@@ -21,6 +21,12 @@ namespace Synergy;
 
 require "Paypal.class.php";
 
+class PaymentException extends \Exception {
+  public function __construct($message, $code = 0, Exception $previous = null) {
+    parent::__construct($message, $code, $previous);
+  }
+}
+
 class Payment {
 
   public function __construct($settings) {
@@ -30,28 +36,41 @@ class Payment {
       $settings["paypal"]["password"],
       $settings["paypal"]["signature"],
       $settings["paypal"]["endpoint"]);
+    $this->mysql = $this->getMysql();
   }
 
   public function process() {
     
-    $requestParams = array(
+    if ($this->getCardNumber() == "") {
+      throw new PaymentException("No credit card number was provided.");
+    }
+    
+    if ($this->getFirstName() == "") {
+      throw new PaymentException("No name was provided.");
+    }
+    
+    if ($_POST["cvv2"] == "") {
+      throw new PaymentException("No security code (CVV2) was provided.");
+    }
+    
+    $init = array(
       "IPADDRESS" => $_SERVER["REMOTE_ADDR"],
       "PAYMENTACTION" => "Sale"
     );
 
-    $creditCardDetails = array(
+    $card = array(
       "CREDITCARDTYPE" => $this->getCardType(),
       "ACCT" => $this->getCardNumber(),
       "EXPDATE" => $this->getExpiryDate(),
       "CVV2" => $_POST["cvv2"]
     );
 
-    $payerDetails = array(
+    $payer = array(
       "FIRSTNAME" => $this->getFirstName(),
       "LASTNAME" => $this->getLastName()
     );
 
-    $orderParams = array(
+    $order = array(
       "AMT" => $_POST["amount"],
       "ITEMAMT" => $_POST["amount"],
       "SHIPPINGAMT" => "0",
@@ -64,16 +83,64 @@ class Payment {
       "L_AMT0" => $_POST["amount"],
       "L_QTY0" => "1"
     );
-
-    $response = $this->paypal->request("DoDirectPayment",
-      $requestParams + $creditCardDetails + $payerDetails + $orderParams + $item);
+    
+    $request = $init + $card + $payer + $order + $item;
+    //echo "<!--";
+    //var_dump($request);
+    //echo "-->";
+    $id = $this->saveRequest($_POST["userId"], $request);
+    
+    $response = $this->paypal->request("DoDirectPayment", $request);
+    $this->saveResponse($id, $response);
+    //echo "<!--";
+    //var_dump($response);
+    //echo "-->";
 
     if (is_array($response) && $response["ACK"] == "Success") {
       $transactionId = $response["TRANSACTIONID"];
     }
     
-    var_dump($response);
-    exit;
+    return $response;
+  }
+  
+  private function saveRequest($userId, $request) {
+    
+    // mask sensitive card details in case our db is attacked.
+    $request["ACCT"] = str_pad(substr($request["ACCT"], 12), 16, "*", STR_PAD_LEFT);
+    $request["CVV2"] = "***";
+    
+    $json = json_encode($request);
+    
+    $result = $this->mysql->query(sprintf(
+      "insert into creditcard (userId, request, requestDate) ".
+      "values (%d, '%s', now())",
+      (int)$userId,
+      $this->mysql->escape_string($json)
+    ));
+    
+    if ($result == null) {
+      throw new \Exception($this->mysql->error);
+    }
+    
+    return $this->mysql->insert_id;
+  }
+  
+  private function saveResponse($id, $response) {
+    
+    $json = json_encode($response);
+    
+    $result = $this->mysql->query(sprintf(
+      "update creditcard set ".
+      "response = '%s', responseDate = now(), result = '%s' ".
+      "where id = %d",
+      $this->mysql->escape_string($json),
+      $this->mysql->escape_string($response["ACK"]),
+      $id
+    ));
+    
+    if ($result == null) {
+      throw new \Exception($this->mysql->error);
+    }
   }
   
   private function getExpiryDate() {
@@ -101,7 +168,7 @@ class Payment {
     elseif (preg_match("/^6(?:011|5[0-9]{2})[0-9]{12}$/", $n)) {
       return "Discover";
     }
-    throw new \Exception("unrecognised credit card number: " . $n);
+    throw new PaymentException("Unrecognised credit card number: " . $n);
   }
   
   private function getFirstName() {
@@ -122,6 +189,13 @@ class Payment {
       return $parts[count($parts) - 1];
     }
     return "";
+  }
+  
+  public function getMysql() {
+    $s = $this->settings["database"];
+    $sql = new \mysqli($s["host"], $s["user"], $s["pass"], $s["name"]);
+    $sql->set_charset("utf8");
+    return $sql;
   }
 }
  

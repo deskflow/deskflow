@@ -44,7 +44,6 @@ class PayPal {
       "VERSION" => $this->version
     ) + $this->credentials;
     
-    var_dump($requestParams + $params);
     $request = http_build_query($requestParams + $params);
     
     $curlOptions = array(

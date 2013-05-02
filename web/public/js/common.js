@@ -110,6 +110,7 @@ function submitPremiumForm() {
           
         var paypal = signup.find("form#creditcard");
         paypal.find("input[name='amount']").val(amount);
+        paypal.find("input[name='userId']").val(message.userId);
         
         signup.find("div.step1").hide();
         signup.find("div.step2").fadeIn();
@@ -174,15 +175,11 @@ function downloadOptions() {
     $("div.info-dialog").dialog("close");
   });
 
-  //$("a#show-signup").click(function() {
+  $("a#show-signup").click(function() {
     var amount = getPremiumAmount();
     signup.find("span#amount2").html("$" + amount.toFixed(2));
     signup.dialog("open");
-//  });
-
-// temp
-  signup.find("div.step1").hide();
-  signup.find("div.step2").fadeIn();
+  });
 
   signup.find("input.cancel").click(function() {
     signup.dialog("close");

@@ -629,6 +629,6 @@ div.creditcard form.creditcard div.box {
 
 div.creditcard div.caution,
 div.creditcard div.greenNotice {
-  padding-top: 1em;
-  margin-top: 10px;
+  padding-top: .8em;
+  margin-top: 15px;
 }

@@ -199,6 +199,7 @@ plain text (we only keep a hash).{/t}
           <p><i>{t}Pay with...{/t}</i></p>
           <form id="creditcard" action="{$secureSite}/creditcard/" method="post">
             <input type="hidden" name="amount" value="10">
+            <input type="hidden" name="userId" value="1">
             <input type="image" src="{$baseUrl}/img/creditcards.png" />
           </form>
           <p class="reassuring">{t}Credit card payments will be taken through our secure site.{/t}</p>

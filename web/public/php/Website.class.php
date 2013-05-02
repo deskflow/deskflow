@@ -183,24 +183,57 @@ class Website {
     $smarty->assign("startYear", date("Y"));
     $smarty->assign("endYear", date("Y") + 20);
     $smarty->assign("amount", $_POST["amount"]);
+    $smarty->assign("userId", $_POST["userId"]);
     
-    $showFailed = false;
-    $showSuccess = false;
+    $monthList = array();
+    for ($i = 0; $i < 11; $i++) {
+      $number = $i + 1;
+      $text = date("F", mktime(0, 0, 0, $number, 10));
+      $monthList[] = array(
+        "number" => $number,
+        "text" => str_pad($number, 2, "0", STR_PAD_LEFT) . " - " . $text
+      );
+    }
+    $smarty->assign("monthList", $monthList);
+    
+    $failed = false;
+    $success = false;
     
     if (isset($_POST["number"])) {
+      $payment = new Payment($this->settings);
       try {
-        $payment = new Payment($this->settings);
-        $payment->process();
-        $showSuccess = true;
+        $response = $payment->process();      
+        $success = $response["ACK"] == "Success";
+        $failed = !$success;
+        
+        if ($success) {
+          $funds = (float)$response["AMT"];
+          $userId = $_POST["userId"];
+          
+          $premium = new Premium($this->settings, $this->session);
+          $premium->assignVotesFromFunds($userId, $funds);
+        }
+        else if ($failed) {
+          $smarty->assign("failMessage", $response["L_LONGMESSAGE0"]);
+        }
       }
-      catch (\Exception $e) {
+      catch (PaymentException $e) {
+        $failed = true;
         $smarty->assign("failMessage", $e->getMessage());
-        $showFailed = true;
       }
     }
     
-    $smarty->assign("showFailed", $showFailed);
-    $smarty->assign("showSuccess", $showSuccess);
+    $card = array();
+    $card["number"] = isset($_POST["number"]) ? $_POST["number"] : null;
+    $card["name"] = isset($_POST["name"]) ? $_POST["name"] : null;
+    $card["month"] = isset($_POST["month"]) ? $_POST["month"] : null;
+    $card["year"] = isset($_POST["year"]) ? $_POST["year"] : null;
+    $card["cvv2"] = isset($_POST["cvv2"]) ? $_POST["cvv2"] : null;
+    $smarty->assign("card", $card);
+    
+    $smarty->assign("showForm", !$success);
+    $smarty->assign("showFailed", $failed);
+    $smarty->assign("showSuccess", $success);
   }
 
   public function isBot() {
