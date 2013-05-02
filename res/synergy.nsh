@@ -28,6 +28,8 @@
 !define icon "..\res\synergy.ico"
 !define controlPanelReg "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
 
+!addplugindir "..\res"
+
 !define MUI_ICON ${icon}
 !define MUI_UNICON ${icon}
 
@@ -243,10 +245,7 @@ SectionEnd
 
 Function .onInstSuccess
 
-  ; TODO: makensis won't accept this any more for some reason.
-  ; start the GUI automatically.
-  ;ShellExecAsUser::ShellExecAsUser "" "$INSTDIR\synergy.exe" SW_SHOWNORMAL
-  
-  Exec "$INSTDIR\synergy.exe"
+  ; relies on !addplugindir
+  ShellExecAsUser::ShellExecAsUser "" "$INSTDIR\synergy.exe" SW_SHOWNORMAL
 
 FunctionEnd
