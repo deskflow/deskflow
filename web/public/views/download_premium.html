@@ -151,17 +151,12 @@ plain text (we only keep a hash).{/t}
     </div>
     <div class="step2">
       <p>
-{t}You're almost done! Please choose a payment service. When the payment is complete, you will be
-redirected to your Synergy Premium account.{/t}
-      </p>
-      <p>
-{t}The payment is handled by <b>Bolton Software Ltd</b>, the company behind
-the development of Synergy.{/t}
+{t}You're almost done! Please choose a payment method.{/t}
       </p>
       
       <div class="paybuttons">
         <div class="paybutton">
-        
+          <p><i>{t}Pay with...{/t}</i></p>
           <form id="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
             <input type="hidden" name="cmd" value="_xclick">
             <input type="hidden" name="business" value="SXQD4CT26Z95N">
@@ -183,7 +178,7 @@ the development of Synergy.{/t}
         </div>
         
         <div class="paybutton">
-        
+          <p><i>{t}Pay with...{/t}</i></p>
           <form id="google" action="https://checkout.google.com/api/checkout/v2/checkoutForm/Merchant/158941555171301" method="post">
           
             <input type="hidden" name="item_name_1" />
@@ -200,13 +195,17 @@ the development of Synergy.{/t}
         
         </div>
         
+        <div class="creditcard">
+          <p><i>{t}Pay with...{/t}</i></p>
+          <form id="creditcard" action="{$secureSite}/creditcard/" method="post">
+            <input type="hidden" name="amount" value="10">
+            <input type="image" src="{$baseUrl}/img/creditcards.png" />
+          </form>
+          <p class="reassuring">{t}Credit card payments will be taken through our secure site.{/t}</p>
+        </div>
+        
         <br />
       </div>
-      
-      <p>
-{t}Please click a logo to continue.{/t}
-{t}Both PayPal and Google Wallet accept all major credit cards.{/t}
-      </p>
 
     </div>
   </div>

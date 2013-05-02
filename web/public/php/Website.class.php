@@ -24,6 +24,7 @@ require "Locale.class.php";
 require "Files.class.php";
 require "ContactForm.class.php";
 require "Premium.class.php";
+require "Payment.class.php";
 
 class Website {
 
@@ -35,7 +36,7 @@ class Website {
   
   public function run() {
 
-    $path = $_GET["path"];
+    $path = isset($_GET["path"]) ? $_GET["path"] : null;
     $pathParts = preg_split('/\//', $path, null, PREG_SPLIT_NO_EMPTY);
     
     // defaults
@@ -82,7 +83,17 @@ class Website {
 
     $smarty = new \Smarty; // must come first; smarty makes T_ work somehow.
     $lang = $locale->lang;
-    $title = "Synergy" . (($page != "home") ? (" - " . T_(ucfirst($page))) : "");
+
+    switch ($page) {
+    case "creditcard":
+      $title = T_("Credit Card");
+      $this->creditCard($smarty);
+      break;
+    }
+    
+    if (!isset($title)) {
+      $title = "Synergy" . (($page != "home") ? (" - " . T_(ucfirst($page))) : "");
+    }
     
     $baseUrl = $this->getRoot();
     $baseWithLang = $baseUrl . (stristr($lang, "en") ? "" : "/" . $lang);
@@ -90,6 +101,7 @@ class Website {
     $smarty->assign("lang", $lang);
     $smarty->assign("baseUrl", $baseUrl);
     $smarty->assign("baseWithLang", $baseWithLang);
+    $smarty->assign("secureSite", $this->settings["general"]["secureSite"]);
     $smarty->assign("gsLang", $locale->getGoogleSearchLang());
     $smarty->assign("page", $page);
     $smarty->assign("title", $title);
@@ -152,9 +164,43 @@ class Website {
     }
     $smarty->assign("custom", $custom);
 
-    $content = $smarty->fetch("views/" . $page . ".html");
+    $view = "views/" . $page . ".html";
+    if (!file_exists($view)) {
+      header("HTTP/1.0 404 Not Found"); 
+      die("<h1>404: Not Found</h1>");
+    }
+    
+    $content = $smarty->fetch($view);
     $smarty->assign("content", $content);
     $smarty->display("views/layout.html");
+  }
+  
+  public function creditCard($smarty) {
+    if (!isset($_POST["amount"])) {
+      throw new \Exception("missing amount field.");
+    }
+    
+    $smarty->assign("startYear", date("Y"));
+    $smarty->assign("endYear", date("Y") + 20);
+    $smarty->assign("amount", $_POST["amount"]);
+    
+    $showFailed = false;
+    $showSuccess = false;
+    
+    if (isset($_POST["number"])) {
+      try {
+        $payment = new Payment($this->settings);
+        $payment->process();
+        $showSuccess = true;
+      }
+      catch (\Exception $e) {
+        $smarty->assign("failMessage", $e->getMessage());
+        $showFailed = true;
+      }
+    }
+    
+    $smarty->assign("showFailed", $showFailed);
+    $smarty->assign("showSuccess", $showSuccess);
   }
 
   public function isBot() {

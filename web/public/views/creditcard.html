@@ -1,0 +1,83 @@
+<div class="creditcard">
+
+  <div class="title">
+    <div class="logo">
+      <img src="{$baseUrl}/img/icon.png" /><h1 class="title">Synergy</h1>
+    </div>
+  </div>
+  
+  <div class="inner-content">
+
+    <h2>{t}Credit Card{/t}</h2>
+    
+    <p>{t}Thanks for choosing to pay with credit card using our secure site.{/t}</p>
+    <img src="{$baseUrl}/img/creditcards-sm.png" />
+    
+    {if $showFailed}
+    
+    <div class="caution">
+      <p>{t}Sorry, your card payment failed. Please contact your card issuer and try again.{/t}</p>
+      <p>{t}Error: {/t} {$failMessage}</p>
+    </div>
+    
+    {/if}
+    
+    {if $showSuccess}
+    
+    <div class="greenNotice">
+      <p>{t}Thanks, your credit card payment was successful.{/t}</p>
+    </div>
+    
+    {/if}
+    
+    <form class="creditcard" action="." method="post">
+      <div class="box">
+        <p>
+          <label for="number">{t}Card number:{/t}</label>
+          <input id="number" name="number" type="text" value="4693 6633 6889 5941" />
+        </p>
+        <p>
+          <label for="name">{t}Name on card:{/t}</label>
+          <input id="name" name="name" type="text" value="Test Test" />
+        </p>
+        <p>
+          <label for="number">{t}Expiration:{/t}</label>
+          <select name="month">
+            <option value="1">{t}01 - January{/t}</option>
+            <option value="2">{t}02 - February{/t}</option>
+            <option value="3">{t}03 - March{/t}</option>
+            <option value="4">{t}04 - April{/t}</option>
+            <option value="5" selected>{t}05 - May{/t}</option>
+            <option value="6">{t}06 - June{/t}</option>
+            <option value="7">{t}07 - July{/t}</option>
+            <option value="8">{t}08 - August{/t}</option>
+            <option value="9">{t}09 - September{/t}</option>
+            <option value="10">{t}10 - October{/t}</option>
+            <option value="11">{t}11 - November{/t}</option>
+            <option value="12">{t}12 - December{/t}</option>
+          </select>
+          <select name="year">
+          {for $year=$startYear to $endYear}
+            <option value="{$year}" {if $year==2018}selected{/if}>{$year}</option>
+          {/for}
+          </select>
+        </p>
+        <p>
+          <label for="cvv2">{t}Security code:{/t}</label>
+          <input id="cvv2" name="cvv2" type="text" style="width: 5em" value="123" />
+          <a href="http://en.wikipedia.org/wiki/Card_security_code" target="_blank">{t}Huh?{/t}</a>
+        </p>
+        <p>
+          <label for="number">{t}Amount:{/t}</label><p style="padding-top: .2em">&dollar;{$amount}</p>
+          <input name="amount" type="hidden" value="{$amount}" />
+        </p>
+        <p>
+      </div>
+      <div class="buttons">
+        <input id="ok" class="ok" type="button" value="Pay now!" />
+      </div>
+    </form>
+    
+  </div>
+
+</div>
