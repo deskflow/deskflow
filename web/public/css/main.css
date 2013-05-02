@@ -1,7 +1,7 @@
 body {
   font-family: arial, sans-serif;
   color: #777;
-  background-color: #ccc;
+  background-color: #eee;
   text-align: center;
 }
 
@@ -46,7 +46,7 @@ div.layout {
   width: 770px;
   background-color: #fff;
   border-radius: 5px;
-  box-shadow: 0px 0px 20px #999;
+  box-shadow: 0px 0px 20px #ccc;
 }
 
 div.content {
@@ -61,13 +61,15 @@ div.inner-content {
 div.footer {
   clear: both;
   margin: 20px auto 20px auto;
+  padding-top: 20px;
   padding-bottom: 20px;
   text-align: center;
-  color: #aaa;
+  color: #888;
+  background-color: #f3f3f3;
 }
 
 div.footer a {
-  color: #aaa;
+  color: #888;
   white-space: nowrap;
 }
 
@@ -502,14 +504,19 @@ div.signup-dialog div.paybuttons br {
   clear: both;
 }
 
+div.signup-dialog div.creditcard,
 div.signup-dialog div.paybutton {
   float: left;
-  height: 70px;
   border: 1px solid #c7c7c7;
-  width: 224px;
   margin-bottom: 5px;
   text-align: center;
   background-color: #f0f0f0;
+}
+
+div.signup-dialog div.paybutton
+{
+  height: 85px;
+  width: 224px;
 }
 
 div.signup-dialog div.paybutton:first-child {
@@ -517,11 +524,31 @@ div.signup-dialog div.paybutton:first-child {
 }
 
 div.signup-dialog div.paybuttons form#google {
-  padding-top: 17px;
+  padding-top: 7px;
 }
 
 div.signup-dialog div.paybuttons form#paypal {
-  padding-top: 20px;
+  padding-top: 10px;
+}
+
+div.signup-dialog div.paybuttons p {
+  margin: 5px 0px 5px 0px;
+  padding: 0px;
+}
+
+div.signup-dialog div.creditcard {
+  clear: both;
+  margin-top: 10px;
+  width: 450px;
+  padding: 5px 10px 5px 10px;
+}
+
+div.signup-dialog div.creditcard p.reassuring {
+  color: green;
+}
+
+div.signup-dialog div.creditcard input {
+  padding: 10px 0px 10px 0px;
 }
 
 div.premium-page form#vote {
@@ -589,4 +616,19 @@ div.greenNotice {
   border: 1px solid green;
   padding: 0px 10px 0px 10px;
   margin-bottom: 10px;
+}
+
+div.creditcard form.creditcard {
+  width: 50%;
+  margin-top: 10px;
+}
+
+div.creditcard form.creditcard div.box {
+  padding-right: 10px;
+}
+
+div.creditcard div.caution,
+div.creditcard div.greenNotice {
+  padding-top: 1em;
+  margin-top: 10px;
 }
