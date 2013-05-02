@@ -85,16 +85,10 @@ class Payment {
     );
     
     $request = $init + $card + $payer + $order + $item;
-    //echo "<!--";
-    //var_dump($request);
-    //echo "-->";
     $id = $this->saveRequest($_POST["userId"], $request);
     
     $response = $this->paypal->request("DoDirectPayment", $request);
     $this->saveResponse($id, $response);
-    //echo "<!--";
-    //var_dump($response);
-    //echo "-->";
 
     if (is_array($response) && $response["ACK"] == "Success") {
       $transactionId = $response["TRANSACTIONID"];
@@ -131,10 +125,11 @@ class Payment {
     
     $result = $this->mysql->query(sprintf(
       "update creditcard set ".
-      "response = '%s', responseDate = now(), result = '%s' ".
+      "response = '%s', responseDate = now(), result = '%s', amount = %f ".
       "where id = %d",
       $this->mysql->escape_string($json),
       $this->mysql->escape_string($response["ACK"]),
+      (float)$response["AMT"],
       $id
     ));
     
