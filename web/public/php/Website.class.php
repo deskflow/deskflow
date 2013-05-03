@@ -110,6 +110,7 @@ class Website {
     $smarty->assign("splashImage", $locale->getSplashImage());
     $smarty->assign("premium", $this->premium);
     $smarty->assign("year", date("Y"));
+    $smarty->assign("timestamp", time());
 
     if ($page == "download") {
       
