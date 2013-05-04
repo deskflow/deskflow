@@ -10,26 +10,44 @@
         <location filename="res/AboutDialogBase.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2001-2012 Chris Schoeneman, Nick Bolton, Volker Lanz, Sorin Sbarnea.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2012 Bolton Software Ltd.&lt;br /&gt;
+Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (synergy-foss.org).
 &lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <oldsource>&lt;p&gt;
+Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2012 Bolton Software Ltd.&lt;br /&gt;
+Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Visit our website for help and info (synergy-foss.org).
+&lt;/p&gt;</oldsource>
+        <translation type="finished">&lt;p&gt;
+하나의 키보드와 마우스를 공유하여 여러 컴퓨터를 제어할 수 있는 응용 프로그램으로, 다양한 플랫폼을 지원하며 오픈 소스 입니다.&lt;br /&gt;&lt;br /&gt;
+저작권 © 2012 볼튼 소프트웨어 (주) &lt;br /&gt;
+저작권 © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Synergy는 GNU 일반 공중 사용 허가서 (GPLv2) 아래에 배포하고 있습니다.&lt;br /&gt;&lt;br /&gt;
+Synergy는 Richard Lee과 Adam Feder에 의해 개발된 CosmoSynergy에 기반을 두고 있습니다.&lt;br /&gt;
+Synergy GUI는 Volker Lanz의 QSynergy에 기반을 두고 있습니다.&lt;br /&gt;&lt;br /&gt;
+도움말 및 정보를 보시려면 저희 웹 사이트(synergy-foss.org)를 방문하세요.
+&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="139"/>
+        <location filename="res/AboutDialogBase.ui" line="140"/>
         <source>Unknown</source>
         <translation type="finished">알수없음</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="123"/>
+        <location filename="res/AboutDialogBase.ui" line="124"/>
         <source>Version:</source>
         <translation type="finished">버전:</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="162"/>
+        <location filename="res/AboutDialogBase.ui" line="163"/>
         <source>&amp;Ok</source>
         <translation type="finished">확인(&amp;O)</translation>
     </message>
@@ -148,169 +166,170 @@ Visit our website for help and info (synergy-foss.org).
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="src/MainWindow.cpp" line="625"/>
+        <location filename="src/MainWindow.cpp" line="632"/>
         <source>&amp;Start</source>
         <translation type="finished">시작(&amp;S)</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="195"/>
+        <location filename="src/MainWindow.cpp" line="196"/>
         <source>&amp;File</source>
         <translation type="finished">파일(&amp;F)</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="196"/>
+        <location filename="src/MainWindow.cpp" line="197"/>
         <source>&amp;Edit</source>
         <translation type="finished">편집(&amp;E)</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="197"/>
+        <location filename="src/MainWindow.cpp" line="198"/>
         <source>&amp;Window</source>
         <translation type="finished">창(&amp;W)</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="198"/>
+        <location filename="src/MainWindow.cpp" line="199"/>
         <source>&amp;Help</source>
         <translation type="finished">도움말(&amp;H)</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="315"/>
+        <location filename="src/MainWindow.cpp" line="316"/>
         <source>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</source>
         <translation type="finished">&lt;p&gt;%1버전이 사용 가능합니다.&lt;a href=&quot;%2&quot;&gt;홈페이지 가기&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="441"/>
+        <location filename="src/MainWindow.cpp" line="448"/>
         <source>Program can not be started</source>
         <translation type="finished">프로그램을 시작할 수 없습니다</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="441"/>
+        <location filename="src/MainWindow.cpp" line="448"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation type="finished">실행파일&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;이(가) 존재하지만 성공적으로 실행되지 못했습니다. 이 프로그램을 실행시키기 위한 충분한 권한을 가지고 있는지 확인해주세요.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="460"/>
+        <location filename="src/MainWindow.cpp" line="467"/>
         <source>Synergy client not found</source>
         <translation type="finished">Synergy 클라이언트를 찾을 수 없습니다.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="461"/>
+        <location filename="src/MainWindow.cpp" line="468"/>
         <source>The executable for the synergy client does not exist.</source>
         <translation type="finished">Synergy 클라이언트 실행 파일이 존재하지 않습니다.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="468"/>
+        <location filename="src/MainWindow.cpp" line="475"/>
         <source>Hostname is empty</source>
         <translation type="finished">호스트명이 비어있습니다.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="469"/>
+        <location filename="src/MainWindow.cpp" line="476"/>
         <source>Please fill in a hostname for the synergy client to connect to.</source>
         <translation type="finished">클라이언트가 접속할 호스트명을 입력해주세요.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="494"/>
+        <location filename="src/MainWindow.cpp" line="501"/>
         <source>Cannot write configuration file</source>
         <translation type="finished">설정파일을 쓸 수 없습니다.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="494"/>
+        <location filename="src/MainWindow.cpp" line="501"/>
         <source>The temporary configuration file required to start synergy can not be written.</source>
         <translation type="finished">Synergy를 구동하기 위해 필요한 임시 설정 파일을 작성할 수 없습니다.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="507"/>
+        <location filename="src/MainWindow.cpp" line="514"/>
         <source>Configuration filename invalid</source>
         <translation type="finished">설정 파일 이름이 올바르지 않습니다</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="508"/>
+        <location filename="src/MainWindow.cpp" line="515"/>
         <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
         <translation type="finished">Synergy 서버를 실행하기 위한 설정 파일이 제대로 작성되어 있지 않습니다. 지금 설정 파일을 찾아 보시겠습니까?</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="535"/>
+        <location filename="src/MainWindow.cpp" line="542"/>
         <source>Synergy server not found</source>
         <translation type="finished">Synergy 서버를 찾을 수 없습니다</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="536"/>
+        <location filename="src/MainWindow.cpp" line="543"/>
         <source>The executable for the synergy server does not exist.</source>
         <translation type="finished">Synergy 서버 실행 파일이 존재하지 않습니다.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="600"/>
+        <location filename="src/MainWindow.cpp" line="607"/>
         <source>Synergy terminated with an error</source>
         <translation type="finished">Synergy가 오류로 인해 종료되었습니다</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="600"/>
+        <location filename="src/MainWindow.cpp" line="607"/>
         <source>Synergy terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
         <translation type="finished">Synergy가 %1의 코드로 비 정상적으로 종료되었습니다.&lt;br&gt;&lt;br&gt;자세한 사항은 로그 출력결과를 확인하세요</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="619"/>
+        <location filename="src/MainWindow.cpp" line="626"/>
         <source>&amp;Stop</source>
         <translation type="finished">중지(&amp;S)</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="642"/>
+        <location filename="src/MainWindow.cpp" line="649"/>
         <source>service mode</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">서비스 모드</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="642"/>
+        <location filename="src/MainWindow.cpp" line="649"/>
         <source>desktop mode</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">데스크탑 모드</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="643"/>
+        <location filename="src/MainWindow.cpp" line="650"/>
         <source>Synergy is running (%1).</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Synergy가 실행 중 입니다 (%1).</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="786"/>
+        <location filename="src/MainWindow.cpp" line="793"/>
         <source>Elevate Synergy</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Synergy 승급</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="787"/>
+        <location filename="src/MainWindow.cpp" line="794"/>
         <source>Are you sure you want to elevate Synergy?
 
 This allows Synergy to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Synergy only if you really need to.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Synergy의 권한을 승급 하시겠습니까?
+이것을 허용하게 되면 Synergy와 승급된 프로세스, UAC 대화상자와 상호작용 할 수 있지만, 승급되지 않은 프로세스들과 문제가 생길 수 있습니다. Synergy 권한 승급은 반드시 필요한 경우에만 사용하세요.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="647"/>
+        <location filename="src/MainWindow.cpp" line="654"/>
         <source>Synergy is starting.</source>
         <translation type="finished">Synergy가 실행 중 입니다.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="650"/>
+        <location filename="src/MainWindow.cpp" line="657"/>
         <source>Synergy is not running.</source>
         <translation type="finished">Synergy가 실행 중이지 않습니다.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="707"/>
+        <location filename="src/MainWindow.cpp" line="714"/>
         <source>Unknown</source>
         <translation type="finished">알수없음</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="728"/>
+        <location filename="src/MainWindow.cpp" line="735"/>
         <source>Browse for a synergys config file</source>
         <translation type="finished">synergys 설정 파일 탐색</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="741"/>
+        <location filename="src/MainWindow.cpp" line="748"/>
         <source>Save configuration as...</source>
         <translation type="finished">설정을 다른 이름으로 저장...</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="745"/>
+        <location filename="src/MainWindow.cpp" line="752"/>
         <source>Save failed</source>
         <translation type="finished">저장에 실패했습니다</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="745"/>
+        <location filename="src/MainWindow.cpp" line="752"/>
         <source>Could not save configuration to file.</source>
         <translation type="finished">설정 사항을 파일에 저장할 수 없습니다.</translation>
     </message>
@@ -325,7 +344,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="54"/>
         <source>Screen name:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">화면 이름:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="61"/>
@@ -336,7 +355,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="68"/>
         <source>&amp;Server IP:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">서버 IP:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="160"/>
@@ -397,12 +416,12 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="174"/>
         <source>&amp;Elevate</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">올리기</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="204"/>
         <source>IP addresses:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">IP 주소:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="296"/>
@@ -462,22 +481,22 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="345"/>
         <source>&amp;Hide</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">숨기기</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="348"/>
         <source>Hide</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">숨기기</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="353"/>
         <source>&amp;Show</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">보이기</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="356"/>
         <source>Show</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">보이기</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="361"/>
@@ -513,7 +532,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>NewScreenWidget</name>
     <message>
-        <location filename="src/NewScreenWidget.cpp" line="31"/>
+        <location filename="src/NewScreenWidget.cpp" line="32"/>
         <source>Unnamed</source>
         <translation type="finished">이름없음</translation>
     </message>
@@ -521,17 +540,17 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>QObject</name>
     <message>
-        <location filename="src/MainWindow.cpp" line="44"/>
+        <location filename="src/MainWindow.cpp" line="45"/>
         <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
         <translation type="finished">Synergy 설정파일 (*.sgc);;모든 파일 (*.*)</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="47"/>
+        <location filename="src/MainWindow.cpp" line="48"/>
         <source>Synergy Configurations (*.conf);;All files (*.*)</source>
         <translation type="finished">Synergy 설정파일 (*.conf);;모든 파일 (*.*)</translation>
     </message>
     <message>
-        <location filename="src/main.cpp" line="95"/>
+        <location filename="src/main.cpp" line="96"/>
         <source>System tray is unavailable, quitting.</source>
         <translation type="finished">시스템 트레이를 사용할 수 없어 종료합니다.</translation>
     </message>
@@ -539,12 +558,12 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>ScreenSettingsDialog</name>
     <message>
-        <location filename="src/ScreenSettingsDialog.cpp" line="64"/>
+        <location filename="src/ScreenSettingsDialog.cpp" line="65"/>
         <source>Screen name is empty</source>
         <translation type="finished">스크린 이름이 비었습니다</translation>
     </message>
     <message>
-        <location filename="src/ScreenSettingsDialog.cpp" line="64"/>
+        <location filename="src/ScreenSettingsDialog.cpp" line="65"/>
         <source>The name for a screen can not be empty. Please fill in a name or cancel the dialog.</source>
         <translation type="finished">스크린 이름이 비었습니다. 이름을 입력하거나 입력창을 취소하세요.</translation>
     </message>
@@ -719,7 +738,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>ScreenSetupModel</name>
     <message>
-        <location filename="src/ScreenSetupModel.cpp" line="50"/>
+        <location filename="src/ScreenSetupModel.cpp" line="51"/>
         <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
         <translation type="finished">&lt;center&gt;화면: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;설정을 편집하려면 더블클릭&lt;br&gt;삭제하려면 휴지통으로 드래그 하세요</translation>
     </message>
@@ -891,7 +910,12 @@ Double click on a screen to edit its settings.</source>
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="src/SettingsDialog.cpp" line="71"/>
+        <location filename="src/SettingsDialog.cpp" line="57"/>
+        <source>Encryption password must not be empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/SettingsDialog.cpp" line="89"/>
         <source>Save log file to...</source>
         <translation type="finished">로그 파일 저장하기...</translation>
     </message>
@@ -904,127 +928,157 @@ Double click on a screen to edit its settings.</source>
         <translation type="finished">설정</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="20"/>
+        <location filename="res/SettingsDialogBase.ui" line="142"/>
         <source>&amp;Advanced</source>
         <translation type="finished">고급(&amp;A)</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="26"/>
+        <location filename="res/SettingsDialogBase.ui" line="154"/>
         <source>Sc&amp;reen name:</source>
         <translation type="finished">화면 이름(&amp;R):</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="43"/>
+        <location filename="res/SettingsDialogBase.ui" line="171"/>
         <source>P&amp;ort:</source>
         <translation type="finished">포트(&amp;O):</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="50"/>
+        <location filename="res/SettingsDialogBase.ui" line="200"/>
         <source>&amp;Interface:</source>
         <translation type="finished">인터페이스(&amp;I):</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="211"/>
+        <location filename="res/SettingsDialogBase.ui" line="26"/>
         <source>&amp;Start Synergy after logging in</source>
         <translation type="finished">윈도우 시작시 Synergy 시작(&amp;S)</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="218"/>
+        <location filename="res/SettingsDialogBase.ui" line="33"/>
         <source>&amp;Automatically start server/client</source>
         <translation type="finished">서버/클라이언트를 자동으로 시작(&amp;A)</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="225"/>
+        <location filename="res/SettingsDialogBase.ui" line="40"/>
         <source>&amp;Hide when server/client starts</source>
         <translation type="finished">서버/클라이언트가 시작되면 숨기기(&amp;H)</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="123"/>
+        <location filename="res/SettingsDialogBase.ui" line="250"/>
         <source>Logging</source>
         <translation type="finished">로그 기록</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="86"/>
+        <location filename="res/SettingsDialogBase.ui" line="217"/>
         <source>&amp;Process mode:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">프로세스 모드:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="97"/>
+        <location filename="res/SettingsDialogBase.ui" line="228"/>
         <source>Service</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">서비스</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="102"/>
+        <location filename="res/SettingsDialogBase.ui" line="233"/>
         <source>Desktop (legacy)</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">데스크탑 (레거시)</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="129"/>
+        <location filename="res/SettingsDialogBase.ui" line="268"/>
         <source>&amp;Logging level:</source>
         <translation type="finished">기록 수준(&amp;L):</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="139"/>
+        <location filename="res/SettingsDialogBase.ui" line="317"/>
         <source>Log to file:</source>
         <translation type="finished">파일로 저장:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="156"/>
+        <location filename="res/SettingsDialogBase.ui" line="334"/>
         <source>Browse...</source>
         <translation type="finished">찾아보기...</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="164"/>
+        <location filename="res/SettingsDialogBase.ui" line="279"/>
         <source>Error</source>
         <translation type="finished">오류</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="169"/>
+        <location filename="res/SettingsDialogBase.ui" line="59"/>
+        <source>&amp;Encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="74"/>
+        <source>&amp;Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="119"/>
+        <source>Pass&amp;word:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="284"/>
         <source>Warning</source>
         <translation type="finished">경고</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="174"/>
+        <location filename="res/SettingsDialogBase.ui" line="289"/>
         <source>Note</source>
         <translation type="finished">알림</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="179"/>
+        <location filename="res/SettingsDialogBase.ui" line="294"/>
         <source>Info</source>
         <translation type="finished">정보</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="184"/>
+        <location filename="res/SettingsDialogBase.ui" line="299"/>
         <source>Debug</source>
         <translation type="finished">디버그</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="189"/>
+        <location filename="res/SettingsDialogBase.ui" line="304"/>
         <source>Debug1</source>
         <translation type="finished">디버그1</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="194"/>
+        <location filename="res/SettingsDialogBase.ui" line="309"/>
         <source>Debug2</source>
         <translation type="finished">디버그2</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="205"/>
+        <location filename="res/SettingsDialogBase.ui" line="20"/>
         <source>&amp;Startup</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">시작하기</translation>
     </message>
 </context>
 <context>
     <name>SetupWizard</name>
     <message>
-        <location filename="src/SetupWizard.cpp" line="43"/>
+        <location filename="src/SetupWizard.cpp" line="60"/>
         <source>Setup Synergy</source>
         <translation type="finished">시너지 설정</translation>
     </message>
     <message>
-        <location filename="src/SetupWizard.cpp" line="54"/>
+        <location filename="src/SetupWizard.cpp" line="70"/>
         <source>Please select an option.</source>
         <translation type="finished">옵션을 선택하세요.</translation>
+    </message>
+    <message>
+        <location filename="src/SetupWizard.cpp" line="80"/>
+        <source>Encryption mode required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/SetupWizard.cpp" line="89"/>
+        <source>Encryption password required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/SetupWizard.cpp" line="96"/>
+        <source>Encryption password and confirmation do not match.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1060,11 +1114,46 @@ Double click on a screen to edit its settings.</source>
         <oldsource>You have already set up a server. This a computer you wish to control using the server's keyboard and mouse. There can be many clients in your setup.</oldsource>
         <translation type="finished">이미 서버 하나를 설정해 두었습니다. 이 컴퓨터는 서버의 키보드와 마우스를 사용해서 조작할 수 있게 됩니다. Synergy 환경에 여러개의 클라이언트를 추가할 수 있습니다.</translation>
     </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="136"/>
+        <source>Encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="142"/>
+        <source>Network traffic can be easily monitored. Using encryption can reduce the risk that sensitive information will be revealed to others (for example, passwords).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="168"/>
+        <source>Choose a random encryption mode. The mode must be the same on both the client and server.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="213"/>
+        <source>&amp;Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="296"/>
+        <source>A longer password will provide stronger encryption. It is a good idea to use 20 characters or more.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="320"/>
+        <source>&amp;Password:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="379"/>
+        <source>&amp;Confirm:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>VersionChecker</name>
     <message>
-        <location filename="src/VersionChecker.cpp" line="101"/>
+        <location filename="src/VersionChecker.cpp" line="102"/>
         <source>Unknown</source>
         <translation type="finished">알수없음</translation>
     </message>
