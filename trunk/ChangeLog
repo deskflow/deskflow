@@ -1,3 +1,9 @@
+1.4.12
+======
+Bug #3565 - Encryption fails when typing fast (Invalid message from client)
+Bug #3606 - GUI is elevated after setup
+Bug #3572 - Mac caps lock causes disconnect
+
 1.4.11
 ======
 Feature #12 - Encryption
