@@ -160,7 +160,7 @@ Visit our website for help and info (synergy-foss.org).
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="src/MainWindow.cpp" line="626"/>
+        <location filename="src/MainWindow.cpp" line="632"/>
         <source>&amp;Start</source>
         <translation type="unfinished"></translation>
     </message>
@@ -190,139 +190,139 @@ Visit our website for help and info (synergy-foss.org).
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="442"/>
+        <location filename="src/MainWindow.cpp" line="448"/>
         <source>Program can not be started</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="442"/>
+        <location filename="src/MainWindow.cpp" line="448"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="461"/>
+        <location filename="src/MainWindow.cpp" line="467"/>
         <source>Synergy client not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="462"/>
+        <location filename="src/MainWindow.cpp" line="468"/>
         <source>The executable for the synergy client does not exist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="469"/>
+        <location filename="src/MainWindow.cpp" line="475"/>
         <source>Hostname is empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="470"/>
+        <location filename="src/MainWindow.cpp" line="476"/>
         <source>Please fill in a hostname for the synergy client to connect to.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="495"/>
+        <location filename="src/MainWindow.cpp" line="501"/>
         <source>Cannot write configuration file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="495"/>
+        <location filename="src/MainWindow.cpp" line="501"/>
         <source>The temporary configuration file required to start synergy can not be written.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="508"/>
+        <location filename="src/MainWindow.cpp" line="514"/>
         <source>Configuration filename invalid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="509"/>
+        <location filename="src/MainWindow.cpp" line="515"/>
         <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="536"/>
+        <location filename="src/MainWindow.cpp" line="542"/>
         <source>Synergy server not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="537"/>
+        <location filename="src/MainWindow.cpp" line="543"/>
         <source>The executable for the synergy server does not exist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="601"/>
+        <location filename="src/MainWindow.cpp" line="607"/>
         <source>Synergy terminated with an error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="601"/>
+        <location filename="src/MainWindow.cpp" line="607"/>
         <source>Synergy terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="620"/>
+        <location filename="src/MainWindow.cpp" line="626"/>
         <source>&amp;Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="643"/>
+        <location filename="src/MainWindow.cpp" line="649"/>
         <source>service mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="643"/>
+        <location filename="src/MainWindow.cpp" line="649"/>
         <source>desktop mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="644"/>
+        <location filename="src/MainWindow.cpp" line="650"/>
         <source>Synergy is running (%1).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="787"/>
+        <location filename="src/MainWindow.cpp" line="793"/>
         <source>Elevate Synergy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="788"/>
+        <location filename="src/MainWindow.cpp" line="794"/>
         <source>Are you sure you want to elevate Synergy?
 
 This allows Synergy to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Synergy only if you really need to.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="648"/>
+        <location filename="src/MainWindow.cpp" line="654"/>
         <source>Synergy is starting.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="651"/>
+        <location filename="src/MainWindow.cpp" line="657"/>
         <source>Synergy is not running.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="708"/>
+        <location filename="src/MainWindow.cpp" line="714"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="729"/>
+        <location filename="src/MainWindow.cpp" line="735"/>
         <source>Browse for a synergys config file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="742"/>
+        <location filename="src/MainWindow.cpp" line="748"/>
         <source>Save configuration as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="746"/>
+        <location filename="src/MainWindow.cpp" line="752"/>
         <source>Save failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="746"/>
+        <location filename="src/MainWindow.cpp" line="752"/>
         <source>Could not save configuration to file.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -901,7 +901,12 @@ Double click on a screen to edit its settings.</source>
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="src/SettingsDialog.cpp" line="72"/>
+        <location filename="src/SettingsDialog.cpp" line="57"/>
+        <source>Encryption password must not be empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/SettingsDialog.cpp" line="89"/>
         <source>Save log file to...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -914,112 +919,127 @@ Double click on a screen to edit its settings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="20"/>
+        <location filename="res/SettingsDialogBase.ui" line="142"/>
         <source>&amp;Advanced</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="26"/>
+        <location filename="res/SettingsDialogBase.ui" line="154"/>
         <source>Sc&amp;reen name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="43"/>
+        <location filename="res/SettingsDialogBase.ui" line="171"/>
         <source>P&amp;ort:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="50"/>
+        <location filename="res/SettingsDialogBase.ui" line="200"/>
         <source>&amp;Interface:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="211"/>
+        <location filename="res/SettingsDialogBase.ui" line="26"/>
         <source>&amp;Start Synergy after logging in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="218"/>
+        <location filename="res/SettingsDialogBase.ui" line="33"/>
         <source>&amp;Automatically start server/client</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="225"/>
+        <location filename="res/SettingsDialogBase.ui" line="40"/>
         <source>&amp;Hide when server/client starts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="123"/>
+        <location filename="res/SettingsDialogBase.ui" line="250"/>
         <source>Logging</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="86"/>
+        <location filename="res/SettingsDialogBase.ui" line="217"/>
         <source>&amp;Process mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="97"/>
+        <location filename="res/SettingsDialogBase.ui" line="228"/>
         <source>Service</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="102"/>
+        <location filename="res/SettingsDialogBase.ui" line="233"/>
         <source>Desktop (legacy)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="129"/>
+        <location filename="res/SettingsDialogBase.ui" line="268"/>
         <source>&amp;Logging level:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="139"/>
+        <location filename="res/SettingsDialogBase.ui" line="317"/>
         <source>Log to file:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="156"/>
+        <location filename="res/SettingsDialogBase.ui" line="334"/>
         <source>Browse...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="164"/>
+        <location filename="res/SettingsDialogBase.ui" line="279"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="169"/>
+        <location filename="res/SettingsDialogBase.ui" line="59"/>
+        <source>&amp;Encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="74"/>
+        <source>&amp;Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="119"/>
+        <source>Pass&amp;word:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="284"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="174"/>
+        <location filename="res/SettingsDialogBase.ui" line="289"/>
         <source>Note</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="179"/>
+        <location filename="res/SettingsDialogBase.ui" line="294"/>
         <source>Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="184"/>
+        <location filename="res/SettingsDialogBase.ui" line="299"/>
         <source>Debug</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="189"/>
+        <location filename="res/SettingsDialogBase.ui" line="304"/>
         <source>Debug1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="194"/>
+        <location filename="res/SettingsDialogBase.ui" line="309"/>
         <source>Debug2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="205"/>
+        <location filename="res/SettingsDialogBase.ui" line="20"/>
         <source>&amp;Startup</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1032,8 +1052,23 @@ Double click on a screen to edit its settings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/SetupWizard.cpp" line="71"/>
+        <location filename="src/SetupWizard.cpp" line="70"/>
         <source>Please select an option.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/SetupWizard.cpp" line="80"/>
+        <source>Encryption mode required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/SetupWizard.cpp" line="89"/>
+        <source>Encryption password required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/SetupWizard.cpp" line="96"/>
+        <source>Encryption password and confirmation do not match.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1068,6 +1103,41 @@ Double click on a screen to edit its settings.</source>
         <location filename="res/SetupWizardBase.ui" line="103"/>
         <source>You have already set up a server. This is a computer you wish to control using the server&apos;s keyboard and mouse. There can be many clients in your setup.</source>
         <oldsource>You have already set up a server. This a computer you wish to control using the server&apos;s keyboard and mouse. There can be many clients in your setup.</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="136"/>
+        <source>Encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="142"/>
+        <source>Network traffic can be easily monitored. Using encryption can reduce the risk that sensitive information will be revealed to others (for example, passwords).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="168"/>
+        <source>Choose a random encryption mode. The mode must be the same on both the client and server.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="213"/>
+        <source>&amp;Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="296"/>
+        <source>A longer password will provide stronger encryption. It is a good idea to use 20 characters or more.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="320"/>
+        <source>&amp;Password:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="379"/>
+        <source>&amp;Confirm:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
