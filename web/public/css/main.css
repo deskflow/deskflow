@@ -80,6 +80,16 @@ div.footer p.lang {
   margin: 20px auto 20px auto;
 }
 
+div.home p {
+  padding: 0em;
+  margin: 1em 0em .8em 0em;
+}
+
+div.home ul {
+  padding: 0em;
+  margin: 0em 0em 2em 1.3em;
+}
+
 div.home div.demo,
 div.info div.donate {
   text-align: center;

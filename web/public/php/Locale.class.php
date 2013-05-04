@@ -195,7 +195,7 @@ class Locale {
   }
   
   function getSplashImage() {
-    $format = "img/splash/splash-%s.jpg";
+    $format = "img/splash/splash-%s.png";
     $filenameFull = sprintf($format, $this->lang);
     if (file_exists($filenameFull)) {
       return $filenameFull;

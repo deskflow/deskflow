@@ -39,52 +39,21 @@
   </div>
   
   <div class="inner-content">
-
-    {if false}
-    <div class="appeal">
-      <h2>{t}Urgent Appeal from Synergy{/t}</h2>
-      <p>
-{t}Sadly our sponsor has cut funding to the Synergy Project
-because it hasn't been profitable for them. We have now removed
-their optional toolbar from our installers. We hope that you will
-help us out by registering for <a href="download/">Synergy Premium</a>
-for $1 or whatever you feel our work is worth. All funding goes toward
-fixing bugs and speeding up development time. Thank you for reading!{/t}
-      </p>
-      <p>-- {t}Nick Bolton, Project Leader{/t}</p>
-    </div>
-    {/if}
-    {if false}
-    <div class="greenNotice">
-      <h2>{t}Synergy: Graduate software engineer needed in the UK{/t}</h2>
-      <p>
-{t}We're looking for a talented university graduate software engineer to help
-us improve Synergy. Bolton Software is the UK-based company behind the 
-development of Synergy, and we're looking to fill a vacancy in our new
-UK office near London.{/t}
-      </p>
-      <p><a href="http://boltonsoftware.com/careers/gse1/">Graduate Software Engineer (C++)</a></p>
-      {literal}
-      <!-- AddThis Button BEGIN -->
-      <div class="addthis_toolbox addthis_default_style"
-        addthis:url="http://boltonsoftware.com/careers/gse1/"
-        addthis:title="Graduate Software Engineer (C++) at Bolton Software"
-        addthis:description="We're looking for a talented university graduate software engineer to help us improve Synergy.">
-      <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
-      <a class="addthis_button_tweet"></a>
-      <a class="addthis_button_pinterest_pinit"></a>
-      <a class="addthis_counter addthis_pill_style"></a>
-      </div>
-      <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
-      <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=nbolton"></script>
-      <!-- AddThis Button END -->
-      {/literal}
-      <p>
-{t}Please tweet, like or share the above link to help us get the word out. Thanks for your help!{/t}
-      </p>
-      <p>-- {t}Nick Bolton, Project Leader{/t}</p>
-    </div>
-    {/if}
+    {if $lang|strpos:'en' === 0}
+    <p>
+{t}Synergy lets you easily share your mouse and keyboard between multiple
+computers on your desk.{/t}
+    </p>
+    <ul>
+      <li>{t}Supported on Windows, Mac OS X, and Linux.{/t}</li>
+      <li>{t}Simply move your mouse to any computer and start typing.{/t}</li>
+      <li>{t}Copy and paste between all of your computers.{/t}</li>
+      <li>{t}Encryption keeps sensitive data safe on public networks.{/t}</li>
+      <li>{t}Save space on your desktop by using one keyboard and mouse.{/t}</li>
+      <li>{t}All you need is a network connection (no extra cables).{/t}</li>
+      <li>{t}Synergy is free and open source, and always will be!{/t}</li>
+    </ul>
+    {else}
     <p>
 {t}Synergy lets you easily share your mouse and keyboard between
 multiple computers on your desk, and it's Free and Open Source.
@@ -93,7 +62,8 @@ another. You can even share all of your clipboards. All you need
 is a network connection. Synergy is cross-platform (works on
 Windows, Mac OS X and Linux).{/t}
     </p>
-    
+    {/if}
+
     {if !$premium->isUserPremium()}
     {$custom}
     {/if}
