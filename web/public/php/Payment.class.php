@@ -41,75 +41,109 @@ class Payment {
 
   public function process() {
     
-    if ($this->getCardNumber() == "") {
-      throw new PaymentException("No credit card number was provided.");
+    $id = $this->createRecord($_POST["userId"]);
+    
+    try {
+      
+      if ($this->getCardNumber() == "") {
+        throw new PaymentException("No credit card number was provided.");
+      }
+      
+      if ($this->getFirstName() == "") {
+        throw new PaymentException("No name was provided.");
+      }
+      
+      if ($_POST["cvv2"] == "") {
+        throw new PaymentException("No security code (CVV2) was provided.");
+      }
+      
+      $init = array(
+        "IPADDRESS" => $_SERVER["REMOTE_ADDR"],
+        "PAYMENTACTION" => "Sale"
+      );
+
+      $card = array(
+        "CREDITCARDTYPE" => $this->getCardType(),
+        "ACCT" => $this->getCardNumber(),
+        "EXPDATE" => $this->getExpiryDate(),
+        "CVV2" => $_POST["cvv2"]
+      );
+
+      $payer = array(
+        "FIRSTNAME" => $this->getFirstName(),
+        "LASTNAME" => $this->getLastName()
+      );
+
+      $order = array(
+        "AMT" => $_POST["amount"],
+        "ITEMAMT" => $_POST["amount"],
+        "SHIPPINGAMT" => "0",
+        "CURRENCYCODE" => "USD"
+      );
+
+      $item = array(
+        "L_NAME0" => "Synergy Premium",
+        "L_DESC0" => "Account funds",
+        "L_AMT0" => $_POST["amount"],
+        "L_QTY0" => "1"
+      );
+      
+      $request = $init + $card + $payer + $order + $item;
+      $this->saveRequest($id, $request);
+      
+      $response = $this->paypal->request("DoDirectPayment", $request);
+      $this->saveResponse($id, $response);
+
+      if (is_array($response) && $response["ACK"] == "Success") {
+        $transactionId = $response["TRANSACTIONID"];
+      }
+    }
+    catch (\Exception $e) {
+      $this->saveException($id, $e);
+      throw $e;
     }
     
-    if ($this->getFirstName() == "") {
-      throw new PaymentException("No name was provided.");
-    }
-    
-    if ($_POST["cvv2"] == "") {
-      throw new PaymentException("No security code (CVV2) was provided.");
-    }
-    
-    $init = array(
-      "IPADDRESS" => $_SERVER["REMOTE_ADDR"],
-      "PAYMENTACTION" => "Sale"
-    );
-
-    $card = array(
-      "CREDITCARDTYPE" => $this->getCardType(),
-      "ACCT" => $this->getCardNumber(),
-      "EXPDATE" => $this->getExpiryDate(),
-      "CVV2" => $_POST["cvv2"]
-    );
-
-    $payer = array(
-      "FIRSTNAME" => $this->getFirstName(),
-      "LASTNAME" => $this->getLastName()
-    );
-
-    $order = array(
-      "AMT" => $_POST["amount"],
-      "ITEMAMT" => $_POST["amount"],
-      "SHIPPINGAMT" => "0",
-      "CURRENCYCODE" => "USD"
-    );
-
-    $item = array(
-      "L_NAME0" => "Synergy Premium",
-      "L_DESC0" => "Account funds",
-      "L_AMT0" => $_POST["amount"],
-      "L_QTY0" => "1"
-    );
-    
-    $request = $init + $card + $payer + $order + $item;
-    $id = $this->saveRequest($_POST["userId"], $request);
-    
-    $response = $this->paypal->request("DoDirectPayment", $request);
-    $this->saveResponse($id, $response);
-
-    if (is_array($response) && $response["ACK"] == "Success") {
-      $transactionId = $response["TRANSACTIONID"];
-    }
     
     return $response;
   }
   
-  private function saveRequest($userId, $request) {
+  private function createRecord($userId) {
+    
+    $result = $this->mysql->query(sprintf(
+      "insert into creditcard (userId, amount, created) ".
+      "values (%d, %f, now())",
+      (int)$userId,
+      (float)$_POST["amount"]
+    ));
+    
+    if ($result == null) {
+      throw new \Exception($this->mysql->error);
+    }
+    
+    return $this->mysql->insert_id;
+  }
+  
+  private function saveRequest($id, $request) {
+    
+    $showDigits = 4;
+    $number = $request["ACCT"];
+    $cvv2 = $request["CVV2"];
+    $numberMask = str_repeat("*", strlen($number) - $showDigits);
+    $lastDigits = substr($number, strlen($number) - $showDigits);
+    $cvv2Mask = str_repeat("*", strlen($cvv2));
     
     // mask sensitive card details in case our db is attacked.
-    $request["ACCT"] = str_pad(substr($request["ACCT"], 12), 16, "*", STR_PAD_LEFT);
-    $request["CVV2"] = "***";
+    $request["ACCT"] = $numberMask . $lastDigits;
+    $request["CVV2"] = $cvv2Mask;
     
     $json = json_encode($request);
     
     $result = $this->mysql->query(sprintf(
-      "insert into creditcard (userId, request, requestDate) ".
-      "values (%d, '%s', now())",
-      (int)$userId,
-      $this->mysql->escape_string($json)
+      "update creditcard set ".
+      "request = '%s', requestDate = now() ".
+      "where id = %d",
+      $this->mysql->escape_string($json),
+      $id
     ));
     
     if ($result == null) {
@@ -125,11 +159,25 @@ class Payment {
     
     $result = $this->mysql->query(sprintf(
       "update creditcard set ".
-      "response = '%s', responseDate = now(), result = '%s', amount = %f ".
+      "response = '%s', responseDate = now(), result = '%s' ".
       "where id = %d",
       $this->mysql->escape_string($json),
       $this->mysql->escape_string($response["ACK"]),
-      (float)$response["AMT"],
+      $id
+    ));
+    
+    if ($result == null) {
+      throw new \Exception($this->mysql->error);
+    }
+  }
+  
+  private function saveException($id, $exception) {
+    
+    $result = $this->mysql->query(sprintf(
+      "update creditcard set ".
+      "result = 'Exception', error = '%s' ".
+      "where id = %d",
+      $exception->getMessage(),
       $id
     ));
     
@@ -163,7 +211,7 @@ class Payment {
     elseif (preg_match("/^6(?:011|5[0-9]{2})[0-9]{12}$/", $n)) {
       return "Discover";
     }
-    throw new PaymentException("Unrecognised credit card number: " . $n);
+    throw new PaymentException("Card type was not Visa, MasterCard, Amex or Discover.");
   }
   
   private function getFirstName() {

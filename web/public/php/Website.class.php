@@ -177,8 +177,13 @@ class Website {
   }
   
   public function creditCard($smarty) {
+    
     if (!isset($_POST["amount"])) {
       throw new \Exception("missing amount field.");
+    }
+    
+    if (!isset($_POST["userId"])) {
+      throw new \Exception("missing userId field.");
     }
     
     $smarty->assign("startYear", date("Y"));
