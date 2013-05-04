@@ -10,26 +10,36 @@
         <location filename="res/AboutDialogBase.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2001-2012 Chris Schoeneman, Nick Bolton, Volker Lanz, Sorin Sbarnea.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2012 Bolton Software Ltd.&lt;br /&gt;
+Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (synergy-foss.org).
 &lt;/p&gt;</source>
+        <oldsource>&lt;p&gt;
+Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2012 Bolton Software Ltd.&lt;br /&gt;
+Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Visit our website for help and info (synergy-foss.org).
+&lt;/p&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="139"/>
+        <location filename="res/AboutDialogBase.ui" line="140"/>
         <source>Unknown</source>
         <translation type="finished">Ismeretlen</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="123"/>
+        <location filename="res/AboutDialogBase.ui" line="124"/>
         <source>Version:</source>
         <translation type="finished">Verzió:</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="162"/>
+        <location filename="res/AboutDialogBase.ui" line="163"/>
         <source>&amp;Ok</source>
         <translation type="finished">&amp;Ok</translation>
     </message>
@@ -148,169 +158,169 @@ Visit our website for help and info (synergy-foss.org).
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="src/MainWindow.cpp" line="625"/>
+        <location filename="src/MainWindow.cpp" line="632"/>
         <source>&amp;Start</source>
         <translation type="finished">&amp;Start</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="195"/>
+        <location filename="src/MainWindow.cpp" line="196"/>
         <source>&amp;File</source>
         <translation type="finished">Fájl</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="196"/>
+        <location filename="src/MainWindow.cpp" line="197"/>
         <source>&amp;Edit</source>
         <translation type="finished">Szerkeszt</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="197"/>
+        <location filename="src/MainWindow.cpp" line="198"/>
         <source>&amp;Window</source>
         <translation type="finished">Ablak</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="198"/>
+        <location filename="src/MainWindow.cpp" line="199"/>
         <source>&amp;Help</source>
         <translation type="finished">Súgó</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="315"/>
+        <location filename="src/MainWindow.cpp" line="316"/>
         <source>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</source>
         <translation type="finished">&lt;p&gt;A(z) %1 verzió elérhetővé vált, &lt;a href=&quot;%2&quot;&gt;látogassa meg weboldalunkat&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="441"/>
+        <location filename="src/MainWindow.cpp" line="448"/>
         <source>Program can not be started</source>
         <translation type="finished">A program nem tud elindulni</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="441"/>
+        <location filename="src/MainWindow.cpp" line="448"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation type="finished">A végrehajtandó&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;nem indul, esetleg nem létezik. Kérjük ellenőrizze, hogy rendelkezik-e a szükséges engedélyekkel a futtatáshoz.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="460"/>
+        <location filename="src/MainWindow.cpp" line="467"/>
         <source>Synergy client not found</source>
         <translation type="finished">Synergy kliens nem található</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="461"/>
+        <location filename="src/MainWindow.cpp" line="468"/>
         <source>The executable for the synergy client does not exist.</source>
         <translation type="finished">A Synergy kliens futtatható állománya nem található.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="468"/>
+        <location filename="src/MainWindow.cpp" line="475"/>
         <source>Hostname is empty</source>
         <translation type="finished">A gépnév üres.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="469"/>
+        <location filename="src/MainWindow.cpp" line="476"/>
         <source>Please fill in a hostname for the synergy client to connect to.</source>
         <translation type="finished">Kérjük adja meg a Synergy kliens gép nevét a csatlakozáshoz.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="494"/>
+        <location filename="src/MainWindow.cpp" line="501"/>
         <source>Cannot write configuration file</source>
         <translation type="finished">A konfigurációs fájl nem írható.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="494"/>
+        <location filename="src/MainWindow.cpp" line="501"/>
         <source>The temporary configuration file required to start synergy can not be written.</source>
         <translation type="finished">Az ideiglenes konfigurációs fájl, amely szükséges a Synergy indításához, nem jött létre.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="507"/>
+        <location filename="src/MainWindow.cpp" line="514"/>
         <source>Configuration filename invalid</source>
         <translation type="finished">Konfigurációs fájlnév érvénytelen</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="508"/>
+        <location filename="src/MainWindow.cpp" line="515"/>
         <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
         <translation type="finished">Nem adott meg érvényes konfigurációs fájlnevet a synergy szerveren. Meg akarja keresni a konfigurációs fájlt most?</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="535"/>
+        <location filename="src/MainWindow.cpp" line="542"/>
         <source>Synergy server not found</source>
         <translation type="finished">Synergy szerver nem elérhető</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="536"/>
+        <location filename="src/MainWindow.cpp" line="543"/>
         <source>The executable for the synergy server does not exist.</source>
         <translation type="finished">A Synergy szerver futtatható állománya nem található.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="600"/>
+        <location filename="src/MainWindow.cpp" line="607"/>
         <source>Synergy terminated with an error</source>
         <translation type="finished">A Synergy hibát jelzett, ezért leállt</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="600"/>
+        <location filename="src/MainWindow.cpp" line="607"/>
         <source>Synergy terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
         <translation type="finished">A Synergy a következő hibakóddal lépet ki: %1.&lt;br&gt;&lt;br&gt;A részletekért tekintse meg a naplót.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="619"/>
+        <location filename="src/MainWindow.cpp" line="626"/>
         <source>&amp;Stop</source>
         <translation type="finished">Stop</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="642"/>
+        <location filename="src/MainWindow.cpp" line="649"/>
         <source>service mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="642"/>
+        <location filename="src/MainWindow.cpp" line="649"/>
         <source>desktop mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="643"/>
+        <location filename="src/MainWindow.cpp" line="650"/>
         <source>Synergy is running (%1).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="786"/>
+        <location filename="src/MainWindow.cpp" line="793"/>
         <source>Elevate Synergy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="787"/>
+        <location filename="src/MainWindow.cpp" line="794"/>
         <source>Are you sure you want to elevate Synergy?
 
 This allows Synergy to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Synergy only if you really need to.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="647"/>
+        <location filename="src/MainWindow.cpp" line="654"/>
         <source>Synergy is starting.</source>
         <translation type="finished">A Synergy indul.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="650"/>
+        <location filename="src/MainWindow.cpp" line="657"/>
         <source>Synergy is not running.</source>
         <translation type="finished">A Synergy nem fut.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="707"/>
+        <location filename="src/MainWindow.cpp" line="714"/>
         <source>Unknown</source>
         <translation type="finished">Ismeretlen</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="728"/>
+        <location filename="src/MainWindow.cpp" line="735"/>
         <source>Browse for a synergys config file</source>
         <translation type="finished">A Synergy konfigurációs fájl kijelölése</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="741"/>
+        <location filename="src/MainWindow.cpp" line="748"/>
         <source>Save configuration as...</source>
         <translation type="finished">Mentse másként a konfigurációt...</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="745"/>
+        <location filename="src/MainWindow.cpp" line="752"/>
         <source>Save failed</source>
         <translation type="finished">Mentés sikertelen</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="745"/>
+        <location filename="src/MainWindow.cpp" line="752"/>
         <source>Could not save configuration to file.</source>
         <translation type="finished">A konfigurációs fájlt nem lehet menteni.</translation>
     </message>
@@ -513,7 +523,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>NewScreenWidget</name>
     <message>
-        <location filename="src/NewScreenWidget.cpp" line="31"/>
+        <location filename="src/NewScreenWidget.cpp" line="32"/>
         <source>Unnamed</source>
         <translation type="finished">Névtelen</translation>
     </message>
@@ -521,17 +531,17 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>QObject</name>
     <message>
-        <location filename="src/MainWindow.cpp" line="44"/>
+        <location filename="src/MainWindow.cpp" line="45"/>
         <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
         <translation type="finished">Synergy konfiguráció (*.sgc);;Minden fájl (*.*)</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="47"/>
+        <location filename="src/MainWindow.cpp" line="48"/>
         <source>Synergy Configurations (*.conf);;All files (*.*)</source>
         <translation type="finished">Synergy konfiguráció (*.conf);;Minden fájl (*.*)</translation>
     </message>
     <message>
-        <location filename="src/main.cpp" line="95"/>
+        <location filename="src/main.cpp" line="96"/>
         <source>System tray is unavailable, quitting.</source>
         <translation type="finished">Rendszer tálca nem elérhető, kilépés.</translation>
     </message>
@@ -539,12 +549,12 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>ScreenSettingsDialog</name>
     <message>
-        <location filename="src/ScreenSettingsDialog.cpp" line="64"/>
+        <location filename="src/ScreenSettingsDialog.cpp" line="65"/>
         <source>Screen name is empty</source>
         <translation type="finished">Képernyőnév üres.</translation>
     </message>
     <message>
-        <location filename="src/ScreenSettingsDialog.cpp" line="64"/>
+        <location filename="src/ScreenSettingsDialog.cpp" line="65"/>
         <source>The name for a screen can not be empty. Please fill in a name or cancel the dialog.</source>
         <translation type="finished">A képernyő neve nem lehet üres. Kérem töltse ki a nevet vagy válasza a mégsem gombot.</translation>
     </message>
@@ -719,7 +729,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>ScreenSetupModel</name>
     <message>
-        <location filename="src/ScreenSetupModel.cpp" line="50"/>
+        <location filename="src/ScreenSetupModel.cpp" line="51"/>
         <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
         <translation type="finished">&lt;center&gt;Képernyő: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Dupla klikk a módosításhoz&lt;br&gt;Húzd a szemetesre a törléshez</translation>
     </message>
@@ -891,7 +901,12 @@ Dupla kattintással szerkesztheti a beállításokat.</translation>
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="src/SettingsDialog.cpp" line="71"/>
+        <location filename="src/SettingsDialog.cpp" line="57"/>
+        <source>Encryption password must not be empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/SettingsDialog.cpp" line="89"/>
         <source>Save log file to...</source>
         <translation type="finished">Napló mentése mint...</translation>
     </message>
@@ -904,112 +919,127 @@ Dupla kattintással szerkesztheti a beállításokat.</translation>
         <translation type="finished">Beállítások</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="20"/>
+        <location filename="res/SettingsDialogBase.ui" line="142"/>
         <source>&amp;Advanced</source>
         <translation type="finished">Haladó</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="26"/>
+        <location filename="res/SettingsDialogBase.ui" line="154"/>
         <source>Sc&amp;reen name:</source>
         <translation type="finished">Képernyő neve:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="43"/>
+        <location filename="res/SettingsDialogBase.ui" line="171"/>
         <source>P&amp;ort:</source>
         <translation type="finished">P&amp;ort:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="50"/>
+        <location filename="res/SettingsDialogBase.ui" line="200"/>
         <source>&amp;Interface:</source>
         <translation type="finished">&amp;Interface:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="211"/>
+        <location filename="res/SettingsDialogBase.ui" line="26"/>
         <source>&amp;Start Synergy after logging in</source>
         <translation type="finished">Indítsa a Synergy-t a bejelentkezés után</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="218"/>
+        <location filename="res/SettingsDialogBase.ui" line="33"/>
         <source>&amp;Automatically start server/client</source>
         <translation type="finished">Automatikus indítás (szerver/kliens) </translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="225"/>
+        <location filename="res/SettingsDialogBase.ui" line="40"/>
         <source>&amp;Hide when server/client starts</source>
         <translation type="finished">Rejtse el mikor a szerver/kliens indul</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="123"/>
+        <location filename="res/SettingsDialogBase.ui" line="250"/>
         <source>Logging</source>
         <translation type="finished">Naplózás</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="86"/>
+        <location filename="res/SettingsDialogBase.ui" line="217"/>
         <source>&amp;Process mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="97"/>
+        <location filename="res/SettingsDialogBase.ui" line="228"/>
         <source>Service</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="102"/>
+        <location filename="res/SettingsDialogBase.ui" line="233"/>
         <source>Desktop (legacy)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="129"/>
+        <location filename="res/SettingsDialogBase.ui" line="268"/>
         <source>&amp;Logging level:</source>
         <translation type="finished">Naplózási szint:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="139"/>
+        <location filename="res/SettingsDialogBase.ui" line="317"/>
         <source>Log to file:</source>
         <translation type="finished">Napló fájlba:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="156"/>
+        <location filename="res/SettingsDialogBase.ui" line="334"/>
         <source>Browse...</source>
         <translation type="finished">Tallózás...</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="164"/>
+        <location filename="res/SettingsDialogBase.ui" line="279"/>
         <source>Error</source>
         <translation type="finished">Hiba</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="169"/>
+        <location filename="res/SettingsDialogBase.ui" line="59"/>
+        <source>&amp;Encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="74"/>
+        <source>&amp;Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="119"/>
+        <source>Pass&amp;word:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="284"/>
         <source>Warning</source>
         <translation type="finished">Figyelmeztetés</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="174"/>
+        <location filename="res/SettingsDialogBase.ui" line="289"/>
         <source>Note</source>
         <translation type="finished">Jegyzet</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="179"/>
+        <location filename="res/SettingsDialogBase.ui" line="294"/>
         <source>Info</source>
         <translation type="finished">Infó</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="184"/>
+        <location filename="res/SettingsDialogBase.ui" line="299"/>
         <source>Debug</source>
         <translation type="finished">Debug</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="189"/>
+        <location filename="res/SettingsDialogBase.ui" line="304"/>
         <source>Debug1</source>
         <translation type="finished">Debug1</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="194"/>
+        <location filename="res/SettingsDialogBase.ui" line="309"/>
         <source>Debug2</source>
         <translation type="finished">Debug2</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="205"/>
+        <location filename="res/SettingsDialogBase.ui" line="20"/>
         <source>&amp;Startup</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1017,14 +1047,29 @@ Dupla kattintással szerkesztheti a beállításokat.</translation>
 <context>
     <name>SetupWizard</name>
     <message>
-        <location filename="src/SetupWizard.cpp" line="43"/>
+        <location filename="src/SetupWizard.cpp" line="60"/>
         <source>Setup Synergy</source>
         <translation type="finished">Synergy beállítás</translation>
     </message>
     <message>
-        <location filename="src/SetupWizard.cpp" line="54"/>
+        <location filename="src/SetupWizard.cpp" line="70"/>
         <source>Please select an option.</source>
         <translation type="finished">Kérem válaszon egy opciót.</translation>
+    </message>
+    <message>
+        <location filename="src/SetupWizard.cpp" line="80"/>
+        <source>Encryption mode required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/SetupWizard.cpp" line="89"/>
+        <source>Encryption password required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/SetupWizard.cpp" line="96"/>
+        <source>Encryption password and confirmation do not match.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1060,11 +1105,46 @@ Dupla kattintással szerkesztheti a beállításokat.</translation>
         <oldsource>You have already set up a server. This a computer you wish to control using the server's keyboard and mouse. There can be many clients in your setup.</oldsource>
         <translation type="finished">Már beállított egy szervert. Ez a számítógép lehet amelyet vezérelhet a szerverre kapcsolt billentyűzet és egér segítségével. Számos kliens gépet felvehet a beállításokban.</translation>
     </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="136"/>
+        <source>Encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="142"/>
+        <source>Network traffic can be easily monitored. Using encryption can reduce the risk that sensitive information will be revealed to others (for example, passwords).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="168"/>
+        <source>Choose a random encryption mode. The mode must be the same on both the client and server.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="213"/>
+        <source>&amp;Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="296"/>
+        <source>A longer password will provide stronger encryption. It is a good idea to use 20 characters or more.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="320"/>
+        <source>&amp;Password:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="379"/>
+        <source>&amp;Confirm:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>VersionChecker</name>
     <message>
-        <location filename="src/VersionChecker.cpp" line="101"/>
+        <location filename="src/VersionChecker.cpp" line="102"/>
         <source>Unknown</source>
         <translation type="finished">Ismeretlen</translation>
     </message>

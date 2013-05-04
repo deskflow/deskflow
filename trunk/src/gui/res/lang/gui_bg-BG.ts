@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE TS><TS language="cy" sourcelanguage="en" version="2.0">
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE TS><TS language="bg-BG" sourcelanguage="en" version="2.0">
 <context>
     <name>AboutDialogBase</name>
     <message>
         <location filename="res/AboutDialogBase.ui" line="38"/>
         <source>About Synergy</source>
-        <translation type="finished">Ynghylch Synergy</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message utf8="true">
         <location filename="res/AboutDialogBase.ui" line="53"/>
@@ -36,12 +36,12 @@ Visit our website for help and info (synergy-foss.org).
     <message>
         <location filename="res/AboutDialogBase.ui" line="124"/>
         <source>Version:</source>
-        <translation type="finished">Fersiwn:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/AboutDialogBase.ui" line="163"/>
         <source>&amp;Ok</source>
-        <translation type="finished">Iawn</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -49,97 +49,97 @@ Visit our website for help and info (synergy-foss.org).
     <message>
         <location filename="res/ActionDialogBase.ui" line="14"/>
         <source>Configure Action</source>
-        <translation type="finished">Cyflunio Gweithred</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="20"/>
         <source>Choose the action to perform</source>
-        <translation type="finished">Dewiswch y weithred i wneud</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="26"/>
         <source>Press a hotkey</source>
-        <translation type="finished">Gwasgwch fysell brys</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="36"/>
         <source>Release a hotkey</source>
-        <translation type="finished">Ryddhewch y bysell frys</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="43"/>
         <source>Press and release a hotkey</source>
-        <translation type="finished">Gwasgwch a ryddhewch y bysell frys</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="69"/>
         <source>only on these screens</source>
-        <translation type="finished">ar y sgriniau yma yn unig</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="119"/>
         <source>Switch to screen</source>
-        <translation type="finished">Newid i sgrîn</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="150"/>
         <source>Switch in direction</source>
-        <translation type="finished">Newid cyfeiriad</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="174"/>
         <source>left</source>
-        <translation type="finished">chwith</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="179"/>
         <source>right</source>
-        <translation type="finished">dde</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="184"/>
         <source>up</source>
-        <translation type="finished">fyny</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="189"/>
         <source>down</source>
-        <translation type="finished">lawr</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="201"/>
         <source>Lock cursor to screen</source>
-        <translation type="finished">Cloi cyrchydd i'r sgrîn</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="225"/>
         <source>toggle</source>
-        <translation type="finished">toglo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="230"/>
         <source>on</source>
-        <translation type="finished">ymlaen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="235"/>
         <source>off</source>
-        <translation type="finished">i ffwrdd</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="248"/>
         <source>This action is performed when</source>
-        <translation type="finished">Mae'r weithred hwn yn cael ei wneud gan</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="254"/>
         <source>the hotkey is pressed</source>
-        <translation type="finished">pan wasgir y bysell frys</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="264"/>
         <source>the hotkey is released</source>
-        <translation type="finished">pan ryddheir y bysell frys</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -147,12 +147,12 @@ Visit our website for help and info (synergy-foss.org).
     <message>
         <location filename="res/HotkeyDialogBase.ui" line="14"/>
         <source>Hotkey</source>
-        <translation type="finished">Bysell frys</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/HotkeyDialogBase.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
-        <translation type="finished">Rhowch y manyleb ar gyfer y bysell frws hwn:</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -160,107 +160,107 @@ Visit our website for help and info (synergy-foss.org).
     <message>
         <location filename="src/MainWindow.cpp" line="632"/>
         <source>&amp;Start</source>
-        <translation type="finished">Dechrau</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="196"/>
         <source>&amp;File</source>
-        <translation type="finished">Ffeil</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="197"/>
         <source>&amp;Edit</source>
-        <translation type="finished">Golygu</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="198"/>
         <source>&amp;Window</source>
-        <translation type="finished">Ffenest</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="199"/>
         <source>&amp;Help</source>
-        <translation type="finished">Cymorth</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="316"/>
         <source>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</source>
-        <translation type="finished">&lt;p&gt;Mae fersiwn %1 ar gael nawr, &lt;a href=&quot;%2&quot;&gt;ymwelwch a'r wefan&lt;/a&gt;.&lt;/p&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="448"/>
         <source>Program can not be started</source>
-        <translation type="finished">Methwyd cychwyn y rhaglen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="448"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation type="finished">Nid oedd yn bosib cychwyn y rhaglen &lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;yn llwyddiannus er ei fod yn bodoli. Gwnewch yn siwr fod ganddoch yr hawliau cywir i redeg y rhaglen yma.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="467"/>
         <source>Synergy client not found</source>
-        <translation type="finished">Methwyd dod o hyd i gleient Synergy</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="468"/>
         <source>The executable for the synergy client does not exist.</source>
-        <translation type="finished">Nid yw'r ffeil weithredadwy ar gyfer y cleient synergy yn bodoli.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="475"/>
         <source>Hostname is empty</source>
-        <translation type="finished">Mae'r enw gwesteiwr yn bodoli</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="476"/>
         <source>Please fill in a hostname for the synergy client to connect to.</source>
-        <translation type="finished">Rhowch enw gwesteiwr i'r cleient synergy i gysylltu iddo.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="501"/>
         <source>Cannot write configuration file</source>
-        <translation type="finished">Methu sgrifennu i'r ffeil gyfluniad</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="501"/>
         <source>The temporary configuration file required to start synergy can not be written.</source>
-        <translation type="finished">Nid yw'n bosib sgrifennu i'r ffeil gyfluniad dros dro sydd angen i ddechrau synergy</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="514"/>
         <source>Configuration filename invalid</source>
-        <translation type="finished">Mae enw'r ffeil gyfluniad yn annilys</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="515"/>
         <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
-        <translation type="finished">Nid ydych wedi llenwi mewn ffeil gyfluniad dilys ar gyfer y gweinydd synergy. Hoffech chi bori am ffeil gyfluniad nawr?</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="542"/>
         <source>Synergy server not found</source>
-        <translation type="finished">Methwyd dod o hyd i weinydd Synergy</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="543"/>
         <source>The executable for the synergy server does not exist.</source>
-        <translation type="finished">Nid yw'r ffeil weithredadwy ar gyfer y gweinydd synergy yn bodoli.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="607"/>
         <source>Synergy terminated with an error</source>
-        <translation type="finished">Fe wnaeth Synergy derfynnu gyda gwall</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="607"/>
         <source>Synergy terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
-        <translation type="finished">Fe wnaeth Synergy derfynnu yn annisgwyl gyda cod gorffen %1.&lt;br&gt;&lt;br&gt;Gwelwch allbwn log am fanylion.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="626"/>
         <source>&amp;Stop</source>
-        <translation type="finished">Stopio</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="649"/>
@@ -292,12 +292,12 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="src/MainWindow.cpp" line="654"/>
         <source>Synergy is starting.</source>
-        <translation type="finished">Mae Synergy yn dechrau.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="657"/>
         <source>Synergy is not running.</source>
-        <translation type="finished">Nid yw Synergy yn rhedeg.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="714"/>
@@ -307,22 +307,22 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="src/MainWindow.cpp" line="735"/>
         <source>Browse for a synergys config file</source>
-        <translation type="finished">Profi am ffeil gyfluniad synergys</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="748"/>
         <source>Save configuration as...</source>
-        <translation type="finished">Cadw'r cyfluniad fel...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="752"/>
         <source>Save failed</source>
-        <translation type="finished">Methwyd cadw</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="752"/>
         <source>Could not save configuration to file.</source>
-        <translation type="finished">Methwyd cadw'r ffeil gyfluniad</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -330,7 +330,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="26"/>
         <source>Synergy</source>
-        <translation type="finished">Synergy</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="54"/>
@@ -352,52 +352,52 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
         <location filename="res/MainWindowBase.ui" line="160"/>
         <location filename="res/MainWindowBase.ui" line="312"/>
         <source>&amp;Start</source>
-        <translation type="finished">Dechrau</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="187"/>
         <source>&amp;Server (share this computer's mouse and keyboard):</source>
-        <translation type="finished">Gweinydd (rhannu bysellfwrdd a llygoden y cyfrifiadur hwn).</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="254"/>
         <source>Use existing configuration:</source>
-        <translation type="finished">Defnyddio'r cyfluniad presennol:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="263"/>
         <source>&amp;Configuration file:</source>
-        <translation type="finished">Ffeil Cyfluniad:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="283"/>
         <source>&amp;Browse...</source>
-        <translation type="finished">Pori...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="220"/>
         <source>Configure interactively:</source>
-        <translation type="finished">Cyflunio'n rhyngweithiol:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="232"/>
         <source>&amp;Configure Server...</source>
-        <translation type="finished">Cyflunio Gweinydd...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="39"/>
         <source>&amp;Client (use another computer's keyboard and mouse):</source>
-        <translation type="finished">Cleient (defnyddio bysellfwrdd a llygoden cyfrifiadur arall):</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="84"/>
         <source>Ready</source>
-        <translation type="finished">Yn barod</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="91"/>
         <source>Log</source>
-        <translation type="finished">Log</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="167"/>
@@ -417,17 +417,17 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="296"/>
         <source>&amp;About Synergy...</source>
-        <translation type="finished">Ynghylch Synergy</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="301"/>
         <source>&amp;Quit</source>
-        <translation type="finished">Gadael</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="304"/>
         <source>Quit</source>
-        <translation type="finished">Gadael</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="307"/>
@@ -437,7 +437,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="315"/>
         <source>Run</source>
-        <translation type="finished">Rhedeg</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="318"/>
@@ -447,12 +447,12 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="326"/>
         <source>S&amp;top</source>
-        <translation type="finished">Stopio</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="329"/>
         <source>Stop</source>
-        <translation type="finished">Stopop</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="332"/>
@@ -462,7 +462,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="337"/>
         <source>S&amp;how Status</source>
-        <translation type="finished">Dangos Statws</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="340"/>
@@ -492,12 +492,12 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="361"/>
         <source>Save configuration &amp;as...</source>
-        <translation type="finished">Cadw'r cyfluniad fel...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="364"/>
         <source>Save the interactively generated server configuration to a file.</source>
-        <translation type="finished">Cadw'r cyfluniad gweinydd a gynhyrchwyd i ffeil:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="367"/>
@@ -507,17 +507,17 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="372"/>
         <source>Settings</source>
-        <translation type="finished">Gosodiadau</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="375"/>
         <source>Edit settings</source>
-        <translation type="finished">Golygu gosodiadau</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="380"/>
         <source>Run Wizard</source>
-        <translation type="finished">Rhedeg Dewin</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -525,7 +525,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="src/NewScreenWidget.cpp" line="32"/>
         <source>Unnamed</source>
-        <translation type="finished">Heb ei enwi</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -533,17 +533,17 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="src/MainWindow.cpp" line="45"/>
         <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
-        <translation type="finished">Cyfluniadau Synergy (*.sgc);;Pob ffeil (*.*)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="48"/>
         <source>Synergy Configurations (*.conf);;All files (*.*)</source>
-        <translation type="finished">Cyfluniadau Synergy (*.conf);;Pob ffeil (*.*)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/main.cpp" line="96"/>
         <source>System tray is unavailable, quitting.</source>
-        <translation type="finished">Nid yw'r gilfach system ar gael, yn gadael.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -551,12 +551,12 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="src/ScreenSettingsDialog.cpp" line="65"/>
         <source>Screen name is empty</source>
-        <translation type="finished">Mae enw'r sgrîn yn wag</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/ScreenSettingsDialog.cpp" line="65"/>
         <source>The name for a screen can not be empty. Please fill in a name or cancel the dialog.</source>
-        <translation type="finished">Ni all enw'r sgrîn fod yn wag. Rhowch enw neu ganslo'r ddeialog.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -564,32 +564,32 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="14"/>
         <source>Screen Settings</source>
-        <translation type="finished">Gosodiadau Sgrîn</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="22"/>
         <source>Screen &amp;name:</source>
-        <translation type="finished">Enw sgrîn</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="42"/>
         <source>A&amp;liases</source>
-        <translation type="finished">Ffugenwau</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="57"/>
         <source>&amp;Add</source>
-        <translation type="finished">Ychwanegu</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="74"/>
         <source>&amp;Remove</source>
-        <translation type="finished">Dileu</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="97"/>
         <source>&amp;Modifier keys</source>
-        <translation type="finished">Bysellau newid</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="106"/>
@@ -648,7 +648,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
         <location filename="res/ScreenSettingsDialogBase.ui" line="283"/>
         <location filename="res/ScreenSettingsDialogBase.ui" line="330"/>
         <source>None</source>
-        <translation type="finished">Dim</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="150"/>
@@ -678,27 +678,27 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="367"/>
         <source>Top-left</source>
-        <translation type="finished">Top-chwith</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="374"/>
         <source>Top-right</source>
-        <translation type="finished">Top-dde</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="381"/>
         <source>Bottom-left</source>
-        <translation type="finished">Gwaelod-chwith</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="388"/>
         <source>Bottom-right</source>
-        <translation type="finished">Gwaelod-dde</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="397"/>
         <source>Corner Si&amp;ze:</source>
-        <translation type="finished">Maint Cornel:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="428"/>
@@ -739,96 +739,94 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="13"/>
         <source>Server Configuration</source>
-        <translation type="finished">Cyfluniad Gweinydd</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="23"/>
         <source>Screens and links</source>
-        <translation type="finished">Sgriniau a dolenni</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="34"/>
         <source>Drag a screen from the grid to the trashcan to remove it.</source>
-        <translation type="finished">Llusgwch sgrîn o'r grid neu i'r bin sbwriel i'w ddileu.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="59"/>
         <source>Configure the layout of your synergy server configuration.</source>
-        <translation type="finished">Cyfluniwch gynllun eich cyfluniad gweinydd synergy</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="72"/>
         <source>Drag this button to the grid to add a new screen.</source>
-        <translation type="finished">Llusgwch y botwm i'r grid i ychwanegu sgrîn newydd.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="127"/>
         <source>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
-        <translation type="finished">Llusgwch sgrîn newydd i'r grid neu symudwch y rhai presennol o gwmpas.
-Llusgwch sgrîn i'r bin sbwriel i'w ddileu.
-Rhowch glic dwbl ar sgrîn i newid ei osodiadau.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="156"/>
         <source>Hotkeys</source>
-        <translation type="finished">Bysellau brys</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="162"/>
         <source>&amp;Hotkeys</source>
-        <translation type="finished">Bysellau brys</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="174"/>
         <source>&amp;New</source>
-        <translation type="finished">Newydd</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="184"/>
         <source>&amp;Edit</source>
-        <translation type="finished">Golygu</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="194"/>
         <source>&amp;Remove</source>
-        <translation type="finished">Dileu</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="217"/>
         <source>A&amp;ctions</source>
-        <translation type="finished">Gweithredoedd</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="229"/>
         <source>Ne&amp;w</source>
-        <translation type="finished">Newydd</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="239"/>
         <source>E&amp;dit</source>
-        <translation type="finished">Golygu</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="249"/>
         <source>Re&amp;move</source>
-        <translation type="finished">Dileu</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="273"/>
         <source>Advanced server settings</source>
-        <translation type="finished">Gosodiadau uwch y gweinydd</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="279"/>
         <source>&amp;Switch</source>
-        <translation type="finished">Newid</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="290"/>
         <source>Switch &amp;after waiting</source>
-        <translation type="finished">Newid ar ôl aros</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="329"/>
@@ -840,22 +838,22 @@ Rhowch glic dwbl ar sgrîn i newid ei osodiadau.</translation>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="343"/>
         <source>Switch on double &amp;tap within</source>
-        <translation type="finished">Newid ar ôl tap dwl yn</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="407"/>
         <source>&amp;Options</source>
-        <translation type="finished">Dewisiadau</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="418"/>
         <source>&amp;Check clients every</source>
-        <translation type="finished">Gwirio cleientiaid bob</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="469"/>
         <source>Use &amp;relative mouse moves</source>
-        <translation type="finished">Defnyddio symudiadau llygoden perthynol</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="479"/>
@@ -916,7 +914,7 @@ Rhowch glic dwbl ar sgrîn i newid ei osodiadau.</translation>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="14"/>
         <source>Settings</source>
-        <translation type="finished">Gosodiadau</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="142"/>
@@ -986,12 +984,12 @@ Rhowch glic dwbl ar sgrîn i newid ei osodiadau.</translation>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="334"/>
         <source>Browse...</source>
-        <translation type="finished">Pori...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="279"/>
         <source>Error</source>
-        <translation type="finished">Gwall</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="59"/>
@@ -1011,17 +1009,17 @@ Rhowch glic dwbl ar sgrîn i newid ei osodiadau.</translation>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="284"/>
         <source>Warning</source>
-        <translation type="finished">Rhybudd</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="289"/>
         <source>Note</source>
-        <translation type="finished">Nodyn</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="294"/>
         <source>Info</source>
-        <translation type="finished">Gwybodaeth</translation>
+        <translation type="finished">Информация</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="299"/>
@@ -1049,12 +1047,12 @@ Rhowch glic dwbl ar sgrîn i newid ei osodiadau.</translation>
     <message>
         <location filename="src/SetupWizard.cpp" line="60"/>
         <source>Setup Synergy</source>
-        <translation type="finished">Gosod fyny Synergy</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="70"/>
         <source>Please select an option.</source>
-        <translation type="finished">Dewiswch.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="80"/>
@@ -1077,33 +1075,33 @@ Rhowch glic dwbl ar sgrîn i newid ei osodiadau.</translation>
     <message>
         <location filename="res/SetupWizardBase.ui" line="20"/>
         <source>Setup Synergy</source>
-        <translation type="finished">Gosod fyny Synergy</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="30"/>
         <source>Server or Client?</source>
-        <translation type="finished">Gweinydd neu Gleient?</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="45"/>
         <source>&amp;Server (new setup)</source>
-        <translation type="finished">Gweinydd (gosodiad newydd)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="58"/>
         <source>This is the first computer you are configuring. Your keyboard and mouse are connected to this computer. This will allow you to move your mouse over to another computer's screen. There can only be one server in your setup.</source>
-        <translation type="finished">Dyma'r cyfrifiadur cynta rydych yn gyflunio. Mae eich bysellfwrdd a llygoden wedi ei gysylltu i'r cyfrifiadur yma. Fe fydd hyn yn eich caniatáu i symud eich llygoden drosodd i sgrîn cyfrifiadur arall. Dim ond un gweinydd all fod yn eich gosodiad.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="90"/>
         <source>&amp;Client (add to setup)</source>
-        <translation type="finished">Cleient (ychwanegu i'r gosodiad)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="103"/>
         <source>You have already set up a server. This is a computer you wish to control using the server's keyboard and mouse. There can be many clients in your setup.</source>
         <oldsource>You have already set up a server. This a computer you wish to control using the server's keyboard and mouse. There can be many clients in your setup.</oldsource>
-        <translation type="finished">Rydych wedi gosod gweinydd fyny yn barod. Dyma'r cyfrifiadur rydych am reoli gyda bysellfwrdd a llygoden y gweinydd. Fe all fod amryw o gleientiaid yn eich gosodiad.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="136"/>

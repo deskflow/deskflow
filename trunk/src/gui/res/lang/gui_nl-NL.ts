@@ -10,26 +10,44 @@
         <location filename="res/AboutDialogBase.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2001-2012 Chris Schoeneman, Nick Bolton, Volker Lanz, Sorin Sbarnea.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2012 Bolton Software Ltd.&lt;br /&gt;
+Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (synergy-foss.org).
 &lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <oldsource>&lt;p&gt;
+Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2012 Bolton Software Ltd.&lt;br /&gt;
+Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Visit our website for help and info (synergy-foss.org).
+&lt;/p&gt;</oldsource>
+        <translation type="finished">&lt;p&gt;
+Toetsenbord en Muis deel applicatie. Multi platform en open source.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2012 Bolton Software Ltd.&lt;br /&gt;
+Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Synergy is uitgebracht onder de GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Synergy is gebaseerd op CosmoSynergy door Richard Lee en Adam Feder.&lt;br /&gt;
+De Synergy GUI is gebaseerd op QSynergy door Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Bezoek onze website voor hulp en informatie (synergy-foss.org).
+&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="139"/>
+        <location filename="res/AboutDialogBase.ui" line="140"/>
         <source>Unknown</source>
         <translation type="finished">Onbekend</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="123"/>
+        <location filename="res/AboutDialogBase.ui" line="124"/>
         <source>Version:</source>
         <translation type="finished">Versie:</translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="162"/>
+        <location filename="res/AboutDialogBase.ui" line="163"/>
         <source>&amp;Ok</source>
         <translation type="finished">&amp;Ok</translation>
     </message>
@@ -64,7 +82,7 @@ Visit our website for help and info (synergy-foss.org).
     <message>
         <location filename="res/ActionDialogBase.ui" line="69"/>
         <source>only on these screens</source>
-        <translation type="finished">Alleen op deze schermen</translation>
+        <translation type="finished">alleen op deze schermen</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="119"/>
@@ -119,7 +137,7 @@ Visit our website for help and info (synergy-foss.org).
     <message>
         <location filename="res/ActionDialogBase.ui" line="248"/>
         <source>This action is performed when</source>
-        <translation type="finished">Deze wordt uitgevoerd wanneer</translation>
+        <translation type="finished">Deze actie wordt uitgevoerd wanneer</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="254"/>
@@ -142,175 +160,175 @@ Visit our website for help and info (synergy-foss.org).
     <message>
         <location filename="res/HotkeyDialogBase.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
-        <translation type="finished">Voer de specificatie voor de sneltoest in:</translation>
+        <translation type="finished">Voer de specificatie voor de sneltoets in:</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="src/MainWindow.cpp" line="625"/>
+        <location filename="src/MainWindow.cpp" line="632"/>
         <source>&amp;Start</source>
         <translation type="finished">&amp;Start</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="195"/>
+        <location filename="src/MainWindow.cpp" line="196"/>
         <source>&amp;File</source>
         <translation type="finished">&amp;Bestand</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="196"/>
+        <location filename="src/MainWindow.cpp" line="197"/>
         <source>&amp;Edit</source>
         <translation type="finished">&amp;Bewerken</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="197"/>
+        <location filename="src/MainWindow.cpp" line="198"/>
         <source>&amp;Window</source>
         <translation type="finished">&amp;Venster</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="198"/>
+        <location filename="src/MainWindow.cpp" line="199"/>
         <source>&amp;Help</source>
         <translation type="finished">&amp;Help</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="315"/>
+        <location filename="src/MainWindow.cpp" line="316"/>
         <source>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</source>
-        <translation type="finished">&lt;p&gt;Versie %1 is nu beschikbaar, &lt;a href=&quot;%2&quot;&gt;ga na website&lt;/a&gt;.&lt;/p&gt;</translation>
+        <translation type="finished">&lt;p&gt;Versie %1 is nu beschikbaar, &lt;a href=&quot;%2&quot;&gt;Bezoek de site&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="441"/>
+        <location filename="src/MainWindow.cpp" line="448"/>
         <source>Program can not be started</source>
         <translation type="finished">Het programma kan niet worden gestart</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="441"/>
+        <location filename="src/MainWindow.cpp" line="448"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation type="finished">De uitvoering van &lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;kon niet succesvol worden uitgevoerd, hoewel het bestaat. Verifieer eerst of u de nodige rechten hebt om het programma uit te voeren.</translation>
+        <translation type="finished">De uitvoering van &lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;kon niet succesvol worden uitgevoerd, hoewel het bestaat. Verifieer eerst of u de nodige rechten heeft om het programma uit te voeren.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="460"/>
+        <location filename="src/MainWindow.cpp" line="467"/>
         <source>Synergy client not found</source>
         <translation type="finished">De Synergy client is niet gevonden</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="461"/>
+        <location filename="src/MainWindow.cpp" line="468"/>
         <source>The executable for the synergy client does not exist.</source>
         <translation type="finished">De executable voor de Synergy client bestaat niet.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="468"/>
+        <location filename="src/MainWindow.cpp" line="475"/>
         <source>Hostname is empty</source>
         <translation type="finished">Hostnaam is leeg</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="469"/>
+        <location filename="src/MainWindow.cpp" line="476"/>
         <source>Please fill in a hostname for the synergy client to connect to.</source>
         <translation type="finished">Vul a.u.b. een hostnaam in voor de Synergy client om mee te verbinden.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="494"/>
+        <location filename="src/MainWindow.cpp" line="501"/>
         <source>Cannot write configuration file</source>
         <translation type="finished">Kan configuratiebestand niet aanmaken</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="494"/>
+        <location filename="src/MainWindow.cpp" line="501"/>
         <source>The temporary configuration file required to start synergy can not be written.</source>
         <translation type="finished">Het tijdelijke configuratiebestand om Synergy te starten kan niet geschreven worden.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="507"/>
+        <location filename="src/MainWindow.cpp" line="514"/>
         <source>Configuration filename invalid</source>
         <translation type="finished">De bestandsnaam van de configuratie is ongeldig</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="508"/>
+        <location filename="src/MainWindow.cpp" line="515"/>
         <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
-        <translation type="finished">U hebt een ongeldig configuratiebestand ingegeven voor de Synergy server. Wilt u de configuratie nu inkijken?</translation>
+        <translation type="finished">U heeft een ongeldig configuratiebestand ingegeven voor de Synergy server. Wilt u nu een configuratiebestand opgeven?</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="535"/>
+        <location filename="src/MainWindow.cpp" line="542"/>
         <source>Synergy server not found</source>
         <translation type="finished">Synergy server is niet gevonden</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="536"/>
+        <location filename="src/MainWindow.cpp" line="543"/>
         <source>The executable for the synergy server does not exist.</source>
         <translation type="finished">De executable voor de Synergy client bestaat niet.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="600"/>
+        <location filename="src/MainWindow.cpp" line="607"/>
         <source>Synergy terminated with an error</source>
-        <translation type="finished">Synergy werd afgesloten door een error</translation>
+        <translation type="finished">Synergy werd afgesloten met een error</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="600"/>
+        <location filename="src/MainWindow.cpp" line="607"/>
         <source>Synergy terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
-        <translation type="finished">Synergy werd onverwacht afgesloten met volgende exit code: %1.&lt;br&gt;&lt;br&gt;. Raadpleeg de log v oor meer details.</translation>
+        <translation type="finished">Synergy werd onverwachts afgesloten met de volgende exit code: %1.&lt;br&gt;&lt;br&gt;. Raadpleeg de log voor meer details.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="619"/>
+        <location filename="src/MainWindow.cpp" line="626"/>
         <source>&amp;Stop</source>
         <translation type="finished">&amp;Stop</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="642"/>
+        <location filename="src/MainWindow.cpp" line="649"/>
         <source>service mode</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">service modus</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="642"/>
+        <location filename="src/MainWindow.cpp" line="649"/>
         <source>desktop mode</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Bureaublad modus</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="643"/>
+        <location filename="src/MainWindow.cpp" line="650"/>
         <source>Synergy is running (%1).</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Synergy is actief (%1)</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="786"/>
+        <location filename="src/MainWindow.cpp" line="793"/>
         <source>Elevate Synergy</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Verhoog Synergy's Privileges</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="787"/>
+        <location filename="src/MainWindow.cpp" line="794"/>
         <source>Are you sure you want to elevate Synergy?
 
 This allows Synergy to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Synergy only if you really need to.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Weet je zeker dat je Synergy's privileges wil verhogen? Dit staat interactie toe met verhoogde processen en het UAC venster, maar kan problemen veroorzaken met niet-verhoogde processen. Verhoog Synergy alleen als het noodzakelijk is.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="647"/>
+        <location filename="src/MainWindow.cpp" line="654"/>
         <source>Synergy is starting.</source>
         <translation type="finished">Synergy wordt gestart.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="650"/>
+        <location filename="src/MainWindow.cpp" line="657"/>
         <source>Synergy is not running.</source>
         <translation type="finished">Synergy is niet actief.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="707"/>
+        <location filename="src/MainWindow.cpp" line="714"/>
         <source>Unknown</source>
         <translation type="finished">Onbekend</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="728"/>
+        <location filename="src/MainWindow.cpp" line="735"/>
         <source>Browse for a synergys config file</source>
         <translation type="finished">Open een Synergy configuratiebestand</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="741"/>
+        <location filename="src/MainWindow.cpp" line="748"/>
         <source>Save configuration as...</source>
         <translation type="finished">Sla configuratie op als...</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="745"/>
+        <location filename="src/MainWindow.cpp" line="752"/>
         <source>Save failed</source>
         <translation type="finished">Opslaan is mislukt</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="745"/>
+        <location filename="src/MainWindow.cpp" line="752"/>
         <source>Could not save configuration to file.</source>
         <translation type="finished">Kon configuratie niet opslaan naar bestand.</translation>
     </message>
@@ -325,7 +343,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="54"/>
         <source>Screen name:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Schermnaam:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="61"/>
@@ -336,7 +354,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="68"/>
         <source>&amp;Server IP:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Server IP:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="160"/>
@@ -362,7 +380,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="283"/>
         <source>&amp;Browse...</source>
-        <translation type="finished">&amp;Open...</translation>
+        <translation type="finished">&amp;Bladeren...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="220"/>
@@ -397,12 +415,12 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="174"/>
         <source>&amp;Elevate</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Verhoog Privileges</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="204"/>
         <source>IP addresses:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">IP adres:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="296"/>
@@ -457,32 +475,32 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="340"/>
         <source>Ctrl+H</source>
-        <translation type="finished">Ctrl+O</translation>
+        <translation type="finished">Ctrl+H</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="345"/>
         <source>&amp;Hide</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">&amp;Verberg</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="348"/>
         <source>Hide</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Verberg</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="353"/>
         <source>&amp;Show</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">&amp;Toon</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="356"/>
         <source>Show</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Toon</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="361"/>
         <source>Save configuration &amp;as...</source>
-        <translation type="finished">Configuratie opslaan &amp;als...</translation>
+        <translation type="finished">Sla configuratie op &amp;als...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="364"/>
@@ -507,13 +525,13 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="380"/>
         <source>Run Wizard</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Start Wizard</translation>
     </message>
 </context>
 <context>
     <name>NewScreenWidget</name>
     <message>
-        <location filename="src/NewScreenWidget.cpp" line="31"/>
+        <location filename="src/NewScreenWidget.cpp" line="32"/>
         <source>Unnamed</source>
         <translation type="finished">Naamloos</translation>
     </message>
@@ -521,17 +539,17 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>QObject</name>
     <message>
-        <location filename="src/MainWindow.cpp" line="44"/>
+        <location filename="src/MainWindow.cpp" line="45"/>
         <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
         <translation type="finished">Synergy Configuratie (*.sgc);;Alle bestanden (*.*)</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="47"/>
+        <location filename="src/MainWindow.cpp" line="48"/>
         <source>Synergy Configurations (*.conf);;All files (*.*)</source>
         <translation type="finished">Synergy configuratie (*.conf);;Alle bestanden (*.*)</translation>
     </message>
     <message>
-        <location filename="src/main.cpp" line="95"/>
+        <location filename="src/main.cpp" line="96"/>
         <source>System tray is unavailable, quitting.</source>
         <translation type="finished">Taakbalk is niet beschikbaar, Synergy wordt afgesloten.</translation>
     </message>
@@ -539,12 +557,12 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>ScreenSettingsDialog</name>
     <message>
-        <location filename="src/ScreenSettingsDialog.cpp" line="64"/>
+        <location filename="src/ScreenSettingsDialog.cpp" line="65"/>
         <source>Screen name is empty</source>
         <translation type="finished">Schermnaam is leeg</translation>
     </message>
     <message>
-        <location filename="src/ScreenSettingsDialog.cpp" line="64"/>
+        <location filename="src/ScreenSettingsDialog.cpp" line="65"/>
         <source>The name for a screen can not be empty. Please fill in a name or cancel the dialog.</source>
         <translation type="finished">De schermnaam mag niet leeg zijn. Gelieve een naam in te vullen of verlaat het venster.</translation>
     </message>
@@ -719,7 +737,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>ScreenSetupModel</name>
     <message>
-        <location filename="src/ScreenSetupModel.cpp" line="50"/>
+        <location filename="src/ScreenSetupModel.cpp" line="51"/>
         <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
         <translation type="finished">&lt;center&gt;Scherm: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Dubbelklik om instellingen te wijzigen&lt;br&gt;Sleep een scherm naar de prullenbak om het te verwijderen</translation>
     </message>
@@ -813,12 +831,12 @@ Dubbelklik op een scherm om zijn instellingen aan te passen.</translation>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="279"/>
         <source>&amp;Switch</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Wissel</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="290"/>
         <source>Switch &amp;after waiting</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Verander na wachten</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="329"/>
@@ -830,7 +848,7 @@ Dubbelklik op een scherm om zijn instellingen aan te passen.</translation>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="343"/>
         <source>Switch on double &amp;tap within</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Verander na een dubbele klik in</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="407"/>
@@ -850,12 +868,12 @@ Dubbelklik op een scherm om zijn instellingen aan te passen.</translation>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="479"/>
         <source>S&amp;ynchronize screen savers</source>
-        <translation type="finished">S&amp;ynchronizeer schermbeveiliging</translation>
+        <translation type="finished">S&amp;ynchroniseer screen savers</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="489"/>
         <source>Don't take &amp;foreground window on Windows servers</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Wordt geen actief venster op Windows Servers</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="512"/>
@@ -885,13 +903,18 @@ Dubbelklik op een scherm om zijn instellingen aan te passen.</translation>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="564"/>
         <source>Cor&amp;ner Size:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Hoek Grootte:</translation>
     </message>
 </context>
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="src/SettingsDialog.cpp" line="71"/>
+        <location filename="src/SettingsDialog.cpp" line="57"/>
+        <source>Encryption password must not be empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/SettingsDialog.cpp" line="89"/>
         <source>Save log file to...</source>
         <translation type="finished">Schrijf logbestand naar...</translation>
     </message>
@@ -904,127 +927,157 @@ Dubbelklik op een scherm om zijn instellingen aan te passen.</translation>
         <translation type="finished">Instellingen</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="20"/>
+        <location filename="res/SettingsDialogBase.ui" line="142"/>
         <source>&amp;Advanced</source>
         <translation type="finished">Ge&amp;avanceerd</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="26"/>
+        <location filename="res/SettingsDialogBase.ui" line="154"/>
         <source>Sc&amp;reen name:</source>
-        <translation type="finished">Scherm naam:</translation>
+        <translation type="finished">Sche&amp;rm naam:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="43"/>
+        <location filename="res/SettingsDialogBase.ui" line="171"/>
         <source>P&amp;ort:</source>
-        <translation type="finished">Poort:</translation>
+        <translation type="finished">P&amp;oort:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="50"/>
+        <location filename="res/SettingsDialogBase.ui" line="200"/>
         <source>&amp;Interface:</source>
         <translation type="finished">&amp;Interface:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="211"/>
+        <location filename="res/SettingsDialogBase.ui" line="26"/>
         <source>&amp;Start Synergy after logging in</source>
         <translation type="finished">Start Synergy na het inloggen</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="218"/>
+        <location filename="res/SettingsDialogBase.ui" line="33"/>
         <source>&amp;Automatically start server/client</source>
         <translation type="finished">Start server/client automatisch</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="225"/>
+        <location filename="res/SettingsDialogBase.ui" line="40"/>
         <source>&amp;Hide when server/client starts</source>
         <translation type="finished">&amp;Verberg wanneer de server/client start</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="123"/>
+        <location filename="res/SettingsDialogBase.ui" line="250"/>
         <source>Logging</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Loggen</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="86"/>
+        <location filename="res/SettingsDialogBase.ui" line="217"/>
         <source>&amp;Process mode:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Draai proces als:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="97"/>
+        <location filename="res/SettingsDialogBase.ui" line="228"/>
         <source>Service</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Service</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="102"/>
+        <location filename="res/SettingsDialogBase.ui" line="233"/>
         <source>Desktop (legacy)</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Desktop Applicatie (oude manier)</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="129"/>
+        <location filename="res/SettingsDialogBase.ui" line="268"/>
         <source>&amp;Logging level:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Log niveau:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="139"/>
+        <location filename="res/SettingsDialogBase.ui" line="317"/>
         <source>Log to file:</source>
         <translation type="finished">Log naar bestand:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="156"/>
+        <location filename="res/SettingsDialogBase.ui" line="334"/>
         <source>Browse...</source>
         <translation type="finished">&amp;Bladeren...</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="164"/>
+        <location filename="res/SettingsDialogBase.ui" line="279"/>
         <source>Error</source>
         <translation type="finished">Fout</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="169"/>
+        <location filename="res/SettingsDialogBase.ui" line="59"/>
+        <source>&amp;Encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="74"/>
+        <source>&amp;Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="119"/>
+        <source>Pass&amp;word:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="284"/>
         <source>Warning</source>
         <translation type="finished">Waarschuwing</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="174"/>
+        <location filename="res/SettingsDialogBase.ui" line="289"/>
         <source>Note</source>
         <translation type="finished">Opmerking</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="179"/>
+        <location filename="res/SettingsDialogBase.ui" line="294"/>
         <source>Info</source>
         <translation type="finished">Info</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="184"/>
+        <location filename="res/SettingsDialogBase.ui" line="299"/>
         <source>Debug</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Debug</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="189"/>
+        <location filename="res/SettingsDialogBase.ui" line="304"/>
         <source>Debug1</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Debug1</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="194"/>
+        <location filename="res/SettingsDialogBase.ui" line="309"/>
         <source>Debug2</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Debug2</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="205"/>
+        <location filename="res/SettingsDialogBase.ui" line="20"/>
         <source>&amp;Startup</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Opstarten</translation>
     </message>
 </context>
 <context>
     <name>SetupWizard</name>
     <message>
-        <location filename="src/SetupWizard.cpp" line="43"/>
+        <location filename="src/SetupWizard.cpp" line="60"/>
         <source>Setup Synergy</source>
         <translation type="finished">Synergy configureren</translation>
     </message>
     <message>
-        <location filename="src/SetupWizard.cpp" line="54"/>
+        <location filename="src/SetupWizard.cpp" line="70"/>
         <source>Please select an option.</source>
-        <translation type="finished">Selecteer een optie alstublieft.</translation>
+        <translation type="finished">Selecteer alstublieft een optie.</translation>
+    </message>
+    <message>
+        <location filename="src/SetupWizard.cpp" line="80"/>
+        <source>Encryption mode required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/SetupWizard.cpp" line="89"/>
+        <source>Encryption password required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/SetupWizard.cpp" line="96"/>
+        <source>Encryption password and confirmation do not match.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1052,7 +1105,7 @@ Dubbelklik op een scherm om zijn instellingen aan te passen.</translation>
     <message>
         <location filename="res/SetupWizardBase.ui" line="90"/>
         <source>&amp;Client (add to setup)</source>
-        <translation type="finished">Client</translation>
+        <translation type="finished">&amp;Client (voeg aan configuratie toe)</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="103"/>
@@ -1060,11 +1113,46 @@ Dubbelklik op een scherm om zijn instellingen aan te passen.</translation>
         <oldsource>You have already set up a server. This a computer you wish to control using the server's keyboard and mouse. There can be many clients in your setup.</oldsource>
         <translation type="finished">Je hebt al een server ingesteld. Je wilt deze computer gaan gebruiken met het toetsenbord en de muis van de Server. Er kunnen meerdere clients toegevoegd worden aan een server.</translation>
     </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="136"/>
+        <source>Encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="142"/>
+        <source>Network traffic can be easily monitored. Using encryption can reduce the risk that sensitive information will be revealed to others (for example, passwords).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="168"/>
+        <source>Choose a random encryption mode. The mode must be the same on both the client and server.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="213"/>
+        <source>&amp;Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="296"/>
+        <source>A longer password will provide stronger encryption. It is a good idea to use 20 characters or more.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="320"/>
+        <source>&amp;Password:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="379"/>
+        <source>&amp;Confirm:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>VersionChecker</name>
     <message>
-        <location filename="src/VersionChecker.cpp" line="101"/>
+        <location filename="src/VersionChecker.cpp" line="102"/>
         <source>Unknown</source>
         <translation type="finished">Onbekend</translation>
     </message>
