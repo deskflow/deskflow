@@ -28,8 +28,9 @@ class Controller {
   protected function showView($viewName) {
   
     $custom = "";
-    if (is_file("custom/" . $viewName . ".html")) {
-      $custom = $this->smarty->fetch("custom/" . $viewName . ".html");
+    $customPath = "custom/" . $viewName . ".html";
+    if (file_exists($customPath)) {
+      $custom = $this->smarty->fetch($customPath);
     }
     $this->smarty->assign("custom", $custom);
 
