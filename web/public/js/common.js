@@ -46,7 +46,7 @@ function getPremiumAmountFromText(text) {
     return defaultPremiumValue;
   }
   value = parseFloat(valueArray[0]);
-  log(value);
+  log("text=" + text + " value=" + value);
   if (value < 1) {
     return 1;
   }
@@ -69,7 +69,16 @@ function premiumError(signup, message) {
 }
 
 function getPremiumAmount() {
-  return getPremiumAmountFromText($("div.premium input#amount").val());
+  return getPremiumAmountFromText($("input#amount").val());
+}
+
+function postToPayment(url, amount) {
+  // send user to secure payment page.
+  var tempForm =
+    '<form action="' + url + '" method="post">' +
+    '<input name="amount" value="' + amount + '" />' +
+    '</form>';
+  $(tempForm).submit();
 }
 
 function submitPremiumForm() {
@@ -77,7 +86,7 @@ function submitPremiumForm() {
   signup.find("input[type='button']").attr("disabled", true);
   
   var amount = getPremiumAmount();
-  log(amount);
+  log("submit form, amount=" + amount);
   
   $.ajax({
     dataType: "json",
@@ -97,23 +106,7 @@ function submitPremiumForm() {
         premiumError(signup, message.error);
       }
       else {
-        var paypal = signup.find("form#paypal");
-        paypal.find("input[name='amount']").val(amount);
-        paypal.find("input[name='custom']").val(message.userId);
-        
-        var google = signup.find("form#google");
-        google.find("input[name='item_name_1']").val("Synergy Premium ($" + amount + " USD)");
-        google.find("input[name='item_description_1']").val(
-          "Your Synergy Premium account will still be credited with $" + amount + " USD.");
-        google.find("input[name='shopping-cart.merchant-private-data']").val(
-          message.userId + "," + amount);
-          
-        var paypal = signup.find("form#creditcard");
-        paypal.find("input[name='amount']").val(amount);
-        paypal.find("input[name='userId']").val(message.userId);
-        
-        signup.find("div.step1").hide();
-        signup.find("div.step2").fadeIn();
+        postToPayment(message.paymentUrl, amount);
       }
     },
     error: function(xhr, textStatus, error) {
@@ -125,13 +118,14 @@ function submitPremiumForm() {
   });
 }
 
-function initSlider() {
+function initSlider(updateFunc) {
   $("div.slider").slider({
     min: 1,
     value: defaultPremiumSliderIndex,
     slide: function(event, ui) {
       var value = getPremiumValueFromIndex(ui.value);
       $("input#amount").val("$" + value);
+      updateFunc();
     }
   });
 
@@ -139,17 +133,16 @@ function initSlider() {
     var index = getPremiumIndexFromText(this.value);
     $("div.slider").slider("value", index);
   });
+  
+  var index = getPremiumIndexFromText($("input#amount").val());
+  $("div.slider").slider("value", index);
 }
 
 function downloadOptions() {
-
-  if ($("div.download-premium").length == 0) {
-    return;
-  }
   
   var signup = $("div.signup-dialog");
   
-  initSlider();
+  initSlider(function() { });
 
   $("div.info-dialog").dialog({
     autoOpen: false,
@@ -176,9 +169,27 @@ function downloadOptions() {
   });
 
   $("a#show-signup").click(function() {
-    var amount = getPremiumAmount();
-    signup.find("span#amount2").html("$" + amount.toFixed(2));
-    signup.dialog("open");
+    $.ajax({
+      dataType: "json",
+      url: "?checkUser",
+      type: "get",
+      success: function(message) {
+        log(message);
+        if (message.userId) {
+          var amount = getPremiumAmount();
+          postToPayment(message.paymentUrl, amount);
+        }
+        else {
+          signup.dialog("open");
+        }
+      },
+      error: function(xhr, textStatus, error) {
+        log(xhr.statusText);
+        log(textStatus);
+        log(error);
+        alert("An error occurred while checking for logged in user.");
+      }
+    });
   });
 
   signup.find("input.cancel").click(function() {
@@ -187,6 +198,14 @@ function downloadOptions() {
   
   signup.find("input.ok").click(function() {
     submitPremiumForm();
+  });
+}
+
+function paymentPage() {  
+  $("form#creditcard input#ok").click(function() {
+    $(this).attr('disabled','disabled');
+    $(this).val("Please wait...");
+    $(this).parent().parent().submit();
   });
   
   $("form#google input[type='image']").click(function() {
@@ -211,28 +230,35 @@ function downloadOptions() {
     
     return false;
   });
+  
+  initSlider(function() { updateAmounts() });
+  $("input#amount").change(function() { updateAmounts() });
+  updateAmounts();
 }
 
-function premiumPage() {
-  if ($("div.premium-page").length == 0) {
-    return;
-  }
+function updateAmounts() {
+  var userId = $("input[name='userId']").val();
+  var amount = getPremiumAmountFromText($("input#amount").val());
+  log("update amounts, amount=" + amount);
+
+  $("form#paypal input[name='amount']").val(amount);
+  $("form#creditcard input[name='amount']").val(amount);
+
+  var title = "Synergy Premium ($" + amount + " USD)";
+  var info = "Your Synergy Premium account will be credited with $" + amount + " USD.";
+  var custom = userId + "," + amount;
   
-  initSlider();
-  
-  $("div.contribute input[type='image']").click(function() {
-    $("form#paypal input[name='amount']").val(getPremiumAmountFromText($("input#amount").val()));
-    log($("form#paypal input[name='amount']"));
-  });
+  var google = $("form#google");
+  google.find("input[name='item_name_1']").val(title);
+  google.find("input[name='item_description_1']").val(info);
+  google.find("input[name='shopping-cart.merchant-private-data']").val(custom);
 }
 
 $(function() {
-  downloadOptions();
-  premiumPage();
-  
-  $("form.creditcard input#ok").click(function() {
-    $(this).attr('disabled','disabled');
-    $(this).val("Please wait...");
-    $(this).parent().parent().submit();
-  });
+  if ($("div.download-premium").length != 0) {
+    downloadOptions();
+  }
+  else if ($("div.premium-payment").length != 0) {
+    paymentPage();
+  }
 });

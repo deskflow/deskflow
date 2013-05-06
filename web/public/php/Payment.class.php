@@ -39,9 +39,9 @@ class Payment {
     $this->mysql = $this->getMysql();
   }
 
-  public function process() {
+  public function process($userId) {
     
-    $id = $this->createRecord($_POST["userId"]);
+    $id = $this->createRecord($userId);
     
     try {
       

@@ -10,11 +10,12 @@
     
     {if $showDonateMessage}
     <div class="donateMessage">
-    <h2>Donate</h2>
+    <h2>Donate to Synergy</h2>
     <p>
 {t}Thanks for offering to donate! We really appreciate your support. We've
 replaced our donate button with Synergy Premium. It's like donating only you
-get the power to vote in return for your contribution.{/t}
+get the power to vote in return for your contribution. You don't have to vote
+either, it's entirely up to you.{/t}
     </p>
     </div>
     {/if}
@@ -25,20 +26,22 @@ get the power to vote in return for your contribution.{/t}
 {t}We urgently need your help to fund the continued development of Synergy.{/t}
       </p>
       <p>
-{t}Since our last sponsor cut our funding (it wasn't profitable for them),
-we've been relying on Premium accounts to fund development. We are now
-supporting 2 full time software engineers in the UK working on Synergy.
-Most of our users create a Premium account for just $1, and although it
-might not seem like much, it really is an enormous help!{/t}
+{t}We rely on Synergy Premium accounts to fund development. We are now
+supporting 2 full time software engineers working on Synergy. Even if you
+can only contribute just $1, it might not seem like much, it really is an
+enormous help for the project!{/t}
       </p>
       <p>
-{t}What's best is that Premium users are the only ones who can tell us what
-to work on!{/t}
+{t}What's best is that Premium users (with votes) are the only ones who can
+tell us what to work on.{/t}
       </p>
       <p>
-{t}Please choose the option on the left and open a Premium account for as
-little as $1. You'll be helping us keep the Synergy project alive for the
-price of a can of Coke! :-){/t}
+{t}Please choose the option on the left and open a Synergy Premium account
+for as little as $1. You'll be helping us keep the Synergy project alive
+for the price of a can of Coke! :-){/t}
+      </p>
+      <p>
+{t}Thanks so much for reading, and we hope you decide to help us out.{/t}
       </p>
       <p><b>Nick Bolton<br /><em>{t}Synergy Project Leader{/t}</em></b></p>
     </div>
@@ -137,7 +140,6 @@ plain text (we only keep a hash).{/t}
       </div>
       <form>
         <div class="box">
-          <p><label for="amount2">Amount:</label><span id="amount2"></span></p>
           <p><label for="name">Your name:</label><input id="name" type="textbox" /></p>
           <p><label for="email1">Email address:</label><input id="email1" type="textbox" /></p>
           <p><label for="email2">Confirm email:</label><input id="email2" type="textbox" /></p>
@@ -149,66 +151,6 @@ plain text (we only keep a hash).{/t}
           <input class="cancel" type="button" value="Cancel" />
         </div>
       </form>
-    </div>
-    <div class="step2">
-      <p>
-{t}You're almost done! Please choose a payment method.{/t}
-      </p>
-      
-      <div class="paybuttons">
-        <div class="paybutton">
-          <p><i>{t}Pay with...{/t}</i></p>
-          <form id="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-            <input type="hidden" name="cmd" value="_xclick">
-            <input type="hidden" name="business" value="SXQD4CT26Z95N">
-            <input type="hidden" name="lc" value="EN">
-            <input type="hidden" name="item_name" value="Synergy Premium">
-            <input type="hidden" name="button_subtype" value="services">
-            <input type="hidden" name="no_note" value="1">
-            <input type="hidden" name="no_shipping" value="1">
-            <input type="hidden" name="rm" value="1">
-            <input type="hidden" name="return" value="http://synergy-foss.org/premium/?success">
-            <input type="hidden" name="cancel_return" value="http://synergy-foss.org/premium/?cancel">
-            <input type="hidden" name="currency_code" value="USD">
-            <input type="hidden" name="amount" value="10">
-            <input type="hidden" name="custom">
-            <input type="hidden" name="bn" value="PP-BuyNowBF:btn_paynowCC_LG.gif:NonHosted">
-            <input type="image" src="{$baseUrl}/img/paypal.png" border="0">
-          </form>
-        
-        </div>
-        
-        <div class="paybutton">
-          <p><i>{t}Pay with...{/t}</i></p>
-          <form id="google" action="https://checkout.google.com/api/checkout/v2/checkoutForm/Merchant/158941555171301" method="post">
-          
-            <input type="hidden" name="item_name_1" />
-            <input type="hidden" name="item_description_1" />
-            <input type="hidden" name="item_quantity_1" value="1" />
-            <input type="hidden" name="item_currency_1" value="GBP"/>
-            <input type="hidden" name="item_price_1" />
-            <input type="hidden" name="_charset_" value="utf-8" />
-            <input type="hidden" name="continue_url" value="http://synergy-foss.org/premium/?success" />
-            <input type="hidden" name="shopping-cart.merchant-private-data">
-            <input type="image" src="{$baseUrl}/img/google.png" border="0" />
-            
-          </form>
-        
-        </div>
-        
-        <div class="creditcard">
-          <p><i>{t}Pay with...{/t}</i></p>
-          <form id="creditcard" action="{$secureSite}/premium/payment/" method="post">
-            <input type="hidden" name="amount" value="10">
-            <input type="hidden" name="userId" value="1">
-            <input type="image" src="{$baseUrl}/img/creditcards.png" />
-          </form>
-          <p class="reassuring">{t}Credit card payments will be taken through our secure site.{/t}</p>
-        </div>
-        
-        <br />
-      </div>
-
     </div>
   </div>
 

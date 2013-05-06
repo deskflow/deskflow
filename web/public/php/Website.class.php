@@ -85,6 +85,7 @@ class Website extends Controllers\Controller {
     $smarty->assign("premium", $this->premium);
     $smarty->assign("year", date("Y"));
     $smarty->assign("timestamp", time());
+    $smarty->assign("helpEmail", "nbolton@synergy-foss.org");
     
     $controller = $this;
     if ($this->page == "download") {

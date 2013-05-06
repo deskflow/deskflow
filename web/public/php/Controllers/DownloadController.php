@@ -78,8 +78,8 @@ class DownloadController extends Controller {
       if (isset($_GET["register"])) {
         exit($this->premium->register());
       }
-      else if (isset($_GET["currency"])) {
-        exit($this->premium->convertCurrency());
+      else if(isset($_GET["checkUser"])) {
+        exit($this->premium->checkUser());
       }
       $view = "download/premium";
       $smarty->assign("showDonateMessage", isset($_GET["donate"]));

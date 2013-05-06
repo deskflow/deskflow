@@ -21,6 +21,7 @@ namespace Synergy\Controllers;
 
 require_once "Controller.php";
 require_once "php/Payment.class.php";
+require_once "php/Models/PaymentInfo.php";
 require_once "php/SessionManager.class.php";
 
 use Exception;
@@ -66,8 +67,7 @@ class PremiumController extends Controller {
       $this->ipn();
       return;
     }
-    
-    if (isset($_GET["gwnotify"])) {
+    else if (isset($_GET["gwnotify"])) {
       $this->googleWalletNotify();
       return;
     }
@@ -86,11 +86,25 @@ class PremiumController extends Controller {
       $this->auth();
     }
     
+    if ($this->isLoggedIn()) {
+      $this->smarty->assign("userVotes", $this->getUserVotes());
+      $this->smarty->assign("userPayments", $this->getUserPayments());
+    }
+    
     $this->showView("premium/index");
   }
   
   function runPayment() {
-  
+    
+    if (isset($_GET["currency"])) {
+      exit($this->convertCurrency());
+    }
+    
+    if (!$this->isLoggedIn()) {
+      header("Location: ..");
+      exit;
+    }
+    
     $this->loadUser();
   
     $amount = isset($_POST["amount"]) ? $_POST["amount"] : self::$defaultAmount;
@@ -119,7 +133,7 @@ class PremiumController extends Controller {
     if (isset($_POST["number"])) {
       $payment = new \Synergy\Payment($this->settings);
       try {
-        $response = $payment->process();      
+        $response = $payment->process($userId);
         $success = $response["ACK"] == "Success";
         $failed = !$success;
         
@@ -129,12 +143,12 @@ class PremiumController extends Controller {
           $this->assignVotesFromFunds($userId, $funds);
         }
         else if ($failed) {
-          $smarty->assign("failMessage", $response["L_LONGMESSAGE0"]);
+          $smarty->assign("cardFailMessage", $response["L_LONGMESSAGE0"]);
         }
       }
       catch (\Synergy\PaymentException $e) {
         $failed = true;
-        $smarty->assign("failMessage", $e->getMessage());
+        $smarty->assign("cardFailMessage", $e->getMessage());
       }
     }
     
@@ -146,10 +160,11 @@ class PremiumController extends Controller {
     $card["cvv2"] = isset($_POST["cvv2"]) ? $_POST["cvv2"] : null;
     $smarty->assign("card", $card);
     
-    $smarty->assign("showForm", !$success);
-    $smarty->assign("showFailed", $failed);
-    $smarty->assign("showSuccess", $success);
+    $smarty->assign("showCardForm", !$success);
+    $smarty->assign("showCardFailed", $failed);
+    $smarty->assign("showCardSuccess", $success);
     
+    $smarty->assign("title", "Synergy Premium - Payment");
     $this->showView("premium/payment");
   }
   
@@ -212,11 +227,26 @@ class PremiumController extends Controller {
     if ($error == "") {
       $this->registerSql($mysql);
       $this->login($_POST["email1"]);
-      $result["userId"] = $this->user->id;
+      $result["paymentUrl"] = $this->getPremiumPaymentUrl();
     }
     
     $result["error"] = $error;
     return json_encode($result);
+  }
+  
+  public function checkUser() {
+    $result = array();
+    if ($this->isLoggedIn()) {
+      $this->loadUser();
+      $result["userId"] = $this->user->id;
+      $result["paymentUrl"] = $this->getPremiumPaymentUrl();
+    }
+    return json_encode($result);
+  }
+  
+  private function getPremiumPaymentUrl() {
+    $site = $this->settings["general"]["secureSite"];
+    return $site . "/premium/payment/";
   }
   
   public function vote() {
@@ -294,6 +324,43 @@ class PremiumController extends Controller {
       array_push($votes, $vote);
     }
     return $votes;
+  }
+  
+  public function getUserPayments() {
+    $mysql = $this->getMysql();
+    $result = $mysql->query(sprintf(
+      "select userId, created, amount, result, method from ".
+      "(".
+      "  select userId, created, amount, ipnCheck as result, ".
+      "  'paypal' as method ".
+      "  from paypal ".
+      
+      "  union ".
+      
+      "  select userId, created, amount, ".
+      "  ExtractValue(data, '//financial-order-state') as result, ".
+      "  'google' as method ".
+      "  from gwallet ".
+      
+      "  union ".
+      
+      "  select userId, created, amount, result, ".
+      "  'card' as method ".
+      "  from creditcard ".
+      
+      ") as payments ".
+      "where userId = %d ".
+      "order by created asc",
+      $this->user->id
+    ));
+    if ($result == null) {
+      throw new Exception($mysql->error);
+    }
+    $payments = array();
+    while ($paymentData = $result->fetch_object()) {
+      $payments[] = new \Synergy\Models\PaymentInfo($paymentData);
+    }
+    return $payments;
   }
   
   public function getAllVotes($limit = null) {

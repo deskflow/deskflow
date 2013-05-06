@@ -8,7 +8,7 @@
   
   <div class="inner-content">
   
-    <h2>{t}Premium{/t}</h2>
+    <h2>{t}Synergy Premium{/t}</h2>
     
     {if !$premium->isLoggedIn()}
     <p>
@@ -46,64 +46,60 @@ support. Funding allows us to spend more time improving Synergy.{/t}
     
     {else}
     
-    <p>
-{t escape=no votes=$premium->getFreeVoteCount()}Welcome to your Synergy
-Premium account. You have <b>%1</b> unassigned Premium vote(s).{/t}
-    </p>
+    <p>{t}Welcome to your Synergy Premium account.{/t} <a href="?logout">{t}Logout{/t}</a></p>
     
-    {if $premium->getFreeVoteCount() == 0}
-    <p>
-{t escape=no url="."}If you have just signed up and don't see any votes,
-we may be waiting to hear from PayPal so please be patient. <a href="%1">Check now</a>.{/t}
-    </p>
-    {/if}
+    <hr />
     
-    <p><a href="?logout">{t}Logout{/t}</a></p>
+    <span class="contribute">
+      {if $premium->user->fundsCount == 0}
+      <h3>{t}Contribute to Synergy{/t}</h3>
+      <p>
+{t url="payment/"}If you'd like to help the Synergy project, please
+<a href="%1">make a contribution</a> and we'll give you votes in
+return ($10 per vote) so you can tell us what to work on next. We
+would really appreciate your support. Thanks!{/t}
+      </p>
+      {else if $premium->user->votesFree == 0}
+      <h3>{t}Need more votes?{/t}</h3>
+      <p>
+{t url="payment/"}It looks like you've used all your votes, that's great!
+Please do <a href="%1">make another contribution</a> if you would like to
+vote on more issues ($10 per vote). We really appreciate your continued
+support.{/t}
+      </p>
+      {else}
+      <h3>{t}Contribute again!{/t}</h3>
+      <p>
+{t url="payment/"}Thanks for your support!
+If you'd like to <a href="%1">make another contribution</a> at any time
+and get more votes ($10 per vote), this would really help support the
+Synergy project.{/t}
+      </p>
+      {/if}
+      <a href="payment/"><img src="{$baseUrl}/img/creditcards-sm.png" /></a>
+    </span>
     
-    <h3>{t}Want more votes?{/t}</h3>
-    <p>
-{t}Each $10 contribution will give you 1 vote, so for example, $100 will give
-you 10 votes. Thanks for your support!{/t}
-    </p>
-    
-    <div class="box contribute">
-      <input type="textbox" id="amount" name="amount" value="$1" />
-      <div class="amount">
-        <div class="slider"></div>
-      </div>
-      
-      <form id="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-        <input type="hidden" name="cmd" value="_xclick">
-        <input type="hidden" name="business" value="SXQD4CT26Z95N">
-        <input type="hidden" name="lc" value="GB">
-        <input type="hidden" name="item_name" value="Synergy Premium">
-        <input type="hidden" name="button_subtype" value="services">
-        <input type="hidden" name="no_note" value="1">
-        <input type="hidden" name="no_shipping" value="1">
-        <input type="hidden" name="rm" value="1">
-        <input type="hidden" name="return" value="http://synergy-foss.org/premium/?success">
-        <input type="hidden" name="cancel_return" value="http://synergy-foss.org/premium/?cancel">
-        <input type="hidden" name="currency_code" value="USD">
-        <input type="hidden" name="amount" value="10">
-        <input type="hidden" name="custom" value="{$premium->user->id}">
-        <input type="hidden" name="bn" value="PP-BuyNowBF:btn_paynowCC_LG.gif:NonHosted">
-        <input type="image" src="https://www.paypalobjects.com/en_GB/i/btn/btn_paynow_SM.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online.">
-        <img alt="" border="0" src="https://www.paypalobjects.com/en_GB/i/scr/pixel.gif" width="1" height="1">
-      </form>
-    </div>
+    <hr />
     
     <h3>{t}Your votes{/t}</h3>
+    <p>
+{t escape=no votes=$premium->getFreeVoteCount()}
+You have <b>%1</b> unassigned Premium vote(s).{/t}
+    </p>
+    
+    {if $userVotes|@count == 0}
+    <p><i>{t}You have not cast any votes yet.{/t}</i></p>
+    {else}
     <ol>
-      {foreach from=$premium->getUserVotes() item=vote}
+      {foreach from=$userVotes item=vote}
       <li><a href="/spit/issues/details/{$vote->issueId}/" target="_blank">#{$vote->issueId}</a> - {t votes=$vote->voteCount}%1 votes{/t}</li>
-      {foreachelse}
-      <p>{t}You have not cast any votes yet.{/t}</p>
       {/foreach}
     </ol>
+    {/if}
     
     <h3>{t}Cast new vote{/t}</h3>
     <p>
-{t escape=no url="/issues/" email="mailto:nbolton@synergy-foss.org" help="../help/"}To
+{t escape=no url="/issues/" email="mailto:{$helpEmail}" help="../help/"}To
 use Premium votes, enter an issue ID from our
 <a href="%1">issue tracker</a>, and assign a number of votes. Choose
 carefully; once votes are spent, you can't get them back. If you have any
@@ -122,14 +118,28 @@ page instead).{/t}
       </div>
     </form>
     
+    <hr />
+    
     <h3>{t}Community votes{/t}</h3>
-    <ol>
+    <p>{t}All votes cast by the Synergy community.{/t}</p>
+    <ol class="community-votes">
       {foreach from=$premium->getAllVotes() item=vote}
       <li><a href="/spit/issues/details/{$vote->issueId}/" target="_blank">#{$vote->issueId}</a> - {t votes=$vote->voteCount}%1 votes{/t}</li>
-      {foreachelse}
-      <li>{t}No votes.{/t}</li>
       {/foreach}
     </ol>
+    
+    <hr />
+    
+    <h3>{t}Payment history{/t}</h3>
+    {if $userPayments|@count == 0}
+    <p><i>{t}You have not made any payments yet.{/t}</i></p>
+    {else}
+    <ol>
+      {foreach from=$userPayments item=payment}
+      <li>{$payment}</li>
+      {/foreach}
+    </ol>
+    {/if}
     
     {/if}
     
