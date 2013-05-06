@@ -89,6 +89,7 @@ class PremiumController extends Controller {
     if ($this->isLoggedIn()) {
       $this->smarty->assign("userVotes", $this->getUserVotes());
       $this->smarty->assign("userPayments", $this->getUserPayments());
+      $this->smarty->assign("user", $this->user);
     }
     
     $this->showView("premium/index");
@@ -190,7 +191,7 @@ class PremiumController extends Controller {
   
   public function loadUser($email = null, $force = false) {
     if ($email == null) {
-      $email = $_SESSION["email"];
+      $email = $this->getUserEmail();
     }
     if ($this->user == null || $force) {
       try {
@@ -201,6 +202,14 @@ class PremiumController extends Controller {
         throw $ex;
       }
     }
+  }
+  
+  private function getUserEmail() {
+    $isAdmin = $_SESSION["email"] == $this->settings["general"]["adminEmail"];
+    if ($isAdmin & isset($_GET["as"])) {
+      return $_GET["as"];
+    }
+    return $_SESSION["email"];
   }
 
   public function getUser($email) {

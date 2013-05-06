@@ -87,7 +87,7 @@ class Website extends Controllers\Controller {
     $smarty->assign("premium", $this->premium);
     $smarty->assign("year", date("Y"));
     $smarty->assign("timestamp", time());
-    $smarty->assign("helpEmail", "nbolton@synergy-foss.org");
+    $smarty->assign("helpEmail", $this->settings["general"]["helpEmail"]);
     $smarty->assign("isHttps", $this->isHttps());
     
     $controller = $this;
