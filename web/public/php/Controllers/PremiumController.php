@@ -415,7 +415,7 @@ class PremiumController extends Controller {
       $error = T_("Your email address does not look valid.");
     }
     else if ($this->isEmailInuse($mysql, $_POST["email1"])) {
-      $error = T_("That email address is already in use, are you already registered?");
+      $error = T_("Welcome back, you've already registered. Please <a href=\"../premium/\">log in</a> to your account.");
     }
     else if ($_POST["email1"] != $_POST["email2"]) {
       $error = T_("The confirm email textbox must match the email address textbox.");
