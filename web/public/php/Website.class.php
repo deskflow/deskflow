@@ -35,8 +35,10 @@ class Website extends Controllers\Controller {
   }
   
   public function start() {
+    
+    $this->ensureCorrectProtocol();
 
-    $path = isset($_GET["path"]) ? $_GET["path"] : null;
+    $path = $this->getPath();
     $pathParts = preg_split('/\//', $path, null, PREG_SPLIT_NO_EMPTY);
     
     // defaults
@@ -100,6 +102,10 @@ class Website extends Controllers\Controller {
   private function run($path) {
     $this->showView($this->page);
   }
+  
+  private function getPath() {
+    return isset($_GET["path"]) ? $_GET["path"] : null;
+  }
 
   public function isBot() {
     return in_array("HTTP_USER_AGENT", $_SERVER) &&
@@ -110,6 +116,32 @@ class Website extends Controllers\Controller {
     $scriptName = $_SERVER['SCRIPT_NAME'];
     $lastSlash = strrpos($scriptName, "/");
     return substr($scriptName, 0, $lastSlash);
+  }
+  
+  private function ensureCorrectProtocol() {
+    $httpsUsed = strpos($this->settings["general"]["secureSite"], "https://") === 0;
+    $isHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != "";
+    $httpsNeeded = $this->isHttpsNeeded();
+    if ($httpsUsed && !$isHttps && $httpsNeeded) {
+      // redirect to https if the current page should be https.
+      $redirect = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+      header("Location: $redirect");
+      exit;
+    }
+    else if ($httpsUsed && $isHttps && !$httpsNeeded) {
+      // redirect to http if the current page does not need to be secure.
+      $redirect = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+      header("Location: $redirect");
+      exit;
+    }
+  }
+  
+  private function isHttpsNeeded() {
+    $path = $this->getPath();
+    if ($path != null) {
+      return preg_match("/premium\/payment\/?/", $path);
+    }
+    return false;
   }
 }
  
