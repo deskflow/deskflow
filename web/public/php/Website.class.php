@@ -21,8 +21,6 @@
 namespace Synergy;
 
 require_once "Locale.class.php";
-require_once "Files.class.php";
-require_once "ContactForm.class.php";
 require_once "Controllers/DownloadController.php";
 require_once "Controllers/PremiumController.php";
 require_once "smarty/libs/Smarty.class.php";
@@ -57,13 +55,7 @@ class Website extends Controllers\Controller {
         $this->page = $pathParts[0];
       }
     }
-
-    $files = new Files();
-    if ($files->downloadRequested($this->page)) {
-      $files->download();
-      exit;
-    }
-
+    
     if (!$this->isBot()) {
       $this->session->start();
     }
