@@ -103,7 +103,7 @@ class PremiumController extends Controller {
     $smarty->assign("userId", $userId);
     
     $monthList = array();
-    for ($i = 0; $i < 11; $i++) {
+    for ($i = 0; $i < 12; $i++) {
       $number = $i + 1;
       $text = date("F", mktime(0, 0, 0, $number, 10));
       $monthList[] = array(
