@@ -131,6 +131,10 @@ page instead).{/t}
     <hr />
     
     <h3>{t}Payment history{/t}</h3>
+    <p>
+{t email="mailto:{$helpEmail}"}This is a record of your payment history.
+Please <a href="%2">email</a> us if you have any questions.{/t}
+    </p>
     {if $userPayments|@count == 0}
     <p><i>{t}You have not made any payments yet.{/t}</i></p>
     {else}
