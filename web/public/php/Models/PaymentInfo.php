@@ -40,7 +40,7 @@ class PaymentInfo {
     
     $r[] = "$" . $d->amount;
     
-    $successText = '<span class="success">Successfull</span>';
+    $successText = '<span class="success">Successful</span>';
     
     switch ($d->method) {
       case "paypal":
