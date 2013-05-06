@@ -2,8 +2,7 @@
 
 /*
  * synergy-web -- website for synergy
- * Copyright (C) 2012 Bolton Software Ltd.
- * Copyright (C) 2012 Nick Bolton
+ * Copyright (C) 2013 Bolton Software Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,23 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Synergy;
+namespace Synergy\Controllers;
 
-require "SessionManager.class.php";
+require_once "Controller.php";
+require_once "php/Payment.class.php";
+require_once "php/SessionManager.class.php";
 
 use Exception;
-
-class Premium {
-
+ 
+class PremiumController extends Controller {
+  
+  private static $defaultAmount = 10;
+  
   var $loginInvalid;
   var $email;
   var $user;
 
-  public function __construct($settings, $session) {
-    $this->settings = $settings;
-    $this->session = $session;
-    $this->voteCost = (int)$settings["premium"]["voteCost"];
-    $this->googleWallet = $settings["googlewallet"];
+  public function __construct($smarty, $website) {
+    parent::__construct($smarty);
+    $this->website = $website;
+    $this->settings = $website->settings;
+    $this->session = $website->session;
+    $this->voteCost = (int)$this->settings["premium"]["voteCost"];
+    $this->googleWallet = $this->settings["googlewallet"];
   }
   
   public function isUserPremium() {
@@ -47,15 +52,24 @@ class Premium {
     }
   }
   
-  public function run($smarty) {
+  public function run($path) {
+    if (preg_match("/premium\/payment/", $path)) {
+      $this->runPayment();
+    }
+    else {
+      $this->runIndex();
+    }
+  }
+  
+  public function runIndex() {
     if (isset($_GET["ipn"])) {
       $this->ipn();
-      exit;
+      return;
     }
     
     if (isset($_GET["gwnotify"])) {
       $this->googleWalletNotify();
-      exit;
+      return;
     }
     
     if ($this->isLoggedIn()) {
@@ -71,6 +85,72 @@ class Premium {
     else if (isset($_GET["login"])) {
       $this->auth();
     }
+    
+    $this->showView("premium/index");
+  }
+  
+  function runPayment() {
+  
+    $this->loadUser();
+  
+    $amount = isset($_POST["amount"]) ? $_POST["amount"] : self::$defaultAmount;
+    $userId = $this->user->id;
+    
+    $smarty = $this->website->smarty;
+    $smarty->assign("startYear", date("Y"));
+    $smarty->assign("endYear", date("Y") + 20);
+    $smarty->assign("amount", $amount);
+    $smarty->assign("userId", $userId);
+    
+    $monthList = array();
+    for ($i = 0; $i < 11; $i++) {
+      $number = $i + 1;
+      $text = date("F", mktime(0, 0, 0, $number, 10));
+      $monthList[] = array(
+        "number" => $number,
+        "text" => str_pad($number, 2, "0", STR_PAD_LEFT) . " - " . $text
+      );
+    }
+    $smarty->assign("monthList", $monthList);
+    
+    $failed = false;
+    $success = false;
+    
+    if (isset($_POST["number"])) {
+      $payment = new \Synergy\Payment($this->settings);
+      try {
+        $response = $payment->process();      
+        $success = $response["ACK"] == "Success";
+        $failed = !$success;
+        
+        if ($success) {
+          $funds = (float)$response["AMT"];
+          $userId = $userId;
+          $this->assignVotesFromFunds($userId, $funds);
+        }
+        else if ($failed) {
+          $smarty->assign("failMessage", $response["L_LONGMESSAGE0"]);
+        }
+      }
+      catch (\Synergy\PaymentException $e) {
+        $failed = true;
+        $smarty->assign("failMessage", $e->getMessage());
+      }
+    }
+    
+    $card = array();
+    $card["number"] = isset($_POST["number"]) ? $_POST["number"] : null;
+    $card["name"] = isset($_POST["name"]) ? $_POST["name"] : null;
+    $card["month"] = isset($_POST["month"]) ? $_POST["month"] : null;
+    $card["year"] = isset($_POST["year"]) ? $_POST["year"] : null;
+    $card["cvv2"] = isset($_POST["cvv2"]) ? $_POST["cvv2"] : null;
+    $smarty->assign("card", $card);
+    
+    $smarty->assign("showForm", !$success);
+    $smarty->assign("showFailed", $failed);
+    $smarty->assign("showSuccess", $success);
+    
+    $this->showView("premium/payment");
   }
   
   public function auth() {    
@@ -448,5 +528,6 @@ class Premium {
     }
   }
 }
-
-?>
+ 
+ ?>
+ 
