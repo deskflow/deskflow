@@ -95,6 +95,9 @@ logos above.{/t}
       {if $showCardForm}
       
       <form id="creditcard" action="." method="post">
+        {if $isHttps}
+        <p class="success">{t}You are using a secure connection (HTTPS, SSL).{/t}</p>
+        {/if}
         <input name="amount" type="hidden" value="{$amount}" />
         <div class="box">
           <p>

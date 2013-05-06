@@ -88,6 +88,7 @@ class Website extends Controllers\Controller {
     $smarty->assign("year", date("Y"));
     $smarty->assign("timestamp", time());
     $smarty->assign("helpEmail", "nbolton@synergy-foss.org");
+    $smarty->assign("isHttps", $this->isHttps());
     
     $controller = $this;
     if ($this->page == "download") {
@@ -120,7 +121,7 @@ class Website extends Controllers\Controller {
   
   private function ensureCorrectProtocol() {
     $httpsUsed = strpos($this->settings["general"]["secureSite"], "https://") === 0;
-    $isHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != "";
+    $isHttps = $this->isHttps();
     $httpsNeeded = $this->isHttpsNeeded();
     if ($httpsUsed && !$isHttps && $httpsNeeded) {
       // redirect to https if the current page should be https.
@@ -134,6 +135,10 @@ class Website extends Controllers\Controller {
       header("Location: $redirect");
       exit;
     }
+  }
+  
+  private function isHttps() {
+    return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != "";
   }
   
   private function isHttpsNeeded() {
