@@ -63,6 +63,7 @@ class Website extends Controllers\Controller {
     }
 
     $locale = new Locale($this);
+    $this->locale = $locale;
     $locale->run($lang);
     $lang = $locale->lang;
     

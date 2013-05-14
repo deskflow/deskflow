@@ -60,6 +60,7 @@ class DownloadController extends Controller {
       $smarty->assign("isOld", strpos($file, $currentVersion) === false);
       $smarty->assign("title", $this->getFileTitle($file));
       $smarty->assign("link", sprintf($format, $file));
+      $smarty->assign("social", $this->getSocialNetwork());
     }
     elseif (isset($_GET["alt"])) {        
       $view = "download/alt";
@@ -86,6 +87,16 @@ class DownloadController extends Controller {
     }
     
     $this->showView($view);
+  }
+  
+  private function getSocialNetwork() {
+    $country = substr($this->website->locale->lang, 0, 2);
+    if ($country == "zh") {
+      return "renren";
+    }
+    else {
+      return "facebook";
+    }
   }
 
   private function getFileTitle($file) {

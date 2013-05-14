@@ -1,3 +1,4 @@
+﻿{if $social == "facebook"}
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
@@ -6,6 +7,7 @@
   js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=2334487070";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
+{/if}
 
 <div class="download-file">
 
@@ -47,7 +49,15 @@ latest version.{/t}
       
     </div>
     
+    {if $social == "facebook"}
+    
     <div class="fb-like-box" data-href="https://www.facebook.com/SynergyOpenSource" data-width="730" data-show-faces="true" data-stream="false" data-header="true"></div>
+    
+    {else if $social == "renren"}
+    
+    <iframe scrolling="no" frameborder="0" allowtransparency="true" src="http://widget.renren.com/plugin/follow?page_id=601718008" style="width:110px;height:190px;"></iframe>
+    
+    {/if}
   
   </div>
 
