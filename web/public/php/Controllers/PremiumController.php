@@ -146,7 +146,7 @@ class PremiumController extends Controller {
     if (!strncmp($amount, "$", strlen("$"))) {
       return substr($amount, 1);
     }
-    return $amount;
+    return (float)$amount;
   }
   
   private function runPayment() {
@@ -439,7 +439,7 @@ class PremiumController extends Controller {
       $mysql->escape_string($_POST["name"]),
       $mysql->escape_string($_POST["email1"]),
       md5($_POST["password1"]),
-      (float)$_POST["amount"]
+      $this->getAmount()
     ));
     if ($result == null) {
       throw new Exception($mysql->error);
