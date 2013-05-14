@@ -144,9 +144,10 @@ class PremiumController extends Controller {
     }
     
     if (!strncmp($amount, "$", strlen("$"))) {
-      return substr($amount, 1);
+      $amount = substr($amount, 1);
     }
-    return (float)$amount;
+    
+    return $amount > 0 ? (float)$amount : 1;
   }
   
   private function runPayment() {
