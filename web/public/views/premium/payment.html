@@ -9,6 +9,8 @@
   <div class="inner-content">
 
     <h2>{t}Synergy Premium{/t}</h2>
+    <p>{t name=$user->name email=$user->email}Logged in as: %1 (%2){/t}</p>
+    
     <p class="success">{t}Thanks again for supporting the Synergy project! You rock!{/t}</p>
     
     <div class="amount-box">
@@ -87,7 +89,7 @@ logos above.{/t}
       
       <div class="greenNotice">
         <p>{t}Thanks, your credit card payment of &dollar;{$amount} was successful.{/t}</p>
-        <p>{t url="../premium/"}Continue to <a href="%1">Synergy Premium</a>.{/t}</p>
+        <p>{t url="../"}Continue to <a href="%1">Synergy Premium</a>.{/t}</p>
       </div>
       
       {/if}

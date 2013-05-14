@@ -201,7 +201,13 @@ function downloadOptions() {
   });
 }
 
-function paymentPage() {  
+function premiumRegisterPage() {
+  initSlider(function() { updateAmounts() });
+  $("input#amount").change(function() { updateAmounts() });
+  updateAmounts();
+}
+
+function premiumPaymentPage() {
   $("form#creditcard input#ok").click(function() {
     $(this).attr('disabled','disabled');
     $(this).val("Please wait...");
@@ -258,7 +264,10 @@ $(function() {
   if ($("div.download-premium").length != 0) {
     downloadOptions();
   }
+  else if ($("div.premium-register").length != 0) {
+    premiumRegisterPage();
+  }
   else if ($("div.premium-payment").length != 0) {
-    paymentPage();
+    premiumPaymentPage();
   }
 });

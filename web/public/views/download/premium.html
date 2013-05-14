@@ -47,23 +47,22 @@ for the price of a can of Coke! :-){/t}
     </div>
     
     <div class="premium">
-      <div class="info">
-        
-        <h2>{t}Premium{/t}</h2>
-        <p>{t}Register for Synergy Premium.{/t}</p>
-        <p><a href="javascript:void(0)" id="show-info">{t}How does Premium work?{/t}</a></p>
-        
-        <p>{t}You decide what to contribute.{/t}</p>
-        
-        <input type="textbox" id="amount" name="amount" value="$1" />
-        <div class="amount">
-          <div class="slider"></div>
+      <form action="{$formUrl}" method="get">
+        <div class="info">
+          
+          <h2>{t}Premium{/t}</h2>
+          <p>{t}You decide what to contribute.{/t}</p>
+          
+          <input type="textbox" id="amount" name="amount" value="$1" />
+          <div class="amount">
+            <div class="slider"></div>
+          </div>
+          
+          <p><em>{t}Use the slider, or enter any value into the textbox.{/t}</em></p>
+          
         </div>
-        
-        <p>{t}Use the slider or enter any value into the textbox.{/t}</p>
-        
-      </div>
-      <p><a href="javascript:void(0)" id="show-signup">{t}Continue{/t}</a></p>
+        <input type="submit" value="{t}Continue{/t}" />
+      </form>
     </div>
     
     <div class="or">
@@ -121,37 +120,6 @@ next version. If we can't fix it then you get your votes back, simple.{/t}
     </p>
     
     <p><a class="close" href="javascript:void(0)">{t}OK{/t}</a></p>
-  </div>
-  
-  <div class="signup-dialog">
-    <h2>{t}Synergy Premium{/t}</h2>
-    <div class="step1">
-      <p>
-{t}Thanks for your interest in Synergy Premium, we really appreciate your
-support. Funding allows us to spend more time improving Synergy.{/t}
-      </p>
-      <p>
-{t}We promise to not spam your email and we never store passwords in
-plain text (we only keep a hash).{/t}
-      </p>
-      <div class="error ui-state-highlight">
-        <span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
-        <p></p>
-      </div>
-      <form>
-        <div class="box">
-          <p><label for="name">Your name:</label><input id="name" type="textbox" /></p>
-          <p><label for="email1">Email address:</label><input id="email1" type="textbox" /></p>
-          <p><label for="email2">Confirm email:</label><input id="email2" type="textbox" /></p>
-          <p><label for="password1">New password:</label><input id="password1" type="password" /></p>
-          <p><label for="password2">Confirm password:</label><input id="password2" type="password" /></p>
-        </div>
-        <div class="buttons">
-          <input class="ok" type="button" value="OK" />
-          <input class="cancel" type="button" value="Cancel" />
-        </div>
-      </form>
-    </div>
   </div>
 
 </div>

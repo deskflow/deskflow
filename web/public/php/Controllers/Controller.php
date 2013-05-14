@@ -36,13 +36,25 @@ class Controller {
 
     $viewPath = "views/" . $viewName . ".html";
     if (!file_exists($viewPath)) {
-      header("HTTP/1.0 404 Not Found"); 
-      die("<h1>404: Not Found</h1>");
+      $this->showPageNotFound();
     }
     
     $content = $this->smarty->fetch($viewPath);
     $this->smarty->assign("content", $content);
     $this->smarty->display("views/layout.html");
+  }
+  
+  protected function showPageNotFound() {
+    header("HTTP/1.0 404 Not Found");
+    die("<h1>404: Not Found</h1>");
+  }
+  
+  protected function isPostBack() {
+    return $_SERVER["REQUEST_METHOD"] == "POST";
+  }
+  
+  protected function getPostValue($name) {
+    return isset($_POST[$name]) ? $_POST[$name] : null;
   }
 }
  

@@ -448,7 +448,7 @@ div.download-premium div.free p {
 }
 
 div.download-premium div.free div.info {
-  height: 15.3em;
+  height: 13em;
 }
 
 div.download-premium div.or {
@@ -462,17 +462,25 @@ div.download-premium div.or {
 }
 
 div.download-premium div.premium input[name="amount"],
+div.premium-register input[name="amount"],
 div.premium-payment input[name="amount"] {
   width: 3.5em;
   float: left;
 }
 
+div.download-premium div.premium input[type="submit"] {
+  margin: 0px;
+  margin-top: 1em;
+}
+
 div.download-premium div.premium div.amount,
+div.premium-register div.amount,
 div.premium-payment div.amount {
   height: 2.5em;
 }
 
 div.download-premium div.premium div.slider,
+div.premium-register div.slider,
 div.premium-payment div.slider {
   margin: 0.9em 0px 0px 4em;
 }
@@ -499,79 +507,14 @@ div.signup-dialog h2 {
   margin-top: 0.2em;
 }
 
-div.signup-dialog div.error {
+div.premium-register div.error {
   padding: 5px;
-  display: none;
   margin-bottom: 10px;
 }
 
-div.signup-dialog div.error p {
+div.premium-register div.error p {
   margin: 0px;
   padding: 0px;
-}
-
-div.signup-dialog div.step2 {
-  display: none;
-}
-
-div.signup-dialog div.step2 form {
-  text-align: center;
-}
-
-div.signup-dialog div.paybuttons {
-  white-space: nowrap;
-  margin-bottom: 7px;
-}
-
-div.signup-dialog div.paybuttons br {
-  clear: both;
-}
-
-div.signup-dialog div.creditcard,
-div.signup-dialog div.paybutton {
-  float: left;
-  border: 1px solid #c7c7c7;
-  margin-bottom: 5px;
-  text-align: center;
-  background-color: #f0f0f0;
-}
-
-div.signup-dialog div.paybutton
-{
-  height: 85px;
-  width: 224px;
-}
-
-div.signup-dialog div.paybutton:first-child {
-  margin-right: 20px;
-}
-
-div.signup-dialog div.paybuttons form#google {
-  padding-top: 7px;
-}
-
-div.signup-dialog div.paybuttons form#paypal {
-  padding-top: 10px;
-}
-
-div.signup-dialog div.paybuttons p {
-  margin: 5px 0px 5px 0px;
-  padding: 0px;
-}
-
-div.signup-dialog div.creditcard {
-  clear: both;
-  margin-top: 10px;
-  width: 450px;
-  padding: 5px 10px 5px 10px;
-}
-
-div.signup-dialog div.creditcard p.reassuring {
-  color: green;
-}
-
-div.signup-dialog div.creditcard input {
-  padding: 10px 0px 10px 0px;
 }
 
 div.premium-page span.contribute h3,
@@ -667,6 +610,7 @@ div.premium-payment div.greenNotice {
   margin-top: 15px;
 }
 
+div.premium-register div.amount-box,
 div.premium-payment div.amount-box {
   width: 20em;
   border: 1px solid #ddd;
@@ -676,8 +620,14 @@ div.premium-payment div.amount-box {
   margin-bottom: 10px;
 }
 
+div.premium-register div.amount-box div.slider,
 div.premium-payment div.amount-box div.slider {
   margin-top: .5em;
+}
+
+div.premium-register div.form {
+  width: 50%;
+  padding-right: 5px;
 }
 
 div.premium-page ol.community-votes {

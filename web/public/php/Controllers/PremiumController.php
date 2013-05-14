@@ -54,11 +54,17 @@ class PremiumController extends Controller {
   }
   
   public function run($path) {
-    if (preg_match("/premium\/payment/", $path)) {
+    if (preg_match("/premium\/?$/", $path)) {
+      $this->runIndex();
+    }
+    else if (preg_match("/premium\/register\/?$/", $path)) {
+      $this->runRegister();
+    }
+    else if (preg_match("/premium\/payment\/?$/", $path)) {
       $this->runPayment();
     }
     else {
-      $this->runIndex();
+      $this->showPageNotFound();
     }
   }
   
@@ -95,7 +101,55 @@ class PremiumController extends Controller {
     $this->showView("premium/index");
   }
   
-  function runPayment() {
+  private function runRegister() {
+    
+    if ($this->isLoggedIn()) {
+      header("Location: ../payment/");
+      return;
+    }
+    
+    $error = null;
+    if (isset($_POST["name"])) {
+      
+      $mysql = $this->getMysql();
+      $error = $this->registerValidate($mysql);
+      
+      if ($error == null) {
+        $this->registerSql($mysql);
+        $this->login($_POST["email1"]);
+        $result["paymentUrl"] = $this->getPremiumPaymentUrl();
+        header("Location: ../payment/?amount=" . urlencode("$") . $this->getAmount());
+        exit;
+      }
+    }
+    
+    $smarty = $this->website->smarty;
+    $smarty->assign("name", $this->getPostValue("name"));
+    $smarty->assign("email1", $this->getPostValue("email1"));
+    $smarty->assign("email2", $this->getPostValue("email2"));
+    $smarty->assign("password1", $this->getPostValue("password1"));
+    $smarty->assign("password2", $this->getPostValue("password2"));
+    $smarty->assign("amount", $this->getAmount());
+    $smarty->assign("error", $error);
+    $this->showView("premium/register");
+  }
+  
+  private function getAmount() {
+    $amount = self::$defaultAmount;
+    if (isset($_POST["amount"])) {
+      $amount = $_POST["amount"];
+    }
+    else if (isset($_GET["amount"])) {
+      $amount = $_GET["amount"];
+    }
+    
+    if (!strncmp($amount, "$", strlen("$"))) {
+      return substr($amount, 1);
+    }
+    return $amount;
+  }
+  
+  private function runPayment() {
     
     if (isset($_GET["currency"])) {
       exit($this->convertCurrency());
@@ -108,7 +162,7 @@ class PremiumController extends Controller {
     
     $this->loadUser();
   
-    $amount = isset($_POST["amount"]) ? $_POST["amount"] : self::$defaultAmount;
+    $amount = $this->getAmount();
     $userId = $this->user->id;
     
     $smarty = $this->website->smarty;
@@ -116,6 +170,7 @@ class PremiumController extends Controller {
     $smarty->assign("endYear", date("Y") + 20);
     $smarty->assign("amount", $amount);
     $smarty->assign("userId", $userId);
+    $smarty->assign("user", $this->user);
     
     $monthList = array();
     for ($i = 0; $i < 12; $i++) {
@@ -227,20 +282,6 @@ class PremiumController extends Controller {
     else {
       throw new \Exception("failed to get user by email: " . $email);
     }
-  }
-  
-  public function register() {
-    $mysql = $this->getMysql();
-    $error = $this->registerValidate($mysql);
-    
-    if ($error == "") {
-      $this->registerSql($mysql);
-      $this->login($_POST["email1"]);
-      $result["paymentUrl"] = $this->getPremiumPaymentUrl();
-    }
-    
-    $result["error"] = $error;
-    return json_encode($result);
   }
   
   public function checkUser() {
@@ -421,19 +462,19 @@ class PremiumController extends Controller {
       $error = T_("Please enter your email address.");
     }
     else if (preg_match("/.+@.+/", $_POST["email1"]) != 1) {
-      $error = T_("Your email address does not look valid.");
+      $error = T_("The email address does not appear to be valid.");
     }
     else if ($this->isEmailInuse($mysql, $_POST["email1"])) {
-      $error = T_("Welcome back, you've already registered. Please <a href=\"../premium/\">log in</a> to your account.");
+      $error = T_("Welcome back, you've already registered. Please <a href=\"../\">log in</a> to your account.");
     }
     else if ($_POST["email1"] != $_POST["email2"]) {
-      $error = T_("The confirm email textbox must match the email address textbox.");
+      $error = T_("The confirm email must match the email address.");
     }
     else if ($_POST["password1"] == "") {
       $error = T_("Please enter a password.");
     }
     else if ($_POST["password1"] != $_POST["password2"]) {
-      $error = T_("The confirm password texbox must match the password textbox.");
+      $error = T_("The confirm password must match the password.");
     }
     return $error;
   }

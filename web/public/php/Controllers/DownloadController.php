@@ -75,13 +75,13 @@ class DownloadController extends Controller {
       $smarty->assign("cur14State", T_("Beta"));
     }
     else {
-      if (isset($_GET["register"])) {
-        exit($this->premium->register());
+      $formUrl = "../premium/register/";
+      if ($this->premium->isLoggedIn()) {
+        $formUrl = "../premium/payment/";
       }
-      else if(isset($_GET["checkUser"])) {
-        exit($this->premium->checkUser());
-      }
+      
       $view = "download/premium";
+      $smarty->assign("formUrl", $formUrl);
       $smarty->assign("showDonateMessage", isset($_GET["donate"]));
     }
     
