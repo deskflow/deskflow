@@ -160,6 +160,7 @@ void AppConfig::loadSettings()
 	m_ProcessMode = (ProcessMode)settings().value("processMode2", DEFAULT_PROCESS_MODE).toInt();
 	m_CryptoPass = settings().value("cryptoPass", "").toString();
 	m_CryptoMode = (CryptoMode)settings().value("cryptoMode", Disabled).toInt();
+	m_Language = settings().value("language", QLocale::system().name()).toString();
 }
 
 void AppConfig::saveSettings()
@@ -178,6 +179,7 @@ void AppConfig::saveSettings()
 	settings().setValue("processMode2", m_ProcessMode);
 	settings().setValue("cryptoPass", m_CryptoPass);
 	settings().setValue("cryptoMode", m_CryptoMode);
+	settings().setValue("language", m_Language);
 }
 
 QString AppConfig::hash(const QString& string)

@@ -22,9 +22,18 @@
 #include <QtCore>
 #include <QtGui>
 
+QSynergyApplication* QSynergyApplication::s_Instance = NULL;
+
 QSynergyApplication::QSynergyApplication(int& argc, char** argv) :
-	QApplication(argc, argv)
+	QApplication(argc, argv),
+	m_Translator(NULL)
 {
+	s_Instance = this;
+}
+
+QSynergyApplication::~QSynergyApplication()
+{
+	delete m_Translator;
 }
 
 void QSynergyApplication::commitData(QSessionManager&)
@@ -37,3 +46,27 @@ void QSynergyApplication::commitData(QSessionManager&)
 	}
 }
 
+QSynergyApplication* QSynergyApplication::getInstance()
+{
+	return s_Instance;
+}
+
+void QSynergyApplication::switchTranslator(QString lang)
+{
+	if (m_Translator != NULL)
+	{
+		removeTranslator(m_Translator);
+		delete m_Translator;
+	}
+
+	QResource locale(":/res/lang/gui_" + lang + ".qm");
+	m_Translator = new QTranslator();
+	m_Translator->load(locale.data(), locale.size());
+	installTranslator(m_Translator);
+}
+
+void QSynergyApplication::setTranslator(QTranslator* translator)
+{
+	m_Translator = translator;
+	installTranslator(m_Translator);
+}

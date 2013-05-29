@@ -64,10 +64,14 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pTempConfigFile(NULL),
 	m_pTrayIcon(NULL),
 	m_pTrayIconMenu(NULL),
-	m_alreadyHidden(false),
-	m_SetupWizard(NULL),
+	m_AlreadyHidden(false),
 	m_ElevateProcess(false),
-	m_SuppressElevateWarning(false)
+	m_SuppressElevateWarning(false),
+	m_pMenuBar(NULL),
+	m_pMenuFile(NULL),
+	m_pMenuEdit(NULL),
+	m_pMenuWindow(NULL),
+	m_pMenuHelp(NULL)
 {
 	setupUi(this);
 
@@ -77,11 +81,9 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
 	m_pUpdateIcon->hide();
 	m_pUpdateLabel->hide();
-	m_versionChecker.setApp(appPath(appConfig.synergycName()));
+	m_VersionChecker.setApp(appPath(appConfig.synergycName()));
 	m_pLabelScreenName->setText(getScreenName());
 	m_pLabelIpAddresses->setText(getIPAddresses());
-
-	m_SetupWizard = new SetupWizard(*this, false);
 
 #if defined(Q_OS_WIN)
 	// ipc must always be enabled, so that we can disable command when switching to desktop mode.
@@ -112,7 +114,6 @@ MainWindow::~MainWindow()
 	}
 
 	saveSettings();
-	delete m_SetupWizard;
 }
 
 void MainWindow::start(bool firstRun)
@@ -124,7 +125,7 @@ void MainWindow::start(bool firstRun)
 	// always show. auto-hide only happens when we have a connection.
 	showNormal();
 
-	m_versionChecker.checkLatest();
+	m_VersionChecker.checkLatest();
 }
 
 void MainWindow::onModeChanged(bool startDesktop, bool applyService)
@@ -190,34 +191,43 @@ void MainWindow::createTrayIcon()
 	m_pTrayIcon->show();
 }
 
+void MainWindow::retranslateMenuBar()
+{
+	m_pMenuFile->setTitle(tr("&File"));
+	m_pMenuEdit->setTitle(tr("&Edit"));
+	m_pMenuWindow->setTitle(tr("&Window"));
+	m_pMenuHelp->setTitle(tr("&Help"));
+}
+
 void MainWindow::createMenuBar()
 {
-	QMenuBar* menubar = new QMenuBar(this);
-	QMenu* pMenuFile = new QMenu(tr("&File"), menubar);
-	QMenu* pMenuEdit = new QMenu(tr("&Edit"), menubar);
-	QMenu* pMenuWindow = new QMenu(tr("&Window"), menubar);
-	QMenu* pMenuHelp = new QMenu(tr("&Help"), menubar);
+	m_pMenuBar = new QMenuBar(this);
+	m_pMenuFile = new QMenu("", m_pMenuBar);
+	m_pMenuEdit = new QMenu("", m_pMenuBar);
+	m_pMenuWindow = new QMenu("", m_pMenuBar);
+	m_pMenuHelp = new QMenu("", m_pMenuBar);
+	retranslateMenuBar();
 
-	menubar->addAction(pMenuFile->menuAction());
-	menubar->addAction(pMenuEdit->menuAction());
+	m_pMenuBar->addAction(m_pMenuFile->menuAction());
+	m_pMenuBar->addAction(m_pMenuEdit->menuAction());
 #if !defined(Q_OS_MAC)
-	menubar->addAction(pMenuWindow->menuAction());
+	m_pMenuBar->addAction(m_pMenuWindow->menuAction());
 #endif
-	menubar->addAction(pMenuHelp->menuAction());
+	m_pMenuBar->addAction(m_pMenuHelp->menuAction());
 
-	pMenuFile->addAction(m_pActionStartSynergy);
-	pMenuFile->addAction(m_pActionStopSynergy);
-	pMenuFile->addSeparator();
-	pMenuFile->addAction(m_pActionWizard);
-	pMenuFile->addAction(m_pActionSave);
-	pMenuFile->addSeparator();
-	pMenuFile->addAction(m_pActionQuit);
-	pMenuEdit->addAction(m_pActionSettings);
-	pMenuWindow->addAction(m_pActionMinimize);
-	pMenuWindow->addAction(m_pActionRestore);
-	pMenuHelp->addAction(m_pActionAbout);
+	m_pMenuFile->addAction(m_pActionStartSynergy);
+	m_pMenuFile->addAction(m_pActionStopSynergy);
+	m_pMenuFile->addSeparator();
+	m_pMenuFile->addAction(m_pActionWizard);
+	m_pMenuFile->addAction(m_pActionSave);
+	m_pMenuFile->addSeparator();
+	m_pMenuFile->addAction(m_pActionQuit);
+	m_pMenuEdit->addAction(m_pActionSettings);
+	m_pMenuWindow->addAction(m_pActionMinimize);
+	m_pMenuWindow->addAction(m_pActionRestore);
+	m_pMenuHelp->addAction(m_pActionAbout);
 
-	setMenuBar(menubar);
+	setMenuBar(m_pMenuBar);
 }
 
 void MainWindow::loadSettings()
@@ -244,7 +254,7 @@ void MainWindow::initConnections()
 	connect(m_pActionStartSynergy, SIGNAL(triggered()), this, SLOT(startSynergy()));
 	connect(m_pActionStopSynergy, SIGNAL(triggered()), this, SLOT(stopSynergy()));
 	connect(m_pActionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
-	connect(&m_versionChecker, SIGNAL(updateFound(const QString&)), this, SLOT(updateFound(const QString&)));
+	connect(&m_VersionChecker, SIGNAL(updateFound(const QString&)), this, SLOT(updateFound(const QString&)));
 }
 
 void MainWindow::saveSettings()
@@ -346,10 +356,10 @@ void MainWindow::updateStateFromLogLine(const QString &line)
 		setSynergyState(synergyConnected);
 
 		// only hide once after each new connection.
-		if (!m_alreadyHidden && appConfig().autoHide())
+		if (!m_AlreadyHidden && appConfig().autoHide())
 		{
 			hide();
-			m_alreadyHidden = true;
+			m_AlreadyHidden = true;
 		}
 	}
 }
@@ -574,7 +584,7 @@ void MainWindow::stopSynergy()
 	m_pTempConfigFile = NULL;
 
 	// reset so that new connects cause auto-hide.
-	m_alreadyHidden = false;
+	m_AlreadyHidden = false;
 }
 
 void MainWindow::stopService()
@@ -730,6 +740,23 @@ QString MainWindow::getScreenName()
 	}
 }
 
+void MainWindow::changeEvent(QEvent* event)
+{
+	if (event != 0)
+	{
+		switch (event->type())
+		{
+		case QEvent::LanguageChange:
+			retranslateUi(this);
+			retranslateMenuBar();
+			break;
+
+		default:
+			QMainWindow::changeEvent(event);
+		}
+	}
+}
+
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
 {
 	QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a synergys config file"), QString(), synergyConfigFilter);
@@ -783,7 +810,8 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 
 void MainWindow::on_m_pActionWizard_triggered()
 {
-	m_SetupWizard->show();
+	SetupWizard wizard(*this, false);
+	wizard.exec();
 }
 
 void MainWindow::on_m_pElevateCheckBox_toggled(bool checked)

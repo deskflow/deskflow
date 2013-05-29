@@ -52,17 +52,11 @@ int main(int argc, char* argv[])
 
 	QApplication::setQuitOnLastWindowClosed(false);
 
-	QTranslator qtTranslator;
-	qtTranslator.load("qt_" + QLocale::system().name(),
-		QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-	app.installTranslator(&qtTranslator);
-
-	QTranslator synergyTranslator;
-	synergyTranslator.load("res/lang/" + QLocale::system().name());
-	app.installTranslator(&synergyTranslator);
-
 	QSettings settings;
 	AppConfig appConfig(&settings);
+
+	app.switchTranslator(appConfig.language());
+
 	MainWindow mainWindow(settings, appConfig);
 	SetupWizard setupWizard(mainWindow, true);
 

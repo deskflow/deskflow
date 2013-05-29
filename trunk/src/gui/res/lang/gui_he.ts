@@ -158,7 +158,7 @@ Visit our website for help and info (synergy-foss.org).
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="src/MainWindow.cpp" line="632"/>
+        <location filename="src/MainWindow.cpp" line="642"/>
         <source>&amp;Start</source>
         <translation type="finished">התחל</translation>
     </message>
@@ -183,144 +183,144 @@ Visit our website for help and info (synergy-foss.org).
         <translation type="finished">ע&amp;זרה</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="316"/>
+        <location filename="src/MainWindow.cpp" line="326"/>
         <source>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</source>
         <translation type="finished">&lt;p&gt;גירסא %1 זמינה כעת, &lt;a href=&quot;%2&quot;&gt;עבור לאתר&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="448"/>
+        <location filename="src/MainWindow.cpp" line="458"/>
         <source>Program can not be started</source>
         <translation type="finished">לא ניתן להפעיל את התוכנה</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="448"/>
+        <location filename="src/MainWindow.cpp" line="458"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation type="finished">היישום:&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;קיים, אך לא ניתן להפעילו. בדוק אם מוגדרות עבורך ההראשות המתאימות להפעלתו.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="467"/>
+        <location filename="src/MainWindow.cpp" line="477"/>
         <source>Synergy client not found</source>
         <translation type="finished">לקוח Synergy לא נמצא</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="468"/>
+        <location filename="src/MainWindow.cpp" line="478"/>
         <source>The executable for the synergy client does not exist.</source>
         <translation type="finished">תוכנת הלקוח של Synergy לא קיימת.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="475"/>
+        <location filename="src/MainWindow.cpp" line="485"/>
         <source>Hostname is empty</source>
         <translation type="finished">לא צוין שם מחשב</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="476"/>
+        <location filename="src/MainWindow.cpp" line="486"/>
         <source>Please fill in a hostname for the synergy client to connect to.</source>
         <translation type="finished">אנא ציין שם מחשב שלקוח Synergy יתחבר אליו.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="501"/>
+        <location filename="src/MainWindow.cpp" line="511"/>
         <source>Cannot write configuration file</source>
         <translation type="finished">לא ניתן לכתוב את קובץ ההגדרות</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="501"/>
+        <location filename="src/MainWindow.cpp" line="511"/>
         <source>The temporary configuration file required to start synergy can not be written.</source>
         <translation type="finished">לא ניתן לכתוב לקובץ ההגדרות הזמני. הדבר הכרחי על מנת להפעיל את Synergy.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="514"/>
+        <location filename="src/MainWindow.cpp" line="524"/>
         <source>Configuration filename invalid</source>
         <translation type="finished">שם קובץ ההגדרות אינו חוקי</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="515"/>
+        <location filename="src/MainWindow.cpp" line="525"/>
         <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="542"/>
+        <location filename="src/MainWindow.cpp" line="552"/>
         <source>Synergy server not found</source>
         <translation type="finished">שרת ה-Synergy לא נמצא.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="543"/>
+        <location filename="src/MainWindow.cpp" line="553"/>
         <source>The executable for the synergy server does not exist.</source>
         <translation type="finished">תוכנת השרת של Synergy לא נמצאה.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="607"/>
+        <location filename="src/MainWindow.cpp" line="617"/>
         <source>Synergy terminated with an error</source>
         <translation type="finished">Synergy נסגרה עם שגיאה.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="607"/>
+        <location filename="src/MainWindow.cpp" line="617"/>
         <source>Synergy terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
         <translation type="finished">Synergy נסגרה באופן לא צפוי עם שגיאה מספר %1.&lt;br&gt;&lt;br&gt;לפרטים נוספים, פנו לקובץ התיעוד (לוג).</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="626"/>
+        <location filename="src/MainWindow.cpp" line="636"/>
         <source>&amp;Stop</source>
         <translation type="finished">עצור</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="649"/>
+        <location filename="src/MainWindow.cpp" line="659"/>
         <source>service mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="649"/>
+        <location filename="src/MainWindow.cpp" line="659"/>
         <source>desktop mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="650"/>
+        <location filename="src/MainWindow.cpp" line="660"/>
         <source>Synergy is running (%1).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="793"/>
+        <location filename="src/MainWindow.cpp" line="821"/>
         <source>Elevate Synergy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="794"/>
+        <location filename="src/MainWindow.cpp" line="822"/>
         <source>Are you sure you want to elevate Synergy?
 
 This allows Synergy to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Synergy only if you really need to.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="654"/>
+        <location filename="src/MainWindow.cpp" line="664"/>
         <source>Synergy is starting.</source>
         <translation type="finished">Synergy מאתחל</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="657"/>
+        <location filename="src/MainWindow.cpp" line="667"/>
         <source>Synergy is not running.</source>
         <translation type="finished">Synergy לא רץ</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="714"/>
+        <location filename="src/MainWindow.cpp" line="724"/>
         <source>Unknown</source>
         <translation type="finished">לא ידוע</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="735"/>
+        <location filename="src/MainWindow.cpp" line="762"/>
         <source>Browse for a synergys config file</source>
         <translation type="finished">מציאת קובץ הגדרות של Synergy</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="748"/>
+        <location filename="src/MainWindow.cpp" line="775"/>
         <source>Save configuration as...</source>
         <translation type="finished">שמור הגדרות &amp;בשם...</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="752"/>
+        <location filename="src/MainWindow.cpp" line="779"/>
         <source>Save failed</source>
         <translation type="finished">שמירה נכשלה</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="752"/>
+        <location filename="src/MainWindow.cpp" line="779"/>
         <source>Could not save configuration to file.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -339,18 +339,12 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="61"/>
-        <location filename="res/MainWindowBase.ui" line="211"/>
-        <source>Unknown</source>
-        <translation type="finished">לא ידוע</translation>
-    </message>
-    <message>
-        <location filename="res/MainWindowBase.ui" line="68"/>
         <source>&amp;Server IP:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="160"/>
-        <location filename="res/MainWindowBase.ui" line="312"/>
+        <location filename="res/MainWindowBase.ui" line="315"/>
         <source>&amp;Start</source>
         <translation type="finished">התחל</translation>
     </message>
@@ -420,102 +414,77 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="301"/>
+        <location filename="res/MainWindowBase.ui" line="304"/>
         <source>&amp;Quit</source>
         <translation type="finished">&amp;יציאה</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="304"/>
+        <location filename="res/MainWindowBase.ui" line="307"/>
         <source>Quit</source>
         <translation type="finished">יציאה</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="307"/>
-        <source>Ctrl+Q</source>
-        <translation type="finished">Ctrl+Q</translation>
-    </message>
-    <message>
-        <location filename="res/MainWindowBase.ui" line="315"/>
+        <location filename="res/MainWindowBase.ui" line="318"/>
         <source>Run</source>
         <translation type="finished">הפעל</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="318"/>
-        <source>Ctrl+S</source>
-        <translation type="finished">Ctrl+S</translation>
-    </message>
-    <message>
-        <location filename="res/MainWindowBase.ui" line="326"/>
+        <location filename="res/MainWindowBase.ui" line="329"/>
         <source>S&amp;top</source>
         <translation type="finished">ע&amp;צור</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="329"/>
+        <location filename="res/MainWindowBase.ui" line="332"/>
         <source>Stop</source>
         <translation type="finished">עצור</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="332"/>
-        <source>Ctrl+T</source>
-        <translation type="finished">Ctrl+T</translation>
-    </message>
-    <message>
-        <location filename="res/MainWindowBase.ui" line="337"/>
+        <location filename="res/MainWindowBase.ui" line="340"/>
         <source>S&amp;how Status</source>
         <translation type="finished">הצג &amp;מצב</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="340"/>
-        <source>Ctrl+H</source>
-        <translation type="finished">Ctrl+H</translation>
-    </message>
-    <message>
-        <location filename="res/MainWindowBase.ui" line="345"/>
+        <location filename="res/MainWindowBase.ui" line="348"/>
         <source>&amp;Hide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="348"/>
+        <location filename="res/MainWindowBase.ui" line="351"/>
         <source>Hide</source>
         <translation type="finished">הסתר</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="353"/>
+        <location filename="res/MainWindowBase.ui" line="359"/>
         <source>&amp;Show</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="356"/>
+        <location filename="res/MainWindowBase.ui" line="362"/>
         <source>Show</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="361"/>
+        <location filename="res/MainWindowBase.ui" line="370"/>
         <source>Save configuration &amp;as...</source>
         <translation type="finished">שמור הגדרות קונפיגורציה כ...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="364"/>
+        <location filename="res/MainWindowBase.ui" line="373"/>
         <source>Save the interactively generated server configuration to a file.</source>
         <translation type="finished">שמור הגדרות השרת הנוכחיות לקובץ.</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="367"/>
-        <source>Ctrl+Alt+S</source>
-        <translation type="finished">Ctrl+Alt+S</translation>
-    </message>
-    <message>
-        <location filename="res/MainWindowBase.ui" line="372"/>
+        <location filename="res/MainWindowBase.ui" line="381"/>
         <source>Settings</source>
         <translation type="finished">הגדרות</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="375"/>
+        <location filename="res/MainWindowBase.ui" line="384"/>
         <source>Edit settings</source>
         <translation type="finished">שנה הגדרות</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="380"/>
+        <location filename="res/MainWindowBase.ui" line="392"/>
         <source>Run Wizard</source>
         <translation type="finished">הפעל אשף</translation>
     </message>
@@ -541,7 +510,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
         <translation type="finished">קבצי הגדרות של Synergy (*.conf);;All Files (*.*)</translation>
     </message>
     <message>
-        <location filename="src/main.cpp" line="96"/>
+        <location filename="src/main.cpp" line="90"/>
         <source>System tray is unavailable, quitting.</source>
         <translation type="finished">מגש המערכת לא זמין, יוצא.</translation>
     </message>
@@ -899,12 +868,12 @@ Double click on a screen to edit its settings.</source>
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="src/SettingsDialog.cpp" line="57"/>
+        <location filename="src/SettingsDialog.cpp" line="62"/>
         <source>Encryption password must not be empty.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/SettingsDialog.cpp" line="89"/>
+        <location filename="src/SettingsDialog.cpp" line="121"/>
         <source>Save log file to...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -917,22 +886,22 @@ Double click on a screen to edit its settings.</source>
         <translation type="finished">הגדרות</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="142"/>
+        <location filename="res/SettingsDialogBase.ui" line="165"/>
         <source>&amp;Advanced</source>
         <translation type="finished">מת&amp;קדם</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="154"/>
+        <location filename="res/SettingsDialogBase.ui" line="177"/>
         <source>Sc&amp;reen name:</source>
         <translation type="finished">&amp;שם מסך:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="171"/>
+        <location filename="res/SettingsDialogBase.ui" line="194"/>
         <source>P&amp;ort:</source>
         <translation type="finished">&amp;פורט:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="200"/>
+        <location filename="res/SettingsDialogBase.ui" line="223"/>
         <source>&amp;Interface:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -952,120 +921,125 @@ Double click on a screen to edit its settings.</source>
         <translation type="finished">&amp;הסתר עם הפעלת השרת\הלקוח</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="250"/>
+        <location filename="res/SettingsDialogBase.ui" line="273"/>
         <source>Logging</source>
         <translation type="finished">תיעוד פעולה (Log)</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="217"/>
+        <location filename="res/SettingsDialogBase.ui" line="240"/>
         <source>&amp;Process mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="228"/>
+        <location filename="res/SettingsDialogBase.ui" line="251"/>
         <source>Service</source>
         <translation type="finished">שירות</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="233"/>
+        <location filename="res/SettingsDialogBase.ui" line="256"/>
         <source>Desktop (legacy)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="268"/>
+        <location filename="res/SettingsDialogBase.ui" line="291"/>
         <source>&amp;Logging level:</source>
         <translation type="finished">&amp;רמת תיעוד פעולה (Log)</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="317"/>
+        <location filename="res/SettingsDialogBase.ui" line="340"/>
         <source>Log to file:</source>
         <translation type="finished">תיעוד לקובץ: </translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="334"/>
+        <location filename="res/SettingsDialogBase.ui" line="357"/>
         <source>Browse...</source>
         <translation type="finished">עיון...</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="279"/>
+        <location filename="res/SettingsDialogBase.ui" line="302"/>
         <source>Error</source>
         <translation type="finished">שגיאה</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="59"/>
+        <location filename="res/SettingsDialogBase.ui" line="20"/>
+        <source>&amp;Graphical interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="55"/>
+        <source>&amp;Language:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="82"/>
         <source>&amp;Encryption</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="74"/>
+        <location filename="res/SettingsDialogBase.ui" line="97"/>
         <source>&amp;Mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="119"/>
+        <location filename="res/SettingsDialogBase.ui" line="142"/>
         <source>Pass&amp;word:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="284"/>
+        <location filename="res/SettingsDialogBase.ui" line="307"/>
         <source>Warning</source>
         <translation type="finished">שים לב</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="289"/>
+        <location filename="res/SettingsDialogBase.ui" line="312"/>
         <source>Note</source>
         <translation type="finished">הערה</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="294"/>
+        <location filename="res/SettingsDialogBase.ui" line="317"/>
         <source>Info</source>
         <translation type="finished">מידע</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="299"/>
+        <location filename="res/SettingsDialogBase.ui" line="322"/>
         <source>Debug</source>
         <translation type="finished">Debug</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="304"/>
+        <location filename="res/SettingsDialogBase.ui" line="327"/>
         <source>Debug1</source>
         <translation type="finished">Debug1</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="309"/>
+        <location filename="res/SettingsDialogBase.ui" line="332"/>
         <source>Debug2</source>
         <translation type="finished">Debug2</translation>
-    </message>
-    <message>
-        <location filename="res/SettingsDialogBase.ui" line="20"/>
-        <source>&amp;Startup</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>SetupWizard</name>
     <message>
-        <location filename="src/SetupWizard.cpp" line="60"/>
+        <location filename="src/SetupWizard.cpp" line="64"/>
         <source>Setup Synergy</source>
         <translation type="finished">הגדרת Synergy</translation>
     </message>
     <message>
-        <location filename="src/SetupWizard.cpp" line="70"/>
+        <location filename="src/SetupWizard.cpp" line="74"/>
         <source>Please select an option.</source>
         <translation type="finished">אנא בחר אופציה.</translation>
     </message>
     <message>
-        <location filename="src/SetupWizard.cpp" line="80"/>
+        <location filename="src/SetupWizard.cpp" line="84"/>
         <source>Encryption mode required.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/SetupWizard.cpp" line="89"/>
+        <location filename="src/SetupWizard.cpp" line="93"/>
         <source>Encryption password required.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/SetupWizard.cpp" line="96"/>
+        <location filename="src/SetupWizard.cpp" line="100"/>
         <source>Encryption password and confirmation do not match.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1078,63 +1052,78 @@ Double click on a screen to edit its settings.</source>
         <translation type="finished">הגדרת Synergy</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="30"/>
+        <location filename="res/SetupWizardBase.ui" line="24"/>
+        <source>Welcome</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="33"/>
+        <source>Thanks for installing Synergy!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="108"/>
+        <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
+        <translation type="finished">Synergy מאפשרת לשתף בקלות את העכבר והמקלדת בין מספר מחשבים על השולחן, וזה חופשית וקוד פתוח. רק להזיז את העכבר מקצה מסך אחד של המחשב לאחר. אתה יכול גם לשתף את כל לוחות כתיבה שלך. כל מה שצריך הוא חיבור לרשת. סינרגיה היא חוצה פלטפורמות (עובד ב-Windows, Mac OS X ו-Linux).</translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="125"/>
         <source>Server or Client?</source>
         <translation type="finished">שרת או לקוח?</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="45"/>
+        <location filename="res/SetupWizardBase.ui" line="140"/>
         <source>&amp;Server (new setup)</source>
         <translation type="finished">&amp;שרת (התקנה חדשה)</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="58"/>
+        <location filename="res/SetupWizardBase.ui" line="153"/>
         <source>This is the first computer you are configuring. Your keyboard and mouse are connected to this computer. This will allow you to move your mouse over to another computer's screen. There can only be one server in your setup.</source>
         <translation type="finished">זהו המחשב הראשון שאתם מגדירים. המקלדת והעכבר מחוברים למחשב זה. הגדרה זו תאפשר לכם להזיז את העכבר אל המסך של מחשב אחר. לכן, אפשר להגדיר רק שרת אחד.</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="90"/>
+        <location filename="res/SetupWizardBase.ui" line="185"/>
         <source>&amp;Client (add to setup)</source>
         <translation type="finished">לקוח (הוסף להתקנה)</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="103"/>
+        <location filename="res/SetupWizardBase.ui" line="198"/>
         <source>You have already set up a server. This is a computer you wish to control using the server's keyboard and mouse. There can be many clients in your setup.</source>
         <oldsource>You have already set up a server. This a computer you wish to control using the server's keyboard and mouse. There can be many clients in your setup.</oldsource>
         <translation type="finished">כבר הגדרת שרת. בחרת לשלוט במחשב זה באמצעות המקלדת והעכבר של השרת. ניתן להגדיר כמה לקוחות.</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="136"/>
+        <location filename="res/SetupWizardBase.ui" line="231"/>
         <source>Encryption</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="142"/>
+        <location filename="res/SetupWizardBase.ui" line="237"/>
         <source>Network traffic can be easily monitored. Using encryption can reduce the risk that sensitive information will be revealed to others (for example, passwords).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="168"/>
+        <location filename="res/SetupWizardBase.ui" line="263"/>
         <source>Choose a random encryption mode. The mode must be the same on both the client and server.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="213"/>
+        <location filename="res/SetupWizardBase.ui" line="308"/>
         <source>&amp;Mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="296"/>
+        <location filename="res/SetupWizardBase.ui" line="391"/>
         <source>A longer password will provide stronger encryption. It is a good idea to use 20 characters or more.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="320"/>
+        <location filename="res/SetupWizardBase.ui" line="415"/>
         <source>&amp;Password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="379"/>
+        <location filename="res/SetupWizardBase.ui" line="474"/>
         <source>&amp;Confirm:</source>
         <translation type="unfinished"></translation>
     </message>

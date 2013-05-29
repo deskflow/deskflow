@@ -20,6 +20,7 @@
 #include <QWizard>
 #include "ui_SetupWizardBase.h"
 #include "CryptoMode.h"
+#include "SynergyLocale.h"
 
 class MainWindow;
 
@@ -30,12 +31,21 @@ public:
 	SetupWizard(MainWindow& mainWindow, bool startMain);
 	virtual ~SetupWizard();
 	bool validateCurrentPage();
-protected slots:
-	void handleFinished();
+
+protected:
+	void changeEvent(QEvent* event);
+	void accept();
+	void reject();
+
+private:
+	CryptoMode parseCryptoMode(const QString& s);
+
 private:
 	MainWindow& m_MainWindow;
 	bool m_StartMain;
-	CryptoMode parseCryptoMode(const QString& s);
+	SynergyLocale m_Locale;
+
 private slots:
     void on_m_pComboCryptoMode_currentIndexChanged(int index);
+	void on_m_pComboLanguage_currentIndexChanged(int index);
 };
