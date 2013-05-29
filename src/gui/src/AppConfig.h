@@ -26,8 +26,13 @@
 // this should be incremented each time a new page is added. this is
 // saved to settings when the user finishes running the wizard. if
 // the saved wizard version is lower than this number, the wizard
-// will be displayed.
-const int kWizardVersion = 1;
+// will be displayed. each version incrememnt should be described
+// here...
+//
+//   1: first version
+//   2: language page added
+//
+const int kWizardVersion = 2;
 
 class QSettings;
 class SettingsDialog;
@@ -64,6 +69,7 @@ class AppConfig
 		QString cryptoModeString() const;
 		ProcessMode processMode() const { return m_ProcessMode; }
 		bool wizardShouldRun() const { return m_WizardLastRun < kWizardVersion; }
+		const QString& language() const { return m_Language; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -88,6 +94,7 @@ class AppConfig
 		void setCryptoMode(CryptoMode c) { m_CryptoMode = c; }
 		void setProcessMode(ProcessMode p) { m_ProcessMode = p; }
 		void setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
+		void setLanguage(const QString language) { m_Language = language; }
 
 		void loadSettings();
 		void saveSettings();
@@ -111,6 +118,7 @@ class AppConfig
 		QString m_CryptoPass;
 		CryptoMode m_CryptoMode;
 		ProcessMode m_ProcessMode;
+		QString m_Language;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

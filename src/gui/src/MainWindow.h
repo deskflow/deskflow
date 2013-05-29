@@ -141,6 +141,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void stopService();
 		void stopDesktop();
 		void setFormEnabled(bool enabled);
+		void changeEvent(QEvent* event);
+		void retranslateMenuBar();
 
 	private:
 		QSettings& m_Settings;
@@ -151,12 +153,16 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QTemporaryFile* m_pTempConfigFile;
 		QSystemTrayIcon* m_pTrayIcon;
 		QMenu* m_pTrayIconMenu;
-		bool m_alreadyHidden;
-		VersionChecker m_versionChecker;
-		SetupWizard* m_SetupWizard;
+		bool m_AlreadyHidden;
+		VersionChecker m_VersionChecker;
 		IpcClient m_IpcClient;
 		bool m_ElevateProcess;
 		bool m_SuppressElevateWarning;
+		QMenuBar* m_pMenuBar;
+		QMenu* m_pMenuFile;
+		QMenu* m_pMenuEdit;
+		QMenu* m_pMenuWindow;
+		QMenu* m_pMenuHelp;
 
 private slots:
 	void on_m_pButtonApply_clicked();

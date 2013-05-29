@@ -55,13 +55,6 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="m_pLabelScreenName">
-         <property name="text">
-          <string>Unknown</string>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="m_pLabelServerName">
          <property name="text">
@@ -74,6 +67,13 @@
        </item>
        <item row="1" column="1">
         <widget class="QLineEdit" name="m_pLineEditHostname"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="m_pLabelScreenName">
+         <property name="text">
+          <string notr="true"/>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -208,7 +208,7 @@
          <item row="0" column="1">
           <widget class="QLabel" name="m_pLabelIpAddresses">
            <property name="text">
-            <string>Unknown</string>
+            <string notr="true"/>
            </property>
           </widget>
          </item>
@@ -295,6 +295,9 @@
    <property name="text">
     <string>&amp;About Synergy...</string>
    </property>
+   <property name="shortcut">
+    <string notr="true"/>
+   </property>
   </action>
   <action name="m_pActionQuit">
    <property name="text">
@@ -304,7 +307,7 @@
     <string>Quit</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Q</string>
+    <string notr="true">Ctrl+Q</string>
    </property>
   </action>
   <action name="m_pActionStartSynergy">
@@ -315,7 +318,7 @@
     <string>Run</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+S</string>
+    <string notr="true">Ctrl+S</string>
    </property>
   </action>
   <action name="m_pActionStopSynergy">
@@ -329,7 +332,7 @@
     <string>Stop</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+T</string>
+    <string notr="true">Ctrl+T</string>
    </property>
   </action>
   <action name="actionShowStatus">
@@ -337,7 +340,7 @@
     <string>S&amp;how Status</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+H</string>
+    <string notr="true">Ctrl+H</string>
    </property>
   </action>
   <action name="m_pActionMinimize">
@@ -347,6 +350,9 @@
    <property name="toolTip">
     <string>Hide</string>
    </property>
+   <property name="shortcut">
+    <string notr="true"/>
+   </property>
   </action>
   <action name="m_pActionRestore">
    <property name="text">
@@ -354,6 +360,9 @@
    </property>
    <property name="toolTip">
     <string>Show</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true"/>
    </property>
   </action>
   <action name="m_pActionSave">
@@ -364,7 +373,7 @@
     <string>Save the interactively generated server configuration to a file.</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+S</string>
+    <string notr="true">Ctrl+Alt+S</string>
    </property>
   </action>
   <action name="m_pActionSettings">
@@ -374,10 +383,16 @@
    <property name="statusTip">
     <string>Edit settings</string>
    </property>
+   <property name="shortcut">
+    <string notr="true"/>
+   </property>
   </action>
   <action name="m_pActionWizard">
    <property name="text">
     <string>Run Wizard</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true"/>
    </property>
   </action>
  </widget>

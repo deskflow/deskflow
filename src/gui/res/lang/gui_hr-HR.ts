@@ -166,7 +166,7 @@ Posjetite našu web stranicu za pomoć i informacije (synergy-foss.org).
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="src/MainWindow.cpp" line="632"/>
+        <location filename="src/MainWindow.cpp" line="642"/>
         <source>&amp;Start</source>
         <translation type="finished">&amp;Pokreni</translation>
     </message>
@@ -191,107 +191,107 @@ Posjetite našu web stranicu za pomoć i informacije (synergy-foss.org).
         <translation type="finished">&amp;Pomoć</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="316"/>
+        <location filename="src/MainWindow.cpp" line="326"/>
         <source>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</source>
         <translation type="finished">&lt;p&gt;Inačica %1 trenutno je dostupna, &lt;a href=&quot;%2&quot;&gt;posjetite web stranicu&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="448"/>
+        <location filename="src/MainWindow.cpp" line="458"/>
         <source>Program can not be started</source>
         <translation type="finished">Program ne može biti pokrenut</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="448"/>
+        <location filename="src/MainWindow.cpp" line="458"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation type="finished">Izvršna datoteka&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;ne može se pokrenuti, kao da ne postoji. Provjerite imate li potrebne dozvole za pokretanje ovog programa.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="467"/>
+        <location filename="src/MainWindow.cpp" line="477"/>
         <source>Synergy client not found</source>
         <translation type="finished">Synergy klijent nije pronađen</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="468"/>
+        <location filename="src/MainWindow.cpp" line="478"/>
         <source>The executable for the synergy client does not exist.</source>
         <translation type="finished">Izvršna datoteka synergy klijenta ne postoji.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="475"/>
+        <location filename="src/MainWindow.cpp" line="485"/>
         <source>Hostname is empty</source>
         <translation type="finished">Naziv računala nedostaje</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="476"/>
+        <location filename="src/MainWindow.cpp" line="486"/>
         <source>Please fill in a hostname for the synergy client to connect to.</source>
         <translation type="finished">Upišite naziv računala synergy klijenta na koji se spajate.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="501"/>
+        <location filename="src/MainWindow.cpp" line="511"/>
         <source>Cannot write configuration file</source>
         <translation type="finished">Nemoguće ispisivanje datoteke postavki</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="501"/>
+        <location filename="src/MainWindow.cpp" line="511"/>
         <source>The temporary configuration file required to start synergy can not be written.</source>
         <translation type="finished">Privremena datoteka postavki potrebna za pokretanje synergya ne može biti zapisana.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="514"/>
+        <location filename="src/MainWindow.cpp" line="524"/>
         <source>Configuration filename invalid</source>
         <translation type="finished">Pogrešan naziv datoteke postavki</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="515"/>
+        <location filename="src/MainWindow.cpp" line="525"/>
         <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
         <translation type="finished">Niste odabrali valjanu datoteku postavki za synergy poslužitelj. Želite li sada odabrati datoteku postavki?</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="542"/>
+        <location filename="src/MainWindow.cpp" line="552"/>
         <source>Synergy server not found</source>
         <translation type="finished">Synergy poslužitelj nije pronađen</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="543"/>
+        <location filename="src/MainWindow.cpp" line="553"/>
         <source>The executable for the synergy server does not exist.</source>
         <translation type="finished">Izvršna datoteka synergy poslužitelja ne postoji.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="607"/>
+        <location filename="src/MainWindow.cpp" line="617"/>
         <source>Synergy terminated with an error</source>
         <translation type="finished">Synergy je prestao sa radom zbog greške</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="607"/>
+        <location filename="src/MainWindow.cpp" line="617"/>
         <source>Synergy terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
         <translation type="finished">Synergy je neočekivano prestao sa radom, s izlaznim kodom of %1.&lt;br&gt;&lt;br&gt;Pogledajte izlazni zapis za više pojedinosti.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="626"/>
+        <location filename="src/MainWindow.cpp" line="636"/>
         <source>&amp;Stop</source>
         <translation type="finished">&amp;Zaustavi</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="649"/>
+        <location filename="src/MainWindow.cpp" line="659"/>
         <source>service mode</source>
         <translation type="finished">servisni način rada</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="649"/>
+        <location filename="src/MainWindow.cpp" line="659"/>
         <source>desktop mode</source>
         <translation type="finished">Način rada radne površine</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="650"/>
+        <location filename="src/MainWindow.cpp" line="660"/>
         <source>Synergy is running (%1).</source>
         <translation type="finished">Synergy je pokrenut (%1).</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="793"/>
+        <location filename="src/MainWindow.cpp" line="821"/>
         <source>Elevate Synergy</source>
         <translation type="finished">UAC ovlasti Synergya</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="794"/>
+        <location filename="src/MainWindow.cpp" line="822"/>
         <source>Are you sure you want to elevate Synergy?
 
 This allows Synergy to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Synergy only if you really need to.</source>
@@ -299,37 +299,37 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 To omogućuje Synergyu interakciju s ovlaštenim procesima i UAC dijalogom, ali može uzrokovati probleme s neovlaštenim procesima. Dajte ovlasti Synergyu samo ako je stvarno potrebno.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="654"/>
+        <location filename="src/MainWindow.cpp" line="664"/>
         <source>Synergy is starting.</source>
         <translation type="finished">Synergy se pokreće.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="657"/>
+        <location filename="src/MainWindow.cpp" line="667"/>
         <source>Synergy is not running.</source>
         <translation type="finished">Synergy nije pokrenut.</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="714"/>
+        <location filename="src/MainWindow.cpp" line="724"/>
         <source>Unknown</source>
         <translation type="finished">Nepoznato</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="735"/>
+        <location filename="src/MainWindow.cpp" line="762"/>
         <source>Browse for a synergys config file</source>
         <translation type="finished">Odaberite synergy datoteku postavki</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="748"/>
+        <location filename="src/MainWindow.cpp" line="775"/>
         <source>Save configuration as...</source>
         <translation type="finished">Spremi postavke kao...</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="752"/>
+        <location filename="src/MainWindow.cpp" line="779"/>
         <source>Save failed</source>
         <translation type="finished">Neuspjelo spremanje</translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="752"/>
+        <location filename="src/MainWindow.cpp" line="779"/>
         <source>Could not save configuration to file.</source>
         <translation type="finished">Nemoguće spremanje postavki u datoteku.</translation>
     </message>
@@ -348,18 +348,12 @@ To omogućuje Synergyu interakciju s ovlaštenim procesima i UAC dijalogom, ali 
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="61"/>
-        <location filename="res/MainWindowBase.ui" line="211"/>
-        <source>Unknown</source>
-        <translation type="finished">Nepoznato</translation>
-    </message>
-    <message>
-        <location filename="res/MainWindowBase.ui" line="68"/>
         <source>&amp;Server IP:</source>
         <translation type="finished">&amp;IP poslužitelja:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="160"/>
-        <location filename="res/MainWindowBase.ui" line="312"/>
+        <location filename="res/MainWindowBase.ui" line="315"/>
         <source>&amp;Start</source>
         <translation type="finished">&amp;Pokreni</translation>
     </message>
@@ -429,102 +423,77 @@ To omogućuje Synergyu interakciju s ovlaštenim procesima i UAC dijalogom, ali 
         <translation type="finished">&amp;O Synergyu...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="301"/>
+        <location filename="res/MainWindowBase.ui" line="304"/>
         <source>&amp;Quit</source>
         <translation type="finished">&amp;Zatvori</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="304"/>
+        <location filename="res/MainWindowBase.ui" line="307"/>
         <source>Quit</source>
         <translation type="finished">Zatvori</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="307"/>
-        <source>Ctrl+Q</source>
-        <translation type="finished">Ctrl+Q</translation>
-    </message>
-    <message>
-        <location filename="res/MainWindowBase.ui" line="315"/>
+        <location filename="res/MainWindowBase.ui" line="318"/>
         <source>Run</source>
         <translation type="finished">Pokreni</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="318"/>
-        <source>Ctrl+S</source>
-        <translation type="finished">Ctrl+S</translation>
-    </message>
-    <message>
-        <location filename="res/MainWindowBase.ui" line="326"/>
+        <location filename="res/MainWindowBase.ui" line="329"/>
         <source>S&amp;top</source>
         <translation type="finished">Z&amp;austavi</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="329"/>
+        <location filename="res/MainWindowBase.ui" line="332"/>
         <source>Stop</source>
         <translation type="finished">Zaustavi</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="332"/>
-        <source>Ctrl+T</source>
-        <translation type="finished">Ctrl+T</translation>
-    </message>
-    <message>
-        <location filename="res/MainWindowBase.ui" line="337"/>
+        <location filename="res/MainWindowBase.ui" line="340"/>
         <source>S&amp;how Status</source>
         <translation type="finished">P&amp;rikaži status</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="340"/>
-        <source>Ctrl+H</source>
-        <translation type="finished">Ctrl+H</translation>
-    </message>
-    <message>
-        <location filename="res/MainWindowBase.ui" line="345"/>
+        <location filename="res/MainWindowBase.ui" line="348"/>
         <source>&amp;Hide</source>
         <translation type="finished">&amp;Sakrij</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="348"/>
+        <location filename="res/MainWindowBase.ui" line="351"/>
         <source>Hide</source>
         <translation type="finished">Sakrij</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="353"/>
+        <location filename="res/MainWindowBase.ui" line="359"/>
         <source>&amp;Show</source>
         <translation type="finished">&amp;Prikaži</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="356"/>
+        <location filename="res/MainWindowBase.ui" line="362"/>
         <source>Show</source>
         <translation type="finished">Prikaži</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="361"/>
+        <location filename="res/MainWindowBase.ui" line="370"/>
         <source>Save configuration &amp;as...</source>
         <translation type="finished">Spremi postavke &amp;kao...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="364"/>
+        <location filename="res/MainWindowBase.ui" line="373"/>
         <source>Save the interactively generated server configuration to a file.</source>
         <translation type="finished">Spremi interaktivno generirane postavke poslužitelja u datoteku...</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="367"/>
-        <source>Ctrl+Alt+S</source>
-        <translation type="finished">Ctrl+Alt+S</translation>
-    </message>
-    <message>
-        <location filename="res/MainWindowBase.ui" line="372"/>
+        <location filename="res/MainWindowBase.ui" line="381"/>
         <source>Settings</source>
         <translation type="finished">Postavke</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="375"/>
+        <location filename="res/MainWindowBase.ui" line="384"/>
         <source>Edit settings</source>
         <translation type="finished">Uredi postavke</translation>
     </message>
     <message>
-        <location filename="res/MainWindowBase.ui" line="380"/>
+        <location filename="res/MainWindowBase.ui" line="392"/>
         <source>Run Wizard</source>
         <translation type="finished">Pokeni čarobnjak</translation>
     </message>
@@ -550,7 +519,7 @@ To omogućuje Synergyu interakciju s ovlaštenim procesima i UAC dijalogom, ali 
         <translation type="finished">Synergy postavke (*.conf);;Sve datoteke (*.*)</translation>
     </message>
     <message>
-        <location filename="src/main.cpp" line="96"/>
+        <location filename="src/main.cpp" line="90"/>
         <source>System tray is unavailable, quitting.</source>
         <translation type="finished">Obavijesna ikona je nedostupna, otkazujem.</translation>
     </message>
@@ -910,12 +879,12 @@ Za uređivanje postavki dvostruko kliknite na zaslon.</translation>
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="src/SettingsDialog.cpp" line="57"/>
+        <location filename="src/SettingsDialog.cpp" line="62"/>
         <source>Encryption password must not be empty.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Lozinka šifriranja ne smije biti prazna.</translation>
     </message>
     <message>
-        <location filename="src/SettingsDialog.cpp" line="89"/>
+        <location filename="src/SettingsDialog.cpp" line="121"/>
         <source>Save log file to...</source>
         <translation type="finished">Spremi datoteku zapisa u...</translation>
     </message>
@@ -928,22 +897,22 @@ Za uređivanje postavki dvostruko kliknite na zaslon.</translation>
         <translation type="finished">Postavke</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="142"/>
+        <location filename="res/SettingsDialogBase.ui" line="165"/>
         <source>&amp;Advanced</source>
         <translation type="finished">&amp;Napredno</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="154"/>
+        <location filename="res/SettingsDialogBase.ui" line="177"/>
         <source>Sc&amp;reen name:</source>
         <translation type="finished">Na&amp;ziv zaslona:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="171"/>
+        <location filename="res/SettingsDialogBase.ui" line="194"/>
         <source>P&amp;ort:</source>
         <translation type="finished">U&amp;laz:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="200"/>
+        <location filename="res/SettingsDialogBase.ui" line="223"/>
         <source>&amp;Interface:</source>
         <translation type="finished">&amp;Sučelje:</translation>
     </message>
@@ -963,122 +932,127 @@ Za uređivanje postavki dvostruko kliknite na zaslon.</translation>
         <translation type="finished">&amp;Sakrij kada se poslužitelj/klijent pokrene</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="250"/>
+        <location filename="res/SettingsDialogBase.ui" line="273"/>
         <source>Logging</source>
         <translation type="finished">Prijavljivanje</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="217"/>
+        <location filename="res/SettingsDialogBase.ui" line="240"/>
         <source>&amp;Process mode:</source>
         <translation type="finished">&amp;Način rada procesa:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="228"/>
+        <location filename="res/SettingsDialogBase.ui" line="251"/>
         <source>Service</source>
         <translation type="finished">Servis</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="233"/>
+        <location filename="res/SettingsDialogBase.ui" line="256"/>
         <source>Desktop (legacy)</source>
         <translation type="finished">Radna površina (zastarjelo)</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="268"/>
+        <location filename="res/SettingsDialogBase.ui" line="291"/>
         <source>&amp;Logging level:</source>
         <translation type="finished">&amp;Razina prijavljivanja:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="317"/>
+        <location filename="res/SettingsDialogBase.ui" line="340"/>
         <source>Log to file:</source>
         <translation type="finished">Prijava u datoteku:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="334"/>
+        <location filename="res/SettingsDialogBase.ui" line="357"/>
         <source>Browse...</source>
         <translation type="finished">Odaberi...</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="279"/>
+        <location filename="res/SettingsDialogBase.ui" line="302"/>
         <source>Error</source>
         <translation type="finished">Greška</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="59"/>
+        <location filename="res/SettingsDialogBase.ui" line="20"/>
+        <source>&amp;Graphical interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="55"/>
+        <source>&amp;Language:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="82"/>
         <source>&amp;Encryption</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Šifriranje</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="74"/>
+        <location filename="res/SettingsDialogBase.ui" line="97"/>
         <source>&amp;Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Način šifriranja:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="119"/>
+        <location filename="res/SettingsDialogBase.ui" line="142"/>
         <source>Pass&amp;word:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Lozinka:</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="284"/>
+        <location filename="res/SettingsDialogBase.ui" line="307"/>
         <source>Warning</source>
         <translation type="finished">Upozorenje</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="289"/>
+        <location filename="res/SettingsDialogBase.ui" line="312"/>
         <source>Note</source>
         <translation type="finished">Napomena</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="294"/>
+        <location filename="res/SettingsDialogBase.ui" line="317"/>
         <source>Info</source>
         <translation type="finished">Info</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="299"/>
+        <location filename="res/SettingsDialogBase.ui" line="322"/>
         <source>Debug</source>
         <translation type="finished">Otklanjanje greške</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="304"/>
+        <location filename="res/SettingsDialogBase.ui" line="327"/>
         <source>Debug1</source>
         <translation type="finished">Otklanjanje greške1</translation>
     </message>
     <message>
-        <location filename="res/SettingsDialogBase.ui" line="309"/>
+        <location filename="res/SettingsDialogBase.ui" line="332"/>
         <source>Debug2</source>
         <translation type="finished">Otklanjanje greške2</translation>
-    </message>
-    <message>
-        <location filename="res/SettingsDialogBase.ui" line="20"/>
-        <source>&amp;Startup</source>
-        <translation type="finished">&amp;Pokretanje</translation>
     </message>
 </context>
 <context>
     <name>SetupWizard</name>
     <message>
-        <location filename="src/SetupWizard.cpp" line="60"/>
+        <location filename="src/SetupWizard.cpp" line="64"/>
         <source>Setup Synergy</source>
         <translation type="finished">Podesite Synergy</translation>
     </message>
     <message>
-        <location filename="src/SetupWizard.cpp" line="70"/>
+        <location filename="src/SetupWizard.cpp" line="74"/>
         <source>Please select an option.</source>
         <translation type="finished">Molim, odaberite mogućnost.</translation>
     </message>
     <message>
-        <location filename="src/SetupWizard.cpp" line="80"/>
+        <location filename="src/SetupWizard.cpp" line="84"/>
         <source>Encryption mode required.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Način šifriranja je potreban.</translation>
     </message>
     <message>
-        <location filename="src/SetupWizard.cpp" line="89"/>
+        <location filename="src/SetupWizard.cpp" line="93"/>
         <source>Encryption password required.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Lozinka šifriranja je potrebna.</translation>
     </message>
     <message>
-        <location filename="src/SetupWizard.cpp" line="96"/>
+        <location filename="src/SetupWizard.cpp" line="100"/>
         <source>Encryption password and confirmation do not match.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Lozinka šifriranja i potvrda lozinke se ne podudaraju.</translation>
     </message>
 </context>
 <context>
@@ -1089,65 +1063,80 @@ Za uređivanje postavki dvostruko kliknite na zaslon.</translation>
         <translation type="finished">Podesite Synergy</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="30"/>
+        <location filename="res/SetupWizardBase.ui" line="24"/>
+        <source>Welcome</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="33"/>
+        <source>Thanks for installing Synergy!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="108"/>
+        <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
+        <translation type="finished">Synergy vam omogućuje lagano dijeljenje vašg miša i tipkovnice između više računala na vašoj radnoj površini. Synergy je besplatan i otvorenog kôda. Jednostavno pomaknite vaš miš preko ruba zaslona jednog računala na zaslon drugog računala. Čak možete dijeliti sve vaše međuspremnike. Sve što trebate je Internet veza. Synergy je više platformska aplikacija (radi na Windowsima, Mac OS X i Linuxu).</translation>
+    </message>
+    <message>
+        <location filename="res/SetupWizardBase.ui" line="125"/>
         <source>Server or Client?</source>
         <translation type="finished">Poslužitelj ili klijent?</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="45"/>
+        <location filename="res/SetupWizardBase.ui" line="140"/>
         <source>&amp;Server (new setup)</source>
         <translation type="finished">&amp;Poslužitelj (novo podešavanje)</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="58"/>
+        <location filename="res/SetupWizardBase.ui" line="153"/>
         <source>This is the first computer you are configuring. Your keyboard and mouse are connected to this computer. This will allow you to move your mouse over to another computer's screen. There can only be one server in your setup.</source>
         <translation type="finished">Ovo je prvo računalo koje podešavate. Vaša tipkovnica i miš su spojeni na ovo računalo. Ovo će vam omogućiti da premjestite vaš miš na zaslon drugog računala. Može bit samo jedan poslužitelj u vašim postavkama.</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="90"/>
+        <location filename="res/SetupWizardBase.ui" line="185"/>
         <source>&amp;Client (add to setup)</source>
         <translation type="finished">&amp;Klijent (dodaj u podešavanje)</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="103"/>
+        <location filename="res/SetupWizardBase.ui" line="198"/>
         <source>You have already set up a server. This is a computer you wish to control using the server's keyboard and mouse. There can be many clients in your setup.</source>
         <oldsource>You have already set up a server. This a computer you wish to control using the server's keyboard and mouse. There can be many clients in your setup.</oldsource>
         <translation type="finished">Već ste podesili poslužitelj. Ovo je računalo koje želite kontrolirati koristeći poslužiteljevu tipkovnicu i miš. Može postojati mnogo klijenata u vašim podešavanjima.</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="136"/>
+        <location filename="res/SetupWizardBase.ui" line="231"/>
         <source>Encryption</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Šifriranje</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="142"/>
+        <location filename="res/SetupWizardBase.ui" line="237"/>
         <source>Network traffic can be easily monitored. Using encryption can reduce the risk that sensitive information will be revealed to others (for example, passwords).</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Mrežni promet se lako može nadzirati. Korištenjem šifriranja može se smanjiti rizik otkrivanja osjetljivih informacija (npr. lozinaka)</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="168"/>
+        <location filename="res/SetupWizardBase.ui" line="263"/>
         <source>Choose a random encryption mode. The mode must be the same on both the client and server.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Odaberite naizmjenični način šifriranja. Način šifriranja mora biti isti na klijentu i poslužitelju.</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="213"/>
+        <location filename="res/SetupWizardBase.ui" line="308"/>
         <source>&amp;Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Način šifriranja:</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="296"/>
+        <location filename="res/SetupWizardBase.ui" line="391"/>
         <source>A longer password will provide stronger encryption. It is a good idea to use 20 characters or more.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Dulja lozinka će pružiti jače šifriranje. Bilo bi dobro da koristite 20 ili više znakova.</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="320"/>
+        <location filename="res/SetupWizardBase.ui" line="415"/>
         <source>&amp;Password:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Lozinka:</translation>
     </message>
     <message>
-        <location filename="res/SetupWizardBase.ui" line="379"/>
+        <location filename="res/SetupWizardBase.ui" line="474"/>
         <source>&amp;Confirm:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Potvrda:</translation>
     </message>
 </context>
 <context>
