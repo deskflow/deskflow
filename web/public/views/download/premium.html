@@ -87,9 +87,14 @@ for the price of a can of Coke! :-){/t}
     </p>
     <ol class="votes">
       {foreach from=$premium->getAllVotes(10) item=vote}
-      <li><a href="/spit/issues/details/{$vote->issueId}/" target="_blank">#{$vote->issueId}</a> - {t votes=$vote->voteCount}%1 votes{/t}</li>
-      {foreachelse}
-      <li>{t}No votes.{/t}</li>
+      <li>
+        <a href="/spit/issues/details/{$vote->issueId}/" target="_blank">#{$vote->issueId}</a> - {t votes=$vote->voteCountSum}%1 votes{/t}
+      {if $vote->status == 1}
+        - <span class="doing">Doing</span> <img class="icon16" src="{$baseUrl}/img/icons/doing.png" />
+      {elseif $vote->status == 2}
+        - <span class="done">Done!</span> <img class="icon16" src="{$baseUrl}/img/icons/done.png" />
+      {/if}
+      </li>
       {/foreach}
     </ol>
   

@@ -417,10 +417,12 @@ class PremiumController extends Controller {
   public function getAllVotes($limit = null) {
     $mysql = $this->getMysql();
     $result = $mysql->query(sprintf(
-      "select issueId, sum(voteCount) as voteCount from vote ".
-      "where voteCount != 0 ".
-      "group by issueId ".
-      "order by voteCount desc ".
+      "select v.issueId, sum(v.voteCount) as voteCountSum, i.status ".
+      "from vote as v ".
+      "left join issue as i on i.id = v.issueId ".
+      "where v.voteCount != 0 ".
+      "group by v.issueId ".
+      "order by voteCountSum desc ".
       (($limit != null) ? sprintf("limit 0, %d ", $limit) : "")
     ));
     if ($result == null) {

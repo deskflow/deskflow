@@ -127,7 +127,14 @@ page instead).{/t}
     <p>{t}All votes cast by the Synergy community.{/t}</p>
     <ol class="community-votes">
       {foreach from=$premium->getAllVotes() item=vote}
-      <li><a href="/spit/issues/details/{$vote->issueId}/" target="_blank">#{$vote->issueId}</a> - {t votes=$vote->voteCount}%1 votes{/t}</li>
+      <li>
+        <a href="/spit/issues/details/{$vote->issueId}/" target="_blank">#{$vote->issueId}</a> - {t votes=$vote->voteCountSum}%1 votes{/t}
+      {if $vote->status == 1}
+        - <span class="doing">Doing</span> <img class="icon16" src="{$baseUrl}/img/icons/doing.png" />
+      {elseif $vote->status == 2}
+        - <span class="done">Done!</span> <img class="icon16" src="{$baseUrl}/img/icons/done.png" />
+      {/if}
+      </li>
       {/foreach}
     </ol>
     

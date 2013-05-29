@@ -646,3 +646,15 @@ p.success {
   color: green;
   font-weight: bold;
 }
+
+span.done {
+  color: green;
+}
+
+span.doing {
+  color: #4099ff;
+}
+
+img.icon16 {
+  margin-bottom: -3px;
+}
