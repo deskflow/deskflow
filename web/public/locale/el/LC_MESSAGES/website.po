@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-19 18:32-0000\n"
+"POT-Creation-Date: 2013-05-29 22:19-0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
@@ -16,7 +16,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 ""
 
-#: lang.c:1 php/Website.class.php:103
+#: lang.c:1 php/Controllers/DownloadController.php:67
 msgid "Alternate Downloads"
 msgstr "Εναλλακτικές Λήψεις"
 
@@ -31,7 +31,8 @@ msgid "Previous 1.4 releases"
 msgstr "Προηγούμενες Εκδόσεις 1.4"
 
 
-#: lang.c:4 lang.c:5 lang.c:6 lang.c:7 lang.c:8 php/Website.class.php:112
+#: lang.c:4 lang.c:5 lang.c:6 lang.c:7 lang.c:8
+#: php/Controllers/DownloadController.php:76
 msgid "Beta"
 msgstr "Δοκιμαστική"
 
@@ -71,7 +72,7 @@ msgid "use at your own risk"
 msgstr "το χρησιμοποιείται με δικό σας ρίσκο"
 
 
-#: lang.c:21 lang.c:24 lang.c:26 lang.c:118
+#: lang.c:21 lang.c:24 lang.c:26 lang.c:111
 msgid "Download"
 msgstr "Λήψη"
 
@@ -132,7 +133,7 @@ msgstr "Εναλλακτικές λήψεις"
 
 
 #: lang.c:35
-msgid "Thanks for offering to donate! We really appreciate your support. We've replaced our donate button with Synergy Premium. It's like donating only you get the power to vote in return for your contribution."
+msgid "Thanks for offering to donate! We really appreciate your support. We've replaced our donate button with Synergy Premium. It's like donating only you get the power to vote in return for your contribution. You don't have to vote either, it's entirely up to you."
 msgstr ""
 
 
@@ -147,631 +148,751 @@ msgstr ""
 
 
 #: lang.c:38
-msgid "Since our last sponsor cut our funding (it wasn't profitable for them), we've been relying on Premium accounts to fund development. We are now supporting 2 full time software engineers in the UK working on Synergy. Most of our users create a Premium account for just $1, and although it might not seem like much, it really is an enormous help!"
+msgid "We rely on Synergy Premium accounts to fund development. We are now supporting 2 full time software engineers working on Synergy. Even if you can only contribute just $1, it might not seem like much, it really is an enormous help for the project!"
 msgstr ""
 
 
 #: lang.c:39
-msgid "What's best is that Premium users are the only ones who can tell us what to work on!"
+msgid "What's best is that Premium users (with votes) are the only ones who can tell us what to work on."
 msgstr ""
 
 
 #: lang.c:40
-msgid "Please choose the option on the left and open a Premium account for as little as $1. You'll be helping us keep the Synergy project alive for the price of a can of Coke! :-)"
+msgid "Please choose the option on the left and open a Synergy Premium account for as little as $1. You'll be helping us keep the Synergy project alive for the price of a can of Coke! :-)"
 msgstr ""
 
 
 #: lang.c:41
+msgid "Thanks so much for reading, and we hope you decide to help us out."
+msgstr ""
+
+
+#: lang.c:42
 msgid "Synergy Project Leader"
 msgstr ""
 
 
-#: lang.c:42 lang.c:119 lang.c:132
+#: lang.c:43 lang.c:112
 msgid "Premium"
 msgstr ""
 
 
-#: lang.c:43
-msgid "Register for Synergy Premium."
-msgstr ""
-
-
 #: lang.c:44
-msgid "How does Premium work?"
-msgstr ""
-
-
-#: lang.c:45
 msgid "You decide what to contribute."
 msgstr ""
 
 
-#: lang.c:46
-msgid "Use the slider or enter any value into the textbox."
+#: lang.c:45
+msgid "Use the slider, or enter any value into the textbox."
 msgstr ""
 
 
-#: lang.c:47 lang.c:51
+#: lang.c:46 lang.c:50 lang.c:181
 msgid "Continue"
 msgstr "Συνέχεια"
 
 
-#: lang.c:48
+#: lang.c:47
 msgid "or"
 msgstr "ή"
 
 
-#: lang.c:49
+#: lang.c:48
 msgid "Non-premium"
 msgstr ""
 
 
-#: lang.c:50
-msgid "I can't afford $1 to help Synergy."
+#: lang.c:49
+msgid "I'm not giving you guys a dime!"
 msgstr ""
 
 
-#: lang.c:52
+#: lang.c:51
 msgid "Top 10 Votes"
 msgstr ""
 
 
-#: lang.c:53
+#: lang.c:52
 msgid "Register for Synergy Premium to cast your vote ($10 per vote)."
 msgstr ""
 
 
-#: lang.c:54
+#: lang.c:53
 msgid "The highest voted issue is given our full attention for the next release."
 msgstr ""
 
 
-#: lang.c:55 lang.c:147 lang.c:155
+#: lang.c:54 lang.c:146 lang.c:154
 msgid "%1 votes"
 msgstr "%1 ψήφους"
 
 
-#: lang.c:56 lang.c:156
+#: lang.c:55
 msgid "No votes."
 msgstr "Χωρίς ψήφους"
 
 
-#: lang.c:57 lang.c:63 lang.c:72
+#: lang.c:56 lang.c:64 lang.c:125 lang.c:158 lang.c:172
 msgid "Synergy Premium"
 msgstr ""
 
 
-#: lang.c:58
+#: lang.c:57
 msgid "Thanks for your interest in Synergy Premium, we really appreciate your support. Funding allows us to spend more time improving Synergy. Support the Synergy project by registering a Synergy Premium account today."
 msgstr ""
 
 
-#: lang.c:59
+#: lang.c:58
 msgid "If you can only contribute $1, that's totally fine by us! Anything at all will allow us to spend more time working on Synergy."
 msgstr ""
 
 
-#: lang.c:60
+#: lang.c:59
 msgid "If you decide to contribute $10, then you get a premium vote. For each additional $10, you get another vote. You can cast this vote on any bug or feature. We will try our best to fix the highest voted feature in the next version. If we can't fix it then you get your votes back, simple."
 msgstr ""
 
 
-#: lang.c:61
+#: lang.c:60
 msgid "It's people like you that make Synergy a better piece of software! :-)"
 msgstr ""
 
 
-#: lang.c:62 lang.c:140 lang.c:153
+#: lang.c:61 lang.c:132 lang.c:151
 msgid "OK"
 msgstr "ΟΚ"
 
 
-#: lang.c:64 lang.c:133
-msgid "Thanks for your interest in Synergy Premium, we really appreciate your support. Funding allows us to spend more time improving Synergy."
-msgstr ""
-
-
-#: lang.c:65
-msgid "We promise to not spam your email and we never store passwords in plain text (we only keep a hash)."
-msgstr ""
-
-
-#: lang.c:66
-msgid "You're almost done! Please choose a payment service. When the payment is complete, you will be redirected to your Synergy Premium account."
-msgstr ""
-
-
-#: lang.c:67
-msgid "The payment is handled by <b>Bolton Software Ltd</b>, the company behind the development of Synergy."
-msgstr ""
-
-
-#: lang.c:68
-msgid "Please click a logo to continue."
-msgstr ""
-
-
-#: lang.c:69
-msgid "Both PayPal and Google Wallet accept all major credit cards."
-msgstr ""
-
-
-#: lang.c:70 lang.c:120
+#: lang.c:62 lang.c:113
 msgid "Help"
 msgstr "Βοήθεια"
 
 
-#: lang.c:71
+#: lang.c:63
 msgid "Having problems using Synergy? You're in the right place!"
 msgstr "Έχετε προβλήματα με τη χρήση του Synergy;  Είστε στο σωστό μέρος!"
 
 
-#: lang.c:73
+#: lang.c:65
 msgid "By opening a Synergy Premium account with at least $10, you can directly influence the priority of what bugs will be fixed next. For every $10 contributed, you get 1 vote which you can assign to a bug fix. The highest voted bug fix will get our full attention."
 msgstr ""
 
 
-#: lang.c:74
+#: lang.c:66
 msgid "<a href=\"%1\">Open a Synergy Premium account now</a>."
 msgstr ""
 
 
-#: lang.c:75
+#: lang.c:67
 msgid "Latest version"
 msgstr "Τελευταία έκδοση"
 
 
-#: lang.c:76
+#: lang.c:68
 msgid "Many bugs are raised even though users haven't tried the latest version. Please visit the  <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"%2\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
 msgstr ""
 
 
-#: lang.c:77
+#: lang.c:69
 msgid "User guide"
 msgstr "Οδηγός Χρήσης"
 
 
-#: lang.c:78
+#: lang.c:70
 msgid "Please read our <a href=\"%1\">user guide</a> before going any further."
 msgstr "Παρακαλούμε διαβάστε τον <a href=\"%1\">οδηγό χρήσης</a> πριν συνεχίσετε."
 
 
-#: lang.c:79 lang.c:121 lang.c:163
+#: lang.c:71 lang.c:114 lang.c:188
 msgid "Search"
 msgstr "Αναζήτηση"
 
 
-#: lang.c:80
+#: lang.c:72
 msgid "Do a <a href=\"%1\">quick search</a>, it really won't take long."
 msgstr "Κάντε μία <a href=\"%1\">γρήγορη αναζήτηση</a>, πτραγματικά δεν θα πάρει πολυ χρόνο."
 
 
-#: lang.c:81
+#: lang.c:73
 msgid "Q&#38;A website"
 msgstr "Q&#38;A ιστοσελίδα"
 
 
-#: lang.c:82
+#: lang.c:74
 msgid " You can ask a question on our <a href=\"%1\">Q&#38;A website</a>. Read the <a href=\"%2\">FAQ</a> to make sure your question does not get closed."
 msgstr ""
 
 
-#: lang.c:83 lang.c:166
+#: lang.c:75 lang.c:191
 msgid "Super User"
 msgstr "Υπέρ Χρήστης"
 
 
-#: lang.c:84
+#: lang.c:76
 msgid "If you're familiar with Super User, there's a <a href=\"%1\">synergy tag</a>."
 msgstr ""
 
 
-#: lang.c:85
+#: lang.c:77
 msgid "Super User is <b>not</b> dedicated to supporting Synergy."
 msgstr "Ο Υπέρ Χρήστης <b>δεν</b> είναι αφοσιωμένος να υποστηρίζει το Synergy."
 
 
-#: lang.c:86
+#: lang.c:78
 msgid "Ask questions; do not nag or comment on bugs or issues."
 msgstr "Κάντε ερωτήσεις? Μην γκρινιάζετε ή σχολιάζετε σφάλματα ή προβλήματα."
 
 
-#: lang.c:87
+#: lang.c:79
 msgid "Do not raise new bugs there; use the issue tracker for this."
 msgstr "Μην ανεβάζετε νέα σφάλματα εκεί? Χρησιμοποιήσετε τον καταγραφέα προβλημάτων για αυτό."
 
 
-#: lang.c:88
+#: lang.c:80
 msgid "Synergy developers do <i>not</i> monitor this website."
 msgstr "Οι προγραμματιστές του Synergy <b>ΔΕΝ</b> παρακολουθoύν αυτή την ιστοσελίδα."
 
 
-#: lang.c:89
+#: lang.c:81
 msgid "Always use the \"synergy\" tag on your question."
 msgstr "Να χρησιμοποιείτε πάντα το την ετικέτα \"Synergy\" στην ερώτησή σας."
 
 
-#: lang.c:90
+#: lang.c:82
 msgid "Make sure you mention \"Synergy\" in the question."
 msgstr "Βεβαιωθείτε ότι έχετε αναφέρει την ετικέτα \"Synergy\" στην ερώτηση."
 
 
-#: lang.c:91
+#: lang.c:83
 msgid "IRC"
 msgstr "IRC"
 
 
-#: lang.c:92
+#: lang.c:84
 msgid "You can join our IRC channel: %1 (for IRC, you could use <a href=\"%2\">XChat</a>)"
 msgstr ""
 
 
-#: lang.c:93
+#: lang.c:85
 msgid "Mailing list"
 msgstr "Λίστα αλληλογραφίας"
 
 
-#: lang.c:94
+#: lang.c:86
 msgid "We also have a <a href=\"%1\">mailing list</a>. Do not post bugs on the mailing list."
 msgstr ""
 
 
-#: lang.c:95
+#: lang.c:87
 msgid "Report a bug"
 msgstr "Αναφέρετε ένα σφάλμα"
 
 
-#: lang.c:96
+#: lang.c:88
 msgid "Please report bugs when you've exhausted all of the above options, and you are absolutely certain you've found a bug. Open a <a href=\"%1\">new bug report</a>."
 msgstr "Παρακαλούμε αναφέρετε κάποιο πρόβλημα αφού έχετε εξαντλήσει όλες τις παραπάνω επιλογές, και είστε απολύτως σίγουροι ότι έχετε βρει ένα πρόβλημα. Ανοίξτε ένα <a href=\"%1\">νέο πρόβλημα</a>."
 
 
+#: lang.c:89
+msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk."
+msgstr ""
+
+
+#: lang.c:90
+msgid "Supported on Windows, Mac OS X, and Linux."
+msgstr ""
+
+
+#: lang.c:91
+msgid "Simply move your mouse to any computer and start typing."
+msgstr ""
+
+
+#: lang.c:92
+msgid "Copy and paste between all of your computers."
+msgstr ""
+
+
+#: lang.c:93
+msgid "Encryption keeps sensitive data safe on public networks."
+msgstr ""
+
+
+#: lang.c:94
+msgid "Save space on your desktop by using one keyboard and mouse."
+msgstr ""
+
+
+#: lang.c:95
+msgid "All you need is a network connection (no extra cables)."
+msgstr ""
+
+
+#: lang.c:96
+msgid "Synergy is free and open source, and always will be!"
+msgstr ""
+
+
 #: lang.c:97
-msgid "Urgent Appeal from Synergy"
-msgstr ""
-
-
-#: lang.c:98
-msgid "Sadly our sponsor has cut funding to the Synergy Project because it hasn't been profitable for them. We have now removed their optional toolbar from our installers. We hope that you will help us out by registering for <a href=\"download/\">Synergy Premium</a> for $1 or whatever you feel our work is worth. All funding goes toward fixing bugs and speeding up development time. Thank you for reading!"
-msgstr ""
-
-
-#: lang.c:99 lang.c:103
-msgid "Nick Bolton, Project Leader"
-msgstr ""
-
-
-#: lang.c:100
-msgid "Synergy: Graduate software engineer needed in the UK"
-msgstr ""
-
-
-#: lang.c:101
-msgid "We're looking for a talented university graduate software engineer to help us improve Synergy. Bolton Software is the UK-based company behind the  development of Synergy, and we're looking to fill a vacancy in our new UK office near London."
-msgstr ""
-
-
-#: lang.c:102
-msgid "Please tweet, like or share the above link to help us get the word out. Thanks for your help!"
-msgstr ""
-
-
-#: lang.c:104
 msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
 msgstr "Το Synergy σας αφήνει με εύκολο τρόπο να μοιράσετε το ποντίκι και το πληκτρολόγιο ανάμεσα σε πολλαπλούς υπολογιστές στο γραφείο σας, είναι Δωρεάν και Ανοιχτού Κώδικα. Απλά μετακινείστε το ποντίκι στην άκρη της μιας οθόνης στην άλλη. Μπορείτε να μοιράσετε ακόμα και όλα τα clipboards. Το μόνο που χρειάζεται μία σύνδεση δικτύου. Το Synergy λειτουργεί σε πολλαπλές πλατφόρμες (δουλεύει σε Windows, Mac OS X και Linux)."
 
 
-#: lang.c:105 lang.c:123
+#: lang.c:98 lang.c:116
 msgid "Info"
 msgstr "Πληροφορίες"
 
 
-#: lang.c:106
+#: lang.c:99
 msgid "Twitter"
 msgstr ""
 
 
-#: lang.c:107
+#: lang.c:100
 msgid "Follow Synergy coders!"
 msgstr "Ακολούθησε τους ιδρυτές του Synergy!"
 
 
-#: lang.c:108
+#: lang.c:101
 msgid "Key people"
 msgstr ""
 
 
-#: lang.c:109
+#: lang.c:102
 msgid "Project leader and primary developer"
 msgstr "Υπεύθυνος έργου και κύριος σχεδιαστής"
 
 
-#: lang.c:110
+#: lang.c:103
 msgid "Original author and project founder"
 msgstr "Επίσημος δημιουργός και ιδρυτής του έργου"
 
 
-#: lang.c:111
+#: lang.c:104
 msgid "Founder of Synergy+ (fork project)"
 msgstr "Ιδρυτής του έργου Synergy+ (έργο διακλάδωσης)"
 
 
-#: lang.c:112
+#: lang.c:105
 msgid "History"
 msgstr ""
 
 
-#: lang.c:113
+#: lang.c:106
 msgid "The first incarnation of Synergy was CosmoSynergy, created by Richard Lee and Adam Feder then at Cosmo Software, Inc. (Silicon Valley), a subsidiary of SGI (Silicon Graphics, Inc.), at the end of 1996. They wrote it, and Chris Schoeneman contributed, to solve a problem: most of the engineers in Cosmo Software had both an Irix and a Windows box on their desks and switchboxes were expensive and annoying. CosmoSynergy was a great success but Cosmo Software declined to productize it and the company was later closed. Synergy is a from-scratch reimplementation of CosmoSynergy. It provides most of the features of the original and adds a few improvements."
 msgstr ""
 
 
-#: lang.c:114
+#: lang.c:107
 msgid "Synergy+ (fork project) was started in 2009 by Sorin Sbârnea  for the purpose of fixing bugs inherited from the original version. The original version of Synergy had not been updated for a notable length of time (as of 6 June 2010, the latest release was 2 April 2006). There was never official confirmation that the original Synergy project had been abandoned; however, there was public discussion providing speculation. In said discussion, Chris Schoeneman (the creator of Synergy) stated that instead of supporting a 1.3.x team, he intends on releasing version 2.0 of Synergy, and publicly announced on 27 Aug 2008 that he has been making progress on this version."
 msgstr ""
 
 
-#: lang.c:115
+#: lang.c:108
 msgid "Nick Bolton joined the project in 2009 and lead the re-integration of Synergy+ back into the original Synergy project. Nick is now the project leader and primary developer responsible for all development (bug fixes, new features, project management, etc). Chris and Sorin still contribute to discussion on the mailing list ocassionally."
 msgstr ""
 
 
-#: lang.c:116
+#: lang.c:109
 msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
 msgstr "Το Synergy σας επιτρέπει να μοιράζεστε το πληκτρολόγιο και το ποντίκι σας μεταξύ πολλών υπολογιστών στο γραφείο σας."
 
 
-#: lang.c:117
+#: lang.c:110
 msgid "Home"
 msgstr "Αρχική"
 
 
-#: lang.c:122 lang.c:157
+#: lang.c:115 lang.c:182
 msgid "Press"
 msgstr ""
 
 
-#: lang.c:124
+#: lang.c:117
 msgid "Blog"
 msgstr "Ιστολόγιο"
 
 
-#: lang.c:125
+#: lang.c:118
 msgid "Wiki"
 msgstr "Wiki"
 
 
-#: lang.c:126
+#: lang.c:119
 msgid "Tracker"
 msgstr "Καταγραφέας"
 
 
-#: lang.c:127
+#: lang.c:120
 msgid "Code"
 msgstr "Κώδικας"
 
 
-#: lang.c:128
+#: lang.c:121
 msgid "<b>Welcome</b>, Synergy Premium user! Thanks for supporting our project. <a href=\"%1\">Premium account</a>."
 msgstr ""
 
 
-#: lang.c:129
+#: lang.c:122
 msgid "Improve this translation"
 msgstr "Βελτιώστε αυτή την μετάφραση"
 
 
-#: lang.c:130
+#: lang.c:123
 msgid "License"
 msgstr "Άδεια"
 
 
-#: lang.c:131 lang.c:162
+#: lang.c:124 lang.c:187
 msgid "Privacy Policy"
 msgstr "Πολιτική Προστασίας Προσωπικών Δεδομένων"
 
 
-#: lang.c:134
-msgid "Support the Synergy project by registering a Synergy Premium account today."
+#: lang.c:126
+msgid "Thanks for your interest in Synergy Premium, we really appreciate your support. Funding allows us to spend more time improving Synergy."
 msgstr ""
 
 
-#: lang.c:135
-msgid "<a href=\"%1\">Register for Synergy Premium</a>."
+#: lang.c:127
+msgid "Support the Synergy project by <a href=\"%1\">registering</a> a Synergy Premium account today."
 msgstr ""
 
 
-#: lang.c:136
+#: lang.c:128
 msgid "Login"
 msgstr "Σύνδεση"
 
 
-#: lang.c:137
-msgid "If you don't have an account, you can <a href=\"%1\">sign up</a>."
+#: lang.c:129
+msgid "Currently we don't have a \"forgot password\" feature, please contact us instead, sorry any inconvenience."
 msgstr ""
 
 
-#: lang.c:138
+#: lang.c:130
 msgid "Email:"
 msgstr "Email:"
 
 
-#: lang.c:139
+#: lang.c:131
 msgid "Password:"
 msgstr "Κωδικός"
 
 
-#: lang.c:141
-msgid "Welcome to your Synergy Premium account. You have <b>%1</b> unassigned Premium vote(s)."
+#: lang.c:133 lang.c:159
+msgid "Logged in as: %1 (%2)"
 msgstr ""
 
 
-#: lang.c:142
-msgid "If you have just signed up and don't see any votes, we may be waiting to hear from PayPal so please be patient. <a href=\"%1\">Check now</a>."
-msgstr ""
-
-
-#: lang.c:143
+#: lang.c:134
 msgid "Logout"
 msgstr "Αποσύνδεση"
 
 
-#: lang.c:144
-msgid "Want more votes?"
+#: lang.c:135
+msgid "Welcome to your Synergy Premium account."
 msgstr ""
 
 
-#: lang.c:145
-msgid "Each $10 contribution will give you 1 vote, so for example, $100 will give you 10 votes. Thanks for your support!"
+#: lang.c:136
+msgid "Download Synergy"
 msgstr ""
 
 
-#: lang.c:146
+#: lang.c:137
+msgid "Contribute to Synergy"
+msgstr ""
+
+
+#: lang.c:138
+msgid "If you'd like to help the Synergy project, please <a href=\"%1\">make a contribution</a> and we'll give you votes in return ($10 per vote) so you can tell us what to work on next. We would really appreciate your support. Thanks!"
+msgstr ""
+
+
+#: lang.c:139
+msgid "Need more votes?"
+msgstr ""
+
+
+#: lang.c:140
+msgid "It looks like you've used all your votes, that's great! Please do <a href=\"%1\">make another contribution</a> if you would like to vote on more issues ($10 per vote). We really appreciate your continued support."
+msgstr ""
+
+
+#: lang.c:141
+msgid "Contribute again!"
+msgstr ""
+
+
+#: lang.c:142
+msgid "Thanks for your support! If you'd like to <a href=\"%1\">make another contribution</a> at any time and get more votes ($10 per vote), this would really help support the Synergy project."
+msgstr ""
+
+
+#: lang.c:143
 msgid "Your votes"
 msgstr "Οι ψήφοι σας"
 
 
-#: lang.c:148
+#: lang.c:144
+msgid " You have <b>%1</b> unassigned Premium vote(s)."
+msgstr ""
+
+
+#: lang.c:145
 msgid "You have not cast any votes yet."
 msgstr "Δεν έχετε αφήσει καμία ψήφο ακόμη."
 
 
-#: lang.c:149
+#: lang.c:147
 msgid "Cast new vote"
 msgstr "Αφήστε νέα ψήφο"
 
 
-#: lang.c:150
-msgid "To use Premium votes, enter an issue ID from our <a href=\"%1\">issue tracker</a>, and assign a number of votes. Choose carefully; once votes are spent, you can't get them back. If you have any problems using your votes, please <a href=\"%2\">email</a> for help (please do not report bugs to this address, use the <a href=\"%3\">help</a> page instead)."
+#: lang.c:148
+msgid "\" help=\"../help/\"}To use Premium votes, enter an issue ID from our <a href=\"%1\">issue tracker</a>, and assign a number of votes. Choose carefully; once votes are spent, you can't get them back. If you have any problems using your votes, please <a href=\"%2\">email</a> for help (please do not report bugs to this address, use the <a href=\"%3\">help</a> page instead)."
 msgstr ""
 
 
-#: lang.c:151
+#: lang.c:149
 msgid "Issue ID:"
 msgstr "Ταυτότητα Προβλήματος"
 
 
-#: lang.c:152
+#: lang.c:150
 msgid "Votes:"
 msgstr "Ψήφοι"
 
 
-#: lang.c:154
+#: lang.c:152
 msgid "Community votes"
 msgstr "Ψήφοι κοινότητας"
 
 
-#: lang.c:158
-msgid "If you've featured Synergy on your website, thank you! Please let us know so we can link to it."
+#: lang.c:153
+msgid "All votes cast by the Synergy community."
 msgstr ""
 
 
-#: lang.c:159
-msgid "Media"
-msgstr "Μέσα"
+#: lang.c:155
+msgid "Payment history"
+msgstr ""
 
 
-#: lang.c:160
-msgid "Featured"
-msgstr "Προτεινόμενο"
+#: lang.c:156
+msgid "\"}This is a record of your payment history. Please <a href=\"%2\">email</a> us if you have any questions."
+msgstr ""
+
+
+#: lang.c:157
+msgid "You have not made any payments yet."
+msgstr ""
+
+
+#: lang.c:160 lang.c:173
+msgid "Thanks again for supporting the Synergy project! You rock!"
+msgstr ""
 
 
 #: lang.c:161
-msgid "Awards"
+msgid "Please confirm the amount above, and choose a payment method (click on a logo or enter your card details). Each premium vote costs $10, but you can contribute as little as $1 if you just want to help out. If you need help making a payment or have any feedback please <a href=\"mailto:%1\">email</a> us and we'll do our best to sort it out."
+msgstr ""
+
+
+#: lang.c:162
+msgid "Sorry, your card payment failed. Please check your details and try again. You may need to contact your card issuer or bank for more information."
+msgstr ""
+
+
+#: lang.c:163
+msgid "Alternatively you can still use PayPal or Google Wallet by clicking on the logos above."
 msgstr ""
 
 
 #: lang.c:164
-msgid "Search all Synergy websites from one page."
-msgstr "Αναζήτηση σε όλες τις ιστοσελίδες για το Synergy από μία ιστοσελίδα."
+msgid "<b>Error:</b> %1"
+msgstr ""
 
 
 #: lang.c:165
-msgid "What is searched?"
-msgstr "Τί αναζητείται;"
+msgid "Continue to <a href=\"%1\">Synergy Premium</a>."
+msgstr ""
+
+
+#: lang.c:166
+msgid "You are using a secure connection (HTTPS, SSL)."
+msgstr ""
 
 
 #: lang.c:167
-msgid "Issue tracker"
-msgstr "Καταγραφέας προβλημάτων"
+msgid "Card number:"
+msgstr ""
 
 
 #: lang.c:168
-msgid "Website wiki"
-msgstr "Στην ιστοσελίδα Wiki"
+msgid "Name on card:"
+msgstr ""
 
 
 #: lang.c:169
-msgid "Mailing lists"
-msgstr "Mailing lists"
+msgid "Expiration:"
+msgstr ""
 
 
 #: lang.c:170
-msgid "Search tips"
-msgstr "Συμβουλές αναζήτησης"
+msgid "Security code:"
+msgstr ""
 
 
 #: lang.c:171
-msgid "If you get too many results, try specifying your operating system."
-msgstr "Εάν έχετε πάρα πολλά αποτελέσματα, δοκιμάστε να προσδιορίζει το λειτουργικό σας σύστημα."
-
-
-#: lang.c:172
-msgid "Sometimes issues are specific to the client or server."
-msgstr "Μερικές φορές τα προβλήματα αφορούν μόνο τον πελάτη ή τον διακομιστή."
-
-
-#: lang.c:173
-msgid "You may find that entering your version number helps."
-msgstr "Μπορείτε να διαπιστώσετε ότι εισάγοντας τον αριθμό έκδοσης σας βοηθά."
+msgid "Huh?"
+msgstr ""
 
 
 #: lang.c:174
-msgid "If this does not work, use the <a href=\"%1\">alternative Synergy search</a>."
+msgid "Already registered?"
 msgstr ""
 
 
 #: lang.c:175
+msgid "We promise to not spam your email and we never store passwords in   plain text (we only keep a hash)."
+msgstr ""
+
+
+#: lang.c:176
+msgid "Your name:"
+msgstr ""
+
+
+#: lang.c:177
+msgid "Email address:"
+msgstr ""
+
+
+#: lang.c:178
+msgid "Confirm email:"
+msgstr ""
+
+
+#: lang.c:179
+msgid "New password:"
+msgstr ""
+
+
+#: lang.c:180
+msgid "Confirm password:"
+msgstr ""
+
+
+#: lang.c:183
+msgid "If you've featured Synergy on your website, thank you! Please let us know so we can link to it."
+msgstr ""
+
+
+#: lang.c:184
+msgid "Media"
+msgstr "Μέσα"
+
+
+#: lang.c:185
+msgid "Featured"
+msgstr "Προτεινόμενο"
+
+
+#: lang.c:186
+msgid "Awards"
+msgstr ""
+
+
+#: lang.c:189
+msgid "Search all Synergy websites from one page."
+msgstr "Αναζήτηση σε όλες τις ιστοσελίδες για το Synergy από μία ιστοσελίδα."
+
+
+#: lang.c:190
+msgid "What is searched?"
+msgstr "Τί αναζητείται;"
+
+
+#: lang.c:192
+msgid "Issue tracker"
+msgstr "Καταγραφέας προβλημάτων"
+
+
+#: lang.c:193
+msgid "Website wiki"
+msgstr "Στην ιστοσελίδα Wiki"
+
+
+#: lang.c:194
+msgid "Mailing lists"
+msgstr "Mailing lists"
+
+
+#: lang.c:195
+msgid "Search tips"
+msgstr "Συμβουλές αναζήτησης"
+
+
+#: lang.c:196
+msgid "If you get too many results, try specifying your operating system."
+msgstr "Εάν έχετε πάρα πολλά αποτελέσματα, δοκιμάστε να προσδιορίζει το λειτουργικό σας σύστημα."
+
+
+#: lang.c:197
+msgid "Sometimes issues are specific to the client or server."
+msgstr "Μερικές φορές τα προβλήματα αφορούν μόνο τον πελάτη ή τον διακομιστή."
+
+
+#: lang.c:198
+msgid "You may find that entering your version number helps."
+msgstr "Μπορείτε να διαπιστώσετε ότι εισάγοντας τον αριθμό έκδοσης σας βοηθά."
+
+
+#: lang.c:199
+msgid "If this does not work, use the <a href=\"%1\">alternative Synergy search</a>."
+msgstr ""
+
+
+#: lang.c:200
 msgid "Search now"
 msgstr "Αναζήτηση τώρα"
 
 
-#: lang.c:176
+#: lang.c:201
 msgid "Loading"
 msgstr "Φόρτωση"
 
 
-#: php/Premium.class.php:262
+#: php/Controllers/PremiumController.php:460
 msgid "Please enter your name."
 msgstr "Παρακαλώ εισάγετε το όνομά σας."
 
 
-#: php/Premium.class.php:265
+#: php/Controllers/PremiumController.php:463
 msgid "Please enter your email address."
 msgstr "Παρακαλώ εισάγετε την διεύθυνση ηλεκτρονικής αλληλογραφίας σας (email)."
 
 
-#: php/Premium.class.php:268
-msgid "Your email address does not look valid."
-msgstr "H διεύθυνση ηλεκτρονικής αλληλογραφίας σας δεν φαίνεται να είναι σωστή"
+#: php/Controllers/PremiumController.php:466
+msgid "The email address does not appear to be valid."
+msgstr ""
 
 
-#: php/Premium.class.php:271
-msgid "That email address is already in use, are you already registered?"
-msgstr "Η διεύθυνση ηλεκτρονικής αλληλογραφίας σας είναι ήδη σε χρήση, είστε ήδη εγγεγραμμένος;"
+#: php/Controllers/PremiumController.php:469
+msgid "Welcome back, you've already registered. Please <a href=\"../\">log in</a> to your account."
+msgstr ""
 
 
-#: php/Premium.class.php:274
-msgid "The confirm email textbox must match the email address textbox."
-msgstr "Το πεδίο επιβεβαίωσης ηλεκτρονικού ταχυδρομείου πρέπει να ταιριάζει με το πεδίο ηλεκτρονικού ταχυδρομίου"
+#: php/Controllers/PremiumController.php:472
+msgid "The confirm email must match the email address."
+msgstr ""
 
 
-#: php/Premium.class.php:277
+#: php/Controllers/PremiumController.php:475
 msgid "Please enter a password."
 msgstr "Παρακαλώ εισάγετε ένα κωδικό"
 
 
-#: php/Premium.class.php:280
-msgid "The confirm password texbox must match the password textbox."
+#: php/Controllers/PremiumController.php:478
+msgid "The confirm password must match the password."
 msgstr ""
 
