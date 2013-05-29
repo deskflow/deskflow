@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 01, 2012 at 07:27 PM
+-- Generation Time: May 30, 2013 at 12:23 AM
 -- Server version: 5.1.63-0+squeeze1
--- PHP Version: 5.3.3-7+squeeze14
+-- PHP Version: 5.3.3-7+squeeze15
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -23,6 +23,26 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `creditcard`
+--
+
+CREATE TABLE `creditcard` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `request` text,
+  `response` text,
+  `requestDate` datetime DEFAULT NULL,
+  `responseDate` datetime DEFAULT NULL,
+  `result` varchar(50) DEFAULT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `created` datetime NOT NULL,
+  `error` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `gwallet`
 --
 
@@ -35,6 +55,18 @@ CREATE TABLE `gwallet` (
   `amount` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `issue`
+--
+
+CREATE TABLE `issue` (
+  `id` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
