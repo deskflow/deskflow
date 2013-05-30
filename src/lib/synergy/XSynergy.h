@@ -30,12 +30,6 @@ Thrown when the client fails to follow the protocol.
 */
 XBASE_SUBCLASS_WHAT(XBadClient, XSynergy);
 
-//! Bad crypto mode
-/*!
-Thrown when the user enters an invalid crypto mode.
-*/
-XBASE_SUBCLASS_WHAT(XBadCryptoMode, XSynergy);
-
 //! Incompatible client exception
 /*!
 Thrown when a client attempting to connect has an incompatible version.

@@ -49,3 +49,13 @@ XIOWouldBlock::getWhat() const throw()
 {
 	return format("XIOWouldBlock", "stream operation would block");
 }
+
+
+//
+// XBadCryptoMode
+//
+CString
+XIOBadCryptoMode::getWhat() const throw()
+{
+	return "XBadCryptoMode";
+}
