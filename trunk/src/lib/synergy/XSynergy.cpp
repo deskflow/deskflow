@@ -29,15 +29,6 @@ XBadClient::getWhat() const throw()
 	return "XBadClient";
 }
 
-//
-// XBadCryptoMode
-//
-CString
-XBadCryptoMode::getWhat() const throw()
-{
-	return "XBadCryptoMode";
-}
-
 
 //
 // XIncompatibleClient

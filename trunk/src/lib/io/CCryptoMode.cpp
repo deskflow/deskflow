@@ -16,7 +16,7 @@
 */
 
 #include "CCryptoMode.h"
-#include "XSynergy.h"
+#include "XIO.h"
 
 using namespace CryptoPP;
 
@@ -47,7 +47,7 @@ CCryptoMode::CCryptoMode(ECryptoMode mode, bool encryption) :
 			break;
 
 		default:
-			throw XBadCryptoMode();
+			throw XIOBadCryptoMode();
 		}
 	}
 	else {
@@ -72,7 +72,7 @@ CCryptoMode::CCryptoMode(ECryptoMode mode, bool encryption) :
 			break;
 
 		default:
-			throw XBadCryptoMode();
+			throw XIOBadCryptoMode();
 		}
 	}
 }
