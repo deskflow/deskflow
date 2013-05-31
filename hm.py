@@ -58,7 +58,7 @@ globalOptionsLong = ['no-prompts', 'generator=', 'verbose', 'make-gui']
 cmd_opt_dict = {
 	'about'     : ['', []],
 	'setup'     : ['g:', []],
-	'configure' : ['g:dr', ['debug', 'release', 'game-device', 'vnc', 'mac-sdk=']],
+	'configure' : ['g:dr', ['debug', 'release', 'game-device', 'mac-sdk=']],
 	'build'     : ['dr', ['debug', 'release']],
 	'clean'     : ['dr', ['debug', 'release']],
 	'update'    : ['', []],

@@ -49,7 +49,6 @@ set(inc
 	CArgsBase.h
 	IAppUtil.h
 	CEventGameDevice.h
-	CVncClient.h
 )
 
 set(src
@@ -79,7 +78,6 @@ set(src
 	CAppUtil.cpp
 	CArgsBase.cpp
 	CEventGameDevice.cpp
-	CVncClient.cpp
 	CGameDevice.cpp
 )
 
@@ -118,10 +116,6 @@ set(inc
 if (UNIX)
 	list(APPEND inc
 		../../..
-	)
-elseif (WIN32)
-	list(APPEND inc
-		../../vnc/win
 	)
 endif()
 

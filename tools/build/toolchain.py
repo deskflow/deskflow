@@ -66,9 +66,6 @@ class InternalCommands:
 	# by default, do not compile with game device support.
 	gameDevice = False
 	
-	# by default, do not compile with vnc support.
-	vncSupport = False
-	
 	# by default, let cmake decide
 	macSdk = None
 	
@@ -191,11 +188,6 @@ class InternalCommands:
 			cmake_args += " -DGAME_DEVICE_SUPPORT:BOOL=TRUE"
 		else:
 			cmake_args += " -DGAME_DEVICE_SUPPORT:BOOL=FALSE"
-		
-		if self.vncSupport:
-			cmake_args += " -DVNC_SUPPORT:BOOL=TRUE"
-		else:
-			cmake_args += " -DVNC_SUPPORT:BOOL=FALSE"
 		
 		if self.macSdk:
 			path = "/Developer/SDKs/MacOSX" + self.macSdk + ".sdk/"
@@ -1238,8 +1230,6 @@ class CommandHandler:
 				self.qtDir = a
 			elif o == '--game-device':
 				self.ic.gameDevice = True
-			elif o == '--vnc':
-				self.ic.vncSupport = True
 			elif o == '--mac-sdk':
 				self.ic.macSdk = a
 	
