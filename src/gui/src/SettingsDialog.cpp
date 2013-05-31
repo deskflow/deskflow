@@ -95,9 +95,15 @@ void SettingsDialog::changeEvent(QEvent* event)
 		{
 		case QEvent::LanguageChange:
 			{
+				int logLevelIndex = m_pComboLogLevel->currentIndex();
+				int processModeIndex = m_pComboProcessMode->currentIndex();
+
 				m_pComboLanguage->blockSignals(true);
 				retranslateUi(this);
 				m_pComboLanguage->blockSignals(false);
+
+				m_pComboLogLevel->setCurrentIndex(logLevelIndex);
+				m_pComboProcessMode->setCurrentIndex(processModeIndex);
 				break;
 			}
 
