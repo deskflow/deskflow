@@ -36,7 +36,6 @@ public:
 	const char*	m_display;
 	CString m_name;
 	bool m_disableTray;
-	bool m_enableVnc;
 	bool m_enableIpc;
 	CCryptoOptions m_crypto;
 #if SYSAPI_WIN32

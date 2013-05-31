@@ -44,10 +44,6 @@ else()
   add_executable(synergyd ${src})
 endif()
 
-if (VNC_SUPPORT)
-	list(APPEND libs vnc_server vnc_client)
-endif()
-
 target_link_libraries(synergyd
 	arch base common io ipc mt net platform synergy cryptopp ${libs})
 

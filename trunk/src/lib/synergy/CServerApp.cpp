@@ -34,7 +34,6 @@
 #include "LogOutputters.h"
 #include "CFunctionEventJob.h"
 #include "TMethodJob.h"
-#include "CVncClient.h"
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
@@ -65,8 +64,7 @@ s_serverState(kUninitialized),
 s_serverScreen(NULL),
 s_primaryClient(NULL),
 s_listener(NULL),
-s_timer(NULL),
-m_vncClient(NULL)
+s_timer(NULL)
 {
 }
 
@@ -324,13 +322,6 @@ CServerApp::handleClientConnected(const CEvent&, void* vlistener)
 	if (client != NULL) {
 		s_server->adoptClient(client);
 		updateStatus();
-
-		if (args().m_enableVnc) {
-			// TODO: figure out client IP address from name.
-			CVncClient* vncClient = new CVncClient("192.168.0.13", client->getName());
-			vncClient->start();
-			m_vncClients.insert(std::pair<CString, CVncClient*>(client->getName(), vncClient));
-		}
 	}
 }
 
@@ -733,24 +724,6 @@ CServerApp::handleNoClients(const CEvent&, void*)
 void
 CServerApp::handleScreenSwitched(const CEvent& e, void*)
 {
-	if (!args().m_enableVnc)
-		return;
-
-	if (m_vncClient != NULL) {
-		LOG((CLOG_DEBUG "hiding vnc viewer for: %s", m_vncClient->m_screen.c_str()));
-		m_vncClient->hideViewer();
-	}
-
-	CServer::CSwitchToScreenInfo* info = reinterpret_cast<CServer::CSwitchToScreenInfo*>(e.getData());
-	std::map<CString, CVncClient*>::iterator it = m_vncClients.find(info->m_screen);
-	if (it == m_vncClients.end()) {
-		LOG((CLOG_DEBUG "could not find vnc client for: %s", info->m_screen));
-		return;
-	}
-
-	LOG((CLOG_DEBUG "showing vnc viewer for: %s", info->m_screen));
-	m_vncClient = it->second;
-	m_vncClient->showViewer();
 }
 
 int

@@ -55,10 +55,6 @@ if (UNIX)
 	)
 endif()
 
-if (VNC_SUPPORT)
-	list(APPEND libs vnc_server vnc_client)
-endif()
-
 include_directories(${inc})
 add_executable(synergyc ${src})
 target_link_libraries(synergyc

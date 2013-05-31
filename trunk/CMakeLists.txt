@@ -298,10 +298,6 @@ if (GAME_DEVICE_SUPPORT)
 	add_definitions(-DGAME_DEVICE_SUPPORT)
 endif()
 
-if (VNC_SUPPORT)
-	add_definitions(-DVNC_SUPPORT)
-endif()
-
 add_subdirectory(src)
 add_subdirectory(tools)
 

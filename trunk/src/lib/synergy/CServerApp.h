@@ -41,7 +41,6 @@ class CScreen;
 class CClientListener;
 class CEventQueueTimer;
 class ILogOutputter;
-class CVncClient;
 
 class CServerApp : public CApp {
 public:
@@ -126,10 +125,7 @@ public:
 
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
-	void vncThread(void*);
 	void handleScreenSwitched(const CEvent&, void*  data);
-	std::map<CString, CVncClient*> m_vncClients;
-	CVncClient* m_vncClient;
 };
 
 // configuration file name
