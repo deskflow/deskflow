@@ -13,38 +13,59 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(cpp_dir cryptopp562)
+set(cryptopp_dir cryptopp562)
 
-file(GLOB cpp_src ${cpp_dir}/*.cpp)
-
-if (WIN32)
-	file(GLOB cpp_hdr ${cpp_dir}/*.h)
-	list(APPEND cpp_src ${cpp_hdr})
-endif()
-
-file(GLOB cpp_ignore
-	${cpp_dir}/simple.cpp
-	${cpp_dir}/strciphr.cpp
-	${cpp_dir}/polynomi.cpp
-	${cpp_dir}/eprecomp.cpp
-	${cpp_dir}/eccrypto.cpp
-	${cpp_dir}/algebra.cpp)
-list(REMOVE_ITEM cpp_src ${cpp_ignore})
+# only compile the crypto++ files we need.
+set(cryptopp_src
+	${cryptopp_dir}/3way.cpp
+	${cryptopp_dir}/algparam.cpp
+	${cryptopp_dir}/asn.cpp
+	${cryptopp_dir}/authenc.cpp
+	${cryptopp_dir}/basecode.cpp
+	${cryptopp_dir}/cpu.cpp
+	${cryptopp_dir}/cryptlib.cpp
+	${cryptopp_dir}/dll.cpp
+	${cryptopp_dir}/ec2n.cpp
+	${cryptopp_dir}/ecp.cpp
+	${cryptopp_dir}/filters.cpp
+	${cryptopp_dir}/fips140.cpp
+	${cryptopp_dir}/gcm.cpp
+	${cryptopp_dir}/gf2n.cpp
+	${cryptopp_dir}/gfpcrypt.cpp
+	${cryptopp_dir}/hex.cpp
+	${cryptopp_dir}/hmac.cpp
+	${cryptopp_dir}/hrtimer.cpp
+	${cryptopp_dir}/integer.cpp
+	${cryptopp_dir}/iterhash.cpp
+	${cryptopp_dir}/misc.cpp
+	${cryptopp_dir}/modes.cpp
+	${cryptopp_dir}/mqueue.cpp
+	${cryptopp_dir}/nbtheory.cpp
+	${cryptopp_dir}/oaep.cpp
+	${cryptopp_dir}/osrng.cpp
+	${cryptopp_dir}/pubkey.cpp
+	${cryptopp_dir}/queue.cpp
+	${cryptopp_dir}/randpool.cpp
+	${cryptopp_dir}/rdtables.cpp
+	${cryptopp_dir}/rijndael.cpp
+	${cryptopp_dir}/rng.cpp
+	${cryptopp_dir}/sha.cpp
+)
 
 # if 64-bit windows, compile asm file.
 if (CMAKE_CL_64)
-	list(APPEND cpp_src ${cpp_dir}/x64dll.asm ${cpp_dir}/x64masm.asm)
+	list(APPEND cryptopp_src ${cryptopp_dir}/x64dll.asm ${cryptopp_dir}/x64masm.asm)
 	
 	add_custom_command(OUTPUT $(IntDir)x64dll.obj
 		COMMAND ml64.exe /c /nologo /Fo$(IntDir)x64dll.obj /Zi 
-		"${CMAKE_CURRENT_SOURCE_DIR}/${cpp_dir}/x64dll.asm"
-		MAIN_DEPENDENCY ${cpp_dir}/x64dll.asm
+		"${CMAKE_CURRENT_SOURCE_DIR}/${cryptopp_dir}/x64dll.asm"
+		MAIN_DEPENDENCY ${cryptopp_dir}/x64dll.asm
 		VERBATIM)
 		
 	add_custom_command(OUTPUT $(IntDir)x64masm.obj
 		COMMAND ml64.exe /c /nologo /Fo$(IntDir)x64masm.obj /Zi 
-		"${CMAKE_CURRENT_SOURCE_DIR}/${cpp_dir}/x64masm.asm"
-		MAIN_DEPENDENCY ${cpp_dir}/x64masm.asm
+		"${CMAKE_CURRENT_SOURCE_DIR}/${cryptopp_dir}/x64masm.asm"
+		MAIN_DEPENDENCY ${cryptopp_dir}/x64masm.asm
 		VERBATIM)
 endif()
 
@@ -61,4 +82,4 @@ if (UNIX)
 	endif()
 endif()
 
-add_library(cryptopp STATIC ${cpp_src})
+add_library(cryptopp STATIC ${cryptopp_src})
