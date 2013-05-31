@@ -265,17 +265,17 @@ Visit our website for help and info (synergy-foss.org).
     <message>
         <location filename="src/MainWindow.cpp" line="659"/>
         <source>service mode</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Modul serviciului.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="659"/>
         <source>desktop mode</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Mod de desktop.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="660"/>
         <source>Synergy is running (%1).</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Synergy ruleaza (%1).</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="821"/>
@@ -335,12 +335,12 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="54"/>
         <source>Screen name:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Nume de utilizator:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="61"/>
         <source>&amp;Server IP:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">IP-ul Server-ului:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="160"/>
@@ -401,12 +401,12 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/MainWindowBase.ui" line="174"/>
         <source>&amp;Elevate</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Ridica</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="204"/>
         <source>IP addresses:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Adrese IP:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="296"/>
@@ -872,7 +872,7 @@ Click dublu pe un ecran pentru ai edita setările.</translation>
     <message>
         <location filename="src/SettingsDialog.cpp" line="62"/>
         <source>Encryption password must not be empty.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Parola encriptiei nu poate fi goala.</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="121"/>
@@ -935,7 +935,7 @@ Click dublu pe un ecran pentru ai edita setările.</translation>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="251"/>
         <source>Service</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Serviciu.</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="256"/>
@@ -965,12 +965,12 @@ Click dublu pe un ecran pentru ai edita setările.</translation>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="20"/>
         <source>&amp;Graphical interface</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Interfata Grafica</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="55"/>
         <source>&amp;Language:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Limba:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="82"/>
@@ -980,12 +980,12 @@ Click dublu pe un ecran pentru ai edita setările.</translation>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="97"/>
         <source>&amp;Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Mod:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="142"/>
         <source>Pass&amp;word:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Pass&amp;word:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="307"/>
@@ -1033,17 +1033,17 @@ Click dublu pe un ecran pentru ai edita setările.</translation>
     <message>
         <location filename="src/SetupWizard.cpp" line="84"/>
         <source>Encryption mode required.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Se cere modul pentru encriptie.</translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="93"/>
         <source>Encryption password required.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Parola pentru encriptie este ceruta.</translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="100"/>
         <source>Encryption password and confirmation do not match.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Parola encriptiei si confirmarea nu sunt la fel.</translation>
     </message>
 </context>
 <context>
@@ -1061,7 +1061,7 @@ Click dublu pe un ecran pentru ai edita setările.</translation>
     <message>
         <location filename="res/SetupWizardBase.ui" line="33"/>
         <source>Thanks for installing Synergy!</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Va multumim ca a-ti instalat Synergy!</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="108"/>
@@ -1097,7 +1097,7 @@ Click dublu pe un ecran pentru ai edita setările.</translation>
     <message>
         <location filename="res/SetupWizardBase.ui" line="231"/>
         <source>Encryption</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Encriptie</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="237"/>
@@ -1107,27 +1107,27 @@ Click dublu pe un ecran pentru ai edita setările.</translation>
     <message>
         <location filename="res/SetupWizardBase.ui" line="263"/>
         <source>Choose a random encryption mode. The mode must be the same on both the client and server.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Alegeti o metoda de encriptare la intamplare. Aceasta trebuie sa fie la fel cu cea de la server si cea de la client.</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="308"/>
         <source>&amp;Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Mod:</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="391"/>
         <source>A longer password will provide stronger encryption. It is a good idea to use 20 characters or more.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">O parola mai complexa va furniza o encriptie mai puternica. Este o idee buna sa folositi 20 sau mai multe litere.</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="415"/>
         <source>&amp;Password:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Parola:</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="474"/>
         <source>&amp;Confirm:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Confirma:</translation>
     </message>
 </context>
 <context>

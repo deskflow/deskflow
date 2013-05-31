@@ -26,7 +26,15 @@ Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (synergy-foss.org).
 &lt;/p&gt;</oldsource>
-        <translation type="unfinished"></translation>
+        <translation type="finished">&lt;p&gt;
+Клавиатура и мышь делят назначение. Взаимная платформа и открытый источник.&lt;br /&gt;&lt;br /&gt;
+Авторское право © 2012 Bolton Software Ltd.&lt;br /&gt;
+Авторское право © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Synergy реализована в соответствии с GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Synergy базирована на CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+The Synergy GUI базирована на QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Поситите наш сайт для помощи и информации (synergy-foss.org).
+&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="res/AboutDialogBase.ui" line="140"/>
@@ -265,12 +273,12 @@ Visit our website for help and info (synergy-foss.org).
     <message>
         <location filename="src/MainWindow.cpp" line="659"/>
         <source>service mode</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">метод обслуживания</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="659"/>
         <source>desktop mode</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">настольный режим</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="660"/>
@@ -287,7 +295,8 @@ Visit our website for help and info (synergy-foss.org).
         <source>Are you sure you want to elevate Synergy?
 
 This allows Synergy to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Synergy only if you really need to.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Вы уверены что хотите повышать Synergy?
+Это позволит Synergy взаимодействовать с повышающим процессом и UAC диалогом, но может вызвать проблемы с неповышенными  процессами. Повышайте Synregy только если это действительно необходимо.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="664"/>
@@ -872,7 +881,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="src/SettingsDialog.cpp" line="62"/>
         <source>Encryption password must not be empty.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Кодирование пароля не может быть пустым.</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="121"/>
@@ -930,7 +939,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="240"/>
         <source>&amp;Process mode:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Технологический режим:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="251"/>
@@ -940,7 +949,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="256"/>
         <source>Desktop (legacy)</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Рабочий стол (наследие)</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="291"/>
@@ -965,27 +974,27 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="20"/>
         <source>&amp;Graphical interface</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Графический интерфейс:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="55"/>
         <source>&amp;Language:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Язык:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="82"/>
         <source>&amp;Encryption</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Кодирование</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="97"/>
         <source>&amp;Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Режим:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="142"/>
         <source>Pass&amp;word:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Пароль:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="307"/>
@@ -1033,17 +1042,17 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="src/SetupWizard.cpp" line="84"/>
         <source>Encryption mode required.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Режим кодирования рекомендуется.</translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="93"/>
         <source>Encryption password required.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Кодирование пароля рекомендуется.</translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="100"/>
         <source>Encryption password and confirmation do not match.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Кодирование пароля и подтверждение не совпадают.</translation>
     </message>
 </context>
 <context>
@@ -1056,12 +1065,12 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="res/SetupWizardBase.ui" line="24"/>
         <source>Welcome</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Добро пожаловать</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="33"/>
         <source>Thanks for installing Synergy!</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Спасибо за установку Synergy!</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="108"/>
@@ -1097,37 +1106,37 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="res/SetupWizardBase.ui" line="231"/>
         <source>Encryption</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Кодирование</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="237"/>
         <source>Network traffic can be easily monitored. Using encryption can reduce the risk that sensitive information will be revealed to others (for example, passwords).</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Сетевой трафик может быть легко отслежен. Используя кодирование вы снизите риск попадания конфиденциальной информации в чужие руки (например, пароль).</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="263"/>
         <source>Choose a random encryption mode. The mode must be the same on both the client and server.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Выберите случайный режим кодирования. Режим должен быть одинаковым на клиенте и сервере.</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="308"/>
         <source>&amp;Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Режим:</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="391"/>
         <source>A longer password will provide stronger encryption. It is a good idea to use 20 characters or more.</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Более длинный пароль обеспечит более сильное кодирование. Это плохая идея использовать более 20 символов.</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="415"/>
         <source>&amp;Password:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Пароль:</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="474"/>
         <source>&amp;Confirm:</source>
-        <translation type="unfinished"></translation>
+        <translation type="finished">Подтверждение:</translation>
     </message>
 </context>
 <context>
