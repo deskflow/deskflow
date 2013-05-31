@@ -134,7 +134,7 @@ msgstr "Autres téléchargements"
 
 #: lang.c:35
 msgid "Thanks for offering to donate! We really appreciate your support. We've replaced our donate button with Synergy Premium. It's like donating only you get the power to vote in return for your contribution. You don't have to vote either, it's entirely up to you."
-msgstr ""
+msgstr "Merci de votre participation ! Nous apprécions grandement votre support. Nous avons remplacé notre bouton de donations par Synergy Premium. Cela fonctionne comme les dons et vous gagnez le pouvoir de voter en contrepartie de votre contribution. Vous n'êtes évidemment pas obligés de voter."
 
 
 #: lang.c:36
@@ -149,7 +149,7 @@ msgstr "Nous avons besoin de votre aide pour continuer de financer le développe
 
 #: lang.c:38
 msgid "We rely on Synergy Premium accounts to fund development. We are now supporting 2 full time software engineers working on Synergy. Even if you can only contribute just $1, it might not seem like much, it really is an enormous help for the project!"
-msgstr ""
+msgstr "Nous dépendons des comptes Synergy Premium pour financer le développement. Nous avons désormais 2 ingénieurs logiciel à plein temps qui travaillent sur Synergy. Même une contribution modeste de $1, ce qui peut parâtre peu, constitue une aide substantielle pour le projet."
 
 
 #: lang.c:39
@@ -184,7 +184,7 @@ msgstr "Vous décidez de votre contribution"
 
 #: lang.c:45
 msgid "Use the slider, or enter any value into the textbox."
-msgstr ""
+msgstr "Utilisez le curseur pour entrer une valeur dans la zone de texte."
 
 
 #: lang.c:46 lang.c:50 lang.c:181

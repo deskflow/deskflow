@@ -484,8 +484,10 @@ msgstr "Synergyは最初、シリコンバレーにあるコスモソフトウ�
 
 
 #: lang.c:107
-msgid "Synergy+ (fork project) was started in 2009 by Sorin Sbârnea  for the purpose of fixing bugs inherited from the original version. The original version of Synergy had not been updated for a notable length of time (as of 6 June 2010, the latest release was 2 April 2006). There was never official confirmation that the original Synergy project had been abandoned; however, there was public discussion providing speculation. In said discussion, Chris Schoeneman (the creator of Synergy) stated that instead of supporting a 1.3.x team, he intends on releasing version 2.0 of Synergy, and publicly announced on 27 Aug 2008 that he has been making progress on this version."
-msgstr ""
+msgid "Synergy+ (fork project) was started in 2009 by Sorin Sbârnea  for the purpose of fixing bugs inherited from the original version. The original version of Synergy had not been updated for a notable length of time (as of 6 June 2010, the latest release was 2 April 2006). There was never official confirmation that the original Synergy project had been abandoned; however, there was public discussion providing speculation. In said discussion, Chris Schoeneman (the creator of Synergy) stated that instead of supporting a 1.3.x team, he intends on releasing version 2.0 of Synergy, and publicly announced on 27 Aug 2008 that he has been making progress on this version.\n"
+""
+msgstr "Synergy+（フォークされたプロジェクト）は2009年にソリン・スバメアがオリジナル版から存在しているバグを修正するために開始されました。Synergyのオリジナル版はかなり長い間（2010年6月6日現在、最後のリリースは2006年4月2日）メンテナンスされていませんでした。これまで、オリジナルのSynergyプロジェクトが終了となったなどという公式なアナウンスはなく、それについて議論が上がっているのみとなっています。この議論の中で、クリス・ショーンマン（オリジナル版Synergyの開発者）は、1.3.X開発チームを支援するのではなく、自身がSynergy ver 2.0を開発したいと話しています。また実際に、2008年8月27日にはこの開発が進んでいる旨の公式発表がなされています。\n"
+""
 
 
 #: lang.c:108
@@ -760,17 +762,17 @@ msgstr ""
 
 #: lang.c:176
 msgid "Your name:"
-msgstr ""
+msgstr "名前:"
 
 
 #: lang.c:177
 msgid "Email address:"
-msgstr ""
+msgstr "Email:"
 
 
 #: lang.c:178
 msgid "Confirm email:"
-msgstr ""
+msgstr "Email確認:"
 
 
 #: lang.c:179

@@ -134,42 +134,42 @@ msgstr "Альтернативный источник загрузок"
 
 #: lang.c:35
 msgid "Thanks for offering to donate! We really appreciate your support. We've replaced our donate button with Synergy Premium. It's like donating only you get the power to vote in return for your contribution. You don't have to vote either, it's entirely up to you."
-msgstr ""
+msgstr "Спасибо за предложение взноса! Мы действительно ценим вашу поддержку. Мы заменили нашу кнопку взносов с Synergy Premium. Это как сделать взнос и получить силу голоса чтобы вернуть его. Вы так же можете не голосовать, это ваш выбор."
 
 
 #: lang.c:36
 msgid "Urgent Appeal from Synergy!"
-msgstr ""
+msgstr "Срочное уведомление от Synergy!"
 
 
 #: lang.c:37
 msgid "We urgently need your help to fund the continued development of Synergy."
-msgstr ""
+msgstr "Нам срочно нужна ваша финансовая помощь для дальнейшего развития Synergy."
 
 
 #: lang.c:38
 msgid "We rely on Synergy Premium accounts to fund development. We are now supporting 2 full time software engineers working on Synergy. Even if you can only contribute just $1, it might not seem like much, it really is an enormous help for the project!"
-msgstr ""
+msgstr "Мы полагаемся на Synergy Premium аккаунты для дальнейшего развития разработок. Сейчас мы поддерживаем двух инженеров полностью сосредоточенных на работе Synergy. Даже если вы пожертвуете всего 1$, что выглядит совсем незначительно, это реально может оказать огромную помощь проекту!"
 
 
 #: lang.c:39
 msgid "What's best is that Premium users (with votes) are the only ones who can tell us what to work on."
-msgstr ""
+msgstr "Что самое лучшее, так это то, что Премиум пользователи (с голосами) единственные, кто могут сказать нам над чем работать."
 
 
 #: lang.c:40
 msgid "Please choose the option on the left and open a Synergy Premium account for as little as $1. You'll be helping us keep the Synergy project alive for the price of a can of Coke! :-)"
-msgstr ""
+msgstr "Пожалуйста выберите опцию слева для открытия Synergy Premium аккаунта за минимальную цену 1$. Вы поможете существованию проекта Synergy за цену одной бутылки Колы :-)"
 
 
 #: lang.c:41
 msgid "Thanks so much for reading, and we hope you decide to help us out."
-msgstr ""
+msgstr "Большое спасибо за прочтение, мы надеемся вы решитесь на помощь для нас."
 
 
 #: lang.c:42
 msgid "Synergy Project Leader"
-msgstr ""
+msgstr "Лидер Проекта Synergy"
 
 
 #: lang.c:43 lang.c:112
@@ -184,7 +184,7 @@ msgstr "Вы решаете какой вклад внести"
 
 #: lang.c:45
 msgid "Use the slider, or enter any value into the textbox."
-msgstr ""
+msgstr "Используйте ползунок, или любое другое значение в текстовом поле."
 
 
 #: lang.c:46 lang.c:50 lang.c:181
@@ -204,7 +204,7 @@ msgstr "Обычный"
 
 #: lang.c:49
 msgid "I'm not giving you guys a dime!"
-msgstr ""
+msgstr "Я не дам вам ни копейки!"
 
 
 #: lang.c:51
@@ -214,7 +214,7 @@ msgstr "Топ 10 голосований"
 
 #: lang.c:52
 msgid "Register for Synergy Premium to cast your vote ($10 per vote)."
-msgstr ""
+msgstr "Зарегестрируйте Премиум Synergy чтобы распределить свой голос ($10; за голос)."
 
 
 #: lang.c:53
@@ -275,7 +275,7 @@ msgstr "Возникли проблемы с использованием Synerg
 
 #: lang.c:65
 msgid "By opening a Synergy Premium account with at least $10, you can directly influence the priority of what bugs will be fixed next. For every $10 contributed, you get 1 vote which you can assign to a bug fix. The highest voted bug fix will get our full attention."
-msgstr ""
+msgstr "Открывая Премиум аккаунт Синергии с хотя бы c $10, вы можете несосредственно влиять на очерёдность ошибок, которые будут исправлены следующими. За каждый $10 взнос вы будете получать 1 голос, который сможете отдать за определенный фикс ошибки. Набравшие наибольшее количество голосов фиксы ошибкок полностью привлекут наше внимание."
 
 
 #: lang.c:66
@@ -330,7 +330,7 @@ msgstr "Супер пользователь"
 
 #: lang.c:76
 msgid "If you're familiar with Super User, there's a <a href=\"%1\">synergy tag</a>."
-msgstr ""
+msgstr "Если вы знакомы с Супер Пользователем, это <a href=\"%1\">тег Синергии</a>"
 
 
 #: lang.c:77
@@ -395,42 +395,42 @@ msgstr "Пожалуйста, сообщайте об ошибках тольк�
 
 #: lang.c:89
 msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk."
-msgstr ""
+msgstr "Synergy позволяет использовать одну клавиатуру и мышку между несколькими компьютерами на вашем столе."
 
 
 #: lang.c:90
 msgid "Supported on Windows, Mac OS X, and Linux."
-msgstr ""
+msgstr "Поддерживается Windows, Mac OS X и Linux."
 
 
 #: lang.c:91
 msgid "Simply move your mouse to any computer and start typing."
-msgstr ""
+msgstr "Просто наведите мышь на любой компьютер и начните печатать."
 
 
 #: lang.c:92
 msgid "Copy and paste between all of your computers."
-msgstr ""
+msgstr "Копируйте и вставляйте между всеми своими компьютерами."
 
 
 #: lang.c:93
 msgid "Encryption keeps sensitive data safe on public networks."
-msgstr ""
+msgstr "Кодирование оставляет деликатное сохранение данных в публичных сетях."
 
 
 #: lang.c:94
 msgid "Save space on your desktop by using one keyboard and mouse."
-msgstr ""
+msgstr "Сохраните место на своем рабочем столе используя одну клавиатуру и мышь."
 
 
 #: lang.c:95
 msgid "All you need is a network connection (no extra cables)."
-msgstr ""
+msgstr "Все что вам нужно это сетевое подключение (без дополнительных кабелей)."
 
 
 #: lang.c:96
 msgid "Synergy is free and open source, and always will be!"
-msgstr ""
+msgstr "Synergy это бесплатный и открытый источник, и всегда будет таким!"
 
 
 #: lang.c:97
@@ -475,22 +475,22 @@ msgstr "Основатель Synergy+ (Ответвленный проект)"
 
 #: lang.c:105
 msgid "History"
-msgstr ""
+msgstr "История"
 
 
 #: lang.c:106
 msgid "The first incarnation of Synergy was CosmoSynergy, created by Richard Lee and Adam Feder then at Cosmo Software, Inc. (Silicon Valley), a subsidiary of SGI (Silicon Graphics, Inc.), at the end of 1996. They wrote it, and Chris Schoeneman contributed, to solve a problem: most of the engineers in Cosmo Software had both an Irix and a Windows box on their desks and switchboxes were expensive and annoying. CosmoSynergy was a great success but Cosmo Software declined to productize it and the company was later closed. Synergy is a from-scratch reimplementation of CosmoSynergy. It provides most of the features of the original and adds a few improvements."
-msgstr ""
+msgstr "Первым воплощением Synergy была CosmoSynergy, созданая Ричардом Ли и Адамом Федер в корпорации Cosmo Software (Силиконовая Долина), филиал SGI (Silicon Graphics, Inc), в конце 1996. Они написалии это, и Крис Шоиниман сделал вклад в решение проблемы: большинство инженеров в Cosmo Software имели как Irix так и Windows блоки на их платах, что было дорого и раздражающе. CosmoSynergy была великолепным решением но Cosmo Software снизила производительность и компания вскоре закрылась. Synergy это построенная с нуля CosmoSynergy. Она обеспечивает большинство оригинальный функций а так же добавляет несколько усовершенствований."
 
 
 #: lang.c:107
 msgid "Synergy+ (fork project) was started in 2009 by Sorin Sbârnea  for the purpose of fixing bugs inherited from the original version. The original version of Synergy had not been updated for a notable length of time (as of 6 June 2010, the latest release was 2 April 2006). There was never official confirmation that the original Synergy project had been abandoned; however, there was public discussion providing speculation. In said discussion, Chris Schoeneman (the creator of Synergy) stated that instead of supporting a 1.3.x team, he intends on releasing version 2.0 of Synergy, and publicly announced on 27 Aug 2008 that he has been making progress on this version."
-msgstr ""
+msgstr "Synergy+ (проект разветвления) начался в 2009 Сорином Сбамиа с целью фиксирования ошибок с оригинальной версии. Оригинальная версия Synergy не имела обновлений в течении долгого промежутка времени (на момент 6 июня 2010 последний релиз был 2 апреля 2006). Никогда не было оффициально подтверждения, что проект Synergy был ликвидирован; тем не менее была публичная дискуссия о спекуляции. Было сказано, что Крис Шоениман (создатель Synergy) сказал, что вместо поддержки 1.3.x team он намерен выпустить версию 2.0 для Synergy, и публично анонсировал 27 августа 2008 что он добился прогресса в этой версии."
 
 
 #: lang.c:108
 msgid "Nick Bolton joined the project in 2009 and lead the re-integration of Synergy+ back into the original Synergy project. Nick is now the project leader and primary developer responsible for all development (bug fixes, new features, project management, etc). Chris and Sorin still contribute to discussion on the mailing list ocassionally."
-msgstr ""
+msgstr "Ник Болтон присоединился к проекту в 2009 году и руководил реинтеграцией Synergy+ в оригинальный Synergy проект. Сейчас Ник лидер проекта и важнейший разрабочтик ответственный за все развитие (фиксы ошибок, новые возможности, менеджмент проетки и т.д.) Крис и Сорин переодически вносят свою лепту через почту."
 
 
 #: lang.c:109
@@ -555,17 +555,17 @@ msgstr "Спасибо за Ваш интерес к Synergy Премиум, б�
 
 #: lang.c:127
 msgid "Support the Synergy project by <a href=\"%1\">registering</a> a Synergy Premium account today."
-msgstr ""
+msgstr "Поддержите проект Synergy <a href=\"%1\">зарегестрировав</a> Synergy Premium аккаунт сегодня."
 
 
 #: lang.c:128
 msgid "Login"
-msgstr "Вход"
+msgstr "Login"
 
 
 #: lang.c:129
 msgid "Currently we don't have a \"forgot password\" feature, please contact us instead, sorry any inconvenience."
-msgstr ""
+msgstr "На данный момент у нас нет опции \"Забыл пароль\", пожалуйста свяжитесь с нами, просим прощения за неудобства."
 
 
 #: lang.c:130
@@ -580,7 +580,7 @@ msgstr "Пароль:"
 
 #: lang.c:133 lang.c:159
 msgid "Logged in as: %1 (%2)"
-msgstr ""
+msgstr "Зарегистрирован как: %1 (%2)"
 
 
 #: lang.c:134
@@ -590,42 +590,42 @@ msgstr "Выйти"
 
 #: lang.c:135
 msgid "Welcome to your Synergy Premium account."
-msgstr ""
+msgstr "Добро пожаловать в Synergy Premium аккаунт."
 
 
 #: lang.c:136
 msgid "Download Synergy"
-msgstr ""
+msgstr "Загрузить Synergy."
 
 
 #: lang.c:137
 msgid "Contribute to Synergy"
-msgstr ""
+msgstr "Сделать взнос для Synergy."
 
 
 #: lang.c:138
 msgid "If you'd like to help the Synergy project, please <a href=\"%1\">make a contribution</a> and we'll give you votes in return ($10 per vote) so you can tell us what to work on next. We would really appreciate your support. Thanks!"
-msgstr ""
+msgstr "Если вы хотите помочь проекту Synergy, пожалуйста <a href=\"%1\">сделайте взнос</a> и мы дадим вам голос (10$ за голос), так что вы сможете сами указать, над чем нам стоит работать далее. Мы действительно ценим вашу поддержку. Спасибо!"
 
 
 #: lang.c:139
 msgid "Need more votes?"
-msgstr ""
+msgstr "Нужно больше голосов?"
 
 
 #: lang.c:140
 msgid "It looks like you've used all your votes, that's great! Please do <a href=\"%1\">make another contribution</a> if you would like to vote on more issues ($10 per vote). We really appreciate your continued support."
-msgstr ""
+msgstr "Похоже вы использовали все свои голоса, это великолепно! Пожалуйста <a href=\"%1\">сделайте еще один взнос</a> если вы хотите проголосовать за другие проблемы (10$ за голос). Мы действительно ценим ваше желание помогать нам дальше."
 
 
 #: lang.c:141
 msgid "Contribute again!"
-msgstr ""
+msgstr "Сделайте взнос снова!"
 
 
 #: lang.c:142
 msgid "Thanks for your support! If you'd like to <a href=\"%1\">make another contribution</a> at any time and get more votes ($10 per vote), this would really help support the Synergy project."
-msgstr ""
+msgstr "Спасибо за поддержку! Если вы хотите <a href=\"%1\">сделать еще вклад</a> в любое время и получить еще больше голосов (10$ за голос), это действительно поможет поддержке проекта Synergy."
 
 
 #: lang.c:143
@@ -635,22 +635,22 @@ msgstr "Ваши голоса"
 
 #: lang.c:144
 msgid " You have <b>%1</b> unassigned Premium vote(s)."
-msgstr ""
+msgstr "Вы отменили Premium голос(а)."
 
 
 #: lang.c:145
 msgid "You have not cast any votes yet."
-msgstr "Вы еще не проголосовали"
+msgstr "Вы еще не проголосовали."
 
 
 #: lang.c:147
 msgid "Cast new vote"
-msgstr "Получить дополнительный голос."
+msgstr "Получить дополнительный голос"
 
 
 #: lang.c:148
 msgid "\" help=\"../help/\"}To use Premium votes, enter an issue ID from our <a href=\"%1\">issue tracker</a>, and assign a number of votes. Choose carefully; once votes are spent, you can't get them back. If you have any problems using your votes, please <a href=\"%2\">email</a> for help (please do not report bugs to this address, use the <a href=\"%3\">help</a> page instead)."
-msgstr ""
+msgstr "\" help=\"../help/\"}Чтобы использовать Premium голоса, введи ID ошибки в наш <a href=\"%1\">поисковик ошибок</a>, и укажите количество ваших голосов. Выбирайте с осторожностью; однажды использовав голос вы не сможете вернуть его обратно. Если у вас возникли проблемы при использовании голосов, пожалуйста  <a href=\"%2\">напишите email</a> для помощи (пожалуйста не сообщайте об ошибках по этому адресу, вместо этого используйте <a href=\"%3\">страницу помощи</a>)."
 
 
 #: lang.c:149
@@ -670,117 +670,121 @@ msgstr "Голоса сообщества."
 
 #: lang.c:153
 msgid "All votes cast by the Synergy community."
-msgstr ""
+msgstr "Все голоса предоставлены Synergy сообществом."
 
 
 #: lang.c:155
 msgid "Payment history"
-msgstr ""
+msgstr "История оплаты."
 
 
 #: lang.c:156
 msgid "\"}This is a record of your payment history. Please <a href=\"%2\">email</a> us if you have any questions."
-msgstr ""
+msgstr "\"}Это запись вашей истории платежей. Пожалуйста, <a href=\"%2\">отправьте нам email</a> если у вас возникли вопросы."
 
 
 #: lang.c:157
 msgid "You have not made any payments yet."
-msgstr ""
+msgstr "Пока вы ни разу не внесли оплату."
 
 
 #: lang.c:160 lang.c:173
 msgid "Thanks again for supporting the Synergy project! You rock!"
-msgstr ""
+msgstr "Спасибо что поддержали проект Synergy! Вы жжёте!"
 
 
 #: lang.c:161
 msgid "Please confirm the amount above, and choose a payment method (click on a logo or enter your card details). Each premium vote costs $10, but you can contribute as little as $1 if you just want to help out. If you need help making a payment or have any feedback please <a href=\"mailto:%1\">email</a> us and we'll do our best to sort it out."
-msgstr ""
+msgstr "Пожалуйста подтвердите количество, указанное выше, и выберите способ оплаты (нажмите на эмблему чтобы ввести информацию о вашей кредитной карте). Каждый Premium голос стоит 10$, но вы так же можете внести небольшой взнос если вы просто хотите помочь. Если вам нужна помощь при оплате пожалуйста <a href=\"mailto:%1\">напишите email</a> и мы поможем всем чем можем."
 
 
 #: lang.c:162
 msgid "Sorry, your card payment failed. Please check your details and try again. You may need to contact your card issuer or bank for more information."
-msgstr ""
+msgstr "Извините, оплата с вашей карты не прошла. Пожалуйста проверьте ваши детали и попробуйте еще раз. Возможно вам придется связаться с выпускающим кредитной карты или с банком для большей информации."
 
 
 #: lang.c:163
 msgid "Alternatively you can still use PayPal or Google Wallet by clicking on the logos above."
-msgstr ""
+msgstr "Альтернативно вы все еще можете использовать PayPal или Google Wallet кликнув на логотипы сверху."
 
 
 #: lang.c:164
 msgid "<b>Error:</b> %1"
-msgstr ""
+msgstr "<b>Ошибка:</b> %1"
 
 
 #: lang.c:165
 msgid "Continue to <a href=\"%1\">Synergy Premium</a>."
-msgstr ""
+msgstr "Перейти к <a href=\"%1\">Synergy Premium</a>."
 
 
 #: lang.c:166
 msgid "You are using a secure connection (HTTPS, SSL)."
-msgstr ""
+msgstr "Вы используете безопасное соединение (HTTPS, SSL)."
 
 
 #: lang.c:167
 msgid "Card number:"
-msgstr ""
+msgstr "Номер карты:"
 
 
 #: lang.c:168
 msgid "Name on card:"
-msgstr ""
+msgstr "Имя на карте:"
 
 
 #: lang.c:169
 msgid "Expiration:"
-msgstr ""
+msgstr "Истечение:"
 
 
 #: lang.c:170
 msgid "Security code:"
-msgstr ""
+msgstr "Код:"
 
 
 #: lang.c:171
 msgid "Huh?"
-msgstr ""
+msgstr "Ух?"
 
 
 #: lang.c:174
 msgid "Already registered?"
-msgstr ""
+msgstr "Уже зарегистрированы?"
 
 
 #: lang.c:175
 msgid "We promise to not spam your email and we never store passwords in   plain text (we only keep a hash)."
-msgstr ""
+msgstr "Мы обещаем не слать спам на ваш email и никогда не хранить пароли в открытом виде (мы храним только хэши)."
 
 
 #: lang.c:176
-msgid "Your name:"
-msgstr ""
+msgid "Your name:\n"
+""
+msgstr "Ваше имя:\n"
+""
 
 
 #: lang.c:177
-msgid "Email address:"
-msgstr ""
+msgid "Email address:\n"
+""
+msgstr "Email адрес:\n"
+""
 
 
 #: lang.c:178
 msgid "Confirm email:"
-msgstr ""
+msgstr "Подтверждение адреса электронной почты:"
 
 
 #: lang.c:179
 msgid "New password:"
-msgstr ""
+msgstr "Новый пароль:"
 
 
 #: lang.c:180
 msgid "Confirm password:"
-msgstr ""
+msgstr "Подтвердите пароль:"
 
 
 #: lang.c:183
@@ -795,7 +799,7 @@ msgstr "Медиа"
 
 #: lang.c:185
 msgid "Featured"
-msgstr ""
+msgstr "Рекомендуемый"
 
 
 #: lang.c:186
@@ -850,7 +854,7 @@ msgstr "Вы могли обнаружить, что указание верси
 
 #: lang.c:199
 msgid "If this does not work, use the <a href=\"%1\">alternative Synergy search</a>."
-msgstr "Если не работает, используйте <a href=\"%1\">альтернативный поиск Synergy</a>."
+msgstr "Если это не сработало, используйте <a href=\"%1\">альтернативный поисковик Синергии</a>."
 
 
 #: lang.c:200
@@ -875,17 +879,17 @@ msgstr "Пожалуйста, введите ваш адрес электрон�
 
 #: php/Controllers/PremiumController.php:466
 msgid "The email address does not appear to be valid."
-msgstr ""
+msgstr "Адрес email не является действительным."
 
 
 #: php/Controllers/PremiumController.php:469
 msgid "Welcome back, you've already registered. Please <a href=\"../\">log in</a> to your account."
-msgstr ""
+msgstr "Добро пожаловать обратно, вы зарегистрированы. Пожалуйста <a href=\"../\">войдите</a> в ваш аккаунт."
 
 
 #: php/Controllers/PremiumController.php:472
 msgid "The confirm email must match the email address."
-msgstr ""
+msgstr "Для подтверждения email адреса должны совпадать."
 
 
 #: php/Controllers/PremiumController.php:475
@@ -895,5 +899,5 @@ msgstr "Пожалуйста введите пароль."
 
 #: php/Controllers/PremiumController.php:478
 msgid "The confirm password must match the password."
-msgstr ""
+msgstr "Для подтверждения пароля пароли должны совпадать."
 

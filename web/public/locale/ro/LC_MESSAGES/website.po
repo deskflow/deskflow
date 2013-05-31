@@ -139,12 +139,12 @@ msgstr ""
 
 #: lang.c:36
 msgid "Urgent Appeal from Synergy!"
-msgstr ""
+msgstr "Apel Urgent de la Synergy!"
 
 
 #: lang.c:37
 msgid "We urgently need your help to fund the continued development of Synergy."
-msgstr ""
+msgstr "Avem nevoie urgent de ajutorul dumneavoastra, ca sa contribuiti la dezvoltarea continua a Synergy."
 
 
 #: lang.c:38
@@ -169,7 +169,7 @@ msgstr ""
 
 #: lang.c:42
 msgid "Synergy Project Leader"
-msgstr ""
+msgstr "Lider de proiect al Synergy"
 
 
 #: lang.c:43 lang.c:112
@@ -204,7 +204,7 @@ msgstr "Non-premium"
 
 #: lang.c:49
 msgid "I'm not giving you guys a dime!"
-msgstr ""
+msgstr "Nu-ti dau nimic inapoi!"
 
 
 #: lang.c:51
@@ -214,7 +214,7 @@ msgstr "Top 10 Voturi"
 
 #: lang.c:52
 msgid "Register for Synergy Premium to cast your vote ($10 per vote)."
-msgstr ""
+msgstr "Inregistrati-va pentru Synergy Premium, ca sa puteti vota ($10 pe vot)."
 
 
 #: lang.c:53
@@ -244,17 +244,17 @@ msgstr ""
 
 #: lang.c:58
 msgid "If you can only contribute $1, that's totally fine by us! Anything at all will allow us to spend more time working on Synergy."
-msgstr ""
+msgstr "Dacă puteţi contribui doar cu  $1, este bine pentru noi! Contribuţia dumneavoastră, ne va ajuta să lucrăm mai mult la Synergy."
 
 
 #: lang.c:59
 msgid "If you decide to contribute $10, then you get a premium vote. For each additional $10, you get another vote. You can cast this vote on any bug or feature. We will try our best to fix the highest voted feature in the next version. If we can't fix it then you get your votes back, simple."
-msgstr ""
+msgstr "Dacă decideţi să contribuiti $10, atunci primiţi un vot premium. Pentru fiecare $10 în plus, primiţi încă un vot. Aceste voturi le puteti folosi la fiecare bug sau fiecare noua inovatie. Noi vom incerca sa rezolvam cele mai votate inovatii in urmatoarele versiuni. Daca nu putem sa le reparam, atunci va primiti voturile inapoi, simplu."
 
 
 #: lang.c:60
 msgid "It's people like you that make Synergy a better piece of software! :-)"
-msgstr ""
+msgstr "Oamenii ca voi fac Synergy un software mult mai bun! :-)"
 
 
 #: lang.c:61 lang.c:132 lang.c:151
@@ -334,7 +334,7 @@ msgstr ""
 
 #: lang.c:77
 msgid "Super User is <b>not</b> dedicated to supporting Synergy."
-msgstr "Utilizatorul Super <b>nu</b> este dedicat pentru a sprijini Synergy."
+msgstr "Super Utilizatorul nu <b>este</b>dedicat sprijinirii Synergy."
 
 
 #: lang.c:78
@@ -399,37 +399,37 @@ msgstr ""
 
 #: lang.c:90
 msgid "Supported on Windows, Mac OS X, and Linux."
-msgstr ""
+msgstr "Suport pentru Windows, MAC OS X si Linux."
 
 
 #: lang.c:91
 msgid "Simply move your mouse to any computer and start typing."
-msgstr ""
+msgstr "Simplu doar mutati mouse-ul peste orice calculator si incepeti sa tastati."
 
 
 #: lang.c:92
 msgid "Copy and paste between all of your computers."
-msgstr ""
+msgstr "Copiati si lipiti intre toate computerele dumneavoastra."
 
 
 #: lang.c:93
 msgid "Encryption keeps sensitive data safe on public networks."
-msgstr ""
+msgstr "Encriptia pastreaza date importante si sensibile pe servere publice."
 
 
 #: lang.c:94
 msgid "Save space on your desktop by using one keyboard and mouse."
-msgstr ""
+msgstr "Salveaza spatiu pe biroul tau doar utilizand un singur mouse si o singura tastatura."
 
 
 #: lang.c:95
 msgid "All you need is a network connection (no extra cables)."
-msgstr ""
+msgstr "Tot ce iti trebuie este o conexiule la internet (fara cabluri in plus)."
 
 
 #: lang.c:96
 msgid "Synergy is free and open source, and always will be!"
-msgstr ""
+msgstr "Synergy este o sursa deschisa si gratis, si asa va fii mereu!"
 
 
 #: lang.c:97
@@ -439,7 +439,7 @@ msgstr "Synergy vă permite să partajaţi cu uşurinţă mouse-ul şi tastatura
 
 #: lang.c:98 lang.c:116
 msgid "Info"
-msgstr "Informação"
+msgstr "Informatie"
 
 
 #: lang.c:99
@@ -469,7 +469,7 @@ msgstr "Autorul original şi fondatorul proiectului"
 
 #: lang.c:104
 msgid "Founder of Synergy+ (fork project)"
-msgstr "Fondatorul Synergy+ (proiect furcă)"
+msgstr "Fondatorul Synergy+ (proiectul bifurcat)"
 
 
 #: lang.c:105
@@ -579,7 +579,7 @@ msgstr "Palola:"
 
 #: lang.c:133 lang.c:159
 msgid "Logged in as: %1 (%2)"
-msgstr ""
+msgstr "Logat ca: %1(%2)"
 
 
 #: lang.c:134
@@ -589,17 +589,17 @@ msgstr ""
 
 #: lang.c:135
 msgid "Welcome to your Synergy Premium account."
-msgstr ""
+msgstr "Bine ati venit la contul dumneavoastra Synergy Premium."
 
 
 #: lang.c:136
 msgid "Download Synergy"
-msgstr ""
+msgstr "Downloadati Synergy"
 
 
 #: lang.c:137
 msgid "Contribute to Synergy"
-msgstr ""
+msgstr "Contribuiti la Synergy."
 
 
 #: lang.c:138
@@ -609,7 +609,7 @@ msgstr ""
 
 #: lang.c:139
 msgid "Need more votes?"
-msgstr ""
+msgstr "Vrei mai multe voturi?"
 
 
 #: lang.c:140
@@ -619,7 +619,7 @@ msgstr ""
 
 #: lang.c:141
 msgid "Contribute again!"
-msgstr ""
+msgstr "Contribuiti din nou."
 
 
 #: lang.c:142
@@ -674,7 +674,7 @@ msgstr ""
 
 #: lang.c:155
 msgid "Payment history"
-msgstr ""
+msgstr "Istoricul platilor."
 
 
 #: lang.c:156
@@ -684,7 +684,7 @@ msgstr ""
 
 #: lang.c:157
 msgid "You have not made any payments yet."
-msgstr ""
+msgstr "Nu a-ti facut nici o plata pana acum."
 
 
 #: lang.c:160 lang.c:173
@@ -709,7 +709,7 @@ msgstr ""
 
 #: lang.c:164
 msgid "<b>Error:</b> %1"
-msgstr ""
+msgstr "<b>Eroare.</b>%1"
 
 
 #: lang.c:165
@@ -719,12 +719,12 @@ msgstr ""
 
 #: lang.c:166
 msgid "You are using a secure connection (HTTPS, SSL)."
-msgstr ""
+msgstr "Folositi o conexiune securizata (HTTPS, SSL)."
 
 
 #: lang.c:167
 msgid "Card number:"
-msgstr ""
+msgstr "Numar de card:"
 
 
 #: lang.c:168
@@ -734,22 +734,22 @@ msgstr ""
 
 #: lang.c:169
 msgid "Expiration:"
-msgstr ""
+msgstr "Data expirarii:"
 
 
 #: lang.c:170
 msgid "Security code:"
-msgstr ""
+msgstr "Codul de securitate:"
 
 
 #: lang.c:171
 msgid "Huh?"
-msgstr ""
+msgstr "Ce?"
 
 
 #: lang.c:174
 msgid "Already registered?"
-msgstr ""
+msgstr "Deja inregistrat?"
 
 
 #: lang.c:175
@@ -774,17 +774,17 @@ msgstr ""
 
 #: lang.c:179
 msgid "New password:"
-msgstr ""
+msgstr "Parola noua:"
 
 
 #: lang.c:180
 msgid "Confirm password:"
-msgstr ""
+msgstr "Confirma Parola:"
 
 
 #: lang.c:183
 msgid "If you've featured Synergy on your website, thank you! Please let us know so we can link to it."
-msgstr ""
+msgstr "Daca a-ti pus Synergy pe websitul dumneavoastra, va multumim! Va rugam instintati-ne ca sa avem link-ul."
 
 
 #: lang.c:184
@@ -794,7 +794,7 @@ msgstr ""
 
 #: lang.c:185
 msgid "Featured"
-msgstr ""
+msgstr "Prezentat"
 
 
 #: lang.c:186
@@ -859,7 +859,7 @@ msgstr "Caută acum"
 
 #: lang.c:201
 msgid "Loading"
-msgstr ""
+msgstr "Se încarcă"
 
 
 #: php/Controllers/PremiumController.php:460
@@ -874,7 +874,7 @@ msgstr "Vă rugăm să vă introduceți adresa de email."
 
 #: php/Controllers/PremiumController.php:466
 msgid "The email address does not appear to be valid."
-msgstr ""
+msgstr "Adresa de Email nu este valida."
 
 
 #: php/Controllers/PremiumController.php:469
@@ -884,7 +884,7 @@ msgstr ""
 
 #: php/Controllers/PremiumController.php:472
 msgid "The confirm email must match the email address."
-msgstr ""
+msgstr "Email-ul confirmat trebuie sa se potriveasca cu adresa de Email."
 
 
 #: php/Controllers/PremiumController.php:475

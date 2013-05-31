@@ -579,7 +579,7 @@ msgstr "Wachtwoord:"
 
 #: lang.c:133 lang.c:159
 msgid "Logged in as: %1 (%2)"
-msgstr ""
+msgstr "Ingelogd als: %1 (%2)"
 
 
 #: lang.c:134
@@ -589,17 +589,17 @@ msgstr "Afmelden"
 
 #: lang.c:135
 msgid "Welcome to your Synergy Premium account."
-msgstr ""
+msgstr "Welkom bij je Synergy Premium account."
 
 
 #: lang.c:136
 msgid "Download Synergy"
-msgstr ""
+msgstr "Download Synergy"
 
 
 #: lang.c:137
 msgid "Contribute to Synergy"
-msgstr ""
+msgstr "Draag bij Syngergy."
 
 
 #: lang.c:138
@@ -609,7 +609,7 @@ msgstr ""
 
 #: lang.c:139
 msgid "Need more votes?"
-msgstr ""
+msgstr "Meer stemmen nodig."
 
 
 #: lang.c:140
@@ -619,7 +619,7 @@ msgstr ""
 
 #: lang.c:141
 msgid "Contribute again!"
-msgstr ""
+msgstr "Draag nog een keer bij."
 
 
 #: lang.c:142
@@ -674,7 +674,7 @@ msgstr ""
 
 #: lang.c:155
 msgid "Payment history"
-msgstr ""
+msgstr "Betaal geschiedenis"
 
 
 #: lang.c:156
@@ -684,7 +684,7 @@ msgstr ""
 
 #: lang.c:157
 msgid "You have not made any payments yet."
-msgstr ""
+msgstr "Je hebt nog geen betalingen gedaan."
 
 
 #: lang.c:160 lang.c:173
@@ -709,7 +709,7 @@ msgstr ""
 
 #: lang.c:164
 msgid "<b>Error:</b> %1"
-msgstr ""
+msgstr "<b>Fout:</b> %1"
 
 
 #: lang.c:165
@@ -749,7 +749,7 @@ msgstr "Huh?"
 
 #: lang.c:174
 msgid "Already registered?"
-msgstr ""
+msgstr "Al gerigistreerd?"
 
 
 #: lang.c:175
@@ -774,12 +774,12 @@ msgstr "Email bevestigen:"
 
 #: lang.c:179
 msgid "New password:"
-msgstr ""
+msgstr "Nieuw wachtwoord:"
 
 
 #: lang.c:180
 msgid "Confirm password:"
-msgstr ""
+msgstr "Bevestig wachtwoord:"
 
 
 #: lang.c:183
@@ -874,7 +874,7 @@ msgstr "Gelieve uw e-mailadres in te vullen."
 
 #: php/Controllers/PremiumController.php:466
 msgid "The email address does not appear to be valid."
-msgstr ""
+msgstr "Het email adres ziet er niet geldig uit."
 
 
 #: php/Controllers/PremiumController.php:469

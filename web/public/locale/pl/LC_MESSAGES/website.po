@@ -84,12 +84,12 @@ msgstr "Dziękujemy za wsparcie Synergy! Żadnych reklam dla ciebie :-)"
 
 #: lang.c:23
 msgid "<b>Important:</b> Please try using the <a href=\"%1\">latest version</a> before trying older versions. The version available from this page is obsolete and may contain bugs fixed in the latest version."
-msgstr "<b>Ważne:</b> Użyj najpierw <a href=\"%1\">najnowszej wersji</a> zanim spróbujesz wersji starszy. Wersje dostępne na tej stronie są przestarzałe i mogą zawierać błędy, które zostały naprawione w najnowszych wydaniach."
+msgstr "<b>Ważne:</b> Użyj najpierw <a href=\"%1\">najnowszej wersji</a> zanim spróbujesz wersji starszej. Wersje dostępne na tej stronie są przestarzałe i mogą zawierać błędy, które zostały naprawione w najnowszych wydaniach."
 
 
 #: lang.c:25
 msgid "While your file is downloading, please take a look at <a href=\"%1\">Synergy Premium</a>."
-msgstr "W czasie, gdy Twój plik jest pobierany, może spojrzysz na <a href=\"%1\">Synergy Premium</a>."
+msgstr "W czasie, gdy Twój plik jest pobierany możesz obejrzeć możliwości kontaa <a href=\"%1\">Synergy Premium</a>."
 
 
 #: lang.c:27
@@ -134,7 +134,7 @@ msgstr "Alternatywne do ściągnięcia"
 
 #: lang.c:35
 msgid "Thanks for offering to donate! We really appreciate your support. We've replaced our donate button with Synergy Premium. It's like donating only you get the power to vote in return for your contribution. You don't have to vote either, it's entirely up to you."
-msgstr ""
+msgstr "Dzięki za ofertę przekazania nam darowiziny! Jesteśmy bardzo wdzięczni, że chcesz nasz wesprzeć. Zastąpiliśmy przycisk przekazywania darowizny usługą Synergy Premium. Działa to dokładnie tak samo jak przekazywanie darowizny, ale w zamian za to otrzymujesz prawo do głosowania. Oczywiście nie musisz głosować, wszystko zależy od Ciebie."
 
 
 #: lang.c:36
@@ -149,22 +149,22 @@ msgstr "Bardzo potrzebujemy Twojej pomocy w celu utrzymania dalszego rozwoju syn
 
 #: lang.c:38
 msgid "We rely on Synergy Premium accounts to fund development. We are now supporting 2 full time software engineers working on Synergy. Even if you can only contribute just $1, it might not seem like much, it really is an enormous help for the project!"
-msgstr ""
+msgstr "Konta usługi Synergy Premium to jedyne źródło finansujące proces tworzenia programu. Aktualnie opłacamy 2 programistów, którzy cały czas pracują nad tym programem. Jeżeli wydaje ci się, że możesz przekazać tylko $1 i to mało, to myślisz źle - nawet taka mała kwota wspomaga proces tworzenia Synergy."
 
 
 #: lang.c:39
 msgid "What's best is that Premium users (with votes) are the only ones who can tell us what to work on."
-msgstr ""
+msgstr "Co najlepsze tylko użytkownicy Premium (z głosami) mogą nam mówić nad czym mamy pracować w pierwszej kolejności."
 
 
 #: lang.c:40
 msgid "Please choose the option on the left and open a Synergy Premium account for as little as $1. You'll be helping us keep the Synergy project alive for the price of a can of Coke! :-)"
-msgstr ""
+msgstr "Proszę wybrać opcję po lewej - od tej pory możesz otworzyć konto Synergy Premium już za $1. Pomożesz nam w rozwijaniu projektu Synergy za cenę puszki coli! :-)"
 
 
 #: lang.c:41
 msgid "Thanks so much for reading, and we hope you decide to help us out."
-msgstr ""
+msgstr "Dziękujemy za przeczytanie tego tekstu - mamy nadzieję, że zdecydujesz się nam pomóc."
 
 
 #: lang.c:42
@@ -184,7 +184,7 @@ msgstr "Sam zdecyduj, ile chcesz wpłacić."
 
 #: lang.c:45
 msgid "Use the slider, or enter any value into the textbox."
-msgstr ""
+msgstr "Użyj slidera lub wprowadź dowolną kwotę do pola tekstowego."
 
 
 #: lang.c:46 lang.c:50 lang.c:181
@@ -239,7 +239,7 @@ msgstr "Synergy Premium"
 
 #: lang.c:57
 msgid "Thanks for your interest in Synergy Premium, we really appreciate your support. Funding allows us to spend more time improving Synergy. Support the Synergy project by registering a Synergy Premium account today."
-msgstr "Благодаря ви за интереса към Synergy Premium, ние наистина много оценяваме вашата подкрепа. Даренията ни позволяват да отделим много повече време да подобрим Synergy. Подкрепи проекта Synergy с регистриране на Synergy Premium акаунт днес !"
+msgstr "Dziękujemy za zainteresowanie programem Synergy Premium, bardzo doceniamy Wasze wsparcie. Wasze wpłaty pozwalają nam poświęcać więcej czasu na udoskonalanie programu Synergy. Wspomóż projekt poprzez rejestrację konta Synegry Premium jeszcze dzisiaj."
 
 
 #: lang.c:58
@@ -299,7 +299,7 @@ msgstr "Instrukcja obsługi"
 
 #: lang.c:70
 msgid "Please read our <a href=\"%1\">user guide</a> before going any further."
-msgstr "Zanim przejdziesz dalej - przeczytaj nasz <a href=\"%1\">Podręcznik</a>."
+msgstr "Zanim przejdziesz dalej - przeczytaj naszą <a href=\"%1\">instrukcję obsługi</a>."
 
 
 #: lang.c:71 lang.c:114 lang.c:188
@@ -399,7 +399,7 @@ msgstr "Synergy umożliwia udostępnianie klawiatury oraz myszki pomiędzy wielo
 
 #: lang.c:90
 msgid "Supported on Windows, Mac OS X, and Linux."
-msgstr "Działa na Windows, Mac OS X i Linuxie."
+msgstr "Działa na systemach Windows, Mac OS X i Linux."
 
 
 #: lang.c:91
@@ -409,7 +409,7 @@ msgstr "Po prostu przesuń kursor myszy na dowolny komputer i zacznij pisać."
 
 #: lang.c:92
 msgid "Copy and paste between all of your computers."
-msgstr "Kopiuj i wklej między wszystkimi Twoimi komputerami."
+msgstr "Kopiowanie i wklejanie pomiędzy wszystkimi Twoimi komputerami."
 
 
 #: lang.c:93
@@ -449,7 +449,7 @@ msgstr "Twitter"
 
 #: lang.c:100
 msgid "Follow Synergy coders!"
-msgstr "Podążaj za programistami Synergy!"
+msgstr "Śledź programistów Synergy!"
 
 
 #: lang.c:101
@@ -499,12 +499,12 @@ msgstr "Synergy umożliwia udostępnianie klawiatury oraz myszki pomiędzy wielo
 
 #: lang.c:110
 msgid "Home"
-msgstr "Dom"
+msgstr "Strona główna"
 
 
 #: lang.c:115 lang.c:182
 msgid "Press"
-msgstr "Wciśnij klawisz skrótu"
+msgstr "Informacje prasowe"
 
 
 #: lang.c:117
@@ -529,7 +529,7 @@ msgstr "Kod"
 
 #: lang.c:121
 msgid "<b>Welcome</b>, Synergy Premium user! Thanks for supporting our project. <a href=\"%1\">Premium account</a>."
-msgstr "<b>Witaj</b> użytkowniku Synergy Premium! Dziękujemy za wsparcie naszego projektu. <a href=\"%1\">KontopPremium</a>."
+msgstr "<b>Witaj</b> użytkowniku Synergy Premium! Dziękujemy za wsparcie naszego projektu. <a href=\"%1\">Konto Premium</a>."
 
 
 #: lang.c:122
@@ -554,7 +554,7 @@ msgstr "Dziękujemy za zainteresowanie programem Synergy Premium. Naprawdę doce
 
 #: lang.c:127
 msgid "Support the Synergy project by <a href=\"%1\">registering</a> a Synergy Premium account today."
-msgstr ""
+msgstr "Wesprzyj projekt Synergy <a href=\"%1\">rejestrując</a> konto Synergy Premium już dziś."
 
 
 #: lang.c:128
@@ -564,7 +564,7 @@ msgstr "Login"
 
 #: lang.c:129
 msgid "Currently we don't have a \"forgot password\" feature, please contact us instead, sorry any inconvenience."
-msgstr ""
+msgstr "Aktualnie nie wspieramy funkcji \"zapomniałem hasła\", zamiast tego prosimy o skontaktowanie się z nami, przepraszamy za jakiekolwiek problemy spowodowane brakiem tej funkcji."
 
 
 #: lang.c:130
@@ -579,7 +579,7 @@ msgstr "Hasło:"
 
 #: lang.c:133 lang.c:159
 msgid "Logged in as: %1 (%2)"
-msgstr ""
+msgstr "Zalogowano jako: %1 (%2)"
 
 
 #: lang.c:134
@@ -589,42 +589,42 @@ msgstr "Wyloguj"
 
 #: lang.c:135
 msgid "Welcome to your Synergy Premium account."
-msgstr ""
+msgstr "Witaj na swoim koncie Synergy Premium."
 
 
 #: lang.c:136
 msgid "Download Synergy"
-msgstr ""
+msgstr "Pobierz program Synergy"
 
 
 #: lang.c:137
 msgid "Contribute to Synergy"
-msgstr ""
+msgstr "Wesprzyj projekt Synergy"
 
 
 #: lang.c:138
 msgid "If you'd like to help the Synergy project, please <a href=\"%1\">make a contribution</a> and we'll give you votes in return ($10 per vote) so you can tell us what to work on next. We would really appreciate your support. Thanks!"
-msgstr ""
+msgstr "Jeśli chciałbyś wesprzeć projekt Synergy, prosimy <a href=\"%1\">przekaż darowiznę</a>, a my w zamian za to przekażemy ci głosy ($10 za jeden głos) - w ten sposób będziesz mógł nam powiedzieć czym powinniśmy się zająć w najbliższym czasie. Będziemy bardzo wdzięczni za jakiekolwiek wsparcie. Dziękujemy!"
 
 
 #: lang.c:139
 msgid "Need more votes?"
-msgstr ""
+msgstr "Potrzebujesz większej ilości głosów?"
 
 
 #: lang.c:140
 msgid "It looks like you've used all your votes, that's great! Please do <a href=\"%1\">make another contribution</a> if you would like to vote on more issues ($10 per vote). We really appreciate your continued support."
-msgstr ""
+msgstr "Wygląda na to, że wykorzystałeś wszystkie dostępne głosy. Prosimy o <a href=\"%1\">przekazanie kolejnej darowizny</a>, aby ponownie otrzymać możliwość głosowania na funkcje, którymi powinniśmy się zająć w najbliższej przyszłości ($10 - jeden głos). Dziękujemy za kolejne wsparcie!"
 
 
 #: lang.c:141
 msgid "Contribute again!"
-msgstr ""
+msgstr "Wesprzyj ponownie!"
 
 
 #: lang.c:142
 msgid "Thanks for your support! If you'd like to <a href=\"%1\">make another contribution</a> at any time and get more votes ($10 per vote), this would really help support the Synergy project."
-msgstr ""
+msgstr "Dziękujemy za twoje wsparcie! Jeśli chciałbyś kiedykolwiek <a href=\"%1\">przekazać kolejną darowiznę</a> i otrzymać większą ilość głosów ($10 - jeden głos) to zrób to, to bardzo wspomaga rozwój projektu."
 
 
 #: lang.c:143
@@ -634,7 +634,7 @@ msgstr "Twoje głosy"
 
 #: lang.c:144
 msgid " You have <b>%1</b> unassigned Premium vote(s)."
-msgstr ""
+msgstr "Posiadasz <b>%1</b> głos(-y) do rozdysponowania."
 
 
 #: lang.c:145
@@ -649,12 +649,12 @@ msgstr "Zagłosuj"
 
 #: lang.c:148
 msgid "\" help=\"../help/\"}To use Premium votes, enter an issue ID from our <a href=\"%1\">issue tracker</a>, and assign a number of votes. Choose carefully; once votes are spent, you can't get them back. If you have any problems using your votes, please <a href=\"%2\">email</a> for help (please do not report bugs to this address, use the <a href=\"%3\">help</a> page instead)."
-msgstr ""
+msgstr "\" help=\"../help/\"}Aby użyć swoich głosów Premium proszę podać ID funkcji/zagadnienia z naszego  <a href=\"%1\">systemu śledzenia funkcji/zagadnień</a> oraz liczbę głosów, które chcesz oddać. Wybierz rozsądnie, kiedy oddasz głos nie możesz tego już cognąć. Jeśli wystąpią jakiekolwiek problemy z używaniem głosów proszę napisz nasz adres <a href=\"%2\">email</a>, aby uzyskać pomoc (prosimy o nie zgłaszanie błędów pod tym adresem, aby zgłosić błąd użyj zakładki <a href=\"%3\">pomoc</a>)."
 
 
 #: lang.c:149
 msgid "Issue ID:"
-msgstr "ID usterki:"
+msgstr "ID sprawy:"
 
 
 #: lang.c:150
@@ -669,47 +669,47 @@ msgstr "Głosy społeczności"
 
 #: lang.c:153
 msgid "All votes cast by the Synergy community."
-msgstr ""
+msgstr "Wszystkie głosy oddane przez społeczność Synergy."
 
 
 #: lang.c:155
 msgid "Payment history"
-msgstr ""
+msgstr "Historia płatności"
 
 
 #: lang.c:156
 msgid "\"}This is a record of your payment history. Please <a href=\"%2\">email</a> us if you have any questions."
-msgstr ""
+msgstr "\"}Oto historia twoich płatności. Wyślij nam wiadomość na nasz adres <a href=\"%2\">email</a> jeśli masz jakieś pytania."
 
 
 #: lang.c:157
 msgid "You have not made any payments yet."
-msgstr ""
+msgstr "Do tej pory nie dokonałeś żadnych płatności."
 
 
 #: lang.c:160 lang.c:173
 msgid "Thanks again for supporting the Synergy project! You rock!"
-msgstr ""
+msgstr "Jeszcze raz dziękujemy za wspieranie projektu Synergy! Rządzisz!"
 
 
 #: lang.c:161
 msgid "Please confirm the amount above, and choose a payment method (click on a logo or enter your card details). Each premium vote costs $10, but you can contribute as little as $1 if you just want to help out. If you need help making a payment or have any feedback please <a href=\"mailto:%1\">email</a> us and we'll do our best to sort it out."
-msgstr ""
+msgstr "Prosimy o potwierdzenie powyższej sumy oraz wybór metody płatności (naciśnij na logo lub wprowadź dane karty). Jeden głos premium kosztuje $10, ale możesz wesprzeć nas nawet taką małą kwotą jak $1 jeśli zwyczajnie chcesz pomóc. Jeśli potrzebujesz pomocy z dokonywaniem płatności lub chcesz przekazać nam swoją opinię, prosimy o wiadomość na nasz adres <a href=\"mailto:%1\">email</a>, a my spróbujemy Ci pomóc."
 
 
 #: lang.c:162
 msgid "Sorry, your card payment failed. Please check your details and try again. You may need to contact your card issuer or bank for more information."
-msgstr ""
+msgstr "Przepraszamy, wystąpił błąd z płatnością przy użyciu twojej karty. Prosimy o ponowne sprawdzenie podanych danych. Być może będzie wymagane skontaktowanie się z właścicielem karty lub bankiem by uzyskać więcej informacji."
 
 
 #: lang.c:163
 msgid "Alternatively you can still use PayPal or Google Wallet by clicking on the logos above."
-msgstr ""
+msgstr "Alternatywnie możesz zawsze skorzystać z usługi PayPal lub Portfel Google klikając na powyższe logo."
 
 
 #: lang.c:164
 msgid "<b>Error:</b> %1"
-msgstr ""
+msgstr "<b>Błąd:</b> %1"
 
 
 #: lang.c:165
@@ -719,12 +719,12 @@ msgstr "Przejdź dalej do <a href=\"%1\">Synergy Premium</a>."
 
 #: lang.c:166
 msgid "You are using a secure connection (HTTPS, SSL)."
-msgstr ""
+msgstr "Korzystasz z bezpiecznego, szyfrowanego połączenia (HTTPS, SSL)."
 
 
 #: lang.c:167
 msgid "Card number:"
-msgstr "Numer karty"
+msgstr "Numer karty:"
 
 
 #: lang.c:168
@@ -744,22 +744,22 @@ msgstr "Kod bezpieczeństwa:"
 
 #: lang.c:171
 msgid "Huh?"
-msgstr "Prawda?"
+msgstr "Huh?"
 
 
 #: lang.c:174
 msgid "Already registered?"
-msgstr ""
+msgstr "Masz już konto?"
 
 
 #: lang.c:175
 msgid "We promise to not spam your email and we never store passwords in   plain text (we only keep a hash)."
-msgstr ""
+msgstr "Obiecujemy, że nie będziemy wysyłać Ci spamu. Nie przechowujemy haseł jako tekstu (jedynie jako zaszyfrowane dane)."
 
 
 #: lang.c:176
 msgid "Your name:"
-msgstr "Twoje imię"
+msgstr "Twoje imię:"
 
 
 #: lang.c:177
@@ -774,17 +774,17 @@ msgstr "Potwierdź email:"
 
 #: lang.c:179
 msgid "New password:"
-msgstr ""
+msgstr "Nowe hasło:"
 
 
 #: lang.c:180
 msgid "Confirm password:"
-msgstr ""
+msgstr "Potwierdź hasło:"
 
 
 #: lang.c:183
 msgid "If you've featured Synergy on your website, thank you! Please let us know so we can link to it."
-msgstr "Jeśli wspomniałeś na swojej stronie na temat projektu Synergy -dziękujemy! Daj nam znać, a wstawimy u nas link do Twojej strony."
+msgstr "Jeśli wspomniałeś na swojej stronie na temat projektu Synergy - dziękujemy! Daj nam znać, a umieścimy tutaj link do Twojej strony."
 
 
 #: lang.c:184
@@ -874,17 +874,17 @@ msgstr "Proszę wprowadzić swój adres e-mail."
 
 #: php/Controllers/PremiumController.php:466
 msgid "The email address does not appear to be valid."
-msgstr ""
+msgstr "Podany adres email wydaje się nie być prawidłowy."
 
 
 #: php/Controllers/PremiumController.php:469
 msgid "Welcome back, you've already registered. Please <a href=\"../\">log in</a> to your account."
-msgstr ""
+msgstr "Witaj ponownie, jesteś już zarejestrowany. Proszę <a href=\"../\">zalogować się</a> do swojego konta."
 
 
 #: php/Controllers/PremiumController.php:472
 msgid "The confirm email must match the email address."
-msgstr ""
+msgstr "Ponownie wprowadzony email musi być taki sam jak podany adres email."
 
 
 #: php/Controllers/PremiumController.php:475
@@ -894,5 +894,5 @@ msgstr "Proszę wprowadzić hasło."
 
 #: php/Controllers/PremiumController.php:478
 msgid "The confirm password must match the password."
-msgstr ""
+msgstr "Ponownie wprowadzone hasło musi być takie samo jak podane hasło."
 

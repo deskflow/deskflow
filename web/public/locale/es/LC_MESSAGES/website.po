@@ -134,7 +134,7 @@ msgstr "Descargas alternativas"
 
 #: lang.c:35
 msgid "Thanks for offering to donate! We really appreciate your support. We've replaced our donate button with Synergy Premium. It's like donating only you get the power to vote in return for your contribution. You don't have to vote either, it's entirely up to you."
-msgstr ""
+msgstr "Gracias por ofrecerse a donar! Nosotros realmente apreciamos su apoyo. Hemos reemplazado el botón de donar con Synergy Premium. Es como donar sólo a obtener el derecho a voto a cambio de su contribución. Usted no tiene que votar otra vez, es totalmente de usted."
 
 
 #: lang.c:36
@@ -144,27 +144,27 @@ msgstr "Llamamiento urgente de Synergy!"
 
 #: lang.c:37
 msgid "We urgently need your help to fund the continued development of Synergy."
-msgstr ""
+msgstr "Nosotros urgentemente necessitamos de su ayuda para financiar el desarollo para continuarmos con Synergy."
 
 
 #: lang.c:38
 msgid "We rely on Synergy Premium accounts to fund development. We are now supporting 2 full time software engineers working on Synergy. Even if you can only contribute just $1, it might not seem like much, it really is an enormous help for the project!"
-msgstr ""
+msgstr "Nosotros contamos con cuentas de Synergy Premium para financiar el desarrollo. Ahora nosotros estamos apoyando a tiempo completo 2 ingenieros de software que trabajam en Synergy. Incluso si sólo te puede contribuir con $1, puede no parecer mucho, pero realmente es una grand ayuda para el proyecto!"
 
 
 #: lang.c:39
 msgid "What's best is that Premium users (with votes) are the only ones who can tell us what to work on."
-msgstr ""
+msgstr "Lo mejor es que los usuarios Premium (con los votos) son los únicos que nos pueden decir lo que trabajar."
 
 
 #: lang.c:40
 msgid "Please choose the option on the left and open a Synergy Premium account for as little as $1. You'll be helping us keep the Synergy project alive for the price of a can of Coke! :-)"
-msgstr ""
+msgstr "Por favor, elija la opción de la izquierda y abrir una cuenta Synergy Premium para tan poco de $1. Usted estará ayudando a mantener vivo el proyecto Synergy por el precio de una lata de Coca-Cola! :-)"
 
 
 #: lang.c:41
 msgid "Thanks so much for reading, and we hope you decide to help us out."
-msgstr ""
+msgstr "Muchas gracias por leer, y esperamos que decidas ayudarnos."
 
 
 #: lang.c:42
@@ -184,7 +184,7 @@ msgstr "Tú decides cuanto contribuir."
 
 #: lang.c:45
 msgid "Use the slider, or enter any value into the textbox."
-msgstr ""
+msgstr "Use el control deslizante o introduzca cualquier valor en el cuadro de texto."
 
 
 #: lang.c:46 lang.c:50 lang.c:181
@@ -204,7 +204,7 @@ msgstr "No Premium"
 
 #: lang.c:49
 msgid "I'm not giving you guys a dime!"
-msgstr ""
+msgstr "No voy a dar a ustedes un centavo!"
 
 
 #: lang.c:51
@@ -214,7 +214,7 @@ msgstr "Los 10 votos principales"
 
 #: lang.c:52
 msgid "Register for Synergy Premium to cast your vote ($10 per vote)."
-msgstr ""
+msgstr "Registra para Synergy Premium para emitir su voto ($10 por voto)."
 
 
 #: lang.c:53
@@ -394,42 +394,42 @@ msgstr "Por favor, muéstranos los errores cuando hayas utilizado todas las opci
 
 #: lang.c:89
 msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk."
-msgstr ""
+msgstr "Synergy le permite compartir fácilmente su ratón y teclado entre varios computadoras en lo mismo escritorio."
 
 
 #: lang.c:90
 msgid "Supported on Windows, Mac OS X, and Linux."
-msgstr ""
+msgstr "Es suportado en Windows, Mac OS X y Linux."
 
 
 #: lang.c:91
 msgid "Simply move your mouse to any computer and start typing."
-msgstr ""
+msgstr "Basta mover el puntero del ratón a cualquier computadora y comience a escribir."
 
 
 #: lang.c:92
 msgid "Copy and paste between all of your computers."
-msgstr ""
+msgstr "Copia y pega entre todas sus computadoras."
 
 
 #: lang.c:93
 msgid "Encryption keeps sensitive data safe on public networks."
-msgstr ""
+msgstr " Criptografía mantiene sus datos confidenciales a salvo en las redes públicas."
 
 
 #: lang.c:94
 msgid "Save space on your desktop by using one keyboard and mouse."
-msgstr ""
+msgstr "Guarda espacio en su escritorio utilizando un teclado y un ratón."
 
 
 #: lang.c:95
 msgid "All you need is a network connection (no extra cables)."
-msgstr ""
+msgstr "Todo lo que necessita es una conexión a la red (sin cabos extras)"
 
 
 #: lang.c:96
 msgid "Synergy is free and open source, and always will be!"
-msgstr ""
+msgstr "Synergy es libre y de código abierto, y siempre lo será!"
 
 
 #: lang.c:97
@@ -564,7 +564,7 @@ msgstr "Iniciar sesión"
 
 #: lang.c:129
 msgid "Currently we don't have a \"forgot password\" feature, please contact us instead, sorry any inconvenience."
-msgstr ""
+msgstr "Actualmente no tenemos la característica \"Olvidó su contraseña\" , por favor póngase en contacto con nosotros en vez, lo siento las molestias"
 
 
 #: lang.c:130
@@ -579,7 +579,7 @@ msgstr "Contraseña:"
 
 #: lang.c:133 lang.c:159
 msgid "Logged in as: %1 (%2)"
-msgstr ""
+msgstr "Conectado como: %1 (%2)"
 
 
 #: lang.c:134
@@ -589,12 +589,12 @@ msgstr "Cerrar Sesión "
 
 #: lang.c:135
 msgid "Welcome to your Synergy Premium account."
-msgstr ""
+msgstr "Bienvenido a tu cuenta Synergy Premium."
 
 
 #: lang.c:136
 msgid "Download Synergy"
-msgstr ""
+msgstr " Descarga Synergy"
 
 
 #: lang.c:137
@@ -714,7 +714,7 @@ msgstr ""
 
 #: lang.c:165
 msgid "Continue to <a href=\"%1\">Synergy Premium</a>."
-msgstr ""
+msgstr "Seguir para <a href=\"%1\">Synergy Premium</a>."
 
 
 #: lang.c:166
@@ -724,27 +724,27 @@ msgstr ""
 
 #: lang.c:167
 msgid "Card number:"
-msgstr ""
+msgstr "Número de tarjeta de credito:"
 
 
 #: lang.c:168
 msgid "Name on card:"
-msgstr ""
+msgstr "Nombre de tarjeta de credito:"
 
 
 #: lang.c:169
 msgid "Expiration:"
-msgstr ""
+msgstr "Expiración:"
 
 
 #: lang.c:170
 msgid "Security code:"
-msgstr ""
+msgstr "Código de seguridad:"
 
 
 #: lang.c:171
 msgid "Huh?"
-msgstr ""
+msgstr "¡Cómo!"
 
 
 #: lang.c:174
@@ -759,17 +759,17 @@ msgstr ""
 
 #: lang.c:176
 msgid "Your name:"
-msgstr ""
+msgstr "Su nombre:"
 
 
 #: lang.c:177
 msgid "Email address:"
-msgstr ""
+msgstr "Dirección de e-mail:"
 
 
 #: lang.c:178
 msgid "Confirm email:"
-msgstr ""
+msgstr "Corfirma su e-mail:"
 
 
 #: lang.c:179
