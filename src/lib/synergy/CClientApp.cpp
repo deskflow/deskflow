@@ -40,9 +40,6 @@
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
-#if VNC_SUPPORT
-#include "vnc/win/winvnc/winvnc.h"
-#endif
 #endif
 
 #if SYSAPI_WIN32 && GAME_DEVICE_SUPPORT
@@ -66,15 +63,12 @@
 CClientApp::CClientApp(CreateTaskBarReceiverFunc createTaskBarReceiver) :
 CApp(createTaskBarReceiver, new CArgs()),
 s_client(NULL),
-s_clientScreen(NULL),
-m_vncThread(NULL)
+s_clientScreen(NULL)
 {
 }
 
 CClientApp::~CClientApp()
 {
-	if (m_vncThread)
-		delete m_vncThread;
 }
 
 CClientApp::CArgs::CArgs() :
@@ -618,23 +612,10 @@ CClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
 void 
 CClientApp::startNode()
 {
-	if (args().m_enableVnc) {
-		m_vncThread = new CThread(new TMethodJob<CClientApp>(
-			this, &CClientApp::vncThread, NULL));
-	}
-
 	// start the client.  if this return false then we've failed and
 	// we shouldn't retry.
 	LOG((CLOG_DEBUG1 "starting client"));
 	if (!startClient()) {
 		m_bye(kExitFailed);
 	}
-}
-
-void
-CClientApp::vncThread(void*)
-{
-#if VNC_SUPPORT
-	vncServerMain(0, NULL);
-#endif
 }

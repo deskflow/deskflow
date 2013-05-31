@@ -85,10 +85,8 @@ public:
 
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
-	void vncThread(void*);
 
 private:
 	CClient* s_client;
 	CScreen* s_clientScreen;
-	CThread* m_vncThread;
 };
