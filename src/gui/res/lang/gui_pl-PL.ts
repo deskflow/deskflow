@@ -117,7 +117,7 @@ Strona domowa i pomoc na stronie WWW (synergy-foss.org).
     <message>
         <location filename="res/ActionDialogBase.ui" line="201"/>
         <source>Lock cursor to screen</source>
-        <translation type="finished">Zablokuj kursor myszki do danego ekranu</translation>
+        <translation type="finished">Zablokuj kursor myszki dla danego ekranu</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="225"/>
@@ -127,12 +127,12 @@ Strona domowa i pomoc na stronie WWW (synergy-foss.org).
     <message>
         <location filename="res/ActionDialogBase.ui" line="230"/>
         <source>on</source>
-        <translation type="finished">Włącz</translation>
+        <translation type="finished">wł.</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="235"/>
         <source>off</source>
-        <translation type="finished">Wyłącz</translation>
+        <translation type="finished">wył.</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="248"/>
@@ -193,7 +193,7 @@ Strona domowa i pomoc na stronie WWW (synergy-foss.org).
     <message>
         <location filename="src/MainWindow.cpp" line="326"/>
         <source>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</source>
-        <translation type="finished">&lt;p&gt;Dostępna jest wersja %1, &lt;a href=&quot;%2&quot;&gt;otwórz witrynę&lt;/a&gt;.&lt;/p&gt;</translation>
+        <translation type="finished">&lt;p&gt;Dostępna jest wersja %1, &lt;a href=&quot;%2&quot;&gt;odwiedź stronę internetową&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="458"/>
@@ -203,7 +203,7 @@ Strona domowa i pomoc na stronie WWW (synergy-foss.org).
     <message>
         <location filename="src/MainWindow.cpp" line="458"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation type="finished">Plik wykonawczy&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;nie został poprawnie uruchomiony, mimo, że istnieje. Proszę sprawdzić czy dane konto posiada odpowiednie prawa do uruchomienia wskazanej aplikacji.</translation>
+        <translation type="finished">Plik wykonawczy&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;nie został poprawnie uruchomiony, mimo, że istnieje. Proszę sprawdzić czy dane konto posiada odpowiednie uprawnienia do uruchomienia wskazanej aplikacji.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="477"/>
@@ -410,7 +410,7 @@ Pozwoli to Synergy współpracować z innymi aplikacjami o podniesionych uprawni
     <message>
         <location filename="res/MainWindowBase.ui" line="174"/>
         <source>&amp;Elevate</source>
-        <translation type="finished">Увеличаване на правомощията</translation>
+        <translation type="finished">Zwiększ uprawnienia Synergy</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="204"/>
@@ -796,7 +796,7 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="273"/>
         <source>Advanced server settings</source>
-        <translation type="finished">Ustawienia zaawansowane serwera</translation>
+        <translation type="finished">Zaawansowane ustawienia serwera</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="279"/>
@@ -939,7 +939,7 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="240"/>
         <source>&amp;Process mode:</source>
-        <translation type="finished">&amp;Uruchom jako:</translation>
+        <translation type="finished">Uruchom jako:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="251"/>
@@ -974,7 +974,7 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="20"/>
         <source>&amp;Graphical interface</source>
-        <translation type="finished">Interfejs &amp;graficzny</translation>
+        <translation type="finished">Interfejs graficzny</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="55"/>
@@ -1136,7 +1136,7 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
     <message>
         <location filename="res/SetupWizardBase.ui" line="474"/>
         <source>&amp;Confirm:</source>
-        <translation type="finished">Powtórz:</translation>
+        <translation type="finished">Potwierdź:</translation>
     </message>
 </context>
 <context>
