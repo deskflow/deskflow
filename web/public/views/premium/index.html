@@ -23,17 +23,14 @@ support. Funding allows us to spend more time improving Synergy.{/t}
     
     <h3>{t}Login{/t}</h3>
     
-    <p>
-{t}Currently we don't have a "forgot password" feature, please contact us
-instead, sorry any inconvenience.{/t}
-    </p>
-    
     {if $premium->loginInvalid}
     <div class="loginError ui-state-highlight">
       <span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
       <p>Error: Invalid login.</p>
     </div>
     {/if}
+    
+    <p>{t url="reset/"}<a href="%1">Forgot password</a> (use this to reset your password).{/t}</p>
     
     <form id="login" action="?login" method="post">
       <div class="box">

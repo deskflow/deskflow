@@ -507,12 +507,14 @@ div.signup-dialog h2 {
   margin-top: 0.2em;
 }
 
-div.premium-register div.error {
+div.premium-register div.error,
+div.premium-reset div.error {
   padding: 5px;
   margin-bottom: 10px;
 }
 
-div.premium-register div.error p {
+div.premium-register div.error p,
+div.premium-reset div.error p {
   margin: 0px;
   padding: 0px;
 }
@@ -625,8 +627,13 @@ div.premium-payment div.amount-box div.slider {
   margin-top: .5em;
 }
 
-div.premium-register div.form {
+div.premium-register div.form,
+div.premium-reset div.form {
   width: 50%;
+}
+
+div.premium-register div.form div.box,
+div.premium-reset div.form div.box {
   padding-right: 5px;
 }
 
