@@ -67,6 +67,9 @@ class PremiumController extends Controller {
     else if (preg_match("/premium\/reset\/?$/", $path)) {
       $this->runResetPassword();
     }
+    else if (preg_match("/premium\/json\/auth\/?$/", $path)) {
+      $this->runJsonAuth();
+    }
     else {
       $this->showPageNotFound();
     }
@@ -273,6 +276,22 @@ class PremiumController extends Controller {
     $this->showView("premium/reset");
 	}
 	
+	private function runJsonAuth() {
+		$request = json_decode($_POST["json"]);
+		$email = $request->email;
+		$password = $request->password;
+		
+		$response = new \stdClass;
+		try {
+			$response->result = $this->auth(false, $email, $password);
+		}
+		catch (\Exception $ex) {
+			$response->error = $ex->getMessage();
+		}
+		
+		echo json_encode($response);
+	}
+	
 	private function setPasswordFromForm($email) {
 		$password1 = $this->getPostValue("password1");
 		$password2 = $this->getPostValue("password2");
@@ -335,23 +354,38 @@ class PremiumController extends Controller {
 		return $token;
 	}
   
-  public function auth() {
+  public function auth($login = true, $email = null, $password = null) {
+    
+    if ($email == null) {
+      $email = $_POST["email"];
+    }
+    
+    if ($password == null) {
+      $password = $_POST["password"];
+    }
+    
     $mysql = $this->getMysql();
     $result = $mysql->query(sprintf(
       "select * from user where email = '%s' and password = '%s'",
-      $mysql->escape_string($_POST["email"]),
-      md5($_POST["password"])
+      $mysql->escape_string($email),
+      md5($password)
     ));
+    
     if ($result == null) {
       throw new Exception($mysql->error);
     }
+    
     if ($result->num_rows != 0) {
       $this->user = $result->fetch_object();
-      $this->login($_POST["email"], false);
+      if ($login) {
+        $this->login($email, false);
+      }
+      return true;
     }
     else {
-      $this->email = $_POST["email"];
+      $this->email = $email;
       $this->loginInvalid = true;
+      return false;
     }
   }
   
