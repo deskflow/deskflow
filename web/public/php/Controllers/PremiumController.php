@@ -288,9 +288,28 @@ class PremiumController extends Controller {
 		catch (\Exception $ex) {
 			$response->error = $ex->getMessage();
 		}
+    
+    $this->recordGuiLogin($email);
 		
 		echo json_encode($response);
 	}
+  
+  private function recordGuiLogin($email) {
+    $userAgent = $_SERVER["HTTP_USER_AGENT"];
+    
+    if (!preg_match("/Synergy GUI ([\\d.]+)/", $userAgent, $matches)) {
+      return;
+    }
+    
+		$mysql = $this->getMysql();
+		$result = $mysql->query(sprintf(
+			"update user set ".
+			"lastGuiLogin = now(), lastGuiVersion = '%s' ".
+			"where email = '%s'",
+      $matches[1],
+      $mysql->escape_string($email)
+		));
+  }
 	
 	private function setPasswordFromForm($email) {
 		$password1 = $this->getPostValue("password1");
@@ -306,7 +325,7 @@ class PremiumController extends Controller {
 			"resetToken = NULL, password = '%s' ".
 			"where email = '%s'",
 			md5($password1),
-			$email
+			$mysql->escape_string($email)
 		));
 	}
 	
