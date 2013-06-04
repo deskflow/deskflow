@@ -30,9 +30,10 @@
 // here...
 //
 //   1: first version
-//   2: language page added
+//   2: added language page
+//   3: added premium page
 //
-const int kWizardVersion = 2;
+const int kWizardVersion = 3;
 
 class QSettings;
 class SettingsDialog;
@@ -70,6 +71,8 @@ class AppConfig
 		ProcessMode processMode() const { return m_ProcessMode; }
 		bool wizardShouldRun() const { return m_WizardLastRun < kWizardVersion; }
 		const QString& language() const { return m_Language; }
+		const QString& premiumEmail() const { return m_PremiumEmail; }
+		const QString& premiumToken() const { return m_PremiumToken; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -78,6 +81,7 @@ class AppConfig
 
 		bool detectPath(const QString& name, QString& path);
 		void persistLogDir();
+		bool isPremium();
 
 	protected:
 		QSettings& settings() { return *m_pSettings; }
@@ -95,12 +99,13 @@ class AppConfig
 		void setProcessMode(ProcessMode p) { m_ProcessMode = p; }
 		void setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
 		void setLanguage(const QString language) { m_Language = language; }
+		void setPremiumEmail(const QString premiumEmail) { m_PremiumEmail = premiumEmail; }
+		void setPremiumToken(const QString premiumToken) { m_PremiumToken = premiumToken; }
 
 		void loadSettings();
 		void saveSettings();
 
 		void setCryptoPass(const QString& s);
-		static QString hash(const QString& string);
 
 	private:
 		QSettings* m_pSettings;
@@ -119,6 +124,8 @@ class AppConfig
 		CryptoMode m_CryptoMode;
 		ProcessMode m_ProcessMode;
 		QString m_Language;
+		QString m_PremiumEmail;
+		QString m_PremiumToken;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

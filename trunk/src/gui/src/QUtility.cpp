@@ -28,3 +28,24 @@ void setIndexFromItemData(QComboBox* comboBox, const QVariant& itemData)
 		}
 	}
 }
+
+QString hash(const QString& string)
+{
+	QByteArray data = string.toUtf8();
+	QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Md5);
+	return hash.toHex();
+}
+
+QString getFirstMacAddress()
+{
+	QString mac;
+	foreach (const QNetworkInterface &interface,  QNetworkInterface::allInterfaces())
+	{
+		mac = interface.hardwareAddress();
+		if (mac.size() != 0)
+		{
+			break;
+		}
+	}
+	return mac;
+}

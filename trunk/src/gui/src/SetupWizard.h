@@ -17,12 +17,15 @@
 
 #pragma once
 
-#include <QWizard>
 #include "ui_SetupWizardBase.h"
 #include "CryptoMode.h"
 #include "SynergyLocale.h"
 
+#include <QWizard>
+#include <QNetworkAccessManager>
+
 class MainWindow;
+class QMessageBox;
 
 class SetupWizard : public QWizard, public Ui::SetupWizardBase
 {
@@ -39,13 +42,16 @@ protected:
 
 private:
 	CryptoMode parseCryptoMode(const QString& s);
+	bool isPremiumLoginValid(QMessageBox& message);
 
 private:
 	MainWindow& m_MainWindow;
 	bool m_StartMain;
 	SynergyLocale m_Locale;
+	QNetworkAccessManager m_Network;
 
 private slots:
     void on_m_pComboCryptoMode_currentIndexChanged(int index);
 	void on_m_pComboLanguage_currentIndexChanged(int index);
+	void on_m_pRadioButtonPremiumLogin_toggled(bool checked);
 };

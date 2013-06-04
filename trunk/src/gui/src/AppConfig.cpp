@@ -17,6 +17,7 @@
  */
 
 #include "AppConfig.h"
+#include "QUtility.h"
 
 #include <QtCore>
 #include <QtNetwork>
@@ -161,6 +162,8 @@ void AppConfig::loadSettings()
 	m_CryptoPass = settings().value("cryptoPass", "").toString();
 	m_CryptoMode = (CryptoMode)settings().value("cryptoMode", Disabled).toInt();
 	m_Language = settings().value("language", QLocale::system().name()).toString();
+	m_PremiumEmail= settings().value("premiumEmail", "").toString();
+	m_PremiumToken = settings().value("premiumToken", "").toString();
 }
 
 void AppConfig::saveSettings()
@@ -180,13 +183,8 @@ void AppConfig::saveSettings()
 	settings().setValue("cryptoPass", m_CryptoPass);
 	settings().setValue("cryptoMode", m_CryptoMode);
 	settings().setValue("language", m_Language);
-}
-
-QString AppConfig::hash(const QString& string)
-{
-	QByteArray data = string.toUtf8();
-	QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Md5);
-	return hash.toHex();
+	settings().setValue("premiumEmail", m_PremiumEmail);
+	settings().setValue("premiumToken", m_PremiumToken);
 }
 
 void AppConfig::setCryptoPass(const QString &s)
@@ -225,4 +223,11 @@ QString AppConfig::cryptoModeString() const
 		qCritical() << "invalid crypto mode";
 		return "";
 	}
+}
+
+bool AppConfig::isPremium()
+{
+	QString hashSrc = m_PremiumEmail + getFirstMacAddress();
+	QString hashResult = hash(hashSrc);
+	return hashResult == m_PremiumToken;
 }
