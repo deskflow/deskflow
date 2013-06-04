@@ -233,66 +233,66 @@ class PremiumController extends Controller {
     $smarty->assign("title", T_("Synergy Premium - Payment"));
     $this->showView("premium/payment");
   }
-	
-	public function runResetPassword() {		
-		$error = null;
-		$token = isset($_GET["token"]) ? $_GET["token"] : null;
-		$email = $this->getPostValue("email");
-		$passwordForm = $token != null;
-		$emailForm = $token == null;
-		$emailSuccess = false;
-		
-		$user = null;
-		if ($token != null) {
-			$user = $this->getUserByResetToken($token);
-		}
-		
-		if ($this->isPostBack()) {
-			try {
-				if ($token != null) {
-					$this->setPasswordFromForm($user->email);
-					$this->login($user->email, false);
-					header("Location: ../");
-					exit;
-				}
-				else {
-					$this->sendPasswordResetEmail($email);
-					$emailSuccess = true;
-					$emailForm = false;
-				}
-			}
-			catch (\Synergy\ValidationError $e) {
-				$error = $e->getMessage();
-			}
-		}
-	
+  
+  public function runResetPassword() {    
+    $error = null;
+    $token = isset($_GET["token"]) ? $_GET["token"] : null;
+    $email = $this->getPostValue("email");
+    $passwordForm = $token != null;
+    $emailForm = $token == null;
+    $emailSuccess = false;
+    
+    $user = null;
+    if ($token != null) {
+      $user = $this->getUserByResetToken($token);
+    }
+    
+    if ($this->isPostBack()) {
+      try {
+        if ($token != null) {
+          $this->setPasswordFromForm($user->email);
+          $this->login($user->email, false);
+          header("Location: ../");
+          exit;
+        }
+        else {
+          $this->sendPasswordResetEmail($email);
+          $emailSuccess = true;
+          $emailForm = false;
+        }
+      }
+      catch (\Synergy\ValidationError $e) {
+        $error = $e->getMessage();
+      }
+    }
+  
     $smarty = $this->website->smarty;
-		$smarty->assign("error", $error);
-		$smarty->assign("emailSuccess", $emailSuccess);
-		$smarty->assign("emailForm", $emailForm);
-		$smarty->assign("passwordForm", $passwordForm);
+    $smarty->assign("error", $error);
+    $smarty->assign("emailSuccess", $emailSuccess);
+    $smarty->assign("emailForm", $emailForm);
+    $smarty->assign("passwordForm", $passwordForm);
     $smarty->assign("email", $email);
     $smarty->assign("title", T_("Synergy Premium - Reset Password"));
     $this->showView("premium/reset");
-	}
-	
-	private function runJsonAuth() {
-		$request = json_decode($_POST["json"]);
-		$email = $request->email;
-		$password = $request->password;
-		
-		$response = new \stdClass;
-		try {
-			$response->result = $this->auth(false, $email, $password);
-		}
-		catch (\Exception $ex) {
-			$response->error = $ex->getMessage();
-		}
+  }
+  
+  private function runJsonAuth() {
+    $request = json_decode($_POST["json"]);
+    $email = $request->email;
+    $password = $request->password;
+    
+    $response = new \stdClass;
+    try {
+      $response->result = $this->auth(false, $email, $password);
+    }
+    catch (\Exception $ex) {
+      $response->error = $ex->getMessage();
+    }
     
     $this->recordGuiLogin($email);
-		
-		echo json_encode($response);
-	}
+    
+    echo json_encode($response);
+  }
   
   private function recordGuiLogin($email) {
     $userAgent = $_SERVER["HTTP_USER_AGENT"];
@@ -301,77 +301,77 @@ class PremiumController extends Controller {
       return;
     }
     
-		$mysql = $this->getMysql();
-		$result = $mysql->query(sprintf(
-			"update user set ".
-			"lastGuiLogin = now(), lastGuiVersion = '%s' ".
-			"where email = '%s'",
+    $mysql = $this->getMysql();
+    $result = $mysql->query(sprintf(
+      "update user set ".
+      "lastGuiLogin = now(), lastGuiVersion = '%s' ".
+      "where email = '%s'",
       $matches[1],
       $mysql->escape_string($email)
-		));
+    ));
   }
-	
-	private function setPasswordFromForm($email) {
-		$password1 = $this->getPostValue("password1");
-		$password2 = $this->getPostValue("password2");
-		
-		if ($password1 != $password2) {
-			throw new \Synergy\ValidationError(T_("The password fields do not match."));
-		}
-		
-		$mysql = $this->getMysql();
-		$result = $mysql->query(sprintf(
-			"update user set ".
-			"resetToken = NULL, password = '%s' ".
-			"where email = '%s'",
-			md5($password1),
-			$mysql->escape_string($email)
-		));
-	}
-	
-	private function sendPasswordResetEmail($email) {
-		if ($email == null) {
-			throw new \Synergy\ValidationError(T_("Email field was empty."));
-		}
-		
-		$mysql = $this->getMysql();
-		$result = $mysql->query(sprintf(
-			"select * from user where email = '%s'",
-			$mysql->escape_string($email)
-		));
-			
-		if ($result == null) {
-			throw new Exception($mysql->error);
-		}
-		else {
-			if ($result->num_rows != 0) {
-				$token = $this->createResetToken($email);
-				$resetUrl = sprintf("https://%s?token=%s", $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"], $token);
-				$subject = T_("Password reset");
-				$message = T_("Hello,\n\nPlease click the following link to reset your password.\n\n") . $resetUrl;
-				$headers = sprintf("From: %s <%s>", T_("Synergy Website"), $this->settings["general"]["websiteEmail"]);
-				$result = mail($email, $subject, $message, $headers);
-				
-				if (!$result) {
-					throw new \Exception("mail function failed.");
-				}
-			}
-			else {
-				throw new \Synergy\ValidationError(T_("Invalid email address, please check and try again."));
-			}
-		}
-	}
-	
-	private function createResetToken($email) {
-		$token = sha1(mt_rand() . $this->settings["general"]["tokenSeed"]);
-		$mysql = $this->getMysql();
-		$result = $mysql->query(sprintf(
-			"update user set resetToken = '%s' where email = '%s'",
-			$token,
-			$mysql->escape_string($email)
-		));
-		return $token;
-	}
+  
+  private function setPasswordFromForm($email) {
+    $password1 = $this->getPostValue("password1");
+    $password2 = $this->getPostValue("password2");
+    
+    if ($password1 != $password2) {
+      throw new \Synergy\ValidationError(T_("The password fields do not match."));
+    }
+    
+    $mysql = $this->getMysql();
+    $result = $mysql->query(sprintf(
+      "update user set ".
+      "resetToken = NULL, password = '%s' ".
+      "where email = '%s'",
+      md5($password1),
+      $mysql->escape_string($email)
+    ));
+  }
+  
+  private function sendPasswordResetEmail($email) {
+    if ($email == null) {
+      throw new \Synergy\ValidationError(T_("Email field was empty."));
+    }
+    
+    $mysql = $this->getMysql();
+    $result = $mysql->query(sprintf(
+      "select * from user where email = '%s'",
+      $mysql->escape_string($email)
+    ));
+      
+    if ($result == null) {
+      throw new Exception($mysql->error);
+    }
+    else {
+      if ($result->num_rows != 0) {
+        $token = $this->createResetToken($email);
+        $resetUrl = sprintf("https://%s?token=%s", $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"], $token);
+        $subject = T_("Password reset");
+        $message = T_("Hello,\n\nPlease click the following link to reset your password.\n\n") . $resetUrl;
+        $headers = sprintf("From: %s <%s>", T_("Synergy Website"), $this->settings["general"]["websiteEmail"]);
+        $result = mail($email, $subject, $message, $headers);
+        
+        if (!$result) {
+          throw new \Exception("mail function failed.");
+        }
+      }
+      else {
+        throw new \Synergy\ValidationError(T_("Invalid email address, please check and try again."));
+      }
+    }
+  }
+  
+  private function createResetToken($email) {
+    $token = sha1(mt_rand() . $this->settings["general"]["tokenSeed"]);
+    $mysql = $this->getMysql();
+    $result = $mysql->query(sprintf(
+      "update user set resetToken = '%s' where email = '%s'",
+      $token,
+      $mysql->escape_string($email)
+    ));
+    return $token;
+  }
   
   public function auth($login = true, $email = null, $password = null) {
     
