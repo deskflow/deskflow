@@ -24,6 +24,8 @@ set(cryptopp_src
 	${cryptopp_dir}/basecode.cpp
 	${cryptopp_dir}/cpu.cpp
 	${cryptopp_dir}/cryptlib.cpp
+	${cryptopp_dir}/des.cpp
+	${cryptopp_dir}/dessp.cpp
 	${cryptopp_dir}/dll.cpp
 	${cryptopp_dir}/ec2n.cpp
 	${cryptopp_dir}/ecp.cpp
