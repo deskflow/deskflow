@@ -27,6 +27,7 @@
 #include <QNetworkReply>
 
 #define PREMIUM_AUTH_URL "https://synergy-foss.org/premium/json/auth/"
+//#define PREMIUM_AUTH_URL "http://localhost/synergy/premium/json/auth/"
 
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_MainWindow(mainWindow),
@@ -286,7 +287,12 @@ bool SetupWizard::isPremiumLoginValid(QMessageBox& message)
 	QString requestJson = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\"}";
 	QByteArray requestData(requestJson.toStdString().c_str());
 
+	QString version = m_MainWindow.versionChecker().getVersion();
+	QString userAgent = "Synergy GUI " + version;
+	QByteArray userAgentData(userAgent.toStdString().c_str());
+
 	QNetworkRequest request(QUrl(PREMIUM_AUTH_URL));
+	request.setRawHeader("User-Agent", userAgentData);
 
 	QUrl params;
 	params.addEncodedQueryItem("json", requestData);

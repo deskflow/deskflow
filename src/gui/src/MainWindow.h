@@ -90,6 +90,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QString appPath(const QString& name);
 		void start(bool firstRun);
 		void clearLog();
+		VersionChecker& versionChecker() { return m_VersionChecker; }
 
 	public slots:
 		void appendLogRaw(const QString& text);
