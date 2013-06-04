@@ -10,6 +10,12 @@
     <height>390</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="minimumSize">
    <size>
     <width>500</width>
@@ -111,6 +117,224 @@
        <bool>true</bool>
       </property>
      </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWizardPage" name="m_pPremiumUserPage">
+   <property name="title">
+    <string>Synergy Premium</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <item>
+     <widget class="QLabel" name="label_7">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Synergy Premium users have access to extra features. The latest feature is encryption, which keeps sensitive information (e.g. passwords) safer when typed. These features are funded by Synergy Premium users. You can create an account for as little as $1.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_8">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>10</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="m_pRadioButtonPremiumLogin">
+      <property name="text">
+       <string>Yes, I have an account</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QFormLayout" name="formLayout_5">
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="m_pLineEditPremiumPassword">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="sizeIncrement">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="m_pLabel_29">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>&amp;Password:</string>
+        </property>
+        <property name="indent">
+         <number>10</number>
+        </property>
+        <property name="buddy">
+         <cstring>m_pLineEditPremiumPassword</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="m_pLabel_28">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>&amp;Email:</string>
+        </property>
+        <property name="indent">
+         <number>10</number>
+        </property>
+        <property name="buddy">
+         <cstring>m_pLineEditPremiumEmail</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="m_pLineEditPremiumEmail">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="sizeIncrement">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Normal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="m_pLabelForgotPassword">
+        <property name="text">
+         <string>&lt;a href=&quot;https://synergy-foss.org/premium/reset/&quot;&gt;Forgot password&lt;/a&gt;</string>
+        </property>
+        <property name="openExternalLinks">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="m_pRadioButtonPremiumRegister">
+      <property name="text">
+       <string>I want to sign up now</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="m_pRadioButtonPremiumLater">
+      <property name="text">
+       <string>Maybe later</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_9">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>
@@ -234,7 +458,7 @@
     <item>
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>Network traffic can be easily monitored. Using encryption can reduce the risk that sensitive information will be revealed to others (for example, passwords).</string>
+       <string>Only available to Synergy Premium users.</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
@@ -252,7 +476,33 @@
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>20</height>
+        <height>10</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Network traffic can be easily monitored. Using encryption can reduce the risk that sensitive information will be revealed to others (for example, passwords).</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_10">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>10</height>
        </size>
       </property>
      </spacer>
@@ -418,12 +668,12 @@
          <number>10</number>
         </property>
         <property name="buddy">
-         <cstring>m_pLineEditCryptoPass</cstring>
+         <cstring>m_pLineEditCryptoPassword1</cstring>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="m_pLineEditCryptoPass">
+       <widget class="QLineEdit" name="m_pLineEditCryptoPassword1">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -477,12 +727,12 @@
          <number>10</number>
         </property>
         <property name="buddy">
-         <cstring>m_pLineEditCryptoPassConfirm</cstring>
+         <cstring>m_pLineEditCryptoPassword2</cstring>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLineEdit" name="m_pLineEditCryptoPassConfirm">
+       <widget class="QLineEdit" name="m_pLineEditCryptoPassword2">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -521,6 +771,19 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>m_pComboLanguage</tabstop>
+  <tabstop>m_pRadioButtonPremiumLogin</tabstop>
+  <tabstop>m_pLineEditPremiumEmail</tabstop>
+  <tabstop>m_pLineEditPremiumPassword</tabstop>
+  <tabstop>m_pRadioButtonPremiumRegister</tabstop>
+  <tabstop>m_pRadioButtonPremiumLater</tabstop>
+  <tabstop>m_pServerRadioButton</tabstop>
+  <tabstop>m_pClientRadioButton</tabstop>
+  <tabstop>m_pComboCryptoMode</tabstop>
+  <tabstop>m_pLineEditCryptoPassword1</tabstop>
+  <tabstop>m_pLineEditCryptoPassword2</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

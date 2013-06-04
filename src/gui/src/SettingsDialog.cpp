@@ -24,7 +24,6 @@
 
 #include <QtCore>
 #include <QtGui>
-#include <QCryptographicHash>
 
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -45,9 +44,19 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pLineEditLogFilename->setText(appConfig().logFilename());
 	m_pCheckBoxAutoStart->setChecked(appConfig().autoStart());
 	m_pCheckBoxAutoHide->setChecked(appConfig().autoHide());
-	m_pComboCryptoMode->setCurrentIndex(getCryptoModeIndex(appConfig().cryptoMode()));
-	m_pLineEditCryptoPass->setText(appConfig().cryptoPass());
 	setIndexFromItemData(m_pComboLanguage, appConfig().language());
+	if (appConfig().isPremium())
+	{
+		m_pComboCryptoMode->setCurrentIndex(getCryptoModeIndex(appConfig().cryptoMode()));
+		m_pLineEditCryptoPass->setText(appConfig().cryptoPass());
+	}
+	else
+	{
+		int size = m_pComboCryptoMode->count();
+		m_pComboCryptoMode->setCurrentIndex(size - 1);
+		m_pComboCryptoMode->setEnabled(false);
+	}
+
 }
 
 void SettingsDialog::accept()
