@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define WEBSITE_ADDRESS "synergy-foss.org"
+#define DOWNLOAD_URL "http://synergy-foss.org/?source=gui"
 
 #include <iostream>
 
@@ -324,7 +324,7 @@ void MainWindow::updateFound(const QString &version)
 		tr("<p>Your version of Synergy is out of date. "
 		   "Version <b>%1</b> is now available to "
 		   "<a href=\"%2\">download</a>.</p>")
-		.arg(version).arg("http://synergy-foss.org"));
+		.arg(version).arg(DOWNLOAD_URL));
 }
 
 void MainWindow::appendLogNote(const QString& text)
