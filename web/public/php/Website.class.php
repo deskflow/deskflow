@@ -58,6 +58,11 @@ class Website extends Controllers\Controller {
       }
     }
     
+    if ($this->page == "version") {
+      echo $this->settings["general"]["currentVersion"];
+      exit;
+    }
+    
     if (!$this->isBot()) {
       $this->session->start();
     }

@@ -38,7 +38,7 @@ class DownloadController extends Controller {
       exit;
     }
     
-    $currentVersion = "1.4.12";
+    $currentVersion = $this->website->settings["general"]["currentVersion"];
     $currentDate = mktime(0, 0, 0, 05, 04, 2013);
 
     // naming c: mac universal dropped
