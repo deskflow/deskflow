@@ -64,7 +64,7 @@ class SessionManager {
       time()
     ));
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
     
     $data = "";
@@ -85,7 +85,7 @@ class SessionManager {
         (time() + $this->lifetime)
       ));
       if ($result == null) {
-        throw new Exception($mysql->error);
+        throw new \Exception($mysql->error);
       }
     }
     else {
@@ -102,7 +102,7 @@ class SessionManager {
       $mysql->escape_string($id)
     ));
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
     return true;
   }
@@ -113,7 +113,7 @@ class SessionManager {
       "delete from session where expires < unix_timestamp()"
     );
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
     return true;
   }

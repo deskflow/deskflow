@@ -342,7 +342,7 @@ class PremiumController extends Controller {
     ));
       
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
     else {
       if ($result->num_rows != 0) {
@@ -392,7 +392,7 @@ class PremiumController extends Controller {
     ));
     
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
     
     if ($result->num_rows != 0) {
@@ -439,7 +439,7 @@ class PremiumController extends Controller {
       $mysql->escape_string($email)
     ));
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
     if ($result->num_rows != 0) {
       return $result->fetch_object();
@@ -456,7 +456,7 @@ class PremiumController extends Controller {
       $mysql->escape_string($resetToken)
     ));
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
     if ($result->num_rows != 0) {
       return $result->fetch_object();
@@ -517,7 +517,7 @@ class PremiumController extends Controller {
       $this->user->id
     ));
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
   }
   
@@ -549,7 +549,7 @@ class PremiumController extends Controller {
       $this->user->id
     ));
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
     $votes = array();
     while ($vote = $result->fetch_object()) {
@@ -586,7 +586,7 @@ class PremiumController extends Controller {
       $this->user->id
     ));
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
     $payments = array();
     while ($paymentData = $result->fetch_object()) {
@@ -607,7 +607,7 @@ class PremiumController extends Controller {
       (($limit != null) ? sprintf("limit 0, %d ", $limit) : "")
     ));
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
     $votes = array();
     while ($vote = $result->fetch_object()) {
@@ -626,7 +626,7 @@ class PremiumController extends Controller {
       $this->getAmount()
     ));
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
   }
   
@@ -669,7 +669,7 @@ class PremiumController extends Controller {
       $mysql->escape_string($email)
     ));
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
     $row = $result->fetch_array();
     return (int)($row[0]);
@@ -687,7 +687,7 @@ class PremiumController extends Controller {
       (float)$amount
     ));
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
   }
   
@@ -705,7 +705,7 @@ class PremiumController extends Controller {
       (int)$userId
     ));
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
   }
 
@@ -825,7 +825,7 @@ class PremiumController extends Controller {
       $mysql->escape_string($data)
     ));
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
   }
 }
