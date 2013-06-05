@@ -25,7 +25,7 @@
 #include <QLocale>
 
 #define VERSION_REGEX "(\\d+\\.\\d+\\.\\d+)"
-#define VERSION_URL "http://synergy-plus.googlecode.com/svn/web/version.txt"
+#define VERSION_URL "http://synergy-foss.org/version/"
 
 VersionChecker::VersionChecker()
 {
