@@ -284,12 +284,13 @@ class PremiumController extends Controller {
     $response = new \stdClass;
     try {
       $response->result = $this->auth(false, $email, $password);
+      if ($response->result) {
+        $this->recordGuiLogin($email);
+      }
     }
     catch (\Exception $ex) {
       $response->error = $ex->getMessage();
     }
-    
-    $this->recordGuiLogin($email);
     
     echo json_encode($response);
   }
