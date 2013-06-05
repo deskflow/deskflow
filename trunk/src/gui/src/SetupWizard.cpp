@@ -303,6 +303,12 @@ bool SetupWizard::isPremiumLoginValid(QMessageBox& message)
 	connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
 	loop.exec();
 
+	if (reply->error() != QNetworkReply::NoError) {
+		message.setText(tr("Login failed, an error occurred.\n\nError: %1").arg(reply->errorString()));
+		message.exec();
+		return false;
+	}
+
 	QByteArray responseData = reply->readAll();
 	QString responseJson(responseData);
 
@@ -321,7 +327,7 @@ bool SetupWizard::isPremiumLoginValid(QMessageBox& message)
 		}
 	}
 
-	message.setText(tr("Login failed, an error occurred."));
+	message.setText(tr("Login failed, an error occurred.\n\nServer response:\n\n%1").arg(responseJson.trimmed()));
 	message.exec();
 	return false;
 }
