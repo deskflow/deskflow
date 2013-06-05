@@ -79,8 +79,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	loadSettings();
 	initConnections();
 
-	m_pUpdateIcon->hide();
-	m_pUpdateLabel->hide();
+	m_pWidgetUpdate->hide();
 	m_VersionChecker.setApp(appPath(appConfig.synergycName()));
 	m_pLabelScreenName->setText(getScreenName());
 	m_pLabelIpAddresses->setText(getIPAddresses());
@@ -320,10 +319,11 @@ void MainWindow::logError()
 
 void MainWindow::updateFound(const QString &version)
 {
-	m_pUpdateIcon->show();
-	m_pUpdateLabel->show();
-	m_pUpdateLabel->setText(
-		tr("<p>Version %1 is now available, <a href=\"%2\">visit website</a>.</p>")
+	m_pWidgetUpdate->show();
+	m_pLabelUpdate->setText(
+		tr("<p>Your version of Synergy is out of date. "
+		   "Version <b>%1</b> is now available to "
+		   "<a href=\"%2\">download</a>.</p>")
 		.arg(version).arg("http://synergy-foss.org"));
 }
 
