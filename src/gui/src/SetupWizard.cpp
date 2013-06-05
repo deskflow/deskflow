@@ -112,7 +112,7 @@ bool SetupWizard::validateCurrentPage()
 		}
 		else if (m_pRadioButtonPremiumRegister->isChecked())
 		{
-			const QUrl url(QString("https://synergy-foss.org/premium/register/"));
+			const QUrl url(QString("https://synergy-foss.org/premium/register/?source=gui"));
 			QDesktopServices::openUrl(url);
 			m_pRadioButtonPremiumLogin->setChecked(true);
 			return false;
