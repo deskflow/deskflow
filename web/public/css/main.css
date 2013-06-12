@@ -637,6 +637,10 @@ div.premium-reset div.form div.box {
   padding-right: 5px;
 }
 
+div.premium-register ul.notify li {
+	padding-bottom: .5em;
+}
+
 div.premium-page ol.community-votes {
   height: 15em;
   overflow-y: scroll;

@@ -110,6 +110,32 @@ class PremiumController extends Controller {
   }
   
   private function runRegister() {
+    $smarty = $this->website->smarty;
+    
+    if (isset($_GET["notify"])) {
+    
+      if (!$this->isLoggedIn()) {
+        throw new \Exception("user is not logged in");
+      }
+      
+      if ($_GET["notify"] == "prompt") {
+        $smarty->assign("title", T_("Synergy Premium - Notify"));
+        $smarty->assign("showForm", false);
+        $smarty->assign("showNotify", true);
+        $this->showView("premium/register");
+      }
+      else {
+        if ($_GET["notify"] == "yes") {
+          $this->updateNotifyByEmail(true);
+        }
+        else if ($_GET["notify"] == "no") {
+          $this->updateNotifyByEmail(false);
+        }
+        $result["paymentUrl"] = $this->getPremiumPaymentUrl();
+        header("Location: ../payment/?amount=" . urlencode("$") . $this->getAmount());
+      }
+      return;
+    }
     
     if ($this->isLoggedIn()) {
       header("Location: ../payment/");
@@ -125,13 +151,11 @@ class PremiumController extends Controller {
       if ($error == null) {
         $this->registerSql($mysql);
         $this->login($_POST["email1"]);
-        $result["paymentUrl"] = $this->getPremiumPaymentUrl();
-        header("Location: ../payment/?amount=" . urlencode("$") . $this->getAmount());
+        header("Location: ./?notify=prompt&amount=" . urlencode("$") . $this->getAmount());
         exit;
       }
     }
     
-    $smarty = $this->website->smarty;
     $smarty->assign("name", $this->getPostValue("name"));
     $smarty->assign("email1", $this->getPostValue("email1"));
     $smarty->assign("email2", $this->getPostValue("email2"));
@@ -140,7 +164,22 @@ class PremiumController extends Controller {
     $smarty->assign("amount", $this->getAmount());
     $smarty->assign("error", $error);
     $smarty->assign("title", T_("Synergy Premium - Register"));
+    $smarty->assign("showForm", true);
+    $smarty->assign("showNotify", false);
     $this->showView("premium/register");
+  }
+  
+  private function updateNotifyByEmail($value) {
+    $this->loadUser();
+    
+    $mysql = $this->getMysql();
+    $result = $mysql->query(sprintf(
+      "update user set ".
+      "notifyByEmail = %d ".
+      "where id = %d",
+      $value,
+      $this->user->id
+    ));
   }
   
   private function getAmount() {
