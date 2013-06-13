@@ -150,7 +150,7 @@ class Website extends Controllers\Controller {
   private function isHttpsNeeded() {
     $path = $this->getPath();
     if ($path != null) {
-      return preg_match("/^premium\/?/", $path);
+      return preg_match("/\/?premium\/?/", $path);
     }
     return false;
   }

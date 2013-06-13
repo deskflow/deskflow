@@ -13,21 +13,22 @@
     
     <p class="success">{t}Thanks again for supporting the Synergy project! You rock!{/t}</p>
     
+    <div style="height: .5em"></div>
+    
+    <p>{t}<b>1.</b> Please confirm the amount.{/t}</p>
+    
     <div class="amount-box">
       <input type="textbox" id="amount" name="amount" value="${$amount}" />
       <div class="amount">
         <div class="slider"></div>
       </div>
     </div>
+    
     <input type="hidden" name="userId" value="{$userId}">
     
-    <p>
-{t email=$helpEmail}Please confirm the amount above, and choose a payment
-method (click on a logo or enter your card details). Each premium vote costs
-$10, but you can contribute as little as $1 if you just want to help out.
-If you need help making a payment or have any feedback please
-<a href="mailto:%1">email</a> us and we'll do our best to sort it out.{/t}
-    </p>
+    <div style="height: 1em"></div>
+    
+    <p>{t}<b>2.</b> Select a payment method (click a logo).{/t}</p>
     
     <div class="paypal">
       
@@ -67,7 +68,7 @@ If you need help making a payment or have any feedback please
     
     <div class="creditcard">
       
-      <img src="{$baseUrl}/img/creditcards-sm.png" />
+      <input type="image" src="{$baseUrl}/img/creditcards-sm.png" />
       
       {if $showCardFailed}
       
@@ -96,9 +97,9 @@ logos above.{/t}
       
       {if $showCardForm}
       
-      <form id="creditcard" action="." method="post">
+      <form id="creditcard" action="." method="post" style="display: none">
         {if $isHttps}
-        <p class="success">{t}You are using a secure connection (HTTPS, SSL).{/t}</p>
+        <p class="success">{t}You are using a secure connection (HTTPS).{/t}</p>
         {/if}
         <input name="amount" type="hidden" value="{$amount}" />
         <div class="box">

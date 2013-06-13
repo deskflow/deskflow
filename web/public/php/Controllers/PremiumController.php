@@ -111,6 +111,7 @@ class PremiumController extends Controller {
   
   private function runRegister() {
     $smarty = $this->website->smarty;
+    $amountString = urlencode("$") . $this->getAmount();
     
     if (isset($_GET["notify"])) {
     
@@ -120,6 +121,7 @@ class PremiumController extends Controller {
       
       if ($_GET["notify"] == "prompt") {
         $smarty->assign("title", T_("Synergy Premium - Notify"));
+        $smarty->assign("amount", $amountString);
         $smarty->assign("showForm", false);
         $smarty->assign("showNotify", true);
         $this->showView("premium/register");
@@ -132,7 +134,7 @@ class PremiumController extends Controller {
           $this->updateNotifyByEmail(false);
         }
         $result["paymentUrl"] = $this->getPremiumPaymentUrl();
-        header("Location: ../payment/?amount=" . urlencode("$") . $this->getAmount());
+        header("Location: ../payment/?amount=" . $amountString);
       }
       return;
     }
@@ -757,7 +759,7 @@ class PremiumController extends Controller {
       $req .= "&$key=$value";
     }
 
-    // ask paypal to verify the ipn request.
+    // ask paypal to verify the ipn request
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, "https://www.paypal.com/cgi-bin/webscr");
     curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -770,7 +772,6 @@ class PremiumController extends Controller {
     $res = curl_exec($ch);
     curl_close($ch);
 
-    // assign posted variables to local variables
     $item_name = $_POST["item_name"];
     $item_number = $_POST["item_number"];
     $payment_status = $_POST["payment_status"];
@@ -780,6 +781,15 @@ class PremiumController extends Controller {
     $receiver_email = $_POST["receiver_email"];
     $payer_email = $_POST["payer_email"];
     $userId = $_POST["custom"];
+    
+    // we also get an IPN for credit card transactions which
+    // we should ignore, since we get an immediate response
+    // back from the payment gateway. but unfortunately there
+    // is way to clearly identify this type of IPN other than
+    // the fact that it has no userId.
+    if ($userId == 0 || $userId == "" || $userId == null) {
+      return;
+    }
     
     $this->saveIpnData($userId, $payer_email, json_encode($_POST), $res, $payment_amount);
     

@@ -236,6 +236,11 @@ function premiumPaymentPage() {
     
     return false;
   });
+	
+  $("div.creditcard input[type='image']").click(function() {
+		$("form#creditcard").show();
+		$("form#creditcard input#number").focus();
+	});
   
   initSlider(function() { updateAmounts() });
   $("input#amount").change(function() { updateAmounts() });

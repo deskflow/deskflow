@@ -51,32 +51,40 @@ support. Funding allows us to spend more time improving Synergy.{/t}
     <hr />
     
     <span class="contribute">
+      <h3>{t}Contribute/Donate{/t}</h3>
+      
       {if $premium->user->fundsCount == 0}
-      <h3>{t}Contribute to Synergy{/t}</h3>
       <p>
 {t url="payment/"}If you'd like to help the Synergy project, please
-<a href="%1">make a contribution</a> and we'll give you votes in
-return ($10 per vote) so you can tell us what to work on next. We
-would really appreciate your support. Thanks!{/t}
+make a contribution and we'll give you votes in return ($10 per vote)
+so you can tell us what to work on next. We would really appreciate
+your support. Thanks!{/t}
       </p>
       {else if $premium->user->votesFree == 0}
-      <h3>{t}Need more votes?{/t}</h3>
       <p>
 {t url="payment/"}It looks like you've used all your votes, that's great!
-Please do <a href="%1">make another contribution</a> if you would like to
-vote on more issues ($10 per vote). We really appreciate your continued
-support.{/t}
+Please do make another contribution if you would like to vote on more
+issues ($10 per vote). We really appreciate your continued support.{/t}
       </p>
       {else}
-      <h3>{t}Contribute again!{/t}</h3>
       <p>
-{t url="payment/"}Thanks for your support!
-If you'd like to <a href="%1">make another contribution</a> at any time
-and get more votes ($10 per vote), this would really help support the
-Synergy project.{/t}
+{t url="payment/"}Thanks for your support! If you'd like to make another
+contribution at any time and get more votes ($10 per vote), this would
+really help support the Synergy project.{/t}
       </p>
       {/if}
-      <a href="payment/"><img src="{$baseUrl}/img/creditcards-sm.png" /></a>
+      
+      <p><a href="payment/">{t}Make a contribution{/t}</a></p>
+      <p>
+        {t amount={$user->fundsTotal}}<i>Contributed so far:</i> <b>$%1</b>{/t}
+        {for $i=0 to (($user->fundsTotal / 10) - 1)}
+        <img src="{$baseUrl}/img/icons/heart.png" style="margin-bottom: -.2em" />
+        {/for}
+        {if $user->fundsTotal == 0}
+        <img src="{$baseUrl}/img/icons/sad.png" style="margin-bottom: -.1em" />
+        {/if}
+      </p>
+      
     </span>
     
     <hr />
