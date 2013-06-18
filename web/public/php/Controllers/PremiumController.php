@@ -391,7 +391,8 @@ class PremiumController extends Controller {
         $resetUrl = sprintf("https://%s?token=%s", $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"], $token);
         $subject = T_("Password reset");
         $message = T_("Hello,\n\nPlease click the following link to reset your password.\n\n") . $resetUrl;
-        $headers = sprintf("From: %s <%s>", T_("Synergy Website"), $this->settings["general"]["websiteEmail"]);
+        $from = sprintf("%s <%s>", T_("Synergy Website"), $this->settings["general"]["websiteEmail"]);
+        $headers = sprintf("From: %s\nReply-To: %s", $from, $from);
         $result = mail($email, $subject, $message, $headers);
         
         if (!$result) {
