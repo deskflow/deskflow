@@ -324,10 +324,15 @@ class PremiumController extends Controller {
     
     $response = new \stdClass;
     try {
-      $response->result = $this->auth(false, $email, $password);
-      if ($response->result) {
+      $success = $this->auth(false, $email, $password);
+      if ($success) {
+        if ($this->user->fundsCount == 0) {
+          throw new \Exception("Login is correct, but account has no funds.");
+        }
+        
         $this->recordGuiLogin($email);
       }
+      $response->result = $success;
     }
     catch (\Exception $ex) {
       $response->error = $ex->getMessage();
