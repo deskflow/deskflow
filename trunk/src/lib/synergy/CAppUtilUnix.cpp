@@ -19,7 +19,7 @@
 #include "CAppUtilUnix.h"
 #include "CArgsBase.h"
 
-CAppUtilUnix::CAppUtilUnix()
+CAppUtilUnix::CAppUtilUnix(IEventQueue* events)
 {
 }
 

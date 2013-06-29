@@ -22,11 +22,12 @@
 #include "CClientTaskBarReceiver.h"
 
 class CBufferedLogOutputter;
+class IEventQueue;
 
 //! Implementation of CClientTaskBarReceiver for OS X
 class COSXClientTaskBarReceiver : public CClientTaskBarReceiver {
 public:
-	COSXClientTaskBarReceiver(const CBufferedLogOutputter*);
+	COSXClientTaskBarReceiver(const CBufferedLogOutputter*, IEventQueue* events);
 	virtual ~COSXClientTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides

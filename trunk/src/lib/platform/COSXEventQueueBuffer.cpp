@@ -30,8 +30,8 @@ class CEventQueueTimer { };
 // COSXEventQueueBuffer
 //
 
-COSXEventQueueBuffer::COSXEventQueueBuffer() :
-	m_event(NULL)
+COSXEventQueueBuffer::COSXEventQueueBuffer(IEventQueue* events) :
+	m_eventQueue(events), m_event(NULL)
 {
 	// do nothing
 }
@@ -80,7 +80,7 @@ COSXEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 
 		default: 
 			event = CEvent(CEvent::kSystem,
-						m_events->getSystemTarget(), &m_event);
+						m_eventQueue->getSystemTarget(), &m_event);
 			return kSystem;
 		}
 	}

@@ -27,7 +27,8 @@
 // COSXScreenSaver
 //
 
-COSXScreenSaver::COSXScreenSaver(void* eventTarget) :
+COSXScreenSaver::COSXScreenSaver(IEventQueue* events, void* eventTarget) :
+	m_events(events),
 	m_eventTarget(eventTarget),
 	m_enabled(true)
 {

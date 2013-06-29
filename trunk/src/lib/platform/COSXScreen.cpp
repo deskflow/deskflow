@@ -64,7 +64,9 @@ enum {
 bool					COSXScreen::s_testedForGHOM = false;
 bool					COSXScreen::s_hasGHOM	    = false;
 
-COSXScreen::COSXScreen(bool isPrimary, bool autoShowHideCursor) :
+COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCursor) :
+	CPlatformScreen(events),
+	m_events(events),
 	MouseButtonEventMap(NumButtonIDs),
 	m_isPrimary(isPrimary),
 	m_isOnScreen(m_isPrimary),
@@ -98,8 +100,8 @@ COSXScreen::COSXScreen(bool isPrimary, bool autoShowHideCursor) :
 	try {
 		m_displayID   = CGMainDisplayID();
 		updateScreenShape(m_displayID, 0);
-		m_screensaver = new COSXScreenSaver(getEventTarget());
-		m_keyState	  = new COSXKeyState();
+		m_screensaver = new COSXScreenSaver(m_events, getEventTarget());
+		m_keyState	  = new COSXKeyState(m_events);
 		
     // TODO: http://stackoverflow.com/questions/2950124/enable-access-for-assistive-device-programmatically
 		if (m_isPrimary && !AXAPIEnabled())
@@ -178,7 +180,7 @@ COSXScreen::COSXScreen(bool isPrimary, bool autoShowHideCursor) :
 								&COSXScreen::handleSystemEvent));
 
 	// install the platform event queue
-	m_events->adoptBuffer(new COSXEventQueueBuffer);
+	m_events->adoptBuffer(new COSXEventQueueBuffer(m_events));
 }
 
 COSXScreen::~COSXScreen()
@@ -1036,7 +1038,7 @@ COSXScreen::onMouseMove(SInt32 mx, SInt32 my)
 
 	if (m_isOnScreen) {
 		// motion on primary screen
-		sendEvent(m_events->forIScreen().motionOnPrimary(),
+		sendEvent(m_events->forIPrimaryScreen().motionOnPrimary(),
 							CMotionInfo::alloc(m_xCursor, m_yCursor));
 	}
 	else {
@@ -1058,7 +1060,7 @@ COSXScreen::onMouseMove(SInt32 mx, SInt32 my)
 		}
 		else {
 			// send motion
-			sendEvent(m_events->forIScreen().motionOnSecondary(), CMotionInfo::alloc(x, y));
+			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), CMotionInfo::alloc(x, y));
 		}
 	}
 
@@ -1494,7 +1496,7 @@ COSXScreen::updateScreenShape()
 
 	delete[] displays;
 	// We want to notify the peer screen whether we are primary screen or not
-	sendEvent(m_events->forIPrimaryScreen().shapeChanged());
+	sendEvent(m_events->forIScreen().shapeChanged());
 
 	LOG((CLOG_DEBUG "screen shape: center=%d,%d size=%dx%d on %u %s",
          m_x, m_y, m_w, m_h, displayCount,
@@ -1518,15 +1520,16 @@ COSXScreen::userSwitchCallback(EventHandlerCallRef nextHandler,
 {
 	COSXScreen* screen = (COSXScreen*)inUserData;
 	UInt32 kind        = GetEventKind(theEvent);
+	IEventQueue* events = screen->getEvents();
 
 	if (kind == kEventSystemUserSessionDeactivated) {
 		LOG((CLOG_DEBUG "user session deactivated"));
-		m_events->addEvent(CEvent(m_events->forIScreen().suspend(),
+		events->addEvent(CEvent(events->forIScreen().suspend(),
 									screen->getEventTarget()));
 	}
 	else if (kind == kEventSystemUserSessionActivated) {
 		LOG((CLOG_DEBUG "user session activated"));
-		m_events->addEvent(CEvent(m_events->forIScreen().resume(),
+		events->addEvent(CEvent(events->forIScreen().resume(),
 									screen->getEventTarget()));
 	}
 	return (CallNextEventHandler(nextHandler, theEvent));

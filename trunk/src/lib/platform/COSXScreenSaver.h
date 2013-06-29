@@ -22,10 +22,12 @@
 #include "IScreenSaver.h"
 #include <Carbon/Carbon.h>
 
+class IEventQueue;
+
 //! OSX screen saver implementation
 class COSXScreenSaver : public IScreenSaver {
 public:
-	COSXScreenSaver(void* eventTarget);
+	COSXScreenSaver(IEventQueue* events, void* eventTarget);
 	virtual ~COSXScreenSaver();
 
 	// IScreenSaver overrides
@@ -53,6 +55,7 @@ private:
 	void*				m_autoReleasePool;
 	EventHandlerRef		m_launchTerminationEventHandlerRef;
 	ProcessSerialNumber	m_screenSaverPSN;
+    IEventQueue*        m_events;
 };
 
 #endif

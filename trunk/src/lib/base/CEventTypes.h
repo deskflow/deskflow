@@ -27,7 +27,7 @@ public:
 	void				setEvents(IEventQueue* events);
 
 protected:
-	IEventQueue*		events() const;
+	IEventQueue*		getEvents() const;
 
 private:
 	IEventQueue*		m_events;
@@ -37,7 +37,7 @@ private:
 CEvent::Type															\
 type_##Events::name_()													\
 {																		\
-	return events()->registerTypeOnce(m_##name_, __FUNCTION__);			\
+	return getEvents()->registerTypeOnce(m_##name_, __FUNCTION__);			\
 }
 
 class CClientEvents : public CEventTypes {

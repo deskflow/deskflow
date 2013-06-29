@@ -24,7 +24,8 @@
 //
 
 CXWindowsServerTaskBarReceiver::CXWindowsServerTaskBarReceiver(
-				const CBufferedLogOutputter*)
+		const CBufferedLogOutputter*, IEventQueue* events) :
+	CServerTaskBarReceiver(events)
 {
 	// add ourself to the task bar
 	ARCH->addReceiver(this);
@@ -60,7 +61,7 @@ CXWindowsServerTaskBarReceiver::getIcon() const
 }
 
 IArchTaskBarReceiver*
-createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
+createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events)
 {
-	return new CXWindowsServerTaskBarReceiver(logBuffer);
+	return new CXWindowsServerTaskBarReceiver(logBuffer, events);
 }

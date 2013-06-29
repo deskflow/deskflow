@@ -22,10 +22,12 @@
 #include <Carbon/Carbon.h>
 #include "IEventQueueBuffer.h"
 
+class IEventQueue;
+
 //! Event queue buffer for OS X
 class COSXEventQueueBuffer : public IEventQueueBuffer {
 public:
-	COSXEventQueueBuffer();
+	COSXEventQueueBuffer(IEventQueue* eventQueue);
 	virtual ~COSXEventQueueBuffer();
 
 	// IEventQueueBuffer overrides
@@ -39,6 +41,7 @@ public:
 
 private:
 	EventRef			m_event;
+	IEventQueue*		m_eventQueue;
 };
 
 #endif

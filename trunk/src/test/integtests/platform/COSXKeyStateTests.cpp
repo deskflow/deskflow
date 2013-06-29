@@ -40,7 +40,7 @@ TEST_F(COSXKeyStateTests, fakeAndPoll_shift)
 {
 	CKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	COSXKeyState keyState((IEventQueue*)eventQueue, keyMap);
+	COSXKeyState keyState(&eventQueue, keyMap);
 	keyState.updateKeyMap();
 
 	keyState.fakeKeyDown(SHIFT_ID_L, 0, 1);
@@ -60,7 +60,7 @@ TEST_F(COSXKeyStateTests, fakeAndPoll_charKey)
 {
 	CKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	COSXKeyState keyState((IEventQueue*)eventQueue, keyMap);
+	COSXKeyState keyState(&eventQueue, keyMap);
 	keyState.updateKeyMap();
 
 	keyState.fakeKeyDown(A_CHAR_ID, 0, 1);
@@ -79,7 +79,7 @@ TEST_F(COSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
 {
 	CKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	COSXKeyState keyState((IEventQueue*)eventQueue, keyMap);
+	COSXKeyState keyState(&eventQueue, keyMap);
 	keyState.updateKeyMap();
 
 	keyState.fakeKeyDown(A_CHAR_ID, KeyModifierShift, 1);

@@ -26,7 +26,7 @@ class CBufferedLogOutputter;
 //! Implementation of CServerTaskBarReceiver for OS X
 class COSXServerTaskBarReceiver : public CServerTaskBarReceiver {
 public:
-	COSXServerTaskBarReceiver(const CBufferedLogOutputter*);
+	COSXServerTaskBarReceiver(const CBufferedLogOutputter*, IEventQueue* events);
 	virtual ~COSXServerTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides

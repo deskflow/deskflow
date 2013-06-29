@@ -181,6 +181,7 @@ static const CKeyEntry	s_controlKeys[] = {
 //
 
 COSXKeyState::COSXKeyState(IEventQueue* events) :
+	CKeyState(events),
 	m_deadKeyState(0)
 {
 	init();
