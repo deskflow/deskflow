@@ -177,7 +177,7 @@ private:
 
 #define EVENT_TYPE_ACCESSOR(type_)											\
 type_##Events&																\
-CEventQueue::for##type_##() {												\
+CEventQueue::for##type_() {												\
 	if (m_typesFor##type_ == NULL) {										\
 		m_typesFor##type_ = new type_##Events();							\
 		m_typesFor##type_->setEvents(dynamic_cast<IEventQueue*>(this));		\

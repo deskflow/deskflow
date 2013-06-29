@@ -234,9 +234,9 @@ CClientApp::createScreen()
 #elif WINAPI_XWINDOWS
 	return new CScreen(new CXWindowsScreen(
 		args().m_display, false, args().m_disableXInitThreads,
-		args().m_yscroll, m_events));
+		args().m_yscroll, m_events), m_events);
 #elif WINAPI_CARBON
-	return new CScreen(new COSXScreen(false));
+	return new CScreen(new COSXScreen(m_events, false), m_events);
 #endif
 }
 

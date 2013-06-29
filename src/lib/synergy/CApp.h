@@ -95,7 +95,7 @@ public:
 	virtual void setByeFunc(void(*bye)(int)) { m_bye = bye; }
 	virtual void bye(int error) { m_bye(error); }
 	
-	virtual IEventQueue*			events() const { return m_events; }
+	virtual IEventQueue*			getEvents() const { return m_events; }
 
 private:
 	void				handleIpcMessage(const CEvent&, void*);

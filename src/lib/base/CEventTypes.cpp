@@ -26,7 +26,7 @@ CEventTypes::CEventTypes() :
 }
 
 IEventQueue*
-CEventTypes::events() const
+CEventTypes::getEvents() const
 {
 	assert(m_events != NULL);
 	return m_events;

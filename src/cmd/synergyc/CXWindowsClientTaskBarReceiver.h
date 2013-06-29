@@ -22,11 +22,13 @@
 #include "CClientTaskBarReceiver.h"
 
 class CBufferedLogOutputter;
+class IEventQueue;
 
 //! Implementation of CClientTaskBarReceiver for X Windows
 class CXWindowsClientTaskBarReceiver : public CClientTaskBarReceiver {
 public:
-	CXWindowsClientTaskBarReceiver(const CBufferedLogOutputter*);
+	CXWindowsClientTaskBarReceiver(
+		const CBufferedLogOutputter*, IEventQueue* events);
 	virtual ~CXWindowsClientTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides

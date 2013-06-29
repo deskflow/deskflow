@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if 0
 #include <gtest/gtest.h>
 #include "CXWindowsScreenSaver.h"
 #include "CMockEventQueue.h"
@@ -24,14 +25,14 @@
 using ::testing::_;
 
 // TODO: not working on build machine for some reason
-#if 0
 TEST(CXWindowsScreenSaverTests, activate_defaultScreen_todo)
 {
 	Display* display = XOpenDisplay(":0.0");
 	Window window = DefaultRootWindow(display);
 	CMockEventQueue eventQueue;
 	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(1);
-	CXWindowsScreenSaver screenSaver(display, window, NULL, eventQueue);
+	CXWindowsScreenSaver screenSaver(
+		display, window, NULL, &eventQueue);
 
 	screenSaver.activate();
 

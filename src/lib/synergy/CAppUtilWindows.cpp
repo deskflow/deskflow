@@ -53,7 +53,7 @@ CAppUtilWindows::~CAppUtilWindows()
 BOOL WINAPI CAppUtilWindows::consoleHandler(DWORD)
 {
 	LOG((CLOG_INFO "got shutdown signal"));
-	IEventQueue* events = CAppUtil::instance().app().events();
+	IEventQueue* events = CAppUtil::instance().app().getEvents();
 	events->addEvent(CEvent(CEvent::kQuit));
     return TRUE;
 }

@@ -51,7 +51,8 @@ class CEventQueueTimer { };
 //
 
 CXWindowsEventQueueBuffer::CXWindowsEventQueueBuffer(
-				Display* display, Window window) :
+		Display* display, Window window, IEventQueue* events) :
+	m_events(events),
 	m_display(display),
 	m_window(window),
 	m_waiting(false)

@@ -22,9 +22,11 @@
 
 #define ARCH_APP_UTIL CAppUtilUnix
 
+class IEventQueue;
+
 class CAppUtilUnix : public CAppUtil {
 public:
-	CAppUtilUnix();
+	CAppUtilUnix(IEventQueue* events);
 	virtual ~CAppUtilUnix();
 	
 	bool parseArg(const int& argc, const char* const* argv, int& i);

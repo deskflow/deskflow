@@ -398,12 +398,12 @@ CXWindowsScreenSaver::setXScreenSaverActive(bool activated)
 
 		if (activated) {
 			m_events->addEvent(CEvent(
-							m_events->forIPlatformScreen().screensaverActivated(),
+							m_events->forIPrimaryScreen().screensaverActivated(),
 							m_eventTarget));
 		}
 		else {
 			m_events->addEvent(CEvent(
-							m_events->forIPlatformScreen().screensaverDeactivated(),
+							m_events->forIPrimaryScreen().screensaverDeactivated(),
 							m_eventTarget));
 		}
 	}

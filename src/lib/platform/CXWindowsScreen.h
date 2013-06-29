@@ -36,7 +36,9 @@ class CXWindowsScreenSaver;
 //! Implementation of IPlatformScreen for X11
 class CXWindowsScreen : public CPlatformScreen {
 public:
-	CXWindowsScreen(const char* displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta, IEventQueue* events);
+	CXWindowsScreen(const char* displayName, bool isPrimary,
+		bool disableXInitThreads, int mouseScrollDelta,
+		IEventQueue* events);
 	virtual ~CXWindowsScreen();
 
 	//! @name manipulators

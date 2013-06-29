@@ -49,12 +49,15 @@ class CMutex;
 class CThread;
 class COSXKeyState;
 class COSXScreenSaver;
+class IEventQueue;
 
 //! Implementation of IPlatformScreen for OS X
 class COSXScreen : public CPlatformScreen {
 public:
-	COSXScreen(bool isPrimary, bool autoShowHideCursor=true);
+	COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCursor=true);
 	virtual ~COSXScreen();
+
+	IEventQueue*        getEvents() const { return m_events; }
 
 	// IScreen overrides
 	virtual void*		getEventTarget() const;
@@ -335,6 +338,8 @@ private:
 
 	// cursor will hide and show on enable and disable if true.
 	bool					m_autoShowHideCursor;
+
+	IEventQueue*			m_events;
 };
 
 #endif

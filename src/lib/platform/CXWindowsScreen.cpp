@@ -88,7 +88,12 @@ static int xi_opcode;
 
 CXWindowsScreen*		CXWindowsScreen::s_screen = NULL;
 
-CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta, IEventQueue* events) :
+CXWindowsScreen::CXWindowsScreen(
+		const char* displayName,
+		bool isPrimary,
+		bool disableXInitThreads,
+		int mouseScrollDelta,
+		IEventQueue* events) :
 	m_isPrimary(isPrimary),
 	m_mouseScrollDelta(mouseScrollDelta),
 	m_display(NULL),
@@ -185,7 +190,8 @@ CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool d
 								&CXWindowsScreen::handleSystemEvent));
 
 	// install the platform event queue
-	m_events->adoptBuffer(new CXWindowsEventQueueBuffer(m_display, m_window));
+	m_events->adoptBuffer(new CXWindowsEventQueueBuffer(
+		m_display, m_window, m_events));
 }
 
 CXWindowsScreen::~CXWindowsScreen()
@@ -1317,7 +1323,7 @@ CXWindowsScreen::handleSystemEvent(const CEvent& event, void*)
 			if (id != kClipboardEnd) {
 				LOG((CLOG_DEBUG "lost clipboard %d ownership at time %d", id, xevent->xselectionclear.time));
 				m_clipboard[id]->lost(xevent->xselectionclear.time);
-				sendClipboardEvent(m_events->forIPrimaryScreen().clipboardGrabbed(), id);
+				sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), id);
 				return;
 			}
 		}
@@ -1731,7 +1737,7 @@ CXWindowsScreen::onError()
 	m_display     = NULL;
 
 	// notify of failure
-	sendEvent(m_events->forIPrimaryScreen().error(), NULL);
+	sendEvent(m_events->forIScreen().error(), NULL);
 
 	// FIXME -- should ensure that we ignore operations that involve
 	// m_display from now on.  however, Xlib will simply exit the

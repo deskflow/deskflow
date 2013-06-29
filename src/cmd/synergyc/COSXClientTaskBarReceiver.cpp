@@ -24,7 +24,9 @@
 //
 
 COSXClientTaskBarReceiver::COSXClientTaskBarReceiver(
-				const CBufferedLogOutputter*)
+        const CBufferedLogOutputter*,
+        IEventQueue* events) :
+    CClientTaskBarReceiver(events)
 {
 	// add ourself to the task bar
 	ARCH->addReceiver(this);
@@ -60,8 +62,8 @@ COSXClientTaskBarReceiver::getIcon() const
 }
 
 IArchTaskBarReceiver*
-createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
+createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events)
 {
-	return new COSXClientTaskBarReceiver(logBuffer);
+	return new COSXClientTaskBarReceiver(logBuffer, events);
 }
 

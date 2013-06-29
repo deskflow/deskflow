@@ -38,7 +38,10 @@
 
 static const size_t ModifiersFromXDefaultSize = 32;
 
-CXWindowsKeyState::CXWindowsKeyState(Display* display, bool useXKB) :
+CXWindowsKeyState::CXWindowsKeyState(
+		Display* display, bool useXKB,
+		IEventQueue* events) :
+	CKeyState(events),
 	m_display(display),
 	m_modifierFromX(ModifiersFromXDefaultSize)
 {
