@@ -20,6 +20,7 @@
 #define ILISTENSOCKET_H
 
 #include "ISocket.h"
+#include "CEventTypes.h"
 
 class IDataSocket;
 
@@ -42,25 +43,11 @@ public:
 	virtual IDataSocket*	accept() = 0;
 
 	//@}
-	//! @name accessors
-	//@{
-
-	//! Get connecting event type
-	/*!
-	Returns the socket connecting event type.  A socket sends this
-	event when a remote connection is waiting to be accepted.
-	*/
-	static CEvent::Type	getConnectingEvent();
-
-	//@}
 
 	// ISocket overrides
 	virtual void		bind(const CNetworkAddress&) = 0;
 	virtual void		close() = 0;
 	virtual void*		getEventTarget() const = 0;
-
-private:
-	static CEvent::Type	s_connectingEvent;
 };
 
 #endif

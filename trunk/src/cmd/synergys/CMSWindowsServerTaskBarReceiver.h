@@ -25,11 +25,12 @@
 #include <windows.h>
 
 class CBufferedLogOutputter;
+class IEventQueue;
 
 //! Implementation of CServerTaskBarReceiver for Microsoft Windows
 class CMSWindowsServerTaskBarReceiver : public CServerTaskBarReceiver {
 public:
-	CMSWindowsServerTaskBarReceiver(HINSTANCE, const CBufferedLogOutputter*);
+	CMSWindowsServerTaskBarReceiver(HINSTANCE, const CBufferedLogOutputter*, IEventQueue* events);
 	virtual ~CMSWindowsServerTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides
@@ -63,6 +64,8 @@ private:
 	HMENU				m_menu;
 	HICON				m_icon[kMaxState];
 	const CBufferedLogOutputter*	m_logBuffer;
+	IEventQueue*		m_events;
+
 	static const UINT	s_stateToIconID[];
 };
 

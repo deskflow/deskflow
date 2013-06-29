@@ -30,12 +30,14 @@
 #include "stdset.h"
 #include "stdvector.h"
 #include "INode.h"
+#include "CEventTypes.h"
 
 class CBaseClientProxy;
 class CEventQueueTimer;
 class CPrimaryClient;
 class CInputFilter;
 class CScreen;
+class IEventQueue;
 
 //! Synergy server
 /*!
@@ -101,11 +103,11 @@ public:
 	client (local screen) \p primaryClient.  The client retains
 	ownership of \p primaryClient.
 	*/
-	CServer(const CConfig& config, CPrimaryClient* primaryClient, CScreen* screen);
+	CServer(const CConfig& config, CPrimaryClient* primaryClient, CScreen* screen, IEventQueue* events);
 	~CServer();
 	
 #ifdef TEST_ENV
-	CServer() { }
+	CServer() : m_mock(true), m_events(NULL), m_config(NULL) { }
 #endif
 
 	//! @name manipulators
@@ -156,67 +158,6 @@ public:
 	Set the \c list to the names of the currently connected clients.
 	*/
 	void				getClients(std::vector<CString>& list) const;
-
-	//! Get error event type
-	/*!
-	Returns the error event type.  This is sent when the server fails
-	for some reason.
-	*/
-	static CEvent::Type	getErrorEvent();
-
-	//! Get connected event type
-	/*!
-	Returns the connected event type.  This is sent when a client screen
-	has connected.  The event data is a \c CScreenConnectedInfo* that
-	indicates the connected screen.
-	*/
-	static CEvent::Type	getConnectedEvent();
-
-	//! Get disconnected event type
-	/*!
-	Returns the disconnected event type.  This is sent when all the
-	clients have disconnected.
-	*/
-	static CEvent::Type	getDisconnectedEvent();
-
-	//! Get switch to screen event type
-	/*!
-	Returns the switch to screen event type.  The server responds to this
-	by switching screens.  The event data is a \c CSwitchToScreenInfo*
-	that indicates the target screen.
-	*/
-	static CEvent::Type	getSwitchToScreenEvent();
-
-	//! Get switch in direction event type
-	/*!
-	Returns the switch in direction event type.  The server responds to this
-	by switching screens.  The event data is a \c CSwitchInDirectionInfo*
-	that indicates the target direction.
-	*/
-	static CEvent::Type	getSwitchInDirectionEvent();
-
-	//! Get keyboard broadcast event type
-	/*!
-	Returns the keyboard broadcast event type.  The server responds
-	to this by turning on keyboard broadcasting or turning it off.  The
-	event data is a \c CKeyboardBroadcastInfo*.
-	*/
-	static CEvent::Type getKeyboardBroadcastEvent();
-
-	//! Get lock cursor event type
-	/*!
-	Returns the lock cursor event type.  The server responds to this
-	by locking the cursor to the active screen or unlocking it.  The
-	event data is a \c CLockCursorToScreenInfo*.
-	*/
-	static CEvent::Type	getLockCursorToScreenEvent();
-
-	//! Get screen switched event type
-	/*!
-	Returns the screen switched event type.  This is raised when the
-	screen has been switched to a client.
-	*/
-	static CEvent::Type	getScreenSwitchedEvent();
 
 	//@}
 
@@ -493,14 +434,7 @@ private:
 	// server screen
 	CScreen*			m_screen;
 
-	static CEvent::Type	s_errorEvent;
-	static CEvent::Type	s_connectedEvent;
-	static CEvent::Type	s_disconnectedEvent;
-	static CEvent::Type	s_switchToScreen;
-	static CEvent::Type	s_switchInDirection;
-	static CEvent::Type s_keyboardBroadcast;
-	static CEvent::Type s_lockCursorToScreen;
-	static CEvent::Type s_screenSwitched;
+	IEventQueue*		m_events;
 };
 
 #endif

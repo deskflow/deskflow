@@ -22,6 +22,7 @@
 #include "ISocket.h"
 #include "IStream.h"
 #include "CString.h"
+#include "CEventTypes.h"
 
 //! Data stream socket interface
 /*!
@@ -36,6 +37,8 @@ public:
 		CString			m_what;
 	};
 
+	IDataSocket(IEventQueue* events) : IStream(events) { }
+
 	//! @name manipulators
 	//@{
 
@@ -47,25 +50,6 @@ public:
 	output until the stream connects.
 	*/
 	virtual void		connect(const CNetworkAddress&) = 0;
-
-	//@}
-	//! @name accessors
-	//@{
-
-	//! Get connected event type
-	/*!
-	Returns the socket connected event type.  A socket sends this
-	event when a remote connection has been established.
-	*/
-	static CEvent::Type	getConnectedEvent();
-
-	//! Get connection failed event type
-	/*!
-	Returns the socket connection failed event type.  A socket sends
-	this event when an attempt to connect to a remote port has failed.
-	The data is a pointer to a CConnectionFailedInfo.
-	*/
-	static CEvent::Type	getConnectionFailedEvent();
 
 	//@}
 
@@ -86,10 +70,6 @@ public:
 	virtual void		shutdownOutput() = 0;
 	virtual bool		isReady() const = 0;
 	virtual UInt32		getSize() const = 0;
-
-private:
-	static CEvent::Type	s_connectedEvent;
-	static CEvent::Type	s_failedEvent;
 };
 
 #endif

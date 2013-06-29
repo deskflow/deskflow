@@ -30,8 +30,8 @@
 // CClientProxy1_4
 //
 
-CClientProxy1_4::CClientProxy1_4(const CString& name, synergy::IStream* stream, CServer* server, IEventQueue* eventQueue) :
-	CClientProxy1_3(name, stream, eventQueue), m_server(server)
+CClientProxy1_4::CClientProxy1_4(const CString& name, synergy::IStream* stream, CServer* server, IEventQueue* events) :
+	CClientProxy1_3(name, stream, events), m_server(server)
 {
 	assert(m_server != NULL);
 }

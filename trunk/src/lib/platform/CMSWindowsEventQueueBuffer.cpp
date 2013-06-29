@@ -32,7 +32,8 @@ class CEventQueueTimer { };
 // CMSWindowsEventQueueBuffer
 //
 
-CMSWindowsEventQueueBuffer::CMSWindowsEventQueueBuffer()
+CMSWindowsEventQueueBuffer::CMSWindowsEventQueueBuffer(IEventQueue* events) :
+	m_events(events)
 {
 	// remember thread.  we'll be posting messages to it.
 	m_thread     = GetCurrentThreadId();
@@ -111,7 +112,7 @@ CMSWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 	}
 	else {
 		event = CEvent(CEvent::kSystem,
-							IEventQueue::getSystemTarget(), &m_event);
+							m_events->getSystemTarget(), &m_event);
 		return kSystem;
 	}
 }

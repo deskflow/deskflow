@@ -36,7 +36,7 @@ class CXWindowsScreenSaver;
 //! Implementation of IPlatformScreen for X11
 class CXWindowsScreen : public CPlatformScreen {
 public:
-	CXWindowsScreen(const char* displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta, IEventQueue& eventQueue);
+	CXWindowsScreen(const char* displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta, IEventQueue* events);
 	virtual ~CXWindowsScreen();
 
 	//! @name manipulators
@@ -247,7 +247,7 @@ private:
 	bool                m_xrandr;
 	int                 m_xrandrEventBase;
 
-	IEventQueue&		m_eventQueue;
+	IEventQueue*		m_events;
 	CKeyMap				m_keyMap;
 
 	// pointer to (singleton) screen.  this is only needed by

@@ -55,6 +55,7 @@ public:
 private:
 	CIpcServer*			m_ipcServer;
 	CIpcLogOutputter*	m_ipcLogOutputter;
+	IEventQueue*		m_events;
 };
 
 #define LOG_FILENAME "synergyd.log"

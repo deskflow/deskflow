@@ -26,11 +26,11 @@ using namespace CryptoPP;
 using namespace synergy::crypto;
 
 CCryptoStream::CCryptoStream(
-		IEventQueue* eventQueue,
+		IEventQueue* events,
 		synergy::IStream* stream,
 		const CCryptoOptions& options,
 		bool adoptStream) :
-	CStreamFilter(eventQueue, stream, adoptStream),
+	CStreamFilter(events, stream, adoptStream),
 	m_key(NULL),
 	m_encryption(options.m_mode, true),
 	m_decryption(options.m_mode, false)

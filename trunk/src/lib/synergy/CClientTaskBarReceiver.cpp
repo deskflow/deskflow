@@ -28,7 +28,8 @@
 // CClientTaskBarReceiver
 //
 
-CClientTaskBarReceiver::CClientTaskBarReceiver() :
+CClientTaskBarReceiver::CClientTaskBarReceiver(IEventQueue* events) :
+	m_events(events),
 	m_state(kNotRunning)
 {
 	// do nothing
@@ -90,7 +91,7 @@ CClientTaskBarReceiver::getErrorMessage() const
 void
 CClientTaskBarReceiver::quit()
 {
-	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	m_events->addEvent(CEvent(CEvent::kQuit));
 }
 
 void

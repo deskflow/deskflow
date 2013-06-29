@@ -88,7 +88,7 @@ static int xi_opcode;
 
 CXWindowsScreen*		CXWindowsScreen::s_screen = NULL;
 
-CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta, IEventQueue& eventQueue) :
+CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta, IEventQueue* events) :
 	m_isPrimary(isPrimary),
 	m_mouseScrollDelta(mouseScrollDelta),
 	m_display(NULL),
@@ -113,8 +113,8 @@ CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool d
 	m_xkb(false),
 	m_xi2detected(false),
 	m_xrandr(false),
-	m_eventQueue(eventQueue),
-	CPlatformScreen(eventQueue)
+	m_events(events),
+	CPlatformScreen(events)
 {
 	assert(s_screen == NULL);
 
@@ -138,8 +138,8 @@ CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool d
 		saveShape();
 		m_window      = openWindow();
 		m_screensaver = new CXWindowsScreenSaver(m_display,
-								m_window, getEventTarget(), eventQueue);
-		m_keyState    = new CXWindowsKeyState(m_display, m_xkb, eventQueue, m_keyMap);
+								m_window, getEventTarget(), events);
+		m_keyState    = new CXWindowsKeyState(m_display, m_xkb, events, m_keyMap);
 		LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_xinerama ? "(xinerama)" : ""));
 		LOG((CLOG_DEBUG "window is 0x%08x", m_window));
 	}
@@ -180,12 +180,12 @@ CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool d
 	}
 
 	// install event handlers
-	m_eventQueue.adoptHandler(CEvent::kSystem, IEventQueue::getSystemTarget(),
+	m_events->adoptHandler(CEvent::kSystem, m_events->getSystemTarget(),
 							new TMethodEventJob<CXWindowsScreen>(this,
 								&CXWindowsScreen::handleSystemEvent));
 
 	// install the platform event queue
-	m_eventQueue.adoptBuffer(new CXWindowsEventQueueBuffer(m_display, m_window));
+	m_events->adoptBuffer(new CXWindowsEventQueueBuffer(m_display, m_window));
 }
 
 CXWindowsScreen::~CXWindowsScreen()
@@ -193,8 +193,8 @@ CXWindowsScreen::~CXWindowsScreen()
 	assert(s_screen  != NULL);
 	assert(m_display != NULL);
 
-	m_eventQueue.adoptBuffer(NULL);
-	m_eventQueue.removeHandler(CEvent::kSystem, IEventQueue::getSystemTarget());
+	m_events->adoptBuffer(NULL);
+	m_events->removeHandler(CEvent::kSystem, m_events->getSystemTarget());
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		delete m_clipboard[id];
 	}
@@ -1139,7 +1139,7 @@ CXWindowsScreen::openIM()
 void
 CXWindowsScreen::sendEvent(CEvent::Type type, void* data)
 {
-	m_eventQueue.addEvent(CEvent(type, getEventTarget(), data));
+	m_events->addEvent(CEvent(type, getEventTarget(), data));
 }
 
 void
@@ -1317,7 +1317,7 @@ CXWindowsScreen::handleSystemEvent(const CEvent& event, void*)
 			if (id != kClipboardEnd) {
 				LOG((CLOG_DEBUG "lost clipboard %d ownership at time %d", id, xevent->xselectionclear.time));
 				m_clipboard[id]->lost(xevent->xselectionclear.time);
-				sendClipboardEvent(getClipboardGrabbedEvent(), id);
+				sendClipboardEvent(m_events->forIPrimaryScreen().clipboardGrabbed(), id);
 				return;
 			}
 		}
@@ -1531,10 +1531,10 @@ CXWindowsScreen::onHotKey(XKeyEvent& xkey, bool isRepeat)
 	// find what kind of event
 	CEvent::Type type;
 	if (xkey.type == KeyPress) {
-		type = getHotKeyDownEvent();
+		type = m_events->forIPrimaryScreen().hotKeyDown();
 	}
 	else if (xkey.type == KeyRelease) {
-		type = getHotKeyUpEvent();
+		type = m_events->forIPrimaryScreen().hotKeyUp();
 	}
 	else {
 		return false;
@@ -1542,7 +1542,7 @@ CXWindowsScreen::onHotKey(XKeyEvent& xkey, bool isRepeat)
 
 	// generate event (ignore key repeats)
 	if (!isRepeat) {
-		m_eventQueue.addEvent(CEvent(type, getEventTarget(),
+		m_events->addEvent(CEvent(type, getEventTarget(),
 								CHotKeyInfo::alloc(i->second)));
 	}
 	return true;
@@ -1555,7 +1555,7 @@ CXWindowsScreen::onMousePress(const XButtonEvent& xbutton)
 	ButtonID button      = mapButtonFromX(&xbutton);
 	KeyModifierMask mask = m_keyState->mapModifiersFromX(xbutton.state);
 	if (button != kButtonNone) {
-		sendEvent(getButtonDownEvent(), CButtonInfo::alloc(button, mask));
+		sendEvent(m_events->forIPrimaryScreen().buttonDown(), CButtonInfo::alloc(button, mask));
 	}
 }
 
@@ -1566,15 +1566,15 @@ CXWindowsScreen::onMouseRelease(const XButtonEvent& xbutton)
 	ButtonID button      = mapButtonFromX(&xbutton);
 	KeyModifierMask mask = m_keyState->mapModifiersFromX(xbutton.state);
 	if (button != kButtonNone) {
-		sendEvent(getButtonUpEvent(), CButtonInfo::alloc(button, mask));
+		sendEvent(m_events->forIPrimaryScreen().buttonUp(), CButtonInfo::alloc(button, mask));
 	}
 	else if (xbutton.button == 4) {
 		// wheel forward (away from user)
-		sendEvent(getWheelEvent(), CWheelInfo::alloc(0, 120));
+		sendEvent(m_events->forIPrimaryScreen().wheel(), CWheelInfo::alloc(0, 120));
 	}
 	else if (xbutton.button == 5) {
 		// wheel backward (toward user)
-		sendEvent(getWheelEvent(), CWheelInfo::alloc(0, -120));
+		sendEvent(m_events->forIPrimaryScreen().wheel(), CWheelInfo::alloc(0, -120));
 	}
 	// XXX -- support x-axis scrolling
 }
@@ -1612,7 +1612,7 @@ CXWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 	}
 	else if (m_isOnScreen) {
 		// motion on primary screen
-		sendEvent(getMotionOnPrimaryEvent(),
+		sendEvent(m_events->forIPrimaryScreen().motionOnPrimary(),
 							CMotionInfo::alloc(m_xCursor, m_yCursor));
 	}
 	else {
@@ -1643,7 +1643,7 @@ CXWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 		// warping to the primary screen's enter position,
 		// effectively overriding it.
 		if (x != 0 || y != 0) {
-			sendEvent(getMotionOnSecondaryEvent(), CMotionInfo::alloc(x, y));
+			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), CMotionInfo::alloc(x, y));
 		}
 	}
 }
@@ -1725,13 +1725,13 @@ void
 CXWindowsScreen::onError()
 {
 	// prevent further access to the X display
-	m_eventQueue.adoptBuffer(NULL);
+	m_events->adoptBuffer(NULL);
 	m_screensaver->destroy();
 	m_screensaver = NULL;
 	m_display     = NULL;
 
 	// notify of failure
-	sendEvent(getErrorEvent(), NULL);
+	sendEvent(m_events->forIPrimaryScreen().error(), NULL);
 
 	// FIXME -- should ensure that we ignore operations that involve
 	// m_display from now on.  however, Xlib will simply exit the

@@ -92,7 +92,7 @@
 
 CMSWindowsDesks::CMSWindowsDesks(
 		bool isPrimary, bool noHooks, HINSTANCE hookLibrary,
-		const IScreenSaver* screensaver, IEventQueue& eventQueue,
+		const IScreenSaver* screensaver, IEventQueue* events,
 		IJob* updateKeys, bool stopOnDeskSwitch) :
 	m_isPrimary(isPrimary),
 	m_noHooks(noHooks),
@@ -111,7 +111,7 @@ CMSWindowsDesks::CMSWindowsDesks(
 	m_mutex(),
 	m_deskReady(&m_mutex, false),
 	m_updateKeys(updateKeys),
-	m_eventQueue(eventQueue),
+	m_events(events),
 	m_stopOnDeskSwitch(stopOnDeskSwitch)
 {
 	if (hookLibrary != NULL)
@@ -143,8 +143,8 @@ CMSWindowsDesks::enable()
 	// which desk is active and reinstalls the hooks as necessary.
 	// we wouldn't need this if windows notified us of a desktop
 	// change but as far as i can tell it doesn't.
-	m_timer = m_eventQueue.newTimer(0.2, NULL);
-	m_eventQueue.adoptHandler(CEvent::kTimer, m_timer,
+	m_timer = m_events->newTimer(0.2, NULL);
+	m_events->adoptHandler(CEvent::kTimer, m_timer,
 							new TMethodEventJob<CMSWindowsDesks>(
 								this, &CMSWindowsDesks::handleCheckDesk));
 
@@ -156,8 +156,8 @@ CMSWindowsDesks::disable()
 {
 	// remove timer
 	if (m_timer != NULL) {
-		m_eventQueue.removeHandler(CEvent::kTimer, m_timer);
-		m_eventQueue.deleteTimer(m_timer);
+		m_events->removeHandler(CEvent::kTimer, m_timer);
+		m_events->deleteTimer(m_timer);
 		m_timer = NULL;
 	}
 
@@ -912,7 +912,7 @@ CMSWindowsDesks::checkDesk()
 	// first switch, then shut down.
 	if (m_stopOnDeskSwitch && m_activeDesk != NULL && name != m_activeDeskName) {
 		LOG((CLOG_DEBUG "shutting down because of desk switch to \"%s\"", name.c_str()));
-		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+		m_events->addEvent(CEvent(CEvent::kQuit));
 		return;
 	}
 

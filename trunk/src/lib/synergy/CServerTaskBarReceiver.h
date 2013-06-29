@@ -25,11 +25,14 @@
 #include "CEvent.h"
 #include "CServerApp.h"
 #include "CServer.h"
+#include "CEventTypes.h"
+
+class IEventQueue;
 
 //! Implementation of IArchTaskBarReceiver for the synergy server
 class CServerTaskBarReceiver : public IArchTaskBarReceiver {
 public:
-	CServerTaskBarReceiver();
+	CServerTaskBarReceiver(IEventQueue* events);
 	virtual ~CServerTaskBarReceiver();
 
 	//! @name manipulators
@@ -86,17 +89,13 @@ protected:
 	*/
 	virtual void		onStatusChanged(CServer* server);
 
-protected:
-	CEvent::Type getReloadConfigEvent();
-	CEvent::Type getForceReconnectEvent();
-	CEvent::Type getResetServerEvent();
-
 private:
 	EState				m_state;
 	CString				m_errorMessage;
 	CClients			m_clients;
+	IEventQueue*		m_events;
 };
 
-IArchTaskBarReceiver* createTaskBarReceiver(const CBufferedLogOutputter* logBuffer);
+IArchTaskBarReceiver* createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events);
 
 #endif

@@ -24,10 +24,12 @@
 #include "LogOutputters.h"
 #include "CClient.h"
 
+class IEventQueue;
+
 //! Implementation of IArchTaskBarReceiver for the synergy server
 class CClientTaskBarReceiver : public IArchTaskBarReceiver {
 public:
-	CClientTaskBarReceiver();
+	CClientTaskBarReceiver(IEventQueue* events);
 	virtual ~CClientTaskBarReceiver();
 
 	//! @name manipulators
@@ -85,8 +87,9 @@ private:
 	EState				m_state;
 	CString				m_errorMessage;
 	CString				m_server;
+	IEventQueue*		m_events;
 };
 
-IArchTaskBarReceiver* createTaskBarReceiver(const CBufferedLogOutputter* logBuffer);
+IArchTaskBarReceiver* createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events);
 
 #endif

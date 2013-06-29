@@ -24,11 +24,12 @@
 #include <windows.h>
 
 class CBufferedLogOutputter;
+class IEventQueue;
 
 //! Implementation of CPortableTaskBarReceiver for Microsoft Windows
 class CMSWindowsPortableTaskBarReceiver : public CPortableTaskBarReceiver {
 public:
-	CMSWindowsPortableTaskBarReceiver(HINSTANCE, const CBufferedLogOutputter*);
+	CMSWindowsPortableTaskBarReceiver(HINSTANCE, const CBufferedLogOutputter*, IEventQueue* events);
 	virtual ~CMSWindowsPortableTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides
@@ -62,5 +63,7 @@ private:
 	HMENU				m_menu;
 	HICON				m_icon[kMaxState];
 	const CBufferedLogOutputter*	m_logBuffer;
+	IEventQueue*		m_events;
+
 	static const UINT	s_stateToIconID[];
 };

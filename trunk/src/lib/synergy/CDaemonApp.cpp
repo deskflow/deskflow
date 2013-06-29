@@ -77,11 +77,12 @@ winMainLoopStatic(int, const char**)
 #endif
 
 CDaemonApp::CDaemonApp() :
-m_ipcServer(nullptr),
-m_ipcLogOutputter(nullptr)
-#if SYSAPI_WIN32
-,m_relauncher(nullptr)
-#endif
+	m_events(nullptr),
+	m_ipcServer(nullptr),
+	m_ipcLogOutputter(nullptr)
+	#if SYSAPI_WIN32
+	,m_relauncher(nullptr)
+	#endif
 {
 	s_instance = this;
 }
@@ -103,6 +104,7 @@ CDaemonApp::run(int argc, char** argv)
 
 	CLog log;
 	CEventQueue events;
+	m_events = &events;
 
 	bool uninstall = false;
 	try
@@ -201,7 +203,7 @@ CDaemonApp::mainLoop(bool logToFile)
 		CSocketMultiplexer multiplexer;
 
 		// uses event queue, must be created here.
-		m_ipcServer = new CIpcServer();
+		m_ipcServer = new CIpcServer(m_events);
 
 		// send logging to gui via ipc, log system adopts outputter.
 		m_ipcLogOutputter = new CIpcLogOutputter(*m_ipcServer);
@@ -211,8 +213,8 @@ CDaemonApp::mainLoop(bool logToFile)
 		m_relauncher = new CMSWindowsRelauncher(false, *m_ipcServer, *m_ipcLogOutputter);
 #endif
 
-		EVENTQUEUE->adoptHandler(
-			CIpcServer::getMessageReceivedEvent(), m_ipcServer,
+		m_events->adoptHandler(
+			m_events->forCIpcServer().messageReceived(), m_ipcServer,
 			new TMethodEventJob<CDaemonApp>(this, &CDaemonApp::handleIpcMessage));
 
 		m_ipcServer->listen();
@@ -222,7 +224,7 @@ CDaemonApp::mainLoop(bool logToFile)
 		// (such as a stop request from the service controller).
 		CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
 		CGameDeviceInfo gameDevice;
-		CScreen dummyScreen(new CMSWindowsScreen(false, true, gameDevice, false));
+		CScreen dummyScreen(new CMSWindowsScreen(false, true, gameDevice, false, m_events), m_events);
 		
 		CString command = ARCH->setting("Command");
 		bool elevate = ARCH->setting("Elevate") == "1";
@@ -234,15 +236,15 @@ CDaemonApp::mainLoop(bool logToFile)
 		m_relauncher->startAsync();
 #endif
 
-		EVENTQUEUE->loop();
+		m_events->loop();
 
 #if SYSAPI_WIN32
 		m_relauncher->stop();
 		delete m_relauncher;
 #endif
 
-		EVENTQUEUE->removeHandler(
-			CIpcServer::getMessageReceivedEvent(), m_ipcServer);
+		m_events->removeHandler(
+			m_events->forCIpcServer().messageReceived(), m_ipcServer);
 		
 		CLOG->remove(m_ipcLogOutputter);
 		delete m_ipcLogOutputter;

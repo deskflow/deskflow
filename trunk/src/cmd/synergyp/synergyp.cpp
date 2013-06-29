@@ -79,11 +79,11 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdSh
 	}
 	
 	if (server) {
-		CServerApp app(createTaskBarReceiver);
+		CServerApp app(&events, createTaskBarReceiver);
 		return app.run(argc, argv);
 	}
 	else if (client) {
-		CClientApp app(createTaskBarReceiver);
+		CClientApp app(&events, createTaskBarReceiver);
 		return app.run(argc, argv);
 	}
 

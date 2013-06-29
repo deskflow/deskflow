@@ -28,8 +28,9 @@
 // CClientProxy1_3
 //
 
-CClientProxy1_3::CClientProxy1_3(const CString& name, synergy::IStream* stream, IEventQueue* eventQueue) :
-	CClientProxy1_2(name, stream, eventQueue),
+CClientProxy1_3::CClientProxy1_3(const CString& name, synergy::IStream* stream, IEventQueue* events) :
+	CClientProxy1_2(name, stream, events),
+	m_events(events),
 	m_keepAliveRate(kKeepAliveRate),
 	m_keepAliveTimer(NULL)
 {
@@ -89,8 +90,8 @@ CClientProxy1_3::addHeartbeatTimer()
 {
 	// create and install a timer to periodically send keep alives
 	if (m_keepAliveRate > 0.0) {
-		m_keepAliveTimer = EVENTQUEUE->newTimer(m_keepAliveRate, NULL);
-		EVENTQUEUE->adoptHandler(CEvent::kTimer, m_keepAliveTimer,
+		m_keepAliveTimer = m_events->newTimer(m_keepAliveRate, NULL);
+		m_events->adoptHandler(CEvent::kTimer, m_keepAliveTimer,
 							new TMethodEventJob<CClientProxy1_3>(this,
 								&CClientProxy1_3::handleKeepAlive, NULL));
 	}
@@ -104,8 +105,8 @@ CClientProxy1_3::removeHeartbeatTimer()
 {
 	// remove the timer that sends keep alives periodically
 	if (m_keepAliveTimer != NULL) {
-		EVENTQUEUE->removeHandler(CEvent::kTimer, m_keepAliveTimer);
-		EVENTQUEUE->deleteTimer(m_keepAliveTimer);
+		m_events->removeHandler(CEvent::kTimer, m_keepAliveTimer);
+		m_events->deleteTimer(m_keepAliveTimer);
 		m_keepAliveTimer = NULL;
 	}
 

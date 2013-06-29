@@ -26,11 +26,6 @@
 // CClientProxy
 //
 
-CEvent::Type			CClientProxy::s_readyEvent           = CEvent::kUnknown;
-CEvent::Type			CClientProxy::s_disconnectedEvent    = CEvent::kUnknown;
-CEvent::Type			CClientProxy::s_clipboardChangedEvent= CEvent::kUnknown;
-CEvent::Type			CClientProxy::s_gameDeviceTimingRecvEvent= CEvent::kUnknown;
-
 CClientProxy::CClientProxy(const CString& name, synergy::IStream* stream) :
 	CBaseClientProxy(name),
 	m_stream(stream)
@@ -56,34 +51,6 @@ synergy::IStream*
 CClientProxy::getStream() const
 {
 	return m_stream;
-}
-
-CEvent::Type
-CClientProxy::getReadyEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(s_readyEvent,
-							"CClientProxy::ready");
-}
-
-CEvent::Type
-CClientProxy::getDisconnectedEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(s_disconnectedEvent,
-							"CClientProxy::disconnected");
-}
-
-CEvent::Type
-CClientProxy::getClipboardChangedEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(s_clipboardChangedEvent,
-							"CClientProxy::clipboardChanged");
-}
-
-CEvent::Type
-CClientProxy::getGameDeviceTimingRespEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(s_gameDeviceTimingRecvEvent,
-							"CClientProxy::gameDeviceTimingRecv");
 }
 
 void*

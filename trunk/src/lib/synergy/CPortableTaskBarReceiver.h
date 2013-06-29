@@ -24,11 +24,14 @@
 #include "CEvent.h"
 #include "INode.h"
 #include "LogOutputters.h"
+#include "CEventTypes.h"
+
+class IEventQueue;
 
 //! Implementation of IArchTaskBarReceiver for the synergy server
 class CPortableTaskBarReceiver : public IArchTaskBarReceiver {
 public:
-	CPortableTaskBarReceiver();
+	CPortableTaskBarReceiver(IEventQueue* events);
 	virtual ~CPortableTaskBarReceiver();
 
 	//! @name manipulators
@@ -80,17 +83,14 @@ protected:
 	*/
 	virtual void		onStatusChanged(INode* node);
 
-protected:
-	CEvent::Type getReloadConfigEvent();
-	CEvent::Type getForceReconnectEvent();
-	CEvent::Type getResetServerEvent();
-
 private:
 	EState				m_state;
 	CString				m_errorMessage;
 
 	CString				m_server;
 	CClients			m_clients;
+
+	IEventQueue*		m_events;
 };
 
-IArchTaskBarReceiver* createTaskBarReceiver(const CBufferedLogOutputter* logBuffer);
+IArchTaskBarReceiver* createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events);

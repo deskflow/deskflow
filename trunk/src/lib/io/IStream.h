@@ -22,6 +22,7 @@
 #include "IInterface.h"
 #include "CEvent.h"
 #include "IEventQueue.h"
+#include "CEventTypes.h"
 
 class IEventQueue;
 
@@ -33,8 +34,7 @@ Defines the interface for all streams.
 */
 class IStream : public IInterface {
 public:
-	IStream() : m_eventQueue(EVENTQUEUE) { }
-	IStream(IEventQueue* eventQueue) : m_eventQueue(eventQueue) { }
+	IStream(IEventQueue* events) : m_events(events) { }
 
 	//! @name manipulators
 	//@{
@@ -115,60 +115,10 @@ public:
 	*/
 	virtual UInt32		getSize() const = 0;
 
-	//! Get input ready event type
-	/*!
-	Returns the input ready event type.  A stream sends this event
-	when \c read() will return with data.
-	*/
-	virtual CEvent::Type	getInputReadyEvent();
-
-	//! Get output flushed event type
-	/*!
-	Returns the output flushed event type.  A stream sends this event
-	when the output buffer has been flushed.  If there have been no
-	writes since the event was posted, calling \c shutdownOutput() or
-	\c close() will not discard any data and \c flush() will return
-	immediately.
-	*/
-	virtual CEvent::Type	getOutputFlushedEvent();
-
-	//! Get output error event type
-	/*!
-	Returns the output error event type.  A stream sends this event
-	when a write has failed.
-	*/
-	virtual CEvent::Type	getOutputErrorEvent();
-
-	//! Get input shutdown event type
-	/*!
-	Returns the input shutdown event type.  This is sent when the
-	input side of the stream has shutdown.  When the input has
-	shutdown, no more data will ever be available to read.
-	*/
-	virtual CEvent::Type	getInputShutdownEvent();
-
-	//! Get output shutdown event type
-	/*!
-	Returns the output shutdown event type.  This is sent when the
-	output side of the stream has shutdown.  When the output has
-	shutdown, no more data can ever be written to the stream.  Any
-	attempt to do so will generate a output error event.
-	*/
-	virtual CEvent::Type	getOutputShutdownEvent();
-
-	//! Get the event queue
-	IEventQueue&			getEventQueue() const;
-
 	//@}
 
 private:
-	static CEvent::Type	s_inputReadyEvent;
-	static CEvent::Type	s_outputFlushedEvent;
-	static CEvent::Type	s_outputErrorEvent;
-	static CEvent::Type	s_inputShutdownEvent;
-	static CEvent::Type	s_outputShutdownEvent;
-
-	IEventQueue*			m_eventQueue;
+	IEventQueue*		m_events;
 };
 
 }

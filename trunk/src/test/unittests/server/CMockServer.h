@@ -27,5 +27,5 @@ class IEventQueue;
 class CMockServer : public CServer
 {
 public:
-	CMockServer() : CServer() { m_mock = true; }
+	CMockServer() : CServer() { }
 };

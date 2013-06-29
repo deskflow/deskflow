@@ -28,7 +28,8 @@
 // CServerTaskBarReceiver
 //
 
-CServerTaskBarReceiver::CServerTaskBarReceiver() :
+CServerTaskBarReceiver::CServerTaskBarReceiver(IEventQueue* events) :
+	m_events(events),
 	m_state(kNotRunning)
 {
 	// do nothing
@@ -93,7 +94,7 @@ CServerTaskBarReceiver::getClients() const
 void
 CServerTaskBarReceiver::quit()
 {
-	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	m_events->addEvent(CEvent(CEvent::kQuit));
 }
 
 void
@@ -134,22 +135,4 @@ CServerTaskBarReceiver::getToolTip() const
 	default:
 		return "";
 	}
-}
-
-CEvent::Type
-CServerTaskBarReceiver::getReloadConfigEvent()
-{
-	return CServerApp::instance().getReloadConfigEvent();
-}
-
-CEvent::Type
-CServerTaskBarReceiver::getForceReconnectEvent()
-{
-	return CServerApp::instance().getForceReconnectEvent();
-}
-
-CEvent::Type
-CServerTaskBarReceiver::getResetServerEvent()
-{
-	return CServerApp::instance().getResetServerEvent();
 }

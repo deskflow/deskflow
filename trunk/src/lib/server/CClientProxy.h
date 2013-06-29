@@ -22,6 +22,7 @@
 #include "CBaseClientProxy.h"
 #include "CEvent.h"
 #include "CString.h"
+#include "CEventTypes.h"
 
 namespace synergy { class IStream; }
 
@@ -53,36 +54,6 @@ public:
 	otherwise returns the original stream passed to the c'tor.
 	*/
 	synergy::IStream*			getStream() const;
-
-	//! Get ready event type
-	/*!
-	Returns the ready event type.  This is sent when the client has
-	completed the initial handshake.  Until it is sent, the client is
-	not fully connected.
-	*/
-	static CEvent::Type	getReadyEvent();
-
-	//! Get disconnect event type
-	/*!
-	Returns the disconnect event type.  This is sent when the client
-	disconnects or is disconnected.  The target is getEventTarget().
-	*/
-	static CEvent::Type	getDisconnectedEvent();
-
-	//! Get clipboard changed event type
-	/*!
-	Returns the clipboard changed event type.  This is sent whenever the
-	contents of the clipboard has changed.  The data is a pointer to a
-	IScreen::CClipboardInfo.
-	*/
-	static CEvent::Type	getClipboardChangedEvent();
-
-	//! Get game device timing receive event type
-	/*!
-	Returns the game device timing receive event type.  This is set 
-	whenever the server receives to a timing event response from a client.
-	*/
-	static CEvent::Type	getGameDeviceTimingRespEvent();
 
 	//@}
 
@@ -121,11 +92,6 @@ public:
 
 private:
 	synergy::IStream*	m_stream;
-
-	static CEvent::Type	s_readyEvent;
-	static CEvent::Type	s_disconnectedEvent;
-	static CEvent::Type	s_clipboardChangedEvent;
-	static CEvent::Type	s_gameDeviceTimingRecvEvent;
 };
 
 #endif

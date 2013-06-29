@@ -269,7 +269,7 @@ CMSWindowsXInput::xInputPollThread(void*)
 				LOG((CLOG_DEBUG "xinput buttons changed"));
 
 				// xinput buttons convert exactly to synergy buttons
-				m_screen->sendEvent(m_screen->getGameDeviceButtonsEvent(),
+				m_screen->sendEvent(m_events->forIScreen().gameDeviceButtons(),
 					new IPrimaryScreen::CGameDeviceButtonInfo(index, state.Gamepad.wButtons));
 
 				eventSent = true;
@@ -279,7 +279,7 @@ CMSWindowsXInput::xInputPollThread(void*)
 			{
 				LOG((CLOG_DEBUG "xinput sticks changed"));
 
-				m_screen->sendEvent(m_screen->getGameDeviceSticksEvent(),
+				m_screen->sendEvent(m_events->forIScreen().gameDeviceSticks(),
 					new IPrimaryScreen::CGameDeviceStickInfo(
 					index,
 					m_gameLeftStickXLast, m_gameLeftStickYLast,
@@ -293,7 +293,7 @@ CMSWindowsXInput::xInputPollThread(void*)
 				LOG((CLOG_DEBUG "xinput triggers changed"));
 
 				// @todo seems wrong re-using x/y for a single value...
-				m_screen->sendEvent(m_screen->getGameDeviceTriggersEvent(),
+				m_screen->sendEvent(m_events->forIScreen().gameDeviceTriggers(),
 					new IPrimaryScreen::CGameDeviceTriggerInfo(
 						index,
 						state.Gamepad.bLeftTrigger,
@@ -304,7 +304,7 @@ CMSWindowsXInput::xInputPollThread(void*)
 
 			if (/*eventSent && */!m_gameTimingWaiting && (ARCH->time() - m_gameLastTimingSent > .5))
 			{
-				m_screen->sendEvent(m_screen->getGameDeviceTimingReqEvent(), NULL);
+				m_screen->sendEvent(m_events->forIScreen().gameDeviceTimingReq(), NULL);
 				m_gameLastTimingSent = ARCH->time();
 				m_gameTimingWaiting = true;
 
@@ -332,7 +332,7 @@ CMSWindowsXInput::xInputTimingThread(void*)
 		if (DequeueXInputTimingResp())
 		{
 			LOG((CLOG_DEBUG "dequeued game device timing response"));
-			m_screen->sendEvent(m_screen->getGameDeviceTimingRespEvent(),
+			m_screen->sendEvent(m_events->forIScreen().gameDeviceTimingResp(),
 				new IPrimaryScreen::CGameDeviceTimingRespInfo(GetXInputFakeFreqMillis()));
 		}
 
@@ -354,7 +354,7 @@ CMSWindowsXInput::xInputFeedbackThread(void*)
 		if (DequeueXInputFeedback(&leftMotor, &rightMotor))
 		{
 			LOG((CLOG_DEBUG "dequeued game device feedback"));
-			m_screen->sendEvent(m_screen->getGameDeviceFeedbackEvent(),
+			m_screen->sendEvent(m_events->forIScreen().gameDeviceFeedback(),
 				new IPrimaryScreen::CGameDeviceFeedbackInfo(index, leftMotor, rightMotor));
 		}
 

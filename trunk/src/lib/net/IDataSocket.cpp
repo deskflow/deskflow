@@ -23,23 +23,6 @@
 // IDataSocket
 //
 
-CEvent::Type			IDataSocket::s_connectedEvent = CEvent::kUnknown;
-CEvent::Type			IDataSocket::s_failedEvent    = CEvent::kUnknown;
-
-CEvent::Type
-IDataSocket::getConnectedEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(s_connectedEvent,
-							"IDataSocket::connected");
-}
-
-CEvent::Type
-IDataSocket::getConnectionFailedEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(s_failedEvent,
-							"IDataSocket::failed");
-}
-
 void
 IDataSocket::close()
 {

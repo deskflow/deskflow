@@ -26,6 +26,7 @@
 #include "IArchMultithread.h"
 #include "CArgsBase.h"
 #include <map>
+#include "CEventTypes.h"
 
 enum EServerState {
 	kUninitialized,
@@ -41,6 +42,7 @@ class CScreen;
 class CClientListener;
 class CEventQueueTimer;
 class ILogOutputter;
+class IEventQueue;
 
 class CServerApp : public CApp {
 public:
@@ -55,7 +57,7 @@ public:
 		CConfig* m_config;
 	};
 
-	CServerApp(CreateTaskBarReceiverFunc createTaskBarReceiver);
+	CServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver);
 	virtual ~CServerApp();
 	
 	// Parse server specific command line arguments.
@@ -72,15 +74,12 @@ public:
 
 	// TODO: Document these functions.
 	static void reloadSignalHandler(CArch::ESignal, void*);
-	static CEvent::Type getReloadConfigEvent();
 
 	void reloadConfig(const CEvent&, void*);
 	void loadConfig();
 	bool loadConfig(const CString& pathname);
 	void forceReconnect(const CEvent&, void*);
-	CEvent::Type getForceReconnectEvent();
 	void resetServer(const CEvent&, void*);
-	CEvent::Type getResetServerEvent();
 	void handleClientConnected(const CEvent&, void* vlistener);
 	void handleClientsDisconnected(const CEvent&, void*);
 	void closeServer(CServer* server);
@@ -113,15 +112,14 @@ public:
 	static CServerApp& instance() { return (CServerApp&)CApp::instance(); }
 
 	// TODO: change s_ to m_
-	CServer* s_server;
-	static CEvent::Type s_reloadConfigEvent;
-	CEvent::Type s_forceReconnectEvent;
-	CEvent::Type s_resetServerEvent;
-	EServerState s_serverState;
-	CScreen* s_serverScreen;
-	CPrimaryClient* s_primaryClient;
-	CClientListener* s_listener;
-	CEventQueueTimer* s_timer;
+	CServer*			s_server;
+	EServerState		s_serverState;
+	CScreen*			s_serverScreen;
+	CPrimaryClient*		s_primaryClient;
+	CClientListener*	s_listener;
+	CEventQueueTimer*	s_timer;
+
+	IEventQueue*		m_events;
 
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);

@@ -18,13 +18,8 @@
 
 #include "CPlatformScreen.h"
 
-CPlatformScreen::CPlatformScreen()
-{
-	// do nothing
-}
-
-CPlatformScreen::CPlatformScreen(IEventQueue& eventQueue) :
-	IPlatformScreen(eventQueue)
+CPlatformScreen::CPlatformScreen(IEventQueue* events) :
+	IPlatformScreen(events)
 {
 }
 

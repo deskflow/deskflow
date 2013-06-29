@@ -85,7 +85,9 @@ CMSWindowsScreen::CMSWindowsScreen(
 	bool isPrimary,
 	bool noHooks,
 	const CGameDeviceInfo& gameDeviceInfo,
-	bool stopOnDeskSwitch) :
+	bool stopOnDeskSwitch,
+	IEventQueue* events) :
+	CPlatformScreen(events),
 	m_isPrimary(isPrimary),
 	m_noHooks(noHooks),
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
@@ -113,7 +115,8 @@ CMSWindowsScreen::CMSWindowsScreen(
 	m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
 	m_showingMouse(false),
 	m_gameDeviceInfo(gameDeviceInfo),
-	m_gameDevice(NULL)
+	m_gameDevice(NULL),
+	m_events(events)
 {
 	assert(s_windowInstance != NULL);
 	assert(s_screen   == NULL);
@@ -127,11 +130,11 @@ CMSWindowsScreen::CMSWindowsScreen(
 		m_desks       = new CMSWindowsDesks(
 							m_isPrimary, m_noHooks,
 							m_hookLibrary, m_screensaver,
-							*EVENTQUEUE,
+							m_events,
 							new TMethodJob<CMSWindowsScreen>(this,
 								&CMSWindowsScreen::updateKeysCB),
 							stopOnDeskSwitch);
-		m_keyState    = new CMSWindowsKeyState(m_desks, getEventTarget());
+		m_keyState    = new CMSWindowsKeyState(m_desks, getEventTarget(), m_events);
 		updateScreenShape();
 		m_class       = createWindowClass();
 		m_window      = createWindow(m_class, "Synergy");
@@ -154,12 +157,12 @@ CMSWindowsScreen::CMSWindowsScreen(
 	}
 
 	// install event handlers
-	EVENTQUEUE->adoptHandler(CEvent::kSystem, IEventQueue::getSystemTarget(),
+	m_events->adoptHandler(CEvent::kSystem, m_events->getSystemTarget(),
 							new TMethodEventJob<CMSWindowsScreen>(this,
 								&CMSWindowsScreen::handleSystemEvent));
 
 	// install the platform event queue
-	EVENTQUEUE->adoptBuffer(new CMSWindowsEventQueueBuffer);
+	m_events->adoptBuffer(new CMSWindowsEventQueueBuffer(m_events));
 
 	if ((gameDeviceInfo.m_mode == CGameDeviceInfo::kGameModeXInput) &&
 		(gameDeviceInfo.m_poll != CGameDeviceInfo::kGamePollDynamic))
@@ -186,8 +189,8 @@ CMSWindowsScreen::~CMSWindowsScreen()
 	assert(s_screen != NULL);
 
 	disable();
-	EVENTQUEUE->adoptBuffer(NULL);
-	EVENTQUEUE->removeHandler(CEvent::kSystem, IEventQueue::getSystemTarget());
+	m_events->adoptBuffer(NULL);
+	m_events->removeHandler(CEvent::kSystem, m_events->getSystemTarget());
 	delete m_keyState;
 	delete m_desks;
 	delete m_screensaver;
@@ -224,8 +227,8 @@ CMSWindowsScreen::enable()
 	assert(m_isOnScreen == m_isPrimary);
 
 	// we need to poll some things to fix them
-	m_fixTimer = EVENTQUEUE->newTimer(1.0, NULL);
-	EVENTQUEUE->adoptHandler(CEvent::kTimer, m_fixTimer,
+	m_fixTimer = m_events->newTimer(1.0, NULL);
+	m_events->adoptHandler(CEvent::kTimer, m_fixTimer,
 							new TMethodEventJob<CMSWindowsScreen>(this,
 								&CMSWindowsScreen::handleFixes));
 
@@ -282,8 +285,8 @@ CMSWindowsScreen::disable()
 
 	// uninstall fix timer
 	if (m_fixTimer != NULL) {
-		EVENTQUEUE->removeHandler(CEvent::kTimer, m_fixTimer);
-		EVENTQUEUE->deleteTimer(m_fixTimer);
+		m_events->removeHandler(CEvent::kTimer, m_fixTimer);
+		m_events->deleteTimer(m_fixTimer);
 		m_fixTimer = NULL;
 	}
 
@@ -403,8 +406,8 @@ CMSWindowsScreen::checkClipboards()
 	if (m_ownClipboard && !CMSWindowsClipboard::isOwnedBySynergy()) {
 		LOG((CLOG_DEBUG "clipboard changed: lost ownership and no notification received"));
 		m_ownClipboard = false;
-		sendClipboardEvent(getClipboardGrabbedEvent(), kClipboardClipboard);
-		sendClipboardEvent(getClipboardGrabbedEvent(), kClipboardSelection);
+		sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardClipboard);
+		sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardSelection);
 	}
 }
 
@@ -905,7 +908,7 @@ CMSWindowsScreen::destroyWindow(HWND hwnd) const
 void
 CMSWindowsScreen::sendEvent(CEvent::Type type, void* data)
 {
-	EVENTQUEUE->addEvent(CEvent(type, getEventTarget(), data));
+	m_events->addEvent(CEvent(type, getEventTarget(), data));
 }
 
 void
@@ -1051,7 +1054,7 @@ CMSWindowsScreen::onEvent(HWND, UINT msg,
 	case WM_ENDSESSION:
 		if (m_is95Family) {
 			if (wParam == TRUE && lParam == 0) {
-				EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+				m_events->addEvent(CEvent(CEvent::kQuit));
 			}
 			return true;
 		}
@@ -1084,13 +1087,13 @@ CMSWindowsScreen::onEvent(HWND, UINT msg,
 		case PBT_APMRESUMEAUTOMATIC:
 		case PBT_APMRESUMECRITICAL:
 		case PBT_APMRESUMESUSPEND:
-			EVENTQUEUE->addEvent(CEvent(IScreen::getResumeEvent(),
+			m_events->addEvent(CEvent(m_events->forIScreen().resume(),
 							getEventTarget(), NULL,
 							CEvent::kDeliverImmediately));
 			break;
 
 		case PBT_APMSUSPEND:
-			EVENTQUEUE->addEvent(CEvent(IScreen::getSuspendEvent(),
+			m_events->addEvent(CEvent(m_events->forIScreen().suspend(),
 							getEventTarget(), NULL,
 							CEvent::kDeliverImmediately));
 			break;
@@ -1296,14 +1299,14 @@ CMSWindowsScreen::onHotKey(WPARAM wParam, LPARAM lParam)
 			// ignore key repeats but it counts as a hot key
 			return true;
 		}
-		type = getHotKeyDownEvent();
+		type = m_events->forIPrimaryScreen().hotKeyDown();
 	}
 	else {
-		type = getHotKeyUpEvent();
+		type = m_events->forIPrimaryScreen().hotKeyUp();
 	}
 
 	// generate event
-	EVENTQUEUE->addEvent(CEvent(type, getEventTarget(),
+	m_events->addEvent(CEvent(type, getEventTarget(),
 							CHotKeyInfo::alloc(i->second)));
 
 	return true;
@@ -1332,14 +1335,14 @@ CMSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 		if (pressed) {
 			LOG((CLOG_DEBUG1 "event: button press button=%d", button));
 			if (button != kButtonNone) {
-				sendEvent(getButtonDownEvent(),
+				sendEvent(m_events->forIPrimaryScreen().buttonDown(),
 								CButtonInfo::alloc(button, mask));
 			}
 		}
 		else {
 			LOG((CLOG_DEBUG1 "event: button release button=%d", button));
 			if (button != kButtonNone) {
-				sendEvent(getButtonUpEvent(),
+				sendEvent(m_events->forIPrimaryScreen().buttonUp(),
 								CButtonInfo::alloc(button, mask));
 			}
 		}
@@ -1381,7 +1384,7 @@ CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		
 		// motion on primary screen
 		sendEvent(
-			getMotionOnPrimaryEvent(),
+			m_events->forIPrimaryScreen().motionOnPrimary(),
 			CMotionInfo::alloc(m_xCursor, m_yCursor));
 	}
 	else 
@@ -1408,7 +1411,7 @@ CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		}
 		else {
 			// send motion
-			sendEvent(getMotionOnSecondaryEvent(), CMotionInfo::alloc(x, y));
+			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), CMotionInfo::alloc(x, y));
 		}
 	}
 
@@ -1421,7 +1424,7 @@ CMSWindowsScreen::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
 	// ignore message if posted prior to last mark change
 	if (!ignore()) {
 		LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
-		sendEvent(getWheelEvent(), CWheelInfo::alloc(xDelta, yDelta));
+		sendEvent(m_events->forIPrimaryScreen().wheel(), CWheelInfo::alloc(xDelta, yDelta));
 	}
 	return true;
 }
@@ -1447,7 +1450,7 @@ CMSWindowsScreen::onScreensaver(bool activated)
 		if (!m_screensaverActive &&
 			m_screensaver->checkStarted(SYNERGY_MSG_SCREEN_SAVER, FALSE, 0)) {
 			m_screensaverActive = true;
-			sendEvent(getScreensaverActivatedEvent());
+			sendEvent(m_events->forIPrimaryScreen().screensaverActivated());
 
 			// enable display power down
 			CArchMiscWindows::removeBusyState(CArchMiscWindows::kDISPLAY);
@@ -1456,7 +1459,7 @@ CMSWindowsScreen::onScreensaver(bool activated)
 	else {
 		if (m_screensaverActive) {
 			m_screensaverActive = false;
-			sendEvent(getScreensaverDeactivatedEvent());
+			sendEvent(m_events->forIPrimaryScreen().screensaverDeactivated());
 
 			// disable display power down
 			CArchMiscWindows::addBusyState(CArchMiscWindows::kDISPLAY);
@@ -1492,7 +1495,7 @@ CMSWindowsScreen::onDisplayChange()
 		}
 
 		// send new screen info
-		sendEvent(getShapeChangedEvent());
+		sendEvent(m_events->forIScreen().shapeChanged());
 
 		LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
 	}
@@ -1509,8 +1512,8 @@ CMSWindowsScreen::onClipboardChange()
 		if (m_ownClipboard) {
 			LOG((CLOG_DEBUG "clipboard changed: lost ownership"));
 			m_ownClipboard = false;
-			sendClipboardEvent(getClipboardGrabbedEvent(), kClipboardClipboard);
-			sendClipboardEvent(getClipboardGrabbedEvent(), kClipboardSelection);
+			sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardClipboard);
+			sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardSelection);
 		}
 	}
 	else if (!m_ownClipboard) {

@@ -27,7 +27,8 @@
 // CPortableTaskBarReceiver
 //
 
-CPortableTaskBarReceiver::CPortableTaskBarReceiver() :
+CPortableTaskBarReceiver::CPortableTaskBarReceiver(IEventQueue* events) :
+	m_events(events),
 	m_state(kNotRunning)
 {
 	// do nothing
@@ -79,7 +80,7 @@ CPortableTaskBarReceiver::getErrorMessage() const
 void
 CPortableTaskBarReceiver::quit()
 {
-	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	m_events->addEvent(CEvent(CEvent::kQuit));
 }
 
 void
@@ -117,25 +118,4 @@ CPortableTaskBarReceiver::getToolTip() const
 	default:
 		return "";
 	}
-}
-
-CEvent::Type
-CPortableTaskBarReceiver::getReloadConfigEvent()
-{
-	// do nothing
-	return NULL;
-}
-
-CEvent::Type
-CPortableTaskBarReceiver::getForceReconnectEvent()
-{
-	// do nothing
-	return NULL;
-}
-
-CEvent::Type
-CPortableTaskBarReceiver::getResetServerEvent()
-{
-	// do nothing
-	return NULL;
 }

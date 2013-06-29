@@ -22,6 +22,7 @@
 #include "IInterface.h"
 #include "ClipboardTypes.h"
 #include "CEvent.h"
+#include "CEventTypes.h"
 
 class IClipboard;
 
@@ -66,51 +67,8 @@ public:
 	Return the current position of the cursor in \c x and \c y.
 	*/
 	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
-
-	//! Get error event type
-	/*!
-	Returns the error event type.  This is sent whenever the screen has
-	failed for some reason (e.g. the X Windows server died).
-	*/
-	static CEvent::Type	getErrorEvent();
-
-	//! Get shape changed event type
-	/*!
-	Returns the shape changed event type.  This is sent whenever the
-	screen's shape changes.
-	*/
-	static CEvent::Type	getShapeChangedEvent();
-
-	//! Get clipboard grabbed event type
-	/*!
-	Returns the clipboard grabbed event type.  This is sent whenever the
-	clipboard is grabbed by some other application so we don't own it
-	anymore.  The data is a pointer to a CClipboardInfo.
-	*/
-	static CEvent::Type	getClipboardGrabbedEvent();
-
-	//! Get suspend event type
-	/*!
-	Returns the suspend event type. This is sent whenever the system goes
-	to sleep or a user session is deactivated (fast user switching).
-	*/
-	static CEvent::Type	getSuspendEvent();
-	
-	//! Get resume event type
-	/*!
-	Returns the suspend event type. This is sent whenever the system wakes
-	up or a user session is activated (fast user switching).
-	*/
-	static CEvent::Type	getResumeEvent();
 	
 	//@}
-
-private:
-	static CEvent::Type	s_errorEvent;
-	static CEvent::Type	s_shapeChangedEvent;
-	static CEvent::Type	s_clipboardGrabbedEvent;
-	static CEvent::Type	s_suspendEvent;
-	static CEvent::Type	s_resumeEvent;
 };
 
 #endif

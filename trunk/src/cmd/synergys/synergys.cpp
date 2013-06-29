@@ -45,6 +45,6 @@ main(int argc, char** argv)
 	CLog log;
 	CEventQueue events;
 
-	CServerApp app(createTaskBarReceiver);
+	CServerApp app(&events, createTaskBarReceiver);
 	return app.run(argc, argv);
 }

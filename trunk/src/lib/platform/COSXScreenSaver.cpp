@@ -125,8 +125,8 @@ COSXScreenSaver::processLaunched(ProcessSerialNumber psn)
 		m_screenSaverPSN = psn;
 		LOG((CLOG_DEBUG1 "ScreenSaverEngine launched. Enabled=%d", m_enabled));
 		if (m_enabled) {
-			EVENTQUEUE->addEvent(
-				CEvent(IPrimaryScreen::getScreensaverActivatedEvent(),
+			m_events->addEvent(
+				CEvent(m_events->forIPrimaryScreen().screensaverActivated(),
 					m_eventTarget));
 		}
 	}
@@ -139,8 +139,8 @@ COSXScreenSaver::processTerminated(ProcessSerialNumber psn)
 		m_screenSaverPSN.lowLongOfPSN  == psn.lowLongOfPSN) {
 		LOG((CLOG_DEBUG1 "ScreenSaverEngine terminated. Enabled=%d", m_enabled));
 		if (m_enabled) {
-			EVENTQUEUE->addEvent(
-				CEvent(IPrimaryScreen::getScreensaverDeactivatedEvent(),
+			m_events->addEvent(
+				CEvent(m_events->forIPrimaryScreen().screensaverDeactivated(),
 					m_eventTarget));
 		}
 		

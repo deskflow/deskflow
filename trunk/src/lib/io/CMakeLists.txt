@@ -29,7 +29,6 @@ set(inc
 set(src
 	CStreamBuffer.cpp
 	CStreamFilter.cpp
-	IStream.cpp
 	XIO.cpp
 	CCryptoStream.cpp
 	CCryptoMode.cpp

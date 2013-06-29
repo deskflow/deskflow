@@ -25,6 +25,7 @@
 #define ARCH_PLUGIN CArchPluginWindows
 
 class CScreen;
+class IEventQueue;
 
 //! Windows implementation of IArchPlugin
 class CArchPluginWindows : public IArchPlugin {
@@ -33,9 +34,7 @@ public:
 	virtual ~CArchPluginWindows();
 
 	// IArchPlugin overrides
-	void				init(void* eventTarget);
-	
-	static void*		m_eventTarget;
+	void				init(void* eventTarget, IEventQueue* events);
 
 private:
 	CString				getModuleDir();

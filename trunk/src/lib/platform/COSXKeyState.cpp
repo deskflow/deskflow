@@ -180,14 +180,14 @@ static const CKeyEntry	s_controlKeys[] = {
 // COSXKeyState
 //
 
-COSXKeyState::COSXKeyState() :
+COSXKeyState::COSXKeyState(IEventQueue* events) :
 	m_deadKeyState(0)
 {
 	init();
 }
 
-COSXKeyState::COSXKeyState(IEventQueue& eventQueue, CKeyMap& keyMap) :
-	CKeyState(eventQueue, keyMap),
+COSXKeyState::COSXKeyState(IEventQueue* events, CKeyMap& keyMap) :
+	CKeyState(events, keyMap),
 	m_deadKeyState(0)
 {
 	init();

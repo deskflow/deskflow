@@ -20,9 +20,11 @@
 
 #include "CNetworkAddress.h"
 #include "CTCPSocket.h"
+#include "CEventTypes.h"
 
 class CIpcServerProxy;
 class CIpcMessage;
+class IEventQueue;
 
 //! IPC client for communication between daemon and GUI.
 /*!
@@ -30,8 +32,8 @@ class CIpcMessage;
  */
 class CIpcClient {
 public:
-	CIpcClient();
-	CIpcClient(int port);
+	CIpcClient(IEventQueue* events);
+	CIpcClient(IEventQueue* events, int port);
 	virtual ~CIpcClient();
 
 	//! @name manipulators
@@ -47,14 +49,6 @@ public:
 	void				send(const CIpcMessage& message);
 
 	//@}
-	//! @name accessors
-	//@{
-
-	//! Raised when the socket is connected.
-	static CEvent::Type	getConnectedEvent();
-	static CEvent::Type	getMessageReceivedEvent();
-
-	//@}
 
 private:
 	void				init();
@@ -65,7 +59,5 @@ private:
 	CNetworkAddress		m_serverAddress;
 	CTCPSocket			m_socket;
 	CIpcServerProxy*	m_server;
-	
-	static CEvent::Type	s_connectedEvent;
-	static CEvent::Type	s_messageReceivedEvent;
+	IEventQueue*		m_events;
 };

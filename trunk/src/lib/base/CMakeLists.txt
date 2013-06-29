@@ -17,6 +17,7 @@
 set(inc
 	CEvent.h
 	CEventQueue.h
+	CEventTypes.h
 	CFunctionEventJob.h
 	CFunctionJob.h
 	CLog.h
@@ -41,6 +42,7 @@ set(inc
 set(src
 	CEvent.cpp
 	CEventQueue.cpp
+	CEventTypes.cpp
 	CFunctionEventJob.cpp
 	CFunctionJob.cpp
 	CLog.cpp
@@ -48,7 +50,6 @@ set(src
 	CStopwatch.cpp
 	CStringUtil.cpp
 	CUnicode.cpp
-	IEventQueue.cpp
 	LogOutputters.cpp
 	XBase.cpp
 )

@@ -22,19 +22,24 @@
 #include "TMethodEventJob.h"
 #include "CIpcMessage.h"
 
-CEvent::Type			CIpcClient::s_connectedEvent = CEvent::kUnknown;
-CEvent::Type			CIpcClient::s_messageReceivedEvent = CEvent::kUnknown;
+//
+// CIpcClient
+//
 
-CIpcClient::CIpcClient() :
-m_serverAddress(CNetworkAddress(IPC_HOST, IPC_PORT)),
-m_server(nullptr)
+CIpcClient::CIpcClient(IEventQueue* events) :
+	m_serverAddress(CNetworkAddress(IPC_HOST, IPC_PORT)),
+	m_server(nullptr),
+	m_socket(events),
+	m_events(events)
 {
 	init();
 }
 
-CIpcClient::CIpcClient(int port) :
-m_serverAddress(CNetworkAddress(IPC_HOST, port)),
-m_server(nullptr)
+CIpcClient::CIpcClient(IEventQueue* events, int port) :
+	m_serverAddress(CNetworkAddress(IPC_HOST, port)),
+	m_server(nullptr),
+	m_socket(events),
+	m_events(events)
 {
 	init();
 }
@@ -52,16 +57,16 @@ CIpcClient::~CIpcClient()
 void
 CIpcClient::connect()
 {
-	EVENTQUEUE->adoptHandler(
-		IDataSocket::getConnectedEvent(), m_socket.getEventTarget(),
+	m_events->adoptHandler(
+		m_events->forIDataSocket().connected(), m_socket.getEventTarget(),
 		new TMethodEventJob<CIpcClient>(
 		this, &CIpcClient::handleConnected));
 
 	m_socket.connect(m_serverAddress);
-	m_server = new CIpcServerProxy(m_socket);
+	m_server = new CIpcServerProxy(m_socket, m_events);
 
-	EVENTQUEUE->adoptHandler(
-		CIpcServerProxy::getMessageReceivedEvent(), m_server,
+	m_events->adoptHandler(
+		m_events->forCIpcServerProxy().messageReceived(), m_server,
 		new TMethodEventJob<CIpcClient>(
 		this, &CIpcClient::handleMessageReceived));
 }
@@ -69,8 +74,8 @@ CIpcClient::connect()
 void
 CIpcClient::disconnect()
 {
-	EVENTQUEUE->removeHandler(IDataSocket::getConnectedEvent(), m_socket.getEventTarget());
-	EVENTQUEUE->removeHandler(CIpcServerProxy::getMessageReceivedEvent(), m_server);
+	m_events->removeHandler(m_events->forIDataSocket().connected(), m_socket.getEventTarget());
+	m_events->removeHandler(m_events->forCIpcServerProxy().messageReceived(), m_server);
 
 	m_server->disconnect();
 	delete m_server;
@@ -84,25 +89,11 @@ CIpcClient::send(const CIpcMessage& message)
 	m_server->send(message);
 }
 
-CEvent::Type
-CIpcClient::getConnectedEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(
-		s_connectedEvent, "CIpcClient::connected");
-}
-
-CEvent::Type
-CIpcClient::getMessageReceivedEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(
-		s_messageReceivedEvent, "CIpcClient::messageReceived");
-}
-
 void
 CIpcClient::handleConnected(const CEvent&, void*)
 {
-	EVENTQUEUE->addEvent(CEvent(
-		getConnectedEvent(), this, m_server, CEvent::kDontFreeData));
+	m_events->addEvent(CEvent(
+		m_events->forCIpcClient().connected(), this, m_server, CEvent::kDontFreeData));
 
 	CIpcHelloMessage message(kIpcClientNode);
 	send(message);
@@ -111,7 +102,7 @@ CIpcClient::handleConnected(const CEvent&, void*)
 void
 CIpcClient::handleMessageReceived(const CEvent& e, void*)
 {
-	CEvent event(getMessageReceivedEvent(), this);
+	CEvent event(m_events->forCIpcClient().messageReceived(), this);
 	event.setDataObject(e.getDataObject());
-	EVENTQUEUE->addEvent(event);
+	m_events->addEvent(event);
 }

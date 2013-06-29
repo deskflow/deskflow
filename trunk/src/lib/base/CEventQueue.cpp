@@ -22,13 +22,35 @@
 #include "CStopwatch.h"
 #include "IEventJob.h"
 #include "CArch.h"
+#include "CEventTypes.h"
+
+EVENT_TYPE_ACCESSOR(CClient)
+EVENT_TYPE_ACCESSOR(IStream)
+EVENT_TYPE_ACCESSOR(CIpcClient)
+EVENT_TYPE_ACCESSOR(CIpcClientProxy)
+EVENT_TYPE_ACCESSOR(CIpcServer)
+EVENT_TYPE_ACCESSOR(CIpcServerProxy)
+EVENT_TYPE_ACCESSOR(IDataSocket)
+EVENT_TYPE_ACCESSOR(IListenSocket)
+EVENT_TYPE_ACCESSOR(ISocket)
+EVENT_TYPE_ACCESSOR(COSXScreen)
+EVENT_TYPE_ACCESSOR(CClientListener)
+EVENT_TYPE_ACCESSOR(CClientProxy)
+EVENT_TYPE_ACCESSOR(CClientProxyUnknown)
+EVENT_TYPE_ACCESSOR(CServer)
+EVENT_TYPE_ACCESSOR(CServerApp)
+EVENT_TYPE_ACCESSOR(IKeyState)
+EVENT_TYPE_ACCESSOR(IPrimaryScreen)
+EVENT_TYPE_ACCESSOR(IScreen)
+EVENT_TYPE_ACCESSOR(ISecondaryScreen)
 
 // interrupt handler.  this just adds a quit event to the queue.
 static
 void
-interrupt(CArch::ESignal, void*)
+interrupt(CArch::ESignal, void* data)
 {
-	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	CEventQueue* events = reinterpret_cast<CEventQueue*>(data);
+	events->addEvent(CEvent(CEvent::kQuit));
 }
 
 
@@ -37,12 +59,30 @@ interrupt(CArch::ESignal, void*)
 //
 
 CEventQueue::CEventQueue() :
-	m_nextType(CEvent::kLast)
+	m_systemTarget(0),
+	m_nextType(CEvent::kLast),
+	m_typesForIStream(NULL),
+	m_typesForCIpcClient(NULL),
+	m_typesForCIpcClientProxy(NULL),
+	m_typesForCIpcServer(NULL),
+	m_typesForCIpcServerProxy(NULL),
+	m_typesForIDataSocket(NULL),
+	m_typesForIListenSocket(NULL),
+	m_typesForISocket(NULL),
+	m_typesForCOSXScreen(NULL),
+	m_typesForCClientListener(NULL),
+	m_typesForCClientProxy(NULL),
+	m_typesForCClientProxyUnknown(NULL),
+	m_typesForCServer(NULL),
+	m_typesForCServerApp(NULL),
+	m_typesForIKeyState(NULL),
+	m_typesForIPrimaryScreen(NULL),
+	m_typesForIScreen(NULL),
+	m_typesForISecondaryScreen(NULL)
 {
-	setInstance(this);
 	m_mutex = ARCH->newMutex();
-	ARCH->setSignalHandler(CArch::kINTERRUPT, &interrupt, NULL);
-	ARCH->setSignalHandler(CArch::kTERMINATE, &interrupt, NULL);
+	ARCH->setSignalHandler(CArch::kINTERRUPT, &interrupt, this);
+	ARCH->setSignalHandler(CArch::kTERMINATE, &interrupt, this);
 	m_buffer = new CSimpleEventQueueBuffer;
 }
 
@@ -52,7 +92,6 @@ CEventQueue::~CEventQueue()
 	ARCH->setSignalHandler(CArch::kINTERRUPT, NULL, NULL);
 	ARCH->setSignalHandler(CArch::kTERMINATE, NULL, NULL);
 	ARCH->closeMutex(m_mutex);
-	setInstance(NULL);
 }
 
 void
@@ -65,16 +104,6 @@ CEventQueue::loop()
 		CEvent::deleteData(event);
 		getEvent(event);
 	}
-}
-
-CEvent::Type
-CEventQueue::registerType(const char* name)
-{
-	CArchMutexLock lock(m_mutex);
-	m_typeMap.insert(std::make_pair(m_nextType, name));
-	m_nameMap.insert(std::make_pair(name, m_nextType));
-	LOG((CLOG_DEBUG1 "registered event type %s as %d", name, m_nextType));
-	return m_nextType++;
 }
 
 CEvent::Type
@@ -488,6 +517,12 @@ CEventQueue::getRegisteredType(const CString& name) const
 	return CEvent::kUnknown;
 }
 
+void*
+CEventQueue::getSystemTarget()
+{
+	// any unique arbitrary pointer will do
+	return &m_systemTarget;
+}
 
 //
 // CEventQueue::CTimer

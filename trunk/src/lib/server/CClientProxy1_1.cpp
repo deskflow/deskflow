@@ -25,8 +25,8 @@
 // CClientProxy1_1
 //
 
-CClientProxy1_1::CClientProxy1_1(const CString& name, synergy::IStream* stream, IEventQueue* eventQueue) :
-	CClientProxy1_0(name, stream, eventQueue)
+CClientProxy1_1::CClientProxy1_1(const CString& name, synergy::IStream* stream, IEventQueue* events) :
+	CClientProxy1_0(name, stream, events)
 {
 	// do nothing
 }

@@ -41,8 +41,7 @@ public:
 	//! @name manipulators
 	//@{
 
-	IPlatformScreen() { }
-	IPlatformScreen(IEventQueue& eventQueue) : IKeyState(eventQueue) { }
+	IPlatformScreen(IEventQueue* events) : IKeyState(events) { }
 
 	//! Enable screen
 	/*!
@@ -198,8 +197,8 @@ protected:
 	A platform screen is expected to install a handler for system
 	events in its c'tor like so:
 	\code
-	EVENTQUEUE->adoptHandler(CEvent::kSystem,
-	 					 IEventQueue::getSystemTarget(),
+	m_events->adoptHandler(CEvent::kSystem,
+	 					 m_events->getSystemTarget(),
 	 					 new TMethodEventJob<CXXXPlatformScreen>(this,
 	 						 &CXXXPlatformScreen::handleSystemEvent));
 	\endcode

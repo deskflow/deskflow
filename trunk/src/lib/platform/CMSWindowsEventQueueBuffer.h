@@ -23,10 +23,12 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+class IEventQueue;
+
 //! Event queue buffer for Win32
 class CMSWindowsEventQueueBuffer : public IEventQueueBuffer {
 public:
-	CMSWindowsEventQueueBuffer();
+	CMSWindowsEventQueueBuffer(IEventQueue* events);
 	virtual ~CMSWindowsEventQueueBuffer();
 
 	// IEventQueueBuffer overrides
@@ -43,6 +45,7 @@ private:
 	UINT				m_userEvent;
 	MSG					m_event;
 	UINT				m_daemonQuit;
+	IEventQueue*		m_events;
 };
 
 #endif

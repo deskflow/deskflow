@@ -27,8 +27,9 @@
 // CPacketStreamFilter
 //
 
-CPacketStreamFilter::CPacketStreamFilter(synergy::IStream* stream, bool adoptStream) :
-	CStreamFilter(EVENTQUEUE, stream, adoptStream),
+CPacketStreamFilter::CPacketStreamFilter(IEventQueue* events, synergy::IStream* stream, bool adoptStream) :
+	CStreamFilter(events, stream, adoptStream),
+	m_events(events),
 	m_size(0),
 	m_inputShutdown(false)
 {
@@ -80,7 +81,7 @@ CPacketStreamFilter::read(void* buffer, UInt32 n)
 	readPacketSize();
 
 	if (m_inputShutdown && m_size == 0) {
-		EVENTQUEUE->addEvent(CEvent(getInputShutdownEvent(),
+		m_events->addEvent(CEvent(m_events->forIStream().inputShutdown(),
 						getEventTarget(), NULL));
 	}
 
@@ -176,13 +177,13 @@ CPacketStreamFilter::readMore()
 void
 CPacketStreamFilter::filterEvent(const CEvent& event)
 {
-	if (event.getType() == getInputReadyEvent()) {
+	if (event.getType() == m_events->forIStream().inputReady()) {
 		CLock lock(&m_mutex);
 		if (!readMore()) {
 			return;
 		}
 	}
-	else if (event.getType() == getInputShutdownEvent()) {
+	else if (event.getType() == m_events->forIStream().inputShutdown()) {
 		// discard this if we have buffered data
 		CLock lock(&m_mutex);
 		m_inputShutdown = true;

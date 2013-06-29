@@ -29,8 +29,8 @@ platform specific methods.
 */
 class CKeyState : public IKeyState {
 public:
-	CKeyState();
-	CKeyState(IEventQueue& eventQueue, CKeyMap& keyMap);
+	CKeyState(IEventQueue* events);
+	CKeyState(IEventQueue* events, CKeyMap& keyMap);
 	virtual ~CKeyState();
 
 	//! @name manipulators
@@ -226,6 +226,8 @@ private:
 	// server keyboard state.  an entry is 0 if not the key isn't pressed
 	// otherwise it's the local KeyButton synthesized for the server key.
 	KeyButton			m_serverKeys[kNumButtons];
+
+	IEventQueue*		m_events;
 };
 
 #endif

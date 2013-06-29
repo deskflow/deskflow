@@ -28,7 +28,7 @@ class IEventQueue;
 class CMockClient : public CClient
 {
 public:
-	CMockClient() { m_mock = true; }
+	CMockClient() : CClient() { }
 	MOCK_METHOD2(mouseMove, void(SInt32, SInt32));
 	MOCK_METHOD1(setOptions, void(const COptionsList&));
 	MOCK_METHOD0(handshakeComplete, void());

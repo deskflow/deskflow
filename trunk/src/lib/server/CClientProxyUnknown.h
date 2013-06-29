@@ -20,15 +20,17 @@
 #define CCLIENTPROXYUNKNOWN_H
 
 #include "CEvent.h"
+#include "CEventTypes.h"
 
 class CClientProxy;
 class CEventQueueTimer;
 namespace synergy { class IStream; }
 class CServer;
+class IEventQueue;
 
 class CClientProxyUnknown {
 public:
-	CClientProxyUnknown(synergy::IStream* stream, double timeout, CServer* server);
+	CClientProxyUnknown(synergy::IStream* stream, double timeout, CServer* server, IEventQueue* events);
 	~CClientProxyUnknown();
 
 	//! @name manipulators
@@ -41,24 +43,6 @@ public:
 	if the handshake is unsuccessful or incomplete.
 	*/
 	CClientProxy*		orphanClientProxy();
-
-	//@}
-	//! @name accessors
-	//@{
-
-	//! Get success event type
-	/*!
-	Returns the success event type.  This is sent when the client has
-	correctly responded to the hello message.  The target is this.
-	*/
-	static CEvent::Type	getSuccessEvent();
-
-	//! Get failure event type
-	/*!
-	Returns the failure event type.  This is sent when a client fails
-	to correctly respond to the hello message.  The target is this.
-	*/
-	static CEvent::Type	getFailureEvent();
 
 	//@}
 
@@ -80,10 +64,8 @@ private:
 	CEventQueueTimer*	m_timer;
 	CClientProxy*		m_proxy;
 	bool				m_ready;
-
-	static CEvent::Type	s_successEvent;
-	static CEvent::Type	s_failureEvent;
 	CServer*			m_server;
+	IEventQueue*		m_events;
 };
 
 #endif

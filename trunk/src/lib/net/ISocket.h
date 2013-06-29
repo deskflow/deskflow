@@ -21,6 +21,7 @@
 
 #include "IInterface.h"
 #include "CEvent.h"
+#include "CEventTypes.h"
 
 class CNetworkAddress;
 
@@ -56,18 +57,7 @@ public:
 	*/
 	virtual void*		getEventTarget() const = 0;
 
-	//! Get disconnected event type
-	/*!
-	Returns the socket disconnected event type.  A socket sends this
-	event when the remote side of the socket has disconnected or
-	shutdown both input and output.
-	*/
-	static CEvent::Type	getDisconnectedEvent();
-
 	//@}
-
-private:
-	static CEvent::Type	s_disconnectedEvent;
 };
 
 #endif

@@ -52,7 +52,8 @@ CInputFilter::CCondition::disablePrimary(CPrimaryClient*)
 }
 
 CInputFilter::CKeystrokeCondition::CKeystrokeCondition(
-		IPlatformScreen::CKeyInfo* info) :
+		IEventQueue* events, IPlatformScreen::CKeyInfo* info) :
+	m_events(events),
 	m_id(0),
 	m_key(info->m_key),
 	m_mask(info->m_mask)
@@ -61,7 +62,8 @@ CInputFilter::CKeystrokeCondition::CKeystrokeCondition(
 }
 
 CInputFilter::CKeystrokeCondition::CKeystrokeCondition(
-		KeyID key, KeyModifierMask mask) :
+		IEventQueue* events, KeyID key, KeyModifierMask mask) :
+	m_events(events),
 	m_id(0),
 	m_key(key),
 	m_mask(mask)
@@ -89,7 +91,7 @@ CInputFilter::CKeystrokeCondition::getMask() const
 CInputFilter::CCondition*
 CInputFilter::CKeystrokeCondition::clone() const
 {
-	return new CKeystrokeCondition(m_key, m_mask);
+	return new CKeystrokeCondition(m_events, m_key, m_mask);
 }
 
 CString
@@ -106,10 +108,10 @@ CInputFilter::CKeystrokeCondition::match(const CEvent& event)
 
 	// check for hotkey events
 	CEvent::Type type = event.getType();
-	if (type == IPrimaryScreen::getHotKeyDownEvent()) {
+	if (type == m_events->forIPrimaryScreen().hotKeyDown()) {
 		status = kActivate;
 	}
-	else if (type == IPrimaryScreen::getHotKeyUpEvent()) {
+	else if (type == m_events->forIPrimaryScreen().hotKeyUp()) {
 		status = kDeactivate;
 	}
 	else {
@@ -140,7 +142,8 @@ CInputFilter::CKeystrokeCondition::disablePrimary(CPrimaryClient* primary)
 }
 
 CInputFilter::CMouseButtonCondition::CMouseButtonCondition(
-		IPlatformScreen::CButtonInfo* info) :
+		IEventQueue* events, IPlatformScreen::CButtonInfo* info) :
+	m_events(events),
 	m_button(info->m_button),
 	m_mask(info->m_mask)
 {
@@ -148,7 +151,8 @@ CInputFilter::CMouseButtonCondition::CMouseButtonCondition(
 }
 
 CInputFilter::CMouseButtonCondition::CMouseButtonCondition(
-		ButtonID button, KeyModifierMask mask) :
+		IEventQueue* events, ButtonID button, KeyModifierMask mask) :
+	m_events(events),
 	m_button(button),
 	m_mask(mask)
 {
@@ -175,7 +179,7 @@ CInputFilter::CMouseButtonCondition::getMask() const
 CInputFilter::CCondition*
 CInputFilter::CMouseButtonCondition::clone() const
 {
-	return new CMouseButtonCondition(m_button, m_mask);
+	return new CMouseButtonCondition(m_events, m_button, m_mask);
 }
 
 CString
@@ -199,10 +203,10 @@ CInputFilter::CMouseButtonCondition::match(const CEvent& event)
 
 	// check for hotkey events
 	CEvent::Type type = event.getType();
-	if (type == IPrimaryScreen::getButtonDownEvent()) {
+	if (type == m_events->forIPrimaryScreen().buttonDown()) {
 		status = kActivate;
 	}
-	else if (type == IPrimaryScreen::getButtonUpEvent()) {
+	else if (type == m_events->forIPrimaryScreen().buttonUp()) {
 		status = kDeactivate;
 	}
 	else {
@@ -222,7 +226,8 @@ CInputFilter::CMouseButtonCondition::match(const CEvent& event)
 }
 
 CInputFilter::CScreenConnectedCondition::CScreenConnectedCondition(
-				const CString& screen) :
+		IEventQueue* events, const CString& screen) :
+	m_events(events),
 	m_screen(screen)
 {
 	// do nothing
@@ -236,7 +241,7 @@ CInputFilter::CScreenConnectedCondition::~CScreenConnectedCondition()
 CInputFilter::CCondition*
 CInputFilter::CScreenConnectedCondition::clone() const
 {
-	return new CScreenConnectedCondition(m_screen);
+	return new CScreenConnectedCondition(m_events, m_screen);
 }
 
 CString
@@ -248,7 +253,7 @@ CInputFilter::CScreenConnectedCondition::format() const
 CInputFilter::EFilterStatus
 CInputFilter::CScreenConnectedCondition::match(const CEvent& event)
 {
-	if (event.getType() == CServer::getConnectedEvent()) {
+	if (event.getType() == m_events->forCServer().connected()) {
 		CServer::CScreenConnectedInfo* info = 
 			reinterpret_cast<CServer::CScreenConnectedInfo*>(event.getData());
 		if (m_screen == info->m_screen || m_screen.empty()) {
@@ -272,7 +277,9 @@ CInputFilter::CAction::~CAction()
 	// do nothing
 }
 
-CInputFilter::CLockCursorToScreenAction::CLockCursorToScreenAction(Mode mode) :
+CInputFilter::CLockCursorToScreenAction::CLockCursorToScreenAction(
+		IEventQueue* events, Mode mode) :
+	m_events(events),
 	m_mode(mode)
 {
 	// do nothing
@@ -310,13 +317,14 @@ CInputFilter::CLockCursorToScreenAction::perform(const CEvent& event)
 	// send event
 	CServer::CLockCursorToScreenInfo* info = 
 		CServer::CLockCursorToScreenInfo::alloc(s_state[m_mode]);
-	EVENTQUEUE->addEvent(CEvent(CServer::getLockCursorToScreenEvent(),
+	m_events->addEvent(CEvent(m_events->forCServer().lockCursorToScreen(),
 								event.getTarget(), info,
 								CEvent::kDeliverImmediately));
 }
 
 CInputFilter::CSwitchToScreenAction::CSwitchToScreenAction(
-				const CString& screen) :
+		IEventQueue* events, const CString& screen) :
+	m_events(events),
 	m_screen(screen)
 {
 	// do nothing
@@ -346,7 +354,7 @@ CInputFilter::CSwitchToScreenAction::perform(const CEvent& event)
 	// pick screen name.  if m_screen is empty then use the screen from
 	// event if it has one.
 	CString screen = m_screen;
-	if (screen.empty() && event.getType() == CServer::getConnectedEvent()) {
+	if (screen.empty() && event.getType() == m_events->forCServer().connected()) {
 		CServer::CScreenConnectedInfo* info = 
 			reinterpret_cast<CServer::CScreenConnectedInfo*>(event.getData());
 		screen = info->m_screen;
@@ -355,13 +363,14 @@ CInputFilter::CSwitchToScreenAction::perform(const CEvent& event)
 	// send event
 	CServer::CSwitchToScreenInfo* info =
 		CServer::CSwitchToScreenInfo::alloc(screen);
-	EVENTQUEUE->addEvent(CEvent(CServer::getSwitchToScreenEvent(),
+	m_events->addEvent(CEvent(m_events->forCServer().switchToScreen(),
 								event.getTarget(), info,
 								CEvent::kDeliverImmediately));
 }
 
 CInputFilter::CSwitchInDirectionAction::CSwitchInDirectionAction(
-				EDirection direction) :
+		IEventQueue* events, EDirection direction) :
+	m_events(events),
 	m_direction(direction)
 {
 	// do nothing
@@ -398,20 +407,24 @@ CInputFilter::CSwitchInDirectionAction::perform(const CEvent& event)
 {
 	CServer::CSwitchInDirectionInfo* info =
 		CServer::CSwitchInDirectionInfo::alloc(m_direction);
-	EVENTQUEUE->addEvent(CEvent(CServer::getSwitchInDirectionEvent(),
+	m_events->addEvent(CEvent(m_events->forCServer().switchInDirection(),
 								event.getTarget(), info,
 								CEvent::kDeliverImmediately));
 }
 
-CInputFilter::CKeyboardBroadcastAction::CKeyboardBroadcastAction(Mode mode) :
+CInputFilter::CKeyboardBroadcastAction::CKeyboardBroadcastAction(
+		IEventQueue* events, Mode mode) :
+	m_events(events),
 	m_mode(mode)
 {
 	// do nothing
 }
 
 CInputFilter::CKeyboardBroadcastAction::CKeyboardBroadcastAction(
+		IEventQueue* events,
 		Mode mode,
 		const std::set<CString>& screens) :
+	m_events(events),
 	m_mode(mode),
 	m_screens(IKeyState::CKeyInfo::join(screens))
 {
@@ -466,13 +479,14 @@ CInputFilter::CKeyboardBroadcastAction::perform(const CEvent& event)
 	// send event
 	CServer::CKeyboardBroadcastInfo* info = 
 		CServer::CKeyboardBroadcastInfo::alloc(s_state[m_mode], m_screens);
-	EVENTQUEUE->addEvent(CEvent(CServer::getKeyboardBroadcastEvent(),
+	m_events->addEvent(CEvent(m_events->forCServer().keyboardBroadcast(),
 								event.getTarget(), info,
 								CEvent::kDeliverImmediately));
 }
 
 CInputFilter::CKeystrokeAction::CKeystrokeAction(
-		IPlatformScreen::CKeyInfo* info, bool press) :
+		IEventQueue* events, IPlatformScreen::CKeyInfo* info, bool press) :
+	m_events(events),
 	m_keyInfo(info),
 	m_press(press)
 {
@@ -507,7 +521,7 @@ CInputFilter::CAction*
 CInputFilter::CKeystrokeAction::clone() const
 {
 	IKeyState::CKeyInfo* info = IKeyState::CKeyInfo::alloc(*m_keyInfo);
-	return new CKeystrokeAction(info, m_press);
+	return new CKeystrokeAction(m_events, info, m_press);
 }
 
 CString
@@ -537,15 +551,17 @@ CInputFilter::CKeystrokeAction::format() const
 void
 CInputFilter::CKeystrokeAction::perform(const CEvent& event)
 {
-	CEvent::Type type = m_press ? IPlatformScreen::getKeyDownEvent(*EVENTQUEUE) :
-								IPlatformScreen::getKeyUpEvent(*EVENTQUEUE);
-	EVENTQUEUE->addEvent(CEvent(IPlatformScreen::getFakeInputBeginEvent(),
+	CEvent::Type type = m_press ?
+		m_events->forIKeyState().keyDown() :
+		m_events->forIKeyState().keyUp();
+	
+	m_events->addEvent(CEvent(m_events->forIPrimaryScreen().fakeInputBegin(),
 								event.getTarget(), NULL,
 								CEvent::kDeliverImmediately));
-	EVENTQUEUE->addEvent(CEvent(type, event.getTarget(), m_keyInfo,
+	m_events->addEvent(CEvent(type, event.getTarget(), m_keyInfo,
 								CEvent::kDeliverImmediately |
 								CEvent::kDontFreeData));
-	EVENTQUEUE->addEvent(CEvent(IPlatformScreen::getFakeInputEndEvent(),
+	m_events->addEvent(CEvent(m_events->forIPrimaryScreen().fakeInputEnd(),
 								event.getTarget(), NULL,
 								CEvent::kDeliverImmediately));
 }
@@ -557,7 +573,8 @@ CInputFilter::CKeystrokeAction::formatName() const
 }
 
 CInputFilter::CMouseButtonAction::CMouseButtonAction(
-		IPlatformScreen::CButtonInfo* info, bool press) : 
+		IEventQueue* events, IPlatformScreen::CButtonInfo* info, bool press) :
+	m_events(events),
 	m_buttonInfo(info),
 	m_press(press)
 {
@@ -586,7 +603,7 @@ CInputFilter::CMouseButtonAction::clone() const
 {
 	IPlatformScreen::CButtonInfo* info =
 		IPrimaryScreen::CButtonInfo::alloc(*m_buttonInfo);
-	return new CMouseButtonAction(info, m_press);
+	return new CMouseButtonAction(m_events, info, m_press);
 }
 
 CString
@@ -610,15 +627,15 @@ CInputFilter::CMouseButtonAction::perform(const CEvent& event)
 		KeyID key = m_press ? kKeySetModifiers : kKeyClearModifiers;
 		modifierInfo =
 			IKeyState::CKeyInfo::alloc(key, m_buttonInfo->m_mask, 0, 1);
-		EVENTQUEUE->addEvent(CEvent(IPlatformScreen::getKeyDownEvent(*EVENTQUEUE),
+		m_events->addEvent(CEvent(m_events->forIKeyState().keyDown(),
 								event.getTarget(), modifierInfo,
 								CEvent::kDeliverImmediately));
 	}
 
 	// send button
-	CEvent::Type type = m_press ? IPlatformScreen::getButtonDownEvent() :
-								IPlatformScreen::getButtonUpEvent();
-	EVENTQUEUE->addEvent(CEvent(type, event.getTarget(), m_buttonInfo,
+	CEvent::Type type = m_press ? m_events->forIPrimaryScreen().buttonDown() :
+								m_events->forIPrimaryScreen().buttonUp();
+	m_events->addEvent(CEvent(type, event.getTarget(), m_buttonInfo,
 								CEvent::kDeliverImmediately |
 								CEvent::kDontFreeData));
 }
@@ -869,13 +886,15 @@ CInputFilter::CRule::getAction(bool onActivation, UInt32 index) const
 // -----------------------------------------------------------------------------
 // Input Filter Class
 // -----------------------------------------------------------------------------
-CInputFilter::CInputFilter() :
+CInputFilter::CInputFilter(IEventQueue* events) :
+	m_events(events),
 	m_primaryClient(NULL)
 {
 	// do nothing
 }
 
 CInputFilter::CInputFilter(const CInputFilter& x) :
+	m_events(x.m_events),
 	m_ruleList(x.m_ruleList),
 	m_primaryClient(NULL)
 {
@@ -938,56 +957,56 @@ CInputFilter::setPrimaryClient(CPrimaryClient* client)
 			rule->disable(m_primaryClient);
 		}
 
-		EVENTQUEUE->removeHandler(IPlatformScreen::getKeyDownEvent(*EVENTQUEUE),
+		m_events->removeHandler(m_events->forIKeyState().keyDown(),
 							m_primaryClient->getEventTarget());
-		EVENTQUEUE->removeHandler(IPlatformScreen::getKeyUpEvent(*EVENTQUEUE),
+		m_events->removeHandler(m_events->forIKeyState().keyUp(),
 							m_primaryClient->getEventTarget());
-		EVENTQUEUE->removeHandler(IPlatformScreen::getKeyRepeatEvent(*EVENTQUEUE),
+		m_events->removeHandler(m_events->forIKeyState().keyRepeat(),
 							m_primaryClient->getEventTarget());
-		EVENTQUEUE->removeHandler(IPlatformScreen::getButtonDownEvent(),
+		m_events->removeHandler(m_events->forIPrimaryScreen().buttonDown(),
 							m_primaryClient->getEventTarget());
-		EVENTQUEUE->removeHandler(IPlatformScreen::getButtonUpEvent(),
+		m_events->removeHandler(m_events->forIPrimaryScreen().buttonUp(),
 							m_primaryClient->getEventTarget());
-		EVENTQUEUE->removeHandler(IPlatformScreen::getHotKeyDownEvent(),
+		m_events->removeHandler(m_events->forIPrimaryScreen().hotKeyDown(),
 							m_primaryClient->getEventTarget());
-		EVENTQUEUE->removeHandler(IPlatformScreen::getHotKeyUpEvent(),
+		m_events->removeHandler(m_events->forIPrimaryScreen().hotKeyUp(),
 							m_primaryClient->getEventTarget());
-		EVENTQUEUE->removeHandler(CServer::getConnectedEvent(),
+		m_events->removeHandler(m_events->forCServer().connected(),
 							m_primaryClient->getEventTarget());
 	}
 
 	m_primaryClient = client;
 
 	if (m_primaryClient != NULL) {
-		EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyDownEvent(*EVENTQUEUE),
+		m_events->adoptHandler(m_events->forIKeyState().keyDown(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CInputFilter>(this,
 								&CInputFilter::handleEvent));
-		EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyUpEvent(*EVENTQUEUE),
+		m_events->adoptHandler(m_events->forIKeyState().keyUp(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CInputFilter>(this,
 								&CInputFilter::handleEvent));
-		EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyRepeatEvent(*EVENTQUEUE),
+		m_events->adoptHandler(m_events->forIKeyState().keyRepeat(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CInputFilter>(this,
 								&CInputFilter::handleEvent));
-		EVENTQUEUE->adoptHandler(IPlatformScreen::getButtonDownEvent(),
+		m_events->adoptHandler(m_events->forIPrimaryScreen().buttonDown(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CInputFilter>(this,
 								&CInputFilter::handleEvent));
-		EVENTQUEUE->adoptHandler(IPlatformScreen::getButtonUpEvent(),
+		m_events->adoptHandler(m_events->forIPrimaryScreen().buttonUp(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CInputFilter>(this,
 								&CInputFilter::handleEvent));
-		EVENTQUEUE->adoptHandler(IPlatformScreen::getHotKeyDownEvent(),
+		m_events->adoptHandler(m_events->forIPrimaryScreen().hotKeyDown(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CInputFilter>(this,
 								&CInputFilter::handleEvent));
-		EVENTQUEUE->adoptHandler(IPlatformScreen::getHotKeyUpEvent(),
+		m_events->adoptHandler(m_events->forIPrimaryScreen().hotKeyUp(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CInputFilter>(this,
 								&CInputFilter::handleEvent));
-		EVENTQUEUE->adoptHandler(CServer::getConnectedEvent(),
+		m_events->adoptHandler(m_events->forCServer().connected(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CInputFilter>(this,
 								&CInputFilter::handleEvent));
@@ -1066,5 +1085,5 @@ CInputFilter::handleEvent(const CEvent& event, void*)
 	}
 
 	// not handled so pass through
-	EVENTQUEUE->addEvent(myEvent);
+	m_events->addEvent(myEvent);
 }

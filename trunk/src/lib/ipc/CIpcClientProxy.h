@@ -21,29 +21,23 @@
 #include "CEvent.h"
 #include "Ipc.h"
 #include "IArchMultithread.h"
+#include "CEventTypes.h"
 
 namespace synergy { class IStream; }
 class CIpcMessage;
 class CIpcCommandMessage;
 class CIpcHelloMessage;
+class IEventQueue;
 
 class CIpcClientProxy {
 	friend class CIpcServer;
 
 public:
-	CIpcClientProxy(synergy::IStream& stream);
+	CIpcClientProxy(synergy::IStream& stream, IEventQueue* events);
 	virtual ~CIpcClientProxy();
 
 private:
-	//! Send a message to the client.
 	void				send(const CIpcMessage& message);
-
-	//! Raised when the server receives a message from a client.
-	static CEvent::Type	getMessageReceivedEvent();
-
-	//! Raised when the client disconnects from the server.
-	static CEvent::Type	getDisconnectedEvent();
-
 	void				handleData(const CEvent&, void*);
 	void				handleDisconnect(const CEvent&, void*);
 	void				handleWriteError(const CEvent&, void*);
@@ -57,7 +51,5 @@ private:
 	bool				m_disconnecting;
 	CArchMutex			m_readMutex;
 	CArchMutex			m_writeMutex;
-
-	static CEvent::Type	s_messageReceivedEvent;
-	static CEvent::Type	s_disconnectedEvent;
+	IEventQueue*		m_events;
 };

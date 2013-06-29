@@ -24,6 +24,7 @@
 #include "CNetworkAddress.h"
 #include "INode.h"
 #include "CCryptoOptions.h"
+#include "CEventTypes.h"
 
 class CEventQueueTimer;
 class CScreen;
@@ -54,7 +55,7 @@ public:
 	as its name and \p address as the server's address and \p factory
 	to create the socket.  \p screen is	the local screen.
 	*/
-	CClient(IEventQueue* eventQueue,
+	CClient(IEventQueue* events,
 							const CString& name, const CNetworkAddress& address,
 							ISocketFactory* socketFactory,
 							IStreamFilterFactory* streamFilterFactory,
@@ -63,7 +64,7 @@ public:
 	~CClient();
 	
 #ifdef TEST_ENV
-	CClient() { }
+	CClient() : m_mock(true), m_events(NULL) { }
 #endif
 
 	//! @name manipulators
@@ -114,29 +115,7 @@ public:
 	to connect) to.
 	*/
 	CNetworkAddress		getServerAddress() const;
-
-	//! Get connected event type
-	/*!
-	Returns the connected event type.  This is sent when the client has
-	successfully connected to the server.
-	*/
-	static CEvent::Type	getConnectedEvent();
-
-	//! Get connection failed event type
-	/*!
-	Returns the connection failed event type.  This is sent when the
-	server fails for some reason.  The event data is a CFailInfo*.
-	*/
-	static CEvent::Type	getConnectionFailedEvent();
-
-	//! Get disconnected event type
-	/*!
-	Returns the disconnected event type.  This is sent when the client
-	has disconnected from the server (and only after having successfully
-	connected).
-	*/
-	static CEvent::Type	getDisconnectedEvent();
-
+	
 	//@}
 
 	// IScreen overrides
@@ -217,13 +196,9 @@ private:
 	bool					m_sentClipboard[kClipboardEnd];
 	IClipboard::Time		m_timeClipboard[kClipboardEnd];
 	CString					m_dataClipboard[kClipboardEnd];
-	IEventQueue*			m_eventQueue;
+	IEventQueue*			m_events;
 	CCryptoStream*			m_cryptoStream;
 	CCryptoOptions			m_crypto;
-
-	static CEvent::Type		s_connectedEvent;
-	static CEvent::Type		s_connectionFailedEvent;
-	static CEvent::Type		s_disconnectedEvent;
 };
 
 #endif

@@ -32,6 +32,7 @@
 
 class CConfig;
 class CConfigReadContext;
+class IEventQueue;
 
 namespace std {
 template <>
@@ -172,7 +173,7 @@ public:
 		internal_const_iterator	m_i;
 	};
 
-	CConfig();
+	CConfig(IEventQueue* events);
 	virtual ~CConfig();
 
 	//! @name manipulators
@@ -468,6 +469,7 @@ private:
 	CScreenOptions		m_globalOptions;
 	CInputFilter		m_inputFilter;
 	bool				m_hasLockToScreenAction;
+	IEventQueue*		m_events;
 };
 
 //! Configuration read context

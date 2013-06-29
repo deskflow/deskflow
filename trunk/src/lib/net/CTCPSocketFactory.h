@@ -21,15 +21,20 @@
 
 #include "ISocketFactory.h"
 
+class IEventQueue;
+
 //! Socket factory for TCP sockets
 class CTCPSocketFactory : public ISocketFactory {
 public:
-	CTCPSocketFactory();
+	CTCPSocketFactory(IEventQueue* events);
 	virtual ~CTCPSocketFactory();
 
 	// ISocketFactory overrides
 	virtual IDataSocket*	create() const;
 	virtual IListenSocket*	createListen() const;
+
+private:
+	IEventQueue*		m_events;
 };
 
 #endif

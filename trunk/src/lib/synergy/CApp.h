@@ -34,12 +34,13 @@ class CBufferedLogOutputter;
 class ILogOutputter;
 class CFileLogOutputter;
 class CScreen;
+class IEventQueue;
 
-typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const CBufferedLogOutputter*);
+typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const CBufferedLogOutputter*, IEventQueue* events);
 
 class CApp : public IApp {
 public:
-	CApp(CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args);
+	CApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args);
 	virtual ~CApp();
 
 	// Returns args that are common between server and client.
@@ -93,6 +94,8 @@ public:
 
 	virtual void setByeFunc(void(*bye)(int)) { m_bye = bye; }
 	virtual void bye(int error) { m_bye(error); }
+	
+	virtual IEventQueue*			events() const { return m_events; }
 
 private:
 	void				handleIpcMessage(const CEvent&, void*);
@@ -113,6 +116,7 @@ private:
 	CreateTaskBarReceiverFunc m_createTaskBarReceiver;
 	ARCH_APP_UTIL m_appUtil;
 	CIpcClient*			m_ipcClient;
+	IEventQueue*		m_events;
 };
 
 #define BYE "\nTry `%s --help' for more information."

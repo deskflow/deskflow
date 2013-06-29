@@ -53,14 +53,13 @@ public:
 	virtual void		removeHandler(CEvent::Type type, void* target);
 	virtual void		removeHandlers(void* target);
 	virtual CEvent::Type
-						registerType(const char* name);
-	virtual CEvent::Type
 						registerTypeOnce(CEvent::Type& type, const char* name);
 	virtual bool		isEmpty() const;
 	virtual IEventJob*	getHandler(CEvent::Type type, void* target) const;
 	virtual const char*	getTypeName(CEvent::Type type);
 	virtual CEvent::Type
 						getRegisteredType(const CString& name) const;
+	void*				getSystemTarget();
 
 private:
 	UInt32				saveEvent(const CEvent& event);
@@ -96,6 +95,7 @@ private:
 		bool				m_oneShot;
 		double				m_time;
 	};
+
 	typedef std::set<CEventQueueTimer*> CTimers;
 	typedef CPriorityQueue<CTimer> CTimerQueue;
 	typedef std::map<UInt32, CEvent> CEventTable;
@@ -105,6 +105,7 @@ private:
 	typedef std::map<CEvent::Type, IEventJob*> CTypeHandlerTable;
 	typedef std::map<void*, CTypeHandlerTable> CHandlerTable;
 
+	int					m_systemTarget;
 	CArchMutex			m_mutex;
 
 	// registered events
@@ -127,6 +128,61 @@ private:
 
 	// event handlers
 	CHandlerTable		m_handlers;
+
+public:
+	//
+	// Event type providers.
+	//
+	CClientEvents&				forCClient();
+	IStreamEvents&				forIStream();
+	CIpcClientEvents&			forCIpcClient();
+	CIpcClientProxyEvents&		forCIpcClientProxy();
+	CIpcServerEvents&			forCIpcServer();
+	CIpcServerProxyEvents&		forCIpcServerProxy();
+	IDataSocketEvents&			forIDataSocket();
+	IListenSocketEvents&		forIListenSocket();
+	ISocketEvents&				forISocket();
+	COSXScreenEvents&			forCOSXScreen();
+	CClientListenerEvents&		forCClientListener();
+	CClientProxyEvents&			forCClientProxy();
+	CClientProxyUnknownEvents&	forCClientProxyUnknown();
+	CServerEvents&				forCServer();
+	CServerAppEvents&			forCServerApp();
+	IKeyStateEvents&			forIKeyState();
+	IPrimaryScreenEvents&		forIPrimaryScreen();
+	IScreenEvents&				forIScreen();
+	ISecondaryScreenEvents&		forISecondaryScreen();
+
+private:
+	CClientEvents*				m_typesForCClient;
+	IStreamEvents*				m_typesForIStream;
+	CIpcClientEvents*			m_typesForCIpcClient;
+	CIpcClientProxyEvents*		m_typesForCIpcClientProxy;
+	CIpcServerEvents*			m_typesForCIpcServer;
+	CIpcServerProxyEvents*		m_typesForCIpcServerProxy;
+	IDataSocketEvents*			m_typesForIDataSocket;
+	IListenSocketEvents*		m_typesForIListenSocket;
+	ISocketEvents*				m_typesForISocket;
+	COSXScreenEvents*			m_typesForCOSXScreen;
+	CClientListenerEvents*		m_typesForCClientListener;
+	CClientProxyEvents*			m_typesForCClientProxy;
+	CClientProxyUnknownEvents*	m_typesForCClientProxyUnknown;
+	CServerEvents*				m_typesForCServer;
+	CServerAppEvents*			m_typesForCServerApp;
+	IKeyStateEvents*			m_typesForIKeyState;
+	IPrimaryScreenEvents*		m_typesForIPrimaryScreen;
+	IScreenEvents*				m_typesForIScreen;
+	ISecondaryScreenEvents*		m_typesForISecondaryScreen;
 };
+
+#define EVENT_TYPE_ACCESSOR(type_)											\
+type_##Events&																\
+CEventQueue::for##type_##() {												\
+	if (m_typesFor##type_ == NULL) {										\
+		m_typesFor##type_ = new type_##Events();							\
+		m_typesFor##type_->setEvents(dynamic_cast<IEventQueue*>(this));		\
+	}																		\
+	return *m_typesFor##type_;												\
+}
 
 #endif
