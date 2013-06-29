@@ -27,6 +27,7 @@
 #include "resource.h"
 #include "CArchMiscWindows.h"
 #include "CMSWindowsScreen.h"
+#include "CEventQueue.h"
 
 //
 // CMSWindowsServerTaskBarReceiver
@@ -41,8 +42,9 @@ const UINT CMSWindowsServerTaskBarReceiver::s_stateToIconID[kMaxState] =
 };
 
 CMSWindowsServerTaskBarReceiver::CMSWindowsServerTaskBarReceiver(
-				HINSTANCE appInstance, const CBufferedLogOutputter* logBuffer) :
-	CServerTaskBarReceiver(),
+				HINSTANCE appInstance, const CBufferedLogOutputter* logBuffer, IEventQueue* events) :
+	CServerTaskBarReceiver(events),
+	m_events(events),
 	m_appInstance(appInstance),
 	m_window(NULL),
 	m_logBuffer(logBuffer)
@@ -192,18 +194,18 @@ CMSWindowsServerTaskBarReceiver::runMenu(int x, int y)
 		break;
 
 	case IDC_RELOAD_CONFIG:
-		EVENTQUEUE->addEvent(CEvent(getReloadConfigEvent(),
-							IEventQueue::getSystemTarget()));
+		m_events->addEvent(CEvent(m_events->forCServerApp().reloadConfig(),
+							m_events->getSystemTarget()));
 		break;
 
 	case IDC_FORCE_RECONNECT:
-		EVENTQUEUE->addEvent(CEvent(getForceReconnectEvent(),
-							IEventQueue::getSystemTarget()));
+		m_events->addEvent(CEvent(m_events->forCServerApp().forceReconnect(),
+							m_events->getSystemTarget()));
 		break;
 
 	case ID_SYNERGY_RESETSERVER:
-		EVENTQUEUE->addEvent(CEvent(getResetServerEvent(),
-							IEventQueue::getSystemTarget()));
+		m_events->addEvent(CEvent(m_events->forCServerApp().resetServer(),
+							m_events->getSystemTarget()));
 		break;
 
 	case IDC_TASKBAR_LOG_LEVEL_ERROR:
@@ -388,7 +390,7 @@ CMSWindowsServerTaskBarReceiver::staticDlgProc(HWND hwnd,
 }
 
 IArchTaskBarReceiver*
-createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
+createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events)
 {
 	CArchMiscWindows::setIcons(
 		(HICON)LoadImage(CArchMiscWindows::instanceWin32(),
@@ -401,5 +403,5 @@ createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 		16, 16, LR_SHARED));
 
 	return new CMSWindowsServerTaskBarReceiver(
-		CMSWindowsScreen::getWindowInstance(), logBuffer);
+		CMSWindowsScreen::getWindowInstance(), logBuffer, events);
 }

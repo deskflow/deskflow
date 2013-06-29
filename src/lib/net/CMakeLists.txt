@@ -36,8 +36,6 @@ set(src
 	CTCPSocket.cpp
 	CTCPSocketFactory.cpp
 	IDataSocket.cpp
-	IListenSocket.cpp
-	ISocket.cpp
 	XSocket.cpp
 )
 

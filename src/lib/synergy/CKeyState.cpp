@@ -382,8 +382,9 @@ static const KeyID s_numpadTable[] = {
 // CKeyState
 //
 
-CKeyState::CKeyState() :
-	IKeyState(),
+CKeyState::CKeyState(IEventQueue* events) :
+	IKeyState(events),
+	m_events(events),
 	m_mask(0),
 	m_keyMapPtr(new CKeyMap()),
 	m_keyMap(*m_keyMapPtr)
@@ -391,8 +392,9 @@ CKeyState::CKeyState() :
 	init();
 }
 
-CKeyState::CKeyState(IEventQueue& eventQueue, CKeyMap& keyMap) :
-	IKeyState(eventQueue),
+CKeyState::CKeyState(IEventQueue* events, CKeyMap& keyMap) :
+	IKeyState(events),
+	m_events(events),
 	m_mask(0),
 	m_keyMapPtr(0),
 	m_keyMap(keyMap)
@@ -450,23 +452,23 @@ CKeyState::sendKeyEvent(
 			// ignore auto-repeat on half-duplex keys
 		}
 		else {
-			getEventQueue().addEvent(CEvent(getKeyDownEvent(), target,
+			m_events->addEvent(CEvent(m_events->forIKeyState().keyDown(), target,
 							CKeyInfo::alloc(key, mask, button, 1)));
-			getEventQueue().addEvent(CEvent(getKeyUpEvent(), target,
+			m_events->addEvent(CEvent(m_events->forIKeyState().keyUp(), target,
 							CKeyInfo::alloc(key, mask, button, 1)));
 		}
 	}
 	else {
 		if (isAutoRepeat) {
-			getEventQueue().addEvent(CEvent(getKeyRepeatEvent(), target,
+			m_events->addEvent(CEvent(m_events->forIKeyState().keyRepeat(), target,
 							 CKeyInfo::alloc(key, mask, button, count)));
 		}
 		else if (press) {
-			getEventQueue().addEvent(CEvent(getKeyDownEvent(), target,
+			m_events->addEvent(CEvent(m_events->forIKeyState().keyDown(), target,
 							CKeyInfo::alloc(key, mask, button, 1)));
 		}
 		else {
-			getEventQueue().addEvent(CEvent(getKeyUpEvent(), target,
+			m_events->addEvent(CEvent(m_events->forIKeyState().keyUp(), target,
 							CKeyInfo::alloc(key, mask, button, 1)));
 		}
 	}

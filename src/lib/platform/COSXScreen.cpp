@@ -61,11 +61,8 @@ enum {
 // COSXScreen
 //
 
-
-
 bool					COSXScreen::s_testedForGHOM = false;
 bool					COSXScreen::s_hasGHOM	    = false;
-CEvent::Type			COSXScreen::s_confirmSleepEvent = CEvent::kUnknown;
 
 COSXScreen::COSXScreen(bool isPrimary, bool autoShowHideCursor) :
 	MouseButtonEventMap(NumButtonIDs),
@@ -134,7 +131,7 @@ COSXScreen::COSXScreen(bool isPrimary, bool autoShowHideCursor) :
 		constructMouseButtonEventMap();
 
 		// watch for requests to sleep
-		EVENTQUEUE->adoptHandler(COSXScreen::getConfirmSleepEvent(),
+		m_events->adoptHandler(m_events->forCOSXScreen().confirmSleep(),
 								getEventTarget(),
 								new TMethodEventJob<COSXScreen>(this,
 									&COSXScreen::handleConfirmSleep));
@@ -146,7 +143,7 @@ COSXScreen::COSXScreen(bool isPrimary, bool autoShowHideCursor) :
 								(this, &COSXScreen::watchSystemPowerThread));
 	}
 	catch (...) {
-		EVENTQUEUE->removeHandler(COSXScreen::getConfirmSleepEvent(),
+		m_events->removeHandler(m_events->forCOSXScreen().confirmSleep(),
 								getEventTarget());
 		if (m_switchEventHandlerRef != 0) {
 			RemoveEventHandler(m_switchEventHandlerRef);
@@ -176,19 +173,19 @@ COSXScreen::COSXScreen(bool isPrimary, bool autoShowHideCursor) :
 	}
 
 	// install event handlers
-	EVENTQUEUE->adoptHandler(CEvent::kSystem, IEventQueue::getSystemTarget(),
+	m_events->adoptHandler(CEvent::kSystem, m_events->getSystemTarget(),
 							new TMethodEventJob<COSXScreen>(this,
 								&COSXScreen::handleSystemEvent));
 
 	// install the platform event queue
-	EVENTQUEUE->adoptBuffer(new COSXEventQueueBuffer);
+	m_events->adoptBuffer(new COSXEventQueueBuffer);
 }
 
 COSXScreen::~COSXScreen()
 {
 	disable();
-	EVENTQUEUE->adoptBuffer(NULL);
-	EVENTQUEUE->removeHandler(CEvent::kSystem, IEventQueue::getSystemTarget());
+	m_events->adoptBuffer(NULL);
+	m_events->removeHandler(CEvent::kSystem, m_events->getSystemTarget());
 
 	if (m_pmWatchThread) {
 		// make sure the thread has setup the runloop.
@@ -209,7 +206,7 @@ COSXScreen::~COSXScreen()
 	delete m_pmThreadReady;
 	delete m_pmMutex;
 
-	EVENTQUEUE->removeHandler(COSXScreen::getConfirmSleepEvent(),
+	m_events->removeHandler(m_events->forCOSXScreen().confirmSleep(),
 								getEventTarget());
 
 	RemoveEventHandler(m_switchEventHandlerRef);
@@ -707,8 +704,8 @@ void
 COSXScreen::enable()
 {
 	// watch the clipboard
-	m_clipboardTimer = EVENTQUEUE->newTimer(1.0, NULL);
-	EVENTQUEUE->adoptHandler(CEvent::kTimer, m_clipboardTimer,
+	m_clipboardTimer = m_events->newTimer(1.0, NULL);
+	m_events->adoptHandler(CEvent::kTimer, m_clipboardTimer,
 							new TMethodEventJob<COSXScreen>(this,
 								&COSXScreen::handleClipboardCheck));
 
@@ -778,8 +775,8 @@ COSXScreen::disable()
 
 	// uninstall clipboard timer
 	if (m_clipboardTimer != NULL) {
-		EVENTQUEUE->removeHandler(CEvent::kTimer, m_clipboardTimer);
-		EVENTQUEUE->deleteTimer(m_clipboardTimer);
+		m_events->removeHandler(CEvent::kTimer, m_clipboardTimer);
+		m_events->deleteTimer(m_clipboardTimer);
 		m_clipboardTimer = NULL;
 	}
 
@@ -865,8 +862,8 @@ COSXScreen::checkClipboards()
 	LOG((CLOG_DEBUG2 "checking clipboard"));
 	if (m_pasteboard.synchronize()) {
 		LOG((CLOG_DEBUG "clipboard changed"));
-		sendClipboardEvent(getClipboardGrabbedEvent(), kClipboardClipboard);
-		sendClipboardEvent(getClipboardGrabbedEvent(), kClipboardSelection);
+		sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardClipboard);
+		sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardSelection);
 	}
 }
 
@@ -925,7 +922,7 @@ COSXScreen::isPrimary() const
 void
 COSXScreen::sendEvent(CEvent::Type type, void* data) const
 {
-	EVENTQUEUE->addEvent(CEvent(type, getEventTarget(), data));
+	m_events->addEvent(CEvent(type, getEventTarget(), data));
 }
 
 void
@@ -1039,7 +1036,7 @@ COSXScreen::onMouseMove(SInt32 mx, SInt32 my)
 
 	if (m_isOnScreen) {
 		// motion on primary screen
-		sendEvent(getMotionOnPrimaryEvent(),
+		sendEvent(m_events->forIScreen().motionOnPrimary(),
 							CMotionInfo::alloc(m_xCursor, m_yCursor));
 	}
 	else {
@@ -1061,7 +1058,7 @@ COSXScreen::onMouseMove(SInt32 mx, SInt32 my)
 		}
 		else {
 			// send motion
-			sendEvent(getMotionOnSecondaryEvent(), CMotionInfo::alloc(x, y));
+			sendEvent(m_events->forIScreen().motionOnSecondary(), CMotionInfo::alloc(x, y));
 		}
 	}
 
@@ -1078,14 +1075,14 @@ COSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 		LOG((CLOG_DEBUG1 "event: button press button=%d", button));
 		if (button != kButtonNone) {
 			KeyModifierMask mask = m_keyState->getActiveModifiers();
-			sendEvent(getButtonDownEvent(), CButtonInfo::alloc(button, mask));
+			sendEvent(m_events->forIPrimaryScreen().buttonDown(), CButtonInfo::alloc(button, mask));
 		}
 	}
 	else {
 		LOG((CLOG_DEBUG1 "event: button release button=%d", button));
 		if (button != kButtonNone) {
 			KeyModifierMask mask = m_keyState->getActiveModifiers();
-			sendEvent(getButtonUpEvent(), CButtonInfo::alloc(button, mask));
+			sendEvent(m_events->forIPrimaryScreen().buttonUp(), CButtonInfo::alloc(button, mask));
 		}
 	}
 
@@ -1112,7 +1109,7 @@ bool
 COSXScreen::onMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
 	LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
-	sendEvent(getWheelEvent(), CWheelInfo::alloc(xDelta, yDelta));
+	sendEvent(m_events->forIPrimaryScreen().wheel(), CWheelInfo::alloc(xDelta, yDelta));
 	return true;
 }
 
@@ -1152,7 +1149,7 @@ COSXScreen::onDisplayChange()
 		}
 
 		// send new screen info
-		sendEvent(getShapeChangedEvent());
+		sendEvent(m_events->forIPrimaryScreen().shapeChanged());
 	}
 
 	return true;
@@ -1204,7 +1201,7 @@ COSXScreen::onKey(CGEventRef event)
 			if (m_modifierHotKeys.count(newMask) > 0) {
 				m_activeModifierHotKey     = m_modifierHotKeys[newMask];
 				m_activeModifierHotKeyMask = newMask;
-				EVENTQUEUE->addEvent(CEvent(getHotKeyDownEvent(),
+				m_events->addEvent(CEvent(m_events->forIPrimaryScreen().hotKeyDown(),
 								getEventTarget(),
 								CHotKeyInfo::alloc(m_activeModifierHotKey)));
 			}
@@ -1215,7 +1212,7 @@ COSXScreen::onKey(CGEventRef event)
 		else if (m_activeModifierHotKey != 0) {
 			KeyModifierMask mask = (newMask & m_activeModifierHotKeyMask);
 			if (mask != m_activeModifierHotKeyMask) {
-				EVENTQUEUE->addEvent(CEvent(getHotKeyUpEvent(),
+				m_events->addEvent(CEvent(m_events->forIPrimaryScreen().hotKeyUp(),
 								getEventTarget(),
 								CHotKeyInfo::alloc(m_activeModifierHotKey)));
 				m_activeModifierHotKey     = 0;
@@ -1242,16 +1239,16 @@ COSXScreen::onKey(CGEventRef event)
 			CEvent::Type type;
 			//UInt32 eventKind = GetEventKind(event);
 			if (eventKind == kCGEventKeyDown) {
-				type = getHotKeyDownEvent();
+				type = m_events->forIPrimaryScreen().hotKeyDown();
 			}
 			else if (eventKind == kCGEventKeyUp) {
-				type = getHotKeyUpEvent();
+				type = m_events->forIPrimaryScreen().hotKeyUp();
 			}
 			else {
 				return false;
 			}
 	
-			EVENTQUEUE->addEvent(CEvent(type, getEventTarget(),
+			m_events->addEvent(CEvent(type, getEventTarget(),
 										CHotKeyInfo::alloc(id)));
 		
 			return true;
@@ -1315,16 +1312,16 @@ COSXScreen::onHotKey(EventRef event) const
 	CEvent::Type type;
 	UInt32 eventKind = GetEventKind(event);
 	if (eventKind == kEventHotKeyPressed) {
-		type = getHotKeyDownEvent();
+		type = m_events->forIPrimaryScreen().hotKeyDown();
 	}
 	else if (eventKind == kEventHotKeyReleased) {
-		type = getHotKeyUpEvent();
+		type = m_events->forIPrimaryScreen().hotKeyUp();
 	}
 	else {
 		return false;
 	}
 
-	EVENTQUEUE->addEvent(CEvent(type, getEventTarget(),
+	m_events->addEvent(CEvent(type, getEventTarget(),
 								CHotKeyInfo::alloc(id)));
 
 	return true;
@@ -1403,15 +1400,15 @@ COSXScreen::enableDragTimer(bool enable)
   MouseTrackingResult res; 
 
 	if (enable && m_dragTimer == NULL) {
-		m_dragTimer = EVENTQUEUE->newTimer(0.01, NULL);
-		EVENTQUEUE->adoptHandler(CEvent::kTimer, m_dragTimer,
+		m_dragTimer = m_events->newTimer(0.01, NULL);
+		m_events->adoptHandler(CEvent::kTimer, m_dragTimer,
 							new TMethodEventJob<COSXScreen>(this,
 								&COSXScreen::handleDrag));
 		TrackMouseLocationWithOptions(NULL, 0, 0, &m_dragLastPoint, &modifiers, &res);
 	}
 	else if (!enable && m_dragTimer != NULL) {
-		EVENTQUEUE->removeHandler(CEvent::kTimer, m_dragTimer);
-		EVENTQUEUE->deleteTimer(m_dragTimer);
+		m_events->removeHandler(CEvent::kTimer, m_dragTimer);
+		m_events->deleteTimer(m_dragTimer);
 		m_dragTimer = NULL;
 	}
 }
@@ -1497,7 +1494,7 @@ COSXScreen::updateScreenShape()
 
 	delete[] displays;
 	// We want to notify the peer screen whether we are primary screen or not
-	sendEvent(getShapeChangedEvent());
+	sendEvent(m_events->forIPrimaryScreen().shapeChanged());
 
 	LOG((CLOG_DEBUG "screen shape: center=%d,%d size=%dx%d on %u %s",
          m_x, m_y, m_w, m_h, displayCount,
@@ -1524,12 +1521,12 @@ COSXScreen::userSwitchCallback(EventHandlerCallRef nextHandler,
 
 	if (kind == kEventSystemUserSessionDeactivated) {
 		LOG((CLOG_DEBUG "user session deactivated"));
-		EVENTQUEUE->addEvent(CEvent(IScreen::getSuspendEvent(),
+		m_events->addEvent(CEvent(m_events->forIScreen().suspend(),
 									screen->getEventTarget()));
 	}
 	else if (kind == kEventSystemUserSessionActivated) {
 		LOG((CLOG_DEBUG "user session activated"));
-		EVENTQUEUE->addEvent(CEvent(IScreen::getResumeEvent(),
+		m_events->addEvent(CEvent(m_events->forIScreen().resume(),
 									screen->getEventTarget()));
 	}
 	return (CallNextEventHandler(nextHandler, theEvent));
@@ -1614,14 +1611,14 @@ COSXScreen::handlePowerChangeRequest(natural_t messageType, void* messageArg)
 		// COSXScreen has to handle this in the main thread so we have to
 		// queue a confirm sleep event here.  we actually don't allow the
 		// system to sleep until the event is handled.
-		EVENTQUEUE->addEvent(CEvent(COSXScreen::getConfirmSleepEvent(),
+		m_events->addEvent(CEvent(m_events->forCOSXScreen().confirmSleep(),
 								getEventTarget(), messageArg,
 								CEvent::kDontFreeData));
 		return;
 			
 	case kIOMessageSystemHasPoweredOn:
 		LOG((CLOG_DEBUG "system wakeup"));
-		EVENTQUEUE->addEvent(CEvent(IScreen::getResumeEvent(),
+		m_events->addEvent(CEvent(m_events->forIScreen().resume(),
 								getEventTarget()));
 		break;
 
@@ -1635,13 +1632,6 @@ COSXScreen::handlePowerChangeRequest(natural_t messageType, void* messageArg)
 	}
 }
 
-CEvent::Type
-COSXScreen::getConfirmSleepEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(s_confirmSleepEvent,
-									"COSXScreen::confirmSleep");
-}
-
 void
 COSXScreen::handleConfirmSleep(const CEvent& event, void*)
 {
@@ -1650,7 +1640,7 @@ COSXScreen::handleConfirmSleep(const CEvent& event, void*)
 		CLock lock(m_pmMutex);
 		if (m_pmRootPort != 0) {
 			// deliver suspend event immediately.
-			EVENTQUEUE->addEvent(CEvent(IScreen::getSuspendEvent(),
+			m_events->addEvent(CEvent(m_events->forIScreen().suspend(),
 									getEventTarget(), NULL, 
 									CEvent::kDeliverImmediately));
 	

@@ -34,7 +34,7 @@ public:
 	this object takes ownership of the stream and will delete it in the
 	d'tor.
 	*/
-	CStreamFilter(IEventQueue* eventQueue, synergy::IStream* stream, bool adoptStream = true);
+	CStreamFilter(IEventQueue* events, synergy::IStream* stream, bool adoptStream = true);
 	virtual ~CStreamFilter();
 
 	// IStream overrides
@@ -70,6 +70,7 @@ private:
 private:
 	synergy::IStream*	m_stream;
 	bool				m_adopted;
+	IEventQueue*		m_events;
 };
 
 #endif

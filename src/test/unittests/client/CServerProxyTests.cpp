@@ -29,6 +29,7 @@ using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
 using ::testing::AnyNumber;
+using ::testing::ReturnRef;
 
 const UInt8 g_mouseMove_bufferLen = 16;
 UInt8 g_mouseMove_buffer[g_mouseMove_bufferLen];
@@ -49,7 +50,10 @@ TEST(CServerProxyTests, mouseMove)
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockClient> client;
 	NiceMock<CMockStream> stream;
-
+	IStreamEvents streamEvents;
+	streamEvents.setEvents(&eventQueue);
+	
+	ON_CALL(eventQueue, forIStream()).WillByDefault(ReturnRef(streamEvents));
 	ON_CALL(stream, read(_, _)).WillByDefault(Invoke(mouseMove_mockRead));
 	
 	EXPECT_CALL(client, mouseMove(1, 2)).Times(1);
@@ -68,7 +72,10 @@ TEST(CServerProxyTests, readCryptoIv)
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockClient> client;
 	NiceMock<CMockStream> stream;
-
+	IStreamEvents streamEvents;
+	streamEvents.setEvents(&eventQueue);
+	
+	ON_CALL(eventQueue, forIStream()).WillByDefault(ReturnRef(streamEvents));
 	ON_CALL(stream, read(_, _)).WillByDefault(Invoke(readCryptoIv_mockRead));
 	ON_CALL(client, setDecryptIv(_)).WillByDefault(Invoke(readCryptoIv_setDecryptIv));
 

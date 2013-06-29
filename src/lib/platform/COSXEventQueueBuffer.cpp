@@ -80,7 +80,7 @@ COSXEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 
 		default: 
 			event = CEvent(CEvent::kSystem,
-						IEventQueue::getSystemTarget(), &m_event);
+						m_events->getSystemTarget(), &m_event);
 			return kSystem;
 		}
 	}

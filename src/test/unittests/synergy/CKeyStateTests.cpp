@@ -26,6 +26,7 @@ using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Invoke;
 using ::testing::Return;
+using ::testing::ReturnRef;
 using ::testing::SaveArg;
 
 TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne)
@@ -66,6 +67,7 @@ TEST(CKeyStateTests, sendKeyEvent_halfDuplexAndRepeat_addEventNotCalled)
 	NiceMock<CMockKeyMap> keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
+
 	ON_CALL(keyMap, isHalfDuplex(_, _)).WillByDefault(Return(true));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(0);
@@ -78,7 +80,11 @@ TEST(CKeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice)
 	NiceMock<CMockKeyMap> keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
+	IKeyStateEvents keyStateEvents;
+	keyStateEvents.setEvents(&eventQueue);
+	
 	ON_CALL(keyMap, isHalfDuplex(_, _)).WillByDefault(Return(true));
+	ON_CALL(eventQueue, forIKeyState()).WillByDefault(ReturnRef(keyStateEvents));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(2);
 
@@ -90,6 +96,10 @@ TEST(CKeyStateTests, sendKeyEvent_keyRepeat_addEventCalledOnce)
 	NiceMock<CMockKeyMap> keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
+	IKeyStateEvents keyStateEvents;
+	keyStateEvents.setEvents(&eventQueue);
+	
+	ON_CALL(eventQueue, forIKeyState()).WillByDefault(ReturnRef(keyStateEvents));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 
@@ -101,6 +111,10 @@ TEST(CKeyStateTests, sendKeyEvent_keyDown_addEventCalledOnce)
 	NiceMock<CMockKeyMap> keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
+	IKeyStateEvents keyStateEvents;
+	keyStateEvents.setEvents(&eventQueue);
+	
+	ON_CALL(eventQueue, forIKeyState()).WillByDefault(ReturnRef(keyStateEvents));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 
@@ -112,6 +126,10 @@ TEST(CKeyStateTests, sendKeyEvent_keyUp_addEventCalledOnce)
 	NiceMock<CMockKeyMap> keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
+	IKeyStateEvents keyStateEvents;
+	keyStateEvents.setEvents(&eventQueue);
+	
+	ON_CALL(eventQueue, forIKeyState()).WillByDefault(ReturnRef(keyStateEvents));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 

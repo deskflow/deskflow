@@ -39,7 +39,7 @@ public:
 		CNetworkAddress* m_serverAddress;
 	};
 
-	CClientApp(CreateTaskBarReceiverFunc createTaskBarReceiver);
+	CClientApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver);
 	virtual ~CClientApp();
 
 	// Parse client specific command line arguments.
@@ -87,6 +87,7 @@ private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 
 private:
-	CClient* s_client;
-	CScreen* s_clientScreen;
+	CClient*			s_client;
+	CScreen*			s_clientScreen;
+	IEventQueue*		m_events;
 };

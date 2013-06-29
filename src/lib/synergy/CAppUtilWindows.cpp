@@ -30,13 +30,15 @@
 #include "CArgsBase.h"
 #include "IEventQueue.h"
 #include "CEvent.h"
+#include "CEventQueue.h"
 
 #include <sstream>
 #include <iostream>
 #include <conio.h>
 
-CAppUtilWindows::CAppUtilWindows() :
-m_exitMode(kExitModeNormal)
+CAppUtilWindows::CAppUtilWindows(IEventQueue* events) :
+	m_events(events),
+	m_exitMode(kExitModeNormal)
 {
 	if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE)
     {
@@ -51,7 +53,8 @@ CAppUtilWindows::~CAppUtilWindows()
 BOOL WINAPI CAppUtilWindows::consoleHandler(DWORD)
 {
 	LOG((CLOG_INFO "got shutdown signal"));
-	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	IEventQueue* events = CAppUtil::instance().app().events();
+	events->addEvent(CEvent(CEvent::kQuit));
     return TRUE;
 }
 

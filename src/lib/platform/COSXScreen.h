@@ -27,6 +27,7 @@
 #include <Carbon/Carbon.h>
 #include "COSXClipboard.h"
 #include "CPlatformScreen.h"
+#include "CEventTypes.h"
 
 #include <mach/mach_port.h>
 #include <mach/mach_interface.h>
@@ -181,7 +182,6 @@ private:
 	void				handlePowerChangeRequest(natural_t messageType,
 							 void* messageArgument);
 
-	static CEvent::Type	getConfirmSleepEvent();
 	void				handleConfirmSleep(const CEvent& event, void*);
 	
 	// global hotkey operating mode
@@ -322,9 +322,6 @@ private:
 	// global hotkey operating mode
 	static bool				s_testedForGHOM;
 	static bool				s_hasGHOM;
-
-	// events
-	static CEvent::Type		s_confirmSleepEvent;
 	
 	// Quartz input event support
 	CFMachPortRef			m_eventTapPort;

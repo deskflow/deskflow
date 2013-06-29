@@ -53,18 +53,19 @@
 #include "XScreen.h"
 #include "CTCPSocketFactory.h"
 
-CEvent::Type CServerApp::s_reloadConfigEvent = CEvent::kUnknown;
+//
+// CServerApp
+//
 
-CServerApp::CServerApp(CreateTaskBarReceiverFunc createTaskBarReceiver) :
-CApp(createTaskBarReceiver, new CArgs()),
-s_server(NULL),
-s_forceReconnectEvent(CEvent::kUnknown),
-s_resetServerEvent(CEvent::kUnknown),
-s_serverState(kUninitialized),
-s_serverScreen(NULL),
-s_primaryClient(NULL),
-s_listener(NULL),
-s_timer(NULL)
+CServerApp::CServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
+	CApp(events, createTaskBarReceiver, new CArgs()),
+	m_events(events),
+	s_server(NULL),
+	s_serverState(kUninitialized),
+	s_serverScreen(NULL),
+	s_primaryClient(NULL),
+	s_listener(NULL),
+	s_timer(NULL)
 {
 }
 
@@ -202,8 +203,9 @@ CServerApp::help()
 void
 CServerApp::reloadSignalHandler(CArch::ESignal, void*)
 {
-	EVENTQUEUE->addEvent(CEvent(getReloadConfigEvent(),
-		IEventQueue::getSystemTarget()));
+	IEventQueue* events = CApp::instance().events();
+	events->addEvent(CEvent(events->forCServerApp().reloadConfig(),
+		events->getSystemTarget()));
 }
 
 void
@@ -288,30 +290,12 @@ CServerApp::loadConfig(const CString& pathname)
 	return false;
 }
 
-CEvent::Type 
-CServerApp::getReloadConfigEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(s_reloadConfigEvent, "reloadConfig");
-}
-
 void 
 CServerApp::forceReconnect(const CEvent&, void*)
 {
 	if (s_server != NULL) {
 		s_server->disconnect();
 	}
-}
-
-CEvent::Type 
-CServerApp::getForceReconnectEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(s_forceReconnectEvent, "forceReconnect");
-}
-
-CEvent::Type
-CServerApp::getResetServerEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(s_resetServerEvent, "resetServer");
 }
 
 void 
@@ -328,7 +312,7 @@ CServerApp::handleClientConnected(const CEvent&, void* vlistener)
 void
 CServerApp::handleClientsDisconnected(const CEvent&, void*)
 {
-	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	m_events->addEvent(CEvent(CEvent::kQuit));
 }
 
 void
@@ -343,17 +327,17 @@ CServerApp::closeServer(CServer* server)
 
 	// wait for clients to disconnect for up to timeout seconds
 	double timeout = 3.0;
-	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(timeout, NULL);
-	EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
+	CEventQueueTimer* timer = m_events->newOneShotTimer(timeout, NULL);
+	m_events->adoptHandler(CEvent::kTimer, timer,
 		new TMethodEventJob<CServerApp>(this, &CServerApp::handleClientsDisconnected));
-	EVENTQUEUE->adoptHandler(CServer::getDisconnectedEvent(), server,
+	m_events->adoptHandler(m_events->forCServer().disconnected(), server,
 		new TMethodEventJob<CServerApp>(this, &CServerApp::handleClientsDisconnected));
 	
-	EVENTQUEUE->loop();
+	m_events->loop();
 
-	EVENTQUEUE->removeHandler(CEvent::kTimer, timer);
-	EVENTQUEUE->deleteTimer(timer);
-	EVENTQUEUE->removeHandler(CServer::getDisconnectedEvent(), server);
+	m_events->removeHandler(CEvent::kTimer, timer);
+	m_events->deleteTimer(timer);
+	m_events->removeHandler(m_events->forCServer().disconnected(), server);
 
 	// done with server
 	delete server;
@@ -363,8 +347,8 @@ void
 CServerApp::stopRetryTimer()
 {
 	if (s_timer != NULL) {
-		EVENTQUEUE->deleteTimer(s_timer);
-		EVENTQUEUE->removeHandler(CEvent::kTimer, NULL);
+		m_events->deleteTimer(s_timer);
+		m_events->removeHandler(CEvent::kTimer, NULL);
 		s_timer = NULL;
 	}
 }
@@ -387,7 +371,7 @@ void
 CServerApp::closeClientListener(CClientListener* listen)
 {
 	if (listen != NULL) {
-		EVENTQUEUE->removeHandler(CClientListener::getConnectedEvent(), listen);
+		m_events->removeHandler(m_events->forCClientListener().connected(), listen);
 		delete listen;
 	}
 }
@@ -420,11 +404,11 @@ void
 CServerApp::closeServerScreen(CScreen* screen)
 {
 	if (screen != NULL) {
-		EVENTQUEUE->removeHandler(IScreen::getErrorEvent(),
+		m_events->removeHandler(m_events->forIScreen().error(),
 			screen->getEventTarget());
-		EVENTQUEUE->removeHandler(IScreen::getSuspendEvent(),
+		m_events->removeHandler(m_events->forIScreen().suspend(),
 			screen->getEventTarget());
-		EVENTQUEUE->removeHandler(IScreen::getResumeEvent(),
+		m_events->removeHandler(m_events->forIScreen().resume(),
 			screen->getEventTarget());
 		delete screen;
 	}
@@ -469,7 +453,7 @@ CServerApp::retryHandler(const CEvent&, void*)
 		LOG((CLOG_DEBUG1 "retry server initialization"));
 		s_serverState = kUninitialized;
 		if (!initServer()) {
-			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+			m_events->addEvent(CEvent(CEvent::kQuit));
 		}
 		break;
 
@@ -477,12 +461,12 @@ CServerApp::retryHandler(const CEvent&, void*)
 		LOG((CLOG_DEBUG1 "retry server initialization"));
 		s_serverState = kUninitialized;
 		if (!initServer()) {
-			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+			m_events->addEvent(CEvent(CEvent::kQuit));
 		}
 		else if (s_serverState == kInitialized) {
 			LOG((CLOG_DEBUG1 "starting server"));
 			if (!startServer()) {
-				EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+				m_events->addEvent(CEvent(CEvent::kQuit));
 			}
 		}
 		break;
@@ -491,7 +475,7 @@ CServerApp::retryHandler(const CEvent&, void*)
 		LOG((CLOG_DEBUG1 "retry starting server"));
 		s_serverState = kInitialized;
 		if (!startServer()) {
-			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+			m_events->addEvent(CEvent(CEvent::kQuit));
 		}
 		break;
 	}
@@ -541,8 +525,8 @@ bool CServerApp::initServer()
 		// install a timer and handler to retry later
 		assert(s_timer == NULL);
 		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-		s_timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
-		EVENTQUEUE->adoptHandler(CEvent::kTimer, s_timer,
+		s_timer = m_events->newOneShotTimer(retryTime, NULL);
+		m_events->adoptHandler(CEvent::kTimer, s_timer,
 			new TMethodEventJob<CServerApp>(this, &CServerApp::retryHandler));
 		s_serverState = kInitializing;
 		return true;
@@ -556,15 +540,15 @@ bool CServerApp::initServer()
 CScreen* CServerApp::openServerScreen()
 {
 	CScreen* screen = createScreen();
-	EVENTQUEUE->adoptHandler(IScreen::getErrorEvent(),
+	m_events->adoptHandler(m_events->forIScreen().error(),
 		screen->getEventTarget(),
 		new TMethodEventJob<CServerApp>(
 		this, &CServerApp::handleScreenError));
-	EVENTQUEUE->adoptHandler(IScreen::getSuspendEvent(),
+	m_events->adoptHandler(m_events->forIScreen().suspend(),
 		screen->getEventTarget(),
 		new TMethodEventJob<CServerApp>(
 		this, &CServerApp::handleSuspend));
-	EVENTQUEUE->adoptHandler(IScreen::getResumeEvent(),
+	m_events->adoptHandler(m_events->forIScreen().resume(),
 		screen->getEventTarget(),
 		new TMethodEventJob<CServerApp>(
 		this, &CServerApp::handleResume));
@@ -621,8 +605,8 @@ CServerApp::startServer()
 		// install a timer and handler to retry later
 		assert(s_timer == NULL);
 		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-		s_timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
-		EVENTQUEUE->adoptHandler(CEvent::kTimer, s_timer,
+		s_timer = m_events->newOneShotTimer(retryTime, NULL);
+		m_events->adoptHandler(CEvent::kTimer, s_timer,
 			new TMethodEventJob<CServerApp>(this, &CServerApp::retryHandler));
 		s_serverState = kStarting;
 		return true;
@@ -638,10 +622,10 @@ CServerApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
 	return new CScreen(new CMSWindowsScreen(
-		true, args().m_noHooks, args().m_gameDevice, args().m_stopOnDeskSwitch));
+		true, args().m_noHooks, args().m_gameDevice, args().m_stopOnDeskSwitch, m_events), m_events);
 #elif WINAPI_XWINDOWS
 	return new CScreen(new CXWindowsScreen(
-		args().m_display, true, args().m_disableXInitThreads, 0, *EVENTQUEUE));
+		args().m_display, true, args().m_disableXInitThreads, 0, m_events));
 #elif WINAPI_CARBON
 	return new CScreen(new COSXScreen(true));
 #endif
@@ -659,7 +643,7 @@ void
 CServerApp::handleScreenError(const CEvent&, void*)
 {
 	LOG((CLOG_CRIT "error on screen"));
-	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	m_events->addEvent(CEvent(CEvent::kQuit));
 }
 
 void 
@@ -685,26 +669,30 @@ CServerApp::handleResume(const CEvent&, void*)
 CClientListener*
 CServerApp::openClientListener(const CNetworkAddress& address)
 {
-	CClientListener* listen =
-		new CClientListener(address, new CTCPSocketFactory, NULL, args().m_crypto);
-	EVENTQUEUE->adoptHandler(CClientListener::getConnectedEvent(), listen,
+	CClientListener* listen = new CClientListener(
+		address, new CTCPSocketFactory(m_events),
+		NULL, args().m_crypto, m_events);
+	
+	m_events->adoptHandler(
+		m_events->forCClientListener().connected(), listen,
 		new TMethodEventJob<CServerApp>(
-		this, &CServerApp::handleClientConnected, listen));
+			this, &CServerApp::handleClientConnected, listen));
+	
 	return listen;
 }
 
 CServer* 
 CServerApp::openServer(const CConfig& config, CPrimaryClient* primaryClient)
 {
-	CServer* server = new CServer(config, primaryClient, s_serverScreen);
+	CServer* server = new CServer(config, primaryClient, s_serverScreen, m_events);
 
 	try {
-		EVENTQUEUE->adoptHandler(
-			CServer::getDisconnectedEvent(), server,
+		m_events->adoptHandler(
+			m_events->forCServer().disconnected(), server,
 			new TMethodEventJob<CServerApp>(this, &CServerApp::handleNoClients));
 
-		EVENTQUEUE->adoptHandler(
-			CServer::getScreenSwitchedEvent(), server,
+		m_events->adoptHandler(
+			m_events->forCServer().screenSwitched(), server,
 			new TMethodEventJob<CServerApp>(this, &CServerApp::handleScreenSwitched));
 
 	} catch (std::bad_alloc &ba) {
@@ -766,39 +754,39 @@ CServerApp::mainLoop()
 	}
 
 	// load all available plugins.
-	ARCH->plugin().init(s_serverScreen->getEventTarget());
+	ARCH->plugin().init(s_serverScreen->getEventTarget(), m_events);
 
 	// handle hangup signal by reloading the server's configuration
 	ARCH->setSignalHandler(CArch::kHANGUP, &reloadSignalHandler, NULL);
-	EVENTQUEUE->adoptHandler(getReloadConfigEvent(),
-		IEventQueue::getSystemTarget(),
+	m_events->adoptHandler(m_events->forCServerApp().reloadConfig(),
+		m_events->getSystemTarget(),
 		new TMethodEventJob<CServerApp>(this, &CServerApp::reloadConfig));
 
 	// handle force reconnect event by disconnecting clients.  they'll
 	// reconnect automatically.
-	EVENTQUEUE->adoptHandler(getForceReconnectEvent(),
-		IEventQueue::getSystemTarget(),
+	m_events->adoptHandler(m_events->forCServerApp().forceReconnect(),
+		m_events->getSystemTarget(),
 		new TMethodEventJob<CServerApp>(this, &CServerApp::forceReconnect));
 
 	// to work around the sticky meta keys problem, we'll give users
 	// the option to reset the state of synergys
-	EVENTQUEUE->adoptHandler(getResetServerEvent(),
-		IEventQueue::getSystemTarget(),
+	m_events->adoptHandler(m_events->forCServerApp().resetServer(),
+		m_events->getSystemTarget(),
 		new TMethodEventJob<CServerApp>(this, &CServerApp::resetServer));
 
 	// run event loop.  if startServer() failed we're supposed to retry
 	// later.  the timer installed by startServer() will take care of
 	// that.
 	DAEMON_RUNNING(true);
-	EVENTQUEUE->loop();
+	m_events->loop();
 	DAEMON_RUNNING(false);
 
 	// close down
 	LOG((CLOG_DEBUG1 "stopping server"));
-	EVENTQUEUE->removeHandler(getForceReconnectEvent(),
-		IEventQueue::getSystemTarget());
-	EVENTQUEUE->removeHandler(getReloadConfigEvent(),
-		IEventQueue::getSystemTarget());
+	m_events->removeHandler(m_events->forCServerApp().forceReconnect(),
+		m_events->getSystemTarget());
+	m_events->removeHandler(m_events->forCServerApp().reloadConfig(),
+		m_events->getSystemTarget());
 	cleanupServer();
 	updateStatus();
 	LOG((CLOG_NOTE "stopped server"));
@@ -823,7 +811,7 @@ CServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
 {
 	// general initialization
 	args().m_synergyAddress = new CNetworkAddress;
-	args().m_config         = new CConfig;
+	args().m_config         = new CConfig(m_events);
 	args().m_pname          = ARCH->getBasename(argv[0]);
 
 	// install caller's output filter

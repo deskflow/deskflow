@@ -26,6 +26,8 @@
 
 #define ARCH_APP_UTIL CAppUtilWindows
 
+class IEventQueue;
+
 enum AppExitMode {
 	kExitModeNormal,
 	kExitModeDaemon
@@ -33,7 +35,7 @@ enum AppExitMode {
 
 class CAppUtilWindows : public CAppUtil {
 public:
-	CAppUtilWindows();
+	CAppUtilWindows(IEventQueue* events);
 	virtual ~CAppUtilWindows();
 
 	bool parseArg(const int& argc, const char* const* argv, int& i);
@@ -55,6 +57,8 @@ public:
 	void startNode();
 
 private:
-	AppExitMode m_exitMode;
+	AppExitMode			m_exitMode;
+	IEventQueue*		m_events;
+
 	static BOOL WINAPI consoleHandler(DWORD CEvent);
 };

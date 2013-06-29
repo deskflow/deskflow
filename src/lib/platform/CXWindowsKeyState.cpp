@@ -47,8 +47,8 @@ CXWindowsKeyState::CXWindowsKeyState(Display* display, bool useXKB) :
 
 CXWindowsKeyState::CXWindowsKeyState(
 	Display* display, bool useXKB,
-	IEventQueue& eventQueue, CKeyMap& keyMap) :
-	CKeyState(eventQueue, keyMap),
+	IEventQueue* events, CKeyMap& keyMap) :
+	CKeyState(events, keyMap),
 	m_display(display),
 	m_modifierFromX(ModifiersFromXDefaultSize)
 {

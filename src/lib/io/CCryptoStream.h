@@ -33,7 +33,7 @@ Encrypts (on write) and decrypts (on read) to and from an underlying stream.
 */
 class CCryptoStream : public CStreamFilter {
 public:
-	CCryptoStream(IEventQueue* eventQueue, synergy::IStream* stream, const CCryptoOptions& options, bool adoptStream = true);
+	CCryptoStream(IEventQueue* events, synergy::IStream* stream, const CCryptoOptions& options, bool adoptStream = true);
 	virtual ~CCryptoStream();
 
 	//! @name manipulators

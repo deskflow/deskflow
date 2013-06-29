@@ -39,8 +39,8 @@ class COSXKeyState : public CKeyState {
 public:
 	typedef std::vector<KeyID> CKeyIDs;
 
-	COSXKeyState();
-	COSXKeyState(IEventQueue& eventQueue, CKeyMap& keyMap);
+	COSXKeyState(IEventQueue* events);
+	COSXKeyState(IEventQueue* events, CKeyMap& keyMap);
 	virtual ~COSXKeyState();
 
 	//! @name modifiers

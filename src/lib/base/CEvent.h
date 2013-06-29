@@ -54,7 +54,6 @@ public:
 
 	//! Create \c CEvent with data (POD)
 	/*!
-	The \p type must have been registered using \c registerType().
 	The \p data must be POD (plain old data) allocated by malloc(),
 	which means it cannot have a constructor, destructor or be
 	composed of any types that do. For non-POD (normal C++ objects

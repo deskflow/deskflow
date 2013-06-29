@@ -19,16 +19,18 @@
 #pragma once
 
 #include "CEvent.h"
+#include "CEventTypes.h"
 
 namespace synergy { class IStream; }
 class CIpcMessage;
 class CIpcLogLineMessage;
+class IEventQueue;
 
 class CIpcServerProxy {
 	friend class CIpcClient;
 
 public:
-	CIpcServerProxy(synergy::IStream& stream);
+	CIpcServerProxy(synergy::IStream& stream, IEventQueue* events);
 	virtual ~CIpcServerProxy();
 
 private:
@@ -38,11 +40,7 @@ private:
 	CIpcLogLineMessage*	parseLogLine();
 	void				disconnect();
 
-	//! Raised when the client receives a message from the server.
-	static CEvent::Type	getMessageReceivedEvent();
-
 private:
 	synergy::IStream&	m_stream;
-
-	static CEvent::Type	s_messageReceivedEvent;
+	IEventQueue*		m_events;
 };

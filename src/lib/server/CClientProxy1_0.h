@@ -30,7 +30,7 @@ class IEventQueue;
 //! Proxy for client implementing protocol version 1.0
 class CClientProxy1_0 : public CClientProxy {
 public:
-	CClientProxy1_0(const CString& name, synergy::IStream* adoptedStream, IEventQueue* eventQueue);
+	CClientProxy1_0(const CString& name, synergy::IStream* adoptedStream, IEventQueue* events);
 	~CClientProxy1_0();
 
 	// IScreen
@@ -105,7 +105,7 @@ private:
 	double				m_heartbeatAlarm;
 	CEventQueueTimer*	m_heartbeatTimer;
 	MessageParser		m_parser;
-	IEventQueue*		m_eventQueue;
+	IEventQueue*		m_events;
 };
 
 #endif

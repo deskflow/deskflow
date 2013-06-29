@@ -50,7 +50,7 @@ public:
 
 	CXWindowsKeyState(Display*, bool useXKB);
 	CXWindowsKeyState(Display*, bool useXKB,
-		IEventQueue& eventQueue, CKeyMap& keyMap);
+		IEventQueue* events, CKeyMap& keyMap);
 	~CXWindowsKeyState();
 
 	//! @name modifiers

@@ -26,6 +26,7 @@
 #include "CArchMiscWindows.h"
 #include "resource.h"
 #include "CMSWindowsScreen.h"
+#include "CEventQueue.h"
 
 //
 // CMSWindowsClientTaskBarReceiver
@@ -41,8 +42,8 @@ const UINT CMSWindowsClientTaskBarReceiver::s_stateToIconID[kMaxState] =
 };
 
 CMSWindowsClientTaskBarReceiver::CMSWindowsClientTaskBarReceiver(
-				HINSTANCE appInstance, const CBufferedLogOutputter* logBuffer) :
-	CClientTaskBarReceiver(),
+				HINSTANCE appInstance, const CBufferedLogOutputter* logBuffer, IEventQueue* events) :
+	CClientTaskBarReceiver(events),
 	m_appInstance(appInstance),
 	m_window(NULL),
 	m_logBuffer(logBuffer)
@@ -357,7 +358,7 @@ CMSWindowsClientTaskBarReceiver::staticDlgProc(HWND hwnd,
 }
 
 IArchTaskBarReceiver*
-createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
+createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events)
 {
 	CArchMiscWindows::setIcons(
 		(HICON)LoadImage(CArchMiscWindows::instanceWin32(),
@@ -370,5 +371,5 @@ createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 		16, 16, LR_SHARED));
 
 	return new CMSWindowsClientTaskBarReceiver(
-		CMSWindowsScreen::getWindowInstance(), logBuffer);
+		CMSWindowsScreen::getWindowInstance(), logBuffer, events);
 }

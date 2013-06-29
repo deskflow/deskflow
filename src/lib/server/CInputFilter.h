@@ -29,6 +29,7 @@
 
 class CPrimaryClient;
 class CEvent;
+class IEventQueue;
 
 class CInputFilter {
 public:
@@ -58,8 +59,8 @@ public:
 	// CKeystrokeCondition
 	class CKeystrokeCondition : public CCondition {
 	public:
-		CKeystrokeCondition(IPlatformScreen::CKeyInfo*);
-		CKeystrokeCondition(KeyID key, KeyModifierMask mask);
+		CKeystrokeCondition(IEventQueue* events, IPlatformScreen::CKeyInfo*);
+		CKeystrokeCondition(IEventQueue* events, KeyID key, KeyModifierMask mask);
 		virtual ~CKeystrokeCondition();
 
 		KeyID					getKey() const;
@@ -76,13 +77,14 @@ public:
 		UInt32					m_id;
 		KeyID					m_key;
 		KeyModifierMask			m_mask;
+		IEventQueue*			m_events;
 	};
 
 	// CMouseButtonCondition
 	class CMouseButtonCondition : public CCondition {
 	public:
-		CMouseButtonCondition(IPlatformScreen::CButtonInfo*);
-		CMouseButtonCondition(ButtonID, KeyModifierMask mask);
+		CMouseButtonCondition(IEventQueue* events, IPlatformScreen::CButtonInfo*);
+		CMouseButtonCondition(IEventQueue* events, ButtonID, KeyModifierMask mask);
 		virtual ~CMouseButtonCondition();
 
 		ButtonID				getButton() const;
@@ -96,12 +98,13 @@ public:
 	private:
 		ButtonID				m_button;
 		KeyModifierMask			m_mask;
+		IEventQueue*			m_events;
 	};
 
 	// CScreenConnectedCondition
 	class CScreenConnectedCondition : public CCondition {
 	public:
-		CScreenConnectedCondition(const CString& screen);
+		CScreenConnectedCondition(IEventQueue* events, const CString& screen);
 		virtual ~CScreenConnectedCondition();
 
 		// CCondition overrides
@@ -111,6 +114,7 @@ public:
 
 	private:
 		CString					m_screen;
+		IEventQueue*			m_events;
 	};
 
 	// -------------------------------------------------------------------------
@@ -133,7 +137,7 @@ public:
 	public:
 		enum Mode { kOff, kOn, kToggle };
 
-		CLockCursorToScreenAction(Mode = kToggle);
+		CLockCursorToScreenAction(IEventQueue* events, Mode = kToggle);
 
 		Mode					getMode() const;
 
@@ -144,12 +148,13 @@ public:
 
 	private:
 		Mode					m_mode;
+		IEventQueue*			m_events;
 	};
 	
 	// CSwitchToScreenAction
 	class CSwitchToScreenAction : public CAction {
 	public:
-		CSwitchToScreenAction(const CString& screen);
+		CSwitchToScreenAction(IEventQueue* events, const CString& screen);
 
 		CString					getScreen() const;
 
@@ -160,12 +165,13 @@ public:
 
 	private:
 		CString					m_screen;
+		IEventQueue*			m_events;
 	};
 	
 	// CSwitchInDirectionAction
 	class CSwitchInDirectionAction : public CAction {
 	public:
-		CSwitchInDirectionAction(EDirection);
+		CSwitchInDirectionAction(IEventQueue* events, EDirection);
 
 		EDirection				getDirection() const;
 
@@ -176,6 +182,7 @@ public:
 
 	private:
 		EDirection				m_direction;
+		IEventQueue*			m_events;
 	};
 	
 	// CKeyboardBroadcastAction
@@ -183,8 +190,8 @@ public:
 	public:
 		enum Mode { kOff, kOn, kToggle };
 
-		CKeyboardBroadcastAction(Mode = kToggle);
-		CKeyboardBroadcastAction(Mode, const std::set<CString>& screens);
+		CKeyboardBroadcastAction(IEventQueue* events, Mode = kToggle);
+		CKeyboardBroadcastAction(IEventQueue* events, Mode, const std::set<CString>& screens);
 
 		Mode					getMode() const;
 		std::set<CString>		getScreens() const;
@@ -197,12 +204,13 @@ public:
 	private:
 		Mode					m_mode;
 		CString					m_screens;
+		IEventQueue*			m_events;
 	};
 
 	// CKeystrokeAction
 	class CKeystrokeAction : public CAction {
 	public:
-		CKeystrokeAction(IPlatformScreen::CKeyInfo* adoptedInfo, bool press);
+		CKeystrokeAction(IEventQueue* events, IPlatformScreen::CKeyInfo* adoptedInfo, bool press);
 		~CKeystrokeAction();
 
 		void					adoptInfo(IPlatformScreen::CKeyInfo*);
@@ -220,13 +228,15 @@ public:
 
 	private:
 		IPlatformScreen::CKeyInfo*	m_keyInfo;
-		bool						m_press;
+		bool					m_press;
+		IEventQueue*			m_events;
 	};
 
 	// CMouseButtonAction -- modifier combinations not implemented yet
 	class CMouseButtonAction : public CAction {
 	public:
-		CMouseButtonAction(IPlatformScreen::CButtonInfo* adoptedInfo,
+		CMouseButtonAction(IEventQueue* events,
+									IPlatformScreen::CButtonInfo* adoptedInfo,
 									bool press);
 		~CMouseButtonAction();
 
@@ -244,7 +254,8 @@ public:
 
 	private:
 		IPlatformScreen::CButtonInfo*	m_buttonInfo;
-		bool							m_press;
+		bool					m_press;
+		IEventQueue*			m_events;
 	};
 
 	class CRule {
@@ -306,7 +317,7 @@ public:
 	// -------------------------------------------------------------------------
 	typedef std::vector<CRule> CRuleList;
 
-	CInputFilter();
+	CInputFilter(IEventQueue* events);
 	CInputFilter(const CInputFilter&);
 	virtual ~CInputFilter();
 
@@ -343,6 +354,7 @@ private:
 private:
 	CRuleList			m_ruleList;
 	CPrimaryClient*		m_primaryClient;
+	IEventQueue*		m_events;
 };
 
 #endif

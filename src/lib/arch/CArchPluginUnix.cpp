@@ -27,6 +27,6 @@ CArchPluginUnix::~CArchPluginUnix()
 }
 
 void
-CArchPluginUnix::init(void* eventTarget)
+CArchPluginUnix::init(void* eventTarget, IEventQueue* events)
 {
 }

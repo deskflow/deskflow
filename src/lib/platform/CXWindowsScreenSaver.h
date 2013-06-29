@@ -34,7 +34,7 @@ class CEventQueueTimer;
 //! X11 screen saver implementation
 class CXWindowsScreenSaver : public IScreenSaver {
 public:
-	CXWindowsScreenSaver(Display*, Window, void* eventTarget, IEventQueue& eventQueue);
+	CXWindowsScreenSaver(Display*, Window, void* eventTarget, IEventQueue* events);
 	virtual ~CXWindowsScreenSaver();
 
 	//! @name manipulators
@@ -165,7 +165,7 @@ private:
 	// pixels to be considered significant.
 	SInt32				m_disablePos;
 
-	IEventQueue&		m_eventQueue;
+	IEventQueue*		m_events;
 };
 
 #endif

@@ -45,6 +45,6 @@ main(int argc, char** argv)
 	CLog log;
 	CEventQueue events;
 
-	CClientApp app(createTaskBarReceiver);
+	CClientApp app(&events, createTaskBarReceiver);
 	return app.run(argc, argv);
 }

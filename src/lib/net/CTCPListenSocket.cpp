@@ -33,7 +33,8 @@
 // CTCPListenSocket
 //
 
-CTCPListenSocket::CTCPListenSocket()
+CTCPListenSocket::CTCPListenSocket(IEventQueue* events) :
+	m_events(events)
 {
 	m_mutex = new CMutex;
 	try {
@@ -107,7 +108,7 @@ CTCPListenSocket::accept()
 {
 	IDataSocket* socket = NULL;
 	try {
-		socket = new CTCPSocket(ARCH->acceptSocket(m_socket, NULL));
+		socket = new CTCPSocket(m_events, ARCH->acceptSocket(m_socket, NULL));
 		if (socket != NULL) {
 			CSocketMultiplexer::getInstance()->addSocket(this,
 							new TSocketMultiplexerMethodJob<CTCPListenSocket>(
@@ -139,7 +140,7 @@ CTCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
 		return NULL;
 	}
 	if (read) {
-		EVENTQUEUE->addEvent(CEvent(getConnectingEvent(), this, NULL));
+		m_events->addEvent(CEvent(m_events->forIListenSocket().connecting(), this, NULL));
 		// stop polling on this socket until the client accepts
 		return NULL;
 	}

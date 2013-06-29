@@ -22,6 +22,8 @@
 
 #include "IInterface.h"
 
+class IEventQueue;
+
 //! Interface for plugin manager.
 /*!
 A plugin manager should load all 3rd party plugins from the plugins dir,
@@ -36,7 +38,7 @@ public:
 	/*!
 	Scan the plugins dir and load plugins.
 	*/
-	virtual void		init(void* eventTarget) = 0;
+	virtual void		init(void* eventTarget, IEventQueue* events) = 0;
 
 	//@}
 };

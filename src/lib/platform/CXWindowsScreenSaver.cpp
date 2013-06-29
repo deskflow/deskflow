@@ -57,7 +57,7 @@ extern Status DPMSInfo(Display *, CARD16 *, BOOL *);
 //
 
 CXWindowsScreenSaver::CXWindowsScreenSaver(
-				Display* display, Window window, void* eventTarget, IEventQueue& eventQueue) :
+				Display* display, Window window, void* eventTarget, IEventQueue* events) :
 	m_display(display),
 	m_xscreensaverSink(window),
 	m_eventTarget(eventTarget),
@@ -68,7 +68,7 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 	m_suppressDisable(false),
 	m_disableTimer(NULL),
 	m_disablePos(0),
-	m_eventQueue(eventQueue)
+	m_events(events)
 {
 	// get atoms
 	m_atomScreenSaver           = XInternAtom(m_display,
@@ -120,7 +120,7 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 	}
 
 	// install disable timer event handler
-	m_eventQueue.adoptHandler(CEvent::kTimer, this,
+	m_events->adoptHandler(CEvent::kTimer, this,
 							new TMethodEventJob<CXWindowsScreenSaver>(this,
 								&CXWindowsScreenSaver::handleDisableTimer));
 }
@@ -129,9 +129,9 @@ CXWindowsScreenSaver::~CXWindowsScreenSaver()
 {
 	// done with disable job
 	if (m_disableTimer != NULL) {
-		m_eventQueue.deleteTimer(m_disableTimer);
+		m_events->deleteTimer(m_disableTimer);
 	}
-	m_eventQueue.removeHandler(CEvent::kTimer, this);
+	m_events->removeHandler(CEvent::kTimer, this);
 
 	if (m_display != NULL) {
 		enableDPMS(m_dpmsEnabled);
@@ -397,13 +397,13 @@ CXWindowsScreenSaver::setXScreenSaverActive(bool activated)
 		updateDisableTimer();
 
 		if (activated) {
-			m_eventQueue.addEvent(CEvent(
-							IPlatformScreen::getScreensaverActivatedEvent(),
+			m_events->addEvent(CEvent(
+							m_events->forIPlatformScreen().screensaverActivated(),
 							m_eventTarget));
 		}
 		else {
-			m_eventQueue.addEvent(CEvent(
-							IPlatformScreen::getScreensaverDeactivatedEvent(),
+			m_events->addEvent(CEvent(
+							m_events->forIPlatformScreen().screensaverDeactivated(),
 							m_eventTarget));
 		}
 	}
@@ -504,10 +504,10 @@ CXWindowsScreenSaver::updateDisableTimer()
 {
 	if (m_disabled && !m_suppressDisable && m_disableTimer == NULL) {
 		// 5 seconds should be plenty often to suppress the screen saver
-		m_disableTimer = m_eventQueue.newTimer(5.0, this);
+		m_disableTimer = m_events->newTimer(5.0, this);
 	}
 	else if ((!m_disabled || m_suppressDisable) && m_disableTimer != NULL) {
-		m_eventQueue.deleteTimer(m_disableTimer);
+		m_events->deleteTimer(m_disableTimer);
 		m_disableTimer = NULL;
 	}
 }

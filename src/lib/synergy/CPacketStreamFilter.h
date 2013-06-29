@@ -23,13 +23,15 @@
 #include "CStreamBuffer.h"
 #include "CMutex.h"
 
+class IEventQueue;
+
 //! Packetizing stream filter 
 /*!
 Filters a stream to read and write packets.
 */
 class CPacketStreamFilter : public CStreamFilter {
 public:
-	CPacketStreamFilter(synergy::IStream* stream, bool adoptStream = true);
+	CPacketStreamFilter(IEventQueue* events, synergy::IStream* stream, bool adoptStream = true);
 	~CPacketStreamFilter();
 
 	// IStream overrides
@@ -54,6 +56,7 @@ private:
 	UInt32				m_size;
 	CStreamBuffer		m_buffer;
 	bool				m_inputShutdown;
+	IEventQueue*		m_events;
 };
 
 #endif

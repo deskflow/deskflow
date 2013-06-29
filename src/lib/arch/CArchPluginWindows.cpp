@@ -22,7 +22,6 @@
 #include "IEventQueue.h"
 #include "CEvent.h"
 #include "CScreen.h"
-#include "IPlatformScreen.h" // temp
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -30,7 +29,8 @@
 
 typedef int (*initFunc)(void (*sendEvent)(const char*, void*), void (*log)(const char*));
 
-void* CArchPluginWindows::m_eventTarget = NULL;
+void* g_eventTarget = NULL;
+IEventQueue* g_events = NULL;
 
 CArchPluginWindows::CArchPluginWindows()
 {
@@ -41,9 +41,10 @@ CArchPluginWindows::~CArchPluginWindows()
 }
 
 void
-CArchPluginWindows::init(void* eventTarget)
+CArchPluginWindows::init(void* eventTarget, IEventQueue* events)
 {
-	m_eventTarget = eventTarget;
+	g_eventTarget = eventTarget;
+	g_events = events;
 	
 	CString dir = getPluginsDir();
 	LOG((CLOG_DEBUG "plugins dir: %s", dir.c_str()));
@@ -115,8 +116,8 @@ void
 sendEvent(const char* eventName, void* data)
 {
 	LOG((CLOG_DEBUG5 "plugin sending event"));
-	CEvent::Type type = EVENTQUEUE->getRegisteredType(eventName);
-	EVENTQUEUE->addEvent(CEvent(type, CArchPluginWindows::m_eventTarget, data));
+	CEvent::Type type = g_events->getRegisteredType(eventName);
+	g_events->addEvent(CEvent(type, g_eventTarget, data));
 }
 
 void

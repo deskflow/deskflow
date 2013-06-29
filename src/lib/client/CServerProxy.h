@@ -42,7 +42,7 @@ public:
 	Process messages from the server on \p stream and forward to
 	\p client.
 	*/
-	CServerProxy(CClient* client, synergy::IStream* stream, IEventQueue* eventQueue);
+	CServerProxy(CClient* client, synergy::IStream* stream, IEventQueue* events);
 	~CServerProxy();
 
 	//! @name manipulators
@@ -110,7 +110,7 @@ private:
 	typedef EResult (CServerProxy::*MessageParser)(const UInt8*);
 
 	CClient*			m_client;
-	synergy::IStream*		m_stream;
+	synergy::IStream*	m_stream;
 
 	UInt32				m_seqNum;
 
@@ -121,13 +121,13 @@ private:
 
 	bool				m_ignoreMouse;
 
-	KeyModifierID			m_modifierTranslationTable[kKeyModifierIDLast];
+	KeyModifierID		m_modifierTranslationTable[kKeyModifierIDLast];
 
 	double				m_keepAliveAlarm;
-	CEventQueueTimer*		m_keepAliveAlarmTimer;
+	CEventQueueTimer*	m_keepAliveAlarmTimer;
 
-	MessageParser			m_parser;
-	IEventQueue*			m_eventQueue;
+	MessageParser		m_parser;
+	IEventQueue*		m_events;
 };
 
 #endif

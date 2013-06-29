@@ -28,7 +28,8 @@
 // CScreen
 //
 
-CScreen::CScreen(IPlatformScreen* platformScreen) :
+CScreen::CScreen(IPlatformScreen* platformScreen, IEventQueue* events) :
+	m_events(events),
 	m_screen(platformScreen),
 	m_isPrimary(platformScreen->isPrimary()),
 	m_enabled(false),
@@ -462,7 +463,7 @@ CScreen::enablePrimary()
 	m_screen->openScreensaver(true);
 
 	// claim screen changed size
-	EVENTQUEUE->addEvent(CEvent(getShapeChangedEvent(), getEventTarget()));
+	m_events->addEvent(CEvent(m_events->forIScreen().shapeChanged(), getEventTarget()));
 }
 
 void

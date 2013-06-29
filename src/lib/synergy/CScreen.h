@@ -28,6 +28,7 @@
 
 class IClipboard;
 class IPlatformScreen;
+class IEventQueue;
 
 //! Platform independent screen
 /*!
@@ -36,7 +37,7 @@ primary or secondary screen.
 */
 class CScreen : public IScreen {
 public:
-	CScreen(IPlatformScreen* platformScreen);
+	CScreen(IPlatformScreen* platformScreen, IEventQueue* events);
 	virtual ~CScreen();
 
 	//! @name manipulators
@@ -340,6 +341,8 @@ private:
 
 	// true if we're faking input on a primary screen
 	bool				m_fakeInput;
+
+	IEventQueue*		m_events;
 };
 
 #endif

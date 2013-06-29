@@ -25,6 +25,7 @@
 using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Invoke;
+using ::testing::ReturnRef;
 
 const UInt8 g_cryptoIvWrite_bufferLen = 200;
 UInt8 g_cryptoIvWrite_buffer[g_cryptoIvWrite_bufferLen];
@@ -43,6 +44,8 @@ TEST(CClientProxyTests, cryptoIvWrite)
 	NiceMock<CMockStream> innerStream;
 	NiceMock<CMockServer> server;
 	CCryptoOptions options("ctr", "mock");
+	IStreamEvents streamEvents;
+	streamEvents.setEvents(&eventQueue);
 
 	CCryptoStream* serverStream = new CCryptoStream(&eventQueue, &innerStream, options, false);
 	CCryptoStream* clientStream = new CCryptoStream(&eventQueue, &innerStream, options, false);
@@ -52,6 +55,7 @@ TEST(CClientProxyTests, cryptoIvWrite)
 	serverStream->setEncryptIv(iv);
 	clientStream->setDecryptIv(iv);
 	
+	ON_CALL(eventQueue, forIStream()).WillByDefault(ReturnRef(streamEvents));
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(cryptoIv_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(cryptoIv_mockRead));
 

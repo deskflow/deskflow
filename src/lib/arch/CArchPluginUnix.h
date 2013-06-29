@@ -22,6 +22,8 @@
 
 #define ARCH_PLUGIN CArchPluginUnix
 
+class IEventQueue;
+
 //! Unix implementation of IArchPlugin
 class CArchPluginUnix : public IArchPlugin {
 public:
@@ -29,5 +31,5 @@ public:
 	virtual ~CArchPluginUnix();
 
 	// IArchPlugin overrides
-	void				init(void* eventTarget);
+	void				init(void* eventTarget, IEventQueue* events);
 };

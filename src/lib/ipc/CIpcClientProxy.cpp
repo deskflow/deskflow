@@ -25,47 +25,49 @@
 #include "CProtocolUtil.h"
 #include "CArch.h"
 
-CEvent::Type			CIpcClientProxy::s_messageReceivedEvent = CEvent::kUnknown;
-CEvent::Type			CIpcClientProxy::s_disconnectedEvent = CEvent::kUnknown;
+//
+// CIpcClientProxy
+//
 
-CIpcClientProxy::CIpcClientProxy(synergy::IStream& stream) :
-m_stream(stream),
-m_clientType(kIpcClientUnknown),
-m_disconnecting(false),
-m_readMutex(ARCH->newMutex()),
-m_writeMutex(ARCH->newMutex())
+CIpcClientProxy::CIpcClientProxy(synergy::IStream& stream, IEventQueue* events) :
+	m_stream(stream),
+	m_clientType(kIpcClientUnknown),
+	m_disconnecting(false),
+	m_readMutex(ARCH->newMutex()),
+	m_writeMutex(ARCH->newMutex()),
+	m_events(events)
 {
-	EVENTQUEUE->adoptHandler(
-		m_stream.getInputReadyEvent(), stream.getEventTarget(),
+	m_events->adoptHandler(
+		m_events->forIStream().inputReady(), stream.getEventTarget(),
 		new TMethodEventJob<CIpcClientProxy>(
 		this, &CIpcClientProxy::handleData));
 
-	EVENTQUEUE->adoptHandler(
-		m_stream.getOutputErrorEvent(), stream.getEventTarget(),
+	m_events->adoptHandler(
+		m_events->forIStream().outputError(), stream.getEventTarget(),
 		new TMethodEventJob<CIpcClientProxy>(
 		this, &CIpcClientProxy::handleWriteError));
 
-	EVENTQUEUE->adoptHandler(
-		m_stream.getInputShutdownEvent(), stream.getEventTarget(),
+	m_events->adoptHandler(
+		m_events->forIStream().inputShutdown(), stream.getEventTarget(),
 		new TMethodEventJob<CIpcClientProxy>(
 		this, &CIpcClientProxy::handleDisconnect));
 
-	EVENTQUEUE->adoptHandler(
-		m_stream.getOutputShutdownEvent(), stream.getEventTarget(),
+	m_events->adoptHandler(
+		m_events->forIStream().outputShutdown(), stream.getEventTarget(),
 		new TMethodEventJob<CIpcClientProxy>(
 		this, &CIpcClientProxy::handleWriteError));
 }
 
 CIpcClientProxy::~CIpcClientProxy()
 {
-	EVENTQUEUE->removeHandler(
-		m_stream.getInputReadyEvent(), m_stream.getEventTarget());
-	EVENTQUEUE->removeHandler(
-		m_stream.getOutputErrorEvent(), m_stream.getEventTarget());
-	EVENTQUEUE->removeHandler(
-		m_stream.getInputShutdownEvent(), m_stream.getEventTarget());
-	EVENTQUEUE->removeHandler(
-		m_stream.getOutputShutdownEvent(), m_stream.getEventTarget());
+	m_events->removeHandler(
+		m_events->forIStream().inputReady(), m_stream.getEventTarget());
+	m_events->removeHandler(
+		m_events->forIStream().outputError(), m_stream.getEventTarget());
+	m_events->removeHandler(
+		m_events->forIStream().inputShutdown(), m_stream.getEventTarget());
+	m_events->removeHandler(
+		m_events->forIStream().outputShutdown(), m_stream.getEventTarget());
 	
 	// don't delete the stream while it's being used.
 	ARCH->lockMutex(m_readMutex);
@@ -120,9 +122,9 @@ CIpcClientProxy::handleData(const CEvent&, void*)
 		}
 
 		// don't delete with this event; the data is passed to a new event.
-		CEvent e(getMessageReceivedEvent(), this, NULL, CEvent::kDontFreeData);
+		CEvent e(m_events->forCIpcClientProxy().messageReceived(), this, NULL, CEvent::kDontFreeData);
 		e.setDataObject(m);
-		EVENTQUEUE->addEvent(e);
+		m_events->addEvent(e);
 
 		n = m_stream.read(code, 4);
 	}
@@ -187,19 +189,5 @@ CIpcClientProxy::disconnect()
 	LOG((CLOG_DEBUG "ipc disconnect, closing stream"));
 	m_disconnecting = true;
 	m_stream.close();
-	EVENTQUEUE->addEvent(CEvent(getDisconnectedEvent(), this));
-}
-
-CEvent::Type
-CIpcClientProxy::getMessageReceivedEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(
-		s_messageReceivedEvent, "CIpcClientProxy::messageReceived");
-}
-
-CEvent::Type
-CIpcClientProxy::getDisconnectedEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(
-		s_disconnectedEvent, "CIpcClientProxy::disconnected");
+	m_events->addEvent(CEvent(m_events->forCIpcClientProxy().disconnected(), this));
 }

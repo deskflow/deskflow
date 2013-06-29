@@ -35,7 +35,7 @@
 // CServerProxy
 //
 
-CServerProxy::CServerProxy(CClient* client, synergy::IStream* stream, IEventQueue* eventQueue) :
+CServerProxy::CServerProxy(CClient* client, synergy::IStream* stream, IEventQueue* events) :
 	m_client(client),
 	m_stream(stream),
 	m_seqNum(0),
@@ -49,7 +49,7 @@ CServerProxy::CServerProxy(CClient* client, synergy::IStream* stream, IEventQueu
 	m_keepAliveAlarm(0.0),
 	m_keepAliveAlarmTimer(NULL),
 	m_parser(&CServerProxy::parseHandshakeMessage),
-	m_eventQueue(eventQueue)
+	m_events(events)
 {
 	assert(m_client != NULL);
 	assert(m_stream != NULL);
@@ -59,7 +59,7 @@ CServerProxy::CServerProxy(CClient* client, synergy::IStream* stream, IEventQueu
 		m_modifierTranslationTable[id] = id;
 
 	// handle data on stream
-	m_eventQueue->adoptHandler(m_stream->getInputReadyEvent(),
+	m_events->adoptHandler(m_events->forIStream().inputReady(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CServerProxy>(this,
 								&CServerProxy::handleData));
@@ -71,7 +71,7 @@ CServerProxy::CServerProxy(CClient* client, synergy::IStream* stream, IEventQueu
 CServerProxy::~CServerProxy()
 {
 	setKeepAliveRate(-1.0);
-	m_eventQueue->removeHandler(m_stream->getInputReadyEvent(),
+	m_events->removeHandler(m_events->forIStream().inputReady(),
 							m_stream->getEventTarget());
 }
 
@@ -79,14 +79,14 @@ void
 CServerProxy::resetKeepAliveAlarm()
 {
 	if (m_keepAliveAlarmTimer != NULL) {
-		m_eventQueue->removeHandler(CEvent::kTimer, m_keepAliveAlarmTimer);
-		m_eventQueue->deleteTimer(m_keepAliveAlarmTimer);
+		m_events->removeHandler(CEvent::kTimer, m_keepAliveAlarmTimer);
+		m_events->deleteTimer(m_keepAliveAlarmTimer);
 		m_keepAliveAlarmTimer = NULL;
 	}
 	if (m_keepAliveAlarm > 0.0) {
 		m_keepAliveAlarmTimer =
-			m_eventQueue->newOneShotTimer(m_keepAliveAlarm, NULL);
-		m_eventQueue->adoptHandler(CEvent::kTimer, m_keepAliveAlarmTimer,
+			m_events->newOneShotTimer(m_keepAliveAlarm, NULL);
+		m_events->adoptHandler(CEvent::kTimer, m_keepAliveAlarmTimer,
 							new TMethodEventJob<CServerProxy>(this,
 								&CServerProxy::handleKeepAliveAlarm));
 	}

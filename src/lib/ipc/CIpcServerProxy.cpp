@@ -24,12 +24,15 @@
 #include "Ipc.h"
 #include "CProtocolUtil.h"
 
-CEvent::Type			CIpcServerProxy::s_messageReceivedEvent = CEvent::kUnknown;
+//
+// CIpcServerProxy
+//
 
-CIpcServerProxy::CIpcServerProxy(synergy::IStream& stream) :
-m_stream(stream)
+CIpcServerProxy::CIpcServerProxy(synergy::IStream& stream, IEventQueue* events) :
+	m_events(events),
+	m_stream(stream)
 {
-	EVENTQUEUE->adoptHandler(m_stream.getInputReadyEvent(),
+	m_events->adoptHandler(m_events->forIStream().inputReady(),
 		stream.getEventTarget(),
 		new TMethodEventJob<CIpcServerProxy>(
 		this, &CIpcServerProxy::handleData));
@@ -37,7 +40,7 @@ m_stream(stream)
 
 CIpcServerProxy::~CIpcServerProxy()
 {
-	EVENTQUEUE->removeHandler(m_stream.getInputReadyEvent(),
+	m_events->removeHandler(m_events->forIStream().inputReady(),
 		m_stream.getEventTarget());
 }
 
@@ -66,9 +69,9 @@ CIpcServerProxy::handleData(const CEvent&, void*)
 		}
 		
 		// don't delete with this event; the data is passed to a new event.
-		CEvent e(getMessageReceivedEvent(), this, NULL, CEvent::kDontFreeData);
+		CEvent e(m_events->forCIpcServerProxy().messageReceived(), this, NULL, CEvent::kDontFreeData);
 		e.setDataObject(m);
-		EVENTQUEUE->addEvent(e);
+		m_events->addEvent(e);
 
 		n = m_stream.read(code, 4);
 	}
@@ -116,11 +119,4 @@ CIpcServerProxy::disconnect()
 {
 	LOG((CLOG_DEBUG "ipc disconnect, closing stream"));
 	m_stream.close();
-}
-
-CEvent::Type
-CIpcServerProxy::getMessageReceivedEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(
-		s_messageReceivedEvent, "CIpcServerProxy::messageReceived");
 }

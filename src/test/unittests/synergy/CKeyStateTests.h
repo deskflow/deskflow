@@ -30,12 +30,13 @@ class CMockEventQueue;
 class CMockKeyState : public CKeyState
 {
 public:
-	CMockKeyState() : CKeyState()
+	CMockKeyState(const CMockEventQueue& eventQueue) :
+		CKeyState((IEventQueue*)&eventQueue)
 	{
 	}
 
 	CMockKeyState(const CMockEventQueue& eventQueue, const CMockKeyMap& keyMap) :
-		CKeyState((IEventQueue&)eventQueue, (CKeyMap&)keyMap)
+		CKeyState((IEventQueue*)&eventQueue, (CKeyMap&)keyMap)
 	{
 	}
 

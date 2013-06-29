@@ -24,6 +24,7 @@
 #include "MouseTypes.h"
 #include "CEvent.h"
 #include "GameDeviceTypes.h"
+#include "CEventTypes.h"
 
 //! Primary screen interface
 /*!
@@ -217,64 +218,7 @@ public:
 	//! Handle incoming game device feedback changes.
 	virtual void		gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2) = 0;
 
-	//! Get button down event type.  Event data is CButtonInfo*.
-	static CEvent::Type	getButtonDownEvent();
-	//! Get button up event type.  Event data is CButtonInfo*.
-	static CEvent::Type	getButtonUpEvent();
-	//! Get mouse motion on the primary screen event type
-	/*!
-	Event data is CMotionInfo* and the values are an absolute position.
-	*/
-	static CEvent::Type	getMotionOnPrimaryEvent();
-	//! Get mouse motion on a secondary screen event type
-	/*!
-	Event data is CMotionInfo* and the values are motion deltas not
-	absolute coordinates.
-	*/
-	static CEvent::Type	getMotionOnSecondaryEvent();
-	//! Get mouse wheel event type.  Event data is CWheelInfo*.
-	static CEvent::Type	getWheelEvent();
-	//! Get screensaver activated event type
-	static CEvent::Type	getScreensaverActivatedEvent();
-	//! Get screensaver deactivated event type
-	static CEvent::Type	getScreensaverDeactivatedEvent();
-	//! Get hot key down event type.  Event data is CHotKeyInfo*.
-	static CEvent::Type	getHotKeyDownEvent();
-	//! Get hot key up event type.  Event data is CHotKeyInfo*.
-	static CEvent::Type	getHotKeyUpEvent();
-	//! Get start of fake input event type
-	static CEvent::Type	getFakeInputBeginEvent();
-	//! Get end of fake input event type
-	static CEvent::Type	getFakeInputEndEvent();
-public: // HACK
-	//! Get game device buttons event type.
-	static CEvent::Type	getGameDeviceButtonsEvent();
-	//! Get game device sticks event type.
-	static CEvent::Type	getGameDeviceSticksEvent();
-	//! Get game device triggers event type.
-	static CEvent::Type	getGameDeviceTriggersEvent();
-	//! Get game device timing request event type.
-	static CEvent::Type	getGameDeviceTimingReqEvent();
-private: // HACK
-
 	//@}
-
-private:
-	static CEvent::Type	s_buttonDownEvent;
-	static CEvent::Type	s_buttonUpEvent;
-	static CEvent::Type	s_motionPrimaryEvent;
-	static CEvent::Type	s_motionSecondaryEvent;
-	static CEvent::Type	s_wheelEvent;
-	static CEvent::Type	s_ssActivatedEvent;
-	static CEvent::Type	s_ssDeactivatedEvent;
-	static CEvent::Type	s_hotKeyDownEvent;
-	static CEvent::Type	s_hotKeyUpEvent;
-	static CEvent::Type	s_fakeInputBegin;
-	static CEvent::Type	s_fakeInputEnd;
-	static CEvent::Type s_gameButtonsEvent;
-	static CEvent::Type s_gameSticksEvent;
-	static CEvent::Type s_gameTriggersEvent;
-	static CEvent::Type s_gameTimingReqEvent;
 };
 
 #endif

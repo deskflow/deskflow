@@ -23,14 +23,33 @@
 #include "CEvent.h"
 #include "CString.h"
 
-#define EVENTQUEUE IEventQueue::getInstance()
-
 class IEventJob;
 class IEventQueueBuffer;
 
 // Opaque type for timer info.  This is defined by subclasses of
 // IEventQueueBuffer.
 class CEventQueueTimer;
+
+// Event type registration classes.
+class CClientEvents;
+class IStreamEvents;
+class CIpcClientEvents;
+class CIpcClientProxyEvents;
+class CIpcServerEvents;
+class CIpcServerProxyEvents;
+class IDataSocketEvents;
+class IListenSocketEvents;
+class ISocketEvents;
+class COSXScreenEvents;
+class CClientListenerEvents;
+class CClientProxyEvents;
+class CClientProxyUnknownEvents;
+class CServerEvents;
+class CServerAppEvents;
+class IKeyStateEvents;
+class IPrimaryScreenEvents;
+class IScreenEvents;
+class ISecondaryScreenEvents;
 
 //! Event queue interface
 /*!
@@ -151,13 +170,6 @@ public:
 
 	//! Creates a new event type
 	/*!
-	Returns a unique event type id.
-	*/
-	virtual CEvent::Type
-						registerType(const char* name) = 0;
-
-	//! Creates a new event type
-	/*!
 	If \p type contains \c kUnknown then it is set to a unique event
 	type id otherwise it is left alone.  The final value of \p type
 	is returned.
@@ -201,30 +213,33 @@ public:
 	/*!
 	Returns the target to use for dispatching \c CEvent::kSystem events.
 	*/
-	static void*		getSystemTarget();
-
-	//! Get the singleton instance
-	/*!
-	Returns the singleton instance of the event queue
-	*/
-	static IEventQueue*	getInstance();
+	virtual void*		getSystemTarget() = 0;
 
 	//@}
+	
+	//
+	// Event type providers.
+	//
 
-protected:
-	//! @name manipulators
-	//@{
-
-	//! Set the singleton instance
-	/*!
-	Sets the singleton instance of the event queue
-	*/
-	static void			setInstance(IEventQueue*);
-
-	//@}
-
-private:
-	static IEventQueue*	s_instance;
+	virtual CClientEvents&				forCClient() = 0;
+	virtual IStreamEvents&				forIStream() = 0;
+	virtual CIpcClientEvents&			forCIpcClient() = 0;
+	virtual CIpcClientProxyEvents&		forCIpcClientProxy() = 0;
+	virtual CIpcServerEvents&			forCIpcServer() = 0;
+	virtual CIpcServerProxyEvents&		forCIpcServerProxy() = 0;
+	virtual IDataSocketEvents&			forIDataSocket() = 0;
+	virtual IListenSocketEvents&		forIListenSocket() = 0;
+	virtual ISocketEvents&				forISocket() = 0;
+	virtual COSXScreenEvents&			forCOSXScreen() = 0;
+	virtual CClientListenerEvents&		forCClientListener() = 0;
+	virtual CClientProxyEvents&			forCClientProxy() = 0;
+	virtual CClientProxyUnknownEvents&	forCClientProxyUnknown() = 0;
+	virtual CServerEvents&				forCServer() = 0;
+	virtual CServerAppEvents&			forCServerApp() = 0;
+	virtual IKeyStateEvents&			forIKeyState() = 0;
+	virtual IPrimaryScreenEvents&		forIPrimaryScreen() = 0;
+	virtual IScreenEvents&				forIScreen() = 0;
+	virtual ISecondaryScreenEvents&		forISecondaryScreen() = 0;
 };
 
 #endif

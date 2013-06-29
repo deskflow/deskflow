@@ -42,6 +42,26 @@ public:
 	MOCK_CONST_METHOD2(getHandler, IEventJob*(CEvent::Type, void*));
 	MOCK_METHOD1(deleteTimer, void(CEventQueueTimer*));
 	MOCK_CONST_METHOD1(getRegisteredType, CEvent::Type(const CString&));
+	MOCK_METHOD0(getSystemTarget, void*());
+	MOCK_METHOD0(forCClient, CClientEvents&());
+	MOCK_METHOD0(forIStream, IStreamEvents&());
+	MOCK_METHOD0(forCIpcClient, CIpcClientEvents&());
+	MOCK_METHOD0(forCIpcClientProxy, CIpcClientProxyEvents&());
+	MOCK_METHOD0(forCIpcServer, CIpcServerEvents&());
+	MOCK_METHOD0(forCIpcServerProxy, CIpcServerProxyEvents&());
+	MOCK_METHOD0(forIDataSocket, IDataSocketEvents&());
+	MOCK_METHOD0(forIListenSocket, IListenSocketEvents&());
+	MOCK_METHOD0(forISocket, ISocketEvents&());
+	MOCK_METHOD0(forCOSXScreen, COSXScreenEvents&());
+	MOCK_METHOD0(forCClientListener, CClientListenerEvents&());
+	MOCK_METHOD0(forCClientProxy, CClientProxyEvents&());
+	MOCK_METHOD0(forCClientProxyUnknown, CClientProxyUnknownEvents&());
+	MOCK_METHOD0(forCServer, CServerEvents&());
+	MOCK_METHOD0(forCServerApp, CServerAppEvents&());
+	MOCK_METHOD0(forIKeyState, IKeyStateEvents&());
+	MOCK_METHOD0(forIPrimaryScreen, IPrimaryScreenEvents&());
+	MOCK_METHOD0(forIScreen, IScreenEvents&());
+	MOCK_METHOD0(forISecondaryScreen, ISecondaryScreenEvents&());
 };
 
 #endif

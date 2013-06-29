@@ -26,6 +26,7 @@ class ILogOutputter;
 class CArgsBase;
 class IArchTaskBarReceiver;
 class CScreen;
+class IEventQueue;
 
 class IApp : public IInterface
 {
@@ -45,4 +46,5 @@ public:
 	virtual const char* daemonName() const = 0;
 	virtual int foregroundStartup(int argc, char** argv) = 0;
 	virtual CScreen* createScreen() = 0;
+	virtual IEventQueue*			events() const = 0;
 };

@@ -29,30 +29,30 @@
 // CClientProxy1_0
 //
 
-CClientProxy1_0::CClientProxy1_0(const CString& name, synergy::IStream* stream, IEventQueue* eventQueue) :
+CClientProxy1_0::CClientProxy1_0(const CString& name, synergy::IStream* stream, IEventQueue* events) :
 	CClientProxy(name, stream),
 	m_heartbeatTimer(NULL),
 	m_parser(&CClientProxy1_0::parseHandshakeMessage),
-	m_eventQueue(eventQueue)
+	m_events(events)
 {
 	// install event handlers
-	m_eventQueue->adoptHandler(stream->getInputReadyEvent(),
+	m_events->adoptHandler(m_events->forIStream().inputReady(),
 							stream->getEventTarget(),
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleData, NULL));
-	m_eventQueue->adoptHandler(stream->getOutputErrorEvent(),
+	m_events->adoptHandler(m_events->forIStream().outputError(),
 							stream->getEventTarget(),
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleWriteError, NULL));
-	m_eventQueue->adoptHandler(stream->getInputShutdownEvent(),
+	m_events->adoptHandler(m_events->forIStream().inputShutdown(),
 							stream->getEventTarget(),
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleDisconnect, NULL));
-	m_eventQueue->adoptHandler(stream->getOutputShutdownEvent(),
+	m_events->adoptHandler(m_events->forIStream().outputShutdown(),
 							stream->getEventTarget(),
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleWriteError, NULL));
-	m_eventQueue->adoptHandler(CEvent::kTimer, this,
+	m_events->adoptHandler(CEvent::kTimer, this,
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleFlatline, NULL));
 
@@ -72,22 +72,22 @@ CClientProxy1_0::disconnect()
 {
 	removeHandlers();
 	getStream()->close();
-	m_eventQueue->addEvent(CEvent(getDisconnectedEvent(), getEventTarget()));
+	m_events->addEvent(CEvent(m_events->forCClientProxy().disconnected(), getEventTarget()));
 }
 
 void
 CClientProxy1_0::removeHandlers()
 {
 	// uninstall event handlers
-	m_eventQueue->removeHandler(getStream()->getInputReadyEvent(),
+	m_events->removeHandler(m_events->forIStream().inputReady(),
 							getStream()->getEventTarget());
-	m_eventQueue->removeHandler(getStream()->getOutputErrorEvent(),
+	m_events->removeHandler(m_events->forIStream().outputError(),
 							getStream()->getEventTarget());
-	m_eventQueue->removeHandler(getStream()->getInputShutdownEvent(),
+	m_events->removeHandler(m_events->forIStream().inputShutdown(),
 							getStream()->getEventTarget());
-	m_eventQueue->removeHandler(getStream()->getOutputShutdownEvent(),
+	m_events->removeHandler(m_events->forIStream().outputShutdown(),
 							getStream()->getEventTarget());
-	m_eventQueue->removeHandler(CEvent::kTimer, this);
+	m_events->removeHandler(CEvent::kTimer, this);
 
 	// remove timer
 	removeHeartbeatTimer();
@@ -97,7 +97,7 @@ void
 CClientProxy1_0::addHeartbeatTimer()
 {
 	if (m_heartbeatAlarm > 0.0) {
-		m_heartbeatTimer = m_eventQueue->newOneShotTimer(m_heartbeatAlarm, this);
+		m_heartbeatTimer = m_events->newOneShotTimer(m_heartbeatAlarm, this);
 	}
 }
 
@@ -105,7 +105,7 @@ void
 CClientProxy1_0::removeHeartbeatTimer()
 {
 	if (m_heartbeatTimer != NULL) {
-		m_eventQueue->deleteTimer(m_heartbeatTimer);
+		m_events->deleteTimer(m_heartbeatTimer);
 		m_heartbeatTimer = NULL;
 	}
 }
@@ -172,7 +172,7 @@ CClientProxy1_0::parseHandshakeMessage(const UInt8* code)
 		// future messages get parsed by parseMessage
 		m_parser = &CClientProxy1_0::parseMessage;
 		if (recvInfo()) {
-			m_eventQueue->addEvent(CEvent(getReadyEvent(), getEventTarget()));
+			m_events->addEvent(CEvent(m_events->forCClientProxy().ready(), getEventTarget()));
 			addHeartbeatTimer();
 			return true;
 		}
@@ -185,8 +185,8 @@ CClientProxy1_0::parseMessage(const UInt8* code)
 {
 	if (memcmp(code, kMsgDInfo, 4) == 0) {
 		if (recvInfo()) {
-			m_eventQueue->addEvent(
-							CEvent(getShapeChangedEvent(), getEventTarget()));
+			m_events->addEvent(
+							CEvent(m_events->forIScreen().shapeChanged(), getEventTarget()));
 			return true;
 		}
 		return false;
@@ -492,7 +492,7 @@ CClientProxy1_0::recvClipboard()
 	CClipboardInfo* info   = new CClipboardInfo;
 	info->m_id             = id;
 	info->m_sequenceNumber = seqNum;
-	m_eventQueue->addEvent(CEvent(getClipboardChangedEvent(),
+	m_events->addEvent(CEvent(m_events->forCClientProxy().clipboardChanged(),
 							getEventTarget(), info));
 
 	return true;
@@ -518,7 +518,7 @@ CClientProxy1_0::recvGrabClipboard()
 	CClipboardInfo* info   = new CClipboardInfo;
 	info->m_id             = id;
 	info->m_sequenceNumber = seqNum;
-	m_eventQueue->addEvent(CEvent(getClipboardGrabbedEvent(),
+	m_events->addEvent(CEvent(m_events->forIScreen().clipboardGrabbed(),
 							getEventTarget(), info));
 
 	return true;

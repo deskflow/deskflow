@@ -68,12 +68,10 @@ set(src
 	IClipboard.cpp
 	IKeyState.cpp
 	IPrimaryScreen.cpp
-	IScreen.cpp
 	KeyTypes.cpp
 	ProtocolTypes.cpp
 	XScreen.cpp
 	XSynergy.cpp
-	ISecondaryScreen.cpp
 	CDaemonApp.cpp
 	CAppUtil.cpp
 	CArgsBase.cpp

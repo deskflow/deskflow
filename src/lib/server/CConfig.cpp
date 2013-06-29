@@ -24,12 +24,16 @@
 #include "stdistream.h"
 #include "stdostream.h"
 #include <cstdlib>
+#include "IEventQueue.h"
 
 //
 // CConfig
 //
 
-CConfig::CConfig() : m_hasLockToScreenAction(false)
+CConfig::CConfig(IEventQueue* events) :
+	m_events(events),
+	m_hasLockToScreenAction(false),
+	m_inputFilter(events)
 {
 	// do nothing
 }
@@ -610,7 +614,7 @@ CConfig::operator!=(const CConfig& x) const
 void
 CConfig::read(CConfigReadContext& context)
 {
-	CConfig tmp;
+	CConfig tmp(m_events);
 	while (context) {
 		tmp.readSection(context);
 	}
@@ -1048,7 +1052,7 @@ CConfig::parseCondition(CConfigReadContext& s,
 
 		IPlatformScreen::CKeyInfo* keyInfo = s.parseKeystroke(args[0]);
 
-		return new CInputFilter::CKeystrokeCondition(keyInfo);
+		return new CInputFilter::CKeystrokeCondition(m_events, keyInfo);
 	}
 
 	if (name == "mousebutton") {
@@ -1058,7 +1062,7 @@ CConfig::parseCondition(CConfigReadContext& s,
 
 		IPlatformScreen::CButtonInfo* mouseInfo = s.parseMouse(args[0]);
 
-		return new CInputFilter::CMouseButtonCondition(mouseInfo);
+		return new CInputFilter::CMouseButtonCondition(m_events, mouseInfo);
 	}
 
 	if (name == "connect") {
@@ -1074,7 +1078,7 @@ CConfig::parseCondition(CConfigReadContext& s,
 			throw XConfigRead(s, "unknown screen name \"%{1}\" in connect", screen);
 		}
 
-		return new CInputFilter::CScreenConnectedCondition(screen);
+		return new CInputFilter::CScreenConnectedCondition(m_events, screen);
 	}
 
 	throw XConfigRead(s, "unknown argument \"%{1}\"", name);
@@ -1105,16 +1109,16 @@ CConfig::parseAction(CConfigReadContext& s,
 		if (name == "keystroke") {
 			IPlatformScreen::CKeyInfo* keyInfo2 =
 				IKeyState::CKeyInfo::alloc(*keyInfo);
-			action = new CInputFilter::CKeystrokeAction(keyInfo2, true);
+			action = new CInputFilter::CKeystrokeAction(m_events, keyInfo2, true);
 			rule.adoptAction(action, true);
-			action   = new CInputFilter::CKeystrokeAction(keyInfo, false);
+			action   = new CInputFilter::CKeystrokeAction(m_events, keyInfo, false);
 			activate = false;
 		}
 		else if (name == "keyDown") {
-			action = new CInputFilter::CKeystrokeAction(keyInfo, true);
+			action = new CInputFilter::CKeystrokeAction(m_events, keyInfo, true);
 		}
 		else {
-			action = new CInputFilter::CKeystrokeAction(keyInfo, false);
+			action = new CInputFilter::CKeystrokeAction(m_events, keyInfo, false);
 		}
 	}
 
@@ -1129,16 +1133,16 @@ CConfig::parseAction(CConfigReadContext& s,
 		if (name == "mousebutton") {
 			IPlatformScreen::CButtonInfo* mouseInfo2 =
 				IPlatformScreen::CButtonInfo::alloc(*mouseInfo);
-			action = new CInputFilter::CMouseButtonAction(mouseInfo2, true);
+			action = new CInputFilter::CMouseButtonAction(m_events, mouseInfo2, true);
 			rule.adoptAction(action, true);
-			action   = new CInputFilter::CMouseButtonAction(mouseInfo, false);
+			action   = new CInputFilter::CMouseButtonAction(m_events, mouseInfo, false);
 			activate = false;
 		}
 		else if (name == "mouseDown") {
-			action = new CInputFilter::CMouseButtonAction(mouseInfo, true);
+			action = new CInputFilter::CMouseButtonAction(m_events, mouseInfo, true);
 		}
 		else {
-			action = new CInputFilter::CMouseButtonAction(mouseInfo, false);
+			action = new CInputFilter::CMouseButtonAction(m_events, mouseInfo, false);
 		}
 	}
 
@@ -1167,7 +1171,7 @@ CConfig::parseAction(CConfigReadContext& s,
 			throw XConfigRead(s, "unknown screen name in switchToScreen");
 		}
 
-		action = new CInputFilter::CSwitchToScreenAction(screen);
+		action = new CInputFilter::CSwitchToScreenAction(m_events, screen);
 	}
 
 	else if (name == "switchInDirection") {
@@ -1192,7 +1196,7 @@ CConfig::parseAction(CConfigReadContext& s,
 			throw XConfigRead(s, "unknown direction \"%{1}\" in switchToScreen", args[0]);
 		}
 
-		action = new CInputFilter::CSwitchInDirectionAction(direction);
+		action = new CInputFilter::CSwitchInDirectionAction(m_events, direction);
 	}
 
 	else if (name == "lockCursorToScreen") {
@@ -1221,7 +1225,7 @@ CConfig::parseAction(CConfigReadContext& s,
 			m_hasLockToScreenAction = true;
 		}
 
-		action = new CInputFilter::CLockCursorToScreenAction(mode);
+		action = new CInputFilter::CLockCursorToScreenAction(m_events, mode);
 	}
 
 	else if (name == "keyboardBroadcast") {
@@ -1251,7 +1255,7 @@ CConfig::parseAction(CConfigReadContext& s,
 			parseScreens(s, args[1], screens);
 		}
 
-		action = new CInputFilter::CKeyboardBroadcastAction(mode, screens);
+		action = new CInputFilter::CKeyboardBroadcastAction(m_events, mode, screens);
 	}
 
 	else {

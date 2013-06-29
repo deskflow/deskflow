@@ -31,24 +31,20 @@
 #include "CCryptoStream.h"
 #include "CCryptoOptions.h"
 
-// TODO: these are just for testing -- make sure they're gone by release!
-const byte g_key[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-const byte g_iv[] = "aaaaaaaaaaaaaaa";
-
 //
 // CClientListener
 //
 
-CEvent::Type			CClientListener::s_connectedEvent = CEvent::kUnknown;
-
 CClientListener::CClientListener(const CNetworkAddress& address,
 				ISocketFactory* socketFactory,
 				IStreamFilterFactory* streamFilterFactory,
-				const CCryptoOptions& crypto) :
+				const CCryptoOptions& crypto,
+				IEventQueue* events) :
 	m_socketFactory(socketFactory),
 	m_streamFilterFactory(streamFilterFactory),
 	m_server(NULL),
-	m_crypto(crypto)
+	m_crypto(crypto),
+	m_events(events)
 {
 	assert(m_socketFactory != NULL);
 
@@ -75,7 +71,7 @@ CClientListener::CClientListener(const CNetworkAddress& address,
 	LOG((CLOG_DEBUG1 "listening for clients"));
 
 	// setup event handler
-	EVENTQUEUE->adoptHandler(m_listen->getConnectingEvent(), m_listen,
+	m_events->adoptHandler(m_events->forIListenSocket().connecting(), m_listen,
 							new TMethodEventJob<CClientListener>(this,
 								&CClientListener::handleClientConnecting));
 }
@@ -88,12 +84,12 @@ CClientListener::~CClientListener()
 	for (CNewClients::iterator index = m_newClients.begin();
 								index != m_newClients.end(); ++index) {
 		CClientProxyUnknown* client = *index;
-		EVENTQUEUE->removeHandler(
-							CClientProxyUnknown::getSuccessEvent(), client);
-		EVENTQUEUE->removeHandler(
-							CClientProxyUnknown::getFailureEvent(), client);
-		EVENTQUEUE->removeHandler(
-							CClientProxy::getDisconnectedEvent(), client);
+		m_events->removeHandler(
+							m_events->forCClientProxyUnknown().success(), client);
+		m_events->removeHandler(
+							m_events->forCClientProxyUnknown().failure(), client);
+		m_events->removeHandler(
+							m_events->forCClientProxy().disconnected(), client);
 		delete client;
 	}
 
@@ -104,7 +100,7 @@ CClientListener::~CClientListener()
 		client = getNextClient();
 	}
 
-	EVENTQUEUE->removeHandler(m_listen->getConnectingEvent(), m_listen);
+	m_events->removeHandler(m_events->forIListenSocket().connecting(), m_listen);
 	delete m_listen;
 	delete m_socketFactory;
 	delete m_streamFilterFactory;
@@ -124,16 +120,9 @@ CClientListener::getNextClient()
 	if (!m_waitingClients.empty()) {
 		client = m_waitingClients.front();
 		m_waitingClients.pop_front();
-		EVENTQUEUE->removeHandler(CClientProxy::getDisconnectedEvent(), client);
+		m_events->removeHandler(m_events->forCClientProxy().disconnected(), client);
 	}
 	return client;
-}
-
-CEvent::Type
-CClientListener::getConnectedEvent()
-{
-	return EVENTQUEUE->registerTypeOnce(s_connectedEvent,
-							"CClientListener::connected");
 }
 
 void
@@ -150,25 +139,25 @@ CClientListener::handleClientConnecting(const CEvent&, void*)
 	if (m_streamFilterFactory != NULL) {
 		stream = m_streamFilterFactory->create(stream, true);
 	}
-	stream = new CPacketStreamFilter(stream, true);
+	stream = new CPacketStreamFilter(m_events, stream, true);
 	
 	if (m_crypto.m_mode != kDisabled) {
 		CCryptoStream* cryptoStream = new CCryptoStream(
-			EVENTQUEUE, stream, m_crypto, true);
+			m_events, stream, m_crypto, true);
 		stream = cryptoStream;
 	}
 
 	assert(m_server != NULL);
 
 	// create proxy for unknown client
-	CClientProxyUnknown* client = new CClientProxyUnknown(stream, 30.0, m_server);
+	CClientProxyUnknown* client = new CClientProxyUnknown(stream, 30.0, m_server, m_events);
 	m_newClients.insert(client);
 
 	// watch for events from unknown client
-	EVENTQUEUE->adoptHandler(CClientProxyUnknown::getSuccessEvent(), client,
+	m_events->adoptHandler(m_events->forCClientProxyUnknown().success(), client,
 							new TMethodEventJob<CClientListener>(this,
 								&CClientListener::handleUnknownClient, client));
-	EVENTQUEUE->adoptHandler(CClientProxyUnknown::getFailureEvent(), client,
+	m_events->adoptHandler(m_events->forCClientProxyUnknown().failure(), client,
 							new TMethodEventJob<CClientListener>(this,
 								&CClientListener::handleUnknownClient, client));
 }
@@ -187,18 +176,18 @@ CClientListener::handleUnknownClient(const CEvent&, void* vclient)
 	if (client != NULL) {
 		// handshake was successful
 		m_waitingClients.push_back(client);
-		EVENTQUEUE->addEvent(CEvent(getConnectedEvent(), this));
+		m_events->addEvent(CEvent(m_events->forCClientListener().connected(), this));
 
 		// watch for client to disconnect while it's in our queue
-		EVENTQUEUE->adoptHandler(CClientProxy::getDisconnectedEvent(), client,
+		m_events->adoptHandler(m_events->forCClientProxy().disconnected(), client,
 							new TMethodEventJob<CClientListener>(this,
 								&CClientListener::handleClientDisconnected,
 								client));
 	}
 
 	// now finished with unknown client
-	EVENTQUEUE->removeHandler(CClientProxyUnknown::getSuccessEvent(), client);
-	EVENTQUEUE->removeHandler(CClientProxyUnknown::getFailureEvent(), client);
+	m_events->removeHandler(m_events->forCClientProxyUnknown().success(), client);
+	m_events->removeHandler(m_events->forCClientProxyUnknown().failure(), client);
 	m_newClients.erase(unknownClient);
 	delete unknownClient;
 }
@@ -213,7 +202,7 @@ CClientListener::handleClientDisconnected(const CEvent&, void* vclient)
 							n = m_waitingClients.end(); i != n; ++i) {
 		if (*i == client) {
 			m_waitingClients.erase(i);
-			EVENTQUEUE->removeHandler(CClientProxy::getDisconnectedEvent(),
+			m_events->removeHandler(m_events->forCClientProxy().disconnected(),
 							client);
 			delete client;
 			break;

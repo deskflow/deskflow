@@ -45,7 +45,8 @@ public:
 		bool isPrimary,
 		bool noHooks,
 		const CGameDeviceInfo &gameDevice,
-		bool stopOnDeskSwitch);
+		bool stopOnDeskSwitch,
+		IEventQueue* events);
 	virtual ~CMSWindowsScreen();
 
 	//! @name manipulators
@@ -214,6 +215,9 @@ private: // HACK
 
 	// our window proc
 	static LRESULT CALLBACK wndProc(HWND, UINT, WPARAM, LPARAM);
+	
+	// save last position of mouse to compute next delta movement
+	void saveMousePosition(SInt32 x, SInt32 y);
 
 private:
 	struct CHotKeyItem {
@@ -329,9 +333,8 @@ private:
 	CGameDevice*		m_gameDevice;
 
 	static CMSWindowsScreen*	s_screen;
-
-	// save last position of mouse to compute next delta movement
-	void saveMousePosition(SInt32 x, SInt32 y);
+	
+	IEventQueue*		m_events;
 };
 
 #endif

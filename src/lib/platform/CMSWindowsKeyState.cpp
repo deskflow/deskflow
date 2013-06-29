@@ -576,7 +576,8 @@ static const CWin32Modifiers s_modifiers[] =
 };
 
 CMSWindowsKeyState::CMSWindowsKeyState(
-	CMSWindowsDesks* desks, void* eventTarget) :
+	CMSWindowsDesks* desks, void* eventTarget, IEventQueue* events) :
+	CKeyState(events),
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
 	m_eventTarget(eventTarget),
 	m_desks(desks),
@@ -586,14 +587,14 @@ CMSWindowsKeyState::CMSWindowsKeyState(
 	m_useSavedModifiers(false),
 	m_savedModifiers(0),
 	m_originalSavedModifiers(0),
-	m_eventQueue(*EVENTQUEUE)
+	m_events(events)
 {
 	init();
 }
 
 CMSWindowsKeyState::CMSWindowsKeyState(
-	CMSWindowsDesks* desks, void* eventTarget, IEventQueue& eventQueue, CKeyMap& keyMap) :
-	CKeyState(eventQueue, keyMap),
+	CMSWindowsDesks* desks, void* eventTarget, IEventQueue* events, CKeyMap& keyMap) :
+	CKeyState(events, keyMap),
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
 	m_eventTarget(eventTarget),
 	m_desks(desks),
@@ -603,7 +604,7 @@ CMSWindowsKeyState::CMSWindowsKeyState(
 	m_useSavedModifiers(false),
 	m_savedModifiers(0),
 	m_originalSavedModifiers(0),
-	m_eventQueue(eventQueue)
+	m_events(events)
 {
 	init();
 }
@@ -625,8 +626,8 @@ void
 CMSWindowsKeyState::disable()
 {
 	if (m_fixTimer != NULL) {
-		getEventQueue().removeHandler(CEvent::kTimer, m_fixTimer);
-		getEventQueue().deleteTimer(m_fixTimer);
+		m_events->removeHandler(CEvent::kTimer, m_fixTimer);
+		m_events->deleteTimer(m_fixTimer);
 		m_fixTimer = NULL;
 	}
 	m_lastDown = 0;
@@ -1401,15 +1402,15 @@ CMSWindowsKeyState::fixKeys()
 
 	if (fix && m_fixTimer == NULL) {
 		// schedule check
-		m_fixTimer = EVENTQUEUE->newTimer(0.1, NULL);
-		EVENTQUEUE->adoptHandler(CEvent::kTimer, m_fixTimer,
+		m_fixTimer = m_events->newTimer(0.1, NULL);
+		m_events->adoptHandler(CEvent::kTimer, m_fixTimer,
 							new TMethodEventJob<CMSWindowsKeyState>(
 								this, &CMSWindowsKeyState::handleFixKeys));
 	}
 	else if (!fix && m_fixTimer != NULL) {
 		// remove scheduled check
-		EVENTQUEUE->removeHandler(CEvent::kTimer, m_fixTimer);
-		EVENTQUEUE->deleteTimer(m_fixTimer);
+		m_events->removeHandler(CEvent::kTimer, m_fixTimer);
+		m_events->deleteTimer(m_fixTimer);
 		m_fixTimer = NULL;
 	}
 }
