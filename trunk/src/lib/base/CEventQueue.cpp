@@ -61,6 +61,7 @@ interrupt(CArch::ESignal, void* data)
 CEventQueue::CEventQueue() :
 	m_systemTarget(0),
 	m_nextType(CEvent::kLast),
+	m_typesForCClient(NULL),
 	m_typesForIStream(NULL),
 	m_typesForCIpcClient(NULL),
 	m_typesForCIpcClientProxy(NULL),
