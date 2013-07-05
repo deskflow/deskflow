@@ -51,32 +51,38 @@ support. Funding allows us to spend more time improving Synergy.{/t}
     <hr />
     
     <span class="contribute">
-      <h3>{t}Contribute/Donate{/t}</h3>
+      <h3>{t}Help us fund Synergy!{/t}</h3>
       
       {if $premium->user->fundsCount == 0}
       <p>
-{t url="payment/"}If you'd like to help the Synergy project, please
-make a contribution and we'll give you votes in return ($10 per vote)
+{t url="payment/"}If you'd like to help The Synergy Project, please
+make a donation and we'll give you votes in return ($10 per vote)
 so you can tell us what to work on next. We would really appreciate
 your support. Thanks!{/t}
       </p>
       {else if $premium->user->votesFree == 0}
       <p>
 {t url="payment/"}It looks like you've used all your votes, that's great!
-Please do make another contribution if you would like to vote on more
+Please do make another donation if you would like to vote on more
 issues ($10 per vote). We really appreciate your continued support.{/t}
       </p>
       {else}
       <p>
 {t url="payment/"}Thanks for your support! If you'd like to make another
-contribution at any time and get more votes ($10 per vote), this would
+donation at any time and get more votes ($10 per vote), this would
 really help support the Synergy project.{/t}
       </p>
       {/if}
       
-      <p><a href="payment/">{t}Make a contribution{/t}</a></p>
+      <p><a href="payment/">{t}Make a donation{/t}</a></p>
+      
+      <div style="margin-bottom: 10px; margin-top: 20px">
+        <a href="payment/"><img src="{$baseUrl}/img/paypal-sm.png" /></a>
+        <a href="payment/"><img src="{$baseUrl}/img/google-sm.png" style="margin-bottom: 5px; margin-left: 5px" /></a>
+      </div>
+      
       <p>
-        {t amount={$user->fundsTotal}}<i>Contributed so far:</i> <b>$%1</b>{/t}
+        {t amount={$user->fundsTotal}}<i>Donated so far:</i> <b>$%1</b>{/t}
         {for $i=0 to (($user->fundsTotal / 10) - 1)}
         <img src="{$baseUrl}/img/icons/heart.png" style="margin-bottom: -.2em" />
         {/for}

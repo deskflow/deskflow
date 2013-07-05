@@ -411,8 +411,16 @@ div.download-premium div.free,
 div.download-premium div.donateMessage {
   padding: 20px;
   border-radius: 7px;
-  margin-bottom: 10px;
   margin-right: 5px;
+  margin-bottom: 10px;
+}
+
+div.download-premium div.premium {
+  padding-bottom: 10px;
+}
+
+div.download-premium div.donateMessage {
+  padding-bottom: 0px;
 }
 
 div.download-premium div.donateMessage h2 {
@@ -421,11 +429,6 @@ div.download-premium div.donateMessage h2 {
 
 div.download-premium div.donateMessage {
   border: 1px solid #86c972;
-}
-
-div.download-premium div.donateMessage p {
-  padding: 0px;
-  margin: 0px;
 }
 
 div.download-premium div.premium,
@@ -448,7 +451,7 @@ div.download-premium div.free p {
 }
 
 div.download-premium div.free div.info {
-  height: 13em;
+  height: 14.5em;
 }
 
 div.download-premium div.or {

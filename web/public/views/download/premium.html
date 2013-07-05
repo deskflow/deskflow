@@ -20,32 +20,25 @@ either, it's entirely up to you.{/t}
     </div>
     {/if}
     
-    <div class="caution">
-      <h2>{t}Urgent Appeal from Synergy!{/t}</h2>
+    <div class="donateMessage">
+      <h2>{t}Urgent Appeal from The Synergy Project{/t}</h2>
       <p>
-{t}We urgently need your help to fund the continued development of Synergy.{/t}
+<img src="{$baseUrl}/img/icons/warn.png" style="margin-bottom: -.1em" />
+&nbsp;<b>{t}We urgently need your help to fund this open source project.{/t}</b>
       </p>
       <p>
-{t}We rely on Synergy Premium accounts to fund development. We are now
-supporting 2 full time software engineers working on Synergy. Even if you
-can only contribute just $1, it might not seem like much, it really is an
-enormous help for the project!{/t}
+{t}Please consider a generous donation to help us fund this open source project.
+Funding is spent on writing code (fixing bugs and adding new features). Premium
+users who contribute significantly are given voting rights (one vote per $10),
+so you will have your say on what we should do.{/t}
       </p>
       <p>
-{t}What's best is that Premium users (with votes) are the only ones who can
-tell us what to work on.{/t}
+{t}Thanks so much for reading. We hope you decide to help us out and
+join our beloved family of Synergy Premium users.{/t}
       </p>
       <p>
-{t}Please choose the option on the left and open a Synergy Premium account
-for as little as $1. You'll be helping us keep the Synergy project alive
-for the price of a can of Coke! :-){/t}
-      </p>
-      <p>
-{t}Thanks so much for reading, and we hope you decide to help us out.{/t}
-      </p>
-      <p>
+        <img src="{$baseUrl}/img/icons/user.png" style="margin-bottom: -.1em" />
         <b>Nick Bolton<br />
-        <a href="https://twitter.com/NickBoltonUK">@NickBoltonUK</a><br />
         <em>{t}Synergy Project Leader{/t}</em></b>
       </p>
     </div>
@@ -55,11 +48,16 @@ for the price of a can of Coke! :-){/t}
         <div class="info">
           
           <h2>{t}Premium{/t}</h2>
-          <p>{t}You decide what to contribute.{/t}</p>
+          <p>{t}You decide what to donate.{/t}</p>
           
-          <input type="textbox" id="amount" name="amount" value="$1" />
+          <input type="textbox" id="amount" name="amount" value="$50" />
           <div class="amount">
             <div class="slider"></div>
+          </div>
+          
+          <div>
+            <img src="{$baseUrl}/img/paypal-sm.png" style="margin-top: 5px" />
+            <img src="{$baseUrl}/img/google-sm.png" style="margin-bottom: 5px; margin-left: 5px" />
           </div>
           
           <p><em>{t}Use the slider, or enter any value into the textbox.{/t}</em></p>
@@ -77,12 +75,12 @@ for the price of a can of Coke! :-){/t}
       <div class="info">
       
         <h2>{t}Non-premium{/t}</h2>
-        <p>{t}I'm not giving you guys a dime!{/t}</p>
-        <p>:-(</p>
         
       </div>
-      <p><a href="?list">{t}Continue{/t}</a></p>
+      <p><a href="?list">{t}Continue{/t}</a> <img src="{$baseUrl}/img/icons/sad.png" style="margin-bottom: -.2em" /></p>
     </div>
+    
+    <div style="width: 100%; clear: both"></div>
     
     <h3>{t}Top 10 Votes{/t}</h3>
     <p>
@@ -95,6 +93,8 @@ for the price of a can of Coke! :-){/t}
         <a href="/spit/issues/details/{$vote->issueId}/" target="_blank">#{$vote->issueId}</a> - {t votes=$vote->voteCountSum}%1 votes{/t}
       {if $vote->status == 1}
         - <span class="doing">Doing</span> <img class="icon16" src="{$baseUrl}/img/icons/doing.png" />
+      {elseif $vote->status == 3}
+        - <span class="doing">Next</span> <img class="icon16" src="{$baseUrl}/img/icons/wait.png" />
       {elseif $vote->status == 2}
         - <span class="done">Done!</span> <img class="icon16" src="{$baseUrl}/img/icons/done.png" />
       {/if}
@@ -102,33 +102,6 @@ for the price of a can of Coke! :-){/t}
       {/foreach}
     </ol>
   
-  </div>
-  
-  <div class="info-dialog">
-    <h2>{t}Synergy Premium{/t}</h2>
-    <p>
-{t}Thanks for your interest in Synergy Premium, we really appreciate your
-support. Funding allows us to spend more time improving Synergy.
-Support the Synergy project by registering a Synergy Premium account today.{/t}
-    </p>
-    
-    <p>
-{t}If you can only contribute $1, that's totally fine by us! Anything at all
-will allow us to spend more time working on Synergy.{/t}
-    </p>
-
-    <p>
-{t}If you decide to contribute $10, then you get a premium vote. For each
-additional $10, you get another vote. You can cast this vote on any bug
-or feature. We will try our best to fix the highest voted feature in the
-next version. If we can't fix it then you get your votes back, simple.{/t}
-    </p>
-    
-    <p>
-{t}It's people like you that make Synergy a better piece of software! :-){/t}
-    </p>
-    
-    <p><a class="close" href="javascript:void(0)">{t}OK{/t}</a></p>
   </div>
 
 </div>
