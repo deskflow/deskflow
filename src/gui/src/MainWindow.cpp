@@ -84,6 +84,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pLabelScreenName->setText(getScreenName());
 	m_pLabelIpAddresses->setText(getIPAddresses());
 
+	updatePremiumInfo();
+
 #if defined(Q_OS_WIN)
 	// ipc must always be enabled, so that we can disable command when switching to desktop mode.
 	connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLogRaw(const QString&)));
@@ -749,11 +751,26 @@ void MainWindow::changeEvent(QEvent* event)
 		case QEvent::LanguageChange:
 			retranslateUi(this);
 			retranslateMenuBar();
+			updatePremiumInfo();
 			break;
 
 		default:
 			QMainWindow::changeEvent(event);
 		}
+	}
+}
+
+void MainWindow::updatePremiumInfo()
+{
+	if (m_AppConfig.isPremium())
+	{
+		m_pWidgetPremium->hide();
+		setWindowTitle(tr("Synergy Premium"));
+	}
+	else
+	{
+		m_pWidgetPremium->show();
+		setWindowTitle(tr("Synergy"));
 	}
 }
 
@@ -812,6 +829,7 @@ void MainWindow::on_m_pActionWizard_triggered()
 {
 	SetupWizard wizard(*this, false);
 	wizard.exec();
+	updatePremiumInfo();
 }
 
 void MainWindow::on_m_pElevateCheckBox_toggled(bool checked)

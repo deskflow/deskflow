@@ -26,8 +26,9 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
-#define PREMIUM_AUTH_URL "https://synergy-foss.org/premium/json/auth/"
 //#define PREMIUM_AUTH_URL "http://localhost/synergy/premium/json/auth/"
+#define PREMIUM_AUTH_URL "https://synergy-foss.org/premium/json/auth/"
+#define PREMIUM_REGISTER_URL "https://synergy-foss.org/premium/register/?source=gui-wizard"
 
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_MainWindow(mainWindow),
@@ -112,7 +113,7 @@ bool SetupWizard::validateCurrentPage()
 		}
 		else if (m_pRadioButtonPremiumRegister->isChecked())
 		{
-			const QUrl url(QString("https://synergy-foss.org/premium/register/?source=gui"));
+			const QUrl url(QString(PREMIUM_REGISTER_URL));
 			QDesktopServices::openUrl(url);
 			m_pRadioButtonPremiumLogin->setChecked(true);
 			return false;
