@@ -50,5 +50,6 @@
         <file>lang/gui_zh-CN.qm</file>
         <file>lang/gui_zh-TW.qm</file>
         <file>lang/Languages.xml</file>
+        <file>icons/16x16/money.png</file>
     </qresource>
 </RCC>
