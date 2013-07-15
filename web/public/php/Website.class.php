@@ -39,6 +39,14 @@ class Website extends Controllers\Controller {
     $this->ensureCorrectProtocol();
 
     $path = $this->getPath();
+
+    // redirect so that paths always end in forward slash, this allows us to
+    // rely on relative links in the html without using the ./ prefix.
+    if (($path != null) && (substr($path, strlen($path) - 1) != "/")) {
+        header("Location: " . $path . "/");
+        exit;
+    }
+
     $pathParts = preg_split('/\//', $path, null, PREG_SPLIT_NO_EMPTY);
     
     // defaults
