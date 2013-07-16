@@ -394,6 +394,13 @@ CClientProxy1_0::cryptoIv(const UInt8* iv)
 }
 
 void
+CClientProxy1_0::fileChunkSending(UInt8 mark, const UInt8* iv)
+{
+	// ignore -- not supported in protocol 1.0
+	LOG((CLOG_DEBUG "fileChunkSending not supported"));
+}
+
+void
 CClientProxy1_0::screensaver(bool on)
 {
 	LOG((CLOG_DEBUG1 "send screen saver to \"%s\" on=%d", getName().c_str(), on ? 1 : 0));

@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2013 Bolton Software Ltd.
- *
+ * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file COPYING that should have accompanied this file.
- *
+ * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,15 +17,22 @@
 
 #pragma once
 
-#include <gmock/gmock.h>
-#include "CCryptoStream.h"
-#include "CCryptoOptions.h"
+#include "CEventQueue.h"
 
-class CMockCryptoStream : public CCryptoStream
-{
+class CEventQueueTimer;
+
+class CTestEventQueue : public CEventQueue {
 public:
-	CMockCryptoStream(IEventQueue* eventQueue, IStream* stream) :
-		CCryptoStream(eventQueue, stream, CCryptoOptions("gcm", "stub"), false) { }
-	MOCK_METHOD2(read, UInt32(void*, UInt32));
-	MOCK_METHOD2(write, void(const void*, UInt32));
+	CTestEventQueue() : m_quitTimeoutTimer(nullptr) { }
+
+	void				handleQuitTimeout(const CEvent&, void* vclient);
+	void				raiseQuitEvent();
+	void				initQuitTimeout(double timeout);
+	void				cleanupQuitTimeout();
+
+private:
+	void				timeoutThread(void*);
+
+private:
+	CEventQueueTimer*	m_quitTimeoutTimer;
 };

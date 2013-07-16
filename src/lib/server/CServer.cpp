@@ -41,7 +41,7 @@
 // CServer
 //
 
-CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient, CScreen* screen, IEventQueue* events) :
+CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen, IEventQueue* events) :
 	m_events(events),
 	m_mock(false),
 	m_primaryClient(primaryClient),
@@ -51,8 +51,8 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient, CScreen* 
 	m_yDelta(0),
 	m_xDelta2(0),
 	m_yDelta2(0),
-	m_config(events),
-	m_inputFilter(m_config.getInputFilter()),
+	m_config(&config),
+	m_inputFilter(config.getInputFilter()),
 	m_activeSaver(NULL),
 	m_switchDir(kNoDirection),
 	m_switchScreen(NULL),
@@ -173,6 +173,10 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient, CScreen* 
 							m_inputFilter,
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleFakeInputEndEvent));
+	m_events->adoptHandler(m_events->forIScreen().fileChunkSending(),
+							this,
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleFileChunkSendingEvent));
 
 	// add connection
 	addClient(m_primaryClient);
@@ -185,8 +189,8 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient, CScreen* 
 	m_inputFilter->setPrimaryClient(m_primaryClient);
 
 	// Determine if scroll lock is already set. If so, lock the cursor to the primary screen
-	int keyValue = m_primaryClient->getToggleMask ();
-	if (m_primaryClient->getToggleMask () & KeyModifierScrollLock) {
+	int keyValue = m_primaryClient->getToggleMask();
+	if (m_primaryClient->getToggleMask() & KeyModifierScrollLock) {
 		LOG((CLOG_DEBUG "scroll lock on initially. locked to screen"));
 		m_lockedToScreen = true;
 	}
@@ -259,7 +263,6 @@ CServer::setConfig(const CConfig& config)
 	closeClients(config);
 
 	// cut over
-	m_config = config;
 	processOptions();
 
 	// add ScrollLock as a hotkey to lock to the screen.  this was a
@@ -269,7 +272,7 @@ CServer::setConfig(const CConfig& config)
 	// we will unfortunately generate a warning.  if the user has
 	// configured a CLockCursorToScreenAction then we don't add
 	// ScrollLock as a hotkey.
-	if (!m_config.hasLockToScreenAction()) {
+	if (!m_config->hasLockToScreenAction()) {
 		IPlatformScreen::CKeyInfo* key =
 			IPlatformScreen::CKeyInfo::alloc(kKeyScrollLock, 0, 0, 0);
 		CInputFilter::CRule rule(new CInputFilter::CKeystrokeCondition(m_events, key));
@@ -301,7 +304,7 @@ CServer::adoptClient(CBaseClientProxy* client)
 								&CServer::handleClientDisconnected, client));
 
 	// name must be in our configuration
-	if (!m_config.isScreen(client->getName())) {
+	if (!m_config->isScreen(client->getName())) {
 		LOG((CLOG_WARN "unrecognised client name \"%s\", check server config", client->getName().c_str()));
 		closeClient(client, kMsgEUnknown);
 		return;
@@ -375,7 +378,7 @@ CServer::getClients(std::vector<CString>& list) const
 CString
 CServer::getName(const CBaseClientProxy* client) const
 {
-	CString name = m_config.getCanonicalName(client->getName());
+	CString name = m_config->getCanonicalName(client->getName());
 	if (name.empty()) {
 		name = client->getName();
 	}
@@ -579,7 +582,7 @@ CServer::hasAnyNeighbor(CBaseClientProxy* client, EDirection dir) const
 {
 	assert(client != NULL);
 
-	return m_config.hasNeighbor(getName(client), dir);
+	return m_config->hasNeighbor(getName(client), dir);
 }
 
 CBaseClientProxy*
@@ -601,7 +604,7 @@ CServer::getNeighbor(CBaseClientProxy* src,
 	// search for the closest neighbor that exists in direction dir
 	float tTmp;
 	for (;;) {
-		CString dstName(m_config.getNeighbor(srcName, dir, t, &tTmp));
+		CString dstName(m_config->getNeighbor(srcName, dir, t, &tTmp));
 
 		// if nothing in that direction then return NULL. if the
 		// destination is the source then we can make no more
@@ -757,25 +760,25 @@ CServer::avoidJumpZone(CBaseClientProxy* dst,
 	// don't need to move inwards because that side can't provoke a jump.
 	switch (dir) {
 	case kLeft:
-		if (!m_config.getNeighbor(dstName, kRight, t, NULL).empty() &&
+		if (!m_config->getNeighbor(dstName, kRight, t, NULL).empty() &&
 			x > dx + dw - 1 - z)
 			x = dx + dw - 1 - z;
 		break;
 
 	case kRight:
-		if (!m_config.getNeighbor(dstName, kLeft, t, NULL).empty() &&
+		if (!m_config->getNeighbor(dstName, kLeft, t, NULL).empty() &&
 			x < dx + z)
 			x = dx + z;
 		break;
 
 	case kTop:
-		if (!m_config.getNeighbor(dstName, kBottom, t, NULL).empty() &&
+		if (!m_config->getNeighbor(dstName, kBottom, t, NULL).empty() &&
 			y > dy + dh - 1 - z)
 			y = dy + dh - 1 - z;
 		break;
 
 	case kBottom:
-		if (!m_config.getNeighbor(dstName, kTop, t, NULL).empty() &&
+		if (!m_config->getNeighbor(dstName, kTop, t, NULL).empty() &&
 			y < dy + z)
 			y = dy + z;
 		break;
@@ -839,9 +842,9 @@ CServer::isSwitchOkay(CBaseClientProxy* newScreen,
 	// are we in a locked corner?  first check if screen has the option set
 	// and, if not, check the global options.
 	const CConfig::CScreenOptions* options =
-						m_config.getOptions(getName(m_active));
+						m_config->getOptions(getName(m_active));
 	if (options == NULL || options->count(kOptionScreenSwitchCorners) == 0) {
-		options = m_config.getOptions("");
+		options = m_config->getOptions("");
 	}
 	if (options != NULL && options->count(kOptionScreenSwitchCorners) > 0) {
 		// get corner mask and size
@@ -1089,7 +1092,7 @@ CServer::sendOptions(CBaseClientProxy* client) const
 
 	// look up options for client
 	const CConfig::CScreenOptions* options =
-						m_config.getOptions(getName(client));
+						m_config->getOptions(getName(client));
 	if (options != NULL) {
 		// convert options to a more convenient form for sending
 		optionsList.reserve(2 * options->size());
@@ -1101,7 +1104,7 @@ CServer::sendOptions(CBaseClientProxy* client) const
 	}
 
 	// look up global options
-	options = m_config.getOptions("");
+	options = m_config->getOptions("");
 	if (options != NULL) {
 		// convert options to a more convenient form for sending
 		optionsList.reserve(optionsList.size() + 2 * options->size());
@@ -1120,7 +1123,7 @@ CServer::sendOptions(CBaseClientProxy* client) const
 void
 CServer::processOptions()
 {
-	const CConfig::CScreenOptions* options = m_config.getOptions("");
+	const CConfig::CScreenOptions* options = m_config->getOptions("");
 	if (options == NULL) {
 		return;
 	}
@@ -1508,6 +1511,13 @@ void
 CServer::handleFakeInputEndEvent(const CEvent&, void*)
 {
 	m_primaryClient->fakeInputEnd();
+}
+
+void
+CServer::handleFileChunkSendingEvent(const CEvent& event, void*)
+{
+	UInt8* data = reinterpret_cast<UInt8*>(event.getData());
+	onFileChunkSending(data);
 }
 
 void
@@ -1968,6 +1978,16 @@ CServer::onGameDeviceTimingReq()
 {
 	LOG((CLOG_DEBUG1 "onGameDeviceTimingReq"));
 	m_active->gameDeviceTimingReq();
+}
+
+void
+CServer::onFileChunkSending(const UInt8* data)
+{
+	LOG((CLOG_DEBUG1 "onFileChunkSending"));
+	assert(m_active != NULL);
+
+	// relay
+ 	m_active->fileChunkSending(data[0], &data[1]);
 }
 
 bool

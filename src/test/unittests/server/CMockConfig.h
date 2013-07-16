@@ -18,14 +18,14 @@
 #pragma once
 
 #include <gmock/gmock.h>
-#include "CCryptoStream.h"
-#include "CCryptoOptions.h"
 
-class CMockCryptoStream : public CCryptoStream
+#define TEST_ENV
+#include "CConfig.h"
+
+class CMockConfig : public CConfig
 {
 public:
-	CMockCryptoStream(IEventQueue* eventQueue, IStream* stream) :
-		CCryptoStream(eventQueue, stream, CCryptoOptions("gcm", "stub"), false) { }
-	MOCK_METHOD2(read, UInt32(void*, UInt32));
-	MOCK_METHOD2(write, void(const void*, UInt32));
+	CMockConfig() : CConfig() { }
+	MOCK_METHOD0(getInputFilter, CInputFilter*());
+	MOCK_CONST_METHOD1(isScreen, bool(const CString&));
 };

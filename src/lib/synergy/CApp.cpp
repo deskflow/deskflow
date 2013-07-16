@@ -357,7 +357,7 @@ CApp::initApp(int argc, const char** argv)
 void
 CApp::initIpcClient()
 {
-	m_ipcClient = new CIpcClient(m_events);
+	m_ipcClient = new CIpcClient(m_events, m_socketMultiplexer);
 	m_ipcClient->connect();
 
 	m_events->adoptHandler(

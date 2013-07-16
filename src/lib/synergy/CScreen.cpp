@@ -35,7 +35,8 @@ CScreen::CScreen(IPlatformScreen* platformScreen, IEventQueue* events) :
 	m_enabled(false),
 	m_entered(m_isPrimary),
 	m_screenSaverSync(true),
-	m_fakeInput(false)
+	m_fakeInput(false),
+	m_mock(false)
 {
 	assert(m_screen != NULL);
 
@@ -47,6 +48,10 @@ CScreen::CScreen(IPlatformScreen* platformScreen, IEventQueue* events) :
 
 CScreen::~CScreen()
 {
+	if (m_mock) {
+		return;
+	}
+
 	if (m_enabled) {
 		disable();
 	}

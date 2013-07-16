@@ -203,7 +203,7 @@ CDaemonApp::mainLoop(bool logToFile)
 		CSocketMultiplexer multiplexer;
 
 		// uses event queue, must be created here.
-		m_ipcServer = new CIpcServer(m_events);
+		m_ipcServer = new CIpcServer(m_events, &multiplexer);
 
 		// send logging to gui via ipc, log system adopts outputter.
 		m_ipcLogOutputter = new CIpcLogOutputter(*m_ipcServer);

@@ -48,7 +48,7 @@ public:
 	//! @name manipulators
 	//@{
 
-	void setServer(CServer* server);
+	void				setServer(CServer* server);
 
 	//@}
 
@@ -62,6 +62,9 @@ public:
 	Returns NULL if no clients are available.
 	*/
 	CClientProxy*		getNextClient();
+
+	//! Get server which owns this listener
+	CServer*			getServer() { return m_server; }
 
 	//@}
 

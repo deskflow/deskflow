@@ -18,14 +18,23 @@
 #pragma once
 
 #include <gmock/gmock.h>
-#include "CCryptoStream.h"
-#include "CCryptoOptions.h"
 
-class CMockCryptoStream : public CCryptoStream
+#define TEST_ENV
+#include "CPrimaryClient.h"
+#include "CString.h"
+
+class CMockPrimaryClient : public CPrimaryClient
 {
 public:
-	CMockCryptoStream(IEventQueue* eventQueue, IStream* stream) :
-		CCryptoStream(eventQueue, stream, CCryptoOptions("gcm", "stub"), false) { }
-	MOCK_METHOD2(read, UInt32(void*, UInt32));
-	MOCK_METHOD2(write, void(const void*, UInt32));
+	MOCK_CONST_METHOD0(getEventTarget, void*());
+	MOCK_CONST_METHOD2(getCursorPos, void(SInt32&, SInt32&));
+	MOCK_CONST_METHOD2(setJumpCursorPos, void(SInt32, SInt32));
+	MOCK_METHOD1(reconfigure, void(UInt32));
+	MOCK_METHOD0(resetOptions, void());
+	MOCK_METHOD1(setOptions, void(const COptionsList&));
+	MOCK_METHOD0(enable, void());
+	MOCK_METHOD0(disable, void());
+	MOCK_METHOD2(registerHotKey, UInt32(KeyID, KeyModifierMask));
+	MOCK_CONST_METHOD0(getToggleMask, KeyModifierMask());
+	MOCK_METHOD1(unregisterHotKey, void(UInt32));
 };

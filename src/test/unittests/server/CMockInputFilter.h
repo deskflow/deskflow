@@ -18,14 +18,12 @@
 #pragma once
 
 #include <gmock/gmock.h>
-#include "CCryptoStream.h"
-#include "CCryptoOptions.h"
 
-class CMockCryptoStream : public CCryptoStream
+#define TEST_ENV
+#include "CInputFilter.h"
+
+class CMockInputFilter : public CInputFilter
 {
 public:
-	CMockCryptoStream(IEventQueue* eventQueue, IStream* stream) :
-		CCryptoStream(eventQueue, stream, CCryptoOptions("gcm", "stub"), false) { }
-	MOCK_METHOD2(read, UInt32(void*, UInt32));
-	MOCK_METHOD2(write, void(const void*, UInt32));
+	 MOCK_METHOD1(setPrimaryClient, void(CPrimaryClient*));
 };

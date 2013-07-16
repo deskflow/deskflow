@@ -14,9 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+set(h
+	CTestEventQueue.h
+)
+
 set(src
+	${h}
 	Main.cpp
 	CIpcTests.cpp
+	NetworkTests.cpp
+	CTestEventQueue.cpp
 )
 
 if (WIN32)
@@ -50,11 +57,11 @@ set(inc
 	../../lib/mt
 	../../lib/net
 	../../lib/platform
+	../../lib/server
 	../../lib/synergy
 	../../../tools/gtest-1.6.0/include
 	../../../tools/gmock-1.6.0/include
 	../unittests
-	../unittests/synergy
 )
 
 if (UNIX)
@@ -72,4 +79,4 @@ endif()
 include_directories(${inc})
 add_executable(integtests ${src})
 target_link_libraries(integtests
-	arch base client common io ipc mt net platform server synergy gtest gmock ${libs})
+	arch base client common io ipc mt net platform server synergy gtest gmock cryptopp ${libs})

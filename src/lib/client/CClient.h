@@ -64,7 +64,7 @@ public:
 	~CClient();
 	
 #ifdef TEST_ENV
-	CClient() : m_mock(true), m_events(NULL) { }
+	CClient() : m_mock(true) { }
 #endif
 
 	//! @name manipulators
@@ -91,6 +91,18 @@ public:
 
 	//! Set crypto IV for decryption
 	virtual void		setDecryptIv(const UInt8* iv);
+
+	//! Clears the file buffer
+	void				clearReceivedFileData();
+
+	//! Set the expected size of receiving file
+	void				setExpectedFileSize(CString data);
+
+	//! Received a chunk of file data
+	void				fileChunkReceived(CString data);
+
+	//! Return true if recieved file size is valid
+	bool				isReceivedFileSizeValid();
 
 	//@}
 	//! @name accessors
@@ -175,6 +187,7 @@ private:
 	void				handleResume(const CEvent& event, void*);
 	void				handleGameDeviceTimingResp(const CEvent& event, void*);
 	void				handleGameDeviceFeedback(const CEvent& event, void*);
+	void				handleFileChunkSending(const CEvent&, void*);
 	
 public:
 	bool					m_mock;
@@ -199,6 +212,8 @@ private:
 	IEventQueue*			m_events;
 	CCryptoStream*			m_cryptoStream;
 	CCryptoOptions			m_crypto;
+	std::size_t				m_expectedFileSize;
+	CString					m_receivedFileData;
 };
 
 #endif

@@ -32,8 +32,6 @@
 // CSocketMultiplexer
 //
 
-CSocketMultiplexer*		CSocketMultiplexer::s_instance = NULL;
-
 CSocketMultiplexer::CSocketMultiplexer() :
 	m_mutex(new CMutex),
 	m_thread(NULL),
@@ -44,8 +42,6 @@ CSocketMultiplexer::CSocketMultiplexer() :
 	m_jobListLocker(NULL),
 	m_jobListLockLocker(NULL)
 {
-	assert(s_instance == NULL);
-
 	// this pointer just has to be unique and not NULL.  it will
 	// never be dereferenced.  it's used to identify cursor nodes
 	// in the jobs list.
@@ -54,8 +50,6 @@ CSocketMultiplexer::CSocketMultiplexer() :
 	// start thread
 	m_thread = new CThread(new TMethodJob<CSocketMultiplexer>(
 								this, &CSocketMultiplexer::serviceThread));
-
-	s_instance = this;
 }
 
 CSocketMultiplexer::~CSocketMultiplexer()
@@ -76,15 +70,6 @@ CSocketMultiplexer::~CSocketMultiplexer()
 						i != m_socketJobMap.end(); ++i) {
 		delete *(i->second);
 	}
-
-	s_instance = NULL;
-}
-
-CSocketMultiplexer*
-CSocketMultiplexer::getInstance()
-{
-	assert(s_instance != NULL);
-	return s_instance;
 }
 
 void

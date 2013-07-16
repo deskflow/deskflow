@@ -176,6 +176,10 @@ public:
 	CConfig(IEventQueue* events);
 	virtual ~CConfig();
 
+#ifdef TEST_ENV
+	CConfig() : m_inputFilter(NULL) { }
+#endif
+
 	//! @name manipulators
 	//@{
 
@@ -313,7 +317,8 @@ public:
 	Returns the hot key input filter.  Clients can modify hotkeys using
 	that object.
 	*/
-	CInputFilter*		getInputFilter();
+	virtual CInputFilter*
+						getInputFilter();
 
 	//@}
 	//! @name accessors
@@ -339,7 +344,7 @@ public:
 	/*!
 	Returns true iff \c name names a screen.
 	*/
-	bool				isScreen(const CString& name) const;
+	virtual bool		isScreen(const CString& name) const;
 
 	//! Test for canonical screen name
 	/*!

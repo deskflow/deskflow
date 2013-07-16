@@ -38,6 +38,10 @@ public:
 	CPrimaryClient(const CString& name, CScreen* screen);
 	~CPrimaryClient();
 
+#ifdef TEST_ENV
+	CPrimaryClient() : CBaseClientProxy(""), m_mock(true) { }
+#endif
+
 	//! @name manipulators
 	//@{
 
@@ -45,20 +49,20 @@ public:
 	/*!
 	Handles reconfiguration of jump zones.
 	*/
-	void				reconfigure(UInt32 activeSides);
+	virtual void		reconfigure(UInt32 activeSides);
 
 	//! Register a system hotkey
 	/*!
 	Registers a system-wide hotkey for key \p key with modifiers \p mask.
 	Returns an id used to unregister the hotkey.
 	*/
-	UInt32				registerHotKey(KeyID key, KeyModifierMask mask);
+	virtual UInt32		registerHotKey(KeyID key, KeyModifierMask mask);
 
 	//! Unregister a system hotkey
 	/*!
 	Unregisters a previously registered hot key.
 	*/
-	void				unregisterHotKey(UInt32 id);
+	virtual void		unregisterHotKey(UInt32 id);
 
 	//! Prepare to synthesize input on primary screen
 	/*!
@@ -98,7 +102,8 @@ public:
 	/*!
 	Returns the primary screen's current toggle modifier key state.
 	*/
-	KeyModifierMask		getToggleMask() const;
+	virtual KeyModifierMask		
+						getToggleMask() const;
 
 	//! Get screen lock state
 	/*!
@@ -143,11 +148,13 @@ public:
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);
+	virtual void		fileChunkSending(UInt8 mark, const UInt8* data);
 
 private:
 	CScreen*			m_screen;
 	bool				m_clipboardDirty[kClipboardEnd];
 	SInt32				m_fakeInputCount;
+	bool				m_mock;
 };
 
 #endif

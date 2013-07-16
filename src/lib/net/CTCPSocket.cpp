@@ -35,11 +35,12 @@
 // CTCPSocket
 //
 
-CTCPSocket::CTCPSocket(IEventQueue* events) :
+CTCPSocket::CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
 	IDataSocket(events),
 	m_events(events),
 	m_mutex(),
-	m_flushed(&m_mutex, true)
+	m_flushed(&m_mutex, true),
+	m_socketMultiplexer(socketMultiplexer)
 {
 	try {
 		m_socket = ARCH->newSocket(IArchNetwork::kINET, IArchNetwork::kSTREAM);
@@ -51,12 +52,13 @@ CTCPSocket::CTCPSocket(IEventQueue* events) :
 	init();
 }
 
-CTCPSocket::CTCPSocket(IEventQueue* events, CArchSocket socket) :
+CTCPSocket::CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer, CArchSocket socket) :
 	IDataSocket(events),
 	m_events(events),
 	m_mutex(),
 	m_socket(socket),
-	m_flushed(&m_mutex, true)
+	m_flushed(&m_mutex, true),
+	m_socketMultiplexer(socketMultiplexer)
 {
 	assert(m_socket != NULL);
 
@@ -316,10 +318,10 @@ CTCPSocket::setJob(ISocketMultiplexerJob* job)
 {
 	// multiplexer will delete the old job
 	if (job == NULL) {
-		CSocketMultiplexer::getInstance()->removeSocket(this);
+		m_socketMultiplexer->removeSocket(this);
 	}
 	else {
-		CSocketMultiplexer::getInstance()->addSocket(this, job);
+		m_socketMultiplexer->addSocket(this, job);
 	}
 }
 
