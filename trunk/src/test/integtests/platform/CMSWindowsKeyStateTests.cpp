@@ -27,8 +27,8 @@
 #include "CMSWindowsScreen.h"
 #include "CMSWindowsScreenSaver.h"
 #include "TMethodJob.h"
-#include "CMockEventQueue.h"
-#include "CMockKeyMap.h"
+#include "synergy/CMockEventQueue.h"
+#include "synergy/CMockKeyMap.h"
 
 // wParam = flags, HIBYTE(lParam) = virtual key, LOBYTE(lParam) = scan code
 #define SYNERGY_MSG_FAKE_KEY		SYNERGY_HOOK_LAST_MSG + 4

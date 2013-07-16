@@ -670,8 +670,11 @@ CClientListener*
 CServerApp::openClientListener(const CNetworkAddress& address)
 {
 	CClientListener* listen = new CClientListener(
-		address, new CTCPSocketFactory(m_events),
-		NULL, args().m_crypto, m_events);
+		address,
+		new CTCPSocketFactory(m_events, getSocketMultiplexer()),
+		NULL,
+		args().m_crypto,
+		m_events);
 	
 	m_events->adoptHandler(
 		m_events->forCClientListener().connected(), listen,
@@ -682,7 +685,7 @@ CServerApp::openClientListener(const CNetworkAddress& address)
 }
 
 CServer* 
-CServerApp::openServer(const CConfig& config, CPrimaryClient* primaryClient)
+CServerApp::openServer(CConfig& config, CPrimaryClient* primaryClient)
 {
 	CServer* server = new CServer(config, primaryClient, s_serverScreen, m_events);
 
@@ -720,6 +723,7 @@ CServerApp::mainLoop()
 	// create socket multiplexer.  this must happen after daemonization
 	// on unix because threads evaporate across a fork().
 	CSocketMultiplexer multiplexer;
+	setSocketMultiplexer(&multiplexer);
 
 	// if configuration has no screens then add this system
 	// as the default

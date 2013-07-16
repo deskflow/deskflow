@@ -647,7 +647,9 @@ public:
 		m_shapeChanged(CEvent::kUnknown),
 		m_clipboardGrabbed(CEvent::kUnknown),
 		m_suspend(CEvent::kUnknown),
-		m_resume(CEvent::kUnknown) { }
+		m_resume(CEvent::kUnknown),
+		m_fileChunkSending(CEvent::kUnknown),
+		m_fileRecieveComplete(CEvent::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -683,10 +685,16 @@ public:
 	
 	//! Get resume event type
 	/*!
-	Returns the suspend event type. This is sent whenever the system wakes
+	Returns the resume event type. This is sent whenever the system wakes
 	up or a user session is activated (fast user switching).
 	*/
 	CEvent::Type		resume();
+
+	//! Sending a file chunk
+	CEvent::Type		fileChunkSending();
+
+	//! Completed receiving a file
+	CEvent::Type		fileRecieveComplete();
 
 	//@}
 		
@@ -696,6 +704,8 @@ private:
 	CEvent::Type		m_clipboardGrabbed;
 	CEvent::Type		m_suspend;
 	CEvent::Type		m_resume;
+	CEvent::Type		m_fileChunkSending;
+	CEvent::Type		m_fileRecieveComplete;
 };
 
 class ISecondaryScreenEvents : public CEventTypes {

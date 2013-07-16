@@ -321,6 +321,10 @@ public:
 	CInputFilter(const CInputFilter&);
 	virtual ~CInputFilter();
 
+#ifdef TEST_ENV
+	CInputFilter() : m_primaryClient(NULL) { }
+#endif
+
 	CInputFilter&		operator=(const CInputFilter&);
 
 	// add rule, adopting the condition and the actions
@@ -334,7 +338,7 @@ public:
 
 	// enable event filtering using the given primary client.  disable
 	// if client is NULL.
-	void				setPrimaryClient(CPrimaryClient* client);
+	virtual void		setPrimaryClient(CPrimaryClient* client);
 
 	// convert rules to a string
 	CString				format(const CString& linePrefix) const;

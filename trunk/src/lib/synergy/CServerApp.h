@@ -100,7 +100,7 @@ public:
 	void handleSuspend(const CEvent&, void*);
 	void handleResume(const CEvent&, void*);
 	CClientListener* openClientListener(const CNetworkAddress& address);
-	CServer* openServer(const CConfig& config, CPrimaryClient* primaryClient);
+	CServer* openServer(CConfig& config, CPrimaryClient* primaryClient);
 	void handleNoClients(const CEvent&, void*);
 	bool startServer();
 	int mainLoop();

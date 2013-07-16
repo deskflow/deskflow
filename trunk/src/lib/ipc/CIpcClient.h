@@ -25,6 +25,7 @@
 class CIpcServerProxy;
 class CIpcMessage;
 class IEventQueue;
+class CSocketMultiplexer;
 
 //! IPC client for communication between daemon and GUI.
 /*!
@@ -32,8 +33,8 @@ class IEventQueue;
  */
 class CIpcClient {
 public:
-	CIpcClient(IEventQueue* events);
-	CIpcClient(IEventQueue* events, int port);
+	CIpcClient(IEventQueue* events, CSocketMultiplexer* socketMultiplexer);
+	CIpcClient(IEventQueue* events, CSocketMultiplexer* socketMultiplexer, int port);
 	virtual ~CIpcClient();
 
 	//! @name manipulators

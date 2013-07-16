@@ -28,7 +28,8 @@
 CPrimaryClient::CPrimaryClient(const CString& name, CScreen* screen) :
 	CBaseClientProxy(name),
 	m_screen(screen),
-	m_fakeInputCount(0)
+	m_fakeInputCount(0),
+	m_mock(false)
 {
 	// all clipboards are clean
 	for (UInt32 i = 0; i < kClipboardEnd; ++i) {
@@ -268,6 +269,12 @@ CPrimaryClient::gameDeviceTimingReq()
 
 void
 CPrimaryClient::screensaver(bool)
+{
+	// ignore
+}
+
+void
+CPrimaryClient::fileChunkSending(UInt8 mark, const UInt8* data)
 {
 	// ignore
 }

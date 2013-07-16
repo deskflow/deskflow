@@ -35,7 +35,7 @@
 #include "CString.h"
 #include "CIpcServerProxy.h"
 #include "CIpcMessage.h"
-#include "CSimpleEventQueueBuffer.h"
+#include "CTestEventQueue.h"
 
 #define TEST_IPC_PORT 24802
 
@@ -49,18 +49,9 @@ public:
 	void				sendMessageToServer_serverHandleMessageReceived(const CEvent&, void*);
 	void				sendMessageToClient_serverHandleClientConnected(const CEvent&, void*);
 	void				sendMessageToClient_clientHandleMessageReceived(const CEvent&, void*);
-	void				handleQuitTimeout(const CEvent&, void* vclient);
-	void				raiseQuitEvent();
-	void				initQuitTimeout(double timeout);
-	void				cleanupQuitTimeout();
-
-private:
-	void				timeoutThread(void*);
 
 public:
 	CSocketMultiplexer	m_multiplexer;
-	CEventQueue			m_events;
-	CEventQueueTimer*	m_quitTimeoutTimer;
 	bool				m_connectToServer_helloMessageReceived;
 	bool				m_connectToServer_hasClientNode;
 	CIpcServer*			m_connectToServer_server;
@@ -68,12 +59,14 @@ public:
 	CString				m_sendMessageToClient_receivedString;
 	CIpcClient*			m_sendMessageToServer_client;
 	CIpcServer*			m_sendMessageToClient_server;
+	CTestEventQueue		m_events;
 
 };
 
 TEST_F(CIpcTests, connectToServer)
 {
-	CIpcServer server(&m_events, TEST_IPC_PORT);
+	CSocketMultiplexer socketMultiplexer;
+	CIpcServer server(&m_events, &socketMultiplexer, TEST_IPC_PORT);
 	server.listen();
 	m_connectToServer_server = &server;
 
@@ -82,13 +75,13 @@ TEST_F(CIpcTests, connectToServer)
 		new TMethodEventJob<CIpcTests>(
 		this, &CIpcTests::connectToServer_handleMessageReceived));
 	
-	CIpcClient client(&m_events, TEST_IPC_PORT);
+	CIpcClient client(&m_events, &socketMultiplexer, TEST_IPC_PORT);
 	client.connect();
 	
-	initQuitTimeout(5);
+	m_events.initQuitTimeout(5);
 	m_events.loop();
 	m_events.removeHandler(m_events.forCIpcServer().messageReceived(), &server);
-	cleanupQuitTimeout();
+	m_events.cleanupQuitTimeout();
 	
 	EXPECT_EQ(true, m_connectToServer_helloMessageReceived);
 	EXPECT_EQ(true, m_connectToServer_hasClientNode);
@@ -96,7 +89,8 @@ TEST_F(CIpcTests, connectToServer)
 
 TEST_F(CIpcTests, sendMessageToServer)
 {
-	CIpcServer server(&m_events, TEST_IPC_PORT);
+	CSocketMultiplexer socketMultiplexer;
+	CIpcServer server(&m_events, &socketMultiplexer, TEST_IPC_PORT);
 	server.listen();
 	
 	// event handler sends "test" command to server.
@@ -105,21 +99,22 @@ TEST_F(CIpcTests, sendMessageToServer)
 		new TMethodEventJob<CIpcTests>(
 		this, &CIpcTests::sendMessageToServer_serverHandleMessageReceived));
 	
-	CIpcClient client(&m_events, TEST_IPC_PORT);
+	CIpcClient client(&m_events, &socketMultiplexer, TEST_IPC_PORT);
 	client.connect();
 	m_sendMessageToServer_client = &client;
 
-	initQuitTimeout(5);
+	m_events.initQuitTimeout(5);
 	m_events.loop();
 	m_events.removeHandler(m_events.forCIpcServer().messageReceived(), &server);
-	cleanupQuitTimeout();
+	m_events.cleanupQuitTimeout();
 
 	EXPECT_EQ("test", m_sendMessageToServer_receivedString);
 }
 
 TEST_F(CIpcTests, sendMessageToClient)
 {
-	CIpcServer server(&m_events, TEST_IPC_PORT);
+	CSocketMultiplexer socketMultiplexer;
+	CIpcServer server(&m_events, &socketMultiplexer, TEST_IPC_PORT);
 	server.listen();
 	m_sendMessageToClient_server = &server;
 
@@ -129,7 +124,7 @@ TEST_F(CIpcTests, sendMessageToClient)
 		new TMethodEventJob<CIpcTests>(
 		this, &CIpcTests::sendMessageToClient_serverHandleClientConnected));
 
-	CIpcClient client(&m_events, TEST_IPC_PORT);
+	CIpcClient client(&m_events, &socketMultiplexer, TEST_IPC_PORT);
 	client.connect();
 	
 	m_events.adoptHandler(
@@ -137,17 +132,16 @@ TEST_F(CIpcTests, sendMessageToClient)
 		new TMethodEventJob<CIpcTests>(
 		this, &CIpcTests::sendMessageToClient_clientHandleMessageReceived));
 
-	initQuitTimeout(5);
+	m_events.initQuitTimeout(5);
 	m_events.loop();
 	m_events.removeHandler(m_events.forCIpcServer().messageReceived(), &server);
 	m_events.removeHandler(m_events.forCIpcClient().messageReceived(), &client);
-	cleanupQuitTimeout();
+	m_events.cleanupQuitTimeout();
 
 	EXPECT_EQ("test", m_sendMessageToClient_receivedString);
 }
 
 CIpcTests::CIpcTests() :
-m_quitTimeoutTimer(nullptr),
 m_connectToServer_helloMessageReceived(false),
 m_connectToServer_hasClientNode(false),
 m_connectToServer_server(nullptr),
@@ -168,7 +162,7 @@ CIpcTests::connectToServer_handleMessageReceived(const CEvent& e, void*)
 		m_connectToServer_hasClientNode =
 			m_connectToServer_server->hasClients(kIpcClientNode);
 		m_connectToServer_helloMessageReceived = true;
-		raiseQuitEvent();
+		m_events.raiseQuitEvent();
 	}
 }
 
@@ -185,7 +179,7 @@ CIpcTests::sendMessageToServer_serverHandleMessageReceived(const CEvent& e, void
 		CIpcCommandMessage* cm = static_cast<CIpcCommandMessage*>(m);
 		LOG((CLOG_DEBUG "got ipc command message, %d", cm->command().c_str()));
 		m_sendMessageToServer_receivedString = cm->command();
-		raiseQuitEvent();
+		m_events.raiseQuitEvent();
 	}
 }
 
@@ -208,37 +202,6 @@ CIpcTests::sendMessageToClient_clientHandleMessageReceived(const CEvent& e, void
 		CIpcLogLineMessage* llm = static_cast<CIpcLogLineMessage*>(m);
 		LOG((CLOG_DEBUG "got ipc log message, %d", llm->logLine().c_str()));
 		m_sendMessageToClient_receivedString = llm->logLine();
-		raiseQuitEvent();
+		m_events.raiseQuitEvent();
 	}
-}
-
-void
-CIpcTests::raiseQuitEvent() 
-{
-	m_events.addEvent(CEvent(CEvent::kQuit));
-}
-
-void
-CIpcTests::initQuitTimeout(double timeout)
-{
-	assert(m_quitTimeoutTimer == nullptr);
-	m_quitTimeoutTimer = m_events.newOneShotTimer(timeout, NULL);
-	m_events.adoptHandler(CEvent::kTimer, m_quitTimeoutTimer,
-		new TMethodEventJob<CIpcTests>(
-		this, &CIpcTests::handleQuitTimeout));
-}
-
-void
-CIpcTests::cleanupQuitTimeout()
-{
-	m_events.removeHandler(CEvent::kTimer, m_quitTimeoutTimer);
-	delete m_quitTimeoutTimer;
-	m_quitTimeoutTimer = nullptr;
-}
-
-void
-CIpcTests::handleQuitTimeout(const CEvent&, void* vclient)
-{
-	LOG((CLOG_ERR "timeout"));
-	raiseQuitEvent();
 }

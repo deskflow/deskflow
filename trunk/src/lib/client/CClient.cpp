@@ -30,11 +30,12 @@
 #include "CLog.h"
 #include "IEventQueue.h"
 #include "TMethodEventJob.h"
-#include <cstring>
-#include <cstdlib>
 #include "CArch.h"
 #include "IPlatformScreen.h"
 #include "CCryptoStream.h"
+#include <cstring>
+#include <cstdlib>
+#include <sstream>
 
 //
 // CClient
@@ -83,6 +84,10 @@ CClient::CClient(IEventQueue* events,
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleGameDeviceFeedback));
+	m_events->adoptHandler(m_events->forIScreen().fileChunkSending(),
+							this,
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleFileChunkSending));
 }
 
 CClient::~CClient()
@@ -727,4 +732,34 @@ CClient::handleGameDeviceFeedback(const CEvent& event, void*)
 		reinterpret_cast<IPlatformScreen::CGameDeviceFeedbackInfo*>(event.getData());
 
 	m_server->onGameDeviceFeedback(info->m_id, info->m_m1, info->m_m2);
+}
+
+void
+CClient::handleFileChunkSending(const CEvent& event, void*)
+{
+}
+
+void
+CClient::clearReceivedFileData()
+{
+	m_receivedFileData.clear();
+}
+
+void
+CClient::setExpectedFileSize(CString data)
+{
+	std::istringstream iss(data);
+	iss >> m_expectedFileSize;
+}
+
+void
+CClient::fileChunkReceived(CString data)
+{
+	m_receivedFileData += data;
+}
+
+bool
+CClient::isReceivedFileSizeValid()
+{
+	return m_expectedFileSize == m_receivedFileData.size();
 }

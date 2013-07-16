@@ -22,6 +22,7 @@
 #include "CClientProxy1_2.h"
 #include "CClientProxy1_3.h"
 #include "CClientProxy1_4.h"
+#include "CClientProxy1_5.h"
 #include "ProtocolTypes.h"
 #include "CProtocolUtil.h"
 #include "XSynergy.h"
@@ -220,6 +221,10 @@ CClientProxyUnknown::handleData(const CEvent&, void*)
 
 			case 4:
 				m_proxy = new CClientProxy1_4(name, m_stream, m_server, m_events);
+				break;
+
+			case 5:
+				m_proxy = new CClientProxy1_5(name, m_stream, m_server, m_events);
 				break;
 			}
 		}

@@ -108,8 +108,6 @@ private:
 	CSocketJobs			m_socketJobs;
 	CSocketJobMap		m_socketJobMap;
 	ISocketMultiplexerJob*	m_cursorMark;
-
-	static CSocketMultiplexer*	s_instance;
 };
 
 #endif

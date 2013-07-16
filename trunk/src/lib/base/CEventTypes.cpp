@@ -180,6 +180,8 @@ REGISTER_EVENT(IScreen, shapeChanged)
 REGISTER_EVENT(IScreen, clipboardGrabbed)
 REGISTER_EVENT(IScreen, suspend)
 REGISTER_EVENT(IScreen, resume)
+REGISTER_EVENT(IScreen, fileChunkSending)
+REGISTER_EVENT(IScreen, fileRecieveComplete)
 
 //
 // ISecondaryScreen

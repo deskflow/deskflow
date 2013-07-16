@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2013 Bolton Software Ltd.
- *
+ * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file COPYING that should have accompanied this file.
- *
+ * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,15 +17,16 @@
 
 #pragma once
 
-#include <gmock/gmock.h>
-#include "CCryptoStream.h"
-#include "CCryptoOptions.h"
+#include "CClientProxy1_4.h"
 
-class CMockCryptoStream : public CCryptoStream
-{
+class CServer;
+class IEventQueue;
+
+//! Proxy for client implementing protocol version 1.5
+class CClientProxy1_5 : public CClientProxy1_4 {
 public:
-	CMockCryptoStream(IEventQueue* eventQueue, IStream* stream) :
-		CCryptoStream(eventQueue, stream, CCryptoOptions("gcm", "stub"), false) { }
-	MOCK_METHOD2(read, UInt32(void*, UInt32));
-	MOCK_METHOD2(write, void(const void*, UInt32));
+	CClientProxy1_5(const CString& name, synergy::IStream* adoptedStream, CServer* server, IEventQueue* events);
+	~CClientProxy1_5();
+
+	virtual void		fileChunkSending(UInt8 mark, const UInt8* data);
 };

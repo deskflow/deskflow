@@ -29,6 +29,7 @@ class CEvent;
 class CIpcClientProxy;
 class CIpcMessage;
 class IEventQueue;
+class CSocketMultiplexer;
 
 //! IPC server for communication between daemon and GUI.
 /*!
@@ -39,8 +40,8 @@ and allows the daemon and client/server to send log data to the GUI.
 */
 class CIpcServer {
 public:
-	CIpcServer(IEventQueue* events);
-	CIpcServer(IEventQueue* events, int port);
+	CIpcServer(IEventQueue* events, CSocketMultiplexer* socketMultiplexer);
+	CIpcServer(IEventQueue* events, CSocketMultiplexer* socketMultiplexer, int port);
 	virtual ~CIpcServer();
 
 	//! @name manipulators

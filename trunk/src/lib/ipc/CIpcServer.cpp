@@ -31,17 +31,17 @@
 // CIpcServer
 //
 
-CIpcServer::CIpcServer(IEventQueue* events) :
+CIpcServer::CIpcServer(IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
 	m_events(events),
-	m_socket(events),
+	m_socket(events, socketMultiplexer),
 	m_address(CNetworkAddress(IPC_HOST, IPC_PORT))
 {
 	init();
 }
 
-CIpcServer::CIpcServer(IEventQueue* events, int port) :
+CIpcServer::CIpcServer(IEventQueue* events, CSocketMultiplexer* socketMultiplexer, int port) :
 	m_events(events),
-	m_socket(events),
+	m_socket(events, socketMultiplexer),
 	m_address(CNetworkAddress(IPC_HOST, port))
 {
 	init();

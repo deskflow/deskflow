@@ -103,11 +103,12 @@ public:
 	client (local screen) \p primaryClient.  The client retains
 	ownership of \p primaryClient.
 	*/
-	CServer(const CConfig& config, CPrimaryClient* primaryClient, CScreen* screen, IEventQueue* events);
+	CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen, IEventQueue* events);
 	~CServer();
-	
+
 #ifdef TEST_ENV
-	CServer() : m_mock(true), m_events(NULL), m_config(NULL) { }
+	CServer() : m_mock(true), m_config(NULL) { }
+	void setActive(CBaseClientProxy* active) {	m_active = active; }
 #endif
 
 	//! @name manipulators
@@ -297,6 +298,7 @@ private:
 	void				handleLockCursorToScreenEvent(const CEvent&, void*);
 	void				handleFakeInputBeginEvent(const CEvent&, void*);
 	void				handleFakeInputEndEvent(const CEvent&, void*);
+	void				handleFileChunkSendingEvent(const CEvent&, void*);
 
 	// event processing
 	void				onClipboardChanged(CBaseClientProxy* sender,
@@ -316,6 +318,7 @@ private:
 	void				onGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2);
 	void				onGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2);
 	void				onGameDeviceTimingReq();
+	void				onFileChunkSending(const UInt8* data);
 
 	// add client to list and attach event handlers for client
 	bool				addClient(CBaseClientProxy*);
@@ -386,7 +389,7 @@ private:
 	SInt32				m_xDelta2, m_yDelta2;
 
 	// current configuration
-	CConfig				m_config;
+	CConfig*			m_config;
 
 	// input filter (from m_config);
 	CInputFilter*		m_inputFilter;

@@ -391,7 +391,13 @@ CClient*
 CClientApp::openClient(const CString& name, const CNetworkAddress& address, CScreen* screen, const CCryptoOptions& crypto)
 {
 	CClient* client = new CClient(
-		m_events, name, address, new CTCPSocketFactory(m_events), NULL, screen, crypto);
+		m_events,
+		name,
+		address,
+		new CTCPSocketFactory(m_events, getSocketMultiplexer()),
+		NULL,
+		screen,
+		crypto);
 
 	try {
 		m_events->adoptHandler(
@@ -522,6 +528,7 @@ CClientApp::mainLoop()
 	// create socket multiplexer.  this must happen after daemonization
 	// on unix because threads evaporate across a fork().
 	CSocketMultiplexer multiplexer;
+	setSocketMultiplexer(&multiplexer);
 
 	// start client, etc
 	appUtil().startNode();

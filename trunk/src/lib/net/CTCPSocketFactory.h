@@ -22,11 +22,12 @@
 #include "ISocketFactory.h"
 
 class IEventQueue;
+class CSocketMultiplexer;
 
 //! Socket factory for TCP sockets
 class CTCPSocketFactory : public ISocketFactory {
 public:
-	CTCPSocketFactory(IEventQueue* events);
+	CTCPSocketFactory(IEventQueue* events, CSocketMultiplexer* socketMultiplexer);
 	virtual ~CTCPSocketFactory();
 
 	// ISocketFactory overrides
@@ -35,6 +36,7 @@ public:
 
 private:
 	IEventQueue*		m_events;
+	CSocketMultiplexer* m_socketMultiplexer;
 };
 
 #endif

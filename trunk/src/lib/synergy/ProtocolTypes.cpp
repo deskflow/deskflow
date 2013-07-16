@@ -51,6 +51,7 @@ const char*				kMsgDGameSticks		= "DGST%1i%2i%2i%2i%2i";
 const char*				kMsgDGameTriggers	= "DGTR%1i%1i%1i";
 const char*				kMsgDGameFeedback	= "DGFB%1i%2i%2i";
 const char*				kMsgDCryptoIv		= "DCIV%s";
+const char*				kMsgDFileTransfer	= "DFTR%1i%s";
 const char*				kMsgQInfo			= "QINF";
 const char*				kMsgEIncompatible	= "EICV%2i%2i";
 const char*				kMsgEBusy 			= "EBSY";

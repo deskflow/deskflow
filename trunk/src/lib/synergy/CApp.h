@@ -35,6 +35,7 @@ class ILogOutputter;
 class CFileLogOutputter;
 class CScreen;
 class IEventQueue;
+class CSocketMultiplexer;
 
 typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const CBufferedLogOutputter*, IEventQueue* events);
 
@@ -95,7 +96,10 @@ public:
 	virtual void setByeFunc(void(*bye)(int)) { m_bye = bye; }
 	virtual void bye(int error) { m_bye(error); }
 	
-	virtual IEventQueue*			getEvents() const { return m_events; }
+	virtual IEventQueue* getEvents() const { return m_events; }
+
+	void				setSocketMultiplexer(CSocketMultiplexer* sm) { m_socketMultiplexer = sm; }
+	CSocketMultiplexer*	getSocketMultiplexer() const { return m_socketMultiplexer; }
 
 private:
 	void				handleIpcMessage(const CEvent&, void*);
@@ -117,6 +121,7 @@ private:
 	ARCH_APP_UTIL m_appUtil;
 	CIpcClient*			m_ipcClient;
 	IEventQueue*		m_events;
+	CSocketMultiplexer*	m_socketMultiplexer;
 };
 
 #define BYE "\nTry `%s --help' for more information."

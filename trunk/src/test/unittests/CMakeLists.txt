@@ -22,6 +22,10 @@ set(h
 	io/CMockStream.h
 	server/CMockServer.h
 	io/CMockCryptoStream.h
+	synergy/CMockScreen.h
+	server/CMockConfig.h
+	server/CMockPrimaryClient.h
+	server/CMockInputFilter.h
 )
 
 set(src

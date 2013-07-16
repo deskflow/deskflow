@@ -40,6 +40,10 @@ public:
 	CScreen(IPlatformScreen* platformScreen, IEventQueue* events);
 	virtual ~CScreen();
 
+#ifdef TEST_ENV
+	CScreen() : m_mock(true) { }
+#endif
+
 	//! @name manipulators
 	//@{
 
@@ -49,14 +53,14 @@ public:
 	For a secondary screen it also means disabling the screen saver if
 	synchronizing it and preparing to synthesize events.
 	*/
-	void				enable();
+	virtual void		enable();
 
 	//! Deactivate screen
 	/*!
 	Undoes the operations in activate() and events are no longer
 	reported.  It also releases keys that are logically pressed.
 	*/
-	void				disable();
+	virtual void		disable();
 
 	//! Enter screen
 	/*!
@@ -208,14 +212,14 @@ public:
 	/*!
 	Resets all options to their default values.
 	*/
-	void				resetOptions();
+	virtual void		resetOptions();
 
 	//! Notify of options changes
 	/*!
 	Set options to given values.  Ignores unknown options and doesn't
 	modify options that aren't given in \c options.
 	*/
-	void				setOptions(const COptionsList& options);
+	virtual void		setOptions(const COptionsList& options);
 
 	//! Set clipboard sequence number
 	/*!
@@ -343,6 +347,8 @@ private:
 	bool				m_fakeInput;
 
 	IEventQueue*		m_events;
+
+	bool				m_mock;
 };
 
 #endif

@@ -23,6 +23,7 @@ set(inc
 	CClientProxy1_2.h
 	CClientProxy1_3.h
 	CClientProxy1_4.h
+	CClientProxy1_5.h
 	CClientProxyUnknown.h
 	CConfig.h
 	CInputFilter.h
@@ -39,6 +40,7 @@ set(src
 	CClientProxy1_2.cpp
 	CClientProxy1_3.cpp
 	CClientProxy1_4.cpp
+	CClientProxy1_5.cpp
 	CClientProxyUnknown.cpp
 	CConfig.cpp
 	CInputFilter.cpp

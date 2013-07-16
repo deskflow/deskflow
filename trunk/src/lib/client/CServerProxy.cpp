@@ -309,6 +309,10 @@ CServerProxy::parseMessage(const UInt8* code)
 		cryptoIv();
 	}
 
+	else if (memcmp(code, kMsgDFileTransfer, 4) == 0) {
+		fileChunkReceived();
+	}
+
 	else if (memcmp(code, kMsgCClose, 4) == 0) {
 		// server wants us to hangup
 		LOG((CLOG_DEBUG1 "recv close"));
@@ -929,4 +933,30 @@ CServerProxy::infoAcknowledgment()
 {
 	LOG((CLOG_DEBUG1 "recv info acknowledgment"));
 	m_ignoreMouse = false;
+}
+
+void CServerProxy::fileChunkReceived()
+{
+	// parse
+	UInt8 mark;
+	CString content;
+	CProtocolUtil::readf(m_stream, kMsgDFileTransfer + 4, &mark, &content);
+
+	switch (mark) {
+	case '0':
+		LOG((CLOG_DEBUG2 "recv file data: file size = %s", content));
+		m_client->clearReceivedFileData();
+		m_client->setExpectedFileSize(content);
+		break;
+
+	case '1':
+		LOG((CLOG_DEBUG2 "recv file data: chunck size = %i", content.size()));
+		m_client->fileChunkReceived(content);
+		break;
+
+	case '2':
+		LOG((CLOG_DEBUG2 "file data transfer finished"));
+		m_events->addEvent(CEvent(m_events->forIScreen().fileRecieveComplete(), m_client));
+		break;
+	}
 }

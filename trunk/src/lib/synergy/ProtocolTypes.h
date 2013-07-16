@@ -29,7 +29,7 @@
 //       adds horizontal mouse scrolling
 // 1.4:  adds game device support
 static const SInt16		kProtocolMajorVersion = 1;
-static const SInt16		kProtocolMinorVersion = 4;
+static const SInt16		kProtocolMinorVersion = 5;
 
 // default contact port number
 static const UInt16		kDefaultPort = 24800;
@@ -287,6 +287,13 @@ extern const char*		kMsgDSetOptions;
 // sends a new iv (initialization vector) to the client for the
 // cryptography stream.
 extern const char*		kMsgDCryptoIv;
+
+// file data:  primary <-> secondary
+// transfer file data. A mark is used in the first byte.
+// 0 means the content followed is the file size.
+// 1 means the content followed is the chunk data.
+// 2 means the file transfer is finished.
+extern const char*		kMsgDFileTransfer;
 
 //
 // query codes
