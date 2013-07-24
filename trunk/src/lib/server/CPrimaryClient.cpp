@@ -274,7 +274,7 @@ CPrimaryClient::screensaver(bool)
 }
 
 void
-CPrimaryClient::fileChunkSending(UInt8 mark, const UInt8* data)
+CPrimaryClient::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 {
 	// ignore
 }

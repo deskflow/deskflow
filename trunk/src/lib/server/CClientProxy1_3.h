@@ -42,7 +42,6 @@ protected:
 private:
 	void				handleKeepAlive(const CEvent&, void*);
 
-
 private:
 	double				m_keepAliveRate;
 	CEventQueueTimer*	m_keepAliveTimer;

@@ -18,7 +18,7 @@
 
 #include <gtest/gtest.h>
 #include "CXWindowsScreen.h"
-#include "CMockEventQueue.h"
+#include "synergy/CMockEventQueue.h"
 
 using ::testing::_;
 

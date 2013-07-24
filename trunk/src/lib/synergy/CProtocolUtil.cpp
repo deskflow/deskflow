@@ -228,7 +228,12 @@ CProtocolUtil::vreadf(synergy::IStream* stream, const char* fmt, va_list args)
 					}
 					throw;
 				}
-				LOG((CLOG_DEBUG2 "readf: read %d byte string: %.*s", len, len, sBuffer));
+
+				// don't cause buffer overrun, using +100 chars in case
+				// someone modifies this log message in future.
+				if (len + 100 < kLogMessageLength) {
+					LOG((CLOG_DEBUG2 "readf: read %d byte string: %.*s", len, len, sBuffer));
+				}
 
 				// save the data
 				CString* dst = va_arg(args, CString*);

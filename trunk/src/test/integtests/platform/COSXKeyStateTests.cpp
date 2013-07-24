@@ -20,8 +20,8 @@
 #include <gmock/gmock.h>
 
 #include "COSXKeyState.h"
-#include "CMockKeyMap.h"
-#include "CMockEventQueue.h"
+#include "synergy/CMockKeyMap.h"
+#include "synergy/CMockEventQueue.h"
 
 #include "CLog.h"
 

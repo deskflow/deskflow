@@ -33,13 +33,19 @@
 #include "CArch.h"
 #include "IPlatformScreen.h"
 #include "CCryptoStream.h"
+#include "CThread.h"
+#include "TMethodJob.h"
+#include "CFileChunker.h"
 #include <cstring>
 #include <cstdlib>
 #include <sstream>
+#include <fstream>
 
 //
 // CClient
 //
+
+const size_t CClient::m_chunkSize = 1024 * 512; // 512kb
 
 CClient::CClient(IEventQueue* events,
 				const CString& name, const CNetworkAddress& address,
@@ -439,6 +445,17 @@ CClient::sendConnectionFailedEvent(const char* msg)
 }
 
 void
+CClient::sendFileChunk(const void* data)
+{
+	CFileChunker::CFileChunk* fileChunk = reinterpret_cast<CFileChunker::CFileChunk*>(const_cast<void*>(data));
+	LOG((CLOG_DEBUG1 "sendFileChunk"));
+	assert(m_server != NULL);
+
+	// relay
+	m_server->fileChunkSending(fileChunk->m_chunk[0], &(fileChunk->m_chunk[1]), fileChunk->m_dataSize);
+}
+
+void
 CClient::setupConnecting()
 {
 	assert(m_stream != NULL);
@@ -737,6 +754,7 @@ CClient::handleGameDeviceFeedback(const CEvent& event, void*)
 void
 CClient::handleFileChunkSending(const CEvent& event, void*)
 {
+	sendFileChunk(event.getData());
 }
 
 void
@@ -762,4 +780,25 @@ bool
 CClient::isReceivedFileSizeValid()
 {
 	return m_expectedFileSize == m_receivedFileData.size();
+}
+
+void
+CClient::sendFileToServer(const char* filename)
+{
+	CThread* thread = new CThread(
+		new TMethodJob<CClient>(
+			this, &CClient::sendFileThread,
+			reinterpret_cast<void*>(const_cast<char*>(filename))));
+}
+
+void
+CClient::sendFileThread(void* filename)
+{
+	try {
+		char* name  = reinterpret_cast<char*>(filename);
+		CFileChunker::sendFileChunks(name, m_events, this);
+	}
+	catch (std::runtime_error error) {
+		LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));
+	}
 }

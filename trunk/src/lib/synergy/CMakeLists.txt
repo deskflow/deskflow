@@ -49,6 +49,7 @@ set(inc
 	CArgsBase.h
 	IAppUtil.h
 	CEventGameDevice.h
+	CFileChunker.h
 )
 
 set(src
@@ -77,6 +78,7 @@ set(src
 	CArgsBase.cpp
 	CEventGameDevice.cpp
 	CGameDevice.cpp
+	CFileChunker.cpp
 )
 
 if (WIN32)

@@ -33,13 +33,21 @@
 #include "TMethodEventJob.h"
 #include "CArch.h"
 #include "CKeyState.h"
+#include "CScreen.h"
+#include "CThread.h"
+#include "TMethodJob.h"
+#include "CFileChunker.h"
 #include <cstring>
 #include <cstdlib>
-#include "CScreen.h"
+#include <sstream>
+#include <fstream>
+#include <sstream>
 
 //
 // CServer
 //
+
+const size_t CServer::m_chunkSize = 1024 * 512; // 512kb
 
 CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen, IEventQueue* events) :
 	m_events(events),
@@ -177,6 +185,10 @@ CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen
 							this,
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleFileChunkSendingEvent));
+	m_events->adoptHandler(m_events->forIScreen().fileRecieveComplete(),
+							this,
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleFileRecieveCompleteEvent));
 
 	// add connection
 	addClient(m_primaryClient);
@@ -1516,8 +1528,13 @@ CServer::handleFakeInputEndEvent(const CEvent&, void*)
 void
 CServer::handleFileChunkSendingEvent(const CEvent& event, void*)
 {
-	UInt8* data = reinterpret_cast<UInt8*>(event.getData());
-	onFileChunkSending(data);
+	onFileChunkSending(event.getData());
+}
+
+void
+CServer::handleFileRecieveCompleteEvent(const CEvent& event, void*)
+{
+	onFileRecieveComplete();
 }
 
 void
@@ -1981,13 +1998,32 @@ CServer::onGameDeviceTimingReq()
 }
 
 void
-CServer::onFileChunkSending(const UInt8* data)
+CServer::onFileChunkSending(const void* data)
 {
+	CFileChunker::CFileChunk* fileChunk = reinterpret_cast<CFileChunker::CFileChunk*>(const_cast<void*>(data));
+
 	LOG((CLOG_DEBUG1 "onFileChunkSending"));
 	assert(m_active != NULL);
 
 	// relay
- 	m_active->fileChunkSending(data[0], &data[1]);
+ 	m_active->fileChunkSending(fileChunk->m_chunk[0], &(fileChunk->m_chunk[1]), fileChunk->m_dataSize);
+}
+
+void
+CServer::onFileRecieveComplete()
+{
+	if (isReceivedFileSizeValid()) {
+		if (!m_fileTransferDes.empty()) {
+			std::fstream file;
+			file.open(m_fileTransferDes.c_str(), std::ios::out | std::ios::binary);
+			if (!file.is_open()) {
+				// TODO: file open failed
+			}
+
+			file.write(m_receivedFileData.c_str(), m_receivedFileData.size());
+			file.close();
+		}
+	}
 }
 
 bool
@@ -2259,4 +2295,50 @@ CServer::CKeyboardBroadcastInfo::alloc(State state, const CString& screens)
 	info->m_state = state;
 	strcpy(info->m_screens, screens.c_str());
 	return info;
+}
+
+void
+CServer::clearReceivedFileData()
+{
+	m_receivedFileData.clear();
+}
+
+void
+CServer::setExpectedFileSize(CString data)
+{
+	std::istringstream iss(data);
+	iss >> m_expectedFileSize;
+}
+
+void
+CServer::fileChunkReceived(CString data)
+{
+	m_receivedFileData += data;
+}
+
+bool
+CServer::isReceivedFileSizeValid()
+{
+	return m_expectedFileSize == m_receivedFileData.size();
+}
+
+void
+CServer::sendFileToClient(const char* filename)
+{
+	CThread* thread = new CThread(
+		new TMethodJob<CServer>(
+			this, &CServer::sendFileThread,
+			reinterpret_cast<void*>(const_cast<char*>(filename))));
+}
+
+void
+CServer::sendFileThread(void* filename)
+{
+	try {
+		char* name  = reinterpret_cast<char*>(filename);
+		CFileChunker::sendFileChunks(name, m_events, this);
+	}
+	catch (std::runtime_error error) {
+		LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));
+	}
 }

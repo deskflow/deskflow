@@ -19,6 +19,7 @@
 #include "CLog.h"
 #include "TMethodEventJob.h"
 #include "CSimpleEventQueueBuffer.h"
+#include <stdexcept>
 
 void
 CTestEventQueue::raiseQuitEvent() 
@@ -47,6 +48,5 @@ CTestEventQueue::cleanupQuitTimeout()
 void
 CTestEventQueue::handleQuitTimeout(const CEvent&, void* vclient)
 {
-	LOG((CLOG_ERR "timeout"));
-	raiseQuitEvent();
+	throw std::runtime_error("test event queue timeout");
 }

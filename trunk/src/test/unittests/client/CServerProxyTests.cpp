@@ -48,8 +48,8 @@ TEST(CServerProxyTests, mouseMove)
 	g_mouseMove_bufferIndex = 0;
 
 	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockClient> client;
 	NiceMock<CMockStream> stream;
+	NiceMock<CMockClient> client;
 	IStreamEvents streamEvents;
 	streamEvents.setEvents(&eventQueue);
 	

@@ -19,13 +19,15 @@
 #include "CProtocolUtil.h"
 #include "CLog.h"
 #include "IStream.h"
+#include "CServer.h"
 
 //
 // CClientProxy1_5
 //
 
 CClientProxy1_5::CClientProxy1_5(const CString& name, synergy::IStream* stream, CServer* server, IEventQueue* events) :
-	CClientProxy1_4(name, stream, server, events)
+	CClientProxy1_4(name, stream, server, events),
+	m_events(events)
 {
 }
 
@@ -34,23 +36,64 @@ CClientProxy1_5::~CClientProxy1_5()
 }
 
 void
-CClientProxy1_5::fileChunkSending(UInt8 mark, const UInt8* data)
+CClientProxy1_5::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 {
-	CString chunk(reinterpret_cast<const char*>(data));
+	CString chunk(data, dataSize);
 
 	switch (mark) {
-	case '0':
-		LOG((CLOG_DEBUG2 "file sending start: file size = %s", data));
+	case kFileStart:
+		LOG((CLOG_DEBUG2 "file sending start: size=%s", data));
 		break;
 
-	case '1':
-		LOG((CLOG_DEBUG2 "file chunk sending: %s", data));
+	case kFileChunk:
+		LOG((CLOG_DEBUG2 "file chunk sending: size=%i", chunk.size()));
 		break;
 
-	case '2':
+	case kFileEnd:
 		LOG((CLOG_DEBUG2 "file sending finished"));
 		break;
 	}
 
 	CProtocolUtil::writef(getStream(), kMsgDFileTransfer, mark, &chunk);
+}
+
+bool
+CClientProxy1_5::parseMessage(const UInt8* code)
+{
+	if (memcmp(code, kMsgDFileTransfer, 4) == 0) {
+		fileChunkReceived();
+	}
+	else {
+		return CClientProxy1_4::parseMessage(code);
+	}
+
+	return true;
+}
+
+void
+CClientProxy1_5::fileChunkReceived()
+{
+	// parse
+	UInt8 mark;
+	CString content;
+	CProtocolUtil::readf(getStream(), kMsgDFileTransfer + 4, &mark, &content);
+
+	CServer* server = getServer();
+	switch (mark) {
+	case kFileStart:
+		LOG((CLOG_DEBUG2 "recv file data from client: file size=%s", content.c_str()));
+		server->clearReceivedFileData();
+		server->setExpectedFileSize(content);
+		break;
+
+	case kFileChunk:
+		LOG((CLOG_DEBUG2 "recv file data from client: chunck size=%i", content.size()));
+		server->fileChunkReceived(content);
+		break;
+
+	case kFileEnd:
+		LOG((CLOG_DEBUG2 "file data transfer finished"));
+		m_events->addEvent(CEvent(m_events->forIScreen().fileRecieveComplete(), server));
+		break;
+	}
 }

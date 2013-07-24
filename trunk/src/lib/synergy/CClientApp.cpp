@@ -349,6 +349,14 @@ CClientApp::handleClientConnected(const CEvent&, void*)
 	LOG((CLOG_NOTE "connected to server"));
 	resetRestartTimeout();
 	updateStatus();
+
+	/*
+	// TODO: remove testing code for relase
+	CString fileFullDir = getFileTransferSrc();
+	if (!fileFullDir.empty()) {
+		s_client->sendFileToServer(getFileTransferSrc().c_str());
+	}
+	*/
 }
 
 
@@ -473,6 +481,7 @@ CClientApp::startClient()
 #endif
 
 		s_client->connect();
+
 		updateStatus();
 		return true;
 	}

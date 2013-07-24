@@ -178,7 +178,7 @@ CLog::print(const char* file, int line, const char* fmt, ...)
 	// do not prefix time and file for kPRINT (CLOG_PRINT)
 	if (priority != kPRINT) {
 
-		char message[2048];
+		char message[kLogMessageLength];
 
 #ifndef NDEBUG
 		struct tm *tm;
