@@ -22,8 +22,8 @@
 #define TEST_ENV
 #include "Global.h"
 
-#include "CMockKeyMap.h"
-#include "CMockEventQueue.h"
+#include "synergy/CMockKeyMap.h"
+#include "synergy/CMockEventQueue.h"
 #include "CXWindowsKeyState.h"
 #include "CLog.h"
 #include <errno.h>

@@ -56,6 +56,14 @@ public:
 
 	//@}
 
+	//! @file transfer
+	//@{
+
+	//! sending file chunk to server
+	void				fileChunkSending(UInt8 mark, char* data, size_t dataSize);
+
+	//@}
+
 #ifdef TEST_ENV
 	void				handleDataForTest() { handleData(CEvent(), NULL); }
 #endif

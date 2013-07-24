@@ -64,7 +64,7 @@ public:
 	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2);
 	virtual void		gameDeviceTimingReq();
 	virtual void		cryptoIv(const UInt8* iv);
-	virtual void		fileChunkSending(UInt8 mark, const UInt8* data);
+	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize);
 
 protected:
 	virtual bool		parseHandshakeMessage(const UInt8* code);

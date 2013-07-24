@@ -68,6 +68,13 @@ enum EDirectionMask {
 	kBottomMask = 1 << kBottom
 };
 
+// file transfer constants
+enum EFileTransfer {
+	kFileStart = 1,
+	kFileChunk = 2,
+	kFileEnd = 3
+};
+
 
 //
 // message codes (trailing NUL is not part of code).  in comments, $n

@@ -100,9 +100,9 @@ public:
 
 	//! Received a chunk of file data
 	void				fileChunkReceived(CString data);
-
-	//! Return true if recieved file size is valid
-	bool				isReceivedFileSizeValid();
+	
+	//! Create a new thread and use it to send file to Server
+	void				sendFileToServer(const char* filename);
 
 	//@}
 	//! @name accessors
@@ -128,6 +128,9 @@ public:
 	*/
 	CNetworkAddress		getServerAddress() const;
 	
+	//! Return true if recieved file size is valid
+	bool				isReceivedFileSizeValid();
+
 	//@}
 
 	// IScreen overrides
@@ -167,6 +170,8 @@ private:
 	void				sendClipboard(ClipboardID);
 	void				sendEvent(CEvent::Type, void*);
 	void				sendConnectionFailedEvent(const char* msg);
+	void				sendFileChunk(const void* data);
+	void				sendFileThread(void*);
 	void				setupConnecting();
 	void				setupConnection();
 	void				setupScreen();
@@ -188,7 +193,7 @@ private:
 	void				handleGameDeviceTimingResp(const CEvent& event, void*);
 	void				handleGameDeviceFeedback(const CEvent& event, void*);
 	void				handleFileChunkSending(const CEvent&, void*);
-	
+
 public:
 	bool					m_mock;
 
@@ -214,6 +219,7 @@ private:
 	CCryptoOptions			m_crypto;
 	std::size_t				m_expectedFileSize;
 	CString					m_receivedFileData;
+	static const size_t		m_chunkSize;
 };
 
 #endif

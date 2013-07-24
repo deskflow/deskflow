@@ -148,7 +148,7 @@ public:
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);
-	virtual void		fileChunkSending(UInt8 mark, const UInt8* data);
+	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize);
 
 private:
 	CScreen*			m_screen;

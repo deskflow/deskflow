@@ -29,6 +29,14 @@ public:
 	CClientProxy1_4(const CString& name, synergy::IStream* adoptedStream, CServer* server, IEventQueue* events);
 	~CClientProxy1_4();
 
+	//! @name accessors
+	//@{
+
+	//! get server pointer
+	CServer*			getServer() { return m_server; }
+
+	//@}
+
 	// IClient overrides
 	virtual void		gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons);
 	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2);

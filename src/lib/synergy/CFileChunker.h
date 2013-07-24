@@ -1,12 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
- * Copyright (C) 2012 Nick Bolton
- *
+ * Copyright (C) 2013 Bolton Software Ltd.
+ * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file COPYING that should have accompanied this file.
- *
+ * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -18,32 +17,30 @@
 
 #pragma once
 
-#include <QObject>
-#include <QMutex>
+#include "CString.h"
 
-class QTcpSocket;
+class IEventQueue;
 
-class IpcReader : public QObject
-{
-	Q_OBJECT;
-
+class CFileChunker {
 public:
-	IpcReader(QTcpSocket* socket);
-	virtual ~IpcReader();
-	void start();
-	void stop();
+	//! FileChunk data
+	class CFileChunk {
+	public:
+		CFileChunk(size_t chunkSize) : m_dataSize(chunkSize - 2)
+		{
+			m_chunk = new char[chunkSize]; 
+		}
 
-signals:
-	void readLogLine(const QString& text);
+		~CFileChunk() { delete[] m_chunk; }
+
+	public:
+		const size_t	m_dataSize;
+		char*			m_chunk;
+	};
+
+	static void			sendFileChunks(char* filename, IEventQueue* events, void* eventTarget);
+	static CString		intToString(size_t i);
 
 private:
-	bool readStream(char* buffer, int length);
-	int bytesToInt(const char* buffer, int size);
-
-private slots:
-	void read();
-
-private:
-	QTcpSocket* m_Socket;
-	QMutex m_Mutex;
+	static const size_t m_chunkSize;
 };

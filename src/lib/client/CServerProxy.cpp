@@ -935,7 +935,8 @@ CServerProxy::infoAcknowledgment()
 	m_ignoreMouse = false;
 }
 
-void CServerProxy::fileChunkReceived()
+void
+CServerProxy::fileChunkReceived()
 {
 	// parse
 	UInt8 mark;
@@ -943,20 +944,42 @@ void CServerProxy::fileChunkReceived()
 	CProtocolUtil::readf(m_stream, kMsgDFileTransfer + 4, &mark, &content);
 
 	switch (mark) {
-	case '0':
-		LOG((CLOG_DEBUG2 "recv file data: file size = %s", content));
+	case kFileStart:
+		LOG((CLOG_DEBUG2 "recv file data from server: size=%s", content.c_str()));
 		m_client->clearReceivedFileData();
 		m_client->setExpectedFileSize(content);
 		break;
 
-	case '1':
-		LOG((CLOG_DEBUG2 "recv file data: chunck size = %i", content.size()));
+	case kFileChunk:
+		LOG((CLOG_DEBUG2 "recv file data from server: size=%i", content.size()));
 		m_client->fileChunkReceived(content);
 		break;
 
-	case '2':
+	case kFileEnd:
 		LOG((CLOG_DEBUG2 "file data transfer finished"));
 		m_events->addEvent(CEvent(m_events->forIScreen().fileRecieveComplete(), m_client));
 		break;
 	}
+}
+
+void
+CServerProxy::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
+{
+	CString chunk(data, dataSize);
+
+	switch (mark) {
+	case kFileStart:
+		LOG((CLOG_DEBUG2 "file sending start: size=%s", data));
+		break;
+
+	case kFileChunk:
+		LOG((CLOG_DEBUG2 "file chunk sending: size=%i", chunk.size()));
+		break;
+
+	case kFileEnd:
+		LOG((CLOG_DEBUG2 "file sending finished"));
+		break;
+	}
+
+	CProtocolUtil::writef(m_stream, kMsgDFileTransfer, mark, &chunk);
 }

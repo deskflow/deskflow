@@ -144,6 +144,21 @@ public:
 	//! Notify of game device feedback
 	void				gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2);
 
+	//! Clears the file buffer
+	void				clearReceivedFileData();
+
+	//! Set the expected size of receiving file
+	void				setExpectedFileSize(CString data);
+
+	//! Set
+	void				setFileTransferDes(CString& des) { m_fileTransferDes = des; }
+	
+	//! Received a chunk of file data
+	void				fileChunkReceived(CString data);
+
+	//! Create a new thread and use it to send file to client
+	void				sendFileToClient(const char* filename);
+
 	//@}
 	//! @name accessors
 	//@{
@@ -159,6 +174,9 @@ public:
 	Set the \c list to the names of the currently connected clients.
 	*/
 	void				getClients(std::vector<CString>& list) const;
+	
+	//! Return true if recieved file size is valid
+	bool				isReceivedFileSizeValid();
 
 	//@}
 
@@ -299,6 +317,7 @@ private:
 	void				handleFakeInputBeginEvent(const CEvent&, void*);
 	void				handleFakeInputEndEvent(const CEvent&, void*);
 	void				handleFileChunkSendingEvent(const CEvent&, void*);
+	void				handleFileRecieveCompleteEvent(const CEvent&, void*);
 
 	// event processing
 	void				onClipboardChanged(CBaseClientProxy* sender,
@@ -318,7 +337,8 @@ private:
 	void				onGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2);
 	void				onGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2);
 	void				onGameDeviceTimingReq();
-	void				onFileChunkSending(const UInt8* data);
+	void				onFileChunkSending(const void* data);
+	void				onFileRecieveComplete();
 
 	// add client to list and attach event handlers for client
 	bool				addClient(CBaseClientProxy*);
@@ -343,6 +363,9 @@ private:
 	// force the cursor off of \p client
 	void				forceLeaveClient(CBaseClientProxy* client);
 	
+	// thread funciton for sending file
+	void				sendFileThread(void*);
+
 public:
 	bool				m_mock;
 
@@ -438,6 +461,13 @@ private:
 	CScreen*			m_screen;
 
 	IEventQueue*		m_events;
+
+	// file transfer
+	size_t				m_expectedFileSize;
+	CString				m_receivedFileData;
+	static const size_t	m_chunkSize;
+	CString				m_fileTransferSrc;
+	CString				m_fileTransferDes;
 };
 
 #endif

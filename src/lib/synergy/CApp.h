@@ -101,6 +101,9 @@ public:
 	void				setSocketMultiplexer(CSocketMultiplexer* sm) { m_socketMultiplexer = sm; }
 	CSocketMultiplexer*	getSocketMultiplexer() const { return m_socketMultiplexer; }
 
+	CString&			getFileTransferSrc() { return m_fileTransferSrc; }
+	CString&			getFileTransferDes() { return m_fileTransferDes; }
+
 private:
 	void				handleIpcMessage(const CEvent&, void*);
 
@@ -122,6 +125,8 @@ private:
 	CIpcClient*			m_ipcClient;
 	IEventQueue*		m_events;
 	CSocketMultiplexer*	m_socketMultiplexer;
+	CString				m_fileTransferSrc;
+	CString				m_fileTransferDes;
 };
 
 #define BYE "\nTry `%s --help' for more information."
