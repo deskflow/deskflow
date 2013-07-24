@@ -21,9 +21,10 @@
 #include "CEvent.h"
 #include "IEventQueue.h"
 #include "CEventTypes.h"
-#include "CLOG.h"
+#include "CLog.h"
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 
 using namespace std;
 
