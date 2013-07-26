@@ -23,6 +23,7 @@
 #include "KeyTypes.h"
 #include "CEvent.h"
 #include "GameDeviceTypes.h"
+#include "CStopwatch.h"
 
 class CClient;
 class CClientInfo;
@@ -137,6 +138,11 @@ private:
 
 	MessageParser		m_parser;
 	IEventQueue*		m_events;
+
+	CStopwatch			m_stopwatch;
+	double				m_elapsedTime;
+	size_t				m_receivedDataSize;
+	static const UInt16	m_intervalThreshold;
 };
 
 #endif

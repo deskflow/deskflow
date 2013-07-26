@@ -178,6 +178,9 @@ public:
 	//! Return true if recieved file size is valid
 	bool				isReceivedFileSizeValid();
 
+	//! Return expected file size
+	size_t				getExpectedFileSize() { return m_expectedFileSize; }
+
 	//@}
 
 private:

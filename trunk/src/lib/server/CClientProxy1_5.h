@@ -18,6 +18,7 @@
 #pragma once
 
 #include "CClientProxy1_4.h"
+#include "CStopwatch.h"
 
 class CServer;
 class IEventQueue;
@@ -34,4 +35,9 @@ public:
 
 private:
 	IEventQueue*		m_events;
+
+	CStopwatch			m_stopwatch;
+	double				m_elapsedTime;
+	size_t				m_receivedDataSize;
+	static const UInt16	m_intervalThreshold;
 };
