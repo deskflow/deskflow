@@ -149,7 +149,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
 
 	client.connect();
 
-	m_events.initQuitTimeout(5);
+	m_events.initQuitTimeout(10);
 	m_events.loop();
 	m_events.cleanupQuitTimeout();
 }
@@ -200,7 +200,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 
 	client.connect();
 
-	m_events.initQuitTimeout(5);
+	m_events.initQuitTimeout(10);
 	m_events.loop();
 	m_events.cleanupQuitTimeout();
 }
@@ -251,7 +251,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
 
 	client.connect();
 
-	m_events.initQuitTimeout(5);
+	m_events.initQuitTimeout(10);
 	m_events.loop();
 	m_events.cleanupQuitTimeout();
 }
@@ -302,7 +302,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 
 	client.connect();
 
-	m_events.initQuitTimeout(5);
+	m_events.initQuitTimeout(10);
 	m_events.loop();
 	m_events.cleanupQuitTimeout();
 }

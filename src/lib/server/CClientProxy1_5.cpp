@@ -25,9 +25,14 @@
 // CClientProxy1_5
 //
 
+const UInt16 CClientProxy1_5::m_intervalThreshold = 1;
+
 CClientProxy1_5::CClientProxy1_5(const CString& name, synergy::IStream* stream, CServer* server, IEventQueue* events) :
 	CClientProxy1_4(name, stream, server, events),
-	m_events(events)
+	m_events(events),
+	m_stopwatch(true),
+	m_elapsedTime(0),
+	m_receivedDataSize(0)
 {
 }
 
@@ -81,19 +86,42 @@ CClientProxy1_5::fileChunkReceived()
 	CServer* server = getServer();
 	switch (mark) {
 	case kFileStart:
-		LOG((CLOG_DEBUG2 "recv file data from client: file size=%s", content.c_str()));
 		server->clearReceivedFileData();
 		server->setExpectedFileSize(content);
+		if (CLOG->getFilter() >= kDEBUG2) {
+			LOG((CLOG_DEBUG2 "recv file data from client: file size=%s", content.c_str()));
+			m_stopwatch.start();
+		}
 		break;
 
 	case kFileChunk:
-		LOG((CLOG_DEBUG2 "recv file data from client: chunck size=%i", content.size()));
 		server->fileChunkReceived(content);
+		if (CLOG->getFilter() >= kDEBUG2) {
+				LOG((CLOG_DEBUG2 "recv file data from client: chunck size=%i", content.size()));
+				double interval = m_stopwatch.getTime();
+				m_receivedDataSize += content.size();
+				LOG((CLOG_DEBUG2 "recv file data from client: interval=%f s", interval));
+				if (interval >= m_intervalThreshold) {
+					double averageSpeed = m_receivedDataSize / interval / 1000;
+					LOG((CLOG_DEBUG2 "recv file data from client: average speed=%f kb/s", averageSpeed));
+
+					m_receivedDataSize = 0;
+					m_elapsedTime += interval;
+					m_stopwatch.reset();
+				}
+			}
 		break;
 
 	case kFileEnd:
-		LOG((CLOG_DEBUG2 "file data transfer finished"));
 		m_events->addEvent(CEvent(m_events->forIScreen().fileRecieveComplete(), server));
+		if (CLOG->getFilter() >= kDEBUG2) {
+			LOG((CLOG_DEBUG2 "file data transfer finished"));
+			m_elapsedTime += m_stopwatch.getTime();
+			double averageSpeed = getServer()->getExpectedFileSize() / m_elapsedTime / 1000;
+			LOG((CLOG_DEBUG2 "file data transfer finished: total time consumed=%f s", m_elapsedTime));
+			LOG((CLOG_DEBUG2 "file data transfer finished: total data received=%i kb", getServer()->getExpectedFileSize() / 1000));
+			LOG((CLOG_DEBUG2 "file data transfer finished: total average speed=%f kb/s", averageSpeed));
+		}
 		break;
 	}
 }
