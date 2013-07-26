@@ -222,7 +222,6 @@ private:
 	CCryptoOptions			m_crypto;
 	std::size_t				m_expectedFileSize;
 	CString					m_receivedFileData;
-	static const size_t		m_chunkSize;
 };
 
 #endif

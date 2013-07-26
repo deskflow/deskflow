@@ -48,8 +48,6 @@
 // CServer
 //
 
-const size_t CServer::m_chunkSize = 1024 * 512; // 512kb
-
 CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen, IEventQueue* events) :
 	m_events(events),
 	m_mock(false),

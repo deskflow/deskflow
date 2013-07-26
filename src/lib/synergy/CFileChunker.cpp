@@ -22,9 +22,12 @@
 #include "IEventQueue.h"
 #include "CEventTypes.h"
 #include "CLog.h"
+#include "CStopwatch.h"
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+
+#define PAUSE_TIME_HACK 0.1
 
 using namespace std;
 
@@ -57,27 +60,33 @@ CFileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTar
 	// send chunk messages with a fixed chunk size
 	size_t sentLength = 0;
 	size_t chunkSize = m_chunkSize;
+	CStopwatch stopwatch;
+	stopwatch.start();
 	file.seekg (0, std::ios::beg);
 	while (true) {
-		// make sure we don't read too much from the mock data.
-		if (sentLength + chunkSize > size) {
-			chunkSize = size - sentLength;
-		}
+		if (stopwatch.getTime() > PAUSE_TIME_HACK) {
+			// make sure we don't read too much from the mock data.
+			if (sentLength + chunkSize > size) {
+				chunkSize = size - sentLength;
+			}
 
-		// for fileChunk->m_chunk, the first byte is the chunk mark, last is \0
-		CFileChunk* fileChunk = new CFileChunk(chunkSize + 2);
-		char* chunkData = fileChunk->m_chunk;
+			// for fileChunk->m_chunk, the first byte is the chunk mark, last is \0
+			CFileChunk* fileChunk = new CFileChunk(chunkSize + 2);
+			char* chunkData = fileChunk->m_chunk;
 
-		chunkData[0] = kFileChunk;
-		file.read(&chunkData[1], chunkSize);
-		chunkData[chunkSize + 1] = '\0';
-		events->addEvent(CEvent(events->forIScreen().fileChunkSending(), eventTarget, fileChunk));
+			chunkData[0] = kFileChunk;
+			file.read(&chunkData[1], chunkSize);
+			chunkData[chunkSize + 1] = '\0';
+			events->addEvent(CEvent(events->forIScreen().fileChunkSending(), eventTarget, fileChunk));
 
-		sentLength += chunkSize;
-		file.seekg (sentLength, std::ios::beg);
+			sentLength += chunkSize;
+			file.seekg (sentLength, std::ios::beg);
 
-		if (sentLength == size) {
-			break;
+			if (sentLength == size) {
+				break;
+			}
+
+			stopwatch.reset();
 		}
 	}
 
