@@ -468,7 +468,6 @@ private:
 	// file transfer
 	size_t				m_expectedFileSize;
 	CString				m_receivedFileData;
-	static const size_t	m_chunkSize;
 	CString				m_fileTransferSrc;
 	CString				m_fileTransferDes;
 };

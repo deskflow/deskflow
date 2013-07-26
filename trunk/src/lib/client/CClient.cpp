@@ -46,8 +46,6 @@
 // CClient
 //
 
-const size_t CClient::m_chunkSize = 1024 * 512; // 512kb
-
 CClient::CClient(IEventQueue* events,
 				const CString& name, const CNetworkAddress& address,
 				ISocketFactory* socketFactory,
