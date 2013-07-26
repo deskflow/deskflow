@@ -40,6 +40,7 @@
 #include <cstdlib>
 #include <sstream>
 #include <fstream>
+#include <stdexcept>
 
 //
 // CClient
