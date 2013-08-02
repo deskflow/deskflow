@@ -59,6 +59,7 @@ set(inc
 	../../lib/platform
 	../../lib/server
 	../../lib/synergy
+	../../lib/synwinhk
 	../../../tools/gtest-1.6.0/include
 	../../../tools/gmock-1.6.0/include
 	../unittests
@@ -68,12 +69,6 @@ if (UNIX)
 	list(APPEND inc
 		../../..
 	)
-endif()
-
-if (WIN32)
-	if (GAME_DEVICE_SUPPORT)
-		link_directories("$ENV{DXSDK_DIR}/Lib/x86")
-	endif()
 endif()
 
 include_directories(${inc})

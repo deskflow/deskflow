@@ -559,11 +559,7 @@ public:
 		m_hotKeyDown(CEvent::kUnknown),
 		m_hotKeyUp(CEvent::kUnknown),
 		m_fakeInputBegin(CEvent::kUnknown),
-		m_fakeInputEnd(CEvent::kUnknown),
-		m_gameDeviceButtons(CEvent::kUnknown),
-		m_gameDeviceSticks(CEvent::kUnknown),
-		m_gameDeviceTriggers(CEvent::kUnknown),
-		m_gameDeviceTimingReq(CEvent::kUnknown) { }
+		m_fakeInputEnd(CEvent::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -608,18 +604,6 @@ public:
 	//!  end of fake input event type
 	CEvent::Type		fakeInputEnd();
 
-	//!  game device buttons event type.
-	CEvent::Type		gameDeviceButtons();
-
-	//!  game device sticks event type.
-	CEvent::Type		gameDeviceSticks();
-
-	//!  game device triggers event type.
-	CEvent::Type		gameDeviceTriggers();
-
-	//!  game device timing request event type.
-	CEvent::Type		gameDeviceTimingReq();
-
 	//@}
 
 private:
@@ -634,10 +618,6 @@ private:
 	CEvent::Type		m_hotKeyUp;
 	CEvent::Type		m_fakeInputBegin;
 	CEvent::Type		m_fakeInputEnd;
-	CEvent::Type		m_gameDeviceButtons;
-	CEvent::Type		m_gameDeviceSticks;
-	CEvent::Type		m_gameDeviceTriggers;
-	CEvent::Type		m_gameDeviceTimingReq;
 };
 
 class IScreenEvents : public CEventTypes {
@@ -706,26 +686,4 @@ private:
 	CEvent::Type		m_resume;
 	CEvent::Type		m_fileChunkSending;
 	CEvent::Type		m_fileRecieveComplete;
-};
-
-class ISecondaryScreenEvents : public CEventTypes {
-public:
-	ISecondaryScreenEvents() :
-		m_gameDeviceTimingResp(CEvent::kUnknown),
-		m_gameDeviceFeedback(CEvent::kUnknown) { }
-
-	//! @name accessors
-	//@{
-
-	//! Get game device timing response event type.
-	CEvent::Type		gameDeviceTimingResp();
-
-	//! Get game device feedback event type.
-	CEvent::Type		gameDeviceFeedback();
-
-	//@}
-		
-private:
-	CEvent::Type		m_gameDeviceTimingResp;
-	CEvent::Type		m_gameDeviceFeedback;
 };

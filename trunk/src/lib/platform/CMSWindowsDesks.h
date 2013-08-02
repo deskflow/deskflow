@@ -19,7 +19,7 @@
 #ifndef CMSWINDOWSDESKS_H
 #define CMSWINDOWSDESKS_H
 
-#include "CSynergyHook.h"
+#include "synwinhk.h"
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 #include "OptionTypes.h"
@@ -220,7 +220,6 @@ private:
 	void				deskEnter(CDesk* desk);
 	void				deskLeave(CDesk* desk, HKL keyLayout);
 	void				deskThread(void* vdesk);
-	void				xinputThread();
 
 	// desk switch checking and handling
 	CDesk*				addDesk(const CString& name, HDESK hdesk);

@@ -21,7 +21,6 @@
 
 #include "IInterface.h"
 #include "MouseTypes.h"
-#include "GameDeviceTypes.h"
 #include "CEvent.h"
 #include "CEventTypes.h"
 
@@ -58,24 +57,6 @@ public:
 	Synthesize a mouse wheel event of amount \c xDelta and \c yDelta.
 	*/
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;
-	
-	//! Fake game device buttons
-	/*!
-	Synthesize game device buttons state.
-	*/
-	virtual void		fakeGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) const = 0;
-	
-	//! Fake game device sticks
-	/*!
-	Synthesize game device sticks state.
-	*/
-	virtual void		fakeGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) const = 0;
-	
-	//! Fake game device triggers
-	/*!
-	Synthesize game device triggers state.
-	*/
-	virtual void		fakeGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) const = 0;
 
 	//@}
 };

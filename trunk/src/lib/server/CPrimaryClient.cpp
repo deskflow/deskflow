@@ -244,30 +244,6 @@ CPrimaryClient::mouseWheel(SInt32, SInt32)
 }
 
 void
-CPrimaryClient::gameDeviceButtons(GameDeviceID, GameDeviceButton)
-{
-	// ignore
-}
-
-void
-CPrimaryClient::gameDeviceSticks(GameDeviceID, SInt16, SInt16, SInt16, SInt16)
-{
-	// ignore
-}
-
-void
-CPrimaryClient::gameDeviceTriggers(GameDeviceID, UInt8, UInt8)
-{
-	// ignore
-}
-
-void
-CPrimaryClient::gameDeviceTimingReq()
-{
-	// ignore
-}
-
-void
 CPrimaryClient::screensaver(bool)
 {
 	// ignore

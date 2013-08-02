@@ -19,7 +19,6 @@
 #pragma once
 
 #include "CClientProxy1_3.h"
-#include "GameDeviceTypes.h"
 
 class CServer;
 
@@ -38,25 +37,12 @@ public:
 	//@}
 
 	// IClient overrides
-	virtual void		gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons);
-	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2);
-	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2);
-	virtual void		gameDeviceTimingReq();
 	virtual void		keyDown(KeyID key, KeyModifierMask mask, KeyButton button);
 	virtual void		keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button);
 	virtual void		keyUp(KeyID key, KeyModifierMask mask, KeyButton button);
 
 	//! Send IV to make 
 	void				cryptoIv();
-
-protected:
-	// CClientProxy overrides
-	virtual bool		parseMessage(const UInt8* code);
-
-private:
-	// message handlers
-	void				gameDeviceTimingResp();
-	void				gameDeviceFeedback();
 
 	CServer*			m_server;
 };

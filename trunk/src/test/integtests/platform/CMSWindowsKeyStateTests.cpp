@@ -41,8 +41,8 @@ class CMSWindowsKeyStateTests : public ::testing::Test
 protected:
 	virtual void SetUp()
 	{
-		// load synrgyhk.dll
-		m_hookLibrary = m_hookLibraryLoader.openHookLibrary("synrgyhk");
+		// load synwinhk.dll
+		m_hookLibrary = m_hookLibraryLoader.openHookLibrary("synwinhk");
 		m_screensaver = new CMSWindowsScreenSaver();
 	}
 

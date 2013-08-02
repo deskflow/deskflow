@@ -398,7 +398,7 @@ NetworkTests::sendMockData(void* eventTarget)
 {
 	// send first message (file size)
 	CString size = intToString(kMockDataSize);
-	UInt32 sizeLength = size.size();
+	size_t sizeLength = size.size();
 	CFileChunker::CFileChunk* sizeMessage = new CFileChunker::CFileChunk(sizeLength + 2);
 	char* chunkData = sizeMessage->m_chunk;
 
@@ -461,13 +461,13 @@ newMockData(size_t size)
 	memcpy(data, head, headSize);
 	data += headSize;
 
-	SInt32 times = (size - headSize - tailSize) / synergyRocksSize;
+	size_t times = (size - headSize - tailSize) / synergyRocksSize;
 	for (SInt32 i = 0; i < times; ++i) {
 		memcpy(data, synergyRocks, synergyRocksSize);
 		data += synergyRocksSize;
 	}
 
-	SInt32 remainder = (size - headSize - tailSize) % synergyRocksSize;
+	size_t remainder = (size - headSize - tailSize) % synergyRocksSize;
 	if (remainder != 0) {
 		memset(data, '.', remainder);
 		data += remainder;

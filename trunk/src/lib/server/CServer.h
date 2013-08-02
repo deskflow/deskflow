@@ -138,12 +138,6 @@ public:
 	*/
 	void				disconnect();
 
-	//! Notify of game device timing response
-	void				gameDeviceTimingResp(UInt16 freq);
-
-	//! Notify of game device feedback
-	void				gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2);
-
 	//! Clears the file buffer
 	void				clearReceivedFileData();
 
@@ -304,10 +298,6 @@ private:
 	void				handleMotionPrimaryEvent(const CEvent&, void*);
 	void				handleMotionSecondaryEvent(const CEvent&, void*);
 	void				handleWheelEvent(const CEvent&, void*);
-	void				handleGameDeviceButtons(const CEvent&, void*);
-	void				handleGameDeviceSticks(const CEvent&, void*);
-	void				handleGameDeviceTriggers(const CEvent&, void*);
-	void				handleGameDeviceTimingReq(const CEvent&, void*);
 	void				handleScreensaverActivatedEvent(const CEvent&, void*);
 	void				handleScreensaverDeactivatedEvent(const CEvent&, void*);
 	void				handleSwitchWaitTimeout(const CEvent&, void*);
@@ -336,10 +326,6 @@ private:
 	bool				onMouseMovePrimary(SInt32 x, SInt32 y);
 	void				onMouseMoveSecondary(SInt32 dx, SInt32 dy);
 	void				onMouseWheel(SInt32 xDelta, SInt32 yDelta);
-	void				onGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons);
-	void				onGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2);
-	void				onGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2);
-	void				onGameDeviceTimingReq();
 	void				onFileChunkSending(const void* data);
 	void				onFileRecieveComplete();
 

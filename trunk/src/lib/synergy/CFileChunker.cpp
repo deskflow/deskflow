@@ -48,7 +48,7 @@ CFileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTar
 
 	// send first message (file size)
 	CString fileSize = intToString(size);
-	UInt32 sizeLength = fileSize.size();
+	size_t sizeLength = fileSize.size();
 	CFileChunk* sizeMessage = new CFileChunk(sizeLength + 2);
 	char* chunkData = sizeMessage->m_chunk;
 

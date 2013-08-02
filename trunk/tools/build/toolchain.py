@@ -62,9 +62,6 @@ class InternalCommands:
 	
 	# by default, don't compile the gui
 	enable_make_gui = False
-  
-	# by default, do not compile with game device support.
-	gameDevice = False
 	
 	# by default, let cmake decide
 	macSdk = None
@@ -183,11 +180,6 @@ class InternalCommands:
 		# for makefiles always specify a build type (debug, release, etc)
 		if generator.cmakeName.find('Unix Makefiles') != -1:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
-		
-		if self.gameDevice:
-			cmake_args += " -DGAME_DEVICE_SUPPORT:BOOL=TRUE"
-		else:
-			cmake_args += " -DGAME_DEVICE_SUPPORT:BOOL=FALSE"
 		
 		if self.macSdk:
 			path = "/Developer/SDKs/MacOSX" + self.macSdk + ".sdk/"
@@ -389,7 +381,7 @@ class InternalCommands:
 			self.signFile(pfx, pwd, 'bin/Release', 'synergyc.exe')
 			self.signFile(pfx, pwd, 'bin/Release', 'synergys.exe')
 			self.signFile(pfx, pwd, 'bin/Release', 'synergyd.exe')
-			self.signFile(pfx, pwd, 'bin/Release', 'synrgyhk.dll')
+			self.signFile(pfx, pwd, 'bin/Release', 'synwinhk.dll')
 	
 	def signFile(self, pfx, pwd, dir, file):
 		self.try_chdir(dir)
@@ -1228,8 +1220,6 @@ class CommandHandler:
 				self.vcRedistDir = a
 			elif o == '--qt-dir':
 				self.qtDir = a
-			elif o == '--game-device':
-				self.ic.gameDevice = True
 			elif o == '--mac-sdk':
 				self.ic.macSdk = a
 	

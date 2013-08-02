@@ -166,10 +166,6 @@ REGISTER_EVENT(IPrimaryScreen, hotKeyDown)
 REGISTER_EVENT(IPrimaryScreen, hotKeyUp)
 REGISTER_EVENT(IPrimaryScreen, fakeInputBegin)
 REGISTER_EVENT(IPrimaryScreen, fakeInputEnd)
-REGISTER_EVENT(IPrimaryScreen, gameDeviceButtons)
-REGISTER_EVENT(IPrimaryScreen, gameDeviceSticks)
-REGISTER_EVENT(IPrimaryScreen, gameDeviceTriggers)
-REGISTER_EVENT(IPrimaryScreen, gameDeviceTimingReq)
 
 //
 // IScreen
@@ -182,13 +178,6 @@ REGISTER_EVENT(IScreen, suspend)
 REGISTER_EVENT(IScreen, resume)
 REGISTER_EVENT(IScreen, fileChunkSending)
 REGISTER_EVENT(IScreen, fileRecieveComplete)
-
-//
-// ISecondaryScreen
-//
-
-REGISTER_EVENT(ISecondaryScreen, gameDeviceTimingResp)
-REGISTER_EVENT(ISecondaryScreen, gameDeviceFeedback)
 
 //
 // CIpcServer

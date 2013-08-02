@@ -251,34 +251,6 @@ CScreen::mouseWheel(SInt32 xDelta, SInt32 yDelta)
 }
 
 void
-CScreen::gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons)
-{
-	assert(!m_isPrimary);
-	m_screen->fakeGameDeviceButtons(id, buttons);
-}
-
-void
-CScreen::gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2)
-{
-	assert(!m_isPrimary);
-	m_screen->fakeGameDeviceSticks(id, x1, y1, x2, y2);
-}
-
-void
-CScreen::gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2)
-{
-	assert(!m_isPrimary);
-	m_screen->fakeGameDeviceTriggers(id, t1, t2);
-}
-
-void
-CScreen::gameDeviceTimingReq()
-{
-	assert(!m_isPrimary);
-	m_screen->queueGameDeviceTimingReq();
-}
-
-void
 CScreen::resetOptions()
 {
 	// reset options
@@ -525,16 +497,4 @@ CScreen::leaveSecondary()
 {
 	// release any keys we think are still down
 	m_screen->fakeAllKeysUp();
-}
-
-void
-CScreen::gameDeviceTimingResp(UInt16 freq)
-{
-	m_screen->gameDeviceTimingResp(freq);
-}
-
-void
-CScreen::gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2)
-{
-	m_screen->gameDeviceFeedback(id, m1, m2);
 }

@@ -27,7 +27,7 @@
 // 1.2:  adds mouse relative motion
 // 1.3:  adds keep alive and deprecates heartbeats,
 //       adds horizontal mouse scrolling
-// 1.4:  adds game device support
+// 1.4:  adds crypto support (game device support added then removed)
 static const SInt16		kProtocolMajorVersion = 1;
 static const SInt16		kProtocolMinorVersion = 5;
 
@@ -163,20 +163,6 @@ extern const char*		kMsgCInfoAck;
 // defined by an option.
 extern const char*		kMsgCKeepAlive;
 
-// game device timing:  primary -> secondary
-// periodically, sent from primary to secondary when game device device is polled.
-// this causes a game timing response to be queued, which is dequeued when
-// the device is next faked.
-extern const char*		kMsgCGameTimingReq;
-
-// game device timing:  primary <- secondary
-// in response, sent from secondary to primary when game device device is faked.
-// the difference between when the message was sent and received is a
-// measurement of time it took for the game device device state to reach the
-// game device device user. a timing request is not retransmitted until after 
-// the pending timing response is received.
-extern const char*		kMsgCGameTimingResp;
-
 //
 // data codes
 //
@@ -236,31 +222,6 @@ extern const char*		kMsgDMouseWheel;
 // mouse vertical scroll:  primary -> secondary
 // like as kMsgDMouseWheel except only sends $1 = yDelta.
 extern const char*		kMsgDMouseWheel1_0;
-
-// game device buttons:  primary -> secondary
-// $1 = device id
-// $2 = buttons bit mask
-extern const char*		kMsgDGameButtons;
-
-// game device sticks:  primary -> secondary
-// $1 = device id
-// $2 = x1
-// $3 = y1
-// $4 = x2
-// $5 = y2
-extern const char*		kMsgDGameSticks;
-
-// game device triggers:  primary -> secondary
-// $1 = device id
-// $2 = t1
-// $3 = t2
-extern const char*		kMsgDGameTriggers;
-
-// game device feedback: secondary -> primary
-// $1 = device id
-// $2 = motor 1
-// $3 = motor 2
-extern const char*		kMsgDGameFeedback;
 
 // clipboard data:  primary <-> secondary
 // $2 = sequence number, $3 = clipboard data.  the sequence number

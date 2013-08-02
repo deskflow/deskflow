@@ -42,11 +42,6 @@
 #include "CArchMiscWindows.h"
 #endif
 
-#if SYSAPI_WIN32 && GAME_DEVICE_SUPPORT
-#include <Windows.h>
-#include "XInputHook.h"
-#endif
-
 #if WINAPI_MSWINDOWS
 #include "CMSWindowsScreen.h"
 #elif WINAPI_XWINDOWS
@@ -230,7 +225,7 @@ CClientApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
 	return new CScreen(new CMSWindowsScreen(
-		false, args().m_noHooks, args().m_gameDevice, args().m_stopOnDeskSwitch, m_events), m_events);
+		false, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
 #elif WINAPI_XWINDOWS
 	return new CScreen(new CXWindowsScreen(
 		args().m_display, false, args().m_disableXInitThreads,
@@ -468,18 +463,6 @@ CClientApp::startClient()
 			LOG((CLOG_NOTE "started client"));
 		}
 
-#if SYSAPI_WIN32 && GAME_DEVICE_SUPPORT
-		if (args().m_gameDevice.m_mode == CGameDeviceInfo::kGameModeXInput)
-		{
-			// TODO: currently this is failing because we're not
-			// forcing compile with the DX XInput.h (so the win
-			// SDK is being used)... we need to figure out how to
-			// tell cmake to prefer the DX include path.
-			LOG((CLOG_DEBUG "installing xinput hook"));
-			InstallXInputHook();
-		}
-#endif
-
 		s_client->connect();
 
 		updateStatus();
@@ -516,14 +499,6 @@ CClientApp::startClient()
 void
 CClientApp::stopClient()
 {
-#if SYSAPI_WIN32 && GAME_DEVICE_SUPPORT
-	if (args().m_gameDevice.m_mode == CGameDeviceInfo::kGameModeXInput)
-	{
-		LOG((CLOG_DEBUG "removing xinput hook"));
-		RemoveXInputHook();
-	}
-#endif
-
 	closeClient(s_client);
 	closeClientScreen(s_clientScreen);
 	s_client       = NULL;

@@ -84,10 +84,6 @@ public:
 	virtual void		screensaver(bool activate) = 0;
 	virtual void		resetOptions() = 0;
 	virtual void		setOptions(const COptionsList& options) = 0;
-	virtual void		gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) = 0;
-	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) = 0;
-	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) = 0;
-	virtual void		gameDeviceTimingReq() = 0;
 	virtual void		cryptoIv(const UInt8* iv) = 0;
 	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;
 

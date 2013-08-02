@@ -359,34 +359,6 @@ CClientProxy1_0::mouseWheel(SInt32, SInt32 yDelta)
 }
 
 void
-CClientProxy1_0::gameDeviceButtons(GameDeviceID, GameDeviceButton)
-{
-	// ignore -- not supported in protocol 1.0
-	LOG((CLOG_DEBUG "gameDeviceButtons not supported"));
-}
-
-void
-CClientProxy1_0::gameDeviceSticks(GameDeviceID, SInt16, SInt16, SInt16, SInt16)
-{
-	// ignore -- not supported in protocol 1.0
-	LOG((CLOG_DEBUG "gameDeviceSticks not supported"));
-}
-
-void
-CClientProxy1_0::gameDeviceTriggers(GameDeviceID, UInt8, UInt8)
-{
-	// ignore -- not supported in protocol 1.0
-	LOG((CLOG_DEBUG "gameDeviceTriggers not supported"));
-}
-
-void
-CClientProxy1_0::gameDeviceTimingReq()
-{
-	// ignore -- not supported in protocol 1.0
-	LOG((CLOG_DEBUG "gameDeviceTimingReq not supported"));
-}
-
-void
 CClientProxy1_0::cryptoIv(const UInt8* iv)
 {
 	// ignore -- not supported in protocol 1.0

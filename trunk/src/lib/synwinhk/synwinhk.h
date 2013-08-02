@@ -31,10 +31,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-// fix: cmake defines the library name in lower case (synrgyhk_EXPORTS) as 
-// opposed to upper case (SYNRGYHK_EXPORTS), so rather than figuring out 
-// how to change cmake's behaviour, it's easier to just change the code.
-#if defined(synrgyhk_EXPORTS)
+#if defined(synwinhk_EXPORTS)
 #define CSYNERGYHOOK_API __declspec(dllexport)
 #else
 #define CSYNERGYHOOK_API __declspec(dllimport)

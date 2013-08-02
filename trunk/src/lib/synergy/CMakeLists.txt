@@ -43,12 +43,10 @@ set(inc
 	ProtocolTypes.h
 	XScreen.h
 	XSynergy.h
-	GameDeviceTypes.h
 	CDaemonApp.h
 	CAppUtil.h
 	CArgsBase.h
 	IAppUtil.h
-	CEventGameDevice.h
 	CFileChunker.h
 )
 
@@ -76,15 +74,12 @@ set(src
 	CDaemonApp.cpp
 	CAppUtil.cpp
 	CArgsBase.cpp
-	CEventGameDevice.cpp
-	CGameDevice.cpp
 	CFileChunker.cpp
 )
 
 if (WIN32)
 	list(APPEND inc
 		CAppUtilWindows.h
-		CGameDevice.h
 	)	
 
 	list(APPEND src
@@ -109,6 +104,7 @@ set(inc
 	../platform
 	../server
 	../synergy
+	../synwinhk
 	../..
 	../../../tools
 )

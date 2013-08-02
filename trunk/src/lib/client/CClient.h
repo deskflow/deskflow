@@ -163,10 +163,6 @@ public:
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);
-	virtual void		gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons);
-	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2);
-	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2);
-	virtual void		gameDeviceTimingReq();
 	virtual CString		getName() const;
 
 private:
@@ -193,8 +189,6 @@ private:
 	void				handleHello(const CEvent&, void*);
 	void				handleSuspend(const CEvent& event, void*);
 	void				handleResume(const CEvent& event, void*);
-	void				handleGameDeviceTimingResp(const CEvent& event, void*);
-	void				handleGameDeviceFeedback(const CEvent& event, void*);
 	void				handleFileChunkSending(const CEvent&, void*);
 
 public:

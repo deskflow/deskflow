@@ -19,7 +19,6 @@
 #pragma once
 
 #include "CString.h"
-#include "CGameDevice.h"
 #include "CCryptoOptions.h"
 
 class CArgsBase {
@@ -41,7 +40,6 @@ public:
 #if SYSAPI_WIN32
 	bool m_debugServiceWait;
 	bool m_pauseOnExit;
-	CGameDeviceInfo m_gameDevice;
 	bool m_stopOnDeskSwitch;
 #endif
 #if WINAPI_XWINDOWS

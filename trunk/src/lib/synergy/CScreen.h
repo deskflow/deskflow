@@ -24,7 +24,6 @@
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 #include "OptionTypes.h"
-#include "GameDeviceTypes.h"
 
 class IClipboard;
 class IPlatformScreen;
@@ -171,42 +170,6 @@ public:
 	Each wheel click should generate a delta of +/-120.
 	*/
 	void				mouseWheel(SInt32 xDelta, SInt32 yDelta);
-
-	//! Notify of game device buttons changed
-	/*!
-	Synthesize game device button states.
-	*/
-	virtual void		gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons);
-
-	//! Notify of game device sticks changed
-	/*!
-	Synthesize game device stick states.
-	*/
-	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2);
-	
-	//! Notify of game device trigger changes
-	/*!
-	Synthesize game device trigger states.
-	*/
-	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2);
-	
-	//! Notify of game device timing request
-	/*!
-	Causes a game device timing response when state is next faked.
-	*/
-	virtual void		gameDeviceTimingReq();
-	
-	//! Notify of game device timing response
-	/*!
-	Handles a game device timing response coming back from the client.
-	*/
-	virtual void		gameDeviceTimingResp(UInt16 freq);
-	
-	//! Notify of game device feedback changes
-	/*!
-	Sets the game device state with new feedback values.
-	*/
-	virtual void		gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2);
 
 	//! Notify of options changes
 	/*!

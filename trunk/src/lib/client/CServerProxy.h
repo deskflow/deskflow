@@ -22,7 +22,6 @@
 #include "ClipboardTypes.h"
 #include "KeyTypes.h"
 #include "CEvent.h"
-#include "GameDeviceTypes.h"
 #include "CStopwatch.h"
 
 class CClient;
@@ -52,8 +51,6 @@ public:
 	void				onInfoChanged();
 	bool				onGrabClipboard(ClipboardID);
 	void				onClipboardChanged(ClipboardID, const IClipboard*);
-	void				onGameDeviceTimingResp(UInt16 freq);
-	void				onGameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2);
 
 	//@}
 
@@ -104,10 +101,6 @@ private:
 	void				mouseMove();
 	void				mouseRelativeMove();
 	void				mouseWheel();
-	void				gameDeviceButtons();
-	void				gameDeviceSticks();
-	void				gameDeviceTriggers();
-	void				gameDeviceTimingReq();
 	void				cryptoIv();
 	void				screensaver();
 	void				resetOptions();
