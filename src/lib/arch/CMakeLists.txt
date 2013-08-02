@@ -101,9 +101,3 @@ endif()
 
 include_directories(${inc})
 add_library(arch STATIC ${src})
-
-if (WIN32)
-	if (GAME_DEVICE_SUPPORT)
-		target_link_libraries(arch synxinhk)
-	endif()
-endif()

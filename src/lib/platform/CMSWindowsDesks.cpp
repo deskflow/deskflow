@@ -18,7 +18,7 @@
 
 #include "CMSWindowsDesks.h"
 #include "CMSWindowsScreen.h"
-#include "CSynergyHook.h"
+#include "synwinhk.h"
 #include "IScreenSaver.h"
 #include "XScreen.h"
 #include "CLock.h"

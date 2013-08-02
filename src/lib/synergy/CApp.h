@@ -169,17 +169,6 @@ private:
 
 #elif SYSAPI_WIN32
 
-#if GAME_DEVICE_SUPPORT
-#  define HELP_GAME_DEVICE \
-	"      --game-mode <mode>   enable game device support. valid modes:\n" \
-	"							  xinput, joyinfoex\n" \
-	"      --game-poll <mode>	game polling mode. valid modes:\n" \
-	"							  dynamic, static\n" \
-	"      --game-poll-freq <i>	frequency for static polling.\n"
-#else
-#  define HELP_GAME_DEVICE ""
-#endif
-
 // windows args
 #  define HELP_SYS_ARGS \
 	" [--service <action>] [--relaunch] [--exit-pause]"
@@ -189,7 +178,5 @@ private:
 	"      --relaunch           persistently relaunches process in current user \n" \
 	"                             session (useful for vista and upward).\n" \
 	"      --exit-pause         wait for key press on exit, can be useful for\n" \
-	"                             reading error messages that occur on exit.\n" \
-	HELP_GAME_DEVICE
-
+	"                             reading error messages that occur on exit.\n"
 #endif

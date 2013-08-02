@@ -81,14 +81,6 @@ CClient::CClient(IEventQueue* events,
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleResume));
-	m_events->adoptHandler(m_events->forISecondaryScreen().gameDeviceTimingResp(),
-							getEventTarget(),
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleGameDeviceTimingResp));
-	m_events->adoptHandler(m_events->forISecondaryScreen().gameDeviceFeedback(),
-							getEventTarget(),
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleGameDeviceFeedback));
 	m_events->adoptHandler(m_events->forIScreen().fileChunkSending(),
 							this,
 							new TMethodEventJob<CClient>(this,
@@ -361,30 +353,6 @@ void
 CClient::setOptions(const COptionsList& options)
 {
 	m_screen->setOptions(options);
-}
-
-void
-CClient::gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons)
-{
-	m_screen->gameDeviceButtons(id, buttons);
-}
-
-void
-CClient::gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2)
-{
-	m_screen->gameDeviceSticks(id, x1, y1, x2, y2);
-}
-
-void
-CClient::gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2)
-{
-	m_screen->gameDeviceTriggers(id, t1, t2);
-}
-
-void
-CClient::gameDeviceTimingReq()
-{
-	m_screen->gameDeviceTimingReq();
 }
 
 CString
@@ -730,24 +698,6 @@ CClient::handleResume(const CEvent&, void*)
 		m_connectOnResume = false;
 		connect();
 	}
-}
-
-void
-CClient::handleGameDeviceTimingResp(const CEvent& event, void*)
-{
-	IPlatformScreen::CGameDeviceTimingRespInfo* info =
-		reinterpret_cast<IPlatformScreen::CGameDeviceTimingRespInfo*>(event.getData());
-
-	m_server->onGameDeviceTimingResp(info->m_freq);
-}
-
-void
-CClient::handleGameDeviceFeedback(const CEvent& event, void*)
-{
-	IPlatformScreen::CGameDeviceFeedbackInfo* info =
-		reinterpret_cast<IPlatformScreen::CGameDeviceFeedbackInfo*>(event.getData());
-
-	m_server->onGameDeviceFeedback(info->m_id, info->m_m1, info->m_m2);
 }
 
 void

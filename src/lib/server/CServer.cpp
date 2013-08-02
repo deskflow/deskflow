@@ -132,22 +132,6 @@ CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleWheelEvent));
-	m_events->adoptHandler(m_events->forIPrimaryScreen().gameDeviceButtons(),
-							m_primaryClient->getEventTarget(),
-							new TMethodEventJob<CServer>(this,
-								&CServer::handleGameDeviceButtons));
-	m_events->adoptHandler(m_events->forIPrimaryScreen().gameDeviceSticks(),
-							m_primaryClient->getEventTarget(),
-							new TMethodEventJob<CServer>(this,
-								&CServer::handleGameDeviceSticks));
-	m_events->adoptHandler(m_events->forIPrimaryScreen().gameDeviceTriggers(),
-							m_primaryClient->getEventTarget(),
-							new TMethodEventJob<CServer>(this,
-								&CServer::handleGameDeviceTriggers));
-	m_events->adoptHandler(m_events->forIPrimaryScreen().gameDeviceTimingReq(),
-							m_primaryClient->getEventTarget(),
-							new TMethodEventJob<CServer>(this,
-								&CServer::handleGameDeviceTimingReq));
 	m_events->adoptHandler(m_events->forIPrimaryScreen().screensaverActivated(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CServer>(this,
@@ -356,18 +340,6 @@ CServer::disconnect()
 	else {
 		m_events->addEvent(CEvent(m_events->forCServer().disconnected(), this));
 	}
-}
-
-void
-CServer::gameDeviceTimingResp(UInt16 freq)
-{
-	m_screen->gameDeviceTimingResp(freq);
-}
-
-void
-CServer::gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2)
-{
-	m_screen->gameDeviceFeedback(id, m1, m2);
 }
 
 UInt32
@@ -1338,36 +1310,6 @@ CServer::handleWheelEvent(const CEvent& event, void*)
 }
 
 void
-CServer::handleGameDeviceButtons(const CEvent& event, void*)
-{
-	IPlatformScreen::CGameDeviceButtonInfo* info =
-		reinterpret_cast<IPlatformScreen::CGameDeviceButtonInfo*>(event.getData());
-	onGameDeviceButtons(info->m_id, info->m_buttons);
-}
-
-void
-CServer::handleGameDeviceSticks(const CEvent& event, void*)
-{
-	IPlatformScreen::CGameDeviceStickInfo* info =
-		reinterpret_cast<IPlatformScreen::CGameDeviceStickInfo*>(event.getData());
-	onGameDeviceSticks(info->m_id, info->m_x1, info->m_y1, info->m_x2, info->m_y2);
-}
-
-void
-CServer::handleGameDeviceTriggers(const CEvent& event, void*)
-{
-	IPlatformScreen::CGameDeviceTriggerInfo* info =
-		reinterpret_cast<IPlatformScreen::CGameDeviceTriggerInfo*>(event.getData());
-	onGameDeviceTriggers(info->m_id, info->m_t1, info->m_t2);
-}
-
-void
-CServer::handleGameDeviceTimingReq(const CEvent& event, void*)
-{
-	onGameDeviceTimingReq();
-}
-
-void
 CServer::handleScreensaverActivatedEvent(const CEvent&, void*)
 {
 	onScreensaver(true);
@@ -1966,34 +1908,6 @@ CServer::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
 
 	// relay
 	m_active->mouseWheel(xDelta, yDelta);
-}
-
-void
-CServer::onGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons)
-{
-	LOG((CLOG_DEBUG1 "onGameDeviceButtons id=%d buttons=%d", id, buttons));
-	m_active->gameDeviceButtons(id, buttons);
-}
-
-void
-CServer::onGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2)
-{
-	LOG((CLOG_DEBUG1 "onGameDeviceSticks id=%d s1=%+d,%+d s2=%+d,%+d", id, x1, y1, x2, y2));
-	m_active->gameDeviceSticks(id, x1, y1, x2, y2);
-}
-
-void
-CServer::onGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2)
-{
-	LOG((CLOG_DEBUG1 "onGameDeviceTriggers id=%d t1=%d t2=%d", id, t1, t2));
-	m_active->gameDeviceTriggers(id, t1, t2);
-}
-
-void
-CServer::onGameDeviceTimingReq()
-{
-	LOG((CLOG_DEBUG1 "onGameDeviceTimingReq"));
-	m_active->gameDeviceTimingReq();
 }
 
 void

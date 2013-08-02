@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CSynergyHook.h"
+#include "synwinhk.h"
 #include "ProtocolTypes.h"
 #include <zmouse.h>
 #include <tchar.h>
@@ -910,7 +910,7 @@ init(DWORD threadID)
 
 		// clean up after old process.  the system should've already
 		// removed the hooks so we just need to reset our state.
-		g_hinstance       = GetModuleHandle(_T("synrgyhk"));
+		g_hinstance       = GetModuleHandle(_T("synwinhk"));
 		g_processID       = GetCurrentProcessId();
 		g_wheelSupport    = kWheelNone;
 		g_threadID        = 0;

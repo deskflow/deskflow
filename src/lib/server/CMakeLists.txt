@@ -72,12 +72,6 @@ endif()
 include_directories(${inc})
 add_library(server STATIC ${src})
 
-if (WIN32)
-	if (GAME_DEVICE_SUPPORT)
-		include_directories($ENV{DXSDK_DIR}/Include)
-	endif()
-endif()
-
 if (UNIX)
 	target_link_libraries(server synergy)
 endif()

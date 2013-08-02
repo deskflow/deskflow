@@ -20,14 +20,11 @@
 #define CMSWINDOWSSCREEN_H
 
 #include "CPlatformScreen.h"
-#include "CSynergyHook.h"
+#include "synwinhk.h"
 #include "CCondVar.h"
 #include "CMutex.h"
 #include "CString.h"
 #include "CMSWindowsHookLibraryLoader.h"
-#include "CGameDevice.h"
-#include "CMSWindowsXInput.h"
-#include "CEventGameDevice.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -44,7 +41,6 @@ public:
 	CMSWindowsScreen(
 		bool isPrimary,
 		bool noHooks,
-		const CGameDeviceInfo &gameDevice,
 		bool stopOnDeskSwitch,
 		IEventQueue* events);
 	virtual ~CMSWindowsScreen();
@@ -89,18 +85,12 @@ public:
 	virtual SInt32		getJumpZoneSize() const;
 	virtual bool		isAnyMouseButtonDown() const;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
-	virtual void		gameDeviceTimingResp(UInt16 freq);
-	virtual void		gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2);
 
 	// ISecondaryScreen overrides
 	virtual void		fakeMouseButton(ButtonID id, bool press);
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const;
 	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
-	virtual void		fakeGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) const;
-	virtual void		fakeGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) const;
-	virtual void		fakeGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) const;
-	virtual void		queueGameDeviceTimingReq() const;
 
 	// IKeyState overrides
 	virtual void		updateKeys();
@@ -325,14 +315,12 @@ private:
 	MOUSEKEYS			m_mouseKeys;
 	MOUSEKEYS			m_oldMouseKeys;
 
-	// loads synrgyhk.dll
+	// loads synwinhk.dll
 	CMSWindowsHookLibraryLoader
 						m_hookLibraryLoader;
 
-	const CGameDeviceInfo&	m_gameDeviceInfo;
-	CGameDevice*		m_gameDevice;
-
-	static CMSWindowsScreen*	s_screen;
+	static CMSWindowsScreen*
+						s_screen;
 	
 	IEventQueue*		m_events;
 };

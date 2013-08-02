@@ -42,7 +42,6 @@ EVENT_TYPE_ACCESSOR(CServerApp)
 EVENT_TYPE_ACCESSOR(IKeyState)
 EVENT_TYPE_ACCESSOR(IPrimaryScreen)
 EVENT_TYPE_ACCESSOR(IScreen)
-EVENT_TYPE_ACCESSOR(ISecondaryScreen)
 
 // interrupt handler.  this just adds a quit event to the queue.
 static
@@ -78,8 +77,7 @@ CEventQueue::CEventQueue() :
 	m_typesForCServerApp(NULL),
 	m_typesForIKeyState(NULL),
 	m_typesForIPrimaryScreen(NULL),
-	m_typesForIScreen(NULL),
-	m_typesForISecondaryScreen(NULL)
+	m_typesForIScreen(NULL)
 {
 	m_mutex = ARCH->newMutex();
 	ARCH->setSignalHandler(CArch::kINTERRUPT, &interrupt, this);

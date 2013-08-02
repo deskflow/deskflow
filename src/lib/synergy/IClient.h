@@ -25,7 +25,6 @@
 #include "MouseTypes.h"
 #include "OptionTypes.h"
 #include "CString.h"
-#include "GameDeviceTypes.h"
 
 //! Client interface
 /*!
@@ -140,30 +139,6 @@ public:
 	Each wheel click should generate a delta of +/-120.
 	*/
 	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta) = 0;
-
-	//! Notify of game device buttons changed
-	/*!
-	Synthesize game device button states.
-	*/
-	virtual void		gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) = 0;
-
-	//! Notify of game device sticks changed
-	/*!
-	Synthesize game device stick states.
-	*/
-	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) = 0;
-	
-	//! Notify of game device trigger changes
-	/*!
-	Synthesize game device trigger states.
-	*/
-	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) = 0;
-	
-	//! Notify of game device timing request
-	/*!
-	Causes a game device timing response when state is next faked.
-	*/
-	virtual void		gameDeviceTimingReq() = 0;
 
 	//! Notify of screen saver change
 	virtual void		screensaver(bool activate) = 0;

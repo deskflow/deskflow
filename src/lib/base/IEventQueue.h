@@ -49,7 +49,6 @@ class CServerAppEvents;
 class IKeyStateEvents;
 class IPrimaryScreenEvents;
 class IScreenEvents;
-class ISecondaryScreenEvents;
 
 //! Event queue interface
 /*!
@@ -239,7 +238,6 @@ public:
 	virtual IKeyStateEvents&			forIKeyState() = 0;
 	virtual IPrimaryScreenEvents&		forIPrimaryScreen() = 0;
 	virtual IScreenEvents&				forIScreen() = 0;
-	virtual ISecondaryScreenEvents&		forISecondaryScreen() = 0;
 };
 
 #endif

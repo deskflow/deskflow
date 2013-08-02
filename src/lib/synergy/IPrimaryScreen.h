@@ -23,7 +23,6 @@
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 #include "CEvent.h"
-#include "GameDeviceTypes.h"
 #include "CEventTypes.h"
 
 //! Primary screen interface
@@ -70,55 +69,6 @@ public:
 
 	public:
 		UInt32			m_id;
-	};
-	//! Game device button event data
-	class CGameDeviceButtonInfo {
-	public:
-		CGameDeviceButtonInfo(GameDeviceID id, GameDeviceButton buttons) :
-			m_id(id), m_buttons(buttons) { }
-	public:
-		GameDeviceID m_id;
-		GameDeviceButton m_buttons;
-	};
-	//! Game device sticks event data
-	class CGameDeviceStickInfo {
-	public:
-		CGameDeviceStickInfo(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) :
-			m_id(id), m_x1(x1), m_x2(x2), m_y1(y1), m_y2(y2) { }
-	public:
-		GameDeviceID m_id;
-		SInt16 m_x1;
-		SInt16 m_x2;
-		SInt16 m_y1;
-		SInt16 m_y2;
-	};
-	//! Game device triggers event data
-	class CGameDeviceTriggerInfo {
-	public:
-		CGameDeviceTriggerInfo(GameDeviceID id, UInt8 t1, UInt8 t2) :
-		  m_id(id), m_t1(t1), m_t2(t2) { }
-	public:
-		GameDeviceID m_id;
-		UInt8 m_t1;
-		UInt8 m_t2;
-	};
-	//! Game device timing response event data
-	class CGameDeviceTimingRespInfo {
-	public:
-		CGameDeviceTimingRespInfo(UInt16 freq) :
-		  m_freq(freq) { }
-	public:
-		UInt16 m_freq;
-	};
-	//! Game device feedback event data
-	class CGameDeviceFeedbackInfo {
-	public:
-		CGameDeviceFeedbackInfo(GameDeviceID id, UInt16 m1, UInt16 m2) :
-		  m_id(id), m_m1(m1), m_m2(m2) { }
-	public:
-		GameDeviceID m_id;
-		UInt16 m_m1;
-		UInt16 m_m2;
 	};
 
 	//! @name manipulators
@@ -211,12 +161,6 @@ public:
 	the edges of the screen, typically the center.
 	*/
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
-	
-	//! Handle incoming game device timing responses.
-	virtual void		gameDeviceTimingResp(UInt16 freq) = 0;
-
-	//! Handle incoming game device feedback changes.
-	virtual void		gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2) = 0;
 
 	//@}
 };

@@ -294,22 +294,6 @@ CServerProxy::parseMessage(const UInt8* code)
 		setOptions();
 	}
 
-	else if (memcmp(code, kMsgDGameButtons, 4) == 0) {
-		gameDeviceButtons();
-	}
-
-	else if (memcmp(code, kMsgDGameSticks, 4) == 0) {
-		gameDeviceSticks();
-	}
-
-	else if (memcmp(code, kMsgDGameTriggers, 4) == 0) {
-		gameDeviceTriggers();
-	}
-
-	else if (memcmp(code, kMsgCGameTimingReq, 4) == 0) {
-		gameDeviceTimingReq();
-	}
-
 	else if (memcmp(code, kMsgDCryptoIv, 4) == 0) {
 		cryptoIv();
 	}
@@ -377,20 +361,6 @@ CServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
 	CString data = IClipboard::marshall(clipboard);
 	LOG((CLOG_DEBUG1 "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
 	CProtocolUtil::writef(m_stream, kMsgDClipboard, id, m_seqNum, &data);
-}
-
-void
-CServerProxy::onGameDeviceTimingResp(UInt16 freq)
-{
-	LOG((CLOG_DEBUG1 "sending game device timing response freq=%d", freq));
-	CProtocolUtil::writef(m_stream, kMsgCGameTimingResp, freq);
-}
-
-void
-CServerProxy::onGameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2)
-{
-	LOG((CLOG_DEBUG1 "sending game device feedback id=%d, m1=%d, m2=%d", id, m1, m2));
-	CProtocolUtil::writef(m_stream, kMsgDGameFeedback, id, m1, m2);
 }
 
 void
@@ -787,55 +757,6 @@ CServerProxy::mouseWheel()
 
 	// forward
 	m_client->mouseWheel(xDelta, yDelta);
-}
-
-void
-CServerProxy::gameDeviceButtons()
-{
-	// parse
-	GameDeviceID id;
-	GameDeviceButton buttons;
-	CProtocolUtil::readf(m_stream, kMsgDGameButtons + 4, &id, &buttons);
-	LOG((CLOG_DEBUG2 "recv game device id=%d buttons=%d", id, buttons));
-
-	// forward
-	m_client->gameDeviceButtons(id, buttons);
-}
-
-void
-CServerProxy::gameDeviceSticks()
-{
-	// parse
-	GameDeviceID id;
-	SInt16 x1, y1, x2, y2;
-	CProtocolUtil::readf(m_stream, kMsgDGameSticks + 4, &id, &x1, &y1, &x2, &y2);
-	LOG((CLOG_DEBUG2 "recv game device sticks id=%d s1=%+d,%+d s2=%+d,%+d", id, x1, y1, x2, y2));
-
-	// forward
-	m_client->gameDeviceSticks(id, x1, y1, x2, y2);
-}
-
-void
-CServerProxy::gameDeviceTriggers()
-{
-	// parse
-	GameDeviceID id;
-	UInt8 t1, t2;
-	CProtocolUtil::readf(m_stream, kMsgDGameTriggers + 4, &id, &t1, &t2);
-	LOG((CLOG_DEBUG2 "recv game device triggers id=%d t1=%d t2=%d", id, t1, t2));
-
-	// forward
-	m_client->gameDeviceTriggers(id, t1, t2);
-}
-
-void
-CServerProxy::gameDeviceTimingReq()
-{
-	// parse
-	LOG((CLOG_DEBUG2 "recv game device timing request"));
-
-	// forward
-	m_client->gameDeviceTimingReq();
 }
 
 void

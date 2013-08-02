@@ -151,7 +151,6 @@ public:
 	IKeyStateEvents&			forIKeyState();
 	IPrimaryScreenEvents&		forIPrimaryScreen();
 	IScreenEvents&				forIScreen();
-	ISecondaryScreenEvents&		forISecondaryScreen();
 
 private:
 	CClientEvents*				m_typesForCClient;
@@ -172,7 +171,6 @@ private:
 	IKeyStateEvents*			m_typesForIKeyState;
 	IPrimaryScreenEvents*		m_typesForIPrimaryScreen;
 	IScreenEvents*				m_typesForIScreen;
-	ISecondaryScreenEvents*		m_typesForISecondaryScreen;
 };
 
 #define EVENT_TYPE_ACCESSOR(type_)											\

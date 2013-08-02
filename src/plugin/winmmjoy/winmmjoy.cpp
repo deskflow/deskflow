@@ -59,6 +59,7 @@ cleanup()
 DWORD WINAPI
 mainLoop(void* data)
 {
+	// TODO: use a different message - e.g. DPLG%s (data - plugin)
 	const char* buttonsEvent = "IPrimaryScreen::getGameDeviceButtonsEvent";
 	const char* sticksEvent = "IPrimaryScreen::getGameDeviceSticksEvent";
 	const char* triggersEvent = "IPrimaryScreen::getGameDeviceTriggersEvent";

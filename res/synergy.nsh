@@ -36,8 +36,6 @@
 !include "MUI2.nsh"
 !include "DefineIfExist.nsh"
 
-${!defineifexist} gameDeviceSupport "${binDir}\Release\synxinhk.dll"
-
 !insertmacro MUI_PAGE_LICENSE "..\\res\\License.rtf"
 
 !insertmacro MUI_PAGE_DIRECTORY
@@ -63,6 +61,7 @@ InstallDirRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${product}" ""
   Delete "${dir}\synergyd.log"
   Delete "${dir}\launcher.exe"
   Delete "${dir}\synrgyhk.dll"
+  Delete "${dir}\synwinhk.dll"
   Delete "${dir}\libgcc_s_dw2-1.dll"
   Delete "${dir}\mingwm10.dll"
   Delete "${dir}\QtCore4.dll"
@@ -70,8 +69,6 @@ InstallDirRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${product}" ""
   Delete "${dir}\QtNetwork4.dll"
   Delete "${dir}\Uninstall.exe"
   Delete "${dir}\uninstall.exe"
-  Delete "${dir}\synxinhk.dll"
-  Delete "${dir}\sxinpx13.dll"
   
   RMDir "${dir}"
 
@@ -168,10 +165,10 @@ Section "Server and Client" core
   
   ; if the hook file exists, skip, assuming it couldn't be deleted
   ; because it was in use by some process.
-  ${If} ${FileExists} "synrgyhk.dll"
-    DetailPrint "Skipping synrgyhk.dll, file already exists."
+  ${If} ${FileExists} "synwinhk.dll"
+    DetailPrint "Skipping synwinhk.dll, file already exists."
   ${Else}
-    File "${binDir}\Release\synrgyhk.dll"
+    File "${binDir}\Release\synwinhk.dll"
   ${EndIf}
   
   ; windows firewall exception
@@ -182,16 +179,6 @@ Section "Server and Client" core
   ExecWait "$INSTDIR\synergyd.exe /install"
 
 SectionEnd
-
-!ifdef gameDeviceSupport
-Section "Game Device Support" gamedev
-
-  ; files for xinput support
-  File "${binDir}\Release\synxinhk.dll"
-  File "${binDir}\Release\sxinpx13.dll"
-
-SectionEnd
-!endif
 
 Section "Graphical User Interface" gui
 

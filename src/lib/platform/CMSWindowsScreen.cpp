@@ -84,7 +84,6 @@ CMSWindowsScreen*		CMSWindowsScreen::s_screen   = NULL;
 CMSWindowsScreen::CMSWindowsScreen(
 	bool isPrimary,
 	bool noHooks,
-	const CGameDeviceInfo& gameDeviceInfo,
 	bool stopOnDeskSwitch,
 	IEventQueue* events) :
 	CPlatformScreen(events),
@@ -114,8 +113,6 @@ CMSWindowsScreen::CMSWindowsScreen(
 	m_keyState(NULL),
 	m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
 	m_showingMouse(false),
-	m_gameDeviceInfo(gameDeviceInfo),
-	m_gameDevice(NULL),
 	m_events(events)
 {
 	assert(s_windowInstance != NULL);
@@ -124,7 +121,7 @@ CMSWindowsScreen::CMSWindowsScreen(
 	s_screen = this;
 	try {
 		if (m_isPrimary && !m_noHooks) {
-			m_hookLibrary = openHookLibrary("synrgyhk");
+			m_hookLibrary = openHookLibrary("synwinhk");
 		}
 		m_screensaver = new CMSWindowsScreenSaver();
 		m_desks       = new CMSWindowsDesks(
@@ -163,25 +160,6 @@ CMSWindowsScreen::CMSWindowsScreen(
 
 	// install the platform event queue
 	m_events->adoptBuffer(new CMSWindowsEventQueueBuffer(m_events));
-
-	if ((gameDeviceInfo.m_mode == CGameDeviceInfo::kGameModeXInput) &&
-		(gameDeviceInfo.m_poll != CGameDeviceInfo::kGamePollDynamic))
-		LOG((CLOG_WARN "only dynamic polling is supported with xnput."));
-
-	if ((gameDeviceInfo.m_mode == CGameDeviceInfo::kGameModeJoyInfoEx) &&
-		(gameDeviceInfo.m_poll != CGameDeviceInfo::kGamePollStatic))
-		LOG((CLOG_WARN "only static polling is supported with joyinfoex."));
-
-	if (m_gameDeviceInfo.m_mode == CGameDeviceInfo::kGameModeXInput) {
-#if GAME_DEVICE_SUPPORT
-		m_gameDevice = new CMSWindowsXInput(this, gameDeviceInfo);
-#else if _AMD64_
-		LOG((CLOG_WARN "xinput game device mode not supported for 64-bit."));
-#endif
-	}
-	else {
-		m_gameDevice = new CEventGameDevice(getEventTarget());
-	}
 }
 
 CMSWindowsScreen::~CMSWindowsScreen()
@@ -196,9 +174,6 @@ CMSWindowsScreen::~CMSWindowsScreen()
 	delete m_screensaver;
 	destroyWindow(m_window);
 	destroyClass(m_class);
-
-	if (m_gameDevice != NULL)
-		delete m_gameDevice;
 
 	if (m_hookLibrary != NULL)
 		closeHookLibrary(m_hookLibrary);
@@ -709,18 +684,6 @@ CMSWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
 }
 
 void
-CMSWindowsScreen::gameDeviceTimingResp(UInt16 freq)
-{
-	m_gameDevice->gameDeviceTimingResp(freq);
-}
-
-void
-CMSWindowsScreen::gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2)
-{
-	m_gameDevice->gameDeviceFeedback(id, m1, m2);
-}
-
-void
 CMSWindowsScreen::fakeMouseButton(ButtonID id, bool press)
 {
 	m_desks->fakeMouseButton(id, press);
@@ -742,34 +705,6 @@ void
 CMSWindowsScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
 	m_desks->fakeMouseWheel(xDelta, yDelta);
-}
-
-void
-CMSWindowsScreen::fakeGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) const
-{
-	LOG((CLOG_DEBUG "fake game device buttons id=%d buttons=%d", id, buttons));
-	m_gameDevice->fakeGameDeviceButtons(id, buttons);
-}
-
-void
-CMSWindowsScreen::fakeGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) const
-{
-	LOG((CLOG_DEBUG "fake game device sticks id=%d s1=%+d,%+d s2=%+d,%+d", id, x1, y1, x2, y2));
-	m_gameDevice->fakeGameDeviceSticks(id, x1, y1, x2, y2);
-}
-
-void
-CMSWindowsScreen::fakeGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) const
-{
-	LOG((CLOG_DEBUG "fake game device triggers id=%d t1=%d t2=%d", id, t1, t2));
-	m_gameDevice->fakeGameDeviceTriggers(id, t1, t2);
-}
-
-void
-CMSWindowsScreen::queueGameDeviceTimingReq() const
-{
-	LOG((CLOG_DEBUG "queue game device timing request"));
-	m_gameDevice->queueGameDeviceTimingReq();
 }
 
 void

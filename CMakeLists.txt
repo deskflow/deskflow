@@ -294,10 +294,6 @@ else (UNIX)
 
 endif()
 
-if (GAME_DEVICE_SUPPORT)
-	add_definitions(-DGAME_DEVICE_SUPPORT)
-endif()
-
 add_subdirectory(src)
 add_subdirectory(tools)
 

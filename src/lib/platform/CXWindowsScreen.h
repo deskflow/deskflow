@@ -63,17 +63,12 @@ public:
 	virtual SInt32		getJumpZoneSize() const;
 	virtual bool		isAnyMouseButtonDown() const;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
-	virtual void		gameDeviceTimingResp(UInt16 freq) { }
 
 	// ISecondaryScreen overrides
 	virtual void		fakeMouseButton(ButtonID id, bool press);
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const;
 	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
-	virtual void		fakeGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) const { }
-	virtual void		fakeGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) const { }
-	virtual void		fakeGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) const { }
-	virtual void		queueGameDeviceTimingReq() const { }
 
 	// IPlatformScreen overrides
 	virtual void		enable();
@@ -89,7 +84,6 @@ public:
 	virtual void		setOptions(const COptionsList& options);
 	virtual void		setSequenceNumber(UInt32);
 	virtual bool		isPrimary() const;
-	virtual void		gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2) { }
 
 protected:
 	// IPlatformScreen overrides
