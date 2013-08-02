@@ -800,6 +800,17 @@ COSXScreen::enter()
 		// reset buttons
 		m_buttonState.reset();
 
+		// patch by Yutaka Tsutano
+		// wakes the client screen
+		// http://synergy-foss.org/spit/issues/details/3287#c12
+		io_registry_entry_t entry = IORegistryEntryFromPath(
+			kIOMasterPortDefault,
+			"IOService:/IOResources/IODisplayWrangler");
+		if (entry != MACH_PORT_NULL) {
+			IORegistryEntrySetCFProperty(entry, CFSTR("IORequestIdle"), kCFBooleanFalse);
+			IOObjectRelease(entry);
+		}
+
 		// avoid suppression of local hardware events
 		// stkamp@users.sourceforge.net
 		CGSetLocalEventsFilterDuringSupressionState(
