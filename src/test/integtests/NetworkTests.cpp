@@ -57,6 +57,14 @@ const UInt16 kMockDataChunkIncrement = 1024; // 1KB
 const char* kMockFilename = "NetworkTests.mock";
 const size_t kMockFileSize = 1024 * 1024 * 10; // 10MB
 
+#if WINAPI_CARBON
+// HACK: only run once on mac
+bool g_hasRun_sendToClient_mockData = false;
+bool g_hasRun_sendToClient_mockFile = false;
+bool g_hasRun_sendToServer_mockData = false;
+bool g_hasRun_sendToServer_mockFile = false;
+#endif
+
 void getScreenShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h);
 void getCursorPos(SInt32& x, SInt32& y);
 CString intToString(size_t i);
@@ -105,6 +113,14 @@ public:
 
 TEST_F(NetworkTests, sendToClient_mockData)
 {
+#if WINAPI_CARBON
+	// HACK: only run once on mac
+	if (g_hasRun_sendToClient_mockData) {
+		return;
+	}
+	g_hasRun_sendToClient_mockData = true;
+#endif
+
 	// server and client
 	CNetworkAddress serverAddress(TEST_HOST, TEST_PORT);
 	CCryptoOptions cryptoOptions;
@@ -151,11 +167,21 @@ TEST_F(NetworkTests, sendToClient_mockData)
 
 	m_events.initQuitTimeout(10);
 	m_events.loop();
+	m_events.removeHandler(m_events.forCClientListener().connected(), &listener);
+	m_events.removeHandler(m_events.forIScreen().fileRecieveComplete(), &client);
 	m_events.cleanupQuitTimeout();
 }
 
 TEST_F(NetworkTests, sendToClient_mockFile)
 {
+#if WINAPI_CARBON
+	// HACK: only run once on mac
+	if (g_hasRun_sendToClient_mockFile) {
+		return;
+	}
+	g_hasRun_sendToClient_mockFile = true;
+#endif
+
 	// server and client
 	CNetworkAddress serverAddress(TEST_HOST, TEST_PORT);
 	CCryptoOptions cryptoOptions;
@@ -202,11 +228,21 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 
 	m_events.initQuitTimeout(10);
 	m_events.loop();
+	m_events.removeHandler(m_events.forCClientListener().connected(), &listener);
+	m_events.removeHandler(m_events.forIScreen().fileRecieveComplete(), &client);
 	m_events.cleanupQuitTimeout();
 }
 
 TEST_F(NetworkTests, sendToServer_mockData)
 {
+#if WINAPI_CARBON
+	// HACK: only run once on mac
+	if (g_hasRun_sendToServer_mockData) {
+		return;
+	}
+	g_hasRun_sendToServer_mockData = true;
+#endif
+
 	// server and client
 	CNetworkAddress serverAddress(TEST_HOST, TEST_PORT);
 	CCryptoOptions cryptoOptions;
@@ -253,11 +289,21 @@ TEST_F(NetworkTests, sendToServer_mockData)
 
 	m_events.initQuitTimeout(10);
 	m_events.loop();
+	m_events.removeHandler(m_events.forCClientListener().connected(), &listener);
+	m_events.removeHandler(m_events.forIScreen().fileRecieveComplete(), &server);
 	m_events.cleanupQuitTimeout();
 }
 
 TEST_F(NetworkTests, sendToServer_mockFile)
 {
+#if WINAPI_CARBON
+	// HACK: only run once on mac
+	if (g_hasRun_sendToServer_mockFile) {
+		return;
+	}
+	g_hasRun_sendToServer_mockFile = true;
+#endif
+
 	// server and client
 	CNetworkAddress serverAddress(TEST_HOST, TEST_PORT);
 	CCryptoOptions cryptoOptions;
@@ -304,6 +350,8 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 
 	m_events.initQuitTimeout(10);
 	m_events.loop();
+	m_events.removeHandler(m_events.forCClientListener().connected(), &listener);
+	m_events.removeHandler(m_events.forIScreen().fileRecieveComplete(), &server);
 	m_events.cleanupQuitTimeout();
 }
 
