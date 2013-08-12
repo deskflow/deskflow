@@ -27,8 +27,8 @@
 #include <QNetworkReply>
 
 //#define PREMIUM_AUTH_URL "http://localhost/synergy/premium/json/auth/"
-#define PREMIUM_AUTH_URL "https://synergy-foss.org/premium/json/auth/"
-#define PREMIUM_REGISTER_URL "https://synergy-foss.org/premium/register/?source=gui-wizard"
+#define PREMIUM_AUTH_URL "http://synergy-foss.org/premium/json/auth/"
+#define PREMIUM_REGISTER_URL "http://synergy-foss.org/premium/register/?source=gui-wizard"
 
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_MainWindow(mainWindow),
@@ -282,8 +282,8 @@ void SetupWizard::on_m_pRadioButtonPremiumLogin_toggled(bool checked)
 
 bool SetupWizard::isPremiumLoginValid(QMessageBox& message)
 {
-	QString email = m_pLineEditPremiumEmail->text();
-	QString password = m_pLineEditPremiumPassword->text();
+	QString email = hash(m_pLineEditPremiumEmail->text());
+	QString password = hash(m_pLineEditPremiumPassword->text());
 
 	QString requestJson = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\"}";
 	QByteArray requestData(requestJson.toStdString().c_str());
