@@ -62,6 +62,13 @@ CClientProxy1_4::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 }
 
 void
+CClientProxy1_4::keepAlive()
+{
+	cryptoIv();
+	CClientProxy1_3::keepAlive();
+}
+
+void
 CClientProxy1_4::cryptoIv()
 {
 	CCryptoStream* cryptoStream = dynamic_cast<CCryptoStream*>(getStream());

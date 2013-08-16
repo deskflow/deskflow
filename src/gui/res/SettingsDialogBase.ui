@@ -189,51 +189,6 @@
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="m_pLabel_26">
-        <property name="minimumSize">
-         <size>
-          <width>75</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>&amp;Mode:</string>
-        </property>
-        <property name="buddy">
-         <cstring>m_pComboCryptoMode</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="m_pComboCryptoMode">
-        <item>
-         <property name="text">
-          <string notr="true">OFB (Output Feedback)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string notr="true">CFB (Cipher Feedback)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string notr="true">CTR (Counter)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string notr="true">GCM (Galois/Counter)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string notr="true">Disable encryption</string>
-         </property>
-        </item>
-       </widget>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="m_pLabel_23">
         <property name="minimumSize">
@@ -257,6 +212,13 @@
         </property>
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxEnableCrypto">
+        <property name="text">
+         <string>Enable</string>
         </property>
        </widget>
       </item>
@@ -397,7 +359,6 @@
   <tabstop>m_pCheckBoxAutoStart</tabstop>
   <tabstop>m_pCheckBoxAutoConnect</tabstop>
   <tabstop>m_pCheckBoxAutoHide</tabstop>
-  <tabstop>m_pComboCryptoMode</tabstop>
   <tabstop>m_pLineEditCryptoPass</tabstop>
   <tabstop>m_pComboLogLevel</tabstop>
   <tabstop>m_pCheckBoxLogToFile</tabstop>

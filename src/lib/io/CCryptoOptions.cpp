@@ -36,17 +36,8 @@ CCryptoOptions::setMode(CString modeString)
 ECryptoMode
 CCryptoOptions::parseMode(CString modeString)
 {
-	if (modeString == "ofb") {
-		return kOfb;
-	}
-	else if (modeString == "cfb") {
+	if (modeString == "cfb") {
 		return kCfb;
-	}
-	else if (modeString == "ctr") {
-		return kCtr;
-	}
-	else if (modeString == "gcm") {
-		return kGcm;
 	}
 	else {
 		throw XIOBadCryptoMode();

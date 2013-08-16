@@ -19,9 +19,6 @@
 
 enum ECryptoMode {
 	kDisabled,
-	kOfb,
 	kCfb,
-	kCtr,
-	kGcm,
 	kNumOfModes
 };

@@ -40,6 +40,7 @@ public:
 	virtual void		keyDown(KeyID key, KeyModifierMask mask, KeyButton button);
 	virtual void		keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button);
 	virtual void		keyUp(KeyID key, KeyModifierMask mask, KeyButton button);
+	virtual void		keepAlive();
 
 	//! Send IV to make 
 	void				cryptoIv();

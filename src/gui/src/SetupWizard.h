@@ -18,7 +18,6 @@
 #pragma once
 
 #include "ui_SetupWizardBase.h"
-#include "CryptoMode.h"
 #include "SynergyLocale.h"
 
 #include <QWizard>
@@ -41,7 +40,6 @@ protected:
 	void reject();
 
 private:
-	CryptoMode parseCryptoMode(const QString& s);
 	bool isPremiumLoginValid(QMessageBox& message);
 
 private:
@@ -51,7 +49,7 @@ private:
 	QNetworkAccessManager m_Network;
 
 private slots:
-    void on_m_pComboCryptoMode_currentIndexChanged(int index);
+	void on_m_pCheckBoxEnableCrypto_stateChanged(int );
 	void on_m_pComboLanguage_currentIndexChanged(int index);
 	void on_m_pRadioButtonPremiumLogin_toggled(bool checked);
 };
