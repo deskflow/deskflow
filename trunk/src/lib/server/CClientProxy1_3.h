@@ -38,6 +38,7 @@ protected:
 	virtual void		resetHeartbeatTimer();
 	virtual void		addHeartbeatTimer();
 	virtual void		removeHeartbeatTimer();
+	virtual void		keepAlive();
 
 private:
 	void				handleKeepAlive(const CEvent&, void*);

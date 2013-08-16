@@ -536,107 +536,15 @@
      </spacer>
     </item>
     <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Choose a random encryption mode. The mode must be the same on both the client and server.</string>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item>
      <layout class="QFormLayout" name="formLayout">
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::ExpandingFieldsGrow</enum>
       </property>
       <item row="1" column="0">
-       <widget class="QLabel" name="m_pLabel_26">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>100</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="sizeIncrement">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="baseSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
+       <widget class="QCheckBox" name="m_pCheckBoxEnableCrypto">
         <property name="text">
-         <string>&amp;Mode:</string>
+         <string>Enable encryption</string>
         </property>
-        <property name="indent">
-         <number>10</number>
-        </property>
-        <property name="buddy">
-         <cstring>m_pComboCryptoMode</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="m_pComboCryptoMode">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>200</width>
-          <height>0</height>
-         </size>
-        </property>
-        <item>
-         <property name="text">
-          <string notr="true"/>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string notr="true">OFB (Output Feedback)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string notr="true">CFB (Cipher Feedback)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string notr="true">CTR (Counter)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string notr="true">GCM (Galois/Counter)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string notr="true">Disable encryption</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>
@@ -808,7 +716,6 @@
   <tabstop>m_pRadioButtonPremiumLater</tabstop>
   <tabstop>m_pServerRadioButton</tabstop>
   <tabstop>m_pClientRadioButton</tabstop>
-  <tabstop>m_pComboCryptoMode</tabstop>
   <tabstop>m_pLineEditCryptoPassword1</tabstop>
   <tabstop>m_pLineEditCryptoPassword2</tabstop>
  </tabstops>

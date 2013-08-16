@@ -165,12 +165,9 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 
 	else if (isArg(i, argc, argv, NULL, "--crypto-pass")) {
 		argsBase().m_crypto.m_pass = argv[++i];
+		argsBase().m_crypto.setMode("cfb");
 	}
 
-	else if (isArg(i, argc, argv, NULL, "--crypto-mode")) {
-		argsBase().m_crypto.setMode(argv[++i]);
-	}
-	
 	else if (isArg(i, argc, argv, NULL, "--filetransfer-src")) {
 		m_fileTransferSrc = argv[++i];
 	}

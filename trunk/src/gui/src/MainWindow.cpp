@@ -392,9 +392,8 @@ void MainWindow::startSynergy()
 	if (!appConfig().screenName().isEmpty())
 		args << "--name" << appConfig().screenName();
 
-		if (appConfig().cryptoMode() != Disabled)
+		if (appConfig().cryptoEnabled())
 		{
-			args << "--crypto-mode" << appConfig().cryptoModeString();
 			args << "--crypto-pass" << appConfig().cryptoPass();
 		}
 

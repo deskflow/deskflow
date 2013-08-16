@@ -66,7 +66,6 @@ HEADERS += src/MainWindow.h \
     src/IpcClient.h \
     src/IpcReader.h \
     src/Ipc.h \
-    src/CryptoMode.h \
     src/SynergyLocale.h \
     src/QUtility.h
 RESOURCES += res/Synergy.qrc

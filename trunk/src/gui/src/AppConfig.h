@@ -21,7 +21,6 @@
 #define APPCONFIG_H
 
 #include <QString>
-#include "CryptoMode.h"
 
 // this should be incremented each time a new page is added. this is
 // saved to settings when the user finishes running the wizard. if
@@ -66,7 +65,7 @@ class AppConfig
 		bool autoHide() const { return m_AutoHide; }
 		bool autoStartPrompt() const { return m_AutoStartPrompt; }
 		const QString& cryptoPass() const { return m_CryptoPass; }
-		CryptoMode cryptoMode() const { return m_CryptoMode; }
+		bool cryptoEnabled() const { return m_CryptoEnabled; }
 		QString cryptoModeString() const;
 		ProcessMode processMode() const { return m_ProcessMode; }
 		bool wizardShouldRun() const { return m_WizardLastRun < kWizardVersion; }
@@ -95,7 +94,7 @@ class AppConfig
 		void setAutoStart(bool b);
 		void setAutoHide(bool b) { m_AutoHide = b; }
 		void setAutoStartPrompt(bool b) { m_AutoStartPrompt = b; }
-		void setCryptoMode(CryptoMode c) { m_CryptoMode = c; }
+		void setCryptoEnabled(bool b) { m_CryptoEnabled = b; }
 		void setProcessMode(ProcessMode p) { m_ProcessMode = p; }
 		void setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
 		void setLanguage(const QString language) { m_Language = language; }
@@ -120,8 +119,8 @@ class AppConfig
 		bool m_AutoHide;
 		bool m_AutoStartPrompt;
 		int m_WizardLastRun;
+		bool m_CryptoEnabled;
 		QString m_CryptoPass;
-		CryptoMode m_CryptoMode;
 		ProcessMode m_ProcessMode;
 		QString m_Language;
 		QString m_PremiumEmail;

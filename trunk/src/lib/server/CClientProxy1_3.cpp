@@ -117,5 +117,11 @@ CClientProxy1_3::removeHeartbeatTimer()
 void
 CClientProxy1_3::handleKeepAlive(const CEvent&, void*)
 {
+	keepAlive();
+}
+
+void
+CClientProxy1_3::keepAlive()
+{
 	CProtocolUtil::writef(getStream(), kMsgCKeepAlive);
 }

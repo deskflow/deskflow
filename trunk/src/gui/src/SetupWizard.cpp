@@ -107,8 +107,8 @@ bool SetupWizard::validateCurrentPage()
 			}
 			else
 			{
-				m_pComboCryptoMode->setCurrentIndex(0);
-				m_pComboCryptoMode->setEnabled(true);
+				m_pCheckBoxEnableCrypto->setEnabled(true);
+				m_pCheckBoxEnableCrypto->setChecked(true);
 			}
 		}
 		else if (m_pRadioButtonPremiumRegister->isChecked())
@@ -120,9 +120,9 @@ bool SetupWizard::validateCurrentPage()
 		}
 		else if (m_pRadioButtonPremiumLater->isChecked())
 		{
-			int size = m_pComboCryptoMode->count();
-			m_pComboCryptoMode->setCurrentIndex(size - 1);
-			m_pComboCryptoMode->setEnabled(false);
+			m_pCheckBoxEnableCrypto->setEnabled(false);
+			m_pLineEditCryptoPassword1->setEnabled(false);
+			m_pLineEditCryptoPassword2->setEnabled(false);
 		}
 		else {
 			message.setText(tr("Please select an option."));
@@ -132,15 +132,7 @@ bool SetupWizard::validateCurrentPage()
 	}
 	else if (currentPage() == m_pCryptoPage)
 	{
-		QString modeText = m_pComboCryptoMode->currentText();
-		if (modeText.isEmpty())
-		{
-			message.setText(tr("Encryption mode required."));
-			message.exec();
-			return false;
-		}
-
-		if (parseCryptoMode(modeText) != Disabled)
+		if (m_pCheckBoxEnableCrypto->isChecked())
 		{
 			if (m_pLineEditCryptoPassword1->text().isEmpty())
 			{
@@ -185,7 +177,7 @@ void SetupWizard::accept()
 {
 	AppConfig& appConfig = m_MainWindow.appConfig();
 
-	appConfig.setCryptoMode(parseCryptoMode(m_pComboCryptoMode->currentText()));
+	appConfig.setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
 	appConfig.setCryptoPass(m_pLineEditCryptoPassword1->text());
 	appConfig.setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
 	appConfig.setPremiumEmail(m_pLineEditPremiumEmail->text());
@@ -239,33 +231,16 @@ void SetupWizard::reject()
 	QWizard::reject();
 }
 
-void SetupWizard::on_m_pComboCryptoMode_currentIndexChanged(int index)
+void SetupWizard::on_m_pCheckBoxEnableCrypto_stateChanged(int )
 {
-	bool enabled = parseCryptoMode(m_pComboCryptoMode->currentText()) != Disabled;
+	bool enabled = m_pCheckBoxEnableCrypto->isChecked();
 	m_pLineEditCryptoPassword1->setEnabled(enabled);
 	m_pLineEditCryptoPassword2->setEnabled(enabled);
-}
-
-CryptoMode SetupWizard::parseCryptoMode(const QString& s)
-{
-	if (s.startsWith("OFB"))
+	if (!enabled)
 	{
-		return OFB;
+		m_pLineEditCryptoPassword1->clear();
+		m_pLineEditCryptoPassword2->clear();
 	}
-	else if (s.startsWith("CFB"))
-	{
-		return CFB;
-	}
-	else if (s.startsWith("CTR"))
-	{
-		return CTR;
-	}
-	else if (s.startsWith("GCM"))
-	{
-		return GCM;
-	}
-
-	return Disabled;
 }
 
 void SetupWizard::on_m_pComboLanguage_currentIndexChanged(int index)

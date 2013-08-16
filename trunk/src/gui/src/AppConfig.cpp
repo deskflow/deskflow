@@ -57,7 +57,6 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_AutoStartPrompt(false),
 	m_WizardLastRun(0),
 	m_CryptoPass(),
-	m_CryptoMode(),
 	m_ProcessMode(DEFAULT_PROCESS_MODE)
 {
 	Q_ASSERT(m_pSettings);
@@ -160,7 +159,7 @@ void AppConfig::loadSettings()
 	m_WizardLastRun = settings().value("wizardLastRun", 0).toInt();
 	m_ProcessMode = (ProcessMode)settings().value("processMode2", DEFAULT_PROCESS_MODE).toInt();
 	m_CryptoPass = settings().value("cryptoPass", "").toString();
-	m_CryptoMode = (CryptoMode)settings().value("cryptoMode", Disabled).toInt();
+	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
 	m_Language = settings().value("language", QLocale::system().name()).toString();
 	m_PremiumEmail= settings().value("premiumEmail", "").toString();
 	m_PremiumToken = settings().value("premiumToken", "").toString();
@@ -181,7 +180,7 @@ void AppConfig::saveSettings()
 	settings().setValue("wizardLastRun", kWizardVersion);
 	settings().setValue("processMode2", m_ProcessMode);
 	settings().setValue("cryptoPass", m_CryptoPass);
-	settings().setValue("cryptoMode", m_CryptoMode);
+	settings().setValue("cryptoEnabled", m_CryptoEnabled);
 	settings().setValue("language", m_Language);
 	settings().setValue("premiumEmail", m_PremiumEmail);
 	settings().setValue("premiumToken", m_PremiumToken);
@@ -200,28 +199,6 @@ void AppConfig::setCryptoPass(const QString &s)
 	if (m_CryptoPass != s)
 	{
 		m_CryptoPass = hash(s);
-	}
-}
-
-QString AppConfig::cryptoModeString() const
-{
-	switch (cryptoMode())
-	{
-	case OFB:
-		return "ofb";
-
-	case CFB:
-		return "cfb";
-
-	case CTR:
-		return "ctr";
-
-	case GCM:
-		return "gcm";
-
-	default:
-		qCritical() << "invalid crypto mode";
-		return "";
 	}
 }
 
