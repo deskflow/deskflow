@@ -28,4 +28,5 @@ add_subdirectory(synergy)
 
 if (WIN32)
 	add_subdirectory(synwinhk)
+	add_subdirectory(synwinxt)
 endif()
