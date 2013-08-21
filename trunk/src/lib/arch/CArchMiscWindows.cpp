@@ -273,8 +273,7 @@ CArchMiscWindows::setValue(HKEY key,
 				const TCHAR* name, const std::string& value)
 {
 	assert(key  != NULL);
-	assert(name != NULL);
-	if(key ==NULL || name==NULL) return; // TODO: throw exception
+	if(key ==NULL) return; // TODO: throw exception
 	RegSetValueEx(key, name, 0, REG_SZ,
 								reinterpret_cast<const BYTE*>(value.c_str()),
 								(DWORD)value.size() + 1);
@@ -284,8 +283,7 @@ void
 CArchMiscWindows::setValue(HKEY key, const TCHAR* name, DWORD value)
 {
 	assert(key  != NULL);
-	assert(name != NULL);
-	if(key ==NULL || name==NULL) return; // TODO: throw exception
+	if(key ==NULL) return; // TODO: throw exception
 	RegSetValueEx(key, name, 0, REG_DWORD,
 								reinterpret_cast<CONST BYTE*>(&value),
 								sizeof(DWORD));
