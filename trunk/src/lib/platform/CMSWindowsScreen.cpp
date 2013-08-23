@@ -114,7 +114,6 @@ CMSWindowsScreen::CMSWindowsScreen(
 	m_keyState(NULL),
 	m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
 	m_showingMouse(false),
-	m_startDragging(false),
 	m_events(events)
 {
 	assert(s_windowInstance != NULL);
@@ -664,7 +663,7 @@ CMSWindowsScreen::getJumpZoneSize() const
 }
 
 bool
-CMSWindowsScreen::isAnyMouseButtonDown() const
+CMSWindowsScreen::isAnyMouseButtonDown(UInt32& buttonID) const
 {
 	static const char* buttonToName[] = {
 		"<invalid>",
@@ -677,6 +676,7 @@ CMSWindowsScreen::isAnyMouseButtonDown() const
 
 	for (UInt32 i = 1; i < sizeof(m_buttons) / sizeof(m_buttons[0]); ++i) {
 		if (m_buttons[i]) {
+			buttonID = i;
 			LOG((CLOG_DEBUG "locked by \"%s\"", buttonToName[i]));
 			return true;
 		}
@@ -1273,11 +1273,15 @@ CMSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 	if (button >= kButtonLeft && button <= kButtonExtra0 + 1) {
 		if (pressed) {
 			m_buttons[button] = true;
+			if (button == kButtonLeft) {
+				m_draggingFileDir.clear();
+				LOG((CLOG_DEBUG "dragging file directory is cleared"));
+			}
 		}
 		else {
 			m_buttons[button] = false;
-			if (m_startDragging && button == kButtonLeft) {
-				m_startDragging = false;
+			if (m_draggingStarted && button == kButtonLeft) {
+				m_draggingStarted = false;
 			}
 		}
 	}
@@ -1340,13 +1344,14 @@ CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 			m_events->forIPrimaryScreen().motionOnPrimary(),
 			CMotionInfo::alloc(m_xCursor, m_yCursor));
 
-		if (m_buttons[kButtonLeft] == true && m_startDragging == false) {
+		if (m_buttons[kButtonLeft] == true && m_draggingStarted == false) {
 			// temporarily log out dragging file directory
 			char dir[MAX_PATH];
 			m_hookLibraryLoader.m_getDraggingFileDir(dir);
-			LOG((CLOG_DEBUG "dragging file: %s", dir));
+			m_draggingFileDir.append(dir);
+			LOG((CLOG_DEBUG "dragging file directory: %s", m_draggingFileDir.c_str()));
 
-			m_startDragging = true;
+			m_draggingStarted = true;
 		}
 	}
 	else 

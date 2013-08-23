@@ -371,9 +371,15 @@ bool
 CScreen::isLockedToScreen() const
 {
 	// check for pressed mouse buttons
-	if (m_screen->isAnyMouseButtonDown()) {
-		LOG((CLOG_DEBUG "locked by mouse button"));
-		return true;
+	UInt32 buttonID = 0;
+	if (m_screen->isAnyMouseButtonDown(buttonID)) {
+		LOG((CLOG_DEBUG "locked by mouse buttonID: %d", buttonID));
+		if (buttonID == kButtonLeft) {
+			// this should fake an esc pressed
+			m_screen->fakeMouseButton(buttonID, false);
+		}
+		
+		return (buttonID == kButtonLeft) ? false : true;
 	}
 
 	// not locked
@@ -407,6 +413,12 @@ KeyModifierMask
 CScreen::pollActiveModifiers() const
 {
 	return m_screen->pollActiveModifiers();
+}
+
+CString&
+CScreen::getDraggingFileDir() const
+{
+	return m_screen->getDraggingFileDir();
 }
 
 void*

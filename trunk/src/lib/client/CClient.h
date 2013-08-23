@@ -104,6 +104,9 @@ public:
 	//! Create a new thread and use it to send file to Server
 	void				sendFileToServer(const char* filename);
 
+	//! Set file transder destination
+	void				setFileTransferDes(CString& des) { m_fileTransferDes = des; }
+
 	//@}
 	//! @name accessors
 	//@{
@@ -190,6 +193,8 @@ private:
 	void				handleSuspend(const CEvent& event, void*);
 	void				handleResume(const CEvent& event, void*);
 	void				handleFileChunkSending(const CEvent&, void*);
+	void				handleFileRecieveComplete(const CEvent&, void*);
+	void				onFileRecieveComplete();
 
 public:
 	bool					m_mock;
@@ -216,6 +221,8 @@ private:
 	CCryptoOptions			m_crypto;
 	std::size_t				m_expectedFileSize;
 	CString					m_receivedFileData;
+	CString					m_fileTransferSrc;
+	CString					m_fileTransferDes;
 };
 
 #endif

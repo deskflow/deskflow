@@ -41,7 +41,6 @@
 #include <cstdlib>
 #include <sstream>
 #include <fstream>
-#include <sstream>
 #include <stdexcept>
 
 //
@@ -1656,6 +1655,14 @@ CServer::onMouseUp(ButtonID id)
 
 	// relay
 	m_active->mouseUp(id);
+
+	if (!m_screen->isOnScreen()) {
+		CString& dir = m_screen->getDraggingFileDir();
+		if (!dir.empty()) {
+			LOG((CLOG_DEBUG "drop file to client: %s", dir.c_str()));
+			sendFileToClient(dir.c_str());
+		}
+	}
 }
 
 bool
@@ -2249,6 +2256,7 @@ CServer::sendFileThread(void* filename)
 {
 	try {
 		char* name  = reinterpret_cast<char*>(filename);
+		LOG((CLOG_DEBUG "sendFileChunks: %s", name));
 		CFileChunker::sendFileChunks(name, m_events, this);
 	}
 	catch (std::runtime_error error) {

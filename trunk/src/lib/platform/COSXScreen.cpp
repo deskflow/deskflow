@@ -308,7 +308,7 @@ COSXScreen::getJumpZoneSize() const
 }
 
 bool
-COSXScreen::isAnyMouseButtonDown() const
+COSXScreen::isAnyMouseButtonDown(UInt32& buttonID) const
 {
 	return (GetCurrentButtonState() != 0);
 }

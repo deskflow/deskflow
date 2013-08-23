@@ -144,7 +144,7 @@ public:
 	//! Set the expected size of receiving file
 	void				setExpectedFileSize(CString data);
 
-	//! Set
+	//! Set file transder destination
 	void				setFileTransferDes(CString& des) { m_fileTransferDes = des; }
 	
 	//! Received a chunk of file data

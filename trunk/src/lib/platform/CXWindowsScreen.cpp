@@ -798,7 +798,7 @@ CXWindowsScreen::getJumpZoneSize() const
 }
 
 bool
-CXWindowsScreen::isAnyMouseButtonDown() const
+CXWindowsScreen::isAnyMouseButtonDown(UInt32& buttonID) const
 {
 	// query the pointer to get the button state
 	Window root, window;

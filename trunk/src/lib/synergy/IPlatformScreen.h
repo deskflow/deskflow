@@ -157,7 +157,7 @@ public:
 	virtual void		fakeInputBegin() = 0;
 	virtual void		fakeInputEnd() = 0;
 	virtual SInt32		getJumpZoneSize() const = 0;
-	virtual bool		isAnyMouseButtonDown() const = 0;
+	virtual bool		isAnyMouseButtonDown(UInt32& buttonID) const = 0;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
 
 	// ISecondaryScreen overrides
@@ -184,6 +184,8 @@ public:
 						pollActiveModifiers() const = 0;
 	virtual SInt32		pollActiveGroup() const = 0;
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
+
+	virtual CString&	getDraggingFileDir() = 0;
 
 protected:
 	//! Handle system event

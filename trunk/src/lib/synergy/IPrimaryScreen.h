@@ -152,7 +152,7 @@ public:
 	"current" means up to the last processed event but it can mean
 	the current physical mouse button state.
 	*/
-	virtual bool		isAnyMouseButtonDown() const = 0;
+	virtual bool		isAnyMouseButtonDown(UInt32& buttonID) const = 0;
 
 	//! Get cursor center position
 	/*!
