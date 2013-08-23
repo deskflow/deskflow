@@ -21,6 +21,7 @@
 
 extern LONG g_refCount;
 extern GUID g_CLSID;
+extern void updateDraggingDir(char*);
 extern void outputDebugStringF(const char *str, ...);
 
 CDataHandlerExtension::CDataHandlerExtension()
@@ -64,8 +65,11 @@ CDataHandlerExtension::Release()
 HRESULT STDMETHODCALLTYPE
 CDataHandlerExtension::Load(__RPC__in LPCOLESTR pszFileName, DWORD dwMode)
 {
-	StringCchCopyW(m_selectedFileName, ARRAYSIZE(m_selectedFileName), pszFileName);
-	outputDebugStringF("DataHandlerDemo: CDataHandlerExtension::Load: m_selectedFileName=%ls", m_selectedFileName);
+	char selectedFileDir[MAX_PATH];
+	StringCchCopyW(m_selectedFileDir, ARRAYSIZE(m_selectedFileDir), pszFileName);
+	WideCharToMultiByte(CP_ACP, 0, m_selectedFileDir, -1, selectedFileDir, MAX_PATH, NULL, NULL);
+	updateDraggingDir(selectedFileDir);
+	
 	return S_OK;
 }
 

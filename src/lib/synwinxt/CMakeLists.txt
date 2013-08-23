@@ -16,13 +16,14 @@
 set(inc
 	CClassFactory.h
 	CDataHandlerExtension.h
+	synwinxt.h
 )
 
 set(src
 	CClassFactory.cpp
 	CDataHandlerExtension.cpp
+	synwinxt.cpp
 	synwinxt.def
-	Main.cpp
 )
 
 list(APPEND src

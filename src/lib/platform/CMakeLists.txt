@@ -101,6 +101,7 @@ set(inc
 	../net
 	../io
 	../synwinhk
+	../synwinxt
 )
 
 if (UNIX)

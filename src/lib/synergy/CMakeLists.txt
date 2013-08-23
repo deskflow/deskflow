@@ -105,6 +105,7 @@ set(inc
 	../server
 	../synergy
 	../synwinhk
+	../synwinxt
 	../..
 	../../../tools
 )
