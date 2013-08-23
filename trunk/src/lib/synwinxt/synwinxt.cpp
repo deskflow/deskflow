@@ -15,12 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "synwinxt.h"
 #include "CClassFactory.h"
 #include "CArchMiscWindows.h"
 #include <strsafe.h>
 #include <Windows.h>
 
 #pragma comment(lib, "Shlwapi.lib")
+
+#if defined(_MSC_VER)
+#pragma comment(linker, "-section:sharedData,rws")
+#pragma data_seg("sharedData")
+#endif
+
+static BYTE g_draggingFileDir[MAX_PATH] = { 0 };
+
+#if defined(_MSC_VER)
+#pragma data_seg()
+#endif
 
 // {1BE208B1-BC21-4E39-8BB6-A5DC3F51479E}
 GUID g_CLSID = {0x1be208b1, 0xbc21, 0x4e39, {0x8b, 0xb6, 0xa5, 0xdc, 0x3f, 0x51, 0x47, 0x9e}};
@@ -217,8 +229,7 @@ unregisterShellExtDataHandler(CHAR* fileType, const CLSID& clsid)
 	CHAR subkey[MAX_PATH];
 
 	// Remove the HKCR\<File Type>\shellex\DataHandler key.
-	hr = StringCchPrintf(subkey, ARRAYSIZE(subkey), 
-		"%s\\shellex\\DataHandler", fileType);
+	hr = StringCchPrintf(subkey, ARRAYSIZE(subkey), "%s\\shellex\\DataHandler", fileType);
 	if (SUCCEEDED(hr)) {
 		hr = HRESULT_FROM_WIN32(RegDeleteTree(HKEY_CLASSES_ROOT, subkey));
 	}
@@ -227,7 +238,7 @@ unregisterShellExtDataHandler(CHAR* fileType, const CLSID& clsid)
 }
 
 void
-outputDebugStringF(const char *str, ...)
+outputDebugStringF(const char* str, ...)
 {
 	char buf[2048];
 
@@ -236,4 +247,17 @@ outputDebugStringF(const char *str, ...)
 	vsprintf_s(buf,str,ptr);
 
 	OutputDebugStringA(buf);
+}
+
+void
+updateDraggingDir(char* dir)
+{
+	memcpy(g_draggingFileDir, dir, MAX_PATH);
+	outputDebugStringF("draggingFileDir: %s", g_draggingFileDir);
+}
+
+void
+getDraggingFileDir(char* dir)
+{
+	memcpy(dir, g_draggingFileDir, MAX_PATH);
 }

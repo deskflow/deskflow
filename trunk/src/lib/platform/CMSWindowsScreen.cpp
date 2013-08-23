@@ -110,9 +110,11 @@ CMSWindowsScreen::CMSWindowsScreen(
 	m_ownClipboard(false),
 	m_desks(NULL),
 	m_hookLibrary(NULL),
+	m_shellLibrary(NULL),
 	m_keyState(NULL),
 	m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
 	m_showingMouse(false),
+	m_startDragging(false),
 	m_events(events)
 {
 	assert(s_windowInstance != NULL);
@@ -122,6 +124,7 @@ CMSWindowsScreen::CMSWindowsScreen(
 	try {
 		if (m_isPrimary && !m_noHooks) {
 			m_hookLibrary = openHookLibrary("synwinhk");
+			m_shellLibrary = openShellLibrary("synwinxt");
 		}
 		m_screensaver = new CMSWindowsScreenSaver();
 		m_desks       = new CMSWindowsDesks(
@@ -148,6 +151,9 @@ CMSWindowsScreen::CMSWindowsScreen(
 
 		if (m_hookLibrary != NULL)
 			closeHookLibrary(m_hookLibrary);
+
+		if (m_shellLibrary != NULL)
+			closeHookLibrary(m_shellLibrary);
 
 		s_screen = NULL;
 		throw;
@@ -177,6 +183,9 @@ CMSWindowsScreen::~CMSWindowsScreen()
 
 	if (m_hookLibrary != NULL)
 		closeHookLibrary(m_hookLibrary);
+
+	if (m_shellLibrary != NULL)
+		closeHookLibrary(m_shellLibrary);
 
 	s_screen = NULL;
 }
@@ -751,6 +760,12 @@ CMSWindowsScreen::openHookLibrary(const char* name)
 	return m_hookLibraryLoader.openHookLibrary(name);
 }
 
+HINSTANCE
+CMSWindowsScreen::openShellLibrary(const char* name)
+{
+	return m_hookLibraryLoader.openShellLibrary(name);
+}
+
 void
 CMSWindowsScreen::closeHookLibrary(HINSTANCE hookLibrary) const
 {
@@ -1261,6 +1276,9 @@ CMSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 		}
 		else {
 			m_buttons[button] = false;
+			if (m_startDragging && button == kButtonLeft) {
+				m_startDragging = false;
+			}
 		}
 	}
 
@@ -1321,6 +1339,15 @@ CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		sendEvent(
 			m_events->forIPrimaryScreen().motionOnPrimary(),
 			CMotionInfo::alloc(m_xCursor, m_yCursor));
+
+		if (m_buttons[kButtonLeft] == true && m_startDragging == false) {
+			// temporarily log out dragging file directory
+			char dir[MAX_PATH];
+			m_hookLibraryLoader.m_getDraggingFileDir(dir);
+			LOG((CLOG_DEBUG "dragging file: %s", dir));
+
+			m_startDragging = true;
+		}
 	}
 	else 
 	{

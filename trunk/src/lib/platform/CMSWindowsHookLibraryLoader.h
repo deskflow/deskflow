@@ -22,6 +22,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include "synwinhk.h"
+#include "synwinxt.h"
 
 //! Loads Windows hook DLLs.
 class CMSWindowsHookLibraryLoader
@@ -31,6 +32,7 @@ public:
 	virtual ~CMSWindowsHookLibraryLoader();
 
 	HINSTANCE			openHookLibrary(const char* name);
+	HINSTANCE			openShellLibrary(const char* name);
 
 	// TODO: either make these private or expose properly
 	InitFunc			m_init;
@@ -39,8 +41,7 @@ public:
 	SetZoneFunc			m_setZone;
 	SetModeFunc			m_setMode;
 
-private:
-	HINSTANCE			m_hookLibrary;
+	GetDraggingFileDir	m_getDraggingFileDir;
 };
 
 #endif

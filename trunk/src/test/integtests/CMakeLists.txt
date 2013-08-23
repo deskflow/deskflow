@@ -60,6 +60,7 @@ set(inc
 	../../lib/server
 	../../lib/synergy
 	../../lib/synwinhk
+	../../lib/synwinxt
 	../../../tools/gtest-1.6.0/include
 	../../../tools/gmock-1.6.0/include
 	../unittests

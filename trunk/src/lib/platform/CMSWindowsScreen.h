@@ -125,6 +125,7 @@ protected:
 private:
 	// initialization and shutdown operations
 	HINSTANCE			openHookLibrary(const char* name);
+	HINSTANCE			openShellLibrary(const char* name);
 	void				closeHookLibrary(HINSTANCE hookLibrary) const;
 	HCURSOR				createBlankCursor() const;
 	void				destroyCursor(HCURSOR cursor) const;
@@ -286,6 +287,7 @@ private:
 
 	// hook library stuff
 	HINSTANCE			m_hookLibrary;
+	HINSTANCE			m_shellLibrary;
 
 	// keyboard stuff
 	CMSWindowsKeyState*	m_keyState;
@@ -323,6 +325,8 @@ private:
 						s_screen;
 	
 	IEventQueue*		m_events;
+
+	bool				m_startDragging;
 };
 
 #endif
