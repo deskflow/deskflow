@@ -19,7 +19,8 @@
 #include "CPlatformScreen.h"
 
 CPlatformScreen::CPlatformScreen(IEventQueue* events) :
-	IPlatformScreen(events)
+	IPlatformScreen(events),
+	m_draggingStarted(false)
 {
 }
 

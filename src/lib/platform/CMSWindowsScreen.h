@@ -83,7 +83,7 @@ public:
 	virtual void		fakeInputBegin();
 	virtual void		fakeInputEnd();
 	virtual SInt32		getJumpZoneSize() const;
-	virtual bool		isAnyMouseButtonDown() const;
+	virtual bool		isAnyMouseButtonDown(UInt32& buttonID) const;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
 
 	// ISecondaryScreen overrides
@@ -325,8 +325,6 @@ private:
 						s_screen;
 	
 	IEventQueue*		m_events;
-
-	bool				m_startDragging;
 };
 
 #endif

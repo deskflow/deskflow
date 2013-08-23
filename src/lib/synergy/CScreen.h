@@ -24,6 +24,7 @@
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 #include "OptionTypes.h"
+#include "CString.h"
 
 class IClipboard;
 class IPlatformScreen;
@@ -265,6 +266,10 @@ public:
 	operating system.
 	*/
 	KeyModifierMask		pollActiveModifiers() const;
+
+	//! Get dragging file's directory.
+
+	CString&			getDraggingFileDir() const;
 
 	//@}
 

@@ -48,7 +48,7 @@ public:
 	virtual void		fakeInputBegin() = 0;
 	virtual void		fakeInputEnd() = 0;
 	virtual SInt32		getJumpZoneSize() const = 0;
-	virtual bool		isAnyMouseButtonDown() const = 0;
+	virtual bool		isAnyMouseButtonDown(UInt32& buttonID) const = 0;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
 
 	// ISecondaryScreen overrides
@@ -75,6 +75,8 @@ public:
 						pollActiveModifiers() const;
 	virtual SInt32		pollActiveGroup() const;
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
+
+	virtual CString&	getDraggingFileDir() { return m_draggingFileDir; }
 
 	// IPlatformScreen overrides
 	virtual void		enable() = 0;
@@ -108,6 +110,10 @@ protected:
 
 	// IPlatformScreen overrides
 	virtual void		handleSystemEvent(const CEvent& event, void*) = 0;
+
+protected:
+	CString				m_draggingFileDir;
+	bool				m_draggingStarted;
 };
 
 #endif

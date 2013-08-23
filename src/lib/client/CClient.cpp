@@ -85,6 +85,10 @@ CClient::CClient(IEventQueue* events,
 							this,
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleFileChunkSending));
+	m_events->adoptHandler(m_events->forIScreen().fileRecieveComplete(),
+							this,
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleFileRecieveComplete));
 }
 
 CClient::~CClient()
@@ -704,6 +708,29 @@ void
 CClient::handleFileChunkSending(const CEvent& event, void*)
 {
 	sendFileChunk(event.getData());
+}
+
+void
+CClient::handleFileRecieveComplete(const CEvent& event, void*)
+{
+	onFileRecieveComplete();
+}
+
+void
+CClient::onFileRecieveComplete()
+{
+	if (isReceivedFileSizeValid()) {
+		if (!m_fileTransferDes.empty()) {
+			std::fstream file;
+			file.open(m_fileTransferDes.c_str(), std::ios::out | std::ios::binary);
+			if (!file.is_open()) {
+				// TODO: file open failed
+			}
+
+			file.write(m_receivedFileData.c_str(), m_receivedFileData.size());
+			file.close();
+		}
+	}
 }
 
 void
