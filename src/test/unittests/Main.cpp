@@ -42,7 +42,7 @@ main(int argc, char **argv)
 	
 	// HACK: temp fail for unit tests to test buildbot failure email.
 	EXPECT_EQ(true, false);
-	return 0;
+	return 1;
 
 	return RUN_ALL_TESTS();
 }
