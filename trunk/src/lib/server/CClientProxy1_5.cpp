@@ -76,6 +76,9 @@ CClientProxy1_5::parseMessage(const UInt8* code)
 	if (memcmp(code, kMsgDFileTransfer, 4) == 0) {
 		fileChunkReceived();
 	}
+	else if (memcmp(code, kMsgDDragInfo, 4) == 0) {
+		dragInfoReceived();
+	}
 	else {
 		return CClientProxy1_4::parseMessage(code);
 	}
@@ -132,4 +135,15 @@ CClientProxy1_5::fileChunkReceived()
 		}
 		break;
 	}
+}
+
+void
+CClientProxy1_5::dragInfoReceived()
+{
+	// parse
+	UInt32 fileNum = 0;
+	CString content;
+	CProtocolUtil::readf(getStream(), kMsgDDragInfo + 4, &fileNum, &content);
+	
+	m_server->dragInfoReceived(fileNum, content);
 }

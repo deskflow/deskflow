@@ -34,6 +34,9 @@
 #include "XArch.h"
 #include "COSXDragSimulator.h"
 #include "COSXPasteboardPeeker.h"
+#include "CClientApp.h"
+#include "CServerApp.h"
+#include "CClient.h"
 
 #include <math.h>
 
@@ -98,6 +101,7 @@ COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCur
 	m_eventTapRLSR(nullptr),
 	m_eventTapPort(nullptr),
 	m_pmRootPort(0),
+	m_draggingStarted(false),
 	m_fakeDraggingStarted(false),
 	m_getDropTargetThread(NULL)
 {
@@ -593,6 +597,7 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press)
 		}
 		
 		m_fakeDraggingStarted = false;
+		m_draggingStarted = false;
 	}
 }
 
@@ -636,6 +641,11 @@ COSXScreen::fakeMouseMove(SInt32 x, SInt32 y)
 		// is pressed (except esc key)
 		// TODO: fake this key down properly
 		fakeKeyDown(kKeyControl_L, 8194, 29);
+	}
+	
+	// index 0 means left mouse button
+	if (m_buttonState.test(0)) {
+		m_draggingStarted = true;
 	}
 	
 	// synthesize event
@@ -890,6 +900,24 @@ COSXScreen::leave()
 {
     hideCursor();
     
+	if (m_draggingStarted) {
+		if (!m_isPrimary) {
+			CFStringRef dragInfo = getDraggedFileURL();
+			char* dragInfoCStr = CFStringRefToUTF8String(dragInfo);
+			LOG((CLOG_DEBUG "drag info: %s", dragInfoCStr));
+			CFRelease(dragInfo);
+			CString fileList(dragInfoCStr);
+			size_t size = fileList.size();
+			CClientApp& app = CClientApp::instance();
+			CClient* client = app.getClientPtr();
+			UInt32 fileCount = 1;
+			client->draggingInfoSending(fileCount, fileList, size);
+			LOG((CLOG_DEBUG "send dragging file to server"));
+			client->sendFileToServer(dragInfoCStr);
+			m_draggingStarted = false;
+		}
+	}
+	
 	if (m_isPrimary) {
 		// warp to center
 		//warpCursor(m_xCenter, m_yCenter);

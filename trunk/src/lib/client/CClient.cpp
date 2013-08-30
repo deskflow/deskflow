@@ -67,7 +67,8 @@ CClient::CClient(IEventQueue* events,
 	m_connectOnResume(false),
 	m_events(events),
 	m_cryptoStream(NULL),
-	m_crypto(crypto)
+	m_crypto(crypto),
+	m_sendFileThread(NULL)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -108,6 +109,7 @@ CClient::~CClient()
 	cleanupConnection();
 	delete m_socketFactory;
 	delete m_streamFilterFactory;
+	delete m_sendFileThread;
 }
 
 void
@@ -790,7 +792,7 @@ CClient::isReceivedFileSizeValid()
 void
 CClient::sendFileToServer(const char* filename)
 {
-	CThread* thread = new CThread(
+	m_sendFileThread = new CThread(
 		new TMethodJob<CClient>(
 			this, &CClient::sendFileThread,
 			reinterpret_cast<void*>(const_cast<char*>(filename))));
@@ -806,4 +808,13 @@ CClient::sendFileThread(void* filename)
 	catch (std::runtime_error error) {
 		LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));
 	}
+
+	delete m_sendFileThread;
+	m_sendFileThread = NULL;
+}
+
+void
+CClient::draggingInfoSending(UInt32 fileCount, CString& fileList, size_t size)
+{
+	m_server->draggingInfoSending(fileCount, fileList, size);
 }

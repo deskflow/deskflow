@@ -29,6 +29,7 @@ getDraggedFileURL()
 	NSArray* files = [pboard propertyListForType:NSFilenamesPboardType];
 	for (id file in files) {
 		[string appendString: (NSString*)file];
+		[string appendString: @"\0"];
 	}
 	
 	return (CFStringRef)string;

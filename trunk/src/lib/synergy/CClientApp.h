@@ -83,6 +83,8 @@ public:
 
 	static CClientApp& instance() { return (CClientApp&)CApp::instance(); }
 
+	CClient* getClientPtr() { return s_client; }
+	
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 	void runEventsLoop(void*);

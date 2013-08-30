@@ -36,6 +36,7 @@ namespace synergy { class IStream; }
 class IStreamFilterFactory;
 class IEventQueue;
 class CCryptoStream;
+class CThread;
 
 //! Synergy client
 /*!
@@ -110,7 +111,10 @@ public:
 
 	//! Set file transder destination
 	void				setFileTransferDes(CString& des) { m_fileTransferDes = des; }
-
+	
+	//! Send dragging file information back to server
+	void				draggingInfoSending(UInt32 fileCount, CString& fileList, size_t size);
+	
 	//@}
 	//! @name accessors
 	//@{
@@ -229,6 +233,7 @@ private:
 	CString					m_fileTransferDes;
 	CDragFileList			m_dragFileList;
 	CString					m_dragFileExt;
+	CThread*				m_sendFileThread;
 };
 
 #endif

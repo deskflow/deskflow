@@ -31,6 +31,7 @@
 #include "stdvector.h"
 #include "INode.h"
 #include "CEventTypes.h"
+#include "CDragInformation.h"
 
 class CBaseClientProxy;
 class CEventQueueTimer;
@@ -38,6 +39,7 @@ class CPrimaryClient;
 class CInputFilter;
 class CScreen;
 class IEventQueue;
+class CThread;
 
 //! Synergy server
 /*!
@@ -153,6 +155,9 @@ public:
 	//! Create a new thread and use it to send file to client
 	void				sendFileToClient(const char* filename);
 
+	//! Received dragging information from client
+	void				dragInfoReceived(UInt32 fileNum, CString content);
+	
 	//@}
 	//! @name accessors
 	//@{
@@ -456,6 +461,8 @@ private:
 	CString				m_receivedFileData;
 	CString				m_fileTransferSrc;
 	CString				m_fileTransferDes;
+	CDragFileList		m_dragFileList;
+	CThread*			m_sendFileThread;
 };
 
 #endif

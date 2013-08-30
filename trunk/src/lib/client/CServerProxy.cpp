@@ -28,7 +28,6 @@
 #include "TMethodEventJob.h"
 #include "XBase.h"
 #include <memory>
-#include <cstring>
 #include "CCryptoStream.h"
 
 //
@@ -945,4 +944,10 @@ CServerProxy::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 	}
 
 	CProtocolUtil::writef(m_stream, kMsgDFileTransfer, mark, &chunk);
+}
+
+void
+CServerProxy::draggingInfoSending(UInt32 fileCount, CString fileList, size_t size)
+{
+	CProtocolUtil::writef(m_stream, kMsgDDragInfo, fileCount, &fileList);
 }

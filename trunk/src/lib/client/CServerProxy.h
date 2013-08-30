@@ -23,6 +23,7 @@
 #include "KeyTypes.h"
 #include "CEvent.h"
 #include "CStopwatch.h"
+#include "CString.h"
 
 class CClient;
 class CClientInfo;
@@ -54,9 +55,12 @@ public:
 
 	//@}
 
-	//! sending file chunk to server
+	// sending file chunk to server
 	void				fileChunkSending(UInt8 mark, char* data, size_t dataSize);
 
+	// sending dragging information to server
+	void				draggingInfoSending(UInt32 fileCount, CString fileList, size_t size);
+	
 #ifdef TEST_ENV
 	void				handleDataForTest() { handleData(CEvent(), NULL); }
 #endif
