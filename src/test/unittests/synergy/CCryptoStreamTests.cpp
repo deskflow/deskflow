@@ -70,7 +70,7 @@ TEST(CCryptoStreamTests, write)
 	
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
-	CCryptoOptions options("ctr", "mock");
+	CCryptoOptions options("cfb", "mock");
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write_mockWrite));
 	
@@ -88,7 +88,7 @@ TEST(CCryptoStreamTests, read)
 {
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
-	CCryptoOptions options("ctr", "mock");
+	CCryptoOptions options("cfb", "mock");
 	
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(read_mockRead));
 	
@@ -117,7 +117,7 @@ TEST(CCryptoStreamTests, write4Read1)
 
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
-	CCryptoOptions options("ctr", "mock");
+	CCryptoOptions options("cfb", "mock");
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write4Read1_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(write4Read1_mockRead));
@@ -148,7 +148,7 @@ TEST(CCryptoStreamTests, write1Read4)
 
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
-	CCryptoOptions options("ctr", "mock");
+	CCryptoOptions options("cfb", "mock");
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write1Read4_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(write1Read4_mockRead));
@@ -185,7 +185,7 @@ TEST(CCryptoStreamTests, readWriteIvChanged)
 
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
-	CCryptoOptions options("ctr", "mock");
+	CCryptoOptions options("cfb", "mock");
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(readWriteIvChanged_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(readWriteIvChanged_mockRead));
@@ -257,7 +257,7 @@ TEST(CCryptoStreamTests, newIvDoesNotChangeIv)
 {
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
-	CCryptoOptions options("ctr", "mock");	
+	CCryptoOptions options("cfb", "mock");	
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(newIvDoesNotChangeIv_mockWrite));
 
