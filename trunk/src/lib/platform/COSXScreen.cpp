@@ -604,6 +604,7 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press)
 void
 COSXScreen::getDropTargetThread(void*)
 {
+#if defined(MAC_OS_X_VERSION_10_7)
 	char* cstr = NULL;
 	
 	// wait for 5 secs for the drop destinaiton string to be filled.
@@ -628,6 +629,9 @@ COSXScreen::getDropTargetThread(void*)
 		LOG((CLOG_ERR "failed to get drop target"));
 		m_dropTarget.clear();
 	}
+#else
+	LOG((CLOG_WARN "drag drop not supported"));
+#endif
 	
 	delete m_getDropTargetThread;
 }
@@ -736,9 +740,13 @@ COSXScreen::showCursor()
 	m_cursorHidden = false;
 	
 	if (m_fakeDraggingStarted) {
+#if defined(MAC_OS_X_VERSION_10_7)
 		// TODO: use real file extension
 		fakeDragging("txt", 3, m_xCursor, m_yCursor);
 		fakeMouseButton(kButtonLeft, true);
+#else
+		LOG((CLOG_WARN "drag drop not supported"));
+#endif
 	}
 }
 

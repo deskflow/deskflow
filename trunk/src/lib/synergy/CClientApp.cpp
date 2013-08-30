@@ -536,7 +536,7 @@ CClientApp::mainLoop()
 	// that.
 	DAEMON_RUNNING(true);
 
-#if defined(__APPLE__)
+#if defined(MAC_OS_X_VERSION_10_7)
 	CThread thread(
 		new TMethodJob<CClientApp>(
 			this, &CClientApp::runEventsLoop,
