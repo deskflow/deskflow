@@ -39,6 +39,10 @@ main(int argc, char **argv)
 	log.setFilter(kDEBUG4);
 
 	testing::InitGoogleTest(&argc, argv);
+	
+	// HACK: temp fail for unit tests to test buildbot failure email.
+	EXPECT_EQ(true, false);
+	return;
 
 	return RUN_ALL_TESTS();
 }
