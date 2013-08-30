@@ -43,7 +43,7 @@ TEST(CClientProxyTests, cryptoIvWrite)
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
 	NiceMock<CMockServer> server;
-	CCryptoOptions options("ctr", "mock");
+	CCryptoOptions options("cfb", "mock");
 	IStreamEvents streamEvents;
 	streamEvents.setEvents(&eventQueue);
 
