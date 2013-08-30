@@ -48,6 +48,7 @@ set(inc
 	CArgsBase.h
 	IAppUtil.h
 	CFileChunker.h
+	CDragInformation.h
 )
 
 set(src
@@ -75,6 +76,7 @@ set(src
 	CAppUtil.cpp
 	CArgsBase.cpp
 	CFileChunker.cpp
+	CDragInformation.cpp
 )
 
 if (WIN32)

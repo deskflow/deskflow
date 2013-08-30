@@ -85,6 +85,7 @@ public:
 	virtual void		resetOptions() = 0;
 	virtual void		setOptions(const COptionsList& options) = 0;
 	virtual void		cryptoIv(const UInt8* iv) = 0;
+	virtual void		draggingInfoSending(UInt32 fileCount, const char* data, size_t dataSize) = 0;
 	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;
 
 private:

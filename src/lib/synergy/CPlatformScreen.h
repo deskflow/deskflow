@@ -20,6 +20,7 @@
 #define CPLATFORMSCREEN_H
 
 #include "IPlatformScreen.h"
+#include <stdexcept>
 
 //! Base screen implementation
 /*!
@@ -53,7 +54,7 @@ public:
 
 	// ISecondaryScreen overrides
 	virtual void		fakeMouseButton(ButtonID id, bool press) = 0;
-	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const = 0;
+	virtual void		fakeMouseMove(SInt32 x, SInt32 y) = 0;
 	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const = 0;
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;
 
@@ -76,6 +77,8 @@ public:
 	virtual SInt32		pollActiveGroup() const;
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
+	virtual void		setDraggingStarted(bool started) { m_draggingStarted = started; }
+	virtual bool		getDraggingStarted() { return m_draggingStarted; }
 	virtual CString&	getDraggingFileDir() { return m_draggingFileDir; }
 
 	// IPlatformScreen overrides
@@ -92,6 +95,10 @@ public:
 	virtual void		setOptions(const COptionsList& options) = 0;
 	virtual void		setSequenceNumber(UInt32) = 0;
 	virtual bool		isPrimary() const = 0;
+	
+	virtual void		fakeDraggingFiles(CString str) { throw std::runtime_error("fakeDraggingFiles not implemented"); }
+	virtual const CString&
+						getDropTarget() const { throw std::runtime_error("getDropTarget not implemented"); }
 
 protected:
 	//! Update mouse buttons

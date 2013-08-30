@@ -130,6 +130,9 @@ public:
 	*/
 	virtual void		setSequenceNumber(UInt32) = 0;
 
+	//! Change dragging status
+	virtual void		setDraggingStarted(bool started) = 0;
+
 	//@}
 	//! @name accessors
 	//@{
@@ -162,7 +165,7 @@ public:
 
 	// ISecondaryScreen overrides
 	virtual void		fakeMouseButton(ButtonID id, bool press) = 0;
-	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const = 0;
+	virtual void		fakeMouseMove(SInt32 x, SInt32 y) = 0;
 	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const = 0;
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;
 
@@ -186,7 +189,12 @@ public:
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
 
 	virtual CString&	getDraggingFileDir() = 0;
+	virtual bool		getDraggingStarted() = 0;
 
+	virtual void		fakeDraggingFiles(CString str) = 0;
+	virtual const CString&
+						getDropTarget() const = 0;
+					
 protected:
 	//! Handle system event
 	/*!

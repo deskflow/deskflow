@@ -25,6 +25,7 @@
 #include "INode.h"
 #include "CCryptoOptions.h"
 #include "CEventTypes.h"
+#include "CDragInformation.h"
 
 class CEventQueueTimer;
 class CScreen;
@@ -100,7 +101,10 @@ public:
 
 	//! Received a chunk of file data
 	void				fileChunkReceived(CString data);
-	
+
+	//! Received drag information
+	void				dragInfoReceived(UInt32 fileNum, CString data);
+
 	//! Create a new thread and use it to send file to Server
 	void				sendFileToServer(const char* filename);
 
@@ -193,8 +197,8 @@ private:
 	void				handleSuspend(const CEvent& event, void*);
 	void				handleResume(const CEvent& event, void*);
 	void				handleFileChunkSending(const CEvent&, void*);
-	void				handleFileRecieveComplete(const CEvent&, void*);
-	void				onFileRecieveComplete();
+	void				handleFileRecieveCompleted(const CEvent&, void*);
+	void				onFileRecieveCompleted();
 
 public:
 	bool					m_mock;
@@ -223,6 +227,8 @@ private:
 	CString					m_receivedFileData;
 	CString					m_fileTransferSrc;
 	CString					m_fileTransferDes;
+	CDragFileList			m_dragFileList;
+	CString					m_dragFileExt;
 };
 
 #endif

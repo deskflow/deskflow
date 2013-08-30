@@ -594,3 +594,9 @@ CEventQueue::CTimer::operator<(const CTimer& t) const
 {
 	return m_time < t.m_time;
 }
+
+void
+CEventQueue::cacheCurrentEventQueueRef()
+{
+	m_buffer->cacheCurrentEventQueueRef();
+}

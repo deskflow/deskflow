@@ -44,7 +44,7 @@ public:
 	/*!
 	Synthesize a mouse move to the absolute coordinates \c x,y.
 	*/
-	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const = 0;
+	virtual void		fakeMouseMove(SInt32 x, SInt32 y) = 0;
 
 	//! Fake mouse move
 	/*!

@@ -40,6 +40,7 @@ public:
 	virtual CEventQueueTimer*
 						newTimer(double duration, bool oneShot) const;
 	virtual void		deleteTimer(CEventQueueTimer*) const;
+	void				cacheCurrentEventQueueRef() { }
 
 private:
 	typedef std::deque<UInt32> CEventDeque;

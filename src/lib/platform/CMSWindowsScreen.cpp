@@ -699,7 +699,7 @@ CMSWindowsScreen::fakeMouseButton(ButtonID id, bool press)
 }
 
 void
-CMSWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y) const
+CMSWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y)
 {
 	m_desks->fakeMouseMove(x, y);
 }

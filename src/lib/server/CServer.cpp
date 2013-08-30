@@ -37,6 +37,7 @@
 #include "CThread.h"
 #include "TMethodJob.h"
 #include "CFileChunker.h"
+#include "CDragInformation.h"
 #include <cstring>
 #include <cstdlib>
 #include <sstream>
@@ -167,10 +168,10 @@ CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen
 							this,
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleFileChunkSendingEvent));
-	m_events->adoptHandler(m_events->forIScreen().fileRecieveComplete(),
+	m_events->adoptHandler(m_events->forIScreen().fileRecieveCompleted(),
 							this,
 							new TMethodEventJob<CServer>(this,
-								&CServer::handleFileRecieveCompleteEvent));
+								&CServer::handleFileRecieveCompletedEvent));
 
 	// add connection
 	addClient(m_primaryClient);
@@ -1472,9 +1473,9 @@ CServer::handleFileChunkSendingEvent(const CEvent& event, void*)
 }
 
 void
-CServer::handleFileRecieveCompleteEvent(const CEvent& event, void*)
+CServer::handleFileRecieveCompletedEvent(const CEvent& event, void*)
 {
-	onFileRecieveComplete();
+	onFileRecieveCompleted();
 }
 
 void
@@ -1737,8 +1738,24 @@ CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 
 	// should we switch or not?
 	if (isSwitchOkay(newScreen, dir, x, y, xc, yc)) {
+		if (m_screen->getDraggingStarted() && m_active != newScreen) {
+			CString& dragFileList = m_screen->getDraggingFileDir();
+			size_t size = dragFileList.size() + 1;
+			char* fileList = new char[size];
+			memcpy(fileList, dragFileList.c_str(), size);
+			fileList[size - 1] = '\0';
+			UInt32 fileCount = 1;
+
+			LOG((CLOG_DEBUG2 "sending drag information to client"));
+			LOG((CLOG_DEBUG3 "dragging file list: %s", fileList));
+			LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
+			newScreen->draggingInfoSending(fileCount, fileList, size);
+			m_screen->setDraggingStarted(false);
+		}
+
 		// switch screen
 		switchScreen(newScreen, x, y, false);
+
 		return true;
 	}
 	else {
@@ -1930,7 +1947,7 @@ CServer::onFileChunkSending(const void* data)
 }
 
 void
-CServer::onFileRecieveComplete()
+CServer::onFileRecieveCompleted()
 {
 	if (isReceivedFileSizeValid()) {
 		if (!m_fileTransferDes.empty()) {

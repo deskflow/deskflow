@@ -263,6 +263,12 @@ extern const char*		kMsgDCryptoIv;
 // 2 means the file transfer is finished.
 extern const char*		kMsgDFileTransfer;
 
+// drag infomation:  primary <-> secondary
+// transfer drag infomation. The first 2 bytes are used for storing
+// the number of dragging objects. Then the following string consists
+// of each object's directory.
+extern const char*		kMsgDDragInfo;
+
 //
 // query codes
 //

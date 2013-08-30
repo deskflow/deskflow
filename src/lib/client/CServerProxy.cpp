@@ -301,6 +301,9 @@ CServerProxy::parseMessage(const UInt8* code)
 	else if (memcmp(code, kMsgDFileTransfer, 4) == 0) {
 		fileChunkReceived();
 	}
+	else if (memcmp(code, kMsgDDragInfo, 4) == 0) {
+		dragInfoReceived();
+	}
 
 	else if (memcmp(code, kMsgCClose, 4) == 0) {
 		// server wants us to hangup
@@ -865,7 +868,7 @@ void
 CServerProxy::fileChunkReceived()
 {
 	// parse
-	UInt8 mark;
+	UInt8 mark = 0;
 	CString content;
 	CProtocolUtil::readf(m_stream, kMsgDFileTransfer + 4, &mark, &content);
 
@@ -898,7 +901,7 @@ CServerProxy::fileChunkReceived()
 		break;
 
 	case kFileEnd:
-		m_events->addEvent(CEvent(m_events->forIScreen().fileRecieveComplete(), m_client));
+		m_events->addEvent(CEvent(m_events->forIScreen().fileRecieveCompleted(), m_client));
 		if (CLOG->getFilter() >= kDEBUG2) {
 			LOG((CLOG_DEBUG2 "file data transfer finished"));
 			m_elapsedTime += m_stopwatch.getTime();
@@ -909,6 +912,17 @@ CServerProxy::fileChunkReceived()
 		}
 		break;
 	}
+}
+
+void
+CServerProxy::dragInfoReceived()
+{
+	// parse
+	UInt32 fileNum = 0;
+	CString content;
+	CProtocolUtil::readf(m_stream, kMsgDDragInfo + 4, &fileNum, &content);
+
+	m_client->dragInfoReceived(fileNum, content);
 }
 
 void

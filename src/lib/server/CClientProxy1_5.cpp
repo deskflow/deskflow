@@ -41,6 +41,14 @@ CClientProxy1_5::~CClientProxy1_5()
 }
 
 void
+CClientProxy1_5::draggingInfoSending(UInt32 fileCount, const char* data, size_t dataSize)
+{
+	CString info(data, dataSize);
+
+	CProtocolUtil::writef(getStream(), kMsgDDragInfo, fileCount, &info);
+}
+
+void
 CClientProxy1_5::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 {
 	CString chunk(data, dataSize);
@@ -79,7 +87,7 @@ void
 CClientProxy1_5::fileChunkReceived()
 {
 	// parse
-	UInt8 mark;
+	UInt8 mark = 0;
 	CString content;
 	CProtocolUtil::readf(getStream(), kMsgDFileTransfer + 4, &mark, &content);
 
@@ -113,7 +121,7 @@ CClientProxy1_5::fileChunkReceived()
 		break;
 
 	case kFileEnd:
-		m_events->addEvent(CEvent(m_events->forIScreen().fileRecieveComplete(), server));
+		m_events->addEvent(CEvent(m_events->forIScreen().fileRecieveCompleted(), server));
 		if (CLOG->getFilter() >= kDEBUG2) {
 			LOG((CLOG_DEBUG2 "file data transfer finished"));
 			m_elapsedTime += m_stopwatch.getTime();
