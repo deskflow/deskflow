@@ -98,7 +98,7 @@ bool
 COSXKeyStateTests::isKeyPressed(const COSXKeyState& keyState, KeyButton button)
 {
 	// HACK: allow os to realize key state changes.
-	ARCH->sleep(1);
+	ARCH->sleep(.2);
 
 	IKeyState::KeyButtonSet pressed;
 	keyState.pollPressedKeys(pressed);
