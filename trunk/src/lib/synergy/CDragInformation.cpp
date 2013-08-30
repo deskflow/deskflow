@@ -28,7 +28,7 @@ CDragInformation::parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CSt
 	size_t findResult2 = 0;
 	dragFileList.clear();
 	CString slash("\\");
-	if (data.find("/", startPos != -1)) {
+	if (data.find("/", startPos) != -1) {
 		slash = "/";
 	}
 
