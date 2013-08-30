@@ -97,8 +97,8 @@ TEST_F(COSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
 bool
 COSXKeyStateTests::isKeyPressed(const COSXKeyState& keyState, KeyButton button)
 {
-	// allow os to realize key state changes.
-	ARCH->sleep(.01);
+	// HACK: allow os to realize key state changes.
+	ARCH->sleep(1);
 
 	IKeyState::KeyButtonSet pressed;
 	keyState.pollPressedKeys(pressed);
