@@ -18,13 +18,14 @@
 #import <CoreData/CoreData.h>
 #import <Cocoa/Cocoa.h>
 
+#if defined(MAC_OS_X_VERSION_10_7)
+
 NSWindow* g_dragWindow = NULL;
 COSXDragView* g_dragView = NULL;
 
 void
 runCocoaApp()
 {
-#ifdef MAC_OS_X_VERSION_10_7
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
 	NSApplication* app = [[NSApplication alloc] init];
@@ -44,13 +45,11 @@ runCocoaApp()
 	[app run];
 	
 	[pool release];
-#endif
 }
 
 void
 fakeDragging(const char* str, int length, int cursorX, int cursorY)
 {
-#ifdef MAC_OS_X_VERSION_10_7
 	dispatch_async(dispatch_get_main_queue(), ^{
 	NSRect screen = [[NSScreen mainScreen] frame];
 	NSLog ( @"mouseLocation: %d %d", cursorX, cursorY);
@@ -58,7 +57,6 @@ fakeDragging(const char* str, int length, int cursorX, int cursorY)
 	[g_dragWindow setFrame:rect display:YES];
 	[g_dragWindow makeKeyWindow];
 	});
-#endif
 }
 
 CFStringRef
@@ -66,3 +64,5 @@ getCocoaDropTarget()
 {
 	return [g_dragView getDropTarget];
 }
+
+#endif

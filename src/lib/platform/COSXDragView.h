@@ -17,6 +17,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+#ifdef MAC_OS_X_VERSION_10_7
+
 @interface COSXDragView : NSView<NSDraggingSource,NSDraggingInfo>
 {
 	NSMutableString*	m_dropTarget;
@@ -26,3 +28,5 @@
 -(void)clearDropTarget;
 
 @end
+
+#endif
