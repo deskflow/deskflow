@@ -50,6 +50,10 @@
 #include "COSXScreen.h"
 #endif
 
+#if defined(__APPLE__)
+#include "COSXDragSimulator.h"
+#endif
+
 #include <iostream>
 #include <stdio.h>
 
@@ -531,7 +535,17 @@ CClientApp::mainLoop()
 	// later.  the timer installed by startClient() will take care of
 	// that.
 	DAEMON_RUNNING(true);
+
+#if defined(__APPLE__)
+	CThread thread(
+		new TMethodJob<CClientApp>(
+			this, &CClientApp::runEventsLoop,
+			NULL));
+	runCocoaApp();
+#else
 	m_events->loop();
+#endif
+	
 	DAEMON_RUNNING(false);
 
 	// close down
@@ -611,4 +625,11 @@ CClientApp::startNode()
 	if (!startClient()) {
 		m_bye(kExitFailed);
 	}
+}
+
+void
+CClientApp::runEventsLoop(void*)
+{
+	m_events->cacheCurrentEventQueueRef();
+	m_events->loop();
 }

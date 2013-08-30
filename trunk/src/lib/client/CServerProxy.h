@@ -103,6 +103,7 @@ private:
 	void				queryInfo();
 	void				infoAcknowledgment();
 	void				fileChunkReceived();
+	void				dragInfoReceived();
 
 private:
 	typedef EResult (CServerProxy::*MessageParser)(const UInt8*);

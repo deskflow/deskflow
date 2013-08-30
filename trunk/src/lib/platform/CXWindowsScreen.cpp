@@ -832,7 +832,7 @@ CXWindowsScreen::fakeMouseButton(ButtonID button, bool press)
 }
 
 void
-CXWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y) const
+CXWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y)
 {
 	if (m_xinerama && m_xtestIsXineramaUnaware) {
 		XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);

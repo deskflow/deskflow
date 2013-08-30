@@ -415,10 +415,34 @@ CScreen::pollActiveModifiers() const
 	return m_screen->pollActiveModifiers();
 }
 
+bool
+CScreen::getDraggingStarted() const
+{
+	return m_screen->getDraggingStarted();
+}
+
+void
+CScreen::setDraggingStarted(bool started)
+{
+	m_screen->setDraggingStarted(started);
+}
+
+void
+CScreen::startDraggingFiles(CString str)
+{
+	m_screen->fakeDraggingFiles(str);
+}
+
 CString&
 CScreen::getDraggingFileDir() const
 {
 	return m_screen->getDraggingFileDir();
+}
+
+const CString&
+CScreen::getDropTarget() const
+{
+	return m_screen->getDropTarget();
 }
 
 void*

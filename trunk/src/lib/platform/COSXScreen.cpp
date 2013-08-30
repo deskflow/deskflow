@@ -32,6 +32,8 @@
 #include "TMethodEventJob.h"
 #include "TMethodJob.h"
 #include "XArch.h"
+#include "COSXDragSimulator.h"
+#include "COSXPasteboardPeeker.h"
 
 #include <math.h>
 
@@ -95,7 +97,9 @@ COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCur
 	m_autoShowHideCursor(autoShowHideCursor),
 	m_eventTapRLSR(nullptr),
 	m_eventTapPort(nullptr),
-	m_pmRootPort(0)
+	m_pmRootPort(0),
+	m_fakeDraggingStarted(false),
+	m_getDropTargetThread(NULL)
 {
 	try {
 		m_displayID   = CGMainDisplayID();
@@ -564,7 +568,7 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press)
 		
 		MouseButtonState state = press ? kMouseButtonDown : kMouseButtonUp;
 		
-		LOG((CLOG_DEBUG1 "faking mouse button %s", press ? "press" : "release"));
+		LOG((CLOG_DEBUG1 "faking mouse button id: %d press: %s", id, press ? "pressed" : "released"));
 		
 		MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
 		CGEventType type = thisButtonMap[state];
@@ -580,11 +584,60 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press)
 		m_lastSingleClickXCursor = m_xCursor;
 		m_lastSingleClickYCursor = m_yCursor;
 	}
+	if (!press && (id == kButtonLeft)) {
+		fakeKeyUp(29);
+		
+		if (m_fakeDraggingStarted) {
+			m_getDropTargetThread = new CThread(new TMethodJob<COSXScreen>(
+				this, &COSXScreen::getDropTargetThread));
+		}
+		
+		m_fakeDraggingStarted = false;
+	}
 }
 
 void
-COSXScreen::fakeMouseMove(SInt32 x, SInt32 y) const
+COSXScreen::getDropTargetThread(void*)
 {
+	char* cstr = NULL;
+	
+	// wait for 5 secs for the drop destinaiton string to be filled.
+	UInt32 timeout = ARCH->time() + 5;
+	
+	while (ARCH->time() < timeout) {
+		CFStringRef cfstr = getCocoaDropTarget();
+		cstr = CFStringRefToUTF8String(cfstr);
+		CFRelease(cfstr);
+		
+		if (cstr != NULL) {
+			break;
+		}
+		ARCH->sleep(.1f);
+	}
+	
+	if (cstr != NULL) {
+		LOG((CLOG_DEBUG "drop target: %s", cstr));
+		m_dropTarget = cstr;
+	}
+	else {
+		LOG((CLOG_ERR "failed to get drop target"));
+		m_dropTarget.clear();
+	}
+	
+	delete m_getDropTargetThread;
+}
+
+void
+COSXScreen::fakeMouseMove(SInt32 x, SInt32 y)
+{
+	if (m_fakeDraggingStarted) {
+		// HACK: for some reason the drag icon
+		// does not follow the cursor unless a key
+		// is pressed (except esc key)
+		// TODO: fake this key down properly
+		fakeKeyDown(kKeyControl_L, 8194, 29);
+	}
+	
 	// synthesize event
 	CGPoint pos;
 	pos.x = x;
@@ -671,6 +724,12 @@ COSXScreen::showCursor()
 	}
 
 	m_cursorHidden = false;
+	
+	if (m_fakeDraggingStarted) {
+		// TODO: use real file extension
+		fakeDragging("txt", 3, m_xCursor, m_yCursor);
+		fakeMouseButton(kButtonLeft, true);
+	}
 }
 
 void
@@ -1409,8 +1468,8 @@ COSXScreen::getScrollSpeedFactor() const
 void
 COSXScreen::enableDragTimer(bool enable)
 {
-  UInt32 modifiers;
-  MouseTrackingResult res; 
+	UInt32 modifiers;
+	MouseTrackingResult res;
 
 	if (enable && m_dragTimer == NULL) {
 		m_dragTimer = m_events->newTimer(0.01, NULL);
@@ -1430,8 +1489,8 @@ void
 COSXScreen::handleDrag(const CEvent&, void*)
 {
 	Point p;
-  UInt32 modifiers;
-  MouseTrackingResult res; 
+	UInt32 modifiers;
+	MouseTrackingResult res; 
 
 	TrackMouseLocationWithOptions(NULL, 0, 0, &p, &modifiers, &res);
 
@@ -1848,10 +1907,16 @@ COSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 		case kCGEventOtherMouseUp:
 			screen->onMouseButton(false, CGEventGetIntegerValueField(event, kCGMouseEventButtonNumber) + 1);
 			break;
-		case kCGEventMouseMoved:
-		case kCGEventLeftMouseDragged:
+		case kCGEventLeftMouseDragged: {
+			CFStringRef dragInfo = getDraggedFileURL();
+			char* info = CFStringRefToUTF8String(dragInfo);
+			LOG((CLOG_DEBUG "drag info: %s", info));
+			CFRelease(dragInfo);
+			break;
+		}
 		case kCGEventRightMouseDragged:
 		case kCGEventOtherMouseDragged:
+		case kCGEventMouseMoved:
 			pos = CGEventGetLocation(event);
 			screen->onMouseMove(pos.x, pos.y);
 			
@@ -1941,4 +2006,28 @@ COSXScreen::CMouseButtonState::getFirstButtonDown() const
 		}
 	}
 	return -1;
+}
+
+char*
+COSXScreen::CFStringRefToUTF8String(CFStringRef aString)
+{
+	if (aString == NULL) {
+		return NULL;
+	}
+	
+	CFIndex length = CFStringGetLength(aString);
+	CFIndex maxSize = CFStringGetMaximumSizeForEncoding(
+		length,
+		kCFStringEncodingUTF8);
+	char* buffer = (char*)malloc(maxSize);
+	if (CFStringGetCString(aString, buffer, maxSize, kCFStringEncodingUTF8)) {
+		return buffer;
+	}
+	return NULL;
+}
+
+void
+COSXScreen::fakeDraggingFiles(CString str)
+{
+	m_fakeDraggingStarted = true;
 }

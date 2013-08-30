@@ -629,7 +629,7 @@ public:
 		m_suspend(CEvent::kUnknown),
 		m_resume(CEvent::kUnknown),
 		m_fileChunkSending(CEvent::kUnknown),
-		m_fileRecieveComplete(CEvent::kUnknown) { }
+		m_fileRecieveCompleted(CEvent::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -674,7 +674,7 @@ public:
 	CEvent::Type		fileChunkSending();
 
 	//! Completed receiving a file
-	CEvent::Type		fileRecieveComplete();
+	CEvent::Type		fileRecieveCompleted();
 
 	//@}
 		
@@ -685,5 +685,5 @@ private:
 	CEvent::Type		m_suspend;
 	CEvent::Type		m_resume;
 	CEvent::Type		m_fileChunkSending;
-	CEvent::Type		m_fileRecieveComplete;
+	CEvent::Type		m_fileRecieveCompleted;
 };

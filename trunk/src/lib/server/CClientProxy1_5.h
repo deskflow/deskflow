@@ -29,6 +29,7 @@ public:
 	CClientProxy1_5(const CString& name, synergy::IStream* adoptedStream, CServer* server, IEventQueue* events);
 	~CClientProxy1_5();
 
+	virtual void		draggingInfoSending(UInt32 fileCount, const char* data, size_t dataSize);
 	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize);
 	virtual bool		parseMessage(const UInt8* code);
 	void				fileChunkReceived();

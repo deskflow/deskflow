@@ -85,10 +85,10 @@ CClient::CClient(IEventQueue* events,
 							this,
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleFileChunkSending));
-	m_events->adoptHandler(m_events->forIScreen().fileRecieveComplete(),
+	m_events->adoptHandler(m_events->forIScreen().fileRecieveCompleted(),
 							this,
 							new TMethodEventJob<CClient>(this,
-								&CClient::handleFileRecieveComplete));
+								&CClient::handleFileRecieveCompleted));
 }
 
 CClient::~CClient()
@@ -711,17 +711,19 @@ CClient::handleFileChunkSending(const CEvent& event, void*)
 }
 
 void
-CClient::handleFileRecieveComplete(const CEvent& event, void*)
+CClient::handleFileRecieveCompleted(const CEvent& event, void*)
 {
-	onFileRecieveComplete();
+	onFileRecieveCompleted();
 }
 
 void
-CClient::onFileRecieveComplete()
+CClient::onFileRecieveCompleted()
 {
 	if (isReceivedFileSizeValid()) {
+		m_fileTransferDes = m_screen->getDropTarget();
 		if (!m_fileTransferDes.empty()) {
 			std::fstream file;
+			m_fileTransferDes.append("/").append(m_dragFileList.at(0));
 			file.open(m_fileTransferDes.c_str(), std::ios::out | std::ios::binary);
 			if (!file.is_open()) {
 				// TODO: file open failed
@@ -729,6 +731,9 @@ CClient::onFileRecieveComplete()
 
 			file.write(m_receivedFileData.c_str(), m_receivedFileData.size());
 			file.close();
+		}
+		else {
+			LOG((CLOG_ERR "drop file failed: drop target is empty"));
 		}
 	}
 }
@@ -750,6 +755,30 @@ void
 CClient::fileChunkReceived(CString data)
 {
 	m_receivedFileData += data;
+}
+
+void
+CClient::dragInfoReceived(UInt32 fileNum, CString data)
+{
+	CDragInformation::parseDragInfo(m_dragFileList, fileNum, data);
+	LOG((CLOG_DEBUG "drag information received"));
+	LOG((CLOG_DEBUG "total drag file number: %i", m_dragFileList.size()));
+
+	for(int i = 0; i < m_dragFileList.size(); ++i) {
+		LOG((CLOG_DEBUG2 "dragging file %i name: %s", i + 1, m_dragFileList.at(i).c_str()));
+	}
+	
+	if (m_dragFileList.size() == 1) {
+		m_dragFileExt = CDragInformation::getDragFileExtension(m_dragFileList.at(0));
+	}
+	else if (m_dragFileList.size() > 1) {
+		m_dragFileExt.clear();
+	}
+	else {
+		return;
+	}
+	
+	m_screen->startDraggingFiles(m_dragFileExt);
 }
 
 bool

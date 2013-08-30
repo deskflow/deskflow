@@ -40,6 +40,8 @@ public:
 						newTimer(double duration, bool oneShot) const;
 	virtual void		deleteTimer(CEventQueueTimer*) const;
 
+	virtual	void		cacheCurrentEventQueueRef() {}
+
 private:
 	DWORD				m_thread;
 	UINT				m_userEvent;

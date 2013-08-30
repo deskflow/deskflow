@@ -250,6 +250,12 @@ CPrimaryClient::screensaver(bool)
 }
 
 void
+CPrimaryClient::draggingInfoSending(UInt32 fileCount, const char* data, size_t dataSize)
+{
+	// ignore
+}
+
+void
 CPrimaryClient::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 {
 	// ignore

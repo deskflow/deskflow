@@ -70,6 +70,9 @@ elseif (APPLE)
 		COSXScreen.cpp
 		COSXScreenSaver.cpp
 		COSXScreenSaverUtil.m
+		COSXPasteboardPeeker.m
+		COSXDragSimulator.m
+		COSXDragView.m
 	)
 	
 elseif (UNIX)
@@ -110,9 +113,20 @@ if (UNIX)
 	)
 endif()
 
+if (APPLE)
+	list(APPEND inc
+		/System/Library/Frameworks
+	)
+endif()
+
 include_directories(${inc})
 add_library(platform STATIC ${src})
 
 if (UNIX)
 	target_link_libraries(platform io net ipc synergy ${libs})
+endif()
+
+if (APPLE)
+	FIND_LIBRARY(COCOA_LIBRARY Cocoa)
+	target_link_libraries(platform ${COCOA_LIBRARY})
 endif()

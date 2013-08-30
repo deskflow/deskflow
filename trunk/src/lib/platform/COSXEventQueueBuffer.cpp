@@ -90,7 +90,7 @@ bool
 COSXEventQueueBuffer::addEvent(UInt32 dataID)
 {
 	EventRef event;
-	OSStatus error = CreateEvent( 
+	OSStatus error = CreateEvent(
 							kCFAllocatorDefault,
 							'Syne', 
 							dataID,
@@ -99,7 +99,7 @@ COSXEventQueueBuffer::addEvent(UInt32 dataID)
 							&event);
 
 	if (error == noErr) {
-		error = PostEventToQueue(GetMainEventQueue(), event, 
+		error = PostEventToQueue(m_threadEventQueueRef, event,
 							kEventPriorityStandard);
 		ReleaseEvent(event);
 	}
@@ -125,4 +125,10 @@ void
 COSXEventQueueBuffer::deleteTimer(CEventQueueTimer* timer) const
 {
 	delete timer;
+}
+
+void
+COSXEventQueueBuffer::cacheCurrentEventQueueRef()
+{
+	m_threadEventQueueRef = GetCurrentEventQueue();
 }

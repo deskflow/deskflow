@@ -219,6 +219,12 @@ public:
 	*/
 	void				fakeInputEnd();
 
+	//! Change dragging status
+	void				setDraggingStarted(bool started);
+	
+	//! Fake a files dragging operation
+	void				startDraggingFiles(CString str);
+
 	//@}
 	//! @name accessors
 	//@{
@@ -267,9 +273,17 @@ public:
 	*/
 	KeyModifierMask		pollActiveModifiers() const;
 
+	//! Check if dragging has started.
+
+	bool				getDraggingStarted() const;
+
 	//! Get dragging file's directory.
 
 	CString&			getDraggingFileDir() const;
+
+	//! Get drop target directory.
+	
+	const CString&		getDropTarget() const;
 
 	//@}
 

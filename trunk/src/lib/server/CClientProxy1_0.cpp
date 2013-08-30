@@ -366,6 +366,13 @@ CClientProxy1_0::cryptoIv(const UInt8* iv)
 }
 
 void
+CClientProxy1_0::draggingInfoSending(UInt32 fileCount, const char* data, size_t dataSize)
+{
+	// ignore -- not supported in protocol 1.0
+	LOG((CLOG_DEBUG "draggingInfoSending not supported"));
+}
+
+void
 CClientProxy1_0::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 {
 	// ignore -- not supported in protocol 1.0

@@ -79,7 +79,7 @@ public:
 
 	// ISecondaryScreen overrides
 	virtual void		fakeMouseButton(ButtonID id, bool press);
-	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const;
+	virtual void		fakeMouseMove(SInt32 x, SInt32 y);
 	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
 
@@ -98,6 +98,10 @@ public:
 	virtual void		setSequenceNumber(UInt32);
 	virtual bool		isPrimary() const;
 
+	virtual void		fakeDraggingFiles(CString str);
+	
+	const CString&		getDropTarget() const { return m_dropTarget; }
+	
 protected:
 	// IPlatformScreen overrides
 	virtual void		handleSystemEvent(const CEvent&, void*);
@@ -191,10 +195,16 @@ private:
 										   CGEventType type,
 										   CGEventRef event,
 										   void* refcon);
-        static CGEventRef	handleCGInputEventSecondary(CGEventTapProxy proxy,
-                                                                   		   CGEventType type,
-                                                                   		   CGEventRef event,
-                                                                   		   void* refcon);
+	static CGEventRef	handleCGInputEventSecondary(CGEventTapProxy proxy,
+													CGEventType type,
+													CGEventRef event,
+													void* refcon);
+	
+	// convert CFString to char*
+	static char*		CFStringRefToUTF8String(CFStringRef aString);
+	
+	void				getDropTargetThread(void*);
+	
 private:
 	struct CHotKeyItem {
 	public:
@@ -334,6 +344,10 @@ private:
 	bool					m_autoShowHideCursor;
 
 	IEventQueue*			m_events;
+	
+	bool					m_fakeDraggingStarted;
+	CThread*				m_getDropTargetThread;
+	CString					m_dropTarget;
 };
 
 #endif
