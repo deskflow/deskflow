@@ -17,6 +17,8 @@
 
 #import "COSXDragView.h"
 
+#ifdef MAC_OS_X_VERSION_10_7
+
 @implementation COSXDragView
 
 - (id)
@@ -88,3 +90,5 @@ clearDropTarget
 }
 
 @end
+
+#endif
