@@ -111,6 +111,8 @@ public:
 
 	static CServerApp& instance() { return (CServerApp&)CApp::instance(); }
 
+	CServer* getServerPtr() { return s_server; }
+	
 	// TODO: change s_ to m_
 	CServer*			s_server;
 	EServerState		s_serverState;
@@ -124,6 +126,7 @@ public:
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 	void handleScreenSwitched(const CEvent&, void*  data);
+	void runEventsLoop(void*);
 };
 
 // configuration file name

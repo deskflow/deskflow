@@ -103,6 +103,8 @@ set(inc
 	../ipc
 	../net
 	../io
+	../server
+	../client
 	../synwinhk
 	../synwinxt
 )
@@ -123,7 +125,7 @@ include_directories(${inc})
 add_library(platform STATIC ${src})
 
 if (UNIX)
-	target_link_libraries(platform io net ipc synergy ${libs})
+	target_link_libraries(platform io net ipc synergy server client ${libs})
 endif()
 
 if (APPLE)

@@ -27,9 +27,14 @@ CDragInformation::parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CSt
 	size_t findResult1 = 0;
 	size_t findResult2 = 0;
 	dragFileList.clear();
+	CString slash("\\");
+	if (data.find("/", startPos != -1)) {
+		slash = "/";
+	}
+
 	while (fileNum) {
 		findResult1 = data.find('\0', startPos);
-		findResult2 = data.find_last_of("\\", findResult1);
+		findResult2 = data.find_last_of(slash, findResult1);
 
 		if (findResult1 == startPos) {
 			//TODO: file number does not match, something goes wrong

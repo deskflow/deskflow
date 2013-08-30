@@ -37,7 +37,6 @@
 #include "CThread.h"
 #include "TMethodJob.h"
 #include "CFileChunker.h"
-#include "CDragInformation.h"
 #include <cstring>
 #include <cstdlib>
 #include <sstream>
@@ -75,7 +74,8 @@ CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen
 	m_relativeMoves(false),
 	m_keyboardBroadcasting(false),
 	m_lockedToScreen(false),
-	m_screen(screen)
+	m_screen(screen),
+	m_sendFileThread(NULL)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
@@ -243,6 +243,8 @@ CServer::~CServer()
 	// disable and disconnect primary client
 	m_primaryClient->disable();
 	removeClient(m_primaryClient);
+	
+	delete m_sendFileThread;
 }
 
 bool
@@ -1950,15 +1952,20 @@ void
 CServer::onFileRecieveCompleted()
 {
 	if (isReceivedFileSizeValid()) {
-		if (!m_fileTransferDes.empty()) {
+		if (!m_fileTransferDes.empty() && m_dragFileList.size() > 0) {
 			std::fstream file;
-			file.open(m_fileTransferDes.c_str(), std::ios::out | std::ios::binary);
+			CString dropTarget = m_fileTransferDes;
+			dropTarget.append("/").append(m_dragFileList.at(0));
+			file.open(dropTarget.c_str(), std::ios::out | std::ios::binary);
 			if (!file.is_open()) {
 				// TODO: file open failed
 			}
 
 			file.write(m_receivedFileData.c_str(), m_receivedFileData.size());
 			file.close();
+		}
+		else {
+			LOG((CLOG_ERR "drop file failed: drop target is empty"));
 		}
 	}
 }
@@ -2262,7 +2269,7 @@ CServer::isReceivedFileSizeValid()
 void
 CServer::sendFileToClient(const char* filename)
 {
-	CThread* thread = new CThread(
+	m_sendFileThread = new CThread(
 		new TMethodJob<CServer>(
 			this, &CServer::sendFileThread,
 			reinterpret_cast<void*>(const_cast<char*>(filename))));
@@ -2278,5 +2285,24 @@ CServer::sendFileThread(void* filename)
 	}
 	catch (std::runtime_error error) {
 		LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));
+	}
+
+	delete m_sendFileThread;
+	m_sendFileThread = NULL;
+}
+
+void
+CServer::dragInfoReceived(UInt32 fileNum, CString content)
+{
+	CDragInformation::parseDragInfo(m_dragFileList, fileNum, content);
+	LOG((CLOG_INFO "drag information received"));
+	LOG((CLOG_INFO "total drag file number: %i", m_dragFileList.size()));
+	
+	for(int i = 0; i < m_dragFileList.size(); ++i) {
+		LOG((CLOG_INFO "dragging file %i name: %s", i + 1, m_dragFileList.at(i).c_str()));
+	}
+	
+	if (m_dragFileList.size() != 0) {
+		//TODO: fake a dragging operation
 	}
 }
