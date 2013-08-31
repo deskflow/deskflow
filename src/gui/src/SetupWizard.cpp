@@ -28,7 +28,7 @@
 
 //#define PREMIUM_AUTH_URL "http://localhost/synergy/premium/json/auth/"
 #define PREMIUM_AUTH_URL "http://synergy-foss.org/premium/json/auth/"
-#define PREMIUM_REGISTER_URL "http://synergy-foss.org/premium/register/?source=gui-wizard"
+#define PREMIUM_REGISTER_URL "http://synergy-foss.org/donate/?source=gui-wizard"
 
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_MainWindow(mainWindow),
