@@ -106,7 +106,7 @@
        <item>
         <widget class="QLabel" name="m_pLabelPremium">
          <property name="text">
-          <string>Please help us &lt;a href=&quot;http://synergy-foss.org/premium/register/?source=gui-notice&quot;&gt;fund this project&lt;/a&gt; if you like Synergy.</string>
+          <string>Please help us &lt;a href=&quot;http://synergy-foss.org/donate/?source=gui-notice&quot;&gt;fund this project&lt;/a&gt; if you like Synergy.</string>
          </property>
          <property name="openExternalLinks">
           <bool>true</bool>
