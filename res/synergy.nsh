@@ -62,6 +62,7 @@ InstallDirRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${product}" ""
   Delete "${dir}\launcher.exe"
   Delete "${dir}\synrgyhk.dll"
   Delete "${dir}\synwinhk.dll"
+  Delete "${dir}\synwinxt.dll"
   Delete "${dir}\libgcc_s_dw2-1.dll"
   Delete "${dir}\mingwm10.dll"
   Delete "${dir}\QtCore4.dll"
@@ -162,6 +163,7 @@ Section "Server and Client" core
   File "${binDir}\Release\synergys.exe"
   File "${binDir}\Release\synergyc.exe"
   File "${binDir}\Release\synergyd.exe"
+  File "${binDir}\Release\synwinxt.dll"
   
   ; if the hook file exists, skip, assuming it couldn't be deleted
   ; because it was in use by some process.
@@ -175,6 +177,9 @@ Section "Server and Client" core
   DetailPrint "Adding firewall exception"
   nsExec::ExecToStack "netsh firewall add allowedprogram $\"$INSTDIR\synergys.exe$\" Synergy ENABLE"
   
+	; install the windows shell extension
+	ExecWait "regsvr32 /s $\"$INSTDIR\synwinxt.dll$\""
+	
   ; install and run the service
   ExecWait "$INSTDIR\synergyd.exe /install"
 
@@ -220,6 +225,9 @@ Section Uninstall
   ; delete all registry keys
   DeleteRegKey HKLM "SOFTWARE\${product}"
   DeleteRegKey HKLM "${controlPanelReg}\${product}"
+	
+	; uninstall the windows shell extension
+	ExecWait "regsvr32 /s /u $\"$INSTDIR\synwinxt.dll$\""
 
   ; note: edit macro to delete more files.
   !insertmacro DeleteFiles $INSTDIR

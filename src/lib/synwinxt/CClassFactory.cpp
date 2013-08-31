@@ -20,47 +20,64 @@
 #include <Shlwapi.h>
 
 extern LONG g_refCount;
+extern void outputDebugStringF(const char *str, ...);
 
-CClassFactory::CClassFactory()
+CClassFactory::CClassFactory() :
+	m_refCount(1)
 {
+	outputDebugStringF("synwinxt: > CClassFactory::ctor, g_refCount=%d", g_refCount);
 	InterlockedIncrement(&g_refCount);
+	outputDebugStringF("synwinxt: < CClassFactory::ctor, g_refCount=%d", g_refCount);
 }
 
 CClassFactory::~CClassFactory()
 {
+	outputDebugStringF("synwinxt: > CClassFactory::dtor, g_refCount=%d", g_refCount);
 	InterlockedDecrement(&g_refCount);
+	outputDebugStringF("synwinxt: < CClassFactory::dtor, g_refCount=%d", g_refCount);
 }
 
 HRESULT STDMETHODCALLTYPE
 CClassFactory::QueryInterface(REFIID riid, void **ppvObject)
 {
+	outputDebugStringF("synwinxt: > CClassFactory::QueryInterface");
 	static const QITAB qit[] = 
 	{
 		QITABENT(CClassFactory, IClassFactory),
 		{ 0 },
 	};
-	return QISearch(this, qit, riid, ppvObject);
+	HRESULT hr = QISearch(this, qit, riid, ppvObject);
+	
+	outputDebugStringF("synwinxt: < CClassFactory::QueryInterface, hr=%d", hr);
+	return hr;
 }
 
 ULONG STDMETHODCALLTYPE
 CClassFactory::AddRef()
 {
-	return InterlockedIncrement(&m_refCount);
+	outputDebugStringF("synwinxt: > CClassFactory::AddRef, m_refCount=%d", m_refCount);
+	LONG r = InterlockedIncrement(&m_refCount);
+	outputDebugStringF("synwinxt: < CClassFactory::AddRef, r=%d, m_refCount=%d", r, m_refCount);
+	return r;
 }
 
 ULONG STDMETHODCALLTYPE
 CClassFactory::Release()
 {
-	LONG count = InterlockedDecrement(&m_refCount);
-	if (count == 0) {
+	outputDebugStringF("synwinxt: > CClassFactory::Release, m_refCount=%d", m_refCount);
+	LONG r = InterlockedDecrement(&m_refCount);
+	if (r == 0) {
 		delete this;
 	}
-	return count;
+
+	outputDebugStringF("synwinxt: < CClassFactory::Release, r=%d", r);
+	return r;
 }
 
 HRESULT STDMETHODCALLTYPE
 CClassFactory::CreateInstance(IUnknown *pUnkOuter, REFIID riid, void **ppvObject)
 {
+	outputDebugStringF("synwinxt: > CClassFactory::CreateInstance");
 	if (pUnkOuter != NULL) {
 		return CLASS_E_NOAGGREGATION;
 	}
@@ -70,18 +87,21 @@ CClassFactory::CreateInstance(IUnknown *pUnkOuter, REFIID riid, void **ppvObject
 	if (FAILED(hr)) {
 		delete pExtension;
 	}
-
+	
+	outputDebugStringF("synwinxt: < CClassFactory::CreateInstance, hr=%d", hr);
 	return hr;
 }
 
 HRESULT STDMETHODCALLTYPE
 CClassFactory::LockServer(BOOL fLock)
 {
+	outputDebugStringF("synwinxt: > CClassFactory::LockServer, g_refCount=%d", g_refCount);
 	if (fLock) {
 		InterlockedIncrement(&g_refCount);
 	}
 	else {
 		InterlockedDecrement(&g_refCount);
 	}
+	outputDebugStringF("synwinxt: < CClassFactory::LockServer, g_refCount=%d", g_refCount);
 	return S_OK;
 }
