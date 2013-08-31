@@ -43,199 +43,6 @@ HRESULT registerInprocServer(CHAR* module, const CLSID& clsid, CHAR* threadModel
 HRESULT registerShellExtDataHandler(CHAR* fileType, const CLSID& clsid);
 HRESULT unregisterShellExtDataHandler(CHAR* fileType, const CLSID& clsid);
 HRESULT unregisterInprocServer(const CLSID& clsid);
-void outputDebugStringF(const char *str, ...);
-
-BOOL APIENTRY
-DllMain(HMODULE module, DWORD reason, LPVOID reserved)
-{
-	switch (reason) {
-	case DLL_PROCESS_ATTACH:
-		g_instance = module;
-		DisableThreadLibraryCalls(module);
-		break;
-
-	case DLL_THREAD_ATTACH:
-		break;
-	case DLL_THREAD_DETACH:
-		break;
-	case DLL_PROCESS_DETACH:
-		break;
-	}
-	return TRUE;
-}
-
-STDAPI
-DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppvObj) 
-{
-	HRESULT hr = E_OUTOFMEMORY; 
-	*ppvObj = NULL; 
- 
-	CClassFactory *classFactory = new CClassFactory();
-	if (classFactory != NULL) { 
-		hr = classFactory->QueryInterface(riid, ppvObj); 
-		classFactory->Release(); 
-	} 
-	return hr;
-}
-
-STDAPI
-DllCanUnloadNow()
-{
-	return g_refCount > 0 ? S_FALSE : S_OK;
-}
-STDAPI
-DllRegisterServer()
-{
-	HRESULT hr;
-
-	CHAR module[MAX_PATH];
-	if (GetModuleFileName(g_instance, module, ARRAYSIZE(module)) == 0) {
-		hr = HRESULT_FROM_WIN32(GetLastError());
-		return hr;
-	}
-
-	// Register the component.
-	hr = registerInprocServer(
-			module,
-			g_CLSID,
-			"Apartment");
-
-	if (SUCCEEDED(hr)) {
-		hr = registerShellExtDataHandler(
-				"*", 
-				g_CLSID);
-	}
-
-	return hr;
-}
-
-STDAPI
-DllUnregisterServer()
-{
-	HRESULT hr = S_OK;
-
-	CHAR module[MAX_PATH];
-	if (GetModuleFileName(g_instance, module, ARRAYSIZE(module)) == 0) {
-		hr = HRESULT_FROM_WIN32(GetLastError());
-		return hr;
-	}
-
-	// Unregister the component.
-	hr = unregisterInprocServer(g_CLSID);
-	if (SUCCEEDED(hr)) {
-		// Unregister the context menu handler.
-		hr = unregisterShellExtDataHandler("*", g_CLSID);
-	}
-	
-	return hr;
-}
-
-HRESULT
-registerInprocServer(CHAR* module, const CLSID& clsid, CHAR* threadModel)
-{
-	if (module == NULL || threadModel == NULL) {
-		return E_INVALIDARG;
-	}
-
-	HRESULT hr;
-
-	WCHAR CLASSID[MAX_PATH];
-	CHAR szCLSID[MAX_PATH];
-	StringFromGUID2(clsid, CLASSID, ARRAYSIZE(CLASSID));
-	WideCharToMultiByte(CP_ACP, 0, CLASSID, -1, szCLSID, MAX_PATH, NULL, NULL);
-
-	CHAR subkey[MAX_PATH];
-
-	// Create the HKCR\CLSID\{<CLSID>}\InprocServer32 key.
-	hr = StringCchPrintf(subkey, ARRAYSIZE(subkey), "CLSID\\%s\\InprocServer32", szCLSID);
-
-	if (SUCCEEDED(hr)) {
-		// Set the default value of the InprocServer32 key to the 
-		// path of the COM module.
-		HKEY key = CArchMiscWindows::addKey(HKEY_CLASSES_ROOT, subkey);
-		CArchMiscWindows::setValue(key, NULL, module);
-
-		if (SUCCEEDED(hr)) {
-			// Set the threading model of the component.
-			CArchMiscWindows::setValue(key, "ThreadingModel", threadModel);
-		}
-	}
-
-	return hr;
-}
-
-HRESULT
-unregisterInprocServer(const CLSID& clsid)
-{
-	HRESULT hr = S_OK;
-
-	WCHAR CLASSID[MAX_PATH];
-	CHAR szCLSID[MAX_PATH];
-	StringFromGUID2(clsid, CLASSID, ARRAYSIZE(CLASSID));
-	WideCharToMultiByte(CP_ACP, 0, CLASSID, -1, szCLSID, MAX_PATH, NULL, NULL);
-
-	CHAR subkey[MAX_PATH];
-
-	// Delete the HKCR\CLSID\{<CLSID>} key.
-	hr = StringCchPrintf(subkey, ARRAYSIZE(subkey), "CLSID\\%s", szCLSID);
-	if (SUCCEEDED(hr)) {
-		hr = HRESULT_FROM_WIN32(RegDeleteTree(HKEY_CLASSES_ROOT, subkey));
-	}
-
-	return hr;
-}
-
-HRESULT
-registerShellExtDataHandler(CHAR* fileType, const CLSID& clsid)
-{
-	if (fileType == NULL) {
-		return E_INVALIDARG;
-	}
-
-	HRESULT hr;
-
-	WCHAR szCLSID[MAX_PATH];
-	CHAR CLASSID[MAX_PATH];
-	StringFromGUID2(clsid, szCLSID, ARRAYSIZE(szCLSID));
-	WideCharToMultiByte(CP_ACP, 0, szCLSID, -1, CLASSID, MAX_PATH, NULL, NULL);
-
-	CHAR subkey[MAX_PATH];
-
-	// Create the key HKCR\<File Type>\shellex\DataHandler
-	hr = StringCchPrintf(subkey, ARRAYSIZE(subkey), "%s\\shellex\\DataHandler", fileType);
-	if (SUCCEEDED(hr)) {
-		// Set the default value of the key.
-		HKEY key = CArchMiscWindows::addKey(HKEY_CLASSES_ROOT, subkey);
-		CArchMiscWindows::setValue(key, NULL, CLASSID);
-	}
-
-	return hr;
-}
-
-HRESULT
-unregisterShellExtDataHandler(CHAR* fileType, const CLSID& clsid)
-{
-	if (fileType == NULL) {
-		return E_INVALIDARG;
-	}
-
-	HRESULT hr;
-
-	WCHAR CLASSID[MAX_PATH];
-	CHAR szCLSID[MAX_PATH];
-	StringFromGUID2(clsid, CLASSID, ARRAYSIZE(CLASSID));
-	WideCharToMultiByte(CP_ACP, 0, CLASSID, -1, szCLSID, MAX_PATH, NULL, NULL);
-
-	CHAR subkey[MAX_PATH];
-
-	// Remove the HKCR\<File Type>\shellex\DataHandler key.
-	hr = StringCchPrintf(subkey, ARRAYSIZE(subkey), "%s\\shellex\\DataHandler", fileType);
-	if (SUCCEEDED(hr)) {
-		hr = HRESULT_FROM_WIN32(RegDeleteTree(HKEY_CLASSES_ROOT, subkey));
-	}
-
-	return hr;
-}
 
 void
 outputDebugStringF(const char* str, ...)
@@ -249,15 +56,243 @@ outputDebugStringF(const char* str, ...)
 	OutputDebugStringA(buf);
 }
 
+BOOL APIENTRY
+DllMain(HMODULE module, DWORD reason, LPVOID reserved)
+{
+	outputDebugStringF("synwinxt: > DllMain, reason=%d", reason);
+
+	switch (reason) {
+	case DLL_PROCESS_ATTACH:
+		g_instance = module;
+		DisableThreadLibraryCalls(module);
+		break;
+
+	case DLL_THREAD_ATTACH:
+		break;
+	case DLL_THREAD_DETACH:
+		break;
+	case DLL_PROCESS_DETACH:
+		break;
+	}
+
+	outputDebugStringF("synwinxt: < DllMain");
+	return TRUE;
+}
+
+STDAPI
+DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppvObj) 
+{
+	outputDebugStringF("synwinxt: > DllGetClassObject");
+
+	HRESULT hr = E_OUTOFMEMORY; 
+	*ppvObj = NULL; 
+ 
+	CClassFactory *classFactory = new CClassFactory();
+	if (classFactory != NULL) { 
+		hr = classFactory->QueryInterface(riid, ppvObj); 
+		classFactory->Release(); 
+	}
+
+	outputDebugStringF("synwinxt: < DllGetClassObject, hr=%d", hr);
+	return hr;
+}
+
+STDAPI
+DllCanUnloadNow()
+{
+	outputDebugStringF("synwinxt: > DllCanUnloadNow, g_refCount=%d", g_refCount);
+	int r = g_refCount > 0 ? S_FALSE : S_OK;
+	outputDebugStringF("synwinxt: < DllCanUnloadNow, g_refCount=%d, r=%d", g_refCount, r);
+	return r;
+}
+STDAPI
+DllRegisterServer()
+{
+	outputDebugStringF("synwinxt: > DllRegisterServer");
+
+	HRESULT hr;
+
+	CHAR module[MAX_PATH];
+	if (GetModuleFileName(g_instance, module, ARRAYSIZE(module)) == 0) {
+		hr = HRESULT_FROM_WIN32(GetLastError());
+		outputDebugStringF("synwinxt: < DllRegisterServer, hr=%d", hr);
+		return hr;
+	}
+
+	hr = registerInprocServer(
+		module,
+		g_CLSID,
+		"Apartment");
+
+	if (SUCCEEDED(hr)) {
+		hr = registerShellExtDataHandler(
+			"*", 
+			g_CLSID);
+	}
+	
+	outputDebugStringF("synwinxt: < DllRegisterServer, hr=%d", hr);
+	return hr;
+}
+
+STDAPI
+DllUnregisterServer()
+{
+	outputDebugStringF("synwinxt: > DllUnregisterServer");
+
+	HRESULT hr = S_OK;
+
+	CHAR module[MAX_PATH];
+	if (GetModuleFileName(g_instance, module, ARRAYSIZE(module)) == 0) {
+		hr = HRESULT_FROM_WIN32(GetLastError());
+		outputDebugStringF("synwinxt: < DllRegisterServer, hr=%d", hr);
+		return hr;
+	}
+
+	hr = unregisterInprocServer(g_CLSID);
+	if (SUCCEEDED(hr)) {
+		hr = unregisterShellExtDataHandler("*", g_CLSID);
+	}
+	
+	outputDebugStringF("synwinxt: < DllUnregisterServer, hr=%d", hr);
+	return hr;
+}
+
+HRESULT
+registerInprocServer(CHAR* module, const CLSID& clsid, CHAR* threadModel)
+{
+	outputDebugStringF("synwinxt: > registerInprocServer");
+
+	if (module == NULL || threadModel == NULL) {
+		return E_INVALIDARG;
+	}
+
+	HRESULT hr;
+
+	WCHAR CLASSID[MAX_PATH];
+	CHAR szCLSID[MAX_PATH];
+	StringFromGUID2(clsid, CLASSID, ARRAYSIZE(CLASSID));
+	WideCharToMultiByte(CP_ACP, 0, CLASSID, -1, szCLSID, MAX_PATH, NULL, NULL);
+
+	CHAR subkey[MAX_PATH];
+
+	// create the HKCR\CLSID\{<CLSID>}\InprocServer32 key.
+	hr = StringCchPrintf(subkey, ARRAYSIZE(subkey), "CLSID\\%s\\InprocServer32", szCLSID);
+
+	if (SUCCEEDED(hr)) {
+		// set the default value of the InprocServer32 key to the 
+		// path of the COM module.
+		HKEY key = CArchMiscWindows::addKey(HKEY_CLASSES_ROOT, subkey);
+		CArchMiscWindows::setValue(key, NULL, module);
+
+		if (SUCCEEDED(hr)) {
+			// set the threading model of the component.
+			CArchMiscWindows::setValue(key, "ThreadingModel", threadModel);
+		}
+	}
+	
+	outputDebugStringF("synwinxt: < registerInprocServer, hr=%d", hr);
+	return hr;
+}
+
+HRESULT
+unregisterInprocServer(const CLSID& clsid)
+{
+	outputDebugStringF("synwinxt: > unregisterInprocServer");
+
+	HRESULT hr = S_OK;
+
+	WCHAR CLASSID[MAX_PATH];
+	CHAR szCLSID[MAX_PATH];
+	StringFromGUID2(clsid, CLASSID, ARRAYSIZE(CLASSID));
+	WideCharToMultiByte(CP_ACP, 0, CLASSID, -1, szCLSID, MAX_PATH, NULL, NULL);
+
+	CHAR subkey[MAX_PATH];
+
+	// delete the HKCR\CLSID\{<CLSID>} key.
+	hr = StringCchPrintf(subkey, ARRAYSIZE(subkey), "CLSID\\%s", szCLSID);
+	if (SUCCEEDED(hr)) {
+		hr = HRESULT_FROM_WIN32(RegDeleteTree(HKEY_CLASSES_ROOT, subkey));
+	}
+	
+	if (FAILED(hr)) {
+		outputDebugStringF("synwinxt: < unregisterInprocServer, hr=FAILED");
+	}
+	else {
+		outputDebugStringF("synwinxt: < unregisterInprocServer, hr=%d", hr);
+	}
+	return hr;
+}
+
+HRESULT
+registerShellExtDataHandler(CHAR* fileType, const CLSID& clsid)
+{
+	outputDebugStringF("synwinxt: > registerShellExtDataHandler");
+
+	if (fileType == NULL) {
+		return E_INVALIDARG;
+	}
+
+	HRESULT hr;
+
+	WCHAR szCLSID[MAX_PATH];
+	CHAR CLASSID[MAX_PATH];
+	StringFromGUID2(clsid, szCLSID, ARRAYSIZE(szCLSID));
+	WideCharToMultiByte(CP_ACP, 0, szCLSID, -1, CLASSID, MAX_PATH, NULL, NULL);
+
+	CHAR subkey[MAX_PATH];
+
+	// create the key HKCR\<File Type>\shellex\DataHandler
+	hr = StringCchPrintf(subkey, ARRAYSIZE(subkey), "%s\\shellex\\DataHandler", fileType);
+	if (SUCCEEDED(hr)) {
+		// set the default value of the key.
+		HKEY key = CArchMiscWindows::addKey(HKEY_CLASSES_ROOT, subkey);
+		CArchMiscWindows::setValue(key, NULL, CLASSID);
+	}
+	
+	outputDebugStringF("synwinxt: < registerShellExtDataHandler, hr=%d", hr);
+	return hr;
+}
+
+HRESULT
+unregisterShellExtDataHandler(CHAR* fileType, const CLSID& clsid)
+{
+	outputDebugStringF("synwinxt: > unregisterShellExtDataHandler");
+
+	if (fileType == NULL) {
+		return E_INVALIDARG;
+	}
+
+	HRESULT hr;
+
+	WCHAR CLASSID[MAX_PATH];
+	CHAR szCLSID[MAX_PATH];
+	StringFromGUID2(clsid, CLASSID, ARRAYSIZE(CLASSID));
+	WideCharToMultiByte(CP_ACP, 0, CLASSID, -1, szCLSID, MAX_PATH, NULL, NULL);
+
+	CHAR subkey[MAX_PATH];
+
+	// remove the HKCR\<File Type>\shellex\DataHandler key.
+	hr = StringCchPrintf(subkey, ARRAYSIZE(subkey), "%s\\shellex\\DataHandler", fileType);
+	if (SUCCEEDED(hr)) {
+		hr = HRESULT_FROM_WIN32(RegDeleteTree(HKEY_CLASSES_ROOT, subkey));
+	}
+	
+	outputDebugStringF("synwinxt: < unregisterShellExtDataHandler, hr=%d", hr);
+	return hr;
+}
+
 void
 updateDraggingDir(char* dir)
 {
+	outputDebugStringF("synwinxt: > updateDraggingDir, dir=%s", dir);
 	memcpy(g_draggingFileDir, dir, MAX_PATH);
-	outputDebugStringF("draggingFileDir: %s", g_draggingFileDir);
+	outputDebugStringF("synwinxt: < updateDraggingDir, g_draggingFileDir=%s", g_draggingFileDir);
 }
 
 void
 getDraggingFileDir(char* dir)
 {
+	outputDebugStringF("synwinxt: > getDraggingFileDir");
 	memcpy(dir, g_draggingFileDir, MAX_PATH);
+	outputDebugStringF("synwinxt: < getDraggingFileDir, dir=%s", dir);
 }

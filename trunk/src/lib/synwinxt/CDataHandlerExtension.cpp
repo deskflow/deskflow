@@ -24,58 +24,82 @@ extern GUID g_CLSID;
 extern void updateDraggingDir(char*);
 extern void outputDebugStringF(const char *str, ...);
 
-CDataHandlerExtension::CDataHandlerExtension()
+CDataHandlerExtension::CDataHandlerExtension() :
+	m_refCount(1)
 {
+	outputDebugStringF("synwinxt: > CDataHandlerExtension::ctor, g_refCount=%d", g_refCount);
 	InterlockedIncrement(&g_refCount);
+	outputDebugStringF("synwinxt: < CDataHandlerExtension::ctor, g_refCount=%d", g_refCount);
 }
 
 CDataHandlerExtension::~CDataHandlerExtension()
 {
+	outputDebugStringF("synwinxt: > CDataHandlerExtension::dtor, g_refCount=%d", g_refCount);
 	InterlockedDecrement(&g_refCount);
+	outputDebugStringF("synwinxt: < CDataHandlerExtension::dtor, g_refCount=%d", g_refCount);
 }
 
 HRESULT STDMETHODCALLTYPE
 CDataHandlerExtension::QueryInterface(REFIID riid, void **ppvObject)
 {
+	outputDebugStringF("synwinxt: > CDataHandlerExtension::QueryInterface");
 	static const QITAB qit[] = 
 	{
 		QITABENT(CDataHandlerExtension, IPersistFile),
 		QITABENT(CDataHandlerExtension, IDataObject), 
 		{ 0 },
 	};
-	return QISearch(this, qit, riid, ppvObject);
+	HRESULT hr = QISearch(this, qit, riid, ppvObject);
+	
+	if (FAILED(hr)) {
+		outputDebugStringF("synwinxt: < CDataHandlerExtension::QueryInterface, hr=FAILED");
+	}
+	else {
+		outputDebugStringF("synwinxt: < CDataHandlerExtension::QueryInterface, hr=%d", hr);
+	}
+	return hr;
 }
 
 ULONG STDMETHODCALLTYPE
 CDataHandlerExtension::AddRef()
 {
-	return InterlockedIncrement(&m_refCount);
+	outputDebugStringF("synwinxt: > CDataHandlerExtension::AddRef, m_refCount=%d", m_refCount);
+	LONG r = InterlockedIncrement(&m_refCount);
+	outputDebugStringF("synwinxt: < CDataHandlerExtension::AddRef, r=%d, m_refCount=%d", r, m_refCount);
+	return r;
 }
 
 ULONG STDMETHODCALLTYPE
 CDataHandlerExtension::Release()
 {
-	LONG count = InterlockedDecrement(&m_refCount);
-	if (count == 0) {
+	outputDebugStringF("synwinxt: > CDataHandlerExtension::Release, m_refCount=%d", m_refCount);
+	LONG r = InterlockedDecrement(&m_refCount);
+	if (r == 0) {
 		delete this;
 	}
-	return count;
+	outputDebugStringF("synwinxt: < CDataHandlerExtension::Release, r=%d", r);
+	return r;
 }
 
 HRESULT STDMETHODCALLTYPE
 CDataHandlerExtension::Load(__RPC__in LPCOLESTR pszFileName, DWORD dwMode)
 {
+	outputDebugStringF("synwinxt: > CDataHandlerExtension::Load");
+
 	char selectedFileDir[MAX_PATH];
 	StringCchCopyW(m_selectedFileDir, ARRAYSIZE(m_selectedFileDir), pszFileName);
 	WideCharToMultiByte(CP_ACP, 0, m_selectedFileDir, -1, selectedFileDir, MAX_PATH, NULL, NULL);
 	updateDraggingDir(selectedFileDir);
 	
+	outputDebugStringF("synwinxt: < CDataHandlerExtension::Load");
 	return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE
 CDataHandlerExtension::GetClassID(__RPC__out CLSID *pClassID)
 {
+	outputDebugStringF("synwinxt: > CDataHandlerExtension::GetClassID");
 	*pClassID = g_CLSID;
+	outputDebugStringF("synwinxt: < CDataHandlerExtension::GetClassID");
 	return S_OK;
 }
