@@ -59,6 +59,9 @@ fakeDragging(const char* str, int length, int cursorX, int cursorY)
 	[g_dragWindow setFrame:rect display:NO];
 	
 	[g_dragWindow makeKeyAndOrderFront:nil];
+		
+	CGEventRef down = CGEventCreateMouseEvent(CGEventSourceCreate(kCGEventSourceStateHIDSystemState), kCGEventLeftMouseDown, CGPointMake(cursorX, cursorY), kCGMouseButtonLeft);
+	CGEventPost(kCGHIDEventTap, down);
 	});
 }
 

@@ -744,7 +744,6 @@ COSXScreen::showCursor()
 #if defined(MAC_OS_X_VERSION_10_7)
 		// TODO: use real file extension
 		fakeDragging("txt", 3, m_xCursor, m_yCursor);
-		fakeMouseButton(kButtonLeft, true);
 #else
 		LOG((CLOG_WARN "drag drop not supported"));
 #endif
@@ -911,6 +910,11 @@ COSXScreen::leave()
     
 	if (m_draggingStarted) {
 		if (!m_isPrimary) {
+			// fake ctrl key up
+			fakeKeyUp(29);
+			// fake esc key down and  up
+			fakeKeyDown(kKeyEscape, 8192, 1);
+			fakeKeyUp(1);
 			CFStringRef dragInfo = getDraggedFileURL();
 			char* dragInfoCStr = CFStringRefToUTF8String(dragInfo);
 			LOG((CLOG_DEBUG "drag info: %s", dragInfoCStr));
