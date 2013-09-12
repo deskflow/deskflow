@@ -589,6 +589,7 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press)
 		m_lastSingleClickYCursor = m_yCursor;
 	}
 	if (!press && (id == kButtonLeft)) {
+		// fake ctrl key up
 		fakeKeyUp(29);
 		
 		if (m_fakeDraggingStarted) {

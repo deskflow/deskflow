@@ -30,14 +30,16 @@ runCocoaApp()
 	
 	NSApplication* app = [[NSApplication alloc] init];
     NSWindow* window = [[NSWindow alloc]
-						initWithContentRect: NSMakeRect(-100, -100, 100, 100)
-						styleMask: NSTitledWindowMask | NSMiniaturizableWindowMask
+						initWithContentRect: NSMakeRect(0, 0, 100, 4)
+						styleMask: NSBorderlessWindowMask
 						backing: NSBackingStoreBuffered
 						defer: NO];
     [window setTitle: @""];
+	[window setAlphaValue:0.1];
 	[window makeKeyAndOrderFront:nil];
 	
-	COSXDragView* dragView = [[COSXDragView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
+	COSXDragView* dragView = [[COSXDragView alloc] initWithFrame:NSMakeRect(0, 0, 100, 4)];
+	
 	g_dragWindow = window;
 	g_dragView = dragView;
 	[window setContentView: dragView];
@@ -53,9 +55,10 @@ fakeDragging(const char* str, int length, int cursorX, int cursorY)
 	dispatch_async(dispatch_get_main_queue(), ^{
 	NSRect screen = [[NSScreen mainScreen] frame];
 	NSLog ( @"mouseLocation: %d %d", cursorX, cursorY);
-	NSRect rect = NSMakeRect(cursorX - 50, screen.size.height - cursorY - 50, 100, 100);
-	[g_dragWindow setFrame:rect display:YES];
-	[g_dragWindow makeKeyWindow];
+	NSRect rect = NSMakeRect(cursorX - 99, screen.size.height - cursorY - 2, 100, 4);
+	[g_dragWindow setFrame:rect display:NO];
+	
+	[g_dragWindow makeKeyAndOrderFront:nil];
 	});
 }
 

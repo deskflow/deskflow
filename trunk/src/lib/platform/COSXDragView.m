@@ -43,6 +43,7 @@ acceptsFirstMouse:(NSEvent *)theEvent
 - (void)
 mouseDown:(NSEvent *)theEvent
 {
+	NSLog ( @"cocoa mouse down");
 	NSPoint dragPosition;
 	NSRect imageLocation;
 	dragPosition = [self convertPoint:[theEvent locationInWindow]
