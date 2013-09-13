@@ -912,7 +912,7 @@ COSXScreen::leave()
 		if (!m_isPrimary) {
 			// fake ctrl key up
 			fakeKeyUp(29);
-			// fake esc key down and  up
+			// fake esc key down and up
 			fakeKeyDown(kKeyEscape, 8192, 1);
 			fakeKeyUp(1);
 			CFStringRef dragInfo = getDraggedFileURL();
