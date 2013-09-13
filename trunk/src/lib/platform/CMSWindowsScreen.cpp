@@ -1275,7 +1275,7 @@ CMSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 			m_buttons[button] = true;
 			if (button == kButtonLeft) {
 				m_draggingFileDir.clear();
-				LOG((CLOG_DEBUG "dragging file directory is cleared"));
+				LOG((CLOG_DEBUG2 "dragging file directory is cleared"));
 			}
 		}
 		else {
@@ -1345,12 +1345,6 @@ CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 			CMotionInfo::alloc(m_xCursor, m_yCursor));
 
 		if (m_buttons[kButtonLeft] == true && m_draggingStarted == false) {
-			// temporarily log out dragging file directory
-			char dir[MAX_PATH];
-			m_hookLibraryLoader.m_getDraggingFileDir(dir);
-			m_draggingFileDir.append(dir);
-			LOG((CLOG_DEBUG "dragging file directory: %s", m_draggingFileDir.c_str()));
-
 			m_draggingStarted = true;
 		}
 	}
@@ -1840,4 +1834,18 @@ void
 CMSWindowsScreen::fakeDraggingFiles(CString str)
 {
 	
+}
+
+CString&
+CMSWindowsScreen::getDraggingFileDir()
+{
+	if (m_draggingStarted) {
+		// temporarily log out dragging file directory
+		char dir[MAX_PATH];
+		m_hookLibraryLoader.m_getDraggingFileDir(dir);
+		m_draggingFileDir.clear();
+		m_draggingFileDir.append(dir);
+	}
+
+	return m_draggingFileDir;
 }
