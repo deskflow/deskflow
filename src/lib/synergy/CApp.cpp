@@ -385,5 +385,12 @@ CApp::handleIpcMessage(const CEvent& e, void*)
 	if (m->type() == kIpcShutdown) {
 		LOG((CLOG_INFO "got ipc shutdown message"));
 		m_events->addEvent(CEvent(CEvent::kQuit));
-	}
+    }
+}
+
+void
+CApp::runEventsLoop(void*)
+{
+	m_events->cacheCurrentEventQueueRef();
+	m_events->loop();
 }
