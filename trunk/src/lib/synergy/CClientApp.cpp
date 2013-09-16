@@ -61,7 +61,6 @@
 
 CClientApp::CClientApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
 	CApp(events, createTaskBarReceiver, new CArgs()),
-	m_events(events),
 	s_client(NULL),
 	s_clientScreen(NULL)
 {
@@ -535,12 +534,17 @@ CClientApp::mainLoop()
 	// later.  the timer installed by startClient() will take care of
 	// that.
 	DAEMON_RUNNING(true);
-
+	
 #if defined(MAC_OS_X_VERSION_10_7)
+	
 	CThread thread(
 		new TMethodJob<CClientApp>(
 			this, &CClientApp::runEventsLoop,
 			NULL));
+	
+	// HACK: sleep, allow queue to start.
+	ARCH->sleep(1);
+	
 	runCocoaApp();
 #else
 	m_events->loop();
@@ -625,11 +629,4 @@ CClientApp::startNode()
 	if (!startClient()) {
 		m_bye(kExitFailed);
 	}
-}
-
-void
-CClientApp::runEventsLoop(void*)
-{
-	m_events->cacheCurrentEventQueueRef();
-	m_events->loop();
 }

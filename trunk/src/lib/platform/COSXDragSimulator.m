@@ -26,9 +26,14 @@ COSXDragView* g_dragView = NULL;
 void
 runCocoaApp()
 {
+	// HACK: sleep, carbon loop should start first.
+	usleep(1000000);
+	
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
+    
 	NSApplication* app = [[NSApplication alloc] init];
+    
     NSWindow* window = [[NSWindow alloc]
 						initWithContentRect: NSMakeRect(0, 0, 100, 4)
 						styleMask: NSBorderlessWindowMask
@@ -44,8 +49,10 @@ runCocoaApp()
 	g_dragView = dragView;
 	[window setContentView: dragView];
 	
+	NSLog(@"starting cocoa loop");
 	[app run];
 	
+	NSLog(@"cocoa: release");
 	[pool release];
 }
 

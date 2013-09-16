@@ -63,7 +63,6 @@
 
 CServerApp::CServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
 	CApp(events, createTaskBarReceiver, new CArgs()),
-	m_events(events),
 	s_server(NULL),
 	s_serverState(kUninitialized),
 	s_serverScreen(NULL),
@@ -788,10 +787,15 @@ CServerApp::mainLoop()
 	DAEMON_RUNNING(true);
 	
 #if defined(MAC_OS_X_VERSION_10_7)
+	
 	CThread thread(
 		new TMethodJob<CServerApp>(
 			this, &CServerApp::runEventsLoop,
 			NULL));
+	
+	// HACK: sleep, allow queue to start.
+	ARCH->sleep(1);
+	
 	runCocoaApp();
 #else
 	m_events->loop();
@@ -914,11 +918,4 @@ CServerApp::startNode()
 	if (!startServer()) {
 		m_bye(kExitFailed);
 	}
-}
-
-void
-CServerApp::runEventsLoop(void*)
-{
-	m_events->cacheCurrentEventQueueRef();
-	m_events->loop();
 }

@@ -121,12 +121,9 @@ public:
 	CClientListener*	s_listener;
 	CEventQueueTimer*	s_timer;
 
-	IEventQueue*		m_events;
-
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 	void handleScreenSwitched(const CEvent&, void*  data);
-	void runEventsLoop(void*);
 };
 
 // configuration file name

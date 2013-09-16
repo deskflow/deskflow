@@ -112,9 +112,11 @@ protected:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 	void				initIpcClient();
 	void				cleanupIpcClient();
+	void				runEventsLoop(void*);
 
 	IArchTaskBarReceiver* m_taskBarReceiver;
 	bool m_suspended;
+	IEventQueue*		m_events;
 
 private:
 	CArgsBase* m_args;
@@ -123,7 +125,6 @@ private:
 	CreateTaskBarReceiverFunc m_createTaskBarReceiver;
 	ARCH_APP_UTIL m_appUtil;
 	CIpcClient*			m_ipcClient;
-	IEventQueue*		m_events;
 	CSocketMultiplexer*	m_socketMultiplexer;
 	CString				m_fileTransferSrc;
 	CString				m_fileTransferDes;

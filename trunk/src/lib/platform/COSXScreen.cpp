@@ -1691,8 +1691,13 @@ COSXScreen::watchSystemPowerThread(void*)
 		return;
 	}
 
-	// start the run loop
 	LOG((CLOG_DEBUG "started watchSystemPowerThread"));
+    
+	// HACK: sleep, this seem to stop synergy from freezing.
+	ARCH->sleep(1);
+    
+	// start the run loop
+	LOG((CLOG_DEBUG "starting carbon loop"));
 	CFRunLoopRun();
 	
 	// cleanup
