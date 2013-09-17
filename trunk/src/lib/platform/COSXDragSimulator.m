@@ -61,8 +61,32 @@ fakeDragging(const char* str, int length, int cursorX, int cursorY)
 {
 	dispatch_async(dispatch_get_main_queue(), ^{
 	NSRect screen = [[NSScreen mainScreen] frame];
+	NSLog ( @"screen size: witdh = %f height = %f", screen.size.width, screen.size.height);
 	NSLog ( @"mouseLocation: %d %d", cursorX, cursorY);
-	NSRect rect = NSMakeRect(cursorX - 99, screen.size.height - cursorY - 2, 100, 4);
+		
+	int newCursorX = 0;
+	int newCursorY = 0;
+	if (cursorX == 0) {
+		newCursorX = cursorX - 99;
+	}
+	else if (cursorX == screen.size.width - 1) {
+		newCursorX = cursorX - 1;
+	}
+	newCursorY = screen.size.height - cursorY - 2;
+	
+	if (cursorY == 0) {
+		newCursorY = screen.size.height - 1;
+		newCursorX = cursorX - 50;
+	}
+	else if (cursorY == screen.size.height - 1) {
+		newCursorY = 1;
+		newCursorX = cursorX - 50;
+	}
+	
+	NSRect rect = NSMakeRect(newCursorX, newCursorY, 100, 4);
+	NSLog ( @"newCursorX: %d", newCursorX);
+	NSLog ( @"newCursorY: %d", newCursorY);
+		
 	[g_dragWindow setFrame:rect display:NO];
 	
 	[g_dragWindow makeKeyAndOrderFront:nil];
