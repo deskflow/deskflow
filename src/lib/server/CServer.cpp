@@ -1662,7 +1662,7 @@ CServer::onMouseUp(ButtonID id)
 	if (!m_screen->isOnScreen()) {
 		CString& dir = m_screen->getDraggingFileDir();
 		if (!dir.empty()) {
-			LOG((CLOG_DEBUG "drop file to client: %s", dir.c_str()));
+			LOG((CLOG_DEBUG "send file to client: %s", dir.c_str()));
 			sendFileToClient(dir.c_str());
 		}
 	}
@@ -1952,10 +1952,16 @@ void
 CServer::onFileRecieveCompleted()
 {
 	if (isReceivedFileSizeValid()) {
+		m_fileTransferDes = m_screen->getDropTarget();
 		if (!m_fileTransferDes.empty() && m_dragFileList.size() > 0) {
 			std::fstream file;
 			CString dropTarget = m_fileTransferDes;
-			dropTarget.append("/").append(m_dragFileList.at(0));
+#ifdef SYSAPI_WIN32
+			dropTarget.append("\\");
+#else
+			dropTarget.append("/");
+#endif
+			dropTarget.append(m_dragFileList.at(0));
 			file.open(dropTarget.c_str(), std::ios::out | std::ios::binary);
 			if (!file.is_open()) {
 				// TODO: file open failed
@@ -2280,7 +2286,6 @@ CServer::sendFileThread(void* filename)
 {
 	try {
 		char* name  = reinterpret_cast<char*>(filename);
-		LOG((CLOG_DEBUG "sendFileChunks: %s", name));
 		CFileChunker::sendFileChunks(name, m_events, this);
 	}
 	catch (std::runtime_error error) {
@@ -2295,14 +2300,10 @@ void
 CServer::dragInfoReceived(UInt32 fileNum, CString content)
 {
 	CDragInformation::parseDragInfo(m_dragFileList, fileNum, content);
-	LOG((CLOG_INFO "drag information received"));
-	LOG((CLOG_INFO "total drag file number: %i", m_dragFileList.size()));
+	LOG((CLOG_DEBUG "drag information received"));
+	LOG((CLOG_DEBUG "total drag file number: %i", m_dragFileList.size()));
 	
 	for(int i = 0; i < m_dragFileList.size(); ++i) {
-		LOG((CLOG_INFO "dragging file %i name: %s", i + 1, m_dragFileList.at(i).c_str()));
-	}
-	
-	if (m_dragFileList.size() != 0) {
-		//TODO: fake a dragging operation
+		LOG((CLOG_DEBUG2 "dragging file %i name: %s", i + 1, m_dragFileList.at(i).c_str()));
 	}
 }

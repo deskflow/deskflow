@@ -168,14 +168,6 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 		argsBase().m_crypto.setMode("cfb");
 	}
 
-	else if (isArg(i, argc, argv, NULL, "--filetransfer-src")) {
-		m_fileTransferSrc = argv[++i];
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--filetransfer-des")) {
-		m_fileTransferDes = argv[++i];
-	}
-
 	else {
 		// option not supported here
 		return false;
