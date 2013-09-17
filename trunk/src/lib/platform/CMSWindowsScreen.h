@@ -117,6 +117,8 @@ public:
 	virtual bool		isPrimary() const;
 	virtual void		fakeDraggingFiles(CString str);
 	virtual CString&	getDraggingFileDir();
+	virtual const CString&	
+						getDropTarget() const;
 
 protected:
 	// IPlatformScreen overrides
@@ -327,6 +329,8 @@ private:
 						s_screen;
 	
 	IEventQueue*		m_events;
+
+	CString				m_desktopPath;
 };
 
 #endif

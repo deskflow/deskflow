@@ -468,7 +468,6 @@ CClientApp::startClient()
 
 		s_client->connect();
 
-		s_client->setFileTransferDes(getFileTransferDes());
 		updateStatus();
 		return true;
 	}

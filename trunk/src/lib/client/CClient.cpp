@@ -725,7 +725,12 @@ CClient::onFileRecieveCompleted()
 		m_fileTransferDes = m_screen->getDropTarget();
 		if (!m_fileTransferDes.empty()) {
 			std::fstream file;
-			m_fileTransferDes.append("/").append(m_dragFileList.at(0));
+#ifdef SYSAPI_WIN32
+			m_fileTransferDes.append("\\");
+#else
+			m_fileTransferDes.append("/");
+#endif
+			m_fileTransferDes.append(m_dragFileList.at(0));
 			file.open(m_fileTransferDes.c_str(), std::ios::out | std::ios::binary);
 			if (!file.is_open()) {
 				// TODO: file open failed
