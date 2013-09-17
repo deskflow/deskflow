@@ -27,22 +27,22 @@ extern void outputDebugStringF(const char *str, ...);
 CDataHandlerExtension::CDataHandlerExtension() :
 	m_refCount(1)
 {
-	outputDebugStringF("synwinxt: > CDataHandlerExtension::ctor, g_refCount=%d", g_refCount);
+	outputDebugStringF("synwinxt: > CDataHandlerExtension::ctor, g_refCount=%d\n", g_refCount);
 	InterlockedIncrement(&g_refCount);
-	outputDebugStringF("synwinxt: < CDataHandlerExtension::ctor, g_refCount=%d", g_refCount);
+	outputDebugStringF("synwinxt: < CDataHandlerExtension::ctor, g_refCount=%d\n", g_refCount);
 }
 
 CDataHandlerExtension::~CDataHandlerExtension()
 {
-	outputDebugStringF("synwinxt: > CDataHandlerExtension::dtor, g_refCount=%d", g_refCount);
+	outputDebugStringF("synwinxt: > CDataHandlerExtension::dtor, g_refCount=%d\n", g_refCount);
 	InterlockedDecrement(&g_refCount);
-	outputDebugStringF("synwinxt: < CDataHandlerExtension::dtor, g_refCount=%d", g_refCount);
+	outputDebugStringF("synwinxt: < CDataHandlerExtension::dtor, g_refCount=%d\n", g_refCount);
 }
 
 HRESULT STDMETHODCALLTYPE
 CDataHandlerExtension::QueryInterface(REFIID riid, void **ppvObject)
 {
-	outputDebugStringF("synwinxt: > CDataHandlerExtension::QueryInterface");
+	outputDebugStringF("synwinxt: > CDataHandlerExtension::QueryInterface\n");
 	static const QITAB qit[] = 
 	{
 		QITABENT(CDataHandlerExtension, IPersistFile),
@@ -52,10 +52,10 @@ CDataHandlerExtension::QueryInterface(REFIID riid, void **ppvObject)
 	HRESULT hr = QISearch(this, qit, riid, ppvObject);
 	
 	if (FAILED(hr)) {
-		outputDebugStringF("synwinxt: < CDataHandlerExtension::QueryInterface, hr=FAILED");
+		outputDebugStringF("synwinxt: < CDataHandlerExtension::QueryInterface, hr=FAILED\n");
 	}
 	else {
-		outputDebugStringF("synwinxt: < CDataHandlerExtension::QueryInterface, hr=%d", hr);
+		outputDebugStringF("synwinxt: < CDataHandlerExtension::QueryInterface, hr=%d\n", hr);
 	}
 	return hr;
 }
@@ -63,43 +63,43 @@ CDataHandlerExtension::QueryInterface(REFIID riid, void **ppvObject)
 ULONG STDMETHODCALLTYPE
 CDataHandlerExtension::AddRef()
 {
-	outputDebugStringF("synwinxt: > CDataHandlerExtension::AddRef, m_refCount=%d", m_refCount);
+	outputDebugStringF("synwinxt: > CDataHandlerExtension::AddRef, m_refCount=%d\n", m_refCount);
 	LONG r = InterlockedIncrement(&m_refCount);
-	outputDebugStringF("synwinxt: < CDataHandlerExtension::AddRef, r=%d, m_refCount=%d", r, m_refCount);
+	outputDebugStringF("synwinxt: < CDataHandlerExtension::AddRef, r=%d, m_refCount=%d\n", r, m_refCount);
 	return r;
 }
 
 ULONG STDMETHODCALLTYPE
 CDataHandlerExtension::Release()
 {
-	outputDebugStringF("synwinxt: > CDataHandlerExtension::Release, m_refCount=%d", m_refCount);
+	outputDebugStringF("synwinxt: > CDataHandlerExtension::Release, m_refCount=%d\n", m_refCount);
 	LONG r = InterlockedDecrement(&m_refCount);
 	if (r == 0) {
 		delete this;
 	}
-	outputDebugStringF("synwinxt: < CDataHandlerExtension::Release, r=%d", r);
+	outputDebugStringF("synwinxt: < CDataHandlerExtension::Release, r=%d\n", r);
 	return r;
 }
 
 HRESULT STDMETHODCALLTYPE
 CDataHandlerExtension::Load(__RPC__in LPCOLESTR pszFileName, DWORD dwMode)
 {
-	outputDebugStringF("synwinxt: > CDataHandlerExtension::Load");
+	outputDebugStringF("synwinxt: > CDataHandlerExtension::Load\n");
 
 	char selectedFileDir[MAX_PATH];
 	StringCchCopyW(m_selectedFileDir, ARRAYSIZE(m_selectedFileDir), pszFileName);
 	WideCharToMultiByte(CP_ACP, 0, m_selectedFileDir, -1, selectedFileDir, MAX_PATH, NULL, NULL);
 	updateDraggingDir(selectedFileDir);
 	
-	outputDebugStringF("synwinxt: < CDataHandlerExtension::Load");
+	outputDebugStringF("synwinxt: < CDataHandlerExtension::Load\n");
 	return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE
 CDataHandlerExtension::GetClassID(__RPC__out CLSID *pClassID)
 {
-	outputDebugStringF("synwinxt: > CDataHandlerExtension::GetClassID");
+	outputDebugStringF("synwinxt: > CDataHandlerExtension::GetClassID\n");
 	*pClassID = g_CLSID;
-	outputDebugStringF("synwinxt: < CDataHandlerExtension::GetClassID");
+	outputDebugStringF("synwinxt: < CDataHandlerExtension::GetClassID\n");
 	return S_OK;
 }
