@@ -36,6 +36,8 @@
 #include "TMethodJob.h"
 #include "CArch.h"
 #include "CArchMiscWindows.h"
+#include "CApp.h"
+#include "CArgsBase.h"
 #include <string.h>
 #include <pbt.h>
 #include <Shlobj.h>
@@ -1279,14 +1281,14 @@ CMSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 	if (button >= kButtonLeft && button <= kButtonExtra0 + 1) {
 		if (pressed) {
 			m_buttons[button] = true;
-			if (button == kButtonLeft) {
+			if (CApp::instance().argsBase().m_enableDragDrop && button == kButtonLeft) {
 				m_draggingFileDir.clear();
 				LOG((CLOG_DEBUG2 "dragging file directory is cleared"));
 			}
 		}
 		else {
 			m_buttons[button] = false;
-			if (m_draggingStarted && button == kButtonLeft) {
+			if (CApp::instance().argsBase().m_enableDragDrop && m_draggingStarted && button == kButtonLeft) {
 				m_draggingStarted = false;
 			}
 		}

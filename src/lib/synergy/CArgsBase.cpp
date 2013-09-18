@@ -38,7 +38,8 @@ m_pname(NULL),
 m_logFilter(NULL),
 m_logFile(NULL),
 m_display(NULL),
-m_enableIpc(false)
+m_enableIpc(false),
+m_enableDragDrop(false)
 {
 }
 

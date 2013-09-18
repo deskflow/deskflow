@@ -105,11 +105,6 @@ bool SetupWizard::validateCurrentPage()
 			{
 				return false;
 			}
-			else
-			{
-				m_pCheckBoxEnableCrypto->setEnabled(true);
-				m_pCheckBoxEnableCrypto->setChecked(true);
-			}
 		}
 		else if (m_pRadioButtonPremiumRegister->isChecked())
 		{
@@ -120,9 +115,7 @@ bool SetupWizard::validateCurrentPage()
 		}
 		else if (m_pRadioButtonPremiumLater->isChecked())
 		{
-			m_pCheckBoxEnableCrypto->setEnabled(false);
-			m_pLineEditCryptoPassword1->setEnabled(false);
-			m_pLineEditCryptoPassword2->setEnabled(false);
+			return true;
 		}
 		else {
 			message.setText(tr("Please select an option."));
@@ -257,6 +250,9 @@ void SetupWizard::on_m_pRadioButtonPremiumLogin_toggled(bool checked)
 
 bool SetupWizard::isPremiumLoginValid(QMessageBox& message)
 {
+	// hash the email and password and send it over plain-text,
+	// it would be nice to use SSL, but unfortunately the Qt
+	// implementation is unreliable.
 	QString email = hash(m_pLineEditPremiumEmail->text());
 	QString password = hash(m_pLineEditPremiumPassword->text());
 

@@ -150,7 +150,7 @@ void AppConfig::loadSettings()
 	m_ScreenName = settings().value("screenName", QHostInfo::localHostName()).toString();
 	m_Port = settings().value("port", 24800).toInt();
 	m_Interface = settings().value("interface").toString();
-	m_LogLevel = settings().value("logLevel", 2).toInt();
+	m_LogLevel = settings().value("logLevel", 3).toInt(); // level 3: INFO
 	m_LogToFile = settings().value("logToFile", false).toBool();
 	m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
 	m_AutoStart = settings().value("autoStart", false).toBool();
@@ -161,7 +161,7 @@ void AppConfig::loadSettings()
 	m_CryptoPass = settings().value("cryptoPass", "").toString();
 	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
 	m_Language = settings().value("language", QLocale::system().name()).toString();
-	m_PremiumEmail= settings().value("premiumEmail", "").toString();
+	m_PremiumEmail = settings().value("premiumEmail", "").toString();
 	m_PremiumToken = settings().value("premiumToken", "").toString();
 }
 

@@ -640,17 +640,19 @@ COSXScreen::getDropTargetThread(void*)
 void
 COSXScreen::fakeMouseMove(SInt32 x, SInt32 y)
 {
-	if (m_fakeDraggingStarted) {
-		// HACK: for some reason the drag icon
-		// does not follow the cursor unless a key
-		// is pressed (except esc key)
-		// TODO: fake this key down properly
-		fakeKeyDown(kKeyControl_L, 8194, 29);
-	}
+	if (CApp::instance().argsBase().m_enableDragDrop) {
+		if (m_fakeDraggingStarted) {
+			// HACK: for some reason the drag icon
+			// does not follow the cursor unless a key
+			// is pressed (except esc key)
+			// TODO: fake this key down properly
+			fakeKeyDown(kKeyControl_L, 8194, 29);
+		}
 	
-	// index 0 means left mouse button
-	if (m_buttonState.test(0)) {
-		m_draggingStarted = true;
+		// index 0 means left mouse button
+		if (m_buttonState.test(0)) {
+			m_draggingStarted = true;
+		}
 	}
 	
 	// synthesize event
@@ -908,27 +910,25 @@ COSXScreen::leave()
 {
     hideCursor();
     
-	if (m_draggingStarted) {
-		if (!m_isPrimary) {
-			// fake ctrl key up
-			fakeKeyUp(29);
-			// fake esc key down and up
-			fakeKeyDown(kKeyEscape, 8192, 1);
-			fakeKeyUp(1);
-			CFStringRef dragInfo = getDraggedFileURL();
-			char* dragInfoCStr = CFStringRefToUTF8String(dragInfo);
-			LOG((CLOG_DEBUG "drag info: %s", dragInfoCStr));
-			CFRelease(dragInfo);
-			CString fileList(dragInfoCStr);
-			size_t size = fileList.size();
-			CClientApp& app = CClientApp::instance();
-			CClient* client = app.getClientPtr();
-			UInt32 fileCount = 1;
-			client->draggingInfoSending(fileCount, fileList, size);
-			LOG((CLOG_DEBUG "send dragging file to server"));
-			client->sendFileToServer(dragInfoCStr);
-			m_draggingStarted = false;
-		}
+	if (m_draggingStarted && !m_isPrimary) {
+		// fake ctrl key up
+		fakeKeyUp(29);
+		// fake esc key down and up
+		fakeKeyDown(kKeyEscape, 8192, 1);
+		fakeKeyUp(1);
+		CFStringRef dragInfo = getDraggedFileURL();
+		char* dragInfoCStr = CFStringRefToUTF8String(dragInfo);
+		LOG((CLOG_DEBUG "drag info: %s", dragInfoCStr));
+		CFRelease(dragInfo);
+		CString fileList(dragInfoCStr);
+		size_t size = fileList.size();
+		CClientApp& app = CClientApp::instance();
+		CClient* client = app.getClientPtr();
+		UInt32 fileCount = 1;
+		client->draggingInfoSending(fileCount, fileList, size);
+		LOG((CLOG_DEBUG "send dragging file to server"));
+		client->sendFileToServer(dragInfoCStr);
+		m_draggingStarted = false;
 	}
 	
 	if (m_isPrimary) {
