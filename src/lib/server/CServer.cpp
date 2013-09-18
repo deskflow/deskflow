@@ -1752,7 +1752,7 @@ CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 			LOG((CLOG_DEBUG3 "dragging file list: %s", fileList));
 			LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
 			newScreen->draggingInfoSending(fileCount, fileList, size);
-			m_screen->setDraggingStarted(false);
+			//m_screen->setDraggingStarted(false);
 		}
 
 		// switch screen
@@ -2306,4 +2306,10 @@ CServer::dragInfoReceived(UInt32 fileNum, CString content)
 	for(int i = 0; i < m_dragFileList.size(); ++i) {
 		LOG((CLOG_DEBUG2 "dragging file %i name: %s", i + 1, m_dragFileList.at(i).c_str()));
 	}
+}
+
+void
+CServer::draggingInfoSending(UInt32 fileCount, CString& fileList, size_t size)
+{
+	m_active->draggingInfoSending(fileCount, fileList.c_str(), size);
 }

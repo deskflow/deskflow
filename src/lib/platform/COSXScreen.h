@@ -98,6 +98,7 @@ public:
 	virtual void		setSequenceNumber(UInt32);
 	virtual bool		isPrimary() const;
 	virtual void		fakeDraggingFiles(CString str);
+	virtual CString&	getDraggingFileDir();
 	
 	const CString&		getDropTarget() const { return m_dropTarget; }
 	
@@ -344,7 +345,6 @@ private:
 
 	IEventQueue*			m_events;
 	
-	bool					m_draggingStarted;
 	bool					m_fakeDraggingStarted;
 	CThread*				m_getDropTargetThread;
 	CString					m_dropTarget;

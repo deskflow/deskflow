@@ -22,6 +22,7 @@
 
 NSWindow* g_dragWindow = NULL;
 COSXDragView* g_dragView = NULL;
+NSApplication* g_app = NULL;
 
 void
 runCocoaApp()
@@ -33,7 +34,8 @@ runCocoaApp()
 	
     
 	NSApplication* app = [[NSApplication alloc] init];
-    
+    g_app = app;
+	
     NSWindow* window = [[NSWindow alloc]
 						initWithContentRect: NSMakeRect(0, 0, 100, 4)
 						styleMask: NSBorderlessWindowMask
@@ -54,6 +56,12 @@ runCocoaApp()
 	
 	NSLog(@"cocoa: release");
 	[pool release];
+}
+
+void
+stopCocoaLoop()
+{
+	[g_app stop: g_dragWindow];
 }
 
 void

@@ -376,7 +376,7 @@ CScreen::isLockedToScreen() const
 		LOG((CLOG_DEBUG "locked by mouse buttonID: %d", buttonID));
 		if (buttonID == kButtonLeft) {
 			// TODO: fake esc key down and up
-			m_screen->fakeMouseButton(buttonID, false);
+			//m_screen->fakeMouseButton(buttonID, false);
 		}
 		
 		return (buttonID == kButtonLeft) ? false : true;

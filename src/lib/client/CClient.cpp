@@ -822,5 +822,5 @@ CClient::sendFileThread(void* filename)
 void
 CClient::draggingInfoSending(UInt32 fileCount, CString& fileList, size_t size)
 {
-	m_server->draggingInfoSending(fileCount, fileList, size);
+	m_server->draggingInfoSending(fileCount, fileList.c_str(), size);
 }

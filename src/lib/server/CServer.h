@@ -158,6 +158,9 @@ public:
 	//! Received dragging information from client
 	void				dragInfoReceived(UInt32 fileNum, CString content);
 	
+	//! Send dragging file information to client
+	void				draggingInfoSending(UInt32 fileCount, CString& fileList, size_t size);
+	
 	//@}
 	//! @name accessors
 	//@{
