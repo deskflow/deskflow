@@ -37,6 +37,7 @@
 #include "CClientApp.h"
 #include "CServerApp.h"
 #include "CClient.h"
+#include "CServer.h"
 
 #include <math.h>
 
@@ -101,7 +102,6 @@ COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCur
 	m_eventTapRLSR(nullptr),
 	m_eventTapPort(nullptr),
 	m_pmRootPort(0),
-	m_draggingStarted(false),
 	m_fakeDraggingStarted(false),
 	m_getDropTargetThread(NULL)
 {
@@ -318,6 +318,10 @@ COSXScreen::getJumpZoneSize() const
 bool
 COSXScreen::isAnyMouseButtonDown(UInt32& buttonID) const
 {
+	if (m_buttonState.test(0)) {
+		buttonID = kButtonLeft;
+	}
+
 	return (GetCurrentButtonState() != 0);
 }
 
@@ -908,24 +912,36 @@ COSXScreen::leave()
 {
     hideCursor();
     
-	if (m_draggingStarted && !m_isPrimary) {
-		// fake ctrl key up
-		fakeKeyUp(29);
-		// fake esc key down and up
-		fakeKeyDown(kKeyEscape, 8192, 1);
-		fakeKeyUp(1);
+	if (m_draggingStarted) {
 		CFStringRef dragInfo = getDraggedFileURL();
 		char* dragInfoCStr = CFStringRefToUTF8String(dragInfo);
 		LOG((CLOG_DEBUG "drag info: %s", dragInfoCStr));
 		CFRelease(dragInfo);
 		CString fileList(dragInfoCStr);
 		size_t size = fileList.size();
-		CClientApp& app = CClientApp::instance();
-		CClient* client = app.getClientPtr();
-		UInt32 fileCount = 1;
-		client->draggingInfoSending(fileCount, fileList, size);
-		LOG((CLOG_DEBUG "send dragging file to server"));
-		client->sendFileToServer(dragInfoCStr);
+		
+		// fake esc key down and up
+		fakeKeyDown(kKeyEscape, 8192, 1);
+		fakeKeyUp(1);
+		
+		fakeMouseButton(kButtonLeft, false);
+		
+		if (m_isPrimary) {
+			CServerApp& app = CServerApp::instance();
+			CServer* server = app.getServerPtr();
+			LOG((CLOG_DEBUG "send dragging file to client"));
+			server->sendFileToClient(dragInfoCStr);
+		}
+		else {
+			// fake ctrl key up
+			fakeKeyUp(29);
+			CClientApp& app = CClientApp::instance();
+			CClient* client = app.getClientPtr();
+			UInt32 fileCount = 1;
+			client->draggingInfoSending(fileCount, fileList, size);
+			LOG((CLOG_DEBUG "send dragging file to server"));
+			client->sendFileToServer(dragInfoCStr);
+		}
 		m_draggingStarted = false;
 	}
 	
@@ -1149,6 +1165,9 @@ COSXScreen::onMouseMove(SInt32 mx, SInt32 my)
 		// motion on primary screen
 		sendEvent(m_events->forIPrimaryScreen().motionOnPrimary(),
 							CMotionInfo::alloc(m_xCursor, m_yCursor));
+		if (m_buttonState.test(0)) {
+			m_draggingStarted = true;
+		}
 	}
 	else {
 		// motion on secondary screen.  warp mouse back to
@@ -1210,6 +1229,18 @@ COSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 			if (--m_dragNumButtonsDown == 0) {
 				enableDragTimer(false);
 			}
+		}
+	}
+	
+	if (macButton == kButtonLeft) {
+		MouseButtonState state = pressed ? kMouseButtonDown : kMouseButtonUp;
+		m_buttonState.set(kButtonLeft - 1, state);
+		if (pressed) {
+			m_draggingFileDir.clear();
+			LOG((CLOG_DEBUG2 "dragging file directory is cleared"));
+		}
+		else {
+			m_draggingStarted = false;
 		}
 	}
 
@@ -1951,13 +1982,7 @@ COSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 		case kCGEventOtherMouseUp:
 			screen->onMouseButton(false, CGEventGetIntegerValueField(event, kCGMouseEventButtonNumber) + 1);
 			break;
-		case kCGEventLeftMouseDragged: {
-			CFStringRef dragInfo = getDraggedFileURL();
-			char* info = CFStringRefToUTF8String(dragInfo);
-			LOG((CLOG_DEBUG "drag info: %s", info));
-			CFRelease(dragInfo);
-			break;
-		}
+		case kCGEventLeftMouseDragged:
 		case kCGEventRightMouseDragged:
 		case kCGEventOtherMouseDragged:
 		case kCGEventMouseMoved:
@@ -2074,4 +2099,18 @@ void
 COSXScreen::fakeDraggingFiles(CString str)
 {
 	m_fakeDraggingStarted = true;
+}
+
+CString&
+COSXScreen::getDraggingFileDir()
+{
+	if (m_draggingStarted) {
+		CFStringRef dragInfo = getDraggedFileURL();
+		char* info = CFStringRefToUTF8String(dragInfo);
+		LOG((CLOG_DEBUG "drag info: %s", info));
+		CFRelease(dragInfo);
+		CString fileList(info);
+		m_draggingFileDir = fileList;
+	}
+	return m_draggingFileDir;
 }

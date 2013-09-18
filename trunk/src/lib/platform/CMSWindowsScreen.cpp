@@ -358,6 +358,11 @@ CMSWindowsScreen::leave()
 	m_isOnScreen = false;
 	forceShowCursor();
 
+	if (m_draggingStarted) {
+		fakeMouseButton(kButtonLeft, false);
+		m_draggingStarted = false;
+	}
+	
 	return true;
 }
 

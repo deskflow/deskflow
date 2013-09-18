@@ -45,6 +45,10 @@
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
+#if defined(__APPLE__)
+#include "COSXDragSimulator.h"
+#endif
+
 CApp* CApp::s_instance = nullptr;
 
 CApp::CApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args) :
@@ -393,4 +397,10 @@ CApp::runEventsLoop(void*)
 {
 	m_events->cacheCurrentEventQueueRef();
 	m_events->loop();
+	
+#if defined(MAC_OS_X_VERSION_10_7)
+	
+	stopCocoaLoop();
+	
+#endif
 }
