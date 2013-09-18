@@ -64,28 +64,28 @@ fakeDragging(const char* str, int length, int cursorX, int cursorY)
 	NSLog ( @"screen size: witdh = %f height = %f", screen.size.width, screen.size.height);
 	NSLog ( @"mouseLocation: %d %d", cursorX, cursorY);
 		
-	int newCursorX = 0;
-	int newCursorY = 0;
+	int newPosX = 0;
+	int newPosY = 0;
 	if (cursorX == 0) {
-		newCursorX = cursorX - 99;
+		newPosX = cursorX - 99;
 	}
 	else if (cursorX == screen.size.width - 1) {
-		newCursorX = cursorX - 1;
+		newPosX = cursorX - 1;
 	}
-	newCursorY = screen.size.height - cursorY - 2;
+	newPosY = screen.size.height - cursorY - 2;
 	
 	if (cursorY == 0) {
-		newCursorY = screen.size.height - 1;
-		newCursorX = cursorX - 50;
+		newPosY = screen.size.height - 1;
+		newPosX = cursorX - 50;
 	}
 	else if (cursorY == screen.size.height - 1) {
-		newCursorY = 1;
-		newCursorX = cursorX - 50;
+		newPosY = 1;
+		newPosX = cursorX - 50;
 	}
 	
-	NSRect rect = NSMakeRect(newCursorX, newCursorY, 100, 4);
-	NSLog ( @"newCursorX: %d", newCursorX);
-	NSLog ( @"newCursorY: %d", newCursorY);
+	NSRect rect = NSMakeRect(newPosX, newPosY, 100, 4);
+	NSLog ( @"newPosX: %d", newPosX);
+	NSLog ( @"newPosY: %d", newPosY);
 		
 	[g_dragWindow setFrame:rect display:NO];
 	
