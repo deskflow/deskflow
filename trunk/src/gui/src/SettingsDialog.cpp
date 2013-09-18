@@ -46,21 +46,10 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pCheckBoxAutoHide->setChecked(appConfig().autoHide());
 	m_pCheckBoxEnableCrypto->setChecked(appConfig().cryptoEnabled());
 	setIndexFromItemData(m_pComboLanguage, appConfig().language());
-	if (appConfig().isPremium())
+	if (appConfig().cryptoEnabled())
 	{
-		if (appConfig().cryptoEnabled())
-		{
-			m_pLineEditCryptoPass->setText(appConfig().cryptoPass());
-		}
+		m_pLineEditCryptoPass->setText(appConfig().cryptoPass());
 	}
-	else
-	{
-		m_pCheckBoxEnableCrypto->setChecked(false);
-		m_pCheckBoxEnableCrypto->setEnabled(false);
-		m_pLineEditCryptoPass->clear();
-		m_pLineEditCryptoPass->setEnabled(false);
-	}
-
 }
 
 void SettingsDialog::accept()

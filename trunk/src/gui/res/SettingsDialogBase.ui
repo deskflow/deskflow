@@ -208,7 +208,7 @@
       <item row="1" column="1">
        <widget class="QLineEdit" name="m_pLineEditCryptoPass">
         <property name="enabled">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>

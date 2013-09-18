@@ -155,6 +155,10 @@ CClientApp::parseArgs(int argc, const char* const* argv)
 
 	// identify system
 	LOG((CLOG_INFO "%s Client on %s %s", kAppVersion, ARCH->getOSName().c_str(), ARCH->getPlatformName().c_str()));
+	
+	if (args().m_enableDragDrop) {
+		LOG((CLOG_INFO "drag and drop enabled"));
+	}
 
 	loggingFilterWarning();
 }

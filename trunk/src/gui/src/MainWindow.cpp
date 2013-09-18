@@ -415,6 +415,11 @@ void MainWindow::startSynergy()
 #endif
 	}
 
+	if (appConfig().isPremium())
+	{
+		args << "--enable-drag-drop";
+	}
+
 	if ((synergyType() == synergyClient && !clientArgs(args, app))
 		|| (synergyType() == synergyServer && !serverArgs(args, app)))
 	{

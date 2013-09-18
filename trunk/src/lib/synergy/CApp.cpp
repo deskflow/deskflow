@@ -168,6 +168,14 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 		argsBase().m_crypto.setMode("cfb");
 	}
 
+	else if (isArg(i, argc, argv, NULL, "--enable-drag-drop")) {
+#ifdef WINAPI_XWINDOWS
+		std::cerr << "Option not supported on Linux: " << argv[i] << std::endl;
+		m_bye(kExitArgs);
+#endif
+		argsBase().m_enableDragDrop = true;
+	}
+
 	else {
 		// option not supported here
 		return false;

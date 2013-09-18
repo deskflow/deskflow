@@ -37,6 +37,7 @@ public:
 	bool m_disableTray;
 	bool m_enableIpc;
 	CCryptoOptions m_crypto;
+	bool m_enableDragDrop;
 #if SYSAPI_WIN32
 	bool m_debugServiceWait;
 	bool m_pauseOnExit;
