@@ -371,16 +371,17 @@ bool
 CScreen::isLockedToScreen() const
 {
 	// check for pressed mouse buttons
-	UInt32 buttonID = 0;
-	if (m_screen->isAnyMouseButtonDown(buttonID)) {
-		LOG((CLOG_DEBUG "locked by mouse buttonID: %d", buttonID));
-		if (buttonID == kButtonLeft) {
-			// TODO: fake esc key down and up
-			//m_screen->fakeMouseButton(buttonID, false);
-		}
-		
-		return (buttonID == kButtonLeft) ? false : true;
-	}
+	// HACK: commented out as it breaks new drag drop feature
+//	UInt32 buttonID = 0;
+//	if (m_screen->isAnyMouseButtonDown(buttonID)) {
+//		LOG((CLOG_DEBUG "locked by mouse buttonID: %d", buttonID));
+//		if (buttonID == kButtonLeft) {
+//			// TODO: fake esc key down and up
+//			//m_screen->fakeMouseButton(buttonID, false);
+//		}
+//		
+//		return (buttonID == kButtonLeft) ? false : true;
+//	}
 
 	// not locked
 	return false;
