@@ -633,8 +633,6 @@ COSXScreen::getDropTargetThread(void*)
 #else
 	LOG((CLOG_WARN "drag drop not supported"));
 #endif
-	
-	delete m_getDropTargetThread;
 }
 
 void
