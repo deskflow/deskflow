@@ -186,8 +186,6 @@ CScreen::screensaver(bool activate)
 void
 CScreen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 {
-	assert(!m_isPrimary || m_fakeInput);
-
 	// check for ctrl+alt+del emulation
 	if (id == kKeyDelete &&
 		(mask & (KeyModifierControl | KeyModifierAlt)) ==
@@ -211,21 +209,18 @@ CScreen::keyRepeat(KeyID id,
 void
 CScreen::keyUp(KeyID, KeyModifierMask, KeyButton button)
 {
-	assert(!m_isPrimary || m_fakeInput);
 	m_screen->fakeKeyUp(button);
 }
 
 void
 CScreen::mouseDown(ButtonID button)
 {
-	assert(!m_isPrimary);
 	m_screen->fakeMouseButton(button, true);
 }
 
 void
 CScreen::mouseUp(ButtonID button)
 {
-	assert(!m_isPrimary);
 	m_screen->fakeMouseButton(button, false);
 }
 
@@ -372,16 +367,14 @@ CScreen::isLockedToScreen() const
 {
 	// check for pressed mouse buttons
 	// HACK: commented out as it breaks new drag drop feature
-//	UInt32 buttonID = 0;
-//	if (m_screen->isAnyMouseButtonDown(buttonID)) {
-//		LOG((CLOG_DEBUG "locked by mouse buttonID: %d", buttonID));
-//		if (buttonID == kButtonLeft) {
-//			// TODO: fake esc key down and up
-//			//m_screen->fakeMouseButton(buttonID, false);
-//		}
-//		
-//		return (buttonID == kButtonLeft) ? false : true;
-//	}
+	UInt32 buttonID = 0;
+	if (m_screen->isAnyMouseButtonDown(buttonID)) {
+		if (buttonID != kButtonLeft) {
+			LOG((CLOG_DEBUG "locked by mouse buttonID: %d", buttonID));
+		}
+		
+		return (buttonID == kButtonLeft) ? false : true;
+	}
 
 	// not locked
 	return false;
