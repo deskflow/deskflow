@@ -920,19 +920,13 @@ COSXScreen::leave()
 		CString fileList(dragInfoCStr);
 		size_t size = fileList.size();
 		
-		// fake esc key down and up
-		fakeKeyDown(kKeyEscape, 8192, 1);
-		fakeKeyUp(1);
-		
-		fakeMouseButton(kButtonLeft, false);
-		
-		if (m_isPrimary) {
-			CServerApp& app = CServerApp::instance();
-			CServer* server = app.getServerPtr();
-			LOG((CLOG_DEBUG "send dragging file to client"));
-			server->sendFileToClient(dragInfoCStr);
-		}
-		else {
+		if (!m_isPrimary) {
+			// fake esc key down and up
+			fakeKeyDown(kKeyEscape, 8192, 1);
+			fakeKeyUp(1);
+			
+			fakeMouseButton(kButtonLeft, false);
+			
 			// fake ctrl key up
 			fakeKeyUp(29);
 			CClientApp& app = CClientApp::instance();

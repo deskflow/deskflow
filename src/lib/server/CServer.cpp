@@ -1741,11 +1741,6 @@ CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 	// should we switch or not?
 	if (isSwitchOkay(newScreen, dir, x, y, xc, yc)) {
 		if (m_screen->getDraggingStarted() && m_active != newScreen) {
-			// fake a escape key down and up then left mouse button up
-			m_screen->keyDown(kKeyEscape, 8192, 1);
-			m_screen->keyUp(kKeyEscape, 8192, 1);
-			m_screen->mouseUp(kButtonLeft);
-
 			CString& dragFileList = m_screen->getDraggingFileDir();
 			size_t size = dragFileList.size() + 1;
 			char* fileList = new char[size];
@@ -1753,6 +1748,11 @@ CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 			fileList[size - 1] = '\0';
 			UInt32 fileCount = 1;
 
+			// fake a escape key down and up then left mouse button up
+			m_screen->keyDown(kKeyEscape, 8192, 1);
+			m_screen->keyUp(kKeyEscape, 8192, 1);
+			m_screen->mouseUp(kButtonLeft);
+			
 			LOG((CLOG_DEBUG2 "sending drag information to client"));
 			LOG((CLOG_DEBUG3 "dragging file list: %s", fileList));
 			LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
