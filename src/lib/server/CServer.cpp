@@ -75,7 +75,8 @@ CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen
 	m_keyboardBroadcasting(false),
 	m_lockedToScreen(false),
 	m_screen(screen),
-	m_sendFileThread(NULL)
+	m_sendFileThread(NULL),
+	m_writeToDropDir(NULL)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
@@ -1957,27 +1958,42 @@ void
 CServer::onFileRecieveCompleted()
 {
 	if (isReceivedFileSizeValid()) {
-		m_fileTransferDes = m_screen->getDropTarget();
-		if (!m_fileTransferDes.empty() && m_dragFileList.size() > 0) {
-			std::fstream file;
-			CString dropTarget = m_fileTransferDes;
-#ifdef SYSAPI_WIN32
-			dropTarget.append("\\");
-#else
-			dropTarget.append("/");
-#endif
-			dropTarget.append(m_dragFileList.at(0));
-			file.open(dropTarget.c_str(), std::ios::out | std::ios::binary);
-			if (!file.is_open()) {
-				// TODO: file open failed
-			}
+		m_writeToDropDir = new CThread(
+									   new TMethodJob<CServer>(
+															   this, &CServer::writeToDropDirThread));
+	}
+}
 
-			file.write(m_receivedFileData.c_str(), m_receivedFileData.size());
-			file.close();
+void
+CServer::writeToDropDirThread(void*)
+{
+	while (m_screen->getFakeDraggingStarted()) {
+		LOG((CLOG_DEBUG "write to drop dir: fakeDraggingStarted = true"));
+		ARCH->sleep(.1f);
+	}
+	
+	LOG((CLOG_DEBUG "write to drop dir: fakeDraggingStarted = false"));
+	
+	m_fileTransferDes = m_screen->getDropTarget();
+	if (!m_fileTransferDes.empty() && m_dragFileList.size() > 0) {
+		std::fstream file;
+		CString dropTarget = m_fileTransferDes;
+#ifdef SYSAPI_WIN32
+		dropTarget.append("\\");
+#else
+		dropTarget.append("/");
+#endif
+		dropTarget.append(m_dragFileList.at(0));
+		file.open(dropTarget.c_str(), std::ios::out | std::ios::binary);
+		if (!file.is_open()) {
+			// TODO: file open failed
 		}
-		else {
-			LOG((CLOG_ERR "drop file failed: drop target is empty"));
-		}
+		
+		file.write(m_receivedFileData.c_str(), m_receivedFileData.size());
+		file.close();
+	}
+	else {
+		LOG((CLOG_ERR "drop file failed: drop target is empty"));
 	}
 }
 
@@ -2309,8 +2325,20 @@ CServer::dragInfoReceived(UInt32 fileNum, CString content)
 	LOG((CLOG_DEBUG "total drag file number: %i", m_dragFileList.size()));
 	
 	for(int i = 0; i < m_dragFileList.size(); ++i) {
-		LOG((CLOG_DEBUG2 "dragging file %i name: %s", i + 1, m_dragFileList.at(i).c_str()));
+		LOG((CLOG_DEBUG "dragging file %i name: %s", i + 1, m_dragFileList.at(i).c_str()));
 	}
+	
+	if (m_dragFileList.size() == 1) {
+		m_dragFileExt = CDragInformation::getDragFileExtension(m_dragFileList.at(0));
+	}
+	else if (m_dragFileList.size() > 1) {
+		m_dragFileExt.clear();
+	}
+	else {
+		return;
+	}
+	
+	m_screen->startDraggingFiles(m_dragFileExt);
 }
 
 void

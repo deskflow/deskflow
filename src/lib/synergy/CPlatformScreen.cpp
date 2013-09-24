@@ -20,7 +20,8 @@
 
 CPlatformScreen::CPlatformScreen(IEventQueue* events) :
 	IPlatformScreen(events),
-	m_draggingStarted(false)
+	m_draggingStarted(false),
+	m_fakeDraggingStarted(false)
 {
 }
 

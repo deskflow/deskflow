@@ -362,6 +362,9 @@ private:
 	
 	// thread funciton for sending file
 	void				sendFileThread(void*);
+	
+	// thread function for writing file to drop directory
+	void				writeToDropDirThread(void*);
 
 public:
 	bool				m_mock;
@@ -466,6 +469,8 @@ private:
 	CString				m_fileTransferDes;
 	CDragFileList		m_dragFileList;
 	CThread*			m_sendFileThread;
+	CThread*			m_writeToDropDir;
+	CString				m_dragFileExt;
 };
 
 #endif

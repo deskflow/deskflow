@@ -79,6 +79,7 @@ public:
 
 	virtual void		setDraggingStarted(bool started) { m_draggingStarted = started; }
 	virtual bool		getDraggingStarted() { return m_draggingStarted; }
+	virtual bool		getFakeDraggingStarted() { return m_fakeDraggingStarted; }
 	virtual CString&	getDraggingFileDir() { return m_draggingFileDir; }
 
 	// IPlatformScreen overrides
@@ -121,6 +122,7 @@ protected:
 protected:
 	CString				m_draggingFileDir;
 	bool				m_draggingStarted;
+	bool				m_fakeDraggingStarted;
 };
 
 #endif
