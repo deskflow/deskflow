@@ -415,6 +415,12 @@ CScreen::getDraggingStarted() const
 	return m_screen->getDraggingStarted();
 }
 
+bool
+CScreen::getFakeDraggingStarted() const
+{
+	return m_screen->getFakeDraggingStarted();
+}
+
 void
 CScreen::setDraggingStarted(bool started)
 {

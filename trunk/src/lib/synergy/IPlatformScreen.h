@@ -190,6 +190,7 @@ public:
 
 	virtual CString&	getDraggingFileDir() = 0;
 	virtual bool		getDraggingStarted() = 0;
+	virtual bool		getFakeDraggingStarted() = 0;
 
 	virtual void		fakeDraggingFiles(CString str) = 0;
 	virtual const CString&

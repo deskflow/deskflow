@@ -37,7 +37,7 @@ runCocoaApp()
     g_app = app;
 	
     NSWindow* window = [[NSWindow alloc]
-						initWithContentRect: NSMakeRect(0, 0, 100, 4)
+						initWithContentRect: NSMakeRect(0, 0, 3, 3)
 						styleMask: NSBorderlessWindowMask
 						backing: NSBackingStoreBuffered
 						defer: NO];
@@ -45,7 +45,7 @@ runCocoaApp()
 	[window setAlphaValue:0.1];
 	[window makeKeyAndOrderFront:nil];
 	
-	COSXDragView* dragView = [[COSXDragView alloc] initWithFrame:NSMakeRect(0, 0, 100, 4)];
+	COSXDragView* dragView = [[COSXDragView alloc] initWithFrame:NSMakeRect(0, 0, 3, 3)];
 	
 	g_dragWindow = window;
 	g_dragView = dragView;
@@ -74,24 +74,10 @@ fakeDragging(const char* str, int length, int cursorX, int cursorY)
 		
 	int newPosX = 0;
 	int newPosY = 0;
-	if (cursorX == 0) {
-		newPosX = cursorX - 99;
-	}
-	else if (cursorX == screen.size.width - 1) {
-		newPosX = cursorX - 1;
-	}
-	newPosY = screen.size.height - cursorY - 2;
+	newPosX = cursorX - 1;
+	newPosY = screen.size.height - cursorY - 1;
 	
-	if (cursorY == 0) {
-		newPosY = screen.size.height - 1;
-		newPosX = cursorX - 50;
-	}
-	else if (cursorY == screen.size.height - 1) {
-		newPosY = 1;
-		newPosX = cursorX - 50;
-	}
-	
-	NSRect rect = NSMakeRect(newPosX, newPosY, 100, 4);
+	NSRect rect = NSMakeRect(newPosX, newPosY, 3, 3);
 	NSLog ( @"newPosX: %d", newPosX);
 	NSLog ( @"newPosY: %d", newPosY);
 		

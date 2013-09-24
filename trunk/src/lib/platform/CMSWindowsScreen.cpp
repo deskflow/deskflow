@@ -38,6 +38,8 @@
 #include "CArchMiscWindows.h"
 #include "CApp.h"
 #include "CArgsBase.h"
+#include "CClientApp.h"
+#include "CClient.h"
 #include <string.h>
 #include <pbt.h>
 #include <Shlobj.h>
@@ -126,8 +128,9 @@ CMSWindowsScreen::CMSWindowsScreen(
 	try {
 		if (m_isPrimary && !m_noHooks) {
 			m_hookLibrary = openHookLibrary("synwinhk");
-			m_shellLibrary = openShellLibrary("synwinxt");
 		}
+		m_shellLibrary = openShellLibrary("synwinxt");
+
 		m_screensaver = new CMSWindowsScreenSaver();
 		m_desks       = new CMSWindowsDesks(
 							m_isPrimary, m_noHooks,
@@ -359,6 +362,26 @@ CMSWindowsScreen::leave()
 	forceShowCursor();
 
 	if (m_draggingStarted) {
+		CString& draggingDir = getDraggingFileDir();
+		LOG((CLOG_DEBUG "get dragging file dir: %s", draggingDir.c_str()));
+		size_t size = draggingDir.size();
+
+		if (!m_isPrimary) {
+			// TODO: fake these keys properly
+			fakeKeyDown(kKeyEscape, 8192, 1);
+			fakeKeyUp(1);
+
+			fakeMouseButton(kButtonLeft, false);
+
+			CClientApp& app = CClientApp::instance();
+			CClient* client = app.getClientPtr();
+			UInt32 fileCount = 1;
+			LOG((CLOG_DEBUG "send dragging info to server: %s", draggingDir.c_str()));
+			client->draggingInfoSending(fileCount, draggingDir, size);
+			LOG((CLOG_DEBUG "send dragging file to server"));
+			client->sendFileToServer(draggingDir.c_str());
+		}
+
 		m_draggingStarted = false;
 	}
 	
@@ -708,12 +731,26 @@ void
 CMSWindowsScreen::fakeMouseButton(ButtonID id, bool press)
 {
 	m_desks->fakeMouseButton(id, press);
+
+	if (id == kButtonLeft) {
+		if (press) {
+			m_buttons[kButtonLeft] = true;
+		}
+		else {
+			m_buttons[kButtonLeft] = false;
+			m_fakeDraggingStarted = false;
+			m_draggingStarted = false;
+		}
+	}
 }
 
 void
 CMSWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y)
 {
 	m_desks->fakeMouseMove(x, y);
+	if (m_buttons[kButtonLeft]) {
+		m_draggingStarted = true;
+	}
 }
 
 void

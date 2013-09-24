@@ -102,7 +102,6 @@ COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCur
 	m_eventTapRLSR(nullptr),
 	m_eventTapPort(nullptr),
 	m_pmRootPort(0),
-	m_fakeDraggingStarted(false),
 	m_getDropTargetThread(NULL)
 {
 	try {
@@ -601,7 +600,6 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press)
 				this, &COSXScreen::getDropTargetThread));
 		}
 		
-		m_fakeDraggingStarted = false;
 		m_draggingStarted = false;
 	}
 }
@@ -637,6 +635,7 @@ COSXScreen::getDropTargetThread(void*)
 #else
 	LOG((CLOG_WARN "drag drop not supported"));
 #endif
+	m_fakeDraggingStarted = false;
 }
 
 void
@@ -743,15 +742,6 @@ COSXScreen::showCursor()
 	}
 
 	m_cursorHidden = false;
-	
-	if (m_fakeDraggingStarted) {
-#if defined(MAC_OS_X_VERSION_10_7)
-		// TODO: use real file extension
-		fakeDragging("txt", 3, m_xCursor, m_yCursor);
-#else
-		LOG((CLOG_WARN "drag drop not supported"));
-#endif
-	}
 }
 
 void
@@ -1234,6 +1224,11 @@ COSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 			LOG((CLOG_DEBUG2 "dragging file directory is cleared"));
 		}
 		else {
+			if (m_fakeDraggingStarted) {
+				m_getDropTargetThread = new CThread(new TMethodJob<COSXScreen>(
+																			   this, &COSXScreen::getDropTargetThread));
+			}
+			
 			m_draggingStarted = false;
 		}
 	}
@@ -2093,6 +2088,12 @@ void
 COSXScreen::fakeDraggingFiles(CString str)
 {
 	m_fakeDraggingStarted = true;
+#if defined(MAC_OS_X_VERSION_10_7)
+	// TODO: use real file extension
+	fakeDragging("txt", 3, m_xCursor, m_yCursor);
+#else
+	LOG((CLOG_WARN "drag drop not supported"));
+#endif
 }
 
 CString&

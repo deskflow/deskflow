@@ -123,6 +123,7 @@ endif()
 
 include_directories(${inc})
 add_library(platform STATIC ${src})
+target_link_libraries(platform client ${libs})
 
 if (UNIX)
 	target_link_libraries(platform io net ipc synergy server client ${libs})

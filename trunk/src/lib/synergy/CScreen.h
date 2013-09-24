@@ -273,9 +273,13 @@ public:
 	*/
 	KeyModifierMask		pollActiveModifiers() const;
 
-	//! Check if dragging has started.
+	//! Check if a local dragging has started.
 
 	bool				getDraggingStarted() const;
+	
+	//! Check if a fake dragging has started.
+	
+	bool				getFakeDraggingStarted() const;
 
 	//! Get dragging file's directory.
 

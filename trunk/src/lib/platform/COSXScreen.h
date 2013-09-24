@@ -345,7 +345,6 @@ private:
 
 	IEventQueue*			m_events;
 	
-	bool					m_fakeDraggingStarted;
 	CThread*				m_getDropTargetThread;
 	CString					m_dropTarget;
 };
