@@ -93,6 +93,8 @@ fakeDragging(const char* str, int length, int cursorX, int cursorY)
 CFStringRef
 getCocoaDropTarget()
 {
+	// HACK: sleep, wait for cocoa drop target updated first
+	usleep(1000000);
 	return [g_dragView getDropTarget];
 }
 
