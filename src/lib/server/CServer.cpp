@@ -1968,7 +1968,6 @@ void
 CServer::writeToDropDirThread(void*)
 {
 	while (m_screen->getFakeDraggingStarted()) {
-		LOG((CLOG_DEBUG "write to drop dir: fakeDraggingStarted = true"));
 		ARCH->sleep(.1f);
 	}
 
