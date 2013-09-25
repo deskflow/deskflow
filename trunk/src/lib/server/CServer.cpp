@@ -76,7 +76,8 @@ CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen
 	m_lockedToScreen(false),
 	m_screen(screen),
 	m_sendFileThread(NULL),
-	m_writeToDropDirThread(NULL)
+	m_writeToDropDirThread(NULL),
+	m_ignoreFileTransfer(false)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
@@ -1660,6 +1661,11 @@ CServer::onMouseUp(ButtonID id)
 	// relay
 	m_active->mouseUp(id);
 
+	if (m_ignoreFileTransfer) {
+		m_ignoreFileTransfer = false;
+		return;
+	}
+	
 	if (!m_screen->isOnScreen()) {
 		CString& dir = m_screen->getDraggingFileDir();
 		if (!dir.empty()) {
@@ -1753,6 +1759,15 @@ CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 			m_screen->keyDown(kKeyEscape, 8192, 1);
 			m_screen->keyUp(kKeyEscape, 8192, 1);
 			m_screen->mouseUp(kButtonLeft);
+			
+#if defined(__APPLE__)
+			
+			// on mac it seems that after faking a LMB up, system would signal back
+			// to synergy a mouse up event, which doesn't happen on windows. as a
+			// result, synergy would send dragging file to client twice. This variable
+			// is used to ignore the first file sending.
+			m_ignoreFileTransfer = true;
+#endif
 			
 			LOG((CLOG_DEBUG2 "sending drag information to client"));
 			LOG((CLOG_DEBUG3 "dragging file list: %s", fileList));
