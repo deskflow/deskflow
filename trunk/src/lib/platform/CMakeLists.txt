@@ -126,7 +126,7 @@ add_library(platform STATIC ${src})
 target_link_libraries(platform client ${libs})
 
 if (UNIX)
-	target_link_libraries(platform io net ipc synergy server client ${libs})
+	target_link_libraries(platform io net ipc synergy client ${libs})
 endif()
 
 if (APPLE)

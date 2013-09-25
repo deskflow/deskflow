@@ -35,9 +35,7 @@
 #include "COSXDragSimulator.h"
 #include "COSXPasteboardPeeker.h"
 #include "CClientApp.h"
-#include "CServerApp.h"
 #include "CClient.h"
-#include "CServer.h"
 
 #include <math.h>
 

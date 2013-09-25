@@ -1971,9 +1971,7 @@ CServer::writeToDropDirThread(void*)
 		LOG((CLOG_DEBUG "write to drop dir: fakeDraggingStarted = true"));
 		ARCH->sleep(.1f);
 	}
-	
-	LOG((CLOG_DEBUG "write to drop dir: fakeDraggingStarted = false"));
-	
+
 	m_fileTransferDes = m_screen->getDropTarget();
 	if (!m_fileTransferDes.empty() && m_dragFileList.size() > 0) {
 		std::fstream file;
