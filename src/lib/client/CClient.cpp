@@ -68,7 +68,8 @@ CClient::CClient(IEventQueue* events,
 	m_events(events),
 	m_cryptoStream(NULL),
 	m_crypto(crypto),
-	m_sendFileThread(NULL)
+	m_sendFileThread(NULL),
+	m_writeToDropDirThread(NULL)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -722,26 +723,40 @@ void
 CClient::onFileRecieveCompleted()
 {
 	if (isReceivedFileSizeValid()) {
-		m_fileTransferDes = m_screen->getDropTarget();
-		if (!m_fileTransferDes.empty()) {
-			std::fstream file;
-#ifdef SYSAPI_WIN32
-			m_fileTransferDes.append("\\");
-#else
-			m_fileTransferDes.append("/");
-#endif
-			m_fileTransferDes.append(m_dragFileList.at(0));
-			file.open(m_fileTransferDes.c_str(), std::ios::out | std::ios::binary);
-			if (!file.is_open()) {
-				// TODO: file open failed
-			}
+		m_writeToDropDirThread = new CThread(
+									   new TMethodJob<CClient>(
+															   this, &CClient::writeToDropDirThread));
+	}
+}
 
-			file.write(m_receivedFileData.c_str(), m_receivedFileData.size());
-			file.close();
+
+void
+CClient::writeToDropDirThread(void*)
+{
+	while (m_screen->getFakeDraggingStarted()) {
+		ARCH->sleep(.1f);
+	}
+	
+	m_fileTransferDes = m_screen->getDropTarget();
+	if (!m_fileTransferDes.empty() && m_dragFileList.size() > 0) {
+		std::fstream file;
+		CString dropTarget = m_fileTransferDes;
+#ifdef SYSAPI_WIN32
+		dropTarget.append("\\");
+#else
+		dropTarget.append("/");
+#endif
+		dropTarget.append(m_dragFileList.at(0));
+		file.open(dropTarget.c_str(), std::ios::out | std::ios::binary);
+		if (!file.is_open()) {
+			// TODO: file open failed
 		}
-		else {
-			LOG((CLOG_ERR "drop file failed: drop target is empty"));
-		}
+		
+		file.write(m_receivedFileData.c_str(), m_receivedFileData.size());
+		file.close();
+	}
+	else {
+		LOG((CLOG_ERR "drop file failed: drop target is empty"));
 	}
 }
 

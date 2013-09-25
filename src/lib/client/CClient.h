@@ -182,6 +182,7 @@ private:
 	void				sendConnectionFailedEvent(const char* msg);
 	void				sendFileChunk(const void* data);
 	void				sendFileThread(void*);
+	void				writeToDropDirThread(void*);
 	void				setupConnecting();
 	void				setupConnection();
 	void				setupScreen();
@@ -234,6 +235,7 @@ private:
 	CDragFileList			m_dragFileList;
 	CString					m_dragFileExt;
 	CThread*				m_sendFileThread;
+	CThread*				m_writeToDropDirThread;
 };
 
 #endif
