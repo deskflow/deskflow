@@ -31,7 +31,9 @@ class CEventQueueTimer { };
 //
 
 COSXEventQueueBuffer::COSXEventQueueBuffer(IEventQueue* events) :
-	m_eventQueue(events), m_event(NULL)
+	m_eventQueue(events),
+	m_event(NULL),
+	m_threadEventQueueRef(NULL)
 {
 	// do nothing
 }
@@ -98,7 +100,7 @@ COSXEventQueueBuffer::addEvent(UInt32 dataID)
 							kEventAttributeNone,
 							&event);
 
-	if (error == noErr) {
+	if (error == noErr & m_threadEventQueueRef != NULL) {
 		error = PostEventToQueue(m_threadEventQueueRef, event,
 							kEventPriorityStandard);
 		ReleaseEvent(event);
