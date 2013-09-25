@@ -317,6 +317,7 @@ COSXScreen::isAnyMouseButtonDown(UInt32& buttonID) const
 {
 	if (m_buttonState.test(0)) {
 		buttonID = kButtonLeft;
+		return true;
 	}
 
 	return (GetCurrentButtonState() != 0);
@@ -900,7 +901,7 @@ COSXScreen::leave()
 {
     hideCursor();
     
-	if (m_draggingStarted) {
+	if (getDraggingStarted()) {
 		CFStringRef dragInfo = getDraggedFileURL();
 		char* dragInfoCStr = CFStringRefToUTF8String(dragInfo);
 		LOG((CLOG_DEBUG "drag info: %s", dragInfoCStr));

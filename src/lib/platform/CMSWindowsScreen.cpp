@@ -361,7 +361,7 @@ CMSWindowsScreen::leave()
 	m_isOnScreen = false;
 	forceShowCursor();
 
-	if (m_draggingStarted) {
+	if (getDraggingStarted()) {
 		CString& draggingDir = getDraggingFileDir();
 		LOG((CLOG_DEBUG "get dragging file dir: %s", draggingDir.c_str()));
 		size_t size = draggingDir.size();
@@ -1322,14 +1322,14 @@ CMSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 	if (button >= kButtonLeft && button <= kButtonExtra0 + 1) {
 		if (pressed) {
 			m_buttons[button] = true;
-			if (CApp::instance().argsBase().m_enableDragDrop && button == kButtonLeft) {
+			if (button == kButtonLeft) {
 				m_draggingFileDir.clear();
 				LOG((CLOG_DEBUG2 "dragging file directory is cleared"));
 			}
 		}
 		else {
 			m_buttons[button] = false;
-			if (CApp::instance().argsBase().m_enableDragDrop && m_draggingStarted && button == kButtonLeft) {
+			if (m_draggingStarted && button == kButtonLeft) {
 				m_draggingStarted = false;
 			}
 		}

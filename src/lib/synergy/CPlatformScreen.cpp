@@ -17,6 +17,8 @@
  */
 
 #include "CPlatformScreen.h"
+#include "CApp.h"
+#include "CArgsBase.h"
 
 CPlatformScreen::CPlatformScreen(IEventQueue* events) :
 	IPlatformScreen(events),
@@ -109,4 +111,13 @@ void
 CPlatformScreen::pollPressedKeys(KeyButtonSet& pressedKeys) const
 {
 	getKeyState()->pollPressedKeys(pressedKeys);
+}
+
+bool
+CPlatformScreen::getDraggingStarted()
+{
+	if (CApp::instance().argsBase().m_enableDragDrop) {
+		return m_draggingStarted;
+	}
+	return false;
 }

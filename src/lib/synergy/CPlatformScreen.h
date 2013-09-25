@@ -78,7 +78,7 @@ public:
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
 	virtual void		setDraggingStarted(bool started) { m_draggingStarted = started; }
-	virtual bool		getDraggingStarted() { return m_draggingStarted; }
+	virtual bool		getDraggingStarted();
 	virtual bool		getFakeDraggingStarted() { return m_fakeDraggingStarted; }
 	virtual CString&	getDraggingFileDir() { return m_draggingFileDir; }
 
