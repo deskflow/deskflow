@@ -469,7 +469,7 @@ private:
 	CString				m_fileTransferDes;
 	CDragFileList		m_dragFileList;
 	CThread*			m_sendFileThread;
-	CThread*			m_writeToDropDir;
+	CThread*			m_writeToDropDirThread;
 	CString				m_dragFileExt;
 };
 

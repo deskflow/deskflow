@@ -76,7 +76,7 @@ CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen
 	m_lockedToScreen(false),
 	m_screen(screen),
 	m_sendFileThread(NULL),
-	m_writeToDropDir(NULL)
+	m_writeToDropDirThread(NULL)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
@@ -1958,7 +1958,7 @@ void
 CServer::onFileRecieveCompleted()
 {
 	if (isReceivedFileSizeValid()) {
-		m_writeToDropDir = new CThread(
+		m_writeToDropDirThread = new CThread(
 									   new TMethodJob<CServer>(
 															   this, &CServer::writeToDropDirThread));
 	}

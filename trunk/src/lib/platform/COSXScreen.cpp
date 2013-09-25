@@ -640,19 +640,17 @@ COSXScreen::getDropTargetThread(void*)
 void
 COSXScreen::fakeMouseMove(SInt32 x, SInt32 y)
 {
-	if (CApp::instance().argsBase().m_enableDragDrop) {
-		if (m_fakeDraggingStarted) {
-			// HACK: for some reason the drag icon
-			// does not follow the cursor unless a key
-			// is pressed (except esc key)
-			// TODO: fake this key down properly
-			fakeKeyDown(kKeyControl_L, 8194, 29);
-		}
+	if (m_fakeDraggingStarted) {
+		// HACK: for some reason the drag icon
+		// does not follow the cursor unless a key
+		// is pressed (except esc key)
+		// TODO: fake this key down properly
+		fakeKeyDown(kKeyControl_L, 8194, 29);
+	}
 	
-		// index 0 means left mouse button
-		if (m_buttonState.test(0)) {
-			m_draggingStarted = true;
-		}
+	// index 0 means left mouse button
+	if (m_buttonState.test(0)) {
+		m_draggingStarted = true;
 	}
 	
 	// synthesize event
@@ -2086,13 +2084,15 @@ COSXScreen::CFStringRefToUTF8String(CFStringRef aString)
 void
 COSXScreen::fakeDraggingFiles(CString str)
 {
-	m_fakeDraggingStarted = true;
+	if (CApp::instance().argsBase().m_enableDragDrop) {
+		m_fakeDraggingStarted = true;
 #if defined(MAC_OS_X_VERSION_10_7)
-	// TODO: use real file extension
-	fakeDragging("txt", 3, m_xCursor, m_yCursor);
+		// TODO: use real file extension
+		fakeDragging("txt", 3, m_xCursor, m_yCursor);
 #else
-	LOG((CLOG_WARN "drag drop not supported"));
+		LOG((CLOG_WARN "drag drop not supported"));
 #endif
+	}
 }
 
 CString&
