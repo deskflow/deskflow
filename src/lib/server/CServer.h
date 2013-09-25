@@ -471,6 +471,7 @@ private:
 	CThread*			m_sendFileThread;
 	CThread*			m_writeToDropDirThread;
 	CString				m_dragFileExt;
+	bool				m_ignoreFileTransfer;
 };
 
 #endif
