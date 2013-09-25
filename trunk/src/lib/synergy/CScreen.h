@@ -225,6 +225,7 @@ public:
 	//! Fake a files dragging operation
 	void				startDraggingFiles(CString str);
 
+	void				setEnableDragDrop(bool enabled);
 	//@}
 	//! @name accessors
 	//@{
@@ -335,6 +336,7 @@ private:
 	IEventQueue*		m_events;
 
 	bool				m_mock;
+	bool				m_enableDragDrop;
 };
 
 #endif

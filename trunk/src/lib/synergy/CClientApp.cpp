@@ -302,6 +302,7 @@ CScreen*
 CClientApp::openClientScreen()
 {
 	CScreen* screen = createScreen();
+	screen->setEnableDragDrop(argsBase().m_enableDragDrop);
 	m_events->adoptHandler(m_events->forIScreen().error(),
 		screen->getEventTarget(),
 		new TMethodEventJob<CClientApp>(

@@ -36,7 +36,8 @@ CScreen::CScreen(IPlatformScreen* platformScreen, IEventQueue* events) :
 	m_entered(m_isPrimary),
 	m_screenSaverSync(true),
 	m_fakeInput(false),
-	m_mock(false)
+	m_mock(false),
+	m_enableDragDrop(false)
 {
 	assert(m_screen != NULL);
 
@@ -368,12 +369,18 @@ CScreen::isLockedToScreen() const
 	// check for pressed mouse buttons
 	// HACK: commented out as it breaks new drag drop feature
 	UInt32 buttonID = 0;
+
 	if (m_screen->isAnyMouseButtonDown(buttonID)) {
 		if (buttonID != kButtonLeft) {
 			LOG((CLOG_DEBUG "locked by mouse buttonID: %d", buttonID));
 		}
 		
-		return (buttonID == kButtonLeft) ? false : true;
+		if (m_enableDragDrop) {
+			return (buttonID == kButtonLeft) ? false : true;
+		}
+		else {
+			return true;
+		}
 	}
 
 	// not locked
@@ -431,6 +438,12 @@ void
 CScreen::startDraggingFiles(CString str)
 {
 	m_screen->fakeDraggingFiles(str);
+}
+
+void
+CScreen::setEnableDragDrop(bool enabled)
+{
+	m_enableDragDrop = enabled;
 }
 
 CString&
