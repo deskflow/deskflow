@@ -1750,10 +1750,13 @@ CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 		if (m_screen->getDraggingStarted() && m_active != newScreen) {
 			CString& dragFileList = m_screen->getDraggingFileDir();
 			size_t size = dragFileList.size() + 1;
-			char* fileList = new char[size];
-			memcpy(fileList, dragFileList.c_str(), size);
-			fileList[size - 1] = '\0';
+			char* fileList = NULL;
 			UInt32 fileCount = 1;
+			if (dragFileList.empty() == false) {
+				fileList = new char[size];
+				memcpy(fileList, dragFileList.c_str(), size);
+				fileList[size - 1] = '\0';
+			}
 
 			// fake a escape key down and up then left mouse button up
 			m_screen->keyDown(kKeyEscape, 8192, 1);
@@ -1769,11 +1772,12 @@ CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 			m_ignoreFileTransfer = true;
 #endif
 			
-			LOG((CLOG_DEBUG2 "sending drag information to client"));
-			LOG((CLOG_DEBUG3 "dragging file list: %s", fileList));
-			LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
-			newScreen->draggingInfoSending(fileCount, fileList, size);
-			//m_screen->setDraggingStarted(false);
+			if (dragFileList.empty() == false) {
+				LOG((CLOG_DEBUG2 "sending drag information to client"));
+				LOG((CLOG_DEBUG3 "dragging file list: %s", fileList));
+				LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
+				newScreen->draggingInfoSending(fileCount, fileList, size);
+			}
 		}
 
 		// switch screen

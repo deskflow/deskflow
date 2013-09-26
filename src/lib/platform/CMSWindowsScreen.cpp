@@ -363,7 +363,6 @@ CMSWindowsScreen::leave()
 
 	if (getDraggingStarted()) {
 		CString& draggingDir = getDraggingFileDir();
-		LOG((CLOG_DEBUG "get dragging file dir: %s", draggingDir.c_str()));
 		size_t size = draggingDir.size();
 
 		if (!m_isPrimary) {
@@ -373,13 +372,15 @@ CMSWindowsScreen::leave()
 
 			fakeMouseButton(kButtonLeft, false);
 
-			CClientApp& app = CClientApp::instance();
-			CClient* client = app.getClientPtr();
-			UInt32 fileCount = 1;
-			LOG((CLOG_DEBUG "send dragging info to server: %s", draggingDir.c_str()));
-			client->draggingInfoSending(fileCount, draggingDir, size);
-			LOG((CLOG_DEBUG "send dragging file to server"));
-			client->sendFileToServer(draggingDir.c_str());
+			if (draggingDir.empty() == false) {
+				CClientApp& app = CClientApp::instance();
+				CClient* client = app.getClientPtr();
+				UInt32 fileCount = 1;
+				LOG((CLOG_DEBUG "send dragging info to server: %s", draggingDir.c_str()));
+				client->draggingInfoSending(fileCount, draggingDir, size);
+				LOG((CLOG_DEBUG "send dragging file to server"));
+				client->sendFileToServer(draggingDir.c_str());
+			}
 		}
 
 		m_draggingStarted = false;
