@@ -900,11 +900,7 @@ COSXScreen::leave()
     hideCursor();
     
 	if (getDraggingStarted()) {
-		CFStringRef dragInfo = getDraggedFileURL();
-		char* dragInfoCStr = CFStringRefToUTF8String(dragInfo);
-		LOG((CLOG_DEBUG "drag info: %s", dragInfoCStr));
-		CFRelease(dragInfo);
-		CString fileList(dragInfoCStr);
+		CString& fileList = getDraggingFileDir();
 		size_t size = fileList.size();
 		
 		if (!m_isPrimary) {
@@ -916,12 +912,15 @@ COSXScreen::leave()
 			
 			// fake ctrl key up
 			fakeKeyUp(29);
-			CClientApp& app = CClientApp::instance();
-			CClient* client = app.getClientPtr();
-			UInt32 fileCount = 1;
-			client->draggingInfoSending(fileCount, fileList, size);
-			LOG((CLOG_DEBUG "send dragging file to server"));
-			client->sendFileToServer(dragInfoCStr);
+			
+			if (fileList.empty() == false) {
+				CClientApp& app = CClientApp::instance();
+				CClient* client = app.getClientPtr();
+				UInt32 fileCount = 1;
+				client->draggingInfoSending(fileCount, fileList, size);
+				LOG((CLOG_DEBUG "send dragging file to server"));
+				client->sendFileToServer(fileList.c_str());
+			}
 		}
 		m_draggingStarted = false;
 	}
@@ -2100,11 +2099,17 @@ COSXScreen::getDraggingFileDir()
 {
 	if (m_draggingStarted) {
 		CFStringRef dragInfo = getDraggedFileURL();
-		char* info = CFStringRefToUTF8String(dragInfo);
-		LOG((CLOG_DEBUG "drag info: %s", info));
-		CFRelease(dragInfo);
-		CString fileList(info);
-		m_draggingFileDir = fileList;
+		char* info = NULL;
+		info = CFStringRefToUTF8String(dragInfo);
+		if (info == NULL) {
+			m_draggingFileDir.clear();
+		}
+		else {
+			LOG((CLOG_DEBUG "drag info: %s", info));
+			CFRelease(dragInfo);
+			CString fileList(info);
+			m_draggingFileDir = fileList;
+		}
 	}
 	return m_draggingFileDir;
 }
