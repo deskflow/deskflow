@@ -485,6 +485,9 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 		return false;
 	}
 
+	// wrap in quotes so a malicious user can't start \Program.exe as admin.
+	app = QString("\"%1\"").arg(app);
+
 	if (m_pLineEditHostname->text().isEmpty())
 	{
 		show();
@@ -559,6 +562,9 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 							 tr("The executable for the synergy server does not exist."));
 		return false;
 	}
+
+	// wrap in quotes so a malicious user can't start \Program.exe as admin.
+	app = QString("\"%1\"").arg(app);
 
 	if (appConfig().logToFile())
 	{

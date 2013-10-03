@@ -817,7 +817,21 @@ CArchDaemonWindows::installDaemon()
 	// install default daemon if not already installed.
 	if (!isDaemonInstalled(DEFAULT_DAEMON_NAME, true)) {
 		char path[MAX_PATH];
-		GetModuleFileName(CArchMiscWindows::instanceWin32(), path, MAX_PATH);
+		GetModuleFileName(CArchMiscWindows::instanceWin32(), &path[1], MAX_PATH - 2);
+		
+		int length = 0;
+		for (int i = 0; i < MAX_PATH; i++) {
+			if (path[i] == '\0') {
+				length = i;
+				break;
+			}
+		}
+		
+		// wrap in quotes so a malicious user can't start \Program.exe as admin.
+		path[0] = '"';
+		path[length] = '"';
+		path[length + 1] = '\0';
+
 		installDaemon(DEFAULT_DAEMON_NAME, DEFAULT_DAEMON_INFO, path, "", "", true);
 	}
 
