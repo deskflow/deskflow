@@ -1,0 +1,17 @@
+See: http://synergy-foss.org/pm/projects/synergy/wiki/Readme
+
+Announcement | 2009-08-04
+=========================
+We have recently switched to CMake, to replace Automake.
+Plese read the Compiling wiki page for help with CMake:
+http://synergy-foss.org/pm/projects/synergy/wiki/Compiling
+
+Linux/Mac
+---------
+Instead of using the traditional GNU style `./configure; make`
+commands, you will now need to use CMake.
+
+Windows
+-------
+Instead of using the VS2005 and VS2008 directories, you now need
+to generate the Visual Studio project files using CMake.
