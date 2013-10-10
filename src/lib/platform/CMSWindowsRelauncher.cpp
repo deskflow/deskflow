@@ -31,10 +31,8 @@
 #include "CIpcMessage.h"
 #include "Ipc.h"
 
-#include <Tlhelp32.h>
 #include <UserEnv.h>
 #include <sstream>
-#include <Wtsapi32.h>
 #include <Shellapi.h>
 
 enum {
@@ -85,110 +83,6 @@ CMSWindowsRelauncher::stop()
 	delete m_outputThread;
 }
 
-// this still gets the physical session (the one the keyboard and 
-// mouse is connected to), sometimes this returns -1 but not sure why
-DWORD 
-CMSWindowsRelauncher::getSessionId()
-{
-	return WTSGetActiveConsoleSessionId();
-}
-
-BOOL
-CMSWindowsRelauncher::isProcessInSession(const char* name, DWORD sessionId, PHANDLE process = NULL)
-{
-	// first we need to take a snapshot of the running processes
-	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-	if (snapshot == INVALID_HANDLE_VALUE) {
-		LOG((CLOG_ERR "could not get process snapshot (error: %i)", 
-			GetLastError()));
-		return 0;
-	}
-
-	PROCESSENTRY32 entry;
-	entry.dwSize = sizeof(PROCESSENTRY32);
-
-	// get the first process, and if we can't do that then it's 
-	// unlikely we can go any further
-	BOOL gotEntry = Process32First(snapshot, &entry);
-	if (!gotEntry) {
-		LOG((CLOG_ERR "could not get first process entry (error: %i)", 
-			GetLastError()));
-		return 0;
-	}
-
-	// used to record process names for debug info
-	std::list<std::string> nameList;
-
-	// now just iterate until we can find winlogon.exe pid
-	DWORD pid = 0;
-	while(gotEntry) {
-
-		// make sure we're not checking the system process
-		if (entry.th32ProcessID != 0) {
-
-			DWORD processSessionId;
-			BOOL pidToSidRet = ProcessIdToSessionId(
-				entry.th32ProcessID, &processSessionId);
-
-			if (!pidToSidRet) {
-				LOG((CLOG_ERR "could not get session id for process id %i (error: %i)",
-					entry.th32ProcessID, GetLastError()));
-				return 0;
-			}
-
-			// only pay attention to processes in the active session
-			if (processSessionId == sessionId) {
-
-				// store the names so we can record them for debug
-				nameList.push_back(entry.szExeFile);
-
-				if (_stricmp(entry.szExeFile, name) == 0) {
-					pid = entry.th32ProcessID;
-				}
-			}
-		}
-
-		// now move on to the next entry (if we're not at the end)
-		gotEntry = Process32Next(snapshot, &entry);
-		if (!gotEntry) {
-
-			DWORD err = GetLastError();
-			if (err != ERROR_NO_MORE_FILES) {
-
-				// only worry about error if it's not the end of the snapshot
-				LOG((CLOG_ERR "could not get subsiquent process entry (error: %i)", 
-					GetLastError()));
-				return 0;
-			}
-		}
-	}
-
-	std::string nameListJoin;
-	for(std::list<std::string>::iterator it = nameList.begin();
-		it != nameList.end(); it++) {
-			nameListJoin.append(*it);
-			nameListJoin.append(", ");
-	}
-
-	LOG((CLOG_DEBUG "processes in session %d: %s",
-		sessionId, nameListJoin.c_str()));
-
-	CloseHandle(snapshot);
-
-	if (pid) {
-		if (process != NULL) {
-			// now get the process so we can get the process, with which
-			// we'll use to get the process token.
-			LOG((CLOG_DEBUG "found %s in session %i", name, sessionId));
-			*process = OpenProcess(MAXIMUM_ALLOWED, FALSE, pid);
-		}
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
 HANDLE
 CMSWindowsRelauncher::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security)
 {
@@ -222,52 +116,29 @@ CMSWindowsRelauncher::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTE
 }
 
 HANDLE 
-CMSWindowsRelauncher::getUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security)
+CMSWindowsRelauncher::getUserToken(LPSECURITY_ATTRIBUTES security)
 {
 	// always elevate if we are at the vista/7 login screen. we could also 
 	// elevate for the uac dialog (consent.exe) but this would be pointless,
 	// since synergy would re-launch as non-elevated after the desk switch,
 	// and so would be unusable with the new elevated process taking focus.
-	if (m_elevateProcess || isProcessInSession("logonui.exe", sessionId)) {
+	if (m_elevateProcess || m_session.isProcessInSession("logonui.exe", NULL)) {
 		
 		LOG((CLOG_DEBUG "getting elevated token, %s",
 			(m_elevateProcess ? "elevation required" : "at login screen")));
 
 		HANDLE process;
-		if (isProcessInSession("winlogon.exe", sessionId, &process)) {
+		if (m_session.isProcessInSession("winlogon.exe", &process)) {
 			return duplicateProcessToken(process, security);
 		}
 		else {
-			LOG((CLOG_ERR "could not find winlogon in session %i", sessionId));
 			return NULL;
 		}
 	}
 	else {
 		LOG((CLOG_DEBUG "getting non-elevated token"));
-		return getSessionToken(sessionId, security);
+		return m_session.getUserToken(security);
 	}
-}
-
-HANDLE 
-CMSWindowsRelauncher::getSessionToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security)
-{
-	HANDLE sourceToken;
-	if (!WTSQueryUserToken(sessionId, &sourceToken)) {
-		LOG((CLOG_ERR "could not get token from session %d (error: %i)", sessionId, GetLastError()));
-		return 0;
-	}
-	
-	HANDLE newToken;
-	if (!DuplicateTokenEx(
-		sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
-		SecurityImpersonation, TokenPrimary, &newToken)) {
-
-		LOG((CLOG_ERR "could not duplicate token (error: %i)", GetLastError()));
-		return 0;
-	}
-	
-	LOG((CLOG_DEBUG "duplicated, new token: %i", newToken));
-	return newToken;
 }
 
 void
@@ -282,7 +153,6 @@ CMSWindowsRelauncher::mainLoop(void*)
 		sendSasFunc = (SendSas)GetProcAddress(sasLib, "SendSAS");
 	}
 
-	DWORD sessionId = -1;
 	bool launched = false;
 
 	SECURITY_ATTRIBUTES saAttr; 
@@ -308,7 +178,7 @@ CMSWindowsRelauncher::mainLoop(void*)
 			sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
 		}
 
-		DWORD newSessionId = getSessionId();
+		m_session.updateNewSessionId();
 
 		bool running = false;
 		if (launched) {
@@ -336,14 +206,12 @@ CMSWindowsRelauncher::mainLoop(void*)
 			}
 		}
 
-		// only enter here when id changes, and the session isn't -1, which
-		// may mean that there is no active session.
-		bool sessionChanged = ((newSessionId != sessionId) && (newSessionId != -1));
+		
 
 		// relaunch if it was running but has stopped unexpectedly.
 		bool stoppedRunning = (launched && !running);
 
-		if (stoppedRunning || sessionChanged || m_commandChanged) {
+		if (stoppedRunning || m_session.hasChanged() || m_commandChanged) {
 			
 			m_commandChanged = false;
 
@@ -354,12 +222,12 @@ CMSWindowsRelauncher::mainLoop(void*)
 			}
 
 			// ok, this is now the active session (forget the old one if any)
-			sessionId = newSessionId;
+			m_session.updateActiveSession();
 
 			SECURITY_ATTRIBUTES sa;
 			ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
 
-			HANDLE userToken = getUserToken(sessionId, &sa);
+			HANDLE userToken = getUserToken(&sa);
 			if (userToken == NULL) {
 				// HACK: trigger retry mechanism.
 				launched = true;
@@ -415,7 +283,7 @@ CMSWindowsRelauncher::mainLoop(void*)
 			}
 			else {
 				LOG((CLOG_DEBUG "launched in session %i (cmd: %s)", 
-					sessionId, cmd.c_str()));
+					m_session.getActiveSessionId(), cmd.c_str()));
 				launched = true;
 			}
 		}
