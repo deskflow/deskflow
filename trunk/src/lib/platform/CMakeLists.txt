@@ -33,6 +33,7 @@ if (WIN32)
 		CMSWindowsHookLibraryLoader.h
 		IMSWindowsClipboardFacade.h
 		CMSWindowsDebugOutputter.h
+		CMSWindowsSession.h
 	)
 
 	set(src
@@ -52,6 +53,7 @@ if (WIN32)
 		CMSWindowsRelauncher.cpp
 		CMSWindowsHookLibraryLoader.cpp
 		CMSWindowsDebugOutputter.cpp
+		CMSWindowsSession.cpp
 	)
 
 	list(APPEND src
