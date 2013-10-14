@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsRelauncher.h"
+#include "CMSWindowsWatchdog.h"
 #include "CThread.h"
 #include "TMethodJob.h"
 #include "CLog.h"
@@ -41,7 +41,7 @@ enum {
 
 typedef VOID (WINAPI *SendSas)(BOOL asUser);
 
-CMSWindowsRelauncher::CMSWindowsRelauncher(
+CMSWindowsWatchdog::CMSWindowsWatchdog(
 	bool autoDetectCommand,
 	CIpcServer& ipcServer,
 	CIpcLogOutputter& ipcLogOutputter) :
@@ -59,22 +59,22 @@ CMSWindowsRelauncher::CMSWindowsRelauncher(
 {
 }
 
-CMSWindowsRelauncher::~CMSWindowsRelauncher()
+CMSWindowsWatchdog::~CMSWindowsWatchdog()
 {
 }
 
 void 
-CMSWindowsRelauncher::startAsync()
+CMSWindowsWatchdog::startAsync()
 {
-	m_thread = new CThread(new TMethodJob<CMSWindowsRelauncher>(
-		this, &CMSWindowsRelauncher::mainLoop, nullptr));
+	m_thread = new CThread(new TMethodJob<CMSWindowsWatchdog>(
+		this, &CMSWindowsWatchdog::mainLoop, nullptr));
 
-	m_outputThread = new CThread(new TMethodJob<CMSWindowsRelauncher>(
-		this, &CMSWindowsRelauncher::outputLoop, nullptr));
+	m_outputThread = new CThread(new TMethodJob<CMSWindowsWatchdog>(
+		this, &CMSWindowsWatchdog::outputLoop, nullptr));
 }
 
 void
-CMSWindowsRelauncher::stop()
+CMSWindowsWatchdog::stop()
 {
 	m_monitoring = false;
 	
@@ -86,7 +86,7 @@ CMSWindowsRelauncher::stop()
 }
 
 HANDLE
-CMSWindowsRelauncher::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security)
+CMSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security)
 {
 	HANDLE sourceToken;
 
@@ -117,7 +117,7 @@ CMSWindowsRelauncher::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTE
 }
 
 HANDLE 
-CMSWindowsRelauncher::getUserToken(LPSECURITY_ATTRIBUTES security)
+CMSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
 {
 	// always elevate if we are at the vista/7 login screen. we could also 
 	// elevate for the uac dialog (consent.exe) but this would be pointless,
@@ -142,7 +142,7 @@ CMSWindowsRelauncher::getUserToken(LPSECURITY_ATTRIBUTES security)
 }
 
 void
-CMSWindowsRelauncher::mainLoop(void*)
+CMSWindowsWatchdog::mainLoop(void*)
 {
 	shutdownExistingProcesses();
 
@@ -223,7 +223,7 @@ CMSWindowsRelauncher::mainLoop(void*)
 }
 
 bool
-CMSWindowsRelauncher::isProcessRunning()
+CMSWindowsWatchdog::isProcessRunning()
 {
 	bool running;
 	if (m_launched) {
@@ -256,7 +256,7 @@ CMSWindowsRelauncher::isProcessRunning()
 }
 
 void
-CMSWindowsRelauncher::startProcess(std::string& command)
+CMSWindowsWatchdog::startProcess(std::string& command)
 {
 	m_commandChanged = false;
 
@@ -318,7 +318,7 @@ CMSWindowsRelauncher::startProcess(std::string& command)
 }
 
 void
-CMSWindowsRelauncher::setCommand(const std::string& command, bool elevate)
+CMSWindowsWatchdog::setCommand(const std::string& command, bool elevate)
 {
 	LOG((CLOG_INFO "service command updated"));
 	m_command = command;
@@ -327,7 +327,7 @@ CMSWindowsRelauncher::setCommand(const std::string& command, bool elevate)
 }
 
 std::string
-CMSWindowsRelauncher::getCommand() const
+CMSWindowsWatchdog::getCommand() const
 {
 	if (!m_autoDetectCommand) {
 		return m_command;
@@ -353,7 +353,7 @@ CMSWindowsRelauncher::getCommand() const
 }
 
 void
-CMSWindowsRelauncher::outputLoop(void*)
+CMSWindowsWatchdog::outputLoop(void*)
 {
 	// +1 char for \0
 	CHAR buffer[kOutputBufferSize + 1];
@@ -380,7 +380,7 @@ CMSWindowsRelauncher::outputLoop(void*)
 }
 
 void
-CMSWindowsRelauncher::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
+CMSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
 {
 	DWORD exitCode;
 	GetExitCodeProcess(handle, &exitCode);
@@ -420,7 +420,7 @@ CMSWindowsRelauncher::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
 }
 
 void
-CMSWindowsRelauncher::shutdownExistingProcesses()
+CMSWindowsWatchdog::shutdownExistingProcesses()
 {
 	// first we need to take a snapshot of the running processes
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);

@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO: rename class to CMSWindowsWatchdog
-
 #pragma once
 
 #define WIN32_LEAN_AND_MEAN
@@ -31,13 +29,13 @@ class CThread;
 class CIpcLogOutputter;
 class CIpcServer;
 
-class CMSWindowsRelauncher {
+class CMSWindowsWatchdog {
 public:
-	CMSWindowsRelauncher(
+	CMSWindowsWatchdog(
 		bool autoDetectCommand,
 		CIpcServer& ipcServer,
 		CIpcLogOutputter& ipcLogOutputter);
-	virtual ~CMSWindowsRelauncher();
+	virtual ~CMSWindowsWatchdog();
 
 	void				startAsync();
 	std::string			getCommand() const;

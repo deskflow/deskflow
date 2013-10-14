@@ -43,7 +43,6 @@
 #include "XArchWindows.h"
 #include "CScreen.h"
 #include "CMSWindowsScreen.h"
-#include "CMSWindowsRelauncher.h"
 #include "CMSWindowsDebugOutputter.h"
 
 #define WIN32_LEAN_AND_MEAN
@@ -210,7 +209,7 @@ CDaemonApp::mainLoop(bool logToFile)
 		CLOG->insert(m_ipcLogOutputter);
 
 #if SYSAPI_WIN32
-		m_relauncher = new CMSWindowsRelauncher(false, *m_ipcServer, *m_ipcLogOutputter);
+		m_relauncher = new CMSWindowsWatchdog(false, *m_ipcServer, *m_ipcLogOutputter);
 #endif
 
 		m_events->adoptHandler(
