@@ -29,7 +29,7 @@ if (WIN32)
 		CMSWindowsScreen.h
 		CMSWindowsScreenSaver.h
 		CMSWindowsUtil.h
-		CMSWindowsRelauncher.h
+		CMSWindowsWatchdog.h
 		CMSWindowsHookLibraryLoader.h
 		IMSWindowsClipboardFacade.h
 		CMSWindowsDebugOutputter.h
@@ -50,7 +50,7 @@ if (WIN32)
 		CMSWindowsScreen.cpp
 		CMSWindowsScreenSaver.cpp
 		CMSWindowsUtil.cpp
-		CMSWindowsRelauncher.cpp
+		CMSWindowsWatchdog.cpp
 		CMSWindowsHookLibraryLoader.cpp
 		CMSWindowsDebugOutputter.cpp
 		CMSWindowsSession.cpp

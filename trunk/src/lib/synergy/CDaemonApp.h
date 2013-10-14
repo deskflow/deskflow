@@ -22,7 +22,7 @@
 #include "CIpcServer.h"
 
 #if SYSAPI_WIN32
-#include "CMSWindowsRelauncher.h"
+#include "CMSWindowsWatchdog.h"
 #endif
 
 #include <string>
@@ -48,8 +48,7 @@ public:
 	static CDaemonApp* s_instance;
 
 #if SYSAPI_WIN32
-	CMSWindowsRelauncher*
-						m_relauncher;
+	CMSWindowsWatchdog*	m_relauncher;
 #endif
 
 private:
