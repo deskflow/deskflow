@@ -229,7 +229,7 @@ CDaemonApp::mainLoop(bool logToFile)
 		bool elevate = ARCH->setting("Elevate") == "1";
 		if (command != "") {
 			LOG((CLOG_INFO "using last known command: %s", command.c_str()));
-			m_relauncher->command(command, elevate);
+			m_relauncher->setCommand(command, elevate);
 		}
 
 		m_relauncher->startAsync();
@@ -334,7 +334,7 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 			// tell the relauncher about the new command. this causes the
 			// relauncher to stop the existing command and start the new
 			// command.
-			m_relauncher->command(command, cm->elevate());
+			m_relauncher->setCommand(command, cm->elevate());
 #endif
 			break;
 		}

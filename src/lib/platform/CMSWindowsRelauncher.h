@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// TODO: rename class to CMSWindowsWatchdog
+
 #pragma once
 
 #define WIN32_LEAN_AND_MEAN
@@ -23,6 +25,7 @@
 #include <Windows.h>
 #include <string>
 #include <list>
+#include "XSynergy.h"
 
 class CThread;
 class CIpcLogOutputter;
@@ -37,8 +40,8 @@ public:
 	virtual ~CMSWindowsRelauncher();
 
 	void				startAsync();
-	std::string			command() const;
-	void				command(const std::string& command, bool elevate);
+	std::string			getCommand() const;
+	void				setCommand(const std::string& command, bool elevate);
 	void				stop();
 
 private:
@@ -48,12 +51,15 @@ private:
 	void				shutdownExistingProcesses();
 	HANDLE				duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
 	HANDLE				getUserToken(LPSECURITY_ATTRIBUTES security);
+	void				startProcess(std::string& command);
+	bool				isProcessRunning();
+	void				sendSas();
 
 private:
 	CThread*			m_thread;
 	bool				m_autoDetectCommand;
 	std::string			m_command;
-	bool				m_running;
+	bool				m_monitoring;
 	bool				m_commandChanged;
 	HANDLE				m_stdOutWrite;
 	HANDLE				m_stdOutRead;
@@ -62,4 +68,19 @@ private:
 	CIpcLogOutputter&	m_ipcLogOutputter;
 	bool				m_elevateProcess;
 	CMSWindowsSession	m_session;
+	bool				m_launched;
+	PROCESS_INFORMATION m_processInfo;
+	int					m_failures;
+};
+
+//! Relauncher error
+/*!
+An error occured in the process watchdog.
+*/
+class XMSWindowsWatchdogError : public XSynergy {
+public:
+	XMSWindowsWatchdogError(const CString& msg) : XSynergy(msg) { }
+
+	// XBase overrides
+	virtual CString		getWhat() const throw() { return what(); }
 };

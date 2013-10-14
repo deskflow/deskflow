@@ -19,10 +19,11 @@
 #include "CLog.h"
 #include <Tlhelp32.h>
 #include <Wtsapi32.h>
+#include "XSynergy.h"
+#include "XArchWindows.h"
 
 CMSWindowsSession::CMSWindowsSession() :
-	m_sessionId(-1),
-	m_newSessionId(-1)
+	m_activeSessionId(-1)
 {
 }
 
@@ -30,31 +31,14 @@ CMSWindowsSession::~CMSWindowsSession()
 {
 }
 
-DWORD 
-CMSWindowsSession::getSessionId()
-{
-	return WTSGetActiveConsoleSessionId();
-}
-
-BOOL
+bool
 CMSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
-{
-	BOOL result = isProcessInSession_(name, process);
-	if (!result) {
-		LOG((CLOG_ERR "could not find winlogon in session %i", m_sessionId));
-	}
-	return result;
-}
-
-BOOL
-CMSWindowsSession::isProcessInSession_(const char* name, PHANDLE process = NULL)
 {
 	// first we need to take a snapshot of the running processes
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	if (snapshot == INVALID_HANDLE_VALUE) {
-		LOG((CLOG_ERR "could not get process snapshot (error: %i)", 
-			GetLastError()));
-		return 0;
+		LOG((CLOG_ERR "could not get process snapshot"));
+		throw XArch(new XArchEvalWindows());
 	}
 
 	PROCESSENTRY32 entry;
@@ -64,9 +48,8 @@ CMSWindowsSession::isProcessInSession_(const char* name, PHANDLE process = NULL)
 	// unlikely we can go any further
 	BOOL gotEntry = Process32First(snapshot, &entry);
 	if (!gotEntry) {
-		LOG((CLOG_ERR "could not get first process entry (error: %i)", 
-			GetLastError()));
-		return 0;
+		LOG((CLOG_ERR "could not get first process entry"));
+		throw XArch(new XArchEvalWindows());
 	}
 
 	// used to record process names for debug info
@@ -84,13 +67,12 @@ CMSWindowsSession::isProcessInSession_(const char* name, PHANDLE process = NULL)
 				entry.th32ProcessID, &processSessionId);
 
 			if (!pidToSidRet) {
-				LOG((CLOG_ERR "could not get session id for process id %i (error: %i)",
-					entry.th32ProcessID, GetLastError()));
-				return 0;
+				LOG((CLOG_ERR "could not get session id for process id %i", entry.th32ProcessID));
+				throw XArch(new XArchEvalWindows());
 			}
 
 			// only pay attention to processes in the active session
-			if (processSessionId == m_sessionId) {
+			if (processSessionId == m_activeSessionId) {
 
 				// store the names so we can record them for debug
 				nameList.push_back(entry.szExeFile);
@@ -109,9 +91,8 @@ CMSWindowsSession::isProcessInSession_(const char* name, PHANDLE process = NULL)
 			if (err != ERROR_NO_MORE_FILES) {
 
 				// only worry about error if it's not the end of the snapshot
-				LOG((CLOG_ERR "could not get subsiquent process entry (error: %i)", 
-					GetLastError()));
-				return 0;
+				LOG((CLOG_ERR "could not get next process entry"));
+				throw XArch(new XArchEvalWindows());
 			}
 		}
 	}
@@ -124,19 +105,20 @@ CMSWindowsSession::isProcessInSession_(const char* name, PHANDLE process = NULL)
 	}
 
 	LOG((CLOG_DEBUG "processes in session %d: %s",
-		m_sessionId, nameListJoin.c_str()));
+		m_activeSessionId, nameListJoin.c_str()));
 
 	CloseHandle(snapshot);
 
 	if (pid) {
 		if (process != NULL) {
 			// now get the process, which we'll use to get the process token.
-			LOG((CLOG_DEBUG "found %s in session %i", name, m_sessionId));
+			LOG((CLOG_DEBUG "found %s in session %i", name, m_activeSessionId));
 			*process = OpenProcess(MAXIMUM_ALLOWED, FALSE, pid);
 		}
 		return true;
 	}
 	else {
+		LOG((CLOG_ERR "could not find %s in session %i", name, m_activeSessionId));
 		return false;
 	}
 }
@@ -145,9 +127,9 @@ HANDLE
 CMSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
 {
 	HANDLE sourceToken;
-	if (!WTSQueryUserToken(m_sessionId, &sourceToken)) {
-		LOG((CLOG_ERR "could not get token from session %d (error: %i)", m_sessionId, GetLastError()));
-		return 0;
+	if (!WTSQueryUserToken(m_activeSessionId, &sourceToken)) {
+		LOG((CLOG_ERR "could not get token from session %d", m_activeSessionId));
+		throw XArch(new XArchEvalWindows);
 	}
 	
 	HANDLE newToken;
@@ -155,8 +137,8 @@ CMSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
 		sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
 		SecurityImpersonation, TokenPrimary, &newToken)) {
 
-		LOG((CLOG_ERR "could not duplicate token (error: %i)", GetLastError()));
-		return 0;
+		LOG((CLOG_ERR "could not duplicate token"));
+		throw XArch(new XArchEvalWindows);
 	}
 	
 	LOG((CLOG_DEBUG "duplicated, new token: %i", newToken));
@@ -166,17 +148,11 @@ CMSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
 BOOL
 CMSWindowsSession::hasChanged()
 {
-	return ((m_newSessionId != m_sessionId) && (m_newSessionId != -1));
-}
-
-void
-CMSWindowsSession::updateNewSessionId()
-{
-	m_newSessionId = getSessionId();
+	return (m_activeSessionId != WTSGetActiveConsoleSessionId());
 }
 
 void
 CMSWindowsSession::updateActiveSession()
 {
-	m_sessionId = m_newSessionId;
+	m_activeSessionId = WTSGetActiveConsoleSessionId();
 }
