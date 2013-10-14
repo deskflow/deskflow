@@ -298,24 +298,35 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 		case kIpcCommand: {
 			CIpcCommandMessage* cm = static_cast<CIpcCommandMessage*>(m);
 			CString command = cm->command();
-			LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
 
-			CString debugArg("--debug");
-			UInt32 debugArgPos = static_cast<UInt32>(command.find(debugArg));
-			if (debugArgPos != CString::npos) {
-				UInt32 from = debugArgPos + static_cast<UInt32>(debugArg.size()) + 1;
-				UInt32 nextSpace = static_cast<UInt32>(command.find(" ", from));
-				CString logLevel(command.substr(from, nextSpace - from));
+			// if empty quotes, clear.
+			if (command == "\"\"") {
+				command.clear();
+			}
+
+			if (!command.empty()) {
+				LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
+
+				CString debugArg("--debug");
+				UInt32 debugArgPos = static_cast<UInt32>(command.find(debugArg));
+				if (debugArgPos != CString::npos) {
+					UInt32 from = debugArgPos + static_cast<UInt32>(debugArg.size()) + 1;
+					UInt32 nextSpace = static_cast<UInt32>(command.find(" ", from));
+					CString logLevel(command.substr(from, nextSpace - from));
 				
-				try {
-					// change log level based on that in the command string
-					// and change to that log level now.
-					ARCH->setting("LogLevel", logLevel);
-					CLOG->setFilter(logLevel.c_str());
+					try {
+						// change log level based on that in the command string
+						// and change to that log level now.
+						ARCH->setting("LogLevel", logLevel);
+						CLOG->setFilter(logLevel.c_str());
+					}
+					catch (XArch& e) {
+						LOG((CLOG_ERR "failed to save LogLevel setting, %s", e.what().c_str()));
+					}
 				}
-				catch (XArch& e) {
-					LOG((CLOG_ERR "failed to save LogLevel setting, %s", e.what().c_str()));
-				}
+			}
+			else {
+				LOG((CLOG_DEBUG "empty command, elevate=%d", cm->elevate()));
 			}
 
 			try {

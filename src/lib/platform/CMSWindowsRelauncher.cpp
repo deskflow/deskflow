@@ -175,6 +175,7 @@ CMSWindowsRelauncher::mainLoop(void*)
 				// anything yet, so don't show it as a warning, only show it as
 				// debug to devs to let them know why nothing happened.
 				LOG((CLOG_DEBUG "nothing to launch, no command specified."));
+				shutdownExistingProcesses();
 				continue;
 			}
 
@@ -231,7 +232,7 @@ CMSWindowsRelauncher::isProcessRunning()
 		GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
 		running = (exitCode == STILL_ACTIVE);
 
-		if (!running) {
+		if (!running && !m_command.empty()) {
 			m_failures++;
 			LOG((CLOG_INFO
 				"detected application not running, pid=%d, failures=%d",
