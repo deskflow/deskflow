@@ -25,31 +25,20 @@ public:
 	CMSWindowsSession();
 	~CMSWindowsSession();
 
-	//! Get session ID from Windows
-	/*!
-	This gets the physical session (the one the keyboard and 
-	mouse is connected to), sometimes this returns -1.
-	*/
-	DWORD				getSessionId();
-	
-	BOOL				isProcessInSession(const char* name, PHANDLE process);
-	HANDLE				getUserToken(LPSECURITY_ATTRIBUTES security);
-	DWORD				getActiveSessionId() { return m_sessionId; }
-
 	//!
 	/*!
-	only enter here when id changes, and the session isn't -1, which
-	may mean that there is no active session.
+	Returns true if the session ID has changed since updateActiveSession was called.
 	*/
 	BOOL				hasChanged();
+	
+	bool				isProcessInSession(const char* name, PHANDLE process);
 
-	void				updateNewSessionId();
+	HANDLE				getUserToken(LPSECURITY_ATTRIBUTES security);
+
+	DWORD				getActiveSessionId() { return m_activeSessionId; }
+
 	void				updateActiveSession();
 
 private:
-	BOOL				isProcessInSession_(const char* name, PHANDLE process);
-
-private:
-	DWORD				m_sessionId;
-	DWORD				m_newSessionId;
+	DWORD				m_activeSessionId;
 };

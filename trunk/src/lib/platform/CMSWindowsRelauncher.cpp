@@ -47,13 +47,15 @@ CMSWindowsRelauncher::CMSWindowsRelauncher(
 	CIpcLogOutputter& ipcLogOutputter) :
 	m_thread(NULL),
 	m_autoDetectCommand(autoDetectCommand),
-	m_running(true),
+	m_monitoring(true),
 	m_commandChanged(false),
 	m_stdOutWrite(NULL),
 	m_stdOutRead(NULL),
 	m_ipcServer(ipcServer),
 	m_ipcLogOutputter(ipcLogOutputter),
-	m_elevateProcess(false)
+	m_elevateProcess(false),
+	m_launched(false),
+	m_failures(0)
 {
 }
 
@@ -74,7 +76,7 @@ CMSWindowsRelauncher::startAsync()
 void
 CMSWindowsRelauncher::stop()
 {
-	m_running = false;
+	m_monitoring = false;
 	
 	m_thread->wait(5);
 	delete m_thread;
@@ -94,8 +96,8 @@ CMSWindowsRelauncher::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTE
 		&sourceToken);
 
 	if (!tokenRet) {
-		LOG((CLOG_ERR "could not open token, process handle: %d (error: %i)", process, GetLastError()));
-		return NULL;
+		LOG((CLOG_ERR "could not open token, process handle: %d", process));
+		throw XArch(new XArchEvalWindows());
 	}
 	
 	LOG((CLOG_DEBUG "got token %i, duplicating", sourceToken));
@@ -106,9 +108,8 @@ CMSWindowsRelauncher::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTE
 		SecurityImpersonation, TokenPrimary, &newToken);
 
 	if (!duplicateRet) {
-		LOG((CLOG_ERR "could not duplicate token %i (error: %i)",
-			sourceToken, GetLastError()));
-		return NULL;
+		LOG((CLOG_ERR "could not duplicate token %i", sourceToken));
+		throw XArch(new XArchEvalWindows());
 	}
 	
 	LOG((CLOG_DEBUG "duplicated, new token: %i", newToken));
@@ -126,14 +127,13 @@ CMSWindowsRelauncher::getUserToken(LPSECURITY_ATTRIBUTES security)
 		
 		LOG((CLOG_DEBUG "getting elevated token, %s",
 			(m_elevateProcess ? "elevation required" : "at login screen")));
-
+		
 		HANDLE process;
-		if (m_session.isProcessInSession("winlogon.exe", &process)) {
-			return duplicateProcessToken(process, security);
+		if (!m_session.isProcessInSession("winlogon.exe", &process)) {
+			throw XMSWindowsWatchdogError("cannot get user token without winlogon.exe");
 		}
-		else {
-			return NULL;
-		}
+
+		return duplicateProcessToken(process, security);
 	}
 	else {
 		LOG((CLOG_DEBUG "getting non-elevated token"));
@@ -153,8 +153,6 @@ CMSWindowsRelauncher::mainLoop(void*)
 		sendSasFunc = (SendSas)GetProcAddress(sasLib, "SendSAS");
 	}
 
-	bool launched = false;
-
 	SECURITY_ATTRIBUTES saAttr; 
 	saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
 	saAttr.bInheritHandle = TRUE; 
@@ -164,78 +162,15 @@ CMSWindowsRelauncher::mainLoop(void*)
 		throw XArch(new XArchEvalWindows());
 	}
 
-	PROCESS_INFORMATION pi;
-	ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
+	ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
 
-	int failures = 0;
-
-	while (m_running) {
-
-		HANDLE sendSasEvent = 0;
-		if (sasLib && sendSasFunc) {
-			// can't we just create one event? seems weird creating a new
-			// event every second...
-			sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
-		}
-
-		m_session.updateNewSessionId();
-
-		bool running = false;
-		if (launched) {
-
-			DWORD exitCode;
-			GetExitCodeProcess(pi.hProcess, &exitCode);
-			running = (exitCode == STILL_ACTIVE);
-
-			if (!running) {
-				failures++;
-				LOG((CLOG_INFO "detected application not running, pid=%d, failures=%d", pi.dwProcessId, failures));
-				
-				// increasing backoff period, maximum of 10 seconds.
-				int timeout = (failures * 2) < 10 ? (failures * 2) : 10;
-				LOG((CLOG_DEBUG "waiting, backoff period is %d seconds", timeout));
-				ARCH->sleep(timeout);
-				
-				// double check, in case process started after we waited.
-				GetExitCodeProcess(pi.hProcess, &exitCode);
-				running = (exitCode == STILL_ACTIVE);
-			}
-			else {
-				// reset failures when running.
-				failures = 0;
-			}
-		}
-
+	while (m_monitoring) {
 		
-
-		// relaunch if it was running but has stopped unexpectedly.
-		bool stoppedRunning = (launched && !running);
-
-		if (stoppedRunning || m_session.hasChanged() || m_commandChanged) {
+		// relaunch if the process was running but has stopped unexpectedly.
+		if ((m_launched && !isProcessRunning()) || m_session.hasChanged() || m_commandChanged) {
 			
-			m_commandChanged = false;
-
-			if (launched) {
-				LOG((CLOG_DEBUG "closing existing process to make way for new one"));
-				shutdownProcess(pi.hProcess, pi.dwProcessId, 20);
-				launched = false;
-			}
-
-			// ok, this is now the active session (forget the old one if any)
-			m_session.updateActiveSession();
-
-			SECURITY_ATTRIBUTES sa;
-			ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
-
-			HANDLE userToken = getUserToken(&sa);
-			if (userToken == NULL) {
-				// HACK: trigger retry mechanism.
-				launched = true;
-				continue;
-			}
-
-			std::string cmd = command();
-			if (cmd == "") {
+			std::string command = getCommand();
+			if (command.empty()) {
 				// this appears on first launch when the user hasn't configured
 				// anything yet, so don't show it as a warning, only show it as
 				// debug to devs to let them know why nothing happened.
@@ -243,75 +178,146 @@ CMSWindowsRelauncher::mainLoop(void*)
 				continue;
 			}
 
-			// in case reusing process info struct
-			ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
-
-			STARTUPINFO si;
-			ZeroMemory(&si, sizeof(STARTUPINFO));
-			si.cb = sizeof(STARTUPINFO);
-			si.lpDesktop = "winsta0\\Default"; // TODO: maybe this should be \winlogon if we have logonui.exe?
-			si.hStdError = m_stdOutWrite;
-			si.hStdOutput = m_stdOutWrite;
-			si.dwFlags |= STARTF_USESTDHANDLES;
-
-			LPVOID environment;
-			BOOL blockRet = CreateEnvironmentBlock(&environment, userToken, FALSE);
-			if (!blockRet) {
-				LOG((CLOG_ERR "could not create environment block (error: %i)", 
-					GetLastError()));
+			try {
+				startProcess(command);
+			}
+			catch (XArch& e) {
+				LOG((CLOG_ERR "failed to launch, error: %s", e.what().c_str()));
+				m_launched = false;
 				continue;
 			}
-
-			DWORD creationFlags = 
-				NORMAL_PRIORITY_CLASS |
-				CREATE_NO_WINDOW |
-				CREATE_UNICODE_ENVIRONMENT;
-
-			// re-launch in current active user session
-			LOG((CLOG_INFO "starting new process"));
-			BOOL createRet = CreateProcessAsUser(
-				userToken, NULL, LPSTR(cmd.c_str()),
-				&sa, NULL, TRUE, creationFlags,
-				environment, NULL, &si, &pi);
-
-			DestroyEnvironmentBlock(environment);
-			CloseHandle(userToken);
-
-			if (!createRet) {
-				LOG((CLOG_ERR "could not launch (error: %i)", GetLastError()));
+			catch (XSynergy& e) {
+				LOG((CLOG_ERR "failed to launch, error: %s", e.what()));
+				m_launched = false;
 				continue;
 			}
-			else {
-				LOG((CLOG_DEBUG "launched in session %i (cmd: %s)", 
-					m_session.getActiveSessionId(), cmd.c_str()));
-				launched = true;
+		}
+
+		if (sendSasFunc != NULL) {
+
+			HANDLE sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
+			if (sendSasEvent != NULL) {
+
+				// use SendSAS event to wait for next session (timeout 1 second).
+				if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
+					LOG((CLOG_DEBUG "calling SendSAS"));
+					sendSasFunc(FALSE);
+				}
+
+				CloseHandle(sendSasEvent);
+				continue;
 			}
 		}
 
-		if (sendSasEvent) {
-			// use SendSAS event to wait for next session.
-			if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0 && sendSasFunc) {
-				LOG((CLOG_DEBUG "calling SendSAS"));
-				sendSasFunc(FALSE);
-			}
-			CloseHandle(sendSasEvent);
-		}
-		else {
-			// check for session change every second.
-			ARCH->sleep(1);
-		}
+		// if the sas event failed, wait by sleeping.
+		ARCH->sleep(1);
 	}
 
-	if (launched) {
+	if (m_launched) {
 		LOG((CLOG_DEBUG "terminated running process on exit"));
-		shutdownProcess(pi.hProcess, pi.dwProcessId, 20);
+		shutdownProcess(m_processInfo.hProcess, m_processInfo.dwProcessId, 20);
 	}
 	
 	LOG((CLOG_DEBUG "relauncher main thread finished"));
 }
 
+bool
+CMSWindowsRelauncher::isProcessRunning()
+{
+	bool running;
+	if (m_launched) {
+
+		DWORD exitCode;
+		GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
+		running = (exitCode == STILL_ACTIVE);
+
+		if (!running) {
+			m_failures++;
+			LOG((CLOG_INFO
+				"detected application not running, pid=%d, failures=%d",
+				m_processInfo.dwProcessId, m_failures));
+				
+			// increasing backoff period, maximum of 10 seconds.
+			int timeout = (m_failures * 2) < 10 ? (m_failures * 2) : 10;
+			LOG((CLOG_DEBUG "waiting, backoff period is %d seconds", timeout));
+			ARCH->sleep(timeout);
+			
+			// double check, in case process started after we waited.
+			GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
+			running = (exitCode == STILL_ACTIVE);
+		}
+		else {
+			// reset failures when running.
+			m_failures = 0;
+		}
+	}
+	return running;
+}
+
 void
-CMSWindowsRelauncher::command(const std::string& command, bool elevate)
+CMSWindowsRelauncher::startProcess(std::string& command)
+{
+	m_commandChanged = false;
+
+	if (m_launched) {
+		LOG((CLOG_DEBUG "closing existing process to make way for new one"));
+		shutdownProcess(m_processInfo.hProcess, m_processInfo.dwProcessId, 20);
+		m_launched = false;
+	}
+
+	m_session.updateActiveSession();
+
+	SECURITY_ATTRIBUTES sa;
+	ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
+
+	HANDLE userToken = getUserToken(&sa);
+
+	// clear, as we're reusing process info struct
+	ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
+
+	STARTUPINFO si;
+	ZeroMemory(&si, sizeof(STARTUPINFO));
+	si.cb = sizeof(STARTUPINFO);
+	si.lpDesktop = "winsta0\\Default"; // TODO: maybe this should be \winlogon if we have logonui.exe?
+	si.hStdError = m_stdOutWrite;
+	si.hStdOutput = m_stdOutWrite;
+	si.dwFlags |= STARTF_USESTDHANDLES;
+
+	LPVOID environment;
+	BOOL blockRet = CreateEnvironmentBlock(&environment, userToken, FALSE);
+	if (!blockRet) {
+		LOG((CLOG_ERR "could not create environment block"));
+		throw XArch(new XArchEvalWindows);
+	}
+
+	DWORD creationFlags = 
+		NORMAL_PRIORITY_CLASS |
+		CREATE_NO_WINDOW |
+		CREATE_UNICODE_ENVIRONMENT;
+
+	// re-launch in current active user session
+	LOG((CLOG_INFO "starting new process"));
+	BOOL createRet = CreateProcessAsUser(
+		userToken, NULL, LPSTR(command.c_str()),
+		&sa, NULL, TRUE, creationFlags,
+		environment, NULL, &si, &m_processInfo);
+
+	DestroyEnvironmentBlock(environment);
+	CloseHandle(userToken);
+
+	if (!createRet) {
+		LOG((CLOG_ERR "could not launch"));
+		throw XArch(new XArchEvalWindows);
+	}
+	else {
+		LOG((CLOG_DEBUG "started process, session=%i, command=%s",
+			m_session.getActiveSessionId(), command.c_str()));
+		m_launched = true;
+	}
+}
+
+void
+CMSWindowsRelauncher::setCommand(const std::string& command, bool elevate)
 {
 	LOG((CLOG_INFO "service command updated"));
 	m_command = command;
@@ -320,7 +326,7 @@ CMSWindowsRelauncher::command(const std::string& command, bool elevate)
 }
 
 std::string
-CMSWindowsRelauncher::command() const
+CMSWindowsRelauncher::getCommand() const
 {
 	if (!m_autoDetectCommand) {
 		return m_command;
@@ -338,7 +344,7 @@ CMSWindowsRelauncher::command() const
 
 	size_t i;
 	std::string find = "--relaunch";
-	while((i = cmd.find(find)) != std::string::npos) {
+	while ((i = cmd.find(find)) != std::string::npos) {
 		cmd.replace(i, find.length(), "");
 	}
 
@@ -351,7 +357,7 @@ CMSWindowsRelauncher::outputLoop(void*)
 	// +1 char for \0
 	CHAR buffer[kOutputBufferSize + 1];
 
-	while (m_running) {
+	while (m_monitoring) {
 		
 		DWORD bytesRead;
 		BOOL success = ReadFile(m_stdOutRead, buffer, kOutputBufferSize, &bytesRead, NULL);
@@ -377,16 +383,17 @@ CMSWindowsRelauncher::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
 {
 	DWORD exitCode;
 	GetExitCodeProcess(handle, &exitCode);
-	if (exitCode != STILL_ACTIVE)
+	if (exitCode != STILL_ACTIVE) {
 		return;
+	}
 
 	CIpcShutdownMessage shutdown;
 	m_ipcServer.send(shutdown, kIpcClientNode);
 
 	// wait for process to exit gracefully.
 	double start = ARCH->time();
-	while (true)
-	{
+	while (true) {
+
 		GetExitCodeProcess(handle, &exitCode);
 		if (exitCode != STILL_ACTIVE) {
 			// yay, we got a graceful shutdown. there should be no hook in use errors!
@@ -417,9 +424,8 @@ CMSWindowsRelauncher::shutdownExistingProcesses()
 	// first we need to take a snapshot of the running processes
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	if (snapshot == INVALID_HANDLE_VALUE) {
-		LOG((CLOG_ERR "could not get process snapshot (error: %i)", 
-			GetLastError()));
-		return;
+		LOG((CLOG_ERR "could not get process snapshot"));
+		throw XArch(new XArchEvalWindows);
 	}
 
 	PROCESSENTRY32 entry;
@@ -429,14 +435,13 @@ CMSWindowsRelauncher::shutdownExistingProcesses()
 	// unlikely we can go any further
 	BOOL gotEntry = Process32First(snapshot, &entry);
 	if (!gotEntry) {
-		LOG((CLOG_ERR "could not get first process entry (error: %i)", 
-			GetLastError()));
-		return;
+		LOG((CLOG_ERR "could not get first process entry"));
+		throw XArch(new XArchEvalWindows);
 	}
 
 	// now just iterate until we can find winlogon.exe pid
 	DWORD pid = 0;
-	while(gotEntry) {
+	while (gotEntry) {
 
 		// make sure we're not checking the system process
 		if (entry.th32ProcessID != 0) {
@@ -457,9 +462,8 @@ CMSWindowsRelauncher::shutdownExistingProcesses()
 			if (err != ERROR_NO_MORE_FILES) {
 
 				// only worry about error if it's not the end of the snapshot
-				LOG((CLOG_ERR "could not get subsiquent process entry (error: %i)", 
-					GetLastError()));
-				return;
+				LOG((CLOG_ERR "could not get subsiquent process entry"));
+				throw XArch(new XArchEvalWindows);
 			}
 		}
 	}
