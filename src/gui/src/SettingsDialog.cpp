@@ -34,16 +34,12 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 
 	m_Locale.fillLanguageComboBox(m_pComboLanguage);
 
-	m_pCheckBoxAutoConnect->setChecked(appConfig().autoConnect());
 	m_pLineEditScreenName->setText(appConfig().screenName());
 	m_pSpinBoxPort->setValue(appConfig().port());
 	m_pLineEditInterface->setText(appConfig().interface());
-	m_pComboProcessMode->setCurrentIndex(appConfig().processMode());
 	m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
 	m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
 	m_pLineEditLogFilename->setText(appConfig().logFilename());
-	m_pCheckBoxAutoStart->setChecked(appConfig().autoStart());
-	m_pCheckBoxAutoHide->setChecked(appConfig().autoHide());
 	m_pCheckBoxEnableCrypto->setChecked(appConfig().cryptoEnabled());
 	setIndexFromItemData(m_pComboLanguage, appConfig().language());
 	if (appConfig().cryptoEnabled())
@@ -66,16 +62,12 @@ void SettingsDialog::accept()
 		return;
 	}
 
-	appConfig().setAutoConnect(m_pCheckBoxAutoConnect->isChecked());
 	appConfig().setScreenName(m_pLineEditScreenName->text());
 	appConfig().setPort(m_pSpinBoxPort->value());
 	appConfig().setInterface(m_pLineEditInterface->text());
-	appConfig().setProcessMode((ProcessMode)m_pComboProcessMode->currentIndex());
 	appConfig().setLogLevel(m_pComboLogLevel->currentIndex());
 	appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
 	appConfig().setLogFilename(m_pLineEditLogFilename->text());
-	appConfig().setAutoStart(m_pCheckBoxAutoStart->isChecked());
-	appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
 	appConfig().setCryptoEnabled(cryptoEnabled);
 	appConfig().setCryptoPass(cryptoPass);
 	appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
@@ -98,14 +90,12 @@ void SettingsDialog::changeEvent(QEvent* event)
 		case QEvent::LanguageChange:
 			{
 				int logLevelIndex = m_pComboLogLevel->currentIndex();
-				int processModeIndex = m_pComboProcessMode->currentIndex();
 
 				m_pComboLanguage->blockSignals(true);
 				retranslateUi(this);
 				m_pComboLanguage->blockSignals(false);
 
 				m_pComboLogLevel->setCurrentIndex(logLevelIndex);
-				m_pComboProcessMode->setCurrentIndex(processModeIndex);
 				break;
 			}
 

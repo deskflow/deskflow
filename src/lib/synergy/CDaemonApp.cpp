@@ -45,6 +45,7 @@
 #include "CMSWindowsScreen.h"
 #include "CMSWindowsDebugOutputter.h"
 #include "CMSWindowsWatchdog.h"
+#include "CMSWindowsEventQueueBuffer.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -191,10 +192,7 @@ CDaemonApp::mainLoop(bool logToFile)
 	try
 	{
 		DAEMON_RUNNING(true);
-		/*while (true)
-		{
-		}*/
-
+		
 		if (logToFile)
 			CLOG->insert(new CFileLogOutputter(logPath().c_str()));
 
@@ -208,22 +206,21 @@ CDaemonApp::mainLoop(bool logToFile)
 		// send logging to gui via ipc, log system adopts outputter.
 		m_ipcLogOutputter = new CIpcLogOutputter(*m_ipcServer);
 		CLOG->insert(m_ipcLogOutputter);
-
+		
 #if SYSAPI_WIN32
 		m_watchdog = new CMSWindowsWatchdog(false, *m_ipcServer, *m_ipcLogOutputter);
 #endif
-
+		
 		m_events->adoptHandler(
 			m_events->forCIpcServer().messageReceived(), m_ipcServer,
 			new TMethodEventJob<CDaemonApp>(this, &CDaemonApp::handleIpcMessage));
 
 		m_ipcServer->listen();
-
+		
 #if SYSAPI_WIN32
-		// HACK: create a dummy screen, which can handle system events 
-		// (such as a stop request from the service controller).
-		CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
-		CScreen dummyScreen(new CMSWindowsScreen(false, true, false, m_events), m_events);
+
+		// install the platform event queue to handle service stop events.
+		m_events->adoptBuffer(new CMSWindowsEventQueueBuffer(m_events));
 		
 		CString command = ARCH->setting("Command");
 		bool elevate = ARCH->setting("Elevate") == "1";
@@ -234,7 +231,6 @@ CDaemonApp::mainLoop(bool logToFile)
 
 		m_watchdog->startAsync();
 #endif
-
 		m_events->loop();
 
 #if SYSAPI_WIN32
@@ -248,7 +244,7 @@ CDaemonApp::mainLoop(bool logToFile)
 		CLOG->remove(m_ipcLogOutputter);
 		delete m_ipcLogOutputter;
 		delete m_ipcServer;
-
+		
 		DAEMON_RUNNING(false);
 	}
 	catch (XArch& e) {

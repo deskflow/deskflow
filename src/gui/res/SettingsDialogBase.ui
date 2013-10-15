@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>368</width>
-    <height>485</height>
+    <height>354</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -89,30 +89,6 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="m_pLabel_22">
-        <property name="text">
-         <string>&amp;Process mode:</string>
-        </property>
-        <property name="buddy">
-         <cstring>m_pComboProcessMode</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QComboBox" name="m_pComboProcessMode">
-        <item>
-         <property name="text">
-          <string>Service</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Desktop (legacy)</string>
-         </property>
-        </item>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="m_pLabel_27">
         <property name="sizePolicy">
@@ -137,36 +113,6 @@
       </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="m_pComboLanguage"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="m_pGroupUserInterface">
-     <property name="title">
-      <string>&amp;Startup</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QCheckBox" name="m_pCheckBoxAutoStart">
-        <property name="text">
-         <string>&amp;Start Synergy after logging in</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="m_pCheckBoxAutoConnect">
-        <property name="text">
-         <string>&amp;Automatically start server/client</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
-        <property name="text">
-         <string>&amp;Hide when server/client starts</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>
@@ -355,10 +301,6 @@
   <tabstop>m_pLineEditScreenName</tabstop>
   <tabstop>m_pSpinBoxPort</tabstop>
   <tabstop>m_pLineEditInterface</tabstop>
-  <tabstop>m_pComboProcessMode</tabstop>
-  <tabstop>m_pCheckBoxAutoStart</tabstop>
-  <tabstop>m_pCheckBoxAutoConnect</tabstop>
-  <tabstop>m_pCheckBoxAutoHide</tabstop>
   <tabstop>m_pLineEditCryptoPass</tabstop>
   <tabstop>m_pComboLogLevel</tabstop>
   <tabstop>m_pCheckBoxLogToFile</tabstop>

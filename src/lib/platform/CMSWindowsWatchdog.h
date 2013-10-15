@@ -49,8 +49,8 @@ private:
 	void				shutdownExistingProcesses();
 	HANDLE				duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
 	HANDLE				getUserToken(LPSECURITY_ATTRIBUTES security);
-	void				startProcess(std::string& command);
-	bool				isProcessRunning();
+	void				startProcess();
+	bool				isProcessActive();
 	void				sendSas();
 
 private:
@@ -66,9 +66,9 @@ private:
 	CIpcLogOutputter&	m_ipcLogOutputter;
 	bool				m_elevateProcess;
 	CMSWindowsSession	m_session;
-	bool				m_launched;
 	PROCESS_INFORMATION m_processInfo;
-	int					m_failures;
+	int					m_processFailures;
+	bool				m_processRunning;
 };
 
 //! Relauncher error
