@@ -44,6 +44,7 @@
 #include "CScreen.h"
 #include "CMSWindowsScreen.h"
 #include "CMSWindowsDebugOutputter.h"
+#include "CMSWindowsWatchdog.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -80,7 +81,7 @@ CDaemonApp::CDaemonApp() :
 	m_ipcServer(nullptr),
 	m_ipcLogOutputter(nullptr)
 	#if SYSAPI_WIN32
-	,m_relauncher(nullptr)
+	,m_watchdog(nullptr)
 	#endif
 {
 	s_instance = this;
@@ -209,7 +210,7 @@ CDaemonApp::mainLoop(bool logToFile)
 		CLOG->insert(m_ipcLogOutputter);
 
 #if SYSAPI_WIN32
-		m_relauncher = new CMSWindowsWatchdog(false, *m_ipcServer, *m_ipcLogOutputter);
+		m_watchdog = new CMSWindowsWatchdog(false, *m_ipcServer, *m_ipcLogOutputter);
 #endif
 
 		m_events->adoptHandler(
@@ -228,17 +229,17 @@ CDaemonApp::mainLoop(bool logToFile)
 		bool elevate = ARCH->setting("Elevate") == "1";
 		if (command != "") {
 			LOG((CLOG_INFO "using last known command: %s", command.c_str()));
-			m_relauncher->setCommand(command, elevate);
+			m_watchdog->setCommand(command, elevate);
 		}
 
-		m_relauncher->startAsync();
+		m_watchdog->startAsync();
 #endif
 
 		m_events->loop();
 
 #if SYSAPI_WIN32
-		m_relauncher->stop();
-		delete m_relauncher;
+		m_watchdog->stop();
+		delete m_watchdog;
 #endif
 
 		m_events->removeHandler(
@@ -344,7 +345,7 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 			// tell the relauncher about the new command. this causes the
 			// relauncher to stop the existing command and start the new
 			// command.
-			m_relauncher->setCommand(command, cm->elevate());
+			m_watchdog->setCommand(command, cm->elevate());
 #endif
 			break;
 		}

@@ -21,14 +21,14 @@
 #include "CArch.h"
 #include "CIpcServer.h"
 
-#if SYSAPI_WIN32
-#include "CMSWindowsWatchdog.h"
-#endif
-
 #include <string>
 
 class CEvent;
 class CIpcLogOutputter;
+
+#if SYSAPI_WIN32
+class CMSWindowsWatchdog;
+#endif
 
 class CDaemonApp {
 
@@ -48,7 +48,7 @@ public:
 	static CDaemonApp* s_instance;
 
 #if SYSAPI_WIN32
-	CMSWindowsWatchdog*	m_relauncher;
+	CMSWindowsWatchdog*	m_watchdog;
 #endif
 
 private:
