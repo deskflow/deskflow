@@ -114,7 +114,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void logOutput();
 		void logError();
 		void updateFound(const QString& version);
-		void refreshApplyButton();
 
 	protected:
 		QSettings& settings() { return m_Settings; }

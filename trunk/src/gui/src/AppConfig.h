@@ -53,7 +53,6 @@ class AppConfig
 		~AppConfig();
 
 	public:
-		bool autoConnect() const { return m_AutoConnect; }
 		const QString& screenName() const { return m_ScreenName; }
 		int port() const { return m_Port; }
 		const QString& interface() const { return m_Interface; }
@@ -61,9 +60,6 @@ class AppConfig
 		bool logToFile() const { return m_LogToFile; }
 		const QString& logFilename() const { return m_LogFilename; }
 		QString logLevelText() const;
-		bool autoStart() const { return m_AutoStart; }
-		bool autoHide() const { return m_AutoHide; }
-		bool autoStartPrompt() const { return m_AutoStartPrompt; }
 		const QString& cryptoPass() const { return m_CryptoPass; }
 		bool cryptoEnabled() const { return m_CryptoEnabled; }
 		QString cryptoModeString() const;
@@ -84,18 +80,13 @@ class AppConfig
 
 	protected:
 		QSettings& settings() { return *m_pSettings; }
-		void setAutoConnect(bool b) { m_AutoConnect = b; }
 		void setScreenName(const QString& s) { m_ScreenName = s; }
 		void setPort(int i) { m_Port = i; }
 		void setInterface(const QString& s) { m_Interface = s; }
 		void setLogLevel(int i) { m_LogLevel = i; }
 		void setLogToFile(bool b) { m_LogToFile = b; }
 		void setLogFilename(const QString& s) { m_LogFilename = s; }
-		void setAutoStart(bool b);
-		void setAutoHide(bool b) { m_AutoHide = b; }
-		void setAutoStartPrompt(bool b) { m_AutoStartPrompt = b; }
 		void setCryptoEnabled(bool b) { m_CryptoEnabled = b; }
-		void setProcessMode(ProcessMode p) { m_ProcessMode = p; }
 		void setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
 		void setLanguage(const QString language) { m_Language = language; }
 		void setPremiumEmail(const QString premiumEmail) { m_PremiumEmail = premiumEmail; }
@@ -108,16 +99,12 @@ class AppConfig
 
 	private:
 		QSettings* m_pSettings;
-		bool m_AutoConnect;
 		QString m_ScreenName;
 		int m_Port;
 		QString m_Interface;
 		int m_LogLevel;
 		bool m_LogToFile;
 		QString m_LogFilename;
-		bool m_AutoStart;
-		bool m_AutoHide;
-		bool m_AutoStartPrompt;
 		int m_WizardLastRun;
 		bool m_CryptoEnabled;
 		QString m_CryptoPass;

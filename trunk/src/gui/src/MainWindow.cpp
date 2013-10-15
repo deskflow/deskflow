@@ -119,8 +119,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::start(bool firstRun)
 {
-	onModeChanged(!firstRun && appConfig().autoConnect(), false);
-
 	createTrayIcon();
 
 	// always show. auto-hide only happens when we have a connection.
@@ -131,8 +129,6 @@ void MainWindow::start(bool firstRun)
 
 void MainWindow::onModeChanged(bool startDesktop, bool applyService)
 {
-	refreshApplyButton();
-
 	if (appConfig().processMode() == Service)
 	{
 		// form is always enabled in service mode.
@@ -156,11 +152,6 @@ void MainWindow::onModeChanged(bool startDesktop, bool applyService)
 	}
 
 	m_pElevateCheckBox->setEnabled(appConfig().processMode() == Service);
-}
-
-void MainWindow::refreshApplyButton()
-{
-	m_pButtonApply->setEnabled(appConfig().processMode() == Service);
 }
 
 void MainWindow::setStatus(const QString &status)
@@ -282,6 +273,7 @@ void MainWindow::setIcon(qSynergyState state)
 
 void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
 {
+#ifndef Q_OS_WIN
 	if (reason == QSystemTrayIcon::DoubleClick)
 	{
 		if (isVisible())
@@ -294,6 +286,7 @@ void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
 			activateWindow();
 		}
 	}
+#endif
 }
 
 void MainWindow::logOutput()
@@ -356,13 +349,6 @@ void MainWindow::updateStateFromLogLine(const QString &line)
 		line.contains("connected to server"))
 	{
 		setSynergyState(synergyConnected);
-
-		// only hide once after each new connection.
-		if (!m_AlreadyHidden && appConfig().autoHide())
-		{
-			hide();
-			m_AlreadyHidden = true;
-		}
 	}
 }
 
@@ -646,12 +632,14 @@ void MainWindow::setSynergyState(qSynergyState state)
 		disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
 		connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
 		m_pButtonToggleStart->setText(tr("&Stop"));
+		m_pButtonApply->setEnabled((appConfig().processMode() == Service));
 	}
 	else
 	{
 		disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
 		connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
 		m_pButtonToggleStart->setText(tr("&Start"));
+		m_pButtonApply->setEnabled(false);
 	}
 
 	bool connected = state == synergyConnected;
@@ -693,9 +681,9 @@ void MainWindow::setFormEnabled(bool enabled)
 
 void MainWindow::setVisible(bool visible)
 {
+	QMainWindow::setVisible(visible);
 	m_pActionMinimize->setEnabled(visible);
 	m_pActionRestore->setEnabled(!visible);
-	QMainWindow::setVisible(visible);
 
 #if MAC_OS_X_VERSION_10_7
 	// dock hide only supported on lion :(

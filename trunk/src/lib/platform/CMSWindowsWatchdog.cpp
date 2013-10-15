@@ -54,8 +54,8 @@ CMSWindowsWatchdog::CMSWindowsWatchdog(
 	m_ipcServer(ipcServer),
 	m_ipcLogOutputter(ipcLogOutputter),
 	m_elevateProcess(false),
-	m_launched(false),
-	m_failures(0)
+	m_processFailures(0),
+	m_processRunning(false)
 {
 }
 
@@ -165,56 +165,70 @@ CMSWindowsWatchdog::mainLoop(void*)
 	ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
 
 	while (m_monitoring) {
-		
-		// relaunch if the process was running but has stopped unexpectedly.
-		if ((m_launched && !isProcessRunning()) || m_session.hasChanged() || m_commandChanged) {
-			
-			std::string command = getCommand();
-			if (command.empty()) {
-				// this appears on first launch when the user hasn't configured
-				// anything yet, so don't show it as a warning, only show it as
-				// debug to devs to let them know why nothing happened.
-				LOG((CLOG_DEBUG "nothing to launch, no command specified."));
+		try {
+
+			if (m_processRunning && getCommand().empty()) {
+				LOG((CLOG_INFO "process started but command is empty, shutting down"));
 				shutdownExistingProcesses();
+				m_processRunning = false;
 				continue;
 			}
 
-			try {
-				startProcess(command);
+			if (m_processFailures != 0) {
+				// increasing backoff period, maximum of 10 seconds.
+				int timeout = (m_processFailures * 2) < 10 ? (m_processFailures * 2) : 10;
+				LOG((CLOG_INFO "backing off, wait=%ds, failures=%d", timeout, m_processFailures));
+				ARCH->sleep(timeout);
 			}
-			catch (XArch& e) {
-				LOG((CLOG_ERR "failed to launch, error: %s", e.what().c_str()));
-				m_launched = false;
-				continue;
+		
+			if (!getCommand().empty() && ((m_processFailures != 0) || m_session.hasChanged() || m_commandChanged)) {
+				startProcess();
 			}
-			catch (XSynergy& e) {
-				LOG((CLOG_ERR "failed to launch, error: %s", e.what()));
-				m_launched = false;
-				continue;
+
+			if (m_processRunning && !isProcessActive()) {
+
+				m_processFailures++;
+				m_processRunning = false;
+			
+				LOG((CLOG_WARN "detected application not running, pid=%d",
+					m_processInfo.dwProcessId));
 			}
-		}
 
-		if (sendSasFunc != NULL) {
+			if (sendSasFunc != NULL) {
 
-			HANDLE sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
-			if (sendSasEvent != NULL) {
+				HANDLE sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
+				if (sendSasEvent != NULL) {
 
-				// use SendSAS event to wait for next session (timeout 1 second).
-				if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
-					LOG((CLOG_DEBUG "calling SendSAS"));
-					sendSasFunc(FALSE);
+					// use SendSAS event to wait for next session (timeout 1 second).
+					if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
+						LOG((CLOG_DEBUG "calling SendSAS"));
+						sendSasFunc(FALSE);
+					}
+
+					CloseHandle(sendSasEvent);
+					continue;
 				}
-
-				CloseHandle(sendSasEvent);
-				continue;
 			}
-		}
 
-		// if the sas event failed, wait by sleeping.
-		ARCH->sleep(1);
+			// if the sas event failed, wait by sleeping.
+			ARCH->sleep(1);
+		
+		}
+		catch (XArch& e) {
+			LOG((CLOG_ERR "failed to launch, error: %s", e.what().c_str()));
+			m_processFailures++;
+			m_processRunning = false;
+			continue;
+		}
+		catch (XSynergy& e) {
+			LOG((CLOG_ERR "failed to launch, error: %s", e.what()));
+			m_processFailures++;
+			m_processRunning = false;
+			continue;
+		}
 	}
 
-	if (m_launched) {
+	if (m_processRunning) {
 		LOG((CLOG_DEBUG "terminated running process on exit"));
 		shutdownProcess(m_processInfo.hProcess, m_processInfo.dwProcessId, 20);
 	}
@@ -223,47 +237,26 @@ CMSWindowsWatchdog::mainLoop(void*)
 }
 
 bool
-CMSWindowsWatchdog::isProcessRunning()
+CMSWindowsWatchdog::isProcessActive()
 {
-	bool running;
-	if (m_launched) {
-
-		DWORD exitCode;
-		GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
-		running = (exitCode == STILL_ACTIVE);
-
-		if (!running && !m_command.empty()) {
-			m_failures++;
-			LOG((CLOG_INFO
-				"detected application not running, pid=%d, failures=%d",
-				m_processInfo.dwProcessId, m_failures));
-				
-			// increasing backoff period, maximum of 10 seconds.
-			int timeout = (m_failures * 2) < 10 ? (m_failures * 2) : 10;
-			LOG((CLOG_DEBUG "waiting, backoff period is %d seconds", timeout));
-			ARCH->sleep(timeout);
-			
-			// double check, in case process started after we waited.
-			GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
-			running = (exitCode == STILL_ACTIVE);
-		}
-		else {
-			// reset failures when running.
-			m_failures = 0;
-		}
-	}
-	return running;
+	DWORD exitCode;
+	GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
+	return exitCode == STILL_ACTIVE;
 }
 
 void
-CMSWindowsWatchdog::startProcess(std::string& command)
+CMSWindowsWatchdog::startProcess()
 {
+	if (m_command.empty()) {
+		throw XMSWindowsWatchdogError("cannot start process, command is empty");
+	}
+
 	m_commandChanged = false;
 
-	if (m_launched) {
+	if (m_processRunning) {
 		LOG((CLOG_DEBUG "closing existing process to make way for new one"));
 		shutdownProcess(m_processInfo.hProcess, m_processInfo.dwProcessId, 20);
-		m_launched = false;
+		m_processRunning = false;
 	}
 
 	m_session.updateActiveSession();
@@ -299,7 +292,7 @@ CMSWindowsWatchdog::startProcess(std::string& command)
 	// re-launch in current active user session
 	LOG((CLOG_INFO "starting new process"));
 	BOOL createRet = CreateProcessAsUser(
-		userToken, NULL, LPSTR(command.c_str()),
+		userToken, NULL, LPSTR(m_command.c_str()),
 		&sa, NULL, TRUE, creationFlags,
 		environment, NULL, &si, &m_processInfo);
 
@@ -311,9 +304,11 @@ CMSWindowsWatchdog::startProcess(std::string& command)
 		throw XArch(new XArchEvalWindows);
 	}
 	else {
+		m_processRunning = true;
+		m_processFailures = 0;
+
 		LOG((CLOG_DEBUG "started process, session=%i, command=%s",
-			m_session.getActiveSessionId(), command.c_str()));
-		m_launched = true;
+			m_session.getActiveSessionId(), m_command.c_str()));
 	}
 }
 
@@ -470,4 +465,5 @@ CMSWindowsWatchdog::shutdownExistingProcesses()
 	}
 
 	CloseHandle(snapshot);
+	m_processRunning = false;
 }

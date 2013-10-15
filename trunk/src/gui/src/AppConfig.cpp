@@ -47,14 +47,10 @@ static const char* logLevelNames[] =
 
 AppConfig::AppConfig(QSettings* settings) :
 	m_pSettings(settings),
-	m_AutoConnect(false),
 	m_ScreenName(),
 	m_Port(24800),
 	m_Interface(),
 	m_LogLevel(0),
-	m_AutoStart(false),
-	m_AutoHide(false),
-	m_AutoStartPrompt(false),
 	m_WizardLastRun(0),
 	m_CryptoPass(),
 	m_ProcessMode(DEFAULT_PROCESS_MODE)
@@ -102,62 +98,15 @@ QString AppConfig::logLevelText() const
 	return logLevelNames[logLevel()];
 }
 
-void AppConfig::setAutoStart(bool b)
-{
-	m_AutoStart = b;
-
-	// always create or delete the links/files/entries even if they exist already,
-	// in case it was broken.
-
-#if defined(Q_OS_LINUX)
-
-	QString desktopFileName("synergy.desktop");
-	QString desktopFilePath("/usr/share/applications/" + desktopFileName);
-	QString autoStartPath(QDir::homePath() + "/.config/autostart/" + desktopFileName);
-
-	if (b)
-	{
-		QFile::link(desktopFilePath, autoStartPath);
-	}
-	else
-	{
-		QFile::remove(autoStartPath);
-	}
-
-#elif defined(Q_OS_WIN)
-
-	QSettings settings("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
-	QString path("Synergy");
-
-	if (b)
-	{
-		settings.setValue(path, QCoreApplication::applicationFilePath());
-	}
-	else
-	{
-		settings.remove(path);
-	}
-	settings.sync();
-
-#endif
-
-	// TODO: mac os x auto start
-}
-
 void AppConfig::loadSettings()
 {
-	m_AutoConnect = settings().value("autoConnect", false).toBool();
 	m_ScreenName = settings().value("screenName", QHostInfo::localHostName()).toString();
 	m_Port = settings().value("port", 24800).toInt();
 	m_Interface = settings().value("interface").toString();
 	m_LogLevel = settings().value("logLevel", 3).toInt(); // level 3: INFO
 	m_LogToFile = settings().value("logToFile", false).toBool();
 	m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
-	m_AutoStart = settings().value("autoStart", false).toBool();
-	m_AutoHide = settings().value("autoHide", true).toBool();
-	m_AutoStartPrompt = settings().value("autoStartPrompt", true).toBool();
 	m_WizardLastRun = settings().value("wizardLastRun", 0).toInt();
-	m_ProcessMode = (ProcessMode)settings().value("processMode2", DEFAULT_PROCESS_MODE).toInt();
 	m_CryptoPass = settings().value("cryptoPass", "").toString();
 	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
 	m_Language = settings().value("language", QLocale::system().name()).toString();
@@ -167,18 +116,13 @@ void AppConfig::loadSettings()
 
 void AppConfig::saveSettings()
 {
-	settings().setValue("autoConnect", m_AutoConnect);
 	settings().setValue("screenName", m_ScreenName);
 	settings().setValue("port", m_Port);
 	settings().setValue("interface", m_Interface);
 	settings().setValue("logLevel", m_LogLevel);
 	settings().setValue("logToFile", m_LogToFile);
 	settings().setValue("logFilename", m_LogFilename);
-	settings().setValue("autoStart", m_AutoStart);
-	settings().setValue("autoHide", m_AutoHide);
-	settings().setValue("autoStartPrompt", m_AutoStartPrompt);
 	settings().setValue("wizardLastRun", kWizardVersion);
-	settings().setValue("processMode2", m_ProcessMode);
 	settings().setValue("cryptoPass", m_CryptoPass);
 	settings().setValue("cryptoEnabled", m_CryptoEnabled);
 	settings().setValue("language", m_Language);
