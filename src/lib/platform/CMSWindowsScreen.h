@@ -131,6 +131,7 @@ private:
 	HINSTANCE			openHookLibrary(const char* name);
 	HINSTANCE			openShellLibrary(const char* name);
 	void				closeHookLibrary(HINSTANCE hookLibrary) const;
+	void				closeShellLibrary(HINSTANCE shellLibrary) const;
 	HCURSOR				createBlankCursor() const;
 	void				destroyCursor(HCURSOR cursor) const;
 	ATOM				createWindowClass() const;

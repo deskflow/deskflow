@@ -163,7 +163,7 @@ CMSWindowsScreen::CMSWindowsScreen(
 			closeHookLibrary(m_hookLibrary);
 
 		if (m_shellLibrary != NULL)
-			closeHookLibrary(m_shellLibrary);
+			closeShellLibrary(m_shellLibrary);
 
 		s_screen = NULL;
 		throw;
@@ -195,7 +195,7 @@ CMSWindowsScreen::~CMSWindowsScreen()
 		closeHookLibrary(m_hookLibrary);
 
 	if (m_shellLibrary != NULL)
-		closeHookLibrary(m_shellLibrary);
+		closeShellLibrary(m_shellLibrary);
 
 	s_screen = NULL;
 }
@@ -822,6 +822,14 @@ CMSWindowsScreen::closeHookLibrary(HINSTANCE hookLibrary) const
 	if (hookLibrary != NULL) {
 		m_hookLibraryLoader.m_cleanup();
 		FreeLibrary(hookLibrary);
+	}
+}
+
+void
+CMSWindowsScreen::closeShellLibrary(HINSTANCE shellLibrary) const
+{
+	if (shellLibrary != NULL) {
+		FreeLibrary(shellLibrary);
 	}
 }
 
