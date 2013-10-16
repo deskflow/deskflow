@@ -471,7 +471,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 		return false;
 	}
 
-#if Q_OS_WIN
+#if defined(Q_OS_WIN)
 	// wrap in quotes so a malicious user can't start \Program.exe as admin.
 	app = QString("\"%1\"").arg(app);
 #endif
@@ -551,7 +551,7 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 		return false;
 	}
 
-#if Q_OS_WIN
+#if defined(Q_OS_WIN)
 	// wrap in quotes so a malicious user can't start \Program.exe as admin.
 	app = QString("\"%1\"").arg(app);
 #endif
