@@ -304,6 +304,12 @@ CMSWindowsWatchdog::startProcess()
 		throw XArch(new XArchEvalWindows);
 	}
 	else {
+		// wait for program to fail.
+		ARCH->sleep(1);
+		if (!isProcessActive()) {
+			throw XMSWindowsWatchdogError("process immediately stopped");
+		}
+
 		m_processRunning = true;
 		m_processFailures = 0;
 

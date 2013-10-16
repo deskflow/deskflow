@@ -118,7 +118,7 @@ CMSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
 		return true;
 	}
 	else {
-		LOG((CLOG_ERR "could not find %s in session %i", name, m_activeSessionId));
+		LOG((CLOG_DEBUG "did not find %s in session %i", name, m_activeSessionId));
 		return false;
 	}
 }
