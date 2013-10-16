@@ -471,8 +471,10 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 		return false;
 	}
 
+#if Q_OS_WIN
 	// wrap in quotes so a malicious user can't start \Program.exe as admin.
 	app = QString("\"%1\"").arg(app);
+#endif
 
 	if (m_pLineEditHostname->text().isEmpty())
 	{
@@ -549,8 +551,10 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 		return false;
 	}
 
+#if Q_OS_WIN
 	// wrap in quotes so a malicious user can't start \Program.exe as admin.
 	app = QString("\"%1\"").arg(app);
+#endif
 
 	if (appConfig().logToFile())
 	{
