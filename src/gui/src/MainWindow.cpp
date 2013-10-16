@@ -346,7 +346,8 @@ void MainWindow::updateStateFromLogLine(const QString &line)
 {
 	// TODO: implement ipc connection state messages to replace this hack.
 	if (line.contains("started server") ||
-		line.contains("connected to server"))
+		line.contains("connected to server") ||
+		line.contains("watchdog status: ok"))
 	{
 		setSynergyState(synergyConnected);
 	}
@@ -359,7 +360,6 @@ void MainWindow::clearLog()
 
 void MainWindow::startSynergy()
 {
-	// TODO: refactor this out into 2 methods.
 	bool desktopMode = appConfig().processMode() == Desktop;
 	bool serviceMode = appConfig().processMode() == Service;
 
@@ -632,7 +632,7 @@ void MainWindow::setSynergyState(qSynergyState state)
 		disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
 		connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
 		m_pButtonToggleStart->setText(tr("&Stop"));
-		m_pButtonApply->setEnabled((appConfig().processMode() == Service));
+		m_pButtonApply->setEnabled(true);
 	}
 	else
 	{
@@ -656,8 +656,7 @@ void MainWindow::setSynergyState(qSynergyState state)
 	switch (state)
 	{
 	case synergyConnected: {
-		QString mode(appConfig().processMode() == Service ? tr("service mode") : tr("desktop mode"));
-		setStatus(tr("Synergy is running (%1).").arg(mode));
+		setStatus(tr("Synergy is running."));
 		break;
 	}
 	case synergyConnecting:

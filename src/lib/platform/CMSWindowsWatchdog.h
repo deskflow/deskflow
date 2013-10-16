@@ -41,6 +41,7 @@ public:
 	std::string			getCommand() const;
 	void				setCommand(const std::string& command, bool elevate);
 	void				stop();
+	bool				isProcessActive();
 
 private:
 	void				mainLoop(void*);
@@ -50,7 +51,6 @@ private:
 	HANDLE				duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
 	HANDLE				getUserToken(LPSECURITY_ATTRIBUTES security);
 	void				startProcess();
-	bool				isProcessActive();
 	void				sendSas();
 
 private:

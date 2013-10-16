@@ -347,6 +347,21 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 		}
 
 		case kIpcHello:
+			CIpcHelloMessage* hm = static_cast<CIpcHelloMessage*>(m);
+			CString type;
+			switch (hm->clientType()) {
+				case kIpcClientGui: type = "gui"; break;
+				case kIpcClientNode: type = "node"; break;
+				default: type = "unknown"; break;
+			}
+
+			LOG((CLOG_DEBUG "ipc hello, type=%s", type.c_str()));
+
+#if SYSAPI_WIN32
+			CString watchdogStatus = m_watchdog->isProcessActive() ? "ok" : "error";
+			LOG((CLOG_INFO "watchdog status: %s", watchdogStatus.c_str()));
+#endif
+
 			m_ipcLogOutputter->notifyBuffer();
 			break;
 	}
