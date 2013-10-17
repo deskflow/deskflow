@@ -1,3 +1,17 @@
+1.4.14
+======
+Bug #3287 - Mac does not wake up
+Bug #3758 - Unstable service (synergyd)
+Bug #3759 - Exploit: C:\Program.exe (if it exists) is run by service (elevated)
+Bug #3760 - Encryption broken (GCM, CTR and OFB)
+Bug #3761 - Start button is visible when Synergy is running
+Bug #3762 - Apply button is disabled for Mac and Linux
+Feature #46 - Drag and drop between computers (Windows and Mac)
+
+1.4.13
+======
+Version not released, unstable.
+
 1.4.12
 ======
 Bug #3565 - Encryption fails when typing fast (Invalid message from client)
