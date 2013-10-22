@@ -401,10 +401,12 @@ void MainWindow::startSynergy()
 #endif
 	}
 
+#ifndef Q_OS_LINUX
 	if (appConfig().isPremium())
 	{
 		args << "--enable-drag-drop";
 	}
+#endif
 
 	if ((synergyType() == synergyClient && !clientArgs(args, app))
 		|| (synergyType() == synergyServer && !serverArgs(args, app)))
