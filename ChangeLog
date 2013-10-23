@@ -1,3 +1,8 @@
+1.4.15
+======
+Bug #3765 - Synergy Service - Error 87: The parameter is incorrect.
+Bug #3781 - Option not supported on Linux: --enable-drag-drop (server not starting)
+
 1.4.14
 ======
 Bug #3287 - Mac does not wake up
