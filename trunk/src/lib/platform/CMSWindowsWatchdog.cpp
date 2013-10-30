@@ -266,6 +266,12 @@ CMSWindowsWatchdog::startProcess()
 
 	HANDLE userToken = getUserToken(&sa);
 
+	// patch by Jack Zhou and Henry Tung
+	// set UIAccess to fix Windows 8 GUI interaction
+	// http://synergy-foss.org/spit/issues/details/3338/#c70
+	DWORD uiAccess = 1;
+	SetTokenInformation(userToken, TokenUIAccess, &uiAccess, sizeof(DWORD));
+
 	// clear, as we're reusing process info struct
 	ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
 
