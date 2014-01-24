@@ -28,6 +28,10 @@
 #include <QtGui>
 #include <QSettings>
 
+#if defined(Q_OS_MAC)
+#include <Carbon/Carbon.h>
+#endif
+
 class QThreadImpl : public QThread
 {
 public:
@@ -39,6 +43,10 @@ public:
 
 int waitForTray();
 
+#if defined(Q_OS_MAC)
+bool checkMacAssistiveDevices();
+#endif
+
 int main(int argc, char* argv[])
 {
 	QCoreApplication::setOrganizationName("Synergy");
@@ -47,8 +55,17 @@ int main(int argc, char* argv[])
 
 	QSynergyApplication app(argc, argv);
 
+#if defined(Q_OS_MAC)
+	if (!checkMacAssistiveDevices())
+	{
+		return 1;
+	}
+#endif
+
 	if (!waitForTray())
+	{
 		return -1;
+	}
 
 #ifndef Q_OS_WIN
 	QApplication::setQuitOnLastWindowClosed(false);
@@ -98,3 +115,33 @@ int waitForTray()
 	return true;
 }
 
+#if defined(Q_OS_MAC)
+bool checkMacAssistiveDevices()
+{
+#if defined(MAC_OS_X_VERSION_10_9) // mavericks
+
+	// new in mavericks, applications are trusted individually
+	// with use of the accessibility api. this call will show a
+	// prompt which can show the security/privacy/accessibility
+	// tab, with a list of allowed applications. synergy should
+	// show up there automatically, but will be unchecked.
+
+	const void* keys[] = { kAXTrustedCheckOptionPrompt };
+	const void* values[] = { kCFBooleanTrue };
+
+	CFDictionaryRef options = CFDictionaryCreate(NULL, keys, values, 1, NULL, NULL);
+	bool result = AXIsProcessTrustedWithOptions(options);
+	CFRelease(options);
+
+	return result;
+
+#else
+
+	// now deprecated in mavericks.
+	bool result = AXAPIEnabled();
+	QMessageBox::information(NULL, "Synergy", "Please enable access to assistive devices (System Preferences), then re-open Synergy.");
+	return result;
+
+#endif
+}
+#endif

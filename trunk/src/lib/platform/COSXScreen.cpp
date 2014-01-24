@@ -108,9 +108,21 @@ COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCur
 		m_screensaver = new COSXScreenSaver(m_events, getEventTarget());
 		m_keyState	  = new COSXKeyState(m_events);
 		
-    // TODO: http://stackoverflow.com/questions/2950124/enable-access-for-assistive-device-programmatically
-		if (m_isPrimary && !AXAPIEnabled())
-			throw XArch("system setting not enabled: \"Enable access for assistive devices\"");
+		// only needed when running as a server.
+		if (m_isPrimary) {
+		
+#if defined(MAC_OS_X_VERSION_10_9)
+			// we can't pass options to show the dialog, this must be done by the gui.
+			//if (!AXIsProcessTrusted()) {
+			//	throw XArch("assistive devices does not trust this process, allow it in system settings.");
+			//}
+#else
+			// now deprecated in mavericks.
+			if (!AXAPIEnabled()) {
+				throw XArch("assistive devices is not enabled, enable it in system settings.");
+			}
+#endif
+		}
 		
 		// install display manager notification handler
 #if defined(MAC_OS_X_VERSION_10_5)

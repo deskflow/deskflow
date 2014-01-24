@@ -491,7 +491,6 @@ public:
 	bool			readLine(CString&);
 	UInt32			getLineNumber() const;
 
-	operator void*() const;
 	bool			operator!() const;
 
 	OptionValue		parseBoolean(const CString&) const;
@@ -513,6 +512,7 @@ public:
 	IPlatformScreen::CButtonInfo*
 					parseMouse(const CString& mouse) const;
 	KeyModifierMask	parseModifier(const CString& modifiers) const;
+	std::istream&	getStream() const { return m_stream; };
 
 private:
 	// not implemented

@@ -615,7 +615,7 @@ void
 CConfig::read(CConfigReadContext& context)
 {
 	CConfig tmp(m_events);
-	while (context) {
+	while (context.getStream()) {
 		tmp.readSection(context);
 	}
 	*this = tmp;
@@ -1922,11 +1922,6 @@ UInt32
 CConfigReadContext::getLineNumber() const
 {
 	return m_line;
-}
-
-CConfigReadContext::operator void*() const
-{
-	return m_stream;
 }
 
 bool
