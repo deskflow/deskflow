@@ -361,7 +361,7 @@ class InternalCommands:
 	def signmac(self, identity):
 		self.try_chdir("bin")
 		err = os.system(
-			'codesign -fs "' + identity + '" Synergy.app')
+			'codesign --deep -fs "' + identity + '" Synergy.app')
 		self.restore_chdir()
 	
 	def signwin(self, pfx, pwdFile, dist):
@@ -495,6 +495,14 @@ class InternalCommands:
 		self.try_chdir(dir)
 		err = os.system(bin)
 		self.restore_chdir()
+		
+		# copy the missing Info.plist files for the frameworks.
+		shutil.copy("/Library/Frameworks/QtCore.framework/Contents/Info.plist",
+			dir + "/Synergy.app/Contents/Frameworks/QtCore.framework/Resources/")
+		shutil.copy("/Library/Frameworks/QtGui.framework/Contents/Info.plist",
+			dir + "/Synergy.app/Contents/Frameworks/QtGui.framework/Resources/")
+		shutil.copy("/Library/Frameworks/QtNetwork.framework/Contents/Info.plist",
+			dir + "/Synergy.app/Contents/Frameworks/QtNetwork.framework/Resources/")
 
 		if err != 0:
 			raise Exception(bin + " failed with error: " + str(err))
@@ -1325,11 +1333,4 @@ class CommandHandler:
 			if o == '--identity':
 				identity = a
 		
-		# HACK: codesign fails intermittently. we need some sort of retry mechanism
-		# but i don't have time right now so just hammer the crap out of it and hope
-		# one attempt works.
-		self.ic.signmac(identity)
-		self.ic.signmac(identity)
-		self.ic.signmac(identity)
-		self.ic.signmac(identity)
 		self.ic.signmac(identity)
