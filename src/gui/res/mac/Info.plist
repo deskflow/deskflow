@@ -6,11 +6,11 @@
 	<string>Synergy.icns</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>CFBundleGetInfoString</key>
-	<string>0.9.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleExecutable</key>
 	<string>Synergy</string>
+	<key>CFBundleIdentifier</key>
+	<string>synergy</string>
 </dict>
 </plist>
