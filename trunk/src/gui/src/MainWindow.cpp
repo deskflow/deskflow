@@ -445,11 +445,8 @@ void MainWindow::startSynergy()
 	if (desktopMode)
 	{
 		synergyProcess()->start(app, args);
-		if (synergyProcess()->waitForStarted())
+		if (!synergyProcess()->waitForStarted())
 		{
-			hide();
-		}
-		else {
 			stopSynergy();
 			show();
 			QMessageBox::warning(this, tr("Program can not be started"), QString(tr("The executable<br><br>%1<br><br>could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.").arg(app)));
@@ -673,6 +670,12 @@ void MainWindow::setSynergyState(qSynergyState state)
 	setIcon(state);
 
 	m_SynergyState = state;
+
+	// if in desktop mode, hide synergy. in service mode the gui can
+	// just be closed.
+	if ((appConfig().processMode() == Desktop) && (state == synergyConnected)) {
+		hide();
+	}
 }
 
 void MainWindow::setVisible(bool visible)
