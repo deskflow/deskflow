@@ -121,19 +121,19 @@ void MainWindow::start(bool firstRun)
 {
 	createTrayIcon();
 
-	// always show. auto-hide only happens when we have a connection.
 	showNormal();
 
 	m_VersionChecker.checkLatest();
+
+	if (appConfig().processMode() == Desktop) {
+		startSynergy();
+	}
 }
 
 void MainWindow::onModeChanged(bool startDesktop, bool applyService)
 {
 	if (appConfig().processMode() == Service)
 	{
-		// form is always enabled in service mode.
-		setFormEnabled(true);
-
 		// ensure that the apply button actually does something, since desktop
 		// mode screws around with connecting/disconnecting the action.
 		disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
@@ -445,8 +445,11 @@ void MainWindow::startSynergy()
 	if (desktopMode)
 	{
 		synergyProcess()->start(app, args);
-		if (!synergyProcess()->waitForStarted())
+		if (synergyProcess()->waitForStarted())
 		{
+			hide();
+		}
+		else {
 			stopSynergy();
 			show();
 			QMessageBox::warning(this, tr("Program can not be started"), QString(tr("The executable<br><br>%1<br><br>could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.").arg(app)));
@@ -650,12 +653,6 @@ void MainWindow::setSynergyState(qSynergyState state)
 
 	bool connected = state == synergyConnected;
 
-	// only disable controls in desktop mode. in service mode, we can use the apply button.
-	if (appConfig().processMode() == Desktop)
-	{
-		setFormEnabled(!connected);
-	}
-
 	m_pActionStartSynergy->setEnabled(!connected);
 	m_pActionStopSynergy->setEnabled(connected);
 
@@ -676,12 +673,6 @@ void MainWindow::setSynergyState(qSynergyState state)
 	setIcon(state);
 
 	m_SynergyState = state;
-}
-
-void MainWindow::setFormEnabled(bool enabled)
-{
-	m_pGroupClient->setEnabled(enabled);
-	m_pGroupServer->setEnabled(enabled);
 }
 
 void MainWindow::setVisible(bool visible)
