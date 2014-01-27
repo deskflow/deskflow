@@ -140,7 +140,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QString getScreenName();
 		void stopService();
 		void stopDesktop();
-		void setFormEnabled(bool enabled);
 		void changeEvent(QEvent* event);
 		void retranslateMenuBar();
 		void updatePremiumInfo();
