@@ -56,6 +56,14 @@ int main(int argc, char* argv[])
 	QSynergyApplication app(argc, argv);
 
 #if defined(Q_OS_MAC)
+
+	if (app.applicationDirPath().startsWith("/Volumes/")) {
+		QMessageBox::information(
+			NULL, "Synergy",
+			"Please drag Synergy to the Applications folder, and open it from there.");
+		return 1;
+	}
+	
 	if (!checkMacAssistiveDevices())
 	{
 		return 1;
@@ -139,7 +147,12 @@ bool checkMacAssistiveDevices()
 
 	// now deprecated in mavericks.
 	bool result = AXAPIEnabled();
-	QMessageBox::information(NULL, "Synergy", "Please enable access to assistive devices (System Preferences), then re-open Synergy.");
+	if (!result) {
+		QMessageBox::information(
+			NULL, "Synergy",
+			"Please enable access to assistive devices "
+			"(System Preferences), then re-open Synergy.");
+	}
 	return result;
 
 #endif
