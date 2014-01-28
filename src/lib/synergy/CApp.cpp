@@ -189,7 +189,7 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
         osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
         GetVersionEx(&osvi);
 
-        if (osvi.dwMajorVersion <= 6) {
+        if (osvi.dwMajorVersion < 6) {
             useDragDrop = false;
 		    LOG((CLOG_INFO "ignoring --enable-drag-drop, not supported below vista."));
         }
