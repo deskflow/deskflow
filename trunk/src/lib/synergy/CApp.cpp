@@ -173,11 +173,31 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 	}
 
 	else if (isArg(i, argc, argv, NULL, "--enable-drag-drop")) {
+        bool useDragDrop = true;
+
 #ifdef WINAPI_XWINDOWS
-		std::cerr << "Option not supported on Linux: " << argv[i] << std::endl;
-		m_bye(kExitArgs);
+
+        useDragDrop = false;
+		LOG((CLOG_INFO "ignoring --enable-drag-drop, not supported on linux."));
+
 #endif
-		argsBase().m_enableDragDrop = true;
+
+#ifdef WINAPI_MSWINDOWS
+
+        OSVERSIONINFO osvi;
+        ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
+        osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+        GetVersionEx(&osvi);
+
+        if (osvi.dwMajorVersion <= 6) {
+            useDragDrop = false;
+		    LOG((CLOG_INFO "ignoring --enable-drag-drop, not supported below vista."));
+        }
+#endif
+
+        if (useDragDrop) {
+		    argsBase().m_enableDragDrop = true;
+        }
 	}
 
 	else {
