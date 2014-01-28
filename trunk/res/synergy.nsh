@@ -35,6 +35,7 @@
 
 !include "MUI2.nsh"
 !include "DefineIfExist.nsh"
+!include "Library.nsh"
 
 !insertmacro MUI_PAGE_LICENSE "..\\res\\License.rtf"
 
@@ -163,7 +164,6 @@ Section "Server and Client" core
   File "${binDir}\Release\synergys.exe"
   File "${binDir}\Release\synergyc.exe"
   File "${binDir}\Release\synergyd.exe"
-  File "${binDir}\Release\synwinxt.dll"
   
   ; if the hook file exists, skip, assuming it couldn't be deleted
   ; because it was in use by some process.
@@ -171,6 +171,14 @@ Section "Server and Client" core
     DetailPrint "Skipping synwinhk.dll, file already exists."
   ${Else}
     File "${binDir}\Release\synwinhk.dll"
+  ${EndIf}
+  
+  ; if the shell ex file exists, skip, assuming it couldn't be deleted
+  ; because it was in use by some process.
+  ${If} ${FileExists} "synwinxt.dll"
+    DetailPrint "Skipping synwinxt.dll, file already exists."
+  ${Else}
+    File "${binDir}\Release\synwinxt.dll"
   ${EndIf}
   
   ; windows firewall exception
