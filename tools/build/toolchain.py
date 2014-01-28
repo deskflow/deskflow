@@ -662,11 +662,15 @@ class InternalCommands:
 		
 		# ensure dist dir is clean
 		if os.path.exists(dist):
-			os.rmdir(dist)
+			shutil.rmtree(dist)
 		
 		os.makedirs(dist)
 		shutil.copytree(dir + "/" + name + ".app", dist + "/" + name + ".app")
-
+		
+		self.try_chdir(dist)
+		err = os.system("ln -s /Applications")
+		self.restore_chdir()
+		
 		fileName = "%s-%s-%s.dmg" % (
 			self.project, 
 			self.getVersionFromCmake(),
