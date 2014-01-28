@@ -73,6 +73,16 @@ CMSWindowsHookLibraryLoader::openHookLibrary(const char* name)
 HINSTANCE
 CMSWindowsHookLibraryLoader::openShellLibrary(const char* name)
 {
+    OSVERSIONINFO osvi;
+    ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
+    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+    GetVersionEx(&osvi);
+
+    if (osvi.dwMajorVersion < 6) {
+		LOG((CLOG_INFO "skipping shell library load, %s.dll not supported before vista", name));
+        return NULL;
+    }
+
 	// load the hook library
 	HINSTANCE shellLibrary = LoadLibrary(name);
 	if (shellLibrary == NULL) {
@@ -84,8 +94,8 @@ CMSWindowsHookLibraryLoader::openShellLibrary(const char* name)
 	m_getDraggingFileDir = (GetDraggingFileDir)GetProcAddress(shellLibrary, "getDraggingFileDir");
 
 	if (m_getDraggingFileDir == NULL) {
-			LOG((CLOG_ERR "invalid shell library, use a newer %s.dll", name));
-			throw XScreenOpenFailure();
+		LOG((CLOG_ERR "invalid shell library, use a newer %s.dll", name));
+		throw XScreenOpenFailure();
 	}
 
 	return shellLibrary;
