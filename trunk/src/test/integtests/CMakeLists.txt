@@ -30,6 +30,7 @@ if (WIN32)
 	list(APPEND src
 		platform/CMSWindowsClipboardTests.cpp
 		platform/CMSWindowsKeyStateTests.cpp
+		arch/CArchInternetWindowsTests.cpp
 	)
 elseif (APPLE)
 	list(APPEND src

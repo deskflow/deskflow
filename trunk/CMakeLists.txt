@@ -276,7 +276,7 @@ if (UNIX)
 
 else (UNIX)
 
-	list(APPEND libs Wtsapi32 Userenv)
+	list(APPEND libs Wtsapi32 Userenv Wininet)
 
 	add_definitions(
 		/DWIN32

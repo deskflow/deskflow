@@ -483,10 +483,9 @@ class InternalCommands:
 
 		# copy synergy[cs] binaries into the bundle, since the gui
 		# now looks for the binaries in the current app dir.
-		shutil.copy(dir + "/synergyc",
-			dir + "/Synergy.app/Contents/MacOS/")
-		shutil.copy(dir + "/synergys",
-			dir + "/Synergy.app/Contents/MacOS/")
+		shutil.copy(dir + "/synergyc", dir + "/Synergy.app/Contents/MacOS/")
+		shutil.copy(dir + "/synergys", dir + "/Synergy.app/Contents/MacOS/")
+		shutil.copy(dir + "/syntool", dir + "/Synergy.app/Contents/MacOS/")
 
 		# use qt to copy libs to bundle so no dependencies are needed. do not create a
 		# dmg at this point, since we need to sign it first, and then create our own
