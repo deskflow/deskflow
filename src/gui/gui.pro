@@ -40,7 +40,8 @@ SOURCES += src/main.cpp \
     src/IpcReader.cpp \
     src/Ipc.cpp \
     src/SynergyLocale.cpp \
-    src/QUtility.cpp
+	src/QUtility.cpp \
+	src/PremiumAuth.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -55,7 +56,7 @@ HEADERS += src/MainWindow.h \
     src/HotkeyDialog.h \
     src/ActionDialog.h \
     src/Hotkey.h \
-    src/Action.h \
+	src/Action.h \
     src/KeySequence.h \
     src/KeySequenceWidget.h \
     src/SettingsDialog.h \
@@ -67,7 +68,8 @@ HEADERS += src/MainWindow.h \
     src/IpcReader.h \
     src/Ipc.h \
     src/SynergyLocale.h \
-    src/QUtility.h
+	src/QUtility.h \
+	src/PremiumAuth.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 

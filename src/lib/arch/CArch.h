@@ -52,6 +52,7 @@
 #	include "CArchTaskBarWindows.h"
 #	include "CArchTimeWindows.h"
 #	include "CArchPluginWindows.h"
+#	include "CArchInternetWindows.h"
 #elif SYSAPI_UNIX
 #	include "CArchConsoleUnix.h"
 #	include "CArchDaemonUnix.h"
@@ -67,6 +68,7 @@
 #	include "CArchTaskBarXWindows.h"
 #	include "CArchTimeUnix.h"
 #	include "CArchPluginUnix.h"
+#	include "CArchInternetUnix.h"
 #endif
 
 /*!
@@ -119,10 +121,12 @@ public:
 	static CArch*		getInstance();
 
 	ARCH_PLUGIN&		plugin() const { return (ARCH_PLUGIN&)m_plugin; }
+	ARCH_INTERNET&		internet() const { return (ARCH_INTERNET&)m_internet; }
 
 private:
 	static CArch*		s_instance;
 	ARCH_PLUGIN			m_plugin;
+	ARCH_INTERNET		m_internet;
 };
 
 //! Convenience object to lock/unlock an arch mutex

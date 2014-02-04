@@ -46,7 +46,6 @@ private:
 	MainWindow& m_MainWindow;
 	bool m_StartMain;
 	SynergyLocale m_Locale;
-	QNetworkAccessManager m_Network;
 
 private slots:
 	void on_m_pCheckBoxEnableCrypto_stateChanged(int );

@@ -19,6 +19,7 @@
 #include "MainWindow.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
+#include "PremiumAuth.h"
 
 #include <QMessageBox>
 #include <QDesktopServices>
@@ -26,8 +27,6 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
-//#define PREMIUM_AUTH_URL "http://localhost/synergy/premium/json/auth/"
-#define PREMIUM_AUTH_URL "http://synergy-foss.org/premium/json/auth/"
 #define PREMIUM_REGISTER_URL "http://synergy-foss.org/donate/?source=gui-wizard"
 
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
@@ -250,39 +249,11 @@ void SetupWizard::on_m_pRadioButtonPremiumLogin_toggled(bool checked)
 
 bool SetupWizard::isPremiumLoginValid(QMessageBox& message)
 {
-	// hash the email and password and send it over plain-text,
-	// it would be nice to use SSL, but unfortunately the Qt
-	// implementation is unreliable.
-	QString email = hash(m_pLineEditPremiumEmail->text());
-	QString password = hash(m_pLineEditPremiumPassword->text());
+	QString email = m_pLineEditPremiumEmail->text();
+	QString password = m_pLineEditPremiumPassword->text();
 
-	QString requestJson = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\"}";
-	QByteArray requestData(requestJson.toStdString().c_str());
-
-	QString version = m_MainWindow.versionChecker().getVersion();
-	QString userAgent = "Synergy GUI " + version;
-	QByteArray userAgentData(userAgent.toStdString().c_str());
-
-	QNetworkRequest request(QUrl(PREMIUM_AUTH_URL));
-	request.setRawHeader("User-Agent", userAgentData);
-
-	QUrl params;
-	params.addEncodedQueryItem("json", requestData);
-	QNetworkReply* reply = m_Network.post(request, params.encodedQuery());
-
-	// use loop instead of waitForReadyRead (which doesnt seem to work).
-	QEventLoop loop;
-	connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-	loop.exec();
-
-	if (reply->error() != QNetworkReply::NoError) {
-		message.setText(tr("Login failed, an error occurred.\n\nError: %1").arg(reply->errorString()));
-		message.exec();
-		return false;
-	}
-
-	QByteArray responseData = reply->readAll();
-	QString responseJson(responseData);
+	PremiumAuth auth;
+	QString responseJson = auth.auth(email, password);
 
 	// this feels like a lot of work, but its cheaper than getting a json
 	// parsing library involved.
