@@ -61,6 +61,7 @@ InstallDirRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${product}" ""
   Delete "${dir}\synergyd.exe"
   Delete "${dir}\synergyd.log"
   Delete "${dir}\launcher.exe"
+  Delete "${dir}\syntool.exe"
   Delete "${dir}\synrgyhk.dll"
   Delete "${dir}\synwinhk.dll"
   Delete "${dir}\synwinxt.dll"
@@ -107,6 +108,7 @@ Section
   nsExec::Exec "taskkill /f /im synergys.exe"
   nsExec::Exec "taskkill /f /im synergyc.exe"
   nsExec::Exec "taskkill /f /im synergyd.exe"
+  nsExec::Exec "taskkill /f /im syntool.exe"
 
   ; clean up legacy files that may exist (but leave user files)
   !insertmacro DeleteFiles "$PROGRAMFILES32\${product}\bin"
@@ -164,6 +166,7 @@ Section "Server and Client" core
   File "${binDir}\Release\synergys.exe"
   File "${binDir}\Release\synergyc.exe"
   File "${binDir}\Release\synergyd.exe"
+  File "${binDir}\Release\syntool.exe"
   
   ; if the hook file exists, skip, assuming it couldn't be deleted
   ; because it was in use by some process.
@@ -226,6 +229,7 @@ Section Uninstall
   nsExec::Exec "taskkill /f /im synergys.exe"
   nsExec::Exec "taskkill /f /im synergyc.exe"
   nsExec::Exec "taskkill /f /im synergyd.exe"
+  nsExec::Exec "taskkill /f /im syntool.exe"
 
   ; delete start menu shortcut
   Delete "$SMPROGRAMS\${product}.lnk"
