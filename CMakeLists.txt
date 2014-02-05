@@ -137,12 +137,17 @@ if (UNIX)
 	check_library_exists("pthread" pthread_create "" HAVE_PTHREAD)
 	if (HAVE_PTHREAD)
 		list(APPEND libs pthread)
-	else (HAVE_PTHREAD)
+	else()
 		message(FATAL_ERROR "Missing library: pthread")
 	endif()
-  
-  find_library(lib_CURL CURL)
-  list(APPEND libs ${lib_CURL})
+
+	# curl is used on both Linux and Mac
+	find_package(CURL)
+	if (CURL_FOUND)
+		list(APPEND libs curl)
+	else()
+		message(FATAL_ERROR "Missing library: curl")
+	endif()
 	
 	if (APPLE)
 		exec_program(uname ARGS -v OUTPUT_VARIABLE DARWIN_VERSION)
