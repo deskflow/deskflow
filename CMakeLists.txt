@@ -140,6 +140,9 @@ if (UNIX)
 	else (HAVE_PTHREAD)
 		message(FATAL_ERROR "Missing library: pthread")
 	endif()
+  
+  find_library(lib_CURL CURL)
+  list(APPEND libs ${lib_CURL})
 	
 	if (APPLE)
 		exec_program(uname ARGS -v OUTPUT_VARIABLE DARWIN_VERSION)
@@ -163,15 +166,12 @@ if (UNIX)
 		find_library(lib_ApplicationServices ApplicationServices)
 		find_library(lib_Foundation Foundation)
 		find_library(lib_Carbon Carbon)
-		find_library(lib_CURL CURL)
 
 		list(APPEND libs
 			${lib_ScreenSaver}
 			${lib_IOKit}
 			${lib_ApplicationServices}
-			${lib_Foundation}
-			${lib_Carbon}
-			${lib_CURL}
+			${lib_Foundation
 		)
 
 	else()
@@ -242,12 +242,14 @@ if (UNIX)
 		if (HAVE_Xrandr)
 			list(APPEND libs Xrandr)
 		endif()
+    
+    # this was outside of the linux scope,
+    # not sure why, moving it back inside.
+    if(HAVE_Xi)
+      list(APPEND libs Xi)
+    endif()
 
 	endif()
-
-        IF(HAVE_Xi)
-                LIST(APPEND libs Xi)
-        ENDIF()
 
 	# For config.h, set some static values; it may be a good idea to make
 	# these values dynamic for non-standard UNIX compilers.
