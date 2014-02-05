@@ -253,13 +253,17 @@ bool SetupWizard::isPremiumLoginValid(QMessageBox& message)
 	QString password = m_pLineEditPremiumPassword->text();
 
 	PremiumAuth auth;
-	QString responseJson = auth.auth(email, password);
+	QString responseJson = auth.request(email, password);
 
-	// this feels like a lot of work, but its cheaper than getting a json
-	// parsing library involved.
-	QRegExp regex(".*\"result\":\\s*([^,}\\s]+).*");
-	if (regex.exactMatch(responseJson)) {
-		QString boolString = regex.cap(1);
+	if (responseJson.trimmed() == "") {
+		message.setText(tr("Login failed, could not communicate with server."));
+		message.exec();
+		return false;
+	}
+
+	QRegExp resultRegex(".*\"result\".*:.*(true|false).*");
+	if (resultRegex.exactMatch(responseJson)) {
+		QString boolString = resultRegex.cap(1);
 		if (boolString == "true") {
 			return true;
 		}
@@ -269,8 +273,20 @@ bool SetupWizard::isPremiumLoginValid(QMessageBox& message)
 			return false;
 		}
 	}
+	else {
+		QRegExp errorRegex(".*\"error\".*:.*\"(.+)\".*");
+		if (errorRegex.exactMatch(responseJson)) {
 
-	message.setText(tr("Login failed, an error occurred.\n\nServer response:\n\n%1").arg(responseJson.trimmed()));
+			// replace "\n" with real new lines.
+			QString error = errorRegex.cap(1).replace("\\n", "\n");
+
+			message.setText(tr("Login failed, an error occurred.\n\n%1").arg(error));
+			message.exec();
+			return false;
+		}
+	}
+
+	message.setText(tr("Login failed, an error occurred.\n\nServer response:\n\n%1").arg(responseJson));
 	message.exec();
 	return false;
 }
