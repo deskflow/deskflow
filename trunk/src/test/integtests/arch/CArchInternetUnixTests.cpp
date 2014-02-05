@@ -23,7 +23,7 @@
 
 TEST(CArchInternetWindowsTests, openWebPage)
 {
-    CArchInternetUnix internet;
-    CString result = internet.get(TEST_URL);
+	CArchInternetUnix internet;
+	CString result = internet.get(TEST_URL);
 	ASSERT_EQ("Hello world!", result);
 }
