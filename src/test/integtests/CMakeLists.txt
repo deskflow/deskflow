@@ -26,11 +26,22 @@ set(src
 	CTestEventQueue.cpp
 )
 
+# arch
+if (WIN32)
+	list(APPEND src
+		arch/CArchInternetWindowsTests.cpp
+	)
+elseif (UNIX)
+	list(APPEND src
+		arch/CArchInternetUnixTests.cpp
+	)
+endif()
+
+# platform
 if (WIN32)
 	list(APPEND src
 		platform/CMSWindowsClipboardTests.cpp
 		platform/CMSWindowsKeyStateTests.cpp
-		arch/CArchInternetWindowsTests.cpp
 	)
 elseif (APPLE)
 	list(APPEND src
@@ -38,7 +49,6 @@ elseif (APPLE)
 		platform/COSXKeyStateTests.cpp
 		platform/COSXScreenTests.cpp
 	)
-
 elseif (UNIX)
 	list(APPEND src
 		platform/CXWindowsClipboardTests.cpp
