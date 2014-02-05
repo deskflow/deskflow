@@ -40,7 +40,7 @@ endif()
 include_directories(${inc})
 add_executable(syntool ${src})
 target_link_libraries(syntool
-	arch base client common io mt net ipc platform synergy cryptopp ${libs})
+	synergy arch base client common io ipc mt net platform server cryptopp ${libs})
 
 if (CONF_CPACK)
 	install(TARGETS
