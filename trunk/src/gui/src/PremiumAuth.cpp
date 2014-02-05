@@ -24,7 +24,7 @@
 // we use syntool to authenticate because Qt's http library is very
 // unreliable, and since we're writing platform specific code, use the
 // synergy code since there we can use integ tests.
-QString PremiumAuth::auth(const QString& email, const QString& password)
+QString PremiumAuth::request(const QString& email, const QString& password)
 {
 	QString program(QCoreApplication::applicationDirPath() + "/syntool");
 	QStringList args("--premium-auth");
@@ -40,7 +40,7 @@ QString PremiumAuth::auth(const QString& email, const QString& password)
 		process.write(credentials.toStdString().c_str());
 
 		if (process.waitForFinished()) {
-			return process.readLine();
+			return process.readAll();
 		}
 	}
 

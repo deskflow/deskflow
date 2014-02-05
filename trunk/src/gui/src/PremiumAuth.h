@@ -22,5 +22,5 @@
 class PremiumAuth
 {
 public:
-	QString auth(const QString& email, const QString& password);
+	QString request(const QString& email, const QString& password);
 };
