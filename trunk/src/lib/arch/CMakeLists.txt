@@ -24,6 +24,7 @@ set(src
 if (WIN32)
 
 	set(inc
+		CArch.h
 		CArchConsoleWindows.h
 		CArchDaemonWindows.h
 		CArchFileWindows.h
