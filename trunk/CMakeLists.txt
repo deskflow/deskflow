@@ -176,7 +176,8 @@ if (UNIX)
 			${lib_ScreenSaver}
 			${lib_IOKit}
 			${lib_ApplicationServices}
-			${lib_Foundation
+			${lib_Foundation}
+			${lib_Carbon}
 		)
 
 	else()
