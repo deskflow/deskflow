@@ -105,7 +105,7 @@ public:
 	client (local screen) \p primaryClient.  The client retains
 	ownership of \p primaryClient.
 	*/
-	CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen, IEventQueue* events);
+	CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen, IEventQueue* events, bool enableDragDrop);
 	~CServer();
 
 #ifdef TEST_ENV
@@ -472,6 +472,7 @@ private:
 	CThread*			m_writeToDropDirThread;
 	CString				m_dragFileExt;
 	bool				m_ignoreFileTransfer;
+	bool				m_enableDragDrop;
 };
 
 #endif

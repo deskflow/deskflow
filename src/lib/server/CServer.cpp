@@ -47,7 +47,7 @@
 // CServer
 //
 
-CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen, IEventQueue* events) :
+CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen, IEventQueue* events, bool enableDragDrop) :
 	m_events(events),
 	m_mock(false),
 	m_primaryClient(primaryClient),
@@ -77,7 +77,8 @@ CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen
 	m_screen(screen),
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
-	m_ignoreFileTransfer(false)
+	m_ignoreFileTransfer(false),
+	m_enableDragDrop(enableDragDrop)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
@@ -166,14 +167,17 @@ CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen
 							m_inputFilter,
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleFakeInputEndEvent));
-	m_events->adoptHandler(m_events->forIScreen().fileChunkSending(),
-							this,
-							new TMethodEventJob<CServer>(this,
-								&CServer::handleFileChunkSendingEvent));
-	m_events->adoptHandler(m_events->forIScreen().fileRecieveCompleted(),
-							this,
-							new TMethodEventJob<CServer>(this,
-								&CServer::handleFileRecieveCompletedEvent));
+
+	if (m_enableDragDrop) {
+		m_events->adoptHandler(m_events->forIScreen().fileChunkSending(),
+								this,
+								new TMethodEventJob<CServer>(this,
+									&CServer::handleFileChunkSendingEvent));
+		m_events->adoptHandler(m_events->forIScreen().fileRecieveCompleted(),
+								this,
+								new TMethodEventJob<CServer>(this,
+									&CServer::handleFileRecieveCompletedEvent));
+	}
 
 	// add connection
 	addClient(m_primaryClient);
@@ -245,8 +249,6 @@ CServer::~CServer()
 	// disable and disconnect primary client
 	m_primaryClient->disable();
 	removeClient(m_primaryClient);
-	
-	delete m_sendFileThread;
 }
 
 bool
@@ -1666,7 +1668,7 @@ CServer::onMouseUp(ButtonID id)
 		return;
 	}
 	
-	if (!m_screen->isOnScreen()) {
+	if (m_enableDragDrop && !m_screen->isOnScreen()) {
 		CString& dir = m_screen->getDraggingFileDir();
 		if (!dir.empty()) {
 			LOG((CLOG_DEBUG "send file to client: %s", dir.c_str()));
@@ -1747,7 +1749,7 @@ CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 
 	// should we switch or not?
 	if (isSwitchOkay(newScreen, dir, x, y, xc, yc)) {
-		if (m_screen->getDraggingStarted() && m_active != newScreen) {
+		if (m_enableDragDrop && m_screen->getDraggingStarted() && m_active != newScreen) {
 			CString& dragFileList = m_screen->getDraggingFileDir();
 			size_t size = dragFileList.size() + 1;
 			char* fileList = NULL;
@@ -2329,18 +2331,23 @@ CServer::sendFileThread(void* filename)
 		LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));
 	}
 
-	delete m_sendFileThread;
 	m_sendFileThread = NULL;
 }
 
 void
 CServer::dragInfoReceived(UInt32 fileNum, CString content)
 {
+	// TODO: fix duplicate function from CClient
+
+	if (!m_enableDragDrop) {
+		LOG((CLOG_DEBUG "drag drop not enabled, ignoring drag info."));
+		return;
+	}
+
 	CDragInformation::parseDragInfo(m_dragFileList, fileNum, content);
-	LOG((CLOG_DEBUG "drag information received"));
-	LOG((CLOG_DEBUG "total drag file number: %i", m_dragFileList.size()));
+	LOG((CLOG_DEBUG "drag info received, total drag file number: %i", m_dragFileList.size()));
 	
-	for(int i = 0; i < m_dragFileList.size(); ++i) {
+	for (int i = 0; i < m_dragFileList.size(); ++i) {
 		LOG((CLOG_DEBUG "dragging file %i name: %s", i + 1, m_dragFileList.at(i).c_str()));
 	}
 	

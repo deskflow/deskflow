@@ -51,7 +51,8 @@ CClient::CClient(IEventQueue* events,
 				ISocketFactory* socketFactory,
 				IStreamFilterFactory* streamFilterFactory,
 				CScreen* screen,
-				const CCryptoOptions& crypto) :
+				const CCryptoOptions& crypto,
+				bool enableDragDrop) :
 	m_mock(false),
 	m_name(name),
 	m_serverAddress(address),
@@ -69,7 +70,8 @@ CClient::CClient(IEventQueue* events,
 	m_cryptoStream(NULL),
 	m_crypto(crypto),
 	m_sendFileThread(NULL),
-	m_writeToDropDirThread(NULL)
+	m_writeToDropDirThread(NULL),
+	m_enableDragDrop(false)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -83,14 +85,17 @@ CClient::CClient(IEventQueue* events,
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleResume));
-	m_events->adoptHandler(m_events->forIScreen().fileChunkSending(),
-							this,
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleFileChunkSending));
-	m_events->adoptHandler(m_events->forIScreen().fileRecieveCompleted(),
-							this,
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleFileRecieveCompleted));
+
+	if (m_enableDragDrop) {
+		m_events->adoptHandler(m_events->forIScreen().fileChunkSending(),
+								this,
+								new TMethodEventJob<CClient>(this,
+									&CClient::handleFileChunkSending));
+		m_events->adoptHandler(m_events->forIScreen().fileRecieveCompleted(),
+								this,
+								new TMethodEventJob<CClient>(this,
+									&CClient::handleFileRecieveCompleted));
+	}
 }
 
 CClient::~CClient()
@@ -110,7 +115,6 @@ CClient::~CClient()
 	cleanupConnection();
 	delete m_socketFactory;
 	delete m_streamFilterFactory;
-	delete m_sendFileThread;
 }
 
 void
@@ -782,12 +786,17 @@ CClient::fileChunkReceived(CString data)
 void
 CClient::dragInfoReceived(UInt32 fileNum, CString data)
 {
-	LOG((CLOG_DEBUG "drag information received"));
-	LOG((CLOG_DEBUG "parsing drag info data: %s", data.c_str()));
-	CDragInformation::parseDragInfo(m_dragFileList, fileNum, data);
-	LOG((CLOG_DEBUG "total drag file number: %i", m_dragFileList.size()));
+	// TODO: fix duplicate function from CServer
 
-	for(int i = 0; i < m_dragFileList.size(); ++i) {
+	if (!m_enableDragDrop) {
+		LOG((CLOG_DEBUG "drag drop not enabled, ignoring drag info."));
+		return;
+	}
+
+	CDragInformation::parseDragInfo(m_dragFileList, fileNum, data);
+	LOG((CLOG_DEBUG "drag info received, total drag file number: %i", m_dragFileList.size()));
+
+	for (int i = 0; i < m_dragFileList.size(); ++i) {
 		LOG((CLOG_DEBUG2 "dragging file %i name: %s", i + 1, m_dragFileList.at(i).c_str()));
 	}
 	
@@ -830,7 +839,6 @@ CClient::sendFileThread(void* filename)
 		LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));
 	}
 
-	delete m_sendFileThread;
 	m_sendFileThread = NULL;
 }
 
