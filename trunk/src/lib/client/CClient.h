@@ -62,7 +62,8 @@ public:
 							ISocketFactory* socketFactory,
 							IStreamFilterFactory* streamFilterFactory,
 							CScreen* screen,
-							const CCryptoOptions& crypto);
+							const CCryptoOptions& crypto,
+							bool enableDragDrop);
 	~CClient();
 	
 #ifdef TEST_ENV
@@ -236,6 +237,7 @@ private:
 	CString					m_dragFileExt;
 	CThread*				m_sendFileThread;
 	CThread*				m_writeToDropDirThread;
+	bool					m_enableDragDrop;
 };
 
 #endif

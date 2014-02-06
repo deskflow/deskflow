@@ -408,7 +408,8 @@ CClientApp::openClient(const CString& name, const CNetworkAddress& address, CScr
 		new CTCPSocketFactory(m_events, getSocketMultiplexer()),
 		NULL,
 		screen,
-		crypto);
+		crypto,
+		args().m_enableDragDrop);
 
 	try {
 		m_events->adoptHandler(

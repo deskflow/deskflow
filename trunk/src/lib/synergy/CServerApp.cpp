@@ -695,7 +695,7 @@ CServerApp::openClientListener(const CNetworkAddress& address)
 CServer* 
 CServerApp::openServer(CConfig& config, CPrimaryClient* primaryClient)
 {
-	CServer* server = new CServer(config, primaryClient, s_serverScreen, m_events);
+	CServer* server = new CServer(config, primaryClient, s_serverScreen, m_events, args().m_enableDragDrop);
 	try {
 		m_events->adoptHandler(
 			m_events->forCServer().disconnected(), server,

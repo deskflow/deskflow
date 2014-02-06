@@ -130,7 +130,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	CServer server(serverConfig, &primaryClient, &serverScreen, &m_events);
+	CServer server(serverConfig, &primaryClient, &serverScreen, &m_events, false);
 	server.m_mock = true;
 	listener.setServer(&server);
 
@@ -142,7 +142,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	CClient client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions);
+	CClient client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions, false);
 		
 	m_events.adoptHandler(
 		m_events.forIScreen().fileRecieveCompleted(), &client,
@@ -183,7 +183,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	CServer server(serverConfig, &primaryClient, &serverScreen, &m_events);
+	CServer server(serverConfig, &primaryClient, &serverScreen, &m_events, false);
 	server.m_mock = true;
 	listener.setServer(&server);
 
@@ -195,7 +195,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	CClient client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions);
+	CClient client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions, false);
 		
 	m_events.adoptHandler(
 		m_events.forIScreen().fileRecieveCompleted(), &client,
@@ -231,7 +231,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	CServer server(serverConfig, &primaryClient, &serverScreen, &m_events);
+	CServer server(serverConfig, &primaryClient, &serverScreen, &m_events, false);
 	server.m_mock = true;
 	listener.setServer(&server);
 
@@ -243,7 +243,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	CClient client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions);
+	CClient client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions, false);
 	
 	m_events.adoptHandler(
 		m_events.forCClientListener().connected(), &listener,
@@ -284,7 +284,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	CServer server(serverConfig, &primaryClient, &serverScreen, &m_events);
+	CServer server(serverConfig, &primaryClient, &serverScreen, &m_events, false);
 	server.m_mock = true;
 	listener.setServer(&server);
 
@@ -296,7 +296,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	CClient client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions);
+	CClient client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions, false);
 	
 	m_events.adoptHandler(
 		m_events.forCClientListener().connected(), &listener,
