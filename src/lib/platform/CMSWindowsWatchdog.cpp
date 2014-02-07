@@ -233,7 +233,7 @@ CMSWindowsWatchdog::mainLoop(void*)
 		shutdownProcess(m_processInfo.hProcess, m_processInfo.dwProcessId, 20);
 	}
 	
-	LOG((CLOG_DEBUG "relauncher main thread finished"));
+	LOG((CLOG_DEBUG "watchdog main thread finished"));
 }
 
 bool
@@ -331,6 +331,7 @@ CMSWindowsWatchdog::setCommand(const std::string& command, bool elevate)
 	m_command = command;
 	m_elevateProcess = elevate;
 	m_commandChanged = true;
+	m_processFailures = 0;
 }
 
 std::string
