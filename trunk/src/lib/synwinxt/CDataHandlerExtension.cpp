@@ -86,10 +86,8 @@ HRESULT STDMETHODCALLTYPE
 CDataHandlerExtension::Load(__RPC__in LPCOLESTR pszFileName, DWORD dwMode)
 {
 	outputDebugStringF("synwinxt: > CDataHandlerExtension::Load\n");
-	
 	std::string fileName = _bstr_t(pszFileName);
 	setDraggingFilename(fileName.c_str());
-	
 	outputDebugStringF("synwinxt: < CDataHandlerExtension::Load\n");
 	return S_OK;
 }
