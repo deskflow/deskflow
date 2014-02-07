@@ -13,31 +13,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(inc
+set(headers
 	CClassFactory.h
 	CDataHandlerExtension.h
 	synwinxt.h
 )
 
-set(src
+set(source
 	CClassFactory.cpp
 	CDataHandlerExtension.cpp
 	synwinxt.cpp
 	synwinxt.def
 )
 
-list(APPEND src
-	${inc}
+list(APPEND source
+	${headers}
 )
 
-set(inc
+set(includes
 	../arch
 	../base
 	../common
 )
 
-include_directories(${inc})
-add_library(synwinxt SHARED ${inc} ${src})
+include_directories(${includes})
+add_library(synwinxt SHARED ${source})
 target_link_libraries(synwinxt
 	arch base common ${libs})
 	
