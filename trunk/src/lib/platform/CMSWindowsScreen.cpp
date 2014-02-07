@@ -1888,6 +1888,13 @@ CMSWindowsScreen::CHotKeyItem::operator<(const CHotKeyItem& x) const
 			(m_keycode == x.m_keycode && m_mask < x.m_mask));
 }
 
+void
+CMSWindowsScreen::fakeDraggingFiles(CString str)
+{
+	// possible design flaw: this function stops a "not implemented"
+	// exception from being thrown.
+}
+
 CString&
 CMSWindowsScreen::getDraggingFileDir()
 {
