@@ -147,12 +147,16 @@ CMSWindowsScreen::CMSWindowsScreen(
 		forceShowCursor();
 		LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
 		LOG((CLOG_DEBUG "window is 0x%08x", m_window));
-
-		wchar_t* desktopPath = 0;
-		SHGetKnownFolderPath(FOLDERID_Desktop, 0, NULL, &desktopPath);
-		m_desktopPath = _bstr_t(desktopPath);
-		CoTaskMemFree(static_cast<void*>(desktopPath));
-		LOG((CLOG_DEBUG "using desktop for drop target: %s", m_desktopPath.c_str()));
+		
+		// SHGetFolderPath is deprecated in vista, but use it for xp support.
+		char desktopPath[MAX_PATH];
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, desktopPath))) {
+			m_desktopPath = CString(desktopPath);
+			LOG((CLOG_DEBUG "using desktop for drop target: %s", m_desktopPath.c_str()));
+		}
+		else {
+			LOG((CLOG_ERR "failed to get desktop path, no drop target available, error=%d", GetLastError()));
+		}
 	}
 	catch (...) {
 		delete m_keyState;
