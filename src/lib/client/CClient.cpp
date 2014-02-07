@@ -71,7 +71,7 @@ CClient::CClient(IEventQueue* events,
 	m_crypto(crypto),
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
-	m_enableDragDrop(false)
+	m_enableDragDrop(enableDragDrop)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
