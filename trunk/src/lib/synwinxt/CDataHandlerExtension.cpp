@@ -21,7 +21,7 @@
 
 extern LONG g_refCount;
 extern GUID g_CLSID;
-extern void updateDraggingFilename(char*);
+extern void setDraggingFilename(char*);
 extern void outputDebugStringF(const char *str, ...);
 
 CDataHandlerExtension::CDataHandlerExtension() :
@@ -89,7 +89,7 @@ CDataHandlerExtension::Load(__RPC__in LPCOLESTR pszFileName, DWORD dwMode)
 	char selectedFilename[MAX_PATH];
 	StringCchCopyW(m_selectedFilename, ARRAYSIZE(m_selectedFilename), pszFileName);
 	WideCharToMultiByte(CP_ACP, 0, m_selectedFilename, -1, selectedFilename, MAX_PATH, NULL, NULL);
-	updateDraggingFilename(selectedFilename);
+	setDraggingFilename(selectedFilename);
 	
 	outputDebugStringF("synwinxt: < CDataHandlerExtension::Load\n");
 	return S_OK;
