@@ -281,11 +281,37 @@ unregisterShellExtDataHandler(CHAR* fileType, const CLSID& clsid)
 	return hr;
 }
 
+std::string
+getFileExt(const char* filenameCStr)
+{
+	std::string filename = filenameCStr;
+	size_t findExt = filename.find_last_of(".", filename.size());
+	if (findExt != std::string::npos) {
+		return filename.substr(findExt + 1, filename.size() - findExt - 1);
+	}
+	return "";
+}
+
 void
 setDraggingFilename(const char* filename)
 {
 	outputDebugStringF("synwinxt: > setDraggingFilename, filename=%s\n", filename);
-	memcpy(g_draggingFilename, filename, MAX_PATH);
+	
+	// HACK: only handle files that are not .exe or .lnk
+	// dragging anything, including a selection marquee, from a program
+	// (e.g. explorer.exe) will cause this function to be called with the
+	// path of that program. currently we don't know how to test for this
+	// situation, so just ignore exe and lnk files.
+	std::string ext = getFileExt(filename);
+	if ((ext != "exe") && (ext != "lnk")) {
+		memcpy(g_draggingFilename, filename, MAX_PATH);
+	}
+	else {
+		outputDebugStringF(
+			"synwinxt: ignoring filename=%s, ext=%s\n",
+			filename, ext.c_str());
+	}
+
 	outputDebugStringF("synwinxt: < setDraggingFilename, g_draggingFilename=%s\n", g_draggingFilename);
 }
 
@@ -294,5 +320,10 @@ getDraggingFilename(char* filename)
 {
 	outputDebugStringF("synwinxt: > getDraggingFilename\n");
 	memcpy(filename, g_draggingFilename, MAX_PATH);
+	
+	// mark string as empty once used, so we can't accidentally copy
+	// the same file more than once unless the user does this on purpose.
+	g_draggingFilename[0] = NULL;
+
 	outputDebugStringF("synwinxt: < getDraggingFilename, filename=%s\n", filename);
 }

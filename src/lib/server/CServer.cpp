@@ -1669,10 +1669,10 @@ CServer::onMouseUp(ButtonID id)
 	}
 	
 	if (m_enableDragDrop && !m_screen->isOnScreen()) {
-		CString& dir = m_screen->getDraggingFilename();
-		if (!dir.empty()) {
-			LOG((CLOG_DEBUG "send file to client: %s", dir.c_str()));
-			sendFileToClient(dir.c_str());
+		CString& file = m_screen->getDraggingFilename();
+		if (!file.empty()) {
+			LOG((CLOG_DEBUG "send file to client: %s", file.c_str()));
+			sendFileToClient(file.c_str());
 		}
 	}
 }
