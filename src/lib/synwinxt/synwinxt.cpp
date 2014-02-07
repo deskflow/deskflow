@@ -282,11 +282,11 @@ unregisterShellExtDataHandler(CHAR* fileType, const CLSID& clsid)
 }
 
 void
-updateDraggingFilename(char* filename)
+setDraggingFilename(char* filename)
 {
-	outputDebugStringF("synwinxt: > updateDraggingFilename, filename=%s\n", filename);
+	outputDebugStringF("synwinxt: > setDraggingFilename, filename=%s\n", filename);
 	memcpy(g_draggingFilename, filename, MAX_PATH);
-	outputDebugStringF("synwinxt: < updateDraggingFilename, g_draggingFilename=%s\n", g_draggingFilename);
+	outputDebugStringF("synwinxt: < setDraggingFilename, g_draggingFilename=%s\n", g_draggingFilename);
 }
 
 void
