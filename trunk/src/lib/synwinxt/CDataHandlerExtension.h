@@ -53,5 +53,5 @@ public:
 
 private:
 	LONG m_refCount;
-	WCHAR m_selectedFileDir[MAX_PATH];
+	WCHAR m_selectedFilename[MAX_PATH];
 };

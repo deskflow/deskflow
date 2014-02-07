@@ -362,8 +362,8 @@ CMSWindowsScreen::leave()
 	forceShowCursor();
 
 	if (getDraggingStarted()) {
-		CString& draggingDir = getDraggingFileDir();
-		size_t size = draggingDir.size();
+		CString& draggingFilename = getDraggingFilename();
+		size_t size = draggingFilename.size();
 
 		if (!m_isPrimary) {
 			// TODO: fake these keys properly
@@ -372,14 +372,14 @@ CMSWindowsScreen::leave()
 
 			fakeMouseButton(kButtonLeft, false);
 
-			if (draggingDir.empty() == false) {
+			if (draggingFilename.empty() == false) {
 				CClientApp& app = CClientApp::instance();
 				CClient* client = app.getClientPtr();
 				UInt32 fileCount = 1;
-				LOG((CLOG_DEBUG "send dragging info to server: %s", draggingDir.c_str()));
-				client->draggingInfoSending(fileCount, draggingDir, size);
+				LOG((CLOG_DEBUG "send dragging info to server: %s", draggingFilename.c_str()));
+				client->draggingInfoSending(fileCount, draggingFilename, size);
 				LOG((CLOG_DEBUG "send dragging file to server"));
-				client->sendFileToServer(draggingDir.c_str());
+				client->sendFileToServer(draggingFilename.c_str());
 			}
 		}
 
@@ -1332,8 +1332,8 @@ CMSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 		if (pressed) {
 			m_buttons[button] = true;
 			if (button == kButtonLeft) {
-				m_draggingFileDir.clear();
-				LOG((CLOG_DEBUG2 "dragging file directory is cleared"));
+				m_draggingFilename.clear();
+				LOG((CLOG_DEBUG2 "dragging filename is cleared"));
 			}
 		}
 		else {
@@ -1896,17 +1896,17 @@ CMSWindowsScreen::fakeDraggingFiles(CString str)
 }
 
 CString&
-CMSWindowsScreen::getDraggingFileDir()
+CMSWindowsScreen::getDraggingFilename()
 {
 	if (m_draggingStarted) {
-		// temporarily log out dragging file directory
+		// temporarily log out dragging filename
 		char dir[MAX_PATH];
-		m_hookLibraryLoader.m_getDraggingFileDir(dir);
-		m_draggingFileDir.clear();
-		m_draggingFileDir.append(dir);
+		m_hookLibraryLoader.m_getDraggingFilename(dir);
+		m_draggingFilename.clear();
+		m_draggingFilename.append(dir);
 	}
 
-	return m_draggingFileDir;
+	return m_draggingFilename;
 }
 
 const CString&

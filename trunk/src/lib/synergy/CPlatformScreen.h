@@ -80,7 +80,7 @@ public:
 	virtual void		setDraggingStarted(bool started) { m_draggingStarted = started; }
 	virtual bool		getDraggingStarted();
 	virtual bool		getFakeDraggingStarted() { return m_fakeDraggingStarted; }
-	virtual CString&	getDraggingFileDir() { return m_draggingFileDir; }
+	virtual CString&	getDraggingFilename() { return m_draggingFilename; }
 
 	// IPlatformScreen overrides
 	virtual void		enable() = 0;
@@ -120,7 +120,7 @@ protected:
 	virtual void		handleSystemEvent(const CEvent& event, void*) = 0;
 
 protected:
-	CString				m_draggingFileDir;
+	CString				m_draggingFilename;
 	bool				m_draggingStarted;
 	bool				m_fakeDraggingStarted;
 };

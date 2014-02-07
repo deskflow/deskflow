@@ -447,9 +447,9 @@ CScreen::setEnableDragDrop(bool enabled)
 }
 
 CString&
-CScreen::getDraggingFileDir() const
+CScreen::getDraggingFilename() const
 {
-	return m_screen->getDraggingFileDir();
+	return m_screen->getDraggingFilename();
 }
 
 const CString&

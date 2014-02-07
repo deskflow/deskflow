@@ -912,7 +912,7 @@ COSXScreen::leave()
     hideCursor();
     
 	if (getDraggingStarted()) {
-		CString& fileList = getDraggingFileDir();
+		CString& fileList = getDraggingFilename();
 		size_t size = fileList.size();
 		
 		if (!m_isPrimary) {
@@ -1228,7 +1228,7 @@ COSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 		MouseButtonState state = pressed ? kMouseButtonDown : kMouseButtonUp;
 		m_buttonState.set(kButtonLeft - 1, state);
 		if (pressed) {
-			m_draggingFileDir.clear();
+			m_draggingFilename.clear();
 			LOG((CLOG_DEBUG2 "dragging file directory is cleared"));
 		}
 		else {
@@ -2105,21 +2105,21 @@ COSXScreen::fakeDraggingFiles(CString str)
 }
 
 CString&
-COSXScreen::getDraggingFileDir()
+COSXScreen::getDraggingFilename()
 {
 	if (m_draggingStarted) {
 		CFStringRef dragInfo = getDraggedFileURL();
 		char* info = NULL;
 		info = CFStringRefToUTF8String(dragInfo);
 		if (info == NULL) {
-			m_draggingFileDir.clear();
+			m_draggingFilename.clear();
 		}
 		else {
 			LOG((CLOG_DEBUG "drag info: %s", info));
 			CFRelease(dragInfo);
 			CString fileList(info);
-			m_draggingFileDir = fileList;
+			m_draggingFilename = fileList;
 		}
 	}
-	return m_draggingFileDir;
+	return m_draggingFilename;
 }

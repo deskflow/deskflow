@@ -28,7 +28,7 @@
 #pragma data_seg("sharedData")
 #endif
 
-static BYTE g_draggingFileDir[MAX_PATH] = { 0 };
+static BYTE g_draggingFilename[MAX_PATH] = { 0 };
 
 #if defined(_MSC_VER)
 #pragma data_seg()
@@ -282,17 +282,17 @@ unregisterShellExtDataHandler(CHAR* fileType, const CLSID& clsid)
 }
 
 void
-updateDraggingDir(char* dir)
+updateDraggingFilename(char* filename)
 {
-	outputDebugStringF("synwinxt: > updateDraggingDir, dir=%s\n", dir);
-	memcpy(g_draggingFileDir, dir, MAX_PATH);
-	outputDebugStringF("synwinxt: < updateDraggingDir, g_draggingFileDir=%s\n", g_draggingFileDir);
+	outputDebugStringF("synwinxt: > updateDraggingFilename, filename=%s\n", filename);
+	memcpy(g_draggingFilename, filename, MAX_PATH);
+	outputDebugStringF("synwinxt: < updateDraggingFilename, g_draggingFilename=%s\n", g_draggingFilename);
 }
 
 void
-getDraggingFileDir(char* dir)
+getDraggingFilename(char* filename)
 {
-	outputDebugStringF("synwinxt: > getDraggingFileDir\n");
-	memcpy(dir, g_draggingFileDir, MAX_PATH);
-	outputDebugStringF("synwinxt: < getDraggingFileDir, dir=%s\n", dir);
+	outputDebugStringF("synwinxt: > getDraggingFilename\n");
+	memcpy(filename, g_draggingFilename, MAX_PATH);
+	outputDebugStringF("synwinxt: < getDraggingFilename, filename=%s\n", filename);
 }
