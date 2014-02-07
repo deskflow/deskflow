@@ -22,7 +22,6 @@
 
 NSWindow* g_dragWindow = NULL;
 COSXDragView* g_dragView = NULL;
-NSApplication* g_app = NULL;
 
 void
 runCocoaApp()
@@ -32,9 +31,7 @@ runCocoaApp()
 	
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
-    
-	NSApplication* app = [[NSApplication alloc] init];
-    g_app = app;
+	[NSApplication sharedApplication];
 	
     NSWindow* window = [[NSWindow alloc]
 						initWithContentRect: NSMakeRect(0, 0, 3, 3)
@@ -52,7 +49,7 @@ runCocoaApp()
 	[window setContentView: dragView];
 	
 	NSLog(@"starting cocoa loop");
-	[app run];
+	[NSApp run];
 	
 	NSLog(@"cocoa: release");
 	[pool release];
@@ -61,7 +58,7 @@ runCocoaApp()
 void
 stopCocoaLoop()
 {
-	[g_app stop: g_dragWindow];
+	[NSApp stop: g_dragWindow];
 }
 
 void
