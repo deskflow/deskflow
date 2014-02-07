@@ -43,6 +43,7 @@
 #include <string.h>
 #include <pbt.h>
 #include <Shlobj.h>
+#include <comutil.h>
 
 //
 // add backwards compatible multihead support (and suppress bogus warning).
@@ -147,10 +148,11 @@ CMSWindowsScreen::CMSWindowsScreen(
 		LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
 		LOG((CLOG_DEBUG "window is 0x%08x", m_window));
 
-		char desktopPath[MAX_PATH];
-		SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, desktopPath);
-		m_desktopPath = CString(desktopPath);
-		LOG((CLOG_DEBUG "temporarily use desktop directory for drop target: %s", m_desktopPath.c_str()));
+		wchar_t* desktopPath = 0;
+		SHGetKnownFolderPath(FOLDERID_Desktop, 0, NULL, &desktopPath);
+		m_desktopPath = _bstr_t(desktopPath);
+		CoTaskMemFree(static_cast<void*>(desktopPath));
+		LOG((CLOG_DEBUG "using desktop for drop target: %s", m_desktopPath.c_str()));
 	}
 	catch (...) {
 		delete m_keyState;
