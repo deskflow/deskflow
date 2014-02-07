@@ -284,7 +284,7 @@ public:
 
 	//! Get dragging file's directory.
 
-	CString&			getDraggingFileDir() const;
+	CString&			getDraggingFilename() const;
 
 	//! Get drop target directory.
 	

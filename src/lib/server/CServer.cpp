@@ -1669,7 +1669,7 @@ CServer::onMouseUp(ButtonID id)
 	}
 	
 	if (m_enableDragDrop && !m_screen->isOnScreen()) {
-		CString& dir = m_screen->getDraggingFileDir();
+		CString& dir = m_screen->getDraggingFilename();
 		if (!dir.empty()) {
 			LOG((CLOG_DEBUG "send file to client: %s", dir.c_str()));
 			sendFileToClient(dir.c_str());
@@ -1750,7 +1750,7 @@ CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 	// should we switch or not?
 	if (isSwitchOkay(newScreen, dir, x, y, xc, yc)) {
 		if (m_enableDragDrop && m_screen->getDraggingStarted() && m_active != newScreen) {
-			CString& dragFileList = m_screen->getDraggingFileDir();
+			CString& dragFileList = m_screen->getDraggingFilename();
 			size_t size = dragFileList.size() + 1;
 			char* fileList = NULL;
 			UInt32 fileCount = 1;

@@ -26,7 +26,7 @@ CMSWindowsHookLibraryLoader::CMSWindowsHookLibraryLoader() :
 	m_setSides(NULL),
 	m_setZone(NULL),
 	m_setMode(NULL),
-	m_getDraggingFileDir(NULL)
+	m_getDraggingFilename(NULL)
 {
 }
 
@@ -91,9 +91,9 @@ CMSWindowsHookLibraryLoader::openShellLibrary(const char* name)
 	}
 
 	// look up functions
-	m_getDraggingFileDir = (GetDraggingFileDir)GetProcAddress(shellLibrary, "getDraggingFileDir");
+	m_getDraggingFilename = (GetDraggingFilename)GetProcAddress(shellLibrary, "getDraggingFilename");
 
-	if (m_getDraggingFileDir == NULL) {
+	if (m_getDraggingFilename == NULL) {
 		LOG((CLOG_ERR "invalid shell library, use a newer %s.dll", name));
 		throw XScreenOpenFailure();
 	}

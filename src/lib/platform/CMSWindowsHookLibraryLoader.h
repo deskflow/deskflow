@@ -41,7 +41,7 @@ public:
 	SetZoneFunc			m_setZone;
 	SetModeFunc			m_setMode;
 
-	GetDraggingFileDir	m_getDraggingFileDir;
+	GetDraggingFilename	m_getDraggingFilename;
 };
 
 #endif

@@ -188,7 +188,7 @@ public:
 	virtual SInt32		pollActiveGroup() const = 0;
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
 
-	virtual CString&	getDraggingFileDir() = 0;
+	virtual CString&	getDraggingFilename() = 0;
 	virtual bool		getDraggingStarted() = 0;
 	virtual bool		getFakeDraggingStarted() = 0;
 

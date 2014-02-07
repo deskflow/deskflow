@@ -116,7 +116,7 @@ public:
 	virtual void		setSequenceNumber(UInt32);
 	virtual bool		isPrimary() const;
 	virtual void		fakeDraggingFiles(CString str);
-	virtual CString&	getDraggingFileDir();
+	virtual CString&	getDraggingFilename();
 	virtual const CString&	
 						getDropTarget() const;
 
