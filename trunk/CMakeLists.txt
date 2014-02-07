@@ -180,7 +180,7 @@ if (UNIX)
 			${lib_Carbon}
 		)
 
-	else()
+	else() # not-apple
 
 		# add include dir for bsd (posix uses /usr/include/)
 		set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
@@ -284,9 +284,9 @@ if (UNIX)
 		add_definitions(-DWINAPI_XWINDOWS=1)
 	endif()
 
-else (UNIX)
+else() # not-unix
 
-	list(APPEND libs Wtsapi32 Userenv Wininet)
+	list(APPEND libs Wtsapi32 Userenv Wininet comsuppw)
 
 	add_definitions(
 		/DWIN32

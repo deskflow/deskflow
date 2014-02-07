@@ -1988,11 +1988,15 @@ CServer::onFileRecieveCompleted()
 void
 CServer::writeToDropDirThread(void*)
 {
+	LOG((CLOG_DEBUG "starting write to drop dir thread"));
+
 	while (m_screen->getFakeDraggingStarted()) {
 		ARCH->sleep(.1f);
 	}
 
 	m_fileTransferDes = m_screen->getDropTarget();
+	LOG((CLOG_DEBUG "dropping file, files=%i target=%s", m_dragFileList.size(), m_fileTransferDes.c_str()));
+
 	if (!m_fileTransferDes.empty() && m_dragFileList.size() > 0) {
 		std::fstream file;
 		CString dropTarget = m_fileTransferDes;

@@ -17,12 +17,13 @@
 
 #include "CDataHandlerExtension.h"
 #include <Shlwapi.h>
-#include <strsafe.h>
+#include <comutil.h>
+#include <string>
 
 extern LONG g_refCount;
 extern GUID g_CLSID;
-extern void setDraggingFilename(char*);
-extern void outputDebugStringF(const char *str, ...);
+extern void setDraggingFilename(const char* str);
+extern void outputDebugStringF(const char* str, ...);
 
 CDataHandlerExtension::CDataHandlerExtension() :
 	m_refCount(1)
@@ -85,11 +86,9 @@ HRESULT STDMETHODCALLTYPE
 CDataHandlerExtension::Load(__RPC__in LPCOLESTR pszFileName, DWORD dwMode)
 {
 	outputDebugStringF("synwinxt: > CDataHandlerExtension::Load\n");
-
-	char selectedFilename[MAX_PATH];
-	StringCchCopyW(m_selectedFilename, ARRAYSIZE(m_selectedFilename), pszFileName);
-	WideCharToMultiByte(CP_ACP, 0, m_selectedFilename, -1, selectedFilename, MAX_PATH, NULL, NULL);
-	setDraggingFilename(selectedFilename);
+	
+	std::string fileName = _bstr_t(pszFileName);
+	setDraggingFilename(fileName.c_str());
 	
 	outputDebugStringF("synwinxt: < CDataHandlerExtension::Load\n");
 	return S_OK;
