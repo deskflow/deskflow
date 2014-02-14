@@ -42,10 +42,7 @@ IpcClient::~IpcClient()
 
 void IpcClient::connected()
 {
-	char typeBuf[1];
-	typeBuf[0] = kIpcClientGui;
 	sendHello();
-
 	infoMessage("connection established");
 }
 

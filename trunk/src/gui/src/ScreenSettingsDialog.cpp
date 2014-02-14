@@ -21,6 +21,7 @@
 
 #include <QtCore>
 #include <QtGui>
+#include <QMessageBox>
 
 ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),

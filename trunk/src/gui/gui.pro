@@ -1,4 +1,4 @@
-QT += network
+QT += widgets network
 TEMPLATE = app
 TARGET = synergy
 DEPENDPATH += . \
@@ -74,7 +74,6 @@ RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 
 	QMAKE_INFO_PLIST = res/mac/Info.plist
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.4
     TARGET = Synergy
     QSYNERGY_ICON.files = res/mac/Synergy.icns
     QSYNERGY_ICON.path = Contents/Resources

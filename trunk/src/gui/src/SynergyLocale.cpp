@@ -18,7 +18,7 @@
 #include "SynergyLocale.h"
 
 #include <QResource>
-#include <QtXml/QXmlStreamReader>
+#include <QXmlStreamReader>
 #include <QDebug>
 
 SynergyLocale::SynergyLocale()

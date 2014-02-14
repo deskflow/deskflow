@@ -205,7 +205,7 @@ void SetupWizard::accept()
 
 	if (m_StartMain)
 	{
-		m_MainWindow.start(true);
+		m_MainWindow.start();
 	}
 
 	QWizard::accept();
@@ -217,7 +217,7 @@ void SetupWizard::reject()
 
 	if (m_StartMain)
 	{
-		m_MainWindow.start(true);
+		m_MainWindow.start();
 	}
 
 	QWizard::reject();

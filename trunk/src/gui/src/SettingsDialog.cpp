@@ -24,6 +24,8 @@
 
 #include <QtCore>
 #include <QtGui>
+#include <QMessageBox>
+#include <QFileDialog>
 
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),

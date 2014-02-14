@@ -29,7 +29,7 @@ class IpcClient : public QObject
 	 Q_OBJECT
 
 public:
-    IpcClient();
+	IpcClient();
 	virtual ~IpcClient();
 
 	void sendHello();

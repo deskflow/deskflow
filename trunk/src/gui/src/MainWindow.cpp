@@ -30,6 +30,10 @@
 #include <QtGui>
 #include <QtNetwork>
 #include <QNetworkAccessManager>
+#include <QMenu>
+#include <QMenuBar>
+#include <QMessageBox>
+#include <QFileDialog>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
@@ -97,7 +101,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pElevateCheckBox->hide();
 #endif
 
-    // change default size based on os
+	// change default size based on os
 #if defined(Q_OS_MAC)
 	resize(720, 550);
 	setMinimumSize(size());
@@ -117,7 +121,7 @@ MainWindow::~MainWindow()
 	saveSettings();
 }
 
-void MainWindow::start(bool firstRun)
+void MainWindow::start()
 {
 	createTrayIcon();
 
@@ -226,8 +230,8 @@ void MainWindow::loadSettings()
 {
 	// the next two must come BEFORE loading groupServerChecked and groupClientChecked or
 	// disabling and/or enabling the right widgets won't automatically work
-        m_pRadioExternalConfig->setChecked(settings().value("useExternalConfig", false).toBool());
-        m_pRadioInternalConfig->setChecked(settings().value("useInternalConfig", true).toBool());
+	m_pRadioExternalConfig->setChecked(settings().value("useExternalConfig", false).toBool());
+	m_pRadioInternalConfig->setChecked(settings().value("useInternalConfig", true).toBool());
 
 	m_pGroupServer->setChecked(settings().value("groupServerChecked", false).toBool());
 	m_pLineEditConfigFile->setText(settings().value("configFile", QDir::homePath() + "/" + synergyConfigName).toString());
@@ -253,9 +257,9 @@ void MainWindow::saveSettings()
 {
 	// program settings
 	settings().setValue("groupServerChecked", m_pGroupServer->isChecked());
-        settings().setValue("useExternalConfig", m_pRadioExternalConfig->isChecked());
+	settings().setValue("useExternalConfig", m_pRadioExternalConfig->isChecked());
 	settings().setValue("configFile", m_pLineEditConfigFile->text());
-        settings().setValue("useInternalConfig", m_pRadioInternalConfig->isChecked());
+	settings().setValue("useInternalConfig", m_pRadioInternalConfig->isChecked());
 	settings().setValue("groupClientChecked", m_pGroupClient->isChecked());
 	settings().setValue("serverHostname", m_pLineEditHostname->text());
 
@@ -355,7 +359,7 @@ void MainWindow::updateStateFromLogLine(const QString &line)
 
 void MainWindow::clearLog()
 {
-    m_pLogOutput->clear();
+	m_pLogOutput->clear();
 }
 
 void MainWindow::startSynergy()
@@ -508,7 +512,7 @@ QString MainWindow::configFilename()
 		if (!m_pTempConfigFile->open())
 		{
 			QMessageBox::critical(this, tr("Cannot write configuration file"), tr("The temporary configuration file required to start synergy can not be written."));
-			return false;
+			return "";
 		}
 
 		serverConfig().save(*m_pTempConfigFile);
@@ -524,7 +528,7 @@ QString MainWindow::configFilename()
 				tr("You have not filled in a valid configuration file for the synergy server. "
 						"Do you want to browse for the configuration file now?"), QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes
 					|| !on_m_pButtonBrowseConfigFile_clicked())
-				return false;
+				return "";
 		}
 
 		filename = m_pLineEditConfigFile->text();
@@ -684,7 +688,7 @@ void MainWindow::setVisible(bool visible)
 	m_pActionMinimize->setEnabled(visible);
 	m_pActionRestore->setEnabled(!visible);
 
-#if MAC_OS_X_VERSION_10_7
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1070 // lion
 	// dock hide only supported on lion :(
 	ProcessSerialNumber psn = { 0, kCurrentProcess };
 	GetCurrentProcess(&psn);

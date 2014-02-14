@@ -20,7 +20,7 @@
 
 #define KEYSEQUENCEWIDGET__H
 
-#include <QtGui>
+#include <QPushButton>
 
 #include "KeySequence.h"
 

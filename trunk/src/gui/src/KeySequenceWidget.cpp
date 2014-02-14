@@ -19,6 +19,7 @@
 #include "KeySequenceWidget.h"
 
 #include <iostream>
+#include <QMouseEvent>
 
 KeySequenceWidget::KeySequenceWidget(QWidget* parent, const KeySequence& seq) :
 	QPushButton(parent),
