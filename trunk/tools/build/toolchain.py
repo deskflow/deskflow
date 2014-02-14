@@ -16,7 +16,7 @@
 
 # TODO: split this file up, it's too long!
 
-import sys, os, ConfigParser, shutil, re, ftputil, zipfile
+import sys, os, ConfigParser, shutil, re, ftputil, zipfile, glob
 from generators import Generator, EclipseGenerator, XcodeGenerator, MakefilesGenerator
 
 if sys.version_info >= (2, 4):
@@ -1265,12 +1265,19 @@ class InternalCommands:
 	def reset(self):
 		if os.path.exists('build'):
 			shutil.rmtree('build')
+		
 		if os.path.exists('bin'):
 			shutil.rmtree('bin')
+		
 		if os.path.exists('lib'):
 			shutil.rmtree('lib')
+		
 		if os.path.exists('src/gui/tmp'):
 			shutil.rmtree('src/gui/tmp')
+		
+		# qt 4.3 generates ui_ files.
+		for filename in glob.glob("src/gui/ui_*"):
+		  os.remove(filename)
 
 # the command handler should be called only from hm.py (i.e. directly 
 # from the command prompt). the purpose of this class is so that we 
