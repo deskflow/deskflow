@@ -66,7 +66,7 @@ class InternalCommands:
 	# by default, compile the gui
 	enableMakeGui = True
 	
-	# by default, let cmake decide
+	# by default, unknown
 	macSdk = None
 	
 	# cryptoPP dir with version number
@@ -206,10 +206,9 @@ class InternalCommands:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 			
 		elif sys.platform == "darwin":
-			path = "/Developer/SDKs/MacOSX" + self.macSdk + ".sdk/"
-			cmake_args += " -DCMAKE_OSX_SYSROOT=" + path
+			sdkDir = self.getMacSdkDir()
+			cmake_args += " -DCMAKE_OSX_SYSROOT=" + sdkDir
 			cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macSdk
-			os.environ["MACOSX_DEPLOYMENT_TARGET"] = self.macSdk
 
 			# store the sdk version for the build command
 			config = self.getConfig()
@@ -399,8 +398,8 @@ class InternalCommands:
 		
 		config = self.getConfig()
 		if config.has_option("cmake", "mac_sdk"):
-			macSdk = config.get("cmake", "mac_sdk")
-			os.environ["MACOSX_DEPLOYMENT_TARGET"] = macSdk
+			self.macSdk = config.get("cmake", "mac_sdk")
+			os.environ["MACOSX_DEPLOYMENT_TARGET"] = self.macSdk
 
 		if generator.find('Unix Makefiles') != -1:
 			for target in targets:
@@ -416,6 +415,7 @@ class InternalCommands:
 					raise Exception('Build command not supported with generator: ' + generator)
 	
 	def makeGui(self, targets, args=""):
+		
 		if sys.platform == 'win32':
 			gui_make_cmd = self.w32_make_cmd
 		elif sys.platform in ['linux2', 'sunos5', 'freebsd7', 'darwin']:
@@ -730,6 +730,11 @@ class InternalCommands:
 			raise Exception('Package failed: ' + str(err))
 		
 	def distMac(self):
+		
+		config = self.getConfig()
+		if config.has_option("cmake", "mac_sdk"):
+			self.macSdk = config.get("cmake", "mac_sdk")
+		
 		dir = self.getGenerator().binDir
 		name = "Synergy"
 		dist = dir + "/" + name
