@@ -31,7 +31,7 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 	m_versionChecker.setApp(synergyApp);
 	m_pLabelSynergyVersion->setText(m_versionChecker.getVersion());
 
-    // change default size based on os
+	// change default size based on os
 #if defined(Q_OS_MAC)
 	QSize size(600, 380);
 	setMaximumSize(size);

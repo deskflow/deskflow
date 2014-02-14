@@ -32,7 +32,7 @@ class Generator(object):
 
 class MakefilesGenerator(Generator):
 	def __init__(self):
-		super(MakefilesGenerator, self).__init__('Unix Makefiles', 'build', '..', 'bin')
+		super(MakefilesGenerator, self).__init__('Unix Makefiles')
 
 	def getBuildDir(self, target):
 		return super(MakefilesGenerator, self).getBuildDir(target) + '/' + target
@@ -48,6 +48,14 @@ class MakefilesGenerator(Generator):
 
 	def getSourceDir(self):
 		return super(MakefilesGenerator, self).getSourceDir() + '/..'
+		
+class XcodeGenerator(Generator):
+	def __init__(self):
+		super(XcodeGenerator, self).__init__('Xcode')
+		
+	def getBinDir(self, target=''):
+		xcodeTarget = target[0].upper() + target[1:]
+		return super(XcodeGenerator, self).getBinDir(target) + '/' + xcodeTarget
 
 class EclipseGenerator(Generator):
 	def __init__(self):

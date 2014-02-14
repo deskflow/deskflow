@@ -88,7 +88,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QString configFilename();
 		QString address();
 		QString appPath(const QString& name);
-		void start(bool firstRun);
+		void start();
 		void clearLog();
 		VersionChecker& versionChecker() { return m_VersionChecker; }
 

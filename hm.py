@@ -51,14 +51,14 @@ requiredMinor = 6
 
 # options used by all commands
 globalOptions = 'v'
-globalOptionsLong = ['no-prompts', 'generator=', 'verbose', 'make-gui']
+globalOptionsLong = ['no-prompts', 'verbose', 'skip-gui', 'skip-core']
 
 # list of valid commands as keys. the values are optarg strings, but most 
 # are None for now (this is mainly for extensibility)
 cmd_opt_dict = {
 	'about'     : ['', []],
-	'setup'     : ['g:', []],
-	'configure' : ['g:dr', ['debug', 'release', 'mac-sdk=']],
+	'setup'     : ['g:', ['generator=']],
+	'configure' : ['g:dr', ['generator=', 'debug', 'release', 'mac-sdk=']],
 	'build'     : ['dr', ['debug', 'release']],
 	'clean'     : ['dr', ['debug', 'release']],
 	'update'    : ['', []],
