@@ -816,6 +816,10 @@ class InternalCommands:
 		return major + '.' + minor + '.' + rev
 
 	def distftp(self, type, ftp):
+		config = self.getConfig()
+		if config.has_option("cmake", "mac_sdk"):
+			self.macSdk = config.get("cmake", "mac_sdk")
+		
 		if not type:
 			raise Exception('Type not specified.')
 		

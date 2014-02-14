@@ -54,6 +54,9 @@ class XcodeGenerator(Generator):
 		super(XcodeGenerator, self).__init__('Xcode')
 		
 	def getBinDir(self, target=''):
+		if target == "":
+			return super(XcodeGenerator, self).getBinDir(target)
+		
 		xcodeTarget = target[0].upper() + target[1:]
 		return super(XcodeGenerator, self).getBinDir(target) + '/' + xcodeTarget
 
