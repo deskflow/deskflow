@@ -96,6 +96,8 @@ CEventQueue::~CEventQueue()
 void
 CEventQueue::loop()
 {
+	m_buffer->init();
+	
 	CEvent event;
 	getEvent(event);
 	while (event.getType() != CEvent::kQuit) {
@@ -593,10 +595,4 @@ bool
 CEventQueue::CTimer::operator<(const CTimer& t) const
 {
 	return m_time < t.m_time;
-}
-
-void
-CEventQueue::cacheCurrentEventQueueRef()
-{
-	m_buffer->cacheCurrentEventQueueRef();
 }

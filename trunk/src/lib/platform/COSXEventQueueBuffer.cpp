@@ -33,7 +33,7 @@ class CEventQueueTimer { };
 COSXEventQueueBuffer::COSXEventQueueBuffer(IEventQueue* events) :
 	m_eventQueue(events),
 	m_event(NULL),
-	m_threadEventQueueRef(NULL)
+	m_carbonEventQueue(NULL)
 {
 	// do nothing
 }
@@ -44,6 +44,12 @@ COSXEventQueueBuffer::~COSXEventQueueBuffer()
 	if (m_event != NULL) {
 		ReleaseEvent(m_event);
 	}
+}
+
+void
+COSXEventQueueBuffer::init()
+{
+	m_carbonEventQueue = GetCurrentEventQueue();
 }
 
 void
@@ -100,9 +106,15 @@ COSXEventQueueBuffer::addEvent(UInt32 dataID)
 							kEventAttributeNone,
 							&event);
 
-	if (error == noErr & m_threadEventQueueRef != NULL) {
-		error = PostEventToQueue(m_threadEventQueueRef, event,
-							kEventPriorityStandard);
+	if (error == noErr) {
+	
+		assert(m_carbonEventQueue != NULL);
+		
+		error = PostEventToQueue(
+			m_carbonEventQueue,
+			event,
+			kEventPriorityStandard);
+		
 		ReleaseEvent(event);
 	}
 	
@@ -127,10 +139,4 @@ void
 COSXEventQueueBuffer::deleteTimer(CEventQueueTimer* timer) const
 {
 	delete timer;
-}
-
-void
-COSXEventQueueBuffer::cacheCurrentEventQueueRef()
-{
-	m_threadEventQueueRef = GetCurrentEventQueue();
 }

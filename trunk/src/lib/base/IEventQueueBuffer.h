@@ -39,6 +39,12 @@ public:
 
 	//! @name manipulators
 	//@{
+	
+	//! Initialize
+	/*!
+	Useful for platform-specific initialisation from a specific thread.
+	*/
+	virtual	void		init() = 0;
 
 	//! Block waiting for an event
 	/*!
@@ -66,8 +72,6 @@ public:
 	return at some future time if it's blocked waiting on an event.
 	*/
 	virtual bool		addEvent(UInt32 dataID) = 0;
-	
-	virtual	void		cacheCurrentEventQueueRef() = 0;
 
 	//@}
 	//! @name accessors

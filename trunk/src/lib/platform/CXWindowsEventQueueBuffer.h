@@ -37,6 +37,7 @@ public:
 	virtual ~CXWindowsEventQueueBuffer();
 
 	// IEventQueueBuffer overrides
+	virtual	void		init() { }
 	virtual void		waitForEvent(double timeout);
 	virtual Type		getEvent(CEvent& event, UInt32& dataID);
 	virtual bool		addEvent(UInt32 dataID);
@@ -44,8 +45,6 @@ public:
 	virtual CEventQueueTimer*
 						newTimer(double duration, bool oneShot) const;
 	virtual void		deleteTimer(CEventQueueTimer*) const;
-
-	virtual	void		cacheCurrentEventQueueRef() {}
 
 private:
 	void				flush();

@@ -415,7 +415,6 @@ CApp::handleIpcMessage(const CEvent& e, void*)
 void
 CApp::runEventsLoop(void*)
 {
-	m_events->cacheCurrentEventQueueRef();
 	m_events->loop();
 	
 #if defined(MAC_OS_X_VERSION_10_7)
