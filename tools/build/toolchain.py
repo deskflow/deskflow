@@ -468,6 +468,9 @@ class InternalCommands:
 		self.try_chdir(dir)
 		err = os.system(bin)
 		self.restore_chdir()
+
+		if err != 0:
+			raise Exception(bin + " failed with error: " + str(err))
 		
 		(qMajor, qMinor, qRev) = self.getQmakeVersion()
 		if qMajor <= 4:
@@ -477,21 +480,22 @@ class InternalCommands:
 			frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
 		
 		# copy the missing Info.plist files for the frameworks.
-		shutil.copy(frameworkRootDir + "/QtCore.framework/Contents/Info.plist",
-			dir + "/Synergy.app/Contents/Frameworks/QtCore.framework/Resources/")
-		shutil.copy(frameworkRootDir + "/QtGui.framework/Contents/Info.plist",
-			dir + "/Synergy.app/Contents/Frameworks/QtGui.framework/Resources/")
-		shutil.copy(frameworkRootDir + "/QtNetwork.framework/Contents/Info.plist",
-			dir + "/Synergy.app/Contents/Frameworks/QtNetwork.framework/Resources/")
-
-		if err != 0:
-			raise Exception(bin + " failed with error: " + str(err))
+		target = dir + "/Synergy.app/Contents/Frameworks"
+		for root, dirs, files in os.walk(target):
+			for dir in dirs:
+				if dir.startswith("Qt"):
+					shutil.copy(
+						frameworkRootDir + "/" + dir + "/Contents/Info.plist",
+						target + "/" + dir + "/Resources/")
 	
 	def signmac(self, identity):
 		self.try_chdir("bin")
 		err = os.system(
 			'codesign --deep -fs "' + identity + '" Synergy.app')
 		self.restore_chdir()
+
+		if err != 0:
+			raise Exception("codesign failed with error: " + str(err))
 	
 	def signwin(self, pfx, pwdFile, dist):
 		generator = self.getGeneratorFromConfig().cmakeName
@@ -521,6 +525,9 @@ class InternalCommands:
 			' /t http://timestamp.verisign.com/scripts/timstamp.dll ' +
 			file)
 		self.restore_chdir()
+
+		if err != 0:
+			raise Exception("signtool failed with error: " + str(err))
 	
 	def runBuildCommand(self, cmd, target):
 	
