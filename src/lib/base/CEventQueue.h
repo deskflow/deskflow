@@ -60,8 +60,6 @@ public:
 	virtual CEvent::Type
 						getRegisteredType(const CString& name) const;
 	void*				getSystemTarget();
-	
-	void				cacheCurrentEventQueueRef();
 
 private:
 	UInt32				saveEvent(const CEvent& event);

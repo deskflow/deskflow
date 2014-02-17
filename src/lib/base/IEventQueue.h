@@ -176,8 +176,6 @@ public:
 	virtual CEvent::Type
 						registerTypeOnce(CEvent::Type& type,
 							const char* name) = 0;
-	
-	virtual void		cacheCurrentEventQueueRef() = 0;
 
 	//@}
 	//! @name accessors
