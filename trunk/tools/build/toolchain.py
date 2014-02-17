@@ -445,9 +445,9 @@ class InternalCommands:
 
 			if sys.platform == 'darwin' and not "clean" in args:
 				for target in targets:
-					self.macPostMakeGui(target)
+					self.macPostMake(target)
 	
-	def macPostMakeGui(self, target):
+	def macPostMake(self, target):
 
 		dir = self.getGenerator().binDir
 
@@ -461,32 +461,33 @@ class InternalCommands:
 			shutil.copy(targetDir + "/synergys", bundleBinDir)
 			shutil.copy(targetDir + "/syntool", bundleBinDir)
 
-		# use qt to copy libs to bundle so no dependencies are needed. do not create a
-		# dmg at this point, since we need to sign it first, and then create our own
-		# after signing (so that qt does not affect the signed app bundle).
-		bin = "macdeployqt Synergy.app -verbose=2"
-		self.try_chdir(dir)
-		err = os.system(bin)
-		self.restore_chdir()
-
-		if err != 0:
-			raise Exception(bin + " failed with error: " + str(err))
-		
-		(qMajor, qMinor, qRev) = self.getQmakeVersion()
-		if qMajor <= 4:
-			frameworkRootDir = "/Library/Frameworks"
-		else:
-			# TODO: auto-detect, qt can now be installed anywhere.
-			frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
-		
-		# copy the missing Info.plist files for the frameworks.
-		target = dir + "/Synergy.app/Contents/Frameworks"
-		for root, dirs, files in os.walk(target):
-			for dir in dirs:
-				if dir.startswith("Qt"):
-					shutil.copy(
-						frameworkRootDir + "/" + dir + "/Contents/Info.plist",
-						target + "/" + dir + "/Resources/")
+		if self.enableMakeGui:
+			# use qt to copy libs to bundle so no dependencies are needed. do not create a
+			# dmg at this point, since we need to sign it first, and then create our own
+			# after signing (so that qt does not affect the signed app bundle).
+			bin = "macdeployqt Synergy.app -verbose=2"
+			self.try_chdir(dir)
+			err = os.system(bin)
+			self.restore_chdir()
+	
+			if err != 0:
+				raise Exception(bin + " failed with error: " + str(err))
+			
+			(qMajor, qMinor, qRev) = self.getQmakeVersion()
+			if qMajor <= 4:
+				frameworkRootDir = "/Library/Frameworks"
+			else:
+				# TODO: auto-detect, qt can now be installed anywhere.
+				frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
+			
+			# copy the missing Info.plist files for the frameworks.
+			target = dir + "/Synergy.app/Contents/Frameworks"
+			for root, dirs, files in os.walk(target):
+				for dir in dirs:
+					if dir.startswith("Qt"):
+						shutil.copy(
+							frameworkRootDir + "/" + dir + "/Contents/Info.plist",
+							target + "/" + dir + "/Resources/")
 	
 	def signmac(self, identity):
 		self.try_chdir("bin")
