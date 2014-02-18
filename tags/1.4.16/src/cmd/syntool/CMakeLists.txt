@@ -1,0 +1,50 @@
+# synergy -- mouse and keyboard sharing utility
+# Copyright (C) 2014 Bolton Software Ltd.
+# 
+# This package is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# found in the file COPYING that should have accompanied this file.
+# 
+# This package is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set(src
+	syntool.cpp
+)
+
+set(inc
+	../../lib/arch
+	../../lib/base
+	../../lib/common
+	../../lib/io
+	../../lib/ipc
+	../../lib/mt
+	../../lib/net
+	../../lib/platform
+	../../lib/synergy
+	../../lib/synwinhk
+	../../lib/synwinxt
+)
+
+if (UNIX)
+	list(APPEND inc
+		../../..
+	)
+endif()
+
+include_directories(${inc})
+add_executable(syntool ${src})
+target_link_libraries(syntool
+	synergy arch base client common io ipc mt net platform server cryptopp ${libs})
+
+if (CONF_CPACK)
+	install(TARGETS
+		syntool
+		COMPONENT core
+		DESTINATION bin)
+endif()

@@ -1,0 +1,7 @@
+LIBRARY "synwinxt"
+EXPORTS
+	DllGetClassObject	PRIVATE
+	DllCanUnloadNow		PRIVATE
+	DllRegisterServer	PRIVATE
+	DllUnregisterServer	PRIVATE
+	getDraggingFilename	
