@@ -1,3 +1,16 @@
+1.4.16
+======
+Bug #3338 - Alt tab not working with Windows 8
+Bug #3642 - Failed to start server on Mac OS X 10.9 Mavericks, assistive devices problem
+Bug #3785 - Synwinxt.dll error opening file for writing during install of 1.4.15
+Bug #3787 - Wont automatically load after login on OS X
+Bug #3788 - Configuration wizard: Premium login fails when behind a proxy
+Bug #3796 - Some files being unintentionally dragged (including explorer.exe)
+Bug #3799 - Synergy Client on Fedora crashes on drag/drop operations
+Bug #3818 - Client freezes on Mac OS 10.6.8
+Bug #3874 - Premium GUI login is case sensitive for email
+Bug #3911 - Drag and drop error on OS X 10.9 Mavericks
+
 1.4.15
 ======
 Bug #3765 - Synergy Service - Error 87: The parameter is incorrect.
