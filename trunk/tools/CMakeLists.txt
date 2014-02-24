@@ -85,3 +85,8 @@ if (UNIX)
 endif()
 
 add_library(cryptopp STATIC ${cryptopp_src})
+
+if (UNIX)
+	# ignore warnings in crypto++
+	set_target_properties(cryptopp PROPERTIES COMPILE_FLAGS "-w")
+endif()
