@@ -23,5 +23,11 @@ include_directories(
 add_library(gtest STATIC ../../tools/gtest-1.6.0/src/gtest-all.cc)
 add_library(gmock STATIC ../../tools/gmock-1.6.0/src/gmock-all.cc)
 
+if (UNIX)
+	# ignore warnings in gtest and gmock
+	set_target_properties(gtest PROPERTIES COMPILE_FLAGS "-w")
+	set_target_properties(gmock PROPERTIES COMPILE_FLAGS "-w")
+endif()
+
 add_subdirectory(integtests)
 add_subdirectory(unittests)
