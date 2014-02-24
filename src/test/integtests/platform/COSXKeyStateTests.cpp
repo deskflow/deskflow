@@ -59,8 +59,6 @@ TEST_F(COSXKeyStateTests, fakeAndPoll_shift)
 	EXPECT_TRUE(!isKeyPressed(keyState, SHIFT_BUTTON));
 }
 
-#endif
-
 TEST_F(COSXKeyStateTests, fakeAndPoll_charKey)
 {
 	CKeyMap keyMap;
@@ -117,4 +115,6 @@ COSXKeyStateTests::isKeyPressed(const COSXKeyState& keyState, KeyButton button)
 	}
 	return false;
 }
+
+#endif
 
