@@ -46,10 +46,10 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 # for unix, put debug files in a separate bin "debug" dir.
 # release bin files should stay in the root of the bin dir.
 if (CMAKE_GENERATOR STREQUAL "Unix Makefiles")
-  if (CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/debug)
-    set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib/debug)
-  endif()
+	if (CMAKE_BUILD_TYPE STREQUAL Debug)
+		set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/debug)
+		set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib/debug)
+	endif()
 endif()
 
 # Set some easy to type variables.
@@ -69,8 +69,7 @@ if (UNIX)
 
 	# warnings as errors:
 	# we have a problem with people checking in code with warnings.
-	set(CMAKE_CXX_FLAGS "-Werror")
-
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 
 	# For config.h, detect the libraries, functions, etc.
 	include(CheckIncludeFiles)
@@ -253,12 +252,12 @@ if (UNIX)
 		if (HAVE_Xrandr)
 			list(APPEND libs Xrandr)
 		endif()
-    
-    # this was outside of the linux scope,
-    # not sure why, moving it back inside.
-    if(HAVE_Xi)
-      list(APPEND libs Xi)
-    endif()
+		
+		# this was outside of the linux scope,
+		# not sure why, moving it back inside.
+		if(HAVE_Xi)
+			list(APPEND libs Xi)
+		endif()
 
 	endif()
 
@@ -313,39 +312,26 @@ add_subdirectory(src)
 add_subdirectory(tools)
 
 if (WIN32)
-	# add /analyze in order to unconver potential bugs in the source code
-	# Details: http://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx
-	# add /FR to generate browse information (ncb files) usefull for using IDE
+	# TODO:	consider using /analyze to uncover potential bugs in the source code.
 
-	#define _BIND_TO_CURRENT_CRT_VERSION 1
-	#define _BIND_TO_CURRENT_ATL_VERSION 1
-	#define _BIND_TO_CURRENT_MFC_VERSION 1
-	#define _BIND_TO_CURRENT_OPENMP_VERSION 1
-	# next line replaced the previous 4 ones:
-	#define _BIND_TO_CURRENT_VCLIBS_VERSION 1;
-
-	# compiler: /MP - use multi cores to compile
-	# added _SECURE_SCL=1 for finding bugs with iterators - http://msdn.microsoft.com/en-us/library/aa985965.aspx
+	# /WX - warnings as errors (we have a problem with people checking in code with warnings).
+	# /FR - generate browse information (ncb files) useful for using IDE.
+	# /MP - use multi cores to compile.
+	# /D _BIND_TO_CURRENT_VCLIBS_VERSION - TODO: explain why.
+	# /D _SECURE_SCL=1 - find bugs with iterators.
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX /FR /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1 /D _SECURE_SCL=1")
 	
-	# common args between all vs builds
-	set(VS_ARGS "/FR /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1 /D _SECURE_SCL=1 ${VS_ARGS_EXTRA}")
-	
-	# we may use `cmake -D VS_ARGS_EXTRA="/analyze"` for example to specify
-	# analyze mode (since we don't always want to use it; e.g. on non-team 
-	# or non-x86 compiler editions where there's no support)
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${VS_ARGS}")
-	set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${VS_ARGS}")
-
-	# this line removes "/D NDEBUG" from release, we want them in order to
-	# find bugs even on release builds.
-	set(CMAKE_CXX_FLAGS_RELEASE "/MD /O2 /Ob2")
+	# /MD - use multi-core libraries.
+	# /O2 - get the fastest code.
+	# /Ob2 - expand inline functions (auto-inlining).
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /O2 /Ob2")
 
 endif()
 
 if (CONF_CPACK)
 
 	if (WIN32)
-	   message(FATAL_ERROR "CPack support for Windows has been removed.")
+		message(FATAL_ERROR "CPack support for Windows has been removed.")
 	endif()
 
 	if (UNIX)

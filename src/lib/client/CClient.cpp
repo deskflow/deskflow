@@ -800,7 +800,7 @@ CClient::dragInfoReceived(UInt32 fileNum, CString data)
 	CDragInformation::parseDragInfo(m_dragFileList, fileNum, data);
 	LOG((CLOG_DEBUG "drag info received, total drag file number: %i", m_dragFileList.size()));
 
-	for (int i = 0; i < m_dragFileList.size(); ++i) {
+	for (size_t i = 0; i < m_dragFileList.size(); ++i) {
 		LOG((CLOG_DEBUG2 "dragging file %i name: %s", i + 1, m_dragFileList.at(i).c_str()));
 	}
 	

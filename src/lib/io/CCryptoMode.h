@@ -20,14 +20,20 @@
 #include "ECryptoMode.h"
 #include "CString.h"
 
+#if SYSAPI_UNIX
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wtautological-compare"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wunused-function"
+#endif 
+
 #include <cryptopp562/gcm.h>
 #include <cryptopp562/modes.h>
 #include <cryptopp562/aes.h>
+
+#if SYSAPI_UNIX
 #pragma GCC diagnostic pop
+#endif
 
 //! Encapsulation of modes
 /*!
