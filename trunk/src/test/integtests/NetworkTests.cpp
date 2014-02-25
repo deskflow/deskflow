@@ -472,7 +472,7 @@ newMockData(size_t size)
 	data += headSize;
 
 	size_t times = (size - headSize - tailSize) / synergyRocksSize;
-	for (SInt32 i = 0; i < times; ++i) {
+	for (size_t i = 0; i < times; ++i) {
 		memcpy(data, synergyRocks, synergyRocksSize);
 		data += synergyRocksSize;
 	}
