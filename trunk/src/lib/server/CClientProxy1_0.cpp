@@ -359,13 +359,6 @@ CClientProxy1_0::mouseWheel(SInt32, SInt32 yDelta)
 }
 
 void
-CClientProxy1_0::cryptoIv(const UInt8* iv)
-{
-	// ignore -- not supported in protocol 1.0
-	LOG((CLOG_DEBUG "cryptoIv not supported"));
-}
-
-void
 CClientProxy1_0::draggingInfoSending(UInt32 fileCount, const char* data, size_t dataSize)
 {
 	// ignore -- not supported in protocol 1.0

@@ -60,18 +60,10 @@ CCryptoMode::~CCryptoMode()
 	}
 
 	if (m_encryption) {
-		switch (m_mode) {
-		case kCfb:
-			delete reinterpret_cast<CCfbModeEnc*>(m_crypto);
-			break;
-		}
+		delete reinterpret_cast<CCfbModeEnc*>(m_crypto);
 	}
 	else {
-		switch (m_mode) {
-		case kCfb:
-			delete reinterpret_cast<CCfbModeDec*>(m_crypto);
-			break;
-		}
+		delete reinterpret_cast<CCfbModeDec*>(m_crypto);
 	}
 }
 
@@ -83,18 +75,10 @@ CCryptoMode::processData(byte* out, const byte* in, size_t length)
 	}
 
 	if (m_encryption) {
-		switch (m_mode) {
-		case kCfb:
-			reinterpret_cast<CCfbModeEnc*>(m_crypto)->ProcessData(out, in, length);
-			break;
-		}
+		reinterpret_cast<CCfbModeEnc*>(m_crypto)->ProcessData(out, in, length);
 	}
 	else {
-		switch (m_mode) {
-		case kCfb:
-			reinterpret_cast<CCfbModeDec*>(m_crypto)->ProcessData(out, in, length);
-			break;
-		}
+		reinterpret_cast<CCfbModeDec*>(m_crypto)->ProcessData(out, in, length);
 	}
 }
 
@@ -107,17 +91,9 @@ CCryptoMode::setKeyWithIv(const byte* key, size_t length, const byte* iv)
 	}
 
 	if (m_encryption) {
-		switch (m_mode) {
-		case kCfb:
-			reinterpret_cast<CCfbModeEnc*>(m_crypto)->SetKeyWithIV(key, length, iv);
-			break;
-		}
+		reinterpret_cast<CCfbModeEnc*>(m_crypto)->SetKeyWithIV(key, length, iv);
 	}
 	else {
-		switch (m_mode) {
-		case kCfb:
-			reinterpret_cast<CCfbModeDec*>(m_crypto)->SetKeyWithIV(key, length, iv);
-			break;
-		}
+		reinterpret_cast<CCfbModeDec*>(m_crypto)->SetKeyWithIV(key, length, iv);
 	}
 }

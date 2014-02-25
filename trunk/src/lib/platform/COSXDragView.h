@@ -24,8 +24,8 @@
 	NSMutableString*	m_dropTarget;
 }
 
--(CFStringRef)getDropTarget;
--(void)clearDropTarget;
+- (CFStringRef)getDropTarget;
+- (void)clearDropTarget;
 
 @end
 

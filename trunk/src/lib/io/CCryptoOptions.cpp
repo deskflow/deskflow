@@ -21,8 +21,8 @@
 CCryptoOptions::CCryptoOptions(
 		const CString& modeString,
 		const CString& pass) :
-	m_mode(parseMode(modeString)),
-	m_pass(pass)
+	m_pass(pass),
+	m_mode(parseMode(modeString))
 {
 }
 

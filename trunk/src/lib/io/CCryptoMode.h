@@ -17,11 +17,17 @@
 
 #pragma once
 
+#include "ECryptoMode.h"
+#include "CString.h"
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtautological-compare"
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-function"
 #include <cryptopp562/gcm.h>
 #include <cryptopp562/modes.h>
 #include <cryptopp562/aes.h>
-#include "ECryptoMode.h"
-#include "CString.h"
+#pragma GCC diagnostic pop
 
 //! Encapsulation of modes
 /*!

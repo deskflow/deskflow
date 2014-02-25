@@ -31,8 +31,8 @@ class CEventQueueTimer { };
 //
 
 COSXEventQueueBuffer::COSXEventQueueBuffer(IEventQueue* events) :
-	m_eventQueue(events),
 	m_event(NULL),
+	m_eventQueue(events),
 	m_carbonEventQueue(NULL)
 {
 	// do nothing

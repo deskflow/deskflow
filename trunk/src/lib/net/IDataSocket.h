@@ -37,7 +37,7 @@ public:
 		CString			m_what;
 	};
 
-	IDataSocket(IEventQueue* events) : IStream(events) { }
+	IDataSocket(IEventQueue* events) { }
 
 	//! @name manipulators
 	//@{

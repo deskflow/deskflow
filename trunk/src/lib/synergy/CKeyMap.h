@@ -33,7 +33,7 @@ This class provides a keyboard mapping.
 class CKeyMap {
 public:
 	CKeyMap();
-	~CKeyMap();
+	virtual ~CKeyMap();
 
 	//! KeyID synthesis info
 	/*!

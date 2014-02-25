@@ -29,13 +29,13 @@
 //
 
 CScreen::CScreen(IPlatformScreen* platformScreen, IEventQueue* events) :
-	m_events(events),
 	m_screen(platformScreen),
 	m_isPrimary(platformScreen->isPrimary()),
 	m_enabled(false),
 	m_entered(m_isPrimary),
 	m_screenSaverSync(true),
 	m_fakeInput(false),
+	m_events(events),
 	m_mock(false),
 	m_enableDragDrop(false)
 {

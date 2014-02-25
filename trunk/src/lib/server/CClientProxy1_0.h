@@ -59,7 +59,6 @@ public:
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);
-	virtual void		cryptoIv(const UInt8* iv);
 	virtual void		draggingInfoSending(UInt32 fileCount, const char* data, size_t dataSize);
 	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize);
 

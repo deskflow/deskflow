@@ -30,9 +30,9 @@
 
 CClientProxy1_3::CClientProxy1_3(const CString& name, synergy::IStream* stream, IEventQueue* events) :
 	CClientProxy1_2(name, stream, events),
-	m_events(events),
 	m_keepAliveRate(kKeepAliveRate),
-	m_keepAliveTimer(NULL)
+	m_keepAliveTimer(NULL),
+	m_events(events)
 {
 	setHeartbeatRate(kKeepAliveRate, kKeepAliveRate * kKeepAlivesUntilDeath);
 }

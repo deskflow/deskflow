@@ -39,7 +39,7 @@ public:
 	~CPrimaryClient();
 
 #ifdef TEST_ENV
-	CPrimaryClient() : CBaseClientProxy(""), m_mock(true) { }
+	CPrimaryClient() : CBaseClientProxy("") { }
 #endif
 
 	//! @name manipulators
@@ -151,7 +151,6 @@ private:
 	CScreen*			m_screen;
 	bool				m_clipboardDirty[kClipboardEnd];
 	SInt32				m_fakeInputCount;
-	bool				m_mock;
 };
 
 #endif

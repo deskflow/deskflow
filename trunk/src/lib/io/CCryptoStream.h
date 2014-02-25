@@ -20,8 +20,13 @@
 #include "BasicTypes.h"
 #include "CStreamFilter.h"
 #include "CCryptoMode.h"
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wall"
 #include <cryptopp562/osrng.h>
 #include <cryptopp562/sha.h>
+
+#pragma GCC diagnostic pop
 
 class CCryptoOptions;
 

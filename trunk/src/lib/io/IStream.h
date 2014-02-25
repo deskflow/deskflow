@@ -34,7 +34,7 @@ Defines the interface for all streams.
 */
 class IStream : public IInterface {
 public:
-	IStream(IEventQueue* events) : m_events(events) { }
+	IStream() { }
 
 	//! @name manipulators
 	//@{
@@ -116,9 +116,6 @@ public:
 	virtual UInt32		getSize() const = 0;
 
 	//@}
-
-private:
-	IEventQueue*		m_events;
 };
 
 }

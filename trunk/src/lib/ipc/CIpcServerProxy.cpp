@@ -29,8 +29,8 @@
 //
 
 CIpcServerProxy::CIpcServerProxy(synergy::IStream& stream, IEventQueue* events) :
-	m_events(events),
-	m_stream(stream)
+	m_stream(stream),
+	m_events(events)
 {
 	m_events->adoptHandler(m_events->forIStream().inputReady(),
 		stream.getEventTarget(),

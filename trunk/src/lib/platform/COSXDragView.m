@@ -21,6 +21,10 @@
 
 @implementation COSXDragView
 
+@dynamic draggingFormation;
+@dynamic animatesToDestination;
+@dynamic numberOfValidItemsForDrop;
+
 - (id)
 initWithFrame:(NSRect)frame
 {
@@ -69,13 +73,13 @@ namesOfPromisedFilesDroppedAtDestination:(NSURL *)dropDestination
 	return nil;
 }
 
--(NSDragOperation)
+- (NSDragOperation)
 draggingSourceOperationMaskForLocal:(BOOL)flag
 {
 	return NSDragOperationCopy;
 }
 
--(CFStringRef)
+- (CFStringRef)
 getDropTarget
 {
 	NSMutableString* string;
@@ -84,10 +88,67 @@ getDropTarget
 	return (CFStringRef)string;
 }
 
--(void)
+- (void)
 clearDropTarget
 {
 	[m_dropTarget setString:@""];
+}
+
+- (NSWindow *)
+draggingDestinationWindow
+{
+	return nil;
+}
+
+- (NSDragOperation)
+draggingSourceOperationMask
+{
+	return NSDragOperationNone;
+}
+
+- (NSPoint)draggingLocation
+{
+	NSPoint point;
+	return point;
+}
+
+- (NSPoint)draggedImageLocation
+{
+	NSPoint point;
+	return point;
+}
+
+- (NSImage *)draggedImage
+{
+	return nil;
+}
+
+- (NSPasteboard *)draggingPasteboard
+{
+	return nil;
+}
+
+- (id)draggingSource
+{
+	return nil;
+}
+
+- (NSInteger)draggingSequenceNumber
+{
+	return nil;
+}
+
+- (void)slideDraggedImageTo:(NSPoint)screenPoint
+{
+}
+
+- (NSDragOperation)draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context
+{
+	return NSDragOperationNone;
+}
+
+- (void)enumerateDraggingItemsWithOptions:(NSDraggingItemEnumerationOptions)enumOpts forView:(NSView *)view classes:(NSArray *)classArray searchOptions:(NSDictionary *)searchOptions usingBlock:(void (^)(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop))block
+{
 }
 
 @end

@@ -29,9 +29,9 @@
 
 CPacketStreamFilter::CPacketStreamFilter(IEventQueue* events, synergy::IStream* stream, bool adoptStream) :
 	CStreamFilter(events, stream, adoptStream),
-	m_events(events),
 	m_size(0),
-	m_inputShutdown(false)
+	m_inputShutdown(false),
+	m_events(events)
 {
 	// do nothing
 }

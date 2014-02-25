@@ -33,11 +33,11 @@ m_disableXInitThreads(false),
 m_backend(false),
 m_restartable(true),
 m_noHooks(false),
-m_disableTray(false),
 m_pname(NULL),
 m_logFilter(NULL),
 m_logFile(NULL),
 m_display(NULL),
+m_disableTray(false),
 m_enableIpc(false),
 m_enableDragDrop(false)
 {
