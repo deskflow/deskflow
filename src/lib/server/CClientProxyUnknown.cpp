@@ -39,11 +39,11 @@
 //
 
 CClientProxyUnknown::CClientProxyUnknown(synergy::IStream* stream, double timeout, CServer* server, IEventQueue* events) :
-	m_events(events),
 	m_stream(stream),
 	m_proxy(NULL),
 	m_ready(false),
-	m_server(server)
+	m_server(server),
+	m_events(events)
 {
 	assert(m_server != NULL);
 

@@ -70,11 +70,10 @@ bool					COSXScreen::s_hasGHOM	    = false;
 
 COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCursor) :
 	CPlatformScreen(events),
-	m_events(events),
-	MouseButtonEventMap(NumButtonIDs),
 	m_isPrimary(isPrimary),
 	m_isOnScreen(m_isPrimary),
 	m_cursorPosValid(false),
+	MouseButtonEventMap(NumButtonIDs),
 	m_cursorHidden(false),
 	m_dragNumButtonsDown(0),
 	m_dragTimer(NULL),
@@ -90,16 +89,17 @@ COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCur
 	m_pmMutex(new CMutex),
 	m_pmWatchThread(NULL),
 	m_pmThreadReady(new CCondVar<bool>(m_pmMutex, false)),
+	m_pmRootPort(0),
 	m_activeModifierHotKey(0),
 	m_activeModifierHotKeyMask(0),
+	m_eventTapPort(nullptr),
+	m_eventTapRLSR(nullptr),
 	m_lastSingleClick(0),
 	m_lastDoubleClick(0),
 	m_lastSingleClickXCursor(0),
 	m_lastSingleClickYCursor(0),
 	m_autoShowHideCursor(autoShowHideCursor),
-	m_eventTapRLSR(nullptr),
-	m_eventTapPort(nullptr),
-	m_pmRootPort(0),
+	m_events(events),
 	m_getDropTargetThread(NULL)
 {
 	try {
@@ -444,11 +444,12 @@ void
 COSXScreen::constructMouseButtonEventMap()
 {
 	const CGEventType source[NumButtonIDs][3] = {
-		kCGEventLeftMouseUp,kCGEventLeftMouseDragged,kCGEventLeftMouseDown,
-		kCGEventOtherMouseUp,kCGEventOtherMouseDragged,kCGEventOtherMouseDown,
-		kCGEventRightMouseUp,kCGEventRightMouseDragged,kCGEventRightMouseDown,
-		kCGEventOtherMouseUp,kCGEventOtherMouseDragged,kCGEventOtherMouseDown,
-		kCGEventOtherMouseUp,kCGEventOtherMouseDragged,kCGEventOtherMouseDown};
+		{kCGEventLeftMouseUp, kCGEventLeftMouseDragged, kCGEventLeftMouseDown},
+		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown},
+		{kCGEventRightMouseUp, kCGEventRightMouseDragged, kCGEventRightMouseDown},
+		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown},
+		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown}
+	};
 
 	for (UInt16 button = 0; button < NumButtonIDs; button++) {
 		MouseButtonEventMapType new_map;
@@ -746,9 +747,15 @@ COSXScreen::showCursor()
 	// appears to fix "mouse randomly not showing" bug
 	CGAssociateMouseAndMouseCursorPosition(true);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+	// CGCursorIsVisible is probably deprecated because its unreliable.
 	if (!CGCursorIsVisible()) {
 		LOG((CLOG_WARN "cursor may not be visible"));
 	}
+	
+#pragma GCC diagnostic pop
 
 	m_cursorHidden = false;
 }
@@ -775,9 +782,15 @@ COSXScreen::hideCursor()
 	// appears to fix "mouse randomly not hiding" bug
 	CGAssociateMouseAndMouseCursorPosition(true);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+	// CGCursorIsVisible is probably deprecated because its unreliable.
 	if (CGCursorIsVisible()) {
 		LOG((CLOG_WARN "cursor may be still visible"));
 	}
+	
+#pragma GCC diagnostic pop
 
 	m_cursorHidden = true;
 }
@@ -871,7 +884,13 @@ COSXScreen::enter()
 	showCursor();
 
 	if (m_isPrimary) {
+	
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 		CGSetLocalEventsSuppressionInterval(0.0);
+
+#pragma GCC diagnostic pop
 		
 		// enable global hotkeys
 		//setGlobalHotKeysEnabled(true);
@@ -891,6 +910,9 @@ COSXScreen::enter()
 			IOObjectRelease(entry);
 		}
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 		// avoid suppression of local hardware events
 		// stkamp@users.sourceforge.net
 		CGSetLocalEventsFilterDuringSupressionState(
@@ -900,6 +922,9 @@ COSXScreen::enter()
 								(kCGEventFilterMaskPermitLocalKeyboardEvents |
 								kCGEventFilterMaskPermitSystemDefinedEvents),
 								kCGEventSupressionStateRemoteMouseDrag);
+								
+#pragma GCC diagnostic pop
+
 	}
 
 	// now on screen
@@ -941,6 +966,9 @@ COSXScreen::leave()
 		// warp to center
 		//warpCursor(m_xCenter, m_yCenter);
 		
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 		// This used to be necessary to get smooth mouse motion on other screens,
 		// but now is just to avoid a hesitating cursor when transitioning to
 		// the primary (this) screen.
@@ -948,6 +976,9 @@ COSXScreen::leave()
 		
 		// disable global hotkeys
 		//setGlobalHotKeysEnabled(false);
+		
+#pragma GCC diagnostic pop
+
 	}
 	else {
 		// warp the mouse to the cursor center

@@ -53,20 +53,20 @@ CInputFilter::CCondition::disablePrimary(CPrimaryClient*)
 
 CInputFilter::CKeystrokeCondition::CKeystrokeCondition(
 		IEventQueue* events, IPlatformScreen::CKeyInfo* info) :
-	m_events(events),
 	m_id(0),
 	m_key(info->m_key),
-	m_mask(info->m_mask)
+	m_mask(info->m_mask),
+	m_events(events)
 {
 	free(info);
 }
 
 CInputFilter::CKeystrokeCondition::CKeystrokeCondition(
 		IEventQueue* events, KeyID key, KeyModifierMask mask) :
-	m_events(events),
 	m_id(0),
 	m_key(key),
-	m_mask(mask)
+	m_mask(mask),
+	m_events(events)
 {
 	// do nothing
 }
@@ -143,18 +143,18 @@ CInputFilter::CKeystrokeCondition::disablePrimary(CPrimaryClient* primary)
 
 CInputFilter::CMouseButtonCondition::CMouseButtonCondition(
 		IEventQueue* events, IPlatformScreen::CButtonInfo* info) :
-	m_events(events),
 	m_button(info->m_button),
-	m_mask(info->m_mask)
+	m_mask(info->m_mask),
+	m_events(events)
 {
 	free(info);
 }
 
 CInputFilter::CMouseButtonCondition::CMouseButtonCondition(
 		IEventQueue* events, ButtonID button, KeyModifierMask mask) :
-	m_events(events),
 	m_button(button),
-	m_mask(mask)
+	m_mask(mask),
+	m_events(events)
 {
 	// do nothing
 }
@@ -227,8 +227,8 @@ CInputFilter::CMouseButtonCondition::match(const CEvent& event)
 
 CInputFilter::CScreenConnectedCondition::CScreenConnectedCondition(
 		IEventQueue* events, const CString& screen) :
-	m_events(events),
-	m_screen(screen)
+	m_screen(screen),
+	m_events(events)
 {
 	// do nothing
 }
@@ -279,8 +279,8 @@ CInputFilter::CAction::~CAction()
 
 CInputFilter::CLockCursorToScreenAction::CLockCursorToScreenAction(
 		IEventQueue* events, Mode mode) :
-	m_events(events),
-	m_mode(mode)
+	m_mode(mode),
+	m_events(events)
 {
 	// do nothing
 }
@@ -324,8 +324,8 @@ CInputFilter::CLockCursorToScreenAction::perform(const CEvent& event)
 
 CInputFilter::CSwitchToScreenAction::CSwitchToScreenAction(
 		IEventQueue* events, const CString& screen) :
-	m_events(events),
-	m_screen(screen)
+	m_screen(screen),
+	m_events(events)
 {
 	// do nothing
 }
@@ -370,8 +370,8 @@ CInputFilter::CSwitchToScreenAction::perform(const CEvent& event)
 
 CInputFilter::CSwitchInDirectionAction::CSwitchInDirectionAction(
 		IEventQueue* events, EDirection direction) :
-	m_events(events),
-	m_direction(direction)
+	m_direction(direction),
+	m_events(events)
 {
 	// do nothing
 }
@@ -414,8 +414,8 @@ CInputFilter::CSwitchInDirectionAction::perform(const CEvent& event)
 
 CInputFilter::CKeyboardBroadcastAction::CKeyboardBroadcastAction(
 		IEventQueue* events, Mode mode) :
-	m_events(events),
-	m_mode(mode)
+	m_mode(mode),
+	m_events(events)
 {
 	// do nothing
 }
@@ -424,9 +424,9 @@ CInputFilter::CKeyboardBroadcastAction::CKeyboardBroadcastAction(
 		IEventQueue* events,
 		Mode mode,
 		const std::set<CString>& screens) :
-	m_events(events),
 	m_mode(mode),
-	m_screens(IKeyState::CKeyInfo::join(screens))
+	m_screens(IKeyState::CKeyInfo::join(screens)),
+	m_events(events)
 {
 	// do nothing
 }
@@ -486,9 +486,9 @@ CInputFilter::CKeyboardBroadcastAction::perform(const CEvent& event)
 
 CInputFilter::CKeystrokeAction::CKeystrokeAction(
 		IEventQueue* events, IPlatformScreen::CKeyInfo* info, bool press) :
-	m_events(events),
 	m_keyInfo(info),
-	m_press(press)
+	m_press(press),
+	m_events(events)
 {
 	// do nothing
 }
@@ -574,9 +574,9 @@ CInputFilter::CKeystrokeAction::formatName() const
 
 CInputFilter::CMouseButtonAction::CMouseButtonAction(
 		IEventQueue* events, IPlatformScreen::CButtonInfo* info, bool press) :
-	m_events(events),
 	m_buttonInfo(info),
-	m_press(press)
+	m_press(press),
+	m_events(events)
 {
 	// do nothing
 }
@@ -887,16 +887,16 @@ CInputFilter::CRule::getAction(bool onActivation, UInt32 index) const
 // Input Filter Class
 // -----------------------------------------------------------------------------
 CInputFilter::CInputFilter(IEventQueue* events) :
-	m_events(events),
-	m_primaryClient(NULL)
+	m_primaryClient(NULL),
+	m_events(events)
 {
 	// do nothing
 }
 
 CInputFilter::CInputFilter(const CInputFilter& x) :
-	m_events(x.m_events),
 	m_ruleList(x.m_ruleList),
-	m_primaryClient(NULL)
+	m_primaryClient(NULL),
+	m_events(x.m_events)
 {
 	setPrimaryClient(x.m_primaryClient);
 }

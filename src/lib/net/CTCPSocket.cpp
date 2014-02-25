@@ -37,9 +37,9 @@
 
 CTCPSocket::CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
 	IDataSocket(events),
-	m_events(events),
 	m_mutex(),
 	m_flushed(&m_mutex, true),
+	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {
 	try {
@@ -54,10 +54,10 @@ CTCPSocket::CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexe
 
 CTCPSocket::CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer, CArchSocket socket) :
 	IDataSocket(events),
-	m_events(events),
 	m_mutex(),
 	m_socket(socket),
 	m_flushed(&m_mutex, true),
+	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {
 	assert(m_socket != NULL);

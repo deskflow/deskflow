@@ -384,20 +384,20 @@ static const KeyID s_numpadTable[] = {
 
 CKeyState::CKeyState(IEventQueue* events) :
 	IKeyState(events),
-	m_events(events),
-	m_mask(0),
 	m_keyMapPtr(new CKeyMap()),
-	m_keyMap(*m_keyMapPtr)
+	m_keyMap(*m_keyMapPtr),
+	m_mask(0),
+	m_events(events)
 {
 	init();
 }
 
 CKeyState::CKeyState(IEventQueue* events, CKeyMap& keyMap) :
 	IKeyState(events),
-	m_events(events),
-	m_mask(0),
 	m_keyMapPtr(0),
-	m_keyMap(keyMap)
+	m_keyMap(keyMap),
+	m_mask(0),
+	m_events(events)
 {
 	init();
 }

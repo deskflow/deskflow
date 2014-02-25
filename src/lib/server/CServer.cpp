@@ -48,7 +48,6 @@
 //
 
 CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen, IEventQueue* events, bool enableDragDrop) :
-	m_events(events),
 	m_mock(false),
 	m_primaryClient(primaryClient),
 	m_active(primaryClient),
@@ -75,6 +74,7 @@ CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen
 	m_keyboardBroadcasting(false),
 	m_lockedToScreen(false),
 	m_screen(screen),
+	m_events(events),
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
 	m_ignoreFileTransfer(false),
@@ -190,7 +190,6 @@ CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen
 	m_inputFilter->setPrimaryClient(m_primaryClient);
 
 	// Determine if scroll lock is already set. If so, lock the cursor to the primary screen
-	int keyValue = m_primaryClient->getToggleMask();
 	if (m_primaryClient->getToggleMask() & KeyModifierScrollLock) {
 		LOG((CLOG_DEBUG "scroll lock on initially. locked to screen"));
 		m_lockedToScreen = true;

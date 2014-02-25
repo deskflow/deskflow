@@ -26,7 +26,7 @@ class IEventQueue;
 class CMockStream : public synergy::IStream
 {
 public:
-	CMockStream() : synergy::IStream(NULL) { }
+	CMockStream() { }
 	MOCK_METHOD0(close, void());
 	MOCK_METHOD2(read, UInt32(void*, UInt32));
 	MOCK_METHOD2(write, void(const void*, UInt32));

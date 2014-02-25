@@ -52,14 +52,14 @@
 CApp* CApp::s_instance = nullptr;
 
 CApp::CApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args) :
-	m_events(events),
-	m_createTaskBarReceiver(createTaskBarReceiver),
-	m_args(args),
 	m_bye(&exit),
 	m_taskBarReceiver(NULL),
 	m_suspended(false),
-	m_ipcClient(nullptr),
-	m_appUtil(events)
+	m_events(events),
+	m_args(args),
+	m_createTaskBarReceiver(createTaskBarReceiver),
+	m_appUtil(events),
+	m_ipcClient(nullptr)
 {
 	assert(s_instance == nullptr);
 	s_instance = this;
@@ -289,7 +289,12 @@ CApp::run(int argc, char** argv)
 #if MAC_OS_X_VERSION_10_7
 	// dock hide only supported on lion :(
 	ProcessSerialNumber psn = { 0, kCurrentProcess };
+	
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 	GetCurrentProcess(&psn);
+#pragma GCC diagnostic pop
+
 	TransformProcessType(&psn, kProcessTransformToBackgroundApplication);
 #endif
 

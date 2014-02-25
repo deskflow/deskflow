@@ -28,8 +28,7 @@
 CPrimaryClient::CPrimaryClient(const CString& name, CScreen* screen) :
 	CBaseClientProxy(name),
 	m_screen(screen),
-	m_fakeInputCount(0),
-	m_mock(false)
+	m_fakeInputCount(0)
 {
 	// all clipboards are clean
 	for (UInt32 i = 0; i < kClipboardEnd; ++i) {

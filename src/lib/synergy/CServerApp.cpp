@@ -886,13 +886,6 @@ CServerApp::foregroundStartup(int argc, char** argv)
 	return mainLoop();
 }
 
-static
-int 
-mainLoopStatic() 
-{
-	return CServerApp::instance().mainLoop();
-}
-
 const char* 
 CServerApp::daemonName() const
 {

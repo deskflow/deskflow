@@ -22,15 +22,22 @@
 #import "IEventQueue.h"
 #import "IPrimaryScreen.h"
 #import <string.h>
+#import <sys/sysctl.h>
+
+void
+getProcessSerialNumber(const char* name, ProcessSerialNumber& psn);
+
+bool
+testProcessName(const char* name, const ProcessSerialNumber& psn);
 
 //
 // COSXScreenSaver
 //
 
 COSXScreenSaver::COSXScreenSaver(IEventQueue* events, void* eventTarget) :
-	m_events(events),
 	m_eventTarget(eventTarget),
-	m_enabled(true)
+	m_enabled(true),
+	m_events(events)
 {
 	m_autoReleasePool       = screenSaverUtilCreatePool();
 	m_screenSaverController = screenSaverUtilCreateController();
@@ -51,29 +58,9 @@ COSXScreenSaver::COSXScreenSaver(IEventQueue* events, void* eventTarget) :
 	
 	m_screenSaverPSN.highLongOfPSN = 0;
 	m_screenSaverPSN.lowLongOfPSN  = 0;
-
-	// test if screensaver is running and find process number
+	
 	if (isActive()) {
-		ProcessInfoRec	procInfo;
-		Str31			procName;	// pascal string. first byte holds length.
-		memset(&procInfo, 0, sizeof(procInfo));
-		procInfo.processName       = procName;
-		procInfo.processInfoLength = sizeof(ProcessInfoRec);
-
-		ProcessSerialNumber	psn;
-		OSErr err = GetNextProcess(&psn);
-		while (err == 0) {
-			memset(procName, 0, sizeof(procName));
-			err = GetProcessInformation(&psn, &procInfo);
-			if (err != 0) {
-				break;
-			}
-			if (strcmp("ScreenSaverEngine", (const char*)&procName[1]) == 0) {
-				m_screenSaverPSN = psn;
-				break;
-			}
-			err = GetNextProcess(&psn);
-		}
+		getProcessSerialNumber("ScreenSaverEngine", m_screenSaverPSN);
 	}
 }
 
@@ -119,10 +106,7 @@ COSXScreenSaver::isActive() const
 void
 COSXScreenSaver::processLaunched(ProcessSerialNumber psn)
 {
-	CFStringRef	processName;
-	OSStatus	err = CopyProcessName(&psn, &processName);
-	
-	if (err == 0 && CFEqual(CFSTR("ScreenSaverEngine"), processName)) {
+	if (testProcessName("ScreenSaverEngine", psn)) {
 		m_screenSaverPSN = psn;
 		LOG((CLOG_DEBUG1 "ScreenSaverEngine launched. Enabled=%d", m_enabled));
 		if (m_enabled) {
@@ -178,3 +162,41 @@ COSXScreenSaver::launchTerminationCallback(
 	}
     return (CallNextEventHandler(nextHandler, theEvent));
 }
+
+#pragma GCC diagnostic push 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+void
+getProcessSerialNumber(const char* name, ProcessSerialNumber& psn)
+{
+	ProcessInfoRec procInfo;
+	Str31 procName;	// pascal string. first byte holds length.
+	memset(&procInfo, 0, sizeof(procInfo));
+	procInfo.processName = procName;
+	procInfo.processInfoLength = sizeof(ProcessInfoRec);
+
+	ProcessSerialNumber	checkPsn;
+	OSErr err = GetNextProcess(&checkPsn);
+	while (err == 0) {
+		memset(procName, 0, sizeof(procName));
+		err = GetProcessInformation(&checkPsn, &procInfo);
+		if (err != 0) {
+			break;
+		}
+		if (strcmp(name, (const char*)&procName[1]) == 0) {
+			psn = checkPsn;
+			break;
+		}
+		err = GetNextProcess(&checkPsn);
+	}
+}
+
+bool
+testProcessName(const char* name, const ProcessSerialNumber& psn)
+{
+	CFStringRef	processName;
+	OSStatus	err = CopyProcessName(&psn, &processName);
+	return (err == 0 && CFEqual(CFSTR("ScreenSaverEngine"), processName));
+}
+
+#pragma GCC diagnostic pop

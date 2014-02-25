@@ -29,8 +29,8 @@
 //
 
 CServerTaskBarReceiver::CServerTaskBarReceiver(IEventQueue* events) :
-	m_events(events),
-	m_state(kNotRunning)
+	m_state(kNotRunning),
+	m_events(events)
 {
 	// do nothing
 }

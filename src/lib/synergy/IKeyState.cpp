@@ -25,8 +25,7 @@
 // IKeyState
 //
 
-IKeyState::IKeyState(IEventQueue* events) :
-	m_events(events)
+IKeyState::IKeyState(IEventQueue* events)
 {
 }
 

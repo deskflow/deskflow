@@ -78,12 +78,12 @@ winMainLoopStatic(int, const char**)
 #endif
 
 CDaemonApp::CDaemonApp() :
-	m_events(nullptr),
 	m_ipcServer(nullptr),
-	m_ipcLogOutputter(nullptr)
+	m_ipcLogOutputter(nullptr),
 	#if SYSAPI_WIN32
-	,m_watchdog(nullptr)
+	m_watchdog(nullptr),
 	#endif
+	m_events(nullptr)
 {
 	s_instance = this;
 }

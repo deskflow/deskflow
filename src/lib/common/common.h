@@ -131,19 +131,15 @@
 // math functions we define __FP__, the include guard macro for fp.h, to
 // prevent fp.h from being included.
 #if defined(__APPLE__)
-#define __FP__
+#	define __FP__
 #endif
 
 // define NULL
 #include <stddef.h>
 
-// we don't want to use NULL since it's old and nasty, so replace any
-// usages with nullptr (warning: this could break many things).
-// if not c++0x yet, future proof code by allowing use of nullptr
-#ifdef nullptr
-#define NULL nullptr
-#else
-#define nullptr NULL
+// if not c++0x, future proof code by allowing use of nullptr
+#ifndef nullptr
+#	define nullptr NULL
 #endif
 
 // make assert available since we use it a lot

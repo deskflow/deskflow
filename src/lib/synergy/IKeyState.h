@@ -165,9 +165,6 @@ public:
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
 
 	//@}
-
-private:
-	IEventQueue*		m_events;
 };
 
 #endif

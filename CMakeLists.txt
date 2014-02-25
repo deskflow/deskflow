@@ -67,6 +67,11 @@ set(libs)
 # Depending on the platform, pass in the required defines.
 if (UNIX)
 
+	# warnings as errors:
+	# we have a problem with people checking in code with warnings.
+	set(CMAKE_CXX_FLAGS "-Werror")
+
+
 	# For config.h, detect the libraries, functions, etc.
 	include(CheckIncludeFiles)
 	include(CheckLibraryExists)

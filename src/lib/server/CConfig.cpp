@@ -31,9 +31,9 @@
 //
 
 CConfig::CConfig(IEventQueue* events) :
-	m_events(events),
+	m_inputFilter(events),
 	m_hasLockToScreenAction(false),
-	m_inputFilter(events)
+	m_events(events)
 {
 	// do nothing
 }
