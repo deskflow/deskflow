@@ -21,9 +21,11 @@
 #include "CString.h"
 
 #if __APPLE__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wtautological-compare"
-#pragma GCC diagnostic ignored "-Wall"
+#	if GNUC_46
+#		pragma GCC diagnostic push
+#		pragma GCC diagnostic ignored "-Wtautological-compare"
+#	endif
+#	pragma GCC diagnostic ignored "-Wall"
 #endif 
 
 #include <cryptopp562/gcm.h>
@@ -31,7 +33,9 @@
 #include <cryptopp562/aes.h>
 
 #if __APPLE__
-#pragma GCC diagnostic pop
+#	if GNUC_46
+#		pragma GCC diagnostic pop
+#	endif
 #endif
 
 //! Encapsulation of modes
