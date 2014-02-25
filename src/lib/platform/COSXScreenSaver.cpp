@@ -24,11 +24,9 @@
 #import <string.h>
 #import <sys/sysctl.h>
 
-void
-getProcessSerialNumber(const char* name, ProcessSerialNumber& psn);
-
-bool
-testProcessName(const char* name, const ProcessSerialNumber& psn);
+// TODO: upgrade deprecated function usage in these functions.
+void getProcessSerialNumber(const char* name, ProcessSerialNumber& psn);
+bool testProcessName(const char* name, const ProcessSerialNumber& psn);
 
 //
 // COSXScreenSaver
@@ -163,7 +161,9 @@ COSXScreenSaver::launchTerminationCallback(
     return (CallNextEventHandler(nextHandler, theEvent));
 }
 
-#pragma GCC diagnostic push 
+#if GNUC_46
+#	pragma GCC diagnostic push
+#endif
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 void
@@ -199,4 +199,6 @@ testProcessName(const char* name, const ProcessSerialNumber& psn)
 	return (err == 0 && CFEqual(CFSTR("ScreenSaverEngine"), processName));
 }
 
-#pragma GCC diagnostic pop
+#if GNUC_46
+#	pragma GCC diagnostic pop
+#endif

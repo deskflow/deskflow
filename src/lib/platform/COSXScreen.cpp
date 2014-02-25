@@ -61,6 +61,12 @@ enum {
 	kSynergyMouseScrollAxisY = 'saxy'
 };
 
+// TODO: upgrade deprecated function usage in these functions.
+void setZeroSuppressionInterval();
+void avoidSupression();
+void logCursorVisibility();
+void avoidHesitatingCursor();
+
 //
 // COSXScreen
 //
@@ -747,15 +753,7 @@ COSXScreen::showCursor()
 	// appears to fix "mouse randomly not showing" bug
 	CGAssociateMouseAndMouseCursorPosition(true);
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
-	// CGCursorIsVisible is probably deprecated because its unreliable.
-	if (!CGCursorIsVisible()) {
-		LOG((CLOG_WARN "cursor may not be visible"));
-	}
-	
-#pragma GCC diagnostic pop
+	logCursorVisibility();
 
 	m_cursorHidden = false;
 }
@@ -782,15 +780,7 @@ COSXScreen::hideCursor()
 	// appears to fix "mouse randomly not hiding" bug
 	CGAssociateMouseAndMouseCursorPosition(true);
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
-	// CGCursorIsVisible is probably deprecated because its unreliable.
-	if (CGCursorIsVisible()) {
-		LOG((CLOG_WARN "cursor may be still visible"));
-	}
-	
-#pragma GCC diagnostic pop
+	logCursorVisibility();
 
 	m_cursorHidden = true;
 }
@@ -884,16 +874,7 @@ COSXScreen::enter()
 	showCursor();
 
 	if (m_isPrimary) {
-	
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
-		CGSetLocalEventsSuppressionInterval(0.0);
-
-#pragma GCC diagnostic pop
-		
-		// enable global hotkeys
-		//setGlobalHotKeysEnabled(true);
+		setZeroSuppressionInterval();
 	}
 	else {
 		// reset buttons
@@ -905,26 +886,13 @@ COSXScreen::enter()
 		io_registry_entry_t entry = IORegistryEntryFromPath(
 			kIOMasterPortDefault,
 			"IOService:/IOResources/IODisplayWrangler");
+		
 		if (entry != MACH_PORT_NULL) {
 			IORegistryEntrySetCFProperty(entry, CFSTR("IORequestIdle"), kCFBooleanFalse);
 			IOObjectRelease(entry);
 		}
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
-		// avoid suppression of local hardware events
-		// stkamp@users.sourceforge.net
-		CGSetLocalEventsFilterDuringSupressionState(
-								kCGEventFilterMaskPermitAllEvents,
-								kCGEventSupressionStateSupressionInterval);
-		CGSetLocalEventsFilterDuringSupressionState(
-								(kCGEventFilterMaskPermitLocalKeyboardEvents |
-								kCGEventFilterMaskPermitSystemDefinedEvents),
-								kCGEventSupressionStateRemoteMouseDrag);
-								
-#pragma GCC diagnostic pop
-
+		avoidSupression();
 	}
 
 	// now on screen
@@ -963,31 +931,8 @@ COSXScreen::leave()
 	}
 	
 	if (m_isPrimary) {
-		// warp to center
-		//warpCursor(m_xCenter, m_yCenter);
-		
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+		avoidHesitatingCursor();
 
-		// This used to be necessary to get smooth mouse motion on other screens,
-		// but now is just to avoid a hesitating cursor when transitioning to
-		// the primary (this) screen.
-		CGSetLocalEventsSuppressionInterval(0.0001);
-		
-		// disable global hotkeys
-		//setGlobalHotKeysEnabled(false);
-		
-#pragma GCC diagnostic pop
-
-	}
-	else {
-		// warp the mouse to the cursor center
-		//fakeMouseMove(m_xCenter, m_yCenter);
-
-		// FIXME -- prepare to show cursor if it moves
-
-		// take keyboard focus	
-		// FIXME
 	}
 
 	// now off screen
@@ -2154,3 +2099,50 @@ COSXScreen::getDraggingFilename()
 	}
 	return m_draggingFilename;
 }
+
+#if GNUC_46
+#	pragma GCC diagnostic push
+#endif
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+void
+setZeroSuppressionInterval()
+{
+	CGSetLocalEventsSuppressionInterval(0.0);
+}
+
+void
+avoidSupression()
+{
+	// avoid suppression of local hardware events
+	// stkamp@users.sourceforge.net
+	CGSetLocalEventsFilterDuringSupressionState(
+							kCGEventFilterMaskPermitAllEvents,
+							kCGEventSupressionStateSupressionInterval);
+	CGSetLocalEventsFilterDuringSupressionState(
+							(kCGEventFilterMaskPermitLocalKeyboardEvents |
+							kCGEventFilterMaskPermitSystemDefinedEvents),
+							kCGEventSupressionStateRemoteMouseDrag);
+}
+
+void
+logCursorVisibility()
+{
+	// CGCursorIsVisible is probably deprecated because its unreliable.
+	if (!CGCursorIsVisible()) {
+		LOG((CLOG_WARN "cursor may not be visible"));
+	}
+}
+
+void
+avoidHesitatingCursor()
+{
+	// This used to be necessary to get smooth mouse motion on other screens,
+	// but now is just to avoid a hesitating cursor when transitioning to
+	// the primary (this) screen.
+	CGSetLocalEventsSuppressionInterval(0.0001);
+}
+
+#if GNUC_46
+#	pragma GCC diagnostic pop
+#endif
