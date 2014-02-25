@@ -21,7 +21,7 @@
 #include "CStreamFilter.h"
 #include "CCryptoMode.h"
 
-#if SYSAPI_UNIX
+#if __APPLE__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wall"
 #endif
@@ -29,7 +29,7 @@
 #include <cryptopp562/osrng.h>
 #include <cryptopp562/sha.h>
 
-#if SYSAPI_UNIX
+#if __APPLE__
 #pragma GCC diagnostic pop
 #endif
 
