@@ -31,7 +31,7 @@
 # This will create an in-source UNIX Makefile.
 
 import sys, os
-sys.path.append('tools')
+sys.path.append('ext')
 
 # if old build src dir exists, move it, as this will now be used for build 
 # output.

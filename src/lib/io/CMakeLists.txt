@@ -44,7 +44,7 @@ set(inc
 	../base
 	../common
 	../..
-	../../../tools
+	../../../ext
 )
 
 if (UNIX)

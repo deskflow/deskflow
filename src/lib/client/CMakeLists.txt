@@ -36,7 +36,7 @@ set(inc
 	../mt
 	../net
 	../synergy
-	../../../tools
+	../../../ext
 )
 
 if (UNIX)
