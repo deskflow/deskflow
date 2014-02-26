@@ -40,7 +40,7 @@ class InternalCommands:
 	cmake_dir = 'res'
 	gui_dir = 'src/gui'
 	doc_dir = 'doc'
-	toolsDir = 'tools'
+	extDir = 'ext'
 
 	sln_filename = '%s.sln' % project
 	xcodeproj_filename = '%s.xcodeproj' % project
@@ -138,7 +138,7 @@ class InternalCommands:
 
 	def checkCryptoPP(self):
     
-		dir = self.toolsDir + '/' + self.cryptoPPDir
+		dir = self.extDir + '/' + self.cryptoPPDir
 		if (os.path.isdir(dir)):
 			return
 		

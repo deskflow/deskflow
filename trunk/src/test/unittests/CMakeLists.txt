@@ -49,9 +49,9 @@ set(inc
 	../../lib/net
 	../../lib/platform
 	../../lib/synergy
-	../../../tools/gtest-1.6.0/include
-	../../../tools/gmock-1.6.0/include
-	../../../tools
+	../../../ext/gtest-1.6.0/include
+	../../../ext/gmock-1.6.0/include
+	../../../ext
 	io
 	synergy
 )

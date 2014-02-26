@@ -111,7 +111,7 @@ set(inc
 	../synwinhk
 	../synwinxt
 	../..
-	../../../tools
+	../../../ext
 )
 
 if (UNIX)
