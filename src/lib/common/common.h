@@ -155,7 +155,4 @@ enum {
 	kExitConfig     = 4  // cannot read configuration
 };
 
-// gnu 4.6+ has pragma diagnostic push and tautological-compare
-#define GNUC_46 defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
-
 #endif

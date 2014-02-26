@@ -60,7 +60,7 @@ CCryptoStream::read(void* out, UInt32 n)
 	LOG((CLOG_DEBUG4 "crypto: read %i (decrypt)", n));
 
 	byte* cypher = new byte[n];
-	int result = getStream()->read(cypher, n);
+	size_t result = getStream()->read(cypher, n);
 	if (result == 0) {
 		// nothing to read.
 		return 0;

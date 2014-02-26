@@ -20,22 +20,7 @@
 #include "BasicTypes.h"
 #include "CStreamFilter.h"
 #include "CCryptoMode.h"
-
-#if __APPLE__
-#	if GNUC_46
-#		pragma GCC diagnostic push
-#	endif
-#	pragma GCC diagnostic ignored "-Wall"
-#endif
-
-#include <cryptopp562/osrng.h>
-#include <cryptopp562/sha.h>
-
-#if __APPLE__
-#	if GNUC_46
-#		pragma GCC diagnostic pop
-#	endif
-#endif
+#include "CCryptoStream_cryptopp.h"
 
 class CCryptoOptions;
 
