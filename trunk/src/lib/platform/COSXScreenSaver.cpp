@@ -161,9 +161,6 @@ COSXScreenSaver::launchTerminationCallback(
     return (CallNextEventHandler(nextHandler, theEvent));
 }
 
-#if GNUC_46
-#	pragma GCC diagnostic push
-#endif
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 void
@@ -199,6 +196,4 @@ testProcessName(const char* name, const ProcessSerialNumber& psn)
 	return (err == 0 && CFEqual(CFSTR("ScreenSaverEngine"), processName));
 }
 
-#if GNUC_46
-#	pragma GCC diagnostic pop
-#endif
+#pragma GCC diagnostic error "-Wdeprecated-declarations"

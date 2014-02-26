@@ -28,7 +28,7 @@ CDragInformation::parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CSt
 	size_t findResult2 = 0;
 	dragFileList.clear();
 	CString slash("\\");
-	if (data.find("/", startPos) != -1) {
+	if (data.find("/", startPos) != string::npos) {
 		slash = "/";
 	}
 
@@ -51,9 +51,9 @@ CDragInformation::parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CSt
 CString
 CDragInformation::getDragFileExtension(CString fileName)
 {
-	size_t findResult = -1;
+	size_t findResult = string::npos;
 	findResult = fileName.find_last_of(".", fileName.size());
-	if (findResult != -1) {
+	if (findResult != string::npos) {
 		return fileName.substr(findResult + 1, fileName.size() - findResult - 1);
 	}
 	else {

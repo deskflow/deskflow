@@ -2100,9 +2100,6 @@ COSXScreen::getDraggingFilename()
 	return m_draggingFilename;
 }
 
-#if GNUC_46
-#	pragma GCC diagnostic push
-#endif
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 void
@@ -2143,6 +2140,4 @@ avoidHesitatingCursor()
 	CGSetLocalEventsSuppressionInterval(0.0001);
 }
 
-#if GNUC_46
-#	pragma GCC diagnostic pop
-#endif
+#pragma GCC diagnostic error "-Wdeprecated-declarations"
