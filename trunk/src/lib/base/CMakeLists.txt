@@ -14,51 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(inc
-	CEvent.h
-	CEventQueue.h
-	CEventTypes.h
-	CFunctionEventJob.h
-	CFunctionJob.h
-	CLog.h
-	CPriorityQueue.h
-	CSimpleEventQueueBuffer.h
-	CStopwatch.h
-	CString.h
-	CStringUtil.h
-	CUnicode.h
-	IEventJob.h
-	IEventQueue.h
-	IEventQueueBuffer.h
-	IJob.h
-	ILogOutputter.h
-	LogOutputters.h
-	TMethodEventJob.h
-	TMethodJob.h
-	XBase.h
-	ELevel.h
-)
+file(GLOB headers "*.h")
+file(GLOB sources "*.cpp")
 
-set(src
-	CEvent.cpp
-	CEventQueue.cpp
-	CEventTypes.cpp
-	CFunctionEventJob.cpp
-	CFunctionJob.cpp
-	CLog.cpp
-	CSimpleEventQueueBuffer.cpp
-	CStopwatch.cpp
-	CStringUtil.cpp
-	CUnicode.cpp
-	LogOutputters.cpp
-	XBase.cpp
-)
-
-if (WIN32)
-	list(APPEND src ${inc})
+if (SYNERGY_ADD_HEADERS)
+	list(APPEND sources ${headers})
 endif()
 
-set(inc
+include_directories(
 	../arch
 	../common
 	../mt
@@ -66,14 +29,13 @@ set(inc
 )
 
 if (UNIX)
-	list(APPEND inc
+	include_directories(
 		../../..
 		../base
 	)
 endif()
 
-include_directories(${inc})
-add_library(base STATIC ${src})
+add_library(base STATIC ${sources})
 
 if (UNIX)
 	target_link_libraries(base common)

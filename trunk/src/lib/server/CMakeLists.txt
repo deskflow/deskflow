@@ -14,45 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(inc
-	CBaseClientProxy.h
-	CClientListener.h
-	CClientProxy.h
-	CClientProxy1_0.h
-	CClientProxy1_1.h
-	CClientProxy1_2.h
-	CClientProxy1_3.h
-	CClientProxy1_4.h
-	CClientProxy1_5.h
-	CClientProxyUnknown.h
-	CConfig.h
-	CInputFilter.h
-	CPrimaryClient.h
-	CServer.h
-)
+file(GLOB headers "*.h")
+file(GLOB sources "*.cpp")
 
-set(src
-	CBaseClientProxy.cpp
-	CClientListener.cpp
-	CClientProxy.cpp
-	CClientProxy1_0.cpp
-	CClientProxy1_1.cpp
-	CClientProxy1_2.cpp
-	CClientProxy1_3.cpp
-	CClientProxy1_4.cpp
-	CClientProxy1_5.cpp
-	CClientProxyUnknown.cpp
-	CConfig.cpp
-	CInputFilter.cpp
-	CPrimaryClient.cpp
-	CServer.cpp
-)
-
-if (WIN32)
-	list(APPEND src ${inc})
+if (SYNERGY_ADD_HEADERS)
+	list(APPEND sources ${headers})
 endif()
 
-set(inc
+include_directories(
 	../arch
 	../base
 	../common
@@ -64,13 +33,12 @@ set(inc
 )
 
 if (UNIX)
-	list(APPEND inc
+	include_directories(
 		../../..
 	)
 endif()
 
-include_directories(${inc})
-add_library(server STATIC ${src})
+add_library(server STATIC ${sources})
 
 if (UNIX)
 	target_link_libraries(server synergy)

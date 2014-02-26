@@ -14,89 +14,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(inc
-	CClientTaskBarReceiver.h
-	CServerTaskBarReceiver.h
-	CPortableTaskBarReceiver.h
-	CApp.h
-	CClientApp.h
-	CServerApp.h
-	CClipboard.h
-	CKeyMap.h
-	CKeyState.h
-	CPacketStreamFilter.h
-	CPlatformScreen.h
-	CProtocolUtil.h
-	CScreen.h
-	ClipboardTypes.h
-	IClient.h
-	IClipboard.h
-	IKeyState.h
-	IPlatformScreen.h
-	IPrimaryScreen.h
-	IScreen.h
-	IScreenSaver.h
-	ISecondaryScreen.h
-	KeyTypes.h
-	MouseTypes.h
-	OptionTypes.h
-	ProtocolTypes.h
-	XScreen.h
-	XSynergy.h
-	CDaemonApp.h
-	CAppUtil.h
-	CArgsBase.h
-	IAppUtil.h
-	CFileChunker.h
-	CDragInformation.h
-	CToolApp.h
-)
+file(GLOB headers "*.h")
+file(GLOB sources "*.cpp")
 
-set(src
-	CClientTaskBarReceiver.cpp
-	CServerTaskBarReceiver.cpp
-	CPortableTaskBarReceiver.cpp
-	CApp.cpp
-	CClientApp.cpp
-	CServerApp.cpp
-	CClipboard.cpp
-	CKeyMap.cpp
-	CKeyState.cpp
-	CPacketStreamFilter.cpp
-	CPlatformScreen.cpp
-	CProtocolUtil.cpp
-	CScreen.cpp
-	IClipboard.cpp
-	IKeyState.cpp
-	IPrimaryScreen.cpp
-	KeyTypes.cpp
-	ProtocolTypes.cpp
-	XScreen.cpp
-	XSynergy.cpp
-	CDaemonApp.cpp
-	CAppUtil.cpp
-	CArgsBase.cpp
-	CFileChunker.cpp
-	CDragInformation.cpp
-	CToolApp.cpp
-)
+# remove files which are not cross platform
+list(REMOVE_ITEM headers "*Windows*")
+list(REMOVE_ITEM headers "*Unix*")
 
+# arch
 if (WIN32)
-	list(APPEND inc
-		CAppUtilWindows.h
-	)	
-
-	list(APPEND src
-		${inc}
-		CAppUtilWindows.cpp
-	)
-elseif(UNIX)
-	list(APPEND src
-	  	CAppUtilUnix.cpp
-	)
+	file(GLOB arch_sources "*Windows*.cpp")
+	file(GLOB arch_headers "*Windows*.h")
+elseif (UNIX)
+	file(GLOB arch_sources "*Unix*.cpp")
+	file(GLOB arch_headers "*Unix*.h")
 endif()
 
-set(inc
+list(APPEND sources ${arch_sources})
+list(APPEND headers ${arch_headers})
+
+include_directories(
 	../arch
 	../base
 	../client
@@ -115,13 +52,12 @@ set(inc
 )
 
 if (UNIX)
-	list(APPEND inc
+	include_directories(
 		../../..
 	)
 endif()
 
-include_directories(${inc})
-add_library(synergy STATIC ${src})
+add_library(synergy STATIC ${sources})
 
 if (UNIX)
 	target_link_libraries(synergy arch client ipc net base platform mt server)

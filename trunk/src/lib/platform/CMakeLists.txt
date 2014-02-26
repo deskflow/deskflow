@@ -15,88 +15,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 if (WIN32)
-
-	set(inc
-		CMSWindowsClipboard.h
-		CMSWindowsClipboardAnyTextConverter.h
-		CMSWindowsClipboardBitmapConverter.h
-		CMSWindowsClipboardHTMLConverter.h
-		CMSWindowsClipboardTextConverter.h
-		CMSWindowsClipboardUTF16Converter.h
-		CMSWindowsDesks.h
-		CMSWindowsEventQueueBuffer.h
-		CMSWindowsKeyState.h
-		CMSWindowsScreen.h
-		CMSWindowsScreenSaver.h
-		CMSWindowsUtil.h
-		CMSWindowsWatchdog.h
-		CMSWindowsHookLibraryLoader.h
-		IMSWindowsClipboardFacade.h
-		CMSWindowsDebugOutputter.h
-		CMSWindowsSession.h
-	)
-
-	set(src
-		CMSWindowsClipboard.cpp
-		CMSWindowsClipboardFacade.cpp
-		CMSWindowsClipboardAnyTextConverter.cpp
-		CMSWindowsClipboardBitmapConverter.cpp
-		CMSWindowsClipboardHTMLConverter.cpp
-		CMSWindowsClipboardTextConverter.cpp
-		CMSWindowsClipboardUTF16Converter.cpp
-		CMSWindowsDesks.cpp
-		CMSWindowsEventQueueBuffer.cpp
-		CMSWindowsKeyState.cpp
-		CMSWindowsScreen.cpp
-		CMSWindowsScreenSaver.cpp
-		CMSWindowsUtil.cpp
-		CMSWindowsWatchdog.cpp
-		CMSWindowsHookLibraryLoader.cpp
-		CMSWindowsDebugOutputter.cpp
-		CMSWindowsSession.cpp
-	)
-
-	list(APPEND src
-		${inc}
-	)
-
+	file(GLOB headers "CMSWindows*.h")
+	file(GLOB sources "CMSWindows*.cpp")
 elseif (APPLE)
-
-	set(src
-		COSXClipboard.cpp
-		COSXClipboardAnyTextConverter.cpp
-		COSXClipboardTextConverter.cpp
-		COSXClipboardUTF16Converter.cpp
-		COSXEventQueueBuffer.cpp
-		COSXKeyState.cpp
-		COSXScreen.cpp
-		COSXScreenSaver.cpp
-		COSXScreenSaverUtil.m
-		COSXPasteboardPeeker.m
-		COSXDragSimulator.m
-		COSXDragView.m
-	)
-	
+	file(GLOB headers "COSX*.h")
+	file(GLOB sources "COSX*.cpp")
 elseif (UNIX)
-
-	set(src
-		CXWindowsClipboard.cpp
-		CXWindowsClipboardAnyBitmapConverter.cpp
-		CXWindowsClipboardBMPConverter.cpp
-		CXWindowsClipboardHTMLConverter.cpp
-		CXWindowsClipboardTextConverter.cpp
-		CXWindowsClipboardUCS2Converter.cpp
-		CXWindowsClipboardUTF8Converter.cpp
-		CXWindowsEventQueueBuffer.cpp
-		CXWindowsKeyState.cpp
-		CXWindowsScreen.cpp
-		CXWindowsScreenSaver.cpp
-		CXWindowsUtil.cpp
-	)
-	
+	file(GLOB headers "CXWindows*.h")
+	file(GLOB sources "CXWindows*.cpp")
 endif()
 
-set(inc
+if (SYNERGY_ADD_HEADERS)
+	list(APPEND sources ${headers})
+endif()
+
+include_directories(
 	../arch
 	../base
 	../common
@@ -112,7 +45,7 @@ set(inc
 )
 
 if (UNIX)
-	list(APPEND inc
+	include_directories(
 		../../..
 	)
 endif()
@@ -124,7 +57,7 @@ if (APPLE)
 endif()
 
 include_directories(${inc})
-add_library(platform STATIC ${src})
+add_library(platform STATIC ${sources})
 target_link_libraries(platform client ${libs})
 
 if (UNIX)
@@ -132,6 +65,6 @@ if (UNIX)
 endif()
 
 if (APPLE)
-	FIND_LIBRARY(COCOA_LIBRARY Cocoa)
+	find_library(COCOA_LIBRARY Cocoa)
 	target_link_libraries(platform ${COCOA_LIBRARY})
 endif()

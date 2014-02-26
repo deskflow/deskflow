@@ -14,16 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(inc
-	Version.h
-)
+file(GLOB headers "*.h")
+file(GLOB sources "*.cpp")
 
-set(src
-	Version.cpp
-)
-
-if (WIN32)
-	list(APPEND src ${inc})
+if (SYNERGY_ADD_HEADERS)
+	list(APPEND sources ${headers})
 endif()
 
 if (UNIX)
@@ -32,4 +27,4 @@ if (UNIX)
 	)
 endif()
 
-add_library(common STATIC ${src})
+add_library(common STATIC ${sources})

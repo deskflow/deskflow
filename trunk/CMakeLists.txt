@@ -20,8 +20,8 @@ set(VERSION_MINOR 4)
 set(VERSION_REV 17)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
-# The check for 2.6 may be too strict (consider lowering).
-cmake_minimum_required(VERSION 2.4.7)
+# 2.8 needed for file glob.
+cmake_minimum_required(VERSION 2.8)
 
 # CMake complains if we don't have this.
 if (COMMAND cmake_policy)
@@ -63,6 +63,14 @@ set(doc_dir ${root_dir}/doc)
 # a more elegant way of doing this; with SCons, when you check for the
 # lib, it is automatically passed to the linker.
 set(libs)
+
+# only include headers as "source" if not unix makefiles,
+# which is useful when using an IDE.
+if (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
+	set(SYNERGY_ADD_HEADERS FALSE)
+else()
+	set(SYNERGY_ADD_HEADERS TRUE)
+endif()
 
 # Depending on the platform, pass in the required defines.
 if (UNIX)

@@ -14,11 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(src
-	synergyd.cpp
-)
+file(GLOB headers "*.h")
+file(GLOB sources "*.cpp")
 
-set(inc
+include_directories(
 	../../lib/arch
 	../../lib/base
 	../../lib/common
@@ -31,17 +30,15 @@ set(inc
 )
 
 if (UNIX)
-	list(APPEND inc
+	include_directories(
 		../../..
 	)
 endif()
 
-include_directories(${inc})
-
 if (WIN32)
-  add_executable(synergyd WIN32 ${src})
+  add_executable(synergyd WIN32 ${sources})
 else()
-  add_executable(synergyd ${src})
+  add_executable(synergyd ${sources})
 endif()
 
 target_link_libraries(synergyd
