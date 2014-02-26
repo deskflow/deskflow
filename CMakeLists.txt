@@ -328,6 +328,12 @@ if (WIN32)
 
 endif()
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "IRIX")
+	set_target_properties(synergys PROPERTIES LINK_FLAGS "-all -woff 33 -woff 84 -woff 15")
+	set_target_properties(synergyc PROPERTIES LINK_FLAGS "-all -woff 33 -woff 84 -woff 15")
+	set_target_properties(synergyd PROPERTIES LINK_FLAGS "-all -woff 33 -woff 84 -woff 15")
+endif()
+
 if (CONF_CPACK)
 
 	if (WIN32)
@@ -382,10 +388,3 @@ if (CONF_DOXYGEN)
 	configure_file(${cmake_dir}/doxygen.cfg.in ${doc_dir}/doxygen.cfg)
 
 endif()
-
-if (${CMAKE_SYSTEM_NAME} MATCHES "IRIX")
-	set_target_properties(synergys PROPERTIES LINK_FLAGS "-all -woff 33 -woff 84 -woff 15")
-	set_target_properties(synergyc PROPERTIES LINK_FLAGS "-all -woff 33 -woff 84 -woff 15")
-	set_target_properties(synergyd PROPERTIES LINK_FLAGS "-all -woff 33 -woff 84 -woff 15")
-endif()
-
