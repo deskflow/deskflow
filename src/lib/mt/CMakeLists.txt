@@ -14,28 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(inc
-	CCondVar.h
-	CLock.h
-	CMutex.h
-	CThread.h
-	XMT.h
-	XThread.h
-)
+file(GLOB headers "*.h")
+file(GLOB sources "*.cpp")
 
-set(src
-	CCondVar.cpp
-	CLock.cpp
-	CMutex.cpp
-	CThread.cpp
-	XMT.cpp
-)
-
-if (WIN32)
-	list(APPEND src ${inc})
+if (SYNERGY_ADD_HEADERS)
+	list(APPEND sources ${headers})
 endif()
 
-set(inc
+include_directories(
 	../arch
 	../base
 	../common
@@ -43,10 +29,9 @@ set(inc
 )
 
 if (UNIX)
-	list(APPEND inc
+	include_directories(
 		../../..
 	)
 endif()
 
-include_directories(${inc})
-add_library(mt STATIC ${src})
+add_library(mt STATIC ${sources})

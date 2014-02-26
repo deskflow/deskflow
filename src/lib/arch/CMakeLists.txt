@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(src
+set(sources
 	CArch.cpp
 	IArchString.cpp
 	XArch.cpp
@@ -23,7 +23,7 @@ set(src
 
 if (WIN32)
 
-	set(inc
+	set(headers
 		CArch.h
 		CArchConsoleWindows.h
 		CArchDaemonWindows.h
@@ -47,8 +47,8 @@ if (WIN32)
 		CArchInternetWindows.h
 	)
 
-	list(APPEND src
-		${inc}
+	list(APPEND sources
+		${headers}
 		CArchConsoleWindows.cpp
 		CArchDaemonWindows.cpp
 		CArchFileWindows.cpp
@@ -68,7 +68,7 @@ if (WIN32)
 	
 elseif (UNIX)
 
-	list(APPEND src
+	list(APPEND sources
 		CArchConsoleUnix.cpp
 		CArchDaemonUnix.cpp
 		CArchFileUnix.cpp
@@ -88,7 +88,7 @@ elseif (UNIX)
 	
 endif()
 
-set(inc
+include_directories(
 	../base
 	../common
 	../mt
@@ -97,11 +97,10 @@ set(inc
 )
 
 if (UNIX)
-	list(APPEND inc
+	include_directories(
 		../../..
 		../arch
 	)
 endif()
 
-include_directories(${inc})
-add_library(arch STATIC ${src})
+add_library(arch STATIC ${sources})

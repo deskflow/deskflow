@@ -14,31 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(h
-	synergy/CKeyStateTests.h
-	synergy/CMockEventQueue.h
-	synergy/CMockKeyMap.h
-	client/CMockClient.h
-	io/CMockStream.h
-	server/CMockServer.h
-	io/CMockCryptoStream.h
-	synergy/CMockScreen.h
-	server/CMockConfig.h
-	server/CMockPrimaryClient.h
-	server/CMockInputFilter.h
-)
+file(GLOB_RECURSE headers "*.h")
+file(GLOB_RECURSE sources "*.cpp")
 
-set(src
-	${h}
-	Main.cpp
-	synergy/CClipboardTests.cpp
-	synergy/CKeyStateTests.cpp
-	client/CServerProxyTests.cpp
-	synergy/CCryptoStreamTests.cpp
-	server/CClientProxyTests.cpp
-)
-
-set(inc
+include_directories(
 	../../lib/arch
 	../../lib/base
 	../../lib/client
@@ -57,12 +36,15 @@ set(inc
 )
 
 if (UNIX)
-	list(APPEND inc
+	include_directories(
 		../../..
 	)
 endif()
 
-include_directories(${inc})
-add_executable(unittests ${src})
+if (SYNERGY_ADD_HEADERS)
+	list(APPEND sources ${headers})
+endif()
+
+add_executable(unittests ${sources})
 target_link_libraries(unittests
 	arch base client server common io net platform server synergy mt gtest gmock cryptopp ${libs})

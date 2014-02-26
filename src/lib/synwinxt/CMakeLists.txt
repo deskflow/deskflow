@@ -13,31 +13,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(headers
-	CClassFactory.h
-	CDataHandlerExtension.h
-	synwinxt.h
-)
+file(GLOB headers "*.h")
+file(GLOB sources "*.cpp" "*.def")
 
-set(source
-	CClassFactory.cpp
-	CDataHandlerExtension.cpp
-	synwinxt.cpp
-	synwinxt.def
-)
+if (SYNERGY_ADD_HEADERS)
+	list(APPEND sources ${headers})
+endif()
 
-list(APPEND source
-	${headers}
-)
-
-set(includes
+include_directories(
 	../arch
 	../base
 	../common
 )
 
-include_directories(${includes})
-add_library(synwinxt SHARED ${source})
+add_library(synwinxt SHARED ${sources})
 target_link_libraries(synwinxt
 	arch base common ${libs})
 	

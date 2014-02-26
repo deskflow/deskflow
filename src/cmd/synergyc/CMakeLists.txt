@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(src
+set(sources
 	synergyc.cpp
 )
 
 if (WIN32)
-	list(APPEND src
+	list(APPEND sources
 		CMSWindowsClientTaskBarReceiver.cpp
 		CMSWindowsClientTaskBarReceiver.h
 		resource.h
@@ -31,12 +31,12 @@ if (WIN32)
 		tb_wait.ico
 	)
 elseif (APPLE)
-	list(APPEND src COSXClientTaskBarReceiver.cpp)
+	list(APPEND sources COSXClientTaskBarReceiver.cpp)
 elseif (UNIX)
-	list(APPEND src CXWindowsClientTaskBarReceiver.cpp)	
+	list(APPEND sources CXWindowsClientTaskBarReceiver.cpp)	
 endif()
 
-set(inc
+include_directories(
 	../../lib/arch
 	../../lib/base
 	../../lib/client
@@ -52,13 +52,12 @@ set(inc
 )
 
 if (UNIX)
-	list(APPEND inc
+	include_directories(
 		../../..
 	)
 endif()
 
-include_directories(${inc})
-add_executable(synergyc ${src})
+add_executable(synergyc ${sources})
 target_link_libraries(synergyc
 	arch base client common io mt net ipc platform server synergy cryptopp ${libs})
 

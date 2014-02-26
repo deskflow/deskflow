@@ -13,25 +13,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(headers
-	synwinhk.h
-)
+file(GLOB headers "*.h")
+file(GLOB sources "*.cpp")
 
-set(source
-	synwinhk.cpp
-)
+if (SYNERGY_ADD_HEADERS)
+	list(APPEND sources ${headers})
+endif()
 
-list(APPEND source
-	${headers}
-)
-
-set(includes
+include_directories(
 	../common
 	../synergy
 )
 
-include_directories(${includes})
-add_library(synwinhk SHARED ${source})
+add_library(synwinhk SHARED ${sources})
 
 # copy the dlls (and supporting files) from the lib dir to 
 # the bin dir, so that synergyc and synergys can easily find them.

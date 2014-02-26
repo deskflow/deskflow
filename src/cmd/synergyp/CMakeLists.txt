@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(src
+set(sources
 	synergyp.cpp
 )
 
 if (WIN32)
-	list(APPEND src
+	list(APPEND sources
 		CMSWindowsPortableTaskBarReceiver.cpp
 		CMSWindowsPortableTaskBarReceiver.h
 		resource.h
@@ -31,12 +31,12 @@ if (WIN32)
 		tb_wait.ico
 	)
 elseif (APPLE)
-	list(APPEND src COSXPortableTaskBarReceiver.cpp)	
+	list(APPEND sources COSXPortableTaskBarReceiver.cpp)	
 elseif (UNIX)
-	list(APPEND src CXWindowsPortableTaskBarReceiver.cpp)
+	list(APPEND sources CXWindowsPortableTaskBarReceiver.cpp)
 endif()
 
-set(inc
+include_directories(
 	../../lib/arch
 	../../lib/base
 	../../lib/common
@@ -52,17 +52,15 @@ set(inc
 )
 
 if (UNIX)
-	list(APPEND inc
+	include_directories(
 		../../..
 	)
 endif()
 
-include_directories(${inc})
-
 if (WIN32)
-	add_executable(synergyp WIN32 ${src})
+	add_executable(synergyp WIN32 ${sources})
 else()
-	add_executable(synergyp ${src})
+	add_executable(synergyp ${sources})
 endif()	
 	
 target_link_libraries(synergyp

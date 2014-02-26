@@ -14,51 +14,41 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(h
-	CTestEventQueue.h
-)
-
-set(src
-	${h}
-	Main.cpp
-	CIpcTests.cpp
-	NetworkTests.cpp
-	CTestEventQueue.cpp
-)
+file(GLOB headers "*.h")
+file(GLOB sources "*.cpp")
 
 # arch
 if (WIN32)
-	list(APPEND src
-		arch/CArchInternetWindowsTests.cpp
-	)
+	file(GLOB arch_sources "arch/CArchWindows*.cpp")
+	file(GLOB arch_headers "arch/CArchWindows*.h")
 elseif (UNIX)
-	list(APPEND src
-		arch/CArchInternetUnixTests.cpp
-	)
+	file(GLOB arch_sources "arch/CArchUnix*.cpp")
+	file(GLOB arch_headers "arch/CArchUnix*.h")
 endif()
+
+list(APPEND sources ${arch_sources})
+list(APPEND headers ${arch_headers})
 
 # platform
 if (WIN32)
-	list(APPEND src
-		platform/CMSWindowsClipboardTests.cpp
-		platform/CMSWindowsKeyStateTests.cpp
-	)
+	file(GLOB platform_sources "platform/CMSWindows*.cpp")
+	file(GLOB platform_headers "platform/CMSWindows*.h")
 elseif (APPLE)
-	list(APPEND src
-		platform/COSXClipboardTests.cpp
-		platform/COSXKeyStateTests.cpp
-		platform/COSXScreenTests.cpp
-	)
+	file(GLOB platform_sources "platform/COSX*.cpp")
+	file(GLOB platform_headers "platform/COSX*.h")
 elseif (UNIX)
-	list(APPEND src
-		platform/CXWindowsClipboardTests.cpp
-		platform/CXWindowsKeyStateTests.cpp
-		platform/CXWindowsScreenTests.cpp
-		platform/CXWindowsScreenSaverTests.cpp
-	)
+	file(GLOB platform_sources "platform/CXWindows*.cpp")
+	file(GLOB platform_headers "platform/CXWindows*.h")
 endif()
 
-set(inc
+list(APPEND sources ${platform_sources})
+list(APPEND headers ${platform_headers})
+
+if (SYNERGY_ADD_HEADERS)
+	list(APPEND sources ${headers})
+endif()
+
+include_directories(
 	../../lib/arch
 	../../lib/base
 	../../lib/client
@@ -78,12 +68,11 @@ set(inc
 )
 
 if (UNIX)
-	list(APPEND inc
+	include_directories(
 		../../..
 	)
 endif()
 
-include_directories(${inc})
-add_executable(integtests ${src})
+add_executable(integtests ${sources})
 target_link_libraries(integtests
 	arch base client common io ipc mt net platform server synergy gtest gmock cryptopp ${libs})
