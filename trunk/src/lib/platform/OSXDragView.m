@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import "platform/COSXDragView.h"
+#import "platform/OSXDragView.h"
 
 #ifdef MAC_OS_X_VERSION_10_7
 

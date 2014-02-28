@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import "platform/COSXScreenSaver.h"
+#import "platform/OSXScreenSaver.h"
 
-#import "platform/COSXScreenSaverUtil.h"
+#import "platform/OSXScreenSaverUtil.h"
 #import "synergy/IPrimaryScreen.h"
 #import "base/Log.h"
 #import "base/IEventQueue.h"

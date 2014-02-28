@@ -12,9 +12,9 @@
  * GNU General Public License for more details.
  */
 
-#import "platform/COSXDragSimulator.h"
+#import "platform/OSXDragSimulator.h"
 
-#import "platform/COSXDragView.h"
+#import "platform/OSXDragView.h"
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>

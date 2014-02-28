@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "IEventQueueBuffer.h"
+#include "base/IEventQueueBuffer.h"
 
 #include <Carbon/Carbon.h>
 

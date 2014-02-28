@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "platform/IScreenSaver.h"
+#include "synergy/IScreenSaver.h"
 
 #include <Carbon/Carbon.h>
 
