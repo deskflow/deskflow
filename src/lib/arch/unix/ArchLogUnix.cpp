@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "arch/ArchLogUnix.h"
+#include "arch/unix/ArchLogUnix.h"
 
 #include <syslog.h>
 

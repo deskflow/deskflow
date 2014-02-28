@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "arch/ArchFileUnix.h"
+#include "arch/unix/ArchFileUnix.h"
 
 #include <stdio.h>
 #include <unistd.h>

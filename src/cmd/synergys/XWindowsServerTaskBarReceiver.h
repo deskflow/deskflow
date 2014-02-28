@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "synergys/ServerTaskBarReceiver.h"
+#include "synergy/ServerTaskBarReceiver.h"
 
 class CBufferedLogOutputter;
 class IEventQueue;

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "arch/win32/ArchTaskBarXWindows.h"
+#include "arch/unix/ArchTaskBarXWindows.h"
 
 //
 // CArchTaskBarXWindows

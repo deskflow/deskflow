@@ -34,5 +34,3 @@ public:
 	virtual void		showLog(bool);
 	virtual void		writeLog(ELevel, const char*);
 };
-
-#endif

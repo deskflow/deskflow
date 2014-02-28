@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "arch/XArchUnix.h"
+#include "arch/unix/XArchUnix.h"
 
 #include <cstring>
 

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "arch/ArchTimeUnix.h"
+#include "arch/unix/ArchTimeUnix.h"
 
 #if TIME_WITH_SYS_TIME
 #	include <sys/time.h>

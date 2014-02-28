@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "arch/ArchDaemonUnix.h"
-#include "arch/XArchUnix.h"
+#include "arch/unix/ArchDaemonUnix.h"
+
+#include "arch/unix/XArchUnix.h"
 #include "base/Log.h"
 
 #include <unistd.h>

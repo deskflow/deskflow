@@ -15,7 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "arch/ArchInternetUnix.h"
+#include "arch/unix/ArchInternetUnix.h"
+
 #include "arch/XArch.h"
 #include "common/Version.h"
 #include "base/Log.h"
