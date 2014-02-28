@@ -16,23 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CClientProxyUnknown.h"
-#include "CClientProxy1_0.h"
-#include "CClientProxy1_1.h"
-#include "CClientProxy1_2.h"
-#include "CClientProxy1_3.h"
-#include "CClientProxy1_4.h"
-#include "CClientProxy1_5.h"
-#include "ProtocolTypes.h"
-#include "CProtocolUtil.h"
-#include "XSynergy.h"
-#include "IStream.h"
-#include "XIO.h"
-#include "CLog.h"
-#include "CString.h"
-#include "IEventQueue.h"
-#include "TMethodEventJob.h"
-#include "CServer.h"
+#include "server/ClientProxyUnknown.h"
+
+#include "server/Server.h"
+#include "server/ClientProxy1_0.h"
+#include "server/ClientProxy1_1.h"
+#include "server/ClientProxy1_2.h"
+#include "server/ClientProxy1_3.h"
+#include "server/ClientProxy1_4.h"
+#include "server/ClientProxy1_5.h"
+#include "synergy/protocol_types.h"
+#include "synergy/ProtocolUtil.h"
+#include "synergy/XSynergy.h"
+#include "io/IStream.h"
+#include "io/XIO.h"
+#include "base/Log.h"
+#include "base/String.h"
+#include "base/IEventQueue.h"
+#include "base/TMethodEventJob.h"
 
 //
 // CClientProxyUnknown

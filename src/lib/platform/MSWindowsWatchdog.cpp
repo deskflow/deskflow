@@ -16,23 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsWatchdog.h"
-#include "CThread.h"
-#include "TMethodJob.h"
-#include "CLog.h"
-#include "CArch.h"
-#include "Version.h"
-#include "CArchDaemonWindows.h"
-#include "XArchWindows.h"
-#include "CApp.h"
-#include "CArgsBase.h"
-#include "CIpcLogOutputter.h"
-#include "CIpcServer.h"
-#include "CIpcMessage.h"
-#include "Ipc.h"
+#include "platform/MSWindowsWatchdog.h"
 
-#include <UserEnv.h>
+#include "ipc/IpcLogOutputter.h"
+#include "ipc/IpcServer.h"
+#include "ipc/IpcMessage.h"
+#include "ipc/Ipc.h"
+#include "synergy/App.h"
+#include "synergy/ArgsBase.h"
+#include "mt/Thread.h"
+#include "arch/win32/ArchDaemonWindows.h"
+#include "arch/win32/XArchWindows.h"
+#include "arch/Arch.h"
+#include "base/TMethodJob.h"
+#include "base/Log.h"
+#include "common/Version.h"
+
 #include <sstream>
+#include <UserEnv.h>
 #include <Shellapi.h>
 
 enum {

@@ -16,21 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsDesks.h"
-#include "CMSWindowsScreen.h"
-#include "synwinhk.h"
-#include "IScreenSaver.h"
-#include "XScreen.h"
-#include "CLock.h"
-#include "CThread.h"
-#include "CLog.h"
-#include "IEventQueue.h"
-#include "IJob.h"
-#include "TMethodEventJob.h"
-#include "TMethodJob.h"
-#include "CArchMiscWindows.h"
+#include "platform/MSWindowsDesks.h"
+
+#include "synwinhk/synwinhk.h"
+#include "platform/MSWindowsScreen.h"
+#include "synergy/IScreenSaver.h"
+#include "synergy/XScreen.h"
+#include "mt/Lock.h"
+#include "mt/Thread.h"
+#include "arch/win32/ArchMiscWindows.h"
+#include "base/Log.h"
+#include "base/IEventQueue.h"
+#include "base/IJob.h"
+#include "base/TMethodEventJob.h"
+#include "base/TMethodJob.h"
+#include "base/IEventQueue.h"
+
 #include <malloc.h>
-#include "IEventQueue.h"
 
 // these are only defined when WINVER >= 0x0500
 #if !defined(SPI_GETMOUSESPEED)

@@ -18,7 +18,7 @@
  
 #pragma once
 
-#include "ILogOutputter.h"
+#include "base/ILogOutputter.h"
 
 //! Write log to debugger
 /*!

@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "CClientProxy1_3.h"
+#include "server/ClientProxy1_3.h"
 
 class CServer;
 

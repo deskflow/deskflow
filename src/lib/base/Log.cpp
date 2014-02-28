@@ -16,13 +16,14 @@
  * along with this program.	If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CLog.h"
-#include "CString.h"
-#include "CStringUtil.h"
-#include "LogOutputters.h"
-#include "CArch.h"
-#include "Version.h"
-#include "XArch.h"
+#include "arch/Arch.h"
+#include "arch/XArch.h"
+#include "base/Log.h"
+#include "base/String.h"
+#include "base/StringUtil.h"
+#include "base/log_outputters.h"
+#include "common/Version.h"
+
 #include <cstdio>
 #include <cstring>
 #include <iostream>

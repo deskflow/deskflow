@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CEvent.h"
-#include "CEventQueue.h"
+#include "base/Event.h"
+#include "base/EventQueue.h"
 
 //
 // CEvent

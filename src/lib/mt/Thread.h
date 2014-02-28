@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CTHREAD_H
-#define CTHREAD_H
+#pragma once
 
-#include "IArchMultithread.h"
+#include "arch/IArchMultithread.h"
 
 class IJob;
 
@@ -209,5 +208,3 @@ private:
 private:
 	CArchThread			m_thread;
 };
-
-#endif

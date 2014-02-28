@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CUnicode.h"
-#include "CArch.h"
+#include "arch/Arch.h"
+#include "base/Unicode.h"
+
 #include <cstring>
 
 //

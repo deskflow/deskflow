@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CCondVar.h"
-#include "CStopwatch.h"
-#include "CArch.h"
+#include "mt/CondVar.h"
+#include "arch/Arch.h"
+#include "base/Stopwatch.h"
 
 //
 // CCondVarBase

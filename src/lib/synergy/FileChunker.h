@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "CString.h"
+#include "base/String.h"
 
 class IEventQueue;
 

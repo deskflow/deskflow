@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IARCHNETWORK_H
-#define IARCHNETWORK_H
+#pragma once
 
-#include "IInterface.h"
-#include "stdstring.h"
+#include "common/IInterface.h"
+#include "common/stdstring.h"
 
 class CArchThreadImpl;
 typedef CArchThreadImpl* CArchThread;
@@ -281,5 +280,3 @@ public:
 
 	virtual void init() = 0;
 };
-
-#endif

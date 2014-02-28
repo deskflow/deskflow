@@ -16,17 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CTCPSocket.h"
-#include "CNetworkAddress.h"
-#include "CSocketMultiplexer.h"
-#include "TSocketMultiplexerMethodJob.h"
-#include "XSocket.h"
-#include "CLock.h"
-#include "CLog.h"
-#include "IEventQueue.h"
-#include "IEventJob.h"
-#include "CArch.h"
-#include "XArch.h"
+#include "net/TCPSocket.h"
+
+#include "net/NetworkAddress.h"
+#include "net/SocketMultiplexer.h"
+#include "net/TSocketMultiplexerMethodJob.h"
+#include "net/XSocket.h"
+#include "mt/Lock.h"
+#include "arch/Arch.h"
+#include "arch/XArch.h"
+#include "base/Log.h"
+#include "base/IEventQueue.h"
+#include "base/IEventJob.h"
+
 #include <cstring>
 #include <cstdlib>
 #include <memory>

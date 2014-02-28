@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef XSCREEN_H
-#define XSCREEN_H
+#pragma once
 
-#include "XBase.h"
+#include "base/XBase.h"
 
 //! Generic screen exception
 XBASE_SUBCLASS(XScreen, XBase);
@@ -67,5 +66,3 @@ protected:
 private:
 	double				m_timeUntilRetry;
 };
-
-#endif

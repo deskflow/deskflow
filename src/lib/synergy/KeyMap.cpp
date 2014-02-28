@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CKeyMap.h"
-#include "KeyTypes.h"
-#include "CLog.h"
+#include "synergy/KeyMap.h"
+#include "synergy/key_types.h"
+#include "base/Log.h"
+
 #include <assert.h>
 #include <cctype>
 #include <cstdlib>

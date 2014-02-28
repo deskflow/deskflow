@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMSWINDOWSCLIPBOARDTEXTCONVERTER_H
-#define CMSWINDOWSCLIPBOARDTEXTCONVERTER_H
+#pragma once
 
-#include "CMSWindowsClipboardAnyTextConverter.h"
+#include "platform/MSWindowsClipboardAnyTextConverter.h"
 
 //! Convert to/from locale text encoding
 class CMSWindowsClipboardTextConverter :
@@ -36,5 +35,3 @@ protected:
 	virtual CString		doFromIClipboard(const CString&) const;
 	virtual CString		doToIClipboard(const CString&) const;
 };
-
-#endif

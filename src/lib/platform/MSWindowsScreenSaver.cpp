@@ -16,13 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsScreenSaver.h"
-#include "CMSWindowsScreen.h"
-#include "CThread.h"
-#include "CLog.h"
-#include "TMethodJob.h"
-#include "CArch.h"
-#include "CArchMiscWindows.h"
+#include "platform/MSWindowsScreenSaver.h"
+
+#include "platform/MSWindowsScreen.h"
+#include "mt/Thread.h"
+#include "arch/Arch.h"
+#include "arch/win32/ArchMiscWindows.h"
+#include "base/Log.h"
+#include "base/TMethodJob.h"
+
 #include <malloc.h>
 #include <tchar.h>
 

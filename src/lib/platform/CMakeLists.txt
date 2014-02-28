@@ -15,14 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 if (WIN32)
-	file(GLOB headers "CMSWindows*.h")
-	file(GLOB sources "CMSWindows*.cpp")
+	file(GLOB headers "MSWindows*.h")
+	file(GLOB sources "MSWindows*.cpp")
 elseif (APPLE)
-	file(GLOB headers "COSX*.h")
-	file(GLOB sources "COSX*.cpp")
+	file(GLOB headers "OSX*.h")
+	file(GLOB sources "OSX*.cpp")
 elseif (UNIX)
-	file(GLOB headers "CXWindows*.h")
-	file(GLOB sources "CXWindows*.cpp")
+	file(GLOB headers "XWindows*.h")
+	file(GLOB sources "XWindows*.cpp")
 endif()
 
 if (SYNERGY_ADD_HEADERS)
@@ -30,18 +30,7 @@ if (SYNERGY_ADD_HEADERS)
 endif()
 
 include_directories(
-	../arch
-	../base
-	../common
-	../mt
-	../synergy
-	../ipc
-	../net
-	../io
-	../server
-	../client
-	../synwinhk
-	../synwinxt
+	../
 )
 
 if (UNIX)

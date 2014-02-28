@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COSXSCREENSAVERUTIL_H
-#define COSXSCREENSAVERUTIL_H
+#pragma once
 
-#include "common.h"
+#include "common/common.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -38,6 +37,4 @@ int						screenSaverUtilIsActive(void*);
 
 #if defined(__cplusplus)
 }
-#endif
-
 #endif

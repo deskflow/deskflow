@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IEVENTJOB_H
-#define IEVENTJOB_H
+#pragma once
 
-#include "IInterface.h"
+#include "common/IInterface.h"
 
 class CEvent;
 
@@ -32,5 +31,3 @@ public:
 	//! Run the job
 	virtual void		run(const CEvent&) = 0;
 };
-
-#endif

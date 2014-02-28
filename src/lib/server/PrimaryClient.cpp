@@ -16,10 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CPrimaryClient.h"
-#include "CScreen.h"
-#include "CClipboard.h"
-#include "CLog.h"
+#include "server/PrimaryClient.h"
+
+#include "synergy/Screen.h"
+#include "synergy/Clipboard.h"
+#include "base/Log.h"
 
 //
 // CPrimaryClient

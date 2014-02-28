@@ -16,12 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CNETWORKADDRESS_H
-#define CNETWORKADDRESS_H
+#pragma once
 
-#include "CString.h"
-#include "BasicTypes.h"
-#include "IArchNetwork.h"
+#include "base/String.h"
+#include "base/EventTypes.h"
+#include "arch/IArchNetwork.h"
 
 //! Network address type
 /*!
@@ -122,5 +121,3 @@ private:
 	CString				m_hostname;
 	int					m_port;
 };
-
-#endif

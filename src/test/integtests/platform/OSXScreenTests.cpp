@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtest/gtest.h>
+#include "test/global/access.h"
+#include "platform/OSXScreen.h"
+#include "arch/Arch.h"
+#include "base/EventQueue.h"
 
-#define private public
-#include "COSXScreen.h"
-#include "CEventQueue.h"
-#include "CArch.h"
+#include <gtest/gtest.h>
 
 // disabling these tests - the return value of CGCursorIsVisible is unreliable.
 /*

@@ -15,12 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "test/mock/server/MockServer.h"
+#include "test/mock/io/MockStream.h"
+#include "test/mock/io/MockCryptoStream.h"
+#include "test/mock/synergy/MockEventQueue.h"
+#include "server/ClientProxy1_4.h"
+
 #include <gtest/gtest.h>
-#include "CClientProxy1_4.h"
-#include "CMockServer.h"
-#include "CMockStream.h"
-#include "CMockCryptoStream.h"
-#include "CMockEventQueue.h"
 
 using ::testing::_;
 using ::testing::NiceMock;

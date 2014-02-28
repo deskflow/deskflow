@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COSXCLIPBOARDUTF16CONVERTER_H
-#define COSXCLIPBOARDUTF16CONVERTER_H
+#pragma once
 
-#include "COSXClipboardAnyTextConverter.h"
+#include "platform/OSXClipboardAnyTextConverter.h"
 
 //! Convert to/from UTF-16 encoding
 class COSXClipboardUTF16Converter : public COSXClipboardAnyTextConverter {
@@ -36,5 +35,3 @@ protected:
 	virtual CString		doFromIClipboard(const CString&) const;
 	virtual CString		doToIClipboard(const CString&) const;
 };
-
-#endif

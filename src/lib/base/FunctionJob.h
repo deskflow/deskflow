@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CFUNCTIONJOB_H
-#define CFUNCTIONJOB_H
+#pragma once
 
-#include "IJob.h"
+#include "base/IJob.h"
 
 //! Use a function as a job
 /*!
@@ -38,5 +37,3 @@ private:
 	void				(*m_func)(void*);
 	void*				m_arg;
 };
-
-#endif

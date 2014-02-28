@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "CEvent.h"
-#include "CEventTypes.h"
+#include "base/Event.h"
+#include "base/EventTypes.h"
 
 namespace synergy { class IStream; }
 class CIpcMessage;

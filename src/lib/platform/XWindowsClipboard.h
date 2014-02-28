@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CXWINDOWSCLIPBOARD_H
-#define CXWINDOWSCLIPBOARD_H
+#pragma once
 
-#include "IClipboard.h"
-#include "ClipboardTypes.h"
-#include "stdmap.h"
-#include "stdlist.h"
-#include "stdvector.h"
+#include "synergy/IClipboard.h"
+#include "synerty/ClipboardTypes.h"
+#include "common/stdmap.h"
+#include "common/stdlist.h"
+#include "common/stdvector.h"
+
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
@@ -376,5 +376,3 @@ public:
 
 	//@}
 };
-
-#endif

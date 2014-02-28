@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "arch/ArchInternetWindows.h"
+
 #include <gtest/gtest.h>
-#include "CArchInternetWindows.h"
 
 #define TEST_URL "https://synergy-foss.org/tests/?testString"
 //#define TEST_URL "http://localhost/synergy/tests/?testString"

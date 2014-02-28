@@ -16,10 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CPacketStreamFilter.h"
-#include "IEventQueue.h"
-#include "CLock.h"
-#include "TMethodEventJob.h"
+#include "synergy/PacketStreamFilter.h"
+#include "base/IEventQueue.h"
+#include "mt/Lock.h"
+#include "base/TMethodEventJob.h"
+
 #include <cstring>
 #include <memory>
 

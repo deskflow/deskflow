@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "CEvent.h"
-#include "Ipc.h"
-#include "IArchMultithread.h"
-#include "CEventTypes.h"
+#include "ipc/Ipc.h"
+#include "arch/IArchMultithread.h"
+#include "base/EventTypes.h"
+#include "base/Event.h"
 
 namespace synergy { class IStream; }
 class CIpcMessage;

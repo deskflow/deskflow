@@ -16,13 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CIpcServerProxy.h"
-#include "IStream.h"
-#include "TMethodEventJob.h"
-#include "CLog.h"
-#include "CIpcMessage.h"
-#include "Ipc.h"
-#include "CProtocolUtil.h"
+#include "ipc/IpcServerProxy.h"
+
+#include "ipc/IpcMessage.h"
+#include "ipc/Ipc.h"
+#include "synergy/ProtocolUtil.h"
+#include "io/IStream.h"
+#include "base/TMethodEventJob.h"
+#include "base/Log.h"
 
 //
 // CIpcServerProxy

@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COSXSERVERTASKBARRECEIVER_H
-#define COSXSERVERTASKBARRECEIVER_H
+#pragma once
 
-#include "CServerTaskBarReceiver.h"
+#include "synergys/ServerTaskBarReceiver.h"
 
 class CBufferedLogOutputter;
 
@@ -35,5 +34,3 @@ public:
 	virtual void		primaryAction();
 	virtual const Icon	getIcon() const;
 };
-
-#endif

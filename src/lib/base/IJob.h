@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IJOB_H
-#define IJOB_H
+#pragma once
 
-#include "IInterface.h"
+#include "common/IInterface.h"
 
 //! Job interface
 /*!
@@ -30,5 +29,3 @@ public:
 	//! Run the job
 	virtual void		run() = 0;
 };
-
-#endif

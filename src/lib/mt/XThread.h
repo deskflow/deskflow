@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef XTHREAD_H
-#define XTHREAD_H
+#pragma once
 
-#include "XArch.h"
+#include "arch/XArch.h"
 
 //! Thread exception to exit
 /*!
@@ -36,5 +35,3 @@ public:
 public:
 	void*				m_result;
 };
-
-#endif

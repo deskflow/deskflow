@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COMMON_H
-#define COMMON_H
+#pragma once
 
 // this file should be included, directly or indirectly by every other.
 
@@ -154,5 +153,3 @@ enum {
 	kExitArgs       = 3,  // bad arguments
 	kExitConfig     = 4  // cannot read configuration
 };
-
-#endif

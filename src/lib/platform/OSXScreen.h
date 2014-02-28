@@ -16,19 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COSXSCREEN_H
-#define COSXSCREEN_H
+#pragma once
+
+#include "platform/OSXClipboard.h"
+#include "synergy/PlatformScreen.h"
+#include "base/EventTypes.h"
+#include "common/stdmap.h"
+#include "common/stdvector.h"
 
 #include <bitset>
-
-#include "stdmap.h"
-#include "stdvector.h"
-
 #include <Carbon/Carbon.h>
-#include "COSXClipboard.h"
-#include "CPlatformScreen.h"
-#include "CEventTypes.h"
-
 #include <mach/mach_port.h>
 #include <mach/mach_interface.h>
 #include <mach/mach_init.h>
@@ -348,5 +345,3 @@ private:
 	CThread*				m_getDropTargetThread;
 	CString					m_dropTarget;
 };
-
-#endif

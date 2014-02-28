@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CIpcClient.h"
-#include "Ipc.h"
-#include "CIpcServerProxy.h"
-#include "TMethodEventJob.h"
-#include "CIpcMessage.h"
+#include "ipc/IpcClient.h"
+#include "ipc/Ipc.h"
+#include "ipc/IpcServerProxy.h"
+#include "ipc/IpcMessage.h"
+#include "base/TMethodEventJob.h"
 
 //
 // CIpcClient

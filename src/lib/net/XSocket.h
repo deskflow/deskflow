@@ -16,13 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef XSOCKET_H
-#define XSOCKET_H
+#pragma once
 
-#include "XIO.h"
-#include "XBase.h"
-#include "CString.h"
-#include "BasicTypes.h"
+#include "io/XIO.h"
+#include "base/XBase.h"
+#include "base/String.h"
+#include "common/basic_types.h"
 
 //! Generic socket exception
 XBASE_SUBCLASS(XSocket, XBase);
@@ -96,5 +95,3 @@ XBASE_SUBCLASS_FORMAT(XSocketConnect, XSocket);
 Thrown when a socket cannot be created (by the operating system).
 */
 XBASE_SUBCLASS_FORMAT(XSocketCreate, XSocket);
-
-#endif

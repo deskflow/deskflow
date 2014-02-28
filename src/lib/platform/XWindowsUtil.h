@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CXWINDOWSUTIL_H
-#define CXWINDOWSUTIL_H
+#pragma once
 
-#include "CString.h"
-#include "BasicTypes.h"
-#include "stdmap.h"
-#include "stdvector.h"
+#include "base/String.h"
+#include "base/EventTypes.h"
+#include "common/stdmap.h"
+#include "common/stdvector.h"
+
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
@@ -185,5 +185,3 @@ private:
 
 	static CKeySymMap	s_keySymToUCS4;
 };
-
-#endif

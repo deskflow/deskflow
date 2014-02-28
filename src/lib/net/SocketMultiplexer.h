@@ -16,12 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSOCKETMULTIPLEXER_H
-#define CSOCKETMULTIPLEXER_H
+#pragma once
 
-#include "IArchNetwork.h"
-#include "stdlist.h"
-#include "stdmap.h"
+#include "arch/IArchNetwork.h"
+#include "common/stdlist.h"
+#include "common/stdmap.h"
 
 template <class T>
 class CCondVar;
@@ -109,5 +108,3 @@ private:
 	CSocketJobMap		m_socketJobMap;
 	ISocketMultiplexerJob*	m_cursorMark;
 };
-
-#endif

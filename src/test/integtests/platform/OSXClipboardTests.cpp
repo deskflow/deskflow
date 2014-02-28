@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
+#include "platform/OSXClipboard.h"
+
 #include <gtest/gtest.h>
-#include "COSXClipboard.h"
+#include <iostream>
 
 TEST(COSXClipboardTests, empty_openCalled_returnsTrue)
 {

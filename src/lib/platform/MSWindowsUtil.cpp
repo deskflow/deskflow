@@ -16,8 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsUtil.h"
-#include "CStringUtil.h"
+#include "platform/MSWindowsUtil.h"
+
+#include "base/StringUtil.h"
+
 #include <stdio.h>
 
 //

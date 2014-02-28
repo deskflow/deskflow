@@ -16,42 +16,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CClientApp.h"
-#include "CLog.h"
-#include "CArch.h"
-#include "XSocket.h"
-#include "Version.h"
-#include "ProtocolTypes.h"
-#include "CString.h"
-#include "CScreen.h"
-#include "CEvent.h"
-#include "CClient.h"
-#include "CNetworkAddress.h"
-#include "IArchTaskBarReceiver.h"
-#include "IEventQueue.h"
-#include "TMethodEventJob.h"
-#include "CTCPSocketFactory.h"
-#include "XScreen.h"
-#include "LogOutputters.h"
-#include "CSocketMultiplexer.h"
-#include "CEventQueue.h"
-#include "CThread.h"
-#include "TMethodJob.h"
+#include "synergy/ClientApp.h"
+
+#include "client/Client.h"
+#include "synergy/protocol_types.h"
+#include "synergy/Screen.h"
+#include "synergy/XScreen.h"
+#include "net/NetworkAddress.h"
+#include "net/TCPSocketFactory.h"
+#include "net/SocketMultiplexer.h"
+#include "net/XSocket.h"
+#include "mt/Thread.h"
+#include "arch/IArchTaskBarReceiver.h"
+#include "arch/Arch.h"
+#include "base/String.h"
+#include "base/Event.h"
+#include "base/IEventQueue.h"
+#include "base/TMethodEventJob.h"
+#include "base/log_outputters.h"
+#include "base/EventQueue.h"
+#include "base/TMethodJob.h"
+#include "base/Log.h"
+#include "common/Version.h"
 
 #if SYSAPI_WIN32
-#include "CArchMiscWindows.h"
+#include "arch/win32/ArchMiscWindows.h"
 #endif
 
 #if WINAPI_MSWINDOWS
-#include "CMSWindowsScreen.h"
+#include "platform/MSWindowsScreen.h"
 #elif WINAPI_XWINDOWS
-#include "CXWindowsScreen.h"
+#include "platform/XWindowsScreen.h"
 #elif WINAPI_CARBON
-#include "COSXScreen.h"
+#include "platform/OSXScreen.h"
 #endif
 
 #if defined(__APPLE__)
-#include "COSXDragSimulator.h"
+#include "platform/OSXDragSimulator.h"
 #endif
 
 #include <iostream>

@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IARCHFILE_H
-#define IARCHFILE_H
+#pragma once
 
-#include "IInterface.h"
-#include "stdstring.h"
+#include "common/IInterface.h"
+#include "common/stdstring.h"
 
 //! Interface for architecture dependent file system operations
 /*!
@@ -64,5 +63,3 @@ public:
 
 	//@}
 };
-
-#endif

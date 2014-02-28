@@ -16,13 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ISTREAM_H
-#define ISTREAM_H
+#pragma once
 
-#include "IInterface.h"
-#include "CEvent.h"
-#include "IEventQueue.h"
-#include "CEventTypes.h"
+#include "common/IInterface.h"
+#include "base/Event.h"
+#include "base/IEventQueue.h"
+#include "base/EventTypes.h"
 
 class IEventQueue;
 
@@ -119,5 +118,3 @@ public:
 };
 
 }
-
-#endif

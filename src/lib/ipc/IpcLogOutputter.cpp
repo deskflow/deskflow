@@ -16,18 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CIpcLogOutputter.h"
-#include "CIpcServer.h"
-#include "CIpcMessage.h"
-#include "Ipc.h"
-#include "CEvent.h"
-#include "CEventQueue.h"
-#include "TMethodEventJob.h"
-#include "CIpcClientProxy.h"
-#include "CArch.h"
-#include "CThread.h"
-#include "TMethodJob.h"
-#include "XArch.h"
+#include "ipc/IpcLogOutputter.h"
+
+#include "ipc/IpcServer.h"
+#include "ipc/IpcMessage.h"
+#include "ipc/Ipc.h"
+#include "ipc/IpcClientProxy.h"
+#include "mt/Thread.h"
+#include "arch/Arch.h"
+#include "arch/XArch.h"
+#include "base/Event.h"
+#include "base/EventQueue.h"
+#include "base/TMethodEventJob.h"
+#include "base/TMethodJob.h"
 
 // limit number of log lines sent in one message.
 #define MAX_SEND 100

@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CLOG_H
-#define CLOG_H
+#pragma once
 
-#include "common.h"
-#include "IArchMultithread.h"
-#include "stdlist.h"
+#include "arch/IArchMultithread.h"
+#include "arch/Arch.h"
+#include "common/common.h"
+#include "common/stdlist.h"
+
 #include <stdarg.h>
-#include "CArch.h"
 
 #define CLOG (CLog::getInstance())
 
@@ -209,5 +209,3 @@ otherwise it expands to a call that doesn't.
 #define CLOG_DEBUG3		CLOG_TRACE "%z\070"
 #define CLOG_DEBUG4		CLOG_TRACE "%z\071" // char is '9'
 #define CLOG_DEBUG5		CLOG_TRACE "%z\072" // char is ':'
-
-#endif

@@ -16,14 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsClipboard.h"
-#include "CMSWindowsClipboardTextConverter.h"
-#include "CMSWindowsClipboardUTF16Converter.h"
-#include "CMSWindowsClipboardBitmapConverter.h"
-#include "CMSWindowsClipboardHTMLConverter.h"
-#include "CLog.h"
-#include "CArchMiscWindows.h"
-#include "CMSWindowsClipboardFacade.h"
+#include "platform/MSWindowsClipboard.h"
+
+#include "platform/MSWindowsClipboardTextConverter.h"
+#include "platform/MSWindowsClipboardUTF16Converter.h"
+#include "platform/MSWindowsClipboardBitmapConverter.h"
+#include "platform/MSWindowsClipboardHTMLConverter.h"
+#include "platform/MSWindowsClipboardFacade.h"
+#include "arch/win32/ArchMiscWindows.h"
+#include "base/Log.h"
 
 //
 // CMSWindowsClipboard

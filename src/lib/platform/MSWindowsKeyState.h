@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMSWINDOWSKEYSTATE_H
-#define CMSWINDOWSKEYSTATE_H
+#pragma once
 
-#include "CKeyState.h"
-#include "CString.h"
-#include "stdvector.h"
+#include "synergy/KeyState.h"
+#include "base/String.h"
+#include "common/stdvector.h"
+
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <Windows.h>
 
 class CEvent;
 class CEventQueueTimer;
@@ -227,5 +227,3 @@ private:
 
 	static const KeyID	s_virtualKey[];
 };
-
-#endif

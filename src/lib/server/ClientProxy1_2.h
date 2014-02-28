@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CCLIENTPROXY1_2_H
-#define CCLIENTPROXY1_2_H
+#pragma once
 
-#include "CClientProxy1_1.h"
+#include "server/ClientProxy1_1.h"
 
 class IEventQueue;
 
@@ -32,5 +31,3 @@ public:
 	// IClient overrides
 	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel);
 };
-
-#endif

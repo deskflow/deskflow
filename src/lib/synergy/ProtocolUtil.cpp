@@ -16,10 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CProtocolUtil.h"
-#include "IStream.h"
-#include "CLog.h"
-#include "stdvector.h"
+#include "synergy/ProtocolUtil.h"
+#include "io/IStream.h"
+#include "base/Log.h"
+#include "common/stdvector.h"
+
 #include <cctype>
 #include <cstring>
 

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-#include "CAppUtil.h"
+#include "synergy/AppUtil.h"
 
 CAppUtil* CAppUtil::s_instance = nullptr;
  

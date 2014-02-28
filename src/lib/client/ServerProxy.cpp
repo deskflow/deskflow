@@ -16,19 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CServerProxy.h"
-#include "CClient.h"
-#include "CClipboard.h"
-#include "CProtocolUtil.h"
-#include "OptionTypes.h"
-#include "ProtocolTypes.h"
-#include "IStream.h"
-#include "CLog.h"
-#include "IEventQueue.h"
-#include "TMethodEventJob.h"
-#include "XBase.h"
+#include "client/ServerProxy.h"
+
+#include "client/Client.h"
+#include "synergy/Clipboard.h"
+#include "synergy/ProtocolUtil.h"
+#include "synergy/option_types.h"
+#include "synergy/protocol_types.h"
+#include "io/IStream.h"
+#include "io/CryptoStream.h"
+#include "base/Log.h"
+#include "base/IEventQueue.h"
+#include "base/TMethodEventJob.h"
+#include "base/XBase.h"
+
 #include <memory>
-#include "CCryptoStream.h"
 
 //
 // CServerProxy

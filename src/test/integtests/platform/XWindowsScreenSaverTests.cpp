@@ -16,10 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// TODO: fix tests
 #if 0
+
+#include "test/mock/synergy/MockEventQueue.h"
+#include "platform/XWindowsScreenSaver.h"
+
 #include <gtest/gtest.h>
-#include "CXWindowsScreenSaver.h"
-#include "CMockEventQueue.h"
 #include <X11/Xlib.h>
 
 using ::testing::_;

@@ -16,29 +16,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "COSXScreen.h"
-#include "COSXClipboard.h"
-#include "COSXEventQueueBuffer.h"
-#include "COSXKeyState.h"
-#include "COSXScreenSaver.h"
-#include "CClipboard.h"
-#include "CKeyMap.h"
-#include "CCondVar.h"
-#include "CLock.h"
-#include "CMutex.h"
-#include "CThread.h"
-#include "CLog.h"
-#include "IEventQueue.h"
-#include "TMethodEventJob.h"
-#include "TMethodJob.h"
-#include "XArch.h"
-#include "COSXDragSimulator.h"
-#include "COSXPasteboardPeeker.h"
-#include "CClientApp.h"
-#include "CClient.h"
+#include "platform/OSXScreen.h"
+
+#include "platform/OSXClipboard.h"
+#include "platform/OSXEventQueueBuffer.h"
+#include "platform/OSXKeyState.h"
+#include "platform/OSXScreenSaver.h"
+#include "platform/OSXDragSimulator.h"
+#include "platform/OSXPasteboardPeeker.h"
+#include "synergy/Clipboard.h"
+#include "synergy/KeyMap.h"
+#include "synergy/ClientApp.h"
+#include "synergy/Client.h"
+#include "mt/CondVar.h"
+#include "mt/Lock.h"
+#include "mt/Mutex.h"
+#include "mt/Thread.h"
+#include "arch/XArch.h"
+#include "base/Log.h"
+#include "base/IEventQueue.h"
+#include "base/TMethodEventJob.h"
+#include "base/TMethodJob.h"
 
 #include <math.h>
-
 #include <mach-o/dyld.h>
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>

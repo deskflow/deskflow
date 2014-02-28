@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VERSION_H
-#define VERSION_H
+#pragma once
 
-#include "common.h"
+#include "common/common.h"
 
 // set version macro if not set yet
 #if !defined(VERSION)
@@ -38,5 +37,3 @@ extern const char* kVersion;
 
 // application version
 extern const char* kAppVersion;
-
-#endif

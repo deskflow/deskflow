@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CXWindowsClipboardTextConverter.h"
-#include "CUnicode.h"
+#include "platform/XWindowsClipboardTextConverter.h"
+
+#include "base/Unicode.h"
 
 //
 // CXWindowsClipboardTextConverter

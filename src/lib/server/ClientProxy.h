@@ -16,13 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CCLIENTPROXY_H
-#define CCLIENTPROXY_H
+#pragma once
 
-#include "CBaseClientProxy.h"
-#include "CEvent.h"
-#include "CString.h"
-#include "CEventTypes.h"
+#include "server/BaseClientProxy.h"
+#include "base/Event.h"
+#include "base/String.h"
+#include "base/EventTypes.h"
 
 namespace synergy { class IStream; }
 
@@ -90,5 +89,3 @@ public:
 private:
 	synergy::IStream*	m_stream;
 };
-
-#endif

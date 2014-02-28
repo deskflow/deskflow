@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CEVENT_H
-#define CEVENT_H
+#pragma once
 
-#include "BasicTypes.h"
-#include "stdmap.h"
+#include "common/basic_types.h"
+#include "common/stdmap.h"
 
 class CEventData {
 public:
@@ -125,5 +124,3 @@ private:
 	Flags				m_flags;
 	CEventData*			m_dataObject;
 };
-
-#endif

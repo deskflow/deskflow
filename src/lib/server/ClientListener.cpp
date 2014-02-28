@@ -16,20 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CClientListener.h"
-#include "CClientProxy.h"
-#include "CClientProxyUnknown.h"
-#include "CPacketStreamFilter.h"
-#include "IStreamFilterFactory.h"
-#include "IDataSocket.h"
-#include "IListenSocket.h"
-#include "ISocketFactory.h"
-#include "XSocket.h"
-#include "CLog.h"
-#include "IEventQueue.h"
-#include "TMethodEventJob.h"
-#include "CCryptoStream.h"
-#include "CCryptoOptions.h"
+#include "server/ClientListener.h"
+
+#include "server/ClientProxy.h"
+#include "server/ClientProxyUnknown.h"
+#include "synergy/PacketStreamFilter.h"
+#include "net/IDataSocket.h"
+#include "net/IListenSocket.h"
+#include "net/ISocketFactory.h"
+#include "net/XSocket.h"
+#include "io/CryptoStream.h"
+#include "io/CryptoOptions.h"
+#include "io/IStreamFilterFactory.h"
+#include "base/Log.h"
+#include "base/IEventQueue.h"
+#include "base/TMethodEventJob.h"
 
 //
 // CClientListener

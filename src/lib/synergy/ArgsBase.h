@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "CString.h"
-#include "CCryptoOptions.h"
+#include "base/String.h"
+#include "io/CryptoOptions.h"
 
 class CArgsBase {
 public:

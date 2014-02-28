@@ -16,11 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CXWindowsKeyState.h"
-#include "CXWindowsUtil.h"
-#include "CLog.h"
-#include "CStringUtil.h"
-#include "stdmap.h"
+#include "platform/XWindowsKeyState.h"
+
+#include "platform/XWindowsUtil.h"
+#include "base/Log.h"
+#include "base/StringUtil.h"
+#include "common/stdmap.h"
+
 #include <cstddef>
 #include <algorithm>
 #if X_DISPLAY_MISSING

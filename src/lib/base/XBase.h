@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef XBASE_H
-#define XBASE_H
+#pragma once
 
-#include "CString.h"
+#include "base/String.h"
 
 //! Exception base class
 /*!
@@ -121,5 +120,3 @@ private:																\
 	mutable EState				m_state;								\
 	mutable std::string			m_formatted;							\
 }
-
-#endif

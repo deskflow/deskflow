@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CDragInformation.h"
-#include "CLog.h"
+#include "synergy/DragInformation.h"
+#include "base/Log.h"
 
 using namespace std;
 

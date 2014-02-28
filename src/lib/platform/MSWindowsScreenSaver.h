@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMSWINDOWSSCREENSAVER_H
-#define CMSWINDOWSSCREENSAVER_H
+#pragma once
 
-#include "IScreenSaver.h"
-#include "CString.h"
+#include "synergy/IScreenSaver.h"
+#include "base/String.h"
+
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <Windows.h>
 
 class CThread;
 
@@ -92,5 +92,3 @@ private:
 	// for deactivation (and is therefore active).
 	bool				m_active;
 };
-
-#endif

@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMSWINDOWSCLIPBOARDBITMAPCONVERTER_H
-#define CMSWINDOWSCLIPBOARDBITMAPCONVERTER_H
+#pragma once
 
-#include "CMSWindowsClipboard.h"
+#include "platform/MSWindowsClipboard.h"
 
 //! Convert to/from some text encoding
 class CMSWindowsClipboardBitmapConverter :
@@ -35,5 +34,3 @@ public:
 	virtual HANDLE		fromIClipboard(const CString&) const;
 	virtual CString		toIClipboard(HANDLE) const;
 };
-
-#endif

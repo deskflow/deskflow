@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include "CClientProxy1_4.h"
-#include "CStopwatch.h"
+#include "server/ClientProxy1_4.h"
+#include "base/Stopwatch.h"
 
 class CServer;
 class IEventQueue;

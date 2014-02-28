@@ -16,16 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CEVENTQUEUE_H
-#define CEVENTQUEUE_H
+#pragma once
 
-#include "IEventQueue.h"
-#include "CEvent.h"
-#include "CPriorityQueue.h"
-#include "CStopwatch.h"
-#include "IArchMultithread.h"
-#include "stdmap.h"
-#include "stdset.h"
+#include "base/IEventQueue.h"
+#include "base/Event.h"
+#include "base/PriorityQueue.h"
+#include "base/Stopwatch.h"
+#include "arch/IArchMultithread.h"
+#include "common/stdmap.h"
+#include "common/stdset.h"
 
 //! Event queue
 /*!
@@ -182,5 +181,3 @@ CEventQueue::for##type_() {												\
 	}																		\
 	return *m_typesFor##type_;												\
 }
-
-#endif

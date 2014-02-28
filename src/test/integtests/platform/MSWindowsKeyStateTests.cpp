@@ -16,19 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-
 #define TEST_ENV
-#include "Global.h"
 
-#include "CMSWindowsKeyState.h"
-#include "CMSWindowsDesks.h"
-#include "CMSWindowsScreen.h"
-#include "CMSWindowsScreenSaver.h"
-#include "TMethodJob.h"
+#include "test/global/access.h"
+#include "platform/MSWindowsKeyState.h"
+#include "platform/MSWindowsDesks.h"
+#include "platform/MSWindowsScreen.h"
+#include "platform/MSWindowsScreenSaver.h"
 #include "synergy/CMockEventQueue.h"
 #include "synergy/CMockKeyMap.h"
+#include "base/TMethodJob.h"
+
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 // wParam = flags, HIBYTE(lParam) = virtual key, LOBYTE(lParam) = scan code
 #define SYNERGY_MSG_FAKE_KEY		SYNERGY_HOOK_LAST_MSG + 4

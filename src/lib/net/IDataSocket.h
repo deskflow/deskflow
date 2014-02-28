@@ -16,13 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IDATASOCKET_H
-#define IDATASOCKET_H
+#pragma once
 
-#include "ISocket.h"
-#include "IStream.h"
-#include "CString.h"
-#include "CEventTypes.h"
+#include "net/ISocket.h"
+#include "io/IStream.h"
+#include "base/String.h"
+#include "base/EventTypes.h"
 
 //! Data stream socket interface
 /*!
@@ -71,5 +70,3 @@ public:
 	virtual bool		isReady() const = 0;
 	virtual UInt32		getSize() const = 0;
 };
-
-#endif

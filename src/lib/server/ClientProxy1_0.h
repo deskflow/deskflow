@@ -16,12 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CCLIENTPROXY1_0_H
-#define CCLIENTPROXY1_0_H
+#pragma once
 
-#include "CClientProxy.h"
-#include "CClipboard.h"
-#include "ProtocolTypes.h"
+#include "server/ClientProxy.h"
+#include "synergy/Clipboard.h"
+#include "synergy/protocol_types.h"
 
 class CEvent;
 class CEventQueueTimer;
@@ -104,5 +103,3 @@ private:
 	MessageParser		m_parser;
 	IEventQueue*		m_events;
 };
-
-#endif

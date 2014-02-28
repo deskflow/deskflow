@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ISOCKETMULTIPLEXERJOB_H
-#define ISOCKETMULTIPLEXERJOB_H
+#pragma once
 
-#include "IArchNetwork.h"
-#include "IInterface.h"
+#include "arch/IArchNetwork.h"
+#include "common/IInterface.h"
 
 //! Socket multiplexer job
 /*!
@@ -75,5 +74,3 @@ public:
 
 	//@}
 };
-
-#endif

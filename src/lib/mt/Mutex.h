@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMUTEX_H
-#define CMUTEX_H
+#pragma once
 
-#include "IArchMultithread.h"
+#include "arch/IArchMultithread.h"
 
 //! Mutual exclusion
 /*!
@@ -78,5 +77,3 @@ private:
 	friend class CCondVarBase;
 	CArchMutex			m_mutex;
 };
-
-#endif

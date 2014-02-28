@@ -19,38 +19,39 @@
 // TODO: split this class into windows and unix to get rid
 // of all the #ifdefs!
 
-#include "CDaemonApp.h"
-#include "CEventQueue.h"
-#include "LogOutputters.h"
-#include "CLog.h"
-#include "XArch.h"
-#include "CApp.h"
-#include "TMethodJob.h"
-#include "TMethodEventJob.h"
-#include "CIpcClientProxy.h"
-#include "CIpcMessage.h"
-#include "CSocketMultiplexer.h"
-#include "CIpcLogOutputter.h"
-#include "CLog.h"
+#include "synergy/DaemonApp.h"
 
-#include <string>
-#include <iostream>
-#include <sstream>
+#include "synergy/App.h"
+#include "ipc/IpcClientProxy.h"
+#include "ipc/IpcMessage.h"
+#include "ipc/IpcLogOutputter.h"
+#include "net/SocketMultiplexer.h"
+#include "arch/XArch.h"
+#include "base/Log.h"
+#include "base/TMethodJob.h"
+#include "base/TMethodEventJob.h"
+#include "base/EventQueue.h"
+#include "base/log_outputters.h"
+#include "base/Log.h"
 
 #if SYSAPI_WIN32
 
-#include "CArchMiscWindows.h"
-#include "XArchWindows.h"
-#include "CScreen.h"
-#include "CMSWindowsScreen.h"
-#include "CMSWindowsDebugOutputter.h"
-#include "CMSWindowsWatchdog.h"
-#include "CMSWindowsEventQueueBuffer.h"
+#include "arch/win32/ArchMiscWindows.h"
+#include "arch/win32/XArchWindows.h"
+#include "synergy/Screen.h"
+#include "platform/MSWindowsScreen.h"
+#include "platform/MSWindowsDebugOutputter.h"
+#include "platform/MSWindowsWatchdog.h"
+#include "platform/MSWindowsEventQueueBuffer.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 #endif
+
+#include <string>
+#include <iostream>
+#include <sstream>
 
 using namespace std;
 

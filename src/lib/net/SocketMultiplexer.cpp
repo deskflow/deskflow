@@ -16,17 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CSocketMultiplexer.h"
-#include "ISocketMultiplexerJob.h"
-#include "CCondVar.h"
-#include "CLock.h"
-#include "CMutex.h"
-#include "CThread.h"
-#include "CLog.h"
-#include "TMethodJob.h"
-#include "CArch.h"
-#include "XArch.h"
-#include "stdvector.h"
+#include "net/SocketMultiplexer.h"
+
+#include "net/ISocketMultiplexerJob.h"
+#include "mt/CondVar.h"
+#include "mt/Lock.h"
+#include "mt/Mutex.h"
+#include "mt/Thread.h"
+#include "arch/Arch.h"
+#include "arch/XArch.h"
+#include "base/Log.h"
+#include "base/TMethodJob.h"
+#include "common/stdvector.h"
 
 //
 // CSocketMultiplexer

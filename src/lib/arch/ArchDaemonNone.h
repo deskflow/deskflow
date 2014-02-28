@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CARCHDAEMONNONE_H
-#define CARCHDAEMONNONE_H
+#pragma once
 
-#include "IArchDaemon.h"
+#include "arch/IArchDaemon.h"
 
 #define ARCH_DAEMON CArchDaemonNone
 
@@ -50,5 +49,3 @@ public:
 	virtual void		uninstallDaemon();
 	virtual std::string	commandLine() const;
 };
-
-#endif

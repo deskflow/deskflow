@@ -16,13 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMSWINDOWSCLIENTTASKBARRECEIVER_H
-#define CMSWINDOWSCLIENTTASKBARRECEIVER_H
+#pragma once
+
+#include "synergy/ClientTaskBarReceiver.h"
 
 #define WIN32_LEAN_AND_MEAN
-
-#include "CClientTaskBarReceiver.h"
-#include <windows.h>
+#include <Windows.h>
 
 class CBufferedLogOutputter;
 class IEventQueue;
@@ -67,5 +66,3 @@ private:
 
 	static const UINT	s_stateToIconID[];
 };
-
-#endif

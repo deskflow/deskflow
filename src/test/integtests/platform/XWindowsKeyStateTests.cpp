@@ -16,25 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-
 #define TEST_ENV
-#include "Global.h"
 
-#include "synergy/CMockKeyMap.h"
-#include "synergy/CMockEventQueue.h"
-#include "CXWindowsKeyState.h"
-#include "CLog.h"
-#include <errno.h>
+#include "test/global/access.h"
+#include "test/mock/synergy/CMockKeyMap.h"
+#include "test/mock/synergy/CMockEventQueue.h"
+#include "platform/XWindowsKeyState.h"
+#include "base/Log.h"
 
 #define XK_LATIN1
 #define XK_MISCELLANY
-#include "X11/keysymdef.h"
+#include <X11/keysymdef.h>
 
 #if HAVE_XKB_EXTENSION
 #	include <X11/XKBlib.h>
 #endif
+
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include <errno.h>
 
 class CXWindowsKeyStateTests : public ::testing::Test
 {

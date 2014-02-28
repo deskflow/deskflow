@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IARCHLOG_H
-#define IARCHLOG_H
+#pragma once
 
-#include "IInterface.h"
-#include "ELevel.h"
+#include "common/IInterface.h"
+#include "base/ELevel.h"
 
 //! Interface for architecture dependent logging
 /*!
@@ -62,5 +61,3 @@ public:
 
 	//@}
 };
-
-#endif

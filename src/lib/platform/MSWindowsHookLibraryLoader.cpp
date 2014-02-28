@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsHookLibraryLoader.h"
-#include "XScreen.h"
-#include "CLog.h"
+#include "platform/MSWindowsHookLibraryLoader.h"
+
+#include "synergy/XScreen.h"
+#include "base/Log.h"
 
 CMSWindowsHookLibraryLoader::CMSWindowsHookLibraryLoader() :
 	m_init(NULL),

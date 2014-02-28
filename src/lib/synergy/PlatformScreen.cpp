@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CPlatformScreen.h"
-#include "CApp.h"
-#include "CArgsBase.h"
+#include "synergy/PlatformScreen.h"
+#include "synergy/App.h"
+#include "synergy/ArgsBase.h"
 
 CPlatformScreen::CPlatformScreen(IEventQueue* events) :
 	IPlatformScreen(events),

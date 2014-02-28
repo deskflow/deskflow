@@ -18,15 +18,15 @@
 
 #pragma once
 
-#include "common.h"
-#include "CString.h"
-#include "IApp.h"
-#include "CIpcClient.h"
+#include "common/common.h"
+#include "base/String.h"
+#include "synergy/IApp.h"
+#include "ipc/IpcClient.h"
 
 #if SYSAPI_WIN32
-#include "CAppUtilWindows.h"
+#include "synergy/win32/AppUtilWindows.h"
 #elif SYSAPI_UNIX
-#include "CAppUtilUnix.h"
+#include "synergy/unix/AppUtilUnix.h"
 #endif
 
 class IArchTaskBarReceiver;

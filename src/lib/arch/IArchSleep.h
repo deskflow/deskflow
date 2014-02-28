@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IARCHSLEEP_H
-#define IARCHSLEEP_H
+#pragma once
 
-#include "IInterface.h"
+#include "common/IInterface.h"
 
 //! Interface for architecture dependent sleeping
 /*!
@@ -43,5 +42,3 @@ public:
 
 	//@}
 };
-
-#endif

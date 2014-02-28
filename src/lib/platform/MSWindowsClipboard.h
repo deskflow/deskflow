@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMSWINDOWSCLIPBOARD_H
-#define CMSWINDOWSCLIPBOARD_H
+#pragma once
 
-#include "IClipboard.h"
-#include "CMSWindowsClipboardFacade.h"
-#include "stdvector.h"
+#include "platform/MSWindowsClipboardFacade.h"
+#include "synergy/IClipboard.h"
+#include "common/stdvector.h"
+
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <Windows.h>
 
 class IMSWindowsClipboardConverter;
 class IMSWindowsClipboardFacade;
@@ -111,5 +111,3 @@ public:
 	// (i.e., the reverse of fromIClipboard()).
 	virtual CString		toIClipboard(HANDLE data) const = 0;
 };
-
-#endif

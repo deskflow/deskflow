@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "COSXClipboardTextConverter.h"
-#include "CUnicode.h"
+#include "platform/OSXClipboardTextConverter.h"
+
+#include "base/Unicode.h"
 
 //
 // COSXClipboardTextConverter

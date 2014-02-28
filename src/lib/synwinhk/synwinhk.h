@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSYNERGYHOOK_H
-#define CSYNERGYHOOK_H
+#pragma once
 
 // hack: vs2005 doesn't declare _WIN32_WINNT, so we need to hard code it.
 // however, some say that this should be hard coded since it defines the
@@ -27,9 +26,10 @@
 #define _WIN32_WINNT 0x0400
 #endif
 
-#include "BasicTypes.h"
+#include "base/EventTypes.h"
+
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <Windows.h>
 
 #if defined(synwinhk_EXPORTS)
 #define CSYNERGYHOOK_API __declspec(dllexport)
@@ -89,5 +89,3 @@ CSYNERGYHOOK_API void	setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h,
 CSYNERGYHOOK_API void	setMode(EHookMode mode);
 
 }
-
-#endif

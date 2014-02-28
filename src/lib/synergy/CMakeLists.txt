@@ -17,37 +17,24 @@
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
-# remove files which are not cross platform
-list(REMOVE_ITEM headers "*Windows*")
-list(REMOVE_ITEM headers "*Unix*")
-
 # arch
 if (WIN32)
-	file(GLOB arch_sources "*Windows*.cpp")
-	file(GLOB arch_headers "*Windows*.h")
+	file(GLOB arch_headers "win32/*.h")
+	file(GLOB arch_sources "win32/*.cpp")
 elseif (UNIX)
-	file(GLOB arch_sources "*Unix*.cpp")
-	file(GLOB arch_headers "*Unix*.h")
+	file(GLOB arch_headers "unix/*.h")
+	file(GLOB arch_sources "unix/*.cpp")
 endif()
 
 list(APPEND sources ${arch_sources})
 list(APPEND headers ${arch_headers})
 
+if (SYNERGY_ADD_HEADERS)
+	list(APPEND sources ${headers})
+endif()
+
 include_directories(
-	../arch
-	../base
-	../client
-	../common
-	../io
-	../ipc
-	../mt
-	../net
-	../platform
-	../server
-	../synergy
-	../synwinhk
-	../synwinxt
-	../..
+	../
 	../../../ext
 )
 

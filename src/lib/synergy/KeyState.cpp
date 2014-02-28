@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CKeyState.h"
-#include "CLog.h"
+#include "synergy/KeyState.h"
+#include "base/Log.h"
+
 #include <cstring>
 #include <algorithm>
 #include <iterator>

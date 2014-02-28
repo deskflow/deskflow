@@ -18,10 +18,11 @@
 
 #pragma once
 
-#include "ILogOutputter.h"
-#include "CArch.h"
+#include "arch/Arch.h"
+#include "arch/IArchMultithread.h"
+#include "base/ILogOutputter.h"
+
 #include <queue>
-#include "IArchMultithread.h"
 
 class CIpcServer;
 class CEvent;

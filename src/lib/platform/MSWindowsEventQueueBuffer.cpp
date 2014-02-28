@@ -16,10 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsEventQueueBuffer.h"
-#include "CThread.h"
-#include "IEventQueue.h"
-#include "CArchMiscWindows.h"
+#include "platform/MSWindowsEventQueueBuffer.h"
+
+#include "arch/win32/ArchMiscWindows.h"
+#include "mt/Thread.h"
+#include "base/IEventQueue.h"
 
 //
 // CEventQueueTimer

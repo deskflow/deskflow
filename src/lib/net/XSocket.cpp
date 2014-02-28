@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "XSocket.h"
-#include "CStringUtil.h"
+#include "net/XSocket.h"
+#include "base/StringUtil.h"
 
 //
 // XSocketAddress

@@ -15,12 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "test/mock/io/MockStream.h"
+#include "test/mock/synergy/MockEventQueue.h"
+#include "synergy/PacketStreamFilter.h"
+#include "io/CryptoStream.h"
+#include "io/CryptoOptions.h"
+
 #include <gtest/gtest.h>
-#include "CCryptoStream.h"
-#include "CMockStream.h"
-#include "CMockEventQueue.h"
-#include "CPacketStreamFilter.h"
-#include "CCryptoOptions.h"
 
 using ::testing::_;
 using ::testing::Invoke;

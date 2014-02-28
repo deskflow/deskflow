@@ -19,9 +19,10 @@
 #ifndef IMWINDOWSCLIPBOARDFACADE
 #define IMWINDOWSCLIPBOARDFACADE
 
-#include "IInterface.h"
+#include "common/IInterface.h"
+
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <Windows.h>
 
 class IMSWindowsClipboardConverter;
 

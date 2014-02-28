@@ -18,15 +18,8 @@ file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
 include_directories(
-	../../lib/arch
-	../../lib/base
-	../../lib/common
-	../../lib/io
-	../../lib/ipc
-	../../lib/mt
-	../../lib/net
-	../../lib/platform
-	../../lib/synergy
+	../
+	../../lib/
 )
 
 if (UNIX)

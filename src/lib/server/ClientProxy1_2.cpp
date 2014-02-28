@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CClientProxy1_2.h"
-#include "CProtocolUtil.h"
-#include "CLog.h"
+#include "server/ClientProxy1_2.h"
+
+#include "synergy/ProtocolUtil.h"
+#include "base/Log.h"
 
 //
 // CClientProxy1_1

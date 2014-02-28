@@ -17,9 +17,10 @@
 
 #pragma once
 
-#include "ECryptoMode.h"
-#include "CString.h"
-#include "CCryptoMode_cryptopp.h"
+#include "io/ECryptoMode.h"
+
+#include "io/CryptoMode_cryptopp.h"
+#include "base/String.h"
 
 //! Encapsulation of modes
 /*!

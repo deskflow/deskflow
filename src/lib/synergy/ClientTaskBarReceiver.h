@@ -19,10 +19,10 @@
 #ifndef CCLIENTTASKBARRECEIVER_H
 #define CCLIENTTASKBARRECEIVER_H
 
-#include "CString.h"
-#include "IArchTaskBarReceiver.h"
-#include "LogOutputters.h"
-#include "CClient.h"
+#include "base/String.h"
+#include "arch/IArchTaskBarReceiver.h"
+#include "base/log_outputters.h"
+#include "client/Client.h"
 
 class IEventQueue;
 

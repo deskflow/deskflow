@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CKEYSTATE_H
-#define CKEYSTATE_H
+#pragma once
 
-#include "IKeyState.h"
-#include "CKeyMap.h"
+#include "synergy/IKeyState.h"
+#include "synergy/KeyMap.h"
 
 //! Core key state
 /*!
@@ -229,5 +228,3 @@ private:
 
 	IEventQueue*		m_events;
 };
-
-#endif

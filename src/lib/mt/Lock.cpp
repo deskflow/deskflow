@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CLock.h"
-#include "CCondVar.h"
-#include "CMutex.h"
+#include "mt/Lock.h"
+#include "mt/CondVar.h"
+#include "mt/Mutex.h"
 
 //
 // CLock

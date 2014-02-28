@@ -16,15 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CCLIENTLISTENER_H
-#define CCLIENTLISTENER_H
+#pragma once
 
-#include "CConfig.h"
-#include "CEvent.h"
-#include "stddeque.h"
-#include "stdset.h"
-#include "CCryptoOptions.h"
-#include "CEventTypes.h"
+#include "server/Config.h"
+#include "io/CryptoOptions.h"
+#include "base/EventTypes.h"
+#include "base/Event.h"
+#include "common/stddeque.h"
+#include "common/stdset.h"
 
 class CClientProxy;
 class CClientProxyUnknown;
@@ -87,5 +86,3 @@ private:
 	CCryptoOptions		m_crypto;
 	IEventQueue*		m_events;
 };
-
-#endif

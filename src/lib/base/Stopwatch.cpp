@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CStopwatch.h"
-#include "CArch.h"
+#include "base/Stopwatch.h"
+#include "arch/Arch.h"
 
 //
 // CStopwatch

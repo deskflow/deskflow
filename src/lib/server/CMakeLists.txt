@@ -22,13 +22,7 @@ if (SYNERGY_ADD_HEADERS)
 endif()
 
 include_directories(
-	../arch
-	../base
-	../common
-	../io
-	../mt
-	../net
-	../synergy
+	../
 	../../../ext
 )
 

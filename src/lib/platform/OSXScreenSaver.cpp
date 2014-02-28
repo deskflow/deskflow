@@ -16,11 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import "COSXScreenSaver.h"
-#import "COSXScreenSaverUtil.h"
-#import "CLog.h"
-#import "IEventQueue.h"
-#import "IPrimaryScreen.h"
+#import "platform/COSXScreenSaver.h"
+
+#import "platform/COSXScreenSaverUtil.h"
+#import "synergy/IPrimaryScreen.h"
+#import "base/Log.h"
+#import "base/IEventQueue.h"
+
 #import <string.h>
 #import <sys/sysctl.h>
 

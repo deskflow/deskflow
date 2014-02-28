@@ -16,12 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IEVENTQUEUE_H
-#define IEVENTQUEUE_H
+#pragma once
 
-#include "IInterface.h"
-#include "CEvent.h"
-#include "CString.h"
+#include "common/IInterface.h"
+#include "base/Event.h"
+#include "base/String.h"
 
 class IEventJob;
 class IEventQueueBuffer;
@@ -239,5 +238,3 @@ public:
 	virtual IPrimaryScreenEvents&		forIPrimaryScreen() = 0;
 	virtual IScreenEvents&				forIScreen() = 0;
 };
-
-#endif

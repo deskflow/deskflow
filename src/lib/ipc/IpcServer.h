@@ -18,12 +18,13 @@
 
 #pragma once
 
-#include "CTCPListenSocket.h"
-#include "CNetworkAddress.h"
-#include "Ipc.h"
+#include "ipc/Ipc.h"
+#include "net/TCPListenSocket.h"
+#include "net/NetworkAddress.h"
+#include "arch/Arch.h"
+#include "base/EventTypes.h"
+
 #include <list>
-#include "CArch.h"
-#include "CEventTypes.h"
 
 class CEvent;
 class CIpcClientProxy;

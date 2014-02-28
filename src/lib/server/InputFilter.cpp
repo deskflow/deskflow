@@ -16,13 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CInputFilter.h"
-#include "CServer.h"
-#include "CPrimaryClient.h"
-#include "CKeyMap.h"
-#include "CEventQueue.h"
-#include "CLog.h"
-#include "TMethodEventJob.h"
+#include "server/InputFilter.h"
+#include "server/Server.h"
+#include "server/PrimaryClient.h"
+#include "synergy/KeyMap.h"
+#include "base/EventQueue.h"
+#include "base/Log.h"
+#include "base/TMethodEventJob.h"
+
 #include <cstdlib>
 #include <cstring>
 

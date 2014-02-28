@@ -16,16 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMSWINDOWSCLIPBOARDFACADE_H
-#define CMSWINDOWSCLIPBOARDFACADE_H
+#pragma once
 
-#include "IMSWindowsClipboardFacade.h"
-#include "IClipboard.h"
+#include "platform/IMSWindowsClipboardFacade.h"
+
+#include "synergy/IClipboard.h"
 
 class CMSWindowsClipboardFacade : public IMSWindowsClipboardFacade
 {
 public:
 	virtual void write(HANDLE win32Data, UINT win32Format);
 };
-
-#endif

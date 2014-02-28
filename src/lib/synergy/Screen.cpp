@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CScreen.h"
-#include "IPlatformScreen.h"
-#include "ProtocolTypes.h"
-#include "CLog.h"
-#include "IEventQueue.h"
-#include "CClientProxy.h"
-#include "TMethodEventJob.h"
+#include "synergy/Screen.h"
+#include "synergy/IPlatformScreen.h"
+#include "synergy/protocol_types.h"
+#include "base/Log.h"
+#include "base/IEventQueue.h"
+#include "server/ClientProxy.h"
+#include "base/TMethodEventJob.h"
 
 //
 // CScreen

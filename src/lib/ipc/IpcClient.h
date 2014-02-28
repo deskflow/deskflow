@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "CNetworkAddress.h"
-#include "CTCPSocket.h"
-#include "CEventTypes.h"
+#include "net/NetworkAddress.h"
+#include "net/TCPSocket.h"
+#include "base/EventTypes.h"
 
 class CIpcServerProxy;
 class CIpcMessage;

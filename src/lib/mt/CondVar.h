@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CCONDVAR_H
-#define CCONDVAR_H
+#pragma once
 
-#include "CMutex.h"
-#include "BasicTypes.h"
+#include "mt/Mutex.h"
+#include "common/basic_types.h"
 
 class CStopwatch;
 
@@ -224,5 +223,3 @@ CCondVar<T>::operator const volatile T&() const
 {
 	return m_data;
 }
-
-#endif

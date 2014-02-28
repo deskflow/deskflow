@@ -16,10 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CNetworkAddress.h"
-#include "XSocket.h"
-#include "CArch.h"
-#include "XArch.h"
+#include "net/NetworkAddress.h"
+
+#include "net/XSocket.h"
+#include "arch/Arch.h"
+#include "arch/XArch.h"
+
 #include <cstdlib>
 
 //

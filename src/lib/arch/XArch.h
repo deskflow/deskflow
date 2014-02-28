@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef XARCH_H
-#define XARCH_H
+#pragma once
 
-#include "common.h"
-#include "stdstring.h"
+#include "common/common.h"
+#include "common/stdstring.h"
 
 //! Generic thread exception
 /*!
@@ -169,6 +168,3 @@ XARCH_SUBCLASS(XArchDaemonUninstallFailed, XArchDaemon);
 
 //! Attempted to uninstall a daemon that was not installed
 XARCH_SUBCLASS(XArchDaemonUninstallNotInstalled, XArchDaemonUninstallFailed);
-
-
-#endif

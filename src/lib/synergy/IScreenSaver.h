@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ISCREENSAVER_H
-#define ISCREENSAVER_H
+#pragma once
 
-#include "IInterface.h"
-#include "CEvent.h"
+#include "base/Event.h"
+#include "common/IInterface.h"
 
 //! Screen saver interface
 /*!
@@ -74,5 +73,3 @@ public:
 
 	//@}
 };
-
-#endif

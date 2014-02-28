@@ -18,21 +18,11 @@ file(GLOB_RECURSE headers "*.h")
 file(GLOB_RECURSE sources "*.cpp")
 
 include_directories(
-	../../lib/arch
-	../../lib/base
-	../../lib/client
-	../../lib/server
-	../../lib/common
-	../../lib/io
-	../../lib/mt
-	../../lib/net
-	../../lib/platform
-	../../lib/synergy
+	../../
+	../../lib/
 	../../../ext/gtest-1.6.0/include
 	../../../ext/gmock-1.6.0/include
 	../../../ext
-	io
-	synergy
 )
 
 if (UNIX)

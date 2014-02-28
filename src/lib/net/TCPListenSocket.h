@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CTCPLISTENSOCKET_H
-#define CTCPLISTENSOCKET_H
+#pragma once
 
-#include "IListenSocket.h"
-#include "IArchNetwork.h"
+#include "net/IListenSocket.h"
+#include "arch/IArchNetwork.h"
 
 class CMutex;
 class ISocketMultiplexerJob;
@@ -55,5 +54,3 @@ private:
 	IEventQueue*		m_events;
 	CSocketMultiplexer* m_socketMultiplexer;
 };
-
-#endif

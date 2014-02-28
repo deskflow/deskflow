@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsClipboardHTMLConverter.h"
-#include "CStringUtil.h"
+#include "platform/MSWindowsClipboardHTMLConverter.h"
+
+#include "base/StringUtil.h"
 
 //
 // CMSWindowsClipboardHTMLConverter

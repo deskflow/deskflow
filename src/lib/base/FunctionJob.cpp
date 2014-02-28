@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CFunctionJob.h"
+#include "base/FunctionJob.h"
 
 //
 // CFunctionJob
