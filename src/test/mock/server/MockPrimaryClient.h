@@ -22,7 +22,7 @@
 #include "synergy/PrimaryClient.h"
 #include "base/String.h"
 
-#include <gmock/gmock.h>
+#include "test/global/gmock.h"
 
 class CMockPrimaryClient : public CPrimaryClient
 {

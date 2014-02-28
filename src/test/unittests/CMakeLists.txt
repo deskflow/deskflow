@@ -17,6 +17,18 @@
 file(GLOB_RECURSE headers "*.h")
 file(GLOB_RECURSE sources "*.cpp")
 
+file(GLOB_RECURSE global_headers "../../test/global/*.h")
+file(GLOB_RECURSE global_sources "../../test/global/*.cpp")
+
+list(APPEND headers ${global_headers})
+list(APPEND sources ${global_sources})
+
+file(GLOB_RECURSE mock_headers "../../test/mock/*.h")
+file(GLOB_RECURSE mock_sources "../../test/mock/*.cpp")
+
+list(APPEND headers ${mock_headers})
+list(APPEND sources ${mock_sources})
+
 include_directories(
 	../../
 	../../lib/

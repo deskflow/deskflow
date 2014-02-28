@@ -21,7 +21,7 @@
 
 #include "synergy/Screen.h"
 
-#include <gmock/gmock.h>
+#include "test/global/gmock.h"
 
 class CMockScreen : public CScreen
 {

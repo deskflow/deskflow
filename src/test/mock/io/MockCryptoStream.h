@@ -20,7 +20,7 @@
 #include "io/CryptoStream.h"
 #include "io/CryptoOptions.h"
 
-#include <gmock/gmock.h>
+#include "test/global/gmock.h"
 
 class CMockCryptoStream : public CCryptoStream
 {

@@ -21,7 +21,7 @@
 
 #include "server/InputFilter.h"
 
-#include <gmock/gmock.h>
+#include "test/global/gmock.h"
 
 class CMockInputFilter : public CInputFilter
 {

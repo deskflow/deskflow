@@ -23,7 +23,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-#include <gtest/gtest.h>
+#include "test/global/gtest.h"
 #include <iostream>
 #include <fstream>
 
