@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "test/mock/synergy/MockEventQueue.h"
 #include "platform/XWindowsScreen.h"
-#include "synergy/CMockEventQueue.h"
 
 #include "test/global/gtest.h"
 
