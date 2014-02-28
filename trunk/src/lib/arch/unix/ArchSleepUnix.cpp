@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "arch/ArchSleepUnix.h"
+#include "arch/unix/ArchSleepUnix.h"
+
 #include "arch/Arch.h"
 
 #if TIME_WITH_SYS_TIME

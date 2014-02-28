@@ -16,10 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "arch/ArchNetworkBSD.h"
+#include "arch/unix/ArchNetworkBSD.h"
+
+#include "arch/unix/ArchMultithreadPosix.h"
+#include "arch/unix/XArchUnix.h"
 #include "arch/Arch.h"
-#include "arch/ArchMultithreadPosix.h"
-#include "arch/XArchUnix.h"
 
 #if HAVE_UNISTD_H
 #	include <unistd.h>

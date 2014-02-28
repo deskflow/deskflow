@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "arch/ArchMultithreadPosix.h"
+#include "arch/unix/ArchMultithreadPosix.h"
+
 #include "arch/Arch.h"
 #include "arch/XArch.h"
 

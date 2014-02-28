@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "arch/ArchStringUnix.h"
+#include "arch/unix/ArchStringUnix.h"
 
 #include <stdio.h>
 

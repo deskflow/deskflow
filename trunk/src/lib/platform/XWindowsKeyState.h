@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "base/KeyState.h"
+#include "synergy/KeyState.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"
 
