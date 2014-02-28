@@ -25,5 +25,8 @@
 #	pragma GCC system_header
 #endif
 
-// gtest has a warning on osx106 (signed/unsigned int compare).
-#include <gtest/gtest.h>
+// gmock includes gtest which has a warning on osx106 (signed/unsigned
+// int compare), so include our special header here first to silence
+// the warning.
+#include "test/global/gtest.h"
+#include <gmock/gmock.h>

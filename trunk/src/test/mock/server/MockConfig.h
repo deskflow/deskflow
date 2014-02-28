@@ -21,7 +21,7 @@
 
 #include "server/Config.h"
 
-#include <gmock/gmock.h>
+#include "test/global/gmock.h"
 
 class CMockConfig : public CConfig
 {

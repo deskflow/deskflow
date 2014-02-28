@@ -24,7 +24,7 @@
 #include "client/ServerProxy.h"
 #include "synergy/protocol_types.h"
 
-#include <gtest/gtest.h>
+#include "test/global/gtest.h"
 
 using ::testing::_;
 using ::testing::Invoke;

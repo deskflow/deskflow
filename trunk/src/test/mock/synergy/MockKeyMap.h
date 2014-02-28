@@ -20,7 +20,7 @@
 
 #include "synergy/KeyMap.h"
 
-#include <gmock/gmock.h>
+#include "test/global/gmock.h"
 
 class CMockKeyMap : public CKeyMap
 {

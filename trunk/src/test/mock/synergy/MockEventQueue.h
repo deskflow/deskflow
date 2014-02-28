@@ -20,7 +20,7 @@
 
 #include "base/IEventQueue.h"
 
-#include <gmock/gmock.h>
+#include "test/global/gmock.h"
 
 class CMockEventQueue : public IEventQueue
 {

@@ -22,7 +22,7 @@
 
 #include "client/Client.h"
 
-#include <gmock/gmock.h>
+#include "test/global/gmock.h"
 
 class IEventQueue;
 

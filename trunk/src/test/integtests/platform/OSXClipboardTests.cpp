@@ -18,7 +18,7 @@
 
 #include "platform/OSXClipboard.h"
 
-#include <gtest/gtest.h>
+#include "test/global/gtest.h"
 #include <iostream>
 
 TEST(COSXClipboardTests, empty_openCalled_returnsTrue)

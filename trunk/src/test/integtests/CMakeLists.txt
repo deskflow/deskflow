@@ -14,16 +14,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-file(GLOB headers "*.h")
-file(GLOB sources "*.cpp")
+file(GLOB_RECURSE headers "*.h")
+file(GLOB_RECURSE sources "*.cpp")
+
+# remove arch files (specific arch added later).
+file(GLOB remove_arch "arch/*")
+list(REMOVE_ITEM headers ${remove_arch})
+list(REMOVE_ITEM sources ${remove_arch})
+
+# remove platform files (specific platform added later).
+file(GLOB remove_platform "platform/*")
+list(REMOVE_ITEM headers ${remove_platform})
+list(REMOVE_ITEM sources ${remove_platform})
 
 # arch
 if (WIN32)
-	file(GLOB arch_sources "arch/CArchWindows*.cpp")
-	file(GLOB arch_headers "arch/CArchWindows*.h")
+	file(GLOB arch_sources "arch/ArchWindows*.cpp")
+	file(GLOB arch_headers "arch/ArchWindows*.h")
 elseif (UNIX)
-	file(GLOB arch_sources "arch/CArchUnix*.cpp")
-	file(GLOB arch_headers "arch/CArchUnix*.h")
+	file(GLOB arch_sources "arch/ArchUnix*.cpp")
+	file(GLOB arch_headers "arch/ArchUnix*.h")
 endif()
 
 list(APPEND sources ${arch_sources})
@@ -31,18 +41,30 @@ list(APPEND headers ${arch_headers})
 
 # platform
 if (WIN32)
-	file(GLOB platform_sources "platform/CMSWindows*.cpp")
-	file(GLOB platform_headers "platform/CMSWindows*.h")
+	file(GLOB platform_sources "platform/MSWindows*.cpp")
+	file(GLOB platform_headers "platform/MSWindows*.h")
 elseif (APPLE)
-	file(GLOB platform_sources "platform/COSX*.cpp")
-	file(GLOB platform_headers "platform/COSX*.h")
+	file(GLOB platform_sources "platform/OSX*.cpp")
+	file(GLOB platform_headers "platform/OSX*.h")
 elseif (UNIX)
-	file(GLOB platform_sources "platform/CXWindows*.cpp")
-	file(GLOB platform_headers "platform/CXWindows*.h")
+	file(GLOB platform_sources "platform/XWindows*.cpp")
+	file(GLOB platform_headers "platform/XWindows*.h")
 endif()
 
 list(APPEND sources ${platform_sources})
 list(APPEND headers ${platform_headers})
+
+file(GLOB_RECURSE global_headers "../../test/global/*.h")
+file(GLOB_RECURSE global_sources "../../test/global/*.cpp")
+
+list(APPEND headers ${global_headers})
+list(APPEND sources ${global_sources})
+
+file(GLOB_RECURSE mock_headers "../../test/mock/*.h")
+file(GLOB_RECURSE mock_sources "../../test/mock/*.cpp")
+
+list(APPEND headers ${mock_headers})
+list(APPEND sources ${mock_sources})
 
 if (SYNERGY_ADD_HEADERS)
 	list(APPEND sources ${headers})

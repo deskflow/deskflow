@@ -21,7 +21,7 @@
 #include "test/mock/synergy/MockEventQueue.h"
 #include "server/ClientProxy1_4.h"
 
-#include <gtest/gtest.h>
+#include "test/global/gtest.h"
 
 using ::testing::_;
 using ::testing::NiceMock;

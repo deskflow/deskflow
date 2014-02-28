@@ -20,7 +20,7 @@
 
 #include "synergy/KeyState.h"
 
-#include "gmock/gmock.h"
+#include "test/global/gmock.h"
 
 class CMockKeyMap;
 class CMockEventQueue;

@@ -17,11 +17,12 @@
  */
 
 #include "test/unittests/synergy/KeyStateTests.h"
+
 #include "test/mock/synergy/MockEventQueue.h"
 #include "test/mock/synergy/MockKeyMap.h"
 
-#include <gmock/gmock.h>
 #include "test/global/gtest.h"
+#include "test/global/gmock.h"
 
 using ::testing::_;
 using ::testing::NiceMock;

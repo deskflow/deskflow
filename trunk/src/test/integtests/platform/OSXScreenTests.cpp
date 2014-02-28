@@ -20,7 +20,7 @@
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
 
-#include <gtest/gtest.h>
+#include "test/global/gtest.h"
 
 // disabling these tests - the return value of CGCursorIsVisible is unreliable.
 /*
