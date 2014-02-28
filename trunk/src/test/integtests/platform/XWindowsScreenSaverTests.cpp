@@ -22,7 +22,7 @@
 #include "test/mock/synergy/MockEventQueue.h"
 #include "platform/XWindowsScreenSaver.h"
 
-#include <gtest/gtest.h>
+#include "test/global/gtest.h"
 #include <X11/Xlib.h>
 
 using ::testing::_;

@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test/global/access.h"
 #include "platform/OSXScreen.h"
 #include "arch/Arch.h"
 #include "base/EventQueue.h"

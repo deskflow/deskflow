@@ -19,7 +19,7 @@
 
 #define TEST_ENV
 
-#include "synergy/PrimaryClient.h"
+#include "server/PrimaryClient.h"
 #include "base/String.h"
 
 #include "test/global/gmock.h"
