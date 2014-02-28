@@ -18,9 +18,8 @@
 
 #define TEST_ENV
 
-#include "test/global/access.h"
-#include "test/mock/synergy/CMockKeyMap.h"
-#include "test/mock/synergy/CMockEventQueue.h"
+#include "test/mock/synergy/MockKeyMap.h"
+#include "test/mock/synergy/MockEventQueue.h"
 #include "platform/XWindowsKeyState.h"
 #include "base/Log.h"
 
@@ -82,7 +81,7 @@ TEST_F(CXWindowsKeyStateTests, setActiveGroup_pollAndSet_groupIsZero)
 
 	keyState.setActiveGroup(CXWindowsKeyState::kGroupPollAndSet);
 
-	ASSERT_EQ(0, keyState.m_group);
+	ASSERT_EQ(0, keyState.group());
 }
 
 TEST_F(CXWindowsKeyStateTests, setActiveGroup_poll_groupIsNotSet)
@@ -94,7 +93,7 @@ TEST_F(CXWindowsKeyStateTests, setActiveGroup_poll_groupIsNotSet)
 
 	keyState.setActiveGroup(CXWindowsKeyState::kGroupPoll);
 
-	ASSERT_LE(-1, keyState.m_group);
+	ASSERT_LE(-1, keyState.group());
 }
 
 TEST_F(CXWindowsKeyStateTests, setActiveGroup_customGroup_groupWasSet)
@@ -106,7 +105,7 @@ TEST_F(CXWindowsKeyStateTests, setActiveGroup_customGroup_groupWasSet)
 
 	keyState.setActiveGroup(1);
 
-	ASSERT_EQ(1, keyState.m_group);
+	ASSERT_EQ(1, keyState.group());
 }
 
 TEST_F(CXWindowsKeyStateTests, mapModifiersFromX_zeroState_zeroMask)
@@ -166,9 +165,8 @@ TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCo
 		m_display, true, &eventQueue, keyMap);
 
 	// set mock modifier mapping
-	std::fill(
-		keyState.m_modifierFromX.begin(), keyState.m_modifierFromX.end(), 0);
-	keyState.m_modifierFromX[ShiftMapIndex] = KeyModifierShift;
+	std::fill(keyState.modifierFromX().begin(), keyState.modifierFromX().end(), 0);
+	keyState.modifierFromX()[ShiftMapIndex] = KeyModifierShift;
 
 	KeyCode key = XKeysymToKeycode(m_display, XK_Shift_L);
 
@@ -210,7 +208,7 @@ TEST_F(CXWindowsKeyStateTests, pollActiveGroup_positiveGroup_returnsGroup)
 	CXWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
-	keyState.m_group = 3;
+	keyState.group(3);
 
 	SInt32 actual = keyState.pollActiveGroup();
 
@@ -226,7 +224,7 @@ TEST_F(CXWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
 		m_display, true, &eventQueue, keyMap);
 
 	// reset the group
-	keyState.m_group = -1;
+	keyState.group(-1);
 
 	XkbStateRec state;
 
