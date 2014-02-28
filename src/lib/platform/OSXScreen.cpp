@@ -18,6 +18,7 @@
 
 #include "platform/OSXScreen.h"
 
+#include "client/Client.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXEventQueueBuffer.h"
 #include "platform/OSXKeyState.h"
@@ -27,7 +28,6 @@
 #include "synergy/Clipboard.h"
 #include "synergy/KeyMap.h"
 #include "synergy/ClientApp.h"
-#include "synergy/Client.h"
 #include "mt/CondVar.h"
 #include "mt/Lock.h"
 #include "mt/Mutex.h"

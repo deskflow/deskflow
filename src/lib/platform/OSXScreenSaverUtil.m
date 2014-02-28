@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#import "platform/COSXScreenSaverUtil.h"
+#import "platform/OSXScreenSaverUtil.h"
 
 #import "platform/OSXScreenSaverControl.h"
 

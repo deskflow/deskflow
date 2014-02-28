@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#import "platform/COSXPasteboardPeeker.h"
+#import "platform/OSXPasteboardPeeker.h"
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
