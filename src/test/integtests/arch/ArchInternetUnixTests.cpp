@@ -17,7 +17,7 @@
 
 #include "arch/ArchInternetUnix.h"
 
-#include <gtest/gtest.h>
+#include "test/global/gtest.h"
 
 #define TEST_URL "https://synergy-foss.org/tests/?testString"
 //#define TEST_URL "http://localhost/synergy/tests/?testString"

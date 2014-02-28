@@ -18,17 +18,16 @@
 
 #define TEST_ENV
 
-#include "test/global/access.h"
+#include "test/mock/synergy/MockEventQueue.h"
+#include "test/mock/synergy/MockKeyMap.h"
 #include "platform/MSWindowsKeyState.h"
 #include "platform/MSWindowsDesks.h"
 #include "platform/MSWindowsScreen.h"
 #include "platform/MSWindowsScreenSaver.h"
-#include "synergy/CMockEventQueue.h"
-#include "synergy/CMockKeyMap.h"
 #include "base/TMethodJob.h"
 
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
+#include "test/global/gtest.h"
+#include "test/global/gmock.h"
 
 // wParam = flags, HIBYTE(lParam) = virtual key, LOBYTE(lParam) = scan code
 #define SYNERGY_MSG_FAKE_KEY		SYNERGY_HOOK_LAST_MSG + 4

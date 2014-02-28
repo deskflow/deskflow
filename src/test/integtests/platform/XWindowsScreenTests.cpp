@@ -19,7 +19,7 @@
 #include "platform/XWindowsScreen.h"
 #include "synergy/CMockEventQueue.h"
 
-#include <gtest/gtest.h>
+#include "test/global/gtest.h"
 
 using ::testing::_;
 

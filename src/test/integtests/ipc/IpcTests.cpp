@@ -21,7 +21,6 @@
 
 #define TEST_ENV
 
-#include "test/global/access.h"
 #include "test/global/TestEventQueue.h"
 #include "ipc/IpcServer.h"
 #include "ipc/IpcClient.h"
@@ -38,7 +37,7 @@
 #include "base/EventQueue.h"
 #include "base/TMethodEventJob.h"
 
-#include <gtest/gtest.h>
+#include "test/global/gtest.h"
 
 #define TEST_IPC_PORT 24802
 
@@ -161,7 +160,7 @@ void
 CIpcTests::connectToServer_handleMessageReceived(const CEvent& e, void*)
 {
 	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
-	if (m->m_type == kIpcHello) {
+	if (m->type() == kIpcHello) {
 		m_connectToServer_hasClientNode =
 			m_connectToServer_server->hasClients(kIpcClientNode);
 		m_connectToServer_helloMessageReceived = true;
@@ -173,12 +172,12 @@ void
 CIpcTests::sendMessageToServer_serverHandleMessageReceived(const CEvent& e, void*)
 {
 	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
-	if (m->m_type == kIpcHello) {
+	if (m->type() == kIpcHello) {
 		LOG((CLOG_DEBUG "client said hello, sending test to server"));
 		CIpcCommandMessage m("test", true);
 		m_sendMessageToServer_client->send(m);
 	}
-	else if (m->m_type == kIpcCommand) {
+	else if (m->type() == kIpcCommand) {
 		CIpcCommandMessage* cm = static_cast<CIpcCommandMessage*>(m);
 		LOG((CLOG_DEBUG "got ipc command message, %d", cm->command().c_str()));
 		m_sendMessageToServer_receivedString = cm->command();
@@ -190,7 +189,7 @@ void
 CIpcTests::sendMessageToClient_serverHandleClientConnected(const CEvent& e, void*)
 {
 	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
-	if (m->m_type == kIpcHello) {
+	if (m->type() == kIpcHello) {
 		LOG((CLOG_DEBUG "client said hello, sending test to client"));
 		CIpcLogLineMessage m("test");
 		m_sendMessageToClient_server->send(m, kIpcClientNode);
@@ -201,7 +200,7 @@ void
 CIpcTests::sendMessageToClient_clientHandleMessageReceived(const CEvent& e, void*)
 {
 	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
-	if (m->m_type == kIpcLogLine) {
+	if (m->type() == kIpcLogLine) {
 		CIpcLogLineMessage* llm = static_cast<CIpcLogLineMessage*>(m);
 		LOG((CLOG_DEBUG "got ipc log message, %d", llm->logLine().c_str()));
 		m_sendMessageToClient_receivedString = llm->logLine();
