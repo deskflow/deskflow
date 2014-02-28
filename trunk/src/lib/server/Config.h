@@ -16,18 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CCONFIG_H
-#define CCONFIG_H
+#pragma once
 
-#include "OptionTypes.h"
-#include "ProtocolTypes.h"
-#include "CNetworkAddress.h"
-#include "CStringUtil.h"
-#include "CInputFilter.h"
-#include "XBase.h"
-#include "stdmap.h"
-#include "stdset.h"
-#include "IPlatformScreen.h"
+#include "server/InputFilter.h"
+#include "synergy/option_types.h"
+#include "synergy/protocol_types.h"
+#include "synergy/IPlatformScreen.h"
+#include "net/NetworkAddress.h"
+#include "base/StringUtil.h"
+#include "base/XBase.h"
+#include "common/stdmap.h"
+#include "common/stdset.h"
+
 #include <iosfwd>
 
 class CConfig;
@@ -543,5 +543,3 @@ protected:
 private:
 	CString				m_error;
 };
-
-#endif

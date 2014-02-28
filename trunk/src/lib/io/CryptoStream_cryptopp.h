@@ -20,7 +20,7 @@
 // HACK: gcc on osx106 doesn't give you an easy way to hide warnings
 // from included headers, so use the system_header pragma. the downside
 // is that everything in the header file following this also has warnings
-// ignored, so we need to put it in a separate header file.
+// ignored, so we need to put it in a separate header file (this file).
 #if __APPLE__
 #	pragma GCC system_header
 #endif

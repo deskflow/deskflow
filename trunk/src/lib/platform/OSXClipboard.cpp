@@ -16,12 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "COSXClipboard.h"
-#include "CClipboard.h"
-#include "COSXClipboardUTF16Converter.h"
-#include "COSXClipboardTextConverter.h"
-#include "CLog.h"
-#include "XArch.h"
+#include "platform/OSXClipboard.h"
+
+#include "synergy/Clipboard.h"
+#include "platform/OSXClipboardUTF16Converter.h"
+#include "platform/OSXClipboardTextConverter.h"
+#include "base/Log.h"
+#include "arch/XArch.h"
 
 //
 // COSXClipboard

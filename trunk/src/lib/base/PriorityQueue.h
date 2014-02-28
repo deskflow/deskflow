@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CPRIORITYQUEUE_H
-#define CPRIORITYQUEUE_H
+#pragma once
 
-#include "stdvector.h"
+#include "common/stdvector.h"
+
 #include <algorithm>
 #include <functional>
 
@@ -136,5 +136,3 @@ private:
 	Container			c;
 	Compare				comp;
 };
-
-#endif

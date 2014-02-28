@@ -16,19 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMSWINDOWSDESKS_H
-#define CMSWINDOWSDESKS_H
+#pragma once
 
-#include "synwinhk.h"
-#include "KeyTypes.h"
-#include "MouseTypes.h"
-#include "OptionTypes.h"
-#include "CCondVar.h"
-#include "CMutex.h"
-#include "CString.h"
-#include "stdmap.h"
+#include "synwinhk/synwinhk.h"
+#include "synergy/key_types.h"
+#include "synergy/mouse_types.h"
+#include "synergy/option_types.h"
+#include "mt/CondVar.h"
+#include "mt/Mutex.h"
+#include "base/String.h"
+#include "common/stdmap.h"
+
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <Windows.h>
 
 class CEvent;
 class CEventQueueTimer;
@@ -309,5 +309,3 @@ private:
 	// true if program should stop on desk switch.
 	bool				m_stopOnDeskSwitch;
 };
-
-#endif

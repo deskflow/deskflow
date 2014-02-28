@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CLOCK_H
-#define CLOCK_H
+#pragma once
 
-#include "common.h"
+#include "common/common.h"
 
 class CMutex;
 class CCondVarBase;
@@ -48,5 +47,3 @@ private:
 private:
 	const CMutex*		m_mutex;
 };
-
-#endif

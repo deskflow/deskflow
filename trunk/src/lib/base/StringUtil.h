@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSTRINGUTIL_H
-#define CSTRINGUTIL_H
+#pragma once
 
-#include "CString.h"
+#include "base/String.h"
+
 #include <stdarg.h>
 
 //! String utilities
@@ -76,6 +76,3 @@ public:
 							const CString::value_type& b);
 	};
 };
-
-#endif
-

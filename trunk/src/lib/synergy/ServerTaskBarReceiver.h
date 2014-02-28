@@ -16,16 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSERVERTASKBARRECEIVER_H
-#define CSERVERTASKBARRECEIVER_H
+#pragma once
 
-#include "CString.h"
-#include "IArchTaskBarReceiver.h"
-#include "stdvector.h"
-#include "CEvent.h"
-#include "CServerApp.h"
-#include "CServer.h"
-#include "CEventTypes.h"
+#include "server/Server.h"
+#include "synergy/ServerApp.h"
+#include "arch/IArchTaskBarReceiver.h"
+#include "base/EventTypes.h"
+#include "base/String.h"
+#include "base/Event.h"
+#include "common/stdvector.h"
 
 class IEventQueue;
 
@@ -97,5 +96,3 @@ private:
 };
 
 IArchTaskBarReceiver* createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events);
-
-#endif

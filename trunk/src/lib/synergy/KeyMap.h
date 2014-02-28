@@ -16,15 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CKEYMAP_H
-#define CKEYMAP_H
+#pragma once
 
-#include "KeyTypes.h"
-#include "CString.h"
-#include "CStringUtil.h"
-#include "stdmap.h"
-#include "stdset.h"
-#include "stdvector.h"
+#include "synergy/key_types.h"
+#include "base/String.h"
+#include "base/StringUtil.h"
+#include "common/stdmap.h"
+#include "common/stdset.h"
+#include "common/stdvector.h"
 
 //! Key map
 /*!
@@ -491,5 +490,3 @@ private:
 	static CKeyToNameMap*		s_keyToNameMap;
 	static CModifierToNameMap*	s_modifierToNameMap;
 };
-
-#endif

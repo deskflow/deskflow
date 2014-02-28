@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CXWindowsClipboardUTF8Converter.h"
+#include "platform/XWindowsClipboardUTF8Converter.h"
 
 //
 // CXWindowsClipboardUTF8Converter

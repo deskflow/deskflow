@@ -15,14 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CFileChunker.h"
-#include "BasicTypes.h"
-#include "ProtocolTypes.h"
-#include "CEvent.h"
-#include "IEventQueue.h"
-#include "CEventTypes.h"
-#include "CLog.h"
-#include "CStopwatch.h"
+#include "synergy/FileChunker.h"
+
+#include "synergy/protocol_types.h"
+#include "base/EventTypes.h"
+#include "base/Event.h"
+#include "base/IEventQueue.h"
+#include "base/EventTypes.h"
+#include "base/Log.h"
+#include "base/Stopwatch.h"
+
 #include <fstream>
 #include <sstream>
 #include <stdexcept>

@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "COSXEventQueueBuffer.h"
-#include "CEvent.h"
-#include "IEventQueue.h"
+#include "platform/OSXEventQueueBuffer.h"
+
+#include "base/Event.h"
+#include "base/IEventQueue.h"
 
 //
 // CEventQueueTimer

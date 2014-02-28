@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "IInterface.h"
+#include "common/IInterface.h"
 
 typedef int (*StartupFunc)(int, char**);
 

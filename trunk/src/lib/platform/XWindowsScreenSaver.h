@@ -16,17 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CXWINDOWSSCREENSAVER_H
-#define CXWINDOWSSCREENSAVER_H
+#pragma once
 
-#include "IScreenSaver.h"
-#include "stdmap.h"
+#include "synergy/IScreenSaver.h"
+#include "base/IEventQueue.h"
+#include "common/stdmap.h"
+
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
 #	include <X11/Xlib.h>
 #endif
-#include "IEventQueue.h"
 
 class CEvent;
 class CEventQueueTimer;
@@ -167,5 +167,3 @@ private:
 
 	IEventQueue*		m_events;
 };
-
-#endif

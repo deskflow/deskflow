@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMETHODEVENTJOB_H
-#define CMETHODEVENTJOB_H
+#pragma once
 
 #include "IEventJob.h"
 
@@ -70,5 +69,3 @@ TMethodEventJob<T>::run(const CEvent& event)
 		(m_object->*m_method)(event, m_arg);
 	}
 }
-
-#endif

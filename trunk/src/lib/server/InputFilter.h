@@ -16,16 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CINPUTFILTER_H
-#define CINPUTFILTER_H
+#pragma once
 
-#include "KeyTypes.h"
-#include "MouseTypes.h"
-#include "ProtocolTypes.h"
-#include "IPlatformScreen.h"
-#include "CString.h"
-#include "stdmap.h"
-#include "stdset.h"
+#include "synergy/key_types.h"
+#include "synergy/mouse_types.h"
+#include "synergy/protocol_types.h"
+#include "synergy/IPlatformScreen.h"
+#include "base/String.h"
+#include "common/stdmap.h"
+#include "common/stdset.h"
 
 class CPrimaryClient;
 class CEvent;
@@ -360,5 +359,3 @@ private:
 	CPrimaryClient*		m_primaryClient;
 	IEventQueue*		m_events;
 };
-
-#endif

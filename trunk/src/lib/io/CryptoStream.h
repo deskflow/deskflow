@@ -17,10 +17,10 @@
 
 #pragma once
 
-#include "BasicTypes.h"
-#include "CStreamFilter.h"
-#include "CCryptoMode.h"
-#include "CCryptoStream_cryptopp.h"
+#include "io/StreamFilter.h"
+#include "io/CryptoMode.h"
+#include "io/CryptoStream_cryptopp.h"
+#include "base/EventTypes.h"
 
 class CCryptoOptions;
 

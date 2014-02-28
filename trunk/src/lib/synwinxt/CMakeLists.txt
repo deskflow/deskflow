@@ -21,9 +21,7 @@ if (SYNERGY_ADD_HEADERS)
 endif()
 
 include_directories(
-	../arch
-	../base
-	../common
+	../
 )
 
 add_library(synwinxt SHARED ${sources})

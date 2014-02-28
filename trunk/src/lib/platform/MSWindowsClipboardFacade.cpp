@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsClipboard.h"
-#include "CMSWindowsClipboardFacade.h"
+#include "platform/MSWindowsClipboardFacade.h"
+
+#include "platform/MSWindowsClipboard.h"
 
 void CMSWindowsClipboardFacade::write(HANDLE win32Data, UINT win32Format)
 {

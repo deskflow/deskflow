@@ -16,11 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <../../gtest.h>
+#include "test/unittests/synergy/KeyStateTests.h"
+#include "test/mock/synergy/MockEventQueue.h"
+#include "test/mock/synergy/MockKeyMap.h"
+
 #include <gmock/gmock.h>
-#include "CKeyStateTests.h"
-#include "CMockEventQueue.h"
-#include "CMockKeyMap.h"
+#include "test/global/gtest.h"
 
 using ::testing::_;
 using ::testing::NiceMock;

@@ -15,9 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CCryptoStream.h"
-#include "CLog.h"
-#include "CCryptoOptions.h"
+#include "io/CryptoStream.h"
+
+#include "io/CryptoOptions.h"
+#include "base/Log.h"
+
 #include <sstream>
 #include <string>
 #include <stdio.h>

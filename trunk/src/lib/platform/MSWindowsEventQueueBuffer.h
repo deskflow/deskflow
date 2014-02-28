@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMSWINDOWSEVENTQUEUEBUFFER_H
-#define CMSWINDOWSEVENTQUEUEBUFFER_H
+#pragma once
 
-#include "IEventQueueBuffer.h"
+#include "base/IEventQueueBuffer.h"
+
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <Windows.h>
 
 class IEventQueue;
 
@@ -48,5 +48,3 @@ private:
 	UINT				m_daemonQuit;
 	IEventQueue*		m_events;
 };
-
-#endif

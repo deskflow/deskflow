@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMSWINDOWSCLIPBOARDANYTEXTCONVERTER_H
-#define CMSWINDOWSCLIPBOARDANYTEXTCONVERTER_H
+#pragma once
 
-#include "CMSWindowsClipboard.h"
+#include "platform/MSWindowsClipboard.h"
 
 //! Convert to/from some text encoding
 class CMSWindowsClipboardAnyTextConverter :
@@ -56,5 +55,3 @@ private:
 	CString				convertLinefeedToWin32(const CString&) const;
 	CString				convertLinefeedToUnix(const CString&) const;
 };
-
-#endif

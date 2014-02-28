@@ -18,8 +18,8 @@
  
 #pragma once
 
-#include "CArch.h"
-#include "CIpcServer.h"
+#include "arch/Arch.h"
+#include "ipc/IpcServer.h"
 
 #include <string>
 

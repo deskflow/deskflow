@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CXWINDOWSKEYSTATE_H
-#define CXWINDOWSKEYSTATE_H
+#pragma once
 
-#include "CKeyState.h"
-#include "stdmap.h"
-#include "stdvector.h"
+#include "base/KeyState.h"
+#include "common/stdmap.h"
+#include "common/stdvector.h"
+
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
@@ -160,5 +160,3 @@ private:
 	// autorepeat state
 	XKeyboardState		m_keyboardState;
 };
-
-#endif

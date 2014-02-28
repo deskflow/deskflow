@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COSXSCREENSAVER_H
-#define COSXSCREENSAVER_H
+#pragma once
 
-#include "IScreenSaver.h"
+#include "platform/IScreenSaver.h"
+
 #include <Carbon/Carbon.h>
 
 class IEventQueue;
@@ -57,5 +57,3 @@ private:
 	ProcessSerialNumber	m_screenSaverPSN;
     IEventQueue*        m_events;
 };
-
-#endif

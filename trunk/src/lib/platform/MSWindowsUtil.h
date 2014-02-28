@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMSWINDOWSUTIL_H
-#define CMSWINDOWSUTIL_H
+#pragma once
 
-#include "CString.h"
+#include "base/String.h"
+
 #define WINDOWS_LEAN_AND_MEAN
-#include <windows.h>
+#include <Windows.h>
 
 class CMSWindowsUtil {
 public:
@@ -38,5 +38,3 @@ public:
 	*/
 	static CString		getErrorString(HINSTANCE, DWORD error, DWORD id);
 };
-
-#endif

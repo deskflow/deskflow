@@ -16,13 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CEventQueue.h"
-#include "CLog.h"
-#include "CSimpleEventQueueBuffer.h"
-#include "CStopwatch.h"
-#include "IEventJob.h"
-#include "CArch.h"
-#include "CEventTypes.h"
+#include "base/EventQueue.h"
+
+#include "arch/Arch.h"
+#include "base/Log.h"
+#include "base/SimpleEventQueueBuffer.h"
+#include "base/Stopwatch.h"
+#include "base/IEventJob.h"
+#include "base/EventTypes.h"
 
 EVENT_TYPE_ACCESSOR(CClient)
 EVENT_TYPE_ACCESSOR(IStream)

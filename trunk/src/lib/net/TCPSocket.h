@@ -16,14 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CTCPSOCKET_H
-#define CTCPSOCKET_H
+#pragma once
 
-#include "IDataSocket.h"
-#include "CStreamBuffer.h"
-#include "CCondVar.h"
-#include "CMutex.h"
-#include "IArchNetwork.h"
+#include "net/IDataSocket.h"
+#include "io/StreamBuffer.h"
+#include "mt/CondVar.h"
+#include "mt/Mutex.h"
+#include "arch/IArchNetwork.h"
 
 class CMutex;
 class CThread;
@@ -90,5 +89,3 @@ private:
 	IEventQueue*		m_events;
 	CSocketMultiplexer* m_socketMultiplexer;
 };
-
-#endif

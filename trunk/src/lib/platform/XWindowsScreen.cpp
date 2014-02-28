@@ -16,21 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CXWindowsScreen.h"
-#include "CXWindowsClipboard.h"
-#include "CXWindowsEventQueueBuffer.h"
-#include "CXWindowsKeyState.h"
-#include "CXWindowsScreenSaver.h"
-#include "CXWindowsUtil.h"
-#include "CClipboard.h"
-#include "CKeyMap.h"
-#include "XScreen.h"
-#include "XArch.h"
-#include "CLog.h"
-#include "CStopwatch.h"
-#include "CStringUtil.h"
-#include "IEventQueue.h"
-#include "TMethodEventJob.h"
+#include "platform/XWindowsScreen.h"
+
+#include "platform/XWindowsClipboard.h"
+#include "platform/XWindowsEventQueueBuffer.h"
+#include "platform/XWindowsKeyState.h"
+#include "platform/XWindowsScreenSaver.h"
+#include "platform/XWindowsUtil.h"
+#include "synergy/Clipboard.h"
+#include "synergy/KeyMap.h"
+#include "synergy/XScreen.h"
+#include "arch/XArch.h"
+#include "arch/Arch.h"
+#include "base/Log.h"
+#include "base/Stopwatch.h"
+#include "base/StringUtil.h"
+#include "base/IEventQueue.h"
+#include "base/TMethodEventJob.h"
+
 #include <cstring>
 #include <cstdlib>
 #if X_DISPLAY_MISSING
@@ -67,7 +70,6 @@
 #		include <X11/extensions/XInput2.h>
 #	endif
 #endif
-#include "CArch.h"
 
 static int xi_opcode;
 

@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include "CString.h"
-#include "ECryptoMode.h"
+#include "base/String.h"
+#include "io/ECryptoMode.h"
 
 //! Encapsulates basic crypto options
 class CCryptoOptions {

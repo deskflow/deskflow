@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsClipboardBitmapConverter.h"
-#include "CLog.h"
+#include "platform/MSWindowsClipboardBitmapConverter.h"
+
+#include "base/Log.h"
 
 //
 // CMSWindowsClipboardBitmapConverter

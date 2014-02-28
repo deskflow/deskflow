@@ -19,9 +19,9 @@ set(sources
 )
 
 if (WIN32)
+	file(GLOB arch_headers "MSWindows*.h")
+	file(GLOB arch_sources "MSWindows*.cpp")
 	list(APPEND sources
-		CMSWindowsPortableTaskBarReceiver.cpp
-		CMSWindowsPortableTaskBarReceiver.h
 		resource.h
 		synergyp.ico
 		synergyp.rc
@@ -31,24 +31,23 @@ if (WIN32)
 		tb_wait.ico
 	)
 elseif (APPLE)
-	list(APPEND sources COSXPortableTaskBarReceiver.cpp)	
+	file(GLOB arch_headers "OSX*.h")
+	file(GLOB arch_sources "OSX*.cpp")
 elseif (UNIX)
-	list(APPEND sources CXWindowsPortableTaskBarReceiver.cpp)
+	file(GLOB arch_headers "XWindows*.h")
+	file(GLOB arch_sources "XWindows*.cpp")
+endif()
+
+list(APPEND sources ${arch_sources})
+list(APPEND headers ${arch_headers})
+
+if (SYNERGY_ADD_HEADERS)
+	list(APPEND sources ${headers})
 endif()
 
 include_directories(
-	../../lib/arch
-	../../lib/base
-	../../lib/common
-	../../lib/io
-	../../lib/ipc
-	../../lib/mt
-	../../lib/net
-	../../lib/platform
-	../../lib/synergy
-	../../lib/server
-	../../lib/synwinhk
-	../../lib/synwinxt
+	../
+	../../lib/
 )
 
 if (UNIX)

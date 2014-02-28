@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CCLIPBOARD_H
-#define CCLIPBOARD_H
+#pragma once
 
-#include "IClipboard.h"
+#include "synergy/IClipboard.h"
 
 //! Memory buffer clipboard
 /*!
@@ -70,5 +69,3 @@ private:
 	bool				m_added[kNumFormats];
 	CString				m_data[kNumFormats];
 };
-
-#endif

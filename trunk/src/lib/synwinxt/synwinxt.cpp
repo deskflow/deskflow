@@ -15,11 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synwinxt.h"
-#include "CClassFactory.h"
-#include "CArchMiscWindows.h"
-#include <strsafe.h>
+#include "synwinxt/synwinxt.h"
+#include "synwinxt/ClassFactory.h"
+#include "arch/win32/ArchMiscWindows.h"
+
 #include <Windows.h>
+#include <strsafe.h>
 
 #pragma comment(lib, "Shlwapi.lib")
 

@@ -16,15 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSCREEN_H
-#define CSCREEN_H
+#pragma once
 
-#include "IScreen.h"
-#include "ClipboardTypes.h"
-#include "KeyTypes.h"
-#include "MouseTypes.h"
-#include "OptionTypes.h"
-#include "CString.h"
+#include "synergy/clipboard_types.h"
+#include "synergy/IScreen.h"
+#include "synergy/key_types.h"
+#include "synergy/mouse_types.h"
+#include "synergy/option_types.h"
+#include "base/String.h"
 
 class IClipboard;
 class IPlatformScreen;
@@ -338,5 +337,3 @@ private:
 	bool				m_mock;
 	bool				m_enableDragDrop;
 };
-
-#endif

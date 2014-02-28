@@ -16,17 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsPortableTaskBarReceiver.h"
-#include "CMSWindowsClipboard.h"
-#include "IEventQueue.h"
-#include "LogOutputters.h"
-#include "BasicTypes.h"
-#include "CArch.h"
-#include "CArchTaskBarWindows.h"
+#include "synergyp/MSWindowsPortableTaskBarReceiver.h"
+
 #include "resource.h"
-#include "CArchMiscWindows.h"
-#include "CMSWindowsScreen.h"
-#include "CEventQueue.h"
+#include "platform/MSWindowsClipboard.h"
+#include "platform/MSWindowsScreen.h"
+#include "arch/win32/ArchTaskBarWindows.h"
+#include "arch/win32/ArchMiscWindows.h"
+#include "arch/Arch.h"
+#include "base/EventQueue.h"
+#include "base/IEventQueue.h"
+#include "base/log_outputters.h"
+#include "base/EventTypes.h"
 
 //
 // CMSWindowsPortableTaskBarReceiver

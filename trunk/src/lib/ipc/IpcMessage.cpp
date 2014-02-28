@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CIpcMessage.h"
-#include "Ipc.h"
+#include "ipc/IpcMessage.h"
+#include "ipc/Ipc.h"
 
 CIpcMessage::CIpcMessage(UInt8 type) :
-m_type(type)
+	m_type(type)
 {
 }
 
@@ -29,8 +29,8 @@ CIpcMessage::~CIpcMessage()
 }
 
 CIpcHelloMessage::CIpcHelloMessage(EIpcClientType clientType) :
-CIpcMessage(kIpcHello),
-m_clientType(clientType)
+	CIpcMessage(kIpcHello),
+	m_clientType(clientType)
 {
 }
 

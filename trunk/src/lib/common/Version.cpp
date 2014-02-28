@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Version.h"
+#include "common/Version.h"
 
 const char* kApplication = "Synergy";
 const char* kCopyright   = "Copyright (C) 2012-2014 Bolton Software Ltd.\n"

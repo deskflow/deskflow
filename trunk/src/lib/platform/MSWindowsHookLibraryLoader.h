@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMSWINDOWSHOOKLIBRARYLOADER_H
-#define CMSWINDOWSHOOKLIBRARYLOADER_H
+#pragma once
+
+#include "synwinhk/synwinhk.h"
+#include "synwinxt/synwinxt.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include "synwinhk.h"
-#include "synwinxt.h"
 
 //! Loads Windows hook DLLs.
 class CMSWindowsHookLibraryLoader
@@ -43,5 +43,3 @@ public:
 
 	GetDraggingFilename	m_getDraggingFilename;
 };
-
-#endif

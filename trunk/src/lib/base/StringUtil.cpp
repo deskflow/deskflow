@@ -16,10 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CStringUtil.h"
-#include "CArch.h"
-#include "common.h"
-#include "stdvector.h"
+#include "base/StringUtil.h"
+#include "arch/Arch.h"
+#include "common/common.h"
+#include "common/stdvector.h"
+
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>

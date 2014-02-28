@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "BasicTypes.h"
-#include "CString.h"
-#include "Ipc.h"
-#include "CEvent.h"
+#include "ipc/Ipc.h"
+#include "base/EventTypes.h"
+#include "base/String.h"
+#include "base/Event.h"
 
 class CIpcMessage : public CEventData {
 public:

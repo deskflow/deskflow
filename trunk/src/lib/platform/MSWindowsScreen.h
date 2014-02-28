@@ -16,18 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMSWINDOWSSCREEN_H
-#define CMSWINDOWSSCREEN_H
+#pragma once
 
-#include "CPlatformScreen.h"
-#include "synwinhk.h"
-#include "CCondVar.h"
-#include "CMutex.h"
-#include "CString.h"
-#include "CMSWindowsHookLibraryLoader.h"
+#include "platform/MSWindowsHookLibraryLoader.h"
+#include "synergy/PlatformScreen.h"
+#include "synwinhk/synwinhk.h"
+#include "mt/CondVar.h"
+#include "mt/Mutex.h"
+#include "base/String.h"
 
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <Windows.h>
 
 class CEventQueueTimer;
 class CMSWindowsDesks;
@@ -333,5 +332,3 @@ private:
 
 	CString				m_desktopPath;
 };
-
-#endif

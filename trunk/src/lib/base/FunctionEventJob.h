@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CFUNCTIONEVENTJOB_H
-#define CFUNCTIONEVENTJOB_H
+#pragma once
 
-#include "IEventJob.h"
+#include "base/IEventJob.h"
 
 //! Use a function as an event job
 /*!
@@ -38,5 +37,3 @@ private:
 	void				(*m_func)(const CEvent&, void*);
 	void*				m_arg;
 };
-
-#endif

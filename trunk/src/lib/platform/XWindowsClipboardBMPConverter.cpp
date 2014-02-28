@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CXWindowsClipboardBMPConverter.h"
+#include "platform/XWindowsClipboardBMPConverter.h"
 
 // BMP file header structure
 struct CBMPHeader {

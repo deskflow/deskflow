@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CPortableTaskBarReceiver.h"
-#include "CLock.h"
-#include "CStringUtil.h"
-#include "IEventQueue.h"
-#include "CArch.h"
-#include "Version.h"
+#include "synergy/PortableTaskBarReceiver.h"
+#include "mt/Lock.h"
+#include "base/StringUtil.h"
+#include "base/IEventQueue.h"
+#include "arch/Arch.h"
+#include "common/Version.h"
 
 //
 // CPortableTaskBarReceiver

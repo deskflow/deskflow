@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef XSYNERGY_H
-#define XSYNERGY_H
+#pragma once
 
-#include "XBase.h"
+#include "base/XBase.h"
 
 //! Generic synergy exception
 XBASE_SUBCLASS(XSynergy, XBase);
@@ -125,5 +124,3 @@ protected:
 private:
 	int	m_code;
 };
-
-#endif

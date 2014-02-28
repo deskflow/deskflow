@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IINTERFACE_H
-#define IINTERFACE_H
+#pragma once
 
-#include "common.h"
+#include "common/common.h"
 
 //! Base class of interfaces
 /*!
@@ -31,5 +30,3 @@ public:
 	//! Interface destructor does nothing
 	virtual ~IInterface() { }
 };
-
-#endif

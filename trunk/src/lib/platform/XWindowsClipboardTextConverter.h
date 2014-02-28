@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CXWINDOWSCLIPBOARDTEXTCONVERTER_H
-#define CXWINDOWSCLIPBOARDTEXTCONVERTER_H
+#pragma once
 
-#include "CXWindowsClipboard.h"
+#include "platform/XWindowsClipboard.h"
 
 //! Convert to/from locale text encoding
 class CXWindowsClipboardTextConverter : public IXWindowsClipboardConverter {
@@ -41,5 +40,3 @@ public:
 private:
 	Atom				m_atom;
 };
-
-#endif

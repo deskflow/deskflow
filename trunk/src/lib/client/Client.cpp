@@ -16,26 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CClient.h"
-#include "CServerProxy.h"
-#include "CScreen.h"
-#include "CClipboard.h"
-#include "CPacketStreamFilter.h"
-#include "CProtocolUtil.h"
-#include "ProtocolTypes.h"
-#include "XSynergy.h"
-#include "IDataSocket.h"
-#include "ISocketFactory.h"
-#include "IStreamFilterFactory.h"
-#include "CLog.h"
-#include "IEventQueue.h"
-#include "TMethodEventJob.h"
-#include "CArch.h"
-#include "IPlatformScreen.h"
-#include "CCryptoStream.h"
-#include "CThread.h"
-#include "TMethodJob.h"
-#include "CFileChunker.h"
+#include "client/Client.h"
+
+#include "client/ServerProxy.h"
+#include "synergy/Screen.h"
+#include "synergy/Clipboard.h"
+#include "synergy/PacketStreamFilter.h"
+#include "synergy/ProtocolUtil.h"
+#include "synergy/protocol_types.h"
+#include "synergy/XSynergy.h"
+#include "synergy/FileChunker.h"
+#include "synergy/IPlatformScreen.h"
+#include "mt/Thread.h"
+#include "io/IStreamFilterFactory.h"
+#include "io/CryptoStream.h"
+#include "net/IDataSocket.h"
+#include "net/ISocketFactory.h"
+#include "arch/Arch.h"
+#include "base/Log.h"
+#include "base/IEventQueue.h"
+#include "base/TMethodEventJob.h"
+#include "base/TMethodJob.h"
+
 #include <cstring>
 #include <cstdlib>
 #include <sstream>

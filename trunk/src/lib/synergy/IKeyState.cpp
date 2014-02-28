@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "IKeyState.h"
-#include "CEventQueue.h"
+#include "synergy/IKeyState.h"
+#include "base/EventQueue.h"
+
 #include <cstring>
 #include <cstdlib>
 

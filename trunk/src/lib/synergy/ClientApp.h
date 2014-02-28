@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "CApp.h"
-#include "CArgsBase.h"
+#include "synergy/App.h"
+#include "synergy/ArgsBase.h"
 
 class CScreen;
 class CEvent;

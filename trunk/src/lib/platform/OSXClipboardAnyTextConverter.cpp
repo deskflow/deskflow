@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "COSXClipboardAnyTextConverter.h"
+#include "platform/OSXClipboardAnyTextConverter.h"
+
 #include <algorithm>
 
 //

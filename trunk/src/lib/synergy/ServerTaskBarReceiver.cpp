@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CServerTaskBarReceiver.h"
-#include "CServer.h"
-#include "CLock.h"
-#include "CStringUtil.h"
-#include "IEventQueue.h"
-#include "CArch.h"
-#include "Version.h"
+#include "synergy/ServerTaskBarReceiver.h"
+#include "server/Server.h"
+#include "mt/Lock.h"
+#include "base/StringUtil.h"
+#include "base/IEventQueue.h"
+#include "arch/Arch.h"
+#include "common/Version.h"
 
 //
 // CServerTaskBarReceiver

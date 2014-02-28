@@ -16,18 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CXWINDOWSSCREEN_H
-#define CXWINDOWSSCREEN_H
+#pragma once
 
-#include "CPlatformScreen.h"
-#include "stdset.h"
-#include "stdvector.h"
+#include "synergy/PlatformScreen.h"
+#include "synergy/KeyMap.h"
+#include "common/stdset.h"
+#include "common/stdvector.h"
+
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
 #	include <X11/Xlib.h>
 #endif
-#include "CKeyMap.h"
 
 class CXWindowsClipboard;
 class CXWindowsKeyState;
@@ -250,5 +250,3 @@ private:
 	// ioErrorHandler().
 	static CXWindowsScreen*	s_screen;
 };
-
-#endif

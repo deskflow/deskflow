@@ -16,18 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CXWindowsClipboard.h"
-#include "CXWindowsClipboardTextConverter.h"
-#include "CXWindowsClipboardUCS2Converter.h"
-#include "CXWindowsClipboardUTF8Converter.h"
-#include "CXWindowsClipboardHTMLConverter.h"
-#include "CXWindowsClipboardBMPConverter.h"
-#include "CXWindowsUtil.h"
-#include "CThread.h"
-#include "CLog.h"
-#include "CStopwatch.h"
-#include "CArch.h"
-#include "stdvector.h"
+#include "platform/XWindowsClipboard.h"
+
+#include "platform/XWindowsClipboardTextConverter.h"
+#include "platform/XWindowsClipboardUCS2Converter.h"
+#include "platform/XWindowsClipboardUTF8Converter.h"
+#include "platform/XWindowsClipboardHTMLConverter.h"
+#include "platform/XWindowsClipboardBMPConverter.h"
+#include "platform/XWindowsUtil.h"
+#include "mt/Thread.h"
+#include "arch/Arch.h"
+#include "base/Log.h"
+#include "base/Stopwatch.h"
+#include "common/stdvector.h"
+
 #include <cstdio>
 #include <X11/Xatom.h>
 

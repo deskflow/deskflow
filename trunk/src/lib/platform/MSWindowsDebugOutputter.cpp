@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsDebugOutputter.h"
+#include "platform/MSWindowsDebugOutputter.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-
 #include <string>
 
 CMSWindowsDebugOutputter::CMSWindowsDebugOutputter()

@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSTREAMFILTER_H
-#define CSTREAMFILTER_H
+#pragma once
 
-#include "IStream.h"
-#include "IEventQueue.h"
+#include "io/IStream.h"
+#include "base/IEventQueue.h"
 
 //! A stream filter
 /*!
@@ -72,5 +71,3 @@ private:
 	bool				m_adopted;
 	IEventQueue*		m_events;
 };
-
-#endif

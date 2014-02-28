@@ -18,10 +18,10 @@
 
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
+#include "synergy/PortableTaskBarReceiver.h"
 
-#include "CPortableTaskBarReceiver.h"
-#include <windows.h>
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 class CBufferedLogOutputter;
 class IEventQueue;

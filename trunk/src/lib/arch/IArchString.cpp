@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "IArchString.h"
-#include "common.h"
-#include "CArch.h"
+#include "arch/IArchString.h"
+#include "arch/Arch.h"
+#include "common/common.h"
+
 #include <climits>
 #include <cstring>
 #include <cstdlib>

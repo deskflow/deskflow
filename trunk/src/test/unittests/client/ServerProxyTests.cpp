@@ -18,12 +18,13 @@
 
 #define TEST_ENV
 
+#include "test/mock/client/MockClient.h"
+#include "test/mock/io/MockStream.h"
+#include "test/mock/synergy/MockEventQueue.h"
+#include "client/ServerProxy.h"
+#include "synergy/protocol_types.h"
+
 #include <gtest/gtest.h>
-#include "CServerProxy.h"
-#include "CMockClient.h"
-#include "CMockStream.h"
-#include "CMockEventQueue.h"
-#include "ProtocolTypes.h"
 
 using ::testing::_;
 using ::testing::Invoke;

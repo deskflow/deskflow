@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COSXCLIPBOARD_H
-#define COSXCLIPBOARD_H
+#pragma once
+
+#include "synergy/IClipboard.h"
 
 #include <Carbon/Carbon.h>
-#include "IClipboard.h"
 #include <vector>
 
 class IOSXClipboardConverter;
@@ -93,5 +93,3 @@ public:
 
 	//@}
 };
-
-#endif

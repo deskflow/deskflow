@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CXWINDOWSCLIPBOARDHTMLCONVERTER_H
-#define CXWINDOWSCLIPBOARDHTMLCONVERTER_H
+#pragma once
 
-#include "CXWindowsClipboard.h"
+#include "platform/XWindowsClipboard.h"
 
 //! Convert to/from HTML encoding
 class CXWindowsClipboardHTMLConverter : public IXWindowsClipboardConverter {
@@ -41,5 +40,3 @@ public:
 private:
 	Atom				m_atom;
 };
-
-#endif

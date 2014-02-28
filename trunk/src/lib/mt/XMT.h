@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef XMT_H
-#define XMT_H
+#pragma once
 
-#include "XBase.h"
+#include "base/XBase.h"
 
 //! Generic multithreading exception
 XBASE_SUBCLASS(XMT, XBase);
@@ -29,5 +28,3 @@ XBASE_SUBCLASS(XMT, XBase);
 Thrown when a thread cannot be created.
 */
 XBASE_SUBCLASS_WHAT(XMTThreadUnavailable, XMT);
-
-#endif

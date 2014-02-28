@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CCLIENTPROXYUNKNOWN_H
-#define CCLIENTPROXYUNKNOWN_H
+#pragma once
 
-#include "CEvent.h"
-#include "CEventTypes.h"
+#include "base/Event.h"
+#include "base/EventTypes.h"
 
 class CClientProxy;
 class CEventQueueTimer;
@@ -67,5 +66,3 @@ private:
 	CServer*			m_server;
 	IEventQueue*		m_events;
 };
-
-#endif

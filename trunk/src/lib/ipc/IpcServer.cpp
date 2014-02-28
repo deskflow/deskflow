@@ -16,16 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CIpcServer.h"
-#include "Ipc.h"
-#include "IEventQueue.h"
-#include "TMethodEventJob.h"
-#include "CEvent.h"
-#include "CLog.h"
-#include "CIpcClientProxy.h"
-#include "IStream.h"
-#include "IDataSocket.h"
-#include "CIpcMessage.h"
+#include "ipc/IpcServer.h"
+
+#include "ipc/Ipc.h"
+#include "ipc/IpcClientProxy.h"
+#include "ipc/IpcMessage.h"
+#include "net/IDataSocket.h"
+#include "io/IStream.h"
+#include "base/IEventQueue.h"
+#include "base/TMethodEventJob.h"
+#include "base/Event.h"
+#include "base/Log.h"
 
 //
 // CIpcServer

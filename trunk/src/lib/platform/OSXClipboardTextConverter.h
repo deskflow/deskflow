@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COSXCLIPBOARDTEXTCONVERTER_H
-#define COSXCLIPBOARDTEXTCONVERTER_H
+#pragma once
 
-#include "COSXClipboardAnyTextConverter.h"
+#include "platform/OSXClipboardAnyTextConverter.h"
 
 //! Convert to/from locale text encoding
 class COSXClipboardTextConverter : public COSXClipboardAnyTextConverter {
@@ -41,5 +40,3 @@ protected:
 							CFStringEncoding fromEncoding,
 							CFStringEncoding toEncoding);
 };
-
-#endif

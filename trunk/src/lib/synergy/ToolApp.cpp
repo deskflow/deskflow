@@ -15,9 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CToolApp.h"
-#include "CString.h"
-#include "CArch.h"
+#include "synergy/ToolApp.h"
+#include "arch/Arch.h"
+#include "base/String.h"
 
 #include <iostream>
 #include <sstream>

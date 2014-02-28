@@ -16,15 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
-#include <fstream>
-#include <gtest/gtest.h>
-#include "CArch.h"
-#include "CLog.h"
+#include "arch/Arch.h"
+#include "base/Log.h"
 
 #if SYSAPI_WIN32
-#include "CArchMiscWindows.h"
+#include "arch/win32/ArchMiscWindows.h"
 #endif
+
+#include <gtest/gtest.h>
+#include <iostream>
+#include <fstream>
 
 #define LOCK_TIMEOUT 30
 

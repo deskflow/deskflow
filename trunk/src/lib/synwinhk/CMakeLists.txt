@@ -21,8 +21,7 @@ if (SYNERGY_ADD_HEADERS)
 endif()
 
 include_directories(
-	../common
-	../synergy
+	../
 )
 
 add_library(synwinhk SHARED ${sources})

@@ -16,12 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CThread.h"
-#include "XMT.h"
-#include "XThread.h"
-#include "CLog.h"
-#include "IJob.h"
-#include "CArch.h"
+#include "mt/Thread.h"
+
+#include "mt/XMT.h"
+#include "mt/XThread.h"
+#include "arch/Arch.h"
+#include "base/Log.h"
+#include "base/IJob.h"
 
 //
 // CThread

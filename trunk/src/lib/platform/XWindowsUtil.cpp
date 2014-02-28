@@ -16,11 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CXWindowsUtil.h"
-#include "KeyTypes.h"
-#include "CThread.h"
-#include "CLog.h"
-#include "CStringUtil.h"
+#include "platform/XWindowsUtil.h"
+
+#include "platform/KeyTypes.h"
+#include "mt/Thread.h"
+#include "base/Log.h"
+#include "base/StringUtil.h"
+
 #include <X11/Xatom.h>
 #define XK_APL
 #define XK_ARABIC

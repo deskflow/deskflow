@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CArgsBase.h"
+#include "synergy/ArgsBase.h"
 
 CArgsBase::CArgsBase() :
 #if SYSAPI_WIN32

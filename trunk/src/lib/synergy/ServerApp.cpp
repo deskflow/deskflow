@@ -16,46 +16,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CServerApp.h"
-#include "CLog.h"
-#include "CArch.h"
-#include "XSocket.h"
-#include "Version.h"
-#include "IEventQueue.h"
-#include "CServer.h"
-#include "CClientListener.h"
-#include "CClientProxy.h"
-#include "TMethodEventJob.h"
-#include "CServerTaskBarReceiver.h"
-#include "CPrimaryClient.h"
-#include "CScreen.h"
-#include "CSocketMultiplexer.h"
-#include "CEventQueue.h"
-#include "LogOutputters.h"
-#include "CFunctionEventJob.h"
-#include "TMethodJob.h"
+#include "synergy/ServerApp.h"
+
+#include "server/Server.h"
+#include "server/ClientListener.h"
+#include "server/ClientProxy.h"
+#include "server/PrimaryClient.h"
+#include "synergy/Screen.h"
+#include "synergy/XScreen.h"
+#include "synergy/ServerTaskBarReceiver.h"
+#include "net/SocketMultiplexer.h"
+#include "net/TCPSocketFactory.h"
+#include "net/XSocket.h"
+#include "arch/Arch.h"
+#include "base/EventQueue.h"
+#include "base/log_outputters.h"
+#include "base/FunctionEventJob.h"
+#include "base/TMethodJob.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
+#include "base/TMethodEventJob.h"
+#include "common/Version.h"
 
 #if SYSAPI_WIN32
-#include "CArchMiscWindows.h"
+#include "arch/win32/ArchMiscWindows.h"
 #endif
 
 #if WINAPI_MSWINDOWS
-#include "CMSWindowsScreen.h"
+#include "platform/MSWindowsScreen.h"
 #elif WINAPI_XWINDOWS
-#include "CXWindowsScreen.h"
+#include "platform/XWindowsScreen.h"
 #elif WINAPI_CARBON
-#include "COSXScreen.h"
+#include "platform/OSXScreen.h"
 #endif
 
 #if defined(__APPLE__)
-#include "COSXDragSimulator.h"
+#include "platform/OSXDragSimulator.h"
 #endif
 
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
-#include "XScreen.h"
-#include "CTCPSocketFactory.h"
 
 //
 // CServerApp

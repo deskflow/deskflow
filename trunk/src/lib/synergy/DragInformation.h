@@ -17,9 +17,9 @@
 
 #pragma once
 
-#include "stdvector.h"
-#include "CString.h"
-#include "BasicTypes.h"
+#include "common/stdvector.h"
+#include "base/String.h"
+#include "base/EventTypes.h"
 
 typedef std::vector<CString> CDragFileList;
 

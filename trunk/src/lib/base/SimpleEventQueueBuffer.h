@@ -16,12 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSIMPLEEVENTQUEUEBUFFER_H
-#define CSIMPLEEVENTQUEUEBUFFER_H
+#pragma once
 
-#include "IEventQueueBuffer.h"
-#include "IArchMultithread.h"
-#include "stddeque.h"
+#include "base/IEventQueueBuffer.h"
+#include "arch/IArchMultithread.h"
+#include "common/stddeque.h"
 
 //! In-memory event queue buffer
 /*!
@@ -57,5 +56,3 @@ public:
 	CEventQueueTimer() { }
 	virtual ~CEventQueueTimer() { }
 };
-
-#endif

@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CCryptoOptions.h"
-#include "XIO.h"
+#include "io/CryptoOptions.h"
+#include "io/XIO.h"
 
 CCryptoOptions::CCryptoOptions(
 		const CString& modeString,

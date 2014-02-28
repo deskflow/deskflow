@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "CPortableTaskBarReceiver.h"
+#include "synergyp/PortableTaskBarReceiver.h"
 
 class CBufferedLogOutputter;
 

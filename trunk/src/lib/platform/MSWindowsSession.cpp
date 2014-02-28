@@ -15,12 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsSession.h"
-#include "CLog.h"
+#include "platform/MSWindowsSession.h"
+
+#include "arch/win32/XArchWindows.h"
+#include "synergy/XSynergy.h"
+#include "base/Log.h"
+
 #include <Tlhelp32.h>
 #include <Wtsapi32.h>
-#include "XSynergy.h"
-#include "XArchWindows.h"
 
 CMSWindowsSession::CMSWindowsSession() :
 	m_activeSessionId(-1)

@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CKEYSTATETESTS_H
-#define CKEYSTATETESTS_H
+#pragma once
 
-#include "CKeyState.h"
+#include "synergy/KeyState.h"
+
 #include "gmock/gmock.h"
 
 class CMockKeyMap;
@@ -71,5 +71,3 @@ stubMapKey(
 
 CKeyMap::Keystroke s_stubKeystroke(1, false, false);
 CKeyMap::KeyItem s_stubKeyItem;
-
-#endif

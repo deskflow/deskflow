@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "COSXKeyState.h"
-#include "CLog.h"
-#include "CArch.h"
+#include "platform/OSXKeyState.h"
+#include "arch/Arch.h"
+#include "base/Log.h"
 
 #if defined(MAC_OS_X_VERSION_10_5)
 #include <Carbon/Carbon.h>

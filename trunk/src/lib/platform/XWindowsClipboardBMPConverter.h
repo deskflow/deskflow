@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CXWINDOWSCLIPBOARDBMPCONVERTER_H
-#define CXWINDOWSCLIPBOARDBMPCONVERTER_H
+#pragma once
 
-#include "CXWindowsClipboard.h"
+#include "platform/XWindowsClipboard.h"
 
 //! Convert to/from some text encoding
 class CXWindowsClipboardBMPConverter :
@@ -39,5 +38,3 @@ public:
 private:
 	Atom				m_atom;
 };
-
-#endif

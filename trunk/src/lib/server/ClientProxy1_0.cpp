@@ -16,13 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CClientProxy1_0.h"
-#include "CProtocolUtil.h"
-#include "XSynergy.h"
-#include "IStream.h"
-#include "CLog.h"
-#include "IEventQueue.h"
-#include "TMethodEventJob.h"
+#include "server/ClientProxy1_0.h"
+
+#include "synergy/ProtocolUtil.h"
+#include "synergy/XSynergy.h"
+#include "io/IStream.h"
+#include "base/Log.h"
+#include "base/IEventQueue.h"
+#include "base/TMethodEventJob.h"
+
 #include <cstring>
 
 //

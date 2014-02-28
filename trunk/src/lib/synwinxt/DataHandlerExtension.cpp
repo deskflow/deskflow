@@ -15,7 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CDataHandlerExtension.h"
+#include "DataHandlerExtension.h"
+
 #include <Shlwapi.h>
 #include <comutil.h>
 #include <string>

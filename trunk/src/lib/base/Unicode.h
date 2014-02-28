@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CUNICODE_H
-#define CUNICODE_H
+#pragma once
 
-#include "CString.h"
-#include "BasicTypes.h"
+#include "base/String.h"
+#include "common/basic_types.h"
 
 //! Unicode utility functions
 /*!
@@ -143,5 +142,3 @@ private:
 	static UInt32		s_invalid;
 	static UInt32		s_replacement;
 };
-
-#endif

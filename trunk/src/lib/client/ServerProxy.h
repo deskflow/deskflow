@@ -16,14 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSERVERPROXY_H
-#define CSERVERPROXY_H
+#pragma once
 
-#include "ClipboardTypes.h"
-#include "KeyTypes.h"
-#include "CEvent.h"
-#include "CStopwatch.h"
-#include "CString.h"
+#include "synergy/clipboard_types.h"
+#include "synergy/key_types.h"
+#include "base/Event.h"
+#include "base/Stopwatch.h"
+#include "base/String.h"
 
 class CClient;
 class CClientInfo;
@@ -137,5 +136,3 @@ private:
 	size_t				m_receivedDataSize;
 	static const UInt16	m_intervalThreshold;
 };
-
-#endif

@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CPLATFORMSCREEN_H
-#define CPLATFORMSCREEN_H
+#pragma once
 
-#include "IPlatformScreen.h"
+#include "synergy/IPlatformScreen.h"
+
 #include <stdexcept>
 
 //! Base screen implementation
@@ -124,5 +124,3 @@ protected:
 	bool				m_draggingStarted;
 	bool				m_fakeDraggingStarted;
 };
-
-#endif

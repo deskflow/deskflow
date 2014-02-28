@@ -16,15 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CConfig.h"
-#include "CServer.h"
-#include "CKeyMap.h"
-#include "KeyTypes.h"
-#include "XSocket.h"
-#include "stdistream.h"
-#include "stdostream.h"
+#include "server/Config.h"
+
+#include "server/Server.h"
+#include "synergy/KeyMap.h"
+#include "synergy/key_types.h"
+#include "net/XSocket.h"
+#include "base/IEventQueue.h"
+#include "common/stdistream.h"
+#include "common/stdostream.h"
+
 #include <cstdlib>
-#include "IEventQueue.h"
 
 //
 // CConfig

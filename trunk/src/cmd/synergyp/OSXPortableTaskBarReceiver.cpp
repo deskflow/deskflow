@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "COSXServerTaskBarReceiver.h"
-#include "CArch.h"
+#include "synergys/OSXServerTaskBarReceiver.h"
+#include "arch/Arch.h"
 
 //
 // COSXServerTaskBarReceiver

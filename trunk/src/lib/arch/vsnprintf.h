@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "IArchString.h"
+#include "arch/IArchString.h"
 
 #if HAVE_VSNPRINTF
 

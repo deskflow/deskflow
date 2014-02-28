@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "XIO.h"
+#include "io/XIO.h"
 
 //
 // XIOClosed

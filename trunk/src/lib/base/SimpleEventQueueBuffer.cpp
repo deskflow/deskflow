@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CSimpleEventQueueBuffer.h"
-#include "CStopwatch.h"
-#include "CArch.h"
+#include "base/SimpleEventQueueBuffer.h"
+#include "base/Stopwatch.h"
+#include "arch/Arch.h"
 
 //
 // CSimpleEventQueueBuffer

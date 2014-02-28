@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CCLIENTPROXY1_3_H
-#define CCLIENTPROXY1_3_H
+#pragma once
 
-#include "CClientProxy1_2.h"
+#include "server/ClientProxy1_2.h"
 
 //! Proxy for client implementing protocol version 1.3
 class CClientProxy1_3 : public CClientProxy1_2 {
@@ -48,5 +47,3 @@ private:
 	CEventQueueTimer*	m_keepAliveTimer;
 	IEventQueue*		m_events;
 };
-
-#endif

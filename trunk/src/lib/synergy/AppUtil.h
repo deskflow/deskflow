@@ -18,8 +18,8 @@
  
 #pragma once
 
-#include "IAppUtil.h"
-#include "XSynergy.h"
+#include "synergy/IAppUtil.h"
+#include "synergy/XSynergy.h"
 
 class CAppUtil : public IAppUtil {
 public:

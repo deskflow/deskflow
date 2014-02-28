@@ -16,10 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtest/gtest.h>
+#include "platform/MSWindowsClipboard.h"
+#include "platform/IMSWindowsClipboardFacade.h"
+
 #include <gmock/gmock.h>
-#include "CMSWindowsClipboard.h"
-#include "IMSWindowsClipboardFacade.h"
+#include <gtest/gtest.h>
 
 class CMSWindowsClipboardTests : public ::testing::Test
 {

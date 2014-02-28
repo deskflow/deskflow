@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COSXCLIPBOARDANYTEXTCONVERTER_H
-#define COSXCLIPBOARDANYTEXTCONVERTER_H
+#pragma once
 
-#include "COSXClipboard.h"
+#include "platform/OSXClipboard.h"
 
 //! Convert to/from some text encoding
 class COSXClipboardAnyTextConverter : public IOSXClipboardConverter {
@@ -52,5 +51,3 @@ private:
 	static CString		convertLinefeedToMacOS(const CString&);
 	static CString		convertLinefeedToUnix(const CString&);
 };
-
-#endif

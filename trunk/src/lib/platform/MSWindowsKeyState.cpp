@@ -16,15 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CMSWindowsKeyState.h"
-#include "CMSWindowsDesks.h"
-#include "CThread.h"
-#include "CFunctionJob.h"
-#include "CLog.h"
-#include "CStringUtil.h"
-#include "IEventQueue.h"
-#include "TMethodEventJob.h"
-#include "CArchMiscWindows.h"
+#include "platform/MSWindowsKeyState.h"
+
+#include "platform/MSWindowsDesks.h"
+#include "mt/Thread.h"
+#include "arch/win32/ArchMiscWindows.h"
+#include "base/FunctionJob.h"
+#include "base/Log.h"
+#include "base/StringUtil.h"
+#include "base/IEventQueue.h"
+#include "base/TMethodEventJob.h"
 
 // extended mouse buttons
 #if !defined(VK_XBUTTON1)

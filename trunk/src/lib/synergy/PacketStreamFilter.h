@@ -16,12 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CPACKETSTREAMFILTER_H
-#define CPACKETSTREAMFILTER_H
+#pragma once
 
-#include "CStreamFilter.h"
-#include "CStreamBuffer.h"
-#include "CMutex.h"
+#include "io/StreamFilter.h"
+#include "io/StreamBuffer.h"
+#include "mt/Mutex.h"
 
 class IEventQueue;
 
@@ -58,5 +57,3 @@ private:
 	bool				m_inputShutdown;
 	IEventQueue*		m_events;
 };
-
-#endif

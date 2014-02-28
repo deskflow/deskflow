@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CXWINDOWSCLIPBOARDUCS2CONVERTER_H
-#define CXWINDOWSCLIPBOARDUCS2CONVERTER_H
+#pragma once
 
-#include "CXWindowsClipboard.h"
+#include "platform/XWindowsClipboard.h"
 
 //! Convert to/from UCS-2 encoding
 class CXWindowsClipboardUCS2Converter : public IXWindowsClipboardConverter {
@@ -41,5 +40,3 @@ public:
 private:
 	Atom				m_atom;
 };
-
-#endif

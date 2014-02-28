@@ -18,12 +18,13 @@
 
 #pragma once
 
+#include "platform/MSWindowsSession.h"
+#include "synergy/XSynergy.h"
+
 #define WIN32_LEAN_AND_MEAN
-#include "CMSWindowsSession.h"
 #include <Windows.h>
 #include <string>
 #include <list>
-#include "XSynergy.h"
 
 class CThread;
 class CIpcLogOutputter;

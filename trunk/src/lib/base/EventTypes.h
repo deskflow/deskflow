@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "CEvent.h"
+#include "base/Event.h"
 
 class IEventQueue;
 

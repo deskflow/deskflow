@@ -16,16 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CCLIENT_H
-#define CCLIENT_H
+#pragma once
 
-#include "IClient.h"
-#include "IClipboard.h"
-#include "CNetworkAddress.h"
-#include "INode.h"
-#include "CCryptoOptions.h"
-#include "CEventTypes.h"
-#include "CDragInformation.h"
+#include "synergy/IClient.h"
+
+#include "synergy/IClipboard.h"
+#include "synergy/DragInformation.h"
+#include "synergy/INode.h"
+#include "net/NetworkAddress.h"
+#include "io/CryptoOptions.h"
+#include "base/EventTypes.h"
 
 class CEventQueueTimer;
 class CScreen;
@@ -239,5 +239,3 @@ private:
 	CThread*				m_writeToDropDirThread;
 	bool					m_enableDragDrop;
 };
-
-#endif

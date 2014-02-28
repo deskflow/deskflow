@@ -16,26 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CApp.h"
-#include "CLog.h"
-#include "Version.h"
-#include "ProtocolTypes.h"
-#include "CArch.h"
-#include "XBase.h"
-#include "XArch.h"
-#include "LogOutputters.h"
-#include "XSynergy.h"
-#include "CArgsBase.h"
-#include "CIpcServerProxy.h"
-#include "TMethodEventJob.h"
-#include "CIpcMessage.h"
-#include "Ipc.h"
-#include "CEventQueue.h"
+#include "synergy/App.h"
+#include "base/Log.h"
+#include "common/Version.h"
+#include "synergy/protocol_types.h"
+#include "arch/Arch.h"
+#include "base/XBase.h"
+#include "arch/XArch.h"
+#include "base/log_outputters.h"
+#include "synergy/XSynergy.h"
+#include "synergy/ArgsBase.h"
+#include "ipc/IpcServerProxy.h"
+#include "base/TMethodEventJob.h"
+#include "ipc/IpcMessage.h"
+#include "ipc/Ipc.h"
+#include "base/EventQueue.h"
 
 #if SYSAPI_WIN32
-#include "CArchMiscWindows.h"
-#include "IEventQueue.h"
-#include "TMethodJob.h"
+#include "arch/win32/ArchMiscWindows.h"
+#include "base/IEventQueue.h"
+#include "base/TMethodJob.h"
 #endif
 
 #include <iostream>
@@ -46,7 +46,7 @@
 #endif
 
 #if defined(__APPLE__)
-#include "COSXDragSimulator.h"
+#include "platform/OSXDragSimulator.h"
 #endif
 
 CApp* CApp::s_instance = nullptr;

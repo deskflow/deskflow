@@ -49,22 +49,10 @@ if (SYNERGY_ADD_HEADERS)
 endif()
 
 include_directories(
-	../../lib/arch
-	../../lib/base
-	../../lib/client
-	../../lib/common
-	../../lib/io
-	../../lib/ipc
-	../../lib/mt
-	../../lib/net
-	../../lib/platform
-	../../lib/server
-	../../lib/synergy
-	../../lib/synwinhk
-	../../lib/synwinxt
+	../../
+	../../lib/
 	../../../ext/gtest-1.6.0/include
 	../../../ext/gmock-1.6.0/include
-	../unittests
 )
 
 if (UNIX)

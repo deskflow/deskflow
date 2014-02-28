@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CXWindowsServerTaskBarReceiver.h"
-#include "CArch.h"
+#include "synergys/XWindowsServerTaskBarReceiver.h"
+#include "arch/Arch.h"
 
 //
 // CXWindowsServerTaskBarReceiver

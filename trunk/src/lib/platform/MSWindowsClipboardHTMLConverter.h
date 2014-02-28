@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMSWINDOWSCLIPBOARDHTMLCONVERTER_H
-#define CMSWINDOWSCLIPBOARDHTMLCONVERTER_H
+#pragma once
 
-#include "CMSWindowsClipboardAnyTextConverter.h"
+#include "platform/MSWindowsClipboardAnyTextConverter.h"
 
 //! Convert to/from HTML encoding
 class CMSWindowsClipboardHTMLConverter :
@@ -44,5 +43,3 @@ private:
 private:
 	UINT				m_format;
 };
-
-#endif

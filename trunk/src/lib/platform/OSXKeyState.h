@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COSXKEYSTATE_H
-#define COSXKEYSTATE_H
+#pragma once
+
+#include "synergy/KeyState.h"
+#include "common/stdmap.h"
+#include "common/stdset.h"
+#include "common/stdvector.h"
 
 #include <Carbon/Carbon.h>
-#include "CKeyState.h"
-#include "stdmap.h"
-#include "stdset.h"
-#include "stdvector.h"
 
 #if defined(MAC_OS_X_VERSION_10_5)
 	typedef TISInputSourceRef KeyLayout;
@@ -222,5 +222,3 @@ private:
 	bool superPressed;
 	bool capsPressed;
 };
-
-#endif

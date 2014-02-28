@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COSXEVENTQUEUEBUFFER_H
-#define COSXEVENTQUEUEBUFFER_H
+#pragma once
+
+#include "IEventQueueBuffer.h"
 
 #include <Carbon/Carbon.h>
-#include "IEventQueueBuffer.h"
 
 class IEventQueue;
 
@@ -45,5 +45,3 @@ private:
 	IEventQueue*		m_eventQueue;
 	EventQueueRef		m_carbonEventQueue;
 };
-
-#endif

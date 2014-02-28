@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CStreamFilter.h"
-#include "IEventQueue.h"
-#include "TMethodEventJob.h"
+#include "io/StreamFilter.h"
+#include "base/IEventQueue.h"
+#include "base/TMethodEventJob.h"
 
 //
 // CStreamFilter

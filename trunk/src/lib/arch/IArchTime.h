@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IARCHTIME_H
-#define IARCHTIME_H
+#pragma once
 
-#include "IInterface.h"
+#include "common/IInterface.h"
 
 //! Interface for architecture dependent time operations
 /*!
@@ -40,5 +39,3 @@ public:
 
 	//@}
 };
-
-#endif

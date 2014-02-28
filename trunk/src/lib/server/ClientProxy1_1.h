@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CCLIENTPROXY1_1_H
-#define CCLIENTPROXY1_1_H
+#pragma once
 
-#include "CClientProxy1_0.h"
+#include "server/ClientProxy1_0.h"
 
 //! Proxy for client implementing protocol version 1.1
 class CClientProxy1_1 : public CClientProxy1_0 {
@@ -33,5 +32,3 @@ public:
 							SInt32 count, KeyButton);
 	virtual void		keyUp(KeyID, KeyModifierMask, KeyButton);
 };
-
-#endif

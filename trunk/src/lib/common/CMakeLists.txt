@@ -21,6 +21,10 @@ if (SYNERGY_ADD_HEADERS)
 	list(APPEND sources ${headers})
 endif()
 
+include_directories(
+	../
+)
+
 if (UNIX)
 	include_directories(
 		../../..

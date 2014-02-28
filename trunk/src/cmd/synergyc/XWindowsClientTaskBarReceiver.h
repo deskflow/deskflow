@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CXWINDOWSCLIENTTASKBARRECEIVER_H
-#define CXWINDOWSCLIENTTASKBARRECEIVER_H
+#pragma once
 
-#include "CClientTaskBarReceiver.h"
+#include "synergyc/ClientTaskBarReceiver.h"
 
 class CBufferedLogOutputter;
 class IEventQueue;
@@ -37,5 +36,3 @@ public:
 	virtual void		primaryAction();
 	virtual const Icon	getIcon() const;
 };
-
-#endif

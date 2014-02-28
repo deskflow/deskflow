@@ -16,15 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IPLATFORMSCREEN_H
-#define IPLATFORMSCREEN_H
+#pragma once
 
-#include "IScreen.h"
-#include "IPrimaryScreen.h"
-#include "ISecondaryScreen.h"
-#include "IKeyState.h"
-#include "ClipboardTypes.h"
-#include "OptionTypes.h"
+#include "synergy/clipboard_types.h"
+#include "synergy/IScreen.h"
+#include "synergy/IPrimaryScreen.h"
+#include "synergy/ISecondaryScreen.h"
+#include "synergy/IKeyState.h"
+#include "synergy/option_types.h"
 
 class IClipboard;
 
@@ -223,5 +222,3 @@ protected:
 	*/
 	virtual void		handleSystemEvent(const CEvent& event, void*) = 0;
 };
-
-#endif

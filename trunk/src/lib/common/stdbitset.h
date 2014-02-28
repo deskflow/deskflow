@@ -16,6 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdpre.h"
+#include "common/stdpre.h"
 #include <bitset>
-#include "stdpost.h"
+#include "common/stdpost.h"

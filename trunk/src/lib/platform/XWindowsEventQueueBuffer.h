@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CXWINDOWSEVENTQUEUEBUFFER_H
-#define CXWINDOWSEVENTQUEUEBUFFER_H
+#pragma once
 
-#include "IEventQueueBuffer.h"
-#include "CMutex.h"
-#include "stdvector.h"
+#include "mt/Mutex.h"
+#include "base/IEventQueueBuffer.h"
+#include "common/stdvector.h"
+
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
@@ -62,5 +62,3 @@ private:
 	int					m_pipefd[2];
 	IEventQueue*		m_events;
 };
-
-#endif

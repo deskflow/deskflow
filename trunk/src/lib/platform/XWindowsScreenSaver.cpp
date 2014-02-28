@@ -16,13 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CXWindowsScreenSaver.h"
-#include "CXWindowsUtil.h"
-#include "IPlatformScreen.h"
-#include "CLog.h"
-#include "CEvent.h"
-#include "IEventQueue.h"
-#include "TMethodEventJob.h"
+#include "platform/XWindowsScreenSaver.h"
+
+#include "platform/XWindowsUtil.h"
+#include "synergy/IPlatformScreen.h"
+#include "base/Log.h"
+#include "base/Event.h"
+#include "base/IEventQueue.h"
+#include "base/TMethodEventJob.h"
+
 #include <X11/Xatom.h>
 #if HAVE_X11_EXTENSIONS_XTEST_H
 #	include <X11/extensions/XTest.h>

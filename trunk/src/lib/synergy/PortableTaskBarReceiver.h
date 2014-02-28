@@ -18,13 +18,13 @@
 
 #pragma once
 
-#include "CString.h"
-#include "IArchTaskBarReceiver.h"
-#include "stdvector.h"
-#include "CEvent.h"
-#include "INode.h"
-#include "LogOutputters.h"
-#include "CEventTypes.h"
+#include "synergy/INode.h"
+#include "arch/IArchTaskBarReceiver.h"
+#include "base/log_outputters.h"
+#include "base/EventTypes.h"
+#include "base/Event.h"
+#include "base/String.h"
+#include "common/stdvector.h"
 
 class IEventQueue;
 

@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IARCHCONSOLE_H
-#define IARCHCONSOLE_H
+#pragma once
 
-#include "IInterface.h"
-#include "ELevel.h"
+#include "common/IInterface.h"
+#include "base/ELevel.h"
 
 //! Interface for architecture dependent console output
 /*!
@@ -65,5 +64,3 @@ public:
 
 	//@}
 };
-
-#endif

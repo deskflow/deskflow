@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IARCHMULTITHREAD_H
-#define IARCHMULTITHREAD_H
+#pragma once
 
-#include "IInterface.h"
+#include "common/IInterface.h"
 
 /*!      
 \class CArchCondImpl
@@ -272,5 +271,3 @@ public:
 
 	//@}
 };
-
-#endif

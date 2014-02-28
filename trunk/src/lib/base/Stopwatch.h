@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSTOPWATCH_H
-#define CSTOPWATCH_H
+#pragma once
 
-#include "common.h"
+#include "common/common.h"
 
 //! A timer class
 /*!
@@ -108,5 +107,3 @@ private:
 	bool				m_triggered;
 	bool				m_stopped;
 };
-
-#endif

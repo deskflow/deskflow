@@ -18,15 +18,16 @@
 
 #pragma once
 
-#include "CApp.h"
-#include "CString.h"
-#include "CConfig.h"
-#include "CNetworkAddress.h"
-#include "CArch.h"
-#include "IArchMultithread.h"
-#include "CArgsBase.h"
+#include "synergy/App.h"
+#include "base/String.h"
+#include "server/Config.h"
+#include "net/NetworkAddress.h"
+#include "arch/Arch.h"
+#include "arch/IArchMultithread.h"
+#include "synergy/ArgsBase.h"
+#include "base/EventTypes.h"
+
 #include <map>
-#include "CEventTypes.h"
 
 enum EServerState {
 	kUninitialized,

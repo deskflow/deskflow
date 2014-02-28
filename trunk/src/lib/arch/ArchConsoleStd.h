@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "IArchConsole.h"
+#include "arch/IArchConsole.h"
 
 //! Cross platform implementation of IArchConsole
 class CArchConsoleStd : public IArchConsole {

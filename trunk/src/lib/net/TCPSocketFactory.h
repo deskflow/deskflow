@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CTCPSOCKETFACTORY_H
-#define CTCPSOCKETFACTORY_H
+#pragma once
 
-#include "ISocketFactory.h"
+#include "net/ISocketFactory.h"
 
 class IEventQueue;
 class CSocketMultiplexer;
@@ -38,5 +37,3 @@ private:
 	IEventQueue*		m_events;
 	CSocketMultiplexer* m_socketMultiplexer;
 };
-
-#endif

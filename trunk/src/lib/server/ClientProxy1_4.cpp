@@ -16,15 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CClientProxy1_4.h"
-#include "CProtocolUtil.h"
-#include "CLog.h"
-#include "IEventQueue.h"
-#include "TMethodEventJob.h"
+#include "server/ClientProxy1_4.h"
+
+#include "server/Server.h"
+#include "synergy/ProtocolUtil.h"
+#include "io/CryptoStream.h"
+#include "base/Log.h"
+#include "base/IEventQueue.h"
+#include "base/TMethodEventJob.h"
+
 #include <cstring>
 #include <memory>
-#include "CServer.h"
-#include "CCryptoStream.h"
 
 //
 // CClientProxy1_4

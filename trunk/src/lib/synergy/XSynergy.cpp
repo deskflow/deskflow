@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "XSynergy.h"
-#include "CStringUtil.h"
+#include "synergy/XSynergy.h"
+#include "base/StringUtil.h"
 
 //
 // XBadClient

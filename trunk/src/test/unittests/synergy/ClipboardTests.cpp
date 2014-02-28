@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <../../gtest.h>
-#include "CClipboard.h"
+#include "synergy/Clipboard.h"
+
+#include "test/global/gtest.h"
 
 TEST(CClipboardTests, empty_openCalled_returnsTrue)
 {

@@ -16,14 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-
-#include "COSXKeyState.h"
+#include "platform/OSXKeyState.h"
 #include "synergy/CMockKeyMap.h"
 #include "synergy/CMockEventQueue.h"
+#include "base/Log.h"
 
-#include "CLog.h"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 #define SHIFT_ID_L kKeyShift_L
 #define SHIFT_ID_R kKeyShift_R

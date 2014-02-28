@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CClassFactory.h"
-#include "CDataHandlerExtension.h"
+#include "synwinxt/ClassFactory.h"
+#include "synwinxt/DataHandlerExtension.h"
+
 #include <Shlwapi.h>
 
 extern LONG g_refCount;

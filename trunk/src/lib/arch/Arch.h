@@ -33,42 +33,41 @@
 // class lazy-loaded so that apps like the daemon don't load
 // stuff when they don't need it.
 
-#ifndef CARCH_H
-#define CARCH_H
+#pragma once
 
-#include "common.h"
+#include "common/common.h"
 
 #if SYSAPI_WIN32
-#	include "CArchConsoleWindows.h"
-#	include "CArchDaemonWindows.h"
-#	include "CArchFileWindows.h"
-#	include "CArchLogWindows.h"
-#	include "CArchMiscWindows.h"
-#	include "CArchMultithreadWindows.h"
-#	include "CArchNetworkWinsock.h"
-#	include "CArchSleepWindows.h"
-#	include "CArchStringWindows.h"
-#	include "CArchSystemWindows.h"
-#	include "CArchTaskBarWindows.h"
-#	include "CArchTimeWindows.h"
-#	include "CArchPluginWindows.h"
-#	include "CArchInternetWindows.h"
+#	include "arch/win32/ArchConsoleWindows.h"
+#	include "arch/win32/ArchDaemonWindows.h"
+#	include "arch/win32/ArchFileWindows.h"
+#	include "arch/win32/ArchLogWindows.h"
+#	include "arch/win32/ArchMiscWindows.h"
+#	include "arch/win32/ArchMultithreadWindows.h"
+#	include "arch/win32/ArchNetworkWinsock.h"
+#	include "arch/win32/ArchSleepWindows.h"
+#	include "arch/win32/ArchStringWindows.h"
+#	include "arch/win32/ArchSystemWindows.h"
+#	include "arch/win32/ArchTaskBarWindows.h"
+#	include "arch/win32/ArchTimeWindows.h"
+#	include "arch/win32/ArchPluginWindows.h"
+#	include "arch/win32/ArchInternetWindows.h"
 #elif SYSAPI_UNIX
-#	include "CArchConsoleUnix.h"
-#	include "CArchDaemonUnix.h"
-#	include "CArchFileUnix.h"
-#	include "CArchLogUnix.h"
+#	include "arch/unix/ArchConsoleUnix.h"
+#	include "arch/unix/ArchDaemonUnix.h"
+#	include "arch/unix/ArchFileUnix.h"
+#	include "arch/unix/ArchLogUnix.h"
 #	if HAVE_PTHREAD
-#		include "CArchMultithreadPosix.h"
+#		include "arch/unix/ArchMultithreadPosix.h"
 #	endif
-#	include "CArchNetworkBSD.h"
-#	include "CArchSleepUnix.h"
-#	include "CArchStringUnix.h"
-#	include "CArchSystemUnix.h"
-#	include "CArchTaskBarXWindows.h"
-#	include "CArchTimeUnix.h"
-#	include "CArchPluginUnix.h"
-#	include "CArchInternetUnix.h"
+#	include "arch/unix/ArchNetworkBSD.h"
+#	include "arch/unix/ArchSleepUnix.h"
+#	include "arch/unix/ArchStringUnix.h"
+#	include "arch/unix/ArchSystemUnix.h"
+#	include "arch/unix/ArchTaskBarXWindows.h"
+#	include "arch/unix/ArchTimeUnix.h"
+#	include "arch/unix/ArchPluginUnix.h"
+#	include "arch/unix/ArchInternetUnix.h"
 #endif
 
 /*!
@@ -144,5 +143,3 @@ public:
 private:
 	CArchMutex			m_mutex;
 };
-
-#endif

@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CTCPSocketFactory.h"
-#include "CTCPSocket.h"
-#include "CTCPListenSocket.h"
+#include "net/TCPSocketFactory.h"
+
+#include "net/TCPSocket.h"
+#include "net/TCPListenSocket.h"
 
 //
 // CTCPSocketFactory

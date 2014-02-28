@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IARCHDAEMON_H
-#define IARCHDAEMON_H
+#pragma once
 
-#include "IInterface.h"
-#include "CString.h"
+#include "common/IInterface.h"
+#include "base/String.h"
 
 //! Interface for architecture dependent daemonizing
 /*!
@@ -128,5 +127,3 @@ public:
 
 	//@}
 };
-
-#endif

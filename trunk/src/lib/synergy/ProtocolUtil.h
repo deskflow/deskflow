@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CPROTOCOLUTIL_H
-#define CPROTOCOLUTIL_H
+#pragma once
 
-#include "BasicTypes.h"
-#include "XIO.h"
+#include "io/XIO.h"
+#include "base/EventTypes.h"
+
 #include <stdarg.h>
 
 namespace synergy { class IStream; }
@@ -94,6 +94,3 @@ public:
 	// XBase overrides
 	virtual CString		getWhat() const throw();
 };
-
-#endif
-

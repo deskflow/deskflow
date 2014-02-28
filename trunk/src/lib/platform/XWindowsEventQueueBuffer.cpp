@@ -16,11 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CXWindowsEventQueueBuffer.h"
-#include "CLock.h"
-#include "CThread.h"
-#include "CEvent.h"
-#include "IEventQueue.h"
+#include "platform/XWindowsEventQueueBuffer.h"
+
+#include "mt/Lock.h"
+#include "mt/Thread.h"
+#include "base/Event.h"
+#include "base/IEventQueue.h"
+
 #include <fcntl.h>
 #if HAVE_UNISTD_H
 #	include <unistd.h>

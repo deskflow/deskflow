@@ -16,22 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSERVER_H
-#define CSERVER_H
+#pragma once
 
-#include "CConfig.h"
-#include "CClipboard.h"
-#include "ClipboardTypes.h"
-#include "KeyTypes.h"
-#include "MouseTypes.h"
-#include "CEvent.h"
-#include "CStopwatch.h"
-#include "stdmap.h"
-#include "stdset.h"
-#include "stdvector.h"
-#include "INode.h"
-#include "CEventTypes.h"
-#include "CDragInformation.h"
+#include "server/Config.h"
+#include "synergy/clipboard_types.h"
+#include "synergy/Clipboard.h"
+#include "synergy/key_types.h"
+#include "synergy/mouse_types.h"
+#include "synergy/INode.h"
+#include "synergy/DragInformation.h"
+#include "base/Event.h"
+#include "base/Stopwatch.h"
+#include "base/EventTypes.h"
+#include "common/stdmap.h"
+#include "common/stdset.h"
+#include "common/stdvector.h"
 
 class CBaseClientProxy;
 class CEventQueueTimer;
@@ -474,5 +473,3 @@ private:
 	bool				m_ignoreFileTransfer;
 	bool				m_enableDragDrop;
 };
-
-#endif

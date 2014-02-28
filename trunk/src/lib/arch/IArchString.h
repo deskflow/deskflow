@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IARCHSTRING_H
-#define IARCHSTRING_H
+#pragma once
 
-#include "IInterface.h"
-#include "BasicTypes.h"
+#include "common/IInterface.h"
+#include "common/basic_types.h"
+
 #include <stdarg.h>
 
 //! Interface for architecture dependent string operations
@@ -70,5 +70,3 @@ public:
 
 	//@}
 };
-
-#endif

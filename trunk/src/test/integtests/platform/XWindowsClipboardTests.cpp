@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
+#include "platform/XWindowsClipboard.h"
+
 #include <gtest/gtest.h>
-#include "CXWindowsClipboard.h"
+#include <iostream>
 
 class CXWindowsClipboardTests : public ::testing::Test
 {

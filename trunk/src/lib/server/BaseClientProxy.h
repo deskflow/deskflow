@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CBASECLIENTPROXY_H
-#define CBASECLIENTPROXY_H
+#pragma once
 
-#include "IClient.h"
-#include "CString.h"
+#include "synergy/IClient.h"
+#include "base/String.h"
 
 //! Generic proxy for client or primary
 class CBaseClientProxy : public IClient {
@@ -87,5 +86,3 @@ private:
 	CString				m_name;
 	SInt32				m_x, m_y;
 };
-
-#endif

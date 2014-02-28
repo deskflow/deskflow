@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CPRIMARYCLIENT_H
-#define CPRIMARYCLIENT_H
+#pragma once
 
-#include "CBaseClientProxy.h"
-#include "ProtocolTypes.h"
+#include "server/BaseClientProxy.h"
+#include "synergy/protocol_types.h"
 
 class CScreen;
 
@@ -152,5 +151,3 @@ private:
 	bool				m_clipboardDirty[kClipboardEnd];
 	SInt32				m_fakeInputCount;
 };
-
-#endif

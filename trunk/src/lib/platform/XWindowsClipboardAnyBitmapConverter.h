@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CXWINDOWSCLIPBOARDANYBITMAPCONVERTER_H
-#define CXWINDOWSCLIPBOARDANYBITMAPCONVERTER_H
+#pragma once
 
-#include "CXWindowsClipboard.h"
+#include "platform/XWindowsClipboard.h"
 
 //! Convert to/from some text encoding
 class CXWindowsClipboardAnyBitmapConverter :
@@ -59,5 +58,3 @@ protected:
 	virtual CString		doToIClipboard(const CString&,
 							UInt32& w, UInt32& h, UInt32& depth) const = 0;
 };
-
-#endif

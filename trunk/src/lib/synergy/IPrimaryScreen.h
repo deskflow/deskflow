@@ -16,14 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IPRIMARYSCREEN_H
-#define IPRIMARYSCREEN_H
+#pragma once
 
-#include "IInterface.h"
-#include "KeyTypes.h"
-#include "MouseTypes.h"
-#include "CEvent.h"
-#include "CEventTypes.h"
+#include "synergy/key_types.h"
+#include "synergy/mouse_types.h"
+#include "base/Event.h"
+#include "base/EventTypes.h"
+#include "common/IInterface.h"
 
 //! Primary screen interface
 /*!
@@ -164,5 +163,3 @@ public:
 
 	//@}
 };
-
-#endif

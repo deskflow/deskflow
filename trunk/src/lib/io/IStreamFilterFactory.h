@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ISTREAMFILTERFACTORY_H
-#define ISTREAMFILTERFACTORY_H
+#pragma once
 
-#include "IInterface.h"
+#include "common/IInterface.h"
 
 using namespace synergy;
 namespace synergy { class IStream; }
@@ -37,5 +36,3 @@ public:
 	*/
 	virtual synergy::IStream*	create(IStream* stream, bool adoptStream) = 0;
 };
-
-#endif

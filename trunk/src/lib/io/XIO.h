@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef XIO_H
-#define XIO_H
+#pragma once
 
-#include "XBase.h"
+#include "base/XBase.h"
 
 //! Generic I/O exception
 XBASE_SUBCLASS(XIO, XBase);
@@ -54,5 +53,3 @@ XBASE_SUBCLASS_WHAT(XIOWouldBlock, XIO);
 Thrown when the user enters an invalid crypto mode.
 */
 XBASE_SUBCLASS_WHAT(XIOBadCryptoMode, XIO);
-
-#endif

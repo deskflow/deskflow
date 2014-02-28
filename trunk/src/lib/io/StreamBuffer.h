@@ -16,12 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSTREAMBUFFER_H
-#define CSTREAMBUFFER_H
+#pragma once
 
-#include "BasicTypes.h"
-#include "stdlist.h"
-#include "stdvector.h"
+#include "base/EventTypes.h"
+#include "common/stdlist.h"
+#include "common/stdvector.h"
 
 //! FIFO of bytes
 /*!
@@ -78,5 +77,3 @@ private:
 	UInt32				m_size;
 	UInt32				m_headUsed;
 };
-
-#endif

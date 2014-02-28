@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IARCHTASKBARRECEIVER_H
-#define IARCHTASKBARRECEIVER_H
+#pragma once
 
-#include "IInterface.h"
-#include "stdstring.h"
+#include "base/String.h"
+#include "common/IInterface.h"
 
 class IScreen;
 class INode;
@@ -97,5 +96,3 @@ public:
 
 	//@}
 };
-
-#endif

@@ -15,8 +15,9 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "CCryptoMode.h"
-#include "XIO.h"
+#include "io/CryptoMode.h"
+
+#include "io/XIO.h"
 
 using namespace CryptoPP;
 
