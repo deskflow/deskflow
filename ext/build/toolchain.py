@@ -635,6 +635,8 @@ class InternalCommands:
 			raise Exception('Not implemented for platform: ' + sys.platform)
 		
 	def doxygen(self):
+		self.enableMakeGui = False
+		
 		# The conf generates doc/doxygen.cfg from cmake/doxygen.cfg.in
 		self.configure(self.defaultTarget, '-DCONF_DOXYGEN:BOOL=TRUE')
 
@@ -1346,7 +1348,7 @@ class CommandHandler:
 		print 'Not yet implemented: install'
 	
 	def doxygen(self):
-		self.ic.doxygen ()
+		self.ic.doxygen()
 	
 	def dist(self):
 		
