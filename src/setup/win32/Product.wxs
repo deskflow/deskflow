@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
+  <?include Include.wxi?>
+
+  <Product Id="*" Name="$(var.Name)" Language="1033" Version="$(var.Version)" Manufacturer="$(var.Author)" UpgradeCode="E87C85E3-69FD-4F00-BBB4-69C5FD615D47">
+
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+    <UIRef Id="WixUI_InstallDir" />
+
+    <Feature Id="ProductFeature" Title="$(var.Name)">
+      <ComponentGroupRef Id="ProductComponents" />
+    </Feature>
+
+    <Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
+
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.ResPath)\License.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="$(var.ResPath)\dialog.bmp" />
+
+    <Property Id="ARPPRODUCTICON" Value="synergy.ico" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    
+    <Property Id="LEGACY_UNINSTALL_EXISTS">
+      <RegistrySearch
+        Id="LegacyRegistrySearch" Root="HKLM"
+        Key="SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Synergy"
+        Name="UninstallString" Win64="no" Type="file">
+        <FileSearch Id="LegacyFileSearch" Name="uninstall.exe" />
+      </RegistrySearch>
+    </Property>
+    
+    <Condition Message="An existing installation of [ProductName] was detected, please uninstall it before continuing.">
+      NOT LEGACY_UNINSTALL_EXISTS
+    </Condition>
+
+    <CustomAction Id="StartGui" FileKey="GuiFile" ExeCommand="" Return="asyncNoWait" />
+
+    <InstallExecuteSequence>
+      <Custom Action="StartGui" After="InstallFinalize">NOT Installed</Custom>
+    </InstallExecuteSequence>
+    
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="$(var.ProgramFilesFolder)">
+        <Directory Id="INSTALLFOLDER" Name="$(var.Name)" />
+      </Directory>
+      <Directory Id="ProgramMenuFolder" />
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      
+      <Component Id="Service" Guid="EC9AD3B0-277C-4157-B5C8-5FD5B6A5F4AD" >
+        <File Source="$(var.BinPath)/synergyd.exe" />
+        <ServiceInstall
+            Id="ServiceInstall" Name="Synergy" DisplayName="[ProductName]"
+            Description="Controls the [ProductName] foreground processes."
+            Type="ownProcess" Start="auto" ErrorControl="normal" />
+        <ServiceControl
+            Id="ServiceControl" Name="Synergy"
+            Start="install" Stop="both" Remove="uninstall" />
+      </Component>
+			
+      <Component Id="Core" Guid="BBF05BE7-1BC9-444B-8A24-EF35D0B44D39">
+        <File Source="$(var.BinPath)/synergys.exe">
+          <fire:FirewallException Id="SereverFirewallException" Name="[ProductName]" Scope="any" />
+        </File>
+        <File Source="$(var.BinPath)/synergyc.exe" />
+        <File Source="$(var.BinPath)/syntool.exe" />
+        <File Source="$(var.BinPath)/synwinhk.dll" />
+      </Component>
+      
+      <Component Id="ShellEx" Guid="77A9CA73-A5A7-4EF9-88CC-F2E014EF73EA">
+        <File Source="$(var.BinPath)/synwinxt.dll" />
+        <RegistryKey Root="HKCR" Key="*\shellex\DataHandler">
+          <RegistryValue Value="{1BE208B1-BC21-4E39-8BB6-A5DC3F51479E}" Type="string" />
+        </RegistryKey>
+        <RegistryKey Root="HKCR" Key="CLSID\{1BE208B1-BC21-4E39-8BB6-A5DC3F51479E}\InprocServer32">
+          <RegistryValue Value="[INSTALLFOLDER]synwinxt.dll" Type="string" />
+          <RegistryValue Name="ThreadingModel" Value="Apartment" Type="string" />
+        </RegistryKey>
+      </Component>
+      
+      <Component Id="Gui" Guid="BAC8149B-6287-45BF-9C27-43D71ED40214">
+        <File Id="GuiFile" Source="$(var.BinPath)/synergy.exe" KeyPath="yes">
+          <Shortcut Id="GuiShortcut" Name="$(var.Name)" Directory="ProgramMenuFolder" Icon="synergy.ico" Advertise="yes" />
+        </File>
+      </Component>
+      
+    </ComponentGroup>
+  </Fragment>
+</Wix>

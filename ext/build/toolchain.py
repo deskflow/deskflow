@@ -407,7 +407,7 @@ class InternalCommands:
 		else:
 			for target in targets:
 				if generator.startswith('Visual Studio'):
-					self.run_vcbuild(generator, target)
+					self.run_vcbuild(generator, target, self.sln_filepath())
 				elif generator == 'Xcode':
 					cmd = self.xcodebuild_cmd + ' -configuration ' + target.capitalize()
 					self.runBuildCommand(cmd, target)
@@ -560,12 +560,12 @@ class InternalCommands:
 			# special case for version 10, use new /target:clean
 			if generator.startswith('Visual Studio 10'):
 				for target in targets:
-					self.run_vcbuild(generator, target, '/target:clean')
+					self.run_vcbuild(generator, target, self.sln_filepath(), '/target:clean')
 				
 			# any other version of visual studio, use /clean
 			elif generator.startswith('Visual Studio'):
 				for target in targets:
-					self.run_vcbuild(generator, target, '/clean')
+					self.run_vcbuild(generator, target, self.sln_filepath(), '/clean')
 
 		else:
 			cmd = ''
@@ -685,7 +685,8 @@ class InternalCommands:
 			
 		elif type == 'win':
 			if sys.platform == 'win32':
-				self.distNsis(vcRedistDir, qtDir)
+				#self.distNsis(vcRedistDir, qtDir)
+				self.distWix()
 			else:
 				package_unsupported = True
 			
@@ -771,6 +772,33 @@ class InternalCommands:
 		err = os.system(cmd)
 		self.restore_chdir()
 
+	def distWix(self):
+		generator = self.getGeneratorFromConfig().cmakeName
+		
+		arch = 'x86'
+		if generator.endswith('Win64'):
+			arch = 'x64'
+		
+		version = self.getVersionFromCmake()
+		args = "/p:DefineConstants=\"Version=%s\"" % version
+		
+		self.run_vcbuild(generator, 'release', 'synergy.sln', args, 'src/setup/win32/')
+		
+		filename = "%s-%s-Windows-%s.msi" % (
+			self.project, 
+			version,
+			arch)
+			
+		old = "bin/Release/synergy.msi"
+		new = "bin/Release/%s" % (filename)
+		
+		try:
+			os.remove(new)
+		except OSError:
+			pass
+		
+		os.rename(old, new)
+		
 	def distNsis(self, vcRedistDir, qtDir):
 		
 		if vcRedistDir == '':
@@ -872,7 +900,7 @@ class InternalCommands:
 		elif type == 'win':
 			
 			# get platform based on last generator used
-			ext = 'exe'
+			ext = 'msi'
 			generator = self.getGeneratorFromConfig().cmakeName
 			if generator.find('Win64') != -1:
 				platform = 'Windows-x64'
@@ -1167,7 +1195,7 @@ class InternalCommands:
 		
 		return path
 
-	def run_vcbuild(self, generator, mode, args=''):
+	def run_vcbuild(self, generator, mode, solution, args='', dir=''):
 		import platform
 		
 		# os_bits should be loaded with '32bit' or '64bit'
@@ -1189,6 +1217,7 @@ class InternalCommands:
 		else: # target = 32bit
 			vcvars_platform = 'x86' # 32/64bit OS building 32bit app
 			config_platform = 'Win32'
+		
 		if mode == 'release':
 			config = 'Release'
 		else:
@@ -1197,14 +1226,16 @@ class InternalCommands:
 		if generator.startswith('Visual Studio 10'):
 			cmd = ('@echo off\n'
 				'call "%s" %s \n'
+				'cd "%s"\n'
 				'msbuild /nologo %s /p:Configuration="%s" /p:Platform="%s" "%s"'
-				) % (self.get_vcvarsall(generator), vcvars_platform, args, config, config_platform, self.sln_filepath())
+				) % (self.get_vcvarsall(generator), vcvars_platform, dir, args, config, config_platform, solution)
 		else:
 			config = config + '|' + config_platform
 			cmd = ('@echo off\n'
 				'call "%s" %s \n'
+				'cd "%s"\n'
 				'vcbuild /nologo %s "%s" "%s"'
-				) % (self.get_vcvarsall(generator), vcvars_platform, args, self.sln_filepath(), config)
+				) % (self.get_vcvarsall(generator), vcvars_platform, dir, args, solution, config)
 		
 		# Generate a batch file, since we can't use environment variables directly.
 		temp_bat = self.getBuildDir() + r'\vcbuild.bat'
