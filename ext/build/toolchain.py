@@ -790,7 +790,7 @@ class InternalCommands:
 			arch)
 			
 		old = "bin/Release/synergy.msi"
-		new = "bin/Release/%s" % (filename)
+		new = "bin/%s" % (filename)
 		
 		try:
 			os.remove(new)
