@@ -21,6 +21,7 @@
 
 #include <Windows.h>
 #include <strsafe.h>
+#include <sstream>
 
 #pragma comment(lib, "Shlwapi.lib")
 
@@ -46,21 +47,23 @@ HRESULT unregisterShellExtDataHandler(CHAR* fileType, const CLSID& clsid);
 HRESULT unregisterInprocServer(const CLSID& clsid);
 
 void
-outputDebugStringF(const char* str, ...)
+log(const char* str, ...)
 {
 	char buf[2048];
 
 	va_list ptr;
-	va_start(ptr,str);
-	vsprintf_s(buf,str,ptr);
+	va_start(ptr, str);
+	vsprintf_s(buf, str, ptr);
 
-	OutputDebugStringA(buf);
+	std::stringstream ss;
+	ss << "synwinxt-" << VERSION << ": " << buf << std::endl;
+	OutputDebugStringA(ss.str().c_str());
 }
 
 BOOL APIENTRY
 DllMain(HMODULE module, DWORD reason, LPVOID reserved)
 {
-	outputDebugStringF("synwinxt: > DllMain, reason=%d\n", reason);
+	log("> DllMain, reason=%d", reason);
 
 	switch (reason) {
 	case DLL_PROCESS_ATTACH:
@@ -76,14 +79,15 @@ DllMain(HMODULE module, DWORD reason, LPVOID reserved)
 		break;
 	}
 
-	outputDebugStringF("synwinxt: < DllMain\n");
+	log("< DllMain");
 	return TRUE;
 }
 
+//#pragma comment(linker, "/export:DllGetClassObject,PRIVATE")
 STDAPI
 DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppvObj) 
 {
-	outputDebugStringF("synwinxt: > DllGetClassObject\n");
+	log("> DllGetClassObject");
 
 	HRESULT hr = E_OUTOFMEMORY; 
 	*ppvObj = NULL; 
@@ -94,29 +98,32 @@ DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppvObj)
 		classFactory->Release(); 
 	}
 
-	outputDebugStringF("synwinxt: < DllGetClassObject, hr=%d\n", hr);
+	log("< DllGetClassObject, hr=%d", hr);
 	return hr;
 }
 
+//#pragma comment(linker, "/export:DllCanUnloadNow,PRIVATE")
 STDAPI
 DllCanUnloadNow()
 {
-	outputDebugStringF("synwinxt: > DllCanUnloadNow, g_refCount=%d\n", g_refCount);
+	log("> DllCanUnloadNow, g_refCount=%d", g_refCount);
 	int r = g_refCount > 0 ? S_FALSE : S_OK;
-	outputDebugStringF("synwinxt: < DllCanUnloadNow, g_refCount=%d, r=%d\n", g_refCount, r);
+	log("< DllCanUnloadNow, g_refCount=%d, r=%d", g_refCount, r);
 	return r;
 }
+
+//#pragma comment(linker, "/export:DllRegisterServer,PRIVATE")
 STDAPI
 DllRegisterServer()
 {
-	outputDebugStringF("synwinxt: > DllRegisterServer\n");
+	log("> DllRegisterServer");
 
-	HRESULT hr;
+	/*HRESULT hr;
 
 	CHAR module[MAX_PATH];
 	if (GetModuleFileName(g_instance, module, ARRAYSIZE(module)) == 0) {
 		hr = HRESULT_FROM_WIN32(GetLastError());
-		outputDebugStringF("synwinxt: < DllRegisterServer, hr=%d\n", hr);
+		log("< DllRegisterServer, hr=%d", hr);
 		return hr;
 	}
 
@@ -131,21 +138,25 @@ DllRegisterServer()
 			g_CLSID);
 	}
 	
-	outputDebugStringF("synwinxt: < DllRegisterServer, hr=%d\n", hr);
-	return hr;
+	log("< DllRegisterServer, hr=%d", hr);
+	*/
+
+	log("< DllRegisterServer");
+	return S_OK;
 }
 
+//#pragma comment(linker, "/export:DllUnregisterServer,PRIVATE")
 STDAPI
 DllUnregisterServer()
 {
-	outputDebugStringF("synwinxt: > DllUnregisterServer\n");
-
+	log("> DllUnregisterServer");
+	/*
 	HRESULT hr = S_OK;
 
 	CHAR module[MAX_PATH];
 	if (GetModuleFileName(g_instance, module, ARRAYSIZE(module)) == 0) {
 		hr = HRESULT_FROM_WIN32(GetLastError());
-		outputDebugStringF("synwinxt: < DllRegisterServer, hr=%d\n", hr);
+		log("< DllRegisterServer, hr=%d", hr);
 		return hr;
 	}
 
@@ -154,14 +165,16 @@ DllUnregisterServer()
 		hr = unregisterShellExtDataHandler("*", g_CLSID);
 	}
 	
-	outputDebugStringF("synwinxt: < DllUnregisterServer, hr=%d\n", hr);
-	return hr;
-}
+	log("< DllUnregisterServer, hr=%d", hr);*/
 
+	log("< DllUnregisterServer");
+	return S_OK;
+}
+/*
 HRESULT
 registerInprocServer(CHAR* module, const CLSID& clsid, CHAR* threadModel)
 {
-	outputDebugStringF("synwinxt: > registerInprocServer\n");
+	log("> registerInprocServer");
 
 	if (module == NULL || threadModel == NULL) {
 		return E_INVALIDARG;
@@ -191,14 +204,14 @@ registerInprocServer(CHAR* module, const CLSID& clsid, CHAR* threadModel)
 		}
 	}
 	
-	outputDebugStringF("synwinxt: < registerInprocServer, hr=%d\n", hr);
+	log("< registerInprocServer, hr=%d", hr);
 	return hr;
 }
 
 HRESULT
 unregisterInprocServer(const CLSID& clsid)
 {
-	outputDebugStringF("synwinxt: > unregisterInprocServer\n");
+	log("> unregisterInprocServer");
 
 	HRESULT hr = S_OK;
 
@@ -216,10 +229,10 @@ unregisterInprocServer(const CLSID& clsid)
 	}
 	
 	if (FAILED(hr)) {
-		outputDebugStringF("synwinxt: < unregisterInprocServer, hr=FAILED\n");
+		log("< unregisterInprocServer, hr=FAILED");
 	}
 	else {
-		outputDebugStringF("synwinxt: < unregisterInprocServer, hr=%d\n", hr);
+		log("< unregisterInprocServer, hr=%d", hr);
 	}
 	return hr;
 }
@@ -227,7 +240,7 @@ unregisterInprocServer(const CLSID& clsid)
 HRESULT
 registerShellExtDataHandler(CHAR* fileType, const CLSID& clsid)
 {
-	outputDebugStringF("synwinxt: > registerShellExtDataHandler\n");
+	log("> registerShellExtDataHandler");
 
 	if (fileType == NULL) {
 		return E_INVALIDARG;
@@ -250,14 +263,14 @@ registerShellExtDataHandler(CHAR* fileType, const CLSID& clsid)
 		CArchMiscWindows::setValue(key, NULL, CLASSID);
 	}
 	
-	outputDebugStringF("synwinxt: < registerShellExtDataHandler, hr=%d\n", hr);
+	log("< registerShellExtDataHandler, hr=%d", hr);
 	return hr;
 }
 
 HRESULT
 unregisterShellExtDataHandler(CHAR* fileType, const CLSID& clsid)
 {
-	outputDebugStringF("synwinxt: > unregisterShellExtDataHandler\n");
+	log("> unregisterShellExtDataHandler");
 
 	if (fileType == NULL) {
 		return E_INVALIDARG;
@@ -278,10 +291,10 @@ unregisterShellExtDataHandler(CHAR* fileType, const CLSID& clsid)
 		hr = HRESULT_FROM_WIN32(RegDeleteTree(HKEY_CLASSES_ROOT, subkey));
 	}
 	
-	outputDebugStringF("synwinxt: < unregisterShellExtDataHandler, hr=%d\n", hr);
+	log("< unregisterShellExtDataHandler, hr=%d", hr);
 	return hr;
 }
-
+*/
 std::string
 getFileExt(const char* filenameCStr)
 {
@@ -296,7 +309,7 @@ getFileExt(const char* filenameCStr)
 void
 setDraggingFilename(const char* filename)
 {
-	outputDebugStringF("synwinxt: > setDraggingFilename, filename=%s\n", filename);
+	log("> setDraggingFilename, filename=%s", filename);
 	
 	// HACK: only handle files that are not .exe or .lnk
 	// dragging anything, including a selection marquee, from a program
@@ -308,23 +321,23 @@ setDraggingFilename(const char* filename)
 		memcpy(g_draggingFilename, filename, MAX_PATH);
 	}
 	else {
-		outputDebugStringF(
-			"synwinxt: ignoring filename=%s, ext=%s\n",
+		log(
+			"ignoring filename=%s, ext=%s",
 			filename, ext.c_str());
 	}
 
-	outputDebugStringF("synwinxt: < setDraggingFilename, g_draggingFilename=%s\n", g_draggingFilename);
+	log("< setDraggingFilename, g_draggingFilename=%s", g_draggingFilename);
 }
 
 void
 getDraggingFilename(char* filename)
 {
-	outputDebugStringF("synwinxt: > getDraggingFilename\n");
+	log("> getDraggingFilename");
 	memcpy(filename, g_draggingFilename, MAX_PATH);
 	
 	// mark string as empty once used, so we can't accidentally copy
 	// the same file more than once unless the user does this on purpose.
 	g_draggingFilename[0] = NULL;
 
-	outputDebugStringF("synwinxt: < getDraggingFilename, filename=%s\n", filename);
+	log("< getDraggingFilename, filename=%s", filename);
 }
