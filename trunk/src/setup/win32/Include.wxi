@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  
+  <?define Name="Synergy" ?>
+  <?define Author="The Synergy Project" ?>
+  
+  <?define BinPath="../../../bin/$(var.Configuration)" ?>
+  <?define ResPath="../../../res" ?>
+
+  <?ifndef Version ?>
+  <?define Version="1.2.3.4" ?>
+  <?endif?>
+  
+  <?if $(var.Platform) = "x64" ?>
+  <?define ProgramFilesFolder="ProgramFiles64Folder" ?>
+  <?else?>
+  <?define ProgramFilesFolder="ProgramFilesFolder" ?>
+  <?endif?>
+  
+</Include>
