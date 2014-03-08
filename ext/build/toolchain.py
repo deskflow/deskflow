@@ -782,7 +782,9 @@ class InternalCommands:
 		version = self.getVersionFromCmake()
 		args = "/p:DefineConstants=\"Version=%s\"" % version
 		
-		self.run_vcbuild(generator, 'release', 'synergy.sln', args, 'src/setup/win32/')
+		self.run_vcbuild(
+			generator, 'release', 'synergy.sln', args,
+			'src/setup/win32/', 'x86')
 		
 		filename = "%s-%s-Windows-%s.msi" % (
 			self.project, 
@@ -1195,7 +1197,7 @@ class InternalCommands:
 		
 		return path
 
-	def run_vcbuild(self, generator, mode, solution, args='', dir=''):
+	def run_vcbuild(self, generator, mode, solution, args='', dir='', config32='x86'):
 		import platform
 		
 		# os_bits should be loaded with '32bit' or '64bit'
@@ -1216,7 +1218,7 @@ class InternalCommands:
 			config_platform = 'x64'
 		else: # target = 32bit
 			vcvars_platform = 'x86' # 32/64bit OS building 32bit app
-			config_platform = 'Win32'
+			config_platform = config32
 		
 		if mode == 'release':
 			config = 'Release'
