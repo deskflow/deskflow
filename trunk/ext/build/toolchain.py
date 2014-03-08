@@ -1197,7 +1197,7 @@ class InternalCommands:
 		
 		return path
 
-	def run_vcbuild(self, generator, mode, solution, args='', dir='', config32='x86'):
+	def run_vcbuild(self, generator, mode, solution, args='', dir='', config32='Win32'):
 		import platform
 		
 		# os_bits should be loaded with '32bit' or '64bit'
