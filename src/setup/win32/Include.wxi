@@ -6,15 +6,18 @@
   
   <?define BinPath="../../../bin/$(var.Configuration)" ?>
   <?define ResPath="../../../res" ?>
+  <?define QtPath="C:\Qt\2010.02\qt\bin" ?>
 
   <?ifndef Version ?>
-  <?define Version="1.2.3.4" ?>
+  <?define Version="1.0.0" ?>
   <?endif?>
   
   <?if $(var.Platform) = "x64" ?>
   <?define ProgramFilesFolder="ProgramFiles64Folder" ?>
+  <?define PlatformSimpleName="64-bit" ?>
   <?else?>
   <?define ProgramFilesFolder="ProgramFilesFolder" ?>
+  <?define PlatformSimpleName="32-bit" ?>
   <?endif?>
   
 </Include>

@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
+<Wix
+  xmlns="http://schemas.microsoft.com/wix/2006/wi"
+  xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension"
+  xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  
   <?include Include.wxi?>
 
-  <Product Id="*" Name="$(var.Name)" Language="1033" Version="$(var.Version)" Manufacturer="$(var.Author)" UpgradeCode="E87C85E3-69FD-4F00-BBB4-69C5FD615D47">
-
-    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
-    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+  <Product
+      Id="*" Name="$(var.Name) ($(var.PlatformSimpleName))" Language="1033"
+      Version="$(var.Version)" Manufacturer="$(var.Author)"
+      UpgradeCode="E87C85E3-69FD-4F00-BBB4-69C5FD615D47">
+    
+    <Package InstallerVersion="300" Compressed="yes" InstallScope="perMachine" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of $(var.Name) is already installed." />
     <MediaTemplate EmbedCab="yes" />
     <UIRef Id="WixUI_InstallDir" />
 
     <Feature Id="ProductFeature" Title="$(var.Name)">
       <ComponentGroupRef Id="ProductComponents" />
+      <MergeRef Id="CRT" />
     </Feature>
 
     <Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
@@ -21,6 +29,7 @@
 
     <Property Id="ARPPRODUCTICON" Value="synergy.ico" />
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
     
     <Property Id="LEGACY_UNINSTALL_EXISTS">
       <RegistrySearch
@@ -31,22 +40,32 @@
       </RegistrySearch>
     </Property>
     
-    <Condition Message="An existing installation of [ProductName] was detected, please uninstall it before continuing.">
+    <Condition Message="An existing installation of $(var.Name) was detected, please uninstall it before continuing.">
       NOT LEGACY_UNINSTALL_EXISTS
     </Condition>
 
-    <CustomAction Id="StartGui" FileKey="GuiFile" ExeCommand="" Return="asyncNoWait" />
+    <CustomAction Id="StartGui" FileKey="GuiProgram" ExeCommand="" Return="asyncNoWait" />
 
     <InstallExecuteSequence>
       <Custom Action="StartGui" After="InstallFinalize">NOT Installed</Custom>
     </InstallExecuteSequence>
+
+    <util:RestartResource Id="RestartExplorer" Path="[EXPLORERPATH]" ProcessName="explorer.exe"/>
+
+    <Property Id="EXPLORERPATH" >
+      <DirectorySearch Id="FindExplorerDir" AssignToProperty="no" Depth="0" Path="[WindowsFolder]">
+        <FileSearch Id="FindExplorer" Name="explorer.exe" />
+      </DirectorySearch>
+    </Property>
     
   </Product>
 
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="$(var.ProgramFilesFolder)">
-        <Directory Id="INSTALLFOLDER" Name="$(var.Name)" />
+        <Directory Id="INSTALLFOLDER" Name="$(var.Name)">
+          <Merge Id="CRT" Language="0" SourceFile="$(env.CommonProgramFiles)\Merge Modules\Microsoft_VC100_CRT_x86.msm" DiskId="1" />
+        </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder" />
     </Directory>
@@ -55,41 +74,50 @@
   <Fragment>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       
-      <Component Id="Service" Guid="EC9AD3B0-277C-4157-B5C8-5FD5B6A5F4AD" >
-        <File Source="$(var.BinPath)/synergyd.exe" />
+      <Component Id="Core" Guid="EC9AD3B0-277C-4157-B5C8-5FD5B6A5F4AD">
+        
+        <File Source="$(var.BinPath)/synergyd.exe" KeyPath="yes" />
+        
         <ServiceInstall
-            Id="ServiceInstall" Name="Synergy" DisplayName="[ProductName]"
-            Description="Controls the [ProductName] foreground processes."
+            Id="ServiceInstall" Name="Synergy" DisplayName="$(var.Name)"
+            Description="Controls the $(var.Name) foreground processes."
             Type="ownProcess" Start="auto" ErrorControl="normal" />
+        
         <ServiceControl
             Id="ServiceControl" Name="Synergy"
             Start="install" Stop="both" Remove="uninstall" />
-      </Component>
-			
-      <Component Id="Core" Guid="BBF05BE7-1BC9-444B-8A24-EF35D0B44D39">
+
         <File Source="$(var.BinPath)/synergys.exe">
-          <fire:FirewallException Id="SereverFirewallException" Name="[ProductName]" Scope="any" />
+          <fire:FirewallException Id="SereverFirewallException" Name="$(var.Name)" Scope="any" />
         </File>
+        
         <File Source="$(var.BinPath)/synergyc.exe" />
         <File Source="$(var.BinPath)/syntool.exe" />
         <File Source="$(var.BinPath)/synwinhk.dll" />
-      </Component>
-      
-      <Component Id="ShellEx" Guid="77A9CA73-A5A7-4EF9-88CC-F2E014EF73EA">
         <File Source="$(var.BinPath)/synwinxt.dll" />
+        
         <RegistryKey Root="HKCR" Key="*\shellex\DataHandler">
           <RegistryValue Value="{1BE208B1-BC21-4E39-8BB6-A5DC3F51479E}" Type="string" />
         </RegistryKey>
+        
         <RegistryKey Root="HKCR" Key="CLSID\{1BE208B1-BC21-4E39-8BB6-A5DC3F51479E}\InprocServer32">
           <RegistryValue Value="[INSTALLFOLDER]synwinxt.dll" Type="string" />
           <RegistryValue Name="ThreadingModel" Value="Apartment" Type="string" />
         </RegistryKey>
+        
       </Component>
       
       <Component Id="Gui" Guid="BAC8149B-6287-45BF-9C27-43D71ED40214">
-        <File Id="GuiFile" Source="$(var.BinPath)/synergy.exe" KeyPath="yes">
+        <File Id="GuiProgram" Source="$(var.BinPath)/synergy.exe" KeyPath="yes">
           <Shortcut Id="GuiShortcut" Name="$(var.Name)" Directory="ProgramMenuFolder" Icon="synergy.ico" Advertise="yes" />
         </File>
+
+        <File Source="$(var.QtPath)\libgcc_s_dw2-1.dll" CompanionFile="GuiProgram" />
+        <File Source="$(var.QtPath)\mingwm10.dll" CompanionFile="GuiProgram" />
+        <File Source="$(var.QtPath)\QtCore4.dll" CompanionFile="GuiProgram" />
+        <File Source="$(var.QtPath)\QtGui4.dll" CompanionFile="GuiProgram" />
+        <File Source="$(var.QtPath)\QtNetwork4.dll" CompanionFile="GuiProgram" />
+        
       </Component>
       
     </ComponentGroup>
