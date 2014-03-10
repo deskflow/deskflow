@@ -7,14 +7,26 @@
   <?include Include.wxi?>
 
   <Product
-      Id="*" Name="$(var.Name) ($(var.PlatformSimpleName))" Language="1033"
-      Version="$(var.Version)" Manufacturer="$(var.Author)"
-      UpgradeCode="E87C85E3-69FD-4F00-BBB4-69C5FD615D47">
+      Id="*"
+      UpgradeCode="$(var.UpgradeGuid)"
+      Name="$(var.Name) ($(var.PlatformSimpleName))"
+      Language="1033"
+      Version="$(var.Version)"
+      Manufacturer="$(var.Author)">
     
     <Package InstallerVersion="300" Compressed="yes" InstallScope="perMachine" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of $(var.Name) is already installed." />
     <MediaTemplate EmbedCab="yes" />
     <UIRef Id="WixUI_InstallDir" />
+
+    <?if $(var.Platform) = "x86" ?>
+    <Condition Message="You are running a 64-bit version of Windows. Please install the 64-bit version of $(var.Name) instead of the 32-bit version.">NOT Msix64</Condition>
+    <?endif ?>
+    
+    <!-- causes ICE61 warning, but stops user from installing many instances from nightly builds. -->
+    <Upgrade Id="$(var.UpgradeGuid)">
+      <UpgradeVersion Minimum="0.0.0.0" Property="UPGRADE" />
+    </Upgrade>
 
     <Feature Id="ProductFeature" Title="$(var.Name)">
       <ComponentGroupRef Id="ProductComponents" />
@@ -64,7 +76,7 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="$(var.ProgramFilesFolder)">
         <Directory Id="INSTALLFOLDER" Name="$(var.Name)">
-          <Merge Id="CRT" Language="0" SourceFile="$(env.CommonProgramFiles)\Merge Modules\Microsoft_VC100_CRT_x86.msm" DiskId="1" />
+          <Merge Id="CRT" Language="0" SourceFile="$(var.CRT)" DiskId="1" />
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder" />
