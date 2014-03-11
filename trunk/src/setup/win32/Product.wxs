@@ -34,6 +34,7 @@
     </Feature>
 
     <Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
+    <Binary Id="Scripts" SourceFile="Scripts.vbs" />
 
     <WixVariable Id="WixUILicenseRtf" Value="$(var.ResPath)\License.rtf" />
     <WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\banner.bmp" />
@@ -56,10 +57,45 @@
       NOT LEGACY_UNINSTALL_EXISTS
     </Condition>
 
-    <CustomAction Id="StartGui" FileKey="GuiProgram" ExeCommand="" Return="asyncNoWait" />
-
+    <CustomAction Id="RestartExplorerPrompt" BinaryKey="Scripts" VBScriptCall="RestartExplorerPrompt" />
+    <CustomAction Id="RestartExplorer" BinaryKey="Scripts" VBScriptCall="RestartExplorer" Execute="deferred" Impersonate="yes" />
+    <CustomAction Id="StartGui" FileKey="GuiProgram" ExeCommand="" Return="asyncNoWait" Execute="deferred" Impersonate="yes" />
+    
+    <!--
+    generally it is ill-advised to use custom actions and vbscript,
+    as this makes it really hard to guarentee clean msi usage.
+    however, msi insists on checking for files-in-use before it
+    stops our service (which will turn up a ton of applications
+    using the hook and shellex dlls). its actually much cleaner for
+    us to disable the restart manager (MSIRESTARTMANAGERCONTROL) and
+    forcefully restart explorer.exe ourselves. patches welcome!
+    -->
     <InstallExecuteSequence>
-      <Custom Action="StartGui" After="InstallFinalize">NOT Installed</Custom>
+
+      <!--
+      ask the user if we can restart explorer, but only on install or
+      upgrade (known as "NOT Installed"), and only if not running in
+      passive/quiet mode.
+      -->
+      <Custom Action="RestartExplorerPrompt" Before="InstallFinalize">
+        NOT Installed AND (UILevel = 4 OR UILevel = 5)
+      </Custom>
+
+      <!--
+      if the user answered the restart explorer dialog, then this must
+      be an attented install, so it should be ok for us to restart 
+      explorer, start the gui, and potentially reboot.
+      -->
+      <Custom Action="RestartExplorer" After="RestartExplorerPrompt">
+        RESTART_EXPLORER="yes"
+      </Custom>
+      <Custom Action="StartGui" After="RestartExplorer">
+        RESTART_EXPLORER="yes"
+      </Custom>
+      <ScheduleReboot After="RestartExplorer">
+        RESTART_EXPLORER="no"
+      </ScheduleReboot>
+      
     </InstallExecuteSequence>
     
   </Product>
