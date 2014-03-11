@@ -61,14 +61,6 @@
     <InstallExecuteSequence>
       <Custom Action="StartGui" After="InstallFinalize">NOT Installed</Custom>
     </InstallExecuteSequence>
-
-    <util:RestartResource Id="RestartExplorer" Path="[EXPLORERPATH]" ProcessName="explorer.exe"/>
-
-    <Property Id="EXPLORERPATH" >
-      <DirectorySearch Id="FindExplorerDir" AssignToProperty="no" Depth="0" Path="[WindowsFolder]">
-        <FileSearch Id="FindExplorer" Name="explorer.exe" />
-      </DirectorySearch>
-    </Property>
     
   </Product>
 
