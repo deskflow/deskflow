@@ -2,8 +2,7 @@ Function RestartExplorerPrompt
     
     Dim message
     message = "The Windows Explorer process needs to be restarted. " & _
-        "A reboot is required if you do not wish to do this. " & vbCr & vbCr & _
-        "Would you like setup to restart the Windows Explorer process?"
+        vbCr & vbCr & "Would you like setup to do this?"
 
     answer = MsgBox(message, vbSystemModal Or vbYesNo Or vbQuestion, "Restart Explorer")
     
