@@ -17,27 +17,10 @@
 file(GLOB_RECURSE headers "*.h")
 file(GLOB_RECURSE sources "*.cpp")
 
-# remove arch files (specific arch added later).
-file(GLOB remove_arch "arch/*")
-list(REMOVE_ITEM headers ${remove_arch})
-list(REMOVE_ITEM sources ${remove_arch})
-
 # remove platform files (specific platform added later).
-file(GLOB remove_platform "platform/*")
+file(GLOB_RECURSE remove_platform "platform/*")
 list(REMOVE_ITEM headers ${remove_platform})
 list(REMOVE_ITEM sources ${remove_platform})
-
-# arch
-if (WIN32)
-	file(GLOB arch_sources "arch/ArchWindows*.cpp")
-	file(GLOB arch_headers "arch/ArchWindows*.h")
-elseif (UNIX)
-	file(GLOB arch_sources "arch/ArchUnix*.cpp")
-	file(GLOB arch_headers "arch/ArchUnix*.h")
-endif()
-
-list(APPEND sources ${arch_sources})
-list(APPEND headers ${arch_headers})
 
 # platform
 if (WIN32)
