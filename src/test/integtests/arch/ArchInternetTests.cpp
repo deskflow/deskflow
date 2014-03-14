@@ -15,16 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "arch/ArchInternetUnix.h"
+#include "arch/Arch.h"
 
 #include "test/global/gtest.h"
 
 #define TEST_URL "https://synergy-foss.org/tests/?testString"
 //#define TEST_URL "http://localhost/synergy/tests/?testString"
 
-TEST(CArchInternetWindowsTests, openWebPage)
+TEST(ArchInternetTests, get)
 {
-	CArchInternetUnix internet;
+	ARCH_INTERNET internet;
 	CString result = internet.get(TEST_URL);
 	ASSERT_EQ("Hello world!", result);
 }
