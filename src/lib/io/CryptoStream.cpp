@@ -77,7 +77,7 @@ CCryptoStream::read(void* out, UInt32 n)
 	m_decryption.processData(static_cast<byte*>(out), cypher, n);
 	logBuffer("plaintext", static_cast<byte*>(out), n);
 	delete[] cypher;
-	return result;
+	return static_cast<UInt32>(result);
 }
 
 void
