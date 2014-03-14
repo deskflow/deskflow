@@ -248,14 +248,11 @@ CDaemonApp::mainLoop(bool logToFile)
 		
 		DAEMON_RUNNING(false);
 	}
-	catch (XArch& e) {
-		LOG((CLOG_ERR "xarch exception: %s", e.what().c_str()));
-	}
 	catch (std::exception& e) {
-		LOG((CLOG_ERR "std exception: %s", e.what()));
+		LOG((CLOG_CRIT "An error occurred: %s", e.what()));
 	}
 	catch (...) {
-		LOG((CLOG_ERR "unrecognized error."));
+		LOG((CLOG_CRIT "An unknown error occurred.\n"));
 	}
 }
 
@@ -318,7 +315,7 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 						CLOG->setFilter(logLevel.c_str());
 					}
 					catch (XArch& e) {
-						LOG((CLOG_ERR "failed to save LogLevel setting, %s", e.what().c_str()));
+						LOG((CLOG_ERR "failed to save LogLevel setting, %s", e.what()));
 					}
 				}
 			}
@@ -335,7 +332,7 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 				ARCH->setting("Elevate", CString(cm->elevate() ? "1" : "0"));
 			}
 			catch (XArch& e) {
-				LOG((CLOG_ERR "failed to save settings, %s", e.what().c_str()));
+				LOG((CLOG_ERR "failed to save settings, %s", e.what()));
 			}
 
 #if SYSAPI_WIN32

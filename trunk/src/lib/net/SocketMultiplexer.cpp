@@ -200,7 +200,7 @@ CSocketMultiplexer::serviceThread(void*)
 			}
 		}
 		catch (XArchNetwork& e) {
-			LOG((CLOG_WARN "error in socket multiplexer: %s", e.what().c_str()));
+			LOG((CLOG_WARN "error in socket multiplexer: %s", e.what()));
 			status = 0;
 		}
 

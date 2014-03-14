@@ -63,7 +63,7 @@ public:
 };
 
 //! Generic exception architecture dependent library
-class XArch {
+class XArch : public std::exception {
 public:
 	XArch(XArchEval* adoptedEvaluator) : m_eval(adoptedEvaluator) { }
 	XArch(const std::string& msg) : m_eval(NULL), m_what(msg) { }
@@ -71,7 +71,7 @@ public:
 							m_what(e.m_what) { }
 	~XArch() { delete m_eval; }
 
-	std::string			what() const throw();
+	const char*			what() const throw();
 
 private:
 	XArchEval*			m_eval;

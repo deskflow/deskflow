@@ -22,7 +22,7 @@
 // XArch
 //
 
-std::string
+const char*
 XArch::what() const throw()
 {
 	try {
@@ -33,5 +33,5 @@ XArch::what() const throw()
 	catch (...) {
 		// ignore
 	}
-	return m_what;
+	return m_what.c_str();
 }

@@ -117,7 +117,7 @@ CTCPSocket::close()
 		}
 		catch (XArchNetwork& e) {
 			// ignore, there's not much we can do
-			LOG((CLOG_WARN "error closing socket: %s", e.what().c_str()));
+			LOG((CLOG_WARN "error closing socket: %s", e.what()));
 		}
 	}
 }
@@ -433,7 +433,7 @@ CTCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
 			ARCH->throwErrorOnSocket(m_socket);
 		}
 		catch (XArchNetwork& e) {
-			sendConnectionFailedEvent(e.what().c_str());
+			sendConnectionFailedEvent(e.what());
 			onDisconnected();
 			return newJob();
 		}
@@ -499,7 +499,7 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 		}
 		catch (XArchNetwork& e) {
 			// other write error
-			LOG((CLOG_WARN "error writing socket: %s", e.what().c_str()));
+			LOG((CLOG_WARN "error writing socket: %s", e.what()));
 			onDisconnected();
 			sendEvent(m_events->forIStream().outputError());
 			sendEvent(m_events->forISocket().disconnected());
@@ -546,7 +546,7 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 		}
 		catch (XArchNetwork& e) {
 			// ignore other read error
-			LOG((CLOG_WARN "error reading socket: %s", e.what().c_str()));
+			LOG((CLOG_WARN "error reading socket: %s", e.what()));
 		}
 	}
 

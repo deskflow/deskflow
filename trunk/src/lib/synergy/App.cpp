@@ -313,17 +313,11 @@ CApp::run(int argc, char** argv)
 		// using the exit(int) function!
 		result = e.getCode();
 	}
-	catch (XBase& e) {
-		LOG((CLOG_CRIT "Exception: %s\n", e.what()));
-	}
-	catch (XArch& e) {
-		LOG((CLOG_CRIT "Init failed: %s" BYE, e.what().c_str(), argsBase().m_pname));
-	}
 	catch (std::exception& e) {
-		LOG((CLOG_CRIT "Exception: %s\n", e.what()));
+		LOG((CLOG_CRIT "An error occurred: %s\n", e.what()));
 	}
 	catch (...) {
-		LOG((CLOG_CRIT "An unexpected exception occurred.\n"));
+		LOG((CLOG_CRIT "An unknown error occurred.\n"));
 	}
 
 	appUtil().beforeAppExit();
