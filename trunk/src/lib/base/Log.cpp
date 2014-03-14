@@ -54,17 +54,6 @@ static const int		g_defaultMaxPriority = kDEBUG;
 static const int		g_defaultMaxPriority = kINFO;
 #endif
 
-// length of longest string in g_priority
-static const int		g_maxPriorityLength = 7;
-
-// length of suffix string (": ")
-static const int		g_prioritySuffixLength = 2;
-
-// amount of padded required to fill in the priority prefix
-static const int		g_priorityPad = g_maxPriorityLength +
-										g_prioritySuffixLength;
-
-
 //
 // CLog
 //
