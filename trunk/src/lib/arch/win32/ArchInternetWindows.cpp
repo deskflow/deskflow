@@ -22,6 +22,7 @@
 
 #include <sstream>
 #include <Wininet.h>
+#include <Shlwapi.h>
 
 struct CWinINetUrl {
 	CString				m_scheme;
@@ -58,6 +59,27 @@ CArchInternetWindows::get(const CString& url)
 {
 	CWinINetRequest request(url);
 	return request.send();
+}
+
+CString
+CArchInternetWindows::urlEncode(const CString& url)
+{
+	TCHAR buffer[1024];
+	DWORD bufferSize = sizeof(buffer);
+
+	if (UrlEscape(url.c_str(), buffer, &bufferSize, URL_ESCAPE_UNSAFE) != S_OK) {
+		throw XArch(new XArchEvalWindows());
+	}
+
+	CString result(buffer);
+
+	// the win32 url encoding funcitons are pretty useless (to us) and only
+	// escape "unsafe" chars, but not + or =, so we need to replace these
+	// manually (and probably many other chars).
+	find_replace_all(result, "+", "%2B");
+	find_replace_all(result, "=", "%3D");
+
+	return result;
 }
 
 //

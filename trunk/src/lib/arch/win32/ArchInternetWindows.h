@@ -24,4 +24,5 @@
 class CArchInternetWindows {
 public:
 	CString				get(const CString& url);
+	CString				urlEncode(const CString& url);
 };

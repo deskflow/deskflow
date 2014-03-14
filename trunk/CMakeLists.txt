@@ -298,7 +298,7 @@ if (UNIX)
 
 else() # not-unix
 
-	list(APPEND libs Wtsapi32 Userenv Wininet comsuppw)
+	list(APPEND libs Wtsapi32 Userenv Wininet comsuppw Shlwapi)
 
 	add_definitions(
 		/DWIN32

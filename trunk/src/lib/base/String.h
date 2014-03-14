@@ -23,3 +23,5 @@
 
 // use standard C++ string class for our string class
 typedef std::string CString;
+
+void find_replace_all(CString& subject, const CString& find, const CString& replace);

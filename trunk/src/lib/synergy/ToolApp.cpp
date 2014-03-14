@@ -44,7 +44,7 @@ CToolApp::run(int argc, char** argv)
 			
 			std::stringstream ss;
 			ss << PREMIUM_AUTH_URL;
-			ss << "?email=" << email;
+			ss << "?email=" << ARCH->internet().urlEncode(email);
 			ss << "&password=" << password;
 
 			std::cout << ARCH->internet().get(ss.str()) << std::endl;
