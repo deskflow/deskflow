@@ -37,9 +37,9 @@
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "base/Log.h"
+#include "common/stdexcept.h"
 
 #include "test/global/gtest.h"
-#include <stdexcept>
 #include <sstream>
 #include <fstream>
 #include <iostream>

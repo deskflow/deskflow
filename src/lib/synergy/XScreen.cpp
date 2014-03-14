@@ -50,7 +50,7 @@ XScreenUnavailable::XScreenUnavailable(double timeUntilRetry) :
 	// do nothing
 }
 
-XScreenUnavailable::~XScreenUnavailable()
+XScreenUnavailable::~XScreenUnavailable() _NOEXCEPT
 {
 	// do nothing
 }

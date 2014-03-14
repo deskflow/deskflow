@@ -19,8 +19,7 @@
 #pragma once
 
 #include "synergy/IPlatformScreen.h"
-
-#include <stdexcept>
+#include "common/stdexcept.h"
 
 //! Base screen implementation
 /*!

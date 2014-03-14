@@ -534,7 +534,7 @@ public:
 	XConfigRead(const CConfigReadContext& context, const CString&);
 	XConfigRead(const CConfigReadContext& context,
 							const char* errorFmt, const CString& arg);
-	~XConfigRead();
+	virtual ~XConfigRead() _NOEXCEPT;
 
 protected:
 	// XBase overrides

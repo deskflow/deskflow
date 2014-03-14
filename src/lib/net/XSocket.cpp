@@ -24,7 +24,7 @@
 //
 
 XSocketAddress::XSocketAddress(EError error,
-				const CString& hostname, int port) throw() :
+				const CString& hostname, int port) _NOEXCEPT :
 	m_error(error),
 	m_hostname(hostname),
 	m_port(port)

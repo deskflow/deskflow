@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
- * Copyright (C) 2002 Chris Schoeneman
+ * Copyright (C) 2014 Bolton Software Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,23 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "arch/XArch.h"
+#include <stdexcept>
 
-//
-// XArch
-//
-
-const char*
-XArch::what() const _NOEXCEPT
-{
-	const char* what = std::runtime_error::what();
-	try {
-		if (strlen(what) == 0 && m_eval != NULL) {
-			return m_eval->eval().c_str();
-		}
-	}
-	catch (...) {
-		// ignore
-	}
-	return what;
-}
+// apple declares _NOEXCEPT
+#ifndef _NOEXCEPT
+#	define _NOEXCEPT throw()
+#endif

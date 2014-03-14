@@ -37,12 +37,12 @@
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
+#include "common/stdexcept.h"
 
 #include <cstring>
 #include <cstdlib>
 #include <sstream>
 #include <fstream>
-#include <stdexcept>
 
 //
 // CClient

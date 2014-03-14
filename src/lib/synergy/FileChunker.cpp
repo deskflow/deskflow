@@ -24,10 +24,10 @@
 #include "base/EventTypes.h"
 #include "base/Log.h"
 #include "base/Stopwatch.h"
+#include "common/stdexcept.h"
 
 #include <fstream>
 #include <sstream>
-#include <stdexcept>
 
 #define PAUSE_TIME_HACK 0.1
 
