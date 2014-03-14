@@ -30,7 +30,7 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
 {
 	setupUi(this);
 
-	QRegExp validScreenName("[a-z_][a-z0-9\\._-]{,31}", Qt::CaseInsensitive);
+	QRegExp validScreenName("[a-z0-9\\._-]{,255}", Qt::CaseInsensitive);
 
 	m_pLineEditName->setText(m_pScreen->name());
 	m_pLineEditName->setValidator(new QRegExpValidator(validScreenName, m_pLineEditName));
