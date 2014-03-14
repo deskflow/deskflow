@@ -31,18 +31,18 @@
 
 // names of priorities
 static const char*		g_priority[] = {
-								"FATAL",
-								"ERROR",
-								"WARNING",
-								"NOTE",
-								"INFO",
-				"DEBUG",
-				"DEBUG1",
-				"DEBUG2",
-				"DEBUG3",
-				"DEBUG4",
-				"DEBUG5"
-							};
+	"FATAL",
+	"ERROR",
+	"WARNING",
+	"NOTE",
+	"INFO",
+	"DEBUG",
+	"DEBUG1",
+	"DEBUG2",
+	"DEBUG3",
+	"DEBUG4",
+	"DEBUG5"
+};
 
 // number of priorities
 static const int g_numPriority = (int)(sizeof(g_priority) / sizeof(g_priority[0]));
