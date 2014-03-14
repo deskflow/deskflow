@@ -24,7 +24,7 @@
 /*!
 This is the base class of most exception types.
 */
-class XBase {
+class XBase : public std::exception {
 public:
 	//! Use getWhat() as the result of what()
 	XBase();

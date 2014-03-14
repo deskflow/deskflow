@@ -139,7 +139,7 @@ CIpcLogOutputter::bufferThread(void*)
 		}
 	}
 	catch (XArch& e) {
-		LOG((CLOG_ERR "ipc log buffer thread error, %s", e.what().c_str()));
+		LOG((CLOG_ERR "ipc log buffer thread error, %s", e.what()));
 	}
 
 	LOG((CLOG_DEBUG "ipc log buffer thread finished"));

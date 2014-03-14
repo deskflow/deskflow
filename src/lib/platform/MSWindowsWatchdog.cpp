@@ -215,14 +215,14 @@ CMSWindowsWatchdog::mainLoop(void*)
 			ARCH->sleep(1);
 		
 		}
-		catch (XArch& e) {
-			LOG((CLOG_ERR "failed to launch, error: %s", e.what().c_str()));
+		catch (std::exception& e) {
+			LOG((CLOG_ERR "failed to launch, error: %s", e.what()));
 			m_processFailures++;
 			m_processRunning = false;
 			continue;
 		}
-		catch (XSynergy& e) {
-			LOG((CLOG_ERR "failed to launch, error: %s", e.what()));
+		catch (...) {
+			LOG((CLOG_ERR "failed to launch, unknown error."));
 			m_processFailures++;
 			m_processRunning = false;
 			continue;
