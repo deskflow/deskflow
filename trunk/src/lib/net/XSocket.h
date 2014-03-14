@@ -41,7 +41,8 @@ public:
 		kBadPort		//!< The port is invalid
 	};
 
-	XSocketAddress(EError, const CString& hostname, int port) throw();
+	XSocketAddress(EError, const CString& hostname, int port) _NOEXCEPT;
+	virtual ~XSocketAddress() _NOEXCEPT { }
 
 	//! @name accessors
 	//@{

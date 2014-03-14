@@ -2313,7 +2313,7 @@ XConfigRead::XConfigRead(const CConfigReadContext& context,
 	// do nothing
 }
 
-XConfigRead::~XConfigRead()
+XConfigRead::~XConfigRead() _NOEXCEPT
 {
 	// do nothing
 }

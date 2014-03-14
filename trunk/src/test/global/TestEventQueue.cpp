@@ -20,8 +20,7 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "base/SimpleEventQueueBuffer.h"
-
-#include <stdexcept>
+#include "common/stdexcept.h"
 
 void
 CTestEventQueue::raiseQuitEvent() 

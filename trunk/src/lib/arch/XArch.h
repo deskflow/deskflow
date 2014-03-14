@@ -20,6 +20,7 @@
 
 #include "common/common.h"
 #include "common/stdstring.h"
+#include "common/stdexcept.h"
 
 //! Generic thread exception
 /*!
@@ -63,19 +64,17 @@ public:
 };
 
 //! Generic exception architecture dependent library
-class XArch : public std::exception {
+class XArch : public std::runtime_error {
 public:
-	XArch(XArchEval* adoptedEvaluator) : m_eval(adoptedEvaluator) { }
-	XArch(const std::string& msg) : m_eval(NULL), m_what(msg) { }
-	XArch(const XArch& e) : m_eval(e.m_eval != NULL ? e.m_eval->clone() : NULL),
-							m_what(e.m_what) { }
-	~XArch() { delete m_eval; }
+	XArch(XArchEval* adoptedEvaluator) : std::runtime_error(""), m_eval(adoptedEvaluator) { }
+	XArch(const std::string& msg) : std::runtime_error(msg), m_eval(NULL) { }
+	XArch(const XArch& e) : std::runtime_error(e.what()), m_eval(e.m_eval != NULL ? e.m_eval->clone() : NULL) { }
+	~XArch() _NOEXCEPT { delete m_eval; }
 
-	const char*			what() const throw();
+	virtual const char* what() const _NOEXCEPT;
 
 private:
 	XArchEval*			m_eval;
-	mutable std::string	m_what;
 };
 
 // Macro to declare XArch derived types

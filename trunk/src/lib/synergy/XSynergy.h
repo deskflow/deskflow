@@ -63,6 +63,7 @@ a client that is already connected.
 class XDuplicateClient : public XSynergy {
 public:
 	XDuplicateClient(const CString& name);
+	virtual ~XDuplicateClient() _NOEXCEPT { }
 
 	//! @name accessors
 	//@{
@@ -88,6 +89,7 @@ unknown to the server.
 class XUnknownClient : public XSynergy {
 public:
 	XUnknownClient(const CString& name);
+	virtual ~XUnknownClient() _NOEXCEPT { }
 
 	//! @name accessors
 	//@{
@@ -114,6 +116,7 @@ exit(int).
 class XExitApp : public XSynergy {
 public:
 	XExitApp(int code);
+	virtual ~XExitApp() _NOEXCEPT { }
 
 	//! Get the exit code
 	int getCode() const throw();

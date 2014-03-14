@@ -27,29 +27,30 @@
 //
 
 XBase::XBase() :
-	m_what()
+	std::runtime_error("")
 {
 	// do nothing
 }
 
 XBase::XBase(const CString& msg) :
-	m_what(msg)
+	std::runtime_error(msg)
 {
 	// do nothing
 }
 
-XBase::~XBase()
+XBase::~XBase() _NOEXCEPT
 {
 	// do nothing
 }
 
 const char*
-XBase::what() const
+XBase::what() const _NOEXCEPT
 {
-	if (m_what.empty()) {
-		m_what = getWhat();
+	const char* what = std::runtime_error::what();
+	if (strlen(what) == 0) {
+		return getWhat().c_str();
 	}
-	return m_what.c_str();
+	return what;
 }
 
 CString
