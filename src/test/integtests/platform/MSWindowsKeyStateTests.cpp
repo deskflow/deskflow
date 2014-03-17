@@ -68,14 +68,13 @@ private:
 	CMSWindowsHook m_hook;
 };
 
-TEST_F(CMSWindowsKeyStateTests, disable_nonWin95OS_eventQueueNotUsed)
+TEST_F(CMSWindowsKeyStateTests, disable_eventQueueNotUsed)
 {
 	NiceMock<CMockEventQueue> eventQueue;
 	CMSWindowsDesks* desks = newDesks(&eventQueue);
 	CMockKeyMap keyMap;
 	CMSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
 	
-	// in anything above win95-family, event handler should not be called.
 	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(0);
 
 	keyState.disable();
@@ -122,19 +121,3 @@ TEST_F(CMSWindowsKeyStateTests, saveModifiers_noModifiers_savedModifiers0)
 	ASSERT_EQ(0, keyState.getSavedModifiers());
 	delete desks;
 }
-/*
-TEST_F(CMSWindowsKeyStateTests, saveModifiers_shiftKeyDown_savedModifiers4)
-{
-	NiceMock<CMockEventQueue> eventQueue;
-	CMSWindowsDesks* desks = newDesks(eventQueue);
-	CMockKeyMap keyMap;
-	CMSWindowsKeyState keyState(desks, getEventTarget(), eventQueue, keyMap);
-	desks->enable();
-	desks->fakeKeyEvent(1, 1, true, false);
-
-	keyState.saveModifiers();
-
-	ASSERT_EQ(1, keyState.getSavedModifiers());
-	delete desks;
-}
-*/
