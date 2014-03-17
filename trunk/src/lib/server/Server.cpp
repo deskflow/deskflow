@@ -408,7 +408,7 @@ CServer::isLockedToScreen() const
 {
 	// locked if we say we're locked
 	if (isLockedToScreenServer()) {
-		LOG((CLOG_DEBUG "locked to screen"));
+		LOG((CLOG_NOTE "cursor is locked to screen"));
 		return true;
 	}
 
@@ -1452,7 +1452,7 @@ CServer::handleLockCursorToScreenEvent(const CEvent& event, void*)
 	// enter new state
 	if (newState != m_lockedToScreen) {
 		m_lockedToScreen = newState;
-		LOG((CLOG_DEBUG "cursor %s current screen", m_lockedToScreen ? "locked to" : "unlocked from"));
+		LOG((CLOG_NOTE "cursor %s current screen", m_lockedToScreen ? "locked to" : "unlocked from"));
 
 		m_primaryClient->reconfigure(getActivePrimarySides());
 		if (!isLockedToScreenServer()) {
