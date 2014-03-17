@@ -182,7 +182,12 @@ static const CKeyEntry	s_controlKeys[] = {
 
 COSXKeyState::COSXKeyState(IEventQueue* events) :
 	CKeyState(events),
-	m_deadKeyState(0)
+	m_deadKeyState(0),
+	m_shiftPressed(false),
+	m_controlPressed(false),
+	m_altPressed(false),
+	m_superPressed(false),
+	m_capsPressed(false)
 {
 	init();
 }
@@ -201,13 +206,6 @@ COSXKeyState::~COSXKeyState()
 void
 COSXKeyState::init()
 {
-	// initialize modifier key values
-	shiftPressed = false;
-	controlPressed = false;
-	altPressed = false;
-	superPressed = false;
-	capsPressed = false;
-
 	// build virtual key map
 	for (size_t i = 0; i < sizeof(s_controlKeys) /
 								sizeof(s_controlKeys[0]); ++i) {
@@ -487,48 +485,71 @@ COSXKeyState::fakeKey(const Keystroke& keystroke)
 
 	switch (keystroke.m_type) {
 	case Keystroke::kButton:
-		{
-			LOG((CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up"));
-
-		// let system figure out character for us
-		ref = CGEventCreateKeyboardEvent(0, mapKeyButtonToVirtualKey(
-									keystroke.m_data.m_button.m_button),
-								keystroke.m_data.m_button.m_press);
+	{
+		CGKeyCode keyCode = mapKeyButtonToVirtualKey(keystroke.m_data.m_button.m_button);
+		bool keyDown = keystroke.m_data.m_button.m_press;
+		CGEventSourceRef source = 0;
+		
+		LOG((CLOG_DEBUG1 "  button=%03x keyCode=%03x keyDown=%s client=%08x",
+			keystroke.m_data.m_button.m_button,
+			keyCode,
+			keyDown ? "down" : "up",
+			keystroke.m_data.m_button.m_client));
+		
+		ref = CGEventCreateKeyboardEvent(source, keyCode, keystroke.m_data.m_button.m_press);
 		if (ref == NULL) {
 			LOG((CLOG_CRIT "unable to create keyboard event for keystroke"));
+			return;
 		}
 
-			UInt32 vk = mapKeyButtonToVirtualKey(keystroke.m_data.m_button.m_button);
-			UInt32 modifierDown = keystroke.m_data.m_button.m_press;
-
-			// check the key for specials and store the value (persistent until changed)
-			if (vk == s_shiftVK)    shiftPressed=modifierDown;
-			if (vk == s_controlVK)  controlPressed=modifierDown;
-			if (vk == s_altVK)      altPressed=modifierDown;
-			if (vk == s_superVK)    superPressed=modifierDown;
-			if (vk == s_capsLockVK) capsPressed=modifierDown;
-
-			//Set the event flags for special keys - see following link:
-			//http://stackoverflow.com/questions/2008126/cgeventpost-possible-bug-when-simulating-keyboard-events
-			CGEventFlags modifiers = 0;
-			if (shiftPressed)   modifiers |= kCGEventFlagMaskShift;
-			if (controlPressed) modifiers |= kCGEventFlagMaskControl;
-			if (altPressed)     modifiers |= kCGEventFlagMaskAlternate;
-			if (superPressed)   modifiers |= kCGEventFlagMaskCommand;
-			if (capsPressed)    modifiers |= kCGEventFlagMaskAlphaShift;
-			
-			CGEventSetFlags(ref, modifiers);
-			
-			CGEventPost(kCGHIDEventTap, ref);
-
-			// add a delay if client data isn't zero
-			if (keystroke.m_data.m_button.m_client) {
-				ARCH->sleep(0.01);
-			}
+		// check if modifier and store the value for next time this function is called.
+		if (keyCode == s_shiftVK) {
+			m_shiftPressed = keyDown;
 		}
-		break;
+		else if (keyCode == s_controlVK) {
+			m_controlPressed = keyDown;
+		}
+		else if (keyCode == s_altVK) {
+			m_altPressed = keyDown;
+		}
+		else if (keyCode == s_superVK) {
+			m_superPressed = keyDown;
+		}
+		else if (keyCode == s_capsLockVK) {
+			m_capsPressed = keyDown;
+		}
 
-	case Keystroke::kGroup:
+		CGEventFlags modifiers = 0;
+		if (m_shiftPressed) {
+			modifiers |= kCGEventFlagMaskShift;
+		}
+		else if (m_controlPressed) {
+			modifiers |= kCGEventFlagMaskControl;
+		}
+		else if (m_altPressed) {
+			modifiers |= kCGEventFlagMaskAlternate;
+		}
+		else if (m_superPressed) {
+			modifiers |= kCGEventFlagMaskCommand;
+		}
+		else if (m_capsPressed) {
+			modifiers |= kCGEventFlagMaskAlphaShift;
+		}
+		
+		LOG((CLOG_DEBUG1 "  modifiers=%03x", modifiers));
+		
+		// set the event flags for modifier keys, see: http://tinyurl.com/pxl742y
+		CGEventSetFlags(ref, modifiers);
+		CGEventPost(kCGHIDEventTap, ref);
+
+		// HACK: add a delay if client data isn't zero
+		if (keystroke.m_data.m_button.m_client) {
+			ARCH->sleep(0.01);
+		}
+	}
+	break;
+
+	case Keystroke::kGroup: {
 		if (keystroke.m_data.m_group.m_absolute) {
 			LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
 			setGroup(keystroke.m_data.m_group.m_group);
@@ -539,6 +560,7 @@ COSXKeyState::fakeKey(const Keystroke& keystroke)
 									keystroke.m_data.m_group.m_group));
 		}
 		break;
+	}
 	}
 }
 
