@@ -17,8 +17,6 @@
 
 #pragma once
 
-#include <Windows.h>
-
 #if defined(synwinxt_EXPORTS)
 #define CSYNERGYSHELLEXE_API __declspec(dllexport)
 #else

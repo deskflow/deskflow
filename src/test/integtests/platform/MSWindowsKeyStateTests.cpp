@@ -40,8 +40,7 @@ class CMSWindowsKeyStateTests : public ::testing::Test
 protected:
 	virtual void SetUp()
 	{
-		// load synwinhk.dll
-		m_hookLibrary = m_hookLibraryLoader.openHookLibrary("synwinhk");
+		m_hook.loadLibrary();
 		m_screensaver = new CMSWindowsScreenSaver();
 	}
 
@@ -53,7 +52,7 @@ protected:
 	CMSWindowsDesks* newDesks(IEventQueue* eventQueue)
 	{
 		return new CMSWindowsDesks(
-			true, false, m_hookLibrary, m_screensaver, eventQueue,
+			true, false, m_hook.getInstance(), m_screensaver, eventQueue,
 			new TMethodJob<CMSWindowsKeyStateTests>(
 				this, &CMSWindowsKeyStateTests::updateKeysCB), false);
 	}
@@ -65,9 +64,8 @@ protected:
 
 private:
 	void updateKeysCB(void*) { }
-	HINSTANCE m_hookLibrary;
 	IScreenSaver* m_screensaver;
-	CMSWindowsHookLibraryLoader m_hookLibraryLoader;
+	CMSWindowsHook m_hook;
 };
 
 TEST_F(CMSWindowsKeyStateTests, disable_nonWin95OS_eventQueueNotUsed)

@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
- * Copyright (C) 2011 Chris Schoeneman
+ * Copyright (C) 2014 Bolton Software Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,31 +17,27 @@
 
 #pragma once
 
-#include "synwinhk/synwinhk.h"
 #include "synwinxt/synwinxt.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-//! Loads Windows hook DLLs.
-class CMSWindowsHookLibraryLoader
+//! Loads and provides functions for the Windows shell extension
+class CMSWindowsShellEx
 {
 public:
-	CMSWindowsHookLibraryLoader();
-	virtual ~CMSWindowsHookLibraryLoader();
+	CMSWindowsShellEx();
+	virtual ~CMSWindowsShellEx();
 
-	HINSTANCE			openHookLibrary(const char* name);
-	HINSTANCE			openShellLibrary(const char* name);
+	void				loadLibrary();
+	HINSTANCE			getInstance() const;
+	void				getDraggingFilename(char* filename) const;
+	void				clearDraggingFilename();
 
-	// TODO: either make these private or expose properly
-	InitFunc			m_init;
-	CleanupFunc			m_cleanup;
-	SetSidesFunc		m_setSides;
-	SetZoneFunc			m_setZone;
-	SetModeFunc			m_setMode;
-	
+private:
+	HINSTANCE			m_instance;
 	GetDraggingFilenameFunc
-						m_getDraggingFilename;
+						m_getDraggingFilenameFunc;
 	ClearDraggingFilenameFunc
-						m_clearDraggingFilename;
+						m_clearDraggingFilenameFunc;
 };

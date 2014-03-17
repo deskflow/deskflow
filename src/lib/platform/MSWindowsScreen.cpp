@@ -117,8 +117,6 @@ CMSWindowsScreen::CMSWindowsScreen(
 	m_nextClipboardWindow(NULL),
 	m_ownClipboard(false),
 	m_desks(NULL),
-	m_hookLibrary(NULL),
-	m_shellLibrary(NULL),
 	m_keyState(NULL),
 	m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
 	m_showingMouse(false),
@@ -130,17 +128,19 @@ CMSWindowsScreen::CMSWindowsScreen(
 	s_screen = this;
 	try {
 		if (m_isPrimary && !m_noHooks) {
-			m_hookLibrary = openHookLibrary("synwinhk");
+			m_hook.loadLibrary();
 		}
-		m_shellLibrary = openShellLibrary("synwinxt");
+		m_shellEx.loadLibrary();
 
 		m_screensaver = new CMSWindowsScreenSaver();
 		m_desks       = new CMSWindowsDesks(
-							m_isPrimary, m_noHooks,
-							m_hookLibrary, m_screensaver,
+							m_isPrimary,
+							m_noHooks,
+							m_hook.getInstance(),
+							m_screensaver,
 							m_events,
-							new TMethodJob<CMSWindowsScreen>(this,
-								&CMSWindowsScreen::updateKeysCB),
+							new TMethodJob<CMSWindowsScreen>(
+								this, &CMSWindowsScreen::updateKeysCB),
 							stopOnDeskSwitch);
 		m_keyState    = new CMSWindowsKeyState(m_desks, getEventTarget(), m_events);
 		updateScreenShape();
@@ -166,13 +166,6 @@ CMSWindowsScreen::CMSWindowsScreen(
 		delete m_screensaver;
 		destroyWindow(m_window);
 		destroyClass(m_class);
-
-		if (m_hookLibrary != NULL)
-			closeHookLibrary(m_hookLibrary);
-
-		if (m_shellLibrary != NULL)
-			closeShellLibrary(m_shellLibrary);
-
 		s_screen = NULL;
 		throw;
 	}
@@ -198,12 +191,6 @@ CMSWindowsScreen::~CMSWindowsScreen()
 	delete m_screensaver;
 	destroyWindow(m_window);
 	destroyClass(m_class);
-
-	if (m_hookLibrary != NULL)
-		closeHookLibrary(m_hookLibrary);
-
-	if (m_shellLibrary != NULL)
-		closeShellLibrary(m_shellLibrary);
 
 	s_screen = NULL;
 }
@@ -241,13 +228,11 @@ CMSWindowsScreen::enable()
 	m_desks->enable();
 
 	if (m_isPrimary) {
-		if (m_hookLibrary != NULL) {
-			// set jump zones
-			m_hookLibraryLoader.m_setZone(m_x, m_y, m_w, m_h, getJumpZoneSize());
+		// set jump zones
+		m_hook.setZone(m_x, m_y, m_w, m_h, getJumpZoneSize());
 
-			// watch jump zones
-			m_hookLibraryLoader.m_setMode(kHOOK_WATCH_JUMP_ZONE);
-		}
+		// watch jump zones
+		m_hook.setMode(kHOOK_WATCH_JUMP_ZONE);
 	}
 	else {
 		// prevent the system from entering power saving modes.  if
@@ -264,10 +249,8 @@ CMSWindowsScreen::disable()
 	m_desks->disable();
 
 	if (m_isPrimary) {
-		if (m_hookLibrary != NULL) {
-			// disable hooks
-			m_hookLibraryLoader.m_setMode(kHOOK_DISABLE);
-		}
+		// disable hooks
+		m_hook.setMode(kHOOK_DISABLE);
 
 		// enable special key sequences on win95 family
 		enableSpecialKeys(true);
@@ -304,10 +287,8 @@ CMSWindowsScreen::enter()
 		// enable special key sequences on win95 family
 		enableSpecialKeys(true);
 
-		if (m_hookLibrary != NULL) {
-			// watch jump zones
-			m_hookLibraryLoader.m_setMode(kHOOK_WATCH_JUMP_ZONE);
-		}
+		// watch jump zones
+		m_hook.setMode(kHOOK_WATCH_JUMP_ZONE);
 
 		// all messages prior to now are invalid
 		nextMark();
@@ -359,10 +340,7 @@ CMSWindowsScreen::leave()
 		// reflected in the internal keyboard state.
 		m_keyState->saveModifiers();
 
-		if (m_hookLibrary != NULL) {
-			// capture events
-			m_hookLibraryLoader.m_setMode(kHOOK_RELAY_EVENTS);
-		}
+		m_hook.setMode(kHOOK_RELAY_EVENTS);
 	}
 
 	// now off screen
@@ -541,9 +519,7 @@ CMSWindowsScreen::reconfigure(UInt32 activeSides)
 	assert(m_isPrimary);
 
 	LOG((CLOG_DEBUG "active sides: %x", activeSides));
-
-	if (m_hookLibrary != NULL)
-		m_hookLibraryLoader.m_setSides(activeSides);
+	m_hook.setSides(activeSides);
 }
 
 void
@@ -810,35 +786,6 @@ CMSWindowsScreen::fakeAllKeysUp()
 {
 	CPlatformScreen::fakeAllKeysUp();
 	updateForceShowCursor();
-}
-
-HINSTANCE
-CMSWindowsScreen::openHookLibrary(const char* name)
-{
-	return m_hookLibraryLoader.openHookLibrary(name);
-}
-
-HINSTANCE
-CMSWindowsScreen::openShellLibrary(const char* name)
-{
-	return m_hookLibraryLoader.openShellLibrary(name);
-}
-
-void
-CMSWindowsScreen::closeHookLibrary(HINSTANCE hookLibrary) const
-{
-	if (hookLibrary != NULL) {
-		m_hookLibraryLoader.m_cleanup();
-		FreeLibrary(hookLibrary);
-	}
-}
-
-void
-CMSWindowsScreen::closeShellLibrary(HINSTANCE shellLibrary) const
-{
-	if (shellLibrary != NULL) {
-		FreeLibrary(shellLibrary);
-	}
 }
 
 HCURSOR
@@ -1517,7 +1464,7 @@ CMSWindowsScreen::onDisplayChange()
 
 			// tell hook about resize if on screen
 			else {
-				m_hookLibraryLoader.m_setZone(m_x, m_y, m_w, m_h, getJumpZoneSize());
+				m_hook.setZone(m_x, m_y, m_w, m_h, getJumpZoneSize());
 			}
 		}
 
@@ -1908,7 +1855,7 @@ CMSWindowsScreen::getDraggingFilename()
 {
 	if (m_draggingStarted) {
 		char filename[MAX_PATH];
-		m_hookLibraryLoader.m_getDraggingFilename(filename);
+		m_shellEx.getDraggingFilename(filename);
 		m_draggingFilename = filename;
 	}
 
@@ -1919,7 +1866,7 @@ void
 CMSWindowsScreen::clearDraggingFilename()
 {
 	LOG((CLOG_DEBUG "clearing stored dragging file name"));
-	m_hookLibraryLoader.m_clearDraggingFilename();
+	m_shellEx.clearDraggingFilename();
 }
 
 const CString&
