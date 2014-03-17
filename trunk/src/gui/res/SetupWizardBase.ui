@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>556</width>
-    <height>489</height>
+    <height>464</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -126,45 +126,9 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_4">
     <item>
-     <widget class="QLabel" name="label_7">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>&lt;p&gt;&lt;b&gt;Latest feature:&lt;/b&gt; Drag and drop files between computers.&lt;/p&gt;
-
-&lt;p&gt;Thanks to donations from our Synergy Premium users, we've been able to add new features. The latest feature is drag and drop, where you can drag and drop files from one computer to another (supported on Windows and Mac OS X).&lt;/p&gt;
-
-&lt;p&gt;To access the latest feature, donate $1 or more to our project, and in return we give you a Synergy Premium account. A help desk with &lt;b&gt;phone and email support&lt;/b&gt; is also provided to our Synergy Premium users free of charge!&lt;/p&gt;</string>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_8">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>10</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
      <widget class="QRadioButton" name="m_pRadioButtonPremiumLogin">
       <property name="text">
-       <string>Yes, I am a Synergy Premium user, and proud of it! :)</string>
+       <string>Yes, I have Synergy Premium</string>
       </property>
      </widget>
     </item>
@@ -328,7 +292,7 @@
     <item>
      <widget class="QRadioButton" name="m_pRadioButtonPremiumRegister">
       <property name="text">
-       <string>I want to donate $1 and get Synergy Premium</string>
+       <string>Tell me more...</string>
       </property>
      </widget>
     </item>
@@ -351,7 +315,7 @@
     <item>
      <widget class="QRadioButton" name="m_pRadioButtonPremiumLater">
       <property name="text">
-       <string>Maybe later :(</string>
+       <string>Not interested</string>
       </property>
      </widget>
     </item>
@@ -366,7 +330,7 @@
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>40</height>
+        <height>100</height>
        </size>
       </property>
      </spacer>
