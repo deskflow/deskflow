@@ -40,6 +40,9 @@ public:
 	SetSidesFunc		m_setSides;
 	SetZoneFunc			m_setZone;
 	SetModeFunc			m_setMode;
-
-	GetDraggingFilename	m_getDraggingFilename;
+	
+	GetDraggingFilenameFunc
+						m_getDraggingFilename;
+	ClearDraggingFilenameFunc
+						m_clearDraggingFilename;
 };

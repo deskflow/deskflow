@@ -25,6 +25,8 @@
 #define CSYNERGYSHELLEXE_API __declspec(dllimport)
 #endif
 
-typedef void (*GetDraggingFilename)(CHAR*);
+typedef void			(*GetDraggingFilenameFunc)(char*);
+typedef void			(*ClearDraggingFilenameFunc)();
 
-CSYNERGYSHELLEXE_API void getDraggingFilename(char*);
+CSYNERGYSHELLEXE_API void getDraggingFilename(char* filename);
+CSYNERGYSHELLEXE_API void clearDraggingFilename();

@@ -417,15 +417,15 @@ CScreen::pollActiveModifiers() const
 }
 
 bool
-CScreen::getDraggingStarted() const
+CScreen::isDraggingStarted() const
 {
-	return m_screen->getDraggingStarted();
+	return m_screen->isDraggingStarted();
 }
 
 bool
-CScreen::getFakeDraggingStarted() const
+CScreen::isFakeDraggingStarted() const
 {
-	return m_screen->getFakeDraggingStarted();
+	return m_screen->isFakeDraggingStarted();
 }
 
 void
@@ -450,6 +450,12 @@ CString&
 CScreen::getDraggingFilename() const
 {
 	return m_screen->getDraggingFilename();
+}
+
+void
+CScreen::clearDraggingFilename()
+{
+	m_screen->clearDraggingFilename();
 }
 
 const CString&

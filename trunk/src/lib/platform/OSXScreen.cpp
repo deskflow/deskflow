@@ -904,7 +904,7 @@ COSXScreen::leave()
 {
     hideCursor();
     
-	if (getDraggingStarted()) {
+	if (isDraggingStarted()) {
 		CString& fileList = getDraggingFilename();
 		size_t size = fileList.size();
 		

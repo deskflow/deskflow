@@ -309,24 +309,17 @@ getFileExt(const char* filenameCStr)
 void
 setDraggingFilename(const char* filename)
 {
-	log("> setDraggingFilename, filename=%s", filename);
-	
-	// HACK: only handle files that are not .exe or .lnk
-	// dragging anything, including a selection marquee, from a program
-	// (e.g. explorer.exe) will cause this function to be called with the
-	// path of that program. currently we don't know how to test for this
-	// situation, so just ignore exe and lnk files.
-	std::string ext = getFileExt(filename);
-	if ((ext != "exe") && (ext != "lnk")) {
-		memcpy(g_draggingFilename, filename, MAX_PATH);
-	}
-	else {
-		log(
-			"ignoring filename=%s, ext=%s",
-			filename, ext.c_str());
-	}
+	log("> setDraggingFilename, filename='%s'", filename);
+	memcpy(g_draggingFilename, filename, MAX_PATH);
+	log("< setDraggingFilename, g_draggingFilename='%s'", g_draggingFilename);
+}
 
-	log("< setDraggingFilename, g_draggingFilename=%s", g_draggingFilename);
+void
+clearDraggingFilename()
+{
+	log("> clearDraggingFilename");
+	g_draggingFilename[0] = NULL;
+	log("< clearDraggingFilename, g_draggingFilename='%s'", g_draggingFilename);
 }
 
 void
@@ -334,10 +327,5 @@ getDraggingFilename(char* filename)
 {
 	log("> getDraggingFilename");
 	memcpy(filename, g_draggingFilename, MAX_PATH);
-	
-	// mark string as empty once used, so we can't accidentally copy
-	// the same file more than once unless the user does this on purpose.
-	g_draggingFilename[0] = NULL;
-
-	log("< getDraggingFilename, filename=%s", filename);
+	log("< getDraggingFilename, filename='%s'", filename);
 }
