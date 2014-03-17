@@ -1674,12 +1674,16 @@ CServer::onMouseUp(ButtonID id)
 		return;
 	}
 	
-	if (m_enableDragDrop && !m_screen->isOnScreen()) {
-		CString& file = m_screen->getDraggingFilename();
-		if (!file.empty()) {
-			LOG((CLOG_DEBUG "send file to client: %s", file.c_str()));
-			sendFileToClient(file.c_str());
+	if (m_enableDragDrop) {
+		if (!m_screen->isOnScreen()) {
+			CString& file = m_screen->getDraggingFilename();
+			if (!file.empty()) {
+				sendFileToClient(file.c_str());
+			}
 		}
+
+		// always clear dragging filename
+		m_screen->clearDraggingFilename();
 	}
 }
 
@@ -1755,7 +1759,7 @@ CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 
 	// should we switch or not?
 	if (isSwitchOkay(newScreen, dir, x, y, xc, yc)) {
-		if (m_enableDragDrop && m_screen->getDraggingStarted() && m_active != newScreen) {
+		if (m_enableDragDrop && m_screen->isDraggingStarted() && m_active != newScreen) {
 			CString& dragFileList = m_screen->getDraggingFilename();
 			size_t size = dragFileList.size() + 1;
 			char* fileList = NULL;
@@ -1996,7 +2000,7 @@ CServer::writeToDropDirThread(void*)
 {
 	LOG((CLOG_DEBUG "starting write to drop dir thread"));
 
-	while (m_screen->getFakeDraggingStarted()) {
+	while (m_screen->isFakeDraggingStarted()) {
 		ARCH->sleep(.1f);
 	}
 
@@ -2331,14 +2335,15 @@ CServer::sendFileToClient(const char* filename)
 }
 
 void
-CServer::sendFileThread(void* filename)
+CServer::sendFileThread(void* data)
 {
 	try {
-		char* name  = reinterpret_cast<char*>(filename);
-		CFileChunker::sendFileChunks(name, m_events, this);
+		char* filename = reinterpret_cast<char*>(data);
+		LOG((CLOG_DEBUG "sending file to client, filename=%s", filename));
+		CFileChunker::sendFileChunks(filename, m_events, this);
 	}
 	catch (std::runtime_error error) {
-		LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));
+		LOG((CLOG_ERR "failed sending file chunks, error: %s", error.what()));
 	}
 
 	m_sendFileThread = NULL;

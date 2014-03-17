@@ -188,8 +188,9 @@ public:
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
 
 	virtual CString&	getDraggingFilename() = 0;
-	virtual bool		getDraggingStarted() = 0;
-	virtual bool		getFakeDraggingStarted() = 0;
+	virtual void		clearDraggingFilename() = 0;
+	virtual bool		isDraggingStarted() = 0;
+	virtual bool		isFakeDraggingStarted() = 0;
 
 	virtual void		fakeDraggingFiles(CString str) = 0;
 	virtual const CString&

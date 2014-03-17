@@ -116,6 +116,7 @@ public:
 	virtual bool		isPrimary() const;
 	virtual void		fakeDraggingFiles(CString str);
 	virtual CString&	getDraggingFilename();
+	virtual void		clearDraggingFilename();
 	virtual const CString&	
 						getDropTarget() const;
 

@@ -273,20 +273,19 @@ public:
 	*/
 	KeyModifierMask		pollActiveModifiers() const;
 
-	//! Check if a local dragging has started.
-
-	bool				getDraggingStarted() const;
+	//! Test if file is dragged on primary screen
+	bool				isDraggingStarted() const;
 	
-	//! Check if a fake dragging has started.
-	
-	bool				getFakeDraggingStarted() const;
+	//! Test if file is dragged on secondary screen
+	bool				isFakeDraggingStarted() const;
 
-	//! Get dragging file's directory.
-
+	//! Get the filename of the file being dragged
 	CString&			getDraggingFilename() const;
 
-	//! Get drop target directory.
-	
+	//! Clear the filename of the file that was dragged
+	void				clearDraggingFilename();
+
+	//! Get the drop target directory
 	const CString&		getDropTarget() const;
 
 	//@}

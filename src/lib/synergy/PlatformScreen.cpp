@@ -114,7 +114,7 @@ CPlatformScreen::pollPressedKeys(KeyButtonSet& pressedKeys) const
 }
 
 bool
-CPlatformScreen::getDraggingStarted()
+CPlatformScreen::isDraggingStarted()
 {
 	if (CApp::instance().argsBase().m_enableDragDrop) {
 		return m_draggingStarted;

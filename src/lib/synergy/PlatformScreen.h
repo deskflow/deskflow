@@ -77,9 +77,10 @@ public:
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
 	virtual void		setDraggingStarted(bool started) { m_draggingStarted = started; }
-	virtual bool		getDraggingStarted();
-	virtual bool		getFakeDraggingStarted() { return m_fakeDraggingStarted; }
+	virtual bool		isDraggingStarted();
+	virtual bool		isFakeDraggingStarted() { return m_fakeDraggingStarted; }
 	virtual CString&	getDraggingFilename() { return m_draggingFilename; }
+	virtual void		clearDraggingFilename() { }
 
 	// IPlatformScreen overrides
 	virtual void		enable() = 0;

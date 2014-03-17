@@ -742,7 +742,7 @@ CClient::writeToDropDirThread(void*)
 {
 	LOG((CLOG_DEBUG "starting write to drop dir thread"));
 
-	while (m_screen->getFakeDraggingStarted()) {
+	while (m_screen->isFakeDraggingStarted()) {
 		ARCH->sleep(.1f);
 	}
 	

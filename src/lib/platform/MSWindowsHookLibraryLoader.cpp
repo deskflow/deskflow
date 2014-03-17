@@ -27,7 +27,8 @@ CMSWindowsHookLibraryLoader::CMSWindowsHookLibraryLoader() :
 	m_setSides(NULL),
 	m_setZone(NULL),
 	m_setMode(NULL),
-	m_getDraggingFilename(NULL)
+	m_getDraggingFilename(NULL),
+	m_clearDraggingFilename(NULL)
 {
 }
 
@@ -52,13 +53,14 @@ CMSWindowsHookLibraryLoader::openHookLibrary(const char* name)
 	m_setMode   = (SetModeFunc)GetProcAddress(hookLibrary, "setMode");
 	m_init      = (InitFunc)GetProcAddress(hookLibrary, "init");
 	m_cleanup   = (CleanupFunc)GetProcAddress(hookLibrary, "cleanup");
-	if (m_setSides             == NULL ||
-		m_setZone              == NULL ||
-		m_setMode              == NULL ||
-		m_init                 == NULL ||
-		m_cleanup              == NULL) {
-			LOG((CLOG_ERR "invalid hook library, use a newer %s.dll", name));
-			throw XScreenOpenFailure();
+
+	if (m_setSides == NULL ||
+		m_setZone == NULL ||
+		m_setMode == NULL ||
+		m_init == NULL ||
+		m_cleanup == NULL) {
+		LOG((CLOG_ERR "failed to load hook function, %s.dll could be out of date", name));
+		throw XScreenOpenFailure();
 	}
 
 	// initialize hook library
@@ -80,22 +82,24 @@ CMSWindowsHookLibraryLoader::openShellLibrary(const char* name)
     GetVersionEx(&osvi);
 
     if (osvi.dwMajorVersion < 6) {
-		LOG((CLOG_INFO "skipping shell library load, %s.dll not supported before vista", name));
+		LOG((CLOG_INFO "skipping shell extension library load, %s.dll not supported before vista", name));
         return NULL;
     }
 
 	// load the hook library
 	HINSTANCE shellLibrary = LoadLibrary(name);
 	if (shellLibrary == NULL) {
-		LOG((CLOG_ERR "failed to load shell library, %s.dll is missing or invalid", name));
+		LOG((CLOG_ERR "failed to load shell extension library, %s.dll is missing or invalid", name));
 		throw XScreenOpenFailure();
 	}
 
 	// look up functions
-	m_getDraggingFilename = (GetDraggingFilename)GetProcAddress(shellLibrary, "getDraggingFilename");
+	m_getDraggingFilename = (GetDraggingFilenameFunc)GetProcAddress(shellLibrary, "getDraggingFilename");
+	m_clearDraggingFilename = (ClearDraggingFilenameFunc)GetProcAddress(shellLibrary, "clearDraggingFilename");
 
-	if (m_getDraggingFilename == NULL) {
-		LOG((CLOG_ERR "invalid shell library, use a newer %s.dll", name));
+	if (m_getDraggingFilename == NULL ||
+		m_clearDraggingFilename == NULL) {
+		LOG((CLOG_ERR "failed to load shell extension function, %s.dll could be out of date", name));
 		throw XScreenOpenFailure();
 	}
 

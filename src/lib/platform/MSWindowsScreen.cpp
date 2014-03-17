@@ -369,7 +369,7 @@ CMSWindowsScreen::leave()
 	m_isOnScreen = false;
 	forceShowCursor();
 
-	if (getDraggingStarted()) {
+	if (isDraggingStarted()) {
 		CString& draggingFilename = getDraggingFilename();
 		size_t size = draggingFilename.size();
 
@@ -1907,14 +1907,19 @@ CString&
 CMSWindowsScreen::getDraggingFilename()
 {
 	if (m_draggingStarted) {
-		// temporarily log out dragging filename
-		char dir[MAX_PATH];
-		m_hookLibraryLoader.m_getDraggingFilename(dir);
-		m_draggingFilename.clear();
-		m_draggingFilename.append(dir);
+		char filename[MAX_PATH];
+		m_hookLibraryLoader.m_getDraggingFilename(filename);
+		m_draggingFilename = filename;
 	}
 
 	return m_draggingFilename;
+}
+
+void
+CMSWindowsScreen::clearDraggingFilename()
+{
+	LOG((CLOG_DEBUG "clearing stored dragging file name"));
+	m_hookLibraryLoader.m_clearDraggingFilename();
 }
 
 const CString&
