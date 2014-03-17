@@ -490,7 +490,7 @@ COSXKeyState::fakeKey(const Keystroke& keystroke)
 		bool keyDown = keystroke.m_data.m_button.m_press;
 		CGEventSourceRef source = 0;
 		
-		LOG((CLOG_DEBUG1 "  button=%03x keyCode=%03x keyDown=%s client=%08x",
+		LOG((CLOG_DEBUG1 "  button=0x%04x keyCode=0x%08x keyDown=%s client=0x%08x",
 			keystroke.m_data.m_button.m_button,
 			keyCode,
 			keyDown ? "down" : "up",
@@ -536,7 +536,7 @@ COSXKeyState::fakeKey(const Keystroke& keystroke)
 			modifiers |= kCGEventFlagMaskAlphaShift;
 		}
 		
-		LOG((CLOG_DEBUG1 "  modifiers=%03x", modifiers));
+		LOG((CLOG_DEBUG1 "  modifiers=0x%04x", modifiers));
 		
 		// set the event flags for modifier keys, see: http://tinyurl.com/pxl742y
 		CGEventSetFlags(ref, modifiers);
@@ -552,7 +552,7 @@ COSXKeyState::fakeKey(const Keystroke& keystroke)
 		
 		IKeyState::KeyButtonSet::const_iterator it;
 		for (it = pressed.begin(); it != pressed.end(); ++it) {
-			LOG((CLOG_DEBUG1 "  pressed: button=%03x", *it));
+			LOG((CLOG_DEBUG1 "  pressed: button=0x%04x", *it));
 		}
 	}
 	break;
