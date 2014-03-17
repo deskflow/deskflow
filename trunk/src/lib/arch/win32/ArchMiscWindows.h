@@ -51,19 +51,6 @@ public:
 	//! Delete memory
 	static void			cleanup();
 
-	//! Test if windows 95, et al.
-	/*!
-	Returns true iff the platform is win95/98/me.
-	*/
-	static bool			isWindows95Family();
-
-	//! Test if windows 95, et al.
-	/*!
-	Returns true iff the platform is win98 or win2k or higher (i.e.
-	not windows 95 or windows NT).
-	*/
-	static bool			isWindowsModern();
-
 	//! Set the application icons
 	/*!
 	Set the application icons.

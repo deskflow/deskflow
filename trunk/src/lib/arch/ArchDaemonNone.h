@@ -39,12 +39,11 @@ public:
 							const char* description,
 							const char* pathname,
 							const char* commandLine,
-							const char* dependencies,
-							bool allUsers);
-	virtual void		uninstallDaemon(const char* name, bool allUsers);
+							const char* dependencies);
+	virtual void		uninstallDaemon(const char* name);
 	virtual int			daemonize(const char* name, DaemonFunc func);
-	virtual bool		canInstallDaemon(const char* name, bool allUsers);
-	virtual bool		isDaemonInstalled(const char* name, bool allUsers);
+	virtual bool		canInstallDaemon(const char* name);
+	virtual bool		isDaemonInstalled(const char* name);
 	virtual void		installDaemon();
 	virtual void		uninstallDaemon();
 	virtual std::string	commandLine() const;

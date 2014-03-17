@@ -98,8 +98,6 @@ CMSWindowsDesks::CMSWindowsDesks(
 		IJob* updateKeys, bool stopOnDeskSwitch) :
 	m_isPrimary(isPrimary),
 	m_noHooks(noHooks),
-	m_is95Family(CArchMiscWindows::isWindows95Family()),
-	m_isModernFamily(CArchMiscWindows::isWindowsModern()),
 	m_isOnScreen(m_isPrimary),
 	m_x(0), m_y(0),
 	m_w(0), m_h(0),
@@ -253,26 +251,6 @@ CMSWindowsDesks::fakeKeyEvent(
 				KeyButton button, UINT virtualKey,
 				bool press, bool /*isAutoRepeat*/) const
 {
-	// win 95 family doesn't understand handed modifier virtual keys
-	if (m_is95Family) {
-		switch (virtualKey) {
-		case VK_LSHIFT:
-		case VK_RSHIFT:
-			virtualKey = VK_SHIFT;
-			break;
-
-		case VK_LCONTROL:
-		case VK_RCONTROL:
-			virtualKey = VK_CONTROL;
-			break;
-
-		case VK_LMENU:
-		case VK_RMENU:
-			virtualKey = VK_MENU;
-			break;
-		}
-	}
-
 	// synthesize event
 	DWORD flags = 0;
 	if (((button & 0x100u) != 0)) {
@@ -517,51 +495,15 @@ CMSWindowsDesks::secondaryDeskProc(
 void
 CMSWindowsDesks::deskMouseMove(SInt32 x, SInt32 y) const
 {
-	// motion is simple (i.e. it's on the primary monitor) if there
-	// is only one monitor.  it's also simple if we're not on the
-	// windows 95 family since those platforms don't have a broken
-	// mouse_event() function (see the comment below).
-	bool simple = (!m_multimon || !m_is95Family);
-	if (!simple) {
-		// also simple if motion is within the primary monitor
-		simple = (x >= 0 && x < GetSystemMetrics(SM_CXSCREEN) &&
-				  y >= 0 && y < GetSystemMetrics(SM_CYSCREEN));
-	}
-
-	// move the mouse directly to target position if motion is simple
-	if (simple) {
-		// when using absolute positioning with mouse_event(),
-		// the normalized device coordinates range over only
-		// the primary screen.
-		SInt32 w = GetSystemMetrics(SM_CXSCREEN);
-		SInt32 h = GetSystemMetrics(SM_CYSCREEN);
-		mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-								(DWORD)((65535.0f * x) / (w - 1) + 0.5f),
-								(DWORD)((65535.0f * y) / (h - 1) + 0.5f),
-								0, 0);
-	}
-
-	// windows 98 and Me are broken.  you cannot set the absolute
-	// position of the mouse except on the primary monitor but you
-	// can do relative moves onto any monitor.  this is, in microsoft's
-	// words, "by design."  apparently the designers of windows 2000
-	// we're a little less lazy and did it right.
-	//
-	// microsoft recommends in Q193003 to absolute position the cursor
-	// somewhere on the primary monitor then relative move to the
-	// desired location.  this doesn't work for us because when the
-	// user drags a scrollbar, a window, etc. it causes the dragged
-	// item to jump back and forth between the position on the primary
-	// monitor and the desired position.  while it always ends up in
-	// the right place, the effect is disconcerting.
-	//
-	// instead we'll get the cursor's current position and do just a
-	// relative move from there to the desired position.
-	else {
-		POINT pos;
-		GetCursorPos(&pos);
-		deskMouseRelativeMove(x - pos.x, y - pos.y);
-	}
+	// when using absolute positioning with mouse_event(),
+	// the normalized device coordinates range over only
+	// the primary screen.
+	SInt32 w = GetSystemMetrics(SM_CXSCREEN);
+	SInt32 h = GetSystemMetrics(SM_CYSCREEN);
+	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
+							(DWORD)((65535.0f * x) / (w - 1) + 0.5f),
+							(DWORD)((65535.0f * y) / (h - 1) + 0.5f),
+							0, 0);
 }
 
 void
@@ -993,7 +935,7 @@ CMSWindowsDesks::handleCheckDesk(const CEvent&, void*)
 
 	// also check if screen saver is running if on a modern OS and
 	// this is the primary screen.
-	if (m_isPrimary && m_isModernFamily) {
+	if (m_isPrimary) {
 		BOOL running;
 		SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, &running, FALSE);
 		PostThreadMessage(m_threadID, SYNERGY_MSG_SCREEN_SAVER, running, 0);
@@ -1003,24 +945,15 @@ CMSWindowsDesks::handleCheckDesk(const CEvent&, void*)
 HDESK
 CMSWindowsDesks::openInputDesktop()
 {
-	if (m_is95Family) {
-		// there's only one desktop on windows 95 et al.
-		return GetThreadDesktop(GetCurrentThreadId());
-	}
-	else {
-		return OpenInputDesktop(DF_ALLOWOTHERACCOUNTHOOK, TRUE,
-								DESKTOP_CREATEWINDOW |
-									DESKTOP_HOOKCONTROL |
-									GENERIC_WRITE);
-	}
+	return OpenInputDesktop(
+		DF_ALLOWOTHERACCOUNTHOOK, TRUE,
+		DESKTOP_CREATEWINDOW | DESKTOP_HOOKCONTROL | GENERIC_WRITE);
 }
 
 void
 CMSWindowsDesks::closeDesktop(HDESK desk)
 {
-	// on 95/98/me we don't need to close the desktop returned by
-	// openInputDesktop().
-	if (desk != NULL && !m_is95Family) {
+	if (desk != NULL) {
 		CloseDesktop(desk);
 	}
 }
@@ -1030,9 +963,6 @@ CMSWindowsDesks::getDesktopName(HDESK desk)
 {
 	if (desk == NULL) {
 		return CString();
-	}
-	else if (m_is95Family) {
-		return "desktop";
 	}
 	else {
 		DWORD size;

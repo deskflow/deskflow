@@ -167,9 +167,6 @@ private:
 	bool				getGroups(GroupList&) const;
 	void				setWindowGroup(SInt32 group);
 
-	void				fixKeys();
-	void				handleFixKeys(const CEvent&, void*);
-
 	KeyID				getIDForKey(CKeyMap::KeyItem& item,
 							KeyButton button, UINT virtualKey,
 							PBYTE keyState, HKL hkl) const;
@@ -187,7 +184,6 @@ private:
 	typedef std::map<HKL, SInt32> GroupMap;
 	typedef std::map<KeyID, UINT> KeyToVKMap;
 
-	bool				m_is95Family;
 	void*				m_eventTarget;
 	CMSWindowsDesks*	m_desks;
 	HKL					m_keyLayout;

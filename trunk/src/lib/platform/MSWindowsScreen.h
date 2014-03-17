@@ -237,9 +237,6 @@ private:
 	// true if hooks are not to be installed (useful for debugging)
 	bool				m_noHooks;
 
-	// true if windows 95/98/me
-	bool				m_is95Family;
-
 	// true if mouse has entered the screen
 	bool				m_isOnScreen;
 
