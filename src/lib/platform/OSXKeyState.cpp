@@ -541,10 +541,18 @@ COSXKeyState::fakeKey(const Keystroke& keystroke)
 		// set the event flags for modifier keys, see: http://tinyurl.com/pxl742y
 		CGEventSetFlags(ref, modifiers);
 		CGEventPost(kCGHIDEventTap, ref);
-
+		
 		// HACK: add a delay if client data isn't zero
 		if (keystroke.m_data.m_button.m_client) {
 			ARCH->sleep(0.01);
+		}
+		
+		IKeyState::KeyButtonSet pressed;
+		pollPressedKeys(pressed);
+		
+		IKeyState::KeyButtonSet::const_iterator it;
+		for (it = pressed.begin(); it != pressed.end(); ++it) {
+			LOG((CLOG_DEBUG1 "  pressed: button=%03x", *it));
 		}
 	}
 	break;
