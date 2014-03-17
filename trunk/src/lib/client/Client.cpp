@@ -48,13 +48,14 @@
 // CClient
 //
 
-CClient::CClient(IEventQueue* events,
-				const CString& name, const CNetworkAddress& address,
-				ISocketFactory* socketFactory,
-				IStreamFilterFactory* streamFilterFactory,
-				CScreen* screen,
-				const CCryptoOptions& crypto,
-				bool enableDragDrop) :
+CClient::CClient(
+		IEventQueue* events,
+		const CString& name, const CNetworkAddress& address,
+		ISocketFactory* socketFactory,
+		IStreamFilterFactory* streamFilterFactory,
+		CScreen* screen,
+		const CCryptoOptions& crypto,
+		bool enableDragDrop) :
 	m_mock(false),
 	m_name(name),
 	m_serverAddress(address),
@@ -730,8 +731,8 @@ CClient::onFileRecieveCompleted()
 {
 	if (isReceivedFileSizeValid()) {
 		m_writeToDropDirThread = new CThread(
-									   new TMethodJob<CClient>(
-															   this, &CClient::writeToDropDirThread));
+			new TMethodJob<CClient>(
+				this, &CClient::writeToDropDirThread));
 	}
 }
 

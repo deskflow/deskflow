@@ -49,7 +49,12 @@
 // CServer
 //
 
-CServer::CServer(CConfig& config, CPrimaryClient* primaryClient, CScreen* screen, IEventQueue* events, bool enableDragDrop) :
+CServer::CServer(
+		CConfig& config,
+		CPrimaryClient* primaryClient,
+		CScreen* screen,
+		IEventQueue* events,
+		bool enableDragDrop) :
 	m_mock(false),
 	m_primaryClient(primaryClient),
 	m_active(primaryClient),
