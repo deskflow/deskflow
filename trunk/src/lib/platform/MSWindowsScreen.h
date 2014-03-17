@@ -18,7 +18,8 @@
 
 #pragma once
 
-#include "platform/MSWindowsHookLibraryLoader.h"
+#include "platform/MSWindowsShellEx.h"
+#include "platform/MSWindowsHook.h"
 #include "synergy/PlatformScreen.h"
 #include "synwinhk/synwinhk.h"
 #include "mt/CondVar.h"
@@ -128,10 +129,6 @@ protected:
 
 private:
 	// initialization and shutdown operations
-	HINSTANCE			openHookLibrary(const char* name);
-	HINSTANCE			openShellLibrary(const char* name);
-	void				closeHookLibrary(HINSTANCE hookLibrary) const;
-	void				closeShellLibrary(HINSTANCE shellLibrary) const;
 	HCURSOR				createBlankCursor() const;
 	void				destroyCursor(HCURSOR cursor) const;
 	ATOM				createWindowClass() const;
@@ -290,10 +287,6 @@ private:
 	// one desk per desktop and a cond var to communicate with it
 	CMSWindowsDesks*	m_desks;
 
-	// hook library stuff
-	HINSTANCE			m_hookLibrary;
-	HINSTANCE			m_shellLibrary;
-
 	// keyboard stuff
 	CMSWindowsKeyState*	m_keyState;
 
@@ -321,10 +314,9 @@ private:
 	bool				m_gotOldMouseKeys;
 	MOUSEKEYS			m_mouseKeys;
 	MOUSEKEYS			m_oldMouseKeys;
-
-	// loads synwinhk.dll
-	CMSWindowsHookLibraryLoader
-						m_hookLibraryLoader;
+	
+	CMSWindowsHook		m_hook;
+	CMSWindowsShellEx	m_shellEx;
 
 	static CMSWindowsScreen*
 						s_screen;
