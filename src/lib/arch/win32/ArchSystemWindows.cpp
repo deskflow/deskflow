@@ -83,35 +83,10 @@ CArchSystemWindows::getOSName() const
 			if (info.dwMajorVersion == 5 && info.dwMinorVersion == 0) {
 				return "Microsoft Windows Server 2000";
 			}
-			if (info.dwMajorVersion <= 4) {
-				return "Microsoft Windows NT";
-			}
 			char buffer[100];
 			sprintf(buffer, "Microsoft Windows %d.%d",
 							info.dwMajorVersion, info.dwMinorVersion);
 			return buffer;
-
-		case VER_PLATFORM_WIN32_WINDOWS:
-			if (info.dwMajorVersion == 4 && info.dwMinorVersion == 0) {
-				if (info.szCSDVersion[1] == 'C' ||
-					info.szCSDVersion[1] == 'B') {
-					return "Microsoft Windows 95 OSR2";
-				}
-				return "Microsoft Windows 95";
-			}
-			if (info.dwMajorVersion == 4 && info.dwMinorVersion == 10) {
-				if (info.szCSDVersion[1] == 'A') {
-					return "Microsoft Windows 98 SE";
-				}
-				return "Microsoft Windows 98";
-			}
-			if (info.dwMajorVersion == 4 && info.dwMinorVersion == 90) {
-				return "Microsoft Windows ME";
-			}
-			if (info.dwMajorVersion == 4) {
-				return "Microsoft Windows unknown 95 family";
-			}
-			break;
 
 		default:
 			break;

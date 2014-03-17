@@ -579,7 +579,6 @@ static const CWin32Modifiers s_modifiers[] =
 CMSWindowsKeyState::CMSWindowsKeyState(
 	CMSWindowsDesks* desks, void* eventTarget, IEventQueue* events) :
 	CKeyState(events),
-	m_is95Family(CArchMiscWindows::isWindows95Family()),
 	m_eventTarget(eventTarget),
 	m_desks(desks),
 	m_keyLayout(GetKeyboardLayout(0)),
@@ -596,7 +595,6 @@ CMSWindowsKeyState::CMSWindowsKeyState(
 CMSWindowsKeyState::CMSWindowsKeyState(
 	CMSWindowsDesks* desks, void* eventTarget, IEventQueue* events, CKeyMap& keyMap) :
 	CKeyState(events, keyMap),
-	m_is95Family(CArchMiscWindows::isWindows95Family()),
 	m_eventTarget(eventTarget),
 	m_desks(desks),
 	m_keyLayout(GetKeyboardLayout(0)),
@@ -761,10 +759,7 @@ CMSWindowsKeyState::mapKeyToVirtualKey(KeyID key) const
 void
 CMSWindowsKeyState::onKey(KeyButton button, bool down, KeyModifierMask newState)
 {
-	// handle win32 brokenness and forward to superclass
-	fixKeys();
 	CKeyState::onKey(button, down, newState);
-	fixKeys();
 }
 
 void
@@ -810,28 +805,22 @@ CMSWindowsKeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 bool
 CMSWindowsKeyState::fakeCtrlAltDel()
 {
-	if (!m_is95Family) {
-		// to fake ctrl+alt+del on the NT family we broadcast a suitable
-		// hotkey to all windows on the winlogon desktop.  however, the
-		// current thread must be on that desktop to do the broadcast
-		// and we can't switch just any thread because some own windows
-		// or hooks.  so start a new thread to do the real work.
-		HANDLE hEvtSendSas = OpenEvent( EVENT_MODIFY_STATE, FALSE, "Global\\SendSAS" );
-		if ( hEvtSendSas ) {
-			LOG((CLOG_DEBUG "found the SendSAS event - signaling my launcher to simulate ctrl+alt+del"));
-			SetEvent( hEvtSendSas );
-			CloseHandle( hEvtSendSas );
-		}
-		else {
+	// to fake ctrl+alt+del on the NT family we broadcast a suitable
+	// hotkey to all windows on the winlogon desktop.  however, the
+	// current thread must be on that desktop to do the broadcast
+	// and we can't switch just any thread because some own windows
+	// or hooks.  so start a new thread to do the real work.
+	HANDLE hEvtSendSas = OpenEvent( EVENT_MODIFY_STATE, FALSE, "Global\\SendSAS" );
+	if ( hEvtSendSas ) {
+		LOG((CLOG_DEBUG "found the SendSAS event - signaling my launcher to simulate ctrl+alt+del"));
+		SetEvent( hEvtSendSas );
+		CloseHandle( hEvtSendSas );
+	}
+	else {
 		CThread cad(new CFunctionJob(&CMSWindowsKeyState::ctrlAltDelThread));
 		cad.wait();
 	}
-	}
-	else {
-		// simulate ctrl+alt+del
-		fakeKeyDown(kKeyDelete, KeyModifierControl | KeyModifierAlt,
-							virtualKeyToButton(VK_DELETE));
-	}
+
 	return true;
 }
 
@@ -1006,11 +995,6 @@ CMSWindowsKeyState::getKeyMap(CKeyMap& keyMap)
 
 			case VK_LWIN:
 			case VK_RWIN:
-				// add extended key only for these on 95 family
-				if (m_is95Family) {
-					m_buttonToVK[i | 0x100u] = vk;
-					continue;
-				}
 				break;
 
 			case VK_RETURN:
@@ -1351,77 +1335,6 @@ CMSWindowsKeyState::setWindowGroup(SInt32 group)
 	Sleep(100);
 }
 
-void
-CMSWindowsKeyState::fixKeys()
-{
-	// fake key releases for the windows keys if we think they're
-	// down but they're really up.  we have to do this because if the
-	// user presses and releases a windows key without pressing any
-	// other key while it's down then the system will eat the key
-	// release.  if we don't detect that and synthesize the release
-	// then the client won't take the usual windows key release action
-	// (which on windows is to show the start menu).
-	//
-	// only check on the windows 95 family since the NT family reports
-	// the key releases as usual.
-	if (!m_is95Family) {
-		return;
-	}
-
-	KeyButton leftButton  = virtualKeyToButton(VK_LWIN);
-	KeyButton rightButton = virtualKeyToButton(VK_RWIN);
-	bool leftDown         = isKeyDown(leftButton);
-	bool rightDown        = isKeyDown(rightButton);
-	bool fix              = (leftDown || rightDown);
-	if (fix) {
-		// check if either button is not really down
-		bool leftAsyncDown  = ((GetAsyncKeyState(VK_LWIN) & 0x8000) != 0);
-		bool rightAsyncDown = ((GetAsyncKeyState(VK_RWIN) & 0x8000) != 0);
-
-		if (leftAsyncDown != leftDown || rightAsyncDown != rightDown) {
-			KeyModifierMask state = getActiveModifiers();
-			if (!leftAsyncDown && !rightAsyncDown) {
-				// no win keys are down so remove super modifier
-				state &= ~KeyModifierSuper;
-			}
-
-			// report up events
-			if (leftDown  && !leftAsyncDown) {
-				LOG((CLOG_DEBUG1 "event: fake key release left windows key (0x%03x)", leftButton));
-				CKeyState::onKey(leftButton, false, state);
-				CKeyState::sendKeyEvent(m_eventTarget, false, false,
-								kKeySuper_L, state, 1, leftButton);
-			}
-			if (rightDown && !rightAsyncDown) {
-				LOG((CLOG_DEBUG1 "event: fake key release right windows key (0x%03x)", rightButton));
-				CKeyState::onKey(rightButton, false, state);
-				CKeyState::sendKeyEvent(m_eventTarget, false, false,
-								kKeySuper_R, state, 1, rightButton);
-			}
-		}
-	}
-
-	if (fix && m_fixTimer == NULL) {
-		// schedule check
-		m_fixTimer = m_events->newTimer(0.1, NULL);
-		m_events->adoptHandler(CEvent::kTimer, m_fixTimer,
-							new TMethodEventJob<CMSWindowsKeyState>(
-								this, &CMSWindowsKeyState::handleFixKeys));
-	}
-	else if (!fix && m_fixTimer != NULL) {
-		// remove scheduled check
-		m_events->removeHandler(CEvent::kTimer, m_fixTimer);
-		m_events->deleteTimer(m_fixTimer);
-		m_fixTimer = NULL;
-	}
-}
-
-void
-CMSWindowsKeyState::handleFixKeys(const CEvent&, void*)
-{
-	fixKeys();
-}
-
 KeyID
 CMSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button)
 {
@@ -1436,21 +1349,12 @@ CMSWindowsKeyState::getIDForKey(CKeyMap::KeyItem& item,
 				KeyButton button, UINT virtualKey,
 				PBYTE keyState, HKL hkl) const
 {
-	int n;
-	KeyID id;
-	if (m_is95Family) {
-		// XXX -- how do we get characters not in Latin-1?
-		WORD ascii;
-		n  = ToAsciiEx(virtualKey, button, keyState, &ascii, 0, hkl);
-		id = static_cast<KeyID>(ascii & 0xffu);
-	}
-	else {
-		WCHAR unicode[2];
-		n  = m_ToUnicodeEx(virtualKey, button, keyState,
-								unicode, sizeof(unicode) / sizeof(unicode[0]),
-								0, hkl);
-		id = static_cast<KeyID>(unicode[0]);
-	}
+	WCHAR unicode[2];
+	int n = m_ToUnicodeEx(
+		virtualKey, button, keyState, unicode,
+		sizeof(unicode) / sizeof(unicode[0]), 0, hkl);
+	KeyID id = static_cast<KeyID>(unicode[0]);
+	
 	switch (n) {
 	case -1:
 		return CKeyMap::getDeadKey(id);

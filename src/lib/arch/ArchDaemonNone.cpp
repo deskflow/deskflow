@@ -37,14 +37,13 @@ CArchDaemonNone::installDaemon(const char*,
 				const char*,
 				const char*,
 				const char*,
-				const char*,
-				bool)
+				const char*)
 {
 	// do nothing
 }
 
 void
-CArchDaemonNone::uninstallDaemon(const char*, bool)
+CArchDaemonNone::uninstallDaemon(const char*)
 {
 	// do nothing
 }
@@ -58,13 +57,13 @@ CArchDaemonNone::daemonize(const char* name, DaemonFunc func)
 }
 
 bool
-CArchDaemonNone::canInstallDaemon(const char*, bool)
+CArchDaemonNone::canInstallDaemon(const char*)
 {
 	return false;
 }
 
 bool
-CArchDaemonNone::isDaemonInstalled(const char*, bool)
+CArchDaemonNone::isDaemonInstalled(const char*)
 {
 	return false;
 }

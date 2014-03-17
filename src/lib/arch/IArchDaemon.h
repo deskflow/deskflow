@@ -51,14 +51,13 @@ public:
 							const char* description,
 							const char* pathname,
 							const char* commandLine,
-							const char* dependencies,
-							bool allUsers) = 0;
+							const char* dependencies) = 0;
 
 	//! Uninstall daemon
 	/*!
 	Uninstall a daemon.  Throws an \c XArchDaemon on failure.
 	*/
-	virtual void		uninstallDaemon(const char* name, bool allUsers) = 0;
+	virtual void		uninstallDaemon(const char* name) = 0;
 
 	//! Install daemon
 	/*!
@@ -109,13 +108,13 @@ public:
 	may still fail.  This method ignores whether or not the
 	service is already installed.
 	*/
-	virtual bool		canInstallDaemon(const char* name, bool allUsers) = 0;
+	virtual bool		canInstallDaemon(const char* name) = 0;
 
 	//! Check if the daemon is installed
 	/*!
 	Returns true iff the daemon is installed.
 	*/
-	virtual bool		isDaemonInstalled(const char* name, bool allUsers) = 0;
+	virtual bool		isDaemonInstalled(const char* name) = 0;
 
 	//@}
 

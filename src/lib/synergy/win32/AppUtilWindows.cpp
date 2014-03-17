@@ -17,20 +17,20 @@
  */
 
 #include "synergy/win32/AppUtilWindows.h"
-#include "common/Version.h"
-#include "base/Log.h"
-#include "arch/win32/XArchWindows.h"
-#include "arch/win32/ArchMiscWindows.h"
-#include "synergy/App.h"
-#include "base/log_outputters.h"
-#include "platform/MSWindowsScreen.h"
-#include "synergy/XSynergy.h"
-#include "arch/IArchTaskBarReceiver.h"
 #include "synergy/Screen.h"
 #include "synergy/ArgsBase.h"
+#include "synergy/App.h"
+#include "synergy/XSynergy.h"
+#include "platform/MSWindowsScreen.h"
+#include "arch/win32/XArchWindows.h"
+#include "arch/win32/ArchMiscWindows.h"
+#include "arch/IArchTaskBarReceiver.h"
+#include "base/Log.h"
+#include "base/log_outputters.h"
 #include "base/IEventQueue.h"
 #include "base/Event.h"
 #include "base/EventQueue.h"
+#include "common/Version.h"
 
 #include <sstream>
 #include <iostream>
@@ -156,6 +156,15 @@ CAppUtilWindows::beforeAppExit()
 int
 CAppUtilWindows::run(int argc, char** argv)
 {
+    OSVERSIONINFO osvi;
+    ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
+    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+    GetVersionEx(&osvi);
+
+    if (osvi.dwMajorVersion < 5 || (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion < 1)) {
+		throw std::runtime_error("synergy only supports windows xp and above.");
+    }
+
 	// record window instance for tray icon, etc
 	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 

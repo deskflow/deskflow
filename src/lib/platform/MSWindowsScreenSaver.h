@@ -60,10 +60,8 @@ private:
 		HWND			m_window;
 	};
 
-	static BOOL CALLBACK	findScreenSaverFunc(HWND hwnd, LPARAM lParam);
 	static BOOL CALLBACK	killScreenSaverFunc(HWND hwnd, LPARAM lParam);
 
-	DWORD				findScreenSaver();
 	void				watchDesktop();
 	void				watchProcess(HANDLE process);
 	void				unwatchProcess();
@@ -74,9 +72,6 @@ private:
 	bool				isSecure(bool* wasSecureAnInt) const;
 
 private:
-	bool				m_is95Family;
-	bool				m_is95;
-	bool				m_isNT;
 	BOOL				m_wasEnabled;
 	bool				m_wasSecure;
 	bool				m_wasSecureAnInt;
