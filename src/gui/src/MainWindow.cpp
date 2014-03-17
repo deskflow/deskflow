@@ -88,8 +88,6 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pLabelScreenName->setText(getScreenName());
 	m_pLabelIpAddresses->setText(getIPAddresses());
 
-	updatePremiumInfo();
-
 #if defined(Q_OS_WIN)
 	// ipc must always be enabled, so that we can disable command when switching to desktop mode.
 	connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLogRaw(const QString&)));
@@ -123,6 +121,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::start()
 {
+	updatePremiumInfo();
+
 	createTrayIcon();
 
 	showNormal();
