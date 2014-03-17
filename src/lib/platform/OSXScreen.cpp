@@ -119,9 +119,9 @@ COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCur
 		
 #if defined(MAC_OS_X_VERSION_10_9)
 			// we can't pass options to show the dialog, this must be done by the gui.
-			//if (!AXIsProcessTrusted()) {
-			//	throw XArch("assistive devices does not trust this process, allow it in system settings.");
-			//}
+			if (!AXIsProcessTrusted()) {
+				throw XArch("assistive devices does not trust this process, allow it in system settings.");
+			}
 #else
 			// now deprecated in mavericks.
 			if (!AXAPIEnabled()) {
