@@ -19,6 +19,6 @@
 import sys
 sys.path.append('ext')
 
-from build import toolchain
-tc = toolchain.Toolchain()
+from toolchain import commands
+tc = commands.Toolchain()
 tc.run(sys.argv)
