@@ -252,6 +252,12 @@ class InternalCommands:
 	
 	# cryptoPP dir with version number
 	cryptoPPDir = 'cryptopp562'
+	
+	# gtest dir with version number
+	gtestDir = 'gtest-1.6.0'
+	
+	# gmock dir with version number
+	gmockDir = 'gmock-1.6.0'
 
 	win32_generators = {
 		1 : Generator('Visual Studio 10'),
@@ -333,6 +339,38 @@ class InternalCommands:
 		zip = zipfile.ZipFile(zipFilename)
 		zip.extractall(dir)
 
+	def checkGTest(self):
+    
+		dir = self.extDir + '/' + self.gtestDir
+		if (os.path.isdir(dir)):
+			return
+		
+		zipFilename = dir + '.zip'
+		if (not os.path.exists(zipFilename)):
+			raise Exception('GTest zip not found at: ' + zipFilename)
+		
+		if not os.path.exists(dir):
+				os.mkdir(dir)
+		
+		zip = zipfile.ZipFile(zipFilename)
+		zip.extractall(dir)
+
+	def checkGMock(self):
+    
+		dir = self.extDir + '/' + self.gmockDir
+		if (os.path.isdir(dir)):
+			return
+		
+		zipFilename = dir + '.zip'
+		if (not os.path.exists(zipFilename)):
+			raise Exception('GMock zip not found at: ' + zipFilename)
+		
+		if not os.path.exists(dir):
+				os.mkdir(dir)
+		
+		zip = zipfile.ZipFile(zipFilename)
+		zip.extractall(dir)
+
 	def configure(self, target='', extraArgs=''):
 
 		# ensure latest setup and do not ask config for generator (only fall 
@@ -401,6 +439,8 @@ class InternalCommands:
 
 		# ensure that the cryptopp source exists
 		self.checkCryptoPP()
+		self.checkGTest()
+		self.checkGMock()
 		
 		if extraArgs != '':
 			cmake_args += ' ' + extraArgs
