@@ -16,7 +16,7 @@
 
 # TODO: split this file up, it's too long!
 
-import sys, os, ConfigParser, shutil, re, ftputil, zipfile, glob
+import sys, os, ConfigParser, shutil, re, ftputil, zipfile, glob, commands
 from generators import Generator, EclipseGenerator, XcodeGenerator, MakefilesGenerator
 from getopt import gnu_getopt
 
@@ -186,12 +186,6 @@ class Toolchain:
 				raise
 
 	def run(self, argv):
-		# the toolchain source used to live in the build dir, which is now used for
-		# CMake generated files. the only way to 
-		if os.path.exists('build/toolchain.py'):
-			print "Removing legacy build dir."
-			os.rename('build', 'build.old')
-		
 		if sys.version_info < (self.requiredMajor, self.requiredMinor):
 			print ('Python version must be at least ' +
 					 str(self.requiredMajor) + '.' + str(self.requiredMinor) + ', but is ' +
@@ -392,11 +386,11 @@ class InternalCommands:
 			print 'Defaulting target to: ' + self.defaultTarget
 			target = self.defaultTarget
 		
-		# allow user to skip qui compile
+		# allow user to skip core compile
 		if self.enableMakeCore:
 			self.configureCore(target, extraArgs)
 		
-		# allow user to skip qui compile
+		# allow user to skip gui compile
 		if self.enableMakeGui:
 			self.configureGui(target, extraArgs)
 		
@@ -504,7 +498,6 @@ class InternalCommands:
 			raise Exception('QMake encountered error: ' + str(err))
 
 	def getQmakeVersion(self):
-		import commands
 		version = commands.getoutput("qmake --version")
 		result = re.search('(\d+)\.(\d+)\.(\d)', version)
 		
@@ -609,7 +602,7 @@ class InternalCommands:
 		if self.enableMakeCore:
 			self.makeCore(targets)
 
-		# allow user to skip qui compile
+		# allow user to skip gui compile
 		if self.enableMakeGui:
 			self.makeGui(targets)
 	
@@ -834,7 +827,6 @@ class InternalCommands:
 
 	def find_revision(self):
 		if sys.version_info < (2, 4):
-			import commands
 			stdout = commands.getoutput('svn info')
 		else:
 			p = subprocess.Popen(['svn', 'info'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -873,18 +865,15 @@ class InternalCommands:
 		unixTarget = self.defaultTarget
 		
 		if type == '' or type == None:
-			raise Exception('No type specified.')
+			self.dist_usage()
+			return
 
 		if type != 'win' and type != 'mac':
 			self.configure(unixTarget, '-DCONF_CPACK:BOOL=TRUE')
 
 		moveExt = ''
 
-		if type == None:
-			self.dist_usage()
-			return
-			
-		elif type == 'src':
+		if type == 'src':
 			if sys.platform in ['linux2', 'darwin']:
 				self.distSrc()
 			else:
