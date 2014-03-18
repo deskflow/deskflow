@@ -18,9 +18,190 @@
 
 import sys, os, ConfigParser, shutil, re, ftputil, zipfile, glob
 from generators import Generator, EclipseGenerator, XcodeGenerator, MakefilesGenerator
+from getopt import gnu_getopt
 
 if sys.version_info >= (2, 4):
 	import subprocess
+
+class Toolchain:
+	
+	# minimum required version.
+	# 2.6 needed for ZipFile.extractall.
+	# do not change to 2.7, as the build machines are still at 2.6
+	# and are a massive pain in the ass to upgrade.
+	requiredMajor = 2
+	requiredMinor = 6
+
+	# options used by all commands
+	globalOptions = 'v'
+	globalOptionsLong = ['no-prompts', 'verbose', 'skip-gui', 'skip-core']
+
+	# list of valid commands as keys. the values are optarg strings, but most 
+	# are None for now (this is mainly for extensibility)
+	cmd_opt_dict = {
+		'about'     : ['', []],
+		'setup'     : ['g:', ['generator=']],
+		'configure' : ['g:dr', ['generator=', 'debug', 'release', 'mac-sdk=']],
+		'build'     : ['dr', ['debug', 'release']],
+		'clean'     : ['dr', ['debug', 'release']],
+		'update'    : ['', []],
+		'install'   : ['', []],
+		'doxygen'   : ['', []],
+		'dist'      : ['', ['vcredist-dir=', 'qt-dir=']],
+		'distftp'   : ['', ['host=', 'user=', 'pass=', 'dir=']],
+		'kill'      : ['', []],
+		'usage'     : ['', []],
+		'revision'  : ['', []],
+		'reformat'  : ['', []],
+		'open'      : ['', []],
+		'genlist'   : ['', []],
+		'reset'	    : ['', []],
+		'signwin'	: ['', ['pfx=', 'pwd=', 'dist']],
+		'signmac'	: ['', ['identity=']]
+	}
+
+	# aliases to valid commands
+	cmd_alias_dict = {
+		'info'	    : 'about',
+		'help'      : 'usage',
+		'package'   : 'dist',
+		'docs'      : 'doxygen',
+		'make'      : 'build',
+		'cmake'     : 'configure',
+	}
+
+	def complete_command(self, arg):
+		completions = []
+		
+		for cmd, optarg in self.cmd_opt_dict.iteritems():
+			# if command was matched fully, return only this, so that
+			# if `dist` is typed, it will return only `dist` and not
+			# `dist` and `distftp` for example.
+			if cmd == arg:
+				return [cmd,]
+			if cmd.startswith(arg):
+				completions.append(cmd)
+		
+		for alias, cmd in self.cmd_alias_dict.iteritems():
+			# don't know if this will work just like above, but it's
+			# probably worth adding.
+			if alias == arg:
+				return [alias,]
+			if alias.startswith(arg):
+				completions.append(alias)
+		
+		return completions
+
+	def start_cmd(self, argv):
+		
+		cmd_arg = ''
+		if len(argv) > 1:
+			cmd_arg = argv[1]
+				
+		# change common help args to help command
+		if cmd_arg in ('--help', '-h', '--usage', '-u', '/?'):
+			cmd_arg = 'usage'
+
+		completions = self.complete_command(cmd_arg)
+		
+		if cmd_arg and len(completions) > 0:
+
+			if len(completions) == 1:
+
+				# get the only completion (since in this case we have 1)
+				cmd = completions[0]
+
+				# build up the first part of the map (for illustrative purposes)
+				cmd_map = list()
+				if cmd_arg != cmd:
+					cmd_map.append(cmd_arg)
+					cmd_map.append(cmd)
+				
+				# map an alias to the command, and build up the map
+				if cmd in self.cmd_alias_dict.keys():
+					alias = cmd
+					if cmd_arg == cmd:
+						cmd_map.append(alias)
+					cmd = self.cmd_alias_dict[cmd]
+					cmd_map.append(cmd)
+				
+				# show command map to avoid confusion
+				if len(cmd_map) != 0:
+					print 'Mapping command: %s' % ' -> '.join(cmd_map)
+				
+				self.run_cmd(cmd, argv[2:])
+				
+				return 0
+				
+			else:
+				print (
+					'Command `%s` too ambiguous, '
+					'could mean any of: %s'
+					) % (cmd_arg, ', '.join(completions))
+		else:
+
+			if len(argv) == 1:
+				print 'No command specified, showing usage.\n'
+			else:
+				print 'Command not recognised: %s\n' % cmd_arg
+			
+			self.run_cmd('usage')
+		
+		# generic error code if not returned sooner
+		return 1
+
+	def run_cmd(self, cmd, argv = []):
+		
+		verbose = False
+		try:
+			options_pair = self.cmd_opt_dict[cmd]
+			
+			options = self.globalOptions + options_pair[0]
+			
+			options_long = []
+			options_long.extend(self.globalOptionsLong)
+			options_long.extend(options_pair[1])
+			
+			opts, args = gnu_getopt(argv, options, options_long)
+			
+			for o, a in opts:
+				if o in ('-v', '--verbose'):
+					verbose = True
+			
+			# pass args and optarg data to command handler, which figures out
+			# how to handle the arguments
+			handler = CommandHandler(argv, opts, args, verbose)
+			
+			# use reflection to get the function pointer
+			cmd_func = getattr(handler, cmd)
+		
+			cmd_func()
+		except:
+			if not verbose:
+				# print friendly error for users
+				sys.stderr.write('Error: ' + sys.exc_info()[1].__str__() + '\n')
+				sys.exit(1)
+			else:
+				# if user wants to be verbose let python do it's thing
+				raise
+
+	def run(self, argv):
+		# the toolchain source used to live in the build dir, which is now used for
+		# CMake generated files. the only way to 
+		if os.path.exists('build/toolchain.py'):
+			print "Removing legacy build dir."
+			os.rename('build', 'build.old')
+		
+		if sys.version_info < (self.requiredMajor, self.requiredMinor):
+			print ('Python version must be at least ' +
+					 str(self.requiredMajor) + '.' + str(self.requiredMinor) + ', but is ' +
+					 str(sys.version_info[0]) + '.' + str(sys.version_info[1]))
+			sys.exit(1)
+
+		try:
+			self.start_cmd(argv)
+		except KeyboardInterrupt:
+			print '\n\nUser aborted, exiting.'
 
 class InternalCommands:
 	
