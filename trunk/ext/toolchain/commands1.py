@@ -328,10 +328,10 @@ class InternalCommands:
 			raise Exception('Crypto++ zip not found at: ' + zipFilename)
 		
 		if not os.path.exists(dir):
-				os.mkdir(dir)
+			os.mkdir(dir)
 		
 		zip = zipfile.ZipFile(zipFilename)
-		zip.extractall(dir)
+		self.zipExtractAll(zip, dir)
 
 	def checkGTest(self):
     
@@ -344,10 +344,10 @@ class InternalCommands:
 			raise Exception('GTest zip not found at: ' + zipFilename)
 		
 		if not os.path.exists(dir):
-				os.mkdir(dir)
+			os.mkdir(dir)
 		
 		zip = zipfile.ZipFile(zipFilename)
-		zip.extractall(dir)
+		self.zipExtractAll(zip, dir)
 
 	def checkGMock(self):
     
@@ -360,10 +360,22 @@ class InternalCommands:
 			raise Exception('GMock zip not found at: ' + zipFilename)
 		
 		if not os.path.exists(dir):
-				os.mkdir(dir)
+			os.mkdir(dir)
 		
 		zip = zipfile.ZipFile(zipFilename)
-		zip.extractall(dir)
+		self.zipExtractAll(zip, dir)
+
+	# ZipFile.extractall() is buggy in 2.6.1
+	# http://bugs.python.org/issue4710
+	def zipExtractAll(self, z, dir):
+		if not dir.endswith("/"):
+			dir += "/"
+		
+		for f in z.namelist():
+			if f.endswith("/"):
+				os.makedirs(dir + f)
+			else:
+				z.extract(f, dir)
 
 	def configure(self, target='', extraArgs=''):
 
