@@ -893,8 +893,7 @@ class InternalCommands:
 			
 		elif type == 'rpm':
 			if sys.platform == 'linux2':
-				self.dist_run('cpack -G RPM', unixTarget)
-				moveExt = 'rpm'
+                                self.distRpm()
 			else:
 				package_unsupported = True
 			
@@ -931,6 +930,42 @@ class InternalCommands:
 				("Package type, '%s' is not supported for platform, '%s'") 
 				% (type, sys.platform))
 		
+        def distRpm(self):
+                rpmDir = self.getGenerator().buildDir + '/rpm'
+                if os.path.exists(rpmDir):
+			shutil.rmtree(rpmDir)
+		
+		os.makedirs(rpmDir)
+
+		templateFile = open(self.cmake_dir + '/synergy.spec.in')
+		template = templateFile.read()
+
+		template = template.replace('${in:version}', self.getVersionFromCmake())	
+                
+		specPath = rpmDir + '/synergy.spec'
+
+		specFile = open(specPath, 'w')
+		specFile.write(template)
+		specFile.close()
+
+                version = self.getVersionFromCmake()
+                target = '../../bin/synergy-%s-%s.rpm' % (
+                        version, self.getLinuxPlatform())
+                
+
+		try:
+			self.try_chdir(rpmDir)
+                        cmd = 'rpmbuild -bb --define "_topdir `pwd`" synergy.spec'
+                        print "RPM command: " + cmd
+			err = os.system(cmd)
+			if err != 0:
+				raise Exception('Package failed: ' + str(err))
+
+			self.unixMove('RPMS/*/*.rpm', target)
+		finally:
+			self.restore_chdir()
+
+
 	def distSrc(self):
 		version = self.getVersionFromCmake()
 		name = (self.project + '-' + version + '-Source')
@@ -1099,7 +1134,20 @@ class InternalCommands:
 
 		ftp.run(srcDir + src, dest) 
 		print 'Done'
-	
+                
+        def getLinuxPlatform(self):
+                # os_bits should be loaded with '32bit' or '64bit'
+                import platform
+                (os_bits, other) = platform.architecture()
+		
+                # get platform based on current platform
+                if os_bits == '32bit':
+                        return 'Linux-i686'
+                elif os_bits == '64bit':
+                        return 'Linux-x86_64'
+                else:
+                        raise Exception("unknown os bits: " + os_bits)
+
 	def dist_name(self, type):
 		ext = None
 		platform = None
@@ -1110,16 +1158,8 @@ class InternalCommands:
 			
 		elif type == 'rpm' or type == 'deb':
 		
-			# os_bits should be loaded with '32bit' or '64bit'
-			import platform
-			(os_bits, other) = platform.architecture()
-		
-			# get platform based on current platform
 			ext = type
-			if os_bits == '32bit':
-				platform = 'Linux-i686'
-			elif os_bits == '64bit':
-				platform = 'Linux-x86_64'
+                        platform = self.getLinuxPlatform()
 			
 		elif type == 'win':
 			
