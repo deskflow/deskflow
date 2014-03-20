@@ -31,13 +31,14 @@ cp $source/res/synergy.desktop %{buildroot}%{_datarootdir}/applications
 cp $source/res/synergy.ico %{buildroot}%{_datarootdir}/icons
 
 %files
+%defattr(755,root,root,-)
 %{_bindir}/synergy
 %{_bindir}/synergyc
 %{_bindir}/synergys
 %{_bindir}/synergyd
 %{_bindir}/syntool
-%{_datarootdir}/applications/synergy.desktop
-%{_datarootdir}/icons/synergy.ico
+%attr(644,-,-) %{_datarootdir}/applications/synergy.desktop
+%attr(644,-,-) %{_datarootdir}/icons/synergy.ico
 
 %changelog
 * Thu Mar 20 2014 Nick Bolton <nick@synergy-foss.org>
