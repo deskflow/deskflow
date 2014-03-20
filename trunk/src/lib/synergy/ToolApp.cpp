@@ -25,36 +25,59 @@
 //#define PREMIUM_AUTH_URL "http://localhost/synergy/premium/json/auth/"
 #define PREMIUM_AUTH_URL "https://synergy-foss.org/premium/json/auth/"
 
-int
+enum {
+	kErrorOk,
+	kErrorArgs,
+	kErrorException,
+	kErrorUnknown
+};
+
+UInt32
 CToolApp::run(int argc, char** argv)
 {
 	if (argc <= 1) {
 		std::cerr << "no args" << std::endl;
-		return 1;
+		return kErrorArgs;
 	}
 
-	for (int i = 1; i < argc; i++) {
-		if (strcmp(argv[i], "--premium-auth") == 0) {
-			CString credentials;
-			std::cin >> credentials;
+	try {
+		for (int i = 1; i < argc; i++) {
+			if (strcmp(argv[i], "--premium-auth") == 0) {
+				premiumAuth();
+				return kErrorOk;
+			}
+			else {
+				std::cerr << "unknown arg: " << argv[i] << std::endl;
+				return kErrorArgs;
+			}
+		}
+	}
+	catch (std::exception& e) {
+		std::cerr << e.what() << std::endl;
+		return kErrorException;
+	}
+	catch (...) {
+		std::cerr << "unknown error" << std::endl;
+		return kErrorUnknown;
+	}
 
-			size_t separator = credentials.find(':');
-			CString email = credentials.substr(0, separator);
-			CString password = credentials.substr(separator + 1, credentials.length());
+	return kErrorOk;
+}
+
+void
+CToolApp::premiumAuth()
+{
+	CString credentials;
+	std::cin >> credentials;
+
+	size_t separator = credentials.find(':');
+	CString email = credentials.substr(0, separator);
+	CString password = credentials.substr(separator + 1, credentials.length());
 			
-			std::stringstream ss;
-			ss << PREMIUM_AUTH_URL;
-			ss << "?email=" << ARCH->internet().urlEncode(email);
-			ss << "&password=" << password;
+	std::stringstream ss;
+	ss << PREMIUM_AUTH_URL;
+	ss << "?email=" << ARCH->internet().urlEncode(email);
+	ss << "&password=" << password;
 
-			std::cout << ARCH->internet().get(ss.str()) << std::endl;
-			return 0;
-		}
-		else {
-			std::cerr << "unknown arg: " << argv[i] << std::endl;
-			return 1;
-		}
-	}
-
-	return 0;
+	std::cout << ARCH->internet().get(ss.str()) << std::endl;
 }

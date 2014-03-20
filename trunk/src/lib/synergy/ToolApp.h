@@ -17,7 +17,12 @@
 
 #pragma once
 
+#include "common/basic_types.h"
+
 class CToolApp {
 public:
-	int					run(int argc, char** argv);
+	UInt32				run(int argc, char** argv);
+
+private:
+	void				premiumAuth();
 };

@@ -252,12 +252,20 @@ bool SetupWizard::isPremiumLoginValid(QMessageBox& message)
 	QString email = m_pLineEditPremiumEmail->text();
 	QString password = m_pLineEditPremiumPassword->text();
 
-	PremiumAuth auth;
-	QString responseJson = auth.request(email, password);
-
-	if (responseJson.trimmed() == "") {
-		message.setText(tr("Login failed, could not communicate with server."));
-		message.exec();
+	QString responseJson;
+	try
+	{
+		PremiumAuth auth;
+		responseJson = auth.request(email, password);
+	}
+	catch (std::exception& e)
+	{
+		message.critical(
+			this, "Error",
+			tr("Sorry, an error occured while trying to sign in. "
+			   "Please contact the help desk, and provide the "
+			   "following details.\n\n%1")
+			.arg(e.what()));
 		return false;
 	}
 
@@ -268,8 +276,9 @@ bool SetupWizard::isPremiumLoginValid(QMessageBox& message)
 			return true;
 		}
 		else if (boolString == "false") {
-			message.setText(tr("Login failed, invalid email or password."));
-			message.exec();
+			message.critical(
+				this, "Error",
+				tr("Login failed, invalid email or password."));
 			return false;
 		}
 	}
@@ -280,13 +289,16 @@ bool SetupWizard::isPremiumLoginValid(QMessageBox& message)
 			// replace "\n" with real new lines.
 			QString error = errorRegex.cap(1).replace("\\n", "\n");
 
-			message.setText(tr("Login failed, an error occurred.\n\n%1").arg(error));
-			message.exec();
+			message.critical(
+				this, "Error",
+				tr("Login failed, an error occurred.\n\n%1").arg(error));
 			return false;
 		}
 	}
 
-	message.setText(tr("Login failed, an error occurred.\n\nServer response:\n\n%1").arg(responseJson));
-	message.exec();
+	message.critical(
+		this, "Error",
+		tr("Login failed, an error occurred.\n\nServer response:\n\n%1")
+			.arg(responseJson));
 	return false;
 }
