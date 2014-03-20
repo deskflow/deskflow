@@ -55,6 +55,9 @@ string for that error code.
 */
 class XArchEval {
 public:
+	XArchEval() { }
+	virtual ~XArchEval() _NOEXCEPT { }
+	
 	virtual std::string	eval() const = 0;
 };
 
@@ -63,7 +66,7 @@ class XArch : public std::runtime_error {
 public:
 	XArch(XArchEval* adopted) : std::runtime_error(adopted->eval()) { delete adopted; }
 	XArch(const std::string& msg) : std::runtime_error(msg) { }
-	~XArch() _NOEXCEPT { }
+	virtual ~XArch() _NOEXCEPT { }
 };
 
 // Macro to declare XArch derived types
