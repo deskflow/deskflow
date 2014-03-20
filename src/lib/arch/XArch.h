@@ -55,26 +55,15 @@ string for that error code.
 */
 class XArchEval {
 public:
-	XArchEval() { }
-	virtual ~XArchEval() { }
-
-	virtual XArchEval*	clone() const throw() = 0;
-
-	virtual std::string	eval() const throw() = 0;
+	virtual std::string	eval() const = 0;
 };
 
 //! Generic exception architecture dependent library
 class XArch : public std::runtime_error {
 public:
-	XArch(XArchEval* adoptedEvaluator) : std::runtime_error(""), m_eval(adoptedEvaluator) { }
-	XArch(const std::string& msg) : std::runtime_error(msg), m_eval(NULL) { }
-	XArch(const XArch& e) : std::runtime_error(e.what()), m_eval(e.m_eval != NULL ? e.m_eval->clone() : NULL) { }
-	~XArch() _NOEXCEPT { delete m_eval; }
-
-	virtual const char* what() const _NOEXCEPT;
-
-private:
-	XArchEval*			m_eval;
+	XArch(XArchEval* adopted) : std::runtime_error(adopted->eval()) { delete adopted; }
+	XArch(const std::string& msg) : std::runtime_error(msg) { }
+	~XArch() _NOEXCEPT { }
 };
 
 // Macro to declare XArch derived types

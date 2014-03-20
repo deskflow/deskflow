@@ -24,12 +24,6 @@
 // XArchEvalUnix
 //
 
-XArchEval*
-XArchEvalUnix::clone() const throw()
-{
-	return new XArchEvalUnix(m_errno);
-}
-
 std::string
 XArchEvalUnix::eval() const throw()
 {
