@@ -18,16 +18,11 @@
 
 #include "arch/win32/XArchWindows.h"
 #include "arch/win32/ArchNetworkWinsock.h"
+#include "base/String.h"
 
 //
 // XArchEvalWindows
 //
-
-XArchEval*
-XArchEvalWindows::clone() const throw()
-{
-	return new XArchEvalWindows(m_errno);
-}
 
 std::string
 XArchEvalWindows::eval() const throw()
@@ -37,13 +32,13 @@ XArchEvalWindows::eval() const throw()
 							FORMAT_MESSAGE_IGNORE_INSERTS |
 							FORMAT_MESSAGE_FROM_SYSTEM,
 							0,
-							m_errno,
+							m_error,
 							MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 							(LPTSTR)&cmsg,
 							0,
 							NULL) == 0) {
 		cmsg = NULL;
-		return "Unknown error";
+		return string_format("Unknown error, code %d", m_error);
 	}
 	std::string smsg(cmsg);
 	LocalFree(cmsg);
@@ -54,12 +49,6 @@ XArchEvalWindows::eval() const throw()
 //
 // XArchEvalWinsock
 //
-
-XArchEval*
-XArchEvalWinsock::clone() const throw()
-{
-	return new XArchEvalWinsock(m_errno);
-}
 
 std::string
 XArchEvalWinsock::eval() const throw()
@@ -123,7 +112,7 @@ XArchEvalWinsock::eval() const throw()
 	};
 
 	for (unsigned int i = 0; s_netErrorCodes[i].m_code != 0; ++i) {
-		if (s_netErrorCodes[i].m_code == m_errno) {
+		if (s_netErrorCodes[i].m_code == m_error) {
 			return s_netErrorCodes[i].m_msg;
 		}
 	}

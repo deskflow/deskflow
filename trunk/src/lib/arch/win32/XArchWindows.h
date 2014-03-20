@@ -26,28 +26,24 @@
 //! Lazy error message string evaluation for windows
 class XArchEvalWindows : public XArchEval {
 public:
-	XArchEvalWindows() : m_errno(GetLastError()) { }
-	XArchEvalWindows(DWORD err) : m_errno(err) { }
+	XArchEvalWindows() : m_error(GetLastError()) { }
+	XArchEvalWindows(DWORD error) : m_error(error) { }
 	virtual ~XArchEvalWindows() { }
 
-	// XArchEval overrides
-	virtual XArchEval*	clone() const throw();
-	virtual std::string	eval() const throw();
+	virtual std::string	eval() const;
 
 private:
-	DWORD				m_errno;
+	DWORD				m_error;
 };
 
 //! Lazy error message string evaluation for winsock
 class XArchEvalWinsock : public XArchEval {
 public:
-	XArchEvalWinsock(int err) : m_errno(err) { }
+	XArchEvalWinsock(int error) : m_error(error) { }
 	virtual ~XArchEvalWinsock() { }
 
-	// XArchEval overrides
-	virtual XArchEval*	clone() const throw();
-	virtual std::string	eval() const throw();
+	virtual std::string	eval() const;
 
 private:
-	int					m_errno;
+	int					m_error;
 };

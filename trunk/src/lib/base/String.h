@@ -25,3 +25,4 @@
 typedef std::string CString;
 
 void find_replace_all(CString& subject, const CString& find, const CString& replace);
+CString string_format(const CString format, ...);

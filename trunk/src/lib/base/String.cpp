@@ -17,6 +17,9 @@
 
 #include "base/String.h"
 
+#include <memory>
+#include <cstdarg>
+
 void
 find_replace_all(
 	CString& subject,
@@ -28,4 +31,35 @@ find_replace_all(
          subject.replace(pos, find.length(), replace);
          pos += replace.length();
     }
+}
+
+CString
+string_format(const CString format, ...)
+{
+	// reserve 2 times as much as the length of the format
+    size_t final, n = format.size() * 2;
+
+    CString str;
+    std::unique_ptr<char[]> formatted;
+    va_list ap;
+
+    while (true) {
+        
+		// wrap the plain char array in unique_ptr
+		formatted.reset(new char[n]);
+
+        strcpy(&formatted[0], format.c_str());
+        va_start(ap, format);
+        final = vsnprintf(&formatted[0], n, format.c_str(), ap);
+        va_end(ap);
+
+        if (final < 0 || final >= n) {
+            n += abs(static_cast<int>(final - n + 1));
+		}
+		else {
+            break;
+		}
+    }
+
+    return CString(formatted.get());
 }
