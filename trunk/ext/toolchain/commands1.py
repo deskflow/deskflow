@@ -1136,6 +1136,9 @@ class InternalCommands:
 		print 'Done'
                 
         def getLinuxPlatform(self):
+		if os.uname()[4][:3] == 'arm':
+			return 'Linux-armv6l'
+
                 # os_bits should be loaded with '32bit' or '64bit'
                 import platform
                 (os_bits, other) = platform.architecture()
