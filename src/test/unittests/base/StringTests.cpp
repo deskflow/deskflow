@@ -17,46 +17,26 @@
 
 #include "base/String.h"
 
-#include <stdio.h>
-#include <cstdarg>
+#include "test/global/gtest.h"
 
-void
-find_replace_all(
-	CString& subject,
-	const CString& find,
-	const CString& replace)
+TEST(CStringTests, find_replace_all)
 {
-	size_t pos = 0;
-	while ((pos = subject.find(find, pos)) != CString::npos) {
-		 subject.replace(pos, find.length(), replace);
-		 pos += replace.length();
-	}
+	CString subject = "foobar";
+	CString find = "bar";
+	CString replace = "baz";
+
+	find_replace_all(subject, find, replace);
+
+	EXPECT_EQ("foobaz", subject);
 }
 
-CString
-string_format(const std::string fmt, ...)
+TEST(CStringTests, string_format)
 {
-	int size = 100;
-	std::string str;
-	va_list ap;
+	CString format = "%s=%d";
+	const char* arg1 = "answer";
+	int arg2 = 42;
 
-	while (true) {
-		str.resize(size);
-		va_start(ap, fmt);
-		int n = vsnprintf((char *)str.c_str(), size, fmt.c_str(), ap);
-		va_end(ap);
+	CString result = string_format(format, arg1, arg2);
 
-		if (n > -1 && n < size) {
-			str.resize(n);
-			return str;
-		}
-		if (n > -1) {
-			size = n + 1;
-		}
-		else {
-			size *= 2;
-		}
-	}
-
-	return str;
+	EXPECT_EQ("answer=42", result);
 }
