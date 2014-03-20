@@ -25,8 +25,8 @@
 //
 
 std::string
-XArchEvalUnix::eval() const throw()
+XArchEvalUnix::eval() const
 {
 	// FIXME -- not thread safe
-	return strerror(m_errno);
+	return strerror(m_error);
 }
