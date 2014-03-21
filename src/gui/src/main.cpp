@@ -31,6 +31,7 @@
 
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
+#include "AXDatabaseCleaner.h"
 #endif
 
 class QThreadImpl : public QThread
@@ -136,11 +137,24 @@ bool checkMacAssistiveDevices()
 	// show up there automatically, but will be unchecked.
 
 	const void* keys[] = { kAXTrustedCheckOptionPrompt };
-	const void* values[] = { kCFBooleanTrue };
+	const void* falseValue[] = { kCFBooleanFalse };
+	const void* trueValue[] = { kCFBooleanTrue };
 
-	CFDictionaryRef options = CFDictionaryCreate(NULL, keys, values, 1, NULL, NULL);
-	bool result = AXIsProcessTrustedWithOptions(options);
-	CFRelease(options);
+	CFDictionaryRef optionsWithoutPrompt = CFDictionaryCreate(NULL, keys, falseValue, 1, NULL, NULL);
+	CFDictionaryRef optionsWithPrompt = CFDictionaryCreate(NULL, keys, trueValue, 1, NULL, NULL);
+	bool result;
+
+	result = AXIsProcessTrustedWithOptions(optionsWithoutPrompt);
+	if (!result) {
+		// call privilege help tool
+		AXDatabaseCleaner axdc;
+		axdc.loadPrivilegeHelper();
+
+		result = AXIsProcessTrustedWithOptions(optionsWithPrompt);
+	}
+
+	CFRelease(optionsWithoutPrompt);
+	CFRelease(optionsWithPrompt);
 
 	return result;
 
