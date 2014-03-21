@@ -17,7 +17,7 @@
  */
 
 #include "base/XBase.h"
-#include "base/StringUtil.h"
+#include "base/String.h"
 
 #include <cerrno>
 #include <cstdarg>
@@ -64,7 +64,7 @@ XBase::format(const char* /*id*/, const char* fmt, ...) const throw()
 	va_list args;
 	va_start(args, fmt);
 	try {
-		result = CStringUtil::vformat(fmt, args);
+		result = synergy::string::vformat(fmt, args);
 	}
 	catch (...) {
 		// ignore

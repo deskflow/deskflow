@@ -28,6 +28,8 @@
 
 #include <cstdlib>
 
+using namespace synergy::string;
+
 //
 // CConfig
 //
@@ -75,7 +77,7 @@ CConfig::renameScreen(const CString& oldName,
 
 	// accept if names are equal but replace with new name to maintain
 	// case.  otherwise, the new name must not exist.
-	if (!CStringUtil::CaselessCmp::equal(oldName, newName) &&
+	if (!CaselessCmp::equal(oldName, newName) &&
 		m_nameToCanonicalName.find(newName) != m_nameToCanonicalName.end()) {
 		return false;
 	}
@@ -96,10 +98,10 @@ CConfig::renameScreen(const CString& oldName,
 	}
 
 	// update alias targets
-	if (CStringUtil::CaselessCmp::equal(oldName, oldCanonical)) {
+	if (CaselessCmp::equal(oldName, oldCanonical)) {
 		for (CNameMap::iterator iter = m_nameToCanonicalName.begin();
 							iter != m_nameToCanonicalName.end(); ++iter) {
-			if (CStringUtil::CaselessCmp::equal(
+			if (CaselessCmp::equal(
 							iter->second, oldCanonical)) {
 				iter->second = newName;
 			}
@@ -444,7 +446,7 @@ bool
 CConfig::isCanonicalName(const CString& name) const
 {
 	return (!name.empty() &&
-			CStringUtil::CaselessCmp::equal(getCanonicalName(name), name));
+			CaselessCmp::equal(getCanonicalName(name), name));
 }
 
 CString
@@ -579,7 +581,7 @@ CConfig::operator==(const CConfig& x) const
 								index2 = x.m_map.begin();
 								index1 != m_map.end(); ++index1, ++index2) {
 		// compare names
-		if (!CStringUtil::CaselessCmp::equal(index1->first, index2->first)) {
+		if (!CaselessCmp::equal(index1->first, index2->first)) {
 			return false;
 		}
 
@@ -593,8 +595,8 @@ CConfig::operator==(const CConfig& x) const
 								index2 = x.m_nameToCanonicalName.begin();
 								index1 != m_nameToCanonicalName.end();
 								++index1, ++index2) {
-		if (!CStringUtil::CaselessCmp::equal(index1->first,  index2->first) ||
-			!CStringUtil::CaselessCmp::equal(index1->second, index2->second)) {
+		if (!CaselessCmp::equal(index1->first,  index2->first) ||
+			!CaselessCmp::equal(index1->second, index2->second)) {
 			return false;
 		}
 	}
@@ -645,7 +647,7 @@ CConfig::formatInterval(const CInterval& x)
 	if (x.first == 0.0f && x.second == 1.0f) {
 		return "";
 	}
-	return CStringUtil::print("(%d,%d)", (int)(x.first * 100.0f + 0.5f),
+	return synergy::string::sprintf("(%d,%d)", (int)(x.first * 100.0f + 0.5f),
 										(int)(x.second * 100.0f + 0.5f));
 }
 
@@ -1426,7 +1428,7 @@ CConfig::getOptionValue(OptionID id, OptionValue value)
 		id == kOptionScreenSwitchCornerSize ||
 		id == kOptionScreenSwitchDelay ||
 		id == kOptionScreenSwitchTwoTap) {
-		return CStringUtil::print("%d", value);
+		return synergy::string::sprintf("%d", value);
 	}
 	if (id == kOptionScreenSwitchCorners) {
 		std::string result("none");
@@ -1464,7 +1466,7 @@ bool
 CConfig::CName::operator==(const CString& name) const
 {
 	CString canonical = m_config->getCanonicalName(name);
-	return CStringUtil::CaselessCmp::equal(canonical, m_name);
+	return CaselessCmp::equal(canonical, m_name);
 }
 
 
@@ -1726,7 +1728,7 @@ CConfig::CCell::operator==(const CCell& x) const
 
 		// operator== doesn't compare names.  only compare destination
 		// names.
-		if (!CStringUtil::CaselessCmp::equal(index1->second.getName(),
+		if (!CaselessCmp::equal(index1->second.getName(),
 								index2->second.getName())) {
 			return false;
 		}
@@ -1812,7 +1814,7 @@ operator<<(std::ostream& s, const CConfig& config)
 	if (config.m_map.size() != config.m_nameToCanonicalName.size()) {
 		// map canonical to alias
 		typedef std::multimap<CString, CString,
-								CStringUtil::CaselessCmp> CMNameMap;
+								CaselessCmp> CMNameMap;
 		CMNameMap aliases;
 		for (CConfig::CNameMap::const_iterator
 								index = config.m_nameToCanonicalName.begin();
@@ -1907,7 +1909,7 @@ CConfigReadContext::readLine(CString& line)
 				if (!isgraph(line[i]) && line[i] != ' ' && line[i] != '\t') {
 					throw XConfigRead(*this,
 								"invalid character %{1}",
-								CStringUtil::print("%#2x", line[i]));
+								synergy::string::sprintf("%#2x", line[i]));
 				}
 			}
 
@@ -1935,10 +1937,10 @@ CConfigReadContext::operator!() const
 OptionValue
 CConfigReadContext::parseBoolean(const CString& arg) const
 {
-	if (CStringUtil::CaselessCmp::equal(arg, "true")) {
+	if (CaselessCmp::equal(arg, "true")) {
 		return static_cast<OptionValue>(true);
 	}
-	if (CStringUtil::CaselessCmp::equal(arg, "false")) {
+	if (CaselessCmp::equal(arg, "false")) {
 		return static_cast<OptionValue>(false);
 	}
 	throw XConfigRead(*this, "invalid boolean argument \"%{1}\"", arg);
@@ -1965,25 +1967,25 @@ CConfigReadContext::parseInt(const CString& arg) const
 OptionValue
 CConfigReadContext::parseModifierKey(const CString& arg) const
 {
-	if (CStringUtil::CaselessCmp::equal(arg, "shift")) {
+	if (CaselessCmp::equal(arg, "shift")) {
 		return static_cast<OptionValue>(kKeyModifierIDShift);
 	}
-	if (CStringUtil::CaselessCmp::equal(arg, "ctrl")) {
+	if (CaselessCmp::equal(arg, "ctrl")) {
 		return static_cast<OptionValue>(kKeyModifierIDControl);
 	}
-	if (CStringUtil::CaselessCmp::equal(arg, "alt")) {
+	if (CaselessCmp::equal(arg, "alt")) {
 		return static_cast<OptionValue>(kKeyModifierIDAlt);
 	}
-	if (CStringUtil::CaselessCmp::equal(arg, "altgr")) {
+	if (CaselessCmp::equal(arg, "altgr")) {
 		return static_cast<OptionValue>(kKeyModifierIDAltGr);
 	}
-	if (CStringUtil::CaselessCmp::equal(arg, "meta")) {
+	if (CaselessCmp::equal(arg, "meta")) {
 		return static_cast<OptionValue>(kKeyModifierIDMeta);
 	}
-	if (CStringUtil::CaselessCmp::equal(arg, "super")) {
+	if (CaselessCmp::equal(arg, "super")) {
 		return static_cast<OptionValue>(kKeyModifierIDSuper);
 	}
-	if (CStringUtil::CaselessCmp::equal(arg, "none")) {
+	if (CaselessCmp::equal(arg, "none")) {
 		return static_cast<OptionValue>(kKeyModifierIDNull);
 	}
 	throw XConfigRead(*this, "invalid argument \"%{1}\"", arg);
@@ -1992,34 +1994,34 @@ CConfigReadContext::parseModifierKey(const CString& arg) const
 OptionValue
 CConfigReadContext::parseCorner(const CString& arg) const
 {
-	if (CStringUtil::CaselessCmp::equal(arg, "left")) {
+	if (CaselessCmp::equal(arg, "left")) {
 		return kTopLeftMask | kBottomLeftMask;
 	}
-	else if (CStringUtil::CaselessCmp::equal(arg, "right")) {
+	else if (CaselessCmp::equal(arg, "right")) {
 		return kTopRightMask | kBottomRightMask;
 	}
-	else if (CStringUtil::CaselessCmp::equal(arg, "top")) {
+	else if (CaselessCmp::equal(arg, "top")) {
 		return kTopLeftMask | kTopRightMask;
 	}
-	else if (CStringUtil::CaselessCmp::equal(arg, "bottom")) {
+	else if (CaselessCmp::equal(arg, "bottom")) {
 		return kBottomLeftMask | kBottomRightMask;
 	}
-	else if (CStringUtil::CaselessCmp::equal(arg, "top-left")) {
+	else if (CaselessCmp::equal(arg, "top-left")) {
 		return kTopLeftMask;
 	}
-	else if (CStringUtil::CaselessCmp::equal(arg, "top-right")) {
+	else if (CaselessCmp::equal(arg, "top-right")) {
 		return kTopRightMask;
 	}
-	else if (CStringUtil::CaselessCmp::equal(arg, "bottom-left")) {
+	else if (CaselessCmp::equal(arg, "bottom-left")) {
 		return kBottomLeftMask;
 	}
-	else if (CStringUtil::CaselessCmp::equal(arg, "bottom-right")) {
+	else if (CaselessCmp::equal(arg, "bottom-right")) {
 		return kBottomRightMask;
 	}
-	else if (CStringUtil::CaselessCmp::equal(arg, "none")) {
+	else if (CaselessCmp::equal(arg, "none")) {
 		return kNoCornerMask;
 	}
-	else if (CStringUtil::CaselessCmp::equal(arg, "all")) {
+	else if (CaselessCmp::equal(arg, "all")) {
 		return kAllCornersMask;
 	}
 	throw XConfigRead(*this, "invalid argument \"%{1}\"", arg);
@@ -2299,7 +2301,7 @@ CConfigReadContext::concatArgs(const ArgList& args)
 
 XConfigRead::XConfigRead(const CConfigReadContext& context,
 				const CString& error) :
-	m_error(CStringUtil::print("line %d: %s",
+	m_error(synergy::string::sprintf("line %d: %s",
 							context.getLineNumber(), error.c_str()))
 {
 	// do nothing
@@ -2307,8 +2309,8 @@ XConfigRead::XConfigRead(const CConfigReadContext& context,
 
 XConfigRead::XConfigRead(const CConfigReadContext& context,
 				const char* errorFmt, const CString& arg) :
-	m_error(CStringUtil::print("line %d: ", context.getLineNumber()) +
-							CStringUtil::format(errorFmt, arg.c_str()))
+	m_error(synergy::string::sprintf("line %d: ", context.getLineNumber()) +
+							synergy::string::format(errorFmt, arg.c_str()))
 {
 	// do nothing
 }

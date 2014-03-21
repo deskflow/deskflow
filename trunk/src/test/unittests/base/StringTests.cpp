@@ -19,24 +19,37 @@
 
 #include "test/global/gtest.h"
 
-TEST(CStringTests, find_replace_all)
+using namespace synergy;
+
+TEST(CStringTests, format)
+{
+	const char* format = "%%%{1}=%{2}";
+	const char* arg1 = "answer";
+	const char* arg2 = "42";
+
+	CString result = string::format(format, arg1, arg2);
+
+	EXPECT_EQ("%answer=42", result);
+}
+
+TEST(CStringTests, findReplaceAll)
 {
 	CString subject = "foobar";
 	CString find = "bar";
 	CString replace = "baz";
 
-	find_replace_all(subject, find, replace);
+	string::findReplaceAll(subject, find, replace);
 
 	EXPECT_EQ("foobaz", subject);
 }
 
-TEST(CStringTests, string_format)
+TEST(CStringTests, sprintf)
 {
-	CString format = "%s=%d";
+	const char* format = "%s=%d";
 	const char* arg1 = "answer";
 	int arg2 = 42;
 
-	CString result = string_format(format, arg1, arg2);
+	CString result = string::sprintf(format, arg1, arg2);
 
 	EXPECT_EQ("answer=42", result);
 }

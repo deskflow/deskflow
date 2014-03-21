@@ -20,7 +20,6 @@
 
 #include "synergy/key_types.h"
 #include "base/String.h"
-#include "base/StringUtil.h"
 #include "common/stdmap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
@@ -463,9 +462,9 @@ private:
 
 	// Key maps for parsing/formatting
 	typedef std::map<CString, KeyID,
-							CStringUtil::CaselessCmp> CNameToKeyMap;
+							synergy::string::CaselessCmp> CNameToKeyMap;
 	typedef std::map<CString, KeyModifierMask,
-							CStringUtil::CaselessCmp> CNameToModifierMap;
+							synergy::string::CaselessCmp> CNameToModifierMap;
 	typedef std::map<KeyID, CString> CKeyToNameMap;
 	typedef std::map<KeyModifierMask, CString> CModifierToNameMap;
 

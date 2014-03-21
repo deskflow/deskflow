@@ -20,7 +20,7 @@
 
 #include "platform/XWindowsUtil.h"
 #include "base/Log.h"
-#include "base/StringUtil.h"
+#include "base/String.h"
 #include "common/stdmap.h"
 
 #include <cstddef>

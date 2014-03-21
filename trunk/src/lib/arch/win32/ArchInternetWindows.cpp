@@ -76,8 +76,8 @@ CArchInternetWindows::urlEncode(const CString& url)
 	// the win32 url encoding funcitons are pretty useless (to us) and only
 	// escape "unsafe" chars, but not + or =, so we need to replace these
 	// manually (and probably many other chars).
-	find_replace_all(result, "+", "%2B");
-	find_replace_all(result, "=", "%3D");
+	synergy::string::findReplaceAll(result, "+", "%2B");
+	synergy::string::findReplaceAll(result, "=", "%3D");
 
 	return result;
 }

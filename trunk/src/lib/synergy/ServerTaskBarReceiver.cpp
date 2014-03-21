@@ -19,7 +19,7 @@
 #include "synergy/ServerTaskBarReceiver.h"
 #include "server/Server.h"
 #include "mt/Lock.h"
-#include "base/StringUtil.h"
+#include "base/String.h"
 #include "base/IEventQueue.h"
 #include "arch/Arch.h"
 #include "common/Version.h"
@@ -120,17 +120,17 @@ CServerTaskBarReceiver::getToolTip() const
 {
 	switch (m_state) {
 	case kNotRunning:
-		return CStringUtil::print("%s:  Not running", kAppVersion);
+		return synergy::string::sprintf("%s:  Not running", kAppVersion);
 
 	case kNotWorking:
-		return CStringUtil::print("%s:  %s",
+		return synergy::string::sprintf("%s:  %s",
 								kAppVersion, m_errorMessage.c_str());
 						
 	case kNotConnected:
-		return CStringUtil::print("%s:  Waiting for clients", kAppVersion);
+		return synergy::string::sprintf("%s:  Waiting for clients", kAppVersion);
 
 	case kConnected:
-		return CStringUtil::print("%s:  Connected", kAppVersion);
+		return synergy::string::sprintf("%s:  Connected", kAppVersion);
 
 	default:
 		return "";

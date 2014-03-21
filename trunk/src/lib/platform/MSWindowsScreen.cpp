@@ -37,7 +37,6 @@
 #include "base/FunctionJob.h"
 #include "base/Log.h"
 #include "base/String.h"
-#include "base/StringUtil.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"

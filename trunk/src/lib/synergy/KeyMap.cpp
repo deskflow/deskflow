@@ -1167,7 +1167,7 @@ CKeyMap::formatKey(KeyID key, KeyModifierMask mask)
 			x += (char)key;
 		}
 		else {
-			x += CStringUtil::print("\\u%04x", key);
+			x += synergy::string::sprintf("\\u%04x", key);
 		}
 	}
 	else if (!x.empty()) {

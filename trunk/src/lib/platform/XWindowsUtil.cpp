@@ -21,7 +21,7 @@
 #include "synergy/key_types.h"
 #include "mt/Thread.h"
 #include "base/Log.h"
-#include "base/StringUtil.h"
+#include "base/String.h"
 
 #include <X11/Xatom.h>
 #define XK_APL
@@ -1617,10 +1617,10 @@ CXWindowsUtil::atomToString(Display* display, Atom atom)
 	CXWindowsUtil::CErrorLock lock(display, &error);
 	char* name = XGetAtomName(display, atom);
 	if (error) {
-		return CStringUtil::print("<UNKNOWN> (%d)", (int)atom);
+		return synergy::string::sprintf("<UNKNOWN> (%d)", (int)atom);
 	}
 	else {
-		CString msg = CStringUtil::print("%s (%d)", name, (int)atom);
+		CString msg = synergy::string::sprintf("%s (%d)", name, (int)atom);
 		XFree(name);
 		return msg;
 	}
@@ -1636,12 +1636,12 @@ CXWindowsUtil::atomsToString(Display* display, const Atom* atom, UInt32 num)
 	CString msg;
 	if (error) {
 		for (UInt32 i = 0; i < num; ++i) {
-			msg += CStringUtil::print("<UNKNOWN> (%d), ", (int)atom[i]);
+			msg += synergy::string::sprintf("<UNKNOWN> (%d), ", (int)atom[i]);
 		}
 	}
 	else {
 		for (UInt32 i = 0; i < num; ++i) {
-			msg += CStringUtil::print("%s (%d), ", names[i], (int)atom[i]);
+			msg += synergy::string::sprintf("%s (%d), ", names[i], (int)atom[i]);
 			XFree(names[i]);
 		}
 	}
