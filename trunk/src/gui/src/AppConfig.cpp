@@ -112,6 +112,7 @@ void AppConfig::loadSettings()
 	m_Language = settings().value("language", QLocale::system().name()).toString();
 	m_PremiumEmail = settings().value("premiumEmail", "").toString();
 	m_PremiumToken = settings().value("premiumToken", "").toString();
+	m_StartedBefore = settings().value("startedBefore", false).toBool();
 }
 
 void AppConfig::saveSettings()
@@ -128,6 +129,7 @@ void AppConfig::saveSettings()
 	settings().setValue("language", m_Language);
 	settings().setValue("premiumEmail", m_PremiumEmail);
 	settings().setValue("premiumToken", m_PremiumToken);
+	settings().setValue("startedBefore", m_StartedBefore);
 }
 
 void AppConfig::setCryptoPass(const QString &s)
