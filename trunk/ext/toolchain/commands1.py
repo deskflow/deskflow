@@ -41,7 +41,7 @@ class Toolchain:
 	cmd_opt_dict = {
 		'about'     : ['', []],
 		'setup'     : ['g:', ['generator=']],
-		'configure' : ['g:dr', ['generator=', 'debug', 'release', 'mac-sdk=']],
+		'configure' : ['g:dr', ['generator=', 'debug', 'release', 'mac-sdk=', 'mac-identity=']],
 		'build'     : ['dr', ['debug', 'release']],
 		'clean'     : ['dr', ['debug', 'release']],
 		'update'    : ['', []],
@@ -57,7 +57,7 @@ class Toolchain:
 		'genlist'   : ['', []],
 		'reset'	    : ['', []],
 		'signwin'	: ['', ['pfx=', 'pwd=', 'dist']],
-		'signmac'	: ['', ['identity=']]
+		'signmac'	: ['', []]
 	}
 
 	# aliases to valid commands
@@ -244,6 +244,9 @@ class InternalCommands:
 	# by default, unknown
 	macSdk = None
 	
+	# by default, unknown
+	macIdentity = None
+	
 	# cryptoPP dir with version number
 	cryptoPPDir = 'cryptopp562'
 	
@@ -384,14 +387,31 @@ class InternalCommands:
 		self.ensure_setup_latest()
 		
 		if sys.platform == "darwin":
+			config = self.getConfig()
+		
 			if self.macSdk:
-				sdkDir = self.getMacSdkDir()
-				if not os.path.exists(sdkDir):
-					raise Exception("Mac SDK not found at: " + sdkDir)
-				
-				os.environ["MACOSX_DEPLOYMENT_TARGET"] = self.macSdk
-			else:
+				config.set('hm', 'macSdk', self.macSdk)
+			elif config.has_option("hm", "macSdk"):
+				self.macSdk = config.get('hm', 'macSdk')
+		
+			if self.macIdentity:
+				config.set('hm', 'macIdentity', self.macIdentity)
+			elif config.has_option("hm", "macIdentity"):
+				self.macIdentity = config.get('hm', 'macIdentity')
+		
+			self.write_config(config)
+		
+			if not self.macSdk:
 				raise Exception("Arg missing: --mac-sdk <version>");
+				
+			if not self.macIdentity:
+				raise Exception("Arg missing: --mac-identity <name>");
+			
+			sdkDir = self.getMacSdkDir()
+			if not os.path.exists(sdkDir):
+				raise Exception("Mac SDK not found at: " + sdkDir)
+			
+			os.environ["MACOSX_DEPLOYMENT_TARGET"] = self.macSdk
 		
 		# default is release
 		if target == '':
@@ -434,11 +454,6 @@ class InternalCommands:
 			sdkDir = self.getMacSdkDir()
 			cmake_args += " -DCMAKE_OSX_SYSROOT=" + sdkDir
 			cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macSdk
-
-			# store the sdk version for the build command
-			config = self.getConfig()
-			config.set('cmake', 'mac_sdk', self.macSdk)
-			self.write_config(config)
 		
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
@@ -464,6 +479,11 @@ class InternalCommands:
 		if generator.cmakeName.find('Eclipse') != -1:
 			self.fixCmakeEclipseBug()
 
+		# manually change .xcodeproj to add code sign for
+		# synmacph project and specify its info.plist
+		if generator.cmakeName.find('Xcode') != -1:
+			self.fixXcodeProject(target)
+			
 		if err != 0:
 			raise Exception('CMake encountered error: ' + str(err))
 
@@ -538,6 +558,59 @@ class InternalCommands:
 		file.truncate()
 		file.close()
 
+	def fixXcodeProject(self, target):
+		print "Fixing Xcode project..."
+		
+		insertContent = (
+			"CODE_SIGN_IDENTITY = '%s';\n"
+			"INFOPLIST_FILE = %s/src/cmd/synmacph/Info.plist;\n") % (
+			self.macIdentity,
+			os.getcwd()
+		)
+		
+		dir = self.getBuildDir(target)
+		file = open(dir + '/synergy.xcodeproj/project.pbxproj', 'r+')
+		contents = file.readlines()
+		
+		buildConfigurationsFound = None
+		releaseConfigRefFound = None
+		releaseBuildSettingsFound = None
+		fixed = None
+		releaseConfigRef = "";
+		
+		for line in contents:
+			if buildConfigurationsFound:
+				matchObj = re.search(r'\s*(.*)\s*\/\*\s*Release\s*\*\/,', line, re.I)
+				if matchObj:
+					releaseConfigRef = matchObj.group(1)
+					releaseConfigRefFound = True
+					break
+			elif buildConfigurationsFound == None:
+				if 'PBXNativeTarget "synmacph" */ = {' in line:
+					buildConfigurationsFound = True
+		
+		if not releaseConfigRefFound:
+			raise Exception("Release config ref not found.")
+		
+		for n, line in enumerate(contents):
+			if releaseBuildSettingsFound == None:
+				if releaseConfigRef + '/* Release */ = {' in line:
+					releaseBuildSettingsFound = True
+			elif fixed == None:
+				if 'buildSettings = {' in line:
+					contents[n] = line + insertContent
+					fixed = True
+		
+		if not fixed:
+			raise Exception("Xcode project was not fixed.")
+		
+		file.seek(0)
+		for line in contents:
+			file.write(line)
+		file.truncate()
+		file.close()
+		return
+				
 	def persist_cmake(self):
 		# even though we're running `cmake --version`, we're only doing this for the 0 return
 		# code; we don't care about the version, since CMakeLists worrys about this for us.
@@ -609,6 +682,8 @@ class InternalCommands:
 			targets += [self.defaultTarget,]
 	
 		self.ensure_setup_latest()
+		
+		self.loadConfig()
 
 		# allow user to skip core compile
 		if self.enableMakeCore:
@@ -618,13 +693,20 @@ class InternalCommands:
 		if self.enableMakeGui:
 			self.makeGui(targets)
 	
+	def loadConfig(self):
+		config = self.getConfig()
+		
+		if config.has_option("hm", "macSdk"):
+			self.macSdk = config.get("hm", "macSdk")
+		
+		if config.has_option("hm", "macIdentity"):
+			self.macIdentity = config.get("hm", "macIdentity")
+	
 	def makeCore(self, targets):
 	
 		generator = self.getGeneratorFromConfig().cmakeName
 		
-		config = self.getConfig()
-		if config.has_option("cmake", "mac_sdk"):
-			self.macSdk = config.get("cmake", "mac_sdk")
+		if self.macSdk:
 			os.environ["MACOSX_DEPLOYMENT_TARGET"] = self.macSdk
 
 		if generator.find('Unix Makefiles') != -1:
@@ -686,6 +768,11 @@ class InternalCommands:
 			shutil.copy(targetDir + "/synergyc", bundleBinDir)
 			shutil.copy(targetDir + "/synergys", bundleBinDir)
 			shutil.copy(targetDir + "/syntool", bundleBinDir)
+			
+			launchServicesDir = dir + "/Synergy.app/Contents/Library/LaunchServices/"
+			if not os.path.exists(launchServicesDir):
+				os.makedirs(launchServicesDir)
+			shutil.copy(targetDir + "/synmacph", launchServicesDir)
 
 		if self.enableMakeGui:
 			# use qt to copy libs to bundle so no dependencies are needed. do not create a
@@ -715,10 +802,14 @@ class InternalCommands:
 							frameworkRootDir + "/" + dir + "/Contents/Info.plist",
 							target + "/" + dir + "/Resources/")
 	
-	def signmac(self, identity):
+	def signmac(self):
+		self.loadConfig()
+		if not self.macIdentity:
+			raise Exception("run config with --mac-identity")
+		
 		self.try_chdir("bin")
 		err = os.system(
-			'codesign --deep -fs "' + identity + '" Synergy.app')
+			'codesign --deep -fs "' + self.macIdentity + '" Synergy.app')
 		self.restore_chdir()
 
 		if err != 0:
@@ -1623,6 +1714,8 @@ class CommandHandler:
 				self.qtDir = a
 			elif o == '--mac-sdk':
 				self.ic.macSdk = a
+			elif o == '--mac-identity':
+				self.ic.macIdentity = a
 	
 	def about(self):
 		self.ic.about()
@@ -1721,9 +1814,4 @@ class CommandHandler:
 		self.ic.signwin(pfx, pwd, dist)
 
 	def signmac(self):
-		idenity = None
-		for o, a in self.opts:
-			if o == '--identity':
-				identity = a
-		
-		self.ic.signmac(identity)
+		self.ic.signmac()
