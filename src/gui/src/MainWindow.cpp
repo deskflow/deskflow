@@ -119,7 +119,7 @@ MainWindow::~MainWindow()
 	saveSettings();
 }
 
-void MainWindow::start()
+void MainWindow::open()
 {
 	updatePremiumInfo();
 
@@ -129,7 +129,10 @@ void MainWindow::start()
 
 	m_VersionChecker.checkLatest();
 
-	if (appConfig().processMode() == Desktop) {
+	// only start if user has previously started. this stops the gui from
+	// auto hiding before the user has configured synergy (which of course
+	// confuses first time users, who think synergy has crashed).
+	if (appConfig().startedBefore() && appConfig().processMode() == Desktop) {
 		startSynergy();
 	}
 }
@@ -463,6 +466,20 @@ void MainWindow::startSynergy()
 		QString command(app + " " + args.join(" "));
 		m_IpcClient.sendCommand(command, m_ElevateProcess);
 	}
+	else {
+	
+		if (!appConfig().startedBefore()) {
+			QMessageBox::information(
+				this, "Synergy",
+				tr("Synergy has been minimized to the notification "
+				"area. This happens automatically when Synergy "
+				"starts."));
+		}
+	}
+
+	appConfig().setStartedBefore(true);
+	appConfig().saveSettings();
+
 }
 
 bool MainWindow::clientArgs(QStringList& args, QString& app)

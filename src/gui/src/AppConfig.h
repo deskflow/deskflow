@@ -68,6 +68,7 @@ class AppConfig
 		const QString& language() const { return m_Language; }
 		const QString& premiumEmail() const { return m_PremiumEmail; }
 		const QString& premiumToken() const { return m_PremiumToken; }
+		bool startedBefore() const { return m_StartedBefore; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -91,6 +92,7 @@ class AppConfig
 		void setLanguage(const QString language) { m_Language = language; }
 		void setPremiumEmail(const QString premiumEmail) { m_PremiumEmail = premiumEmail; }
 		void setPremiumToken(const QString premiumToken) { m_PremiumToken = premiumToken; }
+		void setStartedBefore(bool b) { m_StartedBefore = b; }
 
 		void loadSettings();
 		void saveSettings();
@@ -112,6 +114,7 @@ class AppConfig
 		QString m_Language;
 		QString m_PremiumEmail;
 		QString m_PremiumToken;
+		bool m_StartedBefore;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

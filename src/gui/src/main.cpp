@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		mainWindow.start();
+		mainWindow.open();
 	}
 
 	return app.exec();
