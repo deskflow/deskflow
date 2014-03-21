@@ -17,7 +17,7 @@
  */
 
 #include "net/XSocket.h"
-#include "base/StringUtil.h"
+#include "base/String.h"
 
 //
 // XSocketAddress
@@ -69,7 +69,7 @@ XSocketAddress::getWhat() const throw()
 	};
 	return format(s_errorID[m_error], s_errorMsg[m_error],
 								m_hostname.c_str(), 
-								CStringUtil::print("%d", m_port).c_str());
+								synergy::string::sprintf("%d", m_port).c_str());
 }
 
 

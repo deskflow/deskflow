@@ -18,7 +18,7 @@
 
 #include "platform/MSWindowsClipboardHTMLConverter.h"
 
-#include "base/StringUtil.h"
+#include "base/String.h"
 
 //
 // CMSWindowsClipboardHTMLConverter
@@ -63,11 +63,11 @@ CMSWindowsClipboardHTMLConverter::doFromIClipboard(const CString& data) const
 	UInt32 EndHTML = EndFragment + (UInt32)suffix.size();
 
 	prefix.replace(prefix.find("XXXXXXXXXX"), 10,
-							CStringUtil::print("%010u", StartFragment));
+							synergy::string::sprintf("%010u", StartFragment));
 	prefix.replace(prefix.find("YYYYYYYYYY"), 10,
-							CStringUtil::print("%010u", EndFragment));
+							synergy::string::sprintf("%010u", EndFragment));
 	prefix.replace(prefix.find("ZZZZZZZZZZ"), 10,
-							CStringUtil::print("%010u", EndHTML));
+							synergy::string::sprintf("%010u", EndHTML));
 
 	// concatenate
 	prefix += data;

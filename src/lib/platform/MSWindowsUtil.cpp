@@ -18,7 +18,7 @@
 
 #include "platform/MSWindowsUtil.h"
 
-#include "base/StringUtil.h"
+#include "base/String.h"
 
 #include <stdio.h>
 
@@ -69,8 +69,8 @@ CMSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
 								(LPTSTR)&buffer,
 								0,
 								NULL) == 0) {
-		CString errorString = CStringUtil::print("%d", error);
-		return CStringUtil::format(getString(hinstance, id).c_str(),
+		CString errorString = synergy::string::sprintf("%d", error);
+		return synergy::string::format(getString(hinstance, id).c_str(),
 							errorString.c_str());
 	}
 	else {

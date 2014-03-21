@@ -98,7 +98,7 @@ CInputFilter::CKeystrokeCondition::clone() const
 CString
 CInputFilter::CKeystrokeCondition::format() const
 {
-	return CStringUtil::print("keystroke(%s)",
+	return synergy::string::sprintf("keystroke(%s)",
 							CKeyMap::formatKey(m_key, m_mask).c_str());
 }
 
@@ -190,7 +190,7 @@ CInputFilter::CMouseButtonCondition::format() const
 	if (!key.empty()) {
 		key += "+";
 	}
-	return CStringUtil::print("mousebutton(%s%d)", key.c_str(), m_button);
+	return synergy::string::sprintf("mousebutton(%s%d)", key.c_str(), m_button);
 }
 
 CInputFilter::EFilterStatus		
@@ -248,7 +248,7 @@ CInputFilter::CScreenConnectedCondition::clone() const
 CString
 CInputFilter::CScreenConnectedCondition::format() const
 {
-	return CStringUtil::print("connect(%s)", m_screen.c_str());
+	return synergy::string::sprintf("connect(%s)", m_screen.c_str());
 }
 
 CInputFilter::EFilterStatus
@@ -303,7 +303,7 @@ CInputFilter::CLockCursorToScreenAction::format() const
 {
 	static const char* s_mode[] = { "off", "on", "toggle" };
 
-	return CStringUtil::print("lockCursorToScreen(%s)", s_mode[m_mode]);
+	return synergy::string::sprintf("lockCursorToScreen(%s)", s_mode[m_mode]);
 }
 
 void
@@ -346,7 +346,7 @@ CInputFilter::CSwitchToScreenAction::clone() const
 CString
 CInputFilter::CSwitchToScreenAction::format() const
 {
-	return CStringUtil::print("switchToScreen(%s)", m_screen.c_str());
+	return synergy::string::sprintf("switchToScreen(%s)", m_screen.c_str());
 }
 
 void
@@ -400,7 +400,7 @@ CInputFilter::CSwitchInDirectionAction::format() const
 		"down"
 	};
 
-	return CStringUtil::print("switchInDirection(%s)", s_names[m_direction]);
+	return synergy::string::sprintf("switchInDirection(%s)", s_names[m_direction]);
 }
 
 void
@@ -459,10 +459,10 @@ CInputFilter::CKeyboardBroadcastAction::format() const
 	static const char* s_name = "keyboardBroadcast";
 
 	if (m_screens.empty() || m_screens[0] == '*') {
-		return CStringUtil::print("%s(%s)", s_name, s_mode[m_mode]);
+		return synergy::string::sprintf("%s(%s)", s_name, s_mode[m_mode]);
 	}
 	else {
-		return CStringUtil::print("%s(%s,%.*s)", s_name, s_mode[m_mode],
+		return synergy::string::sprintf("%s(%s,%.*s)", s_name, s_mode[m_mode],
 							m_screens.size() - 2,
 							m_screens.c_str() + 1);
 	}
@@ -531,17 +531,17 @@ CInputFilter::CKeystrokeAction::format() const
 	const char* type = formatName();
 
 	if (m_keyInfo->m_screens[0] == '\0') {
-		return CStringUtil::print("%s(%s)", type,
+		return synergy::string::sprintf("%s(%s)", type,
 							CKeyMap::formatKey(m_keyInfo->m_key,
 								m_keyInfo->m_mask).c_str());
 	}
 	else if (m_keyInfo->m_screens[0] == '*') {
-		return CStringUtil::print("%s(%s,*)", type,
+		return synergy::string::sprintf("%s(%s,*)", type,
 							CKeyMap::formatKey(m_keyInfo->m_key,
 								m_keyInfo->m_mask).c_str());
 	}
 	else {
-		return CStringUtil::print("%s(%s,%.*s)", type,
+		return synergy::string::sprintf("%s(%s,%.*s)", type,
 							CKeyMap::formatKey(m_keyInfo->m_key,
 								m_keyInfo->m_mask).c_str(),
 							strlen(m_keyInfo->m_screens + 1) - 1,
@@ -613,7 +613,7 @@ CInputFilter::CMouseButtonAction::format() const
 	const char* type = formatName();
 
 	CString key = CKeyMap::formatKey(kKeyNone, m_buttonInfo->m_mask);
-	return CStringUtil::print("%s(%s%s%d)", type,
+	return synergy::string::sprintf("%s(%s%s%d)", type,
 							key.c_str(), key.empty() ? "" : "+",
 							m_buttonInfo->m_button);
 }

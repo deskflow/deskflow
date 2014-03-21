@@ -38,7 +38,7 @@ XArchEvalWindows::eval() const throw()
 							0,
 							NULL) == 0) {
 		cmsg = NULL;
-		return string_format("Unknown error, code %d", m_error);
+		return synergy::string::sprintf("Unknown error, code %d", m_error);
 	}
 	std::string smsg(cmsg);
 	LocalFree(cmsg);

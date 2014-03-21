@@ -23,7 +23,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/FunctionJob.h"
 #include "base/Log.h"
-#include "base/StringUtil.h"
+#include "base/String.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 

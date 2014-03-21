@@ -30,7 +30,7 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/Stopwatch.h"
-#include "base/StringUtil.h"
+#include "base/String.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 

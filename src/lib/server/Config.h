@@ -23,7 +23,7 @@
 #include "synergy/protocol_types.h"
 #include "synergy/IPlatformScreen.h"
 #include "net/NetworkAddress.h"
-#include "base/StringUtil.h"
+#include "base/String.h"
 #include "base/XBase.h"
 #include "common/stdmap.h"
 #include "common/stdset.h"
@@ -140,8 +140,8 @@ private:
 	public:
 		CScreenOptions	m_options;
 	};
-	typedef std::map<CString, CCell, CStringUtil::CaselessCmp> CCellMap;
-	typedef std::map<CString, CString, CStringUtil::CaselessCmp> CNameMap;
+	typedef std::map<CString, CCell, synergy::string::CaselessCmp> CCellMap;
+	typedef std::map<CString, CString, synergy::string::CaselessCmp> CNameMap;
 
 public:
 	typedef CCell::const_iterator link_const_iterator;
