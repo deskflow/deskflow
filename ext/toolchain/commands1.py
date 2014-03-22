@@ -1089,11 +1089,7 @@ class InternalCommands:
 			raise Exception('Package failed: ' + str(err))
 		
 	def distMac(self):
-		
-		config = self.getConfig()
-		if config.has_option("cmake", "mac_sdk"):
-			self.macSdk = config.get("cmake", "mac_sdk")
-		
+		self.loadConfig()
 		dir = self.getGenerator().binDir
 		name = "Synergy"
 		dist = dir + "/" + name
@@ -1204,16 +1200,13 @@ class InternalCommands:
 		return major + '.' + minor + '.' + rev
 
 	def distftp(self, type, ftp):
-		config = self.getConfig()
-		if config.has_option("cmake", "mac_sdk"):
-			self.macSdk = config.get("cmake", "mac_sdk")
-		
 		if not type:
 			raise Exception('Type not specified.')
 		
 		if not ftp:
 			raise Exception('FTP info not defined.')
 		
+		self.loadConfig()
 		src = self.dist_name(type)
 		dest = self.dist_name_rev(type)
 		print 'Uploading %s to FTP server %s...' % (dest, ftp.host)
