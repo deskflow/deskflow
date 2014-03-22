@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #import "AXDatabaseCleaner.h"
 #import <Cocoa/Cocoa.h>
 #import <ServiceManagement/ServiceManagement.h>
@@ -42,6 +43,8 @@ AXDatabaseCleaner::~AXDatabaseCleaner()
 
 void AXDatabaseCleaner::loadPrivilegeHelper()
 {
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090 // mavericks
+
 	OSStatus status = AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &d->authRef);
 	if (status != errAuthorizationSuccess) {
 		assert(NO);
@@ -75,4 +78,6 @@ void AXDatabaseCleaner::loadPrivilegeHelper()
 		assert(error != nil);
 		NSLog(@"bless error: domain= %@ / code= %d", [error domain], (int) [error code]);
 	}
+
+#endif
 }
