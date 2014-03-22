@@ -479,9 +479,10 @@ class InternalCommands:
 		if generator.cmakeName.find('Eclipse') != -1:
 			self.fixCmakeEclipseBug()
 
+		# only on osx 10.9 mavericks.
 		# manually change .xcodeproj to add code sign for
 		# synmacph project and specify its info.plist
-		if generator.cmakeName.find('Xcode') != -1:
+		if self.macSdk == "10.9" and generator.cmakeName.find('Xcode') != -1:
 			self.fixXcodeProject(target)
 			
 		if err != 0:
