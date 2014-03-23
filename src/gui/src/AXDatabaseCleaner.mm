@@ -17,7 +17,9 @@
 
 #import "AXDatabaseCleaner.h"
 #import <Cocoa/Cocoa.h>
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1060
 #import <ServiceManagement/ServiceManagement.h>
+#endif
 #import <Security/Authorization.h>
 
 const NSString* const label = @"synmacph";
