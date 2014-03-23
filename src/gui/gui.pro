@@ -80,10 +80,7 @@ macx {
     QSYNERGY_ICON.files = res/mac/Synergy.icns
     QSYNERGY_ICON.path = Contents/Resources
     QMAKE_BUNDLE_DATA += QSYNERGY_ICON
-    LIBS += -framework ApplicationServices \
-		-framework ServiceManagement \
-		-framework Security \
-		-framework cocoa
+    LIBS += $$MACX_LIBS
 }
 debug { 
     OBJECTS_DIR = tmp/debug

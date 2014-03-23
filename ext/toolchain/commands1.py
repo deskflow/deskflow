@@ -505,6 +505,16 @@ class InternalCommands:
 				# 10.4: universal (intel and power pc)
 				qmake_cmd_string += ' CONFIG+="ppc i386"'
 			
+			libs = (
+				"-framework ApplicationServices "
+				"-framework Security "
+				"-framework cocoa")
+			
+			if major == 10 and minor >= 6:
+				libs += " -framework ServiceManagement"
+			
+			qmake_cmd_string += " \"MACX_LIBS=%s\" " % libs
+			
 			sdkDir = self.getMacSdkDir()
 			shortForm = "macosx" + self.macSdk
 			version = str(major) + "." + str(minor)
