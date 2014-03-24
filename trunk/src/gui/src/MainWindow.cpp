@@ -451,6 +451,14 @@ void MainWindow::startSynergy()
 
 	if (desktopMode)
 	{
+		if (!appConfig().startedBefore()) {
+			QMessageBox::information(
+				this, "Synergy",
+				tr("Synergy will be minimized to the notification "
+				"area. This will happen automatically when Synergy "
+				"starts."));
+		}
+
 		synergyProcess()->start(app, args);
 		if (!synergyProcess()->waitForStarted())
 		{
@@ -465,16 +473,6 @@ void MainWindow::startSynergy()
 	{
 		QString command(app + " " + args.join(" "));
 		m_IpcClient.sendCommand(command, m_ElevateProcess);
-	}
-	else {
-	
-		if (!appConfig().startedBefore()) {
-			QMessageBox::information(
-				this, "Synergy",
-				tr("Synergy has been minimized to the notification "
-				"area. This happens automatically when Synergy "
-				"starts."));
-		}
 	}
 
 	appConfig().setStartedBefore(true);
