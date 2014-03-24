@@ -1,0 +1,55 @@
+# sample synergy configuration file
+#
+# comments begin with the # character and continue to the end of
+# line.  comments may appear anywhere the syntax permits.
+
+# This example uses 3 computers. A laptop and two desktops (one a mac)
+# They are arranged in the following configuration with Desktop1 acting as the server
+# Desktop 2 has 3 screens arranged around desktop1
+#
+#            +--------+ +---------+
+#            |Desktop2| |Desktop2 |
+#            |        | |         |
+#            +--------+ +---------+
+# +-------+  +--------+ +---------+
+# |Laptop |  |Desktop1| |Desktop2 |
+# |       |  |        | |         |
+# +-------+  +--------+ +---------+
+#
+# The laptop comes and goes but that doesn't really affect this configuration
+
+# The screens section is for the logical or short name of the computers
+section: screens
+	# three computers that are logically named:  desktop1, desktop2, and laptop
+	desktop1:
+	desktop2:
+	laptop:
+end
+
+section: links
+	# larry is to the right of moe and curly is above moe
+	moe:
+		right = larry
+		up    = curly
+
+	# moe is to the left of larry and curly is above larry.
+	# note that curly is above both moe and larry and moe
+	# and larry have a symmetric connection (they're in
+	# opposite directions of each other).
+	larry:
+		left  = moe
+		up    = curly
+
+	# larry is below curly.  if you move up from moe and then
+	# down, you'll end up on larry.
+	curly:
+		down  = larry
+end
+
+# The aliases section is to map the full names of the computers to their logical names used in the screens section
+# One way to find the actual name of a comptuer is to run hostname from a command window
+section: aliases
+	# Laptop is actually known as John-Smiths-MacBook-3.local
+	desktop2:
+		John-Smiths-MacBook-3.local
+end

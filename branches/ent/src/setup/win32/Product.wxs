@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix
+  xmlns="http://schemas.microsoft.com/wix/2006/wi"
+  xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension"
+  xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  
+  <?include Include.wxi?>
+
+  <Product
+      Id="*"
+      UpgradeCode="$(var.UpgradeGuid)"
+      Name="$(var.Name) ($(var.PlatformSimpleName))"
+      Language="1033"
+      Version="$(var.Version)"
+      Manufacturer="$(var.Author)">
+    
+    <Package InstallerVersion="300" Compressed="yes" InstallScope="perMachine" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of $(var.Name) is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+    <UIRef Id="WixUI_InstallDir" />
+
+    <?if $(var.Platform) = "x86" ?>
+    <Condition Message="You are running a 64-bit version of Windows. Please install the 64-bit version of $(var.Name) instead of the 32-bit version.">NOT Msix64</Condition>
+    <?endif ?>
+    
+    <!-- causes ICE61 warning, but stops user from installing many instances from nightly builds. -->
+    <Upgrade Id="$(var.UpgradeGuid)">
+      <UpgradeVersion Minimum="0.0.0.0" Property="UPGRADE" />
+    </Upgrade>
+
+    <Feature Id="ProductFeature" Title="$(var.Name)">
+      <ComponentGroupRef Id="ProductComponents" />
+      <MergeRef Id="CRT" />
+    </Feature>
+
+    <Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
+    <Binary Id="Scripts" SourceFile="Scripts.vbs" />
+
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.ResPath)\License.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="$(var.ResPath)\dialog.bmp" />
+
+    <Property Id="ARPPRODUCTICON" Value="synergy.ico" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
+    
+    <Property Id="LEGACY_UNINSTALL_EXISTS">
+      <RegistrySearch
+        Id="LegacyRegistrySearch" Root="HKLM"
+        Key="SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Synergy"
+        Name="UninstallString" Win64="no" Type="file">
+        <FileSearch Id="LegacyFileSearch" Name="uninstall.exe" />
+      </RegistrySearch>
+    </Property>
+    
+    <Condition Message="An existing installation of $(var.Name) was detected, please uninstall it before continuing.">
+      NOT LEGACY_UNINSTALL_EXISTS
+    </Condition>
+
+    <CustomAction Id="RestartExplorerPrompt" BinaryKey="Scripts" VBScriptCall="RestartExplorerPrompt" />
+    <CustomAction Id="RestartExplorer" BinaryKey="Scripts" VBScriptCall="RestartExplorer" Execute="deferred" Impersonate="yes" />
+    <CustomAction Id="StartGui" FileKey="GuiProgram" ExeCommand="" Return="asyncNoWait" Execute="deferred" Impersonate="yes" />
+    
+    <!--
+    generally it is ill-advised to use custom actions and vbscript,
+    as this makes it really hard to guarentee clean msi usage.
+    however, msi insists on checking for files-in-use before it
+    stops our service (which will turn up a ton of applications
+    using the hook and shellex dlls). its actually much cleaner for
+    us to disable the restart manager (MSIRESTARTMANAGERCONTROL) and
+    forcefully restart explorer.exe ourselves. patches welcome!
+    -->
+    <InstallExecuteSequence>
+
+      <!--
+      ask the user if we can restart explorer, but only on install or
+      upgrade (known as "NOT Installed"), and only if not running in
+      passive/quiet mode.
+      -->
+      <Custom Action="RestartExplorerPrompt" Before="InstallFinalize">
+        NOT Installed AND (UILevel = 4 OR UILevel = 5)
+      </Custom>
+
+      <!--
+      if the user answered the restart explorer dialog, then this must
+      be an attented install, so it should be ok for us to restart 
+      explorer, start the gui, and potentially reboot.
+      -->
+      <Custom Action="RestartExplorer" After="RestartExplorerPrompt">
+        RESTART_EXPLORER="yes"
+      </Custom>
+      <Custom Action="StartGui" After="RestartExplorer">
+        RESTART_EXPLORER="yes"
+      </Custom>
+      <ScheduleReboot After="RestartExplorer">
+        RESTART_EXPLORER="no"
+      </ScheduleReboot>
+      
+    </InstallExecuteSequence>
+    
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="$(var.ProgramFilesFolder)">
+        <Directory Id="INSTALLFOLDER" Name="$(var.Name)">
+          <Merge Id="CRT" Language="0" SourceFile="$(var.CRT)" DiskId="1" />
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder" />
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      
+      <Component Id="Core" Guid="EC9AD3B0-277C-4157-B5C8-5FD5B6A5F4AD">
+        
+        <File Source="$(var.BinPath)/synergyd.exe" KeyPath="yes" />
+        
+        <ServiceInstall
+            Id="ServiceInstall" Name="Synergy" DisplayName="$(var.Name)"
+            Description="Controls the $(var.Name) foreground processes."
+            Type="ownProcess" Start="auto" ErrorControl="normal" />
+        
+        <ServiceControl
+            Id="ServiceControl" Name="Synergy"
+            Start="install" Stop="both" Remove="uninstall" />
+
+        <File Source="$(var.BinPath)/synergys.exe">
+          <fire:FirewallException Id="SereverFirewallException" Name="$(var.Name)" Scope="any" />
+        </File>
+        
+        <File Source="$(var.BinPath)/synergyc.exe" />
+        <File Source="$(var.BinPath)/syntool.exe" />
+        <File Source="$(var.BinPath)/synwinhk.dll" />
+        <File Source="$(var.BinPath)/synwinxt.dll" />
+        
+        <RegistryKey Root="HKCR" Key="*\shellex\DataHandler">
+          <RegistryValue Value="{1BE208B1-BC21-4E39-8BB6-A5DC3F51479E}" Type="string" />
+        </RegistryKey>
+        
+        <RegistryKey Root="HKCR" Key="CLSID\{1BE208B1-BC21-4E39-8BB6-A5DC3F51479E}\InprocServer32">
+          <RegistryValue Value="[INSTALLFOLDER]synwinxt.dll" Type="string" />
+          <RegistryValue Name="ThreadingModel" Value="Apartment" Type="string" />
+        </RegistryKey>
+        
+      </Component>
+      
+      <Component Id="Gui" Guid="BAC8149B-6287-45BF-9C27-43D71ED40214">
+        <File Id="GuiProgram" Source="$(var.BinPath)/synergy.exe" KeyPath="yes">
+          <Shortcut Id="GuiShortcut" Name="$(var.Name)" Directory="ProgramMenuFolder" Icon="synergy.ico" Advertise="yes" />
+        </File>
+
+        <File Source="$(var.QtPath)\libgcc_s_dw2-1.dll" CompanionFile="GuiProgram" />
+        <File Source="$(var.QtPath)\mingwm10.dll" CompanionFile="GuiProgram" />
+        <File Source="$(var.QtPath)\QtCore4.dll" CompanionFile="GuiProgram" />
+        <File Source="$(var.QtPath)\QtGui4.dll" CompanionFile="GuiProgram" />
+        <File Source="$(var.QtPath)\QtNetwork4.dll" CompanionFile="GuiProgram" />
+        
+      </Component>
+      
+    </ComponentGroup>
+  </Fragment>
+</Wix>
