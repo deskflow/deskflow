@@ -17,7 +17,7 @@
 # Version number for Synergy
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 4)
-set(VERSION_REV 17)
+set(VERSION_REV 18)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
 # 2.8 needed for file glob.
