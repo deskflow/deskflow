@@ -1,3 +1,28 @@
+1.4.17
+======
+Bug #2836 - Unable to begin screen name or alias with numbers
+Bug #3796 - Some files being unintentionally dragged (including explorer.exe)
+Bug #3886 - Alias is allowed to match screen name
+Bug #3919 - RPM install fails on Fedora 20, failed dependencies: libcurl
+Bug #3921 - Error: synwinxt.dll outdated (upgrading from 1.4.15 to 1.4.16)
+Bug #3927 - Mavericks accessibility exception not working (when upgrading from 1.4.15 to 1.4.16)
+Bug #3933 - Plus signs in the email address cause premium login to fail
+Bug #3939 - Compile fails on ARM (Raspberry Pi) because of cryptopp/Crypto++ lib
+Bug #3947 - Conflicts when using yum localinstall on Fedora 20
+Bug #3959 - Premium title doesn't always show on first login
+Bug #3968 - GUI auto-hides on initial first install (with no config)
+Task #3936 - Change installer to WiX for improved file upgrade process
+Task #3950 - Poll modifier after key down on Mac OS X and log results
+Task #3951 - Clear filename stored in synwinxt on mouse up
+Task #3952 - Make Premium wizard page cleaner
+Task #3953 - Inherit XArch and XBase from std::exception
+Task #3954 - Make "lock to screen" log message go to NOTE level instead of DEBUG
+Task #3960 - Split CMSWindowsHookLibraryLoader into hook and shellex loaders
+Task #3961 - Remove Windows 95 support
+Task #3963 - Disable failing Linux unit/integ tests on Fedora 20 32-bit (valgrind SIGILL)
+Task #3964 - Make Premium login error more verbose
+Task #3969 - Merge String.cpp and StringUtil.cpp
+
 1.4.16
 ======
 Bug #3338 - Alt tab not working with Windows 8
