@@ -1,4 +1,0 @@
-* On Windows, use MiKTeX to get the pdflatex command.
-* The /doc dir in the svn root is used for documentation that applies to multiple versions.
-* Style guide for LaTeX: http://web.science.mq.edu.au/~rdale/resources/writingnotes/latexstyle.html
-* Full book for LaTeX: http://en.wikibooks.org/wiki/LaTeX/
