@@ -122,12 +122,12 @@ CClientApp::parseArgs(int argc, const char* const* argv)
 	if (i == argc) {
 		LOG((CLOG_PRINT "%s: a server address or name is required" BYE,
 			args().m_pname, args().m_pname));
-		m_bye(kExitArgs);
+		bye(kExitArgs);
 	}
 	if (i + 1 != argc) {
 		LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
 			args().m_pname, argv[i], args().m_pname));
-		m_bye(kExitArgs);
+		bye(kExitArgs);
 	}
 
 	// save server address
@@ -143,7 +143,7 @@ CClientApp::parseArgs(int argc, const char* const* argv)
 		if (!args().m_restartable || e.getError() == XSocketAddress::kBadPort) {
 			LOG((CLOG_PRINT "%s: %s" BYE,
 				args().m_pname, e.what(), args().m_pname));
-			m_bye(kExitFailed);
+			bye(kExitFailed);
 		}
 	}
 
@@ -151,7 +151,7 @@ CClientApp::parseArgs(int argc, const char* const* argv)
 	if (!CLOG->setFilter(args().m_logFilter)) {
 		LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
 			args().m_pname, args().m_logFilter, args().m_pname));
-		m_bye(kExitArgs);
+		bye(kExitArgs);
 	}
 
 	// identify system
@@ -597,7 +597,6 @@ CClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
 {
 	// general initialization
 	args().m_serverAddress = new CNetworkAddress;
-	args().m_pname         = ARCH->getBasename(argv[0]);
 
 	// install caller's output filter
 	if (outputter != NULL) {
@@ -633,6 +632,6 @@ CClientApp::startNode()
 	// we shouldn't retry.
 	LOG((CLOG_DEBUG1 "starting client"));
 	if (!startClient()) {
-		m_bye(kExitFailed);
+		bye(kExitFailed);
 	}
 }

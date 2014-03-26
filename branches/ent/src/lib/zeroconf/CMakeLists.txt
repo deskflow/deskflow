@@ -1,6 +1,5 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012 Bolton Software Ltd.
-# Copyright (C) 2011 Nick Bolton
+# Copyright (C) 2014 Bolton Software Ltd.
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -14,17 +13,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(synergyc)
-add_subdirectory(synergys)
-#add_subdirectory(synergyd)
-add_subdirectory(usynergy)
-add_subdirectory(syntool)
-add_subdirectory(synentds)
+file(GLOB headers "*.h")
+file(GLOB sources "*.cpp")
 
-if (WIN32)
-  add_subdirectory(synergyp)
+include_directories(
+	../
+	../../../ext
+)
+
+if (UNIX)
+	include_directories(
+		../../..
+	)
 endif()
 
-if (APPLE)
-	add_subdirectory(synmacph)
-endif()
+add_library(zeroconf STATIC ${sources})
+
+#if (UNIX)
+#	target_link_libraries()
+#endif()

@@ -20,6 +20,8 @@
 
 // this file should be included, directly or indirectly by every other.
 
+#include <common/namespace.h>
+
 #if HAVE_CONFIG_H
 #	include "config.h"
 

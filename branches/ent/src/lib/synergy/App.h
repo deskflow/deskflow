@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "common/common.h"
-#include "base/String.h"
-#include "synergy/IApp.h"
 #include "ipc/IpcClient.h"
+#include "synergy/IApp.h"
+#include "base/String.h"
+#include "common/common.h"
 
 #if SYSAPI_WIN32
 #include "synergy/win32/AppUtilWindows.h"
@@ -36,93 +36,126 @@ class CFileLogOutputter;
 class CScreen;
 class IEventQueue;
 class CSocketMultiplexer;
+class CApp;
 
 typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const CBufferedLogOutputter*, IEventQueue* events);
 
+//! Minimal application
+class CMinimalApp : public IMinimalApp
+{
+	friend CApp;
+
+public:
+	CMinimalApp(CArgsBase* args);
+	virtual ~CMinimalApp();
+
+	// IMinimalApp overrides
+	CArgsBase&			argsBase() const { return *m_args; }
+	void				setByeFunc(void(*bye)(int)) { m_bye = bye; }
+	void				bye(int error) { m_bye(error); }
+	bool				isArg(int argi, int argc, const char* const* argv,
+							const char* name1, const char* name2,
+							int minParams = 0);
+
+protected:
+	//! Prints help specific to client or server.
+	virtual void		help() { }
+	
+	//! Parse command line arguments.
+	virtual void		parseArgs(int argc, const char* const* argv) { }
+
+	//! Prints the current compiled version.
+	virtual void		version();
+
+	//! Parse command line arguments (recursively).
+	virtual void		parseArgs(int argc, const char* const* argv, int &i);
+
+	//! Parse a single argument.
+	virtual bool		parseArg(const int& argc, const char* const* argv,
+							int& i);
+
+private:
+	void				(*m_bye)(int);
+	CArgsBase*			m_args;
+};
+
+//! Full client or server application
 class CApp : public IApp {
 public:
 	CApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args);
 	virtual ~CApp();
 
-	// Returns args that are common between server and client.
-	CArgsBase& argsBase() const { return *m_args; }
+	int					run(int argc, char** argv);
 
-	// Prints the current compiled version.
-	virtual void version();
+	int					daemonMainLoop(int, const char**);
 
-	// Prints help specific to client or server.
-	virtual void help() = 0;
+	virtual void		loadConfig() = 0;
+	virtual bool		loadConfig(const CString& pathname) = 0;
 
-	// Parse command line arguments.
-	virtual void parseArgs(int argc, const char* const* argv) = 0;
+	//! A description of the daemon (used only on Windows).
+	virtual const char*	daemonInfo() const = 0;
+
+	static CApp&		instance() {
+							assert(s_instance != nullptr);
+							return *s_instance; }
+
+	//! If --log was specified in args, then add a file logger.
+	void				setupFileLogging();
+
+	//! If messages will be hidden (to improve performance), warn user.
+	void				loggingFilterWarning();
+
+	//! Parses args, sets up file logging, and loads the config.
+	void				initApp(int argc, const char** argv);
+
+	void				initApp(int argc, char** argv) {
+							//! HACK: cast to const
+							initApp(argc, (const char**)argv); }
+
+	ARCH_APP_UTIL&		appUtil() { return m_appUtil; }
+
+	virtual IArchTaskBarReceiver*
+						taskBarReceiver() const  { return m_taskBarReceiver; }
 	
-	int run(int argc, char** argv);
-
-	int daemonMainLoop(int, const char**);
-
-	virtual void loadConfig() = 0;
-	virtual bool loadConfig(const CString& pathname) = 0;
-
-	// A description of the daemon (used only on Windows).
-	virtual const char* daemonInfo() const = 0;
-
-	// Function pointer for function to exit immediately.
-	// TODO: this is old C code - use inheritance to normalize
-	void (*m_bye)(int);
-
-	// Returns true if argv[argi] is equal to name1 or name2.
-	bool isArg(int argi, int argc, const char* const* argv,
-		const char* name1, const char* name2,
-		int minRequiredParameters = 0);
-
-	static CApp& instance() { assert(s_instance != nullptr); return *s_instance; }
-
-	// If --log was specified in args, then add a file logger.
-	void setupFileLogging();
-
-	// If messages will be hidden (to improve performance), warn user.
-	void loggingFilterWarning();
-
-	// Parses args, sets up file logging, and loads the config.
-	void initApp(int argc, const char** argv);
-
-	// HACK: accept non-const, but make it const anyway
-	void initApp(int argc, char** argv) { initApp(argc, (const char**)argv); }
-
-	ARCH_APP_UTIL& appUtil() { return m_appUtil; }
-
-	virtual IArchTaskBarReceiver* taskBarReceiver() const  { return m_taskBarReceiver; }
-
-	virtual void setByeFunc(void(*bye)(int)) { m_bye = bye; }
-	virtual void bye(int error) { m_bye(error); }
-	
-	virtual IEventQueue* getEvents() const { return m_events; }
+	virtual IEventQueue*
+						getEvents() const { return m_events; }
 
 	void				setSocketMultiplexer(CSocketMultiplexer* sm) { m_socketMultiplexer = sm; }
 	CSocketMultiplexer*	getSocketMultiplexer() const { return m_socketMultiplexer; }
+
+	virtual CArgsBase&	argsBase() const;
+	virtual void		setByeFunc(void(*bye)(int));
+	virtual void		bye(int error);
+	virtual bool		isArg(int argi, int argc, const char* const* argv,
+							const char* name1, const char* name2,
+							int minParams = 0);
+	virtual void		parseArgs(int argc, const char* const* argv);
 
 private:
 	void				handleIpcMessage(const CEvent&, void*);
 
 protected:
-	virtual void parseArgs(int argc, const char* const* argv, int &i);
-	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
+	virtual void		parseArgs(int argc, const char* const* argv, int &i);
+	virtual bool		parseArg(const int& argc, const char* const* argv,
+							int& i);
 	void				initIpcClient();
 	void				cleanupIpcClient();
 	void				runEventsLoop(void*);
 
-	IArchTaskBarReceiver* m_taskBarReceiver;
-	bool m_suspended;
+	IArchTaskBarReceiver*
+						m_taskBarReceiver;
+	bool				m_suspended;
 	IEventQueue*		m_events;
 
 private:
-	CArgsBase* m_args;
-	static CApp* s_instance;
-	CFileLogOutputter* m_fileLog;
-	CreateTaskBarReceiverFunc m_createTaskBarReceiver;
-	ARCH_APP_UTIL m_appUtil;
+	static CApp*		s_instance;
+	CFileLogOutputter*	m_fileLog;
+	CreateTaskBarReceiverFunc
+						m_createTaskBarReceiver;
+	ARCH_APP_UTIL		m_appUtil;
 	CIpcClient*			m_ipcClient;
 	CSocketMultiplexer*	m_socketMultiplexer;
+	CMinimalApp			m_minimal;
 };
 
 #define BYE "\nTry `%s --help' for more information."

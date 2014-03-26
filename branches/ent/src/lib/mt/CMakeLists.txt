@@ -32,3 +32,7 @@ if (UNIX)
 endif()
 
 add_library(mt STATIC ${sources})
+
+if (UNIX)
+	target_link_libraries(mt base)
+endif()

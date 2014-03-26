@@ -51,55 +51,37 @@
 
 CApp* CApp::s_instance = nullptr;
 
-CApp::CApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args) :
+//
+// CMinimalApp
+//
+
+CMinimalApp::CMinimalApp(CArgsBase* args) :
 	m_bye(&exit),
-	m_taskBarReceiver(NULL),
-	m_suspended(false),
-	m_events(events),
-	m_args(args),
-	m_createTaskBarReceiver(createTaskBarReceiver),
-	m_appUtil(events),
-	m_ipcClient(nullptr)
+	m_args(args)
 {
-	assert(s_instance == nullptr);
-	s_instance = this;
 }
 
-CApp::~CApp()
+CMinimalApp::~CMinimalApp()
 {
 	delete m_args;
 }
 
-bool
-CApp::isArg(
-	int argi, int argc, const char* const* argv,
-	const char* name1, const char* name2,
-	int minRequiredParameters)
+void
+CMinimalApp::version()
 {
-	if ((name1 != NULL && strcmp(argv[argi], name1) == 0) ||
-		(name2 != NULL && strcmp(argv[argi], name2) == 0)) {
-			// match.  check args left.
-			if (argi + minRequiredParameters >= argc) {
-				LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
-					argsBase().m_pname, argv[argi], argsBase().m_pname));
-				m_bye(kExitArgs);
-			}
-			return true;
-	}
-
-	// no match
-	return false;
+	printf(
+		"%s %s, protocol version %d.%d\n%s\n",
+		argsBase().m_pname,
+		kVersion,
+		kProtocolMajorVersion,
+		kProtocolMinorVersion,
+		kCopyright);
 }
 
 bool
-CApp::parseArg(const int& argc, const char* const* argv, int& i)
+CMinimalApp::parseArg(const int& argc, const char* const* argv, int& i)
 {
-	if (appUtil().parseArg(argc, argv, i)) {
-		// handled by platform util
-		return true;
-	}
-	
-	else if (isArg(i, argc, argv, "-d", "--debug", 1)) {
+	if (isArg(i, argc, argv, "-d", "--debug", 1)) {
 		// change logging level
 		argsBase().m_logFilter = argv[++i];
 	}
@@ -118,6 +100,145 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 		argsBase().m_daemon = true;
 	}
 
+	else if (isArg(i, argc, argv, "-h", "--help")) {
+		help();
+		m_bye(kExitSuccess);
+	}
+
+	else if (isArg(i, argc, argv, NULL, "--version")) {
+		version();
+		m_bye(kExitSuccess);
+	}
+	
+	else {
+		// option not supported here
+		return false;
+	}
+
+	return true;
+}
+
+bool
+CMinimalApp::isArg(
+	int argi, int argc, const char* const* argv,
+	const char* name1, const char* name2,
+	int minParams)
+{
+	if ((name1 != NULL && strcmp(argv[argi], name1) == 0) ||
+		(name2 != NULL && strcmp(argv[argi], name2) == 0)) {
+			// match.  check args left.
+			if (argi + minParams >= argc) {
+				LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
+					argsBase().m_pname, argv[argi], argsBase().m_pname));
+				m_bye(kExitArgs);
+			}
+			return true;
+	}
+
+	// no match
+	return false;
+}
+
+void
+CMinimalApp::parseArgs(int argc, const char* const* argv, int& i)
+{
+	assert(argv != NULL);
+	assert(argc >= 1);
+
+	argsBase().m_pname = ARCH->getBasename(argv[0]);
+	argsBase().m_name = ARCH->getHostName();
+
+	// parse options
+	for (i = 1; i < argc; ++i) {
+
+		if (parseArg(argc, argv, i)) {
+			continue;
+		}
+
+		else if (isArg(i, argc, argv, "--", NULL)) {
+			// remaining arguments are not options
+			++i;
+			break;
+		}
+
+		else if (argv[i][0] == '-') {
+			std::cerr << "Unrecognized option: " << argv[i] << std::endl;
+			m_bye(kExitArgs);
+		}
+
+		else {
+			// this and remaining arguments are not options
+			break;
+		}
+	}
+}
+
+
+//
+// CApp
+//
+
+CApp::CApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args) :
+	m_minimal(args),
+	m_taskBarReceiver(NULL),
+	m_suspended(false),
+	m_events(events),
+	m_createTaskBarReceiver(createTaskBarReceiver),
+	m_appUtil(events),
+	m_ipcClient(nullptr)
+{
+	assert(s_instance == nullptr);
+	s_instance = this;
+}
+
+CApp::~CApp()
+{
+}
+
+CArgsBase&
+CApp::argsBase() const
+{
+	m_minimal.argsBase();
+}
+
+void
+CApp::setByeFunc(void(*bye)(int))
+{
+	m_minimal.setByeFunc(bye);
+}
+
+void
+CApp::bye(int error)
+{
+	m_minimal.bye(error);
+}
+
+bool
+CApp::isArg(int argi, int argc, const char* const* argv, const char* name1,
+	const char* name2, int minParams)
+{
+	m_minimal.isArg(argi, argc, argv, name1, name2, minParams);
+}
+
+void
+CApp::parseArgs(int argc, const char* const* argv)
+{
+	m_minimal.parseArgs(argc, argv);
+}
+
+bool
+CApp::parseArg(const int& argc, const char* const* argv, int& i)
+{
+	if (appUtil().parseArg(argc, argv, i)) {
+		// handled by platform util
+		return true;
+	}
+
+	if (m_minimal.parseArg(argc, argv, i)) {
+		// handled by minimal
+		return true;
+	}
+	
 	else if (isArg(i, argc, argv, "-n", "--name", 1)) {
 		// save screen name
 		argsBase().m_name = argv[++i];
@@ -139,16 +260,6 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 
 	else if (isArg(i, argc, argv, NULL, "--no-hooks")) {
 		argsBase().m_noHooks = true;
-	}
-
-	else if (isArg(i, argc, argv, "-h", "--help")) {
-		help();
-		m_bye(kExitSuccess);
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--version")) {
-		version();
-		m_bye(kExitSuccess);
 	}
 	
 	else if (isArg(i, argc, argv, NULL, "--no-tray")) {
@@ -211,46 +322,7 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 void
 CApp::parseArgs(int argc, const char* const* argv, int& i)
 {
-	// about these use of assert() here:
-	// previously an /analyze warning was displayed if we only used assert and
-	// did not return on failure. however, this warning does not appear to show
-	// any more (could be because new compiler args have been added).
-	// the asserts are programmer benefit only; the os should never pass 0 args,
-	// because the first is always the binary name. the only way assert would 
-	// evaluate to true, is if this parse function were implemented incorrectly,
-	// which is unlikely because it's old code and has a specific use.
-	// we should avoid using anything other than assert here, because it will
-	// look like important code, which it's not really.
-	assert(argsBase().m_pname != NULL);
-	assert(argv != NULL);
-	assert(argc >= 1);
-
-	// set defaults
-	argsBase().m_name = ARCH->getHostName();
-
-	// parse options
-	for (i = 1; i < argc; ++i) {
-
-		if (parseArg(argc, argv, i)) {
-			continue;
-		}
-
-		else if (isArg(i, argc, argv, "--", NULL)) {
-			// remaining arguments are not options
-			++i;
-			break;
-		}
-
-		else if (argv[i][0] == '-') {
-			std::cerr << "Unrecognized option: " << argv[i] << std::endl;
-			m_bye(kExitArgs);
-		}
-
-		else {
-			// this and remaining arguments are not options
-			break;
-		}
-	}
+	m_minimal.parseArgs(argc, argv, i);
 
 #if SYSAPI_WIN32
 	// suggest that user installs as a windows service. when launched as 
@@ -261,26 +333,9 @@ CApp::parseArgs(int argc, const char* const* argv, int& i)
 			"the --daemon argument is not supported on windows. "
 			"instead, install %s as a service (--service install)", 
 			argsBase().m_pname));
-		m_bye(kExitArgs);
+		bye(kExitArgs);
 	}
 #endif
-}
-
-void
-CApp::version()
-{
-	char buffer[500];
-	sprintf(
-		buffer,
-		"%s %s, protocol version %d.%d\n%s",
-		argsBase().m_pname,
-		kVersion,
-		kProtocolMajorVersion,
-		kProtocolMinorVersion,
-		kCopyright
-		);
-
-	std::cout << buffer << std::endl;
 }
 
 int

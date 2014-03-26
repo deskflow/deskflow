@@ -105,7 +105,7 @@ CServerApp::parseArg(const int& argc, const char* const* argv, int& i)
 		catch (XSocketAddress& e) {
 			LOG((CLOG_PRINT "%s: %s" BYE,
 				args().m_pname, e.what(), args().m_pname));
-			m_bye(kExitArgs);
+			bye(kExitArgs);
 		}
 		++i;
 	}
@@ -135,14 +135,14 @@ CServerApp::parseArgs(int argc, const char* const* argv)
 	if (i != argc) {
 		LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
 			args().m_pname, argv[i], args().m_pname));
-		m_bye(kExitArgs);
+		bye(kExitArgs);
 	}
 
 	// set log filter
 	if (!CLOG->setFilter(args().m_logFilter)) {
 		LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
 			args().m_pname, args().m_logFilter, args().m_pname));
-		m_bye(kExitArgs);
+		bye(kExitArgs);
 	}
 
 	// identify system
@@ -267,7 +267,7 @@ CServerApp::loadConfig()
 
 	if (!loaded) {
 		LOG((CLOG_PRINT "%s: no configuration available", args().m_pname));
-		m_bye(kExitConfig);
+		bye(kExitConfig);
 	}
 }
 
@@ -839,7 +839,6 @@ CServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
 	// general initialization
 	args().m_synergyAddress = new CNetworkAddress;
 	args().m_config         = new CConfig(m_events);
-	args().m_pname          = ARCH->getBasename(argv[0]);
 
 	// install caller's output filter
 	if (outputter != NULL) {
@@ -914,6 +913,6 @@ CServerApp::startNode()
 	// we shouldn't retry.
 	LOG((CLOG_DEBUG1 "starting server"));
 	if (!startServer()) {
-		m_bye(kExitFailed);
+		bye(kExitFailed);
 	}
 }
