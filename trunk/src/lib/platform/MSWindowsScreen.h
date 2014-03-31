@@ -211,6 +211,10 @@ private: // HACK
 	
 	// save last position of mouse to compute next delta movement
 	void saveMousePosition(SInt32 x, SInt32 y);
+	
+	// check if it is a modifier key repeating message
+	bool				isModifierRepeat(KeyModifierMask oldState, 
+							KeyModifierMask state, WPARAM wParam) const;
 
 private:
 	struct CHotKeyItem {
