@@ -1136,6 +1136,11 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 		}
 	}
 
+	// stop sending modifier keys over and over again
+	if (isModifierRepeat(oldState, state, wParam)) {
+		return true;
+	}
+
 	// ignore message if posted prior to last mark change
 	if (!ignore()) {
 		// check for ctrl+alt+del.  we do not want to pass that to the
@@ -1815,4 +1820,32 @@ const CString&
 CMSWindowsScreen::getDropTarget() const
 {
 	return m_desktopPath;
+}
+
+bool
+CMSWindowsScreen::isModifierRepeat(KeyModifierMask oldState, KeyModifierMask state, WPARAM wParam) const
+{
+	bool result = false;
+
+	if (oldState == state && state != 0) {
+		UINT virtKey = (wParam & 0xffu);
+		if ((state & KeyModifierShift) != 0
+			&& (virtKey == VK_LSHIFT || virtKey == VK_RSHIFT)) {
+			result = true;
+		}
+		if ((state & KeyModifierControl) != 0
+			&& (virtKey == VK_LCONTROL || virtKey == VK_RCONTROL)) {
+			result = true;
+		}
+		if ((state & KeyModifierAlt) != 0
+			&& (virtKey == VK_LMENU || virtKey == VK_RMENU)) {
+			result = true;
+		}
+		if ((state & KeyModifierSuper) != 0
+			&& (virtKey == VK_LWIN || virtKey == VK_RWIN)) {
+			result = true;
+		}
+	}
+
+	return result;
 }
