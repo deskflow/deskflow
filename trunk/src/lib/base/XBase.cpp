@@ -48,7 +48,8 @@ XBase::what() const _NOEXCEPT
 {
 	const char* what = std::runtime_error::what();
 	if (strlen(what) == 0) {
-		return getWhat().c_str();
+		m_what = getWhat();
+		return m_what.c_str();
 	}
 	return what;
 }

@@ -48,6 +48,8 @@ protected:
 	*/
 	virtual CString		format(const char* id,
 							const char* defaultFormat, ...) const throw();
+private:
+	mutable CString		m_what;
 };
 
 /*!
