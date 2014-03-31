@@ -215,9 +215,10 @@ private:
 	GroupList			m_groups;
 	GroupMap			m_groupMap;
 	
-	bool				m_shiftPressed;
-	bool				m_controlPressed;
-	bool				m_altPressed;
-	bool				m_superPressed;
-	bool				m_capsPressed;
+	// Hold the current state of modifier keys
+	bool shiftPressed;
+	bool controlPressed;
+	bool altPressed;
+	bool superPressed;
+	bool capsPressed;
 };
