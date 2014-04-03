@@ -1,0 +1,156 @@
+1.4.17
+======
+Bug #2836 - Unable to begin screen name or alias with numbers
+Bug #3796 - Some files being unintentionally dragged (including explorer.exe)
+Bug #3886 - Alias is allowed to match screen name
+Bug #3919 - RPM install fails on Fedora 20, failed dependencies: libcurl
+Bug #3921 - Error: synwinxt.dll outdated (upgrading from 1.4.15 to 1.4.16)
+Bug #3927 - Mavericks accessibility exception not working (when upgrading from 1.4.15 to 1.4.16)
+Bug #3933 - Plus signs in the email address cause premium login to fail
+Bug #3939 - Compile fails on ARM (Raspberry Pi) because of cryptopp/Crypto++ lib
+Bug #3947 - Conflicts when using yum localinstall on Fedora 20
+Bug #3959 - Premium title doesn't always show on first login
+Bug #3968 - GUI auto-hides on initial first install (with no config)
+Task #3936 - Change installer to WiX for improved file upgrade process
+Task #3950 - Poll modifier after key down on Mac OS X and log results
+Task #3951 - Clear filename stored in synwinxt on mouse up
+Task #3952 - Make Premium wizard page cleaner
+Task #3953 - Inherit XArch and XBase from std::exception
+Task #3954 - Make "lock to screen" log message go to NOTE level instead of DEBUG
+Task #3960 - Split CMSWindowsHookLibraryLoader into hook and shellex loaders
+Task #3961 - Remove Windows 95 support
+Task #3963 - Disable failing Linux unit/integ tests on Fedora 20 32-bit (valgrind SIGILL)
+Task #3964 - Make Premium login error more verbose
+Task #3969 - Merge String.cpp and StringUtil.cpp
+
+1.4.16
+======
+Bug #3338 - Alt tab not working with Windows 8
+Bug #3642 - Failed to start server on Mac OS X 10.9 Mavericks, assistive devices problem
+Bug #3785 - Synwinxt.dll error opening file for writing during install of 1.4.15
+Bug #3787 - Wont automatically load after login on OS X
+Bug #3788 - Configuration wizard: Premium login fails when behind a proxy
+Bug #3796 - Some files being unintentionally dragged (including explorer.exe)
+Bug #3799 - Synergy Client on Fedora crashes on drag/drop operations
+Bug #3818 - Client freezes on Mac OS 10.6.8
+Bug #3874 - Premium GUI login is case sensitive for email
+Bug #3911 - Drag and drop error on OS X 10.9 Mavericks
+
+1.4.15
+======
+Bug #3765 - Synergy Service - Error 87: The parameter is incorrect.
+Bug #3781 - Option not supported on Linux: --enable-drag-drop (server not starting)
+
+1.4.14
+======
+Bug #3287 - Mac does not wake up
+Bug #3758 - Unstable service (synergyd)
+Bug #3759 - Exploit: C:\Program.exe (if it exists) is run by service (elevated)
+Bug #3760 - Encryption broken (GCM, CTR and OFB)
+Bug #3761 - Start button is visible when Synergy is running
+Bug #3762 - Apply button is disabled for Mac and Linux
+Feature #46 - Drag and drop between computers (Windows and Mac)
+
+1.4.13
+======
+Version not released, unstable.
+
+1.4.12
+======
+Bug #3565 - Encryption fails when typing fast (Invalid message from client)
+Bug #3606 - GUI is elevated after setup
+Bug #3572 - Mac caps lock causes disconnect
+
+1.4.11
+======
+Feature #12 - Encryption
+Feature #421 - Portable version
+Bug #2855 - Mouse cursor remains hidden on Mac client (intermittently/randomly)
+Bug #3281 - server start on OS X defaults to 'interactive'
+Bug #3310 - P&ort in settings screen
+
+1.4.10
+======
+Bug #2799 - Right shift broken (Windows server, Mac OS X client)
+Bug #3302 - GUI does not show/hide when tray icon is double clicked (Windows)
+Bug #3303 - Mac OS X IPC integ test fails intermittently
+Feature #2974 - Gesture Support for Magic Mouse/Trackpad
+Feature #3172 - Button to stop Synergy when in service mode
+Feature #3241 - Option to elevate synergyc/s when in service mode
+Feature #3242 - Show a list of available IP addresses and screen name on the main screen
+Feature #3296 - 64-bit Windows installer should display helpful message on 32-bit Windows
+Feature #3300 - Make service mode default mode (now that we have elevate option)
+Feature #3301 - Add process mode option to settings (remove startup wizard page)
+Feature #3306 - Gatekeeper compatibility on Mac OS X 10.8
+
+1.4.9
+=====
+Bug #3159 - In service mode, server doesn't start unless GUI is running
+Bug #3214 - Client sometimes can't connect if GUI is closed
+Bug #56 - Mac OS X server not sending keystrokes to client
+Bug #3161 - First time GUI appears, service doesn't send logging
+Bug #3164 - In service mode, you need to add a firewall exception
+Bug #3166 - Service shutdown stalls when GUI is closed
+Bug #3216 - Fatal error if plugins folder doesn't exist
+Bug #3221 - ERROR: could not connect to service, error: 2
+Feature #3192 - Add support for JOYINFOEX structure to poll game device info
+Feature #3202 - Plugin support (sending for primary screen events on Windows only)
+Feature #3155 - Cross-platform TCP IPC between GUI and service
+Task #3177 - Fix Mac buildslave to build multiple versions
+Task #3193 - Add Micro Synergy to repository
+Task #3275 - Change hostname label to "IP address or hostname"
+Task #3276 - Installation recovery mechanism for synrgyhk.dll
+
+1.4.8
+=====
+Bug #143: Cursor on Mac OS X goes to center when inactive
+Bug #146: Screen Resize causes problems with moving off right-hand side of screen
+Bug #3058: Modifier keys not working on Mac OS X server
+Bug #3139: Double click too strict (click, move, click should not count)
+Bug #3195: Service install can fail first time
+Bug #3196: Wizard buttons not visible
+Bug #3197: GUI doesn't take focus after install
+Bug #3202: Hook DLL (synrgyhk.dll) is not released
+Feature #3143: Setup wizard for first time users
+Feature #3145: Check for updates
+Feature #3174: Startup mode wizard page
+Feature #3184: New service for process management
+
+1.4.7
+=====
+Bug #3132: GUI hides before successful connection
+Bug #3133: Can't un-hide GUI on Mac
+Feature #3054: Hide synergy[cs] dock icon (Mac OS X)
+Feature #3135: Integrate log into main window
+Task #3134: Move hotkey warnings to DEBUG
+
+1.4.6
+=====
+Bug #155: Build error on FreeBSD (missing sentinel in function call)
+Bug #571: Synergy SegFaults with "Unknown Quartz Event type: 0x1d"
+Bug #617: xrandr rotation on client confines cursor in wrong area
+Bug #642: `synergyc --help` segfaults on sparc64 architecture
+Bug #652: Stack overflow in getIDForKey
+Bug #1071: Can't copy from the Firefox address bar on Linux
+Bug #1662: Copying text from remote computer crashes java programs.
+Bug #1731: YouTube can cause server to freeze randomly
+Bug #2752: Use SAS for ctrl+alt+del on win7
+Bug #2763: Double-click broken on Mac OS
+Bug #2817: Keypad Subtract has wrong keycode on OS X
+Bug #2958: GNOME 3 mouse problem (gnome-shell)
+Bug #2962: Clipboard not working on mac client
+Bug #3063: Segfault in copy buffer
+Bug #3066: Server segfault on clipboard paste
+Bug #3089: Comma and Period translated wrong when using the NEO2-layout
+Bug #3092: Wrong screen rotation detected
+Bug #3105: There doesn't seem to be a system tray available. Quitting
+Bug #3116: Memory Leak due to the XInput2 patches
+Bug #3117: Dual monitors not detected properly anymore
+Feature #3073: Re-introduce auto-start GUI (Windows)
+Feature #3076: Re-introduce auto-start backend
+Feature #3077: Re-introduce hidden on start
+Feature #3091: Add option to remap altgr modifier
+Feature #3119: Mac OS X secondary screen
+Task #2905: Unit tests: Clipboard classes
+Task #3072: Downgrade Linux build machines
+Task #3090: CXWindowsKeyState integ test args wrong
