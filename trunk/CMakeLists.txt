@@ -20,8 +20,7 @@ set(VERSION_MINOR 4)
 set(VERSION_REV 18)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
-# 2.8 needed for file glob.
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.6)
 
 # CMake complains if we don't have this.
 if (COMMAND cmake_policy)
