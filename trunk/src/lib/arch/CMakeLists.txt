@@ -48,3 +48,7 @@ if (UNIX)
 endif()
 
 add_library(arch STATIC ${sources})
+
+if (UNIX)
+	target_link_libraries(arch ${libs})
+endif()
