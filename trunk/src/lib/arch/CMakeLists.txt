@@ -23,7 +23,7 @@ endif()
 
 # arch
 if (WIN32)
-	file(GLOB arch_headers "awin32/*.h")
+	file(GLOB arch_headers "win32/*.h")
 	file(GLOB arch_sources "win32/*.cpp")
 elseif (UNIX)
 	file(GLOB arch_headers "unix/*.h")
