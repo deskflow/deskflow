@@ -1,0 +1,11 @@
+Package: synergy
+Section: net
+Priority: optional
+Maintainer: Nick Bolton <nick@synergy-foss.org>
+Version: ${in:version}
+Architecture: ${in:arch}
+Depends: libc6
+Installed-Size: 30
+Description: Keyboard and mouse sharing utility
+ Synergy is free and open source software for sharing one mouse and keyboard
+ between multiple computers. Works on Windows, Mac OS X and Linux.
