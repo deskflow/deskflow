@@ -1078,6 +1078,7 @@ class InternalCommands:
 
 		metaDir = '%s/%s/DEBIAN' % (debDir, package)		
 		os.makedirs(metaDir)
+		os.chmod(metaDir, 0o0755)
 
 		templateFile = open(resDir + '/deb/control.in')
 		template = templateFile.read()
