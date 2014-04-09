@@ -982,9 +982,6 @@ class InternalCommands:
 			self.dist_usage()
 			return
 
-		if type != 'win' and type != 'mac':
-			self.configure(unixTarget, '-DCONF_CPACK:BOOL=TRUE')
-
 		moveExt = ''
 
 		if type == 'src':
@@ -1001,8 +998,7 @@ class InternalCommands:
 			
 		elif type == 'deb':
 			if sys.platform == 'linux2':
-				self.dist_run('cpack -G DEB', unixTarget)
-				moveExt = 'deb'
+				self.distDeb()
 			else:
 				package_unsupported = True
 			
@@ -1067,6 +1063,92 @@ class InternalCommands:
 		finally:
 			self.restore_chdir()
 
+        def distDeb(self):
+		buildDir = self.getGenerator().buildDir
+		binDir = self.getGenerator().binDir
+		resDir = self.cmake_dir
+
+                version = self.getVersionFromCmake()
+                package = '%s-%s-%s' % (
+                        self.project, version, self.getLinuxPlatform())
+
+                debDir = '%s/deb' % buildDir
+                if os.path.exists(debDir):
+			shutil.rmtree(debDir)
+
+		metaDir = '%s/%s/DEBIAN' % (debDir, package)		
+		os.makedirs(metaDir)
+
+		templateFile = open(resDir + '/deb/control.in')
+		template = templateFile.read()
+
+		template = template.replace('${in:version}',
+			self.getVersionFromCmake())
+
+		template = template.replace('${in:arch}',
+			self.getDebianArch())
+
+		controlPath = '%s/control' % metaDir
+
+		controlFile = open(controlPath, 'w')
+		controlFile.write(template)
+		controlFile.close()
+
+		targetBin = '%s/%s/usr/bin' % (debDir, package)
+		targetShare = '%s/%s/usr/share' % (debDir, package)
+
+		os.makedirs(targetBin)
+		os.makedirs("%s/applications" % targetShare)
+		os.makedirs("%s/icons" % targetShare)
+		os.makedirs("%s/doc/%s" % (targetShare, self.project))
+
+		binFiles = ['synergy', 'synergyc', 'synergys', 'synergyd', 'syntool']
+		for f in binFiles:
+			shutil.copy("%s/%s" % (binDir, f), targetBin)
+
+			err = os.system("strip %s/%s" % (targetBin, f))
+			if err != 0:
+				raise Exception('strip failed: ' + str(err))
+
+		shutil.copy(
+			"%s/synergy.desktop" % resDir,
+			"%s/applications" % targetShare)
+
+		shutil.copy(
+			"%s/synergy.ico" % resDir,
+			"%s/icons" % targetShare)
+
+		docTarget = "%s/doc/%s" % (targetShare, self.project)
+
+		copyrightPath = "%s/deb/copyright" % resDir
+		shutil.copy(copyrightPath, docTarget)
+
+		shutil.copy("%s/deb/changelog" % resDir, docTarget)
+		os.system("gzip -9 %s/changelog" % docTarget)
+		if err != 0:
+			raise Exception('gzip failed: ' + str(err))
+		
+		target = '../../bin/%s.deb' % package
+
+		try:
+			self.try_chdir(debDir)
+
+			# TODO: consider dpkg-buildpackage (higher level tool)
+                        cmd = 'fakeroot dpkg-deb --build %s' % package
+                        print "Command: " + cmd
+			err = os.system(cmd)
+			if err != 0:
+				raise Exception('dpkg-deb failed: ' + str(err))
+
+                        cmd = 'lintian %s.deb' % package
+                        print "Command: " + cmd
+			err = os.system(cmd)
+			if err != 0:
+				raise Exception('lintian failed: ' + str(err))
+
+			self.unixMove('*.deb', target)
+		finally:
+			self.restore_chdir()
 
 	def distSrc(self):
 		version = self.getVersionFromCmake()
@@ -1229,7 +1311,23 @@ class InternalCommands:
 
 		ftp.run(srcDir + src, dest) 
 		print 'Done'
-                
+	
+	def getDebianArch(self):
+		if os.uname()[4][:3] == 'arm':
+			return 'armel'
+
+                # os_bits should be loaded with '32bit' or '64bit'
+                import platform
+                (os_bits, other) = platform.architecture()
+		
+                # get platform based on current platform
+                if os_bits == '32bit':
+                        return 'i386'
+                elif os_bits == '64bit':
+                        return 'amd64'
+                else:
+                        raise Exception("unknown os bits: " + os_bits)
+
         def getLinuxPlatform(self):
 		if os.uname()[4][:3] == 'arm':
 			return 'Linux-armv6l'
@@ -1294,14 +1392,6 @@ class InternalCommands:
 		replace = '\g<1>-r' + self.find_revision() + '\g<2>'
 		return re.sub(pattern, replace, self.dist_name(type))
 	
-	def dist_run(self, command, target=''):
-		self.try_chdir(self.getBuildDir(target))
-		print 'CPack command: ' + command
-		err = os.system(command)
-		self.restore_chdir()
-		if err != 0:
-			raise Exception('Package failed: ' + str(err))
-
 	def dist_usage(self):
 		print ('Usage: %s package [package-type]\n'
 			'\n'
