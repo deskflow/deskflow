@@ -23,6 +23,7 @@
 #include <QTimer>
 #include "IpcReader.h"
 #include "Ipc.h"
+#include <QDataStream>
 
 IpcClient::IpcClient() :
 m_ReaderStarted(false),
