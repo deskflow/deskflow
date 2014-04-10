@@ -1054,12 +1054,18 @@ class InternalCommands:
 		try:
 			self.try_chdir(rpmDir)
                         cmd = 'rpmbuild -bb --define "_topdir `pwd`" synergy.spec'
-                        print "RPM command: " + cmd
+                        print "Command: " + cmd
 			err = os.system(cmd)
 			if err != 0:
-				raise Exception('Package failed: ' + str(err))
+				raise Exception('rpmbuild failed: ' + str(err))
 
 			self.unixMove('RPMS/*/*.rpm', target)
+
+                        cmd = 'rpmlint ' + target
+                        print "Command: " + cmd
+			err = os.system(cmd)
+			if err != 0:
+				raise Exception('rpmlint failed: ' + str(err))
 		finally:
 			self.restore_chdir()
 
