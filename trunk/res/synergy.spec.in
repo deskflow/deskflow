@@ -1,9 +1,9 @@
 # -*- rpm-spec -*-
-Summary: Synergy
+Summary: Keyboard and mouse sharing utility
 Name: synergy
 Release: 1
 License: GPLv2
-Group: Applications/Accessories
+Group: Applications/Productivity
 URL: http://synergy-foss.org/
 Source: http://synergy-foss.org/download/
 Vendor: The Synergy Project
@@ -12,8 +12,7 @@ Version: ${in:version}
 
 %description
 Synergy is free and open source software for sharing one mouse and keyboard
-between multiple computers. Works on Windows, Mac OS X, Linux, Android and
-Apple iOS.
+between multiple computers. Works on Windows, Mac OS X, Linux.
 
 %prep
 source=%{_topdir}/../..
