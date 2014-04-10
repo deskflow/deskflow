@@ -1078,7 +1078,6 @@ class InternalCommands:
 
 		metaDir = '%s/%s/DEBIAN' % (debDir, package)		
 		os.makedirs(metaDir)
-		os.chmod(metaDir, 0o0755)
 
 		templateFile = open(resDir + '/deb/control.in')
 		template = templateFile.read()
@@ -1097,27 +1096,30 @@ class InternalCommands:
 
 		targetBin = '%s/%s/usr/bin' % (debDir, package)
 		targetShare = '%s/%s/usr/share' % (debDir, package)
+		targetApplications = "%s/applications" % targetShare
+		targetIcons = "%s/icons" % targetShare
+		targetDocs = "%s/doc/%s" % (targetShare, self.project)
 
 		os.makedirs(targetBin)
-		os.makedirs("%s/applications" % targetShare)
-		os.makedirs("%s/icons" % targetShare)
-		os.makedirs("%s/doc/%s" % (targetShare, self.project))
+		os.makedirs(targetApplications)
+		os.makedirs(targetIcons)
+		os.makedirs(targetDocs)
+		
+		for root, dirs, files in os.walk(debDir):
+			for d in dirs:
+				os.chmod(os.path.join(root, d), 0o0755)
 
 		binFiles = ['synergy', 'synergyc', 'synergys', 'synergyd', 'syntool']
 		for f in binFiles:
 			shutil.copy("%s/%s" % (binDir, f), targetBin)
-
-			err = os.system("strip %s/%s" % (targetBin, f))
+			target = "%s/%s" % (targetBin, f)
+			os.chmod(target, 0o0755)
+			err = os.system("strip " + target)
 			if err != 0:
 				raise Exception('strip failed: ' + str(err))
 
-		shutil.copy(
-			"%s/synergy.desktop" % resDir,
-			"%s/applications" % targetShare)
-
-		shutil.copy(
-			"%s/synergy.ico" % resDir,
-			"%s/icons" % targetShare)
+		shutil.copy("%s/synergy.desktop" % resDir, targetApplications)
+		shutil.copy("%s/synergy.ico" % resDir, targetIcons)
 
 		docTarget = "%s/doc/%s" % (targetShare, self.project)
 
@@ -1128,6 +1130,10 @@ class InternalCommands:
 		os.system("gzip -9 %s/changelog" % docTarget)
 		if err != 0:
 			raise Exception('gzip failed: ' + str(err))
+
+		for root, dirs, files in os.walk(targetShare):
+			for f in files:
+				os.chmod(os.path.join(root, f), 0o0644)
 		
 		target = '../../bin/%s.deb' % package
 
