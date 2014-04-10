@@ -1327,7 +1327,7 @@ class InternalCommands:
 	
 	def getDebianArch(self):
 		if os.uname()[4][:3] == 'arm':
-			return 'armel'
+			return 'armhf'
 
                 # os_bits should be loaded with '32bit' or '64bit'
                 import platform
