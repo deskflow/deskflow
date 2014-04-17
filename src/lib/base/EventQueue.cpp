@@ -112,7 +112,7 @@ CEventQueue::loop()
 	LOG((CLOG_DEBUG "event queue is ready"));
 	while (!m_pending.empty()) {
 		LOG((CLOG_DEBUG "add pending events to buffer"));
-		const CEvent& event = m_pending.front();
+		CEvent& event = m_pending.front();
 		addEventToBuffer(event);
 		m_pending.pop();
 	}
