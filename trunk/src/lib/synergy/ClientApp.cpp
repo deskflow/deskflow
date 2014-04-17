@@ -548,8 +548,10 @@ CClientApp::mainLoop()
 			this, &CClientApp::runEventsLoop,
 			NULL));
 	
-	// HACK: sleep, allow queue to start.
-	ARCH->sleep(1);
+	// wait until carbon loop is ready
+	COSXScreen* screen = dynamic_cast<COSXScreen*>(
+		s_clientScreen->getPlatformScreen());
+	screen->waitForCarbonLoop();
 	
 	runCocoaApp();
 #else

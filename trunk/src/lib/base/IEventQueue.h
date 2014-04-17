@@ -176,6 +176,13 @@ public:
 						registerTypeOnce(CEvent::Type& type,
 							const char* name) = 0;
 
+	//! Wait for event queue to become ready
+	/*!
+	Blocks on the current thread until the event queue is ready for events to
+	be added.
+	*/
+	virtual void		waitForReady() const = 0;
+	
 	//@}
 	//! @name accessors
 	//@{
