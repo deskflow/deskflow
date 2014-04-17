@@ -135,7 +135,7 @@ draggingSourceOperationMask
 
 - (NSInteger)draggingSequenceNumber
 {
-	return nil;
+	return 0;
 }
 
 - (void)slideDraggedImageTo:(NSPoint)screenPoint
