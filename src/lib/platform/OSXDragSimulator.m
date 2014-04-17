@@ -28,9 +28,6 @@ COSXDragView* g_dragView = NULL;
 void
 runCocoaApp()
 {
-	// HACK: sleep, carbon loop should start first.
-	usleep(1000000);
-	
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
 	[NSApplication sharedApplication];

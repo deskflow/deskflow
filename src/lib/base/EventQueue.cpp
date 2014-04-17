@@ -18,12 +18,15 @@
 
 #include "base/EventQueue.h"
 
+#include "mt/Mutex.h"
+#include "mt/Lock.h"
 #include "arch/Arch.h"
-#include "base/Log.h"
 #include "base/SimpleEventQueueBuffer.h"
 #include "base/Stopwatch.h"
 #include "base/IEventJob.h"
 #include "base/EventTypes.h"
+#include "base/Log.h"
+#include "base/XBase.h"
 
 EVENT_TYPE_ACCESSOR(CClient)
 EVENT_TYPE_ACCESSOR(IStream)
@@ -78,7 +81,9 @@ CEventQueue::CEventQueue() :
 	m_typesForCServerApp(NULL),
 	m_typesForIKeyState(NULL),
 	m_typesForIPrimaryScreen(NULL),
-	m_typesForIScreen(NULL)
+	m_typesForIScreen(NULL),
+	m_readyMutex(new CMutex),
+	m_readyCondVar(new CCondVar<bool>(m_readyMutex, false))
 {
 	m_mutex = ARCH->newMutex();
 	ARCH->setSignalHandler(CArch::kINTERRUPT, &interrupt, this);
@@ -89,6 +94,9 @@ CEventQueue::CEventQueue() :
 CEventQueue::~CEventQueue()
 {
 	delete m_buffer;
+	delete m_readyCondVar;
+	delete m_readyMutex;
+	
 	ARCH->setSignalHandler(CArch::kINTERRUPT, NULL, NULL);
 	ARCH->setSignalHandler(CArch::kTERMINATE, NULL, NULL);
 	ARCH->closeMutex(m_mutex);
@@ -98,6 +106,16 @@ void
 CEventQueue::loop()
 {
 	m_buffer->init();
+	*m_readyCondVar = true;
+	m_readyCondVar->broadcast();
+	
+	LOG((CLOG_DEBUG "event queue is ready"));
+	while (!m_pending.empty()) {
+		LOG((CLOG_DEBUG "add pending events to buffer"));
+		CEvent& event = m_pending.front();
+		addEventToBuffer(event);
+		m_pending.pop();
+	}
 	
 	CEvent event;
 	getEvent(event);
@@ -268,18 +286,27 @@ CEventQueue::addEvent(const CEvent& event)
 		dispatchEvent(event);
 		CEvent::deleteData(event);
 	}
+	else if (!(*m_readyCondVar)) {
+		m_pending.push(event);
+	}
 	else {
-		CArchMutexLock lock(m_mutex);
-		
-		// store the event's data locally
-		UInt32 eventID = saveEvent(event);
-		
-		// add it
-		if (!m_buffer->addEvent(eventID)) {
-			// failed to send event
-			removeEvent(eventID);
-			CEvent::deleteData(event);
-		}
+		addEventToBuffer(event);
+	}
+}
+
+void
+CEventQueue::addEventToBuffer(const CEvent& event)
+{
+	CArchMutexLock lock(m_mutex);
+	
+	// store the event's data locally
+	UInt32 eventID = saveEvent(event);
+	
+	// add it
+	if (!m_buffer->addEvent(eventID)) {
+		// failed to send event
+		removeEvent(eventID);
+		CEvent::deleteData(event);
 	}
 }
 
@@ -524,6 +551,21 @@ CEventQueue::getSystemTarget()
 {
 	// any unique arbitrary pointer will do
 	return &m_systemTarget;
+}
+
+void
+CEventQueue::waitForReady() const
+{
+	double timeout = ARCH->time() + 5;
+	m_readyCondVar->lock();
+	
+	while (!m_readyCondVar->wait()) {
+		if(ARCH->time() > timeout) {
+			throw std::runtime_error("event queue is not ready within 5 sec");
+		}
+	}
+	
+	m_readyCondVar->unlock();
 }
 
 //

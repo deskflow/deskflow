@@ -18,6 +18,7 @@
 
 #include "platform/OSXScreen.h"
 
+#include "base/EventQueue.h"
 #include "client/Client.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXEventQueueBuffer.h"
@@ -163,6 +164,10 @@ COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCur
 
 		// create thread for monitoring system power state.
 		*m_pmThreadReady = false;
+#if defined(MAC_OS_X_VERSION_10_7)
+		m_carbonLoopMutex = new CMutex();
+		m_carbonLoopReady = new CCondVar<bool>(m_carbonLoopMutex, false);
+#endif
 		LOG((CLOG_DEBUG "starting watchSystemPowerThread"));
 		m_pmWatchThread = new CThread(new TMethodJob<COSXScreen>
 								(this, &COSXScreen::watchSystemPowerThread));
@@ -255,6 +260,11 @@ COSXScreen::~COSXScreen()
 
 	delete m_keyState;
 	delete m_screensaver;
+	
+#if defined(MAC_OS_X_VERSION_10_7)
+	delete m_carbonLoopMutex;
+	delete m_carbonLoopReady;
+#endif
 }
 
 void*
@@ -1694,10 +1704,16 @@ COSXScreen::watchSystemPowerThread(void*)
 	}
 
 	LOG((CLOG_DEBUG "started watchSystemPowerThread"));
+
+	m_events->waitForReady();
     
-	// HACK: sleep, this seem to stop synergy from freezing.
-	ARCH->sleep(1);
-    
+#if defined(MAC_OS_X_VERSION_10_7)
+	if (*m_carbonLoopReady == false) {
+		*m_carbonLoopReady = true;
+		m_carbonLoopReady->broadcast();
+	}
+#endif
+	
 	// start the run loop
 	LOG((CLOG_DEBUG "starting carbon loop"));
 	CFRunLoopRun();
@@ -2098,6 +2114,21 @@ COSXScreen::getDraggingFilename()
 		}
 	}
 	return m_draggingFilename;
+}
+
+void
+COSXScreen::waitForCarbonLoop() const
+{
+	double timeout = ARCH->time() + 5;
+	m_carbonLoopReady->lock();
+	
+	while (!m_carbonLoopReady->wait()) {
+		if(ARCH->time() > timeout) {
+			throw std::runtime_error("carbon loop is not ready within 5 sec");
+		}
+	}
+	
+	m_carbonLoopReady->unlock();
 }
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"

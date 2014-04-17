@@ -18,13 +18,18 @@
 
 #pragma once
 
+#include "mt/CondVar.h"
+#include "arch/IArchMultithread.h"
 #include "base/IEventQueue.h"
 #include "base/Event.h"
 #include "base/PriorityQueue.h"
 #include "base/Stopwatch.h"
-#include "arch/IArchMultithread.h"
 #include "common/stdmap.h"
 #include "common/stdset.h"
+
+#include <queue>
+
+class CMutex;
 
 //! Event queue
 /*!
@@ -59,13 +64,15 @@ public:
 	virtual CEvent::Type
 						getRegisteredType(const CString& name) const;
 	void*				getSystemTarget();
+	virtual void		waitForReady() const;
 
 private:
 	UInt32				saveEvent(const CEvent& event);
 	CEvent				removeEvent(UInt32 eventID);
 	bool				hasTimerExpired(CEvent& event);
 	double				getNextTimerTimeout() const;
-
+	void				addEventToBuffer(const CEvent& event);
+	
 private:
 	class CTimer {
 	public:
@@ -170,6 +177,9 @@ private:
 	IKeyStateEvents*			m_typesForIKeyState;
 	IPrimaryScreenEvents*		m_typesForIPrimaryScreen;
 	IScreenEvents*				m_typesForIScreen;
+	CMutex*						m_readyMutex;
+	CCondVar<bool>*				m_readyCondVar;
+	std::queue<const CEvent>	m_pending;
 };
 
 #define EVENT_TYPE_ACCESSOR(type_)											\

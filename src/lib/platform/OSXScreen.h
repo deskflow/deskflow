@@ -47,6 +47,7 @@ class CThread;
 class COSXKeyState;
 class COSXScreenSaver;
 class IEventQueue;
+class CMutex;
 
 //! Implementation of IPlatformScreen for OS X
 class COSXScreen : public CPlatformScreen {
@@ -98,6 +99,7 @@ public:
 	virtual CString&	getDraggingFilename();
 	
 	const CString&		getDropTarget() const { return m_dropTarget; }
+	void				waitForCarbonLoop() const;
 	
 protected:
 	// IPlatformScreen overrides
@@ -344,4 +346,9 @@ private:
 	
 	CThread*				m_getDropTargetThread;
 	CString					m_dropTarget;
+	
+#if defined(MAC_OS_X_VERSION_10_7)
+	CMutex*					m_carbonLoopMutex;
+	CCondVar<bool>*			m_carbonLoopReady;
+#endif
 };
