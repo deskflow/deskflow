@@ -24,6 +24,7 @@
 
 NSWindow* g_dragWindow = NULL;
 COSXDragView* g_dragView = NULL;
+NSString* g_ext = NULL;
 
 void
 runCocoaApp()
@@ -61,8 +62,10 @@ stopCocoaLoop()
 }
 
 void
-fakeDragging(const char* str, int length, int cursorX, int cursorY)
+fakeDragging(const char* str, int cursorX, int cursorY)
 {
+	g_ext = [NSString stringWithUTF8String:str];
+	
 	dispatch_async(dispatch_get_main_queue(), ^{
 	NSRect screen = [[NSScreen mainScreen] frame];
 	NSLog ( @"screen size: witdh = %f height = %f", screen.size.width, screen.size.height);
@@ -80,7 +83,9 @@ fakeDragging(const char* str, int length, int cursorX, int cursorY)
 	[g_dragWindow setFrame:rect display:NO];
 	
 	[g_dragWindow makeKeyAndOrderFront:nil];
-		
+	
+	[g_dragView setFileExt:g_ext];
+
 	CGEventRef down = CGEventCreateMouseEvent(CGEventSourceCreate(kCGEventSourceStateHIDSystemState), kCGEventLeftMouseDown, CGPointMake(cursorX, cursorY), kCGMouseButtonLeft);
 	CGEventPost(kCGHIDEventTap, down);
 	});

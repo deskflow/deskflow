@@ -22,10 +22,12 @@
 @interface COSXDragView : NSView<NSDraggingSource,NSDraggingInfo>
 {
 	NSMutableString*	m_dropTarget;
+	NSString*	m_dragFileExt;
 }
 
 - (CFStringRef)getDropTarget;
 - (void)clearDropTarget;
+- (void)setFileExt:(NSString*) ext;
 
 @end
 
