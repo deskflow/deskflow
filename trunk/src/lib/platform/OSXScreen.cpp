@@ -620,9 +620,6 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press)
 		m_lastSingleClickYCursor = m_yCursor;
 	}
 	if (!press && (id == kButtonLeft)) {
-		// fake ctrl key up
-		fakeKeyUp(29);
-		
 		if (m_fakeDraggingStarted) {
 			m_getDropTargetThread = new CThread(new TMethodJob<COSXScreen>(
 				this, &COSXScreen::getDropTargetThread));
@@ -670,11 +667,7 @@ void
 COSXScreen::fakeMouseMove(SInt32 x, SInt32 y)
 {
 	if (m_fakeDraggingStarted) {
-		// HACK: for some reason the drag icon
-		// does not follow the cursor unless a key
-		// is pressed (except esc key)
-		// TODO: fake this key down properly
-		fakeKeyDown(kKeyControl_L, 8194, 29);
+		m_buttonState.set(0, kMouseButtonDown);
 	}
 	
 	// index 0 means left mouse button
@@ -924,9 +917,6 @@ COSXScreen::leave()
 			fakeKeyUp(1);
 			
 			fakeMouseButton(kButtonLeft, false);
-			
-			// fake ctrl key up
-			fakeKeyUp(29);
 			
 			if (fileList.empty() == false) {
 				CClientApp& app = CClientApp::instance();
