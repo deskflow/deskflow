@@ -2080,7 +2080,7 @@ COSXScreen::fakeDraggingFiles(CString str)
 	m_fakeDraggingStarted = true;
 #if defined(MAC_OS_X_VERSION_10_7)
 	// TODO: use real file extension
-	fakeDragging("txt", 3, m_xCursor, m_yCursor);
+	fakeDragging(str.c_str(), m_xCursor, m_yCursor);
 #else
 	LOG((CLOG_WARN "drag drop not supported"));
 #endif

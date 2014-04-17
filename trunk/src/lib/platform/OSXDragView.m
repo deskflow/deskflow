@@ -30,6 +30,7 @@ initWithFrame:(NSRect)frame
 {
 	self = [super initWithFrame:frame];
 	m_dropTarget = [[NSMutableString alloc] initWithCapacity:0];
+	m_dragFileExt = [[NSMutableString alloc] initWithCapacity:0];
     return self;
 }
 
@@ -57,7 +58,7 @@ mouseDown:(NSEvent *)theEvent
 	dragPosition.y -= 16;
 	imageLocation.origin = dragPosition;
 	imageLocation.size = NSMakeSize(32,32);
-	[self dragPromisedFilesOfTypes:[NSArray arrayWithObject:@"zip"]
+	[self dragPromisedFilesOfTypes:[NSArray arrayWithObject:m_dragFileExt]
 								fromRect:imageLocation
 								  source:self
 							   slideBack:NO
@@ -92,6 +93,13 @@ getDropTarget
 clearDropTarget
 {
 	[m_dropTarget setString:@""];
+}
+
+- (void)
+setFileExt:(NSString*) ext
+{
+	m_dragFileExt = [NSString stringWithString:ext];
+	NSLog(@"drag file ext: %@", m_dragFileExt);
 }
 
 - (NSWindow *)
