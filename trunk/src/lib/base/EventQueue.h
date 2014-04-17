@@ -179,7 +179,7 @@ private:
 	IScreenEvents*				m_typesForIScreen;
 	CMutex*						m_readyMutex;
 	CCondVar<bool>*				m_readyCondVar;
-	std::queue<const CEvent>	m_pending;
+	std::queue<CEvent>			m_pending;
 };
 
 #define EVENT_TYPE_ACCESSOR(type_)											\
