@@ -64,12 +64,12 @@
 
 CServerApp::CServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
 	CApp(events, createTaskBarReceiver, new CArgs()),
-	s_server(NULL),
-	s_serverState(kUninitialized),
-	s_serverScreen(NULL),
-	s_primaryClient(NULL),
-	s_listener(NULL),
-	s_timer(NULL)
+	m_server(NULL),
+	m_serverState(kUninitialized),
+	m_serverScreen(NULL),
+	m_primaryClient(NULL),
+	m_listener(NULL),
+	m_timer(NULL)
 {
 }
 
@@ -221,8 +221,8 @@ CServerApp::reloadConfig(const CEvent&, void*)
 {
 	LOG((CLOG_DEBUG "reload configuration"));
 	if (loadConfig(args().m_configFile)) {
-		if (s_server != NULL) {
-			s_server->setConfig(*args().m_config);
+		if (m_server != NULL) {
+			m_server->setConfig(*args().m_config);
 		}
 		LOG((CLOG_NOTE "reloaded configuration"));
 	}
@@ -301,8 +301,8 @@ CServerApp::loadConfig(const CString& pathname)
 void 
 CServerApp::forceReconnect(const CEvent&, void*)
 {
-	if (s_server != NULL) {
-		s_server->disconnect();
+	if (m_server != NULL) {
+		m_server->disconnect();
 	}
 }
 
@@ -312,7 +312,7 @@ CServerApp::handleClientConnected(const CEvent&, void* vlistener)
 	CClientListener* listener = reinterpret_cast<CClientListener*>(vlistener);
 	CClientProxy* client = listener->getNextClient();
 	if (client != NULL) {
-		s_server->adoptClient(client);
+		m_server->adoptClient(client);
 		updateStatus();
 	}
 }
@@ -354,10 +354,10 @@ CServerApp::closeServer(CServer* server)
 void 
 CServerApp::stopRetryTimer()
 {
-	if (s_timer != NULL) {
-		m_events->deleteTimer(s_timer);
+	if (m_timer != NULL) {
+		m_events->deleteTimer(m_timer);
 		m_events->removeHandler(CEvent::kTimer, NULL);
-		s_timer = NULL;
+		m_timer = NULL;
 	}
 }
 
@@ -371,7 +371,7 @@ void CServerApp::updateStatus( const CString& msg )
 {
 	if (m_taskBarReceiver)
 	{
-		m_taskBarReceiver->updateStatus(s_server, msg);
+		m_taskBarReceiver->updateStatus(m_server, msg);
 	}
 }
 
@@ -387,19 +387,19 @@ CServerApp::closeClientListener(CClientListener* listen)
 void 
 CServerApp::stopServer()
 {
-	if (s_serverState == kStarted) {
-		closeClientListener(s_listener);
-		closeServer(s_server);
-		s_server      = NULL;
-		s_listener    = NULL;
-		s_serverState = kInitialized;
+	if (m_serverState == kStarted) {
+		closeClientListener(m_listener);
+		closeServer(m_server);
+		m_server      = NULL;
+		m_listener    = NULL;
+		m_serverState = kInitialized;
 	}
-	else if (s_serverState == kStarting) {
+	else if (m_serverState == kStarting) {
 		stopRetryTimer();
-		s_serverState = kInitialized;
+		m_serverState = kInitialized;
 	}
-	assert(s_server == NULL);
-	assert(s_listener == NULL);
+	assert(m_server == NULL);
+	assert(m_listener == NULL);
 }
 
 void
@@ -425,32 +425,32 @@ CServerApp::closeServerScreen(CScreen* screen)
 void CServerApp::cleanupServer()
 {
 	stopServer();
-	if (s_serverState == kInitialized) {
-		closePrimaryClient(s_primaryClient);
-		closeServerScreen(s_serverScreen);
-		s_primaryClient = NULL;
-		s_serverScreen  = NULL;
-		s_serverState   = kUninitialized;
+	if (m_serverState == kInitialized) {
+		closePrimaryClient(m_primaryClient);
+		closeServerScreen(m_serverScreen);
+		m_primaryClient = NULL;
+		m_serverScreen  = NULL;
+		m_serverState   = kUninitialized;
 	}
-	else if (s_serverState == kInitializing ||
-		s_serverState == kInitializingToStart) {
+	else if (m_serverState == kInitializing ||
+		m_serverState == kInitializingToStart) {
 			stopRetryTimer();
-			s_serverState = kUninitialized;
+			m_serverState = kUninitialized;
 	}
-	assert(s_primaryClient == NULL);
-	assert(s_serverScreen == NULL);
-	assert(s_serverState == kUninitialized);
+	assert(m_primaryClient == NULL);
+	assert(m_serverScreen == NULL);
+	assert(m_serverState == kUninitialized);
 }
 
 void
 CServerApp::retryHandler(const CEvent&, void*)
 {
 	// discard old timer
-	assert(s_timer != NULL);
+	assert(m_timer != NULL);
 	stopRetryTimer();
 
 	// try initializing/starting the server again
-	switch (s_serverState) {
+	switch (m_serverState) {
 	case kUninitialized:
 	case kInitialized:
 	case kStarted:
@@ -459,7 +459,7 @@ CServerApp::retryHandler(const CEvent&, void*)
 
 	case kInitializing:
 		LOG((CLOG_DEBUG1 "retry server initialization"));
-		s_serverState = kUninitialized;
+		m_serverState = kUninitialized;
 		if (!initServer()) {
 			m_events->addEvent(CEvent(CEvent::kQuit));
 		}
@@ -467,11 +467,11 @@ CServerApp::retryHandler(const CEvent&, void*)
 
 	case kInitializingToStart:
 		LOG((CLOG_DEBUG1 "retry server initialization"));
-		s_serverState = kUninitialized;
+		m_serverState = kUninitialized;
 		if (!initServer()) {
 			m_events->addEvent(CEvent(CEvent::kQuit));
 		}
-		else if (s_serverState == kInitialized) {
+		else if (m_serverState == kInitialized) {
 			LOG((CLOG_DEBUG1 "starting server"));
 			if (!startServer()) {
 				m_events->addEvent(CEvent(CEvent::kQuit));
@@ -481,7 +481,7 @@ CServerApp::retryHandler(const CEvent&, void*)
 
 	case kStarting:
 		LOG((CLOG_DEBUG1 "retry starting server"));
-		s_serverState = kInitialized;
+		m_serverState = kInitialized;
 		if (!startServer()) {
 			m_events->addEvent(CEvent(CEvent::kQuit));
 		}
@@ -492,7 +492,7 @@ CServerApp::retryHandler(const CEvent&, void*)
 bool CServerApp::initServer()
 {
 	// skip if already initialized or initializing
-	if (s_serverState != kUninitialized) {
+	if (m_serverState != kUninitialized) {
 		return true;
 	}
 
@@ -503,9 +503,9 @@ bool CServerApp::initServer()
 		CString name    = args().m_config->getCanonicalName(args().m_name);
 		serverScreen    = openServerScreen();
 		primaryClient   = openPrimaryClient(name, serverScreen);
-		s_serverScreen  = serverScreen;
-		s_primaryClient = primaryClient;
-		s_serverState   = kInitialized;
+		m_serverScreen  = serverScreen;
+		m_primaryClient = primaryClient;
+		m_serverState   = kInitialized;
 		updateStatus();
 		return true;
 	}
@@ -531,12 +531,12 @@ bool CServerApp::initServer()
 
 	if (args().m_restartable) {
 		// install a timer and handler to retry later
-		assert(s_timer == NULL);
+		assert(m_timer == NULL);
 		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-		s_timer = m_events->newOneShotTimer(retryTime, NULL);
-		m_events->adoptHandler(CEvent::kTimer, s_timer,
+		m_timer = m_events->newOneShotTimer(retryTime, NULL);
+		m_events->adoptHandler(CEvent::kTimer, m_timer,
 			new TMethodEventJob<CServerApp>(this, &CServerApp::retryHandler));
-		s_serverState = kInitializing;
+		m_serverState = kInitializing;
 		return true;
 	}
 	else {
@@ -568,34 +568,34 @@ bool
 CServerApp::startServer()
 {
 	// skip if already started or starting
-	if (s_serverState == kStarting || s_serverState == kStarted) {
+	if (m_serverState == kStarting || m_serverState == kStarted) {
 		return true;
 	}
 
 	// initialize if necessary
-	if (s_serverState != kInitialized) {
+	if (m_serverState != kInitialized) {
 		if (!initServer()) {
 			// hard initialization failure
 			return false;
 		}
-		if (s_serverState == kInitializing) {
+		if (m_serverState == kInitializing) {
 			// not ready to start
-			s_serverState = kInitializingToStart;
+			m_serverState = kInitializingToStart;
 			return true;
 		}
-		assert(s_serverState == kInitialized);
+		assert(m_serverState == kInitialized);
 	}
 
 	double retryTime;
 	CClientListener* listener = NULL;
 	try {
 		listener   = openClientListener(args().m_config->getSynergyAddress());
-		s_server   = openServer(*args().m_config, s_primaryClient);
-		listener->setServer(s_server);
-		s_listener = listener;
+		m_server   = openServer(*args().m_config, m_primaryClient);
+		listener->setServer(m_server);
+		m_listener = listener;
 		updateStatus();
 		LOG((CLOG_NOTE "started server, waiting for clients"));
-		s_serverState = kStarted;
+		m_serverState = kStarted;
 		return true;
 	}
 	catch (XSocketAddressInUse& e) {
@@ -612,12 +612,12 @@ CServerApp::startServer()
 
 	if (args().m_restartable) {
 		// install a timer and handler to retry later
-		assert(s_timer == NULL);
+		assert(m_timer == NULL);
 		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-		s_timer = m_events->newOneShotTimer(retryTime, NULL);
-		m_events->adoptHandler(CEvent::kTimer, s_timer,
+		m_timer = m_events->newOneShotTimer(retryTime, NULL);
+		m_events->adoptHandler(CEvent::kTimer, m_timer,
 			new TMethodEventJob<CServerApp>(this, &CServerApp::retryHandler));
-		s_serverState = kStarting;
+		m_serverState = kStarting;
 		return true;
 	}
 	else {
@@ -696,7 +696,7 @@ CServerApp::openClientListener(const CNetworkAddress& address)
 CServer* 
 CServerApp::openServer(CConfig& config, CPrimaryClient* primaryClient)
 {
-	CServer* server = new CServer(config, primaryClient, s_serverScreen, m_events, args().m_enableDragDrop);
+	CServer* server = new CServer(config, primaryClient, m_serverScreen, m_events, args().m_enableDragDrop);
 	try {
 		m_events->adoptHandler(
 			m_events->forCServer().disconnected(), server,
@@ -766,7 +766,7 @@ CServerApp::mainLoop()
 	}
 
 	// load all available plugins.
-	ARCH->plugin().init(s_serverScreen->getEventTarget(), m_events);
+	ARCH->plugin().init(m_serverScreen->getEventTarget(), m_events);
 
 	// handle hangup signal by reloading the server's configuration
 	ARCH->setSignalHandler(CArch::kHANGUP, &reloadSignalHandler, NULL);
@@ -800,7 +800,7 @@ CServerApp::mainLoop()
 	
 	// wait until carbon loop is ready
 	COSXScreen* screen = dynamic_cast<COSXScreen*>(
-		s_serverScreen->getPlatformScreen());
+		m_serverScreen->getPlatformScreen());
 	screen->waitForCarbonLoop();
 	
 	runCocoaApp();

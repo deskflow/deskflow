@@ -83,12 +83,12 @@ public:
 
 	static CClientApp& instance() { return (CClientApp&)CApp::instance(); }
 
-	CClient* getClientPtr() { return s_client; }
+	CClient* getClientPtr() { return m_client; }
 	
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 
 private:
-	CClient*			s_client;
-	CScreen*			s_clientScreen;
+	CClient*			m_client;
+	CScreen*			m_clientScreen;
 };

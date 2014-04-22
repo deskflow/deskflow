@@ -62,8 +62,8 @@
 
 CClientApp::CClientApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
 	CApp(events, createTaskBarReceiver, new CArgs()),
-	s_client(NULL),
-	s_clientScreen(NULL)
+	m_client(NULL),
+	m_clientScreen(NULL)
 {
 }
 
@@ -255,7 +255,7 @@ CClientApp::updateStatus(const CString& msg)
 {
 	if (m_taskBarReceiver)
 	{
-		m_taskBarReceiver->updateStatus(s_client, msg);
+		m_taskBarReceiver->updateStatus(m_client, msg);
 	}
 }
 
@@ -353,14 +353,6 @@ CClientApp::handleClientConnected(const CEvent&, void*)
 	LOG((CLOG_NOTE "connected to server"));
 	resetRestartTimeout();
 	updateStatus();
-
-	/*
-	// TODO: remove testing code for relase
-	CString fileFullDir = getFileTransferSrc();
-	if (!fileFullDir.empty()) {
-		s_client->sendFileToServer(getFileTransferSrc().c_str());
-	}
-	*/
 }
 
 
@@ -393,7 +385,7 @@ CClientApp::handleClientDisconnected(const CEvent&, void*)
 		m_events->addEvent(CEvent(CEvent::kQuit));
 	}
 	else if (!m_suspended) {
-		s_client->connect();
+		m_client->connect();
 	}
 	updateStatus();
 }
@@ -465,15 +457,15 @@ CClientApp::startClient()
 	double retryTime;
 	CScreen* clientScreen = NULL;
 	try {
-		if (s_clientScreen == NULL) {
+		if (m_clientScreen == NULL) {
 			clientScreen = openClientScreen();
-			s_client     = openClient(args().m_name,
+			m_client     = openClient(args().m_name,
 				*args().m_serverAddress, clientScreen, args().m_crypto);
-			s_clientScreen  = clientScreen;
+			m_clientScreen  = clientScreen;
 			LOG((CLOG_NOTE "started client"));
 		}
 
-		s_client->connect();
+		m_client->connect();
 
 		updateStatus();
 		return true;
@@ -509,10 +501,10 @@ CClientApp::startClient()
 void
 CClientApp::stopClient()
 {
-	closeClient(s_client);
-	closeClientScreen(s_clientScreen);
-	s_client       = NULL;
-	s_clientScreen = NULL;
+	closeClient(m_client);
+	closeClientScreen(m_clientScreen);
+	m_client       = NULL;
+	m_clientScreen = NULL;
 }
 
 
@@ -534,7 +526,7 @@ CClientApp::mainLoop()
 	}
 
 	// load all available plugins.
-	ARCH->plugin().init(s_clientScreen->getEventTarget(), m_events);
+	ARCH->plugin().init(m_clientScreen->getEventTarget(), m_events);
 
 	// run event loop.  if startClient() failed we're supposed to retry
 	// later.  the timer installed by startClient() will take care of
@@ -550,7 +542,7 @@ CClientApp::mainLoop()
 	
 	// wait until carbon loop is ready
 	COSXScreen* screen = dynamic_cast<COSXScreen*>(
-		s_clientScreen->getPlatformScreen());
+		m_clientScreen->getPlatformScreen());
 	screen->waitForCarbonLoop();
 	
 	runCocoaApp();
