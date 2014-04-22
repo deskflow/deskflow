@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "platform/MSWindowsShellEx.h"
 #include "platform/MSWindowsHook.h"
 #include "synergy/PlatformScreen.h"
 #include "synwinhk/synwinhk.h"
@@ -118,7 +117,6 @@ public:
 	virtual bool		isPrimary() const;
 	virtual void		fakeDraggingFiles(CString str);
 	virtual CString&	getDraggingFilename();
-	virtual void		clearDraggingFilename();
 	virtual const CString&	
 						getDropTarget() const;
 
@@ -322,7 +320,6 @@ private:
 	MOUSEKEYS			m_oldMouseKeys;
 	
 	CMSWindowsHook		m_hook;
-	CMSWindowsShellEx	m_shellEx;
 
 	static CMSWindowsScreen*
 						s_screen;
