@@ -34,6 +34,7 @@ class CMSWindowsDesks;
 class CMSWindowsKeyState;
 class CMSWindowsScreenSaver;
 class CThread;
+class CMSWindowsDropTarget;
 
 //! Implementation of IPlatformScreen for Microsoft Windows
 class CMSWindowsScreen : public CPlatformScreen {
@@ -135,6 +136,7 @@ private:
 	ATOM				createDeskWindowClass(bool isPrimary) const;
 	void				destroyClass(ATOM windowClass) const;
 	HWND				createWindow(ATOM windowClass, const char* name) const;
+	HWND				createDropWindow(ATOM windowClass, const char* name) const;
 	void				destroyWindow(HWND) const;
 
 	// convenience function to send events
@@ -215,6 +217,9 @@ private: // HACK
 	// check if it is a modifier key repeating message
 	bool				isModifierRepeat(KeyModifierMask oldState, 
 							KeyModifierMask state, WPARAM wParam) const;
+
+	// send drag info and data back to server
+	void				sendDragThread(void*);
 
 private:
 	struct CHotKeyItem {
@@ -325,4 +330,11 @@ private:
 	IEventQueue*		m_events;
 
 	CString				m_desktopPath;
+
+	CMSWindowsDropTarget*
+						m_dropTarget;
+	HWND				m_dropWindow;
+	const int			m_dropWindowSize;
+
+	CThread*			m_sendDragThread;
 };

@@ -85,7 +85,9 @@ CServer::CServer(
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
 	m_ignoreFileTransfer(false),
-	m_enableDragDrop(enableDragDrop)
+	m_enableDragDrop(enableDragDrop),
+	m_getDragInfoThread(NULL),
+	m_waitDragInfoThread(true)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
@@ -1658,6 +1660,9 @@ CServer::onMouseDown(ButtonID id)
 
 	// relay
 	m_active->mouseDown(id);
+
+	// reset this variable back to default value true
+	m_waitDragInfoThread = true;
 }
 
 void
@@ -1759,46 +1764,76 @@ CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 
 	// should we switch or not?
 	if (isSwitchOkay(newScreen, dir, x, y, xc, yc)) {
-		if (m_enableDragDrop && m_screen->isDraggingStarted() && m_active != newScreen) {
-			CString& dragFileList = m_screen->getDraggingFilename();
-			size_t size = dragFileList.size() + 1;
-			char* fileList = NULL;
-			UInt32 fileCount = 1;
-			if (dragFileList.empty() == false) {
-				fileList = new char[size];
-				memcpy(fileList, dragFileList.c_str(), size);
-				fileList[size - 1] = '\0';
+		if (m_enableDragDrop
+			&& m_screen->isDraggingStarted()
+			&& m_active != newScreen
+			&& m_waitDragInfoThread) {
+			if (m_getDragInfoThread == NULL) {
+				m_getDragInfoThread = new CThread(
+					new TMethodJob<CServer>(
+						this,
+						&CServer::getDragInfoThread));
+			}
+			return false;
+		}
+		
+		if (m_getDragInfoThread == NULL) {
+			// switch screen
+			switchScreen(newScreen, x, y, false);
+
+			// send drag file info to client if there is any
+			if (m_dragFileList.size() > 0) {
+				sendDragInfo(newScreen);
+				m_dragFileList.clear();
 			}
 
-			// fake a escape key down and up then left mouse button up
-			m_screen->keyDown(kKeyEscape, 8192, 1);
-			m_screen->keyUp(kKeyEscape, 8192, 1);
-			m_screen->mouseUp(kButtonLeft);
+			m_waitDragInfoThread = true;
+		
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+void
+CServer::getDragInfoThread(void*)
+{
+	m_dragFileList.clear();
+	CString& dragFileList = m_screen->getDraggingFilename();
+	if (!dragFileList.empty()) {
+		m_dragFileList.push_back(dragFileList);
+	}
 			
 #if defined(__APPLE__)
-			
-			// on mac it seems that after faking a LMB up, system would signal back
-			// to synergy a mouse up event, which doesn't happen on windows. as a
-			// result, synergy would send dragging file to client twice. This variable
-			// is used to ignore the first file sending.
-			m_ignoreFileTransfer = true;
+	// on mac it seems that after faking a LMB up, system would signal back
+	// to synergy a mouse up event, which doesn't happen on windows. as a
+	// result, synergy would send dragging file to client twice. This variable
+	// is used to ignore the first file sending.
+	m_ignoreFileTransfer = true;
 #endif
-			
-			if (dragFileList.empty() == false) {
-				LOG((CLOG_DEBUG2 "sending drag information to client"));
-				LOG((CLOG_DEBUG3 "dragging file list: %s", fileList));
-				LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
-				newScreen->draggingInfoSending(fileCount, fileList, size);
-			}
-		}
 
-		// switch screen
-		switchScreen(newScreen, x, y, false);
+	m_waitDragInfoThread = false;
+	m_getDragInfoThread = NULL;
+}
 
-		return true;
-	}
-	else {
-		return false;
+void
+CServer::sendDragInfo(CBaseClientProxy* newScreen)
+{
+	// TODO: support multiple files dragging
+	CString& dragFile = m_dragFileList.at(0);
+	size_t size = dragFile.size() + 1;
+	char* fileList = NULL;
+	UInt32 fileCount = 1;
+	if (dragFile.empty() == false) {
+		fileList = new char[size];
+		memcpy(fileList, dragFile.c_str(), size);
+		fileList[size - 1] = '\0';
+		
+		LOG((CLOG_DEBUG2 "sending drag information to client"));
+		LOG((CLOG_DEBUG3 "dragging file list: %s", fileList));
+		LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
+		newScreen->draggingInfoSending(fileCount, fileList, size);
 	}
 }
 

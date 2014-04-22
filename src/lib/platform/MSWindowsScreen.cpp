@@ -18,6 +18,7 @@
 
 #include "platform/MSWindowsScreen.h"
 
+#include "platform/MSWindowsDropTarget.h"
 #include "client/Client.h"
 #include "platform/MSWindowsClipboard.h"
 #include "platform/MSWindowsDesks.h"
@@ -118,7 +119,9 @@ CMSWindowsScreen::CMSWindowsScreen(
 	m_keyState(NULL),
 	m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
 	m_showingMouse(false),
-	m_events(events)
+	m_events(events),
+	m_dropWindow(NULL),
+	m_dropWindowSize(20)
 {
 	assert(s_windowInstance != NULL);
 	assert(s_screen   == NULL);
@@ -157,6 +160,11 @@ CMSWindowsScreen::CMSWindowsScreen(
 		else {
 			LOG((CLOG_ERR "failed to get desktop path, no drop target available, error=%d", GetLastError()));
 		}
+
+		OleInitialize(0);
+		m_dropWindow = createDropWindow(m_class, "DropWindow");
+		m_dropTarget = new CMSWindowsDropTarget();
+		RegisterDragDrop(m_dropWindow, m_dropTarget);
 	}
 	catch (...) {
 		delete m_keyState;
@@ -189,6 +197,11 @@ CMSWindowsScreen::~CMSWindowsScreen()
 	delete m_screensaver;
 	destroyWindow(m_window);
 	destroyClass(m_class);
+
+	RevokeDragDrop(m_dropWindow);
+	m_dropTarget->Release();
+	OleUninitialize();
+	destroyWindow(m_dropWindow);
 
 	s_screen = NULL;
 }
@@ -345,32 +358,33 @@ CMSWindowsScreen::leave()
 	m_isOnScreen = false;
 	forceShowCursor();
 
-	if (isDraggingStarted()) {
-		CString& draggingFilename = getDraggingFilename();
-		size_t size = draggingFilename.size();
+	if (isDraggingStarted() && !m_isPrimary) {
+		m_sendDragThread = new CThread(
+			new TMethodJob<CMSWindowsScreen>(
+				this,
+				&CMSWindowsScreen::sendDragThread));
+	}
 
-		if (!m_isPrimary) {
-			// TODO: fake these keys properly
-			fakeKeyDown(kKeyEscape, 8192, 1);
-			fakeKeyUp(1);
+	return true;
+}
 
-			fakeMouseButton(kButtonLeft, false);
+void
+CMSWindowsScreen::sendDragThread(void*)
+{
+	CString& draggingFilename = getDraggingFilename();
+	size_t size = draggingFilename.size();
 
-			if (draggingFilename.empty() == false) {
-				CClientApp& app = CClientApp::instance();
-				CClient* client = app.getClientPtr();
-				UInt32 fileCount = 1;
-				LOG((CLOG_DEBUG "send dragging info to server: %s", draggingFilename.c_str()));
-				client->draggingInfoSending(fileCount, draggingFilename, size);
-				LOG((CLOG_DEBUG "send dragging file to server"));
-				client->sendFileToServer(draggingFilename.c_str());
-			}
-		}
-
-		m_draggingStarted = false;
+	if (draggingFilename.empty() == false) {
+		CClientApp& app = CClientApp::instance();
+		CClient* client = app.getClientPtr();
+		UInt32 fileCount = 1;
+		LOG((CLOG_DEBUG "send dragging info to server: %s", draggingFilename.c_str()));
+		client->draggingInfoSending(fileCount, draggingFilename, size);
+		LOG((CLOG_DEBUG "send dragging file to server"));
+		client->sendFileToServer(draggingFilename.c_str());
 	}
 	
-	return true;
+	m_draggingStarted = false;
 }
 
 bool
@@ -855,6 +869,29 @@ CMSWindowsScreen::createWindow(ATOM windowClass, const char* name) const
 		LOG((CLOG_ERR "failed to create window: %d", GetLastError()));
 		throw XScreenOpenFailure();
 	}
+	return window;
+}
+
+HWND
+CMSWindowsScreen::createDropWindow(ATOM windowClass, const char* name) const
+{
+	HWND window = CreateWindowEx(
+		WS_EX_TOPMOST |
+		WS_EX_TRANSPARENT |
+		WS_EX_ACCEPTFILES,
+		reinterpret_cast<LPCTSTR>(m_class),
+		name,
+		WS_POPUP,
+		0, 0, m_dropWindowSize, m_dropWindowSize,
+		NULL, NULL,
+		s_windowInstance,
+		NULL);
+
+	if (window == NULL) {
+		LOG((CLOG_ERR "failed to create drop window: %d", GetLastError()));
+		throw XScreenOpenFailure();
+	}
+
 	return window;
 }
 
@@ -1801,9 +1838,48 @@ CString&
 CMSWindowsScreen::getDraggingFilename()
 {
 	if (m_draggingStarted) {
-		char filename[MAX_PATH];
-		m_shellEx.getDraggingFilename(filename);
-		m_draggingFilename = filename;
+		m_dropTarget->clearDraggingFilename();
+		m_draggingFilename.clear();
+
+		int halfSize = m_dropWindowSize / 2;
+
+		SInt32 xPos = m_isPrimary ? m_xCursor : m_xCenter;
+		SInt32 yPos = m_isPrimary ? m_yCursor : m_yCenter;
+		xPos = (xPos - halfSize) < 0 ? 0 : xPos - halfSize;
+		yPos = (yPos - halfSize) < 0 ? 0 : yPos - halfSize;
+		SetWindowPos(
+			m_dropWindow,
+			HWND_TOPMOST,
+			xPos,
+			yPos,
+			m_dropWindowSize,
+			m_dropWindowSize,
+			SWP_SHOWWINDOW);
+
+		// TODO: fake these keys properly
+		fakeKeyDown(kKeyEscape, 8192, 1);
+		fakeKeyUp(1);
+		fakeMouseButton(kButtonLeft, false);
+
+		CString filename;
+		DOUBLE timeout = ARCH->time() + .5f;
+		while (ARCH->time() < timeout) {
+			ARCH->sleep(.05f);
+			filename = m_dropTarget->getDraggingFilename();
+			if (!filename.empty()) {
+				break;
+			}
+		}
+
+		ShowWindow(m_dropWindow, SW_HIDE);
+
+		if (!filename.empty()) {
+			m_draggingFilename = filename;
+		}
+
+		if (m_draggingFilename.empty()) {
+			LOG((CLOG_DEBUG "failed to get drag file name from OLE"));
+		}
 	}
 
 	return m_draggingFilename;
