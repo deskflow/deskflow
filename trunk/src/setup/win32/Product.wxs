@@ -18,10 +18,6 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of $(var.Name) is already installed." />
     <MediaTemplate EmbedCab="yes" />
     <UIRef Id="WixUI_InstallDir" />
-
-    <?if $(var.Platform) = "x86" ?>
-    <Condition Message="You are running a 64-bit version of Windows. Please install the 64-bit version of $(var.Name) instead of the 32-bit version.">NOT Msix64</Condition>
-    <?endif ?>
     
     <!-- causes ICE61 warning, but stops user from installing many instances from nightly builds. -->
     <Upgrade Id="$(var.UpgradeGuid)">
@@ -34,7 +30,6 @@
     </Feature>
 
     <Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
-    <Binary Id="Scripts" SourceFile="Scripts.vbs" />
 
     <WixVariable Id="WixUILicenseRtf" Value="$(var.ResPath)\License.rtf" />
     <WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\banner.bmp" />
@@ -57,46 +52,7 @@
       NOT LEGACY_UNINSTALL_EXISTS
     </Condition>
 
-    <CustomAction Id="RestartExplorerPrompt" BinaryKey="Scripts" VBScriptCall="RestartExplorerPrompt" />
-    <CustomAction Id="RestartExplorer" BinaryKey="Scripts" VBScriptCall="RestartExplorer" Execute="deferred" Impersonate="yes" />
     <CustomAction Id="StartGui" FileKey="GuiProgram" ExeCommand="" Return="asyncNoWait" Execute="deferred" Impersonate="yes" />
-    
-    <!--
-    generally it is ill-advised to use custom actions and vbscript,
-    as this makes it really hard to guarentee clean msi usage.
-    however, msi insists on checking for files-in-use before it
-    stops our service (which will turn up a ton of applications
-    using the hook and shellex dlls). its actually much cleaner for
-    us to disable the restart manager (MSIRESTARTMANAGERCONTROL) and
-    forcefully restart explorer.exe ourselves. patches welcome!
-    -->
-    <InstallExecuteSequence>
-
-      <!--
-      ask the user if we can restart explorer, but only on install or
-      upgrade (known as "NOT Installed"), and only if not running in
-      passive/quiet mode.
-      -->
-      <Custom Action="RestartExplorerPrompt" Before="InstallFinalize">
-        NOT Installed AND (UILevel = 4 OR UILevel = 5)
-      </Custom>
-
-      <!--
-      if the user answered the restart explorer dialog, then this must
-      be an attented install, so it should be ok for us to restart 
-      explorer, start the gui, and potentially reboot.
-      -->
-      <Custom Action="RestartExplorer" After="RestartExplorerPrompt">
-        RESTART_EXPLORER="yes"
-      </Custom>
-      <Custom Action="StartGui" After="RestartExplorer">
-        RESTART_EXPLORER="yes"
-      </Custom>
-      <ScheduleReboot After="RestartExplorer">
-        RESTART_EXPLORER="no"
-      </ScheduleReboot>
-      
-    </InstallExecuteSequence>
     
   </Product>
 
@@ -134,16 +90,6 @@
         <File Source="$(var.BinPath)/synergyc.exe" />
         <File Source="$(var.BinPath)/syntool.exe" />
         <File Source="$(var.BinPath)/synwinhk.dll" />
-        <File Source="$(var.BinPath)/synwinxt.dll" />
-        
-        <RegistryKey Root="HKCR" Key="*\shellex\DataHandler">
-          <RegistryValue Value="{1BE208B1-BC21-4E39-8BB6-A5DC3F51479E}" Type="string" />
-        </RegistryKey>
-        
-        <RegistryKey Root="HKCR" Key="CLSID\{1BE208B1-BC21-4E39-8BB6-A5DC3F51479E}\InprocServer32">
-          <RegistryValue Value="[INSTALLFOLDER]synwinxt.dll" Type="string" />
-          <RegistryValue Name="ThreadingModel" Value="Apartment" Type="string" />
-        </RegistryKey>
         
       </Component>
       
