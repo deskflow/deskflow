@@ -2102,6 +2102,11 @@ COSXScreen::getDraggingFilename()
 			CString fileList(info);
 			m_draggingFilename = fileList;
 		}
+
+		// fake a escape key down and up then left mouse button up
+		fakeKeyDown(kKeyEscape, 8192, 1);
+		fakeKeyUp(1);
+		fakeMouseButton(kButtonLeft, false);
 	}
 	return m_draggingFilename;
 }

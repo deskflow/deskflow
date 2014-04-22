@@ -365,6 +365,12 @@ private:
 	// thread function for writing file to drop directory
 	void				writeToDropDirThread(void*);
 
+	// thread function for getting drag filename
+	void				getDragInfoThread(void*);
+
+	// send drag info to new client screen
+	void				sendDragInfo(CBaseClientProxy* newScreen);
+
 public:
 	bool				m_mock;
 
@@ -472,4 +478,7 @@ private:
 	CString				m_dragFileExt;
 	bool				m_ignoreFileTransfer;
 	bool				m_enableDragDrop;
+
+	CThread*			m_getDragInfoThread;
+	bool				m_waitDragInfoThread;
 };
