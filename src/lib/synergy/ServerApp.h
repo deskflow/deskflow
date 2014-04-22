@@ -112,15 +112,14 @@ public:
 
 	static CServerApp& instance() { return (CServerApp&)CApp::instance(); }
 
-	CServer* getServerPtr() { return s_server; }
+	CServer* getServerPtr() { return m_server; }
 	
-	// TODO: change s_ to m_
-	CServer*			s_server;
-	EServerState		s_serverState;
-	CScreen*			s_serverScreen;
-	CPrimaryClient*		s_primaryClient;
-	CClientListener*	s_listener;
-	CEventQueueTimer*	s_timer;
+	CServer*			m_server;
+	EServerState		m_serverState;
+	CScreen*			m_serverScreen;
+	CPrimaryClient*		m_primaryClient;
+	CClientListener*	m_listener;
+	CEventQueueTimer*	m_timer;
 
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
