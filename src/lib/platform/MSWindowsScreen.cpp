@@ -131,7 +131,6 @@ CMSWindowsScreen::CMSWindowsScreen(
 		if (m_isPrimary && !m_noHooks) {
 			m_hook.loadLibrary();
 		}
-		m_shellEx.loadLibrary();
 
 		m_screensaver = new CMSWindowsScreenSaver();
 		m_desks       = new CMSWindowsDesks(
@@ -1883,13 +1882,6 @@ CMSWindowsScreen::getDraggingFilename()
 	}
 
 	return m_draggingFilename;
-}
-
-void
-CMSWindowsScreen::clearDraggingFilename()
-{
-	LOG((CLOG_DEBUG1 "clearing stored dragging file name"));
-	m_shellEx.clearDraggingFilename();
 }
 
 const CString&
