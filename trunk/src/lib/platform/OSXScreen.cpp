@@ -2114,6 +2114,7 @@ COSXScreen::getDraggingFilename()
 void
 COSXScreen::waitForCarbonLoop() const
 {
+#if defined(MAC_OS_X_VERSION_10_7)
 	double timeout = ARCH->time() + 5;
 	m_carbonLoopReady->lock();
 	
@@ -2124,6 +2125,7 @@ COSXScreen::waitForCarbonLoop() const
 	}
 	
 	m_carbonLoopReady->unlock();
+#endif
 }
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
