@@ -38,7 +38,7 @@ public:
 
 protected:
 	//! Get a human readable string describing the exception
-	virtual CString		getWhat() const throw() = 0;
+	virtual CString		getWhat() const throw() { return ""; }
 
 	//! Format a string
 	/*!
