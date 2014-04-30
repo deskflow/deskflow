@@ -218,8 +218,6 @@ COSXKeyState::init()
 KeyModifierMask
 COSXKeyState::mapModifiersFromOSX(UInt32 mask) const
 {
-	LOG((CLOG_DEBUG1 "mask: %04x", mask));
-
 	KeyModifierMask outMask = 0;
 	if ((mask & kCGEventFlagMaskShift) != 0) {
 		outMask |= KeyModifierShift;
@@ -240,6 +238,7 @@ COSXKeyState::mapModifiersFromOSX(UInt32 mask) const
 		outMask |= KeyModifierNumLock;
 	}
 
+	LOG((CLOG_DEBUG1 "mask=%04x outMask=%04x", mask, outMask));
 	return outMask;
 }
 
@@ -394,7 +393,33 @@ COSXKeyState::fakeCtrlAltDel()
 KeyModifierMask
 COSXKeyState::pollActiveModifiers() const
 {
-	return mapModifiersFromOSX(GetCurrentKeyModifiers());
+	// falsely assumed that the mask returned by GetCurrentKeyModifiers()
+	// was the same as a CGEventFlags (which is what mapModifiersFromOSX
+	// expects). patch by Marc
+	UInt32 mask = GetCurrentKeyModifiers();
+	KeyModifierMask outMask = 0;
+
+	if ((mask & shiftKey) != 0) {
+		outMask |= KeyModifierShift;
+	}
+	if ((mask & controlKey) != 0) {
+		outMask |= KeyModifierControl;
+	}
+	if ((mask & optionKey) != 0) {
+		outMask |= KeyModifierAlt;
+	}
+	if ((mask & cmdKey) != 0) {
+		outMask |= KeyModifierSuper;
+	}
+	if ((mask & alphaLock) != 0) {
+		outMask |= KeyModifierCapsLock;
+	}
+	if ((mask & s_osxNumLock) != 0) {
+		outMask |= KeyModifierNumLock;
+	}
+
+	LOG((CLOG_DEBUG1 "mask=%04x outMask=%04x", mask, outMask));
+	return outMask;
 }
 
 SInt32
