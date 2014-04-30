@@ -46,6 +46,12 @@ CDragInformation::parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CSt
 		startPos = findResult1 + 1;
 		--fileNum;
 	}
+
+	LOG((CLOG_DEBUG "drag info received, total drag file number: %i", dragFileList.size()));
+
+	for (size_t i = 0; i < dragFileList.size(); ++i) {
+		LOG((CLOG_DEBUG2 "dragging file %i name: %s", i + 1, dragFileList.at(i).c_str()));
+	}
 }
 
 CString

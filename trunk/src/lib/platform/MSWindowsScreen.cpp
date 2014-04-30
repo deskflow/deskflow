@@ -1827,7 +1827,7 @@ CMSWindowsScreen::CHotKeyItem::operator<(const CHotKeyItem& x) const
 }
 
 void
-CMSWindowsScreen::fakeDraggingFiles(CString str)
+CMSWindowsScreen::fakeDraggingFiles(CDragFileList fileList)
 {
 	// possible design flaw: this function stops a "not implemented"
 	// exception from being thrown.

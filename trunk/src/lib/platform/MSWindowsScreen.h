@@ -20,6 +20,7 @@
 
 #include "platform/MSWindowsHook.h"
 #include "synergy/PlatformScreen.h"
+#include "synergy/DragInformation.h"
 #include "synwinhk/synwinhk.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
@@ -115,7 +116,7 @@ public:
 	virtual void		setOptions(const COptionsList& options);
 	virtual void		setSequenceNumber(UInt32);
 	virtual bool		isPrimary() const;
-	virtual void		fakeDraggingFiles(CString str);
+	virtual void		fakeDraggingFiles(CDragFileList fileList);
 	virtual CString&	getDraggingFilename();
 	virtual const CString&	
 						getDropTarget() const;

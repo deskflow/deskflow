@@ -19,6 +19,7 @@
 #pragma once
 
 #include "synergy/IPlatformScreen.h"
+#include "synergy/DragInformation.h"
 #include "common/stdexcept.h"
 
 //! Base screen implementation
@@ -97,7 +98,7 @@ public:
 	virtual void		setSequenceNumber(UInt32) = 0;
 	virtual bool		isPrimary() const = 0;
 	
-	virtual void		fakeDraggingFiles(CString str) { throw std::runtime_error("fakeDraggingFiles not implemented"); }
+	virtual void		fakeDraggingFiles(CDragFileList fileList) { throw std::runtime_error("fakeDraggingFiles not implemented"); }
 	virtual const CString&
 						getDropTarget() const { throw std::runtime_error("getDropTarget not implemented"); }
 

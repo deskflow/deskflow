@@ -793,31 +793,14 @@ CClient::fileChunkReceived(CString data)
 void
 CClient::dragInfoReceived(UInt32 fileNum, CString data)
 {
-	// TODO: fix duplicate function from CServer
-
 	if (!m_enableDragDrop) {
 		LOG((CLOG_DEBUG "drag drop not enabled, ignoring drag info."));
 		return;
 	}
 
 	CDragInformation::parseDragInfo(m_dragFileList, fileNum, data);
-	LOG((CLOG_DEBUG "drag info received, total drag file number: %i", m_dragFileList.size()));
-
-	for (size_t i = 0; i < m_dragFileList.size(); ++i) {
-		LOG((CLOG_DEBUG2 "dragging file %i name: %s", i + 1, m_dragFileList.at(i).c_str()));
-	}
 	
-	if (m_dragFileList.size() == 1) {
-		m_dragFileExt = CDragInformation::getDragFileExtension(m_dragFileList.at(0));
-	}
-	else if (m_dragFileList.size() > 1) {
-		m_dragFileExt.clear();
-	}
-	else {
-		return;
-	}
-	
-	m_screen->startDraggingFiles(m_dragFileExt);
+	m_screen->startDraggingFiles(m_dragFileList);
 }
 
 bool

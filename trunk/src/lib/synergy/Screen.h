@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "synergy/DragInformation.h"
 #include "synergy/clipboard_types.h"
 #include "synergy/IScreen.h"
 #include "synergy/key_types.h"
@@ -222,7 +223,7 @@ public:
 	void				setDraggingStarted(bool started);
 	
 	//! Fake a files dragging operation
-	void				startDraggingFiles(CString str);
+	void				startDraggingFiles(CDragFileList& fileList);
 
 	void				setEnableDragDrop(bool enabled);
 	//@}

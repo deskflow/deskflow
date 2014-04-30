@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "synergy/DragInformation.h"
 #include "synergy/clipboard_types.h"
 #include "synergy/IScreen.h"
 #include "synergy/IPrimaryScreen.h"
@@ -192,7 +193,7 @@ public:
 	virtual bool		isDraggingStarted() = 0;
 	virtual bool		isFakeDraggingStarted() = 0;
 
-	virtual void		fakeDraggingFiles(CString str) = 0;
+	virtual void		fakeDraggingFiles(CDragFileList fileList) = 0;
 	virtual const CString&
 						getDropTarget() const = 0;
 					
