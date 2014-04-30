@@ -20,6 +20,7 @@
 
 #include "platform/OSXClipboard.h"
 #include "synergy/PlatformScreen.h"
+#include "synergy/DragInformation.h"
 #include "base/EventTypes.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"
@@ -95,7 +96,7 @@ public:
 	virtual void		setOptions(const COptionsList& options);
 	virtual void		setSequenceNumber(UInt32);
 	virtual bool		isPrimary() const;
-	virtual void		fakeDraggingFiles(CString str);
+	virtual void		fakeDraggingFiles(CDragFileList fileList);
 	virtual CString&	getDraggingFilename();
 	
 	const CString&		getDropTarget() const { return m_dropTarget; }

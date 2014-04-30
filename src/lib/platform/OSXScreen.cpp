@@ -2075,12 +2075,16 @@ COSXScreen::CFStringRefToUTF8String(CFStringRef aString)
 }
 
 void
-COSXScreen::fakeDraggingFiles(CString str)
+COSXScreen::fakeDraggingFiles(CDragFileList fileList)
 {
 	m_fakeDraggingStarted = true;
+	CString fileExt;
+	if (fileList.size() == 1) {
+		fileExt = CDragInformation::getDragFileExtension(fileList.at(0));
+	}
+
 #if defined(MAC_OS_X_VERSION_10_7)
-	// TODO: use real file extension
-	fakeDragging(str.c_str(), m_xCursor, m_yCursor);
+	fakeDragging(fileExt.c_str(), m_xCursor, m_yCursor);
 #else
 	LOG((CLOG_WARN "drag drop not supported"));
 #endif

@@ -2387,31 +2387,14 @@ CServer::sendFileThread(void* data)
 void
 CServer::dragInfoReceived(UInt32 fileNum, CString content)
 {
-	// TODO: fix duplicate function from CClient
-
 	if (!m_enableDragDrop) {
 		LOG((CLOG_DEBUG "drag drop not enabled, ignoring drag info."));
 		return;
 	}
 
 	CDragInformation::parseDragInfo(m_dragFileList, fileNum, content);
-	LOG((CLOG_DEBUG "drag info received, total drag file number: %i", m_dragFileList.size()));
-	
-	for (size_t i = 0; i < m_dragFileList.size(); ++i) {
-		LOG((CLOG_DEBUG "dragging file %i name: %s", i + 1, m_dragFileList.at(i).c_str()));
-	}
-	
-	if (m_dragFileList.size() == 1) {
-		m_dragFileExt = CDragInformation::getDragFileExtension(m_dragFileList.at(0));
-	}
-	else if (m_dragFileList.size() > 1) {
-		m_dragFileExt.clear();
-	}
-	else {
-		return;
-	}
-	
-	m_screen->startDraggingFiles(m_dragFileExt);
+
+	m_screen->startDraggingFiles(m_dragFileList);
 }
 
 void

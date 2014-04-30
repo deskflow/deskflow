@@ -435,9 +435,9 @@ CScreen::setDraggingStarted(bool started)
 }
 
 void
-CScreen::startDraggingFiles(CString str)
+CScreen::startDraggingFiles(CDragFileList& fileList)
 {
-	m_screen->fakeDraggingFiles(str);
+	m_screen->fakeDraggingFiles(fileList);
 }
 
 void
