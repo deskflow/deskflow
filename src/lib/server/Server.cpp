@@ -1833,7 +1833,7 @@ CServer::sendDragInfo(CBaseClientProxy* newScreen)
 		LOG((CLOG_DEBUG2 "sending drag information to client"));
 		LOG((CLOG_DEBUG3 "dragging file list: %s", fileList));
 		LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
-		newScreen->draggingInfoSending(fileCount, fileList, size);
+		newScreen->sendDragInfo(fileCount, fileList, size);
 	}
 }
 
@@ -2395,10 +2395,4 @@ CServer::dragInfoReceived(UInt32 fileNum, CString content)
 	CDragInformation::parseDragInfo(m_dragFileList, fileNum, content);
 
 	m_screen->startDraggingFiles(m_dragFileList);
-}
-
-void
-CServer::draggingInfoSending(UInt32 fileCount, CString& fileList, size_t size)
-{
-	m_active->draggingInfoSending(fileCount, fileList.c_str(), size);
 }

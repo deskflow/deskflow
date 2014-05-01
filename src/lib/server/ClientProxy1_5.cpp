@@ -42,7 +42,7 @@ CClientProxy1_5::~CClientProxy1_5()
 }
 
 void
-CClientProxy1_5::draggingInfoSending(UInt32 fileCount, const char* data, size_t dataSize)
+CClientProxy1_5::sendDragInfo(UInt32 fileCount, const char* data, size_t dataSize)
 {
 	CString info(data, dataSize);
 

@@ -378,7 +378,7 @@ CMSWindowsScreen::sendDragThread(void*)
 		CClient* client = app.getClientPtr();
 		UInt32 fileCount = 1;
 		LOG((CLOG_DEBUG "send dragging info to server: %s", draggingFilename.c_str()));
-		client->draggingInfoSending(fileCount, draggingFilename, size);
+		client->sendDragInfo(fileCount, draggingFilename, size);
 		LOG((CLOG_DEBUG "send dragging file to server"));
 		client->sendFileToServer(draggingFilename.c_str());
 	}

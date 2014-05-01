@@ -922,7 +922,7 @@ COSXScreen::leave()
 				CClientApp& app = CClientApp::instance();
 				CClient* client = app.getClientPtr();
 				UInt32 fileCount = 1;
-				client->draggingInfoSending(fileCount, fileList, size);
+				client->sendDragInfo(fileCount, fileList, size);
 				LOG((CLOG_DEBUG "send dragging file to server"));
 				client->sendFileToServer(fileList.c_str());
 			}
