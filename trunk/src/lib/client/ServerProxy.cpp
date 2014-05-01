@@ -949,7 +949,7 @@ CServerProxy::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 }
 
 void
-CServerProxy::draggingInfoSending(UInt32 fileCount, const char* data, size_t dataSize)
+CServerProxy::sendDragInfo(UInt32 fileCount, const char* data, size_t dataSize)
 {
 	CString info(data, dataSize);
 	CProtocolUtil::writef(m_stream, kMsgDDragInfo, fileCount, &info);

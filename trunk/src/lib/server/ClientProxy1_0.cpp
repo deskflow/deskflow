@@ -361,7 +361,7 @@ CClientProxy1_0::mouseWheel(SInt32, SInt32 yDelta)
 }
 
 void
-CClientProxy1_0::draggingInfoSending(UInt32 fileCount, const char* data, size_t dataSize)
+CClientProxy1_0::sendDragInfo(UInt32 fileCount, const char* data, size_t dataSize)
 {
 	// ignore -- not supported in protocol 1.0
 	LOG((CLOG_DEBUG "draggingInfoSending not supported"));
