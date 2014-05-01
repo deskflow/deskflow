@@ -22,9 +22,12 @@ public:
 	AXDatabaseCleaner();
 	~AXDatabaseCleaner();
 
-	void loadPrivilegeHelper();
+	bool loadPrivilegeHelper();
+	bool xpcConnect();
+	bool privilegeCommand(const char* command);
 
 private:
 	class Private;
-	Private* d;
+	Private* m_private;
+	bool m_waitForResponse;
 };

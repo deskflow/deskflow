@@ -4,11 +4,9 @@
 <dict>
 	<key>Label</key>
 	<string>synmacph</string>
-	<key>RunAtLoad</key>
-	<true/>
-	<key>LaunchOnlyOnce</key>
-	<true/>
-	<key>KeepAlive</key>
-	<false/>
-</dict>
+	<key>MachServices</key>
+	<dict>
+		<key>synmacph</key>
+		<true/>
+	</dict></dict>
 </plist>
