@@ -23,6 +23,9 @@
 
 const char* const label = "synmacph";
 
+static void xpcEventHandler(xpc_connection_t connection, xpc_object_t event);
+static void xpcConnectionHandler(xpc_connection_t connection);
+
 static void xpcEventHandler(xpc_connection_t connection, xpc_object_t event)
 {
 	syslog(LOG_NOTICE, "received event in helper");
