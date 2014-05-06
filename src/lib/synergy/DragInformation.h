@@ -21,14 +21,31 @@
 #include "base/String.h"
 #include "base/EventTypes.h"
 
-typedef std::vector<CString> CDragFileList;
+class CDragInformation;
+typedef std::vector<CDragInformation> CDragFileList;
 
 class CDragInformation {
 public:
-	CDragInformation() { }
-
+	CDragInformation();
 	~CDragInformation() { }
-
+	
+	CString&			getFilename() { return m_filename; }
+	void				setFilename(CString& name) { m_filename = name; }
+	size_t				getFilesize() { return m_filesize; }
+	void				setFilesize(size_t size) { m_filesize = size; }
+	
 	static void			parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CString data);
 	static CString		getDragFileExtension(CString fileName);
+	// helper function to setuo drag info
+	// example: filename1,filesize1,filename2,filesize2,
+	// return file count
+	static int			setupDragInfo(CDragFileList& fileList, CString& output);
+
+private:
+	static size_t		stringToNum(CString& str);
+	static CString		getFileSize(CString& filename);
+
+private:
+	CString				m_filename;
+	size_t				m_filesize;
 };

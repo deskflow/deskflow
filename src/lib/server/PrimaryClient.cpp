@@ -250,7 +250,7 @@ CPrimaryClient::screensaver(bool)
 }
 
 void
-CPrimaryClient::sendDragInfo(UInt32 fileCount, const char* data, size_t dataSize)
+CPrimaryClient::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
 {
 	// ignore
 }

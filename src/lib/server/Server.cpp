@@ -1802,7 +1802,9 @@ CServer::getDragInfoThread(void*)
 	m_dragFileList.clear();
 	CString& dragFileList = m_screen->getDraggingFilename();
 	if (!dragFileList.empty()) {
-		m_dragFileList.push_back(dragFileList);
+		CDragInformation di;
+		di.setFilename(dragFileList);
+		m_dragFileList.push_back(di);
 	}
 			
 #if defined(__APPLE__)
@@ -1820,20 +1822,19 @@ CServer::getDragInfoThread(void*)
 void
 CServer::sendDragInfo(CBaseClientProxy* newScreen)
 {
-	// TODO: support multiple files dragging
-	CString& dragFile = m_dragFileList.at(0);
-	size_t size = dragFile.size() + 1;
-	char* fileList = NULL;
-	UInt32 fileCount = 1;
-	if (dragFile.empty() == false) {
-		fileList = new char[size];
-		memcpy(fileList, dragFile.c_str(), size);
-		fileList[size - 1] = '\0';
-		
+	CString infoString;
+	UInt32 fileCount = CDragInformation::setupDragInfo(m_dragFileList, infoString);
+	
+	if (fileCount > 0) {
+		char* info = NULL;
+		size_t size = infoString.size();
+		info = new char[size];
+		memcpy(info, infoString.c_str(), size);
+
 		LOG((CLOG_DEBUG2 "sending drag information to client"));
-		LOG((CLOG_DEBUG3 "dragging file list: %s", fileList));
+		LOG((CLOG_DEBUG3 "dragging file list: %s", info));
 		LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
-		newScreen->sendDragInfo(fileCount, fileList, size);
+		newScreen->sendDragInfo(fileCount, info, size);
 	}
 }
 
@@ -2050,7 +2051,7 @@ CServer::writeToDropDirThread(void*)
 #else
 		dropTarget.append("/");
 #endif
-		dropTarget.append(m_dragFileList.at(0));
+		dropTarget.append(m_dragFileList.at(0).getFilename());
 		file.open(dropTarget.c_str(), std::ios::out | std::ios::binary);
 		if (!file.is_open()) {
 			// TODO: file open failed
@@ -2058,6 +2059,8 @@ CServer::writeToDropDirThread(void*)
 		
 		file.write(m_receivedFileData.c_str(), m_receivedFileData.size());
 		file.close();
+
+		m_dragFileList.clear();
 	}
 	else {
 		LOG((CLOG_ERR "drop file failed: drop target is empty"));

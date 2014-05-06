@@ -42,11 +42,11 @@ CClientProxy1_5::~CClientProxy1_5()
 }
 
 void
-CClientProxy1_5::sendDragInfo(UInt32 fileCount, const char* data, size_t dataSize)
+CClientProxy1_5::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
 {
-	CString info(data, dataSize);
+	CString data(info, size);
 
-	CProtocolUtil::writef(getStream(), kMsgDDragInfo, fileCount, &info);
+	CProtocolUtil::writef(getStream(), kMsgDDragInfo, fileCount, &data);
 }
 
 void
