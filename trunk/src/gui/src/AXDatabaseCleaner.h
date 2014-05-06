@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <QtCore>
+#include <AvailabilityInternal.h>
 
 // HACK: ideally this file should not be included in project,
 // if it is below marvericks, but it seems that .pro can't

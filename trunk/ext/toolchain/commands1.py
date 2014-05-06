@@ -780,10 +780,11 @@ class InternalCommands:
 			shutil.copy(targetDir + "/synergys", bundleBinDir)
 			shutil.copy(targetDir + "/syntool", bundleBinDir)
 			
-			launchServicesDir = dir + "/Synergy.app/Contents/Library/LaunchServices/"
-			if not os.path.exists(launchServicesDir):
-				os.makedirs(launchServicesDir)
-			shutil.copy(targetDir + "/synmacph", launchServicesDir)
+			if self.macSdk == "10.9":
+				launchServicesDir = dir + "/Synergy.app/Contents/Library/LaunchServices/"
+				if not os.path.exists(launchServicesDir):
+					os.makedirs(launchServicesDir)
+				shutil.copy(targetDir + "/synmacph", launchServicesDir)
 
 		if self.enableMakeGui:
 			# use qt to copy libs to bundle so no dependencies are needed. do not create a
