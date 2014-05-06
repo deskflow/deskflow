@@ -16,6 +16,9 @@
  */
 
 #import "AXDatabaseCleaner.h"
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090
+
 #import <Cocoa/Cocoa.h>
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1060
 #import <ServiceManagement/ServiceManagement.h>
@@ -159,3 +162,5 @@ bool AXDatabaseCleaner::privilegeCommand(const char* command)
 
 	return true;
 }
+
+#endif

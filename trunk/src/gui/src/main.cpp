@@ -31,7 +31,11 @@
 
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090
 #include "AXDatabaseCleaner.h"
+#endif
+
 #endif
 
 class QThreadImpl : public QThread
