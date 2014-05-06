@@ -42,7 +42,7 @@ CDragInformation::parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CSt
 		slash = "/";
 	}
 	
-	int index = 0;
+	UInt32 index = 0;
 	while (index < fileNum) {
 		findResult1 = data.find(',', startPos);
 		findResult2 = data.find_last_of(slash, findResult1);
