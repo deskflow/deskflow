@@ -20,6 +20,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -123,10 +124,10 @@ CDragInformation::stringToNum(CString& str)
 CString
 CDragInformation::getFileSize(CString& filename)
 {
-	std::fstream file(filename, ios::in|ios::binary);
+	std::fstream file(filename.c_str(), ios::in|ios::binary);
 
 	if (!file.is_open()) {
-		throw runtime_error("failed to get file size");
+	  throw std::runtime_error("failed to get file size");
 	}
 
 	// check file size
