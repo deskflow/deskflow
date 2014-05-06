@@ -114,7 +114,7 @@ public:
 	void				setFileTransferDes(CString& des) { m_fileTransferDes = des; }
 	
 	//! Send dragging file information back to server
-	void				sendDragInfo(UInt32 fileCount, CString& fileList, size_t size);
+	void				sendDragInfo(UInt32 fileCount, CString& info, size_t size);
 	
 	//@}
 	//! @name accessors

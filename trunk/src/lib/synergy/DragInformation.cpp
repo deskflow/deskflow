@@ -18,7 +18,16 @@
 #include "synergy/DragInformation.h"
 #include "base/Log.h"
 
+#include <fstream>
+#include <sstream>
+
 using namespace std;
+
+CDragInformation::CDragInformation() :
+	m_filename(),
+	m_filesize(0)
+{
+}
 
 void
 CDragInformation::parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CString data)
@@ -31,26 +40,47 @@ CDragInformation::parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CSt
 	if (data.find("/", startPos) != string::npos) {
 		slash = "/";
 	}
-
-	while (fileNum) {
-		findResult1 = data.find('\0', startPos);
+	
+	int index = 0;
+	while (index < fileNum) {
+		findResult1 = data.find(',', startPos);
 		findResult2 = data.find_last_of(slash, findResult1);
 
 		if (findResult1 == startPos) {
 			//TODO: file number does not match, something goes wrong
 			break;
 		}
+		
+		// set filename
 		if (findResult1 - findResult2 > 1) {
-			dragFileList.push_back(data.substr(findResult2 + 1, findResult1 - findResult2));
+			CString filename = data.substr(findResult2 + 1,
+				findResult1 - findResult2 - 1);
+			CDragInformation di;
+			di.setFilename(filename);
+			dragFileList.push_back(di);
 		}
 		startPos = findResult1 + 1;
-		--fileNum;
+		
+		//set filesize
+		findResult2 = data.find(',', startPos);
+		if (findResult2 - findResult1 > 1) {
+			CString filesize = data.substr(findResult1 + 1,
+										   findResult2 - findResult1 - 1);
+			size_t size = stringToNum(filesize);
+			dragFileList.at(index).setFilesize(size);
+		}
+		startPos = findResult1 + 1;
+		
+		++index;
 	}
 
-	LOG((CLOG_DEBUG "drag info received, total drag file number: %i", dragFileList.size()));
+	LOG((CLOG_DEBUG "drag info received, total drag file number: %i",
+		dragFileList.size()));
 
 	for (size_t i = 0; i < dragFileList.size(); ++i) {
-		LOG((CLOG_DEBUG2 "dragging file %i name: %s", i + 1, dragFileList.at(i).c_str()));
+		LOG((CLOG_DEBUG2 "dragging file %i name: %s",
+			i + 1,
+			dragFileList.at(i).getFilename().c_str()));
 	}
 }
 
@@ -65,4 +95,48 @@ CDragInformation::getDragFileExtension(CString fileName)
 	else {
 		return "";
 	}
+}
+
+int
+CDragInformation::setupDragInfo(CDragFileList& fileList, CString& output)
+{
+	int size = fileList.size();
+	for (int i = 0; i < size; ++i) {
+		output.append(fileList.at(i).getFilename());
+		output.append(",");
+		CString filesize = getFileSize(fileList.at(i).getFilename());
+		output.append(filesize);
+		output.append(",");
+	}
+	return size;
+}
+
+size_t
+CDragInformation::stringToNum(CString& str)
+{
+	istringstream iss(str.c_str());
+	size_t size;
+	iss >> size;
+	return size;
+}
+
+CString
+CDragInformation::getFileSize(CString& filename)
+{
+	std::fstream file(filename, ios::in|ios::binary);
+
+	if (!file.is_open()) {
+		throw runtime_error("failed to get file size");
+	}
+
+	// check file size
+	file.seekg (0, std::ios::end);
+	size_t size = (size_t)file.tellg();
+
+	stringstream ss;
+	ss << size;
+	
+	file. close();
+	
+	return ss.str();
 }

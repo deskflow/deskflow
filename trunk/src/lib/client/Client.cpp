@@ -757,7 +757,7 @@ CClient::writeToDropDirThread(void*)
 #else
 		dropTarget.append("/");
 #endif
-		dropTarget.append(m_dragFileList.at(0));
+		dropTarget.append(m_dragFileList.at(0).getFilename());
 		file.open(dropTarget.c_str(), std::ios::out | std::ios::binary);
 		if (!file.is_open()) {
 			// TODO: file open failed
@@ -833,7 +833,7 @@ CClient::sendFileThread(void* filename)
 }
 
 void
-CClient::sendDragInfo(UInt32 fileCount, CString& fileList, size_t size)
+CClient::sendDragInfo(UInt32 fileCount, CString& info, size_t size)
 {
-	m_server->sendDragInfo(fileCount, fileList.c_str(), size);
+	m_server->sendDragInfo(fileCount, info.c_str(), size);
 }

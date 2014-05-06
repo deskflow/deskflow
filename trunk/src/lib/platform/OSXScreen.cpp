@@ -909,21 +909,30 @@ COSXScreen::leave()
     
 	if (isDraggingStarted()) {
 		CString& fileList = getDraggingFilename();
-		size_t size = fileList.size();
 		
 		if (!m_isPrimary) {
+			// TODO: is this duplicated?
 			// fake esc key down and up
 			fakeKeyDown(kKeyEscape, 8192, 1);
 			fakeKeyUp(1);
-			
 			fakeMouseButton(kButtonLeft, false);
 			
 			if (fileList.empty() == false) {
 				CClientApp& app = CClientApp::instance();
 				CClient* client = app.getClientPtr();
-				UInt32 fileCount = 1;
-				client->sendDragInfo(fileCount, fileList, size);
+				
+				CDragInformation di;
+				di.setFilename(fileList);
+				CDragFileList dragFileList;
+				dragFileList.push_back(di);
+				CString info;
+				UInt32 fileCount = CDragInformation::setupDragInfo(
+					dragFileList, info);
+				client->sendDragInfo(fileCount, info, info.size());
 				LOG((CLOG_DEBUG "send dragging file to server"));
+				
+				// TODO: what to do with multiple file or even
+				// a folder
 				client->sendFileToServer(fileList.c_str());
 			}
 		}
@@ -2080,7 +2089,8 @@ COSXScreen::fakeDraggingFiles(CDragFileList fileList)
 	m_fakeDraggingStarted = true;
 	CString fileExt;
 	if (fileList.size() == 1) {
-		fileExt = CDragInformation::getDragFileExtension(fileList.at(0));
+		fileExt = CDragInformation::getDragFileExtension(
+			fileList.at(0).getFilename());
 	}
 
 #if defined(MAC_OS_X_VERSION_10_7)
