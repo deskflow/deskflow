@@ -17,6 +17,13 @@
 
 #pragma once
 
+#include <QtCore>
+
+// HACK: ideally this file should not be included in project,
+// if it is below marvericks, but it seems that .pro can't
+// specify mac version
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090
+
 class AXDatabaseCleaner {
 public:
 	AXDatabaseCleaner();
@@ -31,3 +38,5 @@ private:
 	Private* m_private;
 	bool m_waitForResponse;
 };
+
+#endif
