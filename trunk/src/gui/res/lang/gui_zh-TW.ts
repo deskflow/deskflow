@@ -15,7 +15,7 @@ Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&l
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (synergy-foss.org).
+Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
@@ -24,7 +24,7 @@ Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&l
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (synergy-foss.org).
+Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</oldsource>
         <translation type="finished">&lt;p&gt;
 鍵盤與滑鼠分享軟件, 跨平台與開源。&lt;br /&gt;&lt;br /&gt;
@@ -33,7 +33,7 @@ Visit our website for help and info (synergy-foss.org).
 Synergy 是基於GNU General Public License (GPLv2)之下發佈。&lt;br /&gt;&lt;br /&gt;
 Synergy 是基於CosmoSynergy（源自Richard Lee及Adam Feder）&lt;br /&gt;
 Synergy 的圖形介面是基於 QSynergy（源自Volker Lanz所開發）&lt;br /&gt;&lt;br /&gt;
-更多的資訊與幫助，請瀏覽我們的網站 (synergy-foss.org)。
+更多的資訊與幫助，請瀏覽我們的網站 (synergy-project.org)。
 &lt;/p&gt;</translation>
     </message>
     <message>

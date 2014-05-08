@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define DOWNLOAD_URL "http://synergy-foss.org/?source=gui"
+#define DOWNLOAD_URL "http://synergy-project.org/?source=gui"
 
 #include <iostream>
 

@@ -146,7 +146,7 @@ TEST_F(CMSWindowsClipboardTests, close_isOpen_noErrors)
 }
 
 // looks like this test may fail intermittently:
-// * http://buildbot.synergy-foss.org:8000/builders/trunk-win32/builds/246/steps/shell_3/logs/stdio
+// * http://buildbot.synergy-project.org:8000/builders/trunk-win32/builds/246/steps/shell_3/logs/stdio
 /*TEST_F(CMSWindowsClipboardTests, getTime_openWithNoEmpty_returnsOne)
 {
 	CMSWindowsClipboard clipboard(NULL);
@@ -160,7 +160,7 @@ TEST_F(CMSWindowsClipboardTests, close_isOpen_noErrors)
 }*/
 
 // this also fails intermittently:
-// http://buildbot.synergy-foss.org:8000/builders/trunk-win32/builds/266/steps/shell_3/logs/stdio
+// http://buildbot.synergy-project.org:8000/builders/trunk-win32/builds/266/steps/shell_3/logs/stdio
 /*TEST_F(CMSWindowsClipboardTests, getTime_openAndEmpty_returnsOne)
 {
 	CMSWindowsClipboard clipboard(NULL);

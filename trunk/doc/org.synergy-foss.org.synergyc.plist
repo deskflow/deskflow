@@ -5,7 +5,7 @@
 <!-- Mac OSX only: Copy this plist file into [~]/Library/LaunchAgents to start synergy client automatically. Make sure you change the IP below. -->
 <dict>
      <key>Label</key>
-     <string>org.synergy-foss.org.synergyc.plist</string>
+     <string>org.synergy-project.org.synergyc.plist</string>
      <key>OnDemand</key>
      <false/>
      <key>ProgramArguments</key>

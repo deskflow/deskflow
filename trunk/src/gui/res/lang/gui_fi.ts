@@ -15,7 +15,7 @@ Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&l
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (synergy-foss.org).
+Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
@@ -24,7 +24,7 @@ Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&l
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (synergy-foss.org).
+Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</oldsource>
         <translation type="finished">&lt;p&gt;
 Näppäimistön ja hiiren jako-ohjelma. Järjestelmäriippumaton ja avointa lähdekoodia.&lt;br /&gt;&lt;br /&gt;
@@ -33,7 +33,7 @@ Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&l
 Synergy on julkaistu GNU General Public License (GPLv2) lisenssin alaisena.&lt;br /&gt;&lt;br /&gt;
 Synergy perustuu Richard Leen ja Adam Federin CosmoSynergy sovellukseen.&lt;br /&gt;
 Synergy GUI perustuu Volker Lanzin QSynergy sovellukseen.&lt;br /&gt;&lt;br /&gt;
-Ohjeita ja lisätietoja löydät verkkosivuiltamme (synergy-foss.org).
+Ohjeita ja lisätietoja löydät verkkosivuiltamme (synergy-project.org).
 &lt;/p&gt;</translation>
     </message>
     <message>

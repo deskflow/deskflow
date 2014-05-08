@@ -23,7 +23,7 @@
 #include <sstream>
 	
 //#define PREMIUM_AUTH_URL "http://localhost/synergy/premium/json/auth/"
-#define PREMIUM_AUTH_URL "https://synergy-foss.org/premium/json/auth/"
+#define PREMIUM_AUTH_URL "https://synergy-project.org/premium/json/auth/"
 
 enum {
 	kErrorOk,

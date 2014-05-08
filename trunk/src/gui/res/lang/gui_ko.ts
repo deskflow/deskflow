@@ -15,7 +15,7 @@ Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&l
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (synergy-foss.org).
+Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
@@ -24,7 +24,7 @@ Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&l
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (synergy-foss.org).
+Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</oldsource>
         <translation type="finished">&lt;p&gt;
 하나의 키보드와 마우스를 공유하여 여러 컴퓨터를 제어할 수 있는 응용 프로그램으로, 다양한 플랫폼을 지원하며 오픈 소스 입니다.&lt;br /&gt;&lt;br /&gt;
@@ -33,7 +33,7 @@ Visit our website for help and info (synergy-foss.org).
 Synergy는 GNU 일반 공중 사용 허가서 (GPLv2) 아래에 배포하고 있습니다.&lt;br /&gt;&lt;br /&gt;
 Synergy는 Richard Lee과 Adam Feder에 의해 개발된 CosmoSynergy에 기반을 두고 있습니다.&lt;br /&gt;
 Synergy GUI는 Volker Lanz의 QSynergy에 기반을 두고 있습니다.&lt;br /&gt;&lt;br /&gt;
-도움말 및 정보를 보시려면 저희 웹 사이트(synergy-foss.org)를 방문하세요.
+도움말 및 정보를 보시려면 저희 웹 사이트(synergy-project.org)를 방문하세요.
 &lt;/p&gt;</translation>
     </message>
     <message>

@@ -15,4 +15,4 @@ Once the binaries have been copied to /usr/bin, you should follow the configurat
   http://synergy2.sourceforge.net/configuration.html
 
 If you have any problems, see the [[Support]] page:
-  http://synergy-foss.org/support
+  http://synergy-project.org/support

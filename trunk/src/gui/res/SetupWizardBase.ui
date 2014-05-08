@@ -264,7 +264,7 @@
       <item row="2" column="1">
        <widget class="QLabel" name="m_pLabelForgotPassword">
         <property name="text">
-         <string>&lt;a href=&quot;http://synergy-foss.org/premium/reset/?source=gui&quot;&gt;Forgot password&lt;/a&gt;</string>
+         <string>&lt;a href=&quot;http://synergy-project.org/premium/reset/?source=gui&quot;&gt;Forgot password&lt;/a&gt;</string>
         </property>
         <property name="openExternalLinks">
          <bool>true</bool>
