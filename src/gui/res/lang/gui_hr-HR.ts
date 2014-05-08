@@ -15,7 +15,7 @@ Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&l
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (synergy-foss.org).
+Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
@@ -24,7 +24,7 @@ Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&l
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (synergy-foss.org).
+Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</oldsource>
         <translation type="finished">&lt;p&gt;
 Aplikacija za dijeljenje tipkovnice i miša. Više platformska i otvorenog kôda.&lt;br /&gt;&lt;br /&gt;
@@ -33,7 +33,7 @@ Autorska prava © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&
 Synergy je objavljen pod GNU Općom Javnom Licencom (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy je temeljen na CosmoSynergyu od Richarda Leea i Adama Federa.&lt;br /&gt;
 Synergy GUI sučelje temeljeno je na QSynergyu od Volkera Lanza.&lt;br /&gt;&lt;br /&gt;
-Posjetite našu web stranicu za pomoć i informacije (synergy-foss.org).
+Posjetite našu web stranicu za pomoć i informacije (synergy-project.org).
 &lt;/p&gt;</translation>
     </message>
     <message>

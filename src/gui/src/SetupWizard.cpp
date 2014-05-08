@@ -27,7 +27,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
-#define PREMIUM_REGISTER_URL "http://synergy-foss.org/donate/?source=gui-wizard"
+#define PREMIUM_REGISTER_URL "http://synergy-project.org/donate/?source=gui-wizard"
 
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_MainWindow(mainWindow),

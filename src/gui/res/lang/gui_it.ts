@@ -15,7 +15,7 @@ Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&l
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (synergy-foss.org).
+Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
@@ -24,7 +24,7 @@ Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&l
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (synergy-foss.org).
+Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</oldsource>
         <translation type="finished">&lt;p&gt;
 Applicazione Multipiattaforma Open Source per la condivisione di mouse e tastiera.&lt;br /&gt;&lt;br /&gt;
@@ -33,7 +33,7 @@ Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&l
 Synergy è rilasciato sotto licenza GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy è basato su CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 L'interfaccia grafica (GUI) è basata su QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visita il nostro sito per aiuto o informazioni (synergy-foss.org).
+Visita il nostro sito per aiuto o informazioni (synergy-project.org).
 &lt;/p&gt;</translation>
     </message>
     <message>

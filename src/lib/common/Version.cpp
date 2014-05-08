@@ -22,7 +22,7 @@ const char* kApplication = "Synergy";
 const char* kCopyright   = "Copyright (C) 2012-2014 Bolton Software Ltd.\n"
                            "Copyright (C) 2008-2014 Nick Bolton\n"
                            "Copyright (C) 2002-2014 Chris Schoeneman";
-const char* kContact     = "Email: nick@synergy-foss.org";
-const char* kWebsite     = "http://synergy-foss.org/";
+const char* kContact     = "Email: nick@synergy-project.org";
+const char* kWebsite     = "http://synergy-project.org/";
 const char* kVersion     = VERSION;
 const char* kAppVersion  = "Synergy " VERSION;

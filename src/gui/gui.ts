@@ -17,7 +17,7 @@ Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&l
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (synergy-foss.org).
+Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
@@ -26,7 +26,7 @@ Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&l
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (synergy-foss.org).
+Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
@@ -413,7 +413,8 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="109"/>
-        <source>Please help us &lt;a href=&quot;http://synergy-foss.org/donate/?source=gui-notice&quot;&gt;fund this project&lt;/a&gt; if you like Synergy.</source>
+        <source>Please help us &lt;a href=&quot;http://synergy-project.org/donate/?source=gui-notice&quot;&gt;fund this project&lt;/a&gt; if you like Synergy.</source>
+        <oldsource>Please help us &lt;a href=&quot;http://synergy-project.org/donate/?source=gui-notice&quot;&gt;fund this project&lt;/a&gt; if you like Synergy.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -523,7 +524,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/main.cpp" line="119"/>
+        <location filename="src/main.cpp" line="123"/>
         <source>System tray is unavailable, quitting.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1100,7 +1101,8 @@ Server response:
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="267"/>
-        <source>&lt;a href=&quot;http://synergy-foss.org/premium/reset/?source=gui&quot;&gt;Forgot password&lt;/a&gt;</source>
+        <source>&lt;a href=&quot;http://synergy-project.org/premium/reset/?source=gui&quot;&gt;Forgot password&lt;/a&gt;</source>
+        <oldsource>&lt;a href=&quot;http://synergy-project.org/premium/reset/?source=gui&quot;&gt;Forgot password&lt;/a&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
