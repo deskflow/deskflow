@@ -21,6 +21,8 @@
 #include "synergy/Clipboard.h"
 #include "platform/OSXClipboardUTF16Converter.h"
 #include "platform/OSXClipboardTextConverter.h"
+#include "platform/OSXClipboardBMPConverter.h"
+#include "platform/OSXClipboardHTMLConverter.h"
 #include "base/Log.h"
 #include "arch/XArch.h"
 
@@ -32,8 +34,12 @@ COSXClipboard::COSXClipboard() :
 	m_time(0),
 	m_pboard(NULL)
 {
+	m_converters.push_back(new COSXClipboardHTMLConverter);
+	m_converters.push_back(new COSXClipboardBMPConverter);
 	m_converters.push_back(new COSXClipboardUTF16Converter);
 	m_converters.push_back(new COSXClipboardTextConverter);
+
+
 
 	OSStatus createErr = PasteboardCreate(kPasteboardClipboard, &m_pboard);
 	if (createErr != noErr) {
@@ -94,6 +100,15 @@ COSXClipboard::add(EFormat format, const CString & data)
 		return;
 
 	LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
+	if(format == IClipboard::kText) {
+		LOG((CLOG_DEBUG " format of data to be added to clipboard was kText"));
+	}
+	else if(format == IClipboard::kBitmap) {
+		LOG((CLOG_DEBUG " format of data to be added to clipboard was kBitmap"));
+	}
+	else if(format == IClipboard::kHTML) {
+		LOG((CLOG_DEBUG " format of data to be added to clipboard was kHTML"));
+	}
 
 	for (ConverterList::const_iterator index = m_converters.begin();
 			index != m_converters.end(); ++index) {
