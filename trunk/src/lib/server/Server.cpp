@@ -22,6 +22,7 @@
 #include "server/ClientProxyUnknown.h"
 #include "server/PrimaryClient.h"
 #include "synergy/IPlatformScreen.h"
+#include "synergy/DropHelper.h"
 #include "synergy/option_types.h"
 #include "synergy/protocol_types.h"
 #include "synergy/XScreen.h"
@@ -2040,31 +2041,8 @@ CServer::writeToDropDirThread(void*)
 		ARCH->sleep(.1f);
 	}
 
-	m_fileTransferDes = m_screen->getDropTarget();
-	LOG((CLOG_DEBUG "dropping file, files=%i target=%s", m_dragFileList.size(), m_fileTransferDes.c_str()));
-
-	if (!m_fileTransferDes.empty() && m_dragFileList.size() > 0) {
-		std::fstream file;
-		CString dropTarget = m_fileTransferDes;
-#ifdef SYSAPI_WIN32
-		dropTarget.append("\\");
-#else
-		dropTarget.append("/");
-#endif
-		dropTarget.append(m_dragFileList.at(0).getFilename());
-		file.open(dropTarget.c_str(), std::ios::out | std::ios::binary);
-		if (!file.is_open()) {
-			// TODO: file open failed
-		}
-		
-		file.write(m_receivedFileData.c_str(), m_receivedFileData.size());
-		file.close();
-
-		m_dragFileList.clear();
-	}
-	else {
-		LOG((CLOG_ERR "drop file failed: drop target is empty"));
-	}
+	CDropHelper::writeToDir(m_screen->getDropTarget(), m_dragFileList,
+					m_receivedFileData);
 }
 
 bool

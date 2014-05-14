@@ -82,7 +82,7 @@ fakeDragging(const char* str, int cursorX, int cursorY)
 		
 	[g_dragWindow setFrame:rect display:NO];
 	[g_dragWindow makeKeyAndOrderFront:nil];
-		[NSApp activateIgnoringOtherApps:YES];
+	[NSApp activateIgnoringOtherApps:YES];
 	
 	[g_dragView setFileExt:g_ext];
 

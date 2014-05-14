@@ -144,9 +144,6 @@ public:
 
 	//! Set the expected size of receiving file
 	void				setExpectedFileSize(CString data);
-
-	//! Set file transder destination
-	void				setFileTransferDes(CString& des) { m_fileTransferDes = des; }
 	
 	//! Received a chunk of file data
 	void				fileChunkReceived(CString data);
@@ -467,8 +464,6 @@ private:
 	// file transfer
 	size_t				m_expectedFileSize;
 	CString				m_receivedFileData;
-	CString				m_fileTransferSrc;
-	CString				m_fileTransferDes;
 	CDragFileList		m_dragFileList;
 	CThread*			m_sendFileThread;
 	CThread*			m_writeToDropDirThread;
