@@ -1873,7 +1873,12 @@ CMSWindowsScreen::getDraggingFilename()
 		ShowWindow(m_dropWindow, SW_HIDE);
 
 		if (!filename.empty()) {
-			m_draggingFilename = filename;
+			if (CDragInformation::isFileValid(filename)) {
+				m_draggingFilename = filename;
+			}
+			else {
+				LOG((CLOG_DEBUG "drag file name is invalid: %s", filename.c_str()));
+			}
 		}
 
 		if (m_draggingFilename.empty()) {

@@ -109,9 +109,6 @@ public:
 
 	//! Create a new thread and use it to send file to Server
 	void				sendFileToServer(const char* filename);
-
-	//! Set file transder destination
-	void				setFileTransferDes(CString& des) { m_fileTransferDes = des; }
 	
 	//! Send dragging file information back to server
 	void				sendDragInfo(UInt32 fileCount, CString& info, size_t size);
@@ -231,8 +228,6 @@ private:
 	CCryptoOptions			m_crypto;
 	std::size_t				m_expectedFileSize;
 	CString					m_receivedFileData;
-	CString					m_fileTransferSrc;
-	CString					m_fileTransferDes;
 	CDragFileList			m_dragFileList;
 	CString					m_dragFileExt;
 	CThread*				m_sendFileThread;

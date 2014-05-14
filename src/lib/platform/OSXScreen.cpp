@@ -911,12 +911,6 @@ COSXScreen::leave()
 		CString& fileList = getDraggingFilename();
 		
 		if (!m_isPrimary) {
-			// TODO: is this duplicated?
-			// fake esc key down and up
-			fakeKeyDown(kKeyEscape, 8192, 1);
-			fakeKeyUp(1);
-			fakeMouseButton(kButtonLeft, false);
-			
 			if (fileList.empty() == false) {
 				CClientApp& app = CClientApp::instance();
 				CClient* client = app.getClientPtr();

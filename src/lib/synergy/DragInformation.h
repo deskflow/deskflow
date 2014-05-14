@@ -35,11 +35,13 @@ public:
 	void				setFilesize(size_t size) { m_filesize = size; }
 	
 	static void			parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CString data);
-	static CString		getDragFileExtension(CString fileName);
-	// helper function to setuo drag info
+	static CString		getDragFileExtension(CString filename);
+	// helper function to setup drag info
 	// example: filename1,filesize1,filename2,filesize2,
 	// return file count
 	static int			setupDragInfo(CDragFileList& fileList, CString& output);
+
+	static bool			isFileValid(CString filename);
 
 private:
 	static size_t		stringToNum(CString& str);

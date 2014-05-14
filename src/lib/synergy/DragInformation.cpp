@@ -86,12 +86,12 @@ CDragInformation::parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CSt
 }
 
 CString
-CDragInformation::getDragFileExtension(CString fileName)
+CDragInformation::getDragFileExtension(CString filename)
 {
 	size_t findResult = string::npos;
-	findResult = fileName.find_last_of(".", fileName.size());
+	findResult = filename.find_last_of(".", filename.size());
 	if (findResult != string::npos) {
-		return fileName.substr(findResult + 1, fileName.size() - findResult - 1);
+		return filename.substr(findResult + 1, filename.size() - findResult - 1);
 	}
 	else {
 		return "";
@@ -110,6 +110,21 @@ CDragInformation::setupDragInfo(CDragFileList& fileList, CString& output)
 		output.append(",");
 	}
 	return size;
+}
+
+bool
+CDragInformation::isFileValid(CString filename)
+{
+	bool result = false;
+	std::fstream file(filename.c_str(), ios::in|ios::binary);
+
+	if (file.is_open()) {
+		result = true;
+	}
+
+	file. close();
+
+	return result;
 }
 
 size_t
