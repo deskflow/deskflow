@@ -1,3 +1,11 @@
+1.4.18
+======
+Bug #3980 - Shell extension DLL causes explorer.exe to crash
+Task #4049 - Correct code style in OSXKeyState compilation unit
+Task #4050 - Fix subversion issue tracker URL
+Task #4053 - Improve deb package quality
+Task #4054 - Improve rpm package quality
+
 1.4.17
 ======
 Bug #2836 - Unable to begin screen name or alias with numbers
