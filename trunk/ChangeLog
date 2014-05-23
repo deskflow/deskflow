@@ -1,3 +1,8 @@
+1.5.0
+=====
+Bug #4060 - Key stuck down on Windows server
+Bug #4061 - Windows server repeats modifier keys
+
 1.4.18
 ======
 Bug #3980 - Shell extension DLL causes explorer.exe to crash
