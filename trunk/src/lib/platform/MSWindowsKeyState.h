@@ -124,6 +124,14 @@ public:
 	*/
 	static KeyID		getKeyID(UINT virtualKey, KeyButton button);
 
+	//! Map button to virtual key
+	/*!
+	Returns the virtual key for button \p button
+	(button should include the extended key bit), or kKeyNone if there is
+	no such key.
+	*/
+	UINT				mapButtonToVirtualKey(KeyButton button) const;
+
 	//@}
 
 	// IKeyState overrides

@@ -46,6 +46,7 @@
 #include <pbt.h>
 #include <Shlobj.h>
 #include <comutil.h>
+#include <algorithm>
 
 //
 // add backwards compatible multihead support (and suppress bogus warning).
@@ -302,7 +303,10 @@ CMSWindowsScreen::enter()
 
 		// all messages prior to now are invalid
 		nextMark();
-	} else {
+
+		m_primaryKeyDownList.clear();
+	}
+	else {
 		// Entering a secondary screen. Ensure that no screensaver is active
 		// and that the screen is not in powersave mode.
 		CArchMiscWindows::wakeupDisplay();
@@ -351,6 +355,14 @@ CMSWindowsScreen::leave()
 		m_keyState->saveModifiers();
 
 		m_hook.setMode(kHOOK_RELAY_EVENTS);
+
+		m_primaryKeyDownList.clear();
+		for (KeyButton i = 0; i < IKeyState::kNumButtons; ++i) {
+			if (m_keyState->isKeyDown(i)) {
+				m_primaryKeyDownList.push_back(i);
+				LOG((CLOG_DEBUG1 "key button %d is down before leaving to another screen", i));
+			}
+		}
 	}
 
 	// now off screen
@@ -1137,6 +1149,18 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 	// record keyboard state
 	m_keyState->onKey(button, down, oldState);
 
+	if (!down && m_isPrimary && !m_isOnScreen) {
+		PrimaryKeyDownList::iterator find = std::find(m_primaryKeyDownList.begin(), m_primaryKeyDownList.end(), button);
+		if (find != m_primaryKeyDownList.end()) {
+			LOG((CLOG_DEBUG1 "release key button %d on primary", *find));
+			m_hook.setMode(kHOOK_WATCH_JUMP_ZONE);
+			fakeLocalKey(*find, false);
+			m_primaryKeyDownList.erase(find);
+			m_hook.setMode(kHOOK_RELAY_EVENTS);
+			return true;
+		}
+	}
+
 	// windows doesn't tell us the modifier key state on mouse or key
 	// events so we have to figure it out.  most apps would use
 	// GetKeyState() or even GetAsyncKeyState() for that but we can't
@@ -1800,6 +1824,19 @@ CMSWindowsScreen::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 
 	return result;
+}
+
+void
+CMSWindowsScreen::fakeLocalKey(KeyButton button, bool press) const
+{
+	INPUT input;
+	input.type = INPUT_KEYBOARD;
+	input.ki.wVk =  m_keyState->mapButtonToVirtualKey(button);
+	DWORD pressFlag = press ? KEYEVENTF_EXTENDEDKEY : KEYEVENTF_KEYUP;
+	input.ki.dwFlags = pressFlag;
+	input.ki.time = 0;
+	input.ki.dwExtraInfo = 0;
+	SendInput(1,&input,sizeof(input));
 }
 
 //

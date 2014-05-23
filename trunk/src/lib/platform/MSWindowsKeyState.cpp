@@ -909,7 +909,10 @@ CMSWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 	}
 	for (KeyButton i = 1; i < 256; ++i) {
 		if ((keyState[i] & 0x80) != 0) {
-			pressedKeys.insert(i);
+			KeyButton keyButton = virtualKeyToButton(i);
+			if (keyButton != 0) {
+				pressedKeys.insert(keyButton);
+			}
 		}
 	}
 }
@@ -1342,6 +1345,12 @@ CMSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button)
 		virtualKey += 0x100u;
 	}
 	return s_virtualKey[virtualKey];
+}
+
+UINT
+CMSWindowsKeyState::mapButtonToVirtualKey(KeyButton button) const
+{
+	return m_buttonToVK[button];
 }
 
 KeyID
