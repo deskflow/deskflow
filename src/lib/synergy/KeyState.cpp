@@ -903,7 +903,6 @@ CKeyState::updateModifierKeyState(KeyButton button,
 	}
 }
 
-
 //
 // CKeyState::CAddActiveModifierContext
 //

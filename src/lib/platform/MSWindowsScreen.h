@@ -127,6 +127,9 @@ protected:
 	virtual void		updateButtons();
 	virtual IKeyState*	getKeyState() const;
 
+	// simulate a local key to the system directly
+	void				fakeLocalKey(KeyButton button, bool press) const;
+
 private:
 	// initialization and shutdown operations
 	HCURSOR				createBlankCursor() const;
@@ -236,6 +239,7 @@ private:
 	typedef std::map<UInt32, CHotKeyItem> HotKeyMap;
 	typedef std::vector<UInt32> HotKeyIDList;
 	typedef std::map<CHotKeyItem, UInt32> HotKeyToIDMap;
+	typedef std::vector<KeyButton> PrimaryKeyDownList;
 
 	static HINSTANCE	s_windowInstance;
 
@@ -335,4 +339,6 @@ private:
 	const int			m_dropWindowSize;
 
 	CThread*			m_sendDragThread;
+
+	PrimaryKeyDownList	m_primaryKeyDownList;
 };
