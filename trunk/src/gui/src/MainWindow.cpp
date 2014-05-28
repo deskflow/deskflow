@@ -580,7 +580,13 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 	if (appConfig().logToFile())
 	{
 		appConfig().persistLogDir();
-		args << "--log" << appConfig().logFilename();
+
+		QString logFilename = appConfig().logFilename();
+#if defined(Q_OS_WIN)
+		// wrap in quotes in case username contains spaces.
+		logFilename = QString("\"%1\"").arg(logFilename);
+#endif
+		args << "--log" << logFilename;
 	}
 
 	args << "-c" << configFilename() << "--address" << address();
