@@ -589,7 +589,12 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 		args << "--log" << logFilename;
 	}
 
-	args << "-c" << configFilename() << "--address" << address();
+	QString configFilename = this->configFilename();
+#if defined(Q_OS_WIN)
+	// wrap in quotes in case username contains spaces.
+	configFilename = QString("\"%1\"").arg(configFilename);
+#endif
+	args << "-c" << configFilename << "--address" << address();
 
 	return true;
 }
