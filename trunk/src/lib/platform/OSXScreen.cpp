@@ -1701,9 +1701,12 @@ COSXScreen::watchSystemPowerThread(void*)
 	m_events->waitForReady();
     
 #if defined(MAC_OS_X_VERSION_10_7)
-	if (*m_carbonLoopReady == false) {
-		*m_carbonLoopReady = true;
-		m_carbonLoopReady->signal();
+	{
+		CLock lockCarbon(m_carbonLoopMutex);
+		if (*m_carbonLoopReady == false) {
+			*m_carbonLoopReady = true;
+			m_carbonLoopReady->signal();
+		}
 	}
 #endif
 	
@@ -2123,16 +2126,13 @@ void
 COSXScreen::waitForCarbonLoop() const
 {
 #if defined(MAC_OS_X_VERSION_10_7)
-	double timeout = ARCH->time() + 5;
-	m_carbonLoopReady->lock();
-	
+	double timeout = ARCH->time() + 10;
+	CLock lock(m_carbonLoopMutex);
 	while (!m_carbonLoopReady->wait()) {
 		if(ARCH->time() > timeout) {
 			throw std::runtime_error("carbon loop is not ready within 5 sec");
 		}
 	}
-	
-	m_carbonLoopReady->unlock();
 #endif
 }
 
