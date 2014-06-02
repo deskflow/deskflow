@@ -106,9 +106,11 @@ void
 CEventQueue::loop()
 {
 	m_buffer->init();
-	*m_readyCondVar = true;
-	m_readyCondVar->signal();
-	
+	{
+		CLock lock(m_readyMutex);
+		*m_readyCondVar = true;
+		m_readyCondVar->signal();
+	}
 	LOG((CLOG_DEBUG "event queue is ready"));
 	while (!m_pending.empty()) {
 		LOG((CLOG_DEBUG "add pending events to buffer"));
@@ -556,16 +558,14 @@ CEventQueue::getSystemTarget()
 void
 CEventQueue::waitForReady() const
 {
-	double timeout = ARCH->time() + 5;
-	m_readyCondVar->lock();
+	double timeout = ARCH->time() + 10;
+	CLock lock(m_readyMutex);
 	
 	while (!m_readyCondVar->wait()) {
 		if(ARCH->time() > timeout) {
 			throw std::runtime_error("event queue is not ready within 5 sec");
 		}
 	}
-	
-	m_readyCondVar->unlock();
 }
 
 //
