@@ -1703,7 +1703,7 @@ COSXScreen::watchSystemPowerThread(void*)
 #if defined(MAC_OS_X_VERSION_10_7)
 	if (*m_carbonLoopReady == false) {
 		*m_carbonLoopReady = true;
-		m_carbonLoopReady->broadcast();
+		m_carbonLoopReady->signal();
 	}
 #endif
 	

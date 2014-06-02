@@ -107,7 +107,7 @@ CEventQueue::loop()
 {
 	m_buffer->init();
 	*m_readyCondVar = true;
-	m_readyCondVar->broadcast();
+	m_readyCondVar->signal();
 	
 	LOG((CLOG_DEBUG "event queue is ready"));
 	while (!m_pending.empty()) {
