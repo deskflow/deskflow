@@ -93,7 +93,7 @@ void AppConfig::persistLogDir()
 	}
 }
 
-const QString logFilenameCmd() const
+const QString AppConfig::logFilenameCmd() const
 {
 	QString filename = m_LogFilename;
 #if defined(Q_OS_WIN)
