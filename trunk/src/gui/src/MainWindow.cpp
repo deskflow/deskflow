@@ -508,7 +508,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 	if (appConfig().logToFile())
 	{
 		appConfig().persistLogDir();
-		args << "--log" << appConfig().logFilename();
+		args << "--log" << appConfig().logFilenameCmd();
 	}
 
 	args << m_pLineEditHostname->text() + ":" + QString::number(appConfig().port());
@@ -581,12 +581,7 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 	{
 		appConfig().persistLogDir();
 
-		QString logFilename = appConfig().logFilename();
-#if defined(Q_OS_WIN)
-		// wrap in quotes in case username contains spaces.
-		logFilename = QString("\"%1\"").arg(logFilename);
-#endif
-		args << "--log" << logFilename;
+		args << "--log" << appConfig().logFilenameCmd();
 	}
 
 	QString configFilename = this->configFilename();
