@@ -59,6 +59,7 @@ class AppConfig
 		int logLevel() const { return m_LogLevel; }
 		bool logToFile() const { return m_LogToFile; }
 		const QString& logFilename() const { return m_LogFilename; }
+		const QString logFilenameCmd() const;
 		QString logLevelText() const;
 		const QString& cryptoPass() const { return m_CryptoPass; }
 		bool cryptoEnabled() const { return m_CryptoEnabled; }
