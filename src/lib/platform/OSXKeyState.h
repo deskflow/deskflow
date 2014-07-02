@@ -99,7 +99,7 @@ public:
 						pollActiveModifiers() const;
 	virtual SInt32		pollActiveGroup() const;
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
-
+	void				fixStickyKeys();
 protected:
 	// CKeyState overrides
 	virtual void		getKeyMap(CKeyMap& keyMap);
