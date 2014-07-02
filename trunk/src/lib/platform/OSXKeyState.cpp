@@ -459,6 +459,47 @@ COSXKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 }
 
 void
+COSXKeyState::fixStickyKeys()
+{
+	KeyModifierMask synergyMask = getActiveModifiers();
+	KeyModifierMask hardwareMask = pollActiveModifiers();
+	if (synergyMask != hardwareMask) {
+		
+		// modifier key stuck
+		// compute changed modifiers
+		KeyModifierMask changed = (hardwareMask ^ synergyMask);
+		
+		if (changed) {
+			KeyButton kb;
+			CString keyFixed;
+			// synthesize changed modifier keys
+			if ((changed & KeyModifierShift) != 0) {
+				kb = mapVirtualKeyToKeyButton(s_shiftVK);
+				fakeKeyUp(kb);
+				keyFixed.append("shift ");
+			}
+			if ((changed & KeyModifierControl) != 0) {
+				kb = mapVirtualKeyToKeyButton(s_controlVK);
+				fakeKeyUp(kb);
+				keyFixed.append("ctrl ");
+			}
+			if ((changed & KeyModifierAlt) != 0) {
+				kb = mapVirtualKeyToKeyButton(s_altVK);
+				fakeKeyUp(kb);
+				keyFixed.append("alt ");
+			}
+			if ((changed & KeyModifierSuper) != 0) {
+				kb = mapVirtualKeyToKeyButton(s_superVK);
+				fakeKeyUp(kb);
+				keyFixed.append("cmd ");
+			}
+			
+			LOG((CLOG_DEBUG "fixed stuck modifier key: %s", keyFixed.c_str()));
+		}
+	}
+}
+
+void
 COSXKeyState::getKeyMap(CKeyMap& keyMap)
 {
 	// update keyboard groups
