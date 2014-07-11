@@ -4,7 +4,7 @@
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # found in the file COPYING that should have accompanied this file.
-# 
+#
 # This package is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -56,16 +56,16 @@ set(cryptopp_src
 
 # if 64-bit windows, compile asm file.
 if (CMAKE_CL_64)
-	list(APPEND cryptopp_src ${cryptopp_dir}/x64dll.asm ${cryptopp_dir}/x64masm.asm)
-	
+	list(APPEND cryptopp_src $(IntDir)x64dll.obj $(IntDir)x64masm.obj)
+
 	add_custom_command(OUTPUT $(IntDir)x64dll.obj
-		COMMAND ml64.exe /c /nologo /Fo$(IntDir)x64dll.obj /Zi 
+		COMMAND ml64.exe /c /nologo /Fo$(IntDir)x64dll.obj /Zi
 		"${CMAKE_CURRENT_SOURCE_DIR}/${cryptopp_dir}/x64dll.asm"
 		MAIN_DEPENDENCY ${cryptopp_dir}/x64dll.asm
 		VERBATIM)
-		
+
 	add_custom_command(OUTPUT $(IntDir)x64masm.obj
-		COMMAND ml64.exe /c /nologo /Fo$(IntDir)x64masm.obj /Zi 
+		COMMAND ml64.exe /c /nologo /Fo$(IntDir)x64masm.obj /Zi
 		"${CMAKE_CURRENT_SOURCE_DIR}/${cryptopp_dir}/x64masm.asm"
 		MAIN_DEPENDENCY ${cryptopp_dir}/x64masm.asm
 		VERBATIM)
@@ -74,7 +74,7 @@ endif()
 if (UNIX)
 	add_definitions(-DCRYPTOPP_DISABLE_ASM)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O2 -pipe")
-	
+
 	if (APPLE)
 		if (DARWIN_VERSION GREATER 10)
 			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-tautological-compare")
