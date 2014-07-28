@@ -26,7 +26,8 @@
 // 1.2:  adds mouse relative motion
 // 1.3:  adds keep alive and deprecates heartbeats,
 //       adds horizontal mouse scrolling
-// 1.4:  adds crypto support (game device support added then removed)
+// 1.4:  adds crypto support
+// NOTE: with new version, synergy minor version should increment
 static const SInt16		kProtocolMajorVersion = 1;
 static const SInt16		kProtocolMinorVersion = 5;
 
