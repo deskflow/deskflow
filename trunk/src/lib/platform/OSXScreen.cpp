@@ -527,8 +527,6 @@ COSXScreen::postMouseEvent(CGPoint& pos) const
 void
 COSXScreen::fakeMouseButton(ButtonID id, bool press)
 {
-	m_keyState->fixStickyKeys();
-	
 	NXEventHandle handle = NXOpenEventStatus();
 	double clickTime = NXClickTime(handle);
 	
