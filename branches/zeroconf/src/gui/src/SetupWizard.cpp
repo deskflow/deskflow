@@ -105,13 +105,6 @@ bool SetupWizard::validateCurrentPage()
 				return false;
 			}
 		}
-		else if (m_pRadioButtonPremiumRegister->isChecked())
-		{
-			const QUrl url(QString(PREMIUM_REGISTER_URL));
-			QDesktopServices::openUrl(url);
-			m_pRadioButtonPremiumLogin->setChecked(true);
-			return false;
-		}
 		else if (m_pRadioButtonPremiumLater->isChecked())
 		{
 			return true;
@@ -120,25 +113,6 @@ bool SetupWizard::validateCurrentPage()
 			message.setText(tr("Please select an option."));
 			message.exec();
 			return false;
-		}
-	}
-	else if (currentPage() == m_pCryptoPage)
-	{
-		if (m_pCheckBoxEnableCrypto->isChecked())
-		{
-			if (m_pLineEditCryptoPassword1->text().isEmpty())
-			{
-				message.setText(tr("Encryption password required."));
-				message.exec();
-				return false;
-			}
-
-			if (m_pLineEditCryptoPassword1->text() != m_pLineEditCryptoPassword2->text())
-			{
-				message.setText(tr("Encryption password and confirmation do not match."));
-				message.exec();
-				return false;
-			}
 		}
 	}
 
@@ -169,8 +143,6 @@ void SetupWizard::accept()
 {
 	AppConfig& appConfig = m_MainWindow.appConfig();
 
-	appConfig.setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
-	appConfig.setCryptoPass(m_pLineEditCryptoPassword1->text());
 	appConfig.setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
 	appConfig.setPremiumEmail(m_pLineEditPremiumEmail->text());
 
@@ -225,14 +197,6 @@ void SetupWizard::reject()
 
 void SetupWizard::on_m_pCheckBoxEnableCrypto_stateChanged(int )
 {
-	bool enabled = m_pCheckBoxEnableCrypto->isChecked();
-	m_pLineEditCryptoPassword1->setEnabled(enabled);
-	m_pLineEditCryptoPassword2->setEnabled(enabled);
-	if (!enabled)
-	{
-		m_pLineEditCryptoPassword1->clear();
-		m_pLineEditCryptoPassword2->clear();
-	}
 }
 
 void SetupWizard::on_m_pComboLanguage_currentIndexChanged(int index)
