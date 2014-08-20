@@ -106,8 +106,7 @@ release {
 win32 { 
 	Debug:DESTDIR = ../../bin/Debug
 	Release:DESTDIR = ../../bin/Release
-#C:/Tools/reimp_new/bin -L"C:\Program Files\Bonjour SDK\Lib\x64"
-	LIBS += -L"C:/Program Files/Bonjour SDK/Lib/x64" -ldnssd
-	INCLUDEPATH += "C:/Program Files/Bonjour SDK/Include"
+	LIBS += -L"../../ext/bonjour/x64" -ldnssd
+	INCLUDEPATH += "$(BONJOUR_SDK_HOME)/Include"
 }
 else:DESTDIR = ../../bin
