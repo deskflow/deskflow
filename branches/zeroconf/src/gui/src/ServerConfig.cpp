@@ -28,18 +28,20 @@ static const struct
 	 const char* name;
 } neighbourDirs[] =
 {
-	{  0, -1, "up" },
 	{  1,  0, "right" },
-	{  0,  1, "down" },
 	{ -1,  0, "left" },
+	{  0, -1, "up" },
+	{  0,  1, "down" },
+
 };
 
 
-ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows) :
+ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows , QString serverName) :
 	m_pSettings(settings),
 	m_Screens(),
 	m_NumColumns(numColumns),
-	m_NumRows(numRows)
+	m_NumRows(numRows),
+	m_ServerName(serverName)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -262,4 +264,44 @@ int ServerConfig::numScreens() const
 			rval++;
 
 	return rval;
+}
+
+bool ServerConfig::autoAddScreen(const QString name)
+{
+	bool success = false;
+	int serverIndex = -1;
+	int targetIndex = -1;
+	if(!findScreenName(m_ServerName, serverIndex)) {
+		return success;
+	}
+	if (findScreenName(name, targetIndex)) {
+		return true;
+	}
+
+	for (unsigned int i = 0; i < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]); i++) {
+		int idx = adjacentScreenIndex(serverIndex, neighbourDirs[i].x, neighbourDirs[i].y);
+		if (idx != -1 && screens()[idx].isNull()) {
+			m_Screens[idx] = Screen(name);
+			success = true;
+			break;
+		}
+	}
+
+	saveSettings();
+
+	return success;
+}
+
+bool ServerConfig::findScreenName(QString name, int& index)
+{
+	bool found = false;
+	for (int i = 0; i < screens().size(); i++) {
+		if (!screens()[i].isNull() &&
+			screens()[i].name().compare(name) == 0) {
+			index = i;
+			found = true;
+			break;
+		}
+	}
+	return found;
 }

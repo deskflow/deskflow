@@ -49,6 +49,7 @@ class QTemporaryFile;
 class LogDialog;
 class QSynergyApplication;
 class SetupWizard;
+class ZeroconfService;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase
 {
@@ -91,6 +92,9 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void open();
 		void clearLog();
 		VersionChecker& versionChecker() { return m_VersionChecker; }
+		QString getScreenName();
+		void startSynergy();
+		ServerConfig& serverConfig() { return m_ServerConfig; }
 
 	public slots:
 		void appendLogRaw(const QString& text);
@@ -109,7 +113,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void on_m_pElevateCheckBox_toggled(bool checked);
 		void synergyFinished(int exitCode, QProcess::ExitStatus);
 		void trayActivated(QSystemTrayIcon::ActivationReason reason);
-		void startSynergy();
 		void stopSynergy();
 		void logOutput();
 		void logError();
@@ -120,7 +123,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		AppConfig& appConfig() { return m_AppConfig; }
 		QProcess*& synergyProcess() { return m_pSynergy; }
 		void setSynergyProcess(QProcess* p) { m_pSynergy = p; }
-		ServerConfig& serverConfig() { return m_ServerConfig; }
 		void initConnections();
 		void createMenuBar();
 		void createStatusBar();
@@ -137,7 +139,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void onModeChanged(bool startDesktop, bool applyService);
 		void updateStateFromLogLine(const QString& line);
 		QString getIPAddresses();
-		QString getScreenName();
 		void stopService();
 		void stopDesktop();
 		void changeEvent(QEvent* event);
@@ -163,6 +164,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QMenu* m_pMenuEdit;
 		QMenu* m_pMenuWindow;
 		QMenu* m_pMenuHelp;
+		ZeroconfService* m_pZeroconfService;
 
 private slots:
 	void on_m_pButtonApply_clicked();

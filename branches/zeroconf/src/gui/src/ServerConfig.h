@@ -38,7 +38,7 @@ class ServerConfig : public BaseConfig
 	friend QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config);
 
 	public:
-		ServerConfig(QSettings* settings, int numColumns, int numRows);
+		ServerConfig(QSettings* settings, int numColumns, int numRows, QString serverName);
 		~ServerConfig();
 
 	public:
@@ -64,6 +64,7 @@ class ServerConfig : public BaseConfig
 		bool save(const QString& fileName) const;
 		void save(QFile& file) const;
 		int numScreens() const;
+		bool autoAddScreen(const QString name);
 
 	protected:
 		QSettings& settings() { return *m_pSettings; }
@@ -90,6 +91,9 @@ class ServerConfig : public BaseConfig
 		int adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const;
 
 	private:
+		bool findScreenName(QString name, int& index);
+
+	private:
 		QSettings* m_pSettings;
 		ScreenList m_Screens;
 		int m_NumColumns;
@@ -106,6 +110,7 @@ class ServerConfig : public BaseConfig
 		int m_SwitchCornerSize;
 		QList<bool> m_SwitchCorners;
 		HotkeyList m_Hotkeys;
+		QString m_ServerName;
 };
 
 QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config);

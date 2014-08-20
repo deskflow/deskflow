@@ -41,7 +41,12 @@ SOURCES += src/main.cpp \
 	src/Ipc.cpp \
 	src/SynergyLocale.cpp \
 	src/QUtility.cpp \
-	src/PremiumAuth.cpp
+	src/PremiumAuth.cpp \
+	src/ZeroconfServer.cpp \
+	src/ZeroconfThread.cpp \
+	src/ZeroconfRegister.cpp \
+	src/ZeroconfBrowser.cpp \
+	src/ZeroconfService.cpp
 HEADERS += src/MainWindow.h \
 	src/AboutDialog.h \
 	src/ServerConfig.h \
@@ -69,7 +74,13 @@ HEADERS += src/MainWindow.h \
 	src/Ipc.h \
 	src/SynergyLocale.h \
 	src/QUtility.h \
-	src/PremiumAuth.h
+	src/PremiumAuth.h \
+	src/ZeroconfServer.h \
+	src/ZeroconfThread.h \
+	src/ZeroconfRegister.h \
+	src/ZeroconfRecord.h \
+	src/ZeroconfBrowser.h \
+	src/ZeroconfService.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx {
@@ -95,5 +106,8 @@ release {
 win32 { 
 	Debug:DESTDIR = ../../bin/Debug
 	Release:DESTDIR = ../../bin/Release
+#C:/Tools/reimp_new/bin -L"C:\Program Files\Bonjour SDK\Lib\x64"
+	LIBS += -L"C:/Program Files/Bonjour SDK/Lib/x64" -ldnssd
+	INCLUDEPATH += "C:/Program Files/Bonjour SDK/Include"
 }
 else:DESTDIR = ../../bin
