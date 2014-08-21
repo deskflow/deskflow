@@ -110,9 +110,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	setMinimumSize(size());
 #endif
 
-	if (!appConfig.wizardShouldRun()) {
-		updateZeroconfService();
-	}
+	updateZeroconfService();
+
 }
 
 MainWindow::~MainWindow()
@@ -806,12 +805,13 @@ void MainWindow::updatePremiumInfo()
 
 void MainWindow::updateZeroconfService()
 {
-	if (m_pZeroconfService) {
-		delete m_pZeroconfService;
+	if (!m_AppConfig.wizardShouldRun()) {
+		if (m_pZeroconfService) {
+			delete m_pZeroconfService;
+		}
+
+		m_pZeroconfService = new ZeroconfService(this);
 	}
-
-	m_pZeroconfService = new ZeroconfService(this);
-
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
