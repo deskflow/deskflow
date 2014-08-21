@@ -76,7 +76,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pMenuFile(NULL),
 	m_pMenuEdit(NULL),
 	m_pMenuWindow(NULL),
-	m_pMenuHelp(NULL)
+	m_pMenuHelp(NULL),
+	m_pZeroconfService(NULL)
 {
 	setupUi(this);
 
@@ -109,7 +110,9 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	setMinimumSize(size());
 #endif
 
-	m_pZeroconfService = new ZeroconfService(this);
+	if (!appConfig.wizardShouldRun()) {
+		updateZeroconfService();
+	}
 }
 
 MainWindow::~MainWindow()
@@ -799,6 +802,16 @@ void MainWindow::updatePremiumInfo()
 		m_pWidgetPremium->show();
 		setWindowTitle(tr("Synergy"));
 	}
+}
+
+void MainWindow::updateZeroconfService()
+{
+	if (m_pZeroconfService) {
+		delete m_pZeroconfService;
+	}
+
+	m_pZeroconfService = new ZeroconfService(this);
+
 }
 
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()

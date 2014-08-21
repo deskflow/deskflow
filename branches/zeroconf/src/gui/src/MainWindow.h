@@ -98,6 +98,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void showConfigureServer(const QString& message);
 		void showConfigureServer() { showConfigureServer(""); }
 		void autoAddScreen(const QString name);
+		void updateZeroconfService();
 
 	public slots:
 		void appendLogRaw(const QString& text);

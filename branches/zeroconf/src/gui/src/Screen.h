@@ -65,10 +65,10 @@ class Screen : public BaseConfig
 
 		bool swapped() const { return m_Swapped; }
 		QString& name() { return m_Name; }
+		void setName(const QString& name) { m_Name = name; }
 
 	protected:
 		void init();
-		void setName(const QString& name) { m_Name = name; }
 		QPixmap* pixmap() { return &m_Pixmap; }
 
 		void setPixmap(const QPixmap& pixmap) { m_Pixmap = pixmap; }

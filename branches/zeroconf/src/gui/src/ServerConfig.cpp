@@ -36,6 +36,8 @@ static const struct
 
 };
 
+const int serverDefaultIndex = 7;
+
 ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows , QString serverName) :
 	m_pSettings(settings),
 	m_Screens(),
@@ -271,7 +273,9 @@ int ServerConfig::autoAddScreen(const QString name)
 	int serverIndex = -1;
 	int targetIndex = -1;
 	if (!findScreenName(m_ServerName, serverIndex)) {
-		return kAutoAddScreenNoServer;
+		if (!tryFixNoServer(m_ServerName, serverIndex)) {
+			return kAutoAddScreenNoServer;
+		}
 	}
 	if (findScreenName(name, targetIndex)) {
 		// already exists.
@@ -282,7 +286,7 @@ int ServerConfig::autoAddScreen(const QString name)
 	for (unsigned int i = 0; i < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]); i++) {
 		int idx = adjacentScreenIndex(serverIndex, neighbourDirs[i].x, neighbourDirs[i].y);
 		if (idx != -1 && screens()[idx].isNull()) {
-			m_Screens[idx] = Screen(name);
+			m_Screens[idx].setName(name);
 			success = true;
 			break;
 		}
@@ -296,7 +300,7 @@ int ServerConfig::autoAddScreen(const QString name)
 	return kAutoAddScreenOk;
 }
 
-bool ServerConfig::findScreenName(QString name, int& index)
+bool ServerConfig::findScreenName(const QString& name, int& index)
 {
 	bool found = false;
 	for (int i = 0; i < screens().size(); i++) {
@@ -309,4 +313,16 @@ bool ServerConfig::findScreenName(QString name, int& index)
 		}
 	}
 	return found;
+}
+
+bool ServerConfig::tryFixNoServer(const QString& name, int& index)
+{
+	bool fixed = false;
+	if (screens()[serverDefaultIndex].isNull()) {
+		m_Screens[serverDefaultIndex].setName(name);
+		index = serverDefaultIndex;
+		fixed = true;
+	}
+
+	return fixed;
 }

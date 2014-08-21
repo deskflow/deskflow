@@ -91,7 +91,8 @@ class ServerConfig : public BaseConfig
 		int adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const;
 
 	private:
-		bool findScreenName(QString name, int& index);
+		bool findScreenName(const QString& name, int& index);
+		bool tryFixNoServer(const QString& name, int& index);
 
 	private:
 		QSettings* m_pSettings;
