@@ -36,7 +36,6 @@ static const struct
 
 };
 
-
 ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows , QString serverName) :
 	m_pSettings(settings),
 	m_Screens(),
@@ -267,18 +266,16 @@ int ServerConfig::numScreens() const
 	return rval;
 }
 
-void ServerConfig::autoAddScreen(const QString name)
+int ServerConfig::autoAddScreen(const QString name)
 {
 	int serverIndex = -1;
 	int targetIndex = -1;
-	if(!findScreenName(m_ServerName, serverIndex)) {
-		QMessageBox::warning(0, QObject::tr("Zero configuration service"),
-			QObject::tr("Zero configuration service detectes a client, but "
-			"there is no machine named %1 in the server configuration.")
-			.arg(m_ServerName));
+	if (!findScreenName(m_ServerName, serverIndex)) {
+		return kAutoAddScreenNoServer;
 	}
 	if (findScreenName(name, targetIndex)) {
-		return;
+		// already exists.
+		return kAutoAddScreenOk;
 	}
 
 	bool success = false;
@@ -292,18 +289,18 @@ void ServerConfig::autoAddScreen(const QString name)
 	}
 
 	if (!success) {
-		QMessageBox::warning(0, QObject::tr("Zero configuration service"),
-			QObject::tr("Zero configuration service detectes a client, but "
-			"doesn't know where to add it. Please use Configure Server button"));
+		return kAutoAddScreenNoSpace;
 	}
 
 	saveSettings();
+	return kAutoAddScreenOk;
 }
 
 bool ServerConfig::findScreenName(QString name, int& index)
 {
 	bool found = false;
 	for (int i = 0; i < screens().size(); i++) {
+		QString test = screens()[i].name();
 		if (!screens()[i].isNull() &&
 			screens()[i].name().compare(name) == 0) {
 			index = i;

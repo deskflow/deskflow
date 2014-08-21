@@ -95,6 +95,9 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QString getScreenName();
 		void startSynergy();
 		ServerConfig& serverConfig() { return m_ServerConfig; }
+		void showConfigureServer(const QString& message);
+		void showConfigureServer() { showConfigureServer(""); }
+		void autoAddScreen(const QString name);
 
 	public slots:
 		void appendLogRaw(const QString& text);

@@ -64,7 +64,7 @@ class ServerConfig : public BaseConfig
 		bool save(const QString& fileName) const;
 		void save(QFile& file) const;
 		int numScreens() const;
-		void autoAddScreen(const QString name);
+		int autoAddScreen(const QString name);
 
 	protected:
 		QSettings& settings() { return *m_pSettings; }
@@ -114,6 +114,12 @@ class ServerConfig : public BaseConfig
 };
 
 QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config);
+
+enum {
+	kAutoAddScreenOk,
+	kAutoAddScreenNoServer,
+	kAutoAddScreenNoSpace
+};
 
 #endif
 

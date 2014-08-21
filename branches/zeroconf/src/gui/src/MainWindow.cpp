@@ -846,10 +846,35 @@ void MainWindow::on_m_pActionSettings_triggered()
 	}
 }
 
-void MainWindow::on_m_pButtonConfigureServer_clicked()
+void MainWindow::autoAddScreen(const QString name)
+{
+	int r = m_ServerConfig.autoAddScreen(name);
+	if (r != kAutoAddScreenOk) {
+		switch (r) {
+		case kAutoAddScreenNoServer:
+			showConfigureServer(
+				tr("Please add the server (%1) to the grid.")
+					.arg(appConfig().screenName()));
+			break;
+
+		case kAutoAddScreenNoSpace:
+			showConfigureServer(
+				tr("Please add the client (%1) to the grid.").arg(name));
+			break;
+		}
+	}
+}
+
+void MainWindow::showConfigureServer(const QString& message)
 {
 	ServerConfigDialog dlg(this, serverConfig(), appConfig().screenName());
+	dlg.message(message);
 	dlg.exec();
+}
+
+void MainWindow::on_m_pButtonConfigureServer_clicked()
+{
+	showConfigureServer();
 }
 
 void MainWindow::on_m_pActionWizard_triggered()

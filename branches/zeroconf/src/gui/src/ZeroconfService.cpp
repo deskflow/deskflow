@@ -88,7 +88,7 @@ void ZeroconfService::clientDetected(const QList<ZeroconfRecord>& list)
 	foreach (ZeroconfRecord record, list) {
 		m_pMainWindow->appendLogNote(tr("zeroconf client detected: %1").arg(
 			record.serviceName));
-		m_pMainWindow->serverConfig().autoAddScreen(record.serviceName);
+		m_pMainWindow->autoAddScreen(record.serviceName);
 	}
 
 	if (!list.isEmpty()) {
