@@ -1,3 +1,9 @@
+1.5.1
+=====
+Bug #3307 - Configuration file paths containing spaces don't work
+Bug #3404 - Log path needs to be in quotes on windows
+Bug #3996 - Installer fails when Windows Firewall is disabled
+
 1.5.0
 =====
 Bug #4060 - Key stuck down on Windows server
