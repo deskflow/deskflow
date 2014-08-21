@@ -814,6 +814,18 @@ void MainWindow::updateZeroconfService()
 
 }
 
+void MainWindow::on_m_pGroupClient_toggled(bool on)
+{
+	m_pGroupServer->setChecked(!on);
+	updateZeroconfService();
+}
+
+void MainWindow::on_m_pGroupServer_toggled(bool on)
+{
+	m_pGroupClient->setChecked(!on);
+	updateZeroconfService();
+}
+
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
 {
 	QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a synergys config file"), QString(), synergyConfigFilter);
