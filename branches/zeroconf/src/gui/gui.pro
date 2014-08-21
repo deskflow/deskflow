@@ -93,6 +93,9 @@ macx {
 	QMAKE_BUNDLE_DATA += QSYNERGY_ICON
 	LIBS += $$MACX_LIBS
 }
+unix:!macx {
+	LIBS += -ldns_sd
+}
 debug { 
 	OBJECTS_DIR = tmp/debug
 	MOC_DIR = tmp/debug
