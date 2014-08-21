@@ -20,7 +20,6 @@
 #include "Hotkey.h"
 
 #include <QtCore>
-#include <QMessageBox>
 
 static const struct
 {

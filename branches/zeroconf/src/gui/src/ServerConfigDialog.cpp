@@ -23,6 +23,7 @@
 
 #include <QtCore>
 #include <QtGui>
+#include <QMessageBox>
 
 ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, const QString& defaultScreenName) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
