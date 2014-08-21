@@ -23,13 +23,15 @@
 
 #include <QtCore>
 #include <QtGui>
+#include <QMessageBox>
 
 ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, const QString& defaultScreenName) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::ServerConfigDialogBase(),
 	m_OrigServerConfig(config),
 	m_ServerConfig(config),
-	m_ScreenSetupModel(serverConfig().screens(), serverConfig().numColumns(), serverConfig().numRows())
+	m_ScreenSetupModel(serverConfig().screens(), serverConfig().numColumns(), serverConfig().numRows()),
+	m_Message("")
 {
 	setupUi(this);
 
@@ -59,6 +61,17 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
 
 	if (serverConfig().numScreens() == 0)
 		model().screen(serverConfig().numColumns() / 2, serverConfig().numRows() / 2) = Screen(defaultScreenName);
+}
+
+void ServerConfigDialog::showEvent(QShowEvent* event)
+{
+	QDialog::show();
+
+	if (!m_Message.isEmpty())
+	{
+		// TODO: ideally this massage box should pop up after the dialog is shown
+		QMessageBox::information(this, tr("Configure server"), m_Message);
+	}
 }
 
 void ServerConfigDialog::accept()

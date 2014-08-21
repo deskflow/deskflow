@@ -28,18 +28,21 @@ static const struct
 	 const char* name;
 } neighbourDirs[] =
 {
-	{  0, -1, "up" },
 	{  1,  0, "right" },
-	{  0,  1, "down" },
 	{ -1,  0, "left" },
+	{  0, -1, "up" },
+	{  0,  1, "down" },
+
 };
 
+const int serverDefaultIndex = 7;
 
-ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows) :
+ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows , QString serverName) :
 	m_pSettings(settings),
 	m_Screens(),
 	m_NumColumns(numColumns),
-	m_NumRows(numRows)
+	m_NumRows(numRows),
+	m_ServerName(serverName)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -262,4 +265,63 @@ int ServerConfig::numScreens() const
 			rval++;
 
 	return rval;
+}
+
+int ServerConfig::autoAddScreen(const QString name)
+{
+	int serverIndex = -1;
+	int targetIndex = -1;
+	if (!findScreenName(m_ServerName, serverIndex)) {
+		if (!tryFixNoServer(m_ServerName, serverIndex)) {
+			return kAutoAddScreenNoServer;
+		}
+	}
+	if (findScreenName(name, targetIndex)) {
+		// already exists.
+		return kAutoAddScreenOk;
+	}
+
+	bool success = false;
+	for (unsigned int i = 0; i < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]); i++) {
+		int idx = adjacentScreenIndex(serverIndex, neighbourDirs[i].x, neighbourDirs[i].y);
+		if (idx != -1 && screens()[idx].isNull()) {
+			m_Screens[idx].setName(name);
+			success = true;
+			break;
+		}
+	}
+
+	if (!success) {
+		return kAutoAddScreenNoSpace;
+	}
+
+	saveSettings();
+	return kAutoAddScreenOk;
+}
+
+bool ServerConfig::findScreenName(const QString& name, int& index)
+{
+	bool found = false;
+	for (int i = 0; i < screens().size(); i++) {
+		QString test = screens()[i].name();
+		if (!screens()[i].isNull() &&
+			screens()[i].name().compare(name) == 0) {
+			index = i;
+			found = true;
+			break;
+		}
+	}
+	return found;
+}
+
+bool ServerConfig::tryFixNoServer(const QString& name, int& index)
+{
+	bool fixed = false;
+	if (screens()[serverDefaultIndex].isNull()) {
+		m_Screens[serverDefaultIndex].setName(name);
+		index = serverDefaultIndex;
+		fixed = true;
+	}
+
+	return fixed;
 }

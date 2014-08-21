@@ -64,12 +64,12 @@ class Screen : public BaseConfig
 		QTextStream& writeAliasesSection(QTextStream& outStream) const;
 
 		bool swapped() const { return m_Swapped; }
+		QString& name() { return m_Name; }
+		void setName(const QString& name) { m_Name = name; }
 
 	protected:
 		void init();
-		void setName(const QString& name) { m_Name = name; }
 		QPixmap* pixmap() { return &m_Pixmap; }
-		QString& name() { return m_Name; }
 
 		void setPixmap(const QPixmap& pixmap) { m_Pixmap = pixmap; }
 		QStringList& aliases() { return m_Aliases; }
