@@ -36,6 +36,8 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
 
 	public slots:
 		void accept();
+		void showEvent(QShowEvent* event);
+		void message(const QString& message) { m_Message = message; }
 
 	protected slots:
 		void on_m_pButtonNewHotkey_clicked();
@@ -57,6 +59,7 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
 		ServerConfig& m_OrigServerConfig;
 		ServerConfig m_ServerConfig;
 		ScreenSetupModel m_ScreenSetupModel;
+		QString m_Message;
 };
 
 #endif

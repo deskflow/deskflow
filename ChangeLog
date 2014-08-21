@@ -1,3 +1,7 @@
+1.6.0
+=====
+Feature #65 - Auto config feature using Zeroconf/Bonjour
+
 1.5.1
 =====
 Bug #3307 - Configuration file paths containing spaces don't work

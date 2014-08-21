@@ -25,6 +25,7 @@
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
 #include "SetupWizard.h"
+#include "ZeroconfService.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -64,7 +65,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_AppConfig(appConfig),
 	m_pSynergy(NULL),
 	m_SynergyState(synergyDisconnected),
-	m_ServerConfig(&m_Settings, 5, 3),
+	m_ServerConfig(&m_Settings, 5, 3, m_AppConfig.screenName()),
 	m_pTempConfigFile(NULL),
 	m_pTrayIcon(NULL),
 	m_pTrayIconMenu(NULL),
@@ -75,7 +76,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pMenuFile(NULL),
 	m_pMenuEdit(NULL),
 	m_pMenuWindow(NULL),
-	m_pMenuHelp(NULL)
+	m_pMenuHelp(NULL),
+	m_pZeroconfService(NULL)
 {
 	setupUi(this);
 
@@ -107,16 +109,20 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	resize(700, 530);
 	setMinimumSize(size());
 #endif
+
+	updateZeroconfService();
+
 }
 
 MainWindow::~MainWindow()
 {
-	if (appConfig().processMode() == Desktop)
-	{
+	if (appConfig().processMode() == Desktop) {
 		stopDesktop();
 	}
 
 	saveSettings();
+
+	delete m_pZeroconfService;
 }
 
 void MainWindow::open()
@@ -382,13 +388,13 @@ void MainWindow::startSynergy()
 
 	args << "-f" << "--no-tray" << "--debug" << appConfig().logLevelText();
 
-	if (!appConfig().screenName().isEmpty())
-		args << "--name" << appConfig().screenName();
 
-		if (appConfig().cryptoEnabled())
-		{
-			args << "--crypto-pass" << appConfig().cryptoPass();
-		}
+	args << "--name" << getScreenName();
+
+	if (appConfig().cryptoEnabled())
+	{
+		args << "--crypto-pass" << appConfig().cryptoPass();
+	}
 
 	if (desktopMode)
 	{
@@ -553,7 +559,8 @@ QString MainWindow::configFilename()
 
 QString MainWindow::address()
 {
-	return (!appConfig().interface().isEmpty() ? appConfig().interface() : "") + ":" + QString::number(appConfig().port());
+	QString i = appConfig().interface();
+	return (!i.isEmpty() ? i : "") + ":" + QString::number(appConfig().port());
 }
 
 QString MainWindow::appPath(const QString& name)
@@ -796,6 +803,29 @@ void MainWindow::updatePremiumInfo()
 	}
 }
 
+void MainWindow::updateZeroconfService()
+{
+	if (!m_AppConfig.wizardShouldRun()) {
+		if (m_pZeroconfService) {
+			delete m_pZeroconfService;
+		}
+
+		m_pZeroconfService = new ZeroconfService(this);
+	}
+}
+
+void MainWindow::on_m_pGroupClient_toggled(bool on)
+{
+	m_pGroupServer->setChecked(!on);
+	updateZeroconfService();
+}
+
+void MainWindow::on_m_pGroupServer_toggled(bool on)
+{
+	m_pGroupClient->setChecked(!on);
+	updateZeroconfService();
+}
+
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
 {
 	QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a synergys config file"), QString(), synergyConfigFilter);
@@ -841,10 +871,35 @@ void MainWindow::on_m_pActionSettings_triggered()
 	}
 }
 
-void MainWindow::on_m_pButtonConfigureServer_clicked()
+void MainWindow::autoAddScreen(const QString name)
+{
+	int r = m_ServerConfig.autoAddScreen(name);
+	if (r != kAutoAddScreenOk) {
+		switch (r) {
+		case kAutoAddScreenNoServer:
+			showConfigureServer(
+				tr("Please add the server (%1) to the grid.")
+					.arg(appConfig().screenName()));
+			break;
+
+		case kAutoAddScreenNoSpace:
+			showConfigureServer(
+				tr("Please add the client (%1) to the grid.").arg(name));
+			break;
+		}
+	}
+}
+
+void MainWindow::showConfigureServer(const QString& message)
 {
 	ServerConfigDialog dlg(this, serverConfig(), appConfig().screenName());
+	dlg.message(message);
 	dlg.exec();
+}
+
+void MainWindow::on_m_pButtonConfigureServer_clicked()
+{
+	showConfigureServer();
 }
 
 void MainWindow::on_m_pActionWizard_triggered()

@@ -252,7 +252,7 @@
        </sizepolicy>
       </property>
       <property name="title">
-       <string>&amp;Client (use another computer's keyboard and mouse):</string>
+       <string>&amp;Client (use another computer's mouse and keyboard):</string>
       </property>
       <property name="checkable">
        <bool>true</bool>
