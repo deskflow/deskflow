@@ -64,7 +64,7 @@ class ServerConfig : public BaseConfig
 		bool save(const QString& fileName) const;
 		void save(QFile& file) const;
 		int numScreens() const;
-		bool autoAddScreen(const QString name);
+		void autoAddScreen(const QString name);
 
 	protected:
 		QSettings& settings() { return *m_pSettings; }

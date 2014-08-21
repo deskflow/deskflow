@@ -88,10 +88,7 @@ void ZeroconfService::clientDetected(const QList<ZeroconfRecord>& list)
 	foreach (ZeroconfRecord record, list) {
 		m_pMainWindow->appendLogNote(tr("zeroconf client detected: %1").arg(
 			record.serviceName));
-		if (!m_pMainWindow->serverConfig().autoAddScreen(record.serviceName)) {
-			QMessageBox::warning(0, tr("Zero configuration service"),
-				tr("Zero configuration service detectes a client, but doesn't know where to add it. Please use Configure Server button"));
-		}
+		m_pMainWindow->serverConfig().autoAddScreen(record.serviceName);
 	}
 
 	if (!list.isEmpty()) {

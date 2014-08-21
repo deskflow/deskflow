@@ -20,6 +20,7 @@
 #include "Hotkey.h"
 
 #include <QtCore>
+#include <QMessageBox>
 
 static const struct
 {
@@ -266,18 +267,21 @@ int ServerConfig::numScreens() const
 	return rval;
 }
 
-bool ServerConfig::autoAddScreen(const QString name)
+void ServerConfig::autoAddScreen(const QString name)
 {
-	bool success = false;
 	int serverIndex = -1;
 	int targetIndex = -1;
 	if(!findScreenName(m_ServerName, serverIndex)) {
-		return success;
+		QMessageBox::warning(0, QObject::tr("Zero configuration service"),
+			QObject::tr("Zero configuration service detectes a client, but "
+			"there is no machine named %1 in the server configuration.")
+			.arg(m_ServerName));
 	}
 	if (findScreenName(name, targetIndex)) {
-		return true;
+		return;
 	}
 
+	bool success = false;
 	for (unsigned int i = 0; i < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]); i++) {
 		int idx = adjacentScreenIndex(serverIndex, neighbourDirs[i].x, neighbourDirs[i].y);
 		if (idx != -1 && screens()[idx].isNull()) {
@@ -287,9 +291,13 @@ bool ServerConfig::autoAddScreen(const QString name)
 		}
 	}
 
-	saveSettings();
+	if (!success) {
+		QMessageBox::warning(0, QObject::tr("Zero configuration service"),
+			QObject::tr("Zero configuration service detectes a client, but "
+			"doesn't know where to add it. Please use Configure Server button"));
+	}
 
-	return success;
+	saveSettings();
 }
 
 bool ServerConfig::findScreenName(QString name, int& index)
