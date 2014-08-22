@@ -104,6 +104,8 @@
         <File Source="$(var.QtPath)\QtGui4.dll" CompanionFile="GuiProgram" />
         <File Source="$(var.QtPath)\QtNetwork4.dll" CompanionFile="GuiProgram" />
         
+        <File Source="$(var.ExtPath)\bonjour\x64\dnssd.dll" CompanionFile="GuiProgram" />
+
       </Component>
       
     </ComponentGroup>
