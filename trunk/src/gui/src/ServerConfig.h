@@ -92,7 +92,7 @@ class ServerConfig : public BaseConfig
 
 	private:
 		bool findScreenName(const QString& name, int& index);
-		bool tryFixNoServer(const QString& name, int& index);
+		bool fixNoServer(const QString& name, int& index);
 
 	private:
 		QSettings* m_pSettings;
