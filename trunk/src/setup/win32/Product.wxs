@@ -52,6 +52,19 @@
       NOT LEGACY_UNINSTALL_EXISTS
     </Condition>
 
+    <Property Id="BONJOUR_INSTALLED">
+      <RegistrySearch
+        Id="BonjourRegistrySearch"
+        Root="HKLM"
+        Key="SOFTWARE\Classes\AppID\Bonjour.DLL"
+        Name="AppID"
+        Type="raw" />
+    </Property>
+
+    <Condition Message="This beta version requires Bonjour to be installed. Please visit synergy-project.org/bonjour/ to download the Bonjour installer.">
+      <![CDATA[Installed OR BONJOUR_INSTALLED]]>
+    </Condition>
+    
     <CustomAction Id="StartGui" FileKey="GuiProgram" ExeCommand="" Return="asyncNoWait" Execute="deferred" Impersonate="yes" />
     
   </Product>
