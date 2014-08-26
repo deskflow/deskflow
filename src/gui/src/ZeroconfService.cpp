@@ -56,7 +56,7 @@ ZeroconfService::ZeroconfService(MainWindow* mainWindow) :
 	}
 
 	connect(m_pZeroconfBrowser, SIGNAL(error(DNSServiceErrorType)),
-		this, SLOT(errorHandle(int32_t)));
+		this, SLOT(errorHandle(DNSServiceErrorType)));
 }
 
 ZeroconfService::~ZeroconfService()
@@ -96,7 +96,7 @@ void ZeroconfService::clientDetected(const QList<ZeroconfRecord>& list)
 	}
 }
 
-void ZeroconfService::errorHandle(int32_t errorCode)
+void ZeroconfService::errorHandle(DNSServiceErrorType errorCode)
 {
 	QMessageBox::critical(0, tr("Zero configuration service"),
 		tr("Error code: %1.").arg(errorCode));
