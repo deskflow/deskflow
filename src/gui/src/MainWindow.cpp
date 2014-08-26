@@ -112,6 +112,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
 	updateZeroconfService();
 
+	m_pAutoConnectCheckBox->setChecked(appConfig.autoConnect());
 }
 
 MainWindow::~MainWindow()
@@ -808,9 +809,12 @@ void MainWindow::updateZeroconfService()
 	if (!m_AppConfig.wizardShouldRun()) {
 		if (m_pZeroconfService) {
 			delete m_pZeroconfService;
+			m_pZeroconfService = NULL;
 		}
 
-		m_pZeroconfService = new ZeroconfService(this);
+		if (m_AppConfig.autoConnect() || synergyType() == synergyServer) {
+			m_pZeroconfService = new ZeroconfService(this);
+		}
 	}
 }
 
@@ -934,4 +938,11 @@ void MainWindow::on_m_pElevateCheckBox_toggled(bool checked)
 void MainWindow::on_m_pButtonApply_clicked()
 {
 	startSynergy();
+}
+
+void MainWindow::on_m_pAutoConnectCheckBox_toggled(bool checked)
+{
+	m_pLineEditHostname->setDisabled(checked);
+	appConfig().setAutoConnect(checked);
+	updateZeroconfService();
 }

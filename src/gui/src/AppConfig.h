@@ -70,6 +70,8 @@ class AppConfig
 		const QString& premiumEmail() const { return m_PremiumEmail; }
 		const QString& premiumToken() const { return m_PremiumToken; }
 		bool startedBefore() const { return m_StartedBefore; }
+		bool autoConnect() const { return m_AutoConnect; }
+		void setAutoConnect(bool autoConnect);
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -116,6 +118,7 @@ class AppConfig
 		QString m_PremiumEmail;
 		QString m_PremiumToken;
 		bool m_StartedBefore;
+		bool m_AutoConnect;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

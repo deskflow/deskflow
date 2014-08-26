@@ -171,6 +171,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		ZeroconfService* m_pZeroconfService;
 
 private slots:
+	void on_m_pAutoConnectCheckBox_toggled(bool checked);
 	void on_m_pButtonApply_clicked();
 };
 
