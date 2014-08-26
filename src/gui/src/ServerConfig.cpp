@@ -272,7 +272,7 @@ int ServerConfig::autoAddScreen(const QString name)
 	int serverIndex = -1;
 	int targetIndex = -1;
 	if (!findScreenName(m_ServerName, serverIndex)) {
-		if (!tryFixNoServer(m_ServerName, serverIndex)) {
+		if (!fixNoServer(m_ServerName, serverIndex)) {
 			return kAutoAddScreenNoServer;
 		}
 	}
@@ -314,7 +314,7 @@ bool ServerConfig::findScreenName(const QString& name, int& index)
 	return found;
 }
 
-bool ServerConfig::tryFixNoServer(const QString& name, int& index)
+bool ServerConfig::fixNoServer(const QString& name, int& index)
 {
 	bool fixed = false;
 	if (screens()[serverDefaultIndex].isNull()) {
