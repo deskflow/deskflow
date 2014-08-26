@@ -31,6 +31,7 @@ class QSettings;
 class QString;
 class QFile;
 class ServerConfigDialog;
+class MainWindow;
 
 class ServerConfig : public BaseConfig
 {
@@ -38,7 +39,8 @@ class ServerConfig : public BaseConfig
 	friend QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config);
 
 	public:
-		ServerConfig(QSettings* settings, int numColumns, int numRows, QString serverName);
+		ServerConfig(QSettings* settings, int numColumns, int numRows,
+			QString serverName, MainWindow* mainWindow);
 		~ServerConfig();
 
 	public:
@@ -93,6 +95,8 @@ class ServerConfig : public BaseConfig
 	private:
 		bool findScreenName(const QString& name, int& index);
 		bool fixNoServer(const QString& name, int& index);
+		int showAddClientMsgBox(const QString& clientName);
+		void addToFirstEmptyGrid(const QString& clientName);
 
 	private:
 		QSettings* m_pSettings;
@@ -112,14 +116,16 @@ class ServerConfig : public BaseConfig
 		QList<bool> m_SwitchCorners;
 		HotkeyList m_Hotkeys;
 		QString m_ServerName;
+		MainWindow* m_pMainWindow;
 };
 
 QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config);
 
 enum {
 	kAutoAddScreenOk,
-	kAutoAddScreenNoServer,
-	kAutoAddScreenNoSpace
+	kAutoAddScreenManualServer,
+	kAutoAddScreenManualClient,
+	kAutoAddScreenIgnore
 };
 
 #endif

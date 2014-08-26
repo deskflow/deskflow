@@ -291,7 +291,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="3" column="0">
         <widget class="QCheckBox" name="m_pAutoConnectCheckBox">
          <property name="text">
           <string>Auto connect</string>

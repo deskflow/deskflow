@@ -18,8 +18,12 @@
 
 #include "ServerConfig.h"
 #include "Hotkey.h"
+#include "MainWindow.h"
 
 #include <QtCore>
+#include <QMessageBox>
+#include <QAbstractButton>
+#include <QPushButton>
 
 static const struct
 {
@@ -35,14 +39,23 @@ static const struct
 
 };
 
+enum {
+	kAddClientRight,
+	kAddClientLeft,
+	kAddClientOther,
+	kAddClientIgnore
+};
+
 const int serverDefaultIndex = 7;
 
-ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows , QString serverName) :
+ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows ,
+				QString serverName, MainWindow* mainWindow) :
 	m_pSettings(settings),
 	m_Screens(),
 	m_NumColumns(numColumns),
 	m_NumRows(numRows),
-	m_ServerName(serverName)
+	m_ServerName(serverName),
+	m_pMainWindow(mainWindow)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -273,7 +286,7 @@ int ServerConfig::autoAddScreen(const QString name)
 	int targetIndex = -1;
 	if (!findScreenName(m_ServerName, serverIndex)) {
 		if (!fixNoServer(m_ServerName, serverIndex)) {
-			return kAutoAddScreenNoServer;
+			return kAutoAddScreenManualServer;
 		}
 	}
 	if (findScreenName(name, targetIndex)) {
@@ -281,18 +294,44 @@ int ServerConfig::autoAddScreen(const QString name)
 		return kAutoAddScreenOk;
 	}
 
+	int result = showAddClientMsgBox(name);
+
+	if (result == kAddClientIgnore) {
+		return kAutoAddScreenIgnore;
+	}
+
+	if (result == kAddClientOther) {
+		addToFirstEmptyGrid(name);
+		return kAutoAddScreenManualClient;
+	}
+
 	bool success = false;
-	for (unsigned int i = 0; i < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]); i++) {
-		int idx = adjacentScreenIndex(serverIndex, neighbourDirs[i].x, neighbourDirs[i].y);
-		if (idx != -1 && screens()[idx].isNull()) {
+	int startIndex = serverIndex;
+	int offset = 1;
+	int dirIndex = 0;
+
+	if (result == kAddClientLeft) {
+		offset = -1;
+		dirIndex = 1;
+	}
+
+	int idx = adjacentScreenIndex(startIndex, neighbourDirs[dirIndex].x,
+					neighbourDirs[dirIndex].y);
+	while (idx != -1) {
+		if (screens()[idx].isNull()) {
 			m_Screens[idx].setName(name);
 			success = true;
 			break;
 		}
+
+		startIndex += offset;
+		idx = adjacentScreenIndex(startIndex, neighbourDirs[dirIndex].x,
+					neighbourDirs[dirIndex].y);
 	}
 
 	if (!success) {
-		return kAutoAddScreenNoSpace;
+		addToFirstEmptyGrid(name);
+		return kAutoAddScreenManualClient;
 	}
 
 	saveSettings();
@@ -303,7 +342,6 @@ bool ServerConfig::findScreenName(const QString& name, int& index)
 {
 	bool found = false;
 	for (int i = 0; i < screens().size(); i++) {
-		QString test = screens()[i].name();
 		if (!screens()[i].isNull() &&
 			screens()[i].name().compare(name) == 0) {
 			index = i;
@@ -324,4 +362,49 @@ bool ServerConfig::fixNoServer(const QString& name, int& index)
 	}
 
 	return fixed;
+}
+
+int ServerConfig::showAddClientMsgBox(const QString& clientName)
+{
+	int result = kAddClientIgnore;
+	QWidget* w = dynamic_cast<QWidget*>(m_pMainWindow);
+	QMessageBox msgBox(w);
+	msgBox.setIcon(QMessageBox::Question);
+	msgBox.setWindowTitle(QObject::tr("Incoming client"));
+	msgBox.setText(QObject::tr(
+		"A new client wants to connect. Which side\n"
+		"of this screen is the client (%1) located?")
+		   .arg(clientName));
+
+	QPushButton* left = msgBox.addButton(QObject::tr("Left"), QMessageBox::AcceptRole);
+	QPushButton* right = msgBox.addButton(QObject::tr("Right"), QMessageBox::AcceptRole);
+	QPushButton* other = msgBox.addButton(QObject::tr("Other"), QMessageBox::AcceptRole);
+	QPushButton* ignore = msgBox.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
+	msgBox.setDefaultButton(ignore);
+
+	msgBox.exec();
+
+	QAbstractButton* button = msgBox.clickedButton();
+	QPushButton* clickedButton = dynamic_cast<QPushButton*>(button);
+	if (clickedButton == right) {
+		result = kAddClientRight;
+	}
+	else if (clickedButton == left) {
+		result = kAddClientLeft;
+	}
+	else if (clickedButton == other) {
+		result = kAddClientOther;
+	}
+
+	return result;
+}
+
+void::ServerConfig::addToFirstEmptyGrid(const QString &clientName)
+{
+	for (int i = 0; i < screens().size(); i++) {
+		if (screens()[i].isNull()) {
+			m_Screens[i].setName(clientName);
+			break;
+		}
+	}
 }
