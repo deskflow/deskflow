@@ -93,7 +93,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void clearLog();
 		VersionChecker& versionChecker() { return m_VersionChecker; }
 		QString getScreenName();
-		void startSynergy();
 		ServerConfig& serverConfig() { return m_ServerConfig; }
 		void showConfigureServer(const QString& message);
 		void showConfigureServer() { showConfigureServer(""); }
@@ -104,6 +103,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void appendLogRaw(const QString& text);
 		void appendLogNote(const QString& text);
 		void appendLogError(const QString& text);
+		void startSynergy();
 
 	protected slots:
 		void on_m_pGroupClient_toggled(bool on);
