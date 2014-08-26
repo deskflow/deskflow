@@ -22,6 +22,8 @@
 
 #include <QtCore/QObject>
 
+typedef int32_t  DNSServiceErrorType;
+
 class ZeroconfRegister;
 class ZeroconfBrowser;
 class MainWindow;
@@ -37,7 +39,7 @@ public:
 private slots:
 	void serverDetected(const QList<ZeroconfRecord>& list);
 	void clientDetected(const QList<ZeroconfRecord>& list);
-	void errorHandle(int32_t errorCode);
+	void errorHandle(DNSServiceErrorType errorCode);
 
 private:
 	QString getLocalIPAddresses();
