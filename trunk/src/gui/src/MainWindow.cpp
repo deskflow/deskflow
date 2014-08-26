@@ -65,7 +65,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_AppConfig(appConfig),
 	m_pSynergy(NULL),
 	m_SynergyState(synergyDisconnected),
-	m_ServerConfig(&m_Settings, 5, 3, m_AppConfig.screenName()),
+	m_ServerConfig(&m_Settings, 5, 3, m_AppConfig.screenName(), this),
 	m_pTempConfigFile(NULL),
 	m_pTrayIcon(NULL),
 	m_pTrayIconMenu(NULL),
@@ -880,15 +880,17 @@ void MainWindow::autoAddScreen(const QString name)
 	int r = m_ServerConfig.autoAddScreen(name);
 	if (r != kAutoAddScreenOk) {
 		switch (r) {
-		case kAutoAddScreenNoServer:
+		case kAutoAddScreenManualServer:
 			showConfigureServer(
 				tr("Please add the server (%1) to the grid.")
 					.arg(appConfig().screenName()));
 			break;
 
-		case kAutoAddScreenNoSpace:
+		case kAutoAddScreenManualClient:
 			showConfigureServer(
-				tr("Please add the client (%1) to the grid.").arg(name));
+				tr("Please drag the new client screen (%1) "
+					"to the desired position on the grid.")
+					.arg(name));
 			break;
 		}
 	}
