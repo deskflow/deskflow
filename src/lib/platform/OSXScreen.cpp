@@ -292,13 +292,15 @@ COSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 void
 COSXScreen::getCursorPos(SInt32& x, SInt32& y) const
 {
-	Point mouse;
-	GetGlobalMouse(&mouse);
-	x                = mouse.h;
-	y                = mouse.v;
+	// patch by Jake Petroules for issue 575
+	CGEventRef event = CGEventCreate(NULL);
+	CGPoint mouse = CGEventGetLocation(event);
+	x = mouse.x;
+	y = mouse.y;
 	m_cursorPosValid = true;
-	m_xCursor        = x;
-	m_yCursor        = y;
+	m_xCursor = x;
+	m_yCursor = y;
+	CFRelease(event);
 }
 
 void
@@ -690,21 +692,24 @@ COSXScreen::fakeMouseMove(SInt32 x, SInt32 y)
 void
 COSXScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 {
+	// patch by Jake Petroules for issue 575
+
 	// OS X does not appear to have a fake relative mouse move function.
 	// simulate it by getting the current mouse position and adding to
 	// that.  this can yield the wrong answer but there's not much else
 	// we can do.
 
 	// get current position
-	Point oldPos;
-	GetGlobalMouse(&oldPos);
+	CGEventRef event = CGEventCreate(NULL);
+	CGPoint oldPos = CGEventGetLocation(event);
+	CFRelease(event);
 
 	// synthesize event
 	CGPoint pos;
-	m_xCursor = static_cast<SInt32>(oldPos.h);
-	m_yCursor = static_cast<SInt32>(oldPos.v);
-	pos.x     = oldPos.h + dx;
-	pos.y     = oldPos.v + dy;
+	m_xCursor = static_cast<SInt32>(oldPos.x);
+	m_yCursor = static_cast<SInt32>(oldPos.y);
+	pos.x = oldPos.x + dx;
+	pos.y = oldPos.y + dy;
 	postMouseEvent(pos);
 
 	// we now assume we don't know the current cursor position
@@ -1052,7 +1057,7 @@ COSXScreen::handleSystemEvent(const CEvent& event, void*)
 			// get scroll amount
 			r = GetEventParameter(*carbonEvent,
 					kSynergyMouseScrollAxisX,
-					typeLongInteger,
+					typeSInt32,
 					NULL,
 					sizeof(xScroll),
 					NULL,
@@ -1062,7 +1067,7 @@ COSXScreen::handleSystemEvent(const CEvent& event, void*)
 			}
 			r = GetEventParameter(*carbonEvent,
 					kSynergyMouseScrollAxisY,
-					typeLongInteger,
+					typeSInt32,
 					NULL,
 					sizeof(yScroll),
 					NULL,
@@ -1090,7 +1095,11 @@ COSXScreen::handleSystemEvent(const CEvent& event, void*)
 			break;
 			
 	case kEventClassWindow:
-		SendEventToWindow(*carbonEvent, m_userInputWindow);
+		// patch by Jake Petroules for issue 575
+		// 2nd param was formerly GetWindowEventTarget(m_userInputWindow) which is 32-bit only,
+		// however as m_userInputWindow is never initialized to anything we can take advantage of
+		// the fact that GetWindowEventTarget(NULL) == NULL
+		SendEventToEventTarget(*carbonEvent, NULL);
 		switch (GetEventKind(*carbonEvent)) {
 		case kEventWindowActivated:
 			LOG((CLOG_DEBUG1 "window activated"));
@@ -1514,15 +1523,17 @@ COSXScreen::getScrollSpeedFactor() const
 void
 COSXScreen::enableDragTimer(bool enable)
 {
-	UInt32 modifiers;
-	MouseTrackingResult res;
-
 	if (enable && m_dragTimer == NULL) {
 		m_dragTimer = m_events->newTimer(0.01, NULL);
 		m_events->adoptHandler(CEvent::kTimer, m_dragTimer,
 							new TMethodEventJob<COSXScreen>(this,
 								&COSXScreen::handleDrag));
-		TrackMouseLocationWithOptions(NULL, 0, 0, &m_dragLastPoint, &modifiers, &res);
+		// patch by Jake Petroules for issue 575
+		CGEventRef event = CGEventCreate(NULL);
+		CGPoint mouse = CGEventGetLocation(event);
+		m_dragLastPoint.h = (short)mouse.x;
+		m_dragLastPoint.v = (short)mouse.y;
+		CFRelease(event);
 	}
 	else if (!enable && m_dragTimer != NULL) {
 		m_events->removeHandler(CEvent::kTimer, m_dragTimer);
@@ -1534,15 +1545,15 @@ COSXScreen::enableDragTimer(bool enable)
 void
 COSXScreen::handleDrag(const CEvent&, void*)
 {
-	Point p;
-	UInt32 modifiers;
-	MouseTrackingResult res; 
+	// patch by Jake Petroules for issue 575
+	CGEventRef event = CGEventCreate(NULL);
+	CGPoint p = CGEventGetLocation(event);
+	CFRelease(event);
 
-	TrackMouseLocationWithOptions(NULL, 0, 0, &p, &modifiers, &res);
-
-	if (res != kMouseTrackingTimedOut && (p.h != m_dragLastPoint.h || p.v != m_dragLastPoint.v)) {
-		m_dragLastPoint = p;
-		onMouseMove((SInt32)p.h, (SInt32)p.v);
+	if ((short)p.x != m_dragLastPoint.h || (short)p.y != m_dragLastPoint.v) {
+		m_dragLastPoint.h = (short)p.x;
+		m_dragLastPoint.v = (short)p.y;
+		onMouseMove((SInt32)p.x, (SInt32)p.y);
 	}
 }
 
