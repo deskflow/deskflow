@@ -554,7 +554,25 @@ class InternalCommands:
  		return (major, minor, rev)
 
 	def getMacSdkDir(self):
-		return "/Developer/SDKs/MacOSX" + self.macSdk + ".sdk"
+		# patch by Jake Petroules for issue 575
+		sdkName = "macosx" + self.macSdk
+
+		# Ideally we'll use xcrun (which is influenced by $DEVELOPER_DIR), then try a couple
+		# fallbacks to known paths if xcrun is not available
+		sdkPath = commands.getoutput("xcrun --show-sdk-path --sdk " + sdkName)
+		if sdkPath:
+			return sdkPath
+
+		developerDir = os.getenv("DEVELOPER_DIR")
+		if not developerDir:
+			developerDir = "/Applications/Xcode.app/Contents/Developer"
+
+		sdkDirName = sdkName.replace("macosx", "MacOSX")
+		sdkPath = developerDir + "/Platforms/MacOSX.platform/Developer/SDKs/" + sdkDirName + ".sdk"
+		if os.path.exists(sdkPath):
+			return sdkPath
+
+		return "/Developer/SDKs/" + sdkDirName + ".sdk"
 	
 	# http://tinyurl.com/cs2rxxb
 	def fixCmakeEclipseBug(self):
