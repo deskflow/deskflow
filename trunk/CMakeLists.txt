@@ -164,14 +164,14 @@ if (UNIX)
 		exec_program(uname ARGS -v OUTPUT_VARIABLE DARWIN_VERSION)
 		string(REGEX MATCH "[0-9]+" DARWIN_VERSION ${DARWIN_VERSION})
 		message(STATUS "DARWIN_VERSION=${DARWIN_VERSION}")
-		# patch by Jake Petroules for issue 575
 		if (DARWIN_VERSION LESS 9)
-			# 10.4: Universal (32-bit and 64-bit Intel and PowerPC)
-		set(CMAKE_OSX_ARCHITECTURES "ppc;ppc64;i386:x86_64"
+			# 10.4: universal (32-bit intel and power pc) 
+			set(CMAKE_OSX_ARCHITECTURES "ppc;i386"
 				CACHE STRING "" FORCE)
 		else()
-			# 10.5+: Intel only
-			set(CMAKE_OSX_ARCHITECTURES "i386;x86_64"
+			# 10.5+: 32-bit only -- missing funcs in 64-bit os libs
+			# such as GetGlobalMouse.
+			set(CMAKE_OSX_ARCHITECTURES "i386"
 				CACHE STRING "" FORCE)
 		endif()
 		
