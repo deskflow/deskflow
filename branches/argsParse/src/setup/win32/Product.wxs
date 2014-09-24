@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix
+  xmlns="http://schemas.microsoft.com/wix/2006/wi"
+  xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension"
+  xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  
+  <?include Include.wxi?>
+
+  <Product
+      Id="*"
+      UpgradeCode="$(var.UpgradeGuid)"
+      Name="$(var.Name) ($(var.PlatformSimpleName))"
+      Language="1033"
+      Version="$(var.Version)"
+      Manufacturer="$(var.Author)">
+    
+    <Package InstallerVersion="300" Compressed="yes" InstallScope="perMachine" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of $(var.Name) is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+    <UIRef Id="WixUI_InstallDir" />
+    
+    <!-- causes ICE61 warning, but stops user from installing many instances from nightly builds. -->
+    <Upgrade Id="$(var.UpgradeGuid)">
+      <UpgradeVersion Minimum="0.0.0.0" Property="UPGRADE" />
+    </Upgrade>
+
+    <Feature Id="ProductFeature" Title="$(var.Name)">
+      <ComponentGroupRef Id="ProductComponents" />
+      <MergeRef Id="CRT" />
+    </Feature>
+
+    <Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
+
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.ResPath)\License.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="$(var.ResPath)\dialog.bmp" />
+
+    <Property Id="ARPPRODUCTICON" Value="synergy.ico" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
+    
+    <Property Id="LEGACY_UNINSTALL_EXISTS">
+      <RegistrySearch
+        Id="LegacyRegistrySearch" Root="HKLM"
+        Key="SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Synergy"
+        Name="UninstallString" Win64="no" Type="file">
+        <FileSearch Id="LegacyFileSearch" Name="uninstall.exe" />
+      </RegistrySearch>
+    </Property>
+    
+    <Condition Message="An existing installation of $(var.Name) was detected, please uninstall it before continuing.">
+      NOT LEGACY_UNINSTALL_EXISTS
+    </Condition>
+
+    <Property Id="BONJOUR_INSTALLED">
+      <RegistrySearch
+        Id="BonjourRegistrySearch"
+        Root="HKLM"
+        Key="SOFTWARE\Classes\AppID\Bonjour.DLL"
+        Name="AppID"
+        Type="raw" />
+    </Property>
+
+    <Condition Message="This beta version requires Bonjour to be installed. Please visit synergy-project.org/bonjour/ to download the Bonjour installer.">
+      <![CDATA[Installed OR BONJOUR_INSTALLED]]>
+    </Condition>
+    
+    <CustomAction Id="StartGui" FileKey="GuiProgram" ExeCommand="" Return="asyncNoWait" Execute="deferred" Impersonate="yes" />
+    
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="$(var.ProgramFilesFolder)">
+        <Directory Id="INSTALLFOLDER" Name="$(var.Name)">
+          <Merge Id="CRT" Language="0" SourceFile="$(var.CRT)" DiskId="1" />
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder" />
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      
+      <Component Id="Core" Guid="EC9AD3B0-277C-4157-B5C8-5FD5B6A5F4AD">
+        
+        <File Source="$(var.BinPath)/synergyd.exe" KeyPath="yes" />
+        
+        <ServiceInstall
+            Id="ServiceInstall" Name="Synergy" DisplayName="$(var.Name)"
+            Description="Controls the $(var.Name) foreground processes."
+            Type="ownProcess" Start="auto" ErrorControl="normal" />
+        
+        <ServiceControl
+            Id="ServiceControl" Name="Synergy"
+            Start="install" Stop="both" Remove="uninstall" />
+
+        <File Source="$(var.BinPath)/synergys.exe">
+          <fire:FirewallException Id="SereverFirewallException" Name="$(var.Name)" Scope="any" IgnoreFailure="yes" />
+        </File>
+        
+        <File Source="$(var.BinPath)/synergyc.exe" />
+        <File Source="$(var.BinPath)/syntool.exe" />
+        <File Source="$(var.BinPath)/synwinhk.dll" />
+        
+      </Component>
+      
+      <Component Id="Gui" Guid="BAC8149B-6287-45BF-9C27-43D71ED40214">
+        <File Id="GuiProgram" Source="$(var.BinPath)/synergy.exe" KeyPath="yes">
+          <Shortcut Id="GuiShortcut" Name="$(var.Name)" Directory="ProgramMenuFolder" Icon="synergy.ico" Advertise="yes" />
+        </File>
+
+        <File Source="$(var.QtPath)\libgcc_s_dw2-1.dll" CompanionFile="GuiProgram" />
+        <File Source="$(var.QtPath)\mingwm10.dll" CompanionFile="GuiProgram" />
+        <File Source="$(var.QtPath)\QtCore4.dll" CompanionFile="GuiProgram" />
+        <File Source="$(var.QtPath)\QtGui4.dll" CompanionFile="GuiProgram" />
+        <File Source="$(var.QtPath)\QtNetwork4.dll" CompanionFile="GuiProgram" />
+        
+        <File Source="$(var.ExtPath)\bonjour\x64\dnssd.dll" CompanionFile="GuiProgram" />
+
+      </Component>
+      
+    </ComponentGroup>
+  </Fragment>
+</Wix>

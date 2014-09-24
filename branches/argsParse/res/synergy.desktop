@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Synergy
+Comment=Share your keyboard and mouse over a network
+Exec=synergy
+Icon=/usr/share/icons/synergy.ico
+Type=Application
+Categories=Utility;
