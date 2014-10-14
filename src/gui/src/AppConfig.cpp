@@ -121,8 +121,6 @@ void AppConfig::loadSettings()
 	m_CryptoPass = settings().value("cryptoPass", "").toString();
 	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
 	m_Language = settings().value("language", QLocale::system().name()).toString();
-	m_PremiumEmail = settings().value("premiumEmail", "").toString();
-	m_PremiumToken = settings().value("premiumToken", "").toString();
 	m_StartedBefore = settings().value("startedBefore", false).toBool();
 	m_AutoConnect = settings().value("autoConnect", true).toBool();
 }
@@ -139,8 +137,6 @@ void AppConfig::saveSettings()
 	settings().setValue("cryptoPass", m_CryptoPass);
 	settings().setValue("cryptoEnabled", m_CryptoEnabled);
 	settings().setValue("language", m_Language);
-	settings().setValue("premiumEmail", m_PremiumEmail);
-	settings().setValue("premiumToken", m_PremiumToken);
 	settings().setValue("startedBefore", m_StartedBefore);
 	settings().setValue("autoConnect", m_AutoConnect);
 }
@@ -159,13 +155,6 @@ void AppConfig::setCryptoPass(const QString &s)
 	{
 		m_CryptoPass = hash(s);
 	}
-}
-
-bool AppConfig::isPremium()
-{
-	QString hashSrc = m_PremiumEmail + getFirstMacAddress();
-	QString hashResult = hash(hashSrc);
-	return hashResult == m_PremiumToken;
 }
 
 void AppConfig::setAutoConnect(bool autoConnect)

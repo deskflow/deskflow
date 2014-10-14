@@ -147,7 +147,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void stopDesktop();
 		void changeEvent(QEvent* event);
 		void retranslateMenuBar();
-		void updatePremiumInfo();
 
 	private:
 		QSettings& m_Settings;

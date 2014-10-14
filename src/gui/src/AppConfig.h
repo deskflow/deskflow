@@ -30,7 +30,7 @@
 //
 //   1: first version
 //   2: added language page
-//   3: added premium page
+//   3: added premium page and removed
 //
 const int kWizardVersion = 3;
 
@@ -67,8 +67,6 @@ class AppConfig
 		ProcessMode processMode() const { return m_ProcessMode; }
 		bool wizardShouldRun() const { return m_WizardLastRun < kWizardVersion; }
 		const QString& language() const { return m_Language; }
-		const QString& premiumEmail() const { return m_PremiumEmail; }
-		const QString& premiumToken() const { return m_PremiumToken; }
 		bool startedBefore() const { return m_StartedBefore; }
 		bool autoConnect() const { return m_AutoConnect; }
 		void setAutoConnect(bool autoConnect);
@@ -80,7 +78,6 @@ class AppConfig
 
 		bool detectPath(const QString& name, QString& path);
 		void persistLogDir();
-		bool isPremium();
 
 	protected:
 		QSettings& settings() { return *m_pSettings; }
@@ -93,8 +90,6 @@ class AppConfig
 		void setCryptoEnabled(bool b) { m_CryptoEnabled = b; }
 		void setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
 		void setLanguage(const QString language) { m_Language = language; }
-		void setPremiumEmail(const QString premiumEmail) { m_PremiumEmail = premiumEmail; }
-		void setPremiumToken(const QString premiumToken) { m_PremiumToken = premiumToken; }
 		void setStartedBefore(bool b) { m_StartedBefore = b; }
 
 		void loadSettings();
@@ -115,8 +110,6 @@ class AppConfig
 		QString m_CryptoPass;
 		ProcessMode m_ProcessMode;
 		QString m_Language;
-		QString m_PremiumEmail;
-		QString m_PremiumToken;
 		bool m_StartedBefore;
 		bool m_AutoConnect;
 

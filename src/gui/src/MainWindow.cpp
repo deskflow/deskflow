@@ -128,8 +128,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::open()
 {
-	updatePremiumInfo();
-
 	createTrayIcon();
 
 	showNormal();
@@ -416,10 +414,9 @@ void MainWindow::startSynergy()
 	}
 
 #ifndef Q_OS_LINUX
-	if (appConfig().isPremium())
-	{
-		args << "--enable-drag-drop";
-	}
+
+	args << "--enable-drag-drop";
+
 #endif
 
 	if ((synergyType() == synergyClient && !clientArgs(args, app))
@@ -781,26 +778,11 @@ void MainWindow::changeEvent(QEvent* event)
 		case QEvent::LanguageChange:
 			retranslateUi(this);
 			retranslateMenuBar();
-			updatePremiumInfo();
 			break;
 
 		default:
 			QMainWindow::changeEvent(event);
 		}
-	}
-}
-
-void MainWindow::updatePremiumInfo()
-{
-	if (m_AppConfig.isPremium())
-	{
-		m_pWidgetPremium->hide();
-		setWindowTitle(tr("Synergy Premium"));
-	}
-	else
-	{
-		m_pWidgetPremium->show();
-		setWindowTitle(tr("Synergy"));
 	}
 }
 
@@ -912,7 +894,6 @@ void MainWindow::on_m_pActionWizard_triggered()
 {
 	SetupWizard wizard(*this, false);
 	wizard.exec();
-	updatePremiumInfo();
 }
 
 void MainWindow::on_m_pElevateCheckBox_toggled(bool checked)

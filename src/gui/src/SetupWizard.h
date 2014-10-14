@@ -40,9 +40,6 @@ protected:
 	void reject();
 
 private:
-	bool isPremiumLoginValid(QMessageBox& message);
-
-private:
 	MainWindow& m_MainWindow;
 	bool m_StartMain;
 	SynergyLocale m_Locale;
@@ -50,5 +47,4 @@ private:
 private slots:
 	void on_m_pCheckBoxEnableCrypto_stateChanged(int );
 	void on_m_pComboLanguage_currentIndexChanged(int index);
-	void on_m_pRadioButtonPremiumLogin_toggled(bool checked);
 };

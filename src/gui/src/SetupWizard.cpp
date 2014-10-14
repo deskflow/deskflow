@@ -19,15 +19,8 @@
 #include "MainWindow.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
-#include "PremiumAuth.h"
 
 #include <QMessageBox>
-#include <QDesktopServices>
-#include <QUrl>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-
-#define PREMIUM_REGISTER_URL "http://synergy-project.org/donate/?source=gui-wizard"
 
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_MainWindow(mainWindow),
@@ -58,13 +51,7 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 
 	m_Locale.fillLanguageComboBox(m_pComboLanguage);
 	setIndexFromItemData(m_pComboLanguage, m_MainWindow.appConfig().language());
-	AppConfig& appConfig = m_MainWindow.appConfig();
-	QString premiumEmail = appConfig.premiumEmail();
-	if (!premiumEmail.isEmpty())
-	{
-		m_pRadioButtonPremiumLogin->setChecked(true);
-		m_pLineEditPremiumEmail->setText(premiumEmail);
-	}
+
 }
 
 SetupWizard::~SetupWizard()
@@ -84,32 +71,6 @@ bool SetupWizard::validateCurrentPage()
 
 		if (!result)
 		{
-			message.setText(tr("Please select an option."));
-			message.exec();
-			return false;
-		}
-	}
-	else if (currentPage() == m_pPremiumUserPage)
-	{
-		if (m_pRadioButtonPremiumLogin->isChecked())
-		{
-			if (m_pLineEditPremiumEmail->text().isEmpty() ||
-				m_pLineEditPremiumPassword->text().isEmpty())
-			{
-				message.setText(tr("Please enter your email address and password."));
-				message.exec();
-				return false;
-			}
-			else if (!isPremiumLoginValid(message))
-			{
-				return false;
-			}
-		}
-		else if (m_pRadioButtonPremiumLater->isChecked())
-		{
-			return true;
-		}
-		else {
 			message.setText(tr("Please select an option."));
 			message.exec();
 			return false;
@@ -144,19 +105,6 @@ void SetupWizard::accept()
 	AppConfig& appConfig = m_MainWindow.appConfig();
 
 	appConfig.setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
-	appConfig.setPremiumEmail(m_pLineEditPremiumEmail->text());
-
-	if (!m_pRadioButtonPremiumLogin->isChecked())
-	{
-		appConfig.setPremiumToken("");
-	}
-	else
-	{
-		QString mac = getFirstMacAddress();
-		QString hashSrc = m_pLineEditPremiumEmail->text() + mac;
-		QString hashResult = hash(hashSrc);
-		appConfig.setPremiumToken(hashResult);
-	}
 
 	appConfig.setWizardHasRun();
 	appConfig.saveSettings();
@@ -204,66 +152,4 @@ void SetupWizard::on_m_pComboLanguage_currentIndexChanged(int index)
 {
 	QString ietfCode = m_pComboLanguage->itemData(index).toString();
 	QSynergyApplication::getInstance()->switchTranslator(ietfCode);
-}
-
-void SetupWizard::on_m_pRadioButtonPremiumLogin_toggled(bool checked)
-{
-	m_pLineEditPremiumEmail->setEnabled(checked);
-	m_pLineEditPremiumPassword->setEnabled(checked);
-}
-
-bool SetupWizard::isPremiumLoginValid(QMessageBox& message)
-{
-	QString email = m_pLineEditPremiumEmail->text();
-	QString password = m_pLineEditPremiumPassword->text();
-
-	QString responseJson;
-	try
-	{
-		PremiumAuth auth;
-		responseJson = auth.request(email, password);
-	}
-	catch (std::exception& e)
-	{
-		message.critical(
-			this, "Error",
-			tr("Sorry, an error occured while trying to sign in. "
-			   "Please contact the help desk, and provide the "
-			   "following details.\n\n%1")
-			.arg(e.what()));
-		return false;
-	}
-
-	QRegExp resultRegex(".*\"result\".*:.*(true|false).*");
-	if (resultRegex.exactMatch(responseJson)) {
-		QString boolString = resultRegex.cap(1);
-		if (boolString == "true") {
-			return true;
-		}
-		else if (boolString == "false") {
-			message.critical(
-				this, "Error",
-				tr("Login failed, invalid email or password."));
-			return false;
-		}
-	}
-	else {
-		QRegExp errorRegex(".*\"error\".*:.*\"(.+)\".*");
-		if (errorRegex.exactMatch(responseJson)) {
-
-			// replace "\n" with real new lines.
-			QString error = errorRegex.cap(1).replace("\\n", "\n");
-
-			message.critical(
-				this, "Error",
-				tr("Login failed, an error occurred.\n\n%1").arg(error));
-			return false;
-		}
-	}
-
-	message.critical(
-		this, "Error",
-		tr("Login failed, an error occurred.\n\nServer response:\n\n%1")
-			.arg(responseJson));
-	return false;
 }
