@@ -1782,29 +1782,32 @@ CXWindowsScreen::doSelectEvents(Window w) const
 	// that we select PointerMotionMask on every window.  we also select
 	// SubstructureNotifyMask in order to get CreateNotify events so we
 	// select events on new windows too.
-	//
-	// note that this can break certain clients due a design flaw of X.
-	// X will deliver a PointerMotion event to the deepest window in the
-	// hierarchy that contains the pointer and has PointerMotionMask
-	// selected by *any* client.  if another client doesn't select
-	// motion events in a subwindow so the parent window will get them
-	// then by selecting for motion events on the subwindow we break
-	// that client because the parent will no longer get the events.
-
-	// FIXME -- should provide some workaround for event selection
-	// design flaw.  perhaps only select for motion events on windows
-	// that already do or are top-level windows or don't propagate
-	// pointer events.  or maybe an option to simply poll the mouse.
 
 	// we don't want to adjust our grab window
 	if (w == m_window) {
 		return;
 	}
 
+       // X11 has a design flaw. If *no* client selected PointerMotionMask for
+       // a window, motion events will be delivered to that window's parent.
+       // If *any* client, not necessarily the owner, selects PointerMotionMask
+       // on such a window, X will stop propagating motion events to its
+       // parent. This breaks applications that rely on event propagation
+       // behavior.
+       //
+       // Avoid selecting PointerMotionMask unless some other client selected
+       // it already.
+       long mask = SubstructureNotifyMask;
+       XWindowAttributes attr;
+       XGetWindowAttributes(m_display, w, &attr);
+       if ((attr.all_event_masks & PointerMotionMask) == PointerMotionMask) {
+               mask |= PointerMotionMask;
+       }
+
 	// select events of interest.  do this before querying the tree so
 	// we'll get notifications of children created after the XQueryTree()
 	// so we won't miss them.
-	XSelectInput(m_display, w, PointerMotionMask | SubstructureNotifyMask);
+       XSelectInput(m_display, w, mask);
 
 	// recurse on child windows
 	Window rw, pw, *cw;
