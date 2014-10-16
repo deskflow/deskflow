@@ -302,9 +302,9 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 				LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
 
 				CString debugArg("--debug");
-				UInt32 debugArgPos = static_cast<UInt32>(command.find(debugArg));
+				size_t debugArgPos = command.find(debugArg);
 				if (debugArgPos != CString::npos) {
-					UInt32 from = debugArgPos + static_cast<UInt32>(debugArg.size()) + 1;
+					UInt32 from = static_cast<UInt32>(debugArgPos) + static_cast<UInt32>(debugArg.size()) + 1;
 					UInt32 nextSpace = static_cast<UInt32>(command.find(" ", from));
 					CString logLevel(command.substr(from, nextSpace - from));
 				

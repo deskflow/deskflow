@@ -142,7 +142,7 @@ COSXScreenSaver::launchTerminationCallback(
 	OSStatus		result;
     ProcessSerialNumber psn; 
     EventParamType	actualType;
-    UInt32			actualSize;
+    ByteCount		actualSize;
 
     result = GetEventParameter(theEvent, kEventParamProcessID,
 							   typeProcessSerialNumber, &actualType,
