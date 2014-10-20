@@ -1192,7 +1192,7 @@ class InternalCommands:
 			shutil.rmtree(exportPath)
 
 		print 'Exporting repository to: ' + exportPath
-		err = os.system('svn export . ' + exportPath)
+		err = os.system('git archive master | tar -x -C ' + exportPath)
 		if err != 0:
 			raise Exception('Repository export failed: ' + str(err))		
 
