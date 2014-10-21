@@ -62,6 +62,10 @@ enum {
 	kSynergyMouseScrollAxisY = 'saxy'
 };
 
+enum {
+	kCarbonLoopWaitTimeout = 10
+};
+
 // TODO: upgrade deprecated function usage in these functions.
 void setZeroSuppressionInterval();
 void avoidSupression();
@@ -1693,17 +1697,24 @@ COSXScreen::watchSystemPowerThread(void*)
 	// setting m_pmThreadReady to true otherwise the parent thread will
 	// block waiting for it.
 	if (m_pmRootPort == 0) {
+		LOG((CLOG_WARN "failed to init watchSystemPowerThread"));
 		return;
 	}
 
 	LOG((CLOG_DEBUG "started watchSystemPowerThread"));
-
+	
+	LOG((CLOG_DEBUG "waiting for event loop"));
 	m_events->waitForReady();
     
 #if defined(MAC_OS_X_VERSION_10_7)
 	{
 		CLock lockCarbon(m_carbonLoopMutex);
 		if (*m_carbonLoopReady == false) {
+			
+			// we signalling carbon loop ready before starting
+			// unless we know how to do it within the loop
+			LOG((CLOG_DEBUG "signalling carbon loop ready"));
+
 			*m_carbonLoopReady = true;
 			m_carbonLoopReady->signal();
 		}
@@ -1713,6 +1724,7 @@ COSXScreen::watchSystemPowerThread(void*)
 	// start the run loop
 	LOG((CLOG_DEBUG "starting carbon loop"));
 	CFRunLoopRun();
+	LOG((CLOG_DEBUG "carbon loop has stopped"));
 	
 	// cleanup
 	if (notificationPortRef) {
@@ -2126,14 +2138,26 @@ void
 COSXScreen::waitForCarbonLoop() const
 {
 #if defined(MAC_OS_X_VERSION_10_7)
-	double timeout = ARCH->time() + 10;
+	if (*m_carbonLoopReady) {
+		LOG((CLOG_DEBUG "carbon loop already ready"));
+		return;
+	}
+
 	CLock lock(m_carbonLoopMutex);
+
+	LOG((CLOG_DEBUG "waiting for carbon loop"));
+
+	double timeout = ARCH->time() + kCarbonLoopWaitTimeout;
 	while (!m_carbonLoopReady->wait()) {
 		if(ARCH->time() > timeout) {
-			throw std::runtime_error("carbon loop is not ready within 5 sec");
+			LOG((CLOG_DEBUG "carbon loop not ready, waiting again"));
+			timeout = ARCH->time() + kCarbonLoopWaitTimeout;
 		}
 	}
+
+	LOG((CLOG_DEBUG "carbon loop ready"));
 #endif
+
 }
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
