@@ -1,38 +1,11 @@
-#Vim backup files
-*~
-#Python compiled files
 *.pyc
-
-#Git-svn created .gitignore
-/Release
-/Debug
-/vc90.pdb
-/synergy.ncb
-/synergy.vcproj.ADOBENET.ssbarnea.user
 /bin
-/tool
-/config.h
-/tags
-
-#doxygen
-/doc/doxygen
-/doc/doxygen.cfg
-build
-cryptopp562
-gmock-1.6.0
-gtest-1.6.0
-lib
-/src/gui/Makefile.Debug
-/src/gui/Makefile.Release
-/src/gui/object_script.synergy.Debug
-/src/gui/object_script.synergy.Release
-/src/gui/Makefile
-tmp
-/src/gui/ui_ScreenSettingsDialogBase.h
-/src/gui/ui_ServerConfigDialogBase.h
-/src/gui/ui_SettingsDialogBase.h
-/src/gui/ui_SetupWizardBase.h
-/src/gui/ui_AboutDialogBase.h
-/src/gui/ui_ActionDialogBase.h
-/src/gui/ui_HotkeyDialogBase.h
-/src/gui/ui_MainWindowBase.h
+/lib
+/build
+/ext/cryptopp562
+/ext/gmock-1.6.0
+/ext/gtest-1.6.0
+/src/gui/Makefile*
+/src/gui/object_script*
+/src/gui/tmp
+/src/gui/ui_*
