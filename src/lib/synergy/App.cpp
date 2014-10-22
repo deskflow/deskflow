@@ -67,6 +67,7 @@ CApp::CApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver,
 
 CApp::~CApp()
 {
+	s_instance = nullptr;
 	delete m_args;
 }
 
