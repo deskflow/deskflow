@@ -19,6 +19,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <Tlhelp32.h>
 
 class CMSWindowsSession {
 public:
@@ -38,6 +39,9 @@ public:
 	DWORD				getActiveSessionId() { return m_activeSessionId; }
 
 	void				updateActiveSession();
+
+private:
+	BOOL				nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry);
 
 private:
 	DWORD				m_activeSessionId;

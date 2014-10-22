@@ -21,7 +21,6 @@
 #include "synergy/XSynergy.h"
 #include "base/Log.h"
 
-#include <Tlhelp32.h>
 #include <Wtsapi32.h>
 
 CMSWindowsSession::CMSWindowsSession() :
@@ -72,6 +71,8 @@ CMSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
 				// if we can not acquire session associated with a specified process,
 				// simply ignore it
 				LOG((CLOG_ERR "could not get session id for process id %i", entry.th32ProcessID));
+				gotEntry = nextProcessEntry(snapshot, &entry);
+				continue;
 			}
 			else {
 				// only pay attention to processes in the active session
@@ -89,17 +90,7 @@ CMSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
 		}
 
 		// now move on to the next entry (if we're not at the end)
-		gotEntry = Process32Next(snapshot, &entry);
-		if (!gotEntry) {
-
-			DWORD err = GetLastError();
-			if (err != ERROR_NO_MORE_FILES) {
-
-				// only worry about error if it's not the end of the snapshot
-				LOG((CLOG_ERR "could not get next process entry"));
-				throw XArch(new XArchEvalWindows());
-			}
-		}
+		gotEntry = nextProcessEntry(snapshot, &entry);
 	}
 
 	std::string nameListJoin;
@@ -160,4 +151,23 @@ void
 CMSWindowsSession::updateActiveSession()
 {
 	m_activeSessionId = WTSGetActiveConsoleSessionId();
+}
+
+
+BOOL
+CMSWindowsSession::nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry)
+{
+	BOOL gotEntry = Process32Next(snapshot, entry);
+	if (!gotEntry) {
+
+		DWORD err = GetLastError();
+		if (err != ERROR_NO_MORE_FILES) {
+
+			// only worry about error if it's not the end of the snapshot
+			LOG((CLOG_ERR "could not get next process entry"));
+			throw XArch(new XArchEvalWindows());
+		}
+	}
+
+	return gotEntry;
 }
