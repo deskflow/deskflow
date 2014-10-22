@@ -1438,7 +1438,7 @@ class InternalCommands:
 	def dist_name_rev(self, type):
 		# find the version number (we're puting the rev in after this)
 		pattern = '(.*\d+\.\d+\.\d+)(.*)'
-		replace = "\g<1>-%s@%s\g<2>" % (
+		replace = "\g<1>-%s-%s\g<2>" % (
 			self.getGitBranchName(), self.getGitRevision())
 		return re.sub(pattern, replace, self.dist_name(type))
 
