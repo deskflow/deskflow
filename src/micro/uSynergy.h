@@ -256,6 +256,19 @@ typedef void		(*uSynergyMouseCallback)(uSynergyCookie cookie, uint16_t x, uint16
 
 
 /**
+@brief Mouse relative callback
+
+This callback is called when a mouse relative event happens.
+
+@param cookie		Cookie supplied in the Synergy context
+@param x			Mouse X motion
+@param y			Mouse Y motion
+**/
+typedef void		(*uSynergyMouseRelativeCallback)(uSynergyCookie cookie, int16_t x, int16_t y);
+
+
+
+/**
 @brief Key event callback
 
 This callback is called when a key is pressed or released.
@@ -332,6 +345,7 @@ typedef struct
 	uSynergyTraceFunc				m_traceFunc;									/* Function for tracing status (can be NULL) */
 	uSynergyScreenActiveCallback	m_screenActiveCallback;							/* Callback for entering and leaving screen */
 	uSynergyMouseCallback			m_mouseCallback;								/* Callback for mouse events */
+	uSynergyMouseRelativeCallback	m_mouseRelativeCallback;						/* Callback for mouse relative events */
 	uSynergyKeyboardCallback		m_keyboardCallback;								/* Callback for keyboard events */
 	uSynergyJoystickCallback		m_joystickCallback;								/* Callback for joystick events */
 	uSynergyClipboardCallback		m_clipboardCallback;							/* Callback for clipboard events */
