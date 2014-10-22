@@ -69,20 +69,23 @@ CMSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
 				entry.th32ProcessID, &processSessionId);
 
 			if (!pidToSidRet) {
+				// if we can not acquire session associated with a specified process,
+				// simply ignore it
 				LOG((CLOG_ERR "could not get session id for process id %i", entry.th32ProcessID));
-				throw XArch(new XArchEvalWindows());
 			}
+			else {
+				// only pay attention to processes in the active session
+				if (processSessionId == m_activeSessionId) {
 
-			// only pay attention to processes in the active session
-			if (processSessionId == m_activeSessionId) {
+					// store the names so we can record them for debug
+					nameList.push_back(entry.szExeFile);
 
-				// store the names so we can record them for debug
-				nameList.push_back(entry.szExeFile);
-
-				if (_stricmp(entry.szExeFile, name) == 0) {
-					pid = entry.th32ProcessID;
+					if (_stricmp(entry.szExeFile, name) == 0) {
+						pid = entry.th32ProcessID;
+					}
 				}
 			}
+
 		}
 
 		// now move on to the next entry (if we're not at the end)
