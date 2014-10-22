@@ -1036,10 +1036,7 @@ class InternalCommands:
 		moveExt = ''
 
 		if type == 'src':
-			if sys.platform in ['linux2', 'darwin']:
-				self.distSrc()
-			else:
-				package_unsupported = True
+			self.distSrc()
 			
 		elif type == 'rpm':
 			if sys.platform == 'linux2':
@@ -1223,11 +1220,15 @@ class InternalCommands:
 			print "Removing existing export..."
 			shutil.rmtree(exportPath)
 
-		print 'Exporting repository to: ' + exportPath
 		os.mkdir(exportPath)
-		err = os.system('git archive master | tar -x -C ' + exportPath)
+
+		cmd = "git archive %s | tar -x -C %s" % (
+			self.getGitBranchName(), exportPath)
+		
+		print 'Exporting repository to: ' + exportPath
+		err = os.system(cmd)
 		if err != 0:
-			raise Exception('Repository export failed: ' + str(err))		
+			raise Exception('Repository export failed: ' + str(err))
 
 		packagePath = '../' + self.getGenerator().binDir + '/' + name + '.tar.gz'
 
