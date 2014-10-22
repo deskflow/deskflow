@@ -946,17 +946,32 @@ class InternalCommands:
 	def getGitRevision(self):
 		if sys.version_info < (2, 4):
 			raise Exception("Python 2.4 or greater required.")
-		else:
-			p = subprocess.Popen(
-				["git", "log", "--pretty=format:%h", "-n", "1"],
-				stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-			stdout, stderr = p.communicate()
-
-			if p.returncode != 0:
-				raise Exception('Could not get revision - git info failed with code: ' + str(p.returncode))
 		
-			return stdout
+		p = subprocess.Popen(
+			["git", "log", "--pretty=format:%h", "-n", "1"],
+			stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+		stdout, stderr = p.communicate()
+
+		if p.returncode != 0:
+			raise Exception('Could not get revision, git error: ' + str(p.returncode))
+	
+		return stdout.strip()
+
+	def getGitBranchName(self):
+		if sys.version_info < (2, 4):
+			raise Exception("Python 2.4 or greater required.")
+		
+		p = subprocess.Popen(
+			["git", "rev-parse", "--abbrev-ref", "HEAD"],
+			stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+		stdout, stderr = p.communicate()
+
+		if p.returncode != 0:
+			raise Exception('Could not get branch name, git error: ' + str(p.returncode))
+	
+		return stdout.strip()
 
 	def find_revision_svn(self):
 		if sys.version_info < (2, 4):
@@ -1422,9 +1437,10 @@ class InternalCommands:
 	def dist_name_rev(self, type):
 		# find the version number (we're puting the rev in after this)
 		pattern = '(.*\d+\.\d+\.\d+)(.*)'
-		replace = '\g<1>-' + self.find_revision() + '\g<2>'
+		replace = "\g<1>-%s@%s\g<2>" % (
+			self.getGitBranchName(), self.getGitRevision())
 		return re.sub(pattern, replace, self.dist_name(type))
-	
+
 	def dist_usage(self):
 		print ('Usage: %s package [package-type]\n'
 			'\n'
