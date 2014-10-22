@@ -125,8 +125,6 @@ private:
 	CSocketMultiplexer*	m_socketMultiplexer;
 };
 
-#define BYE "\nTry `%s --help' for more information."
-
 #if WINAPI_MSWINDOWS
 #define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
 #else
