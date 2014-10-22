@@ -20,19 +20,42 @@
 #include "base/String.h"
 #include "common/stdvector.h"
 
+class CServerArgs;
+class CClientArgs;
+class CToolArgs;
 class CArgsBase;
+class CApp;
 
 class CArgParser {
 
 public:
+	CArgParser(CApp* app);
+
+	bool				parseServerArgs(CServerArgs& args, int argc, const char* const* argv);
+	bool				parseClientArgs(CClientArgs& args, int argc, const char* const* argv);
 	bool				parsePlatformArg(CArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
+	bool				parseGenericArgs(int argc, const char* const* argv, int& i);
+	void				setArgsBase(CArgsBase& argsBase) { m_argsBase = &argsBase; }
 
 	static	bool		isArg(int argi, int argc, const char* const* argv,
 							const char* name1, const char* name2,
 							int minRequiredParameters = 0);
+	static void			splitCommandString(CString& command, std::vector<CString>& argv);
+	static bool			searchDoubleQuotes(CString& command, size_t& left, 
+							size_t& right, size_t startPos = 0);
+	static void			removeDoubleQuotes(CString& arg);
+	static const char**	getArgv(std::vector<CString>& argsArray);
+	static CString		assembleCommand(std::vector<CString>& argsArray, 
+							CString ignoreArg = "", int parametersRequired = 0);
+
 private:
+	void				updateCommonArgs(const char* const* argv);
+	bool				checkUnexpectedArgs();
+	
 	static CArgsBase&	argsBase() { return *m_argsBase; }
 
 private:
+	CApp*				m_app;
+	
 	static CArgsBase*	m_argsBase;
 };

@@ -40,7 +40,8 @@ m_display(NULL),
 m_disableTray(false),
 m_enableIpc(false),
 m_enableDragDrop(false),
-m_shouldExit(false)
+m_shouldExit(false),
+m_synergyAddress()
 {
 }
 
