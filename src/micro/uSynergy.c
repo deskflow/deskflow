@@ -338,7 +338,8 @@ static void sProcessMessage(uSynergyContext *context, const uint8_t *message)
 	{
 		// Mouse relative. Reply with CNOP
 		//		kMsgDMouseRelMove	= "DMRM%2i%2i"
-		sSendMouseRelativeCallback(context, sNetToNative16(message+8), sNetToNative16(message+10));
+		sSendMouseRelativeCallback(context, sNetToNative16(message+8),
+			sNetToNative16(message+10));
 	}
 	else if (USYNERGY_IS_PACKET("DMWM"))
 	{
@@ -535,7 +536,7 @@ static void sUpdateContext(uSynergyContext *context)
 	for (;;)
 	{
 		/* If less than 4 bytes left in buffer, we can't even get the next packet length yet */
-		if(context->m_receiveOfs < 4)
+		if (context->m_receiveOfs < 4)
 			return;
 
 		/* Grab packet length and bail out if the packet goes beyond the end of the buffer */
