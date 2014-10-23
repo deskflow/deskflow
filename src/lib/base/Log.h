@@ -26,6 +26,7 @@
 #include <stdarg.h>
 
 #define CLOG (CLog::getInstance())
+#define BYE "\nTry `%s --help' for more information."
 
 class ILogOutputter;
 class CThread;

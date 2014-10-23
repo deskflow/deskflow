@@ -38,8 +38,6 @@ public:
 	CAppUtilWindows(IEventQueue* events);
 	virtual ~CAppUtilWindows();
 
-	bool parseArg(const int& argc, const char* const* argv, int& i);
-
 	int daemonNTStartup(int, char**);
 	
 	int daemonNTMainLoop(int argc, const char** argv);

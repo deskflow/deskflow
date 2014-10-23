@@ -25,8 +25,7 @@ class CAppUtil : public IAppUtil {
 public:
 	CAppUtil();
 	virtual ~CAppUtil();
-	
-	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
+
 	virtual void adoptApp(IApp* app);
 	IApp& app() const;
 	virtual void exitApp(int code) { throw XExitApp(code); }

@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "synergy/ArgsBase.h"
 #include "synergy/App.h"
 #include "base/String.h"
 #include "server/Config.h"
@@ -44,20 +45,10 @@ class CClientListener;
 class CEventQueueTimer;
 class ILogOutputter;
 class IEventQueue;
+class CServerArgs;
 
 class CServerApp : public CApp {
 public:
-	class CArgs : public CArgsBase {
-	public:
-		CArgs();
-		~CArgs();
-
-	public:
-		CString	m_configFile;
-		CNetworkAddress* m_synergyAddress;
-		CConfig* m_config;
-	};
-
 	CServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver);
 	virtual ~CServerApp();
 	
@@ -68,7 +59,7 @@ public:
 	void help();
 
 	// Returns arguments that are common and for server.
-	CArgs& args() const { return (CArgs&)argsBase(); }
+	CServerArgs& args() const { return (CServerArgs&)argsBase(); }
 
 	const char* daemonName() const;
 	const char* daemonInfo() const;
@@ -120,9 +111,9 @@ public:
 	CPrimaryClient*		m_primaryClient;
 	CClientListener*	m_listener;
 	CEventQueueTimer*	m_timer;
+	CNetworkAddress*	m_synergyAddress;
 
 private:
-	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 	void handleScreenSwitched(const CEvent&, void*  data);
 };
 

@@ -22,6 +22,9 @@
 #include "synergy/DaemonApp.h"
 
 #include "synergy/App.h"
+#include "synergy/ArgParser.h"
+#include "synergy/ServerArgs.h"
+#include "synergy/ClientArgs.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcLogOutputter.h"
@@ -301,13 +304,29 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 			if (!command.empty()) {
 				LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
 
-				CString debugArg("--debug");
-				size_t debugArgPos = command.find(debugArg);
-				if (debugArgPos != CString::npos) {
-					UInt32 from = static_cast<UInt32>(debugArgPos) + static_cast<UInt32>(debugArg.size()) + 1;
-					UInt32 nextSpace = static_cast<UInt32>(command.find(" ", from));
-					CString logLevel(command.substr(from, nextSpace - from));
+				std::vector<CString> argsArray;
+				CArgParser::splitCommandString(command, argsArray);
+				CArgParser argParser(NULL);
+				const char** argv = argParser.getArgv(argsArray);
+				CServerArgs serverArgs;
+				CClientArgs clientArgs;
+				int argc = static_cast<int>(argsArray.size());
+				bool server = argsArray[0].find("synergys") != CString::npos ? true : false;
+				CArgsBase* argBase = NULL;
+
+				if (server) {
+					argParser.parseServerArgs(serverArgs, argc, argv);
+					argBase = &serverArgs;
+				}
+				else {
+					argParser.parseClientArgs(clientArgs, argc, argv);
+					argBase = &clientArgs;
+				}
+
+				delete[] argv;
 				
+				CString logLevel(argBase->m_logFilter);
+				if (!logLevel.empty()) {
 					try {
 						// change log level based on that in the command string
 						// and change to that log level now.

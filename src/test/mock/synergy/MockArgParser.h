@@ -1,12 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
- * Copyright (C) 2002 Chris Schoeneman
- * 
+ * Copyright (C) 2014 Synergy Si, Inc.
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file COPYING that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -18,17 +17,17 @@
 
 #pragma once
 
-#include "synergy/AppUtil.h"
+#define TEST_ENV
 
-#define ARCH_APP_UTIL CAppUtilUnix
+#include "synergy/ArgParser.h"
 
-class IEventQueue;
+#include "test/global/gmock.h"
 
-class CAppUtilUnix : public CAppUtil {
+class CMockArgParser : public CArgParser
+{
 public:
-	CAppUtilUnix(IEventQueue* events);
-	virtual ~CAppUtilUnix();
-	
-	int run(int argc, char** argv);
-	void startNode();
+	CMockArgParser() : CArgParser(NULL) { }
+
+	MOCK_METHOD3(parseGenericArgs, bool(int, const char* const*, int&));
+	MOCK_METHOD0(checkUnexpectedArgs, bool());
 };

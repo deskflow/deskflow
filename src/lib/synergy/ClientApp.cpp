@@ -19,9 +19,11 @@
 #include "synergy/ClientApp.h"
 
 #include "client/Client.h"
+#include "synergy/ArgParser.h"
 #include "synergy/protocol_types.h"
 #include "synergy/Screen.h"
 #include "synergy/XScreen.h"
+#include "synergy/ClientArgs.h"
 #include "net/NetworkAddress.h"
 #include "net/TCPSocketFactory.h"
 #include "net/SocketMultiplexer.h"
@@ -61,9 +63,10 @@
 #define RETRY_TIME 1.0
 
 CClientApp::CClientApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
-	CApp(events, createTaskBarReceiver, new CArgs()),
+	CApp(events, createTaskBarReceiver, new CClientArgs()),
 	m_client(NULL),
-	m_clientScreen(NULL)
+	m_clientScreen(NULL),
+	m_serverAddress(NULL)
 {
 }
 
@@ -71,97 +74,35 @@ CClientApp::~CClientApp()
 {
 }
 
-CClientApp::CArgs::CArgs() :
-m_yscroll(0),
-m_serverAddress(NULL)
-{
-}
-
-CClientApp::CArgs::~CArgs()
-{
-}
-
-bool
-CClientApp::parseArg(const int& argc, const char* const* argv, int& i)
-{
-	if (CApp::parseArg(argc, argv, i)) {
-		// found common arg
-		return true;
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--camp")) {
-		// ignore -- included for backwards compatibility
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--no-camp")) {
-		// ignore -- included for backwards compatibility
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--yscroll", 1)) {
-		// define scroll 
-		args().m_yscroll = atoi(argv[++i]);
-	}
-
-	else {
-		// option not supported here
-		return false;
-	}
-
-	// argument was valid
-	return true;
-}
-
 void
 CClientApp::parseArgs(int argc, const char* const* argv)
 {
-	// asserts values, sets defaults, and parses args
-	int i;
-	CApp::parseArgs(argc, argv, i);
+	CArgParser argParser(this);
+	bool result = argParser.parseClientArgs(args(), argc, argv);
 
-	// exactly one non-option argument (server-address)
-	if (i == argc) {
-		LOG((CLOG_PRINT "%s: a server address or name is required" BYE,
-			args().m_pname, args().m_pname));
+	if (!result || args().m_shouldExit) {
 		m_bye(kExitArgs);
 	}
-	if (i + 1 != argc) {
-		LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
-			args().m_pname, argv[i], args().m_pname));
-		m_bye(kExitArgs);
-	}
-
-	// save server address
-	try {
-		*args().m_serverAddress = CNetworkAddress(argv[i], kDefaultPort);
-		args().m_serverAddress->resolve();
-	}
-	catch (XSocketAddress& e) {
-		// allow an address that we can't look up if we're restartable.
-		// we'll try to resolve the address each time we connect to the
-		// server.  a bad port will never get better.  patch by Brent
-		// Priddy.
-		if (!args().m_restartable || e.getError() == XSocketAddress::kBadPort) {
-			LOG((CLOG_PRINT "%s: %s" BYE,
-				args().m_pname, e.what(), args().m_pname));
-			m_bye(kExitFailed);
+	else {
+		// save server address
+		if (!args().m_synergyAddress.empty()) {
+			try {
+				*m_serverAddress = CNetworkAddress(args().m_synergyAddress, kDefaultPort);
+				m_serverAddress->resolve();
+			}
+			catch (XSocketAddress& e) {
+				// allow an address that we can't look up if we're restartable.
+				// we'll try to resolve the address each time we connect to the
+				// server.  a bad port will never get better.  patch by Brent
+				// Priddy.
+				if (!args().m_restartable || e.getError() == XSocketAddress::kBadPort) {
+					LOG((CLOG_PRINT "%s: %s" BYE,
+						args().m_pname, e.what(), args().m_pname));
+					m_bye(kExitFailed);
+				}
+			}
 		}
 	}
-
-	// set log filter
-	if (!CLOG->setFilter(args().m_logFilter)) {
-		LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
-			args().m_pname, args().m_logFilter, args().m_pname));
-		m_bye(kExitArgs);
-	}
-
-	// identify system
-	LOG((CLOG_INFO "%s Client on %s %s", kAppVersion, ARCH->getOSName().c_str(), ARCH->getPlatformName().c_str()));
-	
-	if (args().m_enableDragDrop) {
-		LOG((CLOG_INFO "drag and drop enabled"));
-	}
-
-	loggingFilterWarning();
 }
 
 void
@@ -460,7 +401,7 @@ CClientApp::startClient()
 		if (m_clientScreen == NULL) {
 			clientScreen = openClientScreen();
 			m_client     = openClient(args().m_name,
-				*args().m_serverAddress, clientScreen, args().m_crypto);
+				*m_serverAddress, clientScreen, args().m_crypto);
 			m_clientScreen  = clientScreen;
 			LOG((CLOG_NOTE "started client"));
 		}
@@ -590,7 +531,7 @@ int
 CClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
 	// general initialization
-	args().m_serverAddress = new CNetworkAddress;
+	m_serverAddress = new CNetworkAddress;
 	args().m_pname         = ARCH->getBasename(argv[0]);
 
 	// install caller's output filter
@@ -612,7 +553,7 @@ CClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
 			delete m_taskBarReceiver;
 		}
 
-		delete args().m_serverAddress;
+		delete m_serverAddress;
 
 		throw;
 	}
