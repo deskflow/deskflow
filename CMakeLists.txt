@@ -168,7 +168,7 @@ if (UNIX)
 			# 10.4: Universal (32-bit Intel and PowerPC)
 			set(CMAKE_OSX_ARCHITECTURES "ppc;i386"
 				CACHE STRING "" FORCE)
-		else (DARWIN_VERSION LESS 10)
+		elseif (DARWIN_VERSION LESS 10)
 			# 10.5: 32-bit Intel only
 			set(CMAKE_OSX_ARCHITECTURES "i386"
 				CACHE STRING "" FORCE)
