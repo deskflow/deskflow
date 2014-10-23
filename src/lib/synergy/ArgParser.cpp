@@ -134,12 +134,12 @@ CArgParser::parsePlatformArg(CArgsBase& argsBase, const int& argc, const char* c
 
 	return true;
 #elif WINAPI_XWINDOWS
-	if (CArgumentParser::isArg(i, argc, argv, "-display", "--display", 1)) {
+	if (isArg(i, argc, argv, "-display", "--display", 1)) {
 		// use alternative display
 		argsBase.m_display = argv[++i];
 	}
 
-	else if (CArgumentParser::isArg(i, argc, argv, NULL, "--no-xinitthreads")) {
+	else if (isArg(i, argc, argv, NULL, "--no-xinitthreads")) {
 		argsBase.m_disableXInitThreads = true;
 	}
 
