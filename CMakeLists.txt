@@ -165,11 +165,15 @@ if (UNIX)
 		string(REGEX MATCH "[0-9]+" DARWIN_VERSION ${DARWIN_VERSION})
 		message(STATUS "DARWIN_VERSION=${DARWIN_VERSION}")
 		if (DARWIN_VERSION LESS 9)
-			# 10.4: Universal (32-bit and 64-bit Intel and PowerPC)
-			set(CMAKE_OSX_ARCHITECTURES "ppc;ppc64;i386:x86_64"
+			# 10.4: Universal (32-bit Intel and PowerPC)
+			set(CMAKE_OSX_ARCHITECTURES "ppc;i386"
+				CACHE STRING "" FORCE)
+		else (DARWIN_VERSION LESS 10)
+			# 10.5: 32-bit Intel only
+			set(CMAKE_OSX_ARCHITECTURES "i386"
 				CACHE STRING "" FORCE)
 		else()
-			# 10.5+: Intel only
+			# 10.6+: Intel only
 			set(CMAKE_OSX_ARCHITECTURES "i386;x86_64"
 				CACHE STRING "" FORCE)
 		endif()
