@@ -72,12 +72,16 @@
 
 // Added this because it doesn't compile on OS X 10.6 because they are already defined in Carbon
 #if !defined(__MACTYPES__)
+#if defined(__APPLE__)
+#include <CoreServices/CoreServices.h>
+#else
 typedef signed TYPE_OF_SIZE_1	SInt8;
 typedef signed TYPE_OF_SIZE_2	SInt16;
 typedef signed TYPE_OF_SIZE_4	SInt32;
 typedef unsigned TYPE_OF_SIZE_1	UInt8;
 typedef unsigned TYPE_OF_SIZE_2	UInt16;
 typedef unsigned TYPE_OF_SIZE_4	UInt32;
+#endif
 #endif
 //
 // clean up
