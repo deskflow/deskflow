@@ -19,26 +19,17 @@
 #pragma once
 
 #include "synergy/App.h"
-#include "synergy/ArgsBase.h"
 
 class CScreen;
 class CEvent;
 class CClient;
 class CNetworkAddress;
 class CThread;
+class CClientArgs;
+class CCryptoOptions;
 
 class CClientApp : public CApp {
 public:
-	class CArgs : public CArgsBase {
-	public:
-		CArgs();
-		~CArgs();
-
-	public:
-		int m_yscroll;
-		CNetworkAddress* m_serverAddress;
-	};
-
 	CClientApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver);
 	virtual ~CClientApp();
 
@@ -49,7 +40,7 @@ public:
 	void help();
 
 	// Returns arguments that are common and for client.
-	CArgs& args() const { return (CArgs&)argsBase(); }
+	CClientArgs& args() const { return (CClientArgs&)argsBase(); }
 
 	const char* daemonName() const;
 	const char* daemonInfo() const;
@@ -84,11 +75,9 @@ public:
 	static CClientApp& instance() { return (CClientApp&)CApp::instance(); }
 
 	CClient* getClientPtr() { return m_client; }
-	
-private:
-	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 
 private:
 	CClient*			m_client;
 	CScreen*			m_clientScreen;
+	CNetworkAddress*	m_serverAddress;
 };

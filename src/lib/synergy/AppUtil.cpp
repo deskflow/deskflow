@@ -30,13 +30,6 @@ CAppUtil::~CAppUtil()
 {
 }
 
-bool 
-CAppUtil::parseArg(const int& argc, const char* const* argv, int& i)
-{
-	// no common platform args (yet)
-	return false;
-}
-
 void
 CAppUtil::adoptApp(IApp* app)
 {

@@ -17,6 +17,7 @@
  */
 
 #include "synergy/App.h"
+
 #include "base/Log.h"
 #include "common/Version.h"
 #include "synergy/protocol_types.h"
@@ -51,6 +52,10 @@
 
 CApp* CApp::s_instance = nullptr;
 
+//
+// CApp
+//
+
 CApp::CApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args) :
 	m_bye(&exit),
 	m_taskBarReceiver(NULL),
@@ -69,202 +74,6 @@ CApp::~CApp()
 {
 	s_instance = nullptr;
 	delete m_args;
-}
-
-bool
-CApp::isArg(
-	int argi, int argc, const char* const* argv,
-	const char* name1, const char* name2,
-	int minRequiredParameters)
-{
-	if ((name1 != NULL && strcmp(argv[argi], name1) == 0) ||
-		(name2 != NULL && strcmp(argv[argi], name2) == 0)) {
-			// match.  check args left.
-			if (argi + minRequiredParameters >= argc) {
-				LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
-					argsBase().m_pname, argv[argi], argsBase().m_pname));
-				m_bye(kExitArgs);
-			}
-			return true;
-	}
-
-	// no match
-	return false;
-}
-
-bool
-CApp::parseArg(const int& argc, const char* const* argv, int& i)
-{
-	if (appUtil().parseArg(argc, argv, i)) {
-		// handled by platform util
-		return true;
-	}
-	
-	else if (isArg(i, argc, argv, "-d", "--debug", 1)) {
-		// change logging level
-		argsBase().m_logFilter = argv[++i];
-	}
-
-	else if (isArg(i, argc, argv, "-l", "--log", 1)) {
-		argsBase().m_logFile = argv[++i];
-	}
-
-	else if (isArg(i, argc, argv, "-f", "--no-daemon")) {
-		// not a daemon
-		argsBase().m_daemon = false;
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--daemon")) {
-		// daemonize
-		argsBase().m_daemon = true;
-	}
-
-	else if (isArg(i, argc, argv, "-n", "--name", 1)) {
-		// save screen name
-		argsBase().m_name = argv[++i];
-	}
-
-	else if (isArg(i, argc, argv, "-1", "--no-restart")) {
-		// don't try to restart
-		argsBase().m_restartable = false;
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--restart")) {
-		// try to restart
-		argsBase().m_restartable = true;
-	}
-
-	else if (isArg(i, argc, argv, "-z", NULL)) {
-		argsBase().m_backend = true;
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--no-hooks")) {
-		argsBase().m_noHooks = true;
-	}
-
-	else if (isArg(i, argc, argv, "-h", "--help")) {
-		help();
-		m_bye(kExitSuccess);
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--version")) {
-		version();
-		m_bye(kExitSuccess);
-	}
-	
-	else if (isArg(i, argc, argv, NULL, "--no-tray")) {
-		argsBase().m_disableTray = true;
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--ipc")) {
-		argsBase().m_enableIpc = true;
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--server")) {
-		// HACK: stop error happening when using portable (synergyp) 
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--client")) {
-		// HACK: stop error happening when using portable (synergyp) 
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--crypto-pass")) {
-		argsBase().m_crypto.m_pass = argv[++i];
-		argsBase().m_crypto.setMode("cfb");
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--enable-drag-drop")) {
-        bool useDragDrop = true;
-
-#ifdef WINAPI_XWINDOWS
-
-        useDragDrop = false;
-		LOG((CLOG_INFO "ignoring --enable-drag-drop, not supported on linux."));
-
-#endif
-
-#ifdef WINAPI_MSWINDOWS
-
-        OSVERSIONINFO osvi;
-        ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
-        osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-        GetVersionEx(&osvi);
-
-        if (osvi.dwMajorVersion < 6) {
-            useDragDrop = false;
-		    LOG((CLOG_INFO "ignoring --enable-drag-drop, not supported below vista."));
-        }
-#endif
-
-        if (useDragDrop) {
-		    argsBase().m_enableDragDrop = true;
-        }
-	}
-
-	else {
-		// option not supported here
-		return false;
-	}
-
-	return true;
-}
-
-void
-CApp::parseArgs(int argc, const char* const* argv, int& i)
-{
-	// about these use of assert() here:
-	// previously an /analyze warning was displayed if we only used assert and
-	// did not return on failure. however, this warning does not appear to show
-	// any more (could be because new compiler args have been added).
-	// the asserts are programmer benefit only; the os should never pass 0 args,
-	// because the first is always the binary name. the only way assert would 
-	// evaluate to true, is if this parse function were implemented incorrectly,
-	// which is unlikely because it's old code and has a specific use.
-	// we should avoid using anything other than assert here, because it will
-	// look like important code, which it's not really.
-	assert(argsBase().m_pname != NULL);
-	assert(argv != NULL);
-	assert(argc >= 1);
-
-	// set defaults
-	argsBase().m_name = ARCH->getHostName();
-
-	// parse options
-	for (i = 1; i < argc; ++i) {
-
-		if (parseArg(argc, argv, i)) {
-			continue;
-		}
-
-		else if (isArg(i, argc, argv, "--", NULL)) {
-			// remaining arguments are not options
-			++i;
-			break;
-		}
-
-		else if (argv[i][0] == '-') {
-			std::cerr << "Unrecognized option: " << argv[i] << std::endl;
-			m_bye(kExitArgs);
-		}
-
-		else {
-			// this and remaining arguments are not options
-			break;
-		}
-	}
-
-#if SYSAPI_WIN32
-	// suggest that user installs as a windows service. when launched as 
-	// service, process should automatically detect that it should run in
-	// daemon mode.
-	if (argsBase().m_daemon) {
-		LOG((CLOG_ERR 
-			"the --daemon argument is not supported on windows. "
-			"instead, install %s as a service (--service install)", 
-			argsBase().m_pname));
-		m_bye(kExitArgs);
-	}
-#endif
 }
 
 void
@@ -363,6 +172,18 @@ CApp::initApp(int argc, const char** argv)
 {
 	// parse command line
 	parseArgs(argc, argv);
+
+	// set log filter
+	if (!CLOG->setFilter(argsBase().m_logFilter)) {
+		LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
+			argsBase().m_pname, argsBase().m_logFilter, argsBase().m_pname));
+		m_bye(kExitArgs);
+	}
+	loggingFilterWarning();
+	
+	if (argsBase().m_enableDragDrop) {
+		LOG((CLOG_INFO "drag and drop enabled"));
+	}
 
 	// setup file logging after parsing args
 	setupFileLogging();

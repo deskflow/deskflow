@@ -27,31 +27,6 @@ CAppUtilUnix::~CAppUtilUnix()
 {
 }
 
-bool 
-CAppUtilUnix::parseArg(const int& argc, const char* const* argv, int& i)
-{
-#if WINAPI_XWINDOWS
-	if (app().isArg(i, argc, argv, "-display", "--display", 1)) {
-		// use alternative display
-		app().argsBase().m_display = argv[++i];
-	}
-
-	else if (app().isArg(i, argc, argv, NULL, "--no-xinitthreads")) {
-		app().argsBase().m_disableXInitThreads = true;
-	}
-
-	else {
-		// option not supported here
-		return false;
-	}
-
-	return true;
-#else
-	// no options for carbon
-	return false;
-#endif
-}
-
 int
 standardStartupStatic(int argc, char** argv)
 {

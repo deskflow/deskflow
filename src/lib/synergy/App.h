@@ -70,11 +70,6 @@ public:
 	// TODO: this is old C code - use inheritance to normalize
 	void (*m_bye)(int);
 
-	// Returns true if argv[argi] is equal to name1 or name2.
-	bool isArg(int argi, int argc, const char* const* argv,
-		const char* name1, const char* name2,
-		int minRequiredParameters = 0);
-
 	static CApp& instance() { assert(s_instance != nullptr); return *s_instance; }
 
 	// If --log was specified in args, then add a file logger.
@@ -105,8 +100,6 @@ private:
 	void				handleIpcMessage(const CEvent&, void*);
 
 protected:
-	virtual void parseArgs(int argc, const char* const* argv, int &i);
-	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 	void				initIpcClient();
 	void				cleanupIpcClient();
 	void				runEventsLoop(void*);

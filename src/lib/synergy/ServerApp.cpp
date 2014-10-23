@@ -22,9 +22,11 @@
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
 #include "server/PrimaryClient.h"
+#include "synergy/ArgParser.h"
 #include "synergy/Screen.h"
 #include "synergy/XScreen.h"
 #include "synergy/ServerTaskBarReceiver.h"
+#include "synergy/ServerArgs.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
 #include "net/XSocket.h"
@@ -63,13 +65,14 @@
 //
 
 CServerApp::CServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
-	CApp(events, createTaskBarReceiver, new CArgs()),
+	CApp(events, createTaskBarReceiver, new CServerArgs()),
 	m_server(NULL),
 	m_serverState(kUninitialized),
 	m_serverScreen(NULL),
 	m_primaryClient(NULL),
 	m_listener(NULL),
-	m_timer(NULL)
+	m_timer(NULL),
+	m_synergyAddress(NULL)
 {
 }
 
@@ -77,82 +80,29 @@ CServerApp::~CServerApp()
 {
 }
 
-CServerApp::CArgs::CArgs() :
-m_synergyAddress(NULL),
-m_config(NULL)
-{
-}
-
-CServerApp::CArgs::~CArgs()
-{
-}
-
-bool
-CServerApp::parseArg(const int& argc, const char* const* argv, int& i)
-{
-	if (CApp::parseArg(argc, argv, i)) {
-		// found common arg
-		return true;
-	}
-
-	else if (isArg(i, argc, argv, "-a", "--address", 1)) {
-		// save listen address
-		try {
-			*args().m_synergyAddress = CNetworkAddress(argv[i + 1],
-				kDefaultPort);
-			args().m_synergyAddress->resolve();
-		}
-		catch (XSocketAddress& e) {
-			LOG((CLOG_PRINT "%s: %s" BYE,
-				args().m_pname, e.what(), args().m_pname));
-			m_bye(kExitArgs);
-		}
-		++i;
-	}
-
-	else if (isArg(i, argc, argv, "-c", "--config", 1)) {
-		// save configuration file path
-		args().m_configFile = argv[++i];
-	}
-
-	else {
-		// option not supported here
-		return false;
-	}
-
-	// argument was valid
-	return true;
-}
-
 void
 CServerApp::parseArgs(int argc, const char* const* argv)
 {
-	// asserts values, sets defaults, and parses args
-	int i;
-	CApp::parseArgs(argc, argv, i);
+	CArgParser argParser(this);
+	bool result = argParser.parseServerArgs(args(), argc, argv);
 
-	// no non-option arguments are allowed
-	if (i != argc) {
-		LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
-			args().m_pname, argv[i], args().m_pname));
+	if (!result || args().m_shouldExit) {
 		m_bye(kExitArgs);
 	}
-
-	// set log filter
-	if (!CLOG->setFilter(args().m_logFilter)) {
-		LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
-			args().m_pname, args().m_logFilter, args().m_pname));
-		m_bye(kExitArgs);
+	else {
+		if (!args().m_synergyAddress.empty()) {
+			try {
+				*m_synergyAddress = CNetworkAddress(args().m_synergyAddress, 
+					kDefaultPort);
+				m_synergyAddress->resolve();
+			}
+			catch (XSocketAddress& e) {
+				LOG((CLOG_PRINT "%s: %s" BYE,
+					args().m_pname, e.what(), args().m_pname));
+				m_bye(kExitArgs);
+			}
+		}
 	}
-
-	// identify system
-	LOG((CLOG_INFO "%s Server on %s %s", kAppVersion, ARCH->getOSName().c_str(), ARCH->getPlatformName().c_str()));
-	
-	if (args().m_enableDragDrop) {
-		LOG((CLOG_INFO "drag and drop enabled"));
-	}
-
-	loggingFilterWarning();
 }
 
 void
@@ -742,8 +692,8 @@ CServerApp::mainLoop()
 	// set the contact address, if provided, in the config.
 	// otherwise, if the config doesn't have an address, use
 	// the default.
-	if (args().m_synergyAddress->isValid()) {
-		args().m_config->setSynergyAddress(*args().m_synergyAddress);
+	if (m_synergyAddress->isValid()) {
+		args().m_config->setSynergyAddress(*m_synergyAddress);
 	}
 	else if (!args().m_config->getSynergyAddress().isValid()) {
 		args().m_config->setSynergyAddress(CNetworkAddress(kDefaultPort));
@@ -839,7 +789,7 @@ int
 CServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
 	// general initialization
-	args().m_synergyAddress = new CNetworkAddress;
+	m_synergyAddress = new CNetworkAddress;
 	args().m_config         = new CConfig(m_events);
 	args().m_pname          = ARCH->getBasename(argv[0]);
 
@@ -858,7 +808,7 @@ CServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
 	}
 
 	delete args().m_config;
-	delete args().m_synergyAddress;
+	delete m_synergyAddress;
 	return result;
 }
 

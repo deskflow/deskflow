@@ -32,9 +32,6 @@ class IApp : public IInterface
 {
 public:
 	virtual void setByeFunc(void(*bye)(int)) = 0;
-	virtual bool isArg(int argi, int argc, const char* const* argv,
-		const char* name1, const char* name2,
-		int minRequiredParameters = 0) = 0;
 	virtual CArgsBase& argsBase() const = 0;
 	virtual int standardStartup(int argc, char** argv) = 0;
 	virtual int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup) = 0;

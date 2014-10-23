@@ -23,7 +23,6 @@
 
 class IAppUtil : public IInterface {
 public:
-	virtual bool parseArg(const int& argc, const char* const* argv, int& i) = 0;
 	virtual void adoptApp(IApp* app) = 0;
 	virtual IApp& app() const = 0;
 	virtual int run(int argc, char** argv) = 0;

@@ -58,29 +58,6 @@ BOOL WINAPI CAppUtilWindows::consoleHandler(DWORD)
     return TRUE;
 }
 
-bool 
-CAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
-{
-	if (app().isArg(i, argc, argv, NULL, "--service")) {
-
-		LOG((CLOG_WARN "obsolete argument --service, use synergyd instead."));
-		app().bye(kExitFailed);
-	}
-	else if (app().isArg(i, argc, argv, NULL, "--exit-pause")) {
-
-		app().argsBase().m_pauseOnExit = true;
-	}
-	else if (app().isArg(i, argc, argv, NULL, "--stop-on-desk-switch")) {
-		app().argsBase().m_stopOnDeskSwitch = true;
-	}
-	else {
-		// option not supported here
-		return false;
-	}
-
-	return true;
-}
-
 static
 int 
 mainLoopStatic() 

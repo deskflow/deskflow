@@ -29,7 +29,6 @@ public:
 	CAppUtilUnix(IEventQueue* events);
 	virtual ~CAppUtilUnix();
 	
-	bool parseArg(const int& argc, const char* const* argv, int& i);
 	int run(int argc, char** argv);
 	void startNode();
 };
