@@ -161,14 +161,14 @@ if (UNIX)
 	endif()
 	
 	if (APPLE)
-		exec_program(uname ARGS -v OUTPUT_VARIABLE DARWIN_VERSION)
+		exec_program(uname ARGS -r OUTPUT_VARIABLE DARWIN_VERSION)
 		string(REGEX MATCH "[0-9]+" DARWIN_VERSION ${DARWIN_VERSION})
 		message(STATUS "DARWIN_VERSION=${DARWIN_VERSION}")
 		if (DARWIN_VERSION LESS 9)
 			# 10.4: Universal (32-bit Intel and PowerPC)
 			set(CMAKE_OSX_ARCHITECTURES "ppc;i386"
 				CACHE STRING "" FORCE)
-		else (DARWIN_VERSION LESS 10)
+		elseif (DARWIN_VERSION LESS 10)
 			# 10.5: 32-bit Intel only
 			set(CMAKE_OSX_ARCHITECTURES "i386"
 				CACHE STRING "" FORCE)
