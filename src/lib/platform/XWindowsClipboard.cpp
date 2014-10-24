@@ -937,8 +937,14 @@ CXWindowsClipboard::pushReplies()
 	for (CReplyMap::iterator index = m_replies.begin();
 								index != m_replies.end(); ) {
 		assert(!index->second.empty());
-		if (!index->second.front()->m_replied) {
-			pushReplies(index, index->second, index->second.begin());
+		CReplyList::iterator listit = index->second.begin();
+		while (listit != index->second.end()) {
+			if (!(*listit)->m_replied)
+				break;
+			++listit;
+		}
+		if (listit != index->second.end() && !(*listit)->m_replied) {
+			pushReplies(index, index->second, listit);
 		}
 		else {
 			++index;
