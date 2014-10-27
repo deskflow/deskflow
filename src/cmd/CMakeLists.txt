@@ -25,7 +25,7 @@ if (WIN32)
 endif()
 
 if (APPLE)
-	if (DARWIN_VERSION GREATER 12)
+	if (OSX_TARGET_MINOR GREATER 8)
 		add_subdirectory(synmacph)
 	endif()
 endif()
