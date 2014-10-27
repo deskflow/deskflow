@@ -18,6 +18,8 @@ Developers
 Synergy is free and open source, so you are free to run the program,
 change the program, and redistribute the program with or without changes.
 
-Once you've got the source code, just use ./hm.sh conf to compile.
-For detailed instructions and a list of dependencies, check out our wiki:
-http://synergy-project.org/wiki/Compiling
+Once you've got the source code, just use "hm conf" and "hm build" to
+compile (./hm.sh on Linux and Mac).
+
+For detailed compile instructions and a list of dependencies, check
+out our wiki: http://synergy-project.org/wiki/Compiling
