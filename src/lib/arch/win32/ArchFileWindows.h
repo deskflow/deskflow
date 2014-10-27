@@ -32,6 +32,8 @@ public:
 	virtual const char*	getBasename(const char* pathname);
 	virtual std::string	getUserDirectory();
 	virtual std::string	getSystemDirectory();
+	virtual std::string	getInstalledDirectory();
+	virtual std::string	getLogDirectory();
 	virtual std::string	concatPath(const std::string& prefix,
 							const std::string& suffix);
 };

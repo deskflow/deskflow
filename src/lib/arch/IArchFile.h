@@ -50,6 +50,18 @@ public:
 	*/
 	virtual std::string	getSystemDirectory() = 0;
 
+	//! Get installed directory
+	/*!
+	Returns the directory in which Synergy is installed.
+	*/
+	virtual std::string	getInstalledDirectory() = 0;
+
+	//! Get log directory
+	/*!
+	Returns the log file directory.
+	*/
+	virtual std::string	getLogDirectory() = 0;
+
 	//! Concatenate path components
 	/*!
 	Concatenate pathname components with a directory separator

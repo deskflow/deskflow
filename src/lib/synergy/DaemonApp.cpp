@@ -87,7 +87,8 @@ CDaemonApp::CDaemonApp() :
 	#if SYSAPI_WIN32
 	m_watchdog(nullptr),
 	#endif
-	m_events(nullptr)
+	m_events(nullptr),
+	m_fileLogOutputter(nullptr)
 {
 	s_instance = this;
 }
@@ -197,8 +198,10 @@ CDaemonApp::mainLoop(bool logToFile)
 	{
 		DAEMON_RUNNING(true);
 		
-		if (logToFile)
-			CLOG->insert(new CFileLogOutputter(logPath().c_str()));
+		if (logToFile) {
+			m_fileLogOutputter = new CFileLogOutputter(logFilename().c_str());
+			CLOG->insert(m_fileLogOutputter);
+		}
 
 		// create socket multiplexer.  this must happen after daemonization
 		// on unix because threads evaporate across a fork().
@@ -213,6 +216,7 @@ CDaemonApp::mainLoop(bool logToFile)
 		
 #if SYSAPI_WIN32
 		m_watchdog = new CMSWindowsWatchdog(false, *m_ipcServer, *m_ipcLogOutputter);
+		m_watchdog->setFileLogOutputter(m_fileLogOutputter);
 #endif
 		
 		m_events->adoptHandler(
@@ -270,21 +274,17 @@ CDaemonApp::foregroundError(const char* message)
 }
 
 std::string
-CDaemonApp::logPath()
+CDaemonApp::logFilename()
 {
-#ifdef SYSAPI_WIN32
-	// TODO: move to CArchMiscWindows
-	// on windows, log to the same dir as the binary.
-	char fileNameBuffer[MAX_PATH];
-	GetModuleFileName(NULL, fileNameBuffer, MAX_PATH);
-	string fileName(fileNameBuffer);
-	size_t lastSlash = fileName.find_last_of("\\");
-	string path(fileName.substr(0, lastSlash));
-	path.append("\\").append(LOG_FILENAME);
-	return path;
-#elif SYSAPI_UNIX
-	return "/var/log/" LOG_FILENAME;
-#endif
+	string logFilename;
+	logFilename = ARCH->setting("LogFilename");
+	if (logFilename.empty()) {
+		logFilename = ARCH->getLogDirectory();
+		logFilename.append("/");
+		logFilename.append(LOG_FILENAME);
+	}
+
+	return logFilename;
 }
 
 void
@@ -337,6 +337,23 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 						LOG((CLOG_ERR "failed to save LogLevel setting, %s", e.what()));
 					}
 				}
+
+#if SYSAPI_WIN32
+				CString logFilename;
+				if (argBase->m_logFile != NULL) {
+					logFilename = CString(argBase->m_logFile);
+					ARCH->setting("LogFilename", logFilename);
+					m_watchdog->setFileLogOutputter(m_fileLogOutputter);
+					command = CArgParser::assembleCommand(argsArray, "--log", 1);
+					LOG((CLOG_DEBUG "removed log file argument and filename %s from command ", logFilename.c_str()));
+					LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
+				}
+				else {
+					m_watchdog->setFileLogOutputter(NULL);
+				}
+
+				m_fileLogOutputter->setLogFilename(logFilename.c_str());
+#endif
 			}
 			else {
 				LOG((CLOG_DEBUG "empty command, elevate=%d", cm->elevate()));

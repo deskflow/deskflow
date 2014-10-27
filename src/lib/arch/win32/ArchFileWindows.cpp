@@ -122,6 +122,24 @@ CArchFileWindows::getSystemDirectory()
 }
 
 std::string
+CArchFileWindows::getInstalledDirectory()
+{
+	char fileNameBuffer[MAX_PATH];
+	GetModuleFileName(NULL, fileNameBuffer, MAX_PATH);
+	std::string fileName(fileNameBuffer);
+	size_t lastSlash = fileName.find_last_of("\\");
+	fileName = fileName.substr(0, lastSlash);
+
+	return fileName;
+}
+
+std::string
+CArchFileWindows::getLogDirectory()
+{
+	return getInstalledDirectory();
+}
+
+std::string
 CArchFileWindows::concatPath(const std::string& prefix,
 				const std::string& suffix)
 {

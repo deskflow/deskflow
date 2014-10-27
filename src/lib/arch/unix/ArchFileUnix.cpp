@@ -89,6 +89,22 @@ CArchFileUnix::getSystemDirectory()
 }
 
 std::string
+CArchFileUnix::getInstalledDirectory()
+{
+#if WINAPI_XWINDOWS
+	return "/bin";
+#else
+	return "";
+#endif
+}
+
+std::string
+CArchFileUnix::getLogDirectory()
+{
+	return "/var/log";
+}
+
+std::string
 CArchFileUnix::concatPath(const std::string& prefix,
 				const std::string& suffix)
 {
