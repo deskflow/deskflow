@@ -161,19 +161,19 @@ if (UNIX)
 	endif()
 	
 	if (APPLE)
-		exec_program(uname ARGS -v OUTPUT_VARIABLE DARWIN_VERSION)
-		string(REGEX MATCH "[0-9]+" DARWIN_VERSION ${DARWIN_VERSION})
-		message(STATUS "DARWIN_VERSION=${DARWIN_VERSION}")
-		if (DARWIN_VERSION LESS 9)
-			# 10.4: Universal (32-bit Intel and PowerPC)
+		message(STATUS "OSX_TARGET_MAJOR=${OSX_TARGET_MAJOR}")
+		message(STATUS "OSX_TARGET_MINOR=${OSX_TARGET_MINOR}")
+
+		if (NOT (OSX_TARGET_MAJOR EQUAL 10))
+			message(FATAL_ERROR "Mac OS X target must be 10.x")
+		endif ()
+
+		if (OSX_TARGET_MINOR LESS 6)
+			# <= 10.5: 32-bit Intel and PowerPC
 			set(CMAKE_OSX_ARCHITECTURES "ppc;i386"
 				CACHE STRING "" FORCE)
-		else (DARWIN_VERSION LESS 10)
-			# 10.5: 32-bit Intel only
-			set(CMAKE_OSX_ARCHITECTURES "i386"
-				CACHE STRING "" FORCE)
 		else()
-			# 10.6+: Intel only
+			# >= 10.6: Intel only
 			set(CMAKE_OSX_ARCHITECTURES "i386;x86_64"
 				CACHE STRING "" FORCE)
 		endif()

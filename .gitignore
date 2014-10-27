@@ -10,3 +10,5 @@
 /src/gui/tmp
 /src/gui/ui_*
 src/gui/gui.pro.user
+src/gui/.qmake.stash
+config.h
