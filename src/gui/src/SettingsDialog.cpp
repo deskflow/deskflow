@@ -50,9 +50,14 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 		m_pLineEditCryptoPass->setText(appConfig().cryptoPass());
 	}
 
+#if defined(Q_OS_WIN)
 	m_SuppressElevateWarning = true;
 	m_pCheckBoxElevateMode->setChecked(appConfig().elevateMode());
 	m_SuppressElevateWarning = false;
+#else
+	// elevate checkbox is only useful on ms windows.
+	m_pCheckBoxElevateMode->hide();
+#endif
 }
 
 void SettingsDialog::accept()
