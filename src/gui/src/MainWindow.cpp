@@ -70,8 +70,6 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pTrayIcon(NULL),
 	m_pTrayIconMenu(NULL),
 	m_AlreadyHidden(false),
-	m_ElevateProcess(false),
-	m_SuppressElevateWarning(false),
 	m_pMenuBar(NULL),
 	m_pMenuFile(NULL),
 	m_pMenuEdit(NULL),
@@ -96,9 +94,6 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLogError(const QString&)));
 	connect(&m_IpcClient, SIGNAL(infoMessage(const QString&)), this, SLOT(appendLogNote(const QString&)));
 	m_IpcClient.connectToHost();
-#else
-	// elevate checkbox is only useful on ms windows.
-	m_pElevateCheckBox->hide();
 #endif
 
 	// change default size based on os
@@ -162,8 +157,6 @@ void MainWindow::onModeChanged(bool startDesktop, bool applyService)
 		stopService();
 		startSynergy();
 	}
-
-	m_pElevateCheckBox->setEnabled(appConfig().processMode() == Service);
 }
 
 void MainWindow::setStatus(const QString &status)
@@ -245,10 +238,6 @@ void MainWindow::loadSettings()
 	m_pLineEditConfigFile->setText(settings().value("configFile", QDir::homePath() + "/" + synergyConfigName).toString());
 	m_pGroupClient->setChecked(settings().value("groupClientChecked", true).toBool());
 	m_pLineEditHostname->setText(settings().value("serverHostname").toString());
-
-	m_SuppressElevateWarning = true;
-	m_pElevateCheckBox->setChecked(settings().value("elevateChecked", false).toBool());
-	m_SuppressElevateWarning = false;
 }
 
 void MainWindow::initConnections()
@@ -476,7 +465,7 @@ void MainWindow::startSynergy()
 	if (serviceMode)
 	{
 		QString command(app + " " + args.join(" "));
-		m_IpcClient.sendCommand(command, m_ElevateProcess);
+		m_IpcClient.sendCommand(command, appConfig().elevateMode());
 	}
 
 	appConfig().setStartedBefore(true);
@@ -624,7 +613,7 @@ void MainWindow::stopSynergy()
 void MainWindow::stopService()
 {
 	// send empty command to stop service from laucning anything.
-	m_IpcClient.sendCommand("", m_ElevateProcess);
+	m_IpcClient.sendCommand("", appConfig().elevateMode());
 }
 
 void MainWindow::stopDesktop()
@@ -894,28 +883,6 @@ void MainWindow::on_m_pActionWizard_triggered()
 {
 	SetupWizard wizard(*this, false);
 	wizard.exec();
-}
-
-void MainWindow::on_m_pElevateCheckBox_toggled(bool checked)
-{
-	if (checked && !m_SuppressElevateWarning) {
-		int r = QMessageBox::warning(
-			this, tr("Elevate Synergy"),
-			tr("Are you sure you want to elevate Synergy?\n\n"
-			   "This allows Synergy to interact with elevated processes "
-			   "and the UAC dialog, but can cause problems with non-elevated "
-			   "processes. Elevate Synergy only if you really need to."),
-			QMessageBox::Yes | QMessageBox::No);
-
-		if (r != QMessageBox::Yes) {
-			m_pElevateCheckBox->setChecked(false);
-			return;
-		}
-	}
-
-	m_ElevateProcess = checked;
-	settings().setValue("elevateChecked", checked);
-	settings().sync();
 }
 
 void MainWindow::on_m_pButtonApply_clicked()
