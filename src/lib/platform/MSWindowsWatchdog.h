@@ -29,6 +29,7 @@
 class CThread;
 class CIpcLogOutputter;
 class CIpcServer;
+class CFileLogOutputter;
 
 class CMSWindowsWatchdog {
 public:
@@ -43,6 +44,7 @@ public:
 	void				setCommand(const std::string& command, bool elevate);
 	void				stop();
 	bool				isProcessActive();
+	void				setFileLogOutputter(CFileLogOutputter* outputter);
 
 private:
 	void				mainLoop(void*);
@@ -70,6 +72,7 @@ private:
 	PROCESS_INFORMATION m_processInfo;
 	int					m_processFailures;
 	bool				m_processRunning;
+	CFileLogOutputter*	m_fileLogOutputter;
 };
 
 //! Relauncher error

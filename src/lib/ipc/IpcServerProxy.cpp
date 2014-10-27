@@ -83,7 +83,7 @@ CIpcServerProxy::handleData(const CEvent&, void*)
 void
 CIpcServerProxy::send(const CIpcMessage& message)
 {
-	LOG((CLOG_DEBUG "ipc write: %d", message.type()));
+	LOG((CLOG_DEBUG4 "ipc write: %d", message.type()));
 
 	switch (message.type()) {
 	case kIpcHello: {

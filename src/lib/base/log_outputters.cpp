@@ -235,12 +235,18 @@ CBufferedLogOutputter::write(ELevel, const char* message)
 
 CFileLogOutputter::CFileLogOutputter(const char* logFile)
 {
-	assert(logFile != NULL);
-	m_fileName = logFile;
+	setLogFilename(logFile);
 }
 
 CFileLogOutputter::~CFileLogOutputter()
 {
+}
+
+void
+CFileLogOutputter::setLogFilename(const char* logFile)
+{
+	assert(logFile != NULL);
+	m_fileName = logFile;
 }
 
 bool

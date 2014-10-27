@@ -79,8 +79,11 @@ public:
 	virtual void		close();
 	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
+
+	void				setLogFilename(const char* title);
+
 private:
-	std::string m_fileName;
+	std::string			m_fileName;
 };
 
 //! Write log to system log

@@ -28,6 +28,7 @@
 #include "arch/win32/ArchDaemonWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "arch/Arch.h"
+#include "base/log_outputters.h"
 #include "base/TMethodJob.h"
 #include "base/Log.h"
 #include "common/Version.h"
@@ -56,7 +57,8 @@ CMSWindowsWatchdog::CMSWindowsWatchdog(
 	m_ipcLogOutputter(ipcLogOutputter),
 	m_elevateProcess(false),
 	m_processFailures(0),
-	m_processRunning(false)
+	m_processRunning(false),
+	m_fileLogOutputter(NULL)
 {
 }
 
@@ -245,6 +247,12 @@ CMSWindowsWatchdog::isProcessActive()
 	return exitCode == STILL_ACTIVE;
 }
 
+void 
+CMSWindowsWatchdog::setFileLogOutputter(CFileLogOutputter* outputter)
+{
+	m_fileLogOutputter = outputter;
+}
+
 void
 CMSWindowsWatchdog::startProcess()
 {
@@ -383,8 +391,11 @@ CMSWindowsWatchdog::outputLoop(void*)
 			// send process output over IPC to GUI, and force it to be sent
 			// which bypasses the ipc logging anti-recursion mechanism.
 			m_ipcLogOutputter.write(kINFO, buffer, true);
-		}
-			
+
+			if (m_fileLogOutputter != NULL) {
+				m_fileLogOutputter->write(kINFO, buffer);
+			}
+		}	
 	}
 }
 

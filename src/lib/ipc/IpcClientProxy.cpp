@@ -141,7 +141,7 @@ CIpcClientProxy::send(const CIpcMessage& message)
 	// also, don't allow the dtor to destroy the stream while we're using it.
 	CArchMutexLock lock(m_writeMutex);
 
-	LOG((CLOG_DEBUG "ipc write: %d", message.type()));
+	LOG((CLOG_DEBUG4 "ipc write: %d", message.type()));
 
 	switch (message.type()) {
 	case kIpcLogLine: {

@@ -25,6 +25,7 @@
 
 class CEvent;
 class CIpcLogOutputter;
+class CFileLogOutputter;
 
 #if SYSAPI_WIN32
 class CMSWindowsWatchdog;
@@ -41,7 +42,7 @@ public:
 private:
 	void daemonize();
 	void foregroundError(const char* message);
-	std::string logPath();
+	std::string			logFilename();
 	void				handleIpcMessage(const CEvent&, void*);
 
 public:
@@ -55,6 +56,7 @@ private:
 	CIpcServer*			m_ipcServer;
 	CIpcLogOutputter*	m_ipcLogOutputter;
 	IEventQueue*		m_events;
+	CFileLogOutputter*	m_fileLogOutputter;
 };
 
 #define LOG_FILENAME "synergyd.log"
