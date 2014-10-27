@@ -18,10 +18,12 @@
 
 #pragma once
 
-#include "common/common.h"
-#include "base/String.h"
-#include "synergy/IApp.h"
 #include "ipc/IpcClient.h"
+#include "synergy/IApp.h"
+#include "base/String.h"
+#include "base/Log.h"
+#include "base/EventQueue.h"
+#include "common/common.h"
 
 #if SYSAPI_WIN32
 #include "synergy/win32/AppUtilWindows.h"
@@ -96,6 +98,8 @@ public:
 	void				setSocketMultiplexer(CSocketMultiplexer* sm) { m_socketMultiplexer = sm; }
 	CSocketMultiplexer*	getSocketMultiplexer() const { return m_socketMultiplexer; }
 
+	void				setEvents(CEventQueue& events) { m_events = &events; }
+
 private:
 	void				handleIpcMessage(const CEvent&, void*);
 
@@ -116,6 +120,30 @@ private:
 	ARCH_APP_UTIL m_appUtil;
 	CIpcClient*			m_ipcClient;
 	CSocketMultiplexer*	m_socketMultiplexer;
+};
+
+class CMinimalApp : public CApp {
+public:
+	CMinimalApp();
+	virtual ~CMinimalApp();
+
+	// IApp overrides
+	virtual int			standardStartup(int argc, char** argv);
+	virtual int			runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup);
+	virtual void		startNode();
+	virtual int			mainLoop();
+	virtual int			foregroundStartup(int argc, char** argv);
+	virtual CScreen*	createScreen();
+	virtual void		loadConfig();
+	virtual bool		loadConfig(const CString& pathname);
+	virtual const char*	daemonInfo() const;
+	virtual const char* daemonName() const;
+	virtual void		parseArgs(int argc, const char* const* argv);
+
+private:
+	CArch				m_arch;
+	CLog				m_log;
+	CEventQueue			m_events;
 };
 
 #if WINAPI_MSWINDOWS

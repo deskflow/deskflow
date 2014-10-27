@@ -20,6 +20,7 @@
 #include "synergy/App.h"
 #include "synergy/ServerArgs.h"
 #include "synergy/ClientArgs.h"
+#include "synergy/ToolArgs.h"
 #include "synergy/ArgsBase.h"
 #include "base/Log.h"
 
@@ -153,6 +154,23 @@ CArgParser::parsePlatformArg(CArgsBase& argsBase, const int& argc, const char* c
 	// no options for carbon
 	return false;
 #endif
+}
+
+
+bool
+CArgParser::parseToolArgs(CToolArgs& args, int argc, const char* const* argv)
+{
+	for (int i = 1; i < argc; ++i) {
+		if (isArg(i, argc, argv, NULL, "--get-active-desktop", 0)) {
+			args.m_printActiveDesktopName = true;
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	return false;
 }
 
 bool

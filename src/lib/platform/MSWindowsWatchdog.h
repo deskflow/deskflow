@@ -20,6 +20,7 @@
 
 #include "platform/MSWindowsSession.h"
 #include "synergy/XSynergy.h"
+#include "arch/IArchMultithread.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -54,7 +55,10 @@ private:
 	HANDLE				duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
 	HANDLE				getUserToken(LPSECURITY_ATTRIBUTES security);
 	void				startProcess();
+	BOOL				doStartProcess(CString& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
 	void				sendSas();
+	void				getActiveDesktop(LPSECURITY_ATTRIBUTES security);
+	void				testOutput(CString buffer);
 
 private:
 	CThread*			m_thread;
@@ -73,6 +77,10 @@ private:
 	int					m_processFailures;
 	bool				m_processRunning;
 	CFileLogOutputter*	m_fileLogOutputter;
+	bool				m_autoElevated;
+	CArchMutex			m_mutex;
+	CArchCond			m_condVar;
+	bool				m_ready;
 };
 
 //! Relauncher error

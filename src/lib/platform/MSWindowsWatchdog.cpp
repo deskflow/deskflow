@@ -43,6 +43,8 @@ enum {
 
 typedef VOID (WINAPI *SendSas)(BOOL asUser);
 
+const char g_activeDesktop[] = {"activeDesktop:"};
+
 CMSWindowsWatchdog::CMSWindowsWatchdog(
 	bool autoDetectCommand,
 	CIpcServer& ipcServer,
@@ -58,12 +60,23 @@ CMSWindowsWatchdog::CMSWindowsWatchdog(
 	m_elevateProcess(false),
 	m_processFailures(0),
 	m_processRunning(false),
-	m_fileLogOutputter(NULL)
+	m_fileLogOutputter(NULL),
+	m_autoElevated(false),
+	m_ready(false)
 {
+	m_mutex = ARCH->newMutex();
+	m_condVar = ARCH->newCondVar();
 }
 
 CMSWindowsWatchdog::~CMSWindowsWatchdog()
 {
+	if (m_condVar != NULL) {
+		ARCH->closeCondVar(m_condVar);
+	}
+
+	if (m_mutex != NULL) {
+		ARCH->closeMutex(m_mutex);
+	}
 }
 
 void 
@@ -126,7 +139,9 @@ CMSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
 	// elevate for the uac dialog (consent.exe) but this would be pointless,
 	// since synergy would re-launch as non-elevated after the desk switch,
 	// and so would be unusable with the new elevated process taking focus.
-	if (m_elevateProcess || m_session.isProcessInSession("logonui.exe", NULL)) {
+	if (m_elevateProcess
+		|| m_autoElevated
+		|| m_session.isProcessInSession("logonui.exe", NULL)) {
 		
 		LOG((CLOG_DEBUG "getting elevated token, %s",
 			(m_elevateProcess ? "elevation required" : "at login screen")));
@@ -273,7 +288,11 @@ CMSWindowsWatchdog::startProcess()
 	SECURITY_ATTRIBUTES sa;
 	ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
 
+	getActiveDesktop(&sa);
+
+	ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
 	HANDLE userToken = getUserToken(&sa);
+	m_autoElevated = false;
 
 	// patch by Jack Zhou and Henry Tung
 	// set UIAccess to fix Windows 8 GUI interaction
@@ -281,6 +300,33 @@ CMSWindowsWatchdog::startProcess()
 	DWORD uiAccess = 1;
 	SetTokenInformation(userToken, TokenUIAccess, &uiAccess, sizeof(DWORD));
 
+	BOOL createRet = doStartProcess(m_command, userToken, &sa);
+
+	if (!createRet) {
+		LOG((CLOG_ERR "could not launch"));
+		DWORD exitCode = 0;
+		GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
+		LOG((CLOG_ERR "exit code: %d", exitCode));
+		throw XArch(new XArchEvalWindows);
+	}
+	else {
+		// wait for program to fail.
+		ARCH->sleep(1);
+		if (!isProcessActive()) {
+			throw XMSWindowsWatchdogError("process immediately stopped");
+		}
+
+		m_processRunning = true;
+		m_processFailures = 0;
+
+		LOG((CLOG_DEBUG "started process, session=%i, command=%s",
+			m_session.getActiveSessionId(), m_command.c_str()));
+	}
+}
+
+BOOL
+CMSWindowsWatchdog::doStartProcess(CString& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
+{
 	// clear, as we're reusing process info struct
 	ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
 
@@ -307,30 +353,14 @@ CMSWindowsWatchdog::startProcess()
 	// re-launch in current active user session
 	LOG((CLOG_INFO "starting new process"));
 	BOOL createRet = CreateProcessAsUser(
-		userToken, NULL, LPSTR(m_command.c_str()),
-		&sa, NULL, TRUE, creationFlags,
+		userToken, NULL, LPSTR(command.c_str()),
+		sa, NULL, TRUE, creationFlags,
 		environment, NULL, &si, &m_processInfo);
 
 	DestroyEnvironmentBlock(environment);
 	CloseHandle(userToken);
 
-	if (!createRet) {
-		LOG((CLOG_ERR "could not launch"));
-		throw XArch(new XArchEvalWindows);
-	}
-	else {
-		// wait for program to fail.
-		ARCH->sleep(1);
-		if (!isProcessActive()) {
-			throw XMSWindowsWatchdogError("process immediately stopped");
-		}
-
-		m_processRunning = true;
-		m_processFailures = 0;
-
-		LOG((CLOG_DEBUG "started process, session=%i, command=%s",
-			m_session.getActiveSessionId(), m_command.c_str()));
-	}
+	return createRet;
 }
 
 void
@@ -387,6 +417,8 @@ CMSWindowsWatchdog::outputLoop(void*)
 		}
 		else {
 			buffer[bytesRead] = '\0';
+
+			testOutput(buffer);
 
 			// send process output over IPC to GUI, and force it to be sent
 			// which bypasses the ipc logging anti-recursion mechanism.
@@ -491,4 +523,58 @@ CMSWindowsWatchdog::shutdownExistingProcesses()
 
 	CloseHandle(snapshot);
 	m_processRunning = false;
+}
+
+void
+CMSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
+{
+	CString installedDir = ARCH->getInstalledDirectory();
+	if (!installedDir.empty()) {
+		CString syntoolCommand;
+		syntoolCommand.append("\"").append(installedDir).append("\\").append("syntool").append("\"");
+		syntoolCommand.append(" --get-active-desktop");
+
+		m_session.updateActiveSession();
+		bool elevateProcess = m_elevateProcess;
+		m_elevateProcess = true;
+		HANDLE userToken = getUserToken(security);
+		m_elevateProcess = elevateProcess;
+
+		BOOL createRet = doStartProcess(syntoolCommand, userToken, security);
+
+		if (!createRet) {
+			DWORD rc = GetLastError();
+			RevertToSelf();
+		}
+		else {
+			LOG((CLOG_DEBUG "launched syntool to check active desktop"));
+		}
+
+		ARCH->lockMutex(m_mutex);
+		while (!m_ready) {
+			ARCH->waitCondVar(m_condVar, m_mutex, 1.0);
+		}
+		m_ready = false;
+		ARCH->unlockMutex(m_mutex);
+	}
+} 
+
+void
+CMSWindowsWatchdog::testOutput(CString buffer)
+{
+	// HACK: check standard output seems hacky.
+	size_t i = buffer.find(g_activeDesktop);
+	if (i != CString::npos) {
+		size_t s = sizeof(g_activeDesktop);
+		CString defaultDesktop("Default");
+		CString sub = buffer.substr(s - 1, defaultDesktop.size());
+		if (sub != defaultDesktop) {
+			m_autoElevated = true;
+		}
+
+		ARCH->lockMutex(m_mutex);
+		m_ready = true;
+		ARCH->broadcastCondVar(m_condVar);
+		ARCH->unlockMutex(m_mutex);
+	}
 }
