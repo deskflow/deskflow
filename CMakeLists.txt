@@ -200,7 +200,10 @@ if (UNIX)
 		set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
 
 		set(XKBlib "X11/Xlib.h;X11/XKBlib.h")
-		check_symbol_exists("XRRNotifyEvent" "${XKBlib};X11/extensions/Xrandr.h" HAVE_X11_EXTENSIONS_XRANDR_H)
+		set(CMAKE_EXTRA_INCLUDE_FILES "${XKBlib};X11/extensions/Xrandr.h")
+		check_type_size("XRRNotifyEvent" X11_EXTENSIONS_XRANDR_H)
+		set(HAVE_X11_EXTENSIONS_XRANDR_H "${X11_EXTENSIONS_XRANDR_H}")
+		set(CMAKE_EXTRA_INCLUDE_FILES)
 
 		check_include_files("${XKBlib};X11/extensions/dpms.h" HAVE_X11_EXTENSIONS_DPMS_H)
 		check_include_files("X11/extensions/Xinerama.h" HAVE_X11_EXTENSIONS_XINERAMA_H)
