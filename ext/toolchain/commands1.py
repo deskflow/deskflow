@@ -430,14 +430,16 @@ class InternalCommands:
 		if generator.cmakeName.find('Unix Makefiles') != -1:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 			
-		elif sys.platform == "darwin":
+		if sys.platform == "darwin":
 			macSdkMatch = re.match("(\d+)\.(\d+)", self.macSdk)
 			if not macSdkMatch:
 				raise Exception("unknown osx version: " + self.macSdk)
 
-			sdkDir = self.getMacSdkDir()
-			cmake_args += " -DCMAKE_OSX_SYSROOT=" + sdkDir
-			cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macSdk
+			if generator.cmakeName.find('Unix Makefiles') == -1:
+				sdkDir = self.getMacSdkDir()
+				cmake_args += " -DCMAKE_OSX_SYSROOT=" + sdkDir
+				cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macSdk
+
 			cmake_args += " -DOSX_TARGET_MAJOR=" + macSdkMatch.group(1)
 			cmake_args += " -DOSX_TARGET_MINOR=" + macSdkMatch.group(2)
 		
@@ -551,7 +553,7 @@ class InternalCommands:
 		if os.path.exists(sdkPath):
 			return sdkPath
 
-		return "/Developer/SDKs/" + sdkDirName + ".sdk"
+		return os.popen('xcodebuild -version -sdk macosx' + self.macSdk + ' Path').read().strip()
 	
 	# http://tinyurl.com/cs2rxxb
 	def fixCmakeEclipseBug(self):
