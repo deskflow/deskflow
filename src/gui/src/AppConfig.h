@@ -78,6 +78,7 @@ class AppConfig
 
 		bool detectPath(const QString& name, QString& path);
 		void persistLogDir();
+		bool elevateMode();
 
 	protected:
 		QSettings& settings() { return *m_pSettings; }
@@ -91,6 +92,7 @@ class AppConfig
 		void setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
 		void setLanguage(const QString language) { m_Language = language; }
 		void setStartedBefore(bool b) { m_StartedBefore = b; }
+		void setElevateMode(bool b) { m_ElevateMode = b; }
 
 		void loadSettings();
 		void saveSettings();
@@ -112,6 +114,7 @@ class AppConfig
 		QString m_Language;
 		bool m_StartedBefore;
 		bool m_AutoConnect;
+		bool m_ElevateMode;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

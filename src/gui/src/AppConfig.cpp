@@ -54,7 +54,8 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_WizardLastRun(0),
 	m_CryptoPass(),
 	m_ProcessMode(DEFAULT_PROCESS_MODE),
-	m_AutoConnect(true)
+	m_AutoConnect(true),
+	m_ElevateMode(false)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -123,6 +124,7 @@ void AppConfig::loadSettings()
 	m_Language = settings().value("language", QLocale::system().name()).toString();
 	m_StartedBefore = settings().value("startedBefore", false).toBool();
 	m_AutoConnect = settings().value("autoConnect", true).toBool();
+	m_ElevateMode = settings().value("elevateMode", false).toBool();
 }
 
 void AppConfig::saveSettings()
@@ -139,6 +141,7 @@ void AppConfig::saveSettings()
 	settings().setValue("language", m_Language);
 	settings().setValue("startedBefore", m_StartedBefore);
 	settings().setValue("autoConnect", m_AutoConnect);
+	settings().setValue("elevateMode", m_ElevateMode);
 }
 
 void AppConfig::setCryptoPass(const QString &s)
@@ -160,4 +163,9 @@ void AppConfig::setCryptoPass(const QString &s)
 void AppConfig::setAutoConnect(bool autoConnect)
 {
 	m_AutoConnect = autoConnect;
+}
+
+bool AppConfig::elevateMode()
+{
+	return m_ElevateMode;
 }

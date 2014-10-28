@@ -312,13 +312,6 @@
        </spacer>
       </item>
       <item>
-       <widget class="QCheckBox" name="m_pElevateCheckBox">
-        <property name="text">
-         <string>&amp;Elevate</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="m_pButtonApply">
         <property name="enabled">
          <bool>false</bool>

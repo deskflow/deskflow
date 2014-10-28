@@ -171,3 +171,21 @@ CMSWindowsSession::nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry)
 
 	return gotEntry;
 }
+
+CString
+CMSWindowsSession::getActiveDesktopName()
+{
+	CString result;
+
+	HDESK hd = OpenInputDesktop(0, TRUE, GENERIC_READ);
+	if (hd != NULL) {
+		DWORD size;
+		GetUserObjectInformation(hd, UOI_NAME, NULL, 0, &size);
+		TCHAR* name = (TCHAR*)alloca(size + sizeof(TCHAR));
+		GetUserObjectInformation(hd, UOI_NAME, name, size, &size);
+		result = name;
+		CloseDesktop(hd);
+	}
+
+	return result;
+}

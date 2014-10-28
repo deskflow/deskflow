@@ -30,7 +30,8 @@
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::SettingsDialogBase(),
-	m_AppConfig(config)
+	m_AppConfig(config),
+	m_SuppressElevateWarning(false)
 {
 	setupUi(this);
 
@@ -48,6 +49,15 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	{
 		m_pLineEditCryptoPass->setText(appConfig().cryptoPass());
 	}
+
+#if defined(Q_OS_WIN)
+	m_SuppressElevateWarning = true;
+	m_pCheckBoxElevateMode->setChecked(appConfig().elevateMode());
+	m_SuppressElevateWarning = false;
+#else
+	// elevate checkbox is only useful on ms windows.
+	m_pCheckBoxElevateMode->hide();
+#endif
 }
 
 void SettingsDialog::accept()
@@ -73,6 +83,7 @@ void SettingsDialog::accept()
 	appConfig().setCryptoEnabled(cryptoEnabled);
 	appConfig().setCryptoPass(cryptoPass);
 	appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
+	appConfig().setElevateMode(m_pCheckBoxElevateMode->isChecked());
 	appConfig().saveSettings();
 	QDialog::accept();
 }
@@ -143,4 +154,22 @@ void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 {
 	QString ietfCode = m_pComboLanguage->itemData(index).toString();
 	QSynergyApplication::getInstance()->switchTranslator(ietfCode);
+}
+
+void SettingsDialog::on_m_pCheckBoxElevateMode_toggled(bool checked)
+{
+	if (checked && !m_SuppressElevateWarning) {
+		int r = QMessageBox::warning(
+			this, tr("Elevate Synergy"),
+			tr("Are you sure you want to elevate Synergy?\n\n"
+			   "This allows Synergy to interact with elevated processes "
+			   "and the UAC dialog, but can cause problems with non-elevated "
+			   "processes. Elevate Synergy only if you really need to."),
+			QMessageBox::Yes | QMessageBox::No);
+
+		if (r != QMessageBox::Yes) {
+			m_pCheckBoxElevateMode->setChecked(false);
+			return;
+		}
+	}
 }

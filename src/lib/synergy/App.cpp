@@ -244,3 +244,80 @@ CApp::runEventsLoop(void*)
 	
 #endif
 }
+
+//
+// CMinimalApp
+//
+
+CMinimalApp::CMinimalApp() :
+	CApp(NULL, NULL, new CArgsBase())
+{
+	setEvents(m_events);
+}
+
+CMinimalApp::~CMinimalApp()
+{
+}
+
+int
+CMinimalApp::standardStartup(int argc, char** argv)
+{
+	return 0;
+}
+
+int
+CMinimalApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
+{
+	return 0;
+}
+
+void
+CMinimalApp::startNode()
+{
+}
+
+int
+CMinimalApp::mainLoop()
+{
+	return 0;
+}
+
+int
+CMinimalApp::foregroundStartup(int argc, char** argv)
+{
+	return 0;
+}
+
+CScreen*
+CMinimalApp::createScreen()
+{
+	return NULL;
+}
+
+void
+CMinimalApp::loadConfig()
+{
+}
+
+bool
+CMinimalApp::loadConfig(const CString& pathname)
+{
+	return false;
+}
+
+const char*
+CMinimalApp::daemonInfo() const
+{
+	return "";
+}
+
+const char*
+CMinimalApp::daemonName() const
+{
+	return "";
+}
+
+void
+CMinimalApp::parseArgs(int argc, const char* const* argv)
+{
+}

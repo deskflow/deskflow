@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2013 Bolton Software Ltd.
+ * Copyright (C) 2014 Synergy Si, Inc.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,34 +19,10 @@
 
 #include "base/String.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <Tlhelp32.h>
-
-class CMSWindowsSession {
+class CToolArgs {
 public:
-	CMSWindowsSession();
-	~CMSWindowsSession();
+	CToolArgs();
 
-	//!
-	/*!
-	Returns true if the session ID has changed since updateActiveSession was called.
-	*/
-	BOOL				hasChanged();
-	
-	bool				isProcessInSession(const char* name, PHANDLE process);
-
-	HANDLE				getUserToken(LPSECURITY_ATTRIBUTES security);
-
-	DWORD				getActiveSessionId() { return m_activeSessionId; }
-
-	void				updateActiveSession();
-
-	CString				getActiveDesktopName();
-
-private:
-	BOOL				nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry);
-
-private:
-	DWORD				m_activeSessionId;
+public:
+	bool				m_printActiveDesktopName;
 };

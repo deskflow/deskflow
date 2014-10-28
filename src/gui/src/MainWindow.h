@@ -114,7 +114,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void on_m_pActionAbout_triggered();
 		void on_m_pActionSettings_triggered();
 		void on_m_pActionWizard_triggered();
-		void on_m_pElevateCheckBox_toggled(bool checked);
 		void synergyFinished(int exitCode, QProcess::ExitStatus);
 		void trayActivated(QSystemTrayIcon::ActivationReason reason);
 		void stopSynergy();
@@ -160,8 +159,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool m_AlreadyHidden;
 		VersionChecker m_VersionChecker;
 		IpcClient m_IpcClient;
-		bool m_ElevateProcess;
-		bool m_SuppressElevateWarning;
 		QMenuBar* m_pMenuBar;
 		QMenu* m_pMenuFile;
 		QMenu* m_pMenuEdit;

@@ -34,6 +34,7 @@ public:
 	bool				parseServerArgs(CServerArgs& args, int argc, const char* const* argv);
 	bool				parseClientArgs(CClientArgs& args, int argc, const char* const* argv);
 	bool				parsePlatformArg(CArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
+	bool				parseToolArgs(CToolArgs& args, int argc, const char* const* argv);
 	bool				parseGenericArgs(int argc, const char* const* argv, int& i);
 	void				setArgsBase(CArgsBase& argsBase) { m_argsBase = &argsBase; }
 
