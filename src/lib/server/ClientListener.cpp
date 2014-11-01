@@ -51,7 +51,7 @@ CClientListener::CClientListener(const CNetworkAddress& address,
 
 	try {
 		// create listen socket
-		m_listen = m_socketFactory->createListen();
+		m_listen = m_socketFactory->createListen(ARCH->getAddrFamily(address.getAddress()));
 
 		// bind listen address
 		LOG((CLOG_DEBUG1 "binding listen socket"));

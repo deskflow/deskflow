@@ -36,7 +36,7 @@ A data socket using TCP.
 */
 class CTCPSocket : public IDataSocket {
 public:
-	CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer);
+	CTCPSocket(IArchNetwork::EAddressFamily family, IEventQueue* events, CSocketMultiplexer* socketMultiplexer);
 	CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer, CArchSocket socket);
 	~CTCPSocket();
 

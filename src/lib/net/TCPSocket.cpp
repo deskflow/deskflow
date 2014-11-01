@@ -37,7 +37,7 @@
 // CTCPSocket
 //
 
-CTCPSocket::CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
+CTCPSocket::CTCPSocket(IArchNetwork::EAddressFamily family, IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
 	IDataSocket(events),
 	m_mutex(),
 	m_flushed(&m_mutex, true),
@@ -45,7 +45,7 @@ CTCPSocket::CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexe
 	m_socketMultiplexer(socketMultiplexer)
 {
 	try {
-		m_socket = ARCH->newSocket(IArchNetwork::kINET, IArchNetwork::kSTREAM);
+		m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
 	}
 	catch (XArchNetwork& e) {
 		throw XSocketCreate(e.what());

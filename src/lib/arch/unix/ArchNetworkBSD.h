@@ -50,9 +50,11 @@ public:
 	CArchNetAddressImpl() : m_len(sizeof(m_addr)) { }
 
 public:
-	struct sockaddr		m_addr;
-	socklen_t			m_len;
+	struct sockaddr_storage		m_addr;
+	socklen_t					m_len;
 };
+#define TYPED_ADDR(type_, addr_) (reinterpret_cast<type_*>(&addr_->m_addr))
+
 
 //! Berkeley (BSD) sockets implementation of IArchNetwork
 class CArchNetworkBSD : public IArchNetwork {

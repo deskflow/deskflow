@@ -34,13 +34,13 @@
 // CTCPListenSocket
 //
 
-CTCPListenSocket::CTCPListenSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
+CTCPListenSocket::CTCPListenSocket(IArchNetwork::EAddressFamily family, IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
 	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {
 	m_mutex = new CMutex;
 	try {
-		m_socket = ARCH->newSocket(IArchNetwork::kINET, IArchNetwork::kSTREAM);
+		m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
 	}
 	catch (XArchNetwork& e) {
 		throw XSocketCreate(e.what());

@@ -38,13 +38,13 @@ CTCPSocketFactory::~CTCPSocketFactory()
 }
 
 IDataSocket*
-CTCPSocketFactory::create() const
+CTCPSocketFactory::create(IArchNetwork::EAddressFamily family) const
 {
-	return new CTCPSocket(m_events, m_socketMultiplexer);
+	return new CTCPSocket(family, m_events, m_socketMultiplexer);
 }
 
 IListenSocket*
-CTCPSocketFactory::createListen() const
+CTCPSocketFactory::createListen(IArchNetwork::EAddressFamily family) const
 {
-	return new CTCPListenSocket(m_events, m_socketMultiplexer);
+	return new CTCPListenSocket(family, m_events, m_socketMultiplexer);
 }

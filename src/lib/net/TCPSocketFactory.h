@@ -19,6 +19,7 @@
 #pragma once
 
 #include "net/ISocketFactory.h"
+#include "arch/IArchNetwork.h"
 
 class IEventQueue;
 class CSocketMultiplexer;
@@ -30,8 +31,8 @@ public:
 	virtual ~CTCPSocketFactory();
 
 	// ISocketFactory overrides
-	virtual IDataSocket*	create() const;
-	virtual IListenSocket*	createListen() const;
+	virtual IDataSocket*	create(IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const;
+	virtual IListenSocket*	createListen(IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const;
 
 private:
 	IEventQueue*		m_events;

@@ -33,7 +33,7 @@
 //
 
 CIpcServer::CIpcServer(IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
-	m_socket(events, socketMultiplexer),
+	m_socket(IArchNetwork::kINET, events, socketMultiplexer),
 	m_address(CNetworkAddress(IPC_HOST, IPC_PORT)),
 	m_events(events)
 {
@@ -41,7 +41,7 @@ CIpcServer::CIpcServer(IEventQueue* events, CSocketMultiplexer* socketMultiplexe
 }
 
 CIpcServer::CIpcServer(IEventQueue* events, CSocketMultiplexer* socketMultiplexer, int port) :
-	m_socket(events, socketMultiplexer),
+	m_socket(IArchNetwork::kINET, events, socketMultiplexer),
 	m_address(CNetworkAddress(IPC_HOST, port)),
 	m_events(events)
 {

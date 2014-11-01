@@ -19,6 +19,7 @@
 #pragma once
 
 #include "common/IInterface.h"
+#include "arch/IArchNetwork.h"
 
 class IDataSocket;
 class IListenSocket;
@@ -34,10 +35,10 @@ public:
 	//@{
 
 	//! Create data socket
-	virtual IDataSocket*	create() const = 0;
+	virtual IDataSocket*	create(IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const = 0;
 
 	//! Create listen socket
-	virtual IListenSocket*	createListen() const = 0;
+	virtual IListenSocket*	createListen(IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const = 0;
 
 	//@}
 };

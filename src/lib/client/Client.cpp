@@ -150,7 +150,7 @@ CClient::connect()
 		}
 
 		// create the socket
-		IDataSocket* socket = m_socketFactory->create();
+		IDataSocket* socket = m_socketFactory->create(ARCH->getAddrFamily(m_serverAddress.getAddress()));
 
 		// filter socket messages, including a packetizing filter
 		m_stream = socket;
