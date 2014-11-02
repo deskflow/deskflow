@@ -10,7 +10,7 @@
         <location filename="res/AboutDialogBase.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2012 Bolton Software Ltd.&lt;br /&gt;
+Copyright © 2012 Synergy Si Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
@@ -19,7 +19,7 @@ Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2012 Bolton Software Ltd.&lt;br /&gt;
+Copyright © 2012 Synergy Si Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
@@ -28,7 +28,7 @@ Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</oldsource>
         <translation type="finished">&lt;p&gt;
 Aplicación de compartición de teclado y ratón. Plataforma cruzada y código abierto.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2012 Bolton Software Ltd.&lt;br /&gt;
+Copyright © 2012 Synergy Si Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Synergy es publicado bajo la Licencia Pública General GNU (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy está basado en CosmoSynergy por Richard Lee y Adam Feder.&lt;br /&gt;

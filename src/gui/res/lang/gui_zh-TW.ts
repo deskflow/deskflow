@@ -10,7 +10,7 @@
         <location filename="res/AboutDialogBase.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2012 Bolton Software Ltd.&lt;br /&gt;
+Copyright © 2012 Synergy Si Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
@@ -19,7 +19,7 @@ Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2012 Bolton Software Ltd.&lt;br /&gt;
+Copyright © 2012 Synergy Si Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
@@ -28,7 +28,7 @@ Visit our website for help and info (synergy-project.org).
 &lt;/p&gt;</oldsource>
         <translation type="finished">&lt;p&gt;
 鍵盤與滑鼠分享軟件, 跨平台與開源。&lt;br /&gt;&lt;br /&gt;
-版權所有 © 2012 Bolton Software Ltd.&lt;br /&gt;
+版權所有 © 2012 Synergy Si Ltd.&lt;br /&gt;
 版權所有 © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Synergy 是基於GNU General Public License (GPLv2)之下發佈。&lt;br /&gt;&lt;br /&gt;
 Synergy 是基於CosmoSynergy（源自Richard Lee及Adam Feder）&lt;br /&gt;
