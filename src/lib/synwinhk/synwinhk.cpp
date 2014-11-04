@@ -118,7 +118,7 @@ static WPARAM			g_deadVirtKey     = 0;
 static WPARAM			g_deadRelease     = 0;
 static LPARAM			g_deadLParam      = 0;
 static BYTE				g_deadKeyState[256] = { 0 };
-static BYTE				g_keyState[256] = { 0 };
+static BYTE				g_keyState[256]   = { 0 };
 static DWORD			g_hookThread      = 0;
 static DWORD			g_attachedThread  = 0;
 static bool				g_fakeInput       = false;
@@ -167,7 +167,6 @@ attachThreadToForeground()
             return false;
 
 		DWORD threadID = GetWindowThreadProcessId(window, NULL);
-
 		// skip if no change
 		if (g_attachedThread != threadID) {
 			// detach from previous thread
@@ -196,6 +195,10 @@ static
 void
 keyboardGetState(BYTE keys[256], DWORD vkCode, bool kf_up)
 {
+	// we have to use GetAsyncKeyState() rather than GetKeyState() because
+	// we don't pass through most keys so the event synchronous state
+	// doesn't get updated.  we do that because certain modifier keys have
+	// side effects, like alt and the windows key.
 	if (vkCode < 0 || vkCode >= 256) {
 		return;
 	}
@@ -495,7 +498,7 @@ static
 bool
 keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
-	bool attached = attachThreadToForeground();
+	attachThreadToForeground();
 	return doKeyboardHookHandler(wParam, lParam);
 }
 #endif
