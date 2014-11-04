@@ -94,6 +94,9 @@
 	// work around for statement scoping bug
 #	define for if (false) { } else for
 
+	// Allow keyword macros to prevent above from causing error
+#	define _ALLOW_KEYWORD_MACROS
+
 	// turn off bonehead warnings
 #	pragma warning(disable: 4786) // identifier truncated in debug info
 #	pragma warning(disable: 4514) // unreferenced inline function removed
@@ -139,6 +142,7 @@
 // if not c++0x, future proof code by allowing use of nullptr
 #ifndef nullptr
 #	define nullptr NULL
+#	define _ALLOW_KEYWORD_MACROS
 #endif
 
 // make assert available since we use it a lot
