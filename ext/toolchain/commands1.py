@@ -757,7 +757,13 @@ class InternalCommands:
 					raise Exception('Build command not supported with generator: ' + generator)
 	
 	def makeGui(self, targets, args=""):
-		
+		name = "Synergy.app"
+		self.try_chdir(self.getGenerator().binDir)
+		if os.path.exists(name):
+			print "removing exisiting bundle"
+			shutil.rmtree(name)
+		self.restore_chdir()
+
 		if sys.platform == 'win32':
 			gui_make_cmd = self.w32_make_cmd
 		elif sys.platform in ['linux2', 'sunos5', 'freebsd7', 'darwin']:
@@ -789,16 +795,49 @@ class InternalCommands:
 				for target in targets:
 					self.macPostMake(target)
 
+				self.fixQtFrameworksLayout()
+
 	def symlink(self, source, target):
 		if not os.path.exists(target):
-			print 'link: ', source,'-->', target
 			os.symlink(source, target)
  
 	def move(self, source, target):
 		if os.path.exists(source):
-			if not os.path.exists(target):
-				print 'move: ', source,'-->', target
-				shutil.move(source, target)
+			shutil.move(source, target)
+
+	def fixQtFrameworksLayout(self):
+		# reorganize Qt frameworks layout on Mac 10.9.5 or later
+		# http://goo.gl/BFnQ8l
+		# QtCore example:
+		# 	QtCore.framework/
+		# 		QtCore    -> Versions/Current/QtCore
+		# 		Resources -> Versions/Current/Resources
+		# 		Versions/
+		# 			Current -> 5
+		# 			5/
+		# 				QtCore
+		# 				Resources/
+		# 					Info.plist
+		dir = self.getGenerator().binDir
+		target = dir + "/Synergy.app/Contents/Frameworks"
+		(major, minor) = self.getMacVersion()
+
+		for root, dirs, files in os.walk(target):
+			for dir in dirs:
+				if dir.startswith("Qt"):
+					if major == 10:
+						if minor >= 9:
+							self.try_chdir(target + "/" + dir +"/Versions")
+							self.symlink("5", "Current")
+							self.move("../Resources", "5")
+							self.restore_chdir()
+
+							self.try_chdir(target + "/" + dir)
+							dot = dir.find('.')
+							frameworkName = dir[:dot]
+							self.symlink("Versions/Current/" + frameworkName, frameworkName)
+							self.symlink("Versions/Current/Resources", "Resources")
+							self.restore_chdir()
 
 	def macPostMake(self, target):
 
@@ -839,42 +878,15 @@ class InternalCommands:
 				# TODO: auto-detect, qt can now be installed anywhere.
 				frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
 			
-			# copy the missing Info.plist files for the frameworks.
-			# reorganize Qt frameworks layout, if it is for Mac 10.9.5 or later
-			# http://goo.gl/BFnQ8l
-			# QtCore example:
-			# 	QtCore.framework/
-			# 		QtCore    -> Versions/Current/QtCore
-			# 		Resources -> Versions/Current/Resources
-			# 		Versions/
-			# 			Current -> 5
-			# 			5/
-			# 				QtCore
-			# 				Resources/
-			# 					Info.plist
 			target = dir + "/Synergy.app/Contents/Frameworks"
-			(major, minor) = self.getMacVersion()
 
+			# copy the missing Info.plist files for the frameworks.
 			for root, dirs, files in os.walk(target):
 				for dir in dirs:
 					if dir.startswith("Qt"):
 						shutil.copy(
 							frameworkRootDir + "/" + dir + "/Contents/Info.plist",
 							target + "/" + dir + "/Resources/")
-
-						if major == 10:
-							if minor >= 9:
-								self.try_chdir(target + "/" + dir +"/Versions")
-								self.symlink("5", "Current")
-								self.move("../Resources", "5")
-								self.restore_chdir()
-
-								self.try_chdir(target + "/" + dir)
-								dot = dir.find('.')
-								frameworkName = dir[:dot]
-								self.symlink("Versions/Current/" + frameworkName, frameworkName)
-								self.symlink("Versions/Current/Resources", "Resources")
-								self.restore_chdir()
 
 	def signmac(self):
 		self.loadConfig()
