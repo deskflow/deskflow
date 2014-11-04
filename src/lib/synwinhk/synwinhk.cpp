@@ -465,7 +465,6 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 		PostThreadMessage(g_threadID, SYNERGY_MSG_KEY, charAndVirtKey, lParam);
 	}
 
-
 	if (g_mode == kHOOK_RELAY_EVENTS) {
 		// let certain keys pass through
 		switch (wParam) {
