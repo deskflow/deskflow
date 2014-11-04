@@ -788,7 +788,16 @@ class InternalCommands:
 			if sys.platform == 'darwin' and not "clean" in args:
 				for target in targets:
 					self.macPostMake(target)
-	
+
+	def symlink(self, source, target):
+		if not os.path.exists(target):
+			print 'link: ', source,'-->', target
+			os.symlink(source, target)
+ 
+	def move(self, source, target):
+		print 'move: ', source,'-->', target
+		shutil.move(source, target)
+
 	def macPostMake(self, target):
 
 		dir = self.getGenerator().binDir
@@ -802,7 +811,7 @@ class InternalCommands:
 			shutil.copy(targetDir + "/synergyc", bundleBinDir)
 			shutil.copy(targetDir + "/synergys", bundleBinDir)
 			shutil.copy(targetDir + "/syntool", bundleBinDir)
-			
+
 			if self.macSdk == "10.9":
 				launchServicesDir = dir + "/Synergy.app/Contents/Library/LaunchServices/"
 				if not os.path.exists(launchServicesDir):
@@ -829,14 +838,42 @@ class InternalCommands:
 				frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
 			
 			# copy the missing Info.plist files for the frameworks.
+			# reorganize Qt frameworks layout, if it is for Mac 10.9.5 or later
+			# http://goo.gl/BFnQ8l
+			# QtCore example:
+			# 	QtCore.framework/
+			# 		QtCore    -> Versions/Current/QtCore
+			# 		Resources -> Versions/Current/Resources
+			# 		Versions/
+			# 			Current -> 5
+			# 			5/
+			# 				QtCore
+			# 				Resources/
+			# 					Info.plist
 			target = dir + "/Synergy.app/Contents/Frameworks"
+			(major, minor) = self.getMacVersion()
+
 			for root, dirs, files in os.walk(target):
 				for dir in dirs:
 					if dir.startswith("Qt"):
 						shutil.copy(
 							frameworkRootDir + "/" + dir + "/Contents/Info.plist",
 							target + "/" + dir + "/Resources/")
-	
+
+						if major == 10:
+							if minor >= 9:
+								self.try_chdir(target + "/" + dir +"/Versions")
+								self.symlink("5", "Current")
+								self.move("../Resources", "5")
+								self.restore_chdir()
+
+								self.try_chdir(target + "/" + dir)
+								dot = dir.find('.')
+								frameworkName = dir[:dot]
+								self.symlink("Versions/Current/" + frameworkName, frameworkName)
+								self.symlink("Versions/Current/Resources", "Resources")
+								self.restore_chdir()
+
 	def signmac(self):
 		self.loadConfig()
 		if not self.macIdentity:
