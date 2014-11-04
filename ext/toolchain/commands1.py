@@ -821,12 +821,11 @@ class InternalCommands:
 		dir = self.getGenerator().binDir
 		target = dir + "/Synergy.app/Contents/Frameworks"
 		(major, minor) = self.getMacVersion()
-
-		for root, dirs, files in os.walk(target):
-			for dir in dirs:
-				if dir.startswith("Qt"):
-					if major == 10:
-						if minor >= 9:
+		if major == 10:
+			if minor >= 9:
+				for root, dirs, files in os.walk(target):
+					for dir in dirs:
+						if dir.startswith("Qt"):
 							self.try_chdir(target + "/" + dir +"/Versions")
 							self.symlink("5", "Current")
 							self.move("../Resources", "5")
