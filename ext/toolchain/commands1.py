@@ -795,8 +795,10 @@ class InternalCommands:
 			os.symlink(source, target)
  
 	def move(self, source, target):
-		print 'move: ', source,'-->', target
-		shutil.move(source, target)
+		if os.path.exists(source):
+			if not os.path.exists(target):
+				print 'move: ', source,'-->', target
+				shutil.move(source, target)
 
 	def macPostMake(self, target):
 
