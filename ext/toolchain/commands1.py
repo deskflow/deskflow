@@ -1314,7 +1314,7 @@ class InternalCommands:
 			shutil.rmtree(dist)
 		
 		os.makedirs(dist)
-		shutil.copytree(dir + "/" + name + ".app", dist + "/" + name + ".app")
+		shutil.move(dir + "/" + name + ".app", dist + "/" + name + ".app")
 		
 		self.try_chdir(dist)
 		err = os.system("ln -s /Applications")
