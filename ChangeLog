@@ -1,3 +1,20 @@
+1.6.1
+=====
+Bug #4002 - Carbon loop not ready within 5 sec
+Bug #4191 - Accessibility helper tool crashes
+Bug #4149 - Mac 10.9.5 or 10.10 gatekeeper blocks Synergy
+Bug #4139 - Exception thrown when ProcessIdToSessionId() fails
+Bug #4055 - Shift keys are not sent to clients (Win 8.1 server)
+Bug #4021 - Copy & paste not working for EFL applications
+Bug #3749 - Linux Chrome hover doesn't work
+Bug #4128 - Daemon logging not written with "log to file"
+Enhancement #4122 - Enable drag and drop by default
+Enhancement #4158 - Build for Mac OS X 10.10
+Enhancement #4130 - Auto elevate for Windows UAC and screen lock
+Enhancement #4126 - 64-bit support for OS X
+Enhancement #4141 - DMRM message support for μSynergy
+Enhancement #4124 - More robust argument parsing
+
 1.6.0
 =====
 Feature #65 - Auto config feature using Zeroconf/Bonjour
