@@ -130,81 +130,26 @@ int waitForTray()
 }
 
 #if defined(Q_OS_MAC)
-bool settingsExist()
-{
-	QSettings settings;
-
-	//FIXME: check settings existance properly
-	int port = settings.value("port", -1).toInt();
-
-	return port == -1 ? false : true;
-}
-
 bool checkMacAssistiveDevices()
 {
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090 // mavericks
+
 	// new in mavericks, applications are trusted individually
 	// with use of the accessibility api. this call will show a
 	// prompt which can show the security/privacy/accessibility
 	// tab, with a list of allowed applications. synergy should
 	// show up there automatically, but will be unchecked.
 
-	const void* keys[] = { kAXTrustedCheckOptionPrompt };
-	const void* trueValue[] = { kCFBooleanTrue };
-	const void* falseValue[] = { kCFBooleanFalse };
-	CFDictionaryRef optionsWithPrompt = CFDictionaryCreate(NULL, keys, trueValue, 1, NULL, NULL);
-	CFDictionaryRef optionsWithoutPrompt = CFDictionaryCreate(NULL, keys, falseValue, 1, NULL, NULL);
-	bool result;
-
-	result = AXIsProcessTrustedWithOptions(optionsWithoutPrompt);
-
-	// Synergy is not checked in accessibility
-	if (!result) {
-		// if setting doesn't exist, just skip helper tool
-		if (!settingsExist()) {
-			result = AXIsProcessTrustedWithOptions(optionsWithPrompt);
-		}
-		else {
-			int reply;
-			reply = QMessageBox::question(
-				NULL,
-				"Synergy",
-				"Synergy requires access to Assistive Devices, but was not allowed.\n\nShould Synergy attempt to fix this?",
-				QMessageBox::Yes|QMessageBox::Default,
-				QMessageBox::No|QMessageBox::Escape);
-
-			if (reply == QMessageBox::Yes) {
-				// call privilege help tool
-				AXDatabaseCleaner axdc;
-				result = axdc.loadPrivilegeHelper();
-				result = axdc.xpcConnect();
-
-				QMessageBox box;
-				box.setModal(false);
-				box.setStandardButtons(0);
-				box.setText("Please wait.");
-				box.resize(150, 10);
-				box.show();
-
-				const char* command = "sudo sqlite3 /Library/Application\\ Support/com.apple.TCC/TCC.db 'delete from access where client like \"%Synergy.app%\"'";
-				result = axdc.privilegeCommand(command);
-
-				box.hide();
-
-				if (result) {
-					QMessageBox::information(
-						NULL, "Synergy",
-						"Synergy helper tool is complete. Please tick the checkbox in Accessibility.");
-				}
-			}
-
-			result = AXIsProcessTrustedWithOptions(optionsWithPrompt);
-		}
+	if (AXIsProcessTrusted()) {
+		return true;
 	}
 
-	CFRelease(optionsWithoutPrompt);
-	CFRelease(optionsWithPrompt);
+	const void* keys[] = { kAXTrustedCheckOptionPrompt };
+	const void* trueValue[] = { kCFBooleanTrue };
+	CFDictionaryRef options = CFDictionaryCreate(NULL, keys, trueValue, 1, NULL, NULL);
 
+	bool result = AXIsProcessTrustedWithOptions(options);
+	CFRelease(options);
 	return result;
 
 #else
