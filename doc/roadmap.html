@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head>
+ <meta HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+ <meta name="keywords" content="Virtual Screen, Open Source, Software" />
+ <meta name="description" content="Mouse and Keyboard Sharing" />
+ <link rel="stylesheet" type="text/css" href="synergy.css" media="screen" />
+ <title>Synergy Roadmap</title>
+</head>
+<body class="main">
+<p>
+</p><h3>Synergy Roadmap</h3><p>
+</p><p>
+This page describes the planned development of Synergy.  There are
+no dates or deadlines.  Instead, you'll find the features to come
+and the rough order they'll arrive.
+</p><p>
+</p><h4>Short term</h4><p>
+</p><p>
+Synergy should work seamlessly.  When it works correctly, it works
+transparently so you don't even think about it.  When it breaks,
+you're forced out of the illusion of a unified desktop.  The first
+priority is fixing those bugs that break the illusion.
+</p><p>
+Some of these bugs are pretty minor and some people would rather
+have new features first.  But I'd rather fix the current
+foundation before building on it.  That's not to say features
+won't get added until after bug fixes;  sometimes it's just too
+tempting to code up a feature.
+</p><p>
+The highest priority feature is currently splitting synergy into
+front-ends and a back-end.  The back-end does the real work.  The
+front-ends are console, GUI, or background applications that
+communicate with the back-end, either controlling it or receiving
+notifications from it.
+</p><p>
+On win32, there'd be a front-end for the tray icon and a dialog to
+start, stop, and control the back-end.  OS X and X11 would have
+similar front-ends.  Splitting out the front-end has the added
+benefit on X11 of keeping the back-end totally independent of
+choice of GUI toolkit (KDE, Gnome, etc.)
+</p><p>
+One can also imagine a front-end that does nothing but put monitors
+into power-saving mode when the cursor is not on them.  If you have
+one monitor auto-senses two inputs, this would automatically switch
+the display when you move the cursor to one screen or another.
+</p><p>
+</p><h4>Medium term</h4><p>
+</p><p>
+Some features fit well into Synergy's current design and may simply
+enhance it's current capabilities.
+</p><p>
+<ul>
+<li>Configurable hot key to pop up a screen switch menu
+<li>Configure screen saver synchronization on or off
+<li>Graphical interface configuration and control on all platforms
+<li>Graphical status feedback on all platforms
+<li>More supported clipboard formats (particularly rich text)
+</ul>
+</p><p>
+A popup menu would be new for Synergy, which currently doesn't have
+to do any drawing.  That opens up many possibilities.  Ideally,
+front-ends request hot keys from the back-end and then tell the back
+end what to do when they're invoked.  This keeps the back-end
+independent of the user interface.
+</p><p>
+</p><h4>Long term</h4><p>
+</p><p>
+Two features stand out as long term goals:
+</p><p>
+<ul>
+<li>Support <span class="arg">N</span> computers on
+<span class="arg">M</span> monitors
+<li>Drag and drop across computers
+</ul>
+</p><p>
+The first feature means sharing a monitor or monitors the way the
+keyboard and mouse are shared.  With this, Synergy would be a full
+KVM solution.  Not only would it support a few computers sharing
+one screen (still using the mouse to roll from one screen to
+another), but it should also support dozens of computers to provide
+a solution for server farm administrators.  In this capacity, it
+may need to support text (as opposed to bitmap graphics) screens.
+</p><p>
+The second feature would enhance the unified desktop illusion.  It
+would make it possible to drag a file and possibly other objects
+to another screen.  The object would be copied (or moved).  I expect
+this to be a very tricky feature.
+</p>
+</body>
+
+</html>
