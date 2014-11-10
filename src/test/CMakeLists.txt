@@ -19,9 +19,13 @@ include_directories(
 	../../ext/gtest-1.6.0/include
 	../../ext/gmock-1.6.0
 	../../ext/gmock-1.6.0/include)
-	
+
 add_library(gtest STATIC ../../ext/gtest-1.6.0/src/gtest-all.cc)
 add_library(gmock STATIC ../../ext/gmock-1.6.0/src/gmock-all.cc)
+
+if(MSVC11)
+	add_definitions(-D_VARIADIC_MAX=10)
+endif()
 
 if (UNIX)
 	# ignore warnings in gtest and gmock
