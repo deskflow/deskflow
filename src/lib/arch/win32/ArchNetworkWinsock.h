@@ -99,7 +99,7 @@ private:
 	void				throwNameError(int);
 
 private:
-	typedef std::list<WSAEVENT> EventList;
+	typedef std::list<WSAEVENT*> EventList;
 
 	ArchMutex			m_mutex;
 	EventList			m_unblockEvents;
