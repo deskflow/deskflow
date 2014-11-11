@@ -25,7 +25,7 @@ typedef int (*StartupFunc)(int, char**);
 class ILogOutputter;
 class ArgsBase;
 class IArchTaskBarReceiver;
-class Screen;
+namespace synergy { class Screen; }
 class IEventQueue;
 
 class IApp : public IInterface
@@ -42,6 +42,6 @@ public:
 	virtual void initApp(int argc, const char** argv) = 0;
 	virtual const char* daemonName() const = 0;
 	virtual int foregroundStartup(int argc, char** argv) = 0;
-	virtual Screen* createScreen() = 0;
+	virtual synergy::Screen* createScreen() = 0;
 	virtual IEventQueue*			getEvents() const = 0;
 };

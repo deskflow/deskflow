@@ -54,7 +54,7 @@ Client::Client(
 		const String& name, const NetworkAddress& address,
 		ISocketFactory* socketFactory,
 		IStreamFilterFactory* streamFilterFactory,
-		Screen* screen,
+		synergy::Screen* screen,
 		const CryptoOptions& crypto,
 		bool enableDragDrop) :
 	m_mock(false),

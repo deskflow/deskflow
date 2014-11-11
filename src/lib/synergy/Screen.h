@@ -30,6 +30,8 @@ class IClipboard;
 class IPlatformScreen;
 class IEventQueue;
 
+namespace synergy {
+
 //! Platform independent screen
 /*!
 This is a platform independent screen.  It can work as either a
@@ -339,3 +341,5 @@ private:
 	bool				m_mock;
 	bool				m_enableDragDrop;
 };
+
+}

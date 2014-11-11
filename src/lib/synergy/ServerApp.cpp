@@ -359,7 +359,7 @@ ServerApp::closePrimaryClient(PrimaryClient* primaryClient)
 }
 
 void 
-ServerApp::closeServerScreen(Screen* screen)
+ServerApp::closeServerScreen(synergy::Screen* screen)
 {
 	if (screen != NULL) {
 		m_events->removeHandler(m_events->forIScreen().error(),
@@ -447,7 +447,7 @@ bool ServerApp::initServer()
 	}
 
 	double retryTime;
-	Screen* serverScreen         = NULL;
+	synergy::Screen* serverScreen         = NULL;
 	PrimaryClient* primaryClient = NULL;
 	try {
 		String name    = args().m_config->getCanonicalName(args().m_name);
@@ -495,9 +495,10 @@ bool ServerApp::initServer()
 	}
 }
 
-Screen* ServerApp::openServerScreen()
+synergy::Screen*
+ServerApp::openServerScreen()
 {
-	Screen* screen = createScreen();
+	synergy::Screen* screen = createScreen();
 	screen->setEnableDragDrop(argsBase().m_enableDragDrop);
 	m_events->adoptHandler(m_events->forIScreen().error(),
 		screen->getEventTarget(),
@@ -576,22 +577,22 @@ ServerApp::startServer()
 	}
 }
 
-Screen* 
+synergy::Screen* 
 ServerApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
-	return new Screen(new CMSWindowsScreen(
+	return new synergy::Screen(new CMSWindowsScreen(
 		true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
 #elif WINAPI_XWINDOWS
-	return new Screen(new CXWindowsScreen(
+	return new synergy::Screen(new CXWindowsScreen(
 		args().m_display, true, args().m_disableXInitThreads, 0, m_events), m_events);
 #elif WINAPI_CARBON
-	return new Screen(new OSXScreen(m_events, true), m_events);
+	return new synergy::Screen(new OSXScreen(m_events, true), m_events);
 #endif
 }
 
 PrimaryClient* 
-ServerApp::openPrimaryClient(const String& name, Screen* screen)
+ServerApp::openPrimaryClient(const String& name, synergy::Screen* screen)
 {
 	LOG((CLOG_DEBUG1 "creating primary screen"));
 	return new PrimaryClient(name, screen);

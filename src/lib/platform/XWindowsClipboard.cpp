@@ -937,7 +937,7 @@ CXWindowsClipboard::pushReplies()
 	for (ReplyMap::iterator index = m_replies.begin();
 								index != m_replies.end(); ) {
 		assert(!index->second.empty());
-		CReplyList::iterator listit = index->second.begin();
+		ReplyList::iterator listit = index->second.begin();
 		while (listit != index->second.end()) {
 			if (!(*listit)->m_replied)
 				break;

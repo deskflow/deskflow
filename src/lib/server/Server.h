@@ -36,7 +36,7 @@ class BaseClientProxy;
 class EventQueueTimer;
 class PrimaryClient;
 class InputFilter;
-class Screen;
+namespace synergy { class Screen; }
 class IEventQueue;
 class Thread;
 
@@ -104,7 +104,8 @@ public:
 	client (local screen) \p primaryClient.  The client retains
 	ownership of \p primaryClient.
 	*/
-	Server(Config& config, PrimaryClient* primaryClient, Screen* screen, IEventQueue* events, bool enableDragDrop);
+	Server(Config& config, PrimaryClient* primaryClient,
+		synergy::Screen* screen, IEventQueue* events, bool enableDragDrop);
 	~Server();
 
 #ifdef TEST_ENV
@@ -457,7 +458,7 @@ private:
 	bool				m_lockedToScreen;
 
 	// server screen
-	Screen*			m_screen;
+	synergy::Screen*			m_screen;
 
 	IEventQueue*		m_events;
 

@@ -20,7 +20,7 @@
 
 #include "synergy/App.h"
 
-class Screen;
+namespace synergy { class Screen; }
 class Event;
 class Client;
 class NetworkAddress;
@@ -52,20 +52,21 @@ public:
 	int foregroundStartup(int argc, char** argv);
 	int standardStartup(int argc, char** argv);
 	int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup);
-	Screen* createScreen();
+	synergy::Screen* createScreen();
 	void updateStatus();
 	void updateStatus(const String& msg);
 	void resetRestartTimeout();
 	double nextRestartTimeout();
 	void handleScreenError(const Event&, void*);
-	Screen* openClientScreen();
-	void closeClientScreen(Screen* screen);
+	synergy::Screen* openClientScreen();
+	void closeClientScreen(synergy::Screen* screen);
 	void handleClientRestart(const Event&, void* vtimer);
 	void scheduleClientRestart(double retryTime);
 	void handleClientConnected(const Event&, void*);
 	void handleClientFailed(const Event& e, void*);
 	void handleClientDisconnected(const Event&, void*);
-	Client* openClient(const String& name, const NetworkAddress& address, Screen* screen, const CryptoOptions& crypto);
+	Client* openClient(const String& name, const NetworkAddress& address, 
+				synergy::Screen* screen, const CryptoOptions& crypto);
 	void closeClient(Client* client);
 	bool startClient();
 	void stopClient();
@@ -78,6 +79,6 @@ public:
 
 private:
 	Client*			m_client;
-	Screen*			m_clientScreen;
+	synergy::Screen*m_clientScreen;
 	NetworkAddress*	m_serverAddress;
 };

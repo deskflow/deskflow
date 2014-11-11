@@ -169,18 +169,18 @@ ClientApp::daemonInfo() const
 #endif
 }
 
-Screen*
+synergy::Screen*
 ClientApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
-	return new Screen(new CMSWindowsScreen(
+	return new synergy::Screen(new CMSWindowsScreen(
 		false, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
 #elif WINAPI_XWINDOWS
-	return new Screen(new CXWindowsScreen(
+	return new synergy::Screen(new CXWindowsScreen(
 		args().m_display, false, args().m_disableXInitThreads,
 		args().m_yscroll, m_events), m_events);
 #elif WINAPI_CARBON
-	return new Screen(new OSXScreen(m_events, false), m_events);
+	return new synergy::Screen(new OSXScreen(m_events, false), m_events);
 #endif
 }
 
@@ -240,10 +240,10 @@ ClientApp::handleScreenError(const Event&, void*)
 }
 
 
-Screen*
+synergy::Screen*
 ClientApp::openClientScreen()
 {
-	Screen* screen = createScreen();
+	synergy::Screen* screen = createScreen();
 	screen->setEnableDragDrop(argsBase().m_enableDragDrop);
 	m_events->adoptHandler(m_events->forIScreen().error(),
 		screen->getEventTarget(),
@@ -254,7 +254,7 @@ ClientApp::openClientScreen()
 
 
 void
-ClientApp::closeClientScreen(Screen* screen)
+ClientApp::closeClientScreen(synergy::Screen* screen)
 {
 	if (screen != NULL) {
 		m_events->removeHandler(m_events->forIScreen().error(),
@@ -333,7 +333,8 @@ ClientApp::handleClientDisconnected(const Event&, void*)
 
 
 Client*
-ClientApp::openClient(const String& name, const NetworkAddress& address, Screen* screen, const CryptoOptions& crypto)
+ClientApp::openClient(const String& name, const NetworkAddress& address,
+				synergy::Screen* screen, const CryptoOptions& crypto)
 {
 	Client* client = new Client(
 		m_events,
@@ -396,7 +397,7 @@ bool
 ClientApp::startClient()
 {
 	double retryTime;
-	Screen* clientScreen = NULL;
+	synergy::Screen* clientScreen = NULL;
 	try {
 		if (m_clientScreen == NULL) {
 			clientScreen = openClientScreen();

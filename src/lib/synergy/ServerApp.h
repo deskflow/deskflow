@@ -40,7 +40,7 @@ enum EServerState {
 };
 
 class Server;
-class Screen;
+namespace synergy { class Screen; }
 class ClientListener;
 class EventQueueTimer;
 class ILogOutputter;
@@ -81,13 +81,13 @@ public:
 	void closeClientListener(ClientListener* listen);
 	void stopServer();
 	void closePrimaryClient(PrimaryClient* primaryClient);
-	void closeServerScreen(Screen* screen);
+	void closeServerScreen(synergy::Screen* screen);
 	void cleanupServer();
 	bool initServer();
 	void retryHandler(const Event&, void*);
-	Screen* openServerScreen();
-	Screen* createScreen();
-	PrimaryClient* openPrimaryClient(const String& name, Screen* screen);
+	synergy::Screen* openServerScreen();
+	synergy::Screen* createScreen();
+	PrimaryClient* openPrimaryClient(const String& name, synergy::Screen* screen);
 	void handleScreenError(const Event&, void*);
 	void handleSuspend(const Event&, void*);
 	void handleResume(const Event&, void*);
@@ -105,13 +105,13 @@ public:
 
 	Server* getServerPtr() { return m_server; }
 	
-	Server*			m_server;
+	Server*				m_server;
 	EServerState		m_serverState;
-	Screen*			m_serverScreen;
+	synergy::Screen*	m_serverScreen;
 	PrimaryClient*		m_primaryClient;
-	ClientListener*	m_listener;
+	ClientListener*		m_listener;
 	EventQueueTimer*	m_timer;
-	NetworkAddress*	m_synergyAddress;
+	NetworkAddress*		m_synergyAddress;
 
 private:
 	void handleScreenSwitched(const Event&, void*  data);

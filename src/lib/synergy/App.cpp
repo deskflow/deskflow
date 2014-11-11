@@ -288,7 +288,7 @@ MinimalApp::foregroundStartup(int argc, char** argv)
 	return 0;
 }
 
-Screen*
+synergy::Screen*
 MinimalApp::createScreen()
 {
 	return NULL;

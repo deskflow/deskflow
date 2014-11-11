@@ -24,6 +24,8 @@
 #include "server/ClientProxy.h"
 #include "base/TMethodEventJob.h"
 
+namespace synergy {
+
 //
 // Screen
 //
@@ -552,4 +554,6 @@ Screen::leaveSecondary()
 {
 	// release any keys we think are still down
 	m_screen->fakeAllKeysUp();
+}
+
 }

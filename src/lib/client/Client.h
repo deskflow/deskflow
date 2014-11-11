@@ -28,7 +28,7 @@
 #include "base/EventTypes.h"
 
 class EventQueueTimer;
-class Screen;
+namespace synergy { class Screen; }
 class ServerProxy;
 class IDataSocket;
 class ISocketFactory;
@@ -61,7 +61,7 @@ public:
 							const String& name, const NetworkAddress& address,
 							ISocketFactory* socketFactory,
 							IStreamFilterFactory* streamFilterFactory,
-							Screen* screen,
+							synergy::Screen* screen,
 							const CryptoOptions& crypto,
 							bool enableDragDrop);
 	~Client();
@@ -211,7 +211,7 @@ private:
 	NetworkAddress			m_serverAddress;
 	ISocketFactory*			m_socketFactory;
 	IStreamFilterFactory*	m_streamFilterFactory;
-	Screen*				m_screen;
+	synergy::Screen*		m_screen;
 	synergy::IStream*		m_stream;
 	EventQueueTimer*		m_timer;
 	ServerProxy*			m_server;

@@ -21,7 +21,7 @@
 #include "server/BaseClientProxy.h"
 #include "synergy/protocol_types.h"
 
-class Screen;
+namespace synergy { class Screen; }
 
 //! Primary screen as pseudo-client
 /*!
@@ -34,7 +34,7 @@ public:
 	/*!
 	\c name is the name of the server and \p screen is primary screen.
 	*/
-	PrimaryClient(const String& name, Screen* screen);
+	PrimaryClient(const String& name, synergy::Screen* screen);
 	~PrimaryClient();
 
 #ifdef TEST_ENV
@@ -147,7 +147,7 @@ public:
 	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize);
 
 private:
-	Screen*			m_screen;
+	synergy::Screen*	m_screen;
 	bool				m_clipboardDirty[kClipboardEnd];
 	SInt32				m_fakeInputCount;
 };

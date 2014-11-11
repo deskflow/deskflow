@@ -35,7 +35,7 @@ class IArchTaskBarReceiver;
 class BufferedLogOutputter;
 class ILogOutputter;
 class FileLogOutputter;
-class Screen;
+namespace synergy { class Screen; }
 class IEventQueue;
 class SocketMultiplexer;
 
@@ -133,7 +133,8 @@ public:
 	virtual void		startNode();
 	virtual int			mainLoop();
 	virtual int			foregroundStartup(int argc, char** argv);
-	virtual Screen*	createScreen();
+	virtual synergy::Screen*	
+						createScreen();
 	virtual void		loadConfig();
 	virtual bool		loadConfig(const String& pathname);
 	virtual const char*	daemonInfo() const;
@@ -142,7 +143,7 @@ public:
 
 private:
 	Arch				m_arch;
-	Log				m_log;
+	Log					m_log;
 	EventQueue			m_events;
 };
 

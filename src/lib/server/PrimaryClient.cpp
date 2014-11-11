@@ -26,7 +26,7 @@
 // PrimaryClient
 //
 
-PrimaryClient::PrimaryClient(const String& name, Screen* screen) :
+PrimaryClient::PrimaryClient(const String& name, synergy::Screen* screen) :
 	BaseClientProxy(name),
 	m_screen(screen),
 	m_fakeInputCount(0)

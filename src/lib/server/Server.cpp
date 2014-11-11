@@ -53,7 +53,7 @@
 Server::Server(
 		Config& config,
 		PrimaryClient* primaryClient,
-		Screen* screen,
+		synergy::Screen* screen,
 		IEventQueue* events,
 		bool enableDragDrop) :
 	m_mock(false),
