@@ -21,10 +21,10 @@
 #include "net/IListenSocket.h"
 #include "arch/IArchNetwork.h"
 
-class CMutex;
+class Mutex;
 class ISocketMultiplexerJob;
 class IEventQueue;
-class CSocketMultiplexer;
+class SocketMultiplexer;
 
 //! TCP listen socket
 /*!
@@ -32,11 +32,11 @@ A listen socket using TCP.
 */
 class CTCPListenSocket : public IListenSocket {
 public:
-	CTCPListenSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer);
+	CTCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
 	~CTCPListenSocket();
 
 	// ISocket overrides
-	virtual void		bind(const CNetworkAddress&);
+	virtual void		bind(const NetworkAddress&);
 	virtual void		close();
 	virtual void*		getEventTarget() const;
 
@@ -49,8 +49,8 @@ private:
 							bool, bool, bool);
 
 private:
-	CArchSocket			m_socket;
-	CMutex*				m_mutex;
+	ArchSocket			m_socket;
+	Mutex*				m_mutex;
 	IEventQueue*		m_events;
-	CSocketMultiplexer* m_socketMultiplexer;
+	SocketMultiplexer* m_socketMultiplexer;
 };

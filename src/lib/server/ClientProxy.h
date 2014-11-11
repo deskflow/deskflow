@@ -26,13 +26,13 @@
 namespace synergy { class IStream; }
 
 //! Generic proxy for client
-class CClientProxy : public CBaseClientProxy {
+class ClientProxy : public BaseClientProxy {
 public:
 	/*!
 	\c name is the name of the client.
 	*/
-	CClientProxy(const CString& name, synergy::IStream* adoptedStream);
-	~CClientProxy();
+	ClientProxy(const String& name, synergy::IStream* adoptedStream);
+	~ClientProxy();
 
 	//! @name manipulators
 	//@{
@@ -82,7 +82,7 @@ public:
 	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta) = 0;
 	virtual void		screensaver(bool activate) = 0;
 	virtual void		resetOptions() = 0;
-	virtual void		setOptions(const COptionsList& options) = 0;
+	virtual void		setOptions(const OptionsList& options) = 0;
 	virtual void		sendDragInfo(UInt32 fileCount, const char* info,
 							size_t size) = 0;
 	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;

@@ -34,11 +34,11 @@
 // CTCPListenSocket
 //
 
-CTCPListenSocket::CTCPListenSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
+CTCPListenSocket::CTCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {
-	m_mutex = new CMutex;
+	m_mutex = new Mutex;
 	try {
 		m_socket = ARCH->newSocket(IArchNetwork::kINET, IArchNetwork::kSTREAM);
 	}
@@ -62,10 +62,10 @@ CTCPListenSocket::~CTCPListenSocket()
 }
 
 void
-CTCPListenSocket::bind(const CNetworkAddress& addr)
+CTCPListenSocket::bind(const NetworkAddress& addr)
 {
 	try {
-		CLock lock(m_mutex);
+		Lock lock(m_mutex);
 		ARCH->setReuseAddrOnSocket(m_socket, true);
 		ARCH->bindSocket(m_socket, addr.getAddress());
 		ARCH->listenOnSocket(m_socket);
@@ -85,7 +85,7 @@ CTCPListenSocket::bind(const CNetworkAddress& addr)
 void
 CTCPListenSocket::close()
 {
-	CLock lock(m_mutex);
+	Lock lock(m_mutex);
 	if (m_socket == NULL) {
 		throw XIOClosed();
 	}
@@ -142,7 +142,7 @@ CTCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
 		return NULL;
 	}
 	if (read) {
-		m_events->addEvent(CEvent(m_events->forIListenSocket().connecting(), this, NULL));
+		m_events->addEvent(Event(m_events->forIListenSocket().connecting(), this, NULL));
 		// stop polling on this socket until the client accepts
 		return NULL;
 	}

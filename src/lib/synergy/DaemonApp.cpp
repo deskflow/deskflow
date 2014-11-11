@@ -58,12 +58,12 @@
 
 using namespace std;
 
-CDaemonApp* CDaemonApp::s_instance = NULL;
+DaemonApp* DaemonApp::s_instance = NULL;
 
 int
 mainLoopStatic()
 {
-	CDaemonApp::s_instance->mainLoop(true);
+	DaemonApp::s_instance->mainLoop(true);
 	return kExitSuccess;
 }
 
@@ -77,11 +77,11 @@ unixMainLoopStatic(int, const char**)
 int
 winMainLoopStatic(int, const char**)
 {
-	return CArchMiscWindows::runDaemon(mainLoopStatic);
+	return ArchMiscWindows::runDaemon(mainLoopStatic);
 }
 #endif
 
-CDaemonApp::CDaemonApp() :
+DaemonApp::DaemonApp() :
 	m_ipcServer(nullptr),
 	m_ipcLogOutputter(nullptr),
 	#if SYSAPI_WIN32
@@ -93,23 +93,23 @@ CDaemonApp::CDaemonApp() :
 	s_instance = this;
 }
 
-CDaemonApp::~CDaemonApp()
+DaemonApp::~DaemonApp()
 {
 }
 
 int
-CDaemonApp::run(int argc, char** argv)
+DaemonApp::run(int argc, char** argv)
 {
 #if SYSAPI_WIN32
 	// win32 instance needed for threading, etc.
-	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+	ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 	
-	CArch arch;
+	Arch arch;
 	arch.init();
 
-	CLog log;
-	CEventQueue events;
+	Log log;
+	EventQueue events;
 	m_events = &events;
 
 	bool uninstall = false;
@@ -168,8 +168,8 @@ CDaemonApp::run(int argc, char** argv)
 		return kExitSuccess;
 	}
 	catch (XArch& e) {
-		CString message = e.what();
-		if (uninstall && (message.find("The service has not been started") != CString::npos)) {
+		String message = e.what();
+		if (uninstall && (message.find("The service has not been started") != String::npos)) {
 			// TODO: if we're keeping this use error code instead (what is it?!).
 			// HACK: this message happens intermittently, not sure where from but
 			// it's quite misleading for the user. they thing something has gone
@@ -192,7 +192,7 @@ CDaemonApp::run(int argc, char** argv)
 }
 
 void
-CDaemonApp::mainLoop(bool logToFile)
+DaemonApp::mainLoop(bool logToFile)
 {
 	try
 	{
@@ -205,13 +205,13 @@ CDaemonApp::mainLoop(bool logToFile)
 
 		// create socket multiplexer.  this must happen after daemonization
 		// on unix because threads evaporate across a fork().
-		CSocketMultiplexer multiplexer;
+		SocketMultiplexer multiplexer;
 
 		// uses event queue, must be created here.
-		m_ipcServer = new CIpcServer(m_events, &multiplexer);
+		m_ipcServer = new IpcServer(m_events, &multiplexer);
 
 		// send logging to gui via ipc, log system adopts outputter.
-		m_ipcLogOutputter = new CIpcLogOutputter(*m_ipcServer);
+		m_ipcLogOutputter = new IpcLogOutputter(*m_ipcServer);
 		CLOG->insert(m_ipcLogOutputter);
 		
 #if SYSAPI_WIN32
@@ -220,8 +220,8 @@ CDaemonApp::mainLoop(bool logToFile)
 #endif
 		
 		m_events->adoptHandler(
-			m_events->forCIpcServer().messageReceived(), m_ipcServer,
-			new TMethodEventJob<CDaemonApp>(this, &CDaemonApp::handleIpcMessage));
+			m_events->forIpcServer().messageReceived(), m_ipcServer,
+			new TMethodEventJob<DaemonApp>(this, &DaemonApp::handleIpcMessage));
 
 		m_ipcServer->listen();
 		
@@ -230,7 +230,7 @@ CDaemonApp::mainLoop(bool logToFile)
 		// install the platform event queue to handle service stop events.
 		m_events->adoptBuffer(new CMSWindowsEventQueueBuffer(m_events));
 		
-		CString command = ARCH->setting("Command");
+		String command = ARCH->setting("Command");
 		bool elevate = ARCH->setting("Elevate") == "1";
 		if (command != "") {
 			LOG((CLOG_INFO "using last known command: %s", command.c_str()));
@@ -247,7 +247,7 @@ CDaemonApp::mainLoop(bool logToFile)
 #endif
 
 		m_events->removeHandler(
-			m_events->forCIpcServer().messageReceived(), m_ipcServer);
+			m_events->forIpcServer().messageReceived(), m_ipcServer);
 		
 		CLOG->remove(m_ipcLogOutputter);
 		delete m_ipcLogOutputter;
@@ -264,7 +264,7 @@ CDaemonApp::mainLoop(bool logToFile)
 }
 
 void
-CDaemonApp::foregroundError(const char* message)
+DaemonApp::foregroundError(const char* message)
 {
 #if SYSAPI_WIN32
 	MessageBox(NULL, message, "Synergy Service", MB_OK | MB_ICONERROR);
@@ -274,7 +274,7 @@ CDaemonApp::foregroundError(const char* message)
 }
 
 std::string
-CDaemonApp::logFilename()
+DaemonApp::logFilename()
 {
 	string logFilename;
 	logFilename = ARCH->setting("LogFilename");
@@ -288,13 +288,13 @@ CDaemonApp::logFilename()
 }
 
 void
-CDaemonApp::handleIpcMessage(const CEvent& e, void*)
+DaemonApp::handleIpcMessage(const Event& e, void*)
 {
-	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
+	IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
 	switch (m->type()) {
 		case kIpcCommand: {
-			CIpcCommandMessage* cm = static_cast<CIpcCommandMessage*>(m);
-			CString command = cm->command();
+			IpcCommandMessage* cm = static_cast<IpcCommandMessage*>(m);
+			String command = cm->command();
 
 			// if empty quotes, clear.
 			if (command == "\"\"") {
@@ -304,15 +304,15 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 			if (!command.empty()) {
 				LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
 
-				std::vector<CString> argsArray;
-				CArgParser::splitCommandString(command, argsArray);
-				CArgParser argParser(NULL);
+				std::vector<String> argsArray;
+				ArgParser::splitCommandString(command, argsArray);
+				ArgParser argParser(NULL);
 				const char** argv = argParser.getArgv(argsArray);
-				CServerArgs serverArgs;
-				CClientArgs clientArgs;
+				ServerArgs serverArgs;
+				ClientArgs clientArgs;
 				int argc = static_cast<int>(argsArray.size());
-				bool server = argsArray[0].find("synergys") != CString::npos ? true : false;
-				CArgsBase* argBase = NULL;
+				bool server = argsArray[0].find("synergys") != String::npos ? true : false;
+				ArgsBase* argBase = NULL;
 
 				if (server) {
 					argParser.parseServerArgs(serverArgs, argc, argv);
@@ -325,7 +325,7 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 
 				delete[] argv;
 				
-				CString logLevel(argBase->m_logFilter);
+				String logLevel(argBase->m_logFilter);
 				if (!logLevel.empty()) {
 					try {
 						// change log level based on that in the command string
@@ -365,7 +365,7 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 				ARCH->setting("Command", command);
 
 				// TODO: it would be nice to store bools/ints...
-				ARCH->setting("Elevate", CString(cm->elevate() ? "1" : "0"));
+				ARCH->setting("Elevate", String(cm->elevate() ? "1" : "0"));
 			}
 			catch (XArch& e) {
 				LOG((CLOG_ERR "failed to save settings, %s", e.what()));
@@ -381,8 +381,8 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 		}
 
 		case kIpcHello:
-			CIpcHelloMessage* hm = static_cast<CIpcHelloMessage*>(m);
-			CString type;
+			IpcHelloMessage* hm = static_cast<IpcHelloMessage*>(m);
+			String type;
 			switch (hm->clientType()) {
 				case kIpcClientGui: type = "gui"; break;
 				case kIpcClientNode: type = "node"; break;
@@ -392,7 +392,7 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 			LOG((CLOG_DEBUG "ipc hello, type=%s", type.c_str()));
 
 #if SYSAPI_WIN32
-			CString watchdogStatus = m_watchdog->isProcessActive() ? "ok" : "error";
+			String watchdogStatus = m_watchdog->isProcessActive() ? "ok" : "error";
 			LOG((CLOG_INFO "watchdog status: %s", watchdogStatus.c_str()));
 #endif
 

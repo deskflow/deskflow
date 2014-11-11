@@ -24,10 +24,10 @@
 /*!
 This class implements a clipboard that stores data in memory.
 */
-class CClipboard : public IClipboard {
+class Clipboard : public IClipboard {
 public:
-	CClipboard();
-	virtual ~CClipboard();
+	Clipboard();
+	virtual ~Clipboard();
 
 	//! @name manipulators
 	//@{
@@ -37,7 +37,7 @@ public:
 	Extract marshalled clipboard data and store it in this clipboard.
 	Sets the clipboard time to \c time.
 	*/
-	void				unmarshall(const CString& data, Time time);
+	void				unmarshall(const String& data, Time time);
 
 	//@}
 	//! @name accessors
@@ -48,18 +48,18 @@ public:
 	Merge this clipboard's data into a single buffer that can be later
 	unmarshalled to restore the clipboard and return the buffer.
 	*/
-	CString				marshall() const;
+	String				marshall() const;
 
 	//@}
 
 	// IClipboard overrides
 	virtual bool		empty();
-	virtual void		add(EFormat, const CString& data);
+	virtual void		add(EFormat, const String& data);
 	virtual bool		open(Time) const;
 	virtual void		close() const;
 	virtual Time		getTime() const;
 	virtual bool		has(EFormat) const;
-	virtual CString		get(EFormat) const;
+	virtual String		get(EFormat) const;
 
 private:
 	mutable bool		m_open;
@@ -67,5 +67,5 @@ private:
 	bool				m_owner;
 	Time				m_timeOwned;
 	bool				m_added[kNumFormats];
-	CString				m_data[kNumFormats];
+	String				m_data[kNumFormats];
 };

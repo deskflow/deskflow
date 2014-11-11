@@ -21,35 +21,35 @@
 
 using namespace synergy;
 
-TEST(CStringTests, format)
+TEST(StringTests, format)
 {
 	const char* format = "%%%{1}=%{2}";
 	const char* arg1 = "answer";
 	const char* arg2 = "42";
 
-	CString result = string::format(format, arg1, arg2);
+	String result = string::format(format, arg1, arg2);
 
 	EXPECT_EQ("%answer=42", result);
 }
 
-TEST(CStringTests, findReplaceAll)
+TEST(StringTests, findReplaceAll)
 {
-	CString subject = "foobar";
-	CString find = "bar";
-	CString replace = "baz";
+	String subject = "foobar";
+	String find = "bar";
+	String replace = "baz";
 
 	string::findReplaceAll(subject, find, replace);
 
 	EXPECT_EQ("foobaz", subject);
 }
 
-TEST(CStringTests, sprintf)
+TEST(StringTests, sprintf)
 {
 	const char* format = "%s=%d";
 	const char* arg1 = "answer";
 	int arg2 = 42;
 
-	CString result = string::sprintf(format, arg1, arg2);
+	String result = string::sprintf(format, arg1, arg2);
 
 	EXPECT_EQ("answer=42", result);
 }

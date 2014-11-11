@@ -25,21 +25,21 @@
 #include <cstdlib>
 
 //
-// CNetworkAddress
+// NetworkAddress
 //
 
 // name re-resolution adapted from a patch by Brent Priddy.
 
-CNetworkAddress::CNetworkAddress() :
+NetworkAddress::NetworkAddress() :
 	m_address(NULL),
 	m_hostname(),
 	m_port(0)
 {
-	// note -- make no calls to CNetwork socket interface here;
-	// we're often called prior to CNetwork::init().
+	// note -- make no calls to Network socket interface here;
+	// we're often called prior to Network::init().
 }
 
-CNetworkAddress::CNetworkAddress(int port) :
+NetworkAddress::NetworkAddress(int port) :
 	m_address(NULL),
 	m_hostname(),
 	m_port(port)
@@ -49,7 +49,7 @@ CNetworkAddress::CNetworkAddress(int port) :
 	ARCH->setAddrPort(m_address, m_port);
 }
 
-CNetworkAddress::CNetworkAddress(const CNetworkAddress& addr) :
+NetworkAddress::NetworkAddress(const NetworkAddress& addr) :
 	m_address(addr.m_address != NULL ? ARCH->copyAddr(addr.m_address) : NULL),
 	m_hostname(addr.m_hostname),
 	m_port(addr.m_port)
@@ -57,19 +57,19 @@ CNetworkAddress::CNetworkAddress(const CNetworkAddress& addr) :
 	// do nothing
 }
 
-CNetworkAddress::CNetworkAddress(const CString& hostname, int port) :
+NetworkAddress::NetworkAddress(const String& hostname, int port) :
 	m_address(NULL),
 	m_hostname(hostname),
 	m_port(port)
 {
 	// check for port suffix
-	CString::size_type i = m_hostname.rfind(':');
-	if (i != CString::npos && i + 1 < m_hostname.size()) {
+	String::size_type i = m_hostname.rfind(':');
+	if (i != String::npos && i + 1 < m_hostname.size()) {
 		// found a colon.  see if it looks like an IPv6 address.
 		bool colonNotation = false;
 		bool dotNotation   = false;
 		bool doubleColon   = false;
-		for (CString::size_type j = 0; j < i; ++j) {
+		for (String::size_type j = 0; j < i; ++j) {
 			if (m_hostname[j] == ':') {
 				colonNotation = true;
 				dotNotation   = false;
@@ -109,17 +109,17 @@ CNetworkAddress::CNetworkAddress(const CString& hostname, int port) :
 	checkPort();
 }
 
-CNetworkAddress::~CNetworkAddress()
+NetworkAddress::~NetworkAddress()
 {
 	if (m_address != NULL) {
 		ARCH->closeAddr(m_address);
 	}
 }
 
-CNetworkAddress&
-CNetworkAddress::operator=(const CNetworkAddress& addr)
+NetworkAddress&
+NetworkAddress::operator=(const NetworkAddress& addr)
 {
-	CArchNetAddress newAddr = NULL;
+	ArchNetAddress newAddr = NULL;
 	if (addr.m_address != NULL) {
 		newAddr = ARCH->copyAddr(addr.m_address);
 	}
@@ -133,7 +133,7 @@ CNetworkAddress::operator=(const CNetworkAddress& addr)
 }
 
 void
-CNetworkAddress::resolve()
+NetworkAddress::resolve()
 {
 	// discard previous address
 	if (m_address != NULL) {
@@ -169,43 +169,43 @@ CNetworkAddress::resolve()
 }
 
 bool
-CNetworkAddress::operator==(const CNetworkAddress& addr) const
+NetworkAddress::operator==(const NetworkAddress& addr) const
 {
 	return ARCH->isEqualAddr(m_address, addr.m_address);
 }
 
 bool
-CNetworkAddress::operator!=(const CNetworkAddress& addr) const
+NetworkAddress::operator!=(const NetworkAddress& addr) const
 {
 	return !operator==(addr);
 }
 
 bool
-CNetworkAddress::isValid() const
+NetworkAddress::isValid() const
 {
 	return (m_address != NULL);
 }
 
-const CArchNetAddress&
-CNetworkAddress::getAddress() const
+const ArchNetAddress&
+NetworkAddress::getAddress() const
 {
 	return m_address;
 }
 
 int
-CNetworkAddress::getPort() const
+NetworkAddress::getPort() const
 {
 	return m_port;
 }
 
-CString
-CNetworkAddress::getHostname() const
+String
+NetworkAddress::getHostname() const
 {
 	return m_hostname;
 }
 
 void
-CNetworkAddress::checkPort()
+NetworkAddress::checkPort()
 {
 	// check port number
 	if (m_port <= 0 || m_port > 65535) {

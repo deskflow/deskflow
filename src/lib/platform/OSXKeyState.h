@@ -35,13 +35,13 @@
 /*!
 A key state for OS X.
 */
-class COSXKeyState : public CKeyState {
+class OSXKeyState : public KeyState {
 public:
-	typedef std::vector<KeyID> CKeyIDs;
+	typedef std::vector<KeyID> KeyIDs;
 
-	COSXKeyState(IEventQueue* events);
-	COSXKeyState(IEventQueue* events, CKeyMap& keyMap);
-	virtual ~COSXKeyState();
+	OSXKeyState(IEventQueue* events);
+	OSXKeyState(IEventQueue* events, synergy::KeyMap& keyMap);
+	virtual ~OSXKeyState();
 
 	//! @name modifiers
 	//@{
@@ -79,7 +79,7 @@ public:
 	that was pressed or released, or 0 if the button doesn't map to a known
 	KeyID.
 	*/
-	KeyButton			mapKeyFromEvent(CKeyIDs& ids,
+	KeyButton			mapKeyFromEvent(KeyIDs& ids,
 							KeyModifierMask* maskOut, CGEventRef event) const;
 
 	//! Map key and mask to native values
@@ -101,21 +101,21 @@ public:
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
 protected:
-	// CKeyState overrides
-	virtual void		getKeyMap(CKeyMap& keyMap);
+	// KeyState overrides
+	virtual void		getKeyMap(synergy::KeyMap& keyMap);
 	virtual void		fakeKey(const Keystroke& keystroke);
 
 private:
-	class CKeyResource;
+	class KeyResource;
 	typedef std::vector<KeyLayout> GroupList;
 
-	// Add hard coded special keys to a CKeyMap.
+	// Add hard coded special keys to a synergy::KeyMap.
 	void				getKeyMapForSpecialKeys(
-							CKeyMap& keyMap, SInt32 group) const;
+							synergy::KeyMap& keyMap, SInt32 group) const;
 
 	// Convert keyboard resource to a key map
-	bool				getKeyMap(CKeyMap& keyMap,
-							SInt32 group, const CKeyResource& r) const;
+	bool				getKeyMap(synergy::KeyMap& keyMap,
+							SInt32 group, const KeyResource& r) const;
 
 	// Get the available keyboard groups
 	bool				getGroups(GroupList&) const;
@@ -138,7 +138,7 @@ private:
 	// option is acting as AltGr (i.e. it generates a glyph and there are
 	// no command modifiers active) then we don't send the super modifier
 	// to clients because they'd try to match it as a command modifier.
-	void				adjustAltGrModifier(const CKeyIDs& ids,
+	void				adjustAltGrModifier(const KeyIDs& ids,
 							KeyModifierMask* mask, bool isCommand) const;
 
 	// Maps an OS X virtual key id to a KeyButton.  This simply remaps
@@ -152,7 +152,7 @@ private:
 	void				init();
 
 private:
-	class CKeyResource : public IInterface {
+	class KeyResource : public IInterface {
 	public:
 		virtual bool	isValid() const = 0;
 		virtual UInt32	getNumModifierCombinations() const = 0;
@@ -169,11 +169,11 @@ private:
 	};
 
 
-	class CUCHRKeyResource : public CKeyResource {
+	class CUCHRKeyResource : public KeyResource {
 	public:
 		CUCHRKeyResource(const void*, UInt32 keyboardType);
 
-		// CKeyResource overrides
+		// KeyResource overrides
 		virtual bool	isValid() const;
 		virtual UInt32	getNumModifierCombinations() const;
 		virtual UInt32	getNumTables() const;
@@ -208,9 +208,9 @@ private:
 	};
 
 	typedef std::map<KeyLayout, SInt32> GroupMap;
-	typedef std::map<UInt32, KeyID> CVirtualKeyMap;
+	typedef std::map<UInt32, KeyID> VirtualKeyMap;
 
-	CVirtualKeyMap		m_virtualKeyMap;
+	VirtualKeyMap		m_virtualKeyMap;
 	mutable UInt32		m_deadKeyState;
 	GroupList			m_groups;
 	GroupMap			m_groupMap;

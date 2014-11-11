@@ -20,13 +20,13 @@
 
 #include "arch/IArchTime.h"
 
-#define ARCH_TIME CArchTimeUnix
+#define ARCH_TIME ArchTimeUnix
 
 //! Generic Unix implementation of IArchTime
-class CArchTimeUnix : public IArchTime {
+class ArchTimeUnix : public IArchTime {
 public:
-	CArchTimeUnix();
-	virtual ~CArchTimeUnix();
+	ArchTimeUnix();
+	virtual ~ArchTimeUnix();
 
 	// IArchTime overrides
 	virtual double		time();

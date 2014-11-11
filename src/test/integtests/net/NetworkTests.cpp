@@ -61,7 +61,7 @@ const size_t kMockFileSize = 1024 * 1024 * 10; // 10MB
 
 void getScreenShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h);
 void getCursorPos(SInt32& x, SInt32& y);
-CString intToString(size_t i);
+String intToString(size_t i);
 UInt8* newMockData(size_t size);
 void createFile(fstream& file, const char* filename, size_t size);
 
@@ -85,20 +85,20 @@ public:
 
 	void				sendMockData(void* eventTarget);
 	
-	void				sendToClient_mockData_handleClientConnected(const CEvent&, void* vlistener);
-	void				sendToClient_mockData_fileRecieveCompleted(const CEvent&, void*);
+	void				sendToClient_mockData_handleClientConnected(const Event&, void* vlistener);
+	void				sendToClient_mockData_fileRecieveCompleted(const Event&, void*);
 	
-	void				sendToClient_mockFile_handleClientConnected(const CEvent&, void* vlistener);
-	void				sendToClient_mockFile_fileRecieveCompleted(const CEvent& event, void*);
+	void				sendToClient_mockFile_handleClientConnected(const Event&, void* vlistener);
+	void				sendToClient_mockFile_fileRecieveCompleted(const Event& event, void*);
 	
-	void				sendToServer_mockData_handleClientConnected(const CEvent&, void* vlistener);
-	void				sendToServer_mockData_fileRecieveCompleted(const CEvent& event, void*);
+	void				sendToServer_mockData_handleClientConnected(const Event&, void* vlistener);
+	void				sendToServer_mockData_fileRecieveCompleted(const Event& event, void*);
 
-	void				sendToServer_mockFile_handleClientConnected(const CEvent&, void* vlistener);
-	void				sendToServer_mockFile_fileRecieveCompleted(const CEvent& event, void*);
+	void				sendToServer_mockFile_handleClientConnected(const Event&, void* vlistener);
+	void				sendToServer_mockFile_fileRecieveCompleted(const Event& event, void*);
 	
 public:
-	CTestEventQueue		m_events;
+	TestEventQueue		m_events;
 	UInt8*				m_mockData;
 	size_t				m_mockDataSize;
 	fstream				m_mockFile;
@@ -108,41 +108,41 @@ public:
 TEST_F(NetworkTests, sendToClient_mockData)
 {
 	// server and client
-	CNetworkAddress serverAddress(TEST_HOST, TEST_PORT);
-	CCryptoOptions cryptoOptions;
+	NetworkAddress serverAddress(TEST_HOST, TEST_PORT);
+	CryptoOptions cryptoOptions;
 	
 	serverAddress.resolve();
 	
 	// server
-	CSocketMultiplexer serverSocketMultiplexer;
+	SocketMultiplexer serverSocketMultiplexer;
 	CTCPSocketFactory* serverSocketFactory = new CTCPSocketFactory(&m_events, &serverSocketMultiplexer);
-	CClientListener listener(serverAddress, serverSocketFactory, NULL, cryptoOptions, &m_events);
-	NiceMock<CMockScreen> serverScreen;
-	NiceMock<CMockPrimaryClient> primaryClient;
-	NiceMock<CMockConfig> serverConfig;
-	NiceMock<CMockInputFilter> serverInputFilter;
+	ClientListener listener(serverAddress, serverSocketFactory, NULL, cryptoOptions, &m_events);
+	NiceMock<MockScreen> serverScreen;
+	NiceMock<MockPrimaryClient> primaryClient;
+	NiceMock<MockConfig> serverConfig;
+	NiceMock<MockInputFilter> serverInputFilter;
 	
 	m_events.adoptHandler(
-		m_events.forCClientListener().connected(), &listener,
+		m_events.forClientListener().connected(), &listener,
 		new TMethodEventJob<NetworkTests>(
 			this, &NetworkTests::sendToClient_mockData_handleClientConnected, &listener));
 
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	CServer server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
+	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
 	server.m_mock = true;
 	listener.setServer(&server);
 
 	// client
-	NiceMock<CMockScreen> clientScreen;
-	CSocketMultiplexer clientSocketMultiplexer;
+	NiceMock<MockScreen> clientScreen;
+	SocketMultiplexer clientSocketMultiplexer;
 	CTCPSocketFactory* clientSocketFactory = new CTCPSocketFactory(&m_events, &clientSocketMultiplexer);
 	
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	CClient client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions, true);
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions, true);
 		
 	m_events.adoptHandler(
 		m_events.forIScreen().fileRecieveCompleted(), &client,
@@ -153,7 +153,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
 
 	m_events.initQuitTimeout(10);
 	m_events.loop();
-	m_events.removeHandler(m_events.forCClientListener().connected(), &listener);
+	m_events.removeHandler(m_events.forClientListener().connected(), &listener);
 	m_events.removeHandler(m_events.forIScreen().fileRecieveCompleted(), &client);
 	m_events.cleanupQuitTimeout();
 }
@@ -161,41 +161,41 @@ TEST_F(NetworkTests, sendToClient_mockData)
 TEST_F(NetworkTests, sendToClient_mockFile)
 {
 	// server and client
-	CNetworkAddress serverAddress(TEST_HOST, TEST_PORT);
-	CCryptoOptions cryptoOptions;
+	NetworkAddress serverAddress(TEST_HOST, TEST_PORT);
+	CryptoOptions cryptoOptions;
 	
 	serverAddress.resolve();
 	
 	// server
-	CSocketMultiplexer serverSocketMultiplexer;
+	SocketMultiplexer serverSocketMultiplexer;
 	CTCPSocketFactory* serverSocketFactory = new CTCPSocketFactory(&m_events, &serverSocketMultiplexer);
-	CClientListener listener(serverAddress, serverSocketFactory, NULL, cryptoOptions, &m_events);
-	NiceMock<CMockScreen> serverScreen;
-	NiceMock<CMockPrimaryClient> primaryClient;
-	NiceMock<CMockConfig> serverConfig;
-	NiceMock<CMockInputFilter> serverInputFilter;
+	ClientListener listener(serverAddress, serverSocketFactory, NULL, cryptoOptions, &m_events);
+	NiceMock<MockScreen> serverScreen;
+	NiceMock<MockPrimaryClient> primaryClient;
+	NiceMock<MockConfig> serverConfig;
+	NiceMock<MockInputFilter> serverInputFilter;
 	
 	m_events.adoptHandler(
-		m_events.forCClientListener().connected(), &listener,
+		m_events.forClientListener().connected(), &listener,
 		new TMethodEventJob<NetworkTests>(
 			this, &NetworkTests::sendToClient_mockFile_handleClientConnected, &listener));
 
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	CServer server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
+	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
 	server.m_mock = true;
 	listener.setServer(&server);
 
 	// client
-	NiceMock<CMockScreen> clientScreen;
-	CSocketMultiplexer clientSocketMultiplexer;
+	NiceMock<MockScreen> clientScreen;
+	SocketMultiplexer clientSocketMultiplexer;
 	CTCPSocketFactory* clientSocketFactory = new CTCPSocketFactory(&m_events, &clientSocketMultiplexer);
 	
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	CClient client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions, true);
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions, true);
 		
 	m_events.adoptHandler(
 		m_events.forIScreen().fileRecieveCompleted(), &client,
@@ -206,7 +206,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 
 	m_events.initQuitTimeout(10);
 	m_events.loop();
-	m_events.removeHandler(m_events.forCClientListener().connected(), &listener);
+	m_events.removeHandler(m_events.forClientListener().connected(), &listener);
 	m_events.removeHandler(m_events.forIScreen().fileRecieveCompleted(), &client);
 	m_events.cleanupQuitTimeout();
 }
@@ -214,39 +214,39 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 TEST_F(NetworkTests, sendToServer_mockData)
 {
 	// server and client
-	CNetworkAddress serverAddress(TEST_HOST, TEST_PORT);
-	CCryptoOptions cryptoOptions;
+	NetworkAddress serverAddress(TEST_HOST, TEST_PORT);
+	CryptoOptions cryptoOptions;
 	
 	serverAddress.resolve();
 
 	// server
-	CSocketMultiplexer serverSocketMultiplexer;
+	SocketMultiplexer serverSocketMultiplexer;
 	CTCPSocketFactory* serverSocketFactory = new CTCPSocketFactory(&m_events, &serverSocketMultiplexer);
-	CClientListener listener(serverAddress, serverSocketFactory, NULL, cryptoOptions, &m_events);
-	NiceMock<CMockScreen> serverScreen;
-	NiceMock<CMockPrimaryClient> primaryClient;
-	NiceMock<CMockConfig> serverConfig;
-	NiceMock<CMockInputFilter> serverInputFilter;
+	ClientListener listener(serverAddress, serverSocketFactory, NULL, cryptoOptions, &m_events);
+	NiceMock<MockScreen> serverScreen;
+	NiceMock<MockPrimaryClient> primaryClient;
+	NiceMock<MockConfig> serverConfig;
+	NiceMock<MockInputFilter> serverInputFilter;
 
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	CServer server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
+	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
 	server.m_mock = true;
 	listener.setServer(&server);
 
 	// client
-	NiceMock<CMockScreen> clientScreen;
-	CSocketMultiplexer clientSocketMultiplexer;
+	NiceMock<MockScreen> clientScreen;
+	SocketMultiplexer clientSocketMultiplexer;
 	CTCPSocketFactory* clientSocketFactory = new CTCPSocketFactory(&m_events, &clientSocketMultiplexer);
 	
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	CClient client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions, true);
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions, true);
 	
 	m_events.adoptHandler(
-		m_events.forCClientListener().connected(), &listener,
+		m_events.forClientListener().connected(), &listener,
 		new TMethodEventJob<NetworkTests>(
 			this, &NetworkTests::sendToServer_mockData_handleClientConnected, &client));
 
@@ -259,7 +259,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
 
 	m_events.initQuitTimeout(10);
 	m_events.loop();
-	m_events.removeHandler(m_events.forCClientListener().connected(), &listener);
+	m_events.removeHandler(m_events.forClientListener().connected(), &listener);
 	m_events.removeHandler(m_events.forIScreen().fileRecieveCompleted(), &server);
 	m_events.cleanupQuitTimeout();
 }
@@ -267,39 +267,39 @@ TEST_F(NetworkTests, sendToServer_mockData)
 TEST_F(NetworkTests, sendToServer_mockFile)
 {
 	// server and client
-	CNetworkAddress serverAddress(TEST_HOST, TEST_PORT);
-	CCryptoOptions cryptoOptions;
+	NetworkAddress serverAddress(TEST_HOST, TEST_PORT);
+	CryptoOptions cryptoOptions;
 	
 	serverAddress.resolve();
 
 	// server
-	CSocketMultiplexer serverSocketMultiplexer;
+	SocketMultiplexer serverSocketMultiplexer;
 	CTCPSocketFactory* serverSocketFactory = new CTCPSocketFactory(&m_events, &serverSocketMultiplexer);
-	CClientListener listener(serverAddress, serverSocketFactory, NULL, cryptoOptions, &m_events);
-	NiceMock<CMockScreen> serverScreen;
-	NiceMock<CMockPrimaryClient> primaryClient;
-	NiceMock<CMockConfig> serverConfig;
-	NiceMock<CMockInputFilter> serverInputFilter;
+	ClientListener listener(serverAddress, serverSocketFactory, NULL, cryptoOptions, &m_events);
+	NiceMock<MockScreen> serverScreen;
+	NiceMock<MockPrimaryClient> primaryClient;
+	NiceMock<MockConfig> serverConfig;
+	NiceMock<MockInputFilter> serverInputFilter;
 
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	CServer server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
+	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
 	server.m_mock = true;
 	listener.setServer(&server);
 
 	// client
-	NiceMock<CMockScreen> clientScreen;
-	CSocketMultiplexer clientSocketMultiplexer;
+	NiceMock<MockScreen> clientScreen;
+	SocketMultiplexer clientSocketMultiplexer;
 	CTCPSocketFactory* clientSocketFactory = new CTCPSocketFactory(&m_events, &clientSocketMultiplexer);
 	
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	CClient client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions, true);
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, NULL, &clientScreen, cryptoOptions, true);
 	
 	m_events.adoptHandler(
-		m_events.forCClientListener().connected(), &listener,
+		m_events.forClientListener().connected(), &listener,
 		new TMethodEventJob<NetworkTests>(
 			this, &NetworkTests::sendToServer_mockFile_handleClientConnected, &client));
 
@@ -312,23 +312,23 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 
 	m_events.initQuitTimeout(10);
 	m_events.loop();
-	m_events.removeHandler(m_events.forCClientListener().connected(), &listener);
+	m_events.removeHandler(m_events.forClientListener().connected(), &listener);
 	m_events.removeHandler(m_events.forIScreen().fileRecieveCompleted(), &server);
 	m_events.cleanupQuitTimeout();
 }
 
 void 
-NetworkTests::sendToClient_mockData_handleClientConnected(const CEvent&, void* vlistener)
+NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vlistener)
 {
-	CClientListener* listener = reinterpret_cast<CClientListener*>(vlistener);
-	CServer* server = listener->getServer();
+	ClientListener* listener = reinterpret_cast<ClientListener*>(vlistener);
+	Server* server = listener->getServer();
 
-	CClientProxy* client = listener->getNextClient();
+	ClientProxy* client = listener->getNextClient();
 	if (client == NULL) {
 		throw runtime_error("client is null");
 	}
 
-	CBaseClientProxy* bcp = reinterpret_cast<CBaseClientProxy*>(client);
+	BaseClientProxy* bcp = reinterpret_cast<BaseClientProxy*>(client);
 	server->adoptClient(bcp);
 	server->setActive(bcp);
 
@@ -336,26 +336,26 @@ NetworkTests::sendToClient_mockData_handleClientConnected(const CEvent&, void* v
 }
 
 void 
-NetworkTests::sendToClient_mockData_fileRecieveCompleted(const CEvent& event, void*)
+NetworkTests::sendToClient_mockData_fileRecieveCompleted(const Event& event, void*)
 {
-	CClient* client = reinterpret_cast<CClient*>(event.getTarget());
+	Client* client = reinterpret_cast<Client*>(event.getTarget());
 	EXPECT_TRUE(client->isReceivedFileSizeValid());
 
 	m_events.raiseQuitEvent();
 }
 
 void 
-NetworkTests::sendToClient_mockFile_handleClientConnected(const CEvent&, void* vlistener)
+NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vlistener)
 {
-	CClientListener* listener = reinterpret_cast<CClientListener*>(vlistener);
-	CServer* server = listener->getServer();
+	ClientListener* listener = reinterpret_cast<ClientListener*>(vlistener);
+	Server* server = listener->getServer();
 
-	CClientProxy* client = listener->getNextClient();
+	ClientProxy* client = listener->getNextClient();
 	if (client == NULL) {
 		throw runtime_error("client is null");
 	}
 
-	CBaseClientProxy* bcp = reinterpret_cast<CBaseClientProxy*>(client);
+	BaseClientProxy* bcp = reinterpret_cast<BaseClientProxy*>(client);
 	server->adoptClient(bcp);
 	server->setActive(bcp);
 
@@ -363,41 +363,41 @@ NetworkTests::sendToClient_mockFile_handleClientConnected(const CEvent&, void* v
 }
 
 void 
-NetworkTests::sendToClient_mockFile_fileRecieveCompleted(const CEvent& event, void*)
+NetworkTests::sendToClient_mockFile_fileRecieveCompleted(const Event& event, void*)
 {
-	CClient* client = reinterpret_cast<CClient*>(event.getTarget());
+	Client* client = reinterpret_cast<Client*>(event.getTarget());
 	EXPECT_TRUE(client->isReceivedFileSizeValid());
 
 	m_events.raiseQuitEvent();
 }
 
 void 
-NetworkTests::sendToServer_mockData_handleClientConnected(const CEvent&, void* vclient)
+NetworkTests::sendToServer_mockData_handleClientConnected(const Event&, void* vclient)
 {
-	CClient* client = reinterpret_cast<CClient*>(vclient);
+	Client* client = reinterpret_cast<Client*>(vclient);
 	sendMockData(client);
 }
 
 void 
-NetworkTests::sendToServer_mockData_fileRecieveCompleted(const CEvent& event, void*)
+NetworkTests::sendToServer_mockData_fileRecieveCompleted(const Event& event, void*)
 {
-	CServer* server = reinterpret_cast<CServer*>(event.getTarget());
+	Server* server = reinterpret_cast<Server*>(event.getTarget());
 	EXPECT_TRUE(server->isReceivedFileSizeValid());
 
 	m_events.raiseQuitEvent();
 }
 
 void 
-NetworkTests::sendToServer_mockFile_handleClientConnected(const CEvent&, void* vclient)
+NetworkTests::sendToServer_mockFile_handleClientConnected(const Event&, void* vclient)
 {
-	CClient* client = reinterpret_cast<CClient*>(vclient);
+	Client* client = reinterpret_cast<Client*>(vclient);
 	client->sendFileToServer(kMockFilename);
 }
 
 void 
-NetworkTests::sendToServer_mockFile_fileRecieveCompleted(const CEvent& event, void*)
+NetworkTests::sendToServer_mockFile_fileRecieveCompleted(const Event& event, void*)
 {
-	CServer* server = reinterpret_cast<CServer*>(event.getTarget());
+	Server* server = reinterpret_cast<Server*>(event.getTarget());
 	EXPECT_TRUE(server->isReceivedFileSizeValid());
 
 	m_events.raiseQuitEvent();
@@ -407,15 +407,15 @@ void
 NetworkTests::sendMockData(void* eventTarget)
 {
 	// send first message (file size)
-	CString size = intToString(kMockDataSize);
+	String size = intToString(kMockDataSize);
 	size_t sizeLength = size.size();
-	CFileChunker::CFileChunk* sizeMessage = new CFileChunker::CFileChunk(sizeLength + 2);
+	FileChunker::FileChunk* sizeMessage = new FileChunker::FileChunk(sizeLength + 2);
 	char* chunkData = sizeMessage->m_chunk;
 
 	chunkData[0] = kFileStart;
 	memcpy(&chunkData[1], size.c_str(), sizeLength);
 	chunkData[sizeLength + 1] = '\0';
-	m_events.addEvent(CEvent(m_events.forIScreen().fileChunkSending(), eventTarget, sizeMessage));
+	m_events.addEvent(Event(m_events.forIScreen().fileChunkSending(), eventTarget, sizeMessage));
 
 	// send chunk messages with incrementing chunk size
 	size_t lastSize = 0;
@@ -429,13 +429,13 @@ NetworkTests::sendMockData(void* eventTarget)
 		}
 
 		// first byte is the chunk mark, last is \0
-		CFileChunker::CFileChunk* fileChunk = new CFileChunker::CFileChunk(chunkSize + 2);
+		FileChunker::FileChunk* fileChunk = new FileChunker::FileChunk(chunkSize + 2);
 		char* chunkData = fileChunk->m_chunk;
 
 		chunkData[0] = kFileChunk;
 		memcpy(&chunkData[1], &m_mockData[sentLength], chunkSize);
 		chunkData[chunkSize + 1] = '\0';
-		m_events.addEvent(CEvent(m_events.forIScreen().fileChunkSending(), eventTarget, fileChunk));
+		m_events.addEvent(Event(m_events.forIScreen().fileChunkSending(), eventTarget, fileChunk));
 
 		sentLength += chunkSize;
 		lastSize = chunkSize;
@@ -447,12 +447,12 @@ NetworkTests::sendMockData(void* eventTarget)
 	}
 	
 	// send last message
-	CFileChunker::CFileChunk* transferFinished = new CFileChunker::CFileChunk(2);
+	FileChunker::FileChunk* transferFinished = new FileChunker::FileChunk(2);
 	chunkData = transferFinished->m_chunk;
 
 	chunkData[0] = kFileEnd;
 	chunkData[1] = '\0';
-	m_events.addEvent(CEvent(m_events.forIScreen().fileChunkSending(), eventTarget, transferFinished));
+	m_events.addEvent(Event(m_events.forIScreen().fileChunkSending(), eventTarget, transferFinished));
 }
 
 UInt8*
@@ -519,7 +519,7 @@ getCursorPos(SInt32& x, SInt32& y)
 	y = 0;
 }
 
-CString
+String
 intToString(size_t i)
 {
 	stringstream ss;

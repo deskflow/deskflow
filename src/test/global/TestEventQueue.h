@@ -19,13 +19,13 @@
 
 #include "base/EventQueue.h"
 
-class CEventQueueTimer;
+class EventQueueTimer;
 
-class CTestEventQueue : public CEventQueue {
+class TestEventQueue : public EventQueue {
 public:
-	CTestEventQueue() : m_quitTimeoutTimer(nullptr) { }
+	TestEventQueue() : m_quitTimeoutTimer(nullptr) { }
 
-	void				handleQuitTimeout(const CEvent&, void* vclient);
+	void				handleQuitTimeout(const Event&, void* vclient);
 	void				raiseQuitEvent();
 	void				initQuitTimeout(double timeout);
 	void				cleanupQuitTimeout();
@@ -34,5 +34,5 @@ private:
 	void				timeoutThread(void*);
 
 private:
-	CEventQueueTimer*	m_quitTimeoutTimer;
+	EventQueueTimer*	m_quitTimeoutTimer;
 };

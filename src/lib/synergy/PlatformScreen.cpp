@@ -20,103 +20,103 @@
 #include "synergy/App.h"
 #include "synergy/ArgsBase.h"
 
-CPlatformScreen::CPlatformScreen(IEventQueue* events) :
+PlatformScreen::PlatformScreen(IEventQueue* events) :
 	IPlatformScreen(events),
 	m_draggingStarted(false),
 	m_fakeDraggingStarted(false)
 {
 }
 
-CPlatformScreen::~CPlatformScreen()
+PlatformScreen::~PlatformScreen()
 {
 	// do nothing
 }
 
 void
-CPlatformScreen::updateKeyMap()
+PlatformScreen::updateKeyMap()
 {
 	getKeyState()->updateKeyMap();
 }
 
 void
-CPlatformScreen::updateKeyState()
+PlatformScreen::updateKeyState()
 {
 	getKeyState()->updateKeyState();
 	updateButtons();
 }
 
 void
-CPlatformScreen::setHalfDuplexMask(KeyModifierMask mask)
+PlatformScreen::setHalfDuplexMask(KeyModifierMask mask)
 {
 	getKeyState()->setHalfDuplexMask(mask);
 }
 
 void
-CPlatformScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
+PlatformScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
 				KeyButton button)
 {
 	getKeyState()->fakeKeyDown(id, mask, button);
 }
 
 bool
-CPlatformScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
+PlatformScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 				SInt32 count, KeyButton button)
 {
 	return getKeyState()->fakeKeyRepeat(id, mask, count, button);
 }
 
 bool
-CPlatformScreen::fakeKeyUp(KeyButton button)
+PlatformScreen::fakeKeyUp(KeyButton button)
 {
 	return getKeyState()->fakeKeyUp(button);
 }
 
 void
-CPlatformScreen::fakeAllKeysUp()
+PlatformScreen::fakeAllKeysUp()
 {
 	getKeyState()->fakeAllKeysUp();
 }
 
 bool
-CPlatformScreen::fakeCtrlAltDel()
+PlatformScreen::fakeCtrlAltDel()
 {
 	return getKeyState()->fakeCtrlAltDel();
 }
 
 bool
-CPlatformScreen::isKeyDown(KeyButton button) const
+PlatformScreen::isKeyDown(KeyButton button) const
 {
 	return getKeyState()->isKeyDown(button);
 }
 
 KeyModifierMask
-CPlatformScreen::getActiveModifiers() const
+PlatformScreen::getActiveModifiers() const
 {
 	return getKeyState()->getActiveModifiers();
 }
 
 KeyModifierMask
-CPlatformScreen::pollActiveModifiers() const
+PlatformScreen::pollActiveModifiers() const
 {
 	return getKeyState()->pollActiveModifiers();
 }
 
 SInt32
-CPlatformScreen::pollActiveGroup() const
+PlatformScreen::pollActiveGroup() const
 {
 	return getKeyState()->pollActiveGroup();
 }
 
 void
-CPlatformScreen::pollPressedKeys(KeyButtonSet& pressedKeys) const
+PlatformScreen::pollPressedKeys(KeyButtonSet& pressedKeys) const
 {
 	getKeyState()->pollPressedKeys(pressedKeys);
 }
 
 bool
-CPlatformScreen::isDraggingStarted()
+PlatformScreen::isDraggingStarted()
 {
-	if (CApp::instance().argsBase().m_enableDragDrop) {
+	if (App::instance().argsBase().m_enableDragDrop) {
 		return m_draggingStarted;
 	}
 	return false;

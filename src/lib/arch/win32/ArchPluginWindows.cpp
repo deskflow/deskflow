@@ -32,37 +32,37 @@ typedef int (*initFunc)(void (*sendEvent)(const char*, void*), void (*log)(const
 void* g_eventTarget = NULL;
 IEventQueue* g_events = NULL;
 
-CArchPluginWindows::CArchPluginWindows()
+ArchPluginWindows::ArchPluginWindows()
 {
 }
 
-CArchPluginWindows::~CArchPluginWindows()
+ArchPluginWindows::~ArchPluginWindows()
 {
 }
 
 void
-CArchPluginWindows::init(void* eventTarget, IEventQueue* events)
+ArchPluginWindows::init(void* eventTarget, IEventQueue* events)
 {
 	g_eventTarget = eventTarget;
 	g_events = events;
 	
-	CString dir = getPluginsDir();
+	String dir = getPluginsDir();
 	LOG((CLOG_DEBUG "plugins dir: %s", dir.c_str()));
 
-	CString pattern = CString(dir).append("\\*.dll");
-	std::vector<CString> plugins;
+	String pattern = String(dir).append("\\*.dll");
+	std::vector<String> plugins;
 	getFilenames(pattern, plugins);
 
-	std::vector<CString>::iterator it;
+	std::vector<String>::iterator it;
 	for (it = plugins.begin(); it != plugins.end(); ++it)
 		load(*it);
 }
 
 void
-CArchPluginWindows::load(const CString& dllFilename)
+ArchPluginWindows::load(const String& dllFilename)
 {
 	LOG((CLOG_DEBUG "loading plugin: %s", dllFilename.c_str()));
-	CString path = CString(getPluginsDir()).append("\\").append(dllFilename);
+	String path = String(getPluginsDir()).append("\\").append(dllFilename);
 	HINSTANCE library = LoadLibrary(path.c_str());
 	if (library == NULL)
 		throw XArch(new XArchEvalWindows);
@@ -71,18 +71,18 @@ CArchPluginWindows::load(const CString& dllFilename)
 	initPlugin(&sendEvent, &log);
 }
 
-CString
-CArchPluginWindows::getModuleDir()
+String
+ArchPluginWindows::getModuleDir()
 {
 	TCHAR c_modulePath[MAX_PATH];
 	if (GetModuleFileName(NULL, c_modulePath, MAX_PATH) == 0) {
 		throw XArch(new XArchEvalWindows);
 	}
 
-	CString modulePath(c_modulePath);
+	String modulePath(c_modulePath);
 	size_t lastSlash = modulePath.find_last_of("\\");
 
-	if (lastSlash != CString::npos) {
+	if (lastSlash != String::npos) {
 		return modulePath.substr(0, lastSlash);
 	}
 
@@ -90,7 +90,7 @@ CArchPluginWindows::getModuleDir()
 }
 
 void
-CArchPluginWindows::getFilenames(const CString& pattern, std::vector<CString>& filenames)
+ArchPluginWindows::getFilenames(const String& pattern, std::vector<String>& filenames)
 {
 	WIN32_FIND_DATA data;
 	HANDLE find = FindFirstFile(pattern.c_str(), &data);
@@ -107,7 +107,7 @@ CArchPluginWindows::getFilenames(const CString& pattern, std::vector<CString>& f
 	FindClose(find);
 }
 
-CString CArchPluginWindows::getPluginsDir()
+String ArchPluginWindows::getPluginsDir()
 {
 	return getModuleDir().append("\\").append(PLUGINS_DIR);
 }
@@ -116,8 +116,8 @@ void
 sendEvent(const char* eventName, void* data)
 {
 	LOG((CLOG_DEBUG5 "plugin sending event"));
-	CEvent::Type type = g_events->getRegisteredType(eventName);
-	g_events->addEvent(CEvent(type, g_eventTarget, data));
+	Event::Type type = g_events->getRegisteredType(eventName);
+	g_events->addEvent(Event(type, g_eventTarget, data));
 }
 
 void

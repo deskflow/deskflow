@@ -52,14 +52,14 @@ CXWindowsClipboardUTF8Converter::getDataSize() const
 	return 8;
 }
 
-CString
-CXWindowsClipboardUTF8Converter::fromIClipboard(const CString& data) const
+String
+CXWindowsClipboardUTF8Converter::fromIClipboard(const String& data) const
 {
 	return data;
 }
 
-CString
-CXWindowsClipboardUTF8Converter::toIClipboard(const CString& data) const
+String
+CXWindowsClipboardUTF8Converter::toIClipboard(const String& data) const
 {
 	return data;
 }

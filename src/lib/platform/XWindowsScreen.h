@@ -34,7 +34,7 @@ class CXWindowsKeyState;
 class CXWindowsScreenSaver;
 
 //! Implementation of IPlatformScreen for X11
-class CXWindowsScreen : public CPlatformScreen {
+class CXWindowsScreen : public PlatformScreen {
 public:
 	CXWindowsScreen(const char* displayName, bool isPrimary,
 		bool disableXInitThreads, int mouseScrollDelta,
@@ -81,20 +81,20 @@ public:
 	virtual void		closeScreensaver();
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
-	virtual void		setOptions(const COptionsList& options);
+	virtual void		setOptions(const OptionsList& options);
 	virtual void		setSequenceNumber(UInt32);
 	virtual bool		isPrimary() const;
 
 protected:
 	// IPlatformScreen overrides
-	virtual void		handleSystemEvent(const CEvent&, void*);
+	virtual void		handleSystemEvent(const Event&, void*);
 	virtual void		updateButtons();
 	virtual IKeyState*	getKeyState() const;
 
 private:
 	// event sending
-	void				sendEvent(CEvent::Type, void* = NULL);
-	void				sendClipboardEvent(CEvent::Type, ClipboardID);
+	void				sendEvent(Event::Type, void* = NULL);
+	void				sendClipboardEvent(Event::Type, ClipboardID);
 
 	// create the transparent cursor
 	Cursor				createBlankCursor() const;
@@ -115,7 +115,7 @@ private:
 	static int			ioErrorHandler(Display*);
 
 private:
-	class CKeyEventFilter {
+	class KeyEventFilter {
 	public:
 		int				m_event;
 		Window			m_window;
@@ -154,21 +154,21 @@ private:
 	static Bool			findKeyEvent(Display*, XEvent* xevent, XPointer arg);
 
 private:
-	struct CHotKeyItem {
+	struct HotKeyItem {
 	public:
-		CHotKeyItem(int, unsigned int);
+		HotKeyItem(int, unsigned int);
 
-		bool			operator<(const CHotKeyItem&) const;
+		bool			operator<(const HotKeyItem&) const;
 
 	private:
 		int				m_keycode;
 		unsigned int	m_mask;
 	};
-	typedef std::set<bool> CFilteredKeycodes;
+	typedef std::set<bool> FilteredKeycodes;
 	typedef std::vector<std::pair<int, unsigned int> > HotKeyList;
 	typedef std::map<UInt32, HotKeyList> HotKeyMap;
 	typedef std::vector<UInt32> HotKeyIDList;
-	typedef std::map<CHotKeyItem, UInt32> HotKeyToIDMap;
+	typedef std::map<HotKeyItem, UInt32> HotKeyToIDMap;
 
 	// true if screen is being used as a primary screen, false otherwise
 	bool				m_isPrimary;
@@ -205,7 +205,7 @@ private:
 	XIM					m_im;
 	XIC					m_ic;
 	KeyCode				m_lastKeycode;
-	CFilteredKeycodes	m_filtered;
+	FilteredKeycodes	m_filtered;
 
 	// clipboards
 	CXWindowsClipboard*	m_clipboard[kClipboardEnd];
@@ -244,7 +244,7 @@ private:
 	int                 m_xrandrEventBase;
 
 	IEventQueue*		m_events;
-	CKeyMap				m_keyMap;
+	synergy::KeyMap				m_keyMap;
 
 	// pointer to (singleton) screen.  this is only needed by
 	// ioErrorHandler().

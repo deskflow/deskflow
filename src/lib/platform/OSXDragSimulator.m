@@ -23,7 +23,7 @@
 #if defined(MAC_OS_X_VERSION_10_7)
 
 NSWindow* g_dragWindow = NULL;
-COSXDragView* g_dragView = NULL;
+OSXDragView* g_dragView = NULL;
 NSString* g_ext = NULL;
 
 void
@@ -42,7 +42,7 @@ runCocoaApp()
 	[window setAlphaValue:0.1];
 	[window makeKeyAndOrderFront:nil];
 	
-	COSXDragView* dragView = [[COSXDragView alloc] initWithFrame:NSMakeRect(0, 0, 3, 3)];
+	OSXDragView* dragView = [[OSXDragView alloc] initWithFrame:NSMakeRect(0, 0, 3, 3)];
 	
 	g_dragWindow = window;
 	g_dragView = dragView;

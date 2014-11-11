@@ -55,12 +55,12 @@ public:
 
 	// IClipboard overrides
 	virtual bool		empty();
-	virtual void		add(EFormat, const CString& data);
+	virtual void		add(EFormat, const String& data);
 	virtual bool		open(Time) const;
 	virtual void		close() const;
 	virtual Time		getTime() const;
 	virtual bool		has(EFormat) const;
-	virtual CString		get(EFormat) const;
+	virtual String		get(EFormat) const;
 
 	void setFacade(IMSWindowsClipboardFacade& facade);
 
@@ -68,8 +68,8 @@ private:
 	void				clearConverters();
 
 	UINT				convertFormatToWin32(EFormat) const;
-	HANDLE				convertTextToWin32(const CString& data) const;
-	CString				convertTextFromWin32(HANDLE) const;
+	HANDLE				convertTextToWin32(const String& data) const;
+	String				convertTextFromWin32(HANDLE) const;
 
 	static UINT			getOwnershipFormat();
 
@@ -105,9 +105,9 @@ public:
 	// the input data must be in the IClipboard format returned by
 	// getFormat().  the return data will be in the win32 clipboard
 	// format returned by getWin32Format(), allocated by GlobalAlloc().
-	virtual HANDLE		fromIClipboard(const CString&) const = 0;
+	virtual HANDLE		fromIClipboard(const String&) const = 0;
 
 	// convert from the win32 clipboard format to the IClipboard format
 	// (i.e., the reverse of fromIClipboard()).
-	virtual CString		toIClipboard(HANDLE data) const = 0;
+	virtual String		toIClipboard(HANDLE data) const = 0;
 };

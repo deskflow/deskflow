@@ -21,21 +21,21 @@
 #include <sys/utsname.h>
 
 //
-// CArchSystemUnix
+// ArchSystemUnix
 //
 
-CArchSystemUnix::CArchSystemUnix()
+ArchSystemUnix::ArchSystemUnix()
 {
 	// do nothing
 }
 
-CArchSystemUnix::~CArchSystemUnix()
+ArchSystemUnix::~ArchSystemUnix()
 {
 	// do nothing
 }
 
 std::string
-CArchSystemUnix::getOSName() const
+ArchSystemUnix::getOSName() const
 {
 #if defined(HAVE_SYS_UTSNAME_H)
 	struct utsname info;
@@ -53,7 +53,7 @@ CArchSystemUnix::getOSName() const
 }
 
 std::string
-CArchSystemUnix::getPlatformName() const
+ArchSystemUnix::getPlatformName() const
 {
 #if defined(HAVE_SYS_UTSNAME_H)
 	struct utsname info;
@@ -65,12 +65,12 @@ CArchSystemUnix::getPlatformName() const
 }
 
 std::string
-CArchSystemUnix::setting(const std::string&) const
+ArchSystemUnix::setting(const std::string&) const
 {
 	return "";
 }
 
 void
-CArchSystemUnix::setting(const std::string&, const std::string&) const
+ArchSystemUnix::setting(const std::string&, const std::string&) const
 {
 }

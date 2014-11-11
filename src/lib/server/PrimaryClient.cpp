@@ -23,11 +23,11 @@
 #include "base/Log.h"
 
 //
-// CPrimaryClient
+// PrimaryClient
 //
 
-CPrimaryClient::CPrimaryClient(const CString& name, CScreen* screen) :
-	CBaseClientProxy(name),
+PrimaryClient::PrimaryClient(const String& name, Screen* screen) :
+	BaseClientProxy(name),
 	m_screen(screen),
 	m_fakeInputCount(0)
 {
@@ -37,31 +37,31 @@ CPrimaryClient::CPrimaryClient(const CString& name, CScreen* screen) :
 	}
 }
 
-CPrimaryClient::~CPrimaryClient()
+PrimaryClient::~PrimaryClient()
 {
 	// do nothing
 }
 
 void
-CPrimaryClient::reconfigure(UInt32 activeSides)
+PrimaryClient::reconfigure(UInt32 activeSides)
 {
 	m_screen->reconfigure(activeSides);
 }
 
 UInt32
-CPrimaryClient::registerHotKey(KeyID key, KeyModifierMask mask)
+PrimaryClient::registerHotKey(KeyID key, KeyModifierMask mask)
 {
 	return m_screen->registerHotKey(key, mask);
 }
 
 void
-CPrimaryClient::unregisterHotKey(UInt32 id)
+PrimaryClient::unregisterHotKey(UInt32 id)
 {
 	m_screen->unregisterHotKey(id);
 }
 
 void
-CPrimaryClient::fakeInputBegin()
+PrimaryClient::fakeInputBegin()
 {
 	if (++m_fakeInputCount == 1) {
 		m_screen->fakeInputBegin();
@@ -69,7 +69,7 @@ CPrimaryClient::fakeInputBegin()
 }
 
 void
-CPrimaryClient::fakeInputEnd()
+PrimaryClient::fakeInputEnd()
 {
 	if (--m_fakeInputCount == 0) {
 		m_screen->fakeInputEnd();
@@ -77,68 +77,68 @@ CPrimaryClient::fakeInputEnd()
 }
 
 SInt32
-CPrimaryClient::getJumpZoneSize() const
+PrimaryClient::getJumpZoneSize() const
 {
 	return m_screen->getJumpZoneSize();
 }
 
 void
-CPrimaryClient::getCursorCenter(SInt32& x, SInt32& y) const
+PrimaryClient::getCursorCenter(SInt32& x, SInt32& y) const
 {
 	m_screen->getCursorCenter(x, y);
 }
 
 KeyModifierMask
-CPrimaryClient::getToggleMask() const
+PrimaryClient::getToggleMask() const
 {
 	return m_screen->pollActiveModifiers();
 }
 
 bool
-CPrimaryClient::isLockedToScreen() const
+PrimaryClient::isLockedToScreen() const
 {
 	return m_screen->isLockedToScreen();
 }
 
 void*
-CPrimaryClient::getEventTarget() const
+PrimaryClient::getEventTarget() const
 {
 	return m_screen->getEventTarget();
 }
 
 bool
-CPrimaryClient::getClipboard(ClipboardID id, IClipboard* clipboard) const
+PrimaryClient::getClipboard(ClipboardID id, IClipboard* clipboard) const
 {
 	return m_screen->getClipboard(id, clipboard);
 }
 
 void
-CPrimaryClient::getShape(SInt32& x, SInt32& y,
+PrimaryClient::getShape(SInt32& x, SInt32& y,
 				SInt32& width, SInt32& height) const
 {
 	m_screen->getShape(x, y, width, height);
 }
 
 void
-CPrimaryClient::getCursorPos(SInt32& x, SInt32& y) const
+PrimaryClient::getCursorPos(SInt32& x, SInt32& y) const
 {
 	m_screen->getCursorPos(x, y);
 }
 
 void
-CPrimaryClient::enable()
+PrimaryClient::enable()
 {
 	m_screen->enable();
 }
 
 void
-CPrimaryClient::disable()
+PrimaryClient::disable()
 {
 	m_screen->disable();
 }
 
 void
-CPrimaryClient::enter(SInt32 xAbs, SInt32 yAbs,
+PrimaryClient::enter(SInt32 xAbs, SInt32 yAbs,
 				UInt32 seqNum, KeyModifierMask mask, bool screensaver)
 {
 	m_screen->setSequenceNumber(seqNum);
@@ -149,13 +149,13 @@ CPrimaryClient::enter(SInt32 xAbs, SInt32 yAbs,
 }
 
 bool
-CPrimaryClient::leave()
+PrimaryClient::leave()
 {
 	return m_screen->leave();
 }
 
 void
-CPrimaryClient::setClipboard(ClipboardID id, const IClipboard* clipboard)
+PrimaryClient::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
 	// ignore if this clipboard is already clean
 	if (m_clipboardDirty[id]) {
@@ -168,7 +168,7 @@ CPrimaryClient::setClipboard(ClipboardID id, const IClipboard* clipboard)
 }
 
 void
-CPrimaryClient::grabClipboard(ClipboardID id)
+PrimaryClient::grabClipboard(ClipboardID id)
 {
 	// grab clipboard
 	m_screen->grabClipboard(id);
@@ -178,13 +178,13 @@ CPrimaryClient::grabClipboard(ClipboardID id)
 }
 
 void
-CPrimaryClient::setClipboardDirty(ClipboardID id, bool dirty)
+PrimaryClient::setClipboardDirty(ClipboardID id, bool dirty)
 {
 	m_clipboardDirty[id] = dirty;
 }
 
 void
-CPrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
+PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
 {
 	if (m_fakeInputCount > 0) {
 // XXX -- don't forward keystrokes to primary screen for now
@@ -196,13 +196,13 @@ CPrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
 }
 
 void
-CPrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton)
+PrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
+PrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 {
 	if (m_fakeInputCount > 0) {
 // XXX -- don't forward keystrokes to primary screen for now
@@ -214,61 +214,61 @@ CPrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 }
 
 void
-CPrimaryClient::mouseDown(ButtonID)
+PrimaryClient::mouseDown(ButtonID)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::mouseUp(ButtonID)
+PrimaryClient::mouseUp(ButtonID)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::mouseMove(SInt32 x, SInt32 y)
+PrimaryClient::mouseMove(SInt32 x, SInt32 y)
 {
 	m_screen->warpCursor(x, y);
 }
 
 void
-CPrimaryClient::mouseRelativeMove(SInt32, SInt32)
+PrimaryClient::mouseRelativeMove(SInt32, SInt32)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::mouseWheel(SInt32, SInt32)
+PrimaryClient::mouseWheel(SInt32, SInt32)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::screensaver(bool)
+PrimaryClient::screensaver(bool)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
+PrimaryClient::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
+PrimaryClient::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::resetOptions()
+PrimaryClient::resetOptions()
 {
 	m_screen->resetOptions();
 }
 
 void
-CPrimaryClient::setOptions(const COptionsList& options)
+PrimaryClient::setOptions(const OptionsList& options)
 {
 	m_screen->setOptions(options);
 }

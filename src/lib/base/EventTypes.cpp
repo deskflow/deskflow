@@ -21,31 +21,31 @@
 #include <assert.h>
 #include <stddef.h>
 
-CEventTypes::CEventTypes() :
+EventTypes::EventTypes() :
 	m_events(NULL)
 {
 }
 
 IEventQueue*
-CEventTypes::getEvents() const
+EventTypes::getEvents() const
 {
 	assert(m_events != NULL);
 	return m_events;
 }
 
 void
-CEventTypes::setEvents(IEventQueue* events)
+EventTypes::setEvents(IEventQueue* events)
 {
 	m_events = events;
 }
 
 //
-// CClient
+// Client
 //
 
-REGISTER_EVENT(CClient, connected)
-REGISTER_EVENT(CClient, connectionFailed)
-REGISTER_EVENT(CClient, disconnected)
+REGISTER_EVENT(Client, connected)
+REGISTER_EVENT(Client, connectionFailed)
+REGISTER_EVENT(Client, disconnected)
 
 //
 // IStream
@@ -58,24 +58,24 @@ REGISTER_EVENT(IStream, inputShutdown)
 REGISTER_EVENT(IStream, outputShutdown)
 
 //
-// CIpcClient
+// IpcClient
 //
 
-REGISTER_EVENT(CIpcClient, connected)
-REGISTER_EVENT(CIpcClient, messageReceived)
+REGISTER_EVENT(IpcClient, connected)
+REGISTER_EVENT(IpcClient, messageReceived)
 
 //
-// CIpcClientProxy
+// IpcClientProxy
 //
 
-REGISTER_EVENT(CIpcClientProxy, messageReceived)
-REGISTER_EVENT(CIpcClientProxy, disconnected)
+REGISTER_EVENT(IpcClientProxy, messageReceived)
+REGISTER_EVENT(IpcClientProxy, disconnected)
 
 //
-// CIpcServerProxy
+// IpcServerProxy
 //
 
-REGISTER_EVENT(CIpcServerProxy, messageReceived)
+REGISTER_EVENT(IpcServerProxy, messageReceived)
 
 //
 // IDataSocket
@@ -97,52 +97,52 @@ REGISTER_EVENT(IListenSocket, connecting)
 REGISTER_EVENT(ISocket, disconnected)
 
 //
-// COSXScreen
+// OSXScreen
 //
 
-REGISTER_EVENT(COSXScreen, confirmSleep)
+REGISTER_EVENT(OSXScreen, confirmSleep)
 
 //
-// CClientListener
+// ClientListener
 //
 
-REGISTER_EVENT(CClientListener, connected)
+REGISTER_EVENT(ClientListener, connected)
 
 //
-// CClientProxy
+// ClientProxy
 //
 
-REGISTER_EVENT(CClientProxy, ready)
-REGISTER_EVENT(CClientProxy, disconnected)
-REGISTER_EVENT(CClientProxy, clipboardChanged)
+REGISTER_EVENT(ClientProxy, ready)
+REGISTER_EVENT(ClientProxy, disconnected)
+REGISTER_EVENT(ClientProxy, clipboardChanged)
 
 //
-// CClientProxyUnknown
+// ClientProxyUnknown
 //
 
-REGISTER_EVENT(CClientProxyUnknown, success)
-REGISTER_EVENT(CClientProxyUnknown, failure)
+REGISTER_EVENT(ClientProxyUnknown, success)
+REGISTER_EVENT(ClientProxyUnknown, failure)
 
 //
-// CServer
+// Server
 //
 
-REGISTER_EVENT(CServer, error)
-REGISTER_EVENT(CServer, connected)
-REGISTER_EVENT(CServer, disconnected)
-REGISTER_EVENT(CServer, switchToScreen)
-REGISTER_EVENT(CServer, switchInDirection)
-REGISTER_EVENT(CServer, keyboardBroadcast)
-REGISTER_EVENT(CServer, lockCursorToScreen)
-REGISTER_EVENT(CServer, screenSwitched)
+REGISTER_EVENT(Server, error)
+REGISTER_EVENT(Server, connected)
+REGISTER_EVENT(Server, disconnected)
+REGISTER_EVENT(Server, switchToScreen)
+REGISTER_EVENT(Server, switchInDirection)
+REGISTER_EVENT(Server, keyboardBroadcast)
+REGISTER_EVENT(Server, lockCursorToScreen)
+REGISTER_EVENT(Server, screenSwitched)
 
 //
-// CServerApp
+// ServerApp
 //
 
-REGISTER_EVENT(CServerApp, reloadConfig)
-REGISTER_EVENT(CServerApp, forceReconnect)
-REGISTER_EVENT(CServerApp, resetServer)
+REGISTER_EVENT(ServerApp, reloadConfig)
+REGISTER_EVENT(ServerApp, forceReconnect)
+REGISTER_EVENT(ServerApp, resetServer)
 
 //
 // IKeyState
@@ -181,8 +181,8 @@ REGISTER_EVENT(IScreen, fileChunkSending)
 REGISTER_EVENT(IScreen, fileRecieveCompleted)
 
 //
-// CIpcServer
+// IpcServer
 //
 
-REGISTER_EVENT(CIpcServer, clientConnected)
-REGISTER_EVENT(CIpcServer, messageReceived)
+REGISTER_EVENT(IpcServer, clientConnected)
+REGISTER_EVENT(IpcServer, messageReceived)

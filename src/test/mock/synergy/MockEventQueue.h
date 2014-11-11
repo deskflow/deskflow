@@ -22,42 +22,42 @@
 
 #include "test/global/gmock.h"
 
-class CMockEventQueue : public IEventQueue
+class MockEventQueue : public IEventQueue
 {
 public:
 	MOCK_METHOD0(loop, void());
-	MOCK_METHOD2(newOneShotTimer, CEventQueueTimer*(double, void*));
-	MOCK_METHOD2(newTimer, CEventQueueTimer*(double, void*));
-	MOCK_METHOD2(getEvent, bool(CEvent&, double));
+	MOCK_METHOD2(newOneShotTimer, EventQueueTimer*(double, void*));
+	MOCK_METHOD2(newTimer, EventQueueTimer*(double, void*));
+	MOCK_METHOD2(getEvent, bool(Event&, double));
 	MOCK_METHOD1(adoptBuffer, void(IEventQueueBuffer*));
-	MOCK_METHOD2(registerTypeOnce, CEvent::Type(CEvent::Type&, const char*));
+	MOCK_METHOD2(registerTypeOnce, Event::Type(Event::Type&, const char*));
 	MOCK_METHOD1(removeHandlers, void(void*));
-	MOCK_METHOD1(registerType, CEvent::Type(const char*));
+	MOCK_METHOD1(registerType, Event::Type(const char*));
 	MOCK_CONST_METHOD0(isEmpty, bool());
-	MOCK_METHOD3(adoptHandler, void(CEvent::Type, void*, IEventJob*));
-	MOCK_METHOD1(getTypeName, const char*(CEvent::Type));
-	MOCK_METHOD1(addEvent, void(const CEvent&));
-	MOCK_METHOD2(removeHandler, void(CEvent::Type, void*));
-	MOCK_METHOD1(dispatchEvent, bool(const CEvent&));
-	MOCK_CONST_METHOD2(getHandler, IEventJob*(CEvent::Type, void*));
-	MOCK_METHOD1(deleteTimer, void(CEventQueueTimer*));
-	MOCK_CONST_METHOD1(getRegisteredType, CEvent::Type(const CString&));
+	MOCK_METHOD3(adoptHandler, void(Event::Type, void*, IEventJob*));
+	MOCK_METHOD1(getTypeName, const char*(Event::Type));
+	MOCK_METHOD1(addEvent, void(const Event&));
+	MOCK_METHOD2(removeHandler, void(Event::Type, void*));
+	MOCK_METHOD1(dispatchEvent, bool(const Event&));
+	MOCK_CONST_METHOD2(getHandler, IEventJob*(Event::Type, void*));
+	MOCK_METHOD1(deleteTimer, void(EventQueueTimer*));
+	MOCK_CONST_METHOD1(getRegisteredType, Event::Type(const String&));
 	MOCK_METHOD0(getSystemTarget, void*());
-	MOCK_METHOD0(forCClient, CClientEvents&());
+	MOCK_METHOD0(forClient, ClientEvents&());
 	MOCK_METHOD0(forIStream, IStreamEvents&());
-	MOCK_METHOD0(forCIpcClient, CIpcClientEvents&());
-	MOCK_METHOD0(forCIpcClientProxy, CIpcClientProxyEvents&());
-	MOCK_METHOD0(forCIpcServer, CIpcServerEvents&());
-	MOCK_METHOD0(forCIpcServerProxy, CIpcServerProxyEvents&());
+	MOCK_METHOD0(forIpcClient, IpcClientEvents&());
+	MOCK_METHOD0(forIpcClientProxy, IpcClientProxyEvents&());
+	MOCK_METHOD0(forIpcServer, IpcServerEvents&());
+	MOCK_METHOD0(forIpcServerProxy, IpcServerProxyEvents&());
 	MOCK_METHOD0(forIDataSocket, IDataSocketEvents&());
 	MOCK_METHOD0(forIListenSocket, IListenSocketEvents&());
 	MOCK_METHOD0(forISocket, ISocketEvents&());
-	MOCK_METHOD0(forCOSXScreen, COSXScreenEvents&());
-	MOCK_METHOD0(forCClientListener, CClientListenerEvents&());
-	MOCK_METHOD0(forCClientProxy, CClientProxyEvents&());
-	MOCK_METHOD0(forCClientProxyUnknown, CClientProxyUnknownEvents&());
-	MOCK_METHOD0(forCServer, CServerEvents&());
-	MOCK_METHOD0(forCServerApp, CServerAppEvents&());
+	MOCK_METHOD0(forOSXScreen, OSXScreenEvents&());
+	MOCK_METHOD0(forClientListener, ClientListenerEvents&());
+	MOCK_METHOD0(forClientProxy, ClientProxyEvents&());
+	MOCK_METHOD0(forClientProxyUnknown, ClientProxyUnknownEvents&());
+	MOCK_METHOD0(forServer, ServerEvents&());
+	MOCK_METHOD0(forServerApp, ServerAppEvents&());
 	MOCK_METHOD0(forIKeyState, IKeyStateEvents&());
 	MOCK_METHOD0(forIPrimaryScreen, IPrimaryScreenEvents&());
 	MOCK_METHOD0(forIScreen, IScreenEvents&());

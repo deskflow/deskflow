@@ -33,10 +33,10 @@ This outputter performs no output and returns false from \c write(),
 causing the logger to stop traversing the outputter chain.  Insert
 this to prevent already inserted outputters from writing.
 */
-class CStopLogOutputter : public ILogOutputter {
+class StopLogOutputter : public ILogOutputter {
 public:
-	CStopLogOutputter();
-	virtual ~CStopLogOutputter();
+	StopLogOutputter();
+	virtual ~StopLogOutputter();
 
 	// ILogOutputter overrides
 	virtual void		open(const char* title);
@@ -50,10 +50,10 @@ public:
 This outputter writes output to the console.  The level for each
 message is ignored.
 */
-class CConsoleLogOutputter : public ILogOutputter {
+class ConsoleLogOutputter : public ILogOutputter {
 public:
-	CConsoleLogOutputter();
-	virtual ~CConsoleLogOutputter();
+	ConsoleLogOutputter();
+	virtual ~ConsoleLogOutputter();
 
 	// ILogOutputter overrides
 	virtual void		open(const char* title);
@@ -69,10 +69,10 @@ This outputter writes output to the file.  The level for each
 message is ignored.
 */
 
-class CFileLogOutputter : public ILogOutputter {
+class FileLogOutputter : public ILogOutputter {
 public:
-	CFileLogOutputter(const char* logFile);
-	virtual ~CFileLogOutputter();
+	FileLogOutputter(const char* logFile);
+	virtual ~FileLogOutputter();
 
 	// ILogOutputter overrides
 	virtual void		open(const char* title);
@@ -90,10 +90,10 @@ private:
 /*!
 This outputter writes output to the system log.
 */
-class CSystemLogOutputter : public ILogOutputter {
+class SystemLogOutputter : public ILogOutputter {
 public:
-	CSystemLogOutputter();
-	virtual ~CSystemLogOutputter();
+	SystemLogOutputter();
+	virtual ~SystemLogOutputter();
 
 	// ILogOutputter overrides
 	virtual void		open(const char* title);
@@ -104,16 +104,16 @@ public:
 
 //! Write log to system log only
 /*!
-Creating an object of this type inserts a CStopLogOutputter followed
-by a CSystemLogOutputter into CLog.  The destructor removes those
+Creating an object of this type inserts a StopLogOutputter followed
+by a SystemLogOutputter into Log.  The destructor removes those
 outputters.  Add one of these to any scope that needs to write to
 the system log (only) and restore the old outputters when exiting
 the scope.
 */
-class CSystemLogger {
+class SystemLogger {
 public:
-	CSystemLogger(const char* title, bool blockConsole);
-	~CSystemLogger();
+	SystemLogger(const char* title, bool blockConsole);
+	~SystemLogger();
 
 private:
 	ILogOutputter*		m_syslog;
@@ -124,15 +124,15 @@ private:
 /*!
 This outputter records the last N log messages.
 */
-class CBufferedLogOutputter : public ILogOutputter {
+class BufferedLogOutputter : public ILogOutputter {
 private:
-	typedef std::deque<CString> CBuffer;
+	typedef std::deque<String> Buffer;
 
 public:
-	typedef CBuffer::const_iterator const_iterator;
+	typedef Buffer::const_iterator const_iterator;
 
-	CBufferedLogOutputter(UInt32 maxBufferSize);
-	virtual ~CBufferedLogOutputter();
+	BufferedLogOutputter(UInt32 maxBufferSize);
+	virtual ~BufferedLogOutputter();
 
 	//! @name accessors
 	//@{
@@ -152,17 +152,17 @@ public:
 	virtual bool		write(ELevel level, const char* message);
 private:
 	UInt32				m_maxBufferSize;
-	CBuffer				m_buffer;
+	Buffer				m_buffer;
 };
 
 //! Write log to message box
 /*!
 The level for each message is ignored.
 */
-class CMesssageBoxLogOutputter : public ILogOutputter {
+class MesssageBoxLogOutputter : public ILogOutputter {
 public:
-	CMesssageBoxLogOutputter();
-	virtual ~CMesssageBoxLogOutputter();
+	MesssageBoxLogOutputter();
+	virtual ~MesssageBoxLogOutputter();
 
 	// ILogOutputter overrides
 	virtual void		open(const char* title);

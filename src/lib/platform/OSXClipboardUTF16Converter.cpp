@@ -21,35 +21,35 @@
 #include "base/Unicode.h"
 
 //
-// COSXClipboardUTF16Converter
+// OSXClipboardUTF16Converter
 //
 
-COSXClipboardUTF16Converter::COSXClipboardUTF16Converter()
+OSXClipboardUTF16Converter::OSXClipboardUTF16Converter()
 {
 	// do nothing
 }
 
-COSXClipboardUTF16Converter::~COSXClipboardUTF16Converter()
+OSXClipboardUTF16Converter::~OSXClipboardUTF16Converter()
 {
 	// do nothing
 }
 
 CFStringRef
-COSXClipboardUTF16Converter::getOSXFormat() const
+OSXClipboardUTF16Converter::getOSXFormat() const
 {
 	return CFSTR("public.utf16-plain-text");
 }
 
-CString
-COSXClipboardUTF16Converter::doFromIClipboard(const CString& data) const
+String
+OSXClipboardUTF16Converter::doFromIClipboard(const String& data) const
 {
 	// convert and add nul terminator
-	return CUnicode::UTF8ToUTF16(data);
+	return Unicode::UTF8ToUTF16(data);
 }
 
-CString
-COSXClipboardUTF16Converter::doToIClipboard(const CString& data) const
+String
+OSXClipboardUTF16Converter::doToIClipboard(const String& data) const
 {
 	// convert and strip nul terminator
-	return CUnicode::UTF16ToUTF8(data);
+	return Unicode::UTF16ToUTF8(data);
 }

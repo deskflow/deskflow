@@ -23,19 +23,19 @@
 
 #include <string>
 
-class CEvent;
-class CIpcLogOutputter;
-class CFileLogOutputter;
+class Event;
+class IpcLogOutputter;
+class FileLogOutputter;
 
 #if SYSAPI_WIN32
 class CMSWindowsWatchdog;
 #endif
 
-class CDaemonApp {
+class DaemonApp {
 
 public:
-	CDaemonApp();
-	virtual ~CDaemonApp();
+	DaemonApp();
+	virtual ~DaemonApp();
 	int run(int argc, char** argv);
 	void mainLoop(bool logToFile);
 
@@ -43,20 +43,20 @@ private:
 	void daemonize();
 	void foregroundError(const char* message);
 	std::string			logFilename();
-	void				handleIpcMessage(const CEvent&, void*);
+	void				handleIpcMessage(const Event&, void*);
 
 public:
-	static CDaemonApp* s_instance;
+	static DaemonApp* s_instance;
 
 #if SYSAPI_WIN32
-	CMSWindowsWatchdog*	m_watchdog;
+	MSWindowsWatchdog*	m_watchdog;
 #endif
 
 private:
-	CIpcServer*			m_ipcServer;
-	CIpcLogOutputter*	m_ipcLogOutputter;
+	IpcServer*			m_ipcServer;
+	IpcLogOutputter*	m_ipcLogOutputter;
 	IEventQueue*		m_events;
-	CFileLogOutputter*	m_fileLogOutputter;
+	FileLogOutputter*	m_fileLogOutputter;
 };
 
 #define LOG_FILENAME "synergyd.log"

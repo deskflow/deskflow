@@ -41,20 +41,20 @@ extern "C" {
 
 
 template <class T>
-class CCondVar;
-class CEventQueueTimer;
-class CMutex;
-class CThread;
-class COSXKeyState;
-class COSXScreenSaver;
+class CondVar;
+class EventQueueTimer;
+class Mutex;
+class Thread;
+class OSXKeyState;
+class OSXScreenSaver;
 class IEventQueue;
-class CMutex;
+class Mutex;
 
 //! Implementation of IPlatformScreen for OS X
-class COSXScreen : public CPlatformScreen {
+class OSXScreen : public PlatformScreen {
 public:
-	COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCursor=true);
-	virtual ~COSXScreen();
+	OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCursor=true);
+	virtual ~OSXScreen();
 
 	IEventQueue*        getEvents() const { return m_events; }
 
@@ -93,18 +93,18 @@ public:
 	virtual void		closeScreensaver();
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
-	virtual void		setOptions(const COptionsList& options);
+	virtual void		setOptions(const OptionsList& options);
 	virtual void		setSequenceNumber(UInt32);
 	virtual bool		isPrimary() const;
-	virtual void		fakeDraggingFiles(CDragFileList fileList);
-	virtual CString&	getDraggingFilename();
+	virtual void		fakeDraggingFiles(DragFileList fileList);
+	virtual String&	getDraggingFilename();
 	
-	const CString&		getDropTarget() const { return m_dropTarget; }
+	const String&		getDropTarget() const { return m_dropTarget; }
 	void				waitForCarbonLoop() const;
 	
 protected:
 	// IPlatformScreen overrides
-	virtual void		handleSystemEvent(const CEvent&, void*);
+	virtual void		handleSystemEvent(const Event&, void*);
 	virtual void		updateButtons();
 	virtual IKeyState*	getKeyState() const;
 
@@ -114,8 +114,8 @@ private:
 	void				postMouseEvent(CGPoint&) const;
 	
 	// convenience function to send events
-	void				sendEvent(CEvent::Type type, void* = NULL) const;
-	void				sendClipboardEvent(CEvent::Type type, ClipboardID id) const;
+	void				sendEvent(Event::Type type, void* = NULL) const;
+	void				sendClipboardEvent(Event::Type type, ClipboardID id) const;
 
 	// message handlers
 	bool				onMouseMove(SInt32 mx, SInt32 my);
@@ -157,10 +157,10 @@ private:
 	void				enableDragTimer(bool enable);
 
 	// drag timer handler
-	void				handleDrag(const CEvent&, void*);
+	void				handleDrag(const Event&, void*);
 
 	// clipboard check timer handler
-	void				handleClipboardCheck(const CEvent&, void*);
+	void				handleClipboardCheck(const Event&, void*);
 
 #if defined(MAC_OS_X_VERSION_10_5)
 	// Resolution switch callback
@@ -183,7 +183,7 @@ private:
 	void				handlePowerChangeRequest(natural_t messageType,
 							 void* messageArgument);
 
-	void				handleConfirmSleep(const CEvent& event, void*);
+	void				handleConfirmSleep(const Event& event, void*);
 	
 	// global hotkey operating mode
 	static bool			isGlobalHotKeyOperatingModeAvailable();
@@ -206,14 +206,14 @@ private:
 	void				getDropTargetThread(void*);
 	
 private:
-	struct CHotKeyItem {
+	struct HotKeyItem {
 	public:
-		CHotKeyItem(UInt32, UInt32);
-		CHotKeyItem(EventHotKeyRef, UInt32, UInt32);
+		HotKeyItem(UInt32, UInt32);
+		HotKeyItem(EventHotKeyRef, UInt32, UInt32);
 
 		EventHotKeyRef	getRef() const;
 
-		bool			operator<(const CHotKeyItem&) const;
+		bool			operator<(const HotKeyItem&) const;
 
 	private:
 		EventHotKeyRef	m_ref;
@@ -221,7 +221,7 @@ private:
 		UInt32			m_mask;
 	};
 
-	enum MouseButtonState {
+	enum EMouseButtonState {
 		kMouseButtonUp = 0,
 		kMouseButtonDragged,
 		kMouseButtonDown,
@@ -229,9 +229,9 @@ private:
 	};
 	
 
-	class CMouseButtonState {
+	class MouseButtonState {
 	public:
-		void set(UInt32 button, MouseButtonState state);
+		void set(UInt32 button, EMouseButtonState state);
 		bool any();
 		void reset(); 
 		void overwrite(UInt32 buttons);
@@ -242,10 +242,10 @@ private:
 		std::bitset<NumButtonIDs>	  m_buttons;
 	};
 
-	typedef std::map<UInt32, CHotKeyItem> HotKeyMap;
+	typedef std::map<UInt32, HotKeyItem> HotKeyMap;
 	typedef std::vector<UInt32> HotKeyIDList;
 	typedef std::map<KeyModifierMask, UInt32> ModifierHotKeyMap;
-	typedef std::map<CHotKeyItem, UInt32> HotKeyToIDMap;
+	typedef std::map<HotKeyItem, UInt32> HotKeyToIDMap;
 
 	// true if screen is being used as a primary screen, false otherwise
 	bool				m_isPrimary;
@@ -271,29 +271,29 @@ private:
        fakeMouseButton button method is marked 'const'. This is
        Evil, and this should be moved to a place where it need not
        be mutable as soon as possible. */
-	mutable CMouseButtonState m_buttonState;
+	mutable MouseButtonState m_buttonState;
 	typedef std::map<UInt16, CGEventType> MouseButtonEventMapType;
 	std::vector<MouseButtonEventMapType> MouseButtonEventMap;
 
 	bool				m_cursorHidden;
 	SInt32				m_dragNumButtonsDown;
 	Point				m_dragLastPoint;
-	CEventQueueTimer*	m_dragTimer;
+	EventQueueTimer*	m_dragTimer;
 
 	// keyboard stuff
-	COSXKeyState*		m_keyState;
+	OSXKeyState*		m_keyState;
 
 	// clipboards
-	COSXClipboard       m_pasteboard;
+	OSXClipboard       m_pasteboard;
 	UInt32				m_sequenceNumber;
 
 	// screen saver stuff
-	COSXScreenSaver*	m_screensaver;
+	OSXScreenSaver*	m_screensaver;
 	bool				m_screensaverNotify;
 
 	// clipboard stuff
 	bool				m_ownClipboard;
-	CEventQueueTimer*	m_clipboardTimer;
+	EventQueueTimer*	m_clipboardTimer;
 
 	// window object that gets user input events when the server
 	// has focus.
@@ -312,9 +312,9 @@ private:
 	EventHandlerRef			m_switchEventHandlerRef;
 
 	// sleep / wakeup
-	CMutex*					m_pmMutex;
-	CThread*				m_pmWatchThread;
-    CCondVar<bool>*			m_pmThreadReady;
+	Mutex*					m_pmMutex;
+	Thread*				m_pmWatchThread;
+    CondVar<bool>*			m_pmThreadReady;
 	CFRunLoopRef			m_pmRunloop;
 	io_connect_t			m_pmRootPort;
 
@@ -345,11 +345,11 @@ private:
 
 	IEventQueue*			m_events;
 	
-	CThread*				m_getDropTargetThread;
-	CString					m_dropTarget;
+	Thread*				m_getDropTargetThread;
+	String					m_dropTarget;
 	
 #if defined(MAC_OS_X_VERSION_10_7)
-	CMutex*					m_carbonLoopMutex;
-	CCondVar<bool>*			m_carbonLoopReady;
+	Mutex*					m_carbonLoopMutex;
+	CondVar<bool>*			m_carbonLoopReady;
 #endif
 };

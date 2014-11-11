@@ -37,17 +37,17 @@ typedef int socklen_t;
 // compatible so we always use it.
 typedef char optval_t;
 
-#define ARCH_NETWORK CArchNetworkBSD
+#define ARCH_NETWORK ArchNetworkBSD
 
-class CArchSocketImpl {
+class ArchSocketImpl {
 public:
 	int					m_fd;
 	int					m_refCount;
 };
 
-class CArchNetAddressImpl {
+class ArchNetAddressImpl {
 public:
-	CArchNetAddressImpl() : m_len(sizeof(m_addr)) { }
+	ArchNetAddressImpl() : m_len(sizeof(m_addr)) { }
 
 public:
 	struct sockaddr		m_addr;
@@ -55,50 +55,50 @@ public:
 };
 
 //! Berkeley (BSD) sockets implementation of IArchNetwork
-class CArchNetworkBSD : public IArchNetwork {
+class ArchNetworkBSD : public IArchNetwork {
 public:
-	CArchNetworkBSD();
-	virtual ~CArchNetworkBSD();
+	ArchNetworkBSD();
+	virtual ~ArchNetworkBSD();
 
 	virtual void init();
 
 	// IArchNetwork overrides
-	virtual CArchSocket     newSocket(EAddressFamily, ESocketType);
-	virtual CArchSocket     copySocket(CArchSocket s);	virtual void		closeSocket(CArchSocket s);
-	virtual void		closeSocketForRead(CArchSocket s);
-	virtual void		closeSocketForWrite(CArchSocket s);
-	virtual void		bindSocket(CArchSocket s, CArchNetAddress addr);
-	virtual void		listenOnSocket(CArchSocket s);
-	virtual CArchSocket	acceptSocket(CArchSocket s, CArchNetAddress* addr);
-	virtual bool		connectSocket(CArchSocket s, CArchNetAddress name);
-	virtual int			pollSocket(CPollEntry[], int num, double timeout);
-	virtual void		unblockPollSocket(CArchThread thread);
-	virtual size_t		readSocket(CArchSocket s, void* buf, size_t len);
-	virtual size_t		writeSocket(CArchSocket s,
+	virtual ArchSocket     newSocket(EAddressFamily, ESocketType);
+	virtual ArchSocket     copySocket(ArchSocket s);	virtual void		closeSocket(ArchSocket s);
+	virtual void		closeSocketForRead(ArchSocket s);
+	virtual void		closeSocketForWrite(ArchSocket s);
+	virtual void		bindSocket(ArchSocket s, ArchNetAddress addr);
+	virtual void		listenOnSocket(ArchSocket s);
+	virtual ArchSocket	acceptSocket(ArchSocket s, ArchNetAddress* addr);
+	virtual bool		connectSocket(ArchSocket s, ArchNetAddress name);
+	virtual int			pollSocket(PollEntry[], int num, double timeout);
+	virtual void		unblockPollSocket(ArchThread thread);
+	virtual size_t		readSocket(ArchSocket s, void* buf, size_t len);
+	virtual size_t		writeSocket(ArchSocket s,
 							const void* buf, size_t len);
-	virtual void		throwErrorOnSocket(CArchSocket);
-	virtual bool		setNoDelayOnSocket(CArchSocket, bool noDelay);
-	virtual bool		setReuseAddrOnSocket(CArchSocket, bool reuse);
+	virtual void		throwErrorOnSocket(ArchSocket);
+	virtual bool		setNoDelayOnSocket(ArchSocket, bool noDelay);
+	virtual bool		setReuseAddrOnSocket(ArchSocket, bool reuse);
 	virtual std::string		getHostName();
-	virtual CArchNetAddress	newAnyAddr(EAddressFamily);
-	virtual CArchNetAddress	copyAddr(CArchNetAddress);
-	virtual CArchNetAddress	nameToAddr(const std::string&);
-	virtual void			closeAddr(CArchNetAddress);
-	virtual std::string		addrToName(CArchNetAddress);
-	virtual std::string		addrToString(CArchNetAddress);
-	virtual EAddressFamily	getAddrFamily(CArchNetAddress);
-	virtual void			setAddrPort(CArchNetAddress, int port);
-	virtual int				getAddrPort(CArchNetAddress);
-	virtual bool			isAnyAddr(CArchNetAddress);
-	virtual bool			isEqualAddr(CArchNetAddress, CArchNetAddress);
+	virtual ArchNetAddress	newAnyAddr(EAddressFamily);
+	virtual ArchNetAddress	copyAddr(ArchNetAddress);
+	virtual ArchNetAddress	nameToAddr(const std::string&);
+	virtual void			closeAddr(ArchNetAddress);
+	virtual std::string		addrToName(ArchNetAddress);
+	virtual std::string		addrToString(ArchNetAddress);
+	virtual EAddressFamily	getAddrFamily(ArchNetAddress);
+	virtual void			setAddrPort(ArchNetAddress, int port);
+	virtual int				getAddrPort(ArchNetAddress);
+	virtual bool			isAnyAddr(ArchNetAddress);
+	virtual bool			isEqualAddr(ArchNetAddress, ArchNetAddress);
 
 private:
 	const int*			getUnblockPipe();
-	const int*			getUnblockPipeForThread(CArchThread);
+	const int*			getUnblockPipeForThread(ArchThread);
 	void				setBlockingOnSocket(int fd, bool blocking);
 	void				throwError(int);
 	void				throwNameError(int);
 
 private:
-	CArchMutex			m_mutex;
+	ArchMutex			m_mutex;
 };

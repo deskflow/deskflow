@@ -18,23 +18,23 @@
 #include "io/CryptoOptions.h"
 #include "io/XIO.h"
 
-CCryptoOptions::CCryptoOptions(
-		const CString& modeString,
-		const CString& pass) :
+CryptoOptions::CryptoOptions(
+		const String& modeString,
+		const String& pass) :
 	m_pass(pass),
 	m_mode(parseMode(modeString))
 {
 }
 
 void
-CCryptoOptions::setMode(CString modeString)
+CryptoOptions::setMode(String modeString)
 {
 	m_modeString = modeString;
 	m_mode = parseMode(modeString);
 }
 
 ECryptoMode
-CCryptoOptions::parseMode(CString modeString)
+CryptoOptions::parseMode(String modeString)
 {
 	if (modeString == "cfb") {
 		return kCfb;

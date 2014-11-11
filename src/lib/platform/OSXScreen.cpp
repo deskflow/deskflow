@@ -73,14 +73,14 @@ void logCursorVisibility();
 void avoidHesitatingCursor();
 
 //
-// COSXScreen
+// OSXScreen
 //
 
-bool					COSXScreen::s_testedForGHOM = false;
-bool					COSXScreen::s_hasGHOM	    = false;
+bool					OSXScreen::s_testedForGHOM = false;
+bool					OSXScreen::s_hasGHOM	    = false;
 
-COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCursor) :
-	CPlatformScreen(events),
+OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCursor) :
+	PlatformScreen(events),
 	m_isPrimary(isPrimary),
 	m_isOnScreen(m_isPrimary),
 	m_cursorPosValid(false),
@@ -97,9 +97,9 @@ COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCur
 	m_hiddenWindow(NULL),
 	m_userInputWindow(NULL),
 	m_switchEventHandlerRef(0),
-	m_pmMutex(new CMutex),
+	m_pmMutex(new Mutex),
 	m_pmWatchThread(NULL),
-	m_pmThreadReady(new CCondVar<bool>(m_pmMutex, false)),
+	m_pmThreadReady(new CondVar<bool>(m_pmMutex, false)),
 	m_pmRootPort(0),
 	m_activeModifierHotKey(0),
 	m_activeModifierHotKeyMask(0),
@@ -116,8 +116,8 @@ COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCur
 	try {
 		m_displayID   = CGMainDisplayID();
 		updateScreenShape(m_displayID, 0);
-		m_screensaver = new COSXScreenSaver(m_events, getEventTarget());
-		m_keyState	  = new COSXKeyState(m_events);
+		m_screensaver = new OSXScreenSaver(m_events, getEventTarget());
+		m_keyState	  = new OSXKeyState(m_events);
 		
 		// only needed when running as a server.
 		if (m_isPrimary) {
@@ -161,23 +161,23 @@ COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCur
 		constructMouseButtonEventMap();
 
 		// watch for requests to sleep
-		m_events->adoptHandler(m_events->forCOSXScreen().confirmSleep(),
+		m_events->adoptHandler(m_events->forOSXScreen().confirmSleep(),
 								getEventTarget(),
-								new TMethodEventJob<COSXScreen>(this,
-									&COSXScreen::handleConfirmSleep));
+								new TMethodEventJob<OSXScreen>(this,
+									&OSXScreen::handleConfirmSleep));
 
 		// create thread for monitoring system power state.
 		*m_pmThreadReady = false;
 #if defined(MAC_OS_X_VERSION_10_7)
-		m_carbonLoopMutex = new CMutex();
-		m_carbonLoopReady = new CCondVar<bool>(m_carbonLoopMutex, false);
+		m_carbonLoopMutex = new Mutex();
+		m_carbonLoopReady = new CondVar<bool>(m_carbonLoopMutex, false);
 #endif
 		LOG((CLOG_DEBUG "starting watchSystemPowerThread"));
-		m_pmWatchThread = new CThread(new TMethodJob<COSXScreen>
-								(this, &COSXScreen::watchSystemPowerThread));
+		m_pmWatchThread = new Thread(new TMethodJob<OSXScreen>
+								(this, &OSXScreen::watchSystemPowerThread));
 	}
 	catch (...) {
-		m_events->removeHandler(m_events->forCOSXScreen().confirmSleep(),
+		m_events->removeHandler(m_events->forOSXScreen().confirmSleep(),
 								getEventTarget());
 		if (m_switchEventHandlerRef != 0) {
 			RemoveEventHandler(m_switchEventHandlerRef);
@@ -207,24 +207,24 @@ COSXScreen::COSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCur
 	}
 
 	// install event handlers
-	m_events->adoptHandler(CEvent::kSystem, m_events->getSystemTarget(),
-							new TMethodEventJob<COSXScreen>(this,
-								&COSXScreen::handleSystemEvent));
+	m_events->adoptHandler(Event::kSystem, m_events->getSystemTarget(),
+							new TMethodEventJob<OSXScreen>(this,
+								&OSXScreen::handleSystemEvent));
 
 	// install the platform event queue
-	m_events->adoptBuffer(new COSXEventQueueBuffer(m_events));
+	m_events->adoptBuffer(new OSXEventQueueBuffer(m_events));
 }
 
-COSXScreen::~COSXScreen()
+OSXScreen::~OSXScreen()
 {
 	disable();
 	m_events->adoptBuffer(NULL);
-	m_events->removeHandler(CEvent::kSystem, m_events->getSystemTarget());
+	m_events->removeHandler(Event::kSystem, m_events->getSystemTarget());
 
 	if (m_pmWatchThread) {
 		// make sure the thread has setup the runloop.
 		{
-			CLock lock(m_pmMutex);
+			Lock lock(m_pmMutex);
 			while (!(bool)*m_pmThreadReady) {
 				m_pmThreadReady->wait();
 			}
@@ -240,7 +240,7 @@ COSXScreen::~COSXScreen()
 	delete m_pmThreadReady;
 	delete m_pmMutex;
 
-	m_events->removeHandler(m_events->forCOSXScreen().confirmSleep(),
+	m_events->removeHandler(m_events->forOSXScreen().confirmSleep(),
 								getEventTarget());
 
 	RemoveEventHandler(m_switchEventHandlerRef);
@@ -272,20 +272,20 @@ COSXScreen::~COSXScreen()
 }
 
 void*
-COSXScreen::getEventTarget() const
+OSXScreen::getEventTarget() const
 {
-	return const_cast<COSXScreen*>(this);
+	return const_cast<OSXScreen*>(this);
 }
 
 bool
-COSXScreen::getClipboard(ClipboardID, IClipboard* dst) const
+OSXScreen::getClipboard(ClipboardID, IClipboard* dst) const
 {
-	CClipboard::copy(dst, &m_pasteboard);
+	Clipboard::copy(dst, &m_pasteboard);
 	return true;
 }
 
 void
-COSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+OSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 {
 	x = m_x;
 	y = m_y;
@@ -294,7 +294,7 @@ COSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 }
 
 void
-COSXScreen::getCursorPos(SInt32& x, SInt32& y) const
+OSXScreen::getCursorPos(SInt32& x, SInt32& y) const
 {
 	CGEventRef event = CGEventCreate(NULL);
 	CGPoint mouse = CGEventGetLocation(event);
@@ -307,13 +307,13 @@ COSXScreen::getCursorPos(SInt32& x, SInt32& y) const
 }
 
 void
-COSXScreen::reconfigure(UInt32)
+OSXScreen::reconfigure(UInt32)
 {
 	// do nothing
 }
 
 void
-COSXScreen::warpCursor(SInt32 x, SInt32 y)
+OSXScreen::warpCursor(SInt32 x, SInt32 y)
 {
 	// move cursor without generating events
 	CGPoint pos;
@@ -328,25 +328,25 @@ COSXScreen::warpCursor(SInt32 x, SInt32 y)
 }
 
 void
-COSXScreen::fakeInputBegin()
+OSXScreen::fakeInputBegin()
 {
 	// FIXME -- not implemented
 }
 
 void
-COSXScreen::fakeInputEnd()
+OSXScreen::fakeInputEnd()
 {
 	// FIXME -- not implemented
 }
 
 SInt32
-COSXScreen::getJumpZoneSize() const
+OSXScreen::getJumpZoneSize() const
 {
 	return 1;
 }
 
 bool
-COSXScreen::isAnyMouseButtonDown(UInt32& buttonID) const
+OSXScreen::isAnyMouseButtonDown(UInt32& buttonID) const
 {
 	if (m_buttonState.test(0)) {
 		buttonID = kButtonLeft;
@@ -357,14 +357,14 @@ COSXScreen::isAnyMouseButtonDown(UInt32& buttonID) const
 }
 
 void
-COSXScreen::getCursorCenter(SInt32& x, SInt32& y) const
+OSXScreen::getCursorCenter(SInt32& x, SInt32& y) const
 {
 	x = m_xCenter;
 	y = m_yCenter;
 }
 
 UInt32
-COSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
+OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
 	// get mac virtual key and modifier mask matching synergy key and mask
 	UInt32 macKey, macMask;
@@ -402,24 +402,24 @@ COSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 								GetApplicationEventTarget(), 0,
 								&ref);
 		okay = (status == noErr);
-		m_hotKeyToIDMap[CHotKeyItem(macKey, macMask)] = id;
+		m_hotKeyToIDMap[HotKeyItem(macKey, macMask)] = id;
 	}
 
 	if (!okay) {
 		m_oldHotKeyIDs.push_back(id);
-		m_hotKeyToIDMap.erase(CHotKeyItem(macKey, macMask));
-		LOG((CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", CKeyMap::formatKey(key, mask).c_str(), key, mask));
+		m_hotKeyToIDMap.erase(HotKeyItem(macKey, macMask));
+		LOG((CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", synergy::KeyMap::formatKey(key, mask).c_str(), key, mask));
 		return 0;
 	}
 
-	m_hotKeys.insert(std::make_pair(id, CHotKeyItem(ref, macKey, macMask)));
+	m_hotKeys.insert(std::make_pair(id, HotKeyItem(ref, macKey, macMask)));
 	
-	LOG((CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", CKeyMap::formatKey(key, mask).c_str(), key, mask, id));
+	LOG((CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", synergy::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
 	return id;
 }
 
 void
-COSXScreen::unregisterHotKey(UInt32 id)
+OSXScreen::unregisterHotKey(UInt32 id)
 {
 	// look up hotkey
 	HotKeyMap::iterator i = m_hotKeys.find(id);
@@ -462,7 +462,7 @@ COSXScreen::unregisterHotKey(UInt32 id)
 }
 
 void
-COSXScreen::constructMouseButtonEventMap()
+OSXScreen::constructMouseButtonEventMap()
 {
 	const CGEventType source[NumButtonIDs][3] = {
 		{kCGEventLeftMouseUp, kCGEventLeftMouseDragged, kCGEventLeftMouseDown},
@@ -483,7 +483,7 @@ COSXScreen::constructMouseButtonEventMap()
 }
 
 void
-COSXScreen::postMouseEvent(CGPoint& pos) const
+OSXScreen::postMouseEvent(CGPoint& pos) const
 {
 	// check if cursor position is valid on the client display configuration
 	// stkamp@users.sourceforge.net
@@ -530,7 +530,7 @@ COSXScreen::postMouseEvent(CGPoint& pos) const
 }
 
 void
-COSXScreen::fakeMouseButton(ButtonID id, bool press)
+OSXScreen::fakeMouseButton(ButtonID id, bool press)
 {
 	NXEventHandle handle = NXOpenEventStatus();
 	double clickTime = NXClickTime(handle);
@@ -606,7 +606,7 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press)
 		
 		// ... otherwise, perform a single press or release as normal.
 		
-		MouseButtonState state = press ? kMouseButtonDown : kMouseButtonUp;
+		EMouseButtonState state = press ? kMouseButtonDown : kMouseButtonUp;
 		
 		LOG((CLOG_DEBUG1 "faking mouse button id: %d press: %s", id, press ? "pressed" : "released"));
 		
@@ -626,8 +626,8 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press)
 	}
 	if (!press && (id == kButtonLeft)) {
 		if (m_fakeDraggingStarted) {
-			m_getDropTargetThread = new CThread(new TMethodJob<COSXScreen>(
-				this, &COSXScreen::getDropTargetThread));
+			m_getDropTargetThread = new Thread(new TMethodJob<OSXScreen>(
+				this, &OSXScreen::getDropTargetThread));
 		}
 		
 		m_draggingStarted = false;
@@ -635,7 +635,7 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press)
 }
 
 void
-COSXScreen::getDropTargetThread(void*)
+OSXScreen::getDropTargetThread(void*)
 {
 #if defined(MAC_OS_X_VERSION_10_7)
 	char* cstr = NULL;
@@ -669,7 +669,7 @@ COSXScreen::getDropTargetThread(void*)
 }
 
 void
-COSXScreen::fakeMouseMove(SInt32 x, SInt32 y)
+OSXScreen::fakeMouseMove(SInt32 x, SInt32 y)
 {
 	if (m_fakeDraggingStarted) {
 		m_buttonState.set(0, kMouseButtonDown);
@@ -693,7 +693,7 @@ COSXScreen::fakeMouseMove(SInt32 x, SInt32 y)
 }
 
 void
-COSXScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
+OSXScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 {
 	// OS X does not appear to have a fake relative mouse move function.
 	// simulate it by getting the current mouse position and adding to
@@ -718,7 +718,7 @@ COSXScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 }
 
 void
-COSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
+OSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
 	if (xDelta != 0 || yDelta != 0) {
 #if defined(MAC_OS_X_VERSION_10_5)
@@ -741,7 +741,7 @@ COSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 }
 
 void
-COSXScreen::showCursor()
+OSXScreen::showCursor()
 {
 	LOG((CLOG_DEBUG "showing cursor"));
 
@@ -768,7 +768,7 @@ COSXScreen::showCursor()
 }
 
 void
-COSXScreen::hideCursor()
+OSXScreen::hideCursor()
 {
 	LOG((CLOG_DEBUG "hiding cursor"));
 
@@ -795,13 +795,13 @@ COSXScreen::hideCursor()
 }
 
 void
-COSXScreen::enable()
+OSXScreen::enable()
 {
 	// watch the clipboard
 	m_clipboardTimer = m_events->newTimer(1.0, NULL);
-	m_events->adoptHandler(CEvent::kTimer, m_clipboardTimer,
-							new TMethodEventJob<COSXScreen>(this,
-								&COSXScreen::handleClipboardCheck));
+	m_events->adoptHandler(Event::kTimer, m_clipboardTimer,
+							new TMethodEventJob<OSXScreen>(this,
+								&OSXScreen::handleClipboardCheck));
 
 	if (m_isPrimary) {
 		// FIXME -- start watching jump zones
@@ -844,7 +844,7 @@ COSXScreen::enable()
 }
 
 void
-COSXScreen::disable()
+OSXScreen::disable()
 {
 	if (m_autoShowHideCursor) {
 		showCursor();
@@ -869,7 +869,7 @@ COSXScreen::disable()
 
 	// uninstall clipboard timer
 	if (m_clipboardTimer != NULL) {
-		m_events->removeHandler(CEvent::kTimer, m_clipboardTimer);
+		m_events->removeHandler(Event::kTimer, m_clipboardTimer);
 		m_events->deleteTimer(m_clipboardTimer);
 		m_clipboardTimer = NULL;
 	}
@@ -878,7 +878,7 @@ COSXScreen::disable()
 }
 
 void
-COSXScreen::enter()
+OSXScreen::enter()
 {
 	showCursor();
 
@@ -909,24 +909,24 @@ COSXScreen::enter()
 }
 
 bool
-COSXScreen::leave()
+OSXScreen::leave()
 {
     hideCursor();
     
 	if (isDraggingStarted()) {
-		CString& fileList = getDraggingFilename();
+		String& fileList = getDraggingFilename();
 		
 		if (!m_isPrimary) {
 			if (fileList.empty() == false) {
-				CClientApp& app = CClientApp::instance();
-				CClient* client = app.getClientPtr();
+				ClientApp& app = ClientApp::instance();
+				Client* client = app.getClientPtr();
 				
-				CDragInformation di;
+				DragInformation di;
 				di.setFilename(fileList);
-				CDragFileList dragFileList;
+				DragFileList dragFileList;
 				dragFileList.push_back(di);
-				CString info;
-				UInt32 fileCount = CDragInformation::setupDragInfo(
+				String info;
+				UInt32 fileCount = DragInformation::setupDragInfo(
 					dragFileList, info);
 				client->sendDragInfo(fileCount, info, info.size());
 				LOG((CLOG_DEBUG "send dragging file to server"));
@@ -951,17 +951,17 @@ COSXScreen::leave()
 }
 
 bool
-COSXScreen::setClipboard(ClipboardID, const IClipboard* src)
+OSXScreen::setClipboard(ClipboardID, const IClipboard* src)
 {
 	if(src != NULL) {
 		LOG((CLOG_DEBUG "setting clipboard"));
-		CClipboard::copy(&m_pasteboard, src);	
+		Clipboard::copy(&m_pasteboard, src);	
 	}	
 	return true;
 }
 
 void
-COSXScreen::checkClipboards()
+OSXScreen::checkClipboards()
 {
 	LOG((CLOG_DEBUG2 "checking clipboard"));
 	if (m_pasteboard.synchronize()) {
@@ -972,7 +972,7 @@ COSXScreen::checkClipboards()
 }
 
 void
-COSXScreen::openScreensaver(bool notify)
+OSXScreen::openScreensaver(bool notify)
 {
 	m_screensaverNotify = notify;
 	if (!m_screensaverNotify) {
@@ -981,7 +981,7 @@ COSXScreen::openScreensaver(bool notify)
 }
 
 void
-COSXScreen::closeScreensaver()
+OSXScreen::closeScreensaver()
 {
 	if (!m_screensaverNotify) {
 		m_screensaver->enable();
@@ -989,7 +989,7 @@ COSXScreen::closeScreensaver()
 }
 
 void
-COSXScreen::screensaver(bool activate)
+OSXScreen::screensaver(bool activate)
 {
 	if (activate) {
 		m_screensaver->activate();
@@ -1000,46 +1000,46 @@ COSXScreen::screensaver(bool activate)
 }
 
 void
-COSXScreen::resetOptions()
+OSXScreen::resetOptions()
 {
 	// no options
 }
 
 void
-COSXScreen::setOptions(const COptionsList&)
+OSXScreen::setOptions(const OptionsList&)
 {
 	// no options
 }
 
 void
-COSXScreen::setSequenceNumber(UInt32 seqNum)
+OSXScreen::setSequenceNumber(UInt32 seqNum)
 {
 	m_sequenceNumber = seqNum;
 }
 
 bool
-COSXScreen::isPrimary() const
+OSXScreen::isPrimary() const
 {
 	return m_isPrimary;
 }
 
 void
-COSXScreen::sendEvent(CEvent::Type type, void* data) const
+OSXScreen::sendEvent(Event::Type type, void* data) const
 {
-	m_events->addEvent(CEvent(type, getEventTarget(), data));
+	m_events->addEvent(Event(type, getEventTarget(), data));
 }
 
 void
-COSXScreen::sendClipboardEvent(CEvent::Type type, ClipboardID id) const
+OSXScreen::sendClipboardEvent(Event::Type type, ClipboardID id) const
 {
-	CClipboardInfo* info   = (CClipboardInfo*)malloc(sizeof(CClipboardInfo));
+	ClipboardInfo* info   = (ClipboardInfo*)malloc(sizeof(ClipboardInfo));
 	info->m_id             = id;
 	info->m_sequenceNumber = m_sequenceNumber;
 	sendEvent(type, info);
 }
 
 void
-COSXScreen::handleSystemEvent(const CEvent& event, void*)
+OSXScreen::handleSystemEvent(const Event& event, void*)
 {
 	EventRef* carbonEvent = reinterpret_cast<EventRef*>(event.getData());
 	assert(carbonEvent != NULL);
@@ -1126,7 +1126,7 @@ COSXScreen::handleSystemEvent(const CEvent& event, void*)
 }
 
 bool 
-COSXScreen::onMouseMove(SInt32 mx, SInt32 my)
+OSXScreen::onMouseMove(SInt32 mx, SInt32 my)
 {
 	LOG((CLOG_DEBUG2 "mouse move %+d,%+d", mx, my));
 
@@ -1144,7 +1144,7 @@ COSXScreen::onMouseMove(SInt32 mx, SInt32 my)
 	if (m_isOnScreen) {
 		// motion on primary screen
 		sendEvent(m_events->forIPrimaryScreen().motionOnPrimary(),
-							CMotionInfo::alloc(m_xCursor, m_yCursor));
+							MotionInfo::alloc(m_xCursor, m_yCursor));
 		if (m_buttonState.test(0)) {
 			m_draggingStarted = true;
 		}
@@ -1168,7 +1168,7 @@ COSXScreen::onMouseMove(SInt32 mx, SInt32 my)
 		}
 		else {
 			// send motion
-			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), CMotionInfo::alloc(x, y));
+			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(x, y));
 		}
 	}
 
@@ -1176,7 +1176,7 @@ COSXScreen::onMouseMove(SInt32 mx, SInt32 my)
 }
 
 bool				
-COSXScreen::onMouseButton(bool pressed, UInt16 macButton)
+OSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 {
 	// Buttons 2 and 3 are inverted on the mac
 	ButtonID button = mapMacButtonToSynergy(macButton);
@@ -1185,14 +1185,14 @@ COSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 		LOG((CLOG_DEBUG1 "event: button press button=%d", button));
 		if (button != kButtonNone) {
 			KeyModifierMask mask = m_keyState->getActiveModifiers();
-			sendEvent(m_events->forIPrimaryScreen().buttonDown(), CButtonInfo::alloc(button, mask));
+			sendEvent(m_events->forIPrimaryScreen().buttonDown(), ButtonInfo::alloc(button, mask));
 		}
 	}
 	else {
 		LOG((CLOG_DEBUG1 "event: button release button=%d", button));
 		if (button != kButtonNone) {
 			KeyModifierMask mask = m_keyState->getActiveModifiers();
-			sendEvent(m_events->forIPrimaryScreen().buttonUp(), CButtonInfo::alloc(button, mask));
+			sendEvent(m_events->forIPrimaryScreen().buttonUp(), ButtonInfo::alloc(button, mask));
 		}
 	}
 
@@ -1213,7 +1213,7 @@ COSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 	}
 	
 	if (macButton == kButtonLeft) {
-		MouseButtonState state = pressed ? kMouseButtonDown : kMouseButtonUp;
+		EMouseButtonState state = pressed ? kMouseButtonDown : kMouseButtonUp;
 		m_buttonState.set(kButtonLeft - 1, state);
 		if (pressed) {
 			m_draggingFilename.clear();
@@ -1221,8 +1221,8 @@ COSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 		}
 		else {
 			if (m_fakeDraggingStarted) {
-				m_getDropTargetThread = new CThread(new TMethodJob<COSXScreen>(
-																			   this, &COSXScreen::getDropTargetThread));
+				m_getDropTargetThread = new Thread(new TMethodJob<OSXScreen>(
+																			   this, &OSXScreen::getDropTargetThread));
 			}
 			
 			m_draggingStarted = false;
@@ -1233,24 +1233,24 @@ COSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 }
 
 bool
-COSXScreen::onMouseWheel(SInt32 xDelta, SInt32 yDelta) const
+OSXScreen::onMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
 	LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
-	sendEvent(m_events->forIPrimaryScreen().wheel(), CWheelInfo::alloc(xDelta, yDelta));
+	sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(xDelta, yDelta));
 	return true;
 }
 
 void
-COSXScreen::handleClipboardCheck(const CEvent&, void*)
+OSXScreen::handleClipboardCheck(const Event&, void*)
 {
 	checkClipboards();
 }
 
 #if !defined(MAC_OS_X_VERSION_10_5)
 pascal void 
-COSXScreen::displayManagerCallback(void* inUserData, SInt16 inMessage, void*)
+OSXScreen::displayManagerCallback(void* inUserData, SInt16 inMessage, void*)
 {
-	COSXScreen* screen = (COSXScreen*)inUserData;
+	OSXScreen* screen = (OSXScreen*)inUserData;
 
 	if (inMessage == kDMNotifyEvent) {
 		screen->onDisplayChange();
@@ -1258,7 +1258,7 @@ COSXScreen::displayManagerCallback(void* inUserData, SInt16 inMessage, void*)
 }
 
 bool
-COSXScreen::onDisplayChange()
+OSXScreen::onDisplayChange()
 {
 	// screen resolution may have changed.  save old shape.
 	SInt32 xOld = m_x, yOld = m_y, wOld = m_w, hOld = m_h;
@@ -1283,9 +1283,9 @@ COSXScreen::onDisplayChange()
 }
 #else
 void 
-COSXScreen::displayReconfigurationCallback(CGDirectDisplayID displayID, CGDisplayChangeSummaryFlags flags, void* inUserData)
+OSXScreen::displayReconfigurationCallback(CGDirectDisplayID displayID, CGDisplayChangeSummaryFlags flags, void* inUserData)
 {
-	COSXScreen* screen = (COSXScreen*)inUserData;
+	OSXScreen* screen = (OSXScreen*)inUserData;
 
 	// Closing or opening the lid when an external monitor is
     // connected causes an kCGDisplayBeginConfigurationFlag event
@@ -1306,7 +1306,7 @@ COSXScreen::displayReconfigurationCallback(CGDirectDisplayID displayID, CGDispla
 #endif
 
 bool
-COSXScreen::onKey(CGEventRef event)
+OSXScreen::onKey(CGEventRef event)
 {
 	CGEventType eventKind = CGEventGetType(event);
 
@@ -1328,9 +1328,9 @@ COSXScreen::onKey(CGEventRef event)
 			if (m_modifierHotKeys.count(newMask) > 0) {
 				m_activeModifierHotKey     = m_modifierHotKeys[newMask];
 				m_activeModifierHotKeyMask = newMask;
-				m_events->addEvent(CEvent(m_events->forIPrimaryScreen().hotKeyDown(),
+				m_events->addEvent(Event(m_events->forIPrimaryScreen().hotKeyDown(),
 								getEventTarget(),
-								CHotKeyInfo::alloc(m_activeModifierHotKey)));
+								HotKeyInfo::alloc(m_activeModifierHotKey)));
 			}
 		}
 
@@ -1339,9 +1339,9 @@ COSXScreen::onKey(CGEventRef event)
 		else if (m_activeModifierHotKey != 0) {
 			KeyModifierMask mask = (newMask & m_activeModifierHotKeyMask);
 			if (mask != m_activeModifierHotKeyMask) {
-				m_events->addEvent(CEvent(m_events->forIPrimaryScreen().hotKeyUp(),
+				m_events->addEvent(Event(m_events->forIPrimaryScreen().hotKeyUp(),
 								getEventTarget(),
-								CHotKeyInfo::alloc(m_activeModifierHotKey)));
+								HotKeyInfo::alloc(m_activeModifierHotKey)));
 				m_activeModifierHotKey     = 0;
 				m_activeModifierHotKeyMask = 0;
 			}
@@ -1356,14 +1356,14 @@ COSXScreen::onKey(CGEventRef event)
 	// so we check for a key/modifier match in our hot key map.
 	if (!m_isOnScreen) {
 		HotKeyToIDMap::const_iterator i =
-			m_hotKeyToIDMap.find(CHotKeyItem(virtualKey, 
+			m_hotKeyToIDMap.find(HotKeyItem(virtualKey, 
 											 m_keyState->mapModifiersToCarbon(macMask) 
 											 & 0xff00u));
 		if (i != m_hotKeyToIDMap.end()) {
 			UInt32 id = i->second;
 	
 			// determine event type
-			CEvent::Type type;
+			Event::Type type;
 			//UInt32 eventKind = GetEventKind(event);
 			if (eventKind == kCGEventKeyDown) {
 				type = m_events->forIPrimaryScreen().hotKeyDown();
@@ -1375,8 +1375,8 @@ COSXScreen::onKey(CGEventRef event)
 				return false;
 			}
 	
-			m_events->addEvent(CEvent(type, getEventTarget(),
-										CHotKeyInfo::alloc(id)));
+			m_events->addEvent(Event(type, getEventTarget(),
+										HotKeyInfo::alloc(id)));
 		
 			return true;
 		}
@@ -1389,7 +1389,7 @@ COSXScreen::onKey(CGEventRef event)
 
 	// map event to keys
 	KeyModifierMask mask;
-	COSXKeyState::CKeyIDs keys;
+	OSXKeyState::KeyIDs keys;
 	KeyButton button = m_keyState->mapKeyFromEvent(keys, &mask, event);
 	if (button == 0) {
 		return false;
@@ -1417,7 +1417,7 @@ COSXScreen::onKey(CGEventRef event)
 	}
 
 	// send key events
-	for (COSXKeyState::CKeyIDs::const_iterator i = keys.begin();
+	for (OSXKeyState::KeyIDs::const_iterator i = keys.begin();
 							i != keys.end(); ++i) {
 		m_keyState->sendKeyEvent(getEventTarget(), down, isRepeat,
 							*i, sendMask, 1, button);
@@ -1427,7 +1427,7 @@ COSXScreen::onKey(CGEventRef event)
 }
 
 bool
-COSXScreen::onHotKey(EventRef event) const
+OSXScreen::onHotKey(EventRef event) const
 {
 	// get the hotkey id
 	EventHotKeyID hkid;
@@ -1436,7 +1436,7 @@ COSXScreen::onHotKey(EventRef event) const
 	UInt32 id = hkid.id;
 
 	// determine event type
-	CEvent::Type type;
+	Event::Type type;
 	UInt32 eventKind = GetEventKind(event);
 	if (eventKind == kEventHotKeyPressed) {
 		type = m_events->forIPrimaryScreen().hotKeyDown();
@@ -1448,14 +1448,14 @@ COSXScreen::onHotKey(EventRef event) const
 		return false;
 	}
 
-	m_events->addEvent(CEvent(type, getEventTarget(),
-								CHotKeyInfo::alloc(id)));
+	m_events->addEvent(Event(type, getEventTarget(),
+								HotKeyInfo::alloc(id)));
 
 	return true;
 }
 
 ButtonID 
-COSXScreen::mapMacButtonToSynergy(UInt16 macButton) const
+OSXScreen::mapMacButtonToSynergy(UInt16 macButton) const
 {
 	switch (macButton) {
 	case 1:
@@ -1472,7 +1472,7 @@ COSXScreen::mapMacButtonToSynergy(UInt16 macButton) const
 }
 
 SInt32
-COSXScreen::mapScrollWheelToSynergy(SInt32 x) const
+OSXScreen::mapScrollWheelToSynergy(SInt32 x) const
 {
 	// return accelerated scrolling but not exponentially scaled as it is
 	// on the mac.
@@ -1481,7 +1481,7 @@ COSXScreen::mapScrollWheelToSynergy(SInt32 x) const
 }
 
 SInt32
-COSXScreen::mapScrollWheelFromSynergy(SInt32 x) const
+OSXScreen::mapScrollWheelFromSynergy(SInt32 x) const
 {
 	// use server's acceleration with a little boost since other platforms
 	// take one wheel step as a larger step than the mac does.
@@ -1489,7 +1489,7 @@ COSXScreen::mapScrollWheelFromSynergy(SInt32 x) const
 }
 
 double
-COSXScreen::getScrollSpeed() const
+OSXScreen::getScrollSpeed() const
 {
 	double scaling = 0.0;
 
@@ -1515,19 +1515,19 @@ COSXScreen::getScrollSpeed() const
 }
 
 double
-COSXScreen::getScrollSpeedFactor() const
+OSXScreen::getScrollSpeedFactor() const
 {
 	return pow(10.0, getScrollSpeed());
 }
 
 void
-COSXScreen::enableDragTimer(bool enable)
+OSXScreen::enableDragTimer(bool enable)
 {
 	if (enable && m_dragTimer == NULL) {
 		m_dragTimer = m_events->newTimer(0.01, NULL);
-		m_events->adoptHandler(CEvent::kTimer, m_dragTimer,
-							new TMethodEventJob<COSXScreen>(this,
-								&COSXScreen::handleDrag));
+		m_events->adoptHandler(Event::kTimer, m_dragTimer,
+							new TMethodEventJob<OSXScreen>(this,
+								&OSXScreen::handleDrag));
 		CGEventRef event = CGEventCreate(NULL);
 		CGPoint mouse = CGEventGetLocation(event);
 		m_dragLastPoint.h = (short)mouse.x;
@@ -1535,14 +1535,14 @@ COSXScreen::enableDragTimer(bool enable)
 		CFRelease(event);
 	}
 	else if (!enable && m_dragTimer != NULL) {
-		m_events->removeHandler(CEvent::kTimer, m_dragTimer);
+		m_events->removeHandler(Event::kTimer, m_dragTimer);
 		m_events->deleteTimer(m_dragTimer);
 		m_dragTimer = NULL;
 	}
 }
 
 void
-COSXScreen::handleDrag(const CEvent&, void*)
+OSXScreen::handleDrag(const Event&, void*)
 {
 	CGEventRef event = CGEventCreate(NULL);
 	CGPoint p = CGEventGetLocation(event);
@@ -1556,7 +1556,7 @@ COSXScreen::handleDrag(const CEvent&, void*)
 }
 
 void
-COSXScreen::updateButtons()
+OSXScreen::updateButtons()
 {
 	UInt32 buttons = GetCurrentButtonState();
 
@@ -1564,19 +1564,19 @@ COSXScreen::updateButtons()
 }
 
 IKeyState*
-COSXScreen::getKeyState() const
+OSXScreen::getKeyState() const
 {
 	return m_keyState;
 }
 
 void
-COSXScreen::updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags flags)
+OSXScreen::updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags flags)
 {
 	updateScreenShape();
 }
 
 void
-COSXScreen::updateScreenShape()
+OSXScreen::updateScreenShape()
 {
 	// get info for each display
 	CGDisplayCount displayCount = 0;
@@ -1633,28 +1633,28 @@ COSXScreen::updateScreenShape()
 //
 // FAST USER SWITCH NOTIFICATION SUPPORT
 //
-// COSXScreen::userSwitchCallback(void*)
+// OSXScreen::userSwitchCallback(void*)
 // 
 // gets called if a fast user switch occurs
 //
 
 pascal OSStatus
-COSXScreen::userSwitchCallback(EventHandlerCallRef nextHandler,
+OSXScreen::userSwitchCallback(EventHandlerCallRef nextHandler,
 								EventRef theEvent,
 								void* inUserData)
 {
-	COSXScreen* screen = (COSXScreen*)inUserData;
+	OSXScreen* screen = (OSXScreen*)inUserData;
 	UInt32 kind        = GetEventKind(theEvent);
 	IEventQueue* events = screen->getEvents();
 
 	if (kind == kEventSystemUserSessionDeactivated) {
 		LOG((CLOG_DEBUG "user session deactivated"));
-		events->addEvent(CEvent(events->forIScreen().suspend(),
+		events->addEvent(Event(events->forIScreen().suspend(),
 									screen->getEventTarget()));
 	}
 	else if (kind == kEventSystemUserSessionActivated) {
 		LOG((CLOG_DEBUG "user session activated"));
-		events->addEvent(CEvent(events->forIScreen().resume(),
+		events->addEvent(Event(events->forIScreen().resume(),
 									screen->getEventTarget()));
 	}
 	return (CallNextEventHandler(nextHandler, theEvent));
@@ -1665,13 +1665,13 @@ COSXScreen::userSwitchCallback(EventHandlerCallRef nextHandler,
 //
 // SLEEP/WAKEUP NOTIFICATION SUPPORT
 //
-// COSXScreen::watchSystemPowerThread(void*)
+// OSXScreen::watchSystemPowerThread(void*)
 // 
 // main of thread monitoring system power (sleep/wakup) using a CFRunLoop
 //
 
 void
-COSXScreen::watchSystemPowerThread(void*)
+OSXScreen::watchSystemPowerThread(void*)
 {
 	io_object_t				notifier;
 	IONotificationPortRef	notificationPortRef;
@@ -1693,7 +1693,7 @@ COSXScreen::watchSystemPowerThread(void*)
 	
 	// thread is ready
 	{
-		CLock lock(m_pmMutex);
+		Lock lock(m_pmMutex);
 		*m_pmThreadReady = true;
 		m_pmThreadReady->signal();
 	}
@@ -1713,7 +1713,7 @@ COSXScreen::watchSystemPowerThread(void*)
     
 #if defined(MAC_OS_X_VERSION_10_7)
 	{
-		CLock lockCarbon(m_carbonLoopMutex);
+		Lock lockCarbon(m_carbonLoopMutex);
 		if (*m_carbonLoopReady == false) {
 			
 			// we signalling carbon loop ready before starting
@@ -1739,36 +1739,36 @@ COSXScreen::watchSystemPowerThread(void*)
 		CFRelease(runloopSourceRef);
 	}
 
-	CLock lock(m_pmMutex);
+	Lock lock(m_pmMutex);
 	IODeregisterForSystemPower(&notifier);
 	m_pmRootPort = 0;
 	LOG((CLOG_DEBUG "stopped watchSystemPowerThread"));
 }
 
 void
-COSXScreen::powerChangeCallback(void* refcon, io_service_t service,
+OSXScreen::powerChangeCallback(void* refcon, io_service_t service,
 						  natural_t messageType, void* messageArg)
 {
-	((COSXScreen*)refcon)->handlePowerChangeRequest(messageType, messageArg);
+	((OSXScreen*)refcon)->handlePowerChangeRequest(messageType, messageArg);
 }
 
 void
-COSXScreen::handlePowerChangeRequest(natural_t messageType, void* messageArg)
+OSXScreen::handlePowerChangeRequest(natural_t messageType, void* messageArg)
 {
 	// we've received a power change notification
 	switch (messageType) {
 	case kIOMessageSystemWillSleep:
-		// COSXScreen has to handle this in the main thread so we have to
+		// OSXScreen has to handle this in the main thread so we have to
 		// queue a confirm sleep event here.  we actually don't allow the
 		// system to sleep until the event is handled.
-		m_events->addEvent(CEvent(m_events->forCOSXScreen().confirmSleep(),
+		m_events->addEvent(Event(m_events->forOSXScreen().confirmSleep(),
 								getEventTarget(), messageArg,
-								CEvent::kDontFreeData));
+								Event::kDontFreeData));
 		return;
 			
 	case kIOMessageSystemHasPoweredOn:
 		LOG((CLOG_DEBUG "system wakeup"));
-		m_events->addEvent(CEvent(m_events->forIScreen().resume(),
+		m_events->addEvent(Event(m_events->forIScreen().resume(),
 								getEventTarget()));
 		break;
 
@@ -1776,23 +1776,23 @@ COSXScreen::handlePowerChangeRequest(natural_t messageType, void* messageArg)
 		break;
 	}
 
-	CLock lock(m_pmMutex);
+	Lock lock(m_pmMutex);
 	if (m_pmRootPort != 0) {
 		IOAllowPowerChange(m_pmRootPort, (long)messageArg);
 	}
 }
 
 void
-COSXScreen::handleConfirmSleep(const CEvent& event, void*)
+OSXScreen::handleConfirmSleep(const Event& event, void*)
 {
 	long messageArg = (long)event.getData();
 	if (messageArg != 0) {
-		CLock lock(m_pmMutex);
+		Lock lock(m_pmMutex);
 		if (m_pmRootPort != 0) {
 			// deliver suspend event immediately.
-			m_events->addEvent(CEvent(m_events->forIScreen().suspend(),
+			m_events->addEvent(Event(m_events->forIScreen().suspend(),
 									getEventTarget(), NULL, 
-									CEvent::kDeliverImmediately));
+									Event::kDeliverImmediately));
 	
 			LOG((CLOG_DEBUG "system will sleep"));
 			IOAllowPowerChange(m_pmRootPort, messageArg);
@@ -1853,7 +1853,7 @@ static CGSSetGlobalHotKeyOperatingMode_t	s_CGSSetGlobalHotKeyOperatingMode;
 	}
 
 bool
-COSXScreen::isGlobalHotKeyOperatingModeAvailable()
+OSXScreen::isGlobalHotKeyOperatingModeAvailable()
 {
 	if (!s_testedForGHOM) {
 		s_testedForGHOM = true;
@@ -1868,7 +1868,7 @@ COSXScreen::isGlobalHotKeyOperatingModeAvailable()
 }
 
 void
-COSXScreen::setGlobalHotKeysEnabled(bool enabled)
+OSXScreen::setGlobalHotKeysEnabled(bool enabled)
 {
 	if (isGlobalHotKeyOperatingModeAvailable()) {
 		CGSConnection conn = s__CGSDefaultConnection();
@@ -1886,7 +1886,7 @@ COSXScreen::setGlobalHotKeysEnabled(bool enabled)
 }
 
 bool
-COSXScreen::getGlobalHotKeysEnabled()
+OSXScreen::getGlobalHotKeysEnabled()
 {
 	CGSGlobalHotKeyOperatingMode mode;
 	if (isGlobalHotKeyOperatingModeAvailable()) {
@@ -1902,10 +1902,10 @@ COSXScreen::getGlobalHotKeysEnabled()
 #endif
 
 //
-// COSXScreen::CHotKeyItem
+// OSXScreen::HotKeyItem
 //
 
-COSXScreen::CHotKeyItem::CHotKeyItem(UInt32 keycode, UInt32 mask) :
+OSXScreen::HotKeyItem::HotKeyItem(UInt32 keycode, UInt32 mask) :
 	m_ref(NULL),
 	m_keycode(keycode),
 	m_mask(mask)
@@ -1913,7 +1913,7 @@ COSXScreen::CHotKeyItem::CHotKeyItem(UInt32 keycode, UInt32 mask) :
 	// do nothing
 }
 
-COSXScreen::CHotKeyItem::CHotKeyItem(EventHotKeyRef ref,
+OSXScreen::HotKeyItem::HotKeyItem(EventHotKeyRef ref,
 				UInt32 keycode, UInt32 mask) :
 	m_ref(ref),
 	m_keycode(keycode),
@@ -1923,13 +1923,13 @@ COSXScreen::CHotKeyItem::CHotKeyItem(EventHotKeyRef ref,
 }
 
 EventHotKeyRef
-COSXScreen::CHotKeyItem::getRef() const
+OSXScreen::HotKeyItem::getRef() const
 {
 	return m_ref;
 }
 
 bool
-COSXScreen::CHotKeyItem::operator<(const CHotKeyItem& x) const
+OSXScreen::HotKeyItem::operator<(const HotKeyItem& x) const
 {
 	return (m_keycode < x.m_keycode ||
 			(m_keycode == x.m_keycode && m_mask < x.m_mask));
@@ -1939,7 +1939,7 @@ COSXScreen::CHotKeyItem::operator<(const CHotKeyItem& x) const
 // will show the cursor if a local event comes in while synergy has the cursor
 // off the screen.
 CGEventRef
-COSXScreen::handleCGInputEventSecondary(
+OSXScreen::handleCGInputEventSecondary(
 	CGEventTapProxy proxy,
 	CGEventType type,
 	CGEventRef event,
@@ -1949,7 +1949,7 @@ COSXScreen::handleCGInputEventSecondary(
 	// should be tested better before reintroducing.
 	return event;
 
-	COSXScreen* screen = (COSXScreen*)refcon;
+	OSXScreen* screen = (OSXScreen*)refcon;
 	if (screen->m_cursorHidden && type == kCGEventMouseMoved) {
 
 		CGPoint pos = CGEventGetLocation(event);
@@ -1965,12 +1965,12 @@ COSXScreen::handleCGInputEventSecondary(
 
 // Quartz event tap support
 CGEventRef
-COSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
+OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 							   CGEventType type,
 							   CGEventRef event,
 							   void* refcon)
 {
-	COSXScreen* screen = (COSXScreen*)refcon;
+	OSXScreen* screen = (OSXScreen*)refcon;
 	CGPoint pos;
 
 	switch(type) {
@@ -2036,38 +2036,38 @@ COSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 }
 
 void
-COSXScreen::CMouseButtonState::set(UInt32 button, MouseButtonState state) 
+OSXScreen::MouseButtonState::set(UInt32 button, EMouseButtonState state) 
 {
 	bool newState = (state == kMouseButtonDown);
 	m_buttons.set(button, newState);
 }
 
 bool
-COSXScreen::CMouseButtonState::any() 
+OSXScreen::MouseButtonState::any() 
 {
 	return m_buttons.any();
 }
 
 void
-COSXScreen::CMouseButtonState::reset() 
+OSXScreen::MouseButtonState::reset() 
 {
 	m_buttons.reset();
 }
 
 void
-COSXScreen::CMouseButtonState::overwrite(UInt32 buttons) 
+OSXScreen::MouseButtonState::overwrite(UInt32 buttons) 
 {
 	m_buttons = std::bitset<NumButtonIDs>(buttons);
 }
 
 bool
-COSXScreen::CMouseButtonState::test(UInt32 button) const 
+OSXScreen::MouseButtonState::test(UInt32 button) const 
 {
 	return m_buttons.test(button);
 }
 
 SInt8
-COSXScreen::CMouseButtonState::getFirstButtonDown() const 
+OSXScreen::MouseButtonState::getFirstButtonDown() const 
 {
 	if (m_buttons.any()) {
 		for (unsigned short button = 0; button < m_buttons.size(); button++) {
@@ -2080,7 +2080,7 @@ COSXScreen::CMouseButtonState::getFirstButtonDown() const
 }
 
 char*
-COSXScreen::CFStringRefToUTF8String(CFStringRef aString)
+OSXScreen::CFStringRefToUTF8String(CFStringRef aString)
 {
 	if (aString == NULL) {
 		return NULL;
@@ -2098,12 +2098,12 @@ COSXScreen::CFStringRefToUTF8String(CFStringRef aString)
 }
 
 void
-COSXScreen::fakeDraggingFiles(CDragFileList fileList)
+OSXScreen::fakeDraggingFiles(DragFileList fileList)
 {
 	m_fakeDraggingStarted = true;
-	CString fileExt;
+	String fileExt;
 	if (fileList.size() == 1) {
-		fileExt = CDragInformation::getDragFileExtension(
+		fileExt = DragInformation::getDragFileExtension(
 			fileList.at(0).getFilename());
 	}
 
@@ -2114,8 +2114,8 @@ COSXScreen::fakeDraggingFiles(CDragFileList fileList)
 #endif
 }
 
-CString&
-COSXScreen::getDraggingFilename()
+String&
+OSXScreen::getDraggingFilename()
 {
 	if (m_draggingStarted) {
 		CFStringRef dragInfo = getDraggedFileURL();
@@ -2127,7 +2127,7 @@ COSXScreen::getDraggingFilename()
 		else {
 			LOG((CLOG_DEBUG "drag info: %s", info));
 			CFRelease(dragInfo);
-			CString fileList(info);
+			String fileList(info);
 			m_draggingFilename = fileList;
 		}
 
@@ -2140,7 +2140,7 @@ COSXScreen::getDraggingFilename()
 }
 
 void
-COSXScreen::waitForCarbonLoop() const
+OSXScreen::waitForCarbonLoop() const
 {
 #if defined(MAC_OS_X_VERSION_10_7)
 	if (*m_carbonLoopReady) {
@@ -2148,7 +2148,7 @@ COSXScreen::waitForCarbonLoop() const
 		return;
 	}
 
-	CLock lock(m_carbonLoopMutex);
+	Lock lock(m_carbonLoopMutex);
 
 	LOG((CLOG_DEBUG "waiting for carbon loop"));
 

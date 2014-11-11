@@ -27,10 +27,10 @@
 class IEventQueue;
 
 //! Implementation of IArchTaskBarReceiver for the synergy server
-class CClientTaskBarReceiver : public IArchTaskBarReceiver {
+class ClientTaskBarReceiver : public IArchTaskBarReceiver {
 public:
-	CClientTaskBarReceiver(IEventQueue* events);
-	virtual ~CClientTaskBarReceiver();
+	ClientTaskBarReceiver(IEventQueue* events);
+	virtual ~ClientTaskBarReceiver();
 
 	//! @name manipulators
 	//@{
@@ -39,9 +39,9 @@ public:
 	/*!
 	Determine the status and query required information from the client.
 	*/
-	void				updateStatus(CClient*, const CString& errorMsg);
+	void				updateStatus(Client*, const String& errorMsg);
 
-	void updateStatus(INode* n, const CString& errorMsg) { updateStatus((CClient*)n, errorMsg); }
+	void updateStatus(INode* n, const String& errorMsg) { updateStatus((Client*)n, errorMsg); }
 
 	//@}
 
@@ -69,7 +69,7 @@ protected:
 	EState				getStatus() const;
 
 	//! Get error message
-	const CString&		getErrorMessage() const;
+	const String&		getErrorMessage() const;
 
 	//! Quit app
 	/*!
@@ -81,15 +81,15 @@ protected:
 	/*!
 	Called when status changes.  The default implementation does nothing.
 	*/
-	virtual void		onStatusChanged(CClient* client);
+	virtual void		onStatusChanged(Client* client);
 
 private:
 	EState				m_state;
-	CString				m_errorMessage;
-	CString				m_server;
+	String				m_errorMessage;
+	String				m_server;
 	IEventQueue*		m_events;
 };
 
-IArchTaskBarReceiver* createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events);
+IArchTaskBarReceiver* createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events);
 
 #endif

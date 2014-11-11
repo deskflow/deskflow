@@ -19,7 +19,7 @@
 
 #ifdef MAC_OS_X_VERSION_10_7
 
-@implementation COSXDragView
+@implementation OSXDragView
 
 @dynamic draggingFormation;
 @dynamic animatesToDestination;

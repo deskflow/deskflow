@@ -31,17 +31,17 @@
 namespace synergy {
 namespace string {
 
-CString
+String
 format(const char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
-	CString result = vformat(fmt, args);
+	String result = vformat(fmt, args);
 	va_end(args);
 	return result;
 }
 
-CString
+String
 vformat(const char* fmt, va_list args)
 {
 	// find highest indexed substitution and the locations of substitutions
@@ -106,7 +106,7 @@ vformat(const char* fmt, va_list args)
 	}
 
 	// substitute
-	CString result;
+	String result;
 	result.reserve(resultLength);
 	size_t src = 0;
 	for (int i = 0; i < n; ++i) {
@@ -119,13 +119,13 @@ vformat(const char* fmt, va_list args)
 	return result;
 }
 
-CString
+String
 sprintf(const char* fmt, ...)
 {
 	char tmp[1024];
 	char* buffer = tmp;
 	int len      = (int)(sizeof(tmp) / sizeof(tmp[0]));
-	CString result;
+	String result;
 	while (buffer != NULL) {
 		// try printing into the buffer
 		va_list args;
@@ -157,12 +157,12 @@ sprintf(const char* fmt, ...)
 
 void
 findReplaceAll(
-	CString& subject,
-	const CString& find,
-	const CString& replace)
+	String& subject,
+	const String& find,
+	const String& replace)
 {
 	size_t pos = 0;
-	while ((pos = subject.find(find, pos)) != CString::npos) {
+	while ((pos = subject.find(find, pos)) != String::npos) {
 		 subject.replace(pos, find.length(), replace);
 		 pos += replace.length();
 	}
@@ -175,8 +175,8 @@ findReplaceAll(
 
 bool
 CaselessCmp::cmpEqual(
-	const CString::value_type& a,
-	const CString::value_type& b)
+	const String::value_type& a,
+	const String::value_type& b)
 {
 	// should use std::tolower but not in all versions of libstdc++ have it
 	return tolower(a) == tolower(b);
@@ -184,15 +184,15 @@ CaselessCmp::cmpEqual(
 
 bool
 CaselessCmp::cmpLess(
-	const CString::value_type& a,
-	const CString::value_type& b)
+	const String::value_type& a,
+	const String::value_type& b)
 {
 	// should use std::tolower but not in all versions of libstdc++ have it
 	return tolower(a) < tolower(b);
 }
 
 bool
-CaselessCmp::less(const CString& a, const CString& b)
+CaselessCmp::less(const String& a, const String& b)
 {
 	return std::lexicographical_compare(
 		a.begin(), a.end(),
@@ -201,13 +201,13 @@ CaselessCmp::less(const CString& a, const CString& b)
 }
 
 bool
-CaselessCmp::equal(const CString& a, const CString& b)
+CaselessCmp::equal(const String& a, const String& b)
 {
 	return !(less(a, b) || less(b, a));
 }
 
 bool
-CaselessCmp::operator()(const CString& a, const CString& b) const
+CaselessCmp::operator()(const String& a, const String& b) const
 {
 	return less(a, b);
 }

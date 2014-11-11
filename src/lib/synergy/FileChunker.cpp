@@ -33,10 +33,10 @@
 
 using namespace std;
 
-const size_t CFileChunker::m_chunkSize = 512 * 1024; // 512kb
+const size_t FileChunker::m_chunkSize = 512 * 1024; // 512kb
 
 void
-CFileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTarget)
+FileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTarget)
 {
 	std::fstream file(reinterpret_cast<char*>(filename), std::ios::in | std::ios::binary);
 
@@ -49,20 +49,20 @@ CFileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTar
 	size_t size = (size_t)file.tellg();
 
 	// send first message (file size)
-	CString fileSize = intToString(size);
+	String fileSize = intToString(size);
 	size_t sizeLength = fileSize.size();
-	CFileChunk* sizeMessage = new CFileChunk(sizeLength + 2);
+	FileChunk* sizeMessage = new FileChunk(sizeLength + 2);
 	char* chunkData = sizeMessage->m_chunk;
 
 	chunkData[0] = kFileStart;
 	memcpy(&chunkData[1], fileSize.c_str(), sizeLength);
 	chunkData[sizeLength + 1] = '\0';
-	events->addEvent(CEvent(events->forIScreen().fileChunkSending(), eventTarget, sizeMessage));
+	events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, sizeMessage));
 
 	// send chunk messages with a fixed chunk size
 	size_t sentLength = 0;
 	size_t chunkSize = m_chunkSize;
-	CStopwatch stopwatch;
+	Stopwatch stopwatch;
 	stopwatch.start();
 	file.seekg (0, std::ios::beg);
 	while (true) {
@@ -73,13 +73,13 @@ CFileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTar
 			}
 
 			// for fileChunk->m_chunk, the first byte is the chunk mark, last is \0
-			CFileChunk* fileChunk = new CFileChunk(chunkSize + 2);
+			FileChunk* fileChunk = new FileChunk(chunkSize + 2);
 			char* chunkData = fileChunk->m_chunk;
 
 			chunkData[0] = kFileChunk;
 			file.read(&chunkData[1], chunkSize);
 			chunkData[chunkSize + 1] = '\0';
-			events->addEvent(CEvent(events->forIScreen().fileChunkSending(), eventTarget, fileChunk));
+			events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, fileChunk));
 
 			sentLength += chunkSize;
 			file.seekg (sentLength, std::ios::beg);
@@ -93,18 +93,18 @@ CFileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTar
 	}
 
 	// send last message
-	CFileChunk* transferFinished = new CFileChunk(2);
+	FileChunk* transferFinished = new FileChunk(2);
 	chunkData = transferFinished->m_chunk;
 
 	chunkData[0] = kFileEnd;
 	chunkData[1] = '\0';
-	events->addEvent(CEvent(events->forIScreen().fileChunkSending(), eventTarget, transferFinished));
+	events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, transferFinished));
 
 	file.close();
 }
 
-CString
-CFileChunker::intToString(size_t i)
+String
+FileChunker::intToString(size_t i)
 {
 	stringstream ss;
 	ss << i;

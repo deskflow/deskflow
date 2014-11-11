@@ -22,7 +22,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
-class CNetworkAddress;
+class NetworkAddress;
 
 //! Generic socket interface
 /*!
@@ -38,7 +38,7 @@ public:
 	/*!
 	Binds the socket to a particular address.
 	*/
-	virtual void		bind(const CNetworkAddress&) = 0;
+	virtual void		bind(const NetworkAddress&) = 0;
 
 	//! Close socket
 	/*!

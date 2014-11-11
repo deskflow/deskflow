@@ -21,47 +21,47 @@
 #include "base/Stopwatch.h"
 
 //
-// CCondVarBase
+// CondVarBase
 //
 
-CCondVarBase::CCondVarBase(CMutex* mutex) : 
+CondVarBase::CondVarBase(Mutex* mutex) : 
 	m_mutex(mutex)
 {
 	assert(m_mutex != NULL);
 	m_cond = ARCH->newCondVar();
 }
 
-CCondVarBase::~CCondVarBase()
+CondVarBase::~CondVarBase()
 {
 	ARCH->closeCondVar(m_cond);
 }
 
 void
-CCondVarBase::lock() const
+CondVarBase::lock() const
 {
 	m_mutex->lock();
 }
 
 void
-CCondVarBase::unlock() const
+CondVarBase::unlock() const
 {
 	m_mutex->unlock();
 }
 
 void
-CCondVarBase::signal()
+CondVarBase::signal()
 {
 	ARCH->signalCondVar(m_cond);
 }
 
 void
-CCondVarBase::broadcast()
+CondVarBase::broadcast()
 {
 	ARCH->broadcastCondVar(m_cond);
 }
 
 bool
-CCondVarBase::wait(CStopwatch& timer, double timeout) const
+CondVarBase::wait(Stopwatch& timer, double timeout) const
 {
 	// check timeout against timer
 	if (timeout >= 0.0) {
@@ -73,13 +73,13 @@ CCondVarBase::wait(CStopwatch& timer, double timeout) const
 }
 
 bool
-CCondVarBase::wait(double timeout) const
+CondVarBase::wait(double timeout) const
 {
 	return ARCH->waitCondVar(m_cond, m_mutex->m_mutex, timeout);
 }
 
-CMutex*
-CCondVarBase::getMutex() const
+Mutex*
+CondVarBase::getMutex() const
 {
 	return m_mutex;
 }

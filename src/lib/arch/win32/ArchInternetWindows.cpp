@@ -24,20 +24,20 @@
 #include <Wininet.h>
 #include <Shlwapi.h>
 
-struct CWinINetUrl {
-	CString				m_scheme;
-	CString				m_host;
-	CString				m_path;
+struct WinINetUrl {
+	String				m_scheme;
+	String				m_host;
+	String				m_path;
 	INTERNET_PORT		m_port;
 	DWORD				m_flags;
 };
 
-class CWinINetRequest {
+class WinINetRequest {
 public:
-	CWinINetRequest(const CString& url);
-	~CWinINetRequest();
+	WinINetRequest(const String& url);
+	~WinINetRequest();
 
-	CString				send();
+	String				send();
 	void				openSession();
 	void				connect();
 	void				openRequest();
@@ -46,23 +46,23 @@ private:
 	HINTERNET			m_session;
 	HINTERNET			m_connect;
 	HINTERNET			m_request;
-	CWinINetUrl			m_url;
+	WinINetUrl			m_url;
 	bool				m_used;
 };
 
 //
-// CArchInternetWindows
+// ArchInternetWindows
 //
 
-CString
-CArchInternetWindows::get(const CString& url)
+String
+ArchInternetWindows::get(const String& url)
 {
-	CWinINetRequest request(url);
+	WinINetRequest request(url);
 	return request.send();
 }
 
-CString
-CArchInternetWindows::urlEncode(const CString& url)
+String
+ArchInternetWindows::urlEncode(const String& url)
 {
 	TCHAR buffer[1024];
 	DWORD bufferSize = sizeof(buffer);
@@ -71,7 +71,7 @@ CArchInternetWindows::urlEncode(const CString& url)
 		throw XArch(new XArchEvalWindows());
 	}
 
-	CString result(buffer);
+	String result(buffer);
 
 	// the win32 url encoding funcitons are pretty useless (to us) and only
 	// escape "unsafe" chars, but not + or =, so we need to replace these
@@ -83,12 +83,12 @@ CArchInternetWindows::urlEncode(const CString& url)
 }
 
 //
-// CWinINetRequest
+// WinINetRequest
 //
 
-static CWinINetUrl parseUrl(const CString& url);
+static WinINetUrl parseUrl(const String& url);
 
-CWinINetRequest::CWinINetRequest(const CString& url) :
+WinINetRequest::WinINetRequest(const String& url) :
 	m_session(NULL),
 	m_connect(NULL),
 	m_request(NULL),
@@ -97,7 +97,7 @@ CWinINetRequest::CWinINetRequest(const CString& url) :
 {
 }
 
-CWinINetRequest::~CWinINetRequest()
+WinINetRequest::~WinINetRequest()
 {
 	if (m_request != NULL) {
 		InternetCloseHandle(m_request);
@@ -112,8 +112,8 @@ CWinINetRequest::~CWinINetRequest()
 	}
 }
 
-CString
-CWinINetRequest::send()
+String
+WinINetRequest::send()
 {
 	if (m_used) {
 		throw XArch("class is one time use.");
@@ -124,7 +124,7 @@ CWinINetRequest::send()
 	connect();
 	openRequest();
 	
-	CString headers("Content-Type: text/html");
+	String headers("Content-Type: text/html");
 	if (!HttpSendRequest(m_request, headers.c_str(), (DWORD)headers.length(), NULL, NULL)) {
 		throw XArch(new XArchEvalWindows());
 	}
@@ -143,7 +143,7 @@ CWinINetRequest::send()
 }
 
 void
-CWinINetRequest::openSession()
+WinINetRequest::openSession()
 {
 	std::stringstream userAgent;
 	userAgent << "Synergy ";
@@ -162,7 +162,7 @@ CWinINetRequest::openSession()
 }
 
 void
-CWinINetRequest::connect()
+WinINetRequest::connect()
 {
 	m_connect = InternetConnect(
 		m_session,
@@ -180,7 +180,7 @@ CWinINetRequest::connect()
 }
 
 void
-CWinINetRequest::openRequest()
+WinINetRequest::openRequest()
 {
 	m_request = HttpOpenRequest(
 		m_connect,
@@ -200,10 +200,10 @@ CWinINetRequest::openRequest()
 // nb: i tried to use InternetCrackUrl here, but couldn't quite get that to
 // work. here's some (less robust) code to split the url into components.
 // this works fine with simple urls, but doesn't consider the full url spec.
-static CWinINetUrl
-parseUrl(const CString& url)
+static WinINetUrl
+parseUrl(const String& url)
 {
-	CWinINetUrl parsed;
+	WinINetUrl parsed;
 
 	size_t schemeEnd = url.find("://");
 	size_t hostEnd = url.find('/', schemeEnd + 3);
@@ -215,7 +215,7 @@ parseUrl(const CString& url)
 	parsed.m_port = INTERNET_DEFAULT_HTTP_PORT;
 	parsed.m_flags = 0;
 
-	if (parsed.m_scheme.find("https") != CString::npos) {
+	if (parsed.m_scheme.find("https") != String::npos) {
 		parsed.m_port = INTERNET_DEFAULT_HTTPS_PORT;
 		parsed.m_flags = INTERNET_FLAG_SECURE;
 	}

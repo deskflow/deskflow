@@ -17,12 +17,12 @@
 
 #pragma once
 
-#define ARCH_INTERNET CArchInternetUnix
+#define ARCH_INTERNET ArchInternetUnix
 
 #include "base/String.h"
 
-class CArchInternetUnix {
+class ArchInternetUnix {
 public:
-	CString				get(const CString& url);
-	CString				urlEncode(const CString& url);
+	String				get(const String& url);
+	String				urlEncode(const String& url);
 };

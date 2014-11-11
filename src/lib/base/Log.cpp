@@ -54,12 +54,12 @@ static const int		g_defaultMaxPriority = kINFO;
 #endif
 
 //
-// CLog
+// Log
 //
 
-CLog*				 CLog::s_log = NULL;
+Log*				 Log::s_log = NULL;
 
-CLog::CLog()
+Log::Log()
 {
 	assert(s_log == NULL);
 
@@ -69,40 +69,40 @@ CLog::CLog()
 	// other initalization
 	m_maxPriority = g_defaultMaxPriority;
 	m_maxNewlineLength = 0;
-	insert(new CConsoleLogOutputter);
+	insert(new ConsoleLogOutputter);
 
 	s_log = this;
 }
 
-CLog::~CLog()
+Log::~Log()
 {
 	// clean up
-	for (COutputterList::iterator index	= m_outputters.begin();
+	for (OutputterList::iterator index	= m_outputters.begin();
 									index != m_outputters.end(); ++index) {
 		delete *index;
 	}
-	for (COutputterList::iterator index	= m_alwaysOutputters.begin();
+	for (OutputterList::iterator index	= m_alwaysOutputters.begin();
 									index != m_alwaysOutputters.end(); ++index) {
 		delete *index;
 	}
 	ARCH->closeMutex(m_mutex);
 }
 
-CLog*
-CLog::getInstance()
+Log*
+Log::getInstance()
 {
 	assert(s_log != NULL);
 	return s_log;
 }
 
 const char*
-CLog::getFilterName() const
+Log::getFilterName() const
 {
 	return getFilterName(getFilter());
 }
 
 const char*
-CLog::getFilterName(int level) const
+Log::getFilterName(int level) const
 {
 	if (level < 0) {
 		return "Message";
@@ -111,7 +111,7 @@ CLog::getFilterName(int level) const
 }
 
 void
-CLog::print(const char* file, int line, const char* fmt, ...)
+Log::print(const char* file, int line, const char* fmt, ...)
 {
 	// check if fmt begins with a priority argument
 	ELevel priority = kINFO;
@@ -193,11 +193,11 @@ CLog::print(const char* file, int line, const char* fmt, ...)
 }
 
 void
-CLog::insert(ILogOutputter* outputter, bool alwaysAtHead)
+Log::insert(ILogOutputter* outputter, bool alwaysAtHead)
 {
 	assert(outputter != NULL);
 
-	CArchMutexLock lock(m_mutex);
+	ArchMutexLock lock(m_mutex);
 	if (alwaysAtHead) {
 		m_alwaysOutputters.push_front(outputter);
 	}
@@ -218,18 +218,18 @@ CLog::insert(ILogOutputter* outputter, bool alwaysAtHead)
 }
 
 void
-CLog::remove(ILogOutputter* outputter)
+Log::remove(ILogOutputter* outputter)
 {
-	CArchMutexLock lock(m_mutex);
+	ArchMutexLock lock(m_mutex);
 	m_outputters.remove(outputter);
 	m_alwaysOutputters.remove(outputter);
 }
 
 void
-CLog::pop_front(bool alwaysAtHead)
+Log::pop_front(bool alwaysAtHead)
 {
-	CArchMutexLock lock(m_mutex);
-	COutputterList* list = alwaysAtHead ? &m_alwaysOutputters : &m_outputters;
+	ArchMutexLock lock(m_mutex);
+	OutputterList* list = alwaysAtHead ? &m_alwaysOutputters : &m_outputters;
 	if (!list->empty()) {
 		delete list->front();
 		list->pop_front();
@@ -237,7 +237,7 @@ CLog::pop_front(bool alwaysAtHead)
 }
 
 bool
-CLog::setFilter(const char* maxPriority)
+Log::setFilter(const char* maxPriority)
 {
 	if (maxPriority != NULL) {
 		for (int i = 0; i < g_numPriority; ++i) {
@@ -252,29 +252,29 @@ CLog::setFilter(const char* maxPriority)
 }
 
 void
-CLog::setFilter(int maxPriority)
+Log::setFilter(int maxPriority)
 {
-	CArchMutexLock lock(m_mutex);
+	ArchMutexLock lock(m_mutex);
 	m_maxPriority = maxPriority;
 }
 
 int
-CLog::getFilter() const
+Log::getFilter() const
 {
-	CArchMutexLock lock(m_mutex);
+	ArchMutexLock lock(m_mutex);
 	return m_maxPriority;
 }
 
 void
-CLog::output(ELevel priority, char* msg)
+Log::output(ELevel priority, char* msg)
 {
 	assert(priority >= -1 && priority < g_numPriority);
 	assert(msg != NULL);
 	if (!msg) return;
 
-	CArchMutexLock lock(m_mutex);
+	ArchMutexLock lock(m_mutex);
 
-	COutputterList::const_iterator i;
+	OutputterList::const_iterator i;
 
 	for (i = m_alwaysOutputters.begin(); i != m_alwaysOutputters.end(); ++i) {
 

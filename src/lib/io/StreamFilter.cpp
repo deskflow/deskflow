@@ -21,98 +21,98 @@
 #include "base/TMethodEventJob.h"
 
 //
-// CStreamFilter
+// StreamFilter
 //
 
-CStreamFilter::CStreamFilter(IEventQueue* events, synergy::IStream* stream, bool adoptStream) :
+StreamFilter::StreamFilter(IEventQueue* events, synergy::IStream* stream, bool adoptStream) :
 	m_stream(stream),
 	m_adopted(adoptStream),
 	m_events(events)
 {
 	// replace handlers for m_stream
 	m_events->removeHandlers(m_stream->getEventTarget());
-	m_events->adoptHandler(CEvent::kUnknown, m_stream->getEventTarget(),
-							new TMethodEventJob<CStreamFilter>(this,
-								&CStreamFilter::handleUpstreamEvent));
+	m_events->adoptHandler(Event::kUnknown, m_stream->getEventTarget(),
+							new TMethodEventJob<StreamFilter>(this,
+								&StreamFilter::handleUpstreamEvent));
 }
 
-CStreamFilter::~CStreamFilter()
+StreamFilter::~StreamFilter()
 {
-	m_events->removeHandler(CEvent::kUnknown, m_stream->getEventTarget());
+	m_events->removeHandler(Event::kUnknown, m_stream->getEventTarget());
 	if (m_adopted) {
 		delete m_stream;
 	}
 }
 
 void
-CStreamFilter::close()
+StreamFilter::close()
 {
 	getStream()->close();
 }
 
 UInt32
-CStreamFilter::read(void* buffer, UInt32 n)
+StreamFilter::read(void* buffer, UInt32 n)
 {
 	return getStream()->read(buffer, n);
 }
 
 void
-CStreamFilter::write(const void* buffer, UInt32 n)
+StreamFilter::write(const void* buffer, UInt32 n)
 {
 	getStream()->write(buffer, n);
 }
 
 void
-CStreamFilter::flush()
+StreamFilter::flush()
 {
 	getStream()->flush();
 }
 
 void
-CStreamFilter::shutdownInput()
+StreamFilter::shutdownInput()
 {
 	getStream()->shutdownInput();
 }
 
 void
-CStreamFilter::shutdownOutput()
+StreamFilter::shutdownOutput()
 {
 	getStream()->shutdownOutput();
 }
 
 void*
-CStreamFilter::getEventTarget() const
+StreamFilter::getEventTarget() const
 {
 	return const_cast<void*>(reinterpret_cast<const void*>(this));
 }
 
 bool
-CStreamFilter::isReady() const
+StreamFilter::isReady() const
 {
 	return getStream()->isReady();
 }
 
 UInt32
-CStreamFilter::getSize() const
+StreamFilter::getSize() const
 {
 	return getStream()->getSize();
 }
 
 synergy::IStream*
-CStreamFilter::getStream() const
+StreamFilter::getStream() const
 {
 	return m_stream;
 }
 
 void
-CStreamFilter::filterEvent(const CEvent& event)
+StreamFilter::filterEvent(const Event& event)
 {
-	m_events->dispatchEvent(CEvent(event.getType(),
+	m_events->dispatchEvent(Event(event.getType(),
 						getEventTarget(), event.getData()));
 }
 
 void
-CStreamFilter::handleUpstreamEvent(const CEvent& event, void*)
+StreamFilter::handleUpstreamEvent(const Event& event, void*)
 {
 	filterEvent(event);
 }

@@ -22,21 +22,21 @@
 #include <string.h>
 
 //
-// CArchLogWindows
+// ArchLogWindows
 //
 
-CArchLogWindows::CArchLogWindows() : m_eventLog(NULL)
+ArchLogWindows::ArchLogWindows() : m_eventLog(NULL)
 {
 	// do nothing
 }
 
-CArchLogWindows::~CArchLogWindows()
+ArchLogWindows::~ArchLogWindows()
 {
 	// do nothing
 }
 
 void
-CArchLogWindows::openLog(const char* name)
+ArchLogWindows::openLog(const char* name)
 {
 	if (m_eventLog == NULL) {
 		m_eventLog = RegisterEventSource(NULL, name);
@@ -44,7 +44,7 @@ CArchLogWindows::openLog(const char* name)
 }
 
 void
-CArchLogWindows::closeLog()
+ArchLogWindows::closeLog()
 {
 	if (m_eventLog != NULL) {
 		DeregisterEventSource(m_eventLog);
@@ -53,13 +53,13 @@ CArchLogWindows::closeLog()
 }
 
 void
-CArchLogWindows::showLog(bool)
+ArchLogWindows::showLog(bool)
 {
 	// do nothing
 }
 
 void
-CArchLogWindows::writeLog(ELevel level, const char* msg)
+ArchLogWindows::writeLog(ELevel level, const char* msg)
 {
 	if (m_eventLog != NULL) {
 		// convert priority

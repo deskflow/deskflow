@@ -25,8 +25,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-class CEvent;
-class CEventQueueTimer;
+class Event;
+class EventQueueTimer;
 class CMSWindowsDesks;
 class IEventQueue;
 
@@ -34,10 +34,10 @@ class IEventQueue;
 /*!
 This class maps KeyIDs to keystrokes.
 */
-class CMSWindowsKeyState : public CKeyState {
+class CMSWindowsKeyState : public KeyState {
 public:
 	CMSWindowsKeyState(CMSWindowsDesks* desks, void* eventTarget, IEventQueue* events);
-	CMSWindowsKeyState(CMSWindowsDesks* desks, void* eventTarget, IEventQueue* events, CKeyMap& keyMap);
+	CMSWindowsKeyState(CMSWindowsDesks* desks, void* eventTarget, IEventQueue* events, synergy::KeyMap& keyMap);
 	virtual ~CMSWindowsKeyState();
 
 	//! @name manipulators
@@ -145,7 +145,7 @@ public:
 	virtual SInt32		pollActiveGroup() const;
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
-	// CKeyState overrides
+	// KeyState overrides
 	virtual void		onKey(KeyButton button, bool down,
 							KeyModifierMask newState);
 	virtual void		sendKeyEvent(void* target,
@@ -160,8 +160,8 @@ public:
 	void				setSavedModifiers(KeyModifierMask value) { m_savedModifiers = value; }
 
 protected:
-	// CKeyState overrides
-	virtual void		getKeyMap(CKeyMap& keyMap);
+	// KeyState overrides
+	virtual void		getKeyMap(synergy::KeyMap& keyMap);
 	virtual void		fakeKey(const Keystroke& keystroke);
 	virtual KeyModifierMask&
 						getActiveModifiersRValue();
@@ -175,11 +175,11 @@ private:
 	bool				getGroups(GroupList&) const;
 	void				setWindowGroup(SInt32 group);
 
-	KeyID				getIDForKey(CKeyMap::KeyItem& item,
+	KeyID				getIDForKey(synergy::KeyMap::KeyItem& item,
 							KeyButton button, UINT virtualKey,
 							PBYTE keyState, HKL hkl) const;
 
-	void				addKeyEntry(CKeyMap& keyMap, CKeyMap::KeyItem& item);
+	void				addKeyEntry(synergy::KeyMap& keyMap, synergy::KeyMap::KeyItem& item);
 
 	void				init();
 
@@ -202,7 +202,7 @@ private:
 	IEventQueue*		m_events;
 
 	// the timer used to check for fixing key state
-	CEventQueueTimer*	m_fixTimer;
+	EventQueueTimer*	m_fixTimer;
 
 	// the groups (keyboard layouts)
 	GroupList			m_groups;

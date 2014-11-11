@@ -24,7 +24,7 @@
 //
 
 XSocketAddress::XSocketAddress(EError error,
-				const CString& hostname, int port) _NOEXCEPT :
+				const String& hostname, int port) _NOEXCEPT :
 	m_error(error),
 	m_hostname(hostname),
 	m_port(port)
@@ -38,7 +38,7 @@ XSocketAddress::getError() const throw()
 	return m_error;
 }
 
-CString
+String
 XSocketAddress::getHostname() const throw()
 {
 	return m_hostname;
@@ -50,7 +50,7 @@ XSocketAddress::getPort() const throw()
 	return m_port;
 }
 
-CString
+String
 XSocketAddress::getWhat() const throw()
 {
 	static const char* s_errorID[] = {
@@ -77,7 +77,7 @@ XSocketAddress::getWhat() const throw()
 // XSocketIOClose
 //
 
-CString
+String
 XSocketIOClose::getWhat() const throw()
 {
 	return format("XSocketIOClose", "close: %{1}", what());
@@ -88,7 +88,7 @@ XSocketIOClose::getWhat() const throw()
 // XSocketBind
 //
 
-CString
+String
 XSocketBind::getWhat() const throw()
 {
 	return format("XSocketBind", "cannot bind address: %{1}", what());
@@ -99,7 +99,7 @@ XSocketBind::getWhat() const throw()
 // XSocketConnect
 //
 
-CString
+String
 XSocketConnect::getWhat() const throw()
 {
 	return format("XSocketConnect", "cannot connect socket: %{1}", what());
@@ -110,7 +110,7 @@ XSocketConnect::getWhat() const throw()
 // XSocketCreate
 //
 
-CString
+String
 XSocketCreate::getWhat() const throw()
 {
 	return format("XSocketCreate", "cannot create socket: %{1}", what());

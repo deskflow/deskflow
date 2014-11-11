@@ -21,7 +21,7 @@
 #include "mt/Mutex.h"
 #include "common/basic_types.h"
 
-class CStopwatch;
+class Stopwatch;
 
 //! Generic condition variable
 /*!
@@ -30,15 +30,15 @@ but doesn't provide the actual variable storage.  A condition variable
 is a multiprocessing primitive that can be waited on.  Every condition
 variable has an associated mutex.
 */
-class CCondVarBase {
+class CondVarBase {
 public:
 	/*!
 	\c mutex must not be NULL.  All condition variables have an
 	associated mutex.  The mutex needn't be unique to one condition
 	variable.
 	*/
-	CCondVarBase(CMutex* mutex);
-	~CCondVarBase();
+	CondVarBase(Mutex* mutex);
+	~CondVarBase();
 
 	//! @name manipulators
 	//@{
@@ -104,24 +104,24 @@ public:
 
 	(cancellation point)
 	*/
-	bool				wait(CStopwatch& timer, double timeout) const;
+	bool				wait(Stopwatch& timer, double timeout) const;
 
 	//! Get the mutex
 	/*!
 	Get the mutex passed to the c'tor.
 	*/
-	CMutex*				getMutex() const;
+	Mutex*				getMutex() const;
 
 	//@}
 
 private:
 	// not implemented
-	CCondVarBase(const CCondVarBase&);
-	CCondVarBase&		operator=(const CCondVarBase&);
+	CondVarBase(const CondVarBase&);
+	CondVarBase&		operator=(const CondVarBase&);
 
 private:
-	CMutex*				m_mutex;
-	CArchCond			m_cond;
+	Mutex*				m_mutex;
+	ArchCond			m_cond;
 };
 
 //! Condition variable
@@ -129,13 +129,13 @@ private:
 A condition variable with storage for type \c T.
 */
 template <class T>
-class CCondVar : public CCondVarBase {
+class CondVar : public CondVarBase {
 public:
 	//! Initialize using \c value
-	CCondVar(CMutex* mutex, const T& value);
+	CondVar(Mutex* mutex, const T& value);
 	//! Initialize using another condition variable's value
-	CCondVar(const CCondVar&);
-	~CCondVar();
+	CondVar(const CondVar&);
+	~CondVar();
 
 	//! @name manipulators
 	//@{
@@ -145,14 +145,14 @@ public:
 	Set the variable's value.  The condition variable should be locked
 	before calling this method.
 	*/
-	CCondVar&			operator=(const CCondVar& cv);
+	CondVar&			operator=(const CondVar& cv);
 
 	//! Assigns \c value to this
 	/*!
 	Set the variable's value.  The condition variable should be locked
 	before calling this method.
 	*/
-	CCondVar&			operator=(const T& v);
+	CondVar&			operator=(const T& v);
 
 	//@}
 	//! @name accessors
@@ -173,10 +173,10 @@ private:
 
 template <class T>
 inline
-CCondVar<T>::CCondVar(
-	CMutex* mutex,
+CondVar<T>::CondVar(
+	Mutex* mutex,
 	const T& data) :
-	CCondVarBase(mutex),
+	CondVarBase(mutex),
 	m_data(data)
 {
 	// do nothing
@@ -184,9 +184,9 @@ CCondVar<T>::CCondVar(
 
 template <class T>
 inline
-CCondVar<T>::CCondVar(
-	const CCondVar& cv) :
-	CCondVarBase(cv.getMutex()),
+CondVar<T>::CondVar(
+	const CondVar& cv) :
+	CondVarBase(cv.getMutex()),
 	m_data(cv.m_data)
 {
 	// do nothing
@@ -194,15 +194,15 @@ CCondVar<T>::CCondVar(
 
 template <class T>
 inline
-CCondVar<T>::~CCondVar()
+CondVar<T>::~CondVar()
 {
 	// do nothing
 }
 
 template <class T>
 inline
-CCondVar<T>&
-CCondVar<T>::operator=(const CCondVar<T>& cv)
+CondVar<T>&
+CondVar<T>::operator=(const CondVar<T>& cv)
 {
 	m_data = cv.m_data;
 	return *this;
@@ -210,8 +210,8 @@ CCondVar<T>::operator=(const CCondVar<T>& cv)
 
 template <class T>
 inline
-CCondVar<T>&
-CCondVar<T>::operator=(const T& data)
+CondVar<T>&
+CondVar<T>::operator=(const T& data)
 {
 	m_data = data;
 	return *this;
@@ -219,7 +219,7 @@ CCondVar<T>::operator=(const T& data)
 
 template <class T>
 inline
-CCondVar<T>::operator const volatile T&() const
+CondVar<T>::operator const volatile T&() const
 {
 	return m_data;
 }

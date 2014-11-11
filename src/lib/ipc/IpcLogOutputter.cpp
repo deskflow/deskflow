@@ -33,7 +33,7 @@
 // limit number of log lines sent in one message.
 #define MAX_SEND 100
 
-CIpcLogOutputter::CIpcLogOutputter(CIpcServer& ipcServer) :
+IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer) :
 m_ipcServer(ipcServer),
 m_bufferMutex(ARCH->newMutex()),
 m_sending(false),
@@ -42,11 +42,11 @@ m_notifyCond(ARCH->newCondVar()),
 m_notifyMutex(ARCH->newMutex()),
 m_bufferWaiting(false)
 {
-	m_bufferThread = new CThread(new TMethodJob<CIpcLogOutputter>(
-		this, &CIpcLogOutputter::bufferThread));
+	m_bufferThread = new Thread(new TMethodJob<IpcLogOutputter>(
+		this, &IpcLogOutputter::bufferThread));
 }
 
-CIpcLogOutputter::~CIpcLogOutputter()
+IpcLogOutputter::~IpcLogOutputter()
 {
 	m_running = false;
 	notifyBuffer();
@@ -60,28 +60,28 @@ CIpcLogOutputter::~CIpcLogOutputter()
 }
 
 void
-CIpcLogOutputter::open(const char* title)
+IpcLogOutputter::open(const char* title)
 {
 }
 
 void
-CIpcLogOutputter::close()
+IpcLogOutputter::close()
 {
 }
 
 void
-CIpcLogOutputter::show(bool showIfEmpty)
+IpcLogOutputter::show(bool showIfEmpty)
 {
 }
 
 bool
-CIpcLogOutputter::write(ELevel level, const char* text)
+IpcLogOutputter::write(ELevel level, const char* text)
 {
 	return write(level, text, false);
 }
 
 bool
-CIpcLogOutputter::write(ELevel, const char* text, bool force)
+IpcLogOutputter::write(ELevel, const char* text, bool force)
 {
 	// TODO: discard based on thread id? hmm...
 	// sending the buffer generates log messages, which we must throw
@@ -93,7 +93,7 @@ CIpcLogOutputter::write(ELevel, const char* text, bool force)
 	if (m_sending && !force) {
 
 		// ignore events from the buffer thread (would cause recursion).
-		if (CThread::getCurrentThread().getID() == m_bufferThreadId) {
+		if (Thread::getCurrentThread().getID() == m_bufferThreadId) {
 			return true;
 		}
 	}
@@ -104,16 +104,16 @@ CIpcLogOutputter::write(ELevel, const char* text, bool force)
 }
 
 void
-CIpcLogOutputter::appendBuffer(const CString& text)
+IpcLogOutputter::appendBuffer(const String& text)
 {
-	CArchMutexLock lock(m_bufferMutex);
+	ArchMutexLock lock(m_bufferMutex);
 	m_buffer.push(text);
 }
 
 void
-CIpcLogOutputter::bufferThread(void*)
+IpcLogOutputter::bufferThread(void*)
 {
-	CArchMutexLock lock(m_notifyMutex);
+	ArchMutexLock lock(m_notifyMutex);
 	m_bufferThreadId = m_bufferThread->getID();
 
 	try {
@@ -146,25 +146,25 @@ CIpcLogOutputter::bufferThread(void*)
 }
 
 void
-CIpcLogOutputter::notifyBuffer()
+IpcLogOutputter::notifyBuffer()
 {
 	if (!m_bufferWaiting) {
 		return;
 	}
-	CArchMutexLock lock(m_notifyMutex);
+	ArchMutexLock lock(m_notifyMutex);
 	ARCH->broadcastCondVar(m_notifyCond);
 }
 
-CString
-CIpcLogOutputter::getChunk(size_t count)
+String
+IpcLogOutputter::getChunk(size_t count)
 {
-	CArchMutexLock lock(m_bufferMutex);
+	ArchMutexLock lock(m_bufferMutex);
 
 	if (m_buffer.size() < count) {
 		count = m_buffer.size();
 	}
 
-	CString chunk;
+	String chunk;
 	for (size_t i = 0; i < count; i++) {
 		chunk.append(m_buffer.front());
 		chunk.append("\n");
@@ -174,9 +174,9 @@ CIpcLogOutputter::getChunk(size_t count)
 }
 
 void
-CIpcLogOutputter::sendBuffer()
+IpcLogOutputter::sendBuffer()
 {
-	CIpcLogLineMessage message(getChunk(MAX_SEND));
+	IpcLogLineMessage message(getChunk(MAX_SEND));
 
 	m_sending = true;
 	m_ipcServer.send(message, kIpcClientGui);

@@ -25,7 +25,7 @@ using ::testing::_;
 
 TEST(CXWindowsScreenTests, fakeMouseMove_nonPrimary_getCursorPosValuesCorrect)
 {
-	CMockEventQueue eventQueue;
+	MockEventQueue eventQueue;
 	EXPECT_CALL(eventQueue, adoptHandler(_, _, _)).Times(2);
 	EXPECT_CALL(eventQueue, adoptBuffer(_)).Times(2);
 	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(2);

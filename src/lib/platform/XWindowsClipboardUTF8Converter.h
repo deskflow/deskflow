@@ -34,8 +34,8 @@ public:
 						getFormat() const;
 	virtual Atom		getAtom() const;
 	virtual int			getDataSize() const;
-	virtual CString		fromIClipboard(const CString&) const;
-	virtual CString		toIClipboard(const CString&) const;
+	virtual String		fromIClipboard(const String&) const;
+	virtual String		toIClipboard(const String&) const;
 
 private:
 	Atom				m_atom;

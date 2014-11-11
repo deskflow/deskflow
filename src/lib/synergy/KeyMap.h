@@ -24,14 +24,16 @@
 #include "common/stdset.h"
 #include "common/stdvector.h"
 
+namespace synergy {
+
 //! Key map
 /*!
 This class provides a keyboard mapping.
 */
-class CKeyMap {
+class KeyMap {
 public:
-	CKeyMap();
-	virtual ~CKeyMap();
+	KeyMap();
+	virtual ~KeyMap();
 
 	//! KeyID synthesis info
 	/*!
@@ -82,27 +84,27 @@ public:
 		Keystroke(SInt32 group, bool absolute, bool restore);
 
 	public:
-		struct CButton {
+		struct Button {
 		public:
 			KeyButton	m_button;		//!< Button to synthesize
 			bool		m_press;		//!< \c true iff press
 			bool		m_repeat;		//!< \c true iff for an autorepeat
 			UInt32		m_client;		//!< Client data
 		};
-		struct CGroup {
+		struct Group {
 		public:
 			SInt32		m_group;		//!< Group/offset to change to/by
 			bool		m_absolute;		//!< \c true iff change to, else by
 			bool		m_restore;		//!< \c true iff for restoring state
 		};
-		union CData {
+		union Data {
 		public:
-			CButton		m_button;
-			CGroup		m_group;
+			Button		m_button;
+			Group		m_group;
 		};
 
 		EType			m_type;
-		CData			m_data;
+		Data			m_data;
 	};
 
 	//! A sequence of keystrokes
@@ -121,8 +123,8 @@ public:
 	//! @name manipulators
 	//@{
 
-	//! Swap with another \c CKeyMap
-	virtual void		swap(CKeyMap&);
+	//! Swap with another \c KeyMap
+	virtual void		swap(KeyMap&);
 
 	//! Add a key entry
 	/*!
@@ -302,14 +304,14 @@ public:
 	Converts a key and modifier mask into a string representing the
 	combination.
 	*/
-	static CString		formatKey(KeyID key, KeyModifierMask);
+	static String		formatKey(KeyID key, KeyModifierMask);
 
 	//! Parse a string into a key
 	/*!
 	Converts a string into a key.  Returns \c true on success and \c false
 	if the string cannot be parsed.
 	*/
-	static bool			parseKey(const CString&, KeyID&);
+	static bool			parseKey(const String&, KeyID&);
 
 	//! Parse a string into a modifier mask
 	/*!
@@ -318,7 +320,7 @@ public:
 	remaining leading and trailing whitespace is stripped from the input
 	string. 
 	*/
-	static bool			parseModifiers(CString&, KeyModifierMask&);
+	static bool			parseModifiers(String&, KeyModifierMask&);
 
 	//@}
 
@@ -438,8 +440,8 @@ private:
 	static void			initKeyNameMaps();
 
 	// not implemented
-	CKeyMap(const CKeyMap&);
-	CKeyMap&			operator=(const CKeyMap&);
+	KeyMap(const KeyMap&);
+	KeyMap&			operator=(const KeyMap&);
 
 private:
 	// Ways to synthesize a KeyID over multiple keyboard groups
@@ -461,12 +463,12 @@ private:
 	typedef std::set<KeyButton> KeyButtonSet;
 
 	// Key maps for parsing/formatting
-	typedef std::map<CString, KeyID,
-							synergy::string::CaselessCmp> CNameToKeyMap;
-	typedef std::map<CString, KeyModifierMask,
-							synergy::string::CaselessCmp> CNameToModifierMap;
-	typedef std::map<KeyID, CString> CKeyToNameMap;
-	typedef std::map<KeyModifierMask, CString> CModifierToNameMap;
+	typedef std::map<String, KeyID,
+							synergy::string::CaselessCmp> NameToKeyMap;
+	typedef std::map<String, KeyModifierMask,
+							synergy::string::CaselessCmp> NameToModifierMap;
+	typedef std::map<KeyID, String> KeyToNameMap;
+	typedef std::map<KeyModifierMask, String> ModifierToNameMap;
 
 	// KeyID info
 	KeyIDMap			m_keyIDMap;
@@ -484,8 +486,10 @@ private:
 	KeyItem				m_modifierKeyItem;
 
 	// parsing/formatting tables
-	static CNameToKeyMap*		s_nameToKeyMap;
-	static CNameToModifierMap*	s_nameToModifierMap;
-	static CKeyToNameMap*		s_keyToNameMap;
-	static CModifierToNameMap*	s_modifierToNameMap;
+	static NameToKeyMap*		s_nameToKeyMap;
+	static NameToModifierMap*	s_nameToModifierMap;
+	static KeyToNameMap*		s_keyToNameMap;
+	static ModifierToNameMap*	s_modifierToNameMap;
 };
+
+}

@@ -23,10 +23,10 @@
 class IEventQueue;
 
 //! Proxy for client implementing protocol version 1.2
-class CClientProxy1_2 : public CClientProxy1_1 {
+class ClientProxy1_2 : public ClientProxy1_1 {
 public:
-	CClientProxy1_2(const CString& name, synergy::IStream* adoptedStream, IEventQueue* events);
-	~CClientProxy1_2();
+	ClientProxy1_2(const String& name, synergy::IStream* adoptedStream, IEventQueue* events);
+	~ClientProxy1_2();
 
 	// IClient overrides
 	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel);

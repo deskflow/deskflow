@@ -26,13 +26,13 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#define ARCH_TASKBAR CArchTaskBarWindows
+#define ARCH_TASKBAR ArchTaskBarWindows
 
 //! Win32 implementation of IArchTaskBar
-class CArchTaskBarWindows : public IArchTaskBar {
+class ArchTaskBarWindows : public IArchTaskBar {
 public:
-	CArchTaskBarWindows();
-	virtual ~CArchTaskBarWindows();
+	ArchTaskBarWindows();
+	virtual ~ArchTaskBarWindows();
 
 	virtual void init();
 
@@ -56,15 +56,15 @@ public:
 	virtual void		updateReceiver(IArchTaskBarReceiver*);
 
 private:
-	class CReceiverInfo {
+	class ReceiverInfo {
 	public:
 		UINT			m_id;
 	};
 
-	typedef std::map<IArchTaskBarReceiver*, CReceiverInfo> CReceiverToInfoMap;
-	typedef std::map<UINT, CReceiverToInfoMap::iterator> CIDToReceiverMap;
+	typedef std::map<IArchTaskBarReceiver*, ReceiverInfo> ReceiverToInfoMap;
+	typedef std::map<UINT, ReceiverToInfoMap::iterator> CIDToReceiverMap;
 	typedef std::vector<UINT> CIDStack;
-	typedef std::map<HWND, bool> CDialogs;
+	typedef std::map<HWND, bool> Dialogs;
 
 	UINT				getNextID();
 	void				recycleID(UINT);
@@ -74,7 +74,7 @@ private:
 	void				updateIcon(UINT);
 	void				addAllIcons();
 	void				removeAllIcons();
-	void				modifyIconNoLock(CReceiverToInfoMap::const_iterator,
+	void				modifyIconNoLock(ReceiverToInfoMap::const_iterator,
 							DWORD taskBarMessage);
 	void				removeIconNoLock(UINT id);
 	void				handleIconMessage(IArchTaskBarReceiver*, LPARAM);
@@ -89,26 +89,26 @@ private:
 	HINSTANCE			instanceWin32();
 
 private:
-	static CArchTaskBarWindows*	s_instance;
+	static ArchTaskBarWindows*	s_instance;
 
 	// multithread data
-	CArchMutex			m_mutex;
-	CArchCond			m_condVar;
+	ArchMutex			m_mutex;
+	ArchCond			m_condVar;
 	bool				m_ready;
 	int					m_result;
-	CArchThread			m_thread;
+	ArchThread			m_thread;
 
 	// child thread data
 	HWND				m_hwnd;
 	UINT				m_taskBarRestart;
 
 	// shared data
-	CReceiverToInfoMap	m_receivers;
+	ReceiverToInfoMap	m_receivers;
 	CIDToReceiverMap	m_idTable;
 	CIDStack			m_oldIDs;
 	UINT				m_nextID;
 
 	// dialogs
-	CDialogs			m_dialogs;
-	CDialogs			m_addedDialogs;
+	Dialogs			m_dialogs;
+	Dialogs			m_addedDialogs;
 };

@@ -88,12 +88,12 @@ public:
 
 	// IClipboard overrides
 	virtual bool		empty();
-	virtual void		add(EFormat, const CString& data);
+	virtual void		add(EFormat, const String& data);
 	virtual bool		open(Time) const;
 	virtual void		close() const;
 	virtual Time		getTime() const;
 	virtual bool		has(EFormat) const;
-	virtual CString		get(EFormat) const;
+	virtual String		get(EFormat) const;
 
 private:
 	// remove all converters from our list
@@ -146,7 +146,7 @@ private:
 		// cannot be performed (in which case *actualTarget == None).
 		bool			readClipboard(Display* display,
 							Atom selection, Atom target,
-							Atom* actualTarget, CString* data);
+							Atom* actualTarget, String* data);
 
 	private:
 		bool			processEvent(Display* display, XEvent* event);
@@ -167,7 +167,7 @@ private:
 		bool			m_reading;
 
 		// the converted selection data
-		CString*		m_data;
+		String*		m_data;
 
 		// the actual type of the data.  if this is None then the
 		// selection owner cannot convert to the requested type.
@@ -182,7 +182,7 @@ private:
 	enum { kMotifClipFormat = 1, kMotifClipItem, kMotifClipHeader };
 
 	// _MOTIF_CLIP_HEADER structure
-	class CMotifClipHeader {
+	class MotifClipHeader {
 	public:
 		SInt32			m_id;			// kMotifClipHeader
 		SInt32			m_pad1[3];
@@ -195,7 +195,7 @@ private:
 	};
 
 	// Motif clip item structure
-	class CMotifClipItem {
+	class MotifClipItem {
 	public:
 		SInt32			m_id;			// kMotifClipItem
 		SInt32			m_pad1[5];
@@ -206,7 +206,7 @@ private:
 	};
 
 	// Motif clip format structure
-	class CMotifClipFormat {
+	class MotifClipFormat {
 	public:
 		SInt32			m_id;			// kMotifClipFormat
 		SInt32			m_pad1[6];
@@ -219,11 +219,11 @@ private:
 	};
 
 	// stores data needed to respond to a selection request
-	class CReply {
+	class Reply {
 	public:
-		CReply(Window, Atom target, ::Time);
-		CReply(Window, Atom target, ::Time, Atom property,
-							const CString& data, Atom type, int format);
+		Reply(Window, Atom target, ::Time);
+		Reply(Window, Atom target, ::Time, Atom property,
+							const String& data, Atom type, int format);
 
 	public:
 		// information about the request
@@ -239,21 +239,21 @@ private:
 		bool			m_done;
 
 		// the data to send and its type and format
-		CString			m_data;
+		String			m_data;
 		Atom			m_type;
 		int				m_format;
 
 		// index of next byte in m_data to send
 		UInt32			m_ptr;
 	};
-	typedef std::list<CReply*> CReplyList;
-	typedef std::map<Window, CReplyList> CReplyMap;
-	typedef std::map<Window, long> CReplyEventMask;
+	typedef std::list<Reply*> ReplyList;
+	typedef std::map<Window, ReplyList> ReplyMap;
+	typedef std::map<Window, long> ReplyEventMask;
 
 	// ICCCM interoperability methods
 	void				icccmFillCache();
 	bool				icccmGetSelection(Atom target,
-							Atom* actualTarget, CString* data) const;
+							Atom* actualTarget, String* data) const;
 	Time				icccmGetTime() const;
 
 	// motif interoperability methods
@@ -261,26 +261,26 @@ private:
 	void				motifUnlockClipboard() const;
 	bool				motifOwnsClipboard() const;
 	void				motifFillCache();
-	bool				motifGetSelection(const CMotifClipFormat*,
-							Atom* actualTarget, CString* data) const;
+	bool				motifGetSelection(const MotifClipFormat*,
+							Atom* actualTarget, String* data) const;
 	Time				motifGetTime() const;
 
 	// reply methods
 	bool				insertMultipleReply(Window, ::Time, Atom);
-	void				insertReply(CReply*);
+	void				insertReply(Reply*);
 	void				pushReplies();
-	void				pushReplies(CReplyMap::iterator&,
-							CReplyList&, CReplyList::iterator);
-	bool				sendReply(CReply*);
+	void				pushReplies(ReplyMap::iterator&,
+							ReplyList&, ReplyList::iterator);
+	bool				sendReply(Reply*);
 	void				clearReplies();
-	void				clearReplies(CReplyList&);
+	void				clearReplies(ReplyList&);
 	void				sendNotify(Window requestor, Atom selection,
 							Atom target, Atom property, Time time);
 	bool				wasOwnedAtTime(::Time) const;
 
 	// data conversion methods
-	Atom				getTargetsData(CString&, int* format) const;
-	Atom				getTimestampData(CString&, int* format) const;
+	Atom				getTargetsData(String&, int* format) const;
+	Atom				getTimestampData(String&, int* format) const;
 
 private:
 	typedef std::vector<IXWindowsClipboardConverter*> ConverterList;
@@ -303,11 +303,11 @@ private:
 	bool				m_cached;
 	Time				m_cacheTime;
 	bool				m_added[kNumFormats];
-	CString				m_data[kNumFormats];
+	String				m_data[kNumFormats];
 
 	// conversion request replies
-	CReplyMap			m_replies;
-	CReplyEventMask		m_eventMasks;
+	ReplyMap			m_replies;
+	ReplyEventMask		m_eventMasks;
 
 	// clipboard format converters
 	ConverterList		m_converters;
@@ -365,14 +365,14 @@ public:
 	getFormat().  The return data will be in the X selection
 	format returned by getAtom().
 	*/
-	virtual CString		fromIClipboard(const CString&) const = 0;
+	virtual String		fromIClipboard(const String&) const = 0;
 
 	//! Convert to IClipboard format
 	/*!
 	Convert from the X selection format to the IClipboard format
 	(i.e., the reverse of fromIClipboard()).
 	*/
-	virtual CString		toIClipboard(const CString&) const = 0;
+	virtual String		toIClipboard(const String&) const = 0;
 
 	//@}
 };

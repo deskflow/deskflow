@@ -28,10 +28,10 @@ class IEventQueue;
 /*!
 Filters a stream to read and write packets.
 */
-class CPacketStreamFilter : public CStreamFilter {
+class PacketStreamFilter : public StreamFilter {
 public:
-	CPacketStreamFilter(IEventQueue* events, synergy::IStream* stream, bool adoptStream = true);
-	~CPacketStreamFilter();
+	PacketStreamFilter(IEventQueue* events, synergy::IStream* stream, bool adoptStream = true);
+	~PacketStreamFilter();
 
 	// IStream overrides
 	virtual void		close();
@@ -42,8 +42,8 @@ public:
 	virtual UInt32		getSize() const;
 
 protected:
-	// CStreamFilter overrides
-	virtual void		filterEvent(const CEvent&);
+	// StreamFilter overrides
+	virtual void		filterEvent(const Event&);
 
 private:
 	bool				isReadyNoLock() const;
@@ -51,9 +51,9 @@ private:
 	bool				readMore();
 
 private:
-	CMutex				m_mutex;
+	Mutex				m_mutex;
 	UInt32				m_size;
-	CStreamBuffer		m_buffer;
+	StreamBuffer		m_buffer;
 	bool				m_inputShutdown;
 	IEventQueue*		m_events;
 };

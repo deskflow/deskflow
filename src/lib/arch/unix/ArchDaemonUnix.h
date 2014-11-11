@@ -21,13 +21,13 @@
 #include "arch/ArchDaemonNone.h"
 
 #undef ARCH_DAEMON
-#define ARCH_DAEMON CArchDaemonUnix
+#define ARCH_DAEMON ArchDaemonUnix
 
 //! Unix implementation of IArchDaemon
-class CArchDaemonUnix : public CArchDaemonNone {
+class ArchDaemonUnix : public ArchDaemonNone {
 public:
-	CArchDaemonUnix();
-	virtual ~CArchDaemonUnix();
+	ArchDaemonUnix();
+	virtual ~ArchDaemonUnix();
 
 	// IArchDaemon overrides
 	virtual int			daemonize(const char* name, DaemonFunc func);

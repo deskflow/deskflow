@@ -22,15 +22,15 @@
 #include "synergy/Clipboard.h"
 #include "synergy/protocol_types.h"
 
-class CEvent;
-class CEventQueueTimer;
+class Event;
+class EventQueueTimer;
 class IEventQueue;
 
 //! Proxy for client implementing protocol version 1.0
-class CClientProxy1_0 : public CClientProxy {
+class ClientProxy1_0 : public ClientProxy {
 public:
-	CClientProxy1_0(const CString& name, synergy::IStream* adoptedStream, IEventQueue* events);
-	~CClientProxy1_0();
+	ClientProxy1_0(const String& name, synergy::IStream* adoptedStream, IEventQueue* events);
+	~ClientProxy1_0();
 
 	// IScreen
 	virtual bool		getClipboard(ClipboardID id, IClipboard*) const;
@@ -57,7 +57,7 @@ public:
 	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta);
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
-	virtual void		setOptions(const COptionsList& options);
+	virtual void		setOptions(const OptionsList& options);
 	virtual void		sendDragInfo(UInt32 fileCount, const char* info, size_t size);
 	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize);
 
@@ -75,31 +75,31 @@ private:
 	void				disconnect();
 	void				removeHandlers();
 
-	void				handleData(const CEvent&, void*);
-	void				handleDisconnect(const CEvent&, void*);
-	void				handleWriteError(const CEvent&, void*);
-	void				handleFlatline(const CEvent&, void*);
+	void				handleData(const Event&, void*);
+	void				handleDisconnect(const Event&, void*);
+	void				handleWriteError(const Event&, void*);
+	void				handleFlatline(const Event&, void*);
 
 	bool				recvInfo();
 	bool				recvClipboard();
 	bool				recvGrabClipboard();
 
 private:
-	typedef bool (CClientProxy1_0::*MessageParser)(const UInt8*);
-	struct CClientClipboard {
+	typedef bool (ClientProxy1_0::*MessageParser)(const UInt8*);
+	struct ClientClipboard {
 	public:
-		CClientClipboard();
+		ClientClipboard();
 
 	public:
-		CClipboard		m_clipboard;
+		Clipboard		m_clipboard;
 		UInt32			m_sequenceNumber;
 		bool			m_dirty;
 	};
 
-	CClientInfo			m_info;
-	CClientClipboard	m_clipboard[kClipboardEnd];
+	ClientInfo			m_info;
+	ClientClipboard	m_clipboard[kClipboardEnd];
 	double				m_heartbeatAlarm;
-	CEventQueueTimer*	m_heartbeatTimer;
+	EventQueueTimer*	m_heartbeatTimer;
 	MessageParser		m_parser;
 	IEventQueue*		m_events;
 };

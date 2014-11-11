@@ -20,14 +20,14 @@
 
 #include "synergy/AppUtil.h"
 
-#define ARCH_APP_UTIL CAppUtilUnix
+#define ARCH_APP_UTIL AppUtilUnix
 
 class IEventQueue;
 
-class CAppUtilUnix : public CAppUtil {
+class AppUtilUnix : public AppUtil {
 public:
-	CAppUtilUnix(IEventQueue* events);
-	virtual ~CAppUtilUnix();
+	AppUtilUnix(IEventQueue* events);
+	virtual ~AppUtilUnix();
 	
 	int run(int argc, char** argv);
 	void startNode();

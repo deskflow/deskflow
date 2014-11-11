@@ -24,32 +24,32 @@
 #include "base/Event.h"
 
 namespace synergy { class IStream; }
-class CIpcMessage;
-class CIpcCommandMessage;
-class CIpcHelloMessage;
+class IpcMessage;
+class IpcCommandMessage;
+class IpcHelloMessage;
 class IEventQueue;
 
-class CIpcClientProxy {
-	friend class CIpcServer;
+class IpcClientProxy {
+	friend class IpcServer;
 
 public:
-	CIpcClientProxy(synergy::IStream& stream, IEventQueue* events);
-	virtual ~CIpcClientProxy();
+	IpcClientProxy(synergy::IStream& stream, IEventQueue* events);
+	virtual ~IpcClientProxy();
 
 private:
-	void				send(const CIpcMessage& message);
-	void				handleData(const CEvent&, void*);
-	void				handleDisconnect(const CEvent&, void*);
-	void				handleWriteError(const CEvent&, void*);
-	CIpcHelloMessage*	parseHello();
-	CIpcCommandMessage*	parseCommand();
+	void				send(const IpcMessage& message);
+	void				handleData(const Event&, void*);
+	void				handleDisconnect(const Event&, void*);
+	void				handleWriteError(const Event&, void*);
+	IpcHelloMessage*	parseHello();
+	IpcCommandMessage*	parseCommand();
 	void				disconnect();
 	
 private:
 	synergy::IStream&	m_stream;
 	EIpcClientType		m_clientType;
 	bool				m_disconnecting;
-	CArchMutex			m_readMutex;
-	CArchMutex			m_writeMutex;
+	ArchMutex			m_readMutex;
+	ArchMutex			m_writeMutex;
 	IEventQueue*		m_events;
 };

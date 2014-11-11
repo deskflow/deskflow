@@ -29,12 +29,12 @@ public:
 	/*!
 	Gets a string for \p id from the string table of \p instance.
 	*/
-	static CString		getString(HINSTANCE instance, DWORD id);
+	static String		getString(HINSTANCE instance, DWORD id);
 
 	//! Get error string
 	/*!
 	Gets a system error message for \p error.  If the error cannot be
 	found return the string for \p id, replacing ${1} with \p error.
 	*/
-	static CString		getErrorString(HINSTANCE, DWORD error, DWORD id);
+	static String		getErrorString(HINSTANCE, DWORD error, DWORD id);
 };

@@ -23,7 +23,7 @@
 #include <stdio.h>
 
 //
-// CArchStringWindows
+// ArchStringWindows
 //
 
 #include "arch/multibyte.h"
@@ -31,16 +31,16 @@
 #define ARCH_VSNPRINTF _vsnprintf
 #include "arch/vsnprintf.h"
 
-CArchStringWindows::CArchStringWindows()
+ArchStringWindows::ArchStringWindows()
 {
 }
 
-CArchStringWindows::~CArchStringWindows()
+ArchStringWindows::~ArchStringWindows()
 {
 }
 
 IArchString::EWideCharEncoding
-CArchStringWindows::getWideCharEncoding()
+ArchStringWindows::getWideCharEncoding()
 {
 	return kUTF16;
 }

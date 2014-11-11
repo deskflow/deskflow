@@ -60,7 +60,7 @@ UInt8 readWriteIvChangeTrigger_mockRead(void* out, UInt32 n);
 UInt8 g_newIvDoesNotChangeIv_buffer[1];
 void newIvDoesNotChangeIv_mockWrite(const void* in, UInt32 n);
 
-TEST(CCryptoStreamTests, write)
+TEST(CryptoStreamTests, write)
 {
 	const UInt32 size = 4;
 	UInt8* buffer = new UInt8[size];
@@ -69,13 +69,13 @@ TEST(CCryptoStreamTests, write)
 	buffer[2] = 'D';
 	buffer[3] = 'N';
 	
-	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockStream> innerStream;
-	CCryptoOptions options("cfb", "mock");
+	NiceMock<MockEventQueue> eventQueue;
+	NiceMock<MockStream> innerStream;
+	CryptoOptions options("cfb", "mock");
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write_mockWrite));
 	
-	CCryptoStream cs(&eventQueue, &innerStream, options, false);
+	CryptoStream cs(&eventQueue, &innerStream, options, false);
 	cs.setEncryptIv(kIv);
 	cs.write(buffer, size);
 	
@@ -85,15 +85,15 @@ TEST(CCryptoStreamTests, write)
 	EXPECT_EQ(220, g_write_buffer[3]);
 }
 
-TEST(CCryptoStreamTests, read)
+TEST(CryptoStreamTests, read)
 {
-	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockStream> innerStream;
-	CCryptoOptions options("cfb", "mock");
+	NiceMock<MockEventQueue> eventQueue;
+	NiceMock<MockStream> innerStream;
+	CryptoOptions options("cfb", "mock");
 	
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(read_mockRead));
 	
-	CCryptoStream cs(&eventQueue, &innerStream, options, false);
+	CryptoStream cs(&eventQueue, &innerStream, options, false);
 	cs.setEncryptIv(kIv);
 	cs.setDecryptIv(kIv);
 	
@@ -112,18 +112,18 @@ TEST(CCryptoStreamTests, read)
 	EXPECT_EQ('N', buffer[3]);
 }
 
-TEST(CCryptoStreamTests, write4Read1)
+TEST(CryptoStreamTests, write4Read1)
 {
 	g_write4Read1_bufferIndex = 0;
 
-	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockStream> innerStream;
-	CCryptoOptions options("cfb", "mock");
+	NiceMock<MockEventQueue> eventQueue;
+	NiceMock<MockStream> innerStream;
+	CryptoOptions options("cfb", "mock");
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write4Read1_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(write4Read1_mockRead));
 	
-	CCryptoStream cs1(&eventQueue, &innerStream, options, false);
+	CryptoStream cs1(&eventQueue, &innerStream, options, false);
 	cs1.setEncryptIv(kIv);
 	
 	cs1.write("a", 1);
@@ -131,7 +131,7 @@ TEST(CCryptoStreamTests, write4Read1)
 	cs1.write("c", 1);
 	cs1.write("d", 1);
 
-	CCryptoStream cs2(&eventQueue, &innerStream, options, false);
+	CryptoStream cs2(&eventQueue, &innerStream, options, false);
 	cs2.setDecryptIv(kIv);
 	
 	UInt8 buffer[4];
@@ -143,18 +143,18 @@ TEST(CCryptoStreamTests, write4Read1)
 	EXPECT_EQ('d', buffer[3]);
 }
 
-TEST(CCryptoStreamTests, write1Read4)
+TEST(CryptoStreamTests, write1Read4)
 {
 	g_write1Read4_bufferIndex = 0;
 
-	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockStream> innerStream;
-	CCryptoOptions options("cfb", "mock");
+	NiceMock<MockEventQueue> eventQueue;
+	NiceMock<MockStream> innerStream;
+	CryptoOptions options("cfb", "mock");
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write1Read4_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(write1Read4_mockRead));
 
-	CCryptoStream cs1(&eventQueue, &innerStream, options, false);
+	CryptoStream cs1(&eventQueue, &innerStream, options, false);
 	cs1.setEncryptIv(kIv);
 
 	UInt8 bufferIn[4];
@@ -164,7 +164,7 @@ TEST(CCryptoStreamTests, write1Read4)
 	bufferIn[3] = 'd';
 	cs1.write(bufferIn, 4);
 	
-	CCryptoStream cs2(&eventQueue, &innerStream, options, false);
+	CryptoStream cs2(&eventQueue, &innerStream, options, false);
 	cs2.setDecryptIv(kIv);
 
 	UInt8 bufferOut[4];
@@ -179,14 +179,14 @@ TEST(CCryptoStreamTests, write1Read4)
 	EXPECT_EQ('d', bufferOut[3]);
 }
 
-TEST(CCryptoStreamTests, readWriteIvChanged)
+TEST(CryptoStreamTests, readWriteIvChanged)
 {
 	g_readWriteIvChangeTrigger_writeBufferIndex = 0;
 	g_readWriteIvChangeTrigger_readBufferIndex = 0;
 
-	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockStream> innerStream;
-	CCryptoOptions options("cfb", "mock");
+	NiceMock<MockEventQueue> eventQueue;
+	NiceMock<MockStream> innerStream;
+	CryptoOptions options("cfb", "mock");
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(readWriteIvChanged_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(readWriteIvChanged_mockRead));
@@ -195,7 +195,7 @@ TEST(CCryptoStreamTests, readWriteIvChanged)
 	const byte iv1[] = "aaaaaaaaaaaaaaaa";
 	const byte iv2[] = "bbbbbbbbbbbbbbbb";
 	
-	CCryptoStream cs1(&eventQueue, &innerStream, options, false);
+	CryptoStream cs1(&eventQueue, &innerStream, options, false);
 	cs1.setEncryptIv(iv1);
 	
 	UInt8 bufferIn[4];
@@ -205,7 +205,7 @@ TEST(CCryptoStreamTests, readWriteIvChanged)
 	bufferIn[3] = 'd';
 	cs1.write(bufferIn, 4);
 	
-	CCryptoStream cs2(&eventQueue, &innerStream, options, false);
+	CryptoStream cs2(&eventQueue, &innerStream, options, false);
 	cs1.setDecryptIv(iv2);
 
 	UInt8 bufferOut[4];
@@ -234,35 +234,35 @@ TEST(CCryptoStreamTests, readWriteIvChanged)
 	EXPECT_EQ('d', bufferOut[3]);
 }
 
-TEST(CCryptoStreamTests, createKey)
+TEST(CryptoStreamTests, createKey)
 {
 	byte hash1[16];
-	CCryptoStream::createKey(hash1, "MockLongPassword", 16, 16);
+	CryptoStream::createKey(hash1, "MockLongPassword", 16, 16);
 	EXPECT_EQ(hash1[0], 149);
 	EXPECT_EQ(hash1[15], 235);
 	
 	byte hash2[32];
-	CCryptoStream::createKey(hash2, "MockLongPassword", 32, 16);
+	CryptoStream::createKey(hash2, "MockLongPassword", 32, 16);
 	EXPECT_EQ(hash2[0], 149);
 	EXPECT_EQ(hash2[15], 235);
 	EXPECT_EQ(hash2[31], 7);
 	
 	byte hash3[32];
-	CCryptoStream::createKey(hash3, "7accbf2f86a9191da0947107d4fe7054", 32, 16);
+	CryptoStream::createKey(hash3, "7accbf2f86a9191da0947107d4fe7054", 32, 16);
 	EXPECT_EQ(hash3[0], 120);
 	EXPECT_EQ(hash3[15], 11);
 	EXPECT_EQ(hash3[31], 233);
 }
 
-TEST(CCryptoStreamTests, newIvDoesNotChangeIv)
+TEST(CryptoStreamTests, newIvDoesNotChangeIv)
 {
-	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockStream> innerStream;
-	CCryptoOptions options("cfb", "mock");	
+	NiceMock<MockEventQueue> eventQueue;
+	NiceMock<MockStream> innerStream;
+	CryptoOptions options("cfb", "mock");	
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(newIvDoesNotChangeIv_mockWrite));
 
-	CCryptoStream cs1(&eventQueue, &innerStream, options, false);
+	CryptoStream cs1(&eventQueue, &innerStream, options, false);
 	cs1.write("a", 1);
 	EXPECT_EQ(175, g_newIvDoesNotChangeIv_buffer[0]);
 

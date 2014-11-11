@@ -20,47 +20,47 @@
 #include "arch/Arch.h"
 
 //
-// COSXServerTaskBarReceiver
+// OSXServerTaskBarReceiver
 //
 
-COSXServerTaskBarReceiver::COSXServerTaskBarReceiver(
-				const CBufferedLogOutputter*)
+OSXServerTaskBarReceiver::OSXServerTaskBarReceiver(
+				const BufferedLogOutputter*)
 {
 	// add ourself to the task bar
 	ARCH->addReceiver(this);
 }
 
-COSXServerTaskBarReceiver::~COSXServerTaskBarReceiver()
+OSXServerTaskBarReceiver::~OSXServerTaskBarReceiver()
 {
 	ARCH->removeReceiver(this);
 }
 
 void
-COSXServerTaskBarReceiver::showStatus()
+OSXServerTaskBarReceiver::showStatus()
 {
 	// do nothing
 }
 
 void
-COSXServerTaskBarReceiver::runMenu(int, int)
+OSXServerTaskBarReceiver::runMenu(int, int)
 {
 	// do nothing
 }
 
 void
-COSXServerTaskBarReceiver::primaryAction()
+OSXServerTaskBarReceiver::primaryAction()
 {
 	// do nothing
 }
 
 const IArchTaskBarReceiver::Icon
-COSXServerTaskBarReceiver::getIcon() const
+OSXServerTaskBarReceiver::getIcon() const
 {
 	return NULL;
 }
 
 IArchTaskBarReceiver*
-createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
+createTaskBarReceiver(const BufferedLogOutputter* logBuffer)
 {
-	return new COSXServerTaskBarReceiver(logBuffer);
+	return new OSXServerTaskBarReceiver(logBuffer);
 }

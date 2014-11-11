@@ -28,7 +28,7 @@
 #include <Tlhelp32.h>
 
 //! Miscellaneous win32 functions.
-class CArchMiscWindows {
+class ArchMiscWindows {
 public:
 	enum EValueType {
 		kUNKNOWN,
@@ -65,25 +65,25 @@ public:
 
 	//! Run the daemon
 	/*!
-	Delegates to CArchDaemonWindows.
+	Delegates to ArchDaemonWindows.
 	*/
 	static int			runDaemon(RunFunc runFunc);
 
 	//! Indicate daemon is in main loop
 	/*!
-	Delegates to CArchDaemonWindows.
+	Delegates to ArchDaemonWindows.
 	*/
 	static void			daemonRunning(bool running);
 
 	//! Indicate failure of running daemon
 	/*!
-	Delegates to CArchDaemonWindows.
+	Delegates to ArchDaemonWindows.
 	*/
 	static void			daemonFailed(int result);
 
 	//! Get daemon quit message
 	/*!
-	Delegates to CArchDaemonWindows.
+	Delegates to ArchDaemonWindows.
 	*/
 	static UINT			getDaemonQuitMessage();
 
@@ -163,7 +163,7 @@ public:
 	static bool wasLaunchedAsService();
 
 	//! Returns true if we got the parent process name.
-	static bool getParentProcessName(CString &name);
+	static bool getParentProcessName(String &name);
 
 	static HINSTANCE instanceWin32();
 
@@ -190,10 +190,10 @@ private:
 	static DWORD WINAPI	dummySetThreadExecutionState(DWORD);
 
 private:
-	typedef std::set<HWND> CDialogs;
+	typedef std::set<HWND> Dialogs;
 	typedef DWORD (WINAPI *STES_t)(DWORD);
 
-	static CDialogs*	s_dialogs;
+	static Dialogs*	s_dialogs;
 	static DWORD		s_busyState;
 	static STES_t		s_stes;
 	static HICON		s_largeIcon;

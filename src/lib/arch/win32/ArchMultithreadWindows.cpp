@@ -37,13 +37,13 @@
 //
 
 //
-// CArchThreadImpl
+// ArchThreadImpl
 //
 
-class CArchThreadImpl {
+class ArchThreadImpl {
 public:
-	CArchThreadImpl();
-	~CArchThreadImpl();
+	ArchThreadImpl();
+	~ArchThreadImpl();
 
 public:
 	int					m_refCount;
@@ -58,7 +58,7 @@ public:
 	void*				m_networkData;
 };
 
-CArchThreadImpl::CArchThreadImpl() :
+ArchThreadImpl::ArchThreadImpl() :
 	m_refCount(1),
 	m_thread(NULL),
 	m_id(0),
@@ -72,7 +72,7 @@ CArchThreadImpl::CArchThreadImpl() :
 	m_cancel = CreateEvent(NULL, TRUE, FALSE, NULL);
 }
 
-CArchThreadImpl::~CArchThreadImpl()
+ArchThreadImpl::~ArchThreadImpl()
 {
 	CloseHandle(m_exit);
 	CloseHandle(m_cancel);
@@ -80,12 +80,12 @@ CArchThreadImpl::~CArchThreadImpl()
 
 
 //
-// CArchMultithreadWindows
+// ArchMultithreadWindows
 //
 
-CArchMultithreadWindows*	CArchMultithreadWindows::s_instance = NULL;
+ArchMultithreadWindows*	ArchMultithreadWindows::s_instance = NULL;
 
-CArchMultithreadWindows::CArchMultithreadWindows()
+ArchMultithreadWindows::ArchMultithreadWindows()
 {
 	assert(s_instance == NULL);
 	s_instance = this;
@@ -101,18 +101,18 @@ CArchMultithreadWindows::CArchMultithreadWindows()
 
 	// create thread for calling (main) thread and add it to our
 	// list.  no need to lock the mutex since we're the only thread.
-	m_mainThread           = new CArchThreadImpl;
+	m_mainThread           = new ArchThreadImpl;
 	m_mainThread->m_thread = NULL;
 	m_mainThread->m_id     = GetCurrentThreadId();
 	insert(m_mainThread);
 }
 
-CArchMultithreadWindows::~CArchMultithreadWindows()
+ArchMultithreadWindows::~ArchMultithreadWindows()
 {
 	s_instance = NULL;
 
 	// clean up thread list
-	for (CThreadList::iterator index  = m_threadList.begin();
+	for (ThreadList::iterator index  = m_threadList.begin();
 							   index != m_threadList.end(); ++index) {
 		delete *index;
 	}
@@ -122,16 +122,16 @@ CArchMultithreadWindows::~CArchMultithreadWindows()
 }
 
 void
-CArchMultithreadWindows::setNetworkDataForCurrentThread(void* data)
+ArchMultithreadWindows::setNetworkDataForCurrentThread(void* data)
 {
 	lockMutex(m_threadMutex);
-	CArchThreadImpl* thread = findNoRef(GetCurrentThreadId());
+	ArchThreadImpl* thread = findNoRef(GetCurrentThreadId());
 	thread->m_networkData = data;
 	unlockMutex(m_threadMutex);
 }
 
 void*
-CArchMultithreadWindows::getNetworkDataForThread(CArchThread thread)
+ArchMultithreadWindows::getNetworkDataForThread(ArchThread thread)
 {
 	lockMutex(m_threadMutex);
 	void* data = thread->m_networkData;
@@ -140,27 +140,27 @@ CArchMultithreadWindows::getNetworkDataForThread(CArchThread thread)
 }
 
 HANDLE
-CArchMultithreadWindows::getCancelEventForCurrentThread()
+ArchMultithreadWindows::getCancelEventForCurrentThread()
 {
 	lockMutex(m_threadMutex);
-	CArchThreadImpl* thread = findNoRef(GetCurrentThreadId());
+	ArchThreadImpl* thread = findNoRef(GetCurrentThreadId());
 	unlockMutex(m_threadMutex);
 	return thread->m_cancel;
 }
 
-CArchMultithreadWindows*
-CArchMultithreadWindows::getInstance()
+ArchMultithreadWindows*
+ArchMultithreadWindows::getInstance()
 {
 	return s_instance;
 }
 
-CArchCond
-CArchMultithreadWindows::newCondVar()
+ArchCond
+ArchMultithreadWindows::newCondVar()
 {
-	CArchCondImpl* cond                       = new CArchCondImpl;
-	cond->m_events[CArchCondImpl::kSignal]    = CreateEvent(NULL,
+	ArchCondImpl* cond                       = new ArchCondImpl;
+	cond->m_events[ArchCondImpl::kSignal]    = CreateEvent(NULL,
 													FALSE, FALSE, NULL);
-	cond->m_events[CArchCondImpl::kBroadcast] = CreateEvent(NULL,
+	cond->m_events[ArchCondImpl::kBroadcast] = CreateEvent(NULL,
 													TRUE,  FALSE, NULL);
 	cond->m_waitCountMutex                    = newMutex();
 	cond->m_waitCount                         = 0;
@@ -168,16 +168,16 @@ CArchMultithreadWindows::newCondVar()
 }
 
 void
-CArchMultithreadWindows::closeCondVar(CArchCond cond)
+ArchMultithreadWindows::closeCondVar(ArchCond cond)
 {
-	CloseHandle(cond->m_events[CArchCondImpl::kSignal]);
-	CloseHandle(cond->m_events[CArchCondImpl::kBroadcast]);
+	CloseHandle(cond->m_events[ArchCondImpl::kSignal]);
+	CloseHandle(cond->m_events[ArchCondImpl::kBroadcast]);
 	closeMutex(cond->m_waitCountMutex);
 	delete cond;
 }
 
 void
-CArchMultithreadWindows::signalCondVar(CArchCond cond)
+ArchMultithreadWindows::signalCondVar(ArchCond cond)
 {
 	// is anybody waiting?
 	lockMutex(cond->m_waitCountMutex);
@@ -186,12 +186,12 @@ CArchMultithreadWindows::signalCondVar(CArchCond cond)
 
 	// wake one thread if anybody is waiting
 	if (hasWaiter) {
-		SetEvent(cond->m_events[CArchCondImpl::kSignal]);
+		SetEvent(cond->m_events[ArchCondImpl::kSignal]);
 	}
 }
 
 void
-CArchMultithreadWindows::broadcastCondVar(CArchCond cond)
+ArchMultithreadWindows::broadcastCondVar(ArchCond cond)
 {
 	// is anybody waiting?
 	lockMutex(cond->m_waitCountMutex);
@@ -200,13 +200,13 @@ CArchMultithreadWindows::broadcastCondVar(CArchCond cond)
 
 	// wake all threads if anybody is waiting
 	if (hasWaiter) {
-		SetEvent(cond->m_events[CArchCondImpl::kBroadcast]);
+		SetEvent(cond->m_events[ArchCondImpl::kBroadcast]);
 	}
 }
 
 bool
-CArchMultithreadWindows::waitCondVar(CArchCond cond,
-							CArchMutex mutex, double timeout)
+ArchMultithreadWindows::waitCondVar(ArchCond cond,
+							ArchMutex mutex, double timeout)
 {
 	// prepare to wait
 	const DWORD winTimeout = (timeout < 0.0) ? INFINITE :
@@ -215,8 +215,8 @@ CArchMultithreadWindows::waitCondVar(CArchCond cond,
 	// make a list of the condition variable events and the cancel event
 	// for the current thread.
 	HANDLE handles[4];
-	handles[0] = cond->m_events[CArchCondImpl::kSignal];
-	handles[1] = cond->m_events[CArchCondImpl::kBroadcast];
+	handles[0] = cond->m_events[ArchCondImpl::kSignal];
+	handles[1] = cond->m_events[ArchCondImpl::kBroadcast];
 	handles[2] = getCancelEventForCurrentThread();
 
 	// update waiter count
@@ -248,7 +248,7 @@ CArchMultithreadWindows::waitCondVar(CArchCond cond,
 
 	// reset the broadcast event if we're the last waiter
 	if (last) {
-		ResetEvent(cond->m_events[CArchCondImpl::kBroadcast]);
+		ResetEvent(cond->m_events[ArchCondImpl::kBroadcast]);
 	}
 
 	// reacquire the mutex
@@ -264,40 +264,40 @@ CArchMultithreadWindows::waitCondVar(CArchCond cond,
 			result == WAIT_OBJECT_0 + 1);
 }
 
-CArchMutex
-CArchMultithreadWindows::newMutex()
+ArchMutex
+ArchMultithreadWindows::newMutex()
 {
-	CArchMutexImpl* mutex = new CArchMutexImpl;
+	ArchMutexImpl* mutex = new ArchMutexImpl;
 	InitializeCriticalSection(&mutex->m_mutex);
 	return mutex;
 }
 
 void
-CArchMultithreadWindows::closeMutex(CArchMutex mutex)
+ArchMultithreadWindows::closeMutex(ArchMutex mutex)
 {
 	DeleteCriticalSection(&mutex->m_mutex);
 	delete mutex;
 }
 
 void
-CArchMultithreadWindows::lockMutex(CArchMutex mutex)
+ArchMultithreadWindows::lockMutex(ArchMutex mutex)
 {
 	EnterCriticalSection(&mutex->m_mutex);
 }
 
 void
-CArchMultithreadWindows::unlockMutex(CArchMutex mutex)
+ArchMultithreadWindows::unlockMutex(ArchMutex mutex)
 {
 	LeaveCriticalSection(&mutex->m_mutex);
 }
 
-CArchThread
-CArchMultithreadWindows::newThread(ThreadFunc func, void* data)
+ArchThread
+ArchMultithreadWindows::newThread(ThreadFunc func, void* data)
 {
 	lockMutex(m_threadMutex);
 
 	// create thread impl for new thread
-	CArchThreadImpl* thread = new CArchThreadImpl;
+	ArchThreadImpl* thread = new ArchThreadImpl;
 	thread->m_func          = func;
 	thread->m_userData      = data;
 
@@ -327,18 +327,18 @@ CArchMultithreadWindows::newThread(ThreadFunc func, void* data)
 	return thread;
 }
 
-CArchThread
-CArchMultithreadWindows::newCurrentThread()
+ArchThread
+ArchMultithreadWindows::newCurrentThread()
 {
 	lockMutex(m_threadMutex);
-	CArchThreadImpl* thread = find(GetCurrentThreadId());
+	ArchThreadImpl* thread = find(GetCurrentThreadId());
 	unlockMutex(m_threadMutex);
 	assert(thread != NULL);
 	return thread;
 }
 
 void
-CArchMultithreadWindows::closeThread(CArchThread thread)
+ArchMultithreadWindows::closeThread(ArchThread thread)
 {
 	assert(thread != NULL);
 
@@ -360,15 +360,15 @@ CArchMultithreadWindows::closeThread(CArchThread thread)
 	}
 }
 
-CArchThread
-CArchMultithreadWindows::copyThread(CArchThread thread)
+ArchThread
+ArchMultithreadWindows::copyThread(ArchThread thread)
 {
 	refThread(thread);
 	return thread;
 }
 
 void
-CArchMultithreadWindows::cancelThread(CArchThread thread)
+ArchMultithreadWindows::cancelThread(ArchThread thread)
 {
 	assert(thread != NULL);
 
@@ -377,14 +377,14 @@ CArchMultithreadWindows::cancelThread(CArchThread thread)
 }
 
 void
-CArchMultithreadWindows::setPriorityOfThread(CArchThread thread, int n)
+ArchMultithreadWindows::setPriorityOfThread(ArchThread thread, int n)
 {
-	struct CPriorityInfo {
+	struct PriorityInfo {
 	public:
 		DWORD		m_class;
 		int			m_level;
 	};
-	static const CPriorityInfo s_pClass[] = {
+	static const PriorityInfo s_pClass[] = {
 		{ IDLE_PRIORITY_CLASS,     THREAD_PRIORITY_IDLE         },
 		{ IDLE_PRIORITY_CLASS,     THREAD_PRIORITY_LOWEST       },
 		{ IDLE_PRIORITY_CLASS,     THREAD_PRIORITY_BELOW_NORMAL },
@@ -436,11 +436,11 @@ CArchMultithreadWindows::setPriorityOfThread(CArchThread thread, int n)
 }
 
 void
-CArchMultithreadWindows::testCancelThread()
+ArchMultithreadWindows::testCancelThread()
 {
 	// find current thread
 	lockMutex(m_threadMutex);
-	CArchThreadImpl* thread = findNoRef(GetCurrentThreadId());
+	ArchThreadImpl* thread = findNoRef(GetCurrentThreadId());
 	unlockMutex(m_threadMutex);
 
 	// test cancel on thread
@@ -448,14 +448,14 @@ CArchMultithreadWindows::testCancelThread()
 }
 
 bool
-CArchMultithreadWindows::wait(CArchThread target, double timeout)
+ArchMultithreadWindows::wait(ArchThread target, double timeout)
 {
 	assert(target != NULL);
 
 	lockMutex(m_threadMutex);
 
 	// find current thread
-	CArchThreadImpl* self = findNoRef(GetCurrentThreadId());
+	ArchThreadImpl* self = findNoRef(GetCurrentThreadId());
 
 	// ignore wait if trying to wait on ourself
 	if (target == self) {
@@ -510,20 +510,20 @@ CArchMultithreadWindows::wait(CArchThread target, double timeout)
 }
 
 bool
-CArchMultithreadWindows::isSameThread(CArchThread thread1, CArchThread thread2)
+ArchMultithreadWindows::isSameThread(ArchThread thread1, ArchThread thread2)
 {
 	return (thread1 == thread2);
 }
 
 bool
-CArchMultithreadWindows::isExitedThread(CArchThread thread)
+ArchMultithreadWindows::isExitedThread(ArchThread thread)
 {
 	// poll exit event
 	return (WaitForSingleObject(thread->m_exit, 0) == WAIT_OBJECT_0);
 }
 
 void*
-CArchMultithreadWindows::getResultOfThread(CArchThread thread)
+ArchMultithreadWindows::getResultOfThread(ArchThread thread)
 {
 	lockMutex(m_threadMutex);
 	void* result = thread->m_result;
@@ -532,13 +532,13 @@ CArchMultithreadWindows::getResultOfThread(CArchThread thread)
 }
 
 IArchMultithread::ThreadID
-CArchMultithreadWindows::getIDOfThread(CArchThread thread)
+ArchMultithreadWindows::getIDOfThread(ArchThread thread)
 {
 	return static_cast<ThreadID>(thread->m_id);
 }
 
 void
-CArchMultithreadWindows::setSignalHandler(
+ArchMultithreadWindows::setSignalHandler(
 				ESignal signal, SignalFunc func, void* userData)
 {
 	lockMutex(m_threadMutex);
@@ -548,7 +548,7 @@ CArchMultithreadWindows::setSignalHandler(
 }
 
 void
-CArchMultithreadWindows::raiseSignal(ESignal signal)
+ArchMultithreadWindows::raiseSignal(ESignal signal)
 {
 	lockMutex(m_threadMutex);
 	if (m_signalFunc[signal] != NULL) {
@@ -561,26 +561,26 @@ CArchMultithreadWindows::raiseSignal(ESignal signal)
 	unlockMutex(m_threadMutex);
 }
 
-CArchThreadImpl*
-CArchMultithreadWindows::find(DWORD id)
+ArchThreadImpl*
+ArchMultithreadWindows::find(DWORD id)
 {
-	CArchThreadImpl* impl = findNoRef(id);
+	ArchThreadImpl* impl = findNoRef(id);
 	if (impl != NULL) {
 		refThread(impl);
 	}
 	return impl;
 }
 
-CArchThreadImpl*
-CArchMultithreadWindows::findNoRef(DWORD id)
+ArchThreadImpl*
+ArchMultithreadWindows::findNoRef(DWORD id)
 {
-	CArchThreadImpl* impl = findNoRefOrCreate(id);
+	ArchThreadImpl* impl = findNoRefOrCreate(id);
 	if (impl == NULL) {
 		// create thread for calling thread which isn't in our list and
 		// add it to the list.  this won't normally happen but it can if
 		// the system calls us under a new thread, like it does when we
 		// run as a service.
-		impl           = new CArchThreadImpl;
+		impl           = new ArchThreadImpl;
 		impl->m_thread = NULL;
 		impl->m_id     = GetCurrentThreadId();
 		insert(impl);
@@ -588,11 +588,11 @@ CArchMultithreadWindows::findNoRef(DWORD id)
 	return impl;
 }
 
-CArchThreadImpl*
-CArchMultithreadWindows::findNoRefOrCreate(DWORD id)
+ArchThreadImpl*
+ArchMultithreadWindows::findNoRefOrCreate(DWORD id)
 {
 	// linear search
-	for (CThreadList::const_iterator index  = m_threadList.begin();
+	for (ThreadList::const_iterator index  = m_threadList.begin();
 									 index != m_threadList.end(); ++index) {
 		if ((*index)->m_id == id) {
 			return *index;
@@ -602,7 +602,7 @@ CArchMultithreadWindows::findNoRefOrCreate(DWORD id)
 }
 
 void
-CArchMultithreadWindows::insert(CArchThreadImpl* thread)
+ArchMultithreadWindows::insert(ArchThreadImpl* thread)
 {
 	assert(thread != NULL);
 
@@ -614,9 +614,9 @@ CArchMultithreadWindows::insert(CArchThreadImpl* thread)
 }
 
 void
-CArchMultithreadWindows::erase(CArchThreadImpl* thread)
+ArchMultithreadWindows::erase(ArchThreadImpl* thread)
 {
-	for (CThreadList::iterator index  = m_threadList.begin();
+	for (ThreadList::iterator index  = m_threadList.begin();
 							   index != m_threadList.end(); ++index) {
 		if (*index == thread) {
 			m_threadList.erase(index);
@@ -626,7 +626,7 @@ CArchMultithreadWindows::erase(CArchThreadImpl* thread)
 }
 
 void
-CArchMultithreadWindows::refThread(CArchThreadImpl* thread)
+ArchMultithreadWindows::refThread(ArchThreadImpl* thread)
 {
 	assert(thread != NULL);
 	assert(findNoRefOrCreate(thread->m_id) != NULL);
@@ -634,7 +634,7 @@ CArchMultithreadWindows::refThread(CArchThreadImpl* thread)
 }
 
 void
-CArchMultithreadWindows::testCancelThreadImpl(CArchThreadImpl* thread)
+ArchMultithreadWindows::testCancelThreadImpl(ArchThreadImpl* thread)
 {
 	assert(thread != NULL);
 
@@ -658,10 +658,10 @@ CArchMultithreadWindows::testCancelThreadImpl(CArchThreadImpl* thread)
 }
 
 unsigned int __stdcall
-CArchMultithreadWindows::threadFunc(void* vrep)
+ArchMultithreadWindows::threadFunc(void* vrep)
 {
 	// get the thread
-	CArchThreadImpl* thread = reinterpret_cast<CArchThreadImpl*>(vrep);
+	ArchThreadImpl* thread = reinterpret_cast<ArchThreadImpl*>(vrep);
 
 	// run thread
 	s_instance->doThreadFunc(thread);
@@ -671,7 +671,7 @@ CArchMultithreadWindows::threadFunc(void* vrep)
 }
 
 void
-CArchMultithreadWindows::doThreadFunc(CArchThread thread)
+ArchMultithreadWindows::doThreadFunc(ArchThread thread)
 {
 	// wait for parent to initialize this object
 	lockMutex(m_threadMutex);

@@ -31,10 +31,10 @@ void getProcessSerialNumber(const char* name, ProcessSerialNumber& psn);
 bool testProcessName(const char* name, const ProcessSerialNumber& psn);
 
 //
-// COSXScreenSaver
+// OSXScreenSaver
 //
 
-COSXScreenSaver::COSXScreenSaver(IEventQueue* events, void* eventTarget) :
+OSXScreenSaver::OSXScreenSaver(IEventQueue* events, void* eventTarget) :
 	m_eventTarget(eventTarget),
 	m_enabled(true),
 	m_events(events)
@@ -64,7 +64,7 @@ COSXScreenSaver::COSXScreenSaver(IEventQueue* events, void* eventTarget) :
 	}
 }
 
-COSXScreenSaver::~COSXScreenSaver()
+OSXScreenSaver::~OSXScreenSaver()
 {
 	RemoveEventHandler(m_launchTerminationEventHandlerRef);
 //	screenSaverUtilReleaseController(m_screenSaverController);
@@ -72,60 +72,60 @@ COSXScreenSaver::~COSXScreenSaver()
 }
 
 void
-COSXScreenSaver::enable()
+OSXScreenSaver::enable()
 {
 	m_enabled = true;
 	screenSaverUtilEnable(m_screenSaverController);
 }
 
 void
-COSXScreenSaver::disable()
+OSXScreenSaver::disable()
 {
 	m_enabled = false;
 	screenSaverUtilDisable(m_screenSaverController);
 }
 
 void
-COSXScreenSaver::activate()
+OSXScreenSaver::activate()
 {
 	screenSaverUtilActivate(m_screenSaverController);
 }
 
 void
-COSXScreenSaver::deactivate()
+OSXScreenSaver::deactivate()
 {
 	screenSaverUtilDeactivate(m_screenSaverController, m_enabled);
 }
 
 bool
-COSXScreenSaver::isActive() const
+OSXScreenSaver::isActive() const
 {
 	return (screenSaverUtilIsActive(m_screenSaverController) != 0);
 }
 
 void
-COSXScreenSaver::processLaunched(ProcessSerialNumber psn)
+OSXScreenSaver::processLaunched(ProcessSerialNumber psn)
 {
 	if (testProcessName("ScreenSaverEngine", psn)) {
 		m_screenSaverPSN = psn;
 		LOG((CLOG_DEBUG1 "ScreenSaverEngine launched. Enabled=%d", m_enabled));
 		if (m_enabled) {
 			m_events->addEvent(
-				CEvent(m_events->forIPrimaryScreen().screensaverActivated(),
+				Event(m_events->forIPrimaryScreen().screensaverActivated(),
 					m_eventTarget));
 		}
 	}
 }
 
 void
-COSXScreenSaver::processTerminated(ProcessSerialNumber psn)
+OSXScreenSaver::processTerminated(ProcessSerialNumber psn)
 {
 	if (m_screenSaverPSN.highLongOfPSN == psn.highLongOfPSN &&
 		m_screenSaverPSN.lowLongOfPSN  == psn.lowLongOfPSN) {
 		LOG((CLOG_DEBUG1 "ScreenSaverEngine terminated. Enabled=%d", m_enabled));
 		if (m_enabled) {
 			m_events->addEvent(
-				CEvent(m_events->forIPrimaryScreen().screensaverDeactivated(),
+				Event(m_events->forIPrimaryScreen().screensaverDeactivated(),
 					m_eventTarget));
 		}
 		
@@ -135,7 +135,7 @@ COSXScreenSaver::processTerminated(ProcessSerialNumber psn)
 }
 
 pascal OSStatus
-COSXScreenSaver::launchTerminationCallback(
+OSXScreenSaver::launchTerminationCallback(
 				EventHandlerCallRef nextHandler,
 				EventRef theEvent, void* userData)
 {
@@ -151,7 +151,7 @@ COSXScreenSaver::launchTerminationCallback(
 	if ((result == noErr) &&
 		(actualSize > 0) &&
 		(actualType == typeProcessSerialNumber)) {
-		COSXScreenSaver* screenSaver = (COSXScreenSaver*)userData;
+		OSXScreenSaver* screenSaver = (OSXScreenSaver*)userData;
 		UInt32 eventKind = GetEventKind(theEvent);
 		if (eventKind == kEventAppLaunched) {
 			screenSaver->processLaunched(psn);

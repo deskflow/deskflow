@@ -72,9 +72,9 @@
 
 /*!
 \def ARCH
-This macro evaluates to the singleton CArch object.
+This macro evaluates to the singleton Arch object.
 */
-#define ARCH	(CArch::getInstance())
+#define ARCH	(Arch::getInstance())
 
 //! Delegating implementation of architecture dependent interfaces
 /*!
@@ -86,7 +86,7 @@ to each method to those implementations.  Clients should use the
 exactly one of these objects before attempting to call any method,
 typically at the beginning of \c main().
 */
-class CArch : public ARCH_CONSOLE,
+class Arch : public ARCH_CONSOLE,
 				public ARCH_DAEMON,
 				public ARCH_FILE,
 				public ARCH_LOG,
@@ -98,8 +98,8 @@ class CArch : public ARCH_CONSOLE,
 				public ARCH_TASKBAR,
 				public ARCH_TIME {
 public:
-	CArch();
-	virtual ~CArch();
+	Arch();
+	virtual ~Arch();
 
 	//! Call init on other arch classes.
 	/*!
@@ -114,32 +114,32 @@ public:
 
 	//! Return the singleton instance
 	/*!
-	The client must have instantiated exactly once CArch object before
+	The client must have instantiated exactly once Arch object before
 	calling this function.
 	*/
-	static CArch*		getInstance();
+	static Arch*		getInstance();
 
 	ARCH_PLUGIN&		plugin() const { return (ARCH_PLUGIN&)m_plugin; }
 	ARCH_INTERNET&		internet() const { return (ARCH_INTERNET&)m_internet; }
 
 private:
-	static CArch*		s_instance;
+	static Arch*		s_instance;
 	ARCH_PLUGIN			m_plugin;
 	ARCH_INTERNET		m_internet;
 };
 
 //! Convenience object to lock/unlock an arch mutex
-class CArchMutexLock {
+class ArchMutexLock {
 public:
-	CArchMutexLock(CArchMutex mutex) : m_mutex(mutex)
+	ArchMutexLock(ArchMutex mutex) : m_mutex(mutex)
 	{
 		ARCH->lockMutex(m_mutex);
 	}
-	~CArchMutexLock()
+	~ArchMutexLock()
 	{
 		ARCH->unlockMutex(m_mutex);
 	}
 
 private:
-	CArchMutex			m_mutex;
+	ArchMutex			m_mutex;
 };

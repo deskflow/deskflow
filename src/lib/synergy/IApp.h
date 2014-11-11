@@ -23,16 +23,16 @@
 typedef int (*StartupFunc)(int, char**);
 
 class ILogOutputter;
-class CArgsBase;
+class ArgsBase;
 class IArchTaskBarReceiver;
-class CScreen;
+class Screen;
 class IEventQueue;
 
 class IApp : public IInterface
 {
 public:
 	virtual void setByeFunc(void(*bye)(int)) = 0;
-	virtual CArgsBase& argsBase() const = 0;
+	virtual ArgsBase& argsBase() const = 0;
 	virtual int standardStartup(int argc, char** argv) = 0;
 	virtual int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup) = 0;
 	virtual void startNode() = 0;
@@ -42,6 +42,6 @@ public:
 	virtual void initApp(int argc, const char** argv) = 0;
 	virtual const char* daemonName() const = 0;
 	virtual int foregroundStartup(int argc, char** argv) = 0;
-	virtual CScreen* createScreen() = 0;
+	virtual Screen* createScreen() = 0;
 	virtual IEventQueue*			getEvents() const = 0;
 };

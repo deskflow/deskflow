@@ -19,11 +19,11 @@
 
 #include "synergy/ArgsBase.h"
 
-class CNetworkAddress;
+class NetworkAddress;
 
-class CClientArgs : public CArgsBase {
+class ClientArgs : public ArgsBase {
 public:
-	CClientArgs();
+	ClientArgs();
 
 public:
 	int m_yscroll;

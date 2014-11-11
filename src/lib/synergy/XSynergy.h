@@ -48,7 +48,7 @@ public:
 	//@}
 
 protected:
-	virtual CString		getWhat() const throw();
+	virtual String		getWhat() const throw();
 
 private:
 	int					m_major;
@@ -62,23 +62,23 @@ a client that is already connected.
 */
 class XDuplicateClient : public XSynergy {
 public:
-	XDuplicateClient(const CString& name);
+	XDuplicateClient(const String& name);
 	virtual ~XDuplicateClient() _NOEXCEPT { }
 
 	//! @name accessors
 	//@{
 
 	//! Get client's name
-	virtual const CString&
+	virtual const String&
 						getName() const throw();
 
 	//@}
 
 protected:
-	virtual CString		getWhat() const throw();
+	virtual String		getWhat() const throw();
 
 private:
-	CString				m_name;
+	String				m_name;
 };
 
 //! Client not in map exception
@@ -88,23 +88,23 @@ unknown to the server.
 */
 class XUnknownClient : public XSynergy {
 public:
-	XUnknownClient(const CString& name);
+	XUnknownClient(const String& name);
 	virtual ~XUnknownClient() _NOEXCEPT { }
 
 	//! @name accessors
 	//@{
 
 	//! Get the client's name
-	virtual const CString&
+	virtual const String&
 						getName() const throw();
 
 	//@}
 
 protected:
-	virtual CString		getWhat() const throw();
+	virtual String		getWhat() const throw();
 
 private:
-	CString				m_name;
+	String				m_name;
 };
 
 //! Generic exit eception
@@ -122,7 +122,7 @@ public:
 	int getCode() const throw();
 
 protected:
-	virtual CString	getWhat() const throw();
+	virtual String	getWhat() const throw();
 	
 private:
 	int	m_code;

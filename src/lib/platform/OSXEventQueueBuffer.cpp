@@ -22,16 +22,16 @@
 #include "base/IEventQueue.h"
 
 //
-// CEventQueueTimer
+// EventQueueTimer
 //
 
-class CEventQueueTimer { };
+class EventQueueTimer { };
 
 //
-// COSXEventQueueBuffer
+// OSXEventQueueBuffer
 //
 
-COSXEventQueueBuffer::COSXEventQueueBuffer(IEventQueue* events) :
+OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue* events) :
 	m_event(NULL),
 	m_eventQueue(events),
 	m_carbonEventQueue(NULL)
@@ -39,7 +39,7 @@ COSXEventQueueBuffer::COSXEventQueueBuffer(IEventQueue* events) :
 	// do nothing
 }
 
-COSXEventQueueBuffer::~COSXEventQueueBuffer()
+OSXEventQueueBuffer::~OSXEventQueueBuffer()
 {
 	// release the last event
 	if (m_event != NULL) {
@@ -48,20 +48,20 @@ COSXEventQueueBuffer::~COSXEventQueueBuffer()
 }
 
 void
-COSXEventQueueBuffer::init()
+OSXEventQueueBuffer::init()
 {
 	m_carbonEventQueue = GetCurrentEventQueue();
 }
 
 void
-COSXEventQueueBuffer::waitForEvent(double timeout)
+OSXEventQueueBuffer::waitForEvent(double timeout)
 {
 	EventRef event;
 	ReceiveNextEvent(0, NULL, timeout, false, &event);
 }
 
 IEventQueueBuffer::Type
-COSXEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
+OSXEventQueueBuffer::getEvent(Event& event, UInt32& dataID)
 {
 	// release the previous event
 	if (m_event != NULL) {
@@ -74,7 +74,7 @@ COSXEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 
 	// handle the event
 	if (error == eventLoopQuitErr) {
-		event = CEvent(CEvent::kQuit);
+		event = Event(Event::kQuit);
 		return kSystem;
 	}
 	else if (error != noErr) {
@@ -88,7 +88,7 @@ COSXEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 			return kUser;
 
 		default: 
-			event = CEvent(CEvent::kSystem,
+			event = Event(Event::kSystem,
 						m_eventQueue->getSystemTarget(), &m_event);
 			return kSystem;
 		}
@@ -96,7 +96,7 @@ COSXEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 }
 
 bool
-COSXEventQueueBuffer::addEvent(UInt32 dataID)
+OSXEventQueueBuffer::addEvent(UInt32 dataID)
 {
 	EventRef event;
 	OSStatus error = CreateEvent(
@@ -123,21 +123,21 @@ COSXEventQueueBuffer::addEvent(UInt32 dataID)
 }
 
 bool
-COSXEventQueueBuffer::isEmpty() const
+OSXEventQueueBuffer::isEmpty() const
 {
 	EventRef event;
 	OSStatus status = ReceiveNextEvent(0, NULL, 0.0, false, &event);
 	return (status == eventLoopTimedOutErr);
 }
 
-CEventQueueTimer*
-COSXEventQueueBuffer::newTimer(double, bool) const
+EventQueueTimer*
+OSXEventQueueBuffer::newTimer(double, bool) const
 {
-	return new CEventQueueTimer;
+	return new EventQueueTimer;
 }
 
 void
-COSXEventQueueBuffer::deleteTimer(CEventQueueTimer* timer) const
+OSXEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
 {
 	delete timer;
 }

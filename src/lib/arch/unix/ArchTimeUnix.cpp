@@ -30,21 +30,21 @@
 #endif
 
 //
-// CArchTimeUnix
+// ArchTimeUnix
 //
 
-CArchTimeUnix::CArchTimeUnix()
+ArchTimeUnix::ArchTimeUnix()
 {
 	// do nothing
 }
 
-CArchTimeUnix::~CArchTimeUnix()
+ArchTimeUnix::~ArchTimeUnix()
 {
 	// do nothing
 }
 
 double
-CArchTimeUnix::time()
+ArchTimeUnix::time()
 {
 	struct timeval t;
 	gettimeofday(&t, NULL);

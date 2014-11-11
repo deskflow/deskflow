@@ -26,12 +26,12 @@
 
 class IEventQueue;
 
-class CMockClient : public CClient
+class MockClient : public Client
 {
 public:
-	CMockClient() : CClient() { }
+	MockClient() : Client() { }
 	MOCK_METHOD2(mouseMove, void(SInt32, SInt32));
-	MOCK_METHOD1(setOptions, void(const COptionsList&));
+	MOCK_METHOD1(setOptions, void(const OptionsList&));
 	MOCK_METHOD0(handshakeComplete, void());
 	MOCK_METHOD1(setDecryptIv, void(const UInt8*));
 };

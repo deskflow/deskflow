@@ -44,7 +44,7 @@ public:
 	*/
 	static bool			getWindowProperty(Display*,
 							Window window, Atom property,
-							CString* data, Atom* type,
+							String* data, Atom* type,
 							SInt32* format, bool deleteProperty);
 
 	//! Set property
@@ -81,14 +81,14 @@ public:
 	/*!
 	Converts \p atom to its string representation.
 	*/
-	static CString		atomToString(Display*, Atom atom);
+	static String		atomToString(Display*, Atom atom);
 
 	//! Convert several Atoms to a string
 	/*!
 	Converts each atom in \p atoms to its string representation and
 	concatenates the results.
 	*/
-	static CString		atomsToString(Display* display,
+	static String		atomsToString(Display* display,
 							const Atom* atom, UInt32 num);
 
 	//! Prepare a property of atoms for use
@@ -96,21 +96,21 @@ public:
 	64-bit systems may need to modify a property's data if it's a
 	list of Atoms before using it.
 	*/
-	static void			convertAtomProperty(CString& data);
+	static void			convertAtomProperty(String& data);
 
 	//! Append an Atom to property data
 	/*!
 	Converts \p atom to a 32-bit on-the-wire format and appends it to
 	\p data.
 	*/
-	static void			appendAtomData(CString& data, Atom atom);
+	static void			appendAtomData(String& data, Atom atom);
 
 	//! Replace an Atom in property data
 	/*!
 	Converts \p atom to a 32-bit on-the-wire format and replaces the atom
 	at index \p index in \p data.
 	*/
-	static void			replaceAtomData(CString& data,
+	static void			replaceAtomData(String& data,
 							UInt32 index, Atom atom);
 
 	//! Append an Time to property data
@@ -118,7 +118,7 @@ public:
 	Converts \p time to a 32-bit on-the-wire format and appends it to
 	\p data.
 	*/
-	static void			appendTimeData(CString& data, Time time);
+	static void			appendTimeData(String& data, Time time);
 
 	//! X11 error handler
 	/*!
@@ -126,10 +126,10 @@ public:
 	previous error handler in the d'tor.  A lock should only be
 	installed while the display is locked by the thread.
 	
-	CErrorLock() ignores errors
-	CErrorLock(bool* flag) sets *flag to true if any error occurs
+	ErrorLock() ignores errors
+	ErrorLock(bool* flag) sets *flag to true if any error occurs
 	*/
-	class CErrorLock {
+	class ErrorLock {
 	public:
 		//! Error handler type
 		typedef void (*ErrorHandler)(Display*, XErrorEvent*, void* userData);
@@ -137,19 +137,19 @@ public:
 		/*!
 		Ignore X11 errors.
 		*/
-		CErrorLock(Display*);
+		ErrorLock(Display*);
 
 		/*!
 		Set \c *errorFlag if any error occurs.
 		*/
-		CErrorLock(Display*, bool* errorFlag);
+		ErrorLock(Display*, bool* errorFlag);
 
 		/*!
 		Call \c handler on each error.
 		*/
-		CErrorLock(Display*, ErrorHandler handler, void* userData);
+		ErrorLock(Display*, ErrorHandler handler, void* userData);
 
-		~CErrorLock();
+		~ErrorLock();
 
 	private:
 		void			install(ErrorHandler, void*);
@@ -164,12 +164,12 @@ public:
 		ErrorHandler	m_handler;
 		void*			m_userData;
 		XErrorHandler	m_oldXHandler;
-		CErrorLock*		m_next;
-		static CErrorLock*	s_top;
+		ErrorLock*		m_next;
+		static ErrorLock*	s_top;
 	};
 
 private:
-	class CPropertyNotifyPredicateInfo {
+	class PropertyNotifyPredicateInfo {
 	public:
 		Window			m_window;
 		Atom			m_property;
@@ -181,7 +181,7 @@ private:
 	static void			initKeyMaps();
 
 private:
-	typedef std::map<KeySym, UInt32> CKeySymMap;
+	typedef std::map<KeySym, UInt32> KeySymMap;
 
-	static CKeySymMap	s_keySymToUCS4;
+	static KeySymMap	s_keySymToUCS4;
 };

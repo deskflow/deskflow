@@ -18,15 +18,15 @@
 
 #include "arch/unix/ArchPluginUnix.h"
 
-CArchPluginUnix::CArchPluginUnix()
+ArchPluginUnix::ArchPluginUnix()
 {
 }
 
-CArchPluginUnix::~CArchPluginUnix()
+ArchPluginUnix::~ArchPluginUnix()
 {
 }
 
 void
-CArchPluginUnix::init(void* eventTarget, IEventQueue* events)
+ArchPluginUnix::init(void* eventTarget, IEventQueue* events)
 {
 }

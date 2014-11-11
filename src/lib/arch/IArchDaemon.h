@@ -86,16 +86,16 @@ public:
 	  Becomes a service.  Argument 0 is the name of the service
 	  and the rest are the arguments passed to StartService().
 	  \c func is only called when the service is actually started.
-	  \c func must call \c CArchMiscWindows::runDaemon() to finally
+	  \c func must call \c ArchMiscWindows::runDaemon() to finally
 	  becoming a service.  The \c runFunc function passed to \c runDaemon()
-	  must call \c CArchMiscWindows::daemonRunning(true) when it
+	  must call \c ArchMiscWindows::daemonRunning(true) when it
 	  enters the main loop (i.e. after initialization) and
-	  \c CArchMiscWindows::daemonRunning(false) when it leaves
+	  \c ArchMiscWindows::daemonRunning(false) when it leaves
 	  the main loop.  The \c stopFunc function passed to \c runDaemon()
 	  is called when the daemon must exit the main loop and it must cause
 	  \c runFunc to return.  \c func should return what \c runDaemon()
 	  returns.  \c func or \c runFunc can call
-	  \c CArchMiscWindows::daemonFailed() to indicate startup failure.
+	  \c ArchMiscWindows::daemonFailed() to indicate startup failure.
 	</ul>
 	*/
 	virtual int			daemonize(const char* name, DaemonFunc func) = 0;

@@ -21,7 +21,7 @@
 
 using namespace CryptoPP;
 
-CCryptoMode::CCryptoMode(ECryptoMode mode, bool encryption) :
+CryptoMode::CryptoMode(ECryptoMode mode, bool encryption) :
 	m_mode(mode),
 	m_crypto(NULL),
 	m_encryption(encryption)
@@ -29,7 +29,7 @@ CCryptoMode::CCryptoMode(ECryptoMode mode, bool encryption) :
 	if (m_encryption) {
 		switch (m_mode) {
 		case kCfb:
-			m_crypto = new CCfbModeEnc;
+			m_crypto = new CfbModeEnc;
 			break;
 
 		case kDisabled:
@@ -42,7 +42,7 @@ CCryptoMode::CCryptoMode(ECryptoMode mode, bool encryption) :
 	else {
 		switch (m_mode) {
 		case kCfb:
-			m_crypto = new CCfbModeDec;
+			m_crypto = new CfbModeDec;
 			break;
 
 		case kDisabled:
@@ -54,47 +54,47 @@ CCryptoMode::CCryptoMode(ECryptoMode mode, bool encryption) :
 	}
 }
 
-CCryptoMode::~CCryptoMode()
+CryptoMode::~CryptoMode()
 {
 	if (m_crypto == NULL) {
 		return;
 	}
 
 	if (m_encryption) {
-		delete reinterpret_cast<CCfbModeEnc*>(m_crypto);
+		delete reinterpret_cast<CfbModeEnc*>(m_crypto);
 	}
 	else {
-		delete reinterpret_cast<CCfbModeDec*>(m_crypto);
+		delete reinterpret_cast<CfbModeDec*>(m_crypto);
 	}
 }
 
 void
-CCryptoMode::processData(byte* out, const byte* in, size_t length)
+CryptoMode::processData(byte* out, const byte* in, size_t length)
 {
 	if (m_crypto == NULL) {
 		return;
 	}
 
 	if (m_encryption) {
-		reinterpret_cast<CCfbModeEnc*>(m_crypto)->ProcessData(out, in, length);
+		reinterpret_cast<CfbModeEnc*>(m_crypto)->ProcessData(out, in, length);
 	}
 	else {
-		reinterpret_cast<CCfbModeDec*>(m_crypto)->ProcessData(out, in, length);
+		reinterpret_cast<CfbModeDec*>(m_crypto)->ProcessData(out, in, length);
 	}
 }
 
 
 void
-CCryptoMode::setKeyWithIv(const byte* key, size_t length, const byte* iv)
+CryptoMode::setKeyWithIv(const byte* key, size_t length, const byte* iv)
 {
 	if (m_crypto == NULL) {
 		return;
 	}
 
 	if (m_encryption) {
-		reinterpret_cast<CCfbModeEnc*>(m_crypto)->SetKeyWithIV(key, length, iv);
+		reinterpret_cast<CfbModeEnc*>(m_crypto)->SetKeyWithIV(key, length, iv);
 	}
 	else {
-		reinterpret_cast<CCfbModeDec*>(m_crypto)->SetKeyWithIV(key, length, iv);
+		reinterpret_cast<CfbModeDec*>(m_crypto)->SetKeyWithIV(key, length, iv);
 	}
 }

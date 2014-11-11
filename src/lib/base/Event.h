@@ -21,17 +21,17 @@
 #include "common/basic_types.h"
 #include "common/stdmap.h"
 
-class CEventData {
+class EventData {
 public:
-	CEventData() { }
-	virtual ~CEventData() { }
+	EventData() { }
+	virtual ~EventData() { }
 };
 
 //! Event
 /*!
-A \c CEvent holds an event type and a pointer to event data.
+A \c Event holds an event type and a pointer to event data.
 */
-class CEvent {
+class Event {
 public:
 	typedef UInt32 Type;
 	enum {
@@ -49,9 +49,9 @@ public:
 		kDontFreeData		= 0x02	//!< Don't free data in deleteData
 	};
 
-	CEvent();
+	Event();
 
-	//! Create \c CEvent with data (POD)
+	//! Create \c Event with data (POD)
 	/*!
 	The \p data must be POD (plain old data) allocated by malloc(),
 	which means it cannot have a constructor, destructor or be
@@ -60,7 +60,7 @@ public:
 	\p target is the intended recipient of the event.
 	\p flags is any combination of \c Flags.
 	*/
-	CEvent(Type type, void* target = NULL, void* data = NULL,
+	Event(Type type, void* target = NULL, void* data = NULL,
 							 Flags flags = kNone);
 
 	//! @name manipulators
@@ -70,14 +70,14 @@ public:
 	/*!
 	Deletes event data for the given event (using free()).
 	*/
-	static void			deleteData(const CEvent&);
+	static void			deleteData(const Event&);
 	
 	//! Set data (non-POD)
 	/*!
 	Set non-POD (non plain old data), where delete is called when the event
 	is deleted, and the destructor is called.
 	*/
-	void				setDataObject(CEventData* dataObject);
+	void				setDataObject(EventData* dataObject);
 
 	//@}
 	//! @name accessors
@@ -107,7 +107,7 @@ public:
 	\c getData() is that when delete is called on this data, so non-POD
 	(non plain old data) dtor is called.
 	*/
-	CEventData*			getDataObject() const;
+	EventData*			getDataObject() const;
 
 	//! Get event flags
 	/*!
@@ -122,5 +122,5 @@ private:
 	void*				m_target;
 	void*				m_data;
 	Flags				m_flags;
-	CEventData*			m_dataObject;
+	EventData*			m_dataObject;
 };

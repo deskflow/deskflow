@@ -18,6 +18,6 @@
 
 #include "arch/unix/ArchConsoleUnix.h"
 
-CArchConsoleUnix::CArchConsoleUnix() { }
+ArchConsoleUnix::ArchConsoleUnix() { }
 
-CArchConsoleUnix::~CArchConsoleUnix() { }
+ArchConsoleUnix::~ArchConsoleUnix() { }

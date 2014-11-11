@@ -101,8 +101,8 @@ CXWindowsClipboardBMPConverter::getDataSize() const
 	return 8;
 }
 
-CString
-CXWindowsClipboardBMPConverter::fromIClipboard(const CString& bmp) const
+String
+CXWindowsClipboardBMPConverter::fromIClipboard(const String& bmp) const
 {
 	// create BMP image
 	UInt8 header[14];
@@ -113,21 +113,21 @@ CXWindowsClipboardBMPConverter::fromIClipboard(const CString& bmp) const
 	toLE(dst, static_cast<UInt16>(0));
 	toLE(dst, static_cast<UInt16>(0));
 	toLE(dst, static_cast<UInt32>(14 + 40));
-	return CString(reinterpret_cast<const char*>(header), 14) + bmp;
+	return String(reinterpret_cast<const char*>(header), 14) + bmp;
 }
 
-CString
-CXWindowsClipboardBMPConverter::toIClipboard(const CString& bmp) const
+String
+CXWindowsClipboardBMPConverter::toIClipboard(const String& bmp) const
 {
 	// make sure data is big enough for a BMP file
 	if (bmp.size() <= 14 + 40) {
-		return CString();
+		return String();
 	}
 
 	// check BMP file header
 	const UInt8* rawBMPHeader = reinterpret_cast<const UInt8*>(bmp.data());
 	if (rawBMPHeader[0] != 'B' || rawBMPHeader[1] != 'M') {
-		return CString();
+		return String();
 	}
 
 	// get offset to image data

@@ -21,18 +21,18 @@
 #include "io/ECryptoMode.h"
 
 //! Encapsulates basic crypto options
-class CCryptoOptions {
+class CryptoOptions {
 public:
-	CCryptoOptions() : m_mode(kDisabled) { }
-	CCryptoOptions(const CString& modeString, const CString& pass);
+	CryptoOptions() : m_mode(kDisabled) { }
+	CryptoOptions(const String& modeString, const String& pass);
 	
 	//! Return enum for mode string
-	static ECryptoMode	parseMode(CString modeString);
+	static ECryptoMode	parseMode(String modeString);
 
 	//! Parse and set mode string
-	void				setMode(CString modeString);
+	void				setMode(String modeString);
 
-	CString				m_pass;
+	String				m_pass;
 	ECryptoMode			m_mode;
-	CString				m_modeString;
+	String				m_modeString;
 };

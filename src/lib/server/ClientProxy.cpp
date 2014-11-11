@@ -24,38 +24,38 @@
 #include "base/EventQueue.h"
 
 //
-// CClientProxy
+// ClientProxy
 //
 
-CClientProxy::CClientProxy(const CString& name, synergy::IStream* stream) :
-	CBaseClientProxy(name),
+ClientProxy::ClientProxy(const String& name, synergy::IStream* stream) :
+	BaseClientProxy(name),
 	m_stream(stream)
 {
 }
 
-CClientProxy::~CClientProxy()
+ClientProxy::~ClientProxy()
 {
 	delete m_stream;
 }
 
 void
-CClientProxy::close(const char* msg)
+ClientProxy::close(const char* msg)
 {
 	LOG((CLOG_DEBUG1 "send close \"%s\" to \"%s\"", msg, getName().c_str()));
-	CProtocolUtil::writef(getStream(), msg);
+	ProtocolUtil::writef(getStream(), msg);
 
 	// force the close to be sent before we return
 	getStream()->flush();
 }
 
 synergy::IStream*
-CClientProxy::getStream() const
+ClientProxy::getStream() const
 {
 	return m_stream;
 }
 
 void*
-CClientProxy::getEventTarget() const
+ClientProxy::getEventTarget() const
 {
-	return static_cast<IScreen*>(const_cast<CClientProxy*>(this));
+	return static_cast<IScreen*>(const_cast<ClientProxy*>(this));
 }

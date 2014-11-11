@@ -27,10 +27,10 @@
 Polymorphism is tricky in Crypto++, so we encapsulate all crypto modes
 and switch based on an enum for ctor, dtor and all functions.
 */
-class CCryptoMode {
+class CryptoMode {
 public:
-	CCryptoMode(ECryptoMode mode, bool encryption = true);
-	~CCryptoMode();
+	CryptoMode(ECryptoMode mode, bool encryption = true);
+	~CryptoMode();
 
 	//! Encrypt or decrypt data
 	void				processData(byte* out, const byte* in, size_t length);
@@ -39,17 +39,17 @@ public:
 	void				setKeyWithIv(const byte* key, size_t length, const byte* iv);
 	
 private:
-	typedef	CryptoPP::OFB_Mode<CryptoPP::AES>::Encryption COfbModeEnc;
-	typedef	CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption CCfbModeEnc;
-	typedef CryptoPP::CTR_Mode<CryptoPP::AES>::Encryption CCtrModeEnc;
-	typedef CryptoPP::GCM<CryptoPP::AES>::Encryption CGcmModeEnc;
+	typedef	CryptoPP::OFB_Mode<CryptoPP::AES>::Encryption OfbModeEnc;
+	typedef	CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption CfbModeEnc;
+	typedef CryptoPP::CTR_Mode<CryptoPP::AES>::Encryption CtrModeEnc;
+	typedef CryptoPP::GCM<CryptoPP::AES>::Encryption GcmModeEnc;
 		
-	typedef CryptoPP::OFB_Mode<CryptoPP::AES>::Decryption COfbModeDec;
-	typedef CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption CCfbModeDec;
-	typedef CryptoPP::CTR_Mode<CryptoPP::AES>::Decryption CCtrModeDec;
-	typedef CryptoPP::GCM<CryptoPP::AES>::Decryption CGcmModeDec;
+	typedef CryptoPP::OFB_Mode<CryptoPP::AES>::Decryption OfbModeDec;
+	typedef CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption CfbModeDec;
+	typedef CryptoPP::CTR_Mode<CryptoPP::AES>::Decryption CtrModeDec;
+	typedef CryptoPP::GCM<CryptoPP::AES>::Decryption GcmModeDec;
 	
-	static ECryptoMode		parseMode(CString& mode);
+	static ECryptoMode		parseMode(String& mode);
 
 	ECryptoMode			m_mode;
 	void*				m_crypto;

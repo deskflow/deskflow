@@ -35,7 +35,7 @@ template <class T, class Container = std::vector<T>,
 #else
 			class Compare = std::greater<typename Container::value_type> >
 #endif
-class CPriorityQueue {
+class PriorityQueue {
 public:
 	typedef typename Container::value_type value_type;
 	typedef typename Container::size_type size_type;
@@ -43,9 +43,9 @@ public:
 	typedef typename Container::const_iterator const_iterator;
 	typedef Container container_type;
 
-	CPriorityQueue() { }
-	CPriorityQueue(Container& swappedIn) { swap(swappedIn); }
-	~CPriorityQueue() { }
+	PriorityQueue() { }
+	PriorityQueue(Container& swappedIn) { swap(swappedIn); }
+	~PriorityQueue() { }
 
 	//! @name manipulators
 	//@{
@@ -84,7 +84,7 @@ public:
 	}
 
 	//! Swap contents with another priority queue
-	void				swap(CPriorityQueue<T, Container, Compare>& q)
+	void				swap(PriorityQueue<T, Container, Compare>& q)
 	{
 		c.swap(q.c);
 	}

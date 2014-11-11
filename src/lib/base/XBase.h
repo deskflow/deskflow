@@ -30,7 +30,7 @@ public:
 	//! Use getWhat() as the result of what()
 	XBase();
 	//! Use \c msg as the result of what()
-	XBase(const CString& msg);
+	XBase(const String& msg);
 	virtual ~XBase() _NOEXCEPT;
 
 	//! Reason for exception
@@ -38,7 +38,7 @@ public:
 
 protected:
 	//! Get a human readable string describing the exception
-	virtual CString		getWhat() const throw() { return ""; }
+	virtual String		getWhat() const throw() { return ""; }
 
 	//! Format a string
 	/*!
@@ -46,47 +46,47 @@ protected:
 	no format can be found, then replaces positional parameters in
 	the format string and returns the result.
 	*/
-	virtual CString		format(const char* id,
+	virtual String		format(const char* id,
 							const char* defaultFormat, ...) const throw();
 private:
-	mutable CString		m_what;
+	mutable String		m_what;
 };
 
 /*!
 \def XBASE_SUBCLASS
 Convenience macro to subclass from XBase (or a subclass of it),
-providing the c'tor taking a const CString&.  getWhat() is not
+providing the c'tor taking a const String&.  getWhat() is not
 declared.
 */
 #define XBASE_SUBCLASS(name_, super_)									\
 class name_ : public super_ {											\
 public:																	\
 	name_() : super_() { }												\
-	name_(const CString& msg) : super_(msg) { }							\
+	name_(const String& msg) : super_(msg) { }							\
 	virtual ~name_() _NOEXCEPT { }										\
 }
 
 /*!
 \def XBASE_SUBCLASS
 Convenience macro to subclass from XBase (or a subclass of it),
-providing the c'tor taking a const CString&.  getWhat() must be
+providing the c'tor taking a const String&.  getWhat() must be
 implemented.
 */
 #define XBASE_SUBCLASS_WHAT(name_, super_)								\
 class name_ : public super_ {											\
 public:																	\
 	name_() : super_() { }												\
-	name_(const CString& msg) : super_(msg) { }							\
+	name_(const String& msg) : super_(msg) { }							\
 	virtual ~name_() _NOEXCEPT { }										\
 																		\
 protected:																\
-	virtual CString		getWhat() const throw();						\
+	virtual String		getWhat() const throw();						\
 }
 
 /*!
 \def XBASE_SUBCLASS_FORMAT
 Convenience macro to subclass from XBase (or a subclass of it),
-providing the c'tor taking a const CString&.  what() is overridden
+providing the c'tor taking a const String&.  what() is overridden
 to call getWhat() when first called;  getWhat() can format the
 error message and can call what() to get the message passed to the
 c'tor.
@@ -98,7 +98,7 @@ private:																\
 																		\
 public:																	\
 	name_() : super_(), m_state(kDone) { }								\
-	name_(const CString& msg) : super_(msg), m_state(kFirst) { }		\
+	name_(const String& msg) : super_(msg), m_state(kFirst) { }		\
 	virtual ~name_() _NOEXCEPT { }										\
 																		\
 	virtual const char*	what() const _NOEXCEPT							\
@@ -117,7 +117,7 @@ public:																	\
 	}																	\
 																		\
 protected:																\
-	virtual CString		getWhat() const throw();						\
+	virtual String		getWhat() const throw();						\
 																		\
 private:																\
 	mutable EState				m_state;								\

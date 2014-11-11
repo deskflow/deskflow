@@ -20,13 +20,13 @@
 
 #include "arch/IArchSleep.h"
 
-#define ARCH_SLEEP CArchSleepWindows
+#define ARCH_SLEEP ArchSleepWindows
 
 //! Win32 implementation of IArchSleep
-class CArchSleepWindows : public IArchSleep {
+class ArchSleepWindows : public IArchSleep {
 public:
-	CArchSleepWindows();
-	virtual ~CArchSleepWindows();
+	ArchSleepWindows();
+	virtual ~ArchSleepWindows();
 
 	// IArchSleep overrides
 	virtual void		sleep(double timeout);

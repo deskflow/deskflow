@@ -307,7 +307,7 @@ extern const char*		kMsgEBad;
 /*!
 This class contains information about a screen.
 */
-class CClientInfo {
+class ClientInfo {
 public:
 	//! Screen position
 	/*!

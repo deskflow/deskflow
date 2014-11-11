@@ -112,7 +112,7 @@ CMSWindowsScreenSaver::enable()
 	}
 
 	// restore display power down
-	CArchMiscWindows::removeBusyState(CArchMiscWindows::kDISPLAY);
+	ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
 }
 
 void
@@ -128,7 +128,7 @@ CMSWindowsScreenSaver::disable()
 	}
 
 	// disable display power down
-	CArchMiscWindows::addBusyState(CArchMiscWindows::kDISPLAY);
+	ArchMiscWindows::addBusyState(ArchMiscWindows::kDISPLAY);
 }
 
 void
@@ -147,7 +147,7 @@ CMSWindowsScreenSaver::activate()
 		}
 
 		// restore power save when screen saver activates
-		CArchMiscWindows::removeBusyState(CArchMiscWindows::kDISPLAY);
+		ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
 	}
 }
 
@@ -187,7 +187,7 @@ CMSWindowsScreenSaver::deactivate()
 								 m_wasEnabled, 0, SPIF_SENDWININICHANGE);
 
 	// disable display power down
-	CArchMiscWindows::removeBusyState(CArchMiscWindows::kDISPLAY);
+	ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
 }
 
 bool
@@ -220,7 +220,7 @@ CMSWindowsScreenSaver::watchDesktop()
 	// watch desktop in another thread
 	LOG((CLOG_DEBUG "watching screen saver desktop"));
 	m_active = true;
-	m_watch  = new CThread(new TMethodJob<CMSWindowsScreenSaver>(this,
+	m_watch  = new Thread(new TMethodJob<CMSWindowsScreenSaver>(this,
 								&CMSWindowsScreenSaver::watchDesktopThread));
 }
 
@@ -235,7 +235,7 @@ CMSWindowsScreenSaver::watchProcess(HANDLE process)
 		LOG((CLOG_DEBUG "watching screen saver process"));
 		m_process = process;
 		m_active  = true;
-		m_watch   = new CThread(new TMethodJob<CMSWindowsScreenSaver>(this,
+		m_watch   = new Thread(new TMethodJob<CMSWindowsScreenSaver>(this,
 								&CMSWindowsScreenSaver::watchProcessThread));
 	}
 }
@@ -284,7 +284,7 @@ void
 CMSWindowsScreenSaver::watchProcessThread(void*)
 {
 	for (;;) {
-		CThread::testCancel();
+		Thread::testCancel();
 		if (WaitForSingleObject(m_process, 50) == WAIT_OBJECT_0) {
 			// process terminated
 			LOG((CLOG_DEBUG "screen saver died"));
@@ -301,19 +301,19 @@ void
 CMSWindowsScreenSaver::setSecure(bool secure, bool saveSecureAsInt)
 {
 	HKEY hkey =
-		CArchMiscWindows::addKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
+		ArchMiscWindows::addKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
 	if (hkey == NULL) {
 		return;
 	}
 
 	if (saveSecureAsInt) {
-		CArchMiscWindows::setValue(hkey, g_isSecureNT, secure ? 1 : 0);
+		ArchMiscWindows::setValue(hkey, g_isSecureNT, secure ? 1 : 0);
 	}
 	else {
-		CArchMiscWindows::setValue(hkey, g_isSecureNT, secure ? "1" : "0");
+		ArchMiscWindows::setValue(hkey, g_isSecureNT, secure ? "1" : "0");
 	}
 
-	CArchMiscWindows::closeKey(hkey);
+	ArchMiscWindows::closeKey(hkey);
 }
 
 bool
@@ -321,7 +321,7 @@ CMSWindowsScreenSaver::isSecure(bool* wasSecureFlagAnInt) const
 {
 	// get the password protection setting key
 	HKEY hkey =
-		CArchMiscWindows::openKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
+		ArchMiscWindows::openKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
 	if (hkey == NULL) {
 		return false;
 	}
@@ -329,28 +329,28 @@ CMSWindowsScreenSaver::isSecure(bool* wasSecureFlagAnInt) const
 	// get the value.  the value may be an int or a string, depending
 	// on the version of windows.
 	bool result;
-	switch (CArchMiscWindows::typeOfValue(hkey, g_isSecureNT)) {
+	switch (ArchMiscWindows::typeOfValue(hkey, g_isSecureNT)) {
 	default:
 		result = false;
 		break;
 
-	case CArchMiscWindows::kUINT: {
+	case ArchMiscWindows::kUINT: {
 		DWORD value =
-			CArchMiscWindows::readValueInt(hkey, g_isSecureNT);
+			ArchMiscWindows::readValueInt(hkey, g_isSecureNT);
 		*wasSecureFlagAnInt = true;
 		result = (value != 0);
 		break;
 	}
 
-	case CArchMiscWindows::kSTRING: {
+	case ArchMiscWindows::kSTRING: {
 		std::string value =
-			CArchMiscWindows::readValueString(hkey, g_isSecureNT);
+			ArchMiscWindows::readValueString(hkey, g_isSecureNT);
 		*wasSecureFlagAnInt = false;
 		result = (value != "0");
 		break;
 	}
 	}
 
-	CArchMiscWindows::closeKey(hkey);
+	ArchMiscWindows::closeKey(hkey);
 	return result;
 }

@@ -20,7 +20,7 @@
 
 #include "common/IInterface.h"
 
-class CEvent;
+class Event;
 
 //! Event handler interface
 /*!
@@ -29,5 +29,5 @@ An event job is an interface for executing a event handler.
 class IEventJob : public IInterface {
 public:
 	//! Run the job
-	virtual void		run(const CEvent&) = 0;
+	virtual void		run(const Event&) = 0;
 };

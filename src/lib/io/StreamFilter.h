@@ -26,15 +26,15 @@
 This class wraps a stream.  Subclasses provide indirect access
 to the wrapped stream, typically performing some filtering.
 */
-class CStreamFilter : public synergy::IStream {
+class StreamFilter : public synergy::IStream {
 public:
 	/*!
 	Create a wrapper around \c stream.  Iff \c adoptStream is true then
 	this object takes ownership of the stream and will delete it in the
 	d'tor.
 	*/
-	CStreamFilter(IEventQueue* events, synergy::IStream* stream, bool adoptStream = true);
-	virtual ~CStreamFilter();
+	StreamFilter(IEventQueue* events, synergy::IStream* stream, bool adoptStream = true);
+	virtual ~StreamFilter();
 
 	// IStream overrides
 	// These all just forward to the underlying stream except getEventTarget.
@@ -61,10 +61,10 @@ protected:
 	Does the event filtering.  The default simply dispatches an event
 	identical except using this object as the event target.
 	*/
-	virtual void		filterEvent(const CEvent&);
+	virtual void		filterEvent(const Event&);
 
 private:
-	void				handleUpstreamEvent(const CEvent&, void*);
+	void				handleUpstreamEvent(const Event&, void*);
 
 private:
 	synergy::IStream*	m_stream;

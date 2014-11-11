@@ -29,15 +29,15 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-class CEventQueueTimer;
+class EventQueueTimer;
 class CMSWindowsDesks;
 class CMSWindowsKeyState;
 class CMSWindowsScreenSaver;
-class CThread;
+class Thread;
 class CMSWindowsDropTarget;
 
 //! Implementation of IPlatformScreen for Microsoft Windows
-class CMSWindowsScreen : public CPlatformScreen {
+class CMSWindowsScreen : public PlatformScreen {
 public:
 	CMSWindowsScreen(
 		bool isPrimary,
@@ -113,17 +113,17 @@ public:
 	virtual void		closeScreensaver();
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
-	virtual void		setOptions(const COptionsList& options);
+	virtual void		setOptions(const OptionsList& options);
 	virtual void		setSequenceNumber(UInt32);
 	virtual bool		isPrimary() const;
-	virtual void		fakeDraggingFiles(CDragFileList fileList);
-	virtual CString&	getDraggingFilename();
-	virtual const CString&	
+	virtual void		fakeDraggingFiles(DragFileList fileList);
+	virtual String&	getDraggingFilename();
+	virtual const String&	
 						getDropTarget() const;
 
 protected:
 	// IPlatformScreen overrides
-	virtual void		handleSystemEvent(const CEvent&, void*);
+	virtual void		handleSystemEvent(const Event&, void*);
 	virtual void		updateButtons();
 	virtual IKeyState*	getKeyState() const;
 
@@ -143,9 +143,9 @@ private:
 
 	// convenience function to send events
 public: // HACK
-	void				sendEvent(CEvent::Type type, void* = NULL);
+	void				sendEvent(Event::Type type, void* = NULL);
 private: // HACK
-	void				sendClipboardEvent(CEvent::Type type, ClipboardID id);
+	void				sendClipboardEvent(Event::Type type, ClipboardID id);
 
 	// handle message before it gets dispatched.  returns true iff
 	// the message should not be dispatched.
@@ -183,7 +183,7 @@ private: // HACK
 	void				updateScreenShape();
 
 	// fix timer callback
-	void				handleFixes(const CEvent&, void*);
+	void				handleFixes(const Event&, void*);
 
 	// fix the clipboard viewer chain
 	void				fixClipboardViewer();
@@ -224,21 +224,21 @@ private: // HACK
 	void				sendDragThread(void*);
 
 private:
-	struct CHotKeyItem {
+	struct HotKeyItem {
 	public:
-		CHotKeyItem(UINT vk, UINT modifiers);
+		HotKeyItem(UINT vk, UINT modifiers);
 
 		UINT			getVirtualKey() const;
 
-		bool			operator<(const CHotKeyItem&) const;
+		bool			operator<(const HotKeyItem&) const;
 
 	private:
 		UINT			m_keycode;
 		UINT			m_mask;
 	};
-	typedef std::map<UInt32, CHotKeyItem> HotKeyMap;
+	typedef std::map<UInt32, HotKeyItem> HotKeyMap;
 	typedef std::vector<UInt32> HotKeyIDList;
-	typedef std::map<CHotKeyItem, UInt32> HotKeyToIDMap;
+	typedef std::map<HotKeyItem, UInt32> HotKeyToIDMap;
 	typedef std::vector<KeyButton> PrimaryKeyDownList;
 
 	static HINSTANCE	s_windowInstance;
@@ -277,7 +277,7 @@ private:
 	DWORD				m_threadID;
 
 	// timer for periodically checking stuff that requires polling
-	CEventQueueTimer*	m_fixTimer;
+	EventQueueTimer*	m_fixTimer;
 
 	// the keyboard layout to use when off primary screen
 	HKL					m_keyLayout;
@@ -331,14 +331,14 @@ private:
 	
 	IEventQueue*		m_events;
 
-	CString				m_desktopPath;
+	String				m_desktopPath;
 
 	CMSWindowsDropTarget*
 						m_dropTarget;
 	HWND				m_dropWindow;
 	const int			m_dropWindowSize;
 
-	CThread*			m_sendDragThread;
+	Thread*			m_sendDragThread;
 
 	PrimaryKeyDownList	m_primaryKeyDownList;
 };

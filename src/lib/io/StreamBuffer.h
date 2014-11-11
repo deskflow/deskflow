@@ -26,10 +26,10 @@
 /*!
 This class maintains a FIFO (first-in, last-out) buffer of bytes.
 */
-class CStreamBuffer {
+class StreamBuffer {
 public:
-	CStreamBuffer();
-	~CStreamBuffer();
+	StreamBuffer();
+	~StreamBuffer();
 
 	//! @name manipulators
 	//@{

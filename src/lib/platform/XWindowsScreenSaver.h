@@ -28,8 +28,8 @@
 #	include <X11/Xlib.h>
 #endif
 
-class CEvent;
-class CEventQueueTimer;
+class Event;
+class EventQueueTimer;
 
 //! X11 screen saver implementation
 class CXWindowsScreenSaver : public IScreenSaver {
@@ -95,7 +95,7 @@ private:
 	void				updateDisableTimer();
 
 	// called periodically to prevent the screen saver from starting
-	void				handleDisableTimer(const CEvent&, void*);
+	void				handleDisableTimer(const Event&, void*);
 
 	// force DPMS to activate or deactivate
 	void				activateDPMS(bool activate);
@@ -110,7 +110,7 @@ private:
 	bool				isDPMSActivated() const;
 
 private:
-	typedef std::map<Window, long> CWatchList;
+	typedef std::map<Window, long> WatchList;
 
 	// the X display
 	Display*			m_display;
@@ -131,7 +131,7 @@ private:
 	long				m_rootEventMask;
 
 	// potential xscreensaver windows being watched
-	CWatchList			m_watchWindows;
+	WatchList			m_watchWindows;
 
 	// atoms used to communicate with xscreensaver's window
 	Atom				m_atomScreenSaver;
@@ -158,7 +158,7 @@ private:
 	bool				m_suppressDisable;
 
 	// the disable timer (NULL if not installed)
-	CEventQueueTimer*	m_disableTimer;
+	EventQueueTimer*	m_disableTimer;
 
 	// fake mouse motion position for suppressing the screen saver.
 	// xscreensaver since 2.21 requires the mouse to move more than 10

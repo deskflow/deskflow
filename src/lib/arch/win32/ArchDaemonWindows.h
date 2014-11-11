@@ -26,15 +26,15 @@
 #include <Windows.h>
 #include <tchar.h>
 
-#define ARCH_DAEMON CArchDaemonWindows
+#define ARCH_DAEMON ArchDaemonWindows
 
 //! Win32 implementation of IArchDaemon
-class CArchDaemonWindows : public IArchDaemon {
+class ArchDaemonWindows : public IArchDaemon {
 public:
 	typedef int			(*RunFunc)(void);
 
-	CArchDaemonWindows();
-	virtual ~CArchDaemonWindows();
+	ArchDaemonWindows();
+	virtual ~ArchDaemonWindows();
 
 	//! Run the daemon
 	/*!
@@ -120,10 +120,10 @@ private:
 	};
 
 private:
-	static CArchDaemonWindows*	s_daemon;
+	static ArchDaemonWindows*	s_daemon;
 
-	CArchMutex			m_serviceMutex;
-	CArchCond			m_serviceCondVar;
+	ArchMutex			m_serviceMutex;
+	ArchCond			m_serviceCondVar;
 	DWORD				m_serviceState;
 	bool				m_serviceHandlerWaiting;
 	bool				m_serviceRunning;

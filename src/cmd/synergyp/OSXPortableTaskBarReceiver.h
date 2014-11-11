@@ -20,13 +20,13 @@
 
 #include "synergyp/PortableTaskBarReceiver.h"
 
-class CBufferedLogOutputter;
+class BufferedLogOutputter;
 
-//! Implementation of CPortableTaskBarReceiver for OS X
-class COSXServerTaskBarReceiver : public CPortableTaskBarReceiver {
+//! Implementation of PortableTaskBarReceiver for OS X
+class OSXServerTaskBarReceiver : public PortableTaskBarReceiver {
 public:
-	COSXServerTaskBarReceiver(const CBufferedLogOutputter*);
-	virtual ~COSXServerTaskBarReceiver();
+	OSXServerTaskBarReceiver(const BufferedLogOutputter*);
+	virtual ~OSXServerTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides
 	virtual void		showStatus();

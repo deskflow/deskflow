@@ -25,21 +25,21 @@
 #include <string.h>
 
 //
-// CArchFileWindows
+// ArchFileWindows
 //
 
-CArchFileWindows::CArchFileWindows()
+ArchFileWindows::ArchFileWindows()
 {
 	// do nothing
 }
 
-CArchFileWindows::~CArchFileWindows()
+ArchFileWindows::~ArchFileWindows()
 {
 	// do nothing
 }
 
 const char*
-CArchFileWindows::getBasename(const char* pathname)
+ArchFileWindows::getBasename(const char* pathname)
 {
 	if (pathname == NULL) {
 		return NULL;
@@ -64,7 +64,7 @@ CArchFileWindows::getBasename(const char* pathname)
 }
 
 std::string
-CArchFileWindows::getUserDirectory()
+ArchFileWindows::getUserDirectory()
 {
 	// try %HOMEPATH%
 	TCHAR dir[MAX_PATH];
@@ -108,7 +108,7 @@ CArchFileWindows::getUserDirectory()
 }
 
 std::string
-CArchFileWindows::getSystemDirectory()
+ArchFileWindows::getSystemDirectory()
 {
 	// get windows directory
 	char dir[MAX_PATH];
@@ -122,7 +122,7 @@ CArchFileWindows::getSystemDirectory()
 }
 
 std::string
-CArchFileWindows::getInstalledDirectory()
+ArchFileWindows::getInstalledDirectory()
 {
 	char fileNameBuffer[MAX_PATH];
 	GetModuleFileName(NULL, fileNameBuffer, MAX_PATH);
@@ -134,13 +134,13 @@ CArchFileWindows::getInstalledDirectory()
 }
 
 std::string
-CArchFileWindows::getLogDirectory()
+ArchFileWindows::getLogDirectory()
 {
 	return getInstalledDirectory();
 }
 
 std::string
-CArchFileWindows::concatPath(const std::string& prefix,
+ArchFileWindows::concatPath(const std::string& prefix,
 				const std::string& suffix)
 {
 	std::string path;

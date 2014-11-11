@@ -42,10 +42,10 @@
 #endif
 
 //
-// CEventQueueTimer
+// EventQueueTimer
 //
 
-class CEventQueueTimer { };
+class EventQueueTimer { };
 
 
 //
@@ -84,7 +84,7 @@ CXWindowsEventQueueBuffer::~CXWindowsEventQueueBuffer()
 void
 CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 {
-	CThread::testCancel();
+	Thread::testCancel();
 
 	// clear out the pipe in preparation for waiting.
 
@@ -98,7 +98,7 @@ CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 	}
 
 	{
-		CLock lock(&m_mutex);
+		Lock lock(&m_mutex);
 		// we're now waiting for events
 		m_waiting = true;
 
@@ -107,7 +107,7 @@ CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 	}
 	// calling flush may have queued up a new event.
 	if (!CXWindowsEventQueueBuffer::isEmpty()) {
-		CThread::testCancel();
+		Thread::testCancel();
 		return;
 	}
 
@@ -190,17 +190,17 @@ CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 
 	{
 		// we're no longer waiting for events
-		CLock lock(&m_mutex);
+		Lock lock(&m_mutex);
 		m_waiting = false;
 	}
 
-	CThread::testCancel();
+	Thread::testCancel();
 }
 
 IEventQueueBuffer::Type
-CXWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
+CXWindowsEventQueueBuffer::getEvent(Event& event, UInt32& dataID)
 {
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 
 	// push out pending events
 	flush();
@@ -215,7 +215,7 @@ CXWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 		return kUser;
 	}
 	else {
-		event = CEvent(CEvent::kSystem,
+		event = Event(Event::kSystem,
 							m_events->getSystemTarget(), &m_event);
 		return kSystem;
 	}
@@ -233,7 +233,7 @@ CXWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 	xevent.xclient.data.l[0]    = static_cast<long>(dataID);
 
 	// save the message
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 	m_postedEvents.push_back(xevent);
 
 	// if we're currently waiting for an event then send saved events to
@@ -261,18 +261,18 @@ CXWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 bool
 CXWindowsEventQueueBuffer::isEmpty() const
 {
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 	return (XPending(m_display) == 0 );
 }
 
-CEventQueueTimer*
+EventQueueTimer*
 CXWindowsEventQueueBuffer::newTimer(double, bool) const
 {
-	return new CEventQueueTimer;
+	return new EventQueueTimer;
 }
 
 void
-CXWindowsEventQueueBuffer::deleteTimer(CEventQueueTimer* timer) const
+CXWindowsEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
 {
 	delete timer;
 }

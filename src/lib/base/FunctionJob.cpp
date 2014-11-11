@@ -19,23 +19,23 @@
 #include "base/FunctionJob.h"
 
 //
-// CFunctionJob
+// FunctionJob
 //
 
-CFunctionJob::CFunctionJob(void (*func)(void*), void* arg) :
+FunctionJob::FunctionJob(void (*func)(void*), void* arg) :
 	m_func(func),
 	m_arg(arg)
 {
 	// do nothing
 }
 
-CFunctionJob::~CFunctionJob()
+FunctionJob::~FunctionJob()
 {
 	// do nothing
 }
 
 void
-CFunctionJob::run()
+FunctionJob::run()
 {
 	if (m_func != NULL) {
 		m_func(m_arg);

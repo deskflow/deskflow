@@ -25,11 +25,11 @@
 #include <memory>
 
 //
-// CPacketStreamFilter
+// PacketStreamFilter
 //
 
-CPacketStreamFilter::CPacketStreamFilter(IEventQueue* events, synergy::IStream* stream, bool adoptStream) :
-	CStreamFilter(events, stream, adoptStream),
+PacketStreamFilter::PacketStreamFilter(IEventQueue* events, synergy::IStream* stream, bool adoptStream) :
+	StreamFilter(events, stream, adoptStream),
 	m_size(0),
 	m_inputShutdown(false),
 	m_events(events)
@@ -37,28 +37,28 @@ CPacketStreamFilter::CPacketStreamFilter(IEventQueue* events, synergy::IStream* 
 	// do nothing
 }
 
-CPacketStreamFilter::~CPacketStreamFilter()
+PacketStreamFilter::~PacketStreamFilter()
 {
 	// do nothing
 }
 
 void
-CPacketStreamFilter::close()
+PacketStreamFilter::close()
 {
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 	m_size = 0;
 	m_buffer.pop(m_buffer.getSize());
-	CStreamFilter::close();
+	StreamFilter::close();
 }
 
 UInt32
-CPacketStreamFilter::read(void* buffer, UInt32 n)
+PacketStreamFilter::read(void* buffer, UInt32 n)
 {
 	if (n == 0) {
 		return 0;
 	}
 
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 
 	// if not enough data yet then give up
 	if (!isReadyNoLock()) {
@@ -82,7 +82,7 @@ CPacketStreamFilter::read(void* buffer, UInt32 n)
 	readPacketSize();
 
 	if (m_inputShutdown && m_size == 0) {
-		m_events->addEvent(CEvent(m_events->forIStream().inputShutdown(),
+		m_events->addEvent(Event(m_events->forIStream().inputShutdown(),
 						getEventTarget(), NULL));
 	}
 
@@ -90,7 +90,7 @@ CPacketStreamFilter::read(void* buffer, UInt32 n)
 }
 
 void
-CPacketStreamFilter::write(const void* buffer, UInt32 count)
+PacketStreamFilter::write(const void* buffer, UInt32 count)
 {
 	// write the length of the payload
 	UInt8 length[4];
@@ -105,36 +105,36 @@ CPacketStreamFilter::write(const void* buffer, UInt32 count)
 }
 
 void
-CPacketStreamFilter::shutdownInput()
+PacketStreamFilter::shutdownInput()
 {
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 	m_size = 0;
 	m_buffer.pop(m_buffer.getSize());
-	CStreamFilter::shutdownInput();
+	StreamFilter::shutdownInput();
 }
 
 bool
-CPacketStreamFilter::isReady() const
+PacketStreamFilter::isReady() const
 {
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 	return isReadyNoLock();
 }
 
 UInt32
-CPacketStreamFilter::getSize() const
+PacketStreamFilter::getSize() const
 {
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 	return isReadyNoLock() ? m_size : 0;
 }
 
 bool
-CPacketStreamFilter::isReadyNoLock() const
+PacketStreamFilter::isReadyNoLock() const
 {
 	return (m_size != 0 && m_buffer.getSize() >= m_size);
 }
 
 void
-CPacketStreamFilter::readPacketSize()
+PacketStreamFilter::readPacketSize()
 {
 	// note -- m_mutex must be locked on entry
 
@@ -150,7 +150,7 @@ CPacketStreamFilter::readPacketSize()
 }
 
 bool
-CPacketStreamFilter::readMore()
+PacketStreamFilter::readMore()
 {
 	// note if we have whole packet
 	bool wasReady = isReadyNoLock();
@@ -176,17 +176,17 @@ CPacketStreamFilter::readMore()
 }
 
 void
-CPacketStreamFilter::filterEvent(const CEvent& event)
+PacketStreamFilter::filterEvent(const Event& event)
 {
 	if (event.getType() == m_events->forIStream().inputReady()) {
-		CLock lock(&m_mutex);
+		Lock lock(&m_mutex);
 		if (!readMore()) {
 			return;
 		}
 	}
 	else if (event.getType() == m_events->forIStream().inputShutdown()) {
 		// discard this if we have buffered data
-		CLock lock(&m_mutex);
+		Lock lock(&m_mutex);
 		m_inputShutdown = true;
 		if (m_size != 0) {
 			return;
@@ -194,5 +194,5 @@ CPacketStreamFilter::filterEvent(const CEvent& event)
 	}
 
 	// pass event
-	CStreamFilter::filterEvent(event);
+	StreamFilter::filterEvent(event);
 }

@@ -21,9 +21,9 @@
 
 class IEventQueue;
 
-class CEventTypes {
+class EventTypes {
 public:
-	CEventTypes();
+	EventTypes();
 	void				setEvents(IEventQueue* events);
 
 protected:
@@ -34,18 +34,18 @@ private:
 };
 
 #define REGISTER_EVENT(type_, name_)									\
-CEvent::Type															\
+Event::Type															\
 type_##Events::name_()													\
 {																		\
 	return getEvents()->registerTypeOnce(m_##name_, __FUNCTION__);			\
 }
 
-class CClientEvents : public CEventTypes {
+class ClientEvents : public EventTypes {
 public:
-	CClientEvents() :
-		m_connected(CEvent::kUnknown),
-		m_connectionFailed(CEvent::kUnknown),
-		m_disconnected(CEvent::kUnknown) { }
+	ClientEvents() :
+		m_connected(Event::kUnknown),
+		m_connectionFailed(Event::kUnknown),
+		m_disconnected(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -55,14 +55,14 @@ public:
 	Returns the connected event type.  This is sent when the client has
 	successfully connected to the server.
 	*/
-	CEvent::Type		connected();
+	Event::Type		connected();
 
 	//! Get connection failed event type
 	/*!
 	Returns the connection failed event type.  This is sent when the
-	server fails for some reason.  The event data is a CFailInfo*.
+	server fails for some reason.  The event data is a FailInfo*.
 	*/
-	CEvent::Type		connectionFailed();
+	Event::Type		connectionFailed();
 
 	//! Get disconnected event type
 	/*!
@@ -70,24 +70,24 @@ public:
 	has disconnected from the server (and only after having successfully
 	connected).
 	*/
-	CEvent::Type		disconnected();
+	Event::Type		disconnected();
 
 	//@}
 
 private:
-	CEvent::Type		m_connected;
-	CEvent::Type		m_connectionFailed;
-	CEvent::Type		m_disconnected;
+	Event::Type		m_connected;
+	Event::Type		m_connectionFailed;
+	Event::Type		m_disconnected;
 };
 
-class IStreamEvents : public CEventTypes {
+class IStreamEvents : public EventTypes {
 public:
 	IStreamEvents() :
-		m_inputReady(CEvent::kUnknown),
-		m_outputFlushed(CEvent::kUnknown),
-		m_outputError(CEvent::kUnknown),
-		m_inputShutdown(CEvent::kUnknown),
-		m_outputShutdown(CEvent::kUnknown) { }
+		m_inputReady(Event::kUnknown),
+		m_outputFlushed(Event::kUnknown),
+		m_outputError(Event::kUnknown),
+		m_inputShutdown(Event::kUnknown),
+		m_outputShutdown(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -97,7 +97,7 @@ public:
 	Returns the input ready event type.  A stream sends this event
 	when \c read() will return with data.
 	*/
-	CEvent::Type		inputReady();
+	Event::Type		inputReady();
 
 	//! Get output flushed event type
 	/*!
@@ -107,14 +107,14 @@ public:
 	\c close() will not discard any data and \c flush() will return
 	immediately.
 	*/
-	CEvent::Type		outputFlushed();
+	Event::Type		outputFlushed();
 
 	//! Get output error event type
 	/*!
 	Returns the output error event type.  A stream sends this event
 	when a write has failed.
 	*/
-	CEvent::Type		outputError();
+	Event::Type		outputError();
 
 	//! Get input shutdown event type
 	/*!
@@ -122,7 +122,7 @@ public:
 	input side of the stream has shutdown.  When the input has
 	shutdown, no more data will ever be available to read.
 	*/
-	CEvent::Type		inputShutdown();
+	Event::Type		inputShutdown();
 
 	//! Get output shutdown event type
 	/*!
@@ -131,106 +131,106 @@ public:
 	shutdown, no more data can ever be written to the stream.  Any
 	attempt to do so will generate a output error event.
 	*/
-	CEvent::Type		outputShutdown();
+	Event::Type		outputShutdown();
 
 	//@}
 		
 private:
-	CEvent::Type		m_inputReady;
-	CEvent::Type		m_outputFlushed;
-	CEvent::Type		m_outputError;
-	CEvent::Type		m_inputShutdown;
-	CEvent::Type		m_outputShutdown;
+	Event::Type		m_inputReady;
+	Event::Type		m_outputFlushed;
+	Event::Type		m_outputError;
+	Event::Type		m_inputShutdown;
+	Event::Type		m_outputShutdown;
 };
 
-class CIpcClientEvents : public CEventTypes {
+class IpcClientEvents : public EventTypes {
 public:
-	CIpcClientEvents() :
-		m_connected(CEvent::kUnknown),
-		m_messageReceived(CEvent::kUnknown) { }
+	IpcClientEvents() :
+		m_connected(Event::kUnknown),
+		m_messageReceived(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
 
 	//! Raised when the socket is connected.
-	CEvent::Type		connected();
+	Event::Type		connected();
 
 	//! Raised when a message is received.
-	CEvent::Type		messageReceived();
+	Event::Type		messageReceived();
 
 	//@}
 	
 private:
-	CEvent::Type		m_connected;
-	CEvent::Type		m_messageReceived;
+	Event::Type		m_connected;
+	Event::Type		m_messageReceived;
 };
 
-class CIpcClientProxyEvents : public CEventTypes {
+class IpcClientProxyEvents : public EventTypes {
 public:
-	CIpcClientProxyEvents() :
-		m_messageReceived(CEvent::kUnknown),
-		m_disconnected(CEvent::kUnknown) { }
+	IpcClientProxyEvents() :
+		m_messageReceived(Event::kUnknown),
+		m_disconnected(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
 
 	//! Raised when the server receives a message from a client.
-	CEvent::Type		messageReceived();
+	Event::Type		messageReceived();
 
 	//! Raised when the client disconnects from the server.
-	CEvent::Type		disconnected();
+	Event::Type		disconnected();
 		
 	//@}
 
 private:
-	CEvent::Type		m_messageReceived;
-	CEvent::Type		m_disconnected;
+	Event::Type		m_messageReceived;
+	Event::Type		m_disconnected;
 };
 
-class CIpcServerEvents : public CEventTypes {
+class IpcServerEvents : public EventTypes {
 public:
-	CIpcServerEvents() :
-		m_clientConnected(CEvent::kUnknown),
-		m_messageReceived(CEvent::kUnknown) { }
+	IpcServerEvents() :
+		m_clientConnected(Event::kUnknown),
+		m_messageReceived(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
 
 	//! Raised when we have created the client proxy.
-	CEvent::Type		clientConnected();
+	Event::Type		clientConnected();
 	
 	//! Raised when a message is received through a client proxy.
-	CEvent::Type		messageReceived();
+	Event::Type		messageReceived();
 
 	//@}
 
 private:
-	CEvent::Type		m_clientConnected;
-	CEvent::Type		m_messageReceived;
+	Event::Type		m_clientConnected;
+	Event::Type		m_messageReceived;
 };
 
-class CIpcServerProxyEvents : public CEventTypes {
+class IpcServerProxyEvents : public EventTypes {
 public:
-	CIpcServerProxyEvents() :
-		m_messageReceived(CEvent::kUnknown) { }
+	IpcServerProxyEvents() :
+		m_messageReceived(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
 
 	//! Raised when the client receives a message from the server.
-	CEvent::Type		messageReceived();
+	Event::Type		messageReceived();
 
 	//@}
 
 private:
-	CEvent::Type		m_messageReceived;
+	Event::Type		m_messageReceived;
 };
 
-class IDataSocketEvents : public CEventTypes {
+class IDataSocketEvents : public EventTypes {
 public:
 	IDataSocketEvents() :
-		m_connected(CEvent::kUnknown),
-		m_connectionFailed(CEvent::kUnknown) { }
+		m_connected(Event::kUnknown),
+		m_connectionFailed(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -240,27 +240,27 @@ public:
 	Returns the socket connected event type.  A socket sends this
 	event when a remote connection has been established.
 	*/
-	CEvent::Type		connected();
+	Event::Type		connected();
 
 	//! Get connection failed event type
 	/*!
 	Returns the socket connection failed event type.  A socket sends
 	this event when an attempt to connect to a remote port has failed.
-	The data is a pointer to a CConnectionFailedInfo.
+	The data is a pointer to a ConnectionFailedInfo.
 	*/
-	CEvent::Type		connectionFailed();
+	Event::Type		connectionFailed();
 
 	//@}
 
 private:
-	CEvent::Type		m_connected;
-	CEvent::Type		m_connectionFailed;
+	Event::Type		m_connected;
+	Event::Type		m_connectionFailed;
 };
 
-class IListenSocketEvents : public CEventTypes {
+class IListenSocketEvents : public EventTypes {
 public:
 	IListenSocketEvents() :
-		m_connecting(CEvent::kUnknown) { }
+		m_connecting(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -270,18 +270,18 @@ public:
 	Returns the socket connecting event type.  A socket sends this
 	event when a remote connection is waiting to be accepted.
 	*/
-	CEvent::Type		connecting();
+	Event::Type		connecting();
 
 	//@}
 
 private:
-	CEvent::Type		m_connecting;
+	Event::Type		m_connecting;
 };
 
-class ISocketEvents : public CEventTypes {
+class ISocketEvents : public EventTypes {
 public:
 	ISocketEvents() :
-		m_disconnected(CEvent::kUnknown) { }
+		m_disconnected(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -292,34 +292,34 @@ public:
 	event when the remote side of the socket has disconnected or
 	shutdown both input and output.
 	*/
-	CEvent::Type		disconnected();
+	Event::Type		disconnected();
 
 	//@}
 
 private:
-	CEvent::Type		m_disconnected;
+	Event::Type		m_disconnected;
 };
 
-class COSXScreenEvents : public CEventTypes {
+class OSXScreenEvents : public EventTypes {
 public:
-	COSXScreenEvents() :
-		m_confirmSleep(CEvent::kUnknown) { }
+	OSXScreenEvents() :
+		m_confirmSleep(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
 
-	CEvent::Type		confirmSleep();
+	Event::Type		confirmSleep();
 
 	//@}
 
 private:
-	CEvent::Type		m_confirmSleep;
+	Event::Type		m_confirmSleep;
 };
 
-class CClientListenerEvents : public CEventTypes {
+class ClientListenerEvents : public EventTypes {
 public:
-	CClientListenerEvents() :
-		m_connected(CEvent::kUnknown) { }
+	ClientListenerEvents() :
+		m_connected(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -329,20 +329,20 @@ public:
 	Returns the connected event type.  This is sent whenever a
 	a client connects.
 	*/
-	CEvent::Type		connected();
+	Event::Type		connected();
 
 	//@}
 
 private:
-	CEvent::Type		m_connected;
+	Event::Type		m_connected;
 };
 
-class CClientProxyEvents : public CEventTypes {
+class ClientProxyEvents : public EventTypes {
 public:
-	CClientProxyEvents() :
-		m_ready(CEvent::kUnknown),
-		m_disconnected(CEvent::kUnknown),
-		m_clipboardChanged(CEvent::kUnknown) { }
+	ClientProxyEvents() :
+		m_ready(Event::kUnknown),
+		m_disconnected(Event::kUnknown),
+		m_clipboardChanged(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -353,36 +353,36 @@ public:
 	completed the initial handshake.  Until it is sent, the client is
 	not fully connected.
 	*/
-	CEvent::Type		ready();
+	Event::Type		ready();
 
 	//! Get disconnect event type
 	/*!
 	Returns the disconnect event type.  This is sent when the client
 	disconnects or is disconnected.  The target is getEventTarget().
 	*/
-	CEvent::Type		disconnected();
+	Event::Type		disconnected();
 
 	//! Get clipboard changed event type
 	/*!
 	Returns the clipboard changed event type.  This is sent whenever the
 	contents of the clipboard has changed.  The data is a pointer to a
-	IScreen::CClipboardInfo.
+	IScreen::ClipboardInfo.
 	*/
-	CEvent::Type		clipboardChanged();
+	Event::Type		clipboardChanged();
 
 	//@}
 
 private:
-	CEvent::Type		m_ready;
-	CEvent::Type		m_disconnected;
-	CEvent::Type		m_clipboardChanged;
+	Event::Type		m_ready;
+	Event::Type		m_disconnected;
+	Event::Type		m_clipboardChanged;
 };
 
-class CClientProxyUnknownEvents : public CEventTypes {
+class ClientProxyUnknownEvents : public EventTypes {
 public:
-	CClientProxyUnknownEvents() :
-		m_success(CEvent::kUnknown),
-		m_failure(CEvent::kUnknown) { }
+	ClientProxyUnknownEvents() :
+		m_success(Event::kUnknown),
+		m_failure(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -392,33 +392,33 @@ public:
 	Returns the success event type.  This is sent when the client has
 	correctly responded to the hello message.  The target is this.
 	*/
-	CEvent::Type		success();
+	Event::Type		success();
 
 	//! Get failure event type
 	/*!
 	Returns the failure event type.  This is sent when a client fails
 	to correctly respond to the hello message.  The target is this.
 	*/
-	CEvent::Type		failure();
+	Event::Type		failure();
 
 	//@}
 		
 private:
-	CEvent::Type		m_success;
-	CEvent::Type		m_failure;
+	Event::Type		m_success;
+	Event::Type		m_failure;
 };
 
-class CServerEvents : public CEventTypes {
+class ServerEvents : public EventTypes {
 public:
-	CServerEvents() :
-		m_error(CEvent::kUnknown),
-		m_connected(CEvent::kUnknown),
-		m_disconnected(CEvent::kUnknown),
-		m_switchToScreen(CEvent::kUnknown),
-		m_switchInDirection(CEvent::kUnknown),
-		m_keyboardBroadcast(CEvent::kUnknown),
-		m_lockCursorToScreen(CEvent::kUnknown),
-		m_screenSwitched(CEvent::kUnknown) { }
+	ServerEvents() :
+		m_error(Event::kUnknown),
+		m_connected(Event::kUnknown),
+		m_disconnected(Event::kUnknown),
+		m_switchToScreen(Event::kUnknown),
+		m_switchInDirection(Event::kUnknown),
+		m_keyboardBroadcast(Event::kUnknown),
+		m_lockCursorToScreen(Event::kUnknown),
+		m_screenSwitched(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -428,208 +428,208 @@ public:
 	Returns the error event type.  This is sent when the server fails
 	for some reason.
 	*/
-	CEvent::Type		error();
+	Event::Type		error();
 
 	//! Get connected event type
 	/*!
 	Returns the connected event type.  This is sent when a client screen
-	has connected.  The event data is a \c CScreenConnectedInfo* that
+	has connected.  The event data is a \c ScreenConnectedInfo* that
 	indicates the connected screen.
 	*/
-	CEvent::Type		connected();
+	Event::Type		connected();
 
 	//! Get disconnected event type
 	/*!
 	Returns the disconnected event type.  This is sent when all the
 	clients have disconnected.
 	*/
-	CEvent::Type		disconnected();
+	Event::Type		disconnected();
 
 	//! Get switch to screen event type
 	/*!
 	Returns the switch to screen event type.  The server responds to this
-	by switching screens.  The event data is a \c CSwitchToScreenInfo*
+	by switching screens.  The event data is a \c SwitchToScreenInfo*
 	that indicates the target screen.
 	*/
-	CEvent::Type		switchToScreen();
+	Event::Type		switchToScreen();
 
 	//! Get switch in direction event type
 	/*!
 	Returns the switch in direction event type.  The server responds to this
-	by switching screens.  The event data is a \c CSwitchInDirectionInfo*
+	by switching screens.  The event data is a \c SwitchInDirectionInfo*
 	that indicates the target direction.
 	*/
-	CEvent::Type		switchInDirection();
+	Event::Type		switchInDirection();
 
 	//! Get keyboard broadcast event type
 	/*!
 	Returns the keyboard broadcast event type.  The server responds
 	to this by turning on keyboard broadcasting or turning it off.  The
-	event data is a \c CKeyboardBroadcastInfo*.
+	event data is a \c KeyboardBroadcastInfo*.
 	*/
-	CEvent::Type		keyboardBroadcast();
+	Event::Type		keyboardBroadcast();
 
 	//! Get lock cursor event type
 	/*!
 	Returns the lock cursor event type.  The server responds to this
 	by locking the cursor to the active screen or unlocking it.  The
-	event data is a \c CLockCursorToScreenInfo*.
+	event data is a \c LockCursorToScreenInfo*.
 	*/
-	CEvent::Type		lockCursorToScreen();
+	Event::Type		lockCursorToScreen();
 
 	//! Get screen switched event type
 	/*!
 	Returns the screen switched event type.  This is raised when the
 	screen has been switched to a client.
 	*/
-	CEvent::Type		screenSwitched();
+	Event::Type		screenSwitched();
 
 	//@}
 		
 private:
-	CEvent::Type		m_error;
-	CEvent::Type		m_connected;
-	CEvent::Type		m_disconnected;
-	CEvent::Type		m_switchToScreen;
-	CEvent::Type		m_switchInDirection;
-	CEvent::Type		m_keyboardBroadcast;
-	CEvent::Type		m_lockCursorToScreen;
-	CEvent::Type		m_screenSwitched;
+	Event::Type		m_error;
+	Event::Type		m_connected;
+	Event::Type		m_disconnected;
+	Event::Type		m_switchToScreen;
+	Event::Type		m_switchInDirection;
+	Event::Type		m_keyboardBroadcast;
+	Event::Type		m_lockCursorToScreen;
+	Event::Type		m_screenSwitched;
 };
 
-class CServerAppEvents : public CEventTypes {
+class ServerAppEvents : public EventTypes {
 public:
-	CServerAppEvents() :
-		m_reloadConfig(CEvent::kUnknown),
-		m_forceReconnect(CEvent::kUnknown),
-		m_resetServer(CEvent::kUnknown) { }
+	ServerAppEvents() :
+		m_reloadConfig(Event::kUnknown),
+		m_forceReconnect(Event::kUnknown),
+		m_resetServer(Event::kUnknown) { }
 		
 	//! @name accessors
 	//@{
 		
-	CEvent::Type		reloadConfig();
-	CEvent::Type		forceReconnect();
-	CEvent::Type		resetServer();
+	Event::Type		reloadConfig();
+	Event::Type		forceReconnect();
+	Event::Type		resetServer();
 
 	//@}
 		
 private:
-	CEvent::Type		m_reloadConfig;
-	CEvent::Type		m_forceReconnect;
-	CEvent::Type		m_resetServer;
+	Event::Type		m_reloadConfig;
+	Event::Type		m_forceReconnect;
+	Event::Type		m_resetServer;
 };
 
-class IKeyStateEvents : public CEventTypes {
+class IKeyStateEvents : public EventTypes {
 public:
 	IKeyStateEvents() :
-		m_keyDown(CEvent::kUnknown),
-		m_keyUp(CEvent::kUnknown),
-		m_keyRepeat(CEvent::kUnknown) { }
+		m_keyDown(Event::kUnknown),
+		m_keyUp(Event::kUnknown),
+		m_keyRepeat(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
 
-	//! Get key down event type.  Event data is CKeyInfo*, count == 1.
-	CEvent::Type		keyDown();
+	//! Get key down event type.  Event data is KeyInfo*, count == 1.
+	Event::Type		keyDown();
 
-	//! Get key up event type.  Event data is CKeyInfo*, count == 1.
-	CEvent::Type		keyUp();
+	//! Get key up event type.  Event data is KeyInfo*, count == 1.
+	Event::Type		keyUp();
 
-	//! Get key repeat event type.  Event data is CKeyInfo*.
-	CEvent::Type		keyRepeat();
+	//! Get key repeat event type.  Event data is KeyInfo*.
+	Event::Type		keyRepeat();
 
 	//@}
 		
 private:
-	CEvent::Type		m_keyDown;
-	CEvent::Type		m_keyUp;
-	CEvent::Type		m_keyRepeat;
+	Event::Type		m_keyDown;
+	Event::Type		m_keyUp;
+	Event::Type		m_keyRepeat;
 };
 
-class IPrimaryScreenEvents : public CEventTypes {
+class IPrimaryScreenEvents : public EventTypes {
 public:
 	IPrimaryScreenEvents() :
-		m_buttonDown(CEvent::kUnknown),
-		m_buttonUp(CEvent::kUnknown),
-		m_motionOnPrimary(CEvent::kUnknown),
-		m_motionOnSecondary(CEvent::kUnknown),
-		m_wheel(CEvent::kUnknown),
-		m_screensaverActivated(CEvent::kUnknown),
-		m_screensaverDeactivated(CEvent::kUnknown),
-		m_hotKeyDown(CEvent::kUnknown),
-		m_hotKeyUp(CEvent::kUnknown),
-		m_fakeInputBegin(CEvent::kUnknown),
-		m_fakeInputEnd(CEvent::kUnknown) { }
+		m_buttonDown(Event::kUnknown),
+		m_buttonUp(Event::kUnknown),
+		m_motionOnPrimary(Event::kUnknown),
+		m_motionOnSecondary(Event::kUnknown),
+		m_wheel(Event::kUnknown),
+		m_screensaverActivated(Event::kUnknown),
+		m_screensaverDeactivated(Event::kUnknown),
+		m_hotKeyDown(Event::kUnknown),
+		m_hotKeyUp(Event::kUnknown),
+		m_fakeInputBegin(Event::kUnknown),
+		m_fakeInputEnd(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
 	
-	//!  button down event type.  Event data is CButtonInfo*.
-	CEvent::Type		buttonDown();
+	//!  button down event type.  Event data is ButtonInfo*.
+	Event::Type		buttonDown();
 
-	//!  button up event type.  Event data is CButtonInfo*.
-	CEvent::Type		buttonUp();
+	//!  button up event type.  Event data is ButtonInfo*.
+	Event::Type		buttonUp();
 
 	//!  mouse motion on the primary screen event type
 	/*!
-	Event data is CMotionInfo* and the values are an absolute position.
+	Event data is MotionInfo* and the values are an absolute position.
 	*/
-	CEvent::Type		motionOnPrimary();
+	Event::Type		motionOnPrimary();
 
 	//!  mouse motion on a secondary screen event type
 	/*!
-	Event data is CMotionInfo* and the values are motion deltas not
+	Event data is MotionInfo* and the values are motion deltas not
 	absolute coordinates.
 	*/
-	CEvent::Type		motionOnSecondary();
+	Event::Type		motionOnSecondary();
 
-	//!  mouse wheel event type.  Event data is CWheelInfo*.
-	CEvent::Type		wheel();
+	//!  mouse wheel event type.  Event data is WheelInfo*.
+	Event::Type		wheel();
 
 	//!  screensaver activated event type
-	CEvent::Type		screensaverActivated();
+	Event::Type		screensaverActivated();
 
 	//!  screensaver deactivated event type
-	CEvent::Type		screensaverDeactivated();
+	Event::Type		screensaverDeactivated();
 
-	//!  hot key down event type.  Event data is CHotKeyInfo*.
-	CEvent::Type		hotKeyDown();
+	//!  hot key down event type.  Event data is HotKeyInfo*.
+	Event::Type		hotKeyDown();
 
-	//!  hot key up event type.  Event data is CHotKeyInfo*.
-	CEvent::Type		hotKeyUp();
+	//!  hot key up event type.  Event data is HotKeyInfo*.
+	Event::Type		hotKeyUp();
 
 	//!  start of fake input event type
-	CEvent::Type		fakeInputBegin();
+	Event::Type		fakeInputBegin();
 
 	//!  end of fake input event type
-	CEvent::Type		fakeInputEnd();
+	Event::Type		fakeInputEnd();
 
 	//@}
 
 private:
-	CEvent::Type		m_buttonDown;
-	CEvent::Type		m_buttonUp;
-	CEvent::Type		m_motionOnPrimary;
-	CEvent::Type		m_motionOnSecondary;
-	CEvent::Type		m_wheel;
-	CEvent::Type		m_screensaverActivated;
-	CEvent::Type		m_screensaverDeactivated;
-	CEvent::Type		m_hotKeyDown;
-	CEvent::Type		m_hotKeyUp;
-	CEvent::Type		m_fakeInputBegin;
-	CEvent::Type		m_fakeInputEnd;
+	Event::Type		m_buttonDown;
+	Event::Type		m_buttonUp;
+	Event::Type		m_motionOnPrimary;
+	Event::Type		m_motionOnSecondary;
+	Event::Type		m_wheel;
+	Event::Type		m_screensaverActivated;
+	Event::Type		m_screensaverDeactivated;
+	Event::Type		m_hotKeyDown;
+	Event::Type		m_hotKeyUp;
+	Event::Type		m_fakeInputBegin;
+	Event::Type		m_fakeInputEnd;
 };
 
-class IScreenEvents : public CEventTypes {
+class IScreenEvents : public EventTypes {
 public:
 	IScreenEvents() :
-		m_error(CEvent::kUnknown),
-		m_shapeChanged(CEvent::kUnknown),
-		m_clipboardGrabbed(CEvent::kUnknown),
-		m_suspend(CEvent::kUnknown),
-		m_resume(CEvent::kUnknown),
-		m_fileChunkSending(CEvent::kUnknown),
-		m_fileRecieveCompleted(CEvent::kUnknown) { }
+		m_error(Event::kUnknown),
+		m_shapeChanged(Event::kUnknown),
+		m_clipboardGrabbed(Event::kUnknown),
+		m_suspend(Event::kUnknown),
+		m_resume(Event::kUnknown),
+		m_fileChunkSending(Event::kUnknown),
+		m_fileRecieveCompleted(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -639,51 +639,51 @@ public:
 	Returns the error event type.  This is sent whenever the screen has
 	failed for some reason (e.g. the X Windows server died).
 	*/
-	CEvent::Type		error();
+	Event::Type		error();
 
 	//! Get shape changed event type
 	/*!
 	Returns the shape changed event type.  This is sent whenever the
 	screen's shape changes.
 	*/
-	CEvent::Type		shapeChanged();
+	Event::Type		shapeChanged();
 
 	//! Get clipboard grabbed event type
 	/*!
 	Returns the clipboard grabbed event type.  This is sent whenever the
 	clipboard is grabbed by some other application so we don't own it
-	anymore.  The data is a pointer to a CClipboardInfo.
+	anymore.  The data is a pointer to a ClipboardInfo.
 	*/
-	CEvent::Type		clipboardGrabbed();
+	Event::Type		clipboardGrabbed();
 
 	//! Get suspend event type
 	/*!
 	Returns the suspend event type. This is sent whenever the system goes
 	to sleep or a user session is deactivated (fast user switching).
 	*/
-	CEvent::Type		suspend();
+	Event::Type		suspend();
 	
 	//! Get resume event type
 	/*!
 	Returns the resume event type. This is sent whenever the system wakes
 	up or a user session is activated (fast user switching).
 	*/
-	CEvent::Type		resume();
+	Event::Type		resume();
 
 	//! Sending a file chunk
-	CEvent::Type		fileChunkSending();
+	Event::Type		fileChunkSending();
 
 	//! Completed receiving a file
-	CEvent::Type		fileRecieveCompleted();
+	Event::Type		fileRecieveCompleted();
 
 	//@}
 		
 private:
-	CEvent::Type		m_error;
-	CEvent::Type		m_shapeChanged;
-	CEvent::Type		m_clipboardGrabbed;
-	CEvent::Type		m_suspend;
-	CEvent::Type		m_resume;
-	CEvent::Type		m_fileChunkSending;
-	CEvent::Type		m_fileRecieveCompleted;
+	Event::Type		m_error;
+	Event::Type		m_shapeChanged;
+	Event::Type		m_clipboardGrabbed;
+	Event::Type		m_suspend;
+	Event::Type		m_resume;
+	Event::Type		m_fileChunkSending;
+	Event::Type		m_fileRecieveCompleted;
 };

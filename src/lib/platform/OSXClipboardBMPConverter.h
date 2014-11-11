@@ -21,10 +21,10 @@
 #include "platform/OSXClipboard.h"
 
 //! Convert to/from some text encoding
-class COSXClipboardBMPConverter : public IOSXClipboardConverter {
+class OSXClipboardBMPConverter : public IOSXClipboardConverter {
 public:
-	COSXClipboardBMPConverter();
-	virtual ~COSXClipboardBMPConverter();
+	OSXClipboardBMPConverter();
+	virtual ~OSXClipboardBMPConverter();
 
 	// IMSWindowsClipboardConverter overrides
 	virtual IClipboard::EFormat
@@ -33,12 +33,12 @@ public:
 	virtual CFStringRef
 						getOSXFormat() const;
 
-	// COSXClipboardAnyBMPConverter overrides
-	virtual CString		fromIClipboard(const CString&) const;
-	virtual CString		toIClipboard(const CString&) const;
+	// OSXClipboardAnyBMPConverter overrides
+	virtual String		fromIClipboard(const String&) const;
+	virtual String		toIClipboard(const String&) const;
 
 	// generic encoding converter
-	static CString		convertString(const CString& data,
+	static String		convertString(const String& data,
 							CFStringEncoding fromEncoding,
 							CFStringEncoding toEncoding);
 };

@@ -26,7 +26,7 @@
 // CMSWindowsUtil
 //
 
-CString
+String
 CMSWindowsUtil::getString(HINSTANCE instance, DWORD id)
 {
 	char buffer[1024];
@@ -51,12 +51,12 @@ CMSWindowsUtil::getString(HINSTANCE instance, DWORD id)
 	} while (n == size);
 	msg[n] = '\0';
 
-	CString result(msg);
+	String result(msg);
 	delete[] msg;
 	return result;
 }
 
-CString
+String
 CMSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
 {
 	char* buffer;
@@ -69,12 +69,12 @@ CMSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
 								(LPTSTR)&buffer,
 								0,
 								NULL) == 0) {
-		CString errorString = synergy::string::sprintf("%d", error);
+		String errorString = synergy::string::sprintf("%d", error);
 		return synergy::string::format(getString(hinstance, id).c_str(),
 							errorString.c_str());
 	}
 	else {
-		CString result(buffer);
+		String result(buffer);
 		LocalFree(buffer);
 		return result;
 	}

@@ -37,12 +37,12 @@ server_stubCheckUnexpectedArgs()
 	return false;
 }
 
-TEST(CServerArgsParsingTests, parseServerArgs_addressArg_setSynergyAddress)
+TEST(ServerArgsParsingTests, parseServerArgs_addressArg_setSynergyAddress)
 {
-	NiceMock<CMockArgParser> argParser;
+	NiceMock<MockArgParser> argParser;
 	ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
 	ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
-	CServerArgs serverArgs;
+	ServerArgs serverArgs;
 	const int argc = 3;
 	const char* kAddressCmd[argc] = { "stub", "--address", "mock_address" };
 
@@ -51,12 +51,12 @@ TEST(CServerArgsParsingTests, parseServerArgs_addressArg_setSynergyAddress)
 	EXPECT_EQ("mock_address", serverArgs.m_synergyAddress);
 }
 
-TEST(CServerArgsParsingTests, parseServerArgs_configArg_setConfigFile)
+TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile)
 {
-	NiceMock<CMockArgParser> argParser;
+	NiceMock<MockArgParser> argParser;
 	ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
 	ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
-	CServerArgs serverArgs;
+	ServerArgs serverArgs;
 	const int argc = 3;
 	const char* kConfigCmd[argc] = { "stub", "--config", "mock_configFile" };
 

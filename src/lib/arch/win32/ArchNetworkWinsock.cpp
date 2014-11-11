@@ -82,25 +82,25 @@ netGetProcAddress(HMODULE module, LPCSTR name)
 	return func;
 }
 
-CArchNetAddressImpl*
-CArchNetAddressImpl::alloc(size_t size)
+ArchNetAddressImpl*
+ArchNetAddressImpl::alloc(size_t size)
 {
 	size_t totalSize = size + ADDR_HDR_SIZE;
-	CArchNetAddressImpl* addr = (CArchNetAddressImpl*)malloc(totalSize);
+	ArchNetAddressImpl* addr = (ArchNetAddressImpl*)malloc(totalSize);
 	addr->m_len = (int)size;
 	return addr;
 }
 
 
 //
-// CArchNetworkWinsock
+// ArchNetworkWinsock
 //
 
-CArchNetworkWinsock::CArchNetworkWinsock()
+ArchNetworkWinsock::ArchNetworkWinsock()
 {
 }
 
-CArchNetworkWinsock::~CArchNetworkWinsock()
+ArchNetworkWinsock::~ArchNetworkWinsock()
 {
 	if (s_networkModule != NULL) {
 		WSACleanup_winsock();
@@ -111,14 +111,14 @@ CArchNetworkWinsock::~CArchNetworkWinsock()
 	}
 	ARCH->closeMutex(m_mutex);
 
-	CEventList::iterator it;
+	EventList::iterator it;
 	for (it = m_unblockEvents.begin(); it != m_unblockEvents.end(); it++) {
 		delete *it;
 	}
 }
 
 void
-CArchNetworkWinsock::init()
+ArchNetworkWinsock::init()
 {
 	static const char* s_library[] = { "ws2_32.dll" };
 
@@ -142,7 +142,7 @@ CArchNetworkWinsock::init()
 }
 
 void
-CArchNetworkWinsock::initModule(HMODULE module)
+ArchNetworkWinsock::initModule(HMODULE module)
 {
 	if (module == NULL) {
 		throw XArchNetworkSupport("");
@@ -199,8 +199,8 @@ CArchNetworkWinsock::initModule(HMODULE module)
 	s_networkModule = module;
 }
 
-CArchSocket
-CArchNetworkWinsock::newSocket(EAddressFamily family, ESocketType type)
+ArchSocket
+ArchNetworkWinsock::newSocket(EAddressFamily family, ESocketType type)
 {
 	// create socket
 	SOCKET fd = socket_winsock(s_family[family], s_type[type], 0);
@@ -216,7 +216,7 @@ CArchNetworkWinsock::newSocket(EAddressFamily family, ESocketType type)
 	}
 
 	// allocate socket object
-	CArchSocketImpl* socket = new CArchSocketImpl;
+	ArchSocketImpl* socket = new ArchSocketImpl;
 	socket->m_socket        = fd;
 	socket->m_refCount      = 1;
 	socket->m_event         = WSACreateEvent_winsock();
@@ -224,8 +224,8 @@ CArchNetworkWinsock::newSocket(EAddressFamily family, ESocketType type)
 	return socket;
 }
 
-CArchSocket
-CArchNetworkWinsock::copySocket(CArchSocket s)
+ArchSocket
+ArchNetworkWinsock::copySocket(ArchSocket s)
 {
 	assert(s != NULL);
 
@@ -237,7 +237,7 @@ CArchNetworkWinsock::copySocket(CArchSocket s)
 }
 
 void
-CArchNetworkWinsock::closeSocket(CArchSocket s)
+ArchNetworkWinsock::closeSocket(ArchSocket s)
 {
 	assert(s != NULL);
 
@@ -262,7 +262,7 @@ CArchNetworkWinsock::closeSocket(CArchSocket s)
 }
 
 void
-CArchNetworkWinsock::closeSocketForRead(CArchSocket s)
+ArchNetworkWinsock::closeSocketForRead(ArchSocket s)
 {
 	assert(s != NULL);
 
@@ -274,7 +274,7 @@ CArchNetworkWinsock::closeSocketForRead(CArchSocket s)
 }
 
 void
-CArchNetworkWinsock::closeSocketForWrite(CArchSocket s)
+ArchNetworkWinsock::closeSocketForWrite(ArchSocket s)
 {
 	assert(s != NULL);
 
@@ -286,7 +286,7 @@ CArchNetworkWinsock::closeSocketForWrite(CArchSocket s)
 }
 
 void
-CArchNetworkWinsock::bindSocket(CArchSocket s, CArchNetAddress addr)
+ArchNetworkWinsock::bindSocket(ArchSocket s, ArchNetAddress addr)
 {
 	assert(s    != NULL);
 	assert(addr != NULL);
@@ -297,7 +297,7 @@ CArchNetworkWinsock::bindSocket(CArchSocket s, CArchNetAddress addr)
 }
 
 void
-CArchNetworkWinsock::listenOnSocket(CArchSocket s)
+ArchNetworkWinsock::listenOnSocket(ArchSocket s)
 {
 	assert(s != NULL);
 
@@ -307,14 +307,14 @@ CArchNetworkWinsock::listenOnSocket(CArchSocket s)
 	}
 }
 
-CArchSocket
-CArchNetworkWinsock::acceptSocket(CArchSocket s, CArchNetAddress* addr)
+ArchSocket
+ArchNetworkWinsock::acceptSocket(ArchSocket s, ArchNetAddress* addr)
 {
 	assert(s != NULL);
 
 	// create new socket and temporary address
-	CArchSocketImpl* socket = new CArchSocketImpl;
-	CArchNetAddress tmp = CArchNetAddressImpl::alloc(sizeof(struct sockaddr));
+	ArchSocketImpl* socket = new ArchSocketImpl;
+	ArchNetAddress tmp = ArchNetAddressImpl::alloc(sizeof(struct sockaddr));
 
 	// accept on socket
 	SOCKET fd = accept_winsock(s->m_socket, &tmp->m_addr, &tmp->m_len);
@@ -356,7 +356,7 @@ CArchNetworkWinsock::acceptSocket(CArchSocket s, CArchNetAddress* addr)
 }
 
 bool
-CArchNetworkWinsock::connectSocket(CArchSocket s, CArchNetAddress addr)
+ArchNetworkWinsock::connectSocket(ArchSocket s, ArchNetAddress addr)
 {
 	assert(s    != NULL);
 	assert(addr != NULL);
@@ -375,7 +375,7 @@ CArchNetworkWinsock::connectSocket(CArchSocket s, CArchNetAddress addr)
 }
 
 int
-CArchNetworkWinsock::pollSocket(CPollEntry pe[], int num, double timeout)
+ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout)
 {
 	int i;
 	DWORD n;
@@ -429,8 +429,8 @@ CArchNetworkWinsock::pollSocket(CPollEntry pe[], int num, double timeout)
 	}
 
 	// add the unblock event
-	CArchMultithreadWindows* mt = CArchMultithreadWindows::getInstance();
-	CArchThread thread     = mt->newCurrentThread();
+	ArchMultithreadWindows* mt = ArchMultithreadWindows::getInstance();
+	ArchThread thread     = mt->newCurrentThread();
 	WSAEVENT* unblockEvent = (WSAEVENT*)mt->getNetworkDataForThread(thread);
 	ARCH->closeThread(thread);
 	if (unblockEvent == NULL) {
@@ -527,10 +527,10 @@ CArchNetworkWinsock::pollSocket(CPollEntry pe[], int num, double timeout)
 }
 
 void
-CArchNetworkWinsock::unblockPollSocket(CArchThread thread)
+ArchNetworkWinsock::unblockPollSocket(ArchThread thread)
 {
 	// set the unblock event
-	CArchMultithreadWindows* mt = CArchMultithreadWindows::getInstance();
+	ArchMultithreadWindows* mt = ArchMultithreadWindows::getInstance();
 	WSAEVENT* unblockEvent = (WSAEVENT*)mt->getNetworkDataForThread(thread);
 	if (unblockEvent != NULL) {
 		WSASetEvent_winsock(*unblockEvent);
@@ -538,7 +538,7 @@ CArchNetworkWinsock::unblockPollSocket(CArchThread thread)
 }
 
 size_t
-CArchNetworkWinsock::readSocket(CArchSocket s, void* buf, size_t len)
+ArchNetworkWinsock::readSocket(ArchSocket s, void* buf, size_t len)
 {
 	assert(s != NULL);
 
@@ -554,7 +554,7 @@ CArchNetworkWinsock::readSocket(CArchSocket s, void* buf, size_t len)
 }
 
 size_t
-CArchNetworkWinsock::writeSocket(CArchSocket s, const void* buf, size_t len)
+ArchNetworkWinsock::writeSocket(ArchSocket s, const void* buf, size_t len)
 {
 	assert(s != NULL);
 
@@ -574,7 +574,7 @@ CArchNetworkWinsock::writeSocket(CArchSocket s, const void* buf, size_t len)
 }
 
 void
-CArchNetworkWinsock::throwErrorOnSocket(CArchSocket s)
+ArchNetworkWinsock::throwErrorOnSocket(ArchSocket s)
 {
 	assert(s != NULL);
 
@@ -593,7 +593,7 @@ CArchNetworkWinsock::throwErrorOnSocket(CArchSocket s)
 }
 
 void
-CArchNetworkWinsock::setBlockingOnSocket(SOCKET s, bool blocking)
+ArchNetworkWinsock::setBlockingOnSocket(SOCKET s, bool blocking)
 {
 	assert(s != 0);
 
@@ -604,7 +604,7 @@ CArchNetworkWinsock::setBlockingOnSocket(SOCKET s, bool blocking)
 }
 
 bool
-CArchNetworkWinsock::setNoDelayOnSocket(CArchSocket s, bool noDelay)
+ArchNetworkWinsock::setNoDelayOnSocket(ArchSocket s, bool noDelay)
 {
 	assert(s != NULL);
 
@@ -628,7 +628,7 @@ CArchNetworkWinsock::setNoDelayOnSocket(CArchSocket s, bool noDelay)
 }
 
 bool
-CArchNetworkWinsock::setReuseAddrOnSocket(CArchSocket s, bool reuse)
+ArchNetworkWinsock::setReuseAddrOnSocket(ArchSocket s, bool reuse)
 {
 	assert(s != NULL);
 
@@ -652,7 +652,7 @@ CArchNetworkWinsock::setReuseAddrOnSocket(CArchSocket s, bool reuse)
 }
 
 std::string
-CArchNetworkWinsock::getHostName()
+ArchNetworkWinsock::getHostName()
 {
 	char name[256];
 	if (gethostname_winsock(name, sizeof(name)) == -1) {
@@ -664,13 +664,13 @@ CArchNetworkWinsock::getHostName()
 	return name;
 }
 
-CArchNetAddress
-CArchNetworkWinsock::newAnyAddr(EAddressFamily family)
+ArchNetAddress
+ArchNetworkWinsock::newAnyAddr(EAddressFamily family)
 {
-	CArchNetAddressImpl* addr = NULL;
+	ArchNetAddressImpl* addr = NULL;
 	switch (family) {
 	case kINET: {
-		addr = CArchNetAddressImpl::alloc(sizeof(struct sockaddr_in));
+		addr = ArchNetAddressImpl::alloc(sizeof(struct sockaddr_in));
 		struct sockaddr_in* ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
 		ipAddr->sin_family         = AF_INET;
 		ipAddr->sin_port           = 0;
@@ -684,21 +684,21 @@ CArchNetworkWinsock::newAnyAddr(EAddressFamily family)
 	return addr;
 }
 
-CArchNetAddress
-CArchNetworkWinsock::copyAddr(CArchNetAddress addr)
+ArchNetAddress
+ArchNetworkWinsock::copyAddr(ArchNetAddress addr)
 {
 	assert(addr != NULL);
 
-	CArchNetAddressImpl* copy = CArchNetAddressImpl::alloc(addr->m_len);
+	ArchNetAddressImpl* copy = ArchNetAddressImpl::alloc(addr->m_len);
 	memcpy(TYPED_ADDR(void, copy), TYPED_ADDR(void, addr), addr->m_len);
 	return copy;
 }
 
-CArchNetAddress
-CArchNetworkWinsock::nameToAddr(const std::string& name)
+ArchNetAddress
+ArchNetworkWinsock::nameToAddr(const std::string& name)
 {
 	// allocate address
-	CArchNetAddressImpl* addr = NULL;
+	ArchNetAddressImpl* addr = NULL;
 
 	// try to convert assuming an IPv4 dot notation address
 	struct sockaddr_in inaddr;
@@ -708,7 +708,7 @@ CArchNetworkWinsock::nameToAddr(const std::string& name)
 	inaddr.sin_addr.s_addr = inet_addr_winsock(name.c_str());
 	if (inaddr.sin_addr.s_addr != INADDR_NONE) {
 		// it's a dot notation address
-		addr = CArchNetAddressImpl::alloc(sizeof(struct sockaddr_in));
+		addr = ArchNetAddressImpl::alloc(sizeof(struct sockaddr_in));
 		memcpy(TYPED_ADDR(void, addr), &inaddr, addr->m_len);
 	}
 
@@ -721,7 +721,7 @@ CArchNetworkWinsock::nameToAddr(const std::string& name)
 
 		// copy over address (only IPv4 currently supported)
 		if (info->h_addrtype == AF_INET) {
-			addr = CArchNetAddressImpl::alloc(sizeof(struct sockaddr_in));
+			addr = ArchNetAddressImpl::alloc(sizeof(struct sockaddr_in));
 			memcpy(&inaddr.sin_addr, info->h_addr_list[0],
 								sizeof(inaddr.sin_addr));
 			memcpy(TYPED_ADDR(void, addr), &inaddr, addr->m_len);
@@ -737,7 +737,7 @@ CArchNetworkWinsock::nameToAddr(const std::string& name)
 }
 
 void
-CArchNetworkWinsock::closeAddr(CArchNetAddress addr)
+ArchNetworkWinsock::closeAddr(ArchNetAddress addr)
 {
 	assert(addr != NULL);
 
@@ -745,7 +745,7 @@ CArchNetworkWinsock::closeAddr(CArchNetAddress addr)
 }
 
 std::string
-CArchNetworkWinsock::addrToName(CArchNetAddress addr)
+ArchNetworkWinsock::addrToName(ArchNetAddress addr)
 {
 	assert(addr != NULL);
 
@@ -762,7 +762,7 @@ CArchNetworkWinsock::addrToName(CArchNetAddress addr)
 }
 
 std::string
-CArchNetworkWinsock::addrToString(CArchNetAddress addr)
+ArchNetworkWinsock::addrToString(ArchNetAddress addr)
 {
 	assert(addr != NULL);
 
@@ -780,7 +780,7 @@ CArchNetworkWinsock::addrToString(CArchNetAddress addr)
 }
 
 IArchNetwork::EAddressFamily
-CArchNetworkWinsock::getAddrFamily(CArchNetAddress addr)
+ArchNetworkWinsock::getAddrFamily(ArchNetAddress addr)
 {
 	assert(addr != NULL);
 
@@ -794,7 +794,7 @@ CArchNetworkWinsock::getAddrFamily(CArchNetAddress addr)
 }
 
 void
-CArchNetworkWinsock::setAddrPort(CArchNetAddress addr, int port)
+ArchNetworkWinsock::setAddrPort(ArchNetAddress addr, int port)
 {
 	assert(addr != NULL);
 
@@ -813,7 +813,7 @@ CArchNetworkWinsock::setAddrPort(CArchNetAddress addr, int port)
 }
 
 int
-CArchNetworkWinsock::getAddrPort(CArchNetAddress addr)
+ArchNetworkWinsock::getAddrPort(ArchNetAddress addr)
 {
 	assert(addr != NULL);
 
@@ -831,7 +831,7 @@ CArchNetworkWinsock::getAddrPort(CArchNetAddress addr)
 }
 
 bool
-CArchNetworkWinsock::isAnyAddr(CArchNetAddress addr)
+ArchNetworkWinsock::isAnyAddr(ArchNetAddress addr)
 {
 	assert(addr != NULL);
 
@@ -850,14 +850,14 @@ CArchNetworkWinsock::isAnyAddr(CArchNetAddress addr)
 }
 
 bool
-CArchNetworkWinsock::isEqualAddr(CArchNetAddress a, CArchNetAddress b)
+ArchNetworkWinsock::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
 {
 	return (a == b || (a->m_len == b->m_len &&
 			memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0));
 }
 
 void
-CArchNetworkWinsock::throwError(int err)
+ArchNetworkWinsock::throwError(int err)
 {
 	switch (err) {
 	case WSAEACCES:
@@ -928,7 +928,7 @@ CArchNetworkWinsock::throwError(int err)
 }
 
 void
-CArchNetworkWinsock::throwNameError(int err)
+ArchNetworkWinsock::throwNameError(int err)
 {
 	switch (err) {
 	case WSAHOST_NOT_FOUND:

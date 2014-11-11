@@ -20,14 +20,14 @@
 
 #include "synergy/ServerTaskBarReceiver.h"
 
-class CBufferedLogOutputter;
+class BufferedLogOutputter;
 class IEventQueue;
 
-//! Implementation of CServerTaskBarReceiver for X Windows
-class CXWindowsServerTaskBarReceiver : public CServerTaskBarReceiver {
+//! Implementation of ServerTaskBarReceiver for X Windows
+class CXWindowsServerTaskBarReceiver : public ServerTaskBarReceiver {
 public:
 	CXWindowsServerTaskBarReceiver(
-		const CBufferedLogOutputter*, IEventQueue* events);
+		const BufferedLogOutputter*, IEventQueue* events);
 	virtual ~CXWindowsServerTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides

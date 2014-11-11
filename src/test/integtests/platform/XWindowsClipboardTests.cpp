@@ -91,7 +91,7 @@ TEST_F(CXWindowsClipboardTests, add_newValue_valueWasStored)
 	
 	clipboard.add(IClipboard::kText, "synergy rocks!");
 	
-	CString actual = clipboard.get(IClipboard::kText);
+	String actual = clipboard.get(IClipboard::kText);
 	EXPECT_EQ("synergy rocks!", actual);
 }
 
@@ -102,7 +102,7 @@ TEST_F(CXWindowsClipboardTests, add_replaceValue_valueWasReplaced)
 	clipboard.add(IClipboard::kText, "synergy rocks!");
 	clipboard.add(IClipboard::kText, "maxivista sucks"); // haha, just kidding.
 	
-	CString actual = clipboard.get(IClipboard::kText);
+	String actual = clipboard.get(IClipboard::kText);
 	EXPECT_EQ("maxivista sucks", actual);
 }
 
@@ -139,7 +139,7 @@ TEST_F(CXWindowsClipboardTests, get_withNoFormats_returnsEmpty)
 {
 	CXWindowsClipboard clipboard = createClipboard();
 	
-	CString actual = clipboard.get(IClipboard::kText);
+	String actual = clipboard.get(IClipboard::kText);
 	
 	EXPECT_EQ("", actual);
 }
@@ -149,7 +149,7 @@ TEST_F(CXWindowsClipboardTests, get_withFormatAdded_returnsExpected)
 	CXWindowsClipboard clipboard = createClipboard();
 	clipboard.add(IClipboard::kText, "synergy rocks!");
 	
-	CString actual = clipboard.get(IClipboard::kText);
+	String actual = clipboard.get(IClipboard::kText);
 	
 	EXPECT_EQ("synergy rocks!", actual);
 }

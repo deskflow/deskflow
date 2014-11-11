@@ -21,17 +21,17 @@
 
 class IEventQueue;
 
-class CFileChunker {
+class FileChunker {
 public:
 	//! FileChunk data
-	class CFileChunk {
+	class FileChunk {
 	public:
-		CFileChunk(size_t chunkSize) : m_dataSize(chunkSize - 2)
+		FileChunk(size_t chunkSize) : m_dataSize(chunkSize - 2)
 		{
 			m_chunk = new char[chunkSize]; 
 		}
 
-		~CFileChunk() { delete[] m_chunk; }
+		~FileChunk() { delete[] m_chunk; }
 
 	public:
 		const size_t	m_dataSize;
@@ -39,7 +39,7 @@ public:
 	};
 
 	static void			sendFileChunks(char* filename, IEventQueue* events, void* eventTarget);
-	static CString		intToString(size_t i);
+	static String		intToString(size_t i);
 
 private:
 	static const size_t m_chunkSize;

@@ -90,7 +90,7 @@ public:
 	*/
 	virtual std::string	getToolTip() const = 0;
 
-	virtual void updateStatus(INode*, const CString& errorMsg) = 0;
+	virtual void updateStatus(INode*, const String& errorMsg) = 0;
 
 	virtual void cleanup() {}
 

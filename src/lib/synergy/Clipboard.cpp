@@ -19,10 +19,10 @@
 #include "synergy/Clipboard.h"
 
 //
-// CClipboard
+// Clipboard
 //
 
-CClipboard::CClipboard() :
+Clipboard::Clipboard() :
 	m_open(false),
 	m_owner(false)
 {
@@ -31,13 +31,13 @@ CClipboard::CClipboard() :
 	close();
 }
 
-CClipboard::~CClipboard()
+Clipboard::~Clipboard()
 {
 	// do nothing
 }
 
 bool
-CClipboard::empty()
+Clipboard::empty()
 {
 	assert(m_open);
 
@@ -57,7 +57,7 @@ CClipboard::empty()
 }
 
 void
-CClipboard::add(EFormat format, const CString& data)
+Clipboard::add(EFormat format, const String& data)
 {
 	assert(m_open);
 	assert(m_owner);
@@ -67,7 +67,7 @@ CClipboard::add(EFormat format, const CString& data)
 }
 
 bool
-CClipboard::open(Time time) const
+Clipboard::open(Time time) const
 {
 	assert(!m_open);
 
@@ -78,41 +78,41 @@ CClipboard::open(Time time) const
 }
 
 void
-CClipboard::close() const
+Clipboard::close() const
 {
 	assert(m_open);
 
 	m_open = false;
 }
 
-CClipboard::Time
-CClipboard::getTime() const
+Clipboard::Time
+Clipboard::getTime() const
 {
 	return m_timeOwned;
 }
 
 bool
-CClipboard::has(EFormat format) const
+Clipboard::has(EFormat format) const
 {
 	assert(m_open);
 	return m_added[format];
 }
 
-CString
-CClipboard::get(EFormat format) const
+String
+Clipboard::get(EFormat format) const
 {
 	assert(m_open);
 	return m_data[format];
 }
 
 void
-CClipboard::unmarshall(const CString& data, Time time)
+Clipboard::unmarshall(const String& data, Time time)
 {
 	IClipboard::unmarshall(this, data, time);
 }
 
-CString
-CClipboard::marshall() const
+String
+Clipboard::marshall() const
 {
 	return IClipboard::marshall(this);
 }

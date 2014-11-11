@@ -21,33 +21,33 @@
 #include "base/String.h"
 #include "base/EventTypes.h"
 
-class CDragInformation;
-typedef std::vector<CDragInformation> CDragFileList;
+class DragInformation;
+typedef std::vector<DragInformation> DragFileList;
 
-class CDragInformation {
+class DragInformation {
 public:
-	CDragInformation();
-	~CDragInformation() { }
+	DragInformation();
+	~DragInformation() { }
 	
-	CString&			getFilename() { return m_filename; }
-	void				setFilename(CString& name) { m_filename = name; }
+	String&			getFilename() { return m_filename; }
+	void				setFilename(String& name) { m_filename = name; }
 	size_t				getFilesize() { return m_filesize; }
 	void				setFilesize(size_t size) { m_filesize = size; }
 	
-	static void			parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CString data);
-	static CString		getDragFileExtension(CString filename);
+	static void			parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, String data);
+	static String		getDragFileExtension(String filename);
 	// helper function to setup drag info
 	// example: filename1,filesize1,filename2,filesize2,
 	// return file count
-	static int			setupDragInfo(CDragFileList& fileList, CString& output);
+	static int			setupDragInfo(DragFileList& fileList, String& output);
 
-	static bool			isFileValid(CString filename);
-
-private:
-	static size_t		stringToNum(CString& str);
-	static CString		getFileSize(CString& filename);
+	static bool			isFileValid(String filename);
 
 private:
-	CString				m_filename;
+	static size_t		stringToNum(String& str);
+	static String		getFileSize(String& filename);
+
+private:
+	String				m_filename;
 	size_t				m_filesize;
 };

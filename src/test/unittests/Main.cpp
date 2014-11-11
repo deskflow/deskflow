@@ -30,13 +30,13 @@ main(int argc, char **argv)
 {
 #if SYSAPI_WIN32
 	// HACK: shouldn't be needed, but logging fails without this.
-	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+	ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 
-	CArch arch;
+	Arch arch;
 	arch.init();
 	
-	CLog log;
+	Log log;
 	log.setFilter(kDEBUG4);
 
 	testing::InitGoogleTest(&argc, argv);

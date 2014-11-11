@@ -83,27 +83,27 @@ inet_aton(const char* cp, struct in_addr* inp)
 #endif
 
 //
-// CArchNetworkBSD
+// ArchNetworkBSD
 //
 
-CArchNetworkBSD::CArchNetworkBSD()
+ArchNetworkBSD::ArchNetworkBSD()
 {
 }
 
-CArchNetworkBSD::~CArchNetworkBSD()
+ArchNetworkBSD::~ArchNetworkBSD()
 {
 	ARCH->closeMutex(m_mutex);
 }
 
 void
-CArchNetworkBSD::init()
+ArchNetworkBSD::init()
 {
 	// create mutex to make some calls thread safe
 	m_mutex = ARCH->newMutex();
 }
 
-CArchSocket
-CArchNetworkBSD::newSocket(EAddressFamily family, ESocketType type)
+ArchSocket
+ArchNetworkBSD::newSocket(EAddressFamily family, ESocketType type)
 {
 	// create socket
 	int fd = socket(s_family[family], s_type[type], 0);
@@ -119,14 +119,14 @@ CArchNetworkBSD::newSocket(EAddressFamily family, ESocketType type)
 	}
 
 	// allocate socket object
-	CArchSocketImpl* newSocket = new CArchSocketImpl;
+	ArchSocketImpl* newSocket = new ArchSocketImpl;
 	newSocket->m_fd            = fd;
 	newSocket->m_refCount      = 1;
 	return newSocket;
 }
 
-CArchSocket
-CArchNetworkBSD::copySocket(CArchSocket s)
+ArchSocket
+ArchNetworkBSD::copySocket(ArchSocket s)
 {
 	assert(s != NULL);
 
@@ -138,7 +138,7 @@ CArchNetworkBSD::copySocket(CArchSocket s)
 }
 
 void
-CArchNetworkBSD::closeSocket(CArchSocket s)
+ArchNetworkBSD::closeSocket(ArchSocket s)
 {
 	assert(s != NULL);
 
@@ -162,7 +162,7 @@ CArchNetworkBSD::closeSocket(CArchSocket s)
 }
 
 void
-CArchNetworkBSD::closeSocketForRead(CArchSocket s)
+ArchNetworkBSD::closeSocketForRead(ArchSocket s)
 {
 	assert(s != NULL);
 
@@ -174,7 +174,7 @@ CArchNetworkBSD::closeSocketForRead(CArchSocket s)
 }
 
 void
-CArchNetworkBSD::closeSocketForWrite(CArchSocket s)
+ArchNetworkBSD::closeSocketForWrite(ArchSocket s)
 {
 	assert(s != NULL);
 
@@ -186,7 +186,7 @@ CArchNetworkBSD::closeSocketForWrite(CArchSocket s)
 }
 
 void
-CArchNetworkBSD::bindSocket(CArchSocket s, CArchNetAddress addr)
+ArchNetworkBSD::bindSocket(ArchSocket s, ArchNetAddress addr)
 {
 	assert(s    != NULL);
 	assert(addr != NULL);
@@ -197,7 +197,7 @@ CArchNetworkBSD::bindSocket(CArchSocket s, CArchNetAddress addr)
 }
 
 void
-CArchNetworkBSD::listenOnSocket(CArchSocket s)
+ArchNetworkBSD::listenOnSocket(ArchSocket s)
 {
 	assert(s != NULL);
 
@@ -207,20 +207,20 @@ CArchNetworkBSD::listenOnSocket(CArchSocket s)
 	}
 }
 
-CArchSocket
-CArchNetworkBSD::acceptSocket(CArchSocket s, CArchNetAddress* addr)
+ArchSocket
+ArchNetworkBSD::acceptSocket(ArchSocket s, ArchNetAddress* addr)
 {
 	assert(s != NULL);
 
 	// if user passed NULL in addr then use scratch space
-	CArchNetAddress dummy;
+	ArchNetAddress dummy;
 	if (addr == NULL) {
 		addr = &dummy;
 	}
 
 	// create new socket and address
-	CArchSocketImpl* newSocket = new CArchSocketImpl;
-	*addr                      = new CArchNetAddressImpl;
+	ArchSocketImpl* newSocket = new ArchSocketImpl;
+	*addr                      = new ArchNetAddressImpl;
 
 	// accept on socket
 	ACCEPT_TYPE_ARG3 len = (ACCEPT_TYPE_ARG3)((*addr)->m_len);
@@ -261,7 +261,7 @@ CArchNetworkBSD::acceptSocket(CArchSocket s, CArchNetAddress* addr)
 }
 
 bool
-CArchNetworkBSD::connectSocket(CArchSocket s, CArchNetAddress addr)
+ArchNetworkBSD::connectSocket(ArchSocket s, ArchNetAddress addr)
 {
 	assert(s    != NULL);
 	assert(addr != NULL);
@@ -281,7 +281,7 @@ CArchNetworkBSD::connectSocket(CArchSocket s, CArchNetAddress addr)
 #if HAVE_POLL
 
 int
-CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
+ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
 {
 	assert(pe != NULL || num == 0);
 
@@ -373,7 +373,7 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 #else
 
 int
-CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
+ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
 {
 	int i, n;
 
@@ -497,7 +497,7 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 #endif
 
 void
-CArchNetworkBSD::unblockPollSocket(CArchThread thread)
+ArchNetworkBSD::unblockPollSocket(ArchThread thread)
 {
 	const int* unblockPipe = getUnblockPipeForThread(thread);
 	if (unblockPipe != NULL) {
@@ -509,7 +509,7 @@ CArchNetworkBSD::unblockPollSocket(CArchThread thread)
 }
 
 size_t
-CArchNetworkBSD::readSocket(CArchSocket s, void* buf, size_t len)
+ArchNetworkBSD::readSocket(ArchSocket s, void* buf, size_t len)
 {
 	assert(s != NULL);
 
@@ -524,7 +524,7 @@ CArchNetworkBSD::readSocket(CArchSocket s, void* buf, size_t len)
 }
 
 size_t
-CArchNetworkBSD::writeSocket(CArchSocket s, const void* buf, size_t len)
+ArchNetworkBSD::writeSocket(ArchSocket s, const void* buf, size_t len)
 {
 	assert(s != NULL);
 
@@ -539,7 +539,7 @@ CArchNetworkBSD::writeSocket(CArchSocket s, const void* buf, size_t len)
 }
 
 void
-CArchNetworkBSD::throwErrorOnSocket(CArchSocket s)
+ArchNetworkBSD::throwErrorOnSocket(ArchSocket s)
 {
 	assert(s != NULL);
 
@@ -558,7 +558,7 @@ CArchNetworkBSD::throwErrorOnSocket(CArchSocket s)
 }
 
 void
-CArchNetworkBSD::setBlockingOnSocket(int fd, bool blocking)
+ArchNetworkBSD::setBlockingOnSocket(int fd, bool blocking)
 {
 	assert(fd != -1);
 
@@ -578,7 +578,7 @@ CArchNetworkBSD::setBlockingOnSocket(int fd, bool blocking)
 }
 
 bool
-CArchNetworkBSD::setNoDelayOnSocket(CArchSocket s, bool noDelay)
+ArchNetworkBSD::setNoDelayOnSocket(ArchSocket s, bool noDelay)
 {
 	assert(s != NULL);
 
@@ -601,7 +601,7 @@ CArchNetworkBSD::setNoDelayOnSocket(CArchSocket s, bool noDelay)
 }
 
 bool
-CArchNetworkBSD::setReuseAddrOnSocket(CArchSocket s, bool reuse)
+ArchNetworkBSD::setReuseAddrOnSocket(ArchSocket s, bool reuse)
 {
 	assert(s != NULL);
 
@@ -624,7 +624,7 @@ CArchNetworkBSD::setReuseAddrOnSocket(CArchSocket s, bool reuse)
 }
 
 std::string
-CArchNetworkBSD::getHostName()
+ArchNetworkBSD::getHostName()
 {
 	char name[256];
 	if (gethostname(name, sizeof(name)) == -1) {
@@ -636,11 +636,11 @@ CArchNetworkBSD::getHostName()
 	return name;
 }
 
-CArchNetAddress
-CArchNetworkBSD::newAnyAddr(EAddressFamily family)
+ArchNetAddress
+ArchNetworkBSD::newAnyAddr(EAddressFamily family)
 {
 	// allocate address
-	CArchNetAddressImpl* addr = new CArchNetAddressImpl;
+	ArchNetAddressImpl* addr = new ArchNetAddressImpl;
 
 	// fill it in
 	switch (family) {
@@ -662,20 +662,20 @@ CArchNetworkBSD::newAnyAddr(EAddressFamily family)
 	return addr;
 }
 
-CArchNetAddress
-CArchNetworkBSD::copyAddr(CArchNetAddress addr)
+ArchNetAddress
+ArchNetworkBSD::copyAddr(ArchNetAddress addr)
 {
 	assert(addr != NULL);
 
 	// allocate and copy address
-	return new CArchNetAddressImpl(*addr);
+	return new ArchNetAddressImpl(*addr);
 }
 
-CArchNetAddress
-CArchNetworkBSD::nameToAddr(const std::string& name)
+ArchNetAddress
+ArchNetworkBSD::nameToAddr(const std::string& name)
 {
 	// allocate address
-	CArchNetAddressImpl* addr = new CArchNetAddressImpl;
+	ArchNetAddressImpl* addr = new ArchNetAddressImpl;
 
 	// try to convert assuming an IPv4 dot notation address
 	struct sockaddr_in inaddr;
@@ -723,7 +723,7 @@ CArchNetworkBSD::nameToAddr(const std::string& name)
 }
 
 void
-CArchNetworkBSD::closeAddr(CArchNetAddress addr)
+ArchNetworkBSD::closeAddr(ArchNetAddress addr)
 {
 	assert(addr != NULL);
 
@@ -731,7 +731,7 @@ CArchNetworkBSD::closeAddr(CArchNetAddress addr)
 }
 
 std::string
-CArchNetworkBSD::addrToName(CArchNetAddress addr)
+ArchNetworkBSD::addrToName(ArchNetAddress addr)
 {
 	assert(addr != NULL);
 
@@ -755,7 +755,7 @@ CArchNetworkBSD::addrToName(CArchNetAddress addr)
 }
 
 std::string
-CArchNetworkBSD::addrToString(CArchNetAddress addr)
+ArchNetworkBSD::addrToString(ArchNetAddress addr)
 {
 	assert(addr != NULL);
 
@@ -776,7 +776,7 @@ CArchNetworkBSD::addrToString(CArchNetAddress addr)
 }
 
 IArchNetwork::EAddressFamily
-CArchNetworkBSD::getAddrFamily(CArchNetAddress addr)
+ArchNetworkBSD::getAddrFamily(ArchNetAddress addr)
 {
 	assert(addr != NULL);
 
@@ -790,7 +790,7 @@ CArchNetworkBSD::getAddrFamily(CArchNetAddress addr)
 }
 
 void
-CArchNetworkBSD::setAddrPort(CArchNetAddress addr, int port)
+ArchNetworkBSD::setAddrPort(ArchNetAddress addr, int port)
 {
 	assert(addr != NULL);
 
@@ -809,7 +809,7 @@ CArchNetworkBSD::setAddrPort(CArchNetAddress addr, int port)
 }
 
 int
-CArchNetworkBSD::getAddrPort(CArchNetAddress addr)
+ArchNetworkBSD::getAddrPort(ArchNetAddress addr)
 {
 	assert(addr != NULL);
 
@@ -827,7 +827,7 @@ CArchNetworkBSD::getAddrPort(CArchNetAddress addr)
 }
 
 bool
-CArchNetworkBSD::isAnyAddr(CArchNetAddress addr)
+ArchNetworkBSD::isAnyAddr(ArchNetAddress addr)
 {
 	assert(addr != NULL);
 
@@ -846,26 +846,26 @@ CArchNetworkBSD::isAnyAddr(CArchNetAddress addr)
 }
 
 bool
-CArchNetworkBSD::isEqualAddr(CArchNetAddress a, CArchNetAddress b)
+ArchNetworkBSD::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
 {
 	return (a->m_len == b->m_len &&
 			memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0);
 }
 
 const int*
-CArchNetworkBSD::getUnblockPipe()
+ArchNetworkBSD::getUnblockPipe()
 {
-	CArchMultithreadPosix* mt = CArchMultithreadPosix::getInstance();
-	CArchThread thread        = mt->newCurrentThread();
+	ArchMultithreadPosix* mt = ArchMultithreadPosix::getInstance();
+	ArchThread thread        = mt->newCurrentThread();
 	const int* p              = getUnblockPipeForThread(thread);
 	ARCH->closeThread(thread);
 	return p;
 }
 
 const int*
-CArchNetworkBSD::getUnblockPipeForThread(CArchThread thread)
+ArchNetworkBSD::getUnblockPipeForThread(ArchThread thread)
 {
-	CArchMultithreadPosix* mt = CArchMultithreadPosix::getInstance();
+	ArchMultithreadPosix* mt = ArchMultithreadPosix::getInstance();
 	int* unblockPipe          = (int*)mt->getNetworkDataForThread(thread);
 	if (unblockPipe == NULL) {
 		unblockPipe = new int[2];
@@ -888,7 +888,7 @@ CArchNetworkBSD::getUnblockPipeForThread(CArchThread thread)
 }
 
 void
-CArchNetworkBSD::throwError(int err)
+ArchNetworkBSD::throwError(int err)
 {
 	switch (err) {
 	case EINTR:
@@ -960,7 +960,7 @@ CArchNetworkBSD::throwError(int err)
 }
 
 void
-CArchNetworkBSD::throwNameError(int err)
+ArchNetworkBSD::throwNameError(int err)
 {
 	static const char* s_msg[] = {
 		"The specified host is unknown",

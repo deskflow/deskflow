@@ -30,30 +30,30 @@
 // -----------------------------------------------------------------------------
 // Input Filter Condition Classes
 // -----------------------------------------------------------------------------
-CInputFilter::CCondition::CCondition()
+InputFilter::Condition::Condition()
 {
 	// do nothing
 }
 
-CInputFilter::CCondition::~CCondition()
-{
-	// do nothing
-}
-
-void
-CInputFilter::CCondition::enablePrimary(CPrimaryClient*)
+InputFilter::Condition::~Condition()
 {
 	// do nothing
 }
 
 void
-CInputFilter::CCondition::disablePrimary(CPrimaryClient*)
+InputFilter::Condition::enablePrimary(PrimaryClient*)
 {
 	// do nothing
 }
 
-CInputFilter::CKeystrokeCondition::CKeystrokeCondition(
-		IEventQueue* events, IPlatformScreen::CKeyInfo* info) :
+void
+InputFilter::Condition::disablePrimary(PrimaryClient*)
+{
+	// do nothing
+}
+
+InputFilter::KeystrokeCondition::KeystrokeCondition(
+		IEventQueue* events, IPlatformScreen::KeyInfo* info) :
 	m_id(0),
 	m_key(info->m_key),
 	m_mask(info->m_mask),
@@ -62,7 +62,7 @@ CInputFilter::CKeystrokeCondition::CKeystrokeCondition(
 	free(info);
 }
 
-CInputFilter::CKeystrokeCondition::CKeystrokeCondition(
+InputFilter::KeystrokeCondition::KeystrokeCondition(
 		IEventQueue* events, KeyID key, KeyModifierMask mask) :
 	m_id(0),
 	m_key(key),
@@ -72,43 +72,43 @@ CInputFilter::CKeystrokeCondition::CKeystrokeCondition(
 	// do nothing
 }
 
-CInputFilter::CKeystrokeCondition::~CKeystrokeCondition()
+InputFilter::KeystrokeCondition::~KeystrokeCondition()
 {
 	// do nothing
 }
 
 KeyID
-CInputFilter::CKeystrokeCondition::getKey() const
+InputFilter::KeystrokeCondition::getKey() const
 {
 	return m_key;
 }
 
 KeyModifierMask
-CInputFilter::CKeystrokeCondition::getMask() const
+InputFilter::KeystrokeCondition::getMask() const
 {
 	return m_mask;
 }
 
-CInputFilter::CCondition*
-CInputFilter::CKeystrokeCondition::clone() const
+InputFilter::Condition*
+InputFilter::KeystrokeCondition::clone() const
 {
-	return new CKeystrokeCondition(m_events, m_key, m_mask);
+	return new KeystrokeCondition(m_events, m_key, m_mask);
 }
 
-CString
-CInputFilter::CKeystrokeCondition::format() const
+String
+InputFilter::KeystrokeCondition::format() const
 {
 	return synergy::string::sprintf("keystroke(%s)",
-							CKeyMap::formatKey(m_key, m_mask).c_str());
+							synergy::KeyMap::formatKey(m_key, m_mask).c_str());
 }
 
-CInputFilter::EFilterStatus
-CInputFilter::CKeystrokeCondition::match(const CEvent& event)
+InputFilter::EFilterStatus
+InputFilter::KeystrokeCondition::match(const Event& event)
 {
 	EFilterStatus status;
 
 	// check for hotkey events
-	CEvent::Type type = event.getType();
+	Event::Type type = event.getType();
 	if (type == m_events->forIPrimaryScreen().hotKeyDown()) {
 		status = kActivate;
 	}
@@ -120,8 +120,8 @@ CInputFilter::CKeystrokeCondition::match(const CEvent& event)
 	}
 
 	// check if it's our hotkey
-	IPrimaryScreen::CHotKeyInfo* kinfo =
-		reinterpret_cast<IPlatformScreen::CHotKeyInfo*>(event.getData());
+	IPrimaryScreen::HotKeyInfo* kinfo =
+		reinterpret_cast<IPlatformScreen::HotKeyInfo*>(event.getData());
 	if (kinfo->m_id != m_id) {
 		return kNoMatch;
 	}
@@ -130,20 +130,20 @@ CInputFilter::CKeystrokeCondition::match(const CEvent& event)
 }
 
 void
-CInputFilter::CKeystrokeCondition::enablePrimary(CPrimaryClient* primary)
+InputFilter::KeystrokeCondition::enablePrimary(PrimaryClient* primary)
 {
 	m_id = primary->registerHotKey(m_key, m_mask);
 }
 
 void
-CInputFilter::CKeystrokeCondition::disablePrimary(CPrimaryClient* primary)
+InputFilter::KeystrokeCondition::disablePrimary(PrimaryClient* primary)
 {
 	primary->unregisterHotKey(m_id);
 	m_id = 0;
 }
 
-CInputFilter::CMouseButtonCondition::CMouseButtonCondition(
-		IEventQueue* events, IPlatformScreen::CButtonInfo* info) :
+InputFilter::MouseButtonCondition::MouseButtonCondition(
+		IEventQueue* events, IPlatformScreen::ButtonInfo* info) :
 	m_button(info->m_button),
 	m_mask(info->m_mask),
 	m_events(events)
@@ -151,7 +151,7 @@ CInputFilter::CMouseButtonCondition::CMouseButtonCondition(
 	free(info);
 }
 
-CInputFilter::CMouseButtonCondition::CMouseButtonCondition(
+InputFilter::MouseButtonCondition::MouseButtonCondition(
 		IEventQueue* events, ButtonID button, KeyModifierMask mask) :
 	m_button(button),
 	m_mask(mask),
@@ -160,41 +160,41 @@ CInputFilter::CMouseButtonCondition::CMouseButtonCondition(
 	// do nothing
 }
 
-CInputFilter::CMouseButtonCondition::~CMouseButtonCondition()
+InputFilter::MouseButtonCondition::~MouseButtonCondition()
 {
 	// do nothing
 }
 
 ButtonID
-CInputFilter::CMouseButtonCondition::getButton() const
+InputFilter::MouseButtonCondition::getButton() const
 {
 	return m_button;
 }
 
 KeyModifierMask
-CInputFilter::CMouseButtonCondition::getMask() const
+InputFilter::MouseButtonCondition::getMask() const
 {
 	return m_mask;
 }
 
-CInputFilter::CCondition*
-CInputFilter::CMouseButtonCondition::clone() const
+InputFilter::Condition*
+InputFilter::MouseButtonCondition::clone() const
 {
-	return new CMouseButtonCondition(m_events, m_button, m_mask);
+	return new MouseButtonCondition(m_events, m_button, m_mask);
 }
 
-CString
-CInputFilter::CMouseButtonCondition::format() const
+String
+InputFilter::MouseButtonCondition::format() const
 {
-	CString key = CKeyMap::formatKey(kKeyNone, m_mask);
+	String key = synergy::KeyMap::formatKey(kKeyNone, m_mask);
 	if (!key.empty()) {
 		key += "+";
 	}
 	return synergy::string::sprintf("mousebutton(%s%d)", key.c_str(), m_button);
 }
 
-CInputFilter::EFilterStatus		
-CInputFilter::CMouseButtonCondition::match(const CEvent& event)
+InputFilter::EFilterStatus		
+InputFilter::MouseButtonCondition::match(const Event& event)
 {
 	static const KeyModifierMask s_ignoreMask =
 		KeyModifierAltGr | KeyModifierCapsLock |
@@ -203,7 +203,7 @@ CInputFilter::CMouseButtonCondition::match(const CEvent& event)
 	EFilterStatus status;
 
 	// check for hotkey events
-	CEvent::Type type = event.getType();
+	Event::Type type = event.getType();
 	if (type == m_events->forIPrimaryScreen().buttonDown()) {
 		status = kActivate;
 	}
@@ -216,8 +216,8 @@ CInputFilter::CMouseButtonCondition::match(const CEvent& event)
 
 	// check if it's the right button and modifiers.  ignore modifiers
 	// that cannot be combined with a mouse button.
-	IPlatformScreen::CButtonInfo* minfo =
-		reinterpret_cast<IPlatformScreen::CButtonInfo*>(event.getData());
+	IPlatformScreen::ButtonInfo* minfo =
+		reinterpret_cast<IPlatformScreen::ButtonInfo*>(event.getData());
 	if (minfo->m_button != m_button ||
 		(minfo->m_mask & ~s_ignoreMask) != m_mask) {
 		return kNoMatch;
@@ -226,37 +226,37 @@ CInputFilter::CMouseButtonCondition::match(const CEvent& event)
 	return status;
 }
 
-CInputFilter::CScreenConnectedCondition::CScreenConnectedCondition(
-		IEventQueue* events, const CString& screen) :
+InputFilter::ScreenConnectedCondition::ScreenConnectedCondition(
+		IEventQueue* events, const String& screen) :
 	m_screen(screen),
 	m_events(events)
 {
 	// do nothing
 }
 
-CInputFilter::CScreenConnectedCondition::~CScreenConnectedCondition()
+InputFilter::ScreenConnectedCondition::~ScreenConnectedCondition()
 {
 	// do nothing
 }
 
-CInputFilter::CCondition*
-CInputFilter::CScreenConnectedCondition::clone() const
+InputFilter::Condition*
+InputFilter::ScreenConnectedCondition::clone() const
 {
-	return new CScreenConnectedCondition(m_events, m_screen);
+	return new ScreenConnectedCondition(m_events, m_screen);
 }
 
-CString
-CInputFilter::CScreenConnectedCondition::format() const
+String
+InputFilter::ScreenConnectedCondition::format() const
 {
 	return synergy::string::sprintf("connect(%s)", m_screen.c_str());
 }
 
-CInputFilter::EFilterStatus
-CInputFilter::CScreenConnectedCondition::match(const CEvent& event)
+InputFilter::EFilterStatus
+InputFilter::ScreenConnectedCondition::match(const Event& event)
 {
-	if (event.getType() == m_events->forCServer().connected()) {
-		CServer::CScreenConnectedInfo* info = 
-			reinterpret_cast<CServer::CScreenConnectedInfo*>(event.getData());
+	if (event.getType() == m_events->forServer().connected()) {
+		Server::ScreenConnectedInfo* info = 
+			reinterpret_cast<Server::ScreenConnectedInfo*>(event.getData());
 		if (m_screen == info->m_screen || m_screen.empty()) {
 			return kActivate;
 		}
@@ -268,17 +268,17 @@ CInputFilter::CScreenConnectedCondition::match(const CEvent& event)
 // -----------------------------------------------------------------------------
 // Input Filter Action Classes
 // -----------------------------------------------------------------------------
-CInputFilter::CAction::CAction()
+InputFilter::Action::Action()
 {
 	// do nothing
 }
 
-CInputFilter::CAction::~CAction()
+InputFilter::Action::~Action()
 {
 	// do nothing
 }
 
-CInputFilter::CLockCursorToScreenAction::CLockCursorToScreenAction(
+InputFilter::LockCursorToScreenAction::LockCursorToScreenAction(
 		IEventQueue* events, Mode mode) :
 	m_mode(mode),
 	m_events(events)
@@ -286,20 +286,20 @@ CInputFilter::CLockCursorToScreenAction::CLockCursorToScreenAction(
 	// do nothing
 }
 
-CInputFilter::CLockCursorToScreenAction::Mode
-CInputFilter::CLockCursorToScreenAction::getMode() const
+InputFilter::LockCursorToScreenAction::Mode
+InputFilter::LockCursorToScreenAction::getMode() const
 {
 	return m_mode;
 }
 
-CInputFilter::CAction*
-CInputFilter::CLockCursorToScreenAction::clone() const
+InputFilter::Action*
+InputFilter::LockCursorToScreenAction::clone() const
 {
-	return new CLockCursorToScreenAction(*this);
+	return new LockCursorToScreenAction(*this);
 }
 
-CString
-CInputFilter::CLockCursorToScreenAction::format() const
+String
+InputFilter::LockCursorToScreenAction::format() const
 {
 	static const char* s_mode[] = { "off", "on", "toggle" };
 
@@ -307,69 +307,69 @@ CInputFilter::CLockCursorToScreenAction::format() const
 }
 
 void
-CInputFilter::CLockCursorToScreenAction::perform(const CEvent& event)
+InputFilter::LockCursorToScreenAction::perform(const Event& event)
 {
-	static const CServer::CLockCursorToScreenInfo::State s_state[] = {
-		CServer::CLockCursorToScreenInfo::kOff,
-		CServer::CLockCursorToScreenInfo::kOn,
-		CServer::CLockCursorToScreenInfo::kToggle
+	static const Server::LockCursorToScreenInfo::State s_state[] = {
+		Server::LockCursorToScreenInfo::kOff,
+		Server::LockCursorToScreenInfo::kOn,
+		Server::LockCursorToScreenInfo::kToggle
 	};
 
 	// send event
-	CServer::CLockCursorToScreenInfo* info = 
-		CServer::CLockCursorToScreenInfo::alloc(s_state[m_mode]);
-	m_events->addEvent(CEvent(m_events->forCServer().lockCursorToScreen(),
+	Server::LockCursorToScreenInfo* info = 
+		Server::LockCursorToScreenInfo::alloc(s_state[m_mode]);
+	m_events->addEvent(Event(m_events->forServer().lockCursorToScreen(),
 								event.getTarget(), info,
-								CEvent::kDeliverImmediately));
+								Event::kDeliverImmediately));
 }
 
-CInputFilter::CSwitchToScreenAction::CSwitchToScreenAction(
-		IEventQueue* events, const CString& screen) :
+InputFilter::SwitchToScreenAction::SwitchToScreenAction(
+		IEventQueue* events, const String& screen) :
 	m_screen(screen),
 	m_events(events)
 {
 	// do nothing
 }
 
-CString
-CInputFilter::CSwitchToScreenAction::getScreen() const
+String
+InputFilter::SwitchToScreenAction::getScreen() const
 {
 	return m_screen;
 }
 
-CInputFilter::CAction*
-CInputFilter::CSwitchToScreenAction::clone() const
+InputFilter::Action*
+InputFilter::SwitchToScreenAction::clone() const
 {
-	return new CSwitchToScreenAction(*this);
+	return new SwitchToScreenAction(*this);
 }
 
-CString
-CInputFilter::CSwitchToScreenAction::format() const
+String
+InputFilter::SwitchToScreenAction::format() const
 {
 	return synergy::string::sprintf("switchToScreen(%s)", m_screen.c_str());
 }
 
 void
-CInputFilter::CSwitchToScreenAction::perform(const CEvent& event)
+InputFilter::SwitchToScreenAction::perform(const Event& event)
 {
 	// pick screen name.  if m_screen is empty then use the screen from
 	// event if it has one.
-	CString screen = m_screen;
-	if (screen.empty() && event.getType() == m_events->forCServer().connected()) {
-		CServer::CScreenConnectedInfo* info = 
-			reinterpret_cast<CServer::CScreenConnectedInfo*>(event.getData());
+	String screen = m_screen;
+	if (screen.empty() && event.getType() == m_events->forServer().connected()) {
+		Server::ScreenConnectedInfo* info = 
+			reinterpret_cast<Server::ScreenConnectedInfo*>(event.getData());
 		screen = info->m_screen;
 	}
 
 	// send event
-	CServer::CSwitchToScreenInfo* info =
-		CServer::CSwitchToScreenInfo::alloc(screen);
-	m_events->addEvent(CEvent(m_events->forCServer().switchToScreen(),
+	Server::SwitchToScreenInfo* info =
+		Server::SwitchToScreenInfo::alloc(screen);
+	m_events->addEvent(Event(m_events->forServer().switchToScreen(),
 								event.getTarget(), info,
-								CEvent::kDeliverImmediately));
+								Event::kDeliverImmediately));
 }
 
-CInputFilter::CSwitchInDirectionAction::CSwitchInDirectionAction(
+InputFilter::SwitchInDirectionAction::SwitchInDirectionAction(
 		IEventQueue* events, EDirection direction) :
 	m_direction(direction),
 	m_events(events)
@@ -378,19 +378,19 @@ CInputFilter::CSwitchInDirectionAction::CSwitchInDirectionAction(
 }
 
 EDirection
-CInputFilter::CSwitchInDirectionAction::getDirection() const
+InputFilter::SwitchInDirectionAction::getDirection() const
 {
 	return m_direction;
 }
 
-CInputFilter::CAction*
-CInputFilter::CSwitchInDirectionAction::clone() const
+InputFilter::Action*
+InputFilter::SwitchInDirectionAction::clone() const
 {
-	return new CSwitchInDirectionAction(*this);
+	return new SwitchInDirectionAction(*this);
 }
 
-CString
-CInputFilter::CSwitchInDirectionAction::format() const
+String
+InputFilter::SwitchInDirectionAction::format() const
 {
 	static const char* s_names[] = {
 		"",
@@ -404,16 +404,16 @@ CInputFilter::CSwitchInDirectionAction::format() const
 }
 
 void
-CInputFilter::CSwitchInDirectionAction::perform(const CEvent& event)
+InputFilter::SwitchInDirectionAction::perform(const Event& event)
 {
-	CServer::CSwitchInDirectionInfo* info =
-		CServer::CSwitchInDirectionInfo::alloc(m_direction);
-	m_events->addEvent(CEvent(m_events->forCServer().switchInDirection(),
+	Server::SwitchInDirectionInfo* info =
+		Server::SwitchInDirectionInfo::alloc(m_direction);
+	m_events->addEvent(Event(m_events->forServer().switchInDirection(),
 								event.getTarget(), info,
-								CEvent::kDeliverImmediately));
+								Event::kDeliverImmediately));
 }
 
-CInputFilter::CKeyboardBroadcastAction::CKeyboardBroadcastAction(
+InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(
 		IEventQueue* events, Mode mode) :
 	m_mode(mode),
 	m_events(events)
@@ -421,39 +421,39 @@ CInputFilter::CKeyboardBroadcastAction::CKeyboardBroadcastAction(
 	// do nothing
 }
 
-CInputFilter::CKeyboardBroadcastAction::CKeyboardBroadcastAction(
+InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(
 		IEventQueue* events,
 		Mode mode,
-		const std::set<CString>& screens) :
+		const std::set<String>& screens) :
 	m_mode(mode),
-	m_screens(IKeyState::CKeyInfo::join(screens)),
+	m_screens(IKeyState::KeyInfo::join(screens)),
 	m_events(events)
 {
 	// do nothing
 }
 
-CInputFilter::CKeyboardBroadcastAction::Mode
-CInputFilter::CKeyboardBroadcastAction::getMode() const
+InputFilter::KeyboardBroadcastAction::Mode
+InputFilter::KeyboardBroadcastAction::getMode() const
 {
 	return m_mode;
 }
 
-std::set<CString>
-CInputFilter::CKeyboardBroadcastAction::getScreens() const
+std::set<String>
+InputFilter::KeyboardBroadcastAction::getScreens() const
 {
-	std::set<CString> screens;
-	IKeyState::CKeyInfo::split(m_screens.c_str(), screens);
+	std::set<String> screens;
+	IKeyState::KeyInfo::split(m_screens.c_str(), screens);
 	return screens;
 }
 
-CInputFilter::CAction*
-CInputFilter::CKeyboardBroadcastAction::clone() const
+InputFilter::Action*
+InputFilter::KeyboardBroadcastAction::clone() const
 {
-	return new CKeyboardBroadcastAction(*this);
+	return new KeyboardBroadcastAction(*this);
 }
 
-CString
-CInputFilter::CKeyboardBroadcastAction::format() const
+String
+InputFilter::KeyboardBroadcastAction::format() const
 {
 	static const char* s_mode[] = { "off", "on", "toggle" };
 	static const char* s_name = "keyboardBroadcast";
@@ -469,24 +469,24 @@ CInputFilter::CKeyboardBroadcastAction::format() const
 }
 
 void
-CInputFilter::CKeyboardBroadcastAction::perform(const CEvent& event)
+InputFilter::KeyboardBroadcastAction::perform(const Event& event)
 {
-	static const CServer::CKeyboardBroadcastInfo::State s_state[] = {
-		CServer::CKeyboardBroadcastInfo::kOff,
-		CServer::CKeyboardBroadcastInfo::kOn,
-		CServer::CKeyboardBroadcastInfo::kToggle
+	static const Server::KeyboardBroadcastInfo::State s_state[] = {
+		Server::KeyboardBroadcastInfo::kOff,
+		Server::KeyboardBroadcastInfo::kOn,
+		Server::KeyboardBroadcastInfo::kToggle
 	};
 
 	// send event
-	CServer::CKeyboardBroadcastInfo* info = 
-		CServer::CKeyboardBroadcastInfo::alloc(s_state[m_mode], m_screens);
-	m_events->addEvent(CEvent(m_events->forCServer().keyboardBroadcast(),
+	Server::KeyboardBroadcastInfo* info = 
+		Server::KeyboardBroadcastInfo::alloc(s_state[m_mode], m_screens);
+	m_events->addEvent(Event(m_events->forServer().keyboardBroadcast(),
 								event.getTarget(), info,
-								CEvent::kDeliverImmediately));
+								Event::kDeliverImmediately));
 }
 
-CInputFilter::CKeystrokeAction::CKeystrokeAction(
-		IEventQueue* events, IPlatformScreen::CKeyInfo* info, bool press) :
+InputFilter::KeystrokeAction::KeystrokeAction(
+		IEventQueue* events, IPlatformScreen::KeyInfo* info, bool press) :
 	m_keyInfo(info),
 	m_press(press),
 	m_events(events)
@@ -494,55 +494,55 @@ CInputFilter::CKeystrokeAction::CKeystrokeAction(
 	// do nothing
 }
 
-CInputFilter::CKeystrokeAction::~CKeystrokeAction()
+InputFilter::KeystrokeAction::~KeystrokeAction()
 {
 	free(m_keyInfo);
 }
 
 void
-CInputFilter::CKeystrokeAction::adoptInfo(IPlatformScreen::CKeyInfo* info)
+InputFilter::KeystrokeAction::adoptInfo(IPlatformScreen::KeyInfo* info)
 {
 	free(m_keyInfo);
 	m_keyInfo = info;
 }
 
-const IPlatformScreen::CKeyInfo*
-CInputFilter::CKeystrokeAction::getInfo() const
+const IPlatformScreen::KeyInfo*
+InputFilter::KeystrokeAction::getInfo() const
 {
 	return m_keyInfo;
 }
 
 bool
-CInputFilter::CKeystrokeAction::isOnPress() const
+InputFilter::KeystrokeAction::isOnPress() const
 {
 	return m_press;
 }
 
-CInputFilter::CAction*
-CInputFilter::CKeystrokeAction::clone() const
+InputFilter::Action*
+InputFilter::KeystrokeAction::clone() const
 {
-	IKeyState::CKeyInfo* info = IKeyState::CKeyInfo::alloc(*m_keyInfo);
-	return new CKeystrokeAction(m_events, info, m_press);
+	IKeyState::KeyInfo* info = IKeyState::KeyInfo::alloc(*m_keyInfo);
+	return new KeystrokeAction(m_events, info, m_press);
 }
 
-CString
-CInputFilter::CKeystrokeAction::format() const
+String
+InputFilter::KeystrokeAction::format() const
 {
 	const char* type = formatName();
 
 	if (m_keyInfo->m_screens[0] == '\0') {
 		return synergy::string::sprintf("%s(%s)", type,
-							CKeyMap::formatKey(m_keyInfo->m_key,
+							synergy::KeyMap::formatKey(m_keyInfo->m_key,
 								m_keyInfo->m_mask).c_str());
 	}
 	else if (m_keyInfo->m_screens[0] == '*') {
 		return synergy::string::sprintf("%s(%s,*)", type,
-							CKeyMap::formatKey(m_keyInfo->m_key,
+							synergy::KeyMap::formatKey(m_keyInfo->m_key,
 								m_keyInfo->m_mask).c_str());
 	}
 	else {
 		return synergy::string::sprintf("%s(%s,%.*s)", type,
-							CKeyMap::formatKey(m_keyInfo->m_key,
+							synergy::KeyMap::formatKey(m_keyInfo->m_key,
 								m_keyInfo->m_mask).c_str(),
 							strlen(m_keyInfo->m_screens + 1) - 1,
 							m_keyInfo->m_screens + 1);
@@ -550,31 +550,31 @@ CInputFilter::CKeystrokeAction::format() const
 }
 
 void
-CInputFilter::CKeystrokeAction::perform(const CEvent& event)
+InputFilter::KeystrokeAction::perform(const Event& event)
 {
-	CEvent::Type type = m_press ?
+	Event::Type type = m_press ?
 		m_events->forIKeyState().keyDown() :
 		m_events->forIKeyState().keyUp();
 	
-	m_events->addEvent(CEvent(m_events->forIPrimaryScreen().fakeInputBegin(),
+	m_events->addEvent(Event(m_events->forIPrimaryScreen().fakeInputBegin(),
 								event.getTarget(), NULL,
-								CEvent::kDeliverImmediately));
-	m_events->addEvent(CEvent(type, event.getTarget(), m_keyInfo,
-								CEvent::kDeliverImmediately |
-								CEvent::kDontFreeData));
-	m_events->addEvent(CEvent(m_events->forIPrimaryScreen().fakeInputEnd(),
+								Event::kDeliverImmediately));
+	m_events->addEvent(Event(type, event.getTarget(), m_keyInfo,
+								Event::kDeliverImmediately |
+								Event::kDontFreeData));
+	m_events->addEvent(Event(m_events->forIPrimaryScreen().fakeInputEnd(),
 								event.getTarget(), NULL,
-								CEvent::kDeliverImmediately));
+								Event::kDeliverImmediately));
 }
 
 const char*
-CInputFilter::CKeystrokeAction::formatName() const
+InputFilter::KeystrokeAction::formatName() const
 {
 	return (m_press ? "keyDown" : "keyUp");
 }
 
-CInputFilter::CMouseButtonAction::CMouseButtonAction(
-		IEventQueue* events, IPlatformScreen::CButtonInfo* info, bool press) :
+InputFilter::MouseButtonAction::MouseButtonAction(
+		IEventQueue* events, IPlatformScreen::ButtonInfo* info, bool press) :
 	m_buttonInfo(info),
 	m_press(press),
 	m_events(events)
@@ -582,100 +582,100 @@ CInputFilter::CMouseButtonAction::CMouseButtonAction(
 	// do nothing
 }
 
-CInputFilter::CMouseButtonAction::~CMouseButtonAction()
+InputFilter::MouseButtonAction::~MouseButtonAction()
 {
 	free(m_buttonInfo);
 }
 
-const IPlatformScreen::CButtonInfo*
-CInputFilter::CMouseButtonAction::getInfo() const
+const IPlatformScreen::ButtonInfo*
+InputFilter::MouseButtonAction::getInfo() const
 {
 	return m_buttonInfo;
 }
 
 bool
-CInputFilter::CMouseButtonAction::isOnPress() const
+InputFilter::MouseButtonAction::isOnPress() const
 {
 	return m_press;
 }
 
-CInputFilter::CAction*
-CInputFilter::CMouseButtonAction::clone() const
+InputFilter::Action*
+InputFilter::MouseButtonAction::clone() const
 {
-	IPlatformScreen::CButtonInfo* info =
-		IPrimaryScreen::CButtonInfo::alloc(*m_buttonInfo);
-	return new CMouseButtonAction(m_events, info, m_press);
+	IPlatformScreen::ButtonInfo* info =
+		IPrimaryScreen::ButtonInfo::alloc(*m_buttonInfo);
+	return new MouseButtonAction(m_events, info, m_press);
 }
 
-CString
-CInputFilter::CMouseButtonAction::format() const
+String
+InputFilter::MouseButtonAction::format() const
 {
 	const char* type = formatName();
 
-	CString key = CKeyMap::formatKey(kKeyNone, m_buttonInfo->m_mask);
+	String key = synergy::KeyMap::formatKey(kKeyNone, m_buttonInfo->m_mask);
 	return synergy::string::sprintf("%s(%s%s%d)", type,
 							key.c_str(), key.empty() ? "" : "+",
 							m_buttonInfo->m_button);
 }
 
 void
-CInputFilter::CMouseButtonAction::perform(const CEvent& event)
+InputFilter::MouseButtonAction::perform(const Event& event)
 
 {
 	// send modifiers
-	IPlatformScreen::CKeyInfo* modifierInfo = NULL;
+	IPlatformScreen::KeyInfo* modifierInfo = NULL;
 	if (m_buttonInfo->m_mask != 0) {
 		KeyID key = m_press ? kKeySetModifiers : kKeyClearModifiers;
 		modifierInfo =
-			IKeyState::CKeyInfo::alloc(key, m_buttonInfo->m_mask, 0, 1);
-		m_events->addEvent(CEvent(m_events->forIKeyState().keyDown(),
+			IKeyState::KeyInfo::alloc(key, m_buttonInfo->m_mask, 0, 1);
+		m_events->addEvent(Event(m_events->forIKeyState().keyDown(),
 								event.getTarget(), modifierInfo,
-								CEvent::kDeliverImmediately));
+								Event::kDeliverImmediately));
 	}
 
 	// send button
-	CEvent::Type type = m_press ? m_events->forIPrimaryScreen().buttonDown() :
+	Event::Type type = m_press ? m_events->forIPrimaryScreen().buttonDown() :
 								m_events->forIPrimaryScreen().buttonUp();
-	m_events->addEvent(CEvent(type, event.getTarget(), m_buttonInfo,
-								CEvent::kDeliverImmediately |
-								CEvent::kDontFreeData));
+	m_events->addEvent(Event(type, event.getTarget(), m_buttonInfo,
+								Event::kDeliverImmediately |
+								Event::kDontFreeData));
 }
 
 const char*
-CInputFilter::CMouseButtonAction::formatName() const
+InputFilter::MouseButtonAction::formatName() const
 {
 	return (m_press ? "mouseDown" : "mouseUp");
 }
 
 //
-// CInputFilter::CRule
+// InputFilter::Rule
 //
 
-CInputFilter::CRule::CRule() :
+InputFilter::Rule::Rule() :
 	m_condition(NULL)
 {
 	// do nothing
 }
 
-CInputFilter::CRule::CRule(CCondition* adoptedCondition) :
+InputFilter::Rule::Rule(Condition* adoptedCondition) :
 	m_condition(adoptedCondition)
 {
 	// do nothing
 }
 
-CInputFilter::CRule::CRule(const CRule& rule) :
+InputFilter::Rule::Rule(const Rule& rule) :
 	m_condition(NULL)
 {
 	copy(rule);
 }
 
-CInputFilter::CRule::~CRule()
+InputFilter::Rule::~Rule()
 {
 	clear();
 }
 
-CInputFilter::CRule&
-CInputFilter::CRule::operator=(const CRule& rule)
+InputFilter::Rule&
+InputFilter::Rule::operator=(const Rule& rule)
 {
 	if (&rule != this) {
 		copy(rule);
@@ -684,14 +684,14 @@ CInputFilter::CRule::operator=(const CRule& rule)
 }
 
 void
-CInputFilter::CRule::clear()
+InputFilter::Rule::clear()
 {
 	delete m_condition;
-	for (CActionList::iterator i = m_activateActions.begin();
+	for (ActionList::iterator i = m_activateActions.begin();
 								i != m_activateActions.end(); ++i) {
 		delete *i;
 	}
-	for (CActionList::iterator i = m_deactivateActions.begin();
+	for (ActionList::iterator i = m_deactivateActions.begin();
 								i != m_deactivateActions.end(); ++i) {
 		delete *i;
 	}
@@ -702,31 +702,31 @@ CInputFilter::CRule::clear()
 }
 
 void
-CInputFilter::CRule::copy(const CRule& rule)
+InputFilter::Rule::copy(const Rule& rule)
 {
 	clear();
 	if (rule.m_condition != NULL) {
 		m_condition = rule.m_condition->clone();
 	}
-	for (CActionList::const_iterator i = rule.m_activateActions.begin();
+	for (ActionList::const_iterator i = rule.m_activateActions.begin();
 								i != rule.m_activateActions.end(); ++i) {
 		m_activateActions.push_back((*i)->clone());
 	}
-	for (CActionList::const_iterator i = rule.m_deactivateActions.begin();
+	for (ActionList::const_iterator i = rule.m_deactivateActions.begin();
 								i != rule.m_deactivateActions.end(); ++i) {
 		m_deactivateActions.push_back((*i)->clone());
 	}
 }
 
 void
-CInputFilter::CRule::setCondition(CCondition* adopted)
+InputFilter::Rule::setCondition(Condition* adopted)
 {
 	delete m_condition;
 	m_condition = adopted;
 }
 
 void
-CInputFilter::CRule::adoptAction(CAction* action, bool onActivation)
+InputFilter::Rule::adoptAction(Action* action, bool onActivation)
 {
 	if (action != NULL) {
 		if (onActivation) {
@@ -739,7 +739,7 @@ CInputFilter::CRule::adoptAction(CAction* action, bool onActivation)
 }
 
 void
-CInputFilter::CRule::removeAction(bool onActivation, UInt32 index)
+InputFilter::Rule::removeAction(bool onActivation, UInt32 index)
 {
 	if (onActivation) {
 		delete m_activateActions[index];
@@ -752,7 +752,7 @@ CInputFilter::CRule::removeAction(bool onActivation, UInt32 index)
 }
 
 void
-CInputFilter::CRule::replaceAction(CAction* adopted,
+InputFilter::Rule::replaceAction(Action* adopted,
 				bool onActivation, UInt32 index)
 {
 	if (adopted == NULL) {
@@ -769,7 +769,7 @@ CInputFilter::CRule::replaceAction(CAction* adopted,
 }
 
 void
-CInputFilter::CRule::enable(CPrimaryClient* primaryClient)
+InputFilter::Rule::enable(PrimaryClient* primaryClient)
 {
 	if (m_condition != NULL) {
 		m_condition->enablePrimary(primaryClient);
@@ -777,7 +777,7 @@ CInputFilter::CRule::enable(CPrimaryClient* primaryClient)
 }
 
 void
-CInputFilter::CRule::disable(CPrimaryClient* primaryClient)
+InputFilter::Rule::disable(PrimaryClient* primaryClient)
 {
 	if (m_condition != NULL) {
 		m_condition->disablePrimary(primaryClient);
@@ -785,7 +785,7 @@ CInputFilter::CRule::disable(CPrimaryClient* primaryClient)
 }
 
 bool
-CInputFilter::CRule::handleEvent(const CEvent& event)
+InputFilter::Rule::handleEvent(const Event& event)
 {
 	// NULL condition never matches
 	if (m_condition == NULL) {
@@ -793,7 +793,7 @@ CInputFilter::CRule::handleEvent(const CEvent& event)
 	}
 
 	// match
-	const CActionList* actions;
+	const ActionList* actions;
 	switch (m_condition->match(event)) {
 	default:
 		// not handled
@@ -811,7 +811,7 @@ CInputFilter::CRule::handleEvent(const CEvent& event)
 	}
 
 	// perform actions
-	for (CActionList::const_iterator i = actions->begin();
+	for (ActionList::const_iterator i = actions->begin();
 								i != actions->end(); ++i) {
 		LOG((CLOG_DEBUG1 "hotkey: %s", (*i)->format().c_str()));
 		(*i)->perform(event);
@@ -820,17 +820,17 @@ CInputFilter::CRule::handleEvent(const CEvent& event)
 	return true;
 }
 
-CString
-CInputFilter::CRule::format() const
+String
+InputFilter::Rule::format() const
 {
-	CString s;
+	String s;
 	if (m_condition != NULL) {
 		// condition
 		s += m_condition->format();
 		s += " = ";
 
 		// activate actions
-		CActionList::const_iterator i = m_activateActions.begin();
+		ActionList::const_iterator i = m_activateActions.begin();
 		if (i != m_activateActions.end()) {
 			s += (*i)->format();
 			while (++i != m_activateActions.end()) {
@@ -855,14 +855,14 @@ CInputFilter::CRule::format() const
 	return s;
 }
 
-const CInputFilter::CCondition*
-CInputFilter::CRule::getCondition() const
+const InputFilter::Condition*
+InputFilter::Rule::getCondition() const
 {
 	return m_condition;
 }
 
 UInt32
-CInputFilter::CRule::getNumActions(bool onActivation) const
+InputFilter::Rule::getNumActions(bool onActivation) const
 {
 	if (onActivation) {
 		return static_cast<UInt32>(m_activateActions.size());
@@ -872,8 +872,8 @@ CInputFilter::CRule::getNumActions(bool onActivation) const
 	}
 }
 
-const CInputFilter::CAction&
-CInputFilter::CRule::getAction(bool onActivation, UInt32 index) const
+const InputFilter::Action&
+InputFilter::Rule::getAction(bool onActivation, UInt32 index) const
 {
 	if (onActivation) {
 		return *m_activateActions[index];
@@ -887,14 +887,14 @@ CInputFilter::CRule::getAction(bool onActivation, UInt32 index) const
 // -----------------------------------------------------------------------------
 // Input Filter Class
 // -----------------------------------------------------------------------------
-CInputFilter::CInputFilter(IEventQueue* events) :
+InputFilter::InputFilter(IEventQueue* events) :
 	m_primaryClient(NULL),
 	m_events(events)
 {
 	// do nothing
 }
 
-CInputFilter::CInputFilter(const CInputFilter& x) :
+InputFilter::InputFilter(const InputFilter& x) :
 	m_ruleList(x.m_ruleList),
 	m_primaryClient(NULL),
 	m_events(x.m_events)
@@ -902,16 +902,16 @@ CInputFilter::CInputFilter(const CInputFilter& x) :
 	setPrimaryClient(x.m_primaryClient);
 }
 
-CInputFilter::~CInputFilter()
+InputFilter::~InputFilter()
 {
 	setPrimaryClient(NULL);
 }
 
-CInputFilter&
-CInputFilter::operator=(const CInputFilter& x)
+InputFilter&
+InputFilter::operator=(const InputFilter& x)
 {
 	if (&x != this) {
-		CPrimaryClient* oldClient = m_primaryClient;
+		PrimaryClient* oldClient = m_primaryClient;
 		setPrimaryClient(NULL);
 
 		m_ruleList = x.m_ruleList;
@@ -922,7 +922,7 @@ CInputFilter::operator=(const CInputFilter& x)
 }
 
 void
-CInputFilter::addFilterRule(const CRule& rule)
+InputFilter::addFilterRule(const Rule& rule)
 {
 	m_ruleList.push_back(rule);
 	if (m_primaryClient != NULL) {
@@ -931,7 +931,7 @@ CInputFilter::addFilterRule(const CRule& rule)
 }
 
 void
-CInputFilter::removeFilterRule(UInt32 index)
+InputFilter::removeFilterRule(UInt32 index)
 {
 	if (m_primaryClient != NULL) {
 		m_ruleList[index].disable(m_primaryClient);
@@ -939,21 +939,21 @@ CInputFilter::removeFilterRule(UInt32 index)
 	m_ruleList.erase(m_ruleList.begin() + index);
 }
 
-CInputFilter::CRule&
-CInputFilter::getRule(UInt32 index)
+InputFilter::Rule&
+InputFilter::getRule(UInt32 index)
 {
 	return m_ruleList[index];
 }
 
 void
-CInputFilter::setPrimaryClient(CPrimaryClient* client)
+InputFilter::setPrimaryClient(PrimaryClient* client)
 {
 	if (m_primaryClient == client) {
 		return;
 	}
 
 	if (m_primaryClient != NULL) {
-		for (CRuleList::iterator rule  = m_ruleList.begin();
+		for (RuleList::iterator rule  = m_ruleList.begin();
 								 rule != m_ruleList.end(); ++rule) {
 			rule->disable(m_primaryClient);
 		}
@@ -972,7 +972,7 @@ CInputFilter::setPrimaryClient(CPrimaryClient* client)
 							m_primaryClient->getEventTarget());
 		m_events->removeHandler(m_events->forIPrimaryScreen().hotKeyUp(),
 							m_primaryClient->getEventTarget());
-		m_events->removeHandler(m_events->forCServer().connected(),
+		m_events->removeHandler(m_events->forServer().connected(),
 							m_primaryClient->getEventTarget());
 	}
 
@@ -981,49 +981,49 @@ CInputFilter::setPrimaryClient(CPrimaryClient* client)
 	if (m_primaryClient != NULL) {
 		m_events->adoptHandler(m_events->forIKeyState().keyDown(),
 							m_primaryClient->getEventTarget(),
-							new TMethodEventJob<CInputFilter>(this,
-								&CInputFilter::handleEvent));
+							new TMethodEventJob<InputFilter>(this,
+								&InputFilter::handleEvent));
 		m_events->adoptHandler(m_events->forIKeyState().keyUp(),
 							m_primaryClient->getEventTarget(),
-							new TMethodEventJob<CInputFilter>(this,
-								&CInputFilter::handleEvent));
+							new TMethodEventJob<InputFilter>(this,
+								&InputFilter::handleEvent));
 		m_events->adoptHandler(m_events->forIKeyState().keyRepeat(),
 							m_primaryClient->getEventTarget(),
-							new TMethodEventJob<CInputFilter>(this,
-								&CInputFilter::handleEvent));
+							new TMethodEventJob<InputFilter>(this,
+								&InputFilter::handleEvent));
 		m_events->adoptHandler(m_events->forIPrimaryScreen().buttonDown(),
 							m_primaryClient->getEventTarget(),
-							new TMethodEventJob<CInputFilter>(this,
-								&CInputFilter::handleEvent));
+							new TMethodEventJob<InputFilter>(this,
+								&InputFilter::handleEvent));
 		m_events->adoptHandler(m_events->forIPrimaryScreen().buttonUp(),
 							m_primaryClient->getEventTarget(),
-							new TMethodEventJob<CInputFilter>(this,
-								&CInputFilter::handleEvent));
+							new TMethodEventJob<InputFilter>(this,
+								&InputFilter::handleEvent));
 		m_events->adoptHandler(m_events->forIPrimaryScreen().hotKeyDown(),
 							m_primaryClient->getEventTarget(),
-							new TMethodEventJob<CInputFilter>(this,
-								&CInputFilter::handleEvent));
+							new TMethodEventJob<InputFilter>(this,
+								&InputFilter::handleEvent));
 		m_events->adoptHandler(m_events->forIPrimaryScreen().hotKeyUp(),
 							m_primaryClient->getEventTarget(),
-							new TMethodEventJob<CInputFilter>(this,
-								&CInputFilter::handleEvent));
-		m_events->adoptHandler(m_events->forCServer().connected(),
+							new TMethodEventJob<InputFilter>(this,
+								&InputFilter::handleEvent));
+		m_events->adoptHandler(m_events->forServer().connected(),
 							m_primaryClient->getEventTarget(),
-							new TMethodEventJob<CInputFilter>(this,
-								&CInputFilter::handleEvent));
+							new TMethodEventJob<InputFilter>(this,
+								&InputFilter::handleEvent));
 
-		for (CRuleList::iterator rule  = m_ruleList.begin();
+		for (RuleList::iterator rule  = m_ruleList.begin();
 								 rule != m_ruleList.end(); ++rule) {
 			rule->enable(m_primaryClient);
 		}
 	}
 }
 
-CString
-CInputFilter::format(const CString& linePrefix) const
+String
+InputFilter::format(const String& linePrefix) const
 {
-	CString s;
-	for (CRuleList::const_iterator i = m_ruleList.begin();
+	String s;
+	for (RuleList::const_iterator i = m_ruleList.begin();
 								i != m_ruleList.end(); ++i) {
 		s += linePrefix;
 		s += i->format();
@@ -1033,13 +1033,13 @@ CInputFilter::format(const CString& linePrefix) const
 }
 
 UInt32
-CInputFilter::getNumRules() const
+InputFilter::getNumRules() const
 {
 	return static_cast<UInt32>(m_ruleList.size());
 }
 
 bool
-CInputFilter::operator==(const CInputFilter& x) const
+InputFilter::operator==(const InputFilter& x) const
 {
 	// if there are different numbers of rules then we can't be equal
 	if (m_ruleList.size() != x.m_ruleList.size()) {
@@ -1048,12 +1048,12 @@ CInputFilter::operator==(const CInputFilter& x) const
 
 	// compare rule lists.  the easiest way to do that is to format each
 	// rule into a string, sort the strings, then compare the results.
-	std::vector<CString> aList, bList;
-	for (CRuleList::const_iterator i = m_ruleList.begin();
+	std::vector<String> aList, bList;
+	for (RuleList::const_iterator i = m_ruleList.begin();
 								i != m_ruleList.end(); ++i) {
 		aList.push_back(i->format());
 	}
-	for (CRuleList::const_iterator i = x.m_ruleList.begin();
+	for (RuleList::const_iterator i = x.m_ruleList.begin();
 								i != x.m_ruleList.end(); ++i) {
 		bList.push_back(i->format());
 	}
@@ -1063,21 +1063,21 @@ CInputFilter::operator==(const CInputFilter& x) const
 }
 
 bool
-CInputFilter::operator!=(const CInputFilter& x) const
+InputFilter::operator!=(const InputFilter& x) const
 {
 	return !operator==(x);
 }
 
 void
-CInputFilter::handleEvent(const CEvent& event, void*)
+InputFilter::handleEvent(const Event& event, void*)
 {
 	// copy event and adjust target
-	CEvent myEvent(event.getType(), this, event.getData(),
-								event.getFlags() | CEvent::kDontFreeData |
-								CEvent::kDeliverImmediately);
+	Event myEvent(event.getType(), this, event.getData(),
+								event.getFlags() | Event::kDontFreeData |
+								Event::kDeliverImmediately);
 
 	// let each rule try to match the event until one does
-	for (CRuleList::iterator rule  = m_ruleList.begin();
+	for (RuleList::iterator rule  = m_ruleList.begin();
 							 rule != m_ruleList.end(); ++rule) {
 		if (rule->handleEvent(myEvent)) {
 			// handled

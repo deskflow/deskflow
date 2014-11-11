@@ -32,7 +32,7 @@ TEST(CXWindowsScreenSaverTests, activate_defaultScreen_todo)
 {
 	Display* display = XOpenDisplay(":0.0");
 	Window window = DefaultRootWindow(display);
-	CMockEventQueue eventQueue;
+	MockEventQueue eventQueue;
 	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(1);
 	CXWindowsScreenSaver screenSaver(
 		display, window, NULL, &eventQueue);

@@ -68,33 +68,33 @@ toLE(UInt8*& dst, UInt32 src)
 	dst += 4;
 }
 
-COSXClipboardBMPConverter::COSXClipboardBMPConverter()
+OSXClipboardBMPConverter::OSXClipboardBMPConverter()
 {
 	// do nothing
 }
 
-COSXClipboardBMPConverter::~COSXClipboardBMPConverter()
+OSXClipboardBMPConverter::~OSXClipboardBMPConverter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-COSXClipboardBMPConverter::getFormat() const
+OSXClipboardBMPConverter::getFormat() const
 {
 	return IClipboard::kBitmap;
 }
 
 CFStringRef
-COSXClipboardBMPConverter::getOSXFormat() const
+OSXClipboardBMPConverter::getOSXFormat() const
 {
 	// TODO: does this only work with Windows?
 	return CFSTR("com.microsoft.bmp");
 }
 
-CString
-COSXClipboardBMPConverter::fromIClipboard(const CString& bmp) const
+String
+OSXClipboardBMPConverter::fromIClipboard(const String& bmp) const
 {
-	LOG((CLOG_DEBUG1 "ENTER COSXClipboardBMPConverter::doFromIClipboard()"));
+	LOG((CLOG_DEBUG1 "ENTER OSXClipboardBMPConverter::doFromIClipboard()"));
 	// create BMP image
 	UInt8 header[14];
 	UInt8* dst = header;
@@ -104,21 +104,21 @@ COSXClipboardBMPConverter::fromIClipboard(const CString& bmp) const
 	toLE(dst, static_cast<UInt16>(0));
 	toLE(dst, static_cast<UInt16>(0));
 	toLE(dst, static_cast<UInt32>(14 + 40));
-	return CString(reinterpret_cast<const char*>(header), 14) + bmp;
+	return String(reinterpret_cast<const char*>(header), 14) + bmp;
 }
 
-CString
-COSXClipboardBMPConverter::toIClipboard(const CString& bmp) const
+String
+OSXClipboardBMPConverter::toIClipboard(const String& bmp) const
 {
 	// make sure data is big enough for a BMP file
 	if (bmp.size() <= 14 + 40) {
-		return CString();
+		return String();
 	}
 
 	// check BMP file header
 	const UInt8* rawBMPHeader = reinterpret_cast<const UInt8*>(bmp.data());
 	if (rawBMPHeader[0] != 'B' || rawBMPHeader[1] != 'M') {
-		return CString();
+		return String();
 	}
 
 	// get offset to image data

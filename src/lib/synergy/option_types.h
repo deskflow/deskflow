@@ -34,7 +34,7 @@ Type to hold an option value.
 typedef SInt32			OptionValue;
 
 // for now, options are just pairs of integers
-typedef std::vector<UInt32> COptionsList;
+typedef std::vector<UInt32> OptionsList;
 
 // macro for packing 4 character strings into 4 byte integers
 #define OPTION_CODE(_s) 											\

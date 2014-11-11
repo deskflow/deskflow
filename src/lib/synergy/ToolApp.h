@@ -21,7 +21,7 @@
 #include "synergy/ToolArgs.h"
 #include "common/basic_types.h"
 
-class CToolApp : public CMinimalApp 
+class ToolApp : public MinimalApp 
 {
 public:
 	UInt32				run(int argc, char** argv);

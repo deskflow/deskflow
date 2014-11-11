@@ -23,25 +23,25 @@
 
 #include <vector>
 
-#define ARCH_PLUGIN CArchPluginWindows
+#define ARCH_PLUGIN ArchPluginWindows
 
-class CScreen;
+class Screen;
 class IEventQueue;
 
 //! Windows implementation of IArchPlugin
-class CArchPluginWindows : public IArchPlugin {
+class ArchPluginWindows : public IArchPlugin {
 public:
-	CArchPluginWindows();
-	virtual ~CArchPluginWindows();
+	ArchPluginWindows();
+	virtual ~ArchPluginWindows();
 
 	// IArchPlugin overrides
 	void				init(void* eventTarget, IEventQueue* events);
 
 private:
-	CString				getModuleDir();
-	void				getFilenames(const CString& pattern, std::vector<CString>& filenames);
-	void				load(const CString& dllPath);
-	CString				getPluginsDir();
+	String				getModuleDir();
+	void				getFilenames(const String& pattern, std::vector<String>& filenames);
+	void				load(const String& dllPath);
+	String				getPluginsDir();
 };
 
 void					sendEvent(const char* text, void* data);

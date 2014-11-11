@@ -36,20 +36,20 @@ UInt32 g_cryptoIvWrite_readBufferIndex;
 void cryptoIv_mockWrite(const void* in, UInt32 n);
 UInt8 cryptoIv_mockRead(void* out, UInt32 n);
 
-TEST(CClientProxyTests, cryptoIvWrite)
+TEST(ClientProxyTests, cryptoIvWrite)
 {
 	g_cryptoIvWrite_writeBufferIndex = 0;
 	g_cryptoIvWrite_readBufferIndex = 0;
 
-	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockStream> innerStream;
-	NiceMock<CMockServer> server;
-	CCryptoOptions options("cfb", "mock");
+	NiceMock<MockEventQueue> eventQueue;
+	NiceMock<MockStream> innerStream;
+	NiceMock<MockServer> server;
+	CryptoOptions options("cfb", "mock");
 	IStreamEvents streamEvents;
 	streamEvents.setEvents(&eventQueue);
 
-	CCryptoStream* serverStream = new CCryptoStream(&eventQueue, &innerStream, options, false);
-	CCryptoStream* clientStream = new CCryptoStream(&eventQueue, &innerStream, options, false);
+	CryptoStream* serverStream = new CryptoStream(&eventQueue, &innerStream, options, false);
+	CryptoStream* clientStream = new CryptoStream(&eventQueue, &innerStream, options, false);
 
 	byte iv[CRYPTO_IV_SIZE];
 	serverStream->newIv(iv);
@@ -60,7 +60,7 @@ TEST(CClientProxyTests, cryptoIvWrite)
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(cryptoIv_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(cryptoIv_mockRead));
 
-	CClientProxy1_4 clientProxy("stub", serverStream, &server, &eventQueue);
+	ClientProxy1_4 clientProxy("stub", serverStream, &server, &eventQueue);
 	
 	UInt8 buffer[100];
 	clientStream->read(buffer, 4);

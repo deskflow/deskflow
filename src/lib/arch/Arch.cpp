@@ -19,36 +19,36 @@
 #include "arch/Arch.h"
 
 //
-// CArch
+// Arch
 //
 
-CArch*					CArch::s_instance = NULL;
+Arch*					Arch::s_instance = NULL;
 
-CArch::CArch()
+Arch::Arch()
 {
 	assert(s_instance == NULL);
 	s_instance = this;
 }
 
-CArch::~CArch()
+Arch::~Arch()
 {
 #if SYSAPI_WIN32
-	CArchMiscWindows::cleanup();
+	ArchMiscWindows::cleanup();
 #endif
 }
 
 void
-CArch::init()
+Arch::init()
 {
 	ARCH_NETWORK::init();
 #if SYSAPI_WIN32
 	ARCH_TASKBAR::init();
-	CArchMiscWindows::init();
+	ArchMiscWindows::init();
 #endif
 }
 
-CArch*
-CArch::getInstance()
+Arch*
+Arch::getInstance()
 {
 	assert(s_instance != NULL);
 	return s_instance;

@@ -32,22 +32,22 @@ public:
 						getFormat() const;
 	virtual Atom		getAtom() const = 0;
 	virtual int			getDataSize() const;
-	virtual CString		fromIClipboard(const CString&) const;
-	virtual CString		toIClipboard(const CString&) const;
+	virtual String		fromIClipboard(const String&) const;
+	virtual String		toIClipboard(const String&) const;
 
 protected:
 	//! Convert from IClipboard format
 	/*!
 	Convert raw BGR pixel data to another image format.
 	*/
-	virtual CString		doBGRFromIClipboard(const UInt8* bgrData,
+	virtual String		doBGRFromIClipboard(const UInt8* bgrData,
 							UInt32 w, UInt32 h) const = 0;
 
 	//! Convert from IClipboard format
 	/*!
 	Convert raw BGRA pixel data to another image format.
 	*/
-	virtual CString		doBGRAFromIClipboard(const UInt8* bgrData,
+	virtual String		doBGRAFromIClipboard(const UInt8* bgrData,
 							UInt32 w, UInt32 h) const = 0;
 
 	//! Convert to IClipboard format
@@ -55,6 +55,6 @@ protected:
 	Convert an image into raw BGR or BGRA image data and store the
 	width, height, and image depth (24 or 32).
 	*/
-	virtual CString		doToIClipboard(const CString&,
+	virtual String		doToIClipboard(const String&,
 							UInt32& w, UInt32& h, UInt32& depth) const = 0;
 };

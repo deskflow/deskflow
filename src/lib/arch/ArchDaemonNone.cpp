@@ -19,21 +19,21 @@
 #include "arch/ArchDaemonNone.h"
 
 //
-// CArchDaemonNone
+// ArchDaemonNone
 //
 
-CArchDaemonNone::CArchDaemonNone()
+ArchDaemonNone::ArchDaemonNone()
 {
 	// do nothing
 }
 
-CArchDaemonNone::~CArchDaemonNone()
+ArchDaemonNone::~ArchDaemonNone()
 {
 	// do nothing
 }
 
 void
-CArchDaemonNone::installDaemon(const char*,
+ArchDaemonNone::installDaemon(const char*,
 				const char*,
 				const char*,
 				const char*,
@@ -43,13 +43,13 @@ CArchDaemonNone::installDaemon(const char*,
 }
 
 void
-CArchDaemonNone::uninstallDaemon(const char*)
+ArchDaemonNone::uninstallDaemon(const char*)
 {
 	// do nothing
 }
 
 int
-CArchDaemonNone::daemonize(const char* name, DaemonFunc func)
+ArchDaemonNone::daemonize(const char* name, DaemonFunc func)
 {
 	// simply forward the call to func.  obviously, this doesn't
 	// do any daemonizing.
@@ -57,29 +57,29 @@ CArchDaemonNone::daemonize(const char* name, DaemonFunc func)
 }
 
 bool
-CArchDaemonNone::canInstallDaemon(const char*)
+ArchDaemonNone::canInstallDaemon(const char*)
 {
 	return false;
 }
 
 bool
-CArchDaemonNone::isDaemonInstalled(const char*)
+ArchDaemonNone::isDaemonInstalled(const char*)
 {
 	return false;
 }
 
 void
-CArchDaemonNone::installDaemon()
+ArchDaemonNone::installDaemon()
 {
 }
 
 void
-CArchDaemonNone::uninstallDaemon()
+ArchDaemonNone::uninstallDaemon()
 {
 }
 
 std::string
-CArchDaemonNone::commandLine() const
+ArchDaemonNone::commandLine() const
 {
 	return "";
 }

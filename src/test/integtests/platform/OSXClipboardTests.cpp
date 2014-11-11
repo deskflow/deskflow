@@ -21,9 +21,9 @@
 #include "test/global/gtest.h"
 #include <iostream>
 
-TEST(COSXClipboardTests, empty_openCalled_returnsTrue)
+TEST(OSXClipboardTests, empty_openCalled_returnsTrue)
 {
-	COSXClipboard clipboard;
+	OSXClipboard clipboard;
 	clipboard.open(0);
 	
 	bool actual = clipboard.empty();
@@ -31,62 +31,62 @@ TEST(COSXClipboardTests, empty_openCalled_returnsTrue)
 	EXPECT_EQ(true, actual);
 }
 
-TEST(COSXClipboardTests, empty_singleFormat_hasReturnsFalse)
+TEST(OSXClipboardTests, empty_singleFormat_hasReturnsFalse)
 {
-	COSXClipboard clipboard;
+	OSXClipboard clipboard;
 	clipboard.open(0);
-	clipboard.add(COSXClipboard::kText, "synergy rocks!");
+	clipboard.add(OSXClipboard::kText, "synergy rocks!");
 	
 	clipboard.empty();
 	
-	bool actual = clipboard.has(COSXClipboard::kText);
+	bool actual = clipboard.has(OSXClipboard::kText);
 	EXPECT_EQ(false, actual);
 }
 
-TEST(COSXClipboardTests, add_newValue_valueWasStored)
+TEST(OSXClipboardTests, add_newValue_valueWasStored)
 {
-	COSXClipboard clipboard;
+	OSXClipboard clipboard;
 	clipboard.open(0);
 	
 	clipboard.add(IClipboard::kText, "synergy rocks!");
 	
-	CString actual = clipboard.get(IClipboard::kText);
+	String actual = clipboard.get(IClipboard::kText);
 	EXPECT_EQ("synergy rocks!", actual);
 }
 
-TEST(COSXClipboardTests, add_replaceValue_valueWasReplaced)
+TEST(OSXClipboardTests, add_replaceValue_valueWasReplaced)
 {
-	COSXClipboard clipboard;
+	OSXClipboard clipboard;
 	clipboard.open(0);
 	
 	clipboard.add(IClipboard::kText, "synergy rocks!");
 	clipboard.add(IClipboard::kText, "maxivista sucks"); // haha, just kidding.
 	
-	CString actual = clipboard.get(IClipboard::kText);
+	String actual = clipboard.get(IClipboard::kText);
 	EXPECT_EQ("maxivista sucks", actual);
 }
 
-TEST(COSXClipboardTests, open_timeIsZero_returnsTrue)
+TEST(OSXClipboardTests, open_timeIsZero_returnsTrue)
 {
-	COSXClipboard clipboard;
+	OSXClipboard clipboard;
 	
 	bool actual = clipboard.open(0);
 	
 	EXPECT_EQ(true, actual);
 }
 
-TEST(COSXClipboardTests, open_timeIsOne_returnsTrue)
+TEST(OSXClipboardTests, open_timeIsOne_returnsTrue)
 {
-	COSXClipboard clipboard;
+	OSXClipboard clipboard;
 	
 	bool actual = clipboard.open(1);
 	
 	EXPECT_EQ(true, actual);
 }
 
-TEST(COSXClipboardTests, close_isOpen_noErrors)
+TEST(OSXClipboardTests, close_isOpen_noErrors)
 {
-	COSXClipboard clipboard;
+	OSXClipboard clipboard;
 	clipboard.open(0);
 	
 	clipboard.close();
@@ -94,32 +94,32 @@ TEST(COSXClipboardTests, close_isOpen_noErrors)
 	// can't assert anything
 }
 
-TEST(COSXClipboardTests, getTime_openWithNoEmpty_returnsOne)
+TEST(OSXClipboardTests, getTime_openWithNoEmpty_returnsOne)
 {
-	COSXClipboard clipboard;
+	OSXClipboard clipboard;
 	clipboard.open(1);
 	
-	COSXClipboard::Time actual = clipboard.getTime();
+	OSXClipboard::Time actual = clipboard.getTime();
 	
-	// this behavior is different to that of CClipboard which only
+	// this behavior is different to that of Clipboard which only
 	// returns the value passed into open(t) after empty() is called.
 	EXPECT_EQ((UInt32)1, actual);
 }
 
-TEST(COSXClipboardTests, getTime_openAndEmpty_returnsOne)
+TEST(OSXClipboardTests, getTime_openAndEmpty_returnsOne)
 {
-	COSXClipboard clipboard;
+	OSXClipboard clipboard;
 	clipboard.open(1);
 	clipboard.empty();
 	
-	COSXClipboard::Time actual = clipboard.getTime();
+	OSXClipboard::Time actual = clipboard.getTime();
 	
 	EXPECT_EQ((UInt32)1, actual);
 }
 
-TEST(COSXClipboardTests, has_withFormatAdded_returnsTrue)
+TEST(OSXClipboardTests, has_withFormatAdded_returnsTrue)
 {
-	COSXClipboard clipboard;
+	OSXClipboard clipboard;
 	clipboard.open(0);
 	clipboard.empty();
 	clipboard.add(IClipboard::kText, "synergy rocks!");
@@ -129,9 +129,9 @@ TEST(COSXClipboardTests, has_withFormatAdded_returnsTrue)
 	EXPECT_EQ(true, actual);
 }
 
-TEST(COSXClipboardTests, has_withNoFormats_returnsFalse)
+TEST(OSXClipboardTests, has_withNoFormats_returnsFalse)
 {
-	COSXClipboard clipboard;
+	OSXClipboard clipboard;
 	clipboard.open(0);
 	clipboard.empty();
 	
@@ -140,25 +140,25 @@ TEST(COSXClipboardTests, has_withNoFormats_returnsFalse)
 	EXPECT_EQ(false, actual);
 }
 
-TEST(COSXClipboardTests, get_withNoFormats_returnsEmpty)
+TEST(OSXClipboardTests, get_withNoFormats_returnsEmpty)
 {
-	COSXClipboard clipboard;
+	OSXClipboard clipboard;
 	clipboard.open(0);
 	clipboard.empty();
 	
-	CString actual = clipboard.get(IClipboard::kText);
+	String actual = clipboard.get(IClipboard::kText);
 	
 	EXPECT_EQ("", actual);
 }
 
-TEST(COSXClipboardTests, get_withFormatAdded_returnsExpected)
+TEST(OSXClipboardTests, get_withFormatAdded_returnsExpected)
 {
-	COSXClipboard clipboard;
+	OSXClipboard clipboard;
 	clipboard.open(0);
 	clipboard.empty();
 	clipboard.add(IClipboard::kText, "synergy rocks!");
 	
-	CString actual = clipboard.get(IClipboard::kText);
+	String actual = clipboard.get(IClipboard::kText);
 	
 	EXPECT_EQ("synergy rocks!", actual);
 }

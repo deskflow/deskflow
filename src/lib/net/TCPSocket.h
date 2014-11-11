@@ -24,11 +24,11 @@
 #include "mt/Mutex.h"
 #include "arch/IArchNetwork.h"
 
-class CMutex;
-class CThread;
+class Mutex;
+class Thread;
 class ISocketMultiplexerJob;
 class IEventQueue;
-class CSocketMultiplexer;
+class SocketMultiplexer;
 
 //! TCP data socket
 /*!
@@ -36,12 +36,12 @@ A data socket using TCP.
 */
 class CTCPSocket : public IDataSocket {
 public:
-	CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer);
-	CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer, CArchSocket socket);
+	CTCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+	CTCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket);
 	~CTCPSocket();
 
 	// ISocket overrides
-	virtual void		bind(const CNetworkAddress&);
+	virtual void		bind(const NetworkAddress&);
 	virtual void		close();
 	virtual void*		getEventTarget() const;
 
@@ -55,7 +55,7 @@ public:
 	virtual UInt32		getSize() const;
 
 	// IDataSocket overrides
-	virtual void		connect(const CNetworkAddress&);
+	virtual void		connect(const NetworkAddress&);
 
 private:
 	void				init();
@@ -63,7 +63,7 @@ private:
 	void				setJob(ISocketMultiplexerJob*);
 	ISocketMultiplexerJob*	newJob();
 	void				sendConnectionFailedEvent(const char*);
-	void				sendEvent(CEvent::Type);
+	void				sendEvent(Event::Type);
 
 	void				onConnected();
 	void				onInputShutdown();
@@ -78,14 +78,14 @@ private:
 							bool, bool, bool);
 
 private:
-	CMutex				m_mutex;
-	CArchSocket			m_socket;
-	CStreamBuffer		m_inputBuffer;
-	CStreamBuffer		m_outputBuffer;
-	CCondVar<bool>		m_flushed;
+	Mutex				m_mutex;
+	ArchSocket			m_socket;
+	StreamBuffer		m_inputBuffer;
+	StreamBuffer		m_outputBuffer;
+	CondVar<bool>		m_flushed;
 	bool				m_connected;
 	bool				m_readable;
 	bool				m_writable;
 	IEventQueue*		m_events;
-	CSocketMultiplexer* m_socketMultiplexer;
+	SocketMultiplexer* m_socketMultiplexer;
 };

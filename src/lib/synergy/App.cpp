@@ -50,13 +50,13 @@
 #include "platform/OSXDragSimulator.h"
 #endif
 
-CApp* CApp::s_instance = nullptr;
+App* App::s_instance = nullptr;
 
 //
-// CApp
+// App
 //
 
-CApp::CApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args) :
+App::App(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, ArgsBase* args) :
 	m_bye(&exit),
 	m_taskBarReceiver(NULL),
 	m_suspended(false),
@@ -70,14 +70,14 @@ CApp::CApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver,
 	s_instance = this;
 }
 
-CApp::~CApp()
+App::~App()
 {
 	s_instance = nullptr;
 	delete m_args;
 }
 
 void
-CApp::version()
+App::version()
 {
 	char buffer[500];
 	sprintf(
@@ -94,7 +94,7 @@ CApp::version()
 }
 
 int
-CApp::run(int argc, char** argv)
+App::run(int argc, char** argv)
 {	
 #if MAC_OS_X_VERSION_10_7
 	// dock hide only supported on lion :(
@@ -136,28 +136,28 @@ CApp::run(int argc, char** argv)
 }
 
 int
-CApp::daemonMainLoop(int, const char**)
+App::daemonMainLoop(int, const char**)
 {
 #if SYSAPI_WIN32
-	CSystemLogger sysLogger(daemonName(), false);
+	SystemLogger sysLogger(daemonName(), false);
 #else
-	CSystemLogger sysLogger(daemonName(), true);
+	SystemLogger sysLogger(daemonName(), true);
 #endif
 	return mainLoop();
 }
 
 void 
-CApp::setupFileLogging()
+App::setupFileLogging()
 {
 	if (argsBase().m_logFile != NULL) {
-		m_fileLog = new CFileLogOutputter(argsBase().m_logFile);
+		m_fileLog = new FileLogOutputter(argsBase().m_logFile);
 		CLOG->insert(m_fileLog);
 		LOG((CLOG_DEBUG1 "logging to file (%s) enabled", argsBase().m_logFile));
 	}
 }
 
 void 
-CApp::loggingFilterWarning()
+App::loggingFilterWarning()
 {
 	if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
 		if (argsBase().m_logFile == NULL) {
@@ -168,7 +168,7 @@ CApp::loggingFilterWarning()
 }
 
 void 
-CApp::initApp(int argc, const char** argv)
+App::initApp(int argc, const char** argv)
 {
 	// parse command line
 	parseArgs(argc, argv);
@@ -195,7 +195,7 @@ CApp::initApp(int argc, const char** argv)
 
 		// create a log buffer so we can show the latest message
 		// as a tray icon tooltip
-		CBufferedLogOutputter* logBuffer = new CBufferedLogOutputter(1000);
+		BufferedLogOutputter* logBuffer = new BufferedLogOutputter(1000);
 		CLOG->insert(logBuffer, true);
 
 		// make the task bar receiver.  the user can control this app
@@ -205,36 +205,36 @@ CApp::initApp(int argc, const char** argv)
 }
 
 void
-CApp::initIpcClient()
+App::initIpcClient()
 {
-	m_ipcClient = new CIpcClient(m_events, m_socketMultiplexer);
+	m_ipcClient = new IpcClient(m_events, m_socketMultiplexer);
 	m_ipcClient->connect();
 
 	m_events->adoptHandler(
-		m_events->forCIpcClient().messageReceived(), m_ipcClient,
-		new TMethodEventJob<CApp>(this, &CApp::handleIpcMessage));
+		m_events->forIpcClient().messageReceived(), m_ipcClient,
+		new TMethodEventJob<App>(this, &App::handleIpcMessage));
 }
 
 void
-CApp::cleanupIpcClient()
+App::cleanupIpcClient()
 {
 	m_ipcClient->disconnect();
-	m_events->removeHandler(m_events->forCIpcClient().messageReceived(), m_ipcClient);
+	m_events->removeHandler(m_events->forIpcClient().messageReceived(), m_ipcClient);
 	delete m_ipcClient;
 }
 
 void
-CApp::handleIpcMessage(const CEvent& e, void*)
+App::handleIpcMessage(const Event& e, void*)
 {
-	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
+	IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
 	if (m->type() == kIpcShutdown) {
 		LOG((CLOG_INFO "got ipc shutdown message"));
-		m_events->addEvent(CEvent(CEvent::kQuit));
+		m_events->addEvent(Event(Event::kQuit));
     }
 }
 
 void
-CApp::runEventsLoop(void*)
+App::runEventsLoop(void*)
 {
 	m_events->loop();
 	

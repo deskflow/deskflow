@@ -20,13 +20,13 @@
 
 #include "arch/IArchTaskBar.h"
 
-#define ARCH_TASKBAR CArchTaskBarXWindows
+#define ARCH_TASKBAR ArchTaskBarXWindows
 
 //! X11 implementation of IArchTaskBar
-class CArchTaskBarXWindows : public IArchTaskBar {
+class ArchTaskBarXWindows : public IArchTaskBar {
 public:
-	CArchTaskBarXWindows();
-	virtual ~CArchTaskBarXWindows();
+	ArchTaskBarXWindows();
+	virtual ~ArchTaskBarXWindows();
 
 	// IArchTaskBar overrides
 	virtual void		addReceiver(IArchTaskBarReceiver*);

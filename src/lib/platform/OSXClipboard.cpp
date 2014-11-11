@@ -27,17 +27,17 @@
 #include "arch/XArch.h"
 
 //
-// COSXClipboard
+// OSXClipboard
 //
 
-COSXClipboard::COSXClipboard() :
+OSXClipboard::OSXClipboard() :
 	m_time(0),
 	m_pboard(NULL)
 {
-	m_converters.push_back(new COSXClipboardHTMLConverter);
-	m_converters.push_back(new COSXClipboardBMPConverter);
-	m_converters.push_back(new COSXClipboardUTF16Converter);
-	m_converters.push_back(new COSXClipboardTextConverter);
+	m_converters.push_back(new OSXClipboardHTMLConverter);
+	m_converters.push_back(new OSXClipboardBMPConverter);
+	m_converters.push_back(new OSXClipboardUTF16Converter);
+	m_converters.push_back(new OSXClipboardTextConverter);
 
 
 
@@ -56,13 +56,13 @@ COSXClipboard::COSXClipboard() :
 	}
 }
 
-COSXClipboard::~COSXClipboard()
+OSXClipboard::~OSXClipboard()
 {
 	clearConverters();
 }
 
 	bool
-COSXClipboard::empty()
+OSXClipboard::empty()
 {
 	LOG((CLOG_DEBUG "emptying clipboard"));
 	if (m_pboard == NULL)
@@ -78,7 +78,7 @@ COSXClipboard::empty()
 }
 
 	bool
-COSXClipboard::synchronize()
+OSXClipboard::synchronize()
 {
 	if (m_pboard == NULL)
 		return false;
@@ -93,7 +93,7 @@ COSXClipboard::synchronize()
 }    
 
 	void
-COSXClipboard::add(EFormat format, const CString & data)
+OSXClipboard::add(EFormat format, const String & data)
 {
 	bool emptied = false;
 	if (m_pboard == NULL)
@@ -117,7 +117,7 @@ COSXClipboard::add(EFormat format, const CString & data)
 
 		// skip converters for other formats
 		if (converter->getFormat() == format) {
-			CString osXData = converter->fromIClipboard(data);
+			String osXData = converter->fromIClipboard(data);
 			CFStringRef flavorType = converter->getOSXFormat();
 			CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, (UInt8 *)osXData.data(), osXData.size());
 
@@ -143,7 +143,7 @@ COSXClipboard::add(EFormat format, const CString & data)
 }
 
 bool
-COSXClipboard::open(Time time) const 
+OSXClipboard::open(Time time) const 
 {
 	if (m_pboard == NULL)
 		return false;
@@ -154,20 +154,20 @@ COSXClipboard::open(Time time) const
 }
 
 void
-COSXClipboard::close() const
+OSXClipboard::close() const
 {
 	LOG((CLOG_DEBUG "closing clipboard"));
 	/* not needed */
 }
 
 IClipboard::Time
-COSXClipboard::getTime() const
+OSXClipboard::getTime() const
 {
 	return m_time;
 }
 
 bool
-COSXClipboard::has(EFormat format) const
+OSXClipboard::has(EFormat format) const
 {
 	if (m_pboard == NULL)
 		return false;
@@ -193,12 +193,12 @@ COSXClipboard::has(EFormat format) const
 	return false;
 }
 
-CString
-COSXClipboard::get(EFormat format) const
+String
+OSXClipboard::get(EFormat format) const
 {
 	CFStringRef type;
 	PasteboardItemID item;
-	CString result;
+	String result;
 
 	if (m_pboard == NULL)
 		return result;
@@ -237,13 +237,13 @@ COSXClipboard::get(EFormat format) const
 			throw err;
 		}
 
-		result = CString((char *) CFDataGetBytePtr(buffer), CFDataGetLength(buffer));
+		result = String((char *) CFDataGetBytePtr(buffer), CFDataGetLength(buffer));
 	}
 	catch (OSStatus err) {
-		LOG((CLOG_DEBUG "exception thrown in COSXClipboard::get MacError (%d)", err));
+		LOG((CLOG_DEBUG "exception thrown in OSXClipboard::get MacError (%d)", err));
 	}
 	catch (...) {
-		LOG((CLOG_DEBUG "unknown exception in COSXClipboard::get"));
+		LOG((CLOG_DEBUG "unknown exception in OSXClipboard::get"));
 		RETHROW_XTHREAD
 	}
 
@@ -254,7 +254,7 @@ COSXClipboard::get(EFormat format) const
 }
 
 	void
-COSXClipboard::clearConverters()
+OSXClipboard::clearConverters()
 {
 	if (m_pboard == NULL)
 		return;

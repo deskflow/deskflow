@@ -20,13 +20,13 @@
 
 #include "arch/IArchString.h"
 
-#define ARCH_STRING CArchStringUnix
+#define ARCH_STRING ArchStringUnix
 
 //! Unix implementation of IArchString
-class CArchStringUnix : public IArchString {
+class ArchStringUnix : public IArchString {
 public:
-	CArchStringUnix();
-	virtual ~CArchStringUnix();
+	ArchStringUnix();
+	virtual ~ArchStringUnix();
 
 	// IArchString overrides
 	virtual EWideCharEncoding

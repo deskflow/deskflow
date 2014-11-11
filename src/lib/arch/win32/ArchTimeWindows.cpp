@@ -41,10 +41,10 @@ static PTimeGetTime		s_tgt        = NULL;
 
 
 //
-// CArchTimeWindows
+// ArchTimeWindows
 //
 
-CArchTimeWindows::CArchTimeWindows()
+ArchTimeWindows::ArchTimeWindows()
 {
 	assert(s_freq == 0.0 || s_mmInstance == NULL);
 
@@ -61,7 +61,7 @@ CArchTimeWindows::CArchTimeWindows()
 	}
 }
 
-CArchTimeWindows::~CArchTimeWindows()
+ArchTimeWindows::~ArchTimeWindows()
 {
 	s_freq = 0.0;
 	if (s_mmInstance == NULL) {
@@ -72,7 +72,7 @@ CArchTimeWindows::~CArchTimeWindows()
 }
 
 double
-CArchTimeWindows::time()
+ArchTimeWindows::time()
 {
 	// get time.  we try three ways, in order of descending precision
 	if (s_freq != 0.0) {

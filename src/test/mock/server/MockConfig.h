@@ -23,10 +23,10 @@
 
 #include "test/global/gmock.h"
 
-class CMockConfig : public CConfig
+class MockConfig : public Config
 {
 public:
-	CMockConfig() : CConfig() { }
-	MOCK_METHOD0(getInputFilter, CInputFilter*());
-	MOCK_CONST_METHOD1(isScreen, bool(const CString&));
+	MockConfig() : Config() { }
+	MOCK_METHOD0(getInputFilter, InputFilter*());
+	MOCK_CONST_METHOD1(isScreen, bool(const String&));
 };

@@ -20,12 +20,12 @@
 
 #include "synergyp/PortableTaskBarReceiver.h"
 
-class CBufferedLogOutputter;
+class BufferedLogOutputter;
 
-//! Implementation of CPortableTaskBarReceiver for X Windows
-class CXWindowsServerTaskBarReceiver : public CPortableTaskBarReceiver {
+//! Implementation of PortableTaskBarReceiver for X Windows
+class CXWindowsServerTaskBarReceiver : public PortableTaskBarReceiver {
 public:
-	CXWindowsServerTaskBarReceiver(const CBufferedLogOutputter*);
+	CXWindowsServerTaskBarReceiver(const BufferedLogOutputter*);
 	virtual ~CXWindowsServerTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides

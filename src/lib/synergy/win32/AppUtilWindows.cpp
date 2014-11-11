@@ -36,7 +36,7 @@
 #include <iostream>
 #include <conio.h>
 
-CAppUtilWindows::CAppUtilWindows(IEventQueue* events) :
+AppUtilWindows::AppUtilWindows(IEventQueue* events) :
 	m_events(events),
 	m_exitMode(kExitModeNormal)
 {
@@ -46,15 +46,15 @@ CAppUtilWindows::CAppUtilWindows(IEventQueue* events) :
     }
 }
 
-CAppUtilWindows::~CAppUtilWindows()
+AppUtilWindows::~AppUtilWindows()
 {
 }
 
-BOOL WINAPI CAppUtilWindows::consoleHandler(DWORD)
+BOOL WINAPI AppUtilWindows::consoleHandler(DWORD)
 {
 	LOG((CLOG_INFO "got shutdown signal"));
-	IEventQueue* events = CAppUtil::instance().app().getEvents();
-	events->addEvent(CEvent(CEvent::kQuit));
+	IEventQueue* events = AppUtil::instance().app().getEvents();
+	events->addEvent(Event(Event::kQuit));
     return TRUE;
 }
 
@@ -62,11 +62,11 @@ static
 int 
 mainLoopStatic() 
 {
-	return CAppUtil::instance().app().mainLoop();
+	return AppUtil::instance().app().mainLoop();
 }
 
 int 
-CAppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
+AppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
 {
 	app().initApp(argc, argv);
 	debugServiceWait();
@@ -74,16 +74,16 @@ CAppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
 	// NB: what the hell does this do?!
 	app().argsBase().m_backend = false;
 	
-	return CArchMiscWindows::runDaemon(mainLoopStatic);
+	return ArchMiscWindows::runDaemon(mainLoopStatic);
 }
 
 void 
-CAppUtilWindows::exitApp(int code)
+AppUtilWindows::exitApp(int code)
 {
 	switch (m_exitMode) {
 
 		case kExitModeDaemon:
-			CArchMiscWindows::daemonFailed(code);
+			ArchMiscWindows::daemonFailed(code);
 			break;
 
 		default:
@@ -93,13 +93,13 @@ CAppUtilWindows::exitApp(int code)
 
 int daemonNTMainLoopStatic(int argc, const char** argv)
 {
-	return CAppUtilWindows::instance().daemonNTMainLoop(argc, argv);
+	return AppUtilWindows::instance().daemonNTMainLoop(argc, argv);
 }
 
 int 
-CAppUtilWindows::daemonNTStartup(int, char**)
+AppUtilWindows::daemonNTStartup(int, char**)
 {
-	CSystemLogger sysLogger(app().daemonName(), false);
+	SystemLogger sysLogger(app().daemonName(), false);
 	m_exitMode = kExitModeDaemon;
 	return ARCH->daemonize(app().daemonName(), daemonNTMainLoopStatic);
 }
@@ -108,18 +108,18 @@ static
 int
 daemonNTStartupStatic(int argc, char** argv)
 {
-	return CAppUtilWindows::instance().daemonNTStartup(argc, argv);
+	return AppUtilWindows::instance().daemonNTStartup(argc, argv);
 }
 
 static
 int
 foregroundStartupStatic(int argc, char** argv)
 {
-	return CAppUtil::instance().app().foregroundStartup(argc, argv);
+	return AppUtil::instance().app().foregroundStartup(argc, argv);
 }
 
 void
-CAppUtilWindows::beforeAppExit()
+AppUtilWindows::beforeAppExit()
 {
 	// this can be handy for debugging, since the application is launched in
 	// a new console window, and will normally close on exit (making it so
@@ -131,7 +131,7 @@ CAppUtilWindows::beforeAppExit()
 }
 
 int
-CAppUtilWindows::run(int argc, char** argv)
+AppUtilWindows::run(int argc, char** argv)
 {
     OSVERSIONINFO osvi;
     ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
@@ -143,13 +143,13 @@ CAppUtilWindows::run(int argc, char** argv)
     }
 
 	// record window instance for tray icon, etc
-	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+	ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 
-	CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
-	CThread::getCurrentThread().setPriority(-14);
+	CMSWindowsScreen::init(ArchMiscWindows::instanceWin32());
+	Thread::getCurrentThread().setPriority(-14);
 
 	StartupFunc startup;
-	if (CArchMiscWindows::wasLaunchedAsService()) {
+	if (ArchMiscWindows::wasLaunchedAsService()) {
 		startup = &daemonNTStartupStatic;
 	} else {
 		startup = &foregroundStartupStatic;
@@ -159,14 +159,14 @@ CAppUtilWindows::run(int argc, char** argv)
 	return app().runInner(argc, argv, NULL, startup);
 }
 
-CAppUtilWindows& 
-CAppUtilWindows::instance()
+AppUtilWindows& 
+AppUtilWindows::instance()
 {
-	return (CAppUtilWindows&)CAppUtil::instance();
+	return (AppUtilWindows&)AppUtil::instance();
 }
 
 void 
-CAppUtilWindows::debugServiceWait()
+AppUtilWindows::debugServiceWait()
 {
 	if (app().argsBase().m_debugServiceWait)
 	{
@@ -183,7 +183,7 @@ CAppUtilWindows::debugServiceWait()
 }
 
 void 
-CAppUtilWindows::startNode()
+AppUtilWindows::startNode()
 {
 	app().startNode();
 }

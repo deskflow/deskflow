@@ -26,27 +26,27 @@
 #include "base/Log.h"
 
 //
-// CIpcServerProxy
+// IpcServerProxy
 //
 
-CIpcServerProxy::CIpcServerProxy(synergy::IStream& stream, IEventQueue* events) :
+IpcServerProxy::IpcServerProxy(synergy::IStream& stream, IEventQueue* events) :
 	m_stream(stream),
 	m_events(events)
 {
 	m_events->adoptHandler(m_events->forIStream().inputReady(),
 		stream.getEventTarget(),
-		new TMethodEventJob<CIpcServerProxy>(
-		this, &CIpcServerProxy::handleData));
+		new TMethodEventJob<IpcServerProxy>(
+		this, &IpcServerProxy::handleData));
 }
 
-CIpcServerProxy::~CIpcServerProxy()
+IpcServerProxy::~IpcServerProxy()
 {
 	m_events->removeHandler(m_events->forIStream().inputReady(),
 		m_stream.getEventTarget());
 }
 
 void
-CIpcServerProxy::handleData(const CEvent&, void*)
+IpcServerProxy::handleData(const Event&, void*)
 {
 	LOG((CLOG_DEBUG "start ipc handle data"));
 
@@ -57,12 +57,12 @@ CIpcServerProxy::handleData(const CEvent&, void*)
 		LOG((CLOG_DEBUG "ipc read: %c%c%c%c",
 			code[0], code[1], code[2], code[3]));
 		
-		CIpcMessage* m = nullptr;
+		IpcMessage* m = nullptr;
 		if (memcmp(code, kIpcMsgLogLine, 4) == 0) {
 			m = parseLogLine();
 		}
 		else if (memcmp(code, kIpcMsgShutdown, 4) == 0) {
-			m = new CIpcShutdownMessage();
+			m = new IpcShutdownMessage();
 		}
 		else {
 			LOG((CLOG_ERR "invalid ipc message"));
@@ -70,7 +70,7 @@ CIpcServerProxy::handleData(const CEvent&, void*)
 		}
 		
 		// don't delete with this event; the data is passed to a new event.
-		CEvent e(m_events->forCIpcServerProxy().messageReceived(), this, NULL, CEvent::kDontFreeData);
+		Event e(m_events->forIpcServerProxy().messageReceived(), this, NULL, Event::kDontFreeData);
 		e.setDataObject(m);
 		m_events->addEvent(e);
 
@@ -81,21 +81,21 @@ CIpcServerProxy::handleData(const CEvent&, void*)
 }
 
 void
-CIpcServerProxy::send(const CIpcMessage& message)
+IpcServerProxy::send(const IpcMessage& message)
 {
 	LOG((CLOG_DEBUG4 "ipc write: %d", message.type()));
 
 	switch (message.type()) {
 	case kIpcHello: {
-		const CIpcHelloMessage& hm = static_cast<const CIpcHelloMessage&>(message);
-		CProtocolUtil::writef(&m_stream, kIpcMsgHello, hm.clientType());
+		const IpcHelloMessage& hm = static_cast<const IpcHelloMessage&>(message);
+		ProtocolUtil::writef(&m_stream, kIpcMsgHello, hm.clientType());
 		break;
 	}
 
 	case kIpcCommand: {
-		const CIpcCommandMessage& cm = static_cast<const CIpcCommandMessage&>(message);
-		CString command = cm.command();
-		CProtocolUtil::writef(&m_stream, kIpcMsgCommand, &command);
+		const IpcCommandMessage& cm = static_cast<const IpcCommandMessage&>(message);
+		String command = cm.command();
+		ProtocolUtil::writef(&m_stream, kIpcMsgCommand, &command);
 		break;
 	}
 
@@ -105,18 +105,18 @@ CIpcServerProxy::send(const CIpcMessage& message)
 	}
 }
 
-CIpcLogLineMessage*
-CIpcServerProxy::parseLogLine()
+IpcLogLineMessage*
+IpcServerProxy::parseLogLine()
 {
-	CString logLine;
-	CProtocolUtil::readf(&m_stream, kIpcMsgLogLine + 4, &logLine);
+	String logLine;
+	ProtocolUtil::readf(&m_stream, kIpcMsgLogLine + 4, &logLine);
 	
 	// must be deleted by event handler.
-	return new CIpcLogLineMessage(logLine);
+	return new IpcLogLineMessage(logLine);
 }
 
 void
-CIpcServerProxy::disconnect()
+IpcServerProxy::disconnect()
 {
 	LOG((CLOG_DEBUG "ipc disconnect, closing stream"));
 	m_stream.close();

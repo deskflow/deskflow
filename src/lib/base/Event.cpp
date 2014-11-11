@@ -20,10 +20,10 @@
 #include "base/EventQueue.h"
 
 //
-// CEvent
+// Event
 //
 
-CEvent::CEvent() :
+Event::Event() :
 	m_type(kUnknown),
 	m_target(NULL),
 	m_data(NULL),
@@ -33,7 +33,7 @@ CEvent::CEvent() :
 	// do nothing
 }
 
-CEvent::CEvent(Type type, void* target, void* data, Flags flags) :
+Event::Event(Type type, void* target, void* data, Flags flags) :
 	m_type(type),
 	m_target(target),
 	m_data(data),
@@ -43,38 +43,38 @@ CEvent::CEvent(Type type, void* target, void* data, Flags flags) :
 	// do nothing
 }
 
-CEvent::Type
-CEvent::getType() const
+Event::Type
+Event::getType() const
 {
 	return m_type;
 }
 
 void*
-CEvent::getTarget() const
+Event::getTarget() const
 {
 	return m_target;
 }
 
 void*
-CEvent::getData() const
+Event::getData() const
 {
 	return m_data;
 }
 
-CEventData*
-CEvent::getDataObject() const
+EventData*
+Event::getDataObject() const
 {
 	return m_dataObject;
 }
 
-CEvent::Flags
-CEvent::getFlags() const
+Event::Flags
+Event::getFlags() const
 {
 	return m_flags;
 }
 
 void
-CEvent::deleteData(const CEvent& event)
+Event::deleteData(const Event& event)
 {
 	switch (event.getType()) {
 	case kUnknown:
@@ -93,7 +93,7 @@ CEvent::deleteData(const CEvent& event)
 }
 
 void
-CEvent::setDataObject(CEventData* dataObject)
+Event::setDataObject(EventData* dataObject)
 {
 	assert(m_dataObject == nullptr);
 	m_dataObject = dataObject;

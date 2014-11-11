@@ -39,18 +39,18 @@ enum EServerState {
 	kStarted
 };
 
-class CServer;
-class CScreen;
-class CClientListener;
-class CEventQueueTimer;
+class Server;
+class Screen;
+class ClientListener;
+class EventQueueTimer;
 class ILogOutputter;
 class IEventQueue;
-class CServerArgs;
+class ServerArgs;
 
-class CServerApp : public CApp {
+class ServerApp : public App {
 public:
-	CServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver);
-	virtual ~CServerApp();
+	ServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver);
+	virtual ~ServerApp();
 	
 	// Parse server specific command line arguments.
 	void parseArgs(int argc, const char* const* argv);
@@ -59,41 +59,41 @@ public:
 	void help();
 
 	// Returns arguments that are common and for server.
-	CServerArgs& args() const { return (CServerArgs&)argsBase(); }
+	ServerArgs& args() const { return (ServerArgs&)argsBase(); }
 
 	const char* daemonName() const;
 	const char* daemonInfo() const;
 
 	// TODO: Document these functions.
-	static void reloadSignalHandler(CArch::ESignal, void*);
+	static void reloadSignalHandler(Arch::ESignal, void*);
 
-	void reloadConfig(const CEvent&, void*);
+	void reloadConfig(const Event&, void*);
 	void loadConfig();
-	bool loadConfig(const CString& pathname);
-	void forceReconnect(const CEvent&, void*);
-	void resetServer(const CEvent&, void*);
-	void handleClientConnected(const CEvent&, void* vlistener);
-	void handleClientsDisconnected(const CEvent&, void*);
-	void closeServer(CServer* server);
+	bool loadConfig(const String& pathname);
+	void forceReconnect(const Event&, void*);
+	void resetServer(const Event&, void*);
+	void handleClientConnected(const Event&, void* vlistener);
+	void handleClientsDisconnected(const Event&, void*);
+	void closeServer(Server* server);
 	void stopRetryTimer();
 	void updateStatus();
-	void updateStatus(const CString& msg);
-	void closeClientListener(CClientListener* listen);
+	void updateStatus(const String& msg);
+	void closeClientListener(ClientListener* listen);
 	void stopServer();
-	void closePrimaryClient(CPrimaryClient* primaryClient);
-	void closeServerScreen(CScreen* screen);
+	void closePrimaryClient(PrimaryClient* primaryClient);
+	void closeServerScreen(Screen* screen);
 	void cleanupServer();
 	bool initServer();
-	void retryHandler(const CEvent&, void*);
-	CScreen* openServerScreen();
-	CScreen* createScreen();
-	CPrimaryClient* openPrimaryClient(const CString& name, CScreen* screen);
-	void handleScreenError(const CEvent&, void*);
-	void handleSuspend(const CEvent&, void*);
-	void handleResume(const CEvent&, void*);
-	CClientListener* openClientListener(const CNetworkAddress& address);
-	CServer* openServer(CConfig& config, CPrimaryClient* primaryClient);
-	void handleNoClients(const CEvent&, void*);
+	void retryHandler(const Event&, void*);
+	Screen* openServerScreen();
+	Screen* createScreen();
+	PrimaryClient* openPrimaryClient(const String& name, Screen* screen);
+	void handleScreenError(const Event&, void*);
+	void handleSuspend(const Event&, void*);
+	void handleResume(const Event&, void*);
+	ClientListener* openClientListener(const NetworkAddress& address);
+	Server* openServer(Config& config, PrimaryClient* primaryClient);
+	void handleNoClients(const Event&, void*);
 	bool startServer();
 	int mainLoop();
 	int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup);
@@ -101,20 +101,20 @@ public:
 	int foregroundStartup(int argc, char** argv);
 	void startNode();
 
-	static CServerApp& instance() { return (CServerApp&)CApp::instance(); }
+	static ServerApp& instance() { return (ServerApp&)App::instance(); }
 
-	CServer* getServerPtr() { return m_server; }
+	Server* getServerPtr() { return m_server; }
 	
-	CServer*			m_server;
+	Server*			m_server;
 	EServerState		m_serverState;
-	CScreen*			m_serverScreen;
-	CPrimaryClient*		m_primaryClient;
-	CClientListener*	m_listener;
-	CEventQueueTimer*	m_timer;
-	CNetworkAddress*	m_synergyAddress;
+	Screen*			m_serverScreen;
+	PrimaryClient*		m_primaryClient;
+	ClientListener*	m_listener;
+	EventQueueTimer*	m_timer;
+	NetworkAddress*	m_synergyAddress;
 
 private:
-	void handleScreenSwitched(const CEvent&, void*  data);
+	void handleScreenSwitched(const Event&, void*  data);
 };
 
 // configuration file name

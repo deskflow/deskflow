@@ -33,12 +33,12 @@
 #include <memory>
 
 //
-// CServerProxy
+// ServerProxy
 //
 
-const UInt16 CServerProxy::m_intervalThreshold = 1;
+const UInt16 ServerProxy::m_intervalThreshold = 1;
 
-CServerProxy::CServerProxy(CClient* client, synergy::IStream* stream, IEventQueue* events) :
+ServerProxy::ServerProxy(Client* client, synergy::IStream* stream, IEventQueue* events) :
 	m_client(client),
 	m_stream(stream),
 	m_seqNum(0),
@@ -51,7 +51,7 @@ CServerProxy::CServerProxy(CClient* client, synergy::IStream* stream, IEventQueu
 	m_ignoreMouse(false),
 	m_keepAliveAlarm(0.0),
 	m_keepAliveAlarmTimer(NULL),
-	m_parser(&CServerProxy::parseHandshakeMessage),
+	m_parser(&ServerProxy::parseHandshakeMessage),
 	m_events(events),
 	m_stopwatch(true),
 	m_elapsedTime(0),
@@ -67,14 +67,14 @@ CServerProxy::CServerProxy(CClient* client, synergy::IStream* stream, IEventQueu
 	// handle data on stream
 	m_events->adoptHandler(m_events->forIStream().inputReady(),
 							m_stream->getEventTarget(),
-							new TMethodEventJob<CServerProxy>(this,
-								&CServerProxy::handleData));
+							new TMethodEventJob<ServerProxy>(this,
+								&ServerProxy::handleData));
 
 	// send heartbeat
 	setKeepAliveRate(kKeepAliveRate);
 }
 
-CServerProxy::~CServerProxy()
+ServerProxy::~ServerProxy()
 {
 	setKeepAliveRate(-1.0);
 	m_events->removeHandler(m_events->forIStream().inputReady(),
@@ -82,31 +82,31 @@ CServerProxy::~CServerProxy()
 }
 
 void
-CServerProxy::resetKeepAliveAlarm()
+ServerProxy::resetKeepAliveAlarm()
 {
 	if (m_keepAliveAlarmTimer != NULL) {
-		m_events->removeHandler(CEvent::kTimer, m_keepAliveAlarmTimer);
+		m_events->removeHandler(Event::kTimer, m_keepAliveAlarmTimer);
 		m_events->deleteTimer(m_keepAliveAlarmTimer);
 		m_keepAliveAlarmTimer = NULL;
 	}
 	if (m_keepAliveAlarm > 0.0) {
 		m_keepAliveAlarmTimer =
 			m_events->newOneShotTimer(m_keepAliveAlarm, NULL);
-		m_events->adoptHandler(CEvent::kTimer, m_keepAliveAlarmTimer,
-							new TMethodEventJob<CServerProxy>(this,
-								&CServerProxy::handleKeepAliveAlarm));
+		m_events->adoptHandler(Event::kTimer, m_keepAliveAlarmTimer,
+							new TMethodEventJob<ServerProxy>(this,
+								&ServerProxy::handleKeepAliveAlarm));
 	}
 }
 
 void
-CServerProxy::setKeepAliveRate(double rate)
+ServerProxy::setKeepAliveRate(double rate)
 {
 	m_keepAliveAlarm = rate * kKeepAlivesUntilDeath;
 	resetKeepAliveAlarm();
 }
 
 void
-CServerProxy::handleData(const CEvent&, void*)
+ServerProxy::handleData(const Event&, void*)
 {
 	// handle messages until there are no more.  first read message code.
 	UInt8 code[4];
@@ -141,8 +141,8 @@ CServerProxy::handleData(const CEvent&, void*)
 	flushCompressedMouse();
 }
 
-CServerProxy::EResult
-CServerProxy::parseHandshakeMessage(const UInt8* code)
+ServerProxy::EResult
+ServerProxy::parseHandshakeMessage(const UInt8* code)
 {
 	if (memcmp(code, kMsgQInfo, 4) == 0) {
 		queryInfo();
@@ -156,7 +156,7 @@ CServerProxy::parseHandshakeMessage(const UInt8* code)
 		setOptions();
 
 		// handshake is complete
-		m_parser = &CServerProxy::parseMessage;
+		m_parser = &ServerProxy::parseMessage;
 		m_client->handshakeComplete();
 	}
 
@@ -166,7 +166,7 @@ CServerProxy::parseHandshakeMessage(const UInt8* code)
 
 	else if (memcmp(code, kMsgCKeepAlive, 4) == 0) {
 		// echo keep alives and reset alarm
-		CProtocolUtil::writef(m_stream, kMsgCKeepAlive);
+		ProtocolUtil::writef(m_stream, kMsgCKeepAlive);
 		resetKeepAliveAlarm();
 	}
 
@@ -183,7 +183,7 @@ CServerProxy::parseHandshakeMessage(const UInt8* code)
 
 	else if (memcmp(code, kMsgEIncompatible, 4) == 0) {
 		SInt32 major, minor;
-		CProtocolUtil::readf(m_stream,
+		ProtocolUtil::readf(m_stream,
 						kMsgEIncompatible + 4, &major, &minor);
 		LOG((CLOG_ERR "server has incompatible version %d.%d", major, minor));
 		m_client->disconnect("server has incompatible version");
@@ -214,8 +214,8 @@ CServerProxy::parseHandshakeMessage(const UInt8* code)
 	return kOkay;
 }
 
-CServerProxy::EResult
-CServerProxy::parseMessage(const UInt8* code)
+ServerProxy::EResult
+ServerProxy::parseMessage(const UInt8* code)
 {
 	if (memcmp(code, kMsgDMouseMove, 4) == 0) {
 		mouseMove();
@@ -251,7 +251,7 @@ CServerProxy::parseMessage(const UInt8* code)
 
 	else if (memcmp(code, kMsgCKeepAlive, 4) == 0) {
 		// echo keep alives and reset alarm
-		CProtocolUtil::writef(m_stream, kMsgCKeepAlive);
+		ProtocolUtil::writef(m_stream, kMsgCKeepAlive);
 		resetKeepAliveAlarm();
 	}
 
@@ -328,20 +328,20 @@ CServerProxy::parseMessage(const UInt8* code)
 	// on a data packet.  we provide that packet here.  i don't
 	// know why a delayed ACK should cause the server to wait since
 	// TCP_NODELAY is enabled.
-	CProtocolUtil::writef(m_stream, kMsgCNoop);
+	ProtocolUtil::writef(m_stream, kMsgCNoop);
 
 	return kOkay;
 }
 
 void
-CServerProxy::handleKeepAliveAlarm(const CEvent&, void*)
+ServerProxy::handleKeepAliveAlarm(const Event&, void*)
 {
 	LOG((CLOG_NOTE "server is dead"));
 	m_client->disconnect("server is not responding");
 }
 
 void
-CServerProxy::onInfoChanged()
+ServerProxy::onInfoChanged()
 {
 	// ignore mouse motion until we receive acknowledgment of our info
 	// change message.
@@ -352,23 +352,23 @@ CServerProxy::onInfoChanged()
 }
 
 bool
-CServerProxy::onGrabClipboard(ClipboardID id)
+ServerProxy::onGrabClipboard(ClipboardID id)
 {
 	LOG((CLOG_DEBUG1 "sending clipboard %d changed", id));
-	CProtocolUtil::writef(m_stream, kMsgCClipboard, id, m_seqNum);
+	ProtocolUtil::writef(m_stream, kMsgCClipboard, id, m_seqNum);
 	return true;
 }
 
 void
-CServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
+ServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
 {
-	CString data = IClipboard::marshall(clipboard);
+	String data = IClipboard::marshall(clipboard);
 	LOG((CLOG_DEBUG1 "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
-	CProtocolUtil::writef(m_stream, kMsgDClipboard, id, m_seqNum, &data);
+	ProtocolUtil::writef(m_stream, kMsgDClipboard, id, m_seqNum, &data);
 }
 
 void
-CServerProxy::flushCompressedMouse()
+ServerProxy::flushCompressedMouse()
 {
 	if (m_compressMouse) {
 		m_compressMouse = false;
@@ -383,17 +383,17 @@ CServerProxy::flushCompressedMouse()
 }
 
 void
-CServerProxy::sendInfo(const CClientInfo& info)
+ServerProxy::sendInfo(const ClientInfo& info)
 {
 	LOG((CLOG_DEBUG1 "sending info shape=%d,%d %dx%d", info.m_x, info.m_y, info.m_w, info.m_h));
-	CProtocolUtil::writef(m_stream, kMsgDInfo,
+	ProtocolUtil::writef(m_stream, kMsgDInfo,
 								info.m_x, info.m_y,
 								info.m_w, info.m_h, 0,
 								info.m_mx, info.m_my);
 }
 
 KeyID
-CServerProxy::translateKey(KeyID id) const
+ServerProxy::translateKey(KeyID id) const
 {
 	static const KeyID s_translationTable[kKeyModifierIDLast][2] = {
 		{ kKeyNone,      kKeyNone },
@@ -473,7 +473,7 @@ CServerProxy::translateKey(KeyID id) const
 }
 
 KeyModifierMask
-CServerProxy::translateModifierMask(KeyModifierMask mask) const
+ServerProxy::translateModifierMask(KeyModifierMask mask) const
 {
 	static const KeyModifierMask s_masks[kKeyModifierIDLast] = {
 		0x0000,
@@ -513,13 +513,13 @@ CServerProxy::translateModifierMask(KeyModifierMask mask) const
 }
 
 void
-CServerProxy::enter()
+ServerProxy::enter()
 {
 	// parse
 	SInt16 x, y;
 	UInt16 mask;
 	UInt32 seqNum;
-	CProtocolUtil::readf(m_stream, kMsgCEnter + 4, &x, &y, &seqNum, &mask);
+	ProtocolUtil::readf(m_stream, kMsgCEnter + 4, &x, &y, &seqNum, &mask);
 	LOG((CLOG_DEBUG1 "recv enter, %d,%d %d %04x", x, y, seqNum, mask));
 
 	// discard old compressed mouse motion, if any
@@ -534,7 +534,7 @@ CServerProxy::enter()
 }
 
 void
-CServerProxy::leave()
+ServerProxy::leave()
 {
 	// parse
 	LOG((CLOG_DEBUG1 "recv leave"));
@@ -547,13 +547,13 @@ CServerProxy::leave()
 }
 
 void
-CServerProxy::setClipboard()
+ServerProxy::setClipboard()
 {
 	// parse
 	ClipboardID id;
 	UInt32 seqNum;
-	CString data;
-	CProtocolUtil::readf(m_stream, kMsgDClipboard + 4, &id, &seqNum, &data);
+	String data;
+	ProtocolUtil::readf(m_stream, kMsgDClipboard + 4, &id, &seqNum, &data);
 	LOG((CLOG_DEBUG "recv clipboard %d size=%d", id, data.size()));
 
 	// validate
@@ -562,18 +562,18 @@ CServerProxy::setClipboard()
 	}
 
 	// forward
-	CClipboard clipboard;
+	Clipboard clipboard;
 	clipboard.unmarshall(data, 0);
 	m_client->setClipboard(id, &clipboard);
 }
 
 void
-CServerProxy::grabClipboard()
+ServerProxy::grabClipboard()
 {
 	// parse
 	ClipboardID id;
 	UInt32 seqNum;
-	CProtocolUtil::readf(m_stream, kMsgCClipboard + 4, &id, &seqNum);
+	ProtocolUtil::readf(m_stream, kMsgCClipboard + 4, &id, &seqNum);
 	LOG((CLOG_DEBUG "recv grab clipboard %d", id));
 
 	// validate
@@ -586,14 +586,14 @@ CServerProxy::grabClipboard()
 }
 
 void
-CServerProxy::keyDown()
+ServerProxy::keyDown()
 {
 	// get mouse up to date
 	flushCompressedMouse();
 
 	// parse
 	UInt16 id, mask, button;
-	CProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button);
+	ProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button);
 	LOG((CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
 
 	// translate
@@ -609,14 +609,14 @@ CServerProxy::keyDown()
 }
 
 void
-CServerProxy::keyRepeat()
+ServerProxy::keyRepeat()
 {
 	// get mouse up to date
 	flushCompressedMouse();
 
 	// parse
 	UInt16 id, mask, count, button;
-	CProtocolUtil::readf(m_stream, kMsgDKeyRepeat + 4,
+	ProtocolUtil::readf(m_stream, kMsgDKeyRepeat + 4,
 								&id, &mask, &count, &button);
 	LOG((CLOG_DEBUG1 "recv key repeat id=0x%08x, mask=0x%04x, count=%d, button=0x%04x", id, mask, count, button));
 
@@ -633,14 +633,14 @@ CServerProxy::keyRepeat()
 }
 
 void
-CServerProxy::keyUp()
+ServerProxy::keyUp()
 {
 	// get mouse up to date
 	flushCompressedMouse();
 
 	// parse
 	UInt16 id, mask, button;
-	CProtocolUtil::readf(m_stream, kMsgDKeyUp + 4, &id, &mask, &button);
+	ProtocolUtil::readf(m_stream, kMsgDKeyUp + 4, &id, &mask, &button);
 	LOG((CLOG_DEBUG1 "recv key up id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
 
 	// translate
@@ -656,14 +656,14 @@ CServerProxy::keyUp()
 }
 
 void
-CServerProxy::mouseDown()
+ServerProxy::mouseDown()
 {
 	// get mouse up to date
 	flushCompressedMouse();
 
 	// parse
 	SInt8 id;
-	CProtocolUtil::readf(m_stream, kMsgDMouseDown + 4, &id);
+	ProtocolUtil::readf(m_stream, kMsgDMouseDown + 4, &id);
 	LOG((CLOG_DEBUG1 "recv mouse down id=%d", id));
 
 	// forward
@@ -671,14 +671,14 @@ CServerProxy::mouseDown()
 }
 
 void
-CServerProxy::mouseUp()
+ServerProxy::mouseUp()
 {
 	// get mouse up to date
 	flushCompressedMouse();
 
 	// parse
 	SInt8 id;
-	CProtocolUtil::readf(m_stream, kMsgDMouseUp + 4, &id);
+	ProtocolUtil::readf(m_stream, kMsgDMouseUp + 4, &id);
 	LOG((CLOG_DEBUG1 "recv mouse up id=%d", id));
 
 	// forward
@@ -686,12 +686,12 @@ CServerProxy::mouseUp()
 }
 
 void
-CServerProxy::mouseMove()
+ServerProxy::mouseMove()
 {
 	// parse
 	bool ignore;
 	SInt16 x, y;
-	CProtocolUtil::readf(m_stream, kMsgDMouseMove + 4, &x, &y);
+	ProtocolUtil::readf(m_stream, kMsgDMouseMove + 4, &x, &y);
 
 	// note if we should ignore the move
 	ignore = m_ignoreMouse;
@@ -719,12 +719,12 @@ CServerProxy::mouseMove()
 }
 
 void
-CServerProxy::mouseRelativeMove()
+ServerProxy::mouseRelativeMove()
 {
 	// parse
 	bool ignore;
 	SInt16 dx, dy;
-	CProtocolUtil::readf(m_stream, kMsgDMouseRelMove + 4, &dx, &dy);
+	ProtocolUtil::readf(m_stream, kMsgDMouseRelMove + 4, &dx, &dy);
 
 	// note if we should ignore the move
 	ignore = m_ignoreMouse;
@@ -749,14 +749,14 @@ CServerProxy::mouseRelativeMove()
 }
 
 void
-CServerProxy::mouseWheel()
+ServerProxy::mouseWheel()
 {
 	// get mouse up to date
 	flushCompressedMouse();
 
 	// parse
 	SInt16 xDelta, yDelta;
-	CProtocolUtil::readf(m_stream, kMsgDMouseWheel + 4, &xDelta, &yDelta);
+	ProtocolUtil::readf(m_stream, kMsgDMouseWheel + 4, &xDelta, &yDelta);
 	LOG((CLOG_DEBUG2 "recv mouse wheel %+d,%+d", xDelta, yDelta));
 
 	// forward
@@ -764,11 +764,11 @@ CServerProxy::mouseWheel()
 }
 
 void
-CServerProxy::cryptoIv()
+ServerProxy::cryptoIv()
 {
 	// parse
-	CString s;
-	CProtocolUtil::readf(m_stream, kMsgDCryptoIv + 4, &s);
+	String s;
+	ProtocolUtil::readf(m_stream, kMsgDCryptoIv + 4, &s);
 	LOG((CLOG_DEBUG2 "recv crypto iv size=%i", s.size()));
 
 	// forward
@@ -776,11 +776,11 @@ CServerProxy::cryptoIv()
 }
 
 void
-CServerProxy::screensaver()
+ServerProxy::screensaver()
 {
 	// parse
 	SInt8 on;
-	CProtocolUtil::readf(m_stream, kMsgCScreenSaver + 4, &on);
+	ProtocolUtil::readf(m_stream, kMsgCScreenSaver + 4, &on);
 	LOG((CLOG_DEBUG1 "recv screen saver on=%d", on));
 
 	// forward
@@ -788,7 +788,7 @@ CServerProxy::screensaver()
 }
 
 void
-CServerProxy::resetOptions()
+ServerProxy::resetOptions()
 {
 	// parse
 	LOG((CLOG_DEBUG1 "recv reset options"));
@@ -806,11 +806,11 @@ CServerProxy::resetOptions()
 }
 
 void
-CServerProxy::setOptions()
+ServerProxy::setOptions()
 {
 	// parse
-	COptionsList options;
-	CProtocolUtil::readf(m_stream, kMsgDSetOptions + 4, &options);
+	OptionsList options;
+	ProtocolUtil::readf(m_stream, kMsgDSetOptions + 4, &options);
 	LOG((CLOG_DEBUG1 "recv set options size=%d", options.size()));
 
 	// forward
@@ -850,28 +850,28 @@ CServerProxy::setOptions()
 }
 
 void
-CServerProxy::queryInfo()
+ServerProxy::queryInfo()
 {
-	CClientInfo info;
+	ClientInfo info;
 	m_client->getShape(info.m_x, info.m_y, info.m_w, info.m_h);
 	m_client->getCursorPos(info.m_mx, info.m_my);
 	sendInfo(info);
 }
 
 void
-CServerProxy::infoAcknowledgment()
+ServerProxy::infoAcknowledgment()
 {
 	LOG((CLOG_DEBUG1 "recv info acknowledgment"));
 	m_ignoreMouse = false;
 }
 
 void
-CServerProxy::fileChunkReceived()
+ServerProxy::fileChunkReceived()
 {
 	// parse
 	UInt8 mark = 0;
-	CString content;
-	CProtocolUtil::readf(m_stream, kMsgDFileTransfer + 4, &mark, &content);
+	String content;
+	ProtocolUtil::readf(m_stream, kMsgDFileTransfer + 4, &mark, &content);
 
 	switch (mark) {
 	case kFileStart:
@@ -902,7 +902,7 @@ CServerProxy::fileChunkReceived()
 		break;
 
 	case kFileEnd:
-		m_events->addEvent(CEvent(m_events->forIScreen().fileRecieveCompleted(), m_client));
+		m_events->addEvent(Event(m_events->forIScreen().fileRecieveCompleted(), m_client));
 		if (CLOG->getFilter() >= kDEBUG2) {
 			LOG((CLOG_DEBUG2 "file data transfer finished"));
 			m_elapsedTime += m_stopwatch.getTime();
@@ -916,20 +916,20 @@ CServerProxy::fileChunkReceived()
 }
 
 void
-CServerProxy::dragInfoReceived()
+ServerProxy::dragInfoReceived()
 {
 	// parse
 	UInt32 fileNum = 0;
-	CString content;
-	CProtocolUtil::readf(m_stream, kMsgDDragInfo + 4, &fileNum, &content);
+	String content;
+	ProtocolUtil::readf(m_stream, kMsgDDragInfo + 4, &fileNum, &content);
 
 	m_client->dragInfoReceived(fileNum, content);
 }
 
 void
-CServerProxy::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
+ServerProxy::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 {
-	CString chunk(data, dataSize);
+	String chunk(data, dataSize);
 
 	switch (mark) {
 	case kFileStart:
@@ -945,12 +945,12 @@ CServerProxy::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 		break;
 	}
 
-	CProtocolUtil::writef(m_stream, kMsgDFileTransfer, mark, &chunk);
+	ProtocolUtil::writef(m_stream, kMsgDFileTransfer, mark, &chunk);
 }
 
 void
-CServerProxy::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
+ServerProxy::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
 {
-	CString data(info, size);
-	CProtocolUtil::writef(m_stream, kMsgDDragInfo, fileCount, &data);
+	String data(info, size);
+	ProtocolUtil::writef(m_stream, kMsgDDragInfo, fileCount, &data);
 }

@@ -18,34 +18,34 @@
  
 #include "synergy/AppUtil.h"
 
-CAppUtil* CAppUtil::s_instance = nullptr;
+AppUtil* AppUtil::s_instance = nullptr;
  
-CAppUtil::CAppUtil() :
+AppUtil::AppUtil() :
 m_app(nullptr)
 {
 	s_instance = this;
 }
 
-CAppUtil::~CAppUtil()
+AppUtil::~AppUtil()
 {
 }
 
 void
-CAppUtil::adoptApp(IApp* app)
+AppUtil::adoptApp(IApp* app)
 {
 	app->setByeFunc(&exitAppStatic);
 	m_app = app;
 }
 
 IApp&
-CAppUtil::app() const
+AppUtil::app() const
 {
 	assert(m_app != nullptr);
 	return *m_app;
 }
 
-CAppUtil&
-CAppUtil::instance()
+AppUtil&
+AppUtil::instance()
 {
 	assert(s_instance != nullptr);
 	return *s_instance;

@@ -20,13 +20,13 @@
 
 #include "arch/IArchFile.h"
 
-#define ARCH_FILE CArchFileWindows
+#define ARCH_FILE ArchFileWindows
 
 //! Win32 implementation of IArchFile
-class CArchFileWindows : public IArchFile {
+class ArchFileWindows : public IArchFile {
 public:
-	CArchFileWindows();
-	virtual ~CArchFileWindows();
+	ArchFileWindows();
+	virtual ~ArchFileWindows();
 
 	// IArchFile overrides
 	virtual const char*	getBasename(const char* pathname);

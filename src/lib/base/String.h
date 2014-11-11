@@ -24,7 +24,7 @@
 #include <stdarg.h>
 
 // use standard C++ string class for our string class
-typedef std::string CString;
+typedef std::string String;
 
 namespace synergy {
 
@@ -44,25 +44,25 @@ characters and conversion specifications introduced by `\%':
 All arguments in the variable list are const char*.  Positional
 elements are indexed from 1.
 */
-CString format(const char* fmt, ...);
+String format(const char* fmt, ...);
 
 //! Format positional arguments
 /*!
 Same as format() except takes va_list.
 */
-CString vformat(const char* fmt, va_list);
+String vformat(const char* fmt, va_list);
 
 //! Print a string using sprintf-style formatting
 /*!
-Equivalent to sprintf() except the result is returned as a CString.
+Equivalent to sprintf() except the result is returned as a String.
 */
-CString sprintf(const char* fmt, ...);
+String sprintf(const char* fmt, ...);
 
 //! Find and replace all
 /*!
 Finds \c find inside \c subject and replaces it with \c replace
 */
-void findReplaceAll(CString& subject, const CString& find, const CString& replace);
+void findReplaceAll(String& subject, const String& find, const String& replace);
 
 //! Case-insensitive comparisons
 /*!
@@ -71,21 +71,21 @@ This class provides case-insensitve comparison functions.
 class CaselessCmp {
 	public:
 	//! Same as less()
-	bool			operator()(const CString& a, const CString& b) const;
+	bool			operator()(const String& a, const String& b) const;
 
 	//! Returns true iff \c a is lexicographically less than \c b
-	static bool		less(const CString& a, const CString& b);
+	static bool		less(const String& a, const String& b);
 
 	//! Returns true iff \c a is lexicographically equal to \c b
-	static bool		equal(const CString& a, const CString& b);
+	static bool		equal(const String& a, const String& b);
 
 	//! Returns true iff \c a is lexicographically less than \c b
-	static bool		cmpLess(const CString::value_type& a,
-						const CString::value_type& b);
+	static bool		cmpLess(const String::value_type& a,
+						const String::value_type& b);
 
 	//! Returns true iff \c a is lexicographically equal to \c b
-	static bool		cmpEqual(const CString::value_type& a,
-						const CString::value_type& b);
+	static bool		cmpEqual(const String::value_type& a,
+						const String::value_type& b);
 };
 
 }

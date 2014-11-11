@@ -29,61 +29,61 @@
 #include <memory>
 
 //
-// CClientProxy1_4
+// ClientProxy1_4
 //
 
-CClientProxy1_4::CClientProxy1_4(const CString& name, synergy::IStream* stream, CServer* server, IEventQueue* events) :
-	CClientProxy1_3(name, stream, events), m_server(server)
+ClientProxy1_4::ClientProxy1_4(const String& name, synergy::IStream* stream, Server* server, IEventQueue* events) :
+	ClientProxy1_3(name, stream, events), m_server(server)
 {
 	assert(m_server != NULL);
 }
 
-CClientProxy1_4::~CClientProxy1_4()
+ClientProxy1_4::~ClientProxy1_4()
 {
 }
 
 void
-CClientProxy1_4::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
+ClientProxy1_4::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
 {
 	cryptoIv();
-	CClientProxy1_3::keyDown(key, mask, button);
+	ClientProxy1_3::keyDown(key, mask, button);
 }
 
 void
-CClientProxy1_4::keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button)
+ClientProxy1_4::keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button)
 {
 	cryptoIv();
-	CClientProxy1_3::keyRepeat(key, mask, count, button);
+	ClientProxy1_3::keyRepeat(key, mask, count, button);
 }
 
 void
-CClientProxy1_4::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
+ClientProxy1_4::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 {
 	cryptoIv();
-	CClientProxy1_3::keyUp(key, mask, button);
+	ClientProxy1_3::keyUp(key, mask, button);
 }
 
 void
-CClientProxy1_4::keepAlive()
+ClientProxy1_4::keepAlive()
 {
 	cryptoIv();
-	CClientProxy1_3::keepAlive();
+	ClientProxy1_3::keepAlive();
 }
 
 void
-CClientProxy1_4::cryptoIv()
+ClientProxy1_4::cryptoIv()
 {
-	CCryptoStream* cryptoStream = dynamic_cast<CCryptoStream*>(getStream());
+	CryptoStream* cryptoStream = dynamic_cast<CryptoStream*>(getStream());
 	if (cryptoStream == NULL) {
 		return;
 	}
 
 	byte iv[CRYPTO_IV_SIZE];
 	cryptoStream->newIv(iv);
-	CString data(reinterpret_cast<const char*>(iv), CRYPTO_IV_SIZE);
+	String data(reinterpret_cast<const char*>(iv), CRYPTO_IV_SIZE);
 
 	LOG((CLOG_DEBUG2 "send crypto iv change to \"%s\"", getName().c_str()));
-	CProtocolUtil::writef(getStream(), kMsgDCryptoIv, &data);
+	ProtocolUtil::writef(getStream(), kMsgDCryptoIv, &data);
 	
 	// change IV only after we've sent the current IV, otherwise
 	// the client won't be able to decrypt the new IV.

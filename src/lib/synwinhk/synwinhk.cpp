@@ -554,7 +554,7 @@ doMouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 			// outside of the screen.  jeez.  naturally we end up getting
 			// fake motion in the other direction to get the position back
 			// on the screen, which plays havoc with switch on double tap.
-			// CServer deals with that.  we'll clamp positions onto the
+			// Server deals with that.  we'll clamp positions onto the
 			// screen.  also, if we discard events for positions outside
 			// of the screen then the mouse appears to get a bit jerky
 			// near the edge.  we can either accept that or pass the bogus

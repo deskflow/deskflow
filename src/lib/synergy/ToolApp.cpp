@@ -37,7 +37,7 @@ enum {
 };
 
 UInt32
-CToolApp::run(int argc, char** argv)
+ToolApp::run(int argc, char** argv)
 {
 	if (argc <= 1) {
 		std::cerr << "no args" << std::endl;

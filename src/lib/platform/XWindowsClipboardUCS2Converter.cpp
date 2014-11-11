@@ -54,14 +54,14 @@ CXWindowsClipboardUCS2Converter::getDataSize() const
 	return 16;
 }
 
-CString
-CXWindowsClipboardUCS2Converter::fromIClipboard(const CString& data) const
+String
+CXWindowsClipboardUCS2Converter::fromIClipboard(const String& data) const
 {
-	return CUnicode::UTF8ToUCS2(data);
+	return Unicode::UTF8ToUCS2(data);
 }
 
-CString
-CXWindowsClipboardUCS2Converter::toIClipboard(const CString& data) const
+String
+CXWindowsClipboardUCS2Converter::toIClipboard(const String& data) const
 {
-	return CUnicode::UCS2ToUTF8(data);
+	return Unicode::UCS2ToUTF8(data);
 }

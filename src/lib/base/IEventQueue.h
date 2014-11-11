@@ -27,40 +27,40 @@ class IEventQueueBuffer;
 
 // Opaque type for timer info.  This is defined by subclasses of
 // IEventQueueBuffer.
-class CEventQueueTimer;
+class EventQueueTimer;
 
 // Event type registration classes.
-class CClientEvents;
+class ClientEvents;
 class IStreamEvents;
-class CIpcClientEvents;
-class CIpcClientProxyEvents;
-class CIpcServerEvents;
-class CIpcServerProxyEvents;
+class IpcClientEvents;
+class IpcClientProxyEvents;
+class IpcServerEvents;
+class IpcServerProxyEvents;
 class IDataSocketEvents;
 class IListenSocketEvents;
 class ISocketEvents;
-class COSXScreenEvents;
-class CClientListenerEvents;
-class CClientProxyEvents;
-class CClientProxyUnknownEvents;
-class CServerEvents;
-class CServerAppEvents;
+class OSXScreenEvents;
+class ClientListenerEvents;
+class ClientProxyEvents;
+class ClientProxyUnknownEvents;
+class ServerEvents;
+class ServerAppEvents;
 class IKeyStateEvents;
 class IPrimaryScreenEvents;
 class IScreenEvents;
 
 //! Event queue interface
 /*!
-An event queue provides a queue of CEvents.  Clients can block waiting
+An event queue provides a queue of Events.  Clients can block waiting
 on any event becoming available at the head of the queue and can place
 new events at the end of the queue.  Clients can also add and remove
 timers which generate events periodically.
 */
 class IEventQueue : public IInterface {
 public:
-	class CTimerEvent {
+	class TimerEvent {
 	public:
-		CEventQueueTimer*	m_timer;	//!< The timer
+		EventQueueTimer*	m_timer;	//!< The timer
 		UInt32				m_count;	//!< Number of repeats
 	};
 
@@ -86,26 +86,26 @@ public:
 	available then blocks for up to \p timeout seconds, or forever if
 	\p timeout is negative.  Returns true iff an event was available.
 	*/
-	virtual bool		getEvent(CEvent& event, double timeout = -1.0) = 0;
+	virtual bool		getEvent(Event& event, double timeout = -1.0) = 0;
 
 	//! Dispatch an event
 	/*!
 	Looks up the dispatcher for the event's target and invokes it.
 	Returns true iff a dispatcher exists for the target.
 	*/
-	virtual bool		dispatchEvent(const CEvent& event) = 0;
+	virtual bool		dispatchEvent(const Event& event) = 0;
 
 	//! Add event to queue
 	/*!
 	Adds \p event to the end of the queue.
 	*/
-	virtual void		addEvent(const CEvent& event) = 0;
+	virtual void		addEvent(const Event& event) = 0;
 
 	//! Create a recurring timer
 	/*!
 	Creates and returns a timer.  An event is returned after \p duration
 	seconds and the timer is reset to countdown again.  When a timer event
-	is returned the data points to a \c CTimerEvent.  The client must pass
+	is returned the data points to a \c TimerEvent.  The client must pass
 	the returned timer to \c deleteTimer() (whether or not the timer has
 	expired) to release the timer.  The returned timer event uses the
 	given \p target.  If \p target is NULL it uses the returned timer as
@@ -113,25 +113,25 @@ public:
 
 	Events for a single timer don't accumulate in the queue, even if the
 	client reading events can't keep up.  Instead, the \c m_count member
-	of the \c CTimerEvent indicates how many events for the timer would
+	of the \c TimerEvent indicates how many events for the timer would
 	have been put on the queue since the last event for the timer was
 	removed (or since the timer was added).
 	*/
-	virtual CEventQueueTimer*
+	virtual EventQueueTimer*
 						newTimer(double duration, void* target) = 0;
 
 	//! Create a one-shot timer
 	/*!
 	Creates and returns a one-shot timer.  An event is returned when
 	the timer expires and the timer is removed from further handling.
-	When a timer event is returned the data points to a \c CTimerEvent.
-	The c_count member of the \c CTimerEvent is always 1.  The client
+	When a timer event is returned the data points to a \c TimerEvent.
+	The c_count member of the \c TimerEvent is always 1.  The client
 	must pass the returned timer to \c deleteTimer() (whether or not the
 	timer has expired) to release the timer.  The returned timer event
 	uses the given \p target.  If \p target is NULL it uses the returned
 	timer as the target.
 	*/
-	virtual CEventQueueTimer*
+	virtual EventQueueTimer*
 						newOneShotTimer(double duration,
 							void* target) = 0;
 
@@ -140,7 +140,7 @@ public:
 	Destroys a previously created timer.  The timer is removed from the
 	queue and will not generate event, even if the timer has expired.
 	*/
-	virtual void		deleteTimer(CEventQueueTimer*) = 0;
+	virtual void		deleteTimer(EventQueueTimer*) = 0;
 
 	//! Register an event handler for an event type
 	/*!
@@ -150,7 +150,7 @@ public:
 	of type \p type.  If no such handler exists it will use the handler
 	for \p target and type \p kUnknown if it exists.
 	*/
-	virtual void		adoptHandler(CEvent::Type type,
+	virtual void		adoptHandler(Event::Type type,
 							void* target, IEventJob* handler) = 0;
 
 	//! Unregister an event handler for an event type
@@ -158,7 +158,7 @@ public:
 	Unregisters an event handler for the \p type, \p target pair and
 	deletes it.
 	*/
-	virtual void		removeHandler(CEvent::Type type, void* target) = 0;
+	virtual void		removeHandler(Event::Type type, void* target) = 0;
 
 	//! Unregister all event handlers for an event target
 	/*!
@@ -172,8 +172,8 @@ public:
 	type id otherwise it is left alone.  The final value of \p type
 	is returned.
 	*/
-	virtual CEvent::Type
-						registerTypeOnce(CEvent::Type& type,
+	virtual Event::Type
+						registerTypeOnce(Event::Type& type,
 							const char* name) = 0;
 
 	//! Wait for event queue to become ready
@@ -199,24 +199,24 @@ public:
 	Finds and returns the event handler for the \p type, \p target pair
 	if it exists, otherwise it returns NULL.
 	*/
-	virtual IEventJob*	getHandler(CEvent::Type type, void* target) const = 0;
+	virtual IEventJob*	getHandler(Event::Type type, void* target) const = 0;
 
 	//! Get name for event
 	/*!
 	Returns the name for the event \p type.  This is primarily for
 	debugging.
 	*/
-	virtual const char*	getTypeName(CEvent::Type type) = 0;
+	virtual const char*	getTypeName(Event::Type type) = 0;
 
 	//! Get an event type by name
 	/*!
 	Returns the registered type for an event for a given name.
 	*/
-	virtual CEvent::Type getRegisteredType(const CString& name) const = 0;
+	virtual Event::Type getRegisteredType(const String& name) const = 0;
 
 	//! Get the system event type target
 	/*!
-	Returns the target to use for dispatching \c CEvent::kSystem events.
+	Returns the target to use for dispatching \c Event::kSystem events.
 	*/
 	virtual void*		getSystemTarget() = 0;
 
@@ -226,21 +226,21 @@ public:
 	// Event type providers.
 	//
 
-	virtual CClientEvents&				forCClient() = 0;
+	virtual ClientEvents&				forClient() = 0;
 	virtual IStreamEvents&				forIStream() = 0;
-	virtual CIpcClientEvents&			forCIpcClient() = 0;
-	virtual CIpcClientProxyEvents&		forCIpcClientProxy() = 0;
-	virtual CIpcServerEvents&			forCIpcServer() = 0;
-	virtual CIpcServerProxyEvents&		forCIpcServerProxy() = 0;
+	virtual IpcClientEvents&			forIpcClient() = 0;
+	virtual IpcClientProxyEvents&		forIpcClientProxy() = 0;
+	virtual IpcServerEvents&			forIpcServer() = 0;
+	virtual IpcServerProxyEvents&		forIpcServerProxy() = 0;
 	virtual IDataSocketEvents&			forIDataSocket() = 0;
 	virtual IListenSocketEvents&		forIListenSocket() = 0;
 	virtual ISocketEvents&				forISocket() = 0;
-	virtual COSXScreenEvents&			forCOSXScreen() = 0;
-	virtual CClientListenerEvents&		forCClientListener() = 0;
-	virtual CClientProxyEvents&			forCClientProxy() = 0;
-	virtual CClientProxyUnknownEvents&	forCClientProxyUnknown() = 0;
-	virtual CServerEvents&				forCServer() = 0;
-	virtual CServerAppEvents&			forCServerApp() = 0;
+	virtual OSXScreenEvents&			forOSXScreen() = 0;
+	virtual ClientListenerEvents&		forClientListener() = 0;
+	virtual ClientProxyEvents&			forClientProxy() = 0;
+	virtual ClientProxyUnknownEvents&	forClientProxyUnknown() = 0;
+	virtual ServerEvents&				forServer() = 0;
+	virtual ServerAppEvents&			forServerApp() = 0;
 	virtual IKeyStateEvents&			forIKeyState() = 0;
 	virtual IPrimaryScreenEvents&		forIPrimaryScreen() = 0;
 	virtual IScreenEvents&				forIScreen() = 0;

@@ -61,7 +61,7 @@ public:
 	//@}
 
 protected:
-	virtual CString		getWhat() const throw();
+	virtual String		getWhat() const throw();
 
 private:
 	double				m_timeUntilRetry;

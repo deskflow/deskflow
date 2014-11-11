@@ -30,18 +30,18 @@
 
 #include <iosfwd>
 
-class CConfig;
-class CConfigReadContext;
+class Config;
+class ConfigReadContext;
 class IEventQueue;
 
 namespace std {
 template <>
-struct iterator_traits<CConfig> {
-	typedef CString						value_type;
+struct iterator_traits<Config> {
+	typedef String						value_type;
 	typedef ptrdiff_t					difference_type;
 	typedef bidirectional_iterator_tag	iterator_category;
-	typedef CString*					pointer;
-	typedef CString&					reference;
+	typedef String*					pointer;
+	typedef String&					reference;
 };
 };
 
@@ -55,23 +55,23 @@ Note that case is preserved in screen names but is ignored when
 comparing names.  Screen names and their aliases share a
 namespace and must be unique.
 */
-class CConfig {
+class Config {
 public:
-	typedef std::map<OptionID, OptionValue> CScreenOptions;
-	typedef std::pair<float, float> CInterval;
+	typedef std::map<OptionID, OptionValue> ScreenOptions;
+	typedef std::pair<float, float> Interval;
 
-	class CCellEdge {
+	class CellEdge {
 	public:
-		CCellEdge(EDirection side, float position);
-		CCellEdge(EDirection side, const CInterval&);
-		CCellEdge(const CString& name, EDirection side, const CInterval&);
-		~CCellEdge();
+		CellEdge(EDirection side, float position);
+		CellEdge(EDirection side, const Interval&);
+		CellEdge(const String& name, EDirection side, const Interval&);
+		~CellEdge();
 
-		CInterval		getInterval() const;
-		void			setName(const CString& newName);
-		CString			getName() const;
+		Interval		getInterval() const;
+		void			setName(const String& newName);
+		String			getName() const;
 		EDirection		getSide() const;
-		bool			overlaps(const CCellEdge&) const;
+		bool			overlaps(const CellEdge&) const;
 		bool			isInside(float x) const;
 
 		// transform position to [0,1]
@@ -81,73 +81,73 @@ public:
 		float			inverseTransform(float x) const;
 
 		// compares side and start of interval
-		bool			operator<(const CCellEdge&) const;
+		bool			operator<(const CellEdge&) const;
 
 		// compares side and interval
-		bool			operator==(const CCellEdge&) const;
-		bool			operator!=(const CCellEdge&) const;
+		bool			operator==(const CellEdge&) const;
+		bool			operator!=(const CellEdge&) const;
 
 	private:
-		void			init(const CString& name, EDirection side,
-							const CInterval&);
+		void			init(const String& name, EDirection side,
+							const Interval&);
 
 	private:
-		CString			m_name;
+		String			m_name;
 		EDirection		m_side;
-		CInterval		m_interval;
+		Interval		m_interval;
 	};
 
 private:
-	class CName {
+	class Name {
 	public:
-		CName(CConfig*, const CString& name);
+		Name(Config*, const String& name);
 
-		bool			operator==(const CString& name) const;
+		bool			operator==(const String& name) const;
 
 	private:
-		CConfig*		m_config;
-		CString			m_name;
+		Config*		m_config;
+		String			m_name;
 	};
 
-	class CCell {
+	class Cell {
 	private:
-		typedef std::map<CCellEdge, CCellEdge> CEdgeLinks;
+		typedef std::map<CellEdge, CellEdge> EdgeLinks;
 
 	public:
-		typedef CEdgeLinks::const_iterator const_iterator;
+		typedef EdgeLinks::const_iterator const_iterator;
 
-		bool			add(const CCellEdge& src, const CCellEdge& dst);
+		bool			add(const CellEdge& src, const CellEdge& dst);
 		void			remove(EDirection side);
 		void			remove(EDirection side, float position);
-		void			remove(const CName& destinationName);
-		void			rename(const CName& oldName, const CString& newName);
+		void			remove(const Name& destinationName);
+		void			rename(const Name& oldName, const String& newName);
 
-		bool			hasEdge(const CCellEdge&) const;
-		bool			overlaps(const CCellEdge&) const;
+		bool			hasEdge(const CellEdge&) const;
+		bool			overlaps(const CellEdge&) const;
 
 		bool			getLink(EDirection side, float position,
-							const CCellEdge*& src, const CCellEdge*& dst) const;
+							const CellEdge*& src, const CellEdge*& dst) const;
 
-		bool			operator==(const CCell&) const;
-		bool			operator!=(const CCell&) const;
+		bool			operator==(const Cell&) const;
+		bool			operator!=(const Cell&) const;
 
 		const_iterator	begin() const;
 		const_iterator	end() const;
 
 	private:
-		CEdgeLinks		m_neighbors;
+		EdgeLinks		m_neighbors;
 
 	public:
-		CScreenOptions	m_options;
+		ScreenOptions	m_options;
 	};
-	typedef std::map<CString, CCell, synergy::string::CaselessCmp> CCellMap;
-	typedef std::map<CString, CString, synergy::string::CaselessCmp> CNameMap;
+	typedef std::map<String, Cell, synergy::string::CaselessCmp> CellMap;
+	typedef std::map<String, String, synergy::string::CaselessCmp> NameMap;
 
 public:
-	typedef CCell::const_iterator link_const_iterator;
-	typedef CCellMap::const_iterator internal_const_iterator;
-	typedef CNameMap::const_iterator all_const_iterator;
-	class const_iterator : std::iterator_traits<CConfig> {
+	typedef Cell::const_iterator link_const_iterator;
+	typedef CellMap::const_iterator internal_const_iterator;
+	typedef NameMap::const_iterator all_const_iterator;
+	class const_iterator : std::iterator_traits<Config> {
 	public:
 		explicit const_iterator() : m_i() { }
 		explicit const_iterator(const internal_const_iterator& i) : m_i(i) { }
@@ -156,8 +156,8 @@ public:
 			m_i = i.m_i;
 			return *this;
 		}
-		CString			operator*() { return m_i->first; }
-		const CString*	operator->() { return &(m_i->first); }
+		String			operator*() { return m_i->first; }
+		const String*	operator->() { return &(m_i->first); }
 		const_iterator&	operator++() { ++m_i;  return *this; }
 		const_iterator	operator++(int) { return const_iterator(m_i++); }
 		const_iterator&	operator--() { --m_i;  return *this; }
@@ -173,11 +173,11 @@ public:
 		internal_const_iterator	m_i;
 	};
 
-	CConfig(IEventQueue* events);
-	virtual ~CConfig();
+	Config(IEventQueue* events);
+	virtual ~Config();
 
 #ifdef TEST_ENV
-	CConfig() : m_inputFilter(NULL) { }
+	Config() : m_inputFilter(NULL) { }
 #endif
 
 	//! @name manipulators
@@ -188,15 +188,15 @@ public:
 	Adds a screen, returning true iff successful.  If a screen or
 	alias with the given name exists then it fails.
 	*/
-	bool				addScreen(const CString& name);
+	bool				addScreen(const String& name);
 
 	//! Rename screen
 	/*!
 	Renames a screen.  All references to the name are updated.
 	Returns true iff successful.
 	*/
-	bool				renameScreen(const CString& oldName,
-							const CString& newName);
+	bool				renameScreen(const String& oldName,
+							const String& newName);
 
 	//! Remove screen
 	/*!
@@ -204,7 +204,7 @@ public:
 	disconnects any connections to the screen.  \c name may be an
 	alias.
 	*/
-	void				removeScreen(const CString& name);
+	void				removeScreen(const String& name);
 
 	//! Remove all screens
 	/*!
@@ -219,22 +219,22 @@ public:
 	Returns false if the alias name already exists or the canonical
 	name is unknown, otherwise returns true.
 	*/
-	bool				addAlias(const CString& canonical,
-							const CString& alias);
+	bool				addAlias(const String& canonical,
+							const String& alias);
 
 	//! Remove alias
 	/*!
 	Removes an alias for a screen name.  It returns false if the
 	alias is unknown or a canonical name, otherwise returns true.
 	*/
-	bool				removeAlias(const CString& alias);
+	bool				removeAlias(const String& alias);
 
 	//! Remove aliases
 	/*!
 	Removes all aliases for a canonical screen name.  It returns false
 	if the canonical name is unknown, otherwise returns true.
 	*/
-	bool				removeAliases(const CString& canonical);
+	bool				removeAliases(const String& canonical);
 
 	//! Remove all aliases
 	/*!
@@ -258,10 +258,10 @@ public:
 	and all of \c srcStart, \c srcEnd, \c dstStart, or \c dstEnd must
 	be inside the range [0,1].
 	*/
-	bool				connect(const CString& srcName,
+	bool				connect(const String& srcName,
 							EDirection srcSide,
 							float srcStart, float srcEnd,
-							const CString& dstName,
+							const String& dstName,
 							float dstStart, float dstEnd);
 
 	//! Disconnect screens
@@ -269,7 +269,7 @@ public:
 	Removes all connections created by connect() on side \c srcSide.
 	Returns false if \c srcName is unknown.
 	*/
-	bool				disconnect(const CString& srcName,
+	bool				disconnect(const String& srcName,
 							EDirection srcSide);
 
 	//! Disconnect screens
@@ -278,7 +278,7 @@ public:
 	covering position \c position.  Returns false if \c srcName is
 	unknown.
 	*/
-	bool				disconnect(const CString& srcName,
+	bool				disconnect(const String& srcName,
 							EDirection srcSide, float position);
 
 	//! Set server address
@@ -286,7 +286,7 @@ public:
 	Set the synergy listen addresses.  There is no default address so
 	this must be called to run a server using this configuration.
 	*/
-	void				setSynergyAddress(const CNetworkAddress&);
+	void				setSynergyAddress(const NetworkAddress&);
 
 	//! Add a screen option
 	/*!
@@ -294,7 +294,7 @@ public:
 	existing option's value if there is one.  Returns true iff \c name
 	is a known screen.
 	*/
-	bool				addOption(const CString& name,
+	bool				addOption(const String& name,
 							OptionID option, OptionValue value);
 
 	//! Remove a screen option
@@ -303,21 +303,21 @@ public:
 	nothing if the option doesn't exist on the screen.  Returns true
 	iff \c name is a known screen.
 	*/
-	bool				removeOption(const CString& name, OptionID option);
+	bool				removeOption(const String& name, OptionID option);
 
 	//! Remove a screen options
 	/*!
 	Removes all options and values from the named screen.  Returns true
 	iff \c name is a known screen.
 	*/
-	bool				removeOptions(const CString& name);
+	bool				removeOptions(const String& name);
 
 	//! Get the hot key input filter
 	/*!
 	Returns the hot key input filter.  Clients can modify hotkeys using
 	that object.
 	*/
-	virtual CInputFilter*
+	virtual InputFilter*
 						getInputFilter();
 
 	//@}
@@ -328,7 +328,7 @@ public:
 	/*!
 	Returns true iff \c name is a valid screen name.
 	*/
-	bool				isValidScreenName(const CString& name) const;
+	bool				isValidScreenName(const String& name) const;
 
 	//! Get beginning (canonical) screen name iterator
 	const_iterator		begin() const;
@@ -344,20 +344,20 @@ public:
 	/*!
 	Returns true iff \c name names a screen.
 	*/
-	virtual bool		isScreen(const CString& name) const;
+	virtual bool		isScreen(const String& name) const;
 
 	//! Test for canonical screen name
 	/*!
 	Returns true iff \c name is the canonical name of a screen.
 	*/
-	bool				isCanonicalName(const CString& name) const;
+	bool				isCanonicalName(const String& name) const;
 
 	//! Get canonical name
 	/*!
 	Returns the canonical name of a screen or the empty string if
 	the name is unknown.  Returns the canonical name if one is given.
 	*/
-	CString				getCanonicalName(const CString& name) const;
+	String				getCanonicalName(const String& name) const;
 
 	//! Get neighbor
 	/*!
@@ -367,7 +367,7 @@ public:
 	saves the position on the neighbor in \c positionOut if it's not
 	\c NULL.
 	*/
-	CString				getNeighbor(const CString&, EDirection,
+	String				getNeighbor(const String&, EDirection,
 							float position, float* positionOut) const;
 
 	//! Check for neighbor
@@ -375,23 +375,23 @@ public:
 	Returns \c true if the screen has a neighbor anywhere along the edge
 	given by the direction.
 	*/
-	bool				hasNeighbor(const CString&, EDirection) const;
+	bool				hasNeighbor(const String&, EDirection) const;
 
 	//! Check for neighbor
 	/*!
 	Returns \c true if the screen has a neighbor in the given range along
 	the edge given by the direction.
 	*/
-	bool				hasNeighbor(const CString&, EDirection,
+	bool				hasNeighbor(const String&, EDirection,
 							float start, float end) const;
 
 	//! Get beginning neighbor iterator
-	link_const_iterator	beginNeighbor(const CString&) const;
+	link_const_iterator	beginNeighbor(const String&) const;
 	//! Get ending neighbor iterator
-	link_const_iterator	endNeighbor(const CString&) const;
+	link_const_iterator	endNeighbor(const String&) const;
 
 	//! Get the server address
-	const CNetworkAddress&	getSynergyAddress() const;
+	const NetworkAddress&	getSynergyAddress() const;
 
 	//! Get the screen options
 	/*!
@@ -399,7 +399,7 @@ public:
 	if the screen is unknown and an empty collection if there are no
 	options.
 	*/
-	const CScreenOptions* getOptions(const CString& name) const;
+	const ScreenOptions* getOptions(const String& name) const;
 
 	//! Check for lock to screen action
 	/*!
@@ -409,28 +409,28 @@ public:
 	bool					hasLockToScreenAction() const;
 
 	//! Compare configurations
-	bool				operator==(const CConfig&) const;
+	bool				operator==(const Config&) const;
 	//! Compare configurations
-	bool				operator!=(const CConfig&) const;
+	bool				operator!=(const Config&) const;
 
 	//! Read configuration
 	/*!
 	Reads a configuration from a context.  Throws XConfigRead on error
 	and context is unchanged.
 	*/
-	void					read(CConfigReadContext& context);
+	void					read(ConfigReadContext& context);
 
 	//! Read configuration
 	/*!
 	Reads a configuration from a stream.  Throws XConfigRead on error.
 	*/
-	friend std::istream&	operator>>(std::istream&, CConfig&);
+	friend std::istream&	operator>>(std::istream&, Config&);
 
 	//! Write configuration
 	/*!
 	Writes a configuration to a stream.
 	*/
-	friend std::ostream&	operator<<(std::ostream&, const CConfig&);
+	friend std::ostream&	operator<<(std::ostream&, const Config&);
 
 	//! Get direction name
 	/*!
@@ -442,37 +442,37 @@ public:
 	/*!
 	Returns an interval as a parseable string.
 	*/
-	static CString		formatInterval(const CInterval&);
+	static String		formatInterval(const Interval&);
 
 	//@}
 
 private:
-	void				readSection(CConfigReadContext&);
-	void				readSectionOptions(CConfigReadContext&);
-	void				readSectionScreens(CConfigReadContext&);
-	void				readSectionLinks(CConfigReadContext&);
-	void				readSectionAliases(CConfigReadContext&);
+	void				readSection(ConfigReadContext&);
+	void				readSectionOptions(ConfigReadContext&);
+	void				readSectionScreens(ConfigReadContext&);
+	void				readSectionLinks(ConfigReadContext&);
+	void				readSectionAliases(ConfigReadContext&);
 
-	CInputFilter::CCondition*
-						parseCondition(CConfigReadContext&,
-							const CString& condition,
-							const std::vector<CString>& args);
-	void				parseAction(CConfigReadContext&,
-							const CString& action,
-							const std::vector<CString>& args,
-							CInputFilter::CRule&, bool activate);
+	InputFilter::Condition*
+						parseCondition(ConfigReadContext&,
+							const String& condition,
+							const std::vector<String>& args);
+	void				parseAction(ConfigReadContext&,
+							const String& action,
+							const std::vector<String>& args,
+							InputFilter::Rule&, bool activate);
 
-	void				parseScreens(CConfigReadContext&, const CString&,
-							std::set<CString>& screens) const;
+	void				parseScreens(ConfigReadContext&, const String&,
+							std::set<String>& screens) const;
 	static const char*	getOptionName(OptionID);
-	static CString		getOptionValue(OptionID, OptionValue);
+	static String		getOptionValue(OptionID, OptionValue);
 
 private:
-	CCellMap			m_map;
-	CNameMap			m_nameToCanonicalName;
-	CNetworkAddress		m_synergyAddress;
-	CScreenOptions		m_globalOptions;
-	CInputFilter		m_inputFilter;
+	CellMap			m_map;
+	NameMap			m_nameToCanonicalName;
+	NetworkAddress		m_synergyAddress;
+	ScreenOptions		m_globalOptions;
+	InputFilter		m_inputFilter;
 	bool				m_hasLockToScreenAction;
 	IEventQueue*		m_events;
 };
@@ -481,44 +481,44 @@ private:
 /*!
 Maintains a context when reading a configuration from a stream.
 */
-class CConfigReadContext {
+class ConfigReadContext {
 public:
-	typedef std::vector<CString> ArgList;
+	typedef std::vector<String> ArgList;
 
-	CConfigReadContext(std::istream&, SInt32 firstLine = 1);
-	~CConfigReadContext();
+	ConfigReadContext(std::istream&, SInt32 firstLine = 1);
+	~ConfigReadContext();
 
-	bool			readLine(CString&);
+	bool			readLine(String&);
 	UInt32			getLineNumber() const;
 
 	bool			operator!() const;
 
-	OptionValue		parseBoolean(const CString&) const;
-	OptionValue		parseInt(const CString&) const;
-	OptionValue		parseModifierKey(const CString&) const;
-	OptionValue		parseCorner(const CString&) const;
-	OptionValue		parseCorners(const CString&) const;
-	CConfig::CInterval
+	OptionValue		parseBoolean(const String&) const;
+	OptionValue		parseInt(const String&) const;
+	OptionValue		parseModifierKey(const String&) const;
+	OptionValue		parseCorner(const String&) const;
+	OptionValue		parseCorners(const String&) const;
+	Config::Interval
 					parseInterval(const ArgList& args) const;
 	void			parseNameWithArgs(
-						const CString& type, const CString& line,
-						const CString& delim, CString::size_type& index,
-						CString& name, ArgList& args) const;
-	IPlatformScreen::CKeyInfo*
-					parseKeystroke(const CString& keystroke) const;
-	IPlatformScreen::CKeyInfo*
-					parseKeystroke(const CString& keystroke,
-						const std::set<CString>& screens) const;
-	IPlatformScreen::CButtonInfo*
-					parseMouse(const CString& mouse) const;
-	KeyModifierMask	parseModifier(const CString& modifiers) const;
+						const String& type, const String& line,
+						const String& delim, String::size_type& index,
+						String& name, ArgList& args) const;
+	IPlatformScreen::KeyInfo*
+					parseKeystroke(const String& keystroke) const;
+	IPlatformScreen::KeyInfo*
+					parseKeystroke(const String& keystroke,
+						const std::set<String>& screens) const;
+	IPlatformScreen::ButtonInfo*
+					parseMouse(const String& mouse) const;
+	KeyModifierMask	parseModifier(const String& modifiers) const;
 	std::istream&	getStream() const { return m_stream; };
 
 private:
 	// not implemented
-	CConfigReadContext&	operator=(const CConfigReadContext&);
+	ConfigReadContext&	operator=(const ConfigReadContext&);
 
-	static CString	concatArgs(const ArgList& args);
+	static String	concatArgs(const ArgList& args);
 
 private:
 	std::istream&	m_stream;
@@ -531,15 +531,15 @@ Thrown when a configuration stream cannot be parsed.
 */
 class XConfigRead : public XBase {
 public:
-	XConfigRead(const CConfigReadContext& context, const CString&);
-	XConfigRead(const CConfigReadContext& context,
-							const char* errorFmt, const CString& arg);
+	XConfigRead(const ConfigReadContext& context, const String&);
+	XConfigRead(const ConfigReadContext& context,
+							const char* errorFmt, const String& arg);
 	virtual ~XConfigRead() _NOEXCEPT;
 
 protected:
 	// XBase overrides
-	virtual CString		getWhat() const throw();
+	virtual String		getWhat() const throw();
 
 private:
-	CString				m_error;
+	String				m_error;
 };

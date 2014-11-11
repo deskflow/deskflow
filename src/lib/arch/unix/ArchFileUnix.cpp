@@ -25,21 +25,21 @@
 #include <cstring>
 
 //
-// CArchFileUnix
+// ArchFileUnix
 //
 
-CArchFileUnix::CArchFileUnix()
+ArchFileUnix::ArchFileUnix()
 {
 	// do nothing
 }
 
-CArchFileUnix::~CArchFileUnix()
+ArchFileUnix::~ArchFileUnix()
 {
 	// do nothing
 }
 
 const char*
-CArchFileUnix::getBasename(const char* pathname)
+ArchFileUnix::getBasename(const char* pathname)
 {
 	if (pathname == NULL) {
 		return NULL;
@@ -55,7 +55,7 @@ CArchFileUnix::getBasename(const char* pathname)
 }
 
 std::string
-CArchFileUnix::getUserDirectory()
+ArchFileUnix::getUserDirectory()
 {
 	char* buffer = NULL;
 	std::string dir;
@@ -83,13 +83,12 @@ CArchFileUnix::getUserDirectory()
 }
 
 std::string
-CArchFileUnix::getSystemDirectory()
+ArchFileUnix::getSystemDirectory()
 {
 	return "/etc";
 }
 
-std::string
-CArchFileUnix::getInstalledDirectory()
+ArchFileUnix::getInstalledDirectory()
 {
 #if WINAPI_XWINDOWS
 	return "/bin";
@@ -99,13 +98,13 @@ CArchFileUnix::getInstalledDirectory()
 }
 
 std::string
-CArchFileUnix::getLogDirectory()
+ArchFileUnix::getLogDirectory()
 {
 	return "/var/log";
 }
 
 std::string
-CArchFileUnix::concatPath(const std::string& prefix,
+ArchFileUnix::concatPath(const std::string& prefix,
 				const std::string& suffix)
 {
 	std::string path;

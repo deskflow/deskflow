@@ -19,28 +19,28 @@
 #include "synergy/unix/AppUtilUnix.h"
 #include "synergy/ArgsBase.h"
 
-CAppUtilUnix::CAppUtilUnix(IEventQueue* events)
+AppUtilUnix::AppUtilUnix(IEventQueue* events)
 {
 }
 
-CAppUtilUnix::~CAppUtilUnix()
+AppUtilUnix::~AppUtilUnix()
 {
 }
 
 int
 standardStartupStatic(int argc, char** argv)
 {
-	return CAppUtil::instance().app().standardStartup(argc, argv);
+	return AppUtil::instance().app().standardStartup(argc, argv);
 }
 
 int
-CAppUtilUnix::run(int argc, char** argv)
+AppUtilUnix::run(int argc, char** argv)
 {
 	return app().runInner(argc, argv, NULL, &standardStartupStatic);
 }
 
 void
-CAppUtilUnix::startNode()
+AppUtilUnix::startNode()
 {
 	app().startNode();
 }

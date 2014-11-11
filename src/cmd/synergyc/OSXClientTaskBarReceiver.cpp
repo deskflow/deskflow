@@ -20,50 +20,50 @@
 #include "arch/Arch.h"
 
 //
-// COSXClientTaskBarReceiver
+// OSXClientTaskBarReceiver
 //
 
-COSXClientTaskBarReceiver::COSXClientTaskBarReceiver(
-        const CBufferedLogOutputter*,
+OSXClientTaskBarReceiver::OSXClientTaskBarReceiver(
+        const BufferedLogOutputter*,
         IEventQueue* events) :
-    CClientTaskBarReceiver(events)
+    ClientTaskBarReceiver(events)
 {
 	// add ourself to the task bar
 	ARCH->addReceiver(this);
 }
 
-COSXClientTaskBarReceiver::~COSXClientTaskBarReceiver()
+OSXClientTaskBarReceiver::~OSXClientTaskBarReceiver()
 {
 	ARCH->removeReceiver(this);
 }
 
 void
-COSXClientTaskBarReceiver::showStatus()
+OSXClientTaskBarReceiver::showStatus()
 {
 	// do nothing
 }
 
 void
-COSXClientTaskBarReceiver::runMenu(int, int)
+OSXClientTaskBarReceiver::runMenu(int, int)
 {
 	// do nothing
 }
 
 void
-COSXClientTaskBarReceiver::primaryAction()
+OSXClientTaskBarReceiver::primaryAction()
 {
 	// do nothing
 }
 
 const IArchTaskBarReceiver::Icon
-COSXClientTaskBarReceiver::getIcon() const
+OSXClientTaskBarReceiver::getIcon() const
 {
 	return NULL;
 }
 
 IArchTaskBarReceiver*
-createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events)
+createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events)
 {
-	return new COSXClientTaskBarReceiver(logBuffer, events);
+	return new OSXClientTaskBarReceiver(logBuffer, events);
 }
 

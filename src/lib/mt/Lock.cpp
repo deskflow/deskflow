@@ -21,22 +21,22 @@
 #include "mt/Mutex.h"
 
 //
-// CLock
+// Lock
 //
 
-CLock::CLock(const CMutex* mutex) :
+Lock::Lock(const Mutex* mutex) :
 	m_mutex(mutex)
 {
 	m_mutex->lock();
 }
 
-CLock::CLock(const CCondVarBase* cv) :
+Lock::Lock(const CondVarBase* cv) :
 	m_mutex(cv->getMutex())
 {
 	m_mutex->lock();
 }
 
-CLock::~CLock()
+Lock::~Lock()
 {
 	m_mutex->unlock();
 }

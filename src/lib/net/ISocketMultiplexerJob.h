@@ -56,7 +56,7 @@ public:
 	/*!
 	Return the socket to multiplex
 	*/
-	virtual CArchSocket	getSocket() const = 0;
+	virtual ArchSocket	getSocket() const = 0;
 
 	//! Check for interest in readability
 	/*!

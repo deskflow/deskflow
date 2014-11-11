@@ -22,20 +22,20 @@
 #include "net/TCPSocket.h"
 #include "base/EventTypes.h"
 
-class CIpcServerProxy;
-class CIpcMessage;
+class IpcServerProxy;
+class IpcMessage;
 class IEventQueue;
-class CSocketMultiplexer;
+class SocketMultiplexer;
 
 //! IPC client for communication between daemon and GUI.
 /*!
- * See \ref CIpcServer description.
+ * See \ref IpcServer description.
  */
-class CIpcClient {
+class IpcClient {
 public:
-	CIpcClient(IEventQueue* events, CSocketMultiplexer* socketMultiplexer);
-	CIpcClient(IEventQueue* events, CSocketMultiplexer* socketMultiplexer, int port);
-	virtual ~CIpcClient();
+	IpcClient(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+	IpcClient(IEventQueue* events, SocketMultiplexer* socketMultiplexer, int port);
+	virtual ~IpcClient();
 
 	//! @name manipulators
 	//@{
@@ -47,18 +47,18 @@ public:
 	void				disconnect();
 
 	//! Sends a message to the server.
-	void				send(const CIpcMessage& message);
+	void				send(const IpcMessage& message);
 
 	//@}
 
 private:
 	void				init();
-	void				handleConnected(const CEvent&, void*);
-	void				handleMessageReceived(const CEvent&, void*);
+	void				handleConnected(const Event&, void*);
+	void				handleMessageReceived(const Event&, void*);
 
 private:
-	CNetworkAddress		m_serverAddress;
+	NetworkAddress		m_serverAddress;
 	CTCPSocket			m_socket;
-	CIpcServerProxy*	m_server;
+	IpcServerProxy*	m_server;
 	IEventQueue*		m_events;
 };

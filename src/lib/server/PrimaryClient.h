@@ -21,7 +21,7 @@
 #include "server/BaseClientProxy.h"
 #include "synergy/protocol_types.h"
 
-class CScreen;
+class Screen;
 
 //! Primary screen as pseudo-client
 /*!
@@ -29,16 +29,16 @@ The primary screen does not have a client associated with it.  This
 class provides a pseudo-client to allow the primary screen to be
 treated as if it was a client.
 */
-class CPrimaryClient : public CBaseClientProxy {
+class PrimaryClient : public BaseClientProxy {
 public:
 	/*!
 	\c name is the name of the server and \p screen is primary screen.
 	*/
-	CPrimaryClient(const CString& name, CScreen* screen);
-	~CPrimaryClient();
+	PrimaryClient(const String& name, Screen* screen);
+	~PrimaryClient();
 
 #ifdef TEST_ENV
-	CPrimaryClient() : CBaseClientProxy("") { }
+	PrimaryClient() : BaseClientProxy("") { }
 #endif
 
 	//! @name manipulators
@@ -142,12 +142,12 @@ public:
 	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta);
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
-	virtual void		setOptions(const COptionsList& options);
+	virtual void		setOptions(const OptionsList& options);
 	virtual void		sendDragInfo(UInt32 fileCount, const char* info, size_t size);
 	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize);
 
 private:
-	CScreen*			m_screen;
+	Screen*			m_screen;
 	bool				m_clipboardDirty[kClipboardEnd];
 	SInt32				m_fakeInputCount;
 };

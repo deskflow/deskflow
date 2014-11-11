@@ -94,7 +94,7 @@ CMSWindowsClipboard::empty()
 }
 
 void
-CMSWindowsClipboard::add(EFormat format, const CString& data)
+CMSWindowsClipboard::add(EFormat format, const String& data)
 {
 	LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
 
@@ -161,7 +161,7 @@ CMSWindowsClipboard::has(EFormat format) const
 	return false;
 }
 
-CString
+String
 CMSWindowsClipboard::get(EFormat format) const
 {
 	// find the converter for the first clipboard format we can handle
@@ -182,7 +182,7 @@ CMSWindowsClipboard::get(EFormat format) const
 
 	// if no converter then we don't recognize any formats
 	if (converter == NULL) {
-		return CString();
+		return String();
 	}
 
 	// get a handle to the clipboard data
@@ -191,7 +191,7 @@ CMSWindowsClipboard::get(EFormat format) const
 		// nb: can't cause this using integ tests; this is only caused when
 		// the selected converter returns an invalid format -- which you
 		// cannot cause using public functions.
-		return CString();
+		return String();
 	}
 
 	// convert

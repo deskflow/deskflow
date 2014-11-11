@@ -24,27 +24,27 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#define ARCH_MULTITHREAD CArchMultithreadWindows
+#define ARCH_MULTITHREAD ArchMultithreadWindows
 
-class CArchCondImpl {
+class ArchCondImpl {
 public:
 	enum { kSignal = 0, kBroadcast };
 
 	HANDLE				m_events[2];
 	mutable int			m_waitCount;
-	CArchMutex			m_waitCountMutex;
+	ArchMutex			m_waitCountMutex;
 };
 
-class CArchMutexImpl {
+class ArchMutexImpl {
 public:
 	CRITICAL_SECTION	m_mutex;
 };
 
 //! Win32 implementation of IArchMultithread
-class CArchMultithreadWindows : public IArchMultithread {
+class ArchMultithreadWindows : public IArchMultithread {
 public:
-	CArchMultithreadWindows();
-	virtual ~CArchMultithreadWindows();
+	ArchMultithreadWindows();
+	virtual ~ArchMultithreadWindows();
 
 	//! @name manipulators
 	//@{
@@ -57,59 +57,59 @@ public:
 
 	HANDLE				getCancelEventForCurrentThread();
 
-	void*				getNetworkDataForThread(CArchThread);
+	void*				getNetworkDataForThread(ArchThread);
 
-	static CArchMultithreadWindows*	getInstance();
+	static ArchMultithreadWindows*	getInstance();
 
 	//@}
 
 	// IArchMultithread overrides
-	virtual CArchCond	newCondVar();
-	virtual void		closeCondVar(CArchCond);
-	virtual void		signalCondVar(CArchCond);
-	virtual void		broadcastCondVar(CArchCond);
-	virtual bool		waitCondVar(CArchCond, CArchMutex, double timeout);
-	virtual CArchMutex	newMutex();
-	virtual void		closeMutex(CArchMutex);
-	virtual void		lockMutex(CArchMutex);
-	virtual void		unlockMutex(CArchMutex);
-	virtual CArchThread	newThread(ThreadFunc, void*);
-	virtual CArchThread	newCurrentThread();
-	virtual CArchThread	copyThread(CArchThread);
-	virtual void		closeThread(CArchThread);
-	virtual void		cancelThread(CArchThread);
-	virtual void		setPriorityOfThread(CArchThread, int n);
+	virtual ArchCond	newCondVar();
+	virtual void		closeCondVar(ArchCond);
+	virtual void		signalCondVar(ArchCond);
+	virtual void		broadcastCondVar(ArchCond);
+	virtual bool		waitCondVar(ArchCond, ArchMutex, double timeout);
+	virtual ArchMutex	newMutex();
+	virtual void		closeMutex(ArchMutex);
+	virtual void		lockMutex(ArchMutex);
+	virtual void		unlockMutex(ArchMutex);
+	virtual ArchThread	newThread(ThreadFunc, void*);
+	virtual ArchThread	newCurrentThread();
+	virtual ArchThread	copyThread(ArchThread);
+	virtual void		closeThread(ArchThread);
+	virtual void		cancelThread(ArchThread);
+	virtual void		setPriorityOfThread(ArchThread, int n);
 	virtual void		testCancelThread();
-	virtual bool		wait(CArchThread, double timeout);
-	virtual bool		isSameThread(CArchThread, CArchThread);
-	virtual bool		isExitedThread(CArchThread);
-	virtual void*		getResultOfThread(CArchThread);
-	virtual ThreadID	getIDOfThread(CArchThread);
+	virtual bool		wait(ArchThread, double timeout);
+	virtual bool		isSameThread(ArchThread, ArchThread);
+	virtual bool		isExitedThread(ArchThread);
+	virtual void*		getResultOfThread(ArchThread);
+	virtual ThreadID	getIDOfThread(ArchThread);
 	virtual void		setSignalHandler(ESignal, SignalFunc, void*);
 	virtual void		raiseSignal(ESignal);
 
 private:
-	CArchThreadImpl*	find(DWORD id);
-	CArchThreadImpl*	findNoRef(DWORD id);
-	CArchThreadImpl*	findNoRefOrCreate(DWORD id);
-	void				insert(CArchThreadImpl* thread);
-	void				erase(CArchThreadImpl* thread);
+	ArchThreadImpl*	find(DWORD id);
+	ArchThreadImpl*	findNoRef(DWORD id);
+	ArchThreadImpl*	findNoRefOrCreate(DWORD id);
+	void				insert(ArchThreadImpl* thread);
+	void				erase(ArchThreadImpl* thread);
 
-	void				refThread(CArchThreadImpl* rep);
-	void				testCancelThreadImpl(CArchThreadImpl* rep);
+	void				refThread(ArchThreadImpl* rep);
+	void				testCancelThreadImpl(ArchThreadImpl* rep);
 
-	void				doThreadFunc(CArchThread thread);
+	void				doThreadFunc(ArchThread thread);
 	static unsigned int __stdcall	threadFunc(void* vrep);
 
 private:
-	typedef std::list<CArchThread> CThreadList;
+	typedef std::list<ArchThread> ThreadList;
 
-	static CArchMultithreadWindows*	s_instance;
+	static ArchMultithreadWindows*	s_instance;
 
-	CArchMutex			m_threadMutex;
+	ArchMutex			m_threadMutex;
 
-	CThreadList			m_threadList;
-	CArchThread			m_mainThread;
+	ThreadList			m_threadList;
+	ArchThread			m_mainThread;
 
 	SignalFunc			m_signalFunc[kNUM_SIGNALS];
 	void*				m_signalUserData[kNUM_SIGNALS];

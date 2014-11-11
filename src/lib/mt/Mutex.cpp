@@ -21,38 +21,38 @@
 #include "arch/Arch.h"
 
 //
-// CMutex
+// Mutex
 //
 
-CMutex::CMutex()
+Mutex::Mutex()
 {
 	m_mutex = ARCH->newMutex();
 }
 
-CMutex::CMutex(const CMutex&)
+Mutex::Mutex(const Mutex&)
 {
 	m_mutex = ARCH->newMutex();
 }
 
-CMutex::~CMutex()
+Mutex::~Mutex()
 {
 	ARCH->closeMutex(m_mutex);
 }
 
-CMutex&
-CMutex::operator=(const CMutex&)
+Mutex&
+Mutex::operator=(const Mutex&)
 {
 	return *this;
 }
 
 void
-CMutex::lock() const
+Mutex::lock() const
 {
 	ARCH->lockMutex(m_mutex);
 }
 
 void
-CMutex::unlock() const
+Mutex::unlock() const
 {
 	ARCH->unlockMutex(m_mutex);
 }

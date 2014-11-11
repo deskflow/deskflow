@@ -40,18 +40,18 @@ public:
 	};
 
 	//! Key event data
-	class CKeyInfo {
+	class KeyInfo {
 	public:
-		static CKeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count);
-		static CKeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count,
-							const std::set<CString>& destinations);
-		static CKeyInfo* alloc(const CKeyInfo&);
+		static KeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count);
+		static KeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count,
+							const std::set<String>& destinations);
+		static KeyInfo* alloc(const KeyInfo&);
 
 		static bool isDefault(const char* screens);
-		static bool contains(const char* screens, const CString& name);
-		static bool equal(const CKeyInfo*, const CKeyInfo*);
-		static CString join(const std::set<CString>& destinations);
-		static void split(const char* screens, std::set<CString>&);
+		static bool contains(const char* screens, const String& name);
+		static bool equal(const KeyInfo*, const KeyInfo*);
+		static String join(const std::set<String>& destinations);
+		static void split(const char* screens, std::set<String>&);
 
 	public:
 		KeyID			m_key;

@@ -30,9 +30,9 @@
 #include <Windows.h>
 #include <list>
 
-#define ARCH_NETWORK CArchNetworkWinsock
+#define ARCH_NETWORK ArchNetworkWinsock
 
-class CArchSocketImpl {
+class ArchSocketImpl {
 public:
 	SOCKET				m_socket;
 	int					m_refCount;
@@ -40,55 +40,55 @@ public:
 	bool				m_pollWrite;
 };
 
-class CArchNetAddressImpl {
+class ArchNetAddressImpl {
 public:
-	static CArchNetAddressImpl* alloc(size_t);
+	static ArchNetAddressImpl* alloc(size_t);
 
 public:
 	int					m_len;
 	struct sockaddr		m_addr;
 };
-#define ADDR_HDR_SIZE	offsetof(CArchNetAddressImpl, m_addr)
+#define ADDR_HDR_SIZE	offsetof(ArchNetAddressImpl, m_addr)
 #define TYPED_ADDR(type_, addr_) (reinterpret_cast<type_*>(&addr_->m_addr))
 
 //! Win32 implementation of IArchNetwork
-class CArchNetworkWinsock : public IArchNetwork {
+class ArchNetworkWinsock : public IArchNetwork {
 public:
-	CArchNetworkWinsock();
-	virtual ~CArchNetworkWinsock();
+	ArchNetworkWinsock();
+	virtual ~ArchNetworkWinsock();
 
 	virtual void init();
 
 	// IArchNetwork overrides
-	virtual CArchSocket	newSocket(EAddressFamily, ESocketType);
-	virtual CArchSocket	copySocket(CArchSocket s);
-	virtual void		closeSocket(CArchSocket s);
-	virtual void		closeSocketForRead(CArchSocket s);
-	virtual void		closeSocketForWrite(CArchSocket s);
-	virtual void		bindSocket(CArchSocket s, CArchNetAddress addr);
-	virtual void		listenOnSocket(CArchSocket s);
-	virtual CArchSocket	acceptSocket(CArchSocket s, CArchNetAddress* addr);
-	virtual bool		connectSocket(CArchSocket s, CArchNetAddress name);
-	virtual int			pollSocket(CPollEntry[], int num, double timeout);
-	virtual void		unblockPollSocket(CArchThread thread);
-	virtual size_t		readSocket(CArchSocket s, void* buf, size_t len);
-	virtual size_t		writeSocket(CArchSocket s,
+	virtual ArchSocket	newSocket(EAddressFamily, ESocketType);
+	virtual ArchSocket	copySocket(ArchSocket s);
+	virtual void		closeSocket(ArchSocket s);
+	virtual void		closeSocketForRead(ArchSocket s);
+	virtual void		closeSocketForWrite(ArchSocket s);
+	virtual void		bindSocket(ArchSocket s, ArchNetAddress addr);
+	virtual void		listenOnSocket(ArchSocket s);
+	virtual ArchSocket	acceptSocket(ArchSocket s, ArchNetAddress* addr);
+	virtual bool		connectSocket(ArchSocket s, ArchNetAddress name);
+	virtual int			pollSocket(PollEntry[], int num, double timeout);
+	virtual void		unblockPollSocket(ArchThread thread);
+	virtual size_t		readSocket(ArchSocket s, void* buf, size_t len);
+	virtual size_t		writeSocket(ArchSocket s,
 							const void* buf, size_t len);
-	virtual void		throwErrorOnSocket(CArchSocket);
-	virtual bool		setNoDelayOnSocket(CArchSocket, bool noDelay);
-	virtual bool		setReuseAddrOnSocket(CArchSocket, bool reuse);
+	virtual void		throwErrorOnSocket(ArchSocket);
+	virtual bool		setNoDelayOnSocket(ArchSocket, bool noDelay);
+	virtual bool		setReuseAddrOnSocket(ArchSocket, bool reuse);
 	virtual std::string		getHostName();
-	virtual CArchNetAddress	newAnyAddr(EAddressFamily);
-	virtual CArchNetAddress	copyAddr(CArchNetAddress);
-	virtual CArchNetAddress	nameToAddr(const std::string&);
-	virtual void			closeAddr(CArchNetAddress);
-	virtual std::string		addrToName(CArchNetAddress);
-	virtual std::string		addrToString(CArchNetAddress);
-	virtual EAddressFamily	getAddrFamily(CArchNetAddress);
-	virtual void			setAddrPort(CArchNetAddress, int port);
-	virtual int				getAddrPort(CArchNetAddress);
-	virtual bool			isAnyAddr(CArchNetAddress);
-	virtual bool			isEqualAddr(CArchNetAddress, CArchNetAddress);
+	virtual ArchNetAddress	newAnyAddr(EAddressFamily);
+	virtual ArchNetAddress	copyAddr(ArchNetAddress);
+	virtual ArchNetAddress	nameToAddr(const std::string&);
+	virtual void			closeAddr(ArchNetAddress);
+	virtual std::string		addrToName(ArchNetAddress);
+	virtual std::string		addrToString(ArchNetAddress);
+	virtual EAddressFamily	getAddrFamily(ArchNetAddress);
+	virtual void			setAddrPort(ArchNetAddress, int port);
+	virtual int				getAddrPort(ArchNetAddress);
+	virtual bool			isAnyAddr(ArchNetAddress);
+	virtual bool			isEqualAddr(ArchNetAddress, ArchNetAddress);
 
 private:
 	void				initModule(HMODULE);
@@ -99,8 +99,8 @@ private:
 	void				throwNameError(int);
 
 private:
-	typedef std::list<WSAEVENT> CEventList;
+	typedef std::list<WSAEVENT> EventList;
 
-	CArchMutex			m_mutex;
-	CEventList			m_unblockEvents;
+	ArchMutex			m_mutex;
+	EventList			m_unblockEvents;
 };

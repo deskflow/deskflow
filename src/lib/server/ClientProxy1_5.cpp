@@ -23,13 +23,13 @@
 #include "base/Log.h"
 
 //
-// CClientProxy1_5
+// ClientProxy1_5
 //
 
-const UInt16 CClientProxy1_5::m_intervalThreshold = 1;
+const UInt16 ClientProxy1_5::m_intervalThreshold = 1;
 
-CClientProxy1_5::CClientProxy1_5(const CString& name, synergy::IStream* stream, CServer* server, IEventQueue* events) :
-	CClientProxy1_4(name, stream, server, events),
+ClientProxy1_5::ClientProxy1_5(const String& name, synergy::IStream* stream, Server* server, IEventQueue* events) :
+	ClientProxy1_4(name, stream, server, events),
 	m_events(events),
 	m_stopwatch(true),
 	m_elapsedTime(0),
@@ -37,22 +37,22 @@ CClientProxy1_5::CClientProxy1_5(const CString& name, synergy::IStream* stream, 
 {
 }
 
-CClientProxy1_5::~CClientProxy1_5()
+ClientProxy1_5::~ClientProxy1_5()
 {
 }
 
 void
-CClientProxy1_5::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
+ClientProxy1_5::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
 {
-	CString data(info, size);
+	String data(info, size);
 
-	CProtocolUtil::writef(getStream(), kMsgDDragInfo, fileCount, &data);
+	ProtocolUtil::writef(getStream(), kMsgDDragInfo, fileCount, &data);
 }
 
 void
-CClientProxy1_5::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
+ClientProxy1_5::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 {
-	CString chunk(data, dataSize);
+	String chunk(data, dataSize);
 
 	switch (mark) {
 	case kFileStart:
@@ -68,11 +68,11 @@ CClientProxy1_5::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 		break;
 	}
 
-	CProtocolUtil::writef(getStream(), kMsgDFileTransfer, mark, &chunk);
+	ProtocolUtil::writef(getStream(), kMsgDFileTransfer, mark, &chunk);
 }
 
 bool
-CClientProxy1_5::parseMessage(const UInt8* code)
+ClientProxy1_5::parseMessage(const UInt8* code)
 {
 	if (memcmp(code, kMsgDFileTransfer, 4) == 0) {
 		fileChunkReceived();
@@ -81,21 +81,21 @@ CClientProxy1_5::parseMessage(const UInt8* code)
 		dragInfoReceived();
 	}
 	else {
-		return CClientProxy1_4::parseMessage(code);
+		return ClientProxy1_4::parseMessage(code);
 	}
 
 	return true;
 }
 
 void
-CClientProxy1_5::fileChunkReceived()
+ClientProxy1_5::fileChunkReceived()
 {
 	// parse
 	UInt8 mark = 0;
-	CString content;
-	CProtocolUtil::readf(getStream(), kMsgDFileTransfer + 4, &mark, &content);
+	String content;
+	ProtocolUtil::readf(getStream(), kMsgDFileTransfer + 4, &mark, &content);
 
-	CServer* server = getServer();
+	Server* server = getServer();
 	switch (mark) {
 	case kFileStart:
 		server->clearReceivedFileData();
@@ -125,7 +125,7 @@ CClientProxy1_5::fileChunkReceived()
 		break;
 
 	case kFileEnd:
-		m_events->addEvent(CEvent(m_events->forIScreen().fileRecieveCompleted(), server));
+		m_events->addEvent(Event(m_events->forIScreen().fileRecieveCompleted(), server));
 		if (CLOG->getFilter() >= kDEBUG2) {
 			LOG((CLOG_DEBUG2 "file data transfer finished"));
 			m_elapsedTime += m_stopwatch.getTime();
@@ -139,12 +139,12 @@ CClientProxy1_5::fileChunkReceived()
 }
 
 void
-CClientProxy1_5::dragInfoReceived()
+ClientProxy1_5::dragInfoReceived()
 {
 	// parse
 	UInt32 fileNum = 0;
-	CString content;
-	CProtocolUtil::readf(getStream(), kMsgDDragInfo + 4, &fileNum, &content);
+	String content;
+	ProtocolUtil::readf(getStream(), kMsgDDragInfo + 4, &fileNum, &content);
 	
 	m_server->dragInfoReceived(fileNum, content);
 }

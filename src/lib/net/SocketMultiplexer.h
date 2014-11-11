@@ -23,9 +23,9 @@
 #include "common/stdmap.h"
 
 template <class T>
-class CCondVar;
-class CMutex;
-class CThread;
+class CondVar;
+class Mutex;
+class Thread;
 class ISocket;
 class ISocketMultiplexerJob;
 
@@ -33,10 +33,10 @@ class ISocketMultiplexerJob;
 /*!
 A socket multiplexer services multiple sockets simultaneously.
 */
-class CSocketMultiplexer {
+class SocketMultiplexer {
 public:
-	CSocketMultiplexer();
-	~CSocketMultiplexer();
+	SocketMultiplexer();
+	~SocketMultiplexer();
 
 	//! @name manipulators
 	//@{
@@ -50,7 +50,7 @@ public:
 	//@{
 
 	// maybe belongs on ISocketMultiplexer
-	static CSocketMultiplexer*
+	static SocketMultiplexer*
 						getInstance();
 
 	//@}
@@ -58,9 +58,9 @@ public:
 private:
 	// list of jobs.  we use a list so we can safely iterate over it
 	// while other threads modify it.
-	typedef std::list<ISocketMultiplexerJob*> CSocketJobs;
-	typedef CSocketJobs::iterator CJobCursor;
-	typedef std::map<ISocket*, CJobCursor> CSocketJobMap;
+	typedef std::list<ISocketMultiplexerJob*> SocketJobs;
+	typedef SocketJobs::iterator JobCursor;
+	typedef std::map<ISocket*, JobCursor> SocketJobMap;
 
 	// service sockets.  the service thread will only access m_sockets
 	// and m_update while m_pollable and m_polling are true.  all other
@@ -77,9 +77,9 @@ private:
 	// nextCursor() finds the next non-dummy item, moves our dummy
 	// item just past it, and returns an iterator for the non-dummy
 	// item.  all cursor calls lock the mutex for their duration.
-	CJobCursor			newCursor();
-	CJobCursor			nextCursor(CJobCursor);
-	void				deleteCursor(CJobCursor);
+	JobCursor			newCursor();
+	JobCursor			nextCursor(JobCursor);
+	void				deleteCursor(JobCursor);
 
 	// lock out locking the job list.  this blocks if another thread
 	// has already locked out locking.  once it returns, only the
@@ -95,16 +95,16 @@ private:
 	void				unlockJobList();
 
 private:
-	CMutex*				m_mutex;
-	CThread*			m_thread;
+	Mutex*				m_mutex;
+	Thread*			m_thread;
 	bool				m_update;
-	CCondVar<bool>*		m_jobsReady;
-	CCondVar<bool>*		m_jobListLock;
-	CCondVar<bool>*		m_jobListLockLocked;
-	CThread*			m_jobListLocker;
-	CThread*			m_jobListLockLocker;
+	CondVar<bool>*		m_jobsReady;
+	CondVar<bool>*		m_jobListLock;
+	CondVar<bool>*		m_jobListLockLocked;
+	Thread*			m_jobListLocker;
+	Thread*			m_jobListLockLocker;
 
-	CSocketJobs			m_socketJobs;
-	CSocketJobMap		m_socketJobMap;
+	SocketJobs			m_socketJobs;
+	SocketJobMap		m_socketJobMap;
 	ISocketMultiplexerJob*	m_cursorMark;
 };

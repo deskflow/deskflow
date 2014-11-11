@@ -29,10 +29,10 @@
 class IEventQueue;
 
 //! Implementation of IArchTaskBarReceiver for the synergy server
-class CPortableTaskBarReceiver : public IArchTaskBarReceiver {
+class PortableTaskBarReceiver : public IArchTaskBarReceiver {
 public:
-	CPortableTaskBarReceiver(IEventQueue* events);
-	virtual ~CPortableTaskBarReceiver();
+	PortableTaskBarReceiver(IEventQueue* events);
+	virtual ~PortableTaskBarReceiver();
 
 	//! @name manipulators
 	//@{
@@ -41,7 +41,7 @@ public:
 	/*!
 	Determine the status and query required information from the server.
 	*/
-	void				updateStatus(INode*, const CString& errorMsg);
+	void				updateStatus(INode*, const String& errorMsg);
 
 	//@}
 
@@ -55,7 +55,7 @@ public:
 	virtual std::string	getToolTip() const;
 
 protected:
-	typedef std::vector<CString> CClients;
+	typedef std::vector<String> Clients;
 	enum EState {
 		kNotRunning,
 		kNotWorking,
@@ -68,7 +68,7 @@ protected:
 	EState				getStatus() const;
 
 	//! Get error message
-	const CString&		getErrorMessage() const;
+	const String&		getErrorMessage() const;
 
 	//! Quit app
 	/*!
@@ -85,12 +85,12 @@ protected:
 
 private:
 	EState				m_state;
-	CString				m_errorMessage;
+	String				m_errorMessage;
 
-	CString				m_server;
-	CClients			m_clients;
+	String				m_server;
+	Clients			m_clients;
 
 	IEventQueue*		m_events;
 };
 
-IArchTaskBarReceiver* createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events);
+IArchTaskBarReceiver* createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events);

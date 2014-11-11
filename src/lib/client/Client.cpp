@@ -46,16 +46,16 @@
 #include <fstream>
 
 //
-// CClient
+// Client
 //
 
-CClient::CClient(
+Client::Client(
 		IEventQueue* events,
-		const CString& name, const CNetworkAddress& address,
+		const String& name, const NetworkAddress& address,
 		ISocketFactory* socketFactory,
 		IStreamFilterFactory* streamFilterFactory,
-		CScreen* screen,
-		const CCryptoOptions& crypto,
+		Screen* screen,
+		const CryptoOptions& crypto,
 		bool enableDragDrop) :
 	m_mock(false),
 	m_name(name),
@@ -83,26 +83,26 @@ CClient::CClient(
 	// register suspend/resume event handlers
 	m_events->adoptHandler(m_events->forIScreen().suspend(),
 							getEventTarget(),
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleSuspend));
+							new TMethodEventJob<Client>(this,
+								&Client::handleSuspend));
 	m_events->adoptHandler(m_events->forIScreen().resume(),
 							getEventTarget(),
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleResume));
+							new TMethodEventJob<Client>(this,
+								&Client::handleResume));
 
 	if (m_enableDragDrop) {
 		m_events->adoptHandler(m_events->forIScreen().fileChunkSending(),
 								this,
-								new TMethodEventJob<CClient>(this,
-									&CClient::handleFileChunkSending));
+								new TMethodEventJob<Client>(this,
+									&Client::handleFileChunkSending));
 		m_events->adoptHandler(m_events->forIScreen().fileRecieveCompleted(),
 								this,
-								new TMethodEventJob<CClient>(this,
-									&CClient::handleFileRecieveCompleted));
+								new TMethodEventJob<Client>(this,
+									&Client::handleFileRecieveCompleted));
 	}
 }
 
-CClient::~CClient()
+Client::~Client()
 {
 	if (m_mock) {
 		return;
@@ -122,7 +122,7 @@ CClient::~CClient()
 }
 
 void
-CClient::connect()
+Client::connect()
 {
 	if (m_stream != NULL) {
 		return;
@@ -157,10 +157,10 @@ CClient::connect()
 		if (m_streamFilterFactory != NULL) {
 			m_stream = m_streamFilterFactory->create(m_stream, true);
 		}
-		m_stream = new CPacketStreamFilter(m_events, m_stream, true);
+		m_stream = new PacketStreamFilter(m_events, m_stream, true);
 
 		if (m_crypto.m_mode != kDisabled) {
-			m_cryptoStream = new CCryptoStream(
+			m_cryptoStream = new CryptoStream(
 				m_events, m_stream, m_crypto, true);
 			m_stream = m_cryptoStream;
 		}
@@ -183,7 +183,7 @@ CClient::connect()
 }
 
 void
-CClient::disconnect(const char* msg)
+Client::disconnect(const char* msg)
 {
 	m_connectOnResume = false;
 	cleanupTimer();
@@ -194,20 +194,20 @@ CClient::disconnect(const char* msg)
 		sendConnectionFailedEvent(msg);
 	}
 	else {
-		sendEvent(m_events->forCClient().disconnected(), NULL);
+		sendEvent(m_events->forClient().disconnected(), NULL);
 	}
 }
 
 void
-CClient::handshakeComplete()
+Client::handshakeComplete()
 {
 	m_ready = true;
 	m_screen->enable();
-	sendEvent(m_events->forCClient().connected(), NULL);
+	sendEvent(m_events->forClient().connected(), NULL);
 }
 
 void
-CClient::setDecryptIv(const UInt8* iv)
+Client::setDecryptIv(const UInt8* iv)
 {
 	if (m_cryptoStream != NULL) {
 		m_cryptoStream->setDecryptIv(iv);
@@ -215,49 +215,49 @@ CClient::setDecryptIv(const UInt8* iv)
 }
 
 bool
-CClient::isConnected() const
+Client::isConnected() const
 {
 	return (m_server != NULL);
 }
 
 bool
-CClient::isConnecting() const
+Client::isConnecting() const
 {
 	return (m_timer != NULL);
 }
 
-CNetworkAddress
-CClient::getServerAddress() const
+NetworkAddress
+Client::getServerAddress() const
 {
 	return m_serverAddress;
 }
 
 void*
-CClient::getEventTarget() const
+Client::getEventTarget() const
 {
 	return m_screen->getEventTarget();
 }
 
 bool
-CClient::getClipboard(ClipboardID id, IClipboard* clipboard) const
+Client::getClipboard(ClipboardID id, IClipboard* clipboard) const
 {
 	return m_screen->getClipboard(id, clipboard);
 }
 
 void
-CClient::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+Client::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 {
 	m_screen->getShape(x, y, w, h);
 }
 
 void
-CClient::getCursorPos(SInt32& x, SInt32& y) const
+Client::getCursorPos(SInt32& x, SInt32& y) const
 {
 	m_screen->getCursorPos(x, y);
 }
 
 void
-CClient::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
+Client::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
 {
 	m_active = true;
 	m_screen->mouseMove(xAbs, yAbs);
@@ -265,7 +265,7 @@ CClient::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
 }
 
 bool
-CClient::leave()
+Client::leave()
 {
 	m_screen->leave();
 
@@ -282,7 +282,7 @@ CClient::leave()
 }
 
 void
-CClient::setClipboard(ClipboardID id, const IClipboard* clipboard)
+Client::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
  	m_screen->setClipboard(id, clipboard);
 	m_ownClipboard[id]  = false;
@@ -290,7 +290,7 @@ CClient::setClipboard(ClipboardID id, const IClipboard* clipboard)
 }
 
 void
-CClient::grabClipboard(ClipboardID id)
+Client::grabClipboard(ClipboardID id)
 {
 	m_screen->grabClipboard(id);
 	m_ownClipboard[id]  = false;
@@ -298,86 +298,86 @@ CClient::grabClipboard(ClipboardID id)
 }
 
 void
-CClient::setClipboardDirty(ClipboardID, bool)
+Client::setClipboardDirty(ClipboardID, bool)
 {
 	assert(0 && "shouldn't be called");
 }
 
 void
-CClient::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
+Client::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 {
  	m_screen->keyDown(id, mask, button);
 }
 
 void
-CClient::keyRepeat(KeyID id, KeyModifierMask mask,
+Client::keyRepeat(KeyID id, KeyModifierMask mask,
 				SInt32 count, KeyButton button)
 {
  	m_screen->keyRepeat(id, mask, count, button);
 }
 
 void
-CClient::keyUp(KeyID id, KeyModifierMask mask, KeyButton button)
+Client::keyUp(KeyID id, KeyModifierMask mask, KeyButton button)
 {
  	m_screen->keyUp(id, mask, button);
 }
 
 void
-CClient::mouseDown(ButtonID id)
+Client::mouseDown(ButtonID id)
 {
  	m_screen->mouseDown(id);
 }
 
 void
-CClient::mouseUp(ButtonID id)
+Client::mouseUp(ButtonID id)
 {
  	m_screen->mouseUp(id);
 }
 
 void
-CClient::mouseMove(SInt32 x, SInt32 y)
+Client::mouseMove(SInt32 x, SInt32 y)
 {
 	m_screen->mouseMove(x, y);
 }
 
 void
-CClient::mouseRelativeMove(SInt32 dx, SInt32 dy)
+Client::mouseRelativeMove(SInt32 dx, SInt32 dy)
 {
 	m_screen->mouseRelativeMove(dx, dy);
 }
 
 void
-CClient::mouseWheel(SInt32 xDelta, SInt32 yDelta)
+Client::mouseWheel(SInt32 xDelta, SInt32 yDelta)
 {
 	m_screen->mouseWheel(xDelta, yDelta);
 }
 
 void
-CClient::screensaver(bool activate)
+Client::screensaver(bool activate)
 {
  	m_screen->screensaver(activate);
 }
 
 void
-CClient::resetOptions()
+Client::resetOptions()
 {
 	m_screen->resetOptions();
 }
 
 void
-CClient::setOptions(const COptionsList& options)
+Client::setOptions(const OptionsList& options)
 {
 	m_screen->setOptions(options);
 }
 
-CString
-CClient::getName() const
+String
+Client::getName() const
 {
 	return m_name;
 }
 
 void
-CClient::sendClipboard(ClipboardID id)
+Client::sendClipboard(ClipboardID id)
 {
 	// note -- m_mutex must be locked on entry
 	assert(m_screen != NULL);
@@ -387,7 +387,7 @@ CClient::sendClipboard(ClipboardID id)
 	// clipboard time before getting the data from the screen
 	// as the screen may detect an unchanged clipboard and
 	// avoid copying the data.
-	CClipboard clipboard;
+	Clipboard clipboard;
 	if (clipboard.open(m_timeClipboard[id])) {
 		clipboard.close();
 	}
@@ -400,7 +400,7 @@ CClient::sendClipboard(ClipboardID id)
 		m_timeClipboard[id] = clipboard.getTime();
 
 		// marshall the data
-		CString data = clipboard.marshall();
+		String data = clipboard.marshall();
 
 		// save and send data if different or not yet sent
 		if (!m_sentClipboard[id] || data != m_dataClipboard[id]) {
@@ -412,24 +412,24 @@ CClient::sendClipboard(ClipboardID id)
 }
 
 void
-CClient::sendEvent(CEvent::Type type, void* data)
+Client::sendEvent(Event::Type type, void* data)
 {
-	m_events->addEvent(CEvent(type, getEventTarget(), data));
+	m_events->addEvent(Event(type, getEventTarget(), data));
 }
 
 void
-CClient::sendConnectionFailedEvent(const char* msg)
+Client::sendConnectionFailedEvent(const char* msg)
 {
-	CFailInfo* info = new CFailInfo(msg);
+	FailInfo* info = new FailInfo(msg);
 	info->m_retry = true;
-	CEvent event(m_events->forCClient().connectionFailed(), getEventTarget(), info, CEvent::kDontFreeData);
+	Event event(m_events->forClient().connectionFailed(), getEventTarget(), info, Event::kDontFreeData);
 	m_events->addEvent(event);
 }
 
 void
-CClient::sendFileChunk(const void* data)
+Client::sendFileChunk(const void* data)
 {
-	CFileChunker::CFileChunk* fileChunk = reinterpret_cast<CFileChunker::CFileChunk*>(const_cast<void*>(data));
+	FileChunker::FileChunk* fileChunk = reinterpret_cast<FileChunker::FileChunk*>(const_cast<void*>(data));
 	LOG((CLOG_DEBUG1 "sendFileChunk"));
 	assert(m_server != NULL);
 
@@ -438,77 +438,77 @@ CClient::sendFileChunk(const void* data)
 }
 
 void
-CClient::setupConnecting()
+Client::setupConnecting()
 {
 	assert(m_stream != NULL);
 
 	m_events->adoptHandler(m_events->forIDataSocket().connected(),
 							m_stream->getEventTarget(),
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleConnected));
+							new TMethodEventJob<Client>(this,
+								&Client::handleConnected));
 	m_events->adoptHandler(m_events->forIDataSocket().connectionFailed(),
 							m_stream->getEventTarget(),
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleConnectionFailed));
+							new TMethodEventJob<Client>(this,
+								&Client::handleConnectionFailed));
 }
 
 void
-CClient::setupConnection()
+Client::setupConnection()
 {
 	assert(m_stream != NULL);
 
 	m_events->adoptHandler(m_events->forISocket().disconnected(),
 							m_stream->getEventTarget(),
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleDisconnected));
+							new TMethodEventJob<Client>(this,
+								&Client::handleDisconnected));
 	m_events->adoptHandler(m_events->forIStream().inputReady(),
 							m_stream->getEventTarget(),
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleHello));
+							new TMethodEventJob<Client>(this,
+								&Client::handleHello));
 	m_events->adoptHandler(m_events->forIStream().outputError(),
 							m_stream->getEventTarget(),
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleOutputError));
+							new TMethodEventJob<Client>(this,
+								&Client::handleOutputError));
 	m_events->adoptHandler(m_events->forIStream().inputShutdown(),
 							m_stream->getEventTarget(),
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleDisconnected));
+							new TMethodEventJob<Client>(this,
+								&Client::handleDisconnected));
 	m_events->adoptHandler(m_events->forIStream().outputShutdown(),
 							m_stream->getEventTarget(),
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleDisconnected));
+							new TMethodEventJob<Client>(this,
+								&Client::handleDisconnected));
 }
 
 void
-CClient::setupScreen()
+Client::setupScreen()
 {
 	assert(m_server == NULL);
 
 	m_ready  = false;
-	m_server = new CServerProxy(this, m_stream, m_events);
+	m_server = new ServerProxy(this, m_stream, m_events);
 	m_events->adoptHandler(m_events->forIScreen().shapeChanged(),
 							getEventTarget(),
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleShapeChanged));
+							new TMethodEventJob<Client>(this,
+								&Client::handleShapeChanged));
 	m_events->adoptHandler(m_events->forIScreen().clipboardGrabbed(),
 							getEventTarget(),
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleClipboardGrabbed));
+							new TMethodEventJob<Client>(this,
+								&Client::handleClipboardGrabbed));
 }
 
 void
-CClient::setupTimer()
+Client::setupTimer()
 {
 	assert(m_timer == NULL);
 
 	m_timer = m_events->newOneShotTimer(15.0, NULL);
-	m_events->adoptHandler(CEvent::kTimer, m_timer,
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleConnectTimeout));
+	m_events->adoptHandler(Event::kTimer, m_timer,
+							new TMethodEventJob<Client>(this,
+								&Client::handleConnectTimeout));
 }
 
 void
-CClient::cleanupConnecting()
+Client::cleanupConnecting()
 {
 	if (m_stream != NULL) {
 		m_events->removeHandler(m_events->forIDataSocket().connected(),
@@ -519,7 +519,7 @@ CClient::cleanupConnecting()
 }
 
 void
-CClient::cleanupConnection()
+Client::cleanupConnection()
 {
 	if (m_stream != NULL) {
 		m_events->removeHandler(m_events->forIStream().inputReady(),
@@ -538,7 +538,7 @@ CClient::cleanupConnection()
 }
 
 void
-CClient::cleanupScreen()
+Client::cleanupScreen()
 {
 	if (m_server != NULL) {
 		if (m_ready) {
@@ -555,17 +555,17 @@ CClient::cleanupScreen()
 }
 
 void
-CClient::cleanupTimer()
+Client::cleanupTimer()
 {
 	if (m_timer != NULL) {
-		m_events->removeHandler(CEvent::kTimer, m_timer);
+		m_events->removeHandler(Event::kTimer, m_timer);
 		m_events->deleteTimer(m_timer);
 		m_timer = NULL;
 	}
 }
 
 void
-CClient::handleConnected(const CEvent&, void*)
+Client::handleConnected(const Event&, void*)
 {
 	LOG((CLOG_DEBUG1 "connected;  wait for hello"));
 	cleanupConnecting();
@@ -580,10 +580,10 @@ CClient::handleConnected(const CEvent&, void*)
 }
 
 void
-CClient::handleConnectionFailed(const CEvent& event, void*)
+Client::handleConnectionFailed(const Event& event, void*)
 {
-	IDataSocket::CConnectionFailedInfo* info =
-		reinterpret_cast<IDataSocket::CConnectionFailedInfo*>(event.getData());
+	IDataSocket::ConnectionFailedInfo* info =
+		reinterpret_cast<IDataSocket::ConnectionFailedInfo*>(event.getData());
 
 	cleanupTimer();
 	cleanupConnecting();
@@ -595,7 +595,7 @@ CClient::handleConnectionFailed(const CEvent& event, void*)
 }
 
 void
-CClient::handleConnectTimeout(const CEvent&, void*)
+Client::handleConnectTimeout(const Event&, void*)
 {
 	cleanupTimer();
 	cleanupConnecting();
@@ -607,37 +607,37 @@ CClient::handleConnectTimeout(const CEvent&, void*)
 }
 
 void
-CClient::handleOutputError(const CEvent&, void*)
+Client::handleOutputError(const Event&, void*)
 {
 	cleanupTimer();
 	cleanupScreen();
 	cleanupConnection();
 	LOG((CLOG_WARN "error sending to server"));
-	sendEvent(m_events->forCClient().disconnected(), NULL);
+	sendEvent(m_events->forClient().disconnected(), NULL);
 }
 
 void
-CClient::handleDisconnected(const CEvent&, void*)
+Client::handleDisconnected(const Event&, void*)
 {
 	cleanupTimer();
 	cleanupScreen();
 	cleanupConnection();
 	LOG((CLOG_DEBUG1 "disconnected"));
-	sendEvent(m_events->forCClient().disconnected(), NULL);
+	sendEvent(m_events->forClient().disconnected(), NULL);
 }
 
 void
-CClient::handleShapeChanged(const CEvent&, void*)
+Client::handleShapeChanged(const Event&, void*)
 {
 	LOG((CLOG_DEBUG "resolution changed"));
 	m_server->onInfoChanged();
 }
 
 void
-CClient::handleClipboardGrabbed(const CEvent& event, void*)
+Client::handleClipboardGrabbed(const Event& event, void*)
 {
-	const IScreen::CClipboardInfo* info =
-		reinterpret_cast<const IScreen::CClipboardInfo*>(event.getData());
+	const IScreen::ClipboardInfo* info =
+		reinterpret_cast<const IScreen::ClipboardInfo*>(event.getData());
 
 	// grab ownership
 	m_server->onGrabClipboard(info->m_id);
@@ -655,10 +655,10 @@ CClient::handleClipboardGrabbed(const CEvent& event, void*)
 }
 
 void
-CClient::handleHello(const CEvent&, void*)
+Client::handleHello(const Event&, void*)
 {
 	SInt16 major, minor;
-	if (!CProtocolUtil::readf(m_stream, kMsgHello, &major, &minor)) {
+	if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor)) {
 		sendConnectionFailedEvent("Protocol error from server");
 		cleanupTimer();
 		cleanupConnection();
@@ -677,7 +677,7 @@ CClient::handleHello(const CEvent&, void*)
 
 	// say hello back
 	LOG((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
-	CProtocolUtil::writef(m_stream, kMsgHelloBack,
+	ProtocolUtil::writef(m_stream, kMsgHelloBack,
 							kProtocolMajorVersion,
 							kProtocolMinorVersion, &m_name);
 
@@ -689,13 +689,13 @@ CClient::handleHello(const CEvent&, void*)
 	// receive another event for already pending messages so we fake
 	// one.
 	if (m_stream->isReady()) {
-		m_events->addEvent(CEvent(m_events->forIStream().inputReady(),
+		m_events->addEvent(Event(m_events->forIStream().inputReady(),
 							m_stream->getEventTarget()));
 	}
 }
 
 void
-CClient::handleSuspend(const CEvent&, void*)
+Client::handleSuspend(const Event&, void*)
 {
 	LOG((CLOG_INFO "suspend"));
 	m_suspended       = true;
@@ -705,7 +705,7 @@ CClient::handleSuspend(const CEvent&, void*)
 }
 
 void
-CClient::handleResume(const CEvent&, void*)
+Client::handleResume(const Event&, void*)
 {
 	LOG((CLOG_INFO "resume"));
 	m_suspended = false;
@@ -716,30 +716,30 @@ CClient::handleResume(const CEvent&, void*)
 }
 
 void
-CClient::handleFileChunkSending(const CEvent& event, void*)
+Client::handleFileChunkSending(const Event& event, void*)
 {
 	sendFileChunk(event.getData());
 }
 
 void
-CClient::handleFileRecieveCompleted(const CEvent& event, void*)
+Client::handleFileRecieveCompleted(const Event& event, void*)
 {
 	onFileRecieveCompleted();
 }
 
 void
-CClient::onFileRecieveCompleted()
+Client::onFileRecieveCompleted()
 {
 	if (isReceivedFileSizeValid()) {
-		m_writeToDropDirThread = new CThread(
-			new TMethodJob<CClient>(
-				this, &CClient::writeToDropDirThread));
+		m_writeToDropDirThread = new Thread(
+			new TMethodJob<Client>(
+				this, &Client::writeToDropDirThread));
 	}
 }
 
 
 void
-CClient::writeToDropDirThread(void*)
+Client::writeToDropDirThread(void*)
 {
 	LOG((CLOG_DEBUG "starting write to drop dir thread"));
 
@@ -747,63 +747,63 @@ CClient::writeToDropDirThread(void*)
 		ARCH->sleep(.1f);
 	}
 	
-	CDropHelper::writeToDir(m_screen->getDropTarget(), m_dragFileList,
+	DropHelper::writeToDir(m_screen->getDropTarget(), m_dragFileList,
 					m_receivedFileData);
 }
 
 void
-CClient::clearReceivedFileData()
+Client::clearReceivedFileData()
 {
 	m_receivedFileData.clear();
 }
 
 void
-CClient::setExpectedFileSize(CString data)
+Client::setExpectedFileSize(String data)
 {
 	std::istringstream iss(data);
 	iss >> m_expectedFileSize;
 }
 
 void
-CClient::fileChunkReceived(CString data)
+Client::fileChunkReceived(String data)
 {
 	m_receivedFileData += data;
 }
 
 void
-CClient::dragInfoReceived(UInt32 fileNum, CString data)
+Client::dragInfoReceived(UInt32 fileNum, String data)
 {
 	if (!m_enableDragDrop) {
 		LOG((CLOG_DEBUG "drag drop not enabled, ignoring drag info."));
 		return;
 	}
 
-	CDragInformation::parseDragInfo(m_dragFileList, fileNum, data);
+	DragInformation::parseDragInfo(m_dragFileList, fileNum, data);
 	
 	m_screen->startDraggingFiles(m_dragFileList);
 }
 
 bool
-CClient::isReceivedFileSizeValid()
+Client::isReceivedFileSizeValid()
 {
 	return m_expectedFileSize == m_receivedFileData.size();
 }
 
 void
-CClient::sendFileToServer(const char* filename)
+Client::sendFileToServer(const char* filename)
 {
-	m_sendFileThread = new CThread(
-		new TMethodJob<CClient>(
-			this, &CClient::sendFileThread,
+	m_sendFileThread = new Thread(
+		new TMethodJob<Client>(
+			this, &Client::sendFileThread,
 			reinterpret_cast<void*>(const_cast<char*>(filename))));
 }
 
 void
-CClient::sendFileThread(void* filename)
+Client::sendFileThread(void* filename)
 {
 	try {
 		char* name  = reinterpret_cast<char*>(filename);
-		CFileChunker::sendFileChunks(name, m_events, this);
+		FileChunker::sendFileChunks(name, m_events, this);
 	}
 	catch (std::runtime_error error) {
 		LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));
@@ -813,7 +813,7 @@ CClient::sendFileThread(void* filename)
 }
 
 void
-CClient::sendDragInfo(UInt32 fileCount, CString& info, size_t size)
+Client::sendDragInfo(UInt32 fileCount, String& info, size_t size)
 {
 	m_server->sendDragInfo(fileCount, info.c_str(), size);
 }

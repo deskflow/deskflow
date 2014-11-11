@@ -19,10 +19,10 @@
 #include "server/BaseClientProxy.h"
 
 //
-// CBaseClientProxy
+// BaseClientProxy
 //
 
-CBaseClientProxy::CBaseClientProxy(const CString& name) :
+BaseClientProxy::BaseClientProxy(const String& name) :
 	m_name(name),
 	m_x(0),
 	m_y(0)
@@ -30,27 +30,27 @@ CBaseClientProxy::CBaseClientProxy(const CString& name) :
 	// do nothing
 }
 
-CBaseClientProxy::~CBaseClientProxy()
+BaseClientProxy::~BaseClientProxy()
 {
 	// do nothing
 }
 
 void
-CBaseClientProxy::setJumpCursorPos(SInt32 x, SInt32 y)
+BaseClientProxy::setJumpCursorPos(SInt32 x, SInt32 y)
 {
 	m_x = x;
 	m_y = y;
 }
 
 void
-CBaseClientProxy::getJumpCursorPos(SInt32& x, SInt32& y) const
+BaseClientProxy::getJumpCursorPos(SInt32& x, SInt32& y) const
 {
 	x = m_x;
 	y = m_y;
 }
 
-CString
-CBaseClientProxy::getName() const
+String
+BaseClientProxy::getName() const
 {
 	return m_name;
 }

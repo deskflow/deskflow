@@ -40,17 +40,17 @@ UInt32 mouseMove_mockRead(void* buffer, UInt32 n);
 const UInt8 g_readCryptoIv_bufferLen = 20;
 UInt8 g_readCryptoIv_buffer[g_readCryptoIv_bufferLen];
 UInt32 g_readCryptoIv_bufferIndex;
-CString g_readCryptoIv_result;
+String g_readCryptoIv_result;
 UInt32 readCryptoIv_mockRead(void* buffer, UInt32 n);
 void readCryptoIv_setDecryptIv(const UInt8*);
 
-TEST(CServerProxyTests, mouseMove)
+TEST(ServerProxyTests, mouseMove)
 {
 	g_mouseMove_bufferIndex = 0;
 
-	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockStream> stream;
-	NiceMock<CMockClient> client;
+	NiceMock<MockEventQueue> eventQueue;
+	NiceMock<MockStream> stream;
+	NiceMock<MockClient> client;
 	IStreamEvents streamEvents;
 	streamEvents.setEvents(&eventQueue);
 	
@@ -62,17 +62,17 @@ TEST(CServerProxyTests, mouseMove)
 	const char data[] = "DSOP\0\0\0\0DMMV\0\1\0\2";
 	memcpy(g_mouseMove_buffer, data, g_mouseMove_bufferLen);
 
-	CServerProxy serverProxy(&client, &stream, &eventQueue);
+	ServerProxy serverProxy(&client, &stream, &eventQueue);
 	serverProxy.handleDataForTest();
 }
 
-TEST(CServerProxyTests, readCryptoIv)
+TEST(ServerProxyTests, readCryptoIv)
 {
 	g_readCryptoIv_bufferIndex = 0;
 
-	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockClient> client;
-	NiceMock<CMockStream> stream;
+	NiceMock<MockEventQueue> eventQueue;
+	NiceMock<MockClient> client;
+	NiceMock<MockStream> stream;
 	IStreamEvents streamEvents;
 	streamEvents.setEvents(&eventQueue);
 	
@@ -83,7 +83,7 @@ TEST(CServerProxyTests, readCryptoIv)
 	const char data[] = "DSOP\0\0\0\0DCIV\0\0\0\4mock";
 	memcpy(g_readCryptoIv_buffer, data, g_readCryptoIv_bufferLen);
 
-	CServerProxy serverProxy(&client, &stream, &eventQueue);
+	ServerProxy serverProxy(&client, &stream, &eventQueue);
 	serverProxy.handleDataForTest();
 
 	EXPECT_EQ("mock", g_readCryptoIv_result);

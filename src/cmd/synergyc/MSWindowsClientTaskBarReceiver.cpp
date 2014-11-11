@@ -43,8 +43,8 @@ const UINT CMSWindowsClientTaskBarReceiver::s_stateToIconID[kMaxState] =
 };
 
 CMSWindowsClientTaskBarReceiver::CMSWindowsClientTaskBarReceiver(
-				HINSTANCE appInstance, const CBufferedLogOutputter* logBuffer, IEventQueue* events) :
-	CClientTaskBarReceiver(events),
+				HINSTANCE appInstance, const BufferedLogOutputter* logBuffer, IEventQueue* events) :
+	ClientTaskBarReceiver(events),
 	m_appInstance(appInstance),
 	m_window(NULL),
 	m_logBuffer(logBuffer)
@@ -229,8 +229,8 @@ CMSWindowsClientTaskBarReceiver::copyLog() const
 {
 	if (m_logBuffer != NULL) {
 		// collect log buffer
-		CString data;
-		for (CBufferedLogOutputter::const_iterator index = m_logBuffer->begin();
+		String data;
+		for (BufferedLogOutputter::const_iterator index = m_logBuffer->begin();
 								index != m_logBuffer->end(); ++index) {
 			data += *index;
 			data += "\n";
@@ -297,14 +297,14 @@ CMSWindowsClientTaskBarReceiver::createWindow()
 	SetWindowLongPtr(m_window, GWL_EXSTYLE, style);
 
 	// tell the task bar about this dialog
-	CArchTaskBarWindows::addDialog(m_window);
+	ArchTaskBarWindows::addDialog(m_window);
 }
 
 void
 CMSWindowsClientTaskBarReceiver::destroyWindow()
 {
 	if (m_window != NULL) {
-		CArchTaskBarWindows::removeDialog(m_window);
+		ArchTaskBarWindows::removeDialog(m_window);
 		DestroyWindow(m_window);
 		m_window = NULL;
 	}
@@ -359,14 +359,14 @@ CMSWindowsClientTaskBarReceiver::staticDlgProc(HWND hwnd,
 }
 
 IArchTaskBarReceiver*
-createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events)
+createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events)
 {
-	CArchMiscWindows::setIcons(
-		(HICON)LoadImage(CArchMiscWindows::instanceWin32(),
+	ArchMiscWindows::setIcons(
+		(HICON)LoadImage(ArchMiscWindows::instanceWin32(),
 		MAKEINTRESOURCE(IDI_SYNERGY),
 		IMAGE_ICON,
 		32, 32, LR_SHARED),
-		(HICON)LoadImage(CArchMiscWindows::instanceWin32(),
+		(HICON)LoadImage(ArchMiscWindows::instanceWin32(),
 		MAKEINTRESOURCE(IDI_SYNERGY),
 		IMAGE_ICON,
 		16, 16, LR_SHARED));

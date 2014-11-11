@@ -21,16 +21,16 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
-class CClientProxy;
-class CEventQueueTimer;
+class ClientProxy;
+class EventQueueTimer;
 namespace synergy { class IStream; }
-class CServer;
+class Server;
 class IEventQueue;
 
-class CClientProxyUnknown {
+class ClientProxyUnknown {
 public:
-	CClientProxyUnknown(synergy::IStream* stream, double timeout, CServer* server, IEventQueue* events);
-	~CClientProxyUnknown();
+	ClientProxyUnknown(synergy::IStream* stream, double timeout, Server* server, IEventQueue* events);
+	~ClientProxyUnknown();
 
 	//! @name manipulators
 	//@{
@@ -41,7 +41,7 @@ public:
 	(i.e. when this object sends a success event).  Returns NULL
 	if the handshake is unsuccessful or incomplete.
 	*/
-	CClientProxy*		orphanClientProxy();
+	ClientProxy*		orphanClientProxy();
 
 	//@}
 
@@ -52,17 +52,17 @@ private:
 	void				addProxyHandlers();
 	void				removeHandlers();
 	void				removeTimer();
-	void				handleData(const CEvent&, void*);
-	void				handleWriteError(const CEvent&, void*);
-	void				handleTimeout(const CEvent&, void*);
-	void				handleDisconnect(const CEvent&, void*);
-	void				handleReady(const CEvent&, void*);
+	void				handleData(const Event&, void*);
+	void				handleWriteError(const Event&, void*);
+	void				handleTimeout(const Event&, void*);
+	void				handleDisconnect(const Event&, void*);
+	void				handleReady(const Event&, void*);
 
 private:
 	synergy::IStream*	m_stream;
-	CEventQueueTimer*	m_timer;
-	CClientProxy*		m_proxy;
+	EventQueueTimer*	m_timer;
+	ClientProxy*		m_proxy;
 	bool				m_ready;
-	CServer*			m_server;
+	Server*			m_server;
 	IEventQueue*		m_events;
 };

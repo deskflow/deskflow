@@ -25,11 +25,11 @@
 #include <cstring>
 
 //
-// CProtocolUtil
+// ProtocolUtil
 //
 
 void
-CProtocolUtil::writef(synergy::IStream* stream, const char* fmt, ...)
+ProtocolUtil::writef(synergy::IStream* stream, const char* fmt, ...)
 {
 	assert(stream != NULL);
 	assert(fmt != NULL);
@@ -45,7 +45,7 @@ CProtocolUtil::writef(synergy::IStream* stream, const char* fmt, ...)
 }
 
 bool
-CProtocolUtil::readf(synergy::IStream* stream, const char* fmt, ...)
+ProtocolUtil::readf(synergy::IStream* stream, const char* fmt, ...)
 {
 	assert(stream != NULL);
 	assert(fmt != NULL);
@@ -66,7 +66,7 @@ CProtocolUtil::readf(synergy::IStream* stream, const char* fmt, ...)
 }
 
 void
-CProtocolUtil::vwritef(synergy::IStream* stream,
+ProtocolUtil::vwritef(synergy::IStream* stream,
 				const char* fmt, UInt32 size, va_list args)
 {
 	assert(stream != NULL);
@@ -95,7 +95,7 @@ CProtocolUtil::vwritef(synergy::IStream* stream,
 }
 
 void
-CProtocolUtil::vreadf(synergy::IStream* stream, const char* fmt, va_list args)
+ProtocolUtil::vreadf(synergy::IStream* stream, const char* fmt, va_list args)
 {
 	assert(stream != NULL);
 	assert(fmt != NULL);
@@ -237,7 +237,7 @@ CProtocolUtil::vreadf(synergy::IStream* stream, const char* fmt, va_list args)
 				}
 
 				// save the data
-				CString* dst = va_arg(args, CString*);
+				String* dst = va_arg(args, String*);
 				dst->assign((const char*)sBuffer, len);
 
 				// release the buffer
@@ -276,7 +276,7 @@ CProtocolUtil::vreadf(synergy::IStream* stream, const char* fmt, va_list args)
 }
 
 UInt32
-CProtocolUtil::getLength(const char* fmt, va_list args)
+ProtocolUtil::getLength(const char* fmt, va_list args)
 {
 	UInt32 n = 0;
 	while (*fmt) {
@@ -309,7 +309,7 @@ CProtocolUtil::getLength(const char* fmt, va_list args)
 
 			case 's':
 				assert(len == 0);
-				len = (UInt32)(va_arg(args, CString*))->size() + 4;
+				len = (UInt32)(va_arg(args, String*))->size() + 4;
 				(void)va_arg(args, UInt8*);
 				break;
 
@@ -342,7 +342,7 @@ CProtocolUtil::getLength(const char* fmt, va_list args)
 }
 
 void
-CProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
+ProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
 {
 	UInt8* dst = reinterpret_cast<UInt8*>(buffer);
 
@@ -443,7 +443,7 @@ CProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
 
 			case 's': {
 				assert(len == 0);
-				const CString* src = va_arg(args, CString*);
+				const String* src = va_arg(args, String*);
 				const UInt32 len = (src != NULL) ? (UInt32)src->size() : 0;
 				*dst++ = static_cast<UInt8>((len >> 24) & 0xff);
 				*dst++ = static_cast<UInt8>((len >> 16) & 0xff);
@@ -489,7 +489,7 @@ CProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
 }
 
 UInt32
-CProtocolUtil::eatLength(const char** pfmt)
+ProtocolUtil::eatLength(const char** pfmt)
 {
 	const char* fmt = *pfmt;
 	UInt32 n = 0;
@@ -514,7 +514,7 @@ CProtocolUtil::eatLength(const char** pfmt)
 }
 
 void
-CProtocolUtil::read(synergy::IStream* stream, void* vbuffer, UInt32 count)
+ProtocolUtil::read(synergy::IStream* stream, void* vbuffer, UInt32 count)
 {
 	assert(stream != NULL);
 	assert(vbuffer != NULL);
@@ -541,8 +541,8 @@ CProtocolUtil::read(synergy::IStream* stream, void* vbuffer, UInt32 count)
 // XIOReadMismatch
 //
 
-CString
+String
 XIOReadMismatch::getWhat() const throw()
 {
-	return format("XIOReadMismatch", "CProtocolUtil::readf() mismatch");
+	return format("XIOReadMismatch", "ProtocolUtil::readf() mismatch");
 }

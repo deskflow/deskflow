@@ -41,7 +41,7 @@ public:
 		kBadPort		//!< The port is invalid
 	};
 
-	XSocketAddress(EError, const CString& hostname, int port) _NOEXCEPT;
+	XSocketAddress(EError, const String& hostname, int port) _NOEXCEPT;
 	virtual ~XSocketAddress() _NOEXCEPT { }
 
 	//! @name accessors
@@ -50,7 +50,7 @@ public:
 	//! Get the error code
 	EError				getError() const throw();
 	//! Get the hostname
-	CString				getHostname() const throw();
+	String				getHostname() const throw();
 	//! Get the port
 	int					getPort() const throw();
 
@@ -58,11 +58,11 @@ public:
 
 protected:
 	// XBase overrides
-	virtual CString		getWhat() const throw();
+	virtual String		getWhat() const throw();
 
 private:
 	EError				m_error;
-	CString				m_hostname;
+	String				m_hostname;
 	int					m_port;
 };
 

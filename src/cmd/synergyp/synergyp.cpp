@@ -39,16 +39,16 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdSh
 {
 #if SYSAPI_WIN32
 	// record window instance for tray icon, etc
-	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+	ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 	
-	CArch arch;
+	Arch arch;
 	arch.init();
 
-	CLog log;
-	CEventQueue events;
+	Log log;
+	EventQueue events;
 
-	CLOG->insert(new CMesssageBoxLogOutputter());
+	CLOG->insert(new MesssageBoxLogOutputter());
 
 	int argc = __argc;
 	char** argv = __argv;
@@ -79,11 +79,11 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdSh
 	}
 	
 	if (server) {
-		CServerApp app(&events, createTaskBarReceiver);
+		ServerApp app(&events, createTaskBarReceiver);
 		return app.run(argc, argv);
 	}
 	else if (client) {
-		CClientApp app(&events, createTaskBarReceiver);
+		ClientApp app(&events, createTaskBarReceiver);
 		return app.run(argc, argv);
 	}
 

@@ -26,22 +26,22 @@
 class IOSXClipboardConverter;
 
 //! OS X clipboard implementation
-class COSXClipboard : public IClipboard {
+class OSXClipboard : public IClipboard {
 public:
-	COSXClipboard();
-	virtual ~COSXClipboard();
+	OSXClipboard();
+	virtual ~OSXClipboard();
 
 	//! Test if clipboard is owned by synergy
 	static bool			isOwnedBySynergy();
 
 	// IClipboard overrides
 	virtual bool		empty();
-	virtual void		add(EFormat, const CString& data);
+	virtual void		add(EFormat, const String& data);
 	virtual bool		open(Time) const;
 	virtual void		close() const;
 	virtual Time		getTime() const;
 	virtual bool		has(EFormat) const;
-	virtual CString		get(EFormat) const;
+	virtual String		get(EFormat) const;
 
 	bool				synchronize();
 private:
@@ -82,14 +82,14 @@ public:
 	getFormat().  The return data will be in the scrap
 	format returned by getOSXFormat().
 	*/
-	virtual CString		fromIClipboard(const CString&) const = 0;
+	virtual String		fromIClipboard(const String&) const = 0;
 
 	//! Convert to IClipboard format
 	/*!
 	Convert from the carbon scrap format to the IClipboard format
 	(i.e., the reverse of fromIClipboard()).
 	*/
-	virtual CString		toIClipboard(const CString&) const = 0;
+	virtual String		toIClipboard(const String&) const = 0;
 
 	//@}
 };

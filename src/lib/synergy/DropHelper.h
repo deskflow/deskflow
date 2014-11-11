@@ -20,8 +20,8 @@
 #include "synergy/DragInformation.h"
 #include "base/String.h"
 
-class CDropHelper {
+class DropHelper {
 public:
-	static void			writeToDir(const CString& destination,
-							CDragFileList& fileList, CString& data);
+	static void			writeToDir(const String& destination,
+							DragFileList& fileList, String& data);
 };

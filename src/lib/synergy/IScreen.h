@@ -31,7 +31,7 @@ This interface defines the methods common to all screens.
 */
 class IScreen : public IInterface {
 public:
-	struct CClipboardInfo {
+	struct ClipboardInfo {
 	public:
 		ClipboardID		m_id;
 		UInt32			m_sequenceNumber;

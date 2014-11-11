@@ -23,14 +23,14 @@
 
 #include "test/global/gmock.h"
 
-class CMockScreen : public CScreen
+class MockScreen : public Screen
 {
 public:
-	CMockScreen() : CScreen() { }
+	MockScreen() : Screen() { }
 	MOCK_METHOD0(disable, void());
 	MOCK_CONST_METHOD4(getShape, void(SInt32&, SInt32&, SInt32&, SInt32&));
 	MOCK_CONST_METHOD2(getCursorPos, void(SInt32&, SInt32&));
 	MOCK_METHOD0(resetOptions, void());
-	MOCK_METHOD1(setOptions, void(const COptionsList&));
+	MOCK_METHOD1(setOptions, void(const OptionsList&));
 	MOCK_METHOD0(enable, void());
 };

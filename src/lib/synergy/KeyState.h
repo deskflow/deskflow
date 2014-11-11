@@ -26,11 +26,11 @@
 This class provides key state services.  Subclasses must implement a few
 platform specific methods.
 */
-class CKeyState : public IKeyState {
+class KeyState : public IKeyState {
 public:
-	CKeyState(IEventQueue* events);
-	CKeyState(IEventQueue* events, CKeyMap& keyMap);
-	virtual ~CKeyState();
+	KeyState(IEventQueue* events);
+	KeyState(IEventQueue* events, synergy::KeyMap& keyMap);
+	virtual ~KeyState();
 
 	//! @name manipulators
 	//@{
@@ -84,7 +84,7 @@ public:
 	SInt32 getKeyState(KeyButton keyButton) { return m_keys[keyButton]; }
 
 protected:
-	typedef CKeyMap::Keystroke Keystroke;
+	typedef synergy::KeyMap::Keystroke Keystroke;
 
 	//! @name protected manipulators
 	//@{
@@ -93,7 +93,7 @@ protected:
 	/*!
 	Fills \p keyMap with the current keyboard map.
 	*/
-	virtual void		getKeyMap(CKeyMap& keyMap) = 0;
+	virtual void		getKeyMap(synergy::KeyMap& keyMap) = 0;
 
 	//! Fake a key event
 	/*!
@@ -136,12 +136,12 @@ protected:
 	//@}
 
 private:
-	typedef CKeyMap::Keystrokes Keystrokes;
-	typedef CKeyMap::ModifierToKeys ModifierToKeys;
+	typedef synergy::KeyMap::Keystrokes Keystrokes;
+	typedef synergy::KeyMap::ModifierToKeys ModifierToKeys;
 public:
-	struct CAddActiveModifierContext {
+	struct AddActiveModifierContext {
 	public:
-		CAddActiveModifierContext(SInt32 group, KeyModifierMask mask,
+		AddActiveModifierContext(SInt32 group, KeyModifierMask mask,
 							ModifierToKeys&	activeModifiers);
 
 	public:
@@ -151,23 +151,23 @@ public:
 
 	private:
 		// not implemented
-		CAddActiveModifierContext(const CAddActiveModifierContext&);
-		CAddActiveModifierContext& operator=(const CAddActiveModifierContext&);
+		AddActiveModifierContext(const AddActiveModifierContext&);
+		AddActiveModifierContext& operator=(const AddActiveModifierContext&);
 	};
 private:
 	
 	class ButtonToKeyLess {
 	public:
-		bool operator()(const CKeyMap::ButtonToKeyMap::value_type& a,
-						const CKeyMap::ButtonToKeyMap::value_type b) const
+		bool operator()(const synergy::KeyMap::ButtonToKeyMap::value_type& a,
+						const synergy::KeyMap::ButtonToKeyMap::value_type b) const
 		{
 			return (a.first < b.first);
 		}
 	};
 
 	// not implemented
-	CKeyState(const CKeyState&);
-	CKeyState& operator=(const CKeyState&);
+	KeyState(const KeyState&);
+	KeyState& operator=(const KeyState&);
 
 	// called by all ctors.
 	void				init();
@@ -193,14 +193,14 @@ private:
 
 	// active modifiers collection callback
 	static void			addActiveModifierCB(KeyID id, SInt32 group,
-							CKeyMap::KeyItem& keyItem, void* vcontext);
+							synergy::KeyMap::KeyItem& keyItem, void* vcontext);
 
 private:
 	// must be declared before m_keyMap. used when this class owns the key map.
-	CKeyMap*			m_keyMapPtr;
+	synergy::KeyMap*			m_keyMapPtr;
 
 	// the keyboard map
-	CKeyMap&			m_keyMap;
+	synergy::KeyMap&			m_keyMap;
 
 	// current modifier state
 	KeyModifierMask		m_mask;

@@ -27,28 +27,28 @@
 #include "io/CryptoOptions.h"
 #include "base/EventTypes.h"
 
-class CEventQueueTimer;
-class CScreen;
-class CServerProxy;
+class EventQueueTimer;
+class Screen;
+class ServerProxy;
 class IDataSocket;
 class ISocketFactory;
 namespace synergy { class IStream; }
 class IStreamFilterFactory;
 class IEventQueue;
-class CCryptoStream;
-class CThread;
+class CryptoStream;
+class Thread;
 
 //! Synergy client
 /*!
 This class implements the top-level client algorithms for synergy.
 */
-class CClient : public IClient, public INode {
+class Client : public IClient, public INode {
 public:
-	class CFailInfo {
+	class FailInfo {
 	public:
-		CFailInfo(const char* what) : m_retry(false), m_what(what) { }
+		FailInfo(const char* what) : m_retry(false), m_what(what) { }
 		bool			m_retry;
-		CString			m_what;
+		String			m_what;
 	};
 
 public:
@@ -57,17 +57,17 @@ public:
 	as its name and \p address as the server's address and \p factory
 	to create the socket.  \p screen is	the local screen.
 	*/
-	CClient(IEventQueue* events,
-							const CString& name, const CNetworkAddress& address,
+	Client(IEventQueue* events,
+							const String& name, const NetworkAddress& address,
 							ISocketFactory* socketFactory,
 							IStreamFilterFactory* streamFilterFactory,
-							CScreen* screen,
-							const CCryptoOptions& crypto,
+							Screen* screen,
+							const CryptoOptions& crypto,
 							bool enableDragDrop);
-	~CClient();
+	~Client();
 	
 #ifdef TEST_ENV
-	CClient() : m_mock(true) { }
+	Client() : m_mock(true) { }
 #endif
 
 	//! @name manipulators
@@ -99,19 +99,19 @@ public:
 	void				clearReceivedFileData();
 
 	//! Set the expected size of receiving file
-	void				setExpectedFileSize(CString data);
+	void				setExpectedFileSize(String data);
 
 	//! Received a chunk of file data
-	void				fileChunkReceived(CString data);
+	void				fileChunkReceived(String data);
 
 	//! Received drag information
-	void				dragInfoReceived(UInt32 fileNum, CString data);
+	void				dragInfoReceived(UInt32 fileNum, String data);
 
 	//! Create a new thread and use it to send file to Server
 	void				sendFileToServer(const char* filename);
 	
 	//! Send dragging file information back to server
-	void				sendDragInfo(UInt32 fileCount, CString& info, size_t size);
+	void				sendDragInfo(UInt32 fileCount, String& info, size_t size);
 	
 	//@}
 	//! @name accessors
@@ -135,7 +135,7 @@ public:
 	Returns the address of the server the client is connected (or wants
 	to connect) to.
 	*/
-	CNetworkAddress		getServerAddress() const;
+	NetworkAddress		getServerAddress() const;
 	
 	//! Return true if recieved file size is valid
 	bool				isReceivedFileSizeValid();
@@ -171,12 +171,12 @@ public:
 	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta);
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
-	virtual void		setOptions(const COptionsList& options);
-	virtual CString		getName() const;
+	virtual void		setOptions(const OptionsList& options);
+	virtual String		getName() const;
 
 private:
 	void				sendClipboard(ClipboardID);
-	void				sendEvent(CEvent::Type, void*);
+	void				sendEvent(Event::Type, void*);
 	void				sendConnectionFailedEvent(const char* msg);
 	void				sendFileChunk(const void* data);
 	void				sendFileThread(void*);
@@ -189,32 +189,32 @@ private:
 	void				cleanupConnection();
 	void				cleanupScreen();
 	void				cleanupTimer();
-	void				handleConnected(const CEvent&, void*);
-	void				handleConnectionFailed(const CEvent&, void*);
-	void				handleConnectTimeout(const CEvent&, void*);
-	void				handleOutputError(const CEvent&, void*);
-	void				handleDisconnected(const CEvent&, void*);
-	void				handleShapeChanged(const CEvent&, void*);
-	void				handleClipboardGrabbed(const CEvent&, void*);
-	void				handleHello(const CEvent&, void*);
-	void				handleSuspend(const CEvent& event, void*);
-	void				handleResume(const CEvent& event, void*);
-	void				handleFileChunkSending(const CEvent&, void*);
-	void				handleFileRecieveCompleted(const CEvent&, void*);
+	void				handleConnected(const Event&, void*);
+	void				handleConnectionFailed(const Event&, void*);
+	void				handleConnectTimeout(const Event&, void*);
+	void				handleOutputError(const Event&, void*);
+	void				handleDisconnected(const Event&, void*);
+	void				handleShapeChanged(const Event&, void*);
+	void				handleClipboardGrabbed(const Event&, void*);
+	void				handleHello(const Event&, void*);
+	void				handleSuspend(const Event& event, void*);
+	void				handleResume(const Event& event, void*);
+	void				handleFileChunkSending(const Event&, void*);
+	void				handleFileRecieveCompleted(const Event&, void*);
 	void				onFileRecieveCompleted();
 
 public:
 	bool					m_mock;
 
 private:
-	CString					m_name;
-	CNetworkAddress			m_serverAddress;
+	String					m_name;
+	NetworkAddress			m_serverAddress;
 	ISocketFactory*			m_socketFactory;
 	IStreamFilterFactory*	m_streamFilterFactory;
-	CScreen*				m_screen;
+	Screen*				m_screen;
 	synergy::IStream*		m_stream;
-	CEventQueueTimer*		m_timer;
-	CServerProxy*			m_server;
+	EventQueueTimer*		m_timer;
+	ServerProxy*			m_server;
 	bool					m_ready;
 	bool					m_active;
 	bool					m_suspended;
@@ -222,15 +222,15 @@ private:
 	bool					m_ownClipboard[kClipboardEnd];
 	bool					m_sentClipboard[kClipboardEnd];
 	IClipboard::Time		m_timeClipboard[kClipboardEnd];
-	CString					m_dataClipboard[kClipboardEnd];
+	String					m_dataClipboard[kClipboardEnd];
 	IEventQueue*			m_events;
-	CCryptoStream*			m_cryptoStream;
-	CCryptoOptions			m_crypto;
+	CryptoStream*			m_cryptoStream;
+	CryptoOptions			m_crypto;
 	std::size_t				m_expectedFileSize;
-	CString					m_receivedFileData;
-	CDragFileList			m_dragFileList;
-	CString					m_dragFileExt;
-	CThread*				m_sendFileThread;
-	CThread*				m_writeToDropDirThread;
+	String					m_receivedFileData;
+	DragFileList			m_dragFileList;
+	String					m_dragFileExt;
+	Thread*				m_sendFileThread;
+	Thread*				m_writeToDropDirThread;
 	bool					m_enableDragDrop;
 };

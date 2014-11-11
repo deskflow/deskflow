@@ -26,18 +26,18 @@
 /*!
 This class represents a network address.
 */
-class CNetworkAddress {
+class NetworkAddress {
 public:
 	/*!
 	Constructs the invalid address
 	*/
-	CNetworkAddress();
+	NetworkAddress();
 
 	/*!
 	Construct the wildcard address with the given port.  \c port must
 	not be zero.
 	*/
-	CNetworkAddress(int port);
+	NetworkAddress(int port);
 
 	/*!
 	Construct the network address for the given \c hostname and \c port.
@@ -49,13 +49,13 @@ public:
 	is thrown with an error of \c XSocketAddress::kBadPort.  The hostname
 	is not resolved by the c'tor;  use \c resolve to do that.
 	*/
-	CNetworkAddress(const CString& hostname, int port);
+	NetworkAddress(const String& hostname, int port);
 
-	CNetworkAddress(const CNetworkAddress&);
+	NetworkAddress(const NetworkAddress&);
 
-	~CNetworkAddress();
+	~NetworkAddress();
 
-	CNetworkAddress&	operator=(const CNetworkAddress&);
+	NetworkAddress&	operator=(const NetworkAddress&);
 
 	//! @name manipulators
 	//@{
@@ -77,13 +77,13 @@ public:
 	/*!
 	Returns true if this address is equal to \p address.
 	*/
-	bool				operator==(const CNetworkAddress& address) const;
+	bool				operator==(const NetworkAddress& address) const;
 
 	//! Check address inequality
 	/*!
 	Returns true if this address is not equal to \p address.
 	*/
-	bool				operator!=(const CNetworkAddress& address) const;
+	bool				operator!=(const NetworkAddress& address) const;
 
 	//! Check address validity
 	/*!
@@ -96,7 +96,7 @@ public:
 	Returns the address in the platform's native network address
 	structure.
 	*/
-	const CArchNetAddress&	getAddress() const;
+	const ArchNetAddress&	getAddress() const;
 
 	//! Get port
 	/*!
@@ -109,7 +109,7 @@ public:
 	/*!
 	Returns the hostname passed to the c'tor sans any port suffix.
 	*/
-	CString				getHostname() const;
+	String				getHostname() const;
 
 	//@}
 
@@ -117,7 +117,7 @@ private:
 	void				checkPort();
 
 private:
-	CArchNetAddress		m_address;
-	CString				m_hostname;
+	ArchNetAddress		m_address;
+	String				m_hostname;
 	int					m_port;
 };

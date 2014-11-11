@@ -20,13 +20,13 @@
 
 #include "arch/IArchLog.h"
 
-#define ARCH_LOG CArchLogUnix
+#define ARCH_LOG ArchLogUnix
 
 //! Unix implementation of IArchLog
-class CArchLogUnix : public IArchLog {
+class ArchLogUnix : public IArchLog {
 public:
-	CArchLogUnix();
-	virtual ~CArchLogUnix();
+	ArchLogUnix();
+	virtual ~ArchLogUnix();
 
 	// IArchLog overrides
 	virtual void		openLog(const char* name);

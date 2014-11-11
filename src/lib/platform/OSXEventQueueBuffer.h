@@ -25,20 +25,20 @@
 class IEventQueue;
 
 //! Event queue buffer for OS X
-class COSXEventQueueBuffer : public IEventQueueBuffer {
+class OSXEventQueueBuffer : public IEventQueueBuffer {
 public:
-	COSXEventQueueBuffer(IEventQueue* eventQueue);
-	virtual ~COSXEventQueueBuffer();
+	OSXEventQueueBuffer(IEventQueue* eventQueue);
+	virtual ~OSXEventQueueBuffer();
 
 	// IEventQueueBuffer overrides
 	virtual void		init();
 	virtual void		waitForEvent(double timeout);
-	virtual Type		getEvent(CEvent& event, UInt32& dataID);
+	virtual Type		getEvent(Event& event, UInt32& dataID);
 	virtual bool		addEvent(UInt32 dataID);
 	virtual bool		isEmpty() const;
-	virtual CEventQueueTimer*
+	virtual EventQueueTimer*
 						newTimer(double duration, bool oneShot) const;
-	virtual void		deleteTimer(CEventQueueTimer*) const;
+	virtual void		deleteTimer(EventQueueTimer*) const;
 
 private:
 	EventRef			m_event;

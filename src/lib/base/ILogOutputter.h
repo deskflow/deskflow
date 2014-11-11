@@ -59,7 +59,7 @@ public:
 	//! Write a message with level
 	/*!
 	Writes \c message, which has the given \c level, to a log.
-	If this method returns true then CLog will stop passing the
+	If this method returns true then Log will stop passing the
 	message to all outputters in the outputter chain, otherwise
 	it continues.  Most implementations should return true.
 	*/

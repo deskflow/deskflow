@@ -25,7 +25,7 @@
 int
 main(int argc, char** argv)
 {
-	CDaemonApp app;
+	DaemonApp app;
 	return app.run(argc, argv);
 }
 
@@ -37,7 +37,7 @@ main(int argc, char** argv)
 int WINAPI
 WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	CDaemonApp app;
+	DaemonApp app;
 	return app.run(__argc, __argv);
 }
 

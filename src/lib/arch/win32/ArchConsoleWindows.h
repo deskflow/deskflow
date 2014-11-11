@@ -20,10 +20,10 @@
 
 #include "arch/ArchConsoleStd.h"
 
-#define ARCH_CONSOLE CArchConsoleWindows
+#define ARCH_CONSOLE ArchConsoleWindows
 
-class CArchConsoleWindows : public CArchConsoleStd {
+class ArchConsoleWindows : public ArchConsoleStd {
 public:
-	CArchConsoleWindows();
-	virtual ~CArchConsoleWindows();
+	ArchConsoleWindows();
+	virtual ~ArchConsoleWindows();
 };

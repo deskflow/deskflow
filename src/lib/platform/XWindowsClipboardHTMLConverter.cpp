@@ -54,14 +54,14 @@ CXWindowsClipboardHTMLConverter::getDataSize() const
 	return 8;
 }
 
-CString
-CXWindowsClipboardHTMLConverter::fromIClipboard(const CString& data) const
+String
+CXWindowsClipboardHTMLConverter::fromIClipboard(const String& data) const
 {
-	return CUnicode::UTF8ToUTF16(data);
+	return Unicode::UTF8ToUTF16(data);
 }
 
-CString
-CXWindowsClipboardHTMLConverter::toIClipboard(const CString& data) const
+String
+CXWindowsClipboardHTMLConverter::toIClipboard(const String& data) const
 {
-	return CUnicode::UTF16ToUTF8(data);
+	return Unicode::UTF16ToUTF8(data);
 }

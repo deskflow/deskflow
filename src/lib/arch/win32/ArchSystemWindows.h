@@ -20,13 +20,13 @@
 
 #include "arch/IArchSystem.h"
 
-#define ARCH_SYSTEM CArchSystemWindows
+#define ARCH_SYSTEM ArchSystemWindows
 
 //! Win32 implementation of IArchString
-class CArchSystemWindows : public IArchSystem {
+class ArchSystemWindows : public IArchSystem {
 public:
-	CArchSystemWindows();
-	virtual ~CArchSystemWindows();
+	ArchSystemWindows();
+	virtual ~ArchSystemWindows();
 
 	// IArchSystem overrides
 	virtual std::string	getOSName() const;

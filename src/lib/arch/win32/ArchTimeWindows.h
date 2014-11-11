@@ -20,13 +20,13 @@
 
 #include "arch/IArchTime.h"
 
-#define ARCH_TIME CArchTimeWindows
+#define ARCH_TIME ArchTimeWindows
 
 //! Win32 implementation of IArchTime
-class CArchTimeWindows : public IArchTime {
+class ArchTimeWindows : public IArchTime {
 public:
-	CArchTimeWindows();
-	virtual ~CArchTimeWindows();
+	ArchTimeWindows();
+	virtual ~ArchTimeWindows();
 
 	// IArchTime overrides
 	virtual double		time();

@@ -20,14 +20,14 @@
 #include "server/ClientProxy1_4.h"
 #include "base/Stopwatch.h"
 
-class CServer;
+class Server;
 class IEventQueue;
 
 //! Proxy for client implementing protocol version 1.5
-class CClientProxy1_5 : public CClientProxy1_4 {
+class ClientProxy1_5 : public ClientProxy1_4 {
 public:
-	CClientProxy1_5(const CString& name, synergy::IStream* adoptedStream, CServer* server, IEventQueue* events);
-	~CClientProxy1_5();
+	ClientProxy1_5(const String& name, synergy::IStream* adoptedStream, Server* server, IEventQueue* events);
+	~ClientProxy1_5();
 
 	virtual void		sendDragInfo(UInt32 fileCount, const char* info, size_t size);
 	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize);
@@ -38,7 +38,7 @@ public:
 private:
 	IEventQueue*		m_events;
 
-	CStopwatch			m_stopwatch;
+	Stopwatch			m_stopwatch;
 	double				m_elapsedTime;
 	size_t				m_receivedDataSize;
 	static const UInt16	m_intervalThreshold;

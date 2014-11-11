@@ -89,7 +89,7 @@ TEST_F(CMSWindowsClipboardTests, add_newValue_valueWasStored)
 
 	clipboard.add(IClipboard::kText, "synergy rocks!");
 
-	CString actual = clipboard.get(IClipboard::kText);
+	String actual = clipboard.get(IClipboard::kText);
 	EXPECT_EQ("synergy rocks!", actual);
 }
 
@@ -113,7 +113,7 @@ TEST_F(CMSWindowsClipboardTests, add_replaceValue_valueWasReplaced)
 	clipboard.add(IClipboard::kText, "synergy rocks!");
 	clipboard.add(IClipboard::kText, "maxivista sucks"); // haha, just kidding.
 
-	CString actual = clipboard.get(IClipboard::kText);
+	String actual = clipboard.get(IClipboard::kText);
 	EXPECT_EQ("maxivista sucks", actual);
 }
 
@@ -154,7 +154,7 @@ TEST_F(CMSWindowsClipboardTests, close_isOpen_noErrors)
 
 	CMSWindowsClipboard::Time actual = clipboard.getTime();
 
-	// this behavior is different to that of CClipboard which only
+	// this behavior is different to that of Clipboard which only
 	// returns the value passed into open(t) after empty() is called.
 	EXPECT_EQ(1, actual);
 }*/
@@ -201,7 +201,7 @@ TEST_F(CMSWindowsClipboardTests, get_withNoFormats_returnsEmpty)
 	clipboard.open(0);
 	clipboard.empty();
 
-	CString actual = clipboard.get(IClipboard::kText);
+	String actual = clipboard.get(IClipboard::kText);
 
 	EXPECT_EQ("", actual);
 }
@@ -213,7 +213,7 @@ TEST_F(CMSWindowsClipboardTests, get_withFormatAdded_returnsExpected)
 	clipboard.empty();
 	clipboard.add(IClipboard::kText, "synergy rocks!");
 
-	CString actual = clipboard.get(IClipboard::kText);
+	String actual = clipboard.get(IClipboard::kText);
 
 	EXPECT_EQ("synergy rocks!", actual);
 }

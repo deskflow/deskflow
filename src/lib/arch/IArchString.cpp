@@ -24,7 +24,7 @@
 #include <cstring>
 #include <cstdlib>
 
-static CArchMutex              s_mutex = NULL;
+static ArchMutex              s_mutex = NULL;
 
 //
 // use C library non-reentrant multibyte conversion with mutex

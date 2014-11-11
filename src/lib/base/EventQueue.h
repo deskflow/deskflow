@@ -29,162 +29,162 @@
 
 #include <queue>
 
-class CMutex;
+class Mutex;
 
 //! Event queue
 /*!
 An event queue that implements the platform independent parts and
 delegates the platform dependent parts to a subclass.
 */
-class CEventQueue : public IEventQueue {
+class EventQueue : public IEventQueue {
 public:
-	CEventQueue();
-	virtual ~CEventQueue();
+	EventQueue();
+	virtual ~EventQueue();
 
 	// IEventQueue overrides
 	virtual void		loop();
 	virtual void		adoptBuffer(IEventQueueBuffer*);
-	virtual bool		getEvent(CEvent& event, double timeout = -1.0);
-	virtual bool		dispatchEvent(const CEvent& event);
-	virtual void		addEvent(const CEvent& event);
-	virtual CEventQueueTimer*
+	virtual bool		getEvent(Event& event, double timeout = -1.0);
+	virtual bool		dispatchEvent(const Event& event);
+	virtual void		addEvent(const Event& event);
+	virtual EventQueueTimer*
 						newTimer(double duration, void* target);
-	virtual CEventQueueTimer*
+	virtual EventQueueTimer*
 						newOneShotTimer(double duration, void* target);
-	virtual void		deleteTimer(CEventQueueTimer*);
-	virtual void		adoptHandler(CEvent::Type type,
+	virtual void		deleteTimer(EventQueueTimer*);
+	virtual void		adoptHandler(Event::Type type,
 							void* target, IEventJob* handler);
-	virtual void		removeHandler(CEvent::Type type, void* target);
+	virtual void		removeHandler(Event::Type type, void* target);
 	virtual void		removeHandlers(void* target);
-	virtual CEvent::Type
-						registerTypeOnce(CEvent::Type& type, const char* name);
+	virtual Event::Type
+						registerTypeOnce(Event::Type& type, const char* name);
 	virtual bool		isEmpty() const;
-	virtual IEventJob*	getHandler(CEvent::Type type, void* target) const;
-	virtual const char*	getTypeName(CEvent::Type type);
-	virtual CEvent::Type
-						getRegisteredType(const CString& name) const;
+	virtual IEventJob*	getHandler(Event::Type type, void* target) const;
+	virtual const char*	getTypeName(Event::Type type);
+	virtual Event::Type
+						getRegisteredType(const String& name) const;
 	void*				getSystemTarget();
 	virtual void		waitForReady() const;
 
 private:
-	UInt32				saveEvent(const CEvent& event);
-	CEvent				removeEvent(UInt32 eventID);
-	bool				hasTimerExpired(CEvent& event);
+	UInt32				saveEvent(const Event& event);
+	Event				removeEvent(UInt32 eventID);
+	bool				hasTimerExpired(Event& event);
 	double				getNextTimerTimeout() const;
-	void				addEventToBuffer(const CEvent& event);
+	void				addEventToBuffer(const Event& event);
 	
 private:
-	class CTimer {
+	class Timer {
 	public:
-		CTimer(CEventQueueTimer*, double timeout, double initialTime,
+		Timer(EventQueueTimer*, double timeout, double initialTime,
 							void* target, bool oneShot);
-		~CTimer();
+		~Timer();
 
 		void			reset();
 
-		CTimer&			operator-=(double);
+		Timer&			operator-=(double);
 
 						operator double() const;
 
 		bool			isOneShot() const;
-		CEventQueueTimer*
+		EventQueueTimer*
 						getTimer() const;
 		void*			getTarget() const;
-		void			fillEvent(CTimerEvent&) const;
+		void			fillEvent(TimerEvent&) const;
 
-		bool			operator<(const CTimer&) const;
+		bool			operator<(const Timer&) const;
 
 	private:
-		CEventQueueTimer*	m_timer;
+		EventQueueTimer*	m_timer;
 		double				m_timeout;
 		void*				m_target;
 		bool				m_oneShot;
 		double				m_time;
 	};
 
-	typedef std::set<CEventQueueTimer*> CTimers;
-	typedef CPriorityQueue<CTimer> CTimerQueue;
-	typedef std::map<UInt32, CEvent> CEventTable;
-	typedef std::vector<UInt32> CEventIDList;
-	typedef std::map<CEvent::Type, const char*> CTypeMap;
-	typedef std::map<CString, CEvent::Type> CNameMap;
-	typedef std::map<CEvent::Type, IEventJob*> CTypeHandlerTable;
-	typedef std::map<void*, CTypeHandlerTable> CHandlerTable;
+	typedef std::set<EventQueueTimer*> Timers;
+	typedef PriorityQueue<Timer> TimerQueue;
+	typedef std::map<UInt32, Event> EventTable;
+	typedef std::vector<UInt32> EventIDList;
+	typedef std::map<Event::Type, const char*> TypeMap;
+	typedef std::map<String, Event::Type> NameMap;
+	typedef std::map<Event::Type, IEventJob*> TypeHandlerTable;
+	typedef std::map<void*, TypeHandlerTable> HandlerTable;
 
 	int					m_systemTarget;
-	CArchMutex			m_mutex;
+	ArchMutex			m_mutex;
 
 	// registered events
-	CEvent::Type		m_nextType;
-	CTypeMap			m_typeMap;
-	CNameMap			m_nameMap;
+	Event::Type		m_nextType;
+	TypeMap			m_typeMap;
+	NameMap			m_nameMap;
 
 	// buffer of events
 	IEventQueueBuffer*	m_buffer;
 
 	// saved events
-	CEventTable			m_events;
-	CEventIDList		m_oldEventIDs;
+	EventTable			m_events;
+	EventIDList		m_oldEventIDs;
 
 	// timers
-	CStopwatch			m_time;
-	CTimers				m_timers;
-	CTimerQueue			m_timerQueue;
-	CTimerEvent			m_timerEvent;
+	Stopwatch			m_time;
+	Timers				m_timers;
+	TimerQueue			m_timerQueue;
+	TimerEvent			m_timerEvent;
 
 	// event handlers
-	CHandlerTable		m_handlers;
+	HandlerTable		m_handlers;
 
 public:
 	//
 	// Event type providers.
 	//
-	CClientEvents&				forCClient();
+	ClientEvents&				forClient();
 	IStreamEvents&				forIStream();
-	CIpcClientEvents&			forCIpcClient();
-	CIpcClientProxyEvents&		forCIpcClientProxy();
-	CIpcServerEvents&			forCIpcServer();
-	CIpcServerProxyEvents&		forCIpcServerProxy();
+	IpcClientEvents&			forIpcClient();
+	IpcClientProxyEvents&		forIpcClientProxy();
+	IpcServerEvents&			forIpcServer();
+	IpcServerProxyEvents&		forIpcServerProxy();
 	IDataSocketEvents&			forIDataSocket();
 	IListenSocketEvents&		forIListenSocket();
 	ISocketEvents&				forISocket();
-	COSXScreenEvents&			forCOSXScreen();
-	CClientListenerEvents&		forCClientListener();
-	CClientProxyEvents&			forCClientProxy();
-	CClientProxyUnknownEvents&	forCClientProxyUnknown();
-	CServerEvents&				forCServer();
-	CServerAppEvents&			forCServerApp();
+	OSXScreenEvents&			forOSXScreen();
+	ClientListenerEvents&		forClientListener();
+	ClientProxyEvents&			forClientProxy();
+	ClientProxyUnknownEvents&	forClientProxyUnknown();
+	ServerEvents&				forServer();
+	ServerAppEvents&			forServerApp();
 	IKeyStateEvents&			forIKeyState();
 	IPrimaryScreenEvents&		forIPrimaryScreen();
 	IScreenEvents&				forIScreen();
 
 private:
-	CClientEvents*				m_typesForCClient;
+	ClientEvents*				m_typesForClient;
 	IStreamEvents*				m_typesForIStream;
-	CIpcClientEvents*			m_typesForCIpcClient;
-	CIpcClientProxyEvents*		m_typesForCIpcClientProxy;
-	CIpcServerEvents*			m_typesForCIpcServer;
-	CIpcServerProxyEvents*		m_typesForCIpcServerProxy;
+	IpcClientEvents*			m_typesForIpcClient;
+	IpcClientProxyEvents*		m_typesForIpcClientProxy;
+	IpcServerEvents*			m_typesForIpcServer;
+	IpcServerProxyEvents*		m_typesForIpcServerProxy;
 	IDataSocketEvents*			m_typesForIDataSocket;
 	IListenSocketEvents*		m_typesForIListenSocket;
 	ISocketEvents*				m_typesForISocket;
-	COSXScreenEvents*			m_typesForCOSXScreen;
-	CClientListenerEvents*		m_typesForCClientListener;
-	CClientProxyEvents*			m_typesForCClientProxy;
-	CClientProxyUnknownEvents*	m_typesForCClientProxyUnknown;
-	CServerEvents*				m_typesForCServer;
-	CServerAppEvents*			m_typesForCServerApp;
+	OSXScreenEvents*			m_typesForOSXScreen;
+	ClientListenerEvents*		m_typesForClientListener;
+	ClientProxyEvents*			m_typesForClientProxy;
+	ClientProxyUnknownEvents*	m_typesForClientProxyUnknown;
+	ServerEvents*				m_typesForServer;
+	ServerAppEvents*			m_typesForServerApp;
 	IKeyStateEvents*			m_typesForIKeyState;
 	IPrimaryScreenEvents*		m_typesForIPrimaryScreen;
 	IScreenEvents*				m_typesForIScreen;
-	CMutex*						m_readyMutex;
-	CCondVar<bool>*				m_readyCondVar;
-	std::queue<CEvent>			m_pending;
+	Mutex*						m_readyMutex;
+	CondVar<bool>*				m_readyCondVar;
+	std::queue<Event>			m_pending;
 };
 
 #define EVENT_TYPE_ACCESSOR(type_)											\
 type_##Events&																\
-CEventQueue::for##type_() {												\
+EventQueue::for##type_() {												\
 	if (m_typesFor##type_ == NULL) {										\
 		m_typesFor##type_ = new type_##Events();							\
 		m_typesFor##type_->setEvents(dynamic_cast<IEventQueue*>(this));		\

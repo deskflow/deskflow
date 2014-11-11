@@ -40,20 +40,20 @@ CMSWindowsClipboardTextConverter::getWin32Format() const
 	return CF_TEXT;
 }
 
-CString
-CMSWindowsClipboardTextConverter::doFromIClipboard(const CString& data) const
+String
+CMSWindowsClipboardTextConverter::doFromIClipboard(const String& data) const
 {
 	// convert and add nul terminator
-	return CUnicode::UTF8ToText(data) += '\0';
+	return Unicode::UTF8ToText(data) += '\0';
 }
 
-CString
-CMSWindowsClipboardTextConverter::doToIClipboard(const CString& data) const
+String
+CMSWindowsClipboardTextConverter::doToIClipboard(const String& data) const
 {
 	// convert and truncate at first nul terminator
-	CString dst          = CUnicode::textToUTF8(data);
-	CString::size_type n = dst.find('\0');
-	if (n != CString::npos) {
+	String dst          = Unicode::textToUTF8(data);
+	String::size_type n = dst.find('\0');
+	if (n != String::npos) {
 		dst.erase(n);
 	}
 	return dst;

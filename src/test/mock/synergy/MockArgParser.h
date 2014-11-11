@@ -23,10 +23,10 @@
 
 #include "test/global/gmock.h"
 
-class CMockArgParser : public CArgParser
+class MockArgParser : public ArgParser
 {
 public:
-	CMockArgParser() : CArgParser(NULL) { }
+	MockArgParser() : ArgParser(NULL) { }
 
 	MOCK_METHOD3(parseGenericArgs, bool(int, const char* const*, int&));
 	MOCK_METHOD0(checkUnexpectedArgs, bool());

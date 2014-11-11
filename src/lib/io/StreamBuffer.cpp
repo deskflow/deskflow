@@ -19,25 +19,25 @@
 #include "io/StreamBuffer.h"
 
 //
-// CStreamBuffer
+// StreamBuffer
 //
 
-const UInt32			CStreamBuffer::kChunkSize = 4096;
+const UInt32			StreamBuffer::kChunkSize = 4096;
 
-CStreamBuffer::CStreamBuffer() :
+StreamBuffer::StreamBuffer() :
 	m_size(0),
 	m_headUsed(0)
 {
 	// do nothing
 }
 
-CStreamBuffer::~CStreamBuffer()
+StreamBuffer::~StreamBuffer()
 {
 	// do nothing
 }
 
 const void*
-CStreamBuffer::peek(UInt32 n)
+StreamBuffer::peek(UInt32 n)
 {
 	assert(n <= m_size);
 
@@ -63,7 +63,7 @@ CStreamBuffer::peek(UInt32 n)
 }
 
 void
-CStreamBuffer::pop(UInt32 n)
+StreamBuffer::pop(UInt32 n)
 {
 	// discard all chunks if n is greater than or equal to m_size
 	if (n >= m_size) {
@@ -93,7 +93,7 @@ CStreamBuffer::pop(UInt32 n)
 }
 
 void
-CStreamBuffer::write(const void* vdata, UInt32 n)
+StreamBuffer::write(const void* vdata, UInt32 n)
 {
 	assert(vdata != NULL);
 
@@ -140,7 +140,7 @@ CStreamBuffer::write(const void* vdata, UInt32 n)
 }
 
 UInt32
-CStreamBuffer::getSize() const
+StreamBuffer::getSize() const
 {
 	return m_size;
 }

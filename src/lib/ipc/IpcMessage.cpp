@@ -19,51 +19,51 @@
 #include "ipc/IpcMessage.h"
 #include "ipc/Ipc.h"
 
-CIpcMessage::CIpcMessage(UInt8 type) :
+IpcMessage::IpcMessage(UInt8 type) :
 	m_type(type)
 {
 }
 
-CIpcMessage::~CIpcMessage()
+IpcMessage::~IpcMessage()
 {
 }
 
-CIpcHelloMessage::CIpcHelloMessage(EIpcClientType clientType) :
-	CIpcMessage(kIpcHello),
+IpcHelloMessage::IpcHelloMessage(EIpcClientType clientType) :
+	IpcMessage(kIpcHello),
 	m_clientType(clientType)
 {
 }
 
-CIpcHelloMessage::~CIpcHelloMessage()
+IpcHelloMessage::~IpcHelloMessage()
 {
 }
 
-CIpcShutdownMessage::CIpcShutdownMessage() :
-CIpcMessage(kIpcShutdown)
+IpcShutdownMessage::IpcShutdownMessage() :
+IpcMessage(kIpcShutdown)
 {
 }
 
-CIpcShutdownMessage::~CIpcShutdownMessage()
+IpcShutdownMessage::~IpcShutdownMessage()
 {
 }
 
-CIpcLogLineMessage::CIpcLogLineMessage(const CString& logLine) :
-CIpcMessage(kIpcLogLine),
+IpcLogLineMessage::IpcLogLineMessage(const String& logLine) :
+IpcMessage(kIpcLogLine),
 m_logLine(logLine)
 {
 }
 
-CIpcLogLineMessage::~CIpcLogLineMessage()
+IpcLogLineMessage::~IpcLogLineMessage()
 {
 }
 
-CIpcCommandMessage::CIpcCommandMessage(const CString& command, bool elevate) :
-CIpcMessage(kIpcCommand),
+IpcCommandMessage::IpcCommandMessage(const String& command, bool elevate) :
+IpcMessage(kIpcCommand),
 m_command(command),
 m_elevate(elevate)
 {
 }
 
-CIpcCommandMessage::~CIpcCommandMessage()
+IpcCommandMessage::~IpcCommandMessage()
 {
 }

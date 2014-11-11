@@ -23,31 +23,31 @@
 #include "common/stdexcept.h"
 
 void
-CTestEventQueue::raiseQuitEvent() 
+TestEventQueue::raiseQuitEvent() 
 {
-	addEvent(CEvent(CEvent::kQuit));
+	addEvent(Event(Event::kQuit));
 }
 
 void
-CTestEventQueue::initQuitTimeout(double timeout)
+TestEventQueue::initQuitTimeout(double timeout)
 {
 	assert(m_quitTimeoutTimer == nullptr);
 	m_quitTimeoutTimer = newOneShotTimer(timeout, NULL);
-	adoptHandler(CEvent::kTimer, m_quitTimeoutTimer,
-		new TMethodEventJob<CTestEventQueue>(
-		this, &CTestEventQueue::handleQuitTimeout));
+	adoptHandler(Event::kTimer, m_quitTimeoutTimer,
+		new TMethodEventJob<TestEventQueue>(
+		this, &TestEventQueue::handleQuitTimeout));
 }
 
 void
-CTestEventQueue::cleanupQuitTimeout()
+TestEventQueue::cleanupQuitTimeout()
 {
-	removeHandler(CEvent::kTimer, m_quitTimeoutTimer);
+	removeHandler(Event::kTimer, m_quitTimeoutTimer);
 	delete m_quitTimeoutTimer;
 	m_quitTimeoutTimer = nullptr;
 }
 
 void
-CTestEventQueue::handleQuitTimeout(const CEvent&, void* vclient)
+TestEventQueue::handleQuitTimeout(const Event&, void* vclient)
 {
 	throw std::runtime_error("test event queue timeout");
 }

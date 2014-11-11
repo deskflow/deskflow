@@ -23,24 +23,24 @@
 #include "base/String.h"
 #include "base/Event.h"
 
-class CIpcMessage : public CEventData {
+class IpcMessage : public EventData {
 public:
-	virtual ~CIpcMessage();
+	virtual ~IpcMessage();
 
 	//! Gets the message type ID.
 	UInt8				type() const { return m_type; }
 
 protected:
-	CIpcMessage(UInt8 type);
+	IpcMessage(UInt8 type);
 
 private:
 	UInt8				m_type;
 };
 
-class CIpcHelloMessage : public CIpcMessage {
+class IpcHelloMessage : public IpcMessage {
 public:
-	CIpcHelloMessage(EIpcClientType clientType);
-	virtual ~CIpcHelloMessage();
+	IpcHelloMessage(EIpcClientType clientType);
+	virtual ~IpcHelloMessage();
 
 	//! Gets the message type ID.
 	EIpcClientType			clientType() const { return m_clientType; }
@@ -49,37 +49,37 @@ private:
 	EIpcClientType			m_clientType;
 };
 
-class CIpcShutdownMessage : public CIpcMessage {
+class IpcShutdownMessage : public IpcMessage {
 public:
-	CIpcShutdownMessage();
-	virtual ~CIpcShutdownMessage();
+	IpcShutdownMessage();
+	virtual ~IpcShutdownMessage();
 };
 
 
-class CIpcLogLineMessage : public CIpcMessage {
+class IpcLogLineMessage : public IpcMessage {
 public:
-	CIpcLogLineMessage(const CString& logLine);
-	virtual ~CIpcLogLineMessage();
+	IpcLogLineMessage(const String& logLine);
+	virtual ~IpcLogLineMessage();
 
 	//! Gets the log line.
-	CString				logLine() const { return m_logLine; }
+	String				logLine() const { return m_logLine; }
 
 private:
-	CString				m_logLine;
+	String				m_logLine;
 };
 
-class CIpcCommandMessage : public CIpcMessage {
+class IpcCommandMessage : public IpcMessage {
 public:
-	CIpcCommandMessage(const CString& command, bool elevate);
-	virtual ~CIpcCommandMessage();
+	IpcCommandMessage(const String& command, bool elevate);
+	virtual ~IpcCommandMessage();
 
 	//! Gets the command.
-	CString				command() const { return m_command; }
+	String				command() const { return m_command; }
 
 	//! Gets whether or not the process should be elevated on MS Windows.
 	bool				elevate() const { return m_elevate; }
 
 private:
-	CString				m_command;
+	String				m_command;
 	bool				m_elevate;
 };

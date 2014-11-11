@@ -46,15 +46,15 @@ CMSWindowsClipboardHTMLConverter::getWin32Format() const
 	return m_format;
 }
 
-CString
-CMSWindowsClipboardHTMLConverter::doFromIClipboard(const CString& data) const
+String
+CMSWindowsClipboardHTMLConverter::doFromIClipboard(const String& data) const
 {
 	// prepare to CF_HTML format prefix and suffix
-	CString prefix("Version:0.9\r\nStartHTML:0000000105\r\n"
+	String prefix("Version:0.9\r\nStartHTML:0000000105\r\n"
 					"EndHTML:ZZZZZZZZZZ\r\n"
 					"StartFragment:XXXXXXXXXX\r\nEndFragment:YYYYYYYYYY\r\n"
 					"<!DOCTYPE><HTML><BODY><!--StartFragment-->");
-	CString suffix("<!--EndFragment--></BODY></HTML>\r\n");
+	String suffix("<!--EndFragment--></BODY></HTML>\r\n");
 
 	// Get byte offsets for header
 	UInt32 StartFragment = (UInt32)prefix.size();
@@ -75,45 +75,45 @@ CMSWindowsClipboardHTMLConverter::doFromIClipboard(const CString& data) const
 	return prefix;
 }
 
-CString
-CMSWindowsClipboardHTMLConverter::doToIClipboard(const CString& data) const
+String
+CMSWindowsClipboardHTMLConverter::doToIClipboard(const String& data) const
 {
 	// get fragment start/end args
-	CString startArg = findArg(data, "StartFragment");
-	CString endArg   = findArg(data, "EndFragment");
+	String startArg = findArg(data, "StartFragment");
+	String endArg   = findArg(data, "EndFragment");
 	if (startArg.empty() || endArg.empty()) {
-		return CString();
+		return String();
 	}
 
 	// convert args to integers
 	SInt32 start = (SInt32)atoi(startArg.c_str());
 	SInt32 end   = (SInt32)atoi(endArg.c_str());
 	if (start <= 0 || end <= 0 || start >= end) {
-		return CString();
+		return String();
 	}
 
 	// extract the fragment
 	return data.substr(start, end - start);
 }
 
-CString
+String
 CMSWindowsClipboardHTMLConverter::findArg(
-				const CString& data, const CString& name) const
+				const String& data, const String& name) const
 {
-	CString::size_type i = data.find(name);
-	if (i == CString::npos) {
-		return CString();
+	String::size_type i = data.find(name);
+	if (i == String::npos) {
+		return String();
 	}
 	i = data.find_first_of(":\r\n", i);
-	if (i == CString::npos || data[i] != ':') {
-		return CString();
+	if (i == String::npos || data[i] != ':') {
+		return String();
 	}
 	i = data.find_first_of("0123456789\r\n", i + 1);
-	if (i == CString::npos || data[i] == '\r' || data[i] == '\n') {
-		return CString();
+	if (i == String::npos || data[i] == '\r' || data[i] == '\n') {
+		return String();
 	}
-	CString::size_type j = data.find_first_not_of("0123456789", i);
-	if (j == CString::npos) {
+	String::size_type j = data.find_first_not_of("0123456789", i);
+	if (j == String::npos) {
 		j = data.size();
 	}
 	return data.substr(i, j - i);

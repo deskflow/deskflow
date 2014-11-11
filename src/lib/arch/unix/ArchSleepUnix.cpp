@@ -43,21 +43,21 @@
 #endif
 
 //
-// CArchSleepUnix
+// ArchSleepUnix
 //
 
-CArchSleepUnix::CArchSleepUnix()
+ArchSleepUnix::ArchSleepUnix()
 {
 	// do nothing
 }
 
-CArchSleepUnix::~CArchSleepUnix()
+ArchSleepUnix::~ArchSleepUnix()
 {
 	// do nothing
 }
 
 void
-CArchSleepUnix::sleep(double timeout)
+ArchSleepUnix::sleep(double timeout)
 {
 	ARCH->testCancelThread();
 	if (timeout < 0.0) {

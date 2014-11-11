@@ -23,13 +23,13 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-class CBufferedLogOutputter;
+class BufferedLogOutputter;
 class IEventQueue;
 
-//! Implementation of CPortableTaskBarReceiver for Microsoft Windows
-class CMSWindowsPortableTaskBarReceiver : public CPortableTaskBarReceiver {
+//! Implementation of PortableTaskBarReceiver for Microsoft Windows
+class CMSWindowsPortableTaskBarReceiver : public PortableTaskBarReceiver {
 public:
-	CMSWindowsPortableTaskBarReceiver(HINSTANCE, const CBufferedLogOutputter*, IEventQueue* events);
+	CMSWindowsPortableTaskBarReceiver(HINSTANCE, const BufferedLogOutputter*, IEventQueue* events);
 	virtual ~CMSWindowsPortableTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides
@@ -42,7 +42,7 @@ public:
 protected:
 	void				copyLog() const;
 
-	// CPortableTaskBarReceiver overrides
+	// PortableTaskBarReceiver overrides
 	virtual void		onStatusChanged();
 
 private:
@@ -62,7 +62,7 @@ private:
 	HWND				m_window;
 	HMENU				m_menu;
 	HICON				m_icon[kMaxState];
-	const CBufferedLogOutputter*	m_logBuffer;
+	const BufferedLogOutputter*	m_logBuffer;
 	IEventQueue*		m_events;
 
 	static const UINT	s_stateToIconID[];

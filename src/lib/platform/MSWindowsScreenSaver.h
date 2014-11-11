@@ -24,7 +24,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-class CThread;
+class Thread;
 
 //! Microsoft windows screen saver implementation
 class CMSWindowsScreenSaver : public IScreenSaver {
@@ -54,7 +54,7 @@ public:
 	virtual bool		isActive() const;
 
 private:
-	class CFindScreenSaverInfo {
+	class FindScreenSaverInfo {
 	public:
 		HDESK			m_desktop;
 		HWND			m_window;
@@ -77,7 +77,7 @@ private:
 	bool				m_wasSecureAnInt;
 
 	HANDLE				m_process;
-	CThread*			m_watch;
+	Thread*			m_watch;
 	DWORD				m_threadID;
 	UINT				m_msg;
 	WPARAM				m_wParam;

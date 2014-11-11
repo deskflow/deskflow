@@ -22,7 +22,7 @@
 #include <iostream>
 
 void
-CArchConsoleStd::writeConsole(ELevel level, const char* str)
+ArchConsoleStd::writeConsole(ELevel level, const char* str)
 {
 	if ((level >= kFATAL) && (level <= kWARNING))
 		std::cerr << str << std::endl;

@@ -24,18 +24,18 @@
 
 #include <queue>
 
-class CIpcServer;
-class CEvent;
-class CIpcClientProxy;
+class IpcServer;
+class Event;
+class IpcClientProxy;
 
 //! Write log to GUI over IPC
 /*!
 This outputter writes output to the GUI via IPC.
 */
-class CIpcLogOutputter : public ILogOutputter {
+class IpcLogOutputter : public ILogOutputter {
 public:
-	CIpcLogOutputter(CIpcServer& ipcServer);
-	virtual ~CIpcLogOutputter();
+	IpcLogOutputter(IpcServer& ipcServer);
+	virtual ~IpcLogOutputter();
 
 	// ILogOutputter overrides
 	virtual void		open(const char* title);
@@ -51,21 +51,21 @@ public:
 
 private:
 	void				bufferThread(void*);
-	CString				getChunk(size_t count);
+	String				getChunk(size_t count);
 	void				sendBuffer();
-	void				appendBuffer(const CString& text);
+	void				appendBuffer(const String& text);
 
 private:
-	typedef std::queue<CString> CBuffer;
+	typedef std::queue<String> Buffer;
 
-	CIpcServer&			m_ipcServer;
-	CBuffer				m_buffer;
-	CArchMutex			m_bufferMutex;
+	IpcServer&			m_ipcServer;
+	Buffer				m_buffer;
+	ArchMutex			m_bufferMutex;
 	bool				m_sending;
-	CThread*			m_bufferThread;
+	Thread*			m_bufferThread;
 	bool				m_running;
-	CArchCond			m_notifyCond;
-	CArchMutex			m_notifyMutex;
+	ArchCond			m_notifyCond;
+	ArchMutex			m_notifyMutex;
 	bool				m_bufferWaiting;
 	IArchMultithread::ThreadID
 						m_bufferThreadId;

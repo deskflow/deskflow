@@ -42,8 +42,8 @@ const UINT CMSWindowsPortableTaskBarReceiver::s_stateToIconID[kMaxState] =
 };
 
 CMSWindowsPortableTaskBarReceiver::CMSWindowsPortableTaskBarReceiver(
-				HINSTANCE appInstance, const CBufferedLogOutputter* logBuffer, IEventQueue* events) :
-	CPortableTaskBarReceiver(events),
+				HINSTANCE appInstance, const BufferedLogOutputter* logBuffer, IEventQueue* events) :
+	PortableTaskBarReceiver(events),
 	m_events(events),
 	m_appInstance(appInstance),
 	m_window(NULL),
@@ -181,17 +181,17 @@ CMSWindowsPortableTaskBarReceiver::runMenu(int x, int y)
 		break;
 
 	case IDC_RELOAD_CONFIG:
-		m_events->addEvent(CEvent(m_events->forCServerApp().reloadConfig(),
+		m_events->addEvent(Event(m_events->forCServerApp().reloadConfig(),
 							m_events->getSystemTarget()));
 		break;
 
 	case IDC_FORCE_RECONNECT:
-		m_events->addEvent(CEvent(m_events->forCServerApp().forceReconnect(),
+		m_events->addEvent(Event(m_events->forCServerApp().forceReconnect(),
 							m_events->getSystemTarget()));
 		break;
 
 	case ID_SYNERGY_RESETSERVER:
-		m_events->addEvent(CEvent(m_events->forCServerApp().resetServer(),
+		m_events->addEvent(Event(m_events->forCServerApp().resetServer(),
 							m_events->getSystemTarget()));
 		break;
 
@@ -246,8 +246,8 @@ CMSWindowsPortableTaskBarReceiver::copyLog() const
 {
 	if (m_logBuffer != NULL) {
 		// collect log buffer
-		CString data;
-		for (CBufferedLogOutputter::const_iterator index = m_logBuffer->begin();
+		String data;
+		for (BufferedLogOutputter::const_iterator index = m_logBuffer->begin();
 								index != m_logBuffer->end(); ++index) {
 			data += *index;
 			data += "\n";
@@ -314,14 +314,14 @@ CMSWindowsPortableTaskBarReceiver::createWindow()
 	SetWindowLongPtr(m_window, GWL_EXSTYLE, style);
 
 	// tell the task bar about this dialog
-	CArchTaskBarWindows::addDialog(m_window);
+	ArchTaskBarWindows::addDialog(m_window);
 }
 
 void
 CMSWindowsPortableTaskBarReceiver::destroyWindow()
 {
 	if (m_window != NULL) {
-		CArchTaskBarWindows::removeDialog(m_window);
+		ArchTaskBarWindows::removeDialog(m_window);
 		DestroyWindow(m_window);
 		m_window = NULL;
 	}
@@ -377,14 +377,14 @@ CMSWindowsPortableTaskBarReceiver::staticDlgProc(HWND hwnd,
 }
 
 IArchTaskBarReceiver*
-createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events)
+createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events)
 {
-	CArchMiscWindows::setIcons(
-		(HICON)LoadImage(CArchMiscWindows::instanceWin32(),
+	ArchMiscWindows::setIcons(
+		(HICON)LoadImage(ArchMiscWindows::instanceWin32(),
 		MAKEINTRESOURCE(IDI_SYNERGY),
 		IMAGE_ICON,
 		32, 32, LR_SHARED),
-		(HICON)LoadImage(CArchMiscWindows::instanceWin32(),
+		(HICON)LoadImage(ArchMiscWindows::instanceWin32(),
 		MAKEINTRESOURCE(IDI_SYNERGY),
 		IMAGE_ICON,
 		16, 16, LR_SHARED));

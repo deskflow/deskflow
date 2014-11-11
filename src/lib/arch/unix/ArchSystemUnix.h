@@ -20,13 +20,13 @@
 
 #include "arch/IArchSystem.h"
 
-#define ARCH_SYSTEM CArchSystemUnix
+#define ARCH_SYSTEM ArchSystemUnix
 
 //! Unix implementation of IArchString
-class CArchSystemUnix : public IArchSystem {
+class ArchSystemUnix : public IArchSystem {
 public:
-	CArchSystemUnix();
-	virtual ~CArchSystemUnix();
+	ArchSystemUnix();
+	virtual ~ArchSystemUnix();
 
 	// IArchSystem overrides
 	virtual std::string	getOSName() const;

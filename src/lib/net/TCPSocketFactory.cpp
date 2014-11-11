@@ -25,7 +25,7 @@
 // CTCPSocketFactory
 //
 
-CTCPSocketFactory::CTCPSocketFactory(IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
+CTCPSocketFactory::CTCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {

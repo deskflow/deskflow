@@ -22,23 +22,23 @@
 #include "base/Log.h"
 
 //
-// CClientProxy1_1
+// ClientProxy1_1
 //
 
-CClientProxy1_2::CClientProxy1_2(const CString& name, synergy::IStream* stream, IEventQueue* events) :
-	CClientProxy1_1(name, stream, events)
+ClientProxy1_2::ClientProxy1_2(const String& name, synergy::IStream* stream, IEventQueue* events) :
+	ClientProxy1_1(name, stream, events)
 {
 	// do nothing
 }
 
-CClientProxy1_2::~CClientProxy1_2()
+ClientProxy1_2::~ClientProxy1_2()
 {
 	// do nothing
 }
 
 void
-CClientProxy1_2::mouseRelativeMove(SInt32 xRel, SInt32 yRel)
+ClientProxy1_2::mouseRelativeMove(SInt32 xRel, SInt32 yRel)
 {
 	LOG((CLOG_DEBUG2 "send mouse relative move to \"%s\" %d,%d", getName().c_str(), xRel, yRel));
-	CProtocolUtil::writef(getStream(), kMsgDMouseRelMove, xRel, yRel);
+	ProtocolUtil::writef(getStream(), kMsgDMouseRelMove, xRel, yRel);
 }

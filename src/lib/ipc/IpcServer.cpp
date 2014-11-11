@@ -29,41 +29,41 @@
 #include "base/Log.h"
 
 //
-// CIpcServer
+// IpcServer
 //
 
-CIpcServer::CIpcServer(IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
+IpcServer::IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	m_socket(events, socketMultiplexer),
-	m_address(CNetworkAddress(IPC_HOST, IPC_PORT)),
+	m_address(NetworkAddress(IPC_HOST, IPC_PORT)),
 	m_events(events)
 {
 	init();
 }
 
-CIpcServer::CIpcServer(IEventQueue* events, CSocketMultiplexer* socketMultiplexer, int port) :
+IpcServer::IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer, int port) :
 	m_socket(events, socketMultiplexer),
-	m_address(CNetworkAddress(IPC_HOST, port)),
+	m_address(NetworkAddress(IPC_HOST, port)),
 	m_events(events)
 {
 	init();
 }
 
 void
-CIpcServer::init()
+IpcServer::init()
 {
 	m_clientsMutex = ARCH->newMutex();
 	m_address.resolve();
 
 	m_events->adoptHandler(
 		m_events->forIListenSocket().connecting(), &m_socket,
-		new TMethodEventJob<CIpcServer>(
-		this, &CIpcServer::handleClientConnecting));
+		new TMethodEventJob<IpcServer>(
+		this, &IpcServer::handleClientConnecting));
 }
 
-CIpcServer::~CIpcServer()
+IpcServer::~IpcServer()
 {
 	ARCH->lockMutex(m_clientsMutex);
-	CClientList::iterator it;
+	ClientList::iterator it;
 	for (it = m_clients.begin(); it != m_clients.end(); it++) {
 		deleteClient(*it);
 	}
@@ -75,13 +75,13 @@ CIpcServer::~CIpcServer()
 }
 
 void
-CIpcServer::listen()
+IpcServer::listen()
 {
 	m_socket.bind(m_address);
 }
 
 void
-CIpcServer::handleClientConnecting(const CEvent&, void*)
+IpcServer::handleClientConnecting(const Event&, void*)
 {
 	synergy::IStream* stream = m_socket.accept();
 	if (stream == NULL) {
@@ -91,30 +91,30 @@ CIpcServer::handleClientConnecting(const CEvent&, void*)
 	LOG((CLOG_DEBUG "accepted ipc client connection"));
 
 	ARCH->lockMutex(m_clientsMutex);
-	CIpcClientProxy* proxy = new CIpcClientProxy(*stream, m_events);
+	IpcClientProxy* proxy = new IpcClientProxy(*stream, m_events);
 	m_clients.push_back(proxy);
 	ARCH->unlockMutex(m_clientsMutex);
 
 	m_events->adoptHandler(
-		m_events->forCIpcClientProxy().disconnected(), proxy,
-		new TMethodEventJob<CIpcServer>(
-		this, &CIpcServer::handleClientDisconnected));
+		m_events->forIpcClientProxy().disconnected(), proxy,
+		new TMethodEventJob<IpcServer>(
+		this, &IpcServer::handleClientDisconnected));
 
 	m_events->adoptHandler(
-		m_events->forCIpcClientProxy().messageReceived(), proxy,
-		new TMethodEventJob<CIpcServer>(
-		this, &CIpcServer::handleMessageReceived));
+		m_events->forIpcClientProxy().messageReceived(), proxy,
+		new TMethodEventJob<IpcServer>(
+		this, &IpcServer::handleMessageReceived));
 
-	m_events->addEvent(CEvent(
-		m_events->forCIpcServer().clientConnected(), this, proxy, CEvent::kDontFreeData));
+	m_events->addEvent(Event(
+		m_events->forIpcServer().clientConnected(), this, proxy, Event::kDontFreeData));
 }
 
 void
-CIpcServer::handleClientDisconnected(const CEvent& e, void*)
+IpcServer::handleClientDisconnected(const Event& e, void*)
 {
-	CIpcClientProxy* proxy = static_cast<CIpcClientProxy*>(e.getTarget());
+	IpcClientProxy* proxy = static_cast<IpcClientProxy*>(e.getTarget());
 
-	CArchMutexLock lock(m_clientsMutex);
+	ArchMutexLock lock(m_clientsMutex);
 	m_clients.remove(proxy);
 	deleteClient(proxy);
 
@@ -122,34 +122,34 @@ CIpcServer::handleClientDisconnected(const CEvent& e, void*)
 }
 
 void
-CIpcServer::handleMessageReceived(const CEvent& e, void*)
+IpcServer::handleMessageReceived(const Event& e, void*)
 {
-	CEvent event(m_events->forCIpcServer().messageReceived(), this);
+	Event event(m_events->forIpcServer().messageReceived(), this);
 	event.setDataObject(e.getDataObject());
 	m_events->addEvent(event);
 }
 
 void
-CIpcServer::deleteClient(CIpcClientProxy* proxy)
+IpcServer::deleteClient(IpcClientProxy* proxy)
 {
-	m_events->removeHandler(m_events->forCIpcClientProxy().messageReceived(), proxy);
-	m_events->removeHandler(m_events->forCIpcClientProxy().disconnected(), proxy);
+	m_events->removeHandler(m_events->forIpcClientProxy().messageReceived(), proxy);
+	m_events->removeHandler(m_events->forIpcClientProxy().disconnected(), proxy);
 	delete proxy;
 }
 
 bool
-CIpcServer::hasClients(EIpcClientType clientType) const
+IpcServer::hasClients(EIpcClientType clientType) const
 {
-	CArchMutexLock lock(m_clientsMutex);
+	ArchMutexLock lock(m_clientsMutex);
 
 	if (m_clients.empty()) {
 		return false;
 	}
 
-	CClientList::const_iterator it;
+	ClientList::const_iterator it;
 	for (it = m_clients.begin(); it != m_clients.end(); it++) {
 		// at least one client is alive and type matches, there are clients.
-		CIpcClientProxy* p = *it;
+		IpcClientProxy* p = *it;
 		if (!p->m_disconnecting && p->m_clientType == clientType) {
 			return true;
 		}
@@ -160,13 +160,13 @@ CIpcServer::hasClients(EIpcClientType clientType) const
 }
 
 void
-CIpcServer::send(const CIpcMessage& message, EIpcClientType filterType)
+IpcServer::send(const IpcMessage& message, EIpcClientType filterType)
 {
-	CArchMutexLock lock(m_clientsMutex);
+	ArchMutexLock lock(m_clientsMutex);
 
-	CClientList::iterator it;
+	ClientList::iterator it;
 	for (it = m_clients.begin(); it != m_clients.end(); it++) {
-		CIpcClientProxy* proxy = *it;
+		IpcClientProxy* proxy = *it;
 		if (proxy->m_clientType == filterType) {
 			proxy->send(message);
 		}

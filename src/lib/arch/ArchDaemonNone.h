@@ -20,7 +20,7 @@
 
 #include "arch/IArchDaemon.h"
 
-#define ARCH_DAEMON CArchDaemonNone
+#define ARCH_DAEMON ArchDaemonNone
 
 //! Dummy implementation of IArchDaemon
 /*!
@@ -29,10 +29,10 @@ daemons.  The install and uninstall functions do nothing, the query
 functions return false, and \c daemonize() simply calls the passed
 function and returns its result.
 */
-class CArchDaemonNone : public IArchDaemon {
+class ArchDaemonNone : public IArchDaemon {
 public:
-	CArchDaemonNone();
-	virtual ~CArchDaemonNone();
+	ArchDaemonNone();
+	virtual ~ArchDaemonNone();
 
 	// IArchDaemon overrides
 	virtual void		installDaemon(const char* name,

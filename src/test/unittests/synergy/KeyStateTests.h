@@ -22,38 +22,38 @@
 
 #include "test/global/gmock.h"
 
-class CMockKeyMap;
-class CMockEventQueue;
+class MockKeyMap;
+class MockEventQueue;
 
 // NOTE: do not mock methods that are not pure virtual. this mock exists only
-// to provide an implementation of the CKeyState abstract class.
-class CMockKeyState : public CKeyState
+// to provide an implementation of the KeyState abstract class.
+class MockKeyState : public KeyState
 {
 public:
-	CMockKeyState(const CMockEventQueue& eventQueue) :
-		CKeyState((IEventQueue*)&eventQueue)
+	MockKeyState(const MockEventQueue& eventQueue) :
+		KeyState((IEventQueue*)&eventQueue)
 	{
 	}
 
-	CMockKeyState(const CMockEventQueue& eventQueue, const CMockKeyMap& keyMap) :
-		CKeyState((IEventQueue*)&eventQueue, (CKeyMap&)keyMap)
+	MockKeyState(const MockEventQueue& eventQueue, const MockKeyMap& keyMap) :
+		KeyState((IEventQueue*)&eventQueue, (synergy::KeyMap&)keyMap)
 	{
 	}
 
 	MOCK_CONST_METHOD0(pollActiveGroup, SInt32());
 	MOCK_CONST_METHOD0(pollActiveModifiers, KeyModifierMask());
 	MOCK_METHOD0(fakeCtrlAltDel, bool());
-	MOCK_METHOD1(getKeyMap, void(CKeyMap&));
+	MOCK_METHOD1(getKeyMap, void(synergy::KeyMap&));
 	MOCK_METHOD1(fakeKey, void(const Keystroke&));
 	MOCK_CONST_METHOD1(pollPressedKeys, void(KeyButtonSet&));
 };
 
-typedef ::testing::NiceMock<CMockKeyState> CKeyStateImpl;
+typedef ::testing::NiceMock<MockKeyState> KeyStateImpl;
 
 typedef UInt32 KeyID;
 
 typedef void (*ForeachKeyCallback)(
-		KeyID, SInt32 group, CKeyMap::KeyItem&, void* userData);
+		KeyID, SInt32 group, synergy::KeyMap::KeyItem&, void* userData);
 
 void
 stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);
@@ -61,13 +61,13 @@ stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);
 void
 assertMaskIsOne(ForeachKeyCallback cb, void* userData);
 
-const CKeyMap::KeyItem*
+const synergy::KeyMap::KeyItem*
 stubMapKey(
-	CKeyMap::Keystrokes& keys, KeyID id, SInt32 group,
-	CKeyMap::ModifierToKeys& activeModifiers,
+	synergy::KeyMap::Keystrokes& keys, KeyID id, SInt32 group,
+	synergy::KeyMap::ModifierToKeys& activeModifiers,
 	KeyModifierMask& currentState,
 	KeyModifierMask desiredMask,
 	bool isAutoRepeat);
 
-CKeyMap::Keystroke s_stubKeystroke(1, false, false);
-CKeyMap::KeyItem s_stubKeyItem;
+synergy::KeyMap::Keystroke s_stubKeystroke(1, false, false);
+synergy::KeyMap::KeyItem s_stubKeyItem;

@@ -47,8 +47,8 @@ const char g_activeDesktop[] = {"activeDesktop:"};
 
 CMSWindowsWatchdog::CMSWindowsWatchdog(
 	bool autoDetectCommand,
-	CIpcServer& ipcServer,
-	CIpcLogOutputter& ipcLogOutputter) :
+	IpcServer& ipcServer,
+	IpcLogOutputter& ipcLogOutputter) :
 	m_thread(NULL),
 	m_autoDetectCommand(autoDetectCommand),
 	m_monitoring(true),
@@ -82,10 +82,10 @@ CMSWindowsWatchdog::~CMSWindowsWatchdog()
 void 
 CMSWindowsWatchdog::startAsync()
 {
-	m_thread = new CThread(new TMethodJob<CMSWindowsWatchdog>(
+	m_thread = new Thread(new TMethodJob<CMSWindowsWatchdog>(
 		this, &CMSWindowsWatchdog::mainLoop, nullptr));
 
-	m_outputThread = new CThread(new TMethodJob<CMSWindowsWatchdog>(
+	m_outputThread = new Thread(new TMethodJob<CMSWindowsWatchdog>(
 		this, &CMSWindowsWatchdog::outputLoop, nullptr));
 }
 
@@ -381,7 +381,7 @@ CMSWindowsWatchdog::getCommand() const
 	}
 
 	// seems like a fairly convoluted way to get the process name
-	const char* launchName = CApp::instance().argsBase().m_pname;
+	const char* launchName = App::instance().argsBase().m_pname;
 	std::string args = ARCH->commandLine();
 
 	// build up a full command line
@@ -440,7 +440,7 @@ CMSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
 		return;
 	}
 
-	CIpcShutdownMessage shutdown;
+	IpcShutdownMessage shutdown;
 	m_ipcServer.send(shutdown, kIpcClientNode);
 
 	// wait for process to exit gracefully.

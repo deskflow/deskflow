@@ -30,10 +30,10 @@ represent a full-duplex data stream.
 */
 class IDataSocket : public ISocket, public synergy::IStream {
 public:
-	class CConnectionFailedInfo {
+	class ConnectionFailedInfo {
 	public:
-		CConnectionFailedInfo(const char* what) : m_what(what) { }
-		CString			m_what;
+		ConnectionFailedInfo(const char* what) : m_what(what) { }
+		String			m_what;
 	};
 
 	IDataSocket(IEventQueue* events) { }
@@ -48,7 +48,7 @@ public:
 	event when it fails.  The stream acts as if shutdown for input and
 	output until the stream connects.
 	*/
-	virtual void		connect(const CNetworkAddress&) = 0;
+	virtual void		connect(const NetworkAddress&) = 0;
 
 	//@}
 
@@ -57,7 +57,7 @@ public:
 	// in VC++6.  it claims the methods are unused locals and warns
 	// that it's removing them.  it's presumably tickled by inheriting
 	// methods with identical signatures from both superclasses.
-	virtual void		bind(const CNetworkAddress&) = 0;
+	virtual void		bind(const NetworkAddress&) = 0;
 	virtual void		close();
 	virtual void*		getEventTarget() const;
 

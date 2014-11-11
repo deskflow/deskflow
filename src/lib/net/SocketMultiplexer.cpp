@@ -30,16 +30,16 @@
 #include "common/stdvector.h"
 
 //
-// CSocketMultiplexer
+// SocketMultiplexer
 //
 
-CSocketMultiplexer::CSocketMultiplexer() :
-	m_mutex(new CMutex),
+SocketMultiplexer::SocketMultiplexer() :
+	m_mutex(new Mutex),
 	m_thread(NULL),
 	m_update(false),
-	m_jobsReady(new CCondVar<bool>(m_mutex, false)),
-	m_jobListLock(new CCondVar<bool>(m_mutex, false)),
-	m_jobListLockLocked(new CCondVar<bool>(m_mutex, false)),
+	m_jobsReady(new CondVar<bool>(m_mutex, false)),
+	m_jobListLock(new CondVar<bool>(m_mutex, false)),
+	m_jobListLockLocked(new CondVar<bool>(m_mutex, false)),
 	m_jobListLocker(NULL),
 	m_jobListLockLocker(NULL)
 {
@@ -49,11 +49,11 @@ CSocketMultiplexer::CSocketMultiplexer() :
 	m_cursorMark = reinterpret_cast<ISocketMultiplexerJob*>(this);
 
 	// start thread
-	m_thread = new CThread(new TMethodJob<CSocketMultiplexer>(
-								this, &CSocketMultiplexer::serviceThread));
+	m_thread = new Thread(new TMethodJob<SocketMultiplexer>(
+								this, &SocketMultiplexer::serviceThread));
 }
 
-CSocketMultiplexer::~CSocketMultiplexer()
+SocketMultiplexer::~SocketMultiplexer()
 {
 	m_thread->cancel();
 	m_thread->unblockPollSocket();
@@ -67,14 +67,14 @@ CSocketMultiplexer::~CSocketMultiplexer()
 	delete m_mutex;
 
 	// clean up jobs
-	for (CSocketJobMap::iterator i = m_socketJobMap.begin();
+	for (SocketJobMap::iterator i = m_socketJobMap.begin();
 						i != m_socketJobMap.end(); ++i) {
 		delete *(i->second);
 	}
 }
 
 void
-CSocketMultiplexer::addSocket(ISocket* socket, ISocketMultiplexerJob* job)
+SocketMultiplexer::addSocket(ISocket* socket, ISocketMultiplexerJob* job)
 {
 	assert(socket != NULL);
 	assert(job    != NULL);
@@ -89,17 +89,17 @@ CSocketMultiplexer::addSocket(ISocket* socket, ISocketMultiplexerJob* job)
 	lockJobList();
 
 	// insert/replace job
-	CSocketJobMap::iterator i = m_socketJobMap.find(socket);
+	SocketJobMap::iterator i = m_socketJobMap.find(socket);
 	if (i == m_socketJobMap.end()) {
 		// we *must* put the job at the end so the order of jobs in
 		// the list continue to match the order of jobs in pfds in
 		// serviceThread().
-		CJobCursor j = m_socketJobs.insert(m_socketJobs.end(), job);
+		JobCursor j = m_socketJobs.insert(m_socketJobs.end(), job);
 		m_update     = true;
 		m_socketJobMap.insert(std::make_pair(socket, j));
 	}
 	else {
-		CJobCursor j = i->second;
+		JobCursor j = i->second;
 		if (*j != job) {
 			delete *j;
 			*j = job;
@@ -112,7 +112,7 @@ CSocketMultiplexer::addSocket(ISocket* socket, ISocketMultiplexerJob* job)
 }
 
 void
-CSocketMultiplexer::removeSocket(ISocket* socket)
+SocketMultiplexer::removeSocket(ISocket* socket)
 {
 	assert(socket != NULL);
 
@@ -128,7 +128,7 @@ CSocketMultiplexer::removeSocket(ISocket* socket)
 	// remove job.  rather than removing it from the map we put NULL
 	// in the list instead so the order of jobs in the list continues
 	// to match the order of jobs in pfds in serviceThread().
-	CSocketJobMap::iterator i = m_socketJobMap.find(socket);
+	SocketJobMap::iterator i = m_socketJobMap.find(socket);
 	if (i != m_socketJobMap.end()) {
 		if (*(i->second) != NULL) {
 			delete *(i->second);
@@ -142,18 +142,18 @@ CSocketMultiplexer::removeSocket(ISocket* socket)
 }
 
 void
-CSocketMultiplexer::serviceThread(void*)
+SocketMultiplexer::serviceThread(void*)
 {
-	std::vector<IArchNetwork::CPollEntry> pfds;
-	IArchNetwork::CPollEntry pfd;
+	std::vector<IArchNetwork::PollEntry> pfds;
+	IArchNetwork::PollEntry pfd;
 
 	// service the connections
 	for (;;) {
-		CThread::testCancel();
+		Thread::testCancel();
 
 		// wait until there are jobs to handle
 		{
-			CLock lock(m_mutex);
+			Lock lock(m_mutex);
 			while (!(bool)*m_jobsReady) {
 				m_jobsReady->wait();
 			}
@@ -169,8 +169,8 @@ CSocketMultiplexer::serviceThread(void*)
 			pfds.clear();
 			pfds.reserve(m_socketJobMap.size());
 
-			CJobCursor cursor    = newCursor();
-			CJobCursor jobCursor = nextCursor(cursor);
+			JobCursor cursor    = newCursor();
+			JobCursor jobCursor = nextCursor(cursor);
 			while (jobCursor != m_socketJobs.end()) {
 				ISocketMultiplexerJob* job = *jobCursor;
 				if (job != NULL) {
@@ -208,8 +208,8 @@ CSocketMultiplexer::serviceThread(void*)
 			// iterate over socket jobs, invoking each and saving the
 			// new job.
 			UInt32 i             = 0;
-			CJobCursor cursor    = newCursor();
-			CJobCursor jobCursor = nextCursor(cursor);
+			JobCursor cursor    = newCursor();
+			JobCursor jobCursor = nextCursor(cursor);
 			while (i < pfds.size() && jobCursor != m_socketJobs.end()) {
 				if (*jobCursor != NULL) {
 					// get poll state
@@ -225,7 +225,7 @@ CSocketMultiplexer::serviceThread(void*)
 
 					// save job, if different
 					if (newJob != job) {
-						CLock lock(m_mutex);
+						Lock lock(m_mutex);
 						delete job;
 						*jobCursor = newJob;
 						m_update   = true;
@@ -240,7 +240,7 @@ CSocketMultiplexer::serviceThread(void*)
 		}
 
 		// delete any removed socket jobs
-		for (CSocketJobMap::iterator i = m_socketJobMap.begin();
+		for (SocketJobMap::iterator i = m_socketJobMap.begin();
 							i != m_socketJobMap.end();) {
 			if (*(i->second) == NULL) {
 				m_socketJobMap.erase(i++);
@@ -256,19 +256,19 @@ CSocketMultiplexer::serviceThread(void*)
 	}
 }
 
-CSocketMultiplexer::CJobCursor
-CSocketMultiplexer::newCursor()
+SocketMultiplexer::JobCursor
+SocketMultiplexer::newCursor()
 {
-	CLock lock(m_mutex);
+	Lock lock(m_mutex);
 	return m_socketJobs.insert(m_socketJobs.begin(), m_cursorMark);
 }
 
-CSocketMultiplexer::CJobCursor
-CSocketMultiplexer::nextCursor(CJobCursor cursor)
+SocketMultiplexer::JobCursor
+SocketMultiplexer::nextCursor(JobCursor cursor)
 {
-	CLock lock(m_mutex);
-	CJobCursor j = m_socketJobs.end();
-	CJobCursor i = cursor;
+	Lock lock(m_mutex);
+	JobCursor j = m_socketJobs.end();
+	JobCursor i = cursor;
 	while (++i != m_socketJobs.end()) {
 		if (*i != m_cursorMark) {
 			// found a real job (as opposed to a cursor)
@@ -283,16 +283,16 @@ CSocketMultiplexer::nextCursor(CJobCursor cursor)
 }
 
 void
-CSocketMultiplexer::deleteCursor(CJobCursor cursor)
+SocketMultiplexer::deleteCursor(JobCursor cursor)
 {
-	CLock lock(m_mutex);
+	Lock lock(m_mutex);
 	m_socketJobs.erase(cursor);
 }
 
 void
-CSocketMultiplexer::lockJobListLock()
+SocketMultiplexer::lockJobListLock()
 {
-	CLock lock(m_mutex);
+	Lock lock(m_mutex);
 
 	// wait for the lock on the lock
 	while (*m_jobListLockLocked) {
@@ -301,16 +301,16 @@ CSocketMultiplexer::lockJobListLock()
 
 	// take ownership of the lock on the lock
 	*m_jobListLockLocked = true;
-	m_jobListLockLocker  = new CThread(CThread::getCurrentThread());
+	m_jobListLockLocker  = new Thread(Thread::getCurrentThread());
 }
 
 void
-CSocketMultiplexer::lockJobList()
+SocketMultiplexer::lockJobList()
 {
-	CLock lock(m_mutex);
+	Lock lock(m_mutex);
 
 	// make sure we're the one that called lockJobListLock()
-	assert(*m_jobListLockLocker == CThread::getCurrentThread());
+	assert(*m_jobListLockLocker == Thread::getCurrentThread());
 
 	// wait for the job list lock
 	while (*m_jobListLock) {
@@ -328,12 +328,12 @@ CSocketMultiplexer::lockJobList()
 }
 
 void
-CSocketMultiplexer::unlockJobList()
+SocketMultiplexer::unlockJobList()
 {
-	CLock lock(m_mutex);
+	Lock lock(m_mutex);
 
 	// make sure we're the one that called lockJobList()
-	assert(*m_jobListLocker == CThread::getCurrentThread());
+	assert(*m_jobListLocker == Thread::getCurrentThread());
 
 	// release the lock
 	delete m_jobListLocker;

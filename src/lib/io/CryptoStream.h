@@ -22,7 +22,7 @@
 #include "io/CryptoStream_cryptopp.h"
 #include "base/EventTypes.h"
 
-class CCryptoOptions;
+class CryptoOptions;
 
 #define CRYPTO_IV_SIZE CryptoPP::AES::BLOCKSIZE
 
@@ -30,10 +30,10 @@ class CCryptoOptions;
 /*!
 Encrypts (on write) and decrypts (on read) to and from an underlying stream.
 */
-class CCryptoStream : public CStreamFilter {
+class CryptoStream : public StreamFilter {
 public:
-	CCryptoStream(IEventQueue* events, synergy::IStream* stream, const CCryptoOptions& options, bool adoptStream = true);
-	virtual ~CCryptoStream();
+	CryptoStream(IEventQueue* events, synergy::IStream* stream, const CryptoOptions& options, bool adoptStream = true);
+	virtual ~CryptoStream();
 
 	//! @name manipulators
 	//@{
@@ -65,14 +65,14 @@ public:
 	void				newIv(byte* out);
 
 	//! Creates a key from a password
-	static void			createKey(byte* out, const CString& password, UInt8 keyLength, UInt8 hashCount);
+	static void			createKey(byte* out, const String& password, UInt8 keyLength, UInt8 hashCount);
 
 private:
 	void				logBuffer(const char* name, const byte* buf, int length);
 	
 	byte*				m_key;
-	CCryptoMode			m_encryption;
-	CCryptoMode			m_decryption;
+	CryptoMode			m_encryption;
+	CryptoMode			m_decryption;
 	CryptoPP::AutoSeededRandomPool m_autoSeedRandomPool;
 };
 

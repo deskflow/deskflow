@@ -70,9 +70,9 @@ private:
 
 TEST_F(CMSWindowsKeyStateTests, disable_eventQueueNotUsed)
 {
-	NiceMock<CMockEventQueue> eventQueue;
+	NiceMock<MockEventQueue> eventQueue;
 	CMSWindowsDesks* desks = newDesks(&eventQueue);
-	CMockKeyMap keyMap;
+	MockKeyMap keyMap;
 	CMSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
 	
 	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(0);
@@ -83,9 +83,9 @@ TEST_F(CMSWindowsKeyStateTests, disable_eventQueueNotUsed)
 
 TEST_F(CMSWindowsKeyStateTests, testAutoRepeat_noRepeatAndButtonIsZero_resultIsTrue)
 {
-	NiceMock<CMockEventQueue> eventQueue;
+	NiceMock<MockEventQueue> eventQueue;
 	CMSWindowsDesks* desks = newDesks(&eventQueue);
-	CMockKeyMap keyMap;
+	MockKeyMap keyMap;
 	CMSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
 	keyState.setLastDown(1);
 
@@ -97,9 +97,9 @@ TEST_F(CMSWindowsKeyStateTests, testAutoRepeat_noRepeatAndButtonIsZero_resultIsT
 
 TEST_F(CMSWindowsKeyStateTests, testAutoRepeat_pressFalse_lastDownIsZero)
 {
-	NiceMock<CMockEventQueue> eventQueue;
+	NiceMock<MockEventQueue> eventQueue;
 	CMSWindowsDesks* desks = newDesks(&eventQueue);
-	CMockKeyMap keyMap;
+	MockKeyMap keyMap;
 	CMSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
 	keyState.setLastDown(1);
 
@@ -111,9 +111,9 @@ TEST_F(CMSWindowsKeyStateTests, testAutoRepeat_pressFalse_lastDownIsZero)
 
 TEST_F(CMSWindowsKeyStateTests, saveModifiers_noModifiers_savedModifiers0)
 {
-	NiceMock<CMockEventQueue> eventQueue;
+	NiceMock<MockEventQueue> eventQueue;
 	CMSWindowsDesks* desks = newDesks(&eventQueue);
-	CMockKeyMap keyMap;
+	MockKeyMap keyMap;
 	CMSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
 
 	keyState.saveModifiers();

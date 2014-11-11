@@ -25,23 +25,23 @@
 #include "common/Version.h"
 
 //
-// CServerTaskBarReceiver
+// ServerTaskBarReceiver
 //
 
-CServerTaskBarReceiver::CServerTaskBarReceiver(IEventQueue* events) :
+ServerTaskBarReceiver::ServerTaskBarReceiver(IEventQueue* events) :
 	m_state(kNotRunning),
 	m_events(events)
 {
 	// do nothing
 }
 
-CServerTaskBarReceiver::~CServerTaskBarReceiver()
+ServerTaskBarReceiver::~ServerTaskBarReceiver()
 {
 	// do nothing
 }
 
 void
-CServerTaskBarReceiver::updateStatus(CServer* server, const CString& errorMsg)
+ServerTaskBarReceiver::updateStatus(Server* server, const String& errorMsg)
 {
 	{
 		// update our status
@@ -73,50 +73,50 @@ CServerTaskBarReceiver::updateStatus(CServer* server, const CString& errorMsg)
 	ARCH->updateReceiver(this);
 }
 
-CServerTaskBarReceiver::EState
-CServerTaskBarReceiver::getStatus() const
+ServerTaskBarReceiver::EState
+ServerTaskBarReceiver::getStatus() const
 {
 	return m_state;
 }
 
-const CString&
-CServerTaskBarReceiver::getErrorMessage() const
+const String&
+ServerTaskBarReceiver::getErrorMessage() const
 {
 	return m_errorMessage;
 }
 
-const CServerTaskBarReceiver::CClients&
-CServerTaskBarReceiver::getClients() const
+const ServerTaskBarReceiver::Clients&
+ServerTaskBarReceiver::getClients() const
 {
 	return m_clients;
 }
 
 void
-CServerTaskBarReceiver::quit()
+ServerTaskBarReceiver::quit()
 {
-	m_events->addEvent(CEvent(CEvent::kQuit));
+	m_events->addEvent(Event(Event::kQuit));
 }
 
 void
-CServerTaskBarReceiver::onStatusChanged(CServer*)
-{
-	// do nothing
-}
-
-void
-CServerTaskBarReceiver::lock() const
+ServerTaskBarReceiver::onStatusChanged(Server*)
 {
 	// do nothing
 }
 
 void
-CServerTaskBarReceiver::unlock() const
+ServerTaskBarReceiver::lock() const
+{
+	// do nothing
+}
+
+void
+ServerTaskBarReceiver::unlock() const
 {
 	// do nothing
 }
 
 std::string
-CServerTaskBarReceiver::getToolTip() const
+ServerTaskBarReceiver::getToolTip() const
 {
 	switch (m_state) {
 	case kNotRunning:

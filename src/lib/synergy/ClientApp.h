@@ -20,18 +20,18 @@
 
 #include "synergy/App.h"
 
-class CScreen;
-class CEvent;
-class CClient;
-class CNetworkAddress;
-class CThread;
-class CClientArgs;
-class CCryptoOptions;
+class Screen;
+class Event;
+class Client;
+class NetworkAddress;
+class Thread;
+class ClientArgs;
+class CryptoOptions;
 
-class CClientApp : public CApp {
+class ClientApp : public App {
 public:
-	CClientApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver);
-	virtual ~CClientApp();
+	ClientApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver);
+	virtual ~ClientApp();
 
 	// Parse client specific command line arguments.
 	void parseArgs(int argc, const char* const* argv);
@@ -40,44 +40,44 @@ public:
 	void help();
 
 	// Returns arguments that are common and for client.
-	CClientArgs& args() const { return (CClientArgs&)argsBase(); }
+	ClientArgs& args() const { return (ClientArgs&)argsBase(); }
 
 	const char* daemonName() const;
 	const char* daemonInfo() const;
 
 	// TODO: move to server only (not supported on client)
 	void loadConfig() { }
-	bool loadConfig(const CString& pathname) { return false; }
+	bool loadConfig(const String& pathname) { return false; }
 
 	int foregroundStartup(int argc, char** argv);
 	int standardStartup(int argc, char** argv);
 	int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup);
-	CScreen* createScreen();
+	Screen* createScreen();
 	void updateStatus();
-	void updateStatus(const CString& msg);
+	void updateStatus(const String& msg);
 	void resetRestartTimeout();
 	double nextRestartTimeout();
-	void handleScreenError(const CEvent&, void*);
-	CScreen* openClientScreen();
-	void closeClientScreen(CScreen* screen);
-	void handleClientRestart(const CEvent&, void* vtimer);
+	void handleScreenError(const Event&, void*);
+	Screen* openClientScreen();
+	void closeClientScreen(Screen* screen);
+	void handleClientRestart(const Event&, void* vtimer);
 	void scheduleClientRestart(double retryTime);
-	void handleClientConnected(const CEvent&, void*);
-	void handleClientFailed(const CEvent& e, void*);
-	void handleClientDisconnected(const CEvent&, void*);
-	CClient* openClient(const CString& name, const CNetworkAddress& address, CScreen* screen, const CCryptoOptions& crypto);
-	void closeClient(CClient* client);
+	void handleClientConnected(const Event&, void*);
+	void handleClientFailed(const Event& e, void*);
+	void handleClientDisconnected(const Event&, void*);
+	Client* openClient(const String& name, const NetworkAddress& address, Screen* screen, const CryptoOptions& crypto);
+	void closeClient(Client* client);
 	bool startClient();
 	void stopClient();
 	int mainLoop();
 	void startNode();
 
-	static CClientApp& instance() { return (CClientApp&)CApp::instance(); }
+	static ClientApp& instance() { return (ClientApp&)App::instance(); }
 
-	CClient* getClientPtr() { return m_client; }
+	Client* getClientPtr() { return m_client; }
 
 private:
-	CClient*			m_client;
-	CScreen*			m_clientScreen;
-	CNetworkAddress*	m_serverAddress;
+	Client*			m_client;
+	Screen*			m_clientScreen;
+	NetworkAddress*	m_serverAddress;
 };

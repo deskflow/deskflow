@@ -31,10 +31,10 @@
 using namespace synergy::string;
 
 //
-// CConfig
+// Config
 //
 
-CConfig::CConfig(IEventQueue* events) :
+Config::Config(IEventQueue* events) :
 	m_inputFilter(events),
 	m_hasLockToScreenAction(false),
 	m_events(events)
@@ -42,13 +42,13 @@ CConfig::CConfig(IEventQueue* events) :
 	// do nothing
 }
 
-CConfig::~CConfig()
+Config::~Config()
 {
 	// do nothing
 }
 
 bool
-CConfig::addScreen(const CString& name)
+Config::addScreen(const String& name)
 {
 	// alias name must not exist
 	if (m_nameToCanonicalName.find(name) != m_nameToCanonicalName.end()) {
@@ -56,7 +56,7 @@ CConfig::addScreen(const CString& name)
 	}
 
 	// add cell
-	m_map.insert(std::make_pair(name, CCell()));
+	m_map.insert(std::make_pair(name, Cell()));
 
 	// add name
 	m_nameToCanonicalName.insert(std::make_pair(name, name));
@@ -65,12 +65,12 @@ CConfig::addScreen(const CString& name)
 }
 
 bool
-CConfig::renameScreen(const CString& oldName,
-							const CString& newName)
+Config::renameScreen(const String& oldName,
+							const String& newName)
 {
 	// get canonical name and find cell
-	CString oldCanonical = getCanonicalName(oldName);
-	CCellMap::iterator index = m_map.find(oldCanonical);
+	String oldCanonical = getCanonicalName(oldName);
+	CellMap::iterator index = m_map.find(oldCanonical);
 	if (index == m_map.end()) {
 		return false;
 	}
@@ -83,7 +83,7 @@ CConfig::renameScreen(const CString& oldName,
 	}
 
 	// update cell
-	CCell tmpCell = index->second;
+	Cell tmpCell = index->second;
 	m_map.erase(index);
 	m_map.insert(std::make_pair(newName, tmpCell));
 
@@ -92,14 +92,14 @@ CConfig::renameScreen(const CString& oldName,
 	m_nameToCanonicalName.insert(std::make_pair(newName, newName));
 
 	// update connections
-	CName oldNameObj(this, oldName);
+	Name oldNameObj(this, oldName);
 	for (index = m_map.begin(); index != m_map.end(); ++index) {
 		index->second.rename(oldNameObj, newName);
 	}
 
 	// update alias targets
 	if (CaselessCmp::equal(oldName, oldCanonical)) {
-		for (CNameMap::iterator iter = m_nameToCanonicalName.begin();
+		for (NameMap::iterator iter = m_nameToCanonicalName.begin();
 							iter != m_nameToCanonicalName.end(); ++iter) {
 			if (CaselessCmp::equal(
 							iter->second, oldCanonical)) {
@@ -112,11 +112,11 @@ CConfig::renameScreen(const CString& oldName,
 }
 
 void
-CConfig::removeScreen(const CString& name)
+Config::removeScreen(const String& name)
 {
 	// get canonical name and find cell
-	CString canonical = getCanonicalName(name);
-	CCellMap::iterator index = m_map.find(canonical);
+	String canonical = getCanonicalName(name);
+	CellMap::iterator index = m_map.find(canonical);
 	if (index == m_map.end()) {
 		return;
 	}
@@ -125,13 +125,13 @@ CConfig::removeScreen(const CString& name)
 	m_map.erase(index);
 
 	// disconnect
-	CName nameObj(this, name);
+	Name nameObj(this, name);
 	for (index = m_map.begin(); index != m_map.end(); ++index) {
 		index->second.remove(nameObj);
 	}
 
 	// remove aliases (and canonical name)
-	for (CNameMap::iterator iter = m_nameToCanonicalName.begin();
+	for (NameMap::iterator iter = m_nameToCanonicalName.begin();
 								iter != m_nameToCanonicalName.end(); ) {
 		if (iter->second == canonical) {
 			m_nameToCanonicalName.erase(iter++);
@@ -143,14 +143,14 @@ CConfig::removeScreen(const CString& name)
 }
 
 void
-CConfig::removeAllScreens()
+Config::removeAllScreens()
 {
 	m_map.clear();
 	m_nameToCanonicalName.clear();
 }
 
 bool
-CConfig::addAlias(const CString& canonical, const CString& alias)
+Config::addAlias(const String& canonical, const String& alias)
 {
 	// alias name must not exist
 	if (m_nameToCanonicalName.find(alias) != m_nameToCanonicalName.end()) {
@@ -169,7 +169,7 @@ CConfig::addAlias(const CString& canonical, const CString& alias)
 }
 
 bool
-CConfig::removeAlias(const CString& alias)
+Config::removeAlias(const String& alias)
 {
 	// must not be a canonical name
 	if (m_map.find(alias) != m_map.end()) {
@@ -177,7 +177,7 @@ CConfig::removeAlias(const CString& alias)
 	}
 
 	// find alias
-	CNameMap::iterator index = m_nameToCanonicalName.find(alias);
+	NameMap::iterator index = m_nameToCanonicalName.find(alias);
 	if (index == m_nameToCanonicalName.end()) {
 		return false;
 	}
@@ -189,7 +189,7 @@ CConfig::removeAlias(const CString& alias)
 }
 
 bool
-CConfig::removeAliases(const CString& canonical)
+Config::removeAliases(const String& canonical)
 {
 	// must be a canonical name
 	if (m_map.find(canonical) == m_map.end()) {
@@ -197,7 +197,7 @@ CConfig::removeAliases(const CString& canonical)
 	}
 
 	// find and removing matching aliases
-	for (CNameMap::iterator index = m_nameToCanonicalName.begin();
+	for (NameMap::iterator index = m_nameToCanonicalName.begin();
 							index != m_nameToCanonicalName.end(); ) {
 		if (index->second == canonical && index->first != canonical) {
 			m_nameToCanonicalName.erase(index++);
@@ -211,13 +211,13 @@ CConfig::removeAliases(const CString& canonical)
 }
 
 void
-CConfig::removeAllAliases()
+Config::removeAllAliases()
 {
 	// remove all names
 	m_nameToCanonicalName.clear();
 
 	// put the canonical names back in
-	for (CCellMap::iterator index = m_map.begin();
+	for (CellMap::iterator index = m_map.begin();
 								index != m_map.end(); ++index) {
 		m_nameToCanonicalName.insert(
 								std::make_pair(index->first, index->first));
@@ -225,33 +225,33 @@ CConfig::removeAllAliases()
 }
 
 bool
-CConfig::connect(const CString& srcName,
+Config::connect(const String& srcName,
 				EDirection srcSide,
 				float srcStart, float srcEnd,
-				const CString& dstName,
+				const String& dstName,
 				float dstStart, float dstEnd)
 {
 	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
 
 	// find source cell
-	CCellMap::iterator index = m_map.find(getCanonicalName(srcName));
+	CellMap::iterator index = m_map.find(getCanonicalName(srcName));
 	if (index == m_map.end()) {
 		return false;
 	}
 
 	// add link
-	CCellEdge srcEdge(srcSide, CInterval(srcStart, srcEnd));
-	CCellEdge dstEdge(dstName, srcSide, CInterval(dstStart, dstEnd));
+	CellEdge srcEdge(srcSide, Interval(srcStart, srcEnd));
+	CellEdge dstEdge(dstName, srcSide, Interval(dstStart, dstEnd));
 	return index->second.add(srcEdge, dstEdge);
 }
 
 bool
-CConfig::disconnect(const CString& srcName, EDirection srcSide)
+Config::disconnect(const String& srcName, EDirection srcSide)
 {
 	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
 
 	// find source cell
-	CCellMap::iterator index = m_map.find(srcName);
+	CellMap::iterator index = m_map.find(srcName);
 	if (index == m_map.end()) {
 		return false;
 	}
@@ -263,12 +263,12 @@ CConfig::disconnect(const CString& srcName, EDirection srcSide)
 }
 
 bool
-CConfig::disconnect(const CString& srcName, EDirection srcSide, float position)
+Config::disconnect(const String& srcName, EDirection srcSide, float position)
 {
 	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
 
 	// find source cell
-	CCellMap::iterator index = m_map.find(srcName);
+	CellMap::iterator index = m_map.find(srcName);
 	if (index == m_map.end()) {
 		return false;
 	}
@@ -280,21 +280,21 @@ CConfig::disconnect(const CString& srcName, EDirection srcSide, float position)
 }
 
 void
-CConfig::setSynergyAddress(const CNetworkAddress& addr)
+Config::setSynergyAddress(const NetworkAddress& addr)
 {
 	m_synergyAddress = addr;
 }
 
 bool
-CConfig::addOption(const CString& name, OptionID option, OptionValue value)
+Config::addOption(const String& name, OptionID option, OptionValue value)
 {
 	// find options
-	CScreenOptions* options = NULL;
+	ScreenOptions* options = NULL;
 	if (name.empty()) {
 		options = &m_globalOptions;
 	}
 	else {
-		CCellMap::iterator index = m_map.find(name);
+		CellMap::iterator index = m_map.find(name);
 		if (index != m_map.end()) {
 			options = &index->second.m_options;
 		}
@@ -309,15 +309,15 @@ CConfig::addOption(const CString& name, OptionID option, OptionValue value)
 }
 
 bool
-CConfig::removeOption(const CString& name, OptionID option)
+Config::removeOption(const String& name, OptionID option)
 {
 	// find options
-	CScreenOptions* options = NULL;
+	ScreenOptions* options = NULL;
 	if (name.empty()) {
 		options = &m_globalOptions;
 	}
 	else {
-		CCellMap::iterator index = m_map.find(name);
+		CellMap::iterator index = m_map.find(name);
 		if (index != m_map.end()) {
 			options = &index->second.m_options;
 		}
@@ -332,15 +332,15 @@ CConfig::removeOption(const CString& name, OptionID option)
 }
 
 bool
-CConfig::removeOptions(const CString& name)
+Config::removeOptions(const String& name)
 {
 	// find options
-	CScreenOptions* options = NULL;
+	ScreenOptions* options = NULL;
 	if (name.empty()) {
 		options = &m_globalOptions;
 	}
 	else {
-		CCellMap::iterator index = m_map.find(name);
+		CellMap::iterator index = m_map.find(name);
 		if (index != m_map.end()) {
 			options = &index->second.m_options;
 		}
@@ -355,7 +355,7 @@ CConfig::removeOptions(const CString& name)
 }
 
 bool
-CConfig::isValidScreenName(const CString& name) const
+Config::isValidScreenName(const String& name) const
 {
 	// name is valid if matches validname
 	//  name      ::= [_A-Za-z0-9] | [_A-Za-z0-9][-_A-Za-z0-9]*[_A-Za-z0-9]
@@ -370,7 +370,7 @@ CConfig::isValidScreenName(const CString& name) const
 	}
 
 	// check each dot separated part
-	CString::size_type b = 0;
+	String::size_type b = 0;
 	for (;;) {
 		// accept trailing .
 		if (b == name.size()) {
@@ -378,8 +378,8 @@ CConfig::isValidScreenName(const CString& name) const
 		}
 
 		// find end of part
-		CString::size_type e = name.find('.', b);
-		if (e == CString::npos) {
+		String::size_type e = name.find('.', b);
+		if (e == String::npos) {
 			e = name.size();
 		}
 
@@ -395,7 +395,7 @@ CConfig::isValidScreenName(const CString& name) const
 		}
 
 		// check interior characters
-		for (CString::size_type i = b; i < e; ++i) {
+		for (String::size_type i = b; i < e; ++i) {
 			if (!isalnum(name[i]) && name[i] != '_' && name[i] != '-') {
 				return false;
 			}
@@ -412,69 +412,69 @@ CConfig::isValidScreenName(const CString& name) const
 	return true;
 }
 
-CConfig::const_iterator
-CConfig::begin() const
+Config::const_iterator
+Config::begin() const
 {
 	return const_iterator(m_map.begin());
 }
 
-CConfig::const_iterator
-CConfig::end() const
+Config::const_iterator
+Config::end() const
 {
 	return const_iterator(m_map.end());
 }
 
-CConfig::all_const_iterator
-CConfig::beginAll() const
+Config::all_const_iterator
+Config::beginAll() const
 {
 	return m_nameToCanonicalName.begin();
 }
 
-CConfig::all_const_iterator
-CConfig::endAll() const
+Config::all_const_iterator
+Config::endAll() const
 {
 	return m_nameToCanonicalName.end();
 }
 
 bool
-CConfig::isScreen(const CString& name) const
+Config::isScreen(const String& name) const
 {
 	return (m_nameToCanonicalName.count(name) > 0);
 }
 
 bool
-CConfig::isCanonicalName(const CString& name) const
+Config::isCanonicalName(const String& name) const
 {
 	return (!name.empty() &&
 			CaselessCmp::equal(getCanonicalName(name), name));
 }
 
-CString
-CConfig::getCanonicalName(const CString& name) const
+String
+Config::getCanonicalName(const String& name) const
 {
-	CNameMap::const_iterator index = m_nameToCanonicalName.find(name);
+	NameMap::const_iterator index = m_nameToCanonicalName.find(name);
 	if (index == m_nameToCanonicalName.end()) {
-		return CString();
+		return String();
 	}
 	else {
 		return index->second;
 	}
 }
 
-CString
-CConfig::getNeighbor(const CString& srcName, EDirection srcSide,
+String
+Config::getNeighbor(const String& srcName, EDirection srcSide,
 				float position, float* positionOut) const
 {
 	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
 
 	// find source cell
-	CCellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
+	CellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
 	if (index == m_map.end()) {
-		return CString();
+		return String();
 	}
 
 	// find edge
-	const CCellEdge* srcEdge, *dstEdge;
+	const CellEdge* srcEdge, *dstEdge;
 	if (!index->second.getLink(srcSide, position, srcEdge, dstEdge)) {
 		// no neighbor
 		return "";
@@ -492,58 +492,58 @@ CConfig::getNeighbor(const CString& srcName, EDirection srcSide,
 }
 
 bool
-CConfig::hasNeighbor(const CString& srcName, EDirection srcSide) const
+Config::hasNeighbor(const String& srcName, EDirection srcSide) const
 {
 	return hasNeighbor(srcName, srcSide, 0.0f, 1.0f);
 }
 
 bool
-CConfig::hasNeighbor(const CString& srcName, EDirection srcSide,
+Config::hasNeighbor(const String& srcName, EDirection srcSide,
 							float start, float end) const
 {
 	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
 
 	// find source cell
-	CCellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
+	CellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
 	if (index == m_map.end()) {
 		return false;
 	}
 
-	return index->second.overlaps(CCellEdge(srcSide, CInterval(start, end)));
+	return index->second.overlaps(CellEdge(srcSide, Interval(start, end)));
 }
 
-CConfig::link_const_iterator
-CConfig::beginNeighbor(const CString& srcName) const
+Config::link_const_iterator
+Config::beginNeighbor(const String& srcName) const
 {
-	CCellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
+	CellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
 	assert(index != m_map.end());
 	return index->second.begin();
 }
 
-CConfig::link_const_iterator
-CConfig::endNeighbor(const CString& srcName) const
+Config::link_const_iterator
+Config::endNeighbor(const String& srcName) const
 {
-	CCellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
+	CellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
 	assert(index != m_map.end());
 	return index->second.end();
 }
 
-const CNetworkAddress&
-CConfig::getSynergyAddress() const
+const NetworkAddress&
+Config::getSynergyAddress() const
 {
 	return m_synergyAddress;
 }
 
-const CConfig::CScreenOptions*
-CConfig::getOptions(const CString& name) const
+const Config::ScreenOptions*
+Config::getOptions(const String& name) const
 {
 	// find options
-	const CScreenOptions* options = NULL;
+	const ScreenOptions* options = NULL;
 	if (name.empty()) {
 		options = &m_globalOptions;
 	}
 	else {
-		CCellMap::const_iterator index = m_map.find(name);
+		CellMap::const_iterator index = m_map.find(name);
 		if (index != m_map.end()) {
 			options = &index->second.m_options;
 		}
@@ -554,13 +554,13 @@ CConfig::getOptions(const CString& name) const
 }
 
 bool
-CConfig::hasLockToScreenAction() const
+Config::hasLockToScreenAction() const
 {
 	return m_hasLockToScreenAction;
 }
 
 bool
-CConfig::operator==(const CConfig& x) const
+Config::operator==(const Config& x) const
 {
 	if (m_synergyAddress != x.m_synergyAddress) {
 		return false;
@@ -577,7 +577,7 @@ CConfig::operator==(const CConfig& x) const
 		return false;
 	}
 
-	for (CCellMap::const_iterator index1 = m_map.begin(),
+	for (CellMap::const_iterator index1 = m_map.begin(),
 								index2 = x.m_map.begin();
 								index1 != m_map.end(); ++index1, ++index2) {
 		// compare names
@@ -591,7 +591,7 @@ CConfig::operator==(const CConfig& x) const
 		}
 	}
 
-	for (CNameMap::const_iterator index1 = m_nameToCanonicalName.begin(),
+	for (NameMap::const_iterator index1 = m_nameToCanonicalName.begin(),
 								index2 = x.m_nameToCanonicalName.begin();
 								index1 != m_nameToCanonicalName.end();
 								++index1, ++index2) {
@@ -610,15 +610,15 @@ CConfig::operator==(const CConfig& x) const
 }
 
 bool
-CConfig::operator!=(const CConfig& x) const
+Config::operator!=(const Config& x) const
 {
 	return !operator==(x);
 }
 
 void
-CConfig::read(CConfigReadContext& context)
+Config::read(ConfigReadContext& context)
 {
-	CConfig tmp(m_events);
+	Config tmp(m_events);
 	while (context.getStream()) {
 		tmp.readSection(context);
 	}
@@ -626,7 +626,7 @@ CConfig::read(CConfigReadContext& context)
 }
 
 const char*
-CConfig::dirName(EDirection dir)
+Config::dirName(EDirection dir)
 {
 	static const char* s_name[] = { "left", "right", "up", "down" };
 
@@ -635,14 +635,14 @@ CConfig::dirName(EDirection dir)
 	return s_name[dir - kFirstDirection];
 }
 
-CInputFilter*
-CConfig::getInputFilter()
+InputFilter*
+Config::getInputFilter()
 {
 	return &m_inputFilter;
 }
 
-CString
-CConfig::formatInterval(const CInterval& x)
+String
+Config::formatInterval(const Interval& x)
 {
 	if (x.first == 0.0f && x.second == 1.0f) {
 		return "";
@@ -652,7 +652,7 @@ CConfig::formatInterval(const CInterval& x)
 }
 
 void
-CConfig::readSection(CConfigReadContext& s)
+Config::readSection(ConfigReadContext& s)
 {
 	static const char s_section[] = "section:";
 	static const char s_options[] = "options";
@@ -660,7 +660,7 @@ CConfig::readSection(CConfigReadContext& s)
 	static const char s_links[]   = "links";
 	static const char s_aliases[] = "aliases";
 
-	CString line;
+	String line;
 	if (!s.readLine(line)) {
 		// no more sections
 		return;
@@ -672,13 +672,13 @@ CConfig::readSection(CConfigReadContext& s)
 	}
 
 	// get section name
-	CString::size_type i = line.find_first_not_of(" \t", sizeof(s_section) - 1);
-	if (i == CString::npos) {
+	String::size_type i = line.find_first_not_of(" \t", sizeof(s_section) - 1);
+	if (i == String::npos) {
 		throw XConfigRead(s, "section name is missing");
 	}
-	CString name = line.substr(i);
+	String name = line.substr(i);
 	i = name.find_first_of(" \t");
-	if (i != CString::npos) {
+	if (i != String::npos) {
 		throw XConfigRead(s, "unexpected data after section name");
 	}
 
@@ -701,9 +701,9 @@ CConfig::readSection(CConfigReadContext& s)
 }
 
 void
-CConfig::readSectionOptions(CConfigReadContext& s)
+Config::readSectionOptions(ConfigReadContext& s)
 {
-	CString line;
+	String line;
 	while (s.readLine(line)) {
 		// check for end of section
 		if (line == "end") {
@@ -714,9 +714,9 @@ CConfig::readSectionOptions(CConfigReadContext& s)
 		//   nameAndArgs  := <name>[(arg[,...])]
 		//   values       := valueAndArgs[,valueAndArgs]...
 		//   valueAndArgs := <value>[(arg[,...])]
-		CString::size_type i = 0;
-		CString name, value;
-		CConfigReadContext::ArgList nameArgs, valueArgs;
+		String::size_type i = 0;
+		String name, value;
+		ConfigReadContext::ArgList nameArgs, valueArgs;
 		s.parseNameWithArgs("name", line, "=", i, name, nameArgs);
 		++i;
 		s.parseNameWithArgs("value", line, ",;\n", i, value, valueArgs);
@@ -724,12 +724,12 @@ CConfig::readSectionOptions(CConfigReadContext& s)
 		bool handled = true;
 		if (name == "address") {
 			try {
-				m_synergyAddress = CNetworkAddress(value, kDefaultPort);
+				m_synergyAddress = NetworkAddress(value, kDefaultPort);
 				m_synergyAddress.resolve();
 			}
 			catch (XSocketAddress& e) {
 				throw XConfigRead(s,
-							CString("invalid address argument ") + e.what());
+							String("invalid address argument ") + e.what());
 			}
 		}
 		else if (name == "heartbeat") {
@@ -777,7 +777,7 @@ CConfig::readSectionOptions(CConfigReadContext& s)
 		}
 		else {
 			// make filter rule
-			CInputFilter::CRule rule(parseCondition(s, name, nameArgs));
+			InputFilter::Rule rule(parseCondition(s, name, nameArgs));
 
 			// save first action (if any)
 			if (!value.empty() || line[i] != ';') {
@@ -795,7 +795,7 @@ CConfig::readSectionOptions(CConfigReadContext& s)
 			if (i < line.length() && line[i] == ';') {
 				// allow trailing ';'
 				i = line.find_first_not_of(" \t", i + 1);
-				if (i == CString::npos) {
+				if (i == String::npos) {
 					i = line.length();
 				}
 				else {
@@ -819,10 +819,10 @@ CConfig::readSectionOptions(CConfigReadContext& s)
 }
 
 void
-CConfig::readSectionScreens(CConfigReadContext& s)
+Config::readSectionScreens(ConfigReadContext& s)
 {
-	CString line;
-	CString screen;
+	String line;
+	String screen;
 	while (s.readLine(line)) {
 		// check for end of section
 		if (line == "end") {
@@ -849,21 +849,21 @@ CConfig::readSectionScreens(CConfigReadContext& s)
 		}
 		else {
 			// parse argument:  `<name>=<value>'
-			CString::size_type i = line.find_first_of(" \t=");
+			String::size_type i = line.find_first_of(" \t=");
 			if (i == 0) {
 				throw XConfigRead(s, "missing argument name");
 			}
-			if (i == CString::npos) {
+			if (i == String::npos) {
 				throw XConfigRead(s, "missing =");
 			}
-			CString name = line.substr(0, i);
+			String name = line.substr(0, i);
 			i = line.find_first_not_of(" \t", i);
-			if (i == CString::npos || line[i] != '=') {
+			if (i == String::npos || line[i] != '=') {
 				throw XConfigRead(s, "missing =");
 			}
 			i = line.find_first_not_of(" \t", i + 1);
-			CString value;
-			if (i != CString::npos) {
+			String value;
+			if (i != String::npos) {
 				value = line.substr(i);
 			}
 
@@ -930,10 +930,10 @@ CConfig::readSectionScreens(CConfigReadContext& s)
 }
 
 void
-CConfig::readSectionLinks(CConfigReadContext& s)
+Config::readSectionLinks(ConfigReadContext& s)
 {
-	CString line;
-	CString screen;
+	String line;
+	String screen;
 	while (s.readLine(line)) {
 		// check for end of section
 		if (line == "end") {
@@ -961,14 +961,14 @@ CConfig::readSectionLinks(CConfigReadContext& s)
 			// the stuff in brackets is optional.  interval values must be
 			// in the range [0,100] and start < end.  if not given the
 			// interval is taken to be (0,100).
-			CString::size_type i = 0;
-			CString side, dstScreen, srcArgString, dstArgString;
-			CConfigReadContext::ArgList srcArgs, dstArgs;
+			String::size_type i = 0;
+			String side, dstScreen, srcArgString, dstArgString;
+			ConfigReadContext::ArgList srcArgs, dstArgs;
 			s.parseNameWithArgs("link", line, "=", i, side, srcArgs);
 			++i;
 			s.parseNameWithArgs("screen", line, "", i, dstScreen, dstArgs);
-			CInterval srcInterval(s.parseInterval(srcArgs));
-			CInterval dstInterval(s.parseInterval(dstArgs));
+			Interval srcInterval(s.parseInterval(srcArgs));
+			Interval dstInterval(s.parseInterval(dstArgs));
 
 			// handle argument
 			EDirection dir;
@@ -1003,10 +1003,10 @@ CConfig::readSectionLinks(CConfigReadContext& s)
 }
 
 void
-CConfig::readSectionAliases(CConfigReadContext& s)
+Config::readSectionAliases(ConfigReadContext& s)
 {
-	CString line;
-	CString screen;
+	String line;
+	String screen;
 	while (s.readLine(line)) {
 		// check for end of section
 		if (line == "end") {
@@ -1045,18 +1045,18 @@ CConfig::readSectionAliases(CConfigReadContext& s)
 }
 
 
-CInputFilter::CCondition*
-CConfig::parseCondition(CConfigReadContext& s,
-				const CString& name, const std::vector<CString>& args)
+InputFilter::Condition*
+Config::parseCondition(ConfigReadContext& s,
+				const String& name, const std::vector<String>& args)
 {
 	if (name == "keystroke") {
 		if (args.size() != 1) {
 			throw XConfigRead(s, "syntax for condition: keystroke(modifiers+key)");
 		}
 
-		IPlatformScreen::CKeyInfo* keyInfo = s.parseKeystroke(args[0]);
+		IPlatformScreen::KeyInfo* keyInfo = s.parseKeystroke(args[0]);
 
-		return new CInputFilter::CKeystrokeCondition(m_events, keyInfo);
+		return new InputFilter::KeystrokeCondition(m_events, keyInfo);
 	}
 
 	if (name == "mousebutton") {
@@ -1064,9 +1064,9 @@ CConfig::parseCondition(CConfigReadContext& s,
 			throw XConfigRead(s, "syntax for condition: mousebutton(modifiers+button)");
 		}
 
-		IPlatformScreen::CButtonInfo* mouseInfo = s.parseMouse(args[0]);
+		IPlatformScreen::ButtonInfo* mouseInfo = s.parseMouse(args[0]);
 
-		return new CInputFilter::CMouseButtonCondition(m_events, mouseInfo);
+		return new InputFilter::MouseButtonCondition(m_events, mouseInfo);
 	}
 
 	if (name == "connect") {
@@ -1074,7 +1074,7 @@ CConfig::parseCondition(CConfigReadContext& s,
 			throw XConfigRead(s, "syntax for condition: connect([screen])");
 		}
 
-		CString screen = args[0];
+		String screen = args[0];
 		if (isScreen(screen)) {
 			screen = getCanonicalName(screen);
 		}
@@ -1082,47 +1082,47 @@ CConfig::parseCondition(CConfigReadContext& s,
 			throw XConfigRead(s, "unknown screen name \"%{1}\" in connect", screen);
 		}
 
-		return new CInputFilter::CScreenConnectedCondition(m_events, screen);
+		return new InputFilter::ScreenConnectedCondition(m_events, screen);
 	}
 
 	throw XConfigRead(s, "unknown argument \"%{1}\"", name);
 }
 
 void
-CConfig::parseAction(CConfigReadContext& s,
-				const CString& name, const std::vector<CString>& args,
-				CInputFilter::CRule& rule, bool activate)
+Config::parseAction(ConfigReadContext& s,
+				const String& name, const std::vector<String>& args,
+				InputFilter::Rule& rule, bool activate)
 {
-	CInputFilter::CAction* action;
+	InputFilter::Action* action;
 
 	if (name == "keystroke" || name == "keyDown" || name == "keyUp") {
 		if (args.size() < 1 || args.size() > 2) {
 			throw XConfigRead(s, "syntax for action: keystroke(modifiers+key[,screens])");
 		}
 
-		IPlatformScreen::CKeyInfo* keyInfo;
+		IPlatformScreen::KeyInfo* keyInfo;
 		if (args.size() == 1) {
 			keyInfo = s.parseKeystroke(args[0]);
 		}
 		else {
-			std::set<CString> screens;
+			std::set<String> screens;
 			parseScreens(s, args[1], screens);
 			keyInfo = s.parseKeystroke(args[0], screens);
 		}
 
 		if (name == "keystroke") {
-			IPlatformScreen::CKeyInfo* keyInfo2 =
-				IKeyState::CKeyInfo::alloc(*keyInfo);
-			action = new CInputFilter::CKeystrokeAction(m_events, keyInfo2, true);
+			IPlatformScreen::KeyInfo* keyInfo2 =
+				IKeyState::KeyInfo::alloc(*keyInfo);
+			action = new InputFilter::KeystrokeAction(m_events, keyInfo2, true);
 			rule.adoptAction(action, true);
-			action   = new CInputFilter::CKeystrokeAction(m_events, keyInfo, false);
+			action   = new InputFilter::KeystrokeAction(m_events, keyInfo, false);
 			activate = false;
 		}
 		else if (name == "keyDown") {
-			action = new CInputFilter::CKeystrokeAction(m_events, keyInfo, true);
+			action = new InputFilter::KeystrokeAction(m_events, keyInfo, true);
 		}
 		else {
-			action = new CInputFilter::CKeystrokeAction(m_events, keyInfo, false);
+			action = new InputFilter::KeystrokeAction(m_events, keyInfo, false);
 		}
 	}
 
@@ -1132,21 +1132,21 @@ CConfig::parseAction(CConfigReadContext& s,
 			throw XConfigRead(s, "syntax for action: mousebutton(modifiers+button)");
 		}
 
-		IPlatformScreen::CButtonInfo* mouseInfo = s.parseMouse(args[0]);
+		IPlatformScreen::ButtonInfo* mouseInfo = s.parseMouse(args[0]);
 
 		if (name == "mousebutton") {
-			IPlatformScreen::CButtonInfo* mouseInfo2 =
-				IPlatformScreen::CButtonInfo::alloc(*mouseInfo);
-			action = new CInputFilter::CMouseButtonAction(m_events, mouseInfo2, true);
+			IPlatformScreen::ButtonInfo* mouseInfo2 =
+				IPlatformScreen::ButtonInfo::alloc(*mouseInfo);
+			action = new InputFilter::MouseButtonAction(m_events, mouseInfo2, true);
 			rule.adoptAction(action, true);
-			action   = new CInputFilter::CMouseButtonAction(m_events, mouseInfo, false);
+			action   = new InputFilter::MouseButtonAction(m_events, mouseInfo, false);
 			activate = false;
 		}
 		else if (name == "mouseDown") {
-			action = new CInputFilter::CMouseButtonAction(m_events, mouseInfo, true);
+			action = new InputFilter::MouseButtonAction(m_events, mouseInfo, true);
 		}
 		else {
-			action = new CInputFilter::CMouseButtonAction(m_events, mouseInfo, false);
+			action = new InputFilter::MouseButtonAction(m_events, mouseInfo, false);
 		}
 	}
 
@@ -1158,7 +1158,7 @@ CConfig::parseAction(CConfigReadContext& s,
 
 		KeyModifierMask mask = s.parseModifier(args[0]);
 
-		action = new CInputFilter::CModifierAction(mask, ~mask);
+		action = new InputFilter::ModifierAction(mask, ~mask);
 	}
 */
 
@@ -1167,7 +1167,7 @@ CConfig::parseAction(CConfigReadContext& s,
 			throw XConfigRead(s, "syntax for action: switchToScreen(name)");
 		}
 
-		CString screen = args[0];
+		String screen = args[0];
 		if (isScreen(screen)) {
 			screen = getCanonicalName(screen);
 		}
@@ -1175,7 +1175,7 @@ CConfig::parseAction(CConfigReadContext& s,
 			throw XConfigRead(s, "unknown screen name in switchToScreen");
 		}
 
-		action = new CInputFilter::CSwitchToScreenAction(m_events, screen);
+		action = new InputFilter::SwitchToScreenAction(m_events, screen);
 	}
 
 	else if (name == "switchInDirection") {
@@ -1200,7 +1200,7 @@ CConfig::parseAction(CConfigReadContext& s,
 			throw XConfigRead(s, "unknown direction \"%{1}\" in switchToScreen", args[0]);
 		}
 
-		action = new CInputFilter::CSwitchInDirectionAction(m_events, direction);
+		action = new InputFilter::SwitchInDirectionAction(m_events, direction);
 	}
 
 	else if (name == "lockCursorToScreen") {
@@ -1208,28 +1208,28 @@ CConfig::parseAction(CConfigReadContext& s,
 			throw XConfigRead(s, "syntax for action: lockCursorToScreen([{off|on|toggle}])");
 		}
 
-		CInputFilter::CLockCursorToScreenAction::Mode mode =
-			CInputFilter::CLockCursorToScreenAction::kToggle;
+		InputFilter::LockCursorToScreenAction::Mode mode =
+			InputFilter::LockCursorToScreenAction::kToggle;
 		if (args.size() == 1) {
 			if (args[0] == "off") {
-				mode = CInputFilter::CLockCursorToScreenAction::kOff;
+				mode = InputFilter::LockCursorToScreenAction::kOff;
 			}
 			else if (args[0] == "on") {
-				mode = CInputFilter::CLockCursorToScreenAction::kOn;
+				mode = InputFilter::LockCursorToScreenAction::kOn;
 			}
 			else if (args[0] == "toggle") {
-				mode = CInputFilter::CLockCursorToScreenAction::kToggle;
+				mode = InputFilter::LockCursorToScreenAction::kToggle;
 			}
 			else {
 				throw XConfigRead(s, "syntax for action: lockCursorToScreen([{off|on|toggle}])");
 			}
 		}
 
-		if (mode != CInputFilter::CLockCursorToScreenAction::kOff) {
+		if (mode != InputFilter::LockCursorToScreenAction::kOff) {
 			m_hasLockToScreenAction = true;
 		}
 
-		action = new CInputFilter::CLockCursorToScreenAction(m_events, mode);
+		action = new InputFilter::LockCursorToScreenAction(m_events, mode);
 	}
 
 	else if (name == "keyboardBroadcast") {
@@ -1237,29 +1237,29 @@ CConfig::parseAction(CConfigReadContext& s,
 			throw XConfigRead(s, "syntax for action: keyboardBroadcast([{off|on|toggle}[,screens]])");
 		}
 
-		CInputFilter::CKeyboardBroadcastAction::Mode mode =
-			CInputFilter::CKeyboardBroadcastAction::kToggle;
+		InputFilter::KeyboardBroadcastAction::Mode mode =
+			InputFilter::KeyboardBroadcastAction::kToggle;
 		if (args.size() >= 1) {
 			if (args[0] == "off") {
-				mode = CInputFilter::CKeyboardBroadcastAction::kOff;
+				mode = InputFilter::KeyboardBroadcastAction::kOff;
 			}
 			else if (args[0] == "on") {
-				mode = CInputFilter::CKeyboardBroadcastAction::kOn;
+				mode = InputFilter::KeyboardBroadcastAction::kOn;
 			}
 			else if (args[0] == "toggle") {
-				mode = CInputFilter::CKeyboardBroadcastAction::kToggle;
+				mode = InputFilter::KeyboardBroadcastAction::kToggle;
 			}
 			else {
 				throw XConfigRead(s, "syntax for action: keyboardBroadcast([{off|on|toggle}[,screens]])");
 			}
 		}
 
-		std::set<CString> screens;
+		std::set<String> screens;
 		if (args.size() >= 2) {
 			parseScreens(s, args[1], screens);
 		}
 
-		action = new CInputFilter::CKeyboardBroadcastAction(m_events, mode, screens);
+		action = new InputFilter::KeyboardBroadcastAction(m_events, mode, screens);
 	}
 
 	else {
@@ -1270,21 +1270,21 @@ CConfig::parseAction(CConfigReadContext& s,
 }
 
 void
-CConfig::parseScreens(CConfigReadContext& c,
-				const CString& s, std::set<CString>& screens) const
+Config::parseScreens(ConfigReadContext& c,
+				const String& s, std::set<String>& screens) const
 {
 	screens.clear();
 
-	CString::size_type i = 0;
+	String::size_type i = 0;
 	while (i < s.size()) {
 		// find end of next screen name
-		CString::size_type j = s.find(':', i);
-		if (j == CString::npos) {
+		String::size_type j = s.find(':', i);
+		if (j == String::npos) {
 			j = s.size();
 		}
 
 		// extract name
-		CString rawName;
+		String rawName;
 		i = s.find_first_not_of(" \t", i);
 		if (i < j) {
 			rawName = s.substr(i, s.find_last_not_of(" \t", j - 1) - i + 1);
@@ -1295,7 +1295,7 @@ CConfig::parseScreens(CConfigReadContext& c,
 			screens.insert("*");
 		}
 		else if (!rawName.empty()) {
-			CString name = getCanonicalName(rawName);
+			String name = getCanonicalName(rawName);
 			if (name.empty()) {
 				throw XConfigRead(c, "unknown screen name \"%{1}\"", rawName);
 			}
@@ -1308,7 +1308,7 @@ CConfig::parseScreens(CConfigReadContext& c,
 }
 
 const char*
-CConfig::getOptionName(OptionID id)
+Config::getOptionName(OptionID id)
 {
 	if (id == kOptionHalfDuplexCapsLock) {
 		return "halfDuplexCapsLock";
@@ -1379,8 +1379,8 @@ CConfig::getOptionName(OptionID id)
 	return NULL;
 }
 
-CString
-CConfig::getOptionValue(OptionID id, OptionValue value)
+String
+Config::getOptionValue(OptionID id, OptionValue value)
 {
 	if (id == kOptionHalfDuplexCapsLock ||
 		id == kOptionHalfDuplexNumLock ||
@@ -1452,10 +1452,10 @@ CConfig::getOptionValue(OptionID id, OptionValue value)
 
 
 //
-// CConfig::CName
+// Config::Name
 //
 
-CConfig::CName::CName(CConfig* config, const CString& name) :
+Config::Name::Name(Config* config, const String& name) :
 	m_config(config),
 	m_name(config->getCanonicalName(name))
 {
@@ -1463,23 +1463,23 @@ CConfig::CName::CName(CConfig* config, const CString& name) :
 }
 
 bool
-CConfig::CName::operator==(const CString& name) const
+Config::Name::operator==(const String& name) const
 {
-	CString canonical = m_config->getCanonicalName(name);
+	String canonical = m_config->getCanonicalName(name);
 	return CaselessCmp::equal(canonical, m_name);
 }
 
 
 //
-// CConfig::CCellEdge
+// Config::CellEdge
 //
 
-CConfig::CCellEdge::CCellEdge(EDirection side, float position)
+Config::CellEdge::CellEdge(EDirection side, float position)
 {
-	init("", side, CInterval(position, position));
+	init("", side, Interval(position, position));
 }
 
-CConfig::CCellEdge::CCellEdge(EDirection side, const CInterval& interval)
+Config::CellEdge::CellEdge(EDirection side, const Interval& interval)
 {
 	assert(interval.first >= 0.0f);
 	assert(interval.second <= 1.0f);
@@ -1488,8 +1488,8 @@ CConfig::CCellEdge::CCellEdge(EDirection side, const CInterval& interval)
 	init("", side, interval);
 }
 
-CConfig::CCellEdge::CCellEdge(const CString& name,
-				EDirection side, const CInterval& interval)
+Config::CellEdge::CellEdge(const String& name,
+				EDirection side, const Interval& interval)
 {
 	assert(interval.first >= 0.0f);
 	assert(interval.second <= 1.0f);
@@ -1498,14 +1498,14 @@ CConfig::CCellEdge::CCellEdge(const CString& name,
 	init(name, side, interval);
 }
 
-CConfig::CCellEdge::~CCellEdge()
+Config::CellEdge::~CellEdge()
 {
 	// do nothing
 }
 
 void
-CConfig::CCellEdge::init(const CString& name, EDirection side,
-				const CInterval& interval)
+Config::CellEdge::init(const String& name, EDirection side,
+				const Interval& interval)
 {
 	assert(side != kNoDirection);
 
@@ -1514,35 +1514,35 @@ CConfig::CCellEdge::init(const CString& name, EDirection side,
 	m_interval = interval;
 }
 
-CConfig::CInterval
-CConfig::CCellEdge::getInterval() const
+Config::Interval
+Config::CellEdge::getInterval() const
 {
 	return m_interval;
 }
 
 void
-CConfig::CCellEdge::setName(const CString& newName)
+Config::CellEdge::setName(const String& newName)
 {
 	m_name = newName;
 }
 
-CString
-CConfig::CCellEdge::getName() const
+String
+Config::CellEdge::getName() const
 {
 	return m_name;
 }
 
 EDirection
-CConfig::CCellEdge::getSide() const
+Config::CellEdge::getSide() const
 {
 	return m_side;
 }
 
 bool
-CConfig::CCellEdge::overlaps(const CCellEdge& edge) const
+Config::CellEdge::overlaps(const CellEdge& edge) const
 {
-	const CInterval& x = m_interval;
-	const CInterval& y = edge.m_interval;
+	const Interval& x = m_interval;
+	const Interval& y = edge.m_interval;
 	if (m_side != edge.m_side) {
 		return false;
 	}
@@ -1553,26 +1553,26 @@ CConfig::CCellEdge::overlaps(const CCellEdge& edge) const
 }
 
 bool
-CConfig::CCellEdge::isInside(float x) const
+Config::CellEdge::isInside(float x) const
 {
 	return (x >= m_interval.first && x < m_interval.second);
 }
 
 float
-CConfig::CCellEdge::transform(float x) const
+Config::CellEdge::transform(float x) const
 {
 	return (x - m_interval.first) / (m_interval.second - m_interval.first);
 }
 
 
 float
-CConfig::CCellEdge::inverseTransform(float x) const
+Config::CellEdge::inverseTransform(float x) const
 {
 	return x * (m_interval.second - m_interval.first) + m_interval.first;
 }
 
 bool
-CConfig::CCellEdge::operator<(const CCellEdge& o) const
+Config::CellEdge::operator<(const CellEdge& o) const
 {
 	if (static_cast<int>(m_side) < static_cast<int>(o.m_side)) {
 		return true;
@@ -1585,24 +1585,24 @@ CConfig::CCellEdge::operator<(const CCellEdge& o) const
 }
 
 bool
-CConfig::CCellEdge::operator==(const CCellEdge& x) const
+Config::CellEdge::operator==(const CellEdge& x) const
 {
 	return (m_side == x.m_side && m_interval == x.m_interval);
 }
 
 bool
-CConfig::CCellEdge::operator!=(const CCellEdge& x) const
+Config::CellEdge::operator!=(const CellEdge& x) const
 {
 	return !operator==(x);
 }
 
 
 //
-// CConfig::CCell
+// Config::Cell
 //
 
 bool
-CConfig::CCell::add(const CCellEdge& src, const CCellEdge& dst)
+Config::Cell::add(const CellEdge& src, const CellEdge& dst)
 {
 	// cannot add an edge that overlaps other existing edges but we
 	// can exactly replace an edge.
@@ -1616,9 +1616,9 @@ CConfig::CCell::add(const CCellEdge& src, const CCellEdge& dst)
 }
 
 void
-CConfig::CCell::remove(EDirection side)
+Config::Cell::remove(EDirection side)
 {
-	for (CEdgeLinks::iterator j = m_neighbors.begin();
+	for (EdgeLinks::iterator j = m_neighbors.begin();
 							j != m_neighbors.end(); ) {
 		if (j->first.getSide() == side) {
 			m_neighbors.erase(j++);
@@ -1630,9 +1630,9 @@ CConfig::CCell::remove(EDirection side)
 }
 
 void
-CConfig::CCell::remove(EDirection side, float position)
+Config::Cell::remove(EDirection side, float position)
 {
-	for (CEdgeLinks::iterator j = m_neighbors.begin();
+	for (EdgeLinks::iterator j = m_neighbors.begin();
 							j != m_neighbors.end(); ++j) {
 		if (j->first.getSide() == side && j->first.isInside(position)) {
 			m_neighbors.erase(j);
@@ -1641,9 +1641,9 @@ CConfig::CCell::remove(EDirection side, float position)
 	}
 }
 void
-CConfig::CCell::remove(const CName& name)
+Config::Cell::remove(const Name& name)
 {
-	for (CEdgeLinks::iterator j = m_neighbors.begin();
+	for (EdgeLinks::iterator j = m_neighbors.begin();
 							j != m_neighbors.end(); ) {
 		if (name == j->second.getName()) {
 			m_neighbors.erase(j++);
@@ -1655,9 +1655,9 @@ CConfig::CCell::remove(const CName& name)
 }
 
 void
-CConfig::CCell::rename(const CName& oldName, const CString& newName)
+Config::Cell::rename(const Name& oldName, const String& newName)
 {
-	for (CEdgeLinks::iterator j = m_neighbors.begin();
+	for (EdgeLinks::iterator j = m_neighbors.begin();
 							j != m_neighbors.end(); ++j) {
 		if (oldName == j->second.getName()) {
 			j->second.setName(newName);
@@ -1666,16 +1666,16 @@ CConfig::CCell::rename(const CName& oldName, const CString& newName)
 }
 
 bool
-CConfig::CCell::hasEdge(const CCellEdge& edge) const
+Config::Cell::hasEdge(const CellEdge& edge) const
 {
-	CEdgeLinks::const_iterator i = m_neighbors.find(edge);
+	EdgeLinks::const_iterator i = m_neighbors.find(edge);
 	return (i != m_neighbors.end() && i->first == edge);
 }
 
 bool
-CConfig::CCell::overlaps(const CCellEdge& edge) const
+Config::Cell::overlaps(const CellEdge& edge) const
 {
-	CEdgeLinks::const_iterator i = m_neighbors.upper_bound(edge);
+	EdgeLinks::const_iterator i = m_neighbors.upper_bound(edge);
 	if (i != m_neighbors.end() && i->first.overlaps(edge)) {
 		return true;
 	}
@@ -1686,11 +1686,11 @@ CConfig::CCell::overlaps(const CCellEdge& edge) const
 }
 
 bool
-CConfig::CCell::getLink(EDirection side, float position,
-				const CCellEdge*& src, const CCellEdge*& dst) const
+Config::Cell::getLink(EDirection side, float position,
+				const CellEdge*& src, const CellEdge*& dst) const
 {
-	CCellEdge edge(side, position);
-	CEdgeLinks::const_iterator i = m_neighbors.upper_bound(edge);
+	CellEdge edge(side, position);
+	EdgeLinks::const_iterator i = m_neighbors.upper_bound(edge);
 	if (i == m_neighbors.begin()) {
 		return false;
 	}
@@ -1704,7 +1704,7 @@ CConfig::CCell::getLink(EDirection side, float position,
 }
 
 bool
-CConfig::CCell::operator==(const CCell& x) const
+Config::Cell::operator==(const Cell& x) const
 {
 	// compare options
 	if (m_options != x.m_options) {
@@ -1715,7 +1715,7 @@ CConfig::CCell::operator==(const CCell& x) const
 	if (m_neighbors.size() != x.m_neighbors.size()) {
 		return false;
 	}
-	for (CEdgeLinks::const_iterator index1 = m_neighbors.begin(),
+	for (EdgeLinks::const_iterator index1 = m_neighbors.begin(),
 								index2 = x.m_neighbors.begin();
 								index1 != m_neighbors.end();
 								++index1, ++index2) {
@@ -1737,51 +1737,51 @@ CConfig::CCell::operator==(const CCell& x) const
 }
 
 bool
-CConfig::CCell::operator!=(const CCell& x) const
+Config::Cell::operator!=(const Cell& x) const
 {
 	return !operator==(x);
 }
 
-CConfig::CCell::const_iterator
-CConfig::CCell::begin() const
+Config::Cell::const_iterator
+Config::Cell::begin() const
 {
 	return m_neighbors.begin();
 }
 
-CConfig::CCell::const_iterator
-CConfig::CCell::end() const
+Config::Cell::const_iterator
+Config::Cell::end() const
 {
 	return m_neighbors.end();
 }
 
 
 //
-// CConfig I/O
+// Config I/O
 //
 
 std::istream&
-operator>>(std::istream& s, CConfig& config)
+operator>>(std::istream& s, Config& config)
 {
-	CConfigReadContext context(s);
+	ConfigReadContext context(s);
 	config.read(context);
 	return s;
 }
 
 std::ostream&
-operator<<(std::ostream& s, const CConfig& config)
+operator<<(std::ostream& s, const Config& config)
 {
 	// screens section
 	s << "section: screens" << std::endl;
-	for (CConfig::const_iterator screen = config.begin();
+	for (Config::const_iterator screen = config.begin();
 								screen != config.end(); ++screen) {
 		s << "\t" << screen->c_str() << ":" << std::endl;
-		const CConfig::CScreenOptions* options = config.getOptions(*screen);
+		const Config::ScreenOptions* options = config.getOptions(*screen);
 		if (options != NULL && options->size() > 0) {
-			for (CConfig::CScreenOptions::const_iterator
+			for (Config::ScreenOptions::const_iterator
 								option  = options->begin();
 								option != options->end(); ++option) {
-				const char* name = CConfig::getOptionName(option->first);
-				CString value    = CConfig::getOptionValue(option->first,
+				const char* name = Config::getOptionName(option->first);
+				String value    = Config::getOptionValue(option->first,
 															option->second);
 				if (name != NULL && !value.empty()) {
 					s << "\t\t" << name << " = " << value << std::endl;
@@ -1792,19 +1792,19 @@ operator<<(std::ostream& s, const CConfig& config)
 	s << "end" << std::endl;
 
 	// links section
-	CString neighbor;
+	String neighbor;
 	s << "section: links" << std::endl;
-	for (CConfig::const_iterator screen = config.begin();
+	for (Config::const_iterator screen = config.begin();
 								screen != config.end(); ++screen) {
 		s << "\t" << screen->c_str() << ":" << std::endl;
 
-		for (CConfig::link_const_iterator
+		for (Config::link_const_iterator
 				link = config.beginNeighbor(*screen),
 				nend = config.endNeighbor(*screen); link != nend; ++link) {			
-			s << "\t\t" << CConfig::dirName(link->first.getSide()) <<
-				CConfig::formatInterval(link->first.getInterval()) <<
+			s << "\t\t" << Config::dirName(link->first.getSide()) <<
+				Config::formatInterval(link->first.getInterval()) <<
 				" = " << link->second.getName().c_str() <<
-				CConfig::formatInterval(link->second.getInterval()) <<
+				Config::formatInterval(link->second.getInterval()) <<
 				std::endl;
 		}
 	}
@@ -1813,10 +1813,10 @@ operator<<(std::ostream& s, const CConfig& config)
 	// aliases section (if there are any)
 	if (config.m_map.size() != config.m_nameToCanonicalName.size()) {
 		// map canonical to alias
-		typedef std::multimap<CString, CString,
+		typedef std::multimap<String, String,
 								CaselessCmp> CMNameMap;
 		CMNameMap aliases;
-		for (CConfig::CNameMap::const_iterator
+		for (Config::NameMap::const_iterator
 								index = config.m_nameToCanonicalName.begin();
 								index != config.m_nameToCanonicalName.end();
 								++index) {
@@ -1826,7 +1826,7 @@ operator<<(std::ostream& s, const CConfig& config)
 		}
 
 		// dump it
-		CString screen;
+		String screen;
 		s << "section: aliases" << std::endl;
 		for (CMNameMap::const_iterator index = aliases.begin();
 								index != aliases.end(); ++index) {
@@ -1841,13 +1841,13 @@ operator<<(std::ostream& s, const CConfig& config)
 
 	// options section
 	s << "section: options" << std::endl;
-	const CConfig::CScreenOptions* options = config.getOptions("");
+	const Config::ScreenOptions* options = config.getOptions("");
 	if (options != NULL && options->size() > 0) {
-		for (CConfig::CScreenOptions::const_iterator
+		for (Config::ScreenOptions::const_iterator
 							option  = options->begin();
 							option != options->end(); ++option) {
-			const char* name = CConfig::getOptionName(option->first);
-			CString value    = CConfig::getOptionValue(option->first,
+			const char* name = Config::getOptionName(option->first);
+			String value    = Config::getOptionValue(option->first,
 														option->second);
 			if (name != NULL && !value.empty()) {
 				s << "\t" << name << " = " << value << std::endl;
@@ -1866,39 +1866,39 @@ operator<<(std::ostream& s, const CConfig& config)
 
 
 //
-// CConfigReadContext
+// ConfigReadContext
 //
 
-CConfigReadContext::CConfigReadContext(std::istream& s, SInt32 firstLine) :
+ConfigReadContext::ConfigReadContext(std::istream& s, SInt32 firstLine) :
 	m_stream(s),
 	m_line(firstLine - 1)
 {
 	// do nothing
 }
 
-CConfigReadContext::~CConfigReadContext()
+ConfigReadContext::~ConfigReadContext()
 {
 	// do nothing
 }
 
 bool
-CConfigReadContext::readLine(CString& line)
+ConfigReadContext::readLine(String& line)
 {
 	++m_line;
 	while (std::getline(m_stream, line)) {
 		// strip leading whitespace
-		CString::size_type i = line.find_first_not_of(" \t");
-		if (i != CString::npos) {
+		String::size_type i = line.find_first_not_of(" \t");
+		if (i != String::npos) {
 			line.erase(0, i);
 		}
 
 		// strip comments and then trailing whitespace
 		i = line.find('#');
-		if (i != CString::npos) {
+		if (i != String::npos) {
 			line.erase(i);
 		}
 		i = line.find_last_not_of(" \r\t");
-		if (i != CString::npos) {
+		if (i != String::npos) {
 			line.erase(i + 1);
 		}
 
@@ -1923,19 +1923,19 @@ CConfigReadContext::readLine(CString& line)
 }
 
 UInt32
-CConfigReadContext::getLineNumber() const
+ConfigReadContext::getLineNumber() const
 {
 	return m_line;
 }
 
 bool
-CConfigReadContext::operator!() const
+ConfigReadContext::operator!() const
 {
 	return !m_stream;
 }
 
 OptionValue
-CConfigReadContext::parseBoolean(const CString& arg) const
+ConfigReadContext::parseBoolean(const String& arg) const
 {
 	if (CaselessCmp::equal(arg, "true")) {
 		return static_cast<OptionValue>(true);
@@ -1947,7 +1947,7 @@ CConfigReadContext::parseBoolean(const CString& arg) const
 }
 
 OptionValue
-CConfigReadContext::parseInt(const CString& arg) const
+ConfigReadContext::parseInt(const String& arg) const
 {
 	const char* s = arg.c_str();
 	char* end;
@@ -1965,7 +1965,7 @@ CConfigReadContext::parseInt(const CString& arg) const
 }
 
 OptionValue
-CConfigReadContext::parseModifierKey(const CString& arg) const
+ConfigReadContext::parseModifierKey(const String& arg) const
 {
 	if (CaselessCmp::equal(arg, "shift")) {
 		return static_cast<OptionValue>(kKeyModifierIDShift);
@@ -1992,7 +1992,7 @@ CConfigReadContext::parseModifierKey(const CString& arg) const
 }
 
 OptionValue
-CConfigReadContext::parseCorner(const CString& arg) const
+ConfigReadContext::parseCorner(const String& arg) const
 {
 	if (CaselessCmp::equal(arg, "left")) {
 		return kTopLeftMask | kBottomLeftMask;
@@ -2028,21 +2028,21 @@ CConfigReadContext::parseCorner(const CString& arg) const
 }
 
 OptionValue
-CConfigReadContext::parseCorners(const CString& args) const
+ConfigReadContext::parseCorners(const String& args) const
 {
 	// find first token
-	CString::size_type i = args.find_first_not_of(" \t", 0);
-	if (i == CString::npos) {
+	String::size_type i = args.find_first_not_of(" \t", 0);
+	if (i == String::npos) {
 		throw XConfigRead(*this, "missing corner argument");
 	}
-	CString::size_type j = args.find_first_of(" \t", i);
+	String::size_type j = args.find_first_of(" \t", i);
 
 	// parse first corner token
 	OptionValue corners = parseCorner(args.substr(i, j - i));
 
 	// get +/-
 	i = args.find_first_not_of(" \t", j);
-	while (i != CString::npos) {
+	while (i != String::npos) {
 		// parse +/-
 		bool add;
 		if (args[i] == '-') {
@@ -2054,13 +2054,13 @@ CConfigReadContext::parseCorners(const CString& args) const
 		else {
 			throw XConfigRead(*this,
 							"invalid corner operator \"%{1}\"",
-							CString(args.c_str() + i, 1));
+							String(args.c_str() + i, 1));
 		}
 
 		// get next corner token
 		i = args.find_first_not_of(" \t", i + 1);
 		j = args.find_first_of(" \t", i);
-		if (i == CString::npos) {
+		if (i == String::npos) {
 			throw XConfigRead(*this, "missing corner argument");
 		}
 
@@ -2077,11 +2077,11 @@ CConfigReadContext::parseCorners(const CString& args) const
 	return corners;
 }
 
-CConfig::CInterval
-CConfigReadContext::parseInterval(const ArgList& args) const
+Config::Interval
+ConfigReadContext::parseInterval(const ArgList& args) const
 {
 	if (args.size() == 0) {
-		return CConfig::CInterval(0.0f, 1.0f);
+		return Config::Interval(0.0f, 1.0f);
 	}
 	if (args.size() != 2 || args[0].empty() || args[1].empty()) {
 		throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
@@ -2103,24 +2103,24 @@ CConfigReadContext::parseInterval(const ArgList& args) const
 		throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
 	}
 
-	return CConfig::CInterval(startValue / 100.0f, endValue / 100.0f);
+	return Config::Interval(startValue / 100.0f, endValue / 100.0f);
 }
 
 void
-CConfigReadContext::parseNameWithArgs(
-				const CString& type, const CString& line,
-				const CString& delim, CString::size_type& index,
-				CString& name, ArgList& args) const
+ConfigReadContext::parseNameWithArgs(
+				const String& type, const String& line,
+				const String& delim, String::size_type& index,
+				String& name, ArgList& args) const
 {
 	// skip leading whitespace
-	CString::size_type i = line.find_first_not_of(" \t", index);
-	if (i == CString::npos) {
-		throw XConfigRead(*this, CString("missing ") + type);
+	String::size_type i = line.find_first_not_of(" \t", index);
+	if (i == String::npos) {
+		throw XConfigRead(*this, String("missing ") + type);
 	}
 
 	// find end of name
-	CString::size_type j = line.find_first_of(" \t(" + delim, i);
-	if (j == CString::npos) {
+	String::size_type j = line.find_first_of(" \t(" + delim, i);
+	if (j == String::npos) {
 		j = line.length();
 	}
 
@@ -2129,15 +2129,15 @@ CConfigReadContext::parseNameWithArgs(
 	args.clear();
 
 	// is it okay to not find a delimiter?
-	bool needDelim = (!delim.empty() && delim.find('\n') == CString::npos);
+	bool needDelim = (!delim.empty() && delim.find('\n') == String::npos);
 
 	// skip whitespace
 	i = line.find_first_not_of(" \t", j);
-	if (i == CString::npos && needDelim) {
+	if (i == String::npos && needDelim) {
 		// expected delimiter but didn't find it
-		throw XConfigRead(*this, CString("missing ") + delim[0]);
+		throw XConfigRead(*this, String("missing ") + delim[0]);
 	}
-	if (i == CString::npos) {
+	if (i == String::npos) {
 		// no arguments
 		index = line.length();
 		return;
@@ -2153,18 +2153,18 @@ CConfigReadContext::parseNameWithArgs(
 
 	// parse arguments
 	j = line.find_first_of(",)", i);
-	while (j != CString::npos) {
+	while (j != String::npos) {
 		// extract arg
-		CString arg(line.substr(i, j - i));
+		String arg(line.substr(i, j - i));
 		i = j;
 
 		// trim whitespace
 		j = arg.find_first_not_of(" \t");
-		if (j != CString::npos) {
+		if (j != String::npos) {
 			arg.erase(0, j);
 		}
 		j = arg.find_last_not_of(" \t");
-		if (j != CString::npos) {
+		if (j != String::npos) {
 			arg.erase(j + 1);
 		}
 
@@ -2184,7 +2184,7 @@ CConfigReadContext::parseNameWithArgs(
 	}
 
 	// verify ')'
-	if (j == CString::npos) {
+	if (j == String::npos) {
 		// expected )
 		throw XConfigRead(*this, "missing )");
 	}
@@ -2194,17 +2194,17 @@ CConfigReadContext::parseNameWithArgs(
 
 	// skip whitespace
 	j = line.find_first_not_of(" \t", i);
-	if (j == CString::npos && needDelim) {
+	if (j == String::npos && needDelim) {
 		// expected delimiter but didn't find it
-		throw XConfigRead(*this, CString("missing ") + delim[0]);
+		throw XConfigRead(*this, String("missing ") + delim[0]);
 	}
 
 	// verify delimiter
-	if (needDelim && delim.find(line[j]) == CString::npos) {
-		throw XConfigRead(*this, CString("expected ") + delim[0]);
+	if (needDelim && delim.find(line[j]) == String::npos) {
+		throw XConfigRead(*this, String("expected ") + delim[0]);
 	}
 
-	if (j == CString::npos) {
+	if (j == String::npos) {
 		j = line.length();
 	}
 
@@ -2212,25 +2212,25 @@ CConfigReadContext::parseNameWithArgs(
 	return;
 }
 
-IPlatformScreen::CKeyInfo*
-CConfigReadContext::parseKeystroke(const CString& keystroke) const
+IPlatformScreen::KeyInfo*
+ConfigReadContext::parseKeystroke(const String& keystroke) const
 {
-	return parseKeystroke(keystroke, std::set<CString>());
+	return parseKeystroke(keystroke, std::set<String>());
 }
 
-IPlatformScreen::CKeyInfo*
-CConfigReadContext::parseKeystroke(const CString& keystroke,
-				const std::set<CString>& screens) const
+IPlatformScreen::KeyInfo*
+ConfigReadContext::parseKeystroke(const String& keystroke,
+				const std::set<String>& screens) const
 {
-	CString s = keystroke;
+	String s = keystroke;
 
 	KeyModifierMask mask;
-	if (!CKeyMap::parseModifiers(s, mask)) {
+	if (!synergy::KeyMap::parseModifiers(s, mask)) {
 		throw XConfigRead(*this, "unable to parse key modifiers");
 	}
 
 	KeyID key;
-	if (!CKeyMap::parseKey(s, key)) {
+	if (!synergy::KeyMap::parseKey(s, key)) {
 		throw XConfigRead(*this, "unable to parse key");
 	}
 
@@ -2238,16 +2238,16 @@ CConfigReadContext::parseKeystroke(const CString& keystroke,
 		throw XConfigRead(*this, "missing key and/or modifiers in keystroke");
 	}
 
-	return IPlatformScreen::CKeyInfo::alloc(key, mask, 0, 0, screens);
+	return IPlatformScreen::KeyInfo::alloc(key, mask, 0, 0, screens);
 }
 
-IPlatformScreen::CButtonInfo*
-CConfigReadContext::parseMouse(const CString& mouse) const
+IPlatformScreen::ButtonInfo*
+ConfigReadContext::parseMouse(const String& mouse) const
 {
-	CString s = mouse;
+	String s = mouse;
 
 	KeyModifierMask mask;
-	if (!CKeyMap::parseModifiers(s, mask)) {
+	if (!synergy::KeyMap::parseModifiers(s, mask)) {
 		throw XConfigRead(*this, "unable to parse button modifiers");
 	}
 
@@ -2260,16 +2260,16 @@ CConfigReadContext::parseMouse(const CString& mouse) const
 		throw XConfigRead(*this, "invalid button");
 	}
 
-	return IPlatformScreen::CButtonInfo::alloc(button, mask);
+	return IPlatformScreen::ButtonInfo::alloc(button, mask);
 }
 
 KeyModifierMask
-CConfigReadContext::parseModifier(const CString& modifiers) const
+ConfigReadContext::parseModifier(const String& modifiers) const
 {
-	CString s = modifiers;
+	String s = modifiers;
 
 	KeyModifierMask mask;
-	if (!CKeyMap::parseModifiers(s, mask)) {
+	if (!synergy::KeyMap::parseModifiers(s, mask)) {
 		throw XConfigRead(*this, "unable to parse modifiers");
 	}
 
@@ -2280,10 +2280,10 @@ CConfigReadContext::parseModifier(const CString& modifiers) const
 	return mask;
 }
 
-CString
-CConfigReadContext::concatArgs(const ArgList& args)
+String
+ConfigReadContext::concatArgs(const ArgList& args)
 {
-	CString s("(");
+	String s("(");
 	for (size_t i = 0; i < args.size(); ++i) {
 		if (i != 0) {
 			s += ",";
@@ -2296,19 +2296,19 @@ CConfigReadContext::concatArgs(const ArgList& args)
 
 
 //
-// CConfig I/O exceptions
+// Config I/O exceptions
 //
 
-XConfigRead::XConfigRead(const CConfigReadContext& context,
-				const CString& error) :
+XConfigRead::XConfigRead(const ConfigReadContext& context,
+				const String& error) :
 	m_error(synergy::string::sprintf("line %d: %s",
 							context.getLineNumber(), error.c_str()))
 {
 	// do nothing
 }
 
-XConfigRead::XConfigRead(const CConfigReadContext& context,
-				const char* errorFmt, const CString& arg) :
+XConfigRead::XConfigRead(const ConfigReadContext& context,
+				const char* errorFmt, const String& arg) :
 	m_error(synergy::string::sprintf("line %d: ", context.getLineNumber()) +
 							synergy::string::format(errorFmt, arg.c_str()))
 {
@@ -2320,7 +2320,7 @@ XConfigRead::~XConfigRead() _NOEXCEPT
 	// do nothing
 }
 
-CString
+String
 XConfigRead::getWhat() const throw()
 {
 	return format("XConfigRead", "read error: %{1}", m_error.c_str());

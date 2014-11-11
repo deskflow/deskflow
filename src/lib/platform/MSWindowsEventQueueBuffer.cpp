@@ -23,10 +23,10 @@
 #include "base/IEventQueue.h"
 
 //
-// CEventQueueTimer
+// EventQueueTimer
 //
 
-class CEventQueueTimer { };
+class EventQueueTimer { };
 
 
 //
@@ -43,7 +43,7 @@ CMSWindowsEventQueueBuffer::CMSWindowsEventQueueBuffer(IEventQueue* events) :
 	m_userEvent  = RegisterWindowMessage("SYNERGY_USER_EVENT");
 
 	// get message type for daemon quit
-	m_daemonQuit = CArchMiscWindows::getDaemonQuitMessage();
+	m_daemonQuit = ArchMiscWindows::getDaemonQuitMessage();
 
 	// make sure this thread has a message queue
 	MSG dummy;
@@ -83,7 +83,7 @@ CMSWindowsEventQueueBuffer::waitForEvent(double timeout)
 }
 
 IEventQueueBuffer::Type
-CMSWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
+CMSWindowsEventQueueBuffer::getEvent(Event& event, UInt32& dataID)
 {
 	// peek at messages first.  waiting for QS_ALLINPUT will return
 	// if a message has been sent to our window but GetMessage will
@@ -100,11 +100,11 @@ CMSWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 		return kNone;
 	}
 	else if (result == 0) {
-		event = CEvent(CEvent::kQuit);
+		event = Event(Event::kQuit);
 		return kSystem;
 	}
 	else if (m_daemonQuit != 0 && m_event.message == m_daemonQuit) {
-		event = CEvent(CEvent::kQuit);
+		event = Event(Event::kQuit);
 		return kSystem;
 	}
 	else if (m_event.message == m_userEvent) {
@@ -112,7 +112,7 @@ CMSWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 		return kUser;
 	}
 	else {
-		event = CEvent(CEvent::kSystem,
+		event = Event(Event::kSystem,
 							m_events->getSystemTarget(), &m_event);
 		return kSystem;
 	}
@@ -131,14 +131,14 @@ CMSWindowsEventQueueBuffer::isEmpty() const
 	return (HIWORD(GetQueueStatus(QS_ALLINPUT)) == 0);
 }
 
-CEventQueueTimer*
+EventQueueTimer*
 CMSWindowsEventQueueBuffer::newTimer(double, bool) const
 {
-	return new CEventQueueTimer;
+	return new EventQueueTimer;
 }
 
 void
-CMSWindowsEventQueueBuffer::deleteTimer(CEventQueueTimer* timer) const
+CMSWindowsEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
 {
 	delete timer;
 }

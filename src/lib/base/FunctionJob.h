@@ -24,11 +24,11 @@
 /*!
 A job class that invokes a function.
 */
-class CFunctionJob : public IJob {
+class FunctionJob : public IJob {
 public:
 	//! run() invokes \c func(arg)
-	CFunctionJob(void (*func)(void*), void* arg = NULL);
-	virtual ~CFunctionJob();
+	FunctionJob(void (*func)(void*), void* arg = NULL);
+	virtual ~FunctionJob();
 
 	// IJob overrides
 	virtual void		run();

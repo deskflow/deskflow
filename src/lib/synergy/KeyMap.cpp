@@ -24,12 +24,14 @@
 #include <cctype>
 #include <cstdlib>
 
-CKeyMap::CNameToKeyMap*			CKeyMap::s_nameToKeyMap      = NULL;
-CKeyMap::CNameToModifierMap*	CKeyMap::s_nameToModifierMap = NULL;
-CKeyMap::CKeyToNameMap*			CKeyMap::s_keyToNameMap      = NULL;
-CKeyMap::CModifierToNameMap*	CKeyMap::s_modifierToNameMap = NULL;
+namespace synergy {
 
-CKeyMap::CKeyMap() :
+KeyMap::NameToKeyMap*			KeyMap::s_nameToKeyMap      = NULL;
+KeyMap::NameToModifierMap*		KeyMap::s_nameToModifierMap = NULL;
+KeyMap::KeyToNameMap*			KeyMap::s_keyToNameMap      = NULL;
+KeyMap::ModifierToNameMap*		KeyMap::s_modifierToNameMap = NULL;
+
+KeyMap::KeyMap() :
 	m_numGroups(0),
 	m_composeAcrossGroups(false)
 {
@@ -44,13 +46,13 @@ CKeyMap::CKeyMap() :
 	m_modifierKeyItem.m_client    = 0;
 }
 
-CKeyMap::~CKeyMap()
+KeyMap::~KeyMap()
 {
 	// do nothing
 }
 
 void
-CKeyMap::swap(CKeyMap& x)
+KeyMap::swap(KeyMap& x)
 {
 	m_keyIDMap.swap(x.m_keyIDMap);
 	m_modifierKeys.swap(x.m_modifierKeys);
@@ -65,7 +67,7 @@ CKeyMap::swap(CKeyMap& x)
 }
 
 void
-CKeyMap::addKeyEntry(const KeyItem& item)
+KeyMap::addKeyEntry(const KeyItem& item)
 {
 	// ignore kKeyNone
 	if (item.m_id == kKeyNone) {
@@ -107,7 +109,7 @@ CKeyMap::addKeyEntry(const KeyItem& item)
 }
 
 void
-CKeyMap::addKeyAliasEntry(KeyID targetID, SInt32 group,
+KeyMap::addKeyAliasEntry(KeyID targetID, SInt32 group,
 				KeyModifierMask targetRequired,
 				KeyModifierMask targetSensitive,
 				KeyID sourceID,
@@ -127,7 +129,7 @@ CKeyMap::addKeyAliasEntry(KeyID targetID, SInt32 group,
 			findCompatibleKey(sourceID, eg,
 								sourceRequired, sourceSensitive);
 		if (sourceEntry != NULL && sourceEntry->size() == 1) {
-			CKeyMap::KeyItem targetItem = sourceEntry->back();
+			KeyMap::KeyItem targetItem = sourceEntry->back();
 			targetItem.m_id    = targetID;
 			targetItem.m_group = eg;
 			addKeyEntry(targetItem);
@@ -137,7 +139,7 @@ CKeyMap::addKeyAliasEntry(KeyID targetID, SInt32 group,
 }
 
 bool
-CKeyMap::addKeyCombinationEntry(KeyID id, SInt32 group,
+KeyMap::addKeyCombinationEntry(KeyID id, SInt32 group,
 				const KeyID* keys, UInt32 numKeys)
 {
 	// disallow kKeyNone
@@ -198,31 +200,31 @@ CKeyMap::addKeyCombinationEntry(KeyID id, SInt32 group,
 }
 
 void
-CKeyMap::allowGroupSwitchDuringCompose()
+KeyMap::allowGroupSwitchDuringCompose()
 {
 	m_composeAcrossGroups = true;
 }
 
 void
-CKeyMap::addHalfDuplexButton(KeyButton button)
+KeyMap::addHalfDuplexButton(KeyButton button)
 {
 	m_halfDuplex.insert(button);
 }
 
 void
-CKeyMap::clearHalfDuplexModifiers()
+KeyMap::clearHalfDuplexModifiers()
 {
 	m_halfDuplexMods.clear();
 }
 
 void
-CKeyMap::addHalfDuplexModifier(KeyID key)
+KeyMap::addHalfDuplexModifier(KeyID key)
 {
 	m_halfDuplexMods.insert(key);
 }
 
 void
-CKeyMap::finish()
+KeyMap::finish()
 {
 	m_numGroups = findNumGroups();
 
@@ -237,7 +239,7 @@ CKeyMap::finish()
 }
 
 void
-CKeyMap::foreachKey(ForeachKeyCallback cb, void* userData)
+KeyMap::foreachKey(ForeachKeyCallback cb, void* userData)
 {
 	for (KeyIDMap::iterator i = m_keyIDMap.begin();
 								i != m_keyIDMap.end(); ++i) {
@@ -255,8 +257,8 @@ CKeyMap::foreachKey(ForeachKeyCallback cb, void* userData)
 	}
 }
 
-const CKeyMap::KeyItem*
-CKeyMap::mapKey(Keystrokes& keys, KeyID id, SInt32 group,
+const KeyMap::KeyItem*
+KeyMap::mapKey(Keystrokes& keys, KeyID id, SInt32 group,
 				ModifierToKeys& activeModifiers,
 				KeyModifierMask& currentState,
 				KeyModifierMask desiredMask,
@@ -330,19 +332,19 @@ CKeyMap::mapKey(Keystrokes& keys, KeyID id, SInt32 group,
 }
 
 SInt32
-CKeyMap::getNumGroups() const
+KeyMap::getNumGroups() const
 {
 	return m_numGroups;
 }
 
 SInt32
-CKeyMap::getEffectiveGroup(SInt32 group, SInt32 offset) const
+KeyMap::getEffectiveGroup(SInt32 group, SInt32 offset) const
 {
 	return (group + offset + getNumGroups()) % getNumGroups();
 }
 
-const CKeyMap::KeyItemList*
-CKeyMap::findCompatibleKey(KeyID id, SInt32 group,
+const KeyMap::KeyItemList*
+KeyMap::findCompatibleKey(KeyID id, SInt32 group,
 				KeyModifierMask required, KeyModifierMask sensitive) const
 {
 	assert(group >= 0 && group < getNumGroups());
@@ -365,19 +367,19 @@ CKeyMap::findCompatibleKey(KeyID id, SInt32 group,
 }
 
 bool
-CKeyMap::isHalfDuplex(KeyID key, KeyButton button) const
+KeyMap::isHalfDuplex(KeyID key, KeyButton button) const
 {
 	return (m_halfDuplex.count(button) + m_halfDuplexMods.count(key) > 0);
 }
 
 bool
-CKeyMap::isCommand(KeyModifierMask mask) const
+KeyMap::isCommand(KeyModifierMask mask) const
 {
 	return ((mask & getCommandModifiers()) != 0);
 }
 
 KeyModifierMask
-CKeyMap::getCommandModifiers() const
+KeyMap::getCommandModifiers() const
 {
 	// we currently treat ctrl, alt, meta and super as command modifiers.
 	// some platforms may have a more limited set (OS X only needs Alt)
@@ -390,7 +392,7 @@ CKeyMap::getCommandModifiers() const
 }
 
 void
-CKeyMap::collectButtons(const ModifierToKeys& mods, ButtonToKeyMap& keys)
+KeyMap::collectButtons(const ModifierToKeys& mods, ButtonToKeyMap& keys)
 {
 	keys.clear();
 	for (ModifierToKeys::const_iterator i = mods.begin();
@@ -400,7 +402,7 @@ CKeyMap::collectButtons(const ModifierToKeys& mods, ButtonToKeyMap& keys)
 }
 
 void
-CKeyMap::initModifierKey(KeyItem& item)
+KeyMap::initModifierKey(KeyItem& item)
 {
 	item.m_generates = 0;
 	item.m_lock      = false;
@@ -456,7 +458,7 @@ CKeyMap::initModifierKey(KeyItem& item)
 }
 
 SInt32
-CKeyMap::findNumGroups() const
+KeyMap::findNumGroups() const
 {
 	size_t max = 0;
 	for (KeyIDMap::const_iterator i = m_keyIDMap.begin();
@@ -469,7 +471,7 @@ CKeyMap::findNumGroups() const
 }
 
 void
-CKeyMap::setModifierKeys()
+KeyMap::setModifierKeys()
 {
 	m_modifierKeys.clear();
 	m_modifierKeys.resize(kKeyModifierNumBits * getNumGroups());
@@ -503,8 +505,8 @@ CKeyMap::setModifierKeys()
 	}
 }
 
-const CKeyMap::KeyItem*
-CKeyMap::mapCommandKey(Keystrokes& keys, KeyID id, SInt32 group,
+const KeyMap::KeyItem*
+KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, SInt32 group,
 				ModifierToKeys& activeModifiers,
 				KeyModifierMask& currentState,
 				KeyModifierMask desiredMask,
@@ -593,8 +595,8 @@ CKeyMap::mapCommandKey(Keystrokes& keys, KeyID id, SInt32 group,
 	return keyItem;
 }
 
-const CKeyMap::KeyItem*
-CKeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, SInt32 group,
+const KeyMap::KeyItem*
+KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, SInt32 group,
 				ModifierToKeys& activeModifiers,
 				KeyModifierMask& currentState,
 				KeyModifierMask desiredMask,
@@ -673,8 +675,8 @@ CKeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, SInt32 group,
 	return &keyItem;
 }
 
-const CKeyMap::KeyItem*
-CKeyMap::mapModifierKey(Keystrokes& keys, KeyID id, SInt32 group,
+const KeyMap::KeyItem*
+KeyMap::mapModifierKey(Keystrokes& keys, KeyID id, SInt32 group,
 				ModifierToKeys& activeModifiers,
 				KeyModifierMask& currentState,
 				KeyModifierMask desiredMask,
@@ -685,7 +687,7 @@ CKeyMap::mapModifierKey(Keystrokes& keys, KeyID id, SInt32 group,
 }
 
 SInt32
-CKeyMap::findBestKey(const KeyEntryList& entryList,
+KeyMap::findBestKey(const KeyEntryList& entryList,
 				KeyModifierMask /*currentState*/,
 				KeyModifierMask desiredState) const
 {
@@ -720,8 +722,8 @@ CKeyMap::findBestKey(const KeyEntryList& entryList,
 }
 
 
-const CKeyMap::KeyItem*
-CKeyMap::keyForModifier(KeyButton button, SInt32 group,
+const KeyMap::KeyItem*
+KeyMap::keyForModifier(KeyButton button, SInt32 group,
 				SInt32 modifierBit) const
 {
 	assert(modifierBit >= 0 && modifierBit < kKeyModifierNumBits);
@@ -744,7 +746,7 @@ CKeyMap::keyForModifier(KeyButton button, SInt32 group,
 }
 
 bool
-CKeyMap::keysForKeyItem(const KeyItem& keyItem, SInt32& group,
+KeyMap::keysForKeyItem(const KeyItem& keyItem, SInt32& group,
 				ModifierToKeys& activeModifiers,
 				KeyModifierMask& currentState, KeyModifierMask desiredState,
 				KeyModifierMask overrideModifiers,
@@ -817,7 +819,7 @@ CKeyMap::keysForKeyItem(const KeyItem& keyItem, SInt32& group,
 }
 
 bool
-CKeyMap::keysToRestoreModifiers(const KeyItem& keyItem, SInt32,
+KeyMap::keysToRestoreModifiers(const KeyItem& keyItem, SInt32,
 				ModifierToKeys& activeModifiers,
 				KeyModifierMask& currentState,
 				const ModifierToKeys& desiredModifiers,
@@ -864,7 +866,7 @@ CKeyMap::keysToRestoreModifiers(const KeyItem& keyItem, SInt32,
 }
 
 bool
-CKeyMap::keysForModifierState(KeyButton button, SInt32 group,
+KeyMap::keysForModifierState(KeyButton button, SInt32 group,
 				ModifierToKeys& activeModifiers,
 				KeyModifierMask& currentState,
 				KeyModifierMask requiredState, KeyModifierMask sensitiveMask,
@@ -959,7 +961,7 @@ CKeyMap::keysForModifierState(KeyButton button, SInt32 group,
 }
 
 void
-CKeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
+KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
 				ModifierToKeys& activeModifiers,
 				KeyModifierMask& currentState,
 				Keystrokes& keystrokes) const
@@ -1069,7 +1071,7 @@ CKeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
 }
 
 SInt32
-CKeyMap::getNumModifiers(KeyModifierMask state)
+KeyMap::getNumModifiers(KeyModifierMask state)
 {
 	SInt32 n = 0;
 	for (; state != 0; state >>= 1) {
@@ -1081,13 +1083,13 @@ CKeyMap::getNumModifiers(KeyModifierMask state)
 }
 
 bool
-CKeyMap::isDeadKey(KeyID key)
+KeyMap::isDeadKey(KeyID key)
 {
 	return (key == kKeyCompose || (key >= 0x0300 && key <= 0x036f));
 }
 
 KeyID
-CKeyMap::getDeadKey(KeyID key)
+KeyMap::getDeadKey(KeyID key)
 {
 	if (isDeadKey(key)) {
 		// already dead
@@ -1144,13 +1146,13 @@ CKeyMap::getDeadKey(KeyID key)
 	}
 }
 
-CString
-CKeyMap::formatKey(KeyID key, KeyModifierMask mask)
+String
+KeyMap::formatKey(KeyID key, KeyModifierMask mask)
 {
 	// initialize tables
 	initKeyNameMaps();
 
-	CString x;
+	String x;
 	for (SInt32 i = 0; i < kKeyModifierNumBits; ++i) {
 		KeyModifierMask mod = (1u << i);
 		if ((mask & mod) != 0 && s_modifierToNameMap->count(mod) > 0) {
@@ -1178,7 +1180,7 @@ CKeyMap::formatKey(KeyID key, KeyModifierMask mask)
 }
 
 bool
-CKeyMap::parseKey(const CString& x, KeyID& key)
+KeyMap::parseKey(const String& x, KeyID& key)
 {
 	// initialize tables
 	initKeyNameMaps();
@@ -1213,20 +1215,20 @@ CKeyMap::parseKey(const CString& x, KeyID& key)
 }
 
 bool
-CKeyMap::parseModifiers(CString& x, KeyModifierMask& mask)
+KeyMap::parseModifiers(String& x, KeyModifierMask& mask)
 {
 	// initialize tables
 	initKeyNameMaps();
 
 	mask = 0;
-	CString::size_type tb = x.find_first_not_of(" \t", 0);
-	while (tb != CString::npos) {
+	String::size_type tb = x.find_first_not_of(" \t", 0);
+	while (tb != String::npos) {
 		// get next component
-		CString::size_type te = x.find_first_of(" \t+)", tb);
-		if (te == CString::npos) {
+		String::size_type te = x.find_first_of(" \t+)", tb);
+		if (te == String::npos) {
 			te = x.size();
 		}
-		CString c = x.substr(tb, te - tb);
+		String c = x.substr(tb, te - tb);
 		if (c.empty()) {
 			// missing component
 			return false;
@@ -1243,9 +1245,9 @@ CKeyMap::parseModifiers(CString& x, KeyModifierMask& mask)
 		else {
 			// unknown string
 			x.erase(0, tb);
-			CString::size_type tb = x.find_first_not_of(" \t");
-			CString::size_type te = x.find_last_not_of(" \t");
-			if (tb == CString::npos) {
+			String::size_type tb = x.find_first_not_of(" \t");
+			String::size_type te = x.find_last_not_of(" \t");
+			if (tb == String::npos) {
 				x = "";
 			}
 			else {
@@ -1256,7 +1258,7 @@ CKeyMap::parseModifiers(CString& x, KeyModifierMask& mask)
 
 		// check for '+' or end of string
 		tb = x.find_first_not_of(" \t", te);
-		if (tb != CString::npos) {
+		if (tb != String::npos) {
 			if (x[tb] != '+') {
 				// expected '+'
 				return false;
@@ -1271,20 +1273,20 @@ CKeyMap::parseModifiers(CString& x, KeyModifierMask& mask)
 }
 
 void
-CKeyMap::initKeyNameMaps()
+KeyMap::initKeyNameMaps()
 {
 	// initialize tables
 	if (s_nameToKeyMap == NULL) {
-		s_nameToKeyMap = new CNameToKeyMap;
-		s_keyToNameMap = new CKeyToNameMap;
+		s_nameToKeyMap = new NameToKeyMap;
+		s_keyToNameMap = new KeyToNameMap;
 		for (const KeyNameMapEntry* i = kKeyNameMap; i->m_name != NULL; ++i) {
 			(*s_nameToKeyMap)[i->m_name] = i->m_id;
 			(*s_keyToNameMap)[i->m_id]   = i->m_name;
 		}
 	}
 	if (s_nameToModifierMap == NULL) {
-		s_nameToModifierMap = new CNameToModifierMap;
-		s_modifierToNameMap = new CModifierToNameMap;
+		s_nameToModifierMap = new NameToModifierMap;
+		s_modifierToNameMap = new ModifierToNameMap;
 		for (const KeyModifierNameMapEntry* i = kModifierNameMap;
 								i->m_name != NULL; ++i) {
 			(*s_nameToModifierMap)[i->m_name] = i->m_mask;
@@ -1295,11 +1297,11 @@ CKeyMap::initKeyNameMaps()
 
 
 //
-// CKeyMap::KeyItem
+// KeyMap::KeyItem
 //
 
 bool
-CKeyMap::KeyItem::operator==(const KeyItem& x) const
+KeyMap::KeyItem::operator==(const KeyItem& x) const
 {
 	return (m_id        == x.m_id        &&
 			m_group     == x.m_group     &&
@@ -1314,10 +1316,10 @@ CKeyMap::KeyItem::operator==(const KeyItem& x) const
 
 
 //
-// CKeyMap::Keystroke
+// KeyMap::Keystroke
 //
 
-CKeyMap::Keystroke::Keystroke(KeyButton button,
+KeyMap::Keystroke::Keystroke(KeyButton button,
 				bool press, bool repeat, UInt32 data) :
 	m_type(kButton)
 {
@@ -1327,10 +1329,12 @@ CKeyMap::Keystroke::Keystroke(KeyButton button,
 	m_data.m_button.m_client = data;
 }
 
-CKeyMap::Keystroke::Keystroke(SInt32 group, bool absolute, bool restore) :
+KeyMap::Keystroke::Keystroke(SInt32 group, bool absolute, bool restore) :
 	m_type(kGroup)
 {
 	m_data.m_group.m_group    = group;
 	m_data.m_group.m_absolute = absolute;
 	m_data.m_group.m_restore  = restore;
+}
+
 }

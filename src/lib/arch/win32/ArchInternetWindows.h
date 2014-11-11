@@ -17,12 +17,12 @@
 
 #pragma once
 
-#define ARCH_INTERNET CArchInternetWindows
+#define ARCH_INTERNET ArchInternetWindows
 
 #include "base/String.h"
 
-class CArchInternetWindows {
+class ArchInternetWindows {
 public:
-	CString				get(const CString& url);
-	CString				urlEncode(const CString& url);
+	String				get(const String& url);
+	String				urlEncode(const String& url);
 };

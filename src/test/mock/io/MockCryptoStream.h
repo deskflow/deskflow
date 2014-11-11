@@ -22,11 +22,11 @@
 
 #include "test/global/gmock.h"
 
-class CMockCryptoStream : public CCryptoStream
+class MockCryptoStream : public CryptoStream
 {
 public:
-	CMockCryptoStream(IEventQueue* eventQueue, IStream* stream) :
-		CCryptoStream(eventQueue, stream, CCryptoOptions("gcm", "stub"), false) { }
+	MockCryptoStream(IEventQueue* eventQueue, IStream* stream) :
+		CryptoStream(eventQueue, stream, CryptoOptions("gcm", "stub"), false) { }
 	MOCK_METHOD2(read, UInt32(void*, UInt32));
 	MOCK_METHOD2(write, void(const void*, UInt32));
 };

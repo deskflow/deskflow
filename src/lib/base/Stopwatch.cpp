@@ -20,10 +20,10 @@
 #include "arch/Arch.h"
 
 //
-// CStopwatch
+// Stopwatch
 //
 
-CStopwatch::CStopwatch(bool triggered) :
+Stopwatch::Stopwatch(bool triggered) :
 	m_mark(0.0),
 	m_triggered(triggered),
 	m_stopped(triggered)
@@ -33,13 +33,13 @@ CStopwatch::CStopwatch(bool triggered) :
 	}
 }
 
-CStopwatch::~CStopwatch()
+Stopwatch::~Stopwatch()
 {
 	// do nothing
 }
 
 double
-CStopwatch::reset()
+Stopwatch::reset()
 {
 	if (m_stopped) {
 		const double dt = m_mark;
@@ -55,7 +55,7 @@ CStopwatch::reset()
 }
 
 void
-CStopwatch::stop()
+Stopwatch::stop()
 {
 	if (m_stopped) {
 		return;
@@ -67,7 +67,7 @@ CStopwatch::stop()
 }
 
 void
-CStopwatch::start()
+Stopwatch::start()
 {
 	m_triggered = false;
 	if (!m_stopped) {
@@ -80,14 +80,14 @@ CStopwatch::start()
 }
 
 void
-CStopwatch::setTrigger()
+Stopwatch::setTrigger()
 {
 	stop();
 	m_triggered = true;
 }
 
 double
-CStopwatch::getTime()
+Stopwatch::getTime()
 {
 	if (m_triggered) {
 		const double dt = m_mark;
@@ -102,19 +102,19 @@ CStopwatch::getTime()
 	}
 }
 
-CStopwatch::operator double()
+Stopwatch::operator double()
 {
 	return getTime();
 }
 
 bool
-CStopwatch::isStopped() const
+Stopwatch::isStopped() const
 {
 	return m_stopped;
 }
 
 double
-CStopwatch::getTime() const
+Stopwatch::getTime() const
 {
 	if (m_stopped) {
 		return m_mark;
@@ -124,7 +124,7 @@ CStopwatch::getTime() const
 	}
 }
 
-CStopwatch::operator double() const
+Stopwatch::operator double() const
 {
 	return getTime();
 }

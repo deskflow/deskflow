@@ -47,7 +47,7 @@ CMSWindowsClipboardBitmapConverter::getWin32Format() const
 }
 
 HANDLE
-CMSWindowsClipboardBitmapConverter::fromIClipboard(const CString& data) const
+CMSWindowsClipboardBitmapConverter::fromIClipboard(const String& data) const
 {
 	// copy to memory handle
 	HGLOBAL gData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, data.size());
@@ -67,13 +67,13 @@ CMSWindowsClipboardBitmapConverter::fromIClipboard(const CString& data) const
 	return gData;
 }
 
-CString
+String
 CMSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 {
 	// get datator
 	const char* src = (const char*)GlobalLock(data);
 	if (src == NULL) {
-		return CString();
+		return String();
 	}
 	UInt32 srcSize = (UInt32)GlobalSize(data);
 
@@ -85,7 +85,7 @@ CMSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 		bitmap->bmiHeader.biBitCount == 32) &&
 		bitmap->bmiHeader.biCompression == BI_RGB) {
 		// already in canonical form
-		CString image(src, srcSize);
+		String image(src, srcSize);
 		GlobalUnlock(data);
 		return image;
 	}
@@ -138,7 +138,7 @@ CMSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 	GdiFlush();
 
 	// extract data
-	CString image((const char*)&info, info.biSize);
+	String image((const char*)&info, info.biSize);
 	image.append((const char*)raw, 4 * w * h);
 
 	// clean up GDI

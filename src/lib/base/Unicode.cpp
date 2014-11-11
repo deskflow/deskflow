@@ -91,14 +91,14 @@ setError(bool* errors)
 
 
 //
-// CUnicode
+// Unicode
 //
 
-UInt32					CUnicode::s_invalid     = 0x0000ffff;
-UInt32					CUnicode::s_replacement = 0x0000fffd;
+UInt32					Unicode::s_invalid     = 0x0000ffff;
+UInt32					Unicode::s_replacement = 0x0000fffd;
 
 bool
-CUnicode::isUTF8(const CString& src)
+Unicode::isUTF8(const String& src)
 {
 	// convert and test each character
 	const UInt8* data = reinterpret_cast<const UInt8*>(src.c_str());
@@ -110,15 +110,15 @@ CUnicode::isUTF8(const CString& src)
 	return true;
 }
 
-CString
-CUnicode::UTF8ToUCS2(const CString& src, bool* errors)
+String
+Unicode::UTF8ToUCS2(const String& src, bool* errors)
 {
 	// default to success
 	resetError(errors);
 
 	// get size of input string and reserve some space in output
 	UInt32 n = (UInt32)src.size();
-	CString dst;
+	String dst;
 	dst.reserve(2 * n);
 
 	// convert each character
@@ -139,15 +139,15 @@ CUnicode::UTF8ToUCS2(const CString& src, bool* errors)
 	return dst;
 }
 
-CString
-CUnicode::UTF8ToUCS4(const CString& src, bool* errors)
+String
+Unicode::UTF8ToUCS4(const String& src, bool* errors)
 {
 	// default to success
 	resetError(errors);
 
 	// get size of input string and reserve some space in output
 	UInt32 n = (UInt32)src.size();
-	CString dst;
+	String dst;
 	dst.reserve(4 * n);
 
 	// convert each character
@@ -163,15 +163,15 @@ CUnicode::UTF8ToUCS4(const CString& src, bool* errors)
 	return dst;
 }
 
-CString
-CUnicode::UTF8ToUTF16(const CString& src, bool* errors)
+String
+Unicode::UTF8ToUTF16(const String& src, bool* errors)
 {
 	// default to success
 	resetError(errors);
 
 	// get size of input string and reserve some space in output
 	UInt32 n = (UInt32)src.size();
-	CString dst;
+	String dst;
 	dst.reserve(2 * n);
 
 	// convert each character
@@ -201,15 +201,15 @@ CUnicode::UTF8ToUTF16(const CString& src, bool* errors)
 	return dst;
 }
 
-CString
-CUnicode::UTF8ToUTF32(const CString& src, bool* errors)
+String
+Unicode::UTF8ToUTF32(const String& src, bool* errors)
 {
 	// default to success
 	resetError(errors);
 
 	// get size of input string and reserve some space in output
 	UInt32 n = (UInt32)src.size();
-	CString dst;
+	String dst;
 	dst.reserve(4 * n);
 
 	// convert each character
@@ -229,8 +229,8 @@ CUnicode::UTF8ToUTF32(const CString& src, bool* errors)
 	return dst;
 }
 
-CString
-CUnicode::UTF8ToText(const CString& src, bool* errors)
+String
+Unicode::UTF8ToText(const String& src, bool* errors)
 {
 	// default to success
 	resetError(errors);
@@ -243,7 +243,7 @@ CUnicode::UTF8ToText(const CString& src, bool* errors)
 	int len   = ARCH->convStringWCToMB(NULL, tmp, size, errors);
 	char* mbs = new char[len + 1];
 	ARCH->convStringWCToMB(mbs, tmp, size, errors);
-	CString text(mbs, len);
+	String text(mbs, len);
 
 	// clean up
 	delete[] mbs;
@@ -252,8 +252,8 @@ CUnicode::UTF8ToText(const CString& src, bool* errors)
 	return text;
 }
 
-CString
-CUnicode::UCS2ToUTF8(const CString& src, bool* errors)
+String
+Unicode::UCS2ToUTF8(const String& src, bool* errors)
 {
 	// default to success
 	resetError(errors);
@@ -263,8 +263,8 @@ CUnicode::UCS2ToUTF8(const CString& src, bool* errors)
 	return doUCS2ToUTF8(reinterpret_cast<const UInt8*>(src.data()), n, errors);
 }
 
-CString
-CUnicode::UCS4ToUTF8(const CString& src, bool* errors)
+String
+Unicode::UCS4ToUTF8(const String& src, bool* errors)
 {
 	// default to success
 	resetError(errors);
@@ -274,8 +274,8 @@ CUnicode::UCS4ToUTF8(const CString& src, bool* errors)
 	return doUCS4ToUTF8(reinterpret_cast<const UInt8*>(src.data()), n, errors);
 }
 
-CString
-CUnicode::UTF16ToUTF8(const CString& src, bool* errors)
+String
+Unicode::UTF16ToUTF8(const String& src, bool* errors)
 {
 	// default to success
 	resetError(errors);
@@ -285,8 +285,8 @@ CUnicode::UTF16ToUTF8(const CString& src, bool* errors)
 	return doUTF16ToUTF8(reinterpret_cast<const UInt8*>(src.data()), n, errors);
 }
 
-CString
-CUnicode::UTF32ToUTF8(const CString& src, bool* errors)
+String
+Unicode::UTF32ToUTF8(const String& src, bool* errors)
 {
 	// default to success
 	resetError(errors);
@@ -296,8 +296,8 @@ CUnicode::UTF32ToUTF8(const CString& src, bool* errors)
 	return doUTF32ToUTF8(reinterpret_cast<const UInt8*>(src.data()), n, errors);
 }
 
-CString
-CUnicode::textToUTF8(const CString& src, bool* errors)
+String
+Unicode::textToUTF8(const String& src, bool* errors)
 {
 	// default to success
 	resetError(errors);
@@ -309,7 +309,7 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 	ARCH->convStringMBToWC(wcs, src.c_str(), n, errors);
 
 	// convert to UTF8
-	CString utf8 = wideCharToUTF8(wcs, len, errors);
+	String utf8 = wideCharToUTF8(wcs, len, errors);
 
 	// clean up
 	delete[] wcs;
@@ -318,10 +318,10 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 }
 
 wchar_t*
-CUnicode::UTF8ToWideChar(const CString& src, UInt32& size, bool* errors)
+Unicode::UTF8ToWideChar(const String& src, UInt32& size, bool* errors)
 {
 	// convert to platform's wide character encoding
-	CString tmp;
+	String tmp;
 	switch (ARCH->getWideCharEncoding()) {
 	case IArchString::kUCS2:
 		tmp = UTF8ToUCS2(src, errors);
@@ -353,12 +353,12 @@ CUnicode::UTF8ToWideChar(const CString& src, UInt32& size, bool* errors)
 	return dst;
 }
 
-CString
-CUnicode::wideCharToUTF8(const wchar_t* src, UInt32 size, bool* errors)
+String
+Unicode::wideCharToUTF8(const wchar_t* src, UInt32 size, bool* errors)
 {
 	// convert from platform's wide character encoding.
 	// note -- this must include a wide nul character (independent of
-	// the CString's nul character).
+	// the String's nul character).
 	switch (ARCH->getWideCharEncoding()) {
 	case IArchString::kUCS2:
 		return doUCS2ToUTF8(reinterpret_cast<const UInt8*>(src), size, errors);
@@ -374,15 +374,15 @@ CUnicode::wideCharToUTF8(const wchar_t* src, UInt32 size, bool* errors)
 
 	default:
 		assert(0 && "unknown wide character encoding");
-		return CString();
+		return String();
 	}
 }
 
-CString
-CUnicode::doUCS2ToUTF8(const UInt8* data, UInt32 n, bool* errors)
+String
+Unicode::doUCS2ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 {
 	// make some space
-	CString dst;
+	String dst;
 	dst.reserve(n);
 
 	// check if first character is 0xfffe or 0xfeff
@@ -414,11 +414,11 @@ CUnicode::doUCS2ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 	return dst;
 }
 
-CString
-CUnicode::doUCS4ToUTF8(const UInt8* data, UInt32 n, bool* errors)
+String
+Unicode::doUCS4ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 {
 	// make some space
-	CString dst;
+	String dst;
 	dst.reserve(n);
 
 	// check if first character is 0xfffe or 0xfeff
@@ -450,11 +450,11 @@ CUnicode::doUCS4ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 	return dst;
 }
 
-CString
-CUnicode::doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors)
+String
+Unicode::doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 {
 	// make some space
-	CString dst;
+	String dst;
 	dst.reserve(n);
 
 	// check if first character is 0xfffe or 0xfeff
@@ -512,11 +512,11 @@ CUnicode::doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 	return dst;
 }
 
-CString
-CUnicode::doUTF32ToUTF8(const UInt8* data, UInt32 n, bool* errors)
+String
+Unicode::doUTF32ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 {
 	// make some space
-	CString dst;
+	String dst;
 	dst.reserve(n);
 
 	// check if first character is 0xfffe or 0xfeff
@@ -553,7 +553,7 @@ CUnicode::doUTF32ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 }
 
 UInt32
-CUnicode::fromUTF8(const UInt8*& data, UInt32& n)
+Unicode::fromUTF8(const UInt8*& data, UInt32& n)
 {
 	assert(data != NULL);
 	assert(n    != 0);
@@ -728,7 +728,7 @@ CUnicode::fromUTF8(const UInt8*& data, UInt32& n)
 }
 
 void
-CUnicode::toUTF8(CString& dst, UInt32 c, bool* errors)
+Unicode::toUTF8(String& dst, UInt32 c, bool* errors)
 {
 	UInt8 data[6];
 

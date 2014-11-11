@@ -30,19 +30,19 @@
 #define A_CHAR_ID 0x00000061
 #define A_CHAR_BUTTON 001
 
-class COSXKeyStateTests : public ::testing::Test {
+class OSXKeyStateTests : public ::testing::Test {
 public:
-	static bool isKeyPressed(const COSXKeyState& keyState, KeyButton button);
+	static bool isKeyPressed(const OSXKeyState& keyState, KeyButton button);
 };
 
 // fakeAndPoll_shift seems to always fail on osx10.6
 #if __MAC_OS_X_VERSION_MIN_REQUIRED > 1060
 
-TEST_F(COSXKeyStateTests, fakeAndPoll_shift)
+TEST_F(OSXKeyStateTests, fakeAndPoll_shift)
 {
-	CKeyMap keyMap;
-	CMockEventQueue eventQueue;
-	COSXKeyState keyState(&eventQueue, keyMap);
+	synergy::KeyMap keyMap;
+	MockEventQueue eventQueue;
+	OSXKeyState keyState(&eventQueue, keyMap);
 	keyState.updateKeyMap();
 
 	keyState.fakeKeyDown(SHIFT_ID_L, 0, 1);
@@ -58,11 +58,11 @@ TEST_F(COSXKeyStateTests, fakeAndPoll_shift)
 	EXPECT_TRUE(!isKeyPressed(keyState, SHIFT_BUTTON));
 }
 
-TEST_F(COSXKeyStateTests, fakeAndPoll_charKey)
+TEST_F(OSXKeyStateTests, fakeAndPoll_charKey)
 {
-	CKeyMap keyMap;
-	CMockEventQueue eventQueue;
-	COSXKeyState keyState(&eventQueue, keyMap);
+	synergy::KeyMap keyMap;
+	MockEventQueue eventQueue;
+	OSXKeyState keyState(&eventQueue, keyMap);
 	keyState.updateKeyMap();
 
 	keyState.fakeKeyDown(A_CHAR_ID, 0, 1);
@@ -77,11 +77,11 @@ TEST_F(COSXKeyStateTests, fakeAndPoll_charKey)
 	keyState.fakeKeyUp(2);
 }
 
-TEST_F(COSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
+TEST_F(OSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
 {
-	CKeyMap keyMap;
-	CMockEventQueue eventQueue;
-	COSXKeyState keyState(&eventQueue, keyMap);
+	synergy::KeyMap keyMap;
+	MockEventQueue eventQueue;
+	OSXKeyState keyState(&eventQueue, keyMap);
 	keyState.updateKeyMap();
 
 	keyState.fakeKeyDown(A_CHAR_ID, KeyModifierShift, 1);
@@ -97,7 +97,7 @@ TEST_F(COSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
 }
 
 bool
-COSXKeyStateTests::isKeyPressed(const COSXKeyState& keyState, KeyButton button)
+OSXKeyStateTests::isKeyPressed(const OSXKeyState& keyState, KeyButton button)
 {
 	// HACK: allow os to realize key state changes.
 	ARCH->sleep(.2);

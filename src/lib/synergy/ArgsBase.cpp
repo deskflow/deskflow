@@ -18,7 +18,7 @@
 
 #include "synergy/ArgsBase.h"
 
-CArgsBase::CArgsBase() :
+ArgsBase::ArgsBase() :
 #if SYSAPI_WIN32
 m_daemon(false), // daemon mode not supported on windows (use --service)
 m_debugServiceWait(false),
@@ -45,6 +45,6 @@ m_synergyAddress()
 {
 }
 
-CArgsBase::~CArgsBase()
+ArgsBase::~ArgsBase()
 {
 }

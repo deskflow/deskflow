@@ -32,39 +32,39 @@ primary screen implementations.
 class IPrimaryScreen : public IInterface {
 public:
 	//! Button event data
-	class CButtonInfo {
+	class ButtonInfo {
 	public:
-		static CButtonInfo* alloc(ButtonID, KeyModifierMask);
-		static CButtonInfo* alloc(const CButtonInfo&);
+		static ButtonInfo* alloc(ButtonID, KeyModifierMask);
+		static ButtonInfo* alloc(const ButtonInfo&);
 
-		static bool			equal(const CButtonInfo*, const CButtonInfo*);
+		static bool			equal(const ButtonInfo*, const ButtonInfo*);
 
 	public:
 		ButtonID		m_button;
 		KeyModifierMask	m_mask;
 	};
 	//! Motion event data
-	class CMotionInfo {
+	class MotionInfo {
 	public:
-		static CMotionInfo* alloc(SInt32 x, SInt32 y);
+		static MotionInfo* alloc(SInt32 x, SInt32 y);
 
 	public:
 		SInt32			m_x;
 		SInt32			m_y;
 	};
 	//! Wheel motion event data
-	class CWheelInfo {
+	class WheelInfo {
 	public:
-		static CWheelInfo* alloc(SInt32 xDelta, SInt32 yDelta);
+		static WheelInfo* alloc(SInt32 xDelta, SInt32 yDelta);
 
 	public:
 		SInt32			m_xDelta;
 		SInt32			m_yDelta;
 	};
 	//! Hot key event data
-	class CHotKeyInfo {
+	class HotKeyInfo {
 	public:
-		static CHotKeyInfo* alloc(UInt32 id);
+		static HotKeyInfo* alloc(UInt32 id);
 
 	public:
 		UInt32			m_id;

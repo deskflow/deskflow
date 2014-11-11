@@ -26,7 +26,7 @@
 This class provides functions for converting between various Unicode
 encodings and the current locale encoding.
 */
-class CUnicode {
+class Unicode {
 public:
 	//! @name accessors
 	//@{
@@ -36,7 +36,7 @@ public:
 	Returns true iff the string contains a valid sequence of UTF-8
 	encoded characters.
 	*/
-	static bool			isUTF8(const CString&);
+	static bool			isUTF8(const String&);
 
 	//! Convert from UTF-8 to UCS-2 encoding
 	/*!
@@ -44,7 +44,7 @@ public:
 	is set to true iff any character could not be encoded in UCS-2.
 	Decoding errors do not set *errors.
 	*/
-	static CString		UTF8ToUCS2(const CString&, bool* errors = NULL);
+	static String		UTF8ToUCS2(const String&, bool* errors = NULL);
 
 	//! Convert from UTF-8 to UCS-4 encoding
 	/*!
@@ -52,7 +52,7 @@ public:
 	is set to true iff any character could not be encoded in UCS-4.
 	Decoding errors do not set *errors.
 	*/
-	static CString		UTF8ToUCS4(const CString&, bool* errors = NULL);
+	static String		UTF8ToUCS4(const String&, bool* errors = NULL);
 
 	//! Convert from UTF-8 to UTF-16 encoding
 	/*!
@@ -60,7 +60,7 @@ public:
 	is set to true iff any character could not be encoded in UTF-16.
 	Decoding errors do not set *errors.
 	*/
-	static CString		UTF8ToUTF16(const CString&, bool* errors = NULL);
+	static String		UTF8ToUTF16(const String&, bool* errors = NULL);
 
 	//! Convert from UTF-8 to UTF-32 encoding
 	/*!
@@ -68,7 +68,7 @@ public:
 	is set to true iff any character could not be encoded in UTF-32.
 	Decoding errors do not set *errors.
 	*/
-	static CString		UTF8ToUTF32(const CString&, bool* errors = NULL);
+	static String		UTF8ToUTF32(const String&, bool* errors = NULL);
 
 	//! Convert from UTF-8 to the current locale encoding
 	/*!
@@ -76,42 +76,42 @@ public:
 	NULL then *errors is set to true iff any character could not be encoded.
 	Decoding errors do not set *errors.
 	*/
-	static CString		UTF8ToText(const CString&, bool* errors = NULL);
+	static String		UTF8ToText(const String&, bool* errors = NULL);
 
 	//! Convert from UCS-2 to UTF-8
 	/*!
 	Convert from UCS-2 to UTF-8.  If errors is not NULL then *errors is
 	set to true iff any character could not be decoded.
 	*/
-	static CString		UCS2ToUTF8(const CString&, bool* errors = NULL);
+	static String		UCS2ToUTF8(const String&, bool* errors = NULL);
 
 	//! Convert from UCS-4 to UTF-8
 	/*!
 	Convert from UCS-4 to UTF-8.  If errors is not NULL then *errors is
 	set to true iff any character could not be decoded.
 	*/
-	static CString		UCS4ToUTF8(const CString&, bool* errors = NULL);
+	static String		UCS4ToUTF8(const String&, bool* errors = NULL);
 
 	//! Convert from UTF-16 to UTF-8
 	/*!
 	Convert from UTF-16 to UTF-8.  If errors is not NULL then *errors is
 	set to true iff any character could not be decoded.
 	*/
-	static CString		UTF16ToUTF8(const CString&, bool* errors = NULL);
+	static String		UTF16ToUTF8(const String&, bool* errors = NULL);
 
 	//! Convert from UTF-32 to UTF-8
 	/*!
 	Convert from UTF-32 to UTF-8.  If errors is not NULL then *errors is
 	set to true iff any character could not be decoded.
 	*/
-	static CString		UTF32ToUTF8(const CString&, bool* errors = NULL);
+	static String		UTF32ToUTF8(const String&, bool* errors = NULL);
 
 	//! Convert from the current locale encoding to UTF-8
 	/*!
 	Convert from the current locale encoding to UTF-8.  If errors is not
 	NULL then *errors is set to true iff any character could not be decoded.
 	*/
-	static CString		textToUTF8(const CString&, bool* errors = NULL);
+	static String		textToUTF8(const String&, bool* errors = NULL);
 
 	//@}
 
@@ -120,23 +120,23 @@ private:
 	// to the platform).  caller must delete[] the returned string.  the
 	// string is *not* nul terminated;  the length (in characters) is
 	// returned in size.
-	static wchar_t*		UTF8ToWideChar(const CString&,
+	static wchar_t*		UTF8ToWideChar(const String&,
 							UInt32& size, bool* errors);
 
 	// convert nul terminated wchar_t string (in platform's native
 	// encoding) to UTF8.
-	static CString		wideCharToUTF8(const wchar_t*,
+	static String		wideCharToUTF8(const wchar_t*,
 							UInt32 size, bool* errors);
 
 	// internal conversion to UTF8
-	static CString		doUCS2ToUTF8(const UInt8* src, UInt32 n, bool* errors);
-	static CString		doUCS4ToUTF8(const UInt8* src, UInt32 n, bool* errors);
-	static CString		doUTF16ToUTF8(const UInt8* src, UInt32 n, bool* errors);
-	static CString		doUTF32ToUTF8(const UInt8* src, UInt32 n, bool* errors);
+	static String		doUCS2ToUTF8(const UInt8* src, UInt32 n, bool* errors);
+	static String		doUCS4ToUTF8(const UInt8* src, UInt32 n, bool* errors);
+	static String		doUTF16ToUTF8(const UInt8* src, UInt32 n, bool* errors);
+	static String		doUTF32ToUTF8(const UInt8* src, UInt32 n, bool* errors);
 
 	// convert characters to/from UTF8
 	static UInt32		fromUTF8(const UInt8*& src, UInt32& size);
-	static void			toUTF8(CString& dst, UInt32 c, bool* errors);
+	static void			toUTF8(String& dst, UInt32 c, bool* errors);
 
 private:
 	static UInt32		s_invalid;

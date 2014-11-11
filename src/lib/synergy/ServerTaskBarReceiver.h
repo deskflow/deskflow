@@ -29,10 +29,10 @@
 class IEventQueue;
 
 //! Implementation of IArchTaskBarReceiver for the synergy server
-class CServerTaskBarReceiver : public IArchTaskBarReceiver {
+class ServerTaskBarReceiver : public IArchTaskBarReceiver {
 public:
-	CServerTaskBarReceiver(IEventQueue* events);
-	virtual ~CServerTaskBarReceiver();
+	ServerTaskBarReceiver(IEventQueue* events);
+	virtual ~ServerTaskBarReceiver();
 
 	//! @name manipulators
 	//@{
@@ -41,9 +41,9 @@ public:
 	/*!
 	Determine the status and query required information from the server.
 	*/
-	void				updateStatus(CServer*, const CString& errorMsg);
+	void				updateStatus(Server*, const String& errorMsg);
 
-	void updateStatus(INode* n, const CString& errorMsg) { updateStatus((CServer*)n, errorMsg); }
+	void updateStatus(INode* n, const String& errorMsg) { updateStatus((Server*)n, errorMsg); }
 
 	//@}
 
@@ -57,7 +57,7 @@ public:
 	virtual std::string	getToolTip() const;
 
 protected:
-	typedef std::vector<CString> CClients;
+	typedef std::vector<String> Clients;
 	enum EState {
 		kNotRunning,
 		kNotWorking,
@@ -70,10 +70,10 @@ protected:
 	EState				getStatus() const;
 
 	//! Get error message
-	const CString&		getErrorMessage() const;
+	const String&		getErrorMessage() const;
 
 	//! Get connected clients
-	const CClients&		getClients() const;
+	const Clients&		getClients() const;
 
 	//! Quit app
 	/*!
@@ -86,13 +86,13 @@ protected:
 	Called when status changes.  The default implementation does
 	nothing.
 	*/
-	virtual void		onStatusChanged(CServer* server);
+	virtual void		onStatusChanged(Server* server);
 
 private:
 	EState				m_state;
-	CString				m_errorMessage;
-	CClients			m_clients;
+	String				m_errorMessage;
+	Clients			m_clients;
 	IEventQueue*		m_events;
 };
 
-IArchTaskBarReceiver* createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events);
+IArchTaskBarReceiver* createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events);

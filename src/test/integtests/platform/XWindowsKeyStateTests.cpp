@@ -74,8 +74,8 @@ protected:
 
 TEST_F(CXWindowsKeyStateTests, setActiveGroup_pollAndSet_groupIsZero)
 {
-	CMockKeyMap keyMap;
-	CMockEventQueue eventQueue;
+	MockKeyMap keyMap;
+	MockEventQueue eventQueue;
 	CXWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
@@ -86,8 +86,8 @@ TEST_F(CXWindowsKeyStateTests, setActiveGroup_pollAndSet_groupIsZero)
 
 TEST_F(CXWindowsKeyStateTests, setActiveGroup_poll_groupIsNotSet)
 {
-	CMockKeyMap keyMap;
-	CMockEventQueue eventQueue;
+	MockKeyMap keyMap;
+	MockEventQueue eventQueue;
 	CXWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
@@ -98,8 +98,8 @@ TEST_F(CXWindowsKeyStateTests, setActiveGroup_poll_groupIsNotSet)
 
 TEST_F(CXWindowsKeyStateTests, setActiveGroup_customGroup_groupWasSet)
 {
-	CMockKeyMap keyMap;
-	CMockEventQueue eventQueue;
+	MockKeyMap keyMap;
+	MockEventQueue eventQueue;
 	CXWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
@@ -110,8 +110,8 @@ TEST_F(CXWindowsKeyStateTests, setActiveGroup_customGroup_groupWasSet)
 
 TEST_F(CXWindowsKeyStateTests, mapModifiersFromX_zeroState_zeroMask)
 {
-	CMockKeyMap keyMap;
-	CMockEventQueue eventQueue;
+	MockKeyMap keyMap;
+	MockEventQueue eventQueue;
 	CXWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
@@ -122,8 +122,8 @@ TEST_F(CXWindowsKeyStateTests, mapModifiersFromX_zeroState_zeroMask)
 
 TEST_F(CXWindowsKeyStateTests, mapModifiersToX_zeroMask_resultIsTrue)
 {
-	CMockKeyMap keyMap;
-	CMockEventQueue eventQueue;
+	MockKeyMap keyMap;
+	MockEventQueue eventQueue;
 	CXWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
@@ -135,8 +135,8 @@ TEST_F(CXWindowsKeyStateTests, mapModifiersToX_zeroMask_resultIsTrue)
 
 TEST_F(CXWindowsKeyStateTests, fakeCtrlAltDel_default_returnsFalse)
 {
-	CMockKeyMap keyMap;
-	CMockEventQueue eventQueue;
+	MockKeyMap keyMap;
+	MockEventQueue eventQueue;
 	CXWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
@@ -147,8 +147,8 @@ TEST_F(CXWindowsKeyStateTests, fakeCtrlAltDel_default_returnsFalse)
 
 TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero)
 {
-	CMockKeyMap keyMap;
-	CMockEventQueue eventQueue;
+	MockKeyMap keyMap;
+	MockEventQueue eventQueue;
 	CXWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
@@ -160,8 +160,8 @@ TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero)
 #if 0 // TODO: fix, causes sigsegv
 TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCorrect)
 {
-	CMockKeyMap keyMap;
-	CMockEventQueue eventQueue;
+	MockKeyMap keyMap;
+	MockEventQueue eventQueue;
 	CXWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
@@ -193,8 +193,8 @@ TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCo
 
 TEST_F(CXWindowsKeyStateTests, pollActiveGroup_defaultState_returnsZero)
 {
-	CMockKeyMap keyMap;
-	CMockEventQueue eventQueue;
+	MockKeyMap keyMap;
+	MockEventQueue eventQueue;
 	CXWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
@@ -205,8 +205,8 @@ TEST_F(CXWindowsKeyStateTests, pollActiveGroup_defaultState_returnsZero)
 
 TEST_F(CXWindowsKeyStateTests, pollActiveGroup_positiveGroup_returnsGroup)
 {
-	CMockKeyMap keyMap;
-	CMockEventQueue eventQueue;
+	MockKeyMap keyMap;
+	MockEventQueue eventQueue;
 	CXWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
@@ -220,8 +220,8 @@ TEST_F(CXWindowsKeyStateTests, pollActiveGroup_positiveGroup_returnsGroup)
 TEST_F(CXWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
 {
 #if HAVE_XKB_EXTENSION
-	CMockKeyMap keyMap;
-	CMockEventQueue eventQueue;
+	MockKeyMap keyMap;
+	MockEventQueue eventQueue;
 	CXWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 

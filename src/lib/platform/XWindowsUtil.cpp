@@ -1290,11 +1290,11 @@ static const KeySym s_map1008FF[] =
 // CXWindowsUtil
 //
 
-CXWindowsUtil::CKeySymMap	CXWindowsUtil::s_keySymToUCS4;
+CXWindowsUtil::KeySymMap	CXWindowsUtil::s_keySymToUCS4;
 
 bool
 CXWindowsUtil::getWindowProperty(Display* display, Window window,
-				Atom property, CString* data, Atom* type,
+				Atom property, String* data, Atom* type,
 				SInt32* format, bool deleteProperty)
 {
 	assert(display != NULL);
@@ -1303,7 +1303,7 @@ CXWindowsUtil::getWindowProperty(Display* display, Window window,
 	int actualDatumSize;
 
 	// ignore errors.  XGetWindowProperty() will report failure.
-	CXWindowsUtil::CErrorLock lock(display);
+	CXWindowsUtil::ErrorLock lock(display);
 
 	// read the property
 	bool okay = true;
@@ -1395,7 +1395,7 @@ CXWindowsUtil::setWindowProperty(Display* display, Window window,
 
 	// save errors
 	bool error = false;
-	CXWindowsUtil::CErrorLock lock(display, &error);
+	CXWindowsUtil::ErrorLock lock(display, &error);
 
 	// how much data to send in first chunk?
 	UInt32 chunkSize = size;
@@ -1445,7 +1445,7 @@ CXWindowsUtil::getCurrentTime(Display* display, Window window)
 								&dummy, 0);
 
 	// look for property notify events with the following
-	CPropertyNotifyPredicateInfo filter;
+	PropertyNotifyPredicateInfo filter;
 	filter.m_window   = window;
 	filter.m_property = atom;
 
@@ -1546,7 +1546,7 @@ CXWindowsUtil::mapKeySymToKeyID(KeySym k)
 
 	default: {
 		// lookup character in table
-		CKeySymMap::const_iterator index = s_keySymToUCS4.find(k);
+		KeySymMap::const_iterator index = s_keySymToUCS4.find(k);
 		if (index != s_keySymToUCS4.end()) {
 			return static_cast<KeyID>(index->second);
 		}
@@ -1606,7 +1606,7 @@ CXWindowsUtil::getModifierBitForKeySym(KeySym keysym)
 	}
 }
 
-CString
+String
 CXWindowsUtil::atomToString(Display* display, Atom atom)
 {
 	if (atom == 0) {
@@ -1614,26 +1614,26 @@ CXWindowsUtil::atomToString(Display* display, Atom atom)
 	}
 
 	bool error = false;
-	CXWindowsUtil::CErrorLock lock(display, &error);
+	CXWindowsUtil::ErrorLock lock(display, &error);
 	char* name = XGetAtomName(display, atom);
 	if (error) {
 		return synergy::string::sprintf("<UNKNOWN> (%d)", (int)atom);
 	}
 	else {
-		CString msg = synergy::string::sprintf("%s (%d)", name, (int)atom);
+		String msg = synergy::string::sprintf("%s (%d)", name, (int)atom);
 		XFree(name);
 		return msg;
 	}
 }
 
-CString
+String
 CXWindowsUtil::atomsToString(Display* display, const Atom* atom, UInt32 num)
 {
 	char** names = new char*[num];
 	bool error = false;
-	CXWindowsUtil::CErrorLock lock(display, &error);
+	CXWindowsUtil::ErrorLock lock(display, &error);
 	XGetAtomNames(display, const_cast<Atom*>(atom), (int)num, names);
-	CString msg;
+	String msg;
 	if (error) {
 		for (UInt32 i = 0; i < num; ++i) {
 			msg += synergy::string::sprintf("<UNKNOWN> (%d), ", (int)atom[i]);
@@ -1653,7 +1653,7 @@ CXWindowsUtil::atomsToString(Display* display, const Atom* atom, UInt32 num)
 }
 
 void
-CXWindowsUtil::convertAtomProperty(CString& data)
+CXWindowsUtil::convertAtomProperty(String& data)
 {
 	// as best i can tell, 64-bit systems don't pack Atoms into properties
 	// as 32-bit numbers but rather as the 64-bit numbers they are.  that
@@ -1668,13 +1668,13 @@ CXWindowsUtil::convertAtomProperty(CString& data)
 }
 
 void
-CXWindowsUtil::appendAtomData(CString& data, Atom atom)
+CXWindowsUtil::appendAtomData(String& data, Atom atom)
 {
 	data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
 }
 
 void
-CXWindowsUtil::replaceAtomData(CString& data, UInt32 index, Atom atom)
+CXWindowsUtil::replaceAtomData(String& data, UInt32 index, Atom atom)
 {
 	data.replace(index * sizeof(Atom), sizeof(Atom),
 								reinterpret_cast<const char*>(&atom),
@@ -1682,7 +1682,7 @@ CXWindowsUtil::replaceAtomData(CString& data, UInt32 index, Atom atom)
 }
 
 void
-CXWindowsUtil::appendTimeData(CString& data, Time time)
+CXWindowsUtil::appendTimeData(String& data, Time time)
 {
 	data.append(reinterpret_cast<char*>(&time), sizeof(Time));
 }
@@ -1690,8 +1690,8 @@ CXWindowsUtil::appendTimeData(CString& data, Time time)
 Bool
 CXWindowsUtil::propertyNotifyPredicate(Display*, XEvent* xevent, XPointer arg)
 {
-	CPropertyNotifyPredicateInfo* filter =
-						reinterpret_cast<CPropertyNotifyPredicateInfo*>(arg);
+	PropertyNotifyPredicateInfo* filter =
+						reinterpret_cast<PropertyNotifyPredicateInfo*>(arg);
 	return (xevent->type             == PropertyNotify &&
 			xevent->xproperty.window == filter->m_window &&
 			xevent->xproperty.atom   == filter->m_property &&
@@ -1710,31 +1710,31 @@ CXWindowsUtil::initKeyMaps()
 
 
 //
-// CXWindowsUtil::CErrorLock
+// CXWindowsUtil::ErrorLock
 //
 
-CXWindowsUtil::CErrorLock*	CXWindowsUtil::CErrorLock::s_top = NULL;
+CXWindowsUtil::ErrorLock*	CXWindowsUtil::ErrorLock::s_top = NULL;
 
-CXWindowsUtil::CErrorLock::CErrorLock(Display* display) :
+CXWindowsUtil::ErrorLock::ErrorLock(Display* display) :
 	m_display(display)
 {
-	install(&CXWindowsUtil::CErrorLock::ignoreHandler, NULL);
+	install(&CXWindowsUtil::ErrorLock::ignoreHandler, NULL);
 }
 
-CXWindowsUtil::CErrorLock::CErrorLock(Display* display, bool* flag) :
+CXWindowsUtil::ErrorLock::ErrorLock(Display* display, bool* flag) :
 	m_display(display)
 {
-	install(&CXWindowsUtil::CErrorLock::saveHandler, flag);
+	install(&CXWindowsUtil::ErrorLock::saveHandler, flag);
 }
 
-CXWindowsUtil::CErrorLock::CErrorLock(Display* display,
+CXWindowsUtil::ErrorLock::ErrorLock(Display* display,
 				ErrorHandler handler, void* data) :
 	m_display(display)
 {
 	install(handler, data);
 }
 
-CXWindowsUtil::CErrorLock::~CErrorLock()
+CXWindowsUtil::ErrorLock::~ErrorLock()
 {
 	// make sure everything finishes before uninstalling handler
 	if (m_display != NULL) {
@@ -1747,7 +1747,7 @@ CXWindowsUtil::CErrorLock::~CErrorLock()
 }
 
 void
-CXWindowsUtil::CErrorLock::install(ErrorHandler handler, void* data)
+CXWindowsUtil::ErrorLock::install(ErrorHandler handler, void* data)
 {
 	// make sure everything finishes before installing handler
 	if (m_display != NULL) {
@@ -1758,13 +1758,13 @@ CXWindowsUtil::CErrorLock::install(ErrorHandler handler, void* data)
 	m_handler     = handler;
 	m_userData    = data;
 	m_oldXHandler = XSetErrorHandler(
-								&CXWindowsUtil::CErrorLock::internalHandler);
+								&CXWindowsUtil::ErrorLock::internalHandler);
 	m_next        = s_top;
 	s_top         = this;
 }
 
 int
-CXWindowsUtil::CErrorLock::internalHandler(Display* display, XErrorEvent* event)
+CXWindowsUtil::ErrorLock::internalHandler(Display* display, XErrorEvent* event)
 {
 	if (s_top != NULL && s_top->m_handler != NULL) {
 		s_top->m_handler(display, event, s_top->m_userData);
@@ -1773,13 +1773,13 @@ CXWindowsUtil::CErrorLock::internalHandler(Display* display, XErrorEvent* event)
 }
 
 void
-CXWindowsUtil::CErrorLock::ignoreHandler(Display*, XErrorEvent* e, void*)
+CXWindowsUtil::ErrorLock::ignoreHandler(Display*, XErrorEvent* e, void*)
 {
 	LOG((CLOG_DEBUG1 "ignoring X error: %d", e->error_code));
 }
 
 void
-CXWindowsUtil::CErrorLock::saveHandler(Display*, XErrorEvent* e, void* flag)
+CXWindowsUtil::ErrorLock::saveHandler(Display*, XErrorEvent* e, void* flag)
 {
 	LOG((CLOG_DEBUG1 "flagging X error: %d", e->error_code));
 	*reinterpret_cast<bool*>(flag) = true;

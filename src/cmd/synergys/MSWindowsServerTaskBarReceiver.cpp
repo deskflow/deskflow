@@ -43,8 +43,8 @@ const UINT CMSWindowsServerTaskBarReceiver::s_stateToIconID[kMaxState] =
 };
 
 CMSWindowsServerTaskBarReceiver::CMSWindowsServerTaskBarReceiver(
-				HINSTANCE appInstance, const CBufferedLogOutputter* logBuffer, IEventQueue* events) :
-	CServerTaskBarReceiver(events),
+				HINSTANCE appInstance, const BufferedLogOutputter* logBuffer, IEventQueue* events) :
+	ServerTaskBarReceiver(events),
 	m_events(events),
 	m_appInstance(appInstance),
 	m_window(NULL),
@@ -93,7 +93,7 @@ CMSWindowsServerTaskBarReceiver::showStatus()
 	std::string status = getToolTip();
 
 	// get the connect clients, if any
-	const CClients& clients = getClients();
+	const Clients& clients = getClients();
 
 	// done getting status
 	unlock();
@@ -103,7 +103,7 @@ CMSWindowsServerTaskBarReceiver::showStatus()
 	SendMessage(child, WM_SETTEXT, 0, (LPARAM)status.c_str());
 	child = GetDlgItem(m_window, IDC_TASKBAR_STATUS_CLIENTS);
 	SendMessage(child, LB_RESETCONTENT, 0, 0);
-	for (CClients::const_iterator index = clients.begin();
+	for (Clients::const_iterator index = clients.begin();
 							index != clients.end(); ) {
 		const char* client = index->c_str();
 		if (++index == clients.end()) {
@@ -195,17 +195,17 @@ CMSWindowsServerTaskBarReceiver::runMenu(int x, int y)
 		break;
 
 	case IDC_RELOAD_CONFIG:
-		m_events->addEvent(CEvent(m_events->forCServerApp().reloadConfig(),
+		m_events->addEvent(Event(m_events->forCServerApp().reloadConfig(),
 							m_events->getSystemTarget()));
 		break;
 
 	case IDC_FORCE_RECONNECT:
-		m_events->addEvent(CEvent(m_events->forCServerApp().forceReconnect(),
+		m_events->addEvent(Event(m_events->forCServerApp().forceReconnect(),
 							m_events->getSystemTarget()));
 		break;
 
 	case ID_SYNERGY_RESETSERVER:
-		m_events->addEvent(CEvent(m_events->forCServerApp().resetServer(),
+		m_events->addEvent(Event(m_events->forCServerApp().resetServer(),
 							m_events->getSystemTarget()));
 		break;
 
@@ -260,8 +260,8 @@ CMSWindowsServerTaskBarReceiver::copyLog() const
 {
 	if (m_logBuffer != NULL) {
 		// collect log buffer
-		CString data;
-		for (CBufferedLogOutputter::const_iterator index = m_logBuffer->begin();
+		String data;
+		for (BufferedLogOutputter::const_iterator index = m_logBuffer->begin();
 								index != m_logBuffer->end(); ++index) {
 			data += *index;
 			data += "\n";
@@ -328,14 +328,14 @@ CMSWindowsServerTaskBarReceiver::createWindow()
 	SetWindowLongPtr(m_window, GWL_EXSTYLE, style);
 
 	// tell the task bar about this dialog
-	CArchTaskBarWindows::addDialog(m_window);
+	ArchTaskBarWindows::addDialog(m_window);
 }
 
 void
 CMSWindowsServerTaskBarReceiver::destroyWindow()
 {
 	if (m_window != NULL) {
-		CArchTaskBarWindows::removeDialog(m_window);
+		ArchTaskBarWindows::removeDialog(m_window);
 		DestroyWindow(m_window);
 		m_window = NULL;
 	}
@@ -391,14 +391,14 @@ CMSWindowsServerTaskBarReceiver::staticDlgProc(HWND hwnd,
 }
 
 IArchTaskBarReceiver*
-createTaskBarReceiver(const CBufferedLogOutputter* logBuffer, IEventQueue* events)
+createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events)
 {
-	CArchMiscWindows::setIcons(
-		(HICON)LoadImage(CArchMiscWindows::instanceWin32(),
+	ArchMiscWindows::setIcons(
+		(HICON)LoadImage(ArchMiscWindows::instanceWin32(),
 		MAKEINTRESOURCE(IDI_SYNERGY),
 		IMAGE_ICON,
 		32, 32, LR_SHARED),
-		(HICON)LoadImage(CArchMiscWindows::instanceWin32(),
+		(HICON)LoadImage(ArchMiscWindows::instanceWin32(),
 		MAKEINTRESOURCE(IDI_SYNERGY),
 		IMAGE_ICON,
 		16, 16, LR_SHARED));

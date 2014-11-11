@@ -22,22 +22,22 @@
 #include "base/EventTypes.h"
 
 namespace synergy { class IStream; }
-class CIpcMessage;
-class CIpcLogLineMessage;
+class IpcMessage;
+class IpcLogLineMessage;
 class IEventQueue;
 
-class CIpcServerProxy {
-	friend class CIpcClient;
+class IpcServerProxy {
+	friend class IpcClient;
 
 public:
-	CIpcServerProxy(synergy::IStream& stream, IEventQueue* events);
-	virtual ~CIpcServerProxy();
+	IpcServerProxy(synergy::IStream& stream, IEventQueue* events);
+	virtual ~IpcServerProxy();
 
 private:
-	void				send(const CIpcMessage& message);
+	void				send(const IpcMessage& message);
 
-	void				handleData(const CEvent&, void*);
-	CIpcLogLineMessage*	parseLogLine();
+	void				handleData(const Event&, void*);
+	IpcLogLineMessage*	parseLogLine();
 	void				disconnect();
 
 private:

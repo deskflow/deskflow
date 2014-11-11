@@ -43,7 +43,7 @@ static const size_t ModifiersFromXDefaultSize = 32;
 CXWindowsKeyState::CXWindowsKeyState(
 		Display* display, bool useXKB,
 		IEventQueue* events) :
-	CKeyState(events),
+	KeyState(events),
 	m_display(display),
 	m_modifierFromX(ModifiersFromXDefaultSize)
 {
@@ -52,8 +52,8 @@ CXWindowsKeyState::CXWindowsKeyState(
 
 CXWindowsKeyState::CXWindowsKeyState(
 	Display* display, bool useXKB,
-	IEventQueue* events, CKeyMap& keyMap) :
-	CKeyState(events, keyMap),
+	IEventQueue* events, synergy::KeyMap& keyMap) :
+	KeyState(events, keyMap),
 	m_display(display),
 	m_modifierFromX(ModifiersFromXDefaultSize)
 {
@@ -152,7 +152,7 @@ CXWindowsKeyState::mapModifiersToX(KeyModifierMask mask,
 }
 
 void
-CXWindowsKeyState::mapKeyToKeycodes(KeyID key, CKeycodeList& keycodes) const
+CXWindowsKeyState::mapKeyToKeycodes(KeyID key, KeycodeList& keycodes) const
 {
 	keycodes.clear();
 	std::pair<KeyToKeyCodeMap::const_iterator,
@@ -218,7 +218,7 @@ CXWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 }
 
 void
-CXWindowsKeyState::getKeyMap(CKeyMap& keyMap)
+CXWindowsKeyState::getKeyMap(synergy::KeyMap& keyMap)
 {
 	// get autorepeat info.  we must use the global_auto_repeat told to
 	// us because it may have modified by synergy.
@@ -297,7 +297,7 @@ CXWindowsKeyState::fakeKey(const Keystroke& keystroke)
 }
 
 void
-CXWindowsKeyState::updateKeysymMap(CKeyMap& keyMap)
+CXWindowsKeyState::updateKeysymMap(synergy::KeyMap& keyMap)
 {
 	// there are up to 4 keysyms per keycode
 	static const int maxKeysyms = 4;
@@ -391,7 +391,7 @@ CXWindowsKeyState::updateKeysymMap(CKeyMap& keyMap)
 	}
 
 	// add entries for each keycode
-	CKeyMap::KeyItem item;
+	synergy::KeyMap::KeyItem item;
 	for (int i = 0; i < numKeycodes; ++i) {
 		KeySym* keysyms = allKeysyms + maxKeysyms * i;
 		KeyCode keycode = static_cast<KeyCode>(i + minKeycode);
@@ -495,7 +495,7 @@ CXWindowsKeyState::updateKeysymMap(CKeyMap& keyMap)
 			item.m_lock      = false;
 			if (modifierButtons.count(keycode) > 0) {
 				// get flags for modifier keys
-				CKeyMap::initModifierKey(item);
+				synergy::KeyMap::initModifierKey(item);
 
 				// add mapping from X (unless we already have)
 				if (item.m_generates != 0) {
@@ -543,7 +543,7 @@ CXWindowsKeyState::updateKeysymMap(CKeyMap& keyMap)
 
 #if HAVE_XKB_EXTENSION
 void
-CXWindowsKeyState::updateKeysymMapXKB(CKeyMap& keyMap)
+CXWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
 {
 	static const XkbKTMapEntryRec defMapEntry = {
 		True,		// active
@@ -589,7 +589,7 @@ CXWindowsKeyState::updateKeysymMapXKB(CKeyMap& keyMap)
 
 	// check every button.  on this pass we save all modifiers as native
 	// X modifier masks.
-	CKeyMap::KeyItem item;
+	synergy::KeyMap::KeyItem item;
 	for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
 		KeyCode keycode = static_cast<KeyCode>(i);
 		item.m_button   = static_cast<KeyButton>(keycode);
@@ -783,7 +783,7 @@ CXWindowsKeyState::updateKeysymMapXKB(CKeyMap& keyMap)
 
 void
 CXWindowsKeyState::remapKeyModifiers(KeyID id, SInt32 group,
-							CKeyMap::KeyItem& item, void* vself)
+							synergy::KeyMap::KeyItem& item, void* vself)
 {
 	CXWindowsKeyState* self = reinterpret_cast<CXWindowsKeyState*>(vself);
 	item.m_required  =

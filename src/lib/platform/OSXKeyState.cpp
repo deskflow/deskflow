@@ -48,12 +48,12 @@ static const UInt32 s_numLockVK  = 71;
 
 static const UInt32 s_osxNumLock = 1 << 16;
 
-struct CKeyEntry {
+struct KeyEntry {
 public:
 	KeyID				m_keyID;
 	UInt32				m_virtualKey;
 };
-static const CKeyEntry	s_controlKeys[] = {
+static const KeyEntry	s_controlKeys[] = {
 #if defined(MAC_OS_X_VERSION_10_5)
 	// cursor keys.  if we don't do this we'll may still get these from
 	// the keyboard resource but they may not correspond to the arrow
@@ -177,27 +177,27 @@ static const CKeyEntry	s_controlKeys[] = {
 
 
 //
-// COSXKeyState
+// OSXKeyState
 //
 
-COSXKeyState::COSXKeyState(IEventQueue* events) :
-	CKeyState(events)
+OSXKeyState::OSXKeyState(IEventQueue* events) :
+	KeyState(events)
 {
 	init();
 }
 
-COSXKeyState::COSXKeyState(IEventQueue* events, CKeyMap& keyMap) :
-	CKeyState(events, keyMap)
+OSXKeyState::OSXKeyState(IEventQueue* events, synergy::KeyMap& keyMap) :
+	KeyState(events, keyMap)
 {
 	init();
 }
 
-COSXKeyState::~COSXKeyState()
+OSXKeyState::~OSXKeyState()
 {
 }
 
 void
-COSXKeyState::init()
+OSXKeyState::init()
 {
 	m_deadKeyState = 0;
 	m_shiftPressed = false;
@@ -216,7 +216,7 @@ COSXKeyState::init()
 }
 
 KeyModifierMask
-COSXKeyState::mapModifiersFromOSX(UInt32 mask) const
+OSXKeyState::mapModifiersFromOSX(UInt32 mask) const
 {
 	KeyModifierMask outMask = 0;
 	if ((mask & kCGEventFlagMaskShift) != 0) {
@@ -243,7 +243,7 @@ COSXKeyState::mapModifiersFromOSX(UInt32 mask) const
 }
 
 KeyModifierMask
-COSXKeyState::mapModifiersToCarbon(UInt32 mask) const
+OSXKeyState::mapModifiersToCarbon(UInt32 mask) const
 {
 	KeyModifierMask outMask = 0;
 	if ((mask & kCGEventFlagMaskShift) != 0) {
@@ -269,7 +269,7 @@ COSXKeyState::mapModifiersToCarbon(UInt32 mask) const
 }
 
 KeyButton 
-COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
+OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
 				KeyModifierMask* maskOut, CGEventRef event) const
 {
 	ids.clear();
@@ -295,7 +295,7 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 	}
 
 	// check for special keys
-	CVirtualKeyMap::const_iterator i = m_virtualKeyMap.find(vkCode);
+	VirtualKeyMap::const_iterator i = m_virtualKeyMap.find(vkCode);
 	if (i != m_virtualKeyMap.end()) {
 		m_deadKeyState = 0;
 		ids.push_back(i->second);
@@ -371,7 +371,7 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 			if (count != 0 || m_deadKeyState == 0) {
 				m_deadKeyState = 0;
 				for (UniCharCount i = 0; i < count; ++i) {
-					ids.push_back(CKeyResource::unicharToKeyID(chars[i]));
+					ids.push_back(KeyResource::unicharToKeyID(chars[i]));
 				}
 				adjustAltGrModifier(ids, maskOut, isCommand);
 				return mapVirtualKeyToKeyButton(vkCode);
@@ -384,14 +384,14 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 }
 
 bool
-COSXKeyState::fakeCtrlAltDel()
+OSXKeyState::fakeCtrlAltDel()
 {
 	// pass keys through unchanged
 	return false;
 }
 
 KeyModifierMask
-COSXKeyState::pollActiveModifiers() const
+OSXKeyState::pollActiveModifiers() const
 {
 	// falsely assumed that the mask returned by GetCurrentKeyModifiers()
 	// was the same as a CGEventFlags (which is what mapModifiersFromOSX
@@ -423,7 +423,7 @@ COSXKeyState::pollActiveModifiers() const
 }
 
 SInt32
-COSXKeyState::pollActiveGroup() const
+OSXKeyState::pollActiveGroup() const
 {
 	bool layoutValid = true;
 #if defined(MAC_OS_X_VERSION_10_5)
@@ -444,9 +444,9 @@ COSXKeyState::pollActiveGroup() const
 }
 
 void
-COSXKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
+OSXKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 {
-	KeyMap km;
+	::KeyMap km;
 	GetKeys(km);
 	const UInt8* m = reinterpret_cast<const UInt8*>(km);
 	for (UInt32 i = 0; i < 16; ++i) {
@@ -459,7 +459,7 @@ COSXKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 }
 
 void
-COSXKeyState::getKeyMap(CKeyMap& keyMap)
+OSXKeyState::getKeyMap(synergy::KeyMap& keyMap)
 {
 	// update keyboard groups
 	if (getGroups(m_groups)) {
@@ -505,7 +505,7 @@ COSXKeyState::getKeyMap(CKeyMap& keyMap)
 }
 
 void
-COSXKeyState::fakeKey(const Keystroke& keystroke)
+OSXKeyState::fakeKey(const Keystroke& keystroke)
 {
 	switch (keystroke.m_type) {
 	case Keystroke::kButton: {
@@ -601,13 +601,13 @@ COSXKeyState::fakeKey(const Keystroke& keystroke)
 }
 
 void
-COSXKeyState::getKeyMapForSpecialKeys(CKeyMap& keyMap, SInt32 group) const
+OSXKeyState::getKeyMapForSpecialKeys(synergy::KeyMap& keyMap, SInt32 group) const
 {
 	// special keys are insensitive to modifers and none are dead keys
-	CKeyMap::KeyItem item;
+	synergy::KeyMap::KeyItem item;
 	for (size_t i = 0; i < sizeof(s_controlKeys) /
 								sizeof(s_controlKeys[0]); ++i) {
-		const CKeyEntry& entry = s_controlKeys[i];
+		const KeyEntry& entry = s_controlKeys[i];
 		item.m_id        = entry.m_keyID;
 		item.m_group     = group;
 		item.m_button    = mapVirtualKeyToKeyButton(entry.m_virtualKey);
@@ -615,7 +615,7 @@ COSXKeyState::getKeyMapForSpecialKeys(CKeyMap& keyMap, SInt32 group) const
 		item.m_sensitive = 0;
 		item.m_dead      = false;
 		item.m_client    = 0;
-		CKeyMap::initModifierKey(item);
+		synergy::KeyMap::initModifierKey(item);
 		keyMap.addKeyEntry(item);
 
 		if (item.m_lock) {
@@ -626,14 +626,14 @@ COSXKeyState::getKeyMapForSpecialKeys(CKeyMap& keyMap, SInt32 group) const
 
 	// note:  we don't special case the number pad keys.  querying the
 	// mac keyboard returns the non-keypad version of those keys but
-	// a CKeyState always provides a mapping from keypad keys to
+	// a KeyState always provides a mapping from keypad keys to
 	// non-keypad keys so we'll be able to generate the characters
 	// anyway.
 }
 
 bool
-COSXKeyState::getKeyMap(CKeyMap& keyMap,
-				SInt32 group, const CKeyResource& r) const
+OSXKeyState::getKeyMap(synergy::KeyMap& keyMap,
+				SInt32 group, const KeyResource& r) const
 {
 	if (!r.isValid()) {
 		return false;
@@ -646,7 +646,7 @@ COSXKeyState::getKeyMap(CKeyMap& keyMap,
 	std::vector<std::pair<KeyID, bool> > buttonKeys(r.getNumTables());
 
 	// iterate over each button
-	CKeyMap::KeyItem item;
+	synergy::KeyMap::KeyItem item;
 	for (UInt32 i = 0; i < r.getNumButtons(); ++i) {
 		item.m_button = mapVirtualKeyToKeyButton(i);
 
@@ -656,7 +656,7 @@ COSXKeyState::getKeyMap(CKeyMap& keyMap,
 		// convert the entry in each table for this button to a KeyID
 		for (UInt32 j = 0; j < r.getNumTables(); ++j) {
 			buttonKeys[j].first  = r.getKey(j, i);
-			buttonKeys[j].second = CKeyMap::isDeadKey(buttonKeys[j].first);
+			buttonKeys[j].second = synergy::KeyMap::isDeadKey(buttonKeys[j].first);
 		}
 
 		// iterate over each character table
@@ -679,7 +679,7 @@ COSXKeyState::getKeyMap(CKeyMap& keyMap,
 			item.m_group  = group;
 			item.m_dead   = buttonKeys[j].second;
 			item.m_client = buttonKeys[j].second ? 1 : 0;
-			CKeyMap::initModifierKey(item);
+			synergy::KeyMap::initModifierKey(item);
 			if (item.m_lock) {
 				// all locking keys are half duplex on OS X
 				keyMap.addHalfDuplexButton(i);
@@ -750,7 +750,7 @@ COSXKeyState::getKeyMap(CKeyMap& keyMap,
 }
 
 bool
-COSXKeyState::mapSynergyHotKeyToMac(KeyID key, KeyModifierMask mask,
+OSXKeyState::mapSynergyHotKeyToMac(KeyID key, KeyModifierMask mask,
 				UInt32 &macVirtualKey, UInt32 &macModifierMask) const
 {
 	// look up button for key
@@ -785,7 +785,7 @@ COSXKeyState::mapSynergyHotKeyToMac(KeyID key, KeyModifierMask mask,
 }
 						
 void
-COSXKeyState::handleModifierKeys(void* target,
+OSXKeyState::handleModifierKeys(void* target,
 				KeyModifierMask oldMask, KeyModifierMask newMask)
 {
 	// compute changed modifiers
@@ -819,7 +819,7 @@ COSXKeyState::handleModifierKeys(void* target,
 }
 
 void
-COSXKeyState::handleModifierKey(void* target,
+OSXKeyState::handleModifierKey(void* target,
 				UInt32 virtualKey, KeyID id,
 				bool down, KeyModifierMask newMask)
 {
@@ -829,7 +829,7 @@ COSXKeyState::handleModifierKey(void* target,
 }
 
 bool
-COSXKeyState::getGroups(GroupList& groups) const
+OSXKeyState::getGroups(GroupList& groups) const
 {
 	CFIndex n;
 	bool gotLayouts = false;
@@ -871,7 +871,7 @@ COSXKeyState::getGroups(GroupList& groups) const
 }
 
 void
-COSXKeyState::setGroup(SInt32 group)
+OSXKeyState::setGroup(SInt32 group)
 {
 #if defined(MAC_OS_X_VERSION_10_5)
 	TISSetInputMethodKeyboardLayoutOverride(m_groups[group]);
@@ -881,7 +881,7 @@ COSXKeyState::setGroup(SInt32 group)
 }
 
 void
-COSXKeyState::checkKeyboardLayout()
+OSXKeyState::checkKeyboardLayout()
 {
 	// XXX -- should call this when notified that groups have changed.
 	// if no notification for that then we should poll.
@@ -893,11 +893,11 @@ COSXKeyState::checkKeyboardLayout()
 }
 
 void
-COSXKeyState::adjustAltGrModifier(const CKeyIDs& ids,
+OSXKeyState::adjustAltGrModifier(const KeyIDs& ids,
 				KeyModifierMask* mask, bool isCommand) const
 {
 	if (!isCommand) {
-		for (CKeyIDs::const_iterator i = ids.begin(); i != ids.end(); ++i) {
+		for (KeyIDs::const_iterator i = ids.begin(); i != ids.end(); ++i) {
 			KeyID id = *i;
 			if (id != kKeyNone &&
 				((id < 0xe000u || id > 0xefffu) ||
@@ -910,25 +910,25 @@ COSXKeyState::adjustAltGrModifier(const CKeyIDs& ids,
 }
 
 KeyButton
-COSXKeyState::mapVirtualKeyToKeyButton(UInt32 keyCode)
+OSXKeyState::mapVirtualKeyToKeyButton(UInt32 keyCode)
 {
 	// 'A' maps to 0 so shift every id
 	return static_cast<KeyButton>(keyCode + KeyButtonOffset);
 }
 
 UInt32
-COSXKeyState::mapKeyButtonToVirtualKey(KeyButton keyButton)
+OSXKeyState::mapKeyButtonToVirtualKey(KeyButton keyButton)
 {
 	return static_cast<UInt32>(keyButton - KeyButtonOffset);
 }
 
 
 //
-// COSXKeyState::CKeyResource
+// OSXKeyState::KeyResource
 //
 
 KeyID
-COSXKeyState::CKeyResource::getKeyID(UInt8 c)
+OSXKeyState::KeyResource::getKeyID(UInt8 c)
 {
 	if (c == 0) {
 		return kKeyNone;
@@ -1070,7 +1070,7 @@ COSXKeyState::CKeyResource::getKeyID(UInt8 c)
 }
 
 KeyID
-COSXKeyState::CKeyResource::unicharToKeyID(UniChar c)
+OSXKeyState::KeyResource::unicharToKeyID(UniChar c)
 {
 	switch (c) {
 	case 3:
@@ -1101,10 +1101,10 @@ COSXKeyState::CKeyResource::unicharToKeyID(UniChar c)
 
 
 //
-// COSXKeyState::CUCHRKeyResource
+// OSXKeyState::CUCHRKeyResource
 //
 
-COSXKeyState::CUCHRKeyResource::CUCHRKeyResource(const void* resource,
+OSXKeyState::CUCHRKeyResource::CUCHRKeyResource(const void* resource,
 				UInt32 keyboardType) :
 	m_m(NULL),
 	m_cti(NULL),
@@ -1174,32 +1174,32 @@ COSXKeyState::CUCHRKeyResource::CUCHRKeyResource(const void* resource,
 }
 
 bool
-COSXKeyState::CUCHRKeyResource::isValid() const
+OSXKeyState::CUCHRKeyResource::isValid() const
 {
 	return (m_m != NULL);
 }
 
 UInt32
-COSXKeyState::CUCHRKeyResource::getNumModifierCombinations() const
+OSXKeyState::CUCHRKeyResource::getNumModifierCombinations() const
 {
 	// only 32 (not 256) because the righthanded modifier bits are ignored
 	return 32;
 }
 
 UInt32
-COSXKeyState::CUCHRKeyResource::getNumTables() const
+OSXKeyState::CUCHRKeyResource::getNumTables() const
 {
 	return m_cti->keyToCharTableCount;
 }
 
 UInt32
-COSXKeyState::CUCHRKeyResource::getNumButtons() const
+OSXKeyState::CUCHRKeyResource::getNumButtons() const
 {
 	return m_cti->keyToCharTableSize;
 }
 
 UInt32
-COSXKeyState::CUCHRKeyResource::getTableForModifier(UInt32 mask) const
+OSXKeyState::CUCHRKeyResource::getTableForModifier(UInt32 mask) const
 {
 	if (mask >= m_m->modifiersCount) {
 		return m_m->defaultTableNum;
@@ -1210,7 +1210,7 @@ COSXKeyState::CUCHRKeyResource::getTableForModifier(UInt32 mask) const
 }
 
 KeyID
-COSXKeyState::CUCHRKeyResource::getKey(UInt32 table, UInt32 button) const
+OSXKeyState::CUCHRKeyResource::getKey(UInt32 table, UInt32 button) const
 {
 	assert(table < getNumTables());
 	assert(button < getNumButtons());
@@ -1246,7 +1246,7 @@ COSXKeyState::CUCHRKeyResource::getKey(UInt32 table, UInt32 button) const
 }
 
 bool
-COSXKeyState::CUCHRKeyResource::getDeadKey(
+OSXKeyState::CUCHRKeyResource::getDeadKey(
 				KeySequence& keys, UInt16 index) const
 {
 	if (m_sri == NULL || index >= m_sri->keyStateRecordCount) {
@@ -1282,14 +1282,14 @@ COSXKeyState::CUCHRKeyResource::getDeadKey(
 
 	// convert keys to their dead counterparts
 	for (KeySequence::iterator i = keys.begin(); i != keys.end(); ++i) {
-		*i = CKeyMap::getDeadKey(*i);
+		*i = synergy::KeyMap::getDeadKey(*i);
 	}
 
 	return true;
 }
 
 bool
-COSXKeyState::CUCHRKeyResource::getKeyRecord(
+OSXKeyState::CUCHRKeyResource::getKeyRecord(
 				KeySequence& keys, UInt16 index, UInt16& state) const
 {
 	const UInt8* base = reinterpret_cast<const UInt8*>(m_resource);
@@ -1353,7 +1353,7 @@ COSXKeyState::CUCHRKeyResource::getKeyRecord(
 }
 
 bool
-COSXKeyState::CUCHRKeyResource::addSequence(
+OSXKeyState::CUCHRKeyResource::addSequence(
 				KeySequence& keys, UCKeyCharSeq c) const
 {
 	if ((c & kUCKeyOutputTestForIndexMask) == kUCKeyOutputSequenceIndexMask) {

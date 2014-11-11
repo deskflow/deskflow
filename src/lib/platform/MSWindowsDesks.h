@@ -30,9 +30,9 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-class CEvent;
-class CEventQueueTimer;
-class CThread;
+class Event;
+class EventQueueTimer;
+class Thread;
 class IJob;
 class IScreenSaver;
 class IEventQueue;
@@ -111,7 +111,7 @@ public:
 	Set options to given values.  Ignores unknown options and doesn't
 	modify options that aren't given in \c options.
 	*/
-	void				setOptions(const COptionsList& options);
+	void				setOptions(const OptionsList& options);
 
 	//! Update the key state
 	/*!
@@ -192,10 +192,10 @@ public:
 	//@}
 
 private:
-	class CDesk {
+	class Desk {
 	public:
-		CString			m_name;
-		CThread*		m_thread;
+		String			m_name;
+		Thread*		m_thread;
 		DWORD			m_threadID;
 		DWORD			m_targetID;
 		HDESK			m_desk;
@@ -203,7 +203,7 @@ private:
 		HWND			m_foregroundWindow;
 		bool			m_lowLevel;
 	};
-	typedef std::map<CString, CDesk*> CDesks;
+	typedef std::map<String, Desk*> Desks;
 
 	// initialization and shutdown operations
 	void				queryHookLibrary(HINSTANCE hookLibrary);
@@ -217,16 +217,16 @@ private:
 	// message handlers
 	void				deskMouseMove(SInt32 x, SInt32 y) const;
 	void				deskMouseRelativeMove(SInt32 dx, SInt32 dy) const;
-	void				deskEnter(CDesk* desk);
-	void				deskLeave(CDesk* desk, HKL keyLayout);
+	void				deskEnter(Desk* desk);
+	void				deskLeave(Desk* desk, HKL keyLayout);
 	void				deskThread(void* vdesk);
 
 	// desk switch checking and handling
-	CDesk*				addDesk(const CString& name, HDESK hdesk);
+	Desk*				addDesk(const String& name, HDESK hdesk);
 	void				removeDesks();
 	void				checkDesk();
-	bool				isDeskAccessible(const CDesk* desk) const;
-	void				handleCheckDesk(const CEvent& event, void*);
+	bool				isDeskAccessible(const Desk* desk) const;
+	void				handleCheckDesk(const Event& event, void*);
 
 	// communication with desk threads
 	void				waitForDesk() const;
@@ -238,7 +238,7 @@ private:
 	// desk API wrappers
 	HDESK				openInputDesktop();
 	void				closeDesktop(HDESK);
-	CString				getDesktopName(HDESK);
+	String				getDesktopName(HDESK);
 
 	// our desk window procs
 	static LRESULT CALLBACK primaryDeskProc(HWND, UINT, WPARAM, LPARAM);
@@ -267,7 +267,7 @@ private:
 	bool				m_multimon;
 
 	// the timer used to check for desktop switching
-	CEventQueueTimer*	m_timer;
+	EventQueueTimer*	m_timer;
 
 	// screen saver stuff
 	DWORD				m_threadID;
@@ -275,13 +275,13 @@ private:
 	bool				m_screensaverNotify;
 
 	// the current desk and it's name
-	CDesk*				m_activeDesk;
-	CString				m_activeDeskName;
+	Desk*				m_activeDesk;
+	String				m_activeDeskName;
 
 	// one desk per desktop and a cond var to communicate with it
-	CMutex				m_mutex;
-	CCondVar<bool>		m_deskReady;
-	CDesks				m_desks;
+	Mutex				m_mutex;
+	CondVar<bool>		m_deskReady;
+	Desks				m_desks;
 
 	// hook library stuff
 	InstallFunc			m_install;

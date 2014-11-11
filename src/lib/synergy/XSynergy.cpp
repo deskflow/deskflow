@@ -23,7 +23,7 @@
 // XBadClient
 //
 
-CString
+String
 XBadClient::getWhat() const throw()
 {
 	return "XBadClient";
@@ -53,7 +53,7 @@ XIncompatibleClient::getMinor() const throw()
 	return m_minor;
 }
 
-CString
+String
 XIncompatibleClient::getWhat() const throw()
 {
 	return format("XIncompatibleClient", "incompatible client %{1}.%{2}",
@@ -66,19 +66,19 @@ XIncompatibleClient::getWhat() const throw()
 // XDuplicateClient
 //
 
-XDuplicateClient::XDuplicateClient(const CString& name) :
+XDuplicateClient::XDuplicateClient(const String& name) :
 	m_name(name)
 {
 	// do nothing
 }
 
-const CString&
+const String&
 XDuplicateClient::getName() const throw()
 {
 	return m_name;
 }
 
-CString
+String
 XDuplicateClient::getWhat() const throw()
 {
 	return format("XDuplicateClient", "duplicate client %{1}", m_name.c_str());
@@ -89,19 +89,19 @@ XDuplicateClient::getWhat() const throw()
 // XUnknownClient
 //
 
-XUnknownClient::XUnknownClient(const CString& name) :
+XUnknownClient::XUnknownClient(const String& name) :
 	m_name(name)
 {
 	// do nothing
 }
 
-const CString&
+const String&
 XUnknownClient::getName() const throw()
 {
 	return m_name;
 }
 
-CString
+String
 XUnknownClient::getWhat() const throw()
 {
 	return format("XUnknownClient", "unknown client %{1}", m_name.c_str());
@@ -124,7 +124,7 @@ XExitApp::getCode() const throw()
 	return m_code;
 }
 
-CString
+String
 XExitApp::getWhat() const throw()
 {
 	return format(

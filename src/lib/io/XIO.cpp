@@ -22,7 +22,7 @@
 // XIOClosed
 //
 
-CString
+String
 XIOClosed::getWhat() const throw()
 {
 	return format("XIOClosed", "already closed");
@@ -33,7 +33,7 @@ XIOClosed::getWhat() const throw()
 // XIOEndOfStream
 //
 
-CString
+String
 XIOEndOfStream::getWhat() const throw()
 {
 	return format("XIOEndOfStream", "reached end of stream");
@@ -44,7 +44,7 @@ XIOEndOfStream::getWhat() const throw()
 // XIOWouldBlock
 //
 
-CString
+String
 XIOWouldBlock::getWhat() const throw()
 {
 	return format("XIOWouldBlock", "stream operation would block");
@@ -54,7 +54,7 @@ XIOWouldBlock::getWhat() const throw()
 //
 // XBadCryptoMode
 //
-CString
+String
 XIOBadCryptoMode::getWhat() const throw()
 {
 	return "XBadCryptoMode";

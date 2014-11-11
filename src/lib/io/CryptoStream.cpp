@@ -27,12 +27,12 @@
 using namespace CryptoPP;
 using namespace synergy::crypto;
 
-CCryptoStream::CCryptoStream(
+CryptoStream::CryptoStream(
 		IEventQueue* events,
 		synergy::IStream* stream,
-		const CCryptoOptions& options,
+		const CryptoOptions& options,
 		bool adoptStream) :
-	CStreamFilter(events, stream, adoptStream),
+	StreamFilter(events, stream, adoptStream),
 	m_key(NULL),
 	m_encryption(options.m_mode, true),
 	m_decryption(options.m_mode, false)
@@ -50,13 +50,13 @@ CCryptoStream::CCryptoStream(
 	}
 }
 
-CCryptoStream::~CCryptoStream()
+CryptoStream::~CryptoStream()
 {
 	delete[] m_key;
 }
 
 UInt32
-CCryptoStream::read(void* out, UInt32 n)
+CryptoStream::read(void* out, UInt32 n)
 {
 	assert(m_key != NULL);
 	LOG((CLOG_DEBUG4 "crypto: read %i (decrypt)", n));
@@ -81,7 +81,7 @@ CCryptoStream::read(void* out, UInt32 n)
 }
 
 void
-CCryptoStream::write(const void* in, UInt32 n)
+CryptoStream::write(const void* in, UInt32 n)
 {
 	assert(m_key != NULL);
 	LOG((CLOG_DEBUG4 "crypto: write %i (encrypt)", n));
@@ -95,7 +95,7 @@ CCryptoStream::write(const void* in, UInt32 n)
 }
 
 void
-CCryptoStream::createKey(byte* out, const CString& password, UInt8 keyLength, UInt8 hashCount)
+CryptoStream::createKey(byte* out, const String& password, UInt8 keyLength, UInt8 hashCount)
 {
 	assert(keyLength <= SHA256::DIGESTSIZE);
 
@@ -114,7 +114,7 @@ CCryptoStream::createKey(byte* out, const CString& password, UInt8 keyLength, UI
 }
 
 void
-CCryptoStream::setEncryptIv(const byte* iv)
+CryptoStream::setEncryptIv(const byte* iv)
 {
 	assert(m_key != NULL);
 	logBuffer("encrypt iv", iv, CRYPTO_IV_SIZE);
@@ -122,7 +122,7 @@ CCryptoStream::setEncryptIv(const byte* iv)
 }
 
 void
-CCryptoStream::setDecryptIv(const byte* iv)
+CryptoStream::setDecryptIv(const byte* iv)
 {
 	assert(m_key != NULL);
 	logBuffer("decrypt iv", iv, CRYPTO_IV_SIZE);
@@ -130,13 +130,13 @@ CCryptoStream::setDecryptIv(const byte* iv)
 }
 
 void
-CCryptoStream::newIv(byte* out)
+CryptoStream::newIv(byte* out)
 {
 	m_autoSeedRandomPool.GenerateBlock(out, CRYPTO_IV_SIZE);
 }
 
 void
-CCryptoStream::logBuffer(const char* name, const byte* buf, int length)
+CryptoStream::logBuffer(const char* name, const byte* buf, int length)
 {
 	if (CLOG->getFilter() < kDEBUG4) {
 		return;

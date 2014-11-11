@@ -20,13 +20,13 @@
 
 #include "arch/IArchString.h"
 
-#define ARCH_STRING CArchStringWindows
+#define ARCH_STRING ArchStringWindows
 
 //! Win32 implementation of IArchString
-class CArchStringWindows : public IArchString {
+class ArchStringWindows : public IArchString {
 public:
-	CArchStringWindows();
-	virtual ~CArchStringWindows();
+	ArchStringWindows();
+	virtual ~ArchStringWindows();
 
 	// IArchString overrides
 	virtual EWideCharEncoding

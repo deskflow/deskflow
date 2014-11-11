@@ -26,33 +26,33 @@
 /*!
 An event queue buffer provides a queue of events for an IEventQueue.
 */
-class CSimpleEventQueueBuffer : public IEventQueueBuffer {
+class SimpleEventQueueBuffer : public IEventQueueBuffer {
 public:
-	CSimpleEventQueueBuffer();	
-	~CSimpleEventQueueBuffer();
+	SimpleEventQueueBuffer();	
+	~SimpleEventQueueBuffer();
 
 	// IEventQueueBuffer overrides
 	void				init() { }
 	virtual void		waitForEvent(double timeout);
-	virtual Type		getEvent(CEvent& event, UInt32& dataID);
+	virtual Type		getEvent(Event& event, UInt32& dataID);
 	virtual bool		addEvent(UInt32 dataID);
 	virtual bool		isEmpty() const;
-	virtual CEventQueueTimer*
+	virtual EventQueueTimer*
 						newTimer(double duration, bool oneShot) const;
-	virtual void		deleteTimer(CEventQueueTimer*) const;
+	virtual void		deleteTimer(EventQueueTimer*) const;
 
 private:
-	typedef std::deque<UInt32> CEventDeque;
+	typedef std::deque<UInt32> EventDeque;
 
-	CArchMutex			m_queueMutex;
-	CArchCond			m_queueReadyCond;
+	ArchMutex			m_queueMutex;
+	ArchCond			m_queueReadyCond;
 	bool				m_queueReady;
-	CEventDeque			m_queue;
+	EventDeque			m_queue;
 };
 
-class CEventQueueTimer
+class EventQueueTimer
 {
 public:
-	CEventQueueTimer() { }
-	virtual ~CEventQueueTimer() { }
+	EventQueueTimer() { }
+	virtual ~EventQueueTimer() { }
 };

@@ -21,21 +21,21 @@
 #include "arch/win32/ArchMultithreadWindows.h"
 
 //
-// CArchSleepWindows
+// ArchSleepWindows
 //
 
-CArchSleepWindows::CArchSleepWindows()
+ArchSleepWindows::ArchSleepWindows()
 {
 	// do nothing
 }
 
-CArchSleepWindows::~CArchSleepWindows()
+ArchSleepWindows::~ArchSleepWindows()
 {
 	// do nothing
 }
 
 void
-CArchSleepWindows::sleep(double timeout)
+ArchSleepWindows::sleep(double timeout)
 {
 	ARCH->testCancelThread();
 	if (timeout < 0.0) {
@@ -46,7 +46,7 @@ CArchSleepWindows::sleep(double timeout)
 	// works if we're using the windows multithread object but
 	// this is windows so that's pretty certain;  we'll get a
 	// link error if we're not, though.
-	CArchMultithreadWindows* mt = CArchMultithreadWindows::getInstance();
+	ArchMultithreadWindows* mt = ArchMultithreadWindows::getInstance();
 	if (mt != NULL) {
 		HANDLE cancelEvent = mt->getCancelEventForCurrentThread();
 		WaitForSingleObject(cancelEvent, (DWORD)(1000.0 * timeout));

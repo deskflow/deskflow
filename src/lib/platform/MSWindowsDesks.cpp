@@ -144,7 +144,7 @@ CMSWindowsDesks::enable()
 	// we wouldn't need this if windows notified us of a desktop
 	// change but as far as i can tell it doesn't.
 	m_timer = m_events->newTimer(0.2, NULL);
-	m_events->adoptHandler(CEvent::kTimer, m_timer,
+	m_events->adoptHandler(Event::kTimer, m_timer,
 							new TMethodEventJob<CMSWindowsDesks>(
 								this, &CMSWindowsDesks::handleCheckDesk));
 
@@ -156,7 +156,7 @@ CMSWindowsDesks::disable()
 {
 	// remove timer
 	if (m_timer != NULL) {
-		m_events->removeHandler(CEvent::kTimer, m_timer);
+		m_events->removeHandler(Event::kTimer, m_timer);
 		m_events->deleteTimer(m_timer);
 		m_timer = NULL;
 	}
@@ -186,7 +186,7 @@ CMSWindowsDesks::resetOptions()
 }
 
 void
-CMSWindowsDesks::setOptions(const COptionsList& options)
+CMSWindowsDesks::setOptions(const OptionsList& options)
 {
 	for (UInt32 i = 0, n = (UInt32)options.size(); i < n; i += 2) {
 		if (options[i] == kOptionWin32KeepForeground) {
@@ -543,7 +543,7 @@ CMSWindowsDesks::deskMouseRelativeMove(SInt32 dx, SInt32 dy) const
 }
 
 void
-CMSWindowsDesks::deskEnter(CDesk* desk)
+CMSWindowsDesks::deskEnter(Desk* desk)
 {
 	if (!m_isPrimary) {
 		ReleaseCapture();
@@ -571,7 +571,7 @@ CMSWindowsDesks::deskEnter(CDesk* desk)
 }
 
 void
-CMSWindowsDesks::deskLeave(CDesk* desk, HKL keyLayout)
+CMSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
 {
 	ShowCursor(FALSE);
 	if (m_isPrimary) {
@@ -657,7 +657,7 @@ CMSWindowsDesks::deskThread(void* vdesk)
 	MSG msg;
 
 	// use given desktop for this thread
-	CDesk* desk              = reinterpret_cast<CDesk*>(vdesk);
+	Desk* desk              = reinterpret_cast<Desk*>(vdesk);
 	desk->m_threadID         = GetCurrentThreadId();
 	desk->m_window           = NULL;
 	desk->m_foregroundWindow = NULL;
@@ -678,7 +678,7 @@ CMSWindowsDesks::deskThread(void* vdesk)
 
 	// tell main thread that we're ready
 	{
-		CLock lock(&m_mutex);
+		Lock lock(&m_mutex);
 		m_deskReady = true;
 		m_deskReady.broadcast();
 	}
@@ -789,7 +789,7 @@ CMSWindowsDesks::deskThread(void* vdesk)
 		}
 
 		// notify that message was processed
-		CLock lock(&m_mutex);
+		Lock lock(&m_mutex);
 		m_deskReady = true;
 		m_deskReady.broadcast();
 	}
@@ -804,14 +804,14 @@ CMSWindowsDesks::deskThread(void* vdesk)
 	}
 }
 
-CMSWindowsDesks::CDesk*
-CMSWindowsDesks::addDesk(const CString& name, HDESK hdesk)
+CMSWindowsDesks::Desk*
+CMSWindowsDesks::addDesk(const String& name, HDESK hdesk)
 {
-	CDesk* desk      = new CDesk;
+	Desk* desk      = new Desk;
 	desk->m_name     = name;
 	desk->m_desk     = hdesk;
 	desk->m_targetID = GetCurrentThreadId();
-	desk->m_thread   = new CThread(new TMethodJob<CMSWindowsDesks>(
+	desk->m_thread   = new Thread(new TMethodJob<CMSWindowsDesks>(
 						this, &CMSWindowsDesks::deskThread, desk));
 	waitForDesk();
 	m_desks.insert(std::make_pair(name, desk));
@@ -821,9 +821,9 @@ CMSWindowsDesks::addDesk(const CString& name, HDESK hdesk)
 void
 CMSWindowsDesks::removeDesks()
 {
-	for (CDesks::iterator index = m_desks.begin();
+	for (Desks::iterator index = m_desks.begin();
 							index != m_desks.end(); ++index) {
-		CDesk* desk = index->second;
+		Desk* desk = index->second;
 		PostThreadMessage(desk->m_threadID, WM_QUIT, 0, 0);
 		desk->m_thread->wait();
 		delete desk->m_thread;
@@ -838,10 +838,10 @@ void
 CMSWindowsDesks::checkDesk()
 {
 	// get current desktop.  if we already know about it then return.
-	CDesk* desk;
+	Desk* desk;
 	HDESK hdesk  = openInputDesktop();
-	CString name = getDesktopName(hdesk);
-	CDesks::const_iterator index = m_desks.find(name);
+	String name = getDesktopName(hdesk);
+	Desks::const_iterator index = m_desks.find(name);
 	if (index == m_desks.end()) {
 		desk = addDesk(name, hdesk);
 		// hold on to hdesk until thread exits so the desk can't
@@ -856,7 +856,7 @@ CMSWindowsDesks::checkDesk()
 	// first switch, then shut down.
 	if (m_stopOnDeskSwitch && m_activeDesk != NULL && name != m_activeDeskName) {
 		LOG((CLOG_DEBUG "shutting down because of desk switch to \"%s\"", name.c_str()));
-		m_events->addEvent(CEvent(CEvent::kQuit));
+		m_events->addEvent(Event(Event::kQuit));
 		return;
 	}
 
@@ -911,7 +911,7 @@ CMSWindowsDesks::checkDesk()
 }
 
 bool
-CMSWindowsDesks::isDeskAccessible(const CDesk* desk) const
+CMSWindowsDesks::isDeskAccessible(const Desk* desk) const
 {
 	return (desk != NULL && desk->m_desk != NULL);
 }
@@ -921,7 +921,7 @@ CMSWindowsDesks::waitForDesk() const
 {
 	CMSWindowsDesks* self = const_cast<CMSWindowsDesks*>(this);
 
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 	while (!(bool)m_deskReady) {
 		m_deskReady.wait();
 	}
@@ -929,7 +929,7 @@ CMSWindowsDesks::waitForDesk() const
 }
 
 void
-CMSWindowsDesks::handleCheckDesk(const CEvent&, void*)
+CMSWindowsDesks::handleCheckDesk(const Event&, void*)
 {
 	checkDesk();
 
@@ -958,18 +958,18 @@ CMSWindowsDesks::closeDesktop(HDESK desk)
 	}
 }
 
-CString
+String
 CMSWindowsDesks::getDesktopName(HDESK desk)
 {
 	if (desk == NULL) {
-		return CString();
+		return String();
 	}
 	else {
 		DWORD size;
 		GetUserObjectInformation(desk, UOI_NAME, NULL, 0, &size);
 		TCHAR* name = (TCHAR*)alloca(size + sizeof(TCHAR));
 		GetUserObjectInformation(desk, UOI_NAME, name, size, &size);
-		CString result(name);
+		String result(name);
 		return result;
 	}
 }

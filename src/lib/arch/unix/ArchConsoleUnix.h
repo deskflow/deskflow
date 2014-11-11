@@ -20,10 +20,10 @@
 
 #include "arch/ArchConsoleStd.h"
 
-#define ARCH_CONSOLE CArchConsoleUnix
+#define ARCH_CONSOLE ArchConsoleUnix
 
-class CArchConsoleUnix : public CArchConsoleStd {
+class ArchConsoleUnix : public ArchConsoleStd {
 public:
-	CArchConsoleUnix();
-	virtual ~CArchConsoleUnix();
+	ArchConsoleUnix();
+	virtual ~ArchConsoleUnix();
 };

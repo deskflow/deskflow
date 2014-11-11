@@ -19,24 +19,24 @@
 #include "base/FunctionEventJob.h"
 
 //
-// CFunctionEventJob
+// FunctionEventJob
 //
 
-CFunctionEventJob::CFunctionEventJob(
-				void (*func)(const CEvent&, void*), void* arg) :
+FunctionEventJob::FunctionEventJob(
+				void (*func)(const Event&, void*), void* arg) :
 	m_func(func),
 	m_arg(arg)
 {
 	// do nothing
 }
 
-CFunctionEventJob::~CFunctionEventJob()
+FunctionEventJob::~FunctionEventJob()
 {
 	// do nothing
 }
 
 void
-CFunctionEventJob::run(const CEvent& event)
+FunctionEventJob::run(const Event& event)
 {
 	if (m_func != NULL) {
 		m_func(event, m_arg);

@@ -36,10 +36,10 @@
 #include "base/TMethodEventJob.h"
 
 //
-// CClientProxyUnknown
+// ClientProxyUnknown
 //
 
-CClientProxyUnknown::CClientProxyUnknown(synergy::IStream* stream, double timeout, CServer* server, IEventQueue* events) :
+ClientProxyUnknown::ClientProxyUnknown(synergy::IStream* stream, double timeout, Server* server, IEventQueue* events) :
 	m_stream(stream),
 	m_proxy(NULL),
 	m_ready(false),
@@ -48,19 +48,19 @@ CClientProxyUnknown::CClientProxyUnknown(synergy::IStream* stream, double timeou
 {
 	assert(m_server != NULL);
 
-	m_events->adoptHandler(CEvent::kTimer, this,
-							new TMethodEventJob<CClientProxyUnknown>(this,
-								&CClientProxyUnknown::handleTimeout, NULL));
+	m_events->adoptHandler(Event::kTimer, this,
+							new TMethodEventJob<ClientProxyUnknown>(this,
+								&ClientProxyUnknown::handleTimeout, NULL));
 	m_timer = m_events->newOneShotTimer(timeout, this);
 	addStreamHandlers();
 
 	LOG((CLOG_DEBUG1 "saying hello"));
-	CProtocolUtil::writef(m_stream, kMsgHello,
+	ProtocolUtil::writef(m_stream, kMsgHello,
 							kProtocolMajorVersion,
 							kProtocolMinorVersion);
 }
 
-CClientProxyUnknown::~CClientProxyUnknown()
+ClientProxyUnknown::~ClientProxyUnknown()
 {
 	removeHandlers();
 	removeTimer();
@@ -68,12 +68,12 @@ CClientProxyUnknown::~CClientProxyUnknown()
 	delete m_proxy;
 }
 
-CClientProxy*
-CClientProxyUnknown::orphanClientProxy()
+ClientProxy*
+ClientProxyUnknown::orphanClientProxy()
 {
 	if (m_ready) {
 		removeHandlers();
-		CClientProxy* proxy = m_proxy;
+		ClientProxy* proxy = m_proxy;
 		m_proxy = NULL;
 		return proxy;
 	}
@@ -83,64 +83,64 @@ CClientProxyUnknown::orphanClientProxy()
 }
 
 void
-CClientProxyUnknown::sendSuccess()
+ClientProxyUnknown::sendSuccess()
 {
 	m_ready = true;
 	removeTimer();
-	m_events->addEvent(CEvent(m_events->forCClientProxyUnknown().success(), this));
+	m_events->addEvent(Event(m_events->forClientProxyUnknown().success(), this));
 }
 
 void
-CClientProxyUnknown::sendFailure()
+ClientProxyUnknown::sendFailure()
 {
 	delete m_proxy;
 	m_proxy = NULL;
 	m_ready = false;
 	removeHandlers();
 	removeTimer();
-	m_events->addEvent(CEvent(m_events->forCClientProxyUnknown().failure(), this));
+	m_events->addEvent(Event(m_events->forClientProxyUnknown().failure(), this));
 }
 
 void
-CClientProxyUnknown::addStreamHandlers()
+ClientProxyUnknown::addStreamHandlers()
 {
 	assert(m_stream != NULL);
 
 	m_events->adoptHandler(m_events->forIStream().inputReady(),
 							m_stream->getEventTarget(),
-							new TMethodEventJob<CClientProxyUnknown>(this,
-								&CClientProxyUnknown::handleData));
+							new TMethodEventJob<ClientProxyUnknown>(this,
+								&ClientProxyUnknown::handleData));
 	m_events->adoptHandler(m_events->forIStream().outputError(),
 							m_stream->getEventTarget(),
-							new TMethodEventJob<CClientProxyUnknown>(this,
-								&CClientProxyUnknown::handleWriteError));
+							new TMethodEventJob<ClientProxyUnknown>(this,
+								&ClientProxyUnknown::handleWriteError));
 	m_events->adoptHandler(m_events->forIStream().inputShutdown(),
 							m_stream->getEventTarget(),
-							new TMethodEventJob<CClientProxyUnknown>(this,
-								&CClientProxyUnknown::handleDisconnect));
+							new TMethodEventJob<ClientProxyUnknown>(this,
+								&ClientProxyUnknown::handleDisconnect));
 	m_events->adoptHandler(m_events->forIStream().outputShutdown(),
 							m_stream->getEventTarget(),
-							new TMethodEventJob<CClientProxyUnknown>(this,
-								&CClientProxyUnknown::handleWriteError));
+							new TMethodEventJob<ClientProxyUnknown>(this,
+								&ClientProxyUnknown::handleWriteError));
 }
 
 void
-CClientProxyUnknown::addProxyHandlers()
+ClientProxyUnknown::addProxyHandlers()
 {
 	assert(m_proxy != NULL);
 
-	m_events->adoptHandler(m_events->forCClientProxy().ready(),
+	m_events->adoptHandler(m_events->forClientProxy().ready(),
 							m_proxy,
-							new TMethodEventJob<CClientProxyUnknown>(this,
-								&CClientProxyUnknown::handleReady));
-	m_events->adoptHandler(m_events->forCClientProxy().disconnected(),
+							new TMethodEventJob<ClientProxyUnknown>(this,
+								&ClientProxyUnknown::handleReady));
+	m_events->adoptHandler(m_events->forClientProxy().disconnected(),
 							m_proxy,
-							new TMethodEventJob<CClientProxyUnknown>(this,
-								&CClientProxyUnknown::handleDisconnect));
+							new TMethodEventJob<ClientProxyUnknown>(this,
+								&ClientProxyUnknown::handleDisconnect));
 }
 
 void
-CClientProxyUnknown::removeHandlers()
+ClientProxyUnknown::removeHandlers()
 {
 	if (m_stream != NULL) {
 		m_events->removeHandler(m_events->forIStream().inputReady(),
@@ -153,29 +153,29 @@ CClientProxyUnknown::removeHandlers()
 							m_stream->getEventTarget());
 	}
 	if (m_proxy != NULL) {
-		m_events->removeHandler(m_events->forCClientProxy().ready(),
+		m_events->removeHandler(m_events->forClientProxy().ready(),
 							m_proxy);
-		m_events->removeHandler(m_events->forCClientProxy().disconnected(),
+		m_events->removeHandler(m_events->forClientProxy().disconnected(),
 							m_proxy);
 	}
 }
 
 void
-CClientProxyUnknown::removeTimer()
+ClientProxyUnknown::removeTimer()
 {
 	if (m_timer != NULL) {
 		m_events->deleteTimer(m_timer);
-		m_events->removeHandler(CEvent::kTimer, this);
+		m_events->removeHandler(Event::kTimer, this);
 		m_timer = NULL;
 	}
 }
 
 void
-CClientProxyUnknown::handleData(const CEvent&, void*)
+ClientProxyUnknown::handleData(const Event&, void*)
 {
 	LOG((CLOG_DEBUG1 "parsing hello reply"));
 
-	CString name("<unknown>");
+	String name("<unknown>");
 	try {
 		// limit the maximum length of the hello
 		UInt32 n = m_stream->getSize();
@@ -186,7 +186,7 @@ CClientProxyUnknown::handleData(const CEvent&, void*)
 
 		// parse the reply to hello
 		SInt16 major, minor;
-		if (!CProtocolUtil::readf(m_stream, kMsgHelloBack,
+		if (!ProtocolUtil::readf(m_stream, kMsgHelloBack,
 									&major, &minor, &name)) {
 			throw XBadClient();
 		}
@@ -205,27 +205,27 @@ CClientProxyUnknown::handleData(const CEvent&, void*)
 		if (major == 1) {
 			switch (minor) {
 			case 0:
-				m_proxy = new CClientProxy1_0(name, m_stream, m_events);
+				m_proxy = new ClientProxy1_0(name, m_stream, m_events);
 				break;
 
 			case 1:
-				m_proxy = new CClientProxy1_1(name, m_stream, m_events);
+				m_proxy = new ClientProxy1_1(name, m_stream, m_events);
 				break;
 
 			case 2:
-				m_proxy = new CClientProxy1_2(name, m_stream, m_events);
+				m_proxy = new ClientProxy1_2(name, m_stream, m_events);
 				break;
 
 			case 3:
-				m_proxy = new CClientProxy1_3(name, m_stream, m_events);
+				m_proxy = new ClientProxy1_3(name, m_stream, m_events);
 				break;
 
 			case 4:
-				m_proxy = new CClientProxy1_4(name, m_stream, m_server, m_events);
+				m_proxy = new ClientProxy1_4(name, m_stream, m_server, m_events);
 				break;
 
 			case 5:
-				m_proxy = new CClientProxy1_5(name, m_stream, m_server, m_events);
+				m_proxy = new ClientProxy1_5(name, m_stream, m_server, m_events);
 				break;
 			}
 		}
@@ -246,14 +246,14 @@ CClientProxyUnknown::handleData(const CEvent&, void*)
 	catch (XIncompatibleClient& e) {
 		// client is incompatible
 		LOG((CLOG_WARN "client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor()));
-		CProtocolUtil::writef(m_stream,
+		ProtocolUtil::writef(m_stream,
 							kMsgEIncompatible,
 							kProtocolMajorVersion, kProtocolMinorVersion);
 	}
 	catch (XBadClient&) {
 		// client not behaving
 		LOG((CLOG_WARN "protocol error from client \"%s\"", name.c_str()));
-		CProtocolUtil::writef(m_stream, kMsgEBad);
+		ProtocolUtil::writef(m_stream, kMsgEBad);
 	}
 	catch (XBase& e) {
 		// misc error
@@ -263,28 +263,28 @@ CClientProxyUnknown::handleData(const CEvent&, void*)
 }
 
 void
-CClientProxyUnknown::handleWriteError(const CEvent&, void*)
+ClientProxyUnknown::handleWriteError(const Event&, void*)
 {
 	LOG((CLOG_NOTE "error communicating with new client"));
 	sendFailure();
 }
 
 void
-CClientProxyUnknown::handleTimeout(const CEvent&, void*)
+ClientProxyUnknown::handleTimeout(const Event&, void*)
 {
 	LOG((CLOG_NOTE "new client is unresponsive"));
 	sendFailure();
 }
 
 void
-CClientProxyUnknown::handleDisconnect(const CEvent&, void*)
+ClientProxyUnknown::handleDisconnect(const Event&, void*)
 {
 	LOG((CLOG_NOTE "new client disconnected"));
 	sendFailure();
 }
 
 void
-CClientProxyUnknown::handleReady(const CEvent&, void*)
+ClientProxyUnknown::handleReady(const Event&, void*)
 {
 	sendSuccess();
 }

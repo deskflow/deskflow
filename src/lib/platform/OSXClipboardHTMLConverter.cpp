@@ -20,31 +20,31 @@
 
 #include "base/Unicode.h"
 
-COSXClipboardHTMLConverter::COSXClipboardHTMLConverter()
+OSXClipboardHTMLConverter::OSXClipboardHTMLConverter()
 {
 	// do nothing
 }
 
-COSXClipboardHTMLConverter::~COSXClipboardHTMLConverter()
+OSXClipboardHTMLConverter::~OSXClipboardHTMLConverter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-COSXClipboardHTMLConverter::getFormat() const
+OSXClipboardHTMLConverter::getFormat() const
 {
 	return IClipboard::kHTML;
 }
 
 CFStringRef
-COSXClipboardHTMLConverter::getOSXFormat() const
+OSXClipboardHTMLConverter::getOSXFormat() const
 {
 	return CFSTR("public.html");
 }
 
-CString 
-COSXClipboardHTMLConverter::convertString(
-								const CString& data,
+String 
+OSXClipboardHTMLConverter::convertString(
+								const String& data,
 								CFStringEncoding fromEncoding,
 								CFStringEncoding toEncoding)
 {
@@ -53,7 +53,7 @@ COSXClipboardHTMLConverter::convertString(
 								data.c_str(), fromEncoding);
 
 	if (stringRef == NULL) {
-		return CString();
+		return String();
 	}
 
 	CFIndex buffSize;
@@ -66,13 +66,13 @@ COSXClipboardHTMLConverter::convertString(
 
 	if (buffer == NULL) {
 		CFRelease(stringRef);
-		return CString();
+		return String();
 	}
 	
 	CFStringGetBytes(stringRef, entireString, toEncoding,
 		0, false, (UInt8*)buffer, buffSize, NULL);
 
-	CString result(buffer, buffSize);
+	String result(buffer, buffSize);
 
 	delete[] buffer;
 	CFRelease(stringRef);
@@ -80,15 +80,15 @@ COSXClipboardHTMLConverter::convertString(
 	return result;
 }
 
-CString
-COSXClipboardHTMLConverter::doFromIClipboard(const CString& data) const
+String
+OSXClipboardHTMLConverter::doFromIClipboard(const String& data) const
 {
 	return convertString(data, kCFStringEncodingUTF8,
 				CFStringGetSystemEncoding());
 }
 
-CString
-COSXClipboardHTMLConverter::doToIClipboard(const CString& data) const
+String
+OSXClipboardHTMLConverter::doToIClipboard(const String& data) const
 {
 	return convertString(data, CFStringGetSystemEncoding(),
 				kCFStringEncodingUTF8);

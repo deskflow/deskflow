@@ -30,21 +30,21 @@ static const char* s_settingsKeyNames[] = {
 };
 
 //
-// CArchSystemWindows
+// ArchSystemWindows
 //
 
-CArchSystemWindows::CArchSystemWindows()
+ArchSystemWindows::ArchSystemWindows()
 {
 	// do nothing
 }
 
-CArchSystemWindows::~CArchSystemWindows()
+ArchSystemWindows::~ArchSystemWindows()
 {
 	// do nothing
 }
 
 std::string
-CArchSystemWindows::getOSName() const
+ArchSystemWindows::getOSName() const
 {
 #if WINVER >= _WIN32_WINNT_WIN2K
 	OSVERSIONINFOEX info;
@@ -96,7 +96,7 @@ CArchSystemWindows::getOSName() const
 }
 
 std::string
-CArchSystemWindows::getPlatformName() const
+ArchSystemWindows::getPlatformName() const
 {
 #ifdef _X86_
 	if(isWOW64())
@@ -113,26 +113,26 @@ CArchSystemWindows::getPlatformName() const
 }
 
 std::string
-CArchSystemWindows::setting(const std::string& valueName) const
+ArchSystemWindows::setting(const std::string& valueName) const
 {
-	HKEY key = CArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
+	HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
 	if (key == NULL)
 		return "";
 
-	return CArchMiscWindows::readValueString(key, valueName.c_str());
+	return ArchMiscWindows::readValueString(key, valueName.c_str());
 }
 
 void
-CArchSystemWindows::setting(const std::string& valueName, const std::string& valueString) const
+ArchSystemWindows::setting(const std::string& valueName, const std::string& valueString) const
 {
-	HKEY key = CArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
+	HKEY key = ArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
 	if (key == NULL)
 		throw XArch(std::string("could not access registry key: ") + valueName);
-	CArchMiscWindows::setValue(key, valueName.c_str(), valueString.c_str());
+	ArchMiscWindows::setValue(key, valueName.c_str(), valueString.c_str());
 }
 
 bool
-CArchSystemWindows::isWOW64() const
+ArchSystemWindows::isWOW64() const
 {
 #if WINVER >= _WIN32_WINNT_WINXP
 	typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);

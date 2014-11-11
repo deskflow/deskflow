@@ -20,19 +20,19 @@
 
 #include "server/ClientProxy1_3.h"
 
-class CServer;
+class Server;
 
 //! Proxy for client implementing protocol version 1.4
-class CClientProxy1_4 : public CClientProxy1_3 {
+class ClientProxy1_4 : public ClientProxy1_3 {
 public:
-	CClientProxy1_4(const CString& name, synergy::IStream* adoptedStream, CServer* server, IEventQueue* events);
-	~CClientProxy1_4();
+	ClientProxy1_4(const String& name, synergy::IStream* adoptedStream, Server* server, IEventQueue* events);
+	~ClientProxy1_4();
 
 	//! @name accessors
 	//@{
 
 	//! get server pointer
-	CServer*			getServer() { return m_server; }
+	Server*			getServer() { return m_server; }
 
 	//@}
 
@@ -45,5 +45,5 @@ public:
 	//! Send IV to make 
 	void				cryptoIv();
 
-	CServer*			m_server;
+	Server*			m_server;
 };

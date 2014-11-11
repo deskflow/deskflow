@@ -20,8 +20,8 @@
 
 #include "common/common.h"
 
-class CMutex;
-class CCondVarBase;
+class Mutex;
+class CondVarBase;
 
 //! Mutual exclusion lock utility
 /*!
@@ -30,20 +30,20 @@ it in the d'tor.  It's easier and safer than manually locking and
 unlocking since unlocking must usually be done no matter how a function
 exits (including by unwinding due to an exception).
 */
-class CLock {
+class Lock {
 public:
 	//! Lock the mutex \c mutex
-	CLock(const CMutex* mutex);
+	Lock(const Mutex* mutex);
 	//! Lock the condition variable \c cv
-	CLock(const CCondVarBase* cv);
+	Lock(const CondVarBase* cv);
 	//! Unlock the mutex or condition variable
-	~CLock();
+	~Lock();
 
 private:
 	// not implemented
-	CLock(const CLock&);
-	CLock& operator=(const CLock&);
+	Lock(const Lock&);
+	Lock& operator=(const Lock&);
 
 private:
-	const CMutex*		m_mutex;
+	const Mutex*		m_mutex;
 };

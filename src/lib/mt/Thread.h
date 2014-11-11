@@ -24,10 +24,10 @@ class IJob;
 
 //! Thread handle
 /*!
-Creating a CThread creates a new context of execution (i.e. thread) that
-runs simulatenously with the calling thread.  A CThread is only a handle
-to a thread;  deleting a CThread does not cancel or destroy the thread it
-refers to and multiple CThread objects can refer to the same thread.
+Creating a Thread creates a new context of execution (i.e. thread) that
+runs simulatenously with the calling thread.  A Thread is only a handle
+to a thread;  deleting a Thread does not cancel or destroy the thread it
+refers to and multiple Thread objects can refer to the same thread.
 
 Threads can terminate themselves but cannot be forced to terminate by
 other threads.  However, other threads can signal a thread to terminate
@@ -40,21 +40,21 @@ a request to cancel the thread.  Cancellation points are noted in the
 documentation.
 */
 // note -- do not derive from this class
-class CThread {
+class Thread {
 public:
 	//! Run \c adoptedJob in a new thread
 	/*!
 	Create and start a new thread executing the \c adoptedJob.  The
 	new thread takes ownership of \c adoptedJob and will delete it.
 	*/
-	CThread(IJob* adoptedJob);
+	Thread(IJob* adoptedJob);
 
 	//! Duplicate a thread handle
 	/*!
 	Make a new thread object that refers to an existing thread.
 	This does \b not start a new thread.
 	*/
-	CThread(const CThread&);
+	Thread(const Thread&);
 
 	//! Release a thread handle
 	/*!
@@ -62,7 +62,7 @@ public:
 	will keep running until the job completes or calls exit() or allows
 	itself to be cancelled.
 	*/
-	~CThread();
+	~Thread();
 
 	//! @name manipulators
 	//@{
@@ -73,7 +73,7 @@ public:
 	makes this thread object refer to another thread.  It does \b not
 	start a new thread.
 	*/
-	CThread&			operator=(const CThread&);
+	Thread&			operator=(const Thread&);
 
 	//! Terminate the calling thread
 	/*!
@@ -84,7 +84,7 @@ public:
 	have \c catch(...) blocks then you should add the following before
 	each to avoid catching the exit:
 	\code
-	catch(CThreadExit&) { throw; }
+	catch(ThreadExit&) { throw; }
 	\endcode
 	or add the \c RETHROW_XTHREAD macro to the \c catch(...) block.
 	*/
@@ -107,7 +107,7 @@ public:
 	may have, especially mutexes.  They can \c catch(XThreadCancel) to
 	do that then rethrow the exception or they can let it happen
 	automatically by doing clean up in the d'tors of automatic
-	objects (like CLock).  Clients are strongly encouraged to do the latter.
+	objects (like Lock).  Clients are strongly encouraged to do the latter.
 	During cancellation, further cancel() calls are ignored (i.e.
 	a thread cannot be interrupted by a cancel during cancellation).
 	
@@ -139,9 +139,9 @@ public:
 
 	//! Get current thread's handle
 	/*!
-	Return a CThread object representing the calling thread.
+	Return a Thread object representing the calling thread.
 	*/
-	static CThread		getCurrentThread();
+	static Thread		getCurrentThread();
 
 	//! Test for cancellation
 	/*!
@@ -180,7 +180,7 @@ public:
 	//! Get the thread id
 	/*!
 	Returns an integer id for this thread.  This id must not be used to
-	check if two CThread objects refer to the same thread.  Use
+	check if two Thread objects refer to the same thread.  Use
 	operator==() for that.
 	*/
 	IArchMultithread::ThreadID
@@ -188,23 +188,23 @@ public:
 
 	//! Compare thread handles
 	/*!
-	Returns true if two CThread objects refer to the same thread.
+	Returns true if two Thread objects refer to the same thread.
 	*/
-	bool				operator==(const CThread&) const;
+	bool				operator==(const Thread&) const;
 
 	//! Compare thread handles
 	/*!
-	Returns true if two CThread objects do not refer to the same thread.
+	Returns true if two Thread objects do not refer to the same thread.
 	*/
-	bool				operator!=(const CThread&) const;
+	bool				operator!=(const Thread&) const;
 
 	//@}
 
 private:
-	CThread(CArchThread);
+	Thread(ArchThread);
 
 	static void*		threadFunc(void*);
 
 private:
-	CArchThread			m_thread;
+	ArchThread			m_thread;
 };

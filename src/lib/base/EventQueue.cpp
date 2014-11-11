@@ -28,21 +28,21 @@
 #include "base/Log.h"
 #include "base/XBase.h"
 
-EVENT_TYPE_ACCESSOR(CClient)
+EVENT_TYPE_ACCESSOR(Client)
 EVENT_TYPE_ACCESSOR(IStream)
-EVENT_TYPE_ACCESSOR(CIpcClient)
-EVENT_TYPE_ACCESSOR(CIpcClientProxy)
-EVENT_TYPE_ACCESSOR(CIpcServer)
-EVENT_TYPE_ACCESSOR(CIpcServerProxy)
+EVENT_TYPE_ACCESSOR(IpcClient)
+EVENT_TYPE_ACCESSOR(IpcClientProxy)
+EVENT_TYPE_ACCESSOR(IpcServer)
+EVENT_TYPE_ACCESSOR(IpcServerProxy)
 EVENT_TYPE_ACCESSOR(IDataSocket)
 EVENT_TYPE_ACCESSOR(IListenSocket)
 EVENT_TYPE_ACCESSOR(ISocket)
-EVENT_TYPE_ACCESSOR(COSXScreen)
-EVENT_TYPE_ACCESSOR(CClientListener)
-EVENT_TYPE_ACCESSOR(CClientProxy)
-EVENT_TYPE_ACCESSOR(CClientProxyUnknown)
-EVENT_TYPE_ACCESSOR(CServer)
-EVENT_TYPE_ACCESSOR(CServerApp)
+EVENT_TYPE_ACCESSOR(OSXScreen)
+EVENT_TYPE_ACCESSOR(ClientListener)
+EVENT_TYPE_ACCESSOR(ClientProxy)
+EVENT_TYPE_ACCESSOR(ClientProxyUnknown)
+EVENT_TYPE_ACCESSOR(Server)
+EVENT_TYPE_ACCESSOR(ServerApp)
 EVENT_TYPE_ACCESSOR(IKeyState)
 EVENT_TYPE_ACCESSOR(IPrimaryScreen)
 EVENT_TYPE_ACCESSOR(IScreen)
@@ -50,89 +50,89 @@ EVENT_TYPE_ACCESSOR(IScreen)
 // interrupt handler.  this just adds a quit event to the queue.
 static
 void
-interrupt(CArch::ESignal, void* data)
+interrupt(Arch::ESignal, void* data)
 {
-	CEventQueue* events = reinterpret_cast<CEventQueue*>(data);
-	events->addEvent(CEvent(CEvent::kQuit));
+	EventQueue* events = reinterpret_cast<EventQueue*>(data);
+	events->addEvent(Event(Event::kQuit));
 }
 
 
 //
-// CEventQueue
+// EventQueue
 //
 
-CEventQueue::CEventQueue() :
+EventQueue::EventQueue() :
 	m_systemTarget(0),
-	m_nextType(CEvent::kLast),
-	m_typesForCClient(NULL),
+	m_nextType(Event::kLast),
+	m_typesForClient(NULL),
 	m_typesForIStream(NULL),
-	m_typesForCIpcClient(NULL),
-	m_typesForCIpcClientProxy(NULL),
-	m_typesForCIpcServer(NULL),
-	m_typesForCIpcServerProxy(NULL),
+	m_typesForIpcClient(NULL),
+	m_typesForIpcClientProxy(NULL),
+	m_typesForIpcServer(NULL),
+	m_typesForIpcServerProxy(NULL),
 	m_typesForIDataSocket(NULL),
 	m_typesForIListenSocket(NULL),
 	m_typesForISocket(NULL),
-	m_typesForCOSXScreen(NULL),
-	m_typesForCClientListener(NULL),
-	m_typesForCClientProxy(NULL),
-	m_typesForCClientProxyUnknown(NULL),
-	m_typesForCServer(NULL),
-	m_typesForCServerApp(NULL),
+	m_typesForOSXScreen(NULL),
+	m_typesForClientListener(NULL),
+	m_typesForClientProxy(NULL),
+	m_typesForClientProxyUnknown(NULL),
+	m_typesForServer(NULL),
+	m_typesForServerApp(NULL),
 	m_typesForIKeyState(NULL),
 	m_typesForIPrimaryScreen(NULL),
 	m_typesForIScreen(NULL),
-	m_readyMutex(new CMutex),
-	m_readyCondVar(new CCondVar<bool>(m_readyMutex, false))
+	m_readyMutex(new Mutex),
+	m_readyCondVar(new CondVar<bool>(m_readyMutex, false))
 {
 	m_mutex = ARCH->newMutex();
-	ARCH->setSignalHandler(CArch::kINTERRUPT, &interrupt, this);
-	ARCH->setSignalHandler(CArch::kTERMINATE, &interrupt, this);
-	m_buffer = new CSimpleEventQueueBuffer;
+	ARCH->setSignalHandler(Arch::kINTERRUPT, &interrupt, this);
+	ARCH->setSignalHandler(Arch::kTERMINATE, &interrupt, this);
+	m_buffer = new SimpleEventQueueBuffer;
 }
 
-CEventQueue::~CEventQueue()
+EventQueue::~EventQueue()
 {
 	delete m_buffer;
 	delete m_readyCondVar;
 	delete m_readyMutex;
 	
-	ARCH->setSignalHandler(CArch::kINTERRUPT, NULL, NULL);
-	ARCH->setSignalHandler(CArch::kTERMINATE, NULL, NULL);
+	ARCH->setSignalHandler(Arch::kINTERRUPT, NULL, NULL);
+	ARCH->setSignalHandler(Arch::kTERMINATE, NULL, NULL);
 	ARCH->closeMutex(m_mutex);
 }
 
 void
-CEventQueue::loop()
+EventQueue::loop()
 {
 	m_buffer->init();
 	{
-		CLock lock(m_readyMutex);
+		Lock lock(m_readyMutex);
 		*m_readyCondVar = true;
 		m_readyCondVar->signal();
 	}
 	LOG((CLOG_DEBUG "event queue is ready"));
 	while (!m_pending.empty()) {
 		LOG((CLOG_DEBUG "add pending events to buffer"));
-		CEvent& event = m_pending.front();
+		Event& event = m_pending.front();
 		addEventToBuffer(event);
 		m_pending.pop();
 	}
 	
-	CEvent event;
+	Event event;
 	getEvent(event);
-	while (event.getType() != CEvent::kQuit) {
+	while (event.getType() != Event::kQuit) {
 		dispatchEvent(event);
-		CEvent::deleteData(event);
+		Event::deleteData(event);
 		getEvent(event);
 	}
 }
 
-CEvent::Type
-CEventQueue::registerTypeOnce(CEvent::Type& type, const char* name)
+Event::Type
+EventQueue::registerTypeOnce(Event::Type& type, const char* name)
 {
-	CArchMutexLock lock(m_mutex);
-	if (type == CEvent::kUnknown) {
+	ArchMutexLock lock(m_mutex);
+	if (type == Event::kUnknown) {
 		m_typeMap.insert(std::make_pair(m_nextType, name));
 		m_nameMap.insert(std::make_pair(name, m_nextType));
 		LOG((CLOG_DEBUG1 "registered event type %s as %d", name, m_nextType));
@@ -142,23 +142,23 @@ CEventQueue::registerTypeOnce(CEvent::Type& type, const char* name)
 }
 
 const char*
-CEventQueue::getTypeName(CEvent::Type type)
+EventQueue::getTypeName(Event::Type type)
 {
 	switch (type) {
-	case CEvent::kUnknown:
+	case Event::kUnknown:
 		return "nil";
 
-	case CEvent::kQuit:
+	case Event::kQuit:
 		return "quit";
 
-	case CEvent::kSystem:
+	case Event::kSystem:
 		return "system";
 
-	case CEvent::kTimer:
+	case Event::kTimer:
 		return "timer";
 
 	default:
-		CTypeMap::const_iterator i = m_typeMap.find(type);
+		TypeMap::const_iterator i = m_typeMap.find(type);
 		if (i == m_typeMap.end()) {
 			return "<unknown>";
 		}
@@ -169,9 +169,9 @@ CEventQueue::getTypeName(CEvent::Type type)
 }
 
 void
-CEventQueue::adoptBuffer(IEventQueueBuffer* buffer)
+EventQueue::adoptBuffer(IEventQueueBuffer* buffer)
 {
-	CArchMutexLock lock(m_mutex);
+	ArchMutexLock lock(m_mutex);
 
 	LOG((CLOG_DEBUG "adopting new buffer"));
 
@@ -183,8 +183,8 @@ CEventQueue::adoptBuffer(IEventQueueBuffer* buffer)
 
 	// discard old buffer and old events
 	delete m_buffer;
-	for (CEventTable::iterator i = m_events.begin(); i != m_events.end(); ++i) {
-		CEvent::deleteData(i->second);
+	for (EventTable::iterator i = m_events.begin(); i != m_events.end(); ++i) {
+		Event::deleteData(i->second);
 	}
 	m_events.clear();
 	m_oldEventIDs.clear();
@@ -192,14 +192,14 @@ CEventQueue::adoptBuffer(IEventQueueBuffer* buffer)
 	// use new buffer
 	m_buffer = buffer;
 	if (m_buffer == NULL) {
-		m_buffer = new CSimpleEventQueueBuffer;
+		m_buffer = new SimpleEventQueueBuffer;
 	}
 }
 
 bool
-CEventQueue::getEvent(CEvent& event, double timeout)
+EventQueue::getEvent(Event& event, double timeout)
 {
-	CStopwatch timer(true);
+	Stopwatch timer(true);
 retry:
 	// if no events are waiting then handle timers and then wait
 	while (m_buffer->isEmpty()) {
@@ -244,7 +244,7 @@ retry:
 
 	case IEventQueueBuffer::kUser:
 		{
-			CArchMutexLock lock(m_mutex);
+			ArchMutexLock lock(m_mutex);
 			event = removeEvent(dataID);
 			return true;
 		}
@@ -256,12 +256,12 @@ retry:
 }
 
 bool
-CEventQueue::dispatchEvent(const CEvent& event)
+EventQueue::dispatchEvent(const Event& event)
 {
 	void* target   = event.getTarget();
 	IEventJob* job = getHandler(event.getType(), target);
 	if (job == NULL) {
-		job = getHandler(CEvent::kUnknown, target);
+		job = getHandler(Event::kUnknown, target);
 	}
 	if (job != NULL) {
 		job->run(event);
@@ -271,22 +271,22 @@ CEventQueue::dispatchEvent(const CEvent& event)
 }
 
 void
-CEventQueue::addEvent(const CEvent& event)
+EventQueue::addEvent(const Event& event)
 {
 	// discard bogus event types
 	switch (event.getType()) {
-	case CEvent::kUnknown:
-	case CEvent::kSystem:
-	case CEvent::kTimer:
+	case Event::kUnknown:
+	case Event::kSystem:
+	case Event::kTimer:
 		return;
 
 	default:
 		break;
 	}
 	
-	if ((event.getFlags() & CEvent::kDeliverImmediately) != 0) {
+	if ((event.getFlags() & Event::kDeliverImmediately) != 0) {
 		dispatchEvent(event);
-		CEvent::deleteData(event);
+		Event::deleteData(event);
 	}
 	else if (!(*m_readyCondVar)) {
 		m_pending.push(event);
@@ -297,9 +297,9 @@ CEventQueue::addEvent(const CEvent& event)
 }
 
 void
-CEventQueue::addEventToBuffer(const CEvent& event)
+EventQueue::addEventToBuffer(const Event& event)
 {
-	CArchMutexLock lock(m_mutex);
+	ArchMutexLock lock(m_mutex);
 	
 	// store the event's data locally
 	UInt32 eventID = saveEvent(event);
@@ -308,60 +308,60 @@ CEventQueue::addEventToBuffer(const CEvent& event)
 	if (!m_buffer->addEvent(eventID)) {
 		// failed to send event
 		removeEvent(eventID);
-		CEvent::deleteData(event);
+		Event::deleteData(event);
 	}
 }
 
-CEventQueueTimer*
-CEventQueue::newTimer(double duration, void* target)
+EventQueueTimer*
+EventQueue::newTimer(double duration, void* target)
 {
 	assert(duration > 0.0);
 
-	CEventQueueTimer* timer = m_buffer->newTimer(duration, false);
+	EventQueueTimer* timer = m_buffer->newTimer(duration, false);
 	if (target == NULL) {
 		target = timer;
 	}
-	CArchMutexLock lock(m_mutex);
+	ArchMutexLock lock(m_mutex);
 	m_timers.insert(timer);
 	// initial duration is requested duration plus whatever's on
 	// the clock currently because the latter will be subtracted
 	// the next time we check for timers.
-	m_timerQueue.push(CTimer(timer, duration,
+	m_timerQueue.push(Timer(timer, duration,
 							duration + m_time.getTime(), target, false));
 	return timer;
 }
 
-CEventQueueTimer*
-CEventQueue::newOneShotTimer(double duration, void* target)
+EventQueueTimer*
+EventQueue::newOneShotTimer(double duration, void* target)
 {
 	assert(duration > 0.0);
 
-	CEventQueueTimer* timer = m_buffer->newTimer(duration, true);
+	EventQueueTimer* timer = m_buffer->newTimer(duration, true);
 	if (target == NULL) {
 		target = timer;
 	}
-	CArchMutexLock lock(m_mutex);
+	ArchMutexLock lock(m_mutex);
 	m_timers.insert(timer);
 	// initial duration is requested duration plus whatever's on
 	// the clock currently because the latter will be subtracted
 	// the next time we check for timers.
-	m_timerQueue.push(CTimer(timer, duration,
+	m_timerQueue.push(Timer(timer, duration,
 							duration + m_time.getTime(), target, true));
 	return timer;
 }
 
 void
-CEventQueue::deleteTimer(CEventQueueTimer* timer)
+EventQueue::deleteTimer(EventQueueTimer* timer)
 {
-	CArchMutexLock lock(m_mutex);
-	for (CTimerQueue::iterator index = m_timerQueue.begin();
+	ArchMutexLock lock(m_mutex);
+	for (TimerQueue::iterator index = m_timerQueue.begin();
 							index != m_timerQueue.end(); ++index) {
 		if (index->getTimer() == timer) {
 			m_timerQueue.erase(index);
 			break;
 		}
 	}
-	CTimers::iterator index = m_timers.find(timer);
+	Timers::iterator index = m_timers.find(timer);
 	if (index != m_timers.end()) {
 		m_timers.erase(index);
 	}
@@ -369,24 +369,24 @@ CEventQueue::deleteTimer(CEventQueueTimer* timer)
 }
 
 void
-CEventQueue::adoptHandler(CEvent::Type type, void* target, IEventJob* handler)
+EventQueue::adoptHandler(Event::Type type, void* target, IEventJob* handler)
 {
-	CArchMutexLock lock(m_mutex);
+	ArchMutexLock lock(m_mutex);
 	IEventJob*& job = m_handlers[target][type];
 	delete job;
 	job = handler;
 }
 
 void
-CEventQueue::removeHandler(CEvent::Type type, void* target)
+EventQueue::removeHandler(Event::Type type, void* target)
 {
 	IEventJob* handler = NULL;
 	{
-		CArchMutexLock lock(m_mutex);
-		CHandlerTable::iterator index = m_handlers.find(target);
+		ArchMutexLock lock(m_mutex);
+		HandlerTable::iterator index = m_handlers.find(target);
 		if (index != m_handlers.end()) {
-			CTypeHandlerTable& typeHandlers = index->second;
-			CTypeHandlerTable::iterator index2 = typeHandlers.find(type);
+			TypeHandlerTable& typeHandlers = index->second;
+			TypeHandlerTable::iterator index2 = typeHandlers.find(type);
 			if (index2 != typeHandlers.end()) {
 				handler = index2->second;
 				typeHandlers.erase(index2);
@@ -397,16 +397,16 @@ CEventQueue::removeHandler(CEvent::Type type, void* target)
 }
 
 void
-CEventQueue::removeHandlers(void* target)
+EventQueue::removeHandlers(void* target)
 {
 	std::vector<IEventJob*> handlers;
 	{
-		CArchMutexLock lock(m_mutex);
-		CHandlerTable::iterator index = m_handlers.find(target);
+		ArchMutexLock lock(m_mutex);
+		HandlerTable::iterator index = m_handlers.find(target);
 		if (index != m_handlers.end()) {
 			// copy to handlers array and clear table for target
-			CTypeHandlerTable& typeHandlers = index->second;
-			for (CTypeHandlerTable::iterator index2 = typeHandlers.begin();
+			TypeHandlerTable& typeHandlers = index->second;
+			for (TypeHandlerTable::iterator index2 = typeHandlers.begin();
 							index2 != typeHandlers.end(); ++index2) {
 				handlers.push_back(index2->second);
 			}
@@ -422,19 +422,19 @@ CEventQueue::removeHandlers(void* target)
 }
 
 bool
-CEventQueue::isEmpty() const
+EventQueue::isEmpty() const
 {
 	return (m_buffer->isEmpty() && getNextTimerTimeout() != 0.0);
 }
 
 IEventJob*
-CEventQueue::getHandler(CEvent::Type type, void* target) const
+EventQueue::getHandler(Event::Type type, void* target) const
 {
-	CArchMutexLock lock(m_mutex);
-	CHandlerTable::const_iterator index = m_handlers.find(target);
+	ArchMutexLock lock(m_mutex);
+	HandlerTable::const_iterator index = m_handlers.find(target);
 	if (index != m_handlers.end()) {
-		const CTypeHandlerTable& typeHandlers = index->second;
-		CTypeHandlerTable::const_iterator index2 = typeHandlers.find(type);
+		const TypeHandlerTable& typeHandlers = index->second;
+		TypeHandlerTable::const_iterator index2 = typeHandlers.find(type);
 		if (index2 != typeHandlers.end()) {
 			return index2->second;
 		}
@@ -443,7 +443,7 @@ CEventQueue::getHandler(CEvent::Type type, void* target) const
 }
 
 UInt32
-CEventQueue::saveEvent(const CEvent& event)
+EventQueue::saveEvent(const Event& event)
 {
 	// choose id
 	UInt32 id;
@@ -462,17 +462,17 @@ CEventQueue::saveEvent(const CEvent& event)
 	return id;
 }
 
-CEvent
-CEventQueue::removeEvent(UInt32 eventID)
+Event
+EventQueue::removeEvent(UInt32 eventID)
 {
 	// look up id
-	CEventTable::iterator index = m_events.find(eventID);
+	EventTable::iterator index = m_events.find(eventID);
 	if (index == m_events.end()) {
-		return CEvent();
+		return Event();
 	}
 
 	// get data
-	CEvent event = index->second;
+	Event event = index->second;
 	m_events.erase(index);
 
 	// save old id for reuse
@@ -482,7 +482,7 @@ CEventQueue::removeEvent(UInt32 eventID)
 }
 
 bool
-CEventQueue::hasTimerExpired(CEvent& event)
+EventQueue::hasTimerExpired(Event& event)
 {
 	// return true if there's a timer in the timer priority queue that
 	// has expired.  if returning true then fill in event appropriately
@@ -496,7 +496,7 @@ CEventQueue::hasTimerExpired(CEvent& event)
 	m_time.reset();
 
 	// countdown elapsed time
-	for (CTimerQueue::iterator index = m_timerQueue.begin();
+	for (TimerQueue::iterator index = m_timerQueue.begin();
 							index != m_timerQueue.end(); ++index) {
 		(*index) -= time;
 	}
@@ -507,12 +507,12 @@ CEventQueue::hasTimerExpired(CEvent& event)
 	}
 
 	// remove timer from queue
-	CTimer timer = m_timerQueue.top();
+	Timer timer = m_timerQueue.top();
 	m_timerQueue.pop();
 
 	// prepare event and reset the timer's clock
 	timer.fillEvent(m_timerEvent);
-	event = CEvent(CEvent::kTimer, timer.getTarget(), &m_timerEvent);
+	event = Event(Event::kTimer, timer.getTarget(), &m_timerEvent);
 	timer.reset();
 
 	// reinsert timer into queue if it's not a one-shot
@@ -524,7 +524,7 @@ CEventQueue::hasTimerExpired(CEvent& event)
 }
 
 double
-CEventQueue::getNextTimerTimeout() const
+EventQueue::getNextTimerTimeout() const
 {
 	// return -1 if no timers, 0 if the top timer has expired, otherwise
 	// the time until the top timer in the timer priority queue will
@@ -538,28 +538,28 @@ CEventQueue::getNextTimerTimeout() const
 	return m_timerQueue.top();
 }
 
-CEvent::Type
-CEventQueue::getRegisteredType(const CString& name) const
+Event::Type
+EventQueue::getRegisteredType(const String& name) const
 {
-	CNameMap::const_iterator found = m_nameMap.find(name);
+	NameMap::const_iterator found = m_nameMap.find(name);
 	if (found != m_nameMap.end())
 		return found->second;
 
-	return CEvent::kUnknown;
+	return Event::kUnknown;
 }
 
 void*
-CEventQueue::getSystemTarget()
+EventQueue::getSystemTarget()
 {
 	// any unique arbitrary pointer will do
 	return &m_systemTarget;
 }
 
 void
-CEventQueue::waitForReady() const
+EventQueue::waitForReady() const
 {
 	double timeout = ARCH->time() + 10;
-	CLock lock(m_readyMutex);
+	Lock lock(m_readyMutex);
 	
 	while (!m_readyCondVar->wait()) {
 		if(ARCH->time() > timeout) {
@@ -569,10 +569,10 @@ CEventQueue::waitForReady() const
 }
 
 //
-// CEventQueue::CTimer
+// EventQueue::Timer
 //
 
-CEventQueue::CTimer::CTimer(CEventQueueTimer* timer, double timeout,
+EventQueue::Timer::Timer(EventQueueTimer* timer, double timeout,
 				double initialTime, void* target, bool oneShot) :
 	m_timer(timer),
 	m_timeout(timeout),
@@ -583,49 +583,49 @@ CEventQueue::CTimer::CTimer(CEventQueueTimer* timer, double timeout,
 	assert(m_timeout > 0.0);
 }
 
-CEventQueue::CTimer::~CTimer()
+EventQueue::Timer::~Timer()
 {
 	// do nothing
 }
 
 void
-CEventQueue::CTimer::reset()
+EventQueue::Timer::reset()
 {
 	m_time = m_timeout;
 }
 
-CEventQueue::CTimer&
-CEventQueue::CTimer::operator-=(double dt)
+EventQueue::Timer&
+EventQueue::Timer::operator-=(double dt)
 {
 	m_time -= dt;
 	return *this;
 }
 
-CEventQueue::CTimer::operator double() const
+EventQueue::Timer::operator double() const
 {
 	return m_time;
 }
 
 bool
-CEventQueue::CTimer::isOneShot() const
+EventQueue::Timer::isOneShot() const
 {
 	return m_oneShot;
 }
 
-CEventQueueTimer*
-CEventQueue::CTimer::getTimer() const
+EventQueueTimer*
+EventQueue::Timer::getTimer() const
 {
 	return m_timer;
 }
 
 void*
-CEventQueue::CTimer::getTarget() const
+EventQueue::Timer::getTarget() const
 {
 	return m_target;
 }
 
 void
-CEventQueue::CTimer::fillEvent(CTimerEvent& event) const
+EventQueue::Timer::fillEvent(TimerEvent& event) const
 {
 	event.m_timer = m_timer;
 	event.m_count = 0;
@@ -635,7 +635,7 @@ CEventQueue::CTimer::fillEvent(CTimerEvent& event) const
 }
 
 bool
-CEventQueue::CTimer::operator<(const CTimer& t) const
+EventQueue::Timer::operator<(const Timer& t) const
 {
 	return m_time < t.m_time;
 }

@@ -25,29 +25,29 @@
 #include "common/stddeque.h"
 #include "common/stdset.h"
 
-class CClientProxy;
-class CClientProxyUnknown;
-class CNetworkAddress;
+class ClientProxy;
+class ClientProxyUnknown;
+class NetworkAddress;
 class IListenSocket;
 class ISocketFactory;
 class IStreamFilterFactory;
-class CServer;
+class Server;
 class IEventQueue;
 
-class CClientListener {
+class ClientListener {
 public:
 	// The factories are adopted.
-	CClientListener(const CNetworkAddress&,
+	ClientListener(const NetworkAddress&,
 							ISocketFactory*,
 							IStreamFilterFactory*,
-							const CCryptoOptions& crypto,
+							const CryptoOptions& crypto,
 							IEventQueue* events);
-	~CClientListener();
+	~ClientListener();
 
 	//! @name manipulators
 	//@{
 
-	void				setServer(CServer* server);
+	void				setServer(Server* server);
 
 	//@}
 
@@ -60,29 +60,29 @@ public:
 	list.  The client is responsible for deleting the returned client.
 	Returns NULL if no clients are available.
 	*/
-	CClientProxy*		getNextClient();
+	ClientProxy*		getNextClient();
 
 	//! Get server which owns this listener
-	CServer*			getServer() { return m_server; }
+	Server*			getServer() { return m_server; }
 
 	//@}
 
 private:
 	// client connection event handlers
-	void				handleClientConnecting(const CEvent&, void*);
-	void				handleUnknownClient(const CEvent&, void*);
-	void				handleClientDisconnected(const CEvent&, void*);
+	void				handleClientConnecting(const Event&, void*);
+	void				handleUnknownClient(const Event&, void*);
+	void				handleClientDisconnected(const Event&, void*);
 
 private:
-	typedef std::set<CClientProxyUnknown*> CNewClients;
-	typedef std::deque<CClientProxy*> CWaitingClients;
+	typedef std::set<ClientProxyUnknown*> NewClients;
+	typedef std::deque<ClientProxy*> WaitingClients;
 
 	IListenSocket*		m_listen;
 	ISocketFactory*		m_socketFactory;
 	IStreamFilterFactory*	m_streamFilterFactory;
-	CNewClients			m_newClients;
-	CWaitingClients		m_waitingClients;
-	CServer*			m_server;
-	CCryptoOptions		m_crypto;
+	NewClients			m_newClients;
+	WaitingClients		m_waitingClients;
+	Server*			m_server;
+	CryptoOptions		m_crypto;
 	IEventQueue*		m_events;
 };

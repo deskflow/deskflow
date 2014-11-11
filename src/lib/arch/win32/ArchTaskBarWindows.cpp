@@ -33,19 +33,19 @@ static const UINT		kNotifyReceiver  = WM_USER + 13;
 static const UINT		kFirstReceiverID = WM_USER + 14;
 
 //
-// CArchTaskBarWindows
+// ArchTaskBarWindows
 //
 
-CArchTaskBarWindows*	CArchTaskBarWindows::s_instance    = NULL;
+ArchTaskBarWindows*	ArchTaskBarWindows::s_instance    = NULL;
 
-CArchTaskBarWindows::CArchTaskBarWindows() :
+ArchTaskBarWindows::ArchTaskBarWindows() :
 	m_nextID(kFirstReceiverID)
 {
 	// save the singleton instance
 	s_instance    = this;
 }
 
-CArchTaskBarWindows::~CArchTaskBarWindows()
+ArchTaskBarWindows::~ArchTaskBarWindows()
 {
 	if (m_thread != NULL) {
 		PostMessage(m_hwnd, WM_QUIT, 0, 0);
@@ -58,7 +58,7 @@ CArchTaskBarWindows::~CArchTaskBarWindows()
 }
 
 void
-CArchTaskBarWindows::init()
+ArchTaskBarWindows::init()
 {
 	// we need a mutex
 	m_mutex       = ARCH->newMutex();
@@ -77,7 +77,7 @@ CArchTaskBarWindows::init()
 	// create a window on the current desktop with the current
 	// thread then the current thread won't be able to switch
 	// desktops if it needs to.
-	m_thread      = ARCH->newThread(&CArchTaskBarWindows::threadEntry, this);
+	m_thread      = ARCH->newThread(&ArchTaskBarWindows::threadEntry, this);
 
 	// wait for child thread
 	while (!m_ready) {
@@ -89,19 +89,19 @@ CArchTaskBarWindows::init()
 }
 
 void
-CArchTaskBarWindows::addDialog(HWND hwnd)
+ArchTaskBarWindows::addDialog(HWND hwnd)
 {
-	CArchMiscWindows::addDialog(hwnd);
+	ArchMiscWindows::addDialog(hwnd);
 }
 
 void
-CArchTaskBarWindows::removeDialog(HWND hwnd)
+ArchTaskBarWindows::removeDialog(HWND hwnd)
 {
-	CArchMiscWindows::removeDialog(hwnd);
+	ArchMiscWindows::removeDialog(hwnd);
 }
 
 void
-CArchTaskBarWindows::addReceiver(IArchTaskBarReceiver* receiver)
+ArchTaskBarWindows::addReceiver(IArchTaskBarReceiver* receiver)
 {
 	// ignore bogus receiver
 	if (receiver == NULL) {
@@ -109,10 +109,10 @@ CArchTaskBarWindows::addReceiver(IArchTaskBarReceiver* receiver)
 	}
 
 	// add receiver if necessary
-	CReceiverToInfoMap::iterator index = m_receivers.find(receiver);
+	ReceiverToInfoMap::iterator index = m_receivers.find(receiver);
 	if (index == m_receivers.end()) {
 		// add it, creating a new message ID for it
-		CReceiverInfo info;
+		ReceiverInfo info;
 		info.m_id = getNextID();
 		index = m_receivers.insert(std::make_pair(receiver, info)).first;
 
@@ -125,10 +125,10 @@ CArchTaskBarWindows::addReceiver(IArchTaskBarReceiver* receiver)
 }
 
 void
-CArchTaskBarWindows::removeReceiver(IArchTaskBarReceiver* receiver)
+ArchTaskBarWindows::removeReceiver(IArchTaskBarReceiver* receiver)
 {
 	// find receiver
-	CReceiverToInfoMap::iterator index = m_receivers.find(receiver);
+	ReceiverToInfoMap::iterator index = m_receivers.find(receiver);
 	if (index == m_receivers.end()) {
 		return;
 	}
@@ -145,10 +145,10 @@ CArchTaskBarWindows::removeReceiver(IArchTaskBarReceiver* receiver)
 }
 
 void
-CArchTaskBarWindows::updateReceiver(IArchTaskBarReceiver* receiver)
+ArchTaskBarWindows::updateReceiver(IArchTaskBarReceiver* receiver)
 {
 	// find receiver
-	CReceiverToInfoMap::const_iterator index = m_receivers.find(receiver);
+	ReceiverToInfoMap::const_iterator index = m_receivers.find(receiver);
 	if (index == m_receivers.end()) {
 		return;
 	}
@@ -158,7 +158,7 @@ CArchTaskBarWindows::updateReceiver(IArchTaskBarReceiver* receiver)
 }
 
 UINT
-CArchTaskBarWindows::getNextID()
+ArchTaskBarWindows::getNextID()
 {
 	if (m_oldIDs.empty()) {
 		return m_nextID++;
@@ -169,13 +169,13 @@ CArchTaskBarWindows::getNextID()
 }
 
 void
-CArchTaskBarWindows::recycleID(UINT id)
+ArchTaskBarWindows::recycleID(UINT id)
 {
 	m_oldIDs.push_back(id);
 }
 
 void
-CArchTaskBarWindows::addIcon(UINT id)
+ArchTaskBarWindows::addIcon(UINT id)
 {
 	ARCH->lockMutex(m_mutex);
 	CIDToReceiverMap::const_iterator index = m_idTable.find(id);
@@ -186,7 +186,7 @@ CArchTaskBarWindows::addIcon(UINT id)
 }
 
 void
-CArchTaskBarWindows::removeIcon(UINT id)
+ArchTaskBarWindows::removeIcon(UINT id)
 {
 	ARCH->lockMutex(m_mutex);
 	removeIconNoLock(id);
@@ -194,7 +194,7 @@ CArchTaskBarWindows::removeIcon(UINT id)
 }
 
 void
-CArchTaskBarWindows::updateIcon(UINT id)
+ArchTaskBarWindows::updateIcon(UINT id)
 {
 	ARCH->lockMutex(m_mutex);
 	CIDToReceiverMap::const_iterator index = m_idTable.find(id);
@@ -205,10 +205,10 @@ CArchTaskBarWindows::updateIcon(UINT id)
 }
 
 void
-CArchTaskBarWindows::addAllIcons()
+ArchTaskBarWindows::addAllIcons()
 {
 	ARCH->lockMutex(m_mutex);
-	for (CReceiverToInfoMap::const_iterator index = m_receivers.begin();
+	for (ReceiverToInfoMap::const_iterator index = m_receivers.begin();
 									index != m_receivers.end(); ++index) {
 		modifyIconNoLock(index, NIM_ADD);
 	}
@@ -216,10 +216,10 @@ CArchTaskBarWindows::addAllIcons()
 }
 
 void
-CArchTaskBarWindows::removeAllIcons()
+ArchTaskBarWindows::removeAllIcons()
 {
 	ARCH->lockMutex(m_mutex);
-	for (CReceiverToInfoMap::const_iterator index = m_receivers.begin();
+	for (ReceiverToInfoMap::const_iterator index = m_receivers.begin();
 									index != m_receivers.end(); ++index) {
 		removeIconNoLock(index->second.m_id);
 	}
@@ -227,8 +227,8 @@ CArchTaskBarWindows::removeAllIcons()
 }
 
 void
-CArchTaskBarWindows::modifyIconNoLock(
-				CReceiverToInfoMap::const_iterator index, DWORD taskBarMessage)
+ArchTaskBarWindows::modifyIconNoLock(
+				ReceiverToInfoMap::const_iterator index, DWORD taskBarMessage)
 {
 	// get receiver
 	UINT id                        = index->second.m_id;
@@ -274,7 +274,7 @@ CArchTaskBarWindows::modifyIconNoLock(
 }
 
 void
-CArchTaskBarWindows::removeIconNoLock(UINT id)
+ArchTaskBarWindows::removeIconNoLock(UINT id)
 {
 	NOTIFYICONDATA data;
 	data.cbSize = sizeof(NOTIFYICONDATA);
@@ -286,7 +286,7 @@ CArchTaskBarWindows::removeIconNoLock(UINT id)
 }
 
 void
-CArchTaskBarWindows::handleIconMessage(
+ArchTaskBarWindows::handleIconMessage(
 				IArchTaskBarReceiver* receiver, LPARAM lParam)
 {
 	// process message
@@ -317,7 +317,7 @@ CArchTaskBarWindows::handleIconMessage(
 }
 
 bool
-CArchTaskBarWindows::processDialogs(MSG* msg)
+ArchTaskBarWindows::processDialogs(MSG* msg)
 {
 	// only one thread can be in this method on any particular object
 	// at any given time.  that's not a problem since only our event
@@ -329,7 +329,7 @@ CArchTaskBarWindows::processDialogs(MSG* msg)
 	m_dialogs.erase(false);
 
 	// merge added dialogs into the dialog list
-	for (CDialogs::const_iterator index = m_addedDialogs.begin();
+	for (Dialogs::const_iterator index = m_addedDialogs.begin();
 							index != m_addedDialogs.end(); ++index) {
 		m_dialogs.insert(std::make_pair(index->first, index->second));
 	}
@@ -344,7 +344,7 @@ CArchTaskBarWindows::processDialogs(MSG* msg)
 	// removeDialog() don't change the map itself (just the
 	// values of some elements).
 	ARCH->lockMutex(m_mutex);
-	for (CDialogs::const_iterator index = m_dialogs.begin();
+	for (Dialogs::const_iterator index = m_dialogs.begin();
 							index != m_dialogs.end(); ++index) {
 		if (index->second) {
 			ARCH->unlockMutex(m_mutex);
@@ -360,7 +360,7 @@ CArchTaskBarWindows::processDialogs(MSG* msg)
 }
 
 LRESULT
-CArchTaskBarWindows::wndProc(HWND hwnd,
+ArchTaskBarWindows::wndProc(HWND hwnd,
 				UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
@@ -399,16 +399,16 @@ CArchTaskBarWindows::wndProc(HWND hwnd,
 }
 
 LRESULT CALLBACK
-CArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
+ArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
 				WPARAM wParam, LPARAM lParam)
 {
-	// if msg is WM_NCCREATE, extract the CArchTaskBarWindows* and put
+	// if msg is WM_NCCREATE, extract the ArchTaskBarWindows* and put
 	// it in the extra window data then forward the call.
-	CArchTaskBarWindows* self = NULL;
+	ArchTaskBarWindows* self = NULL;
 	if (msg == WM_NCCREATE) {
 		CREATESTRUCT* createInfo;
 		createInfo = reinterpret_cast<CREATESTRUCT*>(lParam);
-		self       = reinterpret_cast<CArchTaskBarWindows*>(
+		self       = reinterpret_cast<ArchTaskBarWindows*>(
 												createInfo->lpCreateParams);
 		SetWindowLong(hwnd, 0, reinterpret_cast<LONG>(self));
 	}
@@ -416,7 +416,7 @@ CArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
 		// get the extra window data and forward the call
 		LONG data = GetWindowLong(hwnd, 0);
 		if (data != 0) {
-			self = reinterpret_cast<CArchTaskBarWindows*>(
+			self = reinterpret_cast<ArchTaskBarWindows*>(
 							reinterpret_cast<void*>(data));
 		}
 	}
@@ -431,7 +431,7 @@ CArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
 }
 
 void
-CArchTaskBarWindows::threadMainLoop()
+ArchTaskBarWindows::threadMainLoop()
 {
 	// register the task bar restart message
 	m_taskBarRestart        = RegisterWindowMessage(TEXT("TaskbarCreated"));
@@ -440,9 +440,9 @@ CArchTaskBarWindows::threadMainLoop()
 	WNDCLASSEX classInfo;
 	classInfo.cbSize        = sizeof(classInfo);
 	classInfo.style         = CS_NOCLOSE;
-	classInfo.lpfnWndProc   = &CArchTaskBarWindows::staticWndProc;
+	classInfo.lpfnWndProc   = &ArchTaskBarWindows::staticWndProc;
 	classInfo.cbClsExtra    = 0;
-	classInfo.cbWndExtra    = sizeof(CArchTaskBarWindows*);
+	classInfo.cbWndExtra    = sizeof(ArchTaskBarWindows*);
 	classInfo.hInstance     = instanceWin32();
 	classInfo.hIcon         = NULL;
 	classInfo.hCursor       = NULL;
@@ -491,13 +491,13 @@ CArchTaskBarWindows::threadMainLoop()
 }
 
 void*
-CArchTaskBarWindows::threadEntry(void* self)
+ArchTaskBarWindows::threadEntry(void* self)
 {
-	reinterpret_cast<CArchTaskBarWindows*>(self)->threadMainLoop();
+	reinterpret_cast<ArchTaskBarWindows*>(self)->threadMainLoop();
 	return NULL;
 }
 
-HINSTANCE CArchTaskBarWindows::instanceWin32()
+HINSTANCE ArchTaskBarWindows::instanceWin32()
 {
-	return CArchMiscWindows::instanceWin32();
+	return ArchMiscWindows::instanceWin32();
 }

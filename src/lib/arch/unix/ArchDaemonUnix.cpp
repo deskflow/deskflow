@@ -29,15 +29,15 @@
 #include <cstdlib>
 
 //
-// CArchDaemonUnix
+// ArchDaemonUnix
 //
 
-CArchDaemonUnix::CArchDaemonUnix()
+ArchDaemonUnix::ArchDaemonUnix()
 {
 	// do nothing
 }
 
-CArchDaemonUnix::~CArchDaemonUnix()
+ArchDaemonUnix::~ArchDaemonUnix()
 {
 	// do nothing
 }
@@ -67,7 +67,7 @@ bool alreadyDaemonized() {
 #endif
 
 int
-CArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
+ArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
 {
 #ifdef __APPLE__
 	if (alreadyDaemonized())

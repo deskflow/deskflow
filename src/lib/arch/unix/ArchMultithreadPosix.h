@@ -23,23 +23,23 @@
 
 #include <pthread.h>
 
-#define ARCH_MULTITHREAD CArchMultithreadPosix
+#define ARCH_MULTITHREAD ArchMultithreadPosix
 
-class CArchCondImpl {
+class ArchCondImpl {
 public:
 	pthread_cond_t		m_cond;
 };
 
-class CArchMutexImpl {
+class ArchMutexImpl {
 public:
 	pthread_mutex_t		m_mutex;
 };
 
 //! Posix implementation of IArchMultithread
-class CArchMultithreadPosix : public IArchMultithread {
+class ArchMultithreadPosix : public IArchMultithread {
 public:
-	CArchMultithreadPosix();
-	virtual ~CArchMultithreadPosix();
+	ArchMultithreadPosix();
+	virtual ~ArchMultithreadPosix();
 
 	//! @name manipulators
 	//@{
@@ -50,63 +50,63 @@ public:
 	//! @name accessors
 	//@{
 
-	void*				getNetworkDataForThread(CArchThread);
+	void*				getNetworkDataForThread(ArchThread);
 
-	static CArchMultithreadPosix*	getInstance();
+	static ArchMultithreadPosix*	getInstance();
 
 	//@}
 
 	// IArchMultithread overrides
-	virtual CArchCond	newCondVar();
-	virtual void		closeCondVar(CArchCond);
-	virtual void		signalCondVar(CArchCond);
-	virtual void		broadcastCondVar(CArchCond);
-	virtual bool		waitCondVar(CArchCond, CArchMutex, double timeout);
-	virtual CArchMutex	newMutex();
-	virtual void		closeMutex(CArchMutex);
-	virtual void		lockMutex(CArchMutex);
-	virtual void		unlockMutex(CArchMutex);
-	virtual CArchThread	newThread(ThreadFunc, void*);
-	virtual CArchThread	newCurrentThread();
-	virtual CArchThread	copyThread(CArchThread);
-	virtual void		closeThread(CArchThread);
-	virtual void		cancelThread(CArchThread);
-	virtual void		setPriorityOfThread(CArchThread, int n);
+	virtual ArchCond	newCondVar();
+	virtual void		closeCondVar(ArchCond);
+	virtual void		signalCondVar(ArchCond);
+	virtual void		broadcastCondVar(ArchCond);
+	virtual bool		waitCondVar(ArchCond, ArchMutex, double timeout);
+	virtual ArchMutex	newMutex();
+	virtual void		closeMutex(ArchMutex);
+	virtual void		lockMutex(ArchMutex);
+	virtual void		unlockMutex(ArchMutex);
+	virtual ArchThread	newThread(ThreadFunc, void*);
+	virtual ArchThread	newCurrentThread();
+	virtual ArchThread	copyThread(ArchThread);
+	virtual void		closeThread(ArchThread);
+	virtual void		cancelThread(ArchThread);
+	virtual void		setPriorityOfThread(ArchThread, int n);
 	virtual void		testCancelThread();
-	virtual bool		wait(CArchThread, double timeout);
-	virtual bool		isSameThread(CArchThread, CArchThread);
-	virtual bool		isExitedThread(CArchThread);
-	virtual void*		getResultOfThread(CArchThread);
-	virtual ThreadID	getIDOfThread(CArchThread);
+	virtual bool		wait(ArchThread, double timeout);
+	virtual bool		isSameThread(ArchThread, ArchThread);
+	virtual bool		isExitedThread(ArchThread);
+	virtual void*		getResultOfThread(ArchThread);
+	virtual ThreadID	getIDOfThread(ArchThread);
 	virtual void		setSignalHandler(ESignal, SignalFunc, void*);
 	virtual void		raiseSignal(ESignal);
 
 private:
 	void				startSignalHandler();
 
-	CArchThreadImpl*	find(pthread_t thread);
-	CArchThreadImpl*	findNoRef(pthread_t thread);
-	void				insert(CArchThreadImpl* thread);
-	void				erase(CArchThreadImpl* thread);
+	ArchThreadImpl*	find(pthread_t thread);
+	ArchThreadImpl*	findNoRef(pthread_t thread);
+	void				insert(ArchThreadImpl* thread);
+	void				erase(ArchThreadImpl* thread);
 
-	void				refThread(CArchThreadImpl* rep);
-	void				testCancelThreadImpl(CArchThreadImpl* rep);
+	void				refThread(ArchThreadImpl* rep);
+	void				testCancelThreadImpl(ArchThreadImpl* rep);
 
-	void				doThreadFunc(CArchThread thread);
+	void				doThreadFunc(ArchThread thread);
 	static void*		threadFunc(void* vrep);
 	static void			threadCancel(int);
 	static void*		threadSignalHandler(void* vrep);
 
 private:
-	typedef std::list<CArchThread> CThreadList;
+	typedef std::list<ArchThread> ThreadList;
 
-	static CArchMultithreadPosix*	s_instance;
+	static ArchMultithreadPosix*	s_instance;
 
 	bool				m_newThreadCalled;
 
-	CArchMutex			m_threadMutex;
-	CArchThread			m_mainThread;
-	CThreadList			m_threadList;
+	ArchMutex			m_threadMutex;
+	ArchThread			m_mainThread;
+	ThreadList			m_threadList;
 	ThreadID			m_nextID;
 
 	pthread_t			m_signalThread;

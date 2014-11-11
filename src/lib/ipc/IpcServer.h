@@ -26,11 +26,11 @@
 
 #include <list>
 
-class CEvent;
-class CIpcClientProxy;
-class CIpcMessage;
+class Event;
+class IpcClientProxy;
+class IpcMessage;
 class IEventQueue;
-class CSocketMultiplexer;
+class SocketMultiplexer;
 
 //! IPC server for communication between daemon and GUI.
 /*!
@@ -39,11 +39,11 @@ client/server process or the GUI. The IPC server runs on the daemon process.
 This allows the GUI to send config changes to the daemon and client/server,
 and allows the daemon and client/server to send log data to the GUI.
 */
-class CIpcServer {
+class IpcServer {
 public:
-	CIpcServer(IEventQueue* events, CSocketMultiplexer* socketMultiplexer);
-	CIpcServer(IEventQueue* events, CSocketMultiplexer* socketMultiplexer, int port);
-	virtual ~CIpcServer();
+	IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+	IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer, int port);
+	virtual ~IpcServer();
 
 	//! @name manipulators
 	//@{
@@ -52,7 +52,7 @@ public:
 	void				listen();
 
 	//! Send a message to all clients matching the filter type.
-	void				send(const CIpcMessage& message, EIpcClientType filterType);
+	void				send(const IpcMessage& message, EIpcClientType filterType);
 
 	//@}
 	//! @name accessors
@@ -65,17 +65,17 @@ public:
 
 private:
 	void				init();
-	void				handleClientConnecting(const CEvent&, void*);
-	void				handleClientDisconnected(const CEvent&, void*);
-	void				handleMessageReceived(const CEvent&, void*);
-	void				deleteClient(CIpcClientProxy* proxy);
+	void				handleClientConnecting(const Event&, void*);
+	void				handleClientDisconnected(const Event&, void*);
+	void				handleMessageReceived(const Event&, void*);
+	void				deleteClient(IpcClientProxy* proxy);
 
 private:
-	typedef std::list<CIpcClientProxy*> CClientList;
+	typedef std::list<IpcClientProxy*> ClientList;
 
 	CTCPListenSocket	m_socket;
-	CNetworkAddress		m_address;
-	CClientList			m_clients;
-	CArchMutex			m_clientsMutex;
+	NetworkAddress		m_address;
+	ClientList			m_clients;
+	ArchMutex			m_clientsMutex;
 	IEventQueue*		m_events;
 };

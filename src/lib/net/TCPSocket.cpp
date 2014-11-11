@@ -37,7 +37,7 @@
 // CTCPSocket
 //
 
-CTCPSocket::CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
+CTCPSocket::CTCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	IDataSocket(events),
 	m_mutex(),
 	m_flushed(&m_mutex, true),
@@ -54,7 +54,7 @@ CTCPSocket::CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexe
 	init();
 }
 
-CTCPSocket::CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer, CArchSocket socket) :
+CTCPSocket::CTCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket) :
 	IDataSocket(events),
 	m_mutex(),
 	m_socket(socket),
@@ -81,7 +81,7 @@ CTCPSocket::~CTCPSocket()
 }
 
 void
-CTCPSocket::bind(const CNetworkAddress& addr)
+CTCPSocket::bind(const NetworkAddress& addr)
 {
 	try {
 		ARCH->bindSocket(m_socket, addr.getAddress());
@@ -100,7 +100,7 @@ CTCPSocket::close()
 	// remove ourself from the multiplexer
 	setJob(NULL);
 
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 
 	// clear buffers and enter disconnected state
 	if (m_connected) {
@@ -110,7 +110,7 @@ CTCPSocket::close()
 
 	// close the socket
 	if (m_socket != NULL) {
-		CArchSocket socket = m_socket;
+		ArchSocket socket = m_socket;
 		m_socket = NULL;
 		try {
 			ARCH->closeSocket(socket);
@@ -132,7 +132,7 @@ UInt32
 CTCPSocket::read(void* buffer, UInt32 n)
 {
 	// copy data directly from our input buffer
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 	UInt32 size = m_inputBuffer.getSize();
 	if (n > size) {
 		n = size;
@@ -156,7 +156,7 @@ CTCPSocket::write(const void* buffer, UInt32 n)
 {
 	bool wasEmpty;
 	{
-		CLock lock(&m_mutex);
+		Lock lock(&m_mutex);
 
 		// must not have shutdown output
 		if (!m_writable) {
@@ -186,7 +186,7 @@ CTCPSocket::write(const void* buffer, UInt32 n)
 void
 CTCPSocket::flush()
 {
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 	while (m_flushed == false) {
 		m_flushed.wait();
 	}
@@ -197,7 +197,7 @@ CTCPSocket::shutdownInput()
 {
 	bool useNewJob = false;
 	{
-		CLock lock(&m_mutex);
+		Lock lock(&m_mutex);
 
 		// shutdown socket for reading
 		try {
@@ -224,7 +224,7 @@ CTCPSocket::shutdownOutput()
 {
 	bool useNewJob = false;
 	{
-		CLock lock(&m_mutex);
+		Lock lock(&m_mutex);
 
 		// shutdown socket for writing
 		try {
@@ -249,22 +249,22 @@ CTCPSocket::shutdownOutput()
 bool
 CTCPSocket::isReady() const
 {
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 	return (m_inputBuffer.getSize() > 0);
 }
 
 UInt32
 CTCPSocket::getSize() const
 {
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 	return m_inputBuffer.getSize();
 }
 
 void
-CTCPSocket::connect(const CNetworkAddress& addr)
+CTCPSocket::connect(const NetworkAddress& addr)
 {
 	{
-		CLock lock(&m_mutex);
+		Lock lock(&m_mutex);
 
 		// fail on attempts to reconnect
 		if (m_socket == NULL || m_connected) {
@@ -358,15 +358,15 @@ CTCPSocket::newJob()
 void
 CTCPSocket::sendConnectionFailedEvent(const char* msg)
 {
-	CConnectionFailedInfo* info = new CConnectionFailedInfo(msg);
-	m_events->addEvent(CEvent(m_events->forIDataSocket().connectionFailed(),
-							getEventTarget(), info, CEvent::kDontFreeData));
+	ConnectionFailedInfo* info = new ConnectionFailedInfo(msg);
+	m_events->addEvent(Event(m_events->forIDataSocket().connectionFailed(),
+							getEventTarget(), info, Event::kDontFreeData));
 }
 
 void
-CTCPSocket::sendEvent(CEvent::Type type)
+CTCPSocket::sendEvent(Event::Type type)
 {
-	m_events->addEvent(CEvent(type, getEventTarget(), NULL));
+	m_events->addEvent(Event(type, getEventTarget(), NULL));
 }
 
 void
@@ -408,7 +408,7 @@ ISocketMultiplexerJob*
 CTCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
 				bool, bool write, bool error)
 {
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 
 	// should only check for errors if error is true but checking a new
 	// socket (and a socket that's connecting should be new) for errors
@@ -452,7 +452,7 @@ ISocketMultiplexerJob*
 CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 				bool read, bool write, bool error)
 {
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 
 	if (error) {
 		sendEvent(m_events->forISocket().disconnected());

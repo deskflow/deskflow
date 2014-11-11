@@ -21,22 +21,22 @@
 #include <stdio.h>
 
 //
-// CArchStringUnix
+// ArchStringUnix
 //
 
 #include "arch/multibyte.h"
 #include "arch/vsnprintf.h"
 
-CArchStringUnix::CArchStringUnix()
+ArchStringUnix::ArchStringUnix()
 {
 }
 
-CArchStringUnix::~CArchStringUnix()
+ArchStringUnix::~ArchStringUnix()
 {
 }
 
 IArchString::EWideCharEncoding
-CArchStringUnix::getWideCharEncoding()
+ArchStringUnix::getWideCharEncoding()
 {
 	return kUCS4;
 }

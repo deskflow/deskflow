@@ -20,13 +20,13 @@
 
 #include "arch/IArchFile.h"
 
-#define ARCH_FILE CArchFileUnix
+#define ARCH_FILE ArchFileUnix
 
 //! Unix implementation of IArchFile
-class CArchFileUnix : public IArchFile {
+class ArchFileUnix : public IArchFile {
 public:
-	CArchFileUnix();
-	virtual ~CArchFileUnix();
+	ArchFileUnix();
+	virtual ~ArchFileUnix();
 
 	// IArchFile overrides
 	virtual const char*	getBasename(const char* pathname);

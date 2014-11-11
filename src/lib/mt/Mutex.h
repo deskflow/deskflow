@@ -29,16 +29,16 @@ blocked, exactly one waiting thread will acquire the lock and continue
 running.  A thread may not lock a mutex it already owns the lock on;  if
 it tries it will deadlock itself.
 */
-class CMutex {
+class Mutex {
 public:
-	CMutex();
+	Mutex();
 	//! Equivalent to default c'tor
 	/*!
 	Copy c'tor doesn't copy anything.  It just makes it possible to
 	copy objects that contain a mutex.
 	*/
-	CMutex(const CMutex&);
-	~CMutex();
+	Mutex(const Mutex&);
+	~Mutex();
 
 	//! @name manipulators
 	//@{
@@ -48,7 +48,7 @@ public:
 	This does nothing.  It just makes it possible to assign objects
 	that contain a mutex.
 	*/
-	CMutex&				operator=(const CMutex&);
+	Mutex&				operator=(const Mutex&);
 
 	//@}
 	//! @name accessors
@@ -74,6 +74,6 @@ public:
 	//@}
 
 private:
-	friend class CCondVarBase;
-	CArchMutex			m_mutex;
+	friend class CondVarBase;
+	ArchMutex			m_mutex;
 };

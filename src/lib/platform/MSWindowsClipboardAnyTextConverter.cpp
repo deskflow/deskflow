@@ -39,10 +39,10 @@ CMSWindowsClipboardAnyTextConverter::getFormat() const
 }
 
 HANDLE
-CMSWindowsClipboardAnyTextConverter::fromIClipboard(const CString& data) const
+CMSWindowsClipboardAnyTextConverter::fromIClipboard(const String& data) const
 {
 	// convert linefeeds and then convert to desired encoding
-	CString text = doFromIClipboard(convertLinefeedToWin32(data));
+	String text = doFromIClipboard(convertLinefeedToWin32(data));
 	UInt32 size  = (UInt32)text.size();
 
 	// copy to memory handle
@@ -63,18 +63,18 @@ CMSWindowsClipboardAnyTextConverter::fromIClipboard(const CString& data) const
 	return gData;
 }
 
-CString
+String
 CMSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const
 {
 	// get datator
 	const char* src = (const char*)GlobalLock(data);
 	UInt32 srcSize = (UInt32)GlobalSize(data);
 	if (src == NULL || srcSize <= 1) {
-		return CString();
+		return String();
 	}
 
 	// convert text
-	CString text = doToIClipboard(CString(src, srcSize));
+	String text = doToIClipboard(String(src, srcSize));
 
 	// release handle
 	GlobalUnlock(data);
@@ -83,9 +83,9 @@ CMSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const
 	return convertLinefeedToUnix(text);
 }
 
-CString
+String
 CMSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
-				const CString& src) const
+				const String& src) const
 {
 	// note -- we assume src is a valid UTF-8 string
 
@@ -102,7 +102,7 @@ CMSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
 	}
 
 	// allocate new string
-	CString dst;
+	String dst;
 	dst.reserve(src.size() + numNewlines);
 
 	// copy string, converting newlines
@@ -117,9 +117,9 @@ CMSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
 	return dst;
 }
 
-CString
+String
 CMSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(
-				const CString& src) const
+				const String& src) const
 {
 	// count newlines in string
 	UInt32 numNewlines = 0;
@@ -134,7 +134,7 @@ CMSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(
 	}
 
 	// allocate new string
-	CString dst;
+	String dst;
 	dst.reserve(src.size());
 
 	// copy string, converting newlines

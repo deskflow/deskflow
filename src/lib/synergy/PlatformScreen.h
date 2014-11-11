@@ -28,10 +28,10 @@ This screen implementation is the superclass of all other screen
 implementations.  It implements a handful of methods and requires
 subclasses to implement the rest.
 */
-class CPlatformScreen : public IPlatformScreen {
+class PlatformScreen : public IPlatformScreen {
 public:
-	CPlatformScreen(IEventQueue* events);
-	virtual ~CPlatformScreen();
+	PlatformScreen(IEventQueue* events);
+	virtual ~PlatformScreen();
 
 	// IScreen overrides
 	virtual void*		getEventTarget() const = 0;
@@ -80,7 +80,7 @@ public:
 	virtual void		setDraggingStarted(bool started) { m_draggingStarted = started; }
 	virtual bool		isDraggingStarted();
 	virtual bool		isFakeDraggingStarted() { return m_fakeDraggingStarted; }
-	virtual CString&	getDraggingFilename() { return m_draggingFilename; }
+	virtual String&	getDraggingFilename() { return m_draggingFilename; }
 	virtual void		clearDraggingFilename() { }
 
 	// IPlatformScreen overrides
@@ -94,12 +94,12 @@ public:
 	virtual void		closeScreensaver() = 0;
 	virtual void		screensaver(bool activate) = 0;
 	virtual void		resetOptions() = 0;
-	virtual void		setOptions(const COptionsList& options) = 0;
+	virtual void		setOptions(const OptionsList& options) = 0;
 	virtual void		setSequenceNumber(UInt32) = 0;
 	virtual bool		isPrimary() const = 0;
 	
-	virtual void		fakeDraggingFiles(CDragFileList fileList) { throw std::runtime_error("fakeDraggingFiles not implemented"); }
-	virtual const CString&
+	virtual void		fakeDraggingFiles(DragFileList fileList) { throw std::runtime_error("fakeDraggingFiles not implemented"); }
+	virtual const String&
 						getDropTarget() const { throw std::runtime_error("getDropTarget not implemented"); }
 
 protected:
@@ -118,10 +118,10 @@ protected:
 	virtual IKeyState*	getKeyState() const = 0;
 
 	// IPlatformScreen overrides
-	virtual void		handleSystemEvent(const CEvent& event, void*) = 0;
+	virtual void		handleSystemEvent(const Event& event, void*) = 0;
 
 protected:
-	CString				m_draggingFilename;
+	String				m_draggingFilename;
 	bool				m_draggingStarted;
 	bool				m_fakeDraggingStarted;
 };

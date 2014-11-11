@@ -21,27 +21,27 @@
 #include "arch/Arch.h"
 
 //
-// CSimpleEventQueueBuffer
+// SimpleEventQueueBuffer
 //
 
-CSimpleEventQueueBuffer::CSimpleEventQueueBuffer()
+SimpleEventQueueBuffer::SimpleEventQueueBuffer()
 {
 	m_queueMutex     = ARCH->newMutex();
 	m_queueReadyCond = ARCH->newCondVar();
 	m_queueReady     = false;
 }
 
-CSimpleEventQueueBuffer::~CSimpleEventQueueBuffer()
+SimpleEventQueueBuffer::~SimpleEventQueueBuffer()
 {
 	ARCH->closeCondVar(m_queueReadyCond);
 	ARCH->closeMutex(m_queueMutex);
 }
 
 void
-CSimpleEventQueueBuffer::waitForEvent(double timeout)
+SimpleEventQueueBuffer::waitForEvent(double timeout)
 {
-	CArchMutexLock lock(m_queueMutex);
-	CStopwatch timer(true);
+	ArchMutexLock lock(m_queueMutex);
+	Stopwatch timer(true);
 	while (!m_queueReady) {
 		double timeLeft = timeout;
 		if (timeLeft >= 0.0) {
@@ -55,9 +55,9 @@ CSimpleEventQueueBuffer::waitForEvent(double timeout)
 }
 
 IEventQueueBuffer::Type
-CSimpleEventQueueBuffer::getEvent(CEvent&, UInt32& dataID)
+SimpleEventQueueBuffer::getEvent(Event&, UInt32& dataID)
 {
-	CArchMutexLock lock(m_queueMutex);
+	ArchMutexLock lock(m_queueMutex);
 	if (!m_queueReady) {
 		return kNone;
 	}
@@ -68,9 +68,9 @@ CSimpleEventQueueBuffer::getEvent(CEvent&, UInt32& dataID)
 }
 
 bool
-CSimpleEventQueueBuffer::addEvent(UInt32 dataID)
+SimpleEventQueueBuffer::addEvent(UInt32 dataID)
 {
-	CArchMutexLock lock(m_queueMutex);
+	ArchMutexLock lock(m_queueMutex);
 	m_queue.push_front(dataID);
 	if (!m_queueReady) {
 		m_queueReady = true;
@@ -80,20 +80,20 @@ CSimpleEventQueueBuffer::addEvent(UInt32 dataID)
 }
 
 bool
-CSimpleEventQueueBuffer::isEmpty() const
+SimpleEventQueueBuffer::isEmpty() const
 {
-	CArchMutexLock lock(m_queueMutex);
+	ArchMutexLock lock(m_queueMutex);
 	return !m_queueReady;
 }
 
-CEventQueueTimer*
-CSimpleEventQueueBuffer::newTimer(double, bool) const
+EventQueueTimer*
+SimpleEventQueueBuffer::newTimer(double, bool) const
 {
-	return new CEventQueueTimer;
+	return new EventQueueTimer;
 }
 
 void
-CSimpleEventQueueBuffer::deleteTimer(CEventQueueTimer* timer) const
+SimpleEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
 {
 	delete timer;
 }

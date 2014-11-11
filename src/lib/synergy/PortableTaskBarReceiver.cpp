@@ -24,23 +24,23 @@
 #include "common/Version.h"
 
 //
-// CPortableTaskBarReceiver
+// PortableTaskBarReceiver
 //
 
-CPortableTaskBarReceiver::CPortableTaskBarReceiver(IEventQueue* events) :
+PortableTaskBarReceiver::PortableTaskBarReceiver(IEventQueue* events) :
 	m_state(kNotRunning),
 	m_events(events)
 {
 	// do nothing
 }
 
-CPortableTaskBarReceiver::~CPortableTaskBarReceiver()
+PortableTaskBarReceiver::~PortableTaskBarReceiver()
 {
 	// do nothing
 }
 
 void
-CPortableTaskBarReceiver::updateStatus(INode* node, const CString& errorMsg)
+PortableTaskBarReceiver::updateStatus(INode* node, const String& errorMsg)
 {
 	{
 		// update our status
@@ -65,44 +65,44 @@ CPortableTaskBarReceiver::updateStatus(INode* node, const CString& errorMsg)
 	ARCH->updateReceiver(this);
 }
 
-CPortableTaskBarReceiver::EState
-CPortableTaskBarReceiver::getStatus() const
+PortableTaskBarReceiver::EState
+PortableTaskBarReceiver::getStatus() const
 {
 	return m_state;
 }
 
-const CString&
-CPortableTaskBarReceiver::getErrorMessage() const
+const String&
+PortableTaskBarReceiver::getErrorMessage() const
 {
 	return m_errorMessage;
 }
 
 void
-CPortableTaskBarReceiver::quit()
+PortableTaskBarReceiver::quit()
 {
-	m_events->addEvent(CEvent(CEvent::kQuit));
+	m_events->addEvent(Event(Event::kQuit));
 }
 
 void
-CPortableTaskBarReceiver::onStatusChanged(INode*)
-{
-	// do nothing
-}
-
-void
-CPortableTaskBarReceiver::lock() const
+PortableTaskBarReceiver::onStatusChanged(INode*)
 {
 	// do nothing
 }
 
 void
-CPortableTaskBarReceiver::unlock() const
+PortableTaskBarReceiver::lock() const
+{
+	// do nothing
+}
+
+void
+PortableTaskBarReceiver::unlock() const
 {
 	// do nothing
 }
 
 std::string
-CPortableTaskBarReceiver::getToolTip() const
+PortableTaskBarReceiver::getToolTip() const
 {
 	switch (m_state) {
 	case kNotRunning:

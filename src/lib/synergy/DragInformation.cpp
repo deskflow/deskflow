@@ -24,20 +24,20 @@
 
 using namespace std;
 
-CDragInformation::CDragInformation() :
+DragInformation::DragInformation() :
 	m_filename(),
 	m_filesize(0)
 {
 }
 
 void
-CDragInformation::parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CString data)
+DragInformation::parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, String data)
 {
 	size_t startPos = 0;
 	size_t findResult1 = 0;
 	size_t findResult2 = 0;
 	dragFileList.clear();
-	CString slash("\\");
+	String slash("\\");
 	if (data.find("/", startPos) != string::npos) {
 		slash = "/";
 	}
@@ -54,9 +54,9 @@ CDragInformation::parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CSt
 		
 		// set filename
 		if (findResult1 - findResult2 > 1) {
-			CString filename = data.substr(findResult2 + 1,
+			String filename = data.substr(findResult2 + 1,
 				findResult1 - findResult2 - 1);
-			CDragInformation di;
+			DragInformation di;
 			di.setFilename(filename);
 			dragFileList.push_back(di);
 		}
@@ -65,7 +65,7 @@ CDragInformation::parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CSt
 		//set filesize
 		findResult2 = data.find(',', startPos);
 		if (findResult2 - findResult1 > 1) {
-			CString filesize = data.substr(findResult1 + 1,
+			String filesize = data.substr(findResult1 + 1,
 										   findResult2 - findResult1 - 1);
 			size_t size = stringToNum(filesize);
 			dragFileList.at(index).setFilesize(size);
@@ -85,8 +85,8 @@ CDragInformation::parseDragInfo(CDragFileList& dragFileList, UInt32 fileNum, CSt
 	}
 }
 
-CString
-CDragInformation::getDragFileExtension(CString filename)
+String
+DragInformation::getDragFileExtension(String filename)
 {
 	size_t findResult = string::npos;
 	findResult = filename.find_last_of(".", filename.size());
@@ -99,13 +99,13 @@ CDragInformation::getDragFileExtension(CString filename)
 }
 
 int
-CDragInformation::setupDragInfo(CDragFileList& fileList, CString& output)
+DragInformation::setupDragInfo(DragFileList& fileList, String& output)
 {
 	int size = fileList.size();
 	for (int i = 0; i < size; ++i) {
 		output.append(fileList.at(i).getFilename());
 		output.append(",");
-		CString filesize = getFileSize(fileList.at(i).getFilename());
+		String filesize = getFileSize(fileList.at(i).getFilename());
 		output.append(filesize);
 		output.append(",");
 	}
@@ -113,7 +113,7 @@ CDragInformation::setupDragInfo(CDragFileList& fileList, CString& output)
 }
 
 bool
-CDragInformation::isFileValid(CString filename)
+DragInformation::isFileValid(String filename)
 {
 	bool result = false;
 	std::fstream file(filename.c_str(), ios::in|ios::binary);
@@ -128,7 +128,7 @@ CDragInformation::isFileValid(CString filename)
 }
 
 size_t
-CDragInformation::stringToNum(CString& str)
+DragInformation::stringToNum(String& str)
 {
 	istringstream iss(str.c_str());
 	size_t size;
@@ -136,8 +136,8 @@ CDragInformation::stringToNum(CString& str)
 	return size;
 }
 
-CString
-CDragInformation::getFileSize(CString& filename)
+String
+DragInformation::getFileSize(String& filename)
 {
 	std::fstream file(filename.c_str(), ios::in|ios::binary);
 

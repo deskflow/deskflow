@@ -380,12 +380,12 @@ static const KeyID s_numpadTable[] = {
 };
 
 //
-// CKeyState
+// KeyState
 //
 
-CKeyState::CKeyState(IEventQueue* events) :
+KeyState::KeyState(IEventQueue* events) :
 	IKeyState(events),
-	m_keyMapPtr(new CKeyMap()),
+	m_keyMapPtr(new synergy::KeyMap()),
 	m_keyMap(*m_keyMapPtr),
 	m_mask(0),
 	m_events(events)
@@ -393,7 +393,7 @@ CKeyState::CKeyState(IEventQueue* events) :
 	init();
 }
 
-CKeyState::CKeyState(IEventQueue* events, CKeyMap& keyMap) :
+KeyState::KeyState(IEventQueue* events, synergy::KeyMap& keyMap) :
 	IKeyState(events),
 	m_keyMapPtr(0),
 	m_keyMap(keyMap),
@@ -403,14 +403,14 @@ CKeyState::CKeyState(IEventQueue* events, CKeyMap& keyMap) :
 	init();
 }
 
-CKeyState::~CKeyState()
+KeyState::~KeyState()
 {
 	if (m_keyMapPtr)
 		delete m_keyMapPtr;
 }
 
 void
-CKeyState::init()
+KeyState::init()
 {
 	memset(&m_keys, 0, sizeof(m_keys));
 	memset(&m_syntheticKeys, 0, sizeof(m_syntheticKeys));
@@ -419,7 +419,7 @@ CKeyState::init()
 }
 
 void
-CKeyState::onKey(KeyButton button, bool down, KeyModifierMask newState)
+KeyState::onKey(KeyButton button, bool down, KeyModifierMask newState)
 {
 	// update modifier state
 	m_mask = newState;
@@ -443,7 +443,7 @@ CKeyState::onKey(KeyButton button, bool down, KeyModifierMask newState)
 }
 
 void
-CKeyState::sendKeyEvent(
+KeyState::sendKeyEvent(
 				void* target, bool press, bool isAutoRepeat,
 				KeyID key, KeyModifierMask mask,
 				SInt32 count, KeyButton button)
@@ -453,33 +453,33 @@ CKeyState::sendKeyEvent(
 			// ignore auto-repeat on half-duplex keys
 		}
 		else {
-			m_events->addEvent(CEvent(m_events->forIKeyState().keyDown(), target,
-							CKeyInfo::alloc(key, mask, button, 1)));
-			m_events->addEvent(CEvent(m_events->forIKeyState().keyUp(), target,
-							CKeyInfo::alloc(key, mask, button, 1)));
+			m_events->addEvent(Event(m_events->forIKeyState().keyDown(), target,
+							KeyInfo::alloc(key, mask, button, 1)));
+			m_events->addEvent(Event(m_events->forIKeyState().keyUp(), target,
+							KeyInfo::alloc(key, mask, button, 1)));
 		}
 	}
 	else {
 		if (isAutoRepeat) {
-			m_events->addEvent(CEvent(m_events->forIKeyState().keyRepeat(), target,
-							 CKeyInfo::alloc(key, mask, button, count)));
+			m_events->addEvent(Event(m_events->forIKeyState().keyRepeat(), target,
+							 KeyInfo::alloc(key, mask, button, count)));
 		}
 		else if (press) {
-			m_events->addEvent(CEvent(m_events->forIKeyState().keyDown(), target,
-							CKeyInfo::alloc(key, mask, button, 1)));
+			m_events->addEvent(Event(m_events->forIKeyState().keyDown(), target,
+							KeyInfo::alloc(key, mask, button, 1)));
 		}
 		else {
-			m_events->addEvent(CEvent(m_events->forIKeyState().keyUp(), target,
-							CKeyInfo::alloc(key, mask, button, 1)));
+			m_events->addEvent(Event(m_events->forIKeyState().keyUp(), target,
+							KeyInfo::alloc(key, mask, button, 1)));
 		}
 	}
 }
 
 void
-CKeyState::updateKeyMap()
+KeyState::updateKeyMap()
 {
 	// get the current keyboard map
-	CKeyMap keyMap;
+	synergy::KeyMap keyMap;
 	getKeyMap(keyMap);
 	m_keyMap.swap(keyMap);
 	m_keyMap.finish();
@@ -491,7 +491,7 @@ CKeyState::updateKeyMap()
 }
 
 void
-CKeyState::updateKeyState()
+KeyState::updateKeyState()
 {
 	// reset our state
 	memset(&m_keys, 0, sizeof(m_keys));
@@ -512,19 +512,19 @@ CKeyState::updateKeyState()
 	m_mask = pollActiveModifiers();
 
 	// set active modifiers
-	CAddActiveModifierContext addModifierContext(pollActiveGroup(), m_mask,
+	AddActiveModifierContext addModifierContext(pollActiveGroup(), m_mask,
 												m_activeModifiers);
-	m_keyMap.foreachKey(&CKeyState::addActiveModifierCB, &addModifierContext);
+	m_keyMap.foreachKey(&KeyState::addActiveModifierCB, &addModifierContext);
 
 	LOG((CLOG_DEBUG1 "modifiers on update: 0x%04x", m_mask));
 }
 
 void
-CKeyState::addActiveModifierCB(KeyID, SInt32 group,
-				CKeyMap::KeyItem& keyItem, void* vcontext)
+KeyState::addActiveModifierCB(KeyID, SInt32 group,
+				synergy::KeyMap::KeyItem& keyItem, void* vcontext)
 {
-	CAddActiveModifierContext* context =
-		reinterpret_cast<CAddActiveModifierContext*>(vcontext);
+	AddActiveModifierContext* context =
+		reinterpret_cast<AddActiveModifierContext*>(vcontext);
 	if (group == context->m_activeGroup &&
 		(keyItem.m_generates & context->m_mask) != 0) {
 		context->m_activeModifiers.insert(std::make_pair(
@@ -533,7 +533,7 @@ CKeyState::addActiveModifierCB(KeyID, SInt32 group,
 }
 
 void
-CKeyState::setHalfDuplexMask(KeyModifierMask mask)
+KeyState::setHalfDuplexMask(KeyModifierMask mask)
 {
 	m_keyMap.clearHalfDuplexModifiers();
 	if ((mask & KeyModifierCapsLock) != 0) {
@@ -548,7 +548,7 @@ CKeyState::setHalfDuplexMask(KeyModifierMask mask)
 }
 
 void
-CKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
+KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
 {
 	// if this server key is already down then this is probably a
 	// mis-reported autorepeat.
@@ -567,7 +567,7 @@ CKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
 	// get keys for key press
 	Keystrokes keys;
 	ModifierToKeys oldActiveModifiers = m_activeModifiers;
-	const CKeyMap::KeyItem* keyItem =
+	const synergy::KeyMap::KeyItem* keyItem =
 		m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
 								getActiveModifiersRValue(), mask, false);
 	if (keyItem == NULL) {
@@ -588,7 +588,7 @@ CKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
 }
 
 bool
-CKeyState::fakeKeyRepeat(
+KeyState::fakeKeyRepeat(
 				KeyID id, KeyModifierMask mask,
 				SInt32 count, KeyButton serverID)
 {
@@ -603,7 +603,7 @@ CKeyState::fakeKeyRepeat(
 	// get keys for key repeat
 	Keystrokes keys;
 	ModifierToKeys oldActiveModifiers = m_activeModifiers;
-	const CKeyMap::KeyItem* keyItem =
+	const synergy::KeyMap::KeyItem* keyItem =
 		m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
 								getActiveModifiersRValue(), mask, true);
 	if (keyItem == NULL) {
@@ -650,7 +650,7 @@ CKeyState::fakeKeyRepeat(
 }
 
 bool
-CKeyState::fakeKeyUp(KeyButton serverID)
+KeyState::fakeKeyUp(KeyButton serverID)
 {
 	// if we haven't seen this button go down then ignore it
 	KeyButton localID = m_serverKeys[serverID & kButtonMask];
@@ -695,7 +695,7 @@ CKeyState::fakeKeyUp(KeyButton serverID)
 }
 
 void
-CKeyState::fakeAllKeysUp()
+KeyState::fakeAllKeysUp()
 {
 	Keystrokes keys;
 	for (KeyButton i = 0; i < IKeyState::kNumButtons; ++i) {
@@ -712,31 +712,31 @@ CKeyState::fakeAllKeysUp()
 }
 
 bool
-CKeyState::isKeyDown(KeyButton button) const
+KeyState::isKeyDown(KeyButton button) const
 {
 	return (m_keys[button & kButtonMask] > 0);
 }
 
 KeyModifierMask
-CKeyState::getActiveModifiers() const
+KeyState::getActiveModifiers() const
 {
 	return m_mask;
 }
 
 KeyModifierMask&
-CKeyState::getActiveModifiersRValue()
+KeyState::getActiveModifiersRValue()
 {
 	return m_mask;
 }
 
 SInt32
-CKeyState::getEffectiveGroup(SInt32 group, SInt32 offset) const
+KeyState::getEffectiveGroup(SInt32 group, SInt32 offset) const
 {
 	return m_keyMap.getEffectiveGroup(group, offset);
 }
 
 bool
-CKeyState::isIgnoredKey(KeyID key, KeyModifierMask) const
+KeyState::isIgnoredKey(KeyID key, KeyModifierMask) const
 {
 	switch (key) {
 	case kKeyCapsLock:
@@ -750,9 +750,9 @@ CKeyState::isIgnoredKey(KeyID key, KeyModifierMask) const
 }
 
 KeyButton
-CKeyState::getButton(KeyID id, SInt32 group) const
+KeyState::getButton(KeyID id, SInt32 group) const
 {
-	const CKeyMap::KeyItemList* items =
+	const synergy::KeyMap::KeyItemList* items =
 		m_keyMap.findCompatibleKey(id, group, 0, 0);
 	if (items == NULL) {
 		return 0;
@@ -763,7 +763,7 @@ CKeyState::getButton(KeyID id, SInt32 group) const
 }
 
 void
-CKeyState::addAliasEntries()
+KeyState::addAliasEntries()
 {
 	for (SInt32 g = 0, n = m_keyMap.getNumGroups(); g < n; ++g) {
 		// if we can't shift any kKeyTab key in a particular group but we can
@@ -787,7 +787,7 @@ CKeyState::addAliasEntries()
 }
 
 void
-CKeyState::addKeypadEntries()
+KeyState::addKeypadEntries()
 {
 	// map every numpad key to its equivalent non-numpad key if it's not
 	// on the keyboard.
@@ -801,7 +801,7 @@ CKeyState::addKeypadEntries()
 }
 
 void
-CKeyState::addCombinationEntries()
+KeyState::addCombinationEntries()
 {
 	for (SInt32 g = 0, n = m_keyMap.getNumGroups(); g < n; ++g) {
 		// add dead and compose key composition sequences
@@ -822,7 +822,7 @@ CKeyState::addCombinationEntries()
 }
 
 void
-CKeyState::fakeKeys(const Keystrokes& keys, UInt32 count)
+KeyState::fakeKeys(const Keystrokes& keys, UInt32 count)
 {
 	// do nothing if no keys or no repeats
 	if (count == 0 || keys.empty()) {
@@ -859,12 +859,12 @@ CKeyState::fakeKeys(const Keystrokes& keys, UInt32 count)
 }
 
 void
-CKeyState::updateModifierKeyState(KeyButton button,
+KeyState::updateModifierKeyState(KeyButton button,
 				const ModifierToKeys& oldModifiers,
 				const ModifierToKeys& newModifiers)
 {
 	// get the pressed modifier buttons before and after
-	CKeyMap::ButtonToKeyMap oldKeys, newKeys;
+	synergy::KeyMap::ButtonToKeyMap oldKeys, newKeys;
 	for (ModifierToKeys::const_iterator i = oldModifiers.begin();
 								i != oldModifiers.end(); ++i) {
 		oldKeys.insert(std::make_pair(i->second.m_button, &i->second));
@@ -875,7 +875,7 @@ CKeyState::updateModifierKeyState(KeyButton button,
 	}
 
 	// get the modifier buttons that were pressed or released
-	CKeyMap::ButtonToKeyMap pressed, released;
+	synergy::KeyMap::ButtonToKeyMap pressed, released;
 	std::set_difference(oldKeys.begin(), oldKeys.end(),
 						newKeys.begin(), newKeys.end(),
 						std::inserter(released, released.end()),
@@ -886,14 +886,14 @@ CKeyState::updateModifierKeyState(KeyButton button,
 						ButtonToKeyLess());
 
 	// update state
-	for (CKeyMap::ButtonToKeyMap::const_iterator i = released.begin();
+	for (synergy::KeyMap::ButtonToKeyMap::const_iterator i = released.begin();
 								i != released.end(); ++i) {
 		if (i->first != button) {
 			m_keys[i->first]          = 0;
 			m_syntheticKeys[i->first] = 0;
 		}
 	}
-	for (CKeyMap::ButtonToKeyMap::const_iterator i = pressed.begin();
+	for (synergy::KeyMap::ButtonToKeyMap::const_iterator i = pressed.begin();
 								i != pressed.end(); ++i) {
 		if (i->first != button) {
 			m_keys[i->first]          = 1;
@@ -904,10 +904,10 @@ CKeyState::updateModifierKeyState(KeyButton button,
 }
 
 //
-// CKeyState::CAddActiveModifierContext
+// KeyState::AddActiveModifierContext
 //
 
-CKeyState::CAddActiveModifierContext::CAddActiveModifierContext(
+KeyState::AddActiveModifierContext::AddActiveModifierContext(
 				SInt32 group, KeyModifierMask mask,
 				ModifierToKeys&	activeModifiers) :
 	m_activeGroup(group),

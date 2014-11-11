@@ -27,17 +27,17 @@
 #include <string>
 #include <list>
 
-class CThread;
-class CIpcLogOutputter;
-class CIpcServer;
-class CFileLogOutputter;
+class Thread;
+class IpcLogOutputter;
+class IpcServer;
+class FileLogOutputter;
 
 class CMSWindowsWatchdog {
 public:
 	CMSWindowsWatchdog(
 		bool autoDetectCommand,
-		CIpcServer& ipcServer,
-		CIpcLogOutputter& ipcLogOutputter);
+		IpcServer& ipcServer,
+		IpcLogOutputter& ipcLogOutputter);
 	virtual ~CMSWindowsWatchdog();
 
 	void				startAsync();
@@ -61,16 +61,16 @@ private:
 	void				testOutput(CString buffer);
 
 private:
-	CThread*			m_thread;
+	Thread*			m_thread;
 	bool				m_autoDetectCommand;
 	std::string			m_command;
 	bool				m_monitoring;
 	bool				m_commandChanged;
 	HANDLE				m_stdOutWrite;
 	HANDLE				m_stdOutRead;
-	CThread*			m_outputThread;
-	CIpcServer&			m_ipcServer;
-	CIpcLogOutputter&	m_ipcLogOutputter;
+	Thread*			m_outputThread;
+	IpcServer&			m_ipcServer;
+	IpcLogOutputter&	m_ipcLogOutputter;
 	bool				m_elevateProcess;
 	CMSWindowsSession	m_session;
 	PROCESS_INFORMATION m_processInfo;
@@ -89,8 +89,8 @@ An error occured in the process watchdog.
 */
 class XMSWindowsWatchdogError : public XSynergy {
 public:
-	XMSWindowsWatchdogError(const CString& msg) : XSynergy(msg) { }
+	XMSWindowsWatchdogError(const String& msg) : XSynergy(msg) { }
 
 	// XBase overrides
-	virtual CString		getWhat() const throw() { return what(); }
+	virtual String		getWhat() const throw() { return what(); }
 };
