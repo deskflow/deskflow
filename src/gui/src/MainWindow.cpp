@@ -75,7 +75,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pMenuEdit(NULL),
 	m_pMenuWindow(NULL),
 	m_pMenuHelp(NULL),
-	m_pZeroconfService(NULL)
+	m_pZeroconfService(NULL),
+	m_BonjourRunning(true)
 {
 	setupUi(this);
 
@@ -105,7 +106,13 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	setMinimumSize(size());
 #endif
 
-	updateZeroconfService();
+#if defined(Q_OS_WIN)
+	m_BonjourRunning = isServiceRunning("Bonjour Service");
+#endif
+
+	if (m_BonjourRunning) {
+		updateZeroconfService();
+	}
 
 	m_pAutoConnectCheckBox->setChecked(appConfig.autoConnect());
 }
@@ -895,4 +902,38 @@ void MainWindow::on_m_pAutoConnectCheckBox_toggled(bool checked)
 	m_pLineEditHostname->setDisabled(checked);
 	appConfig().setAutoConnect(checked);
 	updateZeroconfService();
+}
+
+bool MainWindow::isServiceRunning(QString name)
+{
+#if defined(Q_OS_WIN)
+	SC_HANDLE hSCManager;
+	hSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_CONNECT);
+	if (hSCManager == NULL) {
+		appendLogNote("failed to open a service controller manager, error: " +
+			GetLastError());
+		return false;
+	}
+
+	SC_HANDLE hService;
+	int length = name.length();
+	wchar_t* array = new wchar_t[length + 1];
+	name.toWCharArray(array);
+	array[length] = '\0';
+
+	hService = OpenService(hSCManager, array, SERVICE_QUERY_STATUS);
+	if (hService == NULL) {
+		appendLogNote("failed to open " + name + "service, error: " +
+			GetLastError());
+		return false;
+	}
+
+	SERVICE_STATUS status;
+	if (QueryServiceStatus(hService, &status)) {
+		if (status.dwCurrentState == SERVICE_RUNNING) {
+			return true;
+		}
+	}
+#endif
+	return false;
 }
