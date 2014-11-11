@@ -1,3 +1,4 @@
+config.h
 *.pyc
 /bin
 /lib
@@ -11,4 +12,4 @@
 /src/gui/ui_*
 src/gui/gui.pro.user
 src/gui/.qmake.stash
-config.h
+src/setup/win32/synergy.suo
