@@ -88,6 +88,7 @@ ArchFileUnix::getSystemDirectory()
 	return "/etc";
 }
 
+std::string
 ArchFileUnix::getInstalledDirectory()
 {
 #if WINAPI_XWINDOWS
