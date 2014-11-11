@@ -147,6 +147,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void changeEvent(QEvent* event);
 		void retranslateMenuBar();
 		bool isServiceRunning(QString name);
+		bool isBonjourRunning();
 
 	private:
 		QSettings& m_Settings;
@@ -166,7 +167,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QMenu* m_pMenuWindow;
 		QMenu* m_pMenuHelp;
 		ZeroconfService* m_pZeroconfService;
-		bool m_BonjourRunning;
 
 private slots:
 	void on_m_pAutoConnectCheckBox_toggled(bool checked);

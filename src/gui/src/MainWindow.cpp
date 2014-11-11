@@ -75,8 +75,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pMenuEdit(NULL),
 	m_pMenuWindow(NULL),
 	m_pMenuHelp(NULL),
-	m_pZeroconfService(NULL),
-	m_BonjourRunning(true)
+	m_pZeroconfService(NULL)
 {
 	setupUi(this);
 
@@ -106,13 +105,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	setMinimumSize(size());
 #endif
 
-#if defined(Q_OS_WIN)
-	m_BonjourRunning = isServiceRunning("Bonjour Service");
-#endif
-
-	if (m_BonjourRunning) {
-		updateZeroconfService();
-	}
+	updateZeroconfService();
 
 	m_pAutoConnectCheckBox->setChecked(appConfig.autoConnect());
 }
@@ -784,14 +777,16 @@ void MainWindow::changeEvent(QEvent* event)
 
 void MainWindow::updateZeroconfService()
 {
-	if (!m_AppConfig.wizardShouldRun()) {
-		if (m_pZeroconfService) {
-			delete m_pZeroconfService;
-			m_pZeroconfService = NULL;
-		}
+	if (isBonjourRunning()) {
+		if (!m_AppConfig.wizardShouldRun()) {
+			if (m_pZeroconfService) {
+				delete m_pZeroconfService;
+				m_pZeroconfService = NULL;
+			}
 
-		if (m_AppConfig.autoConnect() || synergyType() == synergyServer) {
-			m_pZeroconfService = new ZeroconfService(this);
+			if (m_AppConfig.autoConnect() || synergyType() == synergyServer) {
+				m_pZeroconfService = new ZeroconfService(this);
+			}
 		}
 	}
 }
@@ -936,4 +931,17 @@ bool MainWindow::isServiceRunning(QString name)
 	}
 #endif
 	return false;
+}
+
+bool MainWindow::isBonjourRunning()
+{
+	bool result = false;
+
+#if defined(Q_OS_WIN)
+	result = isServiceRunning("Bonjour Service");
+#else
+	result = true;
+#endif
+
+	return result;
 }
