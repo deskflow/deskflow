@@ -195,17 +195,17 @@ CMSWindowsServerTaskBarReceiver::runMenu(int x, int y)
 		break;
 
 	case IDC_RELOAD_CONFIG:
-		m_events->addEvent(Event(m_events->forCServerApp().reloadConfig(),
+		m_events->addEvent(Event(m_events->forServerApp().reloadConfig(),
 							m_events->getSystemTarget()));
 		break;
 
 	case IDC_FORCE_RECONNECT:
-		m_events->addEvent(Event(m_events->forCServerApp().forceReconnect(),
+		m_events->addEvent(Event(m_events->forServerApp().forceReconnect(),
 							m_events->getSystemTarget()));
 		break;
 
 	case ID_SYNERGY_RESETSERVER:
-		m_events->addEvent(Event(m_events->forCServerApp().resetServer(),
+		m_events->addEvent(Event(m_events->forServerApp().resetServer(),
 							m_events->getSystemTarget()));
 		break;
 

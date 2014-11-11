@@ -45,7 +45,7 @@ typedef VOID (WINAPI *SendSas)(BOOL asUser);
 
 const char g_activeDesktop[] = {"activeDesktop:"};
 
-CMSWindowsWatchdog::CMSWindowsWatchdog(
+MSWindowsWatchdog::MSWindowsWatchdog(
 	bool autoDetectCommand,
 	IpcServer& ipcServer,
 	IpcLogOutputter& ipcLogOutputter) :
@@ -68,7 +68,7 @@ CMSWindowsWatchdog::CMSWindowsWatchdog(
 	m_condVar = ARCH->newCondVar();
 }
 
-CMSWindowsWatchdog::~CMSWindowsWatchdog()
+MSWindowsWatchdog::~MSWindowsWatchdog()
 {
 	if (m_condVar != NULL) {
 		ARCH->closeCondVar(m_condVar);
@@ -80,17 +80,17 @@ CMSWindowsWatchdog::~CMSWindowsWatchdog()
 }
 
 void 
-CMSWindowsWatchdog::startAsync()
+MSWindowsWatchdog::startAsync()
 {
-	m_thread = new Thread(new TMethodJob<CMSWindowsWatchdog>(
-		this, &CMSWindowsWatchdog::mainLoop, nullptr));
+	m_thread = new Thread(new TMethodJob<MSWindowsWatchdog>(
+		this, &MSWindowsWatchdog::mainLoop, nullptr));
 
-	m_outputThread = new Thread(new TMethodJob<CMSWindowsWatchdog>(
-		this, &CMSWindowsWatchdog::outputLoop, nullptr));
+	m_outputThread = new Thread(new TMethodJob<MSWindowsWatchdog>(
+		this, &MSWindowsWatchdog::outputLoop, nullptr));
 }
 
 void
-CMSWindowsWatchdog::stop()
+MSWindowsWatchdog::stop()
 {
 	m_monitoring = false;
 	
@@ -102,7 +102,7 @@ CMSWindowsWatchdog::stop()
 }
 
 HANDLE
-CMSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security)
+MSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security)
 {
 	HANDLE sourceToken;
 
@@ -133,7 +133,7 @@ CMSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES 
 }
 
 HANDLE 
-CMSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
+MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
 {
 	// always elevate if we are at the vista/7 login screen. we could also 
 	// elevate for the uac dialog (consent.exe) but this would be pointless,
@@ -160,7 +160,7 @@ CMSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
 }
 
 void
-CMSWindowsWatchdog::mainLoop(void*)
+MSWindowsWatchdog::mainLoop(void*)
 {
 	shutdownExistingProcesses();
 
@@ -255,7 +255,7 @@ CMSWindowsWatchdog::mainLoop(void*)
 }
 
 bool
-CMSWindowsWatchdog::isProcessActive()
+MSWindowsWatchdog::isProcessActive()
 {
 	DWORD exitCode;
 	GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
@@ -263,13 +263,13 @@ CMSWindowsWatchdog::isProcessActive()
 }
 
 void 
-CMSWindowsWatchdog::setFileLogOutputter(CFileLogOutputter* outputter)
+MSWindowsWatchdog::setFileLogOutputter(FileLogOutputter* outputter)
 {
 	m_fileLogOutputter = outputter;
 }
 
 void
-CMSWindowsWatchdog::startProcess()
+MSWindowsWatchdog::startProcess()
 {
 	if (m_command.empty()) {
 		throw XMSWindowsWatchdogError("cannot start process, command is empty");
@@ -325,7 +325,7 @@ CMSWindowsWatchdog::startProcess()
 }
 
 BOOL
-CMSWindowsWatchdog::doStartProcess(CString& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
+MSWindowsWatchdog::doStartProcess(String& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
 {
 	// clear, as we're reusing process info struct
 	ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
@@ -364,7 +364,7 @@ CMSWindowsWatchdog::doStartProcess(CString& command, HANDLE userToken, LPSECURIT
 }
 
 void
-CMSWindowsWatchdog::setCommand(const std::string& command, bool elevate)
+MSWindowsWatchdog::setCommand(const std::string& command, bool elevate)
 {
 	LOG((CLOG_INFO "service command updated"));
 	m_command = command;
@@ -374,7 +374,7 @@ CMSWindowsWatchdog::setCommand(const std::string& command, bool elevate)
 }
 
 std::string
-CMSWindowsWatchdog::getCommand() const
+MSWindowsWatchdog::getCommand() const
 {
 	if (!m_autoDetectCommand) {
 		return m_command;
@@ -400,7 +400,7 @@ CMSWindowsWatchdog::getCommand() const
 }
 
 void
-CMSWindowsWatchdog::outputLoop(void*)
+MSWindowsWatchdog::outputLoop(void*)
 {
 	// +1 char for \0
 	CHAR buffer[kOutputBufferSize + 1];
@@ -432,7 +432,7 @@ CMSWindowsWatchdog::outputLoop(void*)
 }
 
 void
-CMSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
+MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
 {
 	DWORD exitCode;
 	GetExitCodeProcess(handle, &exitCode);
@@ -472,7 +472,7 @@ CMSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
 }
 
 void
-CMSWindowsWatchdog::shutdownExistingProcesses()
+MSWindowsWatchdog::shutdownExistingProcesses()
 {
 	// first we need to take a snapshot of the running processes
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -526,11 +526,11 @@ CMSWindowsWatchdog::shutdownExistingProcesses()
 }
 
 void
-CMSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
+MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
 {
-	CString installedDir = ARCH->getInstalledDirectory();
+	String installedDir = ARCH->getInstalledDirectory();
 	if (!installedDir.empty()) {
-		CString syntoolCommand;
+		String syntoolCommand;
 		syntoolCommand.append("\"").append(installedDir).append("\\").append("syntool").append("\"");
 		syntoolCommand.append(" --get-active-desktop");
 
@@ -560,14 +560,14 @@ CMSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
 } 
 
 void
-CMSWindowsWatchdog::testOutput(CString buffer)
+MSWindowsWatchdog::testOutput(String buffer)
 {
 	// HACK: check standard output seems hacky.
 	size_t i = buffer.find(g_activeDesktop);
-	if (i != CString::npos) {
+	if (i != String::npos) {
 		size_t s = sizeof(g_activeDesktop);
-		CString defaultDesktop("Default");
-		CString sub = buffer.substr(s - 1, defaultDesktop.size());
+		String defaultDesktop("Default");
+		String sub = buffer.substr(s - 1, defaultDesktop.size());
 		if (sub != defaultDesktop) {
 			m_autoElevated = true;
 		}

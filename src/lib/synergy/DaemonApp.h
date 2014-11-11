@@ -28,7 +28,7 @@ class IpcLogOutputter;
 class FileLogOutputter;
 
 #if SYSAPI_WIN32
-class CMSWindowsWatchdog;
+class MSWindowsWatchdog;
 #endif
 
 class DaemonApp {

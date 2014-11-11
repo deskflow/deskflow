@@ -46,5 +46,5 @@ CTCPSocketFactory::create() const
 IListenSocket*
 CTCPSocketFactory::createListen() const
 {
-	return new CTCPListenSocket(m_events, m_socketMultiplexer);
+	return new TCPListenSocket(m_events, m_socketMultiplexer);
 }

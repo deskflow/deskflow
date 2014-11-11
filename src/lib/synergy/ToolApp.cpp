@@ -45,7 +45,7 @@ ToolApp::run(int argc, char** argv)
 	}
 
 	try {
-		CArgParser argParser(this);
+		ArgParser argParser(this);
 		bool result = argParser.parseToolArgs(m_args, argc, argv);
 
 		if (!result) {
@@ -55,7 +55,7 @@ ToolApp::run(int argc, char** argv)
 		if (m_args.m_printActiveDesktopName) {
 #if SYSAPI_WIN32
 			CMSWindowsSession session;
-			CString name = session.getActiveDesktopName();
+			String name = session.getActiveDesktopName();
 			if (name.empty()) {
 				LOG((CLOG_CRIT "failed to get active desktop name"));
 				return kExitFailed;
@@ -82,6 +82,6 @@ ToolApp::run(int argc, char** argv)
 }
 
 void
-CToolApp::help()
+ToolApp::help()
 {
 }

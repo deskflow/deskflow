@@ -17,7 +17,7 @@
 
 #include "synergy/ToolArgs.h"
 
-CToolArgs::CToolArgs() :
+ToolArgs::ToolArgs() :
 	m_printActiveDesktopName(false)
 {
 }

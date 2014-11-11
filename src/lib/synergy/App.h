@@ -98,7 +98,7 @@ public:
 	void				setSocketMultiplexer(SocketMultiplexer* sm) { m_socketMultiplexer = sm; }
 	SocketMultiplexer*	getSocketMultiplexer() const { return m_socketMultiplexer; }
 
-	void				setEvents(CEventQueue& events) { m_events = &events; }
+	void				setEvents(EventQueue& events) { m_events = &events; }
 
 private:
 	void				handleIpcMessage(const Event&, void*);
@@ -122,10 +122,10 @@ private:
 	SocketMultiplexer*	m_socketMultiplexer;
 };
 
-class CMinimalApp : public CApp {
+class MinimalApp : public App {
 public:
-	CMinimalApp();
-	virtual ~CMinimalApp();
+	MinimalApp();
+	virtual ~MinimalApp();
 
 	// IApp overrides
 	virtual int			standardStartup(int argc, char** argv);
@@ -133,17 +133,17 @@ public:
 	virtual void		startNode();
 	virtual int			mainLoop();
 	virtual int			foregroundStartup(int argc, char** argv);
-	virtual CScreen*	createScreen();
+	virtual Screen*	createScreen();
 	virtual void		loadConfig();
-	virtual bool		loadConfig(const CString& pathname);
+	virtual bool		loadConfig(const String& pathname);
 	virtual const char*	daemonInfo() const;
 	virtual const char* daemonName() const;
 	virtual void		parseArgs(int argc, const char* const* argv);
 
 private:
-	CArch				m_arch;
-	CLog				m_log;
-	CEventQueue			m_events;
+	Arch				m_arch;
+	Log				m_log;
+	EventQueue			m_events;
 };
 
 #if WINAPI_MSWINDOWS

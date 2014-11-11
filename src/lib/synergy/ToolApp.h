@@ -27,5 +27,5 @@ public:
 	UInt32				run(int argc, char** argv);
 	void				help();
 private:
-	CToolArgs			m_args;
+	ToolArgs			m_args;
 };

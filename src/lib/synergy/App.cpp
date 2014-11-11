@@ -246,78 +246,78 @@ App::runEventsLoop(void*)
 }
 
 //
-// CMinimalApp
+// MinimalApp
 //
 
-CMinimalApp::CMinimalApp() :
-	CApp(NULL, NULL, new CArgsBase())
+MinimalApp::MinimalApp() :
+	App(NULL, NULL, new ArgsBase())
 {
 	setEvents(m_events);
 }
 
-CMinimalApp::~CMinimalApp()
+MinimalApp::~MinimalApp()
 {
 }
 
 int
-CMinimalApp::standardStartup(int argc, char** argv)
+MinimalApp::standardStartup(int argc, char** argv)
 {
 	return 0;
 }
 
 int
-CMinimalApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
+MinimalApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
 	return 0;
 }
 
 void
-CMinimalApp::startNode()
+MinimalApp::startNode()
 {
 }
 
 int
-CMinimalApp::mainLoop()
+MinimalApp::mainLoop()
 {
 	return 0;
 }
 
 int
-CMinimalApp::foregroundStartup(int argc, char** argv)
+MinimalApp::foregroundStartup(int argc, char** argv)
 {
 	return 0;
 }
 
-CScreen*
-CMinimalApp::createScreen()
+Screen*
+MinimalApp::createScreen()
 {
 	return NULL;
 }
 
 void
-CMinimalApp::loadConfig()
+MinimalApp::loadConfig()
 {
 }
 
 bool
-CMinimalApp::loadConfig(const CString& pathname)
+MinimalApp::loadConfig(const String& pathname)
 {
 	return false;
 }
 
 const char*
-CMinimalApp::daemonInfo() const
+MinimalApp::daemonInfo() const
 {
 	return "";
 }
 
 const char*
-CMinimalApp::daemonName() const
+MinimalApp::daemonName() const
 {
 	return "";
 }
 
 void
-CMinimalApp::parseArgs(int argc, const char* const* argv)
+MinimalApp::parseArgs(int argc, const char* const* argv)
 {
 }

@@ -172,10 +172,10 @@ CMSWindowsSession::nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry)
 	return gotEntry;
 }
 
-CString
+String
 CMSWindowsSession::getActiveDesktopName()
 {
-	CString result;
+	String result;
 
 	HDESK hd = OpenInputDesktop(0, TRUE, GENERIC_READ);
 	if (hd != NULL) {

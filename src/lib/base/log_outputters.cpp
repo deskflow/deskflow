@@ -243,7 +243,7 @@ FileLogOutputter::~FileLogOutputter()
 }
 
 void
-CFileLogOutputter::setLogFilename(const char* logFile)
+FileLogOutputter::setLogFilename(const char* logFile)
 {
 	assert(logFile != NULL);
 	m_fileName = logFile;

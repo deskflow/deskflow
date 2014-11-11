@@ -158,7 +158,7 @@ ArgParser::parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* con
 
 
 bool
-CArgParser::parseToolArgs(CToolArgs& args, int argc, const char* const* argv)
+ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 {
 	for (int i = 1; i < argc; ++i) {
 		if (isArg(i, argc, argv, NULL, "--get-active-desktop", 0)) {

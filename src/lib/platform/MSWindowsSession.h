@@ -42,7 +42,7 @@ public:
 
 	void				updateActiveSession();
 
-	CString				getActiveDesktopName();
+	String				getActiveDesktopName();
 
 private:
 	BOOL				nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry);

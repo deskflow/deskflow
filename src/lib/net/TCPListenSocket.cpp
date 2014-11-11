@@ -31,10 +31,10 @@
 #include "base/IEventQueue.h"
 
 //
-// CTCPListenSocket
+// TCPListenSocket
 //
 
-CTCPListenSocket::CTCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
+TCPListenSocket::TCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {
@@ -47,7 +47,7 @@ CTCPListenSocket::CTCPListenSocket(IEventQueue* events, SocketMultiplexer* socke
 	}
 }
 
-CTCPListenSocket::~CTCPListenSocket()
+TCPListenSocket::~TCPListenSocket()
 {
 	try {
 		if (m_socket != NULL) {
@@ -62,7 +62,7 @@ CTCPListenSocket::~CTCPListenSocket()
 }
 
 void
-CTCPListenSocket::bind(const NetworkAddress& addr)
+TCPListenSocket::bind(const NetworkAddress& addr)
 {
 	try {
 		Lock lock(m_mutex);
@@ -70,8 +70,8 @@ CTCPListenSocket::bind(const NetworkAddress& addr)
 		ARCH->bindSocket(m_socket, addr.getAddress());
 		ARCH->listenOnSocket(m_socket);
 		m_socketMultiplexer->addSocket(this,
-							new TSocketMultiplexerMethodJob<CTCPListenSocket>(
-								this, &CTCPListenSocket::serviceListening,
+							new TSocketMultiplexerMethodJob<TCPListenSocket>(
+								this, &TCPListenSocket::serviceListening,
 								m_socket, true, false));
 	}
 	catch (XArchNetworkAddressInUse& e) {
@@ -83,7 +83,7 @@ CTCPListenSocket::bind(const NetworkAddress& addr)
 }
 
 void
-CTCPListenSocket::close()
+TCPListenSocket::close()
 {
 	Lock lock(m_mutex);
 	if (m_socket == NULL) {
@@ -100,21 +100,21 @@ CTCPListenSocket::close()
 }
 
 void*
-CTCPListenSocket::getEventTarget() const
+TCPListenSocket::getEventTarget() const
 {
 	return const_cast<void*>(reinterpret_cast<const void*>(this));
 }
 
 IDataSocket*
-CTCPListenSocket::accept()
+TCPListenSocket::accept()
 {
 	IDataSocket* socket = NULL;
 	try {
 		socket = new CTCPSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
 		if (socket != NULL) {
 			m_socketMultiplexer->addSocket(this,
-							new TSocketMultiplexerMethodJob<CTCPListenSocket>(
-								this, &CTCPListenSocket::serviceListening,
+							new TSocketMultiplexerMethodJob<TCPListenSocket>(
+								this, &TCPListenSocket::serviceListening,
 								m_socket, true, false));
 		}
 		return socket;
@@ -134,7 +134,7 @@ CTCPListenSocket::accept()
 }
 
 ISocketMultiplexerJob*
-CTCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
+TCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
 							bool read, bool, bool error)
 {
 	if (error) {

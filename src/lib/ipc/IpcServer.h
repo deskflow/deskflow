@@ -73,7 +73,7 @@ private:
 private:
 	typedef std::list<IpcClientProxy*> ClientList;
 
-	CTCPListenSocket	m_socket;
+	TCPListenSocket		m_socket;
 	NetworkAddress		m_address;
 	ClientList			m_clients;
 	ArchMutex			m_clientsMutex;

@@ -19,9 +19,9 @@
 
 #include "base/String.h"
 
-class CToolArgs {
+class ToolArgs {
 public:
-	CToolArgs();
+	ToolArgs();
 
 public:
 	bool				m_printActiveDesktopName;

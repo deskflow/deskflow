@@ -199,7 +199,7 @@ DaemonApp::mainLoop(bool logToFile)
 		DAEMON_RUNNING(true);
 		
 		if (logToFile) {
-			m_fileLogOutputter = new CFileLogOutputter(logFilename().c_str());
+			m_fileLogOutputter = new FileLogOutputter(logFilename().c_str());
 			CLOG->insert(m_fileLogOutputter);
 		}
 
@@ -215,7 +215,7 @@ DaemonApp::mainLoop(bool logToFile)
 		CLOG->insert(m_ipcLogOutputter);
 		
 #if SYSAPI_WIN32
-		m_watchdog = new CMSWindowsWatchdog(false, *m_ipcServer, *m_ipcLogOutputter);
+		m_watchdog = new MSWindowsWatchdog(false, *m_ipcServer, *m_ipcLogOutputter);
 		m_watchdog->setFileLogOutputter(m_fileLogOutputter);
 #endif
 		
@@ -339,12 +339,12 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
 				}
 
 #if SYSAPI_WIN32
-				CString logFilename;
+				String logFilename;
 				if (argBase->m_logFile != NULL) {
-					logFilename = CString(argBase->m_logFile);
+					logFilename = String(argBase->m_logFile);
 					ARCH->setting("LogFilename", logFilename);
 					m_watchdog->setFileLogOutputter(m_fileLogOutputter);
-					command = CArgParser::assembleCommand(argsArray, "--log", 1);
+					command = ArgParser::assembleCommand(argsArray, "--log", 1);
 					LOG((CLOG_DEBUG "removed log file argument and filename %s from command ", logFilename.c_str()));
 					LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
 				}

@@ -32,20 +32,20 @@ class IpcLogOutputter;
 class IpcServer;
 class FileLogOutputter;
 
-class CMSWindowsWatchdog {
+class MSWindowsWatchdog {
 public:
-	CMSWindowsWatchdog(
+	MSWindowsWatchdog(
 		bool autoDetectCommand,
 		IpcServer& ipcServer,
 		IpcLogOutputter& ipcLogOutputter);
-	virtual ~CMSWindowsWatchdog();
+	virtual ~MSWindowsWatchdog();
 
 	void				startAsync();
 	std::string			getCommand() const;
 	void				setCommand(const std::string& command, bool elevate);
 	void				stop();
 	bool				isProcessActive();
-	void				setFileLogOutputter(CFileLogOutputter* outputter);
+	void				setFileLogOutputter(FileLogOutputter* outputter);
 
 private:
 	void				mainLoop(void*);
@@ -55,20 +55,20 @@ private:
 	HANDLE				duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
 	HANDLE				getUserToken(LPSECURITY_ATTRIBUTES security);
 	void				startProcess();
-	BOOL				doStartProcess(CString& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
+	BOOL				doStartProcess(String& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
 	void				sendSas();
 	void				getActiveDesktop(LPSECURITY_ATTRIBUTES security);
-	void				testOutput(CString buffer);
+	void				testOutput(String buffer);
 
 private:
-	Thread*			m_thread;
+	Thread*				m_thread;
 	bool				m_autoDetectCommand;
 	std::string			m_command;
 	bool				m_monitoring;
 	bool				m_commandChanged;
 	HANDLE				m_stdOutWrite;
 	HANDLE				m_stdOutRead;
-	Thread*			m_outputThread;
+	Thread*				m_outputThread;
 	IpcServer&			m_ipcServer;
 	IpcLogOutputter&	m_ipcLogOutputter;
 	bool				m_elevateProcess;
@@ -76,10 +76,10 @@ private:
 	PROCESS_INFORMATION m_processInfo;
 	int					m_processFailures;
 	bool				m_processRunning;
-	CFileLogOutputter*	m_fileLogOutputter;
+	FileLogOutputter*	m_fileLogOutputter;
 	bool				m_autoElevated;
-	CArchMutex			m_mutex;
-	CArchCond			m_condVar;
+	ArchMutex			m_mutex;
+	ArchCond			m_condVar;
 	bool				m_ready;
 };
 

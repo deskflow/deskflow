@@ -30,10 +30,10 @@ class SocketMultiplexer;
 /*!
 A listen socket using TCP.
 */
-class CTCPListenSocket : public IListenSocket {
+class TCPListenSocket : public IListenSocket {
 public:
-	CTCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
-	~CTCPListenSocket();
+	TCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+	~TCPListenSocket();
 
 	// ISocket overrides
 	virtual void		bind(const NetworkAddress&);
