@@ -70,6 +70,8 @@ class AppConfig
 		bool startedBefore() const { return m_StartedBefore; }
 		bool autoConnect() const { return m_AutoConnect; }
 		void setAutoConnect(bool autoConnect);
+		bool autoConnectPrompted()  { return m_AutoConnectPrompted; }
+		void setAutoConnectPrompted(bool prompted);
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -115,6 +117,7 @@ class AppConfig
 		bool m_StartedBefore;
 		bool m_AutoConnect;
 		bool m_ElevateMode;
+		bool m_AutoConnectPrompted;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];
