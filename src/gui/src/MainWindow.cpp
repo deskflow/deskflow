@@ -75,7 +75,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pMenuEdit(NULL),
 	m_pMenuWindow(NULL),
 	m_pMenuHelp(NULL),
-	m_pZeroconfService(NULL)
+	m_pZeroconfService(NULL),
+	m_SuppressBonjourWarning(appConfig.autoConnect())
 {
 	setupUi(this);
 
@@ -104,8 +105,6 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	resize(700, 530);
 	setMinimumSize(size());
 #endif
-
-	updateZeroconfService();
 
 	m_pAutoConnectCheckBox->setChecked(appConfig.autoConnect());
 }
@@ -894,6 +893,28 @@ void MainWindow::on_m_pButtonApply_clicked()
 
 void MainWindow::on_m_pAutoConnectCheckBox_toggled(bool checked)
 {
+	if (!isBonjourRunning() && checked) {
+		if (m_SuppressBonjourWarning) {
+			m_pAutoConnectCheckBox->setChecked(false);
+			m_SuppressBonjourWarning = false;
+			return;
+		}
+
+		int r = QMessageBox::warning(
+			this, tr("Synergy"),
+			tr("Auto connect feature requires Bonjour installed.\n\n"
+			   "Do you want to install Bonjour?"),
+			QMessageBox::Yes | QMessageBox::No);
+
+		if (r == QMessageBox::Yes) {
+
+		}
+		else {
+			m_pAutoConnectCheckBox->setChecked(false);
+			return;
+		}
+	}
+
 	m_pLineEditHostname->setDisabled(checked);
 	appConfig().setAutoConnect(checked);
 	updateZeroconfService();
