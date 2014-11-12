@@ -917,6 +917,9 @@ bool MainWindow::isServiceRunning(QString name)
 	array[length] = '\0';
 
 	hService = OpenService(hSCManager, array, SERVICE_QUERY_STATUS);
+
+	delete[] array;
+
 	if (hService == NULL) {
 		appendLogNote("failed to open " + name + "service, error: " +
 			GetLastError());
