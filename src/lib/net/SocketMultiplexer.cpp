@@ -243,6 +243,7 @@ SocketMultiplexer::serviceThread(void*)
 		for (SocketJobMap::iterator i = m_socketJobMap.begin();
 							i != m_socketJobMap.end();) {
 			if (*(i->second) == NULL) {
+				m_socketJobs.erase(i->second);
 				m_socketJobMap.erase(i++);
 				m_update = true;
 			}
