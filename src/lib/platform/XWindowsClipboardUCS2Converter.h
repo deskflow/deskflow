@@ -21,13 +21,13 @@
 #include "platform/XWindowsClipboard.h"
 
 //! Convert to/from UCS-2 encoding
-class CXWindowsClipboardUCS2Converter : public IXWindowsClipboardConverter {
+class XWindowsClipboardUCS2Converter : public IXWindowsClipboardConverter {
 public:
 	/*!
 	\c name is converted to an atom and that is reported by getAtom().
 	*/
-	CXWindowsClipboardUCS2Converter(Display* display, const char* name);
-	virtual ~CXWindowsClipboardUCS2Converter();
+	XWindowsClipboardUCS2Converter(Display* display, const char* name);
+	virtual ~XWindowsClipboardUCS2Converter();
 
 	// IXWindowsClipboardConverter overrides
 	virtual IClipboard::EFormat

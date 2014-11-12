@@ -21,13 +21,13 @@
 #include "platform/XWindowsClipboard.h"
 
 //! Convert to/from HTML encoding
-class CXWindowsClipboardHTMLConverter : public IXWindowsClipboardConverter {
+class XWindowsClipboardHTMLConverter : public IXWindowsClipboardConverter {
 public:
 	/*!
 	\c name is converted to an atom and that is reported by getAtom().
 	*/
-	CXWindowsClipboardHTMLConverter(Display* display, const char* name);
-	virtual ~CXWindowsClipboardHTMLConverter();
+	XWindowsClipboardHTMLConverter(Display* display, const char* name);
+	virtual ~XWindowsClipboardHTMLConverter();
 
 	// IXWindowsClipboardConverter overrides
 	virtual IClipboard::EFormat

@@ -21,47 +21,47 @@
 #include "base/Unicode.h"
 
 //
-// CXWindowsClipboardUCS2Converter
+// XWindowsClipboardUCS2Converter
 //
 
-CXWindowsClipboardUCS2Converter::CXWindowsClipboardUCS2Converter(
+XWindowsClipboardUCS2Converter::XWindowsClipboardUCS2Converter(
 				Display* display, const char* name) :
 	m_atom(XInternAtom(display, name, False))
 {
 	// do nothing
 }
 
-CXWindowsClipboardUCS2Converter::~CXWindowsClipboardUCS2Converter()
+XWindowsClipboardUCS2Converter::~XWindowsClipboardUCS2Converter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-CXWindowsClipboardUCS2Converter::getFormat() const
+XWindowsClipboardUCS2Converter::getFormat() const
 {
 	return IClipboard::kText;
 }
 
 Atom
-CXWindowsClipboardUCS2Converter::getAtom() const
+XWindowsClipboardUCS2Converter::getAtom() const
 {
 	return m_atom;
 }
 
 int
-CXWindowsClipboardUCS2Converter::getDataSize() const
+XWindowsClipboardUCS2Converter::getDataSize() const
 {
 	return 16;
 }
 
 String
-CXWindowsClipboardUCS2Converter::fromIClipboard(const String& data) const
+XWindowsClipboardUCS2Converter::fromIClipboard(const String& data) const
 {
 	return Unicode::UTF8ToUCS2(data);
 }
 
 String
-CXWindowsClipboardUCS2Converter::toIClipboard(const String& data) const
+XWindowsClipboardUCS2Converter::toIClipboard(const String& data) const
 {
 	return Unicode::UCS2ToUTF8(data);
 }

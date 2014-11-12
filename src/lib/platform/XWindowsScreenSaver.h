@@ -32,10 +32,10 @@ class Event;
 class EventQueueTimer;
 
 //! X11 screen saver implementation
-class CXWindowsScreenSaver : public IScreenSaver {
+class XWindowsScreenSaver : public IScreenSaver {
 public:
-	CXWindowsScreenSaver(Display*, Window, void* eventTarget, IEventQueue* events);
-	virtual ~CXWindowsScreenSaver();
+	XWindowsScreenSaver(Display*, Window, void* eventTarget, IEventQueue* events);
+	virtual ~XWindowsScreenSaver();
 
 	//! @name manipulators
 	//@{

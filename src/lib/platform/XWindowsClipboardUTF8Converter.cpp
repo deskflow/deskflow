@@ -19,47 +19,47 @@
 #include "platform/XWindowsClipboardUTF8Converter.h"
 
 //
-// CXWindowsClipboardUTF8Converter
+// XWindowsClipboardUTF8Converter
 //
 
-CXWindowsClipboardUTF8Converter::CXWindowsClipboardUTF8Converter(
+XWindowsClipboardUTF8Converter::XWindowsClipboardUTF8Converter(
 				Display* display, const char* name) :
 	m_atom(XInternAtom(display, name, False))
 {
 	// do nothing
 }
 
-CXWindowsClipboardUTF8Converter::~CXWindowsClipboardUTF8Converter()
+XWindowsClipboardUTF8Converter::~XWindowsClipboardUTF8Converter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-CXWindowsClipboardUTF8Converter::getFormat() const
+XWindowsClipboardUTF8Converter::getFormat() const
 {
 	return IClipboard::kText;
 }
 
 Atom
-CXWindowsClipboardUTF8Converter::getAtom() const
+XWindowsClipboardUTF8Converter::getAtom() const
 {
 	return m_atom;
 }
 
 int
-CXWindowsClipboardUTF8Converter::getDataSize() const
+XWindowsClipboardUTF8Converter::getDataSize() const
 {
 	return 8;
 }
 
 String
-CXWindowsClipboardUTF8Converter::fromIClipboard(const String& data) const
+XWindowsClipboardUTF8Converter::fromIClipboard(const String& data) const
 {
 	return data;
 }
 
 String
-CXWindowsClipboardUTF8Converter::toIClipboard(const String& data) const
+XWindowsClipboardUTF8Converter::toIClipboard(const String& data) const
 {
 	return data;
 }

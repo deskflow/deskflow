@@ -1287,13 +1287,13 @@ static const KeySym s_map1008FF[] =
 
 
 //
-// CXWindowsUtil
+// XWindowsUtil
 //
 
-CXWindowsUtil::KeySymMap	CXWindowsUtil::s_keySymToUCS4;
+XWindowsUtil::KeySymMap	XWindowsUtil::s_keySymToUCS4;
 
 bool
-CXWindowsUtil::getWindowProperty(Display* display, Window window,
+XWindowsUtil::getWindowProperty(Display* display, Window window,
 				Atom property, String* data, Atom* type,
 				SInt32* format, bool deleteProperty)
 {
@@ -1303,7 +1303,7 @@ CXWindowsUtil::getWindowProperty(Display* display, Window window,
 	int actualDatumSize;
 
 	// ignore errors.  XGetWindowProperty() will report failure.
-	CXWindowsUtil::ErrorLock lock(display);
+	XWindowsUtil::ErrorLock lock(display);
 
 	// read the property
 	bool okay = true;
@@ -1381,7 +1381,7 @@ CXWindowsUtil::getWindowProperty(Display* display, Window window,
 }
 
 bool
-CXWindowsUtil::setWindowProperty(Display* display, Window window,
+XWindowsUtil::setWindowProperty(Display* display, Window window,
 				Atom property, const void* vdata, UInt32 size,
 				Atom type, SInt32 format)
 {
@@ -1395,7 +1395,7 @@ CXWindowsUtil::setWindowProperty(Display* display, Window window,
 
 	// save errors
 	bool error = false;
-	CXWindowsUtil::ErrorLock lock(display, &error);
+	XWindowsUtil::ErrorLock lock(display, &error);
 
 	// how much data to send in first chunk?
 	UInt32 chunkSize = size;
@@ -1427,7 +1427,7 @@ CXWindowsUtil::setWindowProperty(Display* display, Window window,
 }
 
 Time
-CXWindowsUtil::getCurrentTime(Display* display, Window window)
+XWindowsUtil::getCurrentTime(Display* display, Window window)
 {
 	// select property events on window
 	XWindowAttributes attr;
@@ -1451,7 +1451,7 @@ CXWindowsUtil::getCurrentTime(Display* display, Window window)
 
 	// wait for reply
 	XEvent xevent;
-	XIfEvent(display, &xevent, &CXWindowsUtil::propertyNotifyPredicate,
+	XIfEvent(display, &xevent, &XWindowsUtil::propertyNotifyPredicate,
 								(XPointer)&filter);
 	assert(xevent.type             == PropertyNotify);
 	assert(xevent.xproperty.window == window);
@@ -1464,7 +1464,7 @@ CXWindowsUtil::getCurrentTime(Display* display, Window window)
 }
 
 KeyID
-CXWindowsUtil::mapKeySymToKeyID(KeySym k)
+XWindowsUtil::mapKeySymToKeyID(KeySym k)
 {
 	initKeyMaps();
 
@@ -1558,7 +1558,7 @@ CXWindowsUtil::mapKeySymToKeyID(KeySym k)
 }
 
 UInt32
-CXWindowsUtil::getModifierBitForKeySym(KeySym keysym)
+XWindowsUtil::getModifierBitForKeySym(KeySym keysym)
 {
 	switch (keysym) {
 	case XK_Shift_L:
@@ -1607,14 +1607,14 @@ CXWindowsUtil::getModifierBitForKeySym(KeySym keysym)
 }
 
 String
-CXWindowsUtil::atomToString(Display* display, Atom atom)
+XWindowsUtil::atomToString(Display* display, Atom atom)
 {
 	if (atom == 0) {
 		return "None";
 	}
 
 	bool error = false;
-	CXWindowsUtil::ErrorLock lock(display, &error);
+	XWindowsUtil::ErrorLock lock(display, &error);
 	char* name = XGetAtomName(display, atom);
 	if (error) {
 		return synergy::string::sprintf("<UNKNOWN> (%d)", (int)atom);
@@ -1627,11 +1627,11 @@ CXWindowsUtil::atomToString(Display* display, Atom atom)
 }
 
 String
-CXWindowsUtil::atomsToString(Display* display, const Atom* atom, UInt32 num)
+XWindowsUtil::atomsToString(Display* display, const Atom* atom, UInt32 num)
 {
 	char** names = new char*[num];
 	bool error = false;
-	CXWindowsUtil::ErrorLock lock(display, &error);
+	XWindowsUtil::ErrorLock lock(display, &error);
 	XGetAtomNames(display, const_cast<Atom*>(atom), (int)num, names);
 	String msg;
 	if (error) {
@@ -1653,7 +1653,7 @@ CXWindowsUtil::atomsToString(Display* display, const Atom* atom, UInt32 num)
 }
 
 void
-CXWindowsUtil::convertAtomProperty(String& data)
+XWindowsUtil::convertAtomProperty(String& data)
 {
 	// as best i can tell, 64-bit systems don't pack Atoms into properties
 	// as 32-bit numbers but rather as the 64-bit numbers they are.  that
@@ -1668,13 +1668,13 @@ CXWindowsUtil::convertAtomProperty(String& data)
 }
 
 void
-CXWindowsUtil::appendAtomData(String& data, Atom atom)
+XWindowsUtil::appendAtomData(String& data, Atom atom)
 {
 	data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
 }
 
 void
-CXWindowsUtil::replaceAtomData(String& data, UInt32 index, Atom atom)
+XWindowsUtil::replaceAtomData(String& data, UInt32 index, Atom atom)
 {
 	data.replace(index * sizeof(Atom), sizeof(Atom),
 								reinterpret_cast<const char*>(&atom),
@@ -1682,13 +1682,13 @@ CXWindowsUtil::replaceAtomData(String& data, UInt32 index, Atom atom)
 }
 
 void
-CXWindowsUtil::appendTimeData(String& data, Time time)
+XWindowsUtil::appendTimeData(String& data, Time time)
 {
 	data.append(reinterpret_cast<char*>(&time), sizeof(Time));
 }
 
 Bool
-CXWindowsUtil::propertyNotifyPredicate(Display*, XEvent* xevent, XPointer arg)
+XWindowsUtil::propertyNotifyPredicate(Display*, XEvent* xevent, XPointer arg)
 {
 	PropertyNotifyPredicateInfo* filter =
 						reinterpret_cast<PropertyNotifyPredicateInfo*>(arg);
@@ -1699,7 +1699,7 @@ CXWindowsUtil::propertyNotifyPredicate(Display*, XEvent* xevent, XPointer arg)
 }
 
 void
-CXWindowsUtil::initKeyMaps()
+XWindowsUtil::initKeyMaps()
 {
 	if (s_keySymToUCS4.empty()) {
 		for (size_t i =0; i < sizeof(s_keymap) / sizeof(s_keymap[0]); ++i) {
@@ -1710,31 +1710,31 @@ CXWindowsUtil::initKeyMaps()
 
 
 //
-// CXWindowsUtil::ErrorLock
+// XWindowsUtil::ErrorLock
 //
 
-CXWindowsUtil::ErrorLock*	CXWindowsUtil::ErrorLock::s_top = NULL;
+XWindowsUtil::ErrorLock*	XWindowsUtil::ErrorLock::s_top = NULL;
 
-CXWindowsUtil::ErrorLock::ErrorLock(Display* display) :
+XWindowsUtil::ErrorLock::ErrorLock(Display* display) :
 	m_display(display)
 {
-	install(&CXWindowsUtil::ErrorLock::ignoreHandler, NULL);
+	install(&XWindowsUtil::ErrorLock::ignoreHandler, NULL);
 }
 
-CXWindowsUtil::ErrorLock::ErrorLock(Display* display, bool* flag) :
+XWindowsUtil::ErrorLock::ErrorLock(Display* display, bool* flag) :
 	m_display(display)
 {
-	install(&CXWindowsUtil::ErrorLock::saveHandler, flag);
+	install(&XWindowsUtil::ErrorLock::saveHandler, flag);
 }
 
-CXWindowsUtil::ErrorLock::ErrorLock(Display* display,
+XWindowsUtil::ErrorLock::ErrorLock(Display* display,
 				ErrorHandler handler, void* data) :
 	m_display(display)
 {
 	install(handler, data);
 }
 
-CXWindowsUtil::ErrorLock::~ErrorLock()
+XWindowsUtil::ErrorLock::~ErrorLock()
 {
 	// make sure everything finishes before uninstalling handler
 	if (m_display != NULL) {
@@ -1747,7 +1747,7 @@ CXWindowsUtil::ErrorLock::~ErrorLock()
 }
 
 void
-CXWindowsUtil::ErrorLock::install(ErrorHandler handler, void* data)
+XWindowsUtil::ErrorLock::install(ErrorHandler handler, void* data)
 {
 	// make sure everything finishes before installing handler
 	if (m_display != NULL) {
@@ -1758,13 +1758,13 @@ CXWindowsUtil::ErrorLock::install(ErrorHandler handler, void* data)
 	m_handler     = handler;
 	m_userData    = data;
 	m_oldXHandler = XSetErrorHandler(
-								&CXWindowsUtil::ErrorLock::internalHandler);
+								&XWindowsUtil::ErrorLock::internalHandler);
 	m_next        = s_top;
 	s_top         = this;
 }
 
 int
-CXWindowsUtil::ErrorLock::internalHandler(Display* display, XErrorEvent* event)
+XWindowsUtil::ErrorLock::internalHandler(Display* display, XErrorEvent* event)
 {
 	if (s_top != NULL && s_top->m_handler != NULL) {
 		s_top->m_handler(display, event, s_top->m_userData);
@@ -1773,13 +1773,13 @@ CXWindowsUtil::ErrorLock::internalHandler(Display* display, XErrorEvent* event)
 }
 
 void
-CXWindowsUtil::ErrorLock::ignoreHandler(Display*, XErrorEvent* e, void*)
+XWindowsUtil::ErrorLock::ignoreHandler(Display*, XErrorEvent* e, void*)
 {
 	LOG((CLOG_DEBUG1 "ignoring X error: %d", e->error_code));
 }
 
 void
-CXWindowsUtil::ErrorLock::saveHandler(Display*, XErrorEvent* e, void* flag)
+XWindowsUtil::ErrorLock::saveHandler(Display*, XErrorEvent* e, void* flag)
 {
 	LOG((CLOG_DEBUG1 "flagging X error: %d", e->error_code));
 	*reinterpret_cast<bool*>(flag) = true;

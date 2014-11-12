@@ -31,10 +31,10 @@
 class IEventQueue;
 
 //! Event queue buffer for X11
-class CXWindowsEventQueueBuffer : public IEventQueueBuffer {
+class XWindowsEventQueueBuffer : public IEventQueueBuffer {
 public:
-	CXWindowsEventQueueBuffer(Display*, Window, IEventQueue* events);
-	virtual ~CXWindowsEventQueueBuffer();
+	XWindowsEventQueueBuffer(Display*, Window, IEventQueue* events);
+	virtual ~XWindowsEventQueueBuffer();
 
 	// IEventQueueBuffer overrides
 	virtual	void		init() { }

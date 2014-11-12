@@ -42,7 +42,7 @@ class IEventQueue;
 /*!
 A key state for X Windows.
 */
-class CXWindowsKeyState : public KeyState {
+class XWindowsKeyState : public KeyState {
 public:
 	typedef std::vector<int> KeycodeList;
 	enum {
@@ -50,10 +50,10 @@ public:
 		kGroupPollAndSet = -2
 	};
 
-	CXWindowsKeyState(Display*, bool useXKB, IEventQueue* events);
-	CXWindowsKeyState(Display*, bool useXKB,
+	XWindowsKeyState(Display*, bool useXKB, IEventQueue* events);
+	XWindowsKeyState(Display*, bool useXKB,
 		IEventQueue* events, synergy::KeyMap& keyMap);
-	~CXWindowsKeyState();
+	~XWindowsKeyState();
 
 	//! @name modifiers
 	//@{

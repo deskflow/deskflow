@@ -21,47 +21,47 @@
 #include "base/Unicode.h"
 
 //
-// CXWindowsClipboardTextConverter
+// XWindowsClipboardTextConverter
 //
 
-CXWindowsClipboardTextConverter::CXWindowsClipboardTextConverter(
+XWindowsClipboardTextConverter::XWindowsClipboardTextConverter(
 				Display* display, const char* name) :
 	m_atom(XInternAtom(display, name, False))
 {
 	// do nothing
 }
 
-CXWindowsClipboardTextConverter::~CXWindowsClipboardTextConverter()
+XWindowsClipboardTextConverter::~XWindowsClipboardTextConverter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-CXWindowsClipboardTextConverter::getFormat() const
+XWindowsClipboardTextConverter::getFormat() const
 {
 	return IClipboard::kText;
 }
 
 Atom
-CXWindowsClipboardTextConverter::getAtom() const
+XWindowsClipboardTextConverter::getAtom() const
 {
 	return m_atom;
 }
 
 int
-CXWindowsClipboardTextConverter::getDataSize() const
+XWindowsClipboardTextConverter::getDataSize() const
 {
 	return 8;
 }
 
 String
-CXWindowsClipboardTextConverter::fromIClipboard(const String& data) const
+XWindowsClipboardTextConverter::fromIClipboard(const String& data) const
 {
 	return Unicode::UTF8ToText(data);
 }
 
 String
-CXWindowsClipboardTextConverter::toIClipboard(const String& data) const
+XWindowsClipboardTextConverter::toIClipboard(const String& data) const
 {
 	// convert to UTF-8
 	bool errors;

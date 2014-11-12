@@ -21,11 +21,11 @@
 #include "platform/XWindowsClipboard.h"
 
 //! Convert to/from some text encoding
-class CXWindowsClipboardBMPConverter :
+class XWindowsClipboardBMPConverter :
 				public IXWindowsClipboardConverter {
 public:
-	CXWindowsClipboardBMPConverter(Display* display);
-	virtual ~CXWindowsClipboardBMPConverter();
+	XWindowsClipboardBMPConverter(Display* display);
+	virtual ~XWindowsClipboardBMPConverter();
 
 	// IXWindowsClipboardConverter overrides
 	virtual IClipboard::EFormat

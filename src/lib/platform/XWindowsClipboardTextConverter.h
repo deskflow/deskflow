@@ -21,13 +21,13 @@
 #include "platform/XWindowsClipboard.h"
 
 //! Convert to/from locale text encoding
-class CXWindowsClipboardTextConverter : public IXWindowsClipboardConverter {
+class XWindowsClipboardTextConverter : public IXWindowsClipboardConverter {
 public:
 	/*!
 	\c name is converted to an atom and that is reported by getAtom().
 	*/
-	CXWindowsClipboardTextConverter(Display* display, const char* name);
-	virtual ~CXWindowsClipboardTextConverter();
+	XWindowsClipboardTextConverter(Display* display, const char* name);
+	virtual ~XWindowsClipboardTextConverter();
 
 	// IXWindowsClipboardConverter overrides
 	virtual IClipboard::EFormat

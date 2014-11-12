@@ -33,14 +33,14 @@
 class IXWindowsClipboardConverter;
 
 //! X11 clipboard implementation
-class CXWindowsClipboard : public IClipboard {
+class XWindowsClipboard : public IClipboard {
 public:
 	/*!
 	Use \c window as the window that owns or interacts with the
 	clipboard identified by \c id.
 	*/
-	CXWindowsClipboard(Display*, Window window, ClipboardID id);
-	virtual ~CXWindowsClipboard();
+	XWindowsClipboard(Display*, Window window, ClipboardID id);
+	virtual ~XWindowsClipboard();
 
 	//! Notify clipboard was lost
 	/*!

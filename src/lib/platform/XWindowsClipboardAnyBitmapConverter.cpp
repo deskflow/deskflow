@@ -97,33 +97,33 @@ fromLEU32(const UInt8* data)
 
 
 //
-// CXWindowsClipboardAnyBitmapConverter
+// XWindowsClipboardAnyBitmapConverter
 //
 
-CXWindowsClipboardAnyBitmapConverter::CXWindowsClipboardAnyBitmapConverter()
+XWindowsClipboardAnyBitmapConverter::XWindowsClipboardAnyBitmapConverter()
 {
 	// do nothing
 }
 
-CXWindowsClipboardAnyBitmapConverter::~CXWindowsClipboardAnyBitmapConverter()
+XWindowsClipboardAnyBitmapConverter::~XWindowsClipboardAnyBitmapConverter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-CXWindowsClipboardAnyBitmapConverter::getFormat() const
+XWindowsClipboardAnyBitmapConverter::getFormat() const
 {
 	return IClipboard::kBitmap;
 }
 
 int
-CXWindowsClipboardAnyBitmapConverter::getDataSize() const
+XWindowsClipboardAnyBitmapConverter::getDataSize() const
 {
 	return 8;
 }
 
 String
-CXWindowsClipboardAnyBitmapConverter::fromIClipboard(const String& bmp) const
+XWindowsClipboardAnyBitmapConverter::fromIClipboard(const String& bmp) const
 {
 	// fill BMP info header with native-endian data
 	CBMPInfoHeader infoHeader;
@@ -161,7 +161,7 @@ CXWindowsClipboardAnyBitmapConverter::fromIClipboard(const String& bmp) const
 }
 
 String
-CXWindowsClipboardAnyBitmapConverter::toIClipboard(const String& image) const
+XWindowsClipboardAnyBitmapConverter::toIClipboard(const String& image) const
 {
 	// convert to raw BMP data
 	UInt32 w, h, depth;

@@ -49,10 +49,10 @@ class EventQueueTimer { };
 
 
 //
-// CXWindowsEventQueueBuffer
+// XWindowsEventQueueBuffer
 //
 
-CXWindowsEventQueueBuffer::CXWindowsEventQueueBuffer(
+XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(
 		Display* display, Window window, IEventQueue* events) :
 	m_events(events),
 	m_display(display),
@@ -74,7 +74,7 @@ CXWindowsEventQueueBuffer::CXWindowsEventQueueBuffer(
 	fcntl(m_pipefd[1], F_SETFL, pipeflags | O_NONBLOCK);
 }
 
-CXWindowsEventQueueBuffer::~CXWindowsEventQueueBuffer()
+XWindowsEventQueueBuffer::~XWindowsEventQueueBuffer()
 {
 	// release pipe hack resources
 	close(m_pipefd[0]);
@@ -82,7 +82,7 @@ CXWindowsEventQueueBuffer::~CXWindowsEventQueueBuffer()
 }
 
 void
-CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
+XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 {
 	Thread::testCancel();
 
@@ -106,7 +106,7 @@ CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 		flush();
 	}
 	// calling flush may have queued up a new event.
-	if (!CXWindowsEventQueueBuffer::isEmpty()) {
+	if (!XWindowsEventQueueBuffer::isEmpty()) {
 		Thread::testCancel();
 		return;
 	}
@@ -198,7 +198,7 @@ CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 }
 
 IEventQueueBuffer::Type
-CXWindowsEventQueueBuffer::getEvent(Event& event, UInt32& dataID)
+XWindowsEventQueueBuffer::getEvent(Event& event, UInt32& dataID)
 {
 	Lock lock(&m_mutex);
 
@@ -222,7 +222,7 @@ CXWindowsEventQueueBuffer::getEvent(Event& event, UInt32& dataID)
 }
 
 bool
-CXWindowsEventQueueBuffer::addEvent(UInt32 dataID)
+XWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 {
 	// prepare a message
 	XEvent xevent;
@@ -259,26 +259,26 @@ CXWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 }
 
 bool
-CXWindowsEventQueueBuffer::isEmpty() const
+XWindowsEventQueueBuffer::isEmpty() const
 {
 	Lock lock(&m_mutex);
 	return (XPending(m_display) == 0 );
 }
 
 EventQueueTimer*
-CXWindowsEventQueueBuffer::newTimer(double, bool) const
+XWindowsEventQueueBuffer::newTimer(double, bool) const
 {
 	return new EventQueueTimer;
 }
 
 void
-CXWindowsEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
+XWindowsEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
 {
 	delete timer;
 }
 
 void
-CXWindowsEventQueueBuffer::flush()
+XWindowsEventQueueBuffer::flush()
 {
 	// note -- m_mutex must be locked on entry
 

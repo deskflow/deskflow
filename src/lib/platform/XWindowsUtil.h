@@ -30,7 +30,7 @@
 #endif
 
 //! X11 utility functions
-class CXWindowsUtil {
+class XWindowsUtil {
 public:
 	typedef std::vector<KeySym> KeySyms;
 

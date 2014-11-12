@@ -68,41 +68,41 @@ toLE(UInt8*& dst, UInt32 src)
 }
 
 //
-// CXWindowsClipboardBMPConverter
+// XWindowsClipboardBMPConverter
 //
 
-CXWindowsClipboardBMPConverter::CXWindowsClipboardBMPConverter(
+XWindowsClipboardBMPConverter::XWindowsClipboardBMPConverter(
 				Display* display) :
 	m_atom(XInternAtom(display, "image/bmp", False))
 {
 	// do nothing
 }
 
-CXWindowsClipboardBMPConverter::~CXWindowsClipboardBMPConverter()
+XWindowsClipboardBMPConverter::~XWindowsClipboardBMPConverter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-CXWindowsClipboardBMPConverter::getFormat() const
+XWindowsClipboardBMPConverter::getFormat() const
 {
 	return IClipboard::kBitmap;
 }
 
 Atom
-CXWindowsClipboardBMPConverter::getAtom() const
+XWindowsClipboardBMPConverter::getAtom() const
 {
 	return m_atom;
 }
 
 int
-CXWindowsClipboardBMPConverter::getDataSize() const
+XWindowsClipboardBMPConverter::getDataSize() const
 {
 	return 8;
 }
 
 String
-CXWindowsClipboardBMPConverter::fromIClipboard(const String& bmp) const
+XWindowsClipboardBMPConverter::fromIClipboard(const String& bmp) const
 {
 	// create BMP image
 	UInt8 header[14];
@@ -117,7 +117,7 @@ CXWindowsClipboardBMPConverter::fromIClipboard(const String& bmp) const
 }
 
 String
-CXWindowsClipboardBMPConverter::toIClipboard(const String& bmp) const
+XWindowsClipboardBMPConverter::toIClipboard(const String& bmp) const
 {
 	// make sure data is big enough for a BMP file
 	if (bmp.size() <= 14 + 40) {

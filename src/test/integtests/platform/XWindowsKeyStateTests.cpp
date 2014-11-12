@@ -35,15 +35,15 @@
 #include "test/global/gmock.h"
 #include <errno.h>
 
-class CXWindowsKeyStateTests : public ::testing::Test
+class XWindowsKeyStateTests : public ::testing::Test
 {
 protected:
-	CXWindowsKeyStateTests() :
+	XWindowsKeyStateTests() :
 		m_display(NULL)
 	{
 	}
 
-	~CXWindowsKeyStateTests()
+	~XWindowsKeyStateTests()
 	{
 		if (m_display != NULL) {
 			LOG((CLOG_DEBUG "closing display"));
@@ -72,35 +72,35 @@ protected:
 	Display* m_display;
 };
 
-TEST_F(CXWindowsKeyStateTests, setActiveGroup_pollAndSet_groupIsZero)
+TEST_F(XWindowsKeyStateTests, setActiveGroup_pollAndSet_groupIsZero)
 {
 	MockKeyMap keyMap;
 	MockEventQueue eventQueue;
-	CXWindowsKeyState keyState(
+	XWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
-	keyState.setActiveGroup(CXWindowsKeyState::kGroupPollAndSet);
+	keyState.setActiveGroup(XWindowsKeyState::kGroupPollAndSet);
 
 	ASSERT_EQ(0, keyState.group());
 }
 
-TEST_F(CXWindowsKeyStateTests, setActiveGroup_poll_groupIsNotSet)
+TEST_F(XWindowsKeyStateTests, setActiveGroup_poll_groupIsNotSet)
 {
 	MockKeyMap keyMap;
 	MockEventQueue eventQueue;
-	CXWindowsKeyState keyState(
+	XWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
-	keyState.setActiveGroup(CXWindowsKeyState::kGroupPoll);
+	keyState.setActiveGroup(XWindowsKeyState::kGroupPoll);
 
 	ASSERT_LE(-1, keyState.group());
 }
 
-TEST_F(CXWindowsKeyStateTests, setActiveGroup_customGroup_groupWasSet)
+TEST_F(XWindowsKeyStateTests, setActiveGroup_customGroup_groupWasSet)
 {
 	MockKeyMap keyMap;
 	MockEventQueue eventQueue;
-	CXWindowsKeyState keyState(
+	XWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
 	keyState.setActiveGroup(1);
@@ -108,11 +108,11 @@ TEST_F(CXWindowsKeyStateTests, setActiveGroup_customGroup_groupWasSet)
 	ASSERT_EQ(1, keyState.group());
 }
 
-TEST_F(CXWindowsKeyStateTests, mapModifiersFromX_zeroState_zeroMask)
+TEST_F(XWindowsKeyStateTests, mapModifiersFromX_zeroState_zeroMask)
 {
 	MockKeyMap keyMap;
 	MockEventQueue eventQueue;
-	CXWindowsKeyState keyState(
+	XWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
 	int mask = keyState.mapModifiersFromX(0);
@@ -120,11 +120,11 @@ TEST_F(CXWindowsKeyStateTests, mapModifiersFromX_zeroState_zeroMask)
 	ASSERT_EQ(0, mask);
 }
 
-TEST_F(CXWindowsKeyStateTests, mapModifiersToX_zeroMask_resultIsTrue)
+TEST_F(XWindowsKeyStateTests, mapModifiersToX_zeroMask_resultIsTrue)
 {
 	MockKeyMap keyMap;
 	MockEventQueue eventQueue;
-	CXWindowsKeyState keyState(
+	XWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
 	unsigned int modifiers = 0;
@@ -133,11 +133,11 @@ TEST_F(CXWindowsKeyStateTests, mapModifiersToX_zeroMask_resultIsTrue)
 	ASSERT_TRUE(result);
 }
 
-TEST_F(CXWindowsKeyStateTests, fakeCtrlAltDel_default_returnsFalse)
+TEST_F(XWindowsKeyStateTests, fakeCtrlAltDel_default_returnsFalse)
 {
 	MockKeyMap keyMap;
 	MockEventQueue eventQueue;
-	CXWindowsKeyState keyState(
+	XWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
 	bool result = keyState.fakeCtrlAltDel();
@@ -145,11 +145,11 @@ TEST_F(CXWindowsKeyStateTests, fakeCtrlAltDel_default_returnsFalse)
 	ASSERT_FALSE(result);
 }
 
-TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero)
+TEST_F(XWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero)
 {
 	MockKeyMap keyMap;
 	MockEventQueue eventQueue;
-	CXWindowsKeyState keyState(
+	XWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
 	KeyModifierMask actual = keyState.pollActiveModifiers();
@@ -158,11 +158,11 @@ TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero)
 }
 
 #if 0 // TODO: fix, causes sigsegv
-TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCorrect)
+TEST_F(XWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCorrect)
 {
 	MockKeyMap keyMap;
 	MockEventQueue eventQueue;
-	CXWindowsKeyState keyState(
+	XWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
 	// set mock modifier mapping
@@ -191,11 +191,11 @@ TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCo
 }
 #endif
 
-TEST_F(CXWindowsKeyStateTests, pollActiveGroup_defaultState_returnsZero)
+TEST_F(XWindowsKeyStateTests, pollActiveGroup_defaultState_returnsZero)
 {
 	MockKeyMap keyMap;
 	MockEventQueue eventQueue;
-	CXWindowsKeyState keyState(
+	XWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
 	SInt32 actual = keyState.pollActiveGroup();
@@ -203,11 +203,11 @@ TEST_F(CXWindowsKeyStateTests, pollActiveGroup_defaultState_returnsZero)
 	ASSERT_EQ(0, actual);
 }
 
-TEST_F(CXWindowsKeyStateTests, pollActiveGroup_positiveGroup_returnsGroup)
+TEST_F(XWindowsKeyStateTests, pollActiveGroup_positiveGroup_returnsGroup)
 {
 	MockKeyMap keyMap;
 	MockEventQueue eventQueue;
-	CXWindowsKeyState keyState(
+	XWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
 	keyState.group(3);
@@ -217,12 +217,12 @@ TEST_F(CXWindowsKeyStateTests, pollActiveGroup_positiveGroup_returnsGroup)
 	ASSERT_EQ(3, actual);
 }
 
-TEST_F(CXWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
+TEST_F(XWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
 {
 #if HAVE_XKB_EXTENSION
 	MockKeyMap keyMap;
 	MockEventQueue eventQueue;
-	CXWindowsKeyState keyState(
+	XWindowsKeyState keyState(
 		m_display, true, &eventQueue, keyMap);
 
 	// reset the group

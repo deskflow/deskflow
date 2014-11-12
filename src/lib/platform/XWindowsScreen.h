@@ -29,17 +29,17 @@
 #	include <X11/Xlib.h>
 #endif
 
-class CXWindowsClipboard;
-class CXWindowsKeyState;
-class CXWindowsScreenSaver;
+class XWindowsClipboard;
+class XWindowsKeyState;
+class XWindowsScreenSaver;
 
 //! Implementation of IPlatformScreen for X11
-class CXWindowsScreen : public PlatformScreen {
+class XWindowsScreen : public PlatformScreen {
 public:
-	CXWindowsScreen(const char* displayName, bool isPrimary,
+	XWindowsScreen(const char* displayName, bool isPrimary,
 		bool disableXInitThreads, int mouseScrollDelta,
 		IEventQueue* events);
-	virtual ~CXWindowsScreen();
+	virtual ~XWindowsScreen();
 
 	//! @name manipulators
 	//@{
@@ -190,7 +190,7 @@ private:
 	SInt32				m_xCursor, m_yCursor;
 
 	// keyboard stuff
-	CXWindowsKeyState*	m_keyState;
+	XWindowsKeyState*	m_keyState;
 
 	// hot key stuff
 	HotKeyMap			m_hotKeys;
@@ -208,11 +208,11 @@ private:
 	FilteredKeycodes	m_filtered;
 
 	// clipboards
-	CXWindowsClipboard*	m_clipboard[kClipboardEnd];
+	XWindowsClipboard*	m_clipboard[kClipboardEnd];
 	UInt32				m_sequenceNumber;
 
 	// screen saver stuff
-	CXWindowsScreenSaver*	m_screensaver;
+	XWindowsScreenSaver*	m_screensaver;
 	bool				m_screensaverNotify;
 
 	// logical to physical button mapping.  m_buttons[i] gives the
@@ -248,5 +248,5 @@ private:
 
 	// pointer to (singleton) screen.  this is only needed by
 	// ioErrorHandler().
-	static CXWindowsScreen*	s_screen;
+	static XWindowsScreen*	s_screen;
 };

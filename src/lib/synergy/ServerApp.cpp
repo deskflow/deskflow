@@ -584,7 +584,7 @@ ServerApp::createScreen()
 	return new synergy::Screen(new CMSWindowsScreen(
 		true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
 #elif WINAPI_XWINDOWS
-	return new synergy::Screen(new CXWindowsScreen(
+	return new synergy::Screen(new XWindowsScreen(
 		args().m_display, true, args().m_disableXInitThreads, 0, m_events), m_events);
 #elif WINAPI_CARBON
 	return new synergy::Screen(new OSXScreen(m_events, true), m_events);

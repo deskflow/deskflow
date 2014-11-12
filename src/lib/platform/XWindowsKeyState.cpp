@@ -40,7 +40,7 @@
 
 static const size_t ModifiersFromXDefaultSize = 32;
 
-CXWindowsKeyState::CXWindowsKeyState(
+XWindowsKeyState::XWindowsKeyState(
 		Display* display, bool useXKB,
 		IEventQueue* events) :
 	KeyState(events),
@@ -50,7 +50,7 @@ CXWindowsKeyState::CXWindowsKeyState(
 	init(display, useXKB);
 }
 
-CXWindowsKeyState::CXWindowsKeyState(
+XWindowsKeyState::XWindowsKeyState(
 	Display* display, bool useXKB,
 	IEventQueue* events, synergy::KeyMap& keyMap) :
 	KeyState(events, keyMap),
@@ -60,7 +60,7 @@ CXWindowsKeyState::CXWindowsKeyState(
 	init(display, useXKB);
 }
 
-CXWindowsKeyState::~CXWindowsKeyState()
+XWindowsKeyState::~XWindowsKeyState()
 {
 #if HAVE_XKB_EXTENSION
 	if (m_xkb != NULL) {
@@ -70,7 +70,7 @@ CXWindowsKeyState::~CXWindowsKeyState()
 }
 
 void
-CXWindowsKeyState::init(Display* display, bool useXKB)
+XWindowsKeyState::init(Display* display, bool useXKB)
 {
 	XGetKeyboardControl(m_display, &m_keyboardState);
 #if HAVE_XKB_EXTENSION
@@ -86,7 +86,7 @@ CXWindowsKeyState::init(Display* display, bool useXKB)
 }
 
 void
-CXWindowsKeyState::setActiveGroup(SInt32 group)
+XWindowsKeyState::setActiveGroup(SInt32 group)
 {
 	if (group == kGroupPollAndSet) {
 		// we need to set the group to -1 in order for pollActiveGroup() to
@@ -104,13 +104,13 @@ CXWindowsKeyState::setActiveGroup(SInt32 group)
 }
 
 void
-CXWindowsKeyState::setAutoRepeat(const XKeyboardState& state)
+XWindowsKeyState::setAutoRepeat(const XKeyboardState& state)
 {
 	m_keyboardState = state;
 }
 
 KeyModifierMask
-CXWindowsKeyState::mapModifiersFromX(unsigned int state) const
+XWindowsKeyState::mapModifiersFromX(unsigned int state) const
 {
 	LOG((CLOG_DEBUG2 "mapping state: %i", state));
 	UInt32 offset = 8 * getGroupFromState(state);
@@ -130,7 +130,7 @@ CXWindowsKeyState::mapModifiersFromX(unsigned int state) const
 }
 
 bool
-CXWindowsKeyState::mapModifiersToX(KeyModifierMask mask,
+XWindowsKeyState::mapModifiersToX(KeyModifierMask mask,
 				unsigned int& modifiers) const
 {
 	modifiers = 0;
@@ -152,7 +152,7 @@ CXWindowsKeyState::mapModifiersToX(KeyModifierMask mask,
 }
 
 void
-CXWindowsKeyState::mapKeyToKeycodes(KeyID key, KeycodeList& keycodes) const
+XWindowsKeyState::mapKeyToKeycodes(KeyID key, KeycodeList& keycodes) const
 {
 	keycodes.clear();
 	std::pair<KeyToKeyCodeMap::const_iterator,
@@ -165,14 +165,14 @@ CXWindowsKeyState::mapKeyToKeycodes(KeyID key, KeycodeList& keycodes) const
 }
 
 bool
-CXWindowsKeyState::fakeCtrlAltDel()
+XWindowsKeyState::fakeCtrlAltDel()
 {
 	// pass keys through unchanged
 	return false;
 }
 
 KeyModifierMask
-CXWindowsKeyState::pollActiveModifiers() const
+XWindowsKeyState::pollActiveModifiers() const
 {
 	Window root = DefaultRootWindow(m_display), window;
 	int xRoot, yRoot, xWindow, yWindow;
@@ -185,7 +185,7 @@ CXWindowsKeyState::pollActiveModifiers() const
 }
 
 SInt32
-CXWindowsKeyState::pollActiveGroup() const
+XWindowsKeyState::pollActiveGroup() const
 {
 	// fixed condition where any group < -1 would have undetermined behaviour
 	if (m_group >= 0) {
@@ -204,7 +204,7 @@ CXWindowsKeyState::pollActiveGroup() const
 }
 
 void
-CXWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
+XWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 {
 	char keys[32];
 	XQueryKeymap(m_display, keys);
@@ -218,7 +218,7 @@ CXWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 }
 
 void
-CXWindowsKeyState::getKeyMap(synergy::KeyMap& keyMap)
+XWindowsKeyState::getKeyMap(synergy::KeyMap& keyMap)
 {
 	// get autorepeat info.  we must use the global_auto_repeat told to
 	// us because it may have modified by synergy.
@@ -239,7 +239,7 @@ CXWindowsKeyState::getKeyMap(synergy::KeyMap& keyMap)
 }
 
 void
-CXWindowsKeyState::fakeKey(const Keystroke& keystroke)
+XWindowsKeyState::fakeKey(const Keystroke& keystroke)
 {
 	switch (keystroke.m_type) {
 	case Keystroke::kButton:
@@ -297,7 +297,7 @@ CXWindowsKeyState::fakeKey(const Keystroke& keystroke)
 }
 
 void
-CXWindowsKeyState::updateKeysymMap(synergy::KeyMap& keyMap)
+XWindowsKeyState::updateKeysymMap(synergy::KeyMap& keyMap)
 {
 	// there are up to 4 keysyms per keycode
 	static const int maxKeysyms = 4;
@@ -462,16 +462,16 @@ CXWindowsKeyState::updateKeysymMap(synergy::KeyMap& keyMap)
 
 		// do each keysym (shift level)
 		for (int j = 0; j < maxKeysyms; ++j) {
-			item.m_id = CXWindowsUtil::mapKeySymToKeyID(keysyms[j]);
+			item.m_id = XWindowsUtil::mapKeySymToKeyID(keysyms[j]);
 			if (item.m_id == kKeyNone) {
 				if (j != 0 && modifierButtons.count(keycode) > 0) {
 					// pretend the modifier works in other shift levels
 					// because it probably does.
 					if (keysyms[1] == NoSymbol || j != 3) {
-						item.m_id = CXWindowsUtil::mapKeySymToKeyID(keysyms[0]);
+						item.m_id = XWindowsUtil::mapKeySymToKeyID(keysyms[0]);
 					}
 					else {
-						item.m_id = CXWindowsUtil::mapKeySymToKeyID(keysyms[1]);
+						item.m_id = XWindowsUtil::mapKeySymToKeyID(keysyms[1]);
 					}
 				}
 				if (item.m_id == kKeyNone) {
@@ -543,7 +543,7 @@ CXWindowsKeyState::updateKeysymMap(synergy::KeyMap& keyMap)
 
 #if HAVE_XKB_EXTENSION
 void
-CXWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
+XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
 {
 	static const XkbKTMapEntryRec defMapEntry = {
 		True,		// active
@@ -697,7 +697,7 @@ CXWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
 				// for keys that change the group.
 				item.m_generates = 0;
 				UInt32 modifierBit =
-					CXWindowsUtil::getModifierBitForKeySym(keysym);
+					XWindowsUtil::getModifierBitForKeySym(keysym);
 				if (isModifier && modifierBit != kKeyModifierBitNone) {
 					item.m_generates = (1u << modifierBit);
 					for (SInt32 j = 0; j < 8; ++j) {
@@ -737,8 +737,8 @@ CXWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
 
 						item.m_sensitive |= ShiftMask | LockMask;
 
-						KeyID lKeyID = CXWindowsUtil::mapKeySymToKeyID(lKeysym);
-						KeyID uKeyID = CXWindowsUtil::mapKeySymToKeyID(uKeysym);
+						KeyID lKeyID = XWindowsUtil::mapKeySymToKeyID(lKeysym);
+						KeyID uKeyID = XWindowsUtil::mapKeySymToKeyID(uKeysym);
 						if (lKeyID == kKeyNone || uKeyID == kKeyNone) {
 							continue;
 						}
@@ -764,7 +764,7 @@ CXWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
 				}
 
 				// add entry
-				item.m_id = CXWindowsUtil::mapKeySymToKeyID(keysym);
+				item.m_id = XWindowsUtil::mapKeySymToKeyID(keysym);
 				keyMap.addKeyEntry(item);
 				if (group == 0) {
 					m_keyCodeFromKey.insert(std::make_pair(item.m_id, keycode));
@@ -774,7 +774,7 @@ CXWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
 	}
 
 	// change all modifier masks to synergy masks from X masks
-	keyMap.foreachKey(&CXWindowsKeyState::remapKeyModifiers, this);
+	keyMap.foreachKey(&XWindowsKeyState::remapKeyModifiers, this);
 
 	// allow composition across groups
 	keyMap.allowGroupSwitchDuringCompose();
@@ -782,10 +782,10 @@ CXWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
 #endif
 
 void
-CXWindowsKeyState::remapKeyModifiers(KeyID id, SInt32 group,
+XWindowsKeyState::remapKeyModifiers(KeyID id, SInt32 group,
 							synergy::KeyMap::KeyItem& item, void* vself)
 {
-	CXWindowsKeyState* self = reinterpret_cast<CXWindowsKeyState*>(vself);
+	XWindowsKeyState* self = reinterpret_cast<XWindowsKeyState*>(vself);
 	item.m_required  =
 		self->mapModifiersFromX(XkbBuildCoreState(item.m_required, group));
 	item.m_sensitive =
@@ -793,7 +793,7 @@ CXWindowsKeyState::remapKeyModifiers(KeyID id, SInt32 group,
 }
 
 bool
-CXWindowsKeyState::hasModifiersXKB() const
+XWindowsKeyState::hasModifiersXKB() const
 {
 #if HAVE_XKB_EXTENSION
 	// iterate over all keycodes
@@ -825,7 +825,7 @@ CXWindowsKeyState::hasModifiersXKB() const
 }
 
 int
-CXWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const
+XWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const
 {
 	(void)keycode;
 #if HAVE_XKB_EXTENSION
@@ -856,7 +856,7 @@ CXWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const
 }
 
 UInt32
-CXWindowsKeyState::getGroupFromState(unsigned int state) const
+XWindowsKeyState::getGroupFromState(unsigned int state) const
 {
 #if HAVE_XKB_EXTENSION
 	if (m_xkb != NULL) {
