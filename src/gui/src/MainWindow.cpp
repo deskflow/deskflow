@@ -35,6 +35,7 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDesktopServices>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
@@ -48,6 +49,7 @@
 #if defined(Q_OS_WIN)
 static const char synergyConfigName[] = "synergy.sgc";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
+static const char BonjourUrl[] = "http://synergy-project.org/bonjour/BonjourPSSetup.exe";
 #else
 static const char synergyConfigName[] = "synergy.conf";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
@@ -907,7 +909,7 @@ void MainWindow::on_m_pAutoConnectCheckBox_toggled(bool checked)
 			QMessageBox::Yes | QMessageBox::No);
 
 		if (r == QMessageBox::Yes) {
-
+			downloadBonjour();
 		}
 		else {
 			m_pAutoConnectCheckBox->setChecked(false);
@@ -968,4 +970,11 @@ bool MainWindow::isBonjourRunning()
 #endif
 
 	return result;
+}
+
+void MainWindow::downloadBonjour()
+{
+#if defined(Q_OS_WIN)
+	QDesktopServices::openUrl(QUrl(BonjourUrl));
+#endif
 }

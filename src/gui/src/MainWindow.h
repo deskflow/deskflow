@@ -148,6 +148,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void retranslateMenuBar();
 		bool isServiceRunning(QString name);
 		bool isBonjourRunning();
+		void downloadBonjour();
 
 	private:
 		QSettings& m_Settings;
