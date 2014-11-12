@@ -21,33 +21,33 @@
 #include "base/String.h"
 
 //
-// CMSWindowsClipboardHTMLConverter
+// MSWindowsClipboardHTMLConverter
 //
 
-CMSWindowsClipboardHTMLConverter::CMSWindowsClipboardHTMLConverter()
+MSWindowsClipboardHTMLConverter::MSWindowsClipboardHTMLConverter()
 {
 	m_format = RegisterClipboardFormat("HTML Format");
 }
 
-CMSWindowsClipboardHTMLConverter::~CMSWindowsClipboardHTMLConverter()
+MSWindowsClipboardHTMLConverter::~MSWindowsClipboardHTMLConverter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-CMSWindowsClipboardHTMLConverter::getFormat() const
+MSWindowsClipboardHTMLConverter::getFormat() const
 {
 	return IClipboard::kHTML;
 }
 
 UINT
-CMSWindowsClipboardHTMLConverter::getWin32Format() const
+MSWindowsClipboardHTMLConverter::getWin32Format() const
 {
 	return m_format;
 }
 
 String
-CMSWindowsClipboardHTMLConverter::doFromIClipboard(const String& data) const
+MSWindowsClipboardHTMLConverter::doFromIClipboard(const String& data) const
 {
 	// prepare to CF_HTML format prefix and suffix
 	String prefix("Version:0.9\r\nStartHTML:0000000105\r\n"
@@ -76,7 +76,7 @@ CMSWindowsClipboardHTMLConverter::doFromIClipboard(const String& data) const
 }
 
 String
-CMSWindowsClipboardHTMLConverter::doToIClipboard(const String& data) const
+MSWindowsClipboardHTMLConverter::doToIClipboard(const String& data) const
 {
 	// get fragment start/end args
 	String startArg = findArg(data, "StartFragment");
@@ -97,7 +97,7 @@ CMSWindowsClipboardHTMLConverter::doToIClipboard(const String& data) const
 }
 
 String
-CMSWindowsClipboardHTMLConverter::findArg(
+MSWindowsClipboardHTMLConverter::findArg(
 				const String& data, const String& name) const
 {
 	String::size_type i = data.find(name);

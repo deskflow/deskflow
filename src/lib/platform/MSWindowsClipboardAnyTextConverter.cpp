@@ -19,27 +19,27 @@
 #include "platform/MSWindowsClipboardAnyTextConverter.h"
 
 //
-// CMSWindowsClipboardAnyTextConverter
+// MSWindowsClipboardAnyTextConverter
 //
 
-CMSWindowsClipboardAnyTextConverter::CMSWindowsClipboardAnyTextConverter()
+MSWindowsClipboardAnyTextConverter::MSWindowsClipboardAnyTextConverter()
 {
 	// do nothing
 }
 
-CMSWindowsClipboardAnyTextConverter::~CMSWindowsClipboardAnyTextConverter()
+MSWindowsClipboardAnyTextConverter::~MSWindowsClipboardAnyTextConverter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-CMSWindowsClipboardAnyTextConverter::getFormat() const
+MSWindowsClipboardAnyTextConverter::getFormat() const
 {
 	return IClipboard::kText;
 }
 
 HANDLE
-CMSWindowsClipboardAnyTextConverter::fromIClipboard(const String& data) const
+MSWindowsClipboardAnyTextConverter::fromIClipboard(const String& data) const
 {
 	// convert linefeeds and then convert to desired encoding
 	String text = doFromIClipboard(convertLinefeedToWin32(data));
@@ -64,7 +64,7 @@ CMSWindowsClipboardAnyTextConverter::fromIClipboard(const String& data) const
 }
 
 String
-CMSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const
+MSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const
 {
 	// get datator
 	const char* src = (const char*)GlobalLock(data);
@@ -84,7 +84,7 @@ CMSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const
 }
 
 String
-CMSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
+MSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
 				const String& src) const
 {
 	// note -- we assume src is a valid UTF-8 string
@@ -118,7 +118,7 @@ CMSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
 }
 
 String
-CMSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(
+MSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(
 				const String& src) const
 {
 	// count newlines in string

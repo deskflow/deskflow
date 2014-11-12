@@ -24,11 +24,11 @@
 #include <Windows.h>
 
 //! Loads and provides functions for the Windows hook
-class CMSWindowsHook
+class MSWindowsHook
 {
 public:
-	CMSWindowsHook();
-	virtual ~CMSWindowsHook();
+	MSWindowsHook();
+	virtual ~MSWindowsHook();
 
 	void				loadLibrary();
 	HINSTANCE			getInstance() const;

@@ -21,17 +21,17 @@
 #include "platform/MSWindowsClipboardAnyTextConverter.h"
 
 //! Convert to/from locale text encoding
-class CMSWindowsClipboardTextConverter :
-				public CMSWindowsClipboardAnyTextConverter {
+class MSWindowsClipboardTextConverter :
+				public MSWindowsClipboardAnyTextConverter {
 public:
-	CMSWindowsClipboardTextConverter();
-	virtual ~CMSWindowsClipboardTextConverter();
+	MSWindowsClipboardTextConverter();
+	virtual ~MSWindowsClipboardTextConverter();
 
 	// IMSWindowsClipboardConverter overrides
 	virtual UINT		getWin32Format() const;
 
 protected:
-	// CMSWindowsClipboardAnyTextConverter overrides
+	// MSWindowsClipboardAnyTextConverter overrides
 	virtual String		doFromIClipboard(const String&) const;
 	virtual String		doToIClipboard(const String&) const;
 };

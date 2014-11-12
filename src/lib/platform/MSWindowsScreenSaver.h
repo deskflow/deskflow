@@ -27,10 +27,10 @@
 class Thread;
 
 //! Microsoft windows screen saver implementation
-class CMSWindowsScreenSaver : public IScreenSaver {
+class MSWindowsScreenSaver : public IScreenSaver {
 public:
-	CMSWindowsScreenSaver();
-	virtual ~CMSWindowsScreenSaver();
+	MSWindowsScreenSaver();
+	virtual ~MSWindowsScreenSaver();
 
 	//! @name manipulators
 	//@{

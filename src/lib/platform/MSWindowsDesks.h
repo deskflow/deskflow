@@ -53,7 +53,7 @@ synergy should work on those too.
 This class encapsulates all the desk nastiness.  Clients of this
 object don't have to know anything about desks.
 */
-class CMSWindowsDesks {
+class MSWindowsDesks {
 public:
 	//! Constructor
 	/*!
@@ -64,11 +64,11 @@ public:
 	updated in a thread attached to the current desk.
 	\p hookLibrary must be a handle to the hook library.
 	*/
-	CMSWindowsDesks(
+	MSWindowsDesks(
 		bool isPrimary, bool noHooks, HINSTANCE hookLibrary,
 		const IScreenSaver* screensaver, IEventQueue* events,
 		IJob* updateKeys, bool stopOnDeskSwitch);
-	~CMSWindowsDesks();
+	~MSWindowsDesks();
 
 	//! @name manipulators
 	//@{

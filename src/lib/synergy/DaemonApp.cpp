@@ -117,7 +117,7 @@ DaemonApp::run(int argc, char** argv)
 	{
 #if SYSAPI_WIN32
 		// sends debug messages to visual studio console window.
-		log.insert(new CMSWindowsDebugOutputter());
+		log.insert(new MSWindowsDebugOutputter());
 #endif
 
 		// default log level to system setting.
@@ -228,7 +228,7 @@ DaemonApp::mainLoop(bool logToFile)
 #if SYSAPI_WIN32
 
 		// install the platform event queue to handle service stop events.
-		m_events->adoptBuffer(new CMSWindowsEventQueueBuffer(m_events));
+		m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
 		
 		String command = ARCH->setting("Command");
 		bool elevate = ARCH->setting("Elevate") == "1";

@@ -72,7 +72,7 @@ private:
 	IpcServer&			m_ipcServer;
 	IpcLogOutputter&	m_ipcLogOutputter;
 	bool				m_elevateProcess;
-	CMSWindowsSession	m_session;
+	MSWindowsSession	m_session;
 	PROCESS_INFORMATION m_processInfo;
 	int					m_processFailures;
 	bool				m_processRunning;

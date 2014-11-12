@@ -23,7 +23,7 @@
 
 static const char* g_name = "synwinhk";
 
-CMSWindowsHook::CMSWindowsHook() :
+MSWindowsHook::MSWindowsHook() :
 	m_initFunc(NULL),
 	m_cleanupFunc(NULL),
 	m_setSidesFunc(NULL),
@@ -33,7 +33,7 @@ CMSWindowsHook::CMSWindowsHook() :
 {
 }
 
-CMSWindowsHook::~CMSWindowsHook()
+MSWindowsHook::~MSWindowsHook()
 {
 	cleanup();
 
@@ -43,7 +43,7 @@ CMSWindowsHook::~CMSWindowsHook()
 }
 
 void
-CMSWindowsHook::loadLibrary()
+MSWindowsHook::loadLibrary()
 {
 	// load library
 	m_instance = LoadLibrary(g_name);
@@ -77,13 +77,13 @@ CMSWindowsHook::loadLibrary()
 }
 
 HINSTANCE
-CMSWindowsHook::getInstance() const
+MSWindowsHook::getInstance() const
 {
 	return m_instance;
 }
 
 int
-CMSWindowsHook::init(DWORD threadID)
+MSWindowsHook::init(DWORD threadID)
 {
 	if (m_initFunc == NULL) {
 		return NULL;
@@ -92,7 +92,7 @@ CMSWindowsHook::init(DWORD threadID)
 }
 
 int
-CMSWindowsHook::cleanup()
+MSWindowsHook::cleanup()
 {
 	if (m_cleanupFunc == NULL) {
 		return NULL;
@@ -101,7 +101,7 @@ CMSWindowsHook::cleanup()
 }
 
 void
-CMSWindowsHook::setSides(UInt32 sides)
+MSWindowsHook::setSides(UInt32 sides)
 {
 	if (m_setSidesFunc == NULL) {
 		return;
@@ -110,7 +110,7 @@ CMSWindowsHook::setSides(UInt32 sides)
 }
 
 void
-CMSWindowsHook::setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h, SInt32 jumpZoneSize)
+MSWindowsHook::setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h, SInt32 jumpZoneSize)
 {
 	if (m_setZoneFunc == NULL) {
 		return;
@@ -119,7 +119,7 @@ CMSWindowsHook::setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h, SInt32 jumpZoneS
 }
 
 void
-CMSWindowsHook::setMode(EHookMode mode)
+MSWindowsHook::setMode(EHookMode mode)
 {
 	if (m_setModeFunc == NULL) {
 		return;

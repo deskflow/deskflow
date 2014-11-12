@@ -23,10 +23,10 @@
 #include <Windows.h>
 #include <Tlhelp32.h>
 
-class CMSWindowsSession {
+class MSWindowsSession {
 public:
-	CMSWindowsSession();
-	~CMSWindowsSession();
+	MSWindowsSession();
+	~MSWindowsSession();
 
 	//!
 	/*!

@@ -27,18 +27,18 @@
 
 class Event;
 class EventQueueTimer;
-class CMSWindowsDesks;
+class MSWindowsDesks;
 class IEventQueue;
 
 //! Microsoft Windows key mapper
 /*!
 This class maps KeyIDs to keystrokes.
 */
-class CMSWindowsKeyState : public KeyState {
+class MSWindowsKeyState : public KeyState {
 public:
-	CMSWindowsKeyState(CMSWindowsDesks* desks, void* eventTarget, IEventQueue* events);
-	CMSWindowsKeyState(CMSWindowsDesks* desks, void* eventTarget, IEventQueue* events, synergy::KeyMap& keyMap);
-	virtual ~CMSWindowsKeyState();
+	MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events);
+	MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, synergy::KeyMap& keyMap);
+	virtual ~MSWindowsKeyState();
 
 	//! @name manipulators
 	//@{
@@ -185,15 +185,15 @@ private:
 
 private:
 	// not implemented
-	CMSWindowsKeyState(const CMSWindowsKeyState&);
-	CMSWindowsKeyState& operator=(const CMSWindowsKeyState&);
+	MSWindowsKeyState(const MSWindowsKeyState&);
+	MSWindowsKeyState& operator=(const MSWindowsKeyState&);
 
 private:
 	typedef std::map<HKL, SInt32> GroupMap;
 	typedef std::map<KeyID, UINT> KeyToVKMap;
 
 	void*				m_eventTarget;
-	CMSWindowsDesks*	m_desks;
+	MSWindowsDesks*	m_desks;
 	HKL					m_keyLayout;
 	UINT				m_buttonToVK[512];
 	UINT				m_buttonToNumpadVK[512];

@@ -21,11 +21,11 @@
 #include "platform/MSWindowsClipboardAnyTextConverter.h"
 
 //! Convert to/from HTML encoding
-class CMSWindowsClipboardHTMLConverter :
-				public CMSWindowsClipboardAnyTextConverter {
+class MSWindowsClipboardHTMLConverter :
+				public MSWindowsClipboardAnyTextConverter {
 public:
-	CMSWindowsClipboardHTMLConverter();
-	virtual ~CMSWindowsClipboardHTMLConverter();
+	MSWindowsClipboardHTMLConverter();
+	virtual ~MSWindowsClipboardHTMLConverter();
 
 	// IMSWindowsClipboardConverter overrides
 	virtual IClipboard::EFormat
@@ -33,7 +33,7 @@ public:
 	virtual UINT		getWin32Format() const;
 
 protected:
-	// CMSWindowsClipboardAnyTextConverter overrides
+	// MSWindowsClipboardAnyTextConverter overrides
 	virtual String		doFromIClipboard(const String&) const;
 	virtual String		doToIClipboard(const String&) const;
 

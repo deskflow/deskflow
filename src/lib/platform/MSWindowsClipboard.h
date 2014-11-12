@@ -29,11 +29,11 @@ class IMSWindowsClipboardConverter;
 class IMSWindowsClipboardFacade;
 
 //! Microsoft windows clipboard implementation
-class CMSWindowsClipboard : public IClipboard {
+class MSWindowsClipboard : public IClipboard {
 public:
-	CMSWindowsClipboard(HWND window);
-	CMSWindowsClipboard(HWND window, IMSWindowsClipboardFacade &facade);
-	virtual ~CMSWindowsClipboard();
+	MSWindowsClipboard(HWND window);
+	MSWindowsClipboard(HWND window, IMSWindowsClipboardFacade &facade);
+	virtual ~MSWindowsClipboard();
 
 	//! Empty clipboard without ownership
 	/*!

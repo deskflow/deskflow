@@ -145,7 +145,7 @@ AppUtilWindows::run(int argc, char** argv)
 	// record window instance for tray icon, etc
 	ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 
-	CMSWindowsScreen::init(ArchMiscWindows::instanceWin32());
+	MSWindowsScreen::init(ArchMiscWindows::instanceWin32());
 	Thread::getCurrentThread().setPriority(-14);
 
 	StartupFunc startup;

@@ -54,7 +54,7 @@ ToolApp::run(int argc, char** argv)
 
 		if (m_args.m_printActiveDesktopName) {
 #if SYSAPI_WIN32
-			CMSWindowsSession session;
+			MSWindowsSession session;
 			String name = session.getActiveDesktopName();
 			if (name.empty()) {
 				LOG((CLOG_CRIT "failed to get active desktop name"));

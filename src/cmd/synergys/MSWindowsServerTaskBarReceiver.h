@@ -27,10 +27,10 @@ class BufferedLogOutputter;
 class IEventQueue;
 
 //! Implementation of ServerTaskBarReceiver for Microsoft Windows
-class CMSWindowsServerTaskBarReceiver : public ServerTaskBarReceiver {
+class MSWindowsServerTaskBarReceiver : public ServerTaskBarReceiver {
 public:
-	CMSWindowsServerTaskBarReceiver(HINSTANCE, const BufferedLogOutputter*, IEventQueue* events);
-	virtual ~CMSWindowsServerTaskBarReceiver();
+	MSWindowsServerTaskBarReceiver(HINSTANCE, const BufferedLogOutputter*, IEventQueue* events);
+	virtual ~MSWindowsServerTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides
 	virtual void		showStatus();

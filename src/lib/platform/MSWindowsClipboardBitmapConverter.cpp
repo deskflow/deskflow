@@ -21,33 +21,33 @@
 #include "base/Log.h"
 
 //
-// CMSWindowsClipboardBitmapConverter
+// MSWindowsClipboardBitmapConverter
 //
 
-CMSWindowsClipboardBitmapConverter::CMSWindowsClipboardBitmapConverter()
+MSWindowsClipboardBitmapConverter::MSWindowsClipboardBitmapConverter()
 {
 	// do nothing
 }
 
-CMSWindowsClipboardBitmapConverter::~CMSWindowsClipboardBitmapConverter()
+MSWindowsClipboardBitmapConverter::~MSWindowsClipboardBitmapConverter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-CMSWindowsClipboardBitmapConverter::getFormat() const
+MSWindowsClipboardBitmapConverter::getFormat() const
 {
 	return IClipboard::kBitmap;
 }
 
 UINT
-CMSWindowsClipboardBitmapConverter::getWin32Format() const
+MSWindowsClipboardBitmapConverter::getWin32Format() const
 {
 	return CF_DIB;
 }
 
 HANDLE
-CMSWindowsClipboardBitmapConverter::fromIClipboard(const String& data) const
+MSWindowsClipboardBitmapConverter::fromIClipboard(const String& data) const
 {
 	// copy to memory handle
 	HGLOBAL gData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, data.size());
@@ -68,7 +68,7 @@ CMSWindowsClipboardBitmapConverter::fromIClipboard(const String& data) const
 }
 
 String
-CMSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
+MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 {
 	// get datator
 	const char* src = (const char*)GlobalLock(data);

@@ -581,7 +581,7 @@ synergy::Screen*
 ServerApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
-	return new synergy::Screen(new CMSWindowsScreen(
+	return new synergy::Screen(new MSWindowsScreen(
 		true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
 #elif WINAPI_XWINDOWS
 	return new synergy::Screen(new XWindowsScreen(

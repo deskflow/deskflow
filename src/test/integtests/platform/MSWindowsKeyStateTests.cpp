@@ -35,13 +35,13 @@
 using ::testing::_;
 using ::testing::NiceMock;
 
-class CMSWindowsKeyStateTests : public ::testing::Test
+class MSWindowsKeyStateTests : public ::testing::Test
 {
 protected:
 	virtual void SetUp()
 	{
 		m_hook.loadLibrary();
-		m_screensaver = new CMSWindowsScreenSaver();
+		m_screensaver = new MSWindowsScreenSaver();
 	}
 
 	virtual void TearDown()
@@ -49,31 +49,31 @@ protected:
 		delete m_screensaver;
 	}
 
-	CMSWindowsDesks* newDesks(IEventQueue* eventQueue)
+	MSWindowsDesks* newDesks(IEventQueue* eventQueue)
 	{
-		return new CMSWindowsDesks(
+		return new MSWindowsDesks(
 			true, false, m_hook.getInstance(), m_screensaver, eventQueue,
-			new TMethodJob<CMSWindowsKeyStateTests>(
-				this, &CMSWindowsKeyStateTests::updateKeysCB), false);
+			new TMethodJob<MSWindowsKeyStateTests>(
+				this, &MSWindowsKeyStateTests::updateKeysCB), false);
 	}
 
 	void* getEventTarget() const
 	{
-		return const_cast<CMSWindowsKeyStateTests*>(this);
+		return const_cast<MSWindowsKeyStateTests*>(this);
 	}
 
 private:
 	void updateKeysCB(void*) { }
 	IScreenSaver* m_screensaver;
-	CMSWindowsHook m_hook;
+	MSWindowsHook m_hook;
 };
 
-TEST_F(CMSWindowsKeyStateTests, disable_eventQueueNotUsed)
+TEST_F(MSWindowsKeyStateTests, disable_eventQueueNotUsed)
 {
 	NiceMock<MockEventQueue> eventQueue;
-	CMSWindowsDesks* desks = newDesks(&eventQueue);
+	MSWindowsDesks* desks = newDesks(&eventQueue);
 	MockKeyMap keyMap;
-	CMSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
+	MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
 	
 	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(0);
 
@@ -81,12 +81,12 @@ TEST_F(CMSWindowsKeyStateTests, disable_eventQueueNotUsed)
 	delete desks;
 }
 
-TEST_F(CMSWindowsKeyStateTests, testAutoRepeat_noRepeatAndButtonIsZero_resultIsTrue)
+TEST_F(MSWindowsKeyStateTests, testAutoRepeat_noRepeatAndButtonIsZero_resultIsTrue)
 {
 	NiceMock<MockEventQueue> eventQueue;
-	CMSWindowsDesks* desks = newDesks(&eventQueue);
+	MSWindowsDesks* desks = newDesks(&eventQueue);
 	MockKeyMap keyMap;
-	CMSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
+	MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
 	keyState.setLastDown(1);
 
 	bool actual = keyState.testAutoRepeat(true, false, 1);
@@ -95,12 +95,12 @@ TEST_F(CMSWindowsKeyStateTests, testAutoRepeat_noRepeatAndButtonIsZero_resultIsT
 	delete desks;
 }
 
-TEST_F(CMSWindowsKeyStateTests, testAutoRepeat_pressFalse_lastDownIsZero)
+TEST_F(MSWindowsKeyStateTests, testAutoRepeat_pressFalse_lastDownIsZero)
 {
 	NiceMock<MockEventQueue> eventQueue;
-	CMSWindowsDesks* desks = newDesks(&eventQueue);
+	MSWindowsDesks* desks = newDesks(&eventQueue);
 	MockKeyMap keyMap;
-	CMSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
+	MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
 	keyState.setLastDown(1);
 
 	keyState.testAutoRepeat(false, false, 1);
@@ -109,12 +109,12 @@ TEST_F(CMSWindowsKeyStateTests, testAutoRepeat_pressFalse_lastDownIsZero)
 	delete desks;
 }
 
-TEST_F(CMSWindowsKeyStateTests, saveModifiers_noModifiers_savedModifiers0)
+TEST_F(MSWindowsKeyStateTests, saveModifiers_noModifiers_savedModifiers0)
 {
 	NiceMock<MockEventQueue> eventQueue;
-	CMSWindowsDesks* desks = newDesks(&eventQueue);
+	MSWindowsDesks* desks = newDesks(&eventQueue);
 	MockKeyMap keyMap;
-	CMSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
+	MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
 
 	keyState.saveModifiers();
 

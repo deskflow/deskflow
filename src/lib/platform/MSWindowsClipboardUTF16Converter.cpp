@@ -21,34 +21,34 @@
 #include "base/Unicode.h"
 
 //
-// CMSWindowsClipboardUTF16Converter
+// MSWindowsClipboardUTF16Converter
 //
 
-CMSWindowsClipboardUTF16Converter::CMSWindowsClipboardUTF16Converter()
+MSWindowsClipboardUTF16Converter::MSWindowsClipboardUTF16Converter()
 {
 	// do nothing
 }
 
-CMSWindowsClipboardUTF16Converter::~CMSWindowsClipboardUTF16Converter()
+MSWindowsClipboardUTF16Converter::~MSWindowsClipboardUTF16Converter()
 {
 	// do nothing
 }
 
 UINT
-CMSWindowsClipboardUTF16Converter::getWin32Format() const
+MSWindowsClipboardUTF16Converter::getWin32Format() const
 {
 	return CF_UNICODETEXT;
 }
 
 String
-CMSWindowsClipboardUTF16Converter::doFromIClipboard(const String& data) const
+MSWindowsClipboardUTF16Converter::doFromIClipboard(const String& data) const
 {
 	// convert and add nul terminator
 	return Unicode::UTF8ToUTF16(data).append(sizeof(wchar_t), 0);
 }
 
 String
-CMSWindowsClipboardUTF16Converter::doToIClipboard(const String& data) const
+MSWindowsClipboardUTF16Converter::doToIClipboard(const String& data) const
 {
 	// convert and strip nul terminator
 	String dst          = Unicode::UTF16ToUTF8(data);

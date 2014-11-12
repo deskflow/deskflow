@@ -27,10 +27,10 @@ class BufferedLogOutputter;
 class IEventQueue;
 
 //! Implementation of PortableTaskBarReceiver for Microsoft Windows
-class CMSWindowsPortableTaskBarReceiver : public PortableTaskBarReceiver {
+class MSWindowsPortableTaskBarReceiver : public PortableTaskBarReceiver {
 public:
-	CMSWindowsPortableTaskBarReceiver(HINSTANCE, const BufferedLogOutputter*, IEventQueue* events);
-	virtual ~CMSWindowsPortableTaskBarReceiver();
+	MSWindowsPortableTaskBarReceiver(HINSTANCE, const BufferedLogOutputter*, IEventQueue* events);
+	virtual ~MSWindowsPortableTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides
 	virtual void		showStatus();

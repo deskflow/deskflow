@@ -30,21 +30,21 @@
 #include <Windows.h>
 
 class EventQueueTimer;
-class CMSWindowsDesks;
-class CMSWindowsKeyState;
-class CMSWindowsScreenSaver;
+class MSWindowsDesks;
+class MSWindowsKeyState;
+class MSWindowsScreenSaver;
 class Thread;
-class CMSWindowsDropTarget;
+class MSWindowsDropTarget;
 
 //! Implementation of IPlatformScreen for Microsoft Windows
-class CMSWindowsScreen : public PlatformScreen {
+class MSWindowsScreen : public PlatformScreen {
 public:
-	CMSWindowsScreen(
+	MSWindowsScreen(
 		bool isPrimary,
 		bool noHooks,
 		bool stopOnDeskSwitch,
 		IEventQueue* events);
-	virtual ~CMSWindowsScreen();
+	virtual ~MSWindowsScreen();
 
 	//! @name manipulators
 	//@{
@@ -283,7 +283,7 @@ private:
 	HKL					m_keyLayout;
 
 	// screen saver stuff
-	CMSWindowsScreenSaver*	m_screensaver;
+	MSWindowsScreenSaver*	m_screensaver;
 	bool					m_screensaverNotify;
 	bool					m_screensaverActive;
 
@@ -294,10 +294,10 @@ private:
 	bool				m_ownClipboard;
 
 	// one desk per desktop and a cond var to communicate with it
-	CMSWindowsDesks*	m_desks;
+	MSWindowsDesks*	m_desks;
 
 	// keyboard stuff
-	CMSWindowsKeyState*	m_keyState;
+	MSWindowsKeyState*	m_keyState;
 
 	// hot key stuff
 	HotKeyMap			m_hotKeys;
@@ -324,16 +324,16 @@ private:
 	MOUSEKEYS			m_mouseKeys;
 	MOUSEKEYS			m_oldMouseKeys;
 	
-	CMSWindowsHook		m_hook;
+	MSWindowsHook		m_hook;
 
-	static CMSWindowsScreen*
+	static MSWindowsScreen*
 						s_screen;
 	
 	IEventQueue*		m_events;
 
 	String				m_desktopPath;
 
-	CMSWindowsDropTarget*
+	MSWindowsDropTarget*
 						m_dropTarget;
 	HWND				m_dropWindow;
 	const int			m_dropWindowSize;

@@ -84,13 +84,13 @@
 #endif
 
 //
-// CMSWindowsScreen
+// MSWindowsScreen
 //
 
-HINSTANCE				CMSWindowsScreen::s_windowInstance = NULL;
-CMSWindowsScreen*		CMSWindowsScreen::s_screen   = NULL;
+HINSTANCE				MSWindowsScreen::s_windowInstance = NULL;
+MSWindowsScreen*		MSWindowsScreen::s_screen   = NULL;
 
-CMSWindowsScreen::CMSWindowsScreen(
+MSWindowsScreen::MSWindowsScreen(
 	bool isPrimary,
 	bool noHooks,
 	bool stopOnDeskSwitch,
@@ -133,17 +133,17 @@ CMSWindowsScreen::CMSWindowsScreen(
 			m_hook.loadLibrary();
 		}
 
-		m_screensaver = new CMSWindowsScreenSaver();
-		m_desks       = new CMSWindowsDesks(
+		m_screensaver = new MSWindowsScreenSaver();
+		m_desks       = new MSWindowsDesks(
 							m_isPrimary,
 							m_noHooks,
 							m_hook.getInstance(),
 							m_screensaver,
 							m_events,
-							new TMethodJob<CMSWindowsScreen>(
-								this, &CMSWindowsScreen::updateKeysCB),
+							new TMethodJob<MSWindowsScreen>(
+								this, &MSWindowsScreen::updateKeysCB),
 							stopOnDeskSwitch);
-		m_keyState    = new CMSWindowsKeyState(m_desks, getEventTarget(), m_events);
+		m_keyState    = new MSWindowsKeyState(m_desks, getEventTarget(), m_events);
 		updateScreenShape();
 		m_class       = createWindowClass();
 		m_window      = createWindow(m_class, "Synergy");
@@ -163,7 +163,7 @@ CMSWindowsScreen::CMSWindowsScreen(
 
 		OleInitialize(0);
 		m_dropWindow = createDropWindow(m_class, "DropWindow");
-		m_dropTarget = new CMSWindowsDropTarget();
+		m_dropTarget = new MSWindowsDropTarget();
 		RegisterDragDrop(m_dropWindow, m_dropTarget);
 	}
 	catch (...) {
@@ -178,14 +178,14 @@ CMSWindowsScreen::CMSWindowsScreen(
 
 	// install event handlers
 	m_events->adoptHandler(Event::kSystem, m_events->getSystemTarget(),
-							new TMethodEventJob<CMSWindowsScreen>(this,
-								&CMSWindowsScreen::handleSystemEvent));
+							new TMethodEventJob<MSWindowsScreen>(this,
+								&MSWindowsScreen::handleSystemEvent));
 
 	// install the platform event queue
-	m_events->adoptBuffer(new CMSWindowsEventQueueBuffer(m_events));
+	m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
 }
 
-CMSWindowsScreen::~CMSWindowsScreen()
+MSWindowsScreen::~MSWindowsScreen()
 {
 	assert(s_screen != NULL);
 
@@ -207,7 +207,7 @@ CMSWindowsScreen::~CMSWindowsScreen()
 }
 
 void
-CMSWindowsScreen::init(HINSTANCE windowInstance)
+MSWindowsScreen::init(HINSTANCE windowInstance)
 {
 	assert(s_windowInstance == NULL);
 	assert(windowInstance   != NULL);
@@ -216,21 +216,21 @@ CMSWindowsScreen::init(HINSTANCE windowInstance)
 }
 
 HINSTANCE
-CMSWindowsScreen::getWindowInstance()
+MSWindowsScreen::getWindowInstance()
 {
 	return s_windowInstance;
 }
 
 void
-CMSWindowsScreen::enable()
+MSWindowsScreen::enable()
 {
 	assert(m_isOnScreen == m_isPrimary);
 
 	// we need to poll some things to fix them
 	m_fixTimer = m_events->newTimer(1.0, NULL);
 	m_events->adoptHandler(Event::kTimer, m_fixTimer,
-							new TMethodEventJob<CMSWindowsScreen>(this,
-								&CMSWindowsScreen::handleFixes));
+							new TMethodEventJob<MSWindowsScreen>(this,
+								&MSWindowsScreen::handleFixes));
 
 	// install our clipboard snooper
 	m_nextClipboardWindow = SetClipboardViewer(m_window);
@@ -254,7 +254,7 @@ CMSWindowsScreen::enable()
 }
 
 void
-CMSWindowsScreen::disable()
+MSWindowsScreen::disable()
 {
 	// stop tracking the active desk
 	m_desks->disable();
@@ -291,7 +291,7 @@ CMSWindowsScreen::disable()
 }
 
 void
-CMSWindowsScreen::enter()
+MSWindowsScreen::enter()
 {
 	m_desks->enter();
 	if (m_isPrimary) {
@@ -324,7 +324,7 @@ CMSWindowsScreen::enter()
 }
 
 bool
-CMSWindowsScreen::leave()
+MSWindowsScreen::leave()
 {
 	// get keyboard layout of foreground window.  we'll use this
 	// keyboard layout for translating keys sent to clients.
@@ -371,16 +371,16 @@ CMSWindowsScreen::leave()
 
 	if (isDraggingStarted() && !m_isPrimary) {
 		m_sendDragThread = new Thread(
-			new TMethodJob<CMSWindowsScreen>(
+			new TMethodJob<MSWindowsScreen>(
 				this,
-				&CMSWindowsScreen::sendDragThread));
+				&MSWindowsScreen::sendDragThread));
 	}
 
 	return true;
 }
 
 void
-CMSWindowsScreen::sendDragThread(void*)
+MSWindowsScreen::sendDragThread(void*)
 {
 	String& draggingFilename = getDraggingFilename();
 	size_t size = draggingFilename.size();
@@ -399,9 +399,9 @@ CMSWindowsScreen::sendDragThread(void*)
 }
 
 bool
-CMSWindowsScreen::setClipboard(ClipboardID, const IClipboard* src)
+MSWindowsScreen::setClipboard(ClipboardID, const IClipboard* src)
 {
-	CMSWindowsClipboard dst(m_window);
+	MSWindowsClipboard dst(m_window);
 	if (src != NULL) {
 		// save clipboard data
 		return Clipboard::copy(&dst, src);
@@ -418,7 +418,7 @@ CMSWindowsScreen::setClipboard(ClipboardID, const IClipboard* src)
 }
 
 void
-CMSWindowsScreen::checkClipboards()
+MSWindowsScreen::checkClipboards()
 {
 	// if we think we own the clipboard but we don't then somebody
 	// grabbed the clipboard on this screen without us knowing.
@@ -431,7 +431,7 @@ CMSWindowsScreen::checkClipboards()
 	// next reboot we do this double check.  clipboard ownership
 	// won't be reflected on other screens until we leave but at
 	// least the clipboard itself will work.
-	if (m_ownClipboard && !CMSWindowsClipboard::isOwnedBySynergy()) {
+	if (m_ownClipboard && !MSWindowsClipboard::isOwnedBySynergy()) {
 		LOG((CLOG_DEBUG "clipboard changed: lost ownership and no notification received"));
 		m_ownClipboard = false;
 		sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardClipboard);
@@ -440,7 +440,7 @@ CMSWindowsScreen::checkClipboards()
 }
 
 void
-CMSWindowsScreen::openScreensaver(bool notify)
+MSWindowsScreen::openScreensaver(bool notify)
 {
 	assert(m_screensaver != NULL);
 
@@ -454,7 +454,7 @@ CMSWindowsScreen::openScreensaver(bool notify)
 }
 
 void
-CMSWindowsScreen::closeScreensaver()
+MSWindowsScreen::closeScreensaver()
 {
 	if (m_screensaver != NULL) {
 		if (m_screensaverNotify) {
@@ -468,7 +468,7 @@ CMSWindowsScreen::closeScreensaver()
 }
 
 void
-CMSWindowsScreen::screensaver(bool activate)
+MSWindowsScreen::screensaver(bool activate)
 {
 	assert(m_screensaver != NULL);
 	if (m_screensaver==NULL) return;
@@ -482,45 +482,45 @@ CMSWindowsScreen::screensaver(bool activate)
 }
 
 void
-CMSWindowsScreen::resetOptions()
+MSWindowsScreen::resetOptions()
 {
 	m_desks->resetOptions();
 }
 
 void
-CMSWindowsScreen::setOptions(const OptionsList& options)
+MSWindowsScreen::setOptions(const OptionsList& options)
 {
 	m_desks->setOptions(options);
 }
 
 void
-CMSWindowsScreen::setSequenceNumber(UInt32 seqNum)
+MSWindowsScreen::setSequenceNumber(UInt32 seqNum)
 {
 	m_sequenceNumber = seqNum;
 }
 
 bool
-CMSWindowsScreen::isPrimary() const
+MSWindowsScreen::isPrimary() const
 {
 	return m_isPrimary;
 }
 
 void*
-CMSWindowsScreen::getEventTarget() const
+MSWindowsScreen::getEventTarget() const
 {
-	return const_cast<CMSWindowsScreen*>(this);
+	return const_cast<MSWindowsScreen*>(this);
 }
 
 bool
-CMSWindowsScreen::getClipboard(ClipboardID, IClipboard* dst) const
+MSWindowsScreen::getClipboard(ClipboardID, IClipboard* dst) const
 {
-	CMSWindowsClipboard src(m_window);
+	MSWindowsClipboard src(m_window);
 	Clipboard::copy(dst, &src);
 	return true;
 }
 
 void
-CMSWindowsScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+MSWindowsScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 {
 	assert(m_class != 0);
 
@@ -531,13 +531,13 @@ CMSWindowsScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 }
 
 void
-CMSWindowsScreen::getCursorPos(SInt32& x, SInt32& y) const
+MSWindowsScreen::getCursorPos(SInt32& x, SInt32& y) const
 {
 	m_desks->getCursorPos(x, y);
 }
 
 void
-CMSWindowsScreen::reconfigure(UInt32 activeSides)
+MSWindowsScreen::reconfigure(UInt32 activeSides)
 {
 	assert(m_isPrimary);
 
@@ -546,7 +546,7 @@ CMSWindowsScreen::reconfigure(UInt32 activeSides)
 }
 
 void
-CMSWindowsScreen::warpCursor(SInt32 x, SInt32 y)
+MSWindowsScreen::warpCursor(SInt32 x, SInt32 y)
 {
 	// warp mouse
 	warpCursorNoFlush(x, y);
@@ -562,7 +562,7 @@ CMSWindowsScreen::warpCursor(SInt32 x, SInt32 y)
 	saveMousePosition(x, y);
 }
 
-void CMSWindowsScreen::saveMousePosition(SInt32 x, SInt32 y) {
+void MSWindowsScreen::saveMousePosition(SInt32 x, SInt32 y) {
 
 	m_xCursor = x;
 	m_yCursor = y;
@@ -571,7 +571,7 @@ void CMSWindowsScreen::saveMousePosition(SInt32 x, SInt32 y) {
 }
 
 UInt32
-CMSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
+MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
 	// only allow certain modifiers
 	if ((mask & ~(KeyModifierShift | KeyModifierControl |
@@ -648,7 +648,7 @@ CMSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 }
 
 void
-CMSWindowsScreen::unregisterHotKey(UInt32 id)
+MSWindowsScreen::unregisterHotKey(UInt32 id)
 {
 	// look up hotkey
 	HotKeyMap::iterator i = m_hotKeys.find(id);
@@ -678,7 +678,7 @@ CMSWindowsScreen::unregisterHotKey(UInt32 id)
 }
 
 void
-CMSWindowsScreen::fakeInputBegin()
+MSWindowsScreen::fakeInputBegin()
 {
 	assert(m_isPrimary);
 
@@ -689,7 +689,7 @@ CMSWindowsScreen::fakeInputBegin()
 }
 
 void
-CMSWindowsScreen::fakeInputEnd()
+MSWindowsScreen::fakeInputEnd()
 {
 	assert(m_isPrimary);
 
@@ -700,13 +700,13 @@ CMSWindowsScreen::fakeInputEnd()
 }
 
 SInt32
-CMSWindowsScreen::getJumpZoneSize() const
+MSWindowsScreen::getJumpZoneSize() const
 {
 	return 1;
 }
 
 bool
-CMSWindowsScreen::isAnyMouseButtonDown(UInt32& buttonID) const
+MSWindowsScreen::isAnyMouseButtonDown(UInt32& buttonID) const
 {
 	static const char* buttonToName[] = {
 		"<invalid>",
@@ -729,14 +729,14 @@ CMSWindowsScreen::isAnyMouseButtonDown(UInt32& buttonID) const
 }
 
 void
-CMSWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
+MSWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
 {
 	x = m_xCenter;
 	y = m_yCenter;
 }
 
 void
-CMSWindowsScreen::fakeMouseButton(ButtonID id, bool press)
+MSWindowsScreen::fakeMouseButton(ButtonID id, bool press)
 {
 	m_desks->fakeMouseButton(id, press);
 
@@ -753,7 +753,7 @@ CMSWindowsScreen::fakeMouseButton(ButtonID id, bool press)
 }
 
 void
-CMSWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y)
+MSWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y)
 {
 	m_desks->fakeMouseMove(x, y);
 	if (m_buttons[kButtonLeft]) {
@@ -762,25 +762,25 @@ CMSWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y)
 }
 
 void
-CMSWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
+MSWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 {
 	m_desks->fakeMouseRelativeMove(dx, dy);
 }
 
 void
-CMSWindowsScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
+MSWindowsScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
 	m_desks->fakeMouseWheel(xDelta, yDelta);
 }
 
 void
-CMSWindowsScreen::updateKeys()
+MSWindowsScreen::updateKeys()
 {
 	m_desks->updateKeys();
 }
 
 void
-CMSWindowsScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
+MSWindowsScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
 				KeyButton button)
 {
 	PlatformScreen::fakeKeyDown(id, mask, button);
@@ -788,7 +788,7 @@ CMSWindowsScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
 }
 
 bool
-CMSWindowsScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
+MSWindowsScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 				SInt32 count, KeyButton button)
 {
 	bool result = PlatformScreen::fakeKeyRepeat(id, mask, count, button);
@@ -797,7 +797,7 @@ CMSWindowsScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 }
 
 bool
-CMSWindowsScreen::fakeKeyUp(KeyButton button)
+MSWindowsScreen::fakeKeyUp(KeyButton button)
 {
 	bool result = PlatformScreen::fakeKeyUp(button);
 	updateForceShowCursor();
@@ -805,14 +805,14 @@ CMSWindowsScreen::fakeKeyUp(KeyButton button)
 }
 
 void
-CMSWindowsScreen::fakeAllKeysUp()
+MSWindowsScreen::fakeAllKeysUp()
 {
 	PlatformScreen::fakeAllKeysUp();
 	updateForceShowCursor();
 }
 
 HCURSOR
-CMSWindowsScreen::createBlankCursor() const
+MSWindowsScreen::createBlankCursor() const
 {
 	// create a transparent cursor
 	int cw = GetSystemMetrics(SM_CXCURSOR);
@@ -829,7 +829,7 @@ CMSWindowsScreen::createBlankCursor() const
 }
 
 void
-CMSWindowsScreen::destroyCursor(HCURSOR cursor) const
+MSWindowsScreen::destroyCursor(HCURSOR cursor) const
 {
 	if (cursor != NULL) {
 		DestroyCursor(cursor);
@@ -837,12 +837,12 @@ CMSWindowsScreen::destroyCursor(HCURSOR cursor) const
 }
 
 ATOM
-CMSWindowsScreen::createWindowClass() const
+MSWindowsScreen::createWindowClass() const
 {
 	WNDCLASSEX classInfo;
 	classInfo.cbSize        = sizeof(classInfo);
 	classInfo.style         = CS_DBLCLKS | CS_NOCLOSE;
-	classInfo.lpfnWndProc   = &CMSWindowsScreen::wndProc;
+	classInfo.lpfnWndProc   = &MSWindowsScreen::wndProc;
 	classInfo.cbClsExtra    = 0;
 	classInfo.cbWndExtra    = 0;
 	classInfo.hInstance     = s_windowInstance;
@@ -856,7 +856,7 @@ CMSWindowsScreen::createWindowClass() const
 }
 
 void
-CMSWindowsScreen::destroyClass(ATOM windowClass) const
+MSWindowsScreen::destroyClass(ATOM windowClass) const
 {
 	if (windowClass != 0) {
 		UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass), s_windowInstance);
@@ -864,7 +864,7 @@ CMSWindowsScreen::destroyClass(ATOM windowClass) const
 }
 
 HWND
-CMSWindowsScreen::createWindow(ATOM windowClass, const char* name) const
+MSWindowsScreen::createWindow(ATOM windowClass, const char* name) const
 {
 	HWND window = CreateWindowEx(WS_EX_TOPMOST |
 									WS_EX_TRANSPARENT |
@@ -884,7 +884,7 @@ CMSWindowsScreen::createWindow(ATOM windowClass, const char* name) const
 }
 
 HWND
-CMSWindowsScreen::createDropWindow(ATOM windowClass, const char* name) const
+MSWindowsScreen::createDropWindow(ATOM windowClass, const char* name) const
 {
 	HWND window = CreateWindowEx(
 		WS_EX_TOPMOST |
@@ -907,7 +907,7 @@ CMSWindowsScreen::createDropWindow(ATOM windowClass, const char* name) const
 }
 
 void
-CMSWindowsScreen::destroyWindow(HWND hwnd) const
+MSWindowsScreen::destroyWindow(HWND hwnd) const
 {
 	if (hwnd != NULL) {
 		DestroyWindow(hwnd);
@@ -915,13 +915,13 @@ CMSWindowsScreen::destroyWindow(HWND hwnd) const
 }
 
 void
-CMSWindowsScreen::sendEvent(Event::Type type, void* data)
+MSWindowsScreen::sendEvent(Event::Type type, void* data)
 {
 	m_events->addEvent(Event(type, getEventTarget(), data));
 }
 
 void
-CMSWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id)
+MSWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id)
 {
 	ClipboardInfo* info   = (ClipboardInfo*)malloc(sizeof(ClipboardInfo));
 	if(info == NULL) {
@@ -934,7 +934,7 @@ CMSWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id)
 }
 
 void
-CMSWindowsScreen::handleSystemEvent(const Event& event, void*)
+MSWindowsScreen::handleSystemEvent(const Event& event, void*)
 {
 	MSG* msg = reinterpret_cast<MSG*>(event.getData());
 	assert(msg != NULL);
@@ -950,7 +950,7 @@ CMSWindowsScreen::handleSystemEvent(const Event& event, void*)
 }
 
 void
-CMSWindowsScreen::updateButtons()
+MSWindowsScreen::updateButtons()
 {
 	int numButtons               = GetSystemMetrics(SM_CMOUSEBUTTONS);
 	m_buttons[kButtonNone]       = false;
@@ -964,13 +964,13 @@ CMSWindowsScreen::updateButtons()
 }
 
 IKeyState*
-CMSWindowsScreen::getKeyState() const
+MSWindowsScreen::getKeyState() const
 {
 	return m_keyState;
 }
 
 bool
-CMSWindowsScreen::onPreDispatch(HWND hwnd,
+MSWindowsScreen::onPreDispatch(HWND hwnd,
 				UINT message, WPARAM wParam, LPARAM lParam)
 {
 	// handle event
@@ -991,7 +991,7 @@ CMSWindowsScreen::onPreDispatch(HWND hwnd,
 }
 
 bool
-CMSWindowsScreen::onPreDispatchPrimary(HWND,
+MSWindowsScreen::onPreDispatchPrimary(HWND,
 				UINT message, WPARAM wParam, LPARAM lParam)
 {
 	LOG((CLOG_DEBUG5 "handling pre-dispatch primary"));
@@ -1049,7 +1049,7 @@ CMSWindowsScreen::onPreDispatchPrimary(HWND,
 }
 
 bool
-CMSWindowsScreen::onEvent(HWND, UINT msg,
+MSWindowsScreen::onEvent(HWND, UINT msg,
 				WPARAM wParam, LPARAM lParam, LRESULT* result)
 {
 	switch (msg) {
@@ -1109,14 +1109,14 @@ CMSWindowsScreen::onEvent(HWND, UINT msg,
 }
 
 bool
-CMSWindowsScreen::onMark(UInt32 mark)
+MSWindowsScreen::onMark(UInt32 mark)
 {
 	m_markReceived = mark;
 	return true;
 }
 
 bool
-CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
+MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 {
 	static const KeyModifierMask s_ctrlAlt =
 		KeyModifierControl | KeyModifierAlt;
@@ -1245,7 +1245,7 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 }
 
 bool
-CMSWindowsScreen::onHotKey(WPARAM wParam, LPARAM lParam)
+MSWindowsScreen::onHotKey(WPARAM wParam, LPARAM lParam)
 {
 	// get the key info
 	KeyModifierMask state = getActiveModifiers();
@@ -1292,7 +1292,7 @@ CMSWindowsScreen::onHotKey(WPARAM wParam, LPARAM lParam)
 }
 
 bool
-CMSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
+MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 {
 	// get which button
 	bool pressed    = mapPressFromEvent(wParam, lParam);
@@ -1346,7 +1346,7 @@ CMSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 //      - this actually records the current x,y as "last" a second time (it seems)
 //   5. sends the delta movement to the client (could be +1,+1 or -1,+4 for example)
 bool
-CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
+MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 {
 	// compute motion delta (relative to the last known
 	// mouse position)
@@ -1409,7 +1409,7 @@ CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 }
 
 bool
-CMSWindowsScreen::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
+MSWindowsScreen::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
 {
 	// ignore message if posted prior to last mark change
 	if (!ignore()) {
@@ -1420,7 +1420,7 @@ CMSWindowsScreen::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
 }
 
 bool
-CMSWindowsScreen::onScreensaver(bool activated)
+MSWindowsScreen::onScreensaver(bool activated)
 {
 	// ignore this message if there are any other screen saver
 	// messages already in the queue.  this is important because
@@ -1460,7 +1460,7 @@ CMSWindowsScreen::onScreensaver(bool activated)
 }
 
 bool
-CMSWindowsScreen::onDisplayChange()
+MSWindowsScreen::onDisplayChange()
 {
 	// screen resolution may have changed.  save old shape.
 	SInt32 xOld = m_x, yOld = m_y, wOld = m_w, hOld = m_h;
@@ -1494,11 +1494,11 @@ CMSWindowsScreen::onDisplayChange()
 }
 
 bool
-CMSWindowsScreen::onClipboardChange()
+MSWindowsScreen::onClipboardChange()
 {
 	// now notify client that somebody changed the clipboard (unless
 	// we're the owner).
-	if (!CMSWindowsClipboard::isOwnedBySynergy()) {
+	if (!MSWindowsClipboard::isOwnedBySynergy()) {
 		if (m_ownClipboard) {
 			LOG((CLOG_DEBUG "clipboard changed: lost ownership"));
 			m_ownClipboard = false;
@@ -1515,7 +1515,7 @@ CMSWindowsScreen::onClipboardChange()
 }
 
 void
-CMSWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
+MSWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
 {
 	// send an event that we can recognize before the mouse warp
 	PostThreadMessage(GetCurrentThreadId(), SYNERGY_MSG_PRE_WARP, x, y);
@@ -1565,7 +1565,7 @@ CMSWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
 }
 
 void
-CMSWindowsScreen::nextMark()
+MSWindowsScreen::nextMark()
 {
 	// next mark
 	++m_mark;
@@ -1575,13 +1575,13 @@ CMSWindowsScreen::nextMark()
 }
 
 bool
-CMSWindowsScreen::ignore() const
+MSWindowsScreen::ignore() const
 {
 	return (m_mark != m_markReceived);
 }
 
 void
-CMSWindowsScreen::updateScreenShape()
+MSWindowsScreen::updateScreenShape()
 {
 	// get shape
 	m_x = GetSystemMetrics(SM_XVIRTUALSCREEN);
@@ -1602,7 +1602,7 @@ CMSWindowsScreen::updateScreenShape()
 }
 
 void
-CMSWindowsScreen::handleFixes(const Event&, void*)
+MSWindowsScreen::handleFixes(const Event&, void*)
 {
 	// fix clipboard chain
 	fixClipboardViewer();
@@ -1614,7 +1614,7 @@ CMSWindowsScreen::handleFixes(const Event&, void*)
 }
 
 void
-CMSWindowsScreen::fixClipboardViewer()
+MSWindowsScreen::fixClipboardViewer()
 {
 	// XXX -- disable this code for now.  somehow it can cause an infinite
 	// recursion in the WM_DRAWCLIPBOARD handler.  either we're sending
@@ -1631,12 +1631,12 @@ CMSWindowsScreen::fixClipboardViewer()
 }
 
 void
-CMSWindowsScreen::enableSpecialKeys(bool enable) const
+MSWindowsScreen::enableSpecialKeys(bool enable) const
 {
 }
 
 ButtonID
-CMSWindowsScreen::mapButtonFromEvent(WPARAM msg, LPARAM button) const
+MSWindowsScreen::mapButtonFromEvent(WPARAM msg, LPARAM button) const
 {
 	switch (msg) {
 	case WM_LBUTTONDOWN:
@@ -1690,7 +1690,7 @@ CMSWindowsScreen::mapButtonFromEvent(WPARAM msg, LPARAM button) const
 }
 
 bool
-CMSWindowsScreen::mapPressFromEvent(WPARAM msg, LPARAM) const
+MSWindowsScreen::mapPressFromEvent(WPARAM msg, LPARAM) const
 {
 	switch (msg) {
 	case WM_LBUTTONDOWN:
@@ -1727,7 +1727,7 @@ CMSWindowsScreen::mapPressFromEvent(WPARAM msg, LPARAM) const
 }
 
 void
-CMSWindowsScreen::updateKeysCB(void*)
+MSWindowsScreen::updateKeysCB(void*)
 {
 	// record which keys we think are down
 	bool down[IKeyState::kNumButtons];
@@ -1760,7 +1760,7 @@ CMSWindowsScreen::updateKeysCB(void*)
 }
 
 void
-CMSWindowsScreen::forceShowCursor()
+MSWindowsScreen::forceShowCursor()
 {
 	// check for mouse
 	m_hasMouse = (GetSystemMetrics(SM_MOUSEPRESENT) != 0);
@@ -1793,7 +1793,7 @@ CMSWindowsScreen::forceShowCursor()
 }
 
 void
-CMSWindowsScreen::updateForceShowCursor()
+MSWindowsScreen::updateForceShowCursor()
 {
 	DWORD oldFlags = m_mouseKeys.dwFlags;
 
@@ -1814,7 +1814,7 @@ CMSWindowsScreen::updateForceShowCursor()
 }
 
 LRESULT CALLBACK
-CMSWindowsScreen::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+MSWindowsScreen::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	assert(s_screen != NULL);
 
@@ -1827,7 +1827,7 @@ CMSWindowsScreen::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 }
 
 void
-CMSWindowsScreen::fakeLocalKey(KeyButton button, bool press) const
+MSWindowsScreen::fakeLocalKey(KeyButton button, bool press) const
 {
 	INPUT input;
 	input.type = INPUT_KEYBOARD;
@@ -1840,10 +1840,10 @@ CMSWindowsScreen::fakeLocalKey(KeyButton button, bool press) const
 }
 
 //
-// CMSWindowsScreen::HotKeyItem
+// MSWindowsScreen::HotKeyItem
 //
 
-CMSWindowsScreen::HotKeyItem::HotKeyItem(UINT keycode, UINT mask) :
+MSWindowsScreen::HotKeyItem::HotKeyItem(UINT keycode, UINT mask) :
 	m_keycode(keycode),
 	m_mask(mask)
 {
@@ -1851,27 +1851,27 @@ CMSWindowsScreen::HotKeyItem::HotKeyItem(UINT keycode, UINT mask) :
 }
 
 UINT
-CMSWindowsScreen::HotKeyItem::getVirtualKey() const
+MSWindowsScreen::HotKeyItem::getVirtualKey() const
 {
 	return m_keycode;
 }
 
 bool
-CMSWindowsScreen::HotKeyItem::operator<(const HotKeyItem& x) const
+MSWindowsScreen::HotKeyItem::operator<(const HotKeyItem& x) const
 {
 	return (m_keycode < x.m_keycode ||
 			(m_keycode == x.m_keycode && m_mask < x.m_mask));
 }
 
 void
-CMSWindowsScreen::fakeDraggingFiles(DragFileList fileList)
+MSWindowsScreen::fakeDraggingFiles(DragFileList fileList)
 {
 	// possible design flaw: this function stops a "not implemented"
 	// exception from being thrown.
 }
 
 String&
-CMSWindowsScreen::getDraggingFilename()
+MSWindowsScreen::getDraggingFilename()
 {
 	if (m_draggingStarted) {
 		m_dropTarget->clearDraggingFilename();
@@ -1927,13 +1927,13 @@ CMSWindowsScreen::getDraggingFilename()
 }
 
 const String&
-CMSWindowsScreen::getDropTarget() const
+MSWindowsScreen::getDropTarget() const
 {
 	return m_desktopPath;
 }
 
 bool
-CMSWindowsScreen::isModifierRepeat(KeyModifierMask oldState, KeyModifierMask state, WPARAM wParam) const
+MSWindowsScreen::isModifierRepeat(KeyModifierMask oldState, KeyModifierMask state, WPARAM wParam) const
 {
 	bool result = false;
 

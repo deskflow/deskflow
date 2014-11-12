@@ -21,11 +21,11 @@
 #include "platform/MSWindowsClipboard.h"
 
 //! Convert to/from some text encoding
-class CMSWindowsClipboardBitmapConverter :
+class MSWindowsClipboardBitmapConverter :
 				public IMSWindowsClipboardConverter {
 public:
-	CMSWindowsClipboardBitmapConverter();
-	virtual ~CMSWindowsClipboardBitmapConverter();
+	MSWindowsClipboardBitmapConverter();
+	virtual ~MSWindowsClipboardBitmapConverter();
 
 	// IMSWindowsClipboardConverter overrides
 	virtual IClipboard::EFormat

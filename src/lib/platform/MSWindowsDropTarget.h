@@ -22,12 +22,12 @@
 #include <Windows.h>
 #include <oleidl.h>
 
-class CMSWindowsScreen;
+class MSWindowsScreen;
 
-class CMSWindowsDropTarget : public IDropTarget {
+class MSWindowsDropTarget : public IDropTarget {
 public:
-	CMSWindowsDropTarget();
-	~CMSWindowsDropTarget();
+	MSWindowsDropTarget();
+	~MSWindowsDropTarget();
 
 	// IUnknown implementation
 	HRESULT __stdcall	QueryInterface(REFIID iid, void** object);
@@ -44,7 +44,7 @@ public:
 	std::string			getDraggingFilename();
 	void				clearDraggingFilename();
 
-	static CMSWindowsDropTarget& 
+	static MSWindowsDropTarget& 
 						instance();
 
 private:
@@ -54,6 +54,6 @@ private:
 	bool				m_allowDrop;
 	std::string			m_dragFilename;
 	
-	static CMSWindowsDropTarget*
+	static MSWindowsDropTarget*
 						s_instance;
 };

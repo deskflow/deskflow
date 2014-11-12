@@ -26,10 +26,10 @@
 class IEventQueue;
 
 //! Event queue buffer for Win32
-class CMSWindowsEventQueueBuffer : public IEventQueueBuffer {
+class MSWindowsEventQueueBuffer : public IEventQueueBuffer {
 public:
-	CMSWindowsEventQueueBuffer(IEventQueue* events);
-	virtual ~CMSWindowsEventQueueBuffer();
+	MSWindowsEventQueueBuffer(IEventQueue* events);
+	virtual ~MSWindowsEventQueueBuffer();
 
 	// IEventQueueBuffer overrides
 	virtual	void		init() { }

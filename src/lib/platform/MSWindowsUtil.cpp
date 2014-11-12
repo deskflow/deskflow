@@ -23,11 +23,11 @@
 #include <stdio.h>
 
 //
-// CMSWindowsUtil
+// MSWindowsUtil
 //
 
 String
-CMSWindowsUtil::getString(HINSTANCE instance, DWORD id)
+MSWindowsUtil::getString(HINSTANCE instance, DWORD id)
 {
 	char buffer[1024];
 	int size = static_cast<int>(sizeof(buffer) / sizeof(buffer[0]));
@@ -57,7 +57,7 @@ CMSWindowsUtil::getString(HINSTANCE instance, DWORD id)
 }
 
 String
-CMSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
+MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
 {
 	char* buffer;
 	if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
