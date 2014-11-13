@@ -9,10 +9,10 @@ To install on Mac OS X with the .zip distribution (first seen in 1.3.6) you must
   4. Copy the binaries to /usr/bin using: cp synergy* /usr/bin
 
 How to enable the root user in Mac OS X:
-  http://support.apple.com/kb/ht1528
+  http://support.apple.com/en-us/ht1528
 
 Once the binaries have been copied to /usr/bin, you should follow the configuration guide:
   http://synergy2.sourceforge.net/configuration.html
 
 If you have any problems, see the [[Support]] page:
-  http://synergy-project.org/support
+  http://synergy-project.org/help/
