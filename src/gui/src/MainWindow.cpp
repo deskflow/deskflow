@@ -50,6 +50,8 @@
 #if defined(Q_OS_WIN)
 static const char synergyConfigName[] = "synergy.sgc";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
+static const char bonjourUrl[] = "http://synergy-project.org/bonjour/BonjourPSSetup.exe";
+static const char bonjourInstaller[] = "BonjourSetup.exe";
 #else
 static const char synergyConfigName[] = "synergy.conf";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
@@ -61,9 +63,6 @@ static const char* synergyIconFiles[] =
 	":/res/icons/16x16/synergy-disconnected.png",
 	":/res/icons/16x16/synergy-connected.png"
 };
-
-static const char bonjourUrl[] = "http://synergy-project.org/bonjour/BonjourPSSetup.exe";
-static const char bonjourInstaller[] = "BonjourSetup.exe";
 
 MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_Settings(settings),
@@ -1008,6 +1007,7 @@ void MainWindow::downloadBonjour()
 
 void MainWindow::installBonjour()
 {
+#if defined(Q_OS_WIN)
 	QString tempLocation = QDesktopServices::storageLocation(
 								QDesktopServices::TempLocation);
 	QString filename = tempLocation;
@@ -1031,6 +1031,7 @@ void MainWindow::installBonjour()
 	QDesktopServices::openUrl(QUrl("file:///" + filename));
 
 	m_DownloadMessageBox->hide();
+#endif
 }
 
 void MainWindow::promptAutoConnect()
