@@ -45,11 +45,13 @@ class QTabWidget;
 class QCheckBox;
 class QRadioButton;
 class QTemporaryFile;
+class QMessageBox;
 
 class LogDialog;
 class QSynergyApplication;
 class SetupWizard;
 class ZeroconfService;
+class DataDownloader;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase
 {
@@ -169,10 +171,13 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QMenu* m_pMenuWindow;
 		QMenu* m_pMenuHelp;
 		ZeroconfService* m_pZeroconfService;
+		DataDownloader* m_pDataDownloader;
+		QMessageBox* m_DownloadMessageBox;
 
 private slots:
 	void on_m_pAutoConnectCheckBox_toggled(bool checked);
 	void on_m_pButtonApply_clicked();
+	void installBonjour();
 };
 
 #endif

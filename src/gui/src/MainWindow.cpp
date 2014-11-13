@@ -26,6 +26,7 @@
 #include "SettingsDialog.h"
 #include "SetupWizard.h"
 #include "ZeroconfService.h"
+#include "DataDownloader.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -49,7 +50,6 @@
 #if defined(Q_OS_WIN)
 static const char synergyConfigName[] = "synergy.sgc";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
-static const char BonjourUrl[] = "http://synergy-project.org/bonjour/BonjourPSSetup.exe";
 #else
 static const char synergyConfigName[] = "synergy.conf";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
@@ -61,6 +61,9 @@ static const char* synergyIconFiles[] =
 	":/res/icons/16x16/synergy-disconnected.png",
 	":/res/icons/16x16/synergy-connected.png"
 };
+
+static const char bonjourUrl[] = "http://synergy-project.org/bonjour/BonjourPSSetup.exe";
+static const char bonjourInstaller[] = "BonjourSetup.exe";
 
 MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_Settings(settings),
@@ -77,7 +80,9 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pMenuEdit(NULL),
 	m_pMenuWindow(NULL),
 	m_pMenuHelp(NULL),
-	m_pZeroconfService(NULL)
+	m_pZeroconfService(NULL),
+	m_pDataDownloader(NULL),
+	m_DownloadMessageBox(NULL)
 {
 	setupUi(this);
 
@@ -123,6 +128,10 @@ MainWindow::~MainWindow()
 	saveSettings();
 
 	delete m_pZeroconfService;
+
+	if (m_DownloadMessageBox != NULL) {
+		delete m_DownloadMessageBox;
+	}
 }
 
 void MainWindow::open()
@@ -972,8 +981,51 @@ bool MainWindow::isBonjourRunning()
 void MainWindow::downloadBonjour()
 {
 #if defined(Q_OS_WIN)
-	QDesktopServices::openUrl(QUrl(BonjourUrl));
+	QUrl url(bonjourUrl);
+	if (m_pDataDownloader != NULL) {
+		delete m_pDataDownloader;
+		m_pDataDownloader = NULL;
+	}
+
+	m_pDataDownloader = new DataDownloader(url, this);
+
+	if (m_DownloadMessageBox == NULL) {
+		m_DownloadMessageBox = new QMessageBox();
+		m_DownloadMessageBox->setModal(false);
+		m_DownloadMessageBox->setStandardButtons(0);
+		m_DownloadMessageBox->setText("Installing Bonjour");
+		m_DownloadMessageBox->resize(100, 10);
+	}
+
+	m_DownloadMessageBox->show();
+
+	connect(m_pDataDownloader, SIGNAL(downloaded()), SLOT(installBonjour()));
 #endif
+}
+
+void MainWindow::installBonjour()
+{
+	QString tempLocation = QDesktopServices::storageLocation(
+								QDesktopServices::TempLocation);
+	QString filename = tempLocation;
+	filename.append("\\").append(bonjourInstaller);
+	QFile file(filename);
+	if (!file.open(QIODevice::WriteOnly)) {
+		m_DownloadMessageBox->hide();
+
+		QMessageBox::critical(
+			this, "Synergy",
+			"Failed to download Bonjour installer to location: " +
+			tempLocation + "\n"
+			"Please download the installer manually from this link: \n" +
+			bonjourUrl);
+		return;
+	}
+
+	file.write(m_pDataDownloader->downloadedData());
+	file.close();
+
+	m_DownloadMessageBox->hide();
 }
 
 void MainWindow::promptAutoConnect()
