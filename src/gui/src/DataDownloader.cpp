@@ -24,7 +24,7 @@ DataDownloader::DataDownloader(QUrl url, QObject* parent) :
 				SLOT(fileDownloaded(QNetworkReply*)));
 
 	QNetworkRequest request(url);
-	m_WebCtrl.get(request);
+	m_pReply = m_WebCtrl.get(request);
 }
 
 DataDownloader::~DataDownloader()
@@ -36,10 +36,18 @@ void DataDownloader::fileDownloaded(QNetworkReply* reply)
 {
 	m_DownloadedData = reply->readAll();
 	reply->deleteLater();
-	emit downloaded();
+
+	if (!m_DownloadedData.isEmpty()) {
+		emit downloaded();
+	}
 }
 
 QByteArray DataDownloader::downloadedData() const
 {
 	return m_DownloadedData;
+}
+
+void DataDownloader::cancelDownload()
+{
+	m_pReply->abort();
 }

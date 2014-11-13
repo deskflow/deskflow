@@ -82,7 +82,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pMenuHelp(NULL),
 	m_pZeroconfService(NULL),
 	m_pDataDownloader(NULL),
-	m_DownloadMessageBox(NULL)
+	m_DownloadMessageBox(NULL),
+	m_pCancelButton(NULL)
 {
 	setupUi(this);
 
@@ -988,18 +989,21 @@ void MainWindow::downloadBonjour()
 	}
 
 	m_pDataDownloader = new DataDownloader(url, this);
+	connect(m_pDataDownloader, SIGNAL(downloaded()), SLOT(installBonjour()));
 
 	if (m_DownloadMessageBox == NULL) {
 		m_DownloadMessageBox = new QMessageBox();
-		m_DownloadMessageBox->setModal(false);
-		m_DownloadMessageBox->setStandardButtons(0);
 		m_DownloadMessageBox->setText("Installing Bonjour");
-		m_DownloadMessageBox->resize(100, 10);
+		m_DownloadMessageBox->setStandardButtons(0);
+		m_pCancelButton = m_DownloadMessageBox->addButton(
+			tr("Cancel"), QMessageBox::RejectRole);
 	}
 
-	m_DownloadMessageBox->show();
+	m_DownloadMessageBox->exec();
 
-	connect(m_pDataDownloader, SIGNAL(downloaded()), SLOT(installBonjour()));
+	if (m_DownloadMessageBox->clickedButton() == m_pCancelButton) {
+		m_pDataDownloader->cancelDownload();
+	}
 #endif
 }
 

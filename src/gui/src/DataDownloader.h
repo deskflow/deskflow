@@ -32,6 +32,7 @@ public:
 	virtual ~DataDownloader();
 
 	QByteArray downloadedData() const;
+	void cancelDownload();
 
 signals:
 		void downloaded();
@@ -43,6 +44,7 @@ private:
 
 	QNetworkAccessManager m_WebCtrl;
 	QByteArray m_DownloadedData;
+	QNetworkReply* m_pReply;
 };
 
 #endif // DATADOWNLOADER_H

@@ -46,6 +46,7 @@ class QCheckBox;
 class QRadioButton;
 class QTemporaryFile;
 class QMessageBox;
+class QAbstractButton;
 
 class LogDialog;
 class QSynergyApplication;
@@ -173,6 +174,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		ZeroconfService* m_pZeroconfService;
 		DataDownloader* m_pDataDownloader;
 		QMessageBox* m_DownloadMessageBox;
+		QAbstractButton* m_pCancelButton;
 
 private slots:
 	void on_m_pAutoConnectCheckBox_toggled(bool checked);
