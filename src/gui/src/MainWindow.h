@@ -101,6 +101,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void showConfigureServer() { showConfigureServer(""); }
 		void autoAddScreen(const QString name);
 		void updateZeroconfService();
+		void serverDetected(const QString name);
 
 	public slots:
 		void appendLogRaw(const QString& text);
@@ -177,7 +178,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QAbstractButton* m_pCancelButton;
 
 private slots:
-	void on_m_pAutoConnectCheckBox_toggled(bool checked);
+	void on_m_pComboServerList_currentIndexChanged(QString );
+	void on_m_pCheckBoxAutoConnect_toggled(bool checked);
 	void on_m_pButtonApply_clicked();
 	void installBonjour();
 };

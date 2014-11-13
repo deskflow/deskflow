@@ -116,7 +116,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 		promptAutoConnect();
 	}
 
-	m_pAutoConnectCheckBox->setChecked(appConfig.autoConnect());
+	m_pCheckBoxAutoConnect->setChecked(appConfig.autoConnect());
 }
 
 MainWindow::~MainWindow()
@@ -517,7 +517,20 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 		args << "--log" << appConfig().logFilenameCmd();
 	}
 
-	args << m_pLineEditHostname->text() + ":" + QString::number(appConfig().port());
+	if (m_pCheckBoxAutoConnect->isChecked()) {
+		if (m_pComboServerList->count() == 0) {
+			QMessageBox::warning(this, tr("No server detected"),
+								 tr("Sorry, Synergy doesn't detect any server."));
+			return false;
+		}
+		else {
+			QString serverIp = m_pComboServerList->currentText();
+			args << serverIp + ":" + QString::number(appConfig().port());
+		}
+	}
+	else {
+		args << m_pLineEditHostname->text() + ":" + QString::number(appConfig().port());
+	}
 
 	return true;
 }
@@ -804,6 +817,13 @@ void MainWindow::updateZeroconfService()
 	}
 }
 
+void MainWindow::serverDetected(const QString name)
+{
+	if (m_pComboServerList->findText(name) == -1) {
+		m_pComboServerList->addItem(name);
+	}
+}
+
 void MainWindow::on_m_pGroupClient_toggled(bool on)
 {
 	m_pGroupServer->setChecked(!on);
@@ -905,7 +925,7 @@ void MainWindow::on_m_pButtonApply_clicked()
 	startSynergy();
 }
 
-void MainWindow::on_m_pAutoConnectCheckBox_toggled(bool checked)
+void MainWindow::on_m_pCheckBoxAutoConnect_toggled(bool checked)
 {
 	if (!isBonjourRunning() && checked) {
 		int r = QMessageBox::warning(
@@ -918,13 +938,17 @@ void MainWindow::on_m_pAutoConnectCheckBox_toggled(bool checked)
 			downloadBonjour();
 		}
 
-		m_pAutoConnectCheckBox->setChecked(false);
+		m_pCheckBoxAutoConnect->setChecked(false);
 		return;
 	}
 
 	m_pLineEditHostname->setDisabled(checked);
 	appConfig().setAutoConnect(checked);
 	updateZeroconfService();
+
+	if (!checked) {
+		m_pComboServerList->clear();
+	}
 }
 
 bool MainWindow::isServiceRunning(QString name)
@@ -1050,4 +1074,11 @@ void MainWindow::promptAutoConnect()
 	}
 
 	m_AppConfig.setAutoConnectPrompted(true);
+}
+
+void MainWindow::on_m_pComboServerList_currentIndexChanged(QString )
+{
+	if (m_pComboServerList->count() != 0) {
+		startSynergy();
+	}
 }

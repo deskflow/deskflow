@@ -73,9 +73,9 @@ void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
 {
 	foreach (ZeroconfRecord record, list) {
 		registerService(false);
-		m_pMainWindow->m_pLineEditHostname->setText(record.serviceName);
 		m_pMainWindow->appendLogNote(tr("zeroconf server detected: %1").arg(
 			record.serviceName));
+		m_pMainWindow->serverDetected(record.serviceName);
 	}
 
 	if (!list.isEmpty()) {
