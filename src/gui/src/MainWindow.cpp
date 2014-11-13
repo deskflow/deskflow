@@ -918,10 +918,9 @@ void MainWindow::on_m_pAutoConnectCheckBox_toggled(bool checked)
 		if (r == QMessageBox::Yes) {
 			downloadBonjour();
 		}
-		else {
-			m_pAutoConnectCheckBox->setChecked(false);
-			return;
-		}
+
+		m_pAutoConnectCheckBox->setChecked(false);
+		return;
 	}
 
 	m_pLineEditHostname->setDisabled(checked);
@@ -1028,6 +1027,8 @@ void MainWindow::installBonjour()
 
 	file.write(m_pDataDownloader->downloadedData());
 	file.close();
+
+	QDesktopServices::openUrl(QUrl("file:///" + filename));
 
 	m_DownloadMessageBox->hide();
 }
