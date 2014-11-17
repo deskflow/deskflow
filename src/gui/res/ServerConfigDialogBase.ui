@@ -43,7 +43,7 @@
             <string/>
            </property>
            <property name="pixmap" >
-            <pixmap resource="QSynergy.qrc" >:/res/icons/64x64/user-trash.png</pixmap>
+            <pixmap resource="Synergy.qrc" >:/res/icons/64x64/user-trash.png</pixmap>
            </property>
           </widget>
          </item>
@@ -81,7 +81,7 @@
             <string/>
            </property>
            <property name="pixmap" >
-            <pixmap resource="QSynergy.qrc" >:/res/icons/64x64/video-display.png</pixmap>
+            <pixmap resource="Synergy.qrc" >:/res/icons/64x64/video-display.png</pixmap>
            </property>
           </widget>
          </item>
@@ -637,7 +637,7 @@ Double click on a screen to edit its settings.</string>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="QSynergy.qrc" />
+  <include location="Synergy.qrc" />
  </resources>
  <connections>
   <connection>
