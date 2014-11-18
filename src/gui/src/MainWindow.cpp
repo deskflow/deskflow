@@ -884,21 +884,23 @@ void MainWindow::on_m_pActionSettings_triggered()
 
 void MainWindow::autoAddScreen(const QString name)
 {
-	int r = m_ServerConfig.autoAddScreen(name);
-	if (r != kAutoAddScreenOk) {
-		switch (r) {
-		case kAutoAddScreenManualServer:
-			showConfigureServer(
-				tr("Please add the server (%1) to the grid.")
-					.arg(appConfig().screenName()));
-			break;
+	if (!m_ServerConfig.ignoreAutoConnectClient()) {
+		int r = m_ServerConfig.autoAddScreen(name);
+		if (r != kAutoAddScreenOk) {
+			switch (r) {
+			case kAutoAddScreenManualServer:
+				showConfigureServer(
+					tr("Please add the server (%1) to the grid.")
+						.arg(appConfig().screenName()));
+				break;
 
-		case kAutoAddScreenManualClient:
-			showConfigureServer(
-				tr("Please drag the new client screen (%1) "
-					"to the desired position on the grid.")
-					.arg(name));
-			break;
+			case kAutoAddScreenManualClient:
+				showConfigureServer(
+					tr("Please drag the new client screen (%1) "
+						"to the desired position on the grid.")
+						.arg(name));
+				break;
+			}
 		}
 	}
 }

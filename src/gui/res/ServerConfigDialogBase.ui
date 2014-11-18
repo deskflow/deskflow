@@ -507,7 +507,7 @@ Double click on a screen to edit its settings.</string>
           <item row="4" column="0">
            <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConnectClient">
             <property name="text">
-             <string>Ingore all clients from auto connect</string>
+             <string>Ignore auto connect clients</string>
             </property>
            </widget>
           </item>
