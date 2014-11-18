@@ -21,7 +21,7 @@
 #include <QPushButton>
 #include <QLabel>
 
-AddClientDialog::AddClientDialog(QWidget *parent) :
+AddClientDialog::AddClientDialog(const QString& clientName, QWidget* parent) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::AddClientDialog(),
 	m_AddResult(kAddClientIgnore)
@@ -29,7 +29,7 @@ AddClientDialog::AddClientDialog(QWidget *parent) :
 	setupUi(this);
 
 	m_pLabelHead = new QLabel(this);
-	m_pLabelHead->setText("Client wants to connect...");
+	m_pLabelHead->setText("Client " + clientName + " wants to connect...");
 	gridLayout->addWidget(m_pLabelHead, 0, 1, 1, 1, Qt::AlignCenter);
 
 	QIcon icon(":res/icons/64x64/video-display.png");

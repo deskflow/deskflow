@@ -372,7 +372,7 @@ bool ServerConfig::fixNoServer(const QString& name, int& index)
 
 int ServerConfig::showAddClientDialog(const QString& clientName)
 {
-	AddClientDialog addClientDialog(m_pMainWindow);
+	AddClientDialog addClientDialog(clientName, m_pMainWindow);
 	addClientDialog.exec();
 	int result = addClientDialog.getAddResult();
 

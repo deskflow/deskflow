@@ -38,7 +38,7 @@ class AddClientDialog : public QDialog, public Ui::AddClientDialog
 {
 	Q_OBJECT
 public:
-	AddClientDialog(QWidget *parent = 0);
+	AddClientDialog(const QString& clientName, QWidget* parent = 0);
 	~AddClientDialog();
 
 	int getAddResult() { return m_AddResult; }
