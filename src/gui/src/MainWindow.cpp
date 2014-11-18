@@ -981,7 +981,7 @@ bool MainWindow::isServiceRunning(QString name)
 	delete[] array;
 
 	if (hService == NULL) {
-		appendLogNote("failed to open " + name + "service, error: " +
+		appendLogNote("failed to open " + name + " service, error: " +
 			GetLastError());
 		return false;
 	}
