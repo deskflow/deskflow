@@ -13,7 +13,8 @@ FORMS += res/MainWindowBase.ui \
     res/ActionDialogBase.ui \
     res/HotkeyDialogBase.ui \
     res/SettingsDialogBase.ui \
-    res/SetupWizardBase.ui
+    res/SetupWizardBase.ui \
+    res/AddClientDialogBase.ui
 SOURCES += src/main.cpp \
     src/MainWindow.cpp \
     src/AboutDialog.cpp \
@@ -47,7 +48,8 @@ SOURCES += src/main.cpp \
     src/ZeroconfRegister.cpp \
     src/ZeroconfBrowser.cpp \
     src/ZeroconfService.cpp \
-    src/DataDownloader.cpp
+    src/DataDownloader.cpp \
+    src/AddClientDialog.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -81,7 +83,8 @@ HEADERS += src/MainWindow.h \
     src/ZeroconfRecord.h \
     src/ZeroconfBrowser.h \
     src/ZeroconfService.h \
-    src/DataDownloader.h
+    src/DataDownloader.h \
+    src/AddClientDialog.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 

@@ -19,6 +19,7 @@
 #include "ServerConfig.h"
 #include "Hotkey.h"
 #include "MainWindow.h"
+#include "AddClientDialog.h"
 
 #include <QtCore>
 #include <QMessageBox>
@@ -37,13 +38,6 @@ static const struct
 	{  0, -1, "up" },
 	{  0,  1, "down" },
 
-};
-
-enum {
-	kAddClientRight,
-	kAddClientLeft,
-	kAddClientOther,
-	kAddClientIgnore
 };
 
 const int serverDefaultIndex = 7;
@@ -294,7 +288,7 @@ int ServerConfig::autoAddScreen(const QString name)
 		return kAutoAddScreenOk;
 	}
 
-	int result = showAddClientMsgBox(name);
+	int result = showAddClientDialog(name);
 
 	if (result == kAddClientIgnore) {
 		return kAutoAddScreenIgnore;
@@ -314,6 +308,15 @@ int ServerConfig::autoAddScreen(const QString name)
 		offset = -1;
 		dirIndex = 1;
 	}
+	else if (result == kAddClientUp) {
+		offset = -5;
+		dirIndex = 2;
+	}
+	else if (result == kAddClientDown) {
+		offset = 5;
+		dirIndex = 3;
+	}
+
 
 	int idx = adjacentScreenIndex(startIndex, neighbourDirs[dirIndex].x,
 					neighbourDirs[dirIndex].y);
@@ -364,37 +367,11 @@ bool ServerConfig::fixNoServer(const QString& name, int& index)
 	return fixed;
 }
 
-int ServerConfig::showAddClientMsgBox(const QString& clientName)
+int ServerConfig::showAddClientDialog(const QString& clientName)
 {
-	int result = kAddClientIgnore;
-	QWidget* w = dynamic_cast<QWidget*>(m_pMainWindow);
-	QMessageBox msgBox(w);
-	msgBox.setIcon(QMessageBox::Question);
-	msgBox.setWindowTitle(QObject::tr("Incoming client"));
-	msgBox.setText(QObject::tr(
-		"A new client wants to connect. Which side\n"
-		"of this screen is the client (%1) located?")
-		   .arg(clientName));
-
-	QPushButton* left = msgBox.addButton(QObject::tr("Left"), QMessageBox::AcceptRole);
-	QPushButton* right = msgBox.addButton(QObject::tr("Right"), QMessageBox::AcceptRole);
-	QPushButton* other = msgBox.addButton(QObject::tr("Other"), QMessageBox::AcceptRole);
-	QPushButton* ignore = msgBox.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
-	msgBox.setDefaultButton(ignore);
-
-	msgBox.exec();
-
-	QAbstractButton* button = msgBox.clickedButton();
-	QPushButton* clickedButton = dynamic_cast<QPushButton*>(button);
-	if (clickedButton == right) {
-		result = kAddClientRight;
-	}
-	else if (clickedButton == left) {
-		result = kAddClientLeft;
-	}
-	else if (clickedButton == other) {
-		result = kAddClientOther;
-	}
+	AddClientDialog addClientDialog(m_pMainWindow);
+	addClientDialog.exec();
+	int result = addClientDialog.getAddResult();
 
 	return result;
 }

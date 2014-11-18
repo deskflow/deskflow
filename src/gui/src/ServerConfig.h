@@ -95,7 +95,7 @@ class ServerConfig : public BaseConfig
 	private:
 		bool findScreenName(const QString& name, int& index);
 		bool fixNoServer(const QString& name, int& index);
-		int showAddClientMsgBox(const QString& clientName);
+		int showAddClientDialog(const QString& clientName);
 		void addToFirstEmptyGrid(const QString& clientName);
 
 	private:
