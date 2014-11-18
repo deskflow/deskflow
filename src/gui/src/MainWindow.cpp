@@ -117,6 +117,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	}
 
 	m_pCheckBoxAutoConnect->setChecked(appConfig.autoConnect());
+
+	m_pComboServerList->hide();
 }
 
 MainWindow::~MainWindow()
@@ -822,6 +824,10 @@ void MainWindow::serverDetected(const QString name)
 	if (m_pComboServerList->findText(name) == -1) {
 		// Note: the first added item triggers startSynergy
 		m_pComboServerList->addItem(name);
+	}
+
+	if (m_pComboServerList->count() > 1) {
+		m_pComboServerList->show();
 	}
 }
 
