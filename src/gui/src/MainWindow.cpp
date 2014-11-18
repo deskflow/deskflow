@@ -505,14 +505,6 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 	app = QString("\"%1\"").arg(app);
 #endif
 
-	if (m_pLineEditHostname->text().isEmpty())
-	{
-		show();
-		QMessageBox::warning(this, tr("Hostname is empty"),
-							 tr("Please fill in a hostname for the synergy client to connect to."));
-		return false;
-	}
-
 	if (appConfig().logToFile())
 	{
 		appConfig().persistLogDir();
@@ -531,6 +523,13 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 		}
 	}
 	else {
+		if (m_pLineEditHostname->text().isEmpty()) {
+			show();
+			QMessageBox::warning(this, tr("Hostname is empty"),
+								 tr("Please fill in a hostname for the synergy client to connect to."));
+			return false;
+		}
+
 		args << m_pLineEditHostname->text() + ":" + QString::number(appConfig().port());
 	}
 
