@@ -833,13 +833,17 @@ void MainWindow::serverDetected(const QString name)
 void MainWindow::on_m_pGroupClient_toggled(bool on)
 {
 	m_pGroupServer->setChecked(!on);
-	updateZeroconfService();
+	if (on) {
+		updateZeroconfService();
+	}
 }
 
 void MainWindow::on_m_pGroupServer_toggled(bool on)
 {
 	m_pGroupClient->setChecked(!on);
-	updateZeroconfService();
+	if (on) {
+		updateZeroconfService();
+	}
 }
 
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
