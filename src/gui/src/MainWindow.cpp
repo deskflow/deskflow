@@ -1026,8 +1026,8 @@ void MainWindow::downloadBonjour()
 	connect(m_pDataDownloader, SIGNAL(downloaded()), SLOT(installBonjour()));
 
 	if (m_DownloadMessageBox == NULL) {
-		m_DownloadMessageBox = new QMessageBox();
-		m_DownloadMessageBox->setText("Installing Bonjour");
+		m_DownloadMessageBox = new QMessageBox(this);
+		m_DownloadMessageBox->setText("Installing Bonjour, please wait...");
 		m_DownloadMessageBox->setStandardButtons(0);
 		m_pCancelButton = m_DownloadMessageBox->addButton(
 			tr("Cancel"), QMessageBox::RejectRole);
