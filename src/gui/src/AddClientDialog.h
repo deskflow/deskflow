@@ -41,12 +41,14 @@ public:
 	AddClientDialog(const QString& clientName, QWidget* parent = 0);
 	~AddClientDialog();
 
-	int getAddResult() { return m_AddResult; }
+	int addResult() { return m_AddResult; }
+	bool ignoreAutoConnectClient() { return m_IgnoreAutoConnectClient; }
 
 protected:
 	void changeEvent(QEvent *e);
 
 private slots:
+	void on_m_pCheckBoxIgnoreClient_toggled(bool checked);
 	void handleButtonLeft();
 	void handleButtonUp();
 	void handleButtonRight();
@@ -59,8 +61,8 @@ private:
 	QPushButton* m_pButtonRight;
 	QPushButton* m_pButtonDown;
 	QLabel* m_pLabelCenter;
-	QLabel* m_pLabelHead;
 	int m_AddResult;
+	bool m_IgnoreAutoConnectClient;
 };
 
 #endif // ADDCLIENTDIALOG_H

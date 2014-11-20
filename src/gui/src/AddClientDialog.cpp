@@ -24,13 +24,13 @@
 AddClientDialog::AddClientDialog(const QString& clientName, QWidget* parent) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::AddClientDialog(),
-	m_AddResult(kAddClientIgnore)
+	m_AddResult(kAddClientIgnore),
+	m_IgnoreAutoConnectClient(false)
 {
 	setupUi(this);
 
-	m_pLabelHead = new QLabel(this);
-	m_pLabelHead->setText("Client " + clientName + " wants to connect...");
-	gridLayout->addWidget(m_pLabelHead, 0, 1, 1, 1, Qt::AlignCenter);
+	m_pLabelHead->setText("A client wants to connect. "
+					"Please choose a location for " + clientName + ".");
 
 	QIcon icon(":res/icons/64x64/video-display.png");
 	QSize IconSize(32,32);
@@ -74,7 +74,6 @@ AddClientDialog::~AddClientDialog()
 	delete m_pButtonDown;
 	delete m_pButtonLeft;
 	delete m_pButtonRight;
-	delete m_pLabelHead;
 	delete m_pLabelCenter;
 }
 
@@ -118,4 +117,9 @@ void AddClientDialog::handleButtonAdvanced()
 {
 	m_AddResult = kAddClientOther;
 	close();
+}
+
+void AddClientDialog::on_m_pCheckBoxIgnoreClient_toggled(bool checked)
+{
+	m_IgnoreAutoConnectClient = checked;
 }

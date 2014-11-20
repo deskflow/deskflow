@@ -374,7 +374,8 @@ int ServerConfig::showAddClientDialog(const QString& clientName)
 {
 	AddClientDialog addClientDialog(clientName, m_pMainWindow);
 	addClientDialog.exec();
-	int result = addClientDialog.getAddResult();
+	int result = addClientDialog.addResult();
+	m_IgnoreAutoConnectClient = addClientDialog.ignoreAutoConnectClient();
 
 	return result;
 }
