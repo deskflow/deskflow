@@ -940,7 +940,7 @@ void MainWindow::on_m_pButtonApply_clicked()
 void MainWindow::on_m_pCheckBoxAutoConnect_toggled(bool checked)
 {
 	if (!isBonjourRunning() && checked) {
-		int r = QMessageBox::warning(
+		int r = QMessageBox::information(
 			this, tr("Synergy"),
 			tr("Auto connect feature requires Bonjour installed.\n\n"
 			   "Do you want to install Bonjour?"),
@@ -1072,7 +1072,7 @@ void MainWindow::installBonjour()
 
 void MainWindow::promptAutoConnect()
 {
-	int r = QMessageBox::warning(
+	int r = QMessageBox::question(
 		this, tr("Synergy"),
 		tr("Do you want to enable auto connect?\n\n"
 		   "This feature helps you establish the connection."),
