@@ -83,10 +83,6 @@ void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
 			record.serviceName));
 		m_pMainWindow->serverDetected(record.serviceName);
 	}
-
-	if (!list.isEmpty()) {
-		m_pMainWindow->startSynergy();
-	}
 }
 
 void ZeroconfService::clientDetected(const QList<ZeroconfRecord>& list)
