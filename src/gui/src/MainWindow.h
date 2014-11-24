@@ -34,6 +34,8 @@
 #include "IpcClient.h"
 #include "Ipc.h"
 
+#include <QMutex>
+
 class QAction;
 class QMenu;
 class QLineEdit;
@@ -176,6 +178,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		DataDownloader* m_pDataDownloader;
 		QMessageBox* m_DownloadMessageBox;
 		QAbstractButton* m_pCancelButton;
+		QMutex m_Mutex;
 
 private slots:
 	void on_m_pComboServerList_currentIndexChanged(QString );

@@ -804,6 +804,8 @@ void MainWindow::changeEvent(QEvent* event)
 
 void MainWindow::updateZeroconfService()
 {
+	QMutexLocker locker(&m_Mutex);
+
 	if (isBonjourRunning()) {
 		if (!m_AppConfig.wizardShouldRun()) {
 			if (m_pZeroconfService) {
@@ -960,6 +962,7 @@ void MainWindow::on_m_pCheckBoxAutoConnect_toggled(bool checked)
 
 	if (!checked) {
 		m_pComboServerList->clear();
+		m_pComboServerList->hide();
 	}
 }
 
