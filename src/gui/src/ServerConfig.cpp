@@ -288,7 +288,7 @@ int ServerConfig::autoAddScreen(const QString name)
 	}
 	if (findScreenName(name, targetIndex)) {
 		// already exists.
-		return kAutoAddScreenOk;
+		return kAutoAddScreenIgnore;
 	}
 
 	int result = showAddClientDialog(name);

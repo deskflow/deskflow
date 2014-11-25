@@ -910,6 +910,9 @@ void MainWindow::autoAddScreen(const QString name)
 				break;
 			}
 		}
+		else {
+			startSynergy();
+		}
 	}
 }
 
