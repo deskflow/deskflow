@@ -28,6 +28,10 @@ ZeroconfBrowser::ZeroconfBrowser(QObject* parent) :
 
 ZeroconfBrowser::~ZeroconfBrowser()
 {
+	if (m_pSocket) {
+		delete m_pSocket;
+	}
+
 	if (m_DnsServiceRef) {
 		DNSServiceRefDeallocate(m_DnsServiceRef);
 		m_DnsServiceRef = 0;
