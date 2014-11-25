@@ -96,7 +96,8 @@ ArchNetAddressImpl::alloc(size_t size)
 // ArchNetworkWinsock
 //
 
-ArchNetworkWinsock::ArchNetworkWinsock()
+ArchNetworkWinsock::ArchNetworkWinsock() :
+	m_mutex(NULL)
 {
 }
 
@@ -109,7 +110,9 @@ ArchNetworkWinsock::~ArchNetworkWinsock()
 		WSACleanup_winsock = NULL;
 		s_networkModule    = NULL;
 	}
-	ARCH->closeMutex(m_mutex);
+	if (m_mutex != NULL) {
+		ARCH->closeMutex(m_mutex);
+	}
 
 	EventList::iterator it;
 	for (it = m_unblockEvents.begin(); it != m_unblockEvents.end(); it++) {

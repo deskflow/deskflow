@@ -39,7 +39,10 @@ static const UINT		kFirstReceiverID = WM_USER + 14;
 ArchTaskBarWindows*	ArchTaskBarWindows::s_instance    = NULL;
 
 ArchTaskBarWindows::ArchTaskBarWindows() :
-	m_nextID(kFirstReceiverID)
+	m_nextID(kFirstReceiverID),
+	m_thread(NULL),
+	m_condVar(NULL),
+	m_mutex(NULL)
 {
 	// save the singleton instance
 	s_instance    = this;
@@ -52,8 +55,12 @@ ArchTaskBarWindows::~ArchTaskBarWindows()
 		ARCH->wait(m_thread, -1.0);
 		ARCH->closeThread(m_thread);
 	}
-	ARCH->closeCondVar(m_condVar);
-	ARCH->closeMutex(m_mutex);
+	if (m_condVar != NULL) {
+		ARCH->closeCondVar(m_condVar);
+	}
+	if (m_mutex != NULL) {
+		ARCH->closeMutex(m_mutex);
+	}
 	s_instance = NULL;
 }
 
