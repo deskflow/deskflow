@@ -25,9 +25,6 @@ main(int argc, char** argv)
 	// record window instance for tray icon, etc
 	ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
-	
-	Arch arch;
-	arch.init();
 
 	ToolApp app;
 	return app.run(argc, argv);
