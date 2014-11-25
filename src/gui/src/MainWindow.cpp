@@ -513,8 +513,8 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 
 	if (m_pCheckBoxAutoConnect->isChecked()) {
 		if (m_pComboServerList->count() == 0) {
-			QMessageBox::warning(this, tr("No server detected"),
-								 tr("Sorry, Synergy doesn't detect any server."));
+			QMessageBox::information(this, tr("No server detected"),
+								 tr("Sorry, Synergy hasn't detected any server."));
 			return false;
 		}
 		else {
