@@ -112,10 +112,6 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	setMinimumSize(size());
 #endif
 
-	if (!appConfig.autoConnectPrompted()) {
-		promptAutoConnect();
-	}
-
 	m_pCheckBoxAutoConnect->setChecked(appConfig.autoConnect());
 
 	m_pComboServerList->hide();
@@ -143,6 +139,10 @@ void MainWindow::open()
 	showNormal();
 
 	m_VersionChecker.checkLatest();
+
+	if (!appConfig().autoConnectPrompted()) {
+		promptAutoConnect();
+	}
 
 	// only start if user has previously started. this stops the gui from
 	// auto hiding before the user has configured synergy (which of course
@@ -1083,9 +1083,11 @@ void MainWindow::promptAutoConnect()
 
 	if (r == QMessageBox::Yes) {
 		m_AppConfig.setAutoConnect(true);
+		m_pCheckBoxAutoConnect->setChecked(true);
 	}
 	else {
 		m_AppConfig.setAutoConnect(false);
+		m_pCheckBoxAutoConnect->setChecked(false);
 	}
 
 	m_AppConfig.setAutoConnectPrompted(true);
