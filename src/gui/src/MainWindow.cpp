@@ -511,27 +511,24 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 		args << "--log" << appConfig().logFilenameCmd();
 	}
 
+	// check auto connect first, if it is disabled or no server detected,
+	// use line edit host name if it is not empty
 	if (m_pCheckBoxAutoConnect->isChecked()) {
-		if (m_pComboServerList->count() == 0) {
-			QMessageBox::information(this, tr("No server detected"),
-								 tr("Sorry, Synergy hasn't detected any server."));
-			return false;
-		}
-		else {
+		if (m_pComboServerList->count() != 0) {
 			QString serverIp = m_pComboServerList->currentText();
 			args << serverIp + ":" + QString::number(appConfig().port());
+			return true;
 		}
 	}
-	else {
-		if (m_pLineEditHostname->text().isEmpty()) {
-			show();
-			QMessageBox::warning(this, tr("Hostname is empty"),
-								 tr("Please fill in a hostname for the synergy client to connect to."));
-			return false;
-		}
 
-		args << m_pLineEditHostname->text() + ":" + QString::number(appConfig().port());
+	if (m_pLineEditHostname->text().isEmpty()) {
+		show();
+		QMessageBox::warning(this, tr("Hostname is empty"),
+							 tr("Please fill in a hostname for the synergy client to connect to."));
+		return false;
 	}
+
+	args << m_pLineEditHostname->text() + ":" + QString::number(appConfig().port());
 
 	return true;
 }
