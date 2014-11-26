@@ -43,6 +43,7 @@
 #endif
 
 #if defined(Q_OS_WIN)
+#define _WIN32_WINNT 0x0501
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
@@ -50,7 +51,9 @@
 #if defined(Q_OS_WIN)
 static const char synergyConfigName[] = "synergy.sgc";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
-static const char bonjourUrl[] = "http://synergy-project.org/bonjour/BonjourPSSetup.exe";
+static const char bonjourUrl[] = "http://synergy-project.org/bonjour/";
+static const char bonjour32Url[] = "http://synergy-project.org/bonjour/Bonjour.msi";
+static const char bonjour64Url[] = "http://synergy-project.org/bonjour/Bonjour64.msi";
 static const char bonjourInstaller[] = "BonjourSetup.exe";
 #else
 static const char synergyConfigName[] = "synergy.conf";
@@ -829,6 +832,26 @@ void MainWindow::serverDetected(const QString name)
 	}
 }
 
+int MainWindow::checkWinArch()
+{
+#if defined(Q_OS_WIN)
+	SYSTEM_INFO systemInfo;
+	GetNativeSystemInfo(&systemInfo);
+
+	switch (systemInfo.wProcessorArchitecture) {
+	case PROCESSOR_ARCHITECTURE_INTEL:
+		return x86;
+	case PROCESSOR_ARCHITECTURE_IA64:
+		return x64;
+	case PROCESSOR_ARCHITECTURE_AMD64:
+		return x64;
+	default:
+		appendLogNote("failed to detect system architecture");
+	}
+#endif
+	return unknown;
+}
+
 void MainWindow::on_m_pGroupClient_toggled(bool on)
 {
 	m_pGroupServer->setChecked(!on);
@@ -1019,7 +1042,26 @@ bool MainWindow::isBonjourRunning()
 void MainWindow::downloadBonjour()
 {
 #if defined(Q_OS_WIN)
-	QUrl url(bonjourUrl);
+
+	QUrl url;
+	int arch = checkWinArch();
+	if (arch == x86) {
+		url.setUrl(bonjour32Url);
+		appendLogNote("downloading 32-bit Bonjour");
+	}
+	else if (arch == x64) {
+		url.setUrl(bonjour64Url);
+		appendLogNote("downloading 64-bit Bonjour");
+	}
+	else {
+		QString msg("Failed to detect system architecture.\n"
+					"Please download the installer manually from this link:\n");
+		QMessageBox::warning(
+			this, tr("Synergy"),
+			msg + bonjourUrl);
+		return;
+	}
+
 	if (m_pDataDownloader != NULL) {
 		delete m_pDataDownloader;
 		m_pDataDownloader = NULL;
@@ -1055,7 +1097,7 @@ void MainWindow::installBonjour()
 	if (!file.open(QIODevice::WriteOnly)) {
 		m_DownloadMessageBox->hide();
 
-		QMessageBox::critical(
+		QMessageBox::warning(
 			this, "Synergy",
 			"Failed to download Bonjour installer to location: " +
 			tempLocation + "\n"

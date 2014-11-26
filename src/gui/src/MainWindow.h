@@ -82,6 +82,12 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 			Info
 		};
 
+		enum qProcessorArch {
+			x86,
+			x64,
+			unknown
+		};
+
 	public:
 		MainWindow(QSettings& settings, AppConfig& appConfig);
 		~MainWindow();
@@ -104,6 +110,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void autoAddScreen(const QString name);
 		void updateZeroconfService();
 		void serverDetected(const QString name);
+		int checkWinArch();
 
 	public slots:
 		void appendLogRaw(const QString& text);
