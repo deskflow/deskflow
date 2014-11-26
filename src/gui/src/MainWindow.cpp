@@ -54,7 +54,7 @@ static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.
 static const char bonjourUrl[] = "http://synergy-project.org/bonjour/";
 static const char bonjour32Url[] = "http://synergy-project.org/bonjour/Bonjour.msi";
 static const char bonjour64Url[] = "http://synergy-project.org/bonjour/Bonjour64.msi";
-static const char bonjourInstaller[] = "BonjourSetup.exe";
+static const char bonjourInstaller[] = "BonjourSetup.msi";
 #else
 static const char synergyConfigName[] = "synergy.conf";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
@@ -1109,7 +1109,14 @@ void MainWindow::installBonjour()
 	file.write(m_pDataDownloader->downloadedData());
 	file.close();
 
-	QDesktopServices::openUrl(QUrl("file:///" + filename));
+	QProcess process;
+	QStringList arguments;
+	arguments.append("/i");
+	QString winFilename = QDir::toNativeSeparators(filename);
+	arguments.append(winFilename);
+	arguments.append("/passive");
+	process.start("msiexec", arguments);
+	process.waitForFinished();
 
 	m_DownloadMessageBox->hide();
 #endif
