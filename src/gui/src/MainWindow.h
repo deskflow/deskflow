@@ -187,6 +187,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QMessageBox* m_DownloadMessageBox;
 		QAbstractButton* m_pCancelButton;
 		QMutex m_Mutex;
+		bool m_SuppressAutoConnectWarning;
 
 private slots:
 	void on_m_pComboServerList_currentIndexChanged(QString );

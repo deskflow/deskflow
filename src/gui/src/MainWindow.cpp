@@ -85,7 +85,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pZeroconfService(NULL),
 	m_pDataDownloader(NULL),
 	m_DownloadMessageBox(NULL),
-	m_pCancelButton(NULL)
+	m_pCancelButton(NULL),
+	m_SuppressAutoConnectWarning(false)
 {
 	setupUi(this);
 
@@ -115,7 +116,9 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	setMinimumSize(size());
 #endif
 
+	m_SuppressAutoConnectWarning = true;
 	m_pCheckBoxAutoConnect->setChecked(appConfig.autoConnect());
+	m_SuppressAutoConnectWarning = false;
 
 	m_pComboServerList->hide();
 }
@@ -970,7 +973,7 @@ void MainWindow::on_m_pButtonApply_clicked()
 
 void MainWindow::on_m_pCheckBoxAutoConnect_toggled(bool checked)
 {
-	if (!isBonjourRunning() && checked) {
+	if (!isBonjourRunning() && checked && !m_SuppressAutoConnectWarning) {
 		int r = QMessageBox::information(
 			this, tr("Synergy"),
 			tr("Auto connect feature requires Bonjour.\n\n"
