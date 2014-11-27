@@ -49,7 +49,8 @@ SOURCES += src/main.cpp \
     src/ZeroconfBrowser.cpp \
     src/ZeroconfService.cpp \
     src/DataDownloader.cpp \
-    src/AddClientDialog.cpp
+    src/AddClientDialog.cpp \
+    src/CommandProcess.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -84,7 +85,8 @@ HEADERS += src/MainWindow.h \
     src/ZeroconfBrowser.h \
     src/ZeroconfService.h \
     src/DataDownloader.h \
-    src/AddClientDialog.h
+    src/AddClientDialog.h \
+    src/CommandProcess.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 

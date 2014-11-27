@@ -27,6 +27,7 @@
 #include "SetupWizard.h"
 #include "ZeroconfService.h"
 #include "DataDownloader.h"
+#include "CommandProcess.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -973,15 +974,17 @@ void MainWindow::on_m_pButtonApply_clicked()
 
 void MainWindow::on_m_pCheckBoxAutoConnect_toggled(bool checked)
 {
-	if (!isBonjourRunning() && checked && !m_SuppressAutoConnectWarning) {
-		int r = QMessageBox::information(
-			this, tr("Synergy"),
-			tr("Auto connect feature requires Bonjour.\n\n"
-			   "Do you want to install Bonjour?"),
-			QMessageBox::Yes | QMessageBox::No);
+	if (!isBonjourRunning() && checked) {
+		if (!m_SuppressAutoConnectWarning) {
+			int r = QMessageBox::information(
+				this, tr("Synergy"),
+				tr("Auto connect feature requires Bonjour.\n\n"
+				   "Do you want to install Bonjour?"),
+				QMessageBox::Yes | QMessageBox::No);
 
-		if (r == QMessageBox::Yes) {
-			downloadBonjour();
+			if (r == QMessageBox::Yes) {
+				downloadBonjour();
+			}
 		}
 
 		m_pCheckBoxAutoConnect->setChecked(false);
@@ -1117,14 +1120,17 @@ void MainWindow::installBonjour()
 	file.write(m_pDataDownloader->downloadedData());
 	file.close();
 
-	QProcess process;
 	QStringList arguments;
 	arguments.append("/i");
 	QString winFilename = QDir::toNativeSeparators(filename);
 	arguments.append(winFilename);
 	arguments.append("/passive");
-	process.start("msiexec", arguments);
-	process.waitForFinished();
+	CommandProcess* cp = new CommandProcess("msiexec", arguments);
+	QThread* thread = new QThread;
+	cp->moveToThread(thread);
+	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+	thread->start();
+	QMetaObject::invokeMethod(cp, "run", Qt::QueuedConnection);
 
 	m_DownloadMessageBox->hide();
 #endif
