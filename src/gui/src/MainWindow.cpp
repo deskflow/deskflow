@@ -346,6 +346,12 @@ void MainWindow::appendLogNote(const QString& text)
 	appendLogRaw("NOTE: " + text);
 }
 
+void MainWindow::appendLogDebug(const QString& text) {
+	if (appConfig().logLevel() >= 4) {
+		appendLogRaw("DEBUG: " + text);
+	}
+}
+
 void MainWindow::appendLogError(const QString& text)
 {
 	appendLogRaw("ERROR: " + text);
@@ -967,7 +973,7 @@ void MainWindow::on_m_pCheckBoxAutoConnect_toggled(bool checked)
 	if (!isBonjourRunning() && checked) {
 		int r = QMessageBox::information(
 			this, tr("Synergy"),
-			tr("Auto connect feature requires Bonjour installed.\n\n"
+			tr("Auto connect feature requires Bonjour.\n\n"
 			   "Do you want to install Bonjour?"),
 			QMessageBox::Yes | QMessageBox::No);
 
@@ -1011,8 +1017,7 @@ bool MainWindow::isServiceRunning(QString name)
 	delete[] array;
 
 	if (hService == NULL) {
-		appendLogNote("failed to open " + name + " service, error: " +
-			GetLastError());
+		appendLogDebug("failed to open service: " + name);
 		return false;
 	}
 
