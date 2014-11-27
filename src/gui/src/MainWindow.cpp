@@ -1138,19 +1138,37 @@ void MainWindow::installBonjour()
 
 void MainWindow::promptAutoConnect()
 {
-	int r = QMessageBox::question(
-		this, tr("Synergy"),
-		tr("Do you want to enable auto connect?\n\n"
-		   "This feature helps you establish the connection."),
-		QMessageBox::Yes | QMessageBox::No);
+	if (isBonjourRunning()) {
+		int r = QMessageBox::question(
+			this, tr("Synergy"),
+			tr("Do you want to enable auto connect?\n\n"
+			   "This feature helps you establish the connection."),
+			QMessageBox::Yes | QMessageBox::No);
 
-	if (r == QMessageBox::Yes) {
-		m_AppConfig.setAutoConnect(true);
-		m_pCheckBoxAutoConnect->setChecked(true);
+		if (r == QMessageBox::Yes) {
+			m_AppConfig.setAutoConnect(true);
+			m_pCheckBoxAutoConnect->setChecked(true);
+		}
+		else {
+			m_AppConfig.setAutoConnect(false);
+			m_pCheckBoxAutoConnect->setChecked(false);
+		}
 	}
 	else {
-		m_AppConfig.setAutoConnect(false);
-		m_pCheckBoxAutoConnect->setChecked(false);
+		int r = QMessageBox::question(
+			this, tr("Synergy"),
+			tr("Do you want to enable auto connect and install Bonjour?\n\n"
+			   "This feature helps you establish the connection."),
+			QMessageBox::Yes | QMessageBox::No);
+
+		if (r == QMessageBox::Yes) {
+			m_AppConfig.setAutoConnect(true);
+			downloadBonjour();
+		}
+		else {
+			m_AppConfig.setAutoConnect(false);
+			m_pCheckBoxAutoConnect->setChecked(false);
+		}
 	}
 
 	m_AppConfig.setAutoConnectPrompted(true);
