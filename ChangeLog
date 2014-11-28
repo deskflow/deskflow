@@ -1,3 +1,12 @@
+1.6.2
+=====
+Bug #4227 - Helper tool crashes when service checks elevation state
+Bug #4091 - Zeroconf on server advertises bogus IP address
+Enhancement #4196 - Optional Bonjour requirement for Windows
+Enhancement #4235 - Automatic Bonjour download and install
+Enhancement #4218 - Auto-config available servers combo box
+Enhancement #4230 - More user friendly dialog when client is detected
+
 1.6.1
 =====
 Bug #4002 - Carbon loop not ready within 5 sec

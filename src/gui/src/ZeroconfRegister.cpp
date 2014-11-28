@@ -28,6 +28,10 @@ ZeroconfRegister::ZeroconfRegister(QObject* parent) :
 
 ZeroconfRegister::~ZeroconfRegister()
 {
+	if (m_pSocket) {
+		delete m_pSocket;
+	}
+
 	if (m_DnsServiceRef) {
 		DNSServiceRefDeallocate(m_DnsServiceRef);
 		m_DnsServiceRef = 0;
@@ -49,7 +53,8 @@ void ZeroconfRegister::registerService(const ZeroconfRecord& record,
 	}
 #endif
 
-	DNSServiceErrorType err = DNSServiceRegister(&m_DnsServiceRef, 0, 0,
+	DNSServiceErrorType err = DNSServiceRegister(&m_DnsServiceRef,
+		kDNSServiceFlagsNoAutoRename, 0,
 		record.serviceName.toUtf8().constData(),
 		record.registeredType.toUtf8().constData(),
 		record.replyDomain.isEmpty() ? 0 : record.replyDomain.toUtf8().constData(),

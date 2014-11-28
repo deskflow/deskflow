@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Synergy Si Ltd.
- * 
+ * Copyright (C) 2014 Synergy Si, Inc.
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file COPYING that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,17 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ToolApp.h"
-#include "arch/Arch.h"
+#ifndef COMMANDTHREAD_H
+#define COMMANDTHREAD_H
 
-int
-main(int argc, char** argv) 
+#include <QStringList>
+
+class CommandProcess : public QObject
 {
-#if SYSAPI_WIN32
-	// record window instance for tray icon, etc
-	ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
-#endif
+	Q_OBJECT
 
-	ToolApp app;
-	return app.run(argc, argv);
-}
+public:
+	CommandProcess(QString cmd, QStringList arguments);
+
+public slots:
+	void run();
+
+private:
+	QString m_Command;
+	QStringList m_Arguments;
+};
+
+#endif // COMMANDTHREAD_H

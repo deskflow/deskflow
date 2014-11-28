@@ -144,10 +144,6 @@ void SetupWizard::reject()
 	QWizard::reject();
 }
 
-void SetupWizard::on_m_pCheckBoxEnableCrypto_stateChanged(int )
-{
-}
-
 void SetupWizard::on_m_pComboLanguage_currentIndexChanged(int index)
 {
 	QString ietfCode = m_pComboLanguage->itemData(index).toString();

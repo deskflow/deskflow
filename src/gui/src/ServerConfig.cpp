@@ -19,6 +19,7 @@
 #include "ServerConfig.h"
 #include "Hotkey.h"
 #include "MainWindow.h"
+#include "AddClientDialog.h"
 
 #include <QtCore>
 #include <QMessageBox>
@@ -39,13 +40,6 @@ static const struct
 
 };
 
-enum {
-	kAddClientRight,
-	kAddClientLeft,
-	kAddClientOther,
-	kAddClientIgnore
-};
-
 const int serverDefaultIndex = 7;
 
 ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows ,
@@ -55,6 +49,7 @@ ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows ,
 	m_NumColumns(numColumns),
 	m_NumRows(numRows),
 	m_ServerName(serverName),
+	m_IgnoreAutoConnectClient(false),
 	m_pMainWindow(mainWindow)
 {
 	Q_ASSERT(m_pSettings);
@@ -118,6 +113,7 @@ void ServerConfig::saveSettings()
 	settings().setValue("hasSwitchDoubleTap", hasSwitchDoubleTap());
 	settings().setValue("switchDoubleTap", switchDoubleTap());
 	settings().setValue("switchCornerSize", switchCornerSize());
+	settings().setValue("ignoreAutoConnectClient", ignoreAutoConnectClient());
 
 	writeSettings(settings(), switchCorners(), "switchCorner");
 
@@ -160,6 +156,7 @@ void ServerConfig::loadSettings()
 	haveSwitchDoubleTap(settings().value("hasSwitchDoubleTap", false).toBool());
 	setSwitchDoubleTap(settings().value("switchDoubleTap", 250).toInt());
 	setSwitchCornerSize(settings().value("switchCornerSize").toInt());
+	setIgnoreAutoConnectClient(settings().value("ignoreAutoConnectClient").toBool());
 
 	readSettings(settings(), switchCorners(), "switchCorner", false, NumSwitchCorners);
 
@@ -291,10 +288,10 @@ int ServerConfig::autoAddScreen(const QString name)
 	}
 	if (findScreenName(name, targetIndex)) {
 		// already exists.
-		return kAutoAddScreenOk;
+		return kAutoAddScreenIgnore;
 	}
 
-	int result = showAddClientMsgBox(name);
+	int result = showAddClientDialog(name);
 
 	if (result == kAddClientIgnore) {
 		return kAutoAddScreenIgnore;
@@ -314,6 +311,15 @@ int ServerConfig::autoAddScreen(const QString name)
 		offset = -1;
 		dirIndex = 1;
 	}
+	else if (result == kAddClientUp) {
+		offset = -5;
+		dirIndex = 2;
+	}
+	else if (result == kAddClientDown) {
+		offset = 5;
+		dirIndex = 3;
+	}
+
 
 	int idx = adjacentScreenIndex(startIndex, neighbourDirs[dirIndex].x,
 					neighbourDirs[dirIndex].y);
@@ -364,37 +370,12 @@ bool ServerConfig::fixNoServer(const QString& name, int& index)
 	return fixed;
 }
 
-int ServerConfig::showAddClientMsgBox(const QString& clientName)
+int ServerConfig::showAddClientDialog(const QString& clientName)
 {
-	int result = kAddClientIgnore;
-	QWidget* w = dynamic_cast<QWidget*>(m_pMainWindow);
-	QMessageBox msgBox(w);
-	msgBox.setIcon(QMessageBox::Question);
-	msgBox.setWindowTitle(QObject::tr("Incoming client"));
-	msgBox.setText(QObject::tr(
-		"A new client wants to connect. Which side\n"
-		"of this screen is the client (%1) located?")
-		   .arg(clientName));
-
-	QPushButton* left = msgBox.addButton(QObject::tr("Left"), QMessageBox::AcceptRole);
-	QPushButton* right = msgBox.addButton(QObject::tr("Right"), QMessageBox::AcceptRole);
-	QPushButton* other = msgBox.addButton(QObject::tr("Other"), QMessageBox::AcceptRole);
-	QPushButton* ignore = msgBox.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
-	msgBox.setDefaultButton(ignore);
-
-	msgBox.exec();
-
-	QAbstractButton* button = msgBox.clickedButton();
-	QPushButton* clickedButton = dynamic_cast<QPushButton*>(button);
-	if (clickedButton == right) {
-		result = kAddClientRight;
-	}
-	else if (clickedButton == left) {
-		result = kAddClientLeft;
-	}
-	else if (clickedButton == other) {
-		result = kAddClientOther;
-	}
+	AddClientDialog addClientDialog(clientName, m_pMainWindow);
+	addClientDialog.exec();
+	int result = addClientDialog.addResult();
+	m_IgnoreAutoConnectClient = addClientDialog.ignoreAutoConnectClient();
 
 	return result;
 }

@@ -60,6 +60,7 @@ class ServerConfig : public BaseConfig
 		int switchCornerSize() const { return m_SwitchCornerSize; }
 		const QList<bool>& switchCorners() const { return m_SwitchCorners; }
 		const HotkeyList& hotkeys() const { return m_Hotkeys; }
+		bool ignoreAutoConnectClient() const { return m_IgnoreAutoConnectClient; }
 
 		void saveSettings();
 		void loadSettings();
@@ -86,6 +87,7 @@ class ServerConfig : public BaseConfig
 		void setSwitchDoubleTap(int val) { m_SwitchDoubleTap = val; }
 		void setSwitchCorner(int c, bool on) { m_SwitchCorners[c] = on; }
 		void setSwitchCornerSize(int val) { m_SwitchCornerSize = val; }
+		void setIgnoreAutoConnectClient(bool on) { m_IgnoreAutoConnectClient = on; }
 		QList<bool>& switchCorners() { return m_SwitchCorners; }
 		HotkeyList& hotkeys() { return m_Hotkeys; }
 
@@ -95,7 +97,7 @@ class ServerConfig : public BaseConfig
 	private:
 		bool findScreenName(const QString& name, int& index);
 		bool fixNoServer(const QString& name, int& index);
-		int showAddClientMsgBox(const QString& clientName);
+		int showAddClientDialog(const QString& clientName);
 		void addToFirstEmptyGrid(const QString& clientName);
 
 	private:
@@ -116,6 +118,7 @@ class ServerConfig : public BaseConfig
 		QList<bool> m_SwitchCorners;
 		HotkeyList m_Hotkeys;
 		QString m_ServerName;
+		bool m_IgnoreAutoConnectClient;
 		MainWindow* m_pMainWindow;
 };
 

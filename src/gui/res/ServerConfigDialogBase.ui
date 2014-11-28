@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>ServerConfigDialogBase</class>
- <widget class="QDialog" name="ServerConfigDialogBase" >
-  <property name="geometry" >
+ <widget class="QDialog" name="ServerConfigDialogBase">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,139 +10,139 @@
     <height>514</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Server Configuration</string>
   </property>
-  <layout class="QVBoxLayout" >
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QTabWidget" name="m_pTabWidget" >
-     <property name="currentIndex" >
+    <widget class="QTabWidget" name="m_pTabWidget">
+     <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="m_pTabScreens" >
-      <attribute name="title" >
+     <widget class="QWidget" name="m_pTabScreens">
+      <attribute name="title">
        <string>Screens and links</string>
       </attribute>
-      <layout class="QVBoxLayout" >
+      <layout class="QVBoxLayout">
        <item>
-        <layout class="QHBoxLayout" >
+        <layout class="QHBoxLayout">
          <item>
-          <widget class="TrashScreenWidget" name="m_pTrashScreenWidget" >
-           <property name="acceptDrops" >
+          <widget class="TrashScreenWidget" name="m_pTrashScreenWidget">
+           <property name="acceptDrops">
             <bool>true</bool>
            </property>
-           <property name="toolTip" >
+           <property name="toolTip">
             <string>Drag a screen from the grid to the trashcan to remove it.</string>
            </property>
-           <property name="frameShape" >
+           <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
            </property>
-           <property name="frameShadow" >
+           <property name="frameShadow">
             <enum>QFrame::Raised</enum>
            </property>
-           <property name="text" >
+           <property name="text">
             <string/>
            </property>
-           <property name="pixmap" >
-            <pixmap resource="QSynergy.qrc" >:/res/icons/64x64/user-trash.png</pixmap>
+           <property name="pixmap">
+            <pixmap resource="Synergy.qrc">:/res/icons/64x64/user-trash.png</pixmap>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="label_2" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+          <widget class="QLabel" name="label_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>1</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>Configure the layout of your synergy server configuration.</string>
            </property>
-           <property name="alignment" >
+           <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
-           <property name="wordWrap" >
+           <property name="wordWrap">
             <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="NewScreenWidget" name="m_pLabelNewScreenWidget" >
-           <property name="toolTip" >
+          <widget class="NewScreenWidget" name="m_pLabelNewScreenWidget">
+           <property name="toolTip">
             <string>Drag this button to the grid to add a new screen.</string>
            </property>
-           <property name="frameShape" >
+           <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
            </property>
-           <property name="frameShadow" >
+           <property name="frameShadow">
             <enum>QFrame::Raised</enum>
            </property>
-           <property name="text" >
+           <property name="text">
             <string/>
            </property>
-           <property name="pixmap" >
-            <pixmap resource="QSynergy.qrc" >:/res/icons/64x64/video-display.png</pixmap>
+           <property name="pixmap">
+            <pixmap resource="Synergy.qrc">:/res/icons/64x64/video-display.png</pixmap>
            </property>
           </widget>
          </item>
         </layout>
        </item>
        <item>
-        <widget class="ScreenSetupView" name="m_pScreenSetupView" >
-         <property name="minimumSize" >
+        <widget class="ScreenSetupView" name="m_pScreenSetupView">
+         <property name="minimumSize">
           <size>
            <width>0</width>
            <height>273</height>
           </size>
          </property>
-         <property name="maximumSize" >
+         <property name="maximumSize">
           <size>
            <width>16777215</width>
            <height>273</height>
           </size>
          </property>
-         <property name="acceptDrops" >
+         <property name="acceptDrops">
           <bool>true</bool>
          </property>
-         <property name="autoFillBackground" >
+         <property name="autoFillBackground">
           <bool>false</bool>
          </property>
-         <property name="frameShape" >
+         <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
-         <property name="frameShadow" >
+         <property name="frameShadow">
           <enum>QFrame::Sunken</enum>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_3" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+        <widget class="QLabel" name="label_3">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>1</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</string>
          </property>
-         <property name="alignment" >
+         <property name="alignment">
           <set>Qt::AlignCenter</set>
          </property>
-         <property name="wordWrap" >
+         <property name="wordWrap">
           <bool>true</bool>
          </property>
         </widget>
        </item>
        <item>
         <spacer>
-         <property name="orientation" >
+         <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
            <height>40</height>
@@ -151,56 +152,56 @@ Double click on a screen to edit its settings.</string>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="m_pTabHotkeys" >
-      <attribute name="title" >
+     <widget class="QWidget" name="m_pTabHotkeys">
+      <attribute name="title">
        <string>Hotkeys</string>
       </attribute>
-      <layout class="QHBoxLayout" >
+      <layout class="QHBoxLayout">
        <item>
-        <widget class="QGroupBox" name="groupBox" >
-         <property name="title" >
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
           <string>&amp;Hotkeys</string>
          </property>
-         <layout class="QGridLayout" >
-          <item rowspan="4" row="0" column="0" >
-           <widget class="QListWidget" name="m_pListHotkeys" />
+         <layout class="QGridLayout">
+          <item row="0" column="0" rowspan="4">
+           <widget class="QListWidget" name="m_pListHotkeys"/>
           </item>
-          <item row="0" column="1" >
-           <widget class="QPushButton" name="m_pButtonNewHotkey" >
-            <property name="enabled" >
+          <item row="0" column="1">
+           <widget class="QPushButton" name="m_pButtonNewHotkey">
+            <property name="enabled">
              <bool>true</bool>
             </property>
-            <property name="text" >
+            <property name="text">
              <string>&amp;New</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1" >
-           <widget class="QPushButton" name="m_pButtonEditHotkey" >
-            <property name="enabled" >
+          <item row="1" column="1">
+           <widget class="QPushButton" name="m_pButtonEditHotkey">
+            <property name="enabled">
              <bool>false</bool>
             </property>
-            <property name="text" >
+            <property name="text">
              <string>&amp;Edit</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1" >
-           <widget class="QPushButton" name="m_pButtonRemoveHotkey" >
-            <property name="enabled" >
+          <item row="2" column="1">
+           <widget class="QPushButton" name="m_pButtonRemoveHotkey">
+            <property name="enabled">
              <bool>false</bool>
             </property>
-            <property name="text" >
+            <property name="text">
              <string>&amp;Remove</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="1" >
+          <item row="3" column="1">
            <spacer>
-            <property name="orientation" >
+            <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0">
              <size>
               <width>75</width>
               <height>161</height>
@@ -212,50 +213,50 @@ Double click on a screen to edit its settings.</string>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_2" >
-         <property name="title" >
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
           <string>A&amp;ctions</string>
          </property>
-         <layout class="QGridLayout" >
-          <item rowspan="4" row="0" column="0" >
-           <widget class="QListWidget" name="m_pListActions" />
+         <layout class="QGridLayout">
+          <item row="0" column="0" rowspan="4">
+           <widget class="QListWidget" name="m_pListActions"/>
           </item>
-          <item row="0" column="1" >
-           <widget class="QPushButton" name="m_pButtonNewAction" >
-            <property name="enabled" >
+          <item row="0" column="1">
+           <widget class="QPushButton" name="m_pButtonNewAction">
+            <property name="enabled">
              <bool>false</bool>
             </property>
-            <property name="text" >
+            <property name="text">
              <string>Ne&amp;w</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1" >
-           <widget class="QPushButton" name="m_pButtonEditAction" >
-            <property name="enabled" >
+          <item row="1" column="1">
+           <widget class="QPushButton" name="m_pButtonEditAction">
+            <property name="enabled">
              <bool>false</bool>
             </property>
-            <property name="text" >
+            <property name="text">
              <string>E&amp;dit</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1" >
-           <widget class="QPushButton" name="m_pButtonRemoveAction" >
-            <property name="enabled" >
+          <item row="2" column="1">
+           <widget class="QPushButton" name="m_pButtonRemoveAction">
+            <property name="enabled">
              <bool>false</bool>
             </property>
-            <property name="text" >
+            <property name="text">
              <string>Re&amp;move</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="1" >
+          <item row="3" column="1">
            <spacer>
-            <property name="orientation" >
+            <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
               <height>40</height>
@@ -268,35 +269,35 @@ Double click on a screen to edit its settings.</string>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="m_pTabAdvanced" >
-      <attribute name="title" >
+     <widget class="QWidget" name="m_pTabAdvanced">
+      <attribute name="title">
        <string>Advanced server settings</string>
       </attribute>
-      <layout class="QGridLayout" >
-       <item row="0" column="0" >
-        <widget class="QGroupBox" name="m_pGroupSwitch" >
-         <property name="title" >
+      <layout class="QGridLayout">
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="m_pGroupSwitch">
+         <property name="title">
           <string>&amp;Switch</string>
          </property>
-         <layout class="QVBoxLayout" >
+         <layout class="QVBoxLayout">
           <item>
-           <layout class="QHBoxLayout" >
+           <layout class="QHBoxLayout">
             <item>
-             <widget class="QCheckBox" name="m_pCheckBoxSwitchDelay" >
-              <property name="enabled" >
+             <widget class="QCheckBox" name="m_pCheckBoxSwitchDelay">
+              <property name="enabled">
                <bool>true</bool>
               </property>
-              <property name="text" >
+              <property name="text">
                <string>Switch &amp;after waiting</string>
               </property>
              </widget>
             </item>
             <item>
              <spacer>
-              <property name="orientation" >
+              <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
-              <property name="sizeHint" >
+              <property name="sizeHint" stdset="0">
                <size>
                 <width>40</width>
                 <height>20</height>
@@ -305,27 +306,27 @@ Double click on a screen to edit its settings.</string>
              </spacer>
             </item>
             <item>
-             <widget class="QSpinBox" name="m_pSpinBoxSwitchDelay" >
-              <property name="enabled" >
+             <widget class="QSpinBox" name="m_pSpinBoxSwitchDelay">
+              <property name="enabled">
                <bool>false</bool>
               </property>
-              <property name="minimum" >
+              <property name="minimum">
                <number>10</number>
               </property>
-              <property name="maximum" >
+              <property name="maximum">
                <number>10000</number>
               </property>
-              <property name="singleStep" >
+              <property name="singleStep">
                <number>10</number>
               </property>
-              <property name="value" >
+              <property name="value">
                <number>250</number>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="m_pLabel_14" >
-              <property name="text" >
+             <widget class="QLabel" name="m_pLabel_14">
+              <property name="text">
                <string>ms</string>
               </property>
              </widget>
@@ -333,23 +334,23 @@ Double click on a screen to edit its settings.</string>
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" >
+           <layout class="QHBoxLayout">
             <item>
-             <widget class="QCheckBox" name="m_pCheckBoxSwitchDoubleTap" >
-              <property name="enabled" >
+             <widget class="QCheckBox" name="m_pCheckBoxSwitchDoubleTap">
+              <property name="enabled">
                <bool>true</bool>
               </property>
-              <property name="text" >
+              <property name="text">
                <string>Switch on double &amp;tap within</string>
               </property>
              </widget>
             </item>
             <item>
              <spacer>
-              <property name="orientation" >
+              <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
-              <property name="sizeHint" >
+              <property name="sizeHint" stdset="0">
                <size>
                 <width>40</width>
                 <height>20</height>
@@ -358,27 +359,27 @@ Double click on a screen to edit its settings.</string>
              </spacer>
             </item>
             <item>
-             <widget class="QSpinBox" name="m_pSpinBoxSwitchDoubleTap" >
-              <property name="enabled" >
+             <widget class="QSpinBox" name="m_pSpinBoxSwitchDoubleTap">
+              <property name="enabled">
                <bool>false</bool>
               </property>
-              <property name="minimum" >
+              <property name="minimum">
                <number>10</number>
               </property>
-              <property name="maximum" >
+              <property name="maximum">
                <number>10000</number>
               </property>
-              <property name="singleStep" >
+              <property name="singleStep">
                <number>10</number>
               </property>
-              <property name="value" >
+              <property name="value">
                <number>250</number>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="m_pLabel_15" >
-              <property name="text" >
+             <widget class="QLabel" name="m_pLabel_15">
+              <property name="text">
                <string>ms</string>
               </property>
              </widget>
@@ -387,10 +388,10 @@ Double click on a screen to edit its settings.</string>
           </item>
           <item>
            <spacer>
-            <property name="orientation" >
+            <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
               <height>40</height>
@@ -401,30 +402,30 @@ Double click on a screen to edit its settings.</string>
          </layout>
         </widget>
        </item>
-       <item row="0" column="1" >
-        <widget class="QGroupBox" name="m_pGroupOptions" >
-         <property name="title" >
+       <item row="0" column="1">
+        <widget class="QGroupBox" name="m_pGroupOptions">
+         <property name="title">
           <string>&amp;Options</string>
          </property>
-         <layout class="QGridLayout" >
-          <item row="0" column="0" >
-           <layout class="QHBoxLayout" >
+         <layout class="QGridLayout">
+          <item row="0" column="0">
+           <layout class="QHBoxLayout">
             <item>
-             <widget class="QCheckBox" name="m_pCheckBoxHeartbeat" >
-              <property name="enabled" >
+             <widget class="QCheckBox" name="m_pCheckBoxHeartbeat">
+              <property name="enabled">
                <bool>true</bool>
               </property>
-              <property name="text" >
+              <property name="text">
                <string>&amp;Check clients every</string>
               </property>
              </widget>
             </item>
             <item>
              <spacer>
-              <property name="orientation" >
+              <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
-              <property name="sizeHint" >
+              <property name="sizeHint" stdset="0">
                <size>
                 <width>40</width>
                 <height>20</height>
@@ -433,69 +434,69 @@ Double click on a screen to edit its settings.</string>
              </spacer>
             </item>
             <item>
-             <widget class="QSpinBox" name="m_pSpinBoxHeartbeat" >
-              <property name="enabled" >
+             <widget class="QSpinBox" name="m_pSpinBoxHeartbeat">
+              <property name="enabled">
                <bool>false</bool>
               </property>
-              <property name="minimum" >
+              <property name="minimum">
                <number>1000</number>
               </property>
-              <property name="maximum" >
+              <property name="maximum">
                <number>30000</number>
               </property>
-              <property name="singleStep" >
+              <property name="singleStep">
                <number>1000</number>
               </property>
-              <property name="value" >
+              <property name="value">
                <number>5000</number>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="m_pLabel_16" >
-              <property name="text" >
+             <widget class="QLabel" name="m_pLabel_16">
+              <property name="text">
                <string>ms</string>
               </property>
              </widget>
             </item>
            </layout>
           </item>
-          <item row="1" column="0" >
-           <widget class="QCheckBox" name="m_pCheckBoxRelativeMouseMoves" >
-            <property name="enabled" >
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxRelativeMouseMoves">
+            <property name="enabled">
              <bool>true</bool>
             </property>
-            <property name="text" >
+            <property name="text">
              <string>Use &amp;relative mouse moves</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0" >
-           <widget class="QCheckBox" name="m_pCheckBoxScreenSaverSync" >
-            <property name="enabled" >
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxScreenSaverSync">
+            <property name="enabled">
              <bool>true</bool>
             </property>
-            <property name="text" >
+            <property name="text">
              <string>S&amp;ynchronize screen savers</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="0" >
-           <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground" >
-            <property name="enabled" >
+          <item row="3" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground">
+            <property name="enabled">
              <bool>true</bool>
             </property>
-            <property name="text" >
+            <property name="text">
              <string>Don't take &amp;foreground window on Windows servers</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="0" >
+          <item row="5" column="0">
            <spacer>
-            <property name="orientation" >
+            <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
               <height>16</height>
@@ -503,52 +504,59 @@ Double click on a screen to edit its settings.</string>
             </property>
            </spacer>
           </item>
+          <item row="4" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConnectClient">
+            <property name="text">
+             <string>Ignore auto connect clients</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
-       <item row="1" column="0" colspan="2" >
-        <widget class="QGroupBox" name="m_pGroupSwitchCorners" >
-         <property name="title" >
+       <item row="1" column="0" colspan="2">
+        <widget class="QGroupBox" name="m_pGroupSwitchCorners">
+         <property name="title">
           <string>&amp;Dead corners</string>
          </property>
-         <property name="checked" >
+         <property name="checked">
           <bool>false</bool>
          </property>
-         <layout class="QGridLayout" >
-          <item row="0" column="0" colspan="2" >
-           <widget class="QCheckBox" name="m_pCheckBoxCornerTopLeft" >
-            <property name="text" >
+         <layout class="QGridLayout">
+          <item row="0" column="0" colspan="2">
+           <widget class="QCheckBox" name="m_pCheckBoxCornerTopLeft">
+            <property name="text">
              <string>To&amp;p-left</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="2" colspan="2" >
-           <widget class="QCheckBox" name="m_pCheckBoxCornerTopRight" >
-            <property name="text" >
+          <item row="0" column="2" colspan="2">
+           <widget class="QCheckBox" name="m_pCheckBoxCornerTopRight">
+            <property name="text">
              <string>Top-rig&amp;ht</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0" colspan="2" >
-           <widget class="QCheckBox" name="m_pCheckBoxCornerBottomLeft" >
-            <property name="text" >
+          <item row="1" column="0" colspan="2">
+           <widget class="QCheckBox" name="m_pCheckBoxCornerBottomLeft">
+            <property name="text">
              <string>&amp;Bottom-left</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="2" colspan="2" >
-           <widget class="QCheckBox" name="m_pCheckBoxCornerBottomRight" >
-            <property name="text" >
+          <item row="1" column="2" colspan="2">
+           <widget class="QCheckBox" name="m_pCheckBoxCornerBottomRight">
+            <property name="text">
              <string>Bottom-ri&amp;ght</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0" >
+          <item row="2" column="0">
            <spacer>
-            <property name="orientation" >
+            <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0">
              <size>
               <width>40</width>
               <height>20</height>
@@ -556,29 +564,29 @@ Double click on a screen to edit its settings.</string>
             </property>
            </spacer>
           </item>
-          <item row="2" column="1" colspan="2" >
-           <layout class="QHBoxLayout" >
+          <item row="2" column="1" colspan="2">
+           <layout class="QHBoxLayout">
             <item>
-             <widget class="QLabel" name="label" >
-              <property name="text" >
+             <widget class="QLabel" name="label">
+              <property name="text">
                <string>Cor&amp;ner Size:</string>
               </property>
-              <property name="buddy" >
+              <property name="buddy">
                <cstring>m_pSpinBoxSwitchCornerSize</cstring>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="m_pSpinBoxSwitchCornerSize" />
+             <widget class="QSpinBox" name="m_pSpinBoxSwitchCornerSize"/>
             </item>
            </layout>
           </item>
-          <item row="2" column="3" >
+          <item row="2" column="3">
            <spacer>
-            <property name="orientation" >
+            <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0">
              <size>
               <width>40</width>
               <height>20</height>
@@ -589,12 +597,12 @@ Double click on a screen to edit its settings.</string>
          </layout>
         </widget>
        </item>
-       <item row="2" column="0" >
+       <item row="2" column="0">
         <spacer>
-         <property name="orientation" >
+         <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
            <height>40</height>
@@ -607,12 +615,12 @@ Double click on a screen to edit its settings.</string>
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="m_pButtonBox" >
-     <property name="orientation" >
+    <widget class="QDialogButtonBox" name="m_pButtonBox">
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons" >
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
@@ -637,7 +645,7 @@ Double click on a screen to edit its settings.</string>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="QSynergy.qrc" />
+  <include location="Synergy.qrc"/>
  </resources>
  <connections>
   <connection>
@@ -646,11 +654,11 @@ Double click on a screen to edit its settings.</string>
    <receiver>ServerConfigDialogBase</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>572</x>
      <y>424</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>377</x>
      <y>-8</y>
     </hint>
@@ -662,11 +670,11 @@ Double click on a screen to edit its settings.</string>
    <receiver>ServerConfigDialogBase</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>641</x>
      <y>424</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>595</x>
      <y>1</y>
     </hint>
@@ -678,11 +686,11 @@ Double click on a screen to edit its settings.</string>
    <receiver>m_pSpinBoxSwitchDelay</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>110</x>
      <y>63</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>110</x>
      <y>63</y>
     </hint>
@@ -694,11 +702,11 @@ Double click on a screen to edit its settings.</string>
    <receiver>m_pSpinBoxSwitchDoubleTap</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>110</x>
      <y>63</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>110</x>
      <y>63</y>
     </hint>
@@ -710,11 +718,11 @@ Double click on a screen to edit its settings.</string>
    <receiver>m_pSpinBoxHeartbeat</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>110</x>
      <y>63</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>110</x>
      <y>63</y>
     </hint>
@@ -726,11 +734,11 @@ Double click on a screen to edit its settings.</string>
    <receiver>m_pButtonEditHotkey</receiver>
    <slot>click()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>197</x>
      <y>115</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>304</x>
      <y>115</y>
     </hint>
@@ -742,11 +750,11 @@ Double click on a screen to edit its settings.</string>
    <receiver>m_pButtonEditAction</receiver>
    <slot>click()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>505</x>
      <y>120</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>677</x>
      <y>118</y>
     </hint>

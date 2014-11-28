@@ -45,6 +45,5 @@ private:
 	SynergyLocale m_Locale;
 
 private slots:
-	void on_m_pCheckBoxEnableCrypto_stateChanged(int );
 	void on_m_pComboLanguage_currentIndexChanged(int index);
 };

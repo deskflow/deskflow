@@ -34,6 +34,8 @@
 #include "IpcClient.h"
 #include "Ipc.h"
 
+#include <QMutex>
+
 class QAction;
 class QMenu;
 class QLineEdit;
@@ -45,11 +47,14 @@ class QTabWidget;
 class QCheckBox;
 class QRadioButton;
 class QTemporaryFile;
+class QMessageBox;
+class QAbstractButton;
 
 class LogDialog;
 class QSynergyApplication;
 class SetupWizard;
 class ZeroconfService;
+class DataDownloader;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase
 {
@@ -77,6 +82,12 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 			Info
 		};
 
+		enum qProcessorArch {
+			x86,
+			x64,
+			unknown
+		};
+
 	public:
 		MainWindow(QSettings& settings, AppConfig& appConfig);
 		~MainWindow();
@@ -98,10 +109,13 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void showConfigureServer() { showConfigureServer(""); }
 		void autoAddScreen(const QString name);
 		void updateZeroconfService();
+		void serverDetected(const QString name);
+		int checkWinArch();
 
 	public slots:
 		void appendLogRaw(const QString& text);
 		void appendLogNote(const QString& text);
+		void appendLogDebug(const QString& text);
 		void appendLogError(const QString& text);
 		void startSynergy();
 
@@ -146,6 +160,10 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void stopDesktop();
 		void changeEvent(QEvent* event);
 		void retranslateMenuBar();
+		bool isServiceRunning(QString name);
+		bool isBonjourRunning();
+		void downloadBonjour();
+		void promptAutoConnect();
 
 	private:
 		QSettings& m_Settings;
@@ -165,10 +183,17 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QMenu* m_pMenuWindow;
 		QMenu* m_pMenuHelp;
 		ZeroconfService* m_pZeroconfService;
+		DataDownloader* m_pDataDownloader;
+		QMessageBox* m_DownloadMessageBox;
+		QAbstractButton* m_pCancelButton;
+		QMutex m_Mutex;
+		bool m_SuppressAutoConnectWarning;
 
 private slots:
-	void on_m_pAutoConnectCheckBox_toggled(bool checked);
+	void on_m_pComboServerList_currentIndexChanged(QString );
+	void on_m_pCheckBoxAutoConnect_toggled(bool checked);
 	void on_m_pButtonApply_clicked();
+	void installBonjour();
 };
 
 #endif
