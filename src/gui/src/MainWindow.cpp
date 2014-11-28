@@ -1111,23 +1111,7 @@ void MainWindow::installBonjour()
 
 void MainWindow::promptAutoConfig()
 {
-	if (isBonjourRunning()) {
-		int r = QMessageBox::question(
-			this, tr("Synergy"),
-			tr("Do you want to enable auto config?\n\n"
-			   "This feature helps you establish the connection."),
-			QMessageBox::Yes | QMessageBox::No);
-
-		if (r == QMessageBox::Yes) {
-			m_AppConfig.setAutoConfig(true);
-			m_pCheckBoxAutoConfig->setChecked(true);
-		}
-		else {
-			m_AppConfig.setAutoConfig(false);
-			m_pCheckBoxAutoConfig->setChecked(false);
-		}
-	}
-	else {
+	if (!isBonjourRunning()) {
 		int r = QMessageBox::question(
 			this, tr("Synergy"),
 			tr("Do you want to enable auto config and install Bonjour?\n\n"

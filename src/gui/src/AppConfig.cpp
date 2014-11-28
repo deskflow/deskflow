@@ -54,7 +54,7 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_WizardLastRun(0),
 	m_CryptoPass(),
 	m_ProcessMode(DEFAULT_PROCESS_MODE),
-	m_AutoConfig(false),
+	m_AutoConfig(true),
 	m_ElevateMode(false),
 	m_AutoConfigPrompted(false)
 {
@@ -124,7 +124,7 @@ void AppConfig::loadSettings()
 	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
 	m_Language = settings().value("language", QLocale::system().name()).toString();
 	m_StartedBefore = settings().value("startedBefore", false).toBool();
-	m_AutoConfig = settings().value("autoConfig", false).toBool();
+	m_AutoConfig = settings().value("autoConfig", true).toBool();
 	m_ElevateMode = settings().value("elevateMode", false).toBool();
 	m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
 }
