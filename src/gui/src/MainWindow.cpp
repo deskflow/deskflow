@@ -1055,6 +1055,7 @@ void MainWindow::downloadBonjour()
 	if (m_DownloadMessageBox == NULL) {
 		m_DownloadMessageBox = new QMessageBox(this);
 		m_DownloadMessageBox->setWindowTitle("Synergy");
+		m_DownloadMessageBox->setIcon(QMessageBox::Information);
 		m_DownloadMessageBox->setText("Installing Bonjour, please wait...");
 		m_DownloadMessageBox->setStandardButtons(0);
 		m_pCancelButton = m_DownloadMessageBox->addButton(
