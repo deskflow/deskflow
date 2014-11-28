@@ -27,6 +27,9 @@ class CommandProcess : public QObject
 public:
 	CommandProcess(QString cmd, QStringList arguments);
 
+signals:
+	void finished();
+
 public slots:
 	void run();
 

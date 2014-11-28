@@ -87,7 +87,9 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pDataDownloader(NULL),
 	m_DownloadMessageBox(NULL),
 	m_pCancelButton(NULL),
-	m_SuppressAutoConfigWarning(false)
+	m_SuppressAutoConfigWarning(false),
+	m_BonjourInstall(NULL),
+	m_BonjourInstallThread(NULL)
 {
 	setupUi(this);
 
@@ -136,6 +138,14 @@ MainWindow::~MainWindow()
 
 	if (m_DownloadMessageBox != NULL) {
 		delete m_DownloadMessageBox;
+	}
+
+	if (m_BonjourInstall != NULL) {
+		delete m_BonjourInstall;
+	}
+
+	if (m_BonjourInstallThread != NULL) {
+		delete m_BonjourInstallThread;
 	}
 }
 
@@ -1098,12 +1108,17 @@ void MainWindow::installBonjour()
 	QString winFilename = QDir::toNativeSeparators(filename);
 	arguments.append(winFilename);
 	arguments.append("/passive");
-	CommandProcess* cp = new CommandProcess("msiexec", arguments);
-	QThread* thread = new QThread;
-	cp->moveToThread(thread);
-	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-	thread->start();
-	QMetaObject::invokeMethod(cp, "run", Qt::QueuedConnection);
+	if (m_BonjourInstall == NULL) {
+		m_BonjourInstall = new CommandProcess("msiexec", arguments);
+	}
+	if (m_BonjourInstallThread == NULL) {
+		m_BonjourInstallThread = new QThread;
+	}
+	m_BonjourInstall->moveToThread(m_BonjourInstallThread);
+	connect(m_BonjourInstall, SIGNAL(finished()), this,
+		SLOT(bonjourInstallFinished()));
+	m_BonjourInstallThread->start();
+	QMetaObject::invokeMethod(m_BonjourInstall, "run", Qt::QueuedConnection);
 
 	m_DownloadMessageBox->hide();
 #endif
@@ -1165,4 +1180,15 @@ void MainWindow::on_m_pCheckBoxAutoConfig_toggled(bool checked)
 		m_pComboServerList->clear();
 		m_pComboServerList->hide();
 	}
+}
+
+void MainWindow::bonjourInstallFinished()
+{
+	delete m_BonjourInstall;
+	m_BonjourInstall = NULL;
+
+	delete m_BonjourInstallThread;
+	m_BonjourInstallThread = NULL;
+
+	updateZeroconfService();
 }

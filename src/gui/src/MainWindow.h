@@ -55,6 +55,7 @@ class QSynergyApplication;
 class SetupWizard;
 class ZeroconfService;
 class DataDownloader;
+class CommandProcess;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase
 {
@@ -134,6 +135,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void logOutput();
 		void logError();
 		void updateFound(const QString& version);
+		void bonjourInstallFinished();
 
 	protected:
 		QSettings& settings() { return m_Settings; }
@@ -188,6 +190,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QAbstractButton* m_pCancelButton;
 		QMutex m_Mutex;
 		bool m_SuppressAutoConfigWarning;
+		CommandProcess* m_BonjourInstall;
+		QThread* m_BonjourInstallThread;
 
 private slots:
 	void on_m_pCheckBoxAutoConfig_toggled(bool checked);
