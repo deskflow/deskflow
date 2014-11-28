@@ -88,8 +88,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_DownloadMessageBox(NULL),
 	m_pCancelButton(NULL),
 	m_SuppressAutoConfigWarning(false),
-	m_BonjourInstall(NULL),
-	m_BonjourInstallThread(NULL)
+	m_BonjourInstall(NULL)
 {
 	setupUi(this);
 
@@ -142,10 +141,6 @@ MainWindow::~MainWindow()
 
 	if (m_BonjourInstall != NULL) {
 		delete m_BonjourInstall;
-	}
-
-	if (m_BonjourInstallThread != NULL) {
-		delete m_BonjourInstallThread;
 	}
 }
 
@@ -1111,13 +1106,16 @@ void MainWindow::installBonjour()
 	if (m_BonjourInstall == NULL) {
 		m_BonjourInstall = new CommandProcess("msiexec", arguments);
 	}
-	if (m_BonjourInstallThread == NULL) {
-		m_BonjourInstallThread = new QThread;
-	}
-	m_BonjourInstall->moveToThread(m_BonjourInstallThread);
+
+	QThread* thread = new QThread;
 	connect(m_BonjourInstall, SIGNAL(finished()), this,
 		SLOT(bonjourInstallFinished()));
-	m_BonjourInstallThread->start();
+	connect(m_BonjourInstall, SIGNAL(finished()), thread, SLOT(quit()));
+	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+	m_BonjourInstall->moveToThread(thread);
+	thread->start();
+
 	QMetaObject::invokeMethod(m_BonjourInstall, "run", Qt::QueuedConnection);
 
 	m_DownloadMessageBox->hide();
@@ -1184,11 +1182,7 @@ void MainWindow::on_m_pCheckBoxAutoConfig_toggled(bool checked)
 
 void MainWindow::bonjourInstallFinished()
 {
-	delete m_BonjourInstall;
-	m_BonjourInstall = NULL;
-
-	delete m_BonjourInstallThread;
-	m_BonjourInstallThread = NULL;
+	appendLogNote("Bonjour install finished");
 
 	updateZeroconfService();
 }

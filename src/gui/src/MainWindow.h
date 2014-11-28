@@ -191,7 +191,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QMutex m_Mutex;
 		bool m_SuppressAutoConfigWarning;
 		CommandProcess* m_BonjourInstall;
-		QThread* m_BonjourInstallThread;
 
 private slots:
 	void on_m_pCheckBoxAutoConfig_toggled(bool checked);
