@@ -123,13 +123,13 @@ void SetupWizard::accept()
 
 	settings.sync();
 
+	QWizard::accept();
+
 	if (m_StartMain)
 	{
 		m_MainWindow.updateZeroconfService();
 		m_MainWindow.open();
 	}
-
-	QWizard::accept();
 }
 
 void SetupWizard::reject()
