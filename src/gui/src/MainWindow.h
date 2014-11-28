@@ -163,7 +163,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool isServiceRunning(QString name);
 		bool isBonjourRunning();
 		void downloadBonjour();
-		void promptAutoConnect();
+		void promptAutoConfig();
 
 	private:
 		QSettings& m_Settings;
@@ -187,11 +187,11 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QMessageBox* m_DownloadMessageBox;
 		QAbstractButton* m_pCancelButton;
 		QMutex m_Mutex;
-		bool m_SuppressAutoConnectWarning;
+		bool m_SuppressAutoConfigWarning;
 
 private slots:
+	void on_m_pCheckBoxAutoConfig_toggled(bool checked);
 	void on_m_pComboServerList_currentIndexChanged(QString );
-	void on_m_pCheckBoxAutoConnect_toggled(bool checked);
 	void on_m_pButtonApply_clicked();
 	void installBonjour();
 };

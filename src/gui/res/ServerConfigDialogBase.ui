@@ -44,7 +44,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="Synergy.qrc">:/res/icons/64x64/user-trash.png</pixmap>
+            <pixmap>:/res/icons/64x64/user-trash.png</pixmap>
            </property>
           </widget>
          </item>
@@ -82,7 +82,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="Synergy.qrc">:/res/icons/64x64/video-display.png</pixmap>
+            <pixmap>:/res/icons/64x64/video-display.png</pixmap>
            </property>
           </widget>
          </item>
@@ -505,9 +505,9 @@ Double click on a screen to edit its settings.</string>
            </spacer>
           </item>
           <item row="4" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConnectClient">
+           <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConfigClient">
             <property name="text">
-             <string>Ignore auto connect clients</string>
+             <string>Ignore auto config clients</string>
             </property>
            </widget>
           </item>
@@ -644,9 +644,7 @@ Double click on a screen to edit its settings.</string>
    <header>TrashScreenWidget.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="Synergy.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>m_pButtonBox</sender>

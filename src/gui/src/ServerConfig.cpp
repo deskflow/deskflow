@@ -49,7 +49,7 @@ ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows ,
 	m_NumColumns(numColumns),
 	m_NumRows(numRows),
 	m_ServerName(serverName),
-	m_IgnoreAutoConnectClient(false),
+	m_IgnoreAutoConfigClient(false),
 	m_pMainWindow(mainWindow)
 {
 	Q_ASSERT(m_pSettings);
@@ -113,7 +113,7 @@ void ServerConfig::saveSettings()
 	settings().setValue("hasSwitchDoubleTap", hasSwitchDoubleTap());
 	settings().setValue("switchDoubleTap", switchDoubleTap());
 	settings().setValue("switchCornerSize", switchCornerSize());
-	settings().setValue("ignoreAutoConnectClient", ignoreAutoConnectClient());
+	settings().setValue("ignoreAutoConfigClient", ignoreAutoConfigClient());
 
 	writeSettings(settings(), switchCorners(), "switchCorner");
 
@@ -156,7 +156,7 @@ void ServerConfig::loadSettings()
 	haveSwitchDoubleTap(settings().value("hasSwitchDoubleTap", false).toBool());
 	setSwitchDoubleTap(settings().value("switchDoubleTap", 250).toInt());
 	setSwitchCornerSize(settings().value("switchCornerSize").toInt());
-	setIgnoreAutoConnectClient(settings().value("ignoreAutoConnectClient").toBool());
+	setIgnoreAutoConfigClient(settings().value("ignoreAutoConfigClient").toBool());
 
 	readSettings(settings(), switchCorners(), "switchCorner", false, NumSwitchCorners);
 
@@ -375,7 +375,7 @@ int ServerConfig::showAddClientDialog(const QString& clientName)
 	AddClientDialog addClientDialog(clientName, m_pMainWindow);
 	addClientDialog.exec();
 	int result = addClientDialog.addResult();
-	m_IgnoreAutoConnectClient = addClientDialog.ignoreAutoConnectClient();
+	m_IgnoreAutoConfigClient = addClientDialog.ignoreAutoConfigClient();
 
 	return result;
 }

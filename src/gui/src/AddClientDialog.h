@@ -42,7 +42,7 @@ public:
 	~AddClientDialog();
 
 	int addResult() { return m_AddResult; }
-	bool ignoreAutoConnectClient() { return m_IgnoreAutoConnectClient; }
+	bool ignoreAutoConfigClient() { return m_IgnoreAutoConfigClient; }
 
 protected:
 	void changeEvent(QEvent *e);
@@ -62,7 +62,7 @@ private:
 	QPushButton* m_pButtonDown;
 	QLabel* m_pLabelCenter;
 	int m_AddResult;
-	bool m_IgnoreAutoConnectClient;
+	bool m_IgnoreAutoConfigClient;
 };
 
 #endif // ADDCLIENTDIALOG_H

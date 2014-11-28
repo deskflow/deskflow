@@ -60,7 +60,7 @@ class ServerConfig : public BaseConfig
 		int switchCornerSize() const { return m_SwitchCornerSize; }
 		const QList<bool>& switchCorners() const { return m_SwitchCorners; }
 		const HotkeyList& hotkeys() const { return m_Hotkeys; }
-		bool ignoreAutoConnectClient() const { return m_IgnoreAutoConnectClient; }
+		bool ignoreAutoConfigClient() const { return m_IgnoreAutoConfigClient; }
 
 		void saveSettings();
 		void loadSettings();
@@ -87,7 +87,7 @@ class ServerConfig : public BaseConfig
 		void setSwitchDoubleTap(int val) { m_SwitchDoubleTap = val; }
 		void setSwitchCorner(int c, bool on) { m_SwitchCorners[c] = on; }
 		void setSwitchCornerSize(int val) { m_SwitchCornerSize = val; }
-		void setIgnoreAutoConnectClient(bool on) { m_IgnoreAutoConnectClient = on; }
+		void setIgnoreAutoConfigClient(bool on) { m_IgnoreAutoConfigClient = on; }
 		QList<bool>& switchCorners() { return m_SwitchCorners; }
 		HotkeyList& hotkeys() { return m_Hotkeys; }
 
@@ -118,7 +118,7 @@ class ServerConfig : public BaseConfig
 		QList<bool> m_SwitchCorners;
 		HotkeyList m_Hotkeys;
 		QString m_ServerName;
-		bool m_IgnoreAutoConnectClient;
+		bool m_IgnoreAutoConfigClient;
 		MainWindow* m_pMainWindow;
 };
 

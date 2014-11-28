@@ -54,7 +54,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
 	m_pCheckBoxCornerBottomRight->setChecked(serverConfig().switchCorner(BaseConfig::BottomRight));
 	m_pSpinBoxSwitchCornerSize->setValue(serverConfig().switchCornerSize());
 
-	m_pCheckBoxIgnoreAutoConnectClient->setChecked(serverConfig().ignoreAutoConnectClient());
+	m_pCheckBoxIgnoreAutoConfigClient->setChecked(serverConfig().ignoreAutoConfigClient());
 
 	foreach(const Hotkey& hotkey, serverConfig().hotkeys())
 		m_pListHotkeys->addItem(hotkey.text());
@@ -96,7 +96,7 @@ void ServerConfigDialog::accept()
 	serverConfig().setSwitchCorner(BaseConfig::BottomLeft, m_pCheckBoxCornerBottomLeft->isChecked());
 	serverConfig().setSwitchCorner(BaseConfig::BottomRight, m_pCheckBoxCornerBottomRight->isChecked());
 	serverConfig().setSwitchCornerSize(m_pSpinBoxSwitchCornerSize->value());
-	serverConfig().setIgnoreAutoConnectClient(m_pCheckBoxIgnoreAutoConnectClient->isChecked());
+	serverConfig().setIgnoreAutoConfigClient(m_pCheckBoxIgnoreAutoConfigClient->isChecked());
 
 	// now that the dialog has been accepted, copy the new server config to the original one,
 	// which is a reference to the one in MainWindow.

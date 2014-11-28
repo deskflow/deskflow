@@ -87,7 +87,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pDataDownloader(NULL),
 	m_DownloadMessageBox(NULL),
 	m_pCancelButton(NULL),
-	m_SuppressAutoConnectWarning(false)
+	m_SuppressAutoConfigWarning(false)
 {
 	setupUi(this);
 
@@ -117,9 +117,9 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	setMinimumSize(size());
 #endif
 
-	m_SuppressAutoConnectWarning = true;
-	m_pCheckBoxAutoConnect->setChecked(appConfig.autoConnect());
-	m_SuppressAutoConnectWarning = false;
+	m_SuppressAutoConfigWarning = true;
+	m_pCheckBoxAutoConfig->setChecked(appConfig.autoConfig());
+	m_SuppressAutoConfigWarning = false;
 
 	m_pComboServerList->hide();
 }
@@ -147,8 +147,8 @@ void MainWindow::open()
 
 	m_VersionChecker.checkLatest();
 
-	if (!appConfig().autoConnectPrompted()) {
-		promptAutoConnect();
+	if (!appConfig().autoConfigPrompted()) {
+		promptAutoConfig();
 	}
 
 	// only start if user has previously started. this stops the gui from
@@ -524,9 +524,9 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 		args << "--log" << appConfig().logFilenameCmd();
 	}
 
-	// check auto connect first, if it is disabled or no server detected,
+	// check auto config first, if it is disabled or no server detected,
 	// use line edit host name if it is not empty
-	if (m_pCheckBoxAutoConnect->isChecked()) {
+	if (m_pCheckBoxAutoConfig->isChecked()) {
 		if (m_pComboServerList->count() != 0) {
 			QString serverIp = m_pComboServerList->currentText();
 			args << serverIp + ":" + QString::number(appConfig().port());
@@ -823,7 +823,7 @@ void MainWindow::updateZeroconfService()
 				m_pZeroconfService = NULL;
 			}
 
-			if (m_AppConfig.autoConnect() || synergyType() == synergyServer) {
+			if (m_AppConfig.autoConfig() || synergyType() == synergyServer) {
 				m_pZeroconfService = new ZeroconfService(this);
 			}
 		}
@@ -925,7 +925,7 @@ void MainWindow::on_m_pActionSettings_triggered()
 
 void MainWindow::autoAddScreen(const QString name)
 {
-	if (!m_ServerConfig.ignoreAutoConnectClient()) {
+	if (!m_ServerConfig.ignoreAutoConfigClient()) {
 		int r = m_ServerConfig.autoAddScreen(name);
 		if (r != kAutoAddScreenOk) {
 			switch (r) {
@@ -970,35 +970,6 @@ void MainWindow::on_m_pActionWizard_triggered()
 void MainWindow::on_m_pButtonApply_clicked()
 {
 	startSynergy();
-}
-
-void MainWindow::on_m_pCheckBoxAutoConnect_toggled(bool checked)
-{
-	if (!isBonjourRunning() && checked) {
-		if (!m_SuppressAutoConnectWarning) {
-			int r = QMessageBox::information(
-				this, tr("Synergy"),
-				tr("Auto connect feature requires Bonjour.\n\n"
-				   "Do you want to install Bonjour?"),
-				QMessageBox::Yes | QMessageBox::No);
-
-			if (r == QMessageBox::Yes) {
-				downloadBonjour();
-			}
-		}
-
-		m_pCheckBoxAutoConnect->setChecked(false);
-		return;
-	}
-
-	m_pLineEditHostname->setDisabled(checked);
-	appConfig().setAutoConnect(checked);
-	updateZeroconfService();
-
-	if (!checked) {
-		m_pComboServerList->clear();
-		m_pComboServerList->hide();
-	}
 }
 
 bool MainWindow::isServiceRunning(QString name)
@@ -1137,47 +1108,76 @@ void MainWindow::installBonjour()
 #endif
 }
 
-void MainWindow::promptAutoConnect()
+void MainWindow::promptAutoConfig()
 {
 	if (isBonjourRunning()) {
 		int r = QMessageBox::question(
 			this, tr("Synergy"),
-			tr("Do you want to enable auto connect?\n\n"
+			tr("Do you want to enable auto config?\n\n"
 			   "This feature helps you establish the connection."),
 			QMessageBox::Yes | QMessageBox::No);
 
 		if (r == QMessageBox::Yes) {
-			m_AppConfig.setAutoConnect(true);
-			m_pCheckBoxAutoConnect->setChecked(true);
+			m_AppConfig.setAutoConfig(true);
+			m_pCheckBoxAutoConfig->setChecked(true);
 		}
 		else {
-			m_AppConfig.setAutoConnect(false);
-			m_pCheckBoxAutoConnect->setChecked(false);
+			m_AppConfig.setAutoConfig(false);
+			m_pCheckBoxAutoConfig->setChecked(false);
 		}
 	}
 	else {
 		int r = QMessageBox::question(
 			this, tr("Synergy"),
-			tr("Do you want to enable auto connect and install Bonjour?\n\n"
+			tr("Do you want to enable auto config and install Bonjour?\n\n"
 			   "This feature helps you establish the connection."),
 			QMessageBox::Yes | QMessageBox::No);
 
 		if (r == QMessageBox::Yes) {
-			m_AppConfig.setAutoConnect(true);
+			m_AppConfig.setAutoConfig(true);
 			downloadBonjour();
 		}
 		else {
-			m_AppConfig.setAutoConnect(false);
-			m_pCheckBoxAutoConnect->setChecked(false);
+			m_AppConfig.setAutoConfig(false);
+			m_pCheckBoxAutoConfig->setChecked(false);
 		}
 	}
 
-	m_AppConfig.setAutoConnectPrompted(true);
+	m_AppConfig.setAutoConfigPrompted(true);
 }
 
 void MainWindow::on_m_pComboServerList_currentIndexChanged(QString )
 {
 	if (m_pComboServerList->count() != 0) {
 		startSynergy();
+	}
+}
+
+void MainWindow::on_m_pCheckBoxAutoConfig_toggled(bool checked)
+{
+	if (!isBonjourRunning() && checked) {
+		if (!m_SuppressAutoConfigWarning) {
+			int r = QMessageBox::information(
+				this, tr("Synergy"),
+				tr("Auto config feature requires Bonjour.\n\n"
+				   "Do you want to install Bonjour?"),
+				QMessageBox::Yes | QMessageBox::No);
+
+			if (r == QMessageBox::Yes) {
+				downloadBonjour();
+			}
+		}
+
+		m_pCheckBoxAutoConfig->setChecked(false);
+		return;
+	}
+
+	m_pLineEditHostname->setDisabled(checked);
+	appConfig().setAutoConfig(checked);
+	updateZeroconfService();
+
+	if (!checked) {
+		m_pComboServerList->clear();
+		m_pComboServerList->hide();
 	}
 }
