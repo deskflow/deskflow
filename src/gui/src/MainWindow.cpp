@@ -1184,5 +1184,5 @@ void MainWindow::bonjourInstallFinished()
 {
 	appendLogNote("Bonjour install finished");
 
-	updateZeroconfService();
+	m_pCheckBoxAutoConfig->setChecked(true);
 }
