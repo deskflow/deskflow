@@ -6,6 +6,8 @@ Enhancement #4196 - Optional Bonjour requirement for Windows
 Enhancement #4235 - Automatic Bonjour download and install
 Enhancement #4218 - Auto-config available servers combo box
 Enhancement #4230 - More user friendly dialog when client is detected
+Enhancement #4240 - Minimize auto config message box usage
+Enhancement #4242 - Consistent naming for auto config feature
 
 1.6.1
 =====
