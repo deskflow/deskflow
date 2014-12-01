@@ -96,6 +96,7 @@
       <Component Id="Gui" Guid="BAC8149B-6287-45BF-9C27-43D71ED40214">
         <File Id="GuiProgram" Source="$(var.BinPath)/synergy.exe" KeyPath="yes">
           <Shortcut Id="GuiShortcut" Name="$(var.Name)" Directory="ProgramMenuFolder" Icon="synergy.ico" Advertise="yes" />
+          <fire:FirewallException Id="SereverFirewallException" Name="$(var.Name)" Scope="any" IgnoreFailure="yes" />
         </File>
 
         <File Source="$(var.QtPath)\libgcc_s_dw2-1.dll" CompanionFile="GuiProgram" />
