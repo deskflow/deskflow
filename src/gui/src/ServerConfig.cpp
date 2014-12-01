@@ -372,10 +372,14 @@ bool ServerConfig::fixNoServer(const QString& name, int& index)
 
 int ServerConfig::showAddClientDialog(const QString& clientName)
 {
-	AddClientDialog addClientDialog(clientName, m_pMainWindow);
-	addClientDialog.exec();
-	int result = addClientDialog.addResult();
-	m_IgnoreAutoConfigClient = addClientDialog.ignoreAutoConfigClient();
+	int result = kAddClientIgnore;
+
+	if (m_pMainWindow->isActiveWindow()) {
+		AddClientDialog addClientDialog(clientName, m_pMainWindow);
+		addClientDialog.exec();
+		result = addClientDialog.addResult();
+		m_IgnoreAutoConfigClient = addClientDialog.ignoreAutoConfigClient();
+	}
 
 	return result;
 }
