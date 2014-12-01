@@ -84,7 +84,7 @@
             Start="install" Stop="both" Remove="uninstall" />
 
         <File Source="$(var.BinPath)/synergys.exe">
-          <fire:FirewallException Id="SereverFirewallException" Name="$(var.Name)" Scope="any" IgnoreFailure="yes" />
+          <fire:FirewallException Id="ServerFirewallException" Name="$(var.Name)" Scope="any" IgnoreFailure="yes" />
         </File>
         
         <File Source="$(var.BinPath)/synergyc.exe" />
