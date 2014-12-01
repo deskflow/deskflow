@@ -241,9 +241,9 @@
         <widget class="QLineEdit" name="m_pLineEditHostname"/>
        </item>
        <item row="3" column="0">
-        <widget class="QCheckBox" name="m_pCheckBoxAutoConnect">
+        <widget class="QCheckBox" name="m_pCheckBoxAutoConfig">
          <property name="text">
-          <string>Auto connect</string>
+          <string>Auto config</string>
          </property>
         </widget>
        </item>

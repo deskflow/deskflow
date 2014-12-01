@@ -25,7 +25,7 @@ AddClientDialog::AddClientDialog(const QString& clientName, QWidget* parent) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::AddClientDialog(),
 	m_AddResult(kAddClientIgnore),
-	m_IgnoreAutoConnectClient(false)
+	m_IgnoreAutoConfigClient(false)
 {
 	setupUi(this);
 
@@ -125,5 +125,5 @@ void AddClientDialog::handleButtonAdvanced()
 
 void AddClientDialog::on_m_pCheckBoxIgnoreClient_toggled(bool checked)
 {
-	m_IgnoreAutoConnectClient = checked;
+	m_IgnoreAutoConfigClient = checked;
 }

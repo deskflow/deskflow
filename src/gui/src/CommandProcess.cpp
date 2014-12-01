@@ -30,4 +30,5 @@ void CommandProcess::run()
 	QProcess process;
 	process.start(m_Command, m_Arguments);
 	process.waitForFinished();
+	emit finished();
 }

@@ -55,6 +55,7 @@ class QSynergyApplication;
 class SetupWizard;
 class ZeroconfService;
 class DataDownloader;
+class CommandProcess;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase
 {
@@ -134,6 +135,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void logOutput();
 		void logError();
 		void updateFound(const QString& version);
+		void bonjourInstallFinished();
 
 	protected:
 		QSettings& settings() { return m_Settings; }
@@ -163,7 +165,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool isServiceRunning(QString name);
 		bool isBonjourRunning();
 		void downloadBonjour();
-		void promptAutoConnect();
+		void promptAutoConfig();
 
 	private:
 		QSettings& m_Settings;
@@ -187,11 +189,12 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QMessageBox* m_DownloadMessageBox;
 		QAbstractButton* m_pCancelButton;
 		QMutex m_Mutex;
-		bool m_SuppressAutoConnectWarning;
+		bool m_SuppressAutoConfigWarning;
+		CommandProcess* m_BonjourInstall;
 
 private slots:
+	void on_m_pCheckBoxAutoConfig_toggled(bool checked);
 	void on_m_pComboServerList_currentIndexChanged(QString );
-	void on_m_pCheckBoxAutoConnect_toggled(bool checked);
 	void on_m_pButtonApply_clicked();
 	void installBonjour();
 };
