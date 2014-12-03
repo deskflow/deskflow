@@ -496,7 +496,23 @@ OSXScreen::postMouseEvent(CGPoint& pos) const
     // Fix for sticky keys
     CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
     CGEventSetFlags(event, modifiers);
-    
+
+    // Set movement deltas to fix issues with certain 3D programs
+    SInt64 deltaX = pos.x;
+    deltaX -= m_xCursor;
+
+    SInt64 deltaY = pos.y;
+    deltaY -= m_yCursor;
+
+    CGEventSetIntegerValueField(event, kCGMouseEventDeltaX, deltaX);
+    CGEventSetIntegerValueField(event, kCGMouseEventDeltaY, deltaY);
+
+    double deltaFX = deltaX;
+    double deltaFY = deltaY;
+
+    CGEventSetDoubleValueField(event, kCGMouseEventDeltaX, deltaFX);
+    CGEventSetDoubleValueField(event, kCGMouseEventDeltaY, deltaFY);
+
 	CGEventPost(kCGHIDEventTap, event);
 	
 	CFRelease(event);
