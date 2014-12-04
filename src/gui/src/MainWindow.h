@@ -191,6 +191,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QMutex m_Mutex;
 		bool m_SuppressAutoConfigWarning;
 		CommandProcess* m_BonjourInstall;
+		bool m_SuppressEmptyServerWarning;
 
 private slots:
 	void on_m_pCheckBoxAutoConfig_toggled(bool checked);

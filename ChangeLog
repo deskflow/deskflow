@@ -2,10 +2,14 @@
 =====
 Bug #4227 - Helper tool crashes when service checks elevation state
 Bug #4091 - Zeroconf on server advertises bogus IP address
+Bug #4249 - Drag file causes client crash on Mac (10.10)
 Enhancement #4196 - Optional Bonjour requirement for Windows
 Enhancement #4235 - Automatic Bonjour download and install
 Enhancement #4218 - Auto-config available servers combo box
 Enhancement #4230 - More user friendly dialog when client is detected
+Enhancement #4240 - Minimize auto config message box usage
+Enhancement #4247 - Firewall exception for GUI (needed for Bonjour)
+Enhancement #4242 - Consistent naming for auto config feature
 
 1.6.1
 =====

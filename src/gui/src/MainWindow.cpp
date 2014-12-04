@@ -88,7 +88,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_DownloadMessageBox(NULL),
 	m_pCancelButton(NULL),
 	m_SuppressAutoConfigWarning(false),
-	m_BonjourInstall(NULL)
+	m_BonjourInstall(NULL),
+	m_SuppressEmptyServerWarning(false)
 {
 	setupUi(this);
 
@@ -160,7 +161,9 @@ void MainWindow::open()
 	// auto hiding before the user has configured synergy (which of course
 	// confuses first time users, who think synergy has crashed).
 	if (appConfig().startedBefore() && appConfig().processMode() == Desktop) {
+		m_SuppressEmptyServerWarning = true;
 		startSynergy();
+		m_SuppressEmptyServerWarning = false;
 	}
 }
 
@@ -541,8 +544,10 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 
 	if (m_pLineEditHostname->text().isEmpty()) {
 		show();
-		QMessageBox::warning(this, tr("Hostname is empty"),
+		if (!m_SuppressEmptyServerWarning) {
+			QMessageBox::warning(this, tr("Hostname is empty"),
 							 tr("Please fill in a hostname for the synergy client to connect to."));
+		}
 		return false;
 	}
 

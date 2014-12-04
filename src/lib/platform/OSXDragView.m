@@ -98,7 +98,9 @@ clearDropTarget
 - (void)
 setFileExt:(NSString*) ext
 {
-	m_dragFileExt = [NSString stringWithString:ext];
+	[ext retain];
+	[m_dragFileExt release];
+	m_dragFileExt = ext;
 	NSLog(@"drag file ext: %@", m_dragFileExt);
 }
 
