@@ -366,8 +366,9 @@ class InternalCommands:
 		# back to prompt if not specified as arg)
 		self.ensure_setup_latest()
 		
+		config = self.getConfig()
+
 		if sys.platform == "darwin":
-			config = self.getConfig()
 		
 			if self.macSdk:
 				config.set('hm', 'macSdk', self.macSdk)
@@ -378,8 +379,6 @@ class InternalCommands:
 				config.set('hm', 'macIdentity', self.macIdentity)
 			elif config.has_option("hm", "macIdentity"):
 				self.macIdentity = config.get('hm', 'macIdentity')
-		
-			self.write_config(config)
 		
 			if not self.macSdk:
 				raise Exception("Arg missing: --mac-sdk <version>");
@@ -393,6 +392,12 @@ class InternalCommands:
 			
 			os.environ["MACOSX_DEPLOYMENT_TARGET"] = self.macSdk
 		
+		config.set('hm', 'enableMakeCore', self.enableMakeCore)
+
+		config.set('hm', 'enableMakeGui', self.enableMakeGui)
+
+		self.write_config(config)
+
 		# default is release
 		if target == '':
 			print 'Defaulting target to: ' + self.defaultTarget
@@ -657,6 +662,12 @@ class InternalCommands:
 		if config.has_option("hm", "macIdentity"):
 			self.macIdentity = config.get("hm", "macIdentity")
 	
+		if config.has_option("hm", "enableMakeCore"):
+			self.enableMakeCore = config.getboolean("hm", "enableMakeCore")
+
+		if config.has_option("hm", "enableMakeGui"):
+			self.enableMakeGui = config.getboolean("hm", "enableMakeGui")
+
 	def makeCore(self, targets):
 	
 		generator = self.getGeneratorFromConfig().cmakeName
