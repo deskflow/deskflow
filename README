@@ -1,7 +1,7 @@
 Share one mouse and keyboard between multiple computers.
 
-Synergy is free and open source, so you are free to run the program,
-change the program, and redistribute the program with or without changes.
+Synergy is free and open source, so you are free to run it,
+change it, and redistribute it with or without changes.
 
 Just use "hm conf" and "hm build" to compile (./hm.sh on Linux and Mac).
 
