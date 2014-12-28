@@ -80,7 +80,7 @@ ClientProxy1_4::cryptoIv()
 
 	byte iv[CRYPTO_IV_SIZE];
 	cryptoStream->newIv(iv);
-	String data(reinterpret_cast<const char*>(iv), CRYPTO_IV_SIZE);
+	const String data(reinterpret_cast<const char*>(iv), CRYPTO_IV_SIZE);
 
 	LOG((CLOG_DEBUG2 "send crypto iv change to \"%s\"", getName().c_str()));
 	ProtocolUtil::writef(getStream(), kMsgDCryptoIv, &data);
