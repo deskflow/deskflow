@@ -20,7 +20,41 @@ if (SYNERGY_ADD_HEADERS)
 	list(APPEND sources ${headers})
 endif()
 
+if (WIN32)
+	set(OPENSSL_INCLUDE ../../../ext/openssl/inc32)
+endif()
+
+if (APPLE)
+	set(OPENSSL_INCLUDE ../../../ext/openssl/include)
+endif()
+
+include_directories(
+	../../lib/
+	${OPENSSL_INCLUDE}
+)
+
 add_library(ns SHARED ${sources})
+
+if (WIN32)
+  set(OPENSSL_LIBS
+    ${CMAKE_SOURCE_DIR}/ext/openssl/out32dll/libeay32.lib
+    ${CMAKE_SOURCE_DIR}/ext/openssl/out32dll/ssleay32.lib
+  )
+endif()
+
+if (UNIX)
+  if (APPLE)
+    set(OPENSSL_LIBS
+	  ${CMAKE_SOURCE_DIR}/ext/openssl/libssl.a
+	  ${CMAKE_SOURCE_DIR}/ext/openssl/libcrypto.a
+    )
+  else()
+    set(OPENSSL_LIBS ssl crypto)
+  endif()
+endif()
+
+target_link_libraries(ns
+	arch base client common io mt net ipc platform server synergy cryptopp ${libs} ${OPENSSL_LIBS})
 
 if (WIN32)
 	add_custom_command(
