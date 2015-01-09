@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Bolton Software Ltd.
+ * Copyright (C) 2015 Synergy Si Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,12 +28,12 @@ XBASE_SUBCLASS(XSecureSocket, XBase);
 Secure socket layer using OpenSSL.
 */
 
-struct CSsl;
+struct Ssl;
 
-class CSecureSocket {
+class SecureSocket {
 public:
-	CSecureSocket();
-	~CSecureSocket();
+	SecureSocket();
+	~SecureSocket();
 
 	void				initContext(bool server);
 	void				loadCertificates(const char* CertFile);
@@ -52,7 +52,7 @@ private:
 	bool				getError();
 
 private:
-	CSsl*				m_ssl;
+	Ssl*				m_ssl;
 	bool				m_ready;
 	char*				m_error;
 	const size_t		m_errorSize;

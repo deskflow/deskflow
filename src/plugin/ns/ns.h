@@ -17,6 +17,7 @@
 
 #pragma once
 
+#if defined _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
@@ -26,9 +27,14 @@
 #define NS_API __declspec(dllimport)
 #endif
 
+#else
+#define NS_API
+#endif
+
 extern "C" {
 
-NS_API int		init(void (*sendEvent)(const char*, void*), void (*log)(const char*));
-NS_API int		cleanup();
+NS_API int				init(void (*sendEvent)(const char*, void*), void (*log)(const char*));
+NS_API void*			invoke(const char* command, void* args);
+NS_API int				cleanup();
 
 }

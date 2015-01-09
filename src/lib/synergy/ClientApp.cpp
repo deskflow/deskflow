@@ -458,6 +458,9 @@ ClientApp::mainLoop()
 	SocketMultiplexer multiplexer;
 	setSocketMultiplexer(&multiplexer);
 
+	// load all available plugins.
+	ARCH->plugin().load();
+
 	// start client, etc
 	appUtil().startNode();
 	
@@ -467,7 +470,7 @@ ClientApp::mainLoop()
 		initIpcClient();
 	}
 
-	// load all available plugins.
+	// init all available plugins.
 	ARCH->plugin().init(m_clientScreen->getEventTarget(), m_events);
 
 	// run event loop.  if startClient() failed we're supposed to retry

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Bolton Software Ltd.
+ * Copyright (C) 2015 Synergy Si Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,21 +24,22 @@
 //
 // SecureSocket
 //
-struct CSsl {
+struct Ssl {
 	SSL_CTX*	m_context;
 	SSL*		m_ssl;
 };
-CSecureSocket::CSecureSocket() :
+
+SecureSocket::SecureSocket() :
 	m_ready(false),
 	m_errorSize(65535)
 {
-	m_ssl = new CSsl();
+	m_ssl = new Ssl();
 	m_ssl->m_context = NULL;
 	m_ssl->m_ssl = NULL;
 	m_error = new char[m_errorSize];
 }
 
-CSecureSocket::~CSecureSocket()
+SecureSocket::~SecureSocket()
 {
 	if (m_ssl->m_ssl != NULL) {
 		SSL_free(m_ssl->m_ssl);
@@ -51,7 +52,7 @@ CSecureSocket::~CSecureSocket()
 }
 
 void
-CSecureSocket::initContext(bool server)
+SecureSocket::initContext(bool server)
 {
 	SSL_library_init();
 
@@ -80,7 +81,7 @@ CSecureSocket::initContext(bool server)
 }
 
 void
-CSecureSocket::loadCertificates(const char* filename)
+SecureSocket::loadCertificates(const char* filename)
 {
 	int r = 0;
 	r = SSL_CTX_use_certificate_file(m_ssl->m_context, filename, SSL_FILETYPE_PEM);
@@ -100,7 +101,7 @@ CSecureSocket::loadCertificates(const char* filename)
 	}
 }
 void
-CSecureSocket::createSSL()
+SecureSocket::createSSL()
 {
 	// I assume just one instance is needed
 	// get new SSL state with context
@@ -110,7 +111,7 @@ CSecureSocket::createSSL()
 }
 
 void
-CSecureSocket::accept(int socket)
+SecureSocket::accept(int socket)
 {
 	createSSL();
 
@@ -131,7 +132,7 @@ CSecureSocket::accept(int socket)
 }
 
 void
-CSecureSocket::connect(int socket)
+SecureSocket::connect(int socket)
 {
 	createSSL();
 
@@ -152,7 +153,7 @@ CSecureSocket::connect(int socket)
 }
 
 size_t
-CSecureSocket::write(const void* buffer, int size)
+SecureSocket::write(const void* buffer, int size)
 {
 	bool retry = false;
 	int n = 0;
@@ -168,7 +169,7 @@ CSecureSocket::write(const void* buffer, int size)
 }
 
 size_t
-CSecureSocket::read(void* buffer, int size)
+SecureSocket::read(void* buffer, int size)
 {
 	bool retry = false;
 	int n = 0;
@@ -184,7 +185,7 @@ CSecureSocket::read(void* buffer, int size)
 }
 
 void
-CSecureSocket::showCertificate()
+SecureSocket::showCertificate()
 {
 	X509* cert;
 	char* line;
@@ -207,7 +208,7 @@ CSecureSocket::showCertificate()
 }
 
 bool
-CSecureSocket::checkResult(int n)
+SecureSocket::checkResult(int n)
 {
 	bool retry = false;
 	int errorCode = SSL_get_error(m_ssl->m_ssl, n);
@@ -253,16 +254,15 @@ CSecureSocket::checkResult(int n)
 }
 
 void
-CSecureSocket::showError()
+SecureSocket::showError()
 {
 	if (getError()) {
 		LOG((CLOG_ERR "secure socket error: %s", m_error));
 	}
 }
 
-
 void
-CSecureSocket::throwError(const char* reason)
+SecureSocket::throwError(const char* reason)
 {
 	if (getError()) {
 		throw XSecureSocket(synergy::string::sprintf(
@@ -271,7 +271,7 @@ CSecureSocket::throwError(const char* reason)
 }
 
 bool
-CSecureSocket::getError()
+SecureSocket::getError()
 {
 	unsigned long e = ERR_get_error();
 	bool errorUpdated = false;
@@ -288,7 +288,7 @@ CSecureSocket::getError()
 }
 
 bool
-CSecureSocket::isReady()
+SecureSocket::isReady()
 {
 	return m_ready;
 }

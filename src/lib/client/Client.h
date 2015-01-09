@@ -37,6 +37,7 @@ class IStreamFilterFactory;
 class IEventQueue;
 class CryptoStream;
 class Thread;
+class SecureSocket;
 
 //! Synergy client
 /*!
@@ -233,4 +234,5 @@ private:
 	Thread*				m_sendFileThread;
 	Thread*				m_writeToDropDirThread;
 	bool					m_enableDragDrop;
+	SecureSocket*		m_secureSocket;
 };

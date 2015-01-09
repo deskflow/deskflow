@@ -18,6 +18,7 @@
 
 #include "client/Client.h"
 
+#include "../plugin/ns/SecureSocket.h"
 #include "client/ServerProxy.h"
 #include "synergy/Screen.h"
 #include "synergy/Clipboard.h"
@@ -44,6 +45,12 @@
 #include <cstdlib>
 #include <sstream>
 #include <fstream>
+
+#if defined _WIN32
+static const char s_networkSecurity[] = { "ns" };
+#else
+static const char s_networkSecurity[] = { "libns" };
+#endif
 
 //
 // Client
@@ -75,7 +82,8 @@ Client::Client(
 	m_crypto(crypto),
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
-	m_enableDragDrop(enableDragDrop)
+	m_enableDragDrop(enableDragDrop),
+	m_secureSocket(NULL)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -99,6 +107,11 @@ Client::Client(
 								this,
 								new TMethodEventJob<Client>(this,
 									&Client::handleFileRecieveCompleted));
+	}
+
+	if (ARCH->plugin().exists(s_networkSecurity)) {
+		m_secureSocket = static_cast<SecureSocket*>(
+			ARCH->plugin().invoke("ns", "getSecureSocket", NULL));
 	}
 }
 

@@ -21,6 +21,8 @@
 #define PLUGINS_DIR "plugins"
 
 #include "common/IInterface.h"
+#include "common/stdmap.h"
+#include "base/String.h"
 
 class IEventQueue;
 
@@ -34,11 +36,34 @@ public:
 	//! @name manipulators
 	//@{
 
-	//! Load plugins
+	//!Load plugins
 	/*!
 	Scan the plugins dir and load plugins.
 	*/
+	virtual void		load() = 0;
+
+	//! Init plugins
+	/*!
+	Initializes loaded plugins.
+	*/
 	virtual void		init(void* eventTarget, IEventQueue* events) = 0;
 
+	//! Check if exists
+	/*!
+	Returns true if the plugin exists and is loaded.
+	*/
+	virtual bool		exists(const char* name) = 0;
+
+	//! Invoke function
+	/*!
+	Invokes a function from the plugin.
+	*/
+	virtual void*		invoke(const char* plugin,
+							const char* command,
+							void* args) = 0;
+
 	//@}
+
+protected:
+	typedef std::map<String, void*> PluginTable;
 };

@@ -28,6 +28,7 @@
 #include <iostream>
 
 typedef int (*initFunc)(void (*sendEvent)(const char*, void*), void (*log)(const char*));
+typedef void* (*invokeFunc)(const char*, void*);
 
 void* g_eventTarget = NULL;
 IEventQueue* g_events = NULL;
@@ -41,11 +42,8 @@ ArchPluginWindows::~ArchPluginWindows()
 }
 
 void
-ArchPluginWindows::init(void* eventTarget, IEventQueue* events)
+ArchPluginWindows::load()
 {
-	g_eventTarget = eventTarget;
-	g_events = events;
-	
 	String dir = getPluginsDir();
 	LOG((CLOG_DEBUG "plugins dir: %s", dir.c_str()));
 
@@ -54,21 +52,63 @@ ArchPluginWindows::init(void* eventTarget, IEventQueue* events)
 	getFilenames(pattern, plugins);
 
 	std::vector<String>::iterator it;
-	for (it = plugins.begin(); it != plugins.end(); ++it)
-		load(*it);
+	for (it = plugins.begin(); it != plugins.end(); ++it) {
+		LOG((CLOG_DEBUG "loading plugin: %s", (*it).c_str()));
+		String path = String(getPluginsDir()).append("\\").append(*it);
+		HINSTANCE library = LoadLibrary(path.c_str());
+
+		if (library == NULL) {
+			throw XArch(new XArchEvalWindows);
+		}
+
+		void* lib = reinterpret_cast<void*>(library);
+		String filename = synergy::string::removeFileExt(*it);
+		m_pluginTable.insert(std::make_pair(filename, lib));
+	}
 }
 
 void
-ArchPluginWindows::load(const String& dllFilename)
+ArchPluginWindows::init(void* eventTarget, IEventQueue* events)
 {
-	LOG((CLOG_DEBUG "loading plugin: %s", dllFilename.c_str()));
-	String path = String(getPluginsDir()).append("\\").append(dllFilename);
-	HINSTANCE library = LoadLibrary(path.c_str());
-	if (library == NULL)
-		throw XArch(new XArchEvalWindows);
+	g_eventTarget = eventTarget;
+	g_events = events;
 
-	initFunc initPlugin = (initFunc)GetProcAddress(library, "init");
-	initPlugin(&sendEvent, &log);
+	PluginTable::iterator it;
+	HINSTANCE lib;
+	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
+		lib = reinterpret_cast<HINSTANCE>(it->second);
+		initFunc initPlugin = (initFunc)GetProcAddress(lib, "init");
+		initPlugin(&sendEvent, &log);
+	}
+}
+
+
+bool
+ArchPluginWindows::exists(const char* name)
+{
+	PluginTable::iterator it;
+	it = m_pluginTable.find(name);
+	return it != m_pluginTable.end() ? true : false;
+}
+
+void*
+ArchPluginWindows::invoke(
+	const char* plugin,
+	const char* command,
+	void* args)
+{
+	PluginTable::iterator it;
+	it = m_pluginTable.find(plugin);
+	if (it != m_pluginTable.end()) {
+		HINSTANCE lib = reinterpret_cast<HINSTANCE>(it->second);
+		invokeFunc invokePlugin = (invokeFunc)GetProcAddress(lib, "invoke");
+		return invokePlugin(command, args);
+	}
+	else {
+		LOG((CLOG_DEBUG "invoke command failed, plugin: %s command: %s",
+				plugin, command));
+		return NULL;
+	}
 }
 
 String

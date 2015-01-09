@@ -17,21 +17,41 @@
 
 #include "ns.h"
 
+#include "SecureSocket.h"
+
 #include <iostream>
+
+SecureSocket* g_secureSocket = NULL;
 
 extern "C" {
 
 int
 init(void (*sendEvent)(const char*, void*), void (*log)(const char*))
 {
-	std::cout << "hello world" << std::endl;
 	return 0;
+}
+
+void*
+invoke(const char* command, void* args)
+{
+	if (strcmp(command, "getSecureSocket") == 0) {
+		if (g_secureSocket == NULL) {
+			g_secureSocket = new SecureSocket();
+		}
+		return g_secureSocket;
+	}
+	else {
+		return NULL;
+	}
 }
 
 int
 cleanup()
 {
-	std::cout << "goodbye world" << std::endl;
+	if (g_secureSocket != NULL) {
+		delete g_secureSocket;
+	}
+
 	return 0;
 }
 
