@@ -76,7 +76,7 @@ if (UNIX)
 
 	# warnings as errors:
 	# we have a problem with people checking in code with warnings.
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -fPIC")
 
 	# For config.h, detect the libraries, functions, etc.
 	include(CheckIncludeFiles)
@@ -174,7 +174,7 @@ if (UNIX)
 				CACHE STRING "" FORCE)
 		else()
 			# >= 10.6: Intel only
-			set(CMAKE_OSX_ARCHITECTURES "i386;x86_64"
+			set(CMAKE_OSX_ARCHITECTURES "i386"
 				CACHE STRING "" FORCE)
 		endif()
 		

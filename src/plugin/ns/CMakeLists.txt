@@ -30,6 +30,7 @@ endif()
 
 include_directories(
 	../../lib/
+	../../..
 	${OPENSSL_INCLUDE}
 )
 
@@ -65,11 +66,28 @@ if (WIN32)
 			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\plugins\\
 	)
 else()
-	add_custom_command(
-		TARGET ns
-		POST_BUILD
-		COMMAND cp
-			..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\ns.so
-			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\plugins\\
-	)
+	if (APPLE)
+		add_custom_command(
+			TARGET ns
+			POST_BUILD
+			COMMAND
+				mkdir -p
+				${CMAKE_SOURCE_DIR}/bin/plugins
+				&&
+				cp
+				${CMAKE_SOURCE_DIR}/lib/${CMAKE_CFG_INTDIR}/libns.dylib
+				${CMAKE_SOURCE_DIR}/bin/plugins/
+		)
+	else()
+		add_custom_command(
+			TARGET ns
+			POST_BUILD
+			COMMAND mkdir -p
+				../../../../../bin/plugins
+				&&
+				cp
+				../../../../../lib/libns.so
+				../../../../../bin/plugins/
+		)
+	endif()
 endif()
