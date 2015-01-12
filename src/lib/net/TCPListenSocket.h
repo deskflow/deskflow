@@ -41,7 +41,8 @@ public:
 	virtual void*		getEventTarget() const;
 
 	// IListenSocket overrides
-	virtual IDataSocket*	accept();
+	virtual IDataSocket*
+						accept();
 
 private:
 	ISocketMultiplexerJob*
@@ -52,5 +53,5 @@ private:
 	ArchSocket			m_socket;
 	Mutex*				m_mutex;
 	IEventQueue*		m_events;
-	SocketMultiplexer* m_socketMultiplexer;
+	SocketMultiplexer*	m_socketMultiplexer;
 };

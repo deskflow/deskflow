@@ -87,5 +87,5 @@ private:
 	bool				m_readable;
 	bool				m_writable;
 	IEventQueue*		m_events;
-	SocketMultiplexer* m_socketMultiplexer;
+	SocketMultiplexer*	m_socketMultiplexer;
 };

@@ -30,10 +30,12 @@ public:
 	virtual ~TCPSocketFactory();
 
 	// ISocketFactory overrides
-	virtual IDataSocket*	create() const;
-	virtual IListenSocket*	createListen() const;
+	virtual IDataSocket*
+						create() const;
+	virtual IListenSocket*
+						createListen() const;
 
 private:
 	IEventQueue*		m_events;
-	SocketMultiplexer* m_socketMultiplexer;
+	SocketMultiplexer*	m_socketMultiplexer;
 };
