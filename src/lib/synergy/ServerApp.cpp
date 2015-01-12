@@ -631,7 +631,7 @@ ServerApp::openClientListener(const NetworkAddress& address)
 {
 	ClientListener* listen = new ClientListener(
 		address,
-		new CTCPSocketFactory(m_events, getSocketMultiplexer()),
+		new TCPSocketFactory(m_events, getSocketMultiplexer()),
 		NULL,
 		args().m_crypto,
 		m_events);

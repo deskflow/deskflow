@@ -115,7 +115,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
 	
 	// server
 	SocketMultiplexer serverSocketMultiplexer;
-	CTCPSocketFactory* serverSocketFactory = new CTCPSocketFactory(&m_events, &serverSocketMultiplexer);
+	TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
 	ClientListener listener(serverAddress, serverSocketFactory, NULL, cryptoOptions, &m_events);
 	NiceMock<MockScreen> serverScreen;
 	NiceMock<MockPrimaryClient> primaryClient;
@@ -137,7 +137,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
 	// client
 	NiceMock<MockScreen> clientScreen;
 	SocketMultiplexer clientSocketMultiplexer;
-	CTCPSocketFactory* clientSocketFactory = new CTCPSocketFactory(&m_events, &clientSocketMultiplexer);
+	TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
 	
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
@@ -168,7 +168,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 	
 	// server
 	SocketMultiplexer serverSocketMultiplexer;
-	CTCPSocketFactory* serverSocketFactory = new CTCPSocketFactory(&m_events, &serverSocketMultiplexer);
+	TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
 	ClientListener listener(serverAddress, serverSocketFactory, NULL, cryptoOptions, &m_events);
 	NiceMock<MockScreen> serverScreen;
 	NiceMock<MockPrimaryClient> primaryClient;
@@ -190,7 +190,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 	// client
 	NiceMock<MockScreen> clientScreen;
 	SocketMultiplexer clientSocketMultiplexer;
-	CTCPSocketFactory* clientSocketFactory = new CTCPSocketFactory(&m_events, &clientSocketMultiplexer);
+	TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
 	
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
@@ -221,7 +221,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
 
 	// server
 	SocketMultiplexer serverSocketMultiplexer;
-	CTCPSocketFactory* serverSocketFactory = new CTCPSocketFactory(&m_events, &serverSocketMultiplexer);
+	TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
 	ClientListener listener(serverAddress, serverSocketFactory, NULL, cryptoOptions, &m_events);
 	NiceMock<MockScreen> serverScreen;
 	NiceMock<MockPrimaryClient> primaryClient;
@@ -238,7 +238,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
 	// client
 	NiceMock<MockScreen> clientScreen;
 	SocketMultiplexer clientSocketMultiplexer;
-	CTCPSocketFactory* clientSocketFactory = new CTCPSocketFactory(&m_events, &clientSocketMultiplexer);
+	TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
 	
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
@@ -274,7 +274,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 
 	// server
 	SocketMultiplexer serverSocketMultiplexer;
-	CTCPSocketFactory* serverSocketFactory = new CTCPSocketFactory(&m_events, &serverSocketMultiplexer);
+	TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
 	ClientListener listener(serverAddress, serverSocketFactory, NULL, cryptoOptions, &m_events);
 	NiceMock<MockScreen> serverScreen;
 	NiceMock<MockPrimaryClient> primaryClient;
@@ -291,7 +291,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 	// client
 	NiceMock<MockScreen> clientScreen;
 	SocketMultiplexer clientSocketMultiplexer;
-	CTCPSocketFactory* clientSocketFactory = new CTCPSocketFactory(&m_events, &clientSocketMultiplexer);
+	TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
 	
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));

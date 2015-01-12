@@ -34,11 +34,11 @@ class SocketMultiplexer;
 /*!
 A data socket using TCP.
 */
-class CTCPSocket : public IDataSocket {
+class TCPSocket : public IDataSocket {
 public:
-	CTCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
-	CTCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket);
-	~CTCPSocket();
+	TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+	TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket);
+	~TCPSocket();
 
 	// ISocket overrides
 	virtual void		bind(const NetworkAddress&);

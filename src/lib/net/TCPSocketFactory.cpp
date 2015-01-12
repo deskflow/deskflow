@@ -22,29 +22,29 @@
 #include "net/TCPListenSocket.h"
 
 //
-// CTCPSocketFactory
+// TCPSocketFactory
 //
 
-CTCPSocketFactory::CTCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
+TCPSocketFactory::TCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {
 	// do nothing
 }
 
-CTCPSocketFactory::~CTCPSocketFactory()
+TCPSocketFactory::~TCPSocketFactory()
 {
 	// do nothing
 }
 
 IDataSocket*
-CTCPSocketFactory::create() const
+TCPSocketFactory::create() const
 {
-	return new CTCPSocket(m_events, m_socketMultiplexer);
+	return new TCPSocket(m_events, m_socketMultiplexer);
 }
 
 IListenSocket*
-CTCPSocketFactory::createListen() const
+TCPSocketFactory::createListen() const
 {
 	return new TCPListenSocket(m_events, m_socketMultiplexer);
 }
