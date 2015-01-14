@@ -36,12 +36,15 @@ static void (*s_log)(const char*) = NULL;
 
 extern "C" {
 
+void
+init(void* log, void* arch)
+{
+}
+
 int
-init(void (*sendEvent)(const char*, void*), void (*log)(const char*))
+initEvent(void (*sendEvent)(const char*, void*))
 {
 	s_sendEvent = sendEvent;
-	s_log = log;
-	LOG("init");
 	CreateThread(NULL, 0, mainLoop, NULL, 0, NULL);
 	return 0;
 }

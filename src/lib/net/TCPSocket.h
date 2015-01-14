@@ -38,7 +38,7 @@ class TCPSocket : public IDataSocket {
 public:
 	TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
 	TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket);
-	~TCPSocket();
+	virtual ~TCPSocket();
 
 	// ISocket overrides
 	virtual void		bind(const NetworkAddress&);
@@ -57,15 +57,19 @@ public:
 	// IDataSocket overrides
 	virtual void		connect(const NetworkAddress&);
 
+protected:
+	virtual void		onConnected();
+	ArchSocket			getSocket() { return m_socket; }
+
 private:
 	void				init();
 
 	void				setJob(ISocketMultiplexerJob*);
-	ISocketMultiplexerJob*	newJob();
+	ISocketMultiplexerJob*
+						newJob();
 	void				sendConnectionFailedEvent(const char*);
 	void				sendEvent(Event::Type);
 
-	void				onConnected();
 	void				onInputShutdown();
 	void				onOutputShutdown();
 	void				onDisconnected();

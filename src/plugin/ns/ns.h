@@ -33,8 +33,9 @@
 
 extern "C" {
 
-NS_API int				init(void (*sendEvent)(const char*, void*), void (*log)(const char*));
-NS_API void*			invoke(const char* command, void* args);
+NS_API void				init(void* log, void* arch);
+NS_API int				initEvent(void (*sendEvent)(const char*, void*));
+NS_API void*			invoke(const char* command, void** args);
 NS_API int				cleanup();
 
 }

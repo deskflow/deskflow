@@ -20,10 +20,18 @@
 
 #include "net/TCPSocket.h"
 #include "net/TCPListenSocket.h"
+#include "arch/Arch.h"
+#include "base/Log.h"
 
 //
 // TCPSocketFactory
 //
+
+#if defined _WIN32
+static const char s_networkSecurity[] = { "ns" };
+#else
+static const char s_networkSecurity[] = { "libns" };
+#endif
 
 TCPSocketFactory::TCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	m_events(events),
@@ -38,13 +46,43 @@ TCPSocketFactory::~TCPSocketFactory()
 }
 
 IDataSocket*
-TCPSocketFactory::create() const
+TCPSocketFactory::create(bool secure) const
 {
-	return new TCPSocket(m_events, m_socketMultiplexer);
+	IDataSocket* socket = NULL;
+	if (secure) {
+		void* args[4] = {
+			m_events,
+			m_socketMultiplexer,
+			Log::getInstance(),
+			Arch::getInstance()
+		};
+		socket = static_cast<IDataSocket*>(
+			ARCH->plugin().invoke(s_networkSecurity, "getSecureSocket", args));
+	}
+	else {
+		socket = new TCPSocket(m_events, m_socketMultiplexer);
+	}
+
+	return socket;
 }
 
 IListenSocket*
-TCPSocketFactory::createListen() const
+TCPSocketFactory::createListen(bool secure) const
 {
-	return new TCPListenSocket(m_events, m_socketMultiplexer);
+	IListenSocket* socket = NULL;
+	if (secure) {
+		void* args[4] = {
+			m_events,
+			m_socketMultiplexer,
+			Log::getInstance(),
+			Arch::getInstance()
+		};
+		socket = static_cast<IListenSocket*>(
+			ARCH->plugin().invoke(s_networkSecurity, "getSecureListenSocket", args));
+	}
+	else {
+		socket = new TCPListenSocket(m_events, m_socketMultiplexer);
+	}
+
+	return socket;
 }

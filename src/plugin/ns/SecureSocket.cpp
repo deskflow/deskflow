@@ -17,26 +17,42 @@
 
 #include "SecureSocket.h"
 
-#include "base/String.h"
+#include "net/TCPSocket.h"
+#include "arch/XArch.h"
+#include "base/Log.h"
+
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include <cstring>
+#include <cstdlib>
+#include <memory>
 
 //
 // SecureSocket
 //
+
+#define MAX_ERROR_SIZE 65535
+
 struct Ssl {
 	SSL_CTX*	m_context;
 	SSL*		m_ssl;
 };
 
-SecureSocket::SecureSocket() :
-	m_ready(false),
-	m_errorSize(65535)
+SecureSocket::SecureSocket(
+		IEventQueue* events,
+		SocketMultiplexer* socketMultiplexer) :
+	TCPSocket(events, socketMultiplexer),
+	m_ready(false)
 {
-	m_ssl = new Ssl();
-	m_ssl->m_context = NULL;
-	m_ssl->m_ssl = NULL;
-	m_error = new char[m_errorSize];
+}
+
+SecureSocket::SecureSocket(
+		IEventQueue* events,
+		SocketMultiplexer* socketMultiplexer,
+		ArchSocket socket) :
+	TCPSocket(events, socketMultiplexer, socket),
+	m_ready(false)
+{
 }
 
 SecureSocket::~SecureSocket()
@@ -49,6 +65,81 @@ SecureSocket::~SecureSocket()
 	}
 
 	delete[] m_error;
+}
+
+UInt32
+SecureSocket::read(void* buffer, UInt32 n)
+{
+	bool retry = false;
+	int r = 0;
+	if (m_ssl != NULL) {
+		r = SSL_read(m_ssl->m_ssl, buffer, n);
+		retry = checkResult(r);
+		if (retry) {
+			r = 0;
+		}
+	}
+
+	return r > 0 ? (UInt32)r : 0;
+}
+
+void
+SecureSocket::write(const void* buffer, UInt32 n)
+{
+	bool retry = false;
+	int r = 0;
+	if (m_ssl != NULL) {
+		r = SSL_write(m_ssl->m_ssl, buffer, n);
+		retry = checkResult(r);
+		if (retry) {
+			r = 0;
+		}
+	}
+}
+
+bool
+SecureSocket::isReady() const
+{
+	return m_ready;
+}
+
+void
+SecureSocket::connectSecureSocket()
+{
+#ifdef SYSAPI_WIN32
+	secureConnect(static_cast<int>(getSocket()->m_socket));
+#elif SYSAPI_UNIX
+	secureConnect(getSocket()->m_fd);
+#endif
+}
+
+void
+SecureSocket::acceptSecureSocket()
+{
+#ifdef SYSAPI_WIN32
+	secureAccept(static_cast<int>(getSocket()->m_socket));
+#elif SYSAPI_UNIX
+	secureAccept(getSocket()->m_fd);
+#endif
+}
+
+void
+SecureSocket::initSsl(bool server)
+{
+	m_ssl = new Ssl();
+	m_ssl->m_context = NULL;
+	m_ssl->m_ssl = NULL;
+	m_error = new char[MAX_ERROR_SIZE];
+
+	initContext(server);
+}
+
+void
+SecureSocket::onConnected()
+{
+	TCPSocket::onConnected();
+
+	connectSecureSocket();
 }
 
 void
@@ -111,7 +202,7 @@ SecureSocket::createSSL()
 }
 
 void
-SecureSocket::accept(int socket)
+SecureSocket::secureAccept(int socket)
 {
 	createSSL();
 
@@ -124,6 +215,7 @@ SecureSocket::accept(int socket)
 	bool retry = checkResult(r);
 	while (retry) {
 		ARCH->sleep(.5f);
+		LOG((CLOG_INFO "secureAccept sleep .5s"));
 		r = SSL_accept(m_ssl->m_ssl);
 		retry = checkResult(r);
 	}
@@ -132,7 +224,7 @@ SecureSocket::accept(int socket)
 }
 
 void
-SecureSocket::connect(int socket)
+SecureSocket::secureConnect(int socket)
 {
 	createSSL();
 
@@ -150,38 +242,6 @@ SecureSocket::connect(int socket)
 
 	m_ready= true;
 	showCertificate();
-}
-
-size_t
-SecureSocket::write(const void* buffer, int size)
-{
-	bool retry = false;
-	int n = 0;
-	if (m_ssl != NULL) {
-		n = SSL_write(m_ssl->m_ssl, buffer, size);
-		retry = checkResult(n);
-		if (retry) {
-			n = 0;
-		}
-	}
-
-	return n > 0 ? n : 0;
-}
-
-size_t
-SecureSocket::read(void* buffer, int size)
-{
-	bool retry = false;
-	int n = 0;
-	if (m_ssl != NULL) {
-		n = SSL_read(m_ssl->m_ssl, buffer, size);
-		retry = checkResult(n);
-		if (retry) {
-			n = 0;
-		}
-	}
-		
-	return n > 0 ? n : 0;
 }
 
 void
@@ -277,7 +337,7 @@ SecureSocket::getError()
 	bool errorUpdated = false;
 
 	if (e != 0) {
-		ERR_error_string_n(e, m_error, m_errorSize);
+		ERR_error_string_n(e, m_error, MAX_ERROR_SIZE);
 		errorUpdated = true;
 	}
 	else {
@@ -285,10 +345,4 @@ SecureSocket::getError()
 	}
 	
 	return errorUpdated;
-}
-
-bool
-SecureSocket::isReady()
-{
-	return m_ready;
 }

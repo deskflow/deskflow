@@ -42,11 +42,17 @@ public:
 	*/
 	virtual void		load() = 0;
 
-	//! Init plugins
+	//! Init the common parts
 	/*!
-	Initializes loaded plugins.
+	Initializes common parts like log and arch.
 	*/
-	virtual void		init(void* eventTarget, IEventQueue* events) = 0;
+	virtual void		init(void* log, void* arch) = 0;
+
+	//! Init the event part
+	/*!
+	Initializes event parts.
+	*/
+	virtual void		initEvent(void* eventTarget, IEventQueue* events) = 0;
 
 	//! Check if exists
 	/*!
@@ -60,7 +66,7 @@ public:
 	*/
 	virtual void*		invoke(const char* plugin,
 							const char* command,
-							void* args) = 0;
+							void** args) = 0;
 
 	//@}
 

@@ -32,11 +32,12 @@ public:
 
 	// IArchPlugin overrides
 	void				load();
-	void				init(void* eventTarget, IEventQueue* events);
+	void				init(void* log, void* arch);
+	void				initEvent(void* eventTarget, IEventQueue* events);
 	bool				exists(const char* name);
 	virtual void*		invoke(const char* pluginName,
 							const char* functionName,
-							void* args);
+							void** args);
 
  private:
 	String				getPluginsDir();

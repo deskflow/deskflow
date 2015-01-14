@@ -33,7 +33,7 @@ A listen socket using TCP.
 class TCPListenSocket : public IListenSocket {
 public:
 	TCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
-	~TCPListenSocket();
+	virtual ~TCPListenSocket();
 
 	// ISocket overrides
 	virtual void		bind(const NetworkAddress&);
@@ -44,12 +44,14 @@ public:
 	virtual IDataSocket*
 						accept();
 
-private:
+	ArchSocket&			getSocket() { return m_socket; }
+
+public:
 	ISocketMultiplexerJob*
 						serviceListening(ISocketMultiplexerJob*,
 							bool, bool, bool);
 
-private:
+protected:
 	ArchSocket			m_socket;
 	Mutex*				m_mutex;
 	IEventQueue*		m_events;

@@ -460,6 +460,8 @@ ClientApp::mainLoop()
 
 	// load all available plugins.
 	ARCH->plugin().load();
+	// pass log and arch into plugins.
+	ARCH->plugin().init(Log::getInstance(), Arch::getInstance());
 
 	// start client, etc
 	appUtil().startNode();
@@ -470,8 +472,8 @@ ClientApp::mainLoop()
 		initIpcClient();
 	}
 
-	// init all available plugins.
-	ARCH->plugin().init(m_clientScreen->getEventTarget(), m_events);
+	// init event for all available plugins.
+	ARCH->plugin().initEvent(m_clientScreen->getEventTarget(), m_events);
 
 	// run event loop.  if startClient() failed we're supposed to retry
 	// later.  the timer installed by startClient() will take care of

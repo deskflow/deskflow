@@ -36,6 +36,12 @@
 // ClientListener
 //
 
+#if defined _WIN32
+static const char s_networkSecurity[] = { "ns" };
+#else
+static const char s_networkSecurity[] = { "libns" };
+#endif
+
 ClientListener::ClientListener(const NetworkAddress& address,
 				ISocketFactory* socketFactory,
 				IStreamFilterFactory* streamFilterFactory,
@@ -51,7 +57,8 @@ ClientListener::ClientListener(const NetworkAddress& address,
 
 	try {
 		// create listen socket
-		m_listen = m_socketFactory->createListen();
+		bool useSecureSocket = ARCH->plugin().exists(s_networkSecurity);
+		m_listen = m_socketFactory->createListen(useSecureSocket);
 
 		// bind listen address
 		LOG((CLOG_DEBUG1 "binding listen socket"));

@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
- * Copyright (C) 2002 Chris Schoeneman
+ * Copyright (C) 2015 Synergy Si Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,26 +17,18 @@
 
 #pragma once
 
-#include "common/IInterface.h"
+#include "net/TCPListenSocket.h"
 
-class IDataSocket;
-class IListenSocket;
+class IEventQueue;
+class SocketMultiplexer;
 
-//! Socket factory
-/*!
-This interface defines the methods common to all factories used to
-create sockets.
-*/
-class ISocketFactory : public IInterface {
+class SecureListenSocket : public TCPListenSocket{
 public:
-	//! @name accessors
-	//@{
+	SecureListenSocket(IEventQueue* events,
+		SocketMultiplexer* socketMultiplexer);
+	~SecureListenSocket();
 
-	//! Create data socket
-	virtual IDataSocket*	create(bool secure) const = 0;
-
-	//! Create listen socket
-	virtual IListenSocket*	createListen(bool secure) const = 0;
-
-	//@}
+	// IListenSocket overrides
+	virtual IDataSocket*
+						accept();
 };

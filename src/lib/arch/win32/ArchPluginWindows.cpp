@@ -27,8 +27,9 @@
 #include <Windows.h>
 #include <iostream>
 
-typedef int (*initFunc)(void (*sendEvent)(const char*, void*), void (*log)(const char*));
-typedef void* (*invokeFunc)(const char*, void*);
+typedef int (*initFunc)(void*, void*);
+typedef int (*initEventFunc)(void (*sendEvent)(const char*, void*));
+typedef void* (*invokeFunc)(const char*, void**);
 
 void* g_eventTarget = NULL;
 IEventQueue* g_events = NULL;
@@ -68,7 +69,19 @@ ArchPluginWindows::load()
 }
 
 void
-ArchPluginWindows::init(void* eventTarget, IEventQueue* events)
+ArchPluginWindows::init(void* log, void* arch)
+{
+	PluginTable::iterator it;
+	HINSTANCE lib;
+	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
+		lib = reinterpret_cast<HINSTANCE>(it->second);
+		initFunc initPlugin = (initFunc)GetProcAddress(lib, "init");
+		initPlugin(log, arch);
+	}
+}
+
+void
+ArchPluginWindows::initEvent(void* eventTarget, IEventQueue* events)
 {
 	g_eventTarget = eventTarget;
 	g_events = events;
@@ -77,8 +90,8 @@ ArchPluginWindows::init(void* eventTarget, IEventQueue* events)
 	HINSTANCE lib;
 	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
 		lib = reinterpret_cast<HINSTANCE>(it->second);
-		initFunc initPlugin = (initFunc)GetProcAddress(lib, "init");
-		initPlugin(&sendEvent, &log);
+		initEventFunc initEventPlugin = (initEventFunc)GetProcAddress(lib, "initEvent");
+		initEventPlugin(&sendEvent);
 	}
 }
 
@@ -95,7 +108,7 @@ void*
 ArchPluginWindows::invoke(
 	const char* plugin,
 	const char* command,
-	void* args)
+	void** args)
 {
 	PluginTable::iterator it;
 	it = m_pluginTable.find(plugin);

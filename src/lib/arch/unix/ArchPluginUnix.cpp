@@ -28,7 +28,8 @@
 #include <dirent.h>
 #include <dlfcn.h>
 
-typedef int (*initFunc)(void (*sendEvent)(const char*, void*), void (*log)(const char*));
+typedef void (*initFunc)(void*, void*);
+typedef int (*initEventFunc)(void (*sendEvent)(const char*, void*));
 typedef void* (*invokeFunc)(const char*, void*);
 
 void* g_eventTarget = NULL;
@@ -84,15 +85,25 @@ ArchPluginUnix::load()
 }
 
 void
-ArchPluginUnix::init(void* eventTarget, IEventQueue* events)
+ArchPluginUnix::init(void* log, void* arch)
+{
+	PluginTable::iterator it;
+	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
+		initFunc initPlugin = (initFunc)dlsym(it->second, "init");
+		initPlugin(log, arch);
+	}
+}
+
+void
+ArchPluginUnix::initEvent(void* eventTarget, IEventQueue* events)
 {
 	g_eventTarget = eventTarget;
 	g_events = events;
 
 	PluginTable::iterator it;
 	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
-		initFunc initPlugin = (initFunc)dlsym(it->second, "init");
-		initPlugin(&sendEvent, &log);
+		initEventFunc initEventPlugin = (initEventFunc)dlsym(it->second, "initEvent");
+		initEventPlugin(&sendEvent);
 	}
 }
 
@@ -108,7 +119,7 @@ void*
 ArchPluginUnix::invoke(
 	const char* plugin,
 	const char* command,
-	void* args)
+	void** args)
 {
 	PluginTable::iterator it;
 	it = m_pluginTable.find(plugin);

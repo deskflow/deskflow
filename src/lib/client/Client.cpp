@@ -82,8 +82,7 @@ Client::Client(
 	m_crypto(crypto),
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
-	m_enableDragDrop(enableDragDrop),
-	m_secureSocket(NULL)
+	m_enableDragDrop(enableDragDrop)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -107,11 +106,6 @@ Client::Client(
 								this,
 								new TMethodEventJob<Client>(this,
 									&Client::handleFileRecieveCompleted));
-	}
-
-	if (ARCH->plugin().exists(s_networkSecurity)) {
-		m_secureSocket = static_cast<SecureSocket*>(
-			ARCH->plugin().invoke("ns", "getSecureSocket", NULL));
 	}
 }
 
@@ -163,14 +157,16 @@ Client::connect()
 		}
 
 		// create the socket
-		IDataSocket* socket = m_socketFactory->create();
+		bool useSecureSocket = ARCH->plugin().exists(s_networkSecurity);
+		IDataSocket* socket = m_socketFactory->create(useSecureSocket);
 
 		// filter socket messages, including a packetizing filter
 		m_stream = socket;
+		bool adopt = !useSecureSocket;
 		if (m_streamFilterFactory != NULL) {
-			m_stream = m_streamFilterFactory->create(m_stream, true);
+			m_stream = m_streamFilterFactory->create(m_stream, adopt);
 		}
-		m_stream = new PacketStreamFilter(m_events, m_stream, true);
+		m_stream = new PacketStreamFilter(m_events, m_stream, adopt);
 
 		if (m_crypto.m_mode != kDisabled) {
 			m_cryptoStream = new CryptoStream(
@@ -187,8 +183,7 @@ Client::connect()
 	catch (XBase& e) {
 		cleanupTimer();
 		cleanupConnecting();
-		delete m_stream;
-		m_stream = NULL;
+		cleanupStream();
 		LOG((CLOG_DEBUG1 "connection failed"));
 		sendConnectionFailedEvent(e.what());
 		return;
@@ -545,8 +540,7 @@ Client::cleanupConnection()
 							m_stream->getEventTarget());
 		m_events->removeHandler(m_events->forISocket().disconnected(),
 							m_stream->getEventTarget());
-		delete m_stream;
-		m_stream = NULL;
+		cleanupStream();
 	}
 }
 
@@ -578,6 +572,16 @@ Client::cleanupTimer()
 }
 
 void
+Client::cleanupStream()
+{
+	bool useSecureSocket = ARCH->plugin().exists(s_networkSecurity);
+	if (!useSecureSocket) {
+		delete m_stream;
+		m_stream = NULL;
+	}
+}
+
+void
 Client::handleConnected(const Event&, void*)
 {
 	LOG((CLOG_DEBUG1 "connected;  wait for hello"));
@@ -600,8 +604,7 @@ Client::handleConnectionFailed(const Event& event, void*)
 
 	cleanupTimer();
 	cleanupConnecting();
-	delete m_stream;
-	m_stream = NULL;
+	cleanupStream();
 	LOG((CLOG_DEBUG1 "connection failed"));
 	sendConnectionFailedEvent(info->m_what.c_str());
 	delete info;
@@ -613,8 +616,7 @@ Client::handleConnectTimeout(const Event&, void*)
 	cleanupTimer();
 	cleanupConnecting();
 	cleanupConnection();
-	delete m_stream;
-	m_stream = NULL;
+	cleanupStream();
 	LOG((CLOG_DEBUG1 "connection timed out"));
 	sendConnectionFailedEvent("Timed out");
 }

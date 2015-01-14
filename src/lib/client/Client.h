@@ -190,6 +190,7 @@ private:
 	void				cleanupConnection();
 	void				cleanupScreen();
 	void				cleanupTimer();
+	void				cleanupStream();
 	void				handleConnected(const Event&, void*);
 	void				handleConnectionFailed(const Event&, void*);
 	void				handleConnectTimeout(const Event&, void*);
@@ -205,34 +206,34 @@ private:
 	void				onFileRecieveCompleted();
 
 public:
-	bool					m_mock;
+	bool				m_mock;
 
 private:
-	String					m_name;
-	NetworkAddress			m_serverAddress;
-	ISocketFactory*			m_socketFactory;
-	IStreamFilterFactory*	m_streamFilterFactory;
-	synergy::Screen*		m_screen;
-	synergy::IStream*		m_stream;
-	EventQueueTimer*		m_timer;
-	ServerProxy*			m_server;
-	bool					m_ready;
-	bool					m_active;
-	bool					m_suspended;
-	bool					m_connectOnResume;
-	bool					m_ownClipboard[kClipboardEnd];
-	bool					m_sentClipboard[kClipboardEnd];
-	IClipboard::Time		m_timeClipboard[kClipboardEnd];
-	String					m_dataClipboard[kClipboardEnd];
-	IEventQueue*			m_events;
-	CryptoStream*			m_cryptoStream;
-	CryptoOptions			m_crypto;
-	std::size_t				m_expectedFileSize;
-	String					m_receivedFileData;
-	DragFileList			m_dragFileList;
-	String					m_dragFileExt;
+	String				m_name;
+	NetworkAddress		m_serverAddress;
+	ISocketFactory*		m_socketFactory;
+	IStreamFilterFactory*
+						m_streamFilterFactory;
+	synergy::Screen*	m_screen;
+	synergy::IStream*	m_stream;
+	EventQueueTimer*	m_timer;
+	ServerProxy*		m_server;
+	bool				m_ready;
+	bool				m_active;
+	bool				m_suspended;
+	bool				m_connectOnResume;
+	bool				m_ownClipboard[kClipboardEnd];
+	bool				m_sentClipboard[kClipboardEnd];
+	IClipboard::Time	m_timeClipboard[kClipboardEnd];
+	String				m_dataClipboard[kClipboardEnd];
+	IEventQueue*		m_events;
+	CryptoStream*		m_cryptoStream;
+	CryptoOptions		m_crypto;
+	std::size_t			m_expectedFileSize;
+	String				m_receivedFileData;
+	DragFileList		m_dragFileList;
+	String				m_dragFileExt;
 	Thread*				m_sendFileThread;
 	Thread*				m_writeToDropDirThread;
-	bool					m_enableDragDrop;
-	SecureSocket*		m_secureSocket;
+	bool				m_enableDragDrop;
 };

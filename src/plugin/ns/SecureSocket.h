@@ -17,34 +17,48 @@
 
 #pragma once
 
+#include "net/TCPSocket.h"
 #include "base/XBase.h"
-#include "base/Log.h"
+
+class IEventQueue;
+class SocketMultiplexer;
+
+struct Ssl;
 
 //! Generic socket exception
 XBASE_SUBCLASS(XSecureSocket, XBase);
 
-//! SSL
+
+//! Secure socket
 /*!
-Secure socket layer using OpenSSL.
+A secure socket using SSL.
 */
-
-struct Ssl;
-
-class SecureSocket {
+class SecureSocket : public TCPSocket {
 public:
-	SecureSocket();
+	SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+	SecureSocket(IEventQueue* events,
+		SocketMultiplexer* socketMultiplexer,
+		ArchSocket socket);
 	~SecureSocket();
 
-	void				initContext(bool server);
+	// IStream overrides
+	virtual UInt32		read(void* buffer, UInt32 n);
+	virtual void		write(const void* buffer, UInt32 n);
+	virtual bool		isReady() const;
+
+	void				connectSecureSocket();
+	void				acceptSecureSocket();
+	void				initSsl(bool server);
 	void				loadCertificates(const char* CertFile);
-	void				createSSL();
-	void				accept(int s);
-	void				connect(int s);
-	size_t				write(const void* buffer, int size);
-	size_t				read(void* buffer, int size);
-	bool				isReady();
 
 private:
+	void				onConnected();
+
+	// SSL
+	void				initContext(bool server);
+	void				createSSL();
+	void				secureAccept(int s);
+	void				secureConnect(int s);
 	void				showCertificate();
 	bool				checkResult(int n);
 	void				showError();
@@ -55,5 +69,4 @@ private:
 	Ssl*				m_ssl;
 	bool				m_ready;
 	char*				m_error;
-	const size_t		m_errorSize;
 };

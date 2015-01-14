@@ -707,6 +707,11 @@ ServerApp::mainLoop()
 		return kExitFailed;
 	}
 
+	// load all available plugins.
+	ARCH->plugin().load();
+	// pass log and arch into plugins.
+	ARCH->plugin().init(Log::getInstance(), Arch::getInstance());
+
 	// start server, etc
 	appUtil().startNode();
 	
@@ -716,8 +721,8 @@ ServerApp::mainLoop()
 		initIpcClient();
 	}
 
-	// load all available plugins.
-	ARCH->plugin().init(m_serverScreen->getEventTarget(), m_events);
+	// init event for all available plugins.
+	ARCH->plugin().initEvent(m_serverScreen->getEventTarget(), m_events);
 
 	// handle hangup signal by reloading the server's configuration
 	ARCH->setSignalHandler(Arch::kHANGUP, &reloadSignalHandler, NULL);
