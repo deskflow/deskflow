@@ -21,16 +21,16 @@ if (SYNERGY_ADD_HEADERS)
 endif()
 
 if (WIN32)
-	set(OPENSSL_INCLUDE ../../../ext/openssl/inc32)
+	set(OPENSSL_INCLUDE ../../../../ext/openssl/inc32)
 endif()
 
 if (APPLE)
-	set(OPENSSL_INCLUDE ../../../ext/openssl/include)
+	set(OPENSSL_INCLUDE ../../../../ext/openssl/include)
 endif()
 
 include_directories(
-	../../lib/
-	../../..
+	../../../lib/
+	../../../..
 	${OPENSSL_INCLUDE}
 )
 
@@ -62,8 +62,8 @@ if (WIN32)
 		TARGET ns 
 		POST_BUILD
 		COMMAND xcopy /Y /Q
-			..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\ns.dll
-			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\plugins\\
+			..\\..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\ns.dll
+			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\plugins\\
 	)
 else()
 	if (APPLE)
@@ -83,11 +83,11 @@ else()
 			TARGET ns
 			POST_BUILD
 			COMMAND mkdir -p
-				../../../../../bin/plugins
+				${CMAKE_SOURCE_DIR}/bin/plugins
 				&&
 				cp
-				../../../../../lib/libns.so
-				../../../../../bin/plugins/
+				${CMAKE_SOURCE_DIR}/lib/libns.so
+				${CMAKE_SOURCE_DIR}/bin/plugins/
 		)
 	endif()
 endif()

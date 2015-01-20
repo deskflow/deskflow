@@ -23,8 +23,10 @@ add_subdirectory(ipc)
 add_subdirectory(mt)
 add_subdirectory(net)
 add_subdirectory(platform)
+add_subdirectory(plugin)
 add_subdirectory(server)
 add_subdirectory(synergy)
+
 
 if (WIN32)
 	add_subdirectory(synwinhk)

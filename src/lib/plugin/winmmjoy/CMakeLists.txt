@@ -27,6 +27,6 @@ add_custom_command(
 	TARGET winmmjoy 
 	POST_BUILD
 	COMMAND xcopy /Y /Q
-		..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\winmmjoy.*
-		..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\plugins\\
+		..\\..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\winmmjoy.*
+		..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\plugins\\
 )
