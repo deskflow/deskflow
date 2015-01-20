@@ -27,7 +27,7 @@
 #include <Windows.h>
 #include <iostream>
 
-typedef int (*initFunc)(void*, void*);
+typedef void (*initFunc)(void*, void*);
 typedef int (*initEventFunc)(void (*sendEvent)(const char*, void*));
 typedef void* (*invokeFunc)(const char*, void**);
 
