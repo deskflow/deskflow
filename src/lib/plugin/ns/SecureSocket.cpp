@@ -17,7 +17,9 @@
 
 #include "SecureSocket.h"
 
+#include "net/TSocketMultiplexerMethodJob.h"
 #include "net/TCPSocket.h"
+#include "mt/Lock.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
 
@@ -42,7 +44,7 @@ SecureSocket::SecureSocket(
 		IEventQueue* events,
 		SocketMultiplexer* socketMultiplexer) :
 	TCPSocket(events, socketMultiplexer),
-	m_ready(false)
+	m_secureReady(false)
 {
 }
 
@@ -51,7 +53,7 @@ SecureSocket::SecureSocket(
 		SocketMultiplexer* socketMultiplexer,
 		ArchSocket socket) :
 	TCPSocket(events, socketMultiplexer, socket),
-	m_ready(false)
+	m_secureReady(false)
 {
 }
 
@@ -67,8 +69,24 @@ SecureSocket::~SecureSocket()
 	delete[] m_error;
 }
 
+void
+SecureSocket::secureConnect()
+{
+	setJob(new TSocketMultiplexerMethodJob<SecureSocket>(
+			this, &SecureSocket::serviceConnect,
+			getSocket(), isReadable(), isWritable()));
+}
+
+void
+SecureSocket::secureAccept()
+{
+	setJob(new TSocketMultiplexerMethodJob<SecureSocket>(
+			this, &SecureSocket::serviceAccept,
+			getSocket(), isReadable(), isWritable()));
+}
+
 UInt32
-SecureSocket::read(void* buffer, UInt32 n)
+SecureSocket::secureRead(void* buffer, UInt32 n)
 {
 	bool retry = false;
 	int r = 0;
@@ -83,8 +101,8 @@ SecureSocket::read(void* buffer, UInt32 n)
 	return r > 0 ? (UInt32)r : 0;
 }
 
-void
-SecureSocket::write(const void* buffer, UInt32 n)
+UInt32
+SecureSocket::secureWrite(const void* buffer, UInt32 n)
 {
 	bool retry = false;
 	int r = 0;
@@ -95,32 +113,14 @@ SecureSocket::write(const void* buffer, UInt32 n)
 			r = 0;
 		}
 	}
+
+	return r > 0 ? (UInt32)r : 0;
 }
 
 bool
-SecureSocket::isReady() const
+SecureSocket::isSecureReady()
 {
-	return m_ready;
-}
-
-void
-SecureSocket::connectSecureSocket()
-{
-#ifdef SYSAPI_WIN32
-	secureConnect(static_cast<int>(getSocket()->m_socket));
-#elif SYSAPI_UNIX
-	secureConnect(getSocket()->m_fd);
-#endif
-}
-
-void
-SecureSocket::acceptSecureSocket()
-{
-#ifdef SYSAPI_WIN32
-	secureAccept(static_cast<int>(getSocket()->m_socket));
-#elif SYSAPI_UNIX
-	secureAccept(getSocket()->m_fd);
-#endif
+	return m_secureReady;
 }
 
 void
@@ -132,43 +132,6 @@ SecureSocket::initSsl(bool server)
 	m_error = new char[MAX_ERROR_SIZE];
 
 	initContext(server);
-}
-
-void
-SecureSocket::onConnected()
-{
-	TCPSocket::onConnected();
-
-	connectSecureSocket();
-}
-
-void
-SecureSocket::initContext(bool server)
-{
-	SSL_library_init();
-
-	const SSL_METHOD* method;
- 
-	// load & register all cryptos, etc.
-	OpenSSL_add_all_algorithms();
-
-	// load all error messages
-	SSL_load_error_strings();
-
-	if (server) {
-		// create new server-method instance
-		method = SSLv3_server_method();
-	}
-	else {
-		// create new client-method instance
-		method = SSLv3_client_method();
-	}
-	
-	// create new context from method
-	m_ssl->m_context = SSL_CTX_new(method);
-	if (m_ssl->m_context == NULL) {
-		showError();
-	}
 }
 
 void
@@ -191,6 +154,36 @@ SecureSocket::loadCertificates(const char* filename)
 		showError();
 	}
 }
+
+void
+SecureSocket::initContext(bool server)
+{
+	SSL_library_init();
+
+	const SSL_METHOD* method;
+ 
+	// load & register all cryptos, etc.
+	OpenSSL_add_all_algorithms();
+
+	// load all error messages
+	SSL_load_error_strings();
+
+	if (server) {
+		// create new server-method instance
+		method = SSLv23_server_method();
+	}
+	else {
+		// create new client-method instance
+		method = SSLv23_client_method();
+	}
+	
+	// create new context from method
+	m_ssl->m_context = SSL_CTX_new(method);
+	if (m_ssl->m_context == NULL) {
+		showError();
+	}
+}
+
 void
 SecureSocket::createSSL()
 {
@@ -201,7 +194,7 @@ SecureSocket::createSSL()
 	}
 }
 
-void
+bool
 SecureSocket::secureAccept(int socket)
 {
 	createSSL();
@@ -210,38 +203,46 @@ SecureSocket::secureAccept(int socket)
 	SSL_set_fd(m_ssl->m_ssl, socket);
 
 	// do SSL-protocol accept
+	LOG((CLOG_DEBUG "secureAccept"));
 	int r = SSL_accept(m_ssl->m_ssl);
-
 	bool retry = checkResult(r);
+
+	//TODO: don't use this infinite loop
 	while (retry) {
 		ARCH->sleep(.5f);
-		LOG((CLOG_INFO "secureAccept sleep .5s"));
+		SSL_set_fd(m_ssl->m_ssl, socket);
 		r = SSL_accept(m_ssl->m_ssl);
 		retry = checkResult(r);
 	}
 
-	m_ready = true;
+	m_secureReady = !retry;
+	return retry;
 }
 
-void
+bool
 SecureSocket::secureConnect(int socket)
 {
 	createSSL();
 
 	// attach the socket descriptor
 	SSL_set_fd(m_ssl->m_ssl, socket);
-
+	LOG((CLOG_DEBUG "secureConnect"));
 	int r = SSL_connect(m_ssl->m_ssl);
 
 	bool retry = checkResult(r);
+
+	//TODO: don't use this infinite loop
 	while (retry) {
 		ARCH->sleep(.5f);
 		r = SSL_connect(m_ssl->m_ssl);
 		retry = checkResult(r);
 	}
 
-	m_ready= true;
+	m_secureReady= true;
 	showCertificate();
+
+	m_secureReady = !retry;
+	return retry;
 }
 
 void
@@ -256,9 +257,6 @@ SecureSocket::showCertificate()
 		LOG((CLOG_INFO "server certificate"));
 		line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
 		LOG((CLOG_INFO "subject: %s", line));
-		OPENSSL_free(line);
-		line = X509_NAME_oneline(X509_get_issuer_name(cert), 0, 0);
-		LOG((CLOG_INFO "issuer: %s", line));
 		OPENSSL_free(line);
 		X509_free(cert);
 	}
@@ -345,4 +343,35 @@ SecureSocket::getError()
 	}
 	
 	return errorUpdated;
+}
+
+ISocketMultiplexerJob*
+SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
+				bool, bool write, bool error)
+{
+	Lock lock(&getMutex());
+
+	bool retry = true;
+#ifdef SYSAPI_WIN32
+	retry = secureConnect(static_cast<int>(getSocket()->m_socket));
+#elif SYSAPI_UNIX
+	retry = secureConnect(getSocket()->m_fd);
+#endif
+
+	return retry ? job : newJob();
+}
+
+ISocketMultiplexerJob*
+SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
+				bool, bool write, bool error)
+{
+	Lock lock(&getMutex());
+
+	bool retry = true;
+#ifdef SYSAPI_WIN32
+	retry = secureAccept(static_cast<int>(getSocket()->m_socket));
+#elif SYSAPI_UNIX
+	retry = secureAccept(getSocket()->m_fd);
+#endif
+	return retry ? job : newJob();
 }

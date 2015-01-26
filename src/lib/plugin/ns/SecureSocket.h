@@ -22,6 +22,7 @@
 
 class IEventQueue;
 class SocketMultiplexer;
+class ISocketMultiplexerJob;
 
 struct Ssl;
 
@@ -41,32 +42,38 @@ public:
 		ArchSocket socket);
 	~SecureSocket();
 
-	// IStream overrides
-	virtual UInt32		read(void* buffer, UInt32 n);
-	virtual void		write(const void* buffer, UInt32 n);
-	virtual bool		isReady() const;
 
-	void				connectSecureSocket();
-	void				acceptSecureSocket();
+	void				secureConnect();
+	void				secureAccept();
+	bool				isSecureReady();
+	bool				isSecure() { return true; }
+	UInt32				secureRead(void* buffer, UInt32 n);
+	UInt32				secureWrite(const void* buffer, UInt32 n);
 	void				initSsl(bool server);
 	void				loadCertificates(const char* CertFile);
 
 private:
-	void				onConnected();
-
 	// SSL
 	void				initContext(bool server);
 	void				createSSL();
-	void				secureAccept(int s);
-	void				secureConnect(int s);
+	bool				secureAccept(int s);
+	bool				secureConnect(int s);
 	void				showCertificate();
 	bool				checkResult(int n);
 	void				showError();
 	void				throwError(const char* reason);
 	bool				getError();
 
+	ISocketMultiplexerJob*
+						serviceConnect(ISocketMultiplexerJob*,
+							bool, bool, bool);
+
+	ISocketMultiplexerJob*
+						serviceAccept(ISocketMultiplexerJob*,
+							bool, bool, bool);
+
 private:
 	Ssl*				m_ssl;
-	bool				m_ready;
+	bool				m_secureReady;
 	char*				m_error;
 };

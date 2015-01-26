@@ -467,7 +467,17 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 			// write data
 			UInt32 n = m_outputBuffer.getSize();
 			const void* buffer = m_outputBuffer.peek(n);
-			n = (UInt32)ARCH->writeSocket(m_socket, buffer, n);
+			if (isSecure()) {
+				if (isSecureReady()) {
+					n = secureWrite(buffer, n);
+				}
+				else {
+					return job;
+				}
+			}
+			else {
+				n = (UInt32)ARCH->writeSocket(m_socket, buffer, n);
+			}
 
 			// discard written data
 			if (n > 0) {
@@ -510,14 +520,34 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 	if (read && m_readable) {
 		try {
 			UInt8 buffer[4096];
-			size_t n = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+			size_t n = 0;
+
+			if (isSecure()) {
+				if (isSecureReady()) {
+					n = secureRead(buffer, sizeof(buffer));
+				}
+				else {
+					return job;
+				}
+			}
+			else {
+				n = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+			}
+
 			if (n > 0) {
 				bool wasEmpty = (m_inputBuffer.getSize() == 0);
 
 				// slurp up as much as possible
 				do {
 					m_inputBuffer.write(buffer, (UInt32)n);
-					n = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+
+					if (isSecure() && isSecureReady()) {
+						n = secureRead(buffer, sizeof(buffer));
+					}
+					else {
+						n = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+					}
+
 				} while (n > 0);
 
 				// send input ready if input buffer was empty

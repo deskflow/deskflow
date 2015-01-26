@@ -21,6 +21,7 @@
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
 #include "synergy/PacketStreamFilter.h"
+#include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/IListenSocket.h"
 #include "net/ISocketFactory.h"
@@ -142,7 +143,8 @@ ClientListener::handleClientConnecting(const Event&, void*)
 		return;
 	}
 	LOG((CLOG_NOTE "accepted client connection"));
-
+	TCPSocket* socket = dynamic_cast<TCPSocket*>(stream);
+	socket->secureAccept();
 	// filter socket messages, including a packetizing filter
 	if (m_streamFilterFactory != NULL) {
 		stream = m_streamFilterFactory->create(stream, true);

@@ -22,7 +22,6 @@
 #include "net/SocketMultiplexer.h"
 #include "net/TSocketMultiplexerMethodJob.h"
 #include "arch/XArch.h"
-#include "base/Log.h"
 
 //
 // SecureListenSocket
@@ -51,14 +50,11 @@ SecureListenSocket::accept()
 		socket->initSsl(true);
 		// TODO: customized certificate path
 		socket->loadCertificates("C:\\Temp\\synergy.pem");
-
 		if (socket != NULL) {
 			m_socketMultiplexer->addSocket(this,
 							new TSocketMultiplexerMethodJob<TCPListenSocket>(
 								this, &TCPListenSocket::serviceListening,
 								m_socket, true, false));
-
-			socket->acceptSecureSocket();
 		}
 		return dynamic_cast<IDataSocket*>(socket);
 	}

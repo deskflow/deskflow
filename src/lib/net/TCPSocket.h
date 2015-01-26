@@ -57,19 +57,31 @@ public:
 	// IDataSocket overrides
 	virtual void		connect(const NetworkAddress&);
 
+	virtual void		secureConnect() {}
+	virtual void		secureAccept() {}
+
 protected:
-	virtual void		onConnected();
 	ArchSocket			getSocket() { return m_socket; }
 
-private:
-	void				init();
+	virtual bool		isSecureReady() { return false; }
+	virtual bool		isSecure() { return false; }
+	virtual UInt32		secureRead(void* buffer, UInt32) { return 0; }
+	virtual UInt32		secureWrite(const void*, UInt32) { return 0; }
 
 	void				setJob(ISocketMultiplexerJob*);
 	ISocketMultiplexerJob*
 						newJob();
+	bool				isReadable() { return m_readable; }
+	bool				isWritable() { return m_writable; }
+
+	Mutex&				getMutex() { return m_mutex; }
+
+private:
+	void				init();
+
 	void				sendConnectionFailedEvent(const char*);
 	void				sendEvent(Event::Type);
-
+	void				onConnected();
 	void				onInputShutdown();
 	void				onOutputShutdown();
 	void				onDisconnected();

@@ -50,11 +50,9 @@ TCPSocketFactory::create(bool secure) const
 {
 	IDataSocket* socket = NULL;
 	if (secure) {
-		void* args[4] = {
+		void* args[2] = {
 			m_events,
-			m_socketMultiplexer,
-			Log::getInstance(),
-			Arch::getInstance()
+			m_socketMultiplexer
 		};
 		socket = static_cast<IDataSocket*>(
 			ARCH->plugin().invoke(s_networkSecurity, "getSecureSocket", args));
@@ -71,11 +69,9 @@ TCPSocketFactory::createListen(bool secure) const
 {
 	IListenSocket* socket = NULL;
 	if (secure) {
-		void* args[4] = {
+		void* args[2] = {
 			m_events,
-			m_socketMultiplexer,
-			Log::getInstance(),
-			Arch::getInstance()
+			m_socketMultiplexer
 		};
 		socket = static_cast<IListenSocket*>(
 			ARCH->plugin().invoke(s_networkSecurity, "getSecureListenSocket", args));

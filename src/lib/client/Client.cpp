@@ -32,6 +32,7 @@
 #include "mt/Thread.h"
 #include "io/IStreamFilterFactory.h"
 #include "io/CryptoStream.h"
+#include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/ISocketFactory.h"
 #include "arch/Arch.h"
@@ -82,7 +83,8 @@ Client::Client(
 	m_crypto(crypto),
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
-	m_enableDragDrop(enableDragDrop)
+	m_enableDragDrop(enableDragDrop),
+	m_socket(NULL)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -159,6 +161,7 @@ Client::connect()
 		// create the socket
 		bool useSecureSocket = ARCH->plugin().exists(s_networkSecurity);
 		IDataSocket* socket = m_socketFactory->create(useSecureSocket);
+		m_socket = dynamic_cast<TCPSocket*>(socket);
 
 		// filter socket messages, including a packetizing filter
 		m_stream = socket;
@@ -594,6 +597,8 @@ Client::handleConnected(const Event&, void*)
 		m_sentClipboard[id] = false;
 		m_timeClipboard[id] = 0;
 	}
+
+	m_socket->secureConnect();
 }
 
 void
