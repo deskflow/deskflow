@@ -30,7 +30,6 @@ class ClientProxyUnknown;
 class NetworkAddress;
 class IListenSocket;
 class ISocketFactory;
-class IStreamFilterFactory;
 class Server;
 class IEventQueue;
 
@@ -39,7 +38,6 @@ public:
 	// The factories are adopted.
 	ClientListener(const NetworkAddress&,
 							ISocketFactory*,
-							IStreamFilterFactory*,
 							const CryptoOptions& crypto,
 							IEventQueue* events);
 	~ClientListener();
@@ -81,8 +79,6 @@ private:
 
 	IListenSocket*		m_listen;
 	ISocketFactory*		m_socketFactory;
-	IStreamFilterFactory*
-						m_streamFilterFactory;
 	NewClients			m_newClients;
 	WaitingClients		m_waitingClients;
 	Server*				m_server;

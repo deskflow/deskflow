@@ -27,7 +27,6 @@
 #include "net/XSocket.h"
 #include "io/CryptoStream.h"
 #include "io/CryptoOptions.h"
-#include "io/IStreamFilterFactory.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
@@ -44,11 +43,9 @@ static const char s_networkSecurity[] = { "libns" };
 
 ClientListener::ClientListener(const NetworkAddress& address,
 				ISocketFactory* socketFactory,
-				IStreamFilterFactory* streamFilterFactory,
 				const CryptoOptions& crypto,
 				IEventQueue* events) :
 	m_socketFactory(socketFactory),
-	m_streamFilterFactory(streamFilterFactory),
 	m_server(NULL),
 	m_crypto(crypto),
 	m_events(events)
@@ -67,13 +64,11 @@ ClientListener::ClientListener(const NetworkAddress& address,
 	catch (XSocketAddressInUse&) {
 		cleanupListenSocket();
 		delete m_socketFactory;
-		delete m_streamFilterFactory;
 		throw;
 	}
 	catch (XBase&) {
 		cleanupListenSocket();
 		delete m_socketFactory;
-		delete m_streamFilterFactory;
 		throw;
 	}
 	LOG((CLOG_DEBUG1 "listening for clients"));
@@ -111,7 +106,6 @@ ClientListener::~ClientListener()
 	m_events->removeHandler(m_events->forIListenSocket().connecting(), m_listen);
 	cleanupListenSocket();
 	delete m_socketFactory;
-	delete m_streamFilterFactory;
 }
 
 void
@@ -144,9 +138,6 @@ ClientListener::handleClientConnecting(const Event&, void*)
 	LOG((CLOG_NOTE "accepted client connection"));
 
 	// filter socket messages, including a packetizing filter
-	if (m_streamFilterFactory != NULL) {
-		stream = m_streamFilterFactory->create(stream, true);
-	}
 	stream = new PacketStreamFilter(m_events, stream, true);
 	
 	if (m_crypto.m_mode != kDisabled) {

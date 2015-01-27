@@ -341,7 +341,6 @@ ClientApp::openClient(const String& name, const NetworkAddress& address,
 		name,
 		address,
 		new TCPSocketFactory(m_events, getSocketMultiplexer()),
-		NULL,
 		screen,
 		crypto,
 		args().m_enableDragDrop);

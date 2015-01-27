@@ -30,7 +30,6 @@
 #include "synergy/FileChunker.h"
 #include "synergy/IPlatformScreen.h"
 #include "mt/Thread.h"
-#include "io/IStreamFilterFactory.h"
 #include "io/CryptoStream.h"
 #include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
@@ -61,7 +60,6 @@ Client::Client(
 		IEventQueue* events,
 		const String& name, const NetworkAddress& address,
 		ISocketFactory* socketFactory,
-		IStreamFilterFactory* streamFilterFactory,
 		synergy::Screen* screen,
 		const CryptoOptions& crypto,
 		bool enableDragDrop) :
@@ -69,7 +67,6 @@ Client::Client(
 	m_name(name),
 	m_serverAddress(address),
 	m_socketFactory(socketFactory),
-	m_streamFilterFactory(streamFilterFactory),
 	m_screen(screen),
 	m_stream(NULL),
 	m_timer(NULL),
@@ -127,7 +124,6 @@ Client::~Client()
 	cleanupConnecting();
 	cleanupConnection();
 	delete m_socketFactory;
-	delete m_streamFilterFactory;
 }
 
 void
@@ -166,9 +162,6 @@ Client::connect()
 		// filter socket messages, including a packetizing filter
 		m_stream = socket;
 		bool adopt = !useSecureSocket;
-		if (m_streamFilterFactory != NULL) {
-			m_stream = m_streamFilterFactory->create(m_stream, adopt);
-		}
 		m_stream = new PacketStreamFilter(m_events, m_stream, adopt);
 
 		if (m_crypto.m_mode != kDisabled) {
