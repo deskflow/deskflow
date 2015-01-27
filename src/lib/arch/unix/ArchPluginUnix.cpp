@@ -31,6 +31,7 @@
 typedef void (*initFunc)(void*, void*);
 typedef int (*initEventFunc)(void (*sendEvent)(const char*, void*));
 typedef void* (*invokeFunc)(const char*, void*);
+typedef void (*cleanupFunc)();
 
 void* g_eventTarget = NULL;
 IEventQueue* g_events = NULL;
@@ -81,6 +82,18 @@ ArchPluginUnix::load()
 
 		String filename = synergy::string::removeFileExt(*it);
 		m_pluginTable.insert(std::make_pair(filename, library));
+	}
+}
+
+void
+ArchPluginUnix::unload()
+{
+	PluginTable::iterator it;
+	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
+		cleanupFunc cleanup = (cleanupFunc)dlsym(it->second, "cleanup");
+		cleanup();
+		LOG((CLOG_DEBUG "unloading plugin: %s", it->first.c_str()));
+		dlclose(it->second);
 	}
 }
 

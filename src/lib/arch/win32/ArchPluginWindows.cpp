@@ -30,6 +30,7 @@
 typedef void (*initFunc)(void*, void*);
 typedef int (*initEventFunc)(void (*sendEvent)(const char*, void*));
 typedef void* (*invokeFunc)(const char*, void**);
+typedef void (*cleanupFunc)();
 
 void* g_eventTarget = NULL;
 IEventQueue* g_events = NULL;
@@ -65,6 +66,20 @@ ArchPluginWindows::load()
 		void* lib = reinterpret_cast<void*>(library);
 		String filename = synergy::string::removeFileExt(*it);
 		m_pluginTable.insert(std::make_pair(filename, lib));
+	}
+}
+
+void
+ArchPluginWindows::unload()
+{
+	PluginTable::iterator it;
+	HINSTANCE lib;
+	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
+		lib = reinterpret_cast<HINSTANCE>(it->second);
+		cleanupFunc cleanup = (cleanupFunc)GetProcAddress(lib, "cleanup");
+		cleanup();
+		LOG((CLOG_DEBUG "unloading plugin: %s", it->first.c_str()));
+		FreeLibrary(lib);
 	}
 }
 

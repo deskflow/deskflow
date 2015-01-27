@@ -21,7 +21,6 @@
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
 #include "synergy/PacketStreamFilter.h"
-#include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/IListenSocket.h"
 #include "net/ISocketFactory.h"
@@ -58,21 +57,21 @@ ClientListener::ClientListener(const NetworkAddress& address,
 
 	try {
 		// create listen socket
-		bool useSecureSocket = ARCH->plugin().exists(s_networkSecurity);
-		m_listen = m_socketFactory->createListen(useSecureSocket);
+		m_useSecureSocket = ARCH->plugin().exists(s_networkSecurity);
+		m_listen = m_socketFactory->createListen(m_useSecureSocket);
 
 		// bind listen address
 		LOG((CLOG_DEBUG1 "binding listen socket"));
 		m_listen->bind(address);
 	}
 	catch (XSocketAddressInUse&) {
-		delete m_listen;
+		cleanupListenSocket();
 		delete m_socketFactory;
 		delete m_streamFilterFactory;
 		throw;
 	}
 	catch (XBase&) {
-		delete m_listen;
+		cleanupListenSocket();
 		delete m_socketFactory;
 		delete m_streamFilterFactory;
 		throw;
@@ -110,7 +109,7 @@ ClientListener::~ClientListener()
 	}
 
 	m_events->removeHandler(m_events->forIListenSocket().connecting(), m_listen);
-	delete m_listen;
+	cleanupListenSocket();
 	delete m_socketFactory;
 	delete m_streamFilterFactory;
 }
@@ -143,8 +142,7 @@ ClientListener::handleClientConnecting(const Event&, void*)
 		return;
 	}
 	LOG((CLOG_NOTE "accepted client connection"));
-	TCPSocket* socket = dynamic_cast<TCPSocket*>(stream);
-	socket->secureAccept();
+
 	// filter socket messages, including a packetizing filter
 	if (m_streamFilterFactory != NULL) {
 		stream = m_streamFilterFactory->create(stream, true);
@@ -217,5 +215,13 @@ ClientListener::handleClientDisconnected(const Event&, void* vclient)
 			delete client;
 			break;
 		}
+	}
+}
+
+void
+ClientListener::cleanupListenSocket()
+{
+	if (!m_useSecureSocket) {
+		delete m_listen;
 	}
 }

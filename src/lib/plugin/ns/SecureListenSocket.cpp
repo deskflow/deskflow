@@ -50,6 +50,8 @@ SecureListenSocket::accept()
 		socket->initSsl(true);
 		// TODO: customized certificate path
 		socket->loadCertificates("C:\\Temp\\synergy.pem");
+		socket->secureAccept();
+
 		if (socket != NULL) {
 			m_socketMultiplexer->addSocket(this,
 							new TSocketMultiplexerMethodJob<TCPListenSocket>(

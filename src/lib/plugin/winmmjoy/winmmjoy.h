@@ -31,7 +31,7 @@ extern "C" {
 
 WINMMJOY_API void		init(void* log, void* arch);
 WINMMJOY_API int		initEvent(void (*sendEvent)(const char*, void*));
-WINMMJOY_API int		cleanup();
+WINMMJOY_API void		cleanup();
 
 }
 

@@ -68,6 +68,21 @@ SecureSocket::~SecureSocket()
 
 	delete[] m_error;
 }
+void
+SecureSocket::close()
+{
+	if (m_ssl->m_ssl != NULL) {
+		SSL_free(m_ssl->m_ssl);
+		m_ssl->m_ssl = NULL;
+	}
+
+	if (m_ssl->m_context != NULL) {
+		SSL_CTX_free(m_ssl->m_context);
+		m_ssl->m_context = NULL;
+	}
+
+	TCPSocket::close();
+}
 
 void
 SecureSocket::secureConnect()

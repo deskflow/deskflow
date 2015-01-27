@@ -49,12 +49,10 @@ initEvent(void (*sendEvent)(const char*, void*))
 	return 0;
 }
 
-int
+void
 cleanup()
 {
-	LOG("cleanup");
 	s_running = false;
-	return 0;
 }
 
 }

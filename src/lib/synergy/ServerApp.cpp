@@ -780,6 +780,9 @@ ServerApp::mainLoop()
 		cleanupIpcClient();
 	}
 
+	// unload all plugins.
+	ARCH->plugin().unload();
+
 	return kExitSuccess;
 }
 

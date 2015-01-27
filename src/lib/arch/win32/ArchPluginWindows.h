@@ -35,6 +35,7 @@ public:
 
 	// IArchPlugin overrides
 	void				load();
+	void				unload();
 	void				init(void* log, void* arch);
 	void				initEvent(void* eventTarget, IEventQueue* events);
 	bool				exists(const char* name);

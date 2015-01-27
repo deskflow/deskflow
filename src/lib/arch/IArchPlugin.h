@@ -42,6 +42,12 @@ public:
 	*/
 	virtual void		load() = 0;
 
+	//!Unload plugins
+	/*!
+	Look through the loaded plugins and unload them.
+	*/
+	virtual void		unload() = 0;
+
 	//! Init the common parts
 	/*!
 	Initializes common parts like log and arch.

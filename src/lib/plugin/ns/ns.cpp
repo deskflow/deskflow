@@ -79,7 +79,7 @@ invoke(const char* command, void** args)
 	}
 }
 
-int
+void
 cleanup()
 {
 	if (g_secureSocket != NULL) {
@@ -89,8 +89,6 @@ cleanup()
 	if (g_secureListenSocket != NULL) {
 		delete g_secureListenSocket;
 	}
-
-	return 0;
 }
 
 }
