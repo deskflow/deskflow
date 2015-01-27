@@ -91,7 +91,13 @@ ArchPluginUnix::unload()
 	PluginTable::iterator it;
 	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
 		cleanupFunc cleanup = (cleanupFunc)dlsym(it->second, "cleanup");
-		cleanup();
+		if (cleanup != NULL) {
+			cleanup();
+		}
+		else {
+			LOG((CLOG_DEBUG "no cleanup function in %s", it->first.c_str()));
+		}
+
 		LOG((CLOG_DEBUG "unloading plugin: %s", it->first.c_str()));
 		dlclose(it->second);
 	}
@@ -103,7 +109,12 @@ ArchPluginUnix::init(void* log, void* arch)
 	PluginTable::iterator it;
 	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
 		initFunc initPlugin = (initFunc)dlsym(it->second, "init");
-		initPlugin(log, arch);
+		if (initPlugin != NULL) {
+			initPlugin(log, arch);
+		}
+		else {
+			LOG((CLOG_DEBUG "no init function in %s", it->first.c_str()));
+		}
 	}
 }
 
@@ -116,7 +127,12 @@ ArchPluginUnix::initEvent(void* eventTarget, IEventQueue* events)
 	PluginTable::iterator it;
 	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
 		initEventFunc initEventPlugin = (initEventFunc)dlsym(it->second, "initEvent");
-		initEventPlugin(&sendEvent);
+		if (initEventPlugin != NULL) {
+			initEventPlugin(&sendEvent);
+		}
+		else {
+			LOG((CLOG_DEBUG "no init event function in %s", it->first.c_str()));
+		}
 	}
 }
 
@@ -138,7 +154,14 @@ ArchPluginUnix::invoke(
 	it = m_pluginTable.find(plugin);
 	if (it != m_pluginTable.end()) {
 		invokeFunc invokePlugin = (invokeFunc)dlsym(it->second, "invoke");
-		return invokePlugin(command, args);
+		void* result = NULL;
+		if (invokePlugin != NULL) {
+			result = invokePlugin(command, args);
+		}
+		else {
+			LOG((CLOG_DEBUG "no invoke function in %s", it->first.c_str()));
+		}
+		return result;
 	}
 	else {
 		LOG((CLOG_DEBUG "invoke command failed, plugin: %s command: %s",

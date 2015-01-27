@@ -218,7 +218,7 @@ SecureSocket::secureAccept(int socket)
 	SSL_set_fd(m_ssl->m_ssl, socket);
 
 	// do SSL-protocol accept
-	LOG((CLOG_DEBUG "secureAccept"));
+	LOG((CLOG_DEBUG1 "secureAccept"));
 	int r = SSL_accept(m_ssl->m_ssl);
 	bool retry = checkResult(r);
 
@@ -241,9 +241,9 @@ SecureSocket::secureConnect(int socket)
 
 	// attach the socket descriptor
 	SSL_set_fd(m_ssl->m_ssl, socket);
-	LOG((CLOG_DEBUG "secureConnect"));
-	int r = SSL_connect(m_ssl->m_ssl);
 
+	LOG((CLOG_DEBUG1 "secureConnect"));
+	int r = SSL_connect(m_ssl->m_ssl);
 	bool retry = checkResult(r);
 
 	//TODO: don't use this infinite loop

@@ -77,7 +77,13 @@ ArchPluginWindows::unload()
 	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
 		lib = reinterpret_cast<HINSTANCE>(it->second);
 		cleanupFunc cleanup = (cleanupFunc)GetProcAddress(lib, "cleanup");
-		cleanup();
+		if (cleanup != NULL) {
+			cleanup();
+		}
+		else {
+			LOG((CLOG_DEBUG "no cleanup function in %s", it->first.c_str()));
+		}
+
 		LOG((CLOG_DEBUG "unloading plugin: %s", it->first.c_str()));
 		FreeLibrary(lib);
 	}
@@ -91,7 +97,12 @@ ArchPluginWindows::init(void* log, void* arch)
 	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
 		lib = reinterpret_cast<HINSTANCE>(it->second);
 		initFunc initPlugin = (initFunc)GetProcAddress(lib, "init");
-		initPlugin(log, arch);
+		if (initPlugin != NULL) {
+			initPlugin(log, arch);
+		}
+		else {
+			LOG((CLOG_DEBUG "no init function in %s", it->first.c_str()));
+		}
 	}
 }
 
@@ -106,7 +117,12 @@ ArchPluginWindows::initEvent(void* eventTarget, IEventQueue* events)
 	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
 		lib = reinterpret_cast<HINSTANCE>(it->second);
 		initEventFunc initEventPlugin = (initEventFunc)GetProcAddress(lib, "initEvent");
-		initEventPlugin(&sendEvent);
+		if (initEventPlugin != NULL) {
+			initEventPlugin(&sendEvent);
+		}
+		else {
+			LOG((CLOG_DEBUG "no init event function in %s", it->first.c_str()));
+		}
 	}
 }
 
@@ -130,7 +146,15 @@ ArchPluginWindows::invoke(
 	if (it != m_pluginTable.end()) {
 		HINSTANCE lib = reinterpret_cast<HINSTANCE>(it->second);
 		invokeFunc invokePlugin = (invokeFunc)GetProcAddress(lib, "invoke");
-		return invokePlugin(command, args);
+		void* result = NULL;
+		if (invokePlugin != NULL) {
+			 result = invokePlugin(command, args);
+		}
+		else {
+			LOG((CLOG_DEBUG "no invoke function in %s", it->first.c_str()));
+		}
+
+		return result;
 	}
 	else {
 		LOG((CLOG_DEBUG "invoke command failed, plugin: %s command: %s",
