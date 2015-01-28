@@ -61,11 +61,14 @@ SecureSocket::~SecureSocket()
 {
 	if (m_ssl->m_ssl != NULL) {
 		SSL_free(m_ssl->m_ssl);
+		m_ssl->m_ssl = NULL;
 	}
 	if (m_ssl->m_context != NULL) {
 		SSL_CTX_free(m_ssl->m_context);
+		m_ssl->m_context = NULL;
 	}
 
+	delete m_ssl;
 	delete[] m_error;
 }
 
@@ -90,7 +93,7 @@ SecureSocket::secureRead(void* buffer, UInt32 n)
 {
 	bool retry = false;
 	int r = 0;
-	if (m_ssl != NULL) {
+	if (m_ssl->m_ssl != NULL) {
 		r = SSL_read(m_ssl->m_ssl, buffer, n);
 		retry = checkResult(r);
 		if (retry) {
@@ -106,7 +109,7 @@ SecureSocket::secureWrite(const void* buffer, UInt32 n)
 {
 	bool retry = false;
 	int r = 0;
-	if (m_ssl != NULL) {
+	if (m_ssl->m_ssl != NULL) {
 		r = SSL_write(m_ssl->m_ssl, buffer, n);
 		retry = checkResult(r);
 		if (retry) {
