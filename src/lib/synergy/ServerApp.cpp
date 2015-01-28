@@ -338,8 +338,8 @@ void
 ServerApp::stopServer()
 {
 	if (m_serverState == kStarted) {
-		closeClientListener(m_listener);
 		closeServer(m_server);
+		closeClientListener(m_listener);
 		m_server      = NULL;
 		m_listener    = NULL;
 		m_serverState = kInitialized;
