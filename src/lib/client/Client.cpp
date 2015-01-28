@@ -81,7 +81,8 @@ Client::Client(
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
 	m_enableDragDrop(enableDragDrop),
-	m_socket(NULL)
+	m_socket(NULL),
+	m_useSecureNetwork(false)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -155,13 +156,13 @@ Client::connect()
 		}
 
 		// create the socket
-		bool useSecureSocket = ARCH->plugin().exists(s_networkSecurity);
-		IDataSocket* socket = m_socketFactory->create(useSecureSocket);
+		m_useSecureNetwork = ARCH->plugin().exists(s_networkSecurity);
+		IDataSocket* socket = m_socketFactory->create(m_useSecureNetwork);
 		m_socket = dynamic_cast<TCPSocket*>(socket);
 
 		// filter socket messages, including a packetizing filter
 		m_stream = socket;
-		bool adopt = !useSecureSocket;
+		bool adopt = !m_useSecureNetwork;
 		m_stream = new PacketStreamFilter(m_events, m_stream, adopt);
 
 		if (m_crypto.m_mode != kDisabled) {
@@ -570,10 +571,14 @@ Client::cleanupTimer()
 void
 Client::cleanupStream()
 {
-	bool useSecureSocket = ARCH->plugin().exists(s_networkSecurity);
-	if (!useSecureSocket) {
-		delete m_stream;
-		m_stream = NULL;
+	delete m_stream;
+	m_stream = NULL;
+
+	// PacketStreamFilter doen't adopt secure socket, because
+	// we need to tell the dynamic lib that allocated this object
+	// to do the deletion.
+	if (m_useSecureNetwork) {
+		ARCH->plugin().invoke(s_networkSecurity, "deleteSocket", NULL);
 	}
 }
 

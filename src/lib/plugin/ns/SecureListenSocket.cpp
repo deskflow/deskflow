@@ -36,6 +36,11 @@ SecureListenSocket::SecureListenSocket(
 
 SecureListenSocket::~SecureListenSocket()
 {
+	SecureSocketSet::iterator it;
+	for (it = m_secureSocketSet.begin(); it != m_secureSocketSet.end(); it++) {
+		delete *it;
+	}
+	m_secureSocketSet.clear();
 }
 
 IDataSocket*
@@ -47,6 +52,9 @@ SecureListenSocket::accept()
 						m_events,
 						m_socketMultiplexer,
 						ARCH->acceptSocket(m_socket, NULL));
+
+		m_secureSocketSet.insert(socket);
+
 		socket->initSsl(true);
 		// TODO: customized certificate path
 		socket->loadCertificates("C:\\Temp\\synergy.pem");
@@ -71,5 +79,16 @@ SecureListenSocket::accept()
 			delete socket;
 		}
 		throw ex;
+	}
+}
+
+void
+SecureListenSocket::deleteSocket(void* socket)
+{
+	SecureSocketSet::iterator it;
+	it = m_secureSocketSet.find((IDataSocket*)socket);
+	if (it != m_secureSocketSet.end()) {
+		delete *it;
+		m_secureSocketSet.erase(it);
 	}
 }

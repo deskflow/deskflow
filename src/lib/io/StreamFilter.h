@@ -49,13 +49,13 @@ public:
 	virtual bool		isReady() const;
 	virtual UInt32		getSize() const;
 
-protected:
 	//! Get the stream
 	/*!
 	Returns the stream passed to the c'tor.
 	*/
 	synergy::IStream*	getStream() const;
 
+protected:
 	//! Handle events from source stream
 	/*!
 	Does the event filtering.  The default simply dispatches an event

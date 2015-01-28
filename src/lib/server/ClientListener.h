@@ -49,6 +49,8 @@ public:
 
 	//@}
 
+	void				deleteSocket(void* socket);
+
 	//! @name accessors
 	//@{
 
@@ -84,5 +86,5 @@ private:
 	Server*				m_server;
 	CryptoOptions		m_crypto;
 	IEventQueue*		m_events;
-	bool				m_useSecureSocket;
+	bool				m_useSecureNetwork;
 };

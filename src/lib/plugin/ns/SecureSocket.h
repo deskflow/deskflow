@@ -42,9 +42,6 @@ public:
 		ArchSocket socket);
 	~SecureSocket();
 
-	// ISocket overrides
-	void				close();
-
 	void				secureConnect();
 	void				secureAccept();
 	bool				isSecureReady();

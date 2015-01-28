@@ -233,4 +233,5 @@ private:
 	Thread*				m_writeToDropDirThread;
 	bool				m_enableDragDrop;
 	TCPSocket*			m_socket;
+	bool				m_useSecureNetwork;
 };

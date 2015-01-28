@@ -63,6 +63,6 @@ private:
 	EventQueueTimer*	m_timer;
 	ClientProxy*		m_proxy;
 	bool				m_ready;
-	Server*			m_server;
+	Server*				m_server;
 	IEventQueue*		m_events;
 };

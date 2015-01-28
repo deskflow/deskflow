@@ -52,7 +52,7 @@ public:
 	Returns a crypto stream if the user has this enabled,
 	otherwise returns the original stream passed to the c'tor.
 	*/
-	synergy::IStream*			getStream() const;
+	synergy::IStream*	getStream() const;
 
 	//@}
 

@@ -54,8 +54,8 @@ ClientListener::ClientListener(const NetworkAddress& address,
 
 	try {
 		// create listen socket
-		m_useSecureSocket = ARCH->plugin().exists(s_networkSecurity);
-		m_listen = m_socketFactory->createListen(m_useSecureSocket);
+		m_useSecureNetwork = ARCH->plugin().exists(s_networkSecurity);
+		m_listen = m_socketFactory->createListen(m_useSecureNetwork);
 
 		// bind listen address
 		LOG((CLOG_DEBUG1 "binding listen socket"));
@@ -115,6 +115,12 @@ ClientListener::setServer(Server* server)
 	m_server = server;
 }
 
+void
+ClientListener::deleteSocket(void* socket)
+{
+	m_listen->deleteSocket(socket);
+}
+
 ClientProxy*
 ClientListener::getNextClient()
 {
@@ -132,13 +138,16 @@ ClientListener::handleClientConnecting(const Event&, void*)
 {
 	// accept client connection
 	synergy::IStream* stream = m_listen->accept();
+
 	if (stream == NULL) {
 		return;
 	}
+
 	LOG((CLOG_NOTE "accepted client connection"));
 
 	// filter socket messages, including a packetizing filter
-	stream = new PacketStreamFilter(m_events, stream, true);
+	bool adopt = !m_useSecureNetwork;
+	stream = new PacketStreamFilter(m_events, stream, adopt);
 	
 	if (m_crypto.m_mode != kDisabled) {
 		CryptoStream* cryptoStream = new CryptoStream(
@@ -212,7 +221,13 @@ ClientListener::handleClientDisconnected(const Event&, void* vclient)
 void
 ClientListener::cleanupListenSocket()
 {
-	if (!m_useSecureSocket) {
+	if (!m_useSecureNetwork) {
 		delete m_listen;
+	}
+	else {
+		ARCH->plugin().invoke(
+			s_networkSecurity,
+			"deleteListenSocket",
+			NULL);
 	}
 }

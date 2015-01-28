@@ -543,6 +543,7 @@ ServerApp::startServer()
 		listener   = openClientListener(args().m_config->getSynergyAddress());
 		m_server   = openServer(*args().m_config, m_primaryClient);
 		listener->setServer(m_server);
+		m_server->setListener(listener);
 		m_listener = listener;
 		updateStatus();
 		LOG((CLOG_NOTE "started server, waiting for clients"));

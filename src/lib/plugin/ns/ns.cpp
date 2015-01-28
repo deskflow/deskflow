@@ -59,7 +59,7 @@ invoke(const char* command, void** args)
 		arg2 = reinterpret_cast<SocketMultiplexer*>(args[1]);
 	}
 
-	if (strcmp(command, "getSecureSocket") == 0) {
+	if (strcmp(command, "getSocket") == 0) {
 		if (g_secureSocket != NULL) {
 			delete g_secureSocket;
 		}
@@ -67,16 +67,27 @@ invoke(const char* command, void** args)
 		g_secureSocket->initSsl(false);
 		return g_secureSocket;
 	}
-	else if (strcmp(command, "getSecureListenSocket") == 0) {
+	else if (strcmp(command, "getListenSocket") == 0) {
 		if (g_secureListenSocket != NULL) {
 			delete g_secureListenSocket;
 		}
 		g_secureListenSocket = new SecureListenSocket(arg1, arg2);
 		return g_secureListenSocket;
 	}
-	else {
-		return NULL;
+	else if (strcmp(command, "deleteSocket") == 0) {
+		if (g_secureSocket != NULL) {
+			delete g_secureSocket;
+			g_secureSocket = NULL;
+		}
 	}
+	else if (strcmp(command, "deleteListenSocket") == 0) {
+		if (g_secureListenSocket != NULL) {
+			delete g_secureListenSocket;
+			g_secureListenSocket = NULL;
+		}
+	}
+
+	return NULL;
 }
 
 void

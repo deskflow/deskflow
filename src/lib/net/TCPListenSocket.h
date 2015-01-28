@@ -43,8 +43,7 @@ public:
 	// IListenSocket overrides
 	virtual IDataSocket*
 						accept();
-
-	ArchSocket&			getSocket() { return m_socket; }
+	virtual void		deleteSocket(void*) { }
 
 public:
 	ISocketMultiplexerJob*

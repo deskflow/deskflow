@@ -18,9 +18,11 @@
 #pragma once
 
 #include "net/TCPListenSocket.h"
+#include "common/stdset.h"
 
 class IEventQueue;
 class SocketMultiplexer;
+class IDataSocket;
 
 class SecureListenSocket : public TCPListenSocket{
 public:
@@ -31,4 +33,10 @@ public:
 	// IListenSocket overrides
 	virtual IDataSocket*
 						accept();
+	void				deleteSocket(void*);
+
+private:
+	typedef std::set<IDataSocket*> SecureSocketSet;
+
+	SecureSocketSet		m_secureSocketSet;
 };
