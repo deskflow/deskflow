@@ -137,7 +137,8 @@ void
 ClientListener::handleClientConnecting(const Event&, void*)
 {
 	// accept client connection
-	synergy::IStream* stream = m_listen->accept();
+	IDataSocket* socket	= m_listen->accept();
+	synergy::IStream* stream  = socket;
 
 	if (stream == NULL) {
 		return;
@@ -156,6 +157,12 @@ ClientListener::handleClientConnecting(const Event&, void*)
 	}
 
 	assert(m_server != NULL);
+
+	if (m_useSecureNetwork) {
+		while(!socket->isReady()) {
+			ARCH->sleep(.5f);
+		}
+	}
 
 	// create proxy for unknown client
 	ClientProxyUnknown* client = new ClientProxyUnknown(stream, 30.0, m_server, m_events);

@@ -59,6 +59,8 @@ SecureSocket::SecureSocket(
 
 SecureSocket::~SecureSocket()
 {
+	SSL_shutdown(m_ssl->m_ssl);
+
 	if (m_ssl->m_ssl != NULL) {
 		SSL_free(m_ssl->m_ssl);
 		m_ssl->m_ssl = NULL;
@@ -70,6 +72,14 @@ SecureSocket::~SecureSocket()
 
 	delete m_ssl;
 	delete[] m_error;
+}
+
+void
+SecureSocket::close()
+{
+	SSL_shutdown(m_ssl->m_ssl);
+
+	TCPSocket::close();
 }
 
 void
@@ -210,14 +220,6 @@ SecureSocket::secureAccept(int socket)
 	int r = SSL_accept(m_ssl->m_ssl);
 	bool retry = checkResult(r);
 
-	//TODO: don't use this infinite loop
-	while (retry) {
-		ARCH->sleep(.5f);
-		SSL_set_fd(m_ssl->m_ssl, socket);
-		r = SSL_accept(m_ssl->m_ssl);
-		retry = checkResult(r);
-	}
-
 	m_secureReady = !retry;
 	return retry;
 }
@@ -234,17 +236,12 @@ SecureSocket::secureConnect(int socket)
 	int r = SSL_connect(m_ssl->m_ssl);
 	bool retry = checkResult(r);
 
-	//TODO: don't use this infinite loop
-	while (retry) {
-		ARCH->sleep(.5f);
-		r = SSL_connect(m_ssl->m_ssl);
-		retry = checkResult(r);
+	m_secureReady = !retry;
+
+	if (m_secureReady) {
+		showCertificate();
 	}
 
-	m_secureReady= true;
-	showCertificate();
-
-	m_secureReady = !retry;
 	return retry;
 }
 
@@ -276,6 +273,12 @@ SecureSocket::checkResult(int n)
 	
 	switch (errorCode) {
 	case SSL_ERROR_NONE:
+		// the TLS/SSL I/O operation completed
+		break;
+
+	case SSL_ERROR_ZERO_RETURN:
+		// the TLS/SSL connection has been closed
+		LOG((CLOG_DEBUG2 "SSL_ERROR_ZERO_RETURN"));
 		break;
 
 	case SSL_ERROR_WANT_READ:
@@ -299,15 +302,18 @@ SecureSocket::checkResult(int n)
 		break;
 
 	case SSL_ERROR_SYSCALL:
+		// some I/O error occurred
 		throwError("Secure socket syscall error");
 		break;
 	case SSL_ERROR_SSL:
-		throwError("Secure socket error");
+		// a failure in the SSL library occurred
+		LOG((CLOG_DEBUG2 "SSL_ERROR_SSL"));
+		throwError("Secure socket SSL error");
 		break;
 
 	default:
 		// possible cases: 
-		// SSL_ERROR_WANT_X509_LOOKUP, SSL_ERROR_ZERO_RETURN
+		// SSL_ERROR_WANT_X509_LOOKUP
 		showError();
 	}
 
@@ -326,7 +332,7 @@ void
 SecureSocket::throwError(const char* reason)
 {
 	if (getError()) {
-		throw XSecureSocket(synergy::string::sprintf(
+		throw XSocket(synergy::string::sprintf(
 			"%s: %s", reason, m_error));
 	}
 }
@@ -342,7 +348,7 @@ SecureSocket::getError()
 		errorUpdated = true;
 	}
 	else {
-		LOG((CLOG_DEBUG "can not detect any error in secure socket"));
+		LOG((CLOG_DEBUG2 "can not detect any error in secure socket"));
 	}
 	
 	return errorUpdated;
@@ -376,5 +382,6 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 #elif SYSAPI_UNIX
 	retry = secureAccept(getSocket()->m_fd);
 #endif
+
 	return retry ? job : newJob();
 }

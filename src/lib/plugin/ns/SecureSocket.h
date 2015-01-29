@@ -18,17 +18,13 @@
 #pragma once
 
 #include "net/TCPSocket.h"
-#include "base/XBase.h"
+#include "net/XSocket.h"
 
 class IEventQueue;
 class SocketMultiplexer;
 class ISocketMultiplexerJob;
 
 struct Ssl;
-
-//! Generic socket exception
-XBASE_SUBCLASS(XSecureSocket, XBase);
-
 
 //! Secure socket
 /*!
@@ -42,8 +38,12 @@ public:
 		ArchSocket socket);
 	~SecureSocket();
 
+	// ISocket overrides
+	void				close();
+
 	void				secureConnect();
 	void				secureAccept();
+	bool				isReady() const { return m_secureReady; }
 	bool				isSecureReady();
 	bool				isSecure() { return true; }
 	UInt32				secureRead(void* buffer, UInt32 n);
