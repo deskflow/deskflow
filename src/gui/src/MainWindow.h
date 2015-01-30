@@ -112,6 +112,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void updateZeroconfService();
 		void serverDetected(const QString name);
 		int checkWinArch();
+		void setLoginResult(int result);
 
 	public slots:
 		void appendLogRaw(const QString& text);
@@ -192,6 +193,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool m_SuppressAutoConfigWarning;
 		CommandProcess* m_BonjourInstall;
 		bool m_SuppressEmptyServerWarning;
+		int m_LoginResult;
 
 private slots:
 	void on_m_pCheckBoxAutoConfig_toggled(bool checked);

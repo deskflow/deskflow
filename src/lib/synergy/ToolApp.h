@@ -26,6 +26,10 @@ class ToolApp : public MinimalApp
 public:
 	UInt32				run(int argc, char** argv);
 	void				help();
+
+private:
+	void				loginAuth();
+
 private:
 	ToolArgs			m_args;
 };

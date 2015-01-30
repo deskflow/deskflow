@@ -160,17 +160,20 @@ ArgParser::parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* con
 bool
 ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 {
+	bool result = false;
+
 	for (int i = 1; i < argc; ++i) {
 		if (isArg(i, argc, argv, NULL, "--get-active-desktop", 0)) {
 			args.m_printActiveDesktopName = true;
-			return true;
+			result = true;
 		}
-		else {
-			return false;
+		if (isArg(i, argc, argv, NULL, "--login-auth", 0)) {
+			args.m_loginAuthenticate = true;
+			result = true;
 		}
 	}
 
-	return false;
+	return result;
 }
 
 bool
