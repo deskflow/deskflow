@@ -47,6 +47,7 @@ class AppConfig
 	friend class SettingsDialog;
 	friend class MainWindow;
 	friend class SetupWizard;
+	friend class LoginWindow;
 
 	public:
 		AppConfig(QSettings* settings);
@@ -72,6 +73,9 @@ class AppConfig
 		void setAutoConfig(bool autoConfig);
 		bool autoConfigPrompted()  { return m_AutoConfigPrompted; }
 		void setAutoConfigPrompted(bool prompted);
+		const QString& userEmail() const { return m_UserEmail; }
+		const QString& userToken() const { return m_UserToken; }
+		const int userType() const { return m_UserType; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -95,7 +99,9 @@ class AppConfig
 		void setLanguage(const QString language) { m_Language = language; }
 		void setStartedBefore(bool b) { m_StartedBefore = b; }
 		void setElevateMode(bool b) { m_ElevateMode = b; }
-
+		void setUserEmail(const QString& e) { m_UserEmail = e; }
+		void setUserToken(const QString& t) { m_UserToken = t; }
+		void setUserType(int t) { m_UserType = t; }
 		void loadSettings();
 		void saveSettings();
 
@@ -118,6 +124,9 @@ class AppConfig
 		bool m_AutoConfig;
 		bool m_ElevateMode;
 		bool m_AutoConfigPrompted;
+		QString m_UserEmail;
+		QString m_UserToken;
+		int m_UserType;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

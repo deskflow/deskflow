@@ -24,6 +24,8 @@
 #include "AppConfig.h"
 #include "SetupWizard.h"
 #include "LoginWindow.h"
+#include "QUtility.h"
+#include "LoginResult.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -93,13 +95,22 @@ int main(int argc, char* argv[])
 
 	MainWindow mainWindow(settings, appConfig);
 	SetupWizard setupWizard(mainWindow, true);
-
 	LoginWindow loginWindow(
-					&mainWindow,
-					&setupWizard,
-					appConfig.wizardShouldRun());
+				&mainWindow,
+				&setupWizard,
+				appConfig.wizardShouldRun());
 
-	loginWindow.show();
+	QString email = appConfig.userEmail();
+	QString mac = getFirstMacAddress();
+	QString hashSrc = email + mac;
+	QString hashResult = hash(hashSrc);
+	if (hashResult == appConfig.userToken()) {
+		mainWindow.setLoginResult(appConfig.userType());
+		mainWindow.show();
+	}
+	else {
+		loginWindow.show();
+	}
 
 	return app.exec();
 }

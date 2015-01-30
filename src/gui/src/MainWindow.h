@@ -113,6 +113,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void serverDetected(const QString name);
 		int checkWinArch();
 		void setLoginResult(int result);
+		AppConfig& appConfig() { return m_AppConfig; }
 
 	public slots:
 		void appendLogRaw(const QString& text);
@@ -140,7 +141,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
 	protected:
 		QSettings& settings() { return m_Settings; }
-		AppConfig& appConfig() { return m_AppConfig; }
 		QProcess*& synergyProcess() { return m_pSynergy; }
 		void setSynergyProcess(QProcess* p) { m_pSynergy = p; }
 		void initConnections();

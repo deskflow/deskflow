@@ -5,18 +5,7 @@
 #include <QObject>
 
 class LoginWindow;
-
-enum qUserType {
-	Student,
-	Home,
-	Professional,
-	Error,
-	ExceptionError,
-	InvalidEmailPassword,
-	ServerResponseError,
-	Unknown
-
-};
+class AppConfig;
 
 class LoginAuth : public QObject
 {
@@ -36,7 +25,6 @@ signals:
 
 private:
 	QString request(const QString& email, const QString& password);
-	QString hash(const QString& string);
 
 private:
 	QString m_Email;

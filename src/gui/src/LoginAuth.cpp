@@ -1,6 +1,9 @@
 #include "LoginAuth.h"
 
 #include "LoginWindow.h"
+#include "AppConfig.h"
+#include "QUtility.h"
+#include "LoginResult.h"
 
 #include <QProcess>
 #include <QCoreApplication>
@@ -92,11 +95,4 @@ QString LoginAuth::request(const QString& email, const QString& password)
 	}
 
 	return out;
-}
-
-QString LoginAuth::hash(const QString& string)
-{
-	QByteArray data = string.toUtf8();
-	QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Md5);
-	return hash.toHex();
 }
