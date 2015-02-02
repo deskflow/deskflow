@@ -326,7 +326,7 @@ ClientApp::handleClientDisconnected(const Event&, void*)
 		m_events->addEvent(Event(Event::kQuit));
 	}
 	else if (!m_suspended) {
-		m_client->connect();
+		scheduleClientRestart(nextRestartTimeout());
 	}
 	updateStatus();
 }

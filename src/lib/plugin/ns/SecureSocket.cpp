@@ -59,9 +59,9 @@ SecureSocket::SecureSocket(
 
 SecureSocket::~SecureSocket()
 {
-	SSL_shutdown(m_ssl->m_ssl);
-
 	if (m_ssl->m_ssl != NULL) {
+		SSL_shutdown(m_ssl->m_ssl);
+
 		SSL_free(m_ssl->m_ssl);
 		m_ssl->m_ssl = NULL;
 	}
@@ -308,8 +308,10 @@ SecureSocket::checkResult(int n)
 	case SSL_ERROR_SSL:
 		// a failure in the SSL library occurred
 		LOG((CLOG_DEBUG2 "SSL_ERROR_SSL"));
+		sendEvent(getEvents()->forISocket().disconnected());
 		sendEvent(getEvents()->forIStream().inputShutdown());
 		showError();
+		retry = true;
 		break;
 
 	default:
