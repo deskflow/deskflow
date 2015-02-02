@@ -308,7 +308,8 @@ SecureSocket::checkResult(int n)
 	case SSL_ERROR_SSL:
 		// a failure in the SSL library occurred
 		LOG((CLOG_DEBUG2 "SSL_ERROR_SSL"));
-		throwError("Secure socket SSL error");
+		sendEvent(getEvents()->forIStream().inputShutdown());
+		showError();
 		break;
 
 	default:

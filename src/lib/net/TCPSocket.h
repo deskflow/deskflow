@@ -62,7 +62,7 @@ public:
 
 protected:
 	ArchSocket			getSocket() { return m_socket; }
-
+	IEventQueue*		getEvents() { return m_events; }
 	virtual bool		isSecureReady() { return false; }
 	virtual bool		isSecure() { return false; }
 	virtual UInt32		secureRead(void* buffer, UInt32) { return 0; }
@@ -76,11 +76,12 @@ protected:
 
 	Mutex&				getMutex() { return m_mutex; }
 
+	void				sendEvent(Event::Type);
+
 private:
 	void				init();
 
 	void				sendConnectionFailedEvent(const char*);
-	void				sendEvent(Event::Type);
 	void				onConnected();
 	void				onInputShutdown();
 	void				onOutputShutdown();

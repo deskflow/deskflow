@@ -43,6 +43,9 @@ public:
 	*/
 	ClientProxy*		orphanClientProxy();
 
+	//! Get the stream
+	synergy::IStream*	getStream() { return m_stream; }
+
 	//@}
 
 private:
