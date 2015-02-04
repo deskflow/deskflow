@@ -1,8 +1,6 @@
 #include "MainDialog.h"
 #include "Arguments.h"
 
-#include <QtGui/QApplication>
-
 void parseArgs(Arguments& args, int argc, char* argv[])
 {
 	for (int i = 1; i < argc; i++) {
