@@ -17,7 +17,7 @@
 
 #include "LoginAuth.h"
 
-#include "LoginWindow.h"
+#include "LoginDialog.h"
 #include "AppConfig.h"
 #include "QUtility.h"
 #include "LoginResult.h"
@@ -28,16 +28,16 @@
 #include <QCryptographicHash>
 #include <stdexcept>
 
-void LoginAuth::checkUserType()
+void LoginAuth::checkEditionType()
 {
 	int edition = Unknown;
-	int result = doCheckUserType(edition);
-	m_pLoginWindow->setLoginResult(result);
-	m_pLoginWindow->setEditionType(edition);
+	int result = doCheckEditionType(edition);
+	m_pLoginDialog->setLoginResult(result);
+	m_pLoginDialog->setEditionType(edition);
 	emit finished();
 }
 
-int LoginAuth::doCheckUserType(int& edition)
+int LoginAuth::doCheckEditionType(int& edition)
 {
 	QString responseJson;
 
@@ -47,7 +47,7 @@ int LoginAuth::doCheckUserType(int& edition)
 	}
 	catch (std::exception& e)
 	{
-		m_pLoginWindow->setError(e.what());
+		m_pLoginDialog->setError(e.what());
 		return ExceptionError;
 	}
 
@@ -72,12 +72,12 @@ int LoginAuth::doCheckUserType(int& edition)
 
 			// replace "\n" with real new lines.
 			QString error = errorRegex.cap(1).replace("\\n", "\n");
-			m_pLoginWindow->setError(error);
+			m_pLoginDialog->setError(error);
 			return Error;
 		}
 	}
 
-	m_pLoginWindow->setError(responseJson);
+	m_pLoginDialog->setError(responseJson);
 	return ServerResponseError;
 }
 

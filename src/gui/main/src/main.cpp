@@ -23,7 +23,7 @@
 #include "MainWindow.h"
 #include "AppConfig.h"
 #include "SetupWizard.h"
-#include "LoginWindow.h"
+#include "LoginDialog.h"
 #include "QUtility.h"
 #include "LoginResult.h"
 
@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
 
 	MainWindow mainWindow(settings, appConfig);
 	SetupWizard setupWizard(mainWindow, true);
-	LoginWindow loginWindow(
+	LoginDialog loginDialog(
 				&mainWindow,
 				&setupWizard,
 				appConfig.wizardShouldRun());
@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
 		mainWindow.show();
 	}
 	else {
-		loginWindow.show();
+		loginDialog.show();
 	}
 
 	return app.exec();

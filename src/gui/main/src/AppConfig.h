@@ -47,7 +47,7 @@ class AppConfig
 	friend class SettingsDialog;
 	friend class MainWindow;
 	friend class SetupWizard;
-	friend class LoginWindow;
+	friend class LoginDialog;
 
 	public:
 		AppConfig(QSettings* settings);
