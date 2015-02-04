@@ -1,4 +1,4 @@
-#include "MainWindow.h"
+#include "MainDialog.h"
 #include "Arguments.h"
 
 #include <QtGui/QApplication>
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	parseArgs(args, argc, argv);
 
     QApplication a(argc, argv);
-	MainWindow w(args);
-    w.show();
+	MainDialog d(args);
+	d.show();
     return a.exec();
 }
