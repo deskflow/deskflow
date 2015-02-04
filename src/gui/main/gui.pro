@@ -95,7 +95,7 @@ HEADERS += src/MainWindow.h \
     src/LoginResult.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
-macx { 
+macx {
     HEADERS += src/AXDatabaseCleaner.h
     OBJECTIVE_SOURCES += src/AXDatabaseCleaner.mm
     QMAKE_INFO_PLIST = res/mac/Info.plist
@@ -106,21 +106,21 @@ macx {
     LIBS += $$MACX_LIBS
 }
 unix:!macx:LIBS += -ldns_sd
-debug { 
+win32 {
+    Debug:DESTDIR = ../../../bin/Debug
+    Release:DESTDIR = ../../../bin/Release
+    LIBS += -L"../../../ext/bonjour/x64" \
+        -ldnssd
+    INCLUDEPATH += "$(BONJOUR_SDK_HOME)/Include"
+}
+else:DESTDIR = ../../../bin
+debug {
     OBJECTS_DIR = tmp/debug
     MOC_DIR = tmp/debug
     RCC_DIR = tmp/debug
 }
-release { 
+release {
     OBJECTS_DIR = tmp/release
     MOC_DIR = tmp/release
     RCC_DIR = tmp/release
 }
-win32 { 
-    Debug:DESTDIR = ../../bin/Debug
-    Release:DESTDIR = ../../bin/Release
-    LIBS += -L"../../ext/bonjour/x64" \
-        -ldnssd
-    INCLUDEPATH += "$(BONJOUR_SDK_HOME)/Include"
-}
-else:DESTDIR = ../../bin
