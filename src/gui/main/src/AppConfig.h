@@ -75,7 +75,7 @@ class AppConfig
 		void setAutoConfigPrompted(bool prompted);
 		const QString& userEmail() const { return m_UserEmail; }
 		const QString& userToken() const { return m_UserToken; }
-		const int userType() const { return m_UserType; }
+		const int editionType() const { return m_EditionType; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -101,7 +101,7 @@ class AppConfig
 		void setElevateMode(bool b) { m_ElevateMode = b; }
 		void setUserEmail(const QString& e) { m_UserEmail = e; }
 		void setUserToken(const QString& t) { m_UserToken = t; }
-		void setUserType(int t) { m_UserType = t; }
+		void setEditionType(int t) { m_EditionType = t; }
 		void loadSettings();
 		void saveSettings();
 
@@ -126,7 +126,7 @@ class AppConfig
 		bool m_AutoConfigPrompted;
 		QString m_UserEmail;
 		QString m_UserToken;
-		int m_UserType;
+		int m_EditionType;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

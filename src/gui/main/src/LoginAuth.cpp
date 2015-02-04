@@ -21,6 +21,7 @@
 #include "AppConfig.h"
 #include "QUtility.h"
 #include "LoginResult.h"
+#include "EditionType.h"
 
 #include <QProcess>
 #include <QCoreApplication>
@@ -29,12 +30,14 @@
 
 void LoginAuth::checkUserType()
 {
-	int result = doCheckUserType();
+	int edition = Unknown;
+	int result = doCheckUserType(edition);
 	m_pLoginWindow->setLoginResult(result);
+	m_pLoginWindow->setEditionType(edition);
 	emit finished();
 }
 
-int LoginAuth::doCheckUserType()
+int LoginAuth::doCheckUserType(int& edition)
 {
 	QString responseJson;
 
@@ -52,7 +55,12 @@ int LoginAuth::doCheckUserType()
 	if (resultRegex.exactMatch(responseJson)) {
 		QString boolString = resultRegex.cap(1);
 		if (boolString == "true") {
-			return Home;
+			QRegExp editionRegex(".*\"edition\".*:.*\"(.+)\",.*");
+			if (editionRegex.exactMatch(responseJson)) {
+				QString e = editionRegex.cap(1);
+				edition = e.toInt();
+			}
+			return Ok;
 		}
 		else if (boolString == "false") {
 			return InvalidEmailPassword;

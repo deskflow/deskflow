@@ -22,6 +22,7 @@
 #include "SetupWizard.h"
 #include "LoginAuth.h"
 #include "LoginResult.h"
+#include "EditionType.h"
 #include "QUtility.h"
 
 #include <QMessageBox>
@@ -38,7 +39,8 @@ LoginWindow::LoginWindow(
 	m_pSetupWizard(setupWizard),
 	m_WizardShouldRun(wizardShouldRun),
 	m_pLoginAuth(NULL),
-	m_LoginResult(Unknown),
+	m_LoginResult(Ok),
+	m_EditionType(Unknown),
 	m_AppConfig(m_pMainWindow->appConfig())
 {
 	setupUi(this);
@@ -88,16 +90,16 @@ void LoginWindow::showNext()
 			m_pSetupWizard->show();
 		}
 		else {
-			m_pMainWindow->setLoginResult(m_LoginResult);
+			m_pMainWindow->setEditionType(m_EditionType);
 			if (!m_pLineEditEmail->text().isEmpty()) {
 				m_AppConfig.setUserEmail(m_pLineEditEmail->text());
 
-				if (m_LoginResult != Unknown) {
+				if (m_EditionType != Unknown) {
 					QString mac = getFirstMacAddress();
 					QString hashSrc = m_pLineEditEmail->text() + mac;
 					QString hashResult = hash(hashSrc);
 					m_AppConfig.setUserToken(hashResult);
-					m_AppConfig.setUserType(m_LoginResult);
+					m_AppConfig.setEditionType(m_EditionType);
 				}
 			}
 			m_pMainWindow->show();
@@ -106,8 +108,9 @@ void LoginWindow::showNext()
 
 	delete m_pLoginAuth;
 	m_pLoginAuth = NULL;
-	m_LoginResult = Unknown;
-	m_pPushButtonLogin->setText("Login");
+	m_LoginResult = Ok;
+	m_EditionType = Unknown;
+	m_pPushButtonLogin->setEnabled(true);
 	m_pPushButtonLogin->setDefault(true);
 }
 
@@ -150,7 +153,7 @@ void LoginWindow::on_m_pPushButtonLogin_clicked()
 			m_pLoginAuth->setLoginWindow(this);
 		}
 
-		m_pPushButtonLogin->setText("Logging...");
+		m_pPushButtonLogin->setEnabled(false);
 
 		QString email = m_pLineEditEmail->text();
 		QString password = m_pLineEditPassword->text();

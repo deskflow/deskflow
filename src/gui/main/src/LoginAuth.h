@@ -29,7 +29,7 @@ class LoginAuth : public QObject
 	Q_OBJECT
 
 public:
-	int doCheckUserType();
+	int doCheckUserType(int& edition);
 	void setEmail(QString email) { m_Email = email; }
 	void setPassword(QString password) { m_Password = password; }
 	void setLoginWindow(LoginWindow* w) { m_pLoginWindow = w; }
