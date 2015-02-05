@@ -21,7 +21,7 @@
 #include <QString>
 #include <QObject>
 
-class LoginDialog;
+class LoginWindow;
 class AppConfig;
 
 class LoginAuth : public QObject
@@ -29,13 +29,13 @@ class LoginAuth : public QObject
 	Q_OBJECT
 
 public:
-	int doCheckEditionType(int& edition);
+	int doCheckUserType(int& edition);
 	void setEmail(QString email) { m_Email = email; }
 	void setPassword(QString password) { m_Password = password; }
-	void setLoginDialog(LoginDialog* d) { m_pLoginDialog = d; }
+	void setLoginWindow(LoginWindow* w) { m_pLoginWindow = w; }
 
 public slots:
-	void checkEditionType();
+	void checkUserType();
 
 signals:
 	void finished();
@@ -46,7 +46,7 @@ private:
 private:
 	QString m_Email;
 	QString m_Password;
-	LoginDialog* m_pLoginDialog;
+	LoginWindow* m_pLoginWindow;
 };
 
 #endif // LOGINAUTH_H
