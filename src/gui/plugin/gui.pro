@@ -1,14 +1,12 @@
 TARGET = plugindownloader
 TEMPLATE = app
 SOURCES += src/main.cpp \
-    src/Authenticate.cpp \
-    src/MainDialog.cpp
-HEADERS += src/Arguments.h \
-    src/Authenticate.h \
-    src/MainDialog.h
-FORMS += res/MainDialogBase.ui
-RESOURCES += res/Synergy.qrc
-RC_FILE = res/win/Synergy.rc
+    src/MainWindow.cpp \
+    src/Authenticate.cpp
+HEADERS += src/MainWindow.h \
+    src/Arguments.h \
+    src/Authenticate.h
+FORMS += res/MainWindowBase.ui
 win32 { 
     Debug:DESTDIR = ../../../bin/Debug
     Release:DESTDIR = ../../../bin/Release

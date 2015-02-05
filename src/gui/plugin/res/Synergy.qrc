@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/res">
-        <file>image/spinning-wheel.gif</file>
-        <file>icons/256x256/synergy.ico</file>
-    </qresource>
-</RCC>
