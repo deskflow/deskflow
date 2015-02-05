@@ -25,5 +25,4 @@ public:
 
 public:
 	bool				m_printActiveDesktopName;
-	bool				m_loginAuthenticate;
 };

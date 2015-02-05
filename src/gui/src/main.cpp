@@ -23,7 +23,6 @@
 #include "MainWindow.h"
 #include "AppConfig.h"
 #include "SetupWizard.h"
-#include "LoginWindow.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -94,12 +93,14 @@ int main(int argc, char* argv[])
 	MainWindow mainWindow(settings, appConfig);
 	SetupWizard setupWizard(mainWindow, true);
 
-	LoginWindow loginWindow(
-					&mainWindow,
-					&setupWizard,
-					appConfig.wizardShouldRun());
-
-	loginWindow.show();
+	if (appConfig.wizardShouldRun())
+	{
+		setupWizard.show();
+	}
+	else
+	{
+		mainWindow.open();
+	}
 
 	return app.exec();
 }

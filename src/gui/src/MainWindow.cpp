@@ -28,7 +28,6 @@
 #include "ZeroconfService.h"
 #include "DataDownloader.h"
 #include "CommandProcess.h"
-#include "LoginAuth.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -90,8 +89,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pCancelButton(NULL),
 	m_SuppressAutoConfigWarning(false),
 	m_BonjourInstall(NULL),
-	m_SuppressEmptyServerWarning(false),
-	m_LoginResult(Unknown)
+	m_SuppressEmptyServerWarning(false)
 {
 	setupUi(this);
 
@@ -568,10 +566,7 @@ QString MainWindow::configFilename()
 		m_pTempConfigFile = new QTemporaryFile();
 		if (!m_pTempConfigFile->open())
 		{
-			QMessageBox::critical(
-				this, tr("Cannot write configuration file"),
-				tr("The temporary configuration file required to start synergy can not be written."));
-
+			QMessageBox::critical(this, tr("Cannot write configuration file"), tr("The temporary configuration file required to start synergy can not be written."));
 			return "";
 		}
 
@@ -875,26 +870,6 @@ int MainWindow::checkWinArch()
 	}
 #endif
 	return unknown;
-}
-
-void MainWindow::setLoginResult(int result)
-{
-	m_LoginResult = result;
-	QString title;
-	if (result == Student) {
-		title = "Synergy Student";
-	}
-	else if (result == Home) {
-		title = "Synergy Home";
-	}
-	else if (result == Professional) {
-		title = "Synergy Pro";
-	}
-	else {
-		title = "Synergy (UNREGISTERED)";
-	}
-
-	setWindowTitle(title);
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
