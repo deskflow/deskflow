@@ -213,8 +213,7 @@ class InternalCommands:
 	defaultTarget = 'release'
 
 	cmake_dir = 'res'
-	main_gui_dir = 'src/gui/main'
-	plugin_gui_dir = 'src/gui/plugin'
+	gui_dir = 'src/gui'
 	doc_dir = 'doc'
 	extDir = 'ext'
 
@@ -540,18 +539,10 @@ class InternalCommands:
 		print "QMake command: " + qmake_cmd_string
 		
 		# run qmake from the gui dir
-		self.try_chdir(self.main_gui_dir)
+		self.try_chdir(self.gui_dir)
 		err = os.system(qmake_cmd_string)
 		self.restore_chdir()
 		
-		if err != 0:
-			raise Exception('QMake encountered error: ' + str(err))
-
-		# run qmake from the gui dir
-		self.try_chdir(self.plugin_gui_dir)
-		err = os.system(qmake_cmd_string)
-		self.restore_chdir()
-
 		if err != 0:
 			raise Exception('QMake encountered error: ' + str(err))
 
@@ -786,21 +777,14 @@ class InternalCommands:
 		
 		if sys.platform == 'win32':
 			for target in targets:
-				self.try_chdir(self.main_gui_dir)
+				self.try_chdir(self.gui_dir)
 				err = os.system(gui_make_cmd + ' ' + target)
 				self.restore_chdir()
-
-				if err != 0:
-					raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
-
-				self.try_chdir(self.plugin_gui_dir)
-				err = os.system(gui_make_cmd + ' ' + target)
-				self.restore_chdir()
-
+				
 				if err != 0:
 					raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
 		else:
-			self.try_chdir(self.main_gui_dir)
+			self.try_chdir(self.gui_dir)
 			err = os.system(gui_make_cmd)
 			self.restore_chdir()
 
@@ -812,13 +796,6 @@ class InternalCommands:
 					self.macPostMake(target)
 
 				self.fixQtFrameworksLayout()
-
-			self.try_chdir(self.plugin_gui_dir)
-			err = os.system(gui_make_cmd)
-			self.restore_chdir()
-
-			if err != 0:
-				raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
 
 	def symlink(self, source, target):
 		if not os.path.exists(target):
