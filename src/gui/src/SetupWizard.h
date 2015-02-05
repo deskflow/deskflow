@@ -43,7 +43,10 @@ private:
 	MainWindow& m_MainWindow;
 	bool m_StartMain;
 	SynergyLocale m_Locale;
+	int m_Edition;
 
 private slots:
+	void on_m_pRadioButtonActivate_toggled(bool checked);
+	void on_m_pRadioButtonSkip_toggled(bool checked);
 	void on_m_pComboLanguage_currentIndexChanged(int index);
 };

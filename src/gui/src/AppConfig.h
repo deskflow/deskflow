@@ -32,7 +32,7 @@
 //   2: added language page
 //   3: added premium page and removed
 //
-const int kWizardVersion = 3;
+const int kWizardVersion = 4;
 
 class QSettings;
 class SettingsDialog;
@@ -72,6 +72,12 @@ class AppConfig
 		void setAutoConfig(bool autoConfig);
 		bool autoConfigPrompted()  { return m_AutoConfigPrompted; }
 		void setAutoConfigPrompted(bool prompted);
+		void setEdition(int e) { m_Edition = e; }
+		int edition() { return m_Edition; }
+		void setActivateEmail(QString e) { m_ActivateEmail = e; }
+		QString activateEmail() { return m_ActivateEmail; }
+		void setUserToken(QString t) { m_UserToken = t; }
+		QString userToken() { return m_UserToken; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -118,6 +124,9 @@ class AppConfig
 		bool m_AutoConfig;
 		bool m_ElevateMode;
 		bool m_AutoConfigPrompted;
+		int m_Edition;
+		QString m_ActivateEmail;
+		QString m_UserToken;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

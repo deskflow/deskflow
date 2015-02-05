@@ -17,6 +17,7 @@
  */
 
 #include "AppConfig.h"
+#include "EditionType.h"
 #include "QUtility.h"
 
 #include <QtCore>
@@ -127,6 +128,9 @@ void AppConfig::loadSettings()
 	m_AutoConfig = settings().value("autoConfig", true).toBool();
 	m_ElevateMode = settings().value("elevateMode", false).toBool();
 	m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
+	m_Edition = settings().value("edition", Unknown).toInt();
+	m_ActivateEmail = settings().value("activateEmail", "").toString();
+	m_UserToken = settings().value("userToken", "").toString();
 }
 
 void AppConfig::saveSettings()
@@ -145,6 +149,9 @@ void AppConfig::saveSettings()
 	settings().setValue("autoConfig", m_AutoConfig);
 	settings().setValue("elevateMode", m_ElevateMode);
 	settings().setValue("autoConfigPrompted", m_AutoConfigPrompted);
+	settings().setValue("edition", m_Edition);
+	settings().setValue("activateEmail", m_ActivateEmail);
+	settings().setValue("userToken", m_UserToken);
 }
 
 void AppConfig::setCryptoPass(const QString &s)

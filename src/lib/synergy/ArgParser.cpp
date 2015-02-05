@@ -165,6 +165,10 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 			args.m_printActiveDesktopName = true;
 			return true;
 		}
+		else if (isArg(i, argc, argv, NULL, "--login-auth", 0)) {
+			args.m_loginAuthenticate = true;
+			return true;
+		}
 		else {
 			return false;
 		}

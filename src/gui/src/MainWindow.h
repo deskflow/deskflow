@@ -112,6 +112,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void updateZeroconfService();
 		void serverDetected(const QString name);
 		int checkWinArch();
+		void setEdition(int type);
 
 	public slots:
 		void appendLogRaw(const QString& text);

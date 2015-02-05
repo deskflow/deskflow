@@ -17,6 +17,8 @@
  
 #include "SetupWizard.h"
 #include "MainWindow.h"
+#include "WebClient.h"
+#include "EditionType.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
 
@@ -24,7 +26,8 @@
 
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_MainWindow(mainWindow),
-	m_StartMain(startMain)
+	m_StartMain(startMain),
+	m_Edition(Unknown)
 {
 	setupUi(this);
 
@@ -51,6 +54,9 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 
 	m_Locale.fillLanguageComboBox(m_pComboLanguage);
 	setIndexFromItemData(m_pComboLanguage, m_MainWindow.appConfig().language());
+	AppConfig& appConfig = m_MainWindow.appConfig();
+
+	m_pLineEditEmail->setText(appConfig.activateEmail());
 
 }
 
@@ -64,7 +70,36 @@ bool SetupWizard::validateCurrentPage()
 	message.setWindowTitle(tr("Setup Synergy"));
 	message.setIcon(QMessageBox::Information);
 
-	if (currentPage() == m_pNodePage)
+	if (currentPage() == m_pActivatePage)
+	{
+		if (m_pRadioButtonActivate->isChecked()) {
+			if (m_pLineEditEmail->text().isEmpty() ||
+				m_pLineEditPassword->text().isEmpty()) {
+				message.setText(tr("Please enter your email address and password."));
+				message.exec();
+				return false;
+			}
+			else {
+				WebClient webClient;
+				m_Edition = webClient .getEdition(
+					m_pLineEditEmail->text(),
+					m_pLineEditPassword->text(),
+					message,
+					this);
+
+				if (m_Edition == Unknown) {
+					return false;
+				}
+				else {
+					return true;
+				}
+			}
+		}
+		else {
+			return true;
+		}
+	}
+	else if (currentPage() == m_pNodePage)
 	{
 		bool result = m_pClientRadioButton->isChecked() ||
 				 m_pServerRadioButton->isChecked();
@@ -121,6 +156,16 @@ void SetupWizard::accept()
 		settings.setValue("groupServerChecked", false);
 	}
 
+	if (m_pRadioButtonActivate->isChecked()) {
+		appConfig.setActivateEmail(m_pLineEditEmail->text());
+		QString mac = getFirstMacAddress();
+		QString hashSrc = m_pLineEditEmail->text() + mac;
+		QString hashResult = hash(hashSrc);
+		appConfig.setUserToken(hashResult);
+		appConfig.setEdition(m_Edition);
+	}
+	m_MainWindow.setEdition(m_Edition);
+
 	settings.sync();
 
 	QWizard::accept();
@@ -138,6 +183,7 @@ void SetupWizard::reject()
 
 	if (m_StartMain)
 	{
+		m_MainWindow.setEdition(m_Edition);
 		m_MainWindow.open();
 	}
 
@@ -148,4 +194,20 @@ void SetupWizard::on_m_pComboLanguage_currentIndexChanged(int index)
 {
 	QString ietfCode = m_pComboLanguage->itemData(index).toString();
 	QSynergyApplication::getInstance()->switchTranslator(ietfCode);
+}
+
+void SetupWizard::on_m_pRadioButtonSkip_toggled(bool checked)
+{
+	if (checked) {
+		m_pLineEditEmail->setEnabled(false);
+		m_pLineEditPassword->setEnabled(false);
+	}
+}
+
+void SetupWizard::on_m_pRadioButtonActivate_toggled(bool checked)
+{
+	if (checked) {
+		m_pLineEditEmail->setEnabled(true);
+		m_pLineEditPassword->setEnabled(true);
+	}
 }

@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Synergy Si Ltd.
- * 
+ * Copyright (C) 2015 Synergy Si Ltd.
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file COPYING that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,21 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef EDITIONTYPE_H
+#define EDITIONTYPE_H
 
-#include "synergy/App.h"
-#include "synergy/ToolArgs.h"
-#include "common/basic_types.h"
-
-class ToolApp : public MinimalApp 
-{
-public:
-	UInt32				run(int argc, char** argv);
-	void				help();
-
-private:
-	void				loginAuth();
-
-private:
-	ToolArgs			m_args;
+enum qEditionType {
+	Basic,
+	Pro,
+	Unknown
 };
+
+#endif // EDITIONTYPE_H

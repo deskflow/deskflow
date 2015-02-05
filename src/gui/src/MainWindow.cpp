@@ -28,6 +28,8 @@
 #include "ZeroconfService.h"
 #include "DataDownloader.h"
 #include "CommandProcess.h"
+#include "EditionType.h"
+#include "QUtility.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -812,10 +814,21 @@ void MainWindow::changeEvent(QEvent* event)
 		switch (event->type())
 		{
 		case QEvent::LanguageChange:
+		{
 			retranslateUi(this);
 			retranslateMenuBar();
-			break;
 
+			QString mac = getFirstMacAddress();
+			QString hashSrc = m_AppConfig.activateEmail() + mac;
+			QString hashResult = hash(hashSrc);
+			if (hashResult == m_AppConfig.userToken()) {
+				setEdition(m_AppConfig.edition());
+			}
+			else {
+				setEdition(Unknown);
+			}
+			break;
+		}
 		default:
 			QMainWindow::changeEvent(event);
 		}
@@ -870,6 +883,22 @@ int MainWindow::checkWinArch()
 	}
 #endif
 	return unknown;
+}
+
+void MainWindow::setEdition(int type)
+{
+	QString title;
+	if (type == Basic) {
+		title = "Synergy Basic";
+	}
+	else if (type == Pro) {
+		title = "Synergy Pro";
+	}
+	else {
+		title = "Synergy (UNREGISTERED)";
+	}
+
+	setWindowTitle(title);
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
