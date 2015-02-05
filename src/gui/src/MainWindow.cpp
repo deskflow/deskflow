@@ -29,7 +29,6 @@
 #include "DataDownloader.h"
 #include "CommandProcess.h"
 #include "LoginAuth.h"
-#include "LoginResult.h"
 
 #include <QtCore>
 #include <QtGui>

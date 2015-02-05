@@ -8,7 +8,6 @@
 class MainWindow;
 class SetupWizard;
 class LoginAuth;
-class AppConfig;
 
 class LoginWindow : public QMainWindow, public Ui::LoginWindow
 {
@@ -41,7 +40,6 @@ private:
 	LoginAuth* m_pLoginAuth;
 	int m_LoginResult;
 	QString m_Error;
-	AppConfig& m_AppConfig;
 
 };
 

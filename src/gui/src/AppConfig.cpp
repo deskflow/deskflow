@@ -127,9 +127,6 @@ void AppConfig::loadSettings()
 	m_AutoConfig = settings().value("autoConfig", true).toBool();
 	m_ElevateMode = settings().value("elevateMode", false).toBool();
 	m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
-	m_UserEmail = settings().value("userEmail", "").toString();
-	m_UserToken = settings().value("userToken", "").toString();
-	m_UserType = settings().value("userType", 0).toInt();
 }
 
 void AppConfig::saveSettings()
@@ -148,9 +145,6 @@ void AppConfig::saveSettings()
 	settings().setValue("autoConfig", m_AutoConfig);
 	settings().setValue("elevateMode", m_ElevateMode);
 	settings().setValue("autoConfigPrompted", m_AutoConfigPrompted);
-	settings().setValue("userEmail", m_UserEmail);
-	settings().setValue("userToken", m_UserToken);
-	settings().setValue("userType", m_UserType);
 }
 
 void AppConfig::setCryptoPass(const QString &s)

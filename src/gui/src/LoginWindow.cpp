@@ -4,8 +4,6 @@
 #include "MainWindow.h"
 #include "SetupWizard.h"
 #include "LoginAuth.h"
-#include "LoginResult.h"
-#include "QUtility.h"
 
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -21,12 +19,11 @@ LoginWindow::LoginWindow(
 	m_pSetupWizard(setupWizard),
 	m_WizardShouldRun(wizardShouldRun),
 	m_pLoginAuth(NULL),
-	m_LoginResult(Unknown),
-	m_AppConfig(m_pMainWindow->appConfig())
+	m_LoginResult(Unknown)
 {
 	setupUi(this);
 
-	m_pLineEditEmail->setText(m_AppConfig.userEmail());
+
 }
 
 LoginWindow::~LoginWindow()
@@ -72,17 +69,6 @@ void LoginWindow::showNext()
 		}
 		else {
 			m_pMainWindow->setLoginResult(m_LoginResult);
-			if (!m_pLineEditEmail->text().isEmpty()) {
-				m_AppConfig.setUserEmail(m_pLineEditEmail->text());
-
-				if (m_LoginResult != Unknown) {
-					QString mac = getFirstMacAddress();
-					QString hashSrc = m_pLineEditEmail->text() + mac;
-					QString hashResult = hash(hashSrc);
-					m_AppConfig.setUserToken(hashResult);
-					m_AppConfig.setUserType(m_LoginResult);
-				}
-			}
 			m_pMainWindow->show();
 		}
 	}
