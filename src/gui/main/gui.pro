@@ -92,7 +92,6 @@ HEADERS += src/MainWindow.h \
     src/CommandProcess.h \
     src/LoginWindow.h \
     src/LoginAuth.h \
-    src/EditionType.h \
     src/LoginResult.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc

@@ -38,7 +38,6 @@ public:
     ~LoginWindow();
 
 	void setLoginResult(int result) { m_LoginResult = result; }
-	void setEditionType(int type) { m_EditionType = type; }
 	void setError(QString error) { m_Error = error; }
 
 protected:
@@ -58,7 +57,6 @@ private:
 	bool m_WizardShouldRun;
 	LoginAuth* m_pLoginAuth;
 	int m_LoginResult;
-	int m_EditionType;
 	QString m_Error;
 	AppConfig& m_AppConfig;
 

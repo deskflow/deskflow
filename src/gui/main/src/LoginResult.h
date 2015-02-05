@@ -19,7 +19,10 @@
 #define LOGINRESULT_H
 
 enum qLoginResult {
-	Ok,
+	Unknown,
+	Student,
+	Home,
+	Professional,
 	Error,
 	ExceptionError,
 	InvalidEmailPassword,

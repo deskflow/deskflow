@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
 	QString hashSrc = email + mac;
 	QString hashResult = hash(hashSrc);
 	if (hashResult == appConfig.userToken()) {
-		mainWindow.setEditionType(appConfig.editionType());
+		mainWindow.setLoginResult(appConfig.userType());
 		mainWindow.show();
 	}
 	else {

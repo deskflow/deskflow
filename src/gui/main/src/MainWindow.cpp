@@ -29,7 +29,7 @@
 #include "DataDownloader.h"
 #include "CommandProcess.h"
 #include "LoginAuth.h"
-#include "EditionType.h"
+#include "LoginResult.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -92,7 +92,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_SuppressAutoConfigWarning(false),
 	m_BonjourInstall(NULL),
 	m_SuppressEmptyServerWarning(false),
-	m_EditionType(Unknown)
+	m_LoginResult(Unknown)
 {
 	setupUi(this);
 
@@ -878,14 +878,17 @@ int MainWindow::checkWinArch()
 	return unknown;
 }
 
-void MainWindow::setEditionType(int type)
+void MainWindow::setLoginResult(int result)
 {
-	m_EditionType = type;
+	m_LoginResult = result;
 	QString title;
-	if (type == Basic) {
-		title = "Synergy Basic";
+	if (result == Student) {
+		title = "Synergy Student";
 	}
-	else if (type == Pro) {
+	else if (result == Home) {
+		title = "Synergy Home";
+	}
+	else if (result == Professional) {
 		title = "Synergy Pro";
 	}
 	else {
