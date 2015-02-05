@@ -1,4 +1,3 @@
-QT += widgets
 TARGET = plugindownloader
 TEMPLATE = app
 SOURCES += src/main.cpp \
@@ -10,14 +9,6 @@ HEADERS += src/Arguments.h \
 FORMS += res/MainDialogBase.ui
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
-macx {
-    QMAKE_INFO_PLIST = res/mac/Info.plist
-    TARGET = Synergy
-    QSYNERGY_ICON.files = res/mac/Synergy.icns
-    QSYNERGY_ICON.path = Contents/Resources
-    QMAKE_BUNDLE_DATA += QSYNERGY_ICON
-    LIBS += $$MACX_LIBS
-}
 win32 { 
     Debug:DESTDIR = ../../../bin/Debug
     Release:DESTDIR = ../../../bin/Release
