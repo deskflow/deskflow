@@ -44,6 +44,7 @@ private:
 	bool m_StartMain;
 	SynergyLocale m_Locale;
 	int m_Edition;
+	QWizardPage* m_pPluginPage;
 
 private slots:
 	void on_m_pRadioButtonActivate_toggled(bool checked);

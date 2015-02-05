@@ -21,6 +21,7 @@
 #include "EditionType.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
+#include "PluginWizardPage.h"
 
 #include <QMessageBox>
 
@@ -30,6 +31,8 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_Edition(Unknown)
 {
 	setupUi(this);
+	m_pPluginPage = new PluginWizardPage();
+	addPage(m_pPluginPage);
 
 #if defined(Q_OS_MAC)
 

@@ -14,7 +14,8 @@ FORMS += res/MainWindowBase.ui \
     res/HotkeyDialogBase.ui \
     res/SettingsDialogBase.ui \
     res/SetupWizardBase.ui \
-    res/AddClientDialogBase.ui
+    res/AddClientDialogBase.ui \
+    res/PluginWizardPageBase.ui
 SOURCES += src/main.cpp \
     src/MainWindow.cpp \
     src/AboutDialog.cpp \
@@ -51,7 +52,8 @@ SOURCES += src/main.cpp \
     src/DataDownloader.cpp \
     src/AddClientDialog.cpp \
     src/CommandProcess.cpp \
-    src/WebClient.cpp
+    src/WebClient.cpp \
+    src/PluginWizardPage.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -89,7 +91,8 @@ HEADERS += src/MainWindow.h \
     src/AddClientDialog.h \
     src/CommandProcess.h \
     src/WebClient.h \
-    src/EditionType.h
+    src/EditionType.h \
+    src/PluginWizardPage.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 
