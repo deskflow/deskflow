@@ -19,10 +19,12 @@
 #define WEBCLIENT_H
 
 #include <QString>
+#include <QStringList>
 #include <QObject>
 
 class QMessageBox;
 class QWidget;
+class QStringList;
 
 class WebClient : public QObject
 {
@@ -33,9 +35,27 @@ public:
 			const QString& password,
 			QMessageBox& message,
 			QWidget* w);
+	void setEmail(QString& e) { m_Email = e; }
+	void setPassword(QString& p) { m_Password = p; }
+	QStringList& getPluginList() { return m_PluginList; }
+	QString& getLastError() { return m_Error; }
+
+public slots:
+	void queryPluginList();
+
+signals:
+	void queryPluginDone();
 
 private:
-	QString request(const QString& email, const QString& password);
+	QString request(const QString& email,
+			const QString& password,
+			QStringList& args);
+
+private:
+	QString m_Email;
+	QString m_Password;
+	QStringList m_PluginList;
+	QString m_Error;
 };
 
 #endif // WEBCLIENT_H

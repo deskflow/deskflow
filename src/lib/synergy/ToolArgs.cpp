@@ -18,6 +18,8 @@
 #include "synergy/ToolArgs.h"
 
 ToolArgs::ToolArgs() :
-	m_printActiveDesktopName(false)
+	m_printActiveDesktopName(false),
+	m_loginAuthenticate(false),
+	m_getPluginList(false)
 {
 }

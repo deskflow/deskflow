@@ -21,7 +21,6 @@
 #include "EditionType.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
-#include "PluginWizardPage.h"
 
 #include <QMessageBox>
 
@@ -94,6 +93,8 @@ bool SetupWizard::validateCurrentPage()
 					return false;
 				}
 				else {
+					m_pPluginPage->setEmail(m_pLineEditEmail->text());
+					m_pPluginPage->setPassword(m_pLineEditPassword->text());
 					return true;
 				}
 			}

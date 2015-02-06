@@ -29,6 +29,7 @@ public:
 
 private:
 	void				loginAuth();
+	void				getPluginList();
 
 private:
 	ToolArgs			m_args;

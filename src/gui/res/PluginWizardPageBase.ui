@@ -48,7 +48,7 @@
      <item row="0" column="1">
       <widget class="QLabel" name="m_pLabelSpinning">
        <property name="text">
-        <string>TextLabel</string>
+        <string> </string>
        </property>
       </widget>
      </item>
@@ -96,9 +96,9 @@
       </spacer>
      </item>
      <item row="0" column="1">
-      <widget class="QLabel" name="m_pLabelTip">
+      <widget class="QLabel" name="m_pLabelStatus">
        <property name="text">
-        <string>Finalizing, please wait.</string>
+        <string>Please wait...</string>
        </property>
       </widget>
      </item>

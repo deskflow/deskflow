@@ -19,12 +19,12 @@
 
 #include "ui_SetupWizardBase.h"
 #include "SynergyLocale.h"
+#include "PluginWizardPage.h"
 
 #include <QWizard>
 #include <QNetworkAccessManager>
 
 class MainWindow;
-class QMessageBox;
 
 class SetupWizard : public QWizard, public Ui::SetupWizardBase
 {
@@ -44,7 +44,7 @@ private:
 	bool m_StartMain;
 	SynergyLocale m_Locale;
 	int m_Edition;
-	QWizardPage* m_pPluginPage;
+	PluginWizardPage* m_pPluginPage;
 
 private slots:
 	void on_m_pRadioButtonActivate_toggled(bool checked);

@@ -29,7 +29,7 @@
 #include "platform/MSWindowsSession.h"
 #endif
 
-#define PREMIUM_AUTH_URL "https://synergy-project.org/premium/json/auth/"
+#define JSON_URL "https://synergy-project.org/premium/json/"
 
 enum {
 	kErrorOk,
@@ -70,6 +70,9 @@ ToolApp::run(int argc, char** argv)
 		else if (m_args.m_loginAuthenticate) {
 			loginAuth();
 		}
+		else if (m_args.m_getPluginList) {
+			getPluginList();
+		}
 		else {
 			throw XSynergy("Nothing to do");
 		}
@@ -102,7 +105,25 @@ ToolApp::loginAuth()
 	String password = credentials.substr(separator + 1, credentials.length());
 
 	std::stringstream ss;
-	ss << PREMIUM_AUTH_URL;
+	ss << JSON_URL << "auth/";
+	ss << "?email=" << ARCH->internet().urlEncode(email);
+	ss << "&password=" << password;
+
+	std::cout << ARCH->internet().get(ss.str()) << std::endl;
+}
+
+void
+ToolApp::getPluginList()
+{
+	String credentials;
+	std::cin >> credentials;
+
+	size_t separator = credentials.find(':');
+	String email = credentials.substr(0, separator);
+	String password = credentials.substr(separator + 1, credentials.length());
+
+	std::stringstream ss;
+	ss <<  JSON_URL << "plugins/";
 	ss << "?email=" << ARCH->internet().urlEncode(email);
 	ss << "&password=" << password;
 

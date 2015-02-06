@@ -34,14 +34,15 @@ int WebClient::getEdition(
 	QString responseJson;
 	int edition = Unknown;
 	try {
-		responseJson = request(email, password);
+		QStringList args("--login-auth");
+		responseJson = request(email, password, args);
 	}
 	catch (std::exception& e)
 	{
 		message.critical(
 			w, "Error",
-			tr("Sorry, an error occured while trying to sign in. "
-			"Please contact the help desk, and provide the "
+			tr("An error occured while trying to sign in. "
+			"Please contact the helpdesk, and provide the "
 			"following details.\n\n%1").arg(e.what()));
 		return edition;
 	}
@@ -50,7 +51,7 @@ int WebClient::getEdition(
 	if (resultRegex.exactMatch(responseJson)) {
 		QString boolString = resultRegex.cap(1);
 		if (boolString == "true") {
-			QRegExp editionRegex(".*\"edition\".*:.*\"(.+)\",.*");
+			QRegExp editionRegex(".*\"edition\".*:.*\"([^\"]+)\".*");
 			if (editionRegex.exactMatch(responseJson)) {
 				QString e = editionRegex.cap(1);
 				edition = e.toInt();
@@ -67,7 +68,7 @@ int WebClient::getEdition(
 		}
 	}
 	else {
-		QRegExp errorRegex(".*\"error\".*:.*\"(.+)\".*");
+		QRegExp errorRegex(".*\"error\".*:.*\"([^\"]+)\".*");
 		if (errorRegex.exactMatch(responseJson)) {
 
 			// replace "\n" with real new lines.
@@ -88,10 +89,67 @@ int WebClient::getEdition(
 	return edition;
 }
 
-QString WebClient::request(const QString& email, const QString& password)
+void WebClient::queryPluginList()
+{
+	QString responseJson;
+	try {
+		QStringList args("--get-plugin-list");
+		responseJson = request(m_Email, m_Password, args);
+	}
+	catch (std::exception& e)
+	{
+		m_Error = tr("An error occured while trying to query the "
+			"plugin list. Please contact the help desk, and provide "
+			"the following details.\n\n%1").arg(e.what());
+		emit queryPluginDone();
+		return;
+	}
+
+	QRegExp resultRegex(".*\"result\".*:.*(true|false).*");
+	if (resultRegex.exactMatch(responseJson)) {
+		QString boolString = resultRegex.cap(1);
+		if (boolString == "true") {
+			QRegExp editionRegex(".*\"plugins\".*:.*\"([^\"]+)\".*");
+			if (editionRegex.exactMatch(responseJson)) {
+				QString e = editionRegex.cap(1);
+				m_PluginList = e.split(",");
+				m_Error.clear();
+				emit queryPluginDone();
+				return;
+			}
+		}
+		else if (boolString == "false") {
+			m_Error = tr("Get plugin list failed, invalid user email "
+						 "or password.");
+			emit queryPluginDone();
+			return;
+		}
+	}
+	else {
+		QRegExp errorRegex(".*\"error\".*:.*\"([^\"]+)\".*");
+		if (errorRegex.exactMatch(responseJson)) {
+
+			// replace "\n" with real new lines.
+			QString error = errorRegex.cap(1).replace("\\n", "\n");
+			m_Error = tr("Get plugin list failed, an error occurred."
+						 "\n\n%1").arg(error);
+			emit queryPluginDone();
+			return;
+		}
+	}
+
+	m_Error = tr("Get plugin list failed, an error occurred.\n\n"
+				 "Server response:\n\n%1").arg(responseJson);
+	emit queryPluginDone();
+	return;
+}
+
+QString WebClient::request(
+		const QString& email,
+		const QString& password,
+		QStringList& args)
 {
 	QString program(QCoreApplication::applicationDirPath() + "/syntool");
-	QStringList args("--login-auth");
 
 	QProcess process;
 	process.setReadChannel(QProcess::StandardOutput);
