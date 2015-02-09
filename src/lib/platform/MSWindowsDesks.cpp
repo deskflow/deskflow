@@ -753,7 +753,13 @@ MSWindowsDesks::deskThread(void* vdesk)
 		case SYNERGY_MSG_FAKE_WHEEL:
 			// XXX -- add support for x-axis scrolling
 			if (msg.lParam != 0) {
-				mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (DWORD)msg.lParam, 0);
+				//mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (DWORD)msg.lParam, 0);
+				INPUT input;
+				memset(&input, 0, sizeof(INPUT)); //don't remove this or the screensaver will show-up, strange bug
+				input.type = 0; //INPUT_MOUSE
+				input.mi.mouseData = (DWORD)msg.lParam;
+				input.mi.dwFlags = 0x0800; //MouseWheel
+				SendInput(1, &input, sizeof(INPUT));
 			}
 			break;
 
