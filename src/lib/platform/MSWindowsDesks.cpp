@@ -755,9 +755,9 @@ MSWindowsDesks::deskThread(void* vdesk)
 			if (msg.lParam != 0) {
 				//mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (DWORD)msg.lParam, 0);
 				INPUT input;
-				memset(&input, 0, sizeof(INPUT)); //don't remove this or the screensaver will show-up, strange bug
 				input.type = 0; //INPUT_MOUSE
 				input.mi.mouseData = (DWORD)msg.lParam;
+				input.mi.time = 0;
 				input.mi.dwFlags = 0x0800; //MouseWheel
 				SendInput(1, &input, sizeof(INPUT));
 			}
