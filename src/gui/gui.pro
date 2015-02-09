@@ -53,7 +53,8 @@ SOURCES += src/main.cpp \
     src/AddClientDialog.cpp \
     src/CommandProcess.cpp \
     src/WebClient.cpp \
-    src/PluginWizardPage.cpp
+    src/PluginWizardPage.cpp \
+    src/PluginManager.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -92,7 +93,9 @@ HEADERS += src/MainWindow.h \
     src/CommandProcess.h \
     src/WebClient.h \
     src/EditionType.h \
-    src/PluginWizardPage.h
+    src/PluginWizardPage.h \
+    src/ProcessorArch.h \
+    src/PluginManager.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 

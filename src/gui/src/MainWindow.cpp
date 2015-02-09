@@ -30,6 +30,7 @@
 #include "CommandProcess.h"
 #include "EditionType.h"
 #include "QUtility.h"
+#include "ProcessorArch.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -54,10 +55,10 @@
 #if defined(Q_OS_WIN)
 static const char synergyConfigName[] = "synergy.sgc";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
-static const char bonjourUrl[] = "http://synergy-project.org/bonjour/";
-static const char bonjour32Url[] = "http://synergy-project.org/bonjour/Bonjour.msi";
-static const char bonjour64Url[] = "http://synergy-project.org/bonjour/Bonjour64.msi";
-static const char bonjourInstaller[] = "BonjourSetup.msi";
+static QString bonjourBaseUrl = "http://synergy-project.org/bonjour/";
+static const char bonjourFilename32[] = "Bonjour.msi";
+static const char bonjourFilename64[] = "Bonjour64.msi";
+static const char bonjourTargetFilename[] = "Bonjour.msi";
 #else
 static const char synergyConfigName[] = "synergy.conf";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
@@ -865,26 +866,6 @@ void MainWindow::serverDetected(const QString name)
 	}
 }
 
-int MainWindow::checkWinArch()
-{
-#if defined(Q_OS_WIN)
-	SYSTEM_INFO systemInfo;
-	GetNativeSystemInfo(&systemInfo);
-
-	switch (systemInfo.wProcessorArchitecture) {
-	case PROCESSOR_ARCHITECTURE_INTEL:
-		return x86;
-	case PROCESSOR_ARCHITECTURE_IA64:
-		return x64;
-	case PROCESSOR_ARCHITECTURE_AMD64:
-		return x64;
-	default:
-		appendLogNote("failed to detect system architecture");
-	}
-#endif
-	return unknown;
-}
-
 void MainWindow::setEdition(int type)
 {
 	QString title;
@@ -1063,33 +1044,30 @@ bool MainWindow::isBonjourRunning()
 void MainWindow::downloadBonjour()
 {
 #if defined(Q_OS_WIN)
-
 	QUrl url;
-	int arch = checkWinArch();
-	if (arch == x86) {
-		url.setUrl(bonjour32Url);
+	int arch = checkProcessorArch();
+	if (arch == Win_x86) {
+		url.setUrl(bonjourBaseUrl + bonjourFilename32);
 		appendLogNote("downloading 32-bit Bonjour");
 	}
-	else if (arch == x64) {
-		url.setUrl(bonjour64Url);
+	else if (arch == Win_x64) {
+		url.setUrl(bonjourBaseUrl + bonjourFilename64);
 		appendLogNote("downloading 64-bit Bonjour");
 	}
 	else {
-		QString msg("Failed to detect system architecture.\n"
-					"Please download the installer manually from this link:\n");
-		QMessageBox::warning(
+		QMessageBox::critical(
 			this, tr("Synergy"),
-			msg + bonjourUrl);
+			tr("Failed to detect system architecture."));
 		return;
 	}
 
-	if (m_pDataDownloader != NULL) {
-		delete m_pDataDownloader;
-		m_pDataDownloader = NULL;
+
+	if (m_pDataDownloader == NULL) {
+		m_pDataDownloader = new DataDownloader(this);
+		connect(m_pDataDownloader, SIGNAL(isComplete()), SLOT(installBonjour()));
 	}
 
-	m_pDataDownloader = new DataDownloader(url, this);
-	connect(m_pDataDownloader, SIGNAL(downloaded()), SLOT(installBonjour()));
+	m_pDataDownloader->download(url);
 
 	if (m_DownloadMessageBox == NULL) {
 		m_DownloadMessageBox = new QMessageBox(this);
@@ -1104,7 +1082,7 @@ void MainWindow::downloadBonjour()
 	m_DownloadMessageBox->exec();
 
 	if (m_DownloadMessageBox->clickedButton() == m_pCancelButton) {
-		m_pDataDownloader->cancelDownload();
+		m_pDataDownloader->cancel();
 	}
 #endif
 }
@@ -1115,21 +1093,19 @@ void MainWindow::installBonjour()
 	QString tempLocation = QDesktopServices::storageLocation(
 								QDesktopServices::TempLocation);
 	QString filename = tempLocation;
-	filename.append("\\").append(bonjourInstaller);
+	filename.append("\\").append(bonjourTargetFilename);
 	QFile file(filename);
 	if (!file.open(QIODevice::WriteOnly)) {
 		m_DownloadMessageBox->hide();
 
 		QMessageBox::warning(
 			this, "Synergy",
-			"Failed to download Bonjour installer to location: " +
-			tempLocation + "\n"
-			"Please download the installer manually from this link: \n" +
-			bonjourUrl);
+			tr("Failed to download Bonjour installer to location: %1")
+			.arg(tempLocation));
 		return;
 	}
 
-	file.write(m_pDataDownloader->downloadedData());
+	file.write(m_pDataDownloader->data());
 	file.close();
 
 	QStringList arguments;

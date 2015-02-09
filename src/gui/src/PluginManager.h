@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Synergy Si, Inc.
+ * Copyright (C) 2015 Synergy Si Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,37 +15,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DATADOWNLOADER_H
-#define DATADOWNLOADER_H
+#ifndef PLUGINMANAGER_H
+#define PLUGINMANAGER_H
 
+#include <QString>
+#include <QStringList>
 #include <QObject>
-#include <QByteArray>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
 
-class DataDownloader : public QObject
+class DataDownloader;
+
+class PluginManager: public QObject
 {
 	Q_OBJECT
 
 public:
-	explicit DataDownloader(QObject* parent = 0);
-	virtual ~DataDownloader();
+	PluginManager(QStringList pluginList);
+	~PluginManager();
 
-	QByteArray data() const;
-	void cancel();
-	void download(QUrl url);
+	int downloadIndex() { return m_DownloadIndex; }
 
-signals:
-	void isComplete();
-
-private slots:
-	void complete(QNetworkReply* reply);
+public slots:
+	void downloadPlugins();
 
 private:
-	QNetworkAccessManager m_NetworkManager;
-	QByteArray m_Data;
-	QNetworkReply* m_pReply;
+	void savePlugin();
+	QString getPluginDir();
+	QString getPluginUrl(const QString& pluginName);
+	QString getPluginOSSpecificName(const QString& pluginName);
+
+signals:
+	void downloadNext();
+	void downloadFinished();
+
+private:
+	QStringList m_PluginList;
+	int m_DownloadIndex;
+	DataDownloader* m_pPluginDownloader;
 };
 
-#endif // DATADOWNLOADER_H
+#endif // PLUGINMANAGER_H

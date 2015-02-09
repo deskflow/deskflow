@@ -17,6 +17,23 @@
 
 #include "QUtility.h"
 
+#include "ProcessorArch.h"
+
+#if defined(Q_OS_LINUX)
+#include <QProcess>
+#endif
+
+#if defined(Q_OS_WIN)
+#define _WIN32_WINNT 0x0501
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#endif
+
+#if defined(Q_OS_LINUX)
+static const char kLinuxI686[] = "i686";
+static const char kLinuxX8664[] = "x86_64";
+#endif
+
 void setIndexFromItemData(QComboBox* comboBox, const QVariant& itemData)
 {
 	for (int i = 0; i < comboBox->count(); ++i)
@@ -48,4 +65,60 @@ QString getFirstMacAddress()
 		}
 	}
 	return mac;
+}
+
+int checkProcessorArch()
+{
+#if defined(Q_OS_WIN)
+	SYSTEM_INFO systemInfo;
+	GetNativeSystemInfo(&systemInfo);
+
+	switch (systemInfo.wProcessorArchitecture) {
+	case PROCESSOR_ARCHITECTURE_INTEL:
+		return Win_x86;
+	case PROCESSOR_ARCHITECTURE_IA64:
+		return Win_x64;
+	case PROCESSOR_ARCHITECTURE_AMD64:
+		return Win_x64;
+	default:
+		return unknown;
+	}
+#elif defined(Q_OS_MAC)
+	return Mac_i386;
+#else
+	QString program("uname");
+	QStringList args("-m");
+	QProcess process;
+	process.setReadChannel(QProcess::StandardOutput);
+	process.start(program, args);
+	bool success = process.waitForStarted();
+
+	QString out, error;
+	if (success)
+	{
+		if (process.waitForFinished()) {
+			out = process.readAllStandardOutput();
+			error = process.readAllStandardError();
+		}
+	}
+
+	out = out.trimmed();
+	error = error.trimmed();
+
+	if (out.isEmpty() ||
+		!error.isEmpty() ||
+		!success ||
+		process.exitCode() != 0)
+	{
+		return unknown;
+	}
+
+	if (out == kLinuxI686) {
+		return Linux_i686;
+	}
+	else if (out == kLinuxX8664) {
+		return Linux_x86_64;
+	}
+#endif
+	return unknown;
 }

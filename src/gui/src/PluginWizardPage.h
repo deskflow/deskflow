@@ -5,6 +5,7 @@
 #include <QWizardPage>
 
 class WebClient;
+class PluginManager;
 
 class PluginWizardPage : public QWizardPage, public Ui::PluginWizardPage {
 
@@ -26,14 +27,19 @@ protected:
 
 protected slots:
 	void queryPluginDone();
+	void updateDownloadStatus();
+	void finished();
 
 private:
 	void updateStatus(QString info);
+	void downloadPlugins();
+	void stopSpinning();
 
 private:
 	bool m_Finished;
-	WebClient* m_pWebClient;
 	QString m_Email;
 	QString m_Password;
+	WebClient* m_pWebClient;
+	PluginManager* m_pPluginManager;
 };
 #endif // PLUGINWIZARDPAGE_H

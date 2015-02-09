@@ -34,6 +34,7 @@ public:
 	virtual std::string	getSystemDirectory();
 	virtual std::string	getInstalledDirectory();
 	virtual std::string	getLogDirectory();
+	virtual std::string	getPluginDirectory();
 	virtual std::string	concatPath(const std::string& prefix,
 							const std::string& suffix);
 };

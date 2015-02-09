@@ -73,6 +73,9 @@ ToolApp::run(int argc, char** argv)
 		else if (m_args.m_getPluginList) {
 			getPluginList();
 		}
+		else if (m_args.m_getPluginDir) {
+			std::cout << ARCH->getPluginDirectory() << std::endl;
+		}
 		else {
 			throw XSynergy("Nothing to do");
 		}

@@ -105,6 +105,16 @@ ArchFileUnix::getLogDirectory()
 }
 
 std::string
+ArchFileUnix::getPluginDirectory()
+{
+#if WINAPI_XWINDOWS
+	return getUserDirectory().append("/.synergy/plugins");
+#else
+	return getUserDirectory().append("/Libraries/Synergy/Plugins");
+#endif
+}
+
+std::string
 ArchFileUnix::concatPath(const std::string& prefix,
 				const std::string& suffix)
 {

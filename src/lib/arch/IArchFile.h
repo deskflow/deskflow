@@ -62,6 +62,12 @@ public:
 	*/
 	virtual std::string	getLogDirectory() = 0;
 
+	//! Get plugins directory
+	/*!
+	Returns the plugin files directory.
+	*/
+	virtual std::string	getPluginDirectory() = 0;
+
 	//! Concatenate path components
 	/*!
 	Concatenate pathname components with a directory separator

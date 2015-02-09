@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Synergy Si, Inc.
- * 
+ * Copyright (C) 2015 Synergy Si Ltd.
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file COPYING that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,12 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ToolArgs.h"
+#ifndef PROCESSORARCH_H
+#define PROCESSORARCH_H
 
-ToolArgs::ToolArgs() :
-	m_printActiveDesktopName(false),
-	m_loginAuthenticate(false),
-	m_getPluginList(false),
-	m_getPluginDir(false)
-{
-}
+enum qProcessorArch {
+	Win_x86,
+	Win_x64,
+	Mac_i386,
+	Linux_i686,
+	Linux_x86_64,
+	unknown
+};
+
+#endif // PROCESSORARCH_H

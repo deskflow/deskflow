@@ -140,6 +140,14 @@ ArchFileWindows::getLogDirectory()
 }
 
 std::string
+ArchFileWindows::getPluginDirectory()
+{
+	std::string dir = getUserDirectory();
+	dir.append("\\Synergy\\Plugins");
+	return dir;
+}
+
+std::string
 ArchFileWindows::concatPath(const std::string& prefix,
 				const std::string& suffix)
 {
