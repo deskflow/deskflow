@@ -173,7 +173,7 @@ SecureSocket::initContext(bool server)
 {
 	SSL_library_init();
 
-	const SSL_METHOD* method;
+	SSL_METHOD* method;
  
 	// load & register all cryptos, etc.
 	OpenSSL_add_all_algorithms();
