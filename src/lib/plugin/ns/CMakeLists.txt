@@ -79,15 +79,28 @@ else()
 				${CMAKE_SOURCE_DIR}/bin/plugins/
 		)
 	else()
-		add_custom_command(
-			TARGET ns
-			POST_BUILD
-			COMMAND mkdir -p
-				${CMAKE_SOURCE_DIR}/bin/plugins
-				&&
-				cp
-				${CMAKE_SOURCE_DIR}/lib/libns.so
-				${CMAKE_SOURCE_DIR}/bin/plugins/
-		)
+		if (CMAKE_BUILD_TYPE STREQUAL Debug)
+			add_custom_command(
+				TARGET ns
+				POST_BUILD
+				COMMAND mkdir -p
+					${CMAKE_SOURCE_DIR}/bin/plugins
+					&&
+					cp
+					${CMAKE_SOURCE_DIR}/lib/debug/libns.so
+					${CMAKE_SOURCE_DIR}/bin/plugins/
+			)
+		else()
+			add_custom_command(
+				TARGET ns
+				POST_BUILD
+				COMMAND mkdir -p
+					${CMAKE_SOURCE_DIR}/bin/plugins
+					&&
+					cp
+					${CMAKE_SOURCE_DIR}/lib/libns.so
+					${CMAKE_SOURCE_DIR}/bin/plugins/
+			)
+		endif()
 	endif()
 endif()
