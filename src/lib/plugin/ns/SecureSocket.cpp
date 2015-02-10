@@ -173,7 +173,7 @@ SecureSocket::initContext(bool server)
 {
 	SSL_library_init();
 
-	SSL_METHOD* method;
+	const SSL_METHOD* method;
  
 	// load & register all cryptos, etc.
 	OpenSSL_add_all_algorithms();
@@ -191,7 +191,8 @@ SecureSocket::initContext(bool server)
 	}
 	
 	// create new context from method
-	m_ssl->m_context = SSL_CTX_new(method);
+	SSL_METHOD* m = const_cast<SSL_METHOD*>(method);
+	m_ssl->m_context = SSL_CTX_new(m);
 	if (m_ssl->m_context == NULL) {
 		showError();
 	}
