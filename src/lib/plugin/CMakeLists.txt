@@ -14,8 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(ns)
-
 if (WIN32)
 	add_subdirectory(winmmjoy)
+endif()
+
+if (APPLE)
+	if (OSX_TARGET_MINOR GREATER 7)
+		add_subdirectory(ns)
+	endif()
+else()
+	add_subdirectory(ns)
 endif()
