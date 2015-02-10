@@ -27,7 +27,6 @@
 #include "net/XSocket.h"
 #include "io/CryptoStream.h"
 #include "io/CryptoOptions.h"
-#include "io/IStreamFilterFactory.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
@@ -36,13 +35,17 @@
 // ClientListener
 //
 
+#if defined _WIN32
+static const char s_networkSecurity[] = { "ns" };
+#else
+static const char s_networkSecurity[] = { "libns" };
+#endif
+
 ClientListener::ClientListener(const NetworkAddress& address,
 				ISocketFactory* socketFactory,
-				IStreamFilterFactory* streamFilterFactory,
 				const CryptoOptions& crypto,
 				IEventQueue* events) :
 	m_socketFactory(socketFactory),
-	m_streamFilterFactory(streamFilterFactory),
 	m_server(NULL),
 	m_crypto(crypto),
 	m_events(events)
@@ -51,22 +54,21 @@ ClientListener::ClientListener(const NetworkAddress& address,
 
 	try {
 		// create listen socket
-		m_listen = m_socketFactory->createListen();
+		m_useSecureNetwork = ARCH->plugin().exists(s_networkSecurity);
+		m_listen = m_socketFactory->createListen(m_useSecureNetwork);
 
 		// bind listen address
 		LOG((CLOG_DEBUG1 "binding listen socket"));
 		m_listen->bind(address);
 	}
 	catch (XSocketAddressInUse&) {
-		delete m_listen;
+		cleanupListenSocket();
 		delete m_socketFactory;
-		delete m_streamFilterFactory;
 		throw;
 	}
 	catch (XBase&) {
-		delete m_listen;
+		cleanupListenSocket();
 		delete m_socketFactory;
-		delete m_streamFilterFactory;
 		throw;
 	}
 	LOG((CLOG_DEBUG1 "listening for clients"));
@@ -102,9 +104,8 @@ ClientListener::~ClientListener()
 	}
 
 	m_events->removeHandler(m_events->forIListenSocket().connecting(), m_listen);
-	delete m_listen;
+	cleanupListenSocket();
 	delete m_socketFactory;
-	delete m_streamFilterFactory;
 }
 
 void
@@ -112,6 +113,12 @@ ClientListener::setServer(Server* server)
 {
 	assert(server != NULL);
 	m_server = server;
+}
+
+void
+ClientListener::deleteSocket(void* socket)
+{
+	m_listen->deleteSocket(socket);
 }
 
 ClientProxy*
@@ -130,17 +137,18 @@ void
 ClientListener::handleClientConnecting(const Event&, void*)
 {
 	// accept client connection
-	synergy::IStream* stream = m_listen->accept();
+	IDataSocket* socket	= m_listen->accept();
+	synergy::IStream* stream  = socket;
+
 	if (stream == NULL) {
 		return;
 	}
+
 	LOG((CLOG_NOTE "accepted client connection"));
 
 	// filter socket messages, including a packetizing filter
-	if (m_streamFilterFactory != NULL) {
-		stream = m_streamFilterFactory->create(stream, true);
-	}
-	stream = new PacketStreamFilter(m_events, stream, true);
+	bool adopt = !m_useSecureNetwork;
+	stream = new PacketStreamFilter(m_events, stream, adopt);
 	
 	if (m_crypto.m_mode != kDisabled) {
 		CryptoStream* cryptoStream = new CryptoStream(
@@ -149,6 +157,12 @@ ClientListener::handleClientConnecting(const Event&, void*)
 	}
 
 	assert(m_server != NULL);
+
+	if (m_useSecureNetwork) {
+		while(!socket->isReady()) {
+			ARCH->sleep(.5f);
+		}
+	}
 
 	// create proxy for unknown client
 	ClientProxyUnknown* client = new ClientProxyUnknown(stream, 30.0, m_server, m_events);
@@ -174,6 +188,7 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
 
 	// get the real client proxy and install it
 	ClientProxy* client = unknownClient->orphanClientProxy();
+	bool handshakeOk = true;
 	if (client != NULL) {
 		// handshake was successful
 		m_waitingClients.push_back(client);
@@ -185,12 +200,25 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
 								&ClientListener::handleClientDisconnected,
 								client));
 	}
+	else {
+		handshakeOk = false;
+	}
 
 	// now finished with unknown client
 	m_events->removeHandler(m_events->forClientProxyUnknown().success(), client);
 	m_events->removeHandler(m_events->forClientProxyUnknown().failure(), client);
 	m_newClients.erase(unknownClient);
+	PacketStreamFilter* streamFileter = dynamic_cast<PacketStreamFilter*>(unknownClient->getStream());
+	IDataSocket* socket = NULL;
+	if (streamFileter != NULL) {
+		socket = dynamic_cast<IDataSocket*>(streamFileter->getStream());
+	}
+
 	delete unknownClient;
+
+	if (m_useSecureNetwork && !handshakeOk) {
+		deleteSocket(socket);
+	}
 }
 
 void
@@ -208,5 +236,19 @@ ClientListener::handleClientDisconnected(const Event&, void* vclient)
 			delete client;
 			break;
 		}
+	}
+}
+
+void
+ClientListener::cleanupListenSocket()
+{
+	if (!m_useSecureNetwork) {
+		delete m_listen;
+	}
+	else {
+		ARCH->plugin().invoke(
+			s_networkSecurity,
+			"deleteListenSocket",
+			NULL);
 	}
 }

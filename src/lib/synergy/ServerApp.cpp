@@ -338,8 +338,8 @@ void
 ServerApp::stopServer()
 {
 	if (m_serverState == kStarted) {
-		closeClientListener(m_listener);
 		closeServer(m_server);
+		closeClientListener(m_listener);
 		m_server      = NULL;
 		m_listener    = NULL;
 		m_serverState = kInitialized;
@@ -543,6 +543,7 @@ ServerApp::startServer()
 		listener   = openClientListener(args().m_config->getSynergyAddress());
 		m_server   = openServer(*args().m_config, m_primaryClient);
 		listener->setServer(m_server);
+		m_server->setListener(listener);
 		m_listener = listener;
 		updateStatus();
 		LOG((CLOG_NOTE "started server, waiting for clients"));
@@ -631,8 +632,7 @@ ServerApp::openClientListener(const NetworkAddress& address)
 {
 	ClientListener* listen = new ClientListener(
 		address,
-		new CTCPSocketFactory(m_events, getSocketMultiplexer()),
-		NULL,
+		new TCPSocketFactory(m_events, getSocketMultiplexer()),
 		args().m_crypto,
 		m_events);
 	
@@ -707,6 +707,11 @@ ServerApp::mainLoop()
 		return kExitFailed;
 	}
 
+	// load all available plugins.
+	ARCH->plugin().load();
+	// pass log and arch into plugins.
+	ARCH->plugin().init(Log::getInstance(), Arch::getInstance());
+
 	// start server, etc
 	appUtil().startNode();
 	
@@ -716,8 +721,8 @@ ServerApp::mainLoop()
 		initIpcClient();
 	}
 
-	// load all available plugins.
-	ARCH->plugin().init(m_serverScreen->getEventTarget(), m_events);
+	// init event for all available plugins.
+	ARCH->plugin().initEvent(m_serverScreen->getEventTarget(), m_events);
 
 	// handle hangup signal by reloading the server's configuration
 	ARCH->setSignalHandler(Arch::kHANGUP, &reloadSignalHandler, NULL);
@@ -774,6 +779,9 @@ ServerApp::mainLoop()
 	if (argsBase().m_enableIpc) {
 		cleanupIpcClient();
 	}
+
+	// unload all plugins.
+	ARCH->plugin().unload();
 
 	return kExitSuccess;
 }

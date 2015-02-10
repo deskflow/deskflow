@@ -18,6 +18,7 @@
 
 #include "mt/Thread.h"
 
+#include "net/XSocket.h"
 #include "mt/XMT.h"
 #include "mt/XThread.h"
 #include "arch/Arch.h"
@@ -158,6 +159,10 @@ Thread::threadFunc(void* vjob)
 		LOG((CLOG_DEBUG1 "thread 0x%08x exit", id));
 	}
 
+	catch (XSocket& e) {
+		// client called cancel()
+		LOG((CLOG_DEBUG "%s", e.what()));
+	}
 	catch (XThreadCancel&) {
 		// client called cancel()
 		LOG((CLOG_DEBUG1 "caught cancel on thread 0x%08x", id));

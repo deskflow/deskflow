@@ -24,16 +24,18 @@ class IEventQueue;
 class SocketMultiplexer;
 
 //! Socket factory for TCP sockets
-class CTCPSocketFactory : public ISocketFactory {
+class TCPSocketFactory : public ISocketFactory {
 public:
-	CTCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
-	virtual ~CTCPSocketFactory();
+	TCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+	virtual ~TCPSocketFactory();
 
 	// ISocketFactory overrides
-	virtual IDataSocket*	create() const;
-	virtual IListenSocket*	createListen() const;
+	virtual IDataSocket*
+						create(bool secure) const;
+	virtual IListenSocket*
+						createListen(bool secure) const;
 
 private:
 	IEventQueue*		m_events;
-	SocketMultiplexer* m_socketMultiplexer;
+	SocketMultiplexer*	m_socketMultiplexer;
 };

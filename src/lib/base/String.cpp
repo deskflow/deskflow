@@ -168,6 +168,17 @@ findReplaceAll(
 	}
 }
 
+String
+removeFileExt(String filename)
+{
+	size_t dot = filename.find_last_of('.');
+
+	if (dot == String::npos) {
+		return filename;
+	}
+
+	return filename.substr(0, dot);
+}
 
 //
 // CaselessCmp

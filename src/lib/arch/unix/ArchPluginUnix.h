@@ -31,5 +31,21 @@ public:
 	virtual ~ArchPluginUnix();
 
 	// IArchPlugin overrides
-	void				init(void* eventTarget, IEventQueue* events);
+	void				load();
+	void				unload();
+	void				init(void* log, void* arch);
+	void				initEvent(void* eventTarget, IEventQueue* events);
+	bool				exists(const char* name);
+	virtual void*		invoke(const char* pluginName,
+							const char* functionName,
+							void** args);
+
+ private:
+	String				getPluginsDir();
+
+private:
+	PluginTable			m_pluginTable;
 };
+
+void					sendEvent(const char* text, void* data);
+void					log(const char* text);

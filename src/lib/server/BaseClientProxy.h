@@ -21,6 +21,8 @@
 #include "synergy/IClient.h"
 #include "base/String.h"
 
+namespace synergy { class IStream; }
+
 //! Generic proxy for client or primary
 class BaseClientProxy : public IClient {
 public:
@@ -82,6 +84,8 @@ public:
 							size_t size) = 0;
 	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;
 	virtual String		getName() const;
+	virtual synergy::IStream*
+						getStream() const = 0;
 
 private:
 	String				m_name;

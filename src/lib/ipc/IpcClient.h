@@ -58,7 +58,7 @@ private:
 
 private:
 	NetworkAddress		m_serverAddress;
-	CTCPSocket			m_socket;
+	TCPSocket			m_socket;
 	IpcServerProxy*	m_server;
 	IEventQueue*		m_events;
 };

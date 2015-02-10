@@ -30,7 +30,6 @@ class ClientProxyUnknown;
 class NetworkAddress;
 class IListenSocket;
 class ISocketFactory;
-class IStreamFilterFactory;
 class Server;
 class IEventQueue;
 
@@ -39,7 +38,6 @@ public:
 	// The factories are adopted.
 	ClientListener(const NetworkAddress&,
 							ISocketFactory*,
-							IStreamFilterFactory*,
 							const CryptoOptions& crypto,
 							IEventQueue* events);
 	~ClientListener();
@@ -50,6 +48,8 @@ public:
 	void				setServer(Server* server);
 
 	//@}
+
+	void				deleteSocket(void* socket);
 
 	//! @name accessors
 	//@{
@@ -63,7 +63,7 @@ public:
 	ClientProxy*		getNextClient();
 
 	//! Get server which owns this listener
-	Server*			getServer() { return m_server; }
+	Server*				getServer() { return m_server; }
 
 	//@}
 
@@ -73,16 +73,18 @@ private:
 	void				handleUnknownClient(const Event&, void*);
 	void				handleClientDisconnected(const Event&, void*);
 
+	void				cleanupListenSocket();
+
 private:
 	typedef std::set<ClientProxyUnknown*> NewClients;
 	typedef std::deque<ClientProxy*> WaitingClients;
 
 	IListenSocket*		m_listen;
 	ISocketFactory*		m_socketFactory;
-	IStreamFilterFactory*	m_streamFilterFactory;
 	NewClients			m_newClients;
 	WaitingClients		m_waitingClients;
-	Server*			m_server;
+	Server*				m_server;
 	CryptoOptions		m_crypto;
 	IEventQueue*		m_events;
+	bool				m_useSecureNetwork;
 };

@@ -101,7 +101,7 @@ DragInformation::getDragFileExtension(String filename)
 int
 DragInformation::setupDragInfo(DragFileList& fileList, String& output)
 {
-	int size = fileList.size();
+	int size = static_cast<int>(fileList.size());
 	for (int i = 0; i < size; ++i) {
 		output.append(fileList.at(i).getFilename());
 		output.append(",");

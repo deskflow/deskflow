@@ -39,7 +39,15 @@ public:
 	data stream.  Returns NULL if no socket is waiting to be accepted.
 	This is only valid after a call to \c bind().
 	*/
-	virtual IDataSocket*	accept() = 0;
+	virtual IDataSocket*
+						accept() = 0;
+
+	//! Delete connection socket
+	/*!
+	This is used when the socket was created but not adopted by a client
+	proxy.
+	*/
+	virtual void		deleteSocket(void*) = 0;
 
 	//@}
 

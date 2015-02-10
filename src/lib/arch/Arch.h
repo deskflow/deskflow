@@ -99,6 +99,7 @@ class Arch : public ARCH_CONSOLE,
 				public ARCH_TIME {
 public:
 	Arch();
+	Arch(Arch* arch);
 	virtual ~Arch();
 
 	//! Call init on other arch classes.

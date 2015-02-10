@@ -18,6 +18,7 @@
 
 #include "client/Client.h"
 
+#include "../plugin/ns/SecureSocket.h"
 #include "client/ServerProxy.h"
 #include "synergy/Screen.h"
 #include "synergy/Clipboard.h"
@@ -29,8 +30,8 @@
 #include "synergy/FileChunker.h"
 #include "synergy/IPlatformScreen.h"
 #include "mt/Thread.h"
-#include "io/IStreamFilterFactory.h"
 #include "io/CryptoStream.h"
+#include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/ISocketFactory.h"
 #include "arch/Arch.h"
@@ -45,6 +46,12 @@
 #include <sstream>
 #include <fstream>
 
+#if defined _WIN32
+static const char s_networkSecurity[] = { "ns" };
+#else
+static const char s_networkSecurity[] = { "libns" };
+#endif
+
 //
 // Client
 //
@@ -53,7 +60,6 @@ Client::Client(
 		IEventQueue* events,
 		const String& name, const NetworkAddress& address,
 		ISocketFactory* socketFactory,
-		IStreamFilterFactory* streamFilterFactory,
 		synergy::Screen* screen,
 		const CryptoOptions& crypto,
 		bool enableDragDrop) :
@@ -61,7 +67,6 @@ Client::Client(
 	m_name(name),
 	m_serverAddress(address),
 	m_socketFactory(socketFactory),
-	m_streamFilterFactory(streamFilterFactory),
 	m_screen(screen),
 	m_stream(NULL),
 	m_timer(NULL),
@@ -75,7 +80,9 @@ Client::Client(
 	m_crypto(crypto),
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
-	m_enableDragDrop(enableDragDrop)
+	m_enableDragDrop(enableDragDrop),
+	m_socket(NULL),
+	m_useSecureNetwork(false)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -118,7 +125,6 @@ Client::~Client()
 	cleanupConnecting();
 	cleanupConnection();
 	delete m_socketFactory;
-	delete m_streamFilterFactory;
 }
 
 void
@@ -150,14 +156,14 @@ Client::connect()
 		}
 
 		// create the socket
-		IDataSocket* socket = m_socketFactory->create();
+		m_useSecureNetwork = ARCH->plugin().exists(s_networkSecurity);
+		IDataSocket* socket = m_socketFactory->create(m_useSecureNetwork);
+		m_socket = dynamic_cast<TCPSocket*>(socket);
 
 		// filter socket messages, including a packetizing filter
 		m_stream = socket;
-		if (m_streamFilterFactory != NULL) {
-			m_stream = m_streamFilterFactory->create(m_stream, true);
-		}
-		m_stream = new PacketStreamFilter(m_events, m_stream, true);
+		bool adopt = !m_useSecureNetwork;
+		m_stream = new PacketStreamFilter(m_events, m_stream, adopt);
 
 		if (m_crypto.m_mode != kDisabled) {
 			m_cryptoStream = new CryptoStream(
@@ -174,8 +180,7 @@ Client::connect()
 	catch (XBase& e) {
 		cleanupTimer();
 		cleanupConnecting();
-		delete m_stream;
-		m_stream = NULL;
+		cleanupStream();
 		LOG((CLOG_DEBUG1 "connection failed"));
 		sendConnectionFailedEvent(e.what());
 		return;
@@ -532,8 +537,7 @@ Client::cleanupConnection()
 							m_stream->getEventTarget());
 		m_events->removeHandler(m_events->forISocket().disconnected(),
 							m_stream->getEventTarget());
-		delete m_stream;
-		m_stream = NULL;
+		cleanupStream();
 	}
 }
 
@@ -565,6 +569,20 @@ Client::cleanupTimer()
 }
 
 void
+Client::cleanupStream()
+{
+	delete m_stream;
+	m_stream = NULL;
+
+	// PacketStreamFilter doen't adopt secure socket, because
+	// we need to tell the dynamic lib that allocated this object
+	// to do the deletion.
+	if (m_useSecureNetwork) {
+		ARCH->plugin().invoke(s_networkSecurity, "deleteSocket", NULL);
+	}
+}
+
+void
 Client::handleConnected(const Event&, void*)
 {
 	LOG((CLOG_DEBUG1 "connected;  wait for hello"));
@@ -577,6 +595,8 @@ Client::handleConnected(const Event&, void*)
 		m_sentClipboard[id] = false;
 		m_timeClipboard[id] = 0;
 	}
+
+	m_socket->secureConnect();
 }
 
 void
@@ -587,8 +607,7 @@ Client::handleConnectionFailed(const Event& event, void*)
 
 	cleanupTimer();
 	cleanupConnecting();
-	delete m_stream;
-	m_stream = NULL;
+	cleanupStream();
 	LOG((CLOG_DEBUG1 "connection failed"));
 	sendConnectionFailedEvent(info->m_what.c_str());
 	delete info;
@@ -600,8 +619,7 @@ Client::handleConnectTimeout(const Event&, void*)
 	cleanupTimer();
 	cleanupConnecting();
 	cleanupConnection();
-	delete m_stream;
-	m_stream = NULL;
+	cleanupStream();
 	LOG((CLOG_DEBUG1 "connection timed out"));
 	sendConnectionFailedEvent("Timed out");
 }

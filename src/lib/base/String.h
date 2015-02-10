@@ -64,6 +64,12 @@ Finds \c find inside \c subject and replaces it with \c replace
 */
 void findReplaceAll(String& subject, const String& find, const String& replace);
 
+//! Remove file extension
+/*!
+Finds the last dot and remove all characters from the dot to the end
+*/
+String removeFileExt(String filename);
+
 //! Case-insensitive comparisons
 /*!
 This class provides case-insensitve comparison functions.
