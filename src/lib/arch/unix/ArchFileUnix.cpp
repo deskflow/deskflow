@@ -108,9 +108,19 @@ std::string
 ArchFileUnix::getPluginDirectory()
 {
 #if WINAPI_XWINDOWS
-	return getUserDirectory().append("/.synergy/plugins");
+	return getProfileDirectory().append("/plugins");
 #else
-	return getUserDirectory().append("/Libraries/Synergy/Plugins");
+	return getProfileDirectory().append("/Plugins");
+#endif
+}
+
+std::string
+ArchFileUnix::getProfileDirectory()
+{
+#if WINAPI_XWINDOWS
+	return getUserDirectory().append("/.synergy");
+#else
+	return getUserDirectory().append("/Libraries/Synergy");
 #endif
 }
 

@@ -98,10 +98,9 @@ void WebClient::queryPluginList()
 	}
 	catch (std::exception& e)
 	{
-		m_Error = tr("An error occured while trying to query the "
-			"plugin list. Please contact the help desk, and provide "
-			"the following details.\n\n%1").arg(e.what());
-		emit queryPluginDone();
+		emit error(tr("An error occured while trying to query the "
+					  "plugin list. Please contact the help desk, and "
+					  "provide the following details.\n\n%1").arg(e.what()));
 		return;
 	}
 
@@ -113,15 +112,13 @@ void WebClient::queryPluginList()
 			if (editionRegex.exactMatch(responseJson)) {
 				QString e = editionRegex.cap(1);
 				m_PluginList = e.split(",");
-				m_Error.clear();
 				emit queryPluginDone();
 				return;
 			}
 		}
 		else if (boolString == "false") {
-			m_Error = tr("Get plugin list failed, invalid user email "
-						 "or password.");
-			emit queryPluginDone();
+			emit error(tr("Get plugin list failed, invalid user email "
+						  "or password."));
 			return;
 		}
 	}
@@ -130,17 +127,15 @@ void WebClient::queryPluginList()
 		if (errorRegex.exactMatch(responseJson)) {
 
 			// replace "\n" with real new lines.
-			QString error = errorRegex.cap(1).replace("\\n", "\n");
-			m_Error = tr("Get plugin list failed, an error occurred."
-						 "\n\n%1").arg(error);
-			emit queryPluginDone();
+			QString e = errorRegex.cap(1).replace("\\n", "\n");
+			emit error(tr("Get plugin list failed, an error occurred."
+						  "\n\n%1").arg(e));
 			return;
 		}
 	}
 
-	m_Error = tr("Get plugin list failed, an error occurred.\n\n"
-				 "Server response:\n\n%1").arg(responseJson);
-	emit queryPluginDone();
+	emit error(tr("Get plugin list failed, an error occurred.\n\n"
+				  "Server response:\n\n%1").arg(responseJson));
 	return;
 }
 

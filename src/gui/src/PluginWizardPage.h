@@ -26,9 +26,11 @@ protected:
     void changeEvent(QEvent *e);
 
 protected slots:
+	void showError(QString error);
 	void queryPluginDone();
 	void updateDownloadStatus();
 	void finished();
+	void generateCertificate();
 
 private:
 	void updateStatus(QString info);
@@ -41,5 +43,6 @@ private:
 	QString m_Password;
 	WebClient* m_pWebClient;
 	PluginManager* m_pPluginManager;
+	QThread* m_pPluginManagerThread;
 };
 #endif // PLUGINWIZARDPAGE_H

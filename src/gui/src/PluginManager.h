@@ -36,19 +36,30 @@ public:
 
 public slots:
 	void downloadPlugins();
+	void saveOpenSSLBinary();
+	void generateCertificate();
+	void doGenerateCertificate();
 
 private:
 	void savePlugin();
-	QString getPluginDir();
+	QString getDirViaSyntool(QStringList& args);
 	QString getPluginUrl(const QString& pluginName);
+	QString getOpenSSLBinaryUrl();
 	QString getPluginOSSpecificName(const QString& pluginName);
+	bool checkOpenSSLBinary();
+	void downloadOpenSSLBinary();
 
 signals:
+	void error(QString e);
 	void downloadNext();
 	void downloadFinished();
+	void openSSLBinaryReady();
+	void generateCertificateFinished();
 
 private:
 	QStringList m_PluginList;
+	QString m_PluginDir;
+	QString m_ProfileDir;
 	int m_DownloadIndex;
 	DataDownloader* m_pPluginDownloader;
 };

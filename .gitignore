@@ -13,4 +13,5 @@ config.h
 /src/gui/ui_*
 src/gui/gui.pro.user
 src/gui/.qmake.stash
+src/gui/.rnd
 src/setup/win32/synergy.suo

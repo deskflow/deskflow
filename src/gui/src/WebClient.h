@@ -38,12 +38,12 @@ public:
 	void setEmail(QString& e) { m_Email = e; }
 	void setPassword(QString& p) { m_Password = p; }
 	QStringList& getPluginList() { return m_PluginList; }
-	QString& getLastError() { return m_Error; }
 
 public slots:
 	void queryPluginList();
 
 signals:
+	void error(QString e);
 	void queryPluginDone();
 
 private:
@@ -55,7 +55,6 @@ private:
 	QString m_Email;
 	QString m_Password;
 	QStringList m_PluginList;
-	QString m_Error;
 };
 
 #endif // WEBCLIENT_H

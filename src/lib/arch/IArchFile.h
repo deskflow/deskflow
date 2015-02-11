@@ -68,6 +68,12 @@ public:
 	*/
 	virtual std::string	getPluginDirectory() = 0;
 
+	//! Get local profile directory
+	/*!
+	Returns the local profile directory.
+	*/
+	virtual std::string	getProfileDirectory() = 0;
+
 	//! Concatenate path components
 	/*!
 	Concatenate pathname components with a directory separator

@@ -142,8 +142,24 @@ ArchFileWindows::getLogDirectory()
 std::string
 ArchFileWindows::getPluginDirectory()
 {
-	std::string dir = getUserDirectory();
-	dir.append("\\Synergy\\Plugins");
+	std::string dir = getProfileDirectory();
+	dir.append("\\Plugins");
+	return dir;
+}
+
+std::string
+ArchFileWindows::getProfileDirectory()
+{
+	TCHAR result[MAX_PATH];
+	std::string dir;
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, result))) {
+		dir = result;
+	}
+	else {
+		dir = getUserDirectory();
+	}
+
+	dir.append("\\Synergy");
 	return dir;
 }
 

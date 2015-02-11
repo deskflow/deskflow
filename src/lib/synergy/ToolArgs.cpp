@@ -21,6 +21,7 @@ ToolArgs::ToolArgs() :
 	m_printActiveDesktopName(false),
 	m_loginAuthenticate(false),
 	m_getPluginList(false),
-	m_getPluginDir(false)
+	m_getPluginDir(false),
+	m_getProfileDir(false)
 {
 }
