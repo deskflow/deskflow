@@ -92,6 +92,11 @@ ToolApp::run(int argc, char** argv)
 		return kExitFailed;
 	}
 
+#if WINAPI_XWINDOWS
+	// HACK: avoid sigsegv on linux
+	m_bye(kErrorOk);
+#endif
+
 	return kErrorOk;
 }
 
