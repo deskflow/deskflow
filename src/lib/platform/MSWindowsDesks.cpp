@@ -500,10 +500,17 @@ MSWindowsDesks::deskMouseMove(SInt32 x, SInt32 y) const
 	// the primary screen.
 	SInt32 w = GetSystemMetrics(SM_CXSCREEN);
 	SInt32 h = GetSystemMetrics(SM_CYSCREEN);
-	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-							(DWORD)((65535.0f * x) / (w - 1) + 0.5f),
-							(DWORD)((65535.0f * y) / (h - 1) + 0.5f),
-							0, 0);
+	//mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
+	//						(DWORD)((65535.0f * x) / (w - 1) + 0.5f),
+	//						(DWORD)((65535.0f * y) / (h - 1) + 0.5f),
+	//						0, 0);
+	INPUT input;
+	memset(&input, 0, sizeof(INPUT));
+	input.type = INPUT_MOUSE;
+	input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+	input.mi.dx = (DWORD)((65535.0f * x) / (w - 1) + 0.5f);
+	input.mi.dy = (DWORD)((65535.0f * y) / (h - 1) + 0.5f);
+	SendInput(1, &input, sizeof(INPUT));
 }
 
 void
@@ -533,7 +540,14 @@ MSWindowsDesks::deskMouseRelativeMove(SInt32 dx, SInt32 dy) const
 	}
 
 	// move relative to mouse position
-	mouse_event(MOUSEEVENTF_MOVE, dx, dy, 0, 0);
+	//mouse_event(MOUSEEVENTF_MOVE, dx, dy, 0, 0);
+	INPUT input;
+	memset(&input, 0, sizeof(INPUT));
+	input.type = INPUT_MOUSE;
+	input.mi.dwFlags = MOUSEEVENTF_MOVE;
+	input.mi.dx = dx;
+	input.mi.dy = dy;
+	SendInput(1, &input, sizeof(INPUT));
 
 	// restore mouse speed & acceleration
 	if (accelChanged) {
@@ -655,7 +669,7 @@ void
 MSWindowsDesks::deskThread(void* vdesk)
 {
 	MSG msg;
-
+	INPUT input;
 	// use given desktop for this thread
 	Desk* desk              = reinterpret_cast<Desk*>(vdesk);
 	desk->m_threadID         = GetCurrentThreadId();
@@ -731,12 +745,24 @@ MSWindowsDesks::deskThread(void* vdesk)
 			break;
 
 		case SYNERGY_MSG_FAKE_KEY:
-			keybd_event(HIBYTE(msg.lParam), LOBYTE(msg.lParam), (DWORD)msg.wParam, 0);
+			//keybd_event(HIBYTE(msg.lParam), LOBYTE(msg.lParam), (DWORD)msg.wParam, 0);
+			memset(&input, 0, sizeof(INPUT));
+			input.type = INPUT_KEYBOARD;
+			input.ki.wVk = HIBYTE(msg.lParam);
+			input.ki.wScan = LOBYTE(msg.lParam);
+			input.ki.dwFlags = (DWORD)msg.wParam;
+			input.ki.dwExtraInfo = 0;
+			SendInput(1, &input, sizeof(INPUT));
 			break;
 
 		case SYNERGY_MSG_FAKE_BUTTON:
 			if (msg.wParam != 0) {
-				mouse_event((DWORD)msg.wParam, 0, 0, (DWORD)msg.lParam, 0);
+				//mouse_event((DWORD)msg.wParam, 0, 0, (DWORD)msg.lParam, 0);
+				memset(&input, 0, sizeof(INPUT));
+				input.type = INPUT_MOUSE;
+				input.mi.mouseData = (DWORD)msg.lParam;
+				input.mi.dwFlags = (DWORD)msg.wParam;
+				SendInput(1, &input, sizeof(INPUT));
 			}
 			break;
 
@@ -754,7 +780,6 @@ MSWindowsDesks::deskThread(void* vdesk)
 			// XXX -- add support for x-axis scrolling
 			if (msg.lParam != 0) {
 				//mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (DWORD)msg.lParam, 0);
-				INPUT input;
 				memset(&input, 0, sizeof(INPUT));
 				input.type = 0; //INPUT_MOUSE
 				input.mi.mouseData = (DWORD)msg.lParam;
@@ -788,9 +813,16 @@ MSWindowsDesks::deskThread(void* vdesk)
 			break;
 
 		case SYNERGY_MSG_FAKE_INPUT:
-			keybd_event(SYNERGY_HOOK_FAKE_INPUT_VIRTUAL_KEY,
-								SYNERGY_HOOK_FAKE_INPUT_SCANCODE,
-								msg.wParam ? 0 : KEYEVENTF_KEYUP, 0);
+			//keybd_event(SYNERGY_HOOK_FAKE_INPUT_VIRTUAL_KEY,
+			//					SYNERGY_HOOK_FAKE_INPUT_SCANCODE,
+			//					msg.wParam ? 0 : KEYEVENTF_KEYUP, 0);
+			memset(&input, 0, sizeof(INPUT));
+			input.type = INPUT_KEYBOARD;
+			input.ki.wVk = SYNERGY_HOOK_FAKE_INPUT_VIRTUAL_KEY;
+			input.ki.wScan = SYNERGY_HOOK_FAKE_INPUT_SCANCODE;
+			input.ki.dwFlags = msg.wParam ? 0 : KEYEVENTF_KEYUP;
+			input.ki.dwExtraInfo = 0;
+			SendInput(1, &input, sizeof(INPUT));
 			break;
 		}
 
