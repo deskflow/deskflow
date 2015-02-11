@@ -25,8 +25,6 @@
 #include "net/IListenSocket.h"
 #include "net/ISocketFactory.h"
 #include "net/XSocket.h"
-#include "io/CryptoStream.h"
-#include "io/CryptoOptions.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
@@ -43,11 +41,9 @@ static const char s_networkSecurity[] = { "libns" };
 
 ClientListener::ClientListener(const NetworkAddress& address,
 				ISocketFactory* socketFactory,
-				const CryptoOptions& crypto,
 				IEventQueue* events) :
 	m_socketFactory(socketFactory),
 	m_server(NULL),
-	m_crypto(crypto),
 	m_events(events)
 {
 	assert(m_socketFactory != NULL);
@@ -149,12 +145,6 @@ ClientListener::handleClientConnecting(const Event&, void*)
 	// filter socket messages, including a packetizing filter
 	bool adopt = !m_useSecureNetwork;
 	stream = new PacketStreamFilter(m_events, stream, adopt);
-	
-	if (m_crypto.m_mode != kDisabled) {
-		CryptoStream* cryptoStream = new CryptoStream(
-			m_events, stream, m_crypto, true);
-		stream = cryptoStream;
-	}
 
 	assert(m_server != NULL);
 

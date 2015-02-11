@@ -19,7 +19,6 @@
 #pragma once
 
 #include "server/Config.h"
-#include "io/CryptoOptions.h"
 #include "base/EventTypes.h"
 #include "base/Event.h"
 #include "common/stddeque.h"
@@ -38,7 +37,6 @@ public:
 	// The factories are adopted.
 	ClientListener(const NetworkAddress&,
 							ISocketFactory*,
-							const CryptoOptions& crypto,
 							IEventQueue* events);
 	~ClientListener();
 
@@ -84,7 +82,6 @@ private:
 	NewClients			m_newClients;
 	WaitingClients		m_waitingClients;
 	Server*				m_server;
-	CryptoOptions		m_crypto;
 	IEventQueue*		m_events;
 	bool				m_useSecureNetwork;
 };

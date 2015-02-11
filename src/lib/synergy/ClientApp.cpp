@@ -334,7 +334,7 @@ ClientApp::handleClientDisconnected(const Event&, void*)
 
 Client*
 ClientApp::openClient(const String& name, const NetworkAddress& address,
-				synergy::Screen* screen, const CryptoOptions& crypto)
+				synergy::Screen* screen)
 {
 	Client* client = new Client(
 		m_events,
@@ -342,7 +342,6 @@ ClientApp::openClient(const String& name, const NetworkAddress& address,
 		address,
 		new TCPSocketFactory(m_events, getSocketMultiplexer()),
 		screen,
-		crypto,
 		args().m_enableDragDrop);
 
 	try {
@@ -401,7 +400,7 @@ ClientApp::startClient()
 		if (m_clientScreen == NULL) {
 			clientScreen = openClientScreen();
 			m_client     = openClient(args().m_name,
-				*m_serverAddress, clientScreen, args().m_crypto);
+				*m_serverAddress, clientScreen);
 			m_clientScreen  = clientScreen;
 			LOG((CLOG_NOTE "started client"));
 		}

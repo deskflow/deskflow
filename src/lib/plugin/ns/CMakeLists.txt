@@ -55,7 +55,7 @@ if (UNIX)
 endif()
 
 target_link_libraries(ns
-	arch base client common io mt net ipc platform server synergy cryptopp ${libs} ${OPENSSL_LIBS})
+	arch base client common io mt net ipc platform server synergy ${libs} ${OPENSSL_LIBS})
 
 if (WIN32)
 	add_custom_command(

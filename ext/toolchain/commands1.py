@@ -247,9 +247,6 @@ class InternalCommands:
 	# by default, unknown
 	macIdentity = None
 	
-	# cryptoPP dir with version number
-	cryptoPPDir = 'cryptopp562'
-	
 	# gtest dir with version number
 	gtestDir = 'gtest-1.6.0'
 	
@@ -319,22 +316,6 @@ class InternalCommands:
 
 		for target in targets:
 			self.configure(target)
-
-	def checkCryptoPP(self):
-    
-		dir = self.extDir + '/' + self.cryptoPPDir
-		if (os.path.isdir(dir)):
-			return
-		
-		zipFilename = dir + '.zip'
-		if (not os.path.exists(zipFilename)):
-			raise Exception('Crypto++ zip not found at: ' + zipFilename)
-		
-		if not os.path.exists(dir):
-			os.mkdir(dir)
-		
-		zip = zipfile.ZipFile(zipFilename)
-		self.zipExtractAll(zip, dir)
 
 	def checkGTest(self):
     
@@ -464,8 +445,6 @@ class InternalCommands:
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
 
-		# ensure that the cryptopp source exists
-		self.checkCryptoPP()
 		self.checkGTest()
 		self.checkGMock()
 		

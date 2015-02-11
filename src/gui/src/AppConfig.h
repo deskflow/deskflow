@@ -61,9 +61,6 @@ class AppConfig
 		const QString& logFilename() const { return m_LogFilename; }
 		const QString logFilenameCmd() const;
 		QString logLevelText() const;
-		const QString& cryptoPass() const { return m_CryptoPass; }
-		bool cryptoEnabled() const { return m_CryptoEnabled; }
-		QString cryptoModeString() const;
 		ProcessMode processMode() const { return m_ProcessMode; }
 		bool wizardShouldRun() const { return m_WizardLastRun < kWizardVersion; }
 		const QString& language() const { return m_Language; }
@@ -96,7 +93,6 @@ class AppConfig
 		void setLogLevel(int i) { m_LogLevel = i; }
 		void setLogToFile(bool b) { m_LogToFile = b; }
 		void setLogFilename(const QString& s) { m_LogFilename = s; }
-		void setCryptoEnabled(bool b) { m_CryptoEnabled = b; }
 		void setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
 		void setLanguage(const QString language) { m_Language = language; }
 		void setStartedBefore(bool b) { m_StartedBefore = b; }
@@ -104,8 +100,6 @@ class AppConfig
 
 		void loadSettings();
 		void saveSettings();
-
-		void setCryptoPass(const QString& s);
 
 	private:
 		QSettings* m_pSettings;
@@ -116,8 +110,6 @@ class AppConfig
 		bool m_LogToFile;
 		QString m_LogFilename;
 		int m_WizardLastRun;
-		bool m_CryptoEnabled;
-		QString m_CryptoPass;
 		ProcessMode m_ProcessMode;
 		QString m_Language;
 		bool m_StartedBefore;

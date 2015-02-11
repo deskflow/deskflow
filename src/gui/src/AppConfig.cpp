@@ -53,7 +53,6 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_Interface(),
 	m_LogLevel(0),
 	m_WizardLastRun(0),
-	m_CryptoPass(),
 	m_ProcessMode(DEFAULT_PROCESS_MODE),
 	m_AutoConfig(true),
 	m_ElevateMode(false),
@@ -121,8 +120,6 @@ void AppConfig::loadSettings()
 	m_LogToFile = settings().value("logToFile", false).toBool();
 	m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
 	m_WizardLastRun = settings().value("wizardLastRun", 0).toInt();
-	m_CryptoPass = settings().value("cryptoPass", "").toString();
-	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
 	m_Language = settings().value("language", QLocale::system().name()).toString();
 	m_StartedBefore = settings().value("startedBefore", false).toBool();
 	m_AutoConfig = settings().value("autoConfig", true).toBool();
@@ -142,8 +139,6 @@ void AppConfig::saveSettings()
 	settings().setValue("logToFile", m_LogToFile);
 	settings().setValue("logFilename", m_LogFilename);
 	settings().setValue("wizardLastRun", kWizardVersion);
-	settings().setValue("cryptoPass", m_CryptoPass);
-	settings().setValue("cryptoEnabled", m_CryptoEnabled);
 	settings().setValue("language", m_Language);
 	settings().setValue("startedBefore", m_StartedBefore);
 	settings().setValue("autoConfig", m_AutoConfig);
@@ -152,22 +147,6 @@ void AppConfig::saveSettings()
 	settings().setValue("edition", m_Edition);
 	settings().setValue("activateEmail", m_ActivateEmail);
 	settings().setValue("userToken", m_UserToken);
-}
-
-void AppConfig::setCryptoPass(const QString &s)
-{
-	// clear field to user doesn't get confused.
-	if (s.isEmpty())
-	{
-		m_CryptoPass.clear();
-		return;
-	}
-
-	// only hash if password changes -- don't re-hash the hash.
-	if (m_CryptoPass != s)
-	{
-		m_CryptoPass = hash(s);
-	}
 }
 
 void AppConfig::setAutoConfig(bool autoConfig)

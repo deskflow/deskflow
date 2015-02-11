@@ -24,7 +24,6 @@
 #include "synergy/option_types.h"
 #include "synergy/protocol_types.h"
 #include "io/IStream.h"
-#include "io/CryptoStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
@@ -293,10 +292,6 @@ ServerProxy::parseMessage(const UInt8* code)
 
 	else if (memcmp(code, kMsgDSetOptions, 4) == 0) {
 		setOptions();
-	}
-
-	else if (memcmp(code, kMsgDCryptoIv, 4) == 0) {
-		cryptoIv();
 	}
 
 	else if (memcmp(code, kMsgDFileTransfer, 4) == 0) {
@@ -761,18 +756,6 @@ ServerProxy::mouseWheel()
 
 	// forward
 	m_client->mouseWheel(xDelta, yDelta);
-}
-
-void
-ServerProxy::cryptoIv()
-{
-	// parse
-	String s;
-	ProtocolUtil::readf(m_stream, kMsgDCryptoIv + 4, &s);
-	LOG((CLOG_DEBUG2 "recv crypto iv size=%i", s.size()));
-
-	// forward
-	m_client->setDecryptIv(reinterpret_cast<const UInt8*>(s.c_str()));
 }
 
 void

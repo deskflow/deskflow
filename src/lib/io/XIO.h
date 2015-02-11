@@ -47,9 +47,3 @@ XBASE_SUBCLASS_WHAT(XIOEndOfStream, XIO);
 Thrown if an operation on a stream would block.
 */
 XBASE_SUBCLASS_WHAT(XIOWouldBlock, XIO);
-
-//! I/O bad crypto mode exception
-/*!
-Thrown when the user enters an invalid crypto mode.
-*/
-XBASE_SUBCLASS_WHAT(XIOBadCryptoMode, XIO);

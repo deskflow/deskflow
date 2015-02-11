@@ -30,7 +30,6 @@
 #include "synergy/FileChunker.h"
 #include "synergy/IPlatformScreen.h"
 #include "mt/Thread.h"
-#include "io/CryptoStream.h"
 #include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/ISocketFactory.h"
@@ -61,7 +60,6 @@ Client::Client(
 		const String& name, const NetworkAddress& address,
 		ISocketFactory* socketFactory,
 		synergy::Screen* screen,
-		const CryptoOptions& crypto,
 		bool enableDragDrop) :
 	m_mock(false),
 	m_name(name),
@@ -76,8 +74,6 @@ Client::Client(
 	m_suspended(false),
 	m_connectOnResume(false),
 	m_events(events),
-	m_cryptoStream(NULL),
-	m_crypto(crypto),
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
 	m_enableDragDrop(enableDragDrop),
@@ -165,12 +161,6 @@ Client::connect()
 		bool adopt = !m_useSecureNetwork;
 		m_stream = new PacketStreamFilter(m_events, m_stream, adopt);
 
-		if (m_crypto.m_mode != kDisabled) {
-			m_cryptoStream = new CryptoStream(
-				m_events, m_stream, m_crypto, true);
-			m_stream = m_cryptoStream;
-		}
-
 		// connect
 		LOG((CLOG_DEBUG1 "connecting to server"));
 		setupConnecting();
@@ -209,14 +199,6 @@ Client::handshakeComplete()
 	m_ready = true;
 	m_screen->enable();
 	sendEvent(m_events->forClient().connected(), NULL);
-}
-
-void
-Client::setDecryptIv(const UInt8* iv)
-{
-	if (m_cryptoStream != NULL) {
-		m_cryptoStream->setDecryptIv(iv);
-	}
 }
 
 bool

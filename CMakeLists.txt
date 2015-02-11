@@ -319,7 +319,6 @@ else() # not-unix
 endif()
 
 add_subdirectory(src)
-add_subdirectory(ext)
 
 if (WIN32)
 	# TODO:	consider using /analyze to uncover potential bugs in the source code.

@@ -24,7 +24,6 @@
 #include "synergy/DragInformation.h"
 #include "synergy/INode.h"
 #include "net/NetworkAddress.h"
-#include "io/CryptoOptions.h"
 #include "base/EventTypes.h"
 
 class EventQueueTimer;
@@ -34,7 +33,6 @@ class IDataSocket;
 class ISocketFactory;
 namespace synergy { class IStream; }
 class IEventQueue;
-class CryptoStream;
 class Thread;
 class TCPSocket;
 
@@ -61,7 +59,6 @@ public:
 							const String& name, const NetworkAddress& address,
 							ISocketFactory* socketFactory,
 							synergy::Screen* screen,
-							const CryptoOptions& crypto,
 							bool enableDragDrop);
 	~Client();
 	
@@ -90,9 +87,6 @@ public:
 	Notifies the client that the connection handshake has completed.
 	*/
 	virtual void		handshakeComplete();
-
-	//! Set crypto IV for decryption
-	virtual void		setDecryptIv(const UInt8* iv);
 
 	//! Clears the file buffer
 	void				clearReceivedFileData();
@@ -223,8 +217,6 @@ private:
 	IClipboard::Time	m_timeClipboard[kClipboardEnd];
 	String				m_dataClipboard[kClipboardEnd];
 	IEventQueue*		m_events;
-	CryptoStream*		m_cryptoStream;
-	CryptoOptions		m_crypto;
 	std::size_t			m_expectedFileSize;
 	String				m_receivedFileData;
 	DragFileList		m_dragFileList;
