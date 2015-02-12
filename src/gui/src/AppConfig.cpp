@@ -56,7 +56,8 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_ProcessMode(DEFAULT_PROCESS_MODE),
 	m_AutoConfig(true),
 	m_ElevateMode(false),
-	m_AutoConfigPrompted(false)
+	m_AutoConfigPrompted(false),
+	m_CryptoEnabled(false)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -128,6 +129,7 @@ void AppConfig::loadSettings()
 	m_Edition = settings().value("edition", Unknown).toInt();
 	m_ActivateEmail = settings().value("activateEmail", "").toString();
 	m_UserToken = settings().value("userToken", "").toString();
+	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
 }
 
 void AppConfig::saveSettings()
@@ -147,6 +149,7 @@ void AppConfig::saveSettings()
 	settings().setValue("edition", m_Edition);
 	settings().setValue("activateEmail", m_ActivateEmail);
 	settings().setValue("userToken", m_UserToken);
+	settings().setValue("cryptoEnabled", m_CryptoEnabled);
 }
 
 void AppConfig::setAutoConfig(bool autoConfig)

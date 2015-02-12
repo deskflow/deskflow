@@ -160,6 +160,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool isBonjourRunning();
 		void downloadBonjour();
 		void promptAutoConfig();
+		void updateEdition();
 
 	private:
 		QSettings& m_Settings;

@@ -85,6 +85,9 @@ class AppConfig
 		void persistLogDir();
 		bool elevateMode();
 
+		void setCryptoEnabled(bool e) { m_CryptoEnabled = e; }
+		bool getCryptoEnabled() { return m_CryptoEnabled; }
+
 	protected:
 		QSettings& settings() { return *m_pSettings; }
 		void setScreenName(const QString& s) { m_ScreenName = s; }
@@ -119,6 +122,7 @@ class AppConfig
 		int m_Edition;
 		QString m_ActivateEmail;
 		QString m_UserToken;
+		bool m_CryptoEnabled;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

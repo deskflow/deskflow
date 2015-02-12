@@ -41,16 +41,24 @@ static const char s_networkSecurity[] = { "libns" };
 
 ClientListener::ClientListener(const NetworkAddress& address,
 				ISocketFactory* socketFactory,
-				IEventQueue* events) :
+				IEventQueue* events,
+				bool enableCrypto) :
 	m_socketFactory(socketFactory),
 	m_server(NULL),
-	m_events(events)
+	m_events(events),
+	m_useSecureNetwork(false)
 {
 	assert(m_socketFactory != NULL);
 
 	try {
 		// create listen socket
-		m_useSecureNetwork = ARCH->plugin().exists(s_networkSecurity);
+		if (enableCrypto) {
+			m_useSecureNetwork = ARCH->plugin().exists(s_networkSecurity);
+			if (m_useSecureNetwork == false) {
+				LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
+			}
+		}
+
 		m_listen = m_socketFactory->createListen(m_useSecureNetwork);
 
 		// bind listen address

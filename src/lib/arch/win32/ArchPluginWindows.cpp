@@ -163,24 +163,6 @@ ArchPluginWindows::invoke(
 	}
 }
 
-String
-ArchPluginWindows::getModuleDir()
-{
-	TCHAR c_modulePath[MAX_PATH];
-	if (GetModuleFileName(NULL, c_modulePath, MAX_PATH) == 0) {
-		throw XArch(new XArchEvalWindows);
-	}
-
-	String modulePath(c_modulePath);
-	size_t lastSlash = modulePath.find_last_of("\\");
-
-	if (lastSlash != String::npos) {
-		return modulePath.substr(0, lastSlash);
-	}
-
-	throw XArch("could not get module path.");
-}
-
 void
 ArchPluginWindows::getFilenames(const String& pattern, std::vector<String>& filenames)
 {
@@ -201,7 +183,7 @@ ArchPluginWindows::getFilenames(const String& pattern, std::vector<String>& file
 
 String ArchPluginWindows::getPluginsDir()
 {
-	return getModuleDir().append("\\").append(PLUGINS_DIR);
+	return ARCH->getPluginDirectory();
 }
 
 void

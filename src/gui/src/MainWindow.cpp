@@ -127,6 +127,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_SuppressAutoConfigWarning = false;
 
 	m_pComboServerList->hide();
+
+	updateEdition();
 }
 
 MainWindow::~MainWindow()
@@ -441,6 +443,10 @@ void MainWindow::startSynergy()
 	args << "--enable-drag-drop";
 
 #endif
+
+	if (m_AppConfig.getCryptoEnabled()) {
+		args << "--enable-crypto";
+	}
 
 	if ((synergyType() == synergyClient && !clientArgs(args, app))
 		|| (synergyType() == synergyServer && !serverArgs(args, app)))
@@ -814,15 +820,8 @@ void MainWindow::changeEvent(QEvent* event)
 			retranslateUi(this);
 			retranslateMenuBar();
 
-			QString mac = getFirstMacAddress();
-			QString hashSrc = m_AppConfig.activateEmail() + mac;
-			QString hashResult = hash(hashSrc);
-			if (hashResult == m_AppConfig.userToken()) {
-				setEdition(m_AppConfig.edition());
-			}
-			else {
-				setEdition(Unknown);
-			}
+			updateEdition();
+
 			break;
 		}
 		default:
@@ -1147,6 +1146,19 @@ void MainWindow::promptAutoConfig()
 	}
 
 	m_AppConfig.setAutoConfigPrompted(true);
+}
+
+void MainWindow::updateEdition()
+{
+	QString mac = getFirstMacAddress();
+	QString hashSrc = m_AppConfig.activateEmail() + mac;
+	QString hashResult = hash(hashSrc);
+	if (hashResult == m_AppConfig.userToken()) {
+		setEdition(m_AppConfig.edition());
+	}
+	else {
+		setEdition(Unknown);
+	}
 }
 
 void MainWindow::on_m_pComboServerList_currentIndexChanged(QString )

@@ -41,7 +41,8 @@ m_disableTray(false),
 m_enableIpc(false),
 m_enableDragDrop(false),
 m_shouldExit(false),
-m_synergyAddress()
+m_synergyAddress(),
+m_enableCrypto(false)
 {
 }
 

@@ -60,7 +60,8 @@ Client::Client(
 		const String& name, const NetworkAddress& address,
 		ISocketFactory* socketFactory,
 		synergy::Screen* screen,
-		bool enableDragDrop) :
+		bool enableDragDrop,
+		bool enableCrypto) :
 	m_mock(false),
 	m_name(name),
 	m_serverAddress(address),
@@ -102,6 +103,13 @@ Client::Client(
 								this,
 								new TMethodEventJob<Client>(this,
 									&Client::handleFileRecieveCompleted));
+	}
+
+	if (enableCrypto) {
+		m_useSecureNetwork = ARCH->plugin().exists(s_networkSecurity);
+		if (m_useSecureNetwork == false) {
+			LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
+		}
 	}
 }
 
@@ -152,7 +160,6 @@ Client::connect()
 		}
 
 		// create the socket
-		m_useSecureNetwork = ARCH->plugin().exists(s_networkSecurity);
 		IDataSocket* socket = m_socketFactory->create(m_useSecureNetwork);
 		m_socket = dynamic_cast<TCPSocket*>(socket);
 

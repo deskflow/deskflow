@@ -7,11 +7,12 @@
 #include <QMovie>
 #include <QThread>
 
-PluginWizardPage::PluginWizardPage(QWidget *parent) :
+PluginWizardPage::PluginWizardPage(AppConfig& appConfig, QWidget *parent) :
 	QWizardPage(parent),
 	m_Finished(false),
 	m_pWebClient(NULL),
-	m_pPluginManager(NULL)
+	m_pPluginManager(NULL),
+	m_AppConfig(appConfig)
 {
 	setupUi(this);
 
@@ -79,6 +80,10 @@ void PluginWizardPage::finished()
 {
 	updateStatus(tr("Plugins are ready."));
 	stopSpinning();
+
+	// ideally this should check if ns plugin is ready
+	m_AppConfig.setCryptoEnabled(true);
+
 	m_Finished = true;
 	emit completeChanged();
 }

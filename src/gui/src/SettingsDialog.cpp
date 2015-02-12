@@ -53,6 +53,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	// elevate checkbox is only useful on ms windows.
 	m_pCheckBoxElevateMode->hide();
 #endif
+
+	m_pCheckBoxEnableCrypto->setChecked(m_AppConfig.getCryptoEnabled());
 }
 
 void SettingsDialog::accept()
@@ -120,10 +122,6 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked()
 	}
 }
 
-void SettingsDialog::on_m_pCheckBoxEnableCrypto_stateChanged(int )
-{
-}
-
 void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 {
 	QString ietfCode = m_pComboLanguage->itemData(index).toString();
@@ -146,4 +144,9 @@ void SettingsDialog::on_m_pCheckBoxElevateMode_toggled(bool checked)
 			return;
 		}
 	}
+}
+
+void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
+{
+	m_AppConfig.setCryptoEnabled(checked);
 }

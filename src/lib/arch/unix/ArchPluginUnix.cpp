@@ -173,12 +173,7 @@ ArchPluginUnix::invoke(
 String
 ArchPluginUnix::getPluginsDir()
 {
-#if WINAPI_XWINDOWS
-	return "/usr/lib/synergy/plugin";
-#else
-	// TODO: pluging should be in bundle in the final release
-	return "/Users/xinyu/Projects/synergy/bin/plugins";
-#endif
+	return ARCH->getPluginDirectory();
 }
 
 void

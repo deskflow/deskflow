@@ -46,4 +46,5 @@ public:
 #endif
 	bool				m_shouldExit;
 	String				m_synergyAddress;
+	bool				m_enableCrypto;
 };

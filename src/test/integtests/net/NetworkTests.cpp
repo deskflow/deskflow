@@ -114,7 +114,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
 	// server
 	SocketMultiplexer serverSocketMultiplexer;
 	TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-	ClientListener listener(serverAddress, serverSocketFactory, &m_events);
+	ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
 	NiceMock<MockScreen> serverScreen;
 	NiceMock<MockPrimaryClient> primaryClient;
 	NiceMock<MockConfig> serverConfig;
@@ -140,7 +140,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, true);
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, true, false);
 		
 	m_events.adoptHandler(
 		m_events.forIScreen().fileRecieveCompleted(), &client,
@@ -166,7 +166,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 	// server
 	SocketMultiplexer serverSocketMultiplexer;
 	TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-	ClientListener listener(serverAddress, serverSocketFactory, &m_events);
+	ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
 	NiceMock<MockScreen> serverScreen;
 	NiceMock<MockPrimaryClient> primaryClient;
 	NiceMock<MockConfig> serverConfig;
@@ -192,7 +192,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, true);
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, true, false);
 		
 	m_events.adoptHandler(
 		m_events.forIScreen().fileRecieveCompleted(), &client,
@@ -217,7 +217,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
 	// server
 	SocketMultiplexer serverSocketMultiplexer;
 	TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-	ClientListener listener(serverAddress, serverSocketFactory, &m_events);
+	ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
 	NiceMock<MockScreen> serverScreen;
 	NiceMock<MockPrimaryClient> primaryClient;
 	NiceMock<MockConfig> serverConfig;
@@ -238,7 +238,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, true);
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, true, false);
 	
 	m_events.adoptHandler(
 		m_events.forClientListener().connected(), &listener,
@@ -269,7 +269,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 	// server
 	SocketMultiplexer serverSocketMultiplexer;
 	TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-	ClientListener listener(serverAddress, serverSocketFactory, &m_events);
+	ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
 	NiceMock<MockScreen> serverScreen;
 	NiceMock<MockPrimaryClient> primaryClient;
 	NiceMock<MockConfig> serverConfig;
@@ -290,7 +290,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, true);
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, true, false);
 	
 	m_events.adoptHandler(
 		m_events.forClientListener().connected(), &listener,

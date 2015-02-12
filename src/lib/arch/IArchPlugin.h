@@ -18,8 +18,6 @@
 
 #pragma once
 
-#define PLUGINS_DIR "plugins"
-
 #include "common/IInterface.h"
 #include "common/stdmap.h"
 #include "base/String.h"

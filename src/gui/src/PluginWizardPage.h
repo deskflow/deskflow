@@ -1,6 +1,8 @@
 #ifndef PLUGINWIZARDPAGE_H
 #define PLUGINWIZARDPAGE_H
 
+#include "AppConfig.h"
+
 #include "ui_PluginWizardPageBase.h"
 #include <QWizardPage>
 
@@ -12,7 +14,7 @@ class PluginWizardPage : public QWizardPage, public Ui::PluginWizardPage {
     Q_OBJECT
 
 public:
-    PluginWizardPage(QWidget *parent = 0);
+	PluginWizardPage(AppConfig& appConfig, QWidget *parent = 0);
     ~PluginWizardPage();
 
 	void setFinished(bool b) { m_Finished = b; }
@@ -44,5 +46,6 @@ private:
 	WebClient* m_pWebClient;
 	PluginManager* m_pPluginManager;
 	QThread* m_pPluginManagerThread;
+	AppConfig& m_AppConfig;
 };
 #endif // PLUGINWIZARDPAGE_H

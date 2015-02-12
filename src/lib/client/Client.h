@@ -59,7 +59,8 @@ public:
 							const String& name, const NetworkAddress& address,
 							ISocketFactory* socketFactory,
 							synergy::Screen* screen,
-							bool enableDragDrop);
+							bool enableDragDrop,
+							bool enableCrypto);
 	~Client();
 	
 #ifdef TEST_ENV

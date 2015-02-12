@@ -632,7 +632,9 @@ ServerApp::openClientListener(const NetworkAddress& address)
 {
 	ClientListener* listen = new ClientListener(
 		address,
-		new TCPSocketFactory(m_events, getSocketMultiplexer()), m_events);
+		new TCPSocketFactory(m_events, getSocketMultiplexer()),
+		m_events,
+		args().m_enableCrypto);
 	
 	m_events->adoptHandler(
 		m_events->forClientListener().connected(), listen,

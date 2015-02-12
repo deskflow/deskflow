@@ -44,7 +44,6 @@ public:
 							void** args);
 
 private:
-	String				getModuleDir();
 	void				getFilenames(const String& pattern, std::vector<String>& filenames);
 	String				getPluginsDir();
 
