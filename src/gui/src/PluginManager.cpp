@@ -32,8 +32,7 @@ static const char kWinProcessorArch64[] = "Windows-x64";
 static const char kMacProcessorArch[] = "MacOSX-i386";
 static const char kLinuxProcessorArch32[] = "Linux-i686";
 static const char kLinuxProcessorArch64[] = "Linux-x86_64";
-// TODO: use live url
-static QString kOpenSSLBaseUrl = "http://ws2/public/openssl/";
+static QString kOpenSSLBaseUrl = "http://synergy-foss.org/files/tools/";
 static QString kCertificateLifetime = "365";
 static QString kCertificateSubjectInfo = "/CN=Synergy";
 static QString kCertificateFilename = "Synergy.pem";
