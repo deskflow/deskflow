@@ -120,7 +120,7 @@ ArchFileUnix::getProfileDirectory()
 #if WINAPI_XWINDOWS
 	return getUserDirectory().append("/.synergy");
 #else
-	return getUserDirectory().append("/Libraries/Synergy");
+	return getUserDirectory().append("/Library/Synergy");
 #endif
 }
 
