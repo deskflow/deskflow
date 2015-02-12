@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>368</width>
-    <height>377</height>
+    <height>354</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -136,7 +136,7 @@
       </sizepolicy>
      </property>
      <property name="title">
-      <string>&amp;Encryption</string>
+      <string>&amp;Network Security</string>
      </property>
      <layout class="QFormLayout" name="formLayout">
       <property name="fieldGrowthPolicy">
@@ -145,9 +145,22 @@
       <item row="0" column="0">
        <widget class="QCheckBox" name="m_pCheckBoxEnableCrypto">
         <property name="text">
-         <string>Enable</string>
+         <string>Enable OpenSSL (unique certificate)</string>
         </property>
        </widget>
+      </item>
+      <item row="0" column="1">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>
