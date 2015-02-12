@@ -125,7 +125,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="m_pGroupCrypto">
+    <widget class="QGroupBox" name="m_pGroupNetworkSecurity">
      <property name="enabled">
       <bool>true</bool>
      </property>

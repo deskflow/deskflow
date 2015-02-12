@@ -17,6 +17,8 @@
  */
 
 #include "SettingsDialog.h"
+
+#include "DirectoryManager.h"
 #include "SynergyLocale.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
@@ -26,6 +28,7 @@
 #include <QtGui>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDir>
 
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -54,7 +57,16 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pCheckBoxElevateMode->hide();
 #endif
 
-	m_pCheckBoxEnableCrypto->setChecked(m_AppConfig.getCryptoEnabled());
+	QString pluginDir = DirectoryManager::getPluginDir();
+	QDir dir(pluginDir);
+	int fileNum = dir.entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count();
+	if (fileNum == 0) {
+		m_pGroupNetworkSecurity->setEnabled(false);
+		m_pCheckBoxEnableCrypto->setChecked(false);
+	}
+	else {
+		m_pCheckBoxEnableCrypto->setChecked(m_AppConfig.getCryptoEnabled());
+	}
 }
 
 void SettingsDialog::accept()

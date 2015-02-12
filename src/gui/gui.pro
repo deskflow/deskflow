@@ -54,7 +54,8 @@ SOURCES += src/main.cpp \
     src/CommandProcess.cpp \
     src/WebClient.cpp \
     src/PluginWizardPage.cpp \
-    src/PluginManager.cpp
+    src/PluginManager.cpp \
+    src/DirectoryManager.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -95,7 +96,8 @@ HEADERS += src/MainWindow.h \
     src/EditionType.h \
     src/PluginWizardPage.h \
     src/ProcessorArch.h \
-    src/PluginManager.h
+    src/PluginManager.h \
+    src/DirectoryManager.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 

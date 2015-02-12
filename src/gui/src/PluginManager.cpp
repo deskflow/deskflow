@@ -17,19 +17,14 @@
 
 #include "PluginManager.h"
 
+#include "DirectoryManager.h"
 #include "CommandProcess.h"
 #include "DataDownloader.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
 
-#include <QCoreApplication>
-#include <QProcess>
 #include <QFile>
 #include <QDir>
-#include <QMessageBox>
-
-static const char kGetPluginDirArg[] = "--get-plugin-dir";
-static const char kGetProfileDirArg[] = "--get-profile-dir";
 
 static QString kPluginsBaseUrl = "http://synergy-project.org/files/plugins/";
 static const char kWinProcessorArch32[] = "Windows-x86";
@@ -61,14 +56,12 @@ PluginManager::PluginManager(QStringList pluginList) :
 	m_DownloadIndex(-1),
 	m_pPluginDownloader(NULL)
 {
-	QStringList args1(kGetPluginDirArg);
-	m_PluginDir = getDirViaSyntool(args1);
+	m_PluginDir = DirectoryManager::getPluginDir();
 	if (m_PluginDir.isEmpty()) {
 		emit error(tr("Failed to get plugin directory."));
 	}
 
-	QStringList args2(kGetProfileDirArg);
-	m_ProfileDir = getDirViaSyntool(args2);
+	m_ProfileDir = DirectoryManager::getProfileDir();
 	if (m_ProfileDir.isEmpty()) {
 		emit error(tr("Failed to get profile directory."));
 	}
@@ -175,46 +168,6 @@ void PluginManager::savePlugin()
 
 	file.write(m_pPluginDownloader->data());
 	file.close();
-}
-
-
-QString PluginManager::getDirViaSyntool(QStringList& args)
-{
-	QString program(QCoreApplication::applicationDirPath() + "/syntool");
-
-	QProcess process;
-	process.setReadChannel(QProcess::StandardOutput);
-	process.start(program, args);
-	bool success = process.waitForStarted();
-
-	QString out, error;
-	if (success)
-	{
-		if (process.waitForFinished()) {
-			out = process.readAllStandardOutput();
-			error = process.readAllStandardError();
-		}
-	}
-
-	out = out.trimmed();
-	error = error.trimmed();
-
-	if (out.isEmpty() ||
-		!error.isEmpty() ||
-		!success ||
-		process.exitCode() != 0)
-	{
-		QMessageBox::critical(
-			(QWidget*)parent(), tr("Synergy"),
-			tr("An error occured while calling syntool "
-			   "with the first arg %1. Code: %2\nError: %3")
-			.arg(args.at(0))
-			.arg(process.exitCode())
-			.arg(error.isEmpty() ? "Unknown" : error));
-		return "";
-	}
-
-	return out;
 }
 
 QString PluginManager::getPluginUrl(const QString& pluginName)

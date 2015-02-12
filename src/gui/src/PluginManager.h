@@ -42,7 +42,6 @@ public slots:
 
 private:
 	void savePlugin();
-	QString getDirViaSyntool(QStringList& args);
 	QString getPluginUrl(const QString& pluginName);
 	QString getOpenSSLBinaryUrl();
 	QString getPluginOSSpecificName(const QString& pluginName);
