@@ -32,14 +32,15 @@ Log* g_log = NULL;
 extern "C" {
 
 void
-init(void* log, void* arch)
+init(void* log)
 {
 	if (g_log == NULL) {
 		g_log = new Log(reinterpret_cast<Log*>(log));
 	}
 
 	if (g_arch == NULL) {
-		g_arch = new Arch(reinterpret_cast<Arch*>(arch));
+		g_arch = new Arch();
+		g_arch->init();
 	}
 }
 
@@ -99,6 +100,10 @@ cleanup()
 
 	if (g_secureListenSocket != NULL) {
 		delete g_secureListenSocket;
+	}
+
+	if (g_arch != NULL) {
+		delete g_arch;
 	}
 }
 
