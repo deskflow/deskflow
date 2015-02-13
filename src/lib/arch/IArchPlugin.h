@@ -48,9 +48,9 @@ public:
 
 	//! Init the common parts
 	/*!
-	Initializes common parts like log.
+	Initializes common parts like log and arch.
 	*/
-	virtual void		init(void* log) = 0;
+	virtual void		init(void* log, void* arch) = 0;
 
 	//! Init the event part
 	/*!

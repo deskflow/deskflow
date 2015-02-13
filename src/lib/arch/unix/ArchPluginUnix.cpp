@@ -28,7 +28,7 @@
 #include <dirent.h>
 #include <dlfcn.h>
 
-typedef void (*initFunc)(void*);
+typedef void (*initFunc)(void*, void*);
 typedef int (*initEventFunc)(void (*sendEvent)(const char*, void*));
 typedef void* (*invokeFunc)(const char*, void*);
 typedef void (*cleanupFunc)();
@@ -104,13 +104,13 @@ ArchPluginUnix::unload()
 }
 
 void
-ArchPluginUnix::init(void* log)
+ArchPluginUnix::init(void* log, void* arch)
 {
 	PluginTable::iterator it;
 	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
 		initFunc initPlugin = (initFunc)dlsym(it->second, "init");
 		if (initPlugin != NULL) {
-			initPlugin(log);
+			initPlugin(log, arch);
 		}
 		else {
 			LOG((CLOG_DEBUG "no init function in %s", it->first.c_str()));

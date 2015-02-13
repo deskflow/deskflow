@@ -33,7 +33,7 @@
 
 extern "C" {
 
-NS_API void				init(void* log);
+NS_API void				init(void* log, void* arch);
 NS_API int				initEvent(void (*sendEvent)(const char*, void*));
 NS_API void*			invoke(const char* command, void** args);
 NS_API void				cleanup();

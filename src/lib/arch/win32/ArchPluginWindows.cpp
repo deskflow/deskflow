@@ -27,7 +27,7 @@
 #include <Windows.h>
 #include <iostream>
 
-typedef void (*initFunc)(void*);
+typedef void (*initFunc)(void*, void*);
 typedef int (*initEventFunc)(void (*sendEvent)(const char*, void*));
 typedef void* (*invokeFunc)(const char*, void**);
 typedef void (*cleanupFunc)();
@@ -90,7 +90,7 @@ ArchPluginWindows::unload()
 }
 
 void
-ArchPluginWindows::init(void* log)
+ArchPluginWindows::init(void* log, void* arch)
 {
 	PluginTable::iterator it;
 	HINSTANCE lib;
@@ -98,7 +98,7 @@ ArchPluginWindows::init(void* log)
 		lib = reinterpret_cast<HINSTANCE>(it->second);
 		initFunc initPlugin = (initFunc)GetProcAddress(lib, "init");
 		if (initPlugin != NULL) {
-			initPlugin(log);
+			initPlugin(log, arch);
 		}
 		else {
 			LOG((CLOG_DEBUG "no init function in %s", it->first.c_str()));
