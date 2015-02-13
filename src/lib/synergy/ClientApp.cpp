@@ -460,7 +460,7 @@ ClientApp::mainLoop()
 	// load all available plugins.
 	ARCH->plugin().load();
 	// pass log and arch into plugins.
-	ARCH->plugin().init(Log::getInstance(), Arch::getInstance());
+	ARCH->plugin().init(Log::getInstance());
 
 	// start client, etc
 	appUtil().startNode();
