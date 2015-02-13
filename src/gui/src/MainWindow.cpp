@@ -129,6 +129,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pComboServerList->hide();
 
 	updateEdition();
+
+	m_pLabelPadlock->hide();
 }
 
 MainWindow::~MainWindow()
@@ -726,13 +728,22 @@ void MainWindow::setSynergyState(qSynergyState state)
 	switch (state)
 	{
 	case synergyConnected: {
+		if (m_AppConfig.getCryptoEnabled()) {
+			m_pLabelPadlock->show();
+		}
+		else {
+			m_pLabelPadlock->hide();
+		}
+
 		setStatus(tr("Synergy is running."));
 		break;
 	}
 	case synergyConnecting:
+		m_pLabelPadlock->hide();
 		setStatus(tr("Synergy is starting."));
 		break;
 	case synergyDisconnected:
+		m_pLabelPadlock->hide();
 		setStatus(tr("Synergy is not running."));
 		break;
 	}
