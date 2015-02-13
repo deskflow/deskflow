@@ -997,7 +997,7 @@ void MainWindow::on_m_pButtonApply_clicked()
 	startSynergy();
 }
 
-bool MainWindow::isServiceRunning(QString name)
+bool MainWindow::isServiceRunning()
 {
 #if defined(Q_OS_WIN)
 	SC_HANDLE hSCManager;
