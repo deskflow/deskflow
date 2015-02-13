@@ -39,7 +39,7 @@ init(void* log, void* arch)
 	}
 
 	if (g_arch == NULL) {
-		g_arch = new Arch(reinterpret_cast<Arch*>(arch));
+		Arch::setInstance(reinterpret_cast<Arch*>(arch));
 	}
 }
 
