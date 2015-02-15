@@ -22,8 +22,10 @@ enum qProcessorArch {
 	Win_x86,
 	Win_x64,
 	Mac_i386,
-	Linux_i686,
-	Linux_x86_64,
+	Linux_rpm_i686,
+	Linux_rpm_x86_64,
+	Linux_deb_i686,
+	Linux_deb_x86_64,
 	unknown
 };
 

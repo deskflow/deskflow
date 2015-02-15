@@ -32,6 +32,7 @@
 #if defined(Q_OS_LINUX)
 static const char kLinuxI686[] = "i686";
 static const char kLinuxX8664[] = "x86_64";
+static const char kUbuntu[] = "Ubuntu";
 #endif
 
 void setIndexFromItemData(QComboBox* comboBox, const QVariant& itemData)
@@ -86,19 +87,22 @@ int checkProcessorArch()
 #elif defined(Q_OS_MAC)
 	return Mac_i386;
 #else
-	QString program("uname");
-	QStringList args("-m");
-	QProcess process;
-	process.setReadChannel(QProcess::StandardOutput);
-	process.start(program, args);
-	bool success = process.waitForStarted();
+	bool version32 = false;
+	bool debPackaging = false;
+
+	QString program1("uname");
+	QStringList args1("-m");
+	QProcess process1;
+	process1.setReadChannel(QProcess::StandardOutput);
+	process1.start(program1, args1);
+	bool success = process1.waitForStarted();
 
 	QString out, error;
 	if (success)
 	{
-		if (process.waitForFinished()) {
-			out = process.readAllStandardOutput();
-			error = process.readAllStandardError();
+		if (process1.waitForFinished()) {
+			out = process1.readAllStandardOutput();
+			error = process1.readAllStandardError();
 		}
 	}
 
@@ -108,16 +112,60 @@ int checkProcessorArch()
 	if (out.isEmpty() ||
 		!error.isEmpty() ||
 		!success ||
-		process.exitCode() != 0)
+		process1.exitCode() != 0)
 	{
 		return unknown;
 	}
 
 	if (out == kLinuxI686) {
-		return Linux_i686;
+		version32 = true;
 	}
-	else if (out == kLinuxX8664) {
-		return Linux_x86_64;
+
+	QString program2("python");
+	QStringList args2("-mplatform");
+	QProcess process2;
+	process2.setReadChannel(QProcess::StandardOutput);
+	process2.start(program2, args2);
+	success = process2.waitForStarted();
+
+	if (success)
+	{
+		if (process2.waitForFinished()) {
+			out = process2.readAllStandardOutput();
+			error = process2.readAllStandardError();
+		}
+	}
+
+	out = out.trimmed();
+	error = error.trimmed();
+
+	if (out.isEmpty() ||
+		!error.isEmpty() ||
+		!success ||
+		process2.exitCode() != 0)
+	{
+		return unknown;
+	}
+
+	if (out.contains(kUbuntu)) {
+		debPackaging = true;
+	}
+
+	if (version32) {
+		if (debPackaging) {
+			return Linux_deb_i686;
+		}
+		else {
+			return Linux_rpm_i686;
+		}
+	}
+	else {
+		if (debPackaging) {
+			return Linux_deb_x86_64;
+		}
+		else {
+			return Linux_rpm_x86_64;
+		}
 	}
 #endif
 	return unknown;

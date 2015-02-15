@@ -30,8 +30,10 @@ static QString kPluginsBaseUrl = "http://synergy-project.org/files/plugins/";
 static const char kWinProcessorArch32[] = "Windows-x86";
 static const char kWinProcessorArch64[] = "Windows-x64";
 static const char kMacProcessorArch[] = "MacOSX-i386";
-static const char kLinuxProcessorArch32[] = "Linux-i686";
-static const char kLinuxProcessorArch64[] = "Linux-x86_64";
+static const char kLinuxProcessorArchDeb32[] = "Linux-i686-deb";
+static const char kLinuxProcessorArchDeb64[] = "Linux-x86_64-deb";
+static const char kLinuxProcessorArchRpm32[] = "Linux-i686-rpm";
+static const char kLinuxProcessorArchRpm64[] = "Linux-x86_64-rpm";
 static QString kOpenSSLBaseUrl = "http://synergy-foss.org/files/tools/";
 static QString kCertificateLifetime = "365";
 static QString kCertificateSubjectInfo = "/CN=Synergy";
@@ -184,11 +186,17 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 	else if (arch == Mac_i386) {
 		result.append(kMacProcessorArch);
 	}
-	else if (arch == Linux_i686) {
-		result.append(kLinuxProcessorArch32);
+	else if (arch == Linux_rpm_i686) {
+		result.append(kLinuxProcessorArchRpm32);
 	}
-	else if (arch == Linux_x86_64) {
-		result.append(kLinuxProcessorArch64);
+	else if (arch == Linux_rpm_x86_64) {
+		result.append(kLinuxProcessorArchRpm64);
+	}
+	else if (arch == Linux_deb_i686) {
+		result.append(kLinuxProcessorArchDeb32);
+	}
+	else if (arch == Linux_deb_x86_64) {
+		result.append(kLinuxProcessorArchDeb64);
 	}
 	else {
 		emit error(
