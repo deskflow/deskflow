@@ -997,9 +997,9 @@ void MainWindow::on_m_pButtonApply_clicked()
 	startSynergy();
 }
 
+#if defined(Q_OS_WIN)
 bool MainWindow::isServiceRunning(QString name)
 {
-#if defined(Q_OS_WIN)
 	SC_HANDLE hSCManager;
 	hSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_CONNECT);
 	if (hSCManager == NULL) {
@@ -1029,6 +1029,9 @@ bool MainWindow::isServiceRunning(QString name)
 			return true;
 		}
 	}
+#else
+bool MainWindow::isServiceRunning()
+{
 #endif
 	return false;
 }
@@ -1065,7 +1068,6 @@ void MainWindow::downloadBonjour()
 			tr("Failed to detect system architecture."));
 		return;
 	}
-
 
 	if (m_pDataDownloader == NULL) {
 		m_pDataDownloader = new DataDownloader(this);

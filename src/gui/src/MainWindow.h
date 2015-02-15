@@ -156,7 +156,11 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void stopDesktop();
 		void changeEvent(QEvent* event);
 		void retranslateMenuBar();
+#if defined(Q_OS_WIN)
 		bool isServiceRunning(QString name);
+#else
+		bool isServiceRunning();
+#endif
 		bool isBonjourRunning();
 		void downloadBonjour();
 		void promptAutoConfig();
