@@ -128,7 +128,7 @@
     <item>
      <widget class="QRadioButton" name="m_pRadioButtonActivate">
       <property name="text">
-       <string>I have purchased and would like to activate...</string>
+       <string>&amp;Activate now...</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -201,7 +201,7 @@
       <item row="2" column="1">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>&lt;a href=&quot;https://synergy-project.org/account/reset/&quot;&gt;Forget password&lt;/a&gt;</string>
+         <string>&lt;a href=&quot;https://synergy-project.org/account/reset/&quot;&gt;Forgot password&lt;/a&gt;</string>
         </property>
         <property name="openExternalLinks">
          <bool>true</bool>
@@ -229,7 +229,7 @@
     <item>
      <widget class="QRadioButton" name="m_pRadioButtonSkip">
       <property name="text">
-       <string>I would like to skip activation</string>
+       <string>&amp;Skip activation</string>
       </property>
      </widget>
     </item>
