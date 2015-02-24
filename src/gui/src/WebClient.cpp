@@ -113,8 +113,8 @@ void WebClient::queryPluginList()
 				QString e = editionRegex.cap(1);
 				m_PluginList = e.split(",");
 				emit queryPluginDone();
-				return;
 			}
+			return;
 		}
 		else if (boolString == "false") {
 			emit error(tr("Get plugin list failed, invalid user email "
