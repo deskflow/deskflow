@@ -179,10 +179,10 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 
 	try {
 		QString coreArch = m_CoreInterface.getArch();
-		if (coreArch == "x86") {
+		if (coreArch.startsWith("x86")) {
 			archName = kWinProcessorArch32;
 		}
-		else if (coreArch == "x64") {
+		else if (coreArch.startsWith("x64")) {
 			archName = kWinProcessorArch64;
 		}
 	}
