@@ -63,7 +63,7 @@ void PluginWizardPage::changeEvent(QEvent *e)
 
 void PluginWizardPage::showError(QString error)
 {
-	updateStatus(error);
+	updateStatus(tr("Error: %1").arg(error));
 	showFinished();
 }
 

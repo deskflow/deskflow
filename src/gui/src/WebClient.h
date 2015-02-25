@@ -22,6 +22,8 @@
 #include <QStringList>
 #include <QObject>
 
+#include "CoreInterface.h"
+
 class QMessageBox;
 class QWidget;
 class QStringList;
@@ -55,6 +57,7 @@ private:
 	QString m_Email;
 	QString m_Password;
 	QStringList m_PluginList;
+	CoreInterface m_CoreInterface;
 };
 
 #endif // WEBCLIENT_H

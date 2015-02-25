@@ -140,44 +140,11 @@ void WebClient::queryPluginList()
 }
 
 QString WebClient::request(
-		const QString& email,
-		const QString& password,
-		QStringList& args)
+	const QString& email,
+	const QString& password,
+	QStringList& args)
 {
-	QString program(QCoreApplication::applicationDirPath() + "/syntool");
-
-	QProcess process;
-	process.setReadChannel(QProcess::StandardOutput);
-	process.start(program, args);
-	bool success = process.waitForStarted();
-
-	QString out, error;
-	if (success)
-	{
-		// hash password in case it contains interesting chars.
-		QString credentials(email + ":" + hash(password) + "\n");
-		process.write(credentials.toStdString().c_str());
-
-		if (process.waitForFinished()) {
-			out = process.readAllStandardOutput();
-			error = process.readAllStandardError();
-		}
-	}
-
-	out = out.trimmed();
-	error = error.trimmed();
-
-	if (out.isEmpty() ||
-		!error.isEmpty() ||
-		!success ||
-		process.exitCode() != 0)
-	{
-		throw std::runtime_error(
-			QString("Code: %1\nError: %2")
-				.arg(process.exitCode())
-				.arg(error.isEmpty() ? "Unknown" : error)
-				.toStdString());
-	}
-
-	return out;
+	// hash password in case it contains interesting chars.
+	QString credentials(email + ":" + hash(password) + "\n");
+	return m_CoreInterface.run(args, credentials);
 }
