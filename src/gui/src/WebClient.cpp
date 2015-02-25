@@ -112,8 +112,8 @@ void WebClient::queryPluginList()
 			if (editionRegex.exactMatch(responseJson)) {
 				QString e = editionRegex.cap(1);
 				m_PluginList = e.split(",");
-				emit queryPluginDone();
 			}
+			emit queryPluginDone();
 			return;
 		}
 		else if (boolString == "false") {
