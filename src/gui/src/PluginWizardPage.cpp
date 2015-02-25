@@ -64,9 +64,7 @@ void PluginWizardPage::changeEvent(QEvent *e)
 void PluginWizardPage::showError(QString error)
 {
 	updateStatus(error);
-	stopSpinning();
-	m_Finished = true;
-	emit completeChanged();
+	showFinished();
 }
 
 void PluginWizardPage::queryPluginDone()
@@ -74,8 +72,7 @@ void PluginWizardPage::queryPluginDone()
 	QStringList pluginList = m_pWebClient->getPluginList();
 	if (pluginList.isEmpty()) {
 		updateStatus(tr("Setup complete."));
-		m_Finished = true;
-		emit completeChanged();
+		showFinished();
 	}
 	else {
 		downloadPlugins();
@@ -95,14 +92,11 @@ void PluginWizardPage::updateDownloadStatus()
 
 void PluginWizardPage::finished()
 {
-	updateStatus(tr("Plugins installed successfully."));
-	stopSpinning();
-
-	// ideally this should check if ns plugin is ready
+	// TODO: we should check if ns plugin exists
 	m_AppConfig.setCryptoEnabled(true);
 
-	m_Finished = true;
-	emit completeChanged();
+	updateStatus(tr("Plugins installed successfully."));
+	showFinished();
 }
 
 void PluginWizardPage::generateCertificate()
@@ -173,9 +167,11 @@ void PluginWizardPage::downloadPlugins()
 		Qt::QueuedConnection);
 }
 
-void PluginWizardPage::stopSpinning()
+void PluginWizardPage::showFinished()
 {
 	m_pLabelSpinning->hide();
+	m_Finished = true;
+	emit completeChanged();
 }
 
 bool PluginWizardPage::isComplete() const
@@ -190,10 +186,7 @@ void PluginWizardPage::initializePage()
 		if (m_Email.isEmpty() ||
 			m_Password.isEmpty()) {
 			updateStatus(tr("Setup complete."));
-			stopSpinning();
-			m_Finished = true;
-			emit completeChanged();
-
+			showFinished();
 			return;
 		}
 

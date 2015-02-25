@@ -54,7 +54,7 @@ protected slots:
 private:
 	void updateStatus(QString info);
 	void downloadPlugins();
-	void stopSpinning();
+	void showFinished();
 
 private:
 	bool m_Finished;
