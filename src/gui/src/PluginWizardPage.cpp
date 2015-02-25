@@ -73,7 +73,7 @@ void PluginWizardPage::queryPluginDone()
 {
 	QStringList pluginList = m_pWebClient->getPluginList();
 	if (pluginList.isEmpty()) {
-		updateStatus("No plugin available.");
+		updateStatus(tr("Setup complete."));
 		m_Finished = true;
 		emit completeChanged();
 	}
@@ -95,7 +95,7 @@ void PluginWizardPage::updateDownloadStatus()
 
 void PluginWizardPage::finished()
 {
-	updateStatus(tr("Plugins are ready."));
+	updateStatus(tr("Plugins installed successfully."));
 	stopSpinning();
 
 	// ideally this should check if ns plugin is ready
@@ -116,8 +116,6 @@ void PluginWizardPage::generateCertificate()
 		SIGNAL(generateCertificateFinished()),
 		m_pPluginManagerThread,
 		SLOT(quit()));
-
-	updateStatus(tr("Generating certificate..."));
 
 	QMetaObject::invokeMethod(
 		m_pPluginManager,
@@ -191,7 +189,7 @@ void PluginWizardPage::initializePage()
 	if (m_pWebClient == NULL) {
 		if (m_Email.isEmpty() ||
 			m_Password.isEmpty()) {
-			updateStatus("No plugin available.");
+			updateStatus(tr("Setup complete."));
 			stopSpinning();
 			m_Finished = true;
 			emit completeChanged();
@@ -232,7 +230,7 @@ void PluginWizardPage::initializePage()
 		m_pWebClient->moveToThread(thread);
 		thread->start();
 
-		updateStatus("Querying plugin list...");
+		updateStatus(tr("Getting plugin list..."));
 		QMetaObject::invokeMethod(m_pWebClient, "queryPluginList", Qt::QueuedConnection);
 	}
 }
