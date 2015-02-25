@@ -17,7 +17,7 @@
 
 #include "PluginManager.h"
 
-#include "DirectoryManager.h"
+#include "CoreInterface.h"
 #include "CommandProcess.h"
 #include "DataDownloader.h"
 #include "QUtility.h"
@@ -57,12 +57,12 @@ PluginManager::PluginManager(QStringList pluginList) :
 	m_DownloadIndex(-1),
 	m_pPluginDownloader(NULL)
 {
-	m_PluginDir = DirectoryManager::getPluginDir();
+	m_PluginDir = m_CoreInterface.getPluginDir();
 	if (m_PluginDir.isEmpty()) {
 		emit error(tr("Failed to get plugin directory."));
 	}
 
-	m_ProfileDir = DirectoryManager::getProfileDir();
+	m_ProfileDir = m_CoreInterface.getProfileDir();
 	if (m_ProfileDir.isEmpty()) {
 		emit error(tr("Failed to get profile directory."));
 	}
@@ -173,37 +173,53 @@ void PluginManager::savePlugin()
 
 QString PluginManager::getPluginUrl(const QString& pluginName)
 {
-	QString result;
-	result = kPluginsBaseUrl.append(pluginName).append("/1.0/");
+	QString archName;
 
-	int arch = checkProcessorArch();
-	if (arch == Win_x86) {
-		result.append(kWinProcessorArch32);
+#if defined(Q_OS_WIN)
+
+	try {
+		QString coreArch = m_CoreInterface.getArch();
+		if (coreArch == "x86") {
+			archName = kWinProcessorArch32;
+		}
+		else if (coreArch == "x64") {
+			archName = kWinProcessorArch64;
+		}
 	}
-	else if (arch == Win_x64) {
-		result.append(kWinProcessorArch64);
-	}
-	else if (arch == Mac_i386) {
-		result.append(kMacProcessorArch);
-	}
-	else if (arch == Linux_rpm_i686) {
-		result.append(kLinuxProcessorArchRpm32);
-	}
-	else if (arch == Linux_rpm_x86_64) {
-		result.append(kLinuxProcessorArchRpm64);
-	}
-	else if (arch == Linux_deb_i686) {
-		result.append(kLinuxProcessorArchDeb32);
-	}
-	else if (arch == Linux_deb_x86_64) {
-		result.append(kLinuxProcessorArchDeb64);
-	}
-	else {
-		emit error(
-			tr("Failed to get the url of plugin %1 .")
-			.arg(pluginName));
+	catch (...) {
+		emit error(tr("Could not get Windows architecture type."));
 		return "";
 	}
+
+#elif defined(Q_OS_MAC)
+
+	archName = kMacProcessorArch;
+
+#else
+
+	int arch = checkProcessorArch();
+	if (arch == Linux_rpm_i686) {
+		archName = kLinuxProcessorArchRpm32;
+	}
+	else if (arch == Linux_rpm_x86_64) {
+		archName = kLinuxProcessorArchRpm64;
+	}
+	else if (arch == Linux_deb_i686) {
+		archName = kLinuxProcessorArchDeb32;
+	}
+	else if (arch == Linux_deb_x86_64) {
+		archName = kLinuxProcessorArchDeb64;
+	}
+	else {
+		emit error(tr("Could not get Linux architecture type."));
+		return "";
+	}
+
+#endif
+
+	QString result;
+	result = kPluginsBaseUrl.append(pluginName).append("/1.0/");
+	result.append(archName);
 	result.append("/");
 	result.append(getPluginOSSpecificName(pluginName));
 

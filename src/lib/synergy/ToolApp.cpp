@@ -79,6 +79,9 @@ ToolApp::run(int argc, char** argv)
 		else if (m_args.m_getProfileDir) {
 			std::cout << ARCH->getProfileDirectory() << std::endl;
 		}
+		else if (m_args.m_getArch) {
+			std::cout << ARCH->getPlatformName() << std::endl;
+		}
 		else {
 			throw XSynergy("Nothing to do");
 		}

@@ -29,4 +29,5 @@ public:
 	bool				m_getPluginList;
 	bool				m_getPluginDir;
 	bool				m_getProfileDir;
+	bool				m_getArch;
 };

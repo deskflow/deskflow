@@ -181,6 +181,10 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 			args.m_getProfileDir = true;
 			return true;
 		}
+		else if (isArg(i, argc, argv, NULL, "--get-arch", 0)) {
+			args.m_getArch = true;
+			return true;
+		}
 		else {
 			return false;
 		}
