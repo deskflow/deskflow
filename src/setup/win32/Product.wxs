@@ -90,6 +90,8 @@
         <File Source="$(var.BinPath)/synergyc.exe" />
         <File Source="$(var.BinPath)/syntool.exe" />
         <File Source="$(var.BinPath)/synwinhk.dll" />
+        <File Source="$(var.BinPath)/libeay32.dll" />
+        <File Source="$(var.BinPath)/ssleay32.dll" />
         
       </Component>
       

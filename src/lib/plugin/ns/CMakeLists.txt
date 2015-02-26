@@ -65,6 +65,20 @@ if (WIN32)
 			..\\..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\ns.dll
 			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\plugins\\
 	)
+	add_custom_command(
+		TARGET ns 
+		POST_BUILD
+		COMMAND xcopy /Y /Q
+			..\\..\\..\\..\\..\\ext\\openssl\\out32dll\\libeay32.dll
+			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
+	)
+	add_custom_command(
+		TARGET ns 
+		POST_BUILD
+		COMMAND xcopy /Y /Q
+			..\\..\\..\\..\\..\\ext\\openssl\\out32dll\\ssleay32.dll
+			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
+	)
 else()
 	if (APPLE)
 		add_custom_command(
