@@ -56,16 +56,19 @@ ArchPluginWindows::load()
 	std::vector<String>::iterator it;
 	for (it = plugins.begin(); it != plugins.end(); ++it) {
 		LOG((CLOG_DEBUG "loading plugin: %s", (*it).c_str()));
-		String path = String(getPluginsDir()).append("\\").append(*it);
+		String path = String(dir).append("\\").append(*it);
 		HINSTANCE library = LoadLibrary(path.c_str());
 
 		if (library == NULL) {
+			LOG((CLOG_ERR "failed to load plugin: %s %d", (*it).c_str(), GetLastError()));
 			throw XArch(new XArchEvalWindows);
 		}
 
 		void* lib = reinterpret_cast<void*>(library);
 		String filename = synergy::string::removeFileExt(*it);
 		m_pluginTable.insert(std::make_pair(filename, lib));
+
+		LOG((CLOG_ERR "loaded plugin: %s", (*it).c_str()));
 	}
 }
 

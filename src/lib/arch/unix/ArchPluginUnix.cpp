@@ -64,7 +64,6 @@ ArchPluginUnix::load()
 	while ((de = readdir(dir)) != NULL) {
 		// ignore hidden files and diretories like .. and .
 		if (de->d_name[0] != '.') {
-			LOG((CLOG_DEBUG "load plugin %s", de->d_name));
 			plugins.push_back(de->d_name);
 		}
 	}
@@ -77,11 +76,13 @@ ArchPluginUnix::load()
 		void* library = dlopen(path.c_str(), RTLD_LAZY);
 
 		if (library == NULL) {
+			LOG((CLOG_ERR "failed to load plugin: %s", (*it).c_str()));
 			throw XArch(dlerror());
 		}
 
 		String filename = synergy::string::removeFileExt(*it);
 		m_pluginTable.insert(std::make_pair(filename, library));
+		LOG((CLOG_ERR "loaded plugin: %s", (*it).c_str()));
 	}
 }
 
