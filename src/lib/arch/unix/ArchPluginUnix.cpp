@@ -82,7 +82,7 @@ ArchPluginUnix::load()
 
 		String filename = synergy::string::removeFileExt(*it);
 		m_pluginTable.insert(std::make_pair(filename, library));
-		LOG((CLOG_ERR "loaded plugin: %s", (*it).c_str()));
+		LOG((CLOG_DEBUG "loaded plugin: %s", (*it).c_str()));
 	}
 }
 
