@@ -22,9 +22,11 @@
 #include <QStringList>
 #include <QObject>
 
+#include "CoreInterface.h"
+
 class DataDownloader;
 
-class PluginManager: public QObject
+class PluginManager : public QObject
 {
 	Q_OBJECT
 
@@ -61,6 +63,7 @@ private:
 	QString m_ProfileDir;
 	int m_DownloadIndex;
 	DataDownloader* m_pPluginDownloader;
+	CoreInterface m_CoreInterface;
 };
 
 #endif // PLUGINMANAGER_H

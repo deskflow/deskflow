@@ -23,6 +23,7 @@
 #include <QDialog>
 #include "ui_SettingsDialogBase.h"
 #include "SynergyLocale.h"
+#include "CoreInterface.h"
 
 class AppConfig;
 
@@ -44,6 +45,7 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
 	private:
 		AppConfig& m_AppConfig;
 		SynergyLocale m_Locale;
+		CoreInterface m_CoreInterface;
 		bool m_SuppressElevateWarning;
 
 	private slots:

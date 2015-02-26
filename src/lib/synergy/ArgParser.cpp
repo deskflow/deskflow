@@ -169,16 +169,20 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 			args.m_loginAuthenticate = true;
 			return true;
 		}
-		if (isArg(i, argc, argv, NULL, "--get-plugin-list", 0)) {
+		else if (isArg(i, argc, argv, NULL, "--get-plugin-list", 0)) {
 			args.m_getPluginList = true;
 			return true;
 		}
-		if (isArg(i, argc, argv, NULL, "--get-plugin-dir", 0)) {
+		else if (isArg(i, argc, argv, NULL, "--get-plugin-dir", 0)) {
 			args.m_getPluginDir = true;
 			return true;
 		}
-		if (isArg(i, argc, argv, NULL, "--get-profile-dir", 0)) {
+		else if (isArg(i, argc, argv, NULL, "--get-profile-dir", 0)) {
 			args.m_getProfileDir = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-arch", 0)) {
+			args.m_getArch = true;
 			return true;
 		}
 		else {

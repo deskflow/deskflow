@@ -145,7 +145,7 @@
       <item row="0" column="0">
        <widget class="QCheckBox" name="m_pCheckBoxEnableCrypto">
         <property name="text">
-         <string>Enable OpenSSL (unique certificate)</string>
+         <string>Use &amp;OpenSSL encryption (unique certificate)</string>
         </property>
        </widget>
       </item>

@@ -18,7 +18,7 @@
 
 #include "SettingsDialog.h"
 
-#include "DirectoryManager.h"
+#include "CoreInterface.h"
 #include "SynergyLocale.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
@@ -57,7 +57,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pCheckBoxElevateMode->hide();
 #endif
 
-	QString pluginDir = DirectoryManager::getPluginDir();
+	QString pluginDir = m_CoreInterface.getPluginDir();
 	QDir dir(pluginDir);
 	int fileNum = dir.entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count();
 	if (fileNum == 0) {
