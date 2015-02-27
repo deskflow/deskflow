@@ -431,16 +431,23 @@ class InternalCommands:
 		if generator.cmakeName.find('Unix Makefiles') != -1:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 			
-		elif sys.platform == "darwin":
+		if sys.platform == "darwin":
 			macSdkMatch = re.match("(\d+)\.(\d+)", self.macSdk)
 			if not macSdkMatch:
 				raise Exception("unknown osx version: " + self.macSdk)
 
-			sdkDir = self.getMacSdkDir()
-			cmake_args += " -DCMAKE_OSX_SYSROOT=" + sdkDir
-			cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macSdk
-			cmake_args += " -DOSX_TARGET_MAJOR=" + macSdkMatch.group(1)
-			cmake_args += " -DOSX_TARGET_MINOR=" + macSdkMatch.group(2)
+			if generator.cmakeName.find('Unix Makefiles') == -1:
+				sdkDir = self.getMacSdkDir()
+				cmake_args += " -DCMAKE_OSX_SYSROOT=" + sdkDir
+				cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macSdk
+				cmake_args += " -DOSX_TARGET_MAJOR=" + macSdkMatch.group(1)
+				cmake_args += " -DOSX_TARGET_MINOR=" + macSdkMatch.group(2)
+
+			# Unix Makefiles need OSX_TARGET_* on osx 10.10 yosemite.
+			elif self.macSdk == "10.10":
+				cmake_args += " -DOSX_TARGET_MAJOR=" + macSdkMatch.group(1)
+				cmake_args += " -DOSX_TARGET_MINOR=" + macSdkMatch.group(2)
+				
 		
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
@@ -464,10 +471,10 @@ class InternalCommands:
 		if generator.cmakeName.find('Eclipse') != -1:
 			self.fixCmakeEclipseBug()
 
-		# only on osx 10.9 mavericks.
+		# only on osx 10.9 mavericks and 10.10 yosemite.
 		# manually change .xcodeproj to add code sign for
 		# synmacph project and specify its info.plist
-		if self.macSdk == "10.9" and generator.cmakeName.find('Xcode') != -1:
+		if (self.macSdk == "10.9" or self.macSdk == "10.10") and generator.cmakeName.find('Xcode') != -1:
 			self.fixXcodeProject(target)
 			
 		if err != 0:
@@ -556,7 +563,7 @@ class InternalCommands:
 		if os.path.exists(sdkPath):
 			return sdkPath
 
-		return "/Developer/SDKs/" + sdkDirName + ".sdk"
+		return os.popen('xcodebuild -version -sdk macosx' + self.macSdk + ' Path').read().strip()
 	
 	# http://tinyurl.com/cs2rxxb
 	def fixCmakeEclipseBug(self):
