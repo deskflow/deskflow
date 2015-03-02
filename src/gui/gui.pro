@@ -89,9 +89,7 @@ HEADERS += src/MainWindow.h \
     src/CommandProcess.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
-macx { 
-    HEADERS += src/AXDatabaseCleaner.h
-    OBJECTIVE_SOURCES += src/AXDatabaseCleaner.mm
+macx {
     QMAKE_INFO_PLIST = res/mac/Info.plist
     TARGET = Synergy
     QSYNERGY_ICON.files = res/mac/Synergy.icns
