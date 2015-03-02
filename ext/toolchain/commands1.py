@@ -774,14 +774,6 @@ class InternalCommands:
 				for target in targets:
 					self.macPostMake(target)
 
-	def symlink(self, source, target):
-		if not os.path.exists(target):
-			os.symlink(source, target)
- 
-	def move(self, source, target):
-		if os.path.exists(source):
-			shutil.move(source, target)
-
 	def macPostMake(self, target):
 
 		dir = self.getGenerator().binDir
