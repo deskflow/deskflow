@@ -484,12 +484,6 @@ class InternalCommands:
 
 		if generator.cmakeName.find('Eclipse') != -1:
 			self.fixCmakeEclipseBug()
-
-		# only on osx 10.9 mavericks.
-		# manually change .xcodeproj to add code sign for
-		# synmacph project and specify its info.plist
-		if self.macSdk == "10.9" and generator.cmakeName.find('Xcode') != -1:
-			self.fixXcodeProject(target)
 			
 		if err != 0:
 			raise Exception('CMake encountered error: ' + str(err))
@@ -591,59 +585,6 @@ class InternalCommands:
 		file.write(content)
 		file.truncate()
 		file.close()
-
-	def fixXcodeProject(self, target):
-		print "Fixing Xcode project..."
-		
-		insertContent = (
-			"CODE_SIGN_IDENTITY = '%s';\n"
-			"INFOPLIST_FILE = %s/src/cmd/synmacph/Info.plist;\n") % (
-			self.macIdentity,
-			os.getcwd()
-		)
-		
-		dir = self.getBuildDir(target)
-		file = open(dir + '/synergy.xcodeproj/project.pbxproj', 'r+')
-		contents = file.readlines()
-		
-		buildConfigurationsFound = None
-		releaseConfigRefFound = None
-		releaseBuildSettingsFound = None
-		fixed = None
-		releaseConfigRef = "";
-		
-		for line in contents:
-			if buildConfigurationsFound:
-				matchObj = re.search(r'\s*(.*)\s*\/\*\s*Release\s*\*\/,', line, re.I)
-				if matchObj:
-					releaseConfigRef = matchObj.group(1)
-					releaseConfigRefFound = True
-					break
-			elif buildConfigurationsFound == None:
-				if 'PBXNativeTarget "synmacph" */ = {' in line:
-					buildConfigurationsFound = True
-		
-		if not releaseConfigRefFound:
-			raise Exception("Release config ref not found.")
-		
-		for n, line in enumerate(contents):
-			if releaseBuildSettingsFound == None:
-				if releaseConfigRef + '/* Release */ = {' in line:
-					releaseBuildSettingsFound = True
-			elif fixed == None:
-				if 'buildSettings = {' in line:
-					contents[n] = line + insertContent
-					fixed = True
-		
-		if not fixed:
-			raise Exception("Xcode project was not fixed.")
-		
-		file.seek(0)
-		for line in contents:
-			file.write(line)
-		file.truncate()
-		file.close()
-		return
 				
 	def persist_cmake(self):
 		# even though we're running `cmake --version`, we're only doing this for the 0 return
