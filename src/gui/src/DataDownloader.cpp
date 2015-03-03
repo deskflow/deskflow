@@ -18,10 +18,11 @@
 #include "DataDownloader.h"
 
 DataDownloader::DataDownloader(QObject* parent) :
-	QObject(parent)
+	QObject(parent),
+	m_IsFinished(false)
 {
 	connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
-				SLOT(complete(QNetworkReply*)));
+		SLOT(complete(QNetworkReply*)));
 }
 
 DataDownloader::~DataDownloader()
@@ -34,6 +35,7 @@ void DataDownloader::complete(QNetworkReply* reply)
 	reply->deleteLater();
 
 	if (!m_Data.isEmpty()) {
+		m_IsFinished = true;
 		emit isComplete();
 	}
 }

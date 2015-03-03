@@ -25,8 +25,9 @@
 
 #include <QFile>
 #include <QDir>
+#include <QProcess>
 
-static QString kPluginsBaseUrl = "http://synergy-project.org/files/plugins/";
+static QString kBaseUrl = "http://synergy-project.org/files";
 static const char kWinProcessorArch32[] = "Windows-x86";
 static const char kWinProcessorArch64[] = "Windows-x64";
 static const char kMacProcessorArch[] = "MacOSX-i386";
@@ -34,7 +35,6 @@ static const char kLinuxProcessorArchDeb32[] = "Linux-i686-deb";
 static const char kLinuxProcessorArchDeb64[] = "Linux-x86_64-deb";
 static const char kLinuxProcessorArchRpm32[] = "Linux-i686-rpm";
 static const char kLinuxProcessorArchRpm64[] = "Linux-x86_64-rpm";
-static QString kOpenSSLBaseUrl = "http://synergy-foss.org/files/tools/";
 static QString kCertificateLifetime = "365";
 static QString kCertificateSubjectInfo = "/CN=Synergy";
 static QString kCertificateFilename = "Synergy.pem";
@@ -54,8 +54,7 @@ static const char kLinuxPluginExt[] = ".so";
 
 PluginManager::PluginManager(QStringList pluginList) :
 	m_PluginList(pluginList),
-	m_DownloadIndex(-1),
-	m_pPluginDownloader(NULL)
+	m_DownloadIndex(-1)
 {
 	m_PluginDir = m_CoreInterface.getPluginDir();
 	if (m_PluginDir.isEmpty()) {
@@ -70,14 +69,11 @@ PluginManager::PluginManager(QStringList pluginList) :
 
 PluginManager::~PluginManager()
 {
-	if (m_pPluginDownloader != NULL) {
-		delete m_pPluginDownloader;
-	}
 }
 
 void PluginManager::downloadPlugins()
 {
-	if (m_pPluginDownloader != NULL) {
+	if (m_DataDownloader.isFinished()) {
 		savePlugin();
 		if (m_DownloadIndex != m_PluginList.size() - 1) {
 			emit downloadNext();
@@ -98,11 +94,9 @@ void PluginManager::downloadPlugins()
 		}
 		url.setUrl(pluginUrl);
 
-		if (m_pPluginDownloader == NULL) {
-			m_pPluginDownloader = new DataDownloader();
-			connect(m_pPluginDownloader, SIGNAL(isComplete()), this, SLOT(downloadPlugins()));
-		}
-		m_pPluginDownloader->download(url);
+		connect(&m_DataDownloader, SIGNAL(isComplete()), this, SLOT(downloadPlugins()));
+
+		m_DataDownloader.download(url);
 	}
 }
 
@@ -122,12 +116,12 @@ void PluginManager::saveOpenSSLBinary()
 	QFile file(filename);
 	if (!file.open(QIODevice::WriteOnly)) {
 		emit error(
-				tr("Failed to download OpenSSl to location: %1")
-				.arg(m_ProfileDir));
+			tr("Failed to save certificate tool to: %1")
+			.arg(m_ProfileDir));
 		return;
 	}
 
-	file.write(m_pPluginDownloader->data());
+	file.write(m_DataDownloader.data());
 	file.close();
 
 	emit openSSLBinaryReady();
@@ -160,14 +154,14 @@ void PluginManager::savePlugin()
 	QFile file(filename);
 	if (!file.open(QIODevice::WriteOnly)) {
 		emit error(
-				tr("Failed to download plugin %1 to location: %2")
+				tr("Failed to download '%1' plugin to: %2")
 				.arg(m_PluginList.at(m_DownloadIndex))
 				.arg(m_PluginDir));
 
 		return;
 	}
 
-	file.write(m_pPluginDownloader->data());
+	file.write(m_DataDownloader.data());
 	file.close();
 }
 
@@ -217,8 +211,9 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 
 #endif
 
-	QString result;
-	result = kPluginsBaseUrl.append(pluginName).append("/1.0/");
+	QString result = kBaseUrl;
+	result.append("/plugins/");
+	result.append(pluginName).append("/1.0/");
 	result.append(archName);
 	result.append("/");
 	result.append(getPluginOSSpecificName(pluginName));
@@ -229,8 +224,11 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 QString PluginManager::getOpenSSLBinaryUrl()
 {
 	QString result;
+
 #if defined(Q_OS_WIN)
-	result = kOpenSSLBaseUrl.append(kWinOpenSSLBinary);
+	result = kBaseUrl;
+	result.append("/tools/");
+	result.append(kWinOpenSSLBinary);
 #endif
 
 	return result;
@@ -251,20 +249,13 @@ QString PluginManager::getPluginOSSpecificName(const QString& pluginName)
 
 bool PluginManager::checkOpenSSLBinary()
 {
-	bool exist = false;
+	// assume OpenSSL is unavailable on Windows,
+	// but always available on both Mac and Linux
 #if defined(Q_OS_WIN)
-	QString openSSLFilename = m_ProfileDir;
-	openSSLFilename.append("\\").append(kWinOpenSSLBinary);
-	QDir dir(openSSLFilename);
-	if (dir.exists()) {
-		exist = true;
-	}
+	return false;
 #else
-	// assume OpenSSL is always installed on both Mac and Linux
-	exist = true;
+	return true;
 #endif
-
-	return exist;
 }
 
 void PluginManager::downloadOpenSSLBinary()
@@ -275,21 +266,22 @@ void PluginManager::downloadOpenSSLBinary()
 	}
 
 	QUrl url;
-	QString pluginUrl = getOpenSSLBinaryUrl();
-	url.setUrl(pluginUrl);
+	QString openSslUrl = getOpenSSLBinaryUrl();
+	url.setUrl(openSslUrl);
 
 	disconnect(
-		m_pPluginDownloader,
+		&m_DataDownloader,
 		SIGNAL(isComplete()),
 		this,
 		SLOT(downloadPlugins()));
+
 	connect(
-		m_pPluginDownloader,
+		&m_DataDownloader,
 		SIGNAL(isComplete()),
 		this,
 		SLOT(saveOpenSSLBinary()));
 
-	m_pPluginDownloader->download(url);
+	m_DataDownloader.download(url);
 }
 
 void PluginManager::doGenerateCertificate()
@@ -332,9 +324,26 @@ void PluginManager::doGenerateCertificate()
 	arguments.append("-out");
 	arguments.append(filename);
 
-	// update command and arguments
-	CommandProcess commandProcess(openSSLFilename, arguments);
-	commandProcess.run();
+	QProcess process;
+	process.start(openSSLFilename, arguments);
+	bool success = process.waitForStarted();
+
+	QString standardOutput, standardError;
+	if (success && process.waitForFinished())
+	{
+		standardOutput = process.readAllStandardOutput().trimmed();
+		standardError = process.readAllStandardError().trimmed();
+	}
+
+	int code = process.exitCode();
+	if (!standardError.isEmpty() || !success || code != 0)
+	{
+		emit error(
+			QString("Failed to generate certificate.\n\nCode: %1\nError: %2")
+				.arg(process.exitCode())
+				.arg(standardError.isEmpty() ? "Unknown" : standardError));
+		return;
+	}
 
 	emit generateCertificateFinished();
 }

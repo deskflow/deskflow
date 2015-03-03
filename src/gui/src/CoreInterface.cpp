@@ -64,13 +64,10 @@ QString CoreInterface::run(const QStringList& args, const QString& input)
 		}
 
 		if (process.waitForFinished()) {
-			output = process.readAllStandardOutput();
-			error = process.readAllStandardError();
+			output = process.readAllStandardOutput().trimmed();
+			error = process.readAllStandardError().trimmed();
 		}
 	}
-
-	output = output.trimmed();
-	error = error.trimmed();
 
 	int code = process.exitCode();
 	if (!error.isEmpty() || !success || code != 0)

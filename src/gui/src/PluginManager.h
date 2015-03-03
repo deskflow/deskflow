@@ -23,8 +23,7 @@
 #include <QObject>
 
 #include "CoreInterface.h"
-
-class DataDownloader;
+#include "DataDownloader.h"
 
 class PluginManager : public QObject
 {
@@ -62,7 +61,7 @@ private:
 	QString m_PluginDir;
 	QString m_ProfileDir;
 	int m_DownloadIndex;
-	DataDownloader* m_pPluginDownloader;
+	DataDownloader m_DataDownloader;
 	CoreInterface m_CoreInterface;
 };
 

@@ -35,6 +35,7 @@ public:
 	QByteArray data() const;
 	void cancel();
 	void download(QUrl url);
+	bool isFinished() const { return m_IsFinished; }
 
 signals:
 	void isComplete();
@@ -46,6 +47,7 @@ private:
 	QNetworkAccessManager m_NetworkManager;
 	QByteArray m_Data;
 	QNetworkReply* m_pReply;
+	bool m_IsFinished;
 };
 
 #endif // DATADOWNLOADER_H
