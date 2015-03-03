@@ -108,11 +108,12 @@ void PluginManager::saveOpenSslSetup()
 		dir.mkpath(".");
 	}
 
-	QString filename = m_ProfileDir;
 #if defined(Q_OS_WIN)
-	filename.append("\\").append(kWinOpenSslSetup);
-#endif
 
+	QString filename =
+		QString("%1\\%2")
+		.arg(m_ProfileDir)
+		.arg(kWinOpenSslSetup);
 
 	QFile file(filename);
 	if (!file.open(QIODevice::WriteOnly)) {
@@ -125,19 +126,18 @@ void PluginManager::saveOpenSslSetup()
 	file.write(m_DataDownloader.data());
 	file.close();
 
-	QString openSslSetupFile = m_ProfileDir;
-	openSslSetupFile.append("\\").append(kWinOpenSslSetup);
-
 	QStringList installArgs;
 	installArgs.append("-s");
 	installArgs.append("-y");
 
-	if (!runProgram(openSslSetupFile, installArgs, QStringList())) {
+	if (!runProgram(filename, installArgs, QStringList())) {
 		return;
 	}
 
 	// openssl installer no longer needed
-	QFile::remove(openSslSetupFile);
+	QFile::remove(filename);
+
+#endif
 
 	emit openSslBinaryReady();
 }
