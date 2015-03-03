@@ -38,11 +38,11 @@ static const char kLinuxProcessorArchRpm64[] = "Linux-x86_64-rpm";
 static QString kCertificateLifetime = "365";
 static QString kCertificateSubjectInfo = "/CN=Synergy";
 static QString kCertificateFilename = "Synergy.pem";
-static QString kUnixOpenSSLCommand = "openssl";
+static QString kUnixOpenSslCommand = "openssl";
 
 #if defined(Q_OS_WIN)
 static const char kWinPluginExt[] = ".dll";
-static const char kWinOpenSSLBinary[] = "openssl.exe";
+static const char kWinOpenSslBinary[] = "openssl.exe";
 
 #elif defined(Q_OS_MAC)
 static const char kMacPluginPrefix[] = "lib";
@@ -100,7 +100,7 @@ void PluginManager::downloadPlugins()
 	}
 }
 
-void PluginManager::saveOpenSSLBinary()
+void PluginManager::saveOpenSslBinary()
 {
 	QDir dir(m_ProfileDir);
 	if (!dir.exists()) {
@@ -109,7 +109,7 @@ void PluginManager::saveOpenSSLBinary()
 
 	QString filename = m_ProfileDir;
 #if defined(Q_OS_WIN)
-	filename.append("\\").append(kWinOpenSSLBinary);
+	filename.append("\\").append(kWinOpenSslBinary);
 #endif
 
 
@@ -124,18 +124,18 @@ void PluginManager::saveOpenSSLBinary()
 	file.write(m_DataDownloader.data());
 	file.close();
 
-	emit openSSLBinaryReady();
+	emit openSslBinaryReady();
 }
 
 void PluginManager::generateCertificate()
 {
 	connect(
 		this,
-		SIGNAL(openSSLBinaryReady()),
+		SIGNAL(openSslBinaryReady()),
 		this,
 		SLOT(doGenerateCertificate()));
 
-	downloadOpenSSLBinary();
+	downloadOpenSslBinary();
 }
 
 void PluginManager::savePlugin()
@@ -221,14 +221,14 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 	return result;
 }
 
-QString PluginManager::getOpenSSLBinaryUrl()
+QString PluginManager::getOpenSslBinaryUrl()
 {
 	QString result;
 
 #if defined(Q_OS_WIN)
 	result = kBaseUrl;
 	result.append("/tools/");
-	result.append(kWinOpenSSLBinary);
+	result.append(kWinOpenSslBinary);
 #endif
 
 	return result;
@@ -247,9 +247,9 @@ QString PluginManager::getPluginOSSpecificName(const QString& pluginName)
 	return result;
 }
 
-bool PluginManager::checkOpenSSLBinary()
+bool PluginManager::checkOpenSslBinary()
 {
-	// assume OpenSSL is unavailable on Windows,
+	// assume OpenSsl is unavailable on Windows,
 	// but always available on both Mac and Linux
 #if defined(Q_OS_WIN)
 	return false;
@@ -258,15 +258,15 @@ bool PluginManager::checkOpenSSLBinary()
 #endif
 }
 
-void PluginManager::downloadOpenSSLBinary()
+void PluginManager::downloadOpenSslBinary()
 {
-	if (checkOpenSSLBinary()) {
-		emit openSSLBinaryReady();
+	if (checkOpenSslBinary()) {
+		emit openSslBinaryReady();
 		return;
 	}
 
 	QUrl url;
-	QString openSslUrl = getOpenSSLBinaryUrl();
+	QString openSslUrl = getOpenSslBinaryUrl();
 	url.setUrl(openSslUrl);
 
 	disconnect(
@@ -279,18 +279,18 @@ void PluginManager::downloadOpenSSLBinary()
 		&m_DataDownloader,
 		SIGNAL(isComplete()),
 		this,
-		SLOT(saveOpenSSLBinary()));
+		SLOT(saveOpenSslBinary()));
 
 	m_DataDownloader.download(url);
 }
 
 void PluginManager::doGenerateCertificate()
 {
-	QString openSSLFilename = m_ProfileDir;
+	QString openSslFilename = m_ProfileDir;
 #if defined(Q_OS_WIN)
-	openSSLFilename.append("\\").append(kWinOpenSSLBinary);
+	openSslFilename.append("\\").append(kWinOpenSslBinary);
 #else
-	openSSLFilename = kUnixOpenSSLCommand;
+	openSslFilename = kUnixOpenSslCommand;
 #endif
 
 	QStringList arguments;
@@ -325,7 +325,7 @@ void PluginManager::doGenerateCertificate()
 	arguments.append(filename);
 
 	QProcess process;
-	process.start(openSSLFilename, arguments);
+	process.start(openSslFilename, arguments);
 	bool success = process.waitForStarted();
 
 	QString standardOutput, standardError;

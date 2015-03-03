@@ -37,23 +37,23 @@ public:
 
 public slots:
 	void downloadPlugins();
-	void saveOpenSSLBinary();
+	void saveOpenSslBinary();
 	void generateCertificate();
 	void doGenerateCertificate();
 
 private:
 	void savePlugin();
 	QString getPluginUrl(const QString& pluginName);
-	QString getOpenSSLBinaryUrl();
+	QString getOpenSslBinaryUrl();
 	QString getPluginOSSpecificName(const QString& pluginName);
-	bool checkOpenSSLBinary();
-	void downloadOpenSSLBinary();
+	bool checkOpenSslBinary();
+	void downloadOpenSslBinary();
 
 signals:
 	void error(QString e);
 	void downloadNext();
 	void downloadFinished();
-	void openSSLBinaryReady();
+	void openSslBinaryReady();
 	void generateCertificateFinished();
 
 private:
