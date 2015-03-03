@@ -343,8 +343,11 @@ void PluginManager::doGenerateCertificate()
 	arguments.append(filename);
 
 	QStringList environment;
+
+#if defined(Q_OS_WIN)
 	environment << QString("OPENSSL_CONF=%1\\OpenSSL\\synergy.conf")
 		.arg(m_ProfileDir);
+#endif
 
 	if (!runProgram(openSslProgramFile, arguments, environment)) {
 		return;
