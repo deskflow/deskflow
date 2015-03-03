@@ -71,7 +71,6 @@ SecureSocket::~SecureSocket()
 	}
 
 	delete m_ssl;
-	delete[] m_error;
 }
 
 void
@@ -105,7 +104,7 @@ SecureSocket::secureRead(void* buffer, UInt32 n)
 	int r = 0;
 	if (m_ssl->m_ssl != NULL) {
 		r = SSL_read(m_ssl->m_ssl, buffer, n);
-		retry = checkResult(r);
+		retry = checkResult(r, false);
 		if (retry) {
 			r = 0;
 		}
@@ -121,7 +120,7 @@ SecureSocket::secureWrite(const void* buffer, UInt32 n)
 	int r = 0;
 	if (m_ssl->m_ssl != NULL) {
 		r = SSL_write(m_ssl->m_ssl, buffer, n);
-		retry = checkResult(r);
+		retry = checkResult(r, false);
 		if (retry) {
 			r = 0;
 		}
@@ -142,7 +141,6 @@ SecureSocket::initSsl(bool server)
 	m_ssl = new Ssl();
 	m_ssl->m_context = NULL;
 	m_ssl->m_ssl = NULL;
-	m_error = new char[MAX_ERROR_SIZE];
 
 	initContext(server);
 }
@@ -153,18 +151,17 @@ SecureSocket::loadCertificates(const char* filename)
 	int r = 0;
 	r = SSL_CTX_use_certificate_file(m_ssl->m_context, filename, SSL_FILETYPE_PEM);
 	if (r <= 0) {
-		showError();
+		throwError("failed to use ssl certificate");
 	}
 
 	r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, filename, SSL_FILETYPE_PEM);
 	if (r <= 0) {
-		showError();
+		throwError("failed to use ssl private key");
 	}
 
-	//verify private key
 	r = SSL_CTX_check_private_key(m_ssl->m_context);
 	if (!r) {
-		showError();
+		throwError("check ssl private key failed");
 	}
 }
 
@@ -194,7 +191,7 @@ SecureSocket::initContext(bool server)
 	SSL_METHOD* m = const_cast<SSL_METHOD*>(method);
 	m_ssl->m_context = SSL_CTX_new(m);
 	if (m_ssl->m_context == NULL) {
-		showError();
+		throwError("failed to create ssl context");
 	}
 }
 
@@ -211,6 +208,8 @@ SecureSocket::createSSL()
 bool
 SecureSocket::secureAccept(int socket)
 {
+	LOG((CLOG_DEBUG "accepting secure connection"));
+
 	createSSL();
 
 	// set connection socket to SSL state
@@ -219,15 +218,25 @@ SecureSocket::secureAccept(int socket)
 	// do SSL-protocol accept
 	LOG((CLOG_DEBUG1 "secureAccept"));
 	int r = SSL_accept(m_ssl->m_ssl);
-	bool retry = checkResult(r);
 
-	m_secureReady = !retry;
+	bool retry = false;
+	try {
+		retry = checkResult(r, true);
+		m_secureReady = !retry;
+	}
+	catch (XSocket& e) {
+		LOG((CLOG_ERR "failed to accept secure connection"));
+		LOG((CLOG_INFO "client may have encryption disabled"));
+	}
+
 	return retry;
 }
 
 bool
 SecureSocket::secureConnect(int socket)
 {
+	LOG((CLOG_DEBUG "establishing secure connection"));
+
 	createSSL();
 
 	// attach the socket descriptor
@@ -235,7 +244,15 @@ SecureSocket::secureConnect(int socket)
 
 	LOG((CLOG_DEBUG1 "secureConnect"));
 	int r = SSL_connect(m_ssl->m_ssl);
-	bool retry = checkResult(r);
+	
+	bool retry = false;
+	try {
+		retry = checkResult(r, true);
+	}
+	catch (XSocket& e) {
+		LOG((CLOG_ERR "failed to establish secure connection"));
+		LOG((CLOG_INFO "server may have encryption disabled"));
+	}
 
 	m_secureReady = !retry;
 
@@ -255,107 +272,92 @@ SecureSocket::showCertificate()
 	// get the server's certificate
 	cert = SSL_get_peer_certificate(m_ssl->m_ssl);
 	if (cert != NULL) {
-		LOG((CLOG_INFO "server certificate"));
+		LOG((CLOG_DEBUG "checking ssl certificate"));
 		line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
-		LOG((CLOG_INFO "subject: %s", line));
+		LOG((CLOG_INFO "ssl certificate: %s", line));
 		OPENSSL_free(line);
 		X509_free(cert);
 	}
 	else {
-		LOG((CLOG_INFO "no certificates"));
+		LOG((CLOG_ERR "could not find ssl certificate"));
 	}
 }
 
 bool
-SecureSocket::checkResult(int n)
+SecureSocket::checkResult(int n, bool canThrow)
 {
-	bool retry = false;
 	int errorCode = SSL_get_error(m_ssl->m_ssl, n);
-	
+
 	switch (errorCode) {
 	case SSL_ERROR_NONE:
-		// the TLS/SSL I/O operation completed
-		break;
+		return false;
 
 	case SSL_ERROR_ZERO_RETURN:
-		// the TLS/SSL connection has been closed
-		LOG((CLOG_DEBUG2 "SSL_ERROR_ZERO_RETURN"));
+		LOG((CLOG_WARN "secure socket error: SSL_ERROR_ZERO_RETURN"));
 		break;
 
 	case SSL_ERROR_WANT_READ:
-		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_WANT_READ"));
-		retry = true;
+		LOG((CLOG_WARN "secure socket error: SSL_ERROR_WANT_READ"));
 		break;
 
 	case SSL_ERROR_WANT_WRITE:
-		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_WANT_WRITE"));
-		retry = true;
+		LOG((CLOG_WARN "secure socket error: SSL_ERROR_WANT_WRITE"));
 		break;
 
 	case SSL_ERROR_WANT_CONNECT:
-		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_WANT_CONNECT"));
-		retry = true;
+		LOG((CLOG_WARN "secure socket error: SSL_ERROR_WANT_CONNECT"));
 		break;
 
 	case SSL_ERROR_WANT_ACCEPT:
-		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_WANT_ACCEPT"));
-		retry = true;
+		LOG((CLOG_WARN "secure socket error: SSL_ERROR_WANT_ACCEPT"));
 		break;
 
 	case SSL_ERROR_SYSCALL:
-		// some I/O error occurred
-		throwError("Secure socket syscall error");
+		LOG((CLOG_WARN "secure socket error: SSL_ERROR_SYSCALL"));
 		break;
+
 	case SSL_ERROR_SSL:
-		// a failure in the SSL library occurred
-		LOG((CLOG_DEBUG2 "SSL_ERROR_SSL"));
-		sendEvent(getEvents()->forISocket().disconnected());
-		sendEvent(getEvents()->forIStream().inputShutdown());
-		showError();
-		retry = true;
+		LOG((CLOG_WARN "secure socket error: SSL_ERROR_SSL"));
 		break;
 
 	default:
-		// possible cases: 
-		// SSL_ERROR_WANT_X509_LOOKUP
-		showError();
+		LOG((CLOG_WARN "secure socket error: unknown"));
 	}
 
-	return retry;
-}
-
-void
-SecureSocket::showError()
-{
-	if (getError()) {
-		LOG((CLOG_ERR "secure socket error: %s", m_error));
+	if (canThrow) {
+		sendEvent(getEvents()->forISocket().disconnected());
+		sendEvent(getEvents()->forIStream().inputShutdown());
+		throwError("secure socket failed");
 	}
+
+	return false;
 }
 
 void
 SecureSocket::throwError(const char* reason)
 {
-	if (getError()) {
+	String error = getError();
+	if (error.empty()) {
+		throw XSocket(reason);
+	}
+	else {
 		throw XSocket(synergy::string::sprintf(
-			"%s: %s", reason, m_error));
+			"%s: %s", reason, getError().c_str()));
 	}
 }
 
-bool
+String
 SecureSocket::getError()
 {
 	unsigned long e = ERR_get_error();
-	bool errorUpdated = false;
-
 	if (e != 0) {
-		ERR_error_string_n(e, m_error, MAX_ERROR_SIZE);
-		errorUpdated = true;
+		char error[MAX_ERROR_SIZE];
+		ERR_error_string_n(e, error, MAX_ERROR_SIZE);
+		return error;
 	}
 	else {
-		LOG((CLOG_DEBUG2 "can not detect any error in secure socket"));
+		return "";
 	}
-	
-	return errorUpdated;
 }
 
 ISocketMultiplexerJob*
