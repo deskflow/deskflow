@@ -84,7 +84,7 @@ void PluginWizardPage::updateDownloadStatus()
 	QStringList pluginList = m_pWebClient->getPluginList();
 	int index = m_pPluginManager->downloadIndex();
 	updateStatus(
-		tr("Downloading plugin: %1 (%2/%3)")
+		tr("Downloading '%1' plugin (%2/%3)...")
 		.arg(pluginList.at(index + 1))
 		.arg(index + 2)
 		.arg(pluginList.size()));
@@ -110,6 +110,8 @@ void PluginWizardPage::generateCertificate()
 		SIGNAL(generateCertificateFinished()),
 		m_pPluginManagerThread,
 		SLOT(quit()));
+
+	updateStatus(tr("Generating SSL certificate..."));
 
 	QMetaObject::invokeMethod(
 		m_pPluginManager,

@@ -42,7 +42,8 @@ static QString kUnixOpenSslCommand = "openssl";
 
 #if defined(Q_OS_WIN)
 static const char kWinPluginExt[] = ".dll";
-static const char kWinOpenSslBinary[] = "openssl.exe";
+static const char kWinOpenSslSetup[] = "openssl-1.0.2-Windows-x86.exe";
+static const char kWinOpenSslBinary[] = "OpenSSL\\openssl.exe";
 
 #elif defined(Q_OS_MAC)
 static const char kMacPluginPrefix[] = "lib";
@@ -100,7 +101,7 @@ void PluginManager::downloadPlugins()
 	}
 }
 
-void PluginManager::saveOpenSslBinary()
+void PluginManager::saveOpenSslSetup()
 {
 	QDir dir(m_ProfileDir);
 	if (!dir.exists()) {
@@ -109,7 +110,7 @@ void PluginManager::saveOpenSslBinary()
 
 	QString filename = m_ProfileDir;
 #if defined(Q_OS_WIN)
-	filename.append("\\").append(kWinOpenSslBinary);
+	filename.append("\\").append(kWinOpenSslSetup);
 #endif
 
 
@@ -124,6 +125,20 @@ void PluginManager::saveOpenSslBinary()
 	file.write(m_DataDownloader.data());
 	file.close();
 
+	QString openSslSetupFile = m_ProfileDir;
+	openSslSetupFile.append("\\").append(kWinOpenSslSetup);
+
+	QStringList installArgs;
+	installArgs.append("-s");
+	installArgs.append("-y");
+
+	if (!runProgram(openSslSetupFile, installArgs, QStringList())) {
+		return;
+	}
+
+	// openssl installer no longer needed
+	QFile::remove(openSslSetupFile);
+
 	emit openSslBinaryReady();
 }
 
@@ -135,7 +150,7 @@ void PluginManager::generateCertificate()
 		this,
 		SLOT(doGenerateCertificate()));
 
-	downloadOpenSslBinary();
+	downloadOpenSslSetup();
 }
 
 void PluginManager::savePlugin()
@@ -148,7 +163,7 @@ void PluginManager::savePlugin()
 
 	QString filename = m_PluginDir;
 	QString pluginName = m_PluginList.at(m_DownloadIndex);
-	pluginName = getPluginOSSpecificName(pluginName);
+	pluginName = getPluginOsSpecificName(pluginName);
 	filename.append(QDir::separator()).append(pluginName);
 
 	QFile file(filename);
@@ -216,25 +231,25 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 	result.append(pluginName).append("/1.0/");
 	result.append(archName);
 	result.append("/");
-	result.append(getPluginOSSpecificName(pluginName));
+	result.append(getPluginOsSpecificName(pluginName));
 
 	return result;
 }
 
-QString PluginManager::getOpenSslBinaryUrl()
+QString PluginManager::getOpenSslSetupUrl()
 {
 	QString result;
 
 #if defined(Q_OS_WIN)
 	result = kBaseUrl;
 	result.append("/tools/");
-	result.append(kWinOpenSslBinary);
+	result.append(kWinOpenSslSetup);
 #endif
 
 	return result;
 }
 
-QString PluginManager::getPluginOSSpecificName(const QString& pluginName)
+QString PluginManager::getPluginOsSpecificName(const QString& pluginName)
 {
 	QString result = pluginName;
 #if defined(Q_OS_WIN)
@@ -258,16 +273,17 @@ bool PluginManager::checkOpenSslBinary()
 #endif
 }
 
-void PluginManager::downloadOpenSslBinary()
+void PluginManager::downloadOpenSslSetup()
 {
 	if (checkOpenSslBinary()) {
 		emit openSslBinaryReady();
 		return;
 	}
 
+	QString urlString = getOpenSslSetupUrl();
+
 	QUrl url;
-	QString openSslUrl = getOpenSslBinaryUrl();
-	url.setUrl(openSslUrl);
+	url.setUrl(urlString);
 
 	disconnect(
 		&m_DataDownloader,
@@ -279,18 +295,20 @@ void PluginManager::downloadOpenSslBinary()
 		&m_DataDownloader,
 		SIGNAL(isComplete()),
 		this,
-		SLOT(saveOpenSslBinary()));
+		SLOT(saveOpenSslSetup()));
 
 	m_DataDownloader.download(url);
 }
 
 void PluginManager::doGenerateCertificate()
 {
-	QString openSslFilename = m_ProfileDir;
+	QString openSslProgramFile;
+
 #if defined(Q_OS_WIN)
-	openSslFilename.append("\\").append(kWinOpenSslBinary);
+	openSslProgramFile = m_ProfileDir;
+	openSslProgramFile.append("\\").append(kWinOpenSslBinary);
 #else
-	openSslFilename = kUnixOpenSslCommand;
+	openSslProgramFile = kUnixOpenSslCommand;
 #endif
 
 	QStringList arguments;
@@ -324,8 +342,24 @@ void PluginManager::doGenerateCertificate()
 	arguments.append("-out");
 	arguments.append(filename);
 
+	QStringList environment;
+	environment << QString("OPENSSL_CONF=%1\\OpenSSL\\synergy.conf")
+		.arg(m_ProfileDir);
+
+	if (!runProgram(openSslProgramFile, arguments, environment)) {
+		return;
+	}
+
+	emit generateCertificateFinished();
+}
+
+bool PluginManager::runProgram(
+	const QString& program, const QStringList& args, const QStringList& env)
+{
 	QProcess process;
-	process.start(openSslFilename, arguments);
+	process.setEnvironment(env);
+	process.start(program, args);
+
 	bool success = process.waitForStarted();
 
 	QString standardOutput, standardError;
@@ -336,14 +370,15 @@ void PluginManager::doGenerateCertificate()
 	}
 
 	int code = process.exitCode();
-	if (!standardError.isEmpty() || !success || code != 0)
+	if (!success || code != 0)
 	{
 		emit error(
-			QString("Failed to generate certificate.\n\nCode: %1\nError: %2")
-				.arg(process.exitCode())
-				.arg(standardError.isEmpty() ? "Unknown" : standardError));
-		return;
+			QString("Program failed: %1\n\nCode: %2\nError: %3")
+			.arg(program)
+			.arg(process.exitCode())
+			.arg(standardError.isEmpty() ? "Unknown" : standardError));
+		return false;
 	}
 
-	emit generateCertificateFinished();
+	return true;
 }

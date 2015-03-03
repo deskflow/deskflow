@@ -37,17 +37,21 @@ public:
 
 public slots:
 	void downloadPlugins();
-	void saveOpenSslBinary();
+	void saveOpenSslSetup();
 	void generateCertificate();
 	void doGenerateCertificate();
 
 private:
 	void savePlugin();
 	QString getPluginUrl(const QString& pluginName);
-	QString getOpenSslBinaryUrl();
-	QString getPluginOSSpecificName(const QString& pluginName);
+	QString getOpenSslSetupUrl();
+	QString getPluginOsSpecificName(const QString& pluginName);
 	bool checkOpenSslBinary();
-	void downloadOpenSslBinary();
+	void downloadOpenSslSetup();
+	bool runProgram(
+		const QString& program,
+		const QStringList& args,
+		const QStringList& env);
 
 signals:
 	void error(QString e);
