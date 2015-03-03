@@ -16,6 +16,5 @@
 	<string>Synergy</string>
 	<key>CFBundleIdentifier</key>
 	<string>synergy</string>
-	<key>SMPrivilegedExecutables</key>
 </dict>
 </plist>
