@@ -62,21 +62,21 @@ if (WIN32)
 		TARGET ns 
 		POST_BUILD
 		COMMAND xcopy /Y /Q
-			..\\..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\ns.dll
+			..\\..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\ns.*
 			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\plugins\\
 	)
 	add_custom_command(
 		TARGET ns 
 		POST_BUILD
 		COMMAND xcopy /Y /Q
-			..\\..\\..\\..\\..\\ext\\openssl\\out32dll\\libeay32.dll
+			..\\..\\..\\..\\..\\ext\\openssl\\out32dll\\libeay32.*
 			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
 	)
 	add_custom_command(
 		TARGET ns 
 		POST_BUILD
 		COMMAND xcopy /Y /Q
-			..\\..\\..\\..\\..\\ext\\openssl\\out32dll\\ssleay32.dll
+			..\\..\\..\\..\\..\\ext\\openssl\\out32dll\\ssleay32.*
 			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
 	)
 else()
@@ -89,7 +89,7 @@ else()
 				${CMAKE_SOURCE_DIR}/bin/plugins
 				&&
 				cp
-				${CMAKE_SOURCE_DIR}/lib/${CMAKE_CFG_INTDIR}/libns.dylib
+				${CMAKE_SOURCE_DIR}/lib/${CMAKE_CFG_INTDIR}/libns.*
 				${CMAKE_SOURCE_DIR}/bin/plugins/
 		)
 	else()
@@ -101,7 +101,7 @@ else()
 					${CMAKE_SOURCE_DIR}/bin/plugins
 					&&
 					cp
-					${CMAKE_SOURCE_DIR}/lib/debug/libns.so
+					${CMAKE_SOURCE_DIR}/lib/debug/libns.*
 					${CMAKE_SOURCE_DIR}/bin/plugins/
 			)
 		else()
@@ -112,7 +112,7 @@ else()
 					${CMAKE_SOURCE_DIR}/bin/plugins
 					&&
 					cp
-					${CMAKE_SOURCE_DIR}/lib/libns.so
+					${CMAKE_SOURCE_DIR}/lib/libns.*
 					${CMAKE_SOURCE_DIR}/bin/plugins/
 			)
 		endif()
