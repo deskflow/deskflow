@@ -227,7 +227,6 @@ SecureSocket::secureAccept(int socket)
 	catch (XSocket& e) {
 		LOG((CLOG_ERR "failed to accept secure connection"));
 		LOG((CLOG_INFO "client may have encryption disabled"));
-		throw e;
 	}
 
 	return retry;
@@ -253,7 +252,6 @@ SecureSocket::secureConnect(int socket)
 	catch (XSocket& e) {
 		LOG((CLOG_ERR "failed to establish secure connection"));
 		LOG((CLOG_INFO "server may have encryption disabled"));
-		throw e;
 	}
 
 	m_secureReady = !retry;
