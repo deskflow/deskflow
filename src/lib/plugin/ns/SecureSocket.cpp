@@ -100,7 +100,6 @@ SecureSocket::secureAccept()
 UInt32
 SecureSocket::secureRead(void* buffer, UInt32 n)
 {
-	bool retry = false;
 	int r = 0;
 	if (m_ssl->m_ssl != NULL) {
 		r = SSL_read(m_ssl->m_ssl, buffer, n);
@@ -119,7 +118,6 @@ SecureSocket::secureRead(void* buffer, UInt32 n)
 UInt32
 SecureSocket::secureWrite(const void* buffer, UInt32 n)
 {
-	bool retry = false;
 	int r = 0;
 	if (m_ssl->m_ssl != NULL) {
 		r = SSL_write(m_ssl->m_ssl, buffer, n);
