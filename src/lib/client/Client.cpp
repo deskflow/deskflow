@@ -108,7 +108,7 @@ Client::Client(
 	if (enableCrypto) {
 		m_useSecureNetwork = ARCH->plugin().exists(s_networkSecurity);
 		if (m_useSecureNetwork == false) {
-			LOG((CLOG_ERR "secure connection disabled, ns plugin not found"));
+			LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
 		}
 	}
 }
