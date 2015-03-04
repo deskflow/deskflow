@@ -61,7 +61,7 @@ private:
 	bool				checkResult(int n);
 	void				showError();
 	void				throwError(const char* reason);
-	bool				getError();
+	String				getError();
 
 	ISocketMultiplexerJob*
 						serviceConnect(ISocketMultiplexerJob*,
@@ -74,5 +74,4 @@ private:
 private:
 	Ssl*				m_ssl;
 	bool				m_secureReady;
-	char*				m_error;
 };

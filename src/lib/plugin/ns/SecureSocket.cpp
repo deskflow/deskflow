@@ -71,7 +71,6 @@ SecureSocket::~SecureSocket()
 	}
 
 	delete m_ssl;
-	delete[] m_error;
 }
 
 void
@@ -142,7 +141,6 @@ SecureSocket::initSsl(bool server)
 	m_ssl = new Ssl();
 	m_ssl->m_context = NULL;
 	m_ssl->m_ssl = NULL;
-	m_error = new char[MAX_ERROR_SIZE];
 
 	initContext(server);
 }
@@ -153,18 +151,17 @@ SecureSocket::loadCertificates(const char* filename)
 	int r = 0;
 	r = SSL_CTX_use_certificate_file(m_ssl->m_context, filename, SSL_FILETYPE_PEM);
 	if (r <= 0) {
-		showError();
+		throwError("could not use ssl certificate");
 	}
 
 	r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, filename, SSL_FILETYPE_PEM);
 	if (r <= 0) {
-		showError();
+		throwError("could not use ssl private key");
 	}
 
-	//verify private key
 	r = SSL_CTX_check_private_key(m_ssl->m_context);
 	if (!r) {
-		showError();
+		throwError("could not verify ssl private key");
 	}
 }
 
@@ -255,14 +252,13 @@ SecureSocket::showCertificate()
 	// get the server's certificate
 	cert = SSL_get_peer_certificate(m_ssl->m_ssl);
 	if (cert != NULL) {
-		LOG((CLOG_INFO "server certificate"));
 		line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
-		LOG((CLOG_INFO "subject: %s", line));
+		LOG((CLOG_INFO "server ssl certificate info: %s", line));
 		OPENSSL_free(line);
 		X509_free(cert);
 	}
 	else {
-		LOG((CLOG_INFO "no certificates"));
+		throwError("server has no ssl certificate");
 	}
 }
 
@@ -279,7 +275,7 @@ SecureSocket::checkResult(int n)
 
 	case SSL_ERROR_ZERO_RETURN:
 		// the TLS/SSL connection has been closed
-		LOG((CLOG_DEBUG2 "SSL_ERROR_ZERO_RETURN"));
+		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_ZERO_RETURN"));
 		break;
 
 	case SSL_ERROR_WANT_READ:
@@ -304,11 +300,12 @@ SecureSocket::checkResult(int n)
 
 	case SSL_ERROR_SYSCALL:
 		// some I/O error occurred
-		throwError("Secure socket syscall error");
+		throwError("secure socket syscall error");
 		break;
+
 	case SSL_ERROR_SSL:
 		// a failure in the SSL library occurred
-		LOG((CLOG_DEBUG2 "SSL_ERROR_SSL"));
+		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_SSL"));
 		sendEvent(getEvents()->forISocket().disconnected());
 		sendEvent(getEvents()->forIStream().inputShutdown());
 		showError();
@@ -327,35 +324,29 @@ SecureSocket::checkResult(int n)
 void
 SecureSocket::showError()
 {
-	if (getError()) {
-		LOG((CLOG_ERR "secure socket error: %s", m_error));
-	}
+	LOG((CLOG_ERR "secure socket error: %s", getError().c_str()));
 }
 
 void
 SecureSocket::throwError(const char* reason)
 {
-	if (getError()) {
-		throw XSocket(synergy::string::sprintf(
-			"%s: %s", reason, m_error));
-	}
+	throw XSocket(synergy::string::sprintf(
+		"%s: %s", reason, getError().c_str()));
 }
 
-bool
+String
 SecureSocket::getError()
 {
 	unsigned long e = ERR_get_error();
-	bool errorUpdated = false;
 
 	if (e != 0) {
-		ERR_error_string_n(e, m_error, MAX_ERROR_SIZE);
-		errorUpdated = true;
+		char error[MAX_ERROR_SIZE];
+		ERR_error_string_n(e, error, MAX_ERROR_SIZE);
+		return error;
 	}
 	else {
-		LOG((CLOG_DEBUG2 "can not detect any error in secure socket"));
+		return "unknown";
 	}
-	
-	return errorUpdated;
 }
 
 ISocketMultiplexerJob*
