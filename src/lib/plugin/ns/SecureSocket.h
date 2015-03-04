@@ -58,7 +58,7 @@ private:
 	bool				secureAccept(int s);
 	bool				secureConnect(int s);
 	void				showCertificate();
-	bool				checkResult(int n);
+	void				checkResult(int n, bool& error, bool& retry);
 	void				showError();
 	void				throwError(const char* reason);
 	String				getError();

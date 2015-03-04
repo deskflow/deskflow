@@ -104,7 +104,10 @@ SecureSocket::secureRead(void* buffer, UInt32 n)
 	int r = 0;
 	if (m_ssl->m_ssl != NULL) {
 		r = SSL_read(m_ssl->m_ssl, buffer, n);
-		retry = checkResult(r);
+		
+		bool error, retry;
+		checkResult(r, error, retry);
+		
 		if (retry) {
 			r = 0;
 		}
@@ -120,7 +123,10 @@ SecureSocket::secureWrite(const void* buffer, UInt32 n)
 	int r = 0;
 	if (m_ssl->m_ssl != NULL) {
 		r = SSL_write(m_ssl->m_ssl, buffer, n);
-		retry = checkResult(r);
+		
+		bool error, retry;
+		checkResult(r, error, retry);
+
 		if (retry) {
 			r = 0;
 		}
@@ -212,11 +218,19 @@ SecureSocket::secureAccept(int socket)
 
 	// set connection socket to SSL state
 	SSL_set_fd(m_ssl->m_ssl, socket);
-
-	// do SSL-protocol accept
-	LOG((CLOG_DEBUG1 "secureAccept"));
+	
+	LOG((CLOG_INFO "accepting secure socket"));
 	int r = SSL_accept(m_ssl->m_ssl);
-	bool retry = checkResult(r);
+	
+	bool error, retry;
+	checkResult(r, error, retry);
+
+	if (error) {
+		// tell user and sleep so the socket isn't hammered.
+		LOG((CLOG_ERR "failed to accept secure socket"));
+		LOG((CLOG_INFO "client connection may not be secure"));
+		ARCH->sleep(1);
+	}
 
 	m_secureReady = !retry;
 	return retry;
@@ -229,10 +243,19 @@ SecureSocket::secureConnect(int socket)
 
 	// attach the socket descriptor
 	SSL_set_fd(m_ssl->m_ssl, socket);
-
-	LOG((CLOG_DEBUG1 "secureConnect"));
+	
+	LOG((CLOG_INFO "connecting secure socket"));
 	int r = SSL_connect(m_ssl->m_ssl);
-	bool retry = checkResult(r);
+	
+	bool error, retry;
+	checkResult(r, error, retry);
+
+	if (error) {
+		// tell user and sleep so the socket isn't hammered.
+		LOG((CLOG_ERR "failed to connect secure socket"));
+		LOG((CLOG_INFO "server connection may not be secure"));
+		ARCH->sleep(1);
+	}
 
 	m_secureReady = !retry;
 
@@ -262,20 +285,23 @@ SecureSocket::showCertificate()
 	}
 }
 
-bool
-SecureSocket::checkResult(int n)
+void
+SecureSocket::checkResult(int n, bool& error, bool& retry)
 {
-	bool retry = false;
+	retry = false;
+	error = true;
+
 	int errorCode = SSL_get_error(m_ssl->m_ssl, n);
-	
 	switch (errorCode) {
 	case SSL_ERROR_NONE:
 		// operation completed
+		error = false;
 		break;
 
 	case SSL_ERROR_ZERO_RETURN:
 		// connection has been closed
 		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_ZERO_RETURN"));
+		error = false;
 		break;
 
 	case SSL_ERROR_WANT_READ:
@@ -299,27 +325,35 @@ SecureSocket::checkResult(int n)
 		break;
 
 	case SSL_ERROR_SYSCALL:
-	case SSL_ERROR_SSL:
-		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_SSL"));
+		LOG((CLOG_ERR "secure socket error: SSL_ERROR_SYSCALL"));
 		sendEvent(getEvents()->forISocket().disconnected());
 		sendEvent(getEvents()->forIStream().inputShutdown());
 		showError();
-		retry = true;
+		break;
+
+	case SSL_ERROR_SSL:
+		LOG((CLOG_ERR "secure socket error: SSL_ERROR_SSL"));
+		sendEvent(getEvents()->forISocket().disconnected());
+		sendEvent(getEvents()->forIStream().inputShutdown());
+		showError();
 		break;
 
 	default:
-		// possible cases: 
-		// SSL_ERROR_WANT_X509_LOOKUP
+		LOG((CLOG_ERR "secure socket error: SSL_ERROR_SSL"));
+		sendEvent(getEvents()->forISocket().disconnected());
+		sendEvent(getEvents()->forIStream().inputShutdown());
 		showError();
+		break;
 	}
-
-	return retry;
 }
 
 void
 SecureSocket::showError()
 {
-	LOG((CLOG_ERR "secure socket error: %s", getError().c_str()));
+	String error = getError();
+	if (!error.empty()) {
+		LOG((CLOG_ERR "secure socket error: %s", error.c_str()));
+	}
 }
 
 void
