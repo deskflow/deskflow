@@ -450,7 +450,9 @@ void MainWindow::startSynergy()
 		args << "--enable-crypto";
 	}
 
+#if defined(Q_OS_WIN)
 	args << "--profile-dir" << getProfileDirectoryForArg();
+#endif
 
 	if ((synergyType() == synergyClient && !clientArgs(args, app))
 		|| (synergyType() == synergyServer && !serverArgs(args, app)))
@@ -1234,10 +1236,7 @@ QString MainWindow::getProfileDirectory()
 
 #else
 
-	// HACK: this seems hacky, since we're using a hidden folder inside the
-	// user's home dir to store plugins, etc... but we call it profile dir?
-	return QDesktopServices::storageLocation(
-		QDesktopServices::HomeLocation);
+	return "";
 
 #endif
 }
