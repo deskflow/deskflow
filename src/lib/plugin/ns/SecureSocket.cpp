@@ -270,11 +270,11 @@ SecureSocket::checkResult(int n)
 	
 	switch (errorCode) {
 	case SSL_ERROR_NONE:
-		// the TLS/SSL I/O operation completed
+		// operation completed
 		break;
 
 	case SSL_ERROR_ZERO_RETURN:
-		// the TLS/SSL connection has been closed
+		// connection has been closed
 		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_ZERO_RETURN"));
 		break;
 
@@ -299,12 +299,7 @@ SecureSocket::checkResult(int n)
 		break;
 
 	case SSL_ERROR_SYSCALL:
-		// some I/O error occurred
-		throwError("secure socket syscall error");
-		break;
-
 	case SSL_ERROR_SSL:
-		// a failure in the SSL library occurred
 		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_SSL"));
 		sendEvent(getEvents()->forISocket().disconnected());
 		sendEvent(getEvents()->forIStream().inputShutdown());
