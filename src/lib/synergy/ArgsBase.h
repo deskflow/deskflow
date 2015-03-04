@@ -47,4 +47,6 @@ public:
 	bool				m_shouldExit;
 	String				m_synergyAddress;
 	bool				m_enableCrypto;
+	String				m_profileDirectory;
+	String				m_pluginDirectory;
 };

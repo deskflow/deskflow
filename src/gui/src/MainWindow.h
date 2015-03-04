@@ -165,6 +165,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void downloadBonjour();
 		void promptAutoConfig();
 		void updateEdition();
+		QString getProfileDirectory();
+		QString getProfileDirectoryForArg();
 
 	private:
 		QSettings& m_Settings;

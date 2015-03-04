@@ -450,6 +450,8 @@ void MainWindow::startSynergy()
 		args << "--enable-crypto";
 	}
 
+	args << "--profile-dir" << getProfileDirectoryForArg();
+
 	if ((synergyType() == synergyClient && !clientArgs(args, app))
 		|| (synergyType() == synergyServer && !serverArgs(args, app)))
 	{
@@ -472,6 +474,8 @@ void MainWindow::startSynergy()
 		appendLogRaw("");
 
 	appendLogNote("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
+
+	qDebug() << args;
 
 	// show command if debug log level...
 	if (appConfig().logLevel() >= 4) {
@@ -1215,4 +1219,30 @@ void MainWindow::bonjourInstallFinished()
 	appendLogNote("Bonjour install finished");
 
 	m_pCheckBoxAutoConfig->setChecked(true);
+}
+
+QString MainWindow::getProfileDirectory()
+{
+#if defined(Q_OS_WIN)
+
+	QString qtDataDir = QDesktopServices::storageLocation(
+		QDesktopServices::DataLocation);
+
+	// HACK: core wants the base app data dir, this seems like a very hacky
+	// way to get it (maybe consider using %LOCALAPPDATA% instead?)
+	return qtDataDir.replace("\\Synergy\\Synergy", "");
+
+#else
+
+	// HACK: this seems hacky, since we're using a hidden folder inside the
+	// user's home dir to store plugins, etc... but we call it profile dir?
+	return QDesktopServices::storageLocation(
+		QDesktopServices::HomeLocation);
+
+#endif
+}
+
+QString MainWindow::getProfileDirectoryForArg()
+{
+	return QString("\"%1\"").arg(getProfileDirectory());
 }

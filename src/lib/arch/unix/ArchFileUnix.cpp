@@ -107,6 +107,10 @@ ArchFileUnix::getLogDirectory()
 std::string
 ArchFileUnix::getPluginDirectory()
 {
+	if (!m_pluginDirectory.empty()) {
+		return m_pluginDirectory;
+	}
+
 #if WINAPI_XWINDOWS
 	return getProfileDirectory().append("/plugins");
 #else
@@ -117,11 +121,19 @@ ArchFileUnix::getPluginDirectory()
 std::string
 ArchFileUnix::getProfileDirectory()
 {
+	String dir;
+	if (!m_profileDirectory.empty()) {
+		dir = m_profileDirectory;
+	}
+	else {
 #if WINAPI_XWINDOWS
-	return getUserDirectory().append("/.synergy");
+		dir = getUserDirectory().append("/.synergy");
 #else
-	return getUserDirectory().append("/Library/Synergy");
+		dir = getUserDirectory().append("/Library/Synergy");
 #endif
+	}
+	return dir;
+
 }
 
 std::string
@@ -136,4 +148,16 @@ ArchFileUnix::concatPath(const std::string& prefix,
 	}
 	path += suffix;
 	return path;
+}
+
+void
+ArchFileUnix::setProfileDirectory(const String& s)
+{
+	m_profileDirectory = s;
+}
+
+void
+ArchFileUnix::setPluginDirectory(const String& s)
+{
+	m_pluginDirectory = s;
 }

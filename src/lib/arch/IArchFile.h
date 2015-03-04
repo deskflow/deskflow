@@ -20,6 +20,7 @@
 
 #include "common/IInterface.h"
 #include "common/stdstring.h"
+#include "base/String.h"
 
 //! Interface for architecture dependent file system operations
 /*!
@@ -64,13 +65,16 @@ public:
 
 	//! Get plugins directory
 	/*!
-	Returns the plugin files directory.
+	Returns the plugin files directory. If no plugin directory is set,
+	this will return the plugin folder within the user's profile.
 	*/
 	virtual std::string	getPluginDirectory() = 0;
 
-	//! Get local profile directory
+	//! Get user's profile directory
 	/*!
-	Returns the local profile directory.
+	Returns the user's profile directory. If no profile directory is set,
+	this will return the user's profile according to the operating system,
+	which will depend on which user launched the program.
 	*/
 	virtual std::string	getProfileDirectory() = 0;
 
@@ -84,6 +88,18 @@ public:
 	virtual std::string	concatPath(
 							const std::string& prefix,
 							const std::string& suffix) = 0;
+	
+	//@}
+	//! Set the user's profile directory
+	/*
+	Returns the user's profile directory.
+	*/
+	virtual void		setProfileDirectory(const String& s) = 0;
 
 	//@}
+	//! Set the user's plugin directory
+	/*
+	Returns the user's plugin directory.
+	*/
+	virtual void		setPluginDirectory(const String& s) = 0;
 };

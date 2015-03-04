@@ -253,7 +253,7 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 	else if (isArg(i, argc, argv, NULL, "--client")) {
 		// HACK: stop error happening when using portable (synergyp) 
 	}
-	else if (isArg(i, argc, argv, NULL, "--enable-drag-drop")) {
+	else if (isArg(i, argc, argv, NULL, "--enable-drag-drop", 1)) {
 		bool useDragDrop = true;
 
 #ifdef WINAPI_XWINDOWS
@@ -282,6 +282,12 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 	}
 	else if (isArg(i, argc, argv, NULL, "--enable-crypto")) {
 		argsBase().m_enableCrypto = true;
+	}
+	else if (isArg(i, argc, argv, NULL, "--profile-dir", 1)) {
+		argsBase().m_profileDirectory = argv[++i];
+	}
+	else if (isArg(i, argc, argv, NULL, "--plugin-dir", 1)) {
+		argsBase().m_pluginDirectory = argv[++i];
 	}
 	else {
 		// option not supported here
