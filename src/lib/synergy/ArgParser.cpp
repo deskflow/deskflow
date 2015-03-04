@@ -253,7 +253,7 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 	else if (isArg(i, argc, argv, NULL, "--client")) {
 		// HACK: stop error happening when using portable (synergyp) 
 	}
-	else if (isArg(i, argc, argv, NULL, "--enable-drag-drop", 1)) {
+	else if (isArg(i, argc, argv, NULL, "--enable-drag-drop")) {
 		bool useDragDrop = true;
 
 #ifdef WINAPI_XWINDOWS
