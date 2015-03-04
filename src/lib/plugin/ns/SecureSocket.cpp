@@ -105,8 +105,8 @@ SecureSocket::secureRead(void* buffer, UInt32 n)
 	if (m_ssl->m_ssl != NULL) {
 		r = SSL_read(m_ssl->m_ssl, buffer, n);
 		
-		bool error, retry;
-		checkResult(r, error, retry);
+		bool fatal, retry;
+		checkResult(r, fatal, retry);
 		
 		if (retry) {
 			r = 0;
@@ -124,8 +124,8 @@ SecureSocket::secureWrite(const void* buffer, UInt32 n)
 	if (m_ssl->m_ssl != NULL) {
 		r = SSL_write(m_ssl->m_ssl, buffer, n);
 		
-		bool error, retry;
-		checkResult(r, error, retry);
+		bool fatal, retry;
+		checkResult(r, fatal, retry);
 
 		if (retry) {
 			r = 0;
@@ -219,13 +219,13 @@ SecureSocket::secureAccept(int socket)
 	// set connection socket to SSL state
 	SSL_set_fd(m_ssl->m_ssl, socket);
 	
-	LOG((CLOG_INFO "accepting secure socket"));
+	LOG((CLOG_DEBUG2 "accepting secure socket"));
 	int r = SSL_accept(m_ssl->m_ssl);
 	
-	bool error, retry;
-	checkResult(r, error, retry);
+	bool fatal, retry;
+	checkResult(r, fatal, retry);
 
-	if (error) {
+	if (fatal) {
 		// tell user and sleep so the socket isn't hammered.
 		LOG((CLOG_ERR "failed to accept secure socket"));
 		LOG((CLOG_INFO "client connection may not be secure"));
@@ -233,6 +233,10 @@ SecureSocket::secureAccept(int socket)
 	}
 
 	m_secureReady = !retry;
+	if (m_secureReady) {
+		LOG((CLOG_INFO "accepted secure socket"));
+	}
+
 	return retry;
 }
 
@@ -244,13 +248,13 @@ SecureSocket::secureConnect(int socket)
 	// attach the socket descriptor
 	SSL_set_fd(m_ssl->m_ssl, socket);
 	
-	LOG((CLOG_INFO "connecting secure socket"));
+	LOG((CLOG_DEBUG2 "connecting secure socket"));
 	int r = SSL_connect(m_ssl->m_ssl);
 	
-	bool error, retry;
-	checkResult(r, error, retry);
+	bool fatal, retry;
+	checkResult(r, fatal, retry);
 
-	if (error) {
+	if (fatal) {
 		// tell user and sleep so the socket isn't hammered.
 		LOG((CLOG_ERR "failed to connect secure socket"));
 		LOG((CLOG_INFO "server connection may not be secure"));
@@ -260,6 +264,7 @@ SecureSocket::secureConnect(int socket)
 	m_secureReady = !retry;
 
 	if (m_secureReady) {
+		LOG((CLOG_INFO "connected to secure socket"));
 		showCertificate();
 	}
 
@@ -286,22 +291,23 @@ SecureSocket::showCertificate()
 }
 
 void
-SecureSocket::checkResult(int n, bool& error, bool& retry)
+SecureSocket::checkResult(int n, bool& fatal, bool& retry)
 {
+	// ssl errors are a little quirky. the "want" errors are normal and
+	// should result in a retry.
+
+	fatal = false;
 	retry = false;
-	error = true;
 
 	int errorCode = SSL_get_error(m_ssl->m_ssl, n);
 	switch (errorCode) {
 	case SSL_ERROR_NONE:
 		// operation completed
-		error = false;
 		break;
 
 	case SSL_ERROR_ZERO_RETURN:
-		// connection has been closed
+		// connection closed
 		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_ZERO_RETURN"));
-		error = false;
 		break;
 
 	case SSL_ERROR_WANT_READ:
@@ -326,24 +332,24 @@ SecureSocket::checkResult(int n, bool& error, bool& retry)
 
 	case SSL_ERROR_SYSCALL:
 		LOG((CLOG_ERR "secure socket error: SSL_ERROR_SYSCALL"));
-		sendEvent(getEvents()->forISocket().disconnected());
-		sendEvent(getEvents()->forIStream().inputShutdown());
-		showError();
+		fatal = true;
 		break;
 
 	case SSL_ERROR_SSL:
 		LOG((CLOG_ERR "secure socket error: SSL_ERROR_SSL"));
-		sendEvent(getEvents()->forISocket().disconnected());
-		sendEvent(getEvents()->forIStream().inputShutdown());
-		showError();
+		fatal = true;
 		break;
 
 	default:
 		LOG((CLOG_ERR "secure socket error: SSL_ERROR_SSL"));
+		fatal = true;
+		break;
+	}
+
+	if (fatal) {
+		showError();
 		sendEvent(getEvents()->forISocket().disconnected());
 		sendEvent(getEvents()->forIStream().inputShutdown());
-		showError();
-		break;
 	}
 }
 
@@ -359,8 +365,14 @@ SecureSocket::showError()
 void
 SecureSocket::throwError(const char* reason)
 {
-	throw XSocket(synergy::string::sprintf(
-		"%s: %s", reason, getError().c_str()));
+	String error = getError();
+	if (!error.empty()) {
+		throw XSocket(synergy::string::sprintf(
+			"%s: %s", reason, error.c_str()));
+	}
+	else {
+		throw XSocket(reason);
+	}
 }
 
 String
@@ -374,7 +386,7 @@ SecureSocket::getError()
 		return error;
 	}
 	else {
-		return "unknown";
+		return "";
 	}
 }
 
