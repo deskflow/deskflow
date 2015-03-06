@@ -29,6 +29,8 @@
 #include "platform/MSWindowsSession.h"
 #endif
 
+#define JSON_URL "https://synergy-project.org/premium/json/"
+
 enum {
 	kErrorOk,
 	kErrorArgs,
@@ -65,6 +67,21 @@ ToolApp::run(int argc, char** argv)
 			}
 #endif
 		}
+		else if (m_args.m_loginAuthenticate) {
+			loginAuth();
+		}
+		else if (m_args.m_getPluginList) {
+			getPluginList();
+		}
+		else if (m_args.m_getPluginDir) {
+			std::cout << ARCH->getPluginDirectory() << std::endl;
+		}
+		else if (m_args.m_getProfileDir) {
+			std::cout << ARCH->getProfileDirectory() << std::endl;
+		}
+		else if (m_args.m_getArch) {
+			std::cout << ARCH->getPlatformName() << std::endl;
+		}
 		else {
 			throw XSynergy("Nothing to do");
 		}
@@ -78,10 +95,51 @@ ToolApp::run(int argc, char** argv)
 		return kExitFailed;
 	}
 
+#if WINAPI_XWINDOWS
+	// HACK: avoid sigsegv on linux
+	m_bye(kErrorOk);
+#endif
+
 	return kErrorOk;
 }
 
 void
 ToolApp::help()
 {
+}
+
+void
+ToolApp::loginAuth()
+{
+	String credentials;
+	std::cin >> credentials;
+
+	size_t separator = credentials.find(':');
+	String email = credentials.substr(0, separator);
+	String password = credentials.substr(separator + 1, credentials.length());
+
+	std::stringstream ss;
+	ss << JSON_URL << "auth/";
+	ss << "?email=" << ARCH->internet().urlEncode(email);
+	ss << "&password=" << password;
+
+	std::cout << ARCH->internet().get(ss.str()) << std::endl;
+}
+
+void
+ToolApp::getPluginList()
+{
+	String credentials;
+	std::cin >> credentials;
+
+	size_t separator = credentials.find(':');
+	String email = credentials.substr(0, separator);
+	String password = credentials.substr(separator + 1, credentials.length());
+
+	std::stringstream ss;
+	ss <<  JSON_URL << "plugins/";
+	ss << "?email=" << ARCH->internet().urlEncode(email);
+	ss << "&password=" << password;
+
+	std::cout << ARCH->internet().get(ss.str()) << std::endl;
 }

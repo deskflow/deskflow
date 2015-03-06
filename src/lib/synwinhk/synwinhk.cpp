@@ -236,7 +236,7 @@ static
 bool
 doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
-	DWORD vkCode = wParam;
+	DWORD vkCode = static_cast<DWORD>(wParam);
 	bool kf_up = (lParam & (KF_UP << 16)) != 0;
 
 	// check for special events indicating if we should start or stop

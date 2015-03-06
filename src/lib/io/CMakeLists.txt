@@ -23,7 +23,6 @@ endif()
 
 include_directories(
 	../
-	../../../ext
 )
 
 if (UNIX)
@@ -33,7 +32,3 @@ if (UNIX)
 endif()
 
 add_library(io STATIC ${sources})
-
-if (UNIX)
-	target_link_libraries(io cryptopp)
-endif()

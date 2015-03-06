@@ -43,6 +43,9 @@ public:
 	*/
 	ClientProxy*		orphanClientProxy();
 
+	//! Get the stream
+	synergy::IStream*	getStream() { return m_stream; }
+
 	//@}
 
 private:
@@ -63,6 +66,6 @@ private:
 	EventQueueTimer*	m_timer;
 	ClientProxy*		m_proxy;
 	bool				m_ready;
-	Server*			m_server;
+	Server*				m_server;
 	IEventQueue*		m_events;
 };

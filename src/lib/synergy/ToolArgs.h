@@ -25,4 +25,9 @@ public:
 
 public:
 	bool				m_printActiveDesktopName;
+	bool				m_loginAuthenticate;
+	bool				m_getPluginList;
+	bool				m_getPluginDir;
+	bool				m_getProfileDir;
+	bool				m_getArch;
 };

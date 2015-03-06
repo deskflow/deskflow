@@ -125,7 +125,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="m_pGroupCrypto">
+    <widget class="QGroupBox" name="m_pGroupNetworkSecurity">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -136,44 +136,31 @@
       </sizepolicy>
      </property>
      <property name="title">
-      <string>&amp;Encryption</string>
+      <string>&amp;Network Security</string>
      </property>
      <layout class="QFormLayout" name="formLayout">
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
-      <item row="1" column="0">
-       <widget class="QLabel" name="m_pLabel_23">
-        <property name="minimumSize">
-         <size>
-          <width>75</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Pass&amp;word:</string>
-        </property>
-        <property name="buddy">
-         <cstring>m_pLineEditCryptoPass</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="m_pLineEditCryptoPass">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="echoMode">
-         <enum>QLineEdit::Password</enum>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QCheckBox" name="m_pCheckBoxEnableCrypto">
         <property name="text">
-         <string>Enable</string>
+         <string>Use &amp;SSL encryption (unique certificate)</string>
         </property>
        </widget>
+      </item>
+      <item row="0" column="1">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>
@@ -308,7 +295,6 @@
   <tabstop>m_pLineEditScreenName</tabstop>
   <tabstop>m_pSpinBoxPort</tabstop>
   <tabstop>m_pLineEditInterface</tabstop>
-  <tabstop>m_pLineEditCryptoPass</tabstop>
   <tabstop>m_pComboLogLevel</tabstop>
   <tabstop>m_pCheckBoxLogToFile</tabstop>
   <tabstop>m_pLineEditLogFilename</tabstop>

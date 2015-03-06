@@ -19,7 +19,6 @@
 #pragma once
 
 #include "base/String.h"
-#include "io/CryptoOptions.h"
 
 class ArgsBase {
 public:
@@ -36,7 +35,6 @@ public:
 	String m_name;
 	bool m_disableTray;
 	bool m_enableIpc;
-	CryptoOptions m_crypto;
 	bool m_enableDragDrop;
 #if SYSAPI_WIN32
 	bool m_debugServiceWait;
@@ -48,4 +46,7 @@ public:
 #endif
 	bool				m_shouldExit;
 	String				m_synergyAddress;
+	bool				m_enableCrypto;
+	String				m_profileDirectory;
+	String				m_pluginDirectory;
 };

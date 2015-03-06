@@ -21,6 +21,7 @@
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
 #include "server/PrimaryClient.h"
+#include "server/ClientListener.h"
 #include "synergy/IPlatformScreen.h"
 #include "synergy/DropHelper.h"
 #include "synergy/option_types.h"
@@ -30,6 +31,8 @@
 #include "synergy/FileChunker.h"
 #include "synergy/KeyState.h"
 #include "synergy/Screen.h"
+#include "synergy/PacketStreamFilter.h"
+#include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/IListenSocket.h"
 #include "net/XSocket.h"
@@ -201,7 +204,7 @@ Server::Server(
 
 	// Determine if scroll lock is already set. If so, lock the cursor to the primary screen
 	if (m_primaryClient->getToggleMask() & KeyModifierScrollLock) {
-		LOG((CLOG_DEBUG "scroll lock on initially. locked to screen"));
+		LOG((CLOG_NOTE "Scroll Lock is on, locking cursor to screen"));
 		m_lockedToScreen = true;
 	}
 
@@ -416,7 +419,7 @@ Server::isLockedToScreen() const
 {
 	// locked if we say we're locked
 	if (isLockedToScreenServer()) {
-		LOG((CLOG_NOTE "cursor is locked to screen"));
+		LOG((CLOG_NOTE "Cursor is locked to screen, check Scroll Lock key"));
 		return true;
 	}
 
@@ -1358,7 +1361,11 @@ Server::handleClientDisconnected(const Event&, void* vclient)
 	BaseClientProxy* client = reinterpret_cast<BaseClientProxy*>(vclient);
 	removeActiveClient(client);
 	removeOldClient(client);
+
+	PacketStreamFilter* streamFileter = dynamic_cast<PacketStreamFilter*>(client->getStream());
+	TCPSocket* socket = dynamic_cast<TCPSocket*>(streamFileter->getStream());
 	delete client;
+	m_clientListener->deleteSocket(socket);
 }
 
 void
@@ -1368,7 +1375,10 @@ Server::handleClientCloseTimeout(const Event&, void* vclient)
 	BaseClientProxy* client = reinterpret_cast<BaseClientProxy*>(vclient);
 	LOG((CLOG_NOTE "forced disconnection of client \"%s\"", getName(client).c_str()));
 	removeOldClient(client);
+	PacketStreamFilter* streamFileter = dynamic_cast<PacketStreamFilter*>(client->getStream());
+	TCPSocket* socket = dynamic_cast<TCPSocket*>(streamFileter->getStream());
 	delete client;
+	m_clientListener->deleteSocket(socket);
 }
 
 void

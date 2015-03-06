@@ -39,6 +39,7 @@ class InputFilter;
 namespace synergy { class Screen; }
 class IEventQueue;
 class Thread;
+class ClientListener;
 
 //! Synergy server
 /*!
@@ -154,6 +155,9 @@ public:
 
 	//! Received dragging information from client
 	void				dragInfoReceived(UInt32 fileNum, String content);
+
+	//! Store ClientListener pointer
+	void				setListener(ClientListener* p) { m_clientListener = p; }
 	
 	//@}
 	//! @name accessors
@@ -412,7 +416,7 @@ private:
 	SInt32				m_xDelta2, m_yDelta2;
 
 	// current configuration
-	Config*			m_config;
+	Config*				m_config;
 
 	// input filter (from m_config);
 	InputFilter*		m_inputFilter;
@@ -458,7 +462,7 @@ private:
 	bool				m_lockedToScreen;
 
 	// server screen
-	synergy::Screen*			m_screen;
+	synergy::Screen*	m_screen;
 
 	IEventQueue*		m_events;
 
@@ -466,12 +470,14 @@ private:
 	size_t				m_expectedFileSize;
 	String				m_receivedFileData;
 	DragFileList		m_dragFileList;
-	Thread*			m_sendFileThread;
-	Thread*			m_writeToDropDirThread;
+	Thread*				m_sendFileThread;
+	Thread*				m_writeToDropDirThread;
 	String				m_dragFileExt;
 	bool				m_ignoreFileTransfer;
 	bool				m_enableDragDrop;
 
-	Thread*			m_getDragInfoThread;
+	Thread*				m_getDragInfoThread;
 	bool				m_waitDragInfoThread;
+
+	ClientListener*		m_clientListener;
 };

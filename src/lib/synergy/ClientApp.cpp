@@ -326,7 +326,7 @@ ClientApp::handleClientDisconnected(const Event&, void*)
 		m_events->addEvent(Event(Event::kQuit));
 	}
 	else if (!m_suspended) {
-		m_client->connect();
+		scheduleClientRestart(nextRestartTimeout());
 	}
 	updateStatus();
 }
@@ -334,17 +334,16 @@ ClientApp::handleClientDisconnected(const Event&, void*)
 
 Client*
 ClientApp::openClient(const String& name, const NetworkAddress& address,
-				synergy::Screen* screen, const CryptoOptions& crypto)
+				synergy::Screen* screen)
 {
 	Client* client = new Client(
 		m_events,
 		name,
 		address,
-		new CTCPSocketFactory(m_events, getSocketMultiplexer()),
-		NULL,
+		new TCPSocketFactory(m_events, getSocketMultiplexer()),
 		screen,
-		crypto,
-		args().m_enableDragDrop);
+		args().m_enableDragDrop,
+		args().m_enableCrypto);
 
 	try {
 		m_events->adoptHandler(
@@ -402,7 +401,7 @@ ClientApp::startClient()
 		if (m_clientScreen == NULL) {
 			clientScreen = openClientScreen();
 			m_client     = openClient(args().m_name,
-				*m_serverAddress, clientScreen, args().m_crypto);
+				*m_serverAddress, clientScreen);
 			m_clientScreen  = clientScreen;
 			LOG((CLOG_NOTE "started client"));
 		}
@@ -458,6 +457,11 @@ ClientApp::mainLoop()
 	SocketMultiplexer multiplexer;
 	setSocketMultiplexer(&multiplexer);
 
+	// load all available plugins.
+	ARCH->plugin().load();
+	// pass log and arch into plugins.
+	ARCH->plugin().init(Log::getInstance(), Arch::getInstance());
+
 	// start client, etc
 	appUtil().startNode();
 	
@@ -467,8 +471,8 @@ ClientApp::mainLoop()
 		initIpcClient();
 	}
 
-	// load all available plugins.
-	ARCH->plugin().init(m_clientScreen->getEventTarget(), m_events);
+	// init event for all available plugins.
+	ARCH->plugin().initEvent(m_clientScreen->getEventTarget(), m_events);
 
 	// run event loop.  if startClient() failed we're supposed to retry
 	// later.  the timer installed by startClient() will take care of
@@ -503,6 +507,9 @@ ClientApp::mainLoop()
 	if (argsBase().m_enableIpc) {
 		cleanupIpcClient();
 	}
+
+	// unload all plugins.
+	ARCH->plugin().unload();
 
 	return kExitSuccess;
 }

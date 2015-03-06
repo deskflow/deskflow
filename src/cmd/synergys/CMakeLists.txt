@@ -58,7 +58,7 @@ endif()
 
 add_executable(synergys ${sources})
 target_link_libraries(synergys
-	arch base client common io mt net ipc platform server synergy cryptopp ${libs})
+	arch base client common io mt net ipc platform server synergy ${libs})
 
 if (CONF_CPACK)
 	install(TARGETS

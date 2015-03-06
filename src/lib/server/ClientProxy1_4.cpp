@@ -20,7 +20,6 @@
 
 #include "server/Server.h"
 #include "synergy/ProtocolUtil.h"
-#include "io/CryptoStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
@@ -45,47 +44,23 @@ ClientProxy1_4::~ClientProxy1_4()
 void
 ClientProxy1_4::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-	cryptoIv();
 	ClientProxy1_3::keyDown(key, mask, button);
 }
 
 void
 ClientProxy1_4::keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button)
 {
-	cryptoIv();
 	ClientProxy1_3::keyRepeat(key, mask, count, button);
 }
 
 void
 ClientProxy1_4::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-	cryptoIv();
 	ClientProxy1_3::keyUp(key, mask, button);
 }
 
 void
 ClientProxy1_4::keepAlive()
 {
-	cryptoIv();
 	ClientProxy1_3::keepAlive();
-}
-
-void
-ClientProxy1_4::cryptoIv()
-{
-	CryptoStream* cryptoStream = dynamic_cast<CryptoStream*>(getStream());
-	if (cryptoStream == NULL) {
-		return;
-	}
-
-	byte iv[CRYPTO_IV_SIZE];
-	cryptoStream->newIv(iv);
-	String data(reinterpret_cast<const char*>(iv), CRYPTO_IV_SIZE);
-
-	LOG((CLOG_DEBUG2 "send crypto iv change to \"%s\"", getName().c_str()));
-	ProtocolUtil::writef(getStream(), kMsgDCryptoIv, &data);
-	
-	// change IV only after we've sent the current IV, otherwise
-	// the client won't be able to decrypt the new IV.
-	cryptoStream->setEncryptIv(iv);
 }

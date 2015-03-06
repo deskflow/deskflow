@@ -99,7 +99,6 @@ private:
 	void				mouseMove();
 	void				mouseRelativeMove();
 	void				mouseWheel();
-	void				cryptoIv();
 	void				screensaver();
 	void				resetOptions();
 	void				setOptions();

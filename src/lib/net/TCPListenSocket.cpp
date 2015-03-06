@@ -110,7 +110,7 @@ TCPListenSocket::accept()
 {
 	IDataSocket* socket = NULL;
 	try {
-		socket = new CTCPSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
+		socket = new TCPSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
 		if (socket != NULL) {
 			m_socketMultiplexer->addSocket(this,
 							new TSocketMultiplexerMethodJob<TCPListenSocket>(

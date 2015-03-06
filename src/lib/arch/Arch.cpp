@@ -30,6 +30,11 @@ Arch::Arch()
 	s_instance = this;
 }
 
+Arch::Arch(Arch* arch)
+{
+	s_instance = arch;
+}
+
 Arch::~Arch()
 {
 #if SYSAPI_WIN32

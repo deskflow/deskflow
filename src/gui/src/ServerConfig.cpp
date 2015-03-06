@@ -374,12 +374,15 @@ int ServerConfig::showAddClientDialog(const QString& clientName)
 {
 	int result = kAddClientIgnore;
 
-	if (m_pMainWindow->isActiveWindow()) {
-		AddClientDialog addClientDialog(clientName, m_pMainWindow);
-		addClientDialog.exec();
-		result = addClientDialog.addResult();
-		m_IgnoreAutoConfigClient = addClientDialog.ignoreAutoConfigClient();
+	if (!m_pMainWindow->isActiveWindow()) {
+		m_pMainWindow->showNormal();
+		m_pMainWindow->activateWindow();
 	}
+
+	AddClientDialog addClientDialog(clientName, m_pMainWindow);
+	addClientDialog.exec();
+	result = addClientDialog.addResult();
+	m_IgnoreAutoConfigClient = addClientDialog.ignoreAutoConfigClient();
 
 	return result;
 }

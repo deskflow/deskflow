@@ -165,6 +165,26 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 			args.m_printActiveDesktopName = true;
 			return true;
 		}
+		else if (isArg(i, argc, argv, NULL, "--login-auth", 0)) {
+			args.m_loginAuthenticate = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-plugin-list", 0)) {
+			args.m_getPluginList = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-plugin-dir", 0)) {
+			args.m_getPluginDir = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-profile-dir", 0)) {
+			args.m_getProfileDir = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-arch", 0)) {
+			args.m_getArch = true;
+			return true;
+		}
 		else {
 			return false;
 		}
@@ -233,10 +253,6 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 	else if (isArg(i, argc, argv, NULL, "--client")) {
 		// HACK: stop error happening when using portable (synergyp) 
 	}
-	else if (isArg(i, argc, argv, NULL, "--crypto-pass")) {
-		argsBase().m_crypto.m_pass = argv[++i];
-		argsBase().m_crypto.setMode("cfb");
-	}
 	else if (isArg(i, argc, argv, NULL, "--enable-drag-drop")) {
 		bool useDragDrop = true;
 
@@ -263,6 +279,15 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 		if (useDragDrop) {
 			argsBase().m_enableDragDrop = true;
 		}
+	}
+	else if (isArg(i, argc, argv, NULL, "--enable-crypto")) {
+		argsBase().m_enableCrypto = true;
+	}
+	else if (isArg(i, argc, argv, NULL, "--profile-dir", 1)) {
+		argsBase().m_profileDirectory = argv[++i];
+	}
+	else if (isArg(i, argc, argv, NULL, "--plugin-dir", 1)) {
+		argsBase().m_pluginDirectory = argv[++i];
 	}
 	else {
 		// option not supported here

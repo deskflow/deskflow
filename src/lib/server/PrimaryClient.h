@@ -146,6 +146,9 @@ public:
 	virtual void		sendDragInfo(UInt32 fileCount, const char* info, size_t size);
 	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize);
 
+	virtual synergy::IStream*
+						getStream() const { return NULL; }
+
 private:
 	synergy::Screen*	m_screen;
 	bool				m_clipboardDirty[kClipboardEnd];

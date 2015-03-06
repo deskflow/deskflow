@@ -74,6 +74,11 @@ Log::Log()
 	s_log = this;
 }
 
+Log::Log(Log* src)
+{
+	s_log = src;
+}
+
 Log::~Log()
 {
 	// clean up

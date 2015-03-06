@@ -156,13 +156,14 @@ private:
 #define HELP_COMMON_INFO_1 \
 	"  -d, --debug <level>      filter out log messages with priority below level.\n" \
 	"                             level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n" \
-	"                             DEBUG, DEBUGn (1-5).\n" \
+	"                             DEBUG, DEBUG1, DEBUG2.\n" \
 	"  -n, --name <screen-name> use screen-name instead the hostname to identify\n" \
 	"                             this screen in the configuration.\n" \
 	"  -1, --no-restart         do not try to restart on failure.\n" \
 	"*     --restart            restart the server automatically if it fails.\n" \
 	"  -l  --log <file>         write log messages to file.\n" \
-	"      --no-tray            disable the system tray icon.\n"
+	"      --no-tray            disable the system tray icon.\n" \
+	"      --enable-drag-drop   enable file drag & drop.\n"
 
 #define HELP_COMMON_INFO_2 \
 	"  -h, --help               display this help and exit.\n" \

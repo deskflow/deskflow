@@ -1,25 +1,16 @@
-About
-=====
+Synergy
+=======
 
-Synergy brings your computers together in one cohesive experience; its
-software for sharing one mouse and keyboard between multiple computers
-on your desk. It works on Windows, Mac OS X and Linux allowing you to
-seamlessly move your mouse cursor between all computers on your desk.
+Share one mouse and keyboard between multiple computers.
 
-Users
-=====
+Synergy is free and open source (free as in free speech),
+meaning you are free to run it and redistribute it with
+or without changes.
 
-Synergy is easy to download and configure.
-Get it here: http://synergy-project.org/
+Just use "hm conf" and "hm build" to compile (./hm.sh on
+Linux and Mac).
 
-Developers
-==========
+For detailed compile instructions:
+http://synergy-project.org/wiki/Compiling
 
-Synergy is free and open source, so you are free to run the program,
-change the program, and redistribute the program with or without changes.
-
-Once you've got the source code, just use "hm conf" and "hm build" to
-compile (./hm.sh on Linux and Mac).
-
-For detailed compile instructions and a list of dependencies, check
-out our wiki: http://synergy-project.org/wiki/Compiling
+Happy hacking!

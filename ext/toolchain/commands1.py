@@ -247,9 +247,6 @@ class InternalCommands:
 	# by default, unknown
 	macIdentity = None
 	
-	# cryptoPP dir with version number
-	cryptoPPDir = 'cryptopp562'
-	
 	# gtest dir with version number
 	gtestDir = 'gtest-1.6.0'
 	
@@ -323,22 +320,6 @@ class InternalCommands:
 
 		for target in targets:
 			self.configure(target)
-
-	def checkCryptoPP(self):
-    
-		dir = self.extDir + '/' + self.cryptoPPDir
-		if (os.path.isdir(dir)):
-			return
-		
-		zipFilename = dir + '.zip'
-		if (not os.path.exists(zipFilename)):
-			raise Exception('Crypto++ zip not found at: ' + zipFilename)
-		
-		if not os.path.exists(dir):
-			os.mkdir(dir)
-		
-		zip = zipfile.ZipFile(zipFilename)
-		self.zipExtractAll(zip, dir)
 
 	def checkGTest(self):
     
@@ -468,8 +449,6 @@ class InternalCommands:
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
 
-		# ensure that the cryptopp source exists
-		self.checkCryptoPP()
 		self.checkGTest()
 		self.checkGMock()
 		
@@ -488,12 +467,6 @@ class InternalCommands:
 
 		if generator.cmakeName.find('Eclipse') != -1:
 			self.fixCmakeEclipseBug()
-
-		# only on osx 10.9 mavericks.
-		# manually change .xcodeproj to add code sign for
-		# synmacph project and specify its info.plist
-		if self.macSdk == "10.9" and generator.cmakeName.find('Xcode') != -1:
-			self.fixXcodeProject(target)
 			
 		if err != 0:
 			raise Exception('CMake encountered error: ' + str(err))
@@ -595,59 +568,6 @@ class InternalCommands:
 		file.write(content)
 		file.truncate()
 		file.close()
-
-	def fixXcodeProject(self, target):
-		print "Fixing Xcode project..."
-		
-		insertContent = (
-			"CODE_SIGN_IDENTITY = '%s';\n"
-			"INFOPLIST_FILE = %s/src/cmd/synmacph/Info.plist;\n") % (
-			self.macIdentity,
-			os.getcwd()
-		)
-		
-		dir = self.getBuildDir(target)
-		file = open(dir + '/synergy.xcodeproj/project.pbxproj', 'r+')
-		contents = file.readlines()
-		
-		buildConfigurationsFound = None
-		releaseConfigRefFound = None
-		releaseBuildSettingsFound = None
-		fixed = None
-		releaseConfigRef = "";
-		
-		for line in contents:
-			if buildConfigurationsFound:
-				matchObj = re.search(r'\s*(.*)\s*\/\*\s*Release\s*\*\/,', line, re.I)
-				if matchObj:
-					releaseConfigRef = matchObj.group(1)
-					releaseConfigRefFound = True
-					break
-			elif buildConfigurationsFound == None:
-				if 'PBXNativeTarget "synmacph" */ = {' in line:
-					buildConfigurationsFound = True
-		
-		if not releaseConfigRefFound:
-			raise Exception("Release config ref not found.")
-		
-		for n, line in enumerate(contents):
-			if releaseBuildSettingsFound == None:
-				if releaseConfigRef + '/* Release */ = {' in line:
-					releaseBuildSettingsFound = True
-			elif fixed == None:
-				if 'buildSettings = {' in line:
-					contents[n] = line + insertContent
-					fixed = True
-		
-		if not fixed:
-			raise Exception("Xcode project was not fixed.")
-		
-		file.seek(0)
-		for line in contents:
-			file.write(line)
-		file.truncate()
-		file.close()
-		return
 				
 	def persist_cmake(self):
 		# even though we're running `cmake --version`, we're only doing this for the 0 return
@@ -799,49 +719,6 @@ class InternalCommands:
 				for target in targets:
 					self.macPostMake(target)
 
-				self.fixQtFrameworksLayout()
-
-	def symlink(self, source, target):
-		if not os.path.exists(target):
-			os.symlink(source, target)
- 
-	def move(self, source, target):
-		if os.path.exists(source):
-			shutil.move(source, target)
-
-	def fixQtFrameworksLayout(self):
-		# reorganize Qt frameworks layout on Mac 10.9.5 or later
-		# http://goo.gl/BFnQ8l
-		# QtCore example:
-		# 	QtCore.framework/
-		# 		QtCore    -> Versions/Current/QtCore
-		# 		Resources -> Versions/Current/Resources
-		# 		Versions/
-		# 			Current -> 5
-		# 			5/
-		# 				QtCore
-		# 				Resources/
-		# 					Info.plist
-		dir = self.getGenerator().binDir
-		target = dir + "/Synergy.app/Contents/Frameworks"
-		(major, minor) = self.getMacVersion()
-		if major == 10:
-			if minor >= 9:
-				for root, dirs, files in os.walk(target):
-					for dir in dirs:
-						if dir.startswith("Qt"):
-							self.try_chdir(target + "/" + dir +"/Versions")
-							self.symlink("5", "Current")
-							self.move("../Resources", "5")
-							self.restore_chdir()
-
-							self.try_chdir(target + "/" + dir)
-							dot = dir.find('.')
-							frameworkName = dir[:dot]
-							self.symlink("Versions/Current/" + frameworkName, frameworkName)
-							self.symlink("Versions/Current/Resources", "Resources")
-							self.restore_chdir()
-
 	def macPostMake(self, target):
 
 		dir = self.getGenerator().binDir
@@ -856,53 +733,25 @@ class InternalCommands:
 			shutil.copy(targetDir + "/synergys", bundleBinDir)
 			shutil.copy(targetDir + "/syntool", bundleBinDir)
 
-			if self.macSdk == "10.9":
-				launchServicesDir = dir + "/Synergy.app/Contents/Library/LaunchServices/"
-				if not os.path.exists(launchServicesDir):
-					os.makedirs(launchServicesDir)
-				shutil.copy(targetDir + "/synmacph", launchServicesDir)
-
 		if self.enableMakeGui:
+
+			self.loadConfig()
+			if not self.macIdentity:
+				raise Exception("run config with --mac-identity")
+
 			# use qt to copy libs to bundle so no dependencies are needed. do not create a
 			# dmg at this point, since we need to sign it first, and then create our own
 			# after signing (so that qt does not affect the signed app bundle).
-			bin = "macdeployqt Synergy.app -verbose=2"
+			bin = "macdeployqt Synergy.app -verbose=2 -codesign='" + self.macIdentity + "'"
 			self.try_chdir(dir)
 			err = os.system(bin)
 			self.restore_chdir()
 	
 			if err != 0:
 				raise Exception(bin + " failed with error: " + str(err))
-			
-			(qMajor, qMinor, qRev) = self.getQmakeVersion()
-			if qMajor <= 4:
-				frameworkRootDir = "/Library/Frameworks"
-			else:
-				# TODO: auto-detect, qt can now be installed anywhere.
-				frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
-			
-			target = dir + "/Synergy.app/Contents/Frameworks"
-
-			# copy the missing Info.plist files for the frameworks.
-			for root, dirs, files in os.walk(target):
-				for dir in dirs:
-					if dir.startswith("Qt"):
-						shutil.copy(
-							frameworkRootDir + "/" + dir + "/Contents/Info.plist",
-							target + "/" + dir + "/Resources/")
 
 	def signmac(self):
-		self.loadConfig()
-		if not self.macIdentity:
-			raise Exception("run config with --mac-identity")
-		
-		self.try_chdir("bin")
-		err = os.system(
-			'codesign --deep -fs "' + self.macIdentity + '" Synergy.app')
-		self.restore_chdir()
-
-		if err != 0:
-			raise Exception("codesign failed with error: " + str(err))
+		print "signmac is now obsolete"
 	
 	def signwin(self, pfx, pwdFile, dist):
 		generator = self.getGeneratorFromConfig().cmakeName

@@ -34,11 +34,11 @@ class SocketMultiplexer;
 /*!
 A data socket using TCP.
 */
-class CTCPSocket : public IDataSocket {
+class TCPSocket : public IDataSocket {
 public:
-	CTCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
-	CTCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket);
-	~CTCPSocket();
+	TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+	TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket);
+	virtual ~TCPSocket();
 
 	// ISocket overrides
 	virtual void		bind(const NetworkAddress&);
@@ -57,14 +57,31 @@ public:
 	// IDataSocket overrides
 	virtual void		connect(const NetworkAddress&);
 
+	virtual void		secureConnect() {}
+	virtual void		secureAccept() {}
+
+protected:
+	ArchSocket			getSocket() { return m_socket; }
+	IEventQueue*		getEvents() { return m_events; }
+	virtual bool		isSecureReady() { return false; }
+	virtual bool		isSecure() { return false; }
+	virtual UInt32		secureRead(void* buffer, UInt32) { return 0; }
+	virtual UInt32		secureWrite(const void*, UInt32) { return 0; }
+
+	void				setJob(ISocketMultiplexerJob*);
+	ISocketMultiplexerJob*
+						newJob();
+	bool				isReadable() { return m_readable; }
+	bool				isWritable() { return m_writable; }
+
+	Mutex&				getMutex() { return m_mutex; }
+
+	void				sendEvent(Event::Type);
+
 private:
 	void				init();
 
-	void				setJob(ISocketMultiplexerJob*);
-	ISocketMultiplexerJob*	newJob();
 	void				sendConnectionFailedEvent(const char*);
-	void				sendEvent(Event::Type);
-
 	void				onConnected();
 	void				onInputShutdown();
 	void				onOutputShutdown();
@@ -87,5 +104,5 @@ private:
 	bool				m_readable;
 	bool				m_writable;
 	IEventQueue*		m_events;
-	SocketMultiplexer* m_socketMultiplexer;
+	SocketMultiplexer*	m_socketMultiplexer;
 };

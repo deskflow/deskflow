@@ -96,15 +96,16 @@ private:
 
 private:
 	Mutex*				m_mutex;
-	Thread*			m_thread;
+	Thread*				m_thread;
 	bool				m_update;
 	CondVar<bool>*		m_jobsReady;
 	CondVar<bool>*		m_jobListLock;
 	CondVar<bool>*		m_jobListLockLocked;
-	Thread*			m_jobListLocker;
-	Thread*			m_jobListLockLocker;
+	Thread*				m_jobListLocker;
+	Thread*				m_jobListLockLocker;
 
 	SocketJobs			m_socketJobs;
 	SocketJobMap		m_socketJobMap;
-	ISocketMultiplexerJob*	m_cursorMark;
+	ISocketMultiplexerJob*
+						m_cursorMark;
 };

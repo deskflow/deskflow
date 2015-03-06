@@ -140,6 +140,41 @@ ArchFileWindows::getLogDirectory()
 }
 
 std::string
+ArchFileWindows::getPluginDirectory()
+{
+	if (!m_pluginDirectory.empty()) {
+		return m_pluginDirectory;
+	}
+
+	std::string dir = getProfileDirectory();
+	dir.append("\\Plugins");
+	return dir;
+}
+
+std::string
+ArchFileWindows::getProfileDirectory()
+{
+	String dir;
+	if (!m_profileDirectory.empty()) {
+		dir = m_profileDirectory;
+	}
+	else {
+		TCHAR result[MAX_PATH];
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, result))) {
+			dir = result;
+		}
+		else {
+			dir = getUserDirectory();
+		}
+	}
+
+	// HACK: append program name, this seems wrong.
+	dir.append("\\Synergy");
+
+	return dir;
+}
+
+std::string
 ArchFileWindows::concatPath(const std::string& prefix,
 				const std::string& suffix)
 {
@@ -153,4 +188,16 @@ ArchFileWindows::concatPath(const std::string& prefix,
 	}
 	path += suffix;
 	return path;
+}
+
+void
+ArchFileWindows::setProfileDirectory(const String& s)
+{
+	m_profileDirectory = s;
+}
+
+void
+ArchFileWindows::setPluginDirectory(const String& s)
+{
+	m_pluginDirectory = s;
 }

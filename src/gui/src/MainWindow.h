@@ -83,12 +83,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 			Info
 		};
 
-		enum qProcessorArch {
-			x86,
-			x64,
-			unknown
-		};
-
 	public:
 		MainWindow(QSettings& settings, AppConfig& appConfig);
 		~MainWindow();
@@ -111,7 +105,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void autoAddScreen(const QString name);
 		void updateZeroconfService();
 		void serverDetected(const QString name);
-		int checkWinArch();
+		void setEdition(int type);
 
 	public slots:
 		void appendLogRaw(const QString& text);
@@ -162,10 +156,17 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void stopDesktop();
 		void changeEvent(QEvent* event);
 		void retranslateMenuBar();
+#if defined(Q_OS_WIN)
 		bool isServiceRunning(QString name);
+#else
+		bool isServiceRunning();
+#endif
 		bool isBonjourRunning();
 		void downloadBonjour();
 		void promptAutoConfig();
+		void updateEdition();
+		QString getProfileDirectory();
+		QString getProfileDirectoryForArg();
 
 	private:
 		QSettings& m_Settings;

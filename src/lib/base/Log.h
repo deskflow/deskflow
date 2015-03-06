@@ -41,6 +41,7 @@ LOGC() provide convenient access.
 class Log {
 public:
 	Log();
+	Log(Log* src);
 	~Log();
 
 	//! @name manipulators

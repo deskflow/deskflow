@@ -1,3 +1,12 @@
+1.7.0
+=====
+Enhancement #4313 - SSL encrypted secure connection
+Enhancement #4168 - Plugin manager for GUI
+Enhancement #4307 - Always show client auto-detect dialog
+Enhancement #4397 - Modernize Mac build script (deployment and signing)
+Enhancement #4398 - Remove obsolete Mac database cleaner
+Enhancement #4337 - Remove IStreamFilterFactory dead code
+
 1.6.2
 =====
 Bug #4227 - Helper tool crashes when service checks elevation state

@@ -278,23 +278,6 @@ TEST(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue)
 	EXPECT_EQ(1, i);
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_cryptoPassCmd_savePassword)
-{
-	int i = 1;
-	const int argc = 3;
-	const char* kCryptoPassCmd[argc] = { "stub", "--crypto-pass", "mock_password" };
-
-	ArgParser argParser(NULL);
-	ArgsBase argsBase;
-	argParser.setArgsBase(argsBase);
-	
-	argParser.parseGenericArgs(argc, kCryptoPassCmd, i);
-
-	EXPECT_EQ("mock_password", argsBase.m_crypto.m_pass);
-	EXPECT_EQ(1, argsBase.m_crypto.m_mode); // 1 == kCfb
-	EXPECT_EQ(2, i);
-}
-
 #ifndef  WINAPI_XWINDOWS
 TEST(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnNonLinux_enableDragDropTrue)
 {

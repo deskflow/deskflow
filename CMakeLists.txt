@@ -16,8 +16,8 @@
 
 # Version number for Synergy
 set(VERSION_MAJOR 1)
-set(VERSION_MINOR 6)
-set(VERSION_REV 2)
+set(VERSION_MINOR 7)
+set(VERSION_REV 0)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
 cmake_minimum_required(VERSION 2.6)
@@ -77,6 +77,10 @@ if (UNIX)
 	# warnings as errors:
 	# we have a problem with people checking in code with warnings.
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+
+	if (NOT APPLE)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+	endif()
 
 	# For config.h, detect the libraries, functions, etc.
 	include(CheckIncludeFiles)
@@ -174,7 +178,7 @@ if (UNIX)
 				CACHE STRING "" FORCE)
 		else()
 			# >= 10.6: Intel only
-			set(CMAKE_OSX_ARCHITECTURES "i386;x86_64"
+			set(CMAKE_OSX_ARCHITECTURES "i386"
 				CACHE STRING "" FORCE)
 		endif()
 		
@@ -319,7 +323,6 @@ else() # not-unix
 endif()
 
 add_subdirectory(src)
-add_subdirectory(ext)
 
 if (WIN32)
 	# TODO:	consider using /analyze to uncover potential bugs in the source code.
