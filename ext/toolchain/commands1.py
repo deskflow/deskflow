@@ -259,7 +259,8 @@ class InternalCommands:
 		3 : Generator('Visual Studio 9 2008'),
 		4 : Generator('Visual Studio 9 2008 Win64'),
 		5 : Generator('Visual Studio 8 2005'),
-		6 : Generator('Visual Studio 8 2005 Win64')
+		6 : Generator('Visual Studio 8 2005 Win64'),
+                7 : Generator('Visual Studio 12 2013')
 	}
 
 	unix_generators = {
