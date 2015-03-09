@@ -87,7 +87,7 @@
        </sizepolicy>
       </property>
       <property name="title">
-       <string>&amp;Server (share this computer's mouse and keyboard):</string>
+       <string>Ser&amp;ver (share this computer's mouse and keyboard):</string>
       </property>
       <property name="checkable">
        <bool>true</bool>
