@@ -132,7 +132,7 @@ const KeyID				MSWindowsKeyState::s_virtualKey[] =
 	/* 0x059 */ { kKeyNone },		// VK_Y
 	/* 0x05a */ { kKeyNone },		// VK_Z
 	/* 0x05b */ { kKeySuper_L },	// VK_LWIN
-	/* 0x05c */ { kKeySuper_R },	// VK_RWIN
+	/* 0x05c */ { kKeyNone },	// VK_RWIN
 	/* 0x05d */ { kKeyMenu },		// VK_APPS
 	/* 0x05e */ { kKeyNone },		// undefined
 	/* 0x05f */ { kKeySleep },		// VK_SLEEP
@@ -164,7 +164,7 @@ const KeyID				MSWindowsKeyState::s_virtualKey[] =
 	/* 0x079 */ { kKeyF10 },		// VK_F10
 	/* 0x07a */ { kKeyF11 },		// VK_F11
 	/* 0x07b */ { kKeyF12 },		// VK_F12
-	/* 0x07c */ { kKeyF13 },		// VK_F13
+	/* 0x07c */ { kKeyNone },		// VK_F13
 	/* 0x07d */ { kKeyF14 },		// VK_F14
 	/* 0x07e */ { kKeyF15 },		// VK_F15
 	/* 0x07f */ { kKeyF16 },		// VK_F16
