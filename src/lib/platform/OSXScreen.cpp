@@ -524,6 +524,23 @@ OSXScreen::postMouseEvent(CGPoint& pos) const
 	}
 
 	CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, button);
+    
+    // Set movement deltas to fix issues with certain 3D programs
+    SInt64 deltaX = pos.x;
+    deltaX -= m_xCursor;
+    
+    SInt64 deltaY = pos.y;
+    deltaY -= m_yCursor;
+    
+    CGEventSetIntegerValueField(event, kCGMouseEventDeltaX, deltaX);
+    CGEventSetIntegerValueField(event, kCGMouseEventDeltaY, deltaY);
+    
+    double deltaFX = deltaX;
+    double deltaFY = deltaY;
+    
+    CGEventSetDoubleValueField(event, kCGMouseEventDeltaX, deltaFX);
+    CGEventSetDoubleValueField(event, kCGMouseEventDeltaY, deltaFY);
+    
 	CGEventPost(kCGHIDEventTap, event);
 	
 	CFRelease(event);
