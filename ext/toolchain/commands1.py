@@ -803,6 +803,7 @@ class InternalCommands:
 			self.signFile(pfx, pwd, 'bin/Release', 'synergyc.exe')
 			self.signFile(pfx, pwd, 'bin/Release', 'synergys.exe')
 			self.signFile(pfx, pwd, 'bin/Release', 'synergyd.exe')
+			self.signFile(pfx, pwd, 'bin/Release', 'syntool.exe')
 			self.signFile(pfx, pwd, 'bin/Release', 'synwinhk.dll')
 	
 	def signFile(self, pfx, pwd, dir, file):
