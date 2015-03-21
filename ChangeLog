@@ -3,6 +3,7 @@
 Bug #4349 - Mouse click does not always bring window to front
 Bug #4463 - Unidentified developer error on Mac OS X
 Bug #4464 - Code signing verify failure not reported on Mac build
+Bug #4465 - Binary (syntool) is not code signed on Windows
 Enhancement #4455 - Replace version with branch name in package filename
 
 1.6.2
