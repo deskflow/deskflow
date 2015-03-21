@@ -1,0 +1,153 @@
+diff --git a/ext/toolchain/commands1.py b/ext/toolchain/commands1.py
+index f29a721..cdd2ac6 100644
+--- a/ext/toolchain/commands1.py
++++ b/ext/toolchain/commands1.py
+@@ -698,43 +698,49 @@ class InternalCommands:
+ 					raise Exception('Build command not supported with generator: ' + generator)
+ 	
+ 	def makeGui(self, targets, args=""):
+-		name = "Synergy.app"
+-		self.try_chdir(self.getGenerator().binDir)
+-		if os.path.exists(name):
+-			print "removing exisiting bundle"
+-			shutil.rmtree(name)
+-		self.restore_chdir()
+-
+-		if sys.platform == 'win32':
+-			gui_make_cmd = self.w32_make_cmd
+-		elif sys.platform in ['linux2', 'sunos5', 'freebsd7', 'darwin']:
+-			gui_make_cmd = self.make_cmd + " -w"
+-		else:
+-			raise Exception('Unsupported platform: ' + sys.platform)
+-		
+-		gui_make_cmd += args
+-		
+-		print 'Make GUI command: ' + gui_make_cmd
++		for target in targets:
+ 		
+-		if sys.platform == 'win32':
+-			for target in targets:
++			if sys.platform == 'win32':
++
++				gui_make_cmd = self.w32_make_cmd + ' ' + target + args
++				print 'Make GUI command: ' + gui_make_cmd
++
+ 				self.try_chdir(self.gui_dir)
+-				err = os.system(gui_make_cmd + ' ' + target)
++				err = os.system(gui_make_cmd)
+ 				self.restore_chdir()
+ 				
+ 				if err != 0:
+ 					raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
+-		else:
+-			self.try_chdir(self.gui_dir)
+-			err = os.system(gui_make_cmd)
+-			self.restore_chdir()
+ 
+-			if err != 0:
+-				raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
++			elif sys.platform in ['linux2', 'sunos5', 'freebsd7', 'darwin']:
+ 
+-			if sys.platform == 'darwin' and not "clean" in args:
+-				for target in targets:
+-					self.macPostMake(target)
++				gui_make_cmd = self.make_cmd + " -w" + args
++				print 'Make GUI command: ' + gui_make_cmd
++
++				# start with a clean app bundle
++				targetDir = self.getGenerator().getBinDir(target)
++				bundleTargetDir = targetDir + '/Synergy.app'
++				print bundleTargetDir
++				if os.path.exists(bundleTargetDir):
++					shutil.rmtree(bundleTargetDir)
++
++				binDir = self.getGenerator().binDir
++				bundleTempDir = binDir + '/Synergy.app'
++				print bundleTempDir
++				if os.path.exists(bundleTempDir):
++					shutil.rmtree(bundleTempDir)
++
++				self.try_chdir(self.gui_dir)
++				err = os.system(gui_make_cmd)
++				self.restore_chdir()
++
++				if err != 0:
++					raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
++
++				if sys.platform == 'darwin' and not "clean" in args:
++					self.macPostGuiMake(target)
++			else:
++				raise Exception('Unsupported platform: ' + sys.platform)
+ 
+ 	def symlink(self, source, target):
+ 		if not os.path.exists(target):
+@@ -744,36 +750,51 @@ class InternalCommands:
+ 		if os.path.exists(source):
+ 			shutil.move(source, target)
+ 
+-	def macPostMake(self, target):
++	def macPostGuiMake(self, target):
+ 
+-		dir = self.getGenerator().binDir
++		bundle = 'Synergy.app'
++		binDir = self.getGenerator().binDir
++		targetDir = self.getGenerator().getBinDir(target)
++		bundleTempDir = binDir + '/' + bundle
++		bundleTargetDir = targetDir + '/' + bundle
++
++		if os.path.exists(bundleTempDir):
++			shutil.move(bundleTempDir, bundleTargetDir)
+ 
+ 		if self.enableMakeCore:
+ 			# copy core binaries into the bundle, since the gui
+ 			# now looks for the binaries in the current app dir.
+ 			
+-			targetDir = self.getGenerator().getBinDir(target)
+-			bundleBinDir = dir + "/Synergy.app/Contents/MacOS/"
++			bundleBinDir = bundleTargetDir + "/Contents/MacOS/"
+ 			shutil.copy(targetDir + "/synergyc", bundleBinDir)
+ 			shutil.copy(targetDir + "/synergys", bundleBinDir)
+ 			shutil.copy(targetDir + "/syntool", bundleBinDir)
+ 
+-		if self.enableMakeGui:
++		self.loadConfig()
++		if not self.macIdentity:
++			raise Exception("run config with --mac-identity")
+ 
+-			self.loadConfig()
+-			if not self.macIdentity:
+-				raise Exception("run config with --mac-identity")
+-
+-			# use qt to copy libs to bundle so no dependencies are needed. do not create a
+-			# dmg at this point, since we need to sign it first, and then create our own
+-			# after signing (so that qt does not affect the signed app bundle).
+-			bin = "macdeployqt Synergy.app -verbose=2 -codesign='" + self.macIdentity + "'"
+-			self.try_chdir(dir)
+-			err = os.system(bin)
+-			self.restore_chdir()
++		if sys.version_info < (2, 4):
++			raise Exception("Python 2.4 or greater required.")
+ 	
+-			if err != 0:
+-				raise Exception(bin + " failed with error: " + str(err))
++		self.try_chdir(targetDir)
++
++		p = subprocess.Popen(
++			["macdeployqt", "Synergy.app", "-verbose=2",
++			"-codesign='" + self.macIdentity + "'"],
++			stdout=subprocess.PIPE, stderr=subprocess.PIPE)
++
++		stdout, stderr = p.communicate()
++
++		self.restore_chdir()
++
++		# print stderr to standard out, since macdeployqt sends
++		# everything to stderr making it meaningless.
++		print stdout
++		print stderr
++
++		if "ERROR" in stderr:
++			raise Exception("macdeployqt failed")
+ 
+ 	def signmac(self):
+ 		print "signmac is now obsolete"
