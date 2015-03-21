@@ -788,7 +788,10 @@ class InternalCommands:
 
 		print output[1]
 		if "ERROR" in output[1]:
-			raise Exception("macdeployqt failed")
+			(qMajor, qMinor, qRev) = self.getQmakeVersion()
+			if qMajor >= 5:
+				# only listen to errors in qt 5+
+				raise Exception("macdeployqt failed")
 
 	def signmac(self):
 		print "signmac is now obsolete"
