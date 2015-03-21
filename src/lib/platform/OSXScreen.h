@@ -335,8 +335,8 @@ private:
 	CFRunLoopSourceRef		m_eventTapRLSR;
 
 	// for double click coalescing.
-	double					m_lastSingleClick;
-	double					m_lastDoubleClick;
+	double					m_lastClickTime;
+    int                     m_clickState;
 	SInt32					m_lastSingleClickXCursor;
 	SInt32					m_lastSingleClickYCursor;
 
