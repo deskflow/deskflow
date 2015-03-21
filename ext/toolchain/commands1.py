@@ -775,9 +775,16 @@ class InternalCommands:
 		if sys.version_info < (2, 4):
 			raise Exception("Python 2.4 or greater required.")
 
-		output = commands.getstatusoutput(
-			"macdeployqt %s/Synergy.app -verbose=2 -codesign='%s'" % (
-			targetDir, self.macIdentity))
+		(qMajor, qMinor, qRev) = self.getQmakeVersion()
+		if qMajor >= 5:
+			output = commands.getstatusoutput(
+				"macdeployqt %s/Synergy.app -verbose=2 -codesign='%s'" % (
+				targetDir, self.macIdentity))
+		else:
+			# no code signing available in old versions
+			output = commands.getstatusoutput(
+				"macdeployqt %s/Synergy.app -verbose=2" % (
+				targetDir))
 
 		print output[1]
 		if "ERROR" in output[1]:
