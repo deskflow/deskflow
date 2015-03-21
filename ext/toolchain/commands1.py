@@ -1313,12 +1313,8 @@ class InternalCommands:
 		dest = self.dist_name_rev(type)
 		print 'Uploading %s to FTP server %s...' % (dest, ftp.host)
 
-		srcDir = 'bin/'
-		generator = self.getGeneratorFromConfig().cmakeName
-		#if not generator.startswith('Visual Studio'):
-		#	srcDir += 'release/'
-
-		ftp.run(srcDir + src, dest) 
+		binDir = self.getGenerator().getBinDir('Release')
+		ftp.run(binDir + '/' + src, dest) 
 		print 'Done'
 	
 	def getDebianArch(self):
