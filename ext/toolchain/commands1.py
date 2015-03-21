@@ -775,13 +775,12 @@ class InternalCommands:
 		if sys.version_info < (2, 4):
 			raise Exception("Python 2.4 or greater required.")
 
-		output = os.popen(
+		output = commands.getstatusoutput(
 			"macdeployqt %s/Synergy.app -verbose=2 -codesign='%s'" % (
-			targetDir, self.macIdentity)).read()
+			targetDir, self.macIdentity))
 
-		print output
-
-		if "ERROR" in output:
+		print output[1]
+		if "ERROR" in output[1]:
 			raise Exception("macdeployqt failed")
 
 	def signmac(self):
