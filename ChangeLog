@@ -7,6 +7,14 @@ Enhancement #4397 - Modernize Mac build script (deployment and signing)
 Enhancement #4398 - Remove obsolete Mac database cleaner
 Enhancement #4337 - Remove IStreamFilterFactory dead code
 
+1.6.3
+=====
+Bug #4349 - Mouse click does not always bring window to front
+Bug #4463 - Unidentified developer error on Mac OS X
+Bug #4464 - Code signing verify failure not reported on Mac build
+Bug #4465 - Binary (syntool) is not code signed on Windows
+Enhancement #4455 - Replace version with branch name in package filename
+
 1.6.2
 =====
 Bug #4227 - Helper tool crashes when service checks elevation state
