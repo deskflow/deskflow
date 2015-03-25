@@ -86,13 +86,8 @@ const QString &AppConfig::logFilename() const { return m_LogFilename; }
 
 QString AppConfig::synergyLogDir() const
 {
-#if defined(Q_OS_WIN)
-    // on windows, we want to log to program files
-    return synergyProgramDir() + "log/";
-#else
-    // on unix, we'll log to the standard log dir
-    return "/var/log/";
-#endif
+	// by default log to home dir
+	return QDir::home().absolutePath() + "/";
 }
 
 QString AppConfig::synergyProgramDir() const
