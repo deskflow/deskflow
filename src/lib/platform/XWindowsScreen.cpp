@@ -826,7 +826,7 @@ void
 XWindowsScreen::fakeMouseButton(ButtonID button, bool press)
 {
 	const unsigned int xButton = mapButtonToX(button);
-	if (xButton != 0) {
+	if (xButton > 0 && xButton < 11) {
 		XTestFakeButtonEvent(m_display, xButton,
 							press ? True : False, CurrentTime);
 		XFlush(m_display);
