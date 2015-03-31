@@ -385,9 +385,6 @@ class InternalCommands:
 			if not self.macSdk:
 				raise Exception("Arg missing: --mac-sdk <version>");
 				
-			if not self.macIdentity:
-				raise Exception("Arg missing: --mac-identity <name>");
-			
 			sdkDir = self.getMacSdkDir()
 			if not os.path.exists(sdkDir):
 				raise Exception("Mac SDK not found at: " + sdkDir)
@@ -739,19 +736,17 @@ class InternalCommands:
 			shutil.copy(targetDir + "/syntool", bundleBinDir)
 
 		self.loadConfig()
-		if not self.macIdentity:
-			raise Exception("run config with --mac-identity")
 
 		if sys.version_info < (2, 4):
 			raise Exception("Python 2.4 or greater required.")
 
 		(qMajor, qMinor, qRev) = self.getQmakeVersion()
-		if qMajor >= 5:
+		if qMajor >= 5 and self.macIdentity:
 			output = commands.getstatusoutput(
 				"macdeployqt %s/Synergy.app -verbose=2 -codesign='%s'" % (
 				targetDir, self.macIdentity))
 		else:
-			# no code signing available in old versions
+			# no code signing available in old versions or no identity provided
 			output = commands.getstatusoutput(
 				"macdeployqt %s/Synergy.app -verbose=2" % (
 				targetDir))
