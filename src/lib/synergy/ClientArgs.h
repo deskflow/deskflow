@@ -26,6 +26,6 @@ public:
 	ClientArgs();
 
 public:
-	int	m_yscroll;
-	CString m_certFingerprint;
+	int					m_yscroll;
+	CString				m_certFingerprint;
 };

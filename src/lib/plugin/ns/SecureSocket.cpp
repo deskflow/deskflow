@@ -33,8 +33,6 @@
 #include <fstream>
 #include <algorithm>
 
-int	verifyCertFingerprint(X509_STORE_CTX* ctx, void* arg);
-
 //
 // SecureSocket
 //
@@ -45,6 +43,8 @@ struct Ssl {
 	SSL_CTX*	m_context;
 	SSL*		m_ssl;
 };
+
+int	verifyCertFingerprint(X509_STORE_CTX* ctx, void* arg);
 
 bool CSecureSocket::s_verifyFingerprintFailed = false;
 
