@@ -178,8 +178,6 @@ SecureSocket::loadCertificates(const char* filename)
 	}
 }
 
-const char test[]  = "/Users/xinyu/serverCertificateFingerprint.txt";
-
 void
 SecureSocket::initContext(bool server)
 {
@@ -210,8 +208,11 @@ SecureSocket::initContext(bool server)
 	}
 
 	if (!server) {
-		//void* p = reinterpret_cast<void*>(const_cast<char*>(m_certFingerprint.c_str()));
-		SSL_CTX_set_cert_verify_callback(m_ssl->m_context, verifyCertFingerprint, (void*)test);
+		void* p = reinterpret_cast<void*>(const_cast<char*>(m_certFingerprint.c_str()));
+		SSL_CTX_set_cert_verify_callback(
+			m_ssl->m_context,
+			verifyCertFingerprint,
+			p);
 	}
 }
 
