@@ -23,6 +23,7 @@
 #include "arch/XArch.h"
 #include "base/Log.h"
 
+#include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <cstring>
 #include <cstdlib>
@@ -30,6 +31,9 @@
 #include <sstream>
 #include <iomanip>
 #include <fstream>
+#include <algorithm>
+
+int	verifyCertFingerprint(X509_STORE_CTX* ctx, void* arg);
 
 //
 // SecureSocket
@@ -207,7 +211,7 @@ SecureSocket::initContext(bool server)
 
 	if (!server) {
 		//void* p = reinterpret_cast<void*>(const_cast<char*>(m_certFingerprint.c_str()));
-		SSL_CTX_set_cert_verify_callback(m_ssl->m_context, CSecureSocket::verifyCertFingerprint, (void*)test);
+		SSL_CTX_set_cert_verify_callback(m_ssl->m_context, verifyCertFingerprint, (void*)test);
 	}
 }
 
@@ -437,7 +441,7 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 }
 
 int
-CSecureSocket::verifyCertFingerprint(X509_STORE_CTX* ctx, void* arg)
+verifyCertFingerprint(X509_STORE_CTX* ctx, void* arg)
 {
 	X509 *cert = ctx->cert;
 
@@ -446,13 +450,13 @@ CSecureSocket::verifyCertFingerprint(X509_STORE_CTX* ctx, void* arg)
 	unsigned int tempFingerprintLen;
 	tempDigest = (EVP_MD*)EVP_sha1();
 	if (X509_digest(cert, tempDigest, tempFingerprint, &tempFingerprintLen) <= 0) {
-		s_verifyFingerprintFailed = true;
+		CSecureSocket::s_verifyFingerprintFailed = true;
 		return 0;
 	}
 
 	std::stringstream ss;
 	ss << std::hex;
-	for (int i = 0; i < tempFingerprintLen; i++) {
+	for (unsigned int i = 0; i < tempFingerprintLen; i++) {
 		ss << std::setw(2) << std::setfill('0') << (int)tempFingerprint[i];
 	}
 	CString fingerprint = ss.str();
@@ -483,6 +487,6 @@ CSecureSocket::verifyCertFingerprint(X509_STORE_CTX* ctx, void* arg)
 
 	file.close();
 
-	s_verifyFingerprintFailed = true;
+	CSecureSocket::s_verifyFingerprintFailed = true;
 	return 0;
 }

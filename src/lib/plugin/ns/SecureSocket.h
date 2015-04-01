@@ -20,8 +20,6 @@
 #include "net/TCPSocket.h"
 #include "net/XSocket.h"
 
-#include <openssl/ssl.h>
-
 class IEventQueue;
 class SocketMultiplexer;
 class ISocketMultiplexerJob;
@@ -74,14 +72,10 @@ private:
 							bool, bool, bool);
 
 private:
-static int				verifyCertFingerprint(X509_STORE_CTX* ctx, void* arg);
-
-
-private:
 	Ssl*				m_ssl;
 	bool				m_secureReady;
 	CString				m_certFingerprint;
 
-private:
+public:
 	static bool			s_verifyFingerprintFailed;
 };
