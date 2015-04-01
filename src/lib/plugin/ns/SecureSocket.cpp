@@ -23,11 +23,13 @@
 #include "arch/XArch.h"
 #include "base/Log.h"
 
-#include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <cstring>
 #include <cstdlib>
 #include <memory>
+#include <sstream>
+#include <iomanip>
+#include <fstream>
 
 //
 // SecureSocket
@@ -40,11 +42,14 @@ struct Ssl {
 	SSL*		m_ssl;
 };
 
-SecureSocket::SecureSocket(
+bool CSecureSocket::s_verifyFingerprintFailed = false;
+
+CSecureSocket::CSecureSocket(
 		IEventQueue* events,
-		SocketMultiplexer* socketMultiplexer) :
-	TCPSocket(events, socketMultiplexer),
-	m_secureReady(false)
+		CSocketMultiplexer* socketMultiplexer) :
+	CTCPSocket(events, socketMultiplexer),
+	m_secureReady(false),
+	m_certFingerprint()
 {
 }
 
@@ -169,6 +174,8 @@ SecureSocket::loadCertificates(const char* filename)
 	}
 }
 
+const char test[]  = "/Users/xinyu/serverCertificateFingerprint.txt";
+
 void
 SecureSocket::initContext(bool server)
 {
@@ -196,6 +203,11 @@ SecureSocket::initContext(bool server)
 	m_ssl->m_context = SSL_CTX_new(m);
 	if (m_ssl->m_context == NULL) {
 		showError();
+	}
+
+	if (!server) {
+		//void* p = reinterpret_cast<void*>(const_cast<char*>(m_certFingerprint.c_str()));
+		SSL_CTX_set_cert_verify_callback(m_ssl->m_context, CSecureSocket::verifyCertFingerprint, (void*)test);
 	}
 }
 
@@ -260,6 +272,10 @@ SecureSocket::secureConnect(int socket)
 	}
 
 	m_secureReady = !retry;
+
+	if (s_verifyFingerprintFailed) {
+		throwError("failed to verify server certificate fingerprint");
+	}
 
 	if (m_secureReady) {
 		LOG((CLOG_INFO "connected to secure socket"));
@@ -366,7 +382,7 @@ SecureSocket::throwError(const char* reason)
 	String error = getError();
 	if (!error.empty()) {
 		throw XSocket(synergy::string::sprintf(
-			"%s: %s", reason, error.c_str()));
+											   "%s: %s", reason, error.c_str()));
 	}
 	else {
 		throw XSocket(reason);
@@ -418,4 +434,55 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 #endif
 
 	return retry ? job : newJob();
+}
+
+int
+CSecureSocket::verifyCertFingerprint(X509_STORE_CTX* ctx, void* arg)
+{
+	X509 *cert = ctx->cert;
+
+	EVP_MD* tempDigest;
+	unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
+	unsigned int tempFingerprintLen;
+	tempDigest = (EVP_MD*)EVP_sha1();
+	if (X509_digest(cert, tempDigest, tempFingerprint, &tempFingerprintLen) <= 0) {
+		s_verifyFingerprintFailed = true;
+		return 0;
+	}
+
+	std::stringstream ss;
+	ss << std::hex;
+	for (int i = 0; i < tempFingerprintLen; i++) {
+		ss << std::setw(2) << std::setfill('0') << (int)tempFingerprint[i];
+	}
+	CString fingerprint = ss.str();
+	std::transform(fingerprint.begin(), fingerprint.end(), fingerprint.begin(), ::toupper);
+
+	CString fileLine;
+	CString certificateFingerprint;
+	char* certFingerprintFilename = reinterpret_cast<char*>(arg);
+	std::ifstream file;
+	file.open(certFingerprintFilename);
+
+	while (!file.eof()) {
+		getline(file,fileLine);
+		size_t found = fileLine.find('=');
+		if (found != CString::npos) {
+			certificateFingerprint = fileLine.substr(found + 1);
+
+			if (!certificateFingerprint.empty()) {
+				certificateFingerprint.erase(std::remove(certificateFingerprint.begin(), certificateFingerprint.end(), ':'), certificateFingerprint.end());
+
+				if(certificateFingerprint.compare(fingerprint) == 0) {
+					file.close();
+					return 1;
+				}
+			}
+		}
+	}
+
+	file.close();
+
+	s_verifyFingerprintFailed = true;
+	return 0;
 }

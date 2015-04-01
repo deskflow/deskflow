@@ -17,7 +17,8 @@
 
 #include "synergy/ClientArgs.h"
 
-ClientArgs::ClientArgs() :
-	m_yscroll(0)
+CClientArgs::CClientArgs() :
+	m_yscroll(0),
+	m_certFingerprint()
 {
 }

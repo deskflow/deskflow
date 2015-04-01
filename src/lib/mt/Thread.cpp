@@ -160,7 +160,6 @@ Thread::threadFunc(void* vjob)
 	}
 
 	catch (XSocket& e) {
-		// client called cancel()
 		LOG((CLOG_DEBUG "%s", e.what()));
 	}
 	catch (XThreadCancel&) {
