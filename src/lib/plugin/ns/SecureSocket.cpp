@@ -46,7 +46,7 @@ CSecureSocket::CSecureSocket(
 		CSocketMultiplexer* socketMultiplexer) :
 	CTCPSocket(events, socketMultiplexer),
 	m_secureReady(false),
-	m_certFingerprint()
+	m_certFingerprintFilename()
 {
 }
 
@@ -405,6 +405,10 @@ CSecureSocket::disconnect()
 bool
 CSecureSocket::verifyCertFingerprint()
 {
+	if (m_certFingerprintFilename.empty()) {
+		return false;
+	}
+
 	// calculate received certificate fingerprint
 	X509 *cert = cert = SSL_get_peer_certificate(m_ssl->m_ssl);
 	EVP_MD* tempDigest;
@@ -426,7 +430,7 @@ CSecureSocket::verifyCertFingerprint()
 	CString fileLine;
 	CString certificateFingerprint;
 	std::ifstream file;
-	file.open(m_certFingerprint.c_str());
+	file.open(m_certFingerprintFilename.c_str());
 
 	while (!file.eof()) {
 		getline(file,fileLine);

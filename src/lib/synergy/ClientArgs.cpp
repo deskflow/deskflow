@@ -19,6 +19,6 @@
 
 CClientArgs::CClientArgs() :
 	m_yscroll(0),
-	m_certFingerprint()
+	m_certFingerprintFilename()
 {
 }

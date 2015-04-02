@@ -91,7 +91,7 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
 		}
 		else if (isArg(i, argc, argv, NULL, "--certificate-fingerprint", 1)) {
 			// define scroll
-			args.m_certFingerprint = argv[++i];
+			args.m_certFingerprintFilename = argv[++i];
 		}
 		else {
 			if (i + 1 == argc) {

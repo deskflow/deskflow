@@ -59,6 +59,7 @@ public:
 
 	virtual void		secureConnect() {}
 	virtual void		secureAccept() {}
+	virtual void		setFingerprintFilename(CString& f) {}
 
 protected:
 	ArchSocket			getSocket() { return m_socket; }
