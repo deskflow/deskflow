@@ -51,19 +51,6 @@
     <Condition Message="An existing installation of $(var.Name) was detected, please uninstall it before continuing.">
       NOT LEGACY_UNINSTALL_EXISTS
     </Condition>
-
-    <Property Id="BONJOUR_INSTALLED">
-      <RegistrySearch
-        Id="BonjourRegistrySearch"
-        Root="HKLM"
-        Key="SOFTWARE\Classes\AppID\Bonjour.DLL"
-        Name="AppID"
-        Type="raw" />
-    </Property>
-
-    <Condition Message="This beta version requires Bonjour to be installed. Please visit synergy-project.org/bonjour/ to download the Bonjour installer.">
-      <![CDATA[Installed OR BONJOUR_INSTALLED]]>
-    </Condition>
     
     <CustomAction Id="StartGui" FileKey="GuiProgram" ExeCommand="" Return="asyncNoWait" Execute="deferred" Impersonate="yes" />
     
@@ -97,18 +84,21 @@
             Start="install" Stop="both" Remove="uninstall" />
 
         <File Source="$(var.BinPath)/synergys.exe">
-          <fire:FirewallException Id="SereverFirewallException" Name="$(var.Name)" Scope="any" IgnoreFailure="yes" />
+          <fire:FirewallException Id="ServerFirewallException" Name="$(var.Name)" Scope="any" IgnoreFailure="yes" />
         </File>
         
         <File Source="$(var.BinPath)/synergyc.exe" />
         <File Source="$(var.BinPath)/syntool.exe" />
         <File Source="$(var.BinPath)/synwinhk.dll" />
+        <File Source="$(var.BinPath)/libeay32.dll" />
+        <File Source="$(var.BinPath)/ssleay32.dll" />
         
       </Component>
       
       <Component Id="Gui" Guid="BAC8149B-6287-45BF-9C27-43D71ED40214">
         <File Id="GuiProgram" Source="$(var.BinPath)/synergy.exe" KeyPath="yes">
           <Shortcut Id="GuiShortcut" Name="$(var.Name)" Directory="ProgramMenuFolder" Icon="synergy.ico" Advertise="yes" />
+          <fire:FirewallException Id="GuiFirewallException" Name="$(var.Name)" Scope="any" IgnoreFailure="yes" />
         </File>
 
         <File Source="$(var.QtPath)\libgcc_s_dw2-1.dll" CompanionFile="GuiProgram" />

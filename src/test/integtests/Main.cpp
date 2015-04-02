@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2011 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or
@@ -39,13 +39,13 @@ main(int argc, char **argv)
 {
 #if SYSAPI_WIN32
 	// record window instance for tray icon, etc
-	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+	ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 
-	CArch arch;
+	Arch arch;
 	arch.init();
 	
-	CLog log;
+	Log log;
 	log.setFilter(kDEBUG2);
 
 	string lockFile;

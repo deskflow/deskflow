@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2013 Bolton Software Ltd.
+ * Copyright (C) 2013 Synergy Si Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,20 +21,19 @@
 #include "synergy/XSynergy.h"
 #include "base/Log.h"
 
-#include <Tlhelp32.h>
 #include <Wtsapi32.h>
 
-CMSWindowsSession::CMSWindowsSession() :
+MSWindowsSession::MSWindowsSession() :
 	m_activeSessionId(-1)
 {
 }
 
-CMSWindowsSession::~CMSWindowsSession()
+MSWindowsSession::~MSWindowsSession()
 {
 }
 
 bool
-CMSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
+MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
 {
 	// first we need to take a snapshot of the running processes
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -69,34 +68,29 @@ CMSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
 				entry.th32ProcessID, &processSessionId);
 
 			if (!pidToSidRet) {
+				// if we can not acquire session associated with a specified process,
+				// simply ignore it
 				LOG((CLOG_ERR "could not get session id for process id %i", entry.th32ProcessID));
-				throw XArch(new XArchEvalWindows());
+				gotEntry = nextProcessEntry(snapshot, &entry);
+				continue;
 			}
+			else {
+				// only pay attention to processes in the active session
+				if (processSessionId == m_activeSessionId) {
 
-			// only pay attention to processes in the active session
-			if (processSessionId == m_activeSessionId) {
+					// store the names so we can record them for debug
+					nameList.push_back(entry.szExeFile);
 
-				// store the names so we can record them for debug
-				nameList.push_back(entry.szExeFile);
-
-				if (_stricmp(entry.szExeFile, name) == 0) {
-					pid = entry.th32ProcessID;
+					if (_stricmp(entry.szExeFile, name) == 0) {
+						pid = entry.th32ProcessID;
+					}
 				}
 			}
+
 		}
 
 		// now move on to the next entry (if we're not at the end)
-		gotEntry = Process32Next(snapshot, &entry);
-		if (!gotEntry) {
-
-			DWORD err = GetLastError();
-			if (err != ERROR_NO_MORE_FILES) {
-
-				// only worry about error if it's not the end of the snapshot
-				LOG((CLOG_ERR "could not get next process entry"));
-				throw XArch(new XArchEvalWindows());
-			}
-		}
+		gotEntry = nextProcessEntry(snapshot, &entry);
 	}
 
 	std::string nameListJoin;
@@ -126,7 +120,7 @@ CMSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
 }
 
 HANDLE 
-CMSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
+MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
 {
 	HANDLE sourceToken;
 	if (!WTSQueryUserToken(m_activeSessionId, &sourceToken)) {
@@ -148,13 +142,54 @@ CMSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
 }
 
 BOOL
-CMSWindowsSession::hasChanged()
+MSWindowsSession::hasChanged()
 {
 	return (m_activeSessionId != WTSGetActiveConsoleSessionId());
 }
 
 void
-CMSWindowsSession::updateActiveSession()
+MSWindowsSession::updateActiveSession()
 {
 	m_activeSessionId = WTSGetActiveConsoleSessionId();
+}
+
+
+BOOL
+MSWindowsSession::nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry)
+{
+	BOOL gotEntry = Process32Next(snapshot, entry);
+	if (!gotEntry) {
+
+		DWORD err = GetLastError();
+		if (err != ERROR_NO_MORE_FILES) {
+
+			// only worry about error if it's not the end of the snapshot
+			LOG((CLOG_ERR "could not get next process entry"));
+			throw XArch(new XArchEvalWindows());
+		}
+	}
+
+	return gotEntry;
+}
+
+String
+MSWindowsSession::getActiveDesktopName()
+{
+	String result;
+	try {
+		HDESK hd = OpenInputDesktop(0, TRUE, GENERIC_READ);
+		if (hd != NULL) {
+			DWORD size;
+			GetUserObjectInformation(hd, UOI_NAME, NULL, 0, &size);
+			TCHAR* name = (TCHAR*)alloca(size + sizeof(TCHAR));
+			GetUserObjectInformation(hd, UOI_NAME, name, size, &size);
+			result = name;
+			CloseDesktop(hd);
+		}
+	}
+	catch (std::exception error) {
+		LOG((CLOG_ERR "failed to get active desktop name: %s", error.what()));
+	}
+
+	return result;
 }

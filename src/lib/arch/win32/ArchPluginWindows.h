@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2012 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or
@@ -19,29 +19,36 @@
 #pragma once
 
 #include "arch/IArchPlugin.h"
-#include "base/String.h"
 
 #include <vector>
 
-#define ARCH_PLUGIN CArchPluginWindows
+#define ARCH_PLUGIN ArchPluginWindows
 
-class CScreen;
+class Screen;
 class IEventQueue;
 
 //! Windows implementation of IArchPlugin
-class CArchPluginWindows : public IArchPlugin {
+class ArchPluginWindows : public IArchPlugin {
 public:
-	CArchPluginWindows();
-	virtual ~CArchPluginWindows();
+	ArchPluginWindows();
+	virtual ~ArchPluginWindows();
 
 	// IArchPlugin overrides
-	void				init(void* eventTarget, IEventQueue* events);
+	void				load();
+	void				unload();
+	void				init(void* log, void* arch);
+	void				initEvent(void* eventTarget, IEventQueue* events);
+	bool				exists(const char* name);
+	void*				invoke(const char* pluginName,
+							const char* functionName,
+							void** args);
 
 private:
-	CString				getModuleDir();
-	void				getFilenames(const CString& pattern, std::vector<CString>& filenames);
-	void				load(const CString& dllPath);
-	CString				getPluginsDir();
+	void				getFilenames(const String& pattern, std::vector<String>& filenames);
+	String				getPluginsDir();
+
+private:
+	PluginTable			m_pluginTable;
 };
 
 void					sendEvent(const char* text, void* data);

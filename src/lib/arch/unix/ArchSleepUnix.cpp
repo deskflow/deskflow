@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -43,21 +43,21 @@
 #endif
 
 //
-// CArchSleepUnix
+// ArchSleepUnix
 //
 
-CArchSleepUnix::CArchSleepUnix()
+ArchSleepUnix::ArchSleepUnix()
 {
 	// do nothing
 }
 
-CArchSleepUnix::~CArchSleepUnix()
+ArchSleepUnix::~ArchSleepUnix()
 {
 	// do nothing
 }
 
 void
-CArchSleepUnix::sleep(double timeout)
+ArchSleepUnix::sleep(double timeout)
 {
 	ARCH->testCancelThread();
 	if (timeout < 0.0) {

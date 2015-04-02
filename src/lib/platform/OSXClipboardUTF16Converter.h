@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,17 +21,17 @@
 #include "platform/OSXClipboardAnyTextConverter.h"
 
 //! Convert to/from UTF-16 encoding
-class COSXClipboardUTF16Converter : public COSXClipboardAnyTextConverter {
+class OSXClipboardUTF16Converter : public OSXClipboardAnyTextConverter {
 public:
-	COSXClipboardUTF16Converter();
-	virtual ~COSXClipboardUTF16Converter();
+	OSXClipboardUTF16Converter();
+	virtual ~OSXClipboardUTF16Converter();
 
 	// IOSXClipboardAnyTextConverter overrides
 	virtual CFStringRef
 						getOSXFormat() const;
 
 protected:
-	// COSXClipboardAnyTextConverter overrides
-	virtual CString		doFromIClipboard(const CString&) const;
-	virtual CString		doToIClipboard(const CString&) const;
+	// OSXClipboardAnyTextConverter overrides
+	virtual String		doFromIClipboard(const String&) const;
+	virtual String		doToIClipboard(const String&) const;
 };

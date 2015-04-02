@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2011 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #include <cstring>
 #include <cstdlib>
 
-static CArchMutex              s_mutex = NULL;
+static ArchMutex              s_mutex = NULL;
 
 //
 // use C library non-reentrant multibyte conversion with mutex

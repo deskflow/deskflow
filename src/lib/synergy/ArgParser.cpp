@@ -20,18 +20,19 @@
 #include "synergy/App.h"
 #include "synergy/ServerArgs.h"
 #include "synergy/ClientArgs.h"
+#include "synergy/ToolArgs.h"
 #include "synergy/ArgsBase.h"
 #include "base/Log.h"
 
-CArgsBase* CArgParser::m_argsBase = NULL;
+ArgsBase* ArgParser::m_argsBase = NULL;
 
-CArgParser::CArgParser(CApp* app) :
+ArgParser::ArgParser(App* app) :
 	m_app(app)
 {
 }
 
 bool
-CArgParser::parseServerArgs(CServerArgs& args, int argc, const char* const* argv)
+ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
 {
 	setArgsBase(args);
 	updateCommonArgs(argv);
@@ -65,7 +66,7 @@ CArgParser::parseServerArgs(CServerArgs& args, int argc, const char* const* argv
 }
 
 bool
-CArgParser::parseClientArgs(CClientArgs& args, int argc, const char* const* argv)
+ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
 {
 	setArgsBase(args);
 	updateCommonArgs(argv);
@@ -114,7 +115,7 @@ CArgParser::parseClientArgs(CClientArgs& args, int argc, const char* const* argv
 }
 
 bool
-CArgParser::parsePlatformArg(CArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
+ArgParser::parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
 {
 #if WINAPI_MSWINDOWS
 	if (isArg(i, argc, argv, NULL, "--service")) {
@@ -155,8 +156,45 @@ CArgParser::parsePlatformArg(CArgsBase& argsBase, const int& argc, const char* c
 #endif
 }
 
+
 bool
-CArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
+ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
+{
+	for (int i = 1; i < argc; ++i) {
+		if (isArg(i, argc, argv, NULL, "--get-active-desktop", 0)) {
+			args.m_printActiveDesktopName = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--login-auth", 0)) {
+			args.m_loginAuthenticate = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-plugin-list", 0)) {
+			args.m_getPluginList = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-plugin-dir", 0)) {
+			args.m_getPluginDir = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-profile-dir", 0)) {
+			args.m_getProfileDir = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-arch", 0)) {
+			args.m_getArch = true;
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	return false;
+}
+
+bool
+ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 {
 	if (isArg(i, argc, argv, "-d", "--debug", 1)) {
 		// change logging level
@@ -215,10 +253,6 @@ CArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 	else if (isArg(i, argc, argv, NULL, "--client")) {
 		// HACK: stop error happening when using portable (synergyp) 
 	}
-	else if (isArg(i, argc, argv, NULL, "--crypto-pass")) {
-		argsBase().m_crypto.m_pass = argv[++i];
-		argsBase().m_crypto.setMode("cfb");
-	}
 	else if (isArg(i, argc, argv, NULL, "--enable-drag-drop")) {
 		bool useDragDrop = true;
 
@@ -246,6 +280,15 @@ CArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 			argsBase().m_enableDragDrop = true;
 		}
 	}
+	else if (isArg(i, argc, argv, NULL, "--enable-crypto")) {
+		argsBase().m_enableCrypto = true;
+	}
+	else if (isArg(i, argc, argv, NULL, "--profile-dir", 1)) {
+		argsBase().m_profileDirectory = argv[++i];
+	}
+	else if (isArg(i, argc, argv, NULL, "--plugin-dir", 1)) {
+		argsBase().m_pluginDirectory = argv[++i];
+	}
 	else {
 		// option not supported here
 		return false;
@@ -255,7 +298,7 @@ CArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 }
 
 bool
-CArgParser::isArg(
+ArgParser::isArg(
 	int argi, int argc, const char* const* argv,
 	const char* name1, const char* name2,
 	int minRequiredParameters)
@@ -277,7 +320,7 @@ CArgParser::isArg(
 }
 
 void
-CArgParser::splitCommandString(CString& command, std::vector<CString>& argv)
+ArgParser::splitCommandString(String& command, std::vector<String>& argv)
 {
 	if (command.empty()) {
 		return ;
@@ -290,7 +333,7 @@ CArgParser::splitCommandString(CString& command, std::vector<CString>& argv)
 	size_t startPos = 0;
 	size_t space = command.find(" ", startPos);
 
-	while (space != CString::npos) {
+	while (space != String::npos) {
 		bool ignoreThisSpace = false;
 
 		// check if the space is between two double quotes
@@ -302,7 +345,7 @@ CArgParser::splitCommandString(CString& command, std::vector<CString>& argv)
 		}
 		
 		if (!ignoreThisSpace) {
-			CString subString = command.substr(startPos, space - startPos);
+			String subString = command.substr(startPos, space - startPos);
 
 			removeDoubleQuotes(subString);
 			argv.push_back(subString);
@@ -318,22 +361,22 @@ CArgParser::splitCommandString(CString& command, std::vector<CString>& argv)
 		}
 	}
 
-	CString subString = command.substr(startPos, command.size());
+	String subString = command.substr(startPos, command.size());
 	removeDoubleQuotes(subString);
 	argv.push_back(subString);
 }
 
 bool
-CArgParser::searchDoubleQuotes(CString& command, size_t& left, size_t& right, size_t startPos)
+ArgParser::searchDoubleQuotes(String& command, size_t& left, size_t& right, size_t startPos)
 {
 	bool result = false;
-	left = CString::npos;
-	right = CString::npos;
+	left = String::npos;
+	right = String::npos;
 
 	left = command.find("\"", startPos);
-	if (left != CString::npos) {
+	if (left != String::npos) {
 		right = command.find("\"", left + 1);
-		if (right != CString::npos) {
+		if (right != String::npos) {
 			result = true;
 		}
 	}
@@ -347,7 +390,7 @@ CArgParser::searchDoubleQuotes(CString& command, size_t& left, size_t& right, si
 }
 
 void
-CArgParser::removeDoubleQuotes(CString& arg)
+ArgParser::removeDoubleQuotes(String& arg)
 {
 	// if string is surrounded by double quotes, remove them
 	if (arg[0] == '\"' &&
@@ -357,7 +400,7 @@ CArgParser::removeDoubleQuotes(CString& arg)
 }
 
 const char**
-CArgParser::getArgv(std::vector<CString>& argsArray)
+ArgParser::getArgv(std::vector<String>& argsArray)
 {
 	size_t argc = argsArray.size();
 
@@ -374,19 +417,19 @@ CArgParser::getArgv(std::vector<CString>& argsArray)
 	return argv;
 }
 
-CString
-CArgParser::assembleCommand(std::vector<CString>& argsArray,  CString ignoreArg, int parametersRequired)
+String
+ArgParser::assembleCommand(std::vector<String>& argsArray,  String ignoreArg, int parametersRequired)
 {
-	CString result;
+	String result;
 
-	for (std::vector<CString>::iterator it = argsArray.begin(); it != argsArray.end(); ++it) {
+	for (std::vector<String>::iterator it = argsArray.begin(); it != argsArray.end(); ++it) {
 		if (it->compare(ignoreArg) == 0) {
 			it = it + parametersRequired;
 			continue;
 		}
 
 		// if there is a space in this arg, use double quotes surround it
-		if ((*it).find(" ") != CString::npos) {
+		if ((*it).find(" ") != String::npos) {
 			(*it).insert(0, "\"");
 			(*it).push_back('\"');
 		}
@@ -405,14 +448,14 @@ CArgParser::assembleCommand(std::vector<CString>& argsArray,  CString ignoreArg,
 }
 
 void
-CArgParser::updateCommonArgs(const char* const* argv)
+ArgParser::updateCommonArgs(const char* const* argv)
 {
 	argsBase().m_name = ARCH->getHostName();
 	argsBase().m_pname = ARCH->getBasename(argv[0]);
 }
 
 bool
-CArgParser::checkUnexpectedArgs()
+ArgParser::checkUnexpectedArgs()
 {
 #if SYSAPI_WIN32
 	// suggest that user installs as a windows service. when launched as 

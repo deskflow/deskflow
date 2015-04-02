@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -20,13 +20,13 @@
 
 #include "arch/IArchTime.h"
 
-#define ARCH_TIME CArchTimeWindows
+#define ARCH_TIME ArchTimeWindows
 
 //! Win32 implementation of IArchTime
-class CArchTimeWindows : public IArchTime {
+class ArchTimeWindows : public IArchTime {
 public:
-	CArchTimeWindows();
-	virtual ~CArchTimeWindows();
+	ArchTimeWindows();
+	virtual ~ArchTimeWindows();
 
 	// IArchTime overrides
 	virtual double		time();

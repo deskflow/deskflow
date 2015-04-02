@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -25,14 +25,14 @@
 This class measures time intervals.  All time interval measurement
 should use this class.
 */
-class CStopwatch {
+class Stopwatch {
 public:
 	/*!
 	The default constructor does an implicit reset() or setTrigger().
 	If triggered == false then the clock starts ticking.
 	*/
-	CStopwatch(bool triggered = false);
-	~CStopwatch();
+	Stopwatch(bool triggered = false);
+	~Stopwatch();
 
 	//! @name manipulators
 	//@{

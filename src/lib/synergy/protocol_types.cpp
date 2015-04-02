@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -44,7 +44,6 @@ const char*				kMsgDMouseWheel1_0	= "DMWM%2i";
 const char*				kMsgDClipboard		= "DCLP%1i%4i%s";
 const char*				kMsgDInfo			= "DINF%2i%2i%2i%2i%2i%2i%2i";
 const char*				kMsgDSetOptions		= "DSOP%4I";
-const char*				kMsgDCryptoIv		= "DCIV%s";
 const char*				kMsgDFileTransfer	= "DFTR%1i%s";
 const char*				kMsgDDragInfo		= "DDRG%2i%s";
 const char*				kMsgQInfo			= "QINF";

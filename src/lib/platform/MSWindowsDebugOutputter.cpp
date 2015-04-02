@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2012 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or
@@ -22,37 +22,37 @@
 #include <Windows.h>
 #include <string>
 
-CMSWindowsDebugOutputter::CMSWindowsDebugOutputter()
+MSWindowsDebugOutputter::MSWindowsDebugOutputter()
 {
 }
 
-CMSWindowsDebugOutputter::~CMSWindowsDebugOutputter()
-{
-}
-
-void
-CMSWindowsDebugOutputter::open(const char* title)
+MSWindowsDebugOutputter::~MSWindowsDebugOutputter()
 {
 }
 
 void
-CMSWindowsDebugOutputter::close()
+MSWindowsDebugOutputter::open(const char* title)
 {
 }
 
 void
-CMSWindowsDebugOutputter::show(bool showIfEmpty)
+MSWindowsDebugOutputter::close()
+{
+}
+
+void
+MSWindowsDebugOutputter::show(bool showIfEmpty)
 {
 }
 
 bool
-CMSWindowsDebugOutputter::write(ELevel level, const char* msg)
+MSWindowsDebugOutputter::write(ELevel level, const char* msg)
 {
 	OutputDebugString((std::string(msg) + "\n").c_str());
 	return true;
 }
 
 void
-CMSWindowsDebugOutputter::flush()
+MSWindowsDebugOutputter::flush()
 {
 }

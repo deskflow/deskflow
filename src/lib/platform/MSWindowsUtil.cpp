@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -23,11 +23,11 @@
 #include <stdio.h>
 
 //
-// CMSWindowsUtil
+// MSWindowsUtil
 //
 
-CString
-CMSWindowsUtil::getString(HINSTANCE instance, DWORD id)
+String
+MSWindowsUtil::getString(HINSTANCE instance, DWORD id)
 {
 	char buffer[1024];
 	int size = static_cast<int>(sizeof(buffer) / sizeof(buffer[0]));
@@ -51,13 +51,13 @@ CMSWindowsUtil::getString(HINSTANCE instance, DWORD id)
 	} while (n == size);
 	msg[n] = '\0';
 
-	CString result(msg);
+	String result(msg);
 	delete[] msg;
 	return result;
 }
 
-CString
-CMSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
+String
+MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
 {
 	char* buffer;
 	if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
@@ -69,12 +69,12 @@ CMSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
 								(LPTSTR)&buffer,
 								0,
 								NULL) == 0) {
-		CString errorString = synergy::string::sprintf("%d", error);
+		String errorString = synergy::string::sprintf("%d", error);
 		return synergy::string::format(getString(hinstance, id).c_str(),
 							errorString.c_str());
 	}
 	else {
-		CString result(buffer);
+		String result(buffer);
 		LocalFree(buffer);
 		return result;
 	}

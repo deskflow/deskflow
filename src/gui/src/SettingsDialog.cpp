@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
  * This package is free software; you can redistribute it and/or
@@ -17,6 +17,8 @@
  */
 
 #include "SettingsDialog.h"
+
+#include "CoreInterface.h"
 #include "SynergyLocale.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
@@ -26,11 +28,13 @@
 #include <QtGui>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDir>
 
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::SettingsDialogBase(),
-	m_AppConfig(config)
+	m_AppConfig(config),
+	m_SuppressElevateWarning(false)
 {
 	setupUi(this);
 
@@ -42,37 +46,39 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
 	m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
 	m_pLineEditLogFilename->setText(appConfig().logFilename());
-	m_pCheckBoxEnableCrypto->setChecked(appConfig().cryptoEnabled());
 	setIndexFromItemData(m_pComboLanguage, appConfig().language());
-	if (appConfig().cryptoEnabled())
-	{
-		m_pLineEditCryptoPass->setText(appConfig().cryptoPass());
+
+#if defined(Q_OS_WIN)
+	m_SuppressElevateWarning = true;
+	m_pCheckBoxElevateMode->setChecked(appConfig().elevateMode());
+	m_SuppressElevateWarning = false;
+#else
+	// elevate checkbox is only useful on ms windows.
+	m_pCheckBoxElevateMode->hide();
+#endif
+
+	QString pluginDir = m_CoreInterface.getPluginDir();
+	QDir dir(pluginDir);
+	int fileNum = dir.entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count();
+	if (fileNum == 0) {
+		m_pGroupNetworkSecurity->setEnabled(false);
+		m_pCheckBoxEnableCrypto->setChecked(false);
+	}
+	else {
+		m_pCheckBoxEnableCrypto->setChecked(m_AppConfig.getCryptoEnabled());
 	}
 }
 
 void SettingsDialog::accept()
 {
-	const QString& cryptoPass = m_pLineEditCryptoPass->text();
-	bool cryptoEnabled = m_pCheckBoxEnableCrypto->isChecked();
-	if (cryptoEnabled && cryptoPass.isEmpty())
-	{
-		QMessageBox message;
-		message.setWindowTitle("Settings");
-		message.setIcon(QMessageBox::Information);
-		message.setText(tr("Encryption password must not be empty."));
-		message.exec();
-		return;
-	}
-
 	appConfig().setScreenName(m_pLineEditScreenName->text());
 	appConfig().setPort(m_pSpinBoxPort->value());
 	appConfig().setInterface(m_pLineEditInterface->text());
 	appConfig().setLogLevel(m_pComboLogLevel->currentIndex());
 	appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
 	appConfig().setLogFilename(m_pLineEditLogFilename->text());
-	appConfig().setCryptoEnabled(cryptoEnabled);
-	appConfig().setCryptoPass(cryptoPass);
 	appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
+	appConfig().setElevateMode(m_pCheckBoxElevateMode->isChecked());
 	appConfig().saveSettings();
 	QDialog::accept();
 }
@@ -128,19 +134,31 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked()
 	}
 }
 
-void SettingsDialog::on_m_pCheckBoxEnableCrypto_stateChanged(int )
-{
-	bool cryptoEnabled = m_pCheckBoxEnableCrypto->isChecked();
-	m_pLineEditCryptoPass->setEnabled(cryptoEnabled);
-
-	if (!cryptoEnabled)
-	{
-		m_pLineEditCryptoPass->clear();
-	}
-}
-
 void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 {
 	QString ietfCode = m_pComboLanguage->itemData(index).toString();
 	QSynergyApplication::getInstance()->switchTranslator(ietfCode);
+}
+
+void SettingsDialog::on_m_pCheckBoxElevateMode_toggled(bool checked)
+{
+	if (checked && !m_SuppressElevateWarning) {
+		int r = QMessageBox::warning(
+			this, tr("Elevate Synergy"),
+			tr("Are you sure you want to elevate Synergy?\n\n"
+			   "This allows Synergy to interact with elevated processes "
+			   "and the UAC dialog, but can cause problems with non-elevated "
+			   "processes. Elevate Synergy only if you really need to."),
+			QMessageBox::Yes | QMessageBox::No);
+
+		if (r != QMessageBox::Yes) {
+			m_pCheckBoxElevateMode->setChecked(false);
+			return;
+		}
+	}
+}
+
+void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
+{
+	m_AppConfig.setCryptoEnabled(checked);
 }

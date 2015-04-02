@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2009 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@
 #include "arch/win32/ArchDaemonWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "arch/Arch.h"
+#include "base/log_outputters.h"
 #include "base/TMethodJob.h"
 #include "base/Log.h"
 #include "common/Version.h"
@@ -42,10 +43,12 @@ enum {
 
 typedef VOID (WINAPI *SendSas)(BOOL asUser);
 
-CMSWindowsWatchdog::CMSWindowsWatchdog(
+const char g_activeDesktop[] = {"activeDesktop:"};
+
+MSWindowsWatchdog::MSWindowsWatchdog(
 	bool autoDetectCommand,
-	CIpcServer& ipcServer,
-	CIpcLogOutputter& ipcLogOutputter) :
+	IpcServer& ipcServer,
+	IpcLogOutputter& ipcLogOutputter) :
 	m_thread(NULL),
 	m_autoDetectCommand(autoDetectCommand),
 	m_monitoring(true),
@@ -56,26 +59,38 @@ CMSWindowsWatchdog::CMSWindowsWatchdog(
 	m_ipcLogOutputter(ipcLogOutputter),
 	m_elevateProcess(false),
 	m_processFailures(0),
-	m_processRunning(false)
+	m_processRunning(false),
+	m_fileLogOutputter(NULL),
+	m_autoElevated(false),
+	m_ready(false)
 {
+	m_mutex = ARCH->newMutex();
+	m_condVar = ARCH->newCondVar();
 }
 
-CMSWindowsWatchdog::~CMSWindowsWatchdog()
+MSWindowsWatchdog::~MSWindowsWatchdog()
 {
+	if (m_condVar != NULL) {
+		ARCH->closeCondVar(m_condVar);
+	}
+
+	if (m_mutex != NULL) {
+		ARCH->closeMutex(m_mutex);
+	}
 }
 
 void 
-CMSWindowsWatchdog::startAsync()
+MSWindowsWatchdog::startAsync()
 {
-	m_thread = new CThread(new TMethodJob<CMSWindowsWatchdog>(
-		this, &CMSWindowsWatchdog::mainLoop, nullptr));
+	m_thread = new Thread(new TMethodJob<MSWindowsWatchdog>(
+		this, &MSWindowsWatchdog::mainLoop, nullptr));
 
-	m_outputThread = new CThread(new TMethodJob<CMSWindowsWatchdog>(
-		this, &CMSWindowsWatchdog::outputLoop, nullptr));
+	m_outputThread = new Thread(new TMethodJob<MSWindowsWatchdog>(
+		this, &MSWindowsWatchdog::outputLoop, nullptr));
 }
 
 void
-CMSWindowsWatchdog::stop()
+MSWindowsWatchdog::stop()
 {
 	m_monitoring = false;
 	
@@ -87,7 +102,7 @@ CMSWindowsWatchdog::stop()
 }
 
 HANDLE
-CMSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security)
+MSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security)
 {
 	HANDLE sourceToken;
 
@@ -118,13 +133,15 @@ CMSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES 
 }
 
 HANDLE 
-CMSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
+MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
 {
 	// always elevate if we are at the vista/7 login screen. we could also 
 	// elevate for the uac dialog (consent.exe) but this would be pointless,
 	// since synergy would re-launch as non-elevated after the desk switch,
 	// and so would be unusable with the new elevated process taking focus.
-	if (m_elevateProcess || m_session.isProcessInSession("logonui.exe", NULL)) {
+	if (m_elevateProcess
+		|| m_autoElevated
+		|| m_session.isProcessInSession("logonui.exe", NULL)) {
 		
 		LOG((CLOG_DEBUG "getting elevated token, %s",
 			(m_elevateProcess ? "elevation required" : "at login screen")));
@@ -143,7 +160,7 @@ CMSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
 }
 
 void
-CMSWindowsWatchdog::mainLoop(void*)
+MSWindowsWatchdog::mainLoop(void*)
 {
 	shutdownExistingProcesses();
 
@@ -238,15 +255,21 @@ CMSWindowsWatchdog::mainLoop(void*)
 }
 
 bool
-CMSWindowsWatchdog::isProcessActive()
+MSWindowsWatchdog::isProcessActive()
 {
 	DWORD exitCode;
 	GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
 	return exitCode == STILL_ACTIVE;
 }
 
+void 
+MSWindowsWatchdog::setFileLogOutputter(FileLogOutputter* outputter)
+{
+	m_fileLogOutputter = outputter;
+}
+
 void
-CMSWindowsWatchdog::startProcess()
+MSWindowsWatchdog::startProcess()
 {
 	if (m_command.empty()) {
 		throw XMSWindowsWatchdogError("cannot start process, command is empty");
@@ -265,7 +288,11 @@ CMSWindowsWatchdog::startProcess()
 	SECURITY_ATTRIBUTES sa;
 	ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
 
+	getActiveDesktop(&sa);
+
+	ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
 	HANDLE userToken = getUserToken(&sa);
+	m_autoElevated = false;
 
 	// patch by Jack Zhou and Henry Tung
 	// set UIAccess to fix Windows 8 GUI interaction
@@ -273,6 +300,33 @@ CMSWindowsWatchdog::startProcess()
 	DWORD uiAccess = 1;
 	SetTokenInformation(userToken, TokenUIAccess, &uiAccess, sizeof(DWORD));
 
+	BOOL createRet = doStartProcess(m_command, userToken, &sa);
+
+	if (!createRet) {
+		LOG((CLOG_ERR "could not launch"));
+		DWORD exitCode = 0;
+		GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
+		LOG((CLOG_ERR "exit code: %d", exitCode));
+		throw XArch(new XArchEvalWindows);
+	}
+	else {
+		// wait for program to fail.
+		ARCH->sleep(1);
+		if (!isProcessActive()) {
+			throw XMSWindowsWatchdogError("process immediately stopped");
+		}
+
+		m_processRunning = true;
+		m_processFailures = 0;
+
+		LOG((CLOG_DEBUG "started process, session=%i, command=%s",
+			m_session.getActiveSessionId(), m_command.c_str()));
+	}
+}
+
+BOOL
+MSWindowsWatchdog::doStartProcess(String& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
+{
 	// clear, as we're reusing process info struct
 	ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
 
@@ -299,34 +353,18 @@ CMSWindowsWatchdog::startProcess()
 	// re-launch in current active user session
 	LOG((CLOG_INFO "starting new process"));
 	BOOL createRet = CreateProcessAsUser(
-		userToken, NULL, LPSTR(m_command.c_str()),
-		&sa, NULL, TRUE, creationFlags,
+		userToken, NULL, LPSTR(command.c_str()),
+		sa, NULL, TRUE, creationFlags,
 		environment, NULL, &si, &m_processInfo);
 
 	DestroyEnvironmentBlock(environment);
 	CloseHandle(userToken);
 
-	if (!createRet) {
-		LOG((CLOG_ERR "could not launch"));
-		throw XArch(new XArchEvalWindows);
-	}
-	else {
-		// wait for program to fail.
-		ARCH->sleep(1);
-		if (!isProcessActive()) {
-			throw XMSWindowsWatchdogError("process immediately stopped");
-		}
-
-		m_processRunning = true;
-		m_processFailures = 0;
-
-		LOG((CLOG_DEBUG "started process, session=%i, command=%s",
-			m_session.getActiveSessionId(), m_command.c_str()));
-	}
+	return createRet;
 }
 
 void
-CMSWindowsWatchdog::setCommand(const std::string& command, bool elevate)
+MSWindowsWatchdog::setCommand(const std::string& command, bool elevate)
 {
 	LOG((CLOG_INFO "service command updated"));
 	m_command = command;
@@ -336,14 +374,14 @@ CMSWindowsWatchdog::setCommand(const std::string& command, bool elevate)
 }
 
 std::string
-CMSWindowsWatchdog::getCommand() const
+MSWindowsWatchdog::getCommand() const
 {
 	if (!m_autoDetectCommand) {
 		return m_command;
 	}
 
 	// seems like a fairly convoluted way to get the process name
-	const char* launchName = CApp::instance().argsBase().m_pname;
+	const char* launchName = App::instance().argsBase().m_pname;
 	std::string args = ARCH->commandLine();
 
 	// build up a full command line
@@ -362,7 +400,7 @@ CMSWindowsWatchdog::getCommand() const
 }
 
 void
-CMSWindowsWatchdog::outputLoop(void*)
+MSWindowsWatchdog::outputLoop(void*)
 {
 	// +1 char for \0
 	CHAR buffer[kOutputBufferSize + 1];
@@ -380,16 +418,21 @@ CMSWindowsWatchdog::outputLoop(void*)
 		else {
 			buffer[bytesRead] = '\0';
 
+			testOutput(buffer);
+
 			// send process output over IPC to GUI, and force it to be sent
 			// which bypasses the ipc logging anti-recursion mechanism.
 			m_ipcLogOutputter.write(kINFO, buffer, true);
-		}
-			
+
+			if (m_fileLogOutputter != NULL) {
+				m_fileLogOutputter->write(kINFO, buffer);
+			}
+		}	
 	}
 }
 
 void
-CMSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
+MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
 {
 	DWORD exitCode;
 	GetExitCodeProcess(handle, &exitCode);
@@ -397,7 +440,7 @@ CMSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
 		return;
 	}
 
-	CIpcShutdownMessage shutdown;
+	IpcShutdownMessage shutdown;
 	m_ipcServer.send(shutdown, kIpcClientNode);
 
 	// wait for process to exit gracefully.
@@ -429,7 +472,7 @@ CMSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
 }
 
 void
-CMSWindowsWatchdog::shutdownExistingProcesses()
+MSWindowsWatchdog::shutdownExistingProcesses()
 {
 	// first we need to take a snapshot of the running processes
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -480,4 +523,58 @@ CMSWindowsWatchdog::shutdownExistingProcesses()
 
 	CloseHandle(snapshot);
 	m_processRunning = false;
+}
+
+void
+MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
+{
+	String installedDir = ARCH->getInstalledDirectory();
+	if (!installedDir.empty()) {
+		String syntoolCommand;
+		syntoolCommand.append("\"").append(installedDir).append("\\").append("syntool").append("\"");
+		syntoolCommand.append(" --get-active-desktop");
+
+		m_session.updateActiveSession();
+		bool elevateProcess = m_elevateProcess;
+		m_elevateProcess = true;
+		HANDLE userToken = getUserToken(security);
+		m_elevateProcess = elevateProcess;
+
+		BOOL createRet = doStartProcess(syntoolCommand, userToken, security);
+
+		if (!createRet) {
+			DWORD rc = GetLastError();
+			RevertToSelf();
+		}
+		else {
+			LOG((CLOG_DEBUG "launched syntool to check active desktop"));
+		}
+
+		ARCH->lockMutex(m_mutex);
+		while (!m_ready) {
+			ARCH->waitCondVar(m_condVar, m_mutex, 1.0);
+		}
+		m_ready = false;
+		ARCH->unlockMutex(m_mutex);
+	}
+} 
+
+void
+MSWindowsWatchdog::testOutput(String buffer)
+{
+	// HACK: check standard output seems hacky.
+	size_t i = buffer.find(g_activeDesktop);
+	if (i != String::npos) {
+		size_t s = sizeof(g_activeDesktop);
+		String defaultDesktop("Default");
+		String sub = buffer.substr(s - 1, defaultDesktop.size());
+		if (sub != defaultDesktop) {
+			m_autoElevated = true;
+		}
+
+		ARCH->lockMutex(m_mutex);
+		m_ready = true;
+		ARCH->broadcastCondVar(m_condVar);
+		ARCH->unlockMutex(m_mutex);
+	}
 }

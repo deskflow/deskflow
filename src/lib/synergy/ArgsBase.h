@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2012 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or
@@ -19,12 +19,11 @@
 #pragma once
 
 #include "base/String.h"
-#include "io/CryptoOptions.h"
 
-class CArgsBase {
+class ArgsBase {
 public:
-	CArgsBase();
-	virtual ~CArgsBase();
+	ArgsBase();
+	virtual ~ArgsBase();
 	bool m_daemon;
 	bool m_backend;
 	bool m_restartable;
@@ -33,10 +32,9 @@ public:
 	const char* m_logFilter;
 	const char*	m_logFile;
 	const char*	m_display;
-	CString m_name;
+	String m_name;
 	bool m_disableTray;
 	bool m_enableIpc;
-	CCryptoOptions m_crypto;
 	bool m_enableDragDrop;
 #if SYSAPI_WIN32
 	bool m_debugServiceWait;
@@ -47,5 +45,8 @@ public:
 	bool m_disableXInitThreads;
 #endif
 	bool				m_shouldExit;
-	CString				m_synergyAddress;
+	String				m_synergyAddress;
+	bool				m_enableCrypto;
+	String				m_profileDirectory;
+	String				m_pluginDirectory;
 };

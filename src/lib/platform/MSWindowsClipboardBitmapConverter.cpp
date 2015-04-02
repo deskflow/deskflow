@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,33 +21,33 @@
 #include "base/Log.h"
 
 //
-// CMSWindowsClipboardBitmapConverter
+// MSWindowsClipboardBitmapConverter
 //
 
-CMSWindowsClipboardBitmapConverter::CMSWindowsClipboardBitmapConverter()
+MSWindowsClipboardBitmapConverter::MSWindowsClipboardBitmapConverter()
 {
 	// do nothing
 }
 
-CMSWindowsClipboardBitmapConverter::~CMSWindowsClipboardBitmapConverter()
+MSWindowsClipboardBitmapConverter::~MSWindowsClipboardBitmapConverter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-CMSWindowsClipboardBitmapConverter::getFormat() const
+MSWindowsClipboardBitmapConverter::getFormat() const
 {
 	return IClipboard::kBitmap;
 }
 
 UINT
-CMSWindowsClipboardBitmapConverter::getWin32Format() const
+MSWindowsClipboardBitmapConverter::getWin32Format() const
 {
 	return CF_DIB;
 }
 
 HANDLE
-CMSWindowsClipboardBitmapConverter::fromIClipboard(const CString& data) const
+MSWindowsClipboardBitmapConverter::fromIClipboard(const String& data) const
 {
 	// copy to memory handle
 	HGLOBAL gData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, data.size());
@@ -67,13 +67,13 @@ CMSWindowsClipboardBitmapConverter::fromIClipboard(const CString& data) const
 	return gData;
 }
 
-CString
-CMSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
+String
+MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 {
 	// get datator
 	const char* src = (const char*)GlobalLock(data);
 	if (src == NULL) {
-		return CString();
+		return String();
 	}
 	UInt32 srcSize = (UInt32)GlobalSize(data);
 
@@ -85,7 +85,7 @@ CMSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 		bitmap->bmiHeader.biBitCount == 32) &&
 		bitmap->bmiHeader.biCompression == BI_RGB) {
 		// already in canonical form
-		CString image(src, srcSize);
+		String image(src, srcSize);
 		GlobalUnlock(data);
 		return image;
 	}
@@ -138,7 +138,7 @@ CMSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 	GdiFlush();
 
 	// extract data
-	CString image((const char*)&info, info.biSize);
+	String image((const char*)&info, info.biSize);
 	image.append((const char*)raw, 4 * w * h);
 
 	// clean up GDI

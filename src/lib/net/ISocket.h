@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
-class CNetworkAddress;
+class NetworkAddress;
 
 //! Generic socket interface
 /*!
@@ -38,7 +38,7 @@ public:
 	/*!
 	Binds the socket to a particular address.
 	*/
-	virtual void		bind(const CNetworkAddress&) = 0;
+	virtual void		bind(const NetworkAddress&) = 0;
 
 	//! Close socket
 	/*!

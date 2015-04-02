@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2012 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or
@@ -18,9 +18,9 @@
 
 #pragma once
 
-#define PLUGINS_DIR "plugins"
-
 #include "common/IInterface.h"
+#include "common/stdmap.h"
+#include "base/String.h"
 
 class IEventQueue;
 
@@ -34,11 +34,46 @@ public:
 	//! @name manipulators
 	//@{
 
-	//! Load plugins
+	//!Load plugins
 	/*!
 	Scan the plugins dir and load plugins.
 	*/
-	virtual void		init(void* eventTarget, IEventQueue* events) = 0;
+	virtual void		load() = 0;
+
+	//!Unload plugins
+	/*!
+	Look through the loaded plugins and unload them.
+	*/
+	virtual void		unload() = 0;
+
+	//! Init the common parts
+	/*!
+	Initializes common parts like log and arch.
+	*/
+	virtual void		init(void* log, void* arch) = 0;
+
+	//! Init the event part
+	/*!
+	Initializes event parts.
+	*/
+	virtual void		initEvent(void* eventTarget, IEventQueue* events) = 0;
+
+	//! Check if exists
+	/*!
+	Returns true if the plugin exists and is loaded.
+	*/
+	virtual bool		exists(const char* name) = 0;
+
+	//! Invoke function
+	/*!
+	Invokes a function from the plugin.
+	*/
+	virtual void*		invoke(const char* plugin,
+							const char* command,
+							void** args) = 0;
 
 	//@}
+
+protected:
+	typedef std::map<String, void*> PluginTable;
 };

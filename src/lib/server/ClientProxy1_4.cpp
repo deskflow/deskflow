@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2011 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@
 
 #include "server/Server.h"
 #include "synergy/ProtocolUtil.h"
-#include "io/CryptoStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
@@ -29,63 +28,39 @@
 #include <memory>
 
 //
-// CClientProxy1_4
+// ClientProxy1_4
 //
 
-CClientProxy1_4::CClientProxy1_4(const CString& name, synergy::IStream* stream, CServer* server, IEventQueue* events) :
-	CClientProxy1_3(name, stream, events), m_server(server)
+ClientProxy1_4::ClientProxy1_4(const String& name, synergy::IStream* stream, Server* server, IEventQueue* events) :
+	ClientProxy1_3(name, stream, events), m_server(server)
 {
 	assert(m_server != NULL);
 }
 
-CClientProxy1_4::~CClientProxy1_4()
+ClientProxy1_4::~ClientProxy1_4()
 {
 }
 
 void
-CClientProxy1_4::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
+ClientProxy1_4::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-	cryptoIv();
-	CClientProxy1_3::keyDown(key, mask, button);
+	ClientProxy1_3::keyDown(key, mask, button);
 }
 
 void
-CClientProxy1_4::keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button)
+ClientProxy1_4::keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button)
 {
-	cryptoIv();
-	CClientProxy1_3::keyRepeat(key, mask, count, button);
+	ClientProxy1_3::keyRepeat(key, mask, count, button);
 }
 
 void
-CClientProxy1_4::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
+ClientProxy1_4::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-	cryptoIv();
-	CClientProxy1_3::keyUp(key, mask, button);
+	ClientProxy1_3::keyUp(key, mask, button);
 }
 
 void
-CClientProxy1_4::keepAlive()
+ClientProxy1_4::keepAlive()
 {
-	cryptoIv();
-	CClientProxy1_3::keepAlive();
-}
-
-void
-CClientProxy1_4::cryptoIv()
-{
-	CCryptoStream* cryptoStream = dynamic_cast<CCryptoStream*>(getStream());
-	if (cryptoStream == NULL) {
-		return;
-	}
-
-	byte iv[CRYPTO_IV_SIZE];
-	cryptoStream->newIv(iv);
-	CString data(reinterpret_cast<const char*>(iv), CRYPTO_IV_SIZE);
-
-	LOG((CLOG_DEBUG2 "send crypto iv change to \"%s\"", getName().c_str()));
-	CProtocolUtil::writef(getStream(), kMsgDCryptoIv, &data);
-	
-	// change IV only after we've sent the current IV, otherwise
-	// the client won't be able to decrypt the new IV.
-	cryptoStream->setEncryptIv(iv);
+	ClientProxy1_3::keepAlive();
 }

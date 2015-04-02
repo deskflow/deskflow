@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -20,13 +20,13 @@
 
 #include "arch/IArchSystem.h"
 
-#define ARCH_SYSTEM CArchSystemUnix
+#define ARCH_SYSTEM ArchSystemUnix
 
 //! Unix implementation of IArchString
-class CArchSystemUnix : public IArchSystem {
+class ArchSystemUnix : public IArchSystem {
 public:
-	CArchSystemUnix();
-	virtual ~CArchSystemUnix();
+	ArchSystemUnix();
+	virtual ~ArchSystemUnix();
 
 	// IArchSystem overrides
 	virtual std::string	getOSName() const;

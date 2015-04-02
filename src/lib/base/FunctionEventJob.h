@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -24,16 +24,16 @@
 /*!
 An event job class that invokes a function.
 */
-class CFunctionEventJob : public IEventJob {
+class FunctionEventJob : public IEventJob {
 public:
 	//! run() invokes \c func(arg)
-	CFunctionEventJob(void (*func)(const CEvent&, void*), void* arg = NULL);
-	virtual ~CFunctionEventJob();
+	FunctionEventJob(void (*func)(const Event&, void*), void* arg = NULL);
+	virtual ~FunctionEventJob();
 
 	// IEventJob overrides
-	virtual void		run(const CEvent&);
+	virtual void		run(const Event&);
 
 private:
-	void				(*m_func)(const CEvent&, void*);
+	void				(*m_func)(const Event&, void*);
 	void*				m_arg;
 };

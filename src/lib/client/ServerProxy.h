@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -24,9 +24,9 @@
 #include "base/Stopwatch.h"
 #include "base/String.h"
 
-class CClient;
-class CClientInfo;
-class CEventQueueTimer;
+class Client;
+class ClientInfo;
+class EventQueueTimer;
 class IClipboard;
 namespace synergy { class IStream; }
 class IEventQueue;
@@ -36,14 +36,14 @@ class IEventQueue;
 This class acts a proxy for the server, converting calls into messages
 to the server and messages from the server to calls on the client.
 */
-class CServerProxy {
+class ServerProxy {
 public:
 	/*!
 	Process messages from the server on \p stream and forward to
 	\p client.
 	*/
-	CServerProxy(CClient* client, synergy::IStream* stream, IEventQueue* events);
-	~CServerProxy();
+	ServerProxy(Client* client, synergy::IStream* stream, IEventQueue* events);
+	~ServerProxy();
 
 	//! @name manipulators
 	//@{
@@ -61,7 +61,7 @@ public:
 	void				sendDragInfo(UInt32 fileCount, const char* info, size_t size);
 	
 #ifdef TEST_ENV
-	void				handleDataForTest() { handleData(CEvent(), NULL); }
+	void				handleDataForTest() { handleData(Event(), NULL); }
 #endif
 
 protected:
@@ -73,7 +73,7 @@ private:
 	// if compressing mouse motion then send the last motion now
 	void				flushCompressedMouse();
 
-	void				sendInfo(const CClientInfo&);
+	void				sendInfo(const ClientInfo&);
 
 	void				resetKeepAliveAlarm();
 	void				setKeepAliveRate(double);
@@ -83,8 +83,8 @@ private:
 	KeyModifierMask			translateModifierMask(KeyModifierMask) const;
 
 	// event handlers
-	void				handleData(const CEvent&, void*);
-	void				handleKeepAliveAlarm(const CEvent&, void*);
+	void				handleData(const Event&, void*);
+	void				handleKeepAliveAlarm(const Event&, void*);
 
 	// message handlers
 	void				enter();
@@ -99,7 +99,6 @@ private:
 	void				mouseMove();
 	void				mouseRelativeMove();
 	void				mouseWheel();
-	void				cryptoIv();
 	void				screensaver();
 	void				resetOptions();
 	void				setOptions();
@@ -109,9 +108,9 @@ private:
 	void				dragInfoReceived();
 
 private:
-	typedef EResult (CServerProxy::*MessageParser)(const UInt8*);
+	typedef EResult (ServerProxy::*MessageParser)(const UInt8*);
 
-	CClient*			m_client;
+	Client*			m_client;
 	synergy::IStream*	m_stream;
 
 	UInt32				m_seqNum;
@@ -126,12 +125,12 @@ private:
 	KeyModifierID		m_modifierTranslationTable[kKeyModifierIDLast];
 
 	double				m_keepAliveAlarm;
-	CEventQueueTimer*	m_keepAliveAlarmTimer;
+	EventQueueTimer*	m_keepAliveAlarmTimer;
 
 	MessageParser		m_parser;
 	IEventQueue*		m_events;
 
-	CStopwatch			m_stopwatch;
+	Stopwatch			m_stopwatch;
 	double				m_elapsedTime;
 	size_t				m_receivedDataSize;
 	static const UInt16	m_intervalThreshold;

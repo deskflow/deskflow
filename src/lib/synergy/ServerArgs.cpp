@@ -17,7 +17,7 @@
 
 #include "synergy/ServerArgs.h"
 
-CServerArgs::CServerArgs() :
+ServerArgs::ServerArgs() :
 	m_configFile(),
 	m_config(NULL)
 {

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
  * This package is free software; you can redistribute it and/or
@@ -26,6 +26,11 @@
 #include "SettingsDialog.h"
 #include "SetupWizard.h"
 #include "ZeroconfService.h"
+#include "DataDownloader.h"
+#include "CommandProcess.h"
+#include "EditionType.h"
+#include "QUtility.h"
+#include "ProcessorArch.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -35,12 +40,14 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDesktopServices>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
 #if defined(Q_OS_WIN)
+#define _WIN32_WINNT 0x0501
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
@@ -48,6 +55,10 @@
 #if defined(Q_OS_WIN)
 static const char synergyConfigName[] = "synergy.sgc";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
+static QString bonjourBaseUrl = "http://synergy-project.org/bonjour/";
+static const char bonjourFilename32[] = "Bonjour.msi";
+static const char bonjourFilename64[] = "Bonjour64.msi";
+static const char bonjourTargetFilename[] = "Bonjour.msi";
 #else
 static const char synergyConfigName[] = "synergy.conf";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
@@ -70,14 +81,18 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pTrayIcon(NULL),
 	m_pTrayIconMenu(NULL),
 	m_AlreadyHidden(false),
-	m_ElevateProcess(false),
-	m_SuppressElevateWarning(false),
 	m_pMenuBar(NULL),
 	m_pMenuFile(NULL),
 	m_pMenuEdit(NULL),
 	m_pMenuWindow(NULL),
 	m_pMenuHelp(NULL),
-	m_pZeroconfService(NULL)
+	m_pZeroconfService(NULL),
+	m_pDataDownloader(NULL),
+	m_DownloadMessageBox(NULL),
+	m_pCancelButton(NULL),
+	m_SuppressAutoConfigWarning(false),
+	m_BonjourInstall(NULL),
+	m_SuppressEmptyServerWarning(false)
 {
 	setupUi(this);
 
@@ -96,9 +111,6 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLogError(const QString&)));
 	connect(&m_IpcClient, SIGNAL(infoMessage(const QString&)), this, SLOT(appendLogNote(const QString&)));
 	m_IpcClient.connectToHost();
-#else
-	// elevate checkbox is only useful on ms windows.
-	m_pElevateCheckBox->hide();
 #endif
 
 	// change default size based on os
@@ -110,9 +122,15 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	setMinimumSize(size());
 #endif
 
-	updateZeroconfService();
+	m_SuppressAutoConfigWarning = true;
+	m_pCheckBoxAutoConfig->setChecked(appConfig.autoConfig());
+	m_SuppressAutoConfigWarning = false;
 
-	m_pAutoConnectCheckBox->setChecked(appConfig.autoConnect());
+	m_pComboServerList->hide();
+
+	updateEdition();
+
+	m_pLabelPadlock->hide();
 }
 
 MainWindow::~MainWindow()
@@ -124,6 +142,14 @@ MainWindow::~MainWindow()
 	saveSettings();
 
 	delete m_pZeroconfService;
+
+	if (m_DownloadMessageBox != NULL) {
+		delete m_DownloadMessageBox;
+	}
+
+	if (m_BonjourInstall != NULL) {
+		delete m_BonjourInstall;
+	}
 }
 
 void MainWindow::open()
@@ -134,11 +160,17 @@ void MainWindow::open()
 
 	m_VersionChecker.checkLatest();
 
+	if (!appConfig().autoConfigPrompted()) {
+		promptAutoConfig();
+	}
+
 	// only start if user has previously started. this stops the gui from
 	// auto hiding before the user has configured synergy (which of course
 	// confuses first time users, who think synergy has crashed).
 	if (appConfig().startedBefore() && appConfig().processMode() == Desktop) {
+		m_SuppressEmptyServerWarning = true;
 		startSynergy();
+		m_SuppressEmptyServerWarning = false;
 	}
 }
 
@@ -162,8 +194,6 @@ void MainWindow::onModeChanged(bool startDesktop, bool applyService)
 		stopService();
 		startSynergy();
 	}
-
-	m_pElevateCheckBox->setEnabled(appConfig().processMode() == Service);
 }
 
 void MainWindow::setStatus(const QString &status)
@@ -245,10 +275,6 @@ void MainWindow::loadSettings()
 	m_pLineEditConfigFile->setText(settings().value("configFile", QDir::homePath() + "/" + synergyConfigName).toString());
 	m_pGroupClient->setChecked(settings().value("groupClientChecked", true).toBool());
 	m_pLineEditHostname->setText(settings().value("serverHostname").toString());
-
-	m_SuppressElevateWarning = true;
-	m_pElevateCheckBox->setChecked(settings().value("elevateChecked", false).toBool());
-	m_SuppressElevateWarning = false;
 }
 
 void MainWindow::initConnections()
@@ -339,6 +365,12 @@ void MainWindow::appendLogNote(const QString& text)
 	appendLogRaw("NOTE: " + text);
 }
 
+void MainWindow::appendLogDebug(const QString& text) {
+	if (appConfig().logLevel() >= 4) {
+		appendLogRaw("DEBUG: " + text);
+	}
+}
+
 void MainWindow::appendLogError(const QString& text)
 {
 	appendLogRaw("ERROR: " + text);
@@ -390,11 +422,6 @@ void MainWindow::startSynergy()
 
 	args << "--name" << getScreenName();
 
-	if (appConfig().cryptoEnabled())
-	{
-		args << "--crypto-pass" << appConfig().cryptoPass();
-	}
-
 	if (desktopMode)
 	{
 		setSynergyProcess(new QProcess(this));
@@ -419,6 +446,14 @@ void MainWindow::startSynergy()
 
 #endif
 
+	if (m_AppConfig.getCryptoEnabled()) {
+		args << "--enable-crypto";
+	}
+
+#if defined(Q_OS_WIN)
+	args << "--profile-dir" << getProfileDirectoryForArg();
+#endif
+
 	if ((synergyType() == synergyClient && !clientArgs(args, app))
 		|| (synergyType() == synergyServer && !serverArgs(args, app)))
 	{
@@ -441,6 +476,8 @@ void MainWindow::startSynergy()
 		appendLogRaw("");
 
 	appendLogNote("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
+
+	qDebug() << args;
 
 	// show command if debug log level...
 	if (appConfig().logLevel() >= 4) {
@@ -476,7 +513,7 @@ void MainWindow::startSynergy()
 	if (serviceMode)
 	{
 		QString command(app + " " + args.join(" "));
-		m_IpcClient.sendCommand(command, m_ElevateProcess);
+		m_IpcClient.sendCommand(command, appConfig().elevateMode());
 	}
 
 	appConfig().setStartedBefore(true);
@@ -501,18 +538,29 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 	app = QString("\"%1\"").arg(app);
 #endif
 
-	if (m_pLineEditHostname->text().isEmpty())
-	{
-		show();
-		QMessageBox::warning(this, tr("Hostname is empty"),
-							 tr("Please fill in a hostname for the synergy client to connect to."));
-		return false;
-	}
-
 	if (appConfig().logToFile())
 	{
 		appConfig().persistLogDir();
 		args << "--log" << appConfig().logFilenameCmd();
+	}
+
+	// check auto config first, if it is disabled or no server detected,
+	// use line edit host name if it is not empty
+	if (m_pCheckBoxAutoConfig->isChecked()) {
+		if (m_pComboServerList->count() != 0) {
+			QString serverIp = m_pComboServerList->currentText();
+			args << serverIp + ":" + QString::number(appConfig().port());
+			return true;
+		}
+	}
+
+	if (m_pLineEditHostname->text().isEmpty()) {
+		show();
+		if (!m_SuppressEmptyServerWarning) {
+			QMessageBox::warning(this, tr("Hostname is empty"),
+							 tr("Please fill in a hostname for the synergy client to connect to."));
+		}
+		return false;
 	}
 
 	args << m_pLineEditHostname->text() + ":" + QString::number(appConfig().port());
@@ -624,7 +672,7 @@ void MainWindow::stopSynergy()
 void MainWindow::stopService()
 {
 	// send empty command to stop service from laucning anything.
-	m_IpcClient.sendCommand("", m_ElevateProcess);
+	m_IpcClient.sendCommand("", appConfig().elevateMode());
 }
 
 void MainWindow::stopDesktop()
@@ -686,13 +734,22 @@ void MainWindow::setSynergyState(qSynergyState state)
 	switch (state)
 	{
 	case synergyConnected: {
+		if (m_AppConfig.getCryptoEnabled()) {
+			m_pLabelPadlock->show();
+		}
+		else {
+			m_pLabelPadlock->hide();
+		}
+
 		setStatus(tr("Synergy is running."));
 		break;
 	}
 	case synergyConnecting:
+		m_pLabelPadlock->hide();
 		setStatus(tr("Synergy is starting."));
 		break;
 	case synergyDisconnected:
+		m_pLabelPadlock->hide();
 		setStatus(tr("Synergy is not running."));
 		break;
 	}
@@ -776,10 +833,14 @@ void MainWindow::changeEvent(QEvent* event)
 		switch (event->type())
 		{
 		case QEvent::LanguageChange:
+		{
 			retranslateUi(this);
 			retranslateMenuBar();
-			break;
 
+			updateEdition();
+
+			break;
+		}
 		default:
 			QMainWindow::changeEvent(event);
 		}
@@ -788,28 +849,64 @@ void MainWindow::changeEvent(QEvent* event)
 
 void MainWindow::updateZeroconfService()
 {
-	if (!m_AppConfig.wizardShouldRun()) {
-		if (m_pZeroconfService) {
-			delete m_pZeroconfService;
-			m_pZeroconfService = NULL;
-		}
+	QMutexLocker locker(&m_Mutex);
 
-		if (m_AppConfig.autoConnect() || synergyType() == synergyServer) {
-			m_pZeroconfService = new ZeroconfService(this);
+	if (isBonjourRunning()) {
+		if (!m_AppConfig.wizardShouldRun()) {
+			if (m_pZeroconfService) {
+				delete m_pZeroconfService;
+				m_pZeroconfService = NULL;
+			}
+
+			if (m_AppConfig.autoConfig() || synergyType() == synergyServer) {
+				m_pZeroconfService = new ZeroconfService(this);
+			}
 		}
 	}
+}
+
+void MainWindow::serverDetected(const QString name)
+{
+	if (m_pComboServerList->findText(name) == -1) {
+		// Note: the first added item triggers startSynergy
+		m_pComboServerList->addItem(name);
+	}
+
+	if (m_pComboServerList->count() > 1) {
+		m_pComboServerList->show();
+	}
+}
+
+void MainWindow::setEdition(int type)
+{
+	QString title;
+	if (type == Basic) {
+		title = "Synergy Basic";
+	}
+	else if (type == Pro) {
+		title = "Synergy Pro";
+	}
+	else {
+		title = "Synergy (UNREGISTERED)";
+	}
+
+	setWindowTitle(title);
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
 {
 	m_pGroupServer->setChecked(!on);
-	updateZeroconfService();
+	if (on) {
+		updateZeroconfService();
+	}
 }
 
 void MainWindow::on_m_pGroupServer_toggled(bool on)
 {
 	m_pGroupClient->setChecked(!on);
-	updateZeroconfService();
+	if (on) {
+		updateZeroconfService();
+	}
 }
 
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
@@ -859,21 +956,26 @@ void MainWindow::on_m_pActionSettings_triggered()
 
 void MainWindow::autoAddScreen(const QString name)
 {
-	int r = m_ServerConfig.autoAddScreen(name);
-	if (r != kAutoAddScreenOk) {
-		switch (r) {
-		case kAutoAddScreenManualServer:
-			showConfigureServer(
-				tr("Please add the server (%1) to the grid.")
-					.arg(appConfig().screenName()));
-			break;
+	if (!m_ServerConfig.ignoreAutoConfigClient()) {
+		int r = m_ServerConfig.autoAddScreen(name);
+		if (r != kAutoAddScreenOk) {
+			switch (r) {
+			case kAutoAddScreenManualServer:
+				showConfigureServer(
+					tr("Please add the server (%1) to the grid.")
+						.arg(appConfig().screenName()));
+				break;
 
-		case kAutoAddScreenManualClient:
-			showConfigureServer(
-				tr("Please drag the new client screen (%1) "
-					"to the desired position on the grid.")
-					.arg(name));
-			break;
+			case kAutoAddScreenManualClient:
+				showConfigureServer(
+					tr("Please drag the new client screen (%1) "
+						"to the desired position on the grid.")
+						.arg(name));
+				break;
+			}
+		}
+		else {
+			startSynergy();
 		}
 	}
 }
@@ -896,36 +998,250 @@ void MainWindow::on_m_pActionWizard_triggered()
 	wizard.exec();
 }
 
-void MainWindow::on_m_pElevateCheckBox_toggled(bool checked)
-{
-	if (checked && !m_SuppressElevateWarning) {
-		int r = QMessageBox::warning(
-			this, tr("Elevate Synergy"),
-			tr("Are you sure you want to elevate Synergy?\n\n"
-			   "This allows Synergy to interact with elevated processes "
-			   "and the UAC dialog, but can cause problems with non-elevated "
-			   "processes. Elevate Synergy only if you really need to."),
-			QMessageBox::Yes | QMessageBox::No);
-
-		if (r != QMessageBox::Yes) {
-			m_pElevateCheckBox->setChecked(false);
-			return;
-		}
-	}
-
-	m_ElevateProcess = checked;
-	settings().setValue("elevateChecked", checked);
-	settings().sync();
-}
-
 void MainWindow::on_m_pButtonApply_clicked()
 {
 	startSynergy();
 }
 
-void MainWindow::on_m_pAutoConnectCheckBox_toggled(bool checked)
+#if defined(Q_OS_WIN)
+bool MainWindow::isServiceRunning(QString name)
 {
+	SC_HANDLE hSCManager;
+	hSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_CONNECT);
+	if (hSCManager == NULL) {
+		appendLogNote("failed to open a service controller manager, error: " +
+			GetLastError());
+		return false;
+	}
+
+	SC_HANDLE hService;
+	int length = name.length();
+	wchar_t* array = new wchar_t[length + 1];
+	name.toWCharArray(array);
+	array[length] = '\0';
+
+	hService = OpenService(hSCManager, array, SERVICE_QUERY_STATUS);
+
+	delete[] array;
+
+	if (hService == NULL) {
+		appendLogDebug("failed to open service: " + name);
+		return false;
+	}
+
+	SERVICE_STATUS status;
+	if (QueryServiceStatus(hService, &status)) {
+		if (status.dwCurrentState == SERVICE_RUNNING) {
+			return true;
+		}
+	}
+#else
+bool MainWindow::isServiceRunning()
+{
+#endif
+	return false;
+}
+
+bool MainWindow::isBonjourRunning()
+{
+	bool result = false;
+
+#if defined(Q_OS_WIN)
+	result = isServiceRunning("Bonjour Service");
+#else
+	result = true;
+#endif
+
+	return result;
+}
+
+void MainWindow::downloadBonjour()
+{
+#if defined(Q_OS_WIN)
+	QUrl url;
+	int arch = checkProcessorArch();
+	if (arch == Win_x86) {
+		url.setUrl(bonjourBaseUrl + bonjourFilename32);
+		appendLogNote("downloading 32-bit Bonjour");
+	}
+	else if (arch == Win_x64) {
+		url.setUrl(bonjourBaseUrl + bonjourFilename64);
+		appendLogNote("downloading 64-bit Bonjour");
+	}
+	else {
+		QMessageBox::critical(
+			this, tr("Synergy"),
+			tr("Failed to detect system architecture."));
+		return;
+	}
+
+	if (m_pDataDownloader == NULL) {
+		m_pDataDownloader = new DataDownloader(this);
+		connect(m_pDataDownloader, SIGNAL(isComplete()), SLOT(installBonjour()));
+	}
+
+	m_pDataDownloader->download(url);
+
+	if (m_DownloadMessageBox == NULL) {
+		m_DownloadMessageBox = new QMessageBox(this);
+		m_DownloadMessageBox->setWindowTitle("Synergy");
+		m_DownloadMessageBox->setIcon(QMessageBox::Information);
+		m_DownloadMessageBox->setText("Installing Bonjour, please wait...");
+		m_DownloadMessageBox->setStandardButtons(0);
+		m_pCancelButton = m_DownloadMessageBox->addButton(
+			tr("Cancel"), QMessageBox::RejectRole);
+	}
+
+	m_DownloadMessageBox->exec();
+
+	if (m_DownloadMessageBox->clickedButton() == m_pCancelButton) {
+		m_pDataDownloader->cancel();
+	}
+#endif
+}
+
+void MainWindow::installBonjour()
+{
+#if defined(Q_OS_WIN)
+	QString tempLocation = QDesktopServices::storageLocation(
+								QDesktopServices::TempLocation);
+	QString filename = tempLocation;
+	filename.append("\\").append(bonjourTargetFilename);
+	QFile file(filename);
+	if (!file.open(QIODevice::WriteOnly)) {
+		m_DownloadMessageBox->hide();
+
+		QMessageBox::warning(
+			this, "Synergy",
+			tr("Failed to download Bonjour installer to location: %1")
+			.arg(tempLocation));
+		return;
+	}
+
+	file.write(m_pDataDownloader->data());
+	file.close();
+
+	QStringList arguments;
+	arguments.append("/i");
+	QString winFilename = QDir::toNativeSeparators(filename);
+	arguments.append(winFilename);
+	arguments.append("/passive");
+	if (m_BonjourInstall == NULL) {
+		m_BonjourInstall = new CommandProcess("msiexec", arguments);
+	}
+
+	QThread* thread = new QThread;
+	connect(m_BonjourInstall, SIGNAL(finished()), this,
+		SLOT(bonjourInstallFinished()));
+	connect(m_BonjourInstall, SIGNAL(finished()), thread, SLOT(quit()));
+	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+	m_BonjourInstall->moveToThread(thread);
+	thread->start();
+
+	QMetaObject::invokeMethod(m_BonjourInstall, "run", Qt::QueuedConnection);
+
+	m_DownloadMessageBox->hide();
+#endif
+}
+
+void MainWindow::promptAutoConfig()
+{
+	if (!isBonjourRunning()) {
+		int r = QMessageBox::question(
+			this, tr("Synergy"),
+			tr("Do you want to enable auto config and install Bonjour?\n\n"
+			   "This feature helps you establish the connection."),
+			QMessageBox::Yes | QMessageBox::No);
+
+		if (r == QMessageBox::Yes) {
+			m_AppConfig.setAutoConfig(true);
+			downloadBonjour();
+		}
+		else {
+			m_AppConfig.setAutoConfig(false);
+			m_pCheckBoxAutoConfig->setChecked(false);
+		}
+	}
+
+	m_AppConfig.setAutoConfigPrompted(true);
+}
+
+void MainWindow::updateEdition()
+{
+	QString mac = getFirstMacAddress();
+	QString hashSrc = m_AppConfig.activateEmail() + mac;
+	QString hashResult = hash(hashSrc);
+	if (hashResult == m_AppConfig.userToken()) {
+		setEdition(m_AppConfig.edition());
+	}
+	else {
+		setEdition(Unknown);
+	}
+}
+
+void MainWindow::on_m_pComboServerList_currentIndexChanged(QString )
+{
+	if (m_pComboServerList->count() != 0) {
+		startSynergy();
+	}
+}
+
+void MainWindow::on_m_pCheckBoxAutoConfig_toggled(bool checked)
+{
+	if (!isBonjourRunning() && checked) {
+		if (!m_SuppressAutoConfigWarning) {
+			int r = QMessageBox::information(
+				this, tr("Synergy"),
+				tr("Auto config feature requires Bonjour.\n\n"
+				   "Do you want to install Bonjour?"),
+				QMessageBox::Yes | QMessageBox::No);
+
+			if (r == QMessageBox::Yes) {
+				downloadBonjour();
+			}
+		}
+
+		m_pCheckBoxAutoConfig->setChecked(false);
+		return;
+	}
+
 	m_pLineEditHostname->setDisabled(checked);
-	appConfig().setAutoConnect(checked);
+	appConfig().setAutoConfig(checked);
 	updateZeroconfService();
+
+	if (!checked) {
+		m_pComboServerList->clear();
+		m_pComboServerList->hide();
+	}
+}
+
+void MainWindow::bonjourInstallFinished()
+{
+	appendLogNote("Bonjour install finished");
+
+	m_pCheckBoxAutoConfig->setChecked(true);
+}
+
+QString MainWindow::getProfileDirectory()
+{
+#if defined(Q_OS_WIN)
+
+	QString qtDataDir = QDesktopServices::storageLocation(
+		QDesktopServices::DataLocation);
+
+	// HACK: core wants the base app data dir, this seems like a very hacky
+	// way to get it (maybe consider using %LOCALAPPDATA% instead?)
+	return qtDataDir.replace("\\Synergy\\Synergy", "");
+
+#else
+
+	return "";
+
+#endif
+}
+
+QString MainWindow::getProfileDirectoryForArg()
+{
+	return QString("\"%1\"").arg(getProfileDirectory());
 }

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -34,11 +34,11 @@
 #endif
 
 //
-// CMSWindowsKeyState
+// MSWindowsKeyState
 //
 
 // map virtual keys to synergy key enumeration
-const KeyID				CMSWindowsKeyState::s_virtualKey[] =
+const KeyID				MSWindowsKeyState::s_virtualKey[] =
 {
 	/* 0x000 */ { kKeyNone },		// reserved
 	/* 0x001 */ { kKeyNone },		// VK_LBUTTON
@@ -555,13 +555,13 @@ const KeyID				CMSWindowsKeyState::s_virtualKey[] =
 	/* 0x1ff */ { kKeyNone }		// reserved
 };
 
-struct CWin32Modifiers {
+struct Win32Modifiers {
 public:
 	UINT				m_vk;
 	KeyModifierMask		m_mask;
 };
 
-static const CWin32Modifiers s_modifiers[] =
+static const Win32Modifiers s_modifiers[] =
 {
 	{ VK_SHIFT,    KeyModifierShift   },
 	{ VK_LSHIFT,   KeyModifierShift   },
@@ -576,9 +576,9 @@ static const CWin32Modifiers s_modifiers[] =
 	{ VK_RWIN,     KeyModifierSuper   }
 };
 
-CMSWindowsKeyState::CMSWindowsKeyState(
-	CMSWindowsDesks* desks, void* eventTarget, IEventQueue* events) :
-	CKeyState(events),
+MSWindowsKeyState::MSWindowsKeyState(
+	MSWindowsDesks* desks, void* eventTarget, IEventQueue* events) :
+	KeyState(events),
 	m_eventTarget(eventTarget),
 	m_desks(desks),
 	m_keyLayout(GetKeyboardLayout(0)),
@@ -592,9 +592,9 @@ CMSWindowsKeyState::CMSWindowsKeyState(
 	init();
 }
 
-CMSWindowsKeyState::CMSWindowsKeyState(
-	CMSWindowsDesks* desks, void* eventTarget, IEventQueue* events, CKeyMap& keyMap) :
-	CKeyState(events, keyMap),
+MSWindowsKeyState::MSWindowsKeyState(
+	MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, synergy::KeyMap& keyMap) :
+	KeyState(events, keyMap),
 	m_eventTarget(eventTarget),
 	m_desks(desks),
 	m_keyLayout(GetKeyboardLayout(0)),
@@ -608,13 +608,13 @@ CMSWindowsKeyState::CMSWindowsKeyState(
 	init();
 }
 
-CMSWindowsKeyState::~CMSWindowsKeyState()
+MSWindowsKeyState::~MSWindowsKeyState()
 {
 	disable();
 }
 
 void
-CMSWindowsKeyState::init()
+MSWindowsKeyState::init()
 {
 	// look up symbol that's available on winNT family but not win95
 	HMODULE userModule = GetModuleHandle("user32.dll");
@@ -622,10 +622,10 @@ CMSWindowsKeyState::init()
 }
 
 void
-CMSWindowsKeyState::disable()
+MSWindowsKeyState::disable()
 {
 	if (m_fixTimer != NULL) {
-		m_events->removeHandler(CEvent::kTimer, m_fixTimer);
+		m_events->removeHandler(Event::kTimer, m_fixTimer);
 		m_events->deleteTimer(m_fixTimer);
 		m_fixTimer = NULL;
 	}
@@ -633,19 +633,19 @@ CMSWindowsKeyState::disable()
 }
 
 KeyButton
-CMSWindowsKeyState::virtualKeyToButton(UINT virtualKey) const
+MSWindowsKeyState::virtualKeyToButton(UINT virtualKey) const
 {
 	return m_virtualKeyToButton[virtualKey & 0xffu];
 }
 
 void
-CMSWindowsKeyState::setKeyLayout(HKL keyLayout)
+MSWindowsKeyState::setKeyLayout(HKL keyLayout)
 {
 	m_keyLayout = keyLayout;
 }
 
 bool
-CMSWindowsKeyState::testAutoRepeat(bool press, bool isRepeat, KeyButton button)
+MSWindowsKeyState::testAutoRepeat(bool press, bool isRepeat, KeyButton button)
 {
 	if (!isRepeat) {
 		isRepeat = (press && m_lastDown != 0 && button == m_lastDown);
@@ -660,19 +660,19 @@ CMSWindowsKeyState::testAutoRepeat(bool press, bool isRepeat, KeyButton button)
 }
 
 void
-CMSWindowsKeyState::saveModifiers()
+MSWindowsKeyState::saveModifiers()
 {
 	m_savedModifiers         = getActiveModifiers();
 	m_originalSavedModifiers = m_savedModifiers;
 }
 
 void
-CMSWindowsKeyState::useSavedModifiers(bool enable)
+MSWindowsKeyState::useSavedModifiers(bool enable)
 {
 	if (enable != m_useSavedModifiers) {
 		m_useSavedModifiers = enable;
 		if (!m_useSavedModifiers) {
-			// transfer any modifier state changes to CKeyState's state
+			// transfer any modifier state changes to KeyState's state
 			KeyModifierMask mask = m_originalSavedModifiers ^ m_savedModifiers;
 			getActiveModifiersRValue() =
 				(getActiveModifiers() & ~mask) | (m_savedModifiers & mask);
@@ -681,7 +681,7 @@ CMSWindowsKeyState::useSavedModifiers(bool enable)
 }
 
 KeyID
-CMSWindowsKeyState::mapKeyFromEvent(WPARAM charAndVirtKey,
+MSWindowsKeyState::mapKeyFromEvent(WPARAM charAndVirtKey,
 				LPARAM info, KeyModifierMask* maskOut) const
 {
 	static const KeyModifierMask s_controlAlt =
@@ -735,14 +735,14 @@ CMSWindowsKeyState::mapKeyFromEvent(WPARAM charAndVirtKey,
 }
 
 bool
-CMSWindowsKeyState::didGroupsChange() const
+MSWindowsKeyState::didGroupsChange() const
 {
 	GroupList groups;
 	return (getGroups(groups) && groups != m_groups);
 }
 
 UINT
-CMSWindowsKeyState::mapKeyToVirtualKey(KeyID key) const
+MSWindowsKeyState::mapKeyToVirtualKey(KeyID key) const
 {
 	if (key == kKeyNone) {
 		return 0;
@@ -757,13 +757,13 @@ CMSWindowsKeyState::mapKeyToVirtualKey(KeyID key) const
 }
 
 void
-CMSWindowsKeyState::onKey(KeyButton button, bool down, KeyModifierMask newState)
+MSWindowsKeyState::onKey(KeyButton button, bool down, KeyModifierMask newState)
 {
-	CKeyState::onKey(button, down, newState);
+	KeyState::onKey(button, down, newState);
 }
 
 void
-CMSWindowsKeyState::sendKeyEvent(void* target,
+MSWindowsKeyState::sendKeyEvent(void* target,
 							bool press, bool isAutoRepeat,
 							KeyID key, KeyModifierMask mask,
 							SInt32 count, KeyButton button)
@@ -771,39 +771,39 @@ CMSWindowsKeyState::sendKeyEvent(void* target,
 	if (press || isAutoRepeat) {
 		// send key
 		if (press && !isAutoRepeat) {
-			CKeyState::sendKeyEvent(target, true, false,
+			KeyState::sendKeyEvent(target, true, false,
 							key, mask, 1, button);
 			if (count > 0) {
 				--count;
 			}
 		}
 		if (count >= 1) {
-			CKeyState::sendKeyEvent(target, true, true,
+			KeyState::sendKeyEvent(target, true, true,
 							key, mask, count, button);
 		}
 	}
 	else {
 		// do key up
-		CKeyState::sendKeyEvent(target, false, false, key, mask, 1, button);
+		KeyState::sendKeyEvent(target, false, false, key, mask, 1, button);
 	}
 }
 
 void
-CMSWindowsKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask,
+MSWindowsKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask,
 				KeyButton button)
 {
-	CKeyState::fakeKeyDown(id, mask, button);
+	KeyState::fakeKeyDown(id, mask, button);
 }
 
 bool
-CMSWindowsKeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
+MSWindowsKeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 				SInt32 count, KeyButton button)
 {
-	return CKeyState::fakeKeyRepeat(id, mask, count, button);
+	return KeyState::fakeKeyRepeat(id, mask, count, button);
 }
 
 bool
-CMSWindowsKeyState::fakeCtrlAltDel()
+MSWindowsKeyState::fakeCtrlAltDel()
 {
 	// to fake ctrl+alt+del on the NT family we broadcast a suitable
 	// hotkey to all windows on the winlogon desktop.  however, the
@@ -817,7 +817,7 @@ CMSWindowsKeyState::fakeCtrlAltDel()
 		CloseHandle( hEvtSendSas );
 	}
 	else {
-		CThread cad(new CFunctionJob(&CMSWindowsKeyState::ctrlAltDelThread));
+		Thread cad(new FunctionJob(&MSWindowsKeyState::ctrlAltDelThread));
 		cad.wait();
 	}
 
@@ -825,7 +825,7 @@ CMSWindowsKeyState::fakeCtrlAltDel()
 }
 
 void
-CMSWindowsKeyState::ctrlAltDelThread(void*)
+MSWindowsKeyState::ctrlAltDelThread(void*)
 {
 	// get the Winlogon desktop at whatever privilege we can
 	HDESK desk = OpenDesktop("Winlogon", 0, FALSE, MAXIMUM_ALLOWED);
@@ -845,7 +845,7 @@ CMSWindowsKeyState::ctrlAltDelThread(void*)
 }
 
 KeyModifierMask
-CMSWindowsKeyState::pollActiveModifiers() const
+MSWindowsKeyState::pollActiveModifiers() const
 {
 	KeyModifierMask state = 0;
 
@@ -872,7 +872,7 @@ CMSWindowsKeyState::pollActiveModifiers() const
 }
 
 SInt32
-CMSWindowsKeyState::pollActiveGroup() const
+MSWindowsKeyState::pollActiveGroup() const
 {
 	// determine the thread that'll receive this event
 	HWND  targetWindow = GetForegroundWindow();
@@ -900,7 +900,7 @@ CMSWindowsKeyState::pollActiveGroup() const
 }
 
 void
-CMSWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
+MSWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 {
 	BYTE keyState[256];
 	if (!GetKeyboardState(keyState)) {
@@ -918,7 +918,7 @@ CMSWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 }
 
 void
-CMSWindowsKeyState::getKeyMap(CKeyMap& keyMap)
+MSWindowsKeyState::getKeyMap(synergy::KeyMap& keyMap)
 {
 	// update keyboard groups
 	if (getGroups(m_groups)) {
@@ -934,7 +934,7 @@ CMSWindowsKeyState::getKeyMap(CKeyMap& keyMap)
 	memset(m_virtualKeyToButton, 0, sizeof(m_virtualKeyToButton));
 	m_keyToVKMap.clear();
 
-	CKeyMap::KeyItem item;
+	synergy::KeyMap::KeyItem item;
 	SInt32 numGroups = (SInt32)m_groups.size();
 	for (SInt32 g = 0; g < numGroups; ++g) {
 		item.m_group = g;
@@ -1118,7 +1118,7 @@ CMSWindowsKeyState::getKeyMap(CKeyMap& keyMap)
 				item.m_client    = m_buttonToVK[i];
 
 				// get flags for modifier keys
-				CKeyMap::initModifierKey(item);
+				synergy::KeyMap::initModifierKey(item);
 
 				if (item.m_id == 0) {
 					// translate virtual key to a character with and without
@@ -1230,7 +1230,7 @@ CMSWindowsKeyState::getKeyMap(CKeyMap& keyMap)
 }
 
 void
-CMSWindowsKeyState::fakeKey(const Keystroke& keystroke)
+MSWindowsKeyState::fakeKey(const Keystroke& keystroke)
 {
 	switch (keystroke.m_type) {
 	case Keystroke::kButton: {
@@ -1286,18 +1286,18 @@ CMSWindowsKeyState::fakeKey(const Keystroke& keystroke)
 }
 
 KeyModifierMask&
-CMSWindowsKeyState::getActiveModifiersRValue()
+MSWindowsKeyState::getActiveModifiersRValue()
 {
 	if (m_useSavedModifiers) {
 		return m_savedModifiers;
 	}
 	else {
-		return CKeyState::getActiveModifiersRValue();
+		return KeyState::getActiveModifiersRValue();
 	}
 }
 
 bool
-CMSWindowsKeyState::getGroups(GroupList& groups) const
+MSWindowsKeyState::getGroups(GroupList& groups) const
 {
 	// get keyboard layouts
 	UInt32 newNumLayouts = GetKeyboardLayoutList(0, NULL);
@@ -1320,7 +1320,7 @@ CMSWindowsKeyState::getGroups(GroupList& groups) const
 }
 
 void
-CMSWindowsKeyState::setWindowGroup(SInt32 group)
+MSWindowsKeyState::setWindowGroup(SInt32 group)
 {
 	HWND targetWindow = GetForegroundWindow();
 
@@ -1339,7 +1339,7 @@ CMSWindowsKeyState::setWindowGroup(SInt32 group)
 }
 
 KeyID
-CMSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button)
+MSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button)
 {
 	if ((button & 0x100u) != 0) {
 		virtualKey += 0x100u;
@@ -1348,13 +1348,13 @@ CMSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button)
 }
 
 UINT
-CMSWindowsKeyState::mapButtonToVirtualKey(KeyButton button) const
+MSWindowsKeyState::mapButtonToVirtualKey(KeyButton button) const
 {
 	return m_buttonToVK[button];
 }
 
 KeyID
-CMSWindowsKeyState::getIDForKey(CKeyMap::KeyItem& item,
+MSWindowsKeyState::getIDForKey(synergy::KeyMap::KeyItem& item,
 				KeyButton button, UINT virtualKey,
 				PBYTE keyState, HKL hkl) const
 {
@@ -1366,7 +1366,7 @@ CMSWindowsKeyState::getIDForKey(CKeyMap::KeyItem& item,
 	
 	switch (n) {
 	case -1:
-		return CKeyMap::getDeadKey(id);
+		return synergy::KeyMap::getDeadKey(id);
 
 	default:
 	case 0:
@@ -1385,7 +1385,7 @@ CMSWindowsKeyState::getIDForKey(CKeyMap::KeyItem& item,
 }
 
 void
-CMSWindowsKeyState::addKeyEntry(CKeyMap& keyMap, CKeyMap::KeyItem& item)
+MSWindowsKeyState::addKeyEntry(synergy::KeyMap& keyMap, synergy::KeyMap::KeyItem& item)
 {
 	keyMap.addKeyEntry(item);
 	if (item.m_group == 0) {

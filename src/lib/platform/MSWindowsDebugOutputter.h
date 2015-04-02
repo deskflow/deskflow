@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2012 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or
@@ -25,10 +25,10 @@
 This outputter writes output to the debugger. In Visual Studio, this
 can be seen in the Output window.
 */
-class CMSWindowsDebugOutputter : public ILogOutputter {
+class MSWindowsDebugOutputter : public ILogOutputter {
 public:
-	CMSWindowsDebugOutputter();
-	virtual ~CMSWindowsDebugOutputter();
+	MSWindowsDebugOutputter();
+	virtual ~MSWindowsDebugOutputter();
 
 	// ILogOutputter overrides
 	virtual void		open(const char* title);

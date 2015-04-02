@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2013 Bolton Software Ltd.
+ * Copyright (C) 2013 Synergy Si Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,8 +23,8 @@
 
 #include "test/global/gmock.h"
 
-class CMockInputFilter : public CInputFilter
+class MockInputFilter : public InputFilter
 {
 public:
-	 MOCK_METHOD1(setPrimaryClient, void(CPrimaryClient*));
+	 MOCK_METHOD1(setPrimaryClient, void(PrimaryClient*));
 };

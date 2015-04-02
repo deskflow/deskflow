@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2013 Bolton Software Ltd.
+ * Copyright (C) 2013 Synergy Si Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,7 @@
 
 #ifdef MAC_OS_X_VERSION_10_7
 
-@implementation COSXDragView
+@implementation OSXDragView
 
 @dynamic draggingFormation;
 @dynamic animatesToDestination;
@@ -98,7 +98,9 @@ clearDropTarget
 - (void)
 setFileExt:(NSString*) ext
 {
-	m_dragFileExt = [NSString stringWithString:ext];
+	[ext retain];
+	[m_dragFileExt release];
+	m_dragFileExt = ext;
 	NSLog(@"drag file ext: %@", m_dragFileExt);
 }
 

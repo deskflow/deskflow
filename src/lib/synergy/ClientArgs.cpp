@@ -17,7 +17,7 @@
 
 #include "synergy/ClientArgs.h"
 
-CClientArgs::CClientArgs() :
+ClientArgs::ClientArgs() :
 	m_yscroll(0)
 {
 }

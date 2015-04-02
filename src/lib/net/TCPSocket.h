@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -24,24 +24,24 @@
 #include "mt/Mutex.h"
 #include "arch/IArchNetwork.h"
 
-class CMutex;
-class CThread;
+class Mutex;
+class Thread;
 class ISocketMultiplexerJob;
 class IEventQueue;
-class CSocketMultiplexer;
+class SocketMultiplexer;
 
 //! TCP data socket
 /*!
 A data socket using TCP.
 */
-class CTCPSocket : public IDataSocket {
+class TCPSocket : public IDataSocket {
 public:
-	CTCPSocket(IArchNetwork::EAddressFamily family, IEventQueue* events, CSocketMultiplexer* socketMultiplexer);
-	CTCPSocket(IEventQueue* events, CSocketMultiplexer* socketMultiplexer, CArchSocket socket);
-	~CTCPSocket();
+	TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family = IArchNetwork::kINET);
+	TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket);
+	virtual ~TCPSocket();
 
 	// ISocket overrides
-	virtual void		bind(const CNetworkAddress&);
+	virtual void		bind(const NetworkAddress&);
 	virtual void		close();
 	virtual void*		getEventTarget() const;
 
@@ -55,16 +55,33 @@ public:
 	virtual UInt32		getSize() const;
 
 	// IDataSocket overrides
-	virtual void		connect(const CNetworkAddress&);
+	virtual void		connect(const NetworkAddress&);
+
+	virtual void		secureConnect() {}
+	virtual void		secureAccept() {}
+
+protected:
+	ArchSocket			getSocket() { return m_socket; }
+	IEventQueue*		getEvents() { return m_events; }
+	virtual bool		isSecureReady() { return false; }
+	virtual bool		isSecure() { return false; }
+	virtual UInt32		secureRead(void* buffer, UInt32) { return 0; }
+	virtual UInt32		secureWrite(const void*, UInt32) { return 0; }
+
+	void				setJob(ISocketMultiplexerJob*);
+	ISocketMultiplexerJob*
+						newJob();
+	bool				isReadable() { return m_readable; }
+	bool				isWritable() { return m_writable; }
+
+	Mutex&				getMutex() { return m_mutex; }
+
+	void				sendEvent(Event::Type);
 
 private:
 	void				init();
 
-	void				setJob(ISocketMultiplexerJob*);
-	ISocketMultiplexerJob*	newJob();
 	void				sendConnectionFailedEvent(const char*);
-	void				sendEvent(CEvent::Type);
-
 	void				onConnected();
 	void				onInputShutdown();
 	void				onOutputShutdown();
@@ -78,14 +95,14 @@ private:
 							bool, bool, bool);
 
 private:
-	CMutex				m_mutex;
-	CArchSocket			m_socket;
-	CStreamBuffer		m_inputBuffer;
-	CStreamBuffer		m_outputBuffer;
-	CCondVar<bool>		m_flushed;
+	Mutex				m_mutex;
+	ArchSocket			m_socket;
+	StreamBuffer		m_inputBuffer;
+	StreamBuffer		m_outputBuffer;
+	CondVar<bool>		m_flushed;
 	bool				m_connected;
 	bool				m_readable;
 	bool				m_writable;
 	IEventQueue*		m_events;
-	CSocketMultiplexer* m_socketMultiplexer;
+	SocketMultiplexer*	m_socketMultiplexer;
 };

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,10 +23,10 @@
 
 // disabling these tests - the return value of CGCursorIsVisible is unreliable.
 /*
-TEST(COSXScreenTests, hideCursor_notPrimary)
+TEST(OSXScreenTests, hideCursor_notPrimary)
 {
-	CEventQueue queue;
-	COSXScreen screen(true, false);
+	EventQueue queue;
+	OSXScreen screen(true, false);
 
 	screen.hideCursor();
 
@@ -36,10 +36,10 @@ TEST(COSXScreenTests, hideCursor_notPrimary)
 	ARCH->sleep(.1f);
 }
 
-TEST(COSXScreenTests, showCursor_notPrimary)
+TEST(OSXScreenTests, showCursor_notPrimary)
 {
-	CEventQueue queue;
-	COSXScreen screen(false, false);
+	EventQueue queue;
+	OSXScreen screen(false, false);
 
 	screen.showCursor();
 

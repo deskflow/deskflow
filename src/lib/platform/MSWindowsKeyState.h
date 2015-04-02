@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -25,20 +25,20 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-class CEvent;
-class CEventQueueTimer;
-class CMSWindowsDesks;
+class Event;
+class EventQueueTimer;
+class MSWindowsDesks;
 class IEventQueue;
 
 //! Microsoft Windows key mapper
 /*!
 This class maps KeyIDs to keystrokes.
 */
-class CMSWindowsKeyState : public CKeyState {
+class MSWindowsKeyState : public KeyState {
 public:
-	CMSWindowsKeyState(CMSWindowsDesks* desks, void* eventTarget, IEventQueue* events);
-	CMSWindowsKeyState(CMSWindowsDesks* desks, void* eventTarget, IEventQueue* events, CKeyMap& keyMap);
-	virtual ~CMSWindowsKeyState();
+	MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events);
+	MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, synergy::KeyMap& keyMap);
+	virtual ~MSWindowsKeyState();
 
 	//! @name manipulators
 	//@{
@@ -145,7 +145,7 @@ public:
 	virtual SInt32		pollActiveGroup() const;
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
-	// CKeyState overrides
+	// KeyState overrides
 	virtual void		onKey(KeyButton button, bool down,
 							KeyModifierMask newState);
 	virtual void		sendKeyEvent(void* target,
@@ -160,8 +160,8 @@ public:
 	void				setSavedModifiers(KeyModifierMask value) { m_savedModifiers = value; }
 
 protected:
-	// CKeyState overrides
-	virtual void		getKeyMap(CKeyMap& keyMap);
+	// KeyState overrides
+	virtual void		getKeyMap(synergy::KeyMap& keyMap);
 	virtual void		fakeKey(const Keystroke& keystroke);
 	virtual KeyModifierMask&
 						getActiveModifiersRValue();
@@ -175,25 +175,25 @@ private:
 	bool				getGroups(GroupList&) const;
 	void				setWindowGroup(SInt32 group);
 
-	KeyID				getIDForKey(CKeyMap::KeyItem& item,
+	KeyID				getIDForKey(synergy::KeyMap::KeyItem& item,
 							KeyButton button, UINT virtualKey,
 							PBYTE keyState, HKL hkl) const;
 
-	void				addKeyEntry(CKeyMap& keyMap, CKeyMap::KeyItem& item);
+	void				addKeyEntry(synergy::KeyMap& keyMap, synergy::KeyMap::KeyItem& item);
 
 	void				init();
 
 private:
 	// not implemented
-	CMSWindowsKeyState(const CMSWindowsKeyState&);
-	CMSWindowsKeyState& operator=(const CMSWindowsKeyState&);
+	MSWindowsKeyState(const MSWindowsKeyState&);
+	MSWindowsKeyState& operator=(const MSWindowsKeyState&);
 
 private:
 	typedef std::map<HKL, SInt32> GroupMap;
 	typedef std::map<KeyID, UINT> KeyToVKMap;
 
 	void*				m_eventTarget;
-	CMSWindowsDesks*	m_desks;
+	MSWindowsDesks*	m_desks;
 	HKL					m_keyLayout;
 	UINT				m_buttonToVK[512];
 	UINT				m_buttonToNumpadVK[512];
@@ -202,7 +202,7 @@ private:
 	IEventQueue*		m_events;
 
 	// the timer used to check for fixing key state
-	CEventQueueTimer*	m_fixTimer;
+	EventQueueTimer*	m_fixTimer;
 
 	// the groups (keyboard layouts)
 	GroupList			m_groups;

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -68,41 +68,41 @@ toLE(UInt8*& dst, UInt32 src)
 }
 
 //
-// CXWindowsClipboardBMPConverter
+// XWindowsClipboardBMPConverter
 //
 
-CXWindowsClipboardBMPConverter::CXWindowsClipboardBMPConverter(
+XWindowsClipboardBMPConverter::XWindowsClipboardBMPConverter(
 				Display* display) :
 	m_atom(XInternAtom(display, "image/bmp", False))
 {
 	// do nothing
 }
 
-CXWindowsClipboardBMPConverter::~CXWindowsClipboardBMPConverter()
+XWindowsClipboardBMPConverter::~XWindowsClipboardBMPConverter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-CXWindowsClipboardBMPConverter::getFormat() const
+XWindowsClipboardBMPConverter::getFormat() const
 {
 	return IClipboard::kBitmap;
 }
 
 Atom
-CXWindowsClipboardBMPConverter::getAtom() const
+XWindowsClipboardBMPConverter::getAtom() const
 {
 	return m_atom;
 }
 
 int
-CXWindowsClipboardBMPConverter::getDataSize() const
+XWindowsClipboardBMPConverter::getDataSize() const
 {
 	return 8;
 }
 
-CString
-CXWindowsClipboardBMPConverter::fromIClipboard(const CString& bmp) const
+String
+XWindowsClipboardBMPConverter::fromIClipboard(const String& bmp) const
 {
 	// create BMP image
 	UInt8 header[14];
@@ -113,21 +113,21 @@ CXWindowsClipboardBMPConverter::fromIClipboard(const CString& bmp) const
 	toLE(dst, static_cast<UInt16>(0));
 	toLE(dst, static_cast<UInt16>(0));
 	toLE(dst, static_cast<UInt32>(14 + 40));
-	return CString(reinterpret_cast<const char*>(header), 14) + bmp;
+	return String(reinterpret_cast<const char*>(header), 14) + bmp;
 }
 
-CString
-CXWindowsClipboardBMPConverter::toIClipboard(const CString& bmp) const
+String
+XWindowsClipboardBMPConverter::toIClipboard(const String& bmp) const
 {
 	// make sure data is big enough for a BMP file
 	if (bmp.size() <= 14 + 40) {
-		return CString();
+		return String();
 	}
 
 	// check BMP file header
 	const UInt8* rawBMPHeader = reinterpret_cast<const UInt8*>(bmp.data());
 	if (rawBMPHeader[0] != 'B' || rawBMPHeader[1] != 'M') {
-		return CString();
+		return String();
 	}
 
 	// get offset to image data

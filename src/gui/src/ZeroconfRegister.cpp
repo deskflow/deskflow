@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Bolton Software Ltd.
+ * Copyright (C) 2014 Synergy Si Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,6 +28,10 @@ ZeroconfRegister::ZeroconfRegister(QObject* parent) :
 
 ZeroconfRegister::~ZeroconfRegister()
 {
+	if (m_pSocket) {
+		delete m_pSocket;
+	}
+
 	if (m_DnsServiceRef) {
 		DNSServiceRefDeallocate(m_DnsServiceRef);
 		m_DnsServiceRef = 0;
@@ -49,7 +53,8 @@ void ZeroconfRegister::registerService(const ZeroconfRecord& record,
 	}
 #endif
 
-	DNSServiceErrorType err = DNSServiceRegister(&m_DnsServiceRef, 0, 0,
+	DNSServiceErrorType err = DNSServiceRegister(&m_DnsServiceRef,
+		kDNSServiceFlagsNoAutoRename, 0,
 		record.serviceName.toUtf8().constData(),
 		record.registeredType.toUtf8().constData(),
 		record.replyDomain.isEmpty() ? 0 : record.replyDomain.toUtf8().constData(),

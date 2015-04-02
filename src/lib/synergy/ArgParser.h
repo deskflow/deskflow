@@ -20,42 +20,43 @@
 #include "base/String.h"
 #include "common/stdvector.h"
 
-class CServerArgs;
-class CClientArgs;
-class CToolArgs;
-class CArgsBase;
-class CApp;
+class ServerArgs;
+class ClientArgs;
+class ToolArgs;
+class ArgsBase;
+class App;
 
-class CArgParser {
+class ArgParser {
 
 public:
-	CArgParser(CApp* app);
+	ArgParser(App* app);
 
-	bool				parseServerArgs(CServerArgs& args, int argc, const char* const* argv);
-	bool				parseClientArgs(CClientArgs& args, int argc, const char* const* argv);
-	bool				parsePlatformArg(CArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
+	bool				parseServerArgs(ServerArgs& args, int argc, const char* const* argv);
+	bool				parseClientArgs(ClientArgs& args, int argc, const char* const* argv);
+	bool				parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
+	bool				parseToolArgs(ToolArgs& args, int argc, const char* const* argv);
 	bool				parseGenericArgs(int argc, const char* const* argv, int& i);
-	void				setArgsBase(CArgsBase& argsBase) { m_argsBase = &argsBase; }
+	void				setArgsBase(ArgsBase& argsBase) { m_argsBase = &argsBase; }
 
 	static	bool		isArg(int argi, int argc, const char* const* argv,
 							const char* name1, const char* name2,
 							int minRequiredParameters = 0);
-	static void			splitCommandString(CString& command, std::vector<CString>& argv);
-	static bool			searchDoubleQuotes(CString& command, size_t& left, 
+	static void			splitCommandString(String& command, std::vector<String>& argv);
+	static bool			searchDoubleQuotes(String& command, size_t& left, 
 							size_t& right, size_t startPos = 0);
-	static void			removeDoubleQuotes(CString& arg);
-	static const char**	getArgv(std::vector<CString>& argsArray);
-	static CString		assembleCommand(std::vector<CString>& argsArray, 
-							CString ignoreArg = "", int parametersRequired = 0);
+	static void			removeDoubleQuotes(String& arg);
+	static const char**	getArgv(std::vector<String>& argsArray);
+	static String		assembleCommand(std::vector<String>& argsArray, 
+							String ignoreArg = "", int parametersRequired = 0);
 
 private:
 	void				updateCommonArgs(const char* const* argv);
 	bool				checkUnexpectedArgs();
 	
-	static CArgsBase&	argsBase() { return *m_argsBase; }
+	static ArgsBase&	argsBase() { return *m_argsBase; }
 
 private:
-	CApp*				m_app;
+	App*				m_app;
 	
-	static CArgsBase*	m_argsBase;
+	static ArgsBase*	m_argsBase;
 };

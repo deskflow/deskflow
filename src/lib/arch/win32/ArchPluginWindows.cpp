@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2012 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or
@@ -27,70 +27,147 @@
 #include <Windows.h>
 #include <iostream>
 
-typedef int (*initFunc)(void (*sendEvent)(const char*, void*), void (*log)(const char*));
+typedef void (*initFunc)(void*, void*);
+typedef int (*initEventFunc)(void (*sendEvent)(const char*, void*));
+typedef void* (*invokeFunc)(const char*, void**);
+typedef void (*cleanupFunc)();
 
 void* g_eventTarget = NULL;
 IEventQueue* g_events = NULL;
 
-CArchPluginWindows::CArchPluginWindows()
+ArchPluginWindows::ArchPluginWindows()
 {
 }
 
-CArchPluginWindows::~CArchPluginWindows()
+ArchPluginWindows::~ArchPluginWindows()
 {
 }
 
 void
-CArchPluginWindows::init(void* eventTarget, IEventQueue* events)
+ArchPluginWindows::load()
+{
+	String dir = getPluginsDir();
+	LOG((CLOG_DEBUG "plugins dir: %s", dir.c_str()));
+
+	String pattern = String(dir).append("\\*.dll");
+	std::vector<String> plugins;
+	getFilenames(pattern, plugins);
+
+	std::vector<String>::iterator it;
+	for (it = plugins.begin(); it != plugins.end(); ++it) {
+		LOG((CLOG_DEBUG "loading plugin: %s", (*it).c_str()));
+		String path = String(dir).append("\\").append(*it);
+		HINSTANCE library = LoadLibrary(path.c_str());
+
+		if (library == NULL) {
+			LOG((CLOG_ERR "failed to load plugin: %s %d", (*it).c_str(), GetLastError()));
+			throw XArch(new XArchEvalWindows);
+		}
+
+		void* lib = reinterpret_cast<void*>(library);
+		String filename = synergy::string::removeFileExt(*it);
+		m_pluginTable.insert(std::make_pair(filename, lib));
+
+		LOG((CLOG_DEBUG "loaded plugin: %s", (*it).c_str()));
+	}
+}
+
+void
+ArchPluginWindows::unload()
+{
+	PluginTable::iterator it;
+	HINSTANCE lib;
+	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
+		lib = reinterpret_cast<HINSTANCE>(it->second);
+		cleanupFunc cleanup = (cleanupFunc)GetProcAddress(lib, "cleanup");
+		if (cleanup != NULL) {
+			cleanup();
+		}
+		else {
+			LOG((CLOG_DEBUG "no cleanup function in %s", it->first.c_str()));
+		}
+
+		LOG((CLOG_DEBUG "unloading plugin: %s", it->first.c_str()));
+		FreeLibrary(lib);
+	}
+}
+
+void
+ArchPluginWindows::init(void* log, void* arch)
+{
+	PluginTable::iterator it;
+	HINSTANCE lib;
+	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
+		lib = reinterpret_cast<HINSTANCE>(it->second);
+		initFunc initPlugin = (initFunc)GetProcAddress(lib, "init");
+		if (initPlugin != NULL) {
+			initPlugin(log, arch);
+		}
+		else {
+			LOG((CLOG_DEBUG "no init function in %s", it->first.c_str()));
+		}
+	}
+}
+
+void
+ArchPluginWindows::initEvent(void* eventTarget, IEventQueue* events)
 {
 	g_eventTarget = eventTarget;
 	g_events = events;
-	
-	CString dir = getPluginsDir();
-	LOG((CLOG_DEBUG "plugins dir: %s", dir.c_str()));
 
-	CString pattern = CString(dir).append("\\*.dll");
-	std::vector<CString> plugins;
-	getFilenames(pattern, plugins);
+	PluginTable::iterator it;
+	HINSTANCE lib;
+	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
+		lib = reinterpret_cast<HINSTANCE>(it->second);
+		initEventFunc initEventPlugin = (initEventFunc)GetProcAddress(lib, "initEvent");
+		if (initEventPlugin != NULL) {
+			initEventPlugin(&sendEvent);
+		}
+		else {
+			LOG((CLOG_DEBUG "no init event function in %s", it->first.c_str()));
+		}
+	}
+}
 
-	std::vector<CString>::iterator it;
-	for (it = plugins.begin(); it != plugins.end(); ++it)
-		load(*it);
+
+bool
+ArchPluginWindows::exists(const char* name)
+{
+	PluginTable::iterator it;
+	it = m_pluginTable.find(name);
+	return it != m_pluginTable.end() ? true : false;
+}
+
+void*
+ArchPluginWindows::invoke(
+	const char* plugin,
+	const char* command,
+	void** args)
+{
+	PluginTable::iterator it;
+	it = m_pluginTable.find(plugin);
+	if (it != m_pluginTable.end()) {
+		HINSTANCE lib = reinterpret_cast<HINSTANCE>(it->second);
+		invokeFunc invokePlugin = (invokeFunc)GetProcAddress(lib, "invoke");
+		void* result = NULL;
+		if (invokePlugin != NULL) {
+			 result = invokePlugin(command, args);
+		}
+		else {
+			LOG((CLOG_DEBUG "no invoke function in %s", it->first.c_str()));
+		}
+
+		return result;
+	}
+	else {
+		LOG((CLOG_DEBUG "invoke command failed, plugin: %s command: %s",
+				plugin, command));
+		return NULL;
+	}
 }
 
 void
-CArchPluginWindows::load(const CString& dllFilename)
-{
-	LOG((CLOG_DEBUG "loading plugin: %s", dllFilename.c_str()));
-	CString path = CString(getPluginsDir()).append("\\").append(dllFilename);
-	HINSTANCE library = LoadLibrary(path.c_str());
-	if (library == NULL)
-		throw XArch(new XArchEvalWindows);
-
-	initFunc initPlugin = (initFunc)GetProcAddress(library, "init");
-	initPlugin(&sendEvent, &log);
-}
-
-CString
-CArchPluginWindows::getModuleDir()
-{
-	TCHAR c_modulePath[MAX_PATH];
-	if (GetModuleFileName(NULL, c_modulePath, MAX_PATH) == 0) {
-		throw XArch(new XArchEvalWindows);
-	}
-
-	CString modulePath(c_modulePath);
-	size_t lastSlash = modulePath.find_last_of("\\");
-
-	if (lastSlash != CString::npos) {
-		return modulePath.substr(0, lastSlash);
-	}
-
-	throw XArch("could not get module path.");
-}
-
-void
-CArchPluginWindows::getFilenames(const CString& pattern, std::vector<CString>& filenames)
+ArchPluginWindows::getFilenames(const String& pattern, std::vector<String>& filenames)
 {
 	WIN32_FIND_DATA data;
 	HANDLE find = FindFirstFile(pattern.c_str(), &data);
@@ -107,17 +184,17 @@ CArchPluginWindows::getFilenames(const CString& pattern, std::vector<CString>& f
 	FindClose(find);
 }
 
-CString CArchPluginWindows::getPluginsDir()
+String ArchPluginWindows::getPluginsDir()
 {
-	return getModuleDir().append("\\").append(PLUGINS_DIR);
+	return ARCH->getPluginDirectory();
 }
 
 void
 sendEvent(const char* eventName, void* data)
 {
 	LOG((CLOG_DEBUG5 "plugin sending event"));
-	CEvent::Type type = g_events->getRegisteredType(eventName);
-	g_events->addEvent(CEvent(type, g_eventTarget, data));
+	Event::Type type = g_events->getRegisteredType(eventName);
+	g_events->addEvent(Event(type, g_eventTarget, data));
 }
 
 void

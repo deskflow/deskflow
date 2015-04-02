@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -55,10 +55,10 @@ extern Status DPMSInfo(Display *, CARD16 *, BOOL *);
 #endif
 
 //
-// CXWindowsScreenSaver
+// XWindowsScreenSaver
 //
 
-CXWindowsScreenSaver::CXWindowsScreenSaver(
+XWindowsScreenSaver::XWindowsScreenSaver(
 				Display* display, Window window, void* eventTarget, IEventQueue* events) :
 	m_display(display),
 	m_xscreensaverSink(window),
@@ -97,7 +97,7 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 	// watch top-level windows for changes
 	bool error = false;
 	{
-		CXWindowsUtil::CErrorLock lock(m_display, &error);
+		XWindowsUtil::ErrorLock lock(m_display, &error);
 		Window root = DefaultRootWindow(m_display);
 		XWindowAttributes attr;
 		XGetWindowAttributes(m_display, root, &attr);
@@ -122,38 +122,38 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 	}
 
 	// install disable timer event handler
-	m_events->adoptHandler(CEvent::kTimer, this,
-							new TMethodEventJob<CXWindowsScreenSaver>(this,
-								&CXWindowsScreenSaver::handleDisableTimer));
+	m_events->adoptHandler(Event::kTimer, this,
+							new TMethodEventJob<XWindowsScreenSaver>(this,
+								&XWindowsScreenSaver::handleDisableTimer));
 }
 
-CXWindowsScreenSaver::~CXWindowsScreenSaver()
+XWindowsScreenSaver::~XWindowsScreenSaver()
 {
 	// done with disable job
 	if (m_disableTimer != NULL) {
 		m_events->deleteTimer(m_disableTimer);
 	}
-	m_events->removeHandler(CEvent::kTimer, this);
+	m_events->removeHandler(Event::kTimer, this);
 
 	if (m_display != NULL) {
 		enableDPMS(m_dpmsEnabled);
 		XSetScreenSaver(m_display, m_timeout, m_interval,
 								m_preferBlanking, m_allowExposures);
 		clearWatchForXScreenSaver();
-		CXWindowsUtil::CErrorLock lock(m_display);
+		XWindowsUtil::ErrorLock lock(m_display);
 		XSelectInput(m_display, DefaultRootWindow(m_display), m_rootEventMask);
 	}
 }
 
 void
-CXWindowsScreenSaver::destroy()
+XWindowsScreenSaver::destroy()
 {
 	m_display = NULL;
 	delete this;
 }
 
 bool
-CXWindowsScreenSaver::handleXEvent(const XEvent* xevent)
+XWindowsScreenSaver::handleXEvent(const XEvent* xevent)
 {
 	switch (xevent->type) {
 	case CreateNotify:
@@ -214,7 +214,7 @@ CXWindowsScreenSaver::handleXEvent(const XEvent* xevent)
 }
 
 void
-CXWindowsScreenSaver::enable()
+XWindowsScreenSaver::enable()
 {
 	// for xscreensaver
 	m_disabled = false;
@@ -229,7 +229,7 @@ CXWindowsScreenSaver::enable()
 }
 
 void
-CXWindowsScreenSaver::disable()
+XWindowsScreenSaver::disable()
 {
 	// for xscreensaver
 	m_disabled = true;
@@ -249,7 +249,7 @@ CXWindowsScreenSaver::disable()
 }
 
 void
-CXWindowsScreenSaver::activate()
+XWindowsScreenSaver::activate()
 {
 	// remove disable job timer
 	m_suppressDisable = true;
@@ -275,7 +275,7 @@ CXWindowsScreenSaver::activate()
 }
 
 void
-CXWindowsScreenSaver::deactivate()
+XWindowsScreenSaver::deactivate()
 {
 	// reinstall disable job timer
 	m_suppressDisable = false;
@@ -301,7 +301,7 @@ CXWindowsScreenSaver::deactivate()
 }
 
 bool
-CXWindowsScreenSaver::isActive() const
+XWindowsScreenSaver::isActive() const
 {
 	// check xscreensaver
 	if (m_xscreensaver != None) {
@@ -318,7 +318,7 @@ CXWindowsScreenSaver::isActive() const
 }
 
 bool
-CXWindowsScreenSaver::findXScreenSaver()
+XWindowsScreenSaver::findXScreenSaver()
 {
 	// do nothing if we've already got the xscreensaver window
 	if (m_xscreensaver == None) {
@@ -341,7 +341,7 @@ CXWindowsScreenSaver::findXScreenSaver()
 }
 
 void
-CXWindowsScreenSaver::setXScreenSaver(Window window)
+XWindowsScreenSaver::setXScreenSaver(Window window)
 {
 	LOG((CLOG_DEBUG "xscreensaver window: 0x%08x", window));
 
@@ -356,7 +356,7 @@ CXWindowsScreenSaver::setXScreenSaver(Window window)
 		bool error = false;
 		XWindowAttributes attr;
 		{
-			CXWindowsUtil::CErrorLock lock(m_display, &error);
+			XWindowsUtil::ErrorLock lock(m_display, &error);
 			XGetWindowAttributes(m_display, m_xscreensaver, &attr);
 		}
 		setXScreenSaverActive(!error && attr.map_state != IsUnmapped);
@@ -374,18 +374,18 @@ CXWindowsScreenSaver::setXScreenSaver(Window window)
 }
 
 bool
-CXWindowsScreenSaver::isXScreenSaver(Window w) const
+XWindowsScreenSaver::isXScreenSaver(Window w) const
 {
 	// check for m_atomScreenSaverVersion string property
 	Atom type;
-	return (CXWindowsUtil::getWindowProperty(m_display, w,
+	return (XWindowsUtil::getWindowProperty(m_display, w,
 									m_atomScreenSaverVersion,
 									NULL, &type, NULL, False) &&
 								type == XA_STRING);
 }
 
 void
-CXWindowsScreenSaver::setXScreenSaverActive(bool activated)
+XWindowsScreenSaver::setXScreenSaverActive(bool activated)
 {
 	if (m_xscreensaverActive != activated) {
 		LOG((CLOG_DEBUG "xscreensaver %s on window 0x%08x", activated ? "activated" : "deactivated", m_xscreensaver));
@@ -399,12 +399,12 @@ CXWindowsScreenSaver::setXScreenSaverActive(bool activated)
 		updateDisableTimer();
 
 		if (activated) {
-			m_events->addEvent(CEvent(
+			m_events->addEvent(Event(
 							m_events->forIPrimaryScreen().screensaverActivated(),
 							m_eventTarget));
 		}
 		else {
-			m_events->addEvent(CEvent(
+			m_events->addEvent(Event(
 							m_events->forIPrimaryScreen().screensaverDeactivated(),
 							m_eventTarget));
 		}
@@ -412,7 +412,7 @@ CXWindowsScreenSaver::setXScreenSaverActive(bool activated)
 }
 
 void
-CXWindowsScreenSaver::sendXScreenSaverCommand(Atom cmd, long arg1, long arg2)
+XWindowsScreenSaver::sendXScreenSaverCommand(Atom cmd, long arg1, long arg2)
 {
 	XEvent event;
 	event.xclient.type         = ClientMessage;
@@ -429,7 +429,7 @@ CXWindowsScreenSaver::sendXScreenSaverCommand(Atom cmd, long arg1, long arg2)
 	LOG((CLOG_DEBUG "send xscreensaver command: %d %d %d", (long)cmd, arg1, arg2));
 	bool error = false;
 	{
-		CXWindowsUtil::CErrorLock lock(m_display, &error);
+		XWindowsUtil::ErrorLock lock(m_display, &error);
 		XSendEvent(m_display, m_xscreensaver, False, 0, &event);
 	}
 	if (error) {
@@ -438,7 +438,7 @@ CXWindowsScreenSaver::sendXScreenSaverCommand(Atom cmd, long arg1, long arg2)
 }
 
 void
-CXWindowsScreenSaver::watchForXScreenSaver()
+XWindowsScreenSaver::watchForXScreenSaver()
 {
 	// clear old watch list
 	clearWatchForXScreenSaver();
@@ -463,11 +463,11 @@ CXWindowsScreenSaver::watchForXScreenSaver()
 }
 
 void
-CXWindowsScreenSaver::clearWatchForXScreenSaver()
+XWindowsScreenSaver::clearWatchForXScreenSaver()
 {
 	// stop watching all windows
-	CXWindowsUtil::CErrorLock lock(m_display);
-	for (CWatchList::iterator index = m_watchWindows.begin();
+	XWindowsUtil::ErrorLock lock(m_display);
+	for (WatchList::iterator index = m_watchWindows.begin();
 								index != m_watchWindows.end(); ++index) {
 		XSelectInput(m_display, index->first, index->second);
 	}
@@ -475,13 +475,13 @@ CXWindowsScreenSaver::clearWatchForXScreenSaver()
 }
 
 void
-CXWindowsScreenSaver::addWatchXScreenSaver(Window window)
+XWindowsScreenSaver::addWatchXScreenSaver(Window window)
 {
 	// get window attributes
 	bool error = false;
 	XWindowAttributes attr;
 	{
-		CXWindowsUtil::CErrorLock lock(m_display, &error);
+		XWindowsUtil::ErrorLock lock(m_display, &error);
 		XGetWindowAttributes(m_display, window, &attr);
 	}
 
@@ -490,7 +490,7 @@ CXWindowsScreenSaver::addWatchXScreenSaver(Window window)
 	if (!error && attr.override_redirect == True) {
 		error = false;
 		{
-			CXWindowsUtil::CErrorLock lock(m_display, &error);
+			XWindowsUtil::ErrorLock lock(m_display, &error);
 			XSelectInput(m_display, window,
 								attr.your_event_mask | PropertyChangeMask);
 		}
@@ -502,7 +502,7 @@ CXWindowsScreenSaver::addWatchXScreenSaver(Window window)
 }
 
 void
-CXWindowsScreenSaver::updateDisableTimer()
+XWindowsScreenSaver::updateDisableTimer()
 {
 	if (m_disabled && !m_suppressDisable && m_disableTimer == NULL) {
 		// 5 seconds should be plenty often to suppress the screen saver
@@ -515,7 +515,7 @@ CXWindowsScreenSaver::updateDisableTimer()
 }
 
 void
-CXWindowsScreenSaver::handleDisableTimer(const CEvent&, void*)
+XWindowsScreenSaver::handleDisableTimer(const Event&, void*)
 {
 	// send fake mouse motion directly to xscreensaver
 	if (m_xscreensaver != None) {
@@ -534,7 +534,7 @@ CXWindowsScreenSaver::handleDisableTimer(const CEvent&, void*)
 		event.xmotion.is_hint      = NotifyNormal;
 		event.xmotion.same_screen  = True;
 
-		CXWindowsUtil::CErrorLock lock(m_display);
+		XWindowsUtil::ErrorLock lock(m_display);
 		XSendEvent(m_display, m_xscreensaver, False, 0, &event);
 
 		m_disablePos = 20 - m_disablePos;
@@ -542,19 +542,19 @@ CXWindowsScreenSaver::handleDisableTimer(const CEvent&, void*)
 }
 
 void
-CXWindowsScreenSaver::activateDPMS(bool activate)
+XWindowsScreenSaver::activateDPMS(bool activate)
 {
 #if HAVE_X11_EXTENSIONS_DPMS_H
 	if (m_dpms) {
 		// DPMSForceLevel will generate a BadMatch if DPMS is disabled
-		CXWindowsUtil::CErrorLock lock(m_display);
+		XWindowsUtil::ErrorLock lock(m_display);
 		DPMSForceLevel(m_display, activate ? DPMSModeStandby : DPMSModeOn);
 	}
 #endif
 }
 
 void
-CXWindowsScreenSaver::enableDPMS(bool enable)
+XWindowsScreenSaver::enableDPMS(bool enable)
 {
 #if HAVE_X11_EXTENSIONS_DPMS_H
 	if (m_dpms) {
@@ -569,7 +569,7 @@ CXWindowsScreenSaver::enableDPMS(bool enable)
 }
 
 bool
-CXWindowsScreenSaver::isDPMSEnabled() const
+XWindowsScreenSaver::isDPMSEnabled() const
 {
 #if HAVE_X11_EXTENSIONS_DPMS_H
 	if (m_dpms) {
@@ -587,7 +587,7 @@ CXWindowsScreenSaver::isDPMSEnabled() const
 }
 
 bool
-CXWindowsScreenSaver::isDPMSActivated() const
+XWindowsScreenSaver::isDPMSActivated() const
 {
 #if HAVE_X11_EXTENSIONS_DPMS_H
 	if (m_dpms) {

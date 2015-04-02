@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,39 +21,39 @@
 #include "base/Unicode.h"
 
 //
-// CMSWindowsClipboardTextConverter
+// MSWindowsClipboardTextConverter
 //
 
-CMSWindowsClipboardTextConverter::CMSWindowsClipboardTextConverter()
+MSWindowsClipboardTextConverter::MSWindowsClipboardTextConverter()
 {
 	// do nothing
 }
 
-CMSWindowsClipboardTextConverter::~CMSWindowsClipboardTextConverter()
+MSWindowsClipboardTextConverter::~MSWindowsClipboardTextConverter()
 {
 	// do nothing
 }
 
 UINT
-CMSWindowsClipboardTextConverter::getWin32Format() const
+MSWindowsClipboardTextConverter::getWin32Format() const
 {
 	return CF_TEXT;
 }
 
-CString
-CMSWindowsClipboardTextConverter::doFromIClipboard(const CString& data) const
+String
+MSWindowsClipboardTextConverter::doFromIClipboard(const String& data) const
 {
 	// convert and add nul terminator
-	return CUnicode::UTF8ToText(data) += '\0';
+	return Unicode::UTF8ToText(data) += '\0';
 }
 
-CString
-CMSWindowsClipboardTextConverter::doToIClipboard(const CString& data) const
+String
+MSWindowsClipboardTextConverter::doToIClipboard(const String& data) const
 {
 	// convert and truncate at first nul terminator
-	CString dst          = CUnicode::textToUTF8(data);
-	CString::size_type n = dst.find('\0');
-	if (n != CString::npos) {
+	String dst          = Unicode::textToUTF8(data);
+	String::size_type n = dst.find('\0');
+	if (n != String::npos) {
 		dst.erase(n);
 	}
 	return dst;

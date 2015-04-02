@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2012 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or
@@ -23,21 +23,21 @@
 #include "base/TMethodEventJob.h"
 
 //
-// CIpcClient
+// IpcClient
 //
 
-CIpcClient::CIpcClient(IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
-	m_serverAddress(CNetworkAddress(IPC_HOST, IPC_PORT)),
-	m_socket(IArchNetwork::kINET, events, socketMultiplexer),
+IpcClient::IpcClient(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
+	m_serverAddress(NetworkAddress(IPC_HOST, IPC_PORT)),
+	m_socket(events, socketMultiplexer, IArchNetwork::kINET),
 	m_server(nullptr),
 	m_events(events)
 {
 	init();
 }
 
-CIpcClient::CIpcClient(IEventQueue* events, CSocketMultiplexer* socketMultiplexer, int port) :
-	m_serverAddress(CNetworkAddress(IPC_HOST, port)),
-	m_socket(IArchNetwork::kINET, events, socketMultiplexer),
+IpcClient::IpcClient(IEventQueue* events, SocketMultiplexer* socketMultiplexer, int port) :
+	m_serverAddress(NetworkAddress(IPC_HOST, port)),
+	m_socket(events, socketMultiplexer, IArchNetwork::kINET),
 	m_server(nullptr),
 	m_events(events)
 {
@@ -45,37 +45,37 @@ CIpcClient::CIpcClient(IEventQueue* events, CSocketMultiplexer* socketMultiplexe
 }
 
 void
-CIpcClient::init()
+IpcClient::init()
 {
 	m_serverAddress.resolve();
 }
 
-CIpcClient::~CIpcClient()
+IpcClient::~IpcClient()
 {
 }
 
 void
-CIpcClient::connect()
+IpcClient::connect()
 {
 	m_events->adoptHandler(
 		m_events->forIDataSocket().connected(), m_socket.getEventTarget(),
-		new TMethodEventJob<CIpcClient>(
-		this, &CIpcClient::handleConnected));
+		new TMethodEventJob<IpcClient>(
+		this, &IpcClient::handleConnected));
 
 	m_socket.connect(m_serverAddress);
-	m_server = new CIpcServerProxy(m_socket, m_events);
+	m_server = new IpcServerProxy(m_socket, m_events);
 
 	m_events->adoptHandler(
-		m_events->forCIpcServerProxy().messageReceived(), m_server,
-		new TMethodEventJob<CIpcClient>(
-		this, &CIpcClient::handleMessageReceived));
+		m_events->forIpcServerProxy().messageReceived(), m_server,
+		new TMethodEventJob<IpcClient>(
+		this, &IpcClient::handleMessageReceived));
 }
 
 void
-CIpcClient::disconnect()
+IpcClient::disconnect()
 {
 	m_events->removeHandler(m_events->forIDataSocket().connected(), m_socket.getEventTarget());
-	m_events->removeHandler(m_events->forCIpcServerProxy().messageReceived(), m_server);
+	m_events->removeHandler(m_events->forIpcServerProxy().messageReceived(), m_server);
 
 	m_server->disconnect();
 	delete m_server;
@@ -83,26 +83,26 @@ CIpcClient::disconnect()
 }
 
 void
-CIpcClient::send(const CIpcMessage& message)
+IpcClient::send(const IpcMessage& message)
 {
 	assert(m_server != nullptr);
 	m_server->send(message);
 }
 
 void
-CIpcClient::handleConnected(const CEvent&, void*)
+IpcClient::handleConnected(const Event&, void*)
 {
-	m_events->addEvent(CEvent(
-		m_events->forCIpcClient().connected(), this, m_server, CEvent::kDontFreeData));
+	m_events->addEvent(Event(
+		m_events->forIpcClient().connected(), this, m_server, Event::kDontFreeData));
 
-	CIpcHelloMessage message(kIpcClientNode);
+	IpcHelloMessage message(kIpcClientNode);
 	send(message);
 }
 
 void
-CIpcClient::handleMessageReceived(const CEvent& e, void*)
+IpcClient::handleMessageReceived(const Event& e, void*)
 {
-	CEvent event(m_events->forCIpcClient().messageReceived(), this);
+	Event event(m_events->forIpcClient().messageReceived(), this);
 	event.setDataObject(e.getDataObject());
 	m_events->addEvent(event);
 }

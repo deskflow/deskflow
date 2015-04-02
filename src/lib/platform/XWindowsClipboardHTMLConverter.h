@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,21 +21,21 @@
 #include "platform/XWindowsClipboard.h"
 
 //! Convert to/from HTML encoding
-class CXWindowsClipboardHTMLConverter : public IXWindowsClipboardConverter {
+class XWindowsClipboardHTMLConverter : public IXWindowsClipboardConverter {
 public:
 	/*!
 	\c name is converted to an atom and that is reported by getAtom().
 	*/
-	CXWindowsClipboardHTMLConverter(Display* display, const char* name);
-	virtual ~CXWindowsClipboardHTMLConverter();
+	XWindowsClipboardHTMLConverter(Display* display, const char* name);
+	virtual ~XWindowsClipboardHTMLConverter();
 
 	// IXWindowsClipboardConverter overrides
 	virtual IClipboard::EFormat
 						getFormat() const;
 	virtual Atom		getAtom() const;
 	virtual int			getDataSize() const;
-	virtual CString		fromIClipboard(const CString&) const;
-	virtual CString		toIClipboard(const CString&) const;
+	virtual String		fromIClipboard(const String&) const;
+	virtual String		toIClipboard(const String&) const;
 
 private:
 	Atom				m_atom;

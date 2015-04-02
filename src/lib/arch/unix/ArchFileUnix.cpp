@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -25,21 +25,21 @@
 #include <cstring>
 
 //
-// CArchFileUnix
+// ArchFileUnix
 //
 
-CArchFileUnix::CArchFileUnix()
+ArchFileUnix::ArchFileUnix()
 {
 	// do nothing
 }
 
-CArchFileUnix::~CArchFileUnix()
+ArchFileUnix::~ArchFileUnix()
 {
 	// do nothing
 }
 
 const char*
-CArchFileUnix::getBasename(const char* pathname)
+ArchFileUnix::getBasename(const char* pathname)
 {
 	if (pathname == NULL) {
 		return NULL;
@@ -55,7 +55,7 @@ CArchFileUnix::getBasename(const char* pathname)
 }
 
 std::string
-CArchFileUnix::getUserDirectory()
+ArchFileUnix::getUserDirectory()
 {
 	char* buffer = NULL;
 	std::string dir;
@@ -83,13 +83,61 @@ CArchFileUnix::getUserDirectory()
 }
 
 std::string
-CArchFileUnix::getSystemDirectory()
+ArchFileUnix::getSystemDirectory()
 {
 	return "/etc";
 }
 
 std::string
-CArchFileUnix::concatPath(const std::string& prefix,
+ArchFileUnix::getInstalledDirectory()
+{
+#if WINAPI_XWINDOWS
+	return "/bin";
+#else
+	return "";
+#endif
+}
+
+std::string
+ArchFileUnix::getLogDirectory()
+{
+	return "/var/log";
+}
+
+std::string
+ArchFileUnix::getPluginDirectory()
+{
+	if (!m_pluginDirectory.empty()) {
+		return m_pluginDirectory;
+	}
+
+#if WINAPI_XWINDOWS
+	return getProfileDirectory().append("/plugins");
+#else
+	return getProfileDirectory().append("/Plugins");
+#endif
+}
+
+std::string
+ArchFileUnix::getProfileDirectory()
+{
+	String dir;
+	if (!m_profileDirectory.empty()) {
+		dir = m_profileDirectory;
+	}
+	else {
+#if WINAPI_XWINDOWS
+		dir = getUserDirectory().append("/.synergy");
+#else
+		dir = getUserDirectory().append("/Library/Synergy");
+#endif
+	}
+	return dir;
+
+}
+
+std::string
+ArchFileUnix::concatPath(const std::string& prefix,
 				const std::string& suffix)
 {
 	std::string path;
@@ -100,4 +148,16 @@ CArchFileUnix::concatPath(const std::string& prefix,
 	}
 	path += suffix;
 	return path;
+}
+
+void
+ArchFileUnix::setProfileDirectory(const String& s)
+{
+	m_profileDirectory = s;
+}
+
+void
+ArchFileUnix::setPluginDirectory(const String& s)
+{
+	m_pluginDirectory = s;
 }

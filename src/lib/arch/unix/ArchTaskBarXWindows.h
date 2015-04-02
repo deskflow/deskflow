@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -20,13 +20,13 @@
 
 #include "arch/IArchTaskBar.h"
 
-#define ARCH_TASKBAR CArchTaskBarXWindows
+#define ARCH_TASKBAR ArchTaskBarXWindows
 
 //! X11 implementation of IArchTaskBar
-class CArchTaskBarXWindows : public IArchTaskBar {
+class ArchTaskBarXWindows : public IArchTaskBar {
 public:
-	CArchTaskBarXWindows();
-	virtual ~CArchTaskBarXWindows();
+	ArchTaskBarXWindows();
+	virtual ~ArchTaskBarXWindows();
 
 	// IArchTaskBar overrides
 	virtual void		addReceiver(IArchTaskBarReceiver*);

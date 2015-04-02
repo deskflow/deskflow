@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Bolton Software Ltd.
+ * Copyright (C) 2014 Synergy Si Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,12 +17,12 @@
 
 #pragma once
 
-#define ARCH_INTERNET CArchInternetWindows
+#define ARCH_INTERNET ArchInternetWindows
 
 #include "base/String.h"
 
-class CArchInternetWindows {
+class ArchInternetWindows {
 public:
-	CString				get(const CString& url);
-	CString				urlEncode(const CString& url);
+	String				get(const String& url);
+	String				urlEncode(const String& url);
 };

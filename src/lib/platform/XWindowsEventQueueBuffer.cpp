@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -42,17 +42,17 @@
 #endif
 
 //
-// CEventQueueTimer
+// EventQueueTimer
 //
 
-class CEventQueueTimer { };
+class EventQueueTimer { };
 
 
 //
-// CXWindowsEventQueueBuffer
+// XWindowsEventQueueBuffer
 //
 
-CXWindowsEventQueueBuffer::CXWindowsEventQueueBuffer(
+XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(
 		Display* display, Window window, IEventQueue* events) :
 	m_events(events),
 	m_display(display),
@@ -74,7 +74,7 @@ CXWindowsEventQueueBuffer::CXWindowsEventQueueBuffer(
 	fcntl(m_pipefd[1], F_SETFL, pipeflags | O_NONBLOCK);
 }
 
-CXWindowsEventQueueBuffer::~CXWindowsEventQueueBuffer()
+XWindowsEventQueueBuffer::~XWindowsEventQueueBuffer()
 {
 	// release pipe hack resources
 	close(m_pipefd[0]);
@@ -82,9 +82,9 @@ CXWindowsEventQueueBuffer::~CXWindowsEventQueueBuffer()
 }
 
 void
-CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
+XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 {
-	CThread::testCancel();
+	Thread::testCancel();
 
 	// clear out the pipe in preparation for waiting.
 
@@ -98,7 +98,7 @@ CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 	}
 
 	{
-		CLock lock(&m_mutex);
+		Lock lock(&m_mutex);
 		// we're now waiting for events
 		m_waiting = true;
 
@@ -106,8 +106,8 @@ CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 		flush();
 	}
 	// calling flush may have queued up a new event.
-	if (!CXWindowsEventQueueBuffer::isEmpty()) {
-		CThread::testCancel();
+	if (!XWindowsEventQueueBuffer::isEmpty()) {
+		Thread::testCancel();
 		return;
 	}
 
@@ -190,17 +190,17 @@ CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 
 	{
 		// we're no longer waiting for events
-		CLock lock(&m_mutex);
+		Lock lock(&m_mutex);
 		m_waiting = false;
 	}
 
-	CThread::testCancel();
+	Thread::testCancel();
 }
 
 IEventQueueBuffer::Type
-CXWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
+XWindowsEventQueueBuffer::getEvent(Event& event, UInt32& dataID)
 {
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 
 	// push out pending events
 	flush();
@@ -215,14 +215,14 @@ CXWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 		return kUser;
 	}
 	else {
-		event = CEvent(CEvent::kSystem,
+		event = Event(Event::kSystem,
 							m_events->getSystemTarget(), &m_event);
 		return kSystem;
 	}
 }
 
 bool
-CXWindowsEventQueueBuffer::addEvent(UInt32 dataID)
+XWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 {
 	// prepare a message
 	XEvent xevent;
@@ -233,7 +233,7 @@ CXWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 	xevent.xclient.data.l[0]    = static_cast<long>(dataID);
 
 	// save the message
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 	m_postedEvents.push_back(xevent);
 
 	// if we're currently waiting for an event then send saved events to
@@ -259,26 +259,26 @@ CXWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 }
 
 bool
-CXWindowsEventQueueBuffer::isEmpty() const
+XWindowsEventQueueBuffer::isEmpty() const
 {
-	CLock lock(&m_mutex);
+	Lock lock(&m_mutex);
 	return (XPending(m_display) == 0 );
 }
 
-CEventQueueTimer*
-CXWindowsEventQueueBuffer::newTimer(double, bool) const
+EventQueueTimer*
+XWindowsEventQueueBuffer::newTimer(double, bool) const
 {
-	return new CEventQueueTimer;
+	return new EventQueueTimer;
 }
 
 void
-CXWindowsEventQueueBuffer::deleteTimer(CEventQueueTimer* timer) const
+XWindowsEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
 {
 	delete timer;
 }
 
 void
-CXWindowsEventQueueBuffer::flush()
+XWindowsEventQueueBuffer::flush()
 {
 	// note -- m_mutex must be locked on entry
 

@@ -51,5 +51,7 @@
         <file>lang/gui_zh-TW.qm</file>
         <file>lang/Languages.xml</file>
         <file>icons/16x16/money.png</file>
+        <file>image/spinning-wheel.gif</file>
+        <file>icons/16x16/padlock.png</file>
     </qresource>
 </RCC>

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Bolton Software Ltd.
+ * Copyright (C) 2014 Synergy Si Ltd.
  * Patch by Ryan Chapman
  *
  * This package is free software; you can redistribute it and/or
@@ -21,28 +21,28 @@
 #include "platform/OSXClipboard.h"
 
 //! Convert to/from some text encoding
-class COSXClipboardAnyBitmapConverter : public IOSXClipboardConverter {
+class OSXClipboardAnyBitmapConverter : public IOSXClipboardConverter {
 public:
-	COSXClipboardAnyBitmapConverter();
-	virtual ~COSXClipboardAnyBitmapConverter();
+	OSXClipboardAnyBitmapConverter();
+	virtual ~OSXClipboardAnyBitmapConverter();
 
 	// IOSXClipboardConverter overrides
 	virtual IClipboard::EFormat
 						getFormat() const;
 	virtual CFStringRef	getOSXFormat() const = 0;
-	virtual CString		fromIClipboard(const CString &) const;
-	virtual CString		toIClipboard(const CString &) const;
+	virtual String		fromIClipboard(const String &) const;
+	virtual String		toIClipboard(const String &) const;
 
 protected:
 	//! Convert from IClipboard format
 	/*!
 	 Do UTF-8 conversion and linefeed conversion.
 	*/
-	virtual CString		doFromIClipboard(const CString&) const = 0;
+	virtual String		doFromIClipboard(const String&) const = 0;
 
 	//! Convert to IClipboard format
 	/*!
 	 Do UTF-8 conversion and Linefeed conversion.
 	*/
-	virtual CString		doToIClipboard(const CString&) const = 0;
+	virtual String		doToIClipboard(const String&) const = 0;
 };

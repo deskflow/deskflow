@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -19,33 +19,33 @@
 #include "arch/unix/ArchTaskBarXWindows.h"
 
 //
-// CArchTaskBarXWindows
+// ArchTaskBarXWindows
 //
 
-CArchTaskBarXWindows::CArchTaskBarXWindows()
+ArchTaskBarXWindows::ArchTaskBarXWindows()
 {
 	// do nothing
 }
 
-CArchTaskBarXWindows::~CArchTaskBarXWindows()
-{
-	// do nothing
-}
-
-void
-CArchTaskBarXWindows::addReceiver(IArchTaskBarReceiver* /*receiver*/)
+ArchTaskBarXWindows::~ArchTaskBarXWindows()
 {
 	// do nothing
 }
 
 void
-CArchTaskBarXWindows::removeReceiver(IArchTaskBarReceiver* /*receiver*/)
+ArchTaskBarXWindows::addReceiver(IArchTaskBarReceiver* /*receiver*/)
 {
 	// do nothing
 }
 
 void
-CArchTaskBarXWindows::updateReceiver(IArchTaskBarReceiver* /*receiver*/)
+ArchTaskBarXWindows::removeReceiver(IArchTaskBarReceiver* /*receiver*/)
+{
+	// do nothing
+}
+
+void
+ArchTaskBarXWindows::updateReceiver(IArchTaskBarReceiver* /*receiver*/)
 {
 	// do nothing
 }

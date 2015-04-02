@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 
 //! Thread exception to exit
 /*!
-Thrown by CThread::exit() to exit a thread.  Clients of CThread
+Thrown by Thread::exit() to exit a thread.  Clients of Thread
 must not throw this type but must rethrow it if caught (by
 XThreadExit, XThread, or ...).
 */

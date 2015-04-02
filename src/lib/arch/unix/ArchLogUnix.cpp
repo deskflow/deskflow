@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,39 +21,39 @@
 #include <syslog.h>
 
 //
-// CArchLogUnix
+// ArchLogUnix
 //
 
-CArchLogUnix::CArchLogUnix()
+ArchLogUnix::ArchLogUnix()
 {
 	// do nothing
 }
 
-CArchLogUnix::~CArchLogUnix()
+ArchLogUnix::~ArchLogUnix()
 {
 	// do nothing
 }
 
 void
-CArchLogUnix::openLog(const char* name)
+ArchLogUnix::openLog(const char* name)
 {
 	openlog(name, 0, LOG_DAEMON);
 }
 
 void
-CArchLogUnix::closeLog()
+ArchLogUnix::closeLog()
 {
 	closelog();
 }
 
 void
-CArchLogUnix::showLog(bool)
+ArchLogUnix::showLog(bool)
 {
 	// do nothing
 }
 
 void
-CArchLogUnix::writeLog(ELevel level, const char* msg)
+ArchLogUnix::writeLog(ELevel level, const char* msg)
 {
 	// convert level
 	int priority;

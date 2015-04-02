@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 // 1.3:  adds keep alive and deprecates heartbeats,
 //       adds horizontal mouse scrolling
 // 1.4:  adds crypto support
+// 1.5:  adds file transfer and removes home brew crypto
 // NOTE: with new version, synergy minor version should increment
 static const SInt16		kProtocolMajorVersion = 1;
 static const SInt16		kProtocolMinorVersion = 5;
@@ -251,11 +252,6 @@ extern const char*		kMsgDInfo;
 // pairs.
 extern const char*		kMsgDSetOptions;
 
-// crypto iv:  primary -> secondary
-// sends a new iv (initialization vector) to the client for the
-// cryptography stream.
-extern const char*		kMsgDCryptoIv;
-
 // file data:  primary <-> secondary
 // transfer file data. A mark is used in the first byte.
 // 0 means the content followed is the file size.
@@ -307,7 +303,7 @@ extern const char*		kMsgEBad;
 /*!
 This class contains information about a screen.
 */
-class CClientInfo {
+class ClientInfo {
 public:
 	//! Screen position
 	/*!

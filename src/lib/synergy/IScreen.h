@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ This interface defines the methods common to all screens.
 */
 class IScreen : public IInterface {
 public:
-	struct CClipboardInfo {
+	struct ClipboardInfo {
 	public:
 		ClipboardID		m_id;
 		UInt32			m_sequenceNumber;

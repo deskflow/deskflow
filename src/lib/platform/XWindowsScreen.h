@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -29,17 +29,17 @@
 #	include <X11/Xlib.h>
 #endif
 
-class CXWindowsClipboard;
-class CXWindowsKeyState;
-class CXWindowsScreenSaver;
+class XWindowsClipboard;
+class XWindowsKeyState;
+class XWindowsScreenSaver;
 
 //! Implementation of IPlatformScreen for X11
-class CXWindowsScreen : public CPlatformScreen {
+class XWindowsScreen : public PlatformScreen {
 public:
-	CXWindowsScreen(const char* displayName, bool isPrimary,
+	XWindowsScreen(const char* displayName, bool isPrimary,
 		bool disableXInitThreads, int mouseScrollDelta,
 		IEventQueue* events);
-	virtual ~CXWindowsScreen();
+	virtual ~XWindowsScreen();
 
 	//! @name manipulators
 	//@{
@@ -81,20 +81,20 @@ public:
 	virtual void		closeScreensaver();
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
-	virtual void		setOptions(const COptionsList& options);
+	virtual void		setOptions(const OptionsList& options);
 	virtual void		setSequenceNumber(UInt32);
 	virtual bool		isPrimary() const;
 
 protected:
 	// IPlatformScreen overrides
-	virtual void		handleSystemEvent(const CEvent&, void*);
+	virtual void		handleSystemEvent(const Event&, void*);
 	virtual void		updateButtons();
 	virtual IKeyState*	getKeyState() const;
 
 private:
 	// event sending
-	void				sendEvent(CEvent::Type, void* = NULL);
-	void				sendClipboardEvent(CEvent::Type, ClipboardID);
+	void				sendEvent(Event::Type, void* = NULL);
+	void				sendClipboardEvent(Event::Type, ClipboardID);
 
 	// create the transparent cursor
 	Cursor				createBlankCursor() const;
@@ -115,7 +115,7 @@ private:
 	static int			ioErrorHandler(Display*);
 
 private:
-	class CKeyEventFilter {
+	class KeyEventFilter {
 	public:
 		int				m_event;
 		Window			m_window;
@@ -154,21 +154,21 @@ private:
 	static Bool			findKeyEvent(Display*, XEvent* xevent, XPointer arg);
 
 private:
-	struct CHotKeyItem {
+	struct HotKeyItem {
 	public:
-		CHotKeyItem(int, unsigned int);
+		HotKeyItem(int, unsigned int);
 
-		bool			operator<(const CHotKeyItem&) const;
+		bool			operator<(const HotKeyItem&) const;
 
 	private:
 		int				m_keycode;
 		unsigned int	m_mask;
 	};
-	typedef std::set<bool> CFilteredKeycodes;
+	typedef std::set<bool> FilteredKeycodes;
 	typedef std::vector<std::pair<int, unsigned int> > HotKeyList;
 	typedef std::map<UInt32, HotKeyList> HotKeyMap;
 	typedef std::vector<UInt32> HotKeyIDList;
-	typedef std::map<CHotKeyItem, UInt32> HotKeyToIDMap;
+	typedef std::map<HotKeyItem, UInt32> HotKeyToIDMap;
 
 	// true if screen is being used as a primary screen, false otherwise
 	bool				m_isPrimary;
@@ -190,7 +190,7 @@ private:
 	SInt32				m_xCursor, m_yCursor;
 
 	// keyboard stuff
-	CXWindowsKeyState*	m_keyState;
+	XWindowsKeyState*	m_keyState;
 
 	// hot key stuff
 	HotKeyMap			m_hotKeys;
@@ -205,14 +205,14 @@ private:
 	XIM					m_im;
 	XIC					m_ic;
 	KeyCode				m_lastKeycode;
-	CFilteredKeycodes	m_filtered;
+	FilteredKeycodes	m_filtered;
 
 	// clipboards
-	CXWindowsClipboard*	m_clipboard[kClipboardEnd];
+	XWindowsClipboard*	m_clipboard[kClipboardEnd];
 	UInt32				m_sequenceNumber;
 
 	// screen saver stuff
-	CXWindowsScreenSaver*	m_screensaver;
+	XWindowsScreenSaver*	m_screensaver;
 	bool				m_screensaverNotify;
 
 	// logical to physical button mapping.  m_buttons[i] gives the
@@ -244,9 +244,9 @@ private:
 	int                 m_xrandrEventBase;
 
 	IEventQueue*		m_events;
-	CKeyMap				m_keyMap;
+	synergy::KeyMap				m_keyMap;
 
 	// pointer to (singleton) screen.  this is only needed by
 	// ioErrorHandler().
-	static CXWindowsScreen*	s_screen;
+	static XWindowsScreen*	s_screen;
 };

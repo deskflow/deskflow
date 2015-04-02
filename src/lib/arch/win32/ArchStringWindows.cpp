@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include <stdio.h>
 
 //
-// CArchStringWindows
+// ArchStringWindows
 //
 
 #include "arch/multibyte.h"
@@ -31,16 +31,16 @@
 #define ARCH_VSNPRINTF _vsnprintf
 #include "arch/vsnprintf.h"
 
-CArchStringWindows::CArchStringWindows()
+ArchStringWindows::ArchStringWindows()
 {
 }
 
-CArchStringWindows::~CArchStringWindows()
+ArchStringWindows::~ArchStringWindows()
 {
 }
 
 IArchString::EWideCharEncoding
-CArchStringWindows::getWideCharEncoding()
+ArchStringWindows::getWideCharEncoding()
 {
 	return kUTF16;
 }

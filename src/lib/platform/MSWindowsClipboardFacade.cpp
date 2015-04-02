@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 
 #include "platform/MSWindowsClipboard.h"
 
-void CMSWindowsClipboardFacade::write(HANDLE win32Data, UINT win32Format)
+void MSWindowsClipboardFacade::write(HANDLE win32Data, UINT win32Format)
 {
 	if (SetClipboardData(win32Format, win32Data) == NULL) {
 		// free converted data if we couldn't put it on

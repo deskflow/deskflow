@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ public:
 	/*!
 	Return the socket to multiplex
 	*/
-	virtual CArchSocket	getSocket() const = 0;
+	virtual ArchSocket	getSocket() const = 0;
 
 	//! Check for interest in readability
 	/*!

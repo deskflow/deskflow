@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 // XIOClosed
 //
 
-CString
+String
 XIOClosed::getWhat() const throw()
 {
 	return format("XIOClosed", "already closed");
@@ -33,7 +33,7 @@ XIOClosed::getWhat() const throw()
 // XIOEndOfStream
 //
 
-CString
+String
 XIOEndOfStream::getWhat() const throw()
 {
 	return format("XIOEndOfStream", "reached end of stream");
@@ -44,18 +44,8 @@ XIOEndOfStream::getWhat() const throw()
 // XIOWouldBlock
 //
 
-CString
+String
 XIOWouldBlock::getWhat() const throw()
 {
 	return format("XIOWouldBlock", "stream operation would block");
-}
-
-
-//
-// XBadCryptoMode
-//
-CString
-XIOBadCryptoMode::getWhat() const throw()
-{
-	return "XBadCryptoMode";
 }

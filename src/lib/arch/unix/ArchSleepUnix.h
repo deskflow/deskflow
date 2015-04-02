@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -20,13 +20,13 @@
 
 #include "arch/IArchSleep.h"
 
-#define ARCH_SLEEP CArchSleepUnix
+#define ARCH_SLEEP ArchSleepUnix
 
 //! Unix implementation of IArchSleep
-class CArchSleepUnix : public IArchSleep {
+class ArchSleepUnix : public IArchSleep {
 public:
-	CArchSleepUnix();
-	virtual ~CArchSleepUnix();
+	ArchSleepUnix();
+	virtual ~ArchSleepUnix();
 
 	// IArchSleep overrides
 	virtual void		sleep(double timeout);

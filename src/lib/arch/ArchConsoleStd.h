@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,10 +21,10 @@
 #include "arch/IArchConsole.h"
 
 //! Cross platform implementation of IArchConsole
-class CArchConsoleStd : public IArchConsole {
+class ArchConsoleStd : public IArchConsole {
 public:
-	CArchConsoleStd() { }
-	virtual ~CArchConsoleStd() { }
+	ArchConsoleStd() { }
+	virtual ~ArchConsoleStd() { }
 
 	// IArchConsole overrides
 	virtual void		openConsole(const char* title) { }

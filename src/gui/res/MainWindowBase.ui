@@ -87,7 +87,7 @@
        </sizepolicy>
       </property>
       <property name="title">
-       <string>&amp;Server (share this computer's mouse and keyboard):</string>
+       <string>Ser&amp;ver (share this computer's mouse and keyboard):</string>
       </property>
       <property name="checkable">
        <bool>true</bool>
@@ -220,6 +220,13 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="m_pLabelScreenName">
+         <property name="text">
+          <string notr="true"/>
+         </property>
+        </widget>
+       </item>
        <item row="2" column="0">
         <widget class="QLabel" name="m_pLabelServerName">
          <property name="text">
@@ -233,17 +240,26 @@
        <item row="2" column="1">
         <widget class="QLineEdit" name="m_pLineEditHostname"/>
        </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="m_pLabelScreenName">
+       <item row="3" column="0">
+        <widget class="QCheckBox" name="m_pCheckBoxAutoConfig">
          <property name="text">
-          <string notr="true"/>
+          <string>Auto config</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
-        <widget class="QCheckBox" name="m_pAutoConnectCheckBox">
-         <property name="text">
-          <string>Auto connect</string>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="m_pComboServerList">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>0</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -292,6 +308,19 @@
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
       <item>
+       <widget class="QLabel" name="m_pLabelPadlock">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="Synergy.qrc">:/res/icons/16x16/padlock.png</pixmap>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="m_pStatusLabel">
         <property name="text">
          <string>Ready</string>
@@ -310,13 +339,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="m_pElevateCheckBox">
-        <property name="text">
-         <string>&amp;Elevate</string>
-        </property>
-       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="m_pButtonApply">

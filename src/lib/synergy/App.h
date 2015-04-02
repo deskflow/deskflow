@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -18,10 +18,12 @@
 
 #pragma once
 
-#include "common/common.h"
-#include "base/String.h"
-#include "synergy/IApp.h"
 #include "ipc/IpcClient.h"
+#include "synergy/IApp.h"
+#include "base/String.h"
+#include "base/Log.h"
+#include "base/EventQueue.h"
+#include "common/common.h"
 
 #if SYSAPI_WIN32
 #include "synergy/win32/AppUtilWindows.h"
@@ -30,22 +32,22 @@
 #endif
 
 class IArchTaskBarReceiver;
-class CBufferedLogOutputter;
+class BufferedLogOutputter;
 class ILogOutputter;
-class CFileLogOutputter;
-class CScreen;
+class FileLogOutputter;
+namespace synergy { class Screen; }
 class IEventQueue;
-class CSocketMultiplexer;
+class SocketMultiplexer;
 
-typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const CBufferedLogOutputter*, IEventQueue* events);
+typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const BufferedLogOutputter*, IEventQueue* events);
 
-class CApp : public IApp {
+class App : public IApp {
 public:
-	CApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args);
-	virtual ~CApp();
+	App(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, ArgsBase* args);
+	virtual ~App();
 
 	// Returns args that are common between server and client.
-	CArgsBase& argsBase() const { return *m_args; }
+	ArgsBase& argsBase() const { return *m_args; }
 
 	// Prints the current compiled version.
 	virtual void version();
@@ -61,7 +63,7 @@ public:
 	int daemonMainLoop(int, const char**);
 
 	virtual void loadConfig() = 0;
-	virtual bool loadConfig(const CString& pathname) = 0;
+	virtual bool loadConfig(const String& pathname) = 0;
 
 	// A description of the daemon (used only on Windows).
 	virtual const char* daemonInfo() const = 0;
@@ -70,7 +72,7 @@ public:
 	// TODO: this is old C code - use inheritance to normalize
 	void (*m_bye)(int);
 
-	static CApp& instance() { assert(s_instance != nullptr); return *s_instance; }
+	static App& instance() { assert(s_instance != nullptr); return *s_instance; }
 
 	// If --log was specified in args, then add a file logger.
 	void setupFileLogging();
@@ -93,11 +95,13 @@ public:
 	
 	virtual IEventQueue* getEvents() const { return m_events; }
 
-	void				setSocketMultiplexer(CSocketMultiplexer* sm) { m_socketMultiplexer = sm; }
-	CSocketMultiplexer*	getSocketMultiplexer() const { return m_socketMultiplexer; }
+	void				setSocketMultiplexer(SocketMultiplexer* sm) { m_socketMultiplexer = sm; }
+	SocketMultiplexer*	getSocketMultiplexer() const { return m_socketMultiplexer; }
+
+	void				setEvents(EventQueue& events) { m_events = &events; }
 
 private:
-	void				handleIpcMessage(const CEvent&, void*);
+	void				handleIpcMessage(const Event&, void*);
 
 protected:
 	void				initIpcClient();
@@ -109,17 +113,42 @@ protected:
 	IEventQueue*		m_events;
 
 private:
-	CArgsBase* m_args;
-	static CApp* s_instance;
-	CFileLogOutputter* m_fileLog;
+	ArgsBase* m_args;
+	static App* s_instance;
+	FileLogOutputter* m_fileLog;
 	CreateTaskBarReceiverFunc m_createTaskBarReceiver;
 	ARCH_APP_UTIL m_appUtil;
-	CIpcClient*			m_ipcClient;
-	CSocketMultiplexer*	m_socketMultiplexer;
+	IpcClient*			m_ipcClient;
+	SocketMultiplexer*	m_socketMultiplexer;
+};
+
+class MinimalApp : public App {
+public:
+	MinimalApp();
+	virtual ~MinimalApp();
+
+	// IApp overrides
+	virtual int			standardStartup(int argc, char** argv);
+	virtual int			runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup);
+	virtual void		startNode();
+	virtual int			mainLoop();
+	virtual int			foregroundStartup(int argc, char** argv);
+	virtual synergy::Screen*	
+						createScreen();
+	virtual void		loadConfig();
+	virtual bool		loadConfig(const String& pathname);
+	virtual const char*	daemonInfo() const;
+	virtual const char* daemonName() const;
+	virtual void		parseArgs(int argc, const char* const* argv);
+
+private:
+	Arch				m_arch;
+	Log					m_log;
+	EventQueue			m_events;
 };
 
 #if WINAPI_MSWINDOWS
-#define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
+#define DAEMON_RUNNING(running_) ArchMiscWindows::daemonRunning(running_)
 #else
 #define DAEMON_RUNNING(running_)
 #endif
@@ -127,13 +156,14 @@ private:
 #define HELP_COMMON_INFO_1 \
 	"  -d, --debug <level>      filter out log messages with priority below level.\n" \
 	"                             level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n" \
-	"                             DEBUG, DEBUGn (1-5).\n" \
+	"                             DEBUG, DEBUG1, DEBUG2.\n" \
 	"  -n, --name <screen-name> use screen-name instead the hostname to identify\n" \
 	"                             this screen in the configuration.\n" \
 	"  -1, --no-restart         do not try to restart on failure.\n" \
 	"*     --restart            restart the server automatically if it fails.\n" \
 	"  -l  --log <file>         write log messages to file.\n" \
-	"      --no-tray            disable the system tray icon.\n"
+	"      --no-tray            disable the system tray icon.\n" \
+	"      --enable-drag-drop   enable file drag & drop.\n"
 
 #define HELP_COMMON_INFO_2 \
 	"  -h, --help               display this help and exit.\n" \

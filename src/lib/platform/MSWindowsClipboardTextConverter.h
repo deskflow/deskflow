@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,17 +21,17 @@
 #include "platform/MSWindowsClipboardAnyTextConverter.h"
 
 //! Convert to/from locale text encoding
-class CMSWindowsClipboardTextConverter :
-				public CMSWindowsClipboardAnyTextConverter {
+class MSWindowsClipboardTextConverter :
+				public MSWindowsClipboardAnyTextConverter {
 public:
-	CMSWindowsClipboardTextConverter();
-	virtual ~CMSWindowsClipboardTextConverter();
+	MSWindowsClipboardTextConverter();
+	virtual ~MSWindowsClipboardTextConverter();
 
 	// IMSWindowsClipboardConverter overrides
 	virtual UINT		getWin32Format() const;
 
 protected:
-	// CMSWindowsClipboardAnyTextConverter overrides
-	virtual CString		doFromIClipboard(const CString&) const;
-	virtual CString		doToIClipboard(const CString&) const;
+	// MSWindowsClipboardAnyTextConverter overrides
+	virtual String		doFromIClipboard(const String&) const;
+	virtual String		doToIClipboard(const String&) const;
 };

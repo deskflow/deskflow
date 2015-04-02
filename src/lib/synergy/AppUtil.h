@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,20 +21,20 @@
 #include "synergy/IAppUtil.h"
 #include "synergy/XSynergy.h"
 
-class CAppUtil : public IAppUtil {
+class AppUtil : public IAppUtil {
 public:
-	CAppUtil();
-	virtual ~CAppUtil();
+	AppUtil();
+	virtual ~AppUtil();
 
 	virtual void adoptApp(IApp* app);
 	IApp& app() const;
 	virtual void exitApp(int code) { throw XExitApp(code); }
 
-	static CAppUtil& instance();
+	static AppUtil& instance();
 	static void exitAppStatic(int code) { instance().exitApp(code); }
 	virtual void beforeAppExit() {}
 	
 private:
 	IApp* m_app;
-	static CAppUtil* s_instance;
+	static AppUtil* s_instance;
 };

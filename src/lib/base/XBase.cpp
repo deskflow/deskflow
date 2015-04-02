@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ XBase::XBase() :
 	// do nothing
 }
 
-XBase::XBase(const CString& msg) :
+XBase::XBase(const String& msg) :
 	std::runtime_error(msg)
 {
 	// do nothing
@@ -54,14 +54,14 @@ XBase::what() const _NOEXCEPT
 	return what;
 }
 
-CString
+String
 XBase::format(const char* /*id*/, const char* fmt, ...) const throw()
 {
 	// FIXME -- lookup message string using id as an index.  set
 	// fmt to that string if it exists.
 
 	// format
-	CString result;
+	String result;
 	va_list args;
 	va_start(args, fmt);
 	try {

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -26,13 +26,13 @@
 namespace synergy { class IStream; }
 
 //! Generic proxy for client
-class CClientProxy : public CBaseClientProxy {
+class ClientProxy : public BaseClientProxy {
 public:
 	/*!
 	\c name is the name of the client.
 	*/
-	CClientProxy(const CString& name, synergy::IStream* adoptedStream);
-	~CClientProxy();
+	ClientProxy(const String& name, synergy::IStream* adoptedStream);
+	~ClientProxy();
 
 	//! @name manipulators
 	//@{
@@ -49,10 +49,9 @@ public:
 
 	//! Get stream
 	/*!
-	Returns a crypto stream if the user has this enabled,
-	otherwise returns the original stream passed to the c'tor.
+	Returns the original stream passed to the c'tor.
 	*/
-	synergy::IStream*			getStream() const;
+	synergy::IStream*	getStream() const;
 
 	//@}
 
@@ -82,7 +81,7 @@ public:
 	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta) = 0;
 	virtual void		screensaver(bool activate) = 0;
 	virtual void		resetOptions() = 0;
-	virtual void		setOptions(const COptionsList& options) = 0;
+	virtual void		setOptions(const OptionsList& options) = 0;
 	virtual void		sendDragInfo(UInt32 fileCount, const char* info,
 							size_t size) = 0;
 	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;

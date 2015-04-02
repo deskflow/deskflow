@@ -1,5 +1,5 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012 Bolton Software Ltd.
+# Copyright (C) 2012 Synergy Si Ltd.
 # Copyright (C) 2010 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
@@ -27,14 +27,6 @@ class FtpUploader:
 		
 		ftp = FTP(self.host, self.user, self.password)
 		ftp.cwd(self.dir)
-
-		# check to see if we should stop here
-		if not replace:
-			files = ftp.nlst()
-			if dest in files:
-				print 'Already exists, skipping.'
-				ftp.close()
-				return
 		
 		f = open(src, 'rb')
 		ftp.storbinary('STOR ' + dest, f)

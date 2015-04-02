@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Bolton Software Ltd.
+ * Copyright (C) 2014 Synergy Si Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,14 +16,20 @@
  */
 
 #include "synergy/ToolApp.h"
+
+#include "synergy/ArgParser.h"
 #include "arch/Arch.h"
+#include "base/Log.h"
 #include "base/String.h"
 
 #include <iostream>
 #include <sstream>
-	
-//#define PREMIUM_AUTH_URL "http://localhost/synergy/premium/json/auth/"
-#define PREMIUM_AUTH_URL "https://synergy-project.org/premium/json/auth/"
+
+#if SYSAPI_WIN32
+#include "platform/MSWindowsSession.h"
+#endif
+
+#define JSON_URL "https://synergy-project.org/premium/json/"
 
 enum {
 	kErrorOk,
@@ -33,7 +39,7 @@ enum {
 };
 
 UInt32
-CToolApp::run(int argc, char** argv)
+ToolApp::run(int argc, char** argv)
 {
 	if (argc <= 1) {
 		std::cerr << "no args" << std::endl;
@@ -41,41 +47,97 @@ CToolApp::run(int argc, char** argv)
 	}
 
 	try {
-		for (int i = 1; i < argc; i++) {
-			if (strcmp(argv[i], "--premium-auth") == 0) {
-				premiumAuth();
-				return kErrorOk;
+		ArgParser argParser(this);
+		bool result = argParser.parseToolArgs(m_args, argc, argv);
+
+		if (!result) {
+			m_bye(kExitArgs);
+		}
+
+		if (m_args.m_printActiveDesktopName) {
+#if SYSAPI_WIN32
+			MSWindowsSession session;
+			String name = session.getActiveDesktopName();
+			if (name.empty()) {
+				LOG((CLOG_CRIT "failed to get active desktop name"));
+				return kExitFailed;
 			}
 			else {
-				std::cerr << "unknown arg: " << argv[i] << std::endl;
-				return kErrorArgs;
+				std::cout << "activeDesktop:" << name.c_str() << std::endl;
 			}
+#endif
+		}
+		else if (m_args.m_loginAuthenticate) {
+			loginAuth();
+		}
+		else if (m_args.m_getPluginList) {
+			getPluginList();
+		}
+		else if (m_args.m_getPluginDir) {
+			std::cout << ARCH->getPluginDirectory() << std::endl;
+		}
+		else if (m_args.m_getProfileDir) {
+			std::cout << ARCH->getProfileDirectory() << std::endl;
+		}
+		else if (m_args.m_getArch) {
+			std::cout << ARCH->getPlatformName() << std::endl;
+		}
+		else {
+			throw XSynergy("Nothing to do");
 		}
 	}
 	catch (std::exception& e) {
-		std::cerr << e.what() << std::endl;
-		return kErrorException;
+		LOG((CLOG_CRIT "An error occurred: %s\n", e.what()));
+		return kExitFailed;
 	}
 	catch (...) {
-		std::cerr << "unknown error" << std::endl;
-		return kErrorUnknown;
+		LOG((CLOG_CRIT "An unknown error occurred.\n"));
+		return kExitFailed;
 	}
+
+#if WINAPI_XWINDOWS
+	// HACK: avoid sigsegv on linux
+	m_bye(kErrorOk);
+#endif
 
 	return kErrorOk;
 }
 
 void
-CToolApp::premiumAuth()
+ToolApp::help()
 {
-	CString credentials;
+}
+
+void
+ToolApp::loginAuth()
+{
+	String credentials;
 	std::cin >> credentials;
 
 	size_t separator = credentials.find(':');
-	CString email = credentials.substr(0, separator);
-	CString password = credentials.substr(separator + 1, credentials.length());
-			
+	String email = credentials.substr(0, separator);
+	String password = credentials.substr(separator + 1, credentials.length());
+
 	std::stringstream ss;
-	ss << PREMIUM_AUTH_URL;
+	ss << JSON_URL << "auth/";
+	ss << "?email=" << ARCH->internet().urlEncode(email);
+	ss << "&password=" << password;
+
+	std::cout << ARCH->internet().get(ss.str()) << std::endl;
+}
+
+void
+ToolApp::getPluginList()
+{
+	String credentials;
+	std::cin >> credentials;
+
+	size_t separator = credentials.find(':');
+	String email = credentials.substr(0, separator);
+	String password = credentials.substr(separator + 1, credentials.length());
+
+	std::stringstream ss;
+	ss <<  JSON_URL << "plugins/";
 	ss << "?email=" << ARCH->internet().urlEncode(email);
 	ss << "&password=" << password;
 

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include "Windows.h"
 
-#define ARCH_APP_UTIL CAppUtilWindows
+#define ARCH_APP_UTIL AppUtilWindows
 
 class IEventQueue;
 
@@ -33,10 +33,10 @@ enum AppExitMode {
 	kExitModeDaemon
 };
 
-class CAppUtilWindows : public CAppUtil {
+class AppUtilWindows : public AppUtil {
 public:
-	CAppUtilWindows(IEventQueue* events);
-	virtual ~CAppUtilWindows();
+	AppUtilWindows(IEventQueue* events);
+	virtual ~AppUtilWindows();
 
 	int daemonNTStartup(int, char**);
 	
@@ -50,7 +50,7 @@ public:
 
 	void beforeAppExit();
 
-	static CAppUtilWindows& instance();
+	static AppUtilWindows& instance();
 
 	void startNode();
 
@@ -58,5 +58,5 @@ private:
 	AppExitMode			m_exitMode;
 	IEventQueue*		m_events;
 
-	static BOOL WINAPI consoleHandler(DWORD CEvent);
+	static BOOL WINAPI consoleHandler(DWORD Event);
 };

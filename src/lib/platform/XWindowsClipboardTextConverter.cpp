@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,57 +21,57 @@
 #include "base/Unicode.h"
 
 //
-// CXWindowsClipboardTextConverter
+// XWindowsClipboardTextConverter
 //
 
-CXWindowsClipboardTextConverter::CXWindowsClipboardTextConverter(
+XWindowsClipboardTextConverter::XWindowsClipboardTextConverter(
 				Display* display, const char* name) :
 	m_atom(XInternAtom(display, name, False))
 {
 	// do nothing
 }
 
-CXWindowsClipboardTextConverter::~CXWindowsClipboardTextConverter()
+XWindowsClipboardTextConverter::~XWindowsClipboardTextConverter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-CXWindowsClipboardTextConverter::getFormat() const
+XWindowsClipboardTextConverter::getFormat() const
 {
 	return IClipboard::kText;
 }
 
 Atom
-CXWindowsClipboardTextConverter::getAtom() const
+XWindowsClipboardTextConverter::getAtom() const
 {
 	return m_atom;
 }
 
 int
-CXWindowsClipboardTextConverter::getDataSize() const
+XWindowsClipboardTextConverter::getDataSize() const
 {
 	return 8;
 }
 
-CString
-CXWindowsClipboardTextConverter::fromIClipboard(const CString& data) const
+String
+XWindowsClipboardTextConverter::fromIClipboard(const String& data) const
 {
-	return CUnicode::UTF8ToText(data);
+	return Unicode::UTF8ToText(data);
 }
 
-CString
-CXWindowsClipboardTextConverter::toIClipboard(const CString& data) const
+String
+XWindowsClipboardTextConverter::toIClipboard(const String& data) const
 {
 	// convert to UTF-8
 	bool errors;
-	CString utf8 = CUnicode::textToUTF8(data, &errors);
+	String utf8 = Unicode::textToUTF8(data, &errors);
 
 	// if there were decoding errors then, to support old applications
 	// that don't understand UTF-8 but can report the exact binary
 	// UTF-8 representation, see if the data appears to be UTF-8.  if
 	// so then use it as is.
-	if (errors && CUnicode::isUTF8(data)) {
+	if (errors && Unicode::isUTF8(data)) {
 		return data;
 	}
 

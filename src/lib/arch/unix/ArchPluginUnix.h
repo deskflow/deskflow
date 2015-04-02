@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2012 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or
@@ -20,16 +20,32 @@
 
 #include "arch/IArchPlugin.h"
 
-#define ARCH_PLUGIN CArchPluginUnix
+#define ARCH_PLUGIN ArchPluginUnix
 
 class IEventQueue;
 
 //! Unix implementation of IArchPlugin
-class CArchPluginUnix : public IArchPlugin {
+class ArchPluginUnix : public IArchPlugin {
 public:
-	CArchPluginUnix();
-	virtual ~CArchPluginUnix();
+	ArchPluginUnix();
+	virtual ~ArchPluginUnix();
 
 	// IArchPlugin overrides
-	void				init(void* eventTarget, IEventQueue* events);
+	void				load();
+	void				unload();
+	void				init(void* log, void* arch);
+	void				initEvent(void* eventTarget, IEventQueue* events);
+	bool				exists(const char* name);
+	virtual void*		invoke(const char* pluginName,
+							const char* functionName,
+							void** args);
+
+ private:
+	String				getPluginsDir();
+
+private:
+	PluginTable			m_pluginTable;
 };
+
+void					sendEvent(const char* text, void* data);
+void					log(const char* text);

@@ -1,5 +1,5 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012 Bolton Software Ltd.
+# Copyright (C) 2012 Synergy Si Ltd.
 # Copyright (C) 2009 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
@@ -247,9 +247,6 @@ class InternalCommands:
 	# by default, unknown
 	macIdentity = None
 	
-	# cryptoPP dir with version number
-	cryptoPPDir = 'cryptopp562'
-	
 	# gtest dir with version number
 	gtestDir = 'gtest-1.6.0'
 	
@@ -319,22 +316,6 @@ class InternalCommands:
 
 		for target in targets:
 			self.configure(target)
-
-	def checkCryptoPP(self):
-    
-		dir = self.extDir + '/' + self.cryptoPPDir
-		if (os.path.isdir(dir)):
-			return
-		
-		zipFilename = dir + '.zip'
-		if (not os.path.exists(zipFilename)):
-			raise Exception('Crypto++ zip not found at: ' + zipFilename)
-		
-		if not os.path.exists(dir):
-			os.mkdir(dir)
-		
-		zip = zipfile.ZipFile(zipFilename)
-		self.zipExtractAll(zip, dir)
 
 	def checkGTest(self):
     
@@ -451,15 +432,19 @@ class InternalCommands:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 			
 		elif sys.platform == "darwin":
+			macSdkMatch = re.match("(\d+)\.(\d+)", self.macSdk)
+			if not macSdkMatch:
+				raise Exception("unknown osx version: " + self.macSdk)
+
 			sdkDir = self.getMacSdkDir()
 			cmake_args += " -DCMAKE_OSX_SYSROOT=" + sdkDir
 			cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macSdk
+			cmake_args += " -DOSX_TARGET_MAJOR=" + macSdkMatch.group(1)
+			cmake_args += " -DOSX_TARGET_MINOR=" + macSdkMatch.group(2)
 		
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
 
-		# ensure that the cryptopp source exists
-		self.checkCryptoPP()
 		self.checkGTest()
 		self.checkGMock()
 		
@@ -478,12 +463,6 @@ class InternalCommands:
 
 		if generator.cmakeName.find('Eclipse') != -1:
 			self.fixCmakeEclipseBug()
-
-		# only on osx 10.9 mavericks.
-		# manually change .xcodeproj to add code sign for
-		# synmacph project and specify its info.plist
-		if self.macSdk == "10.9" and generator.cmakeName.find('Xcode') != -1:
-			self.fixXcodeProject(target)
 			
 		if err != 0:
 			raise Exception('CMake encountered error: ' + str(err))
@@ -585,59 +564,6 @@ class InternalCommands:
 		file.write(content)
 		file.truncate()
 		file.close()
-
-	def fixXcodeProject(self, target):
-		print "Fixing Xcode project..."
-		
-		insertContent = (
-			"CODE_SIGN_IDENTITY = '%s';\n"
-			"INFOPLIST_FILE = %s/src/cmd/synmacph/Info.plist;\n") % (
-			self.macIdentity,
-			os.getcwd()
-		)
-		
-		dir = self.getBuildDir(target)
-		file = open(dir + '/synergy.xcodeproj/project.pbxproj', 'r+')
-		contents = file.readlines()
-		
-		buildConfigurationsFound = None
-		releaseConfigRefFound = None
-		releaseBuildSettingsFound = None
-		fixed = None
-		releaseConfigRef = "";
-		
-		for line in contents:
-			if buildConfigurationsFound:
-				matchObj = re.search(r'\s*(.*)\s*\/\*\s*Release\s*\*\/,', line, re.I)
-				if matchObj:
-					releaseConfigRef = matchObj.group(1)
-					releaseConfigRefFound = True
-					break
-			elif buildConfigurationsFound == None:
-				if 'PBXNativeTarget "synmacph" */ = {' in line:
-					buildConfigurationsFound = True
-		
-		if not releaseConfigRefFound:
-			raise Exception("Release config ref not found.")
-		
-		for n, line in enumerate(contents):
-			if releaseBuildSettingsFound == None:
-				if releaseConfigRef + '/* Release */ = {' in line:
-					releaseBuildSettingsFound = True
-			elif fixed == None:
-				if 'buildSettings = {' in line:
-					contents[n] = line + insertContent
-					fixed = True
-		
-		if not fixed:
-			raise Exception("Xcode project was not fixed.")
-		
-		file.seek(0)
-		for line in contents:
-			file.write(line)
-		file.truncate()
-		file.close()
-		return
 				
 	def persist_cmake(self):
 		# even though we're running `cmake --version`, we're only doing this for the 0 return
@@ -751,98 +677,94 @@ class InternalCommands:
 					raise Exception('Build command not supported with generator: ' + generator)
 	
 	def makeGui(self, targets, args=""):
+		for target in targets:
 		
-		if sys.platform == 'win32':
-			gui_make_cmd = self.w32_make_cmd
-		elif sys.platform in ['linux2', 'sunos5', 'freebsd7', 'darwin']:
-			gui_make_cmd = self.make_cmd + " -w"
-		else:
-			raise Exception('Unsupported platform: ' + sys.platform)
-		
-		gui_make_cmd += args
-		
-		print 'Make GUI command: ' + gui_make_cmd
-		
-		if sys.platform == 'win32':
-			for target in targets:
+			if sys.platform == 'win32':
+
+				gui_make_cmd = self.w32_make_cmd + ' ' + target + args
+				print 'Make GUI command: ' + gui_make_cmd
+
 				self.try_chdir(self.gui_dir)
-				err = os.system(gui_make_cmd + ' ' + target)
+				err = os.system(gui_make_cmd)
 				self.restore_chdir()
 				
 				if err != 0:
 					raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
-		else:
-			self.try_chdir(self.gui_dir)
-			err = os.system(gui_make_cmd)
-			self.restore_chdir()
 
-			if err != 0:
-				raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
+			elif sys.platform in ['linux2', 'sunos5', 'freebsd7', 'darwin']:
 
-			if sys.platform == 'darwin' and not "clean" in args:
-				for target in targets:
-					self.macPostMake(target)
-	
-	def macPostMake(self, target):
+				gui_make_cmd = self.make_cmd + " -w" + args
+				print 'Make GUI command: ' + gui_make_cmd
 
-		dir = self.getGenerator().binDir
+				# start with a clean app bundle
+				targetDir = self.getGenerator().getBinDir(target)
+				bundleTargetDir = targetDir + '/Synergy.app'
+				if os.path.exists(bundleTargetDir):
+					shutil.rmtree(bundleTargetDir)
+
+				binDir = self.getGenerator().binDir
+				bundleTempDir = binDir + '/Synergy.app'
+				if os.path.exists(bundleTempDir):
+					shutil.rmtree(bundleTempDir)
+
+				self.try_chdir(self.gui_dir)
+				err = os.system(gui_make_cmd)
+				self.restore_chdir()
+
+				if err != 0:
+					raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
+
+				if sys.platform == 'darwin' and not "clean" in args:
+					self.macPostGuiMake(target)
+			else:
+				raise Exception('Unsupported platform: ' + sys.platform)
+
+	def macPostGuiMake(self, target):
+		bundle = 'Synergy.app'
+		binDir = self.getGenerator().binDir
+		targetDir = self.getGenerator().getBinDir(target)
+		bundleTempDir = binDir + '/' + bundle
+		bundleTargetDir = targetDir + '/' + bundle
+
+		if os.path.exists(bundleTempDir):
+			shutil.move(bundleTempDir, bundleTargetDir)
 
 		if self.enableMakeCore:
 			# copy core binaries into the bundle, since the gui
 			# now looks for the binaries in the current app dir.
 			
-			targetDir = self.getGenerator().getBinDir(target)
-			bundleBinDir = dir + "/Synergy.app/Contents/MacOS/"
+			bundleBinDir = bundleTargetDir + "/Contents/MacOS/"
 			shutil.copy(targetDir + "/synergyc", bundleBinDir)
 			shutil.copy(targetDir + "/synergys", bundleBinDir)
 			shutil.copy(targetDir + "/syntool", bundleBinDir)
-			
-			if self.macSdk == "10.9":
-				launchServicesDir = dir + "/Synergy.app/Contents/Library/LaunchServices/"
-				if not os.path.exists(launchServicesDir):
-					os.makedirs(launchServicesDir)
-				shutil.copy(targetDir + "/synmacph", launchServicesDir)
 
-		if self.enableMakeGui:
-			# use qt to copy libs to bundle so no dependencies are needed. do not create a
-			# dmg at this point, since we need to sign it first, and then create our own
-			# after signing (so that qt does not affect the signed app bundle).
-			bin = "macdeployqt Synergy.app -verbose=2"
-			self.try_chdir(dir)
-			err = os.system(bin)
-			self.restore_chdir()
-	
-			if err != 0:
-				raise Exception(bin + " failed with error: " + str(err))
-			
-			(qMajor, qMinor, qRev) = self.getQmakeVersion()
-			if qMajor <= 4:
-				frameworkRootDir = "/Library/Frameworks"
-			else:
-				# TODO: auto-detect, qt can now be installed anywhere.
-				frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
-			
-			# copy the missing Info.plist files for the frameworks.
-			target = dir + "/Synergy.app/Contents/Frameworks"
-			for root, dirs, files in os.walk(target):
-				for dir in dirs:
-					if dir.startswith("Qt"):
-						shutil.copy(
-							frameworkRootDir + "/" + dir + "/Contents/Info.plist",
-							target + "/" + dir + "/Resources/")
-	
-	def signmac(self):
 		self.loadConfig()
 		if not self.macIdentity:
 			raise Exception("run config with --mac-identity")
-		
-		self.try_chdir("bin")
-		err = os.system(
-			'codesign --deep -fs "' + self.macIdentity + '" Synergy.app')
-		self.restore_chdir()
 
-		if err != 0:
-			raise Exception("codesign failed with error: " + str(err))
+		if sys.version_info < (2, 4):
+			raise Exception("Python 2.4 or greater required.")
+
+		(qMajor, qMinor, qRev) = self.getQmakeVersion()
+		if qMajor >= 5:
+			output = commands.getstatusoutput(
+				"macdeployqt %s/Synergy.app -verbose=2 -codesign='%s'" % (
+				targetDir, self.macIdentity))
+		else:
+			# no code signing available in old versions
+			output = commands.getstatusoutput(
+				"macdeployqt %s/Synergy.app -verbose=2" % (
+				targetDir))
+
+		print output[1]
+		if "ERROR" in output[1]:
+			(qMajor, qMinor, qRev) = self.getQmakeVersion()
+			if qMajor >= 5:
+				# only listen to errors in qt 5+
+				raise Exception("macdeployqt failed")
+
+	def signmac(self):
+		print "signmac is now obsolete"
 	
 	def signwin(self, pfx, pwdFile, dist):
 		generator = self.getGeneratorFromConfig().cmakeName
@@ -861,6 +783,7 @@ class InternalCommands:
 			self.signFile(pfx, pwd, 'bin/Release', 'synergyc.exe')
 			self.signFile(pfx, pwd, 'bin/Release', 'synergys.exe')
 			self.signFile(pfx, pwd, 'bin/Release', 'synergyd.exe')
+			self.signFile(pfx, pwd, 'bin/Release', 'syntool.exe')
 			self.signFile(pfx, pwd, 'bin/Release', 'synwinhk.dll')
 	
 	def signFile(self, pfx, pwd, dir, file):
@@ -1249,16 +1172,16 @@ class InternalCommands:
 		
 	def distMac(self):
 		self.loadConfig()
-		dir = self.getGenerator().binDir
+		binDir = self.getGenerator().getBinDir('Release')
 		name = "Synergy"
-		dist = dir + "/" + name
+		dist = binDir + "/" + name
 		
 		# ensure dist dir is clean
 		if os.path.exists(dist):
 			shutil.rmtree(dist)
 		
 		os.makedirs(dist)
-		shutil.copytree(dir + "/" + name + ".app", dist + "/" + name + ".app")
+		shutil.move(binDir + "/" + name + ".app", dist + "/" + name + ".app")
 		
 		self.try_chdir(dist)
 		err = os.system("ln -s /Applications")
@@ -1271,7 +1194,7 @@ class InternalCommands:
 		
 		cmd = "hdiutil create " + fileName + " -srcfolder ./" + name + "/ -ov"
 		
-		self.try_chdir(dir)
+		self.try_chdir(binDir)
 		err = os.system(cmd)
 		self.restore_chdir()
 
@@ -1370,12 +1293,8 @@ class InternalCommands:
 		dest = self.dist_name_rev(type)
 		print 'Uploading %s to FTP server %s...' % (dest, ftp.host)
 
-		srcDir = 'bin/'
-		generator = self.getGeneratorFromConfig().cmakeName
-		#if not generator.startswith('Visual Studio'):
-		#	srcDir += 'release/'
-
-		ftp.run(srcDir + src, dest) 
+		binDir = self.getGenerator().getBinDir('Release')
+		ftp.run(binDir + '/' + src, dest) 
 		print 'Done'
 	
 	def getDebianArch(self):
@@ -1442,8 +1361,9 @@ class InternalCommands:
 		
 		pattern = re.escape(self.project + '-') + '\d+\.\d+\.\d+' + re.escape('-' + platform + '.' + ext)
 		
-		# only use release dir if not windows
 		target = ''
+		if type == 'mac':
+			target = 'Release'
 
 		for filename in os.listdir(self.getBinDir(target)):
 			if re.search(pattern, filename):
@@ -1454,8 +1374,8 @@ class InternalCommands:
 	
 	def dist_name_rev(self, type):
 		# find the version number (we're puting the rev in after this)
-		pattern = '(.*\d+\.\d+\.\d+)(.*)'
-		replace = "\g<1>-%s-%s\g<2>" % (
+		pattern = '(\d+\.\d+\.\d+)'
+		replace = "%s-%s" % (
 			self.getGitBranchName(), self.getGitRevision())
 		return re.sub(pattern, replace, self.dist_name(type))
 

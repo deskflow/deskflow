@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,13 +21,13 @@
 #include "arch/ArchDaemonNone.h"
 
 #undef ARCH_DAEMON
-#define ARCH_DAEMON CArchDaemonUnix
+#define ARCH_DAEMON ArchDaemonUnix
 
 //! Unix implementation of IArchDaemon
-class CArchDaemonUnix : public CArchDaemonNone {
+class ArchDaemonUnix : public ArchDaemonNone {
 public:
-	CArchDaemonUnix();
-	virtual ~CArchDaemonUnix();
+	ArchDaemonUnix();
+	virtual ~ArchDaemonUnix();
 
 	// IArchDaemon overrides
 	virtual int			daemonize(const char* name, DaemonFunc func);

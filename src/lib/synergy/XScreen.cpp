@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 // XScreenOpenFailure
 //
 
-CString
+String
 XScreenOpenFailure::getWhat() const throw()
 {
 	return format("XScreenOpenFailure", "unable to open screen");
@@ -33,7 +33,7 @@ XScreenOpenFailure::getWhat() const throw()
 // XScreenXInputFailure
 //
 
-CString
+String
 XScreenXInputFailure::getWhat() const throw()
 {
 	return "";
@@ -61,7 +61,7 @@ XScreenUnavailable::getRetryTime() const
 	return m_timeUntilRetry;
 }
 
-CString
+String
 XScreenUnavailable::getWhat() const throw()
 {
 	return format("XScreenUnavailable", "unable to open screen");

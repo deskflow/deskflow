@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Bolton Software Ltd.
+ * Copyright (C) 2014 Synergy Si Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,28 +25,28 @@
 
 void getDropData(IDataObject *pDataObject);
 
-CMSWindowsDropTarget* CMSWindowsDropTarget::s_instance = NULL;
+MSWindowsDropTarget* MSWindowsDropTarget::s_instance = NULL;
 
-CMSWindowsDropTarget::CMSWindowsDropTarget() :
+MSWindowsDropTarget::MSWindowsDropTarget() :
 	m_refCount(1),
 	m_allowDrop(false)
 {
 	s_instance = this;
 }
 
-CMSWindowsDropTarget::~CMSWindowsDropTarget()
+MSWindowsDropTarget::~MSWindowsDropTarget()
 {
 }
 
-CMSWindowsDropTarget&
-CMSWindowsDropTarget::instance()
+MSWindowsDropTarget&
+MSWindowsDropTarget::instance()
 {
 	assert(s_instance != NULL);
 	return *s_instance;
 }
 
 HRESULT
-CMSWindowsDropTarget::DragEnter(IDataObject* dataObject, DWORD keyState, POINTL point, DWORD* effect)
+MSWindowsDropTarget::DragEnter(IDataObject* dataObject, DWORD keyState, POINTL point, DWORD* effect)
 {
 	// check if data object contain drop
 	m_allowDrop = queryDataObject(dataObject);
@@ -60,7 +60,7 @@ CMSWindowsDropTarget::DragEnter(IDataObject* dataObject, DWORD keyState, POINTL 
 }
 
 HRESULT
-CMSWindowsDropTarget::DragOver(DWORD keyState, POINTL point, DWORD* effect)
+MSWindowsDropTarget::DragOver(DWORD keyState, POINTL point, DWORD* effect)
 {
 	*effect = DROPEFFECT_NONE;
 
@@ -68,13 +68,13 @@ CMSWindowsDropTarget::DragOver(DWORD keyState, POINTL point, DWORD* effect)
 }
 
 HRESULT
-CMSWindowsDropTarget::DragLeave(void)
+MSWindowsDropTarget::DragLeave(void)
 {
 	return S_OK;
 }
 
 HRESULT
-CMSWindowsDropTarget::Drop(IDataObject* dataObject, DWORD keyState, POINTL point, DWORD* effect)
+MSWindowsDropTarget::Drop(IDataObject* dataObject, DWORD keyState, POINTL point, DWORD* effect)
 {
 	*effect = DROPEFFECT_NONE;
 
@@ -82,7 +82,7 @@ CMSWindowsDropTarget::Drop(IDataObject* dataObject, DWORD keyState, POINTL point
 }
 
 bool
-CMSWindowsDropTarget::queryDataObject(IDataObject* dataObject)
+MSWindowsDropTarget::queryDataObject(IDataObject* dataObject)
 {
 	// check if it supports CF_HDROP using a HGLOBAL
 	FORMATETC fmtetc = { CF_HDROP, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
@@ -91,19 +91,19 @@ CMSWindowsDropTarget::queryDataObject(IDataObject* dataObject)
 }
 
 void
-CMSWindowsDropTarget::setDraggingFilename(char* const filename)
+MSWindowsDropTarget::setDraggingFilename(char* const filename)
 {
 	m_dragFilename = filename;
 }
 
 std::string
-CMSWindowsDropTarget::getDraggingFilename()
+MSWindowsDropTarget::getDraggingFilename()
 {
 	return m_dragFilename;
 }
 
 void
-CMSWindowsDropTarget::clearDraggingFilename()
+MSWindowsDropTarget::clearDraggingFilename()
 {
 	m_dragFilename.clear();
 }
@@ -131,7 +131,7 @@ getDropData(IDataObject* dataObject)
 			filename[wcslen(wcData)] = '\0';
 			wcstombs(filename, wcData, wcslen(wcData));
 
-			CMSWindowsDropTarget::instance().setDraggingFilename(filename);
+			MSWindowsDropTarget::instance().setDraggingFilename(filename);
 			
 			GlobalUnlock(stgMed.hGlobal);
 
@@ -144,7 +144,7 @@ getDropData(IDataObject* dataObject)
 }
 
 HRESULT __stdcall
-CMSWindowsDropTarget::QueryInterface (REFIID iid, void ** object)
+MSWindowsDropTarget::QueryInterface (REFIID iid, void ** object)
 {
 	if (iid == IID_IDropTarget || iid == IID_IUnknown) {
 		AddRef();
@@ -158,13 +158,13 @@ CMSWindowsDropTarget::QueryInterface (REFIID iid, void ** object)
 }
 
 ULONG __stdcall
-CMSWindowsDropTarget::AddRef(void)
+MSWindowsDropTarget::AddRef(void)
 {
 	return InterlockedIncrement(&m_refCount);
 }
 
 ULONG __stdcall
-CMSWindowsDropTarget::Release(void)
+MSWindowsDropTarget::Release(void)
 {
 	LONG count = InterlockedDecrement(&m_refCount);
 		

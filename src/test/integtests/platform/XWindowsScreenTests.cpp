@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2011 Nick Bolton
  *
  * This package is free software; you can redistribute it and/or
@@ -25,11 +25,11 @@ using ::testing::_;
 
 TEST(CXWindowsScreenTests, fakeMouseMove_nonPrimary_getCursorPosValuesCorrect)
 {
-	CMockEventQueue eventQueue;
+	MockEventQueue eventQueue;
 	EXPECT_CALL(eventQueue, adoptHandler(_, _, _)).Times(2);
 	EXPECT_CALL(eventQueue, adoptBuffer(_)).Times(2);
 	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(2);
-	CXWindowsScreen screen(
+	XWindowsScreen screen(
 		":0.0", false, false, 0, &eventQueue);
 
 	screen.fakeMouseMove(10, 20);

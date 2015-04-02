@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -31,14 +31,14 @@
 #include "base/IEventQueue.h"
 
 //
-// CTCPListenSocket
+// TCPListenSocket
 //
 
-CTCPListenSocket::CTCPListenSocket(IArchNetwork::EAddressFamily family, IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
+TCPListenSocket::TCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
 	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {
-	m_mutex = new CMutex;
+	m_mutex = new Mutex;
 	try {
 		m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
 	}
@@ -47,7 +47,7 @@ CTCPListenSocket::CTCPListenSocket(IArchNetwork::EAddressFamily family, IEventQu
 	}
 }
 
-CTCPListenSocket::~CTCPListenSocket()
+TCPListenSocket::~TCPListenSocket()
 {
 	try {
 		if (m_socket != NULL) {
@@ -62,16 +62,16 @@ CTCPListenSocket::~CTCPListenSocket()
 }
 
 void
-CTCPListenSocket::bind(const CNetworkAddress& addr)
+TCPListenSocket::bind(const NetworkAddress& addr)
 {
 	try {
-		CLock lock(m_mutex);
+		Lock lock(m_mutex);
 		ARCH->setReuseAddrOnSocket(m_socket, true);
 		ARCH->bindSocket(m_socket, addr.getAddress());
 		ARCH->listenOnSocket(m_socket);
 		m_socketMultiplexer->addSocket(this,
-							new TSocketMultiplexerMethodJob<CTCPListenSocket>(
-								this, &CTCPListenSocket::serviceListening,
+							new TSocketMultiplexerMethodJob<TCPListenSocket>(
+								this, &TCPListenSocket::serviceListening,
 								m_socket, true, false));
 	}
 	catch (XArchNetworkAddressInUse& e) {
@@ -83,9 +83,9 @@ CTCPListenSocket::bind(const CNetworkAddress& addr)
 }
 
 void
-CTCPListenSocket::close()
+TCPListenSocket::close()
 {
-	CLock lock(m_mutex);
+	Lock lock(m_mutex);
 	if (m_socket == NULL) {
 		throw XIOClosed();
 	}
@@ -100,21 +100,21 @@ CTCPListenSocket::close()
 }
 
 void*
-CTCPListenSocket::getEventTarget() const
+TCPListenSocket::getEventTarget() const
 {
 	return const_cast<void*>(reinterpret_cast<const void*>(this));
 }
 
 IDataSocket*
-CTCPListenSocket::accept()
+TCPListenSocket::accept()
 {
 	IDataSocket* socket = NULL;
 	try {
-		socket = new CTCPSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
+		socket = new TCPSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
 		if (socket != NULL) {
 			m_socketMultiplexer->addSocket(this,
-							new TSocketMultiplexerMethodJob<CTCPListenSocket>(
-								this, &CTCPListenSocket::serviceListening,
+							new TSocketMultiplexerMethodJob<TCPListenSocket>(
+								this, &TCPListenSocket::serviceListening,
 								m_socket, true, false));
 		}
 		return socket;
@@ -134,7 +134,7 @@ CTCPListenSocket::accept()
 }
 
 ISocketMultiplexerJob*
-CTCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
+TCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
 							bool read, bool, bool error)
 {
 	if (error) {
@@ -142,7 +142,7 @@ CTCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
 		return NULL;
 	}
 	if (read) {
-		m_events->addEvent(CEvent(m_events->forIListenSocket().connecting(), this, NULL));
+		m_events->addEvent(Event(m_events->forIListenSocket().connecting(), this, NULL));
 		// stop polling on this socket until the client accepts
 		return NULL;
 	}

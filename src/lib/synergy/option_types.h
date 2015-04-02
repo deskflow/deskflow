@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ Type to hold an option value.
 typedef SInt32			OptionValue;
 
 // for now, options are just pairs of integers
-typedef std::vector<UInt32> COptionsList;
+typedef std::vector<UInt32> OptionsList;
 
 // macro for packing 4 character strings into 4 byte integers
 #define OPTION_CODE(_s) 											\

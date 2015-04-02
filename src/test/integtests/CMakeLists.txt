@@ -1,5 +1,5 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012 Bolton Software Ltd.
+# Copyright (C) 2012 Synergy Si Ltd.
 # Copyright (C) 2009 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
@@ -68,4 +68,4 @@ endif()
 
 add_executable(integtests ${sources})
 target_link_libraries(integtests
-	arch base client common io ipc mt net platform server synergy gtest gmock cryptopp ${libs})
+	arch base client common io ipc mt net platform server synergy gtest gmock ${libs})

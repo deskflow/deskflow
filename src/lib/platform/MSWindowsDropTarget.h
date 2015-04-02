@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Bolton Software Ltd.
+ * Copyright (C) 2014 Synergy Si Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,12 +22,12 @@
 #include <Windows.h>
 #include <oleidl.h>
 
-class CMSWindowsScreen;
+class MSWindowsScreen;
 
-class CMSWindowsDropTarget : public IDropTarget {
+class MSWindowsDropTarget : public IDropTarget {
 public:
-	CMSWindowsDropTarget();
-	~CMSWindowsDropTarget();
+	MSWindowsDropTarget();
+	~MSWindowsDropTarget();
 
 	// IUnknown implementation
 	HRESULT __stdcall	QueryInterface(REFIID iid, void** object);
@@ -44,7 +44,7 @@ public:
 	std::string			getDraggingFilename();
 	void				clearDraggingFilename();
 
-	static CMSWindowsDropTarget& 
+	static MSWindowsDropTarget& 
 						instance();
 
 private:
@@ -54,6 +54,6 @@ private:
 	bool				m_allowDrop;
 	std::string			m_dragFilename;
 	
-	static CMSWindowsDropTarget*
+	static MSWindowsDropTarget*
 						s_instance;
 };

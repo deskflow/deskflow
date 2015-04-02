@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -42,18 +42,18 @@ class IEventQueue;
 /*!
 A key state for X Windows.
 */
-class CXWindowsKeyState : public CKeyState {
+class XWindowsKeyState : public KeyState {
 public:
-	typedef std::vector<int> CKeycodeList;
+	typedef std::vector<int> KeycodeList;
 	enum {
 		kGroupPoll       = -1,
 		kGroupPollAndSet = -2
 	};
 
-	CXWindowsKeyState(Display*, bool useXKB, IEventQueue* events);
-	CXWindowsKeyState(Display*, bool useXKB,
-		IEventQueue* events, CKeyMap& keyMap);
-	~CXWindowsKeyState();
+	XWindowsKeyState(Display*, bool useXKB, IEventQueue* events);
+	XWindowsKeyState(Display*, bool useXKB,
+		IEventQueue* events, synergy::KeyMap& keyMap);
+	~XWindowsKeyState();
 
 	//! @name modifiers
 	//@{
@@ -99,7 +99,7 @@ public:
 	that key.
 	*/
 	void				mapKeyToKeycodes(KeyID key,
-							CKeycodeList& keycodes) const;
+							KeycodeList& keycodes) const;
 
 	//@}
 
@@ -111,20 +111,20 @@ public:
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
 protected:
-	// CKeyState overrides
-	virtual void		getKeyMap(CKeyMap& keyMap);
+	// KeyState overrides
+	virtual void		getKeyMap(synergy::KeyMap& keyMap);
 	virtual void		fakeKey(const Keystroke& keystroke);
 
 private:
 	void				init(Display* display, bool useXKB);
-	void				updateKeysymMap(CKeyMap&);
-	void				updateKeysymMapXKB(CKeyMap&);
+	void				updateKeysymMap(synergy::KeyMap&);
+	void				updateKeysymMapXKB(synergy::KeyMap&);
 	bool				hasModifiersXKB() const;
 	int					getEffectiveGroup(KeyCode, int group) const;
 	UInt32				getGroupFromState(unsigned int state) const;
 
 	static void			remapKeyModifiers(KeyID, SInt32,
-							CKeyMap::KeyItem&, void*);
+							synergy::KeyMap::KeyItem&, void*);
 
 private:
 	struct XKBModifierInfo {

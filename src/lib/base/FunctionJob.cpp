@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -19,23 +19,23 @@
 #include "base/FunctionJob.h"
 
 //
-// CFunctionJob
+// FunctionJob
 //
 
-CFunctionJob::CFunctionJob(void (*func)(void*), void* arg) :
+FunctionJob::FunctionJob(void (*func)(void*), void* arg) :
 	m_func(func),
 	m_arg(arg)
 {
 	// do nothing
 }
 
-CFunctionJob::~CFunctionJob()
+FunctionJob::~FunctionJob()
 {
 	// do nothing
 }
 
 void
-CFunctionJob::run()
+FunctionJob::run()
 {
 	if (m_func != NULL) {
 		m_func(m_arg);

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2013 Bolton Software Ltd.
+ * Copyright (C) 2013 Synergy Si Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,7 +24,7 @@
 
 #include "test/global/gmock.h"
 
-class CMockPrimaryClient : public CPrimaryClient
+class MockPrimaryClient : public PrimaryClient
 {
 public:
 	MOCK_CONST_METHOD0(getEventTarget, void*());
@@ -32,7 +32,7 @@ public:
 	MOCK_CONST_METHOD2(setJumpCursorPos, void(SInt32, SInt32));
 	MOCK_METHOD1(reconfigure, void(UInt32));
 	MOCK_METHOD0(resetOptions, void());
-	MOCK_METHOD1(setOptions, void(const COptionsList&));
+	MOCK_METHOD1(setOptions, void(const OptionsList&));
 	MOCK_METHOD0(enable, void());
 	MOCK_METHOD0(disable, void());
 	MOCK_METHOD2(registerHotKey, UInt32(KeyID, KeyModifierMask));

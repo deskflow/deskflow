@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2009 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
@@ -20,29 +20,32 @@
 
 #include "platform/MSWindowsSession.h"
 #include "synergy/XSynergy.h"
+#include "arch/IArchMultithread.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <string>
 #include <list>
 
-class CThread;
-class CIpcLogOutputter;
-class CIpcServer;
+class Thread;
+class IpcLogOutputter;
+class IpcServer;
+class FileLogOutputter;
 
-class CMSWindowsWatchdog {
+class MSWindowsWatchdog {
 public:
-	CMSWindowsWatchdog(
+	MSWindowsWatchdog(
 		bool autoDetectCommand,
-		CIpcServer& ipcServer,
-		CIpcLogOutputter& ipcLogOutputter);
-	virtual ~CMSWindowsWatchdog();
+		IpcServer& ipcServer,
+		IpcLogOutputter& ipcLogOutputter);
+	virtual ~MSWindowsWatchdog();
 
 	void				startAsync();
 	std::string			getCommand() const;
 	void				setCommand(const std::string& command, bool elevate);
 	void				stop();
 	bool				isProcessActive();
+	void				setFileLogOutputter(FileLogOutputter* outputter);
 
 private:
 	void				mainLoop(void*);
@@ -52,24 +55,32 @@ private:
 	HANDLE				duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
 	HANDLE				getUserToken(LPSECURITY_ATTRIBUTES security);
 	void				startProcess();
+	BOOL				doStartProcess(String& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
 	void				sendSas();
+	void				getActiveDesktop(LPSECURITY_ATTRIBUTES security);
+	void				testOutput(String buffer);
 
 private:
-	CThread*			m_thread;
+	Thread*				m_thread;
 	bool				m_autoDetectCommand;
 	std::string			m_command;
 	bool				m_monitoring;
 	bool				m_commandChanged;
 	HANDLE				m_stdOutWrite;
 	HANDLE				m_stdOutRead;
-	CThread*			m_outputThread;
-	CIpcServer&			m_ipcServer;
-	CIpcLogOutputter&	m_ipcLogOutputter;
+	Thread*				m_outputThread;
+	IpcServer&			m_ipcServer;
+	IpcLogOutputter&	m_ipcLogOutputter;
 	bool				m_elevateProcess;
-	CMSWindowsSession	m_session;
+	MSWindowsSession	m_session;
 	PROCESS_INFORMATION m_processInfo;
 	int					m_processFailures;
 	bool				m_processRunning;
+	FileLogOutputter*	m_fileLogOutputter;
+	bool				m_autoElevated;
+	ArchMutex			m_mutex;
+	ArchCond			m_condVar;
+	bool				m_ready;
 };
 
 //! Relauncher error
@@ -78,8 +89,8 @@ An error occured in the process watchdog.
 */
 class XMSWindowsWatchdogError : public XSynergy {
 public:
-	XMSWindowsWatchdogError(const CString& msg) : XSynergy(msg) { }
+	XMSWindowsWatchdogError(const String& msg) : XSynergy(msg) { }
 
 	// XBase overrides
-	virtual CString		getWhat() const throw() { return what(); }
+	virtual String		getWhat() const throw() { return what(); }
 };

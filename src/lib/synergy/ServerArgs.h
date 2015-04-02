@@ -19,14 +19,14 @@
 
 #include "synergy/ArgsBase.h"
 
-class CNetworkAddress;
-class CConfig;
+class NetworkAddress;
+class Config;
 
-class CServerArgs : public CArgsBase {
+class ServerArgs : public ArgsBase {
 public:
-	CServerArgs();
+	ServerArgs();
 
 public:
-	CString				m_configFile;
-	CConfig*			m_config;
+	String				m_configFile;
+	Config*			m_config;
 };

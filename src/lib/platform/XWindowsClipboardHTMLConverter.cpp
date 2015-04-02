@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,47 +21,47 @@
 #include "base/Unicode.h"
 
 //
-// CXWindowsClipboardHTMLConverter
+// XWindowsClipboardHTMLConverter
 //
 
-CXWindowsClipboardHTMLConverter::CXWindowsClipboardHTMLConverter(
+XWindowsClipboardHTMLConverter::XWindowsClipboardHTMLConverter(
 				Display* display, const char* name) :
 	m_atom(XInternAtom(display, name, False))
 {
 	// do nothing
 }
 
-CXWindowsClipboardHTMLConverter::~CXWindowsClipboardHTMLConverter()
+XWindowsClipboardHTMLConverter::~XWindowsClipboardHTMLConverter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-CXWindowsClipboardHTMLConverter::getFormat() const
+XWindowsClipboardHTMLConverter::getFormat() const
 {
 	return IClipboard::kHTML;
 }
 
 Atom
-CXWindowsClipboardHTMLConverter::getAtom() const
+XWindowsClipboardHTMLConverter::getAtom() const
 {
 	return m_atom;
 }
 
 int
-CXWindowsClipboardHTMLConverter::getDataSize() const
+XWindowsClipboardHTMLConverter::getDataSize() const
 {
 	return 8;
 }
 
-CString
-CXWindowsClipboardHTMLConverter::fromIClipboard(const CString& data) const
+String
+XWindowsClipboardHTMLConverter::fromIClipboard(const String& data) const
 {
-	return CUnicode::UTF8ToUTF16(data);
+	return Unicode::UTF8ToUTF16(data);
 }
 
-CString
-CXWindowsClipboardHTMLConverter::toIClipboard(const CString& data) const
+String
+XWindowsClipboardHTMLConverter::toIClipboard(const String& data) const
 {
-	return CUnicode::UTF16ToUTF8(data);
+	return Unicode::UTF16ToUTF8(data);
 }

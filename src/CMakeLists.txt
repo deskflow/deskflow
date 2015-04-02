@@ -1,5 +1,5 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012 Bolton Software Ltd.
+# Copyright (C) 2012 Synergy Si Ltd.
 # Copyright (C) 2011 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@
 
 add_subdirectory(lib)
 add_subdirectory(cmd)
-add_subdirectory(plugin)
 add_subdirectory(micro)
 
 if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "IRIX")

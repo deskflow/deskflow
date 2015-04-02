@@ -1,5 +1,5 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012 Bolton Software Ltd.
+# Copyright (C) 2012 Synergy Si Ltd.
 # Copyright (C) 2009 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
@@ -23,7 +23,6 @@ endif()
 
 include_directories(
 	../
-	../../../ext
 )
 
 if (UNIX)
@@ -33,7 +32,3 @@ if (UNIX)
 endif()
 
 add_library(io STATIC ${sources})
-
-if (UNIX)
-	target_link_libraries(io cryptopp)
-endif()

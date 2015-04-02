@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -153,7 +153,7 @@ public:
 	Set options to given values.  Ignore unknown options and don't
 	modify our options that aren't given in \c options.
 	*/
-	virtual void		setOptions(const COptionsList& options) = 0;
+	virtual void		setOptions(const OptionsList& options) = 0;
 
 	//@}
 	//! @name accessors
@@ -163,7 +163,7 @@ public:
 	/*!
 	Return the client's name.
 	*/
-	virtual CString		getName() const = 0;
+	virtual String		getName() const = 0;
 
 	//@}
 

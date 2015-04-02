@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -26,20 +26,20 @@
 class IEventQueue;
 
 //! Event queue buffer for Win32
-class CMSWindowsEventQueueBuffer : public IEventQueueBuffer {
+class MSWindowsEventQueueBuffer : public IEventQueueBuffer {
 public:
-	CMSWindowsEventQueueBuffer(IEventQueue* events);
-	virtual ~CMSWindowsEventQueueBuffer();
+	MSWindowsEventQueueBuffer(IEventQueue* events);
+	virtual ~MSWindowsEventQueueBuffer();
 
 	// IEventQueueBuffer overrides
 	virtual	void		init() { }
 	virtual void		waitForEvent(double timeout);
-	virtual Type		getEvent(CEvent& event, UInt32& dataID);
+	virtual Type		getEvent(Event& event, UInt32& dataID);
 	virtual bool		addEvent(UInt32 dataID);
 	virtual bool		isEmpty() const;
-	virtual CEventQueueTimer*
+	virtual EventQueueTimer*
 						newTimer(double duration, bool oneShot) const;
-	virtual void		deleteTimer(CEventQueueTimer*) const;
+	virtual void		deleteTimer(EventQueueTimer*) const;
 
 private:
 	DWORD				m_thread;

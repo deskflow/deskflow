@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,11 +21,11 @@
 #include "platform/MSWindowsClipboardAnyTextConverter.h"
 
 //! Convert to/from HTML encoding
-class CMSWindowsClipboardHTMLConverter :
-				public CMSWindowsClipboardAnyTextConverter {
+class MSWindowsClipboardHTMLConverter :
+				public MSWindowsClipboardAnyTextConverter {
 public:
-	CMSWindowsClipboardHTMLConverter();
-	virtual ~CMSWindowsClipboardHTMLConverter();
+	MSWindowsClipboardHTMLConverter();
+	virtual ~MSWindowsClipboardHTMLConverter();
 
 	// IMSWindowsClipboardConverter overrides
 	virtual IClipboard::EFormat
@@ -33,12 +33,12 @@ public:
 	virtual UINT		getWin32Format() const;
 
 protected:
-	// CMSWindowsClipboardAnyTextConverter overrides
-	virtual CString		doFromIClipboard(const CString&) const;
-	virtual CString		doToIClipboard(const CString&) const;
+	// MSWindowsClipboardAnyTextConverter overrides
+	virtual String		doFromIClipboard(const String&) const;
+	virtual String		doToIClipboard(const String&) const;
 
 private:
-	CString				findArg(const CString& data, const CString& name) const;
+	String				findArg(const String& data, const String& name) const;
 
 private:
 	UINT				m_format;

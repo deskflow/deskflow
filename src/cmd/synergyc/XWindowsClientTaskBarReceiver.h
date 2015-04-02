@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -20,14 +20,14 @@
 
 #include "synergy/ClientTaskBarReceiver.h"
 
-class CBufferedLogOutputter;
+class BufferedLogOutputter;
 class IEventQueue;
 
-//! Implementation of CClientTaskBarReceiver for X Windows
-class CXWindowsClientTaskBarReceiver : public CClientTaskBarReceiver {
+//! Implementation of ClientTaskBarReceiver for X Windows
+class CXWindowsClientTaskBarReceiver : public ClientTaskBarReceiver {
 public:
 	CXWindowsClientTaskBarReceiver(
-		const CBufferedLogOutputter*, IEventQueue* events);
+		const BufferedLogOutputter*, IEventQueue* events);
 	virtual ~CXWindowsClientTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides

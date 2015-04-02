@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
 
 #include "mt/Thread.h"
 
+#include "net/XSocket.h"
 #include "mt/XMT.h"
 #include "mt/XThread.h"
 #include "arch/Arch.h"
@@ -25,12 +26,12 @@
 #include "base/IJob.h"
 
 //
-// CThread
+// Thread
 //
 
-CThread::CThread(IJob* job)
+Thread::Thread(IJob* job)
 {
-	m_thread = ARCH->newThread(&CThread::threadFunc, job);
+	m_thread = ARCH->newThread(&Thread::threadFunc, job);
 	if (m_thread == NULL) {
 		// couldn't create thread
 		delete job;
@@ -38,26 +39,26 @@ CThread::CThread(IJob* job)
 	}
 }
 
-CThread::CThread(const CThread& thread)
+Thread::Thread(const Thread& thread)
 {
 	m_thread = ARCH->copyThread(thread.m_thread);
 }
 
-CThread::CThread(CArchThread adoptedThread)
+Thread::Thread(ArchThread adoptedThread)
 {
 	m_thread = adoptedThread;
 }
 
-CThread::~CThread()
+Thread::~Thread()
 {
 	ARCH->closeThread(m_thread);
 }
 
-CThread&
-CThread::operator=(const CThread& thread)
+Thread&
+Thread::operator=(const Thread& thread)
 {
 	// copy given thread and release ours
-	CArchThread copy = ARCH->copyThread(thread.m_thread);
+	ArchThread copy = ARCH->copyThread(thread.m_thread);
 	ARCH->closeThread(m_thread);
 
 	// cut over
@@ -67,49 +68,49 @@ CThread::operator=(const CThread& thread)
 }
 
 void
-CThread::exit(void* result)
+Thread::exit(void* result)
 {
 	throw XThreadExit(result);
 }
 
 void
-CThread::cancel()
+Thread::cancel()
 {
 	ARCH->cancelThread(m_thread);
 }
 
 void
-CThread::setPriority(int n)
+Thread::setPriority(int n)
 {
 	ARCH->setPriorityOfThread(m_thread, n);
 }
 
 void
-CThread::unblockPollSocket()
+Thread::unblockPollSocket()
 {
 	ARCH->unblockPollSocket(m_thread);
 }
 
-CThread
-CThread::getCurrentThread()
+Thread
+Thread::getCurrentThread()
 {
-	return CThread(ARCH->newCurrentThread());
+	return Thread(ARCH->newCurrentThread());
 }
 
 void
-CThread::testCancel()
+Thread::testCancel()
 {
 	ARCH->testCancelThread();
 }
 
 bool
-CThread::wait(double timeout) const
+Thread::wait(double timeout) const
 {
 	return ARCH->wait(m_thread, timeout);
 }
 
 void*
-CThread::getResult() const
+Thread::getResult() const
 {
 	if (wait())
 		return ARCH->getResultOfThread(m_thread);
@@ -118,30 +119,30 @@ CThread::getResult() const
 }
 
 IArchMultithread::ThreadID
-CThread::getID() const
+Thread::getID() const
 {
 	return ARCH->getIDOfThread(m_thread);
 }
 
 bool
-CThread::operator==(const CThread& thread) const
+Thread::operator==(const Thread& thread) const
 {
 	return ARCH->isSameThread(m_thread, thread.m_thread);
 }
 
 bool
-CThread::operator!=(const CThread& thread) const
+Thread::operator!=(const Thread& thread) const
 {
 	return !ARCH->isSameThread(m_thread, thread.m_thread);
 }
 
 void*
-CThread::threadFunc(void* vjob)
+Thread::threadFunc(void* vjob)
 {
 	// get this thread's id for logging
 	IArchMultithread::ThreadID id;
 	{
-		CArchThread thread = ARCH->newCurrentThread();
+		ArchThread thread = ARCH->newCurrentThread();
 		id = ARCH->getIDOfThread(thread);
 		ARCH->closeThread(thread);
 	}
@@ -158,6 +159,10 @@ CThread::threadFunc(void* vjob)
 		LOG((CLOG_DEBUG1 "thread 0x%08x exit", id));
 	}
 
+	catch (XSocket& e) {
+		// client called cancel()
+		LOG((CLOG_DEBUG "%s", e.what()));
+	}
 	catch (XThreadCancel&) {
 		// client called cancel()
 		LOG((CLOG_DEBUG1 "caught cancel on thread 0x%08x", id));

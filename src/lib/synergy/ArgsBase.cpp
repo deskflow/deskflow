@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2012 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 
 #include "synergy/ArgsBase.h"
 
-CArgsBase::CArgsBase() :
+ArgsBase::ArgsBase() :
 #if SYSAPI_WIN32
 m_daemon(false), // daemon mode not supported on windows (use --service)
 m_debugServiceWait(false),
@@ -41,10 +41,13 @@ m_disableTray(false),
 m_enableIpc(false),
 m_enableDragDrop(false),
 m_shouldExit(false),
-m_synergyAddress()
+m_synergyAddress(),
+m_enableCrypto(false),
+m_profileDirectory(""),
+m_pluginDirectory("")
 {
 }
 
-CArgsBase::~CArgsBase()
+ArgsBase::~ArgsBase()
 {
 }

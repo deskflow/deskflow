@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -118,6 +118,7 @@ static WPARAM			g_deadVirtKey     = 0;
 static WPARAM			g_deadRelease     = 0;
 static LPARAM			g_deadLParam      = 0;
 static BYTE				g_deadKeyState[256] = { 0 };
+static BYTE				g_keyState[256]   = { 0 };
 static DWORD			g_hookThread      = 0;
 static DWORD			g_attachedThread  = 0;
 static bool				g_fakeInput       = false;
@@ -192,17 +193,41 @@ makeKeyMsg(UINT virtKey, char c, bool noAltGr)
 
 static
 void
-keyboardGetState(BYTE keys[256])
+keyboardGetState(BYTE keys[256], DWORD vkCode, bool kf_up)
 {
 	// we have to use GetAsyncKeyState() rather than GetKeyState() because
 	// we don't pass through most keys so the event synchronous state
 	// doesn't get updated.  we do that because certain modifier keys have
 	// side effects, like alt and the windows key.
-	SHORT key;
-	for (int i = 0; i < 256; ++i) {
-		key     = GetAsyncKeyState(i);
-		keys[i] = (BYTE)((key < 0) ? 0x80u : 0);
+	if (vkCode < 0 || vkCode >= 256) {
+		return;
 	}
+
+	// Keep track of key state on our own in case GetAsyncKeyState() fails
+	g_keyState[vkCode] = kf_up ? 0 : 0x80;
+	g_keyState[VK_SHIFT] = g_keyState[VK_LSHIFT] | g_keyState[VK_RSHIFT];
+
+	SHORT key;
+	// Test whether GetAsyncKeyState() is being honest with us
+	key = GetAsyncKeyState(vkCode);
+
+	if (key & 0x80) {
+		// The only time we know for sure that GetAsyncKeyState() is working 
+		// is when it tells us that the current key is down.
+		// In this case, update g_keyState to reflect what GetAsyncKeyState()
+		// is telling us, just in case we have gotten out of sync
+
+		for (int i = 0; i < 256; ++i) {
+			key = GetAsyncKeyState(i);
+			g_keyState[i] = (BYTE)((key < 0) ? 0x80u : 0);
+		}
+	}
+
+	// copy g_keyState to keys
+	for (int i = 0; i < 256; ++i) {
+		keys[i] = g_keyState[i];
+	}
+
 	key = GetKeyState(VK_CAPITAL);
 	keys[VK_CAPITAL] = (BYTE)(((key < 0) ? 0x80 : 0) | (key & 1));
 }
@@ -211,6 +236,9 @@ static
 bool
 doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
+	DWORD vkCode = static_cast<DWORD>(wParam);
+	bool kf_up = (lParam & (KF_UP << 16)) != 0;
+
 	// check for special events indicating if we should start or stop
 	// passing events through and not report them to the server.  this
 	// is used to allow the server to synthesize events locally but
@@ -254,7 +282,7 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 
 	// we need the keyboard state for ToAscii()
 	BYTE keys[256];
-	keyboardGetState(keys);
+	keyboardGetState(keys, vkCode, kf_up);
 
 	// ToAscii() maps ctrl+letter to the corresponding control code
 	// and ctrl+backspace to delete.  we don't want those translations
@@ -526,7 +554,7 @@ doMouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 			// outside of the screen.  jeez.  naturally we end up getting
 			// fake motion in the other direction to get the position back
 			// on the screen, which plays havoc with switch on double tap.
-			// CServer deals with that.  we'll clamp positions onto the
+			// Server deals with that.  we'll clamp positions onto the
 			// screen.  also, if we discard events for positions outside
 			// of the screen then the mouse appears to get a bit jerky
 			// near the edge.  we can either accept that or pass the bogus

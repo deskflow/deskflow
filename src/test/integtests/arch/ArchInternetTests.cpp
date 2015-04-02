@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Bolton Software Ltd.
+ * Copyright (C) 2014 Synergy Si Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,13 +25,13 @@
 TEST(ArchInternetTests, get)
 {
 	ARCH_INTERNET internet;
-	CString result = internet.get(TEST_URL);
+	String result = internet.get(TEST_URL);
 	ASSERT_EQ("Hello world!", result);
 }
 
 TEST(ArchInternetTests, urlEncode)
 {
 	ARCH_INTERNET internet;
-	CString result = internet.urlEncode("hello=+&world");
+	String result = internet.urlEncode("hello=+&world");
 	ASSERT_EQ("hello%3D%2B%26world", result);
 }

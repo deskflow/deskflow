@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Bolton Software Ltd.
+ * Copyright (C) 2014 Synergy Si Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,6 +26,12 @@
 #define _MSL_STDINT_H
 #include <stdint.h>
 #include <dns_sd.h>
+
+static const QStringList preferedIPAddress(
+				QStringList() <<
+				"192.168." <<
+				"10." <<
+				"172.");
 
 const char* ZeroconfService:: m_ServerServiceName = "_synergyServerZeroconf._tcp";
 const char* ZeroconfService:: m_ClientServiceName = "_synergyClientZeroconf._tcp";
@@ -73,13 +79,9 @@ void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
 {
 	foreach (ZeroconfRecord record, list) {
 		registerService(false);
-		m_pMainWindow->m_pLineEditHostname->setText(record.serviceName);
 		m_pMainWindow->appendLogNote(tr("zeroconf server detected: %1").arg(
 			record.serviceName));
-	}
-
-	if (!list.isEmpty()) {
-		m_pMainWindow->startSynergy();
+		m_pMainWindow->serverDetected(record.serviceName);
 	}
 }
 
@@ -89,10 +91,6 @@ void ZeroconfService::clientDetected(const QList<ZeroconfRecord>& list)
 		m_pMainWindow->appendLogNote(tr("zeroconf client detected: %1").arg(
 			record.serviceName));
 		m_pMainWindow->autoAddScreen(record.serviceName);
-	}
-
-	if (!list.isEmpty()) {
-		m_pMainWindow->startSynergy();
 	}
 }
 
@@ -104,10 +102,22 @@ void ZeroconfService::errorHandle(DNSServiceErrorType errorCode)
 
 QString ZeroconfService::getLocalIPAddresses()
 {
+	QStringList addresses;
 	foreach (const QHostAddress& address, QNetworkInterface::allAddresses()) {
-		if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost))
-			 return address.toString();
+		if (address.protocol() == QAbstractSocket::IPv4Protocol &&
+			address != QHostAddress(QHostAddress::LocalHost)) {
+			addresses.append(address.toString());
+		}
 	}
+
+	foreach (const QString& preferedIP, preferedIPAddress) {
+		foreach (const QString& address, addresses) {
+			if (address.startsWith(preferedIP)) {
+				return address;
+			}
+		}
+	}
+
 	return "";
 }
 
@@ -125,10 +135,19 @@ bool ZeroconfService::registerService(bool server)
 		else {
 			m_pZeroconfRegister = new ZeroconfRegister(this);
 			if (server) {
-				m_pZeroconfRegister->registerService(
-					ZeroconfRecord(tr("%1").arg(getLocalIPAddresses()),
-					QLatin1String(m_ServerServiceName), QString()),
-					m_zeroconfServer.serverPort());
+				QString localIP = getLocalIPAddresses();
+				if (localIP.isEmpty()) {
+					QMessageBox::warning(m_pMainWindow, tr("Synergy"),
+						tr("Failed to get local IP address. "
+						   "Please manually type in server address "
+						   "on your clients"));
+				}
+				else {
+					m_pZeroconfRegister->registerService(
+						ZeroconfRecord(tr("%1").arg(localIP),
+						QLatin1String(m_ServerServiceName), QString()),
+						m_zeroconfServer.serverPort());
+				}
 			}
 			else {
 				m_pZeroconfRegister->registerService(

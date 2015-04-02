@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,10 +21,10 @@
 #include "server/ClientProxy1_0.h"
 
 //! Proxy for client implementing protocol version 1.1
-class CClientProxy1_1 : public CClientProxy1_0 {
+class ClientProxy1_1 : public ClientProxy1_0 {
 public:
-	CClientProxy1_1(const CString& name, synergy::IStream* adoptedStream, IEventQueue* events);
-	~CClientProxy1_1();
+	ClientProxy1_1(const String& name, synergy::IStream* adoptedStream, IEventQueue* events);
+	~ClientProxy1_1();
 
 	// IClient overrides
 	virtual void		keyDown(KeyID, KeyModifierMask, KeyButton);

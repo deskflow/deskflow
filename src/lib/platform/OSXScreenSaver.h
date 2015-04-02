@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -25,10 +25,10 @@
 class IEventQueue;
 
 //! OSX screen saver implementation
-class COSXScreenSaver : public IScreenSaver {
+class OSXScreenSaver : public IScreenSaver {
 public:
-	COSXScreenSaver(IEventQueue* events, void* eventTarget);
-	virtual ~COSXScreenSaver();
+	OSXScreenSaver(IEventQueue* events, void* eventTarget);
+	virtual ~OSXScreenSaver();
 
 	// IScreenSaver overrides
 	virtual void		enable();

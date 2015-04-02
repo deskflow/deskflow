@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -62,22 +62,22 @@
 
 #define RETRY_TIME 1.0
 
-CClientApp::CClientApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
-	CApp(events, createTaskBarReceiver, new CClientArgs()),
+ClientApp::ClientApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
+	App(events, createTaskBarReceiver, new ClientArgs()),
 	m_client(NULL),
 	m_clientScreen(NULL),
 	m_serverAddress(NULL)
 {
 }
 
-CClientApp::~CClientApp()
+ClientApp::~ClientApp()
 {
 }
 
 void
-CClientApp::parseArgs(int argc, const char* const* argv)
+ClientApp::parseArgs(int argc, const char* const* argv)
 {
-	CArgParser argParser(this);
+	ArgParser argParser(this);
 	bool result = argParser.parseClientArgs(args(), argc, argv);
 
 	if (!result || args().m_shouldExit) {
@@ -87,7 +87,7 @@ CClientApp::parseArgs(int argc, const char* const* argv)
 		// save server address
 		if (!args().m_synergyAddress.empty()) {
 			try {
-				*m_serverAddress = CNetworkAddress(args().m_synergyAddress, kDefaultPort);
+				*m_serverAddress = NetworkAddress(args().m_synergyAddress, kDefaultPort);
 				m_serverAddress->resolve();
 			}
 			catch (XSocketAddress& e) {
@@ -106,7 +106,7 @@ CClientApp::parseArgs(int argc, const char* const* argv)
 }
 
 void
-CClientApp::help()
+ClientApp::help()
 {
 #if WINAPI_XWINDOWS
 #  define WINAPI_ARG \
@@ -150,7 +150,7 @@ CClientApp::help()
 }
 
 const char*
-CClientApp::daemonName() const
+ClientApp::daemonName() const
 {
 #if SYSAPI_WIN32
 	return "Synergy Client";
@@ -160,7 +160,7 @@ CClientApp::daemonName() const
 }
 
 const char*
-CClientApp::daemonInfo() const
+ClientApp::daemonInfo() const
 {
 #if SYSAPI_WIN32
 	return "Allows another computer to share it's keyboard and mouse with this computer.";
@@ -169,30 +169,30 @@ CClientApp::daemonInfo() const
 #endif
 }
 
-CScreen*
-CClientApp::createScreen()
+synergy::Screen*
+ClientApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
-	return new CScreen(new CMSWindowsScreen(
+	return new synergy::Screen(new MSWindowsScreen(
 		false, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
 #elif WINAPI_XWINDOWS
-	return new CScreen(new CXWindowsScreen(
+	return new synergy::Screen(new XWindowsScreen(
 		args().m_display, false, args().m_disableXInitThreads,
 		args().m_yscroll, m_events), m_events);
 #elif WINAPI_CARBON
-	return new CScreen(new COSXScreen(m_events, false), m_events);
+	return new synergy::Screen(new OSXScreen(m_events, false), m_events);
 #endif
 }
 
 void
-CClientApp::updateStatus()
+ClientApp::updateStatus()
 {
 	updateStatus("");
 }
 
 
 void
-CClientApp::updateStatus(const CString& msg)
+ClientApp::updateStatus(const String& msg)
 {
 	if (m_taskBarReceiver)
 	{
@@ -202,7 +202,7 @@ CClientApp::updateStatus(const CString& msg)
 
 
 void
-CClientApp::resetRestartTimeout()
+ClientApp::resetRestartTimeout()
 {
 	// retry time can nolonger be changed
 	//s_retryTime = 0.0;
@@ -210,7 +210,7 @@ CClientApp::resetRestartTimeout()
 
 
 double
-CClientApp::nextRestartTimeout()
+ClientApp::nextRestartTimeout()
 {
 	// retry at a constant rate (Issue 52)
 	return RETRY_TIME;
@@ -233,28 +233,28 @@ CClientApp::nextRestartTimeout()
 
 
 void
-CClientApp::handleScreenError(const CEvent&, void*)
+ClientApp::handleScreenError(const Event&, void*)
 {
 	LOG((CLOG_CRIT "error on screen"));
-	m_events->addEvent(CEvent(CEvent::kQuit));
+	m_events->addEvent(Event(Event::kQuit));
 }
 
 
-CScreen*
-CClientApp::openClientScreen()
+synergy::Screen*
+ClientApp::openClientScreen()
 {
-	CScreen* screen = createScreen();
+	synergy::Screen* screen = createScreen();
 	screen->setEnableDragDrop(argsBase().m_enableDragDrop);
 	m_events->adoptHandler(m_events->forIScreen().error(),
 		screen->getEventTarget(),
-		new TMethodEventJob<CClientApp>(
-		this, &CClientApp::handleScreenError));
+		new TMethodEventJob<ClientApp>(
+		this, &ClientApp::handleScreenError));
 	return screen;
 }
 
 
 void
-CClientApp::closeClientScreen(CScreen* screen)
+ClientApp::closeClientScreen(synergy::Screen* screen)
 {
 	if (screen != NULL) {
 		m_events->removeHandler(m_events->forIScreen().error(),
@@ -265,12 +265,12 @@ CClientApp::closeClientScreen(CScreen* screen)
 
 
 void
-CClientApp::handleClientRestart(const CEvent&, void* vtimer)
+ClientApp::handleClientRestart(const Event&, void* vtimer)
 {
 	// discard old timer
-	CEventQueueTimer* timer = reinterpret_cast<CEventQueueTimer*>(vtimer);
+	EventQueueTimer* timer = reinterpret_cast<EventQueueTimer*>(vtimer);
 	m_events->deleteTimer(timer);
-	m_events->removeHandler(CEvent::kTimer, timer);
+	m_events->removeHandler(Event::kTimer, timer);
 
 	// reconnect
 	startClient();
@@ -278,18 +278,18 @@ CClientApp::handleClientRestart(const CEvent&, void* vtimer)
 
 
 void
-CClientApp::scheduleClientRestart(double retryTime)
+ClientApp::scheduleClientRestart(double retryTime)
 {
 	// install a timer and handler to retry later
 	LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-	CEventQueueTimer* timer = m_events->newOneShotTimer(retryTime, NULL);
-	m_events->adoptHandler(CEvent::kTimer, timer,
-		new TMethodEventJob<CClientApp>(this, &CClientApp::handleClientRestart, timer));
+	EventQueueTimer* timer = m_events->newOneShotTimer(retryTime, NULL);
+	m_events->adoptHandler(Event::kTimer, timer,
+		new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientRestart, timer));
 }
 
 
 void
-CClientApp::handleClientConnected(const CEvent&, void*)
+ClientApp::handleClientConnected(const Event&, void*)
 {
 	LOG((CLOG_NOTE "connected to server"));
 	resetRestartTimeout();
@@ -298,15 +298,15 @@ CClientApp::handleClientConnected(const CEvent&, void*)
 
 
 void
-CClientApp::handleClientFailed(const CEvent& e, void*)
+ClientApp::handleClientFailed(const Event& e, void*)
 {
-	CClient::CFailInfo* info =
-		reinterpret_cast<CClient::CFailInfo*>(e.getData());
+	Client::FailInfo* info =
+		reinterpret_cast<Client::FailInfo*>(e.getData());
 
-	updateStatus(CString("Failed to connect to server: ") + info->m_what);
+	updateStatus(String("Failed to connect to server: ") + info->m_what);
 	if (!args().m_restartable || !info->m_retry) {
 		LOG((CLOG_ERR "failed to connect to server: %s", info->m_what.c_str()));
-		m_events->addEvent(CEvent(CEvent::kQuit));
+		m_events->addEvent(Event(Event::kQuit));
 	}
 	else {
 		LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
@@ -319,47 +319,47 @@ CClientApp::handleClientFailed(const CEvent& e, void*)
 
 
 void
-CClientApp::handleClientDisconnected(const CEvent&, void*)
+ClientApp::handleClientDisconnected(const Event&, void*)
 {
 	LOG((CLOG_NOTE "disconnected from server"));
 	if (!args().m_restartable) {
-		m_events->addEvent(CEvent(CEvent::kQuit));
+		m_events->addEvent(Event(Event::kQuit));
 	}
 	else if (!m_suspended) {
-		m_client->connect();
+		scheduleClientRestart(nextRestartTimeout());
 	}
 	updateStatus();
 }
 
 
-CClient*
-CClientApp::openClient(const CString& name, const CNetworkAddress& address, CScreen* screen, const CCryptoOptions& crypto)
+Client*
+ClientApp::openClient(const String& name, const NetworkAddress& address,
+				synergy::Screen* screen)
 {
-	CClient* client = new CClient(
+	Client* client = new Client(
 		m_events,
 		name,
 		address,
-		new CTCPSocketFactory(m_events, getSocketMultiplexer()),
-		NULL,
+		new TCPSocketFactory(m_events, getSocketMultiplexer()),
 		screen,
-		crypto,
-		args().m_enableDragDrop);
+		args().m_enableDragDrop,
+		args().m_enableCrypto);
 
 	try {
 		m_events->adoptHandler(
-			m_events->forCClient().connected(),
+			m_events->forClient().connected(),
 			client->getEventTarget(),
-			new TMethodEventJob<CClientApp>(this, &CClientApp::handleClientConnected));
+			new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientConnected));
 
 		m_events->adoptHandler(
-			m_events->forCClient().connectionFailed(),
+			m_events->forClient().connectionFailed(),
 			client->getEventTarget(),
-			new TMethodEventJob<CClientApp>(this, &CClientApp::handleClientFailed));
+			new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientFailed));
 
 		m_events->adoptHandler(
-			m_events->forCClient().disconnected(),
+			m_events->forClient().disconnected(),
 			client->getEventTarget(),
-			new TMethodEventJob<CClientApp>(this, &CClientApp::handleClientDisconnected));
+			new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientDisconnected));
 
 	} catch (std::bad_alloc &ba) {
 		delete client;
@@ -371,20 +371,20 @@ CClientApp::openClient(const CString& name, const CNetworkAddress& address, CScr
 
 
 void
-CClientApp::closeClient(CClient* client)
+ClientApp::closeClient(Client* client)
 {
 	if (client == NULL) {
 		return;
 	}
 
-	m_events->removeHandler(m_events->forCClient().connected(), client);
-	m_events->removeHandler(m_events->forCClient().connectionFailed(), client);
-	m_events->removeHandler(m_events->forCClient().disconnected(), client);
+	m_events->removeHandler(m_events->forClient().connected(), client);
+	m_events->removeHandler(m_events->forClient().connectionFailed(), client);
+	m_events->removeHandler(m_events->forClient().disconnected(), client);
 	delete client;
 }
 
 int
-CClientApp::foregroundStartup(int argc, char** argv)
+ClientApp::foregroundStartup(int argc, char** argv)
 {
 	initApp(argc, argv);
 
@@ -393,15 +393,15 @@ CClientApp::foregroundStartup(int argc, char** argv)
 }
 
 bool
-CClientApp::startClient()
+ClientApp::startClient()
 {
 	double retryTime;
-	CScreen* clientScreen = NULL;
+	synergy::Screen* clientScreen = NULL;
 	try {
 		if (m_clientScreen == NULL) {
 			clientScreen = openClientScreen();
 			m_client     = openClient(args().m_name,
-				*m_serverAddress, clientScreen, args().m_crypto);
+				*m_serverAddress, clientScreen);
 			m_clientScreen  = clientScreen;
 			LOG((CLOG_NOTE "started client"));
 		}
@@ -414,7 +414,7 @@ CClientApp::startClient()
 	catch (XScreenUnavailable& e) {
 		LOG((CLOG_WARN "secondary screen unavailable: %s", e.what()));
 		closeClientScreen(clientScreen);
-		updateStatus(CString("secondary screen unavailable: ") + e.what());
+		updateStatus(String("secondary screen unavailable: ") + e.what());
 		retryTime = e.getRetryTime();
 	}
 	catch (XScreenOpenFailure& e) {
@@ -440,7 +440,7 @@ CClientApp::startClient()
 
 
 void
-CClientApp::stopClient()
+ClientApp::stopClient()
 {
 	closeClient(m_client);
 	closeClientScreen(m_clientScreen);
@@ -450,12 +450,17 @@ CClientApp::stopClient()
 
 
 int
-CClientApp::mainLoop()
+ClientApp::mainLoop()
 {
 	// create socket multiplexer.  this must happen after daemonization
 	// on unix because threads evaporate across a fork().
-	CSocketMultiplexer multiplexer;
+	SocketMultiplexer multiplexer;
 	setSocketMultiplexer(&multiplexer);
+
+	// load all available plugins.
+	ARCH->plugin().load();
+	// pass log and arch into plugins.
+	ARCH->plugin().init(Log::getInstance(), Arch::getInstance());
 
 	// start client, etc
 	appUtil().startNode();
@@ -466,8 +471,8 @@ CClientApp::mainLoop()
 		initIpcClient();
 	}
 
-	// load all available plugins.
-	ARCH->plugin().init(m_clientScreen->getEventTarget(), m_events);
+	// init event for all available plugins.
+	ARCH->plugin().initEvent(m_clientScreen->getEventTarget(), m_events);
 
 	// run event loop.  if startClient() failed we're supposed to retry
 	// later.  the timer installed by startClient() will take care of
@@ -476,13 +481,13 @@ CClientApp::mainLoop()
 	
 #if defined(MAC_OS_X_VERSION_10_7)
 	
-	CThread thread(
-		new TMethodJob<CClientApp>(
-			this, &CClientApp::runEventsLoop,
+	Thread thread(
+		new TMethodJob<ClientApp>(
+			this, &ClientApp::runEventsLoop,
 			NULL));
 	
 	// wait until carbon loop is ready
-	COSXScreen* screen = dynamic_cast<COSXScreen*>(
+	OSXScreen* screen = dynamic_cast<OSXScreen*>(
 		m_clientScreen->getPlatformScreen());
 	screen->waitForCarbonLoop();
 	
@@ -503,6 +508,9 @@ CClientApp::mainLoop()
 		cleanupIpcClient();
 	}
 
+	// unload all plugins.
+	ARCH->plugin().unload();
+
 	return kExitSuccess;
 }
 
@@ -510,11 +518,11 @@ static
 int
 daemonMainLoopStatic(int argc, const char** argv)
 {
-	return CClientApp::instance().daemonMainLoop(argc, argv);
+	return ClientApp::instance().daemonMainLoop(argc, argv);
 }
 
 int
-CClientApp::standardStartup(int argc, char** argv)
+ClientApp::standardStartup(int argc, char** argv)
 {
 	initApp(argc, argv);
 
@@ -528,10 +536,10 @@ CClientApp::standardStartup(int argc, char** argv)
 }
 
 int
-CClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
+ClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
 	// general initialization
-	m_serverAddress = new CNetworkAddress;
+	m_serverAddress = new NetworkAddress;
 	args().m_pname         = ARCH->getBasename(argv[0]);
 
 	// install caller's output filter
@@ -562,7 +570,7 @@ CClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
 }
 
 void 
-CClientApp::startNode()
+ClientApp::startNode()
 {
 	// start the client.  if this return false then we've failed and
 	// we shouldn't retry.

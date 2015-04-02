@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -19,30 +19,30 @@
 #include "platform/MSWindowsClipboardAnyTextConverter.h"
 
 //
-// CMSWindowsClipboardAnyTextConverter
+// MSWindowsClipboardAnyTextConverter
 //
 
-CMSWindowsClipboardAnyTextConverter::CMSWindowsClipboardAnyTextConverter()
+MSWindowsClipboardAnyTextConverter::MSWindowsClipboardAnyTextConverter()
 {
 	// do nothing
 }
 
-CMSWindowsClipboardAnyTextConverter::~CMSWindowsClipboardAnyTextConverter()
+MSWindowsClipboardAnyTextConverter::~MSWindowsClipboardAnyTextConverter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-CMSWindowsClipboardAnyTextConverter::getFormat() const
+MSWindowsClipboardAnyTextConverter::getFormat() const
 {
 	return IClipboard::kText;
 }
 
 HANDLE
-CMSWindowsClipboardAnyTextConverter::fromIClipboard(const CString& data) const
+MSWindowsClipboardAnyTextConverter::fromIClipboard(const String& data) const
 {
 	// convert linefeeds and then convert to desired encoding
-	CString text = doFromIClipboard(convertLinefeedToWin32(data));
+	String text = doFromIClipboard(convertLinefeedToWin32(data));
 	UInt32 size  = (UInt32)text.size();
 
 	// copy to memory handle
@@ -63,18 +63,18 @@ CMSWindowsClipboardAnyTextConverter::fromIClipboard(const CString& data) const
 	return gData;
 }
 
-CString
-CMSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const
+String
+MSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const
 {
 	// get datator
 	const char* src = (const char*)GlobalLock(data);
 	UInt32 srcSize = (UInt32)GlobalSize(data);
 	if (src == NULL || srcSize <= 1) {
-		return CString();
+		return String();
 	}
 
 	// convert text
-	CString text = doToIClipboard(CString(src, srcSize));
+	String text = doToIClipboard(String(src, srcSize));
 
 	// release handle
 	GlobalUnlock(data);
@@ -83,9 +83,9 @@ CMSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const
 	return convertLinefeedToUnix(text);
 }
 
-CString
-CMSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
-				const CString& src) const
+String
+MSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
+				const String& src) const
 {
 	// note -- we assume src is a valid UTF-8 string
 
@@ -102,7 +102,7 @@ CMSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
 	}
 
 	// allocate new string
-	CString dst;
+	String dst;
 	dst.reserve(src.size() + numNewlines);
 
 	// copy string, converting newlines
@@ -117,9 +117,9 @@ CMSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
 	return dst;
 }
 
-CString
-CMSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(
-				const CString& src) const
+String
+MSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(
+				const String& src) const
 {
 	// count newlines in string
 	UInt32 numNewlines = 0;
@@ -134,7 +134,7 @@ CMSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(
 	}
 
 	// allocate new string
-	CString dst;
+	String dst;
 	dst.reserve(src.size());
 
 	// copy string, converting newlines

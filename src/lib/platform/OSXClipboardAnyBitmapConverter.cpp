@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Bolton Software Ltd.
+ * Copyright (C) 2014 Synergy Si Ltd.
  * Patch by Ryan Chapman
  *
  * This package is free software; you can redistribute it and/or
@@ -19,30 +19,30 @@
 #include "platform/OSXClipboardAnyBitmapConverter.h"
 #include <algorithm>
 
-COSXClipboardAnyBitmapConverter::COSXClipboardAnyBitmapConverter()
+OSXClipboardAnyBitmapConverter::OSXClipboardAnyBitmapConverter()
 {
 	// do nothing
 }
 
-COSXClipboardAnyBitmapConverter::~COSXClipboardAnyBitmapConverter()
+OSXClipboardAnyBitmapConverter::~OSXClipboardAnyBitmapConverter()
 {
 	// do nothing
 }
 
 IClipboard::EFormat
-COSXClipboardAnyBitmapConverter::getFormat() const
+OSXClipboardAnyBitmapConverter::getFormat() const
 {
 	return IClipboard::kBitmap;
 }
 
-CString
-COSXClipboardAnyBitmapConverter::fromIClipboard(const CString& data) const
+String
+OSXClipboardAnyBitmapConverter::fromIClipboard(const String& data) const
 {
 	return doFromIClipboard(data);
 }
 
-CString
-COSXClipboardAnyBitmapConverter::toIClipboard(const CString& data) const
+String
+OSXClipboardAnyBitmapConverter::toIClipboard(const String& data) const
 {
 	return doToIClipboard(data);
 }

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -23,13 +23,13 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#define ARCH_LOG CArchLogWindows
+#define ARCH_LOG ArchLogWindows
 
 //! Win32 implementation of IArchLog
-class CArchLogWindows : public IArchLog {
+class ArchLogWindows : public IArchLog {
 public:
-	CArchLogWindows();
-	virtual ~CArchLogWindows();
+	ArchLogWindows();
+	virtual ~ArchLogWindows();
 
 	// IArchLog overrides
 	virtual void		openLog(const char* name);

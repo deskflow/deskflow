@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
  * This package is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
 //   2: added language page
 //   3: added premium page and removed
 //
-const int kWizardVersion = 3;
+const int kWizardVersion = 4;
 
 class QSettings;
 class SettingsDialog;
@@ -61,15 +61,20 @@ class AppConfig
 		const QString& logFilename() const { return m_LogFilename; }
 		const QString logFilenameCmd() const;
 		QString logLevelText() const;
-		const QString& cryptoPass() const { return m_CryptoPass; }
-		bool cryptoEnabled() const { return m_CryptoEnabled; }
-		QString cryptoModeString() const;
 		ProcessMode processMode() const { return m_ProcessMode; }
 		bool wizardShouldRun() const { return m_WizardLastRun < kWizardVersion; }
 		const QString& language() const { return m_Language; }
 		bool startedBefore() const { return m_StartedBefore; }
-		bool autoConnect() const { return m_AutoConnect; }
-		void setAutoConnect(bool autoConnect);
+		bool autoConfig() const { return m_AutoConfig; }
+		void setAutoConfig(bool autoConfig);
+		bool autoConfigPrompted()  { return m_AutoConfigPrompted; }
+		void setAutoConfigPrompted(bool prompted);
+		void setEdition(int e) { m_Edition = e; }
+		int edition() { return m_Edition; }
+		void setActivateEmail(QString e) { m_ActivateEmail = e; }
+		QString activateEmail() { return m_ActivateEmail; }
+		void setUserToken(QString t) { m_UserToken = t; }
+		QString userToken() { return m_UserToken; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -78,6 +83,10 @@ class AppConfig
 
 		bool detectPath(const QString& name, QString& path);
 		void persistLogDir();
+		bool elevateMode();
+
+		void setCryptoEnabled(bool e) { m_CryptoEnabled = e; }
+		bool getCryptoEnabled() { return m_CryptoEnabled; }
 
 	protected:
 		QSettings& settings() { return *m_pSettings; }
@@ -87,15 +96,13 @@ class AppConfig
 		void setLogLevel(int i) { m_LogLevel = i; }
 		void setLogToFile(bool b) { m_LogToFile = b; }
 		void setLogFilename(const QString& s) { m_LogFilename = s; }
-		void setCryptoEnabled(bool b) { m_CryptoEnabled = b; }
 		void setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
 		void setLanguage(const QString language) { m_Language = language; }
 		void setStartedBefore(bool b) { m_StartedBefore = b; }
+		void setElevateMode(bool b) { m_ElevateMode = b; }
 
 		void loadSettings();
 		void saveSettings();
-
-		void setCryptoPass(const QString& s);
 
 	private:
 		QSettings* m_pSettings;
@@ -106,12 +113,16 @@ class AppConfig
 		bool m_LogToFile;
 		QString m_LogFilename;
 		int m_WizardLastRun;
-		bool m_CryptoEnabled;
-		QString m_CryptoPass;
 		ProcessMode m_ProcessMode;
 		QString m_Language;
 		bool m_StartedBefore;
-		bool m_AutoConnect;
+		bool m_AutoConfig;
+		bool m_ElevateMode;
+		bool m_AutoConfigPrompted;
+		int m_Edition;
+		QString m_ActivateEmail;
+		QString m_UserToken;
+		bool m_CryptoEnabled;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

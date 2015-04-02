@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -27,24 +27,24 @@
 #include "base/Log.h"
 
 //
-// CMSWindowsClipboard
+// MSWindowsClipboard
 //
 
-UINT					CMSWindowsClipboard::s_ownershipFormat = 0;
+UINT					MSWindowsClipboard::s_ownershipFormat = 0;
 
-CMSWindowsClipboard::CMSWindowsClipboard(HWND window) :
+MSWindowsClipboard::MSWindowsClipboard(HWND window) :
 	m_window(window),
 	m_time(0),
-	m_facade(new CMSWindowsClipboardFacade()),
+	m_facade(new MSWindowsClipboardFacade()),
 	m_deleteFacade(true)
 {
 	// add converters, most desired first
-	m_converters.push_back(new CMSWindowsClipboardUTF16Converter);
-	m_converters.push_back(new CMSWindowsClipboardBitmapConverter);
-	m_converters.push_back(new CMSWindowsClipboardHTMLConverter);
+	m_converters.push_back(new MSWindowsClipboardUTF16Converter);
+	m_converters.push_back(new MSWindowsClipboardBitmapConverter);
+	m_converters.push_back(new MSWindowsClipboardHTMLConverter);
 }
 
-CMSWindowsClipboard::~CMSWindowsClipboard()
+MSWindowsClipboard::~MSWindowsClipboard()
 {
 	clearConverters();
 
@@ -56,7 +56,7 @@ CMSWindowsClipboard::~CMSWindowsClipboard()
 }
 
 void
-CMSWindowsClipboard::setFacade(IMSWindowsClipboardFacade& facade)
+MSWindowsClipboard::setFacade(IMSWindowsClipboardFacade& facade)
 {
 	delete m_facade;
 	m_facade = &facade;
@@ -64,7 +64,7 @@ CMSWindowsClipboard::setFacade(IMSWindowsClipboardFacade& facade)
 }
 
 bool
-CMSWindowsClipboard::emptyUnowned()
+MSWindowsClipboard::emptyUnowned()
 {
 	LOG((CLOG_DEBUG "empty clipboard"));
 
@@ -80,7 +80,7 @@ CMSWindowsClipboard::emptyUnowned()
 }
 
 bool
-CMSWindowsClipboard::empty()
+MSWindowsClipboard::empty()
 {
 	if (!emptyUnowned()) {
 		return false;
@@ -94,7 +94,7 @@ CMSWindowsClipboard::empty()
 }
 
 void
-CMSWindowsClipboard::add(EFormat format, const CString& data)
+MSWindowsClipboard::add(EFormat format, const String& data)
 {
 	LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
 
@@ -115,7 +115,7 @@ CMSWindowsClipboard::add(EFormat format, const CString& data)
 }
 
 bool
-CMSWindowsClipboard::open(Time time) const
+MSWindowsClipboard::open(Time time) const
 {
 	LOG((CLOG_DEBUG "open clipboard"));
 
@@ -134,20 +134,20 @@ CMSWindowsClipboard::open(Time time) const
 }
 
 void
-CMSWindowsClipboard::close() const
+MSWindowsClipboard::close() const
 {
 	LOG((CLOG_DEBUG "close clipboard"));
 	CloseClipboard();
 }
 
 IClipboard::Time
-CMSWindowsClipboard::getTime() const
+MSWindowsClipboard::getTime() const
 {
 	return m_time;
 }
 
 bool
-CMSWindowsClipboard::has(EFormat format) const
+MSWindowsClipboard::has(EFormat format) const
 {
 	for (ConverterList::const_iterator index = m_converters.begin();
 								index != m_converters.end(); ++index) {
@@ -161,8 +161,8 @@ CMSWindowsClipboard::has(EFormat format) const
 	return false;
 }
 
-CString
-CMSWindowsClipboard::get(EFormat format) const
+String
+MSWindowsClipboard::get(EFormat format) const
 {
 	// find the converter for the first clipboard format we can handle
 	IMSWindowsClipboardConverter* converter = NULL;
@@ -182,7 +182,7 @@ CMSWindowsClipboard::get(EFormat format) const
 
 	// if no converter then we don't recognize any formats
 	if (converter == NULL) {
-		return CString();
+		return String();
 	}
 
 	// get a handle to the clipboard data
@@ -191,7 +191,7 @@ CMSWindowsClipboard::get(EFormat format) const
 		// nb: can't cause this using integ tests; this is only caused when
 		// the selected converter returns an invalid format -- which you
 		// cannot cause using public functions.
-		return CString();
+		return String();
 	}
 
 	// convert
@@ -199,7 +199,7 @@ CMSWindowsClipboard::get(EFormat format) const
 }
 
 void
-CMSWindowsClipboard::clearConverters()
+MSWindowsClipboard::clearConverters()
 {
 	for (ConverterList::iterator index = m_converters.begin();
 								index != m_converters.end(); ++index) {
@@ -209,7 +209,7 @@ CMSWindowsClipboard::clearConverters()
 }
 
 bool
-CMSWindowsClipboard::isOwnedBySynergy()
+MSWindowsClipboard::isOwnedBySynergy()
 {
 	// create ownership format if we haven't yet
 	if (s_ownershipFormat == 0) {
@@ -219,7 +219,7 @@ CMSWindowsClipboard::isOwnedBySynergy()
 }
 
 UINT
-CMSWindowsClipboard::getOwnershipFormat()
+MSWindowsClipboard::getOwnershipFormat()
 {
 	// create ownership format if we haven't yet
 	if (s_ownershipFormat == 0) {

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,21 +21,21 @@
 #include "platform/XWindowsClipboard.h"
 
 //! Convert to/from UCS-2 encoding
-class CXWindowsClipboardUCS2Converter : public IXWindowsClipboardConverter {
+class XWindowsClipboardUCS2Converter : public IXWindowsClipboardConverter {
 public:
 	/*!
 	\c name is converted to an atom and that is reported by getAtom().
 	*/
-	CXWindowsClipboardUCS2Converter(Display* display, const char* name);
-	virtual ~CXWindowsClipboardUCS2Converter();
+	XWindowsClipboardUCS2Converter(Display* display, const char* name);
+	virtual ~XWindowsClipboardUCS2Converter();
 
 	// IXWindowsClipboardConverter overrides
 	virtual IClipboard::EFormat
 						getFormat() const;
 	virtual Atom		getAtom() const;
 	virtual int			getDataSize() const;
-	virtual CString		fromIClipboard(const CString&) const;
-	virtual CString		toIClipboard(const CString&) const;
+	virtual String		fromIClipboard(const String&) const;
+	virtual String		toIClipboard(const String&) const;
 
 private:
 	Atom				m_atom;

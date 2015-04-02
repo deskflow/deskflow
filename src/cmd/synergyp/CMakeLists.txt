@@ -1,5 +1,5 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012 Bolton Software Ltd.
+# Copyright (C) 2012 Synergy Si Ltd.
 # Copyright (C) 2009 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
@@ -63,7 +63,7 @@ else()
 endif()	
 	
 target_link_libraries(synergyp
-	arch base client common io mt net ipc platform server synergy client cryptopp ${libs})
+	arch base client common io mt net ipc platform server synergy client ${libs})
 
 if (CONF_CPACK)
 	install(TARGETS

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -20,31 +20,67 @@
 
 #include "net/TCPSocket.h"
 #include "net/TCPListenSocket.h"
+#include "arch/Arch.h"
+#include "base/Log.h"
 
 //
-// CTCPSocketFactory
+// TCPSocketFactory
 //
 
-CTCPSocketFactory::CTCPSocketFactory(IEventQueue* events, CSocketMultiplexer* socketMultiplexer) :
+#if defined _WIN32
+static const char s_networkSecurity[] = { "ns" };
+#else
+static const char s_networkSecurity[] = { "libns" };
+#endif
+
+TCPSocketFactory::TCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {
 	// do nothing
 }
 
-CTCPSocketFactory::~CTCPSocketFactory()
+TCPSocketFactory::~TCPSocketFactory()
 {
 	// do nothing
 }
 
 IDataSocket*
-CTCPSocketFactory::create(IArchNetwork::EAddressFamily family) const
+TCPSocketFactory::create(bool secure, IArchNetwork::EAddressFamily family) const
 {
-	return new CTCPSocket(family, m_events, m_socketMultiplexer);
+	IDataSocket* socket = NULL;
+	if (secure) {
+		void* args[3] = {
+			m_events,
+			m_socketMultiplexer,			
+            (void *)&family,
+		};
+		socket = static_cast<IDataSocket*>(
+			ARCH->plugin().invoke(s_networkSecurity, "getSocket", args));
+	}
+	else {
+		socket = new TCPSocket(m_events, m_socketMultiplexer, family);
+	}
+
+	return socket;
 }
 
 IListenSocket*
-CTCPSocketFactory::createListen(IArchNetwork::EAddressFamily family) const
+TCPSocketFactory::createListen(bool secure, IArchNetwork::EAddressFamily family) const
 {
-	return new CTCPListenSocket(family, m_events, m_socketMultiplexer);
+	IListenSocket* socket = NULL;
+	if (secure) {
+		void* args[3] = {            
+			m_events,
+			m_socketMultiplexer,
+			(void *)&family,
+		};
+		socket = static_cast<IListenSocket*>(
+			ARCH->plugin().invoke(s_networkSecurity, "getListenSocket", args));
+	}
+	else {
+		socket = new TCPListenSocket(m_events, m_socketMultiplexer, family);
+	}
+
+	return socket;
 }

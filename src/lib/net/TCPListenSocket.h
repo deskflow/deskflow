@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,36 +21,38 @@
 #include "net/IListenSocket.h"
 #include "arch/IArchNetwork.h"
 
-class CMutex;
+class Mutex;
 class ISocketMultiplexerJob;
 class IEventQueue;
-class CSocketMultiplexer;
+class SocketMultiplexer;
 
 //! TCP listen socket
 /*!
 A listen socket using TCP.
 */
-class CTCPListenSocket : public IListenSocket {
+class TCPListenSocket : public IListenSocket {
 public:
-	CTCPListenSocket(IArchNetwork::EAddressFamily family, IEventQueue* events, CSocketMultiplexer* socketMultiplexer);
-	~CTCPListenSocket();
+	TCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
+	virtual ~TCPListenSocket();
 
 	// ISocket overrides
-	virtual void		bind(const CNetworkAddress&);
+	virtual void		bind(const NetworkAddress&);
 	virtual void		close();
 	virtual void*		getEventTarget() const;
 
 	// IListenSocket overrides
-	virtual IDataSocket*	accept();
+	virtual IDataSocket*
+						accept();
+	virtual void		deleteSocket(void*) { }
 
-private:
+public:
 	ISocketMultiplexerJob*
 						serviceListening(ISocketMultiplexerJob*,
 							bool, bool, bool);
 
-private:
-	CArchSocket			m_socket;
-	CMutex*				m_mutex;
+protected:
+	ArchSocket			m_socket;
+	Mutex*				m_mutex;
 	IEventQueue*		m_events;
-	CSocketMultiplexer* m_socketMultiplexer;
+	SocketMultiplexer*	m_socketMultiplexer;
 };

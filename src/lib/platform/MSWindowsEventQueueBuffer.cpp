@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -23,17 +23,17 @@
 #include "base/IEventQueue.h"
 
 //
-// CEventQueueTimer
+// EventQueueTimer
 //
 
-class CEventQueueTimer { };
+class EventQueueTimer { };
 
 
 //
-// CMSWindowsEventQueueBuffer
+// MSWindowsEventQueueBuffer
 //
 
-CMSWindowsEventQueueBuffer::CMSWindowsEventQueueBuffer(IEventQueue* events) :
+MSWindowsEventQueueBuffer::MSWindowsEventQueueBuffer(IEventQueue* events) :
 	m_events(events)
 {
 	// remember thread.  we'll be posting messages to it.
@@ -43,20 +43,20 @@ CMSWindowsEventQueueBuffer::CMSWindowsEventQueueBuffer(IEventQueue* events) :
 	m_userEvent  = RegisterWindowMessage("SYNERGY_USER_EVENT");
 
 	// get message type for daemon quit
-	m_daemonQuit = CArchMiscWindows::getDaemonQuitMessage();
+	m_daemonQuit = ArchMiscWindows::getDaemonQuitMessage();
 
 	// make sure this thread has a message queue
 	MSG dummy;
 	PeekMessage(&dummy, NULL, WM_USER, WM_USER, PM_NOREMOVE);
 }
 
-CMSWindowsEventQueueBuffer::~CMSWindowsEventQueueBuffer()
+MSWindowsEventQueueBuffer::~MSWindowsEventQueueBuffer()
 {
 	// do nothing
 }
 
 void
-CMSWindowsEventQueueBuffer::waitForEvent(double timeout)
+MSWindowsEventQueueBuffer::waitForEvent(double timeout)
 {
 	// check if messages are available first.  if we don't do this then
 	// MsgWaitForMultipleObjects() will block even if the queue isn't
@@ -83,7 +83,7 @@ CMSWindowsEventQueueBuffer::waitForEvent(double timeout)
 }
 
 IEventQueueBuffer::Type
-CMSWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
+MSWindowsEventQueueBuffer::getEvent(Event& event, UInt32& dataID)
 {
 	// peek at messages first.  waiting for QS_ALLINPUT will return
 	// if a message has been sent to our window but GetMessage will
@@ -100,11 +100,11 @@ CMSWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 		return kNone;
 	}
 	else if (result == 0) {
-		event = CEvent(CEvent::kQuit);
+		event = Event(Event::kQuit);
 		return kSystem;
 	}
 	else if (m_daemonQuit != 0 && m_event.message == m_daemonQuit) {
-		event = CEvent(CEvent::kQuit);
+		event = Event(Event::kQuit);
 		return kSystem;
 	}
 	else if (m_event.message == m_userEvent) {
@@ -112,33 +112,33 @@ CMSWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 		return kUser;
 	}
 	else {
-		event = CEvent(CEvent::kSystem,
+		event = Event(Event::kSystem,
 							m_events->getSystemTarget(), &m_event);
 		return kSystem;
 	}
 }
 
 bool
-CMSWindowsEventQueueBuffer::addEvent(UInt32 dataID)
+MSWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 {
 	return (PostThreadMessage(m_thread, m_userEvent,
 							static_cast<WPARAM>(dataID), 0) != 0);
 }
 
 bool
-CMSWindowsEventQueueBuffer::isEmpty() const
+MSWindowsEventQueueBuffer::isEmpty() const
 {
 	return (HIWORD(GetQueueStatus(QS_ALLINPUT)) == 0);
 }
 
-CEventQueueTimer*
-CMSWindowsEventQueueBuffer::newTimer(double, bool) const
+EventQueueTimer*
+MSWindowsEventQueueBuffer::newTimer(double, bool) const
 {
-	return new CEventQueueTimer;
+	return new EventQueueTimer;
 }
 
 void
-CMSWindowsEventQueueBuffer::deleteTimer(CEventQueueTimer* timer) const
+MSWindowsEventQueueBuffer::deleteTimer(EventQueueTimer* timer) const
 {
 	delete timer;
 }

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -25,21 +25,21 @@
 #include <string.h>
 
 //
-// CArchFileWindows
+// ArchFileWindows
 //
 
-CArchFileWindows::CArchFileWindows()
+ArchFileWindows::ArchFileWindows()
 {
 	// do nothing
 }
 
-CArchFileWindows::~CArchFileWindows()
+ArchFileWindows::~ArchFileWindows()
 {
 	// do nothing
 }
 
 const char*
-CArchFileWindows::getBasename(const char* pathname)
+ArchFileWindows::getBasename(const char* pathname)
 {
 	if (pathname == NULL) {
 		return NULL;
@@ -64,7 +64,7 @@ CArchFileWindows::getBasename(const char* pathname)
 }
 
 std::string
-CArchFileWindows::getUserDirectory()
+ArchFileWindows::getUserDirectory()
 {
 	// try %HOMEPATH%
 	TCHAR dir[MAX_PATH];
@@ -108,7 +108,7 @@ CArchFileWindows::getUserDirectory()
 }
 
 std::string
-CArchFileWindows::getSystemDirectory()
+ArchFileWindows::getSystemDirectory()
 {
 	// get windows directory
 	char dir[MAX_PATH];
@@ -122,7 +122,60 @@ CArchFileWindows::getSystemDirectory()
 }
 
 std::string
-CArchFileWindows::concatPath(const std::string& prefix,
+ArchFileWindows::getInstalledDirectory()
+{
+	char fileNameBuffer[MAX_PATH];
+	GetModuleFileName(NULL, fileNameBuffer, MAX_PATH);
+	std::string fileName(fileNameBuffer);
+	size_t lastSlash = fileName.find_last_of("\\");
+	fileName = fileName.substr(0, lastSlash);
+
+	return fileName;
+}
+
+std::string
+ArchFileWindows::getLogDirectory()
+{
+	return getInstalledDirectory();
+}
+
+std::string
+ArchFileWindows::getPluginDirectory()
+{
+	if (!m_pluginDirectory.empty()) {
+		return m_pluginDirectory;
+	}
+
+	std::string dir = getProfileDirectory();
+	dir.append("\\Plugins");
+	return dir;
+}
+
+std::string
+ArchFileWindows::getProfileDirectory()
+{
+	String dir;
+	if (!m_profileDirectory.empty()) {
+		dir = m_profileDirectory;
+	}
+	else {
+		TCHAR result[MAX_PATH];
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, result))) {
+			dir = result;
+		}
+		else {
+			dir = getUserDirectory();
+		}
+	}
+
+	// HACK: append program name, this seems wrong.
+	dir.append("\\Synergy");
+
+	return dir;
+}
+
+std::string
+ArchFileWindows::concatPath(const std::string& prefix,
 				const std::string& suffix)
 {
 	std::string path;
@@ -135,4 +188,16 @@ CArchFileWindows::concatPath(const std::string& prefix,
 	}
 	path += suffix;
 	return path;
+}
+
+void
+ArchFileWindows::setProfileDirectory(const String& s)
+{
+	m_profileDirectory = s;
+}
+
+void
+ArchFileWindows::setPluginDirectory(const String& s)
+{
+	m_pluginDirectory = s;
 }

@@ -2,7 +2,7 @@
 uSynergy client -- Interface for the embedded Synergy client library
   version 1.0.0, July 7th, 2012
 
-Copyright (C) 2012 Bolton Software Ltd.
+Copyright (C) 2012 Synergy Si Ltd.
 Copyright (c) 2012 Alex Evans
 
 This software is provided 'as-is', without any express or implied

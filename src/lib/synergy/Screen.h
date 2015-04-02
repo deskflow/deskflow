@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -30,18 +30,20 @@ class IClipboard;
 class IPlatformScreen;
 class IEventQueue;
 
+namespace synergy {
+
 //! Platform independent screen
 /*!
 This is a platform independent screen.  It can work as either a
 primary or secondary screen.
 */
-class CScreen : public IScreen {
+class Screen : public IScreen {
 public:
-	CScreen(IPlatformScreen* platformScreen, IEventQueue* events);
-	virtual ~CScreen();
+	Screen(IPlatformScreen* platformScreen, IEventQueue* events);
+	virtual ~Screen();
 
 #ifdef TEST_ENV
-	CScreen() : m_mock(true) { }
+	Screen() : m_mock(true) { }
 #endif
 
 	//! @name manipulators
@@ -183,7 +185,7 @@ public:
 	Set options to given values.  Ignores unknown options and doesn't
 	modify options that aren't given in \c options.
 	*/
-	virtual void		setOptions(const COptionsList& options);
+	virtual void		setOptions(const OptionsList& options);
 
 	//! Set clipboard sequence number
 	/*!
@@ -223,7 +225,7 @@ public:
 	void				setDraggingStarted(bool started);
 	
 	//! Fake a files dragging operation
-	void				startDraggingFiles(CDragFileList& fileList);
+	void				startDraggingFiles(DragFileList& fileList);
 
 	void				setEnableDragDrop(bool enabled);
 	//@}
@@ -281,13 +283,13 @@ public:
 	bool				isFakeDraggingStarted() const;
 
 	//! Get the filename of the file being dragged
-	CString&			getDraggingFilename() const;
+	String&			getDraggingFilename() const;
 
 	//! Clear the filename of the file that was dragged
 	void				clearDraggingFilename();
 
 	//! Get the drop target directory
-	const CString&		getDropTarget() const;
+	const String&		getDropTarget() const;
 
 	//@}
 
@@ -339,3 +341,5 @@ private:
 	bool				m_mock;
 	bool				m_enableDragDrop;
 };
+
+}

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -90,7 +90,7 @@ public:
 	*/
 	virtual std::string	getToolTip() const = 0;
 
-	virtual void updateStatus(INode*, const CString& errorMsg) = 0;
+	virtual void updateStatus(INode*, const String& errorMsg) = 0;
 
 	virtual void cleanup() {}
 

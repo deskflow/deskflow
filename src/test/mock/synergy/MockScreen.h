@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2013 Bolton Software Ltd.
+ * Copyright (C) 2013 Synergy Si Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,14 +23,14 @@
 
 #include "test/global/gmock.h"
 
-class CMockScreen : public CScreen
+class MockScreen : public synergy::Screen
 {
 public:
-	CMockScreen() : CScreen() { }
+	MockScreen() : synergy::Screen() { }
 	MOCK_METHOD0(disable, void());
 	MOCK_CONST_METHOD4(getShape, void(SInt32&, SInt32&, SInt32&, SInt32&));
 	MOCK_CONST_METHOD2(getCursorPos, void(SInt32&, SInt32&));
 	MOCK_METHOD0(resetOptions, void());
-	MOCK_METHOD1(setOptions, void(const COptionsList&));
+	MOCK_METHOD1(setOptions, void(const OptionsList&));
 	MOCK_METHOD0(enable, void());
 };

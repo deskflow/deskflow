@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,28 +21,28 @@
 #include "base/Unicode.h"
 
 //
-// COSXClipboardTextConverter
+// OSXClipboardTextConverter
 //
 
-COSXClipboardTextConverter::COSXClipboardTextConverter() 
+OSXClipboardTextConverter::OSXClipboardTextConverter() 
 {
 	// do nothing
 }
 
-COSXClipboardTextConverter::~COSXClipboardTextConverter()
+OSXClipboardTextConverter::~OSXClipboardTextConverter()
 {
 	// do nothing
 }
 
 CFStringRef
-COSXClipboardTextConverter::getOSXFormat() const
+OSXClipboardTextConverter::getOSXFormat() const
 {
 	return CFSTR("public.plain-text");
 }
 
-CString 
-COSXClipboardTextConverter::convertString(
-				const CString& data, 
+String 
+OSXClipboardTextConverter::convertString(
+				const String& data, 
 				CFStringEncoding fromEncoding,
 				CFStringEncoding toEncoding)
 {
@@ -51,7 +51,7 @@ COSXClipboardTextConverter::convertString(
 							data.c_str(), fromEncoding);
 
 	if (stringRef == NULL) {
-		return CString();
+		return String();
 	}
 
 	CFIndex buffSize;
@@ -64,13 +64,13 @@ COSXClipboardTextConverter::convertString(
 	
 	if (buffer == NULL) {
 		CFRelease(stringRef);
-		return CString();
+		return String();
 	}
 	
 	CFStringGetBytes(stringRef, entireString, toEncoding,
 							0, false, (UInt8*)buffer, buffSize, NULL);
 
-	CString result(buffer, buffSize);
+	String result(buffer, buffSize);
 
 	delete[] buffer;
 	CFRelease(stringRef);
@@ -78,15 +78,15 @@ COSXClipboardTextConverter::convertString(
 	return result;
 }
 
-CString
-COSXClipboardTextConverter::doFromIClipboard(const CString& data) const
+String
+OSXClipboardTextConverter::doFromIClipboard(const String& data) const
 {
 	return convertString(data, kCFStringEncodingUTF8,
 							CFStringGetSystemEncoding());
 }
 
-CString
-COSXClipboardTextConverter::doToIClipboard(const CString& data) const
+String
+OSXClipboardTextConverter::doToIClipboard(const String& data) const
 {
 	return convertString(data, CFStringGetSystemEncoding(),
 							kCFStringEncodingUTF8);

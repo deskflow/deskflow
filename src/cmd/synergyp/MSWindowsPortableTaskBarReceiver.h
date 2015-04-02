@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -23,14 +23,14 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-class CBufferedLogOutputter;
+class BufferedLogOutputter;
 class IEventQueue;
 
-//! Implementation of CPortableTaskBarReceiver for Microsoft Windows
-class CMSWindowsPortableTaskBarReceiver : public CPortableTaskBarReceiver {
+//! Implementation of PortableTaskBarReceiver for Microsoft Windows
+class MSWindowsPortableTaskBarReceiver : public PortableTaskBarReceiver {
 public:
-	CMSWindowsPortableTaskBarReceiver(HINSTANCE, const CBufferedLogOutputter*, IEventQueue* events);
-	virtual ~CMSWindowsPortableTaskBarReceiver();
+	MSWindowsPortableTaskBarReceiver(HINSTANCE, const BufferedLogOutputter*, IEventQueue* events);
+	virtual ~MSWindowsPortableTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides
 	virtual void		showStatus();
@@ -42,7 +42,7 @@ public:
 protected:
 	void				copyLog() const;
 
-	// CPortableTaskBarReceiver overrides
+	// PortableTaskBarReceiver overrides
 	virtual void		onStatusChanged();
 
 private:
@@ -62,7 +62,7 @@ private:
 	HWND				m_window;
 	HMENU				m_menu;
 	HICON				m_icon[kMaxState];
-	const CBufferedLogOutputter*	m_logBuffer;
+	const BufferedLogOutputter*	m_logBuffer;
 	IEventQueue*		m_events;
 
 	static const UINT	s_stateToIconID[];
