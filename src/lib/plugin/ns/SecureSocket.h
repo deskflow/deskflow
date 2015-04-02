@@ -61,7 +61,9 @@ private:
 	void				checkResult(int n, bool& fatal, bool& retry);
 	void				showError();
 	void				throwError(const char* reason);
-	String				getError();
+	CString				getError();
+	void				disconnect();
+	bool				verifyCertFingerprint();
 
 	ISocketMultiplexerJob*
 						serviceConnect(ISocketMultiplexerJob*,
@@ -75,7 +77,4 @@ private:
 	Ssl*				m_ssl;
 	bool				m_secureReady;
 	CString				m_certFingerprint;
-
-public:
-	static bool			s_verifyFingerprintFailed;
 };

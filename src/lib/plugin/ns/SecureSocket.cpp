@@ -44,10 +44,6 @@ struct Ssl {
 	SSL*		m_ssl;
 };
 
-int	verifyCertFingerprint(X509_STORE_CTX* ctx, void* arg);
-
-bool CSecureSocket::s_verifyFingerprintFailed = false;
-
 CSecureSocket::CSecureSocket(
 		IEventQueue* events,
 		CSocketMultiplexer* socketMultiplexer) :
@@ -206,14 +202,6 @@ SecureSocket::initContext(bool server)
 	if (m_ssl->m_context == NULL) {
 		showError();
 	}
-
-	if (!server) {
-		void* p = reinterpret_cast<void*>(const_cast<char*>(m_certFingerprint.c_str()));
-		SSL_CTX_set_cert_verify_callback(
-			m_ssl->m_context,
-			verifyCertFingerprint,
-			p);
-	}
 }
 
 void
@@ -278,13 +266,15 @@ SecureSocket::secureConnect(int socket)
 
 	m_secureReady = !retry;
 
-	if (s_verifyFingerprintFailed) {
-		throwError("failed to verify server certificate fingerprint");
-	}
-
 	if (m_secureReady) {
-		LOG((CLOG_INFO "connected to secure socket"));
-		showCertificate();
+		if (verifyCertFingerprint()) {
+			LOG((CLOG_INFO "connected to secure socket"));
+			showCertificate();
+		}
+		else {
+			LOG((CLOG_ERR "failed to verity server certificate fingerprint"));
+			disconnect();
+		}
 	}
 
 	return retry;
@@ -367,8 +357,7 @@ SecureSocket::checkResult(int n, bool& fatal, bool& retry)
 
 	if (fatal) {
 		showError();
-		sendEvent(getEvents()->forISocket().disconnected());
-		sendEvent(getEvents()->forIStream().inputShutdown());
+		disconnect();
 	}
 }
 
@@ -409,11 +398,73 @@ SecureSocket::getError()
 	}
 }
 
+void
+CSecureSocket::disconnect()
+{
+	sendEvent(getEvents()->forISocket().disconnected());
+	sendEvent(getEvents()->forIStream().inputShutdown());
+}
+
+bool
+CSecureSocket::verifyCertFingerprint()
+{
+	// calculate received certificate fingerprint
+	X509 *cert = cert = SSL_get_peer_certificate(m_ssl->m_ssl);
+	EVP_MD* tempDigest;
+	unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
+	unsigned int tempFingerprintLen;
+	tempDigest = (EVP_MD*)EVP_sha1();
+	if (X509_digest(cert, tempDigest, tempFingerprint, &tempFingerprintLen) <= 0) {
+		return false;
+	}
+
+	// convert fingerprint into hexdecimal format
+	std::stringstream ss;
+	ss << std::hex;
+	for (unsigned int i = 0; i < tempFingerprintLen; i++) {
+		ss << std::setw(2) << std::setfill('0') << (int)tempFingerprint[i];
+	}
+
+	// all uppercase
+	CString fingerprint = ss.str();
+	std::transform(fingerprint.begin(), fingerprint.end(), fingerprint.begin(), ::toupper);
+
+	// check if this fingerprint exist
+	CString fileLine;
+	CString certificateFingerprint;
+	std::ifstream file;
+	file.open(m_certFingerprint.c_str());
+
+	while (!file.eof()) {
+		getline(file,fileLine);
+		// example of a fingerprint:
+		// SHA1 Fingerprint=6E:41:1A:21:53:2E:A3:EF:4D:A6:F2:A6:BA:0E:27:09:8A:F3:A1:10
+		size_t found = fileLine.find('=');
+		if (found != CString::npos) {
+			certificateFingerprint = fileLine.substr(found + 1);
+
+			if (!certificateFingerprint.empty()) {
+				// remove colons
+				certificateFingerprint.erase(std::remove(certificateFingerprint.begin(), certificateFingerprint.end(), ':'), certificateFingerprint.end());
+
+				if(certificateFingerprint.compare(fingerprint) == 0) {
+					file.close();
+					return true;
+				}
+			}
+		}
+	}
+
+	file.close();
+
+	return false;
+}
+
 ISocketMultiplexerJob*
-SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
+CSecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 				bool, bool write, bool error)
 {
-	Lock lock(&getMutex());
+	CLock lock(&getMutex());
 
 	bool retry = true;
 #ifdef SYSAPI_WIN32
@@ -426,10 +477,10 @@ SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 }
 
 ISocketMultiplexerJob*
-SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
+CSecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 				bool, bool write, bool error)
 {
-	Lock lock(&getMutex());
+	CLock lock(&getMutex());
 
 	bool retry = true;
 #ifdef SYSAPI_WIN32
@@ -439,55 +490,4 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 #endif
 
 	return retry ? job : newJob();
-}
-
-int
-verifyCertFingerprint(X509_STORE_CTX* ctx, void* arg)
-{
-	X509 *cert = ctx->cert;
-
-	EVP_MD* tempDigest;
-	unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
-	unsigned int tempFingerprintLen;
-	tempDigest = (EVP_MD*)EVP_sha1();
-	if (X509_digest(cert, tempDigest, tempFingerprint, &tempFingerprintLen) <= 0) {
-		CSecureSocket::s_verifyFingerprintFailed = true;
-		return 0;
-	}
-
-	std::stringstream ss;
-	ss << std::hex;
-	for (unsigned int i = 0; i < tempFingerprintLen; i++) {
-		ss << std::setw(2) << std::setfill('0') << (int)tempFingerprint[i];
-	}
-	CString fingerprint = ss.str();
-	std::transform(fingerprint.begin(), fingerprint.end(), fingerprint.begin(), ::toupper);
-
-	CString fileLine;
-	CString certificateFingerprint;
-	char* certFingerprintFilename = reinterpret_cast<char*>(arg);
-	std::ifstream file;
-	file.open(certFingerprintFilename);
-
-	while (!file.eof()) {
-		getline(file,fileLine);
-		size_t found = fileLine.find('=');
-		if (found != CString::npos) {
-			certificateFingerprint = fileLine.substr(found + 1);
-
-			if (!certificateFingerprint.empty()) {
-				certificateFingerprint.erase(std::remove(certificateFingerprint.begin(), certificateFingerprint.end(), ':'), certificateFingerprint.end());
-
-				if(certificateFingerprint.compare(fingerprint) == 0) {
-					file.close();
-					return 1;
-				}
-			}
-		}
-	}
-
-	file.close();
-
-	CSecureSocket::s_verifyFingerprintFailed = true;
-	return 0;
 }
