@@ -59,7 +59,7 @@ ClientListener::ClientListener(const NetworkAddress& address,
 			}
 		}
 
-		m_listen = m_socketFactory->createListen(m_useSecureNetwork);
+		m_listen = m_socketFactory->createListen(m_useSecureNetwork, ARCH->getAddrFamily(address.getAddress()));
 
 		// bind listen address
 		LOG((CLOG_DEBUG1 "binding listen socket"));

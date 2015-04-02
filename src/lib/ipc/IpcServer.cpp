@@ -33,7 +33,7 @@
 //
 
 IpcServer::IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
-	m_socket(events, socketMultiplexer),
+	m_socket(events, socketMultiplexer, IArchNetwork::kINET),
 	m_address(NetworkAddress(IPC_HOST, IPC_PORT)),
 	m_events(events)
 {
@@ -41,7 +41,7 @@ IpcServer::IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer) 
 }
 
 IpcServer::IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer, int port) :
-	m_socket(events, socketMultiplexer),
+	m_socket(events, socketMultiplexer, IArchNetwork::kINET),
 	m_address(NetworkAddress(IPC_HOST, port)),
 	m_events(events)
 {

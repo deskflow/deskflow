@@ -46,38 +46,40 @@ TCPSocketFactory::~TCPSocketFactory()
 }
 
 IDataSocket*
-TCPSocketFactory::create(bool secure) const
+TCPSocketFactory::create(bool secure, IArchNetwork::EAddressFamily family) const
 {
 	IDataSocket* socket = NULL;
 	if (secure) {
-		void* args[2] = {
+		void* args[3] = {
 			m_events,
-			m_socketMultiplexer
+			m_socketMultiplexer,			
+            (void *)&family,
 		};
 		socket = static_cast<IDataSocket*>(
 			ARCH->plugin().invoke(s_networkSecurity, "getSocket", args));
 	}
 	else {
-		socket = new TCPSocket(m_events, m_socketMultiplexer);
+		socket = new TCPSocket(m_events, m_socketMultiplexer, family);
 	}
 
 	return socket;
 }
 
 IListenSocket*
-TCPSocketFactory::createListen(bool secure) const
+TCPSocketFactory::createListen(bool secure, IArchNetwork::EAddressFamily family) const
 {
 	IListenSocket* socket = NULL;
 	if (secure) {
-		void* args[2] = {
+		void* args[3] = {            
 			m_events,
-			m_socketMultiplexer
+			m_socketMultiplexer,
+			(void *)&family,
 		};
 		socket = static_cast<IListenSocket*>(
 			ARCH->plugin().invoke(s_networkSecurity, "getListenSocket", args));
 	}
 	else {
-		socket = new TCPListenSocket(m_events, m_socketMultiplexer);
+		socket = new TCPListenSocket(m_events, m_socketMultiplexer, family);
 	}
 
 	return socket;
