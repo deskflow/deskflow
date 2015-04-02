@@ -27,6 +27,9 @@
 #include <algorithm>
 #include <stdio.h>
 #include <cstdarg>
+#include <sstream>
+#include <iomanip>
+#include <algorithm>
 
 namespace synergy {
 namespace string {
@@ -178,6 +181,30 @@ removeFileExt(String filename)
 	}
 
 	return filename.substr(0, dot);
+}
+
+void
+toHex(CString& subject, int width, const char fill)
+{
+	std::stringstream ss;
+	ss << std::hex;
+	for (unsigned int i = 0; i < subject.length(); i++) {
+		ss << std::setw(width) << std::setfill(fill) << (int)(unsigned char)subject[i];
+	}
+
+	subject = ss.str();
+}
+
+void
+uppercase(CString& subject)
+{
+	std::transform(subject.begin(), subject.end(), subject.begin(), ::toupper);
+}
+
+void
+removeChar(CString& subject, const char c)
+{
+	subject.erase(std::remove(subject.begin(), subject.end(), c), subject.end());
 }
 
 //

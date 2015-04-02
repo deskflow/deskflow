@@ -28,10 +28,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <memory>
-#include <sstream>
-#include <iomanip>
 #include <fstream>
-#include <algorithm>
 
 //
 // SecureSocket
@@ -419,15 +416,11 @@ CSecureSocket::verifyCertFingerprint()
 	}
 
 	// convert fingerprint into hexdecimal format
-	std::stringstream ss;
-	ss << std::hex;
-	for (unsigned int i = 0; i < tempFingerprintLen; i++) {
-		ss << std::setw(2) << std::setfill('0') << (int)tempFingerprint[i];
-	}
+	CString fingerprint(reinterpret_cast<char*>(tempFingerprint), tempFingerprintLen);
+	synergy::string::toHex(fingerprint, 2);
 
 	// all uppercase
-	CString fingerprint = ss.str();
-	std::transform(fingerprint.begin(), fingerprint.end(), fingerprint.begin(), ::toupper);
+	synergy::string::uppercase(fingerprint);
 
 	// check if this fingerprint exist
 	CString fileLine;
@@ -445,7 +438,7 @@ CSecureSocket::verifyCertFingerprint()
 
 			if (!certificateFingerprint.empty()) {
 				// remove colons
-				certificateFingerprint.erase(std::remove(certificateFingerprint.begin(), certificateFingerprint.end(), ':'), certificateFingerprint.end());
+				synergy::string::removeChar(certificateFingerprint, ':');
 
 				if(certificateFingerprint.compare(fingerprint) == 0) {
 					file.close();
