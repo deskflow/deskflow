@@ -112,25 +112,33 @@ TCPListenSocket::accept()
 	try {
 		socket = new TCPSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
 		if (socket != NULL) {
-			m_socketMultiplexer->addSocket(this,
-							new TSocketMultiplexerMethodJob<TCPListenSocket>(
-								this, &TCPListenSocket::serviceListening,
-								m_socket, true, false));
+			setListeningJob();
 		}
 		return socket;
 	}
 	catch (XArchNetwork&) {
 		if (socket != NULL) {
 			delete socket;
+			setListeningJob();
 		}
 		return NULL;
 	}
 	catch (std::exception &ex) {
 		if (socket != NULL) {
 			delete socket;
+			setListeningJob();
 		}
 		throw ex;
 	}
+}
+
+void
+CTCPListenSocket::setListeningJob()
+{
+	m_socketMultiplexer->addSocket(this,
+							new TSocketMultiplexerMethodJob<CTCPListenSocket>(
+								this, &CTCPListenSocket::serviceListening,
+								m_socket, true, false));
 }
 
 ISocketMultiplexerJob*

@@ -151,24 +151,46 @@ SecureSocket::initSsl(bool server)
 	initContext(server);
 }
 
-void
-SecureSocket::loadCertificates(const char* filename)
+bool
+CSecureSocket::loadCertificates(CString& filename)
 {
-	int r = 0;
-	r = SSL_CTX_use_certificate_file(m_ssl->m_context, filename, SSL_FILETYPE_PEM);
-	if (r <= 0) {
-		throwError("could not use ssl certificate");
+	if (filename.empty()) {
+		showError("ssl certificate is not specified");
+		return false;
+	}
+	else {
+		std::ifstream file(filename.c_str());
+		bool exist = file.good();
+		file.close();
+
+		if (!exist) {
+			CString errorMsg("ssl certificate doesn't exist: ");
+			errorMsg.append(filename);
+			showError(errorMsg.c_str());
+			return false;
+		}
 	}
 
-	r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, filename, SSL_FILETYPE_PEM);
+	int r = 0;
+	r = SSL_CTX_use_certificate_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
 	if (r <= 0) {
-		throwError("could not use ssl private key");
+		showError("could not use ssl certificate");
+		return false;
+	}
+
+	r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
+	if (r <= 0) {
+		showError("could not use ssl private key");
+		return false;
 	}
 
 	r = SSL_CTX_check_private_key(m_ssl->m_context);
 	if (!r) {
-		throwError("could not verify ssl private key");
+		showError("could not verify ssl private key");
+		return false;
 	}
+
+	return true;
 }
 
 void
@@ -258,7 +280,8 @@ SecureSocket::secureConnect(int socket)
 		// tell user and sleep so the socket isn't hammered.
 		LOG((CLOG_ERR "failed to connect secure socket"));
 		LOG((CLOG_INFO "server connection may not be secure"));
-		ARCH->sleep(1);
+		disconnect();
+		return false;
 	}
 
 	m_secureReady = !retry;
@@ -266,7 +289,9 @@ SecureSocket::secureConnect(int socket)
 	if (m_secureReady) {
 		if (verifyCertFingerprint()) {
 			LOG((CLOG_INFO "connected to secure socket"));
-			showCertificate();
+			if (!showCertificate()) {
+				disconnect();
+			}
 		}
 		else {
 			LOG((CLOG_ERR "failed to verity server certificate fingerprint"));
@@ -277,8 +302,8 @@ SecureSocket::secureConnect(int socket)
 	return retry;
 }
 
-void
-SecureSocket::showCertificate()
+bool
+CSecureSocket::showCertificate()
 {
 	X509* cert;
 	char* line;
@@ -292,8 +317,11 @@ SecureSocket::showCertificate()
 		X509_free(cert);
 	}
 	else {
-		throwError("server has no ssl certificate");
+		showError("server has no ssl certificate");
+		return false;
 	}
+
+	return true;
 }
 
 void
@@ -359,24 +387,15 @@ SecureSocket::checkResult(int n, bool& fatal, bool& retry)
 }
 
 void
-SecureSocket::showError()
+CSecureSocket::showError(const char* reason)
 {
-	String error = getError();
-	if (!error.empty()) {
-		LOG((CLOG_ERR "secure socket error: %s", error.c_str()));
+	if (reason != NULL) {
+		LOG((CLOG_ERR "%s", reason));
 	}
-}
 
-void
-SecureSocket::throwError(const char* reason)
-{
-	String error = getError();
+	CString error = getError();
 	if (!error.empty()) {
-		throw XSocket(synergy::string::sprintf(
-											   "%s: %s", reason, error.c_str()));
-	}
-	else {
-		throw XSocket(reason);
+		LOG((CLOG_ERR "%s", error.c_str()));
 	}
 }
 
