@@ -224,7 +224,6 @@ private:
 	String				m_dragFileExt;
 	Thread*				m_sendFileThread;
 	Thread*				m_writeToDropDirThread;
-	bool				m_enableDragDrop;
 	TCPSocket*			m_socket;
 	bool				m_useSecureNetwork;
 	ClientArgs			m_args;
