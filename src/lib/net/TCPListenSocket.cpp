@@ -133,11 +133,11 @@ TCPListenSocket::accept()
 }
 
 void
-CTCPListenSocket::setListeningJob()
+TCPListenSocket::setListeningJob()
 {
 	m_socketMultiplexer->addSocket(this,
-							new TSocketMultiplexerMethodJob<CTCPListenSocket>(
-								this, &CTCPListenSocket::serviceListening,
+							new TSocketMultiplexerMethodJob<TCPListenSocket>(
+								this, &TCPListenSocket::serviceListening,
 								m_socket, true, false));
 }
 

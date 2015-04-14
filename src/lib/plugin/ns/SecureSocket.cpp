@@ -152,7 +152,7 @@ SecureSocket::initSsl(bool server)
 }
 
 bool
-CSecureSocket::loadCertificates(CString& filename)
+SecureSocket::loadCertificates(String& filename)
 {
 	if (filename.empty()) {
 		showError("ssl certificate is not specified");
@@ -164,7 +164,7 @@ CSecureSocket::loadCertificates(CString& filename)
 		file.close();
 
 		if (!exist) {
-			CString errorMsg("ssl certificate doesn't exist: ");
+			String errorMsg("ssl certificate doesn't exist: ");
 			errorMsg.append(filename);
 			showError(errorMsg.c_str());
 			return false;
@@ -303,7 +303,7 @@ SecureSocket::secureConnect(int socket)
 }
 
 bool
-CSecureSocket::showCertificate()
+SecureSocket::showCertificate()
 {
 	X509* cert;
 	char* line;
@@ -387,13 +387,13 @@ SecureSocket::checkResult(int n, bool& fatal, bool& retry)
 }
 
 void
-CSecureSocket::showError(const char* reason)
+SecureSocket::showError(const char* reason)
 {
 	if (reason != NULL) {
 		LOG((CLOG_ERR "%s", reason));
 	}
 
-	CString error = getError();
+	String error = getError();
 	if (!error.empty()) {
 		LOG((CLOG_ERR "%s", error.c_str()));
 	}

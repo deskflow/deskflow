@@ -50,7 +50,7 @@ public:
 	UInt32				secureRead(void* buffer, UInt32 n);
 	UInt32				secureWrite(const void* buffer, UInt32 n);
 	void				initSsl(bool server);
-	bool				loadCertificates(CString& CertFile);
+	bool				loadCertificates(String& CertFile);
 
 private:
 	// SSL

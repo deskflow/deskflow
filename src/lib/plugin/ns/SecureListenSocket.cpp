@@ -54,17 +54,13 @@ SecureListenSocket::accept()
 						m_events,
 						m_socketMultiplexer,
 						ARCH->acceptSocket(m_socket, NULL));
-
-<<<<<<< HEAD:src/lib/plugin/ns/SecureListenSocket.cpp
+		socket->initSsl(true);
 		m_secureSocketSet.insert(socket);
 
-		socket->initSsl(true);
-=======
 		if (socket != NULL) {
 			setListeningJob();
 		}
 
->>>>>>> 79b9c52... Refactored no or wrong ssl certificate error handling #30:src/lib/net/SecureListenSocket.cpp
 		// TODO: customized certificate path
 		String certificateFilename = ARCH->getProfileDirectory();
 #if SYSAPI_WIN32
@@ -82,15 +78,6 @@ SecureListenSocket::accept()
 
 		socket->secureAccept();
 
-<<<<<<< HEAD:src/lib/plugin/ns/SecureListenSocket.cpp
-		if (socket != NULL) {
-			m_socketMultiplexer->addSocket(this,
-							new TSocketMultiplexerMethodJob<TCPListenSocket>(
-								this, &TCPListenSocket::serviceListening,
-								m_socket, true, false));
-		}
-=======
->>>>>>> 79b9c52... Refactored no or wrong ssl certificate error handling #30:src/lib/net/SecureListenSocket.cpp
 		return dynamic_cast<IDataSocket*>(socket);
 	}
 	catch (XArchNetwork&) {
