@@ -395,6 +395,34 @@ void MainWindow::updateStateFromLogLine(const QString &line)
 	{
 		setSynergyState(synergyConnected);
 	}
+
+	QRegExp fingerprintRegex(".*server fingerprint: ([A-F0-9:]+)");
+	if (fingerprintRegex.exactMatch(line)) {
+
+		QString fingerprint = fingerprintRegex.cap(1);
+		QMessageBox::StandardButton fingerprintReply =
+			QMessageBox::information(
+			this, tr("Security question"),
+			tr("Do you trust this fingerprint?\n\n"
+			   "%1\n\n"
+			   "This is a server fingerprint. You should compare this "
+			   "fingerprint to the one on your server's screen. If the "
+			   "two don't match exactly, then it's probably not the server "
+			   "you're expecting (it could be a malicious user).\n\n"
+			   "To automatically trust this fingerprint for future "
+			   "connections, click Yes. To reject this fingerprint and "
+			   "disconnect from the server, click No.")
+			.arg(fingerprint),
+			QMessageBox::Yes | QMessageBox::No);
+
+		if (fingerprintReply == QMessageBox::Yes) {
+			// TODO: save to file
+			qDebug() << "fingerprint: " << fingerprint;
+		}
+		else {
+			stopSynergy();
+		}
+	}
 }
 
 void MainWindow::clearLog()
