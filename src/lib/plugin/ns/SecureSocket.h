@@ -43,7 +43,7 @@ public:
 
 	void				secureConnect();
 	void				secureAccept();
-	void				setFingerprintFilename(CString& f) { m_certFingerprintFilename = f; }
+	void				setFingerprintFilename(String& f) { m_certFingerprintFilename = f; }
 	bool				isReady() const { return m_secureReady; }
 	bool				isSecureReady();
 	bool				isSecure() { return true; }
@@ -62,7 +62,7 @@ private:
 	void				checkResult(int n, bool& fatal, bool& retry);
 	void				showError();
 	void				throwError(const char* reason);
-	CString				getError();
+	String				getError();
 	void				disconnect();
 	bool				verifyCertFingerprint();
 
@@ -77,5 +77,5 @@ private:
 private:
 	Ssl*				m_ssl;
 	bool				m_secureReady;
-	CString				m_certFingerprintFilename;
+	String				m_certFingerprintFilename;
 };

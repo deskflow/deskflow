@@ -41,10 +41,10 @@ struct Ssl {
 	SSL*		m_ssl;
 };
 
-CSecureSocket::CSecureSocket(
+SecureSocket::SecureSocket(
 		IEventQueue* events,
-		CSocketMultiplexer* socketMultiplexer) :
-	CTCPSocket(events, socketMultiplexer),
+		SocketMultiplexer* socketMultiplexer) :
+	TCPSocket(events, socketMultiplexer),
 	m_secureReady(false),
 	m_certFingerprintFilename()
 {
@@ -396,14 +396,14 @@ SecureSocket::getError()
 }
 
 void
-CSecureSocket::disconnect()
+SecureSocket::disconnect()
 {
 	sendEvent(getEvents()->forISocket().disconnected());
 	sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
 bool
-CSecureSocket::verifyCertFingerprint()
+SecureSocket::verifyCertFingerprint()
 {
 	if (m_certFingerprintFilename.empty()) {
 		return false;
@@ -420,15 +420,15 @@ CSecureSocket::verifyCertFingerprint()
 	}
 
 	// convert fingerprint into hexdecimal format
-	CString fingerprint(reinterpret_cast<char*>(tempFingerprint), tempFingerprintLen);
+	String fingerprint(reinterpret_cast<char*>(tempFingerprint), tempFingerprintLen);
 	synergy::string::toHex(fingerprint, 2);
 
 	// all uppercase
 	synergy::string::uppercase(fingerprint);
 
 	// check if this fingerprint exist
-	CString fileLine;
-	CString certificateFingerprint;
+	String fileLine;
+	String certificateFingerprint;
 	std::ifstream file;
 	file.open(m_certFingerprintFilename.c_str());
 
@@ -437,14 +437,14 @@ CSecureSocket::verifyCertFingerprint()
 		// example of a fingerprint:
 		// SHA1 Fingerprint=6E:41:1A:21:53:2E:A3:EF:4D:A6:F2:A6:BA:0E:27:09:8A:F3:A1:10
 		size_t found = fileLine.find('=');
-		if (found != CString::npos) {
+		if (found != String::npos) {
 			certificateFingerprint = fileLine.substr(found + 1);
 
 			if (!certificateFingerprint.empty()) {
 				// remove colons
 				synergy::string::removeChar(certificateFingerprint, ':');
 
-				if(certificateFingerprint.compare(fingerprint) == 0) {
+				if (certificateFingerprint.compare(fingerprint) == 0) {
 					file.close();
 					return true;
 				}
@@ -458,10 +458,10 @@ CSecureSocket::verifyCertFingerprint()
 }
 
 ISocketMultiplexerJob*
-CSecureSocket::serviceConnect(ISocketMultiplexerJob* job,
+SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 				bool, bool write, bool error)
 {
-	CLock lock(&getMutex());
+	Lock lock(&getMutex());
 
 	bool retry = true;
 #ifdef SYSAPI_WIN32
@@ -474,10 +474,10 @@ CSecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 }
 
 ISocketMultiplexerJob*
-CSecureSocket::serviceAccept(ISocketMultiplexerJob* job,
+SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 				bool, bool write, bool error)
 {
-	CLock lock(&getMutex());
+	Lock lock(&getMutex());
 
 	bool retry = true;
 #ifdef SYSAPI_WIN32

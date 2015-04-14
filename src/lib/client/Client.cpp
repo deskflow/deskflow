@@ -77,7 +77,7 @@ Client::Client(
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
 	m_socket(NULL),
-	m_useSecureNetwork(false)
+	m_useSecureNetwork(false),
 	m_args(args)
 {
 	assert(m_socketFactory != NULL);
@@ -104,7 +104,7 @@ Client::Client(
 									&Client::handleFileRecieveCompleted));
 	}
 
-	if (enableCrypto) {
+	if (m_args.m_enableCrypto) {
 		m_useSecureNetwork = ARCH->plugin().exists(s_networkSecurity);
 		if (m_useSecureNetwork == false) {
 			LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));

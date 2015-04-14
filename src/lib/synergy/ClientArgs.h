@@ -27,5 +27,5 @@ public:
 
 public:
 	int					m_yscroll;
-	CString				m_certFingerprintFilename;
+	String				m_certFingerprintFilename;
 };

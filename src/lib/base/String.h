@@ -74,19 +74,19 @@ String removeFileExt(String filename);
 /*!
 Convert each character in \c subject into hexdecimal form with \c width
 */
-void toHex(CString& subject, int width, const char fill = '0');
+void toHex(String& subject, int width, const char fill = '0');
 
 //! Convert to all uppercase
 /*!
 Convert each character in \c subject to uppercase
 */
-void uppercase(CString& subject);
+void uppercase(String& subject);
 
 //! Remove all specific char in suject
 /*!
 Remove all specific \c char in \c suject
 */
-void removeChar(CString& subject, const char c);
+void removeChar(String& subject, const char c);
 
 
 //! Case-insensitive comparisons

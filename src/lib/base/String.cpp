@@ -184,7 +184,7 @@ removeFileExt(String filename)
 }
 
 void
-toHex(CString& subject, int width, const char fill)
+toHex(String& subject, int width, const char fill)
 {
 	std::stringstream ss;
 	ss << std::hex;
@@ -196,13 +196,13 @@ toHex(CString& subject, int width, const char fill)
 }
 
 void
-uppercase(CString& subject)
+uppercase(String& subject)
 {
 	std::transform(subject.begin(), subject.end(), subject.begin(), ::toupper);
 }
 
 void
-removeChar(CString& subject, const char c)
+removeChar(String& subject, const char c)
 {
 	subject.erase(std::remove(subject.begin(), subject.end(), c), subject.end());
 }
