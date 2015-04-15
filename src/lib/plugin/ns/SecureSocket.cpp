@@ -379,7 +379,7 @@ SecureSocket::checkResult(int n, bool& fatal, bool& retry)
 		break;
 
 	default:
-		LOG((CLOG_ERR "secure socket error: SSL_ERROR_SSL"));
+		LOG((CLOG_ERR "secure socket error: unknown"));
 		fatal = true;
 		break;
 	}
