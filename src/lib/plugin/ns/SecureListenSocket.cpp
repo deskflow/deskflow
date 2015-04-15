@@ -54,10 +54,13 @@ SecureListenSocket::accept()
 						m_events,
 						m_socketMultiplexer,
 						ARCH->acceptSocket(m_socket, NULL));
-
+		socket->initSsl(true);
 		m_secureSocketSet.insert(socket);
 
-		socket->initSsl(true);
+		if (socket != NULL) {
+			setListeningJob();
+		}
+
 		// TODO: customized certificate path
 		String certificateFilename = ARCH->getProfileDirectory();
 #if SYSAPI_WIN32
@@ -67,26 +70,27 @@ SecureListenSocket::accept()
 #endif
 		certificateFilename.append(s_certificateFilename);
 
-		socket->loadCertificates(certificateFilename.c_str());
+		bool loaded = socket->loadCertificates(certificateFilename);
+		if (!loaded) {
+			delete socket;
+			return NULL;
+		}
+
 		socket->secureAccept();
 
-		if (socket != NULL) {
-			m_socketMultiplexer->addSocket(this,
-							new TSocketMultiplexerMethodJob<TCPListenSocket>(
-								this, &TCPListenSocket::serviceListening,
-								m_socket, true, false));
-		}
 		return dynamic_cast<IDataSocket*>(socket);
 	}
 	catch (XArchNetwork&) {
 		if (socket != NULL) {
 			delete socket;
+			setListeningJob();
 		}
 		return NULL;
 	}
 	catch (std::exception &ex) {
 		if (socket != NULL) {
 			delete socket;
+			setListeningJob();
 		}
 		throw ex;
 	}

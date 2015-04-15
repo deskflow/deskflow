@@ -28,6 +28,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <memory>
+#include <fstream>
 
 //
 // SecureSocket
@@ -44,7 +45,8 @@ SecureSocket::SecureSocket(
 		IEventQueue* events,
 		SocketMultiplexer* socketMultiplexer) :
 	TCPSocket(events, socketMultiplexer),
-	m_secureReady(false)
+	m_secureReady(false),
+	m_certFingerprintFilename()
 {
 }
 
@@ -149,24 +151,46 @@ SecureSocket::initSsl(bool server)
 	initContext(server);
 }
 
-void
-SecureSocket::loadCertificates(const char* filename)
+bool
+SecureSocket::loadCertificates(String& filename)
 {
-	int r = 0;
-	r = SSL_CTX_use_certificate_file(m_ssl->m_context, filename, SSL_FILETYPE_PEM);
-	if (r <= 0) {
-		throwError("could not use ssl certificate");
+	if (filename.empty()) {
+		showError("ssl certificate is not specified");
+		return false;
+	}
+	else {
+		std::ifstream file(filename.c_str());
+		bool exist = file.good();
+		file.close();
+
+		if (!exist) {
+			String errorMsg("ssl certificate doesn't exist: ");
+			errorMsg.append(filename);
+			showError(errorMsg.c_str());
+			return false;
+		}
 	}
 
-	r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, filename, SSL_FILETYPE_PEM);
+	int r = 0;
+	r = SSL_CTX_use_certificate_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
 	if (r <= 0) {
-		throwError("could not use ssl private key");
+		showError("could not use ssl certificate");
+		return false;
+	}
+
+	r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
+	if (r <= 0) {
+		showError("could not use ssl private key");
+		return false;
 	}
 
 	r = SSL_CTX_check_private_key(m_ssl->m_context);
 	if (!r) {
-		throwError("could not verify ssl private key");
+		showError("could not verify ssl private key");
+		return false;
 	}
+
+	return true;
 }
 
 void
@@ -256,20 +280,29 @@ SecureSocket::secureConnect(int socket)
 		// tell user and sleep so the socket isn't hammered.
 		LOG((CLOG_ERR "failed to connect secure socket"));
 		LOG((CLOG_INFO "server connection may not be secure"));
-		ARCH->sleep(1);
+		disconnect();
+		return false;
 	}
 
 	m_secureReady = !retry;
 
 	if (m_secureReady) {
-		LOG((CLOG_INFO "connected to secure socket"));
-		showCertificate();
+		if (verifyCertFingerprint()) {
+			LOG((CLOG_INFO "connected to secure socket"));
+			if (!showCertificate()) {
+				disconnect();
+			}
+		}
+		else {
+			LOG((CLOG_ERR "failed to verity server certificate fingerprint"));
+			disconnect();
+		}
 	}
 
 	return retry;
 }
 
-void
+bool
 SecureSocket::showCertificate()
 {
 	X509* cert;
@@ -284,8 +317,11 @@ SecureSocket::showCertificate()
 		X509_free(cert);
 	}
 	else {
-		throwError("server has no ssl certificate");
+		showError("server has no ssl certificate");
+		return false;
 	}
+
+	return true;
 }
 
 void
@@ -346,30 +382,20 @@ SecureSocket::checkResult(int n, bool& fatal, bool& retry)
 
 	if (fatal) {
 		showError();
-		sendEvent(getEvents()->forISocket().disconnected());
-		sendEvent(getEvents()->forIStream().inputShutdown());
+		disconnect();
 	}
 }
 
 void
-SecureSocket::showError()
+SecureSocket::showError(const char* reason)
 {
-	String error = getError();
-	if (!error.empty()) {
-		LOG((CLOG_ERR "secure socket error: %s", error.c_str()));
+	if (reason != NULL) {
+		LOG((CLOG_ERR "%s", reason));
 	}
-}
 
-void
-SecureSocket::throwError(const char* reason)
-{
 	String error = getError();
 	if (!error.empty()) {
-		throw XSocket(synergy::string::sprintf(
-			"%s: %s", reason, error.c_str()));
-	}
-	else {
-		throw XSocket(reason);
+		LOG((CLOG_ERR "%s", error.c_str()));
 	}
 }
 
@@ -386,6 +412,76 @@ SecureSocket::getError()
 	else {
 		return "";
 	}
+}
+
+void
+SecureSocket::disconnect()
+{
+	sendEvent(getEvents()->forISocket().disconnected());
+	sendEvent(getEvents()->forIStream().inputShutdown());
+}
+
+void
+SecureSocket::formatFingerprint(String& fingerprint, bool hex, bool separator)
+{
+	if (hex) {
+		// to hexidecimal
+		synergy::string::toHex(fingerprint, 2);
+	}
+
+	// all uppercase
+	synergy::string::uppercase(fingerprint);
+
+	if (separator) {
+		// add colon to separate each 2 charactors
+		size_t separators = fingerprint.size() / 2;
+		for (size_t i = 1; i < separators; i++) {
+			fingerprint.insert(i * 3 - 1, ":");
+		}
+	}
+}
+
+bool
+SecureSocket::verifyCertFingerprint()
+{
+	if (m_certFingerprintFilename.empty()) {
+		return false;
+	}
+
+	// calculate received certificate fingerprint
+	X509 *cert = cert = SSL_get_peer_certificate(m_ssl->m_ssl);
+	EVP_MD* tempDigest;
+	unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
+	unsigned int tempFingerprintLen;
+	tempDigest = (EVP_MD*)EVP_sha1();
+	if (X509_digest(cert, tempDigest, tempFingerprint, &tempFingerprintLen) <= 0) {
+		return false;
+	}
+
+	// format fingerprint into hexdecimal format with colon separator
+	String fingerprint(reinterpret_cast<char*>(tempFingerprint), tempFingerprintLen);
+	formatFingerprint(fingerprint);
+	LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
+
+	// check if this fingerprint exist
+	String fileLine;
+	std::ifstream file;
+	file.open(m_certFingerprintFilename.c_str());
+
+	bool isValid = false;
+	while (!file.eof()) {
+		getline(file,fileLine);
+		// example of a fingerprint:A1:B2:C3
+		if (!fileLine.empty()) {
+			if (fileLine.compare(fingerprint) == 0) {
+				isValid = true;
+				break;
+			}
+		}
+	}
+
+	file.close();
+	return isValid;
 }
 
 ISocketMultiplexerJob*

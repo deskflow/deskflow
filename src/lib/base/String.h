@@ -70,6 +70,25 @@ Finds the last dot and remove all characters from the dot to the end
 */
 String removeFileExt(String filename);
 
+//! Convert into hexdecimal
+/*!
+Convert each character in \c subject into hexdecimal form with \c width
+*/
+void toHex(String& subject, int width, const char fill = '0');
+
+//! Convert to all uppercase
+/*!
+Convert each character in \c subject to uppercase
+*/
+void uppercase(String& subject);
+
+//! Remove all specific char in suject
+/*!
+Remove all specific \c char in \c suject
+*/
+void removeChar(String& subject, const char c);
+
+
 //! Case-insensitive comparisons
 /*!
 This class provides case-insensitve comparison functions.

@@ -23,6 +23,7 @@
 #include "synergy/IClipboard.h"
 #include "synergy/DragInformation.h"
 #include "synergy/INode.h"
+#include "synergy/ClientArgs.h"
 #include "net/NetworkAddress.h"
 #include "base/EventTypes.h"
 
@@ -59,8 +60,7 @@ public:
 							const String& name, const NetworkAddress& address,
 							ISocketFactory* socketFactory,
 							synergy::Screen* screen,
-							bool enableDragDrop,
-							bool enableCrypto);
+							ClientArgs args);
 	~Client();
 	
 #ifdef TEST_ENV
@@ -224,7 +224,7 @@ private:
 	String				m_dragFileExt;
 	Thread*				m_sendFileThread;
 	Thread*				m_writeToDropDirThread;
-	bool				m_enableDragDrop;
 	TCPSocket*			m_socket;
 	bool				m_useSecureNetwork;
+	ClientArgs			m_args;
 };

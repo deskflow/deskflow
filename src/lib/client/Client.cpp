@@ -60,8 +60,7 @@ Client::Client(
 		const String& name, const NetworkAddress& address,
 		ISocketFactory* socketFactory,
 		synergy::Screen* screen,
-		bool enableDragDrop,
-		bool enableCrypto) :
+		ClientArgs args) :
 	m_mock(false),
 	m_name(name),
 	m_serverAddress(address),
@@ -77,9 +76,9 @@ Client::Client(
 	m_events(events),
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
-	m_enableDragDrop(enableDragDrop),
 	m_socket(NULL),
-	m_useSecureNetwork(false)
+	m_useSecureNetwork(false),
+	m_args(args)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -94,7 +93,7 @@ Client::Client(
 							new TMethodEventJob<Client>(this,
 								&Client::handleResume));
 
-	if (m_enableDragDrop) {
+	if (m_args.m_enableDragDrop) {
 		m_events->adoptHandler(m_events->forIScreen().fileChunkSending(),
 								this,
 								new TMethodEventJob<Client>(this,
@@ -105,7 +104,7 @@ Client::Client(
 									&Client::handleFileRecieveCompleted));
 	}
 
-	if (enableCrypto) {
+	if (m_args.m_enableCrypto) {
 		m_useSecureNetwork = ARCH->plugin().exists(s_networkSecurity);
 		if (m_useSecureNetwork == false) {
 			LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
@@ -162,6 +161,7 @@ Client::connect()
 		// create the socket
 		IDataSocket* socket = m_socketFactory->create(m_useSecureNetwork);
 		m_socket = dynamic_cast<TCPSocket*>(socket);
+		m_socket->setFingerprintFilename(m_args.m_certFingerprintFilename);
 
 		// filter socket messages, including a packetizing filter
 		m_stream = socket;
@@ -780,7 +780,8 @@ Client::fileChunkReceived(String data)
 void
 Client::dragInfoReceived(UInt32 fileNum, String data)
 {
-	if (!m_enableDragDrop) {
+	// TODO: fix duplicate function from CServer
+	if (!m_args.m_enableDragDrop) {
 		LOG((CLOG_DEBUG "drag drop not enabled, ignoring drag info."));
 		return;
 	}

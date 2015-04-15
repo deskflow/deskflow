@@ -53,3 +53,32 @@ TEST(StringTests, sprintf)
 
 	EXPECT_EQ("answer=42", result);
 }
+
+TEST(StringTests, toHex)
+{
+	String subject = "foobar";
+	int width = 2;
+
+	string::toHex(subject, width);
+
+	EXPECT_EQ("666f6f626172", subject);
+}
+
+TEST(StringTests, uppercase)
+{
+	String subject = "12foo3BaR";
+
+	string::uppercase(subject);
+
+	EXPECT_EQ("12FOO3BAR", subject);
+}
+
+TEST(StringTests, removeChar)
+{
+	String subject = "foobar";
+	const char c = 'o';
+
+	string::removeChar(subject, c);
+
+	EXPECT_EQ("fbar", subject);
+}
