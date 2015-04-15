@@ -421,6 +421,26 @@ SecureSocket::disconnect()
 	sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
+void
+SecureSocket::formatFingerprint(String& fingerprint, bool hex, bool separator)
+{
+	if (hex) {
+		// to hexidecimal
+		synergy::string::toHex(fingerprint, 2);
+	}
+
+	// all uppercase
+	synergy::string::uppercase(fingerprint);
+
+	if (separator) {
+		// add colon to separate each 2 charactors
+		size_t separators = fingerprint.size() / 2;
+		for (size_t i = 1; i < separators; i++) {
+			fingerprint.insert(i * 3 - 1, ":");
+		}
+	}
+}
+
 bool
 SecureSocket::verifyCertFingerprint()
 {
@@ -438,40 +458,30 @@ SecureSocket::verifyCertFingerprint()
 		return false;
 	}
 
-	// convert fingerprint into hexdecimal format
+	// format fingerprint into hexdecimal format with colon separator
 	String fingerprint(reinterpret_cast<char*>(tempFingerprint), tempFingerprintLen);
-	synergy::string::toHex(fingerprint, 2);
-
-	// all uppercase
-	synergy::string::uppercase(fingerprint);
+	formatFingerprint(fingerprint);
 
 	// check if this fingerprint exist
 	String fileLine;
-	String certificateFingerprint;
 	std::ifstream file;
 	file.open(m_certFingerprintFilename.c_str());
 
 	while (!file.eof()) {
 		getline(file,fileLine);
-		// example of a fingerprint:
-		// SHA1 Fingerprint=6E:41:1A:21:53:2E:A3:EF:4D:A6:F2:A6:BA:0E:27:09:8A:F3:A1:10
-		size_t found = fileLine.find('=');
-		if (found != String::npos) {
-			certificateFingerprint = fileLine.substr(found + 1);
-
-			if (!certificateFingerprint.empty()) {
-				// remove colons
-				synergy::string::removeChar(certificateFingerprint, ':');
-
-				if (certificateFingerprint.compare(fingerprint) == 0) {
-					file.close();
-					return true;
-				}
+		// example of a fingerprint:A1:B2:C3
+		if (!fileLine.empty()) {
+			if (fileLine.compare(fingerprint) == 0) {
+				file.close();
+				return true;
 			}
 		}
 	}
 
 	file.close();
+
+	LOG((CLOG_NOTE "new fingerprint from a server"));
+	LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
 	return false;
 }

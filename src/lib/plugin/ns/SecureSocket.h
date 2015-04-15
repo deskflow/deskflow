@@ -63,6 +63,9 @@ private:
 	void				showError(const char* reason = NULL);
 	String				getError();
 	void				disconnect();
+	void				formatFingerprint(String& fingerprint,
+											bool hex = true,
+											bool separator = true);
 	bool				verifyCertFingerprint();
 
 	ISocketMultiplexerJob*
