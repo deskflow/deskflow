@@ -55,7 +55,8 @@ SOURCES += src/main.cpp \
     src/WebClient.cpp \
     src/PluginWizardPage.cpp \
     src/PluginManager.cpp \
-    src/CoreInterface.cpp
+    src/CoreInterface.cpp \
+    src/Fingerprint.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -97,7 +98,8 @@ HEADERS += src/MainWindow.h \
     src/PluginWizardPage.h \
     src/ProcessorArch.h \
     src/PluginManager.h \
-    src/CoreInterface.h
+    src/CoreInterface.h \
+    src/Fingerprint.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx {

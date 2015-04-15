@@ -21,6 +21,8 @@
 #include <iostream>
 
 #include "MainWindow.h"
+
+#include "Fingerprint.h"
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
@@ -396,32 +398,48 @@ void MainWindow::updateStateFromLogLine(const QString &line)
 		setSynergyState(synergyConnected);
 	}
 
+	checkFingerprint(line);
+}
+
+void MainWindow::checkFingerprint(const QString& line)
+{
 	QRegExp fingerprintRegex(".*server fingerprint: ([A-F0-9:]+)");
-	if (fingerprintRegex.exactMatch(line)) {
+	if (!fingerprintRegex.exactMatch(line)) {
+		return;
+	}
 
-		QString fingerprint = fingerprintRegex.cap(1);
-		QMessageBox::StandardButton fingerprintReply =
-			QMessageBox::information(
-			this, tr("Security question"),
-			tr("Do you trust this fingerprint?\n\n"
-			   "%1\n\n"
-			   "This is a server fingerprint. You should compare this "
-			   "fingerprint to the one on your server's screen. If the "
-			   "two don't match exactly, then it's probably not the server "
-			   "you're expecting (it could be a malicious user).\n\n"
-			   "To automatically trust this fingerprint for future "
-			   "connections, click Yes. To reject this fingerprint and "
-			   "disconnect from the server, click No.")
-			.arg(fingerprint),
-			QMessageBox::Yes | QMessageBox::No);
+	QString fingerprint = fingerprintRegex.cap(1);
+	if (Fingerprint::trustedServers().check(fingerprint)) {
+		return;
+	}
 
-		if (fingerprintReply == QMessageBox::Yes) {
-			// TODO: save to file
-			qDebug() << "fingerprint: " << fingerprint;
-		}
-		else {
-			stopSynergy();
-		}
+	QMessageBox::StandardButton fingerprintReply =
+		QMessageBox::information(
+		this, tr("Security question"),
+		tr("Do you trust this fingerprint?\n\n"
+		   "%1\n\n"
+		   "This is a server fingerprint. You should compare this "
+		   "fingerprint to the one on your server's screen. If the "
+		   "two don't match exactly, then it's probably not the server "
+		   "you're expecting (it could be a malicious user).\n\n"
+		   "To automatically trust this fingerprint for future "
+		   "connections, click Yes. To reject this fingerprint and "
+		   "disconnect from the server, click No.")
+		.arg(fingerprint),
+		QMessageBox::Yes | QMessageBox::No);
+
+	if (fingerprintReply == QMessageBox::Yes) {
+		// restart core process after trusting fingerprint.
+		Fingerprint::trustedServers().trust(fingerprint);
+		startSynergy();
+	}
+	else {
+		// on all platforms, the core process will stop if the
+		// fingerprint is not trusted, so technically the stop
+		// isn't really needed. however on windows, the core
+		// process will keep trying (and failing) unless we
+		// tell it to stop.
+		stopSynergy();
 	}
 }
 
@@ -479,7 +497,11 @@ void MainWindow::startSynergy()
 	}
 
 #if defined(Q_OS_WIN)
-	args << "--profile-dir" << getProfileDirectoryForArg();
+	// on windows, the profile directory changes depending on the user that
+	// launched the process (e.g. when launched with elevation). setting the
+	// profile dir on launch ensures it uses the same profile dir is used
+	// no matter how its relaunched.
+	args << "--profile-dir" << getProfileRootForArg();
 #endif
 
 	if ((synergyType() == synergyClient && !clientArgs(args, app))
@@ -1251,25 +1273,17 @@ void MainWindow::bonjourInstallFinished()
 	m_pCheckBoxAutoConfig->setChecked(true);
 }
 
-QString MainWindow::getProfileDirectory()
+QString MainWindow::getProfileRootForArg()
 {
+	CoreInterface coreInterface;
+	QString dir = coreInterface.getProfileDir();
+
+	// HACK: strip our app name since we're returning the root dir.
 #if defined(Q_OS_WIN)
-
-	QString qtDataDir = QDesktopServices::storageLocation(
-		QDesktopServices::DataLocation);
-
-	// HACK: core wants the base app data dir, this seems like a very hacky
-	// way to get it (maybe consider using %LOCALAPPDATA% instead?)
-	return qtDataDir.replace("\\Synergy\\Synergy", "");
-
+	dir.replace("\\Synergy", "");
 #else
-
-	return "";
-
+	dir.replace("/.synergy", "");
 #endif
-}
 
-QString MainWindow::getProfileDirectoryForArg()
-{
-	return QString("\"%1\"").arg(getProfileDirectory());
+	return QString("\"%1\"").arg(dir);
 }
