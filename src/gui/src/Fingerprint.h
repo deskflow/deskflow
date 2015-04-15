@@ -26,7 +26,7 @@ private:
 
 public:
 	void trust(const QString& fingerprintText);
-	bool check(const QString& fingerprintText);
+	bool exists(const QString& fingerprintText);
 
 public:
 	static Fingerprint local();

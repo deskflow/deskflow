@@ -409,7 +409,7 @@ void MainWindow::checkFingerprint(const QString& line)
 	}
 
 	QString fingerprint = fingerprintRegex.cap(1);
-	if (Fingerprint::trustedServers().check(fingerprint)) {
+	if (Fingerprint::trustedServers().exists(fingerprint)) {
 		return;
 	}
 

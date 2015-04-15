@@ -56,7 +56,7 @@ void Fingerprint::trust(const QString& fingerprintText)
 	}
 }
 
-bool Fingerprint::check(const QString& fingerprintText)
+bool Fingerprint::exists(const QString& fingerprintText)
 {
 	CoreInterface coreInterface;
 	QString profileDir = coreInterface.getProfileDir();
