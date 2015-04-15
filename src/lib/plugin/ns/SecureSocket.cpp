@@ -461,29 +461,27 @@ SecureSocket::verifyCertFingerprint()
 	// format fingerprint into hexdecimal format with colon separator
 	String fingerprint(reinterpret_cast<char*>(tempFingerprint), tempFingerprintLen);
 	formatFingerprint(fingerprint);
+	LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
 	// check if this fingerprint exist
 	String fileLine;
 	std::ifstream file;
 	file.open(m_certFingerprintFilename.c_str());
 
+	bool isValid = false;
 	while (!file.eof()) {
 		getline(file,fileLine);
 		// example of a fingerprint:A1:B2:C3
 		if (!fileLine.empty()) {
 			if (fileLine.compare(fingerprint) == 0) {
-				file.close();
-				return true;
+				isValid = true;
+				break;
 			}
 		}
 	}
 
 	file.close();
-
-	LOG((CLOG_NOTE "new fingerprint from a server"));
-	LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
-
-	return false;
+	return isValid;
 }
 
 ISocketMultiplexerJob*
