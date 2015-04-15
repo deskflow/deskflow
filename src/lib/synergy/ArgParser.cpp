@@ -89,10 +89,6 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
 			// define scroll 
 			args.m_yscroll = atoi(argv[++i]);
 		}
-		else if (isArg(i, argc, argv, NULL, "--certificate-fingerprint", 1)) {
-			// define scroll
-			args.m_certFingerprintFilename = argv[++i];
-		}
 		else {
 			if (i + 1 == argc) {
 				args.m_synergyAddress = argv[i];

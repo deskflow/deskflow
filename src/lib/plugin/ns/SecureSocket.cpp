@@ -36,6 +36,11 @@
 
 #define MAX_ERROR_SIZE 65535
 
+static const char kFingerprintDirName[] = "ssl/fingerprints";
+static const char kFingerprintLocalFilename[] = "local.txt";
+static const char kFingerprintTrustedServersFilename[] = "trusted-servers.txt";
+static const char kFingerprintTrustedClientsFilename[] = "trusted-clients.txt";
+
 struct Ssl {
 	SSL_CTX*	m_context;
 	SSL*		m_ssl;
@@ -45,8 +50,7 @@ SecureSocket::SecureSocket(
 		IEventQueue* events,
 		SocketMultiplexer* socketMultiplexer) :
 	TCPSocket(events, socketMultiplexer),
-	m_secureReady(false),
-	m_certFingerprintFilename()
+	m_secureReady(false)
 {
 }
 
@@ -294,7 +298,7 @@ SecureSocket::secureConnect(int socket)
 			}
 		}
 		else {
-			LOG((CLOG_ERR "failed to verity server certificate fingerprint"));
+			LOG((CLOG_ERR "failed to verify server certificate fingerprint"));
 			disconnect();
 		}
 	}
@@ -444,17 +448,16 @@ SecureSocket::formatFingerprint(String& fingerprint, bool hex, bool separator)
 bool
 SecureSocket::verifyCertFingerprint()
 {
-	if (m_certFingerprintFilename.empty()) {
-		return false;
-	}
-
 	// calculate received certificate fingerprint
 	X509 *cert = cert = SSL_get_peer_certificate(m_ssl->m_ssl);
 	EVP_MD* tempDigest;
 	unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
 	unsigned int tempFingerprintLen;
 	tempDigest = (EVP_MD*)EVP_sha1();
-	if (X509_digest(cert, tempDigest, tempFingerprint, &tempFingerprintLen) <= 0) {
+	int digestResult = X509_digest(cert, tempDigest, tempFingerprint, &tempFingerprintLen);
+
+	if (digestResult <= 0) {
+		LOG((CLOG_ERR "failed to calculate fingerprint, digest result: %d", digestResult));
 		return false;
 	}
 
@@ -463,15 +466,21 @@ SecureSocket::verifyCertFingerprint()
 	formatFingerprint(fingerprint);
 	LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
+	String trustedServersFilename;
+	trustedServersFilename = synergy::string::sprintf(
+		"%s/%s/%s",
+		ARCH->getProfileDirectory().c_str(),
+		kFingerprintDirName,
+		kFingerprintTrustedServersFilename);
+
 	// check if this fingerprint exist
 	String fileLine;
 	std::ifstream file;
-	file.open(m_certFingerprintFilename.c_str());
+	file.open(trustedServersFilename.c_str());
 
 	bool isValid = false;
 	while (!file.eof()) {
 		getline(file,fileLine);
-		// example of a fingerprint:A1:B2:C3
 		if (!fileLine.empty()) {
 			if (fileLine.compare(fingerprint) == 0) {
 				isValid = true;

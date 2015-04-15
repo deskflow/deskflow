@@ -43,7 +43,6 @@ public:
 
 	void				secureConnect();
 	void				secureAccept();
-	void				setFingerprintFilename(String& f) { m_certFingerprintFilename = f; }
 	bool				isReady() const { return m_secureReady; }
 	bool				isSecureReady();
 	bool				isSecure() { return true; }
@@ -79,5 +78,4 @@ private:
 private:
 	Ssl*				m_ssl;
 	bool				m_secureReady;
-	String				m_certFingerprintFilename;
 };

@@ -161,7 +161,6 @@ Client::connect()
 		// create the socket
 		IDataSocket* socket = m_socketFactory->create(m_useSecureNetwork);
 		m_socket = dynamic_cast<TCPSocket*>(socket);
-		m_socket->setFingerprintFilename(m_args.m_certFingerprintFilename);
 
 		// filter socket messages, including a packetizing filter
 		m_stream = socket;

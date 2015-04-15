@@ -27,5 +27,4 @@ public:
 
 public:
 	int					m_yscroll;
-	String				m_certFingerprintFilename;
 };
