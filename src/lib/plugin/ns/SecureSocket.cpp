@@ -37,9 +37,9 @@
 #define MAX_ERROR_SIZE 65535
 
 static const char kFingerprintDirName[] = "ssl/fingerprints";
-static const char kFingerprintLocalFilename[] = "local.txt";
+//static const char kFingerprintLocalFilename[] = "local.txt";
 static const char kFingerprintTrustedServersFilename[] = "trusted-servers.txt";
-static const char kFingerprintTrustedClientsFilename[] = "trusted-clients.txt";
+//static const char kFingerprintTrustedClientsFilename[] = "trusted-clients.txt";
 
 struct Ssl {
 	SSL_CTX*	m_context;
