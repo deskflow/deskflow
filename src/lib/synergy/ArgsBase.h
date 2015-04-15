@@ -24,25 +24,27 @@ class ArgsBase {
 public:
 	ArgsBase();
 	virtual ~ArgsBase();
-	bool m_daemon;
-	bool m_backend;
-	bool m_restartable;
-	bool m_noHooks;
-	const char* m_pname;
-	const char* m_logFilter;
-	const char*	m_logFile;
-	const char*	m_display;
-	String m_name;
-	bool m_disableTray;
-	bool m_enableIpc;
-	bool m_enableDragDrop;
+
+public:
+	bool				m_daemon;
+	bool				m_backend;
+	bool				m_restartable;
+	bool				m_noHooks;
+	const char*			m_pname;
+	const char*			m_logFilter;
+	const char*			m_logFile;
+	const char*			m_display;
+	String				m_name;
+	bool				m_disableTray;
+	bool				m_enableIpc;
+	bool				m_enableDragDrop;
 #if SYSAPI_WIN32
-	bool m_debugServiceWait;
-	bool m_pauseOnExit;
-	bool m_stopOnDeskSwitch;
+	bool				m_debugServiceWait;
+	bool				m_pauseOnExit;
+	bool				m_stopOnDeskSwitch;
 #endif
 #if WINAPI_XWINDOWS
-	bool m_disableXInitThreads;
+	bool				m_disableXInitThreads;
 #endif
 	bool				m_shouldExit;
 	String				m_synergyAddress;

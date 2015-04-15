@@ -43,13 +43,14 @@ public:
 
 	void				secureConnect();
 	void				secureAccept();
+	void				setFingerprintFilename(String& f) { m_certFingerprintFilename = f; }
 	bool				isReady() const { return m_secureReady; }
 	bool				isSecureReady();
 	bool				isSecure() { return true; }
 	UInt32				secureRead(void* buffer, UInt32 n);
 	UInt32				secureWrite(const void* buffer, UInt32 n);
 	void				initSsl(bool server);
-	void				loadCertificates(const char* CertFile);
+	bool				loadCertificates(String& CertFile);
 
 private:
 	// SSL
@@ -57,11 +58,15 @@ private:
 	void				createSSL();
 	bool				secureAccept(int s);
 	bool				secureConnect(int s);
-	void				showCertificate();
+	bool				showCertificate();
 	void				checkResult(int n, bool& fatal, bool& retry);
-	void				showError();
-	void				throwError(const char* reason);
+	void				showError(const char* reason = NULL);
 	String				getError();
+	void				disconnect();
+	void				formatFingerprint(String& fingerprint,
+											bool hex = true,
+											bool separator = true);
+	bool				verifyCertFingerprint();
 
 	ISocketMultiplexerJob*
 						serviceConnect(ISocketMultiplexerJob*,
@@ -74,4 +79,5 @@ private:
 private:
 	Ssl*				m_ssl;
 	bool				m_secureReady;
+	String				m_certFingerprintFilename;
 };

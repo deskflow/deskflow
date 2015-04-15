@@ -26,5 +26,6 @@ public:
 	ClientArgs();
 
 public:
-	int m_yscroll;
+	int					m_yscroll;
+	String				m_certFingerprintFilename;
 };

@@ -45,6 +45,9 @@ public:
 						accept();
 	virtual void		deleteSocket(void*) { }
 
+protected:
+	void				setListeningJob();
+
 public:
 	ISocketMultiplexerJob*
 						serviceListening(ISocketMultiplexerJob*,
