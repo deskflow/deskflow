@@ -23,6 +23,7 @@
 #include "MainWindow.h"
 
 #include "Fingerprint.h"
+#include "PluginManager.h"
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
@@ -133,6 +134,17 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	updateEdition();
 
 	m_pLabelPadlock->hide();
+
+	if (Fingerprint::localFingerprintExists()) {
+		m_pLabelFingerprint->setVisible(true);
+		m_pLabelLocalFingerprint->setVisible(true);
+		m_pLabelLocalFingerprint->setText(
+									Fingerprint::localFingerprint());
+	}
+	else {
+		m_pLabelFingerprint->setVisible(false);
+		m_pLabelLocalFingerprint->setVisible(false);
+	}
 }
 
 MainWindow::~MainWindow()
@@ -941,17 +953,6 @@ void MainWindow::setEdition(int type)
 	}
 
 	setWindowTitle(title);
-
-	if (type == Pro) {
-		m_pLabelFingerprint->setVisible(true);
-		m_pLabelLocalFingerprint->setVisible(true);
-		m_pLabelLocalFingerprint->setText(
-									Fingerprint::localFingerprint());
-	}
-	else {
-		m_pLabelFingerprint->setVisible(false);
-		m_pLabelLocalFingerprint->setVisible(false);
-	}
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)

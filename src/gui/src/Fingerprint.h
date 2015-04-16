@@ -34,6 +34,7 @@ public:
 	static Fingerprint trustedClients();
 
 	static QString localFingerprint();
+	static bool localFingerprintExists();
 
 private:
 	QString m_Filename;

@@ -88,6 +88,26 @@ bool Fingerprint::exists(const QString& fingerprintText)
 	return false;
 }
 
+bool Fingerprint::localFingerprintExists()
+{
+	CoreInterface coreInterface;
+	QString profileDir = coreInterface.getProfileDir();
+
+	QString dirName = QString("%1/%2")
+	  .arg(profileDir)
+	  .arg(kDirName);
+
+	QString path = QString("%1/%2").arg(dirName).arg(kLocalFilename);
+	QFile file(path);
+
+	bool exist = false;
+	if (file.exists()) {
+		exist = true;
+	}
+
+	return exist;
+}
+
 Fingerprint Fingerprint::local()
 {
 	return Fingerprint(kLocalFilename);
