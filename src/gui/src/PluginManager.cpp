@@ -74,6 +74,23 @@ PluginManager::~PluginManager()
 {
 }
 
+bool PluginManager::exist(QString name)
+{
+	CoreInterface coreInterface;
+	QString PluginDir = coreInterface.getPluginDir();
+	QString pluginName = getPluginOsSpecificName(name);
+	QString filename;
+	filename.append(PluginDir);
+	filename.append(QDir::separator()).append(pluginName);
+	QFile file(filename);
+	bool exist = false;
+	if (file.exists()) {
+		exist = true;
+	}
+
+	return exist;
+}
+
 void PluginManager::downloadPlugins()
 {
 	if (m_DataDownloader.isFinished()) {
@@ -251,19 +268,6 @@ QString PluginManager::getOpenSslSetupUrl()
 	return result;
 }
 
-QString PluginManager::getPluginOsSpecificName(const QString& pluginName)
-{
-	QString result = pluginName;
-#if defined(Q_OS_WIN)
-	result.append(kWinPluginExt);
-#elif defined(Q_OS_MAC)
-	result = kMacPluginPrefix + pluginName + kMacPluginExt;
-#else
-	result = kLinuxPluginPrefix + pluginName + kLinuxPluginExt;
-#endif
-	return result;
-}
-
 bool PluginManager::checkOpenSslBinary()
 {
 	// assume OpenSsl is unavailable on Windows,
@@ -425,4 +429,17 @@ bool PluginManager::runProgram(
 	}
 
 	return true;
+}
+
+QString PluginManager::getPluginOsSpecificName(const QString& pluginName)
+{
+	QString result = pluginName;
+#if defined(Q_OS_WIN)
+	result.append(kWinPluginExt);
+#elif defined(Q_OS_MAC)
+	result = kMacPluginPrefix + pluginName + kMacPluginExt;
+#else
+	result = kLinuxPluginPrefix + pluginName + kLinuxPluginExt;
+#endif
+	return result;
 }

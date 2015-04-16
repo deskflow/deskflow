@@ -35,6 +35,8 @@ public:
 
 	int downloadIndex() { return m_DownloadIndex; }
 
+	static bool exist(QString name);
+
 public slots:
 	void downloadPlugins();
 	void saveOpenSslSetup();
@@ -45,13 +47,14 @@ private:
 	void savePlugin();
 	QString getPluginUrl(const QString& pluginName);
 	QString getOpenSslSetupUrl();
-	QString getPluginOsSpecificName(const QString& pluginName);
 	bool checkOpenSslBinary();
 	void downloadOpenSslSetup();
 	bool runProgram(
 		const QString& program,
 		const QStringList& args,
 		const QStringList& env);
+
+	static QString getPluginOsSpecificName(const QString& pluginName);
 
 signals:
 	void error(QString e);
