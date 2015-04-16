@@ -941,6 +941,17 @@ void MainWindow::setEdition(int type)
 	}
 
 	setWindowTitle(title);
+
+	if (type == Pro) {
+		m_pLabelFingerprint->setVisible(true);
+		m_pLabelLocalFingerprint->setVisible(true);
+		m_pLabelLocalFingerprint->setText(
+									Fingerprint::localFingerprint());
+	}
+	else {
+		m_pLabelFingerprint->setVisible(false);
+		m_pLabelLocalFingerprint->setVisible(false);
+	}
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
@@ -1222,6 +1233,7 @@ void MainWindow::updateEdition()
 	QString mac = getFirstMacAddress();
 	QString hashSrc = m_AppConfig.activateEmail() + mac;
 	QString hashResult = hash(hashSrc);
+
 	if (hashResult == m_AppConfig.userToken()) {
 		setEdition(m_AppConfig.edition());
 	}

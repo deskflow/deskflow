@@ -33,6 +33,8 @@ public:
 	static Fingerprint trustedServers();
 	static Fingerprint trustedClients();
 
+	static QString localFingerprint();
+
 private:
 	QString m_Filename;
 };

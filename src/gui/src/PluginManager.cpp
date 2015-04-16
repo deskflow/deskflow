@@ -39,6 +39,8 @@ static QString kCertificateLifetime = "365";
 static QString kCertificateSubjectInfo = "/CN=Synergy";
 static QString kCertificateFilename = "Synergy.pem";
 static QString kUnixOpenSslCommand = "openssl";
+static const char kFingerprintDir[] = "ssl/fingerprints";
+static const char kFingerprintLocalFilename[] = "local.txt";
 
 #if defined(Q_OS_WIN)
 static const char kWinPluginExt[] = ".dll";
@@ -353,6 +355,45 @@ void PluginManager::doGenerateCertificate()
 		return;
 	}
 
+	// generate fingerprint
+	arguments.clear();
+	arguments.append("x509");
+	arguments.append("-fingerprint");
+	arguments.append("-sha1");
+	arguments.append("-noout");
+	arguments.append("-in");
+	arguments.append(filename);
+
+	if (!runProgram(openSslProgramFile, arguments, environment)) {
+		return;
+	}
+
+	// write the standard output into file
+	filename.clear();
+	filename.append(m_ProfileDir);
+	filename.append(QDir::separator()).append(kFingerprintDir);
+	QDir dir(filename);
+	if (!dir.exists()) {
+		dir.mkpath(".");
+	}
+	filename.append(QDir::separator()).append(kFingerprintLocalFilename);
+
+	// only write the fingerprint part
+	int i = m_standardOutput.indexOf("=");
+	if (i != -1) {
+		i++;
+		QString fingerprint = m_standardOutput.mid(i, m_standardOutput.size() - i);
+
+		QFile file(filename);
+		file.resize(0);
+		if (file.open(QIODevice::Append))
+		{
+			QTextStream out(&file);
+			out << fingerprint << "\n";
+			file.close();
+		}
+	}
+
 	emit generateCertificateFinished();
 }
 
@@ -365,10 +406,10 @@ bool PluginManager::runProgram(
 
 	bool success = process.waitForStarted();
 
-	QString standardOutput, standardError;
+	QString standardError;
 	if (success && process.waitForFinished())
 	{
-		standardOutput = process.readAllStandardOutput().trimmed();
+		m_standardOutput = process.readAllStandardOutput().trimmed();
 		standardError = process.readAllStandardError().trimmed();
 	}
 

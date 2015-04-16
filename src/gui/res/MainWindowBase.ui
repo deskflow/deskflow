@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <ui version="4.0">
  <class>MainWindowBase</class>
  <widget class="QMainWindow" name="MainWindowBase">
@@ -118,6 +118,30 @@
         </layout>
        </item>
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLabel" name="m_pLabelFingerprint">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Fingerprint:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="m_pLabelLocalFingerprint">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
         <widget class="QRadioButton" name="m_pRadioInternalConfig">
          <property name="text">
           <string>Configure interactively:</string>
@@ -128,7 +152,7 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
           <widget class="QPushButton" name="m_pButtonConfigureServer">
            <property name="text">

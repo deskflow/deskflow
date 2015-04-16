@@ -67,6 +67,7 @@ private:
 	int m_DownloadIndex;
 	DataDownloader m_DataDownloader;
 	CoreInterface m_CoreInterface;
+	QString m_standardOutput;
 };
 
 #endif // PLUGINMANAGER_H

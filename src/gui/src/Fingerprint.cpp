@@ -102,3 +102,32 @@ Fingerprint Fingerprint::trustedClients()
 {
 	return Fingerprint(kTrustedClientsFilename);
 }
+
+QString Fingerprint::localFingerprint()
+{
+	CoreInterface coreInterface;
+	QString profileDir = coreInterface.getProfileDir();
+
+	QString dirName = QString("%1/%2")
+	  .arg(profileDir)
+	  .arg(kDirName);
+
+	QString path = QString("%1/%2").arg(dirName).arg(kLocalFilename);
+
+	QFile file(path);
+	QString fingerprint;
+	if (file.open(QIODevice::ReadOnly))
+	{
+	   QTextStream in(&file);
+	   while (!in.atEnd())
+	   {
+		  QString context = in.readLine();
+		  if (!context.isEmpty()) {
+			  fingerprint = context;
+		  }
+	   }
+	   file.close();
+	}
+
+	return fingerprint;
+}
