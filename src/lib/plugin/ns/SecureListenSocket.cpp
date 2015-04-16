@@ -55,7 +55,6 @@ SecureListenSocket::accept()
 						m_socketMultiplexer,
 						ARCH->acceptSocket(m_socket, NULL));
 		socket->initSsl(true);
-		m_secureSocketSet.insert(socket);
 
 		if (socket != NULL) {
 			setListeningJob();
@@ -77,6 +76,8 @@ SecureListenSocket::accept()
 		}
 
 		socket->secureAccept();
+
+		m_secureSocketSet.insert(socket);
 
 		return dynamic_cast<IDataSocket*>(socket);
 	}
