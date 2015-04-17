@@ -58,6 +58,7 @@ private:
 
 signals:
 	void error(QString e);
+	void info(QString i);
 	void downloadNext();
 	void downloadFinished();
 	void openSslBinaryReady();

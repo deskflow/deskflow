@@ -46,13 +46,13 @@ protected:
 
 protected slots:
 	void showError(QString error);
+	void updateStatus(QString info);
 	void queryPluginDone();
 	void updateDownloadStatus();
 	void finished();
 	void generateCertificate();
 
 private:
-	void updateStatus(QString info);
 	void downloadPlugins();
 	void showFinished();
 

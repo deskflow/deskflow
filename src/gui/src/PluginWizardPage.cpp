@@ -136,6 +136,11 @@ void PluginWizardPage::downloadPlugins()
 		SLOT(showError(QString)));
 
 	connect(m_pPluginManager,
+		SIGNAL(info(QString)),
+		this,
+		SLOT(updateStatus(QString)));
+
+	connect(m_pPluginManager,
 		SIGNAL(downloadNext()),
 		this,
 		SLOT(updateDownloadStatus()));

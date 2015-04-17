@@ -156,6 +156,7 @@ void PluginManager::saveOpenSslSetup()
 	// openssl installer no longer needed
 	QFile::remove(filename);
 
+	emit info(tr("SSL tools ready"));
 #endif
 
 	emit openSslBinaryReady();
@@ -304,6 +305,8 @@ void PluginManager::downloadOpenSslSetup()
 		SLOT(saveOpenSslSetup()));
 
 	m_DataDownloader.download(url);
+
+	emit info(tr("Downloading SSL tools..."));
 }
 
 void PluginManager::doGenerateCertificate()
@@ -331,8 +334,8 @@ void PluginManager::doGenerateCertificate()
 	// subject information
 	arguments.append("-subj");
 
-	QString info(kCertificateSubjectInfo);
-	arguments.append(info);
+	QString subInfo(kCertificateSubjectInfo);
+	arguments.append(subInfo);
 
 	// private key
 	arguments.append("-newkey");
@@ -358,6 +361,8 @@ void PluginManager::doGenerateCertificate()
 	if (!runProgram(openSslProgramFile, arguments, environment)) {
 		return;
 	}
+
+	emit info(tr("SSL certificate generated"));
 
 	// generate fingerprint
 	arguments.clear();
@@ -395,6 +400,7 @@ void PluginManager::doGenerateCertificate()
 			QTextStream out(&file);
 			out << fingerprint << "\n";
 			file.close();
+			emit info(tr("SSL fingerprint generated"));
 		}
 	}
 
