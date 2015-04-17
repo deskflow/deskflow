@@ -370,6 +370,21 @@ SecureSocket::checkResult(int n, bool& fatal, bool& retry)
 
 	case SSL_ERROR_SYSCALL:
 		LOG((CLOG_ERR "secure socket error: SSL_ERROR_SYSCALL"));
+		if (ERR_peek_error() == 0) {
+			if (n == 0) {
+				LOG((CLOG_ERR "an EOF violates the protocol"));
+			}
+			else if (n == -1) {
+				// underlying socket I/O reproted an error
+				try {
+					ARCH->throwErrorOnSocket(getSocket());
+				}
+				catch (XArchNetwork& e) {
+					LOG((CLOG_ERR "%s", e.what()));
+				}
+			}
+		}
+
 		fatal = true;
 		break;
 
