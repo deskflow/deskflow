@@ -331,7 +331,6 @@ ClientApp::handleClientDisconnected(const Event&, void*)
 	updateStatus();
 }
 
-
 Client*
 ClientApp::openClient(const String& name, const NetworkAddress& address,
 				synergy::Screen* screen)

@@ -281,10 +281,8 @@ SecureSocket::secureConnect(int socket)
 	checkResult(r, fatal, retry);
 
 	if (fatal) {
-		// tell user and sleep so the socket isn't hammered.
 		LOG((CLOG_ERR "failed to connect secure socket"));
 		LOG((CLOG_INFO "server connection may not be secure"));
-		disconnect();
 		return false;
 	}
 
@@ -299,6 +297,7 @@ SecureSocket::secureConnect(int socket)
 		}
 		else {
 			LOG((CLOG_ERR "failed to verify server certificate fingerprint"));
+			sendEvent(getEvents()->forISocket().stopRetry());
 			disconnect();
 		}
 	}

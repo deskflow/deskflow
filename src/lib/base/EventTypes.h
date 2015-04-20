@@ -281,7 +281,8 @@ private:
 class ISocketEvents : public EventTypes {
 public:
 	ISocketEvents() :
-		m_disconnected(Event::kUnknown) { }
+		m_disconnected(Event::kUnknown),
+		m_stopRetry(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -294,10 +295,18 @@ public:
 	*/
 	Event::Type		disconnected();
 
+	//! Get stop retry event type
+	/*!
+	 Returns the stop retry event type.  This is sent when the client
+	 doesn't want to reconnect after it disconnects from the server.
+	 */
+	Event::Type		stopRetry();
+
 	//@}
 
 private:
 	Event::Type		m_disconnected;
+	Event::Type		m_stopRetry;
 };
 
 class OSXScreenEvents : public EventTypes {
