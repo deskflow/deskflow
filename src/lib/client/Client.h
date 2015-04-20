@@ -60,12 +60,8 @@ public:
 							const String& name, const NetworkAddress& address,
 							ISocketFactory* socketFactory,
 							synergy::Screen* screen,
-							ClientArgs args);
+							ClientArgs& args);
 	~Client();
-	
-#ifdef TEST_ENV
-	Client() : m_mock(true) { }
-#endif
 
 	//! @name manipulators
 	//@{
@@ -196,6 +192,7 @@ private:
 	void				handleResume(const Event& event, void*);
 	void				handleFileChunkSending(const Event&, void*);
 	void				handleFileRecieveCompleted(const Event&, void*);
+	void				handleStopRetry(const Event&, void*);
 	void				onFileRecieveCompleted();
 
 public:
@@ -226,5 +223,5 @@ private:
 	Thread*				m_writeToDropDirThread;
 	TCPSocket*			m_socket;
 	bool				m_useSecureNetwork;
-	ClientArgs			m_args;
+	ClientArgs&			m_args;
 };

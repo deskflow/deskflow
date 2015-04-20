@@ -94,7 +94,10 @@ bool PluginManager::exist(QString name)
 void PluginManager::downloadPlugins()
 {
 	if (m_DataDownloader.isFinished()) {
-		savePlugin();
+		if (!savePlugin()) {
+			return;
+		}
+
 		if (m_DownloadIndex != m_PluginList.size() - 1) {
 			emit downloadNext();
 		}
@@ -218,7 +221,7 @@ void PluginManager::generateCertificate()
 	emit generateCertificateFinished();
 }
 
-void PluginManager::savePlugin()
+bool PluginManager::savePlugin()
 {
 	// create the path if not exist
 	QDir dir(m_PluginDir);
@@ -234,15 +237,19 @@ void PluginManager::savePlugin()
 	QFile file(filename);
 	if (!file.open(QIODevice::WriteOnly)) {
 		emit error(
-				tr("Failed to download '%1' plugin to: %2")
+				tr("Failed to download plugin '%1' to: %2 \n %3")
 				.arg(m_PluginList.at(m_DownloadIndex))
-				.arg(m_PluginDir));
+				.arg(m_PluginDir)
+				.arg(file.errorString()));
 
-		return;
+		file.close();
+		return false;
 	}
 
 	file.write(m_DataDownloader.data());
 	file.close();
+
+	return true;
 }
 
 QString PluginManager::getPluginUrl(const QString& pluginName)

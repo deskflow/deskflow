@@ -60,7 +60,7 @@ Client::Client(
 		const String& name, const NetworkAddress& address,
 		ISocketFactory* socketFactory,
 		synergy::Screen* screen,
-		ClientArgs args) :
+		ClientArgs& args) :
 	m_mock(false),
 	m_name(name),
 	m_serverAddress(address),
@@ -470,6 +470,10 @@ Client::setupConnection()
 							m_stream->getEventTarget(),
 							new TMethodEventJob<Client>(this,
 								&Client::handleDisconnected));
+
+	m_events->adoptHandler(m_events->forISocket().stopRetry(),
+						   m_stream->getEventTarget(),
+						   new TMethodEventJob<Client>(this, &Client::handleStopRetry));
 }
 
 void
@@ -525,6 +529,8 @@ Client::cleanupConnection()
 							m_stream->getEventTarget());
 		m_events->removeHandler(m_events->forISocket().disconnected(),
 							m_stream->getEventTarget());
+		m_events->removeHandler(m_events->forISocket().stopRetry(),
+								m_stream->getEventTarget());
 		cleanupStream();
 	}
 }
@@ -743,6 +749,11 @@ Client::onFileRecieveCompleted()
 	}
 }
 
+void
+Client::handleStopRetry(const Event&, void*)
+{
+	m_args.m_restartable = false;
+}
 
 void
 Client::writeToDropDirThread(void*)

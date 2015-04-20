@@ -42,7 +42,7 @@ public slots:
 	void generateCertificate();
 
 private:
-	void savePlugin();
+	bool savePlugin();
 	QString getPluginUrl(const QString& pluginName);
 	bool checkOpenSslBinary();
 	bool runProgram(
