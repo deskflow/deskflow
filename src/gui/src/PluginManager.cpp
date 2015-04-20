@@ -26,6 +26,7 @@
 #include <QFile>
 #include <QDir>
 #include <QProcess>
+#include <QCoreApplication>
 
 static QString kBaseUrl = "http://synergy-project.org/files";
 static const char kWinProcessorArch32[] = "Windows-x86";
@@ -164,13 +165,100 @@ void PluginManager::saveOpenSslSetup()
 
 void PluginManager::generateCertificate()
 {
-	connect(
-		this,
-		SIGNAL(openSslBinaryReady()),
-		this,
-		SLOT(doGenerateCertificate()));
+	QString openSslProgramFile;
 
-	downloadOpenSslSetup();
+#if defined(Q_OS_WIN)
+	openSslProgramFile = QCoreApplication::applicationDirPath();
+	openSslProgramFile.append("\\").append(kWinOpenSslBinary);
+#else
+	openSslProgramFile = kUnixOpenSslCommand;
+#endif
+
+	QStringList arguments;
+
+	// self signed certificate
+	arguments.append("req");
+	arguments.append("-x509");
+	arguments.append("-nodes");
+
+	// valide duration
+	arguments.append("-days");
+	arguments.append(kCertificateLifetime);
+
+	// subject information
+	arguments.append("-subj");
+
+	QString subInfo(kCertificateSubjectInfo);
+	arguments.append(subInfo);
+
+	// private key
+	arguments.append("-newkey");
+	arguments.append("rsa:1024");
+
+	// key output filename
+	arguments.append("-keyout");
+	QString filename = m_ProfileDir;
+	filename.append(QDir::separator()).append(kCertificateFilename);
+	arguments.append(filename);
+
+	// certificate output filename
+	arguments.append("-out");
+	arguments.append(filename);
+
+	QStringList environment;
+
+#if defined(Q_OS_WIN)
+	environment << QString("OPENSSL_CONF=%1\\OpenSSL\\synergy.conf")
+		.arg(QCoreApplication::applicationDirPath());
+#endif
+
+	if (!runProgram(openSslProgramFile, arguments, environment)) {
+		return;
+	}
+
+	emit info(tr("SSL certificate generated"));
+
+	// generate fingerprint
+	arguments.clear();
+	arguments.append("x509");
+	arguments.append("-fingerprint");
+	arguments.append("-sha1");
+	arguments.append("-noout");
+	arguments.append("-in");
+	arguments.append(filename);
+
+	if (!runProgram(openSslProgramFile, arguments, environment)) {
+		return;
+	}
+
+	// write the standard output into file
+	filename.clear();
+	filename.append(m_ProfileDir);
+	filename.append(QDir::separator()).append(kFingerprintDir);
+	QDir dir(filename);
+	if (!dir.exists()) {
+		dir.mkpath(".");
+	}
+	filename.append(QDir::separator()).append(kFingerprintLocalFilename);
+
+	// only write the fingerprint part
+	int i = m_standardOutput.indexOf("=");
+	if (i != -1) {
+		i++;
+		QString fingerprint = m_standardOutput.mid(i, m_standardOutput.size() - i);
+
+		QFile file(filename);
+		file.resize(0);
+		if (file.open(QIODevice::Append))
+		{
+			QTextStream out(&file);
+			out << fingerprint << "\n";
+			file.close();
+			emit info(tr("SSL fingerprint generated"));
+		}
+	}
+
+	emit generateCertificateFinished();
 }
 
 void PluginManager::savePlugin()
@@ -278,133 +366,6 @@ bool PluginManager::checkOpenSslBinary()
 #else
 	return true;
 #endif
-}
-
-void PluginManager::downloadOpenSslSetup()
-{
-	if (checkOpenSslBinary()) {
-		emit openSslBinaryReady();
-		return;
-	}
-
-	QString urlString = getOpenSslSetupUrl();
-
-	QUrl url;
-	url.setUrl(urlString);
-
-	disconnect(
-		&m_DataDownloader,
-		SIGNAL(isComplete()),
-		this,
-		SLOT(downloadPlugins()));
-
-	connect(
-		&m_DataDownloader,
-		SIGNAL(isComplete()),
-		this,
-		SLOT(saveOpenSslSetup()));
-
-	m_DataDownloader.download(url);
-
-	emit info(tr("Downloading SSL tools..."));
-}
-
-void PluginManager::doGenerateCertificate()
-{
-	QString openSslProgramFile;
-
-#if defined(Q_OS_WIN)
-	openSslProgramFile = m_ProfileDir;
-	openSslProgramFile.append("\\").append(kWinOpenSslBinary);
-#else
-	openSslProgramFile = kUnixOpenSslCommand;
-#endif
-
-	QStringList arguments;
-
-	// self signed certificate
-	arguments.append("req");
-	arguments.append("-x509");
-	arguments.append("-nodes");
-
-	// valide duration
-	arguments.append("-days");
-	arguments.append(kCertificateLifetime);
-
-	// subject information
-	arguments.append("-subj");
-
-	QString subInfo(kCertificateSubjectInfo);
-	arguments.append(subInfo);
-
-	// private key
-	arguments.append("-newkey");
-	arguments.append("rsa:1024");
-
-	// key output filename
-	arguments.append("-keyout");
-	QString filename = m_ProfileDir;
-	filename.append(QDir::separator()).append(kCertificateFilename);
-	arguments.append(filename);
-
-	// certificate output filename
-	arguments.append("-out");
-	arguments.append(filename);
-
-	QStringList environment;
-
-#if defined(Q_OS_WIN)
-	environment << QString("OPENSSL_CONF=%1\\OpenSSL\\synergy.conf")
-		.arg(m_ProfileDir);
-#endif
-
-	if (!runProgram(openSslProgramFile, arguments, environment)) {
-		return;
-	}
-
-	emit info(tr("SSL certificate generated"));
-
-	// generate fingerprint
-	arguments.clear();
-	arguments.append("x509");
-	arguments.append("-fingerprint");
-	arguments.append("-sha1");
-	arguments.append("-noout");
-	arguments.append("-in");
-	arguments.append(filename);
-
-	if (!runProgram(openSslProgramFile, arguments, environment)) {
-		return;
-	}
-
-	// write the standard output into file
-	filename.clear();
-	filename.append(m_ProfileDir);
-	filename.append(QDir::separator()).append(kFingerprintDir);
-	QDir dir(filename);
-	if (!dir.exists()) {
-		dir.mkpath(".");
-	}
-	filename.append(QDir::separator()).append(kFingerprintLocalFilename);
-
-	// only write the fingerprint part
-	int i = m_standardOutput.indexOf("=");
-	if (i != -1) {
-		i++;
-		QString fingerprint = m_standardOutput.mid(i, m_standardOutput.size() - i);
-
-		QFile file(filename);
-		file.resize(0);
-		if (file.open(QIODevice::Append))
-		{
-			QTextStream out(&file);
-			out << fingerprint << "\n";
-			file.close();
-			emit info(tr("SSL fingerprint generated"));
-		}
-	}
-
-	emit generateCertificateFinished();
 }
 
 bool PluginManager::runProgram(

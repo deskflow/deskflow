@@ -41,7 +41,6 @@ public slots:
 	void downloadPlugins();
 	void saveOpenSslSetup();
 	void generateCertificate();
-	void doGenerateCertificate();
 
 private:
 	void savePlugin();
