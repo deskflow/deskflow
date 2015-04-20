@@ -44,7 +44,6 @@ static QString kUnixOpenSslCommand = "openssl";
 
 #if defined(Q_OS_WIN)
 static const char kWinPluginExt[] = ".dll";
-static const char kWinOpenSslSetup[] = "openssl-1.0.2-Windows-x86.exe";
 static const char kWinOpenSslBinary[] = "OpenSSL\\openssl.exe";
 
 #elif defined(Q_OS_MAC)
@@ -118,48 +117,6 @@ void PluginManager::downloadPlugins()
 
 		m_DataDownloader.download(url);
 	}
-}
-
-void PluginManager::saveOpenSslSetup()
-{
-	QDir dir(m_ProfileDir);
-	if (!dir.exists()) {
-		dir.mkpath(".");
-	}
-
-#if defined(Q_OS_WIN)
-
-	QString filename =
-		QString("%1\\%2")
-		.arg(m_ProfileDir)
-		.arg(kWinOpenSslSetup);
-
-	QFile file(filename);
-	if (!file.open(QIODevice::WriteOnly)) {
-		emit error(
-			tr("Failed to save certificate tool to: %1")
-			.arg(m_ProfileDir));
-		return;
-	}
-
-	file.write(m_DataDownloader.data());
-	file.close();
-
-	QStringList installArgs;
-	installArgs.append("-s");
-	installArgs.append("-y");
-
-	if (!runProgram(filename, installArgs, QStringList())) {
-		return;
-	}
-
-	// openssl installer no longer needed
-	QFile::remove(filename);
-
-	emit info(tr("SSL tools ready"));
-#endif
-
-	emit openSslBinaryReady();
 }
 
 void PluginManager::generateCertificate()
@@ -326,19 +283,6 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 	result.append(archName);
 	result.append("/");
 	result.append(getPluginOsSpecificName(pluginName));
-
-	return result;
-}
-
-QString PluginManager::getOpenSslSetupUrl()
-{
-	QString result;
-
-#if defined(Q_OS_WIN)
-	result = kBaseUrl;
-	result.append("/tools/");
-	result.append(kWinOpenSslSetup);
-#endif
 
 	return result;
 }

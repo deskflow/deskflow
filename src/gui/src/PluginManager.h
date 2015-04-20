@@ -39,15 +39,12 @@ public:
 
 public slots:
 	void downloadPlugins();
-	void saveOpenSslSetup();
 	void generateCertificate();
 
 private:
 	void savePlugin();
 	QString getPluginUrl(const QString& pluginName);
-	QString getOpenSslSetupUrl();
 	bool checkOpenSslBinary();
-	void downloadOpenSslSetup();
 	bool runProgram(
 		const QString& program,
 		const QStringList& args,
