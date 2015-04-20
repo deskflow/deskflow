@@ -22,6 +22,7 @@
 #include "DataDownloader.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
+#include "Fingerprint.h"
 
 #include <QFile>
 #include <QDir>
@@ -40,8 +41,6 @@ static QString kCertificateLifetime = "365";
 static QString kCertificateSubjectInfo = "/CN=Synergy";
 static QString kCertificateFilename = "Synergy.pem";
 static QString kUnixOpenSslCommand = "openssl";
-static const char kFingerprintDir[] = "ssl/fingerprints";
-static const char kFingerprintLocalFilename[] = "local.txt";
 
 #if defined(Q_OS_WIN)
 static const char kWinPluginExt[] = ".dll";
@@ -233,13 +232,7 @@ void PluginManager::generateCertificate()
 
 	// write the standard output into file
 	filename.clear();
-	filename.append(m_ProfileDir);
-	filename.append(QDir::separator()).append(kFingerprintDir);
-	QDir dir(filename);
-	if (!dir.exists()) {
-		dir.mkpath(".");
-	}
-	filename.append(QDir::separator()).append(kFingerprintLocalFilename);
+	filename.append(Fingerprint::local().filePath());
 
 	// only write the fingerprint part
 	int i = m_standardOutput.indexOf("=");

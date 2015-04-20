@@ -27,14 +27,16 @@ private:
 public:
 	void trust(const QString& fingerprintText);
 	bool exists(const QString& fingerprintText);
+	QString filePath() const;
 
 public:
 	static Fingerprint local();
 	static Fingerprint trustedServers();
 	static Fingerprint trustedClients();
-
+	static QString directoryPath();
 	static QString localFingerprint();
 	static bool localFingerprintExists();
+	static void persistDirectory();
 
 private:
 	QString m_Filename;

@@ -34,20 +34,9 @@ Fingerprint::Fingerprint(const QString& filename)
 
 void Fingerprint::trust(const QString& fingerprintText)
 {
-	CoreInterface coreInterface;
-	QString profileDir = coreInterface.getProfileDir();
+	Fingerprint::persistDirectory();
 
-	QString dirName = QString("%1/%2")
-	  .arg(profileDir)
-	  .arg(kDirName);
-
-	QDir dir(dirName);
-	if (!dir.exists()) {
-		dir.mkpath(".");
-	}
-
-	QString path = QString("%1/%2").arg(dirName).arg(m_Filename);
-	QFile file(path);
+	QFile file(filePath());
 	if (file.open(QIODevice::Append))
 	{
 		QTextStream out(&file);
@@ -58,19 +47,12 @@ void Fingerprint::trust(const QString& fingerprintText)
 
 bool Fingerprint::exists(const QString& fingerprintText)
 {
-	CoreInterface coreInterface;
-	QString profileDir = coreInterface.getProfileDir();
-
-	QString dirName = QString("%1/%2")
-	  .arg(profileDir)
-	  .arg(kDirName);
-
+	QString dirName = Fingerprint::directoryPath();
 	if (!QDir(dirName).exists()) {
 		return false;
 	}
 
-	QString path = QString("%1/%2").arg(dirName).arg(m_Filename);
-	QFile file(path);
+	QFile file(filePath());
 
 	if (file.open(QIODevice::ReadOnly))
 	{
@@ -86,6 +68,30 @@ bool Fingerprint::exists(const QString& fingerprintText)
 	}
 
 	return false;
+}
+
+QString Fingerprint::filePath() const
+{
+	QString dir = Fingerprint::directoryPath();
+	return QString("%1/%2").arg(dir).arg(m_Filename);
+}
+
+void Fingerprint::persistDirectory()
+{
+	QDir dir(Fingerprint::directoryPath());
+	if (!dir.exists()) {
+		dir.mkpath(".");
+	}
+}
+
+QString Fingerprint::directoryPath()
+{
+	CoreInterface coreInterface;
+	QString profileDir = coreInterface.getProfileDir();
+
+	return QString("%1/%2")
+	  .arg(profileDir)
+	  .arg(kDirName);
 }
 
 bool Fingerprint::localFingerprintExists()
