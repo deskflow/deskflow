@@ -44,7 +44,6 @@ public slots:
 private:
 	bool savePlugin();
 	QString getPluginUrl(const QString& pluginName);
-	bool checkOpenSslBinary();
 	bool runProgram(
 		const QString& program,
 		const QStringList& args,
@@ -57,7 +56,6 @@ signals:
 	void info(QString i);
 	void downloadNext();
 	void downloadFinished();
-	void openSslBinaryReady();
 
 private:
 	QStringList m_PluginList;
@@ -66,7 +64,6 @@ private:
 	int m_DownloadIndex;
 	DataDownloader m_DataDownloader;
 	CoreInterface m_CoreInterface;
-	QString m_standardOutput;
 	SslCertificate m_SslCertificate;
 };
 

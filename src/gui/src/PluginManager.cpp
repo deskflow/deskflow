@@ -133,7 +133,7 @@ bool PluginManager::savePlugin()
 	QFile file(filename);
 	if (!file.open(QIODevice::WriteOnly)) {
 		emit error(
-				tr("Failed to download plugin '%1' to: %2 \n %3")
+				tr("Failed to download plugin '%1' to: %2\n%3")
 				.arg(m_PluginList.at(m_DownloadIndex))
 				.arg(m_PluginDir)
 				.arg(file.errorString()));

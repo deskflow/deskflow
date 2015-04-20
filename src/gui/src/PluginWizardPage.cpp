@@ -108,12 +108,12 @@ void PluginWizardPage::finished()
 void PluginWizardPage::generateCertificate()
 {
 	connect(m_pSslCertificate,
-		SIGNAL(generateCertificateFinished()),
+		SIGNAL(generateFinished()),
 		this,
 		SLOT(finished()));
 
 	connect(m_pSslCertificate,
-		SIGNAL(generateCertificateFinished()),
+		SIGNAL(generateFinished()),
 		m_pThread,
 		SLOT(quit()));
 
