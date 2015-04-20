@@ -23,6 +23,7 @@
 #include "net/TSocketMultiplexerMethodJob.h"
 #include "arch/XArch.h"
 
+static const char s_certificateDir[] = { "SSL" };
 static const char s_certificateFilename[] = { "Synergy.pem" };
 
 //
@@ -60,14 +61,11 @@ SecureListenSocket::accept()
 			setListeningJob();
 		}
 
-		// TODO: customized certificate path
-		String certificateFilename = ARCH->getProfileDirectory();
-#if SYSAPI_WIN32
-		certificateFilename.append("\\");
-#elif SYSAPI_UNIX
-		certificateFilename.append("/");
-#endif
-		certificateFilename.append(s_certificateFilename);
+		String certificateFilename = synergy::string::sprintf(
+			"%s/%s/%s",
+			ARCH->getProfileDirectory().c_str(),
+			s_certificateDir,
+			s_certificateFilename);
 
 		bool loaded = socket->loadCertificates(certificateFilename);
 		if (!loaded) {
