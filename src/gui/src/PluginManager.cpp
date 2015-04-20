@@ -37,15 +37,9 @@ static const char kLinuxProcessorArchDeb32[] = "Linux-i686-deb";
 static const char kLinuxProcessorArchDeb64[] = "Linux-x86_64-deb";
 static const char kLinuxProcessorArchRpm32[] = "Linux-i686-rpm";
 static const char kLinuxProcessorArchRpm64[] = "Linux-x86_64-rpm";
-static QString kCertificateLifetime = "365";
-static QString kCertificateSubjectInfo = "/CN=Synergy";
-static QString kCertificateFilename = "Synergy.pem";
-static QString kSslDir = "SSL";
-static QString kUnixOpenSslCommand = "openssl";
 
 #if defined(Q_OS_WIN)
 static const char kWinPluginExt[] = ".dll";
-static const char kWinOpenSslBinary[] = "OpenSSL\\openssl.exe";
 
 #elif defined(Q_OS_MAC)
 static const char kMacPluginPrefix[] = "lib";
@@ -121,104 +115,6 @@ void PluginManager::downloadPlugins()
 
 		m_DataDownloader.download(url);
 	}
-}
-
-void PluginManager::generateCertificate()
-{
-	QString openSslProgramFile;
-
-#if defined(Q_OS_WIN)
-	openSslProgramFile = QCoreApplication::applicationDirPath();
-	openSslProgramFile.append("\\").append(kWinOpenSslBinary);
-#else
-	openSslProgramFile = kUnixOpenSslCommand;
-#endif
-
-	QStringList arguments;
-
-	// self signed certificate
-	arguments.append("req");
-	arguments.append("-x509");
-	arguments.append("-nodes");
-
-	// valide duration
-	arguments.append("-days");
-	arguments.append(kCertificateLifetime);
-
-	// subject information
-	arguments.append("-subj");
-
-	QString subInfo(kCertificateSubjectInfo);
-	arguments.append(subInfo);
-
-	// private key
-	arguments.append("-newkey");
-	arguments.append("rsa:1024");
-
-	QString sslDirPath = QString("%1%2%3")
-	  .arg(m_ProfileDir)
-	  .arg(QDir::separator())
-	  .arg(kSslDir);
-
-	QDir sslDir(sslDirPath);
-	if (!sslDir.exists()) {
-		sslDir.mkdir(".");
-	}
-
-	QString filename = QString("%1%2%3")
-		.arg(sslDirPath)
-		.arg(QDir::separator())
-		.arg(kCertificateFilename);
-
-	// key output filename
-	arguments.append("-keyout");
-	arguments.append(filename);
-
-	// certificate output filename
-	arguments.append("-out");
-	arguments.append(filename);
-
-	QStringList environment;
-
-#if defined(Q_OS_WIN)
-	environment << QString("OPENSSL_CONF=%1\\OpenSSL\\synergy.conf")
-		.arg(QCoreApplication::applicationDirPath());
-#endif
-
-	if (!runProgram(openSslProgramFile, arguments, environment)) {
-		return;
-	}
-
-	emit info(tr("SSL certificate generated"));
-
-	// generate fingerprint
-	arguments.clear();
-	arguments.append("x509");
-	arguments.append("-fingerprint");
-	arguments.append("-sha1");
-	arguments.append("-noout");
-	arguments.append("-in");
-	arguments.append(filename);
-
-	if (!runProgram(openSslProgramFile, arguments, environment)) {
-		return;
-	}
-
-	// write the standard output into file
-	filename.clear();
-	filename.append(Fingerprint::local().filePath());
-
-	// only write the fingerprint part
-	int i = m_standardOutput.indexOf("=");
-	if (i != -1) {
-		i++;
-		QString fingerprint = m_standardOutput.mid(i, m_standardOutput.size() - i);
-		
-		Fingerprint::local().trust(fingerprint, false);
-		emit info(tr("SSL fingerprint generated"));
-	}
-
-	emit generateCertificateFinished();
 }
 
 bool PluginManager::savePlugin()
@@ -306,47 +202,6 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 	result.append(getPluginOsSpecificName(pluginName));
 
 	return result;
-}
-
-bool PluginManager::checkOpenSslBinary()
-{
-	// assume OpenSsl is unavailable on Windows,
-	// but always available on both Mac and Linux
-#if defined(Q_OS_WIN)
-	return false;
-#else
-	return true;
-#endif
-}
-
-bool PluginManager::runProgram(
-	const QString& program, const QStringList& args, const QStringList& env)
-{
-	QProcess process;
-	process.setEnvironment(env);
-	process.start(program, args);
-
-	bool success = process.waitForStarted();
-
-	QString standardError;
-	if (success && process.waitForFinished())
-	{
-		m_standardOutput = process.readAllStandardOutput().trimmed();
-		standardError = process.readAllStandardError().trimmed();
-	}
-
-	int code = process.exitCode();
-	if (!success || code != 0)
-	{
-		emit error(
-			QString("Program failed: %1\n\nCode: %2\nError: %3")
-			.arg(program)
-			.arg(process.exitCode())
-			.arg(standardError.isEmpty() ? "Unknown" : standardError));
-		return false;
-	}
-
-	return true;
 }
 
 QString PluginManager::getPluginOsSpecificName(const QString& pluginName)

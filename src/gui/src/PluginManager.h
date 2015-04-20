@@ -22,6 +22,7 @@
 #include <QStringList>
 #include <QObject>
 
+#include "SslCertificate.h"
 #include "CoreInterface.h"
 #include "DataDownloader.h"
 
@@ -39,7 +40,6 @@ public:
 
 public slots:
 	void downloadPlugins();
-	void generateCertificate();
 
 private:
 	bool savePlugin();
@@ -58,7 +58,6 @@ signals:
 	void downloadNext();
 	void downloadFinished();
 	void openSslBinaryReady();
-	void generateCertificateFinished();
 
 private:
 	QStringList m_PluginList;
@@ -68,6 +67,7 @@ private:
 	DataDownloader m_DataDownloader;
 	CoreInterface m_CoreInterface;
 	QString m_standardOutput;
+	SslCertificate m_SslCertificate;
 };
 
 #endif // PLUGINMANAGER_H

@@ -56,7 +56,8 @@ SOURCES += src/main.cpp \
     src/PluginWizardPage.cpp \
     src/PluginManager.cpp \
     src/CoreInterface.cpp \
-    src/Fingerprint.cpp
+    src/Fingerprint.cpp \
+    src/SslCertificate.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -99,10 +100,11 @@ HEADERS += src/MainWindow.h \
     src/ProcessorArch.h \
     src/PluginManager.h \
     src/CoreInterface.h \
-    src/Fingerprint.h
+    src/Fingerprint.h \
+    src/SslCertificate.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
-macx {
+macx { 
     QMAKE_INFO_PLIST = res/mac/Info.plist
     TARGET = Synergy
     QSYNERGY_ICON.files = res/mac/Synergy.icns

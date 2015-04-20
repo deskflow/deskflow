@@ -18,6 +18,7 @@
 #include "PluginWizardPage.h"
 #include "ui_PluginWizardPageBase.h"
 
+#include "SslCertificate.h"
 #include "WebClient.h"
 #include "PluginManager.h"
 
@@ -29,6 +30,7 @@ PluginWizardPage::PluginWizardPage(AppConfig& appConfig, QWidget *parent) :
 	m_Finished(false),
 	m_pWebClient(NULL),
 	m_pPluginManager(NULL),
+	m_pSslCertificate(NULL),
 	m_AppConfig(appConfig)
 {
 	setupUi(this);
@@ -36,6 +38,8 @@ PluginWizardPage::PluginWizardPage(AppConfig& appConfig, QWidget *parent) :
 	QMovie *movie = new QMovie(":/res/image/spinning-wheel.gif");
 	m_pLabelSpinning->setMovie(movie);
 	movie->start();
+
+	m_pSslCertificate = new SslCertificate(this);
 }
 
 PluginWizardPage::~PluginWizardPage()
@@ -47,6 +51,8 @@ PluginWizardPage::~PluginWizardPage()
 	if (m_pPluginManager != NULL) {
 		delete m_pPluginManager;
 	}
+
+	delete m_pSslCertificate;
 }
 
 void PluginWizardPage::changeEvent(QEvent *e)
@@ -101,20 +107,20 @@ void PluginWizardPage::finished()
 
 void PluginWizardPage::generateCertificate()
 {
-	connect(m_pPluginManager,
+	connect(m_pSslCertificate,
 		SIGNAL(generateCertificateFinished()),
 		this,
 		SLOT(finished()));
 
-	connect(m_pPluginManager,
+	connect(m_pSslCertificate,
 		SIGNAL(generateCertificateFinished()),
-		m_pPluginManagerThread,
+		m_pThread,
 		SLOT(quit()));
 
 	updateStatus(tr("Generating SSL certificate..."));
 
 	QMetaObject::invokeMethod(
-		m_pPluginManager,
+		m_pSslCertificate,
 		"generateCertificate",
 		Qt::QueuedConnection);
 }
@@ -128,7 +134,7 @@ void PluginWizardPage::downloadPlugins()
 {
 	QStringList pluginList = m_pWebClient->getPluginList();
 	m_pPluginManager = new PluginManager(pluginList);
-	m_pPluginManagerThread = new QThread;
+	m_pThread = new QThread;
 
 	connect(m_pPluginManager,
 		SIGNAL(error(QString)),
@@ -152,12 +158,12 @@ void PluginWizardPage::downloadPlugins()
 
 	connect(m_pPluginManager,
 		SIGNAL(error(QString)),
-		m_pPluginManagerThread,
+		m_pThread,
 		SLOT(quit()));
 
-	connect(m_pPluginManagerThread,
+	connect(m_pThread,
 		SIGNAL(finished()),
-		m_pPluginManagerThread,
+		m_pThread,
 		SLOT(deleteLater()));
 
 	updateStatus(
@@ -165,8 +171,8 @@ void PluginWizardPage::downloadPlugins()
 		.arg(pluginList.at(0))
 		.arg(pluginList.size()));
 
-	m_pPluginManager->moveToThread(m_pPluginManagerThread);
-	m_pPluginManagerThread->start();
+	m_pPluginManager->moveToThread(m_pThread);
+	m_pThread->start();
 
 	QMetaObject::invokeMethod(
 		m_pPluginManager,
