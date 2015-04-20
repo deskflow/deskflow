@@ -25,9 +25,12 @@ private:
 	Fingerprint(const QString& filename);
 
 public:
-	void trust(const QString& fingerprintText);
-	bool exists(const QString& fingerprintText);
+	void trust(const QString& fingerprintText, bool append = true);
+	bool isTrusted(const QString& fingerprintText);
+	QStringList readList(const int readTo = -1);
+	QString readFirst();
 	QString filePath() const;
+	bool fileExists() const;
 
 public:
 	static Fingerprint local();

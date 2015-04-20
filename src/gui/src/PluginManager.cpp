@@ -239,16 +239,9 @@ void PluginManager::generateCertificate()
 	if (i != -1) {
 		i++;
 		QString fingerprint = m_standardOutput.mid(i, m_standardOutput.size() - i);
-
-		QFile file(filename);
-		file.resize(0);
-		if (file.open(QIODevice::Append))
-		{
-			QTextStream out(&file);
-			out << fingerprint << "\n";
-			file.close();
-			emit info(tr("SSL fingerprint generated"));
-		}
+		
+		Fingerprint::local().trust(fingerprint, false);
+		emit info(tr("SSL fingerprint generated"));
 	}
 
 	emit generateCertificateFinished();

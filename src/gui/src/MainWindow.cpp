@@ -135,11 +135,10 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
 	m_pLabelPadlock->hide();
 
-	if (Fingerprint::localFingerprintExists()) {
+	if (Fingerprint::local().fileExists()) {
 		m_pLabelFingerprint->setVisible(true);
 		m_pLabelLocalFingerprint->setVisible(true);
-		m_pLabelLocalFingerprint->setText(
-									Fingerprint::localFingerprint());
+		m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
 	}
 	else {
 		m_pLabelFingerprint->setVisible(false);
@@ -421,7 +420,7 @@ void MainWindow::checkFingerprint(const QString& line)
 	}
 
 	QString fingerprint = fingerprintRegex.cap(1);
-	if (Fingerprint::trustedServers().exists(fingerprint)) {
+	if (Fingerprint::trustedServers().isTrusted(fingerprint)) {
 		return;
 	}
 
