@@ -62,10 +62,6 @@ public:
 							synergy::Screen* screen,
 							ClientArgs& args);
 	~Client();
-	
-#ifdef TEST_ENV
-	Client() : m_mock(true) { }
-#endif
 
 	//! @name manipulators
 	//@{
