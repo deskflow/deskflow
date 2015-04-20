@@ -22,10 +22,10 @@
 #include <QDir>
 #include <QTextStream>
 
-static const char kDirName[] = "ssl/fingerprints";
-static const char kLocalFilename[] = "local.txt";
-static const char kTrustedServersFilename[] = "trusted-servers.txt";
-static const char kTrustedClientsFilename[] = "trusted-clients.txt";
+static const char kDirName[] = "SSL/Fingerprints";
+static const char kLocalFilename[] = "Local.txt";
+static const char kTrustedServersFilename[] = "TrustedServers.txt";
+static const char kTrustedClientsFilename[] = "TrustedClients.txt";
 
 Fingerprint::Fingerprint(const QString& filename)
 {

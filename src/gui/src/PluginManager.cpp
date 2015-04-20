@@ -40,6 +40,7 @@ static const char kLinuxProcessorArchRpm64[] = "Linux-x86_64-rpm";
 static QString kCertificateLifetime = "365";
 static QString kCertificateSubjectInfo = "/CN=Synergy";
 static QString kCertificateFilename = "Synergy.pem";
+static QString kSslDir = "SSL";
 static QString kUnixOpenSslCommand = "openssl";
 
 #if defined(Q_OS_WIN)
@@ -151,10 +152,23 @@ void PluginManager::generateCertificate()
 	arguments.append("-newkey");
 	arguments.append("rsa:1024");
 
+	QString sslDirPath = QString("%1%2%3")
+	  .arg(m_ProfileDir)
+	  .arg(QDir::separator())
+	  .arg(kSslDir);
+
+	QDir sslDir(sslDirPath);
+	if (!sslDir.exists()) {
+		sslDir.mkdir(".");
+	}
+
+	QString filename = QString("%1%2%3")
+		.arg(sslDirPath)
+		.arg(QDir::separator())
+		.arg(kCertificateFilename);
+
 	// key output filename
 	arguments.append("-keyout");
-	QString filename = m_ProfileDir;
-	filename.append(QDir::separator()).append(kCertificateFilename);
 	arguments.append(filename);
 
 	// certificate output filename
