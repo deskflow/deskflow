@@ -44,7 +44,7 @@ public slots:
 	void doGenerateCertificate();
 
 private:
-	void savePlugin();
+	bool savePlugin();
 	QString getPluginUrl(const QString& pluginName);
 	QString getOpenSslSetupUrl();
 	bool checkOpenSslBinary();
