@@ -36,10 +36,10 @@
 
 #define MAX_ERROR_SIZE 65535
 
-static const char kFingerprintDirName[] = "ssl/fingerprints";
-//static const char kFingerprintLocalFilename[] = "local.txt";
-static const char kFingerprintTrustedServersFilename[] = "trusted-servers.txt";
-//static const char kFingerprintTrustedClientsFilename[] = "trusted-clients.txt";
+static const char kFingerprintDirName[] = "SSL/Fingerprints";
+//static const char kFingerprintLocalFilename[] = "Local.txt";
+static const char kFingerprintTrustedServersFilename[] = "TrustedServers.txt";
+//static const char kFingerprintTrustedClientsFilename[] = "TrustedClients.txt";
 
 struct Ssl {
 	SSL_CTX*	m_context;
@@ -493,7 +493,7 @@ SecureSocket::verifyCertFingerprint()
 	file.open(trustedServersFilename.c_str());
 
 	bool isValid = false;
-	while (!file.eof()) {
+	while (!file.eof() && file.is_open()) {
 		getline(file,fileLine);
 		if (!fileLine.empty()) {
 			if (fileLine.compare(fingerprint) == 0) {
