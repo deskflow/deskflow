@@ -106,6 +106,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void updateZeroconfService();
 		void serverDetected(const QString name);
 		void setEdition(int type);
+		void updateLocalFingerprint();
 
 	public slots:
 		void appendLogRaw(const QString& text);

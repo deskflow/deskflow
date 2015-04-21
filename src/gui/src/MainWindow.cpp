@@ -135,15 +135,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
 	m_pLabelPadlock->hide();
 
-	if (Fingerprint::local().fileExists()) {
-		m_pLabelFingerprint->setVisible(true);
-		m_pLabelLocalFingerprint->setVisible(true);
-		m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
-	}
-	else {
-		m_pLabelFingerprint->setVisible(false);
-		m_pLabelLocalFingerprint->setVisible(false);
-	}
+	updateLocalFingerprint();
 }
 
 MainWindow::~MainWindow()
@@ -938,6 +930,19 @@ void MainWindow::setEdition(int type)
 	}
 
 	setWindowTitle(title);
+}
+
+void MainWindow::updateLocalFingerprint()
+{
+	if (Fingerprint::local().fileExists()) {
+		m_pLabelFingerprint->setVisible(true);
+		m_pLabelLocalFingerprint->setVisible(true);
+		m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
+	}
+	else {
+		m_pLabelFingerprint->setVisible(false);
+		m_pLabelLocalFingerprint->setVisible(false);
+	}
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
