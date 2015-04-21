@@ -31,6 +31,7 @@ static const char kUnixOpenSslCommand[] = "openssl";
 
 #if defined(Q_OS_WIN)
 static const char kWinOpenSslBinary[] = "OpenSSL\\openssl.exe";
+static const char kConfigFile[] = "OpenSSL\\synergy.conf";
 #endif
 
 SslCertificate::SslCertificate(QObject *parent) :
@@ -38,147 +39,137 @@ SslCertificate::SslCertificate(QObject *parent) :
 {
 	m_ProfileDir = m_CoreInterface.getProfileDir();
 	if (m_ProfileDir.isEmpty()) {
-	  emit error(tr("Failed to get profile directory."));
+		emit error(tr("Failed to get profile directory."));
 	}
 }
 
-bool SslCertificate::checkOpenSslBinary()
+bool SslCertificate::runTool(const QStringList& args)
 {
-  // assume OpenSsl is unavailable on Windows,
-  // but always available on both Mac and Linux
+	QString program;
 #if defined(Q_OS_WIN)
-  return false;
+	program = QCoreApplication::applicationDirPath();
+	program.append("\\").append(kWinOpenSslBinary);
 #else
-  return true;
+	program = kUnixOpenSslCommand;
 #endif
-}
 
-bool SslCertificate::runProgram(
-  const QString& program,
-  const QStringList& args,
-  const QStringList& env)
-{
-  QProcess process;
-  process.setEnvironment(env);
-  process.start(program, args);
 
-  bool success = process.waitForStarted();
+	QStringList environment;
+#if defined(Q_OS_WIN)
+	environment << QString("OPENSSL_CONF=%1\\%2")
+		.arg(QCoreApplication::applicationDirPath())
+		.arg(kConfigFile);
+#endif
 
-  QString standardError;
-  if (success && process.waitForFinished())
-  {
-	m_standardOutput = process.readAllStandardOutput().trimmed();
-	standardError = process.readAllStandardError().trimmed();
-  }
+	QProcess process;
+	process.setEnvironment(environment);
+	process.start(program, args);
 
-  int code = process.exitCode();
-  if (!success || code != 0)
-  {
-	emit error(
-	  QString("Program failed: %1\n\nCode: %2\nError: %3")
-	  .arg(program)
-	  .arg(process.exitCode())
-	  .arg(standardError.isEmpty() ? "Unknown" : standardError));
-	return false;
-  }
+	bool success = process.waitForStarted();
 
-  return true;
+	QString standardError;
+	if (success && process.waitForFinished())
+	{
+		m_ToolOutput = process.readAllStandardOutput().trimmed();
+		standardError = process.readAllStandardError().trimmed();
+	}
+
+	int code = process.exitCode();
+	if (!success || code != 0)
+	{
+		emit error(
+			QString("SSL tool failed: %1\n\nCode: %2\nError: %3")
+				.arg(program)
+				.arg(process.exitCode())
+				.arg(standardError.isEmpty() ? "Unknown" : standardError));
+		return false;
+	}
+
+	return true;
 }
 
 void SslCertificate::generateCertificate()
 {
-  QString openSslProgramFile;
+	QStringList arguments;
 
-#if defined(Q_OS_WIN)
-  openSslProgramFile = QCoreApplication::applicationDirPath();
-  openSslProgramFile.append("\\").append(kWinOpenSslBinary);
-#else
-  openSslProgramFile = kUnixOpenSslCommand;
-#endif
+	// self signed certificate
+	arguments.append("req");
+	arguments.append("-x509");
+	arguments.append("-nodes");
 
-  QStringList arguments;
+	// valide duration
+	arguments.append("-days");
+	arguments.append(kCertificateLifetime);
 
-  // self signed certificate
-  arguments.append("req");
-  arguments.append("-x509");
-  arguments.append("-nodes");
+	// subject information
+	arguments.append("-subj");
 
-  // valide duration
-  arguments.append("-days");
-  arguments.append(kCertificateLifetime);
+	QString subInfo(kCertificateSubjectInfo);
+	arguments.append(subInfo);
 
-  // subject information
-  arguments.append("-subj");
+	// private key
+	arguments.append("-newkey");
+	arguments.append("rsa:1024");
 
-  QString subInfo(kCertificateSubjectInfo);
-  arguments.append(subInfo);
+	QString sslDirPath = QString("%1%2%3")
+		.arg(m_ProfileDir)
+		.arg(QDir::separator())
+		.arg(kSslDir);
 
-  // private key
-  arguments.append("-newkey");
-  arguments.append("rsa:1024");
+	QDir sslDir(sslDirPath);
+	if (!sslDir.exists()) {
+		sslDir.mkdir(".");
+	}
 
-  QString sslDirPath = QString("%1%2%3")
-	.arg(m_ProfileDir)
-	.arg(QDir::separator())
-	.arg(kSslDir);
+	QString filename = QString("%1%2%3")
+		.arg(sslDirPath)
+		.arg(QDir::separator())
+		.arg(kCertificateFilename);
 
-  QDir sslDir(sslDirPath);
-  if (!sslDir.exists()) {
-	sslDir.mkdir(".");
-  }
+	// key output filename
+	arguments.append("-keyout");
+	arguments.append(filename);
 
-  QString filename = QString("%1%2%3")
-	.arg(sslDirPath)
-	.arg(QDir::separator())
-	.arg(kCertificateFilename);
+	// certificate output filename
+	arguments.append("-out");
+	arguments.append(filename);
 
-  // key output filename
-  arguments.append("-keyout");
-  arguments.append(filename);
+	if (!runTool(arguments)) {
+		return;
+	}
 
-  // certificate output filename
-  arguments.append("-out");
-  arguments.append(filename);
+	emit info(tr("SSL certificate generated."));
 
-  QStringList environment;
+	generateFingerprint(filename);
 
-#if defined(Q_OS_WIN)
-  environment << QString("OPENSSL_CONF=%1\\OpenSSL\\synergy.conf")
-	.arg(QCoreApplication::applicationDirPath());
-#endif
+	emit generateFinished();
+}
 
-  if (!runProgram(openSslProgramFile, arguments, environment)) {
-	return;
-  }
+void SslCertificate::generateFingerprint(const QString& certificateFilename)
+{
+	QStringList arguments;
+	arguments.append("x509");
+	arguments.append("-fingerprint");
+	arguments.append("-sha1");
+	arguments.append("-noout");
+	arguments.append("-in");
+	arguments.append(certificateFilename);
 
-  emit info(tr("SSL certificate generated"));
+	if (!runTool(arguments)) {
+		return;
+	}
 
-  // generate fingerprint
-  arguments.clear();
-  arguments.append("x509");
-  arguments.append("-fingerprint");
-  arguments.append("-sha1");
-  arguments.append("-noout");
-  arguments.append("-in");
-  arguments.append(filename);
+	// find the fingerprint from the tool output
+	int i = m_ToolOutput.indexOf("=");
+	if (i != -1) {
+		i++;
+		QString fingerprint = m_ToolOutput.mid(
+			i, m_ToolOutput.size() - i);
 
-  if (!runProgram(openSslProgramFile, arguments, environment)) {
-	return;
-  }
-
-  // write the standard output into file
-  filename.clear();
-  filename.append(Fingerprint::local().filePath());
-
-  // only write the fingerprint part
-  int i = m_standardOutput.indexOf("=");
-  if (i != -1) {
-	i++;
-	QString fingerprint = m_standardOutput.mid(i, m_standardOutput.size() - i);
-
-	Fingerprint::local().trust(fingerprint, false);
-	emit info(tr("SSL fingerprint generated"));
-  }
-
-  emit generateCertificateFinished();
+		Fingerprint::local().trust(fingerprint, false);
+		emit info(tr("SSL fingerprint generated."));
+	}
+	else {
+		emit error(tr("Failed to find SSL fingerprint."));
+	}
 }
