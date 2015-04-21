@@ -297,7 +297,6 @@ SecureSocket::secureConnect(int socket)
 		}
 		else {
 			LOG((CLOG_ERR "failed to verify server certificate fingerprint"));
-			sendEvent(getEvents()->forISocket().stopRetry());
 			disconnect();
 		}
 	}
@@ -435,6 +434,7 @@ SecureSocket::getError()
 void
 SecureSocket::disconnect()
 {
+	sendEvent(getEvents()->forISocket().stopRetry());
 	sendEvent(getEvents()->forISocket().disconnected());
 	sendEvent(getEvents()->forIStream().inputShutdown());
 }
