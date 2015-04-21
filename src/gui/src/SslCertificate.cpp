@@ -118,7 +118,7 @@ void SslCertificate::generateCertificate()
 
 	QDir sslDir(sslDirPath);
 	if (!sslDir.exists()) {
-		sslDir.mkdir(".");
+		sslDir.mkpath(".");
 	}
 
 	QString filename = QString("%1%2%3")
