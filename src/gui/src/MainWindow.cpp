@@ -553,14 +553,6 @@ void MainWindow::startSynergy()
 
 	if (desktopMode)
 	{
-		if (!appConfig().startedBefore()) {
-			QMessageBox::information(
-				this, "Synergy",
-				tr("Synergy will be minimized to the notification "
-				"area. This will happen automatically when Synergy "
-				"starts."));
-		}
-
 		synergyProcess()->start(app, args);
 		if (!synergyProcess()->waitForStarted())
 		{
@@ -818,12 +810,6 @@ void MainWindow::setSynergyState(qSynergyState state)
 	setIcon(state);
 
 	m_SynergyState = state;
-
-	// if in desktop mode, hide synergy. in service mode the gui can
-	// just be closed.
-	if ((appConfig().processMode() == Desktop) && (state == synergyConnected)) {
-		hide();
-	}
 }
 
 void MainWindow::setVisible(bool visible)
