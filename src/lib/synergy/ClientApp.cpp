@@ -331,7 +331,6 @@ ClientApp::handleClientDisconnected(const Event&, void*)
 	updateStatus();
 }
 
-
 Client*
 ClientApp::openClient(const String& name, const NetworkAddress& address,
 				synergy::Screen* screen)
@@ -342,8 +341,7 @@ ClientApp::openClient(const String& name, const NetworkAddress& address,
 		address,
 		new TCPSocketFactory(m_events, getSocketMultiplexer()),
 		screen,
-		args().m_enableDragDrop,
-		args().m_enableCrypto);
+		args());
 
 	try {
 		m_events->adoptHandler(

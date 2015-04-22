@@ -26,6 +26,7 @@
 
     <Feature Id="ProductFeature" Title="$(var.Name)">
       <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="OpenSslComponents" />
       <MergeRef Id="CRT" />
     </Feature>
 
@@ -61,6 +62,7 @@
       <Directory Id="$(var.ProgramFilesFolder)">
         <Directory Id="INSTALLFOLDER" Name="$(var.Name)">
           <Merge Id="CRT" Language="0" SourceFile="$(var.CRT)" DiskId="1" />
+          <Directory Id="OpenSslDir" Name="OpenSSL" />
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder" />
@@ -68,6 +70,7 @@
   </Fragment>
 
   <Fragment>
+    
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       
       <Component Id="Core" Guid="EC9AD3B0-277C-4157-B5C8-5FD5B6A5F4AD">
@@ -111,6 +114,15 @@
 
       </Component>
       
+    </ComponentGroup>
+
+    <ComponentGroup Id="OpenSslComponents" Directory="OpenSslDir">
+      <Component Id="OpenSsl" Guid="92648F77-65A6-4B16-AC59-A1F37BD341B1">
+        <File Source="$(var.ExtPath)/openssl/out32dll/libeay32.dll" Id="OpenSslDll1" />
+        <File Source="$(var.ExtPath)/openssl/out32dll/ssleay32.dll" Id="OpenSslDll2" />
+        <File Source="$(var.ExtPath)/openssl/out32dll/openssl.exe" />
+        <File Source="$(var.ResPath)/openssl/synergy.conf" />
+      </Component>
     </ComponentGroup>
   </Fragment>
 </Wix>

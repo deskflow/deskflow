@@ -22,6 +22,7 @@
 #include <QStringList>
 #include <QObject>
 
+#include "SslCertificate.h"
 #include "CoreInterface.h"
 #include "DataDownloader.h"
 
@@ -35,30 +36,26 @@ public:
 
 	int downloadIndex() { return m_DownloadIndex; }
 
+	static bool exist(QString name);
+
 public slots:
 	void downloadPlugins();
-	void saveOpenSslSetup();
-	void generateCertificate();
-	void doGenerateCertificate();
 
 private:
-	void savePlugin();
+	bool savePlugin();
 	QString getPluginUrl(const QString& pluginName);
-	QString getOpenSslSetupUrl();
-	QString getPluginOsSpecificName(const QString& pluginName);
-	bool checkOpenSslBinary();
-	void downloadOpenSslSetup();
 	bool runProgram(
 		const QString& program,
 		const QStringList& args,
 		const QStringList& env);
 
+	static QString getPluginOsSpecificName(const QString& pluginName);
+
 signals:
 	void error(QString e);
+	void info(QString i);
 	void downloadNext();
 	void downloadFinished();
-	void openSslBinaryReady();
-	void generateCertificateFinished();
 
 private:
 	QStringList m_PluginList;
@@ -67,6 +64,7 @@ private:
 	int m_DownloadIndex;
 	DataDownloader m_DataDownloader;
 	CoreInterface m_CoreInterface;
+	SslCertificate m_SslCertificate;
 };
 
 #endif // PLUGINMANAGER_H

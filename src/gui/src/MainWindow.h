@@ -106,6 +106,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void updateZeroconfService();
 		void serverDetected(const QString name);
 		void setEdition(int type);
+		void updateLocalFingerprint();
 
 	public slots:
 		void appendLogRaw(const QString& text);
@@ -165,8 +166,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void downloadBonjour();
 		void promptAutoConfig();
 		void updateEdition();
-		QString getProfileDirectory();
-		QString getProfileDirectoryForArg();
+		QString getProfileRootForArg();
+		void checkFingerprint(const QString& line);
 
 	private:
 		QSettings& m_Settings;
