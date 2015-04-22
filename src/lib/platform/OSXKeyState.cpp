@@ -189,7 +189,7 @@ OSXKeyState::OSXKeyState(IEventQueue* events) :
 OSXKeyState::OSXKeyState(IEventQueue* events, synergy::KeyMap& keyMap) :
 	KeyState(events, keyMap)
 {
-	init();
+	init();a
 }
 
 OSXKeyState::~OSXKeyState()
@@ -388,6 +388,34 @@ OSXKeyState::fakeCtrlAltDel()
 {
 	// pass keys through unchanged
 	return false;
+}
+
+CGEventFlags
+OSXKeyState::getModifierStateAsOSXFlags()
+{
+    CGEventFlags modifiers = 0;
+    
+    if (m_shiftPressed) {
+        modifiers |= kCGEventFlagMaskShift;
+    }
+    
+    if (m_controlPressed) {
+        modifiers |= kCGEventFlagMaskControl;
+    }
+    
+    if (m_altPressed) {
+        modifiers |= kCGEventFlagMaskAlternate;
+    }
+    
+    if (m_superPressed) {
+        modifiers |= kCGEventFlagMaskCommand;
+    }
+    
+    if (m_capsPressed) {
+        modifiers |= kCGEventFlagMaskAlphaShift;
+    }
+    
+    return modifiers;
 }
 
 KeyModifierMask
