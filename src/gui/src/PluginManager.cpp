@@ -22,10 +22,12 @@
 #include "DataDownloader.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
+#include "Fingerprint.h"
 
 #include <QFile>
 #include <QDir>
 #include <QProcess>
+#include <QCoreApplication>
 
 static QString kBaseUrl = "http://synergy-project.org/files";
 static const char kWinProcessorArch32[] = "Windows-x86";
@@ -35,15 +37,9 @@ static const char kLinuxProcessorArchDeb32[] = "Linux-i686-deb";
 static const char kLinuxProcessorArchDeb64[] = "Linux-x86_64-deb";
 static const char kLinuxProcessorArchRpm32[] = "Linux-i686-rpm";
 static const char kLinuxProcessorArchRpm64[] = "Linux-x86_64-rpm";
-static QString kCertificateLifetime = "365";
-static QString kCertificateSubjectInfo = "/CN=Synergy";
-static QString kCertificateFilename = "Synergy.pem";
-static QString kUnixOpenSslCommand = "openssl";
 
 #if defined(Q_OS_WIN)
 static const char kWinPluginExt[] = ".dll";
-static const char kWinOpenSslSetup[] = "openssl-1.0.2-Windows-x86.exe";
-static const char kWinOpenSslBinary[] = "OpenSSL\\openssl.exe";
 
 #elif defined(Q_OS_MAC)
 static const char kMacPluginPrefix[] = "lib";
@@ -72,10 +68,30 @@ PluginManager::~PluginManager()
 {
 }
 
+bool PluginManager::exist(QString name)
+{
+	CoreInterface coreInterface;
+	QString PluginDir = coreInterface.getPluginDir();
+	QString pluginName = getPluginOsSpecificName(name);
+	QString filename;
+	filename.append(PluginDir);
+	filename.append(QDir::separator()).append(pluginName);
+	QFile file(filename);
+	bool exist = false;
+	if (file.exists()) {
+		exist = true;
+	}
+
+	return exist;
+}
+
 void PluginManager::downloadPlugins()
 {
 	if (m_DataDownloader.isFinished()) {
-		savePlugin();
+		if (!savePlugin()) {
+			return;
+		}
+
 		if (m_DownloadIndex != m_PluginList.size() - 1) {
 			emit downloadNext();
 		}
@@ -101,59 +117,7 @@ void PluginManager::downloadPlugins()
 	}
 }
 
-void PluginManager::saveOpenSslSetup()
-{
-	QDir dir(m_ProfileDir);
-	if (!dir.exists()) {
-		dir.mkpath(".");
-	}
-
-#if defined(Q_OS_WIN)
-
-	QString filename =
-		QString("%1\\%2")
-		.arg(m_ProfileDir)
-		.arg(kWinOpenSslSetup);
-
-	QFile file(filename);
-	if (!file.open(QIODevice::WriteOnly)) {
-		emit error(
-			tr("Failed to save certificate tool to: %1")
-			.arg(m_ProfileDir));
-		return;
-	}
-
-	file.write(m_DataDownloader.data());
-	file.close();
-
-	QStringList installArgs;
-	installArgs.append("-s");
-	installArgs.append("-y");
-
-	if (!runProgram(filename, installArgs, QStringList())) {
-		return;
-	}
-
-	// openssl installer no longer needed
-	QFile::remove(filename);
-
-#endif
-
-	emit openSslBinaryReady();
-}
-
-void PluginManager::generateCertificate()
-{
-	connect(
-		this,
-		SIGNAL(openSslBinaryReady()),
-		this,
-		SLOT(doGenerateCertificate()));
-
-	downloadOpenSslSetup();
-}
-
-void PluginManager::savePlugin()
+bool PluginManager::savePlugin()
 {
 	// create the path if not exist
 	QDir dir(m_PluginDir);
@@ -169,15 +133,19 @@ void PluginManager::savePlugin()
 	QFile file(filename);
 	if (!file.open(QIODevice::WriteOnly)) {
 		emit error(
-				tr("Failed to download '%1' plugin to: %2")
+				tr("Failed to download plugin '%1' to: %2\n%3")
 				.arg(m_PluginList.at(m_DownloadIndex))
-				.arg(m_PluginDir));
+				.arg(m_PluginDir)
+				.arg(file.errorString()));
 
-		return;
+		file.close();
+		return false;
 	}
 
 	file.write(m_DataDownloader.data());
 	file.close();
+
+	return true;
 }
 
 QString PluginManager::getPluginUrl(const QString& pluginName)
@@ -236,19 +204,6 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 	return result;
 }
 
-QString PluginManager::getOpenSslSetupUrl()
-{
-	QString result;
-
-#if defined(Q_OS_WIN)
-	result = kBaseUrl;
-	result.append("/tools/");
-	result.append(kWinOpenSslSetup);
-#endif
-
-	return result;
-}
-
 QString PluginManager::getPluginOsSpecificName(const QString& pluginName)
 {
 	QString result = pluginName;
@@ -260,128 +215,4 @@ QString PluginManager::getPluginOsSpecificName(const QString& pluginName)
 	result = kLinuxPluginPrefix + pluginName + kLinuxPluginExt;
 #endif
 	return result;
-}
-
-bool PluginManager::checkOpenSslBinary()
-{
-	// assume OpenSsl is unavailable on Windows,
-	// but always available on both Mac and Linux
-#if defined(Q_OS_WIN)
-	return false;
-#else
-	return true;
-#endif
-}
-
-void PluginManager::downloadOpenSslSetup()
-{
-	if (checkOpenSslBinary()) {
-		emit openSslBinaryReady();
-		return;
-	}
-
-	QString urlString = getOpenSslSetupUrl();
-
-	QUrl url;
-	url.setUrl(urlString);
-
-	disconnect(
-		&m_DataDownloader,
-		SIGNAL(isComplete()),
-		this,
-		SLOT(downloadPlugins()));
-
-	connect(
-		&m_DataDownloader,
-		SIGNAL(isComplete()),
-		this,
-		SLOT(saveOpenSslSetup()));
-
-	m_DataDownloader.download(url);
-}
-
-void PluginManager::doGenerateCertificate()
-{
-	QString openSslProgramFile;
-
-#if defined(Q_OS_WIN)
-	openSslProgramFile = m_ProfileDir;
-	openSslProgramFile.append("\\").append(kWinOpenSslBinary);
-#else
-	openSslProgramFile = kUnixOpenSslCommand;
-#endif
-
-	QStringList arguments;
-
-	// self signed certificate
-	arguments.append("req");
-	arguments.append("-x509");
-	arguments.append("-nodes");
-
-	// valide duration
-	arguments.append("-days");
-	arguments.append(kCertificateLifetime);
-
-	// subject information
-	arguments.append("-subj");
-
-	QString info(kCertificateSubjectInfo);
-	arguments.append(info);
-
-	// private key
-	arguments.append("-newkey");
-	arguments.append("rsa:1024");
-
-	// key output filename
-	arguments.append("-keyout");
-	QString filename = m_ProfileDir;
-	filename.append(QDir::separator()).append(kCertificateFilename);
-	arguments.append(filename);
-
-	// certificate output filename
-	arguments.append("-out");
-	arguments.append(filename);
-
-	QStringList environment;
-
-#if defined(Q_OS_WIN)
-	environment << QString("OPENSSL_CONF=%1\\OpenSSL\\synergy.conf")
-		.arg(m_ProfileDir);
-#endif
-
-	if (!runProgram(openSslProgramFile, arguments, environment)) {
-		return;
-	}
-
-	emit generateCertificateFinished();
-}
-
-bool PluginManager::runProgram(
-	const QString& program, const QStringList& args, const QStringList& env)
-{
-	QProcess process;
-	process.setEnvironment(env);
-	process.start(program, args);
-
-	bool success = process.waitForStarted();
-
-	QString standardOutput, standardError;
-	if (success && process.waitForFinished())
-	{
-		standardOutput = process.readAllStandardOutput().trimmed();
-		standardError = process.readAllStandardError().trimmed();
-	}
-
-	int code = process.exitCode();
-	if (!success || code != 0)
-	{
-		emit error(
-			QString("Program failed: %1\n\nCode: %2\nError: %3")
-			.arg(program)
-			.arg(process.exitCode())
-			.arg(standardError.isEmpty() ? "Unknown" : standardError));
-		return false;
-	}
-
-	return true;
 }

@@ -21,6 +21,9 @@
 #include <iostream>
 
 #include "MainWindow.h"
+
+#include "Fingerprint.h"
+#include "PluginManager.h"
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
@@ -131,6 +134,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	updateEdition();
 
 	m_pLabelPadlock->hide();
+
+	updateLocalFingerprint();
 }
 
 MainWindow::~MainWindow()
@@ -395,6 +400,50 @@ void MainWindow::updateStateFromLogLine(const QString &line)
 	{
 		setSynergyState(synergyConnected);
 	}
+
+	checkFingerprint(line);
+}
+
+void MainWindow::checkFingerprint(const QString& line)
+{
+	QRegExp fingerprintRegex(".*server fingerprint: ([A-F0-9:]+)");
+	if (!fingerprintRegex.exactMatch(line)) {
+		return;
+	}
+
+	QString fingerprint = fingerprintRegex.cap(1);
+	if (Fingerprint::trustedServers().isTrusted(fingerprint)) {
+		return;
+	}
+
+	QMessageBox::StandardButton fingerprintReply =
+		QMessageBox::information(
+		this, tr("Security question"),
+		tr("Do you trust this fingerprint?\n\n"
+		   "%1\n\n"
+		   "This is a server fingerprint. You should compare this "
+		   "fingerprint to the one on your server's screen. If the "
+		   "two don't match exactly, then it's probably not the server "
+		   "you're expecting (it could be a malicious user).\n\n"
+		   "To automatically trust this fingerprint for future "
+		   "connections, click Yes. To reject this fingerprint and "
+		   "disconnect from the server, click No.")
+		.arg(fingerprint),
+		QMessageBox::Yes | QMessageBox::No);
+
+	if (fingerprintReply == QMessageBox::Yes) {
+		// restart core process after trusting fingerprint.
+		Fingerprint::trustedServers().trust(fingerprint);
+		startSynergy();
+	}
+	else {
+		// on all platforms, the core process will stop if the
+		// fingerprint is not trusted, so technically the stop
+		// isn't really needed. however on windows, the core
+		// process will keep trying (and failing) unless we
+		// tell it to stop.
+		stopSynergy();
+	}
 }
 
 void MainWindow::clearLog()
@@ -451,7 +500,11 @@ void MainWindow::startSynergy()
 	}
 
 #if defined(Q_OS_WIN)
-	args << "--profile-dir" << getProfileDirectoryForArg();
+	// on windows, the profile directory changes depending on the user that
+	// launched the process (e.g. when launched with elevation). setting the
+	// profile dir on launch ensures it uses the same profile dir is used
+	// no matter how its relaunched.
+	args << "--profile-dir" << getProfileRootForArg();
 #endif
 
 	if ((synergyType() == synergyClient && !clientArgs(args, app))
@@ -492,14 +545,6 @@ void MainWindow::startSynergy()
 
 	if (desktopMode)
 	{
-		if (!appConfig().startedBefore()) {
-			QMessageBox::information(
-				this, "Synergy",
-				tr("Synergy will be minimized to the notification "
-				"area. This will happen automatically when Synergy "
-				"starts."));
-		}
-
 		synergyProcess()->start(app, args);
 		if (!synergyProcess()->waitForStarted())
 		{
@@ -757,12 +802,6 @@ void MainWindow::setSynergyState(qSynergyState state)
 	setIcon(state);
 
 	m_SynergyState = state;
-
-	// if in desktop mode, hide synergy. in service mode the gui can
-	// just be closed.
-	if ((appConfig().processMode() == Desktop) && (state == synergyConnected)) {
-		hide();
-	}
 }
 
 void MainWindow::setVisible(bool visible)
@@ -891,6 +930,19 @@ void MainWindow::setEdition(int type)
 	}
 
 	setWindowTitle(title);
+}
+
+void MainWindow::updateLocalFingerprint()
+{
+	if (Fingerprint::local().fileExists()) {
+		m_pLabelFingerprint->setVisible(true);
+		m_pLabelLocalFingerprint->setVisible(true);
+		m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
+	}
+	else {
+		m_pLabelFingerprint->setVisible(false);
+		m_pLabelLocalFingerprint->setVisible(false);
+	}
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
@@ -1172,6 +1224,7 @@ void MainWindow::updateEdition()
 	QString mac = getFirstMacAddress();
 	QString hashSrc = m_AppConfig.activateEmail() + mac;
 	QString hashResult = hash(hashSrc);
+
 	if (hashResult == m_AppConfig.userToken()) {
 		setEdition(m_AppConfig.edition());
 	}
@@ -1223,25 +1276,17 @@ void MainWindow::bonjourInstallFinished()
 	m_pCheckBoxAutoConfig->setChecked(true);
 }
 
-QString MainWindow::getProfileDirectory()
+QString MainWindow::getProfileRootForArg()
 {
+	CoreInterface coreInterface;
+	QString dir = coreInterface.getProfileDir();
+
+	// HACK: strip our app name since we're returning the root dir.
 #if defined(Q_OS_WIN)
-
-	QString qtDataDir = QDesktopServices::storageLocation(
-		QDesktopServices::DataLocation);
-
-	// HACK: core wants the base app data dir, this seems like a very hacky
-	// way to get it (maybe consider using %LOCALAPPDATA% instead?)
-	return qtDataDir.replace("\\Synergy\\Synergy", "");
-
+	dir.replace("\\Synergy", "");
 #else
-
-	return "";
-
+	dir.replace("/.synergy", "");
 #endif
-}
 
-QString MainWindow::getProfileDirectoryForArg()
-{
-	return QString("\"%1\"").arg(getProfileDirectory());
+	return QString("\"%1\"").arg(dir);
 }
