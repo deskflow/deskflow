@@ -189,7 +189,7 @@ OSXKeyState::OSXKeyState(IEventQueue* events) :
 OSXKeyState::OSXKeyState(IEventQueue* events, synergy::KeyMap& keyMap) :
 	KeyState(events, keyMap)
 {
-	init();a
+	init();
 }
 
 OSXKeyState::~OSXKeyState()
