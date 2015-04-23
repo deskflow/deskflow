@@ -446,6 +446,14 @@ void MainWindow::checkFingerprint(const QString& line)
 	}
 }
 
+void MainWindow::autoHide()
+{
+	if ((appConfig().processMode() == Desktop) &&
+		appConfig().getAutoHide()) {
+		hide();
+	}
+}
+
 void MainWindow::clearLog()
 {
 	m_pLogOutput->clear();
@@ -787,6 +795,7 @@ void MainWindow::setSynergyState(qSynergyState state)
 		}
 
 		setStatus(tr("Synergy is running."));
+		autoHide();
 		break;
 	}
 	case synergyConnecting:

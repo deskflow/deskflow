@@ -168,6 +168,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void updateEdition();
 		QString getProfileRootForArg();
 		void checkFingerprint(const QString& line);
+		void autoHide();
 
 	private:
 		QSettings& m_Settings;

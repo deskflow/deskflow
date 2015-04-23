@@ -79,6 +79,7 @@ void SettingsDialog::accept()
 	appConfig().setLogFilename(m_pLineEditLogFilename->text());
 	appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
 	appConfig().setElevateMode(m_pCheckBoxElevateMode->isChecked());
+	appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
 	appConfig().saveSettings();
 	QDialog::accept();
 }
