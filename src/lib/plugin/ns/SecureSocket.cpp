@@ -210,12 +210,11 @@ SecureSocket::initContext(bool server)
 	// load all error messages
 	SSL_load_error_strings();
 
+	// SSLv23_method uses TLSv1, with the ability to fall back to SSLv3
 	if (server) {
-		// create new server-method instance
 		method = SSLv23_server_method();
 	}
 	else {
-		// create new client-method instance
 		method = SSLv23_client_method();
 	}
 	
