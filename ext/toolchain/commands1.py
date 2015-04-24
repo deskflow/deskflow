@@ -716,6 +716,8 @@ class InternalCommands:
 
 				if sys.platform == 'darwin' and not "clean" in args:
 					self.macPostGuiMake(target)
+
+					self.fixQtFrameworksLayout(target)
 			else:
 				raise Exception('Unsupported platform: ' + sys.platform)
 
@@ -742,29 +744,89 @@ class InternalCommands:
 		if not self.macIdentity:
 			raise Exception("run config with --mac-identity")
 
-		if sys.version_info < (2, 4):
-			raise Exception("Python 2.4 or greater required.")
+		if self.enableMakeGui:
+			# use qt to copy libs to bundle so no dependencies are needed. do not create a
+			# dmg at this point, since we need to sign it first, and then create our own
+			# after signing (so that qt does not affect the signed app bundle).
+			bin = "macdeployqt Synergy.app -verbose=2"
+			self.try_chdir(targetDir)
+			err = os.system(bin)
+			self.restore_chdir()
+			print bundleTargetDir
+			if err != 0:
+				raise Exception(bin + " failed with error: " + str(err))
 
-		(qMajor, qMinor, qRev) = self.getQmakeVersion()
-		if qMajor >= 5:
-			output = commands.getstatusoutput(
-				"macdeployqt %s/Synergy.app -verbose=2 -codesign='%s'" % (
-				targetDir, self.macIdentity))
-		else:
-			# no code signing available in old versions
-			output = commands.getstatusoutput(
-				"macdeployqt %s/Synergy.app -verbose=2" % (
-				targetDir))
-
-		print output[1]
-		if "ERROR" in output[1]:
 			(qMajor, qMinor, qRev) = self.getQmakeVersion()
-			if qMajor >= 5:
-				# only listen to errors in qt 5+
-				raise Exception("macdeployqt failed")
+			if qMajor <= 4:
+				frameworkRootDir = "/Library/Frameworks"
+			else:
+				# TODO: auto-detect, qt can now be installed anywhere.
+				frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
+
+			target = bundleTargetDir + "/Contents/Frameworks"
+
+			# copy the missing Info.plist files for the frameworks.
+			for root, dirs, files in os.walk(target):
+				for dir in dirs:
+					if dir.startswith("Qt"):
+						shutil.copy(
+							frameworkRootDir + "/" + dir + "/Contents/Info.plist",
+							target + "/" + dir + "/Resources/")
+
+	def symlink(self, source, target):
+		if not os.path.exists(target):
+			os.symlink(source, target)
+
+	def move(self, source, target):
+		if os.path.exists(source):
+			shutil.move(source, target)
+
+	def fixQtFrameworksLayout(self, target):
+		# reorganize Qt frameworks layout on Mac 10.9.5 or later
+		# http://goo.gl/BFnQ8l
+		# QtCore example:
+		# 	QtCore.framework/
+		# 		QtCore    -> Versions/Current/QtCore
+		# 		Resources -> Versions/Current/Resources
+		# 		Versions/
+		# 			Current -> 5
+		# 			5/
+		# 				QtCore
+		# 				Resources/
+		# 					Info.plist
+		targetDir = self.getGenerator().getBinDir(target)
+
+		target = targetDir + "/Synergy.app/Contents/Frameworks"
+		(major, minor) = self.getMacVersion()
+		if major == 10:
+			if minor >= 9:
+				for root, dirs, files in os.walk(target):
+					for dir in dirs:
+						if dir.startswith("Qt"):
+							self.try_chdir(target + "/" + dir +"/Versions")
+							self.symlink("5", "Current")
+							self.move("../Resources", "5")
+							self.restore_chdir()
+
+							self.try_chdir(target + "/" + dir)
+							dot = dir.find('.')
+							frameworkName = dir[:dot]
+							self.symlink("Versions/Current/" + frameworkName, frameworkName)
+							self.symlink("Versions/Current/Resources", "Resources")
+							self.restore_chdir()
 
 	def signmac(self):
-		print "signmac is now obsolete"
+		self.loadConfig()
+		if not self.macIdentity:
+			raise Exception("run config with --mac-identity")
+
+		self.try_chdir("bin/Release/")
+		err = os.system(
+			'codesign --deep -fs "' + self.macIdentity + '" Synergy.app')
+		self.restore_chdir()
+
+		if err != 0:
+			raise Exception("codesign failed with error: " + str(err))
 	
 	def signwin(self, pfx, pwdFile, dist):
 		generator = self.getGeneratorFromConfig().cmakeName
