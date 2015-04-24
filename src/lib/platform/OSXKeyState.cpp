@@ -390,6 +390,34 @@ OSXKeyState::fakeCtrlAltDel()
 	return false;
 }
 
+CGEventFlags
+OSXKeyState::getModifierStateAsOSXFlags()
+{
+    CGEventFlags modifiers = 0;
+    
+    if (m_shiftPressed) {
+        modifiers |= kCGEventFlagMaskShift;
+    }
+    
+    if (m_controlPressed) {
+        modifiers |= kCGEventFlagMaskControl;
+    }
+    
+    if (m_altPressed) {
+        modifiers |= kCGEventFlagMaskAlternate;
+    }
+    
+    if (m_superPressed) {
+        modifiers |= kCGEventFlagMaskCommand;
+    }
+    
+    if (m_capsPressed) {
+        modifiers |= kCGEventFlagMaskAlphaShift;
+    }
+    
+    return modifiers;
+}
+
 KeyModifierMask
 OSXKeyState::pollActiveModifiers() const
 {

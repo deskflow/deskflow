@@ -528,6 +528,10 @@ OSXScreen::postMouseEvent(CGPoint& pos) const
     // Dragging events also need the click state
     CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
     
+    // Fix for sticky keys
+    CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
+    CGEventSetFlags(event, modifiers);
+    
 	CGEventPost(kCGHIDEventTap, event);
 	
 	CFRelease(event);
@@ -594,6 +598,10 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
     CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, index);
     
     CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
+    
+    // Fix for sticky keys
+    CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
+    CGEventSetFlags(event, modifiers);
     
     m_buttonState.set(index, state);
     CGEventPost(kCGHIDEventTap, event);
@@ -705,6 +713,10 @@ OSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 			mapScrollWheelFromSynergy(yDelta),
 			-mapScrollWheelFromSynergy(xDelta));
 		
+        // Fix for sticky keys
+        CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
+        CGEventSetFlags(scrollEvent, modifiers);
+        
 		CGEventPost(kCGHIDEventTap, scrollEvent);
 		CFRelease(scrollEvent);
 #else
