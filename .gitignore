@@ -1,5 +1,6 @@
 config.h
 *.pyc
+*~
 /bin
 /lib
 /build
