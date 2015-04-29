@@ -1025,7 +1025,7 @@ Double click on a screen to edit its settings.</source>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="265"/>
-        <source>Sorry, an error occured while trying to sign in. Please contact the help desk, and provide the following details.
+        <source>Sorry, an error occurred while trying to sign in. Please contact the help desk, and provide the following details.
 
 %1</source>
         <translation type="unfinished"></translation>
