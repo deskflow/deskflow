@@ -30,7 +30,8 @@ if (WIN32)
 endif()
 
 if (APPLE)
-	set(OPENSSL_INCLUDE ../../../../ext/openssl/include)
+	set(OPENSSL_PLAT_DIR openssl-osx)
+	set(OPENSSL_INCLUDE ../../../../ext/${OPENSSL_PLAT_DIR}/include)
 endif()
 
 include_directories(
@@ -51,8 +52,8 @@ endif()
 if (UNIX)
 	if (APPLE)
 		set(OPENSSL_LIBS
-		${CMAKE_SOURCE_DIR}/ext/openssl/libssl.a
-		${CMAKE_SOURCE_DIR}/ext/openssl/libcrypto.a
+		${CMAKE_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/libssl.a
+		${CMAKE_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/libcrypto.a
 		)
 	else()
 		set(OPENSSL_LIBS ssl crypto)
