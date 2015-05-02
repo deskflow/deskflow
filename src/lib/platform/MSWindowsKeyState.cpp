@@ -318,11 +318,11 @@ const KeyID				MSWindowsKeyState::s_virtualKey[] =
 	/* 0x112 */ { kKeyAlt_R },		// VK_MENU
 	/* 0x113 */ { kKeyNone },		// VK_PAUSE
 	/* 0x114 */ { kKeyNone },		// VK_CAPITAL
-	/* 0x115 */ { kKeyNone },		// VK_KANA			
+	/* 0x115 */ { kKeyHangulEng },		// VK_KANA			
 	/* 0x116 */ { kKeyNone },		// VK_HANGUL		
 	/* 0x117 */ { kKeyNone },		// VK_JUNJA			
 	/* 0x118 */ { kKeyNone },		// VK_FINAL			
-	/* 0x119 */ { kKeyNone },		// VK_KANJI			
+	/* 0x119 */ { kKeyHanja },		// VK_KANJI			
 	/* 0x11a */ { kKeyNone },		// undefined
 	/* 0x11b */ { kKeyNone },		// VK_ESCAPE
 	/* 0x11c */ { kKeyNone },		// VK_CONVERT		
