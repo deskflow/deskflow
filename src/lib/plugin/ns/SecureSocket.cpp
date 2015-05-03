@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2015 Synergy Si Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file COPYING that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -110,10 +110,10 @@ SecureSocket::secureRead(void* buffer, UInt32 n)
 	if (m_ssl->m_ssl != NULL) {
 		LOG((CLOG_DEBUG2 "reading secure socket"));
 		r = SSL_read(m_ssl->m_ssl, buffer, n);
-		
+
 		bool fatal, retry;
 		checkResult(r, fatal, retry);
-		
+
 		if (retry) {
 			r = 0;
 		}
@@ -129,7 +129,7 @@ SecureSocket::secureWrite(const void* buffer, UInt32 n)
 	if (m_ssl->m_ssl != NULL) {
 		LOG((CLOG_DEBUG2 "writing secure socket"));
 		r = SSL_write(m_ssl->m_ssl, buffer, n);
-		
+
 		bool fatal, retry;
 		checkResult(r, fatal, retry);
 
@@ -205,7 +205,7 @@ SecureSocket::initContext(bool server)
 	SSL_library_init();
 
 	const SSL_METHOD* method;
- 
+
 	// load & register all cryptos, etc.
 	OpenSSL_add_all_algorithms();
 
@@ -219,13 +219,17 @@ SecureSocket::initContext(bool server)
 	else {
 		method = SSLv23_client_method();
 	}
-	
+
 	// create new context from method
 	SSL_METHOD* m = const_cast<SSL_METHOD*>(method);
 	m_ssl->m_context = SSL_CTX_new(m);
 
 	// drop SSLv3 support
 	SSL_CTX_set_options(m_ssl->m_context, SSL_OP_NO_SSLv3);
+
+	// Set ciphersuite list
+	// drops some ciphersuites
+	SSL_CTX_set_cipher_list(m_ssl->m_context, "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK");
 
 	if (m_ssl->m_context == NULL) {
 		showError();
@@ -249,10 +253,10 @@ SecureSocket::secureAccept(int socket)
 
 	// set connection socket to SSL state
 	SSL_set_fd(m_ssl->m_ssl, socket);
-	
+
 	LOG((CLOG_DEBUG2 "accepting secure socket"));
 	int r = SSL_accept(m_ssl->m_ssl);
-	
+
 	bool fatal, retry;
 	checkResult(r, fatal, retry);
 
@@ -278,10 +282,10 @@ SecureSocket::secureConnect(int socket)
 
 	// attach the socket descriptor
 	SSL_set_fd(m_ssl->m_ssl, socket);
-	
+
 	LOG((CLOG_DEBUG2 "connecting secure socket"));
 	int r = SSL_connect(m_ssl->m_ssl);
-	
+
 	bool fatal, retry;
 	checkResult(r, fatal, retry);
 
@@ -314,7 +318,7 @@ SecureSocket::showCertificate()
 {
 	X509* cert;
 	char* line;
- 
+
 	// get the server's certificate
 	cert = SSL_get_peer_certificate(m_ssl->m_ssl);
 	if (cert != NULL) {
