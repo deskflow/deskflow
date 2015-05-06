@@ -52,9 +52,15 @@
     <Condition Message="An existing installation of $(var.Name) was detected, please uninstall it before continuing.">
       NOT LEGACY_UNINSTALL_EXISTS
     </Condition>
-    
-    <CustomAction Id="StartGui" FileKey="GuiProgram" ExeCommand="" Return="asyncNoWait" Execute="deferred" Impersonate="yes" />
-    
+
+    <CustomAction Id="StartGui" FileKey="GuiProgram" ExeCommand="" Return="asyncNoWait" />
+    <UI>
+      <Publish Dialog="ExitDialog"
+      Control="Finish"
+      Event="DoAction"
+      Value="StartGui">NOT Installed</Publish>
+    </UI>
+
   </Product>
 
   <Fragment>
