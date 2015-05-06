@@ -100,6 +100,7 @@ public:
 	virtual SInt32		pollActiveGroup() const;
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
+    CGEventFlags getModifierStateAsOSXFlags();
 protected:
 	// KeyState overrides
 	virtual void		getKeyMap(synergy::KeyMap& keyMap);
