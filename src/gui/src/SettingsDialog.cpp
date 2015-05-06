@@ -18,6 +18,7 @@
 
 #include "SettingsDialog.h"
 
+#include "PluginManager.h"
 #include "CoreInterface.h"
 #include "SynergyLocale.h"
 #include "QSynergyApplication.h"
@@ -29,6 +30,8 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDir>
+
+static const char networkSecurity[] = "ns";
 
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -57,10 +60,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pCheckBoxElevateMode->hide();
 #endif
 
-	QString pluginDir = m_CoreInterface.getPluginDir();
-	QDir dir(pluginDir);
-	int fileNum = dir.entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count();
-	if (fileNum == 0) {
+	if (!PluginManager::exist(networkSecurity)) {
 		m_pGroupNetworkSecurity->setEnabled(false);
 		m_pCheckBoxEnableCrypto->setChecked(false);
 	}

@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
- * Copyright (C) 2011 Nick Bolton
+ * Copyright (C) 2015 Synergy Si Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,20 +17,30 @@
 
 #pragma once
 
-#define TEST_ENV
+#include <QString>
 
-#include "client/Client.h"
-
-#include "test/global/gmock.h"
-
-class IEventQueue;
-
-class MockClient : public Client
+class Fingerprint
 {
+private:
+	Fingerprint(const QString& filename);
+
 public:
-	MockClient() : Client() { }
-	MOCK_METHOD2(mouseMove, void(SInt32, SInt32));
-	MOCK_METHOD1(setOptions, void(const OptionsList&));
-	MOCK_METHOD0(handshakeComplete, void());
-	MOCK_METHOD1(setDecryptIv, void(const UInt8*));
+	void trust(const QString& fingerprintText, bool append = true);
+	bool isTrusted(const QString& fingerprintText);
+	QStringList readList(const int readTo = -1);
+	QString readFirst();
+	QString filePath() const;
+	bool fileExists() const;
+
+public:
+	static Fingerprint local();
+	static Fingerprint trustedServers();
+	static Fingerprint trustedClients();
+	static QString directoryPath();
+	static QString localFingerprint();
+	static bool localFingerprintExists();
+	static void persistDirectory();
+
+private:
+	QString m_Filename;
 };

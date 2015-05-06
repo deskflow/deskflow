@@ -95,6 +95,7 @@ REGISTER_EVENT(IListenSocket, connecting)
 //
 
 REGISTER_EVENT(ISocket, disconnected)
+REGISTER_EVENT(ISocket, stopRetry)
 
 //
 // OSXScreen

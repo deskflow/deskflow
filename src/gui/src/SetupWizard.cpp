@@ -169,6 +169,7 @@ void SetupWizard::accept()
 		appConfig.setEdition(m_Edition);
 	}
 	m_MainWindow.setEdition(m_Edition);
+	m_MainWindow.updateLocalFingerprint();
 
 	settings.sync();
 

@@ -25,6 +25,7 @@
 
 class WebClient;
 class PluginManager;
+class SslCertificate;
 
 class PluginWizardPage : public QWizardPage, public Ui::PluginWizardPage {
 
@@ -46,13 +47,13 @@ protected:
 
 protected slots:
 	void showError(QString error);
+	void updateStatus(QString info);
 	void queryPluginDone();
 	void updateDownloadStatus();
 	void finished();
 	void generateCertificate();
 
 private:
-	void updateStatus(QString info);
 	void downloadPlugins();
 	void showFinished();
 
@@ -62,7 +63,8 @@ private:
 	QString m_Password;
 	WebClient* m_pWebClient;
 	PluginManager* m_pPluginManager;
-	QThread* m_pPluginManagerThread;
+	SslCertificate* m_pSslCertificate;
+	QThread* m_pThread;
 	AppConfig& m_AppConfig;
 };
 #endif // PLUGINWIZARDPAGE_H

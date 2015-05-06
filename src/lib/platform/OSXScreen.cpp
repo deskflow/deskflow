@@ -105,8 +105,8 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 	m_activeModifierHotKeyMask(0),
 	m_eventTapPort(nullptr),
 	m_eventTapRLSR(nullptr),
-	m_lastSingleClick(0),
-	m_lastDoubleClick(0),
+	m_lastClickTime(0),
+	m_clickState(1),
 	m_lastSingleClickXCursor(0),
 	m_lastSingleClickYCursor(0),
 	m_autoShowHideCursor(autoShowHideCursor),
@@ -524,6 +524,10 @@ OSXScreen::postMouseEvent(CGPoint& pos) const
 	}
 
 	CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, button);
+    
+    // Dragging events also need the click state
+    CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
+    
 	CGEventPost(kCGHIDEventTap, event);
 	
 	CFRelease(event);
@@ -532,20 +536,6 @@ OSXScreen::postMouseEvent(CGPoint& pos) const
 void
 OSXScreen::fakeMouseButton(ButtonID id, bool press)
 {
-	NXEventHandle handle = NXOpenEventStatus();
-	double clickTime = NXClickTime(handle);
-	
-	if ((ARCH->time() - m_lastDoubleClick) <= clickTime) {
-		// drop all down and up fakes immedately after a double click.
-		// TODO: perhaps there is a better way to do this, usually in
-		// finder, if you tripple click a folder, it will open it and
-		// then select a folder under the cursor -- and perhaps other
-		// strange behaviour might happen?
-		LOG((CLOG_DEBUG1 "dropping mouse button %s",
-			press ? "press" : "release"));
-		return;
-	}
-	
 	// Buttons are indexed from one, but the button down array is indexed from zero
 	UInt32 index = id - kButtonLeft;
 	if (index >= NumButtonIDs) {
@@ -569,61 +559,47 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
 	// since we don't have double click distance in NX APIs
 	// we define our own defaults.
 	const double maxDiff = sqrt(2) + 0.0001;
-
-	if (press && (id == kButtonLeft) &&
-		((ARCH->time() - m_lastSingleClick) <= clickTime) &&
-		diff <= maxDiff) {
-
-		LOG((CLOG_DEBUG1 "faking mouse left double click"));
-		
-		// finder does not seem to detect double clicks from two separate
-		// CGEventCreateMouseEvent calls. so, if we detect a double click we
-		// use CGEventSetIntegerValueField to tell the OS.
-		// 
-		// the caveat here is that findor will see this as a single click 
-		// followed by a double click (even though there should be only a
-		// double click). this may cause weird behaviour in other apps.
-		//
-		// for some reason using the old CGPostMouseEvent function, doesn't
-		// cause double clicks (though i'm sure it did work at some point).
-		
-		CGEventRef event = CGEventCreateMouseEvent(
-			NULL, kCGEventLeftMouseDown, pos, kCGMouseButtonLeft);
-		
-		CGEventSetIntegerValueField(event, kCGMouseEventClickState, 2);
-		m_buttonState.set(index, kMouseButtonDown);
-		CGEventPost(kCGHIDEventTap, event);
-		
-		CGEventSetType(event, kCGEventLeftMouseUp);
-		m_buttonState.set(index, kMouseButtonUp);
-		CGEventPost(kCGHIDEventTap, event);
-		
-		CFRelease(event);
-	
-		m_lastDoubleClick = ARCH->time();
-	}
-	else {
-		
-		// ... otherwise, perform a single press or release as normal.
-		
-		EMouseButtonState state = press ? kMouseButtonDown : kMouseButtonUp;
-		
-		LOG((CLOG_DEBUG1 "faking mouse button id: %d press: %s", id, press ? "pressed" : "released"));
-		
-		MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
-		CGEventType type = thisButtonMap[state];
-		
-		CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, index);
-	
-		m_buttonState.set(index, state);
-		CGEventPost(kCGHIDEventTap, event);
-		
-		CFRelease(event);
-	
-		m_lastSingleClick = ARCH->time();
-		m_lastSingleClickXCursor = m_xCursor;
-		m_lastSingleClickYCursor = m_yCursor;
-	}
+    
+    
+    NXEventHandle handle = NXOpenEventStatus();
+    double clickTime = NXClickTime(handle);
+    
+    // As long as the click is within the time window and distance window
+    // increase clickState (double click, triple click, etc)
+    // This will allow for higher than triple click but the quartz documenation
+    // does not specify that this should be limited to triple click
+    if(press) {
+        if((ARCH->time() - m_lastClickTime) <= clickTime && diff <= maxDiff){
+            m_clickState++;
+        }
+        else {
+            m_clickState = 1;
+        }
+        
+        m_lastClickTime = ARCH->time();
+    }
+    
+    if(m_clickState == 1){
+        m_lastSingleClickXCursor = m_xCursor;
+        m_lastSingleClickYCursor = m_yCursor;
+    }
+    
+    EMouseButtonState state = press ? kMouseButtonDown : kMouseButtonUp;
+    
+    LOG((CLOG_DEBUG1 "faking mouse button id: %d press: %s", id, press ? "pressed" : "released"));
+    
+    MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
+    CGEventType type = thisButtonMap[state];
+    
+    CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, index);
+    
+    CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
+    
+    m_buttonState.set(index, state);
+    CGEventPost(kCGHIDEventTap, event);
+    
+    CFRelease(event);
+    
 	if (!press && (id == kButtonLeft)) {
 		if (m_fakeDraggingStarted) {
 			m_getDropTargetThread = new Thread(new TMethodJob<OSXScreen>(

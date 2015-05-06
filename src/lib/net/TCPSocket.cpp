@@ -461,15 +461,26 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 	}
 
 	bool needNewJob = false;
+	static UInt32 s_retryOutputBufferSize = 0;
 
 	if (write) {
 		try {
 			// write data
 			UInt32 n = m_outputBuffer.getSize();
+
+			if (s_retryOutputBufferSize > 0) {
+				n = s_retryOutputBufferSize;
+			}
+
 			const void* buffer = m_outputBuffer.peek(n);
 			if (isSecure()) {
 				if (isSecureReady()) {
+					s_retryOutputBufferSize = n;
 					n = secureWrite(buffer, n);
+
+					if (n > 0) {
+						s_retryOutputBufferSize = 0;
+					}
 				}
 				else {
 					return job;
@@ -519,7 +530,8 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 
 	if (read && m_readable) {
 		try {
-			UInt8 buffer[4096];
+			static UInt8 buffer[4096];
+			memset(buffer, 0, sizeof(buffer));
 			size_t n = 0;
 
 			if (isSecure()) {
