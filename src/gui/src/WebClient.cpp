@@ -98,7 +98,7 @@ void WebClient::queryPluginList()
 	}
 	catch (std::exception& e)
 	{
-		emit error(tr("An error occured while trying to query the "
+		emit error(tr("An error occurred while trying to query the "
 					  "plugin list. Please contact the help desk, and "
 					  "provide the following details.\n\n%1").arg(e.what()));
 		return;
