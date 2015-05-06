@@ -45,6 +45,6 @@ TEST(DeprecatedArgsParsingTests, parseDeprecatedArgs_cryptoPass_returnFalse)
 
 	bool result = argParser.parseDeprecatedArgs(argc, kCryptoPassCmd, i);
 
-	EXPECT_EQ(false, result);
+	EXPECT_FALSE(result);
 	EXPECT_EQ(1, i);
 }
