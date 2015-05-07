@@ -21,11 +21,17 @@ if (SYNERGY_ADD_HEADERS)
 endif()
 
 if (WIN32)
-	set(OPENSSL_INCLUDE ../../../../ext/openssl/inc32)
+	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+		set(OPENSSL_PLAT_DIR openssl-win64)
+	else()
+		set(OPENSSL_PLAT_DIR openssl-win32)
+	endif()
+	set(OPENSSL_INCLUDE ../../../../ext/${OPENSSL_PLAT_DIR}/inc32)
 endif()
 
 if (APPLE)
-	set(OPENSSL_INCLUDE ../../../../ext/openssl/include)
+	set(OPENSSL_PLAT_DIR openssl-osx)
+	set(OPENSSL_INCLUDE ../../../../ext/${OPENSSL_PLAT_DIR}/include)
 endif()
 
 include_directories(
@@ -37,21 +43,21 @@ include_directories(
 add_library(ns SHARED ${sources})
 
 if (WIN32)
-  set(OPENSSL_LIBS
-    ${CMAKE_SOURCE_DIR}/ext/openssl/out32dll/libeay32.lib
-    ${CMAKE_SOURCE_DIR}/ext/openssl/out32dll/ssleay32.lib
-  )
+	set(OPENSSL_LIBS
+		${CMAKE_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/out32dll/libeay32.lib
+		${CMAKE_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/out32dll/ssleay32.lib
+	)
 endif()
 
 if (UNIX)
-  if (APPLE)
-    set(OPENSSL_LIBS
-	  ${CMAKE_SOURCE_DIR}/ext/openssl/libssl.a
-	  ${CMAKE_SOURCE_DIR}/ext/openssl/libcrypto.a
-    )
-  else()
-    set(OPENSSL_LIBS ssl crypto)
-  endif()
+	if (APPLE)
+		set(OPENSSL_LIBS
+		${CMAKE_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/libssl.a
+		${CMAKE_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/libcrypto.a
+		)
+	else()
+		set(OPENSSL_LIBS ssl crypto)
+	endif()
 endif()
 
 target_link_libraries(ns
@@ -69,14 +75,14 @@ if (WIN32)
 		TARGET ns 
 		POST_BUILD
 		COMMAND xcopy /Y /Q
-			..\\..\\..\\..\\..\\ext\\openssl\\out32dll\\libeay32.*
+			..\\..\\..\\..\\..\\ext\\${OPENSSL_PLAT_DIR}\\out32dll\\libeay32.*
 			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
 	)
 	add_custom_command(
 		TARGET ns 
 		POST_BUILD
 		COMMAND xcopy /Y /Q
-			..\\..\\..\\..\\..\\ext\\openssl\\out32dll\\ssleay32.*
+			..\\..\\..\\..\\..\\ext\\${OPENSSL_PLAT_DIR}\\out32dll\\ssleay32.*
 			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
 	)
 else()

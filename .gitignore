@@ -1,5 +1,7 @@
 config.h
 *.pyc
+*~
+\.*.swp
 /bin
 /lib
 /build

@@ -303,6 +303,7 @@ class InternalCommands:
 			'  install     Installs the program\n'
 			'  doxygen     Builds doxygen documentation\n'
 			'  reformat    Reformat .cpp and .h files using AStyle\n'
+			'  genlist     Shows the list of available platform generators\n'
 			'  usage       Shows the help screen\n'
 			'\n'
 			'Example: %s build -g 3'
