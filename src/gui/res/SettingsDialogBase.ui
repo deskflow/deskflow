@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <ui version="4.0">
  <class>SettingsDialogBase</class>
  <widget class="QDialog" name="SettingsDialogBase">
@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>368</width>
-    <height>354</height>
+    <height>377</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -118,6 +118,13 @@
        <widget class="QCheckBox" name="m_pCheckBoxElevateMode">
         <property name="text">
          <string>Elevate mode</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
+        <property name="text">
+         <string>&amp;Hide on startup</string>
         </property>
        </widget>
       </item>

@@ -52,9 +52,15 @@
     <Condition Message="An existing installation of $(var.Name) was detected, please uninstall it before continuing.">
       NOT LEGACY_UNINSTALL_EXISTS
     </Condition>
-    
-    <CustomAction Id="StartGui" FileKey="GuiProgram" ExeCommand="" Return="asyncNoWait" Execute="deferred" Impersonate="yes" />
-    
+
+    <CustomAction Id="StartGui" FileKey="GuiProgram" ExeCommand="" Return="asyncNoWait" />
+    <UI>
+      <Publish Dialog="ExitDialog"
+      Control="Finish"
+      Event="DoAction"
+      Value="StartGui">NOT Installed</Publish>
+    </UI>
+
   </Product>
 
   <Fragment>
@@ -118,9 +124,9 @@
 
     <ComponentGroup Id="OpenSslComponents" Directory="OpenSslDir">
       <Component Id="OpenSsl" Guid="92648F77-65A6-4B16-AC59-A1F37BD341B1">
-        <File Source="$(var.ExtPath)/openssl/out32dll/libeay32.dll" Id="OpenSslDll1" />
-        <File Source="$(var.ExtPath)/openssl/out32dll/ssleay32.dll" Id="OpenSslDll2" />
-        <File Source="$(var.ExtPath)/openssl/out32dll/openssl.exe" />
+        <File Source="$(var.ExtPath)/$(var.OpensslPath)/out32dll/libeay32.dll" Id="OpenSslDll1" />
+        <File Source="$(var.ExtPath)/$(var.OpensslPath)/out32dll/ssleay32.dll" Id="OpenSslDll2" />
+        <File Source="$(var.ExtPath)/$(var.OpensslPath)/out32dll/openssl.exe" />
         <File Source="$(var.ResPath)/openssl/synergy.conf" />
       </Component>
     </ComponentGroup>

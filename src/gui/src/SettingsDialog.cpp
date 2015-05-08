@@ -50,11 +50,14 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
 	m_pLineEditLogFilename->setText(appConfig().logFilename());
 	setIndexFromItemData(m_pComboLanguage, appConfig().language());
+	m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
 
 #if defined(Q_OS_WIN)
 	m_SuppressElevateWarning = true;
 	m_pCheckBoxElevateMode->setChecked(appConfig().elevateMode());
 	m_SuppressElevateWarning = false;
+
+	m_pCheckBoxAutoHide->hide();
 #else
 	// elevate checkbox is only useful on ms windows.
 	m_pCheckBoxElevateMode->hide();
@@ -79,6 +82,7 @@ void SettingsDialog::accept()
 	appConfig().setLogFilename(m_pLineEditLogFilename->text());
 	appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
 	appConfig().setElevateMode(m_pCheckBoxElevateMode->isChecked());
+	appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
 	appConfig().saveSettings();
 	QDialog::accept();
 }

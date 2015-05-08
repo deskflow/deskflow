@@ -108,6 +108,7 @@ SecureSocket::secureRead(void* buffer, UInt32 n)
 {
 	int r = 0;
 	if (m_ssl->m_ssl != NULL) {
+		LOG((CLOG_DEBUG2 "reading secure socket"));
 		r = SSL_read(m_ssl->m_ssl, buffer, n);
 		
 		bool fatal, retry;
@@ -126,6 +127,7 @@ SecureSocket::secureWrite(const void* buffer, UInt32 n)
 {
 	int r = 0;
 	if (m_ssl->m_ssl != NULL) {
+		LOG((CLOG_DEBUG2 "writing secure socket"));
 		r = SSL_write(m_ssl->m_ssl, buffer, n);
 		
 		bool fatal, retry;
@@ -210,18 +212,21 @@ SecureSocket::initContext(bool server)
 	// load all error messages
 	SSL_load_error_strings();
 
+	// SSLv23_method uses TLSv1, with the ability to fall back to SSLv3
 	if (server) {
-		// create new server-method instance
 		method = SSLv23_server_method();
 	}
 	else {
-		// create new client-method instance
 		method = SSLv23_client_method();
 	}
 	
 	// create new context from method
 	SSL_METHOD* m = const_cast<SSL_METHOD*>(method);
 	m_ssl->m_context = SSL_CTX_new(m);
+
+	// drop SSLv3 support
+	SSL_CTX_set_options(m_ssl->m_context, SSL_OP_NO_SSLv3);
+
 	if (m_ssl->m_context == NULL) {
 		showError();
 	}
@@ -343,31 +348,19 @@ SecureSocket::checkResult(int n, bool& fatal, bool& retry)
 
 	case SSL_ERROR_ZERO_RETURN:
 		// connection closed
-		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_ZERO_RETURN"));
+		LOG((CLOG_DEBUG2 "SSL connection has been closed"));
 		break;
 
 	case SSL_ERROR_WANT_READ:
-		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_WANT_READ"));
-		retry = true;
-		break;
-
 	case SSL_ERROR_WANT_WRITE:
-		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_WANT_WRITE"));
-		retry = true;
-		break;
-
 	case SSL_ERROR_WANT_CONNECT:
-		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_WANT_CONNECT"));
-		retry = true;
-		break;
-
 	case SSL_ERROR_WANT_ACCEPT:
-		LOG((CLOG_DEBUG2 "secure socket error: SSL_ERROR_WANT_ACCEPT"));
+		LOG((CLOG_DEBUG2 "need to retry the same SSL function"));
 		retry = true;
 		break;
 
 	case SSL_ERROR_SYSCALL:
-		LOG((CLOG_ERR "secure socket error: SSL_ERROR_SYSCALL"));
+		LOG((CLOG_ERR "some secure socket I/O error occurred"));
 		if (ERR_peek_error() == 0) {
 			if (n == 0) {
 				LOG((CLOG_ERR "an EOF violates the protocol"));
@@ -387,12 +380,12 @@ SecureSocket::checkResult(int n, bool& fatal, bool& retry)
 		break;
 
 	case SSL_ERROR_SSL:
-		LOG((CLOG_ERR "secure socket error: SSL_ERROR_SSL"));
+		LOG((CLOG_ERR "a failure in the SSL library occurred"));
 		fatal = true;
 		break;
 
 	default:
-		LOG((CLOG_ERR "secure socket error: unknown"));
+		LOG((CLOG_ERR "unknown secure socket error"));
 		fatal = true;
 		break;
 	}

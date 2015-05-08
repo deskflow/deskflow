@@ -20,7 +20,6 @@
 
 #include <QtCore>
 #include <QtGui>
-#include <QtNetwork>
 
 AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),

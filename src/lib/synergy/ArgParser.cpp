@@ -44,6 +44,9 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
 		else if (parseGenericArgs(argc, argv, i)) {
 			continue;
 		}
+		else if (parseDeprecatedArgs(argc, argv, i)) {
+			continue;
+		}
 		else if (isArg(i, argc, argv, "-a", "--address", 1)) {
 			// save listen address
 			args.m_synergyAddress = argv[++i];
@@ -77,6 +80,9 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
 			continue;
 		}
 		else if (parseGenericArgs(argc, argv, i)) {
+			continue;
+		}
+		else if (parseDeprecatedArgs(argc, argv, i)) {
 			continue;
 		}
 		else if (isArg(i, argc, argv, NULL, "--camp")) {
@@ -295,6 +301,18 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 	}
 
 	return true;
+}
+
+bool
+ArgParser::parseDeprecatedArgs(int argc, const char* const* argv, int& i)
+{
+	if (isArg(i, argc, argv, NULL, "--crypto-pass")) {
+		LOG((CLOG_NOTE "--crypto-pass is deprecated"));
+		i++;
+		return true;
+	}
+
+	return false;
 }
 
 bool

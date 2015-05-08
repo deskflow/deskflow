@@ -87,6 +87,8 @@ class AppConfig
 
 		void setCryptoEnabled(bool e) { m_CryptoEnabled = e; }
 		bool getCryptoEnabled() { return m_CryptoEnabled; }
+		void setAutoHide(bool b) { m_AutoHide = b; }
+		bool getAutoHide() { return m_AutoHide; }
 
 	protected:
 		QSettings& settings() { return *m_pSettings; }
@@ -123,6 +125,7 @@ class AppConfig
 		QString m_ActivateEmail;
 		QString m_UserToken;
 		bool m_CryptoEnabled;
+		bool m_AutoHide;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

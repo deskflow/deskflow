@@ -161,7 +161,9 @@ void MainWindow::open()
 {
 	createTrayIcon();
 
-	showNormal();
+	if (!autoHide()) {
+		showNormal();
+	}
 
 	m_VersionChecker.checkLatest();
 
@@ -399,6 +401,17 @@ void MainWindow::updateStateFromLogLine(const QString &line)
 		line.contains("watchdog status: ok"))
 	{
 		setSynergyState(synergyConnected);
+
+		if (!appConfig().startedBefore()) {
+				QMessageBox::information(
+					this, "Synergy",
+					tr("Synergy is now connected, You can close the "
+					"config window. Synergy will remain connected in "
+					"the background."));
+
+			appConfig().setStartedBefore(true);
+			appConfig().saveSettings();
+		}
 	}
 
 	checkFingerprint(line);
@@ -444,6 +457,17 @@ void MainWindow::checkFingerprint(const QString& line)
 		// tell it to stop.
 		stopSynergy();
 	}
+}
+
+bool MainWindow::autoHide()
+{
+	if ((appConfig().processMode() == Desktop) &&
+		appConfig().getAutoHide()) {
+		hide();
+		return true;
+	}
+
+	return false;
 }
 
 void MainWindow::clearLog()
@@ -560,10 +584,6 @@ void MainWindow::startSynergy()
 		QString command(app + " " + args.join(" "));
 		m_IpcClient.sendCommand(command, appConfig().elevateMode());
 	}
-
-	appConfig().setStartedBefore(true);
-	appConfig().saveSettings();
-
 }
 
 bool MainWindow::clientArgs(QStringList& args, QString& app)
@@ -787,6 +807,7 @@ void MainWindow::setSynergyState(qSynergyState state)
 		}
 
 		setStatus(tr("Synergy is running."));
+
 		break;
 	}
 	case synergyConnecting:

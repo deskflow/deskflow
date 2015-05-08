@@ -1,3 +1,16 @@
+v1.7.2
+======
+Bug #4564 - Modifier keys often stuck down on Mac client
+Bug #4581 - Starting GUI on Mac crashes instantly on syntool segfault
+Bug #4520 - Laggy or sluggish cursor (ping spikes) on Mac when using WiFi
+Bug #4607 - GUI doesn't start after install on Windows
+Enhancement #4412 - Automate extract and compile for OpenSSL
+Enhancement #4567 - SSL plugin should use TLSv1_method() minimum
+Enhancement #4591 - Revert to legacy Mac deployment and signing
+Enhancement #4569 - Reintroduce GUI auto-hide setting (disabled by default)
+Enhancement #4570 - Make `--crypto-pass` show deprecated message
+Enhancement #4596 - Typo 'occurred' in WebClient.cpp
+
 v1.7.1
 ======
 Bug #3784 - Double click & drag doesn't select words on client
