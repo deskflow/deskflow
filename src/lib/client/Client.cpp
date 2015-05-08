@@ -159,7 +159,7 @@ Client::connect()
 		}
 
 		// create the socket
-		IDataSocket* socket = m_socketFactory->create(m_useSecureNetwork);
+		IDataSocket* socket = m_socketFactory->create(m_useSecureNetwork, ARCH->getAddrFamily(m_serverAddress.getAddress()));
 		m_socket = dynamic_cast<TCPSocket*>(socket);
 
 		// filter socket messages, including a packetizing filter

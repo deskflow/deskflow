@@ -71,7 +71,8 @@ invoke(const char* command, void** args)
 		if (g_secureListenSocket != NULL) {
 			delete g_secureListenSocket;
 		}
-		g_secureListenSocket = new SecureListenSocket(arg1, arg2);
+		IArchNetwork::EAddressFamily* arg3 = reinterpret_cast<IArchNetwork::EAddressFamily*>(args[3]);
+		g_secureListenSocket = new SecureListenSocket(arg1, arg2, *arg3);
 		return g_secureListenSocket;
 	}
 	else if (strcmp(command, "deleteSocket") == 0) {
