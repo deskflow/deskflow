@@ -254,12 +254,14 @@ class InternalCommands:
 	gmockDir = 'gmock-1.6.0'
 
 	win32_generators = {
-		1 : Generator('Visual Studio 10'),
-		2 : Generator('Visual Studio 10 Win64'),
-		3 : Generator('Visual Studio 9 2008'),
-		4 : Generator('Visual Studio 9 2008 Win64'),
-		5 : Generator('Visual Studio 8 2005'),
-		6 : Generator('Visual Studio 8 2005 Win64')
+		1 : Generator('Visual Studio 11'),
+		2 : Generator('Visual Studio 11 Win64'),
+		3 : Generator('Visual Studio 10'),
+		4 : Generator('Visual Studio 10 Win64'),
+		5 : Generator('Visual Studio 9 2008'),
+		6 : Generator('Visual Studio 9 2008 Win64'),
+		7 : Generator('Visual Studio 8 2005'),
+		8 : Generator('Visual Studio 8 2005 Win64')
 	}
 
 	unix_generators = {
@@ -890,7 +892,7 @@ class InternalCommands:
 
 		if generator.startswith('Visual Studio'):
 			# special case for version 10, use new /target:clean
-			if generator.startswith('Visual Studio 10'):
+			if generator.startswith('Visual Studio 10') or generator.startswith('Visual Studio 11'):
 				for target in targets:
 					self.run_vcbuild(generator, target, self.sln_filepath(), '/target:clean')
 				
@@ -1683,6 +1685,8 @@ class InternalCommands:
 			value,type = _winreg.QueryValueEx(key, '9.0')
 		elif generator.startswith('Visual Studio 10'):
 			value,type = _winreg.QueryValueEx(key, '10.0')
+		elif generator.startswith('Visual Studio 11'):
+			value,type = _winreg.QueryValueEx(key, '11.0')
 		else:
 			raise Exception('Cannot determine vcvarsall.bat location for: ' + generator)
 		
@@ -1725,7 +1729,7 @@ class InternalCommands:
 		else:
 			config = 'Debug'
 				
-		if generator.startswith('Visual Studio 10'):
+		if generator.startswith('Visual Studio 10') or generator.startswith('Visual Studio 11'):
 			cmd = ('@echo off\n'
 				'call "%s" %s \n'
 				'cd "%s"\n'
