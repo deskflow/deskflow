@@ -84,8 +84,7 @@ private:
 	bool				recvClipboard();
 	bool				recvGrabClipboard();
 
-private:
-	typedef bool (ClientProxy1_0::*MessageParser)(const UInt8*);
+protected:
 	struct ClientClipboard {
 	public:
 		ClientClipboard();
@@ -96,8 +95,12 @@ private:
 		bool			m_dirty;
 	};
 
-	ClientInfo			m_info;
 	ClientClipboard	m_clipboard[kClipboardEnd];
+
+private:
+	typedef bool (ClientProxy1_0::*MessageParser)(const UInt8*);
+
+	ClientInfo			m_info;
 	double				m_heartbeatAlarm;
 	EventQueueTimer*	m_heartbeatTimer;
 	MessageParser		m_parser;

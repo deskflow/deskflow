@@ -27,7 +27,7 @@
 // 1.3:  adds keep alive and deprecates heartbeats,
 //       adds horizontal mouse scrolling
 // 1.4:  adds crypto support
-// 1.5:  adds file transfer and removes home brew crypto
+// 1.5:  adds file/clipboard transfer and removes home brew crypto
 // NOTE: with new version, synergy minor version should increment
 static const SInt16		kProtocolMajorVersion = 1;
 static const SInt16		kProtocolMinorVersion = 5;

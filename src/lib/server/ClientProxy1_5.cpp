@@ -19,7 +19,9 @@
 
 #include "server/Server.h"
 #include "synergy/ProtocolUtil.h"
+#include "mt/Thread.h"
 #include "io/IStream.h"
+#include "base/TMethodJob.h"
 #include "base/Log.h"
 
 //
@@ -69,6 +71,24 @@ ClientProxy1_5::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 	}
 
 	ProtocolUtil::writef(getStream(), kMsgDFileTransfer, mark, &chunk);
+}
+
+void
+ClientProxy1_5::setClipboard(ClipboardID id, const IClipboard* clipboard)
+{
+	// ignore if this clipboard is already clean
+	if (m_clipboard[id].m_dirty) {
+		// this clipboard is now clean
+		m_clipboard[id].m_dirty = false;
+		Clipboard::copy(&m_clipboard[id].m_clipboard, clipboard);
+
+		m_clipboardData = m_clipboard[id].m_clipboard.marshall();
+
+		m_sendFileThread = new Thread(
+		new TMethodJob<ClientProxy1_5>(
+			this, &ClientProxy1_5::sendClipboardThread,
+			reinterpret_cast<void*>(id)));
+	}
 }
 
 bool
@@ -147,4 +167,12 @@ ClientProxy1_5::dragInfoReceived()
 	ProtocolUtil::readf(getStream(), kMsgDDragInfo + 4, &fileNum, &content);
 	
 	m_server->dragInfoReceived(fileNum, content);
+}
+
+void
+ClientProxy1_5::sendClipboardThread(void* data)
+{
+	ClipboardID id = reinterpret_cast<ClipboardID>(data);\
+	LOG((CLOG_DEBUG "sending clipboard %d to \"%s\" size=%d", id, getName().c_str(), m_clipboardData.size()));
+	ProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, &m_clipboardData);
 }

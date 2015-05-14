@@ -22,6 +22,7 @@
 
 class Server;
 class IEventQueue;
+class Thread;
 
 //! Proxy for client implementing protocol version 1.5
 class ClientProxy1_5 : public ClientProxy1_4 {
@@ -31,9 +32,14 @@ public:
 
 	virtual void		sendDragInfo(UInt32 fileCount, const char* info, size_t size);
 	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize);
+	virtual void		setClipboard(ClipboardID id, const IClipboard* clipboard);
 	virtual bool		parseMessage(const UInt8* code);
 	void				fileChunkReceived();
 	void				dragInfoReceived();
+
+private:
+	// thread funciton for sending clipboard
+	void				sendClipboardThread(void*);
 
 private:
 	IEventQueue*		m_events;
@@ -42,4 +48,6 @@ private:
 	double				m_elapsedTime;
 	size_t				m_receivedDataSize;
 	static const UInt16	m_intervalThreshold;
+	Thread*				m_sendFileThread;
+	String				m_clipboardData;
 };

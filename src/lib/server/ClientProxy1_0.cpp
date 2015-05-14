@@ -282,6 +282,7 @@ ClientProxy1_0::setClipboard(ClipboardID id, const IClipboard* clipboard)
 		Clipboard::copy(&m_clipboard[id].m_clipboard, clipboard);
 
 		String data = m_clipboard[id].m_clipboard.marshall();
+
 		LOG((CLOG_DEBUG "send clipboard %d to \"%s\" size=%d", id, getName().c_str(), data.size()));
 		ProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, &data);
 	}
@@ -504,7 +505,6 @@ ClientProxy1_0::recvGrabClipboard()
 
 	return true;
 }
-
 
 //
 // ClientProxy1_0::ClientClipboard
