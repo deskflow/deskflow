@@ -49,17 +49,17 @@ public:
 	//@{
 
 	//! Opens a TCP socket only allowing local connections.
-	void				listen();
+	virtual void		listen();
 
 	//! Send a message to all clients matching the filter type.
-	void				send(const IpcMessage& message, EIpcClientType filterType);
+	virtual void		send(const IpcMessage& message, EIpcClientType filterType);
 
 	//@}
 	//! @name accessors
 	//@{
 
 	//! Returns true when there are clients of the specified type connected.
-	bool				hasClients(EIpcClientType clientType) const;
+	virtual bool		hasClients(EIpcClientType clientType) const;
 
 	//@}
 
@@ -72,10 +72,21 @@ private:
 
 private:
 	typedef std::list<IpcClientProxy*> ClientList;
-
-	TCPListenSocket		m_socket;
+	
+	bool				m_mock;
+	IEventQueue*		m_events;
+	SocketMultiplexer*	m_socketMultiplexer;
+	TCPListenSocket*	m_socket;
 	NetworkAddress		m_address;
 	ClientList			m_clients;
 	ArchMutex			m_clientsMutex;
-	IEventQueue*		m_events;
+
+#ifdef TEST_ENV
+public:
+	IpcServer() :
+		m_mock(true),
+		m_events(nullptr),
+		m_socketMultiplexer(nullptr),
+		m_socket(nullptr) { }
+#endif
 };
