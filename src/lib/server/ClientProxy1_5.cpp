@@ -172,7 +172,7 @@ ClientProxy1_5::dragInfoReceived()
 void
 ClientProxy1_5::sendClipboardThread(void* data)
 {
-	ClipboardID id = reinterpret_cast<ClipboardID>(data);\
+	size_t id = reinterpret_cast<size_t>(data);
 	LOG((CLOG_DEBUG "sending clipboard %d to \"%s\" size=%d", id, getName().c_str(), m_clipboardData.size()));
 	ProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, &m_clipboardData);
 }
