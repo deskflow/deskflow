@@ -116,7 +116,12 @@ void
 IpcLogOutputter::appendBuffer(const String& text)
 {
 	ArchMutexLock lock(m_bufferMutex);
-	m_buffer.push(text);
+	if (m_buffer.size() >= m_bufferMaxSize) {
+		// if the queue is exceeds size limit,
+		// throw away the oldest item
+		m_buffer.pop_front();
+	}
+	m_buffer.push_back(text);
 }
 
 void
@@ -182,7 +187,7 @@ IpcLogOutputter::getChunk(size_t count)
 	for (size_t i = 0; i < count; i++) {
 		chunk.append(m_buffer.front());
 		chunk.append("\n");
-		m_buffer.pop();
+		m_buffer.pop_front();
 	}
 	return chunk;
 }

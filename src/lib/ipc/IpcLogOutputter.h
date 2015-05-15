@@ -22,7 +22,7 @@
 #include "arch/IArchMultithread.h"
 #include "base/ILogOutputter.h"
 
-#include <queue>
+#include <deque>
 
 class IpcServer;
 class Event;
@@ -87,7 +87,7 @@ private:
 	void				appendBuffer(const String& text);
 
 private:
-	typedef std::queue<String> Buffer;
+	typedef std::deque<String> Buffer;
 
 	IpcServer&			m_ipcServer;
 	Buffer				m_buffer;
