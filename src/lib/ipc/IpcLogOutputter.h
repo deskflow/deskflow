@@ -42,6 +42,9 @@ public:
 	virtual void		close();
 	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
+	
+	//! @name manipulators
+	//@{
 
 	//! Same as write, but allows message to sidestep anti-recursion mechanism.
 	bool				write(ELevel level, const char* text, bool force);
@@ -49,7 +52,35 @@ public:
 	//! Notify that the buffer should be sent.
 	void				notifyBuffer();
 
+	//! Set the buffer size.
+	/*!
+	Set the maximum size of the buffer to protect memory
+	from runaway logging.
+	*/
+	void				bufferMaxSize(UInt16 bufferMaxSize);
+	
+	//! Close the outputter
+	/*!
+	Close the outputter.  If \p waitForEmpty is true, it will wait until
+	the buffer has been sent to the IPC server before closing.
+	*/
+	void				close(bool waitForEmpty);
+	
+	//@}
+	
+	//! @name accessors
+	//@{
+	
+	//! Get the buffer size
+	/*!
+	Returns the maximum size of the buffer.
+	*/
+	UInt16				bufferMaxSize() const;
+	
+	//@}
+
 private:
+	void				init();
 	void				bufferThread(void*);
 	String				getChunk(size_t count);
 	void				sendBuffer();
@@ -62,11 +93,14 @@ private:
 	Buffer				m_buffer;
 	ArchMutex			m_bufferMutex;
 	bool				m_sending;
-	Thread*			m_bufferThread;
+	Thread*				m_bufferThread;
 	bool				m_running;
 	ArchCond			m_notifyCond;
 	ArchMutex			m_notifyMutex;
 	bool				m_bufferWaiting;
 	IArchMultithread::ThreadID
 						m_bufferThreadId;
+	UInt16				m_bufferMaxSize;
+	ArchCond			m_bufferEmptyCond;
+	ArchMutex			m_bufferEmptyMutex;
 };
