@@ -91,7 +91,8 @@ Server::Server(
 	m_ignoreFileTransfer(false),
 	m_enableDragDrop(enableDragDrop),
 	m_getDragInfoThread(NULL),
-	m_waitDragInfoThread(true)
+	m_waitDragInfoThread(true),
+	m_dataTransmissionThread(NULL)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
@@ -505,9 +506,10 @@ Server::switchScreen(BaseClientProxy* dst,
 								forScreensaver);
 
 		// send the clipboard data to new active screen
-		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-			m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
-		}
+		m_dataTransmissionThread = new Thread(
+			new TMethodJob<Server>(
+				this, &Server::clipboardTransmissionThread,
+				NULL));
 
 		Server::SwitchToScreenInfo* info =
 			Server::SwitchToScreenInfo::alloc(m_active->getName());
@@ -1846,6 +1848,14 @@ Server::sendDragInfo(BaseClientProxy* newScreen)
 		LOG((CLOG_DEBUG3 "dragging file list: %s", info));
 		LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
 		newScreen->sendDragInfo(fileCount, info, size);
+	}
+}
+
+void
+Server::clipboardTransmissionThread(void*)
+{
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+			m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
 	}
 }
 

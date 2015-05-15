@@ -20,9 +20,7 @@
 #include "server/Server.h"
 #include "synergy/FileChunker.h"
 #include "synergy/ProtocolUtil.h"
-#include "mt/Thread.h"
 #include "io/IStream.h"
-#include "base/TMethodJob.h"
 #include "base/Log.h"
 
 #include <sstream>
@@ -124,11 +122,6 @@ ClientProxy1_5::setClipboard(ClipboardID id, const IClipboard* clipboard)
 
 		// send last message
 		ProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, kDataEnd, "\0");
-
-//		m_sendFileThread = new Thread(
-//			new TMethodJob<ClientProxy1_5>(
-//				this, &ClientProxy1_5::sendClipboardThread,
-//				reinterpret_cast<void*>(id)));
 	}
 }
 
@@ -208,53 +201,4 @@ ClientProxy1_5::dragInfoReceived()
 	ProtocolUtil::readf(getStream(), kMsgDDragInfo + 4, &fileNum, &content);
 	
 	m_server->dragInfoReceived(fileNum, content);
-}
-
-void
-ClientProxy1_5::sendClipboardThread(void* data)
-{
-	//size_t id = reinterpret_cast<size_t>(data);
-	//String clipboardData = m_clipboardData.at(id);
-	//int size = clipboardData.size();
-	//LOG((CLOG_DEBUG "sending clipboard %d to \"%s\" size=%d", id, getName().c_str(), size));
-
-	////TODO: refactor FileChunker
-	//// send first message (file size)
-	//std::stringstream ss;
-	//ss << size;
-	//String dataSize = ss.str();
-	//ProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, kDataStart, &dataSize);
-
-	//// send chunk messages with a fixed chunk size
-	//size_t sentLength = 0;
-	//size_t chunkSize = 2048;
-	//Stopwatch stopwatch;
-	//stopwatch.start();
-	//while (true) {
-	//	if (stopwatch.getTime() > 0.1f) {
-	//		// make sure we don't read too much from the mock data.
-	//		if (sentLength + chunkSize > size) {
-	//			chunkSize = size - sentLength;
-	//		}
-
-	//		char* chunk = new char[chunkSize];
-	//		memcpy(chunk, clipboardData.substr(sentLength, chunkSize).c_str(), chunkSize);
-	//		//String chunk(clipboardData.substr(sentLength, chunkSize).c_str(), chunkSize);
-	//		//int sizetest = chunk.size();
-	//		//sizetest++;
-	//		//sizetest--;
-	//		ProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, kDataChunk, chunk);
-
-	//		sentLength += chunkSize;
-
-	//		if (sentLength == size) {
-	//			break;
-	//		}
-
-	//		stopwatch.reset();
-	//	}
-	//}
-
-	//// send last message
-	//ProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, kDataEnd, "\0");
 }

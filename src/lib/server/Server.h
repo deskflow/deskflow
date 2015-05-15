@@ -370,6 +370,9 @@ private:
 	// send drag info to new client screen
 	void				sendDragInfo(BaseClientProxy* newScreen);
 
+	// thread funciton for sending clipboard
+	void				clipboardTransmissionThread(void*);
+
 public:
 	bool				m_mock;
 
@@ -480,4 +483,6 @@ private:
 	bool				m_waitDragInfoThread;
 
 	ClientListener*		m_clientListener;
+
+	Thread*				m_dataTransmissionThread;
 };

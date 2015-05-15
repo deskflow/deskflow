@@ -23,7 +23,6 @@
 
 class Server;
 class IEventQueue;
-class Thread;
 
 //! Proxy for client implementing protocol version 1.5
 class ClientProxy1_5 : public ClientProxy1_4 {
@@ -39,15 +38,10 @@ public:
 	void				dragInfoReceived();
 
 private:
-	// thread funciton for sending clipboard
-	void				sendClipboardThread(void*);
-
-private:
 	IEventQueue*		m_events;
 
 	Stopwatch			m_stopwatch;
 	double				m_elapsedTime;
 	size_t				m_receivedDataSize;
 	static const UInt16	m_intervalThreshold;
-	//Thread*				m_sendFileThread;
 };
