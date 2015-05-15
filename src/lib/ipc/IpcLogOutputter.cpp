@@ -30,17 +30,22 @@
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 
-// limit number of log lines sent in one message.
-#define MAX_SEND 100
+enum EIpcLogOutputter {
+	kBufferMaxSize = 1000,
+	kMaxSendLines = 100
+};
 
 IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer) :
-m_ipcServer(ipcServer),
-m_bufferMutex(ARCH->newMutex()),
-m_sending(false),
-m_running(true),
-m_notifyCond(ARCH->newCondVar()),
-m_notifyMutex(ARCH->newMutex()),
-m_bufferWaiting(false)
+	m_ipcServer(ipcServer),
+	m_bufferMutex(ARCH->newMutex()),
+	m_sending(false),
+	m_running(true),
+	m_notifyCond(ARCH->newCondVar()),
+	m_notifyMutex(ARCH->newMutex()),
+	m_bufferWaiting(false),
+	m_bufferMaxSize(kBufferMaxSize),
+	m_bufferEmptyCond(ARCH->newCondVar()),
+	m_bufferEmptyMutex(ARCH->newMutex())
 {
 	m_bufferThread = new Thread(new TMethodJob<IpcLogOutputter>(
 		this, &IpcLogOutputter::bufferThread));
@@ -48,15 +53,16 @@ m_bufferWaiting(false)
 
 IpcLogOutputter::~IpcLogOutputter()
 {
-	m_running = false;
-	notifyBuffer();
-	m_bufferThread->wait(5);
+	close();
 
 	ARCH->closeMutex(m_bufferMutex);
 	delete m_bufferThread;
 
 	ARCH->closeCondVar(m_notifyCond);
 	ARCH->closeMutex(m_notifyMutex);
+
+	ARCH->closeCondVar(m_bufferEmptyCond);
+	ARCH->closeMutex(m_bufferEmptyMutex);
 }
 
 void
@@ -67,6 +73,9 @@ IpcLogOutputter::open(const char* title)
 void
 IpcLogOutputter::close()
 {
+	m_running = false;
+	notifyBuffer();
+	m_bufferThread->wait(5);
 }
 
 void
@@ -133,6 +142,11 @@ IpcLogOutputter::bufferThread(void*)
 				break;
 			}
 
+			if (m_buffer.empty()) {
+				ArchMutexLock lock(m_bufferEmptyMutex);
+				ARCH->broadcastCondVar(m_bufferEmptyCond);
+			}
+
 			m_bufferWaiting = true;
 			ARCH->waitCondVar(m_notifyCond, m_notifyMutex, -1);
 			m_bufferWaiting = false;
@@ -176,9 +190,31 @@ IpcLogOutputter::getChunk(size_t count)
 void
 IpcLogOutputter::sendBuffer()
 {
-	IpcLogLineMessage message(getChunk(MAX_SEND));
+	IpcLogLineMessage message(getChunk(kMaxSendLines));
 
 	m_sending = true;
 	m_ipcServer.send(message, kIpcClientGui);
 	m_sending = false;
+}
+
+void
+IpcLogOutputter::bufferMaxSize(UInt16 bufferMaxSize)
+{
+	m_bufferMaxSize = bufferMaxSize;
+}
+
+UInt16
+IpcLogOutputter::bufferMaxSize() const
+{
+	return m_bufferMaxSize;
+}
+
+void
+IpcLogOutputter::close(bool waitForEmpty)
+{
+	if (waitForEmpty) {
+		ARCH->waitCondVar(m_bufferEmptyCond, m_bufferEmptyMutex, -1);
+	}
+
+	close();
 }

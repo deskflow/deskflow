@@ -17,21 +17,50 @@
 
 #define TEST_ENV
 
+#include "test/mock/ipc/MockIpcServer.h"
+
+#include "mt/Thread.h"
 #include "ipc/IpcLogOutputter.h"
 #include "base/String.h"
 
-#include "test/mock/ipc/MockIpcServer.h"
-
+#include "test/global/gmock.h"
 #include "test/global/gtest.h"
 
+using ::testing::_;
+using ::testing::Return;
+using ::testing::Matcher;
+using ::testing::MatcherCast;
+using ::testing::Property;
+using ::testing::StrEq;
+
 using namespace synergy;
+
+inline const Matcher<const IpcMessage&> IpcLogLineMessageEq(const String& s) {
+	const Matcher<const IpcLogLineMessage&> m(
+		Property(&IpcLogLineMessage::logLine, StrEq(s)));
+	return MatcherCast<const IpcMessage&>(m);
+}
 
 TEST(IpcLogOutputterTests, write_bufferSizeWrapping)
 {
 	MockIpcServer mockServer;
-	IpcLogOutputter outputter(mockServer);
+	
+	ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
-	outputter.write(kNOTE, "hello world", false);
+	EXPECT_CALL(mockServer, hasClients(_)).Times(1);
+	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 2\nmock 3\n"), _)).Times(1);
+
+	IpcLogOutputter outputter(mockServer);
+	outputter.bufferMaxSize(2);
+
+	// log more lines than the buffer can contain
+	for (UInt8 i = 1; i <= 3; i++) {
+		String s = string::sprintf("mock %d", i);
+		outputter.write(kNOTE, s.c_str());
+	}
+
+	// close, but wait until the buffer is empty.
+	outputter.close(true);
 
 	EXPECT_EQ(true, true);
 }
