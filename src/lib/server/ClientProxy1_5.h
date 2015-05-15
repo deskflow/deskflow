@@ -19,6 +19,7 @@
 
 #include "server/ClientProxy1_4.h"
 #include "base/Stopwatch.h"
+#include "common/stdvector.h"
 
 class Server;
 class IEventQueue;
@@ -48,6 +49,5 @@ private:
 	double				m_elapsedTime;
 	size_t				m_receivedDataSize;
 	static const UInt16	m_intervalThreshold;
-	Thread*				m_sendFileThread;
-	String				m_clipboardData;
+	//Thread*				m_sendFileThread;
 };

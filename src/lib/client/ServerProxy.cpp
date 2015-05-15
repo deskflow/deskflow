@@ -545,21 +545,32 @@ void
 ServerProxy::setClipboard()
 {
 	// parse
+	static String dataCached;
 	ClipboardID id;
 	UInt32 seqNum;
+	size_t mark = 0;
 	String data;
-	ProtocolUtil::readf(m_stream, kMsgDClipboard + 4, &id, &seqNum, &data);
-	LOG((CLOG_DEBUG "recv clipboard %d size=%d", id, data.size()));
+	ProtocolUtil::readf(m_stream, kMsgDClipboard + 4, &id, &seqNum, &mark, &data);
 
-	// validate
-	if (id >= kClipboardEnd) {
-		return;
+	if (mark == kDataStart) {
+		//TODO: validate size
+		LOG((CLOG_DEBUG "start receiving clipboard data"));
+		dataCached.clear();
 	}
-
-	// forward
-	Clipboard clipboard;
-	clipboard.unmarshall(data, 0);
-	m_client->setClipboard(id, &clipboard);
+	else if (mark == kDataChunk) {
+		dataCached.append(data);
+	}
+	else if (mark == kDataEnd) {
+		LOG((CLOG_DEBUG "received clipboard %d size=%d", id, dataCached.size()));
+		// validate
+		if (id >= kClipboardEnd) {
+			return;
+		}
+		// forward
+		Clipboard clipboard;
+		clipboard.unmarshall(dataCached, 0);
+		m_client->setClipboard(id, &clipboard);
+	}
 }
 
 void
@@ -857,7 +868,7 @@ ServerProxy::fileChunkReceived()
 	ProtocolUtil::readf(m_stream, kMsgDFileTransfer + 4, &mark, &content);
 
 	switch (mark) {
-	case kFileStart:
+	case kDataStart:
 		m_client->clearReceivedFileData();
 		m_client->setExpectedFileSize(content);
 		if (CLOG->getFilter() >= kDEBUG2) {
@@ -866,7 +877,7 @@ ServerProxy::fileChunkReceived()
 		}
 		break;
 
-	case kFileChunk:
+	case kDataChunk:
 		m_client->fileChunkReceived(content);
 		if (CLOG->getFilter() >= kDEBUG2) {
 			LOG((CLOG_DEBUG2 "recv file data from server: size=%i", content.size()));
@@ -884,7 +895,7 @@ ServerProxy::fileChunkReceived()
 		}
 		break;
 
-	case kFileEnd:
+	case kDataEnd:
 		m_events->addEvent(Event(m_events->forIScreen().fileRecieveCompleted(), m_client));
 		if (CLOG->getFilter() >= kDEBUG2) {
 			LOG((CLOG_DEBUG2 "file data transfer finished"));
@@ -915,15 +926,15 @@ ServerProxy::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 	String chunk(data, dataSize);
 
 	switch (mark) {
-	case kFileStart:
+	case kDataStart:
 		LOG((CLOG_DEBUG2 "file sending start: size=%s", data));
 		break;
 
-	case kFileChunk:
+	case kDataChunk:
 		LOG((CLOG_DEBUG2 "file chunk sending: size=%i", chunk.size()));
 		break;
 
-	case kFileEnd:
+	case kDataEnd:
 		LOG((CLOG_DEBUG2 "file sending finished"));
 		break;
 	}

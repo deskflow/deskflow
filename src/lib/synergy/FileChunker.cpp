@@ -54,7 +54,7 @@ FileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTarg
 	FileChunk* sizeMessage = new FileChunk(sizeLength + 2);
 	char* chunkData = sizeMessage->m_chunk;
 
-	chunkData[0] = kFileStart;
+	chunkData[0] = kDataStart;
 	memcpy(&chunkData[1], fileSize.c_str(), sizeLength);
 	chunkData[sizeLength + 1] = '\0';
 	events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, sizeMessage));
@@ -76,7 +76,7 @@ FileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTarg
 			FileChunk* fileChunk = new FileChunk(chunkSize + 2);
 			char* chunkData = fileChunk->m_chunk;
 
-			chunkData[0] = kFileChunk;
+			chunkData[0] = kDataChunk;
 			file.read(&chunkData[1], chunkSize);
 			chunkData[chunkSize + 1] = '\0';
 			events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, fileChunk));
@@ -96,7 +96,7 @@ FileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTarg
 	FileChunk* transferFinished = new FileChunk(2);
 	chunkData = transferFinished->m_chunk;
 
-	chunkData[0] = kFileEnd;
+	chunkData[0] = kDataEnd;
 	chunkData[1] = '\0';
 	events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, transferFinished));
 

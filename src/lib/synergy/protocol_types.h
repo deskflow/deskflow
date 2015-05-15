@@ -70,12 +70,11 @@ enum EDirectionMask {
 };
 
 // file transfer constants
-enum EFileTransfer {
-	kFileStart = 1,
-	kFileChunk = 2,
-	kFileEnd = 3
+enum EDataTransfer {
+	kDataStart = 1,
+	kDataChunk = 2,
+	kDataEnd = 3
 };
-
 
 //
 // message codes (trailing NUL is not part of code).  in comments, $n
@@ -225,7 +224,7 @@ extern const char*		kMsgDMouseWheel;
 extern const char*		kMsgDMouseWheel1_0;
 
 // clipboard data:  primary <-> secondary
-// $2 = sequence number, $3 = clipboard data.  the sequence number
+// $2 = sequence number, $3 = mark $4 = clipboard data.  the sequence number
 // is 0 when sent by the primary.  secondary screens should use the
 // sequence number from the most recent kMsgCEnter.  $1 = clipboard
 // identifier.

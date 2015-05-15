@@ -420,7 +420,7 @@ NetworkTests::sendMockData(void* eventTarget)
 	FileChunker::FileChunk* sizeMessage = new FileChunker::FileChunk(sizeLength + 2);
 	char* chunkData = sizeMessage->m_chunk;
 
-	chunkData[0] = kFileStart;
+	chunkData[0] = kDataStart;
 	memcpy(&chunkData[1], size.c_str(), sizeLength);
 	chunkData[sizeLength + 1] = '\0';
 	m_events.addEvent(Event(m_events.forIScreen().fileChunkSending(), eventTarget, sizeMessage));
@@ -440,7 +440,7 @@ NetworkTests::sendMockData(void* eventTarget)
 		FileChunker::FileChunk* fileChunk = new FileChunker::FileChunk(chunkSize + 2);
 		char* chunkData = fileChunk->m_chunk;
 
-		chunkData[0] = kFileChunk;
+		chunkData[0] = kDataChunk;
 		memcpy(&chunkData[1], &m_mockData[sentLength], chunkSize);
 		chunkData[chunkSize + 1] = '\0';
 		m_events.addEvent(Event(m_events.forIScreen().fileChunkSending(), eventTarget, fileChunk));
@@ -458,7 +458,7 @@ NetworkTests::sendMockData(void* eventTarget)
 	FileChunker::FileChunk* transferFinished = new FileChunker::FileChunk(2);
 	chunkData = transferFinished->m_chunk;
 
-	chunkData[0] = kFileEnd;
+	chunkData[0] = kDataEnd;
 	chunkData[1] = '\0';
 	m_events.addEvent(Event(m_events.forIScreen().fileChunkSending(), eventTarget, transferFinished));
 }
