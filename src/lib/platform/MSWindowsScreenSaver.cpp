@@ -193,7 +193,7 @@ MSWindowsScreenSaver::deactivate()
 bool
 MSWindowsScreenSaver::isActive() const
 {
-	BOOL running;
+	BOOL running = false;
 	SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, &running, 0);
 	return (running != FALSE);
 }
@@ -267,7 +267,7 @@ MSWindowsScreenSaver::watchDesktopThread(void*)
 		// wait a bit
 		ARCH->sleep(0.2);
 
-		BOOL running;
+		BOOL running = false;
 		SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, &running, 0);
 		if (running) {
 			continue;

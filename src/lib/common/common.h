@@ -89,29 +89,6 @@
 #	endif
 #endif
 
-// VC++ specific
-#if (_MSC_VER >= 1200)
-	// work around for statement scoping bug
-#	define for if (false) { } else for
-
-	// turn off bonehead warnings
-#	pragma warning(disable: 4786) // identifier truncated in debug info
-#	pragma warning(disable: 4514) // unreferenced inline function removed
-
-	// this one's a little too aggressive
-#	pragma warning(disable: 4127) // conditional expression is constant
-
-	// Code Analysis
-#	pragma warning(disable: 6011)
-
-
-	// emitted incorrectly under release build in some circumstances
-#	if defined(NDEBUG)
-#		pragma warning(disable: 4702) // unreachable code
-#		pragma warning(disable: 4701) // variable maybe used uninitialized
-#	endif
-#endif // (_MSC_VER >= 1200)
-
 // VC++ has built-in sized types
 #if defined(_MSC_VER)
 #	include <wchar.h>
@@ -138,7 +115,9 @@
 
 // if not c++0x, future proof code by allowing use of nullptr
 #ifndef nullptr
+#if !defined(_MSC_VER)
 #	define nullptr NULL
+#endif
 #endif
 
 // make assert available since we use it a lot

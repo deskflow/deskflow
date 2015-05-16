@@ -55,7 +55,7 @@ class AppConfig
 	public:
 		const QString& screenName() const { return m_ScreenName; }
 		int port() const { return m_Port; }
-		const QString& interface() const { return m_Interface; }
+		const QString& address() const { return m_Address; }
 		int logLevel() const { return m_LogLevel; }
 		bool logToFile() const { return m_LogToFile; }
 		const QString& logFilename() const { return m_LogFilename; }
@@ -94,7 +94,7 @@ class AppConfig
 		QSettings& settings() { return *m_pSettings; }
 		void setScreenName(const QString& s) { m_ScreenName = s; }
 		void setPort(int i) { m_Port = i; }
-		void setInterface(const QString& s) { m_Interface = s; }
+		void setAddress(const QString& s) { m_Address = s; }
 		void setLogLevel(int i) { m_LogLevel = i; }
 		void setLogToFile(bool b) { m_LogToFile = b; }
 		void setLogFilename(const QString& s) { m_LogFilename = s; }
@@ -110,7 +110,7 @@ class AppConfig
 		QSettings* m_pSettings;
 		QString m_ScreenName;
 		int m_Port;
-		QString m_Interface;
+		QString m_Address;
 		int m_LogLevel;
 		bool m_LogToFile;
 		QString m_LogFilename;

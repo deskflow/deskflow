@@ -160,7 +160,9 @@ MSWindowsScreen::MSWindowsScreen(
 			LOG((CLOG_ERR "failed to get desktop path, no drop target available, error=%d", GetLastError()));
 		}
 
-		OleInitialize(0);
+		if (OleInitialize(0) == OLE_E_WRONGCOMPOBJ) {
+			LOG((CLOG_ERR "failed to initialise OLE, error=%d", GetLastError()));
+		}
 		m_dropWindow = createDropWindow(m_class, "DropWindow");
 		m_dropTarget = new MSWindowsDropTarget();
 		RegisterDragDrop(m_dropWindow, m_dropTarget);
@@ -1220,7 +1222,7 @@ MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 			// use the keypad delete key (the 0x01000000 flag in lParam).
 			wParam  = VK_DELETE | 0x00010000u;
 			lParam &= 0xfe000000;
-			lParam |= m_keyState->virtualKeyToButton(wParam & 0xffu) << 16;
+			lParam |= LPARAM(m_keyState->virtualKeyToButton(wParam & 0xffu)) << 16;
 			lParam |= 0x01000001;
 		}
 
