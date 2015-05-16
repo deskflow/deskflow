@@ -67,7 +67,7 @@ std::string
 ArchFileWindows::getUserDirectory()
 {
 	// try %HOMEPATH%
-	TCHAR dir[MAX_PATH];
+	TCHAR dir[MAX_PATH] = "";
 	DWORD size   = sizeof(dir) / sizeof(TCHAR);
 	DWORD result = GetEnvironmentVariable(_T("HOMEPATH"), dir, size);
 	if (result != 0 && result <= size) {
