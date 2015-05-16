@@ -39,12 +39,14 @@ IKeyState::KeyInfo::alloc(KeyID id,
 				KeyModifierMask mask, KeyButton button, SInt32 count)
 {
 	KeyInfo* info           = (KeyInfo*)malloc(sizeof(KeyInfo));
-	info->m_key              = id;
-	info->m_mask             = mask;
-	info->m_button           = button;
-	info->m_count            = count;
-	info->m_screens          = NULL;
-	info->m_screensBuffer[0] = '\0';
+	if (info) {
+		info->m_key = id;
+		info->m_mask = mask;
+		info->m_button = button;
+		info->m_count = count;
+		info->m_screens = NULL;
+		info->m_screensBuffer[0] = '\0';
+	}
 	return info;
 }
 
@@ -57,12 +59,14 @@ IKeyState::KeyInfo::alloc(KeyID id,
 
 	// build structure
 	KeyInfo* info  = (KeyInfo*)malloc(sizeof(KeyInfo) + screens.size());
-	info->m_key     = id;
-	info->m_mask    = mask;
-	info->m_button  = button;
-	info->m_count   = count;
-	info->m_screens = info->m_screensBuffer;
-	strcpy(info->m_screensBuffer, screens.c_str());
+	if (info) {
+		info->m_key = id;
+		info->m_mask = mask;
+		info->m_button = button;
+		info->m_count = count;
+		info->m_screens = info->m_screensBuffer;
+		strcpy(info->m_screensBuffer, screens.c_str());
+	}
 	return info;
 }
 
@@ -71,12 +75,14 @@ IKeyState::KeyInfo::alloc(const KeyInfo& x)
 {
 	KeyInfo* info  = (KeyInfo*)malloc(sizeof(KeyInfo) +
 										strlen(x.m_screensBuffer));
-	info->m_key     = x.m_key;
-	info->m_mask    = x.m_mask;
-	info->m_button  = x.m_button;
-	info->m_count   = x.m_count;
-	info->m_screens = x.m_screens ? info->m_screensBuffer : NULL;
-	strcpy(info->m_screensBuffer, x.m_screensBuffer);
+	if (info) {
+		info->m_key = x.m_key;
+		info->m_mask = x.m_mask;
+		info->m_button = x.m_button;
+		info->m_count = x.m_count;
+		info->m_screens = x.m_screens ? info->m_screensBuffer : NULL;
+		strcpy(info->m_screensBuffer, x.m_screensBuffer);
+	}
 	return info;
 }
 
