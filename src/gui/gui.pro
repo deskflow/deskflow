@@ -127,6 +127,7 @@ win32 {
     Debug:DESTDIR = ../../bin/Debug
     Release:DESTDIR = ../../bin/Release
     LIBS += -L"../../ext/bonjour/x64" \
+        -ladvapi32 \
         -ldnssd
     INCLUDEPATH += "$(BONJOUR_SDK_HOME)/Include"
 }

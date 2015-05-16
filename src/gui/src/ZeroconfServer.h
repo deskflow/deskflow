@@ -17,6 +17,12 @@
 
 #pragma once
 
+#ifdef _MSC_VER
+#if (_MSC_VER >= 1600)
+#include <cstdint>
+#endif
+#endif
+
 #include <QStringList>
 #include <QTcpServer>
 
