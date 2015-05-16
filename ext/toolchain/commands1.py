@@ -16,7 +16,11 @@
 
 # TODO: split this file up, it's too long!
 
-import sys, os, ConfigParser, shutil, re, ftputil, zipfile, glob, commands
+import sys, os, shutil, re, ftputil, zipfile, glob
+try:
+	import ConfigParser
+except ImportError:
+	import configparser as ConfigParser
 from generators import Generator, EclipseGenerator, XcodeGenerator, MakefilesGenerator
 from getopt import gnu_getopt
 
@@ -73,7 +77,7 @@ class Toolchain:
 	def complete_command(self, arg):
 		completions = []
 		
-		for cmd, optarg in self.cmd_opt_dict.iteritems():
+		for cmd, optarg in self.cmd_opt_dict.items():
 			# if command was matched fully, return only this, so that
 			# if `dist` is typed, it will return only `dist` and not
 			# `dist` and `distftp` for example.
@@ -82,7 +86,7 @@ class Toolchain:
 			if cmd.startswith(arg):
 				completions.append(cmd)
 		
-		for alias, cmd in self.cmd_alias_dict.iteritems():
+		for alias, cmd in self.cmd_alias_dict.items():
 			# don't know if this will work just like above, but it's
 			# probably worth adding.
 			if alias == arg:
@@ -127,23 +131,23 @@ class Toolchain:
 				
 				# show command map to avoid confusion
 				if len(cmd_map) != 0:
-					print 'Mapping command: %s' % ' -> '.join(cmd_map)
+					print('Mapping command: %s' % ' -> '.join(cmd_map))
 				
 				self.run_cmd(cmd, argv[2:])
 				
 				return 0
 				
 			else:
-				print (
+				print((
 					'Command `%s` too ambiguous, '
 					'could mean any of: %s'
-					) % (cmd_arg, ', '.join(completions))
+					) % (cmd_arg, ', '.join(completions)))
 		else:
 
 			if len(argv) == 1:
-				print 'No command specified, showing usage.\n'
+				print('No command specified, showing usage.\n')
 			else:
-				print 'Command not recognised: %s\n' % cmd_arg
+				print('Command not recognised: %s\n' % cmd_arg)
 			
 			self.run_cmd('usage')
 		
@@ -187,7 +191,7 @@ class Toolchain:
 
 	def run(self, argv):
 		if sys.version_info < (self.requiredMajor, self.requiredMinor):
-			print ('Python version must be at least ' +
+			print('Python version must be at least ' +
 					 str(self.requiredMajor) + '.' + str(self.requiredMinor) + ', but is ' +
 					 str(sys.version_info[0]) + '.' + str(sys.version_info[1]))
 			sys.exit(1)
@@ -195,7 +199,7 @@ class Toolchain:
 		try:
 			self.start_cmd(argv)
 		except KeyboardInterrupt:
-			print '\n\nUser aborted, exiting.'
+			print('\n\nUser aborted, exiting.')
 
 class InternalCommands:
 	
@@ -287,7 +291,7 @@ class InternalCommands:
 		
 	def usage(self):
 		app = sys.argv[0]
-		print ('Usage: %s <command> [-g <index>|-v|--no-prompts|<command-options>]\n'
+		print(('Usage: %s <command> [-g <index>|-v|--no-prompts|<command-options>]\n'
 			'\n'
 			'Replace [command] with one of:\n'
 			'  about       Show information about this script\n'
@@ -307,7 +311,7 @@ class InternalCommands:
 			'  usage       Shows the help screen\n'
 			'\n'
 			'Example: %s build -g 3'
-			) % (app, app)
+			) % (app, app))
 
 	def configureAll(self, targets, extraArgs=''):
 
@@ -372,12 +376,12 @@ class InternalCommands:
 			config = self.getConfig()
 		
 			if self.macSdk:
-				config.set('hm', 'macSdk', self.macSdk)
+				config.set('hm', 'macSdk', str(self.macSdk))
 			elif config.has_option("hm", "macSdk"):
 				self.macSdk = config.get('hm', 'macSdk')
 		
 			if self.macIdentity:
-				config.set('hm', 'macIdentity', self.macIdentity)
+				config.set('hm', 'macIdentity', str(self.macIdentity))
 			elif config.has_option("hm", "macIdentity"):
 				self.macIdentity = config.get('hm', 'macIdentity')
 		
@@ -397,7 +401,7 @@ class InternalCommands:
 		
 		# default is release
 		if target == '':
-			print 'Defaulting target to: ' + self.defaultTarget
+			print('Defaulting target to: ' + self.defaultTarget)
 			target = self.defaultTarget
 		
 		# allow user to skip core compile
@@ -457,7 +461,7 @@ class InternalCommands:
 		# Run from build dir so we have an out-of-source build.
 		self.try_chdir(self.getBuildDir(target))
 
-		print "CMake command: " + cmake_cmd_string
+		print("CMake command: " + cmake_cmd_string)
 		err = os.system(cmake_cmd_string)
 
 		self.restore_chdir()
@@ -510,7 +514,7 @@ class InternalCommands:
 				qmake_cmd_string += " QMAKE_MAC_SDK=" + shortForm
 				qmake_cmd_string += " QMAKE_MAC_SDK." + shortForm + ".path=" + sdkDir
 
-		print "QMake command: " + qmake_cmd_string
+		print("QMake command: " + qmake_cmd_string)
 		
 		# run qmake from the gui dir
 		self.try_chdir(self.gui_dir)
@@ -524,14 +528,14 @@ class InternalCommands:
 		version = commands.getoutput("qmake --version")
 		result = re.search('(\d+)\.(\d+)\.(\d)', version)
 		
- 		if not result:
+		if not result:
 			raise Exception("Could not get qmake version.")
- 
- 		major = int(result.group(1))
- 		minor = int(result.group(2))
- 		rev = int(result.group(3))
- 		
- 		return (major, minor, rev)
+
+		major = int(result.group(1))
+		minor = int(result.group(2))
+		rev = int(result.group(3))
+		
+		return (major, minor, rev)
 
 	def getMacSdkDir(self):
 		sdkName = "macosx" + self.macSdk
@@ -555,7 +559,7 @@ class InternalCommands:
 	
 	# http://tinyurl.com/cs2rxxb
 	def fixCmakeEclipseBug(self):
-		print "Fixing CMake Eclipse bugs..."
+		print("Fixing CMake Eclipse bugs...")
 
 		file = open('.project', 'r+')
 		content = file.read()
@@ -574,9 +578,9 @@ class InternalCommands:
 		if err != 0:
 			# if return code from cmake is not 0, then either something has
 			# gone terribly wrong with --version, or it genuinely doesn't exist.
-			print ('Could not find `%s` in system path.\n'
+			print(('Could not find `%s` in system path.\n'
 			       'Download the latest version from:\n  %s') % (
-				self.cmake_cmd, self.cmake_url)
+				self.cmake_cmd, self.cmake_url))
 			raise Exception('Cannot continue without CMake.')
 		else:	
 			return self.cmake_cmd
@@ -595,7 +599,7 @@ class InternalCommands:
 				stdout=subprocess.PIPE, 
 				stderr=subprocess.PIPE)
 		except:
-			print >> sys.stderr, 'Error: Could not find qmake.'
+			sys.stderr.write('Error: Could not find qmake.\n')
 			if sys.platform == 'win32': # windows devs usually need hints ;)
 				print (
 					'Suggestions:\n'
@@ -608,15 +612,15 @@ class InternalCommands:
 		if p.returncode != 0:
 			raise Exception('Could not test for cmake: %s' % stderr)
 		else:
-			m = re.search('.*Using Qt version (\d+\.\d+\.\d+).*', stdout)
+			m = re.search(b'.*Using Qt version (\d+\.\d+\.\d+).*', stdout)
 			if m:
 				if sys.platform == 'win32':
-					ver = m.group(1)
+					ver = m.group(1).decode(encoding='UTF-8')
 					if ver != self.w32_qt_version: # TODO: test properly
-						print >> sys.stderr, (
+						sys.stderr.write((
 							'Warning: Not using supported Qt version %s'
-							' (your version is %s).'
-							) % (self.w32_qt_version, ver)
+							' (your version is %s).\n'
+							) % (self.w32_qt_version, ver))
 				else:
 					pass # any version should be ok for other platforms
 			else:
@@ -624,7 +628,7 @@ class InternalCommands:
 
 	def ensureConfHasRun(self, target, skipConfig):
 		if self.hasConfRun(target):
-			print 'Skipping config for target: ' + target
+			print('Skipping config for target: ' + target)
 			skipConfig = True
 
 		if not skipConfig:
@@ -683,7 +687,7 @@ class InternalCommands:
 			if sys.platform == 'win32':
 
 				gui_make_cmd = self.w32_make_cmd + ' ' + target + args
-				print 'Make GUI command: ' + gui_make_cmd
+				print('Make GUI command: ' + gui_make_cmd)
 
 				self.try_chdir(self.gui_dir)
 				err = os.system(gui_make_cmd)
@@ -695,7 +699,7 @@ class InternalCommands:
 			elif sys.platform in ['linux2', 'sunos5', 'freebsd7', 'darwin']:
 
 				gui_make_cmd = self.make_cmd + " -w" + args
-				print 'Make GUI command: ' + gui_make_cmd
+				print('Make GUI command: ' + gui_make_cmd)
 
 				# start with a clean app bundle
 				targetDir = self.getGenerator().getBinDir(target)
@@ -753,7 +757,7 @@ class InternalCommands:
 			self.try_chdir(targetDir)
 			err = os.system(bin)
 			self.restore_chdir()
-			print bundleTargetDir
+			print(bundleTargetDir)
 			if err != 0:
 				raise Exception(bin + " failed with error: " + str(err))
 
@@ -902,10 +906,10 @@ class InternalCommands:
 		else:
 			cmd = ''
 			if generator == "Unix Makefiles":
-				print 'Cleaning with GNU Make...'
+				print('Cleaning with GNU Make...')
 				cmd = self.make_cmd
 			elif generator == 'Xcode':
-				print 'Cleaning with Xcode...'
+				print('Cleaning with Xcode...')
 				cmd = self.xcodebuild_cmd
 			else:
 				raise Exception('Not supported with generator: ' + generator)
@@ -924,24 +928,24 @@ class InternalCommands:
 	def open(self):
 		generator = self.getGeneratorFromConfig().cmakeName
 		if generator.startswith('Visual Studio'):
-			print 'Opening with %s...' % generator
+			print('Opening with %s...' % generator)
 			self.open_internal(self.sln_filepath())
 			
 		elif generator.startswith('Xcode'):
-			print 'Opening with %s...' % generator
+			print('Opening with %s...' % generator)
 			self.open_internal(self.xcodeproj_filepath(), 'open')
 			
 		else:
 			raise Exception('Not supported with generator: ' + generator)
 		
 	def update(self):
-		print "Running Subversion update..."
+		print("Running Subversion update...")
 		err = os.system('svn update')
 		if err != 0:
 			raise Exception('Could not update from repository with error code code: ' + str(err))
 		
 	def revision(self):
-		print self.find_revision()
+		print(self.find_revision())
 
 	def find_revision(self):
 		return self.getGitRevision()
@@ -1061,10 +1065,10 @@ class InternalCommands:
 			raise Exception(
 				("Package type, '%s' is not supported for platform, '%s'") 
 				% (type, sys.platform))
-		
-        def distRpm(self):
-                rpmDir = self.getGenerator().buildDir + '/rpm'
-                if os.path.exists(rpmDir):
+
+	def distRpm(self):
+		rpmDir = self.getGenerator().buildDir + '/rpm'
+		if os.path.exists(rpmDir):
 			shutil.rmtree(rpmDir)
 		
 		os.makedirs(rpmDir)
@@ -1073,47 +1077,46 @@ class InternalCommands:
 		template = templateFile.read()
 
 		template = template.replace('${in:version}', self.getVersionFromCmake())	
-                
+
 		specPath = rpmDir + '/synergy.spec'
 
 		specFile = open(specPath, 'w')
 		specFile.write(template)
 		specFile.close()
 
-                version = self.getVersionFromCmake()
-                target = '../../bin/synergy-%s-%s.rpm' % (
-                        version, self.getLinuxPlatform())
-                
+		version = self.getVersionFromCmake()
+		target = '../../bin/synergy-%s-%s.rpm' % (
+			version, self.getLinuxPlatform())
 
 		try:
 			self.try_chdir(rpmDir)
-                        cmd = 'rpmbuild -bb --define "_topdir `pwd`" synergy.spec'
-                        print "Command: " + cmd
+			cmd = 'rpmbuild -bb --define "_topdir `pwd`" synergy.spec'
+			print("Command: " + cmd)
 			err = os.system(cmd)
 			if err != 0:
 				raise Exception('rpmbuild failed: ' + str(err))
 
 			self.unixMove('RPMS/*/*.rpm', target)
 
-                        cmd = 'rpmlint ' + target
-                        print "Command: " + cmd
+			cmd = 'rpmlint ' + target
+			print("Command: " + cmd)
 			err = os.system(cmd)
 			if err != 0:
 				raise Exception('rpmlint failed: ' + str(err))
 		finally:
 			self.restore_chdir()
 
-        def distDeb(self):
+	def distDeb(self):
 		buildDir = self.getGenerator().buildDir
 		binDir = self.getGenerator().binDir
 		resDir = self.cmake_dir
 
-                version = self.getVersionFromCmake()
-                package = '%s-%s-%s' % (
-                        self.project, version, self.getLinuxPlatform())
+		version = self.getVersionFromCmake()
+		package = '%s-%s-%s' % (
+			self.project, version, self.getLinuxPlatform())
 
-                debDir = '%s/deb' % buildDir
-                if os.path.exists(debDir):
+		debDir = '%s/deb' % buildDir
+		if os.path.exists(debDir):
 			shutil.rmtree(debDir)
 
 		metaDir = '%s/%s/DEBIAN' % (debDir, package)		
@@ -1181,14 +1184,14 @@ class InternalCommands:
 			self.try_chdir(debDir)
 
 			# TODO: consider dpkg-buildpackage (higher level tool)
-                        cmd = 'fakeroot dpkg-deb --build %s' % package
-                        print "Command: " + cmd
+			cmd = 'fakeroot dpkg-deb --build %s' % package
+			print("Command: " + cmd)
 			err = os.system(cmd)
 			if err != 0:
 				raise Exception('dpkg-deb failed: ' + str(err))
 
-                        cmd = 'lintian %s.deb' % package
-                        print "Command: " + cmd
+			cmd = 'lintian %s.deb' % package
+			print("Command: " + cmd)
 			err = os.system(cmd)
 			if err != 0:
 				raise Exception('lintian failed: ' + str(err))
@@ -1203,7 +1206,7 @@ class InternalCommands:
 		exportPath = self.getGenerator().buildDir + '/' + name
 
 		if os.path.exists(exportPath):
-			print "Removing existing export..."
+			print("Removing existing export...")
 			shutil.rmtree(exportPath)
 
 		os.mkdir(exportPath)
@@ -1211,7 +1214,7 @@ class InternalCommands:
 		cmd = "git archive %s | tar -x -C %s" % (
 			self.getGitBranchName(), exportPath)
 		
-		print 'Exporting repository to: ' + exportPath
+		print('Exporting repository to: ' + exportPath)
 		err = os.system(cmd)
 		if err != 0:
 			raise Exception('Repository export failed: ' + str(err))
@@ -1220,7 +1223,7 @@ class InternalCommands:
 
 		try:
 			self.try_chdir(self.getGenerator().buildDir)
-			print 'Packaging to: ' + packagePath
+			print('Packaging to: ' + packagePath)
 			err = os.system('tar cfvz ' + packagePath + ' ' + name)
 			if err != 0:
 				raise Exception('Package failed: ' + str(err))
@@ -1228,7 +1231,7 @@ class InternalCommands:
 			self.restore_chdir()
 
 	def unixMove(self, source, dest):
-		print 'Moving ' + source + ' to ' + dest
+		print('Moving ' + source + ' to ' + dest)
 		err = os.system('mv ' + source + ' ' + dest)
 		if err != 0:
 			raise Exception('Package failed: ' + str(err))
@@ -1324,7 +1327,7 @@ class InternalCommands:
 		nsiFile.close()
 
 		command = 'makensis ' + nsiPath
-		print 'NSIS command: ' + command
+		print('NSIS command: ' + command)
 		err = os.system(command)
 		if err != 0:
 			raise Exception('Package failed: ' + str(err))
@@ -1354,43 +1357,43 @@ class InternalCommands:
 		self.loadConfig()
 		src = self.dist_name(type)
 		dest = self.dist_name_rev(type)
-		print 'Uploading %s to FTP server %s...' % (dest, ftp.host)
+		print('Uploading %s to FTP server %s...' % (dest, ftp.host))
 
 		binDir = self.getGenerator().getBinDir('Release')
 		ftp.run(binDir + '/' + src, dest) 
-		print 'Done'
+		print('Done')
 	
 	def getDebianArch(self):
 		if os.uname()[4][:3] == 'arm':
 			return 'armhf'
 
-                # os_bits should be loaded with '32bit' or '64bit'
-                import platform
-                (os_bits, other) = platform.architecture()
+		# os_bits should be loaded with '32bit' or '64bit'
+		import platform
+		(os_bits, other) = platform.architecture()
 		
-                # get platform based on current platform
-                if os_bits == '32bit':
-                        return 'i386'
-                elif os_bits == '64bit':
-                        return 'amd64'
-                else:
-                        raise Exception("unknown os bits: " + os_bits)
+		# get platform based on current platform
+		if os_bits == '32bit':
+			return 'i386'
+		elif os_bits == '64bit':
+			return 'amd64'
+		else:
+			raise Exception("unknown os bits: " + os_bits)
 
-        def getLinuxPlatform(self):
+	def getLinuxPlatform(self):
 		if os.uname()[4][:3] == 'arm':
 			return 'Linux-armv6l'
 
-                # os_bits should be loaded with '32bit' or '64bit'
-                import platform
-                (os_bits, other) = platform.architecture()
+		# os_bits should be loaded with '32bit' or '64bit'
+		import platform
+		(os_bits, other) = platform.architecture()
 		
-                # get platform based on current platform
-                if os_bits == '32bit':
-                        return 'Linux-i686'
-                elif os_bits == '64bit':
-                        return 'Linux-x86_64'
-                else:
-                        raise Exception("unknown os bits: " + os_bits)
+		# get platform based on current platform
+		if os_bits == '32bit':
+			return 'Linux-i686'
+		elif os_bits == '64bit':
+			return 'Linux-x86_64'
+		else:
+			raise Exception("unknown os bits: " + os_bits)
 
 	def dist_name(self, type):
 		ext = None
@@ -1403,7 +1406,7 @@ class InternalCommands:
 		elif type == 'rpm' or type == 'deb':
 		
 			ext = type
-                        platform = self.getLinuxPlatform()
+			platform = self.getLinuxPlatform()
 			
 		elif type == 'win':
 			
@@ -1443,7 +1446,7 @@ class InternalCommands:
 		return re.sub(pattern, replace, self.dist_name(type))
 
 	def dist_usage(self):
-		print ('Usage: %s package [package-type]\n'
+		print(('Usage: %s package [package-type]\n'
 			'\n'
 			'Replace [package-type] with one of:\n'
 			'  src    .tar.gz source (Posix only)\n'
@@ -1452,13 +1455,13 @@ class InternalCommands:
 			'  win    .exe installer (Windows)\n'
 			'  mac    .dmg package (Mac OS X)\n'
 			'\n'
-			'Example: %s package src-tgz') % (self.this_cmd, self.this_cmd)
+			'Example: %s package src-tgz') % (self.this_cmd, self.this_cmd))
 
 	def about(self):
-		print ('Help Me script, from the Synergy project.\n'
+		print(('Help Me script, from the Synergy project.\n'
 			'%s\n'
 			'\n'
-			'For help, run: %s help') % (self.website_url, self.this_cmd)
+			'For help, run: %s help') % (self.website_url, self.this_cmd))
 
 	def try_chdir(self, dir):
 		global prevdir
@@ -1469,13 +1472,13 @@ class InternalCommands:
 
 		# Ensure temp build dir exists.
 		if not os.path.exists(dir):
-			print 'Creating dir: ' + dir
+			print('Creating dir: ' + dir)
 			os.makedirs(dir)
  
 		prevdir = os.path.abspath(os.curdir)
 
 		# It will exist by this point, so it's safe to chdir.
-		print 'Entering dir: ' + dir
+		print('Entering dir: ' + dir)
 		os.chdir(dir)
 
 	def restore_chdir(self):
@@ -1500,7 +1503,7 @@ class InternalCommands:
 				raise Exception('Could not open project with error code code: ' + str(err))
 
 	def setup(self, target=''):
-		print "Running setup..."
+		print("Running setup...")
 
 		oldGenerator = self.findGeneratorFromConfig()
 		if not oldGenerator == None:
@@ -1512,7 +1515,7 @@ class InternalCommands:
 					cmakeCacheFilename = buildDir + '/' + cmakeCacheFilename
 
 				if os.path.exists(cmakeCacheFilename):
-					print "Removing %s, since generator changed." % cmakeCacheFilename
+					print("Removing %s, since generator changed." % cmakeCacheFilename)
 					os.remove(cmakeCacheFilename)
 
 		# always either get generator from args, or prompt user when 
@@ -1520,10 +1523,10 @@ class InternalCommands:
 		generator = self.get_generator_from_prompt()
 
 		config = self.getConfig()
-		config.set('hm', 'setup_version', self.setup_version)
+		config.set('hm', 'setup_version', str(self.setup_version))
 		
 		# store the generator so we don't need to ask again
-		config.set('cmake', 'generator', generator)
+		config.set('cmake', 'generator', str(generator))
 
 		self.write_config(config)
 
@@ -1532,7 +1535,7 @@ class InternalCommands:
 		self.setConfRun('debug', False)
 		self.setConfRun('release', False)
 
-		print "Setup complete."
+		print("Setup complete.")
 
 	def getConfig(self):
 		if os.path.exists(self.configFilename):
@@ -1552,7 +1555,7 @@ class InternalCommands:
 	def write_config(self, config, target=''):
 		if not os.path.isdir(self.configDir):
 			os.mkdir(self.configDir)
-		configfile = open(self.configFilename, 'wb')
+		configfile = open(self.configFilename, 'wt')
 		config.write(configfile)
 
 	def getGeneratorFromConfig(self):
@@ -1563,7 +1566,7 @@ class InternalCommands:
 		raise Exception("Could not find generator: " + name)
 
 	def findGeneratorFromConfig(self):
-		config = ConfigParser.RawConfigParser()
+		config = ConfigParser.ConfigParser()
 		config.read(self.configFilename)
 		
 		if not config.has_section('cmake'):
@@ -1573,8 +1576,7 @@ class InternalCommands:
 
 		generators = self.get_generators()
 		keys = generators.keys()
-		keys.sort()
-		for k in keys:
+		for k in sorted(keys):
 			if generators[k].cmakeName == name:
 				return generators[k]
 		
@@ -1582,7 +1584,7 @@ class InternalCommands:
 
 	def min_setup_version(self, version):
 		if os.path.exists(self.configFilename):
-			config = ConfigParser.RawConfigParser()
+			config = ConfigParser.ConfigParser()
 			config.read(self.configFilename)
 
 			try:
@@ -1594,7 +1596,7 @@ class InternalCommands:
 
 	def hasConfRun(self, target):
 		if self.min_setup_version(2):
-			config = ConfigParser.RawConfigParser()
+			config = ConfigParser.ConfigParser()
 			config.read(self.configFilename)
 			try:
 				return config.getboolean('hm', 'conf_done_' + target)
@@ -1605,9 +1607,9 @@ class InternalCommands:
 
 	def setConfRun(self, target, hasRun=True):
 		if self.min_setup_version(3):
-			config = ConfigParser.RawConfigParser()
+			config = ConfigParser.ConfigParser()
 			config.read(self.configFilename)
-			config.set('hm', 'conf_done_' + target, hasRun)
+			config.set('hm', 'conf_done_' + target, str(hasRun))
 			self.write_config(config)
 		else:
 			raise Exception("User does not have correct setup version.")
@@ -1648,20 +1650,24 @@ class InternalCommands:
 			raise Exception('User prompting is disabled.')
 	
 		prompt = 'Enter a number:'
-		print prompt,
+		sys.stdout.write(prompt)
 		
 		generator_id = raw_input()
 		
 		if generator_id in generators:
-			print 'Selected generator:', generators[generator_id]
+			print('Selected generator:', generators[generator_id])
 		else:
-			print 'Invalid number, try again.'
+			print('Invalid number, try again.')
 			self.setup_generator_prompt(generators)
 
 		return generators[generator_id]
 
 	def get_vcvarsall(self, generator):	
-		import platform, _winreg
+		import platform
+		try:
+			import _winreg
+		except ImportError:
+			import winreg as _winreg
 		
 		# os_bits should be loaded with '32bit' or '64bit'
 		(os_bits, other) = platform.architecture()
@@ -1767,7 +1773,7 @@ class InternalCommands:
 		keys = generators.keys()
 		keys.sort()
 		for k in keys:
-			print str(k) + ': ' + generators[k].cmakeName
+			print(str(k) + ': ' + generators[k].cmakeName)
 
 	def getMacVersion(self):
 		if not self.macSdk:
@@ -1775,7 +1781,7 @@ class InternalCommands:
 		
 		result = re.search('(\d+)\.(\d+)', self.macSdk)
 		if not result:
-			print versions
+			print(versions)
 			raise Exception("Could not find Mac OS X version.")
 
 		major = int(result.group(1))
@@ -1880,7 +1886,7 @@ class CommandHandler:
 		self.ic.update()
 	
 	def install(self):
-		print 'Not yet implemented: install'
+		print('Not yet implemented: install')
 	
 	def doxygen(self):
 		self.ic.doxygen()

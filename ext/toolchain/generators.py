@@ -17,7 +17,7 @@
 class Generator(object):
 	def __init__(self, cmakeName, buildDir='build', sourceDir='..', binDir='bin'):
 		self.cmakeName = cmakeName
-        	self.buildDir = buildDir
+		self.buildDir = buildDir
 		self.sourceDir = sourceDir
 		self.binDir = binDir
 
