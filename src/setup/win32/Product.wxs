@@ -113,7 +113,7 @@
         <?if $(var.QtVersion) = "5" ?>
         <File Source="$(var.QtPath)\Qt5Core.dll" CompanionFile="GuiProgram" />
         <File Source="$(var.QtPath)\Qt5Gui.dll" CompanionFile="GuiProgram" />
-        <File Source="$(var.QtPath)\Qt5Network.dll)" CompanionFile="GuiProgram" />
+        <File Source="$(var.QtPath)\Qt5Network.dll" CompanionFile="GuiProgram" />
         <File Source="$(var.QtPath)\Qt5Widgets.dll" CompanionFile="GuiProgram" />
         <File Source="$(var.QtPath)\icudt53.dll" CompanionFile="GuiProgram" />
         <File Source="$(var.QtPath)\icuin53.dll" CompanionFile="GuiProgram" />
