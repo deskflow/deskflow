@@ -92,7 +92,7 @@ MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 
 	// create a destination DIB section
 	LOG((CLOG_INFO "convert image from: depth=%d comp=%d", bitmap->bmiHeader.biBitCount, bitmap->bmiHeader.biCompression));
-	void* raw;
+	void* raw = NULL;
 	BITMAPINFOHEADER info;
 	LONG w               = bitmap->bmiHeader.biWidth;
 	LONG h               = bitmap->bmiHeader.biHeight;
@@ -110,6 +110,10 @@ MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 	HDC dc      = GetDC(NULL);
 	HBITMAP dst = CreateDIBSection(dc, (BITMAPINFO*)&info,
 							DIB_RGB_COLORS, &raw, NULL, 0);
+	if (!dst) {
+		LOG((CLOG_ERR "failed to Allocate bitmap, error=%s", GetLastError()));
+		return NULL;
+	}
 
 	// find the start of the pixel data
 	const char* srcBits = (const char*)bitmap + bitmap->bmiHeader.biSize;

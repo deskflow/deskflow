@@ -2268,7 +2268,9 @@ Server::LockCursorToScreenInfo::alloc(State state)
 {
 	LockCursorToScreenInfo* info =
 		(LockCursorToScreenInfo*)malloc(sizeof(LockCursorToScreenInfo));
-	info->m_state = state;
+	if (info) {
+		info->m_state = state;
+	}
 	return info;
 }
 
@@ -2283,7 +2285,9 @@ Server::SwitchToScreenInfo::alloc(const String& screen)
 	SwitchToScreenInfo* info =
 		(SwitchToScreenInfo*)malloc(sizeof(SwitchToScreenInfo) +
 								screen.size());
-	strcpy(info->m_screen, screen.c_str());
+	if (info) {
+		strcpy(info->m_screen, screen.c_str());
+	}
 	return info;
 }
 
@@ -2297,7 +2301,9 @@ Server::SwitchInDirectionInfo::alloc(EDirection direction)
 {
 	SwitchInDirectionInfo* info =
 		(SwitchInDirectionInfo*)malloc(sizeof(SwitchInDirectionInfo));
-	info->m_direction = direction;
+	if (info) {
+		info->m_direction = direction;
+	}
 	return info;
 }
 
@@ -2310,8 +2316,10 @@ Server::KeyboardBroadcastInfo::alloc(State state)
 {
 	KeyboardBroadcastInfo* info =
 		(KeyboardBroadcastInfo*)malloc(sizeof(KeyboardBroadcastInfo));
-	info->m_state      = state;
-	info->m_screens[0] = '\0';
+	if (info) {
+		info->m_state = state;
+		info->m_screens[0] = '\0';
+	}
 	return info;
 }
 
@@ -2321,8 +2329,10 @@ Server::KeyboardBroadcastInfo::alloc(State state, const String& screens)
 	KeyboardBroadcastInfo* info =
 		(KeyboardBroadcastInfo*)malloc(sizeof(KeyboardBroadcastInfo) +
 								screens.size());
-	info->m_state = state;
-	strcpy(info->m_screens, screens.c_str());
+	if (info) {
+		info->m_state = state;
+		strcpy(info->m_screens, screens.c_str());
+	}
 	return info;
 }
 

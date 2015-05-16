@@ -466,15 +466,15 @@ NetworkTests::sendMockData(void* eventTarget)
 UInt8*
 newMockData(size_t size)
 {
-	UInt8* buffer = new UInt8[size];
-
-	UInt8* data = buffer;
 	const UInt8 head[] = "mock head... ";
 	size_t headSize = sizeof(head) - 1;
 	const UInt8 tail[] = "... mock tail";
 	size_t tailSize = sizeof(tail) - 1;
 	const UInt8 synergyRocks[] = "synergy\0 rocks! ";
 	size_t synergyRocksSize = sizeof(synergyRocks) - 1;
+
+	UInt8* buffer = new UInt8[size+headSize+synergyRocksSize+tailSize];
+	UInt8* data = buffer
 
 	memcpy(data, head, headSize);
 	data += headSize;

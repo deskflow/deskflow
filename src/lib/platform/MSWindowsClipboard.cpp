@@ -171,7 +171,8 @@ MSWindowsClipboard::get(EFormat format) const
 		for (ConverterList::const_iterator index = m_converters.begin();
 								index != m_converters.end(); ++index) {
 			converter = *index;
-			if (converter->getWin32Format() == win32Format &&
+			if (converter &&
+				converter->getWin32Format() == win32Format &&
 				converter->getFormat()      == format) {
 				break;
 			}
