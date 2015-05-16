@@ -212,7 +212,7 @@ class InternalCommands:
 	qmake_cmd = 'qmake'
 	make_cmd = 'make'
 	xcodebuild_cmd = 'xcodebuild'
-	w32_make_cmd = 'mingw32-make'
+	w32_make_cmd = 'nmake'
 	w32_qt_version = '4.6.2'
 	defaultTarget = 'release'
 
@@ -231,7 +231,7 @@ class InternalCommands:
 	cmake_url = 'http://www.cmake.org/cmake/resources/software.html'
 
 	# try_chdir(...) and restore_chdir() will use this
-	prevdir = ''
+	prevdir = []
 	
 	# by default, no index specified as arg
 	generator_id = None
@@ -258,12 +258,16 @@ class InternalCommands:
 	gmockDir = 'gmock-1.6.0'
 
 	win32_generators = {
-		1 : Generator('Visual Studio 10'),
-		2 : Generator('Visual Studio 10 Win64'),
-		3 : Generator('Visual Studio 9 2008'),
-		4 : Generator('Visual Studio 9 2008 Win64'),
-		5 : Generator('Visual Studio 8 2005'),
-		6 : Generator('Visual Studio 8 2005 Win64')
+		1 : Generator('Visual Studio 12'),
+		2 : Generator('Visual Studio 12 Win64'),
+		3 : Generator('Visual Studio 11'),
+		4 : Generator('Visual Studio 11 Win64'),
+		5 : Generator('Visual Studio 10'),
+		6 : Generator('Visual Studio 10 Win64'),
+		7 : Generator('Visual Studio 9 2008'),
+		8 : Generator('Visual Studio 9 2008 Win64'),
+		9 : Generator('Visual Studio 8 2005'),
+		10 : Generator('Visual Studio 8 2005 Win64')
 	}
 
 	unix_generators = {
@@ -686,12 +690,18 @@ class InternalCommands:
 		
 			if sys.platform == 'win32':
 
+				generator = self.getGenerator().cmakeName
 				gui_make_cmd = self.w32_make_cmd + ' ' + target + args
 				print('Make GUI command: ' + gui_make_cmd)
 
 				self.try_chdir(self.gui_dir)
-				err = os.system(gui_make_cmd)
 				self.restore_chdir()
+				try:
+					err = self.run_vccmd(generator, self.w32_make_cmd, ' '.join([target,args]), self.gui_dir)
+				except:
+					import traceback
+					traceback.print_exc()
+					raise
 				
 				if err != 0:
 					raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
@@ -893,8 +903,8 @@ class InternalCommands:
 		generator = self.getGeneratorFromConfig().cmakeName
 
 		if generator.startswith('Visual Studio'):
-			# special case for version 10, use new /target:clean
-			if generator.startswith('Visual Studio 10'):
+			# special case for version 10 11 12 13, use new /target:clean
+			if generator.startswith('Visual Studio 1'):
 				for target in targets:
 					self.run_vcbuild(generator, target, self.sln_filepath(), '/target:clean')
 				
@@ -1043,7 +1053,7 @@ class InternalCommands:
 		elif type == 'win':
 			if sys.platform == 'win32':
 				#self.distNsis(vcRedistDir, qtDir)
-				self.distWix()
+				self.distWix(vcRedistDir, qtDir)
 			else:
 				package_unsupported = True
 			
@@ -1264,15 +1274,53 @@ class InternalCommands:
 		err = os.system(cmd)
 		self.restore_chdir()
 
-	def distWix(self):
+	def distWix(self, vcRedistDir, qtDir):
 		generator = self.getGeneratorFromConfig().cmakeName
 		
 		arch = 'x86'
 		if generator.endswith('Win64'):
 			arch = 'x64'
+
+		vcVer = 10
+		if generator.startswith('Visual Studio '):
+			vcVer = generator.split(' ')[2]
+			print("using Visual C version %s" % vcVer)
+
+		if not qtDir:
+			if sys.version_info < (2, 4):
+				stdout = commands.getoutput('qtpaths --binaries-dir')
+			else:
+				p = subprocess.Popen(['qtpaths', '--binaries-dir'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+				stdout, stderr = p.communicate()
+				if p.returncode != 0:
+					stdout = ""
+			if os.path.exists(stdout.strip()):
+				qtDir = os.path.abspath(stdout.strip()).decode(encoding='UTF-8')
+				print("using QtPath %s" % qtDir)
 		
+		if sys.version_info < (2, 4):
+			stdout = commands.getoutput('qmake --version')
+		else:
+			p = subprocess.Popen(['qmake', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			stdout, stderr = p.communicate()
+			if p.returncode != 0:
+				stdout = ""
+		qtVer = ""
+		m = re.search('.*Qt version (\d+).*', stdout.decode(encoding='UTF-8'),re.I)
+		if m:
+			qtVer = m.group(1)		
+			print("using QT version %s" % qtVer)
+
 		version = self.getVersionFromCmake()
-		args = "/p:DefineConstants=\"Version=%s\"" % version
+		constants=['Version=%s' % version]
+		if qtDir:
+			constants.append('QtPath=%s' % qtDir)
+		if qtVer:
+			constants.append('QtVersion=%s' % qtVer)
+		if vcVer:
+			constants.append('VCVersion=%s' % vcVer)
+
+		args = "/p:DefineConstants=\"%s\"" % ';'.join(constants)
 		
 		self.run_vcbuild(
 			generator, 'release', 'synergy.sln', args,
@@ -1464,29 +1512,31 @@ class InternalCommands:
 			'For help, run: %s help') % (self.website_url, self.this_cmd))
 
 	def try_chdir(self, dir):
-		global prevdir
-
-		if dir == '':
-			prevdir = ''
+		if not dir:
+			self.prevdir.append(dir)
 			return
 
 		# Ensure temp build dir exists.
 		if not os.path.exists(dir):
 			print('Creating dir: ' + dir)
 			os.makedirs(dir)
- 
-		prevdir = os.path.abspath(os.curdir)
+
+		self.prevdir.append(os.path.abspath(os.curdir))
 
 		# It will exist by this point, so it's safe to chdir.
 		print('Entering dir: ' + dir)
 		os.chdir(dir)
 
 	def restore_chdir(self):
-		global prevdir
-		if prevdir == '':
+		if not self.prevdir:
 			return
-		print 'Going back to: ' + prevdir
-		os.chdir(prevdir)
+
+		dir = self.prevdir.pop()
+		if not dir:
+			return
+
+		print('Going back to: ' + dir)
+		os.chdir(dir)
 
 	def open_internal(self, project_filename, application = ''):
 
@@ -1672,38 +1722,37 @@ class InternalCommands:
 		# os_bits should be loaded with '32bit' or '64bit'
 		(os_bits, other) = platform.architecture()
 		
-		# visual studio is a 32-bit app, so when we're on 64-bit, we need to check the WoW dungeon
-		if os_bits == '64bit':
-			key_name = r'SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VS7'
-		else:
-			key_name = r'SOFTWARE\Microsoft\VisualStudio\SxS\VC7'
+		key_name = r'SOFTWARE\Microsoft\VisualStudio\SxS\VC7'
 		
 		try:
 			key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, key_name)
 		except:
-			raise Exception('Unable to open Visual Studio registry key. Application may not be installed.')
+			# visual studio is a 32-bit app, so when we're on 64-bit, we need to check the WoW dungeon
+			alt_key_name = r'SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VS7'
+			try:
+				key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, alt_key_name)
+			except:
+				raise Exception('Unable to open Visual Studio registry key. Application may not be installed.')
 		
-		if generator.startswith('Visual Studio 8'):
-			value,type = _winreg.QueryValueEx(key, '8.0')
-		elif generator.startswith('Visual Studio 9'):
-			value,type = _winreg.QueryValueEx(key, '9.0')
-		elif generator.startswith('Visual Studio 10'):
-			value,type = _winreg.QueryValueEx(key, '10.0')
+		vcver = 0
+		if generator.startswith('Visual Studio '):
+			vcver = generator.split(' ')[2]
+		if vcver:
+			value,type = _winreg.QueryValueEx(key, vcver+'.0')
 		else:
 			raise Exception('Cannot determine vcvarsall.bat location for: ' + generator)
 		
-		# not sure why, but the value on 64-bit differs slightly to the original
-		if os_bits == '64bit':
-			path = value + r'vc\vcvarsall.bat'
-		else:
-			path = value + r'vcvarsall.bat'		
-		
+		path = value + r'vcvarsall.bat'		
 		if not os.path.exists(path):
-			raise Exception("'%s' not found." % path)
+			# not sure why, but the value on 64-bit differs slightly to the original
+			if os_bits == '64bit':
+				path = value + r'vc\vcvarsall.bat'
+			if not os.path.exists(path):
+				raise Exception("'%s' not found." % path)
 		
 		return path
 
-	def run_vcbuild(self, generator, mode, solution, args='', dir='', config32='Win32'):
+	def run_vccmd(self, generator, cmd, args='', dir=''):
 		import platform
 		
 		# os_bits should be loaded with '32bit' or '64bit'
@@ -1721,9 +1770,39 @@ class InternalCommands:
 				vcvars_platform = 'x86_amd64' # 32bit OS building 64bit app
 			else:
 				vcvars_platform = 'amd64'  # 64bit OS building 64bit app
-			config_platform = 'x64'
 		else: # target = 32bit
 			vcvars_platform = 'x86' # 32/64bit OS building 32bit app
+		
+		realcmd = ('@echo off\n'
+			'call "%s" %s \n'
+			'cd "%s"\n'
+			'%s %s'
+			) % (self.get_vcvarsall(generator), vcvars_platform, dir, cmd, args)
+		
+		# Generate a batch file, since we can't use environment variables directly.
+		temp_bat = self.getBuildDir() + r'\vcbuild.bat'
+		file = open(temp_bat, 'wt')
+		file.write(realcmd)
+		file.close()
+
+		print(realcmd)
+		return os.system(temp_bat)
+
+	def run_vcbuild(self, generator, mode, solution, args='', dir='', config32='Win32'):
+		import platform
+		
+		# os_bits should be loaded with '32bit' or '64bit'
+		(os_bits, other) = platform.architecture()
+		# Now we choose the parameters bases on OS 32/64 and our target 32/64
+		# http://msdn.microsoft.com/en-us/library/x4d2c09s%28VS.80%29.aspx
+		
+		# valid options are only: ia64  amd64 x86_amd64 x86_ia64 
+		# but calling vcvarsall.bat does not garantee that it will work
+		# ret code from vcvarsall.bat is always 0 so the only way of knowing that I worked is by analysing the text output
+		# ms bugg: install VS9, FeaturePack, VS9SP1 and you'll obtain a vcvarsall.bat that fails.
+		if generator.find('Win64') != -1:
+			config_platform = 'x64'
+		else: # target = 32bit
 			config_platform = config32
 		
 		if mode == 'release':
@@ -1731,27 +1810,17 @@ class InternalCommands:
 		else:
 			config = 'Debug'
 				
-		if generator.startswith('Visual Studio 10'):
-			cmd = ('@echo off\n'
-				'call "%s" %s \n'
-				'cd "%s"\n'
-				'msbuild /nologo %s /p:Configuration="%s" /p:Platform="%s" "%s"'
-				) % (self.get_vcvarsall(generator), vcvars_platform, dir, args, config, config_platform, solution)
+		if generator.startswith('Visual Studio 1'):
+			realcmd = 'msbuild'
+			realargs = ('/nologo %s /p:Configuration="%s" /p:Platform="%s" "%s"'
+				) % (args, config, config_platform, solution)
 		else:
 			config = config + '|' + config_platform
-			cmd = ('@echo off\n'
-				'call "%s" %s \n'
-				'cd "%s"\n'
-				'vcbuild /nologo %s "%s" "%s"'
-				) % (self.get_vcvarsall(generator), vcvars_platform, dir, args, solution, config)
+			realcmd = 'vcbuild'
+			realargs = ('/nologo %s "%s" "%s"'
+				) % (args, solution, config)
 		
-		# Generate a batch file, since we can't use environment variables directly.
-		temp_bat = self.getBuildDir() + r'\vcbuild.bat'
-		file = open(temp_bat, 'w')
-		file.write(cmd)
-		file.close()
-
-		err = os.system(temp_bat)
+		err = self.run_vccmd(generator, realcmd, realargs, dir)
 		if err != 0:
 			raise Exception('Microsoft compiler failed with error code: ' + str(err))
 

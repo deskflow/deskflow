@@ -50,7 +50,7 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_pSettings(settings),
 	m_ScreenName(),
 	m_Port(24800),
-	m_Interface(),
+	m_Address(),
 	m_LogLevel(0),
 	m_WizardLastRun(0),
 	m_ProcessMode(DEFAULT_PROCESS_MODE),
@@ -117,7 +117,7 @@ void AppConfig::loadSettings()
 {
 	m_ScreenName = settings().value("screenName", QHostInfo::localHostName()).toString();
 	m_Port = settings().value("port", 24800).toInt();
-	m_Interface = settings().value("interface").toString();
+	m_Address = settings().value("interface").toString();
 	m_LogLevel = settings().value("logLevel", 3).toInt(); // level 3: INFO
 	m_LogToFile = settings().value("logToFile", false).toBool();
 	m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
@@ -138,7 +138,7 @@ void AppConfig::saveSettings()
 {
 	settings().setValue("screenName", m_ScreenName);
 	settings().setValue("port", m_Port);
-	settings().setValue("interface", m_Interface);
+	settings().setValue("interface", m_Address);
 	settings().setValue("logLevel", m_LogLevel);
 	settings().setValue("logToFile", m_LogToFile);
 	settings().setValue("logFilename", m_LogFilename);
