@@ -152,6 +152,8 @@ if (UNIX)
 	check_library_exists("pthread" pthread_create "" HAVE_PTHREAD)
 	if (HAVE_PTHREAD)
 		list(APPEND libs pthread)
+	elseif (HAIKU)
+		message(STATUS "pthread in libroot on Haiku")
 	else()
 		message(FATAL_ERROR "Missing library: pthread")
 	endif()
@@ -197,7 +199,8 @@ if (UNIX)
 			${lib_Foundation}
 			${lib_Carbon}
 		)
-
+	elseif(HAIKU)
+			message(STATUS "Haiku operating system")
 	else() # not-apple
 
 		# add include dir for bsd (posix uses /usr/include/)

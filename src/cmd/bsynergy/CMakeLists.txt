@@ -1,6 +1,6 @@
 # synergy -- mouse and keyboard sharing utility
 # Copyright (C) 2012 Synergy Si Ltd.
-# Copyright (C) 2011 Nick Bolton
+# Copyright (C) 2015 Alexander von Gluck IV
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -14,17 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if (HAIKU)
-	add_subdirectory(bsynergy)
-else()
-	add_subdirectory(synergyc)
-	add_subdirectory(synergys)
-	add_subdirectory(synergyd)
-	add_subdirectory(usynergy)
-	add_subdirectory(syntool)
-endif()
+file(GLOB headers "*.h")
+file(GLOB sources "*.cpp")
 
-if (WIN32)
-  add_subdirectory(synergyp)
-endif()
+include_directories(../../micro)
 
+# System headers
+include_directories(/boot/system/develop/headers/private/storage/)
+include_directories(/boot/system/develop/headers/private/input/)
+include_directories(/boot/system/develop/headers/private/shared/)
+include_directories(/boot/system/develop/headers/private/interface/)
+
+add_library(bsynergy SHARED ${sources})
+target_link_libraries(bsynergy micro be network shared translation)
