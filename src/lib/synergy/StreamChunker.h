@@ -21,20 +21,20 @@
 
 class IEventQueue;
 
-class FileChunker {
+class StreamChunker {
 public:
 	//! FileChunk data
-	class FileChunk {
+	class Chunk {
 	public:
-		FileChunk(size_t chunkSize) : m_dataSize(chunkSize - 2)
+		Chunk(size_t size) : m_size(size - 2)
 		{
-			m_chunk = new char[chunkSize]; 
+			m_chunk = new char[size]; 
 		}
 
-		~FileChunk() { delete[] m_chunk; }
+		~Chunk() { delete[] m_chunk; }
 
 	public:
-		const size_t	m_dataSize;
+		const size_t	m_size;
 		char*			m_chunk;
 	};
 

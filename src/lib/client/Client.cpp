@@ -27,7 +27,7 @@
 #include "synergy/ProtocolUtil.h"
 #include "synergy/protocol_types.h"
 #include "synergy/XSynergy.h"
-#include "synergy/FileChunker.h"
+#include "synergy/StreamChunker.h"
 #include "synergy/IPlatformScreen.h"
 #include "mt/Thread.h"
 #include "net/TCPSocket.h"
@@ -422,12 +422,12 @@ Client::sendConnectionFailedEvent(const char* msg)
 void
 Client::sendFileChunk(const void* data)
 {
-	FileChunker::FileChunk* fileChunk = reinterpret_cast<FileChunker::FileChunk*>(const_cast<void*>(data));
-	LOG((CLOG_DEBUG1 "sendFileChunk"));
+	StreamChunker::Chunk* chunk = reinterpret_cast<StreamChunker::Chunk*>(const_cast<void*>(data));
+	LOG((CLOG_DEBUG1 "send file chunk"));
 	assert(m_server != NULL);
 
 	// relay
-	m_server->fileChunkSending(fileChunk->m_chunk[0], &(fileChunk->m_chunk[1]), fileChunk->m_dataSize);
+	m_server->fileChunkSending(chunk->m_chunk[0], &(chunk->m_chunk[1]), chunk->m_size);
 }
 
 void
@@ -821,7 +821,7 @@ Client::sendFileThread(void* filename)
 {
 	try {
 		char* name  = reinterpret_cast<char*>(filename);
-		FileChunker::sendFileChunks(name, m_events, this);
+		StreamChunker::sendFileChunks(name, m_events, this);
 	}
 	catch (std::runtime_error error) {
 		LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));

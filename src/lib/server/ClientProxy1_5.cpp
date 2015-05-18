@@ -18,7 +18,7 @@
 #include "server/ClientProxy1_5.h"
 
 #include "server/Server.h"
-#include "synergy/FileChunker.h"
+#include "synergy/StreamChunker.h"
 #include "synergy/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "base/Log.h"

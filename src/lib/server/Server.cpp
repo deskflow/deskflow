@@ -2033,13 +2033,13 @@ Server::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
 void
 Server::onFileChunkSending(const void* data)
 {
-	FileChunker::FileChunk* fileChunk = reinterpret_cast<FileChunker::FileChunk*>(const_cast<void*>(data));
+	StreamChunker::Chunk* chunk = reinterpret_cast<StreamChunker::Chunk*>(const_cast<void*>(data));
 
-	LOG((CLOG_DEBUG1 "onFileChunkSending"));
+	LOG((CLOG_DEBUG1 "sending file chunk"));
 	assert(m_active != NULL);
 
 	// relay
- 	m_active->fileChunkSending(fileChunk->m_chunk[0], &(fileChunk->m_chunk[1]), fileChunk->m_dataSize);
+ 	m_active->fileChunkSending(chunk->m_chunk[0], &(chunk->m_chunk[1]), chunk->m_size);
 }
 
 void
@@ -2376,7 +2376,7 @@ Server::sendFileThread(void* data)
 	try {
 		char* filename = reinterpret_cast<char*>(data);
 		LOG((CLOG_DEBUG "sending file to client, filename=%s", filename));
-		FileChunker::sendFileChunks(filename, m_events, this);
+		StreamChunker::sendFileChunks(filename, m_events, this);
 	}
 	catch (std::runtime_error error) {
 		LOG((CLOG_ERR "failed sending file chunks, error: %s", error.what()));

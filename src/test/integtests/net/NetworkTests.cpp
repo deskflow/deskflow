@@ -28,7 +28,7 @@
 #include "server/Server.h"
 #include "server/ClientListener.h"
 #include "client/Client.h"
-#include "synergy/FileChunker.h"
+#include "synergy/StreamChunker.h"
 #include "net/SocketMultiplexer.h"
 #include "net/NetworkAddress.h"
 #include "net/TCPSocketFactory.h"
@@ -417,7 +417,7 @@ NetworkTests::sendMockData(void* eventTarget)
 	// send first message (file size)
 	String size = intToString(kMockDataSize);
 	size_t sizeLength = size.size();
-	FileChunker::FileChunk* sizeMessage = new FileChunker::FileChunk(sizeLength + 2);
+	StreamChunker::Chunk* sizeMessage = new StreamChunker::Chunk(sizeLength + 2);
 	char* chunkData = sizeMessage->m_chunk;
 
 	chunkData[0] = kDataStart;
@@ -437,7 +437,7 @@ NetworkTests::sendMockData(void* eventTarget)
 		}
 
 		// first byte is the chunk mark, last is \0
-		FileChunker::FileChunk* fileChunk = new FileChunker::FileChunk(chunkSize + 2);
+		StreamChunker::Chunk* fileChunk = new StreamChunker::Chunk(chunkSize + 2);
 		char* chunkData = fileChunk->m_chunk;
 
 		chunkData[0] = kDataChunk;
@@ -455,7 +455,7 @@ NetworkTests::sendMockData(void* eventTarget)
 	}
 	
 	// send last message
-	FileChunker::FileChunk* transferFinished = new FileChunker::FileChunk(2);
+	StreamChunker::Chunk* transferFinished = new StreamChunker::Chunk(2);
 	chunkData = transferFinished->m_chunk;
 
 	chunkData[0] = kDataEnd;

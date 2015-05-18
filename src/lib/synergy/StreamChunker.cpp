@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/FileChunker.h"
+#include "synergy/StreamChunker.h"
 
 #include "synergy/protocol_types.h"
 #include "base/EventTypes.h"
@@ -33,10 +33,10 @@
 
 using namespace std;
 
-const size_t FileChunker::m_chunkSize = 512 * 1024; // 512kb
+const size_t StreamChunker::m_chunkSize = 512 * 1024; // 512kb
 
 void
-FileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTarget)
+StreamChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTarget)
 {
 	std::fstream file(reinterpret_cast<char*>(filename), std::ios::in | std::ios::binary);
 
@@ -51,7 +51,7 @@ FileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTarg
 	// send first message (file size)
 	String fileSize = intToString(size);
 	size_t sizeLength = fileSize.size();
-	FileChunk* sizeMessage = new FileChunk(sizeLength + 2);
+	Chunk* sizeMessage = new Chunk(sizeLength + 2);
 	char* chunkData = sizeMessage->m_chunk;
 
 	chunkData[0] = kDataStart;
@@ -73,7 +73,7 @@ FileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTarg
 			}
 
 			// for fileChunk->m_chunk, the first byte is the chunk mark, last is \0
-			FileChunk* fileChunk = new FileChunk(chunkSize + 2);
+			Chunk* fileChunk = new Chunk(chunkSize + 2);
 			char* chunkData = fileChunk->m_chunk;
 
 			chunkData[0] = kDataChunk;
@@ -93,7 +93,7 @@ FileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTarg
 	}
 
 	// send last message
-	FileChunk* transferFinished = new FileChunk(2);
+	Chunk* transferFinished = new Chunk(2);
 	chunkData = transferFinished->m_chunk;
 
 	chunkData[0] = kDataEnd;
@@ -104,8 +104,9 @@ FileChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTarg
 }
 
 String
-FileChunker::intToString(size_t i)
+StreamChunker::intToString(size_t i)
 {
+	//TODO: this should be in string
 	stringstream ss;
 	ss << i;
 	return ss.str();
