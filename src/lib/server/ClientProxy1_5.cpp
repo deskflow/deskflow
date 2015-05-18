@@ -74,57 +74,6 @@ ClientProxy1_5::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 	ProtocolUtil::writef(getStream(), kMsgDFileTransfer, mark, &chunk);
 }
 
-void
-ClientProxy1_5::setClipboard(ClipboardID id, const IClipboard* clipboard)
-{
-	// ignore if this clipboard is already clean
-	if (m_clipboard[id].m_dirty) {
-		// this clipboard is now clean
-		m_clipboard[id].m_dirty = false;
-		Clipboard::copy(&m_clipboard[id].m_clipboard, clipboard);
-
-		String data = m_clipboard[id].m_clipboard.marshall();
-
-		size_t size = data.size();
-		LOG((CLOG_DEBUG "sending clipboard %d to \"%s\" size=%d", id, getName().c_str(), size));
-
-		//TODO: refactor FileChunker and use thread
-		// send first message (file size)
-		std::stringstream ss;
-		ss << size;
-		String dataSize = ss.str();
-		ProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, kDataStart, &dataSize);
-
-		// send chunk messages with a fixed chunk size
-		size_t sentLength = 0;
-		size_t chunkSize = 2048;
-		Stopwatch stopwatch;
-		stopwatch.start();
-		while (true) {
-			if (stopwatch.getTime() > 0.1f) {
-				// make sure we don't read too much from the mock data.
-				if (sentLength + chunkSize > size) {
-					chunkSize = size - sentLength;
-				}
-
-				String chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
-				ProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, kDataChunk, &chunk);
-
-				sentLength += chunkSize;
-
-				if (sentLength == size) {
-					break;
-				}
-
-				stopwatch.reset();
-			}
-		}
-
-		// send last message
-		ProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, kDataEnd, "\0");
-	}
-}
-
 bool
 ClientProxy1_5::parseMessage(const UInt8* code)
 {

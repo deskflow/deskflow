@@ -27,10 +27,11 @@
 // 1.3:  adds keep alive and deprecates heartbeats,
 //       adds horizontal mouse scrolling
 // 1.4:  adds crypto support
-// 1.5:  adds file/clipboard transfer and removes home brew crypto
+// 1.5:  adds file transfer and removes home brew crypto
+// 1.6:  adds clipboard streaming
 // NOTE: with new version, synergy minor version should increment
 static const SInt16		kProtocolMajorVersion = 1;
-static const SInt16		kProtocolMinorVersion = 5;
+static const SInt16		kProtocolMinorVersion = 6;
 
 // default contact port number
 static const UInt16		kDefaultPort = 24800;
