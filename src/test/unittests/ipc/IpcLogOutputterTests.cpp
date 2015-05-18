@@ -15,9 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO: fix, tests failing intermittently on mac.
-#ifndef WINAPI_CARBON
-
 #define TEST_ENV
 
 #include "test/mock/ipc/MockIpcServer.h"
@@ -25,9 +22,13 @@
 #include "mt/Thread.h"
 #include "ipc/IpcLogOutputter.h"
 #include "base/String.h"
+#include "common/common.h"
 
 #include "test/global/gmock.h"
 #include "test/global/gtest.h"
+
+// HACK: ipc logging only used on windows anyway
+#if WINAPI_MSWINDOWS
 
 using ::testing::_;
 using ::testing::Return;
@@ -90,4 +91,4 @@ TEST(IpcLogOutputterTests, write_bufferRateLimit)
 	outputter.waitForEmpty();
 }
 
-#endif // WINAPI_CARBON
+#endif // WINAPI_MSWINDOWS
