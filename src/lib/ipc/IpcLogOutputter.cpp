@@ -62,9 +62,11 @@ IpcLogOutputter::~IpcLogOutputter()
 	ARCH->closeMutex(m_notifyMutex);
 
 	ARCH->closeCondVar(m_bufferEmptyCond);
-    
-    // HACK: assert fails on mac debug, can't see why.
-	//ARCH->closeMutex(m_bufferEmptyMutex);
+	
+#ifndef WINAPI_CARBON
+	// HACK: assert fails on mac debug, can't see why.
+	ARCH->closeMutex(m_bufferEmptyMutex);
+#endif // WINAPI_CARBON
 }
 
 void
