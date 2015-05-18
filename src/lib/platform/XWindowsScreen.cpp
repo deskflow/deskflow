@@ -159,15 +159,12 @@ XWindowsScreen::XWindowsScreen(
 
 	// primary/secondary screen only initialization
 	if (m_isPrimary) {
-		// start watching for events on other windows
-		selectEvents(m_root);
-		m_xi2detected = detectXI2();
-
-		if (m_xi2detected) {
 #ifdef HAVE_XI2
+		m_xi2detected = detectXI2();
+		if (m_xi2detected) {
 			selectXIRawMotion();
-#endif
 		} else
+#endif
 		{
 			// start watching for events on other windows
 			selectEvents(m_root);
@@ -744,7 +741,7 @@ XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 		LOG((CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", synergy::KeyMap::formatKey(key, mask).c_str(), key, mask));
 		return 0;
 	}
-	
+
 	LOG((CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", synergy::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
 	return id;
 }
@@ -1299,7 +1296,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 	// handle the event ourself
 	switch (xevent->type) {
 	case CreateNotify:
-		if (m_isPrimary) {
+		if (m_isPrimary && !m_xi2detected) {
 			// select events on new window
 			selectEvents(xevent->xcreatewindow.window);
 		}
