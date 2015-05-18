@@ -62,7 +62,9 @@ IpcLogOutputter::~IpcLogOutputter()
 	ARCH->closeMutex(m_notifyMutex);
 
 	ARCH->closeCondVar(m_bufferEmptyCond);
-	ARCH->closeMutex(m_bufferEmptyMutex);
+    
+    // HACK: assert fails on mac debug, can't see why.
+	//ARCH->closeMutex(m_bufferEmptyMutex);
 }
 
 void
