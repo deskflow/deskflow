@@ -59,12 +59,17 @@ public:
 	*/
 	void				bufferMaxSize(UInt16 bufferMaxSize);
 	
-	//! Close the outputter
+	//! Wait for empty buffer
 	/*!
-	Close the outputter.  If \p waitForEmpty is true, it will wait until
-	the buffer has been sent to the IPC server before closing.
+	Wait on a cond var until the buffer is empty.
 	*/
-	void				close(bool waitForEmpty);
+	void				waitForEmpty();
+
+	//! Set the buffer size.
+	/*!
+	Set the maximum number of \p writeRate for every \p timeRate in seconds.
+	*/
+	void				bufferRateLimit(UInt16 writeLimit, double timeLimit);
 	
 	//@}
 	
@@ -103,4 +108,8 @@ private:
 	UInt16				m_bufferMaxSize;
 	ArchCond			m_bufferEmptyCond;
 	ArchMutex			m_bufferEmptyMutex;
+	UInt16				m_bufferRateWriteLimit;
+	double				m_bufferRateTimeLimit;
+	UInt16				m_bufferWriteCount;
+	double				m_bufferRateStart;
 };

@@ -32,7 +32,9 @@
 
 enum EIpcLogOutputter {
 	kBufferMaxSize = 1000,
-	kMaxSendLines = 100
+	kMaxSendLines = 100,
+	kBufferRateWriteLimit = 1000, // writes per kBufferRateTime
+	kBufferRateTimeLimit = 1 // seconds
 };
 
 IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer) :
@@ -45,7 +47,11 @@ IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer) :
 	m_bufferWaiting(false),
 	m_bufferMaxSize(kBufferMaxSize),
 	m_bufferEmptyCond(ARCH->newCondVar()),
-	m_bufferEmptyMutex(ARCH->newMutex())
+	m_bufferEmptyMutex(ARCH->newMutex()),
+	m_bufferRateWriteLimit(kBufferRateWriteLimit),
+	m_bufferRateTimeLimit(kBufferRateTimeLimit),
+	m_bufferWriteCount(0),
+	m_bufferRateStart(ARCH->time())
 {
 	m_bufferThread = new Thread(new TMethodJob<IpcLogOutputter>(
 		this, &IpcLogOutputter::bufferThread));
@@ -120,12 +126,27 @@ void
 IpcLogOutputter::appendBuffer(const String& text)
 {
 	ArchMutexLock lock(m_bufferMutex);
+
+	double elapsed = ARCH->time() - m_bufferRateStart;
+	if (elapsed < m_bufferRateTimeLimit) {
+		if (m_bufferWriteCount >= m_bufferRateWriteLimit) {
+			// discard the log line if we've logged too much.
+			return;
+		}
+	}
+	else {
+		m_bufferWriteCount = 0;
+		m_bufferRateStart = ARCH->time();
+	}
+
 	if (m_buffer.size() >= m_bufferMaxSize) {
 		// if the queue is exceeds size limit,
 		// throw away the oldest item
 		m_buffer.pop_front();
 	}
+
 	m_buffer.push_back(text);
+	m_bufferWriteCount++;
 }
 
 void
@@ -219,11 +240,14 @@ IpcLogOutputter::bufferMaxSize() const
 }
 
 void
-IpcLogOutputter::close(bool waitForEmpty)
+IpcLogOutputter::waitForEmpty()
 {
-	if (waitForEmpty) {
-		ARCH->waitCondVar(m_bufferEmptyCond, m_bufferEmptyMutex, -1);
-	}
+	ARCH->waitCondVar(m_bufferEmptyCond, m_bufferEmptyMutex, -1);
+}
 
-	close();
+void
+IpcLogOutputter::bufferRateLimit(UInt16 writeLimit, double timeLimit)
+{
+	m_bufferRateWriteLimit = writeLimit;
+	m_bufferRateTimeLimit = timeLimit;
 }

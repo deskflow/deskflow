@@ -57,15 +57,37 @@ TEST(IpcLogOutputterTests, write_bufferSizeWrapping)
 	outputter.bufferMaxSize(2);
 
 	// log more lines than the buffer can contain
-	for (UInt8 i = 1; i <= 3; i++) {
-		String s = string::sprintf("mock %d", i);
-		outputter.write(kNOTE, s.c_str());
-	}
+	outputter.write(kNOTE, "mock 1");
+	outputter.write(kNOTE, "mock 2");
+	outputter.write(kNOTE, "mock 3");
 
-	// close, but wait until the buffer is empty.
-	outputter.close(true);
+	// wait for the buffer to be empty (all lines sent to IPC)
+	outputter.waitForEmpty();
+}
 
-	EXPECT_EQ(true, true);
+TEST(IpcLogOutputterTests, write_bufferRateLimit)
+{
+	MockIpcServer mockServer;
+	
+	ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
+
+	EXPECT_CALL(mockServer, hasClients(_)).Times(2);
+	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\n"), _)).Times(1);
+	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 3\n"), _)).Times(1);
+
+	IpcLogOutputter outputter(mockServer);
+	outputter.bufferRateLimit(1, 0.01); // 5ms
+
+	// log 1 more line than the buffer can accept in time limit.
+	outputter.write(kNOTE, "mock 1");
+	outputter.write(kNOTE, "mock 2");
+	outputter.waitForEmpty();
+	
+	// after waiting the time limit send another to make sure
+	// we can log after the time limit passes.
+	ARCH->sleep(0.001); // 10ms
+	outputter.write(kNOTE, "mock 3");
+	outputter.waitForEmpty();
 }
 
 #endif // WINAPI_CARBON
