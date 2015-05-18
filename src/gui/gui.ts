@@ -853,6 +853,11 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <source>Fix XTest for Xinerama</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="res/ScreenSettingsDialogBase.ui" line="468"/>
+        <source>Preserve window focus</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ScreenSetupModel</name>
