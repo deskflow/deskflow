@@ -32,5 +32,8 @@ public:
 	virtual void		setClipboard(ClipboardID id, const IClipboard* clipboard);
 
 private:
+	void				handleClipboardSendingEvent(const Event&, void*);
+
+private:
 	IEventQueue*		m_events;
 };

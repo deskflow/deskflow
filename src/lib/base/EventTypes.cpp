@@ -116,6 +116,7 @@ REGISTER_EVENT(ClientListener, connected)
 REGISTER_EVENT(ClientProxy, ready)
 REGISTER_EVENT(ClientProxy, disconnected)
 REGISTER_EVENT(ClientProxy, clipboardChanged)
+REGISTER_EVENT(ClientProxy, clipboardSending)
 
 //
 // ClientProxyUnknown

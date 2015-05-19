@@ -351,7 +351,8 @@ public:
 	ClientProxyEvents() :
 		m_ready(Event::kUnknown),
 		m_disconnected(Event::kUnknown),
-		m_clipboardChanged(Event::kUnknown) { }
+		m_clipboardChanged(Event::kUnknown),
+		m_clipboardSending(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -379,12 +380,20 @@ public:
 	*/
 	Event::Type		clipboardChanged();
 
+	//! Clipboard sending event type
+	/*!
+	Returns the clipboard sending event type. This is used to send 
+	clipboard chunks.
+	*/
+	Event::Type		clipboardSending();
+
 	//@}
 
 private:
 	Event::Type		m_ready;
 	Event::Type		m_disconnected;
 	Event::Type		m_clipboardChanged;
+	Event::Type		m_clipboardSending;
 };
 
 class ClientProxyUnknownEvents : public EventTypes {
