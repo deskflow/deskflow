@@ -15,22 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "synergy/Chunk.h"
+#include "base/String.h"
 
-#include "server/ClientProxy1_5.h"
+Chunk::Chunk(size_t size)
+{
+	m_chunk = new char[size];
+	memset(m_chunk, 0, size);
+}
 
-class Server;
-class IEventQueue;
-
-//! Proxy for client implementing protocol version 1.6
-class ClientProxy1_6 : public ClientProxy1_5 {
-public:
-	ClientProxy1_6(const String& name, synergy::IStream* adoptedStream, Server* server, IEventQueue* events);
-	~ClientProxy1_6();
-
-	virtual bool		parseMessage(const UInt8* code);
-	virtual void		setClipboard(ClipboardID id, const IClipboard* clipboard);
-
-private:
-	IEventQueue*		m_events;
-};
+Chunk::~Chunk()
+{
+	delete[] m_chunk;
+}

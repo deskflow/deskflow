@@ -17,20 +17,14 @@
 
 #pragma once
 
-#include "server/ClientProxy1_5.h"
+#include "common/basic_types.h"
 
-class Server;
-class IEventQueue;
-
-//! Proxy for client implementing protocol version 1.6
-class ClientProxy1_6 : public ClientProxy1_5 {
+class Chunk {
 public:
-	ClientProxy1_6(const String& name, synergy::IStream* adoptedStream, Server* server, IEventQueue* events);
-	~ClientProxy1_6();
+	Chunk(size_t size);
+	~Chunk();
 
-	virtual bool		parseMessage(const UInt8* code);
-	virtual void		setClipboard(ClipboardID id, const IClipboard* clipboard);
-
-private:
-	IEventQueue*		m_events;
+public:
+	size_t				m_dataSize;
+	char*				m_chunk;
 };

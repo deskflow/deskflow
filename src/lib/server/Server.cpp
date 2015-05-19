@@ -22,13 +22,14 @@
 #include "server/ClientProxyUnknown.h"
 #include "server/PrimaryClient.h"
 #include "server/ClientListener.h"
+#include "synergy/FileChunk.h"
 #include "synergy/IPlatformScreen.h"
 #include "synergy/DropHelper.h"
 #include "synergy/option_types.h"
 #include "synergy/protocol_types.h"
 #include "synergy/XScreen.h"
 #include "synergy/XSynergy.h"
-#include "synergy/FileChunker.h"
+#include "synergy/StreamChunker.h"
 #include "synergy/KeyState.h"
 #include "synergy/Screen.h"
 #include "synergy/PacketStreamFilter.h"
@@ -508,7 +509,7 @@ Server::switchScreen(BaseClientProxy* dst,
 		// send the clipboard data to new active screen
 		m_dataTransmissionThread = new Thread(
 			new TMethodJob<Server>(
-				this, &Server::clipboardTransmissionThread,
+				this, &Server::sendClipboardThread,
 				NULL));
 
 		Server::SwitchToScreenInfo* info =
@@ -1852,10 +1853,10 @@ Server::sendDragInfo(BaseClientProxy* newScreen)
 }
 
 void
-Server::clipboardTransmissionThread(void*)
+Server::sendClipboardThread(void*)
 {
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-			m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
+		m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
 	}
 }
 
@@ -2033,13 +2034,13 @@ Server::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
 void
 Server::onFileChunkSending(const void* data)
 {
-	StreamChunker::Chunk* chunk = reinterpret_cast<StreamChunker::Chunk*>(const_cast<void*>(data));
+	FileChunk* chunk = reinterpret_cast<FileChunk*>(const_cast<void*>(data));
 
 	LOG((CLOG_DEBUG1 "sending file chunk"));
 	assert(m_active != NULL);
 
 	// relay
- 	m_active->fileChunkSending(chunk->m_chunk[0], &(chunk->m_chunk[1]), chunk->m_size);
+ 	m_active->fileChunkSending(chunk->m_chunk[0], &chunk->m_chunk[1], chunk->m_dataSize);
 }
 
 void
@@ -2376,7 +2377,7 @@ Server::sendFileThread(void* data)
 	try {
 		char* filename = reinterpret_cast<char*>(data);
 		LOG((CLOG_DEBUG "sending file to client, filename=%s", filename));
-		StreamChunker::sendFileChunks(filename, m_events, this);
+		StreamChunker::sendFile(filename, m_events, this);
 	}
 	catch (std::runtime_error error) {
 		LOG((CLOG_ERR "failed sending file chunks, error: %s", error.what()));

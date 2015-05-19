@@ -28,6 +28,7 @@
 #include "server/Server.h"
 #include "server/ClientListener.h"
 #include "client/Client.h"
+#include "synergy/FileChunk.h"
 #include "synergy/StreamChunker.h"
 #include "net/SocketMultiplexer.h"
 #include "net/NetworkAddress.h"
@@ -60,7 +61,6 @@ const size_t kMockFileSize = 1024 * 1024 * 10; // 10MB
 
 void getScreenShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h);
 void getCursorPos(SInt32& x, SInt32& y);
-String intToString(size_t i);
 UInt8* newMockData(size_t size);
 void createFile(fstream& file, const char* filename, size_t size);
 
@@ -415,38 +415,28 @@ void
 NetworkTests::sendMockData(void* eventTarget)
 {
 	// send first message (file size)
-	String size = intToString(kMockDataSize);
-	size_t sizeLength = size.size();
-	StreamChunker::Chunk* sizeMessage = new StreamChunker::Chunk(sizeLength + 2);
-	char* chunkData = sizeMessage->m_chunk;
-
-	chunkData[0] = kDataStart;
-	memcpy(&chunkData[1], size.c_str(), sizeLength);
-	chunkData[sizeLength + 1] = '\0';
+	String size = synergy::string::intToString(kMockDataSize);
+	FileChunk* sizeMessage = FileChunk::start(size);
+	
 	m_events.addEvent(Event(m_events.forIScreen().fileChunkSending(), eventTarget, sizeMessage));
 
 	// send chunk messages with incrementing chunk size
 	size_t lastSize = 0;
 	size_t sentLength = 0;
 	while (true) {
-		size_t chunkSize = lastSize + kMockDataChunkIncrement;
+		size_t dataSize = lastSize + kMockDataChunkIncrement;
 
 		// make sure we don't read too much from the mock data.
-		if (sentLength + chunkSize > kMockDataSize) {
-			chunkSize = kMockDataSize - sentLength;
+		if (sentLength + dataSize > kMockDataSize) {
+			dataSize = kMockDataSize - sentLength;
 		}
 
 		// first byte is the chunk mark, last is \0
-		StreamChunker::Chunk* fileChunk = new StreamChunker::Chunk(chunkSize + 2);
-		char* chunkData = fileChunk->m_chunk;
+		FileChunk* chunk = FileChunk::data(m_mockData, dataSize);
+		m_events.addEvent(Event(m_events.forIScreen().fileChunkSending(), eventTarget, chunk));
 
-		chunkData[0] = kDataChunk;
-		memcpy(&chunkData[1], &m_mockData[sentLength], chunkSize);
-		chunkData[chunkSize + 1] = '\0';
-		m_events.addEvent(Event(m_events.forIScreen().fileChunkSending(), eventTarget, fileChunk));
-
-		sentLength += chunkSize;
-		lastSize = chunkSize;
+		sentLength += dataSize;
+		lastSize = dataSize;
 
 		if (sentLength == kMockDataSize) {
 			break;
@@ -455,11 +445,7 @@ NetworkTests::sendMockData(void* eventTarget)
 	}
 	
 	// send last message
-	StreamChunker::Chunk* transferFinished = new StreamChunker::Chunk(2);
-	chunkData = transferFinished->m_chunk;
-
-	chunkData[0] = kDataEnd;
-	chunkData[1] = '\0';
+	FileChunk* transferFinished = FileChunk::end();
 	m_events.addEvent(Event(m_events.forIScreen().fileChunkSending(), eventTarget, transferFinished));
 }
 
@@ -525,14 +511,6 @@ getCursorPos(SInt32& x, SInt32& y)
 {
 	x = 0;
 	y = 0;
-}
-
-String
-intToString(size_t i)
-{
-	stringstream ss;
-	ss << i;
-	return ss.str();
 }
 
 #endif // WINAPI_CARBON

@@ -371,7 +371,7 @@ private:
 	void				sendDragInfo(BaseClientProxy* newScreen);
 
 	// thread funciton for sending clipboard
-	void				clipboardTransmissionThread(void*);
+	void				sendClipboardThread(void*);
 
 public:
 	bool				m_mock;

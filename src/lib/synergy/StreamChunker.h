@@ -17,29 +17,24 @@
 
 #pragma once
 
+#include "synergy/clipboard_types.h"
 #include "base/String.h"
 
 class IEventQueue;
 
 class StreamChunker {
 public:
-	//! FileChunk data
-	class Chunk {
-	public:
-		Chunk(size_t size) : m_size(size - 2)
-		{
-			m_chunk = new char[size]; 
-		}
-
-		~Chunk() { delete[] m_chunk; }
-
-	public:
-		const size_t	m_size;
-		char*			m_chunk;
-	};
-
-	static void			sendFileChunks(char* filename, IEventQueue* events, void* eventTarget);
-	static String		intToString(size_t i);
+	static void			sendFile(
+							char* filename,
+							IEventQueue* events,
+							void* eventTarget);
+	static void			sendClipboard(
+							String& data,
+							size_t size,
+							ClipboardID id,
+							UInt32 sequence,
+							IEventQueue* events,
+							void* eventTarget);
 
 private:
 	static const size_t m_chunkSize;

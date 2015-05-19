@@ -22,6 +22,7 @@
 #include "client/ServerProxy.h"
 #include "synergy/Screen.h"
 #include "synergy/Clipboard.h"
+#include "synergy/FileChunk.h"
 #include "synergy/DropHelper.h"
 #include "synergy/PacketStreamFilter.h"
 #include "synergy/ProtocolUtil.h"
@@ -422,12 +423,12 @@ Client::sendConnectionFailedEvent(const char* msg)
 void
 Client::sendFileChunk(const void* data)
 {
-	StreamChunker::Chunk* chunk = reinterpret_cast<StreamChunker::Chunk*>(const_cast<void*>(data));
+	FileChunk* chunk = reinterpret_cast<FileChunk*>(const_cast<void*>(data));
 	LOG((CLOG_DEBUG1 "send file chunk"));
 	assert(m_server != NULL);
 
 	// relay
-	m_server->fileChunkSending(chunk->m_chunk[0], &(chunk->m_chunk[1]), chunk->m_size);
+	m_server->fileChunkSending(chunk->m_chunk[0], &chunk->m_chunk[1], chunk->m_dataSize);
 }
 
 void
@@ -821,7 +822,7 @@ Client::sendFileThread(void* filename)
 {
 	try {
 		char* name  = reinterpret_cast<char*>(filename);
-		StreamChunker::sendFileChunks(name, m_events, this);
+		StreamChunker::sendFile(name, m_events, this);
 	}
 	catch (std::runtime_error error) {
 		LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));

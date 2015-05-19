@@ -17,20 +17,17 @@
 
 #pragma once
 
-#include "server/ClientProxy1_5.h"
+#include "synergy/Chunk.h"
+#include "base/String.h"
+#include "common/basic_types.h"
 
-class Server;
-class IEventQueue;
+#define FILE_CHUNK_META_SIZE 2
 
-//! Proxy for client implementing protocol version 1.6
-class ClientProxy1_6 : public ClientProxy1_5 {
+class FileChunk : public Chunk {
 public:
-	ClientProxy1_6(const String& name, synergy::IStream* adoptedStream, Server* server, IEventQueue* events);
-	~ClientProxy1_6();
+	FileChunk(size_t size);
 
-	virtual bool		parseMessage(const UInt8* code);
-	virtual void		setClipboard(ClipboardID id, const IClipboard* clipboard);
-
-private:
-	IEventQueue*		m_events;
+	static FileChunk* start(const String& size);
+	static FileChunk* data(UInt8* data, size_t dataSize);
+	static FileChunk* end();
 };

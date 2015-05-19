@@ -19,7 +19,6 @@
 
 #include "server/Server.h"
 #include "synergy/StreamChunker.h"
-#include "synergy/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "base/Log.h"
 
@@ -37,6 +36,20 @@ ClientProxy1_6::~ClientProxy1_6()
 {
 }
 
+bool
+ClientProxy1_6::parseMessage(const UInt8* code)
+{
+	//TODO:: parse data tansfer
+	if (memcmp(code, kMsgDFileTransfer, 4) == 0) {
+		fileChunkReceived();
+	}
+	else {
+		return ClientProxy1_5::parseMessage(code);
+	}
+
+	return true;
+}
+
 void
 ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
@@ -51,6 +64,6 @@ ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
 		size_t size = data.size();
 		LOG((CLOG_DEBUG "sending clipboard %d to \"%s\" size=%d", id, getName().c_str(), size));
 
-		StreamChunker::sendData(data, size, id, m_events, this);
+		StreamChunker::sendClipboard(data, size, id, 0, m_events, this);
 	}
 }
