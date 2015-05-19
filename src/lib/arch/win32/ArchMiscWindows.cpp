@@ -60,6 +60,9 @@ ArchMiscWindows::cleanup()
 void
 ArchMiscWindows::init()
 {
+	// stop windows system error dialogs from showing.
+	SetErrorMode(SEM_FAILCRITICALERRORS);
+
 	s_dialogs = new Dialogs;
 }
 

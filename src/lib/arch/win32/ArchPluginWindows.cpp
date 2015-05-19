@@ -60,8 +60,9 @@ ArchPluginWindows::load()
 		HINSTANCE library = LoadLibrary(path.c_str());
 
 		if (library == NULL) {
-			LOG((CLOG_ERR "failed to load plugin: %s %d", (*it).c_str(), GetLastError()));
-			throw XArch(new XArchEvalWindows);
+			String error = XArchEvalWindows().eval();
+			LOG((CLOG_ERR "failed to load plugin '%s', error: %s", (*it).c_str(), error.c_str()));
+			continue;
 		}
 
 		void* lib = reinterpret_cast<void*>(library);
