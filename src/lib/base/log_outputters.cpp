@@ -22,6 +22,10 @@
 
 #include <fstream>
 
+enum EFileLogOutputter {
+	kFileSizeLimit = 1024 // kb
+};
+
 //
 // StopLogOutputter
 //
@@ -252,12 +256,26 @@ FileLogOutputter::setLogFilename(const char* logFile)
 bool
 FileLogOutputter::write(ELevel level, const char *message)
 {
+	bool moveFile = false;
+
 	std::ofstream m_handle;
 	m_handle.open(m_fileName.c_str(), std::fstream::app);
 	if (m_handle.is_open() && m_handle.fail() != true) {
 		m_handle << message << std::endl;
+
+		// when file size exceeds limits, move to 'old log' filename.
+		int p = m_handle.tellp();
+		if (p > (kFileSizeLimit * 1024)) {
+			moveFile = true;
+		}
 	}
 	m_handle.close();
+
+	if (moveFile) {
+		String oldLogFilename = synergy::string::sprintf("%s.1", m_fileName.c_str());
+		remove(oldLogFilename.c_str());
+		rename(m_fileName.c_str(), oldLogFilename.c_str());
+	}
 
 	return true;
 }

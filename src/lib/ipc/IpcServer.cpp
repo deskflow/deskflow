@@ -33,17 +33,20 @@
 //
 
 IpcServer::IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
-	m_socket(events, socketMultiplexer),
-	m_address(NetworkAddress(IPC_HOST, IPC_PORT)),
-	m_events(events)
+	m_mock(false),
+	m_events(events),
+	m_socketMultiplexer(socketMultiplexer),
+	m_socket(nullptr),
+	m_address(NetworkAddress(IPC_HOST, IPC_PORT))
 {
 	init();
 }
 
 IpcServer::IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer, int port) :
-	m_socket(events, socketMultiplexer),
-	m_address(NetworkAddress(IPC_HOST, port)),
-	m_events(events)
+	m_mock(false),
+	m_events(events),
+	m_socketMultiplexer(socketMultiplexer),
+	m_address(NetworkAddress(IPC_HOST, port))
 {
 	init();
 }
@@ -51,17 +54,27 @@ IpcServer::IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer, 
 void
 IpcServer::init()
 {
+	m_socket = new TCPListenSocket(m_events, m_socketMultiplexer);
+
 	m_clientsMutex = ARCH->newMutex();
 	m_address.resolve();
 
 	m_events->adoptHandler(
-		m_events->forIListenSocket().connecting(), &m_socket,
+		m_events->forIListenSocket().connecting(), m_socket,
 		new TMethodEventJob<IpcServer>(
 		this, &IpcServer::handleClientConnecting));
 }
 
 IpcServer::~IpcServer()
 {
+	if (m_mock) {
+		return;
+	}
+
+	if (m_socket != nullptr) {
+		delete m_socket;
+	}
+
 	ARCH->lockMutex(m_clientsMutex);
 	ClientList::iterator it;
 	for (it = m_clients.begin(); it != m_clients.end(); it++) {
@@ -71,19 +84,19 @@ IpcServer::~IpcServer()
 	ARCH->unlockMutex(m_clientsMutex);
 	ARCH->closeMutex(m_clientsMutex);
 	
-	m_events->removeHandler(m_events->forIListenSocket().connecting(), &m_socket);
+	m_events->removeHandler(m_events->forIListenSocket().connecting(), m_socket);
 }
 
 void
 IpcServer::listen()
 {
-	m_socket.bind(m_address);
+	m_socket->bind(m_address);
 }
 
 void
 IpcServer::handleClientConnecting(const Event&, void*)
 {
-	synergy::IStream* stream = m_socket.accept();
+	synergy::IStream* stream = m_socket->accept();
 	if (stream == NULL) {
 		return;
 	}

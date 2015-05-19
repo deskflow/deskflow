@@ -30,17 +30,28 @@
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 
-// limit number of log lines sent in one message.
-#define MAX_SEND 100
+enum EIpcLogOutputter {
+	kBufferMaxSize = 1000,
+	kMaxSendLines = 100,
+	kBufferRateWriteLimit = 1000, // writes per kBufferRateTime
+	kBufferRateTimeLimit = 1 // seconds
+};
 
 IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer) :
-m_ipcServer(ipcServer),
-m_bufferMutex(ARCH->newMutex()),
-m_sending(false),
-m_running(true),
-m_notifyCond(ARCH->newCondVar()),
-m_notifyMutex(ARCH->newMutex()),
-m_bufferWaiting(false)
+	m_ipcServer(ipcServer),
+	m_bufferMutex(ARCH->newMutex()),
+	m_sending(false),
+	m_running(true),
+	m_notifyCond(ARCH->newCondVar()),
+	m_notifyMutex(ARCH->newMutex()),
+	m_bufferWaiting(false),
+	m_bufferMaxSize(kBufferMaxSize),
+	m_bufferEmptyCond(ARCH->newCondVar()),
+	m_bufferEmptyMutex(ARCH->newMutex()),
+	m_bufferRateWriteLimit(kBufferRateWriteLimit),
+	m_bufferRateTimeLimit(kBufferRateTimeLimit),
+	m_bufferWriteCount(0),
+	m_bufferRateStart(ARCH->time())
 {
 	m_bufferThread = new Thread(new TMethodJob<IpcLogOutputter>(
 		this, &IpcLogOutputter::bufferThread));
@@ -48,15 +59,20 @@ m_bufferWaiting(false)
 
 IpcLogOutputter::~IpcLogOutputter()
 {
-	m_running = false;
-	notifyBuffer();
-	m_bufferThread->wait(5);
+	close();
 
 	ARCH->closeMutex(m_bufferMutex);
 	delete m_bufferThread;
 
 	ARCH->closeCondVar(m_notifyCond);
 	ARCH->closeMutex(m_notifyMutex);
+
+	ARCH->closeCondVar(m_bufferEmptyCond);
+	
+#ifndef WINAPI_CARBON
+	// HACK: assert fails on mac debug, can't see why.
+	ARCH->closeMutex(m_bufferEmptyMutex);
+#endif // WINAPI_CARBON
 }
 
 void
@@ -67,6 +83,9 @@ IpcLogOutputter::open(const char* title)
 void
 IpcLogOutputter::close()
 {
+	m_running = false;
+	notifyBuffer();
+	m_bufferThread->wait(5);
 }
 
 void
@@ -107,7 +126,27 @@ void
 IpcLogOutputter::appendBuffer(const String& text)
 {
 	ArchMutexLock lock(m_bufferMutex);
-	m_buffer.push(text);
+
+	double elapsed = ARCH->time() - m_bufferRateStart;
+	if (elapsed < m_bufferRateTimeLimit) {
+		if (m_bufferWriteCount >= m_bufferRateWriteLimit) {
+			// discard the log line if we've logged too much.
+			return;
+		}
+	}
+	else {
+		m_bufferWriteCount = 0;
+		m_bufferRateStart = ARCH->time();
+	}
+
+	if (m_buffer.size() >= m_bufferMaxSize) {
+		// if the queue is exceeds size limit,
+		// throw away the oldest item
+		m_buffer.pop_front();
+	}
+
+	m_buffer.push_back(text);
+	m_bufferWriteCount++;
 }
 
 void
@@ -131,6 +170,11 @@ IpcLogOutputter::bufferThread(void*)
 			// program may be stopping while we were in the send loop.
 			if (!m_running) {
 				break;
+			}
+
+			if (m_buffer.empty()) {
+				ArchMutexLock lock(m_bufferEmptyMutex);
+				ARCH->broadcastCondVar(m_bufferEmptyCond);
 			}
 
 			m_bufferWaiting = true;
@@ -168,7 +212,7 @@ IpcLogOutputter::getChunk(size_t count)
 	for (size_t i = 0; i < count; i++) {
 		chunk.append(m_buffer.front());
 		chunk.append("\n");
-		m_buffer.pop();
+		m_buffer.pop_front();
 	}
 	return chunk;
 }
@@ -176,9 +220,34 @@ IpcLogOutputter::getChunk(size_t count)
 void
 IpcLogOutputter::sendBuffer()
 {
-	IpcLogLineMessage message(getChunk(MAX_SEND));
+	IpcLogLineMessage message(getChunk(kMaxSendLines));
 
 	m_sending = true;
 	m_ipcServer.send(message, kIpcClientGui);
 	m_sending = false;
+}
+
+void
+IpcLogOutputter::bufferMaxSize(UInt16 bufferMaxSize)
+{
+	m_bufferMaxSize = bufferMaxSize;
+}
+
+UInt16
+IpcLogOutputter::bufferMaxSize() const
+{
+	return m_bufferMaxSize;
+}
+
+void
+IpcLogOutputter::waitForEmpty()
+{
+	ARCH->waitCondVar(m_bufferEmptyCond, m_bufferEmptyMutex, -1);
+}
+
+void
+IpcLogOutputter::bufferRateLimit(UInt16 writeLimit, double timeLimit)
+{
+	m_bufferRateWriteLimit = writeLimit;
+	m_bufferRateTimeLimit = timeLimit;
 }

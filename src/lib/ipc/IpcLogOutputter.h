@@ -22,7 +22,7 @@
 #include "arch/IArchMultithread.h"
 #include "base/ILogOutputter.h"
 
-#include <queue>
+#include <deque>
 
 class IpcServer;
 class Event;
@@ -42,6 +42,9 @@ public:
 	virtual void		close();
 	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
+	
+	//! @name manipulators
+	//@{
 
 	//! Same as write, but allows message to sidestep anti-recursion mechanism.
 	bool				write(ELevel level, const char* text, bool force);
@@ -49,24 +52,64 @@ public:
 	//! Notify that the buffer should be sent.
 	void				notifyBuffer();
 
+	//! Set the buffer size.
+	/*!
+	Set the maximum size of the buffer to protect memory
+	from runaway logging.
+	*/
+	void				bufferMaxSize(UInt16 bufferMaxSize);
+	
+	//! Wait for empty buffer
+	/*!
+	Wait on a cond var until the buffer is empty.
+	*/
+	void				waitForEmpty();
+
+	//! Set the buffer size.
+	/*!
+	Set the maximum number of \p writeRate for every \p timeRate in seconds.
+	*/
+	void				bufferRateLimit(UInt16 writeLimit, double timeLimit);
+	
+	//@}
+	
+	//! @name accessors
+	//@{
+	
+	//! Get the buffer size
+	/*!
+	Returns the maximum size of the buffer.
+	*/
+	UInt16				bufferMaxSize() const;
+	
+	//@}
+
 private:
+	void				init();
 	void				bufferThread(void*);
 	String				getChunk(size_t count);
 	void				sendBuffer();
 	void				appendBuffer(const String& text);
 
 private:
-	typedef std::queue<String> Buffer;
+	typedef std::deque<String> Buffer;
 
 	IpcServer&			m_ipcServer;
 	Buffer				m_buffer;
 	ArchMutex			m_bufferMutex;
 	bool				m_sending;
-	Thread*			m_bufferThread;
+	Thread*				m_bufferThread;
 	bool				m_running;
 	ArchCond			m_notifyCond;
 	ArchMutex			m_notifyMutex;
 	bool				m_bufferWaiting;
 	IArchMultithread::ThreadID
 						m_bufferThreadId;
+	UInt16				m_bufferMaxSize;
+	ArchCond			m_bufferEmptyCond;
+	ArchMutex			m_bufferEmptyMutex;
+	UInt16				m_bufferRateWriteLimit;
+	double				m_bufferRateTimeLimit;
+	UInt16				m_bufferWriteCount;
+	double				m_bufferRateStart;
 };
