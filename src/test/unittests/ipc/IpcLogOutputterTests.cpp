@@ -77,7 +77,7 @@ TEST(IpcLogOutputterTests, write_bufferRateLimit)
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 3\n"), _)).Times(1);
 
 	IpcLogOutputter outputter(mockServer);
-	outputter.bufferRateLimit(1, 0.01); // 5ms
+	outputter.bufferRateLimit(1, 0.001); // 1ms
 
 	// log 1 more line than the buffer can accept in time limit.
 	outputter.write(kNOTE, "mock 1");
@@ -86,8 +86,9 @@ TEST(IpcLogOutputterTests, write_bufferRateLimit)
 	
 	// after waiting the time limit send another to make sure
 	// we can log after the time limit passes.
-	ARCH->sleep(0.001); // 10ms
+	ARCH->sleep(0.01); // 10ms
 	outputter.write(kNOTE, "mock 3");
+	outputter.write(kNOTE, "mock 4");
 	outputter.waitForEmpty();
 }
 
