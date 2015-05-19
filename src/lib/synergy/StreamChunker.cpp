@@ -17,6 +17,8 @@
 
 #include "synergy/StreamChunker.h"
 
+#include "synergy/FileChunk.h"
+#include "synergy/ClipboardChunk.h"
 #include "synergy/protocol_types.h"
 #include "base/EventTypes.h"
 #include "base/Event.h"
@@ -24,10 +26,10 @@
 #include "base/EventTypes.h"
 #include "base/Log.h"
 #include "base/Stopwatch.h"
+#include "base/String.h"
 #include "common/stdexcept.h"
 
 #include <fstream>
-#include <sstream>
 
 #define PAUSE_TIME_HACK 0.1
 
@@ -36,7 +38,10 @@ using namespace std;
 const size_t StreamChunker::m_chunkSize = 512 * 1024; // 512kb
 
 void
-StreamChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTarget)
+StreamChunker::sendFile(
+				char* filename,
+				IEventQueue* events,
+				void* eventTarget)
 {
 	std::fstream file(reinterpret_cast<char*>(filename), std::ios::in | std::ios::binary);
 
@@ -49,14 +54,9 @@ StreamChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTa
 	size_t size = (size_t)file.tellg();
 
 	// send first message (file size)
-	String fileSize = intToString(size);
-	size_t sizeLength = fileSize.size();
-	Chunk* sizeMessage = new Chunk(sizeLength + 2);
-	char* chunkData = sizeMessage->m_chunk;
+	String fileSize = synergy::string::intToString(size);
+	FileChunk* sizeMessage = FileChunk::start(fileSize);
 
-	chunkData[0] = kDataStart;
-	memcpy(&chunkData[1], fileSize.c_str(), sizeLength);
-	chunkData[sizeLength + 1] = '\0';
 	events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, sizeMessage));
 
 	// send chunk messages with a fixed chunk size
@@ -72,13 +72,12 @@ StreamChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTa
 				chunkSize = size - sentLength;
 			}
 
-			// for fileChunk->m_chunk, the first byte is the chunk mark, last is \0
-			Chunk* fileChunk = new Chunk(chunkSize + 2);
-			char* chunkData = fileChunk->m_chunk;
+			char* chunkData = new char[chunkSize];
+			file.read(chunkData, chunkSize);
+			UInt8* data = reinterpret_cast<UInt8*>(chunkData);
+			FileChunk* fileChunk = FileChunk::data(data, chunkSize);
+			delete[] chunkData;
 
-			chunkData[0] = kDataChunk;
-			file.read(&chunkData[1], chunkSize);
-			chunkData[chunkSize + 1] = '\0';
 			events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, fileChunk));
 
 			sentLength += chunkSize;
@@ -93,21 +92,58 @@ StreamChunker::sendFileChunks(char* filename, IEventQueue* events, void* eventTa
 	}
 
 	// send last message
-	Chunk* transferFinished = new Chunk(2);
-	chunkData = transferFinished->m_chunk;
+	FileChunk* end = FileChunk::end();
 
-	chunkData[0] = kDataEnd;
-	chunkData[1] = '\0';
-	events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, transferFinished));
+	events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, end));
 
 	file.close();
 }
 
-String
-StreamChunker::intToString(size_t i)
+void
+StreamChunker::sendClipboard(
+				String& data,
+				size_t size,
+				ClipboardID id,
+				UInt32 sequence,
+				IEventQueue* events,
+				void* eventTarget)
 {
-	//TODO: this should be in string
-	stringstream ss;
-	ss << i;
-	return ss.str();
+	// send first message (data size)
+	String dataSize = synergy::string::intToString(size);
+	ClipboardChunk* sizeMessage = ClipboardChunk::start(id, sequence, dataSize);
+	
+	events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, sizeMessage));
+
+	// send clipboard chunk with a fixed size
+	// TODO: 4096 fails and this shouldn't a magic number
+	size_t sentLength = 0;
+	size_t chunkSize = 2048;
+	Stopwatch stopwatch;
+	stopwatch.start();
+	while (true) {
+		if (stopwatch.getTime() > 0.1f) {
+			// make sure we don't read too much from the mock data.
+			if (sentLength + chunkSize > size) {
+				chunkSize = size - sentLength;
+			}
+
+			String chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
+			ClipboardChunk* dataChunk = ClipboardChunk::data(id, sequence, chunk);
+			
+			events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, dataChunk));
+
+			sentLength += chunkSize;
+
+			if (sentLength == size) {
+				break;
+			}
+
+			stopwatch.reset();
+		}
+	}
+
+	// send last message
+	ClipboardChunk* end = ClipboardChunk::end(id, sequence);
+
+	events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, end));
 }
