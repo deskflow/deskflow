@@ -54,7 +54,7 @@ StreamChunker::sendFile(
 	size_t size = (size_t)file.tellg();
 
 	// send first message (file size)
-	String fileSize = synergy::string::intToString(size);
+	String fileSize = synergy::string::sizeTypeToString(size);
 	FileChunk* sizeMessage = FileChunk::start(fileSize);
 
 	events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, sizeMessage));
@@ -109,7 +109,7 @@ StreamChunker::sendClipboard(
 				void* eventTarget)
 {
 	// send first message (data size)
-	String dataSize = synergy::string::intToString(size);
+	String dataSize = synergy::string::sizeTypeToString(size);
 	ClipboardChunk* sizeMessage = ClipboardChunk::start(id, sequence, dataSize);
 	
 	events->addEvent(Event(events->forClientProxy().clipboardSending(), eventTarget, sizeMessage));

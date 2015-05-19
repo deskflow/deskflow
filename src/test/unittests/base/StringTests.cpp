@@ -82,3 +82,21 @@ TEST(StringTests, removeChar)
 
 	EXPECT_EQ("fbar", subject);
 }
+
+TEST(StringTests, intToString)
+{
+	size_t value = 123;
+
+	String number = string::sizeTypeToString(value);
+
+	EXPECT_EQ("123", number);
+}
+
+TEST(StringTests, stringToUint)
+{
+	String number = "123";
+
+	size_t value = string::stringToSizeType(number);
+
+	EXPECT_EQ(123, value);
+}

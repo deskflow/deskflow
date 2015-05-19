@@ -208,11 +208,20 @@ removeChar(String& subject, const char c)
 }
 
 String
-intToString(size_t integer)
+sizeTypeToString(size_t n)
 {
 	std::stringstream ss;
-	ss << integer;
+	ss << n;
 	return ss.str();
+}
+
+size_t
+stringToSizeType(String string)
+{
+	std::istringstream iss(string);
+	size_t value;
+	iss >> value;
+	return value;
 }
 
 //

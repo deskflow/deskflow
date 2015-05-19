@@ -415,7 +415,7 @@ void
 NetworkTests::sendMockData(void* eventTarget)
 {
 	// send first message (file size)
-	String size = synergy::string::intToString(kMockDataSize);
+	String size = synergy::string::sizeTypeToString(kMockDataSize);
 	FileChunk* sizeMessage = FileChunk::start(size);
 	
 	m_events.addEvent(Event(m_events.forIScreen().fileChunkSending(), eventTarget, sizeMessage));
