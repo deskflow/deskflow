@@ -379,7 +379,16 @@ SecureSocket::checkResult(int n, bool& fatal, int& retry)
 	case SSL_ERROR_WANT_CONNECT:
 	case SSL_ERROR_WANT_ACCEPT:
 		retry += 1;
-		LOG((CLOG_DEBUG2 "need to retry the same SSL function retry:%d", retry));
+		// If there are a lot of retrys, it's worth warning about
+		if ( retry % 5 == 0 ) {
+			LOG((CLOG_INFO "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
+		}
+		else if ( retry == (maxRetry() / 2) ) {
+			LOG((CLOG_WARN "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
+		}
+		else {
+			LOG((CLOG_DEBUG2 "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
+		}
 		break;
 
 	case SSL_ERROR_SYSCALL:
