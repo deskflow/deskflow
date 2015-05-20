@@ -27,6 +27,7 @@
     <Feature Id="ProductFeature" Title="$(var.Name)">
       <ComponentGroupRef Id="ProductComponents" />
       <ComponentGroupRef Id="OpenSslComponents" />
+      <ComponentGroupRef Id="QtPlatformComponents" />
       <MergeRef Id="CRT" />
     </Feature>
 
@@ -69,6 +70,7 @@
         <Directory Id="INSTALLFOLDER" Name="$(var.Name)">
           <Merge Id="CRT" Language="0" SourceFile="$(var.CRT)" DiskId="1" />
           <Directory Id="OpenSslDir" Name="OpenSSL" />
+          <Directory Id="QtPlatformDir" Name="platforms" />
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder" />
@@ -130,6 +132,12 @@
 
       </Component>
       
+    </ComponentGroup>
+
+    <ComponentGroup Id="QtPlatformComponents" Directory="QtPlatformDir">
+      <Component Id="QtPlatform" Guid="3B053D76-6C0D-4BDF-B2AD-386970741BE4">
+        <File Source="$(var.QtPath)\..\plugins\platforms\qwindows.dll" CompanionFile="GuiProgram" />
+      </Component>
     </ComponentGroup>
 
     <ComponentGroup Id="OpenSslComponents" Directory="OpenSslDir">
