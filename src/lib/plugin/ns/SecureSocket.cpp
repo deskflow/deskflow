@@ -272,7 +272,12 @@ SecureSocket::secureAccept(int socket)
 		ARCH->sleep(1);
 	}
 
-	m_secureReady = (0 == retry) ? true : false;
+	if (retry == 0) {
+		m_secureReady = true;
+	}
+	else {
+		m_secureReady = false;
+	}
 
 	if (m_secureReady) {
 		LOG((CLOG_INFO "accepted secure socket"));
@@ -303,7 +308,12 @@ SecureSocket::secureConnect(int socket)
 		return false;
 	}
 
-	m_secureReady = (0 == retry) ? true : false;
+	if (retry == 0) {
+		m_secureReady = true;
+	}
+	else {
+		m_secureReady = false;
+	}
 
 	if (m_secureReady) {
 		if (verifyCertFingerprint()) {
