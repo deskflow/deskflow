@@ -44,7 +44,7 @@ public:
 	}
 
 	void waitForSend() {
-		ARCH->waitCondVar(m_sendCond, m_sendMutex, -1);
+		ARCH->waitCondVar(m_sendCond, m_sendMutex, 5);
 	}
 
 private:
