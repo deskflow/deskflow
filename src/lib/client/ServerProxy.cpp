@@ -19,6 +19,8 @@
 #include "client/ServerProxy.h"
 
 #include "client/Client.h"
+#include "synergy/ClipboardChunk.h"
+#include "synergy/StreamChunker.h"
 #include "synergy/Clipboard.h"
 #include "synergy/ProtocolUtil.h"
 #include "synergy/option_types.h"
@@ -68,6 +70,11 @@ ServerProxy::ServerProxy(Client* client, synergy::IStream* stream, IEventQueue* 
 							m_stream->getEventTarget(),
 							new TMethodEventJob<ServerProxy>(this,
 								&ServerProxy::handleData));
+
+	m_events->adoptHandler(m_events->forClipboard().clipboardSending(),
+							this,
+							new TMethodEventJob<ServerProxy>(this,
+								&ServerProxy::handleClipboardSendingEvent));
 
 	// send heartbeat
 	setKeepAliveRate(kKeepAliveRate);
@@ -358,8 +365,11 @@ void
 ServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
 {
 	String data = IClipboard::marshall(clipboard);
-	LOG((CLOG_DEBUG1 "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
-	ProtocolUtil::writef(m_stream, kMsgDClipboard, id, m_seqNum, &data);
+	LOG((CLOG_DEBUG "sending clipboard %d seqnum=%d", id, m_seqNum));
+
+	StreamChunker::sendClipboard(data, data.size(), id, m_seqNum, m_events, this);
+
+	LOG((CLOG_DEBUG "sent clipboard size=%d", data.size()));
 }
 
 void
@@ -926,6 +936,38 @@ ServerProxy::dragInfoReceived()
 	ProtocolUtil::readf(m_stream, kMsgDDragInfo + 4, &fileNum, &content);
 
 	m_client->dragInfoReceived(fileNum, content);
+}
+
+void
+ServerProxy::handleClipboardSendingEvent(const Event& event, void*)
+{
+	void* data = event.getData();
+	ClipboardChunk* clipboardData = reinterpret_cast<ClipboardChunk*>(data);
+
+	LOG((CLOG_DEBUG1 "sending clipboard chunk"));
+
+	char* chunk = clipboardData->m_chunk;
+	ClipboardID id = chunk[0];
+	UInt32* seq = reinterpret_cast<UInt32*>(&chunk[1]);
+	UInt32 sequence = *seq;
+	UInt8 mark = chunk[5];
+	String dataChunk(&chunk[6], clipboardData->m_dataSize);
+
+	switch (mark) {
+	case kDataStart:
+		LOG((CLOG_DEBUG2 "file sending start: size=%s", dataChunk.c_str()));
+		break;
+
+	case kDataChunk:
+		LOG((CLOG_DEBUG2 "file chunk sending: size=%i", dataChunk.size()));
+		break;
+
+	case kDataEnd:
+		LOG((CLOG_DEBUG2 "file sending finished"));
+		break;
+	}
+
+	ProtocolUtil::writef(m_stream, kMsgDClipboard, id, sequence, mark, &dataChunk);
 }
 
 void

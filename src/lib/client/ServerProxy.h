@@ -106,6 +106,7 @@ private:
 	void				infoAcknowledgment();
 	void				fileChunkReceived();
 	void				dragInfoReceived();
+	void				handleClipboardSendingEvent(const Event&, void*);
 
 private:
 	typedef EResult (ServerProxy::*MessageParser)(const UInt8*);
