@@ -76,8 +76,8 @@ ArchPluginUnix::load()
 		void* library = dlopen(path.c_str(), RTLD_LAZY);
 
 		if (library == NULL) {
-			LOG((CLOG_ERR "failed to load plugin: %s", (*it).c_str()));
-			throw XArch(dlerror());
+			LOG((CLOG_ERR "failed to load plugin '%s', error: %s", (*it).c_str(), dlerror()));
+			continue;
 		}
 
 		String filename = synergy::string::removeFileExt(*it);
