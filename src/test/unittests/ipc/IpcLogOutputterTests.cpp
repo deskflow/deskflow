@@ -86,6 +86,7 @@ TEST(IpcLogOutputterTests, write_bufferRateLimit)
 	
 	// after waiting the time limit send another to make sure
 	// we can log after the time limit passes.
+	ARCH->sleep(0.002); // 2ms
 	outputter.write(kNOTE, "mock 3");
 	outputter.write(kNOTE, "mock 4");
 	mockServer.waitForSend();
