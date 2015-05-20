@@ -92,7 +92,8 @@ Server::Server(
 	m_ignoreFileTransfer(false),
 	m_enableDragDrop(enableDragDrop),
 	m_getDragInfoThread(NULL),
-	m_waitDragInfoThread(true)
+	m_waitDragInfoThread(true),
+	m_sendClipboardThread(NULL)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
@@ -504,6 +505,13 @@ Server::switchScreen(BaseClientProxy* dst,
 		m_active->enter(x, y, m_seqNum,
 								m_primaryClient->getToggleMask(),
 								forScreensaver);
+
+		// send the clipboard data to new active screen
+		m_sendClipboardThread = new Thread(
+										new TMethodJob<Server>(
+												this,
+												&Server::sendClipboardThread,
+												NULL));
 
 		Server::SwitchToScreenInfo* info =
 			Server::SwitchToScreenInfo::alloc(m_active->getName());

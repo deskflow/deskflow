@@ -194,6 +194,7 @@ private:
 	void				handleFileRecieveCompleted(const Event&, void*);
 	void				handleStopRetry(const Event&, void*);
 	void				onFileRecieveCompleted();
+	void				sendClipboardThread(void*);
 
 public:
 	bool				m_mock;
@@ -224,4 +225,5 @@ private:
 	TCPSocket*			m_socket;
 	bool				m_useSecureNetwork;
 	ClientArgs&			m_args;
+	Thread*				m_sendClipboardThread;
 };

@@ -79,7 +79,8 @@ Client::Client(
 	m_writeToDropDirThread(NULL),
 	m_socket(NULL),
 	m_useSecureNetwork(false),
-	m_args(args)
+	m_args(args),
+	m_sendClipboardThread(NULL)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -265,12 +266,11 @@ Client::leave()
 
 	m_active = false;
 
-	// send clipboards that we own and that have changed
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		if (m_ownClipboard[id]) {
-			sendClipboard(id);
-		}
-	}
+	m_sendClipboardThread = new Thread(
+								new TMethodJob<Client>(
+									this,
+									&Client::sendClipboardThread,
+									NULL));
 
 	return true;
 }
@@ -747,6 +747,17 @@ Client::onFileRecieveCompleted()
 		m_writeToDropDirThread = new Thread(
 			new TMethodJob<Client>(
 				this, &Client::writeToDropDirThread));
+	}
+}
+
+void
+Client::sendClipboardThread(void*)
+{
+	// send clipboards that we own and that have changed
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		if (m_ownClipboard[id]) {
+			sendClipboard(id);
+		}
 	}
 }
 

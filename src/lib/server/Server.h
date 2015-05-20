@@ -484,5 +484,5 @@ private:
 
 	ClientListener*		m_clientListener;
 
-	Thread*				m_dataTransmissionThread;
+	Thread*				m_sendClipboardThread;
 };
