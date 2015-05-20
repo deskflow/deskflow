@@ -35,6 +35,7 @@
 //
 
 #define MAX_ERROR_SIZE 65535
+#define MAX_RETRY_COUNT 60
 
 static const char kFingerprintDirName[] = "SSL/Fingerprints";
 //static const char kFingerprintLocalFilename[] = "Local.txt";
@@ -50,7 +51,8 @@ SecureSocket::SecureSocket(
 		IEventQueue* events,
 		SocketMultiplexer* socketMultiplexer) :
 	TCPSocket(events, socketMultiplexer),
-	m_secureReady(false)
+	m_secureReady(false),
+	m_maxRetry(MAX_RETRY_COUNT)
 {
 }
 
@@ -59,7 +61,8 @@ SecureSocket::SecureSocket(
 		SocketMultiplexer* socketMultiplexer,
 		ArchSocket socket) :
 	TCPSocket(events, socketMultiplexer, socket),
-	m_secureReady(false)
+	m_secureReady(false),
+	m_maxRetry(MAX_RETRY_COUNT)
 {
 }
 

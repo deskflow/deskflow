@@ -50,6 +50,8 @@ public:
 	UInt32				secureWrite(const void* buffer, UInt32 n);
 	void				initSsl(bool server);
 	bool				loadCertificates(String& CertFile);
+	void				maxRetry(int limit) { m_maxRetry = limit; };
+	int					maxRetry() const { return m_maxRetry; };
 
 private:
 	// SSL
@@ -78,4 +80,5 @@ private:
 private:
 	Ssl*				m_ssl;
 	bool				m_secureReady;
+	int					m_maxRetry;
 };
