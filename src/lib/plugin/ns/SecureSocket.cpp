@@ -111,7 +111,9 @@ SecureSocket::secureRead(void* buffer, UInt32 n)
 		LOG((CLOG_DEBUG2 "reading secure socket"));
 		r = SSL_read(m_ssl->m_ssl, buffer, n);
 		
-		bool fatal, retry;
+		bool fatal;
+		static int retry;
+
 		checkResult(r, fatal, retry);
 		
 		if (retry) {
@@ -130,7 +132,9 @@ SecureSocket::secureWrite(const void* buffer, UInt32 n)
 		LOG((CLOG_DEBUG2 "writing secure socket"));
 		r = SSL_write(m_ssl->m_ssl, buffer, n);
 		
-		bool fatal, retry;
+		bool fatal;
+		static int retry;
+
 		checkResult(r, fatal, retry);
 
 		if (retry) {
@@ -253,7 +257,9 @@ SecureSocket::secureAccept(int socket)
 	LOG((CLOG_DEBUG2 "accepting secure socket"));
 	int r = SSL_accept(m_ssl->m_ssl);
 	
-	bool fatal, retry;
+	bool fatal;
+	static int retry;
+
 	checkResult(r, fatal, retry);
 
 	if (fatal) {
@@ -263,12 +269,13 @@ SecureSocket::secureAccept(int socket)
 		ARCH->sleep(1);
 	}
 
-	m_secureReady = !retry;
+	m_secureReady = (0 == retry) ? true : false;
+
 	if (m_secureReady) {
 		LOG((CLOG_INFO "accepted secure socket"));
 	}
 
-	return retry;
+	return !m_secureReady;
 }
 
 bool
@@ -282,7 +289,9 @@ SecureSocket::secureConnect(int socket)
 	LOG((CLOG_DEBUG2 "connecting secure socket"));
 	int r = SSL_connect(m_ssl->m_ssl);
 	
-	bool fatal, retry;
+	bool fatal;
+	static int retry;
+
 	checkResult(r, fatal, retry);
 
 	if (fatal) {
@@ -291,7 +300,7 @@ SecureSocket::secureConnect(int socket)
 		return false;
 	}
 
-	m_secureReady = !retry;
+	m_secureReady = (0 == retry) ? true : false;
 
 	if (m_secureReady) {
 		if (verifyCertFingerprint()) {
@@ -306,7 +315,7 @@ SecureSocket::secureConnect(int socket)
 		}
 	}
 
-	return retry;
+	return !m_secureReady;
 }
 
 bool
@@ -332,22 +341,23 @@ SecureSocket::showCertificate()
 }
 
 void
-SecureSocket::checkResult(int n, bool& fatal, bool& retry)
+SecureSocket::checkResult(int n, bool& fatal, int& retry)
 {
 	// ssl errors are a little quirky. the "want" errors are normal and
 	// should result in a retry.
 
 	fatal = false;
-	retry = false;
 
 	int errorCode = SSL_get_error(m_ssl->m_ssl, n);
 	switch (errorCode) {
 	case SSL_ERROR_NONE:
+		retry = 0;
 		// operation completed
 		break;
 
 	case SSL_ERROR_ZERO_RETURN:
 		// connection closed
+		retry = 0;
 		LOG((CLOG_DEBUG2 "SSL connection has been closed"));
 		break;
 
@@ -356,7 +366,7 @@ SecureSocket::checkResult(int n, bool& fatal, bool& retry)
 	case SSL_ERROR_WANT_CONNECT:
 	case SSL_ERROR_WANT_ACCEPT:
 		LOG((CLOG_DEBUG2 "need to retry the same SSL function"));
-		retry = true;
+		retry += 1;
 		break;
 
 	case SSL_ERROR_SYSCALL:
@@ -391,6 +401,7 @@ SecureSocket::checkResult(int n, bool& fatal, bool& retry)
 	}
 
 	if (fatal) {
+		retry = 0;
 		showError();
 		disconnect();
 	}
