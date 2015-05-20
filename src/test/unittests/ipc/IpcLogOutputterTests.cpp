@@ -48,6 +48,7 @@ inline const Matcher<const IpcMessage&> IpcLogLineMessageEq(const String& s) {
 TEST(IpcLogOutputterTests, write_bufferSizeWrapping)
 {
 	MockIpcServer mockServer;
+	mockServer.delegateToFake();
 	
 	ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
@@ -61,14 +62,13 @@ TEST(IpcLogOutputterTests, write_bufferSizeWrapping)
 	outputter.write(kNOTE, "mock 1");
 	outputter.write(kNOTE, "mock 2");
 	outputter.write(kNOTE, "mock 3");
-
-	// wait for the buffer to be empty (all lines sent to IPC)
-	outputter.waitForEmpty();
+	mockServer.waitForSend();
 }
 
 TEST(IpcLogOutputterTests, write_bufferRateLimit)
 {
 	MockIpcServer mockServer;
+	mockServer.delegateToFake();
 	
 	ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
@@ -82,14 +82,13 @@ TEST(IpcLogOutputterTests, write_bufferRateLimit)
 	// log 1 more line than the buffer can accept in time limit.
 	outputter.write(kNOTE, "mock 1");
 	outputter.write(kNOTE, "mock 2");
-	outputter.waitForEmpty();
+	mockServer.waitForSend();
 	
 	// after waiting the time limit send another to make sure
 	// we can log after the time limit passes.
-	ARCH->sleep(0.01); // 10ms
 	outputter.write(kNOTE, "mock 3");
 	outputter.write(kNOTE, "mock 4");
-	outputter.waitForEmpty();
+	mockServer.waitForSend();
 }
 
 #endif // WINAPI_MSWINDOWS

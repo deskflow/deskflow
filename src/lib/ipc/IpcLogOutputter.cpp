@@ -46,8 +46,6 @@ IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer) :
 	m_notifyMutex(ARCH->newMutex()),
 	m_bufferWaiting(false),
 	m_bufferMaxSize(kBufferMaxSize),
-	m_bufferEmptyCond(ARCH->newCondVar()),
-	m_bufferEmptyMutex(ARCH->newMutex()),
 	m_bufferRateWriteLimit(kBufferRateWriteLimit),
 	m_bufferRateTimeLimit(kBufferRateTimeLimit),
 	m_bufferWriteCount(0),
@@ -66,13 +64,6 @@ IpcLogOutputter::~IpcLogOutputter()
 
 	ARCH->closeCondVar(m_notifyCond);
 	ARCH->closeMutex(m_notifyMutex);
-
-	ARCH->closeCondVar(m_bufferEmptyCond);
-	
-#ifndef WINAPI_CARBON
-	// HACK: assert fails on mac debug, can't see why.
-	ARCH->closeMutex(m_bufferEmptyMutex);
-#endif // WINAPI_CARBON
 }
 
 void
@@ -172,11 +163,6 @@ IpcLogOutputter::bufferThread(void*)
 				break;
 			}
 
-			if (m_buffer.empty()) {
-				ArchMutexLock lock(m_bufferEmptyMutex);
-				ARCH->broadcastCondVar(m_bufferEmptyCond);
-			}
-
 			m_bufferWaiting = true;
 			ARCH->waitCondVar(m_notifyCond, m_notifyMutex, -1);
 			m_bufferWaiting = false;
@@ -237,12 +223,6 @@ UInt16
 IpcLogOutputter::bufferMaxSize() const
 {
 	return m_bufferMaxSize;
-}
-
-void
-IpcLogOutputter::waitForEmpty()
-{
-	ARCH->waitCondVar(m_bufferEmptyCond, m_bufferEmptyMutex, -1);
 }
 
 void

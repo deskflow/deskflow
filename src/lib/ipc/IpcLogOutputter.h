@@ -106,8 +106,6 @@ private:
 	IArchMultithread::ThreadID
 						m_bufferThreadId;
 	UInt16				m_bufferMaxSize;
-	ArchCond			m_bufferEmptyCond;
-	ArchMutex			m_bufferEmptyMutex;
 	UInt16				m_bufferRateWriteLimit;
 	double				m_bufferRateTimeLimit;
 	UInt16				m_bufferWriteCount;
