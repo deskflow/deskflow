@@ -488,7 +488,7 @@ Client::setupScreen()
 							getEventTarget(),
 							new TMethodEventJob<Client>(this,
 								&Client::handleShapeChanged));
-	m_events->adoptHandler(m_events->forIScreen().clipboardGrabbed(),
+	m_events->adoptHandler(m_events->forClipboard().clipboardGrabbed(),
 							getEventTarget(),
 							new TMethodEventJob<Client>(this,
 								&Client::handleClipboardGrabbed));
@@ -546,7 +546,7 @@ Client::cleanupScreen()
 		}
 		m_events->removeHandler(m_events->forIScreen().shapeChanged(),
 							getEventTarget());
-		m_events->removeHandler(m_events->forIScreen().clipboardGrabbed(),
+		m_events->removeHandler(m_events->forClipboard().clipboardGrabbed(),
 							getEventTarget());
 		delete m_server;
 		m_server = NULL;

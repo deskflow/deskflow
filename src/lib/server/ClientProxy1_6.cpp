@@ -33,7 +33,7 @@ ClientProxy1_6::ClientProxy1_6(const String& name, synergy::IStream* stream, Ser
 	ClientProxy1_5(name, stream, server, events),
 	m_events(events)
 {
-	m_events->adoptHandler(m_events->forClientProxy().clipboardSending(),
+	m_events->adoptHandler(m_events->forClipboard().clipboardSending(),
 								this,
 								new TMethodEventJob<ClientProxy1_6>(this,
 									&ClientProxy1_6::handleClipboardSendingEvent));

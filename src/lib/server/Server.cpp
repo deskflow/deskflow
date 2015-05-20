@@ -92,8 +92,7 @@ Server::Server(
 	m_ignoreFileTransfer(false),
 	m_enableDragDrop(enableDragDrop),
 	m_getDragInfoThread(NULL),
-	m_waitDragInfoThread(true),
-	m_dataTransmissionThread(NULL)
+	m_waitDragInfoThread(true)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
@@ -505,12 +504,6 @@ Server::switchScreen(BaseClientProxy* dst,
 		m_active->enter(x, y, m_seqNum,
 								m_primaryClient->getToggleMask(),
 								forScreensaver);
-
-		// send the clipboard data to new active screen
-		m_dataTransmissionThread = new Thread(
-			new TMethodJob<Server>(
-				this, &Server::sendClipboardThread,
-				NULL));
 
 		Server::SwitchToScreenInfo* info =
 			Server::SwitchToScreenInfo::alloc(m_active->getName());
@@ -2079,11 +2072,11 @@ Server::addClient(BaseClientProxy* client)
 							client->getEventTarget(),
 							new TMethodEventJob<Server>(this,
 								&Server::handleShapeChanged, client));
-	m_events->adoptHandler(m_events->forIScreen().clipboardGrabbed(),
+	m_events->adoptHandler(m_events->forClipboard().clipboardGrabbed(),
 							client->getEventTarget(),
 							new TMethodEventJob<Server>(this,
 								&Server::handleClipboardGrabbed, client));
-	m_events->adoptHandler(m_events->forClientProxy().clipboardChanged(),
+	m_events->adoptHandler(m_events->forClipboard().clipboardChanged(),
 							client->getEventTarget(),
 							new TMethodEventJob<Server>(this,
 								&Server::handleClipboardChanged, client));
@@ -2115,9 +2108,9 @@ Server::removeClient(BaseClientProxy* client)
 	// remove event handlers
 	m_events->removeHandler(m_events->forIScreen().shapeChanged(),
 							client->getEventTarget());
-	m_events->removeHandler(m_events->forIScreen().clipboardGrabbed(),
+	m_events->removeHandler(m_events->forClipboard().clipboardGrabbed(),
 							client->getEventTarget());
-	m_events->removeHandler(m_events->forClientProxy().clipboardChanged(),
+	m_events->removeHandler(m_events->forClipboard().clipboardChanged(),
 							client->getEventTarget());
 
 	// remove from list

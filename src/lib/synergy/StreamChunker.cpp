@@ -112,7 +112,7 @@ StreamChunker::sendClipboard(
 	String dataSize = synergy::string::sizeTypeToString(size);
 	ClipboardChunk* sizeMessage = ClipboardChunk::start(id, sequence, dataSize);
 	
-	events->addEvent(Event(events->forClientProxy().clipboardSending(), eventTarget, sizeMessage));
+	events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, sizeMessage));
 
 	// send clipboard chunk with a fixed size
 	// TODO: 4096 fails and this shouldn't a magic number
@@ -130,7 +130,7 @@ StreamChunker::sendClipboard(
 			String chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
 			ClipboardChunk* dataChunk = ClipboardChunk::data(id, sequence, chunk);
 			
-			events->addEvent(Event(events->forClientProxy().clipboardSending(), eventTarget, dataChunk));
+			events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, dataChunk));
 
 			sentLength += chunkSize;
 
@@ -145,5 +145,5 @@ StreamChunker::sendClipboard(
 	// send last message
 	ClipboardChunk* end = ClipboardChunk::end(id, sequence);
 
-	events->addEvent(Event(events->forClientProxy().clipboardSending(), eventTarget, end));
+	events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, end));
 }

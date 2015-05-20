@@ -954,8 +954,8 @@ OSXScreen::checkClipboards()
 	LOG((CLOG_DEBUG2 "checking clipboard"));
 	if (m_pasteboard.synchronize()) {
 		LOG((CLOG_DEBUG "clipboard changed"));
-		sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardClipboard);
-		sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardSelection);
+		sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardClipboard);
+		sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardSelection);
 	}
 }
 

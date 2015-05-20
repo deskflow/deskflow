@@ -474,7 +474,7 @@ ClientProxy1_0::recvClipboard()
 	ClipboardInfo* info   = new ClipboardInfo;
 	info->m_id             = id;
 	info->m_sequenceNumber = seqNum;
-	m_events->addEvent(Event(m_events->forClientProxy().clipboardChanged(),
+	m_events->addEvent(Event(m_events->forClipboard().clipboardChanged(),
 							getEventTarget(), info));
 
 	return true;
@@ -500,7 +500,7 @@ ClientProxy1_0::recvGrabClipboard()
 	ClipboardInfo* info   = new ClipboardInfo;
 	info->m_id             = id;
 	info->m_sequenceNumber = seqNum;
-	m_events->addEvent(Event(m_events->forIScreen().clipboardGrabbed(),
+	m_events->addEvent(Event(m_events->forClipboard().clipboardGrabbed(),
 							getEventTarget(), info));
 
 	return true;
