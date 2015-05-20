@@ -378,8 +378,8 @@ SecureSocket::checkResult(int n, bool& fatal, int& retry)
 	case SSL_ERROR_WANT_WRITE:
 	case SSL_ERROR_WANT_CONNECT:
 	case SSL_ERROR_WANT_ACCEPT:
-		LOG((CLOG_DEBUG2 "need to retry the same SSL function"));
 		retry += 1;
+		LOG((CLOG_DEBUG2 "need to retry the same SSL function retry:%d", retry));
 		break;
 
 	case SSL_ERROR_SYSCALL:
@@ -411,6 +411,12 @@ SecureSocket::checkResult(int n, bool& fatal, int& retry)
 		LOG((CLOG_ERR "unknown secure socket error"));
 		fatal = true;
 		break;
+	}
+
+	// If the retry max would exceed the allowed, treat it as a fatal error
+	if (retry > maxRetry()) {
+		LOG((CLOG_ERR "Maximum retry count exceeded:%d",retry));
+		fatal = true;
 	}
 
 	if (fatal) {
