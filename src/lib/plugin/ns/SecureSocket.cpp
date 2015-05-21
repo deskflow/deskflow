@@ -249,7 +249,7 @@ SecureSocket::createSSL()
 	}
 }
 
-bool
+int
 SecureSocket::secureAccept(int socket)
 {
 	createSSL();
@@ -269,24 +269,31 @@ SecureSocket::secureAccept(int socket)
 		// tell user and sleep so the socket isn't hammered.
 		LOG((CLOG_ERR "failed to accept secure socket"));
 		LOG((CLOG_INFO "client connection may not be secure"));
+		m_secureReady = false;
 		ARCH->sleep(1);
+		return -1; // Failed, error out
 	}
 
+	// If not fatal and no retry, state is good
 	if (retry == 0) {
 		m_secureReady = true;
-	}
-	else {
-		m_secureReady = false;
-	}
-
-	if (m_secureReady) {
 		LOG((CLOG_INFO "accepted secure socket"));
+		return 1;
 	}
 
-	return !m_secureReady;
+	// If not fatal and retry is set, not ready, and return retry
+	if (retry > 0) {
+		LOG((CLOG_DEBUG2 "retry accepting secure socket"));
+		m_secureReady = false;
+		return 0;
+	}
+
+	// no good state exists here
+	LOG((CLOG_ERR "unexpected state attempting to accept connection"));
+	return -1;
 }
 
-bool
+int
 SecureSocket::secureConnect(int socket)
 {
 	createSSL();
@@ -304,31 +311,32 @@ SecureSocket::secureConnect(int socket)
 
 	if (fatal) {
 		LOG((CLOG_ERR "failed to connect secure socket"));
-		LOG((CLOG_INFO "server connection may not be secure"));
-		return false;
+		return -1;
 	}
 
-	if (retry == 0) {
-		m_secureReady = true;
+	// If we should retry, not ready and return 0
+	if (retry > 0) {
+		LOG((CLOG_DEBUG2 "retry connect secure socket"));
+		m_secureReady = false;
+		return 0;
+	}
+
+	// No error, set ready, process and return ok
+	m_secureReady = true;
+	if (verifyCertFingerprint()) {
+		LOG((CLOG_INFO "connected to secure socket"));
+		if (!showCertificate()) {
+			disconnect();
+			return -1;// Cert fail, error
+		}
 	}
 	else {
-		m_secureReady = false;
+		LOG((CLOG_ERR "failed to verify server certificate fingerprint"));
+		disconnect();
+		return -1; // Fingerprint failed, error
 	}
-
-	if (m_secureReady) {
-		if (verifyCertFingerprint()) {
-			LOG((CLOG_INFO "connected to secure socket"));
-			if (!showCertificate()) {
-				disconnect();
-			}
-		}
-		else {
-			LOG((CLOG_ERR "failed to verify server certificate fingerprint"));
-			disconnect();
-		}
-	}
-
-	return !m_secureReady;
+	LOG((CLOG_DEBUG2 "connected secure socket"));
+	return 1;
 }
 
 bool
@@ -545,14 +553,21 @@ SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 {
 	Lock lock(&getMutex());
 
-	bool retry = true;
+	int status = 0;
 #ifdef SYSAPI_WIN32
-	retry = secureConnect(static_cast<int>(getSocket()->m_socket));
+	status = secureConnect(static_cast<int>(getSocket()->m_socket));
 #elif SYSAPI_UNIX
 	retry = secureConnect(getSocket()->m_fd);
 #endif
 
-	return retry ? job : newJob();
+	if (status > 0) {
+		return newJob();
+	}
+	else if (status == 0) {
+		return job;
+	}
+	// If status < 0, error happened
+	return NULL;
 }
 
 ISocketMultiplexerJob*
@@ -561,12 +576,19 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 {
 	Lock lock(&getMutex());
 
-	bool retry = true;
+	int status = 0;
 #ifdef SYSAPI_WIN32
-	retry = secureAccept(static_cast<int>(getSocket()->m_socket));
+	status = secureAccept(static_cast<int>(getSocket()->m_socket));
 #elif SYSAPI_UNIX
-	retry = secureAccept(getSocket()->m_fd);
+	status = secureAccept(getSocket()->m_fd);
 #endif
 
-	return retry ? job : newJob();
+	if (status > 0) {
+		return newJob();
+	}
+	else if (status == 0) {
+		return job;
+	}
+	// If status < 0, error happened
+	return NULL;
 }

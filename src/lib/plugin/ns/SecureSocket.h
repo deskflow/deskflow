@@ -57,8 +57,8 @@ private:
 	// SSL
 	void				initContext(bool server);
 	void				createSSL();
-	bool				secureAccept(int s);
-	bool				secureConnect(int s);
+	int					secureAccept(int s);
+	int					secureConnect(int s);
 	bool				showCertificate();
 	void				checkResult(int n, bool& fatal, int& retry);
 	void				showError(const char* reason = NULL);
