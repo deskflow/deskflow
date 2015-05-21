@@ -28,13 +28,16 @@ class ClipboardChunk : public Chunk {
 public:
 	ClipboardChunk(size_t size);
 
-	static ClipboardChunk* start(
+	static ClipboardChunk*
+						start(
 							ClipboardID id,
 							UInt32 sequence,
 							const String& size);
-	static ClipboardChunk* data(
+	static ClipboardChunk*
+						data(
 							ClipboardID id,
 							UInt32 sequence,
 							const String& data);
-	static ClipboardChunk* end(ClipboardID id, UInt32 sequence);
+	static ClipboardChunk*
+						end(ClipboardID id, UInt32 sequence);
 };
