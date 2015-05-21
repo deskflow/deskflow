@@ -35,6 +35,7 @@
 //
 
 #define MAX_ERROR_SIZE 65535
+#define MAX_RETRY_COUNT 60
 
 static const char kFingerprintDirName[] = "SSL/Fingerprints";
 //static const char kFingerprintLocalFilename[] = "Local.txt";
@@ -50,7 +51,8 @@ SecureSocket::SecureSocket(
 		IEventQueue* events,
 		SocketMultiplexer* socketMultiplexer) :
 	TCPSocket(events, socketMultiplexer),
-	m_secureReady(false)
+	m_secureReady(false),
+	m_maxRetry(MAX_RETRY_COUNT)
 {
 }
 
@@ -59,7 +61,8 @@ SecureSocket::SecureSocket(
 		SocketMultiplexer* socketMultiplexer,
 		ArchSocket socket) :
 	TCPSocket(events, socketMultiplexer, socket),
-	m_secureReady(false)
+	m_secureReady(false),
+	m_maxRetry(MAX_RETRY_COUNT)
 {
 }
 
@@ -111,7 +114,9 @@ SecureSocket::secureRead(void* buffer, UInt32 n)
 		LOG((CLOG_DEBUG2 "reading secure socket"));
 		r = SSL_read(m_ssl->m_ssl, buffer, n);
 		
-		bool fatal, retry;
+		bool fatal;
+		static int retry;
+
 		checkResult(r, fatal, retry);
 		
 		if (retry) {
@@ -130,7 +135,9 @@ SecureSocket::secureWrite(const void* buffer, UInt32 n)
 		LOG((CLOG_DEBUG2 "writing secure socket"));
 		r = SSL_write(m_ssl->m_ssl, buffer, n);
 		
-		bool fatal, retry;
+		bool fatal;
+		static int retry;
+
 		checkResult(r, fatal, retry);
 
 		if (retry) {
@@ -253,7 +260,9 @@ SecureSocket::secureAccept(int socket)
 	LOG((CLOG_DEBUG2 "accepting secure socket"));
 	int r = SSL_accept(m_ssl->m_ssl);
 	
-	bool fatal, retry;
+	bool fatal;
+	static int retry;
+
 	checkResult(r, fatal, retry);
 
 	if (fatal) {
@@ -263,12 +272,18 @@ SecureSocket::secureAccept(int socket)
 		ARCH->sleep(1);
 	}
 
-	m_secureReady = !retry;
+	if (retry == 0) {
+		m_secureReady = true;
+	}
+	else {
+		m_secureReady = false;
+	}
+
 	if (m_secureReady) {
 		LOG((CLOG_INFO "accepted secure socket"));
 	}
 
-	return retry;
+	return !m_secureReady;
 }
 
 bool
@@ -282,7 +297,9 @@ SecureSocket::secureConnect(int socket)
 	LOG((CLOG_DEBUG2 "connecting secure socket"));
 	int r = SSL_connect(m_ssl->m_ssl);
 	
-	bool fatal, retry;
+	bool fatal;
+	static int retry;
+
 	checkResult(r, fatal, retry);
 
 	if (fatal) {
@@ -291,7 +308,12 @@ SecureSocket::secureConnect(int socket)
 		return false;
 	}
 
-	m_secureReady = !retry;
+	if (retry == 0) {
+		m_secureReady = true;
+	}
+	else {
+		m_secureReady = false;
+	}
 
 	if (m_secureReady) {
 		if (verifyCertFingerprint()) {
@@ -306,7 +328,7 @@ SecureSocket::secureConnect(int socket)
 		}
 	}
 
-	return retry;
+	return !m_secureReady;
 }
 
 bool
@@ -332,22 +354,23 @@ SecureSocket::showCertificate()
 }
 
 void
-SecureSocket::checkResult(int n, bool& fatal, bool& retry)
+SecureSocket::checkResult(int n, bool& fatal, int& retry)
 {
 	// ssl errors are a little quirky. the "want" errors are normal and
 	// should result in a retry.
 
 	fatal = false;
-	retry = false;
 
 	int errorCode = SSL_get_error(m_ssl->m_ssl, n);
 	switch (errorCode) {
 	case SSL_ERROR_NONE:
+		retry = 0;
 		// operation completed
 		break;
 
 	case SSL_ERROR_ZERO_RETURN:
 		// connection closed
+		retry = 0;
 		LOG((CLOG_DEBUG2 "SSL connection has been closed"));
 		break;
 
@@ -355,8 +378,17 @@ SecureSocket::checkResult(int n, bool& fatal, bool& retry)
 	case SSL_ERROR_WANT_WRITE:
 	case SSL_ERROR_WANT_CONNECT:
 	case SSL_ERROR_WANT_ACCEPT:
-		LOG((CLOG_DEBUG2 "need to retry the same SSL function"));
-		retry = true;
+		retry += 1;
+		// If there are a lot of retrys, it's worth warning about
+		if ( retry % 5 == 0 ) {
+			LOG((CLOG_INFO "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
+		}
+		else if ( retry == (maxRetry() / 2) ) {
+			LOG((CLOG_WARN "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
+		}
+		else {
+			LOG((CLOG_DEBUG2 "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
+		}
 		break;
 
 	case SSL_ERROR_SYSCALL:
@@ -390,7 +422,14 @@ SecureSocket::checkResult(int n, bool& fatal, bool& retry)
 		break;
 	}
 
+	// If the retry max would exceed the allowed, treat it as a fatal error
+	if (retry > maxRetry()) {
+		LOG((CLOG_ERR "Maximum retry count exceeded:%d",retry));
+		fatal = true;
+	}
+
 	if (fatal) {
+		retry = 0;
 		showError();
 		disconnect();
 	}

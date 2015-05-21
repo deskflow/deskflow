@@ -34,7 +34,12 @@ This outputter writes output to the GUI via IPC.
 */
 class IpcLogOutputter : public ILogOutputter {
 public:
-	IpcLogOutputter(IpcServer& ipcServer);
+	/*!
+	If \p useThread is \c true, the buffer will be sent using a thread.
+	If \p useThread is \c false, then the buffer needs to be sent manually
+	using the \c sendBuffer() function.
+	*/
+	IpcLogOutputter(IpcServer& ipcServer, bool useThread);
 	virtual ~IpcLogOutputter();
 
 	// ILogOutputter overrides
@@ -46,30 +51,28 @@ public:
 	//! @name manipulators
 	//@{
 
-	//! Same as write, but allows message to sidestep anti-recursion mechanism.
-	bool				write(ELevel level, const char* text, bool force);
-
 	//! Notify that the buffer should be sent.
 	void				notifyBuffer();
 
-	//! Set the buffer size.
+	//! Set the buffer size
 	/*!
 	Set the maximum size of the buffer to protect memory
 	from runaway logging.
 	*/
 	void				bufferMaxSize(UInt16 bufferMaxSize);
-	
-	//! Wait for empty buffer
-	/*!
-	Wait on a cond var until the buffer is empty.
-	*/
-	void				waitForEmpty();
 
-	//! Set the buffer size.
+	//! Set the rate limit
 	/*!
 	Set the maximum number of \p writeRate for every \p timeRate in seconds.
 	*/
 	void				bufferRateLimit(UInt16 writeLimit, double timeLimit);
+
+	//! Send the buffer
+	/*!
+	Sends a chunk of the buffer to the IPC server, normally called
+	when threaded mode is on.
+	*/
+	void				sendBuffer();
 	
 	//@}
 	
@@ -88,7 +91,6 @@ private:
 	void				init();
 	void				bufferThread(void*);
 	String				getChunk(size_t count);
-	void				sendBuffer();
 	void				appendBuffer(const String& text);
 
 private:
@@ -106,10 +108,9 @@ private:
 	IArchMultithread::ThreadID
 						m_bufferThreadId;
 	UInt16				m_bufferMaxSize;
-	ArchCond			m_bufferEmptyCond;
-	ArchMutex			m_bufferEmptyMutex;
 	UInt16				m_bufferRateWriteLimit;
 	double				m_bufferRateTimeLimit;
 	UInt16				m_bufferWriteCount;
 	double				m_bufferRateStart;
+	bool				m_useThread;
 };

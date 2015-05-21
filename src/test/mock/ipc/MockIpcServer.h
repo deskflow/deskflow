@@ -19,17 +19,40 @@
 
 #include "ipc/IpcServer.h"
 #include "ipc/IpcMessage.h"
+#include "arch/Arch.h"
 
 #include "test/global/gmock.h"
+
+using ::testing::_;
+using ::testing::Invoke;
 
 class IEventQueue;
 
 class MockIpcServer : public IpcServer
 {
 public:
-	MockIpcServer() { }
+	MockIpcServer() :
+		m_sendCond(ARCH->newCondVar()),
+		m_sendMutex(ARCH->newMutex()) { }
 
 	MOCK_METHOD0(listen, void());
 	MOCK_METHOD2(send, void(const IpcMessage&, EIpcClientType));
 	MOCK_CONST_METHOD1(hasClients, bool(EIpcClientType));
+
+	void delegateToFake() {
+		ON_CALL(*this, send(_, _)).WillByDefault(Invoke(this, &MockIpcServer::mockSend));
+	}
+
+	void waitForSend() {
+		ARCH->waitCondVar(m_sendCond, m_sendMutex, 5);
+	}
+
+private:
+	void mockSend(const IpcMessage&, EIpcClientType) {
+		ArchMutexLock lock(m_sendMutex);
+		ARCH->broadcastCondVar(m_sendCond);
+	}
+
+	ArchCond			m_sendCond;
+	ArchMutex			m_sendMutex;
 };

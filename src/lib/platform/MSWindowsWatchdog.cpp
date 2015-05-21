@@ -420,9 +420,7 @@ MSWindowsWatchdog::outputLoop(void*)
 
 			testOutput(buffer);
 
-			// send process output over IPC to GUI, and force it to be sent
-			// which bypasses the ipc logging anti-recursion mechanism.
-			m_ipcLogOutputter.write(kINFO, buffer, true);
+			m_ipcLogOutputter.write(kINFO, buffer);
 
 			if (m_fileLogOutputter != NULL) {
 				m_fileLogOutputter->write(kINFO, buffer);
