@@ -43,20 +43,6 @@ ClientProxy1_6::~ClientProxy1_6()
 {
 }
 
-bool
-ClientProxy1_6::parseMessage(const UInt8* code)
-{
-	//TODO:: parse data tansfer
-	if (memcmp(code, kMsgDFileTransfer, 4) == 0) {
-		fileChunkReceived();
-	}
-	else {
-		return ClientProxy1_5::parseMessage(code);
-	}
-
-	return true;
-}
-
 void
 ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {

@@ -28,7 +28,6 @@ public:
 	ClientProxy1_6(const String& name, synergy::IStream* adoptedStream, Server* server, IEventQueue* events);
 	~ClientProxy1_6();
 
-	virtual bool		parseMessage(const UInt8* code);
 	virtual void		setClipboard(ClipboardID id, const IClipboard* clipboard);
 
 private:
