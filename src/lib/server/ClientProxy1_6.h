@@ -29,6 +29,7 @@ public:
 	~ClientProxy1_6();
 
 	virtual void		setClipboard(ClipboardID id, const IClipboard* clipboard);
+	virtual bool		recvClipboard();
 
 private:
 	void				handleClipboardSendingEvent(const Event&, void*);

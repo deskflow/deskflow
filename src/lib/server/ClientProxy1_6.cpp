@@ -94,3 +94,53 @@ ClientProxy1_6::handleClipboardSendingEvent(const Event& event, void*)
 
 	ProtocolUtil::writef(getStream(), kMsgDClipboard, id, sequence, mark, &dataChunk);
 }
+
+bool
+ClientProxy1_6::recvClipboard()
+{
+	// parse message
+	static String dataCached;
+	static size_t expectedSize;
+	ClipboardID id;
+	UInt8 mark;
+	UInt32 seqNum;
+	String data;
+	if (!ProtocolUtil::readf(getStream(),
+							 kMsgDClipboard + 4, &id, &seqNum, &mark, &data)) {
+		return false;
+	}
+	
+	if (mark == kDataStart) {
+		expectedSize = synergy::string::stringToSizeType(data);
+		LOG((CLOG_DEBUG "start receiving clipboard data"));
+		dataCached.clear();
+	}
+	else if (mark == kDataChunk) {
+		dataCached.append(data);
+	}
+	else if (mark == kDataEnd) {
+		LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d", getName().c_str(), id, seqNum, dataCached.size()));
+		
+		// validate
+		if (id >= kClipboardEnd) {
+			return false;
+		}
+		else if (expectedSize != dataCached.size()) {
+			LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", expectedSize, dataCached.size()));
+			return false;
+		}
+		
+		// save clipboard
+		m_clipboard[id].m_clipboard.unmarshall(dataCached, 0);
+		m_clipboard[id].m_sequenceNumber = seqNum;
+		
+		// notify
+		ClipboardInfo* info = new ClipboardInfo;
+		info->m_id = id;
+		info->m_sequenceNumber = seqNum;
+		m_events->addEvent(Event(m_events->forClipboard().clipboardChanged(),
+								 getEventTarget(), info));
+	}
+	
+	return true;
+}

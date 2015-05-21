@@ -275,17 +275,7 @@ ClientProxy1_0::leave()
 void
 ClientProxy1_0::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
-	// ignore if this clipboard is already clean
-	if (m_clipboard[id].m_dirty) {
-		// this clipboard is now clean
-		m_clipboard[id].m_dirty = false;
-		Clipboard::copy(&m_clipboard[id].m_clipboard, clipboard);
-
-		String data = m_clipboard[id].m_clipboard.marshall();
-
-		LOG((CLOG_DEBUG "send clipboard %d to \"%s\" size=%d", id, getName().c_str(), data.size()));
-		ProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, &data);
-	}
+	// ignore -- deprecated in protocol 1.0
 }
 
 void
@@ -451,51 +441,8 @@ ClientProxy1_0::recvInfo()
 bool
 ClientProxy1_0::recvClipboard()
 {
-	// parse message
-	static String dataCached;
-	static size_t expectedSize;
-	ClipboardID id;
-	UInt8 mark;
-	UInt32 seqNum;
-	String data;
-	if (!ProtocolUtil::readf(getStream(),
-							 kMsgDClipboard + 4, &id, &seqNum, &mark, &data)) {
-		return false;
-	}
-	
-	if (mark == kDataStart) {
-		expectedSize = synergy::string::stringToSizeType(data);
-		LOG((CLOG_DEBUG "start receiving clipboard data"));
-		dataCached.clear();
-	}
-	else if (mark == kDataChunk) {
-		dataCached.append(data);
-	}
-	else if (mark == kDataEnd) {
-		LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d", getName().c_str(), id, seqNum, dataCached.size()));
-		
-		// validate
-		if (id >= kClipboardEnd) {
-			return false;
-		}
-		else if (expectedSize != dataCached.size()) {
-			LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", expectedSize, dataCached.size()));
-			return false;
-		}
-		
-		// save clipboard
-		m_clipboard[id].m_clipboard.unmarshall(dataCached, 0);
-		m_clipboard[id].m_sequenceNumber = seqNum;
-		
-		// notify
-		ClipboardInfo* info = new ClipboardInfo;
-		info->m_id = id;
-		info->m_sequenceNumber = seqNum;
-		m_events->addEvent(Event(m_events->forClipboard().clipboardChanged(),
-								 getEventTarget(), info));
-	}
-	
-	return true;
+	// deprecated in protocol 1.0
+	return false;
 }
 
 bool

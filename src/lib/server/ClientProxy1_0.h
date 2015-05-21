@@ -70,7 +70,7 @@ protected:
 	virtual void		resetHeartbeatTimer();
 	virtual void		addHeartbeatTimer();
 	virtual void		removeHeartbeatTimer();
-
+	virtual bool		recvClipboard();
 private:
 	void				disconnect();
 	void				removeHandlers();
@@ -81,7 +81,6 @@ private:
 	void				handleFlatline(const Event&, void*);
 
 	bool				recvInfo();
-	bool				recvClipboard();
 	bool				recvGrabClipboard();
 
 protected:
