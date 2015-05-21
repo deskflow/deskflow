@@ -24,6 +24,16 @@
 
 #define CLIPBOARD_CHUNK_META_SIZE 7
 
+enum EAssembleResult {
+	kNotFinish,
+	kFinish,
+	kError
+};
+
+namespace synergy {
+class IStream;
+};
+
 class ClipboardChunk : public Chunk {
 public:
 	ClipboardChunk(size_t size);
@@ -40,4 +50,10 @@ public:
 							const String& data);
 	static ClipboardChunk*
 						end(ClipboardID id, UInt32 sequence);
+
+	static int			assemble(
+							synergy::IStream* stream,
+							String& dataCached,
+							ClipboardID& id,
+							UInt32& sequence);
 };

@@ -17,7 +17,10 @@
 
 #include "synergy/ClipboardChunk.h"
 
+#include "synergy/ProtocolUtil.h"
 #include "synergy/protocol_types.h"
+#include "io/IStream.h"
+#include "base/Log.h"
 
 ClipboardChunk::ClipboardChunk(size_t size) :
 	Chunk(size)
@@ -78,4 +81,43 @@ ClipboardChunk::end(ClipboardID id, UInt32 sequence)
 	chunk[CLIPBOARD_CHUNK_META_SIZE - 1] = '\0';
 
 	return end;
+}
+
+int
+ClipboardChunk::assemble(synergy::IStream* stream,
+					String& dataCached,
+					ClipboardID& id,
+					UInt32& sequence)
+{
+	static size_t expectedSize;
+	UInt8 mark;
+	String data;
+
+	if (!ProtocolUtil::readf(stream, kMsgDClipboard + 4, &id, &sequence, &mark, &data)) {
+		return kError;
+	}
+	
+	if (mark == kDataStart) {
+		expectedSize = synergy::string::stringToSizeType(data);
+		LOG((CLOG_DEBUG "start receiving clipboard data"));
+		dataCached.clear();
+		return kNotFinish;
+	}
+	else if (mark == kDataChunk) {
+		dataCached.append(data);
+		return kNotFinish;
+	}
+	else if (mark == kDataEnd) {
+		// validate
+		if (id >= kClipboardEnd) {
+			return kError;
+		}
+		else if (expectedSize != dataCached.size()) {
+			LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", expectedSize, dataCached.size()));
+			return kError;
+		}
+		return kFinish;
+	}
+
+	return kError;
 }

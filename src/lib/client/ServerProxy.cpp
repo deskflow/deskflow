@@ -556,38 +556,18 @@ ServerProxy::setClipboard()
 {
 	// parse
 	static String dataCached;
-	static size_t expectedSize;
 	ClipboardID id;
-	UInt32 seqNum;
-	size_t mark = 0;
-	String data;
-	ProtocolUtil::readf(m_stream, kMsgDClipboard + 4, &id, &seqNum, &mark, &data);
+	UInt32 seq;
+	
+	int r = ClipboardChunk::assemble(m_stream, dataCached, id, seq);
 
-	if (mark == kDataStart) {
-		expectedSize = synergy::string::stringToSizeType(data);
-		LOG((CLOG_DEBUG "start receiving clipboard data"));
-		dataCached.clear();
-	}
-	else if (mark == kDataChunk) {
-		dataCached.append(data);
-	}
-	else if (mark == kDataEnd) {
+	if (r == kFinish) {
 		LOG((CLOG_DEBUG "received clipboard %d size=%d", id, dataCached.size()));
-
-		// validate
-		if (id >= kClipboardEnd) {
-			return;
-		}
-		else if (expectedSize != dataCached.size()) {
-			LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", expectedSize, dataCached.size()));
-			return;
-		}
-
+		
 		// forward
 		Clipboard clipboard;
 		clipboard.unmarshall(dataCached, 0);
 		m_client->setClipboard(id, &clipboard);
-		expectedSize = 0;
 	}
 }
 
