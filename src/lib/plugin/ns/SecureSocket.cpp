@@ -570,7 +570,7 @@ SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 #ifdef SYSAPI_WIN32
 	status = secureConnect(static_cast<int>(getSocket()->m_socket));
 #elif SYSAPI_UNIX
-	retry = secureConnect(getSocket()->m_fd);
+	status = secureConnect(getSocket()->m_fd);
 #endif
 
 	if (status > 0) {
