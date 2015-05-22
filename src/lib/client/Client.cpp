@@ -265,7 +265,11 @@ Client::leave()
 	m_screen->leave();
 
 	m_active = false;
-
+	
+	if (m_sendClipboardThread != NULL) {
+		StreamChunker::interruptClipboard();
+	}
+	
 	m_sendClipboardThread = new Thread(
 								new TMethodJob<Client>(
 									this,
@@ -803,6 +807,10 @@ Client::isReceivedFileSizeValid()
 void
 Client::sendFileToServer(const char* filename)
 {
+	if (m_sendFileThread != NULL) {
+		StreamChunker::interruptFile();
+	}
+	
 	m_sendFileThread = new Thread(
 		new TMethodJob<Client>(
 			this, &Client::sendFileThread,

@@ -39,6 +39,11 @@ using namespace std;
 #define SECURE_SOCKET_CHUNK_SIZE 2 * 1024; // 2kb
 
 size_t StreamChunker::s_chunkSize = SOCKET_CHUNK_SIZE;
+bool StreamChunker::s_isChunkingClipboard = false;
+bool StreamChunker::s_interruptClipboard = false;
+bool StreamChunker::s_isChunkingFile = false;
+bool StreamChunker::s_interruptFile = false;
+
 
 void
 StreamChunker::sendFile(
@@ -46,6 +51,8 @@ StreamChunker::sendFile(
 				IEventQueue* events,
 				void* eventTarget)
 {
+	s_isChunkingFile = true;
+	
 	std::fstream file(reinterpret_cast<char*>(filename), std::ios::in | std::ios::binary);
 
 	if (!file.is_open()) {
@@ -69,6 +76,11 @@ StreamChunker::sendFile(
 	stopwatch.start();
 	file.seekg (0, std::ios::beg);
 	while (true) {
+		if (s_interruptFile) {
+			s_interruptFile = false;
+			break;
+		}
+		
 		if (stopwatch.getTime() > PAUSE_TIME_HACK) {
 			// make sure we don't read too much from the mock data.
 			if (sentLength + chunkSize > size) {
@@ -100,6 +112,8 @@ StreamChunker::sendFile(
 	events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, end));
 
 	file.close();
+	
+	s_isChunkingFile = false;
 }
 
 void
@@ -111,6 +125,8 @@ StreamChunker::sendClipboard(
 				IEventQueue* events,
 				void* eventTarget)
 {
+	s_isChunkingClipboard = true;
+	
 	// send first message (data size)
 	String dataSize = synergy::string::sizeTypeToString(size);
 	ClipboardChunk* sizeMessage = ClipboardChunk::start(id, sequence, dataSize);
@@ -122,7 +138,13 @@ StreamChunker::sendClipboard(
 	size_t chunkSize = s_chunkSize;
 	Stopwatch stopwatch;
 	stopwatch.start();
+	
 	while (true) {
+		if (s_interruptClipboard) {
+			s_interruptClipboard = false;
+			break;
+		}
+		
 		if (stopwatch.getTime() > 0.1f) {
 			// make sure we don't read too much from the mock data.
 			if (sentLength + chunkSize > size) {
@@ -148,6 +170,8 @@ StreamChunker::sendClipboard(
 	ClipboardChunk* end = ClipboardChunk::end(id, sequence);
 
 	events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, end));
+	
+	s_isChunkingClipboard = false;
 }
 
 void
@@ -158,5 +182,23 @@ StreamChunker::updateChunkSize(bool useSecureSocket)
 	}
 	else {
 		s_chunkSize = SOCKET_CHUNK_SIZE;
+	}
+}
+
+void
+StreamChunker::interruptFile()
+{
+	if (s_isChunkingFile) {
+		s_interruptFile = true;
+		LOG((CLOG_INFO "previous dragged file has become invalid"));
+	}
+}
+
+void
+StreamChunker::interruptClipboard()
+{
+	if (s_isChunkingClipboard) {
+		s_interruptClipboard = true;
+		LOG((CLOG_INFO "previous clipboard data has become invalid"));
 	}
 }

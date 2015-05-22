@@ -505,7 +505,12 @@ Server::switchScreen(BaseClientProxy* dst,
 		m_active->enter(x, y, m_seqNum,
 								m_primaryClient->getToggleMask(),
 								forScreensaver);
-
+		// if already sending clipboard, we need to interupt it, otherwise
+		// clipboard data could be corrupted on the other side
+		if (m_sendClipboardThread != NULL) {
+			StreamChunker::interruptClipboard();
+		}
+		
 		// send the clipboard data to new active screen
 		m_sendClipboardThread = new Thread(
 										new TMethodJob<Server>(
@@ -2347,6 +2352,10 @@ Server::isReceivedFileSizeValid()
 void
 Server::sendFileToClient(const char* filename)
 {
+	if (m_sendFileThread != NULL) {
+		StreamChunker::interruptFile();
+	}
+	
 	m_sendFileThread = new Thread(
 		new TMethodJob<Server>(
 			this, &Server::sendFileThread,
