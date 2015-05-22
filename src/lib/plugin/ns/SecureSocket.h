@@ -48,8 +48,8 @@ public:
 	void				isFatal(bool b) { m_fatal = b; }
 	bool				isSecureReady();
 	bool				isSecure() { return true; }
-	UInt32				secureRead(void* buffer, UInt32 n);
-	UInt32				secureWrite(const void* buffer, UInt32 n);
+	int					secureRead(void* buffer, int size, int& read);
+	int					secureWrite(const void* buffer, int size, int& wrote);
 	void				initSsl(bool server);
 	bool				loadCertificates(String& CertFile);
 	void				maxRetry(int limit) { m_maxRetry = limit; };

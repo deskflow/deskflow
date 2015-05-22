@@ -67,8 +67,8 @@ protected:
 	IEventQueue*		getEvents() { return m_events; }
 	virtual bool		isSecureReady() { return false; }
 	virtual bool		isSecure() { return false; }
-	virtual UInt32		secureRead(void* buffer, UInt32) { return 0; }
-	virtual UInt32		secureWrite(const void*, UInt32) { return 0; }
+	virtual int			secureRead(void* buffer, int, int& ) { return 0; }
+	virtual int			secureWrite(const void*, int, int& ) { return 0; }
 
 	void				setJob(ISocketMultiplexerJob*);
 	ISocketMultiplexerJob*

@@ -52,8 +52,8 @@ SecureSocket::SecureSocket(
 		SocketMultiplexer* socketMultiplexer) :
 	TCPSocket(events, socketMultiplexer),
 	m_secureReady(false),
-	m_maxRetry(MAX_RETRY_COUNT),
-	m_fatal(false)
+	m_fatal(false),
+	m_maxRetry(MAX_RETRY_COUNT)
 {
 }
 
@@ -63,8 +63,8 @@ SecureSocket::SecureSocket(
 		ArchSocket socket) :
 	TCPSocket(events, socketMultiplexer, socket),
 	m_secureReady(false),
-	m_maxRetry(MAX_RETRY_COUNT),
-	m_fatal(false)
+	m_fatal(false),
+	m_maxRetry(MAX_RETRY_COUNT)
 {
 }
 
@@ -111,18 +111,17 @@ SecureSocket::secureAccept()
 			getSocket(), isReadable(), isWritable()));
 }
 
-UInt32
-SecureSocket::secureRead(void* buffer, UInt32 n)
+int
+SecureSocket::secureRead(void* buffer, int size, int& read)
 {
-	int r = 0;
 	if (m_ssl->m_ssl != NULL) {
 		LOG((CLOG_DEBUG2 "reading secure socket"));
-		r = SSL_read(m_ssl->m_ssl, buffer, n);
+		read = SSL_read(m_ssl->m_ssl, buffer, size);
 		
 		static int retry;
 
 		// Check result will cleanup the connection in the case of a fatal
-		checkResult(r, retry);
+		checkResult(read, retry);
 		
 		if (retry) {
 			return 0;
@@ -132,25 +131,24 @@ SecureSocket::secureRead(void* buffer, UInt32 n)
 			return -1;
 		}
 	}
-	// According to SSL spec, r must not be negative and not have an error code
-	// from SSL_get_error(). If this happens, it is itself an error. Let the
-	// parent handle the case
-	return (UInt32)r;
+	// According to SSL spec, the number of bytes read must not be negative and
+	// not have an error code from SSL_get_error(). If this happens, it is
+	// itself an error. Let the parent handle the case
+	return read;
 }
 
-UInt32
-SecureSocket::secureWrite(const void* buffer, UInt32 n)
+int
+SecureSocket::secureWrite(const void* buffer, int size, int& wrote)
 {
-	int r = 0;
 	if (m_ssl->m_ssl != NULL) {
 		LOG((CLOG_DEBUG2 "writing secure socket:%p", this));
 
-		r = SSL_write(m_ssl->m_ssl, buffer, n);
+		wrote = SSL_write(m_ssl->m_ssl, buffer, size);
 		
 		static int retry;
 
 		// Check result will cleanup the connection in the case of a fatal
-		checkResult(r, retry);
+		checkResult(wrote, retry);
 
 		if (retry) {
 			return 0;
@@ -163,7 +161,7 @@ SecureSocket::secureWrite(const void* buffer, UInt32 n)
 	// According to SSL spec, r must not be negative and not have an error code
 	// from SSL_get_error(). If this happens, it is itself an error. Let the
 	// parent handle the case
-	return (UInt32)r;
+	return wrote;
 }
 
 bool
@@ -378,12 +376,13 @@ SecureSocket::showCertificate()
 }
 
 void
-SecureSocket::checkResult(int n, int& retry)
+SecureSocket::checkResult(int status, int& retry)
 {
 	// ssl errors are a little quirky. the "want" errors are normal and
 	// should result in a retry.
 
-	int errorCode = SSL_get_error(m_ssl->m_ssl, n);
+	int errorCode = SSL_get_error(m_ssl->m_ssl, status);
+
 	switch (errorCode) {
 	case SSL_ERROR_NONE:
 		retry = 0;
@@ -416,10 +415,10 @@ SecureSocket::checkResult(int n, int& retry)
 	case SSL_ERROR_SYSCALL:
 		LOG((CLOG_ERR "some secure socket I/O error occurred"));
 		if (ERR_peek_error() == 0) {
-			if (n == 0) {
+			if (status == 0) {
 				LOG((CLOG_ERR "an EOF violates the protocol"));
 			}
-			else if (n == -1) {
+			else if (status == -1) {
 				// underlying socket I/O reproted an error
 				try {
 					ARCH->throwErrorOnSocket(getSocket());
