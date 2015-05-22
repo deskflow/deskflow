@@ -56,4 +56,6 @@ public:
 							String& dataCached,
 							ClipboardID& id,
 							UInt32& sequence);
+
+	static void			send(synergy::IStream* stream, void* data);
 };

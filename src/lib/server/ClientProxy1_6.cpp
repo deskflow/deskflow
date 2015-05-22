@@ -66,33 +66,7 @@ ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
 void
 ClientProxy1_6::handleClipboardSendingEvent(const Event& event, void*)
 {
-	void* data = event.getData();
-	ClipboardChunk* clipboardData = reinterpret_cast<ClipboardChunk*>(data);
-
-	LOG((CLOG_DEBUG1 "sending clipboard chunk"));
-
-	char* chunk = clipboardData->m_chunk;
-	ClipboardID id = chunk[0];
-	UInt32* seq = reinterpret_cast<UInt32*>(&chunk[1]);
-	UInt32 sequence = *seq;
-	UInt8 mark = chunk[5];
-	String dataChunk(&chunk[6], clipboardData->m_dataSize);
-
-	switch (mark) {
-	case kDataStart:
-		LOG((CLOG_DEBUG2 "file sending start: size=%s", dataChunk.c_str()));
-		break;
-
-	case kDataChunk:
-		LOG((CLOG_DEBUG2 "file chunk sending: size=%i", dataChunk.size()));
-		break;
-
-	case kDataEnd:
-		LOG((CLOG_DEBUG2 "file sending finished"));
-		break;
-	}
-
-	ProtocolUtil::writef(getStream(), kMsgDClipboard, id, sequence, mark, &dataChunk);
+	ClipboardChunk::send(getStream(), event.getData());
 }
 
 bool
