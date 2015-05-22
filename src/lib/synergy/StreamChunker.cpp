@@ -35,7 +35,10 @@
 
 using namespace std;
 
-const size_t StreamChunker::m_chunkSize = 512 * 1024; // 512kb
+#define SOCKET_CHUNK_SIZE 512 * 1024; // 512kb
+#define SECURE_SOCKET_CHUNK_SIZE 2 * 1024; // 2kb
+
+size_t StreamChunker::s_chunkSize = SOCKET_CHUNK_SIZE;
 
 void
 StreamChunker::sendFile(
@@ -61,7 +64,7 @@ StreamChunker::sendFile(
 
 	// send chunk messages with a fixed chunk size
 	size_t sentLength = 0;
-	size_t chunkSize = m_chunkSize;
+	size_t chunkSize = s_chunkSize;
 	Stopwatch stopwatch;
 	stopwatch.start();
 	file.seekg (0, std::ios::beg);
@@ -115,9 +118,8 @@ StreamChunker::sendClipboard(
 	events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, sizeMessage));
 
 	// send clipboard chunk with a fixed size
-	// TODO: 4096 fails and this shouldn't a magic number
 	size_t sentLength = 0;
-	size_t chunkSize = 2048;
+	size_t chunkSize = s_chunkSize;
 	Stopwatch stopwatch;
 	stopwatch.start();
 	while (true) {
@@ -146,4 +148,15 @@ StreamChunker::sendClipboard(
 	ClipboardChunk* end = ClipboardChunk::end(id, sequence);
 
 	events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, end));
+}
+
+void
+StreamChunker::updateChunkSize(bool useSecureSocket)
+{
+	if (useSecureSocket) {
+		s_chunkSize = SECURE_SOCKET_CHUNK_SIZE;
+	}
+	else {
+		s_chunkSize = SOCKET_CHUNK_SIZE;
+	}
 }

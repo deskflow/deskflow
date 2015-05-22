@@ -35,7 +35,8 @@ public:
 							UInt32 sequence,
 							IEventQueue* events,
 							void* eventTarget);
+	static void			updateChunkSize(bool useSecureSocket);
 
 private:
-	static const		size_t m_chunkSize;
+	static				size_t s_chunkSize;
 };
