@@ -17,7 +17,13 @@
 
 #include "synergy/FileChunk.h"
 
+#include "synergy/ProtocolUtil.h"
 #include "synergy/protocol_types.h"
+#include "io/IStream.h"
+#include "base/Stopwatch.h"
+#include "base/Log.h"
+
+static const UInt16 kIntervalThreshold = 1;
 
 FileChunk::FileChunk(size_t size) :
 	Chunk(size)
@@ -59,4 +65,88 @@ FileChunk::end()
 	chunk[1] = '\0';
 
 	return end;
+}
+
+int
+FileChunk::assemble(synergy::IStream* stream, String& dataReceived, size_t& expectedSize)
+{
+	// parse
+	UInt8 mark = 0;
+	String content;
+	static size_t receivedDataSize;
+	static double elapsedTime;
+	static Stopwatch stopwatch;
+
+	if (!ProtocolUtil::readf(stream, kMsgDFileTransfer + 4, &mark, &content)) {
+		return kError;
+	}
+
+	switch (mark) {
+	case kDataStart:
+		dataReceived.clear();
+		expectedSize = synergy::string::stringToSizeType(content);
+		receivedDataSize = 0;
+		elapsedTime = 0;
+		stopwatch.reset();
+
+		if (CLOG->getFilter() >= kDEBUG2) {
+			LOG((CLOG_DEBUG2 "recv file data from client: file size=%s", content.c_str()));
+			stopwatch.start();
+		}
+		return kNotFinish;
+
+	case kDataChunk:
+		dataReceived.append(content);
+		if (CLOG->getFilter() >= kDEBUG2) {
+				LOG((CLOG_DEBUG2 "recv file data from client: chunck size=%i", content.size()));
+				double interval = stopwatch.getTime();
+				receivedDataSize += content.size();
+				LOG((CLOG_DEBUG2 "recv file data from client: interval=%f s", interval));
+				if (interval >= kIntervalThreshold) {
+					double averageSpeed = receivedDataSize / interval / 1000;
+					LOG((CLOG_DEBUG2 "recv file data from client: average speed=%f kb/s", averageSpeed));
+
+					receivedDataSize = 0;
+					elapsedTime += interval;
+					stopwatch.reset();
+				}
+			}
+		return kNotFinish;
+
+	case kDataEnd:
+		//m_events->addEvent(Event(m_events->forIScreen().fileRecieveCompleted(), server));
+		if (CLOG->getFilter() >= kDEBUG2) {
+			LOG((CLOG_DEBUG2 "file data transfer finished"));
+			elapsedTime += stopwatch.getTime();
+			double averageSpeed = expectedSize / elapsedTime / 1000;
+			LOG((CLOG_DEBUG2 "file data transfer finished: total time consumed=%f s", elapsedTime));
+			LOG((CLOG_DEBUG2 "file data transfer finished: total data received=%i kb", expectedSize / 1000));
+			LOG((CLOG_DEBUG2 "file data transfer finished: total average speed=%f kb/s", averageSpeed));
+		}
+		return kFinish;
+	}
+
+	return kError;
+}
+
+void
+FileChunk::send(synergy::IStream* stream, UInt8 mark, char* data, size_t dataSize)
+{
+	String chunk(data, dataSize);
+
+	switch (mark) {
+	case kDataStart:
+		LOG((CLOG_DEBUG2 "sending file chunk start: size=%s", data));
+		break;
+
+	case kDataChunk:
+		LOG((CLOG_DEBUG2 "sending file chunk: size=%i", chunk.size()));
+		break;
+
+	case kDataEnd:
+		LOG((CLOG_DEBUG2 "sending file finished"));
+		break;
+	}
+
+	ProtocolUtil::writef(stream, kMsgDFileTransfer, mark, &chunk);
 }

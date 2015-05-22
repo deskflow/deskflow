@@ -24,12 +24,6 @@
 
 #define CLIPBOARD_CHUNK_META_SIZE 7
 
-enum EAssembleResult {
-	kNotFinish,
-	kFinish,
-	kError
-};
-
 namespace synergy {
 class IStream;
 };

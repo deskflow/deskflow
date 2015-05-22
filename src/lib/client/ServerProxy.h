@@ -130,9 +130,4 @@ private:
 
 	MessageParser		m_parser;
 	IEventQueue*		m_events;
-
-	Stopwatch			m_stopwatch;
-	double				m_elapsedTime;
-	size_t				m_receivedDataSize;
-	static const UInt16	m_intervalThreshold;
 };

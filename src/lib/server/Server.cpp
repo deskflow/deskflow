@@ -2338,25 +2338,6 @@ Server::KeyboardBroadcastInfo::alloc(State state, const String& screens)
 	return info;
 }
 
-void
-Server::clearReceivedFileData()
-{
-	m_receivedFileData.clear();
-}
-
-void
-Server::setExpectedFileSize(String data)
-{
-	std::istringstream iss(data);
-	iss >> m_expectedFileSize;
-}
-
-void
-Server::fileChunkReceived(String data)
-{
-	m_receivedFileData += data;
-}
-
 bool
 Server::isReceivedFileSizeValid()
 {

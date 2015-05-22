@@ -781,25 +781,6 @@ Client::writeToDropDirThread(void*)
 }
 
 void
-Client::clearReceivedFileData()
-{
-	m_receivedFileData.clear();
-}
-
-void
-Client::setExpectedFileSize(String data)
-{
-	std::istringstream iss(data);
-	iss >> m_expectedFileSize;
-}
-
-void
-Client::fileChunkReceived(String data)
-{
-	m_receivedFileData += data;
-}
-
-void
 Client::dragInfoReceived(UInt32 fileNum, String data)
 {
 	// TODO: fix duplicate function from CServer

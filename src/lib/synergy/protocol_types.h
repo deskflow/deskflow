@@ -70,11 +70,18 @@ enum EDirectionMask {
 	kBottomMask = 1 << kBottom
 };
 
-// file transfer constants
+// Data transfer constants
 enum EDataTransfer {
 	kDataStart = 1,
 	kDataChunk = 2,
 	kDataEnd = 3
+};
+
+// Data received constants
+enum EDataReceived {
+	kNotFinish,
+	kFinish,
+	kError
 };
 
 //
