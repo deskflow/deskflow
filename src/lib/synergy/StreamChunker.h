@@ -37,5 +37,5 @@ public:
 							void* eventTarget);
 
 private:
-	static const size_t m_chunkSize;
+	static const		size_t m_chunkSize;
 };
