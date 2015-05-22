@@ -474,22 +474,23 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 	if (write) {
 		try {
 			// write data
-			UInt32 n = m_outputBuffer.getSize();
+			int buffSize = m_outputBuffer.getSize();
+			int bytesWrote = 0;
+			int status = 0;
 
 			if (s_retryOutputBufferSize > 0) {
-				n = s_retryOutputBufferSize;
+				buffSize = s_retryOutputBufferSize;
 			}
 
-			const void* buffer = m_outputBuffer.peek(n);
+			const void* buffer = m_outputBuffer.peek(buffSize);
 			if (isSecure()) {
 				if (isSecureReady()) {
-					s_retryOutputBufferSize = n;
-					n = secureWrite(buffer, n);
-
-					if (n > 0) {
+					s_retryOutputBufferSize = buffSize;
+					status = secureWrite(buffer, buffSize, bytesWrote);
+					if (status > 0) {
 						s_retryOutputBufferSize = 0;
 					}
-					else if (n < 0) {
+					else if (status < 0) {
 						return NULL;
 					}
 				}
@@ -498,12 +499,12 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 				}
 			}
 			else {
-				n = (UInt32)ARCH->writeSocket(m_socket, buffer, n);
+				bytesWrote = (UInt32)ARCH->writeSocket(m_socket, buffer, buffSize);
 			}
 
 			// discard written data
-			if (n > 0) {
-				m_outputBuffer.pop(n);
+			if (bytesWrote > 0) {
+				m_outputBuffer.pop(bytesWrote);
 				if (m_outputBuffer.getSize() == 0) {
 					sendEvent(m_events->forIStream().outputFlushed());
 					m_flushed = true;
@@ -543,12 +544,13 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 		try {
 			static UInt8 buffer[4096];
 			memset(buffer, 0, sizeof(buffer));
-			size_t n = 0;
+			int bytesRead = 0;
+			int status = 0;
 
 			if (isSecure()) {
 				if (isSecureReady()) {
-					n = secureRead(buffer, sizeof(buffer));
-					if (n < 0) {
+					status = secureRead(buffer, sizeof(buffer), bytesRead);
+					if (status < 0) {
 						return NULL;
 					}
 				}
@@ -557,27 +559,27 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 				}
 			}
 			else {
-				n = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+				bytesRead = (int) ARCH->readSocket(m_socket, buffer, sizeof(buffer));
 			}
 
-			if (n > 0) {
+			if (bytesRead > 0) {
 				bool wasEmpty = (m_inputBuffer.getSize() == 0);
 
 				// slurp up as much as possible
 				do {
-					m_inputBuffer.write(buffer, (UInt32)n);
+					m_inputBuffer.write(buffer, bytesRead);
 
 					if (isSecure() && isSecureReady()) {
-						n = secureRead(buffer, sizeof(buffer));
-						if (n < 0) {
+						status = secureRead(buffer, sizeof(buffer), bytesRead);
+						if (status < 0) {
 							return NULL;
 						}
 					}
 					else {
-						n = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+						bytesRead = (int) ARCH->readSocket(m_socket, buffer, sizeof(buffer));
 					}
 
-				} while (n > 0);
+				} while (bytesRead > 0 || status > 0);
 
 				// send input ready if input buffer was empty
 				if (wasEmpty) {
