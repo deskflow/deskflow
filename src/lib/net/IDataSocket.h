@@ -68,5 +68,6 @@ public:
 	virtual void		shutdownInput() = 0;
 	virtual void		shutdownOutput() = 0;
 	virtual bool		isReady() const = 0;
+	virtual bool		isFatal() const = 0;
 	virtual UInt32		getSize() const = 0;
 };

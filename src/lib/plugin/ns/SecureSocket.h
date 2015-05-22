@@ -44,6 +44,8 @@ public:
 	void				secureConnect();
 	void				secureAccept();
 	bool				isReady() const { return m_secureReady; }
+	bool				isFatal() const { return m_fatal; }
+	void				isFatal(bool b) { m_fatal = b; }
 	bool				isSecureReady();
 	bool				isSecure() { return true; }
 	UInt32				secureRead(void* buffer, UInt32 n);
@@ -57,10 +59,10 @@ private:
 	// SSL
 	void				initContext(bool server);
 	void				createSSL();
-	bool				secureAccept(int s);
-	bool				secureConnect(int s);
+	int					secureAccept(int s);
+	int					secureConnect(int s);
 	bool				showCertificate();
-	void				checkResult(int n, bool& fatal, int& retry);
+	void				checkResult(int n, int& retry);
 	void				showError(const char* reason = NULL);
 	String				getError();
 	void				disconnect();
@@ -80,5 +82,6 @@ private:
 private:
 	Ssl*				m_ssl;
 	bool				m_secureReady;
+	bool				m_fatal;
 	int					m_maxRetry;
 };
