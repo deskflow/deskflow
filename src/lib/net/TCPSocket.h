@@ -52,6 +52,7 @@ public:
 	virtual void		shutdownInput();
 	virtual void		shutdownOutput();
 	virtual bool		isReady() const;
+	virtual bool		isFatal() const;
 	virtual UInt32		getSize() const;
 
 	// IDataSocket overrides

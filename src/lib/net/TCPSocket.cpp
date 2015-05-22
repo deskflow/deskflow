@@ -253,6 +253,14 @@ TCPSocket::isReady() const
 	return (m_inputBuffer.getSize() > 0);
 }
 
+bool
+TCPSocket::isFatal() const
+{
+	// TCP sockets aren't ever left in a fatal state.
+	LOG((CLOG_ERR "isFatal() not valid for non-secure connections"));
+	return false;
+}
+
 UInt32
 TCPSocket::getSize() const
 {
@@ -481,6 +489,9 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 					if (n > 0) {
 						s_retryOutputBufferSize = 0;
 					}
+					else if (n < 0) {
+						return NULL;
+					}
 				}
 				else {
 					return job;
@@ -537,6 +548,9 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 			if (isSecure()) {
 				if (isSecureReady()) {
 					n = secureRead(buffer, sizeof(buffer));
+					if (n < 0) {
+						return NULL;
+					}
 				}
 				else {
 					return job;
@@ -555,6 +569,9 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 
 					if (isSecure() && isSecureReady()) {
 						n = secureRead(buffer, sizeof(buffer));
+						if (n < 0) {
+							return NULL;
+						}
 					}
 					else {
 						n = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
