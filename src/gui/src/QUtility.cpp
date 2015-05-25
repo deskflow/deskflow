@@ -29,12 +29,6 @@
 #include <Windows.h>
 #endif
 
-#if defined(Q_OS_LINUX)
-static const char kLinuxI686[] = "i686";
-static const char kLinuxX8664[] = "x86_64";
-static const char kUbuntu[] = "Ubuntu";
-#endif
-
 void setIndexFromItemData(QComboBox* comboBox, const QVariant& itemData)
 {
 	for (int i = 0; i < comboBox->count(); ++i)
@@ -68,7 +62,7 @@ QString getFirstMacAddress()
 	return mac;
 }
 
-int checkProcessorArch()
+qProcessorArch getProcessorArch()
 {
 #if defined(Q_OS_WIN)
 	SYSTEM_INFO systemInfo;
@@ -76,97 +70,27 @@ int checkProcessorArch()
 
 	switch (systemInfo.wProcessorArchitecture) {
 	case PROCESSOR_ARCHITECTURE_INTEL:
-		return Win_x86;
+		return kProcessorArchWin32;
 	case PROCESSOR_ARCHITECTURE_IA64:
-		return Win_x64;
+		return kProcessorArchWin64;
 	case PROCESSOR_ARCHITECTURE_AMD64:
-		return Win_x64;
+		return kProcessorArchWin64;
 	default:
-		return unknown;
-	}
-#elif defined(Q_OS_MAC)
-	return Mac_i386;
-#else
-	bool version32 = false;
-	bool debPackaging = false;
-
-	QString program1("uname");
-	QStringList args1("-m");
-	QProcess process1;
-	process1.setReadChannel(QProcess::StandardOutput);
-	process1.start(program1, args1);
-	bool success = process1.waitForStarted();
-
-	QString out, error;
-	if (success)
-	{
-		if (process1.waitForFinished()) {
-			out = process1.readAllStandardOutput();
-			error = process1.readAllStandardError();
-		}
-	}
-
-	out = out.trimmed();
-	error = error.trimmed();
-
-	if (out.isEmpty() ||
-		!error.isEmpty() ||
-		!success ||
-		process1.exitCode() != 0)
-	{
-		return unknown;
-	}
-
-	if (out == kLinuxI686) {
-		version32 = true;
-	}
-
-	QString program2("python");
-	QStringList args2("-mplatform");
-	QProcess process2;
-	process2.setReadChannel(QProcess::StandardOutput);
-	process2.start(program2, args2);
-	success = process2.waitForStarted();
-
-	if (success)
-	{
-		if (process2.waitForFinished()) {
-			out = process2.readAllStandardOutput();
-			error = process2.readAllStandardError();
-		}
-	}
-
-	out = out.trimmed();
-	error = error.trimmed();
-
-	if (out.isEmpty() ||
-		!error.isEmpty() ||
-		!success ||
-		process2.exitCode() != 0)
-	{
-		return unknown;
-	}
-
-	if (out.contains(kUbuntu)) {
-		debPackaging = true;
-	}
-
-	if (version32) {
-		if (debPackaging) {
-			return Linux_deb_i686;
-		}
-		else {
-			return Linux_rpm_i686;
-		}
-	}
-	else {
-		if (debPackaging) {
-			return Linux_deb_x86_64;
-		}
-		else {
-			return Linux_rpm_x86_64;
-		}
+		return kProcessorArchUnknown;
 	}
 #endif
-	return unknown;
+
+#if defined(Q_OS_MAC)
+	return kProcessorArchMac;
+#endif
+
+#if defined(Q_OS_LINUX)
+#ifdef __i386__
+	return kProcessorArchLinux32;
+#else
+	return kProcessorArchLinux64;
+#endif
+#endif
+
+	return kProcessorArchUnknown;
 }

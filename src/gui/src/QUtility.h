@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include "ProcessorArch.h"
+
 #include <QComboBox>
 #include <QVariant>
 #include <QCryptographicHash>
@@ -25,4 +27,4 @@
 void setIndexFromItemData(QComboBox* comboBox, const QVariant& itemData);
 QString hash(const QString& string);
 QString getFirstMacAddress();
-int checkProcessorArch();
+qProcessorArch getProcessorArch();

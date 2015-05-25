@@ -31,13 +31,13 @@
 
 static const char kBaseUrl[] = "http://synergy-project.org/files";
 static const char kDefaultVersion[] = "1.1";
-static const char kWinProcessorArch32[] = "Windows-x86";
-static const char kWinProcessorArch64[] = "Windows-x64";
-static const char kMacProcessorArch[] = "MacOSX%1-i386";
-static const char kLinuxProcessorArchDeb32[] = "Linux-i686-deb";
-static const char kLinuxProcessorArchDeb64[] = "Linux-x86_64-deb";
-static const char kLinuxProcessorArchRpm32[] = "Linux-i686-rpm";
-static const char kLinuxProcessorArchRpm64[] = "Linux-x86_64-rpm";
+static const char kWinPackagePlatform32[] = "Windows-x86";
+static const char kWinPackagePlatform64[] = "Windows-x64";
+static const char kMacPackagePlatform32[] = "MacOSX%1-i386";
+static const char kLinuxPackagePlatformDeb32[] = "Linux-i686-deb";
+static const char kLinuxPackagePlatformDeb64[] = "Linux-x86_64-deb";
+static const char kLinuxPackagePlatformRpm32[] = "Linux-i686-rpm";
+static const char kLinuxPackagePlatformRpm64[] = "Linux-x86_64-rpm";
 
 #if defined(Q_OS_WIN)
 static const char kWinPluginExt[] = ".dll";
@@ -158,10 +158,10 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 	try {
 		QString coreArch = m_CoreInterface.getArch();
 		if (coreArch.startsWith("x86")) {
-			archName = kWinProcessorArch32;
+			archName = kWinPackagePlatform32;
 		}
 		else if (coreArch.startsWith("x64")) {
-			archName = kWinProcessorArch64;
+			archName = kWinPackagePlatform64;
 		}
 	}
 	catch (...) {
@@ -181,22 +181,43 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 	return "";
 #endif
 
-	archName = QString(kMacProcessorArch).arg(macVersion);
+	archName = QString(kMacPackagePlatform).arg(macVersion);
 
 #else
 
-	int arch = checkProcessorArch();
-	if (arch == Linux_rpm_i686) {
-		archName = kLinuxProcessorArchRpm32;
+	QString program("dpkg");
+	QStringList args;
+	args << "-s" << "synergy";
+
+	QProcess process;
+	process.setReadChannel(QProcess::StandardOutput);
+	process.start(program, args);
+	bool success = process.waitForStarted();
+
+	if (!success || !process.waitForFinished())
+	{
+		emit error(tr("Could not get Linux package type."));
+		return "";
 	}
-	else if (arch == Linux_rpm_x86_64) {
-		archName = kLinuxProcessorArchRpm64;
+
+	bool isDeb = (process.exitCode() == 0);
+
+	int arch = getProcessorArch();
+	if (arch == kProcessorArchLinux32) {
+		if (isDeb) {
+			archName = kLinuxPackagePlatformDeb32;
+		}
+		else {
+			archName = kLinuxPackagePlatformRpm32;
+		}
 	}
-	else if (arch == Linux_deb_i686) {
-		archName = kLinuxProcessorArchDeb32;
-	}
-	else if (arch == Linux_deb_x86_64) {
-		archName = kLinuxProcessorArchDeb64;
+	else if (arch == kProcessorArchLinux64) {
+		if (isDeb) {
+			archName = kLinuxPackagePlatformDeb64;
+		}
+		else {
+			archName = kLinuxPackagePlatformRpm64;
+		}
 	}
 	else {
 		emit error(tr("Could not get Linux architecture type."));
