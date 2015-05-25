@@ -30,6 +30,13 @@ class Generator(object):
 	def getSourceDir(self):
 		return self.sourceDir
 
+class VisualStudioGenerator(Generator):
+	def __init__(self, version):
+		super(VisualStudioGenerator, self).__init__('Visual Studio ' + version)
+
+	def getBinDir(self, target=''):
+		return super(VisualStudioGenerator, self).getBinDir(target) + '/' + target
+
 class MakefilesGenerator(Generator):
 	def __init__(self):
 		super(MakefilesGenerator, self).__init__('Unix Makefiles')
