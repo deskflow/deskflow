@@ -106,11 +106,11 @@ if (UNIX)
 				TARGET ns
 				POST_BUILD
 				COMMAND mkdir -p
-					${CMAKE_SOURCE_DIR}/bin/plugins
+					${CMAKE_SOURCE_DIR}/bin/debug/plugins
 					&&
 					cp
 					${CMAKE_SOURCE_DIR}/lib/debug/libns.*
-					${CMAKE_SOURCE_DIR}/bin/plugins/
+					${CMAKE_SOURCE_DIR}/bin/debug/plugins/
 			)
 		else()
 			add_custom_command(
