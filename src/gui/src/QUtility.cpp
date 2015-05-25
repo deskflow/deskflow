@@ -80,10 +80,6 @@ qProcessorArch getProcessorArch()
 	}
 #endif
 
-#if defined(Q_OS_MAC)
-	return kProcessorArchMac;
-#endif
-
 #if defined(Q_OS_LINUX)
 #ifdef __i386__
 	return kProcessorArchLinux32;
