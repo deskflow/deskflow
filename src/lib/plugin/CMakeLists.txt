@@ -19,7 +19,7 @@ if (WIN32)
 endif()
 
 if (APPLE)
-	if (OSX_TARGET_MINOR GREATER 6)
+	if (OSX_TARGET_MINOR GREATER 7)
 		add_subdirectory(ns)
 	endif()
 else()
