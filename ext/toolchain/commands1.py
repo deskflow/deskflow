@@ -1376,6 +1376,9 @@ class InternalCommands:
 		return filename
 
 	def findLibraryFile(self, type, dir, name):
+		if not os.path.exists(dir):
+			return None
+
 		(platform, packageExt, libraryExt) = self.getDistributePlatformInfo(type)
 		ext = libraryExt
 
