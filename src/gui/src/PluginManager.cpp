@@ -29,10 +29,11 @@
 #include <QProcess>
 #include <QCoreApplication>
 
-static QString kBaseUrl = "http://synergy-project.org/files";
+static const char kBaseUrl[] = "http://synergy-project.org/files";
+static const char kDefaultVersion[] = "1.0";
 static const char kWinProcessorArch32[] = "Windows-x86";
 static const char kWinProcessorArch64[] = "Windows-x64";
-static const char kMacProcessorArch[] = "MacOSX-i386";
+static const char kMacProcessorArch[] = "MacOSX%1-i386";
 static const char kLinuxProcessorArchDeb32[] = "Linux-i686-deb";
 static const char kLinuxProcessorArchDeb64[] = "Linux-x86_64-deb";
 static const char kLinuxProcessorArchRpm32[] = "Linux-i686-rpm";
@@ -170,7 +171,17 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 
 #elif defined(Q_OS_MAC)
 
-	archName = kMacProcessorArch;
+	QString macVersion = "1010";
+#if __MAC_OS_X_VERSION_MIN_REQUIRED <= 1090 // 10.9
+	macVersion = "109";
+#elif __MAC_OS_X_VERSION_MIN_REQUIRED <= 1080 // 10.8
+	macVersion = "108";
+#elif __MAC_OS_X_VERSION_MIN_REQUIRED <= 1070 // 10.7
+	emit error(tr("Plugins not supported on this Mac OS X version."));
+	return "";
+#endif
+
+	archName = QString(kMacProcessorArch).arg(macVersion);
 
 #else
 
@@ -194,13 +205,14 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 
 #endif
 
-	QString result = kBaseUrl;
-	result.append("/plugins/");
-	result.append(pluginName).append("/1.0/");
-	result.append(archName);
-	result.append("/");
-	result.append(getPluginOsSpecificName(pluginName));
+	QString result = QString("%1/plugins/%2/%3/%4/%5")
+			.arg(kBaseUrl)
+			.arg(pluginName)
+			.arg(kDefaultVersion)
+			.arg(archName)
+			.arg(getPluginOsSpecificName(pluginName));
 
+	qDebug() << result;
 	return result;
 }
 
