@@ -30,7 +30,7 @@
 #include <QCoreApplication>
 
 static const char kBaseUrl[] = "http://synergy-project.org/files";
-static const char kDefaultVersion[] = "1.0";
+static const char kDefaultVersion[] = "1.1";
 static const char kWinProcessorArch32[] = "Windows-x86";
 static const char kWinProcessorArch64[] = "Windows-x64";
 static const char kMacProcessorArch[] = "MacOSX%1-i386";
