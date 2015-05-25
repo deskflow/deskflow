@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -211,7 +211,7 @@ DaemonApp::mainLoop(bool logToFile)
 		m_ipcServer = new IpcServer(m_events, &multiplexer);
 
 		// send logging to gui via ipc, log system adopts outputter.
-		m_ipcLogOutputter = new IpcLogOutputter(*m_ipcServer);
+		m_ipcLogOutputter = new IpcLogOutputter(*m_ipcServer, true);
 		CLOG->insert(m_ipcLogOutputter);
 		
 #if SYSAPI_WIN32

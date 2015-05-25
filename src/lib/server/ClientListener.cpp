@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -142,25 +142,33 @@ ClientListener::handleClientConnecting(const Event&, void*)
 {
 	// accept client connection
 	IDataSocket* socket	= m_listen->accept();
-	synergy::IStream* stream  = socket;
 
-	if (stream == NULL) {
+	if (socket == NULL) {
 		return;
 	}
 
 	LOG((CLOG_NOTE "accepted client connection"));
 
+	if (m_useSecureNetwork) {
+		LOG((CLOG_DEBUG2 "attempting sercure Connection"));
+		while(!socket->isReady()) {
+			if(socket->isFatal()) {
+				m_listen->deleteSocket(socket);
+				return;
+			}
+			LOG((CLOG_DEBUG2 "retrying sercure Connection"));
+			ARCH->sleep(.5f);
+		}
+	}
+
+	LOG((CLOG_DEBUG2 "sercure Connection established:%d"));
+
+	synergy::IStream* stream  = socket;
 	// filter socket messages, including a packetizing filter
 	bool adopt = !m_useSecureNetwork;
 	stream = new PacketStreamFilter(m_events, stream, adopt);
 
 	assert(m_server != NULL);
-
-	if (m_useSecureNetwork) {
-		while(!socket->isReady()) {
-			ARCH->sleep(.5f);
-		}
-	}
 
 	// create proxy for unknown client
 	ClientProxyUnknown* client = new ClientProxyUnknown(stream, 30.0, m_server, m_events);

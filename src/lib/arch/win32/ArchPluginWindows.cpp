@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -60,8 +60,9 @@ ArchPluginWindows::load()
 		HINSTANCE library = LoadLibrary(path.c_str());
 
 		if (library == NULL) {
-			LOG((CLOG_ERR "failed to load plugin: %s %d", (*it).c_str(), GetLastError()));
-			throw XArch(new XArchEvalWindows);
+			String error = XArchEvalWindows().eval();
+			LOG((CLOG_ERR "failed to load plugin '%s', error: %s", (*it).c_str(), error.c_str()));
+			continue;
 		}
 
 		void* lib = reinterpret_cast<void*>(library);

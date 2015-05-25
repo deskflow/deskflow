@@ -4,7 +4,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -35,6 +35,7 @@
 //
 
 #define MAX_ERROR_SIZE 65535
+#define MAX_RETRY_COUNT 60
 
 static const char kFingerprintDirName[] = "SSL/Fingerprints";
 //static const char kFingerprintLocalFilename[] = "Local.txt";
@@ -50,7 +51,9 @@ SecureSocket::SecureSocket(
 		IEventQueue* events,
 		SocketMultiplexer* socketMultiplexer) :
 	TCPSocket(events, socketMultiplexer),
-	m_secureReady(false)
+	m_secureReady(false),
+	m_fatal(false),
+	m_maxRetry(MAX_RETRY_COUNT)
 {
 }
 
@@ -59,12 +62,15 @@ SecureSocket::SecureSocket(
 		SocketMultiplexer* socketMultiplexer,
 		ArchSocket socket) :
 	TCPSocket(events, socketMultiplexer, socket),
-	m_secureReady(false)
+	m_secureReady(false),
+	m_fatal(false),
+	m_maxRetry(MAX_RETRY_COUNT)
 {
 }
 
 SecureSocket::~SecureSocket()
 {
+	isFatal(true);
 	if (m_ssl->m_ssl != NULL) {
 		SSL_shutdown(m_ssl->m_ssl);
 
@@ -75,13 +81,15 @@ SecureSocket::~SecureSocket()
 		SSL_CTX_free(m_ssl->m_context);
 		m_ssl->m_context = NULL;
 	}
-
+	ARCH->sleep(1);
 	delete m_ssl;
 }
 
 void
 SecureSocket::close()
 {
+	isFatal(true);
+
 	SSL_shutdown(m_ssl->m_ssl);
 
 	TCPSocket::close();
@@ -103,42 +111,57 @@ SecureSocket::secureAccept()
 			getSocket(), isReadable(), isWritable()));
 }
 
-UInt32
-SecureSocket::secureRead(void* buffer, UInt32 n)
+int
+SecureSocket::secureRead(void* buffer, int size, int& read)
 {
-	int r = 0;
 	if (m_ssl->m_ssl != NULL) {
 		LOG((CLOG_DEBUG2 "reading secure socket"));
-		r = SSL_read(m_ssl->m_ssl, buffer, n);
+		read = SSL_read(m_ssl->m_ssl, buffer, size);
 		
-		bool fatal, retry;
-		checkResult(r, fatal, retry);
+		static int retry;
+
+		// Check result will cleanup the connection in the case of a fatal
+		checkResult(read, retry);
 		
 		if (retry) {
-			r = 0;
+			return 0;
+		}
+
+		if (isFatal()) {
+			return -1;
 		}
 	}
-
-	return r > 0 ? (UInt32)r : 0;
+	// According to SSL spec, the number of bytes read must not be negative and
+	// not have an error code from SSL_get_error(). If this happens, it is
+	// itself an error. Let the parent handle the case
+	return read;
 }
 
-UInt32
-SecureSocket::secureWrite(const void* buffer, UInt32 n)
+int
+SecureSocket::secureWrite(const void* buffer, int size, int& wrote)
 {
-	int r = 0;
 	if (m_ssl->m_ssl != NULL) {
-		LOG((CLOG_DEBUG2 "writing secure socket"));
-		r = SSL_write(m_ssl->m_ssl, buffer, n);
+		LOG((CLOG_DEBUG2 "writing secure socket:%p", this));
+
+		wrote = SSL_write(m_ssl->m_ssl, buffer, size);
 		
-		bool fatal, retry;
-		checkResult(r, fatal, retry);
+		static int retry;
+
+		// Check result will cleanup the connection in the case of a fatal
+		checkResult(wrote, retry);
 
 		if (retry) {
-			r = 0;
+			return 0;
+		}
+
+		if (isFatal()) {
+			return -1;
 		}
 	}
-
-	return r > 0 ? (UInt32)r : 0;
+	// According to SSL spec, r must not be negative and not have an error code
+	// from SSL_get_error(). If this happens, it is itself an error. Let the
+	// parent handle the case
+	return wrote;
 }
 
 bool
@@ -242,7 +265,7 @@ SecureSocket::createSSL()
 	}
 }
 
-bool
+int
 SecureSocket::secureAccept(int socket)
 {
 	createSSL();
@@ -253,25 +276,39 @@ SecureSocket::secureAccept(int socket)
 	LOG((CLOG_DEBUG2 "accepting secure socket"));
 	int r = SSL_accept(m_ssl->m_ssl);
 	
-	bool fatal, retry;
-	checkResult(r, fatal, retry);
+	static int retry;
 
-	if (fatal) {
+	checkResult(r, retry);
+
+	if (isFatal()) {
 		// tell user and sleep so the socket isn't hammered.
 		LOG((CLOG_ERR "failed to accept secure socket"));
 		LOG((CLOG_INFO "client connection may not be secure"));
+		m_secureReady = false;
 		ARCH->sleep(1);
+		return -1; // Failed, error out
 	}
 
-	m_secureReady = !retry;
-	if (m_secureReady) {
+	// If not fatal and no retry, state is good
+	if (retry == 0) {
+		m_secureReady = true;
 		LOG((CLOG_INFO "accepted secure socket"));
+		return 1;
 	}
 
-	return retry;
+	// If not fatal and retry is set, not ready, and return retry
+	if (retry > 0) {
+		LOG((CLOG_DEBUG2 "retry accepting secure socket"));
+		m_secureReady = false;
+		return 0;
+	}
+
+	// no good state exists here
+	LOG((CLOG_ERR "unexpected state attempting to accept connection"));
+	return -1;
 }
 
-bool
+int
 SecureSocket::secureConnect(int socket)
 {
 	createSSL();
@@ -282,31 +319,38 @@ SecureSocket::secureConnect(int socket)
 	LOG((CLOG_DEBUG2 "connecting secure socket"));
 	int r = SSL_connect(m_ssl->m_ssl);
 	
-	bool fatal, retry;
-	checkResult(r, fatal, retry);
+	static int retry;
 
-	if (fatal) {
+	checkResult(r, retry);
+
+	if (isFatal()) {
 		LOG((CLOG_ERR "failed to connect secure socket"));
-		LOG((CLOG_INFO "server connection may not be secure"));
-		return false;
+		return -1;
 	}
 
-	m_secureReady = !retry;
+	// If we should retry, not ready and return 0
+	if (retry > 0) {
+		LOG((CLOG_DEBUG2 "retry connect secure socket"));
+		m_secureReady = false;
+		return 0;
+	}
 
-	if (m_secureReady) {
-		if (verifyCertFingerprint()) {
-			LOG((CLOG_INFO "connected to secure socket"));
-			if (!showCertificate()) {
-				disconnect();
-			}
-		}
-		else {
-			LOG((CLOG_ERR "failed to verify server certificate fingerprint"));
+	// No error, set ready, process and return ok
+	m_secureReady = true;
+	if (verifyCertFingerprint()) {
+		LOG((CLOG_INFO "connected to secure socket"));
+		if (!showCertificate()) {
 			disconnect();
+			return -1;// Cert fail, error
 		}
 	}
-
-	return retry;
+	else {
+		LOG((CLOG_ERR "failed to verify server certificate fingerprint"));
+		disconnect();
+		return -1; // Fingerprint failed, error
+	}
+	LOG((CLOG_DEBUG2 "connected secure socket"));
+	return 1;
 }
 
 bool
@@ -332,40 +376,49 @@ SecureSocket::showCertificate()
 }
 
 void
-SecureSocket::checkResult(int n, bool& fatal, bool& retry)
+SecureSocket::checkResult(int status, int& retry)
 {
 	// ssl errors are a little quirky. the "want" errors are normal and
 	// should result in a retry.
 
-	fatal = false;
-	retry = false;
+	int errorCode = SSL_get_error(m_ssl->m_ssl, status);
 
-	int errorCode = SSL_get_error(m_ssl->m_ssl, n);
 	switch (errorCode) {
 	case SSL_ERROR_NONE:
+		retry = 0;
 		// operation completed
 		break;
 
 	case SSL_ERROR_ZERO_RETURN:
 		// connection closed
-		LOG((CLOG_DEBUG2 "SSL connection has been closed"));
+		isFatal(true);
+		LOG((CLOG_DEBUG "SSL connection has been closed"));
 		break;
 
 	case SSL_ERROR_WANT_READ:
 	case SSL_ERROR_WANT_WRITE:
 	case SSL_ERROR_WANT_CONNECT:
 	case SSL_ERROR_WANT_ACCEPT:
-		LOG((CLOG_DEBUG2 "need to retry the same SSL function"));
-		retry = true;
+		retry += 1;
+		// If there are a lot of retrys, it's worth warning about
+		if ( retry % 5 == 0 ) {
+			LOG((CLOG_DEBUG "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
+		}
+		else if ( retry == (maxRetry() / 2) ) {
+			LOG((CLOG_WARN "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
+		}
+		else {
+			LOG((CLOG_DEBUG2 "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
+		}
 		break;
 
 	case SSL_ERROR_SYSCALL:
 		LOG((CLOG_ERR "some secure socket I/O error occurred"));
 		if (ERR_peek_error() == 0) {
-			if (n == 0) {
+			if (status == 0) {
 				LOG((CLOG_ERR "an EOF violates the protocol"));
 			}
-			else if (n == -1) {
+			else if (status == -1) {
 				// underlying socket I/O reproted an error
 				try {
 					ARCH->throwErrorOnSocket(getSocket());
@@ -376,21 +429,28 @@ SecureSocket::checkResult(int n, bool& fatal, bool& retry)
 			}
 		}
 
-		fatal = true;
+		isFatal(true);
 		break;
 
 	case SSL_ERROR_SSL:
 		LOG((CLOG_ERR "a failure in the SSL library occurred"));
-		fatal = true;
+		isFatal(true);
 		break;
 
 	default:
 		LOG((CLOG_ERR "unknown secure socket error"));
-		fatal = true;
+		isFatal(true);
 		break;
 	}
 
-	if (fatal) {
+	// If the retry max would exceed the allowed, treat it as a fatal error
+	if (retry > maxRetry()) {
+		LOG((CLOG_ERR "Maximum retry count exceeded:%d",retry));
+		isFatal(true);
+	}
+
+	if (isFatal()) {
+		retry = 0;
 		showError();
 		disconnect();
 	}
@@ -506,14 +566,21 @@ SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 {
 	Lock lock(&getMutex());
 
-	bool retry = true;
+	int status = 0;
 #ifdef SYSAPI_WIN32
-	retry = secureConnect(static_cast<int>(getSocket()->m_socket));
+	status = secureConnect(static_cast<int>(getSocket()->m_socket));
 #elif SYSAPI_UNIX
-	retry = secureConnect(getSocket()->m_fd);
+	status = secureConnect(getSocket()->m_fd);
 #endif
 
-	return retry ? job : newJob();
+	if (status > 0) {
+		return newJob();
+	}
+	else if (status == 0) {
+		return job;
+	}
+	// If status < 0, error happened
+	return NULL;
 }
 
 ISocketMultiplexerJob*
@@ -522,12 +589,19 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 {
 	Lock lock(&getMutex());
 
-	bool retry = true;
+	int status = 0;
 #ifdef SYSAPI_WIN32
-	retry = secureAccept(static_cast<int>(getSocket()->m_socket));
+	status = secureAccept(static_cast<int>(getSocket()->m_socket));
 #elif SYSAPI_UNIX
-	retry = secureAccept(getSocket()->m_fd);
+	status = secureAccept(getSocket()->m_fd);
 #endif
 
-	return retry ? job : newJob();
+	if (status > 0) {
+		return newJob();
+	}
+	else if (status == 0) {
+		return job;
+	}
+	// If status < 0, error happened
+	return NULL;
 }

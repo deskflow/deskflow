@@ -4,7 +4,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -63,6 +63,7 @@ ToolApp::run(int argc, char** argv)
 				return kExitFailed;
 			}
 			else {
+				// HACK: send to standard out so watchdog can parse.
 				std::cout << "activeDesktop:" << name.c_str() << std::endl;
 			}
 #endif

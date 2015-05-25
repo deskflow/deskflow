@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -52,6 +52,7 @@ public:
 	virtual void		shutdownInput();
 	virtual void		shutdownOutput();
 	virtual bool		isReady() const;
+	virtual bool		isFatal() const;
 	virtual UInt32		getSize() const;
 
 	// IDataSocket overrides
@@ -66,8 +67,8 @@ protected:
 	IEventQueue*		getEvents() { return m_events; }
 	virtual bool		isSecureReady() { return false; }
 	virtual bool		isSecure() { return false; }
-	virtual UInt32		secureRead(void* buffer, UInt32) { return 0; }
-	virtual UInt32		secureWrite(const void*, UInt32) { return 0; }
+	virtual int			secureRead(void* buffer, int, int& ) { return 0; }
+	virtual int			secureWrite(const void*, int, int& ) { return 0; }
 
 	void				setJob(ISocketMultiplexerJob*);
 	ISocketMultiplexerJob*

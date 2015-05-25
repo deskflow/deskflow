@@ -4,7 +4,7 @@
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# found in the file COPYING that should have accompanied this file.
+# found in the file LICENSE that should have accompanied this file.
 # 
 # This package is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,7 +17,7 @@
 # Version number for Synergy
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 7)
-set(VERSION_REV 2)
+set(VERSION_REV 3)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
 cmake_minimum_required(VERSION 2.6)

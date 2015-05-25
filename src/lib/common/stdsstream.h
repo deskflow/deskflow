@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -42,7 +42,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this library; see the file COPYING.  If not, write to the Free
+along with this library; see the file LICENSE.  If not, write to the Free
 Software Foundation, 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 As a special exception, if you link this library with files

@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,8 +31,10 @@
 //   1: first version
 //   2: added language page
 //   3: added premium page and removed
+//   4: ssl plugin 'ns' introduced
+//   5: ssl plugin 'ns' updated
 //
-const int kWizardVersion = 4;
+const int kWizardVersion = 5;
 
 class QSettings;
 class SettingsDialog;

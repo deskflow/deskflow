@@ -5,7 +5,7 @@
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -420,9 +420,7 @@ MSWindowsWatchdog::outputLoop(void*)
 
 			testOutput(buffer);
 
-			// send process output over IPC to GUI, and force it to be sent
-			// which bypasses the ipc logging anti-recursion mechanism.
-			m_ipcLogOutputter.write(kINFO, buffer, true);
+			m_ipcLogOutputter.write(kINFO, buffer);
 
 			if (m_fileLogOutputter != NULL) {
 				m_fileLogOutputter->write(kINFO, buffer);
