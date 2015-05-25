@@ -1355,11 +1355,12 @@ class InternalCommands:
 		packageTarget = self.dist_name_rev(type)
 		ftp.upload(packageSource, packageTarget)
 
-		if (type != 'src'):
+		if type != 'src':
 			pluginsDir = binDir + '/plugins'
 			nsPluginSource = self.findLibraryFile(type, pluginsDir, 'ns')
-			nsPluginTarget = self.getLibraryDistFilename(type, pluginsDir, 'ns')
-			ftp.upload(nsPluginSource, nsPluginTarget, "plugins")
+			if nsPluginSource:
+				nsPluginTarget = self.getLibraryDistFilename(type, pluginsDir, 'ns')
+				ftp.upload(nsPluginSource, nsPluginTarget, "plugins")
 
 	def getLibraryDistFilename(self, type, dir, name):
 		(platform, packageExt, libraryExt) = self.getDistributePlatformInfo(type)
@@ -1384,7 +1385,7 @@ class InternalCommands:
 			if re.search(pattern, filename):
 				return dir + '/' + filename
 		
-		raise Exception('Could not find library name with pattern: ' + pattern)
+		return None
 
 	def getDistributePlatformInfo(self, type):
 		ext = None
