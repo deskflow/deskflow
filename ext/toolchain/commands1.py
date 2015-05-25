@@ -1468,17 +1468,17 @@ class InternalCommands:
 		if os.uname()[4][:3] == 'arm':
 			return 'Linux-armv6l'
 
-			# os_bits should be loaded with '32bit' or '64bit'
-			import platform
-			(os_bits, other) = platform.architecture()
+		# os_bits should be loaded with '32bit' or '64bit'
+		import platform
+		(os_bits, other) = platform.architecture()
 
-			# get platform based on current platform
-			if os_bits == '32bit':
-				return 'Linux-i686'
-			elif os_bits == '64bit':
-				return 'Linux-x86_64'
-			else:
-				raise Exception("unknown os bits: " + os_bits)
+		# get platform based on current platform
+		if os_bits == '32bit':
+			return 'Linux-i686'
+		elif os_bits == '64bit':
+			return 'Linux-x86_64'
+		else:
+			raise Exception("unknown os bits: " + os_bits)
 
 	def dist_usage(self):
 		print ('Usage: %s package [package-type]\n'
