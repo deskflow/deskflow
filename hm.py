@@ -16,9 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-sys.path.append('ext')
+import sys, os
+sys.path.append(os.path.join(os.getcwd(),'ext','toolchain'))
 
-from toolchain import commands1
+import commands1
 tc = commands1.Toolchain()
 tc.run(sys.argv)

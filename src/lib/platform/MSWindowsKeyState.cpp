@@ -618,7 +618,12 @@ MSWindowsKeyState::init()
 {
 	// look up symbol that's available on winNT family but not win95
 	HMODULE userModule = GetModuleHandle("user32.dll");
-	m_ToUnicodeEx = (ToUnicodeEx_t)GetProcAddress(userModule, "ToUnicodeEx");
+	if (userModule) {
+		m_ToUnicodeEx = (ToUnicodeEx_t)GetProcAddress(userModule, "ToUnicodeEx");
+	}
+	else {
+		LOG((CLOG_ERR "Error opening user32.dll: %d", GetLastError()));
+	}
 }
 
 void
@@ -1124,8 +1129,8 @@ MSWindowsKeyState::getKeyMap(synergy::KeyMap& keyMap)
 					// translate virtual key to a character with and without
 					// shift, caps lock, and AltGr.
 					struct Modifier {
-						UINT			m_vk1;
-						UINT			m_vk2;
+						BYTE			m_vk1;
+						BYTE			m_vk2;
 						BYTE			m_state;
 						KeyModifierMask	m_mask;
 					};

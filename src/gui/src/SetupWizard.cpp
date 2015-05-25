@@ -27,7 +27,7 @@
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_MainWindow(mainWindow),
 	m_StartMain(startMain),
-	m_Edition(Unknown)
+	m_Edition(editionUnknown)
 {
 	setupUi(this);
 	m_pPluginPage = new PluginWizardPage(mainWindow.appConfig());
@@ -89,7 +89,7 @@ bool SetupWizard::validateCurrentPage()
 					message,
 					this);
 
-				if (m_Edition == Unknown) {
+				if (m_Edition == editionUnknown) {
 					return false;
 				}
 				else {

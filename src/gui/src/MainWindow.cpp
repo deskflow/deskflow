@@ -50,7 +50,9 @@
 #endif
 
 #if defined(Q_OS_WIN)
+#ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0501
+#endif
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
@@ -670,7 +672,7 @@ QString MainWindow::configFilename()
 
 QString MainWindow::address()
 {
-	QString i = appConfig().interface();
+	QString i = appConfig().address();
 	return (!i.isEmpty() ? i : "") + ":" + QString::number(appConfig().port());
 }
 
@@ -940,10 +942,10 @@ void MainWindow::serverDetected(const QString name)
 void MainWindow::setEdition(int type)
 {
 	QString title;
-	if (type == Basic) {
+	if (type == editionBasic) {
 		title = "Synergy Basic";
 	}
-	else if (type == Pro) {
+	else if (type == editionPro) {
 		title = "Synergy Pro";
 	}
 	else {
@@ -1176,8 +1178,13 @@ void MainWindow::downloadBonjour()
 void MainWindow::installBonjour()
 {
 #if defined(Q_OS_WIN)
+#if QT_VERSION >= 0x050000
+	QString tempLocation = QStandardPaths::writableLocation(
+								QStandardPaths::TempLocation);
+#else
 	QString tempLocation = QDesktopServices::storageLocation(
 								QDesktopServices::TempLocation);
+#endif
 	QString filename = tempLocation;
 	filename.append("\\").append(bonjourTargetFilename);
 	QFile file(filename);
@@ -1250,7 +1257,7 @@ void MainWindow::updateEdition()
 		setEdition(m_AppConfig.edition());
 	}
 	else {
-		setEdition(Unknown);
+		setEdition(editionUnknown);
 	}
 }
 

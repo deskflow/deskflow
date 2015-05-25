@@ -32,7 +32,7 @@ int WebClient::getEdition(
 		QWidget* w)
 {
 	QString responseJson;
-	int edition = Unknown;
+	int edition = editionUnknown;
 	try {
 		QStringList args("--login-auth");
 		responseJson = request(email, password, args);

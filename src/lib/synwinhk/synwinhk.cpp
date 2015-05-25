@@ -237,7 +237,7 @@ bool
 doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
 	DWORD vkCode = static_cast<DWORD>(wParam);
-	bool kf_up = (lParam & (KF_UP << 16)) != 0;
+	bool kf_up = (lParam & (LPARAM(KF_UP) << 16)) != 0;
 
 	// check for special events indicating if we should start or stop
 	// passing events through and not report them to the server.  this
@@ -388,8 +388,8 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 	}
 
 	PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
-							wParam | ((c & 0xff) << 8) |
-							((n & 0xff) << 16) | 0x06000000,
+							wParam | (WPARAM(c & 0xff) << 8) |
+							(WPARAM(n & 0xff) << 16) | 0x06000000,
 							lParam);
 	WPARAM charAndVirtKey = 0;
 	bool clearDeadKey = false;
@@ -723,7 +723,7 @@ keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
 		KBDLLHOOKSTRUCT* info = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
 		WPARAM wParam = info->vkCode;
 		LPARAM lParam = 1;							// repeat code
-		lParam      |= (info->scanCode << 16);		// scan code
+		lParam      |= (LPARAM(info->scanCode) << 16);		// scan code
 		if (info->flags & LLKHF_EXTENDED) {
 			lParam  |= (1lu << 24);					// extended key
 		}

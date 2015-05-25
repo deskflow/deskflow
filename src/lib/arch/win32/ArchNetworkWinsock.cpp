@@ -87,7 +87,7 @@ ArchNetAddressImpl::alloc(size_t size)
 {
 	size_t totalSize = size + ADDR_HDR_SIZE;
 	ArchNetAddressImpl* addr = (ArchNetAddressImpl*)malloc(totalSize);
-	addr->m_len = (int)size;
+	if (addr) addr->m_len = (int)size;
 	return addr;
 }
 

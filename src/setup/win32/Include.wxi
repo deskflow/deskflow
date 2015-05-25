@@ -7,7 +7,12 @@
   <?define BinPath="../../../bin/$(var.Configuration)" ?>
   <?define ResPath="../../../res" ?>
   <?define ExtPath="../../../ext" ?>
+  <?ifndef QtPath ?>
   <?define QtPath="C:\Qt\2010.02\qt\bin" ?>
+  <?endif?>
+  <?ifndef VCVersion ?>
+  <?define VCVersion="10" ?>
+  <?endif?>
 
   <?ifndef Version ?>
   <?define Version="1.0.0" ?>
@@ -27,7 +32,13 @@
   <?define UpgradeGuid="$(var.UpgradeGuid32)" ?>
   <?define var.OpensslPath="openssl-win32" ?>
   <?endif?>
-  
-  <?define CRT="$(env.CommonProgramFiles)\Merge Modules\Microsoft_VC100_CRT_$(var.Platform).msm" ?>
+
+  <?if $(var.VCVersion) = "12" ?>
+  <?define var.InstallerVersion="405" ?>
+  <?else?>
+  <?define var.InstallerVersion="300" ?>
+  <?endif?>
+
+  <?define CRT="$(env.CommonProgramFiles)\Merge Modules\Microsoft_VC$(var.VCVersion)0_CRT_$(var.Platform).msm" ?>
   
 </Include>

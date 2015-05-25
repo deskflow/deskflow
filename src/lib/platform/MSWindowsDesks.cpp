@@ -823,10 +823,14 @@ MSWindowsDesks::removeDesks()
 	for (Desks::iterator index = m_desks.begin();
 							index != m_desks.end(); ++index) {
 		Desk* desk = index->second;
-		PostThreadMessage(desk->m_threadID, WM_QUIT, 0, 0);
-		desk->m_thread->wait();
-		delete desk->m_thread;
-		delete desk;
+		if (desk) {
+			PostThreadMessage(desk->m_threadID, WM_QUIT, 0, 0);
+			if (desk->m_thread) {
+				desk->m_thread->wait();
+				delete desk->m_thread;
+			}
+			delete desk;
+		}
 	}
 	m_desks.clear();
 	m_activeDesk     = NULL;
@@ -935,7 +939,7 @@ MSWindowsDesks::handleCheckDesk(const Event&, void*)
 	// also check if screen saver is running if on a modern OS and
 	// this is the primary screen.
 	if (m_isPrimary) {
-		BOOL running;
+		BOOL running = false;
 		SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, &running, FALSE);
 		PostThreadMessage(m_threadID, SYNERGY_MSG_SCREEN_SAVER, running, 0);
 	}
