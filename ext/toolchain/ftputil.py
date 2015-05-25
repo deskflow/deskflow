@@ -47,6 +47,8 @@ class FtpUploader:
 			try:
 				ftp.mkd(dir)
 			except:
+				# sometimes nlst may returns nothing, so mkd fails with 'File exists'
+				print "Failed to create dir '%s'" % dir
 
 		print "Changing to dir '%s'" % dir
 		ftp.cwd(dir)
