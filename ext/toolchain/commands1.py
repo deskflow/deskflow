@@ -17,7 +17,7 @@
 # TODO: split this file up, it's too long!
 
 import sys, os, ConfigParser, shutil, re, ftputil, zipfile, glob, commands
-from generators import Generator, EclipseGenerator, XcodeGenerator, MakefilesGenerator
+from generators import VisualStudioGenerator, EclipseGenerator, XcodeGenerator, MakefilesGenerator
 from getopt import gnu_getopt
 
 if sys.version_info >= (2, 4):
@@ -254,12 +254,12 @@ class InternalCommands:
 	gmockDir = 'gmock-1.6.0'
 
 	win32_generators = {
-		1 : Generator('Visual Studio 10'),
-		2 : Generator('Visual Studio 10 Win64'),
-		3 : Generator('Visual Studio 9 2008'),
-		4 : Generator('Visual Studio 9 2008 Win64'),
-		5 : Generator('Visual Studio 8 2005'),
-		6 : Generator('Visual Studio 8 2005 Win64')
+		1 : VisualStudioGenerator('10'),
+		2 : VisualStudioGenerator('10 Win64'),
+		3 : VisualStudioGenerator('9 2008'),
+		4 : VisualStudioGenerator('9 2008 Win64'),
+		5 : VisualStudioGenerator('8 2005'),
+		6 : VisualStudioGenerator('8 2005 Win64')
 	}
 
 	unix_generators = {
