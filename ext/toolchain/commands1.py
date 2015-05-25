@@ -840,7 +840,7 @@ class InternalCommands:
 		pwd = lines[0]
 		
 		if (dist):
-			self.signFile(pfx, pwd, 'bin', self.dist_name('win'))
+			self.signFile(pfx, pwd, 'bin/Release', self.dist_name('win'))
 		else:
 			self.signFile(pfx, pwd, 'bin/Release', 'synergy.exe')
 			self.signFile(pfx, pwd, 'bin/Release', 'synergyc.exe')
@@ -1281,7 +1281,7 @@ class InternalCommands:
 			arch)
 			
 		old = "bin/Release/synergy.msi"
-		new = "bin/%s" % (filename)
+		new = "bin/Release/%s" % (filename)
 		
 		try:
 			os.remove(new)
@@ -1344,56 +1344,48 @@ class InternalCommands:
 
 		return major + '.' + minor + '.' + rev
 
+	def ftpUpload(self, ftp, source, target):
+		print "Uploading '%s' as '%s' to FTP server '%s'..." % (
+			source, target, ftp.host)
+		ftp.run(source, target)
+		print 'Done'
+
 	def distftp(self, type, ftp):
 		if not type:
-			raise Exception('Type not specified.')
-		
-		if not ftp:
-			raise Exception('FTP info not defined.')
+			raise Exception('Platform type not specified.')
 		
 		self.loadConfig()
-		src = self.dist_name(type)
-		dest = self.dist_name_rev(type)
-		print 'Uploading %s to FTP server %s...' % (dest, ftp.host)
 
 		binDir = self.getGenerator().getBinDir('Release')
-		ftp.run(binDir + '/' + src, dest) 
-		print 'Done'
-	
-	def getDebianArch(self):
-		if os.uname()[4][:3] == 'arm':
-			return 'armhf'
+
+		packageSource = binDir + '/' + self.dist_name(type)
+		packageTarget = self.dist_name_rev(type)
+		self.ftpUpload(ftp, packageSource, packageTarget)
+
+		if (type != 'src'):
+			pluginsDir = binDir + '/plugins'
+			nsPluginSource = self.findLibraryFile(type, pluginsDir, 'ns')
+			nsPluginTarget = self.getLibraryDistFilename(type, pluginsDir, 'ns')
+			self.ftpUpload(ftp, nsPluginSource, nsPluginTarget)
 
                 # os_bits should be loaded with '32bit' or '64bit'
                 import platform
                 (os_bits, other) = platform.architecture()
+	def findLibraryFile(self, type, dir, name):
+		(platform, packageExt, libraryExt) = self.getDistributePlatformInfo(type)
+		ext = libraryExt
+
+		pattern = name + '\.' + ext
+
+		for filename in os.listdir(dir):
+			if re.search(pattern, filename):
+				return dir + '/' + filename
 		
-                # get platform based on current platform
-                if os_bits == '32bit':
-                        return 'i386'
-                elif os_bits == '64bit':
-                        return 'amd64'
-                else:
-                        raise Exception("unknown os bits: " + os_bits)
+		raise Exception('Could not find library name with pattern: ' + pattern)
 
-        def getLinuxPlatform(self):
-		if os.uname()[4][:3] == 'arm':
-			return 'Linux-armv6l'
-
-                # os_bits should be loaded with '32bit' or '64bit'
-                import platform
-                (os_bits, other) = platform.architecture()
-		
-                # get platform based on current platform
-                if os_bits == '32bit':
-                        return 'Linux-i686'
-                elif os_bits == '64bit':
-                        return 'Linux-x86_64'
-                else:
-                        raise Exception("unknown os bits: " + os_bits)
-
-	def dist_name(self, type):
+	def getDistributePlatformInfo(self, type):
 		ext = None
+		libraryExt = None
 		platform = None
 		
 		if type == 'src':
@@ -1401,14 +1393,14 @@ class InternalCommands:
 			platform = 'Source'
 			
 		elif type == 'rpm' or type == 'deb':
-		
 			ext = type
-                        platform = self.getLinuxPlatform()
+			libraryExt = 'so'
+			platform = self.getLinuxPlatform()
 			
 		elif type == 'win':
-			
 			# get platform based on last generator used
 			ext = 'msi'
+			libraryExt = 'dll'
 			generator = self.getGeneratorFromConfig().cmakeName
 			if generator.find('Win64') != -1:
 				platform = 'Windows-x64'
@@ -1417,18 +1409,23 @@ class InternalCommands:
 			
 		elif type == 'mac':
 			ext = "dmg"
+			libraryExt = 'dylib'
 			platform = self.getMacPackageName()
 		
 		if not platform:
-			raise Exception('Unable to detect package platform.')
-		
-		pattern = re.escape(self.project + '-') + '\d+\.\d+\.\d+' + re.escape('-' + platform + '.' + ext)
-		
-		target = ''
-		if type == 'mac':
-			target = 'Release'
+			raise Exception('Unable to detect distributable platform.')
 
-		for filename in os.listdir(self.getBinDir(target)):
+		return (platform, ext, libraryExt)
+
+	def dist_name(self, type):
+		(platform, packageExt, libraryExt) = self.getDistributePlatformInfo(type)
+		ext = packageExt
+		
+		pattern = (
+			re.escape(self.project + '-') + '\d+\.\d+\.\d+' +
+			re.escape('-' + platform + '.' + ext))
+
+		for filename in os.listdir(self.getBinDir('Release')):
 			if re.search(pattern, filename):
 				return filename
 		
@@ -1441,6 +1438,15 @@ class InternalCommands:
 		replace = "%s-%s" % (
 			self.getGitBranchName(), self.getGitRevision())
 		return re.sub(pattern, replace, self.dist_name(type))
+	
+	def getDebianArch(self):
+		if os.uname()[4][:3] == 'arm':
+			return 'armhf'
+
+
+		if os.uname()[4][:3] == 'arm':
+			return 'Linux-armv6l'
+
 
 	def dist_usage(self):
 		print ('Usage: %s package [package-type]\n'
@@ -1913,10 +1919,11 @@ class CommandHandler:
 			elif o == '--dir':
 				dir = a
 		
-		ftp = None
-		if host:
-			ftp = ftputil.FtpUploader(
-				host, user, password, dir)
+		if not host:
+			raise Exception('FTP host was not specified.')
+
+		ftp = ftputil.FtpUploader(
+			host, user, password, dir)
 		
 		self.ic.distftp(type, ftp)
 	
