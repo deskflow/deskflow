@@ -44,7 +44,9 @@ class FtpUploader:
 	def changeDir(self, ftp, dir):
 		if dir not in ftp.nlst():
 			print "Creating dir '%s'" % dir
-			ftp.mkd(dir)
+			try:
+				ftp.mkd(dir)
+			except:
 
 		print "Changing to dir '%s'" % dir
 		ftp.cwd(dir)
