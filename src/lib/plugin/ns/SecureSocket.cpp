@@ -448,7 +448,7 @@ SecureSocket::checkResult(int status, int& retry)
 
 	// If the retry max would exceed the allowed, treat it as a fatal error
 	if (retry > maxRetry()) {
-		LOG((CLOG_ERR "Maximum retry count exceeded:%d",retry));
+		LOG((CLOG_ERR "maximum retry count exceeded:%d",retry));
 		isFatal(true);
 	}
 
