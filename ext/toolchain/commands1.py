@@ -1343,12 +1343,6 @@ class InternalCommands:
 
 		return major + '.' + minor + '.' + rev
 
-	def ftpUpload(self, ftp, source, target):
-		print "Uploading '%s' as '%s' to FTP server '%s'..." % (
-			source, target, ftp.host)
-		ftp.run(source, target)
-		print 'Done'
-
 	def distftp(self, type, ftp):
 		if not type:
 			raise Exception('Platform type not specified.')
@@ -1359,13 +1353,13 @@ class InternalCommands:
 
 		packageSource = binDir + '/' + self.dist_name(type)
 		packageTarget = self.dist_name_rev(type)
-		self.ftpUpload(ftp, packageSource, packageTarget)
+		ftp.upload(packageSource, packageTarget)
 
 		if (type != 'src'):
 			pluginsDir = binDir + '/plugins'
 			nsPluginSource = self.findLibraryFile(type, pluginsDir, 'ns')
 			nsPluginTarget = self.getLibraryDistFilename(type, pluginsDir, 'ns')
-			self.ftpUpload(ftp, nsPluginSource, nsPluginTarget)
+			ftp.upload(nsPluginSource, nsPluginTarget, "plugins")
 
 	def getLibraryDistFilename(self, type, dir, name):
 		(platform, packageExt, libraryExt) = self.getDistributePlatformInfo(type)
