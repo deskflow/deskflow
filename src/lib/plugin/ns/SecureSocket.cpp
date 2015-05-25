@@ -395,7 +395,7 @@ SecureSocket::checkResult(int status, int& retry)
 	case SSL_ERROR_ZERO_RETURN:
 		// connection closed
 		isFatal(true);
-		LOG((CLOG_DEBUG "SSL connection has been closed"));
+		LOG((CLOG_DEBUG "ssl connection closed"));
 		break;
 
 	case SSL_ERROR_WANT_READ:
@@ -405,21 +405,21 @@ SecureSocket::checkResult(int status, int& retry)
 		retry += 1;
 		// If there are a lot of retrys, it's worth warning about
 		if ( retry % 5 == 0 ) {
-			LOG((CLOG_DEBUG "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
+			LOG((CLOG_DEBUG "ssl retry occurred, error=%s, attempt=%d", errorCode, retry));
 		}
 		else if ( retry == (maxRetry() / 2) ) {
-			LOG((CLOG_WARN "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
+			LOG((CLOG_WARN "ssl retry occurred, error=%s, attempt=%d", errorCode, retry));
 		}
 		else {
-			LOG((CLOG_DEBUG2 "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
+			LOG((CLOG_DEBUG2 "ssl retry occurred, error=%s, attempt=%d", errorCode, retry));
 		}
 		break;
 
 	case SSL_ERROR_SYSCALL:
-		LOG((CLOG_ERR "some secure socket I/O error occurred"));
+		LOG((CLOG_ERR "ssl  error occurred"));
 		if (ERR_peek_error() == 0) {
 			if (status == 0) {
-				LOG((CLOG_ERR "an EOF violates the protocol"));
+				LOG((CLOG_ERR "eof violates ssl protocol"));
 			}
 			else if (status == -1) {
 				// underlying socket I/O reproted an error
@@ -436,19 +436,19 @@ SecureSocket::checkResult(int status, int& retry)
 		break;
 
 	case SSL_ERROR_SSL:
-		LOG((CLOG_ERR "a failure in the SSL library occurred"));
+		LOG((CLOG_ERR "generic ssl error"));
 		isFatal(true);
 		break;
 
 	default:
-		LOG((CLOG_ERR "unknown secure socket error"));
+		LOG((CLOG_ERR "unknown ssl error"));
 		isFatal(true);
 		break;
 	}
 
 	// If the retry max would exceed the allowed, treat it as a fatal error
 	if (retry > maxRetry()) {
-		LOG((CLOG_ERR "maximum retry count exceeded:%d",retry));
+		LOG((CLOG_ERR "ssl retry limit exceeded: %d", retry));
 		isFatal(true);
 	}
 
