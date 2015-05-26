@@ -1,3 +1,5 @@
+v1.7.3-stable
+=============
 Bug #4565 - Incorrect plugin downloads on Debian and Mint
 Bug #4677 - Windows service log file grows to very large size
 Bug #4651 - High logging rate causes Windows service to crash
@@ -19,8 +21,8 @@ Enhancement #4708 - Download ns plugin for specific Mac versions
 Enhancement #4587 - Include OpenSSL binaries in source for easier building
 Enhancement #4695 - Automatically upload plugins as Buildbot step
 
-v1.7.2
-======
+v1.7.2-stable
+=============
 Bug #4564 - Modifier keys often stuck down on Mac client
 Bug #4581 - Starting GUI on Mac crashes instantly on syntool segfault
 Bug #4520 - Laggy or sluggish cursor (ping spikes) on Mac when using WiFi
@@ -32,8 +34,8 @@ Enhancement #4569 - Reintroduce GUI auto-hide setting (disabled by default)
 Enhancement #4570 - Make `--crypto-pass` show deprecated message
 Enhancement #4596 - Typo 'occurred' in WebClient.cpp
 
-v1.7.1
-======
+v1.7.1-beta
+===========
 Bug #3784 - Double click & drag doesn't select words on client
 Bug #3052 - Triple-click (select line) does not work
 Bug #4367 - Duplicate Alt-S Keyboard Shortcuts on Gui
@@ -59,8 +61,8 @@ Enhancement #4540 - Enable Network Security checkbox only when ns plugin exists
 Enhancement #4525 - Reorganize app data directory
 Enhancement #4390 - Disable GUI auto-hide by default
 
-1.7.0
-=====
+v1.7.0-beta
+===========
 Enhancement #4313 - SSL encrypted secure connection
 Enhancement #4168 - Plugin manager for GUI
 Enhancement #4307 - Always show client auto-detect dialog
