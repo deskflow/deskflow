@@ -972,7 +972,13 @@ class InternalCommands:
 		if p.returncode != 0:
 			raise Exception('Could not get branch name, git error: ' + str(p.returncode))
 	
-		return stdout.strip()
+		result = stdout.strip()
+
+		# sometimes, git will prepend "heads/" infront of the branch name,
+		# remove this as it's not useful to us and causes ftp issues.
+		result = re.sub("heads/", "", result)
+
+		return result
 
 	def find_revision_svn(self):
 		if sys.version_info < (2, 4):
@@ -1442,10 +1448,6 @@ class InternalCommands:
 	def dist_name_rev(self, type):
 		branch = self.getGitBranchName()
 		revision = self.getGitRevision()
-
-		# sometimes, git will prepend "heads/" infront of the branch name,
-		# remove this as it's not useful to us and causes ftp issues.
-		branch = re.sub("heads/", "", branch)
 
 		# find the version number (we're puting the rev in after this)
 		pattern = '(\d+\.\d+\.\d+)'
