@@ -1440,10 +1440,16 @@ class InternalCommands:
 		raise Exception('Could not find package name with pattern: ' + pattern)
 	
 	def dist_name_rev(self, type):
+		branch = "heads/" + self.getGitBranchName()
+		revision = self.getGitRevision()
+
+		# sometimes, git will prepend "heads/" infront of the branch name,
+		# remove this as it's not useful to us and causes ftp issues.
+		branch = re.sub("heads/", "", branch)
+		
 		# find the version number (we're puting the rev in after this)
 		pattern = '(\d+\.\d+\.\d+)'
-		replace = "%s-%s" % (
-			self.getGitBranchName(), self.getGitRevision())
+		replace = "%s-%s" % (branch, revision)
 		return re.sub(pattern, replace, self.dist_name(type))
 	
 	def getDebianArch(self):
