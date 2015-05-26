@@ -38,8 +38,8 @@
 
 enum {
 	// this limit seems extremely high, but mac client seem to generate around
-	// 20,000 errors before they establish a connection (wtf?)
-	kMaxRetryCount = 50000
+	// 50,000 errors before they establish a connection (wtf?)
+	kMaxRetryCount = 100000
 };
 
 static const char kFingerprintDirName[] = "SSL/Fingerprints";
