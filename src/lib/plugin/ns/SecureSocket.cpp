@@ -37,7 +37,9 @@
 #define MAX_ERROR_SIZE 65535
 
 enum {
-	kMaxRetryCount = 60
+	// this limit seems extremely high, but mac client seem to generate around
+	// 20,000 errors before they establish a connection (wtf?)
+	kMaxRetryCount = 50000
 };
 
 static const char kFingerprintDirName[] = "SSL/Fingerprints";
@@ -402,17 +404,11 @@ SecureSocket::checkResult(int status, int& retry)
 	case SSL_ERROR_WANT_WRITE:
 	case SSL_ERROR_WANT_CONNECT:
 	case SSL_ERROR_WANT_ACCEPT:
-		retry += 1;
-		// If there are a lot of retrys, it's worth warning about
-		if ( retry % 5 == 0 ) {
-			LOG((CLOG_DEBUG "ssl retry occurred, error=%d, attempt=%d", errorCode, retry));
-		}
-		else if ( retry == (maxRetry() / 2) ) {
-			LOG((CLOG_WARN "ssl retry occurred, error=%d, attempt=%d", errorCode, retry));
-		}
-		else {
-			LOG((CLOG_DEBUG2 "ssl retry occurred, error=%d, attempt=%d", errorCode, retry));
-		}
+		// it seems like these sort of errors are part of openssl's normal behavior,
+		// so we should expect a very high amount of these. sleeping doesn't seem to
+		// help... maybe you just have to swallow the errors (yuck).
+		retry++;
+		LOG((CLOG_DEBUG2 "passive ssl error, error=%d, attempt=%d", errorCode, retry));
 		break;
 
 	case SSL_ERROR_SYSCALL:
@@ -448,7 +444,7 @@ SecureSocket::checkResult(int status, int& retry)
 
 	// If the retry max would exceed the allowed, treat it as a fatal error
 	if (retry > maxRetry()) {
-		LOG((CLOG_ERR "ssl retry limit exceeded: %d", retry));
+		LOG((CLOG_ERR "passive ssl error limit exceeded: %d", retry));
 		isFatal(true);
 	}
 
