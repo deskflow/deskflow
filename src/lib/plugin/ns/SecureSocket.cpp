@@ -412,7 +412,7 @@ SecureSocket::checkResult(int status, int& retry)
 		break;
 
 	case SSL_ERROR_SYSCALL:
-		LOG((CLOG_ERR "ssl  error occurred"));
+		LOG((CLOG_ERR "ssl error occurred (system call failure)"));
 		if (ERR_peek_error() == 0) {
 			if (status == 0) {
 				LOG((CLOG_ERR "eof violates ssl protocol"));
@@ -432,12 +432,12 @@ SecureSocket::checkResult(int status, int& retry)
 		break;
 
 	case SSL_ERROR_SSL:
-		LOG((CLOG_ERR "generic ssl error"));
+		LOG((CLOG_ERR "ssl error occurred (generic failure)"));
 		isFatal(true);
 		break;
 
 	default:
-		LOG((CLOG_ERR "unknown ssl error"));
+		LOG((CLOG_ERR "ssl error occurred (unknown failure)"));
 		isFatal(true);
 		break;
 	}
