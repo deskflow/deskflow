@@ -1,3 +1,24 @@
+Bug #4565 - Incorrect plugin downloads on Debian and Mint
+Bug #4677 - Windows service log file grows to very large size
+Bug #4651 - High logging rate causes Windows service to crash
+Bug #4650 - SSL error log message repeats excessively and freezes cursor
+Bug #4624 - Runaway logging causes GUI to freeze
+Bug #4617 - Windows service randomly stops after 'ssl handshake failure' error
+Bug #4601 - Large clipboard data with SSL causes 'protocol is shutdown' error
+Bug #4593 - Locking Windows server causes SSL_ERROR_SSL to repeat
+Bug #4577 - Memory leak in GUI on Windows caused by logging
+Bug #4538 - Windows service crashes intermittently with no error
+Bug #4341 - GUI freezes on first load when reading log
+Bug #4566 - Client or server crashes with 'ssl handshake failure' error
+Bug #4706 - Installer is not output to build config dir on Windows
+Bug #4704 - Plugin 'ns' release build is overwritten with debug version on Linux
+Bug #4703 - Plugins are not built to config directory on Mac
+Bug #4697 - Timing can allow an SSL socket to be used after cleanup call
+Enhancement #4661 - Log error but do not crash when failing to load plugins
+Enhancement #4708 - Download ns plugin for specific Mac versions
+Enhancement #4587 - Include OpenSSL binaries in source for easier building
+Enhancement #4695 - Automatically upload plugins as Buildbot step
+
 v1.7.2
 ======
 Bug #4564 - Modifier keys often stuck down on Mac client
