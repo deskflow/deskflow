@@ -405,13 +405,13 @@ SecureSocket::checkResult(int status, int& retry)
 		retry += 1;
 		// If there are a lot of retrys, it's worth warning about
 		if ( retry % 5 == 0 ) {
-			LOG((CLOG_DEBUG "ssl retry occurred, error=%s, attempt=%d", errorCode, retry));
+			LOG((CLOG_DEBUG "ssl retry occurred, error=%d, attempt=%d", errorCode, retry));
 		}
 		else if ( retry == (maxRetry() / 2) ) {
-			LOG((CLOG_WARN "ssl retry occurred, error=%s, attempt=%d", errorCode, retry));
+			LOG((CLOG_WARN "ssl retry occurred, error=%d, attempt=%d", errorCode, retry));
 		}
 		else {
-			LOG((CLOG_DEBUG2 "ssl retry occurred, error=%s, attempt=%d", errorCode, retry));
+			LOG((CLOG_DEBUG2 "ssl retry occurred, error=%d, attempt=%d", errorCode, retry));
 		}
 		break;
 
