@@ -34,8 +34,8 @@ Enhancement #4569 - Reintroduce GUI auto-hide setting (disabled by default)
 Enhancement #4570 - Make `--crypto-pass` show deprecated message
 Enhancement #4596 - Typo 'occurred' in WebClient.cpp
 
-v1.7.1-beta
-===========
+v1.7.1-stable
+=============
 Bug #3784 - Double click & drag doesn't select words on client
 Bug #3052 - Triple-click (select line) does not work
 Bug #4367 - Duplicate Alt-S Keyboard Shortcuts on Gui
