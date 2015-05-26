@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Si Ltd.
- *
+ * Copyright (C) 2015 Synergy Si Inc.
+ * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- *
+ * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,12 +17,30 @@
 
 #pragma once
 
-enum qProcessorArch {
-	kProcessorArchWin32,
-	kProcessorArchWin64,
-	kProcessorArchMac32,
-	kProcessorArchMac64,
-	kProcessorArchLinux32,
-	kProcessorArchLinux64,
-	kProcessorArchUnknown
+#include "synergy/Chunk.h"
+#include "base/String.h"
+#include "common/basic_types.h"
+
+#define FILE_CHUNK_META_SIZE 2
+
+namespace synergy {
+class IStream;
+};
+
+class FileChunk : public Chunk {
+public:
+	FileChunk(size_t size);
+
+	static FileChunk*	start(const String& size);
+	static FileChunk*	data(UInt8* data, size_t dataSize);
+	static FileChunk*	end();
+	static int			assemble(
+							synergy::IStream* stream,
+							String& dataCached,
+							size_t& expectedSize);
+	static void			send(
+							synergy::IStream* stream,
+							UInt8 mark,
+							char* data,
+							size_t dataSize);
 };

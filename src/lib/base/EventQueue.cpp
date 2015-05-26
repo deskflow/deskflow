@@ -46,6 +46,7 @@ EVENT_TYPE_ACCESSOR(ServerApp)
 EVENT_TYPE_ACCESSOR(IKeyState)
 EVENT_TYPE_ACCESSOR(IPrimaryScreen)
 EVENT_TYPE_ACCESSOR(IScreen)
+EVENT_TYPE_ACCESSOR(Clipboard)
 
 // interrupt handler.  this just adds a quit event to the queue.
 static
@@ -82,6 +83,7 @@ EventQueue::EventQueue() :
 	m_typesForIKeyState(NULL),
 	m_typesForIPrimaryScreen(NULL),
 	m_typesForIScreen(NULL),
+	m_typesForClipboard(NULL),
 	m_readyMutex(new Mutex),
 	m_readyCondVar(new CondVar<bool>(m_readyMutex, false))
 {

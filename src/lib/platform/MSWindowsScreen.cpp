@@ -433,8 +433,8 @@ MSWindowsScreen::checkClipboards()
 	if (m_ownClipboard && !MSWindowsClipboard::isOwnedBySynergy()) {
 		LOG((CLOG_DEBUG "clipboard changed: lost ownership and no notification received"));
 		m_ownClipboard = false;
-		sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardClipboard);
-		sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardSelection);
+		sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardClipboard);
+		sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardSelection);
 	}
 }
 
@@ -1501,8 +1501,8 @@ MSWindowsScreen::onClipboardChange()
 		if (m_ownClipboard) {
 			LOG((CLOG_DEBUG "clipboard changed: lost ownership"));
 			m_ownClipboard = false;
-			sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardClipboard);
-			sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardSelection);
+			sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardClipboard);
+			sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardSelection);
 		}
 	}
 	else if (!m_ownClipboard) {

@@ -141,15 +141,6 @@ public:
 	*/
 	void				disconnect();
 
-	//! Clears the file buffer
-	void				clearReceivedFileData();
-
-	//! Set the expected size of receiving file
-	void				setExpectedFileSize(String data);
-	
-	//! Received a chunk of file data
-	void				fileChunkReceived(String data);
-
 	//! Create a new thread and use it to send file to client
 	void				sendFileToClient(const char* filename);
 
@@ -178,8 +169,14 @@ public:
 	//! Return true if recieved file size is valid
 	bool				isReceivedFileSizeValid();
 
-	//! Return expected file size
-	size_t				getExpectedFileSize() { return m_expectedFileSize; }
+	//! Return expected file data size
+	size_t&				getExpectedFileSize() { return m_expectedFileSize; }
+
+	//! Return received file data
+	String&				getReceivedFileData() { return m_receivedFileData; }
+
+	//! Return true if using secure network connection
+	bool				isSecure() const;
 
 	//@}
 
@@ -370,6 +367,9 @@ private:
 	// send drag info to new client screen
 	void				sendDragInfo(BaseClientProxy* newScreen);
 
+	// thread funciton for sending clipboard
+	void				sendClipboardThread(void*);
+
 public:
 	bool				m_mock;
 
@@ -480,4 +480,6 @@ private:
 	bool				m_waitDragInfoThread;
 
 	ClientListener*		m_clientListener;
+
+	Thread*				m_sendClipboardThread;
 };

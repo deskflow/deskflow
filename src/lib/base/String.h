@@ -84,10 +84,21 @@ void uppercase(String& subject);
 
 //! Remove all specific char in suject
 /*!
-Remove all specific \c char in \c suject
+Remove all specific \c c in \c suject
 */
 void removeChar(String& subject, const char c);
 
+//! Convert a size type to a string
+/*!
+Convert an size type to a string
+*/
+String sizeTypeToString(size_t n);
+
+//! Convert a string to a size type
+/*!
+Convert an a \c string to an size type
+*/
+size_t stringToSizeType(String string);
 
 //! Case-insensitive comparisons
 /*!

@@ -25,6 +25,7 @@
 #include "server/ClientProxy1_3.h"
 #include "server/ClientProxy1_4.h"
 #include "server/ClientProxy1_5.h"
+#include "server/ClientProxy1_6.h"
 #include "synergy/protocol_types.h"
 #include "synergy/ProtocolUtil.h"
 #include "synergy/XSynergy.h"
@@ -226,6 +227,10 @@ ClientProxyUnknown::handleData(const Event&, void*)
 
 			case 5:
 				m_proxy = new ClientProxy1_5(name, m_stream, m_server, m_events);
+				break;
+
+			case 6:
+				m_proxy = new ClientProxy1_6(name, m_stream, m_server, m_events);
 				break;
 			}
 		}

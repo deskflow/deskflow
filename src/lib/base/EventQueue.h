@@ -157,6 +157,7 @@ public:
 	IKeyStateEvents&			forIKeyState();
 	IPrimaryScreenEvents&		forIPrimaryScreen();
 	IScreenEvents&				forIScreen();
+	ClipboardEvents&			forClipboard();
 
 private:
 	ClientEvents*				m_typesForClient;
@@ -177,6 +178,7 @@ private:
 	IKeyStateEvents*			m_typesForIKeyState;
 	IPrimaryScreenEvents*		m_typesForIPrimaryScreen;
 	IScreenEvents*				m_typesForIScreen;
+	ClipboardEvents*			m_typesForClipboard;
 	Mutex*						m_readyMutex;
 	CondVar<bool>*				m_readyCondVar;
 	std::queue<Event>			m_pending;

@@ -1132,12 +1132,12 @@ void MainWindow::downloadBonjour()
 {
 #if defined(Q_OS_WIN)
 	QUrl url;
-	int arch = checkProcessorArch();
-	if (arch == Win_x86) {
+	int arch = getProcessorArch();
+	if (arch == kProcessorArchWin32) {
 		url.setUrl(bonjourBaseUrl + bonjourFilename32);
 		appendLogNote("downloading 32-bit Bonjour");
 	}
-	else if (arch == Win_x64) {
+	else if (arch == kProcessorArchWin64) {
 		url.setUrl(bonjourBaseUrl + bonjourFilename64);
 		appendLogNote("downloading 64-bit Bonjour");
 	}

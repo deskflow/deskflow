@@ -207,6 +207,23 @@ removeChar(String& subject, const char c)
 	subject.erase(std::remove(subject.begin(), subject.end(), c), subject.end());
 }
 
+String
+sizeTypeToString(size_t n)
+{
+	std::stringstream ss;
+	ss << n;
+	return ss.str();
+}
+
+size_t
+stringToSizeType(String string)
+{
+	std::istringstream iss(string);
+	size_t value;
+	iss >> value;
+	return value;
+}
+
 //
 // CaselessCmp
 //

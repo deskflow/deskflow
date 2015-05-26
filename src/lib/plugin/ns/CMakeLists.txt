@@ -85,18 +85,20 @@ if (WIN32)
 			..\\..\\..\\..\\..\\ext\\${OPENSSL_PLAT_DIR}\\out32dll\\ssleay32.*
 			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
 	)
-else()
+endif()
+
+if (UNIX)
 	if (APPLE)
 		add_custom_command(
 			TARGET ns
 			POST_BUILD
 			COMMAND
 				mkdir -p
-				${CMAKE_SOURCE_DIR}/bin/plugins
+				${CMAKE_SOURCE_DIR}/bin/${CMAKE_CFG_INTDIR}/plugins
 				&&
 				cp
 				${CMAKE_SOURCE_DIR}/lib/${CMAKE_CFG_INTDIR}/libns.*
-				${CMAKE_SOURCE_DIR}/bin/plugins/
+				${CMAKE_SOURCE_DIR}/bin/${CMAKE_CFG_INTDIR}/plugins/
 		)
 	else()
 		if (CMAKE_BUILD_TYPE STREQUAL Debug)
@@ -104,11 +106,11 @@ else()
 				TARGET ns
 				POST_BUILD
 				COMMAND mkdir -p
-					${CMAKE_SOURCE_DIR}/bin/plugins
+					${CMAKE_SOURCE_DIR}/bin/debug/plugins
 					&&
 					cp
 					${CMAKE_SOURCE_DIR}/lib/debug/libns.*
-					${CMAKE_SOURCE_DIR}/bin/plugins/
+					${CMAKE_SOURCE_DIR}/bin/debug/plugins/
 			)
 		else()
 			add_custom_command(

@@ -29,14 +29,15 @@
 #include <QProcess>
 #include <QCoreApplication>
 
-static QString kBaseUrl = "http://synergy-project.org/files";
-static const char kWinProcessorArch32[] = "Windows-x86";
-static const char kWinProcessorArch64[] = "Windows-x64";
-static const char kMacProcessorArch[] = "MacOSX-i386";
-static const char kLinuxProcessorArchDeb32[] = "Linux-i686-deb";
-static const char kLinuxProcessorArchDeb64[] = "Linux-x86_64-deb";
-static const char kLinuxProcessorArchRpm32[] = "Linux-i686-rpm";
-static const char kLinuxProcessorArchRpm64[] = "Linux-x86_64-rpm";
+static const char kBaseUrl[] = "http://synergy-project.org/files";
+static const char kDefaultVersion[] = "1.1";
+static const char kWinPackagePlatform32[] = "Windows-x86";
+static const char kWinPackagePlatform64[] = "Windows-x64";
+static const char kMacPackagePlatform[] = "MacOSX%1-i386";
+static const char kLinuxPackagePlatformDeb32[] = "Linux-i686-deb";
+static const char kLinuxPackagePlatformDeb64[] = "Linux-x86_64-deb";
+static const char kLinuxPackagePlatformRpm32[] = "Linux-i686-rpm";
+static const char kLinuxPackagePlatformRpm64[] = "Linux-x86_64-rpm";
 
 #if defined(Q_OS_WIN)
 static const char kWinPluginExt[] = ".dll";
@@ -157,10 +158,10 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 	try {
 		QString coreArch = m_CoreInterface.getArch();
 		if (coreArch.startsWith("x86")) {
-			archName = kWinProcessorArch32;
+			archName = kWinPackagePlatform32;
 		}
 		else if (coreArch.startsWith("x64")) {
-			archName = kWinProcessorArch64;
+			archName = kWinPackagePlatform64;
 		}
 	}
 	catch (...) {
@@ -170,22 +171,53 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 
 #elif defined(Q_OS_MAC)
 
-	archName = kMacProcessorArch;
+	QString macVersion = "1010";
+#if __MAC_OS_X_VERSION_MIN_REQUIRED <= 1090 // 10.9
+	macVersion = "109";
+#elif __MAC_OS_X_VERSION_MIN_REQUIRED <= 1080 // 10.8
+	macVersion = "108";
+#elif __MAC_OS_X_VERSION_MIN_REQUIRED <= 1070 // 10.7
+	emit error(tr("Plugins not supported on this Mac OS X version."));
+	return "";
+#endif
+
+	archName = QString(kMacPackagePlatform).arg(macVersion);
 
 #else
 
-	int arch = checkProcessorArch();
-	if (arch == Linux_rpm_i686) {
-		archName = kLinuxProcessorArchRpm32;
+	QString program("dpkg");
+	QStringList args;
+	args << "-s" << "synergy";
+
+	QProcess process;
+	process.setReadChannel(QProcess::StandardOutput);
+	process.start(program, args);
+	bool success = process.waitForStarted();
+
+	if (!success || !process.waitForFinished())
+	{
+		emit error(tr("Could not get Linux package type."));
+		return "";
 	}
-	else if (arch == Linux_rpm_x86_64) {
-		archName = kLinuxProcessorArchRpm64;
+
+	bool isDeb = (process.exitCode() == 0);
+
+	int arch = getProcessorArch();
+	if (arch == kProcessorArchLinux32) {
+		if (isDeb) {
+			archName = kLinuxPackagePlatformDeb32;
+		}
+		else {
+			archName = kLinuxPackagePlatformRpm32;
+		}
 	}
-	else if (arch == Linux_deb_i686) {
-		archName = kLinuxProcessorArchDeb32;
-	}
-	else if (arch == Linux_deb_x86_64) {
-		archName = kLinuxProcessorArchDeb64;
+	else if (arch == kProcessorArchLinux64) {
+		if (isDeb) {
+			archName = kLinuxPackagePlatformDeb64;
+		}
+		else {
+			archName = kLinuxPackagePlatformRpm64;
+		}
 	}
 	else {
 		emit error(tr("Could not get Linux architecture type."));
@@ -194,13 +226,14 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 
 #endif
 
-	QString result = kBaseUrl;
-	result.append("/plugins/");
-	result.append(pluginName).append("/1.0/");
-	result.append(archName);
-	result.append("/");
-	result.append(getPluginOsSpecificName(pluginName));
+	QString result = QString("%1/plugins/%2/%3/%4/%5")
+			.arg(kBaseUrl)
+			.arg(pluginName)
+			.arg(kDefaultVersion)
+			.arg(archName)
+			.arg(getPluginOsSpecificName(pluginName));
 
+	qDebug() << result;
 	return result;
 }
 

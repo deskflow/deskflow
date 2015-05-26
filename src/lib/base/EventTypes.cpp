@@ -115,7 +115,6 @@ REGISTER_EVENT(ClientListener, connected)
 
 REGISTER_EVENT(ClientProxy, ready)
 REGISTER_EVENT(ClientProxy, disconnected)
-REGISTER_EVENT(ClientProxy, clipboardChanged)
 
 //
 // ClientProxyUnknown
@@ -175,7 +174,6 @@ REGISTER_EVENT(IPrimaryScreen, fakeInputEnd)
 
 REGISTER_EVENT(IScreen, error)
 REGISTER_EVENT(IScreen, shapeChanged)
-REGISTER_EVENT(IScreen, clipboardGrabbed)
 REGISTER_EVENT(IScreen, suspend)
 REGISTER_EVENT(IScreen, resume)
 REGISTER_EVENT(IScreen, fileChunkSending)
@@ -187,3 +185,11 @@ REGISTER_EVENT(IScreen, fileRecieveCompleted)
 
 REGISTER_EVENT(IpcServer, clientConnected)
 REGISTER_EVENT(IpcServer, messageReceived)
+
+//
+// Clipboard
+//
+
+REGISTER_EVENT(Clipboard, clipboardGrabbed)
+REGISTER_EVENT(Clipboard, clipboardChanged)
+REGISTER_EVENT(Clipboard, clipboardSending)

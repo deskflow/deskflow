@@ -120,7 +120,9 @@ TEST(IpcLogOutputterTests, write_overBufferRateLimit_lastLineTruncated)
 	
 	// after waiting the time limit send another to make sure
 	// we can log after the time limit passes.
-	ARCH->sleep(0.01); // 10ms
+	// HACK: sleep causes the unit test to fail intermittently,
+	// so lets try 100ms (there must be a better way to solve this)
+	ARCH->sleep(0.1); // 100ms
 	outputter.write(kNOTE, "mock 3");
 	outputter.write(kNOTE, "mock 4");
 	outputter.sendBuffer();

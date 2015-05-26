@@ -23,13 +23,32 @@ class FtpUploader:
 		self.password = password
 		self.dir = dir
 
-	def run(self, src, dest, replace=False):
-		
+	def upload(self, src, dest, subDir=None):
+		print "Connecting to '%s'" % self.host
 		ftp = FTP(self.host, self.user, self.password)
-		ftp.cwd(self.dir)
+
+		self.changeDir(ftp, self.dir)
+
+		if subDir:
+			self.changeDir(ftp, subDir)
 		
+		print "Uploading '%s' as '%s'" % (src, dest)
 		f = open(src, 'rb')
 		ftp.storbinary('STOR ' + dest, f)
 		f.close()
 		
 		ftp.close()
+
+		print "Done"
+
+	def changeDir(self, ftp, dir):
+		if dir not in ftp.nlst():
+			print "Creating dir '%s'" % dir
+			try:
+				ftp.mkd(dir)
+			except:
+				# sometimes nlst may returns nothing, so mkd fails with 'File exists'
+				print "Failed to create dir '%s'" % dir
+
+		print "Changing to dir '%s'" % dir
+		ftp.cwd(dir)

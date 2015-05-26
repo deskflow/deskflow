@@ -22,13 +22,14 @@
 #include "server/ClientProxyUnknown.h"
 #include "server/PrimaryClient.h"
 #include "server/ClientListener.h"
+#include "synergy/FileChunk.h"
 #include "synergy/IPlatformScreen.h"
 #include "synergy/DropHelper.h"
 #include "synergy/option_types.h"
 #include "synergy/protocol_types.h"
 #include "synergy/XScreen.h"
 #include "synergy/XSynergy.h"
-#include "synergy/FileChunker.h"
+#include "synergy/StreamChunker.h"
 #include "synergy/KeyState.h"
 #include "synergy/Screen.h"
 #include "synergy/PacketStreamFilter.h"
@@ -91,7 +92,8 @@ Server::Server(
 	m_ignoreFileTransfer(false),
 	m_enableDragDrop(enableDragDrop),
 	m_getDragInfoThread(NULL),
-	m_waitDragInfoThread(true)
+	m_waitDragInfoThread(true),
+	m_sendClipboardThread(NULL)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
@@ -503,11 +505,18 @@ Server::switchScreen(BaseClientProxy* dst,
 		m_active->enter(x, y, m_seqNum,
 								m_primaryClient->getToggleMask(),
 								forScreensaver);
-
-		// send the clipboard data to new active screen
-		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-			m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
+		// if already sending clipboard, we need to interupt it, otherwise
+		// clipboard data could be corrupted on the other side
+		if (m_sendClipboardThread != NULL) {
+			StreamChunker::interruptClipboard();
 		}
+		
+		// send the clipboard data to new active screen
+		m_sendClipboardThread = new Thread(
+										new TMethodJob<Server>(
+												this,
+												&Server::sendClipboardThread,
+												NULL));
 
 		Server::SwitchToScreenInfo* info =
 			Server::SwitchToScreenInfo::alloc(m_active->getName());
@@ -1850,6 +1859,14 @@ Server::sendDragInfo(BaseClientProxy* newScreen)
 }
 
 void
+Server::sendClipboardThread(void*)
+{
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
+	}
+}
+
+void
 Server::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 {
 	LOG((CLOG_DEBUG2 "onMouseMoveSecondary %+d,%+d", dx, dy));
@@ -2023,13 +2040,13 @@ Server::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
 void
 Server::onFileChunkSending(const void* data)
 {
-	FileChunker::FileChunk* fileChunk = reinterpret_cast<FileChunker::FileChunk*>(const_cast<void*>(data));
+	FileChunk* chunk = reinterpret_cast<FileChunk*>(const_cast<void*>(data));
 
-	LOG((CLOG_DEBUG1 "onFileChunkSending"));
+	LOG((CLOG_DEBUG1 "sending file chunk"));
 	assert(m_active != NULL);
 
 	// relay
- 	m_active->fileChunkSending(fileChunk->m_chunk[0], &(fileChunk->m_chunk[1]), fileChunk->m_dataSize);
+ 	m_active->fileChunkSending(chunk->m_chunk[0], &chunk->m_chunk[1], chunk->m_dataSize);
 }
 
 void
@@ -2068,11 +2085,11 @@ Server::addClient(BaseClientProxy* client)
 							client->getEventTarget(),
 							new TMethodEventJob<Server>(this,
 								&Server::handleShapeChanged, client));
-	m_events->adoptHandler(m_events->forIScreen().clipboardGrabbed(),
+	m_events->adoptHandler(m_events->forClipboard().clipboardGrabbed(),
 							client->getEventTarget(),
 							new TMethodEventJob<Server>(this,
 								&Server::handleClipboardGrabbed, client));
-	m_events->adoptHandler(m_events->forClientProxy().clipboardChanged(),
+	m_events->adoptHandler(m_events->forClipboard().clipboardChanged(),
 							client->getEventTarget(),
 							new TMethodEventJob<Server>(this,
 								&Server::handleClipboardChanged, client));
@@ -2104,9 +2121,9 @@ Server::removeClient(BaseClientProxy* client)
 	// remove event handlers
 	m_events->removeHandler(m_events->forIScreen().shapeChanged(),
 							client->getEventTarget());
-	m_events->removeHandler(m_events->forIScreen().clipboardGrabbed(),
+	m_events->removeHandler(m_events->forClipboard().clipboardGrabbed(),
 							client->getEventTarget());
-	m_events->removeHandler(m_events->forClientProxy().clipboardChanged(),
+	m_events->removeHandler(m_events->forClipboard().clipboardChanged(),
 							client->getEventTarget());
 
 	// remove from list
@@ -2326,25 +2343,6 @@ Server::KeyboardBroadcastInfo::alloc(State state, const String& screens)
 	return info;
 }
 
-void
-Server::clearReceivedFileData()
-{
-	m_receivedFileData.clear();
-}
-
-void
-Server::setExpectedFileSize(String data)
-{
-	std::istringstream iss(data);
-	iss >> m_expectedFileSize;
-}
-
-void
-Server::fileChunkReceived(String data)
-{
-	m_receivedFileData += data;
-}
-
 bool
 Server::isReceivedFileSizeValid()
 {
@@ -2354,6 +2352,10 @@ Server::isReceivedFileSizeValid()
 void
 Server::sendFileToClient(const char* filename)
 {
+	if (m_sendFileThread != NULL) {
+		StreamChunker::interruptFile();
+	}
+	
 	m_sendFileThread = new Thread(
 		new TMethodJob<Server>(
 			this, &Server::sendFileThread,
@@ -2366,7 +2368,7 @@ Server::sendFileThread(void* data)
 	try {
 		char* filename = reinterpret_cast<char*>(data);
 		LOG((CLOG_DEBUG "sending file to client, filename=%s", filename));
-		FileChunker::sendFileChunks(filename, m_events, this);
+		StreamChunker::sendFile(filename, m_events, this);
 	}
 	catch (std::runtime_error error) {
 		LOG((CLOG_ERR "failed sending file chunks, error: %s", error.what()));
@@ -2386,4 +2388,10 @@ Server::dragInfoReceived(UInt32 fileNum, String content)
 	DragInformation::parseDragInfo(m_dragFileList, fileNum, content);
 
 	m_screen->startDraggingFiles(m_dragFileList);
+}
+
+bool
+Server::isSecure() const
+{
+	return m_clientListener->isSecure();
 }

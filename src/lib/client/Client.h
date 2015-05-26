@@ -85,15 +85,6 @@ public:
 	*/
 	virtual void		handshakeComplete();
 
-	//! Clears the file buffer
-	void				clearReceivedFileData();
-
-	//! Set the expected size of receiving file
-	void				setExpectedFileSize(String data);
-
-	//! Received a chunk of file data
-	void				fileChunkReceived(String data);
-
 	//! Received drag information
 	void				dragInfoReceived(UInt32 fileNum, String data);
 
@@ -131,7 +122,10 @@ public:
 	bool				isReceivedFileSizeValid();
 
 	//! Return expected file size
-	size_t				getExpectedFileSize() { return m_expectedFileSize; }
+	size_t&				getExpectedFileSize() { return m_expectedFileSize; }
+
+	//! Return received file data
+	String&				getReceivedFileData() { return m_receivedFileData; }
 
 	//@}
 
@@ -194,6 +188,7 @@ private:
 	void				handleFileRecieveCompleted(const Event&, void*);
 	void				handleStopRetry(const Event&, void*);
 	void				onFileRecieveCompleted();
+	void				sendClipboardThread(void*);
 
 public:
 	bool				m_mock;
@@ -224,4 +219,5 @@ private:
 	TCPSocket*			m_socket;
 	bool				m_useSecureNetwork;
 	ClientArgs&			m_args;
+	Thread*				m_sendClipboardThread;
 };

@@ -28,9 +28,10 @@
 //       adds horizontal mouse scrolling
 // 1.4:  adds crypto support
 // 1.5:  adds file transfer and removes home brew crypto
+// 1.6:  adds clipboard streaming
 // NOTE: with new version, synergy minor version should increment
 static const SInt16		kProtocolMajorVersion = 1;
-static const SInt16		kProtocolMinorVersion = 5;
+static const SInt16		kProtocolMinorVersion = 6;
 
 // default contact port number
 static const UInt16		kDefaultPort = 24800;
@@ -69,13 +70,19 @@ enum EDirectionMask {
 	kBottomMask = 1 << kBottom
 };
 
-// file transfer constants
-enum EFileTransfer {
-	kFileStart = 1,
-	kFileChunk = 2,
-	kFileEnd = 3
+// Data transfer constants
+enum EDataTransfer {
+	kDataStart = 1,
+	kDataChunk = 2,
+	kDataEnd = 3
 };
 
+// Data received constants
+enum EDataReceived {
+	kNotFinish,
+	kFinish,
+	kError
+};
 
 //
 // message codes (trailing NUL is not part of code).  in comments, $n
@@ -225,7 +232,7 @@ extern const char*		kMsgDMouseWheel;
 extern const char*		kMsgDMouseWheel1_0;
 
 // clipboard data:  primary <-> secondary
-// $2 = sequence number, $3 = clipboard data.  the sequence number
+// $2 = sequence number, $3 = mark $4 = clipboard data.  the sequence number
 // is 0 when sent by the primary.  secondary screens should use the
 // sequence number from the most recent kMsgCEnter.  $1 = clipboard
 // identifier.
