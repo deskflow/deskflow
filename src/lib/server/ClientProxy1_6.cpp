@@ -29,11 +29,6 @@
 // ClientProxy1_6
 //
 
-enum
-{
-	kSslClipboardMaxSize = 1024
-};
-
 ClientProxy1_6::ClientProxy1_6(const String& name, synergy::IStream* stream, Server* server, IEventQueue* events) :
 	ClientProxy1_5(name, stream, server, events),
 	m_events(events)
@@ -61,8 +56,9 @@ ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
 
 		size_t size = data.size();
 		LOG((CLOG_DEBUG "sending clipboard %d to \"%s\"", id, getName().c_str()));
-		
+
 		StreamChunker::sendClipboard(data, size, id, 0, m_events, this);
+
 		LOG((CLOG_DEBUG "sent clipboard size=%d", size));
 	}
 }
