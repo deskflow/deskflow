@@ -63,8 +63,7 @@ ToolApp::run(int argc, char** argv)
 				return kExitFailed;
 			}
 			else {
-				String output("activeDesktop:");
-				output.append(name);
+				String output = synergy::string::sprintf("activeDesktop:%s", name.c_str());
 				LOG((CLOG_INFO "%s", output.c_str()));
 			}
 #endif
