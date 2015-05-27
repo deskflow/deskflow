@@ -61,18 +61,9 @@ ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
 
 		size_t size = data.size();
 		LOG((CLOG_DEBUG "sending clipboard %d to \"%s\"", id, getName().c_str()));
-
-		// HACK: if using SSL, don't send large clipboards (#4601)
-		bool send = true;
-		if (getServer()->isSecure() && (size > kSslClipboardMaxSize)) {
-			send = false;
-			LOG((CLOG_WARN "large clipboards not supported with ssl, size=%d", size));
-		}
-
-		if (send) {
-			StreamChunker::sendClipboard(data, size, id, 0, m_events, this);
-			LOG((CLOG_DEBUG "sent clipboard size=%d", size));
-		}
+		
+		StreamChunker::sendClipboard(data, size, id, 0, m_events, this);
+		LOG((CLOG_DEBUG "sent clipboard size=%d", size));
 	}
 }
 
