@@ -430,7 +430,7 @@ class InternalCommands:
 		if generator.cmakeName.find('Unix Makefiles') != -1:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 			
-		elif sys.platform == "darwin":
+		if sys.platform == "darwin":
 			macSdkMatch = re.match("(\d+)\.(\d+)", self.macSdk)
 			if not macSdkMatch:
 				raise Exception("unknown osx version: " + self.macSdk)
@@ -499,7 +499,7 @@ class InternalCommands:
 			
 			qmake_cmd_string += " QMAKE_MACOSX_DEPLOYMENT_TARGET=" + version
 
-			(qMajor, qMinor, qRev) = self.getQmakeVersion()
+			(qMajor, qMinor, qRev, qLibDir) = self.getQmakeVersion()
 			if qMajor <= 4:
 				# 4.6: qmake takes full sdk dir.
 				qmake_cmd_string += " QMAKE_MAC_SDK=" + sdkDir
@@ -520,7 +520,7 @@ class InternalCommands:
 
 	def getQmakeVersion(self):
 		version = commands.getoutput("qmake --version")
-		result = re.search('(\d+)\.(\d+)\.(\d)', version)
+		result = re.search('(\d+)\.(\d+)\.(\d) in (.*)', version)
 		
 		if not result:
 			raise Exception("Could not get qmake version.")
@@ -528,8 +528,9 @@ class InternalCommands:
 		major = int(result.group(1))
 		minor = int(result.group(2))
 		rev = int(result.group(3))
+		libDir = str(result.group(4))
 		
-		return (major, minor, rev)
+		return (major, minor, rev, libDir)
 
 	def getMacSdkDir(self):
 		sdkName = "macosx" + self.macSdk
@@ -755,9 +756,9 @@ class InternalCommands:
 			if err != 0:
 				raise Exception(bin + " failed with error: " + str(err))
 
-			(qMajor, qMinor, qRev) = self.getQmakeVersion()
+			(qMajor, qMinor, qRev, qLibDir) = self.getQmakeVersion()
 			if qMajor <= 4:
-				frameworkRootDir = "/Library/Frameworks"
+				frameworkRootDir = qLibDir
 			else:
 				# TODO: auto-detect, qt can now be installed anywhere.
 				frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
