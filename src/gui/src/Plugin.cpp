@@ -42,17 +42,14 @@ static const char kLinuxPackagePlatformRpm64[] = "Linux-x86_64-rpm";
 #if defined(Q_OS_WIN)
 static const char kWinPluginExt[] = ".dll";
 static const char kInstallerPluginLocation[] = "C:/Program Files/Synergy/Plugins/"; //TODO: needs proper windows %X% notation
-static const char kUserPluginLocation[] = "C:/Users/speaker/AppData/Local/Synergy/Plugins";//TODO: needs proper windows %X% notation
 #elif defined(Q_OS_MAC)
 static const char kMacPluginPrefix[] = "lib";
 static const char kMacPluginExt[] = ".dylib";
 static const char kInstallerPluginLocation[] = "/usr/lib/synergy/plugins";
-static const char kUserPluginLocation[] = "/home/speaker/.synergy/plugins";//TODO: needs proper unix  notation
 #else
 static const char kLinuxPluginPrefix[] = "lib";
 static const char kLinuxPluginExt[] = ".so";
 static const char kInstallerPluginLocation[] = "/usr/lib/synergy/plugins";
-static const char kUserPluginLocation[] = "/home/speaker/.synergy/plugins";//TODO: needs proper MacOS X notation
 #endif
 
 QString Plugin::getOsSpecificExt()
@@ -83,8 +80,3 @@ QString Plugin::getOsSpecificName(const QString& pluginName)
 QString Plugin::getOsSpecificInstallerLocation() {
 	return kInstallerPluginLocation;
 }
-
-QString Plugin::getOsSpecificUserLocation() {
-	return kUserPluginLocation;
-}
-
