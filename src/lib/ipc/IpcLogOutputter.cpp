@@ -95,6 +95,13 @@ IpcLogOutputter::show(bool showIfEmpty)
 bool
 IpcLogOutputter::write(ELevel, const char* text)
 {
+	if (!m_ipcServer.hasClients(kIpcClientGui)) {
+		if (!m_buffer.empty()) {
+			m_buffer.clear();
+		}
+		return true;
+	}
+
 	// ignore events from the buffer thread (would cause recursion).
 	if (m_bufferThread != nullptr &&
 		Thread::getCurrentThread().getID() == m_bufferThreadId) {
