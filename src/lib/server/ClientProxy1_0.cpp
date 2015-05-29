@@ -275,16 +275,7 @@ ClientProxy1_0::leave()
 void
 ClientProxy1_0::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
-	// ignore if this clipboard is already clean
-	if (m_clipboard[id].m_dirty) {
-		// this clipboard is now clean
-		m_clipboard[id].m_dirty = false;
-		Clipboard::copy(&m_clipboard[id].m_clipboard, clipboard);
-
-		String data = m_clipboard[id].m_clipboard.marshall();
-		LOG((CLOG_DEBUG "send clipboard %d to \"%s\" size=%d", id, getName().c_str(), data.size()));
-		ProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, &data);
-	}
+	// ignore -- deprecated in protocol 1.0
 }
 
 void
@@ -450,33 +441,8 @@ ClientProxy1_0::recvInfo()
 bool
 ClientProxy1_0::recvClipboard()
 {
-	// parse message
-	ClipboardID id;
-	UInt32 seqNum;
-	String data;
-	if (!ProtocolUtil::readf(getStream(),
-							kMsgDClipboard + 4, &id, &seqNum, &data)) {
-		return false;
-	}
-	LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d", getName().c_str(), id, seqNum, data.size()));
-
-	// validate
-	if (id >= kClipboardEnd) {
-		return false;
-	}
-
-	// save clipboard
-	m_clipboard[id].m_clipboard.unmarshall(data, 0);
-	m_clipboard[id].m_sequenceNumber = seqNum;
-
-	// notify
-	ClipboardInfo* info   = new ClipboardInfo;
-	info->m_id             = id;
-	info->m_sequenceNumber = seqNum;
-	m_events->addEvent(Event(m_events->forClientProxy().clipboardChanged(),
-							getEventTarget(), info));
-
-	return true;
+	// deprecated in protocol 1.0
+	return false;
 }
 
 bool
@@ -499,12 +465,11 @@ ClientProxy1_0::recvGrabClipboard()
 	ClipboardInfo* info   = new ClipboardInfo;
 	info->m_id             = id;
 	info->m_sequenceNumber = seqNum;
-	m_events->addEvent(Event(m_events->forIScreen().clipboardGrabbed(),
+	m_events->addEvent(Event(m_events->forClipboard().clipboardGrabbed(),
 							getEventTarget(), info));
 
 	return true;
 }
-
 
 //
 // ClientProxy1_0::ClientClipboard

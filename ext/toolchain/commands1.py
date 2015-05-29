@@ -1,11 +1,11 @@
 # synergy -- mouse and keyboard sharing utility
 # Copyright (C) 2012 Synergy Si Ltd.
 # Copyright (C) 2009 Nick Bolton
-# 
+#
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # found in the file LICENSE that should have accompanied this file.
-# 
+#
 # This package is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,14 +17,14 @@
 # TODO: split this file up, it's too long!
 
 import sys, os, ConfigParser, shutil, re, ftputil, zipfile, glob, commands
-from generators import Generator, EclipseGenerator, XcodeGenerator, MakefilesGenerator
+from generators import VisualStudioGenerator, EclipseGenerator, XcodeGenerator, MakefilesGenerator
 from getopt import gnu_getopt
 
 if sys.version_info >= (2, 4):
 	import subprocess
 
 class Toolchain:
-	
+
 	# minimum required version.
 	# 2.6 needed for ZipFile.extractall.
 	# do not change to 2.7, as the build machines are still at 2.6
@@ -36,7 +36,7 @@ class Toolchain:
 	globalOptions = 'v'
 	globalOptionsLong = ['no-prompts', 'verbose', 'skip-gui', 'skip-core']
 
-	# list of valid commands as keys. the values are optarg strings, but most 
+	# list of valid commands as keys. the values are optarg strings, but most
 	# are None for now (this is mainly for extensibility)
 	cmd_opt_dict = {
 		'about'     : ['', []],
@@ -55,14 +55,14 @@ class Toolchain:
 		'reformat'  : ['', []],
 		'open'      : ['', []],
 		'genlist'   : ['', []],
-		'reset'	    : ['', []],
-		'signwin'	: ['', ['pfx=', 'pwd=', 'dist']],
-		'signmac'	: ['', []]
+		'reset'     : ['', []],
+		'signwin'   : ['', ['pfx=', 'pwd=', 'dist']],
+		'signmac'   : ['', []]
 	}
 
 	# aliases to valid commands
 	cmd_alias_dict = {
-		'info'	    : 'about',
+		'info'      : 'about',
 		'help'      : 'usage',
 		'package'   : 'dist',
 		'docs'      : 'doxygen',
@@ -72,7 +72,7 @@ class Toolchain:
 
 	def complete_command(self, arg):
 		completions = []
-		
+
 		for cmd, optarg in self.cmd_opt_dict.iteritems():
 			# if command was matched fully, return only this, so that
 			# if `dist` is typed, it will return only `dist` and not
@@ -81,7 +81,7 @@ class Toolchain:
 				return [cmd,]
 			if cmd.startswith(arg):
 				completions.append(cmd)
-		
+
 		for alias, cmd in self.cmd_alias_dict.iteritems():
 			# don't know if this will work just like above, but it's
 			# probably worth adding.
@@ -89,21 +89,21 @@ class Toolchain:
 				return [alias,]
 			if alias.startswith(arg):
 				completions.append(alias)
-		
+
 		return completions
 
 	def start_cmd(self, argv):
-		
+
 		cmd_arg = ''
 		if len(argv) > 1:
 			cmd_arg = argv[1]
-				
+
 		# change common help args to help command
 		if cmd_arg in ('--help', '-h', '--usage', '-u', '/?'):
 			cmd_arg = 'usage'
 
 		completions = self.complete_command(cmd_arg)
-		
+
 		if cmd_arg and len(completions) > 0:
 
 			if len(completions) == 1:
@@ -116,7 +116,7 @@ class Toolchain:
 				if cmd_arg != cmd:
 					cmd_map.append(cmd_arg)
 					cmd_map.append(cmd)
-				
+
 				# map an alias to the command, and build up the map
 				if cmd in self.cmd_alias_dict.keys():
 					alias = cmd
@@ -124,15 +124,15 @@ class Toolchain:
 						cmd_map.append(alias)
 					cmd = self.cmd_alias_dict[cmd]
 					cmd_map.append(cmd)
-				
+
 				# show command map to avoid confusion
 				if len(cmd_map) != 0:
 					print 'Mapping command: %s' % ' -> '.join(cmd_map)
-				
+
 				self.run_cmd(cmd, argv[2:])
-				
+
 				return 0
-				
+
 			else:
 				print (
 					'Command `%s` too ambiguous, '
@@ -144,37 +144,37 @@ class Toolchain:
 				print 'No command specified, showing usage.\n'
 			else:
 				print 'Command not recognised: %s\n' % cmd_arg
-			
+
 			self.run_cmd('usage')
-		
+
 		# generic error code if not returned sooner
 		return 1
 
 	def run_cmd(self, cmd, argv = []):
-		
+
 		verbose = False
 		try:
 			options_pair = self.cmd_opt_dict[cmd]
-			
+
 			options = self.globalOptions + options_pair[0]
-			
+
 			options_long = []
 			options_long.extend(self.globalOptionsLong)
 			options_long.extend(options_pair[1])
-			
+
 			opts, args = gnu_getopt(argv, options, options_long)
-			
+
 			for o, a in opts:
 				if o in ('-v', '--verbose'):
 					verbose = True
-			
+
 			# pass args and optarg data to command handler, which figures out
 			# how to handle the arguments
 			handler = CommandHandler(argv, opts, args, verbose)
-			
+
 			# use reflection to get the function pointer
 			cmd_func = getattr(handler, cmd)
-		
+
 			cmd_func()
 		except:
 			if not verbose:
@@ -198,7 +198,7 @@ class Toolchain:
 			print '\n\nUser aborted, exiting.'
 
 class InternalCommands:
-	
+
 	project = 'synergy'
 	setup_version = 5 # increment to force setup/config
 	website_url = 'http://synergy-project.org/'
@@ -228,42 +228,42 @@ class InternalCommands:
 
 	# try_chdir(...) and restore_chdir() will use this
 	prevdir = ''
-	
+
 	# by default, no index specified as arg
 	generator_id = None
-	
+
 	# by default, prompt user for input
 	no_prompts = False
-	
+
 	# by default, compile the core
 	enableMakeCore = True
-	
+
 	# by default, compile the gui
 	enableMakeGui = True
-	
+
 	# by default, unknown
 	macSdk = None
-	
+
 	# by default, unknown
 	macIdentity = None
-	
+
 	# gtest dir with version number
 	gtestDir = 'gtest-1.6.0'
-	
+
 	# gmock dir with version number
 	gmockDir = 'gmock-1.6.0'
 
 	win32_generators = {
-		1 : Generator('Visual Studio 10'),
-		2 : Generator('Visual Studio 10 Win64'),
-		3 : Generator('Visual Studio 9 2008'),
-		4 : Generator('Visual Studio 9 2008 Win64'),
-		5 : Generator('Visual Studio 8 2005'),
-		6 : Generator('Visual Studio 8 2005 Win64'),
-		7 : Generator('Visual Studio 11'),
-		8 : Generator('Visual Studio 11 Win64'),
-		9 : Generator('Visual Studio 12'),
-		10 : Generator('Visual Studio 12 Win64'),
+		1 : VisualStudioGenerator('10'),
+		2 : VisualStudioGenerator('10 Win64'),
+		3 : VisualStudioGenerator('9 2008'),
+		4 : VisualStudioGenerator('9 2008 Win64'),
+		5 : VisualStudioGenerator('8 2005'),
+		6 : VisualStudioGenerator('8 2005 Win64'),
+		7 : VisualStudioGenerator('11'),
+		8 : VisualStudioGenerator('11 Win64'),
+		9 : VisualStudioGenerator('12'),
+		10 : VisualStudioGenerator('12 Win64'),
 	}
 
 	unix_generators = {
@@ -288,7 +288,7 @@ class InternalCommands:
 
 	def xcodeproj_filepath(self, target=''):
 		return '%s/%s' % (self.getBuildDir(target), self.xcodeproj_filename)
-		
+
 	def usage(self):
 		app = sys.argv[0]
 		print ('Usage: %s <command> [-g <index>|-v|--no-prompts|<command-options>]\n'
@@ -323,34 +323,32 @@ class InternalCommands:
 			self.configure(target)
 
 	def checkGTest(self):
-    
 		dir = self.extDir + '/' + self.gtestDir
 		if (os.path.isdir(dir)):
 			return
-		
+
 		zipFilename = dir + '.zip'
 		if (not os.path.exists(zipFilename)):
 			raise Exception('GTest zip not found at: ' + zipFilename)
-		
+
 		if not os.path.exists(dir):
 			os.mkdir(dir)
-		
+
 		zip = zipfile.ZipFile(zipFilename)
 		self.zipExtractAll(zip, dir)
 
 	def checkGMock(self):
-    
 		dir = self.extDir + '/' + self.gmockDir
 		if (os.path.isdir(dir)):
 			return
-		
+
 		zipFilename = dir + '.zip'
 		if (not os.path.exists(zipFilename)):
 			raise Exception('GMock zip not found at: ' + zipFilename)
-		
+
 		if not os.path.exists(dir):
 			os.mkdir(dir)
-		
+
 		zip = zipfile.ZipFile(zipFilename)
 		self.zipExtractAll(zip, dir)
 
@@ -359,7 +357,7 @@ class InternalCommands:
 	def zipExtractAll(self, z, dir):
 		if not dir.endswith("/"):
 			dir += "/"
-		
+
 		for f in z.namelist():
 			if f.endswith("/"):
 				os.makedirs(dir + f)
@@ -368,66 +366,66 @@ class InternalCommands:
 
 	def configure(self, target='', extraArgs=''):
 
-		# ensure latest setup and do not ask config for generator (only fall 
+		# ensure latest setup and do not ask config for generator (only fall
 		# back to prompt if not specified as arg)
 		self.ensure_setup_latest()
-		
+
 		if sys.platform == "darwin":
 			config = self.getConfig()
-		
+
 			if self.macSdk:
 				config.set('hm', 'macSdk', self.macSdk)
 			elif config.has_option("hm", "macSdk"):
 				self.macSdk = config.get('hm', 'macSdk')
-		
+
 			if self.macIdentity:
 				config.set('hm', 'macIdentity', self.macIdentity)
 			elif config.has_option("hm", "macIdentity"):
 				self.macIdentity = config.get('hm', 'macIdentity')
-		
+
 			self.write_config(config)
-		
+
 			if not self.macSdk:
 				raise Exception("Arg missing: --mac-sdk <version>");
-				
+
 			if not self.macIdentity:
 				raise Exception("Arg missing: --mac-identity <name>");
-			
+
 			sdkDir = self.getMacSdkDir()
 			if not os.path.exists(sdkDir):
 				raise Exception("Mac SDK not found at: " + sdkDir)
-			
+
 			os.environ["MACOSX_DEPLOYMENT_TARGET"] = self.macSdk
-		
+
 		# default is release
 		if target == '':
 			print 'Defaulting target to: ' + self.defaultTarget
 			target = self.defaultTarget
-		
+
 		# allow user to skip core compile
 		if self.enableMakeCore:
 			self.configureCore(target, extraArgs)
-		
+
 		# allow user to skip gui compile
 		if self.enableMakeGui:
 			self.configureGui(target, extraArgs)
-		
+
 		self.setConfRun(target)
 
 	def configureCore(self, target="", extraArgs=""):
-		
+
 		# ensure that we have access to cmake
 		_cmake_cmd = self.persist_cmake()
-	
+
 		# now that we know we've got the latest setup, we can ask the config
-		# file for the generator (but again, we only fall back to this if not 
+		# file for the generator (but again, we only fall back to this if not
 		# specified as arg).
 		generator = self.getGenerator()
-		
+
 		if generator != self.findGeneratorFromConfig():
 			print('Generator changed, running setup.')
 			self.setup(target)
-	
+
 		cmake_args = ''
 		if generator.cmakeName != '':
 			cmake_args += ' -G "' + generator.cmakeName + '"'
@@ -435,7 +433,7 @@ class InternalCommands:
 		# for makefiles always specify a build type (debug, release, etc)
 		if generator.cmakeName.find('Unix Makefiles') != -1:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
-			
+
 		elif sys.platform == "darwin":
 			macSdkMatch = re.match("(\d+)\.(\d+)", self.macSdk)
 			if not macSdkMatch:
@@ -446,18 +444,18 @@ class InternalCommands:
 			cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macSdk
 			cmake_args += " -DOSX_TARGET_MAJOR=" + macSdkMatch.group(1)
 			cmake_args += " -DOSX_TARGET_MINOR=" + macSdkMatch.group(2)
-		
+
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
 
 		self.checkGTest()
 		self.checkGMock()
-		
+
 		if extraArgs != '':
 			cmake_args += ' ' + extraArgs
 
 		cmake_cmd_string = _cmake_cmd + cmake_args + ' ' + sourceDir
-		
+
 		# Run from build dir so we have an out-of-source build.
 		self.try_chdir(self.getBuildDir(target))
 
@@ -468,41 +466,41 @@ class InternalCommands:
 
 		if generator.cmakeName.find('Eclipse') != -1:
 			self.fixCmakeEclipseBug()
-			
+
 		if err != 0:
 			raise Exception('CMake encountered error: ' + str(err))
 
 	def configureGui(self, target="", extraArgs=""):
-			
+
 		# make sure we have qmake
 		self.persist_qmake()
-		
+
 		qmake_cmd_string = self.qmake_cmd + " " + self.qtpro_filename + " -r"
 
 		if sys.platform == "darwin":
-		
+
 			# create makefiles on mac (not xcode).
 			qmake_cmd_string += " -spec macx-g++"
-			
+
 			(major, minor) = self.getMacVersion()
 			if major == 10 and minor <= 4:
 				# 10.4: universal (intel and power pc)
 				qmake_cmd_string += ' CONFIG+="ppc i386"'
-			
+
 			libs = (
 				"-framework ApplicationServices "
 				"-framework Security "
 				"-framework cocoa")
-			
+
 			if major == 10 and minor >= 6:
 				libs += " -framework ServiceManagement"
-			
+
 			qmake_cmd_string += " \"MACX_LIBS=%s\" " % libs
-			
+
 			sdkDir = self.getMacSdkDir()
 			shortForm = "macosx" + self.macSdk
 			version = str(major) + "." + str(minor)
-			
+
 			qmake_cmd_string += " QMAKE_MACOSX_DEPLOYMENT_TARGET=" + version
 
 			(qMajor, qMinor, qRev) = self.getQmakeVersion()
@@ -515,27 +513,27 @@ class InternalCommands:
 				qmake_cmd_string += " QMAKE_MAC_SDK." + shortForm + ".path=" + sdkDir
 
 		print "QMake command: " + qmake_cmd_string
-		
+
 		# run qmake from the gui dir
 		self.try_chdir(self.gui_dir)
 		err = os.system(qmake_cmd_string)
 		self.restore_chdir()
-		
+
 		if err != 0:
 			raise Exception('QMake encountered error: ' + str(err))
 
 	def getQmakeVersion(self):
 		version = commands.getoutput("qmake --version")
 		result = re.search('(\d+)\.(\d+)\.(\d)', version)
-		
- 		if not result:
+
+		if not result:
 			raise Exception("Could not get qmake version.")
- 
- 		major = int(result.group(1))
- 		minor = int(result.group(2))
- 		rev = int(result.group(3))
- 		
- 		return (major, minor, rev)
+
+		major = int(result.group(1))
+		minor = int(result.group(2))
+		rev = int(result.group(3))
+
+		return (major, minor, rev)
 
 	def getMacSdkDir(self):
 		sdkName = "macosx" + self.macSdk
@@ -556,7 +554,7 @@ class InternalCommands:
 			return sdkPath
 
 		return "/Developer/SDKs/" + sdkDirName + ".sdk"
-	
+
 	# http://tinyurl.com/cs2rxxb
 	def fixCmakeEclipseBug(self):
 		print "Fixing CMake Eclipse bugs..."
@@ -569,20 +567,20 @@ class InternalCommands:
 		file.write(content)
 		file.truncate()
 		file.close()
-				
+
 	def persist_cmake(self):
 		# even though we're running `cmake --version`, we're only doing this for the 0 return
 		# code; we don't care about the version, since CMakeLists worrys about this for us.
 		err = os.system('%s --version' % self.cmake_cmd)
-		
+
 		if err != 0:
 			# if return code from cmake is not 0, then either something has
 			# gone terribly wrong with --version, or it genuinely doesn't exist.
 			print ('Could not find `%s` in system path.\n'
-			       'Download the latest version from:\n  %s') % (
+				'Download the latest version from:\n  %s') % (
 				self.cmake_cmd, self.cmake_url)
 			raise Exception('Cannot continue without CMake.')
-		else:	
+		else:
 			return self.cmake_cmd
 
 	def persist_qt(self):
@@ -592,11 +590,11 @@ class InternalCommands:
 		# cannot use subprocess on < python 2.4
 		if sys.version_info < (2, 4):
 			return
-		
+
 		try:
 			p = subprocess.Popen(
-				[self.qmake_cmd, '--version'], 
-				stdout=subprocess.PIPE, 
+				[self.qmake_cmd, '--version'],
+				stdout=subprocess.PIPE,
 				stderr=subprocess.PIPE)
 		except:
 			print >> sys.stderr, 'Error: Could not find qmake.'
@@ -607,7 +605,7 @@ class InternalCommands:
 					'2. Try to download Qt (check our dev FAQ for links):\n'
 					'  qt-sdk-win-opensource-2010.02.exe')
 			raise Exception('Cannot continue without qmake.')
-		
+
 		stdout, stderr = p.communicate()
 		if p.returncode != 0:
 			raise Exception('Could not test for cmake: %s' % stderr)
@@ -639,9 +637,9 @@ class InternalCommands:
 		# if no mode specified, use default
 		if len(targets) == 0:
 			targets += [self.defaultTarget,]
-	
+
 		self.ensure_setup_latest()
-		
+
 		self.loadConfig()
 
 		# allow user to skip core compile
@@ -651,20 +649,20 @@ class InternalCommands:
 		# allow user to skip gui compile
 		if self.enableMakeGui:
 			self.makeGui(targets)
-	
+
 	def loadConfig(self):
 		config = self.getConfig()
-		
+
 		if config.has_option("hm", "macSdk"):
 			self.macSdk = config.get("hm", "macSdk")
-		
+
 		if config.has_option("hm", "macIdentity"):
 			self.macIdentity = config.get("hm", "macIdentity")
-	
+
 	def makeCore(self, targets):
-	
+
 		generator = self.getGeneratorFromConfig().cmakeName
-		
+
 		if self.macSdk:
 			os.environ["MACOSX_DEPLOYMENT_TARGET"] = self.macSdk
 
@@ -680,10 +678,10 @@ class InternalCommands:
 					self.runBuildCommand(cmd, target)
 				else:
 					raise Exception('Build command not supported with generator: ' + generator)
-	
+
 	def makeGui(self, targets, args=""):
 		for target in targets:
-		
+
 			if sys.platform == 'win32':
 
 				gui_make_cmd = self.w32_make_cmd + ' ' + target + args
@@ -692,7 +690,7 @@ class InternalCommands:
 				self.try_chdir(self.gui_dir)
 				err = os.system(gui_make_cmd)
 				self.restore_chdir()
-				
+
 				if err != 0:
 					raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
 
@@ -739,7 +737,7 @@ class InternalCommands:
 		if self.enableMakeCore:
 			# copy core binaries into the bundle, since the gui
 			# now looks for the binaries in the current app dir.
-			
+
 			bundleBinDir = bundleTargetDir + "/Contents/MacOS/"
 			shutil.copy(targetDir + "/synergyc", bundleBinDir)
 			shutil.copy(targetDir + "/synergys", bundleBinDir)
@@ -790,15 +788,15 @@ class InternalCommands:
 		# reorganize Qt frameworks layout on Mac 10.9.5 or later
 		# http://goo.gl/BFnQ8l
 		# QtCore example:
-		# 	QtCore.framework/
-		# 		QtCore    -> Versions/Current/QtCore
-		# 		Resources -> Versions/Current/Resources
-		# 		Versions/
-		# 			Current -> 5
-		# 			5/
-		# 				QtCore
-		# 				Resources/
-		# 					Info.plist
+		#   QtCore.framework/
+		#     QtCore    -> Versions/Current/QtCore
+		#     Resources -> Versions/Current/Resources
+		#     Versions/
+		#       Current -> 5
+		#       5/
+		#         QtCore
+		#         Resources/
+		#           Info.plist
 		targetDir = self.getGenerator().getBinDir(target)
 
 		target = targetDir + "/Synergy.app/Contents/Frameworks"
@@ -832,19 +830,19 @@ class InternalCommands:
 
 		if err != 0:
 			raise Exception("codesign failed with error: " + str(err))
-	
+
 	def signwin(self, pfx, pwdFile, dist):
 		generator = self.getGeneratorFromConfig().cmakeName
 		if not generator.startswith('Visual Studio'):
 			raise Exception('only windows is supported')
-		
+
 		f = open(pwdFile)
 		lines = f.readlines()
 		f.close()
 		pwd = lines[0]
-		
+
 		if (dist):
-			self.signFile(pfx, pwd, 'bin', self.dist_name('win'))
+			self.signFile(pfx, pwd, 'bin/Release', self.dist_name('win'))
 		else:
 			self.signFile(pfx, pwd, 'bin/Release', 'synergy.exe')
 			self.signFile(pfx, pwd, 'bin/Release', 'synergyc.exe')
@@ -852,7 +850,7 @@ class InternalCommands:
 			self.signFile(pfx, pwd, 'bin/Release', 'synergyd.exe')
 			self.signFile(pfx, pwd, 'bin/Release', 'syntool.exe')
 			self.signFile(pfx, pwd, 'bin/Release', 'synwinhk.dll')
-	
+
 	def signFile(self, pfx, pwd, dir, file):
 		self.try_chdir(dir)
 		err = os.system(
@@ -865,22 +863,22 @@ class InternalCommands:
 
 		if err != 0:
 			raise Exception("signtool failed with error: " + str(err))
-	
+
 	def runBuildCommand(self, cmd, target):
-	
+
 		self.try_chdir(self.getBuildDir(target))
 		err = os.system(cmd)
 		self.restore_chdir()
-			
+
 		if err != 0:
 			raise Exception(cmd + ' failed: ' + str(err))
-	
+
 	def clean(self, targets=[]):
-		
+
 		# if no mode specified, use default
 		if len(targets) == 0:
 			targets += [self.defaultTarget,]
-		
+
 		# allow user to skip core clean
 		if self.enableMakeCore:
 			self.cleanCore(targets)
@@ -888,7 +886,7 @@ class InternalCommands:
 		# allow user to skip qui clean
 		if self.enableMakeGui:
 			self.cleanGui(targets)
-	
+
 	def cleanCore(self, targets):
 		generator = self.getGeneratorFromConfig().cmakeName
 
@@ -899,7 +897,7 @@ class InternalCommands:
 				generator.startswith('Visual Studio 12'):
 				for target in targets:
 					self.run_vcbuild(generator, target, self.sln_filepath(), '/target:clean')
-				
+
 			# any other version of visual studio, use /clean
 			elif generator.startswith('Visual Studio'):
 				for target in targets:
@@ -923,29 +921,29 @@ class InternalCommands:
 
 				if err != 0:
 					raise Exception('Clean failed: ' + str(err))
-	
+
 	def cleanGui(self, targets):
 		self.makeGui(targets, " clean")
-		
+
 	def open(self):
 		generator = self.getGeneratorFromConfig().cmakeName
 		if generator.startswith('Visual Studio'):
 			print 'Opening with %s...' % generator
 			self.open_internal(self.sln_filepath())
-			
+
 		elif generator.startswith('Xcode'):
 			print 'Opening with %s...' % generator
 			self.open_internal(self.xcodeproj_filepath(), 'open')
-			
+
 		else:
 			raise Exception('Not supported with generator: ' + generator)
-		
+
 	def update(self):
 		print "Running Subversion update..."
 		err = os.system('svn update')
 		if err != 0:
 			raise Exception('Could not update from repository with error code code: ' + str(err))
-		
+
 	def revision(self):
 		print self.find_revision()
 
@@ -955,7 +953,7 @@ class InternalCommands:
 	def getGitRevision(self):
 		if sys.version_info < (2, 4):
 			raise Exception("Python 2.4 or greater required.")
-		
+
 		p = subprocess.Popen(
 			["git", "log", "--pretty=format:%h", "-n", "1"],
 			stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -964,13 +962,13 @@ class InternalCommands:
 
 		if p.returncode != 0:
 			raise Exception('Could not get revision, git error: ' + str(p.returncode))
-	
+
 		return stdout.strip()
 
 	def getGitBranchName(self):
 		if sys.version_info < (2, 4):
 			raise Exception("Python 2.4 or greater required.")
-		
+
 		p = subprocess.Popen(
 			["git", "rev-parse", "--abbrev-ref", "HEAD"],
 			stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -979,8 +977,14 @@ class InternalCommands:
 
 		if p.returncode != 0:
 			raise Exception('Could not get branch name, git error: ' + str(p.returncode))
-	
-		return stdout.strip()
+
+		result = stdout.strip()
+
+		# sometimes, git will prepend "heads/" infront of the branch name,
+		# remove this as it's not useful to us and causes ftp issues.
+		result = re.sub("heads/", "", result)
+
+		return result
 
 	def find_revision_svn(self):
 		if sys.version_info < (2, 4):
@@ -991,36 +995,36 @@ class InternalCommands:
 
 			if p.returncode != 0:
 				raise Exception('Could not get revision - svn info failed with code: ' + str(p.returncode))
-		
+
 		m = re.search('.*Revision: (\d+).*', stdout)
 		if not m:
 			raise Exception('Could not find revision number in svn info output.')
-		
+
 		return m.group(1)
-		
+
 	def kill(self):
 		if sys.platform == 'win32':
 			return os.system('taskkill /F /FI "IMAGENAME eq synergy*"')
 		else:
 			raise Exception('Not implemented for platform: ' + sys.platform)
-		
+
 	def doxygen(self):
 		self.enableMakeGui = False
-		
+
 		# The conf generates doc/doxygen.cfg from cmake/doxygen.cfg.in
 		self.configure(self.defaultTarget, '-DCONF_DOXYGEN:BOOL=TRUE')
 
 		err = os.system('doxygen %s/%s' % (self.doc_dir, self.doxygen_filename))
-			
+
 		if err != 0:
 			raise Exception('doxygen failed with error code: ' + str(err))
-				
+
 	def dist(self, type, vcRedistDir, qtDir):
 
 		# Package is supported by default.
 		package_unsupported = False
 		unixTarget = self.defaultTarget
-		
+
 		if type == '' or type == None:
 			self.dist_usage()
 			return
@@ -1029,32 +1033,32 @@ class InternalCommands:
 
 		if type == 'src':
 			self.distSrc()
-			
+
 		elif type == 'rpm':
 			if sys.platform == 'linux2':
-                                self.distRpm()
+				self.distRpm()
 			else:
 				package_unsupported = True
-			
+
 		elif type == 'deb':
 			if sys.platform == 'linux2':
 				self.distDeb()
 			else:
 				package_unsupported = True
-			
+
 		elif type == 'win':
 			if sys.platform == 'win32':
 				#self.distNsis(vcRedistDir, qtDir)
 				self.distWix()
 			else:
 				package_unsupported = True
-			
+
 		elif type == 'mac':
 			if sys.platform == 'darwin':
 				self.distMac()
 			else:
 				package_unsupported = True
-			
+
 		else:
 			raise Exception('Package type not supported: ' + type)
 
@@ -1065,64 +1069,65 @@ class InternalCommands:
 
 		if package_unsupported:
 			raise Exception(
-				("Package type, '%s' is not supported for platform, '%s'") 
+				("Package type, '%s' is not supported for platform, '%s'")
 				% (type, sys.platform))
-		
-        def distRpm(self):
-                rpmDir = self.getGenerator().buildDir + '/rpm'
-                if os.path.exists(rpmDir):
+
+	def distRpm(self):
+		rpmDir = self.getGenerator().buildDir + '/rpm'
+		if os.path.exists(rpmDir):
 			shutil.rmtree(rpmDir)
-		
+
 		os.makedirs(rpmDir)
 
 		templateFile = open(self.cmake_dir + '/synergy.spec.in')
 		template = templateFile.read()
 
-		template = template.replace('${in:version}', self.getVersionFromCmake())	
-                
+		template = template.replace('${in:version}', self.getVersionFromCmake())
+
 		specPath = rpmDir + '/synergy.spec'
 
 		specFile = open(specPath, 'w')
 		specFile.write(template)
 		specFile.close()
 
-                version = self.getVersionFromCmake()
-                target = '../../bin/synergy-%s-%s.rpm' % (
-                        version, self.getLinuxPlatform())
-                
+		version = self.getVersionFromCmake()
+		target = '../../bin/synergy-%s-%s.rpm' % (
+			version, self.getLinuxPlatform())
+
 
 		try:
 			self.try_chdir(rpmDir)
-                        cmd = 'rpmbuild -bb --define "_topdir `pwd`" synergy.spec'
-                        print "Command: " + cmd
+			cmd = 'rpmbuild -bb --define "_topdir `pwd`" synergy.spec'
+			print "Command: " + cmd
 			err = os.system(cmd)
 			if err != 0:
 				raise Exception('rpmbuild failed: ' + str(err))
 
 			self.unixMove('RPMS/*/*.rpm', target)
 
-                        cmd = 'rpmlint ' + target
-                        print "Command: " + cmd
+			cmd = 'rpmlint ' + target
+			print "Command: " + cmd
 			err = os.system(cmd)
 			if err != 0:
 				raise Exception('rpmlint failed: ' + str(err))
+
 		finally:
 			self.restore_chdir()
 
-        def distDeb(self):
+	def distDeb(self):
 		buildDir = self.getGenerator().buildDir
 		binDir = self.getGenerator().binDir
 		resDir = self.cmake_dir
 
-                version = self.getVersionFromCmake()
-                package = '%s-%s-%s' % (
-                        self.project, version, self.getLinuxPlatform())
+		version = self.getVersionFromCmake()
+		package = '%s-%s-%s' % (
+			self.project, version, self.getLinuxPlatform())
 
-                debDir = '%s/deb' % buildDir
-                if os.path.exists(debDir):
+		debDir = '%s/deb' % buildDir
+		if os.path.exists(debDir):
 			shutil.rmtree(debDir)
 
-		metaDir = '%s/%s/DEBIAN' % (debDir, package)		
+		metaDir = '%s/%s/DEBIAN' % (debDir, package)
 		os.makedirs(metaDir)
 
 		templateFile = open(resDir + '/deb/control.in')
@@ -1150,7 +1155,7 @@ class InternalCommands:
 		os.makedirs(targetApplications)
 		os.makedirs(targetIcons)
 		os.makedirs(targetDocs)
-		
+
 		for root, dirs, files in os.walk(debDir):
 			for d in dirs:
 				os.chmod(os.path.join(root, d), 0o0755)
@@ -1180,21 +1185,21 @@ class InternalCommands:
 		for root, dirs, files in os.walk(targetShare):
 			for f in files:
 				os.chmod(os.path.join(root, f), 0o0644)
-		
+
 		target = '../../bin/%s.deb' % package
 
 		try:
 			self.try_chdir(debDir)
 
 			# TODO: consider dpkg-buildpackage (higher level tool)
-                        cmd = 'fakeroot dpkg-deb --build %s' % package
-                        print "Command: " + cmd
+			cmd = 'fakeroot dpkg-deb --build %s' % package
+			print "Command: " + cmd
 			err = os.system(cmd)
 			if err != 0:
 				raise Exception('dpkg-deb failed: ' + str(err))
 
-                        cmd = 'lintian %s.deb' % package
-                        print "Command: " + cmd
+			cmd = 'lintian %s.deb' % package
+			print "Command: " + cmd
 			err = os.system(cmd)
 			if err != 0:
 				raise Exception('lintian failed: ' + str(err))
@@ -1216,7 +1221,7 @@ class InternalCommands:
 
 		cmd = "git archive %s | tar -x -C %s" % (
 			self.getGitBranchName(), exportPath)
-		
+
 		print 'Exporting repository to: ' + exportPath
 		err = os.system(cmd)
 		if err != 0:
@@ -1238,66 +1243,66 @@ class InternalCommands:
 		err = os.system('mv ' + source + ' ' + dest)
 		if err != 0:
 			raise Exception('Package failed: ' + str(err))
-		
+
 	def distMac(self):
 		self.loadConfig()
 		binDir = self.getGenerator().getBinDir('Release')
 		name = "Synergy"
 		dist = binDir + "/" + name
-		
+
 		# ensure dist dir is clean
 		if os.path.exists(dist):
 			shutil.rmtree(dist)
-		
+
 		os.makedirs(dist)
 		shutil.move(binDir + "/" + name + ".app", dist + "/" + name + ".app")
-		
+
 		self.try_chdir(dist)
 		err = os.system("ln -s /Applications")
 		self.restore_chdir()
-		
+
 		fileName = "%s-%s-%s.dmg" % (
-			self.project, 
+			self.project,
 			self.getVersionFromCmake(),
 			self.getMacPackageName())
-		
+
 		cmd = "hdiutil create " + fileName + " -srcfolder ./" + name + "/ -ov"
-		
+
 		self.try_chdir(binDir)
 		err = os.system(cmd)
 		self.restore_chdir()
 
 	def distWix(self):
 		generator = self.getGeneratorFromConfig().cmakeName
-		
+
 		arch = 'x86'
 		if generator.endswith('Win64'):
 			arch = 'x64'
-		
+
 		version = self.getVersionFromCmake()
 		args = "/p:DefineConstants=\"Version=%s\"" % version
-		
+
 		self.run_vcbuild(
 			generator, 'release', 'synergy.sln', args,
 			'src/setup/win32/', 'x86')
-		
+
 		filename = "%s-%s-Windows-%s.msi" % (
-			self.project, 
+			self.project,
 			version,
 			arch)
-			
+
 		old = "bin/Release/synergy.msi"
-		new = "bin/%s" % (filename)
-		
+		new = "bin/Release/%s" % (filename)
+
 		try:
 			os.remove(new)
 		except OSError:
 			pass
-		
+
 		os.rename(old, new)
-		
+
 	def distNsis(self, vcRedistDir, qtDir):
-		
+
 		if vcRedistDir == '':
 			raise Exception(
 				'VC++ redist dir path not specified (--vcredist-dir).')
@@ -1313,8 +1318,8 @@ class InternalCommands:
 
 		if generator.endswith('Win64'):
 			arch = 'x64'
-			installDirVar = '$PROGRAMFILES64'			
-		
+			installDirVar = '$PROGRAMFILES64'
+
 		templateFile = open(self.cmake_dir + '\Installer.nsi.in')
 		template = templateFile.read()
 
@@ -1352,101 +1357,140 @@ class InternalCommands:
 
 	def distftp(self, type, ftp):
 		if not type:
-			raise Exception('Type not specified.')
-		
-		if not ftp:
-			raise Exception('FTP info not defined.')
-		
+			raise Exception('Platform type not specified.')
+
 		self.loadConfig()
-		src = self.dist_name(type)
-		dest = self.dist_name_rev(type)
-		print 'Uploading %s to FTP server %s...' % (dest, ftp.host)
 
 		binDir = self.getGenerator().getBinDir('Release')
-		ftp.run(binDir + '/' + src, dest) 
-		print 'Done'
-	
-	def getDebianArch(self):
-		if os.uname()[4][:3] == 'arm':
-			return 'armhf'
 
-                # os_bits should be loaded with '32bit' or '64bit'
-                import platform
-                (os_bits, other) = platform.architecture()
-		
-                # get platform based on current platform
-                if os_bits == '32bit':
-                        return 'i386'
-                elif os_bits == '64bit':
-                        return 'amd64'
-                else:
-                        raise Exception("unknown os bits: " + os_bits)
+		packageSource = binDir + '/' + self.dist_name(type)
+		packageTarget = self.dist_name_rev(type)
+		ftp.upload(packageSource, packageTarget)
 
-        def getLinuxPlatform(self):
-		if os.uname()[4][:3] == 'arm':
-			return 'Linux-armv6l'
+		if type != 'src':
+			pluginsDir = binDir + '/plugins'
+			nsPluginSource = self.findLibraryFile(type, pluginsDir, 'ns')
+			if nsPluginSource:
+				nsPluginTarget = self.getLibraryDistFilename(type, pluginsDir, 'ns')
+				ftp.upload(nsPluginSource, nsPluginTarget, "plugins")
 
-                # os_bits should be loaded with '32bit' or '64bit'
-                import platform
-                (os_bits, other) = platform.architecture()
-		
-                # get platform based on current platform
-                if os_bits == '32bit':
-                        return 'Linux-i686'
-                elif os_bits == '64bit':
-                        return 'Linux-x86_64'
-                else:
-                        raise Exception("unknown os bits: " + os_bits)
+	def getLibraryDistFilename(self, type, dir, name):
+		(platform, packageExt, libraryExt) = self.getDistributePlatformInfo(type)
+		branch = self.getGitBranchName()
+		revision = self.getGitRevision()
+		firstPart = '%s-%s-%s-%s' % (name, branch, revision, platform)
 
-	def dist_name(self, type):
+		filename = '%s.%s' % (firstPart, libraryExt)
+		if type == 'rpm' or type == 'deb':
+			# linux is a bit special, include dist type (deb/rpm in filename)
+			filename = '%s-%s.%s' % (firstPart, packageExt, libraryExt)
+
+		return filename
+
+	def findLibraryFile(self, type, dir, name):
+		if not os.path.exists(dir):
+			return None
+
+		(platform, packageExt, libraryExt) = self.getDistributePlatformInfo(type)
+		ext = libraryExt
+
+		pattern = name + '\.' + ext
+
+		for filename in os.listdir(dir):
+			if re.search(pattern, filename):
+				return dir + '/' + filename
+
+		return None
+
+	def getDistributePlatformInfo(self, type):
 		ext = None
+		libraryExt = None
 		platform = None
-		
+
 		if type == 'src':
 			ext = 'tar.gz'
 			platform = 'Source'
-			
+
 		elif type == 'rpm' or type == 'deb':
-		
 			ext = type
-                        platform = self.getLinuxPlatform()
-			
+			libraryExt = 'so'
+			platform = self.getLinuxPlatform()
+
 		elif type == 'win':
-			
 			# get platform based on last generator used
 			ext = 'msi'
+			libraryExt = 'dll'
 			generator = self.getGeneratorFromConfig().cmakeName
 			if generator.find('Win64') != -1:
 				platform = 'Windows-x64'
 			else:
 				platform = 'Windows-x86'
-			
+
 		elif type == 'mac':
 			ext = "dmg"
+			libraryExt = 'dylib'
 			platform = self.getMacPackageName()
-		
-		if not platform:
-			raise Exception('Unable to detect package platform.')
-		
-		pattern = re.escape(self.project + '-') + '\d+\.\d+\.\d+' + re.escape('-' + platform + '.' + ext)
-		
-		target = ''
-		if type == 'mac':
-			target = 'Release'
 
-		for filename in os.listdir(self.getBinDir(target)):
+		if not platform:
+			raise Exception('Unable to detect distributable platform.')
+
+		return (platform, ext, libraryExt)
+
+	def dist_name(self, type):
+		(platform, packageExt, libraryExt) = self.getDistributePlatformInfo(type)
+		ext = packageExt
+
+		pattern = (
+			re.escape(self.project + '-') + '\d+\.\d+\.\d+' +
+			re.escape('-' + platform + '.' + ext))
+
+		for filename in os.listdir(self.getBinDir('Release')):
 			if re.search(pattern, filename):
 				return filename
-		
+
 		# still here? package probably not created yet.
 		raise Exception('Could not find package name with pattern: ' + pattern)
-	
+
 	def dist_name_rev(self, type):
+		branch = self.getGitBranchName()
+		revision = self.getGitRevision()
+
 		# find the version number (we're puting the rev in after this)
 		pattern = '(\d+\.\d+\.\d+)'
-		replace = "%s-%s" % (
-			self.getGitBranchName(), self.getGitRevision())
+		replace = "%s-%s" % (branch, revision)
 		return re.sub(pattern, replace, self.dist_name(type))
+
+	def getDebianArch(self):
+		if os.uname()[4][:3] == 'arm':
+			return 'armhf'
+
+		# os_bits should be loaded with '32bit' or '64bit'
+		import platform
+		(os_bits, other) = platform.architecture()
+
+		# get platform based on current platform
+		if os_bits == '32bit':
+			return 'i386'
+		elif os_bits == '64bit':
+			return 'amd64'
+		else:
+			raise Exception("unknown os bits: " + os_bits)
+
+	def getLinuxPlatform(self):
+		if os.uname()[4][:3] == 'arm':
+			return 'Linux-armv6l'
+
+		# os_bits should be loaded with '32bit' or '64bit'
+		import platform
+		(os_bits, other) = platform.architecture()
+
+		# get platform based on current platform
+		if os_bits == '32bit':
+			return 'Linux-i686'
+		elif os_bits == '64bit':
+			return 'Linux-x86_64'
+		else:
+			raise Exception("unknown os bits: " + os_bits)
 
 	def dist_usage(self):
 		print ('Usage: %s package [package-type]\n'
@@ -1477,7 +1521,7 @@ class InternalCommands:
 		if not os.path.exists(dir):
 			print 'Creating dir: ' + dir
 			os.makedirs(dir)
- 
+
 		prevdir = os.path.abspath(os.curdir)
 
 		# It will exist by this point, so it's safe to chdir.
@@ -1497,10 +1541,10 @@ class InternalCommands:
 			raise Exception('Project file (%s) not found, run hm conf first.' % project_filename)
 		else:
 			path = project_filename
-			
+
 			if application != '':
 				path = application + ' ' + path
-			
+
 			err = os.system(path)
 			if err != 0:
 				raise Exception('Could not open project with error code code: ' + str(err))
@@ -1510,7 +1554,7 @@ class InternalCommands:
 
 		oldGenerator = self.findGeneratorFromConfig()
 		if not oldGenerator == None:
-			for target in ['debug', 'release']:				
+			for target in ['debug', 'release']:
 				buildDir = oldGenerator.getBuildDir(target)
 
 				cmakeCacheFilename = 'CMakeCache.txt'
@@ -1521,13 +1565,13 @@ class InternalCommands:
 					print "Removing %s, since generator changed." % cmakeCacheFilename
 					os.remove(cmakeCacheFilename)
 
-		# always either get generator from args, or prompt user when 
+		# always either get generator from args, or prompt user when
 		# running setup
 		generator = self.get_generator_from_prompt()
 
 		config = self.getConfig()
 		config.set('hm', 'setup_version', self.setup_version)
-		
+
 		# store the generator so we don't need to ask again
 		config.set('cmake', 'generator', generator)
 
@@ -1565,16 +1609,16 @@ class InternalCommands:
 		generator = self.findGeneratorFromConfig()
 		if generator:
 			return generator
-		
+
 		raise Exception("Could not find generator: " + name)
 
 	def findGeneratorFromConfig(self):
 		config = ConfigParser.RawConfigParser()
 		config.read(self.configFilename)
-		
+
 		if not config.has_section('cmake'):
 			return None
-		
+
 		name = config.get('cmake', 'generator')
 
 		generators = self.get_generators()
@@ -1583,7 +1627,7 @@ class InternalCommands:
 		for k in keys:
 			if generators[k].cmakeName == name:
 				return generators[k]
-		
+
 		return None
 
 	def min_setup_version(self, version):
@@ -1627,7 +1671,7 @@ class InternalCommands:
 			return self.darwin_generators
 		else:
 			raise Exception('Unsupported platform: ' + sys.platform)
-			
+
 	def get_generator_from_prompt(self):
 		return self.getGenerator().cmakeName
 
@@ -1635,7 +1679,7 @@ class InternalCommands:
 		generators = self.get_generators()
 		if len(generators.keys()) == 1:
 			return generators[generators.keys()[0]]
-		
+
 		# if user has specified a generator as an argument
 		if self.generator_id:
 			return generators[int(self.generator_id)]
@@ -1643,21 +1687,21 @@ class InternalCommands:
 		conf = self.findGeneratorFromConfig()
 		if conf:
 			return conf
-		
+
 		raise Exception(
-			'Generator not specified, use -g arg ' + 
+			'Generator not specified, use -g arg ' +
 			'(use `hm genlist` for a list of generators).')
 
 	def setup_generator_prompt(self, generators):
 
 		if self.no_prompts:
 			raise Exception('User prompting is disabled.')
-	
+
 		prompt = 'Enter a number:'
 		print prompt,
-		
+
 		generator_id = raw_input()
-		
+
 		if generator_id in generators:
 			print 'Selected generator:', generators[generator_id]
 		else:
@@ -1666,23 +1710,23 @@ class InternalCommands:
 
 		return generators[generator_id]
 
-	def get_vcvarsall(self, generator):	
+	def get_vcvarsall(self, generator):
 		import platform, _winreg
-		
+
 		# os_bits should be loaded with '32bit' or '64bit'
 		(os_bits, other) = platform.architecture()
-		
+
 		# visual studio is a 32-bit app, so when we're on 64-bit, we need to check the WoW dungeon
 		if os_bits == '64bit':
 			key_name = r'SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VS7'
 		else:
 			key_name = r'SOFTWARE\Microsoft\VisualStudio\SxS\VC7'
-		
+
 		try:
 			key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, key_name)
 		except:
 			raise Exception('Unable to open Visual Studio registry key. Application may not be installed.')
-		
+
 		if generator.startswith('Visual Studio 8'):
 			value,type = _winreg.QueryValueEx(key, '8.0')
 		elif generator.startswith('Visual Studio 9'):
@@ -1695,16 +1739,16 @@ class InternalCommands:
 			value,type = _winreg.QueryValueEx(key, '12.0')
 		else:
 			raise Exception('Cannot determine vcvarsall.bat location for: ' + generator)
-		
+
 		# not sure why, but the value on 64-bit differs slightly to the original
 		if os_bits == '64bit':
 			path = value + r'vc\vcvarsall.bat'
 		else:
-			path = value + r'vcvarsall.bat'		
-		
+			path = value + r'vcvarsall.bat'
+
 		if not os.path.exists(path):
 			raise Exception("'%s' not found." % path)
-		
+
 		return path
 
 	def get_msbuild(self):
@@ -1727,13 +1771,13 @@ class InternalCommands:
 
 	def run_vcbuild(self, generator, mode, solution, args='', dir='', config32='Win32'):
 		import platform
-		
+
 		# os_bits should be loaded with '32bit' or '64bit'
 		(os_bits, other) = platform.architecture()
 		# Now we choose the parameters bases on OS 32/64 and our target 32/64
 		# http://msdn.microsoft.com/en-us/library/x4d2c09s%28VS.80%29.aspx
-		
-		# valid options are only: ia64  amd64 x86_amd64 x86_ia64 
+
+		# valid options are only: ia64  amd64 x86_amd64 x86_ia64
 		# but calling vcvarsall.bat does not garantee that it will work
 		# ret code from vcvarsall.bat is always 0 so the only way of knowing that I worked is by analysing the text output
 		# ms bugg: install VS9, FeaturePack, VS9SP1 and you'll obtain a vcvarsall.bat that fails.
@@ -1747,12 +1791,12 @@ class InternalCommands:
 		else: # target = 32bit
 			vcvars_platform = 'x86' # 32/64bit OS building 32bit app
 			config_platform = config32
-		
+
 		if mode == 'release':
 			config = 'Release'
 		else:
 			config = 'Debug'
-				
+
 		if generator.startswith('Visual Studio 10') or \
 			generator.startswith('Visual Studio 11') or \
 			generator.startswith('Visual Studio 12'):
@@ -1768,7 +1812,7 @@ class InternalCommands:
 				'cd "%s"\n'
 				'vcbuild /nologo %s "%s" "%s"'
 				) % (self.get_vcvarsall(generator), vcvars_platform, dir, args, solution, config)
-		
+
 		# Generate a batch file, since we can't use environment variables directly.
 		temp_bat = self.getBuildDir() + r'\vcbuild.bat'
 		file = open(temp_bat, 'w')
@@ -1788,7 +1832,7 @@ class InternalCommands:
 			r'tool\astyle\AStyle.exe '
 			'--quiet --suffix=none --style=java --indent=force-tab=4 --recursive '
 			'lib/*.cpp lib/*.h cmd/*.cpp cmd/*.h')
-			
+
 		if err != 0:
 			raise Exception('Reformat failed with error code: ' + str(err))
 
@@ -1802,7 +1846,7 @@ class InternalCommands:
 	def getMacVersion(self):
 		if not self.macSdk:
 			raise Exception("Mac OS X SDK not set.")
-		
+
 		result = re.search('(\d+)\.(\d+)', self.macSdk)
 		if not result:
 			print versions
@@ -1838,22 +1882,22 @@ class InternalCommands:
 	def reset(self):
 		if os.path.exists('build'):
 			shutil.rmtree('build')
-		
+
 		if os.path.exists('bin'):
 			shutil.rmtree('bin')
-		
+
 		if os.path.exists('lib'):
 			shutil.rmtree('lib')
-		
+
 		if os.path.exists('src/gui/tmp'):
 			shutil.rmtree('src/gui/tmp')
-		
+
 		# qt 4.3 generates ui_ files.
 		for filename in glob.glob("src/gui/ui_*"):
-		  os.remove(filename)
+			os.remove(filename)
 
-# the command handler should be called only from hm.py (i.e. directly 
-# from the command prompt). the purpose of this class is so that we 
+# the command handler should be called only from hm.py (i.e. directly
+# from the command prompt). the purpose of this class is so that we
 # don't need to do argument handling all over the place in the internal
 # commands class.
 class CommandHandler:
@@ -1861,14 +1905,14 @@ class CommandHandler:
 	build_targets = []
 	vcRedistDir = ''
 	qtDir = ''
-	
+
 	def __init__(self, argv, opts, args, verbose):
-		
+
 		self.ic.verbose = verbose
-		
+
 		self.opts = opts
 		self.args = args
-		
+
 		for o, a in self.opts:
 			if o == '--no-prompts':
 				self.ic.no_prompts = True
@@ -1890,37 +1934,37 @@ class CommandHandler:
 				self.ic.macSdk = a
 			elif o == '--mac-identity':
 				self.ic.macIdentity = a
-	
+
 	def about(self):
 		self.ic.about()
-	
+
 	def setup(self):
 		self.ic.setup()
-	
+
 	def configure(self):
 		self.ic.configureAll(self.build_targets)
-	
+
 	def build(self):
 		self.ic.build(self.build_targets)
-	
+
 	def clean(self):
 		self.ic.clean(self.build_targets)
-	
+
 	def update(self):
 		self.ic.update()
-	
+
 	def install(self):
 		print 'Not yet implemented: install'
-	
+
 	def doxygen(self):
 		self.ic.doxygen()
-	
+
 	def dist(self):
-		
+
 		type = None
 		if len(self.args) > 0:
-			type = self.args[0]		
-				
+			type = self.args[0]
+
 		self.ic.dist(type, self.vcRedistDir, self.qtDir)
 
 	def distftp(self):
@@ -1929,10 +1973,10 @@ class CommandHandler:
 		user = None
 		password = None
 		dir = None
-		
+
 		if len(self.args) > 0:
 			type = self.args[0]
-		
+
 		for o, a in self.opts:
 			if o == '--host':
 				host = a
@@ -1942,29 +1986,30 @@ class CommandHandler:
 				password = a
 			elif o == '--dir':
 				dir = a
-		
-		ftp = None
-		if host:
-			ftp = ftputil.FtpUploader(
-				host, user, password, dir)
-		
+
+		if not host:
+			raise Exception('FTP host was not specified.')
+
+		ftp = ftputil.FtpUploader(
+			host, user, password, dir)
+
 		self.ic.distftp(type, ftp)
-	
+
 	def destroy(self):
 		self.ic.destroy()
-	
+
 	def kill(self):
 		self.ic.kill()
-	
+
 	def usage(self):
 		self.ic.usage()
-	
+
 	def revision(self):
 		self.ic.revision()
-	
+
 	def reformat(self):
 		self.ic.reformat()
-	
+
 	def open(self):
 		self.ic.open()
 
@@ -1973,7 +2018,7 @@ class CommandHandler:
 
 	def reset(self):
 		self.ic.reset()
-		
+
 	def signwin(self):
 		pfx = None
 		pwd = None

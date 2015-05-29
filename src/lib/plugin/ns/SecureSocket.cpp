@@ -35,7 +35,12 @@
 //
 
 #define MAX_ERROR_SIZE 65535
-#define MAX_RETRY_COUNT 60
+
+enum {
+	// this limit seems extremely high, but mac client seem to generate around
+	// 50,000 errors before they establish a connection (wtf?)
+	kMaxRetryCount = 100000
+};
 
 static const char kFingerprintDirName[] = "SSL/Fingerprints";
 //static const char kFingerprintLocalFilename[] = "Local.txt";
@@ -53,7 +58,7 @@ SecureSocket::SecureSocket(
 	TCPSocket(events, socketMultiplexer),
 	m_secureReady(false),
 	m_fatal(false),
-	m_maxRetry(MAX_RETRY_COUNT)
+	m_maxRetry(kMaxRetryCount)
 {
 }
 
@@ -64,7 +69,7 @@ SecureSocket::SecureSocket(
 	TCPSocket(events, socketMultiplexer, socket),
 	m_secureReady(false),
 	m_fatal(false),
-	m_maxRetry(MAX_RETRY_COUNT)
+	m_maxRetry(kMaxRetryCount)
 {
 }
 
@@ -392,31 +397,25 @@ SecureSocket::checkResult(int status, int& retry)
 	case SSL_ERROR_ZERO_RETURN:
 		// connection closed
 		isFatal(true);
-		LOG((CLOG_DEBUG "SSL connection has been closed"));
+		LOG((CLOG_DEBUG "ssl connection closed"));
 		break;
 
 	case SSL_ERROR_WANT_READ:
 	case SSL_ERROR_WANT_WRITE:
 	case SSL_ERROR_WANT_CONNECT:
 	case SSL_ERROR_WANT_ACCEPT:
-		retry += 1;
-		// If there are a lot of retrys, it's worth warning about
-		if ( retry % 5 == 0 ) {
-			LOG((CLOG_DEBUG "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
-		}
-		else if ( retry == (maxRetry() / 2) ) {
-			LOG((CLOG_WARN "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
-		}
-		else {
-			LOG((CLOG_DEBUG2 "need to retry the same SSL function(%d) retry:%d", errorCode, retry));
-		}
+		// it seems like these sort of errors are part of openssl's normal behavior,
+		// so we should expect a very high amount of these. sleeping doesn't seem to
+		// help... maybe you just have to swallow the errors (yuck).
+		retry++;
+		LOG((CLOG_DEBUG2 "passive ssl error, error=%d, attempt=%d", errorCode, retry));
 		break;
 
 	case SSL_ERROR_SYSCALL:
-		LOG((CLOG_ERR "some secure socket I/O error occurred"));
+		LOG((CLOG_ERR "ssl error occurred (system call failure)"));
 		if (ERR_peek_error() == 0) {
 			if (status == 0) {
-				LOG((CLOG_ERR "an EOF violates the protocol"));
+				LOG((CLOG_ERR "eof violates ssl protocol"));
 			}
 			else if (status == -1) {
 				// underlying socket I/O reproted an error
@@ -433,19 +432,19 @@ SecureSocket::checkResult(int status, int& retry)
 		break;
 
 	case SSL_ERROR_SSL:
-		LOG((CLOG_ERR "a failure in the SSL library occurred"));
+		LOG((CLOG_ERR "ssl error occurred (generic failure)"));
 		isFatal(true);
 		break;
 
 	default:
-		LOG((CLOG_ERR "unknown secure socket error"));
+		LOG((CLOG_ERR "ssl error occurred (unknown failure)"));
 		isFatal(true);
 		break;
 	}
 
 	// If the retry max would exceed the allowed, treat it as a fatal error
 	if (retry > maxRetry()) {
-		LOG((CLOG_ERR "Maximum retry count exceeded:%d",retry));
+		LOG((CLOG_ERR "passive ssl error limit exceeded: %d", retry));
 		isFatal(true);
 	}
 

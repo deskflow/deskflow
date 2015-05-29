@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2013 Synergy Si Ltd.
+ * Copyright (C) 2015 Synergy Si Inc.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,30 +17,14 @@
 
 #pragma once
 
-#include "base/String.h"
+#include "common/basic_types.h"
 
-class IEventQueue;
-
-class FileChunker {
+class Chunk {
 public:
-	//! FileChunk data
-	class FileChunk {
-	public:
-		FileChunk(size_t chunkSize) : m_dataSize(chunkSize - 2)
-		{
-			m_chunk = new char[chunkSize]; 
-		}
+	Chunk(size_t size);
+	~Chunk();
 
-		~FileChunk() { delete[] m_chunk; }
-
-	public:
-		const size_t	m_dataSize;
-		char*			m_chunk;
-	};
-
-	static void			sendFileChunks(char* filename, IEventQueue* events, void* eventTarget);
-	static String		intToString(size_t i);
-
-private:
-	static const size_t m_chunkSize;
+public:
+	size_t				m_dataSize;
+	char*				m_chunk;
 };

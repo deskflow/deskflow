@@ -19,6 +19,7 @@ if (WIN32)
 endif()
 
 if (APPLE)
+	# 10.7 should be supported, but gives is a _NXArgv linker error
 	if (OSX_TARGET_MINOR GREATER 7)
 		add_subdirectory(ns)
 	endif()

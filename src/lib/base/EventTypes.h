@@ -350,8 +350,7 @@ class ClientProxyEvents : public EventTypes {
 public:
 	ClientProxyEvents() :
 		m_ready(Event::kUnknown),
-		m_disconnected(Event::kUnknown),
-		m_clipboardChanged(Event::kUnknown) { }
+		m_disconnected(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -371,20 +370,11 @@ public:
 	*/
 	Event::Type		disconnected();
 
-	//! Get clipboard changed event type
-	/*!
-	Returns the clipboard changed event type.  This is sent whenever the
-	contents of the clipboard has changed.  The data is a pointer to a
-	IScreen::ClipboardInfo.
-	*/
-	Event::Type		clipboardChanged();
-
 	//@}
 
 private:
 	Event::Type		m_ready;
 	Event::Type		m_disconnected;
-	Event::Type		m_clipboardChanged;
 };
 
 class ClientProxyUnknownEvents : public EventTypes {
@@ -634,7 +624,6 @@ public:
 	IScreenEvents() :
 		m_error(Event::kUnknown),
 		m_shapeChanged(Event::kUnknown),
-		m_clipboardGrabbed(Event::kUnknown),
 		m_suspend(Event::kUnknown),
 		m_resume(Event::kUnknown),
 		m_fileChunkSending(Event::kUnknown),
@@ -656,14 +645,6 @@ public:
 	screen's shape changes.
 	*/
 	Event::Type		shapeChanged();
-
-	//! Get clipboard grabbed event type
-	/*!
-	Returns the clipboard grabbed event type.  This is sent whenever the
-	clipboard is grabbed by some other application so we don't own it
-	anymore.  The data is a pointer to a ClipboardInfo.
-	*/
-	Event::Type		clipboardGrabbed();
 
 	//! Get suspend event type
 	/*!
@@ -690,9 +671,49 @@ public:
 private:
 	Event::Type		m_error;
 	Event::Type		m_shapeChanged;
-	Event::Type		m_clipboardGrabbed;
 	Event::Type		m_suspend;
 	Event::Type		m_resume;
 	Event::Type		m_fileChunkSending;
 	Event::Type		m_fileRecieveCompleted;
+};
+
+class ClipboardEvents : public EventTypes {
+public:
+	ClipboardEvents() :
+		m_clipboardGrabbed(Event::kUnknown),
+		m_clipboardChanged(Event::kUnknown),
+		m_clipboardSending(Event::kUnknown) { }
+
+	//! @name accessors
+	//@{
+
+	//! Get clipboard grabbed event type
+	/*!
+	Returns the clipboard grabbed event type.  This is sent whenever the
+	clipboard is grabbed by some other application so we don't own it
+	anymore.  The data is a pointer to a ClipboardInfo.
+	*/
+	Event::Type		clipboardGrabbed();
+
+	//! Get clipboard changed event type
+	/*!
+	Returns the clipboard changed event type.  This is sent whenever the
+	contents of the clipboard has changed.  The data is a pointer to a
+	IScreen::ClipboardInfo.
+	*/
+	Event::Type		clipboardChanged();
+
+	//! Clipboard sending event type
+	/*!
+	Returns the clipboard sending event type. This is used to send 
+	clipboard chunks.
+	*/
+	Event::Type		clipboardSending();
+
+	//@}
+
+private:
+	Event::Type		m_clipboardGrabbed;
+	Event::Type		m_clipboardChanged;
+	Event::Type		m_clipboardSending;
 };

@@ -22,12 +22,13 @@
 #include "client/ServerProxy.h"
 #include "synergy/Screen.h"
 #include "synergy/Clipboard.h"
+#include "synergy/FileChunk.h"
 #include "synergy/DropHelper.h"
 #include "synergy/PacketStreamFilter.h"
 #include "synergy/ProtocolUtil.h"
 #include "synergy/protocol_types.h"
 #include "synergy/XSynergy.h"
-#include "synergy/FileChunker.h"
+#include "synergy/StreamChunker.h"
 #include "synergy/IPlatformScreen.h"
 #include "mt/Thread.h"
 #include "net/TCPSocket.h"
@@ -78,7 +79,8 @@ Client::Client(
 	m_writeToDropDirThread(NULL),
 	m_socket(NULL),
 	m_useSecureNetwork(false),
-	m_args(args)
+	m_args(args),
+	m_sendClipboardThread(NULL)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -263,13 +265,16 @@ Client::leave()
 	m_screen->leave();
 
 	m_active = false;
-
-	// send clipboards that we own and that have changed
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		if (m_ownClipboard[id]) {
-			sendClipboard(id);
-		}
+	
+	if (m_sendClipboardThread != NULL) {
+		StreamChunker::interruptClipboard();
 	}
+	
+	m_sendClipboardThread = new Thread(
+								new TMethodJob<Client>(
+									this,
+									&Client::sendClipboardThread,
+									NULL));
 
 	return true;
 }
@@ -422,12 +427,12 @@ Client::sendConnectionFailedEvent(const char* msg)
 void
 Client::sendFileChunk(const void* data)
 {
-	FileChunker::FileChunk* fileChunk = reinterpret_cast<FileChunker::FileChunk*>(const_cast<void*>(data));
-	LOG((CLOG_DEBUG1 "sendFileChunk"));
+	FileChunk* chunk = reinterpret_cast<FileChunk*>(const_cast<void*>(data));
+	LOG((CLOG_DEBUG1 "send file chunk"));
 	assert(m_server != NULL);
 
 	// relay
-	m_server->fileChunkSending(fileChunk->m_chunk[0], &(fileChunk->m_chunk[1]), fileChunk->m_dataSize);
+	m_server->fileChunkSending(chunk->m_chunk[0], &chunk->m_chunk[1], chunk->m_dataSize);
 }
 
 void
@@ -487,7 +492,7 @@ Client::setupScreen()
 							getEventTarget(),
 							new TMethodEventJob<Client>(this,
 								&Client::handleShapeChanged));
-	m_events->adoptHandler(m_events->forIScreen().clipboardGrabbed(),
+	m_events->adoptHandler(m_events->forClipboard().clipboardGrabbed(),
 							getEventTarget(),
 							new TMethodEventJob<Client>(this,
 								&Client::handleClipboardGrabbed));
@@ -545,7 +550,7 @@ Client::cleanupScreen()
 		}
 		m_events->removeHandler(m_events->forIScreen().shapeChanged(),
 							getEventTarget());
-		m_events->removeHandler(m_events->forIScreen().clipboardGrabbed(),
+		m_events->removeHandler(m_events->forClipboard().clipboardGrabbed(),
 							getEventTarget());
 		delete m_server;
 		m_server = NULL;
@@ -750,6 +755,17 @@ Client::onFileRecieveCompleted()
 }
 
 void
+Client::sendClipboardThread(void*)
+{
+	// send clipboards that we own and that have changed
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		if (m_ownClipboard[id]) {
+			sendClipboard(id);
+		}
+	}
+}
+
+void
 Client::handleStopRetry(const Event&, void*)
 {
 	m_args.m_restartable = false;
@@ -766,25 +782,6 @@ Client::writeToDropDirThread(void*)
 	
 	DropHelper::writeToDir(m_screen->getDropTarget(), m_dragFileList,
 					m_receivedFileData);
-}
-
-void
-Client::clearReceivedFileData()
-{
-	m_receivedFileData.clear();
-}
-
-void
-Client::setExpectedFileSize(String data)
-{
-	std::istringstream iss(data);
-	iss >> m_expectedFileSize;
-}
-
-void
-Client::fileChunkReceived(String data)
-{
-	m_receivedFileData += data;
 }
 
 void
@@ -810,6 +807,10 @@ Client::isReceivedFileSizeValid()
 void
 Client::sendFileToServer(const char* filename)
 {
+	if (m_sendFileThread != NULL) {
+		StreamChunker::interruptFile();
+	}
+	
 	m_sendFileThread = new Thread(
 		new TMethodJob<Client>(
 			this, &Client::sendFileThread,
@@ -821,7 +822,7 @@ Client::sendFileThread(void* filename)
 {
 	try {
 		char* name  = reinterpret_cast<char*>(filename);
-		FileChunker::sendFileChunks(name, m_events, this);
+		StreamChunker::sendFile(name, m_events, this);
 	}
 	catch (std::runtime_error error) {
 		LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));

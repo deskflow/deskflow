@@ -17,25 +17,32 @@
 
 #pragma once
 
-#include "server/ClientProxy1_4.h"
-#include "base/Stopwatch.h"
-#include "common/stdvector.h"
+#include "synergy/clipboard_types.h"
+#include "base/String.h"
 
-class Server;
 class IEventQueue;
 
-//! Proxy for client implementing protocol version 1.5
-class ClientProxy1_5 : public ClientProxy1_4 {
+class StreamChunker {
 public:
-	ClientProxy1_5(const String& name, synergy::IStream* adoptedStream, Server* server, IEventQueue* events);
-	~ClientProxy1_5();
-
-	virtual void		sendDragInfo(UInt32 fileCount, const char* info, size_t size);
-	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize);
-	virtual bool		parseMessage(const UInt8* code);
-	void				fileChunkReceived();
-	void				dragInfoReceived();
-
+	static void			sendFile(
+							char* filename,
+							IEventQueue* events,
+							void* eventTarget);
+	static void			sendClipboard(
+							String& data,
+							size_t size,
+							ClipboardID id,
+							UInt32 sequence,
+							IEventQueue* events,
+							void* eventTarget);
+	static void			updateChunkSize(bool useSecureSocket);
+	static void			interruptFile();
+	static void			interruptClipboard();
+	
 private:
-	IEventQueue*		m_events;
+	static size_t		s_chunkSize;
+	static bool			s_isChunkingClipboard;
+	static bool			s_interruptClipboard;
+	static bool			s_isChunkingFile;
+	static bool			s_interruptFile;
 };

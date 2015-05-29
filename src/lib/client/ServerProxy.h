@@ -106,6 +106,7 @@ private:
 	void				infoAcknowledgment();
 	void				fileChunkReceived();
 	void				dragInfoReceived();
+	void				handleClipboardSendingEvent(const Event&, void*);
 
 private:
 	typedef EResult (ServerProxy::*MessageParser)(const UInt8*);
@@ -129,9 +130,4 @@ private:
 
 	MessageParser		m_parser;
 	IEventQueue*		m_events;
-
-	Stopwatch			m_stopwatch;
-	double				m_elapsedTime;
-	size_t				m_receivedDataSize;
-	static const UInt16	m_intervalThreshold;
 };
