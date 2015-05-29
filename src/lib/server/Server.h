@@ -175,9 +175,6 @@ public:
 	//! Return received file data
 	String&				getReceivedFileData() { return m_receivedFileData; }
 
-	//! Return true if using secure network connection
-	bool				isSecure() const;
-
 	//@}
 
 private:
