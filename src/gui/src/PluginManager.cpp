@@ -101,8 +101,10 @@ void PluginManager::copyPlugins()
 			QString newName = destDirName;
 			newName.append(QDir::separator()).append(m_FileSysPluginList.at(i));
 
+			// Check to see if the plugin already exists
 			QFile newFile(newName);
 			if(newFile.exists()) {
+				// If it does, delete it. TODO: Check to see if same and leave
 				newFile.remove();
 			}
 			// make a copy of the plugin in the new location

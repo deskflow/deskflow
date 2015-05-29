@@ -73,9 +73,9 @@ QString Plugin::getOsSpecificName(const QString& pluginName)
 #if defined(Q_OS_WIN)
 	result.append(getOsSpecificExt());
 #elif defined(Q_OS_MAC)
-	result = kMacPluginPrefix + pluginName + getPluginOsSpecificExt();
+	result = kMacPluginPrefix + pluginName + getOsSpecificExt();
 #else
-	result = kLinuxPluginPrefix + pluginName + getPluginOsSpecificExt();
+	result = kLinuxPluginPrefix + pluginName + getOsSpecificExt();
 #endif
 	return result;
 }
