@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#ifndef PLUGINMANAGER_H
-#define PLUGINMANAGER_H
+#ifndef PLUGIN_H
+#define PLUGIN_H
 
 #include <QString>
 #include <QStringList>
@@ -25,47 +24,30 @@
 #include "SslCertificate.h"
 #include "CoreInterface.h"
 #include "DataDownloader.h"
-#include "Plugin.h"
 
-class PluginManager : public QObject
+class Plugin : public QObject
 {
 	Q_OBJECT
 
 public:
-	PluginManager();
-	~PluginManager();
+	//Plugin();
+	//~PluginManager();
 
-	void initFromWeb(QStringList pluginList);
-	void initFromFileSys(QStringList pluginList);
-
-	int pluginCount() { return m_FileSysPluginList.count(); }
-
-	static bool exist(QString name);
+	static QString getOsSpecificName(const QString& pluginName);
+	static QString getOsSpecificExt();
+	static QString getOsSpecificLocation();
+	static QString getOsSpecificInstallerLocation();
+	static QString getOsSpecificUserLocation();
 
 public slots:
-	void copyPlugins();
 
 private:
-	QString getPluginUrl(const QString& pluginName);
-	bool runProgram(
-		const QString& program,
-		const QStringList& args,
-		const QStringList& env);
-
-	//static QString getPluginOsSpecificName(const QString& pluginName);
+//	CoreInterface m_CoreInterface;
 
 signals:
-	void error(QString e);
-	void info(QString i);
-	void updateCopyStatus(int);
-	void copyFinished();
 
 private:
-	QStringList m_FileSysPluginList;
-	QString m_PluginDir;
-	QString m_ProfileDir;
-	CoreInterface m_CoreInterface;
-	SslCertificate m_SslCertificate;
+
 };
 
-#endif // PLUGINMANAGER_H
+#endif // PLUGIN_H
