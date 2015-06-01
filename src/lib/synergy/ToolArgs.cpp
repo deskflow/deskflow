@@ -22,6 +22,7 @@ ToolArgs::ToolArgs() :
 	m_loginAuthenticate(false),
 	m_getPluginList(false),
 	m_getPluginDir(false),
+	m_getInstalledDir(false),
 	m_getProfileDir(false)
 {
 }

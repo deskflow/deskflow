@@ -26,6 +26,7 @@ public:
 
 	QString getPluginDir();
 	QString getProfileDir();
+	QString getInstalledDir();
 	QString getArch();
 	QString run(const QStringList& args, const QString& input = "");
 };

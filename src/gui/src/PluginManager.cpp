@@ -49,6 +49,11 @@ void PluginManager::initFromFileSys(QStringList pluginList)
 	if (m_ProfileDir.isEmpty()) {
 		emit error(tr("Failed to get profile directory."));
 	}
+
+	m_InstalledDir = m_CoreInterface.getInstalledDir();
+	if (m_InstalledDir.isEmpty()) {
+		emit error(tr("Failed to get installed directory."));
+	}
 }
 
 PluginManager::~PluginManager()
@@ -77,7 +82,8 @@ void PluginManager::copyPlugins()
 	try {
 		// Get the Directory where plugins are put on installation
 		// If it doesn't exist, there is nothing to do
-		QString srcDirName = Plugin::getOsSpecificInstallerLocation();
+		QString srcDirName(m_InstalledDir.append(QDir::separator())
+						   .append(Plugin::getOsSpecificInstallerLocation()));
 		QDir srcDir(srcDirName);
 		if (!srcDir.exists()) {
 			emit info(
@@ -96,10 +102,10 @@ void PluginManager::copyPlugins()
 		// Run through the list of plugins and copy them
 		for ( int i = 0 ; i < m_FileSysPluginList.size() ; i++ ) {
 			// Get a file entry for the plugin using the full path
-			QFile file(srcDirName + m_FileSysPluginList.at(i));
+			QFile file(srcDirName + QDir::separator() + m_FileSysPluginList.at(i));
+
 			// construct the destination file name
-			QString newName = destDirName;
-			newName.append(QDir::separator()).append(m_FileSysPluginList.at(i));
+			QString newName(destDirName + QDir::separator() + m_FileSysPluginList.at(i));
 
 			// Check to see if the plugin already exists
 			QFile newFile(newName);
