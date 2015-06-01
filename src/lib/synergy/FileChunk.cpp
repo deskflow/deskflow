@@ -93,7 +93,7 @@ FileChunk::assemble(synergy::IStream* stream, String& dataReceived, size_t& expe
 			LOG((CLOG_DEBUG2 "recv file data from client: file size=%s", content.c_str()));
 			stopwatch.start();
 		}
-		return kNotFinish;
+		return kStart;
 
 	case kDataChunk:
 		dataReceived.append(content);

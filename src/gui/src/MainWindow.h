@@ -167,7 +167,9 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void promptAutoConfig();
 		void updateEdition();
 		QString getProfileRootForArg();
+		void checkConnected(const QString& line);
 		void checkFingerprint(const QString& line);
+		void checkTransmission(const QString& line);
 		bool autoHide();
 
 	private:

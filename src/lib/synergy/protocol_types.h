@@ -79,6 +79,7 @@ enum EDataTransfer {
 
 // Data received constants
 enum EDataReceived {
+	kStart,
 	kNotFinish,
 	kFinish,
 	kError

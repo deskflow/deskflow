@@ -864,6 +864,10 @@ ServerProxy::fileChunkReceived()
 	if (result == kFinish) {
 		m_events->addEvent(Event(m_events->forIScreen().fileRecieveCompleted(), m_client));
 	}
+	else if (result == kStart) {
+		String filename = m_client->getDragFileList().at(0).getFilename();
+		LOG((CLOG_INFO "receiving file: %s", filename.c_str()));
+	}
 }
 
 void

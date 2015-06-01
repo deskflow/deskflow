@@ -395,6 +395,13 @@ void MainWindow::appendLogRaw(const QString& text)
 
 void MainWindow::updateStateFromLogLine(const QString &line)
 {
+	checkConnected(line);
+	checkFingerprint(line);
+	checkTransmission(line);
+}
+
+void MainWindow::checkConnected(const QString& line)
+{
 	// TODO: implement ipc connection state messages to replace this hack.
 	if (line.contains("started server") ||
 		line.contains("connected to server") ||
@@ -413,8 +420,6 @@ void MainWindow::updateStateFromLogLine(const QString &line)
 			appConfig().saveSettings();
 		}
 	}
-
-	checkFingerprint(line);
 }
 
 void MainWindow::checkFingerprint(const QString& line)
@@ -459,6 +464,19 @@ void MainWindow::checkFingerprint(const QString& line)
 	}
 }
 
+void MainWindow::checkTransmission(const QString& line)
+{
+	if (line.contains("receiving file"))
+	{
+		int p = line.lastIndexOf(':');
+		if (p > 0) {
+			m_pTrayIcon->showMessage(
+							"Data Transmission",
+							"Receiving file: " + line.mid(p + 2));
+		}
+	}
+}
+
 bool MainWindow::autoHide()
 {
 	if ((appConfig().processMode() == Desktop) &&
@@ -477,6 +495,7 @@ void MainWindow::clearLog()
 
 void MainWindow::startSynergy()
 {
+	m_pTrayIcon->showMessage("test", "transfering clipboard data!!",QSystemTrayIcon::Warning,2);
 	bool desktopMode = appConfig().processMode() == Desktop;
 	bool serviceMode = appConfig().processMode() == Service;
 
