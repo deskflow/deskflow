@@ -270,21 +270,21 @@ ClientProxyUnknown::handleData(const Event&, void*)
 void
 ClientProxyUnknown::handleWriteError(const Event&, void*)
 {
-	LOG((CLOG_NOTE "error communicating with new client"));
+	LOG((CLOG_ERR "error communicating with new client"));
 	sendFailure();
 }
 
 void
 ClientProxyUnknown::handleTimeout(const Event&, void*)
 {
-	LOG((CLOG_NOTE "new client is unresponsive"));
+	LOG((CLOG_INFO "new client is unresponsive"));
 	sendFailure();
 }
 
 void
 ClientProxyUnknown::handleDisconnect(const Event&, void*)
 {
-	LOG((CLOG_NOTE "new client disconnected"));
+	LOG((CLOG_INFO "new client disconnected"));
 	sendFailure();
 }
 
