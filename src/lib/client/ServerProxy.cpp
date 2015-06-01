@@ -866,7 +866,6 @@ ServerProxy::fileChunkReceived()
 	}
 	else if (result == kStart) {
 		String filename = m_client->getDragFileList().at(0).getFilename();
-		LOG((CLOG_INFO "receiving file: %s", filename.c_str()));
 	}
 }
 
