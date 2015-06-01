@@ -481,7 +481,9 @@ void MainWindow::checkTransmission(const QString& line)
 		if (p1 > 0) {
 			int p2 = line.indexOf(':', p1 + 1);
 			if (p2 > 0) {
-				m_pTrayIcon->showMessage(line.mid(p1 + 2, p2 - p1 - 2), line.mid(p2 + 2));
+				QString title = line.mid(p1 + 2, p2 - p1 - 2);
+				QString detail = line.mid(p2 + 2);
+				m_pTrayIcon->showMessage(title, detail);
 			}
 		}
 	}
