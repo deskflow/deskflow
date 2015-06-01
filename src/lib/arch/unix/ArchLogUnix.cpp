@@ -66,7 +66,7 @@ ArchLogUnix::writeLog(ELevel level, const char* msg)
 		priority = LOG_WARNING;
 		break;
 
-	case kNOTE:
+	case kNOTIFY:
 		priority = LOG_NOTICE;
 		break;
 
