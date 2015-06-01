@@ -44,7 +44,7 @@ DropHelper::writeToDir(const String& destination, DragFileList& fileList, String
 		file.write(data.c_str(), data.size());
 		file.close();
 
-		LOG((CLOG_NOTIFY "File Transmission Complete: %s is saved to %s", fileList.at(0).getFilename(), destination.c_str()));
+		LOG((CLOG_NOTIFY "File Transmission Complete: %s is saved to %s", fileList.at(0).getFilename().c_str(), destination.c_str()));
 
 		fileList.clear();
 	}
