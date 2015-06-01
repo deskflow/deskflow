@@ -71,7 +71,8 @@ static const char* synergyIconFiles[] =
 {
 	":/res/icons/16x16/synergy-disconnected.png",
 	":/res/icons/16x16/synergy-disconnected.png",
-	":/res/icons/16x16/synergy-connected.png"
+	":/res/icons/16x16/synergy-connected.png",
+	":/res/icons/16x16/synergy-transfering.png"
 };
 
 MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
@@ -466,13 +467,22 @@ void MainWindow::checkFingerprint(const QString& line)
 
 void MainWindow::checkTransmission(const QString& line)
 {
-	if (line.contains("receiving file"))
-	{
-		int p = line.lastIndexOf(':');
-		if (p > 0) {
-			m_pTrayIcon->showMessage(
-							"Data Transmission",
-							"Receiving file: " + line.mid(p + 2));
+	if (line.contains("File Transmission")) {
+		if (line.contains("Started")) {
+			setSynergyState(synergyTransfering);
+		}
+		else if (line.contains("Failed") ||
+				 line.contains("Complete")) {
+			setSynergyState(synergyConnected);
+		}
+
+		// NOTIFY: Title: Detail
+		int p1 = line.indexOf(':');
+		if (p1 > 0) {
+			int p2 = line.indexOf(':', p1 + 1);
+			if (p2 > 0) {
+				m_pTrayIcon->showMessage(line.mid(p1 + 2, p2 - p1 - 2), line.mid(p2 + 2));
+			}
 		}
 	}
 }
@@ -836,6 +846,8 @@ void MainWindow::setSynergyState(qSynergyState state)
 	case synergyDisconnected:
 		m_pLabelPadlock->hide();
 		setStatus(tr("Synergy is not running."));
+		break;
+	case synergyTransfering:
 		break;
 	}
 

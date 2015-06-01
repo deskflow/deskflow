@@ -866,6 +866,7 @@ ServerProxy::fileChunkReceived()
 	}
 	else if (result == kStart) {
 		String filename = m_client->getDragFileList().at(0).getFilename();
+		LOG((CLOG_NOTIFY "File Transmission Started: Start receiving %s", filename.c_str()));
 	}
 }
 
