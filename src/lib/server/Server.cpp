@@ -2389,9 +2389,3 @@ Server::dragInfoReceived(UInt32 fileNum, String content)
 
 	m_screen->startDraggingFiles(m_dragFileList);
 }
-
-bool
-Server::isSecure() const
-{
-	return m_clientListener->isSecure();
-}

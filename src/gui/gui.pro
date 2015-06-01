@@ -52,12 +52,14 @@ SOURCES += src/main.cpp \
     src/DataDownloader.cpp \
     src/AddClientDialog.cpp \
     src/CommandProcess.cpp \
-    src/WebClient.cpp \
     src/PluginWizardPage.cpp \
     src/PluginManager.cpp \
     src/CoreInterface.cpp \
     src/Fingerprint.cpp \
-    src/SslCertificate.cpp
+    src/SslCertificate.cpp \
+    src/FileSysClient.cpp \
+    src/Plugin.cpp \
+    src/WebClient.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -94,14 +96,17 @@ HEADERS += src/MainWindow.h \
     src/DataDownloader.h \
     src/AddClientDialog.h \
     src/CommandProcess.h \
-    src/WebClient.h \
     src/EditionType.h \
     src/PluginWizardPage.h \
     src/ProcessorArch.h \
     src/PluginManager.h \
     src/CoreInterface.h \
     src/Fingerprint.h \
-    src/SslCertificate.h
+    src/SslCertificate.h \
+    src/LocalFilesystemClient.h \
+    src/FileSysClient.h \
+    src/Plugin.h \
+    src/WebClient.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 

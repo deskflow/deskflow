@@ -64,9 +64,6 @@ public:
 	//! Get server which owns this listener
 	Server*				getServer() { return m_server; }
 
-	//! Return true if using secure network connection
-	bool				isSecure() { return m_useSecureNetwork; }
-
 	//@}
 
 private:
