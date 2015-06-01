@@ -467,7 +467,7 @@ void MainWindow::checkFingerprint(const QString& line)
 
 void MainWindow::checkTransmission(const QString& line)
 {
-	if (line.contains("File Transmission")) {
+	if (line.contains("Transmission")) {
 		if (line.contains("Started")) {
 			setSynergyState(synergyTransfering);
 		}
@@ -505,7 +505,6 @@ void MainWindow::clearLog()
 
 void MainWindow::startSynergy()
 {
-	m_pTrayIcon->showMessage("test", "transfering clipboard data!!",QSystemTrayIcon::Warning,2);
 	bool desktopMode = appConfig().processMode() == Desktop;
 	bool serviceMode = appConfig().processMode() == Service;
 
