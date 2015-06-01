@@ -114,7 +114,6 @@ FileChunk::assemble(synergy::IStream* stream, String& dataReceived, size_t& expe
 		return kNotFinish;
 
 	case kDataEnd:
-		//m_events->addEvent(Event(m_events->forIScreen().fileRecieveCompleted(), server));
 		if (CLOG->getFilter() >= kDEBUG2) {
 			LOG((CLOG_DEBUG2 "file data transfer finished"));
 			elapsedTime += stopwatch.getTime();
