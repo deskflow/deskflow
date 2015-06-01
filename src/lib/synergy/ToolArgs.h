@@ -28,6 +28,7 @@ public:
 	bool				m_loginAuthenticate;
 	bool				m_getPluginList;
 	bool				m_getPluginDir;
+	bool				m_getInstalledDir;
 	bool				m_getProfileDir;
 	bool				m_getArch;
 };
