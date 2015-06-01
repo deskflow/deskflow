@@ -187,7 +187,7 @@ MSWindowsClientTaskBarReceiver::runMenu(int x, int y)
 		break;
 
 	case IDC_TASKBAR_LOG_LEVEL_NOTE:
-		CLOG->setFilter(kNOTE);
+		CLOG->setFilter(kNOTIFY);
 		break;
 
 	case IDC_TASKBAR_LOG_LEVEL_INFO:

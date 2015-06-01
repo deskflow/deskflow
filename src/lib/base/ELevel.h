@@ -27,7 +27,7 @@ enum ELevel {
 	kFATAL,			//!< For fatal errors
 	kERROR,			//!< For serious errors
 	kWARNING,		//!< For minor errors and warnings
-	kNOTE,			//!< For messages about notable events
+	kNOTIFY,			//!< For messages about notable events
 	kINFO,			//!< For informational messages
 	kDEBUG,			//!< For important debugging messages
 	kDEBUG1,		//!< For verbosity +1 debugging messages
