@@ -813,7 +813,7 @@ void MainWindow::setSynergyState(qSynergyState state)
 		m_pButtonToggleStart->setText(tr("&Stop"));
 		m_pButtonApply->setEnabled(true);
 	}
-	else
+	else if (state == synergyDisconnected)
 	{
 		disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
 		connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
@@ -821,7 +821,10 @@ void MainWindow::setSynergyState(qSynergyState state)
 		m_pButtonApply->setEnabled(false);
 	}
 
-	bool connected = state == synergyConnected;
+	bool connected = false;
+	if (state == synergyConnected || state == synergyTransfering) {
+		connected = true;
+	}
 
 	m_pActionStartSynergy->setEnabled(!connected);
 	m_pActionStopSynergy->setEnabled(connected);
