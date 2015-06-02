@@ -115,11 +115,13 @@ ClipboardChunk::assemble(synergy::IStream* stream,
 		}
 		else if (s_expectedSize != dataCached.size()) {
 			LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", s_expectedSize, dataCached.size()));
+			LOG((CLOG_NOTIFY "Clipboard Transmission Failed: Corrupted clipboard data."));
 			return kError;
 		}
 		return kFinish;
 	}
 
+	LOG((CLOG_NOTIFY "Clipboard Transmission Failed: Unknow error."));
 	return kError;
 }
 
