@@ -102,7 +102,7 @@ ClipboardChunk::assemble(synergy::IStream* stream,
 		s_expectedSize = synergy::string::stringToSizeType(data);
 		LOG((CLOG_DEBUG "start receiving clipboard data"));
 		dataCached.clear();
-		return kNotFinish;
+		return kStart;
 	}
 	else if (mark == kDataChunk) {
 		dataCached.append(data);
