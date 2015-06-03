@@ -2070,7 +2070,7 @@ Server::writeToDropDirThread(void*)
 		ARCH->sleep(.1f);
 	}
 
-	DropHelper::writeToDir(m_screen->getDropTarget(), m_dragFileList,
+	DropHelper::writeToDir(m_screen->getDropTarget(), m_fakeDragFileList,
 					m_receivedFileData);
 }
 
@@ -2387,7 +2387,7 @@ Server::dragInfoReceived(UInt32 fileNum, String content)
 		return;
 	}
 
-	DragInformation::parseDragInfo(m_dragFileList, fileNum, content);
+	DragInformation::parseDragInfo(m_fakeDragFileList, fileNum, content);
 
-	m_screen->startDraggingFiles(m_dragFileList);
+	m_screen->startDraggingFiles(m_fakeDragFileList);
 }

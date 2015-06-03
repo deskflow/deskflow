@@ -175,8 +175,8 @@ public:
 	//! Return received file data
 	String&				getReceivedFileData() { return m_receivedFileData; }
 
-	//! Return drag file list
-	DragFileList		getDragFileList() { return m_dragFileList; }
+	//! Return fake drag file list
+	DragFileList		getFakeDragFileList() { return m_fakeDragFileList; }
 
 	//@}
 
@@ -470,6 +470,7 @@ private:
 	size_t				m_expectedFileSize;
 	String				m_receivedFileData;
 	DragFileList		m_dragFileList;
+	DragFileList		m_fakeDragFileList;
 	Thread*				m_sendFileThread;
 	Thread*				m_writeToDropDirThread;
 	String				m_dragFileExt;
