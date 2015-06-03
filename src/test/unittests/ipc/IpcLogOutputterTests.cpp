@@ -52,7 +52,7 @@ TEST(IpcLogOutputterTests, write_threadingEnabled_bufferIsSent)
 	
 	ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
-	EXPECT_CALL(mockServer, hasClients(_)).Times(4);
+	EXPECT_CALL(mockServer, hasClients(_)).Times(2);
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\n"), _)).Times(1);
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 2\n"), _)).Times(1);
 
@@ -69,7 +69,7 @@ TEST(IpcLogOutputterTests, write_overBufferMaxSize_firstLineTruncated)
 	
 	ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
-	EXPECT_CALL(mockServer, hasClients(_)).Times(4);
+	EXPECT_CALL(mockServer, hasClients(_)).Times(1);
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 2\nmock 3\n"), _)).Times(1);
 
 	IpcLogOutputter outputter(mockServer, false);
@@ -88,7 +88,7 @@ TEST(IpcLogOutputterTests, write_underBufferMaxSize_allLinesAreSent)
 	
 	ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
-	EXPECT_CALL(mockServer, hasClients(_)).Times(3);
+	EXPECT_CALL(mockServer, hasClients(_)).Times(1);
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\nmock 2\n"), _)).Times(1);
 
 	IpcLogOutputter outputter(mockServer, false);
@@ -106,7 +106,7 @@ TEST(IpcLogOutputterTests, write_overBufferRateLimit_lastLineTruncated)
 	
 	ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
-	EXPECT_CALL(mockServer, hasClients(_)).Times(6);
+	EXPECT_CALL(mockServer, hasClients(_)).Times(2);
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\n"), _)).Times(1);
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 3\n"), _)).Times(1);
 
@@ -134,7 +134,7 @@ TEST(IpcLogOutputterTests, write_underBufferRateLimit_allLinesAreSent)
 	
 	ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
-	EXPECT_CALL(mockServer, hasClients(_)).Times(6);
+	EXPECT_CALL(mockServer, hasClients(_)).Times(2);
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\nmock 2\n"), _)).Times(1);
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 3\nmock 4\n"), _)).Times(1);
 
