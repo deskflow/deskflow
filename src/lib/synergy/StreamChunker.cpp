@@ -31,7 +31,7 @@
 
 #include <fstream>
 
-#define PAUSE_TIME_HACK 0.1
+#define PAUSE_TIME_HACK 0.1f
 
 using namespace std;
 
@@ -147,7 +147,7 @@ StreamChunker::sendClipboard(
 			break;
 		}
 		
-		if (stopwatch.getTime() > 0.1f) {
+		if (stopwatch.getTime() > PAUSE_TIME_HACK) {
 			// make sure we don't read too much from the mock data.
 			if (sentLength + chunkSize > size) {
 				chunkSize = size - sentLength;
