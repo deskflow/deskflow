@@ -1797,7 +1797,7 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 
 			return false;
 		}
-		
+
 		// switch screen
 		switchScreen(newScreen, x, y, false);
 		m_waitDragInfoThread = true;
@@ -1993,6 +1993,11 @@ Server::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 	} while (false);
 
 	if (jump) {
+		if (m_sendFileThread != NULL) {
+			StreamChunker::interruptFile();
+			m_sendFileThread = NULL;
+		}
+
 		// switch screens
 		switchScreen(newScreen, m_x, m_y, false);
 	}
