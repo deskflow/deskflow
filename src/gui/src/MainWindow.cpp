@@ -472,7 +472,8 @@ void MainWindow::checkTransmission(const QString& line)
 			setSynergyState(synergyTransfering);
 		}
 		else if (line.contains("Failed") ||
-				 line.contains("Complete")) {
+				 line.contains("Complete") ||
+				 line.contains("Interrupted")) {
 			setSynergyState(synergyConnected);
 		}
 

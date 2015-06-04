@@ -282,6 +282,11 @@ Client::leave()
 									&Client::sendClipboardThread,
 									NULL));
 
+	if (!m_receivedFileData.empty()) {
+		m_receivedFileData.clear();
+		LOG((CLOG_NOTIFY "File Transmission Interrupted: The previous file transmission is interrupted."));
+	}
+
 	return true;
 }
 
