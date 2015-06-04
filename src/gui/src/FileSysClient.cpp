@@ -34,22 +34,20 @@ void FileSysClient::queryPluginList()
 		QStringList nameFilter(extension);
 
 		QString installDir(m_CoreInterface.getInstalledDir()
-						   .append(QDir::separator())
-						   .append(Plugin::getOsSpecificInstallerLocation()));
+							.append(QDir::separator())
+							.append(Plugin::getOsSpecificInstallerLocation()));
 
 		QString searchDirectory(installDir);
-
 		QDir directory(searchDirectory);
-
 		m_PluginList = directory.entryList(nameFilter);
 		isDone(true);
 	}
 	catch (std::exception& e)
 	{
 		isDone(true);
-		emit error(tr("An error occurred while trying to load the "
-								  "plugin list. Please contact the help desk, and "
-								  "provide the following details.\n\n%1").arg(e.what()));
+		emit error(tr(	"An error occurred while trying to load the "
+						"plugin list. Please contact the help desk, and "
+						"provide the following details.\n\n%1").arg(e.what()));
 	}
 	emit queryPluginDone();
 	return;

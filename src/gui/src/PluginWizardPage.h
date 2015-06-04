@@ -30,11 +30,11 @@ class SslCertificate;
 
 class PluginWizardPage : public QWizardPage, public Ui::PluginWizardPage {
 
-    Q_OBJECT
+	Q_OBJECT
 
 public:
 	PluginWizardPage(AppConfig& appConfig, QWidget *parent = 0);
-    ~PluginWizardPage();
+	~PluginWizardPage();
 
 	void setFinished(bool b) { m_Finished = b; }
 	void setEmail(QString e) { m_Email = e; }
@@ -44,7 +44,7 @@ public:
 	void initializePage();
 
 protected:
-    void changeEvent(QEvent *e);
+	void changeEvent(QEvent *e);
 
 protected slots:
 	void showError(QString error);
