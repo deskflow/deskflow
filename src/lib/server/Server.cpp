@@ -1521,7 +1521,6 @@ Server::onClipboardChanged(BaseClientProxy* sender,
 	// ignore update if sequence number is old
 	if (seqNum < clipboard.m_clipboardSeqNum) {
 		LOG((CLOG_INFO "ignored screen \"%s\" update of clipboard %d (missequenced)", getName(sender).c_str(), id));
-		LOG((CLOG_NOTIFY "Clipboard Transmission Ignored: Sequence number is old."));
 		return;
 	}
 
@@ -1535,7 +1534,6 @@ Server::onClipboardChanged(BaseClientProxy* sender,
 	String data = clipboard.m_clipboard.marshall();
 	if (data == clipboard.m_clipboardData) {
 		LOG((CLOG_DEBUG "ignored screen \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id));
-		LOG((CLOG_NOTIFY "Clipboard Transmission Ignored: Clipboard data hasn't changed."));
 		return;
 	}
 
