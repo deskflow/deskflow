@@ -91,7 +91,7 @@ Server::Server(
 	m_writeToDropDirThread(NULL),
 	m_ignoreFileTransfer(false),
 	m_enableDragDrop(enableDragDrop),
-	m_getDragInfoThread(NULL),
+	m_sendDragInfoThread(NULL),
 	m_waitDragInfoThread(true),
 	m_sendClipboardThread(NULL)
 {
@@ -1788,37 +1788,30 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 			&& m_screen->isDraggingStarted()
 			&& m_active != newScreen
 			&& m_waitDragInfoThread) {
-			if (m_getDragInfoThread == NULL) {
-				m_getDragInfoThread = new Thread(
+			if (m_sendDragInfoThread == NULL) {
+				m_sendDragInfoThread = new Thread(
 					new TMethodJob<Server>(
 						this,
-						&Server::getDragInfoThread));
+						&Server::sendDragInfoThread, newScreen));
 			}
+
 			return false;
 		}
 		
-		if (m_getDragInfoThread == NULL) {
-			// switch screen
-			switchScreen(newScreen, x, y, false);
-
-			// send drag file info to client if there is any
-			if (m_dragFileList.size() > 0) {
-				sendDragInfo(newScreen);
-				m_dragFileList.clear();
-			}
-
-			m_waitDragInfoThread = true;
-		
-			return true;
-		}
+		// switch screen
+		switchScreen(newScreen, x, y, false);
+		m_waitDragInfoThread = true;
+		return true;
 	}
 	
 	return false;
 }
 
 void
-Server::getDragInfoThread(void*)
+Server::sendDragInfoThread(void* arg)
 {
+	BaseClientProxy* newScreen = reinterpret_cast<BaseClientProxy*>(arg);
+
 	m_dragFileList.clear();
 	String& dragFileList = m_screen->getDraggingFilename();
 	if (!dragFileList.empty()) {
@@ -1835,8 +1828,13 @@ Server::getDragInfoThread(void*)
 	m_ignoreFileTransfer = true;
 #endif
 
+	// send drag file info to client if there is any
+	if (m_dragFileList.size() > 0) {
+		sendDragInfo(newScreen);
+		m_dragFileList.clear();
+	}
 	m_waitDragInfoThread = false;
-	m_getDragInfoThread = NULL;
+	m_sendDragInfoThread = NULL;
 }
 
 void

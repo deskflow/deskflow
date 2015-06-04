@@ -361,8 +361,8 @@ private:
 	// thread function for writing file to drop directory
 	void				writeToDropDirThread(void*);
 
-	// thread function for getting drag filename
-	void				getDragInfoThread(void*);
+	// thread function for sending drag information
+	void				sendDragInfoThread(void*);
 
 	// send drag info to new client screen
 	void				sendDragInfo(BaseClientProxy* newScreen);
@@ -477,7 +477,7 @@ private:
 	bool				m_ignoreFileTransfer;
 	bool				m_enableDragDrop;
 
-	Thread*				m_getDragInfoThread;
+	Thread*				m_sendDragInfoThread;
 	bool				m_waitDragInfoThread;
 
 	ClientListener*		m_clientListener;
