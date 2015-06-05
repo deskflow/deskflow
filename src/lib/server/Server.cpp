@@ -184,11 +184,11 @@ Server::Server(
 								&Server::handleFakeInputEndEvent));
 
 	if (m_enableDragDrop) {
-		m_events->adoptHandler(m_events->forIScreen().fileChunkSending(),
+		m_events->adoptHandler(m_events->forFile().fileChunkSending(),
 								this,
 								new TMethodEventJob<Server>(this,
 									&Server::handleFileChunkSendingEvent));
-		m_events->adoptHandler(m_events->forIScreen().fileRecieveCompleted(),
+		m_events->adoptHandler(m_events->forFile().fileRecieveCompleted(),
 								this,
 								new TMethodEventJob<Server>(this,
 									&Server::handleFileRecieveCompletedEvent));

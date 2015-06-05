@@ -868,7 +868,7 @@ ServerProxy::fileChunkReceived()
 					m_client->getExpectedFileSize());
 
 	if (result == kFinish) {
-		m_events->addEvent(Event(m_events->forIScreen().fileRecieveCompleted(), m_client));
+		m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), m_client));
 	}
 	else if (result == kStart) {
 		String filename = m_client->getDragFileList().at(0).getFilename();

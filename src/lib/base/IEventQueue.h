@@ -49,6 +49,7 @@ class IKeyStateEvents;
 class IPrimaryScreenEvents;
 class IScreenEvents;
 class ClipboardEvents;
+class FileEvents;
 
 //! Event queue interface
 /*!
@@ -246,4 +247,5 @@ public:
 	virtual IPrimaryScreenEvents&		forIPrimaryScreen() = 0;
 	virtual IScreenEvents&				forIScreen() = 0;
 	virtual ClipboardEvents&			forClipboard() = 0;
+	virtual FileEvents&					forFile() = 0;
 };

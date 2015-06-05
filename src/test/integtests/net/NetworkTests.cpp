@@ -147,7 +147,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
 	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, args);
 		
 	m_events.adoptHandler(
-		m_events.forIScreen().fileRecieveCompleted(), &client,
+		m_events.forFile().fileRecieveCompleted(), &client,
 		new TMethodEventJob<NetworkTests>(
 			this, &NetworkTests::sendToClient_mockData_fileRecieveCompleted));
 
@@ -156,7 +156,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
 	m_events.initQuitTimeout(10);
 	m_events.loop();
 	m_events.removeHandler(m_events.forClientListener().connected(), &listener);
-	m_events.removeHandler(m_events.forIScreen().fileRecieveCompleted(), &client);
+	m_events.removeHandler(m_events.forFile().fileRecieveCompleted(), &client);
 	m_events.cleanupQuitTimeout();
 }
 
@@ -203,7 +203,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, args);
 		
 	m_events.adoptHandler(
-		m_events.forIScreen().fileRecieveCompleted(), &client,
+		m_events.forFile().fileRecieveCompleted(), &client,
 		new TMethodEventJob<NetworkTests>(
 			this, &NetworkTests::sendToClient_mockFile_fileRecieveCompleted));
 
@@ -212,7 +212,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 	m_events.initQuitTimeout(10);
 	m_events.loop();
 	m_events.removeHandler(m_events.forClientListener().connected(), &listener);
-	m_events.removeHandler(m_events.forIScreen().fileRecieveCompleted(), &client);
+	m_events.removeHandler(m_events.forFile().fileRecieveCompleted(), &client);
 	m_events.cleanupQuitTimeout();
 }
 
@@ -257,7 +257,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
 			this, &NetworkTests::sendToServer_mockData_handleClientConnected, &client));
 
 	m_events.adoptHandler(
-		m_events.forIScreen().fileRecieveCompleted(), &server,
+		m_events.forFile().fileRecieveCompleted(), &server,
 		new TMethodEventJob<NetworkTests>(
 			this, &NetworkTests::sendToServer_mockData_fileRecieveCompleted));
 
@@ -266,7 +266,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
 	m_events.initQuitTimeout(10);
 	m_events.loop();
 	m_events.removeHandler(m_events.forClientListener().connected(), &listener);
-	m_events.removeHandler(m_events.forIScreen().fileRecieveCompleted(), &server);
+	m_events.removeHandler(m_events.forFile().fileRecieveCompleted(), &server);
 	m_events.cleanupQuitTimeout();
 }
 
@@ -312,7 +312,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 			this, &NetworkTests::sendToServer_mockFile_handleClientConnected, &client));
 
 	m_events.adoptHandler(
-		m_events.forIScreen().fileRecieveCompleted(), &server,
+		m_events.forFile().fileRecieveCompleted(), &server,
 		new TMethodEventJob<NetworkTests>(
 			this, &NetworkTests::sendToServer_mockFile_fileRecieveCompleted));
 
@@ -321,7 +321,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 	m_events.initQuitTimeout(10);
 	m_events.loop();
 	m_events.removeHandler(m_events.forClientListener().connected(), &listener);
-	m_events.removeHandler(m_events.forIScreen().fileRecieveCompleted(), &server);
+	m_events.removeHandler(m_events.forFile().fileRecieveCompleted(), &server);
 	m_events.cleanupQuitTimeout();
 }
 
@@ -418,7 +418,7 @@ NetworkTests::sendMockData(void* eventTarget)
 	String size = synergy::string::sizeTypeToString(kMockDataSize);
 	FileChunk* sizeMessage = FileChunk::start(size);
 	
-	m_events.addEvent(Event(m_events.forIScreen().fileChunkSending(), eventTarget, sizeMessage));
+	m_events.addEvent(Event(m_events.forFile().fileChunkSending(), eventTarget, sizeMessage));
 
 	// send chunk messages with incrementing chunk size
 	size_t lastSize = 0;
@@ -433,7 +433,7 @@ NetworkTests::sendMockData(void* eventTarget)
 
 		// first byte is the chunk mark, last is \0
 		FileChunk* chunk = FileChunk::data(m_mockData, dataSize);
-		m_events.addEvent(Event(m_events.forIScreen().fileChunkSending(), eventTarget, chunk));
+		m_events.addEvent(Event(m_events.forFile().fileChunkSending(), eventTarget, chunk));
 
 		sentLength += dataSize;
 		lastSize = dataSize;
@@ -446,7 +446,7 @@ NetworkTests::sendMockData(void* eventTarget)
 	
 	// send last message
 	FileChunk* transferFinished = FileChunk::end();
-	m_events.addEvent(Event(m_events.forIScreen().fileChunkSending(), eventTarget, transferFinished));
+	m_events.addEvent(Event(m_events.forFile().fileChunkSending(), eventTarget, transferFinished));
 }
 
 UInt8*

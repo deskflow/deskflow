@@ -625,9 +625,7 @@ public:
 		m_error(Event::kUnknown),
 		m_shapeChanged(Event::kUnknown),
 		m_suspend(Event::kUnknown),
-		m_resume(Event::kUnknown),
-		m_fileChunkSending(Event::kUnknown),
-		m_fileRecieveCompleted(Event::kUnknown) { }
+		m_resume(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -660,12 +658,6 @@ public:
 	*/
 	Event::Type		resume();
 
-	//! Sending a file chunk
-	Event::Type		fileChunkSending();
-
-	//! Completed receiving a file
-	Event::Type		fileRecieveCompleted();
-
 	//@}
 		
 private:
@@ -673,8 +665,6 @@ private:
 	Event::Type		m_shapeChanged;
 	Event::Type		m_suspend;
 	Event::Type		m_resume;
-	Event::Type		m_fileChunkSending;
-	Event::Type		m_fileRecieveCompleted;
 };
 
 class ClipboardEvents : public EventTypes {
@@ -716,4 +706,31 @@ private:
 	Event::Type		m_clipboardGrabbed;
 	Event::Type		m_clipboardChanged;
 	Event::Type		m_clipboardSending;
+};
+
+class FileEvents : public EventTypes {
+public:
+	FileEvents() :
+		m_fileChunkSending(Event::kUnknown),
+		m_fileRecieveCompleted(Event::kUnknown),
+		m_keepAlive(Event::kUnknown) { }
+
+	//! @name accessors
+	//@{
+
+	//! Sending a file chunk
+	Event::Type		fileChunkSending();
+
+	//! Completed receiving a file
+	Event::Type		fileRecieveCompleted();
+
+	//! Send a keep alive
+	Event::Type		keepAlive();
+
+	//@}
+
+private:
+	Event::Type		m_fileChunkSending;
+	Event::Type		m_fileRecieveCompleted;
+	Event::Type		m_keepAlive;
 };

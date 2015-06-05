@@ -96,11 +96,11 @@ Client::Client(
 								&Client::handleResume));
 
 	if (m_args.m_enableDragDrop) {
-		m_events->adoptHandler(m_events->forIScreen().fileChunkSending(),
+		m_events->adoptHandler(m_events->forFile().fileChunkSending(),
 								this,
 								new TMethodEventJob<Client>(this,
 									&Client::handleFileChunkSending));
-		m_events->adoptHandler(m_events->forIScreen().fileRecieveCompleted(),
+		m_events->adoptHandler(m_events->forFile().fileRecieveCompleted(),
 								this,
 								new TMethodEventJob<Client>(this,
 									&Client::handleFileRecieveCompleted));

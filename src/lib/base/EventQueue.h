@@ -158,6 +158,7 @@ public:
 	IPrimaryScreenEvents&		forIPrimaryScreen();
 	IScreenEvents&				forIScreen();
 	ClipboardEvents&			forClipboard();
+	FileEvents&					forFile();
 
 private:
 	ClientEvents*				m_typesForClient;
@@ -179,6 +180,7 @@ private:
 	IPrimaryScreenEvents*		m_typesForIPrimaryScreen;
 	IScreenEvents*				m_typesForIScreen;
 	ClipboardEvents*			m_typesForClipboard;
+	FileEvents*					m_typesForFile;
 	Mutex*						m_readyMutex;
 	CondVar<bool>*				m_readyCondVar;
 	std::queue<Event>			m_pending;
