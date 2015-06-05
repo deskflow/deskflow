@@ -29,6 +29,8 @@ public:
 	// IClient overrides
 	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta);
 
+	void				handleKeepAlive(const Event&, void*);
+
 protected:
 	// ClientProxy overrides
 	virtual bool		parseMessage(const UInt8* code);
@@ -38,9 +40,6 @@ protected:
 	virtual void		addHeartbeatTimer();
 	virtual void		removeHeartbeatTimer();
 	virtual void		keepAlive();
-
-private:
-	void				handleKeepAlive(const Event&, void*);
 
 private:
 	double				m_keepAliveRate;
