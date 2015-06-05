@@ -483,15 +483,20 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 			}
 
 			const void* buffer = m_outputBuffer.peek(buffSize);
+
 			if (isSecure()) {
 				if (isSecureReady()) {
-					s_retryOutputBufferSize = buffSize;
 					status = secureWrite(buffer, buffSize, bytesWrote);
 					if (status > 0) {
 						s_retryOutputBufferSize = 0;
+
 					}
 					else if (status < 0) {
 						return NULL;
+					}
+					else if (status == 0) {
+						s_retryOutputBufferSize = buffSize;
+						return job;
 					}
 				}
 				else {
@@ -552,6 +557,9 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 					status = secureRead(buffer, sizeof(buffer), bytesRead);
 					if (status < 0) {
 						return NULL;
+					}
+					else if (status == 0) {
+						return job;
 					}
 				}
 				else {
