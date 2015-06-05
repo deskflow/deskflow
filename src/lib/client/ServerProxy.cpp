@@ -871,8 +871,10 @@ ServerProxy::fileChunkReceived()
 		m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), m_client));
 	}
 	else if (result == kStart) {
-		String filename = m_client->getDragFileList().at(0).getFilename();
-		LOG((CLOG_NOTIFY "File Transmission Started: Start receiving %s.", filename.c_str()));
+		if (m_client->getDragFileList().size() > 0) {
+			String filename = m_client->getDragFileList().at(0).getFilename();
+			LOG((CLOG_NOTIFY "File Transmission Started: Start receiving %s.", filename.c_str()));
+		}
 	}
 }
 
