@@ -24,6 +24,7 @@
 
 #include <iostream>
 
+const char * kSynergyVers = VERSION;
 SecureSocket* g_secureSocket = NULL;
 SecureListenSocket* g_secureListenSocket = NULL;
 Arch* g_arch = NULL;
@@ -85,6 +86,9 @@ invoke(const char* command, void** args)
 			delete g_secureListenSocket;
 			g_secureListenSocket = NULL;
 		}
+	}
+	else if(strcmp(command, "version") == 0) {
+		return (void*) kSynergyVers;
 	}
 
 	return NULL;
