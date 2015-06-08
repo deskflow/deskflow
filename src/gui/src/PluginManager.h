@@ -25,44 +25,46 @@
 #include "SslCertificate.h"
 #include "CoreInterface.h"
 #include "DataDownloader.h"
+#include "Plugin.h"
 
 class PluginManager : public QObject
 {
 	Q_OBJECT
 
 public:
-	PluginManager(QStringList pluginList);
+	PluginManager();
 	~PluginManager();
 
-	int downloadIndex() { return m_DownloadIndex; }
+	void initFromWeb(QStringList pluginList);
+	void initFromFileSys(QStringList pluginList);
+
+	int pluginCount() { return m_FileSysPluginList.count(); }
 
 	static bool exist(QString name);
 
 public slots:
-	void downloadPlugins();
+	void copyPlugins();
 
 private:
-	bool savePlugin();
 	QString getPluginUrl(const QString& pluginName);
 	bool runProgram(
 		const QString& program,
 		const QStringList& args,
 		const QStringList& env);
 
-	static QString getPluginOsSpecificName(const QString& pluginName);
+	//static QString getPluginOsSpecificName(const QString& pluginName);
 
 signals:
 	void error(QString e);
 	void info(QString i);
-	void downloadNext();
-	void downloadFinished();
+	void updateCopyStatus(int);
+	void copyFinished();
 
 private:
-	QStringList m_PluginList;
+	QStringList m_FileSysPluginList;
 	QString m_PluginDir;
 	QString m_ProfileDir;
-	int m_DownloadIndex;
-	DataDownloader m_DataDownloader;
+	QString m_InstalledDir;
 	CoreInterface m_CoreInterface;
 	SslCertificate m_SslCertificate;
 };

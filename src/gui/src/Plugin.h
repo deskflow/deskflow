@@ -14,19 +14,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#pragma once
+#ifndef PLUGIN_H
+#define PLUGIN_H
 
 #include <QString>
+#include <QStringList>
+#include <QObject>
 
-class CoreInterface
+#include "SslCertificate.h"
+#include "CoreInterface.h"
+#include "DataDownloader.h"
+
+class Plugin : public QObject
 {
-public:
-	CoreInterface();
+	Q_OBJECT
 
-	QString getPluginDir();
-	QString getProfileDir();
-	QString getInstalledDir();
-	QString getArch();
-	QString run(const QStringList& args, const QString& input = "");
+public:
+	//Plugin();
+	//~PluginManager();
+
+	static QString getOsSpecificName(const QString& pluginName);
+	static QString getOsSpecificExt();
+	static QString getOsSpecificLocation();
+	static QString getOsSpecificInstallerLocation();
+	static QString getOsSpecificUserLocation();
+
+public slots:
+
+private:
+//	CoreInterface m_CoreInterface;
+
+signals:
+
+private:
+
 };
+
+#endif // PLUGIN_H
