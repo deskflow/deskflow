@@ -128,6 +128,7 @@ class AppConfig
 		QString m_UserToken;
 		bool m_CryptoEnabled;
 		bool m_AutoHide;
+		bool m_ResetLogLevel;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

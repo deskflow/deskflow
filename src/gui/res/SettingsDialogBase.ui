@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>SettingsDialogBase</class>
  <widget class="QDialog" name="SettingsDialogBase">
@@ -210,17 +210,7 @@
        <widget class="QComboBox" name="m_pComboLogLevel">
         <item>
          <property name="text">
-          <string>Error</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Warning</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Note</string>
+          <string>Notify</string>
          </property>
         </item>
         <item>
