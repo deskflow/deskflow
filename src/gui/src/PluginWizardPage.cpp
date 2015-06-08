@@ -19,6 +19,7 @@
 #include "ui_PluginWizardPageBase.h"
 
 #include "SslCertificate.h"
+#include "FileSysClient.h"
 #include "WebClient.h"
 #include "PluginManager.h"
 
@@ -28,8 +29,7 @@
 PluginWizardPage::PluginWizardPage(AppConfig& appConfig, QWidget *parent) :
 	QWizardPage(parent),
 	m_Finished(false),
-	m_pWebClient(NULL),
-	m_pPluginManager(NULL),
+	m_pFileSysClient(NULL),
 	m_pSslCertificate(NULL),
 	m_AppConfig(appConfig)
 {
@@ -44,12 +44,8 @@ PluginWizardPage::PluginWizardPage(AppConfig& appConfig, QWidget *parent) :
 
 PluginWizardPage::~PluginWizardPage()
 {
-	if (m_pWebClient != NULL) {
-		delete m_pWebClient;
-	}
-
-	if (m_pPluginManager != NULL) {
-		delete m_pPluginManager;
+	if (m_pFileSysClient != NULL) {
+		delete m_pFileSysClient;
 	}
 
 	delete m_pSslCertificate;
@@ -75,25 +71,14 @@ void PluginWizardPage::showError(QString error)
 
 void PluginWizardPage::queryPluginDone()
 {
-	QStringList pluginList = m_pWebClient->getPluginList();
+	QStringList pluginList = m_pFileSysClient->getPluginList();
 	if (pluginList.isEmpty()) {
 		updateStatus(tr("Setup complete."));
 		showFinished();
 	}
 	else {
-		downloadPlugins();
+		copyPlugins();
 	}
-}
-
-void PluginWizardPage::updateDownloadStatus()
-{
-	QStringList pluginList = m_pWebClient->getPluginList();
-	int index = m_pPluginManager->downloadIndex();
-	updateStatus(
-		tr("Downloading '%1' plugin (%2/%3)...")
-		.arg(pluginList.at(index + 1))
-		.arg(index + 2)
-		.arg(pluginList.size()));
 }
 
 void PluginWizardPage::finished()
@@ -130,33 +115,29 @@ void PluginWizardPage::updateStatus(QString info)
 	m_pLabelStatus->setText(info);
 }
 
-void PluginWizardPage::downloadPlugins()
+void PluginWizardPage::copyPlugins()
 {
-	QStringList pluginList = m_pWebClient->getPluginList();
-	m_pPluginManager = new PluginManager(pluginList);
+	QStringList pluginList = m_pFileSysClient->getPluginList();
+	m_PluginManager.initFromFileSys(pluginList);
+
 	m_pThread = new QThread;
 
-	connect(m_pPluginManager,
+	connect(&m_PluginManager,
 		SIGNAL(error(QString)),
 		this,
 		SLOT(showError(QString)));
 
-	connect(m_pPluginManager,
+	connect(&m_PluginManager,
 		SIGNAL(info(QString)),
 		this,
 		SLOT(updateStatus(QString)));
 
-	connect(m_pPluginManager,
-		SIGNAL(downloadNext()),
-		this,
-		SLOT(updateDownloadStatus()));
-
-	connect(m_pPluginManager,
-		SIGNAL(downloadFinished()),
+	connect(&m_PluginManager,
+		SIGNAL(copyFinished()),
 		this,
 		SLOT(generateCertificate()));
 
-	connect(m_pPluginManager,
+	connect(&m_PluginManager,
 		SIGNAL(error(QString)),
 		m_pThread,
 		SLOT(quit()));
@@ -167,16 +148,14 @@ void PluginWizardPage::downloadPlugins()
 		SLOT(deleteLater()));
 
 	updateStatus(
-		tr("Downloading plugin: %1 (1/%2)")
-		.arg(pluginList.at(0))
-		.arg(pluginList.size()));
+		tr("Copying plugins..."));
 
-	m_pPluginManager->moveToThread(m_pThread);
+	m_PluginManager.moveToThread(m_pThread);
 	m_pThread->start();
 
 	QMetaObject::invokeMethod(
-		m_pPluginManager,
-		"downloadPlugins",
+		&m_PluginManager,
+		"copyPlugins",
 		Qt::QueuedConnection);
 }
 
@@ -195,7 +174,7 @@ bool PluginWizardPage::isComplete() const
 void PluginWizardPage::initializePage()
 {
 	QWizardPage::initializePage();
-	if (m_pWebClient == NULL) {
+	if (m_pFileSysClient == NULL) {
 		if (m_Email.isEmpty() ||
 			m_Password.isEmpty()) {
 			updateStatus(tr("Setup complete."));
@@ -205,38 +184,38 @@ void PluginWizardPage::initializePage()
 
 		m_pLabelSpinning->show();
 
+		m_pFileSysClient = new FileSysClient();
 		m_pWebClient = new WebClient();
 		m_pWebClient->setEmail(m_Email);
 		m_pWebClient->setPassword(m_Password);
 
 		QThread* thread = new QThread;
 
-		connect(m_pWebClient,
+		connect(m_pFileSysClient,
 			SIGNAL(error(QString)),
 			this,
 			SLOT(showError(QString)));
 
-		connect(m_pWebClient,
+		connect(m_pFileSysClient,
 			SIGNAL(queryPluginDone()),
 			this,
 			SLOT(queryPluginDone()));
 
-		connect(m_pWebClient,
+		connect(m_pFileSysClient,
 			SIGNAL(queryPluginDone()),
 			thread,
 			SLOT(quit()));
 
-		connect(m_pWebClient,
+		connect(m_pFileSysClient,
 			SIGNAL(error(QString)),
 			thread,
 			SLOT(quit()));
 
 		connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-		m_pWebClient->moveToThread(thread);
+		m_pFileSysClient->moveToThread(thread);
 		thread->start();
 
-		updateStatus(tr("Getting plugin list..."));
-		QMetaObject::invokeMethod(m_pWebClient, "queryPluginList", Qt::QueuedConnection);
+		QMetaObject::invokeMethod(m_pFileSysClient, "queryPluginList", Qt::QueuedConnection);
 	}
 }

@@ -1140,12 +1140,14 @@ class InternalCommands:
 		controlFile.close()
 
 		targetBin = '%s/%s/usr/bin' % (debDir, package)
+		targetPlugin = '%s/%s/usr/lib/synergy/plugins' % (debDir, package)
 		targetShare = '%s/%s/usr/share' % (debDir, package)
 		targetApplications = "%s/applications" % targetShare
 		targetIcons = "%s/icons" % targetShare
 		targetDocs = "%s/doc/%s" % (targetShare, self.project)
 
 		os.makedirs(targetBin)
+		os.makedirs(targetPlugin)
 		os.makedirs(targetApplications)
 		os.makedirs(targetIcons)
 		os.makedirs(targetDocs)
@@ -1159,6 +1161,17 @@ class InternalCommands:
 			shutil.copy("%s/%s" % (binDir, f), targetBin)
 			target = "%s/%s" % (targetBin, f)
 			os.chmod(target, 0o0755)
+			err = os.system("strip " + target)
+			if err != 0:
+				raise Exception('strip failed: ' + str(err))
+
+		pluginDir = "%s/plugins" % binDir
+
+		pluginFiles = [ 'libns.so']
+		for f in pluginFiles:
+			shutil.copy("%s/%s" % (pluginDir, f), targetPlugin)
+			target = "%s/%s" % (targetPlugin, f)
+			os.chmod(target, 0o0644)
 			err = os.system("strip " + target)
 			if err != 0:
 				raise Exception('strip failed: ' + str(err))

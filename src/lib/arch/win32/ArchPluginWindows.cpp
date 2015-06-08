@@ -69,7 +69,12 @@ ArchPluginWindows::load()
 		String filename = synergy::string::removeFileExt(*it);
 		m_pluginTable.insert(std::make_pair(filename, lib));
 
-		LOG((CLOG_DEBUG "loaded plugin: %s", (*it).c_str()));
+		char * version = (char*)invoke( filename.c_str(),"version",NULL);
+		if (version == NULL) {
+			version = "Pre-1.7.4";
+		}
+
+		LOG((CLOG_DEBUG "loaded plugin: %s (%s)", (*it).c_str(),version));
 	}
 }
 
