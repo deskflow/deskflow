@@ -298,6 +298,14 @@ SecureSocket::secureAccept(int socket)
 	if (retry == 0) {
 		m_secureReady = true;
 		LOG((CLOG_INFO "accepted secure socket"));
+		const SSL_CIPHER* cipher = SSL_get_current_cipher(m_ssl->m_ssl);
+		if(cipher != NULL) {
+			char * cipherVersion = SSL_CIPHER_description(cipher, NULL, 0);
+			if(cipherVersion != NULL) {
+				LOG((CLOG_INFO "%s", cipherVersion));
+				OPENSSL_free(cipherVersion);
+			}
+		}
 		return 1;
 	}
 
@@ -355,6 +363,14 @@ SecureSocket::secureConnect(int socket)
 		return -1; // Fingerprint failed, error
 	}
 	LOG((CLOG_DEBUG2 "connected secure socket"));
+	const SSL_CIPHER* cipher = SSL_get_current_cipher(m_ssl->m_ssl);
+	if(cipher != NULL) {
+		char * cipherVersion = SSL_CIPHER_description(cipher, NULL, 0);
+		if(cipherVersion != NULL) {
+			LOG((CLOG_INFO "%s", cipherVersion));
+			OPENSSL_free(cipherVersion);
+		}
+	}
 	return 1;
 }
 
