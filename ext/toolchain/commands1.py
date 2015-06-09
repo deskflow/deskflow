@@ -740,8 +740,14 @@ class InternalCommands:
 			shutil.copy(targetDir + "/syntool", bundleBinDir)
 
 			# Copy all generated plugins to the package
-			bundlePluginDir = bundleBinDir + "/plugins"
-			shutil.copytree(targetDir + "/plugins", bundlePluginDir)
+			bundlePluginDir = bundleBinDir + "plugins"
+			pluginDir = targetDir + "/plugins"
+			print "Copying plugins dirtree: " + pluginDir
+			if os.path.isdir(pluginDir):
+				print "Copying to: " + bundlePluginDir
+				shutil.copytree(pluginDir, bundlePluginDir)
+			else:
+				print "pluginDir doesn't exist, skipping"
 
 		self.loadConfig()
 		if not self.macIdentity:
