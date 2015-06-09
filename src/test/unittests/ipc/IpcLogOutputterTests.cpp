@@ -107,24 +107,26 @@ TEST(IpcLogOutputterTests, write_overBufferRateLimit_lastLineTruncated)
 	ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
 	EXPECT_CALL(mockServer, hasClients(_)).Times(2);
-	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\n"), _)).Times(1);
-	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 3\n"), _)).Times(1);
+	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\nmock 2\n"), _)).Times(1);
+	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 4\nmock 5\n"), _)).Times(1);
 
 	IpcLogOutputter outputter(mockServer, false);
-	outputter.bufferRateLimit(1, 0.01); // 10ms
+	outputter.bufferRateLimit(2, 1); // 10ms
 
 	// log 1 more line than the buffer can accept in time limit.
 	outputter.write(kNOTIFY, "mock 1");
 	outputter.write(kNOTIFY, "mock 2");
+	outputter.write(kNOTIFY, "mock 3");
 	outputter.sendBuffer();
 	
 	// after waiting the time limit send another to make sure
 	// we can log after the time limit passes.
 	// HACK: sleep causes the unit test to fail intermittently,
 	// so lets try 100ms (there must be a better way to solve this)
-	ARCH->sleep(0.1); // 100ms
-	outputter.write(kNOTIFY, "mock 3");
+	ARCH->sleep(2); // 100ms
 	outputter.write(kNOTIFY, "mock 4");
+	outputter.write(kNOTIFY, "mock 5");
+	outputter.write(kNOTIFY, "mock 6");
 	outputter.sendBuffer();
 }
 
