@@ -111,7 +111,7 @@ TEST(IpcLogOutputterTests, write_overBufferRateLimit_lastLineTruncated)
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 3\n"), _)).Times(1);
 
 	IpcLogOutputter outputter(mockServer, false);
-	outputter.bufferRateLimit(1, 0.001); // 1ms
+	outputter.bufferRateLimit(1, 0.01); // 10ms
 
 	// log 1 more line than the buffer can accept in time limit.
 	outputter.write(kNOTIFY, "mock 1");
