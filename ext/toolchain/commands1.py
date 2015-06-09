@@ -739,6 +739,10 @@ class InternalCommands:
 			shutil.copy(targetDir + "/synergys", bundleBinDir)
 			shutil.copy(targetDir + "/syntool", bundleBinDir)
 
+			# Copy all generated plugins to the package
+			bundlePluginDir = bundleBinDir + "/plugins"
+			shutil.copytree(targetDir + "/plugins", bundlePluginDir)
+
 		self.loadConfig()
 		if not self.macIdentity:
 			raise Exception("run config with --mac-identity")
