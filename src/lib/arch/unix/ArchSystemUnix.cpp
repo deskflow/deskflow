@@ -74,3 +74,9 @@ void
 ArchSystemUnix::setting(const std::string&, const std::string&) const
 {
 }
+
+std::string
+ArchSystemUnix::getLibsUsed(void) const
+{
+	return "not implmented.\nuse lsof on shell";
+}
