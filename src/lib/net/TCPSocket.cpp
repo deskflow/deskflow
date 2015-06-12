@@ -496,7 +496,7 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 					}
 					else if (status == 0) {
 						s_retryOutputBufferSize = buffSize;
-						return job;
+						return newJob();
 					}
 				}
 				else {
@@ -559,7 +559,7 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 						return NULL;
 					}
 					else if (status == 0) {
-						return job;
+						return newJob();
 					}
 				}
 				else {
