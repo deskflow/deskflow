@@ -42,6 +42,10 @@ enum {
 	kMaxRetryCount = 100000
 };
 
+enum {
+	kMsgSize = 128
+};
+
 static const char kFingerprintDirName[] = "SSL/Fingerprints";
 //static const char kFingerprintLocalFilename[] = "Local.txt";
 static const char kFingerprintTrustedServersFilename[] = "TrustedServers.txt";
@@ -240,11 +244,9 @@ SecureSocket::initContext(bool server)
 	// load all error messages
 	SSL_load_error_strings();
 
-	LOG((CLOG_INFO "%s",SSLeay_version (SSLEAY_VERSION)));
-	LOG((CLOG_DEBUG2 "OpenSSL : %s",SSLeay_version (SSLEAY_CFLAGS)));
-	LOG((CLOG_DEBUG2 "OpenSSL : %s",SSLeay_version (SSLEAY_BUILT_ON)));
-	LOG((CLOG_DEBUG2 "OpenSSL : %s",SSLeay_version (SSLEAY_PLATFORM)));
-	LOG((CLOG_DEBUG2 "%s",SSLeay_version (SSLEAY_DIR)));
+	if (CLOG->getFilter() >= kINFO) {
+		showSecureLibInfo();
+	}
 
 	// SSLv23_method uses TLSv1, with the ability to fall back to SSLv3
 	if (server) {
@@ -304,14 +306,8 @@ SecureSocket::secureAccept(int socket)
 	if (retry == 0) {
 		m_secureReady = true;
 		LOG((CLOG_INFO "accepted secure socket"));
-		const SSL_CIPHER* cipher = SSL_get_current_cipher(m_ssl->m_ssl);
-		if(cipher != NULL) {
-			char * cipherVersion = SSL_CIPHER_description(cipher, NULL, 0);
-			if(cipherVersion != NULL) {
-				LOG((CLOG_INFO "%s", cipherVersion));
-				OPENSSL_free(cipherVersion);
-			}
-		}
+		showSecureCipherInfo();
+		showSecureConnectInfo();
 		return 1;
 	}
 
@@ -369,14 +365,8 @@ SecureSocket::secureConnect(int socket)
 		return -1; // Fingerprint failed, error
 	}
 	LOG((CLOG_DEBUG2 "connected secure socket"));
-	const SSL_CIPHER* cipher = SSL_get_current_cipher(m_ssl->m_ssl);
-	if(cipher != NULL) {
-		char * cipherVersion = SSL_CIPHER_description(cipher, NULL, 0);
-		if(cipherVersion != NULL) {
-			LOG((CLOG_INFO "%s", cipherVersion));
-			OPENSSL_free(cipherVersion);
-		}
-	}
+	showSecureCipherInfo();
+	showSecureConnectInfo();
 	return 1;
 }
 
@@ -625,4 +615,73 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 	}
 	// If status < 0, error happened
 	return NULL;
+}
+
+void
+showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack) {
+	char msg[kMsgSize];
+	int i = 0;
+	for ( ; i < sk_SSL_CIPHER_num(stack) ; i++) {
+		const SSL_CIPHER * cipher = sk_SSL_CIPHER_value(stack,i);
+
+		SSL_CIPHER_description(cipher, msg, kMsgSize);
+
+		// Why does SSL put a newline in the description?
+		int pos = (int)strlen(msg) - 1;
+		if (msg[pos] == '\n') {
+			msg[pos] = '\0';
+		}
+
+		LOG((CLOG_DEBUG1 "%s",msg));
+	}
+}
+
+void
+SecureSocket::showSecureCipherInfo()
+{
+	STACK_OF(SSL_CIPHER) * sStack = SSL_get_ciphers(m_ssl->m_ssl);
+
+	if (sStack == NULL) {
+		LOG((CLOG_WARN "No ciphers available on server"));
+	}
+	else {
+		LOG((CLOG_DEBUG1 "Ciphers available on server:"));
+		showCipherStackDesc(sStack);
+	}
+
+	// m_ssl->m_ssl->session->ciphers is not forward compatable, In future release
+	// of OpenSSL, it's not visible, need to use SSL_get_client_ciphers() instead
+	STACK_OF(SSL_CIPHER) * cStack = m_ssl->m_ssl->session->ciphers;
+		if (cStack == NULL) {
+		LOG((CLOG_WARN "No ciphers available from client"));
+	}
+	else {
+		LOG((CLOG_DEBUG1 "Ciphers available on client:"));
+		showCipherStackDesc(cStack);
+	}
+	return;
+}
+
+void
+SecureSocket::showSecureLibInfo()
+{
+	LOG((CLOG_INFO "%s",SSLeay_version(SSLEAY_VERSION)));
+	LOG((CLOG_DEBUG2 "OpenSSL : %s",SSLeay_version(SSLEAY_CFLAGS)));
+	LOG((CLOG_DEBUG2 "OpenSSL : %s",SSLeay_version(SSLEAY_BUILT_ON)));
+	LOG((CLOG_DEBUG2 "OpenSSL : %s",SSLeay_version(SSLEAY_PLATFORM)));
+	LOG((CLOG_DEBUG2 "%s",SSLeay_version(SSLEAY_DIR)));
+	return;
+}
+
+void
+SecureSocket::showSecureConnectInfo()
+{
+	const SSL_CIPHER* cipher = SSL_get_current_cipher(m_ssl->m_ssl);
+
+	if (cipher != NULL) {
+		char msg[kMsgSize];
+		SSL_CIPHER_description(cipher, msg, kMsgSize);
+		LOG((CLOG_INFO "%s", msg));
+		}
+	return;
 }
