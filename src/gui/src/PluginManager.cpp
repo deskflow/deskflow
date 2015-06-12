@@ -115,7 +115,14 @@ void PluginManager::copyPlugins()
 			QFile newFile(newName);
 			if(newFile.exists()) {
 				// If it does, delete it. TODO: Check to see if same and leave
-				newFile.remove();
+				bool result = newFile.remove();
+				if( !result ) {
+					emit error(
+							tr(	"Unable to delete plugin:\n%1\n"
+								"Please stop synergy and run the wizard again.")
+							.arg(newName));
+					return;
+				}
 			}
 			// make a copy of the plugin in the new location
 			#if defined(Q_OS_WIN)
@@ -125,10 +132,12 @@ void PluginManager::copyPlugins()
 			#endif
 			if ( !result ) {
 					emit error(
-							tr("Failed to copy plugin '%1' to: %2\n%3")
+							tr("Failed to copy plugin '%1' to: %2\n%3\n"
+							   "Please stop synergy and run the wizard again.")
 							.arg(m_FileSysPluginList.at(i))
 							.arg(newName)
 							.arg(file.errorString()));
+					return;
 			}
 			else {
 				emit info(
