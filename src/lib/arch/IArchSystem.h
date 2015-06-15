@@ -56,4 +56,11 @@ public:
 	*/
 	virtual void setting(const std::string& valueName, const std::string& valueString) const = 0;
 	//@}
+
+	//! Get the pathnames of the libraries used by Synergy
+	/*
+	Returns a string containing the full path names of all loaded libraries at the point it is called.
+	*/
+	virtual std::string getLibsUsed(void) const = 0;
+	//@}
 };

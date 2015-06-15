@@ -491,7 +491,21 @@ Double click on a screen to edit its settings.</string>
             </property>
            </widget>
           </item>
+          <item row="4" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConfigClient">
+            <property name="text">
+             <string>Ignore auto config clients</string>
+            </property>
+           </widget>
+          </item>
           <item row="5" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxEnableDragAndDrop">
+            <property name="text">
+             <string>Enable drag and drop file transfers</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
            <spacer>
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -503,13 +517,6 @@ Double click on a screen to edit its settings.</string>
              </size>
             </property>
            </spacer>
-          </item>
-          <item row="4" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConfigClient">
-            <property name="text">
-             <string>Ignore auto config clients</string>
-            </property>
-           </widget>
           </item>
          </layout>
         </widget>
