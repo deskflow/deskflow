@@ -467,24 +467,26 @@ void MainWindow::checkFingerprint(const QString& line)
 
 void MainWindow::checkTransmission(const QString& line)
 {
-	if (line.contains("Transmission")) {
-		if (line.contains("Started")) {
-			setSynergyState(synergyTransfering);
-		}
-		else if (line.contains("Failed") ||
-				 line.contains("Complete") ||
-				 line.contains("Interrupted")) {
-			setSynergyState(synergyConnected);
-		}
+	if (appConfig().logLevel() >= 2) {
+		if (line.contains("Transmission")) {
+			if (line.contains("Started")) {
+				setSynergyState(synergyTransfering);
+			}
+			else if (line.contains("Failed") ||
+					 line.contains("Complete") ||
+					 line.contains("Interrupted")) {
+				setSynergyState(synergyConnected);
+			}
 
-		// NOTIFY: Title: Detail
-		int p1 = line.indexOf(':');
-		if (p1 > 0) {
-			int p2 = line.indexOf(':', p1 + 1);
-			if (p2 > 0) {
-				QString title = line.mid(p1 + 2, p2 - p1 - 2);
-				QString detail = line.mid(p2 + 2);
-				m_pTrayIcon->showMessage(title, detail);
+			// NOTIFY: Title: Detail
+			int p1 = line.indexOf(':');
+			if (p1 > 0) {
+				int p2 = line.indexOf(':', p1 + 1);
+				if (p2 > 0) {
+					QString title = line.mid(p1 + 2, p2 - p1 - 2);
+					QString detail = line.mid(p2 + 2);
+					m_pTrayIcon->showMessage(title, detail);
+				}
 			}
 		}
 	}
@@ -546,7 +548,9 @@ void MainWindow::startSynergy()
 
 #ifndef Q_OS_LINUX
 
-	args << "--enable-drag-drop";
+	if (m_ServerConfig.enableDragAndDrop()) {
+		args << "--enable-drag-drop";
+	}
 
 #endif
 

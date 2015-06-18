@@ -1,3 +1,20 @@
+v1.7.4-stable
+=============
+Bug #4721 - High CPU usage for Windows service on client
+Bug #4712 - Unable to send clipboard with size above 1KB when using SSL
+Bug #4584 - Drag and drop with SSL causes crash
+Bug #3774 - Missing MinGW dependencies after install on Windows
+Bug #4749 - Clipboard thread race condition causes assertion failure
+Bug #4723 - Waiting for active desktop result freezes Windows service
+Bug #4690 - Log line 'activeDesktop' does not use logging system
+Bug #4720 - Plugin download shows 'Could not get Linux package type' error
+Bug #4737 - Using error log level does not show SSL fingerprint dialog
+Enhancement #4696 - Include 'ns' plugin in installers instead of wizard download
+Enhancement #4796 - Improve secure socket intensive try operations
+Enhancement #4327 - GUI setting to disable drag and drop feature
+Enhancement #4745 - Tray icon notification for clipboard data transfer progress
+Enhancement #4793 - Additional logging to output OpenSSL version
+
 v1.7.3-stable
 =============
 Bug #4565 - Incorrect plugin downloads on Debian and Mint

@@ -417,14 +417,21 @@ SecureSocket::checkResult(int status, int& retry)
 		break;
 
 	case SSL_ERROR_WANT_READ:
+		m_readable = true;
+		retry++;
+		LOG((CLOG_DEBUG2 "want to read, error=%d, attempt=%d", errorCode, retry));
+		break;
+
 	case SSL_ERROR_WANT_WRITE:
+		m_writable = true;
+		retry++;
+		LOG((CLOG_DEBUG2 "want to write, error=%d, attempt=%d", errorCode, retry));
+		break;
+
 	case SSL_ERROR_WANT_CONNECT:
 	case SSL_ERROR_WANT_ACCEPT:
-		// it seems like these sort of errors are part of openssl's normal behavior,
-		// so we should expect a very high amount of these. sleeping doesn't seem to
-		// help... maybe you just have to swallow the errors (yuck).
 		retry++;
-		LOG((CLOG_DEBUG2 "passive ssl error, error=%d, attempt=%d", errorCode, retry));
+		LOG((CLOG_DEBUG2 "want to connect, error=%d, attempt=%d", errorCode, retry));
 		break;
 
 	case SSL_ERROR_SYSCALL:
