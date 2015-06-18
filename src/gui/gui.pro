@@ -103,7 +103,6 @@ HEADERS += src/MainWindow.h \
     src/CoreInterface.h \
     src/Fingerprint.h \
     src/SslCertificate.h \
-    src/LocalFilesystemClient.h \
     src/FileSysClient.h \
     src/Plugin.h \
     src/WebClient.h
