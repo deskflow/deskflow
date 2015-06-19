@@ -1,5 +1,7 @@
 v1.7.4-stable
 =============
+Bug #4810 - WARNING: Failure to find: src\LocalFilesystemClient.h
+Bug #4809 - Intermittent freeze caused by mutex deadlock in logging code
 Bug #4721 - High CPU usage for Windows service on client
 Bug #4712 - Unable to send clipboard with size above 1KB when using SSL
 Bug #4584 - Drag and drop with SSL causes crash
@@ -304,4 +306,4 @@ Feature #3119: Mac OS X secondary screen
 Task #2905: Unit tests: Clipboard classes
 Task #3072: Downgrade Linux build machines
 Task #3090: CXWindowsKeyState integ test args wrong
- 
+
