@@ -299,6 +299,7 @@ SecureSocket::secureAccept(int socket)
 		LOG((CLOG_INFO "client connection may not be secure"));
 		m_secureReady = false;
 		ARCH->sleep(1);
+		retry = 0;
 		return -1; // Failed, error out
 	}
 
@@ -342,6 +343,7 @@ SecureSocket::secureConnect(int socket)
 
 	if (isFatal()) {
 		LOG((CLOG_ERR "failed to connect secure socket"));
+		retry = 0;
 		return -1;
 	}
 
@@ -352,6 +354,7 @@ SecureSocket::secureConnect(int socket)
 		return 0;
 	}
 
+	retry = 0;
 	// No error, set ready, process and return ok
 	m_secureReady = true;
 	if (verifyCertFingerprint()) {
@@ -623,7 +626,7 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 #elif SYSAPI_UNIX
 	status = secureAccept(getSocket()->m_fd);
 #endif
-
+	LOG((CLOG_ERR "DELME: status:%d",status));
 	// If status < 0, error happened
 	if (status < 0) {
 		return NULL;
