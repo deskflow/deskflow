@@ -27,13 +27,14 @@
 class FileSysClient;
 class WebClient;
 class SslCertificate;
+class MainWindow;
 
 class PluginWizardPage : public QWizardPage, public Ui::PluginWizardPage {
 
 	Q_OBJECT
 
 public:
-	PluginWizardPage(AppConfig& appConfig, QWidget *parent = 0);
+	PluginWizardPage(MainWindow& mainWindow, QWidget *parent = 0);
 	~PluginWizardPage();
 
 	void setFinished(bool b) { m_Finished = b; }
@@ -66,6 +67,6 @@ private:
 	PluginManager m_PluginManager;
 	SslCertificate* m_pSslCertificate;
 	QThread* m_pThread;
-	AppConfig& m_AppConfig;
+	MainWindow& m_mainWindow;
 };
 #endif // PLUGINWIZARDPAGE_H
