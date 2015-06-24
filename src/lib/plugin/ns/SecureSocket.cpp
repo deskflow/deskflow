@@ -429,9 +429,17 @@ SecureSocket::checkResult(int status, int& retry)
 		break;
 
 	case SSL_ERROR_WANT_CONNECT:
-	case SSL_ERROR_WANT_ACCEPT:
+		m_writable = true;
+		m_readable = true;
 		retry++;
 		LOG((CLOG_DEBUG2 "want to connect, error=%d, attempt=%d", errorCode, retry));
+		break;
+
+	case SSL_ERROR_WANT_ACCEPT:
+			m_writable = true;
+		m_readable = true;
+		retry++;
+		LOG((CLOG_DEBUG2 "want to accept, error=%d, attempt=%d", errorCode, retry));
 		break;
 
 	case SSL_ERROR_SYSCALL:
@@ -595,14 +603,12 @@ SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 	status = secureConnect(getSocket()->m_fd);
 #endif
 
-	if (status > 0) {
-		return newJob();
-	}
-	else if (status == 0) {
-		return job;
-	}
 	// If status < 0, error happened
-	return NULL;
+	if (status < 0) {
+		return NULL;
+	}
+
+	return newJob();
 }
 
 ISocketMultiplexerJob*
@@ -618,14 +624,12 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 	status = secureAccept(getSocket()->m_fd);
 #endif
 
-	if (status > 0) {
-		return newJob();
-	}
-	else if (status == 0) {
-		return job;
-	}
 	// If status < 0, error happened
-	return NULL;
+	if (status < 0) {
+		return NULL;
+	}
+
+	return newJob();
 }
 
 void
