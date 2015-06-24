@@ -439,7 +439,7 @@ SecureSocket::checkResult(int status, int& retry)
 		break;
 
 	case SSL_ERROR_WANT_ACCEPT:
-			m_writable = true;
+		m_writable = true;
 		m_readable = true;
 		retry++;
 		LOG((CLOG_DEBUG2 "want to accept, error=%d, attempt=%d", errorCode, retry));
@@ -611,7 +611,15 @@ SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 		return NULL;
 	}
 
-	return newJob();
+	// If status > 0, success
+	if (status > 0) {
+		return newJob();
+	}
+
+	// Retry case
+	return new TSocketMultiplexerMethodJob<SecureSocket>(
+			this, &SecureSocket::serviceConnect,
+			getSocket(), isReadable(), isWritable());
 }
 
 ISocketMultiplexerJob*
@@ -626,13 +634,20 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 #elif SYSAPI_UNIX
 	status = secureAccept(getSocket()->m_fd);
 #endif
-	LOG((CLOG_ERR "DELME: status:%d",status));
-	// If status < 0, error happened
+		// If status < 0, error happened
 	if (status < 0) {
 		return NULL;
 	}
 
-	return newJob();
+	// If status > 0, success
+	if (status > 0) {
+		return newJob();
+	}
+
+	// Retry case
+	return new TSocketMultiplexerMethodJob<SecureSocket>(
+			this, &SecureSocket::serviceConnect,
+			getSocket(), isReadable(), isWritable());
 }
 
 void
