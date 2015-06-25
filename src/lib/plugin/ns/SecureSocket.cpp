@@ -299,6 +299,7 @@ SecureSocket::secureAccept(int socket)
 		LOG((CLOG_INFO "client connection may not be secure"));
 		m_secureReady = false;
 		ARCH->sleep(1);
+		retry = 0;
 		return -1; // Failed, error out
 	}
 
@@ -342,6 +343,7 @@ SecureSocket::secureConnect(int socket)
 
 	if (isFatal()) {
 		LOG((CLOG_ERR "failed to connect secure socket"));
+		retry = 0;
 		return -1;
 	}
 
@@ -352,6 +354,7 @@ SecureSocket::secureConnect(int socket)
 		return 0;
 	}
 
+	retry = 0;
 	// No error, set ready, process and return ok
 	m_secureReady = true;
 	if (verifyCertFingerprint()) {
@@ -417,21 +420,27 @@ SecureSocket::checkResult(int status, int& retry)
 		break;
 
 	case SSL_ERROR_WANT_READ:
-		m_readable = true;
 		retry++;
 		LOG((CLOG_DEBUG2 "want to read, error=%d, attempt=%d", errorCode, retry));
 		break;
 
 	case SSL_ERROR_WANT_WRITE:
+		// Need to make sure the socket is known to be writable so the impending
+		// select action actually triggers on a write. This isn't necessary for 
+		// m_readable because the socket logic is always readable
 		m_writable = true;
 		retry++;
 		LOG((CLOG_DEBUG2 "want to write, error=%d, attempt=%d", errorCode, retry));
 		break;
 
 	case SSL_ERROR_WANT_CONNECT:
-	case SSL_ERROR_WANT_ACCEPT:
 		retry++;
 		LOG((CLOG_DEBUG2 "want to connect, error=%d, attempt=%d", errorCode, retry));
+		break;
+
+	case SSL_ERROR_WANT_ACCEPT:
+		retry++;
+		LOG((CLOG_DEBUG2 "want to accept, error=%d, attempt=%d", errorCode, retry));
 		break;
 
 	case SSL_ERROR_SYSCALL:
@@ -595,14 +604,20 @@ SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 	status = secureConnect(getSocket()->m_fd);
 #endif
 
+	// If status < 0, error happened
+	if (status < 0) {
+		return NULL;
+	}
+
+	// If status > 0, success
 	if (status > 0) {
 		return newJob();
 	}
-	else if (status == 0) {
-		return job;
-	}
-	// If status < 0, error happened
-	return NULL;
+
+	// Retry case
+	return new TSocketMultiplexerMethodJob<SecureSocket>(
+			this, &SecureSocket::serviceConnect,
+			getSocket(), isReadable(), isWritable());
 }
 
 ISocketMultiplexerJob*
@@ -617,15 +632,20 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 #elif SYSAPI_UNIX
 	status = secureAccept(getSocket()->m_fd);
 #endif
+		// If status < 0, error happened
+	if (status < 0) {
+		return NULL;
+	}
 
+	// If status > 0, success
 	if (status > 0) {
 		return newJob();
 	}
-	else if (status == 0) {
-		return job;
-	}
-	// If status < 0, error happened
-	return NULL;
+
+	// Retry case
+	return new TSocketMultiplexerMethodJob<SecureSocket>(
+			this, &SecureSocket::serviceAccept,
+			getSocket(), isReadable(), isWritable());
 }
 
 void

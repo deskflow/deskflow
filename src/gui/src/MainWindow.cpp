@@ -1351,3 +1351,12 @@ QString MainWindow::getProfileRootForArg()
 
 	return QString("\"%1\"").arg(dir);
 }
+
+void MainWindow::delay(unsigned int s)
+{
+	QTime dieTime= QTime::currentTime().addSecs(s);
+
+	while( QTime::currentTime() < dieTime ) {
+		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+	}
+}

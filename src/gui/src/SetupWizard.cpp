@@ -30,7 +30,7 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_Edition(Unknown)
 {
 	setupUi(this);
-	m_pPluginPage = new PluginWizardPage(mainWindow.appConfig());
+	m_pPluginPage = new PluginWizardPage(mainWindow);
 	addPage(m_pPluginPage);
 
 #if defined(Q_OS_MAC)

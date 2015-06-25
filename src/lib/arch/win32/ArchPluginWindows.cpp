@@ -34,6 +34,7 @@ typedef void (*cleanupFunc)();
 
 void* g_eventTarget = NULL;
 IEventQueue* g_events = NULL;
+static const char * kPre174Plugin = "Pre-1.7.v";
 
 ArchPluginWindows::ArchPluginWindows()
 {
@@ -69,9 +70,9 @@ ArchPluginWindows::load()
 		String filename = synergy::string::removeFileExt(*it);
 		m_pluginTable.insert(std::make_pair(filename, lib));
 
-		char * version = (char*)invoke( filename.c_str(),"version",NULL);
+		const char * version = (char*)invoke( filename.c_str(),"version",NULL);
 		if (version == NULL) {
-			version = "Pre-1.7.4";
+			version = kPre174Plugin;
 		}
 
 		LOG((CLOG_DEBUG "loaded plugin: %s (%s)", (*it).c_str(),version));
