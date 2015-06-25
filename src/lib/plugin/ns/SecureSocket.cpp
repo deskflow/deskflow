@@ -425,6 +425,9 @@ SecureSocket::checkResult(int status, int& retry)
 		break;
 
 	case SSL_ERROR_WANT_WRITE:
+		// Need to make sure the socket is known to be writable so the impending
+		// select action actually triggers on a write. This isn't necessary for 
+		// m_readable because the socket logic is always readable
 		m_writable = true;
 		retry++;
 		LOG((CLOG_DEBUG2 "want to write, error=%d, attempt=%d", errorCode, retry));
