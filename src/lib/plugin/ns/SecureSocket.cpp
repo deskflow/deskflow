@@ -420,7 +420,6 @@ SecureSocket::checkResult(int status, int& retry)
 		break;
 
 	case SSL_ERROR_WANT_READ:
-		m_readable = true;
 		retry++;
 		LOG((CLOG_DEBUG2 "want to read, error=%d, attempt=%d", errorCode, retry));
 		break;
@@ -432,15 +431,11 @@ SecureSocket::checkResult(int status, int& retry)
 		break;
 
 	case SSL_ERROR_WANT_CONNECT:
-		m_writable = true;
-		m_readable = true;
 		retry++;
 		LOG((CLOG_DEBUG2 "want to connect, error=%d, attempt=%d", errorCode, retry));
 		break;
 
 	case SSL_ERROR_WANT_ACCEPT:
-		m_writable = true;
-		m_readable = true;
 		retry++;
 		LOG((CLOG_DEBUG2 "want to accept, error=%d, attempt=%d", errorCode, retry));
 		break;
@@ -646,7 +641,7 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 
 	// Retry case
 	return new TSocketMultiplexerMethodJob<SecureSocket>(
-			this, &SecureSocket::serviceConnect,
+			this, &SecureSocket::serviceAccept,
 			getSocket(), isReadable(), isWritable());
 }
 
