@@ -33,7 +33,7 @@ static const char*		g_priority[] = {
 	"FATAL",
 	"ERROR",
 	"WARNING",
-	"NOTE",
+	"NOTIFY",
 	"INFO",
 	"DEBUG",
 	"DEBUG1",
