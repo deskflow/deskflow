@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>368</width>
-    <height>377</height>
+    <height>439</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -208,11 +208,6 @@
       </item>
       <item row="0" column="1" colspan="2">
        <widget class="QComboBox" name="m_pComboLogLevel">
-        <item>
-         <property name="text">
-          <string>Notify</string>
-         </property>
-        </item>
         <item>
          <property name="text">
           <string>Info</string>

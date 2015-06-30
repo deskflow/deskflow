@@ -37,7 +37,6 @@ const char AppConfig::m_SynergyLogDir[] = "/var/log/";
 
 static const char* logLevelNames[] =
 {
-	"NOTIFY",
 	"INFO",
 	"DEBUG",
 	"DEBUG1",
@@ -117,7 +116,7 @@ void AppConfig::loadSettings()
 	m_ScreenName = settings().value("screenName", QHostInfo::localHostName()).toString();
 	m_Port = settings().value("port", 24800).toInt();
 	m_Interface = settings().value("interface").toString();
-	m_LogLevel = settings().value("logLevel", 1).toInt(); // level 1: INFO
+	m_LogLevel = settings().value("logLevel", 0).toInt(); // level 0: INFO
 	m_LogToFile = settings().value("logToFile", false).toBool();
 	m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
 	m_WizardLastRun = settings().value("wizardLastRun", 0).toInt();
@@ -134,7 +133,7 @@ void AppConfig::loadSettings()
 	m_ResetLogLevel = settings().value("resetLogLevel", true).toBool();
 
 	if (m_ResetLogLevel) {
-		m_LogLevel = 1;
+		m_LogLevel = 0;
 		m_ResetLogLevel = false;
 	}
 }
