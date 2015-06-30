@@ -477,17 +477,6 @@ void MainWindow::checkTransmission(const QString& line)
 					 line.contains("Interrupted")) {
 				setSynergyState(synergyConnected);
 			}
-
-			// NOTIFY: Title: Detail
-			int p1 = line.indexOf(':');
-			if (p1 > 0) {
-				int p2 = line.indexOf(':', p1 + 1);
-				if (p2 > 0) {
-					QString title = line.mid(p1 + 2, p2 - p1 - 2);
-					QString detail = line.mid(p2 + 2);
-					m_pTrayIcon->showMessage(title, detail);
-				}
-			}
 		}
 	}
 }
