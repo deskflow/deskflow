@@ -1111,7 +1111,7 @@ bool MainWindow::isServiceRunning(QString name)
 	SC_HANDLE hSCManager;
 	hSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_CONNECT);
 	if (hSCManager == NULL) {
-		appendLogNote("failed to open a service controller manager, error: " +
+		appendLogError("failed to open a service controller manager, error: " +
 			GetLastError());
 		return false;
 	}
@@ -1164,11 +1164,11 @@ void MainWindow::downloadBonjour()
 	int arch = getProcessorArch();
 	if (arch == kProcessorArchWin32) {
 		url.setUrl(bonjourBaseUrl + bonjourFilename32);
-		appendLogNote("downloading 32-bit Bonjour");
+		appendLogInfo("downloading 32-bit Bonjour");
 	}
 	else if (arch == kProcessorArchWin64) {
 		url.setUrl(bonjourBaseUrl + bonjourFilename64);
-		appendLogNote("downloading 64-bit Bonjour");
+		appendLogInfo("downloading 64-bit Bonjour");
 	}
 	else {
 		QMessageBox::critical(
