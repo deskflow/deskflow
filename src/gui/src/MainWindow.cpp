@@ -368,13 +368,13 @@ void MainWindow::updateFound(const QString &version)
 		.arg(version).arg(DOWNLOAD_URL));
 }
 
-void MainWindow::appendLogNote(const QString& text)
+void MainWindow::appendLogInfo(const QString& text)
 {
-	appendLogRaw("NOTE: " + text);
+	appendLogRaw("INFO: " + text);
 }
 
 void MainWindow::appendLogDebug(const QString& text) {
-	if (appConfig().logLevel() >= 2) {
+	if (appConfig().logLevel() >= 1) {
 		appendLogRaw("DEBUG: " + text);
 	}
 }
@@ -468,25 +468,14 @@ void MainWindow::checkFingerprint(const QString& line)
 void MainWindow::checkTransmission(const QString& line)
 {
 	if (appConfig().logLevel() >= 2) {
-		if (line.contains("Transmission")) {
-			if (line.contains("Started")) {
+		if (line.contains("transmission")) {
+			if (line.contains("started")) {
 				setSynergyState(synergyTransfering);
 			}
-			else if (line.contains("Failed") ||
-					 line.contains("Complete") ||
-					 line.contains("Interrupted")) {
+			else if (line.contains("failed") ||
+					 line.contains("complete") ||
+					 line.contains("interrupted")) {
 				setSynergyState(synergyConnected);
-			}
-
-			// NOTIFY: Title: Detail
-			int p1 = line.indexOf(':');
-			if (p1 > 0) {
-				int p2 = line.indexOf(':', p1 + 1);
-				if (p2 > 0) {
-					QString title = line.mid(p1 + 2, p2 - p1 - 2);
-					QString detail = line.mid(p2 + 2);
-					m_pTrayIcon->showMessage(title, detail);
-				}
 			}
 		}
 	}
@@ -587,20 +576,20 @@ void MainWindow::startSynergy()
 	if (!m_pLogOutput->toPlainText().isEmpty())
 		appendLogRaw("");
 
-	appendLogNote("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
+	appendLogInfo("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
 
 	qDebug() << args;
 
 	// show command if debug log level...
-	if (appConfig().logLevel() >= 2) {
-		appendLogNote(QString("command: %1 %2").arg(app, args.join(" ")));
+	if (appConfig().logLevel() >= 1) {
+		appendLogInfo(QString("command: %1 %2").arg(app, args.join(" ")));
 	}
 
-	appendLogNote("config file: " + configFilename());
-	appendLogNote("log level: " + appConfig().logLevelText());
+	appendLogInfo("config file: " + configFilename());
+	appendLogInfo("log level: " + appConfig().logLevelText());
 
 	if (appConfig().logToFile())
-		appendLogNote("log file: " + appConfig().logFilename());
+		appendLogInfo("log file: " + appConfig().logFilename());
 
 	if (desktopMode)
 	{
@@ -781,7 +770,7 @@ void MainWindow::stopDesktop()
 		return;
 	}
 
-	appendLogNote("stopping synergy desktop process");
+	appendLogInfo("stopping synergy desktop process");
 
 	if (synergyProcess()->isOpen())
 		synergyProcess()->close();
@@ -1122,7 +1111,7 @@ bool MainWindow::isServiceRunning(QString name)
 	SC_HANDLE hSCManager;
 	hSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_CONNECT);
 	if (hSCManager == NULL) {
-		appendLogNote("failed to open a service controller manager, error: " +
+		appendLogError("failed to open a service controller manager, error: " +
 			GetLastError());
 		return false;
 	}
@@ -1175,11 +1164,11 @@ void MainWindow::downloadBonjour()
 	int arch = getProcessorArch();
 	if (arch == kProcessorArchWin32) {
 		url.setUrl(bonjourBaseUrl + bonjourFilename32);
-		appendLogNote("downloading 32-bit Bonjour");
+		appendLogInfo("downloading 32-bit Bonjour");
 	}
 	else if (arch == kProcessorArchWin64) {
 		url.setUrl(bonjourBaseUrl + bonjourFilename64);
-		appendLogNote("downloading 64-bit Bonjour");
+		appendLogInfo("downloading 64-bit Bonjour");
 	}
 	else {
 		QMessageBox::critical(
@@ -1332,7 +1321,7 @@ void MainWindow::on_m_pCheckBoxAutoConfig_toggled(bool checked)
 
 void MainWindow::bonjourInstallFinished()
 {
-	appendLogNote("Bonjour install finished");
+	appendLogInfo("Bonjour install finished");
 
 	m_pCheckBoxAutoConfig->setChecked(true);
 }
