@@ -111,7 +111,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
 	public slots:
 		void appendLogRaw(const QString& text);
-		void appendLogNote(const QString& text);
+		void appendLogInfo(const QString& text);
+		void appendLogNotify(const QString& text);
 		void appendLogDebug(const QString& text);
 		void appendLogError(const QString& text);
 		void startSynergy();

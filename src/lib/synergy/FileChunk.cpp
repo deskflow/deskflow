@@ -116,7 +116,7 @@ FileChunk::assemble(synergy::IStream* stream, String& dataReceived, size_t& expe
 	case kDataEnd:
 		if (expectedSize != dataReceived.size()) {
 			LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", expectedSize, dataReceived.size()));
-			LOG((CLOG_NOTIFY "File Transmission Failed: Corrupted file data."));
+			LOG((CLOG_NOTIFY "file transmission failed: corrupted file data"));
 			return kError;
 		}
 

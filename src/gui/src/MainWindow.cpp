@@ -368,9 +368,14 @@ void MainWindow::updateFound(const QString &version)
 		.arg(version).arg(DOWNLOAD_URL));
 }
 
-void MainWindow::appendLogNote(const QString& text)
+void MainWindow::appendLogInfo(const QString& text)
 {
-	appendLogRaw("NOTE: " + text);
+	appendLogRaw("INFO: " + text);
+}
+
+void MainWindow::appendLogNotify(const QString& text)
+{
+	appendLogRaw("NOTIFY: " + text);
 }
 
 void MainWindow::appendLogDebug(const QString& text) {
@@ -468,13 +473,13 @@ void MainWindow::checkFingerprint(const QString& line)
 void MainWindow::checkTransmission(const QString& line)
 {
 	if (appConfig().logLevel() >= 2) {
-		if (line.contains("Transmission")) {
-			if (line.contains("Started")) {
+		if (line.contains("transmission")) {
+			if (line.contains("started")) {
 				setSynergyState(synergyTransfering);
 			}
-			else if (line.contains("Failed") ||
-					 line.contains("Complete") ||
-					 line.contains("Interrupted")) {
+			else if (line.contains("failed") ||
+					 line.contains("complete") ||
+					 line.contains("interrupted")) {
 				setSynergyState(synergyConnected);
 			}
 		}
@@ -576,20 +581,20 @@ void MainWindow::startSynergy()
 	if (!m_pLogOutput->toPlainText().isEmpty())
 		appendLogRaw("");
 
-	appendLogNote("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
+	appendLogInfo("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
 
 	qDebug() << args;
 
 	// show command if debug log level...
 	if (appConfig().logLevel() >= 2) {
-		appendLogNote(QString("command: %1 %2").arg(app, args.join(" ")));
+		appendLogInfo(QString("command: %1 %2").arg(app, args.join(" ")));
 	}
 
-	appendLogNote("config file: " + configFilename());
-	appendLogNote("log level: " + appConfig().logLevelText());
+	appendLogInfo("config file: " + configFilename());
+	appendLogInfo("log level: " + appConfig().logLevelText());
 
 	if (appConfig().logToFile())
-		appendLogNote("log file: " + appConfig().logFilename());
+		appendLogInfo("log file: " + appConfig().logFilename());
 
 	if (desktopMode)
 	{
@@ -770,7 +775,7 @@ void MainWindow::stopDesktop()
 		return;
 	}
 
-	appendLogNote("stopping synergy desktop process");
+	appendLogInfo("stopping synergy desktop process");
 
 	if (synergyProcess()->isOpen())
 		synergyProcess()->close();
@@ -1321,7 +1326,7 @@ void MainWindow::on_m_pCheckBoxAutoConfig_toggled(bool checked)
 
 void MainWindow::bonjourInstallFinished()
 {
-	appendLogNote("Bonjour install finished");
+	appendLogInfo("Bonjour install finished");
 
 	m_pCheckBoxAutoConfig->setChecked(true);
 }
