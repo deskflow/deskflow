@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -174,7 +174,7 @@ ServerApp::reloadConfig(const Event&, void*)
 		if (m_server != NULL) {
 			m_server->setConfig(*args().m_config);
 		}
-		LOG((CLOG_NOTE "reloaded configuration"));
+		LOG((CLOG_INFO "reloaded configuration"));
 	}
 }
 
@@ -338,8 +338,8 @@ void
 ServerApp::stopServer()
 {
 	if (m_serverState == kStarted) {
-		closeClientListener(m_listener);
 		closeServer(m_server);
+		closeClientListener(m_listener);
 		m_server      = NULL;
 		m_listener    = NULL;
 		m_serverState = kInitialized;
@@ -543,9 +543,10 @@ ServerApp::startServer()
 		listener   = openClientListener(args().m_config->getSynergyAddress());
 		m_server   = openServer(*args().m_config, m_primaryClient);
 		listener->setServer(m_server);
+		m_server->setListener(listener);
 		m_listener = listener;
 		updateStatus();
-		LOG((CLOG_NOTE "started server, waiting for clients"));
+		LOG((CLOG_INFO "started server, waiting for clients"));
 		m_serverState = kStarted;
 		return true;
 	}
@@ -631,10 +632,9 @@ ServerApp::openClientListener(const NetworkAddress& address)
 {
 	ClientListener* listen = new ClientListener(
 		address,
-		new CTCPSocketFactory(m_events, getSocketMultiplexer()),
-		NULL,
-		args().m_crypto,
-		m_events);
+		new TCPSocketFactory(m_events, getSocketMultiplexer()),
+		m_events,
+		args().m_enableCrypto);
 	
 	m_events->adoptHandler(
 		m_events->forClientListener().connected(), listen,
@@ -707,6 +707,11 @@ ServerApp::mainLoop()
 		return kExitFailed;
 	}
 
+	// load all available plugins.
+	ARCH->plugin().load();
+	// pass log and arch into plugins.
+	ARCH->plugin().init(Log::getInstance(), Arch::getInstance());
+
 	// start server, etc
 	appUtil().startNode();
 	
@@ -716,8 +721,8 @@ ServerApp::mainLoop()
 		initIpcClient();
 	}
 
-	// load all available plugins.
-	ARCH->plugin().init(m_serverScreen->getEventTarget(), m_events);
+	// init event for all available plugins.
+	ARCH->plugin().initEvent(m_serverScreen->getEventTarget(), m_events);
 
 	// handle hangup signal by reloading the server's configuration
 	ARCH->setSignalHandler(Arch::kHANGUP, &reloadSignalHandler, NULL);
@@ -769,11 +774,14 @@ ServerApp::mainLoop()
 		m_events->getSystemTarget());
 	cleanupServer();
 	updateStatus();
-	LOG((CLOG_NOTE "stopped server"));
+	LOG((CLOG_INFO "stopped server"));
 
 	if (argsBase().m_enableIpc) {
 		cleanupIpcClient();
 	}
+
+	// unload all plugins.
+	ARCH->plugin().unload();
 
 	return kExitSuccess;
 }

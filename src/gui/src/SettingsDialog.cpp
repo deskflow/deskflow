@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,6 +17,9 @@
  */
 
 #include "SettingsDialog.h"
+
+#include "PluginManager.h"
+#include "CoreInterface.h"
 #include "SynergyLocale.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
@@ -26,12 +29,16 @@
 #include <QtGui>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDir>
+
+static const char networkSecurity[] = "ns";
 
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::SettingsDialogBase(),
 	m_AppConfig(config),
-	m_SuppressElevateWarning(false)
+	m_SuppressElevateWarning(false),
+	m_SuppressEncryptionWarning(false)
 {
 	setupUi(this);
 
@@ -43,47 +50,43 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
 	m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
 	m_pLineEditLogFilename->setText(appConfig().logFilename());
-	m_pCheckBoxEnableCrypto->setChecked(appConfig().cryptoEnabled());
 	setIndexFromItemData(m_pComboLanguage, appConfig().language());
-	if (appConfig().cryptoEnabled())
-	{
-		m_pLineEditCryptoPass->setText(appConfig().cryptoPass());
-	}
+	m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
 
 #if defined(Q_OS_WIN)
 	m_SuppressElevateWarning = true;
 	m_pCheckBoxElevateMode->setChecked(appConfig().elevateMode());
 	m_SuppressElevateWarning = false;
+
+	m_pCheckBoxAutoHide->hide();
 #else
 	// elevate checkbox is only useful on ms windows.
 	m_pCheckBoxElevateMode->hide();
 #endif
+
+	if (!PluginManager::exist(networkSecurity)) {
+		m_pGroupNetworkSecurity->setEnabled(false);
+		m_pCheckBoxEnableCrypto->setChecked(false);
+	}
+	else {
+		m_SuppressEncryptionWarning = true;
+		m_pCheckBoxEnableCrypto->setChecked(m_AppConfig.getCryptoEnabled());
+		m_SuppressEncryptionWarning = false;
+	}
 }
 
 void SettingsDialog::accept()
 {
-	const QString& cryptoPass = m_pLineEditCryptoPass->text();
-	bool cryptoEnabled = m_pCheckBoxEnableCrypto->isChecked();
-	if (cryptoEnabled && cryptoPass.isEmpty())
-	{
-		QMessageBox message;
-		message.setWindowTitle("Settings");
-		message.setIcon(QMessageBox::Information);
-		message.setText(tr("Encryption password must not be empty."));
-		message.exec();
-		return;
-	}
-
 	appConfig().setScreenName(m_pLineEditScreenName->text());
 	appConfig().setPort(m_pSpinBoxPort->value());
 	appConfig().setInterface(m_pLineEditInterface->text());
 	appConfig().setLogLevel(m_pComboLogLevel->currentIndex());
 	appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
 	appConfig().setLogFilename(m_pLineEditLogFilename->text());
-	appConfig().setCryptoEnabled(cryptoEnabled);
-	appConfig().setCryptoPass(cryptoPass);
 	appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
 	appConfig().setElevateMode(m_pCheckBoxElevateMode->isChecked());
+	appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
+	appConfig().setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
 	appConfig().saveSettings();
 	QDialog::accept();
 }
@@ -139,17 +142,6 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked()
 	}
 }
 
-void SettingsDialog::on_m_pCheckBoxEnableCrypto_stateChanged(int )
-{
-	bool cryptoEnabled = m_pCheckBoxEnableCrypto->isChecked();
-	m_pLineEditCryptoPass->setEnabled(cryptoEnabled);
-
-	if (!cryptoEnabled)
-	{
-		m_pLineEditCryptoPass->clear();
-	}
-}
-
 void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 {
 	QString ietfCode = m_pComboLanguage->itemData(index).toString();
@@ -169,6 +161,23 @@ void SettingsDialog::on_m_pCheckBoxElevateMode_toggled(bool checked)
 
 		if (r != QMessageBox::Yes) {
 			m_pCheckBoxElevateMode->setChecked(false);
+			return;
+		}
+	}
+}
+
+void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
+{
+	if (checked && !m_SuppressEncryptionWarning) {
+		int r = QMessageBox::warning(
+			this, tr("Synergy SSL Encryption"),
+			tr("Are you sure you want to enable SSL encryption?\n\n"
+			   "This allows Synergy to establish a secure connection, "
+			   "but can slow down the data transfer of clipboard and file."),
+			QMessageBox::Yes | QMessageBox::No);
+
+		if (r != QMessageBox::Yes) {
+			m_pCheckBoxEnableCrypto->setChecked(false);
 			return;
 		}
 	}

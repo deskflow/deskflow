@@ -4,7 +4,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -37,15 +37,19 @@ DropHelper::writeToDir(const String& destination, DragFileList& fileList, String
 		dropTarget.append(fileList.at(0).getFilename());
 		file.open(dropTarget.c_str(), std::ios::out | std::ios::binary);
 		if (!file.is_open()) {
-			LOG((CLOG_DEBUG "drop file failed: can not open %s", dropTarget.c_str()));
+			LOG((CLOG_ERR "drop file failed: can not open %s", dropTarget.c_str()));
+			LOG((CLOG_NOTIFY "File Transmission Failed: Can not open %s.", dropTarget.c_str()));
 		}
 		
 		file.write(data.c_str(), data.size());
 		file.close();
 
+		LOG((CLOG_NOTIFY "File Transmission Complete: %s is saved to %s.", fileList.at(0).getFilename().c_str(), destination.c_str()));
+
 		fileList.clear();
 	}
 	else {
 		LOG((CLOG_ERR "drop file failed: drop target is empty"));
+		LOG((CLOG_NOTIFY "File Transmission Failed: Drop target is empty."));
 	}
 }

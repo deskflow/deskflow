@@ -4,7 +4,7 @@
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,24 +27,27 @@
 class DataDownloader : public QObject
 {
 	Q_OBJECT
+
 public:
-	explicit DataDownloader(QUrl url, QObject* parent = 0);
+	explicit DataDownloader(QObject* parent = 0);
 	virtual ~DataDownloader();
 
-	QByteArray downloadedData() const;
-	void cancelDownload();
+	QByteArray data() const;
+	void cancel();
+	void download(QUrl url);
+	bool isFinished() const { return m_IsFinished; }
 
 signals:
-		void downloaded();
+	void isComplete();
 
 private slots:
-	void fileDownloaded(QNetworkReply* reply);
+	void complete(QNetworkReply* reply);
 
 private:
-
-	QNetworkAccessManager m_WebCtrl;
-	QByteArray m_DownloadedData;
+	QNetworkAccessManager m_NetworkManager;
+	QByteArray m_Data;
 	QNetworkReply* m_pReply;
+	bool m_IsFinished;
 };
 
 #endif // DATADOWNLOADER_H

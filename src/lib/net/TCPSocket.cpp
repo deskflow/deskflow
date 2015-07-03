@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -34,10 +34,10 @@
 #include <memory>
 
 //
-// CTCPSocket
+// TCPSocket
 //
 
-CTCPSocket::CTCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
+TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	IDataSocket(events),
 	m_mutex(),
 	m_flushed(&m_mutex, true),
@@ -54,7 +54,7 @@ CTCPSocket::CTCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer
 	init();
 }
 
-CTCPSocket::CTCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket) :
+TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket) :
 	IDataSocket(events),
 	m_mutex(),
 	m_socket(socket),
@@ -70,7 +70,7 @@ CTCPSocket::CTCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer
 	setJob(newJob());
 }
 
-CTCPSocket::~CTCPSocket()
+TCPSocket::~TCPSocket()
 {
 	try {
 		close();
@@ -81,7 +81,7 @@ CTCPSocket::~CTCPSocket()
 }
 
 void
-CTCPSocket::bind(const NetworkAddress& addr)
+TCPSocket::bind(const NetworkAddress& addr)
 {
 	try {
 		ARCH->bindSocket(m_socket, addr.getAddress());
@@ -95,7 +95,7 @@ CTCPSocket::bind(const NetworkAddress& addr)
 }
 
 void
-CTCPSocket::close()
+TCPSocket::close()
 {
 	// remove ourself from the multiplexer
 	setJob(NULL);
@@ -123,13 +123,13 @@ CTCPSocket::close()
 }
 
 void*
-CTCPSocket::getEventTarget() const
+TCPSocket::getEventTarget() const
 {
 	return const_cast<void*>(reinterpret_cast<const void*>(this));
 }
 
 UInt32
-CTCPSocket::read(void* buffer, UInt32 n)
+TCPSocket::read(void* buffer, UInt32 n)
 {
 	// copy data directly from our input buffer
 	Lock lock(&m_mutex);
@@ -152,7 +152,7 @@ CTCPSocket::read(void* buffer, UInt32 n)
 }
 
 void
-CTCPSocket::write(const void* buffer, UInt32 n)
+TCPSocket::write(const void* buffer, UInt32 n)
 {
 	bool wasEmpty;
 	{
@@ -184,7 +184,7 @@ CTCPSocket::write(const void* buffer, UInt32 n)
 }
 
 void
-CTCPSocket::flush()
+TCPSocket::flush()
 {
 	Lock lock(&m_mutex);
 	while (m_flushed == false) {
@@ -193,7 +193,7 @@ CTCPSocket::flush()
 }
 
 void
-CTCPSocket::shutdownInput()
+TCPSocket::shutdownInput()
 {
 	bool useNewJob = false;
 	{
@@ -220,7 +220,7 @@ CTCPSocket::shutdownInput()
 }
 
 void
-CTCPSocket::shutdownOutput()
+TCPSocket::shutdownOutput()
 {
 	bool useNewJob = false;
 	{
@@ -247,21 +247,29 @@ CTCPSocket::shutdownOutput()
 }
 
 bool
-CTCPSocket::isReady() const
+TCPSocket::isReady() const
 {
 	Lock lock(&m_mutex);
 	return (m_inputBuffer.getSize() > 0);
 }
 
+bool
+TCPSocket::isFatal() const
+{
+	// TCP sockets aren't ever left in a fatal state.
+	LOG((CLOG_ERR "isFatal() not valid for non-secure connections"));
+	return false;
+}
+
 UInt32
-CTCPSocket::getSize() const
+TCPSocket::getSize() const
 {
 	Lock lock(&m_mutex);
 	return m_inputBuffer.getSize();
 }
 
 void
-CTCPSocket::connect(const NetworkAddress& addr)
+TCPSocket::connect(const NetworkAddress& addr)
 {
 	{
 		Lock lock(&m_mutex);
@@ -290,7 +298,7 @@ CTCPSocket::connect(const NetworkAddress& addr)
 }
 
 void
-CTCPSocket::init()
+TCPSocket::init()
 {
 	// default state
 	m_connected = false;
@@ -316,7 +324,7 @@ CTCPSocket::init()
 }
 
 void
-CTCPSocket::setJob(ISocketMultiplexerJob* job)
+TCPSocket::setJob(ISocketMultiplexerJob* job)
 {
 	// multiplexer will delete the old job
 	if (job == NULL) {
@@ -328,7 +336,7 @@ CTCPSocket::setJob(ISocketMultiplexerJob* job)
 }
 
 ISocketMultiplexerJob*
-CTCPSocket::newJob()
+TCPSocket::newJob()
 {
 	// note -- must have m_mutex locked on entry
 
@@ -340,23 +348,23 @@ CTCPSocket::newJob()
 		if (!(m_readable || m_writable)) {
 			return NULL;
 		}
-		return new TSocketMultiplexerMethodJob<CTCPSocket>(
-								this, &CTCPSocket::serviceConnecting,
+		return new TSocketMultiplexerMethodJob<TCPSocket>(
+								this, &TCPSocket::serviceConnecting,
 								m_socket, m_readable, m_writable);
 	}
 	else {
 		if (!(m_readable || (m_writable && (m_outputBuffer.getSize() > 0)))) {
 			return NULL;
 		}
-		return new TSocketMultiplexerMethodJob<CTCPSocket>(
-								this, &CTCPSocket::serviceConnected,
+		return new TSocketMultiplexerMethodJob<TCPSocket>(
+								this, &TCPSocket::serviceConnected,
 								m_socket, m_readable,
 								m_writable && (m_outputBuffer.getSize() > 0));
 	}
 }
 
 void
-CTCPSocket::sendConnectionFailedEvent(const char* msg)
+TCPSocket::sendConnectionFailedEvent(const char* msg)
 {
 	ConnectionFailedInfo* info = new ConnectionFailedInfo(msg);
 	m_events->addEvent(Event(m_events->forIDataSocket().connectionFailed(),
@@ -364,13 +372,13 @@ CTCPSocket::sendConnectionFailedEvent(const char* msg)
 }
 
 void
-CTCPSocket::sendEvent(Event::Type type)
+TCPSocket::sendEvent(Event::Type type)
 {
 	m_events->addEvent(Event(type, getEventTarget(), NULL));
 }
 
 void
-CTCPSocket::onConnected()
+TCPSocket::onConnected()
 {
 	m_connected = true;
 	m_readable  = true;
@@ -378,14 +386,14 @@ CTCPSocket::onConnected()
 }
 
 void
-CTCPSocket::onInputShutdown()
+TCPSocket::onInputShutdown()
 {
 	m_inputBuffer.pop(m_inputBuffer.getSize());
 	m_readable = false;
 }
 
 void
-CTCPSocket::onOutputShutdown()
+TCPSocket::onOutputShutdown()
 {
 	m_outputBuffer.pop(m_outputBuffer.getSize());
 	m_writable = false;
@@ -396,7 +404,7 @@ CTCPSocket::onOutputShutdown()
 }
 
 void
-CTCPSocket::onDisconnected()
+TCPSocket::onDisconnected()
 {
 	// disconnected
 	onInputShutdown();
@@ -405,7 +413,7 @@ CTCPSocket::onDisconnected()
 }
 
 ISocketMultiplexerJob*
-CTCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
+TCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
 				bool, bool write, bool error)
 {
 	Lock lock(&m_mutex);
@@ -449,7 +457,7 @@ CTCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
 }
 
 ISocketMultiplexerJob*
-CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
+TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 				bool read, bool write, bool error)
 {
 	Lock lock(&m_mutex);
@@ -461,17 +469,63 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 	}
 
 	bool needNewJob = false;
+	
+	static bool s_retry = false;
+	static int s_retrySize = 0;
+	static void* s_staticBuffer = NULL;
 
 	if (write) {
 		try {
 			// write data
-			UInt32 n = m_outputBuffer.getSize();
-			const void* buffer = m_outputBuffer.peek(n);
-			n = (UInt32)ARCH->writeSocket(m_socket, buffer, n);
+			int bufferSize = 0;
+			int bytesWrote = 0;
+			int status = 0;
+
+			if (s_retry) {
+				bufferSize = s_retrySize;
+			}
+			else {
+				bufferSize = m_outputBuffer.getSize();
+				s_staticBuffer = malloc(bufferSize);
+				memcpy(s_staticBuffer, m_outputBuffer.peek(bufferSize), bufferSize);
+ 			}
+
+			if (bufferSize == 0) {
+				return job;
+			}
+
+			if (isSecure()) {
+				if (isSecureReady()) {
+					status = secureWrite(s_staticBuffer, bufferSize, bytesWrote);
+					if (status > 0) {
+						s_retry = false;
+						bufferSize = 0;
+						free(s_staticBuffer);
+						s_staticBuffer = NULL;
+					}
+					else if (status < 0) {
+						return NULL;
+					}
+					else if (status == 0) {
+						s_retry = true;
+						s_retrySize = bufferSize;
+						return newJob();
+					}
+				}
+				else {
+					return job;
+				}
+			}
+			else {
+				bytesWrote = (UInt32)ARCH->writeSocket(m_socket, s_staticBuffer, bufferSize);
+				bufferSize = 0;
+				free(s_staticBuffer);
+				s_staticBuffer = NULL;
+			}
 
 			// discard written data
-			if (n > 0) {
-				m_outputBuffer.pop(n);
+			if (bytesWrote > 0) {
+				m_outputBuffer.pop(bytesWrote);
 				if (m_outputBuffer.getSize() == 0) {
 					sendEvent(m_events->forIStream().outputFlushed());
 					m_flushed = true;
@@ -509,16 +563,47 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 
 	if (read && m_readable) {
 		try {
-			UInt8 buffer[4096];
-			size_t n = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
-			if (n > 0) {
+			static UInt8 buffer[4096];
+			memset(buffer, 0, sizeof(buffer));
+			int bytesRead = 0;
+			int status = 0;
+
+			if (isSecure()) {
+				if (isSecureReady()) {
+					status = secureRead(buffer, sizeof(buffer), bytesRead);
+					if (status < 0) {
+						return NULL;
+					}
+					else if (status == 0) {
+						return newJob();
+					}
+				}
+				else {
+					return job;
+				}
+			}
+			else {
+				bytesRead = (int) ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+			}
+
+			if (bytesRead > 0) {
 				bool wasEmpty = (m_inputBuffer.getSize() == 0);
 
 				// slurp up as much as possible
 				do {
-					m_inputBuffer.write(buffer, (UInt32)n);
-					n = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
-				} while (n > 0);
+					m_inputBuffer.write(buffer, bytesRead);
+
+					if (isSecure() && isSecureReady()) {
+						status = secureRead(buffer, sizeof(buffer), bytesRead);
+						if (status < 0) {
+							return NULL;
+						}
+					}
+					else {
+						bytesRead = (int) ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+					}
+
+				} while (bytesRead > 0 || status > 0);
 
 				// send input ready if input buffer was empty
 				if (wasEmpty) {

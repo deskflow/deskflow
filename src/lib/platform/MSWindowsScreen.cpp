@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -43,7 +43,6 @@
 #include "base/TMethodJob.h"
 
 #include <string.h>
-#include <pbt.h>
 #include <Shlobj.h>
 #include <comutil.h>
 #include <algorithm>
@@ -434,8 +433,8 @@ MSWindowsScreen::checkClipboards()
 	if (m_ownClipboard && !MSWindowsClipboard::isOwnedBySynergy()) {
 		LOG((CLOG_DEBUG "clipboard changed: lost ownership and no notification received"));
 		m_ownClipboard = false;
-		sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardClipboard);
-		sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardSelection);
+		sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardClipboard);
+		sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardSelection);
 	}
 }
 
@@ -1502,8 +1501,8 @@ MSWindowsScreen::onClipboardChange()
 		if (m_ownClipboard) {
 			LOG((CLOG_DEBUG "clipboard changed: lost ownership"));
 			m_ownClipboard = false;
-			sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardClipboard);
-			sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardSelection);
+			sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardClipboard);
+			sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardSelection);
 		}
 	}
 	else if (!m_ownClipboard) {

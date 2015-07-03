@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -39,7 +39,15 @@ public:
 	data stream.  Returns NULL if no socket is waiting to be accepted.
 	This is only valid after a call to \c bind().
 	*/
-	virtual IDataSocket*	accept() = 0;
+	virtual IDataSocket*
+						accept() = 0;
+
+	//! Delete connection socket
+	/*!
+	This is used when the socket was created but not adopted by a client
+	proxy.
+	*/
+	virtual void		deleteSocket(void*) = 0;
 
 	//@}
 

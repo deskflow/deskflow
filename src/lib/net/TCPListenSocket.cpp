@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -110,27 +110,35 @@ TCPListenSocket::accept()
 {
 	IDataSocket* socket = NULL;
 	try {
-		socket = new CTCPSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
+		socket = new TCPSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
 		if (socket != NULL) {
-			m_socketMultiplexer->addSocket(this,
-							new TSocketMultiplexerMethodJob<TCPListenSocket>(
-								this, &TCPListenSocket::serviceListening,
-								m_socket, true, false));
+			setListeningJob();
 		}
 		return socket;
 	}
 	catch (XArchNetwork&) {
 		if (socket != NULL) {
 			delete socket;
+			setListeningJob();
 		}
 		return NULL;
 	}
 	catch (std::exception &ex) {
 		if (socket != NULL) {
 			delete socket;
+			setListeningJob();
 		}
 		throw ex;
 	}
+}
+
+void
+TCPListenSocket::setListeningJob()
+{
+	m_socketMultiplexer->addSocket(this,
+							new TSocketMultiplexerMethodJob<TCPListenSocket>(
+								this, &TCPListenSocket::serviceListening,
+								m_socket, true, false));
 }
 
 ISocketMultiplexerJob*

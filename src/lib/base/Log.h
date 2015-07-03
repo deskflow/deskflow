@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -41,6 +41,7 @@ LOGC() provide convenient access.
 class Log {
 public:
 	Log();
+	Log(Log* src);
 	~Log();
 
 	//! @name manipulators
@@ -202,7 +203,7 @@ otherwise it expands to a call that doesn't.
 #define CLOG_CRIT		CLOG_TRACE "%z\060" // char is '0'
 #define CLOG_ERR		CLOG_TRACE "%z\061"
 #define CLOG_WARN		CLOG_TRACE "%z\062"
-#define CLOG_NOTE		CLOG_TRACE "%z\063"
+#define CLOG_NOTIFY		CLOG_TRACE "%z\063"
 #define CLOG_INFO		CLOG_TRACE "%z\064"
 #define CLOG_DEBUG		CLOG_TRACE "%z\065"
 #define CLOG_DEBUG1		CLOG_TRACE "%z\066"

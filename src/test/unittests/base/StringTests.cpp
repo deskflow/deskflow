@@ -4,7 +4,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -52,4 +52,51 @@ TEST(StringTests, sprintf)
 	String result = string::sprintf(format, arg1, arg2);
 
 	EXPECT_EQ("answer=42", result);
+}
+
+TEST(StringTests, toHex)
+{
+	String subject = "foobar";
+	int width = 2;
+
+	string::toHex(subject, width);
+
+	EXPECT_EQ("666f6f626172", subject);
+}
+
+TEST(StringTests, uppercase)
+{
+	String subject = "12foo3BaR";
+
+	string::uppercase(subject);
+
+	EXPECT_EQ("12FOO3BAR", subject);
+}
+
+TEST(StringTests, removeChar)
+{
+	String subject = "foobar";
+	const char c = 'o';
+
+	string::removeChar(subject, c);
+
+	EXPECT_EQ("fbar", subject);
+}
+
+TEST(StringTests, intToString)
+{
+	size_t value = 123;
+
+	String number = string::sizeTypeToString(value);
+
+	EXPECT_EQ("123", number);
+}
+
+TEST(StringTests, stringToUint)
+{
+	String number = "123";
+
+	size_t value = string::stringToSizeType(number);
+
+	EXPECT_EQ(123, value);
 }

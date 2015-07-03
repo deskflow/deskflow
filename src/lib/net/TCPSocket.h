@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -34,11 +34,11 @@ class SocketMultiplexer;
 /*!
 A data socket using TCP.
 */
-class CTCPSocket : public IDataSocket {
+class TCPSocket : public IDataSocket {
 public:
-	CTCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
-	CTCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket);
-	~CTCPSocket();
+	TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+	TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket);
+	virtual ~TCPSocket();
 
 	// ISocket overrides
 	virtual void		bind(const NetworkAddress&);
@@ -52,19 +52,38 @@ public:
 	virtual void		shutdownInput();
 	virtual void		shutdownOutput();
 	virtual bool		isReady() const;
+	virtual bool		isFatal() const;
 	virtual UInt32		getSize() const;
 
 	// IDataSocket overrides
 	virtual void		connect(const NetworkAddress&);
 
+	virtual void		secureConnect() {}
+	virtual void		secureAccept() {}
+	virtual void		setFingerprintFilename(String& f) {}
+
+protected:
+	ArchSocket			getSocket() { return m_socket; }
+	IEventQueue*		getEvents() { return m_events; }
+	virtual bool		isSecureReady() { return false; }
+	virtual bool		isSecure() { return false; }
+	virtual int			secureRead(void* buffer, int, int& ) { return 0; }
+	virtual int			secureWrite(const void*, int, int& ) { return 0; }
+
+	void				setJob(ISocketMultiplexerJob*);
+	ISocketMultiplexerJob*
+						newJob();
+	bool				isReadable() { return m_readable; }
+	bool				isWritable() { return m_writable; }
+
+	Mutex&				getMutex() { return m_mutex; }
+
+	void				sendEvent(Event::Type);
+
 private:
 	void				init();
 
-	void				setJob(ISocketMultiplexerJob*);
-	ISocketMultiplexerJob*	newJob();
 	void				sendConnectionFailedEvent(const char*);
-	void				sendEvent(Event::Type);
-
 	void				onConnected();
 	void				onInputShutdown();
 	void				onOutputShutdown();
@@ -77,6 +96,10 @@ private:
 						serviceConnected(ISocketMultiplexerJob*,
 							bool, bool, bool);
 
+protected:
+	bool				m_readable;
+	bool				m_writable;
+
 private:
 	Mutex				m_mutex;
 	ArchSocket			m_socket;
@@ -84,8 +107,6 @@ private:
 	StreamBuffer		m_outputBuffer;
 	CondVar<bool>		m_flushed;
 	bool				m_connected;
-	bool				m_readable;
-	bool				m_writable;
 	IEventQueue*		m_events;
-	SocketMultiplexer* m_socketMultiplexer;
+	SocketMultiplexer*	m_socketMultiplexer;
 };

@@ -4,7 +4,7 @@
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include "ProcessorArch.h"
+
 #include <QComboBox>
 #include <QVariant>
 #include <QCryptographicHash>
@@ -25,3 +27,4 @@
 void setIndexFromItemData(QComboBox* comboBox, const QVariant& itemData);
 QString hash(const QString& string);
 QString getFirstMacAddress();
+qProcessorArch getProcessorArch();

@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,6 +20,7 @@
 
 #include "common/IInterface.h"
 #include "common/stdstring.h"
+#include "base/String.h"
 
 //! Interface for architecture dependent file system operations
 /*!
@@ -62,6 +63,21 @@ public:
 	*/
 	virtual std::string	getLogDirectory() = 0;
 
+	//! Get plugins directory
+	/*!
+	Returns the plugin files directory. If no plugin directory is set,
+	this will return the plugin folder within the user's profile.
+	*/
+	virtual std::string	getPluginDirectory() = 0;
+
+	//! Get user's profile directory
+	/*!
+	Returns the user's profile directory. If no profile directory is set,
+	this will return the user's profile according to the operating system,
+	which will depend on which user launched the program.
+	*/
+	virtual std::string	getProfileDirectory() = 0;
+
 	//! Concatenate path components
 	/*!
 	Concatenate pathname components with a directory separator
@@ -72,6 +88,18 @@ public:
 	virtual std::string	concatPath(
 							const std::string& prefix,
 							const std::string& suffix) = 0;
+	
+	//@}
+	//! Set the user's profile directory
+	/*
+	Returns the user's profile directory.
+	*/
+	virtual void		setProfileDirectory(const String& s) = 0;
 
 	//@}
+	//! Set the user's plugin directory
+	/*
+	Returns the user's plugin directory.
+	*/
+	virtual void		setPluginDirectory(const String& s) = 0;
 };

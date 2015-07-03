@@ -20,6 +20,7 @@ source=%{_topdir}/../..
 mkdir -p %{buildroot}/%{_datarootdir}/applications
 mkdir -p %{buildroot}/%{_datarootdir}/icons
 mkdir -p %{buildroot}/%{_bindir}
+mkdir -p %{buildroot}/%{_bindir}/../lib/synergy/plugins
 
 cp $source/bin/synergy %{buildroot}%{_bindir}
 cp $source/bin/synergyc %{buildroot}%{_bindir}
@@ -28,6 +29,7 @@ cp $source/bin/synergyd %{buildroot}%{_bindir}
 cp $source/bin/syntool %{buildroot}%{_bindir}
 cp $source/res/synergy.desktop %{buildroot}%{_datarootdir}/applications
 cp $source/res/synergy.ico %{buildroot}%{_datarootdir}/icons
+cp $source/bin/plugins/* %{buildroot}%{_bindir}/../lib/synergy/plugins
 
 %files
 %defattr(755,root,root,-)
@@ -38,6 +40,7 @@ cp $source/res/synergy.ico %{buildroot}%{_datarootdir}/icons
 %{_bindir}/syntool
 %attr(644,-,-) %{_datarootdir}/applications/synergy.desktop
 %attr(644,-,-) %{_datarootdir}/icons/synergy.ico
+%attr(644,-,-) %{_bindir}/../lib/synergy/plugins/*
 
 %changelog
 * Thu Mar 20 2014 Nick Bolton <nick@synergy-project.org>

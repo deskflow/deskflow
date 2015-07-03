@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -46,6 +46,8 @@ EVENT_TYPE_ACCESSOR(ServerApp)
 EVENT_TYPE_ACCESSOR(IKeyState)
 EVENT_TYPE_ACCESSOR(IPrimaryScreen)
 EVENT_TYPE_ACCESSOR(IScreen)
+EVENT_TYPE_ACCESSOR(Clipboard)
+EVENT_TYPE_ACCESSOR(File)
 
 // interrupt handler.  this just adds a quit event to the queue.
 static
@@ -82,6 +84,8 @@ EventQueue::EventQueue() :
 	m_typesForIKeyState(NULL),
 	m_typesForIPrimaryScreen(NULL),
 	m_typesForIScreen(NULL),
+	m_typesForClipboard(NULL),
+	m_typesForFile(NULL),
 	m_readyMutex(new Mutex),
 	m_readyCondVar(new CondVar<bool>(m_readyMutex, false))
 {

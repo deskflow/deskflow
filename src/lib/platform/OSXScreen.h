@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -335,8 +335,8 @@ private:
 	CFRunLoopSourceRef		m_eventTapRLSR;
 
 	// for double click coalescing.
-	double					m_lastSingleClick;
-	double					m_lastDoubleClick;
+	double					m_lastClickTime;
+    int                     m_clickState;
 	SInt32					m_lastSingleClickXCursor;
 	SInt32					m_lastSingleClickYCursor;
 

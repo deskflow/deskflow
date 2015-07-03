@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -73,4 +73,10 @@ ArchSystemUnix::setting(const std::string&) const
 void
 ArchSystemUnix::setting(const std::string&, const std::string&) const
 {
+}
+
+std::string
+ArchSystemUnix::getLibsUsed(void) const
+{
+	return "not implmented.\nuse lsof on shell";
 }

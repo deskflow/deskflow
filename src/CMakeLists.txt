@@ -4,7 +4,7 @@
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# found in the file COPYING that should have accompanied this file.
+# found in the file LICENSE that should have accompanied this file.
 # 
 # This package is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,7 +16,6 @@
 
 add_subdirectory(lib)
 add_subdirectory(cmd)
-add_subdirectory(plugin)
 add_subdirectory(micro)
 
 if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "IRIX")

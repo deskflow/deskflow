@@ -4,7 +4,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,6 +27,9 @@
 #include <algorithm>
 #include <stdio.h>
 #include <cstdarg>
+#include <sstream>
+#include <iomanip>
+#include <algorithm>
 
 namespace synergy {
 namespace string {
@@ -168,6 +171,58 @@ findReplaceAll(
 	}
 }
 
+String
+removeFileExt(String filename)
+{
+	size_t dot = filename.find_last_of('.');
+
+	if (dot == String::npos) {
+		return filename;
+	}
+
+	return filename.substr(0, dot);
+}
+
+void
+toHex(String& subject, int width, const char fill)
+{
+	std::stringstream ss;
+	ss << std::hex;
+	for (unsigned int i = 0; i < subject.length(); i++) {
+		ss << std::setw(width) << std::setfill(fill) << (int)(unsigned char)subject[i];
+	}
+
+	subject = ss.str();
+}
+
+void
+uppercase(String& subject)
+{
+	std::transform(subject.begin(), subject.end(), subject.begin(), ::toupper);
+}
+
+void
+removeChar(String& subject, const char c)
+{
+	subject.erase(std::remove(subject.begin(), subject.end(), c), subject.end());
+}
+
+String
+sizeTypeToString(size_t n)
+{
+	std::stringstream ss;
+	ss << n;
+	return ss.str();
+}
+
+size_t
+stringToSizeType(String string)
+{
+	std::istringstream iss(string);
+	size_t value;
+	iss >> value;
+	return value;
+}
 
 //
 // CaselessCmp

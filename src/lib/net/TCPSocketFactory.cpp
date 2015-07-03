@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,31 +20,65 @@
 
 #include "net/TCPSocket.h"
 #include "net/TCPListenSocket.h"
+#include "arch/Arch.h"
+#include "base/Log.h"
 
 //
-// CTCPSocketFactory
+// TCPSocketFactory
 //
 
-CTCPSocketFactory::CTCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
+#if defined _WIN32
+static const char s_networkSecurity[] = { "ns" };
+#else
+static const char s_networkSecurity[] = { "libns" };
+#endif
+
+TCPSocketFactory::TCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {
 	// do nothing
 }
 
-CTCPSocketFactory::~CTCPSocketFactory()
+TCPSocketFactory::~TCPSocketFactory()
 {
 	// do nothing
 }
 
 IDataSocket*
-CTCPSocketFactory::create() const
+TCPSocketFactory::create(bool secure) const
 {
-	return new CTCPSocket(m_events, m_socketMultiplexer);
+	IDataSocket* socket = NULL;
+	if (secure) {
+		void* args[2] = {
+			m_events,
+			m_socketMultiplexer
+		};
+		socket = static_cast<IDataSocket*>(
+			ARCH->plugin().invoke(s_networkSecurity, "getSocket", args));
+	}
+	else {
+		socket = new TCPSocket(m_events, m_socketMultiplexer);
+	}
+
+	return socket;
 }
 
 IListenSocket*
-CTCPSocketFactory::createListen() const
+TCPSocketFactory::createListen(bool secure) const
 {
-	return new TCPListenSocket(m_events, m_socketMultiplexer);
+	IListenSocket* socket = NULL;
+	if (secure) {
+		void* args[2] = {
+			m_events,
+			m_socketMultiplexer
+		};
+		socket = static_cast<IListenSocket*>(
+			ARCH->plugin().invoke(s_networkSecurity, "getListenSocket", args));
+	}
+	else {
+		socket = new TCPListenSocket(m_events, m_socketMultiplexer);
+	}
+
+	return socket;
 }

@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,7 +19,6 @@
 #pragma once
 
 #include "server/Config.h"
-#include "io/CryptoOptions.h"
 #include "base/EventTypes.h"
 #include "base/Event.h"
 #include "common/stddeque.h"
@@ -30,7 +29,6 @@ class ClientProxyUnknown;
 class NetworkAddress;
 class IListenSocket;
 class ISocketFactory;
-class IStreamFilterFactory;
 class Server;
 class IEventQueue;
 
@@ -39,9 +37,8 @@ public:
 	// The factories are adopted.
 	ClientListener(const NetworkAddress&,
 							ISocketFactory*,
-							IStreamFilterFactory*,
-							const CryptoOptions& crypto,
-							IEventQueue* events);
+							IEventQueue* events,
+							bool enableCrypto);
 	~ClientListener();
 
 	//! @name manipulators
@@ -50,6 +47,8 @@ public:
 	void				setServer(Server* server);
 
 	//@}
+
+	void				deleteSocket(void* socket);
 
 	//! @name accessors
 	//@{
@@ -63,7 +62,7 @@ public:
 	ClientProxy*		getNextClient();
 
 	//! Get server which owns this listener
-	Server*			getServer() { return m_server; }
+	Server*				getServer() { return m_server; }
 
 	//@}
 
@@ -73,16 +72,17 @@ private:
 	void				handleUnknownClient(const Event&, void*);
 	void				handleClientDisconnected(const Event&, void*);
 
+	void				cleanupListenSocket();
+
 private:
 	typedef std::set<ClientProxyUnknown*> NewClients;
 	typedef std::deque<ClientProxy*> WaitingClients;
 
 	IListenSocket*		m_listen;
 	ISocketFactory*		m_socketFactory;
-	IStreamFilterFactory*	m_streamFilterFactory;
 	NewClients			m_newClients;
 	WaitingClients		m_waitingClients;
-	Server*			m_server;
-	CryptoOptions		m_crypto;
+	Server*				m_server;
 	IEventQueue*		m_events;
+	bool				m_useSecureNetwork;
 };

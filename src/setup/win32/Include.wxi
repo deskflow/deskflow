@@ -20,10 +20,12 @@
   <?define ProgramFilesFolder="ProgramFiles64Folder" ?>
   <?define PlatformSimpleName="64-bit" ?>
   <?define UpgradeGuid="$(var.UpgradeGuid64)" ?>
+  <?define var.OpensslPath="openssl-win64" ?>
   <?else?>
   <?define ProgramFilesFolder="ProgramFilesFolder" ?>
   <?define PlatformSimpleName="32-bit" ?>
   <?define UpgradeGuid="$(var.UpgradeGuid32)" ?>
+  <?define var.OpensslPath="openssl-win32" ?>
   <?endif?>
   
   <?define CRT="$(env.CommonProgramFiles)\Merge Modules\Microsoft_VC100_CRT_$(var.Platform).msm" ?>

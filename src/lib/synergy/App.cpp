@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -172,6 +172,9 @@ App::initApp(int argc, const char** argv)
 {
 	// parse command line
 	parseArgs(argc, argv);
+	
+	ARCH->setProfileDirectory(argsBase().m_profileDirectory);
+	ARCH->setPluginDirectory(argsBase().m_pluginDirectory);
 
 	// set log filter
 	if (!CLOG->setFilter(argsBase().m_logFilter)) {
@@ -252,6 +255,7 @@ App::runEventsLoop(void*)
 MinimalApp::MinimalApp() :
 	App(NULL, NULL, new ArgsBase())
 {
+	m_arch.init();
 	setEvents(m_events);
 }
 

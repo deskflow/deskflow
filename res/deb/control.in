@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Nick Bolton <nick@synergy-project.org>
 Version: ${in:version}
 Architecture: ${in:arch}
-Depends: libc6 (>= 2.11), libstdc++6 (>= 4.4.3), libx11-6 (>= 1.3.2), libxext6 (>= 1.1.1), libxi6 (>= 1.3), libxinerama1 (>= 1.1), libxtst6 (>= 1.1), libqtcore4 (>= 4.6.2), libqtgui4 (>= 4.6.2), libqt4-network (>= 4.6.2), libcurl3 (>= 7.19.7), libavahi-compat-libdnssd1 (>= 0.6.25)
+Depends: libc6 (>= 2.11), libstdc++6 (>= 4.4.3), libx11-6 (>= 1.3.2), libxext6 (>= 1.1.1), libxi6 (>= 1.3), libxinerama1 (>= 1.1), libxtst6 (>= 1.1), libqtcore4 (>= 4.6.2), libqtgui4 (>= 4.6.2), libqt4-network (>= 4.6.2), libcurl3 (>= 7.19.7), libavahi-compat-libdnssd1 (>= 0.6.25), openssl (>= 1.0.1)
 Installed-Size: 30
 Description: Keyboard and mouse sharing utility
  Synergy is free and open source software for sharing one mouse and keyboard

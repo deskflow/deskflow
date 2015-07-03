@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,7 +26,6 @@ class Client;
 class NetworkAddress;
 class Thread;
 class ClientArgs;
-class CryptoOptions;
 
 class ClientApp : public App {
 public:
@@ -66,7 +65,7 @@ public:
 	void handleClientFailed(const Event& e, void*);
 	void handleClientDisconnected(const Event&, void*);
 	Client* openClient(const String& name, const NetworkAddress& address, 
-				synergy::Screen* screen, const CryptoOptions& crypto);
+				synergy::Screen* screen);
 	void closeClient(Client* client);
 	bool startClient();
 	void stopClient();

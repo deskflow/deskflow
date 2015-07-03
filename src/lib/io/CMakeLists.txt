@@ -4,7 +4,7 @@
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# found in the file COPYING that should have accompanied this file.
+# found in the file LICENSE that should have accompanied this file.
 # 
 # This package is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,7 +23,6 @@ endif()
 
 include_directories(
 	../
-	../../../ext
 )
 
 if (UNIX)
@@ -33,7 +32,3 @@ if (UNIX)
 endif()
 
 add_library(io STATIC ${sources})
-
-if (UNIX)
-	target_link_libraries(io cryptopp)
-endif()

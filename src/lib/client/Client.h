@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,8 +23,8 @@
 #include "synergy/IClipboard.h"
 #include "synergy/DragInformation.h"
 #include "synergy/INode.h"
+#include "synergy/ClientArgs.h"
 #include "net/NetworkAddress.h"
-#include "io/CryptoOptions.h"
 #include "base/EventTypes.h"
 
 class EventQueueTimer;
@@ -33,10 +33,9 @@ class ServerProxy;
 class IDataSocket;
 class ISocketFactory;
 namespace synergy { class IStream; }
-class IStreamFilterFactory;
 class IEventQueue;
-class CryptoStream;
 class Thread;
+class TCPSocket;
 
 //! Synergy client
 /*!
@@ -60,15 +59,9 @@ public:
 	Client(IEventQueue* events,
 							const String& name, const NetworkAddress& address,
 							ISocketFactory* socketFactory,
-							IStreamFilterFactory* streamFilterFactory,
 							synergy::Screen* screen,
-							const CryptoOptions& crypto,
-							bool enableDragDrop);
+							ClientArgs& args);
 	~Client();
-	
-#ifdef TEST_ENV
-	Client() : m_mock(true) { }
-#endif
 
 	//! @name manipulators
 	//@{
@@ -91,18 +84,6 @@ public:
 	Notifies the client that the connection handshake has completed.
 	*/
 	virtual void		handshakeComplete();
-
-	//! Set crypto IV for decryption
-	virtual void		setDecryptIv(const UInt8* iv);
-
-	//! Clears the file buffer
-	void				clearReceivedFileData();
-
-	//! Set the expected size of receiving file
-	void				setExpectedFileSize(String data);
-
-	//! Received a chunk of file data
-	void				fileChunkReceived(String data);
 
 	//! Received drag information
 	void				dragInfoReceived(UInt32 fileNum, String data);
@@ -141,7 +122,13 @@ public:
 	bool				isReceivedFileSizeValid();
 
 	//! Return expected file size
-	size_t				getExpectedFileSize() { return m_expectedFileSize; }
+	size_t&				getExpectedFileSize() { return m_expectedFileSize; }
+
+	//! Return received file data
+	String&				getReceivedFileData() { return m_receivedFileData; }
+
+	//! Return drag file list
+	DragFileList		getDragFileList() { return m_dragFileList; }
 
 	//@}
 
@@ -189,6 +176,7 @@ private:
 	void				cleanupConnection();
 	void				cleanupScreen();
 	void				cleanupTimer();
+	void				cleanupStream();
 	void				handleConnected(const Event&, void*);
 	void				handleConnectionFailed(const Event&, void*);
 	void				handleConnectTimeout(const Event&, void*);
@@ -201,36 +189,38 @@ private:
 	void				handleResume(const Event& event, void*);
 	void				handleFileChunkSending(const Event&, void*);
 	void				handleFileRecieveCompleted(const Event&, void*);
+	void				handleStopRetry(const Event&, void*);
 	void				onFileRecieveCompleted();
+	void				sendClipboardThread(void*);
 
 public:
-	bool					m_mock;
+	bool				m_mock;
 
 private:
-	String					m_name;
-	NetworkAddress			m_serverAddress;
-	ISocketFactory*			m_socketFactory;
-	IStreamFilterFactory*	m_streamFilterFactory;
-	synergy::Screen*		m_screen;
-	synergy::IStream*		m_stream;
-	EventQueueTimer*		m_timer;
-	ServerProxy*			m_server;
-	bool					m_ready;
-	bool					m_active;
-	bool					m_suspended;
-	bool					m_connectOnResume;
-	bool					m_ownClipboard[kClipboardEnd];
-	bool					m_sentClipboard[kClipboardEnd];
-	IClipboard::Time		m_timeClipboard[kClipboardEnd];
-	String					m_dataClipboard[kClipboardEnd];
-	IEventQueue*			m_events;
-	CryptoStream*			m_cryptoStream;
-	CryptoOptions			m_crypto;
-	std::size_t				m_expectedFileSize;
-	String					m_receivedFileData;
-	DragFileList			m_dragFileList;
-	String					m_dragFileExt;
+	String				m_name;
+	NetworkAddress		m_serverAddress;
+	ISocketFactory*		m_socketFactory;
+	synergy::Screen*	m_screen;
+	synergy::IStream*	m_stream;
+	EventQueueTimer*	m_timer;
+	ServerProxy*		m_server;
+	bool				m_ready;
+	bool				m_active;
+	bool				m_suspended;
+	bool				m_connectOnResume;
+	bool				m_ownClipboard[kClipboardEnd];
+	bool				m_sentClipboard[kClipboardEnd];
+	IClipboard::Time	m_timeClipboard[kClipboardEnd];
+	String				m_dataClipboard[kClipboardEnd];
+	IEventQueue*		m_events;
+	std::size_t			m_expectedFileSize;
+	String				m_receivedFileData;
+	DragFileList		m_dragFileList;
+	String				m_dragFileExt;
 	Thread*				m_sendFileThread;
 	Thread*				m_writeToDropDirThread;
-	bool					m_enableDragDrop;
+	TCPSocket*			m_socket;
+	bool				m_useSecureNetwork;
+	ClientArgs&			m_args;
+	Thread*				m_sendClipboardThread;
 };

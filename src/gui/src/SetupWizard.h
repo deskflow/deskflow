@@ -4,7 +4,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,12 +19,12 @@
 
 #include "ui_SetupWizardBase.h"
 #include "SynergyLocale.h"
+#include "PluginWizardPage.h"
 
 #include <QWizard>
 #include <QNetworkAccessManager>
 
 class MainWindow;
-class QMessageBox;
 
 class SetupWizard : public QWizard, public Ui::SetupWizardBase
 {
@@ -43,7 +43,11 @@ private:
 	MainWindow& m_MainWindow;
 	bool m_StartMain;
 	SynergyLocale m_Locale;
+	int m_Edition;
+	PluginWizardPage* m_pPluginPage;
 
 private slots:
+	void on_m_pRadioButtonActivate_toggled(bool checked);
+	void on_m_pRadioButtonSkip_toggled(bool checked);
 	void on_m_pComboLanguage_currentIndexChanged(int index);
 };

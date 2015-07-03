@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -70,7 +70,7 @@ protected:
 	virtual void		resetHeartbeatTimer();
 	virtual void		addHeartbeatTimer();
 	virtual void		removeHeartbeatTimer();
-
+	virtual bool		recvClipboard();
 private:
 	void				disconnect();
 	void				removeHandlers();
@@ -81,11 +81,9 @@ private:
 	void				handleFlatline(const Event&, void*);
 
 	bool				recvInfo();
-	bool				recvClipboard();
 	bool				recvGrabClipboard();
 
-private:
-	typedef bool (ClientProxy1_0::*MessageParser)(const UInt8*);
+protected:
 	struct ClientClipboard {
 	public:
 		ClientClipboard();
@@ -96,8 +94,12 @@ private:
 		bool			m_dirty;
 	};
 
-	ClientInfo			m_info;
 	ClientClipboard	m_clipboard[kClipboardEnd];
+
+private:
+	typedef bool (ClientProxy1_0::*MessageParser)(const UInt8*);
+
+	ClientInfo			m_info;
 	double				m_heartbeatAlarm;
 	EventQueueTimer*	m_heartbeatTimer;
 	MessageParser		m_parser;

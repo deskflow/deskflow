@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -236,7 +236,7 @@ static
 bool
 doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
-	DWORD vkCode = wParam;
+	DWORD vkCode = static_cast<DWORD>(wParam);
 	bool kf_up = (lParam & (KF_UP << 16)) != 0;
 
 	// check for special events indicating if we should start or stop

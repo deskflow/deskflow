@@ -4,7 +4,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,27 +18,33 @@
 #include "server/ClientProxy1_5.h"
 
 #include "server/Server.h"
+#include "synergy/FileChunk.h"
+#include "synergy/StreamChunker.h"
 #include "synergy/ProtocolUtil.h"
 #include "io/IStream.h"
+#include "base/TMethodEventJob.h"
 #include "base/Log.h"
+
+#include <sstream>
 
 //
 // ClientProxy1_5
 //
 
-const UInt16 ClientProxy1_5::m_intervalThreshold = 1;
-
 ClientProxy1_5::ClientProxy1_5(const String& name, synergy::IStream* stream, Server* server, IEventQueue* events) :
 	ClientProxy1_4(name, stream, server, events),
-	m_events(events),
-	m_stopwatch(true),
-	m_elapsedTime(0),
-	m_receivedDataSize(0)
+	m_events(events)
 {
+
+	m_events->adoptHandler(m_events->forFile().keepAlive(),
+							this,
+							new TMethodEventJob<ClientProxy1_3>(this,
+								&ClientProxy1_3::handleKeepAlive, NULL));
 }
 
 ClientProxy1_5::~ClientProxy1_5()
 {
+	m_events->removeHandler(m_events->forFile().keepAlive(), this);
 }
 
 void
@@ -52,23 +58,7 @@ ClientProxy1_5::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
 void
 ClientProxy1_5::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 {
-	String chunk(data, dataSize);
-
-	switch (mark) {
-	case kFileStart:
-		LOG((CLOG_DEBUG2 "file sending start: size=%s", data));
-		break;
-
-	case kFileChunk:
-		LOG((CLOG_DEBUG2 "file chunk sending: size=%i", chunk.size()));
-		break;
-
-	case kFileEnd:
-		LOG((CLOG_DEBUG2 "file sending finished"));
-		break;
-	}
-
-	ProtocolUtil::writef(getStream(), kMsgDFileTransfer, mark, &chunk);
+	FileChunk::send(getStream(), mark, data, dataSize);
 }
 
 bool
@@ -90,51 +80,21 @@ ClientProxy1_5::parseMessage(const UInt8* code)
 void
 ClientProxy1_5::fileChunkReceived()
 {
-	// parse
-	UInt8 mark = 0;
-	String content;
-	ProtocolUtil::readf(getStream(), kMsgDFileTransfer + 4, &mark, &content);
-
 	Server* server = getServer();
-	switch (mark) {
-	case kFileStart:
-		server->clearReceivedFileData();
-		server->setExpectedFileSize(content);
-		if (CLOG->getFilter() >= kDEBUG2) {
-			LOG((CLOG_DEBUG2 "recv file data from client: file size=%s", content.c_str()));
-			m_stopwatch.start();
+	int result = FileChunk::assemble(
+					getStream(),
+					server->getReceivedFileData(),
+					server->getExpectedFileSize());
+	
+
+	if (result == kFinish) {
+		m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), server));
+	}
+	else if (result == kStart) {
+		if (server->getFakeDragFileList().size() > 0) {
+			String filename = server->getFakeDragFileList().at(0).getFilename();
+			LOG((CLOG_NOTIFY "File Transmission Started: Start receiving %s.", filename.c_str()));
 		}
-		break;
-
-	case kFileChunk:
-		server->fileChunkReceived(content);
-		if (CLOG->getFilter() >= kDEBUG2) {
-				LOG((CLOG_DEBUG2 "recv file data from client: chunck size=%i", content.size()));
-				double interval = m_stopwatch.getTime();
-				m_receivedDataSize += content.size();
-				LOG((CLOG_DEBUG2 "recv file data from client: interval=%f s", interval));
-				if (interval >= m_intervalThreshold) {
-					double averageSpeed = m_receivedDataSize / interval / 1000;
-					LOG((CLOG_DEBUG2 "recv file data from client: average speed=%f kb/s", averageSpeed));
-
-					m_receivedDataSize = 0;
-					m_elapsedTime += interval;
-					m_stopwatch.reset();
-				}
-			}
-		break;
-
-	case kFileEnd:
-		m_events->addEvent(Event(m_events->forIScreen().fileRecieveCompleted(), server));
-		if (CLOG->getFilter() >= kDEBUG2) {
-			LOG((CLOG_DEBUG2 "file data transfer finished"));
-			m_elapsedTime += m_stopwatch.getTime();
-			double averageSpeed = getServer()->getExpectedFileSize() / m_elapsedTime / 1000;
-			LOG((CLOG_DEBUG2 "file data transfer finished: total time consumed=%f s", m_elapsedTime));
-			LOG((CLOG_DEBUG2 "file data transfer finished: total data received=%i kb", getServer()->getExpectedFileSize() / 1000));
-			LOG((CLOG_DEBUG2 "file data transfer finished: total average speed=%f kb/s", averageSpeed));
-		}
-		break;
 	}
 }
 

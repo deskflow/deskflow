@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -291,7 +291,7 @@ ClientApp::scheduleClientRestart(double retryTime)
 void
 ClientApp::handleClientConnected(const Event&, void*)
 {
-	LOG((CLOG_NOTE "connected to server"));
+	LOG((CLOG_INFO "connected to server"));
 	resetRestartTimeout();
 	updateStatus();
 }
@@ -321,30 +321,27 @@ ClientApp::handleClientFailed(const Event& e, void*)
 void
 ClientApp::handleClientDisconnected(const Event&, void*)
 {
-	LOG((CLOG_NOTE "disconnected from server"));
+	LOG((CLOG_INFO "disconnected from server"));
 	if (!args().m_restartable) {
 		m_events->addEvent(Event(Event::kQuit));
 	}
 	else if (!m_suspended) {
-		m_client->connect();
+		scheduleClientRestart(nextRestartTimeout());
 	}
 	updateStatus();
 }
 
-
 Client*
 ClientApp::openClient(const String& name, const NetworkAddress& address,
-				synergy::Screen* screen, const CryptoOptions& crypto)
+				synergy::Screen* screen)
 {
 	Client* client = new Client(
 		m_events,
 		name,
 		address,
-		new CTCPSocketFactory(m_events, getSocketMultiplexer()),
-		NULL,
+		new TCPSocketFactory(m_events, getSocketMultiplexer()),
 		screen,
-		crypto,
-		args().m_enableDragDrop);
+		args());
 
 	try {
 		m_events->adoptHandler(
@@ -402,9 +399,9 @@ ClientApp::startClient()
 		if (m_clientScreen == NULL) {
 			clientScreen = openClientScreen();
 			m_client     = openClient(args().m_name,
-				*m_serverAddress, clientScreen, args().m_crypto);
+				*m_serverAddress, clientScreen);
 			m_clientScreen  = clientScreen;
-			LOG((CLOG_NOTE "started client"));
+			LOG((CLOG_INFO "started client"));
 		}
 
 		m_client->connect();
@@ -458,6 +455,11 @@ ClientApp::mainLoop()
 	SocketMultiplexer multiplexer;
 	setSocketMultiplexer(&multiplexer);
 
+	// load all available plugins.
+	ARCH->plugin().load();
+	// pass log and arch into plugins.
+	ARCH->plugin().init(Log::getInstance(), Arch::getInstance());
+
 	// start client, etc
 	appUtil().startNode();
 	
@@ -467,8 +469,8 @@ ClientApp::mainLoop()
 		initIpcClient();
 	}
 
-	// load all available plugins.
-	ARCH->plugin().init(m_clientScreen->getEventTarget(), m_events);
+	// init event for all available plugins.
+	ARCH->plugin().initEvent(m_clientScreen->getEventTarget(), m_events);
 
 	// run event loop.  if startClient() failed we're supposed to retry
 	// later.  the timer installed by startClient() will take care of
@@ -498,11 +500,14 @@ ClientApp::mainLoop()
 	LOG((CLOG_DEBUG1 "stopping client"));
 	stopClient();
 	updateStatus();
-	LOG((CLOG_NOTE "stopped client"));
+	LOG((CLOG_INFO "stopped client"));
 
 	if (argsBase().m_enableIpc) {
 		cleanupIpcClient();
 	}
+
+	// unload all plugins.
+	ARCH->plugin().unload();
 
 	return kExitSuccess;
 }

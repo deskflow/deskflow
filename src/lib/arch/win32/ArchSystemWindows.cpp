@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,6 +22,9 @@
 
 #include "tchar.h"
 #include <string>
+
+#include <windows.h>
+#include <psapi.h>
 
 static const char* s_settingsKeyNames[] = {
 	_T("SOFTWARE"),
@@ -151,4 +154,40 @@ ArchSystemWindows::isWOW64() const
 	}
 #endif
 	return false;
+}
+#pragma comment(lib, "psapi")
+
+std::string
+ArchSystemWindows::getLibsUsed(void) const
+{
+    HMODULE hMods[1024];
+    HANDLE hProcess;
+    DWORD cbNeeded;
+    unsigned int i;
+	char hex[16];
+
+	DWORD pid = GetCurrentProcessId();
+
+	std::string msg = "pid:" + std::to_string((_ULonglong)pid) + "\n";
+
+    hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
+
+    if (NULL == hProcess) {
+        return msg;
+	}
+
+    if (EnumProcessModules(hProcess, hMods, sizeof(hMods), &cbNeeded)) {
+        for (i = 0; i < (cbNeeded / sizeof(HMODULE)); i++) {
+            TCHAR szModName[MAX_PATH];
+            if (GetModuleFileNameEx(hProcess, hMods[i], szModName, sizeof(szModName) / sizeof(TCHAR))) {
+				sprintf(hex,"(0x%08X)",hMods[i]);
+				msg += szModName;
+				msg.append(hex);
+				msg.append("\n");
+            }
+        }
+    }
+
+    CloseHandle(hProcess);
+    return msg;
 }

@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,6 +20,8 @@
 
 #include "synergy/IClient.h"
 #include "base/String.h"
+
+namespace synergy { class IStream; }
 
 //! Generic proxy for client or primary
 class BaseClientProxy : public IClient {
@@ -82,6 +84,8 @@ public:
 							size_t size) = 0;
 	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;
 	virtual String		getName() const;
+	virtual synergy::IStream*
+						getStream() const = 0;
 
 private:
 	String				m_name;

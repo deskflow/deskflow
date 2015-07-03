@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -41,9 +41,6 @@ public:
 	virtual void		keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button);
 	virtual void		keyUp(KeyID key, KeyModifierMask mask, KeyButton button);
 	virtual void		keepAlive();
-
-	//! Send IV to make 
-	void				cryptoIv();
 
 	Server*			m_server;
 };

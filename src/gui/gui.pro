@@ -14,7 +14,8 @@ FORMS += res/MainWindowBase.ui \
     res/HotkeyDialogBase.ui \
     res/SettingsDialogBase.ui \
     res/SetupWizardBase.ui \
-    res/AddClientDialogBase.ui
+    res/AddClientDialogBase.ui \
+    res/PluginWizardPageBase.ui
 SOURCES += src/main.cpp \
     src/MainWindow.cpp \
     src/AboutDialog.cpp \
@@ -50,7 +51,15 @@ SOURCES += src/main.cpp \
     src/ZeroconfService.cpp \
     src/DataDownloader.cpp \
     src/AddClientDialog.cpp \
-    src/CommandProcess.cpp
+    src/CommandProcess.cpp \
+    src/PluginWizardPage.cpp \
+    src/PluginManager.cpp \
+    src/CoreInterface.cpp \
+    src/Fingerprint.cpp \
+    src/SslCertificate.cpp \
+    src/FileSysClient.cpp \
+    src/Plugin.cpp \
+    src/WebClient.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -86,12 +95,20 @@ HEADERS += src/MainWindow.h \
     src/ZeroconfService.h \
     src/DataDownloader.h \
     src/AddClientDialog.h \
-    src/CommandProcess.h
+    src/CommandProcess.h \
+    src/EditionType.h \
+    src/PluginWizardPage.h \
+    src/ProcessorArch.h \
+    src/PluginManager.h \
+    src/CoreInterface.h \
+    src/Fingerprint.h \
+    src/SslCertificate.h \
+    src/FileSysClient.h \
+    src/Plugin.h \
+    src/WebClient.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 
-    HEADERS += src/AXDatabaseCleaner.h
-    OBJECTIVE_SOURCES += src/AXDatabaseCleaner.mm
     QMAKE_INFO_PLIST = res/mac/Info.plist
     TARGET = Synergy
     QSYNERGY_ICON.files = res/mac/Synergy.icns

@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -68,5 +68,6 @@ public:
 	virtual void		shutdownInput() = 0;
 	virtual void		shutdownOutput() = 0;
 	virtual bool		isReady() const = 0;
+	virtual bool		isFatal() const = 0;
 	virtual UInt32		getSize() const = 0;
 };

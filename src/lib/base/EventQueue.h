@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -157,6 +157,8 @@ public:
 	IKeyStateEvents&			forIKeyState();
 	IPrimaryScreenEvents&		forIPrimaryScreen();
 	IScreenEvents&				forIScreen();
+	ClipboardEvents&			forClipboard();
+	FileEvents&					forFile();
 
 private:
 	ClientEvents*				m_typesForClient;
@@ -177,6 +179,8 @@ private:
 	IKeyStateEvents*			m_typesForIKeyState;
 	IPrimaryScreenEvents*		m_typesForIPrimaryScreen;
 	IScreenEvents*				m_typesForIScreen;
+	ClipboardEvents*			m_typesForClipboard;
+	FileEvents*					m_typesForFile;
 	Mutex*						m_readyMutex;
 	CondVar<bool>*				m_readyCondVar;
 	std::queue<Event>			m_pending;

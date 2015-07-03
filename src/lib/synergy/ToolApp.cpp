@@ -4,7 +4,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -28,6 +28,8 @@
 #if SYSAPI_WIN32
 #include "platform/MSWindowsSession.h"
 #endif
+
+#define JSON_URL "https://synergy-project.org/premium/json/"
 
 enum {
 	kErrorOk,
@@ -61,9 +63,28 @@ ToolApp::run(int argc, char** argv)
 				return kExitFailed;
 			}
 			else {
-				std::cout << "activeDesktop:" << name.c_str() << std::endl;
+				String output = synergy::string::sprintf("activeDesktop:%s", name.c_str());
+				LOG((CLOG_INFO "%s", output.c_str()));
 			}
 #endif
+		}
+		else if (m_args.m_loginAuthenticate) {
+			loginAuth();
+		}
+		else if (m_args.m_getPluginList) {
+			getPluginList();
+		}
+		else if (m_args.m_getInstalledDir) {
+			std::cout << ARCH->getInstalledDirectory() << std::endl;
+		}
+		else if (m_args.m_getPluginDir) {
+			std::cout << ARCH->getPluginDirectory() << std::endl;
+		}
+		else if (m_args.m_getProfileDir) {
+			std::cout << ARCH->getProfileDirectory() << std::endl;
+		}
+		else if (m_args.m_getArch) {
+			std::cout << ARCH->getPlatformName() << std::endl;
 		}
 		else {
 			throw XSynergy("Nothing to do");
@@ -78,10 +99,51 @@ ToolApp::run(int argc, char** argv)
 		return kExitFailed;
 	}
 
+#if WINAPI_XWINDOWS
+	// HACK: avoid sigsegv on linux
+	m_bye(kErrorOk);
+#endif
+
 	return kErrorOk;
 }
 
 void
 ToolApp::help()
 {
+}
+
+void
+ToolApp::loginAuth()
+{
+	String credentials;
+	std::cin >> credentials;
+
+	size_t separator = credentials.find(':');
+	String email = credentials.substr(0, separator);
+	String password = credentials.substr(separator + 1, credentials.length());
+
+	std::stringstream ss;
+	ss << JSON_URL << "auth/";
+	ss << "?email=" << ARCH->internet().urlEncode(email);
+	ss << "&password=" << password;
+
+	std::cout << ARCH->internet().get(ss.str()) << std::endl;
+}
+
+void
+ToolApp::getPluginList()
+{
+	String credentials;
+	std::cin >> credentials;
+
+	size_t separator = credentials.find(':');
+	String email = credentials.substr(0, separator);
+	String password = credentials.substr(separator + 1, credentials.length());
+
+	std::stringstream ss;
+	ss <<  JSON_URL << "plugins/";
+	ss << "?email=" << ARCH->internet().urlEncode(email);
+	ss << "&password=" << password;
+
+	std::cout << ARCH->internet().get(ss.str()) << std::endl;
 }

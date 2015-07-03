@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -41,10 +41,9 @@ const char*				kMsgDMouseMove		= "DMMV%2i%2i";
 const char*				kMsgDMouseRelMove	= "DMRM%2i%2i";
 const char*				kMsgDMouseWheel		= "DMWM%2i%2i";
 const char*				kMsgDMouseWheel1_0	= "DMWM%2i";
-const char*				kMsgDClipboard		= "DCLP%1i%4i%s";
+const char*				kMsgDClipboard		= "DCLP%1i%4i%1i%s";
 const char*				kMsgDInfo			= "DINF%2i%2i%2i%2i%2i%2i%2i";
 const char*				kMsgDSetOptions		= "DSOP%4I";
-const char*				kMsgDCryptoIv		= "DCIV%s";
 const char*				kMsgDFileTransfer	= "DFTR%1i%s";
 const char*				kMsgDDragInfo		= "DDRG%2i%s";
 const char*				kMsgQInfo			= "QINF";

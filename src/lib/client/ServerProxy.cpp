@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,12 +19,14 @@
 #include "client/ServerProxy.h"
 
 #include "client/Client.h"
+#include "synergy/FileChunk.h"
+#include "synergy/ClipboardChunk.h"
+#include "synergy/StreamChunker.h"
 #include "synergy/Clipboard.h"
 #include "synergy/ProtocolUtil.h"
 #include "synergy/option_types.h"
 #include "synergy/protocol_types.h"
 #include "io/IStream.h"
-#include "io/CryptoStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
@@ -35,8 +37,6 @@
 //
 // ServerProxy
 //
-
-const UInt16 ServerProxy::m_intervalThreshold = 1;
 
 ServerProxy::ServerProxy(Client* client, synergy::IStream* stream, IEventQueue* events) :
 	m_client(client),
@@ -52,10 +52,7 @@ ServerProxy::ServerProxy(Client* client, synergy::IStream* stream, IEventQueue* 
 	m_keepAliveAlarm(0.0),
 	m_keepAliveAlarmTimer(NULL),
 	m_parser(&ServerProxy::parseHandshakeMessage),
-	m_events(events),
-	m_stopwatch(true),
-	m_elapsedTime(0),
-	m_receivedDataSize(0)
+	m_events(events)
 {
 	assert(m_client != NULL);
 	assert(m_stream != NULL);
@@ -69,6 +66,11 @@ ServerProxy::ServerProxy(Client* client, synergy::IStream* stream, IEventQueue* 
 							m_stream->getEventTarget(),
 							new TMethodEventJob<ServerProxy>(this,
 								&ServerProxy::handleData));
+
+	m_events->adoptHandler(m_events->forClipboard().clipboardSending(),
+							this,
+							new TMethodEventJob<ServerProxy>(this,
+								&ServerProxy::handleClipboardSendingEvent));
 
 	// send heartbeat
 	setKeepAliveRate(kKeepAliveRate);
@@ -295,10 +297,6 @@ ServerProxy::parseMessage(const UInt8* code)
 		setOptions();
 	}
 
-	else if (memcmp(code, kMsgDCryptoIv, 4) == 0) {
-		cryptoIv();
-	}
-
 	else if (memcmp(code, kMsgDFileTransfer, 4) == 0) {
 		fileChunkReceived();
 	}
@@ -336,7 +334,7 @@ ServerProxy::parseMessage(const UInt8* code)
 void
 ServerProxy::handleKeepAliveAlarm(const Event&, void*)
 {
-	LOG((CLOG_NOTE "server is dead"));
+	LOG((CLOG_INFO "server is dead"));
 	m_client->disconnect("server is not responding");
 }
 
@@ -363,8 +361,11 @@ void
 ServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
 {
 	String data = IClipboard::marshall(clipboard);
-	LOG((CLOG_DEBUG1 "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
-	ProtocolUtil::writef(m_stream, kMsgDClipboard, id, m_seqNum, &data);
+	LOG((CLOG_DEBUG "sending clipboard %d seqnum=%d", id, m_seqNum));
+
+	StreamChunker::sendClipboard(data, data.size(), id, m_seqNum, m_events, this);
+
+	LOG((CLOG_DEBUG "sent clipboard size=%d", data.size()));
 }
 
 void
@@ -550,21 +551,26 @@ void
 ServerProxy::setClipboard()
 {
 	// parse
+	static String dataCached;
 	ClipboardID id;
-	UInt32 seqNum;
-	String data;
-	ProtocolUtil::readf(m_stream, kMsgDClipboard + 4, &id, &seqNum, &data);
-	LOG((CLOG_DEBUG "recv clipboard %d size=%d", id, data.size()));
+	UInt32 seq;
+	
+	int r = ClipboardChunk::assemble(m_stream, dataCached, id, seq);
 
-	// validate
-	if (id >= kClipboardEnd) {
-		return;
+	if (r == kFinish) {
+		LOG((CLOG_DEBUG "received clipboard %d size=%d", id, dataCached.size()));
+		
+		// forward
+		Clipboard clipboard;
+		clipboard.unmarshall(dataCached, 0);
+		m_client->setClipboard(id, &clipboard);
+
+		LOG((CLOG_NOTIFY "Clipboard Transmission Complete: Clipboard is updated."));
 	}
-
-	// forward
-	Clipboard clipboard;
-	clipboard.unmarshall(data, 0);
-	m_client->setClipboard(id, &clipboard);
+	else if (r == kStart) {
+		size_t size = ClipboardChunk::getExpectedSize();
+		LOG((CLOG_NOTIFY "Clipboard Transmission Started: Start receiving %u bytes of clipboard data.", size));
+	}
 }
 
 void
@@ -764,18 +770,6 @@ ServerProxy::mouseWheel()
 }
 
 void
-ServerProxy::cryptoIv()
-{
-	// parse
-	String s;
-	ProtocolUtil::readf(m_stream, kMsgDCryptoIv + 4, &s);
-	LOG((CLOG_DEBUG2 "recv crypto iv size=%i", s.size()));
-
-	// forward
-	m_client->setDecryptIv(reinterpret_cast<const UInt8*>(s.c_str()));
-}
-
-void
 ServerProxy::screensaver()
 {
 	// parse
@@ -868,50 +862,19 @@ ServerProxy::infoAcknowledgment()
 void
 ServerProxy::fileChunkReceived()
 {
-	// parse
-	UInt8 mark = 0;
-	String content;
-	ProtocolUtil::readf(m_stream, kMsgDFileTransfer + 4, &mark, &content);
+	int result = FileChunk::assemble(
+					m_stream,
+					m_client->getReceivedFileData(),
+					m_client->getExpectedFileSize());
 
-	switch (mark) {
-	case kFileStart:
-		m_client->clearReceivedFileData();
-		m_client->setExpectedFileSize(content);
-		if (CLOG->getFilter() >= kDEBUG2) {
-			LOG((CLOG_DEBUG2 "recv file data from server: size=%s", content.c_str()));
-			m_stopwatch.start();
+	if (result == kFinish) {
+		m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), m_client));
+	}
+	else if (result == kStart) {
+		if (m_client->getDragFileList().size() > 0) {
+			String filename = m_client->getDragFileList().at(0).getFilename();
+			LOG((CLOG_NOTIFY "File Transmission Started: Start receiving %s.", filename.c_str()));
 		}
-		break;
-
-	case kFileChunk:
-		m_client->fileChunkReceived(content);
-		if (CLOG->getFilter() >= kDEBUG2) {
-			LOG((CLOG_DEBUG2 "recv file data from server: size=%i", content.size()));
-			double interval = m_stopwatch.getTime();
-			LOG((CLOG_DEBUG2 "recv file data from server: interval=%f s", interval));
-			m_receivedDataSize += content.size();
-			if (interval >= m_intervalThreshold) {
-				double averageSpeed = m_receivedDataSize / interval / 1000;
-				LOG((CLOG_DEBUG2 "recv file data from server: average speed=%f kb/s", averageSpeed));
-
-				m_receivedDataSize = 0;
-				m_elapsedTime += interval;
-				m_stopwatch.reset();
-			}
-		}
-		break;
-
-	case kFileEnd:
-		m_events->addEvent(Event(m_events->forIScreen().fileRecieveCompleted(), m_client));
-		if (CLOG->getFilter() >= kDEBUG2) {
-			LOG((CLOG_DEBUG2 "file data transfer finished"));
-			m_elapsedTime += m_stopwatch.getTime();
-			double averageSpeed = m_client->getExpectedFileSize() / m_elapsedTime / 1000;
-			LOG((CLOG_DEBUG2 "file data transfer finished: total time consumed=%f s", m_elapsedTime));
-			LOG((CLOG_DEBUG2 "file data transfer finished: total data received=%i kb", m_client->getExpectedFileSize() / 1000));
-			LOG((CLOG_DEBUG2 "file data transfer finished: total average speed=%f kb/s", averageSpeed));
-		}
-		break;
 	}
 }
 
@@ -927,25 +890,15 @@ ServerProxy::dragInfoReceived()
 }
 
 void
+ServerProxy::handleClipboardSendingEvent(const Event& event, void*)
+{
+	ClipboardChunk::send(m_stream, event.getData());
+}
+
+void
 ServerProxy::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 {
-	String chunk(data, dataSize);
-
-	switch (mark) {
-	case kFileStart:
-		LOG((CLOG_DEBUG2 "file sending start: size=%s", data));
-		break;
-
-	case kFileChunk:
-		LOG((CLOG_DEBUG2 "file chunk sending: size=%i", chunk.size()));
-		break;
-
-	case kFileEnd:
-		LOG((CLOG_DEBUG2 "file sending finished"));
-		break;
-	}
-
-	ProtocolUtil::writef(m_stream, kMsgDFileTransfer, mark, &chunk);
+	FileChunk::send(m_stream, mark, data, dataSize);
 }
 
 void

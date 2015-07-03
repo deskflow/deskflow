@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,6 +21,10 @@
 #include "arch/Arch.h"
 
 #include <fstream>
+
+enum EFileLogOutputter {
+	kFileSizeLimit = 1024 // kb
+};
 
 //
 // StopLogOutputter
@@ -252,12 +256,26 @@ FileLogOutputter::setLogFilename(const char* logFile)
 bool
 FileLogOutputter::write(ELevel level, const char *message)
 {
+	bool moveFile = false;
+
 	std::ofstream m_handle;
 	m_handle.open(m_fileName.c_str(), std::fstream::app);
 	if (m_handle.is_open() && m_handle.fail() != true) {
 		m_handle << message << std::endl;
+
+		// when file size exceeds limits, move to 'old log' filename.
+		int p = m_handle.tellp();
+		if (p > (kFileSizeLimit * 1024)) {
+			moveFile = true;
+		}
 	}
 	m_handle.close();
+
+	if (moveFile) {
+		String oldLogFilename = synergy::string::sprintf("%s.1", m_fileName.c_str());
+		remove(oldLogFilename.c_str());
+		rename(m_fileName.c_str(), oldLogFilename.c_str());
+	}
 
 	return true;
 }

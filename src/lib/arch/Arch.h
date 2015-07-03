@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -99,6 +99,7 @@ class Arch : public ARCH_CONSOLE,
 				public ARCH_TIME {
 public:
 	Arch();
+	Arch(Arch* arch);
 	virtual ~Arch();
 
 	//! Call init on other arch classes.
@@ -118,6 +119,8 @@ public:
 	calling this function.
 	*/
 	static Arch*		getInstance();
+
+	static void			setInstance(Arch* s) { s_instance = s; }
 
 	ARCH_PLUGIN&		plugin() const { return (ARCH_PLUGIN&)m_plugin; }
 	ARCH_INTERNET&		internet() const { return (ARCH_INTERNET&)m_internet; }

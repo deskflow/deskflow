@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -157,7 +157,6 @@ Thread::threadFunc(void* vjob)
 		job->run();
 		LOG((CLOG_DEBUG1 "thread 0x%08x exit", id));
 	}
-
 	catch (XThreadCancel&) {
 		// client called cancel()
 		LOG((CLOG_DEBUG1 "caught cancel on thread 0x%08x", id));

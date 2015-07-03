@@ -4,7 +4,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -276,23 +276,6 @@ TEST(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue)
 
 	EXPECT_EQ(true, argsBase.m_enableIpc);
 	EXPECT_EQ(1, i);
-}
-
-TEST(GenericArgsParsingTests, parseGenericArgs_cryptoPassCmd_savePassword)
-{
-	int i = 1;
-	const int argc = 3;
-	const char* kCryptoPassCmd[argc] = { "stub", "--crypto-pass", "mock_password" };
-
-	ArgParser argParser(NULL);
-	ArgsBase argsBase;
-	argParser.setArgsBase(argsBase);
-	
-	argParser.parseGenericArgs(argc, kCryptoPassCmd, i);
-
-	EXPECT_EQ("mock_password", argsBase.m_crypto.m_pass);
-	EXPECT_EQ(1, argsBase.m_crypto.m_mode); // 1 == kCfb
-	EXPECT_EQ(2, i);
 }
 
 #ifndef  WINAPI_XWINDOWS

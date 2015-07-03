@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -48,6 +48,8 @@ class ServerAppEvents;
 class IKeyStateEvents;
 class IPrimaryScreenEvents;
 class IScreenEvents;
+class ClipboardEvents;
+class FileEvents;
 
 //! Event queue interface
 /*!
@@ -244,4 +246,6 @@ public:
 	virtual IKeyStateEvents&			forIKeyState() = 0;
 	virtual IPrimaryScreenEvents&		forIPrimaryScreen() = 0;
 	virtual IScreenEvents&				forIScreen() = 0;
+	virtual ClipboardEvents&			forClipboard() = 0;
+	virtual FileEvents&					forFile() = 0;
 };

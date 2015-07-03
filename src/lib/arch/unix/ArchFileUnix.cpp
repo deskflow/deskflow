@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -92,9 +92,9 @@ std::string
 ArchFileUnix::getInstalledDirectory()
 {
 #if WINAPI_XWINDOWS
-	return "/bin";
+	return "/usr/bin";
 #else
-	return "";
+	return "/Applications/Synergy.app/Contents/MacOS";
 #endif
 }
 
@@ -102,6 +102,38 @@ std::string
 ArchFileUnix::getLogDirectory()
 {
 	return "/var/log";
+}
+
+std::string
+ArchFileUnix::getPluginDirectory()
+{
+	if (!m_pluginDirectory.empty()) {
+		return m_pluginDirectory;
+	}
+
+#if WINAPI_XWINDOWS
+	return getProfileDirectory().append("/plugins");
+#else
+	return getProfileDirectory().append("/Plugins");
+#endif
+}
+
+std::string
+ArchFileUnix::getProfileDirectory()
+{
+	String dir;
+	if (!m_profileDirectory.empty()) {
+		dir = m_profileDirectory;
+	}
+	else {
+#if WINAPI_XWINDOWS
+		dir = getUserDirectory().append("/.synergy");
+#else
+		dir = getUserDirectory().append("/Library/Synergy");
+#endif
+	}
+	return dir;
+
 }
 
 std::string
@@ -116,4 +148,16 @@ ArchFileUnix::concatPath(const std::string& prefix,
 	}
 	path += suffix;
 	return path;
+}
+
+void
+ArchFileUnix::setProfileDirectory(const String& s)
+{
+	m_profileDirectory = s;
+}
+
+void
+ArchFileUnix::setPluginDirectory(const String& s)
+{
+	m_pluginDirectory = s;
 }

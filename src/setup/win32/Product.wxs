@@ -26,6 +26,8 @@
 
     <Feature Id="ProductFeature" Title="$(var.Name)">
       <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="OpenSslComponents" />
+      <ComponentGroupRef Id="PluginsComponents" />
       <MergeRef Id="CRT" />
     </Feature>
 
@@ -51,9 +53,15 @@
     <Condition Message="An existing installation of $(var.Name) was detected, please uninstall it before continuing.">
       NOT LEGACY_UNINSTALL_EXISTS
     </Condition>
-    
-    <CustomAction Id="StartGui" FileKey="GuiProgram" ExeCommand="" Return="asyncNoWait" Execute="deferred" Impersonate="yes" />
-    
+
+    <CustomAction Id="StartGui" FileKey="GuiProgram" ExeCommand="" Return="asyncNoWait" />
+    <UI>
+      <Publish Dialog="ExitDialog"
+      Control="Finish"
+      Event="DoAction"
+      Value="StartGui">NOT Installed</Publish>
+    </UI>
+
   </Product>
 
   <Fragment>
@@ -61,6 +69,8 @@
       <Directory Id="$(var.ProgramFilesFolder)">
         <Directory Id="INSTALLFOLDER" Name="$(var.Name)">
           <Merge Id="CRT" Language="0" SourceFile="$(var.CRT)" DiskId="1" />
+          <Directory Id="OpenSslDir" Name="OpenSSL" />
+          <Directory Id="PluginsDir" Name="Plugins" />
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder" />
@@ -68,6 +78,7 @@
   </Fragment>
 
   <Fragment>
+    
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       
       <Component Id="Core" Guid="EC9AD3B0-277C-4157-B5C8-5FD5B6A5F4AD">
@@ -90,6 +101,8 @@
         <File Source="$(var.BinPath)/synergyc.exe" />
         <File Source="$(var.BinPath)/syntool.exe" />
         <File Source="$(var.BinPath)/synwinhk.dll" />
+        <File Source="$(var.BinPath)/libeay32.dll" />
+        <File Source="$(var.BinPath)/ssleay32.dll" />
         
       </Component>
       
@@ -99,16 +112,32 @@
           <fire:FirewallException Id="GuiFirewallException" Name="$(var.Name)" Scope="any" IgnoreFailure="yes" />
         </File>
 
-        <File Source="$(var.QtPath)\libgcc_s_dw2-1.dll" CompanionFile="GuiProgram" />
-        <File Source="$(var.QtPath)\mingwm10.dll" CompanionFile="GuiProgram" />
-        <File Source="$(var.QtPath)\QtCore4.dll" CompanionFile="GuiProgram" />
-        <File Source="$(var.QtPath)\QtGui4.dll" CompanionFile="GuiProgram" />
-        <File Source="$(var.QtPath)\QtNetwork4.dll" CompanionFile="GuiProgram" />
+        <File Source="$(var.QtPath)\libgcc_s_dw2-1.dll" />
+        <File Source="$(var.QtPath)\mingwm10.dll" />
+        <File Source="$(var.QtPath)\QtCore4.dll" />
+        <File Source="$(var.QtPath)\QtGui4.dll" />
+        <File Source="$(var.QtPath)\QtNetwork4.dll" />
         
-        <File Source="$(var.ExtPath)\bonjour\x64\dnssd.dll" CompanionFile="GuiProgram" />
+        <File Source="$(var.ExtPath)\bonjour\x64\dnssd.dll" />
 
       </Component>
       
     </ComponentGroup>
+
+    <ComponentGroup Id="OpenSslComponents" Directory="OpenSslDir">
+      <Component Id="OpenSsl" Guid="92648F77-65A6-4B16-AC59-A1F37BD341B1">
+        <File Source="$(var.ExtPath)/$(var.OpensslPath)/out32dll/libeay32.dll" Id="OpenSslDll1" />
+        <File Source="$(var.ExtPath)/$(var.OpensslPath)/out32dll/ssleay32.dll" Id="OpenSslDll2" />
+        <File Source="$(var.ExtPath)/$(var.OpensslPath)/out32dll/openssl.exe" />
+        <File Source="$(var.ResPath)/openssl/synergy.conf" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="PluginsComponents" Directory="PluginsDir">
+      <Component Id="Plugins" Guid="0AB05500-0D04-4932-9B07-EDDA052796E2">
+        <File Source="$(var.BinPath)/plugins/ns.dll" />
+      </Component>
+    </ComponentGroup>
+
   </Fragment>
 </Wix>

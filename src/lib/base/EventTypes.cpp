@@ -4,7 +4,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -95,6 +95,7 @@ REGISTER_EVENT(IListenSocket, connecting)
 //
 
 REGISTER_EVENT(ISocket, disconnected)
+REGISTER_EVENT(ISocket, stopRetry)
 
 //
 // OSXScreen
@@ -114,7 +115,6 @@ REGISTER_EVENT(ClientListener, connected)
 
 REGISTER_EVENT(ClientProxy, ready)
 REGISTER_EVENT(ClientProxy, disconnected)
-REGISTER_EVENT(ClientProxy, clipboardChanged)
 
 //
 // ClientProxyUnknown
@@ -174,11 +174,8 @@ REGISTER_EVENT(IPrimaryScreen, fakeInputEnd)
 
 REGISTER_EVENT(IScreen, error)
 REGISTER_EVENT(IScreen, shapeChanged)
-REGISTER_EVENT(IScreen, clipboardGrabbed)
 REGISTER_EVENT(IScreen, suspend)
 REGISTER_EVENT(IScreen, resume)
-REGISTER_EVENT(IScreen, fileChunkSending)
-REGISTER_EVENT(IScreen, fileRecieveCompleted)
 
 //
 // IpcServer
@@ -186,3 +183,19 @@ REGISTER_EVENT(IScreen, fileRecieveCompleted)
 
 REGISTER_EVENT(IpcServer, clientConnected)
 REGISTER_EVENT(IpcServer, messageReceived)
+
+//
+// Clipboard
+//
+
+REGISTER_EVENT(Clipboard, clipboardGrabbed)
+REGISTER_EVENT(Clipboard, clipboardChanged)
+REGISTER_EVENT(Clipboard, clipboardSending)
+
+//
+// File
+//
+
+REGISTER_EVENT(File, fileChunkSending)
+REGISTER_EVENT(File, fileRecieveCompleted)
+REGISTER_EVENT(File, keepAlive)

@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,6 +29,8 @@ public:
 	// IClient overrides
 	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta);
 
+	void				handleKeepAlive(const Event&, void*);
+
 protected:
 	// ClientProxy overrides
 	virtual bool		parseMessage(const UInt8* code);
@@ -38,9 +40,6 @@ protected:
 	virtual void		addHeartbeatTimer();
 	virtual void		removeHeartbeatTimer();
 	virtual void		keepAlive();
-
-private:
-	void				handleKeepAlive(const Event&, void*);
 
 private:
 	double				m_keepAliveRate;

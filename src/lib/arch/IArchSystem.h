@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -55,5 +55,12 @@ public:
 	Writes a Synergy setting from the system.
 	*/
 	virtual void setting(const std::string& valueName, const std::string& valueString) const = 0;
+	//@}
+
+	//! Get the pathnames of the libraries used by Synergy
+	/*
+	Returns a string containing the full path names of all loaded libraries at the point it is called.
+	*/
+	virtual std::string getLibsUsed(void) const = 0;
 	//@}
 };

@@ -4,7 +4,7 @@
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,37 +17,41 @@
 
 #include "DataDownloader.h"
 
-DataDownloader::DataDownloader(QUrl url, QObject* parent) :
-	QObject(parent)
+DataDownloader::DataDownloader(QObject* parent) :
+	QObject(parent),
+	m_IsFinished(false)
 {
-	connect(&m_WebCtrl, SIGNAL(finished(QNetworkReply*)),
-				SLOT(fileDownloaded(QNetworkReply*)));
-
-	QNetworkRequest request(url);
-	m_pReply = m_WebCtrl.get(request);
+	connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
+		SLOT(complete(QNetworkReply*)));
 }
 
 DataDownloader::~DataDownloader()
 {
-
 }
 
-void DataDownloader::fileDownloaded(QNetworkReply* reply)
+void DataDownloader::complete(QNetworkReply* reply)
 {
-	m_DownloadedData = reply->readAll();
+	m_Data = reply->readAll();
 	reply->deleteLater();
 
-	if (!m_DownloadedData.isEmpty()) {
-		emit downloaded();
+	if (!m_Data.isEmpty()) {
+		m_IsFinished = true;
+		emit isComplete();
 	}
 }
 
-QByteArray DataDownloader::downloadedData() const
+QByteArray DataDownloader::data() const
 {
-	return m_DownloadedData;
+	return m_Data;
 }
 
-void DataDownloader::cancelDownload()
+void DataDownloader::cancel()
 {
 	m_pReply->abort();
+}
+
+void DataDownloader::download(QUrl url)
+{
+	QNetworkRequest request(url);
+	m_pReply = m_NetworkManager.get(request);
 }

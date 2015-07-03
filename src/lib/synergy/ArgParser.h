@@ -4,7 +4,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -36,6 +36,7 @@ public:
 	bool				parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
 	bool				parseToolArgs(ToolArgs& args, int argc, const char* const* argv);
 	bool				parseGenericArgs(int argc, const char* const* argv, int& i);
+	bool				parseDeprecatedArgs(int argc, const char* const* argv, int& i);
 	void				setArgsBase(ArgsBase& argsBase) { m_argsBase = &argsBase; }
 
 	static	bool		isArg(int argi, int argc, const char* const* argv,

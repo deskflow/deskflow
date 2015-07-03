@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -43,6 +43,9 @@ public:
 	*/
 	ClientProxy*		orphanClientProxy();
 
+	//! Get the stream
+	synergy::IStream*	getStream() { return m_stream; }
+
 	//@}
 
 private:
@@ -63,6 +66,6 @@ private:
 	EventQueueTimer*	m_timer;
 	ClientProxy*		m_proxy;
 	bool				m_ready;
-	Server*			m_server;
+	Server*				m_server;
 	IEventQueue*		m_events;
 };

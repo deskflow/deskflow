@@ -4,7 +4,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -281,7 +281,8 @@ private:
 class ISocketEvents : public EventTypes {
 public:
 	ISocketEvents() :
-		m_disconnected(Event::kUnknown) { }
+		m_disconnected(Event::kUnknown),
+		m_stopRetry(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -294,10 +295,18 @@ public:
 	*/
 	Event::Type		disconnected();
 
+	//! Get stop retry event type
+	/*!
+	 Returns the stop retry event type.  This is sent when the client
+	 doesn't want to reconnect after it disconnects from the server.
+	 */
+	Event::Type		stopRetry();
+
 	//@}
 
 private:
 	Event::Type		m_disconnected;
+	Event::Type		m_stopRetry;
 };
 
 class OSXScreenEvents : public EventTypes {
@@ -341,8 +350,7 @@ class ClientProxyEvents : public EventTypes {
 public:
 	ClientProxyEvents() :
 		m_ready(Event::kUnknown),
-		m_disconnected(Event::kUnknown),
-		m_clipboardChanged(Event::kUnknown) { }
+		m_disconnected(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -362,20 +370,11 @@ public:
 	*/
 	Event::Type		disconnected();
 
-	//! Get clipboard changed event type
-	/*!
-	Returns the clipboard changed event type.  This is sent whenever the
-	contents of the clipboard has changed.  The data is a pointer to a
-	IScreen::ClipboardInfo.
-	*/
-	Event::Type		clipboardChanged();
-
 	//@}
 
 private:
 	Event::Type		m_ready;
 	Event::Type		m_disconnected;
-	Event::Type		m_clipboardChanged;
 };
 
 class ClientProxyUnknownEvents : public EventTypes {
@@ -625,11 +624,8 @@ public:
 	IScreenEvents() :
 		m_error(Event::kUnknown),
 		m_shapeChanged(Event::kUnknown),
-		m_clipboardGrabbed(Event::kUnknown),
 		m_suspend(Event::kUnknown),
-		m_resume(Event::kUnknown),
-		m_fileChunkSending(Event::kUnknown),
-		m_fileRecieveCompleted(Event::kUnknown) { }
+		m_resume(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
@@ -648,14 +644,6 @@ public:
 	*/
 	Event::Type		shapeChanged();
 
-	//! Get clipboard grabbed event type
-	/*!
-	Returns the clipboard grabbed event type.  This is sent whenever the
-	clipboard is grabbed by some other application so we don't own it
-	anymore.  The data is a pointer to a ClipboardInfo.
-	*/
-	Event::Type		clipboardGrabbed();
-
 	//! Get suspend event type
 	/*!
 	Returns the suspend event type. This is sent whenever the system goes
@@ -670,20 +658,79 @@ public:
 	*/
 	Event::Type		resume();
 
+	//@}
+		
+private:
+	Event::Type		m_error;
+	Event::Type		m_shapeChanged;
+	Event::Type		m_suspend;
+	Event::Type		m_resume;
+};
+
+class ClipboardEvents : public EventTypes {
+public:
+	ClipboardEvents() :
+		m_clipboardGrabbed(Event::kUnknown),
+		m_clipboardChanged(Event::kUnknown),
+		m_clipboardSending(Event::kUnknown) { }
+
+	//! @name accessors
+	//@{
+
+	//! Get clipboard grabbed event type
+	/*!
+	Returns the clipboard grabbed event type.  This is sent whenever the
+	clipboard is grabbed by some other application so we don't own it
+	anymore.  The data is a pointer to a ClipboardInfo.
+	*/
+	Event::Type		clipboardGrabbed();
+
+	//! Get clipboard changed event type
+	/*!
+	Returns the clipboard changed event type.  This is sent whenever the
+	contents of the clipboard has changed.  The data is a pointer to a
+	IScreen::ClipboardInfo.
+	*/
+	Event::Type		clipboardChanged();
+
+	//! Clipboard sending event type
+	/*!
+	Returns the clipboard sending event type. This is used to send 
+	clipboard chunks.
+	*/
+	Event::Type		clipboardSending();
+
+	//@}
+
+private:
+	Event::Type		m_clipboardGrabbed;
+	Event::Type		m_clipboardChanged;
+	Event::Type		m_clipboardSending;
+};
+
+class FileEvents : public EventTypes {
+public:
+	FileEvents() :
+		m_fileChunkSending(Event::kUnknown),
+		m_fileRecieveCompleted(Event::kUnknown),
+		m_keepAlive(Event::kUnknown) { }
+
+	//! @name accessors
+	//@{
+
 	//! Sending a file chunk
 	Event::Type		fileChunkSending();
 
 	//! Completed receiving a file
 	Event::Type		fileRecieveCompleted();
 
+	//! Send a keep alive
+	Event::Type		keepAlive();
+
 	//@}
-		
+
 private:
-	Event::Type		m_error;
-	Event::Type		m_shapeChanged;
-	Event::Type		m_clipboardGrabbed;
-	Event::Type		m_suspend;
-	Event::Type		m_resume;
 	Event::Type		m_fileChunkSending;
 	Event::Type		m_fileRecieveCompleted;
+	Event::Type		m_keepAlive;
 };

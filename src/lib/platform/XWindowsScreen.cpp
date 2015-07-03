@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -1325,7 +1325,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 			if (id != kClipboardEnd) {
 				LOG((CLOG_DEBUG "lost clipboard %d ownership at time %d", id, xevent->xselectionclear.time));
 				m_clipboard[id]->lost(xevent->xselectionclear.time);
-				sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), id);
+				sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), id);
 				return;
 			}
 		}

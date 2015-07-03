@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -435,8 +435,7 @@ MSWindowsDesks::destroyClass(ATOM windowClass) const
 HWND
 MSWindowsDesks::createWindow(ATOM windowClass, const char* name) const
 {
-	HWND window = CreateWindowEx(WS_EX_TOPMOST |
-									WS_EX_TRANSPARENT |
+	HWND window = CreateWindowEx(WS_EX_TRANSPARENT |
 									WS_EX_TOOLWINDOW,
 								reinterpret_cast<LPCTSTR>(windowClass),
 								name,
@@ -596,7 +595,7 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
 			w = m_w;
 			h = m_h;
 		}
-		SetWindowPos(desk->m_window, HWND_TOPMOST, x, y, w, h,
+		SetWindowPos(desk->m_window, HWND_TOP, x, y, w, h,
 							SWP_NOACTIVATE | SWP_SHOWWINDOW);
 
 		// if not using low-level hooks we have to also activate the
@@ -635,7 +634,7 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
 	}
 	else {
 		// move hider window under the cursor center, raise, and show it
-		SetWindowPos(desk->m_window, HWND_TOPMOST,
+		SetWindowPos(desk->m_window, HWND_TOP,
 							m_xCenter, m_yCenter, 1, 1,
 							SWP_NOACTIVATE | SWP_SHOWWINDOW);
 

@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,10 +27,14 @@
 #include <Windows.h>
 #include <iostream>
 
-typedef int (*initFunc)(void (*sendEvent)(const char*, void*), void (*log)(const char*));
+typedef void (*initFunc)(void*, void*);
+typedef int (*initEventFunc)(void (*sendEvent)(const char*, void*));
+typedef void* (*invokeFunc)(const char*, void**);
+typedef void (*cleanupFunc)();
 
 void* g_eventTarget = NULL;
 IEventQueue* g_events = NULL;
+static const char * kPre174Plugin = "Pre-1.7.v";
 
 ArchPluginWindows::ArchPluginWindows()
 {
@@ -41,11 +45,8 @@ ArchPluginWindows::~ArchPluginWindows()
 }
 
 void
-ArchPluginWindows::init(void* eventTarget, IEventQueue* events)
+ArchPluginWindows::load()
 {
-	g_eventTarget = eventTarget;
-	g_events = events;
-	
 	String dir = getPluginsDir();
 	LOG((CLOG_DEBUG "plugins dir: %s", dir.c_str()));
 
@@ -54,39 +55,122 @@ ArchPluginWindows::init(void* eventTarget, IEventQueue* events)
 	getFilenames(pattern, plugins);
 
 	std::vector<String>::iterator it;
-	for (it = plugins.begin(); it != plugins.end(); ++it)
-		load(*it);
+	for (it = plugins.begin(); it != plugins.end(); ++it) {
+		LOG((CLOG_DEBUG "loading plugin: %s", (*it).c_str()));
+		String path = String(dir).append("\\").append(*it);
+		HINSTANCE library = LoadLibrary(path.c_str());
+
+		if (library == NULL) {
+			String error = XArchEvalWindows().eval();
+			LOG((CLOG_ERR "failed to load plugin '%s', error: %s", (*it).c_str(), error.c_str()));
+			continue;
+		}
+
+		void* lib = reinterpret_cast<void*>(library);
+		String filename = synergy::string::removeFileExt(*it);
+		m_pluginTable.insert(std::make_pair(filename, lib));
+
+		const char * version = (char*)invoke( filename.c_str(),"version",NULL);
+		if (version == NULL) {
+			version = kPre174Plugin;
+		}
+
+		LOG((CLOG_DEBUG "loaded plugin: %s (%s)", (*it).c_str(),version));
+	}
 }
 
 void
-ArchPluginWindows::load(const String& dllFilename)
+ArchPluginWindows::unload()
 {
-	LOG((CLOG_DEBUG "loading plugin: %s", dllFilename.c_str()));
-	String path = String(getPluginsDir()).append("\\").append(dllFilename);
-	HINSTANCE library = LoadLibrary(path.c_str());
-	if (library == NULL)
-		throw XArch(new XArchEvalWindows);
+	PluginTable::iterator it;
+	HINSTANCE lib;
+	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
+		lib = reinterpret_cast<HINSTANCE>(it->second);
+		cleanupFunc cleanup = (cleanupFunc)GetProcAddress(lib, "cleanup");
+		if (cleanup != NULL) {
+			cleanup();
+		}
+		else {
+			LOG((CLOG_DEBUG "no cleanup function in %s", it->first.c_str()));
+		}
 
-	initFunc initPlugin = (initFunc)GetProcAddress(library, "init");
-	initPlugin(&sendEvent, &log);
+		LOG((CLOG_DEBUG "unloading plugin: %s", it->first.c_str()));
+		FreeLibrary(lib);
+	}
 }
 
-String
-ArchPluginWindows::getModuleDir()
+void
+ArchPluginWindows::init(void* log, void* arch)
 {
-	TCHAR c_modulePath[MAX_PATH];
-	if (GetModuleFileName(NULL, c_modulePath, MAX_PATH) == 0) {
-		throw XArch(new XArchEvalWindows);
+	PluginTable::iterator it;
+	HINSTANCE lib;
+	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
+		lib = reinterpret_cast<HINSTANCE>(it->second);
+		initFunc initPlugin = (initFunc)GetProcAddress(lib, "init");
+		if (initPlugin != NULL) {
+			initPlugin(log, arch);
+		}
+		else {
+			LOG((CLOG_DEBUG "no init function in %s", it->first.c_str()));
+		}
 	}
+}
 
-	String modulePath(c_modulePath);
-	size_t lastSlash = modulePath.find_last_of("\\");
+void
+ArchPluginWindows::initEvent(void* eventTarget, IEventQueue* events)
+{
+	g_eventTarget = eventTarget;
+	g_events = events;
 
-	if (lastSlash != String::npos) {
-		return modulePath.substr(0, lastSlash);
+	PluginTable::iterator it;
+	HINSTANCE lib;
+	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
+		lib = reinterpret_cast<HINSTANCE>(it->second);
+		initEventFunc initEventPlugin = (initEventFunc)GetProcAddress(lib, "initEvent");
+		if (initEventPlugin != NULL) {
+			initEventPlugin(&sendEvent);
+		}
+		else {
+			LOG((CLOG_DEBUG "no init event function in %s", it->first.c_str()));
+		}
 	}
+}
 
-	throw XArch("could not get module path.");
+
+bool
+ArchPluginWindows::exists(const char* name)
+{
+	PluginTable::iterator it;
+	it = m_pluginTable.find(name);
+	return it != m_pluginTable.end() ? true : false;
+}
+
+void*
+ArchPluginWindows::invoke(
+	const char* plugin,
+	const char* command,
+	void** args)
+{
+	PluginTable::iterator it;
+	it = m_pluginTable.find(plugin);
+	if (it != m_pluginTable.end()) {
+		HINSTANCE lib = reinterpret_cast<HINSTANCE>(it->second);
+		invokeFunc invokePlugin = (invokeFunc)GetProcAddress(lib, "invoke");
+		void* result = NULL;
+		if (invokePlugin != NULL) {
+			 result = invokePlugin(command, args);
+		}
+		else {
+			LOG((CLOG_DEBUG "no invoke function in %s", it->first.c_str()));
+		}
+
+		return result;
+	}
+	else {
+		LOG((CLOG_DEBUG "invoke command failed, plugin: %s command: %s",
+				plugin, command));
+		return NULL;
+	}
 }
 
 void
@@ -109,7 +193,7 @@ ArchPluginWindows::getFilenames(const String& pattern, std::vector<String>& file
 
 String ArchPluginWindows::getPluginsDir()
 {
-	return getModuleDir().append("\\").append(PLUGINS_DIR);
+	return ARCH->getPluginDirectory();
 }
 
 void

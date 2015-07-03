@@ -4,7 +4,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,6 +17,7 @@
 
 #include "synergy/ArgParser.h"
 
+#include "synergy/StreamChunker.h"
 #include "synergy/App.h"
 #include "synergy/ServerArgs.h"
 #include "synergy/ClientArgs.h"
@@ -42,6 +43,9 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
 			continue;
 		}
 		else if (parseGenericArgs(argc, argv, i)) {
+			continue;
+		}
+		else if (parseDeprecatedArgs(argc, argv, i)) {
 			continue;
 		}
 		else if (isArg(i, argc, argv, "-a", "--address", 1)) {
@@ -77,6 +81,9 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
 			continue;
 		}
 		else if (parseGenericArgs(argc, argv, i)) {
+			continue;
+		}
+		else if (parseDeprecatedArgs(argc, argv, i)) {
 			continue;
 		}
 		else if (isArg(i, argc, argv, NULL, "--camp")) {
@@ -165,6 +172,30 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 			args.m_printActiveDesktopName = true;
 			return true;
 		}
+		else if (isArg(i, argc, argv, NULL, "--login-auth", 0)) {
+			args.m_loginAuthenticate = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-plugin-list", 0)) {
+			args.m_getPluginList = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-installed-dir", 0)) {
+			args.m_getInstalledDir = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-plugin-dir", 0)) {
+			args.m_getPluginDir = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-profile-dir", 0)) {
+			args.m_getProfileDir = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-arch", 0)) {
+			args.m_getArch = true;
+			return true;
+		}
 		else {
 			return false;
 		}
@@ -233,10 +264,6 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 	else if (isArg(i, argc, argv, NULL, "--client")) {
 		// HACK: stop error happening when using portable (synergyp) 
 	}
-	else if (isArg(i, argc, argv, NULL, "--crypto-pass")) {
-		argsBase().m_crypto.m_pass = argv[++i];
-		argsBase().m_crypto.setMode("cfb");
-	}
 	else if (isArg(i, argc, argv, NULL, "--enable-drag-drop")) {
 		bool useDragDrop = true;
 
@@ -264,12 +291,34 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 			argsBase().m_enableDragDrop = true;
 		}
 	}
+	else if (isArg(i, argc, argv, NULL, "--enable-crypto")) {
+		argsBase().m_enableCrypto = true;
+		StreamChunker::updateChunkSize(true);
+	}
+	else if (isArg(i, argc, argv, NULL, "--profile-dir", 1)) {
+		argsBase().m_profileDirectory = argv[++i];
+	}
+	else if (isArg(i, argc, argv, NULL, "--plugin-dir", 1)) {
+		argsBase().m_pluginDirectory = argv[++i];
+	}
 	else {
 		// option not supported here
 		return false;
 	}
 
 	return true;
+}
+
+bool
+ArgParser::parseDeprecatedArgs(int argc, const char* const* argv, int& i)
+{
+	if (isArg(i, argc, argv, NULL, "--crypto-pass")) {
+		LOG((CLOG_WARN "--crypto-pass is deprecated"));
+		i++;
+		return true;
+	}
+
+	return false;
 }
 
 bool

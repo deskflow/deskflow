@@ -1,3 +1,103 @@
+v1.7.4-stable
+=============
+Bug #4809 - Intermittent freeze caused by mutex deadlock in logging code
+Bug #4721 - High CPU usage for Windows service on client
+Bug #4712 - Unable to send clipboard with size above 1KB when using SSL
+Bug #4584 - Drag and drop with SSL causes crash
+Bug #3774 - Missing MinGW dependencies after install on Windows
+Bug #4749 - Clipboard thread race condition causes assertion failure
+Bug #4723 - Waiting for active desktop result freezes Windows service
+Bug #4690 - Log line 'activeDesktop' does not use logging system
+Bug #4720 - Plugin download shows 'Could not get Linux package type' error
+Bug #4737 - Using error log level does not show SSL fingerprint dialog
+Bug #451  - Fast cursor on any client with Mac server
+Bug #4810 - Non-existent file listed in Qt gui.pro file
+Enhancement #4696 - Include 'ns' plugin in installers instead of wizard download
+Enhancement #4796 - Improve secure socket intensive try operations
+Enhancement #4327 - GUI setting to disable drag and drop feature
+Enhancement #4745 - Tray icon notification for clipboard data transfer progress
+Enhancement #4793 - Additional logging to output OpenSSL version
+
+v1.7.3-stable
+=============
+Bug #4565 - Incorrect plugin downloads on Debian and Mint
+Bug #4677 - Windows service log file grows to very large size
+Bug #4651 - High logging rate causes Windows service to crash
+Bug #4650 - SSL error log message repeats excessively and freezes cursor
+Bug #4624 - Runaway logging causes GUI to freeze
+Bug #4617 - Windows service randomly stops after 'ssl handshake failure' error
+Bug #4601 - Large clipboard data with SSL causes 'protocol is shutdown' error
+Bug #4593 - Locking Windows server causes SSL_ERROR_SSL to repeat
+Bug #4577 - Memory leak in GUI on Windows caused by logging
+Bug #4538 - Windows service crashes intermittently with no error
+Bug #4341 - GUI freezes on first load when reading log
+Bug #4566 - Client or server crashes with 'ssl handshake failure' error
+Bug #4706 - Installer is not output to build config dir on Windows
+Bug #4704 - Plugin 'ns' release build is overwritten with debug version on Linux
+Bug #4703 - Plugins are not built to config directory on Mac
+Bug #4697 - Timing can allow an SSL socket to be used after cleanup call
+Enhancement #4661 - Log error but do not crash when failing to load plugins
+Enhancement #4708 - Download ns plugin for specific Mac versions
+Enhancement #4587 - Include OpenSSL binaries in source for easier building
+Enhancement #4695 - Automatically upload plugins as Buildbot step
+
+v1.7.2-stable
+=============
+Bug #4564 - Modifier keys often stuck down on Mac client
+Bug #4581 - Starting GUI on Mac crashes instantly on syntool segfault
+Bug #4520 - Laggy or sluggish cursor (ping spikes) on Mac when using WiFi
+Bug #4607 - GUI doesn't start after install on Windows
+Enhancement #4412 - Automate extract and compile for OpenSSL
+Enhancement #4567 - SSL plugin should use TLSv1_method() minimum
+Enhancement #4591 - Revert to legacy Mac deployment and signing
+Enhancement #4569 - Reintroduce GUI auto-hide setting (disabled by default)
+Enhancement #4570 - Make `--crypto-pass` show deprecated message
+Enhancement #4596 - Typo 'occurred' in WebClient.cpp
+
+v1.7.1-stable
+=============
+Bug #3784 - Double click & drag doesn't select words on client
+Bug #3052 - Triple-click (select line) does not work
+Bug #4367 - Duplicate Alt-S Keyboard Shortcuts on Gui
+Bug #4554 - Server unable to accept new SSL connection
+Bug #4553 - SSL handshake failure error causes GUI to crash
+Bug #4551 - Plugin wizard doesn't create SSL directory
+Bug #4548 - Severe code duplication in fingerprint logic
+Bug #4547 - Windows server crashes when client fingerprint dialog open
+Bug #4539 - Mac client dies when server has SSL_ERROR_SSL
+Bug #4537 - Plugin wizard doesn't complete but finish button enabled
+Bug #4535 - Server crashes on shut down after multiple connections failed
+Bug #4528 - Error SSL_ERROR_SSL is logged on unknown error
+Bug #4527 - Server fingerprint dialog on client GUI keeps showing
+Bug #4469 - GUI crashes on Windows when generating certificate
+Bug #4410 - SSL_ERROR_SSL (unknown protocol) on Mac client
+Bug #4409 - SSL_ERROR_SSL (unknown alert type) on Windows 8.1 client
+Bug #4557 - GUI doesn't show local fingerprint on fresh install
+Enhancement #4522 - SSL server fingerprint verification from client
+Enhancement #4526 - Display local fingerprint on server GUI
+Enhancement #4549 - Extract SSL certificate and fingerprint generate function
+Enhancement #4546 - Redistribute OpenSSL on Windows with installer
+Enhancement #4540 - Enable Network Security checkbox only when ns plugin exists
+Enhancement #4525 - Reorganize app data directory
+Enhancement #4390 - Disable GUI auto-hide by default
+
+v1.7.0-beta
+===========
+Enhancement #4313 - SSL encrypted secure connection
+Enhancement #4168 - Plugin manager for GUI
+Enhancement #4307 - Always show client auto-detect dialog
+Enhancement #4397 - Modernize Mac build script (deployment and signing)
+Enhancement #4398 - Remove obsolete Mac database cleaner
+Enhancement #4337 - Remove IStreamFilterFactory dead code
+
+1.6.3
+=====
+Bug #4349 - Mouse click does not always bring window to front
+Bug #4463 - Unidentified developer error on Mac OS X
+Bug #4464 - Code signing verify failure not reported on Mac build
+Bug #4465 - Binary (syntool) is not code signed on Windows
+Enhancement #4455 - Replace version with branch name in package filename
+
 1.6.2
 =====
 Bug #4227 - Helper tool crashes when service checks elevation state
@@ -207,3 +307,4 @@ Feature #3119: Mac OS X secondary screen
 Task #2905: Unit tests: Clipboard classes
 Task #3072: Downgrade Linux build machines
 Task #3090: CXWindowsKeyState integ test args wrong
+
