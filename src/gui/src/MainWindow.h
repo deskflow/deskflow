@@ -174,6 +174,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void checkFingerprint(const QString& line);
 		void checkTransmission(const QString& line);
 		bool autoHide();
+		QString getTimeStamp();
 
 	private:
 		QSettings& m_Settings;

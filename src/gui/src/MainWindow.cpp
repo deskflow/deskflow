@@ -370,18 +370,18 @@ void MainWindow::updateFound(const QString &version)
 
 void MainWindow::appendLogInfo(const QString& text)
 {
-	appendLogRaw("INFO: " + text);
+	appendLogRaw(getTimeStamp() + " INFO: " + text);
 }
 
 void MainWindow::appendLogDebug(const QString& text) {
 	if (appConfig().logLevel() >= 1) {
-		appendLogRaw("DEBUG: " + text);
+		appendLogRaw(getTimeStamp() + " DEBUG: " + text);
 	}
 }
 
 void MainWindow::appendLogError(const QString& text)
 {
-	appendLogRaw("ERROR: " + text);
+	appendLogRaw(getTimeStamp() + " ERROR: " + text);
 }
 
 void MainWindow::appendLogRaw(const QString& text)
@@ -490,6 +490,12 @@ bool MainWindow::autoHide()
 	}
 
 	return false;
+}
+
+QString MainWindow::getTimeStamp()
+{
+	QDateTime current = QDateTime::currentDateTime();
+	return '[' + current.toString(Qt::ISODate) + ']';
 }
 
 void MainWindow::clearLog()
