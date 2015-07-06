@@ -59,7 +59,7 @@ init(void* log, void* arch)
 		Arch::setInstance(reinterpret_cast<Arch*>(arch));
 	}
 
-	LOG(( CLOG_DEBUG "library use: %s",helperGetLibsUsed().c_str()));
+	LOG(( CLOG_DEBUG "library use: %s", helperGetLibsUsed().c_str()));
 }
 
 int
