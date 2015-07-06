@@ -314,7 +314,10 @@ XWindowsClipboard::add(EFormat format, const String& data)
 bool
 XWindowsClipboard::open(Time time) const
 {
-	assert(!m_open);
+	if (m_open) {
+		return false;
+		LOG((CLOG_DEBUG "failed to open clipboard: already opened"));
+	}
 
 	LOG((CLOG_DEBUG "open clipboard %d", m_id));
 
