@@ -17,6 +17,7 @@ Enhancement #4796 - Improve secure socket intensive try operations
 Enhancement #4327 - GUI setting to disable drag and drop feature
 Enhancement #4745 - Tray icon notification for clipboard data transfer progress
 Enhancement #4793 - Additional logging to output OpenSSL version
+Enhancement #4845 - Add timestamp to log output
 
 v1.7.3-stable
 =============
