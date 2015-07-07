@@ -35,12 +35,9 @@
 //
 
 #define MAX_ERROR_SIZE 65535
-
-enum {
-	// this limit seems extremely high, but mac client seem to generate around
-	// 50,000 errors before they establish a connection (wtf?)
-	kMaxRetryCount = 100000
-};
+// RETRY_DELAY * MAX_RETRY = 10s
+#define MAX_RETRY 1000
+#define RETRY_DELAY 0.01f
 
 enum {
 	kMsgSize = 128
@@ -61,8 +58,7 @@ SecureSocket::SecureSocket(
 		SocketMultiplexer* socketMultiplexer) :
 	TCPSocket(events, socketMultiplexer),
 	m_secureReady(false),
-	m_fatal(false),
-	m_maxRetry(kMaxRetryCount)
+	m_fatal(false)
 {
 }
 
@@ -72,8 +68,7 @@ SecureSocket::SecureSocket(
 		ArchSocket socket) :
 	TCPSocket(events, socketMultiplexer, socket),
 	m_secureReady(false),
-	m_fatal(false),
-	m_maxRetry(kMaxRetryCount)
+	m_fatal(false)
 {
 }
 
@@ -295,8 +290,7 @@ SecureSocket::secureAccept(int socket)
 
 	if (isFatal()) {
 		// tell user and sleep so the socket isn't hammered.
-		LOG((CLOG_ERR "failed to accept secure socket"));
-		LOG((CLOG_INFO "client connection may not be secure"));
+		LOG((CLOG_WARN "failed to accept secure socket"));
 		m_secureReady = false;
 		ARCH->sleep(1);
 		retry = 0;
@@ -318,6 +312,7 @@ SecureSocket::secureAccept(int socket)
 	if (retry > 0) {
 		LOG((CLOG_DEBUG2 "retry accepting secure socket"));
 		m_secureReady = false;
+		ARCH->sleep(RETRY_DELAY);
 		return 0;
 	}
 
@@ -351,6 +346,7 @@ SecureSocket::secureConnect(int socket)
 	if (retry > 0) {
 		LOG((CLOG_DEBUG2 "retry connect secure socket"));
 		m_secureReady = false;
+		ARCH->sleep(RETRY_DELAY);
 		return 0;
 	}
 
@@ -475,8 +471,8 @@ SecureSocket::checkResult(int status, int& retry)
 	}
 
 	// If the retry max would exceed the allowed, treat it as a fatal error
-	if (retry > maxRetry()) {
-		LOG((CLOG_ERR "passive ssl error limit exceeded: %d", retry));
+	if (retry > MAX_RETRY) {
+		LOG((CLOG_DEBUG "retry exceeded %f sec", MAX_RETRY * RETRY_DELAY));
 		isFatal(true);
 	}
 
