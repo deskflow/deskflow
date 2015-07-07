@@ -3,6 +3,7 @@ v1.7.4-stable
 Bug #4809 - Intermittent freeze caused by mutex deadlock in logging code
 Bug #4721 - High CPU usage for Windows service on client
 Bug #4712 - Unable to send clipboard with size above 1KB when using SSL
+Bug #4642 - Connecting causes SSL23_GET_SERVER_HELLO error
 Bug #4584 - Drag and drop with SSL causes crash
 Bug #3774 - Missing MinGW dependencies after install on Windows
 Bug #4749 - Clipboard thread race condition causes assertion failure
