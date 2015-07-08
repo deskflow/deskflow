@@ -18,6 +18,16 @@
 #include "Plugin.h"
 
 #include "CoreInterface.h"
+//#include "CommandProcess.h"
+//#include "DataDownloader.h"
+//#include "QUtility.h"
+//#include "ProcessorArch.h"
+//#include "Fingerprint.h"
+
+//#include <QFile>
+//#include <QDir>
+//#include <QProcess>
+//#include <QCoreApplication>
 
 static const char kBaseUrl[] = "http://synergy-project.org/files";
 static const char kDefaultVersion[] = "1.1";
@@ -31,15 +41,15 @@ static const char kLinuxPackagePlatformRpm64[] = "Linux-x86_64-rpm";
 
 #if defined(Q_OS_WIN)
 static const char kWinPluginExt[] = ".dll";
-static const char kInstallerPluginLocation[] = "Plugins";
+static const char kInstallerPluginLocation[] = "C:/Program Files/Synergy/Plugins/"; //TODO: needs proper windows %X% notation
 #elif defined(Q_OS_MAC)
 static const char kMacPluginPrefix[] = "lib";
 static const char kMacPluginExt[] = ".dylib";
-static const char kInstallerPluginLocation[] = "plugins";
+static const char kInstallerPluginLocation[] = "/usr/lib/synergy/plugins";
 #else
 static const char kLinuxPluginPrefix[] = "lib";
 static const char kLinuxPluginExt[] = ".so";
-static const char kInstallerPluginLocation[] = "plugins";
+static const char kInstallerPluginLocation[] = "/usr/lib/synergy/plugins";
 #endif
 
 QString Plugin::getOsSpecificExt()
