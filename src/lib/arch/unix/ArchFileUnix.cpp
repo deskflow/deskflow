@@ -94,7 +94,7 @@ ArchFileUnix::getInstalledDirectory()
 #if WINAPI_XWINDOWS
 	return "/usr/bin";
 #else
-	return "/Applications/Synergy.app/Contents/MacOS";
+	return "/Applications/Synergy.app/Contents/MacOS/Synergy";
 #endif
 }
 
