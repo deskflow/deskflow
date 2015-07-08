@@ -61,16 +61,19 @@ ArchSystemWindows::getOSName() const
 		case VER_PLATFORM_WIN32_NT:
 			#if WINVER >= _WIN32_WINNT_WIN2K
 			if (info.dwMajorVersion == 6) {
-				if(info.dwMinorVersion == 0) {
+				if (info.dwMinorVersion == 0) {
 					if (info.wProductType == VER_NT_WORKSTATION) {
 						return "Microsoft Windows Vista";
-					} else {
+					}
+					else {
 						return "Microsoft Windows Server 2008";
 					}
-				} else if(info.dwMinorVersion == 1) {
+				}
+				else if (info.dwMinorVersion == 1) {
 					if (info.wProductType == VER_NT_WORKSTATION) {
 						return "Microsoft Windows 7";
-					} else {
+					}
+					else {
 						return "Microsoft Windows Server 2008 R2";
 					}
 				}
@@ -102,7 +105,7 @@ std::string
 ArchSystemWindows::getPlatformName() const
 {
 #ifdef _X86_
-	if(isWOW64())
+	if (isWOW64())
 		return "x86 (WOW64)";
 	else
 		return "x86";
@@ -146,7 +149,7 @@ ArchSystemWindows::isWOW64() const
 		(LPFN_ISWOW64PROCESS) GetProcAddress(hModule, "IsWow64Process");
 
 	BOOL bIsWow64 = FALSE;
-	if(NULL != fnIsWow64Process &&
+	if (NULL != fnIsWow64Process &&
 		fnIsWow64Process(GetCurrentProcess(), &bIsWow64) &&
 		bIsWow64)
 	{

@@ -116,8 +116,8 @@ getDropData(IDataObject* dataObject)
 	STGMEDIUM stgMed;
 
 	// See if the dataobject contains any DROP stored as a HGLOBAL
-	if(dataObject->QueryGetData(&fmtEtc) == S_OK) {
-		if(dataObject->GetData(&fmtEtc, &stgMed) == S_OK) {
+	if (dataObject->QueryGetData(&fmtEtc) == S_OK) {
+		if (dataObject->GetData(&fmtEtc, &stgMed) == S_OK) {
 			// get data here
 			PVOID data = GlobalLock(stgMed.hGlobal);
 
