@@ -180,10 +180,6 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 			args.m_getPluginList = true;
 			return true;
 		}
-		else if (isArg(i, argc, argv, NULL, "--get-installed-dir", 0)) {
-			args.m_getInstalledDir = true;
-			return true;
-		}
 		else if (isArg(i, argc, argv, NULL, "--get-plugin-dir", 0)) {
 			args.m_getPluginDir = true;
 			return true;
