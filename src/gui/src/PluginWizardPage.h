@@ -21,11 +21,10 @@
 #include "AppConfig.h"
 
 #include "ui_PluginWizardPageBase.h"
-#include "PluginManager.h"
 #include <QWizardPage>
 
-class FileSysClient;
 class WebClient;
+class PluginManager;
 class SslCertificate;
 class MainWindow;
 
@@ -51,11 +50,12 @@ protected slots:
 	void showError(QString error);
 	void updateStatus(QString info);
 	void queryPluginDone();
+	void updateDownloadStatus();
 	void finished();
 	void generateCertificate();
 
 private:
-	void copyPlugins();
+	void downloadPlugins();
 	void showFinished();
 
 private:
@@ -63,8 +63,7 @@ private:
 	QString m_Email;
 	QString m_Password;
 	WebClient* m_pWebClient;
-	FileSysClient* m_pFileSysClient;
-	PluginManager m_PluginManager;
+	PluginManager* m_pPluginManager;
 	SslCertificate* m_pSslCertificate;
 	QThread* m_pThread;
 	MainWindow& m_mainWindow;
