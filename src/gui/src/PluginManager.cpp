@@ -25,8 +25,6 @@
 #include "Fingerprint.h"
 #include "Plugin.h"
 
-#include <QTextStream>
-
 #include <QFile>
 #include <QDir>
 #include <QProcess>
@@ -85,8 +83,7 @@ void PluginManager::copyPlugins()
 		// Get the Directory where plugins are put on installation
 		// If it doesn't exist, there is nothing to do
 		QString srcDirName(m_InstalledDir.append(QDir::separator())
-							.append(Plugin::getOsSpecificInstallerLocation()));
-
+						   .append(Plugin::getOsSpecificInstallerLocation()));
 		QDir srcDir(srcDirName);
 		if (!srcDir.exists()) {
 			emit info(
@@ -98,7 +95,6 @@ void PluginManager::copyPlugins()
 		// Get the directory where Plugins are installed into Synergy
 		// If it doesn't exist make it
 		QString destDirName = m_PluginDir;
-
 		QDir destDir(destDirName);
 		if (!destDir.exists()) {
 			destDir.mkpath(".");
@@ -118,11 +114,7 @@ void PluginManager::copyPlugins()
 				newFile.remove();
 			}
 			// make a copy of the plugin in the new location
-			#if defined(Q_OS_WIN)
 			bool result = file.copy(newName);
-			#else
-			bool result = file.link(newName);
-			#endif
 			if ( !result ) {
 					emit error(
 							tr("Failed to copy plugin '%1' to: %2\n%3")
@@ -141,9 +133,9 @@ void PluginManager::copyPlugins()
 	}
 	catch (std::exception& e)
 	{
-		emit error(tr(	"An error occurred while trying to copy the "
-						"plugin list. Please contact the help desk, and "
-						"provide the following details.\n\n%1").arg(e.what()));
+		emit error(tr("An error occurred while trying to copy the "
+								  "plugin list. Please contact the help desk, and "
+								  "provide the following details.\n\n%1").arg(e.what()));
 	}
 	emit copyFinished();
 	return;
