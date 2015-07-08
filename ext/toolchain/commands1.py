@@ -1140,7 +1140,7 @@ class InternalCommands:
 		controlFile.close()
 
 		targetBin = '%s/%s/usr/bin' % (debDir, package)
-		targetPlugin = '%s/%s/usr/lib/synergy/plugins' % (debDir, package)
+		targetPlugin = '%s/%s/usr/lib/synergy-plugins' % (debDir, package)
 		targetShare = '%s/%s/usr/share' % (debDir, package)
 		targetApplications = "%s/applications" % targetShare
 		targetIcons = "%s/icons" % targetShare
