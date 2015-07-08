@@ -310,7 +310,7 @@ MSWindowsScreen::enter()
 		// and that the screen is not in powersave mode.
 		ArchMiscWindows::wakeupDisplay();
 
-		if(m_screensaver != NULL && m_screensaverActive)
+		if (m_screensaver != NULL && m_screensaverActive)
 		{
 			m_screensaver->deactivate();
 			m_screensaverActive = 0;
@@ -923,7 +923,7 @@ void
 MSWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id)
 {
 	ClipboardInfo* info   = (ClipboardInfo*)malloc(sizeof(ClipboardInfo));
-	if(info == NULL) {
+	if (info == NULL) {
 		LOG((CLOG_ERR "malloc failed on %s:%s", __FILE__, __LINE__ ));
 		return;
 	}

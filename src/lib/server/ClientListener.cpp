@@ -151,8 +151,8 @@ ClientListener::handleClientConnecting(const Event&, void*)
 
 	if (m_useSecureNetwork) {
 		LOG((CLOG_DEBUG2 "attempting sercure Connection"));
-		while(!socket->isReady()) {
-			if(socket->isFatal()) {
+		while (!socket->isReady()) {
+			if (socket->isFatal()) {
 				m_listen->deleteSocket(socket);
 				return;
 			}

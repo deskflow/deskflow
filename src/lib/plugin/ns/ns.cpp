@@ -105,7 +105,7 @@ invoke(const char* command, void** args)
 			g_secureListenSocket = NULL;
 		}
 	}
-	else if(strcmp(command, "version") == 0) {
+	else if (strcmp(command, "version") == 0) {
 		return (void*) kSynergyVers;
 	}
 
