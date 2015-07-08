@@ -64,7 +64,6 @@ private:
 	QStringList m_FileSysPluginList;
 	QString m_PluginDir;
 	QString m_ProfileDir;
-	QString m_InstalledDir;
 	CoreInterface m_CoreInterface;
 	SslCertificate m_SslCertificate;
 };
