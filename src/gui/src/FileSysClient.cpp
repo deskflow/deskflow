@@ -33,11 +33,8 @@ void FileSysClient::queryPluginList()
 		QString extension = "*" + Plugin::getOsSpecificExt();
 		QStringList nameFilter(extension);
 
-		QString installDir(m_CoreInterface.getInstalledDir()
-							.append(QDir::separator())
-							.append(Plugin::getOsSpecificInstallerLocation()));
+		QString searchDirectory(Plugin::getOsSpecificInstallerLocation());
 
-		QString searchDirectory(installDir);
 		QDir directory(searchDirectory);
 		m_PluginList = directory.entryList(nameFilter);
 		isDone(true);
