@@ -285,7 +285,7 @@ Client::leave()
 
 	if (!m_receivedFileData.empty()) {
 		m_receivedFileData.clear();
-		LOG((CLOG_NOTIFY "file transmission interrupted"));
+		LOG((CLOG_DEBUG "file transmission interrupted"));
 	}
 
 	return true;
