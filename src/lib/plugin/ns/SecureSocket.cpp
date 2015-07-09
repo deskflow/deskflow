@@ -35,9 +35,9 @@
 //
 
 #define MAX_ERROR_SIZE 65535
-// RETRY_DELAY * MAX_RETRY = 10s
-#define MAX_RETRY 1000
-#define RETRY_DELAY 0.01f
+// g_retryDelay * g_maxRetry = 10s
+static const int g_maxRetry = 1000;
+static const float g_retryDelay = 0.01f;
 
 enum {
 	kMsgSize = 128
@@ -312,7 +312,7 @@ SecureSocket::secureAccept(int socket)
 	if (retry > 0) {
 		LOG((CLOG_DEBUG2 "retry accepting secure socket"));
 		m_secureReady = false;
-		ARCH->sleep(RETRY_DELAY);
+		ARCH->sleep(g_retryDelay);
 		return 0;
 	}
 
@@ -346,7 +346,7 @@ SecureSocket::secureConnect(int socket)
 	if (retry > 0) {
 		LOG((CLOG_DEBUG2 "retry connect secure socket"));
 		m_secureReady = false;
-		ARCH->sleep(RETRY_DELAY);
+		ARCH->sleep(g_retryDelay);
 		return 0;
 	}
 
@@ -471,8 +471,8 @@ SecureSocket::checkResult(int status, int& retry)
 	}
 
 	// If the retry max would exceed the allowed, treat it as a fatal error
-	if (retry > MAX_RETRY) {
-		LOG((CLOG_DEBUG "retry exceeded %f sec", MAX_RETRY * RETRY_DELAY));
+	if (retry > g_maxRetry) {
+		LOG((CLOG_DEBUG "retry exceeded %f sec", g_maxRetry * g_retryDelay));
 		isFatal(true);
 	}
 
