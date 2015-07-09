@@ -36,11 +36,9 @@
 
 #define MAX_ERROR_SIZE 65535
 
-enum {
-	// this limit seems extremely high, but mac client seem to generate around
-	// 50,000 errors before they establish a connection (wtf?)
-	kMaxRetryCount = 100000
-};
+// g_retryDelay * g_maxRetry = 10s
+static const int g_maxRetry = 1000;
+static const float g_retryDelay = 0.01f;
 
 enum {
 	kMsgSize = 128
@@ -318,6 +316,7 @@ SecureSocket::secureAccept(int socket)
 	if (retry > 0) {
 		LOG((CLOG_DEBUG2 "retry accepting secure socket"));
 		m_secureReady = false;
+		ARCH->sleep(g_retryDelay);
 		return 0;
 	}
 
@@ -351,6 +350,7 @@ SecureSocket::secureConnect(int socket)
 	if (retry > 0) {
 		LOG((CLOG_DEBUG2 "retry connect secure socket"));
 		m_secureReady = false;
+		ARCH->sleep(g_retryDelay);
 		return 0;
 	}
 
@@ -475,8 +475,8 @@ SecureSocket::checkResult(int status, int& retry)
 	}
 
 	// If the retry max would exceed the allowed, treat it as a fatal error
-	if (retry > maxRetry()) {
-		LOG((CLOG_ERR "passive ssl error limit exceeded: %d", retry));
+	if (retry > g_maxRetry) {
+		LOG((CLOG_DEBUG "retry exceeded %f sec", g_maxRetry * g_retryDelay));
 		isFatal(true);
 	}
 
