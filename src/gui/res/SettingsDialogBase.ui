@@ -210,6 +210,21 @@
        <widget class="QComboBox" name="m_pComboLogLevel">
         <item>
          <property name="text">
+          <string>Error</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Warning</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Note</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>Info</string>
          </property>
         </item>

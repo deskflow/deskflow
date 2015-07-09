@@ -37,6 +37,9 @@ const char AppConfig::m_SynergyLogDir[] = "/var/log/";
 
 static const char* logLevelNames[] =
 {
+	"ERROR",
+	"WARNING",
+	"NOTE",
 	"INFO",
 	"DEBUG",
 	"DEBUG1",
@@ -55,8 +58,7 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_ElevateMode(false),
 	m_AutoConfigPrompted(false),
 	m_CryptoEnabled(false),
-	m_AutoHide(false),
-	m_ResetLogLevel(true)
+	m_AutoHide(false)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -116,7 +118,7 @@ void AppConfig::loadSettings()
 	m_ScreenName = settings().value("screenName", QHostInfo::localHostName()).toString();
 	m_Port = settings().value("port", 24800).toInt();
 	m_Interface = settings().value("interface").toString();
-	m_LogLevel = settings().value("logLevel", 0).toInt(); // level 0: INFO
+	m_LogLevel = settings().value("logLevel", 3).toInt(); // level 3: INFO
 	m_LogToFile = settings().value("logToFile", false).toBool();
 	m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
 	m_WizardLastRun = settings().value("wizardLastRun", 0).toInt();
@@ -130,12 +132,6 @@ void AppConfig::loadSettings()
 	m_UserToken = settings().value("userToken", "").toString();
 	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
 	m_AutoHide = settings().value("autoHide", false).toBool();
-	m_ResetLogLevel = settings().value("resetLogLevel", true).toBool();
-
-	if (m_ResetLogLevel) {
-		m_LogLevel = 0;
-		m_ResetLogLevel = false;
-	}
 }
 
 void AppConfig::saveSettings()
@@ -157,7 +153,6 @@ void AppConfig::saveSettings()
 	settings().setValue("userToken", m_UserToken);
 	settings().setValue("cryptoEnabled", m_CryptoEnabled);
 	settings().setValue("autoHide", m_AutoHide);
-	settings().setValue("resetLogLevel", m_ResetLogLevel);
 }
 
 void AppConfig::setAutoConfig(bool autoConfig)

@@ -374,7 +374,7 @@ void MainWindow::appendLogInfo(const QString& text)
 }
 
 void MainWindow::appendLogDebug(const QString& text) {
-	if (appConfig().logLevel() >= 1) {
+	if (appConfig().logLevel() >= 4) {
 		appendLogRaw(getTimeStamp() + " DEBUG: " + text);
 	}
 }
@@ -587,7 +587,7 @@ void MainWindow::startSynergy()
 	qDebug() << args;
 
 	// show command if debug log level...
-	if (appConfig().logLevel() >= 1) {
+	if (appConfig().logLevel() >= 4) {
 		appendLogInfo(QString("command: %1 %2").arg(app, args.join(" ")));
 	}
 
