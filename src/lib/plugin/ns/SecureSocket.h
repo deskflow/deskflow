@@ -77,10 +77,6 @@ private:
 						serviceAccept(ISocketMultiplexerJob*,
 							bool, bool, bool);
 
-	void				showSecureConnectInfo();
-	void				showSecureLibInfo();
-	void				showSecureCipherInfo();
-
 private:
 	Ssl*				m_ssl;
 	bool				m_secureReady;
