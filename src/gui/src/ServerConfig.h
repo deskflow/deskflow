@@ -61,7 +61,6 @@ class ServerConfig : public BaseConfig
 		const QList<bool>& switchCorners() const { return m_SwitchCorners; }
 		const HotkeyList& hotkeys() const { return m_Hotkeys; }
 		bool ignoreAutoConfigClient() const { return m_IgnoreAutoConfigClient; }
-		bool enableDragAndDrop() const { return m_EnableDragAndDrop; }
 
 		void saveSettings();
 		void loadSettings();
@@ -89,7 +88,6 @@ class ServerConfig : public BaseConfig
 		void setSwitchCorner(int c, bool on) { m_SwitchCorners[c] = on; }
 		void setSwitchCornerSize(int val) { m_SwitchCornerSize = val; }
 		void setIgnoreAutoConfigClient(bool on) { m_IgnoreAutoConfigClient = on; }
-		void setEnableDragAndDrop(bool on) { m_EnableDragAndDrop = on; }
 		QList<bool>& switchCorners() { return m_SwitchCorners; }
 		HotkeyList& hotkeys() { return m_Hotkeys; }
 
@@ -121,7 +119,6 @@ class ServerConfig : public BaseConfig
 		HotkeyList m_Hotkeys;
 		QString m_ServerName;
 		bool m_IgnoreAutoConfigClient;
-		bool m_EnableDragAndDrop;
 		MainWindow* m_pMainWindow;
 };
 
