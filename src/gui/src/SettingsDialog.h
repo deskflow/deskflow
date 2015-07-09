@@ -47,7 +47,6 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
 		SynergyLocale m_Locale;
 		CoreInterface m_CoreInterface;
 		bool m_SuppressElevateWarning;
-		bool m_SuppressEncryptionWarning;
 
 	private slots:
 		void on_m_pCheckBoxEnableCrypto_toggled(bool checked);
