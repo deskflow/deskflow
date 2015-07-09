@@ -35,6 +35,7 @@
 //
 
 #define MAX_ERROR_SIZE 65535
+
 // g_retryDelay * g_maxRetry = 10s
 static const int g_maxRetry = 1000;
 static const float g_retryDelay = 0.01f;
