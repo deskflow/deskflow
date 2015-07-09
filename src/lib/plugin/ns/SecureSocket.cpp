@@ -558,7 +558,7 @@ SecureSocket::verifyCertFingerprint()
 	// format fingerprint into hexdecimal format with colon separator
 	String fingerprint(reinterpret_cast<char*>(tempFingerprint), tempFingerprintLen);
 	formatFingerprint(fingerprint);
-	LOG((CLOG_INFO "server fingerprint: %s", fingerprint.c_str()));
+	LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
 	String trustedServersFilename;
 	trustedServersFilename = synergy::string::sprintf(

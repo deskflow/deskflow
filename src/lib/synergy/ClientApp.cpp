@@ -291,7 +291,7 @@ ClientApp::scheduleClientRestart(double retryTime)
 void
 ClientApp::handleClientConnected(const Event&, void*)
 {
-	LOG((CLOG_INFO "connected to server"));
+	LOG((CLOG_NOTE "connected to server"));
 	resetRestartTimeout();
 	updateStatus();
 }
@@ -321,7 +321,7 @@ ClientApp::handleClientFailed(const Event& e, void*)
 void
 ClientApp::handleClientDisconnected(const Event&, void*)
 {
-	LOG((CLOG_INFO "disconnected from server"));
+	LOG((CLOG_NOTE "disconnected from server"));
 	if (!args().m_restartable) {
 		m_events->addEvent(Event(Event::kQuit));
 	}
@@ -401,7 +401,7 @@ ClientApp::startClient()
 			m_client     = openClient(args().m_name,
 				*m_serverAddress, clientScreen);
 			m_clientScreen  = clientScreen;
-			LOG((CLOG_INFO "started client"));
+			LOG((CLOG_NOTE "started client"));
 		}
 
 		m_client->connect();
@@ -500,7 +500,7 @@ ClientApp::mainLoop()
 	LOG((CLOG_DEBUG1 "stopping client"));
 	stopClient();
 	updateStatus();
-	LOG((CLOG_INFO "stopped client"));
+	LOG((CLOG_NOTE "stopped client"));
 
 	if (argsBase().m_enableIpc) {
 		cleanupIpcClient();

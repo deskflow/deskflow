@@ -334,7 +334,7 @@ ServerProxy::parseMessage(const UInt8* code)
 void
 ServerProxy::handleKeepAliveAlarm(const Event&, void*)
 {
-	LOG((CLOG_INFO "server is dead"));
+	LOG((CLOG_NOTE "server is dead"));
 	m_client->disconnect("server is not responding");
 }
 

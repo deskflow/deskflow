@@ -309,7 +309,7 @@ bool
 ArgParser::parseDeprecatedArgs(int argc, const char* const* argv, int& i)
 {
 	if (isArg(i, argc, argv, NULL, "--crypto-pass")) {
-		LOG((CLOG_WARN "--crypto-pass is deprecated"));
+		LOG((CLOG_NOTE "--crypto-pass is deprecated"));
 		i++;
 		return true;
 	}

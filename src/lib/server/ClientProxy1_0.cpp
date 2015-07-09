@@ -210,7 +210,7 @@ ClientProxy1_0::parseMessage(const UInt8* code)
 void
 ClientProxy1_0::handleDisconnect(const Event&, void*)
 {
-	LOG((CLOG_INFO "client \"%s\" has disconnected", getName().c_str()));
+	LOG((CLOG_NOTE "client \"%s\" has disconnected", getName().c_str()));
 	disconnect();
 }
 
@@ -225,7 +225,7 @@ void
 ClientProxy1_0::handleFlatline(const Event&, void*)
 {
 	// didn't get a heartbeat fast enough.  assume client is dead.
-	LOG((CLOG_INFO "client \"%s\" is dead", getName().c_str()));
+	LOG((CLOG_NOTE "client \"%s\" is dead", getName().c_str()));
 	disconnect();
 }
 
