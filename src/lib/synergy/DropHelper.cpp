@@ -38,18 +38,16 @@ DropHelper::writeToDir(const String& destination, DragFileList& fileList, String
 		file.open(dropTarget.c_str(), std::ios::out | std::ios::binary);
 		if (!file.is_open()) {
 			LOG((CLOG_ERR "drop file failed: can not open %s", dropTarget.c_str()));
-			LOG((CLOG_DEBUG "file transmission failed: can not open %s", dropTarget.c_str()));
 		}
 		
 		file.write(data.c_str(), data.size());
 		file.close();
 
-		LOG((CLOG_DEBUG "file transmission complete: %s is saved to %s", fileList.at(0).getFilename().c_str(), destination.c_str()));
+		LOG((CLOG_DEBUG "%s is saved to %s", fileList.at(0).getFilename().c_str(), destination.c_str()));
 
 		fileList.clear();
 	}
 	else {
 		LOG((CLOG_ERR "drop file failed: drop target is empty"));
-		LOG((CLOG_DEBUG "file transmission failed: drop target is empty"));
 	}
 }

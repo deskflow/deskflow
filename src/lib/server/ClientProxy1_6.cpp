@@ -95,7 +95,7 @@ ClientProxy1_6::recvClipboard()
 	}
 	else if (r == kStart) {
 		size_t size = ClipboardChunk::getExpectedSize();
-		LOG((CLOG_DEBUG "clipboard transmission started: start receiving %u bytes of clipboard data", size));
+		LOG((CLOG_DEBUG "receiving %u bytes of clipboard data", size));
 	}
 
 	return true;
