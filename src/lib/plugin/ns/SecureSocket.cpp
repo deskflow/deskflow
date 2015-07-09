@@ -301,9 +301,7 @@ SecureSocket::secureAccept(int socket)
 	if (retry == 0) {
 		m_secureReady = true;
 		LOG((CLOG_INFO "accepted secure socket"));
-		if (CLOG->getFilter() >= kDEBUG1) {
-			showSecureCipherInfo();
-		}
+		showSecureCipherInfo();
 		showSecureConnectInfo();
 		return 1;
 	}
@@ -366,9 +364,7 @@ SecureSocket::secureConnect(int socket)
 		return -1; // Fingerprint failed, error
 	}
 	LOG((CLOG_DEBUG2 "connected secure socket"));
-	if (CLOG->getFilter() >= kDEBUG1) {
-		showSecureCipherInfo();
-	}
+	showSecureCipherInfo();
 	showSecureConnectInfo();
 	return 1;
 }
@@ -669,10 +665,10 @@ SecureSocket::showSecureCipherInfo()
 	STACK_OF(SSL_CIPHER) * sStack = SSL_get_ciphers(m_ssl->m_ssl);
 
 	if (sStack == NULL) {
-		LOG((CLOG_DEBUG1 "local cipher list not available"));
+		LOG((CLOG_WARN "No ciphers available on server"));
 	}
 	else {
-		LOG((CLOG_DEBUG1 "available local ciphers:"));
+		LOG((CLOG_DEBUG1 "Ciphers available on server:"));
 		showCipherStackDesc(sStack);
 	}
 
@@ -680,10 +676,10 @@ SecureSocket::showSecureCipherInfo()
 	// of OpenSSL, it's not visible, need to use SSL_get_client_ciphers() instead
 	STACK_OF(SSL_CIPHER) * cStack = m_ssl->m_ssl->session->ciphers;
 		if (cStack == NULL) {
-		LOG((CLOG_DEBUG1 "remote cipher list not available"));
+		LOG((CLOG_WARN "No ciphers available from client"));
 	}
 	else {
-		LOG((CLOG_DEBUG1 "available remote ciphers:"));
+		LOG((CLOG_DEBUG1 "Ciphers available on client:"));
 		showCipherStackDesc(cStack);
 	}
 	return;
@@ -693,10 +689,10 @@ void
 SecureSocket::showSecureLibInfo()
 {
 	LOG((CLOG_INFO "%s",SSLeay_version(SSLEAY_VERSION)));
-	LOG((CLOG_DEBUG1 "openSSL : %s",SSLeay_version(SSLEAY_CFLAGS)));
-	LOG((CLOG_DEBUG1 "openSSL : %s",SSLeay_version(SSLEAY_BUILT_ON)));
-	LOG((CLOG_DEBUG1 "openSSL : %s",SSLeay_version(SSLEAY_PLATFORM)));
-	LOG((CLOG_DEBUG1 "%s",SSLeay_version(SSLEAY_DIR)));
+	LOG((CLOG_DEBUG2 "OpenSSL : %s",SSLeay_version(SSLEAY_CFLAGS)));
+	LOG((CLOG_DEBUG2 "OpenSSL : %s",SSLeay_version(SSLEAY_BUILT_ON)));
+	LOG((CLOG_DEBUG2 "OpenSSL : %s",SSLeay_version(SSLEAY_PLATFORM)));
+	LOG((CLOG_DEBUG2 "%s",SSLeay_version(SSLEAY_DIR)));
 	return;
 }
 
