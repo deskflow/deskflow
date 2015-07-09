@@ -91,11 +91,11 @@ ClientProxy1_6::recvClipboard()
 		info->m_sequenceNumber = seq;
 		m_events->addEvent(Event(m_events->forClipboard().clipboardChanged(),
 								 getEventTarget(), info));
-		LOG((CLOG_NOTIFY "clipboard transmission complete"));
+		LOG((CLOG_DEBUG "clipboard transmission complete"));
 	}
 	else if (r == kStart) {
 		size_t size = ClipboardChunk::getExpectedSize();
-		LOG((CLOG_NOTIFY "clipboard transmission started: start receiving %u bytes of clipboard data", size));
+		LOG((CLOG_DEBUG "clipboard transmission started: start receiving %u bytes of clipboard data", size));
 	}
 
 	return true;
