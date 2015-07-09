@@ -569,7 +569,7 @@ ServerProxy::setClipboard()
 	}
 	else if (r == kStart) {
 		size_t size = ClipboardChunk::getExpectedSize();
-		LOG((CLOG_DEBUG "clipboard transmission started: start receiving %u bytes of clipboard data", size));
+		LOG((CLOG_DEBUG "receiving %u bytes of clipboard data", size));
 	}
 }
 
@@ -873,7 +873,7 @@ ServerProxy::fileChunkReceived()
 	else if (result == kStart) {
 		if (m_client->getDragFileList().size() > 0) {
 			String filename = m_client->getDragFileList().at(0).getFilename();
-			LOG((CLOG_DEBUG "file transmission started: start receiving %s", filename.c_str()));
+			LOG((CLOG_DEBUG "start receiving %s", filename.c_str()));
 		}
 	}
 }
