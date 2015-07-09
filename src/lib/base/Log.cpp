@@ -260,12 +260,14 @@ Log::setFilter(const char* maxPriority)
 void
 Log::setFilter(int maxPriority)
 {
+	ArchMutexLock lock(m_mutex);
 	m_maxPriority = maxPriority;
 }
 
 int
 Log::getFilter() const
 {
+	ArchMutexLock lock(m_mutex);
 	return m_maxPriority;
 }
 
