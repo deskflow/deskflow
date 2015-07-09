@@ -204,7 +204,7 @@ MSWindowsPortableTaskBarReceiver::runMenu(int x, int y)
 		break;
 
 	case IDC_TASKBAR_LOG_LEVEL_NOTE:
-		CLOG->setFilter(kNOTIFY);
+		CLOG->setFilter(kNOTE);
 		break;
 
 	case IDC_TASKBAR_LOG_LEVEL_INFO:

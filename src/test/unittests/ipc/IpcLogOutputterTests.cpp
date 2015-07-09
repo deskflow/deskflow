@@ -57,9 +57,9 @@ TEST(IpcLogOutputterTests, write_threadingEnabled_bufferIsSent)
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 2\n"), _)).Times(1);
 
 	IpcLogOutputter outputter(mockServer, true);
-	outputter.write(kNOTIFY, "mock 1");
+	outputter.write(kNOTE, "mock 1");
 	mockServer.waitForSend();
-	outputter.write(kNOTIFY, "mock 2");
+	outputter.write(kNOTE, "mock 2");
 	mockServer.waitForSend();
 }
 
@@ -76,9 +76,9 @@ TEST(IpcLogOutputterTests, write_overBufferMaxSize_firstLineTruncated)
 	outputter.bufferMaxSize(2);
 
 	// log more lines than the buffer can contain
-	outputter.write(kNOTIFY, "mock 1");
-	outputter.write(kNOTIFY, "mock 2");
-	outputter.write(kNOTIFY, "mock 3");
+	outputter.write(kNOTE, "mock 1");
+	outputter.write(kNOTE, "mock 2");
+	outputter.write(kNOTE, "mock 3");
 	outputter.sendBuffer();
 }
 
@@ -95,8 +95,8 @@ TEST(IpcLogOutputterTests, write_underBufferMaxSize_allLinesAreSent)
 	outputter.bufferMaxSize(2);
 
 	// log more lines than the buffer can contain
-	outputter.write(kNOTIFY, "mock 1");
-	outputter.write(kNOTIFY, "mock 2");
+	outputter.write(kNOTE, "mock 1");
+	outputter.write(kNOTE, "mock 2");
 	outputter.sendBuffer();
 }
 
@@ -118,9 +118,10 @@ TEST(IpcLogOutputterTests, write_overBufferRateLimit_lastLineTruncated)
 	outputter.bufferRateLimit(2, 1); // 1s
 
 	// log 1 more line than the buffer can accept in time limit.
-	outputter.write(kNOTIFY, "mock 1");
-	outputter.write(kNOTIFY, "mock 2");
-	outputter.write(kNOTIFY, "mock 3");
+	outputter.write(kNOTE, "mock 1");
+	outputter.write(kNOTE, "mock 2");
+	outputter.write(kNOTE, "mock 3");
+
 	outputter.sendBuffer();
 	
 	// after waiting the time limit send another to make sure
@@ -128,9 +129,10 @@ TEST(IpcLogOutputterTests, write_overBufferRateLimit_lastLineTruncated)
 	// HACK: sleep causes the unit test to fail intermittently,
 	// so lets try 100ms (there must be a better way to solve this)
 	ARCH->sleep(2); // 2s
-	outputter.write(kNOTIFY, "mock 4");
-	outputter.write(kNOTIFY, "mock 5");
-	outputter.write(kNOTIFY, "mock 6");
+	outputter.write(kNOTE, "mock 4");
+	outputter.write(kNOTE, "mock 5");
+	outputter.write(kNOTE, "mock 6");
+
 	outputter.sendBuffer();
 }
 #endif
@@ -149,14 +151,14 @@ TEST(IpcLogOutputterTests, write_underBufferRateLimit_allLinesAreSent)
 	outputter.bufferRateLimit(4, 1); // 1s (should be plenty of time)
 
 	// log 1 more line than the buffer can accept in time limit.
-	outputter.write(kNOTIFY, "mock 1");
-	outputter.write(kNOTIFY, "mock 2");
+	outputter.write(kNOTE, "mock 1");
+	outputter.write(kNOTE, "mock 2");
 	outputter.sendBuffer();
 	
 	// after waiting the time limit send another to make sure
 	// we can log after the time limit passes.
-	outputter.write(kNOTIFY, "mock 3");
-	outputter.write(kNOTIFY, "mock 4");
+	outputter.write(kNOTE, "mock 3");
+	outputter.write(kNOTE, "mock 4");
 	outputter.sendBuffer();
 }
 
