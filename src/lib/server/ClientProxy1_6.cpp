@@ -79,8 +79,13 @@ ClientProxy1_6::recvClipboard()
 
 	int r = ClipboardChunk::assemble(getStream(), dataCached, id, seq);
 
-	if (r == kFinish) {
-		LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d", getName().c_str(), id, seq, dataCached.size()));
+	if (r == kStart) {
+		size_t size = ClipboardChunk::getExpectedSize();
+		LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
+	}
+	else if (r == kFinish) {
+		LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d",
+				getName().c_str(), id, seq, dataCached.size()));
 		// save clipboard
 		m_clipboard[id].m_clipboard.unmarshall(dataCached, 0);
 		m_clipboard[id].m_sequenceNumber = seq;
@@ -91,10 +96,6 @@ ClientProxy1_6::recvClipboard()
 		info->m_sequenceNumber = seq;
 		m_events->addEvent(Event(m_events->forClipboard().clipboardChanged(),
 								 getEventTarget(), info));
-	}
-	else if (r == kStart) {
-		size_t size = ClipboardChunk::getExpectedSize();
-		LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
 	}
 
 	return true;
