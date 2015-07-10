@@ -543,9 +543,7 @@ void MainWindow::startSynergy()
 
 #ifndef Q_OS_LINUX
 
-	if (m_ServerConfig.enableDragAndDrop()) {
-		args << "--enable-drag-drop";
-	}
+	args << "--enable-drag-drop";
 
 #endif
 
