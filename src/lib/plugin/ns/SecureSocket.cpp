@@ -36,7 +36,7 @@
 
 #define MAX_ERROR_SIZE 65535
 
-// s_retryDelay * s_maxRetry = 10s
+// maxmium retry time limit set to 10s
 static const int s_maxRetry = 1000;
 static const float s_retryDelay = 0.01f;
 
