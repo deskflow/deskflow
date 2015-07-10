@@ -565,11 +565,11 @@ ServerProxy::setClipboard()
 		clipboard.unmarshall(dataCached, 0);
 		m_client->setClipboard(id, &clipboard);
 
-		LOG((CLOG_DEBUG "clipboard transmission complete"));
+		LOG((CLOG_INFO "clipboard was updated"));
 	}
 	else if (r == kStart) {
 		size_t size = ClipboardChunk::getExpectedSize();
-		LOG((CLOG_DEBUG "receiving %u bytes of clipboard data", size));
+		LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
 	}
 }
 
