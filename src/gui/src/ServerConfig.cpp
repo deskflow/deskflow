@@ -50,6 +50,7 @@ ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows ,
 	m_NumRows(numRows),
 	m_ServerName(serverName),
 	m_IgnoreAutoConfigClient(false),
+	m_EnableDragAndDrop(false),
 	m_pMainWindow(mainWindow)
 {
 	Q_ASSERT(m_pSettings);
@@ -114,6 +115,7 @@ void ServerConfig::saveSettings()
 	settings().setValue("switchDoubleTap", switchDoubleTap());
 	settings().setValue("switchCornerSize", switchCornerSize());
 	settings().setValue("ignoreAutoConfigClient", ignoreAutoConfigClient());
+	settings().setValue("enableDragAndDrop", enableDragAndDrop());
 
 	writeSettings(settings(), switchCorners(), "switchCorner");
 
@@ -157,6 +159,7 @@ void ServerConfig::loadSettings()
 	setSwitchDoubleTap(settings().value("switchDoubleTap", 250).toInt());
 	setSwitchCornerSize(settings().value("switchCornerSize").toInt());
 	setIgnoreAutoConfigClient(settings().value("ignoreAutoConfigClient").toBool());
+	setEnableDragAndDrop(settings().value("enableDragAndDrop", true).toBool());
 
 	readSettings(settings(), switchCorners(), "switchCorner", false, NumSwitchCorners);
 
