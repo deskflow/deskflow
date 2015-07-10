@@ -557,7 +557,11 @@ ServerProxy::setClipboard()
 	
 	int r = ClipboardChunk::assemble(m_stream, dataCached, id, seq);
 
-	if (r == kFinish) {
+	if (r == kStart) {
+		size_t size = ClipboardChunk::getExpectedSize();
+		LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
+	}
+	else if (r == kFinish) {
 		LOG((CLOG_DEBUG "received clipboard %d size=%d", id, dataCached.size()));
 		
 		// forward
@@ -566,10 +570,6 @@ ServerProxy::setClipboard()
 		m_client->setClipboard(id, &clipboard);
 
 		LOG((CLOG_INFO "clipboard was updated"));
-	}
-	else if (r == kStart) {
-		size_t size = ClipboardChunk::getExpectedSize();
-		LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
 	}
 }
 
