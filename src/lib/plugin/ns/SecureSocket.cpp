@@ -236,12 +236,6 @@ SecureSocket::initContext(bool server)
 	// load all error messages
 	SSL_load_error_strings();
 
-	LOG((CLOG_INFO "%s",SSLeay_version (SSLEAY_VERSION)));
-	LOG((CLOG_DEBUG2 "OpenSSL : %s",SSLeay_version (SSLEAY_CFLAGS)));
-	LOG((CLOG_DEBUG2 "OpenSSL : %s",SSLeay_version (SSLEAY_BUILT_ON)));
-	LOG((CLOG_DEBUG2 "OpenSSL : %s",SSLeay_version (SSLEAY_PLATFORM)));
-	LOG((CLOG_DEBUG2 "%s",SSLeay_version (SSLEAY_DIR)));
-
 	// SSLv23_method uses TLSv1, with the ability to fall back to SSLv3
 	if (server) {
 		method = SSLv23_server_method();
