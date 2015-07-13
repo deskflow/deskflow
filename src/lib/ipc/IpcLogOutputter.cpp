@@ -37,7 +37,7 @@ enum EIpcLogOutputter {
 	kBufferRateTimeLimit = 1 // seconds
 };
 
-IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer, bool useThread) :
+IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer, EIpcClientType clientType, bool useThread) :
 	m_ipcServer(ipcServer),
 	m_bufferMutex(ARCH->newMutex()),
 	m_sending(false),
@@ -50,7 +50,8 @@ IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer, bool useThread) :
 	m_bufferRateWriteLimit(kBufferRateWriteLimit),
 	m_bufferRateTimeLimit(kBufferRateTimeLimit),
 	m_bufferWriteCount(0),
-	m_bufferRateStart(ARCH->time())
+	m_bufferRateStart(ARCH->time()),
+	m_clientType(clientType)
 {
 	if (useThread) {
 		m_bufferThread = new Thread(new TMethodJob<IpcLogOutputter>(
@@ -102,7 +103,9 @@ IpcLogOutputter::write(ELevel, const char* text)
 	}
 
 	appendBuffer(text);
-	notifyBuffer();
+	if (m_ipcServer.hasClients(m_clientType)) {
+		notifyBuffer();
+	}
 	return true;
 }
 
@@ -141,7 +144,7 @@ IpcLogOutputter::bufferThread(void*)
 
 	try {
 		while (m_running) {
-			if (m_buffer.empty()) {
+			if (m_buffer.empty() || !m_ipcServer.hasClients(m_clientType)) {
 				ArchMutexLock lock(m_notifyMutex);
 				ARCH->waitCondVar(m_notifyCond, m_notifyMutex, -1);
 			}
@@ -184,7 +187,7 @@ IpcLogOutputter::getChunk(size_t count)
 void
 IpcLogOutputter::sendBuffer()
 {
-	if (m_buffer.empty() || !m_ipcServer.hasClients(kIpcClientGui)) {
+	if (m_buffer.empty() || !m_ipcServer.hasClients(m_clientType)) {
 		return;
 	}
 
