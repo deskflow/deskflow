@@ -69,8 +69,8 @@ ArchPluginWindows::load()
 		void* lib = reinterpret_cast<void*>(library);
 		String filename = synergy::string::removeFileExt(*it);
 		m_pluginTable.insert(std::make_pair(filename, lib));
+		const char* version = (char*)invoke(filename.c_str(), "version",NULL);
 
-		const char * version = (char*)invoke( filename.c_str(),"version",NULL);
 		if (version == NULL) {
 			version = kPre174Plugin;
 		}
