@@ -886,7 +886,7 @@ Server::isSwitchOkay(BaseClientProxy* newScreen,
 	}
 
 	// check for optional needed modifiers
-	KeyModifierMask mods = this->m_primaryClient->getToggleMask( );
+	KeyModifierMask mods = this->m_primaryClient->getToggleMask();
 
 	if (!preventSwitch && (
 			(this->m_switchNeedsShift && ((mods & KeyModifierShift) != KeyModifierShift)) ||

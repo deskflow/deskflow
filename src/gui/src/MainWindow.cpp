@@ -1349,7 +1349,7 @@ void MainWindow::delay(unsigned int s)
 {
 	QTime dieTime= QTime::currentTime().addSecs(s);
 
-	while( QTime::currentTime() < dieTime ) {
+	while (QTime::currentTime() < dieTime) {
 		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 	}
 }
