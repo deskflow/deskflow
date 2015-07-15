@@ -52,6 +52,7 @@ TEST(IpcLogOutputterTests, write_threadingEnabled_bufferIsSent)
 	
 	ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
+	EXPECT_CALL(mockServer, hasClients(_)).Times(5);
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\n"), _)).Times(1);
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 2\n"), _)).Times(1);
 
