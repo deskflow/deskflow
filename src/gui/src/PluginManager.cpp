@@ -23,6 +23,7 @@
 #include "QUtility.h"
 #include "ProcessorArch.h"
 #include "Fingerprint.h"
+#include "../lib/common/PluginVersion.h"
 
 #include <QFile>
 #include <QDir>
@@ -30,7 +31,6 @@
 #include <QCoreApplication>
 
 static const char kBaseUrl[] = "http://synergy-project.org/files";
-static const char kDefaultVersion[] = "1.2";
 static const char kWinPackagePlatform32[] = "Windows-x86";
 static const char kWinPackagePlatform64[] = "Windows-x64";
 static const char kMacPackagePlatform[] = "MacOSX%1-i386";
@@ -229,7 +229,7 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 	QString result = QString("%1/plugins/%2/%3/%4/%5")
 			.arg(kBaseUrl)
 			.arg(pluginName)
-			.arg(kDefaultVersion)
+			.arg(pluginVersion(pluginName.toStdString().c_str()))
 			.arg(archName)
 			.arg(getPluginOsSpecificName(pluginName));
 

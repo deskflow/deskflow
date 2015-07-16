@@ -18,6 +18,7 @@
 
 #include "arch/win32/ArchPluginWindows.h"
 #include "arch/win32/XArchWindows.h"
+#include "common/PluginVersion.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/Event.h"
@@ -66,15 +67,22 @@ ArchPluginWindows::load()
 		}
 
 		void* lib = reinterpret_cast<void*>(library);
-		String filename = synergy::string::removeFileExt(*it);
-		m_pluginTable.insert(std::make_pair(filename, lib));
+		String pluginName = synergy::string::removeFileExt(*it);
+		m_pluginTable.insert(std::make_pair(pluginName, lib));
 
-		char* version = (char*)invoke(filename.c_str(), "version",NULL);
-		if (version == NULL) {
-			version = "Pre-1.7.4";
+		char* version = (char*)invoke(pluginName.c_str(), "version", NULL);
+		String expectedVersion(pluginVersion(pluginName.c_str()));
+		if (version != NULL && expectedVersion.compare(version) == 0) {
+			LOG((CLOG_DEBUG "loaded plugin: %s (%s)", (*it).c_str(), version));
 		}
-
-		LOG((CLOG_DEBUG "loaded plugin: %s (%s)", (*it).c_str(),version));
+		else {
+			LOG((CLOG_WARN "plugin version doesn't match"));
+			LOG((CLOG_DEBUG "expected plugin version: %s actual plugin version: %s",
+				expectedVersion.c_str(), version));
+			LOG((CLOG_WARN "skip plugin: %s", (*it).c_str()));
+			m_pluginTable.erase(pluginName);
+			FreeLibrary(library);
+		}
 	}
 }
 
