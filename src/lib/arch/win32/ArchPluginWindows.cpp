@@ -76,10 +76,10 @@ ArchPluginWindows::load()
 			m_pluginTable.insert(std::make_pair(pluginName, lib));
 		}
 		else {
-			LOG((CLOG_WARN "plugin version doesn't match"));
+			LOG((CLOG_ERR "plugin version doesn't match"));
 			LOG((CLOG_DEBUG "expected plugin version: %s actual plugin version: %s",
 				expectedVersion.c_str(), version));
-			LOG((CLOG_WARN "skip plugin: %s", (*it).c_str()));
+			LOG((CLOG_ERR "skip plugin: %s", (*it).c_str()));
 			FreeLibrary(library);
 		}
 	}

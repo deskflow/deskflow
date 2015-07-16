@@ -86,16 +86,16 @@ ArchPluginUnix::load()
 		String pluginName = filename.substr(pos + 3);
 		char* version = (char*)invoke(filename.c_str(), "version", NULL, library);
 		String expectedVersion(pluginVersion(pluginName.c_str()));
-		
+
 		if (version != NULL && expectedVersion.compare(version) == 0) {
 			LOG((CLOG_DEBUG "loaded plugin: %s (%s)", (*it).c_str(), version));
 			m_pluginTable.insert(std::make_pair(filename, library));
 		}
 		else {
-			LOG((CLOG_WARN "plugin version doesn't match"));
+			LOG((CLOG_ERR "plugin version doesn't match"));
 			LOG((CLOG_DEBUG "expected plugin version: %s actual plugin version: %s",
 					expectedVersion.c_str(), version));
-			LOG((CLOG_WARN "skip plugin: %s", (*it).c_str()));
+			LOG((CLOG_ERR "skip plugin: %s", (*it).c_str()));
 			dlclose(library);
 		}
 	}
