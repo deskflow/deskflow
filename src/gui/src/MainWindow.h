@@ -172,7 +172,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QString getProfileRootForArg();
 		void checkConnected(const QString& line);
 		void checkFingerprint(const QString& line);
-		void checkTransmission(const QString& line);
 		bool autoHide();
 		QString getTimeStamp();
 
