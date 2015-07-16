@@ -398,7 +398,6 @@ void MainWindow::updateStateFromLogLine(const QString &line)
 {
 	checkConnected(line);
 	checkFingerprint(line);
-	checkTransmission(line);
 }
 
 void MainWindow::checkConnected(const QString& line)
@@ -462,22 +461,6 @@ void MainWindow::checkFingerprint(const QString& line)
 		// process will keep trying (and failing) unless we
 		// tell it to stop.
 		stopSynergy();
-	}
-}
-
-void MainWindow::checkTransmission(const QString& line)
-{
-	if (appConfig().logLevel() >= 2) {
-		if (line.contains("transmission")) {
-			if (line.contains("started")) {
-				setSynergyState(synergyTransfering);
-			}
-			else if (line.contains("failed") ||
-					 line.contains("complete") ||
-					 line.contains("interrupted")) {
-				setSynergyState(synergyConnected);
-			}
-		}
 	}
 }
 
