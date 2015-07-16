@@ -21,6 +21,7 @@
 #include "arch/Arch.h"
 #include "arch/IArchMultithread.h"
 #include "base/ILogOutputter.h"
+#include "ipc/Ipc.h"
 
 #include <deque>
 
@@ -39,7 +40,7 @@ public:
 	If \p useThread is \c false, then the buffer needs to be sent manually
 	using the \c sendBuffer() function.
 	*/
-	IpcLogOutputter(IpcServer& ipcServer, bool useThread);
+	IpcLogOutputter(IpcServer& ipcServer, EIpcClientType clientType, bool useThread);
 	virtual ~IpcLogOutputter();
 
 	// ILogOutputter overrides
@@ -92,6 +93,7 @@ private:
 	void				bufferThread(void*);
 	String				getChunk(size_t count);
 	void				appendBuffer(const String& text);
+	bool				isRunning();
 
 private:
 	typedef std::deque<String> Buffer;
@@ -113,4 +115,6 @@ private:
 	UInt16				m_bufferWriteCount;
 	double				m_bufferRateStart;
 	bool				m_useThread;
+	EIpcClientType		m_clientType;
+	ArchMutex			m_runningMutex;
 };
