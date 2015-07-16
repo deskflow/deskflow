@@ -19,6 +19,7 @@
 #include "arch/unix/ArchPluginUnix.h"
 
 #include "arch/unix/XArchUnix.h"
+#include "common/PluginVersion.h"
 #include "base/IEventQueue.h"
 #include "base/Event.h"
 #include "base/Log.h"
@@ -82,7 +83,21 @@ ArchPluginUnix::load()
 
 		String filename = synergy::string::removeFileExt(*it);
 		m_pluginTable.insert(std::make_pair(filename, library));
-		LOG((CLOG_DEBUG "loaded plugin: %s", (*it).c_str()));
+		size_t pos = filename.find("lib");
+		String pluginName = filename.substr(pos + 3);
+		char* version = (char*)invoke(filename.c_str(), "version", NULL);
+		String expectedVersion(pluginVersion(pluginName.c_str()));
+		if (version != NULL && expectedVersion.compare(version) == 0) {
+			LOG((CLOG_DEBUG "loaded plugin: %s (%s)", (*it).c_str(), version));
+		}
+		else {
+			LOG((CLOG_WARN "plugin version doesn't match"));
+			LOG((CLOG_DEBUG "expected plugin version: %s actual plugin version: %s",
+					expectedVersion.c_str(), version));
+			LOG((CLOG_WARN "skip plugin: %s", (*it).c_str()));
+			m_pluginTable.erase(filename);
+			dlclose(library);
+		}
 	}
 }
 
