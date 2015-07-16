@@ -20,6 +20,7 @@
 #include "SecureSocket.h"
 #include "SecureListenSocket.h"
 #include "arch/Arch.h"
+#include "common/PluginVersion.h"
 #include "base/Log.h"
 
 #include <iostream>
@@ -27,11 +28,11 @@
 #include <vector>
 #include <iterator>
 
-const char * kSynergyVers = VERSION;
 SecureSocket* g_secureSocket = NULL;
 SecureListenSocket* g_secureListenSocket = NULL;
 Arch* g_arch = NULL;
 Log* g_log = NULL;
+static const char kPluginName[] = "ns";
 
 std::string
 helperGetLibsUsed(void)
@@ -106,7 +107,7 @@ invoke(const char* command, void** args)
 		}
 	}
 	else if (strcmp(command, "version") == 0) {
-		return (void*) kSynergyVers;
+		return (void*)pluginVersion(kPluginName);
 	}
 
 	return NULL;

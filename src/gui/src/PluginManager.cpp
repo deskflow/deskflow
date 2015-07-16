@@ -24,6 +24,7 @@
 #include "ProcessorArch.h"
 #include "Fingerprint.h"
 #include "Plugin.h"
+#include "../lib/common/PluginVersion.h"
 
 #include <QTextStream>
 
@@ -31,6 +32,7 @@
 #include <QDir>
 #include <QProcess>
 #include <QCoreApplication>
+
 
 PluginManager::PluginManager() :
 	m_FileSysPluginList()
@@ -154,6 +156,7 @@ void PluginManager::copyPlugins()
 						"plugin list. Please contact the help desk, and "
 						"provide the following details.\n\n%1").arg(e.what()));
 	}
+
 	emit copyFinished();
 	return;
 }

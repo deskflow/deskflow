@@ -59,7 +59,9 @@ SOURCES += src/main.cpp \
     src/SslCertificate.cpp \
     src/FileSysClient.cpp \
     src/Plugin.cpp \
-    src/WebClient.cpp
+    src/WebClient.cpp \
+    ../lib/common/PluginVersion.cpp
+
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -106,6 +108,8 @@ HEADERS += src/MainWindow.h \
     src/FileSysClient.h \
     src/Plugin.h \
     src/WebClient.h
+    ../lib/common/PluginVersion.h
+
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 
