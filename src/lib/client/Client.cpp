@@ -775,6 +775,8 @@ Client::sendClipboardThread(void*)
 			sendClipboard(id);
 		}
 	}
+
+	m_sendClipboardThread = NULL;
 }
 
 void
