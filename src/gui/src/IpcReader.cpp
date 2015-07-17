@@ -65,7 +65,7 @@ void IpcReader::read()
 			char* data = new char[len];
 			readStream(data, len);
 			QString line = QString::fromUtf8(data, len);
-			delete data;
+			delete[] data;
 
 			readLogLine(line);
 		}
