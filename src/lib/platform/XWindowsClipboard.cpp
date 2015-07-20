@@ -46,7 +46,8 @@ XWindowsClipboard::XWindowsClipboard(Display* display,
 	m_time(0),
 	m_owner(false),
 	m_timeOwned(0),
-	m_timeLost(0)
+	m_timeLost(0),
+	m_cacheTime(0)
 {
 	// get some atoms
 	m_atomTargets         = XInternAtom(m_display, "TARGETS", False);
