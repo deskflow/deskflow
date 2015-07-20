@@ -409,7 +409,7 @@ void MainWindow::checkConnected(const QString& line)
 	{
 		setSynergyState(synergyConnected);
 
-		if (!appConfig().startedBefore()) {
+		if (!appConfig().startedBefore() && isVisible()) {
 				QMessageBox::information(
 					this, "Synergy",
 					tr("Synergy is now connected, You can close the "
