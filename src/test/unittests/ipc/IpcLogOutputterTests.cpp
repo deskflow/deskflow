@@ -36,6 +36,7 @@ using ::testing::Matcher;
 using ::testing::MatcherCast;
 using ::testing::Property;
 using ::testing::StrEq;
+using ::testing::AtLeast;
 
 using namespace synergy;
 
@@ -52,7 +53,7 @@ TEST(IpcLogOutputterTests, write_threadingEnabled_bufferIsSent)
 	
 	ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
-	EXPECT_CALL(mockServer, hasClients(_)).Times(3);
+	EXPECT_CALL(mockServer, hasClients(_)).Times(AtLeast(3));
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\n"), _)).Times(1);
 	EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 2\n"), _)).Times(1);
 
