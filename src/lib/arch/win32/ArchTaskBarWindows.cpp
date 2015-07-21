@@ -333,7 +333,17 @@ ArchTaskBarWindows::processDialogs(MSG* msg)
 	ARCH->lockMutex(m_mutex);
 
 	// remove removed dialogs
-	m_dialogs.erase(false);
+	for (Dialogs::iterator index = m_dialogs.begin();
+							index != m_dialogs.end();) {
+		if (!index->second) {
+			Dialogs::iterator remove = index;
+			++index;
+			m_dialogs.erase(remove);
+		}
+		else {
+			++index;
+		}
+	}
 
 	// merge added dialogs into the dialog list
 	for (Dialogs::const_iterator index = m_addedDialogs.begin();
@@ -417,11 +427,11 @@ ArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
 		createInfo = reinterpret_cast<CREATESTRUCT*>(lParam);
 		self       = reinterpret_cast<ArchTaskBarWindows*>(
 												createInfo->lpCreateParams);
-		SetWindowLong(hwnd, 0, reinterpret_cast<LONG>(self));
+		SetWindowLongPtr(hwnd, 0, reinterpret_cast<LONG_PTR>(self));
 	}
 	else {
 		// get the extra window data and forward the call
-		LONG data = GetWindowLong(hwnd, 0);
+		LONG_PTR data = GetWindowLongPtr(hwnd, 0);
 		if (data != 0) {
 			self = reinterpret_cast<ArchTaskBarWindows*>(
 							reinterpret_cast<void*>(data));

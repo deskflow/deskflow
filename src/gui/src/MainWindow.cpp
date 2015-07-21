@@ -374,7 +374,7 @@ void MainWindow::appendLogInfo(const QString& text)
 }
 
 void MainWindow::appendLogDebug(const QString& text) {
-	if (appConfig().logLevel() >= 1) {
+	if (appConfig().logLevel() >= 4) {
 		appendLogRaw(getTimeStamp() + " DEBUG: " + text);
 	}
 }
@@ -398,7 +398,6 @@ void MainWindow::updateStateFromLogLine(const QString &line)
 {
 	checkConnected(line);
 	checkFingerprint(line);
-	checkTransmission(line);
 }
 
 void MainWindow::checkConnected(const QString& line)
@@ -410,7 +409,7 @@ void MainWindow::checkConnected(const QString& line)
 	{
 		setSynergyState(synergyConnected);
 
-		if (!appConfig().startedBefore()) {
+		if (!appConfig().startedBefore() && isVisible()) {
 				QMessageBox::information(
 					this, "Synergy",
 					tr("Synergy is now connected, You can close the "
@@ -462,22 +461,6 @@ void MainWindow::checkFingerprint(const QString& line)
 		// process will keep trying (and failing) unless we
 		// tell it to stop.
 		stopSynergy();
-	}
-}
-
-void MainWindow::checkTransmission(const QString& line)
-{
-	if (appConfig().logLevel() >= 2) {
-		if (line.contains("transmission")) {
-			if (line.contains("started")) {
-				setSynergyState(synergyTransfering);
-			}
-			else if (line.contains("failed") ||
-					 line.contains("complete") ||
-					 line.contains("interrupted")) {
-				setSynergyState(synergyConnected);
-			}
-		}
 	}
 }
 
@@ -543,9 +526,7 @@ void MainWindow::startSynergy()
 
 #ifndef Q_OS_LINUX
 
-	if (m_ServerConfig.enableDragAndDrop()) {
-		args << "--enable-drag-drop";
-	}
+	args << "--enable-drag-drop";
 
 #endif
 
@@ -587,7 +568,7 @@ void MainWindow::startSynergy()
 	qDebug() << args;
 
 	// show command if debug log level...
-	if (appConfig().logLevel() >= 1) {
+	if (appConfig().logLevel() >= 4) {
 		appendLogInfo(QString("command: %1 %2").arg(app, args.join(" ")));
 	}
 
@@ -1351,7 +1332,7 @@ void MainWindow::delay(unsigned int s)
 {
 	QTime dieTime= QTime::currentTime().addSecs(s);
 
-	while( QTime::currentTime() < dieTime ) {
+	while (QTime::currentTime() < dieTime) {
 		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 	}
 }

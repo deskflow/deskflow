@@ -109,7 +109,7 @@ Client::Client(
 	if (m_args.m_enableCrypto) {
 		m_useSecureNetwork = ARCH->plugin().exists(s_networkSecurity);
 		if (m_useSecureNetwork == false) {
-			LOG((CLOG_WARN "crypto disabled because of ns plugin not available"));
+			LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
 		}
 	}
 }
@@ -154,7 +154,7 @@ Client::connect()
 		// m_serverAddress will be null if the hostname address is not reolved
 		if (m_serverAddress.getAddress() != NULL) {
 		  // to help users troubleshoot, show server host name (issue: 60)
-		  LOG((CLOG_INFO "connecting to '%s': %s:%i", 
+		  LOG((CLOG_NOTE "connecting to '%s': %s:%i", 
 		  m_serverAddress.getHostname().c_str(),
 		  ARCH->addrToString(m_serverAddress.getAddress()).c_str(),
 		  m_serverAddress.getPort()));
@@ -285,7 +285,7 @@ Client::leave()
 
 	if (!m_receivedFileData.empty()) {
 		m_receivedFileData.clear();
-		LOG((CLOG_NOTIFY "file transmission interrupted"));
+		LOG((CLOG_DEBUG "file transmission interrupted"));
 	}
 
 	return true;
@@ -775,6 +775,8 @@ Client::sendClipboardThread(void*)
 			sendClipboard(id);
 		}
 	}
+
+	m_sendClipboardThread = NULL;
 }
 
 void

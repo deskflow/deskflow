@@ -93,7 +93,7 @@ ClientProxy1_5::fileChunkReceived()
 	else if (result == kStart) {
 		if (server->getFakeDragFileList().size() > 0) {
 			String filename = server->getFakeDragFileList().at(0).getFilename();
-			LOG((CLOG_NOTIFY "file transmission started: start receiving %s", filename.c_str()));
+			LOG((CLOG_DEBUG "start receiving %s", filename.c_str()));
 		}
 	}
 }

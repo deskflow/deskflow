@@ -334,7 +334,7 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 	// map the key event to a character.  we have to put the dead
 	// key back first and this has the side effect of removing it.
 	if (g_deadVirtKey != 0) {
-		if(ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
+		if (ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
 					g_deadKeyState, &c, flags) == 2)
 		{
 			// If ToAscii returned 2, it means that we accidentally removed
@@ -366,7 +366,7 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 		PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
 							wParam | 0x05000000, lParam);
 		if (g_deadVirtKey != 0) {
-			if(ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
+			if (ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
 							g_deadKeyState, &c, flags) == 2)
 			{
 				ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
@@ -397,7 +397,7 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 	default:
 		// key is a dead key
 
-		if(lParam & 0x80000000u)
+		if (lParam & 0x80000000u)
 			// This handles the obscure situation where a key has been
 			// pressed which is both a dead key and a normal character
 			// depending on which modifiers have been pressed. We

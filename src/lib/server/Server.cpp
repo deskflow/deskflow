@@ -206,7 +206,7 @@ Server::Server(
 
 	// Determine if scroll lock is already set. If so, lock the cursor to the primary screen
 	if (m_primaryClient->getToggleMask() & KeyModifierScrollLock) {
-		LOG((CLOG_INFO "Scroll Lock is on, locking cursor to screen"));
+		LOG((CLOG_NOTE "Scroll Lock is on, locking cursor to screen"));
 		m_lockedToScreen = true;
 	}
 
@@ -332,7 +332,7 @@ Server::adoptClient(BaseClientProxy* client)
 		closeClient(client, kMsgEBusy);
 		return;
 	}
-	LOG((CLOG_INFO "client \"%s\" has connected", getName(client).c_str()));
+	LOG((CLOG_NOTE "client \"%s\" has connected", getName(client).c_str()));
 
 	// send configuration options to client
 	sendOptions(client);
@@ -421,7 +421,7 @@ Server::isLockedToScreen() const
 {
 	// locked if we say we're locked
 	if (isLockedToScreenServer()) {
-		LOG((CLOG_INFO "Cursor is locked to screen, check Scroll Lock key"));
+		LOG((CLOG_NOTE "Cursor is locked to screen, check Scroll Lock key"));
 		return true;
 	}
 
@@ -886,7 +886,7 @@ Server::isSwitchOkay(BaseClientProxy* newScreen,
 	}
 
 	// check for optional needed modifiers
-	KeyModifierMask mods = this->m_primaryClient->getToggleMask( );
+	KeyModifierMask mods = this->m_primaryClient->getToggleMask();
 
 	if (!preventSwitch && (
 			(this->m_switchNeedsShift && ((mods & KeyModifierShift) != KeyModifierShift)) ||
@@ -1384,7 +1384,7 @@ Server::handleClientCloseTimeout(const Event&, void* vclient)
 {
 	// client took too long to disconnect.  just dump it.
 	BaseClientProxy* client = reinterpret_cast<BaseClientProxy*>(vclient);
-	LOG((CLOG_INFO "forced disconnection of client \"%s\"", getName(client).c_str()));
+	LOG((CLOG_NOTE "forced disconnection of client \"%s\"", getName(client).c_str()));
 	removeOldClient(client);
 	PacketStreamFilter* streamFileter = dynamic_cast<PacketStreamFilter*>(client->getStream());
 	TCPSocket* socket = dynamic_cast<TCPSocket*>(streamFileter->getStream());
@@ -1481,7 +1481,7 @@ Server::handleLockCursorToScreenEvent(const Event& event, void*)
 	// enter new state
 	if (newState != m_lockedToScreen) {
 		m_lockedToScreen = newState;
-		LOG((CLOG_INFO "cursor %s current screen", m_lockedToScreen ? "locked to" : "unlocked from"));
+		LOG((CLOG_NOTE "cursor %s current screen", m_lockedToScreen ? "locked to" : "unlocked from"));
 
 		m_primaryClient->reconfigure(getActivePrimarySides());
 		if (!isLockedToScreenServer()) {
@@ -2152,7 +2152,7 @@ Server::closeClient(BaseClientProxy* client, const char* msg)
 	// note that this method also works on clients that are not in
 	// the m_clients list.  adoptClient() may call us with such a
 	// client.
-	LOG((CLOG_INFO "disconnecting client \"%s\"", getName(client).c_str()));
+	LOG((CLOG_NOTE "disconnecting client \"%s\"", getName(client).c_str()));
 
 	// send message
 	// FIXME -- avoid type cast (kinda hard, though)

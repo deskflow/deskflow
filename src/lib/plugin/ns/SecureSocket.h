@@ -52,8 +52,6 @@ public:
 	int					secureWrite(const void* buffer, int size, int& wrote);
 	void				initSsl(bool server);
 	bool				loadCertificates(String& CertFile);
-	void				maxRetry(int limit) { m_maxRetry = limit; };
-	int					maxRetry() const { return m_maxRetry; };
 
 private:
 	// SSL
@@ -79,13 +77,8 @@ private:
 						serviceAccept(ISocketMultiplexerJob*,
 							bool, bool, bool);
 
-	void				showSecureConnectInfo();
-	void				showSecureLibInfo();
-	void				showSecureCipherInfo();
-
 private:
 	Ssl*				m_ssl;
 	bool				m_secureReady;
 	bool				m_fatal;
-	int					m_maxRetry;
 };

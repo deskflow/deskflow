@@ -36,15 +36,9 @@
 
 #define MAX_ERROR_SIZE 65535
 
-enum {
-	// this limit seems extremely high, but mac client seem to generate around
-	// 50,000 errors before they establish a connection (wtf?)
-	kMaxRetryCount = 100000
-};
-
-enum {
-	kMsgSize = 128
-};
+// maxmium retry time limit set to 10s
+static const int s_maxRetry = 1000;
+static const float s_retryDelay = 0.01f;
 
 static const char kFingerprintDirName[] = "SSL/Fingerprints";
 //static const char kFingerprintLocalFilename[] = "Local.txt";
@@ -61,8 +55,7 @@ SecureSocket::SecureSocket(
 		SocketMultiplexer* socketMultiplexer) :
 	TCPSocket(events, socketMultiplexer),
 	m_secureReady(false),
-	m_fatal(false),
-	m_maxRetry(kMaxRetryCount)
+	m_fatal(false)
 {
 }
 
@@ -72,8 +65,7 @@ SecureSocket::SecureSocket(
 		ArchSocket socket) :
 	TCPSocket(events, socketMultiplexer, socket),
 	m_secureReady(false),
-	m_fatal(false),
-	m_maxRetry(kMaxRetryCount)
+	m_fatal(false)
 {
 }
 
@@ -244,10 +236,6 @@ SecureSocket::initContext(bool server)
 	// load all error messages
 	SSL_load_error_strings();
 
-	if (CLOG->getFilter() >= kINFO) {
-		showSecureLibInfo();
-	}
-
 	// SSLv23_method uses TLSv1, with the ability to fall back to SSLv3
 	if (server) {
 		method = SSLv23_server_method();
@@ -295,8 +283,7 @@ SecureSocket::secureAccept(int socket)
 
 	if (isFatal()) {
 		// tell user and sleep so the socket isn't hammered.
-		LOG((CLOG_ERR "failed to accept secure socket"));
-		LOG((CLOG_INFO "client connection may not be secure"));
+		LOG((CLOG_WARN "failed to accept secure socket"));
 		m_secureReady = false;
 		ARCH->sleep(1);
 		retry = 0;
@@ -307,10 +294,6 @@ SecureSocket::secureAccept(int socket)
 	if (retry == 0) {
 		m_secureReady = true;
 		LOG((CLOG_INFO "accepted secure socket"));
-		if (CLOG->getFilter() >= kDEBUG1) {
-			showSecureCipherInfo();
-		}
-		showSecureConnectInfo();
 		return 1;
 	}
 
@@ -318,6 +301,7 @@ SecureSocket::secureAccept(int socket)
 	if (retry > 0) {
 		LOG((CLOG_DEBUG2 "retry accepting secure socket"));
 		m_secureReady = false;
+		ARCH->sleep(s_retryDelay);
 		return 0;
 	}
 
@@ -351,6 +335,7 @@ SecureSocket::secureConnect(int socket)
 	if (retry > 0) {
 		LOG((CLOG_DEBUG2 "retry connect secure socket"));
 		m_secureReady = false;
+		ARCH->sleep(s_retryDelay);
 		return 0;
 	}
 
@@ -370,10 +355,7 @@ SecureSocket::secureConnect(int socket)
 		return -1; // Fingerprint failed, error
 	}
 	LOG((CLOG_DEBUG2 "connected secure socket"));
-	if (CLOG->getFilter() >= kDEBUG1) {
-		showSecureCipherInfo();
-	}
-	showSecureConnectInfo();
+
 	return 1;
 }
 
@@ -475,8 +457,8 @@ SecureSocket::checkResult(int status, int& retry)
 	}
 
 	// If the retry max would exceed the allowed, treat it as a fatal error
-	if (retry > maxRetry()) {
-		LOG((CLOG_ERR "passive ssl error limit exceeded: %d", retry));
+	if (retry > s_maxRetry) {
+		LOG((CLOG_DEBUG "retry exceeded %f sec", s_maxRetry * s_retryDelay));
 		isFatal(true);
 	}
 
@@ -518,7 +500,6 @@ SecureSocket::getError()
 void
 SecureSocket::disconnect()
 {
-	sendEvent(getEvents()->forISocket().stopRetry());
 	sendEvent(getEvents()->forISocket().disconnected());
 	sendEvent(getEvents()->forIStream().inputShutdown());
 }
@@ -562,7 +543,7 @@ SecureSocket::verifyCertFingerprint()
 	// format fingerprint into hexdecimal format with colon separator
 	String fingerprint(reinterpret_cast<char*>(tempFingerprint), tempFingerprintLen);
 	formatFingerprint(fingerprint);
-	LOG((CLOG_INFO "server fingerprint: %s", fingerprint.c_str()));
+	LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
 	String trustedServersFilename;
 	trustedServersFilename = synergy::string::sprintf(
@@ -646,73 +627,4 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 	return new TSocketMultiplexerMethodJob<SecureSocket>(
 			this, &SecureSocket::serviceAccept,
 			getSocket(), isReadable(), isWritable());
-}
-
-void
-showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack) {
-	char msg[kMsgSize];
-	int i = 0;
-	for ( ; i < sk_SSL_CIPHER_num(stack) ; i++) {
-		const SSL_CIPHER * cipher = sk_SSL_CIPHER_value(stack,i);
-
-		SSL_CIPHER_description(cipher, msg, kMsgSize);
-
-		// Why does SSL put a newline in the description?
-		int pos = (int)strlen(msg) - 1;
-		if (msg[pos] == '\n') {
-			msg[pos] = '\0';
-		}
-
-		LOG((CLOG_DEBUG1 "%s",msg));
-	}
-}
-
-void
-SecureSocket::showSecureCipherInfo()
-{
-	STACK_OF(SSL_CIPHER) * sStack = SSL_get_ciphers(m_ssl->m_ssl);
-
-	if (sStack == NULL) {
-		LOG((CLOG_DEBUG1 "local cipher list not available"));
-	}
-	else {
-		LOG((CLOG_DEBUG1 "available local ciphers:"));
-		showCipherStackDesc(sStack);
-	}
-
-	// m_ssl->m_ssl->session->ciphers is not forward compatable, In future release
-	// of OpenSSL, it's not visible, need to use SSL_get_client_ciphers() instead
-	STACK_OF(SSL_CIPHER) * cStack = m_ssl->m_ssl->session->ciphers;
-		if (cStack == NULL) {
-		LOG((CLOG_DEBUG1 "remote cipher list not available"));
-	}
-	else {
-		LOG((CLOG_DEBUG1 "available remote ciphers:"));
-		showCipherStackDesc(cStack);
-	}
-	return;
-}
-
-void
-SecureSocket::showSecureLibInfo()
-{
-	LOG((CLOG_INFO "%s",SSLeay_version(SSLEAY_VERSION)));
-	LOG((CLOG_DEBUG1 "openSSL : %s",SSLeay_version(SSLEAY_CFLAGS)));
-	LOG((CLOG_DEBUG1 "openSSL : %s",SSLeay_version(SSLEAY_BUILT_ON)));
-	LOG((CLOG_DEBUG1 "openSSL : %s",SSLeay_version(SSLEAY_PLATFORM)));
-	LOG((CLOG_DEBUG1 "%s",SSLeay_version(SSLEAY_DIR)));
-	return;
-}
-
-void
-SecureSocket::showSecureConnectInfo()
-{
-	const SSL_CIPHER* cipher = SSL_get_current_cipher(m_ssl->m_ssl);
-
-	if (cipher != NULL) {
-		char msg[kMsgSize];
-		SSL_CIPHER_description(cipher, msg, kMsgSize);
-		LOG((CLOG_INFO "%s", msg));
-		}
-	return;
 }

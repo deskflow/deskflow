@@ -55,7 +55,7 @@ ClientListener::ClientListener(const NetworkAddress& address,
 		if (enableCrypto) {
 			m_useSecureNetwork = ARCH->plugin().exists(s_networkSecurity);
 			if (m_useSecureNetwork == false) {
-				LOG((CLOG_WARN "crypto disabled because of ns plugin not available"));
+				LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
 			}
 		}
 
@@ -147,12 +147,12 @@ ClientListener::handleClientConnecting(const Event&, void*)
 		return;
 	}
 
-	LOG((CLOG_INFO "accepted client connection"));
+	LOG((CLOG_NOTE "accepted client connection"));
 
 	if (m_useSecureNetwork) {
 		LOG((CLOG_DEBUG2 "attempting sercure Connection"));
-		while(!socket->isReady()) {
-			if(socket->isFatal()) {
+		while (!socket->isReady()) {
+			if (socket->isFatal()) {
 				m_listen->deleteSocket(socket);
 				return;
 			}

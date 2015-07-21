@@ -334,7 +334,7 @@ ServerProxy::parseMessage(const UInt8* code)
 void
 ServerProxy::handleKeepAliveAlarm(const Event&, void*)
 {
-	LOG((CLOG_INFO "server is dead"));
+	LOG((CLOG_NOTE "server is dead"));
 	m_client->disconnect("server is not responding");
 }
 
@@ -557,7 +557,11 @@ ServerProxy::setClipboard()
 	
 	int r = ClipboardChunk::assemble(m_stream, dataCached, id, seq);
 
-	if (r == kFinish) {
+	if (r == kStart) {
+		size_t size = ClipboardChunk::getExpectedSize();
+		LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
+	}
+	else if (r == kFinish) {
 		LOG((CLOG_DEBUG "received clipboard %d size=%d", id, dataCached.size()));
 		
 		// forward
@@ -565,11 +569,7 @@ ServerProxy::setClipboard()
 		clipboard.unmarshall(dataCached, 0);
 		m_client->setClipboard(id, &clipboard);
 
-		LOG((CLOG_NOTIFY "clipboard transmission complete"));
-	}
-	else if (r == kStart) {
-		size_t size = ClipboardChunk::getExpectedSize();
-		LOG((CLOG_NOTIFY "clipboard transmission started: start receiving %u bytes of clipboard data", size));
+		LOG((CLOG_INFO "clipboard was updated"));
 	}
 }
 
@@ -873,7 +873,7 @@ ServerProxy::fileChunkReceived()
 	else if (result == kStart) {
 		if (m_client->getDragFileList().size() > 0) {
 			String filename = m_client->getDragFileList().at(0).getFilename();
-			LOG((CLOG_NOTIFY "file transmission started: start receiving %s", filename.c_str()));
+			LOG((CLOG_DEBUG "start receiving %s", filename.c_str()));
 		}
 	}
 }

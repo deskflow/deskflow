@@ -174,7 +174,7 @@ ServerApp::reloadConfig(const Event&, void*)
 		if (m_server != NULL) {
 			m_server->setConfig(*args().m_config);
 		}
-		LOG((CLOG_INFO "reloaded configuration"));
+		LOG((CLOG_NOTE "reloaded configuration"));
 	}
 }
 
@@ -317,7 +317,7 @@ ServerApp::updateStatus()
 	updateStatus("");
 }
 
-void ServerApp::updateStatus( const String& msg )
+void ServerApp::updateStatus(const String& msg)
 {
 	if (m_taskBarReceiver)
 	{
@@ -546,7 +546,7 @@ ServerApp::startServer()
 		m_server->setListener(listener);
 		m_listener = listener;
 		updateStatus();
-		LOG((CLOG_INFO "started server, waiting for clients"));
+		LOG((CLOG_NOTE "started server, waiting for clients"));
 		m_serverState = kStarted;
 		return true;
 	}
@@ -774,7 +774,7 @@ ServerApp::mainLoop()
 		m_events->getSystemTarget());
 	cleanupServer();
 	updateStatus();
-	LOG((CLOG_INFO "stopped server"));
+	LOG((CLOG_NOTE "stopped server"));
 
 	if (argsBase().m_enableIpc) {
 		cleanupIpcClient();

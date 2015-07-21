@@ -846,7 +846,6 @@ OSXScreen::disable()
 	}
 
 	if (m_eventTapPort) {
-		CGEventTapEnable(m_eventTapPort, false);
 		CFRelease(m_eventTapPort);
 		m_eventTapPort = nullptr;
 	}

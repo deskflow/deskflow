@@ -211,7 +211,7 @@ DaemonApp::mainLoop(bool logToFile)
 		m_ipcServer = new IpcServer(m_events, &multiplexer);
 
 		// send logging to gui via ipc, log system adopts outputter.
-		m_ipcLogOutputter = new IpcLogOutputter(*m_ipcServer, true);
+		m_ipcLogOutputter = new IpcLogOutputter(*m_ipcServer, kIpcClientGui, true);
 		CLOG->insert(m_ipcLogOutputter);
 		
 #if SYSAPI_WIN32

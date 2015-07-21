@@ -37,8 +37,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::SettingsDialogBase(),
 	m_AppConfig(config),
-	m_SuppressElevateWarning(false),
-	m_SuppressEncryptionWarning(false)
+	m_SuppressElevateWarning(false)
 {
 	setupUi(this);
 
@@ -69,9 +68,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 		m_pCheckBoxEnableCrypto->setChecked(false);
 	}
 	else {
-		m_SuppressEncryptionWarning = true;
 		m_pCheckBoxEnableCrypto->setChecked(m_AppConfig.getCryptoEnabled());
-		m_SuppressEncryptionWarning = false;
 	}
 }
 
@@ -86,7 +83,6 @@ void SettingsDialog::accept()
 	appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
 	appConfig().setElevateMode(m_pCheckBoxElevateMode->isChecked());
 	appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
-	appConfig().setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
 	appConfig().saveSettings();
 	QDialog::accept();
 }
@@ -168,17 +164,5 @@ void SettingsDialog::on_m_pCheckBoxElevateMode_toggled(bool checked)
 
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
 {
-	if (checked && !m_SuppressEncryptionWarning) {
-		int r = QMessageBox::warning(
-			this, tr("Synergy SSL Encryption"),
-			tr("Are you sure you want to enable SSL encryption?\n\n"
-			   "This allows Synergy to establish a secure connection, "
-			   "but can slow down the data transfer of clipboard and file."),
-			QMessageBox::Yes | QMessageBox::No);
-
-		if (r != QMessageBox::Yes) {
-			m_pCheckBoxEnableCrypto->setChecked(false);
-			return;
-		}
-	}
+	m_AppConfig.setCryptoEnabled(checked);
 }

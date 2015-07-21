@@ -91,8 +91,11 @@
 
 // VC++ specific
 #if (_MSC_VER >= 1200)
-	// work around for statement scoping bug
-#	define for if (false) { } else for
+
+#   if (_MSC_VER < 1300)
+	    // work around for statement scoping bug
+#	    define for if (false) { } else for
+#   endif
 
 	// turn off bonehead warnings
 #	pragma warning(disable: 4786) // identifier truncated in debug info
@@ -137,8 +140,12 @@
 #include <stddef.h>
 
 // if not c++0x, future proof code by allowing use of nullptr
-#ifndef nullptr
-#	define nullptr NULL
+#if __cplusplus <= 199711L
+#   if !defined(_MSC_VER) || (_MSC_VER < 1300)
+#      ifndef nullptr
+#	      define nullptr NULL
+#      endif
+#   endif
 #endif
 
 // make assert available since we use it a lot

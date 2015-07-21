@@ -39,12 +39,6 @@ QString CoreInterface::getProfileDir()
 	return run(args);
 }
 
-QString CoreInterface::getInstalledDir()
-{
-	QStringList args("--get-installed-dir");
-	return run(args);
-}
-
 QString CoreInterface::getArch()
 {
 	QStringList args("--get-arch");

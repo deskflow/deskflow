@@ -70,7 +70,8 @@ public:
 	*/
 	virtual void*		invoke(const char* plugin,
 							const char* command,
-							void** args) = 0;
+							void** args,
+							void* library = NULL) = 0;
 
 	//@}
 

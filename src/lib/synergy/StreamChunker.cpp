@@ -82,7 +82,7 @@ StreamChunker::sendFile(
 	while (true) {
 		if (s_interruptFile) {
 			s_interruptFile = false;
-			LOG((CLOG_NOTIFY "file transmission interrupted"));
+			LOG((CLOG_DEBUG "file transmission interrupted"));
 			break;
 		}
 		
@@ -154,7 +154,7 @@ StreamChunker::sendClipboard(
 	while (true) {
 		if (s_interruptClipboard) {
 			s_interruptClipboard = false;
-			LOG((CLOG_NOTIFY "clipboard transmission interrupted"));
+			LOG((CLOG_DEBUG "clipboard transmission interrupted"));
 			break;
 		}
 		

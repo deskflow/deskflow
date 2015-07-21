@@ -92,9 +92,9 @@ std::string
 ArchFileUnix::getInstalledDirectory()
 {
 #if WINAPI_XWINDOWS
-	return "/usr/bin";
+	return "/bin";
 #else
-	return "/Applications/Synergy.app/Contents/MacOS";
+	return "";
 #endif
 }
 

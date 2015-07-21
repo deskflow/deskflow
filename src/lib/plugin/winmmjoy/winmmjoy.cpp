@@ -28,7 +28,7 @@ std::stringstream _logStream;
 #define LOG(s) \
 	_logStream.str(""); \
 	_logStream << "winmmjoy: " << s << std::endl; \
-	s_log( _logStream.str().c_str())
+	s_log(_logStream.str().c_str())
 
 static bool s_running = true;
 static void (*s_sendEvent)(const char*, void*) = NULL;

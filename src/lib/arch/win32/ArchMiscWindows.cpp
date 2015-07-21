@@ -228,8 +228,11 @@ void
 ArchMiscWindows::setValue(HKEY key,
 				const TCHAR* name, const std::string& value)
 {
-	assert(key  != NULL);
-	if(key ==NULL) return; // TODO: throw exception
+	assert(key != NULL);
+	if (key == NULL) {
+		// TODO: throw exception
+		return;
+	}
 	RegSetValueEx(key, name, 0, REG_SZ,
 								reinterpret_cast<const BYTE*>(value.c_str()),
 								(DWORD)value.size() + 1);
@@ -238,8 +241,11 @@ ArchMiscWindows::setValue(HKEY key,
 void
 ArchMiscWindows::setValue(HKEY key, const TCHAR* name, DWORD value)
 {
-	assert(key  != NULL);
-	if(key ==NULL) return; // TODO: throw exception
+	assert(key != NULL);
+	if (key == NULL) {
+		// TODO: throw exception
+		return;
+	}
 	RegSetValueEx(key, name, 0, REG_DWORD,
 								reinterpret_cast<CONST BYTE*>(&value),
 								sizeof(DWORD));
@@ -251,7 +257,10 @@ ArchMiscWindows::setValueBinary(HKEY key,
 {
 	assert(key  != NULL);
 	assert(name != NULL);
-	if(key ==NULL || name==NULL) return; // TODO: throw exception
+	if (key == NULL || name == NULL) {
+		// TODO: throw exception
+		return;
+	}
 	RegSetValueEx(key, name, 0, REG_BINARY,
 								reinterpret_cast<const BYTE*>(value.data()),
 								(DWORD)value.size());
