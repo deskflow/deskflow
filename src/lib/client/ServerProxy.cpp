@@ -557,13 +557,19 @@ ServerProxy::setClipboard()
 	
 	int r = ClipboardChunk::assemble(m_stream, dataCached, id, seq);
 
-	if (r == kFinish) {
+	if (r == kStart) {
+		size_t size = ClipboardChunk::getExpectedSize();
+		LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
+	}
+	else if (r == kFinish) {
 		LOG((CLOG_DEBUG "received clipboard %d size=%d", id, dataCached.size()));
 		
 		// forward
 		Clipboard clipboard;
 		clipboard.unmarshall(dataCached, 0);
 		m_client->setClipboard(id, &clipboard);
+
+		LOG((CLOG_INFO "clipboard was updated"));
 	}
 }
 
@@ -862,7 +868,13 @@ ServerProxy::fileChunkReceived()
 					m_client->getExpectedFileSize());
 
 	if (result == kFinish) {
-		m_events->addEvent(Event(m_events->forIScreen().fileRecieveCompleted(), m_client));
+		m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), m_client));
+	}
+	else if (result == kStart) {
+		if (m_client->getDragFileList().size() > 0) {
+			String filename = m_client->getDragFileList().at(0).getFilename();
+			LOG((CLOG_DEBUG "start receiving %s", filename.c_str()));
+		}
 	}
 }
 

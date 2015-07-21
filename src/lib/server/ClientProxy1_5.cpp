@@ -22,6 +22,7 @@
 #include "synergy/StreamChunker.h"
 #include "synergy/ProtocolUtil.h"
 #include "io/IStream.h"
+#include "base/TMethodEventJob.h"
 #include "base/Log.h"
 
 #include <sstream>
@@ -34,10 +35,16 @@ ClientProxy1_5::ClientProxy1_5(const String& name, synergy::IStream* stream, Ser
 	ClientProxy1_4(name, stream, server, events),
 	m_events(events)
 {
+
+	m_events->adoptHandler(m_events->forFile().keepAlive(),
+							this,
+							new TMethodEventJob<ClientProxy1_3>(this,
+								&ClientProxy1_3::handleKeepAlive, NULL));
 }
 
 ClientProxy1_5::~ClientProxy1_5()
 {
+	m_events->removeHandler(m_events->forFile().keepAlive(), this);
 }
 
 void
@@ -81,7 +88,13 @@ ClientProxy1_5::fileChunkReceived()
 	
 
 	if (result == kFinish) {
-		m_events->addEvent(Event(m_events->forIScreen().fileRecieveCompleted(), server));
+		m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), server));
+	}
+	else if (result == kStart) {
+		if (server->getFakeDragFileList().size() > 0) {
+			String filename = server->getFakeDragFileList().at(0).getFilename();
+			LOG((CLOG_DEBUG "start receiving %s", filename.c_str()));
+		}
 	}
 }
 

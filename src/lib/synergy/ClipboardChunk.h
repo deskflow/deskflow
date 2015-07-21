@@ -52,4 +52,9 @@ public:
 							UInt32& sequence);
 
 	static void			send(synergy::IStream* stream, void* data);
+
+	static size_t		getExpectedSize() { return s_expectedSize; }
+
+private:
+	static size_t		s_expectedSize;
 };

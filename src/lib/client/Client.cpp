@@ -96,11 +96,11 @@ Client::Client(
 								&Client::handleResume));
 
 	if (m_args.m_enableDragDrop) {
-		m_events->adoptHandler(m_events->forIScreen().fileChunkSending(),
+		m_events->adoptHandler(m_events->forFile().fileChunkSending(),
 								this,
 								new TMethodEventJob<Client>(this,
 									&Client::handleFileChunkSending));
-		m_events->adoptHandler(m_events->forIScreen().fileRecieveCompleted(),
+		m_events->adoptHandler(m_events->forFile().fileRecieveCompleted(),
 								this,
 								new TMethodEventJob<Client>(this,
 									&Client::handleFileRecieveCompleted));
@@ -257,6 +257,11 @@ Client::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
 	m_active = true;
 	m_screen->mouseMove(xAbs, yAbs);
 	m_screen->enter(mask);
+
+	if (m_sendFileThread != NULL) {
+		StreamChunker::interruptFile();
+		m_sendFileThread = NULL;
+	}
 }
 
 bool
@@ -265,16 +270,23 @@ Client::leave()
 	m_screen->leave();
 
 	m_active = false;
-	
+
 	if (m_sendClipboardThread != NULL) {
 		StreamChunker::interruptClipboard();
+		m_sendClipboardThread->wait();
+		m_sendClipboardThread = NULL;
 	}
-	
+
 	m_sendClipboardThread = new Thread(
 								new TMethodJob<Client>(
 									this,
 									&Client::sendClipboardThread,
 									NULL));
+
+	if (!m_receivedFileData.empty()) {
+		m_receivedFileData.clear();
+		LOG((CLOG_DEBUG "file transmission interrupted"));
+	}
 
 	return true;
 }
@@ -763,6 +775,8 @@ Client::sendClipboardThread(void*)
 			sendClipboard(id);
 		}
 	}
+
+	m_sendClipboardThread = NULL;
 }
 
 void

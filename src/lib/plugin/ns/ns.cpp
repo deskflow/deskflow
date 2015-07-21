@@ -20,17 +20,21 @@
 #include "SecureSocket.h"
 #include "SecureListenSocket.h"
 #include "arch/Arch.h"
+#include "common/PluginVersion.h"
 #include "base/Log.h"
 
 #include <iostream>
+#include <sstream>
+#include <vector>
+#include <iterator>
 
 SecureSocket* g_secureSocket = NULL;
 SecureListenSocket* g_secureListenSocket = NULL;
 Arch* g_arch = NULL;
 Log* g_log = NULL;
+static const char kPluginName[] = "ns";
 
 extern "C" {
-
 void
 init(void* log, void* arch)
 {
@@ -85,6 +89,9 @@ invoke(const char* command, void** args)
 			delete g_secureListenSocket;
 			g_secureListenSocket = NULL;
 		}
+	}
+	else if (strcmp(command, "version") == 0) {
+		return (void*)pluginVersion(kPluginName);
 	}
 
 	return NULL;

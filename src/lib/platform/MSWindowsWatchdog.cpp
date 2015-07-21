@@ -565,7 +565,7 @@ MSWindowsWatchdog::testOutput(String buffer)
 	if (i != String::npos) {
 		size_t s = sizeof(g_activeDesktop);
 		String defaultDesktop("Default");
-		String sub = buffer.substr(s - 1, defaultDesktop.size());
+		String sub = buffer.substr(i + s - 1, defaultDesktop.size());
 		if (sub != defaultDesktop) {
 			m_autoElevated = true;
 		}

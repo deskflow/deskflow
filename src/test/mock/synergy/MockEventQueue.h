@@ -62,5 +62,6 @@ public:
 	MOCK_METHOD0(forIPrimaryScreen, IPrimaryScreenEvents&());
 	MOCK_METHOD0(forIScreen, IScreenEvents&());
 	MOCK_METHOD0(forClipboard, ClipboardEvents&());
+	MOCK_METHOD0(forFile, FileEvents&());
 	MOCK_CONST_METHOD0(waitForReady, void());
 };

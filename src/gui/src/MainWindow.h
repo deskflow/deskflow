@@ -63,13 +63,15 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
 	friend class QSynergyApplication;
 	friend class SetupWizard;
+	friend class PluginWizardPage;
 
 	public:
 		enum qSynergyState
 		{
 			synergyDisconnected,
 			synergyConnecting,
-			synergyConnected
+			synergyConnected,
+			synergyTransfering
 		};
 
 		enum qSynergyType
@@ -107,10 +109,11 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void serverDetected(const QString name);
 		void setEdition(int type);
 		void updateLocalFingerprint();
+		void delay(unsigned int);
 
 	public slots:
 		void appendLogRaw(const QString& text);
-		void appendLogNote(const QString& text);
+		void appendLogInfo(const QString& text);
 		void appendLogDebug(const QString& text);
 		void appendLogError(const QString& text);
 		void startSynergy();
@@ -167,8 +170,10 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void promptAutoConfig();
 		void updateEdition();
 		QString getProfileRootForArg();
+		void checkConnected(const QString& line);
 		void checkFingerprint(const QString& line);
 		bool autoHide();
+		QString getTimeStamp();
 
 	private:
 		QSettings& m_Settings;

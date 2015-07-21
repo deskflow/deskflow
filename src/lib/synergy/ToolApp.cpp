@@ -63,8 +63,8 @@ ToolApp::run(int argc, char** argv)
 				return kExitFailed;
 			}
 			else {
-				// HACK: send to standard out so watchdog can parse.
-				std::cout << "activeDesktop:" << name.c_str() << std::endl;
+				String output = synergy::string::sprintf("activeDesktop:%s", name.c_str());
+				LOG((CLOG_INFO "%s", output.c_str()));
 			}
 #endif
 		}

@@ -264,7 +264,7 @@ FileLogOutputter::write(ELevel level, const char *message)
 		m_handle << message << std::endl;
 
 		// when file size exceeds limits, move to 'old log' filename.
-		int p = m_handle.tellp();
+		size_t p = m_handle.tellp();
 		if (p > (kFileSizeLimit * 1024)) {
 			moveFile = true;
 		}

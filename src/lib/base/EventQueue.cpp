@@ -47,6 +47,7 @@ EVENT_TYPE_ACCESSOR(IKeyState)
 EVENT_TYPE_ACCESSOR(IPrimaryScreen)
 EVENT_TYPE_ACCESSOR(IScreen)
 EVENT_TYPE_ACCESSOR(Clipboard)
+EVENT_TYPE_ACCESSOR(File)
 
 // interrupt handler.  this just adds a quit event to the queue.
 static
@@ -84,6 +85,7 @@ EventQueue::EventQueue() :
 	m_typesForIPrimaryScreen(NULL),
 	m_typesForIScreen(NULL),
 	m_typesForClipboard(NULL),
+	m_typesForFile(NULL),
 	m_readyMutex(new Mutex),
 	m_readyCondVar(new CondVar<bool>(m_readyMutex, false))
 {
@@ -564,7 +566,7 @@ EventQueue::waitForReady() const
 	Lock lock(m_readyMutex);
 	
 	while (!m_readyCondVar->wait()) {
-		if(ARCH->time() > timeout) {
+		if (ARCH->time() > timeout) {
 			throw std::runtime_error("event queue is not ready within 5 sec");
 		}
 	}

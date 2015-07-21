@@ -26,14 +26,15 @@
 class WebClient;
 class PluginManager;
 class SslCertificate;
+class MainWindow;
 
 class PluginWizardPage : public QWizardPage, public Ui::PluginWizardPage {
 
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-	PluginWizardPage(AppConfig& appConfig, QWidget *parent = 0);
-    ~PluginWizardPage();
+	PluginWizardPage(MainWindow& mainWindow, QWidget *parent = 0);
+	~PluginWizardPage();
 
 	void setFinished(bool b) { m_Finished = b; }
 	void setEmail(QString e) { m_Email = e; }
@@ -43,7 +44,7 @@ public:
 	void initializePage();
 
 protected:
-    void changeEvent(QEvent *e);
+	void changeEvent(QEvent *e);
 
 protected slots:
 	void showError(QString error);
@@ -65,6 +66,6 @@ private:
 	PluginManager* m_pPluginManager;
 	SslCertificate* m_pSslCertificate;
 	QThread* m_pThread;
-	AppConfig& m_AppConfig;
+	MainWindow& m_mainWindow;
 };
 #endif // PLUGINWIZARDPAGE_H

@@ -93,7 +93,7 @@ FileChunk::assemble(synergy::IStream* stream, String& dataReceived, size_t& expe
 			LOG((CLOG_DEBUG2 "recv file data from client: file size=%s", content.c_str()));
 			stopwatch.start();
 		}
-		return kNotFinish;
+		return kStart;
 
 	case kDataChunk:
 		dataReceived.append(content);
@@ -114,7 +114,11 @@ FileChunk::assemble(synergy::IStream* stream, String& dataReceived, size_t& expe
 		return kNotFinish;
 
 	case kDataEnd:
-		//m_events->addEvent(Event(m_events->forIScreen().fileRecieveCompleted(), server));
+		if (expectedSize != dataReceived.size()) {
+			LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", expectedSize, dataReceived.size()));
+			return kError;
+		}
+
 		if (CLOG->getFilter() >= kDEBUG2) {
 			LOG((CLOG_DEBUG2 "file data transfer finished"));
 			elapsedTime += stopwatch.getTime();

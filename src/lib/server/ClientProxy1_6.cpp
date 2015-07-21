@@ -29,11 +29,6 @@
 // ClientProxy1_6
 //
 
-enum
-{
-	kSslClipboardMaxSize = 1024
-};
-
 ClientProxy1_6::ClientProxy1_6(const String& name, synergy::IStream* stream, Server* server, IEventQueue* events) :
 	ClientProxy1_5(name, stream, server, events),
 	m_events(events)
@@ -62,17 +57,9 @@ ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
 		size_t size = data.size();
 		LOG((CLOG_DEBUG "sending clipboard %d to \"%s\"", id, getName().c_str()));
 
-		// HACK: if using SSL, don't send large clipboards (#4601)
-		bool send = true;
-		if (getServer()->isSecure() && (size > kSslClipboardMaxSize)) {
-			send = false;
-			LOG((CLOG_WARN "large clipboards not supported with ssl, size=%d", size));
-		}
+		StreamChunker::sendClipboard(data, size, id, 0, m_events, this);
 
-		if (send) {
-			StreamChunker::sendClipboard(data, size, id, 0, m_events, this);
-			LOG((CLOG_DEBUG "sent clipboard size=%d", size));
-		}
+		LOG((CLOG_DEBUG "sent clipboard size=%d", size));
 	}
 }
 
@@ -92,8 +79,13 @@ ClientProxy1_6::recvClipboard()
 
 	int r = ClipboardChunk::assemble(getStream(), dataCached, id, seq);
 
-	if (r == kFinish) {
-		LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d", getName().c_str(), id, seq, dataCached.size()));
+	if (r == kStart) {
+		size_t size = ClipboardChunk::getExpectedSize();
+		LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
+	}
+	else if (r == kFinish) {
+		LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d",
+				getName().c_str(), id, seq, dataCached.size()));
 		// save clipboard
 		m_clipboard[id].m_clipboard.unmarshall(dataCached, 0);
 		m_clipboard[id].m_sequenceNumber = seq;

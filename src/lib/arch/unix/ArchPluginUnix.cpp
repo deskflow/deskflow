@@ -19,6 +19,7 @@
 #include "arch/unix/ArchPluginUnix.h"
 
 #include "arch/unix/XArchUnix.h"
+#include "common/PluginVersion.h"
 #include "base/IEventQueue.h"
 #include "base/Event.h"
 #include "base/Log.h"
@@ -81,8 +82,22 @@ ArchPluginUnix::load()
 		}
 
 		String filename = synergy::string::removeFileExt(*it);
-		m_pluginTable.insert(std::make_pair(filename, library));
-		LOG((CLOG_DEBUG "loaded plugin: %s", (*it).c_str()));
+		size_t pos = filename.find("lib");
+		String pluginName = filename.substr(pos + 3);
+		char* version = (char*)invoke(filename.c_str(), "version", NULL, library);
+		String expectedVersion(pluginVersion(pluginName.c_str()));
+
+		if (version != NULL && expectedVersion.compare(version) == 0) {
+			LOG((CLOG_DEBUG "loaded plugin: %s (%s)", (*it).c_str(), version));
+			m_pluginTable.insert(std::make_pair(filename, library));
+		}
+		else {
+			LOG((CLOG_ERR "plugin version doesn't match"));
+			LOG((CLOG_DEBUG "expected plugin version: %s actual plugin version: %s",
+					expectedVersion.c_str(), version));
+			LOG((CLOG_ERR "skip plugin: %s", (*it).c_str()));
+			dlclose(library);
+		}
 	}
 }
 
@@ -149,26 +164,37 @@ void*
 ArchPluginUnix::invoke(
 	const char* plugin,
 	const char* command,
-	void** args)
+	void** args,
+	void* library)
 {
-	PluginTable::iterator it;
-	it = m_pluginTable.find(plugin);
-	if (it != m_pluginTable.end()) {
-		invokeFunc invokePlugin = (invokeFunc)dlsym(it->second, "invoke");
-		void* result = NULL;
-		if (invokePlugin != NULL) {
-			result = invokePlugin(command, args);
+	void* lib = NULL;
+
+	if (library == NULL) {
+		PluginTable::iterator it;
+		it = m_pluginTable.find(plugin);
+		if (it != m_pluginTable.end()) {
+			lib = it->second;
 		}
 		else {
-			LOG((CLOG_DEBUG "no invoke function in %s", it->first.c_str()));
+			LOG((CLOG_DEBUG "invoke command failed, plugin: %s command: %s",
+					plugin, command));
+			return NULL;
 		}
-		return result;
 	}
 	else {
-		LOG((CLOG_DEBUG "invoke command failed, plugin: %s command: %s",
-				plugin, command));
-		return NULL;
+		lib = library;
 	}
+	
+	invokeFunc invokePlugin = (invokeFunc)dlsym(lib, "invoke");
+	void* result = NULL;
+	if (invokePlugin != NULL) {
+		result = invokePlugin(command, args);
+	}
+	else {
+		LOG((CLOG_DEBUG "no invoke function in %s", plugin));
+	}
+
+	return result;
 }
 
 String

@@ -22,6 +22,8 @@
 #include "io/IStream.h"
 #include "base/Log.h"
 
+size_t ClipboardChunk::s_expectedSize = 0;
+
 ClipboardChunk::ClipboardChunk(size_t size) :
 	Chunk(size)
 {
@@ -89,7 +91,6 @@ ClipboardChunk::assemble(synergy::IStream* stream,
 					ClipboardID& id,
 					UInt32& sequence)
 {
-	static size_t expectedSize;
 	UInt8 mark;
 	String data;
 
@@ -98,10 +99,10 @@ ClipboardChunk::assemble(synergy::IStream* stream,
 	}
 	
 	if (mark == kDataStart) {
-		expectedSize = synergy::string::stringToSizeType(data);
+		s_expectedSize = synergy::string::stringToSizeType(data);
 		LOG((CLOG_DEBUG "start receiving clipboard data"));
 		dataCached.clear();
-		return kNotFinish;
+		return kStart;
 	}
 	else if (mark == kDataChunk) {
 		dataCached.append(data);
@@ -112,13 +113,14 @@ ClipboardChunk::assemble(synergy::IStream* stream,
 		if (id >= kClipboardEnd) {
 			return kError;
 		}
-		else if (expectedSize != dataCached.size()) {
-			LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", expectedSize, dataCached.size()));
+		else if (s_expectedSize != dataCached.size()) {
+			LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", s_expectedSize, dataCached.size()));
 			return kError;
 		}
 		return kFinish;
 	}
 
+	LOG((CLOG_ERR "clipboard transmission failed: unknow error"));
 	return kError;
 }
 

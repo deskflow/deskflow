@@ -71,7 +71,8 @@ static const char* synergyIconFiles[] =
 {
 	":/res/icons/16x16/synergy-disconnected.png",
 	":/res/icons/16x16/synergy-disconnected.png",
-	":/res/icons/16x16/synergy-connected.png"
+	":/res/icons/16x16/synergy-connected.png",
+	":/res/icons/16x16/synergy-transfering.png"
 };
 
 MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
@@ -367,20 +368,20 @@ void MainWindow::updateFound(const QString &version)
 		.arg(version).arg(DOWNLOAD_URL));
 }
 
-void MainWindow::appendLogNote(const QString& text)
+void MainWindow::appendLogInfo(const QString& text)
 {
-	appendLogRaw("NOTE: " + text);
+	appendLogRaw(getTimeStamp() + " INFO: " + text);
 }
 
 void MainWindow::appendLogDebug(const QString& text) {
 	if (appConfig().logLevel() >= 4) {
-		appendLogRaw("DEBUG: " + text);
+		appendLogRaw(getTimeStamp() + " DEBUG: " + text);
 	}
 }
 
 void MainWindow::appendLogError(const QString& text)
 {
-	appendLogRaw("ERROR: " + text);
+	appendLogRaw(getTimeStamp() + " ERROR: " + text);
 }
 
 void MainWindow::appendLogRaw(const QString& text)
@@ -395,6 +396,12 @@ void MainWindow::appendLogRaw(const QString& text)
 
 void MainWindow::updateStateFromLogLine(const QString &line)
 {
+	checkConnected(line);
+	checkFingerprint(line);
+}
+
+void MainWindow::checkConnected(const QString& line)
+{
 	// TODO: implement ipc connection state messages to replace this hack.
 	if (line.contains("started server") ||
 		line.contains("connected to server") ||
@@ -402,7 +409,7 @@ void MainWindow::updateStateFromLogLine(const QString &line)
 	{
 		setSynergyState(synergyConnected);
 
-		if (!appConfig().startedBefore()) {
+		if (!appConfig().startedBefore() && isVisible()) {
 				QMessageBox::information(
 					this, "Synergy",
 					tr("Synergy is now connected, You can close the "
@@ -413,8 +420,6 @@ void MainWindow::updateStateFromLogLine(const QString &line)
 			appConfig().saveSettings();
 		}
 	}
-
-	checkFingerprint(line);
 }
 
 void MainWindow::checkFingerprint(const QString& line)
@@ -468,6 +473,12 @@ bool MainWindow::autoHide()
 	}
 
 	return false;
+}
+
+QString MainWindow::getTimeStamp()
+{
+	QDateTime current = QDateTime::currentDateTime();
+	return '[' + current.toString(Qt::ISODate) + ']';
 }
 
 void MainWindow::clearLog()
@@ -552,20 +563,20 @@ void MainWindow::startSynergy()
 	if (!m_pLogOutput->toPlainText().isEmpty())
 		appendLogRaw("");
 
-	appendLogNote("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
+	appendLogInfo("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
 
 	qDebug() << args;
 
 	// show command if debug log level...
 	if (appConfig().logLevel() >= 4) {
-		appendLogNote(QString("command: %1 %2").arg(app, args.join(" ")));
+		appendLogInfo(QString("command: %1 %2").arg(app, args.join(" ")));
 	}
 
-	appendLogNote("config file: " + configFilename());
-	appendLogNote("log level: " + appConfig().logLevelText());
+	appendLogInfo("config file: " + configFilename());
+	appendLogInfo("log level: " + appConfig().logLevelText());
 
 	if (appConfig().logToFile())
-		appendLogNote("log file: " + appConfig().logFilename());
+		appendLogInfo("log file: " + appConfig().logFilename());
 
 	if (desktopMode)
 	{
@@ -746,7 +757,7 @@ void MainWindow::stopDesktop()
 		return;
 	}
 
-	appendLogNote("stopping synergy desktop process");
+	appendLogInfo("stopping synergy desktop process");
 
 	if (synergyProcess()->isOpen())
 		synergyProcess()->close();
@@ -783,7 +794,7 @@ void MainWindow::setSynergyState(qSynergyState state)
 		m_pButtonToggleStart->setText(tr("&Stop"));
 		m_pButtonApply->setEnabled(true);
 	}
-	else
+	else if (state == synergyDisconnected)
 	{
 		disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
 		connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
@@ -791,7 +802,10 @@ void MainWindow::setSynergyState(qSynergyState state)
 		m_pButtonApply->setEnabled(false);
 	}
 
-	bool connected = state == synergyConnected;
+	bool connected = false;
+	if (state == synergyConnected || state == synergyTransfering) {
+		connected = true;
+	}
 
 	m_pActionStartSynergy->setEnabled(!connected);
 	m_pActionStopSynergy->setEnabled(connected);
@@ -817,6 +831,8 @@ void MainWindow::setSynergyState(qSynergyState state)
 	case synergyDisconnected:
 		m_pLabelPadlock->hide();
 		setStatus(tr("Synergy is not running."));
+		break;
+	case synergyTransfering:
 		break;
 	}
 
@@ -1082,7 +1098,7 @@ bool MainWindow::isServiceRunning(QString name)
 	SC_HANDLE hSCManager;
 	hSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_CONNECT);
 	if (hSCManager == NULL) {
-		appendLogNote("failed to open a service controller manager, error: " +
+		appendLogError("failed to open a service controller manager, error: " +
 			GetLastError());
 		return false;
 	}
@@ -1135,11 +1151,11 @@ void MainWindow::downloadBonjour()
 	int arch = getProcessorArch();
 	if (arch == kProcessorArchWin32) {
 		url.setUrl(bonjourBaseUrl + bonjourFilename32);
-		appendLogNote("downloading 32-bit Bonjour");
+		appendLogInfo("downloading 32-bit Bonjour");
 	}
 	else if (arch == kProcessorArchWin64) {
 		url.setUrl(bonjourBaseUrl + bonjourFilename64);
-		appendLogNote("downloading 64-bit Bonjour");
+		appendLogInfo("downloading 64-bit Bonjour");
 	}
 	else {
 		QMessageBox::critical(
@@ -1292,7 +1308,7 @@ void MainWindow::on_m_pCheckBoxAutoConfig_toggled(bool checked)
 
 void MainWindow::bonjourInstallFinished()
 {
-	appendLogNote("Bonjour install finished");
+	appendLogInfo("Bonjour install finished");
 
 	m_pCheckBoxAutoConfig->setChecked(true);
 }
@@ -1310,4 +1326,13 @@ QString MainWindow::getProfileRootForArg()
 #endif
 
 	return QString("\"%1\"").arg(dir);
+}
+
+void MainWindow::delay(unsigned int s)
+{
+	QTime dieTime= QTime::currentTime().addSecs(s);
+
+	while (QTime::currentTime() < dieTime) {
+		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+	}
 }

@@ -317,7 +317,7 @@ ServerApp::updateStatus()
 	updateStatus("");
 }
 
-void ServerApp::updateStatus( const String& msg )
+void ServerApp::updateStatus(const String& msg)
 {
 	if (m_taskBarReceiver)
 	{

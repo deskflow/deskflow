@@ -31,7 +31,8 @@
 
 #include <fstream>
 
-#define PAUSE_TIME_HACK 0.1
+#define KEEP_ALIVE_THRESHOLD 1
+#define SEND_THRESHOLD 0.005f
 
 using namespace std;
 
@@ -67,21 +68,30 @@ StreamChunker::sendFile(
 	String fileSize = synergy::string::sizeTypeToString(size);
 	FileChunk* sizeMessage = FileChunk::start(fileSize);
 
-	events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, sizeMessage));
+	events->addEvent(Event(events->forFile().fileChunkSending(), eventTarget, sizeMessage));
 
 	// send chunk messages with a fixed chunk size
 	size_t sentLength = 0;
 	size_t chunkSize = s_chunkSize;
-	Stopwatch stopwatch;
-	stopwatch.start();
+	Stopwatch keepAliveStopwatch;
+	Stopwatch sendStopwatch;
+	keepAliveStopwatch.start();
+	sendStopwatch.start();
 	file.seekg (0, std::ios::beg);
+
 	while (true) {
 		if (s_interruptFile) {
 			s_interruptFile = false;
+			LOG((CLOG_DEBUG "file transmission interrupted"));
 			break;
 		}
 		
-		if (stopwatch.getTime() > PAUSE_TIME_HACK) {
+		if (keepAliveStopwatch.getTime() > KEEP_ALIVE_THRESHOLD) {
+			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
+			keepAliveStopwatch.reset();
+		}
+
+		if (sendStopwatch.getTime() > SEND_THRESHOLD) {
 			// make sure we don't read too much from the mock data.
 			if (sentLength + chunkSize > size) {
 				chunkSize = size - sentLength;
@@ -93,7 +103,7 @@ StreamChunker::sendFile(
 			FileChunk* fileChunk = FileChunk::data(data, chunkSize);
 			delete[] chunkData;
 
-			events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, fileChunk));
+			events->addEvent(Event(events->forFile().fileChunkSending(), eventTarget, fileChunk));
 
 			sentLength += chunkSize;
 			file.seekg (sentLength, std::ios::beg);
@@ -102,14 +112,14 @@ StreamChunker::sendFile(
 				break;
 			}
 
-			stopwatch.reset();
+			sendStopwatch.reset();
 		}
 	}
 
 	// send last message
 	FileChunk* end = FileChunk::end();
 
-	events->addEvent(Event(events->forIScreen().fileChunkSending(), eventTarget, end));
+	events->addEvent(Event(events->forFile().fileChunkSending(), eventTarget, end));
 
 	file.close();
 	
@@ -136,16 +146,24 @@ StreamChunker::sendClipboard(
 	// send clipboard chunk with a fixed size
 	size_t sentLength = 0;
 	size_t chunkSize = s_chunkSize;
-	Stopwatch stopwatch;
-	stopwatch.start();
+	Stopwatch keepAliveStopwatch;
+	Stopwatch sendStopwatch;
+	keepAliveStopwatch.start();
+	sendStopwatch.start();
 	
 	while (true) {
 		if (s_interruptClipboard) {
 			s_interruptClipboard = false;
+			LOG((CLOG_DEBUG "clipboard transmission interrupted"));
 			break;
 		}
 		
-		if (stopwatch.getTime() > 0.1f) {
+		if (keepAliveStopwatch.getTime() > KEEP_ALIVE_THRESHOLD) {
+			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
+			keepAliveStopwatch.reset();
+		}
+
+		if (sendStopwatch.getTime() > SEND_THRESHOLD) {
 			// make sure we don't read too much from the mock data.
 			if (sentLength + chunkSize > size) {
 				chunkSize = size - sentLength;
@@ -157,12 +175,11 @@ StreamChunker::sendClipboard(
 			events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, dataChunk));
 
 			sentLength += chunkSize;
-
 			if (sentLength == size) {
 				break;
 			}
 
-			stopwatch.reset();
+			sendStopwatch.reset();
 		}
 	}
 

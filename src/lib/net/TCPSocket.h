@@ -96,6 +96,10 @@ private:
 						serviceConnected(ISocketMultiplexerJob*,
 							bool, bool, bool);
 
+protected:
+	bool				m_readable;
+	bool				m_writable;
+
 private:
 	Mutex				m_mutex;
 	ArchSocket			m_socket;
@@ -103,8 +107,6 @@ private:
 	StreamBuffer		m_outputBuffer;
 	CondVar<bool>		m_flushed;
 	bool				m_connected;
-	bool				m_readable;
-	bool				m_writable;
 	IEventQueue*		m_events;
 	SocketMultiplexer*	m_socketMultiplexer;
 };

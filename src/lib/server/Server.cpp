@@ -91,7 +91,7 @@ Server::Server(
 	m_writeToDropDirThread(NULL),
 	m_ignoreFileTransfer(false),
 	m_enableDragDrop(enableDragDrop),
-	m_getDragInfoThread(NULL),
+	m_sendDragInfoThread(NULL),
 	m_waitDragInfoThread(true),
 	m_sendClipboardThread(NULL)
 {
@@ -184,11 +184,11 @@ Server::Server(
 								&Server::handleFakeInputEndEvent));
 
 	if (m_enableDragDrop) {
-		m_events->adoptHandler(m_events->forIScreen().fileChunkSending(),
+		m_events->adoptHandler(m_events->forFile().fileChunkSending(),
 								this,
 								new TMethodEventJob<Server>(this,
 									&Server::handleFileChunkSendingEvent));
-		m_events->adoptHandler(m_events->forIScreen().fileRecieveCompleted(),
+		m_events->adoptHandler(m_events->forFile().fileRecieveCompleted(),
 								this,
 								new TMethodEventJob<Server>(this,
 									&Server::handleFileRecieveCompletedEvent));
@@ -509,6 +509,8 @@ Server::switchScreen(BaseClientProxy* dst,
 		// clipboard data could be corrupted on the other side
 		if (m_sendClipboardThread != NULL) {
 			StreamChunker::interruptClipboard();
+			m_sendClipboardThread->wait();
+			m_sendClipboardThread = NULL;
 		}
 		
 		// send the clipboard data to new active screen
@@ -884,7 +886,7 @@ Server::isSwitchOkay(BaseClientProxy* newScreen,
 	}
 
 	// check for optional needed modifiers
-	KeyModifierMask mods = this->m_primaryClient->getToggleMask( );
+	KeyModifierMask mods = this->m_primaryClient->getToggleMask();
 
 	if (!preventSwitch && (
 			(this->m_switchNeedsShift && ((mods & KeyModifierShift) != KeyModifierShift)) ||
@@ -1788,37 +1790,30 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 			&& m_screen->isDraggingStarted()
 			&& m_active != newScreen
 			&& m_waitDragInfoThread) {
-			if (m_getDragInfoThread == NULL) {
-				m_getDragInfoThread = new Thread(
+			if (m_sendDragInfoThread == NULL) {
+				m_sendDragInfoThread = new Thread(
 					new TMethodJob<Server>(
 						this,
-						&Server::getDragInfoThread));
+						&Server::sendDragInfoThread, newScreen));
 			}
+
 			return false;
 		}
-		
-		if (m_getDragInfoThread == NULL) {
-			// switch screen
-			switchScreen(newScreen, x, y, false);
 
-			// send drag file info to client if there is any
-			if (m_dragFileList.size() > 0) {
-				sendDragInfo(newScreen);
-				m_dragFileList.clear();
-			}
-
-			m_waitDragInfoThread = true;
-		
-			return true;
-		}
+		// switch screen
+		switchScreen(newScreen, x, y, false);
+		m_waitDragInfoThread = true;
+		return true;
 	}
 	
 	return false;
 }
 
 void
-Server::getDragInfoThread(void*)
+Server::sendDragInfoThread(void* arg)
 {
+	BaseClientProxy* newScreen = reinterpret_cast<BaseClientProxy*>(arg);
+
 	m_dragFileList.clear();
 	String& dragFileList = m_screen->getDraggingFilename();
 	if (!dragFileList.empty()) {
@@ -1835,8 +1830,13 @@ Server::getDragInfoThread(void*)
 	m_ignoreFileTransfer = true;
 #endif
 
+	// send drag file info to client if there is any
+	if (m_dragFileList.size() > 0) {
+		sendDragInfo(newScreen);
+		m_dragFileList.clear();
+	}
 	m_waitDragInfoThread = false;
-	m_getDragInfoThread = NULL;
+	m_sendDragInfoThread = NULL;
 }
 
 void
@@ -1995,6 +1995,11 @@ Server::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 	} while (false);
 
 	if (jump) {
+		if (m_sendFileThread != NULL) {
+			StreamChunker::interruptFile();
+			m_sendFileThread = NULL;
+		}
+
 		// switch screens
 		switchScreen(newScreen, m_x, m_y, false);
 	}
@@ -2068,7 +2073,7 @@ Server::writeToDropDirThread(void*)
 		ARCH->sleep(.1f);
 	}
 
-	DropHelper::writeToDir(m_screen->getDropTarget(), m_dragFileList,
+	DropHelper::writeToDir(m_screen->getDropTarget(), m_fakeDragFileList,
 					m_receivedFileData);
 }
 
@@ -2385,13 +2390,7 @@ Server::dragInfoReceived(UInt32 fileNum, String content)
 		return;
 	}
 
-	DragInformation::parseDragInfo(m_dragFileList, fileNum, content);
+	DragInformation::parseDragInfo(m_fakeDragFileList, fileNum, content);
 
-	m_screen->startDraggingFiles(m_dragFileList);
-}
-
-bool
-Server::isSecure() const
-{
-	return m_clientListener->isSecure();
+	m_screen->startDraggingFiles(m_fakeDragFileList);
 }

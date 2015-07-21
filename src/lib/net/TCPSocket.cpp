@@ -469,29 +469,47 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 	}
 
 	bool needNewJob = false;
-	static UInt32 s_retryOutputBufferSize = 0;
+	
+	static bool s_retry = false;
+	static int s_retrySize = 0;
+	static void* s_staticBuffer = NULL;
 
 	if (write) {
 		try {
 			// write data
-			int buffSize = m_outputBuffer.getSize();
+			int bufferSize = 0;
 			int bytesWrote = 0;
 			int status = 0;
 
-			if (s_retryOutputBufferSize > 0) {
-				buffSize = s_retryOutputBufferSize;
+			if (s_retry) {
+				bufferSize = s_retrySize;
+			}
+			else {
+				bufferSize = m_outputBuffer.getSize();
+				s_staticBuffer = malloc(bufferSize);
+				memcpy(s_staticBuffer, m_outputBuffer.peek(bufferSize), bufferSize);
+ 			}
+
+			if (bufferSize == 0) {
+				return job;
 			}
 
-			const void* buffer = m_outputBuffer.peek(buffSize);
 			if (isSecure()) {
 				if (isSecureReady()) {
-					s_retryOutputBufferSize = buffSize;
-					status = secureWrite(buffer, buffSize, bytesWrote);
+					status = secureWrite(s_staticBuffer, bufferSize, bytesWrote);
 					if (status > 0) {
-						s_retryOutputBufferSize = 0;
+						s_retry = false;
+						bufferSize = 0;
+						free(s_staticBuffer);
+						s_staticBuffer = NULL;
 					}
 					else if (status < 0) {
 						return NULL;
+					}
+					else if (status == 0) {
+						s_retry = true;
+						s_retrySize = bufferSize;
+						return newJob();
 					}
 				}
 				else {
@@ -499,7 +517,10 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 				}
 			}
 			else {
-				bytesWrote = (UInt32)ARCH->writeSocket(m_socket, buffer, buffSize);
+				bytesWrote = (UInt32)ARCH->writeSocket(m_socket, s_staticBuffer, bufferSize);
+				bufferSize = 0;
+				free(s_staticBuffer);
+				s_staticBuffer = NULL;
 			}
 
 			// discard written data
@@ -552,6 +573,9 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 					status = secureRead(buffer, sizeof(buffer), bytesRead);
 					if (status < 0) {
 						return NULL;
+					}
+					else if (status == 0) {
+						return newJob();
 					}
 				}
 				else {

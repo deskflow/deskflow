@@ -175,8 +175,8 @@ public:
 	//! Return received file data
 	String&				getReceivedFileData() { return m_receivedFileData; }
 
-	//! Return true if using secure network connection
-	bool				isSecure() const;
+	//! Return fake drag file list
+	DragFileList		getFakeDragFileList() { return m_fakeDragFileList; }
 
 	//@}
 
@@ -361,8 +361,8 @@ private:
 	// thread function for writing file to drop directory
 	void				writeToDropDirThread(void*);
 
-	// thread function for getting drag filename
-	void				getDragInfoThread(void*);
+	// thread function for sending drag information
+	void				sendDragInfoThread(void*);
 
 	// send drag info to new client screen
 	void				sendDragInfo(BaseClientProxy* newScreen);
@@ -470,13 +470,14 @@ private:
 	size_t				m_expectedFileSize;
 	String				m_receivedFileData;
 	DragFileList		m_dragFileList;
+	DragFileList		m_fakeDragFileList;
 	Thread*				m_sendFileThread;
 	Thread*				m_writeToDropDirThread;
 	String				m_dragFileExt;
 	bool				m_ignoreFileTransfer;
 	bool				m_enableDragDrop;
 
-	Thread*				m_getDragInfoThread;
+	Thread*				m_sendDragInfoThread;
 	bool				m_waitDragInfoThread;
 
 	ClientListener*		m_clientListener;

@@ -36,11 +36,9 @@
 
 #define MAX_ERROR_SIZE 65535
 
-enum {
-	// this limit seems extremely high, but mac client seem to generate around
-	// 50,000 errors before they establish a connection (wtf?)
-	kMaxRetryCount = 100000
-};
+// maxmium retry time limit set to 10s
+static const int s_maxRetry = 1000;
+static const float s_retryDelay = 0.01f;
 
 static const char kFingerprintDirName[] = "SSL/Fingerprints";
 //static const char kFingerprintLocalFilename[] = "Local.txt";
@@ -57,8 +55,7 @@ SecureSocket::SecureSocket(
 		SocketMultiplexer* socketMultiplexer) :
 	TCPSocket(events, socketMultiplexer),
 	m_secureReady(false),
-	m_fatal(false),
-	m_maxRetry(kMaxRetryCount)
+	m_fatal(false)
 {
 }
 
@@ -68,8 +65,7 @@ SecureSocket::SecureSocket(
 		ArchSocket socket) :
 	TCPSocket(events, socketMultiplexer, socket),
 	m_secureReady(false),
-	m_fatal(false),
-	m_maxRetry(kMaxRetryCount)
+	m_fatal(false)
 {
 }
 
@@ -287,10 +283,10 @@ SecureSocket::secureAccept(int socket)
 
 	if (isFatal()) {
 		// tell user and sleep so the socket isn't hammered.
-		LOG((CLOG_ERR "failed to accept secure socket"));
-		LOG((CLOG_INFO "client connection may not be secure"));
+		LOG((CLOG_WARN "failed to accept secure socket"));
 		m_secureReady = false;
 		ARCH->sleep(1);
+		retry = 0;
 		return -1; // Failed, error out
 	}
 
@@ -305,6 +301,7 @@ SecureSocket::secureAccept(int socket)
 	if (retry > 0) {
 		LOG((CLOG_DEBUG2 "retry accepting secure socket"));
 		m_secureReady = false;
+		ARCH->sleep(s_retryDelay);
 		return 0;
 	}
 
@@ -330,6 +327,7 @@ SecureSocket::secureConnect(int socket)
 
 	if (isFatal()) {
 		LOG((CLOG_ERR "failed to connect secure socket"));
+		retry = 0;
 		return -1;
 	}
 
@@ -337,9 +335,11 @@ SecureSocket::secureConnect(int socket)
 	if (retry > 0) {
 		LOG((CLOG_DEBUG2 "retry connect secure socket"));
 		m_secureReady = false;
+		ARCH->sleep(s_retryDelay);
 		return 0;
 	}
 
+	retry = 0;
 	// No error, set ready, process and return ok
 	m_secureReady = true;
 	if (verifyCertFingerprint()) {
@@ -355,6 +355,7 @@ SecureSocket::secureConnect(int socket)
 		return -1; // Fingerprint failed, error
 	}
 	LOG((CLOG_DEBUG2 "connected secure socket"));
+
 	return 1;
 }
 
@@ -401,14 +402,27 @@ SecureSocket::checkResult(int status, int& retry)
 		break;
 
 	case SSL_ERROR_WANT_READ:
-	case SSL_ERROR_WANT_WRITE:
-	case SSL_ERROR_WANT_CONNECT:
-	case SSL_ERROR_WANT_ACCEPT:
-		// it seems like these sort of errors are part of openssl's normal behavior,
-		// so we should expect a very high amount of these. sleeping doesn't seem to
-		// help... maybe you just have to swallow the errors (yuck).
 		retry++;
-		LOG((CLOG_DEBUG2 "passive ssl error, error=%d, attempt=%d", errorCode, retry));
+		LOG((CLOG_DEBUG2 "want to read, error=%d, attempt=%d", errorCode, retry));
+		break;
+
+	case SSL_ERROR_WANT_WRITE:
+		// Need to make sure the socket is known to be writable so the impending
+		// select action actually triggers on a write. This isn't necessary for 
+		// m_readable because the socket logic is always readable
+		m_writable = true;
+		retry++;
+		LOG((CLOG_DEBUG2 "want to write, error=%d, attempt=%d", errorCode, retry));
+		break;
+
+	case SSL_ERROR_WANT_CONNECT:
+		retry++;
+		LOG((CLOG_DEBUG2 "want to connect, error=%d, attempt=%d", errorCode, retry));
+		break;
+
+	case SSL_ERROR_WANT_ACCEPT:
+		retry++;
+		LOG((CLOG_DEBUG2 "want to accept, error=%d, attempt=%d", errorCode, retry));
 		break;
 
 	case SSL_ERROR_SYSCALL:
@@ -443,8 +457,8 @@ SecureSocket::checkResult(int status, int& retry)
 	}
 
 	// If the retry max would exceed the allowed, treat it as a fatal error
-	if (retry > maxRetry()) {
-		LOG((CLOG_ERR "passive ssl error limit exceeded: %d", retry));
+	if (retry > s_maxRetry) {
+		LOG((CLOG_DEBUG "retry exceeded %f sec", s_maxRetry * s_retryDelay));
 		isFatal(true);
 	}
 
@@ -486,7 +500,6 @@ SecureSocket::getError()
 void
 SecureSocket::disconnect()
 {
-	sendEvent(getEvents()->forISocket().stopRetry());
 	sendEvent(getEvents()->forISocket().disconnected());
 	sendEvent(getEvents()->forIStream().inputShutdown());
 }
@@ -572,14 +585,20 @@ SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 	status = secureConnect(getSocket()->m_fd);
 #endif
 
+	// If status < 0, error happened
+	if (status < 0) {
+		return NULL;
+	}
+
+	// If status > 0, success
 	if (status > 0) {
 		return newJob();
 	}
-	else if (status == 0) {
-		return job;
-	}
-	// If status < 0, error happened
-	return NULL;
+
+	// Retry case
+	return new TSocketMultiplexerMethodJob<SecureSocket>(
+			this, &SecureSocket::serviceConnect,
+			getSocket(), isReadable(), isWritable());
 }
 
 ISocketMultiplexerJob*
@@ -594,13 +613,18 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 #elif SYSAPI_UNIX
 	status = secureAccept(getSocket()->m_fd);
 #endif
+		// If status < 0, error happened
+	if (status < 0) {
+		return NULL;
+	}
 
+	// If status > 0, success
 	if (status > 0) {
 		return newJob();
 	}
-	else if (status == 0) {
-		return job;
-	}
-	// If status < 0, error happened
-	return NULL;
+
+	// Retry case
+	return new TSocketMultiplexerMethodJob<SecureSocket>(
+			this, &SecureSocket::serviceAccept,
+			getSocket(), isReadable(), isWritable());
 }

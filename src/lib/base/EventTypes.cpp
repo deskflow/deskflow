@@ -176,8 +176,6 @@ REGISTER_EVENT(IScreen, error)
 REGISTER_EVENT(IScreen, shapeChanged)
 REGISTER_EVENT(IScreen, suspend)
 REGISTER_EVENT(IScreen, resume)
-REGISTER_EVENT(IScreen, fileChunkSending)
-REGISTER_EVENT(IScreen, fileRecieveCompleted)
 
 //
 // IpcServer
@@ -193,3 +191,11 @@ REGISTER_EVENT(IpcServer, messageReceived)
 REGISTER_EVENT(Clipboard, clipboardGrabbed)
 REGISTER_EVENT(Clipboard, clipboardChanged)
 REGISTER_EVENT(Clipboard, clipboardSending)
+
+//
+// File
+//
+
+REGISTER_EVENT(File, fileChunkSending)
+REGISTER_EVENT(File, fileRecieveCompleted)
+REGISTER_EVENT(File, keepAlive)

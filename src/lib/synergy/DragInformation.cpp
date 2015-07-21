@@ -79,7 +79,7 @@ DragInformation::parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, Strin
 		dragFileList.size()));
 
 	for (size_t i = 0; i < dragFileList.size(); ++i) {
-		LOG((CLOG_DEBUG2 "dragging file %i name: %s",
+		LOG((CLOG_DEBUG "dragging file %i name: %s",
 			i + 1,
 			dragFileList.at(i).getFilename().c_str()));
 	}

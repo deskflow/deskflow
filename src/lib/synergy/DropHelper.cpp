@@ -37,11 +37,13 @@ DropHelper::writeToDir(const String& destination, DragFileList& fileList, String
 		dropTarget.append(fileList.at(0).getFilename());
 		file.open(dropTarget.c_str(), std::ios::out | std::ios::binary);
 		if (!file.is_open()) {
-			LOG((CLOG_DEBUG "drop file failed: can not open %s", dropTarget.c_str()));
+			LOG((CLOG_ERR "drop file failed: can not open %s", dropTarget.c_str()));
 		}
 		
 		file.write(data.c_str(), data.size());
 		file.close();
+
+		LOG((CLOG_DEBUG "%s is saved to %s", fileList.at(0).getFilename().c_str(), destination.c_str()));
 
 		fileList.clear();
 	}

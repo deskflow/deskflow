@@ -127,6 +127,9 @@ public:
 	//! Return received file data
 	String&				getReceivedFileData() { return m_receivedFileData; }
 
+	//! Return drag file list
+	DragFileList		getDragFileList() { return m_dragFileList; }
+
 	//@}
 
 	// IScreen overrides

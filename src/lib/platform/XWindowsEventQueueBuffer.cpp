@@ -162,7 +162,7 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 	// we want to give the cpu a chance s owe up this to 25ms
 #define TIMEOUT_DELAY 25
 
-	while( ((dtimeout < 0.0) || (remaining > 0)) && QLength(m_display)==0 && retval==0){
+	while (((dtimeout < 0.0) || (remaining > 0)) && QLength(m_display)==0 && retval==0){
 #if HAVE_POLL
 	retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
  	if (pfds[1].revents & POLLIN) {

@@ -21,17 +21,19 @@
 #include "SslCertificate.h"
 #include "WebClient.h"
 #include "PluginManager.h"
+#include "MainWindow.h"
 
 #include <QMovie>
 #include <QThread>
+#include <QTime>
 
-PluginWizardPage::PluginWizardPage(AppConfig& appConfig, QWidget *parent) :
+PluginWizardPage::PluginWizardPage(MainWindow& mainWindow, QWidget *parent) :
 	QWizardPage(parent),
 	m_Finished(false),
 	m_pWebClient(NULL),
 	m_pPluginManager(NULL),
 	m_pSslCertificate(NULL),
-	m_AppConfig(appConfig)
+	m_mainWindow(mainWindow)
 {
 	setupUi(this);
 
@@ -99,7 +101,7 @@ void PluginWizardPage::updateDownloadStatus()
 void PluginWizardPage::finished()
 {
 	// TODO: we should check if ns plugin exists
-	m_AppConfig.setCryptoEnabled(true);
+	m_mainWindow.appConfig().setCryptoEnabled(true);
 
 	updateStatus(tr("Plugins installed successfully."));
 	showFinished();
