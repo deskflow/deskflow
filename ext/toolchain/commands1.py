@@ -264,6 +264,8 @@ class InternalCommands:
 		8 : VisualStudioGenerator('11 Win64'),
 		9 : VisualStudioGenerator('12'),
 		10 : VisualStudioGenerator('12 Win64'),
+		11 : VisualStudioGenerator('14'),
+		12 : VisualStudioGenerator('14 Win64'),
 	}
 
 	unix_generators = {
@@ -894,7 +896,8 @@ class InternalCommands:
 			# special case for version 10, use new /target:clean
 			if generator.startswith('Visual Studio 10') or \
 				generator.startswith('Visual Studio 11') or \
-				generator.startswith('Visual Studio 12'):
+				generator.startswith('Visual Studio 12') or \
+				generator.startswith('Visual Studio 14'):
 				for target in targets:
 					self.run_vcbuild(generator, target, self.sln_filepath(), '/target:clean')
 
@@ -1737,6 +1740,8 @@ class InternalCommands:
 			value,type = _winreg.QueryValueEx(key, '11.0')
 		elif generator.startswith('Visual Studio 12'):
 			value,type = _winreg.QueryValueEx(key, '12.0')
+		elif generator.startswith('Visual Studio 14'):
+			value,type = _winreg.QueryValueEx(key, '14.0')
 		else:
 			raise Exception('Cannot determine vcvarsall.bat location for: ' + generator)
 
@@ -1755,7 +1760,7 @@ class InternalCommands:
 		import _winreg
 
 		msbuild = u""
-		for version in ('12.0', '4.0', '3.5', '2.0'):
+		for version in ('14.0', '12.0', '4.0', '3.5', '2.0'):
 			key_name = r'SOFTWARE\Microsoft\MSBuild\ToolsVersions\%s' % version
 			try:
 				key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, key_name)
@@ -1799,7 +1804,8 @@ class InternalCommands:
 
 		if generator.startswith('Visual Studio 10') or \
 			generator.startswith('Visual Studio 11') or \
-			generator.startswith('Visual Studio 12'):
+			generator.startswith('Visual Studio 12') or \
+			generator.startswith('Visual Studio 14'):
 			cmd = ('@echo off\n'
 				'call "%s" %s \n'
 				'cd "%s"\n'
