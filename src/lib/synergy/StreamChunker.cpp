@@ -31,7 +31,6 @@
 
 #include <fstream>
 
-#define KEEP_ALIVE_THRESHOLD 1
 #define SEND_THRESHOLD 0.005f
 
 using namespace std;
@@ -73,9 +72,7 @@ StreamChunker::sendFile(
 	// send chunk messages with a fixed chunk size
 	size_t sentLength = 0;
 	size_t chunkSize = s_chunkSize;
-	Stopwatch keepAliveStopwatch;
 	Stopwatch sendStopwatch;
-	keepAliveStopwatch.start();
 	sendStopwatch.start();
 	file.seekg (0, std::ios::beg);
 
@@ -86,12 +83,9 @@ StreamChunker::sendFile(
 			break;
 		}
 		
-		if (keepAliveStopwatch.getTime() > KEEP_ALIVE_THRESHOLD) {
-			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
-			keepAliveStopwatch.reset();
-		}
-
 		if (sendStopwatch.getTime() > SEND_THRESHOLD) {
+			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
+
 			// make sure we don't read too much from the mock data.
 			if (sentLength + chunkSize > size) {
 				chunkSize = size - sentLength;
@@ -146,9 +140,7 @@ StreamChunker::sendClipboard(
 	// send clipboard chunk with a fixed size
 	size_t sentLength = 0;
 	size_t chunkSize = s_chunkSize;
-	Stopwatch keepAliveStopwatch;
 	Stopwatch sendStopwatch;
-	keepAliveStopwatch.start();
 	sendStopwatch.start();
 	
 	while (true) {
@@ -157,13 +149,10 @@ StreamChunker::sendClipboard(
 			LOG((CLOG_DEBUG "clipboard transmission interrupted"));
 			break;
 		}
-		
-		if (keepAliveStopwatch.getTime() > KEEP_ALIVE_THRESHOLD) {
-			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
-			keepAliveStopwatch.reset();
-		}
 
 		if (sendStopwatch.getTime() > SEND_THRESHOLD) {
+			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
+
 			// make sure we don't read too much from the mock data.
 			if (sentLength + chunkSize > size) {
 				chunkSize = size - sentLength;
