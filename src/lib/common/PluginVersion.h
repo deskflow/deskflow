@@ -22,9 +22,7 @@ enum EPluginType {
 	kPluginCount
 };
 
-static const char* s_pluginNames[] = { "ns" };
-static const char* s_pluginVersions[] = { "1.2" };
-
+extern const char* s_pluginNames[];
 
 //! Get expected plugin version
 /*!
