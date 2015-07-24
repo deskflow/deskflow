@@ -229,7 +229,7 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 	QString result = QString("%1/plugins/%2/%3/%4/%5")
 			.arg(kBaseUrl)
 			.arg(pluginName)
-			.arg(pluginVersion(pluginName.toStdString().c_str()))
+			.arg(getExpectedPluginVersion(pluginName.toStdString().c_str()))
 			.arg(archName)
 			.arg(getPluginOsSpecificName(pluginName));
 
