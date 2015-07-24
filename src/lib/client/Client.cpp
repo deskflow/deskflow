@@ -46,11 +46,7 @@
 #include <sstream>
 #include <fstream>
 
-#if defined _WIN32
 static const char s_networkSecurity[] = { "ns" };
-#else
-static const char s_networkSecurity[] = { "libns" };
-#endif
 
 //
 // Client
