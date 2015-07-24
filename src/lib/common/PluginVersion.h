@@ -17,6 +17,15 @@
 
 #pragma once
 
+enum EPluginType {
+	kSecureSocket,
+	kPluginCount
+};
+
+static const char* s_pluginNames[] = { "ns" };
+static const char* s_pluginVersions[] = { "1.2" };
+
+
 //! Get expected plugin version
 /*!
 Returns the plugin version expected by the plugin loader.
