@@ -57,7 +57,7 @@ ArchPluginWindows::load()
 	std::vector<String>::iterator it;
 	for (it = plugins.begin(); it != plugins.end(); ++it) {
 		String filename = *it;
-		String nameNoExt = synergy::string::removeFileExt(*it);
+		String name = synergy::string::removeFileExt(filename);
 		String path = synergy::string::sprintf(
 			"%s\\%s", dir.c_str(), filename.c_str());
 		
@@ -72,8 +72,8 @@ ArchPluginWindows::load()
 			continue;
 		}
 
-		String expectedVersion = getExpectedPluginVersion(nameNoExt.c_str());
-		String currentVersion =  getCurrentVersion(nameNoExt.c_str(), voidHandle);
+		String expectedVersion = getExpectedPluginVersion(name.c_str());
+		String currentVersion =  getCurrentVersion(name.c_str(), voidHandle);
 
 		if (currentVersion.empty() || (expectedVersion != currentVersion)) {
 			LOG((CLOG_ERR
@@ -91,7 +91,7 @@ ArchPluginWindows::load()
 			filename.c_str(),
 			currentVersion.c_str()));
 
-		m_pluginTable.insert(std::make_pair(nameNoExt, voidHandle));
+		m_pluginTable.insert(std::make_pair(name, voidHandle));
 	}
 }
 
