@@ -56,32 +56,42 @@ ArchPluginWindows::load()
 
 	std::vector<String>::iterator it;
 	for (it = plugins.begin(); it != plugins.end(); ++it) {
-		LOG((CLOG_DEBUG "loading plugin: %s", (*it).c_str()));
-		String path = String(dir).append("\\").append(*it);
-		HINSTANCE library = LoadLibrary(path.c_str());
+		String filename = *it;
+		String nameNoExt = synergy::string::removeFileExt(*it);
+		String path = synergy::string::sprintf(
+			"%s\\%s", dir.c_str(), filename.c_str());
+		
+		LOG((CLOG_DEBUG "loading plugin: %s", filename.c_str()));
+		HINSTANCE handle = LoadLibrary(path.c_str());
+		void* voidHandle = reinterpret_cast<void*>(handle);
 
-		if (library == NULL) {
+		if (handle == NULL) {
 			String error = XArchEvalWindows().eval();
-			LOG((CLOG_ERR "failed to load plugin '%s', error: %s", (*it).c_str(), error.c_str()));
+			LOG((CLOG_ERR "failed to load plugin '%s', error: %s",
+				filename.c_str(), error.c_str()));
 			continue;
 		}
 
-		void* lib = reinterpret_cast<void*>(library);
-		String pluginName = synergy::string::removeFileExt(*it);
-		char* version = (char*)invoke(pluginName.c_str(), "version", NULL, lib);
-		String expectedVersion(pluginVersion(pluginName.c_str()));
+		String expectedVersion = getExpectedPluginVersion(nameNoExt.c_str());
+		String currentVersion =  getCurrentVersion(nameNoExt.c_str(), voidHandle);
 
-		if (version != NULL && expectedVersion.compare(version) == 0) {
-			LOG((CLOG_DEBUG "loaded plugin: %s (%s)", (*it).c_str(), version));
-			m_pluginTable.insert(std::make_pair(pluginName, lib));
+		if (currentVersion.empty() || (expectedVersion != currentVersion)) {
+			LOG((CLOG_ERR
+				"failed to load plugin '%s', "
+				"expected version %s but was %s",
+				filename.c_str(),
+				expectedVersion.c_str(),
+				currentVersion.empty() ? "unknown" : currentVersion.c_str()));
+
+			FreeLibrary(handle);
+			continue;
 		}
-		else {
-			LOG((CLOG_ERR "plugin version doesn't match"));
-			LOG((CLOG_DEBUG "expected plugin version: %s actual plugin version: %s",
-				expectedVersion.c_str(), version));
-			LOG((CLOG_ERR "skip plugin: %s", (*it).c_str()));
-			FreeLibrary(library);
-		}
+
+		LOG((CLOG_DEBUG "plugin loaded: %s (version %s)",
+			filename.c_str(),
+			currentVersion.c_str()));
+
+		m_pluginTable.insert(std::make_pair(nameNoExt, voidHandle));
 	}
 }
 
@@ -206,10 +216,23 @@ ArchPluginWindows::getFilenames(const String& pattern, std::vector<String>& file
 	FindClose(find);
 }
 
-String ArchPluginWindows::getPluginsDir()
+String
+ArchPluginWindows::getPluginsDir()
 {
 	return ARCH->getPluginDirectory();
 }
+
+String
+ArchPluginWindows::getCurrentVersion(const String& name, void* handle)
+{
+	char* version = (char*)invoke(name.c_str(), "version", NULL, handle);
+	if (version == NULL) {
+		return "";
+	}
+
+	return version;
+}
+
 
 void
 sendEvent(const char* eventName, void* data)
