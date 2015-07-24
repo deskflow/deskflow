@@ -838,7 +838,7 @@ class InternalCommands:
 		pwd = lines[0]
 		
 		if (dist):
-			self.signFile(pfx, pwd, 'bin/Release', self.dist_name('win'))
+			self.signFile(pfx, pwd, 'bin/Release', self.getDistFilename('win'))
 		else:
 			self.signFile(pfx, pwd, 'bin/Release', 'synergy.exe')
 			self.signFile(pfx, pwd, 'bin/Release', 'synergyc.exe')
@@ -1076,7 +1076,7 @@ class InternalCommands:
 		templateFile = open(self.cmake_dir + '/synergy.spec.in')
 		template = templateFile.read()
 
-		template = template.replace('${in:version}', self.getVersionFromCmake())  
+		template = template.replace('${in:version}', self.getVersionNumber())  
 
 		specPath = rpmDir + '/synergy.spec'
 
@@ -1084,10 +1084,8 @@ class InternalCommands:
 		specFile.write(template)
 		specFile.close()
 
-		version = self.getVersionFromCmake()
 		target = '../../bin/synergy-%s-%s.rpm' % (
-			version, self.getLinuxPlatform())
-								
+			self.getVersionForFilename(), self.getLinuxPlatform())
 
 		try:
 			self.try_chdir(rpmDir)
@@ -1113,9 +1111,10 @@ class InternalCommands:
 		binDir = self.getGenerator().binDir
 		resDir = self.cmake_dir
 
-		version = self.getVersionFromCmake()
 		package = '%s-%s-%s' % (
-			self.project, version, self.getLinuxPlatform())
+			self.project,
+			self.getVersionForFilename(),
+			self.getLinuxPlatform())
 
 		debDir = '%s/deb' % buildDir
 		if os.path.exists(debDir):
@@ -1128,7 +1127,7 @@ class InternalCommands:
 		template = templateFile.read()
 
 		template = template.replace('${in:version}',
-			self.getVersionFromCmake())
+			self.getVersionNumber())
 
 		template = template.replace('${in:arch}',
 			self.getDebianArch())
@@ -1203,8 +1202,11 @@ class InternalCommands:
 			self.restore_chdir()
 
 	def distSrc(self):
-		version = self.getVersionFromCmake()
-		name = (self.project + '-' + version + '-Source')
+		name = '%s-%s-%s' % (
+			self.project,
+			self.getVersionForFilename(),
+			'Source')
+
 		exportPath = self.getGenerator().buildDir + '/' + name
 
 		if os.path.exists(exportPath):
@@ -1257,7 +1259,7 @@ class InternalCommands:
 		
 		fileName = "%s-%s-%s.dmg" % (
 			self.project, 
-			self.getVersionFromCmake(),
+			self.getVersionForFilename(),
 			self.getMacPackageName())
 		
 		cmd = "hdiutil create " + fileName + " -srcfolder ./" + name + "/ -ov"
@@ -1273,7 +1275,7 @@ class InternalCommands:
 		if generator.endswith('Win64'):
 			arch = 'x64'
 		
-		version = self.getVersionFromCmake()
+		version = self.getVersionNumber()
 		args = "/p:DefineConstants=\"Version=%s\"" % version
 		
 		self.run_vcbuild(
@@ -1282,7 +1284,7 @@ class InternalCommands:
 		
 		filename = "%s-%s-Windows-%s.msi" % (
 			self.project, 
-			version,
+			self.getVersionForFilename(),
 			arch)
 			
 		old = "bin/Release/synergy.msi"
@@ -1317,7 +1319,7 @@ class InternalCommands:
 		templateFile = open(self.cmake_dir + '\Installer.nsi.in')
 		template = templateFile.read()
 
-		template = template.replace('${in:version}', self.getVersionFromCmake())
+		template = template.replace('${in:version}', self.getVersionNumber())
 		template = template.replace('${in:arch}', arch)
 		template = template.replace('${in:vcRedistDir}', vcRedistDir)
 		template = template.replace('${in:qtDir}', qtDir)
@@ -1334,7 +1336,7 @@ class InternalCommands:
 		if err != 0:
 			raise Exception('Package failed: ' + str(err))
 
-	def getVersionFromCmake(self):
+	def getVersionNumber(self):
 		cmakeFile = open('CMakeLists.txt')
 		cmake = cmakeFile.read()
 
@@ -1347,7 +1349,20 @@ class InternalCommands:
 		revRe = re.search('VERSION_REV (\d+)', cmake)
 		rev = revRe.group(1)
 
-		return major + '.' + minor + '.' + rev
+		return "%s.%s.%s" % (major, minor, rev)
+
+	def getVersionStage(self):
+		cmakeFile = open('CMakeLists.txt')
+		cmake = cmakeFile.read()
+
+		stageRe = re.search('VERSION_STAGE (\w+)', cmake)
+		return stageRe.group(1)
+
+	def getVersionForFilename(self):
+		versionStage = self.getVersionStage()
+		gitBranch = self.getGitBranchName()
+		gitRevision = self.getGitRevision()
+		return "%s-%s-%s" % (gitBranch, versionStage, gitRevision)
 
 	def distftp(self, type, ftp):
 		if not type:
@@ -1357,8 +1372,9 @@ class InternalCommands:
 
 		binDir = self.getGenerator().getBinDir('Release')
 
-		packageSource = binDir + '/' + self.dist_name(type)
-		packageTarget = self.dist_name_rev(type)
+		filename = self.getDistFilename(type)
+		packageSource = binDir + '/' + filename
+		packageTarget = filename
 		ftp.upload(packageSource, packageTarget)
 
 		if type != 'src':
@@ -1370,9 +1386,7 @@ class InternalCommands:
 
 	def getLibraryDistFilename(self, type, dir, name):
 		(platform, packageExt, libraryExt) = self.getDistributePlatformInfo(type)
-		branch = self.getGitBranchName()
-		revision = self.getGitRevision()
-		firstPart = '%s-%s-%s-%s' % (name, branch, revision, platform)
+		firstPart = '%s-%s-%s' % (name, self.getVersionForFilename(), platform)
 
 		filename = '%s.%s' % (firstPart, libraryExt)
 		if type == 'rpm' or type == 'deb':
@@ -1430,29 +1444,13 @@ class InternalCommands:
 
 		return (platform, ext, libraryExt)
 
-	def dist_name(self, type):
-		(platform, packageExt, libraryExt) = self.getDistributePlatformInfo(type)
-		ext = packageExt
-		
-		pattern = (
-			re.escape(self.project + '-') + '\d+\.\d+\.\d+' +
-			re.escape('-' + platform + '.' + ext))
-
+	def getDistFilename(self, type):
+		pattern = self.getVersionForFilename()
 		for filename in os.listdir(self.getBinDir('Release')):
 			if re.search(pattern, filename):
 				return filename
 		
-		# still here? package probably not created yet.
 		raise Exception('Could not find package name with pattern: ' + pattern)
-	
-	def dist_name_rev(self, type):
-		branch = self.getGitBranchName()
-		revision = self.getGitRevision()
-
-		# find the version number (we're puting the rev in after this)
-		pattern = '(\d+\.\d+\.\d+)'
-		replace = "%s-%s" % (branch, revision)
-		return re.sub(pattern, replace, self.dist_name(type))
 	
 	def getDebianArch(self):
 		if os.uname()[4][:3] == 'arm':
