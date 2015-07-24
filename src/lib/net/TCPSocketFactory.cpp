@@ -27,11 +27,7 @@
 // TCPSocketFactory
 //
 
-#if defined _WIN32
 static const char s_networkSecurity[] = { "ns" };
-#else
-static const char s_networkSecurity[] = { "libns" };
-#endif
 
 TCPSocketFactory::TCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	m_events(events),
