@@ -107,7 +107,7 @@ invoke(const char* command, void** args)
 		}
 	}
 	else if (strcmp(command, "version") == 0) {
-		return (void*)pluginVersion(kPluginName);
+		return (void*)getExpectedPluginVersion(kPluginName);
 	}
 
 	return NULL;

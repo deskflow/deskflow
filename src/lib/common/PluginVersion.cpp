@@ -21,13 +21,13 @@
 
 static const int kpluginCount = 1;
 static const char kUnknownVersion[] = "unknown";
-static const char* s_pluginNames[] = {"ns"};
-static const char* s_pluginVersions[] = {"1.2"};
+static const char* s_pluginNames[] = { "ns" };
+static const char* s_pluginVersions[] = { "1.2" };
 
-const char* pluginVersion(const char* pluginName)
+const char* getExpectedPluginVersion(const char* name)
 {
 	for (int i = 0; i < kpluginCount; i++) {
-		if (strcmp(pluginName, s_pluginNames[i]) == 0) {
+		if (strcmp(name, s_pluginNames[i]) == 0) {
 			return s_pluginVersions[i];
 			break;
 		}
