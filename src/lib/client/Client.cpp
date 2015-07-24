@@ -39,14 +39,13 @@
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
+#include "common/PluginVersion.h"
 #include "common/stdexcept.h"
 
 #include <cstring>
 #include <cstdlib>
 #include <sstream>
 #include <fstream>
-
-static const char s_networkSecurity[] = { "ns" };
 
 //
 // Client
@@ -103,7 +102,7 @@ Client::Client(
 	}
 
 	if (m_args.m_enableCrypto) {
-		m_useSecureNetwork = ARCH->plugin().exists(s_networkSecurity);
+		m_useSecureNetwork = ARCH->plugin().exists(s_pluginNames[kSecureSocket]);
 		if (m_useSecureNetwork == false) {
 			LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
 		}
@@ -585,7 +584,7 @@ Client::cleanupStream()
 	// we need to tell the dynamic lib that allocated this object
 	// to do the deletion.
 	if (m_useSecureNetwork) {
-		ARCH->plugin().invoke(s_networkSecurity, "deleteSocket", NULL);
+		ARCH->plugin().invoke(s_pluginNames[kSecureSocket], "deleteSocket", NULL);
 	}
 }
 
