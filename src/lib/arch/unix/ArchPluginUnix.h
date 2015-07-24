@@ -41,8 +41,9 @@ public:
 							void** args,
 							void* library = NULL);
 
- private:
+private:
 	String				getPluginsDir();
+	String				getCurrentVersion(const String& name, void* handle);
 
 private:
 	PluginTable			m_pluginTable;
