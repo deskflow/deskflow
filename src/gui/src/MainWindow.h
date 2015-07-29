@@ -201,7 +201,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		DataDownloader* m_pDataDownloader;
 		QMessageBox* m_DownloadMessageBox;
 		QAbstractButton* m_pCancelButton;
-		QMutex m_Mutex;
+		QMutex m_UpdateZeroconfMutex;
 		bool m_SuppressAutoConfigWarning;
 		CommandProcess* m_BonjourInstall;
 		bool m_SuppressEmptyServerWarning;

@@ -937,7 +937,7 @@ void MainWindow::changeEvent(QEvent* event)
 
 void MainWindow::updateZeroconfService()
 {
-	QMutexLocker locker(&m_Mutex);
+	QMutexLocker locker(&m_UpdateZeroconfMutex);
 
 	if (isBonjourRunning()) {
 		if (!m_AppConfig.wizardShouldRun()) {
