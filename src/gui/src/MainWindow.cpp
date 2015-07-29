@@ -764,8 +764,9 @@ void MainWindow::stopDesktop()
 
 	appendLogInfo("stopping synergy desktop process");
 
-	if (synergyProcess()->isOpen())
+	if (synergyProcess()->isOpen()) {
 		synergyProcess()->close();
+	}
 
 	delete synergyProcess();
 	setSynergyProcess(NULL);
