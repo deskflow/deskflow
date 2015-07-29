@@ -96,7 +96,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pCancelButton(NULL),
 	m_SuppressAutoConfigWarning(false),
 	m_BonjourInstall(NULL),
-	m_SuppressEmptyServerWarning(false)
+	m_SuppressEmptyServerWarning(false),
+	m_ExpectedRunningState(kStopped)
 {
 	setupUi(this);
 
@@ -142,6 +143,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 MainWindow::~MainWindow()
 {
 	if (appConfig().processMode() == Desktop) {
+		m_ExpectedRunningState = kStopped;
 		stopDesktop();
 	}
 
@@ -777,6 +779,15 @@ void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
 		QMessageBox::critical(this, tr("Synergy terminated with an error"), QString(tr("Synergy terminated unexpectedly with an exit code of %1.<br><br>Please see the log output for details.")).arg(exitCode));
 		stopSynergy();
 	}
+
+	if (appConfig().processMode() == Desktop) {
+		if (m_ExpectedRunningState == kStarted) {
+			stopSynergy();
+			delay(1);
+			startSynergy();
+		}
+	}
+
 #else
 	Q_UNUSED(exitCode);
 #endif
@@ -823,6 +834,7 @@ void MainWindow::setSynergyState(qSynergyState state)
 		}
 
 		setStatus(tr("Synergy is running."));
+		m_ExpectedRunningState = kStarted;
 
 		break;
 	}
@@ -1337,4 +1349,15 @@ void MainWindow::delay(unsigned int s)
 	while (QTime::currentTime() < dieTime) {
 		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 	}
+}
+
+void MainWindow::on_m_pButtonToggleStart_clicked()
+{
+	if (m_SynergyState != synergyConnected) {
+		m_ExpectedRunningState = kStarted;
+	}
+	else {
+		m_ExpectedRunningState = kStopped;
+	}
+
 }

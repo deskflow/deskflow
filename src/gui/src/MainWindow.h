@@ -85,6 +85,11 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 			Info
 		};
 
+		enum qRuningState {
+			kStarted,
+			kStopped
+		};
+
 	public:
 		MainWindow(QSettings& settings, AppConfig& appConfig);
 		~MainWindow();
@@ -138,7 +143,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 	protected:
 		QSettings& settings() { return m_Settings; }
 		AppConfig& appConfig() { return m_AppConfig; }
-		QProcess*& synergyProcess() { return m_pSynergy; }
+		QProcess* synergyProcess() { return m_pSynergy; }
 		void setSynergyProcess(QProcess* p) { m_pSynergy = p; }
 		void initConnections();
 		void createMenuBar();
@@ -200,12 +205,14 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool m_SuppressAutoConfigWarning;
 		CommandProcess* m_BonjourInstall;
 		bool m_SuppressEmptyServerWarning;
+		qRuningState m_ExpectedRunningState;
 
 private slots:
 	void on_m_pCheckBoxAutoConfig_toggled(bool checked);
 	void on_m_pComboServerList_currentIndexChanged(QString );
 	void on_m_pButtonApply_clicked();
 	void installBonjour();
+	void on_m_pButtonToggleStart_clicked();
 };
 
 #endif
