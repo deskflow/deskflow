@@ -114,7 +114,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void serverDetected(const QString name);
 		void setEdition(int type);
 		void updateLocalFingerprint();
-		void delay(unsigned int);
 
 	public slots:
 		void appendLogRaw(const QString& text);

@@ -780,9 +780,8 @@ void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
 	}
 
 	if (m_ExpectedRunningState == kStarted) {
-		delay(1);
+		QTimer::singleShot(1000, this, SLOT(startSynergy()));
 		appendLogInfo(QString("detected process not running, auto restarting"));
-		startSynergy();
 	}
 	else {
 		setSynergyState(synergyDisconnected);
@@ -1333,13 +1332,4 @@ QString MainWindow::getProfileRootForArg()
 #endif
 
 	return QString("\"%1\"").arg(dir);
-}
-
-void MainWindow::delay(unsigned int s)
-{
-	QTime dieTime= QTime::currentTime().addSecs(s);
-
-	while (QTime::currentTime() < dieTime) {
-		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-	}
 }
