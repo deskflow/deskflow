@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -206,13 +206,13 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		CommandProcess* m_BonjourInstall;
 		bool m_SuppressEmptyServerWarning;
 		qRuningState m_ExpectedRunningState;
+		QMutex m_StopDesktopMutex;
 
 private slots:
 	void on_m_pCheckBoxAutoConfig_toggled(bool checked);
 	void on_m_pComboServerList_currentIndexChanged(QString );
 	void on_m_pButtonApply_clicked();
 	void installBonjour();
-	void on_m_pButtonToggleStart_clicked();
 };
 
 #endif

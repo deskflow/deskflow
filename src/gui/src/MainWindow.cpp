@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Synergy Si Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -346,7 +346,7 @@ void MainWindow::logOutput()
 		{
 			if (!line.isEmpty())
 			{
-				appendLogRaw(line);				
+				appendLogRaw(line);
 			}
 		}
 	}
@@ -493,11 +493,8 @@ void MainWindow::startSynergy()
 	bool desktopMode = appConfig().processMode() == Desktop;
 	bool serviceMode = appConfig().processMode() == Service;
 
-	if (desktopMode)
-	{
-		stopSynergy();
-	}
-
+	appendLogDebug("starting process");
+	m_ExpectedRunningState = kStarted;
 	setSynergyState(synergyConnecting);
 
 	QString app;
@@ -587,7 +584,6 @@ void MainWindow::startSynergy()
 		synergyProcess()->start(app, args);
 		if (!synergyProcess()->waitForStarted())
 		{
-			stopSynergy();
 			show();
 			QMessageBox::warning(this, tr("Program can not be started"), QString(tr("The executable<br><br>%1<br><br>could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.").arg(app)));
 			return;
@@ -729,6 +725,10 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 
 void MainWindow::stopSynergy()
 {
+	appendLogDebug("stopping process");
+
+	m_ExpectedRunningState = kStopped;
+
 	if (appConfig().processMode() == Service)
 	{
 		stopService();
@@ -757,6 +757,7 @@ void MainWindow::stopService()
 
 void MainWindow::stopDesktop()
 {
+	QMutexLocker locker(&m_StopDesktopMutex);
 	if (!synergyProcess()) {
 		return;
 	}
@@ -772,27 +773,21 @@ void MainWindow::stopDesktop()
 
 void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
 {
-	// on Windows, we always seem to have an exit code != 0.
-#if !defined(Q_OS_WIN)
-	if (exitCode != 0)
-	{
-		QMessageBox::critical(this, tr("Synergy terminated with an error"), QString(tr("Synergy terminated unexpectedly with an exit code of %1.<br><br>Please see the log output for details.")).arg(exitCode));
-		stopSynergy();
+	if (exitCode == 0) {
+		appendLogInfo(QString("process exited normally"));
+	}
+	else {
+		appendLogError(QString("process exited with error code: %1").arg(exitCode));
 	}
 
-	if (appConfig().processMode() == Desktop) {
-		if (m_ExpectedRunningState == kStarted) {
-			stopSynergy();
-			delay(1);
-			startSynergy();
-		}
+	if (m_ExpectedRunningState == kStarted) {
+		delay(1);
+		appendLogInfo(QString("detected process not running, auto restarting"));
+		startSynergy();
 	}
-
-#else
-	Q_UNUSED(exitCode);
-#endif
-
-	setSynergyState(synergyDisconnected);
+	else {
+		setSynergyState(synergyDisconnected);
+	}
 }
 
 void MainWindow::setSynergyState(qSynergyState state)
@@ -834,7 +829,6 @@ void MainWindow::setSynergyState(qSynergyState state)
 		}
 
 		setStatus(tr("Synergy is running."));
-		m_ExpectedRunningState = kStarted;
 
 		break;
 	}
@@ -1349,15 +1343,4 @@ void MainWindow::delay(unsigned int s)
 	while (QTime::currentTime() < dieTime) {
 		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 	}
-}
-
-void MainWindow::on_m_pButtonToggleStart_clicked()
-{
-	if (m_SynergyState != synergyConnected) {
-		m_ExpectedRunningState = kStarted;
-	}
-	else {
-		m_ExpectedRunningState = kStopped;
-	}
-
 }
