@@ -451,18 +451,12 @@ void MainWindow::checkFingerprint(const QString& line)
 		.arg(fingerprint),
 		QMessageBox::Yes | QMessageBox::No);
 
+	stopSynergy();
+
 	if (fingerprintReply == QMessageBox::Yes) {
 		// restart core process after trusting fingerprint.
 		Fingerprint::trustedServers().trust(fingerprint);
 		startSynergy();
-	}
-	else {
-		// on all platforms, the core process will stop if the
-		// fingerprint is not trusted, so technically the stop
-		// isn't really needed. however on windows, the core
-		// process will keep trying (and failing) unless we
-		// tell it to stop.
-		stopSynergy();
 	}
 }
 
@@ -481,6 +475,12 @@ QString MainWindow::getTimeStamp()
 {
 	QDateTime current = QDateTime::currentDateTime();
 	return '[' + current.toString(Qt::ISODate) + ']';
+}
+
+void MainWindow::restartSynergy()
+{
+	stopSynergy();
+	startSynergy();
 }
 
 void MainWindow::clearLog()
@@ -1070,7 +1070,7 @@ void MainWindow::autoAddScreen(const QString name)
 			}
 		}
 		else {
-			startSynergy();
+			restartSynergy();
 		}
 	}
 }
@@ -1095,8 +1095,7 @@ void MainWindow::on_m_pActionWizard_triggered()
 
 void MainWindow::on_m_pButtonApply_clicked()
 {
-	stopSynergy();
-	startSynergy();
+	restartSynergy();
 }
 
 #if defined(Q_OS_WIN)
@@ -1280,7 +1279,7 @@ void MainWindow::updateEdition()
 void MainWindow::on_m_pComboServerList_currentIndexChanged(QString )
 {
 	if (m_pComboServerList->count() != 0) {
-		startSynergy();
+		restartSynergy();
 	}
 }
 
