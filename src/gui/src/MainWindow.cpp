@@ -1097,6 +1097,7 @@ void MainWindow::on_m_pActionWizard_triggered()
 
 void MainWindow::on_m_pButtonApply_clicked()
 {
+	stopSynergy();
 	startSynergy();
 }
 
