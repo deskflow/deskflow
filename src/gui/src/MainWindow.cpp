@@ -436,27 +436,34 @@ void MainWindow::checkFingerprint(const QString& line)
 		return;
 	}
 
-	QMessageBox::StandardButton fingerprintReply =
-		QMessageBox::information(
-		this, tr("Security question"),
-		tr("Do you trust this fingerprint?\n\n"
-		   "%1\n\n"
-		   "This is a server fingerprint. You should compare this "
-		   "fingerprint to the one on your server's screen. If the "
-		   "two don't match exactly, then it's probably not the server "
-		   "you're expecting (it could be a malicious user).\n\n"
-		   "To automatically trust this fingerprint for future "
-		   "connections, click Yes. To reject this fingerprint and "
-		   "disconnect from the server, click No.")
-		.arg(fingerprint),
-		QMessageBox::Yes | QMessageBox::No);
+	static bool messageBoxAlreadyShown = false;
 
-	stopSynergy();
+	if (!messageBoxAlreadyShown) {
+		messageBoxAlreadyShown = true;
+		QMessageBox::StandardButton fingerprintReply =
+			QMessageBox::information(
+			this, tr("Security question"),
+			tr("Do you trust this fingerprint?\n\n"
+			   "%1\n\n"
+			   "This is a server fingerprint. You should compare this "
+			   "fingerprint to the one on your server's screen. If the "
+			   "two don't match exactly, then it's probably not the server "
+			   "you're expecting (it could be a malicious user).\n\n"
+			   "To automatically trust this fingerprint for future "
+			   "connections, click Yes. To reject this fingerprint and "
+			   "disconnect from the server, click No.")
+			.arg(fingerprint),
+			QMessageBox::Yes | QMessageBox::No);
 
-	if (fingerprintReply == QMessageBox::Yes) {
-		// restart core process after trusting fingerprint.
-		Fingerprint::trustedServers().trust(fingerprint);
-		startSynergy();
+		messageBoxAlreadyShown = false;
+
+		stopSynergy();
+
+		if (fingerprintReply == QMessageBox::Yes) {
+			// restart core process after trusting fingerprint.
+			Fingerprint::trustedServers().trust(fingerprint);
+			startSynergy();
+		}
 	}
 }
 
