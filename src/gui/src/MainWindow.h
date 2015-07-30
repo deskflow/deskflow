@@ -178,6 +178,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void checkFingerprint(const QString& line);
 		bool autoHide();
 		QString getTimeStamp();
+		void restartSynergy();
 
 	private:
 		QSettings& m_Settings;
