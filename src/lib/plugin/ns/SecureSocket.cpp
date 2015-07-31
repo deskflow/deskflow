@@ -59,8 +59,7 @@ SecureSocket::SecureSocket(
 		SocketMultiplexer* socketMultiplexer) :
 	TCPSocket(events, socketMultiplexer),
 	m_secureReady(false),
-	m_fatal(false),
-	m_maxRetry(kMaxRetryCount)
+	m_fatal(false)
 {
 }
 
@@ -70,8 +69,7 @@ SecureSocket::SecureSocket(
 		ArchSocket socket) :
 	TCPSocket(events, socketMultiplexer, socket),
 	m_secureReady(false),
-	m_fatal(false),
-	m_maxRetry(kMaxRetryCount)
+	m_fatal(false)
 {
 }
 
