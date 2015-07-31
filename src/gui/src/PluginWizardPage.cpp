@@ -80,10 +80,8 @@ void PluginWizardPage::queryPluginDone()
 	}
 	else {
 		m_mainWindow.stopSynergy();
-		m_mainWindow.delay(5);
 		copyPlugins();
 		m_mainWindow.startSynergy();
-		m_mainWindow.delay(5);
 	}
 }
 
