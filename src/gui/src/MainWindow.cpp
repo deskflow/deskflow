@@ -455,8 +455,6 @@ void MainWindow::checkFingerprint(const QString& line)
 			.arg(fingerprint),
 			QMessageBox::Yes | QMessageBox::No);
 
-		messageBoxAlreadyShown = false;
-
 		stopSynergy();
 
 		if (fingerprintReply == QMessageBox::Yes) {
@@ -464,6 +462,8 @@ void MainWindow::checkFingerprint(const QString& line)
 			Fingerprint::trustedServers().trust(fingerprint);
 			startSynergy();
 		}
+
+		messageBoxAlreadyShown = false;
 	}
 }
 
