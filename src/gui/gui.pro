@@ -107,7 +107,7 @@ HEADERS += src/MainWindow.h \
     src/SslCertificate.h \
     src/FileSysClient.h \
     src/Plugin.h \
-    src/WebClient.h
+    src/WebClient.h \
     ../lib/common/PluginVersion.h
 
 RESOURCES += res/Synergy.qrc
