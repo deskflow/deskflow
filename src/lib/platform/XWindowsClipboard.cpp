@@ -1106,6 +1106,7 @@ XWindowsClipboard::sendReply(Reply* reply)
 					for (String::size_type j = 0; j < data.size(); ++j) {
 						if (data[j] < 32 || data[j] > 126) {
 							String tmp;
+							// DAL: data can have garbage and be arbitrarily large
 							tmp.reserve(data.size() * 3);
 							for (j = 0; j < data.size(); ++j) {
 								unsigned char v = (unsigned char)data[j];

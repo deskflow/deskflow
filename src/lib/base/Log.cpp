@@ -173,7 +173,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
 	if (priority != kPRINT) {
 
 		char message[kLogMessageLength];
-
+                char *pm = message;
 		struct tm *tm;
 		char tmp[220];
 		time_t t;
@@ -184,10 +184,17 @@ Log::print(const char* file, int line, const char* fmt, ...)
 #ifndef NDEBUG	
 		sprintf(message, "[%s] %s: %s\n\t%s,%d", tmp, g_priority[priority], buffer, file, line);
 #else
-		sprintf(message, "[%s] %s: %s", tmp, g_priority[priority], buffer);
+		// DAL: buffer can be > message
+		// sprintf(message, "[%s] %s: %s", tmp, g_priority[priority], buffer);
+		int ln= strlen(tmp) + strlen(g_priority[priority]) +8; // over
+		if( ln >= sizeof( message ) )
+			pm = new char[ln];
+		sprintf(pm, "[%s] %s: %s", tmp, g_priority[priority], buffer);
+ 
 #endif
-
-		output(priority, message);
+		output(priority, pm);
+                if( pm != message)
+			delete [] pm;
 	} else {
 		output(priority, buffer);
 	}
