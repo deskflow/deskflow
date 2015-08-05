@@ -516,6 +516,7 @@ SecureSocket::getError()
 void
 SecureSocket::disconnect()
 {
+	sendEvent(getEvents()->forISocket().stopRetry());
 	sendEvent(getEvents()->forISocket().disconnected());
 	sendEvent(getEvents()->forIStream().inputShutdown());
 }
