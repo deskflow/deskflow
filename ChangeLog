@@ -1,22 +1,15 @@
 v1.7.4-stable
 =============
-Bug #4809 - Intermittent freeze caused by mutex deadlock in logging code
-Bug #4721 - High CPU usage for Windows service on client
-Bug #4712 - Unable to send clipboard with size above 1KB when using SSL
+Bug #4721 - High CPU usage for Windows service
+Bug #4750 - SSL connect error 'passive ssl error limit'
 Bug #4584 - Drag and drop with SSL causes crash
-Bug #3774 - Missing MinGW dependencies after install on Windows
 Bug #4749 - Clipboard thread race condition causes assertion failure
-Bug #4723 - Waiting for active desktop result freezes Windows service
-Bug #4690 - Log line 'activeDesktop' does not use logging system
 Bug #4720 - Plugin download shows 'Could not get Linux package type' error
-Bug #4737 - Using error log level does not show SSL fingerprint dialog
-Bug #451  - Fast cursor on any client with Mac server
-Bug #4810 - Non-existent file listed in Qt gui.pro file
-Enhancement #4696 - Include 'ns' plugin in installers instead of wizard download
-Enhancement #4796 - Improve secure socket intensive try operations
-Enhancement #4327 - GUI setting to disable drag and drop feature
-Enhancement #4745 - Tray icon notification for clipboard data transfer progress
-Enhancement #4793 - Additional logging to output OpenSSL version
+Bug #4712 - Unable to send clipboard with size above 1KB when using SSL
+Bug #4642 - Connecting causes SSL23_GET_SERVER_HELLO error
+Bug #4690 - Log line 'activeDesktop' does not use logging system
+Bug #4866 - Wrong ns plugin version can be loaded
+Enhancement #4901 - Auto restart when running from GUI in desktop mode
 Enhancement #4845 - Add timestamp to log output
 
 v1.7.3-stable
