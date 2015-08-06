@@ -21,7 +21,7 @@
 
 static const char kUnknownVersion[] = "unknown";
 const char* s_pluginNames[] = { "ns" };
-static const char* s_pluginVersions[] = { "1.2" };
+static const char* s_pluginVersions[] = { "1.3" };
 
 const char* getExpectedPluginVersion(const char* name)
 {
