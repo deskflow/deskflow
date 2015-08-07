@@ -439,6 +439,8 @@ void MainWindow::checkFingerprint(const QString& line)
 	static bool messageBoxAlreadyShown = false;
 
 	if (!messageBoxAlreadyShown) {
+		stopSynergy();
+
 		messageBoxAlreadyShown = true;
 		QMessageBox::StandardButton fingerprintReply =
 			QMessageBox::information(
@@ -454,8 +456,6 @@ void MainWindow::checkFingerprint(const QString& line)
 			   "disconnect from the server, click No.")
 			.arg(fingerprint),
 			QMessageBox::Yes | QMessageBox::No);
-
-		stopSynergy();
 
 		if (fingerprintReply == QMessageBox::Yes) {
 			// restart core process after trusting fingerprint.
