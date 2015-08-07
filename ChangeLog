@@ -11,6 +11,7 @@ Bug #4690 - Log line 'activeDesktop' does not use logging system
 Bug #4866 - Wrong ns plugin version can be loaded
 Enhancement #4901 - Auto restart when running from GUI in desktop mode
 Enhancement #4845 - Add timestamp to log output
+Enhancement #4898 - Move version stage name to build config
 
 v1.7.3-stable
 =============
