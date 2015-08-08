@@ -54,5 +54,11 @@
         <file>image/spinning-wheel.gif</file>
         <file>icons/16x16/padlock.png</file>
         <file>icons/16x16/synergy-transfering.png</file>
+        <file>icons/64x64/synergy-dark-transfering.png</file>
+        <file>icons/64x64/synergy-dark-disconnected.png</file>
+        <file>icons/64x64/synergy-dark-connected.png</file>
+        <file>icons/64x64/synergy-light-transfering.png</file>
+        <file>icons/64x64/synergy-light-disconnected.png</file>
+        <file>icons/64x64/synergy-light-connected.png</file>
     </qresource>
 </RCC>
