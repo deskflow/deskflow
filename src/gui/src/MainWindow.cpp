@@ -35,6 +35,10 @@
 #include "QUtility.h"
 #include "ProcessorArch.h"
 
+#if defined(Q_OS_MAC)
+#include "OSXHelpers.h"
+#endif
+
 #include <QtCore>
 #include <QtGui>
 #include <QtNetwork>
@@ -67,7 +71,21 @@ static const char synergyConfigName[] = "synergy.conf";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
 #endif
 
-static const char* synergyIconFiles[] =
+static const char* synergyLightIconFiles[] =
+{
+	":/res/icons/64x64/synergy-light-disconnected.png",
+	":/res/icons/64x64/synergy-light-disconnected.png",
+	":/res/icons/64x64/synergy-light-connected.png",
+	":/res/icons/64x64/synergy-light-transfering.png"
+};
+static const char* synergyDarkIconFiles[] =
+{
+	":/res/icons/64x64/synergy-dark-disconnected.png",
+	":/res/icons/64x64/synergy-dark-disconnected.png",
+	":/res/icons/64x64/synergy-dark-connected.png",
+	":/res/icons/64x64/synergy-dark-transfering.png"
+};
+static const char* synergyDefaultIconFiles[] =
 {
 	":/res/icons/16x16/synergy-disconnected.png",
 	":/res/icons/16x16/synergy-disconnected.png",
@@ -313,7 +331,15 @@ void MainWindow::saveSettings()
 void MainWindow::setIcon(qSynergyState state)
 {
 	QIcon icon;
-	icon.addFile(synergyIconFiles[state]);
+
+#ifdef Q_OS_MAC
+	if (isOSXInterfaceStyleDark())
+	    icon.addFile(synergyDarkIconFiles[state]);
+	else
+	    icon.addFile(synergyLightIconFiles[state]);
+#else
+	icon.addFile(synergyDefaultIconFiles[state]);
+#endif
 
 	if (m_pTrayIcon)
 		m_pTrayIcon->setIcon(icon);
