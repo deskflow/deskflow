@@ -1323,7 +1323,6 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 			// selection owner.  report that to the receiver.
 			ClipboardID id = getClipboardID(xevent->xselectionclear.selection);
 			if (id != kClipboardEnd) {
-				LOG((CLOG_DEBUG "lost clipboard %d ownership at time %d", id, xevent->xselectionclear.time));
 				m_clipboard[id]->lost(xevent->xselectionclear.time);
 				sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), id);
 				return;

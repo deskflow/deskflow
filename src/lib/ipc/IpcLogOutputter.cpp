@@ -67,6 +67,8 @@ IpcLogOutputter::~IpcLogOutputter()
 	ARCH->closeMutex(m_bufferMutex);
 
 	if (m_bufferThread != nullptr) {
+		m_bufferThread->cancel();
+		m_bufferThread->wait();
 		delete m_bufferThread;
 	}
 

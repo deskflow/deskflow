@@ -31,10 +31,12 @@
 //   1: first version
 //   2: added language page
 //   3: added premium page and removed
-//   4: ssl plugin 'ns' introduced
-//   5: ssl plugin 'ns' updated
+//   4: ssl plugin 'ns' v1.0
+//   5: ssl plugin 'ns' v1.1
+//   6: ssl plugin 'ns' v1.2
+//   7: ssl plugin 'ns' v1.3
 //
-const int kWizardVersion = 5;
+const int kWizardVersion = 7;
 
 class QSettings;
 class SettingsDialog;

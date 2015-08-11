@@ -21,17 +21,12 @@
 #include "net/TCPSocket.h"
 #include "net/TCPListenSocket.h"
 #include "arch/Arch.h"
+#include "common/PluginVersion.h"
 #include "base/Log.h"
 
 //
 // TCPSocketFactory
 //
-
-#if defined _WIN32
-static const char s_networkSecurity[] = { "ns" };
-#else
-static const char s_networkSecurity[] = { "libns" };
-#endif
 
 TCPSocketFactory::TCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	m_events(events),
@@ -55,7 +50,7 @@ TCPSocketFactory::create(bool secure) const
 			m_socketMultiplexer
 		};
 		socket = static_cast<IDataSocket*>(
-			ARCH->plugin().invoke(s_networkSecurity, "getSocket", args));
+			ARCH->plugin().invoke(s_pluginNames[kSecureSocket], "getSocket", args));
 	}
 	else {
 		socket = new TCPSocket(m_events, m_socketMultiplexer);
@@ -74,7 +69,7 @@ TCPSocketFactory::createListen(bool secure) const
 			m_socketMultiplexer
 		};
 		socket = static_cast<IListenSocket*>(
-			ARCH->plugin().invoke(s_networkSecurity, "getListenSocket", args));
+			ARCH->plugin().invoke(s_pluginNames[kSecureSocket], "getListenSocket", args));
 	}
 	else {
 		socket = new TCPListenSocket(m_events, m_socketMultiplexer);

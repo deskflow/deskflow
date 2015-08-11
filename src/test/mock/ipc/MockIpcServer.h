@@ -34,6 +34,16 @@ public:
 	MockIpcServer() :
 		m_sendCond(ARCH->newCondVar()),
 		m_sendMutex(ARCH->newMutex()) { }
+	
+	~MockIpcServer() {
+		if (m_sendCond != NULL) {
+			ARCH->closeCondVar(m_sendCond);
+		}
+
+		if (m_sendMutex != NULL) {
+			ARCH->closeMutex(m_sendMutex);
+		}
+	}
 
 	MOCK_METHOD0(listen, void());
 	MOCK_METHOD2(send, void(const IpcMessage&, EIpcClientType));

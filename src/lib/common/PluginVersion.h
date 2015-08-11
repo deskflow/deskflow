@@ -17,5 +17,15 @@
 
 #pragma once
 
-// return plugin version map
-const char* pluginVersion(const char* pluginName);
+enum EPluginType {
+	kSecureSocket,
+	kPluginCount
+};
+
+extern const char* s_pluginNames[];
+
+//! Get expected plugin version
+/*!
+Returns the plugin version expected by the plugin loader.
+*/
+const char* getExpectedPluginVersion(const char* name);

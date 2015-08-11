@@ -194,13 +194,7 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 	process.start(program, args);
 	bool success = process.waitForStarted();
 
-	if (!success || !process.waitForFinished())
-	{
-		emit error(tr("Could not get Linux package type."));
-		return "";
-	}
-
-	bool isDeb = (process.exitCode() == 0);
+	bool isDeb = (success && process.waitForFinished() & (process.exitCode() == 0));
 
 	int arch = getProcessorArch();
 	if (arch == kProcessorArchLinux32) {
@@ -229,7 +223,7 @@ QString PluginManager::getPluginUrl(const QString& pluginName)
 	QString result = QString("%1/plugins/%2/%3/%4/%5")
 			.arg(kBaseUrl)
 			.arg(pluginName)
-			.arg(pluginVersion(pluginName.toStdString().c_str()))
+			.arg(getExpectedPluginVersion(pluginName.toStdString().c_str()))
 			.arg(archName)
 			.arg(getPluginOsSpecificName(pluginName));
 
