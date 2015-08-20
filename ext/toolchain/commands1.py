@@ -259,7 +259,10 @@ class InternalCommands:
 		3 : VisualStudioGenerator('9 2008'),
 		4 : VisualStudioGenerator('9 2008 Win64'),
 		5 : VisualStudioGenerator('8 2005'),
-		6 : VisualStudioGenerator('8 2005 Win64')
+		6 : VisualStudioGenerator('8 2005 Win64'),
+		7 : VisualStudioGenerator('11'),
+		8 : VisualStudioGenerator('12'),
+		9 : VisualStudioGenerator('14')
 	}
 
 	unix_generators = {
@@ -306,7 +309,7 @@ class InternalCommands:
 			'  genlist     Shows the list of available platform generators\n'
 			'  usage       Shows the help screen\n'
 			'\n'
-			'Example: %s build -g 3'
+			'Example: %s configure -g 3'
 			) % (app, app)
 
 	def configureAll(self, targets, extraArgs=''):
@@ -1749,6 +1752,10 @@ class InternalCommands:
 				value,type = _winreg.QueryValueEx(key, '9.0')
 			elif generator.startswith('Visual Studio 10'):
 				value,type = _winreg.QueryValueEx(key, '10.0')
+			elif generator.startswith('Visual Studio 12'):
+				value,type = _winreg.QueryValueEx(key, '12.0')
+			elif generator.startswith('Visual Studio 14'):
+				value,type = _winreg.QueryValueEx(key, '14.0')
 			else:
 				raise Exception('Cannot determine vcvarsall.bat location for: ' + generator)
 		except WindowsError:
@@ -1901,7 +1908,7 @@ class CommandHandler:
 	qtDir = ''
 	
 	def __init__(self, argv, opts, args, verbose):
-		
+
 		self.ic.verbose = verbose
 		
 		self.opts = opts
