@@ -1742,14 +1742,17 @@ class InternalCommands:
 		except:
 			raise Exception('Unable to open Visual Studio registry key. Application may not be installed.')
 		
-		if generator.startswith('Visual Studio 8'):
-			value,type = _winreg.QueryValueEx(key, '8.0')
-		elif generator.startswith('Visual Studio 9'):
-			value,type = _winreg.QueryValueEx(key, '9.0')
-		elif generator.startswith('Visual Studio 10'):
-			value,type = _winreg.QueryValueEx(key, '10.0')
-		else:
-			raise Exception('Cannot determine vcvarsall.bat location for: ' + generator)
+		try:
+			if generator.startswith('Visual Studio 8'):
+				value,type = _winreg.QueryValueEx(key, '8.0')
+			elif generator.startswith('Visual Studio 9'):
+				value,type = _winreg.QueryValueEx(key, '9.0')
+			elif generator.startswith('Visual Studio 10'):
+				value,type = _winreg.QueryValueEx(key, '10.0')
+			else:
+				raise Exception('Cannot determine vcvarsall.bat location for: ' + generator)
+		except WindowsError:
+			raise Exception('You Visual Studio version may not be suported. Try "hm genlist"')
 		
 		# not sure why, but the value on 64-bit differs slightly to the original
 		if os_bits == '64bit':
