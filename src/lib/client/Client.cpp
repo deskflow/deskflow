@@ -21,7 +21,6 @@
 #include "../plugin/ns/SecureSocket.h"
 #include "client/ServerProxy.h"
 #include "synergy/Screen.h"
-#include "synergy/Clipboard.h"
 #include "synergy/FileChunk.h"
 #include "synergy/DropHelper.h"
 #include "synergy/PacketStreamFilter.h"
@@ -75,7 +74,10 @@ Client::Client(
 	m_socket(NULL),
 	m_useSecureNetwork(false),
 	m_args(args),
-	m_sendClipboardThread(NULL)
+	m_sendClipboardThread(NULL),
+	m_mutex(NULL),
+	m_condData(false),
+	m_condVar(NULL)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -107,6 +109,8 @@ Client::Client(
 			LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
 		}
 	}
+	m_mutex = new Mutex();
+	m_condVar = new CondVar<bool>(m_mutex, m_condData);
 }
 
 Client::~Client()
@@ -125,6 +129,8 @@ Client::~Client()
 	cleanupConnecting();
 	cleanupConnection();
 	delete m_socketFactory;
+	delete m_condVar;
+	delete m_mutex;
 }
 
 void
@@ -262,8 +268,6 @@ Client::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
 bool
 Client::leave()
 {
-	m_screen->leave();
-
 	m_active = false;
 
 	if (m_sendClipboardThread != NULL) {
@@ -272,11 +276,17 @@ Client::leave()
 		m_sendClipboardThread = NULL;
 	}
 
+	m_condData = false;
 	m_sendClipboardThread = new Thread(
 								new TMethodJob<Client>(
 									this,
 									&Client::sendClipboardThread,
 									NULL));
+	// Bug #4735 - we can't leave() until fillClipboard()s all finish
+	while (!m_condData)
+	    m_condVar->wait();
+
+	m_screen->leave();
 
 	if (!m_receivedFileData.empty()) {
 		m_receivedFileData.clear();
@@ -382,9 +392,20 @@ Client::getName() const
 }
 
 void
-Client::sendClipboard(ClipboardID id)
+Client::fillClipboard(ClipboardID id, Clipboard *clipboard)
 {
-	// note -- m_mutex must be locked on entry
+	assert(m_screen != NULL);
+	assert(m_server != NULL);
+
+	if (clipboard->open(m_timeClipboard[id])) {
+		clipboard->close();
+	}
+	m_screen->getClipboard(id, clipboard);
+}
+
+void
+Client::sendClipboard(ClipboardID id, Clipboard *clipboard)
+{
 	assert(m_screen != NULL);
 	assert(m_server != NULL);
 
@@ -392,26 +413,21 @@ Client::sendClipboard(ClipboardID id)
 	// clipboard time before getting the data from the screen
 	// as the screen may detect an unchanged clipboard and
 	// avoid copying the data.
-	Clipboard clipboard;
-	if (clipboard.open(m_timeClipboard[id])) {
-		clipboard.close();
-	}
-	m_screen->getClipboard(id, &clipboard);
 
 	// check time
 	if (m_timeClipboard[id] == 0 ||
-		clipboard.getTime() != m_timeClipboard[id]) {
+		clipboard->getTime() != m_timeClipboard[id]) {
 		// save new time
-		m_timeClipboard[id] = clipboard.getTime();
+		m_timeClipboard[id] = clipboard->getTime();
 
 		// marshall the data
-		String data = clipboard.marshall();
+		String data = clipboard->marshall();
 
 		// save and send data if different or not yet sent
 		if (!m_sentClipboard[id] || data != m_dataClipboard[id]) {
 			m_sentClipboard[id] = true;
 			m_dataClipboard[id] = data;
-			m_server->onClipboardChanged(id, &clipboard);
+			m_server->onClipboardChanged(id, clipboard);
 		}
 	}
 }
@@ -673,8 +689,10 @@ Client::handleClipboardGrabbed(const Event& event, void*)
 
 	// if we're not the active screen then send the clipboard now,
 	// otherwise we'll wait until we leave.
+	Clipboard clipboard;
 	if (!m_active) {
-		sendClipboard(info->m_id);
+		fillClipboard(info->m_id, &clipboard);
+		sendClipboard(info->m_id, &clipboard);
 	}
 }
 
@@ -762,12 +780,24 @@ Client::onFileRecieveCompleted()
 }
 
 void
-Client::sendClipboardThread(void*)
+Client::sendClipboardThread(void * data)
 {
+	Clipboard clipboard[kClipboardEnd];
+	// fill clipboards that we own and that have changed
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		if (m_ownClipboard[id]) {
+			fillClipboard(id, &clipboard[id]);
+		}
+	}
+
+	// signal that fill is done
+	m_condData = true;
+	m_condVar->signal();
+
 	// send clipboards that we own and that have changed
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		if (m_ownClipboard[id]) {
-			sendClipboard(id);
+			sendClipboard(id, &clipboard[id]);
 		}
 	}
 
