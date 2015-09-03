@@ -283,8 +283,16 @@ Client::leave()
 									&Client::sendClipboardThread,
 									NULL));
 	// Bug #4735 - we can't leave() until fillClipboard()s all finish
-	while (!m_condData)
-	    m_condVar->wait();
+	Stopwatch timer(true);
+	m_mutex->lock();
+	while (!m_condData) {
+	    m_condVar->wait(timer, 0.5);
+	    if (timer.getTime()>0.5) {
+		LOG((CLOG_DEBUG "timed out waiting for clipboard fill"));
+		break;
+	    }
+	}
+	m_mutex->unlock();
 
 	m_screen->leave();
 
@@ -791,8 +799,10 @@ Client::sendClipboardThread(void * data)
 	}
 
 	// signal that fill is done
+	m_mutex->lock();
 	m_condData = true;
 	m_condVar->signal();
+	m_mutex->unlock();
 
 	// send clipboards that we own and that have changed
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
