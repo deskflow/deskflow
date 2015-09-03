@@ -286,11 +286,10 @@ Client::leave()
 	Stopwatch timer(true);
 	m_mutex->lock();
 	while (!m_condData) {
-	    m_condVar->wait(timer, 0.5);
-	    if (timer.getTime()>0.5) {
-		LOG((CLOG_DEBUG "timed out waiting for clipboard fill"));
-		break;
-	    }
+		if (!m_condVar->wait(timer, 0.5)) {
+			LOG((CLOG_DEBUG "timed out waiting for clipboard fill"));
+			break;
+		}
 	}
 	m_mutex->unlock();
 
