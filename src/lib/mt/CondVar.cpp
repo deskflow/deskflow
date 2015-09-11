@@ -66,11 +66,15 @@ CondVarBase::wait(Stopwatch& timer, double timeout) const
 	double remain = timeout-timer.getTime();
 	// Some ARCH wait()s return prematurely, retry until really timed out
 	// In particular, ArchMultithreadPosix::waitCondVar() returns every 100ms
-	while (remain >= 0.0) {
+	do {
+		// Always call wait at least once, even if remain is 0, to give
+		// other thread a chance to grab the mutex to avoid deadlocks on
+        // busy waiting.
+		if (remain<0.0) remain=0.0;
 		if (wait(remain))
 			return true;
 		remain = timeout - timer.getTime();
-	}
+	} while (remain >= 0.0);
 	return false;
 }
 
