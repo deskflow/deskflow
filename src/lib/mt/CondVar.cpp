@@ -63,13 +63,15 @@ CondVarBase::broadcast()
 bool
 CondVarBase::wait(Stopwatch& timer, double timeout) const
 {
-	// check timeout against timer
-	if (timeout >= 0.0) {
-		timeout -= timer.getTime();
-		if (timeout < 0.0)
-			return false;
+	double remain = timeout-timer.getTime();
+	// Some ARCH wait()s return prematurely, retry until really timed out
+	// In particular, ArchMultithreadPosix::waitCondVar() returns every 100ms
+	while (remain >= 0.0) {
+		if (wait(remain))
+			return true;
+		remain = timeout - timer.getTime();
 	}
-	return wait(timeout);
+	return false;
 }
 
 bool
