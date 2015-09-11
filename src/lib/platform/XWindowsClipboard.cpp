@@ -513,7 +513,6 @@ XWindowsClipboard::icccmFillCache()
 		LOG((CLOG_DEBUG1 "selection doesn't support TARGETS"));
 		data = "";
 		XWindowsUtil::appendAtomData(data, XA_STRING);
-		// return; // NTL
 	}
 
 	XWindowsUtil::convertAtomProperty(data);
