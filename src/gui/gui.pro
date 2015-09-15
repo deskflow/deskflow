@@ -2,6 +2,8 @@ QT += widgets \
     network
 TEMPLATE = app
 TARGET = synergy
+DEFINES += VERSION_STAGE=\\\"$$QMAKE_VERSION_STAGE\\\"
+DEFINES += VERSION_REVISION=\\\"$$QMAKE_VERSION_REVISION\\\"
 DEPENDPATH += . \
     res
 INCLUDEPATH += . \
