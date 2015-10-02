@@ -853,7 +853,10 @@ MSWindowsDesks::checkDesk()
 
 	// if we are told to shut down on desk switch, and this is not the 
 	// first switch, then shut down.
-	if (m_stopOnDeskSwitch && m_activeDesk != NULL && name != m_activeDeskName) {
+	// Issue #5041 workaround - prevent synergys from shutting down when screen
+	// saver activates - It does not come back cleanly.
+	if (m_stopOnDeskSwitch && m_activeDesk != NULL && name != m_activeDeskName
+		&& !m_screensaver->isActive()) {
 		LOG((CLOG_DEBUG "shutting down because of desk switch to \"%s\"", name.c_str()));
 		m_events->addEvent(Event(Event::kQuit));
 		return;
