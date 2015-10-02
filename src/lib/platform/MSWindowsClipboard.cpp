@@ -182,6 +182,7 @@ MSWindowsClipboard::get(EFormat format) const
 
 	// if no converter then we don't recognize any formats
 	if (converter == NULL) {
+		LOG((CLOG_WARN "No converter for format %d", format));
 		return String();
 	}
 
