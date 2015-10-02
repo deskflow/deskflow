@@ -255,6 +255,7 @@ MSWindowsScreen::enable()
 void
 MSWindowsScreen::disable()
 {
+	LOG((CLOG_DEBUG "%s\n", __FUNCTION__));
 	// stop tracking the active desk
 	m_desks->disable();
 
@@ -514,8 +515,7 @@ bool
 MSWindowsScreen::getClipboard(ClipboardID, IClipboard* dst) const
 {
 	MSWindowsClipboard src(m_window);
-	Clipboard::copy(dst, &src);
-	return true;
+	return Clipboard::copy(dst, &src);
 }
 
 void

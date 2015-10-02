@@ -301,6 +301,9 @@ MSWindowsWatchdog::startProcess()
 	DWORD uiAccess = 1;
 	SetTokenInformation(userToken, TokenUIAccess, &uiAccess, sizeof(DWORD));
 
+	LOG((CLOG_DEBUG "starting process, session=%i, command=%s",
+		m_session.getActiveSessionId(), m_command.c_str()));
+
 	BOOL createRet = doStartProcess(m_command, userToken, &sa);
 
 	if (!createRet) {

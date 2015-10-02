@@ -133,6 +133,7 @@ public:
 	unmarshalled to restore the clipboard and return the buffer.
 	*/
 	static String		marshall(const IClipboard* clipboard);
+	static String		dump(const String &data);
 
 	//! Unmarshall clipboard data
 	/*!

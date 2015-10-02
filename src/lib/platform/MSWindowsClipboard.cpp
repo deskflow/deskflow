@@ -38,6 +38,8 @@ MSWindowsClipboard::MSWindowsClipboard(HWND window) :
 	m_facade(new MSWindowsClipboardFacade()),
 	m_deleteFacade(true)
 {
+	LOG((CLOG_DEBUG "%s", __FUNCTION__));
+
 	// add converters, most desired first
 	m_converters.push_back(new MSWindowsClipboardUTF16Converter);
 	m_converters.push_back(new MSWindowsClipboardBitmapConverter);
@@ -46,6 +48,8 @@ MSWindowsClipboard::MSWindowsClipboard(HWND window) :
 
 MSWindowsClipboard::~MSWindowsClipboard()
 {
+	LOG((CLOG_DEBUG "%s", __FUNCTION__));
+
 	clearConverters();
 
 	// dependency injection causes confusion over ownership, so we need
@@ -82,6 +86,8 @@ MSWindowsClipboard::emptyUnowned()
 bool
 MSWindowsClipboard::empty()
 {
+	LOG((CLOG_DEBUG "%s", __FUNCTION__));
+
 	if (!emptyUnowned()) {
 		return false;
 	}
@@ -164,6 +170,55 @@ MSWindowsClipboard::has(EFormat format) const
 String
 MSWindowsClipboard::get(EFormat format) const
 {
+	LOG((CLOG_DEBUG "get format %d", format));
+
+	auto l_name = [] (UINT fmt) -> String {
+		char buf[100]="";
+		if (fmt>=0xc000 && fmt<=0xffff) {
+			buf[0]=':';
+			GetClipboardFormatName(fmt, buf+1, 99);
+			return String(buf);
+		}
+		return String("");
+	};
+	auto l_err = [] (DWORD error) -> String {
+		if (error==0) return String("");
+		LPVOID ptr=NULL;
+		DWORD len=FormatMessage(
+			FORMAT_MESSAGE_ALLOCATE_BUFFER |
+			FORMAT_MESSAGE_FROM_SYSTEM |
+			FORMAT_MESSAGE_IGNORE_INSERTS,
+			NULL,
+			error,
+			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+			(LPTSTR)&ptr,
+			0, NULL );
+		String ret("");
+		if (ptr!=NULL) {
+			if (len>0) ret=String((LPSTR)ptr, (LPSTR)ptr+len);
+			LocalFree(ptr);
+		}
+		return ret;
+	};
+	String s("converters:");
+	for (ConverterList::const_iterator index = m_converters.begin();
+							index != m_converters.end(); ++index) {
+		s+=synergy::string::sprintf(" %d,0x%x%s",
+			(*index)->getFormat(),
+			(*index)->getWin32Format(),
+			l_name((*index)->getWin32Format()).c_str());
+	}
+	LOG((CLOG_DEBUG "%s\n", s.c_str()));
+
+	s = String("formats:");
+	for (UINT win32Format = EnumClipboardFormats(0);
+		win32Format != 0; win32Format = EnumClipboardFormats(win32Format)) {
+		s+=synergy::string::sprintf(" 0x%x%s",
+			win32Format,
+			l_name(win32Format).c_str());
+	}
+	LOG((CLOG_DEBUG "%s %s\n", s.c_str(), l_err(GetLastError()).c_str()));
+
 	// find the converter for the first clipboard format we can handle
 	IMSWindowsClipboardConverter* converter = NULL;
 	UINT win32Format = EnumClipboardFormats(0);
@@ -189,8 +244,9 @@ MSWindowsClipboard::get(EFormat format) const
 								index != m_converters.end(); ++index) {
 			converter = *index;
 			if (converter->getFormat() == format) {
-				LOG((CLOG_DEBUG "using converter 0x%x for %d\n",
+				LOG((CLOG_DEBUG "using converter 0x%x%s for %d\n",
 					converter->getWin32Format(),
+					l_name(converter->getWin32Format()).c_str(),
 					format));
 				HANDLE win32Data = GetClipboardData(converter->getWin32Format());
 				if (win32Data != NULL)
@@ -200,12 +256,19 @@ MSWindowsClipboard::get(EFormat format) const
 		return String();
 	}
 
+	LOG((CLOG_DEBUG "using converter 0x%x%s for %d\n",
+		converter->getWin32Format(),
+		l_name(converter->getWin32Format()).c_str(),
+		format));
+
 	// get a handle to the clipboard data
 	HANDLE win32Data = GetClipboardData(converter->getWin32Format());
 	if (win32Data == NULL) {
 		// nb: can't cause this using integ tests; this is only caused when
 		// the selected converter returns an invalid format -- which you
 		// cannot cause using public functions.
+		LOG((CLOG_WARN "No data for format %d -> win32 format 0x%x",
+			format, converter->getWin32Format()));
 		return String();
 	}
 
@@ -216,6 +279,8 @@ MSWindowsClipboard::get(EFormat format) const
 void
 MSWindowsClipboard::clearConverters()
 {
+	LOG((CLOG_DEBUG "%s", __FUNCTION__));
+
 	for (ConverterList::iterator index = m_converters.begin();
 								index != m_converters.end(); ++index) {
 		delete *index;
@@ -229,6 +294,7 @@ MSWindowsClipboard::isOwnedBySynergy()
 	// create ownership format if we haven't yet
 	if (s_ownershipFormat == 0) {
 		s_ownershipFormat = RegisterClipboardFormat(TEXT("SynergyOwnership"));
+		LOG((CLOG_DEBUG "%s set ownership %d", __FUNCTION__, s_ownershipFormat));
 	}
 	return (IsClipboardFormatAvailable(getOwnershipFormat()) != 0);
 }
@@ -239,7 +305,10 @@ MSWindowsClipboard::getOwnershipFormat()
 	// create ownership format if we haven't yet
 	if (s_ownershipFormat == 0) {
 		s_ownershipFormat = RegisterClipboardFormat(TEXT("SynergyOwnership"));
+		LOG((CLOG_DEBUG "%s set ownership", __FUNCTION__));
 	}
+
+	LOG((CLOG_DEBUG "%s=%d", __FUNCTION__, s_ownershipFormat));
 
 	// return the format
 	return s_ownershipFormat;
