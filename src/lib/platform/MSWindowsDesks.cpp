@@ -851,24 +851,30 @@ MSWindowsDesks::checkDesk()
 		desk = index->second;
 	}
 
+	if (name == m_activeDeskName) {
+		return;
+	}
+
+	if (m_activeDesk != NULL) {
+		LOG((CLOG_DEBUG "switched desk \"%s\"->\"%s\"",
+			m_activeDeskName.c_str(), name.c_str()));
+	}
+
+	// if we are told to shut down on desk switch, and this is not the
+	// first switch, then shut down.
+	if (m_stopOnDeskSwitch && m_activeDesk != NULL) {
+		LOG((CLOG_DEBUG "shutting down because of desk switch \"%s\"->\"%s\"",
+			m_activeDeskName.c_str(), name.c_str()));
+		m_events->addEvent(Event(Event::kQuit));
+		return;
+	}
+
 	// if active desktop changed then tell the old and new desk threads
 	// about the change.  don't switch desktops when the screensaver is
 	// active becaue we'd most likely switch to the screensaver desktop
 	// which would have the side effect of forcing the screensaver to
 	// stop.
-	if (name != m_activeDeskName && !m_screensaver->isActive()) {
-		// if we are told to shut down on desk switch, and this is not the
-		// first switch, then shut down.
-		// Issue #5041 workaround - prevent synergys from shutting down when
-		// screen saver activates - if it is restarted while the screen saver
-		// is active, the clipboard no longer works.
-		if (m_stopOnDeskSwitch && m_activeDesk != NULL) {
-			LOG((CLOG_DEBUG "shutting down because of desk switch \"%s\"->\"%s\"",
-				m_activeDeskName.c_str(), name.c_str()));
-			m_events->addEvent(Event(Event::kQuit));
-			return;
-		}
-
+	if (!m_screensaver->isActive()) {
 		// show cursor on previous desk
 		bool wasOnScreen = m_isOnScreen;
 		if (!wasOnScreen) {
@@ -879,10 +885,6 @@ MSWindowsDesks::checkDesk()
 		// from an inaccessible desktop so when we switch from an
 		// inaccessible desktop to an accessible one we have to
 		// update the keyboard state.
-		if (m_activeDesk != NULL) {
-			LOG((CLOG_DEBUG "switched desk \"%s\"->\"%s\"",
-				m_activeDeskName.c_str(), name.c_str()));
-		}
 		bool syncKeys = false;
 		bool isAccessible = isDeskAccessible(desk);
 		if (isDeskAccessible(m_activeDesk) != isAccessible) {
@@ -910,19 +912,17 @@ MSWindowsDesks::checkDesk()
 			updateKeys();
 		}
 	}
-	else if (name != m_activeDeskName) {
-		if (m_activeDesk != NULL) {
-			LOG((CLOG_DEBUG "switched desk \"%s\"->\"%s\"",
-				m_activeDeskName.c_str(), name.c_str()));
-		}
-
+	else {
 		// screen saver is active (see check above)
 		PostThreadMessage(m_threadID, SYNERGY_MSG_SCREEN_SAVER, TRUE, 0);
+		// FIXME? Because m_activeDesk isn't updated if screen saver is active,
+		// SYNERGY_MSG_SCREEN_SAVER will be sent on every call to checkDesk()
+		// until isActive() returns false, since name will not match
+		// m_activeDeskName until the latter is updated.
 
-		// Prevent this from retriggering over and over if screen saver stays
-		// active:
-		m_activeDesk     = desk;
-		m_activeDeskName = name;
+		// For now, preserve old (broken?) behavior.
+		//m_activeDesk     = desk;
+		//m_activeDeskName = name;
 	}
 }
 
