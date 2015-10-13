@@ -180,9 +180,24 @@ MSWindowsClipboard::get(EFormat format) const
 		win32Format = EnumClipboardFormats(win32Format);
 	}
 
-	// if no converter then we don't recognize any formats
+	// if no converter then EnumClipboardFormats() is broken: try just
+	// GetClipboardData() directly (Issue $5041)
 	if (converter == NULL) {
-		LOG((CLOG_WARN "No converter for format %d", format));
+		LOG((CLOG_INFO "Broken EnumClipboardFormats, falling back to using GetClipboardData"));
+
+		for (ConverterList::const_iterator index = m_converters.begin();
+								index != m_converters.end(); ++index) {
+			converter = *index;
+			if (converter->getFormat() == format) {
+				LOG((CLOG_DEBUG "using converter 0x%x%s for %d\n",
+					converter->getWin32Format(),
+					l_name(converter->getWin32Format()).c_str(),
+					format));
+				HANDLE win32Data = GetClipboardData(converter->getWin32Format());
+				if (win32Data != NULL)
+					return converter->toIClipboard(win32Data);
+			}
+		}
 		return String();
 	}
 
