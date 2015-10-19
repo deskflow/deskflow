@@ -39,14 +39,14 @@ void DpiHelper::calculateDpi(size_t width, size_t height)
 	size_t dpiTest1 = s_resolutionWidth * 100 / width;
 	size_t dpiTest2 = s_resolutionHeight * 100 / height;
 
-	assert(dpiTest1 == dpiTest2);
+    if (dpiTest1 == dpiTest2) {
+        s_dpi = dpiTest1;
 
-	s_dpi = dpiTest1;
+        if (s_dpi != kDefaultDpi) {
+            s_dpiScaled = true;
 
-	if (s_dpi != kDefaultDpi) {
-		s_dpiScaled = true;
-
-		LOG((CLOG_DEBUG "DPI: %d%%", s_dpi));
-		LOG((CLOG_DEBUG "physical resolution: %d, %d scaled resolution: %d, %d", s_resolutionWidth, s_resolutionHeight, width, height));
-	}
+            LOG((CLOG_DEBUG "DPI: %d%%", s_dpi));
+            LOG((CLOG_DEBUG "physical resolution: %d, %d scaled resolution: %d, %d", s_resolutionWidth, s_resolutionHeight, width, height));
+        }
+    }
 }
