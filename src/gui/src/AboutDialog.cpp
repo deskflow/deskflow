@@ -32,6 +32,8 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 	version = version + '-' + VERSION_STAGE +  '-' + VERSION_REVISION;
 	m_pLabelSynergyVersion->setText(version);
 
+	m_pLabelBuildDate->setText(QDate::currentDate().toString());
+
 	// change default size based on os
 #if defined(Q_OS_MAC)
 	QSize size(600, 380);
