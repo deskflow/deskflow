@@ -2011,6 +2011,7 @@ Server::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 				newY = (SInt32)(newY / DpiHelper::getDpi());
 			}
 		}
+
 		// switch screens
 		switchScreen(newScreen, newX, newY, false);
 	}
