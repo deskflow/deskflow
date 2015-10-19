@@ -40,7 +40,7 @@ TEST(DpiHelperTests, calculateDpi_samePhysicalAndVirtualResolutions_defaultDpi)
 
 	DpiHelper::calculateDpi(1920, 1080);
 
-	EXPECT_EQ(false, DpiHelper::s_dpiScaled);
+	EXPECT_FALSE(DpiHelper::s_dpiScaled);
 	EXPECT_EQ(DpiHelper::kDefaultDpi, DpiHelper::s_dpi);
 }
 
@@ -55,7 +55,7 @@ TEST(DpiHelperTests, calculateDpi_differentPhysicalAndVirtualResolutions_scaledD
 
 	DpiHelper::calculateDpi(960, 540);
 
-	EXPECT_EQ(true, DpiHelper::s_dpiScaled);
+	EXPECT_TRUE(DpiHelper::s_dpiScaled);
 	EXPECT_EQ(200, DpiHelper::s_dpi);
 }
 
@@ -65,6 +65,6 @@ TEST(DpiHelperTests, calculateDpi_defaultStaticValues_defaultDpi)
 
 	DpiHelper::calculateDpi(1920, 1080);
 
-	EXPECT_EQ(false, DpiHelper::s_dpiScaled);
+	EXPECT_FALSE(DpiHelper::s_dpiScaled);
 	EXPECT_EQ(DpiHelper::kDefaultDpi, DpiHelper::s_dpi);
 }
