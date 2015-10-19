@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include "common/common.h"
+
 class DpiHelper {
 public:
 	enum EDpi {
