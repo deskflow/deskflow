@@ -51,6 +51,12 @@ public:
 	*/
 	void				getJumpCursorPos(SInt32& x, SInt32& y) const;
 
+	//! Get cursor position
+	/*!
+	Return if this proxy is for client or primary.
+	*/
+	virtual bool		isPrimary() const { return false; }
+
 	//@}
 
 	// IScreen
