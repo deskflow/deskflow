@@ -20,7 +20,6 @@
 
 #include "SslCertificate.h"
 #include "FileSysClient.h"
-#include "WebClient.h"
 #include "PluginManager.h"
 #include "MainWindow.h"
 
@@ -178,20 +177,18 @@ bool PluginWizardPage::isComplete() const
 void PluginWizardPage::initializePage()
 {
 	QWizardPage::initializePage();
+
+	if (m_Email.isEmpty() ||
+		m_Password.isEmpty()) {
+		updateStatus(tr("Setup complete."));
+		showFinished();
+		return;
+	}
+
 	if (m_pFileSysClient == NULL) {
-		if (m_Email.isEmpty() ||
-			m_Password.isEmpty()) {
-			updateStatus(tr("Setup complete."));
-			showFinished();
-			return;
-		}
+		m_pFileSysClient = new FileSysClient();
 
 		m_pLabelSpinning->show();
-
-		m_pFileSysClient = new FileSysClient();
-		m_pWebClient = new WebClient();
-		m_pWebClient->setEmail(m_Email);
-		m_pWebClient->setPassword(m_Password);
 
 		QThread* thread = new QThread;
 

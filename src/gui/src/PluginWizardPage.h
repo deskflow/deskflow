@@ -25,7 +25,6 @@
 #include <QWizardPage>
 
 class FileSysClient;
-class WebClient;
 class SslCertificate;
 class MainWindow;
 
@@ -62,7 +61,6 @@ private:
 	bool m_Finished;
 	QString m_Email;
 	QString m_Password;
-	WebClient* m_pWebClient;
 	FileSysClient* m_pFileSysClient;
 	PluginManager m_PluginManager;
 	SslCertificate* m_pSslCertificate;
