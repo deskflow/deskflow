@@ -148,7 +148,7 @@ public:
 
 	virtual synergy::IStream*
 						getStream() const { return NULL; }
-
+	bool				isPrimary() const { return true; }
 private:
 	synergy::Screen*	m_screen;
 	bool				m_clipboardDirty[kClipboardEnd];
