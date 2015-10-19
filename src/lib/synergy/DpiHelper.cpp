@@ -29,7 +29,10 @@ size_t DpiHelper::s_primaryHeightCenter = 0;
 
 void DpiHelper::calculateDpi(size_t width, size_t height)
 {
-	if (s_resolutionWidth == 0 || s_resolutionHeight == 0) {
+	if (s_resolutionWidth == 0 || 
+		s_resolutionHeight == 0 || 
+		s_primaryWidthCenter == 0 ||
+		s_primaryHeightCenter == 0) {
 		return;
 	}
 
