@@ -571,8 +571,8 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
     // increase clickState (double click, triple click, etc)
     // This will allow for higher than triple click but the quartz documenation
     // does not specify that this should be limited to triple click
-    if(press) {
-        if((ARCH->time() - m_lastClickTime) <= clickTime && diff <= maxDiff){
+    if (press) {
+        if ((ARCH->time() - m_lastClickTime) <= clickTime && diff <= maxDiff){
             m_clickState++;
         }
         else {
@@ -582,7 +582,7 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
         m_lastClickTime = ARCH->time();
     }
     
-    if(m_clickState == 1){
+    if (m_clickState == 1){
         m_lastSingleClickXCursor = m_xCursor;
         m_lastSingleClickYCursor = m_yCursor;
     }
@@ -941,7 +941,7 @@ OSXScreen::leave()
 bool
 OSXScreen::setClipboard(ClipboardID, const IClipboard* src)
 {
-	if(src != NULL) {
+	if (src != NULL) {
 		LOG((CLOG_DEBUG "setting clipboard"));
 		Clipboard::copy(&m_pasteboard, src);	
 	}	
@@ -2016,7 +2016,7 @@ OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 			LOG((CLOG_WARN "unknown quartz event type: 0x%02x", type));
 	}
 	
-	if(screen->m_isOnScreen) {
+	if (screen->m_isOnScreen) {
 		return event;
 	} else {
 		return NULL;
@@ -2142,7 +2142,7 @@ OSXScreen::waitForCarbonLoop() const
 
 	double timeout = ARCH->time() + kCarbonLoopWaitTimeout;
 	while (!m_carbonLoopReady->wait()) {
-		if(ARCH->time() > timeout) {
+		if (ARCH->time() > timeout) {
 			LOG((CLOG_DEBUG "carbon loop not ready, waiting again"));
 			timeout = ARCH->time() + kCarbonLoopWaitTimeout;
 		}
