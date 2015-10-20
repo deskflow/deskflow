@@ -39,14 +39,9 @@ public:
 			QWidget* w);
 	void setEmail(QString& e) { m_Email = e; }
 	void setPassword(QString& p) { m_Password = p; }
-	QStringList& getPluginList() { return m_PluginList; }
-
-public slots:
-	void queryPluginList();
 
 signals:
 	void error(QString e);
-	void queryPluginDone();
 
 private:
 	QString request(const QString& email,
@@ -56,7 +51,6 @@ private:
 private:
 	QString m_Email;
 	QString m_Password;
-	QStringList m_PluginList;
 	CoreInterface m_CoreInterface;
 };
 
