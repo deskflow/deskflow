@@ -332,10 +332,10 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
 
 	// choose action
 	UInt16 action;
-	if(eventKind==kCGEventKeyDown) {
+	if (eventKind==kCGEventKeyDown) {
 		action = kUCKeyActionDown;
 	}
-	else if(CGEventGetIntegerValueField(event, kCGKeyboardEventAutorepeat)==1) {
+	else if (CGEventGetIntegerValueField(event, kCGKeyboardEventAutorepeat)==1) {
 		action = kUCKeyActionAutoKey;
 	}
 	else {
