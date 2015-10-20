@@ -50,8 +50,8 @@ protected slots:
 	void showError(QString error);
 	void updateStatus(QString info);
 	void queryPluginDone();
-	void finished();
 	void generateCertificate();
+	void finished();
 
 private:
 	void copyPlugins();

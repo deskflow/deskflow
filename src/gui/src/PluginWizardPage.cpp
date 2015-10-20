@@ -64,15 +64,57 @@ void PluginWizardPage::changeEvent(QEvent *e)
 	}
 }
 
-void PluginWizardPage::showError(QString error)
+void PluginWizardPage::initializePage()
 {
-	updateStatus(tr("Error: %1").arg(error));
-	showFinished();
+	QWizardPage::initializePage();
+
+	if (m_Email.isEmpty() ||
+		m_Password.isEmpty()) {
+		updateStatus(tr("Setup complete."));
+		showFinished();
+		return;
+	}
+
+	m_pLabelSpinning->show();
+
+	QThread* thread = new QThread;
+
+	connect(&m_PluginManager,
+		SIGNAL(error(QString)),
+		this,
+		SLOT(showError(QString)));
+
+	connect(&m_PluginManager,
+		SIGNAL(info(QString)),
+		this,
+		SLOT(updateStatus(QString)));
+
+	connect(&m_PluginManager,
+		SIGNAL(queryPluginDone()),
+		this,
+		SLOT(queryPluginDone()));
+
+	connect(&m_PluginManager,
+		SIGNAL(queryPluginDone()),
+		thread,
+		SLOT(quit()));
+
+	connect(&m_PluginManager,
+		SIGNAL(error(QString)),
+		thread,
+		SLOT(quit()));
+
+	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+	m_PluginManager.moveToThread(thread);
+	thread->start();
+
+	QMetaObject::invokeMethod(&m_PluginManager, "queryPluginList", Qt::QueuedConnection);
 }
 
 void PluginWizardPage::queryPluginDone()
 {
-	QStringList pluginList = m_pFileSysClient->getPluginList();
+	QStringList pluginList = m_PluginManager.getPluginList();
 	if (pluginList.isEmpty()) {
 		updateStatus(tr("Setup complete."));
 		showFinished();
@@ -84,56 +126,9 @@ void PluginWizardPage::queryPluginDone()
 	}
 }
 
-void PluginWizardPage::finished()
-{
-	// TODO: we should check if ns plugin exists
-	m_mainWindow.appConfig().setCryptoEnabled(true);
-
-	updateStatus(tr("Plugins installed successfully."));
-	showFinished();
-}
-
-void PluginWizardPage::generateCertificate()
-{
-	connect(m_pSslCertificate,
-		SIGNAL(generateFinished()),
-		this,
-		SLOT(finished()));
-
-	connect(m_pSslCertificate,
-		SIGNAL(generateFinished()),
-		m_pThread,
-		SLOT(quit()));
-
-	updateStatus(tr("Generating SSL certificate..."));
-
-	QMetaObject::invokeMethod(
-		m_pSslCertificate,
-		"generateCertificate",
-		Qt::QueuedConnection);
-}
-
-void PluginWizardPage::updateStatus(QString info)
-{
-	m_pLabelStatus->setText(info);
-}
-
 void PluginWizardPage::copyPlugins()
 {
-	QStringList pluginList = m_pFileSysClient->getPluginList();
-	m_PluginManager.initFromFileSys(pluginList);
-
 	m_pThread = new QThread;
-
-	connect(&m_PluginManager,
-		SIGNAL(error(QString)),
-		this,
-		SLOT(showError(QString)));
-
-	connect(&m_PluginManager,
-		SIGNAL(info(QString)),
-		this,
-		SLOT(updateStatus(QString)));
 
 	connect(&m_PluginManager,
 		SIGNAL(copyFinished()),
@@ -162,6 +157,47 @@ void PluginWizardPage::copyPlugins()
 		Qt::QueuedConnection);
 }
 
+void PluginWizardPage::generateCertificate()
+{
+	connect(m_pSslCertificate,
+		SIGNAL(generateFinished()),
+		this,
+		SLOT(finished()));
+
+	connect(m_pSslCertificate,
+		SIGNAL(generateFinished()),
+		m_pThread,
+		SLOT(quit()));
+
+	updateStatus(tr("Generating SSL certificate..."));
+
+	QMetaObject::invokeMethod(
+		m_pSslCertificate,
+		"generateCertificate",
+		Qt::QueuedConnection);
+}
+
+void PluginWizardPage::showError(QString error)
+{
+	updateStatus(tr("Error: %1").arg(error));
+	showFinished();
+}
+
+
+void PluginWizardPage::updateStatus(QString info)
+{
+	m_pLabelStatus->setText(info);
+}
+
+void PluginWizardPage::finished()
+{
+	// TODO: we should check if ns plugin exists
+	m_mainWindow.appConfig().setCryptoEnabled(true);
+
+	updateStatus(tr("Plugins installed successfully."));
+	showFinished();
+}
+
 void PluginWizardPage::showFinished()
 {
 	m_pLabelSpinning->hide();
@@ -172,51 +208,4 @@ void PluginWizardPage::showFinished()
 bool PluginWizardPage::isComplete() const
 {
 	return m_Finished;
-}
-
-void PluginWizardPage::initializePage()
-{
-	QWizardPage::initializePage();
-
-	if (m_Email.isEmpty() ||
-		m_Password.isEmpty()) {
-		updateStatus(tr("Setup complete."));
-		showFinished();
-		return;
-	}
-
-	if (m_pFileSysClient == NULL) {
-		m_pFileSysClient = new FileSysClient();
-
-		m_pLabelSpinning->show();
-
-		QThread* thread = new QThread;
-
-		connect(m_pFileSysClient,
-			SIGNAL(error(QString)),
-			this,
-			SLOT(showError(QString)));
-
-		connect(m_pFileSysClient,
-			SIGNAL(queryPluginDone()),
-			this,
-			SLOT(queryPluginDone()));
-
-		connect(m_pFileSysClient,
-			SIGNAL(queryPluginDone()),
-			thread,
-			SLOT(quit()));
-
-		connect(m_pFileSysClient,
-			SIGNAL(error(QString)),
-			thread,
-			SLOT(quit()));
-
-		connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
-		m_pFileSysClient->moveToThread(thread);
-		thread->start();
-
-		QMetaObject::invokeMethod(m_pFileSysClient, "queryPluginList", Qt::QueuedConnection);
-	}
 }

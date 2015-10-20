@@ -35,15 +35,18 @@ public:
 	PluginManager();
 	~PluginManager();
 
-	void initFromWeb(QStringList pluginList);
-	void initFromFileSys(QStringList pluginList);
+	void init();
 
-	int pluginCount() { return m_FileSysPluginList.count(); }
+	int pluginCount() { return m_PluginList.count(); }
+	QStringList& getPluginList() { return m_PluginList; }
 
+	bool isDone() { return done; }
+	void setDone(bool b) { done = b; }
 	static bool exist(QString name);
 
 public slots:
 	void copyPlugins();
+	void queryPluginList();
 
 private:
 	QString getPluginUrl(const QString& pluginName);
@@ -59,14 +62,16 @@ signals:
 	void info(QString i);
 	void updateCopyStatus(int);
 	void copyFinished();
+	void queryPluginDone();
 
 private:
-	QStringList m_FileSysPluginList;
+	QStringList m_PluginList;
 	QString m_PluginDir;
 	QString m_ProfileDir;
 	QString m_InstalledDir;
 	CoreInterface m_CoreInterface;
 	SslCertificate m_SslCertificate;
+	bool done;
 };
 
 #endif // PLUGINMANAGER_H
