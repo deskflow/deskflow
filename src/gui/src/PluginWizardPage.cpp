@@ -19,7 +19,6 @@
 #include "ui_PluginWizardPageBase.h"
 
 #include "SslCertificate.h"
-#include "FileSysClient.h"
 #include "PluginManager.h"
 #include "MainWindow.h"
 

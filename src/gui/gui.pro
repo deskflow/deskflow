@@ -59,7 +59,6 @@ SOURCES += src/main.cpp \
     src/CoreInterface.cpp \
     src/Fingerprint.cpp \
     src/SslCertificate.cpp \
-    src/FileSysClient.cpp \
     src/Plugin.cpp \
     src/WebClient.cpp \
     ../lib/common/PluginVersion.cpp
@@ -107,7 +106,6 @@ HEADERS += src/MainWindow.h \
     src/CoreInterface.h \
     src/Fingerprint.h \
     src/SslCertificate.h \
-    src/FileSysClient.h \
     src/Plugin.h \
     src/WebClient.h \
     ../lib/common/PluginVersion.h
