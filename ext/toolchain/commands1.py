@@ -508,6 +508,8 @@ class InternalCommands:
 				qmake_cmd_string += " QMAKE_MAC_SDK=" + shortForm
 				qmake_cmd_string += " QMAKE_MAC_SDK." + shortForm + ".path=" + sdkDir
 
+		qmake_cmd_string += " QMAKE_VERSION_STAGE=" + self.getVersionStage() 
+		qmake_cmd_string += " QMAKE_VERSION_REVISION=" + self.getGitRevision() 
 		print "QMake command: " + qmake_cmd_string
 		
 		# run qmake from the gui dir
@@ -957,7 +959,7 @@ class InternalCommands:
 	def getGitRevision(self):
 		if sys.version_info < (2, 4):
 			raise Exception("Python 2.4 or greater required.")
-		
+
 		p = subprocess.Popen(
 			["git", "log", "--pretty=format:%h", "-n", "1"],
 			stdout=subprocess.PIPE, stderr=subprocess.PIPE)

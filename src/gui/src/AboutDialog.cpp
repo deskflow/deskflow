@@ -28,7 +28,11 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 	setupUi(this);
 
 	m_versionChecker.setApp(synergyApp);
-	m_pLabelSynergyVersion->setText(m_versionChecker.getVersion());
+	QString version = m_versionChecker.getVersion();
+	version = version + '-' + VERSION_STAGE +  '-' + VERSION_REVISION;
+	m_pLabelSynergyVersion->setText(version);
+
+	m_pLabelBuildDate->setText(QDate::currentDate().toString());
 
 	// change default size based on os
 #if defined(Q_OS_MAC)

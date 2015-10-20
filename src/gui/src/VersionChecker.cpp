@@ -96,7 +96,9 @@ QString VersionChecker::getVersion()
 		QRegExp rx(VERSION_REGEX);
 		QString text = process.readLine();
 		if (rx.indexIn(text) != -1)
+		{
 			return rx.cap(1);
+		}
 	}
 
 	return tr("Unknown");
