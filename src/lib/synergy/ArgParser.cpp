@@ -163,7 +163,6 @@ ArgParser::parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* con
 #endif
 }
 
-
 bool
 ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 {
@@ -194,6 +193,22 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 		}
 		else if (isArg(i, argc, argv, NULL, "--get-arch", 0)) {
 			args.m_getArch = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--subscription-serial", 1)) {
+			args.m_subscriptionSerial = argv[++i];
+			if (args.m_subscriptionSerial.empty()) {
+				LOG((CLOG_CRIT "subscription error: serial was not provided"));
+				return false;
+			}
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-subscription-filename", 0)) {
+			args.m_printSubscriptionFilename = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--check-subscription", 0)) {
+			args.m_checkSubscription = true;
 			return true;
 		}
 		else {

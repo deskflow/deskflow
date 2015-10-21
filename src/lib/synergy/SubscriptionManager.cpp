@@ -194,7 +194,7 @@ SubscriptionManager::parsePlainSerial(const String& plainText, SubscriptionKey& 
 String
 SubscriptionManager::getFilename()
 {
-	String path = ARCH->getUserDirectory();
+	String path = ARCH->getProfileDirectory();
 	path = ARCH->concatPath(path, kFile);
 	if (path.empty()) {
 		throw XSubscription("Could not get filename.");

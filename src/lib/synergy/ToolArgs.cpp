@@ -23,6 +23,10 @@ ToolArgs::ToolArgs() :
 	m_getPluginList(false),
 	m_getPluginDir(false),
 	m_getInstalledDir(false),
-	m_getProfileDir(false)
+	m_getProfileDir(false),
+	m_getArch(false),
+	m_printSubscriptionFilename(false),
+	m_checkSubscription(false),
+	m_subscriptionSerial()
 {
 }

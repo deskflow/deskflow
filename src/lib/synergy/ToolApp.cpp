@@ -18,6 +18,7 @@
 #include "synergy/ToolApp.h"
 
 #include "synergy/ArgParser.h"
+#include "synergy/SubscriptionManager.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/String.h"
@@ -85,6 +86,36 @@ ToolApp::run(int argc, char** argv)
 		}
 		else if (m_args.m_getArch) {
 			std::cout << ARCH->getPlatformName() << std::endl;
+		}
+		else if (!m_args.m_subscriptionSerial.empty()) {
+			try {
+				SubscriptionManager subscriptionManager;
+				subscriptionManager.activate(m_args.m_subscriptionSerial);
+			}
+			catch (XSubscription& e) {
+				LOG((CLOG_CRIT "subscription error: %s", e.what()));
+				return kExitSubscription;
+			}
+		}
+		else if (m_args.m_printSubscriptionFilename) {
+			try {
+				SubscriptionManager subscriptionManager;
+				subscriptionManager.printFilename();
+			}
+			catch (XSubscription& e) {
+				LOG((CLOG_CRIT "subscription error: %s", e.what()));
+				return kExitSubscription;
+			}
+		}
+		else if (m_args.m_checkSubscription) {
+			try {
+				SubscriptionManager subscriptionManager;
+				subscriptionManager.checkFile("");
+			}
+			catch (XSubscription& e) {
+				LOG((CLOG_CRIT "subscription error: %s", e.what()));
+				return kExitSubscription;
+			}
 		}
 		else {
 			throw XSynergy("Nothing to do");
