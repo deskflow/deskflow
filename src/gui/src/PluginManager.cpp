@@ -35,15 +35,17 @@
 
 
 PluginManager::PluginManager() :
-	m_FileSysPluginList()
+	m_PluginList()
+{
+	init();
+}
+
+PluginManager::~PluginManager()
 {
 }
 
-void PluginManager::initFromFileSys(QStringList pluginList)
+void PluginManager::init()
 {
-	m_FileSysPluginList.clear();
-	m_FileSysPluginList.append(pluginList);
-
 	m_PluginDir = m_CoreInterface.getPluginDir();
 	if (m_PluginDir.isEmpty()) {
 		emit error(tr("Failed to get plugin directory."));
@@ -58,10 +60,6 @@ void PluginManager::initFromFileSys(QStringList pluginList)
 	if (m_InstalledDir.isEmpty()) {
 		emit error(tr("Failed to get installed directory."));
 	}
-}
-
-PluginManager::~PluginManager()
-{
 }
 
 bool PluginManager::exist(QString name)
@@ -106,12 +104,12 @@ void PluginManager::copyPlugins()
 			destDir.mkpath(".");
 		}
 		// Run through the list of plugins and copy them
-		for ( int i = 0 ; i < m_FileSysPluginList.size() ; i++ ) {
+		for ( int i = 0 ; i < m_PluginList.size() ; i++ ) {
 			// Get a file entry for the plugin using the full path
-			QFile file(srcDirName + QDir::separator() + m_FileSysPluginList.at(i));
+			QFile file(srcDirName + QDir::separator() + m_PluginList.at(i));
 
 			// construct the destination file name
-			QString newName(destDirName + QDir::separator() + m_FileSysPluginList.at(i));
+			QString newName(destDirName + QDir::separator() + m_PluginList.at(i));
 
 			// Check to see if the plugin already exists
 			QFile newFile(newName);
@@ -136,7 +134,7 @@ void PluginManager::copyPlugins()
 					emit error(
 							tr("Failed to copy plugin '%1' to: %2\n%3\n"
 							   "Please stop synergy and run the wizard again.")
-							.arg(m_FileSysPluginList.at(i))
+							.arg(m_PluginList.at(i))
 							.arg(newName)
 							.arg(file.errorString()));
 					return;
@@ -144,9 +142,9 @@ void PluginManager::copyPlugins()
 			else {
 				emit info(
 					tr("Copying '%1' plugin (%2/%3)...")
-					.arg(m_FileSysPluginList.at(i))
+					.arg(m_PluginList.at(i))
 					.arg(i+1)
-					.arg(m_FileSysPluginList.size()));
+					.arg(m_PluginList.size()));
 			}
 		}
 	}
@@ -158,5 +156,32 @@ void PluginManager::copyPlugins()
 	}
 
 	emit copyFinished();
+	return;
+}
+
+void PluginManager::queryPluginList()
+{
+	try {
+		setDone(false);
+		QString extension = "*" + Plugin::getOsSpecificExt();
+		QStringList nameFilter(extension);
+
+		QString installDir(m_CoreInterface.getInstalledDir()
+							.append(QDir::separator())
+							.append(Plugin::getOsSpecificInstallerLocation()));
+
+		QString searchDirectory(installDir);
+		QDir directory(searchDirectory);
+		m_PluginList = directory.entryList(nameFilter);
+		setDone(true);
+	}
+	catch (std::exception& e)
+	{
+		setDone(true);
+		emit error(tr(	"An error occurred while trying to load the "
+						"plugin list. Please contact the help desk, and "
+						"provide the following details.\n\n%1").arg(e.what()));
+	}
+	emit queryPluginDone();
 	return;
 }

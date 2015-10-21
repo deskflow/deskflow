@@ -25,7 +25,6 @@
 #include <QWizardPage>
 
 class FileSysClient;
-class WebClient;
 class SslCertificate;
 class MainWindow;
 
@@ -51,8 +50,8 @@ protected slots:
 	void showError(QString error);
 	void updateStatus(QString info);
 	void queryPluginDone();
-	void finished();
 	void generateCertificate();
+	void finished();
 
 private:
 	void copyPlugins();
@@ -62,7 +61,6 @@ private:
 	bool m_Finished;
 	QString m_Email;
 	QString m_Password;
-	WebClient* m_pWebClient;
 	FileSysClient* m_pFileSysClient;
 	PluginManager m_PluginManager;
 	SslCertificate* m_pSslCertificate;

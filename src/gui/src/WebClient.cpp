@@ -89,56 +89,6 @@ int WebClient::getEdition(
 	return edition;
 }
 
-void WebClient::queryPluginList()
-{
-	QString responseJson;
-	try {
-		QStringList args("--get-plugin-list");
-		responseJson = request(m_Email, m_Password, args);
-	}
-	catch (std::exception& e)
-	{
-		emit error(tr("An error occurred while trying to query the "
-					  "plugin list. Please contact the help desk, and "
-					  "provide the following details.\n\n%1").arg(e.what()));
-		return;
-	}
-
-	QRegExp resultRegex(".*\"result\".*:.*(true|false).*");
-	if (resultRegex.exactMatch(responseJson)) {
-		QString boolString = resultRegex.cap(1);
-		if (boolString == "true") {
-			QRegExp editionRegex(".*\"plugins\".*:.*\"([^\"]+)\".*");
-			if (editionRegex.exactMatch(responseJson)) {
-				QString e = editionRegex.cap(1);
-				m_PluginList = e.split(",");
-			}
-			emit queryPluginDone();
-			return;
-		}
-		else if (boolString == "false") {
-			emit error(tr("Get plugin list failed, invalid user email "
-						  "or password."));
-			return;
-		}
-	}
-	else {
-		QRegExp errorRegex(".*\"error\".*:.*\"([^\"]+)\".*");
-		if (errorRegex.exactMatch(responseJson)) {
-
-			// replace "\n" with real new lines.
-			QString e = errorRegex.cap(1).replace("\\n", "\n");
-			emit error(tr("Get plugin list failed, an error occurred."
-						  "\n\n%1").arg(e));
-			return;
-		}
-	}
-
-	emit error(tr("Get plugin list failed, an error occurred.\n\n"
-				  "Server response:\n\n%1").arg(responseJson));
-	return;
-}
-
 QString WebClient::request(
 	const QString& email,
 	const QString& password,
