@@ -25,7 +25,7 @@ ToolArgs::ToolArgs() :
 	m_getInstalledDir(false),
 	m_getProfileDir(false),
 	m_getArch(false),
-	m_printSubscriptionFilename(false),
+	m_getSubscriptionFilename(false),
 	m_checkSubscription(false),
 	m_subscriptionSerial()
 {

@@ -204,7 +204,7 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 			return true;
 		}
 		else if (isArg(i, argc, argv, NULL, "--get-subscription-filename", 0)) {
-			args.m_printSubscriptionFilename = true;
+			args.m_getSubscriptionFilename = true;
 			return true;
 		}
 		else if (isArg(i, argc, argv, NULL, "--check-subscription", 0)) {
