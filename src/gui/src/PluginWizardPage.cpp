@@ -21,6 +21,7 @@
 #include "SslCertificate.h"
 #include "PluginManager.h"
 #include "MainWindow.h"
+#include "EditionType.h"
 
 #include <QMovie>
 #include <QThread>
@@ -29,6 +30,7 @@
 PluginWizardPage::PluginWizardPage(MainWindow& mainWindow, QWidget *parent) :
 	QWizardPage(parent),
 	m_Finished(false),
+	m_Edition(Unknown),
 	m_pSslCertificate(NULL),
 	m_mainWindow(mainWindow)
 {
@@ -62,8 +64,8 @@ void PluginWizardPage::initializePage()
 {
 	QWizardPage::initializePage();
 
-	if (m_Email.isEmpty() ||
-		m_Password.isEmpty()) {
+	if (m_Edition == Unknown ||
+		m_Edition == Basic) {
 		updateStatus(tr("Setup complete."));
 		showFinished();
 		return;

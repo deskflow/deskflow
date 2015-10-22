@@ -18,6 +18,7 @@
 #include "SetupWizard.h"
 #include "MainWindow.h"
 #include "WebClient.h"
+#include "SubscriptionManager.h"
 #include "EditionType.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
@@ -85,7 +86,7 @@ bool SetupWizard::validateCurrentPage()
 			}
 			else {
 				WebClient webClient;
-				m_Edition = webClient .getEdition(
+				m_Edition = webClient.getEdition(
 					m_pLineEditEmail->text(),
 					m_pLineEditPassword->text(),
 					message,
@@ -95,10 +96,34 @@ bool SetupWizard::validateCurrentPage()
 					return false;
 				}
 				else {
-					m_pPluginPage->setEmail(m_pLineEditEmail->text());
-					m_pPluginPage->setPassword(m_pLineEditPassword->text());
+					m_pPluginPage->setEdition(m_Edition);
 					return true;
 				}
+			}
+		}
+		else if (m_pRadioButtonSubscription->isChecked()) {
+			if (m_pLineEditSerialKey->text().isEmpty()) {
+				message.setText(tr("Please enter your subscription serial key."));
+				message.exec();
+				return false;
+			}
+			else {
+				// plugin page no longer requires email and password
+				// create subscription file in profile directory
+				SubscriptionManager subscriptionManager;
+				bool r = subscriptionManager.activateSerial(m_pLineEditSerialKey->text());
+				if (!r) {
+					return r;
+				}
+
+				// check if the serial is valid
+				r = subscriptionManager.checkSubscription(m_Edition);
+
+				if (r) {
+					m_pPluginPage->setEdition(m_Edition);
+				}
+
+				return r;
 			}
 		}
 		else {
@@ -170,6 +195,7 @@ void SetupWizard::accept()
 		appConfig.setUserToken(hashResult);
 		appConfig.setEdition(m_Edition);
 	}
+
 	m_MainWindow.setEdition(m_Edition);
 	m_MainWindow.updateLocalFingerprint();
 
@@ -221,7 +247,7 @@ void SetupWizard::on_m_pRadioButtonActivate_toggled(bool checked)
 	}
 }
 
-void SetupWizard::on_radioButton_toggled(bool checked)
+void SetupWizard::on_m_pRadioButtonSubscription_toggled(bool checked)
 {
 	if (checked) {
 		m_pLineEditEmail->setEnabled(false);

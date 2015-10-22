@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Si Ltd.
+ * Copyright (C) 2015 Synergy Seamless Inc.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,18 +17,17 @@
 
 #pragma once
 
-#include <QString>
+#include <QWidget>
 
-class CoreInterface
+class SubscriptionManager : public QWidget
 {
 public:
-	CoreInterface();
+    SubscriptionManager();
 
-	QString getPluginDir();
-	QString getProfileDir();
-	QString getInstalledDir();
-	QString getArch();
-	QString activateSerial(const QString& serial);
-	QString checkSubscription();
-	QString run(const QStringList& args, const QString& input = "");
+	bool activateSerial(const QString& serial);
+	bool checkSubscription(int& edition);
+
+private:
+	void showErrorDialog(const QString& errorMsg);
+	int getEditionType(QString& string);
 };

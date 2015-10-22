@@ -227,7 +227,7 @@
      </spacer>
     </item>
     <item>
-     <widget class="QRadioButton" name="radioButton">
+     <widget class="QRadioButton" name="m_pRadioButtonSubscription">
       <property name="text">
        <string>Subscription</string>
       </property>
