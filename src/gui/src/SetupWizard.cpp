@@ -60,6 +60,7 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	AppConfig& appConfig = m_MainWindow.appConfig();
 
 	m_pLineEditEmail->setText(appConfig.activateEmail());
+	m_pLineEditSerialKey->setText(appConfig.serialKey());
 
 	m_pLineEditSerialKey->setEnabled(false);
 
@@ -108,7 +109,6 @@ bool SetupWizard::validateCurrentPage()
 				return false;
 			}
 			else {
-				// plugin page no longer requires email and password
 				// create subscription file in profile directory
 				SubscriptionManager subscriptionManager;
 				bool r = subscriptionManager.activateSerial(m_pLineEditSerialKey->text());
@@ -194,6 +194,11 @@ void SetupWizard::accept()
 		QString hashResult = hash(hashSrc);
 		appConfig.setUserToken(hashResult);
 		appConfig.setEdition(m_Edition);
+	}
+
+	if (m_pRadioButtonSubscription->isChecked())
+	{
+		appConfig.setSerialKey(m_pLineEditSerialKey->text());
 	}
 
 	m_MainWindow.setEdition(m_Edition);
