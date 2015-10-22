@@ -175,18 +175,6 @@ SubscriptionManager::parsePlainSerial(const String& plainText, SubscriptionKey& 
 
 		return;
 	}
-	else if ((parts.size() == 2) && (parts.at(1) == kApplication)) {
-		key.m_name = parts.at(0);
-		LOG((CLOG_INFO "subscription is valid, registered to %s",
-			 key.m_name.c_str()));
-		return;
-	}
-	else if ((parts.size() == 2) && (parts.at(0) == kApplication)) {
-		key.m_name = parts.at(1);
-		LOG((CLOG_INFO "subscription is valid, registered to %s",
-			 key.m_name.c_str()));
-		return;
-	}
 
 	throw XSubscription(synergy::string::sprintf("Serial is invalid."));
 }
