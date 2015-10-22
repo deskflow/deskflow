@@ -26,6 +26,7 @@
 #include <fstream>
 #include <iostream>
 #include <algorithm>
+#include <vector>
 #include <ctime>
 //#include <stdexcept>
 
