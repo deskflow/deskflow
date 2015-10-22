@@ -47,6 +47,7 @@ private:
 	PluginWizardPage* m_pPluginPage;
 
 private slots:
+	void on_radioButton_toggled(bool checked);
 	void on_m_pRadioButtonActivate_toggled(bool checked);
 	void on_m_pRadioButtonSkip_toggled(bool checked);
 	void on_m_pComboLanguage_currentIndexChanged(int index);

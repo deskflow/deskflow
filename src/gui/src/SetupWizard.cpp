@@ -60,6 +60,8 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 
 	m_pLineEditEmail->setText(appConfig.activateEmail());
 
+	m_pLineEditSerialKey->setEnabled(false);
+
 }
 
 SetupWizard::~SetupWizard()
@@ -206,6 +208,7 @@ void SetupWizard::on_m_pRadioButtonSkip_toggled(bool checked)
 	if (checked) {
 		m_pLineEditEmail->setEnabled(false);
 		m_pLineEditPassword->setEnabled(false);
+		m_pLineEditSerialKey->setEnabled(false);
 	}
 }
 
@@ -214,5 +217,15 @@ void SetupWizard::on_m_pRadioButtonActivate_toggled(bool checked)
 	if (checked) {
 		m_pLineEditEmail->setEnabled(true);
 		m_pLineEditPassword->setEnabled(true);
+		m_pLineEditSerialKey->setEnabled(false);
+	}
+}
+
+void SetupWizard::on_radioButton_toggled(bool checked)
+{
+	if (checked) {
+		m_pLineEditEmail->setEnabled(false);
+		m_pLineEditPassword->setEnabled(false);
+		m_pLineEditSerialKey->setEnabled(true);
 	}
 }
