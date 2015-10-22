@@ -29,7 +29,6 @@
 PluginWizardPage::PluginWizardPage(MainWindow& mainWindow, QWidget *parent) :
 	QWizardPage(parent),
 	m_Finished(false),
-	m_pFileSysClient(NULL),
 	m_pSslCertificate(NULL),
 	m_mainWindow(mainWindow)
 {
@@ -44,10 +43,6 @@ PluginWizardPage::PluginWizardPage(MainWindow& mainWindow, QWidget *parent) :
 
 PluginWizardPage::~PluginWizardPage()
 {
-	if (m_pFileSysClient != NULL) {
-		delete m_pFileSysClient;
-	}
-
 	delete m_pSslCertificate;
 }
 

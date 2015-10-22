@@ -24,7 +24,6 @@
 #include "PluginManager.h"
 #include <QWizardPage>
 
-class FileSysClient;
 class SslCertificate;
 class MainWindow;
 
@@ -61,7 +60,6 @@ private:
 	bool m_Finished;
 	QString m_Email;
 	QString m_Password;
-	FileSysClient* m_pFileSysClient;
 	PluginManager m_PluginManager;
 	SslCertificate* m_pSslCertificate;
 	QThread* m_pThread;
