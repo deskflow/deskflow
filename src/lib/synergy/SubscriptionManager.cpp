@@ -118,63 +118,57 @@ void
 SubscriptionManager::parsePlainSerial(const String& plainText, SubscriptionKey& key)
 {
 	String serial;
-	bool parity = false;
 	String parityStart = plainText.substr(0, 1);
 	String parityEnd = plainText.substr(plainText.length() - 1, 1);
 
 	// check for parity chars { and }, record parity result, then remove them.
 	if (parityStart == "{" && parityEnd == "}") {
-		parity = true;
 		serial = plainText.substr(1, plainText.length() - 2);
-	}
-	else {
-		serial = plainText;
-	}
 
-	// tokenize serialised subscription.
-	std::vector<String> parts;
-	std::string::size_type pos = 0;
-	bool look = true;
-	while (look) {
-		std::string::size_type start = pos;
-		pos = serial.find(";", pos);
-		if (pos == String::npos) {
-			pos = plainText.length();
-			look = false;
-		}
-		parts.push_back(serial.substr(start, pos - start));
-		pos += 1;
-	}
-
-	// e.g.: {v1;trial;Bob;1;1398297600;1398384000}
-	if (parity
-		&& (parts.size() == 6)
-		&& (parts.at(0).find("v1") != String::npos)) {
-		key.m_type = parts.at(1);
-		key.m_name = parts.at(2);
-		sscanf(parts.at(3).c_str(), "%d", &key.m_userLimit);
-		sscanf(parts.at(4).c_str(), "%d", &key.m_warnTime);
-		sscanf(parts.at(5).c_str(), "%d", &key.m_expireTime);
-
-		// TODO: use Arch time
-		if (time(0) > key.m_expireTime) {
-			throw XSubscription(synergy::string::sprintf(
-				"%s subscription has expired",
-				key.m_type.c_str()));
-		}
-		else if (time(0) > key.m_warnTime) {
-			LOG((CLOG_WARN "%s subscription will expire soon",
-				key.m_type.c_str()));
+		// tokenize serialised subscription.
+		std::vector<String> parts;
+		std::string::size_type pos = 0;
+		bool look = true;
+		while (look) {
+			std::string::size_type start = pos;
+			pos = serial.find(";", pos);
+			if (pos == String::npos) {
+				pos = plainText.length();
+				look = false;
+			}
+			parts.push_back(serial.substr(start, pos - start));
+			pos += 1;
 		}
 
-		const char* userText = (key.m_userLimit == 1) ? "user" : "users";
-		LOG((CLOG_INFO "%s subscription valid is for %d %s, registered to %s",
-			key.m_type.c_str(),
-			key.m_userLimit,
-			userText,
-			key.m_name.c_str()));
+		// e.g.: {v1;trial;Bob;1;1398297600;1398384000}
+		if ((parts.size() == 6)
+			&& (parts.at(0).find("v1") != String::npos)) {
+			key.m_type = parts.at(1);
+			key.m_name = parts.at(2);
+			sscanf(parts.at(3).c_str(), "%d", &key.m_userLimit);
+			sscanf(parts.at(4).c_str(), "%d", &key.m_warnTime);
+			sscanf(parts.at(5).c_str(), "%d", &key.m_expireTime);
 
-		return;
+			// TODO: use Arch time
+			if (time(0) > key.m_expireTime) {
+				throw XSubscription(synergy::string::sprintf(
+					"%s subscription has expired",
+					key.m_type.c_str()));
+			}
+			else if (time(0) > key.m_warnTime) {
+				LOG((CLOG_WARN "%s subscription will expire soon",
+					key.m_type.c_str()));
+			}
+
+			const char* userText = (key.m_userLimit == 1) ? "user" : "users";
+			LOG((CLOG_INFO "%s subscription valid is for %d %s, registered to %s",
+				key.m_type.c_str(),
+				key.m_userLimit,
+				userText,
+				key.m_name.c_str()));
+
+			return;
+		}
 	}
 
 	throw XSubscription(synergy::string::sprintf("Serial is invalid."));
