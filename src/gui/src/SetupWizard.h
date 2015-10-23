@@ -30,6 +30,11 @@ class SetupWizard : public QWizard, public Ui::SetupWizardBase
 {
 	Q_OBJECT
 public:
+	enum {
+		kMaximiumLoginAttemps = 3
+	};
+
+public:
 	SetupWizard(MainWindow& mainWindow, bool startMain);
 	virtual ~SetupWizard();
 	bool validateCurrentPage();
@@ -45,6 +50,7 @@ private:
 	SynergyLocale m_Locale;
 	int m_Edition;
 	PluginWizardPage* m_pPluginPage;
+	int m_LoginAttemps;
 
 private slots:
 	void on_m_pRadioButtonSubscription_toggled(bool checked);

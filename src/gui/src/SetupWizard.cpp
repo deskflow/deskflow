@@ -28,7 +28,8 @@
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_MainWindow(mainWindow),
 	m_StartMain(startMain),
-	m_Edition(Unknown)
+	m_Edition(Unknown),
+	m_LoginAttemps(0)
 {
 	setupUi(this);
 	m_pPluginPage = new PluginWizardPage(mainWindow);
@@ -94,6 +95,21 @@ bool SetupWizard::validateCurrentPage()
 					this);
 
 				if (m_Edition == Unknown) {
+					m_LoginAttemps++;
+					if (m_LoginAttemps == kMaximiumLoginAttemps) {
+						m_LoginAttemps = 0;
+
+						QMessageBox::StandardButton reply =
+							QMessageBox::information(
+							this, tr("Setup Synergy"),
+							tr("Would you like to use serial key to activate?"),
+							QMessageBox::Yes | QMessageBox::No);
+
+						if (reply == QMessageBox::Yes) {
+							m_pRadioButtonSubscription->setChecked(true);
+						}
+					}
+
 					return false;
 				}
 				else {
