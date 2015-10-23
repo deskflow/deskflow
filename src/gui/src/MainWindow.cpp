@@ -31,6 +31,8 @@
 #include "ZeroconfService.h"
 #include "DataDownloader.h"
 #include "CommandProcess.h"
+#include "SubscriptionManager.h"
+#include "SubscriptionState.h"
 #include "EditionType.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
@@ -553,11 +555,8 @@ void MainWindow::startSynergy()
 	if ((synergyType() == synergyClient && !clientArgs(args, app))
 		|| (synergyType() == synergyServer && !serverArgs(args, app)))
 	{
-		if (desktopMode)
-		{
-			stopSynergy();
-			return;
-		}
+		stopSynergy();
+		return;
 	}
 
 	if (desktopMode)
@@ -699,6 +698,22 @@ QString MainWindow::appPath(const QString& name)
 
 bool MainWindow::serverArgs(QStringList& args, QString& app)
 {
+	SubscriptionManager subscriptionManager;
+	if (subscriptionManager.checkSubscriptionExist())
+	{
+		int edition;
+		int state = subscriptionManager.checkSubscription(edition);
+
+		if (state == kInvalid) {
+			return false;
+		}
+		else if (state == kExpired) {
+			QMessageBox::warning(this, tr("Subscription is expired"),
+								 tr("Your subscription is expired. Please purchase."));
+			return false;
+		}
+	}
+
 	app = appPath(appConfig().synergysName());
 
 	if (!QFile::exists(app))

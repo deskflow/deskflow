@@ -51,6 +51,12 @@ QString CoreInterface::getArch()
 	return run(args);
 }
 
+QString CoreInterface::getSubscriptionFilename()
+{
+	QStringList args("--get-subscription-filename");
+	return run(args);
+}
+
 QString CoreInterface::activateSerial(const QString& serial)
 {
 	QStringList args("--subscription-serial");

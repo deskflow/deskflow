@@ -15,23 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef SUBSCRIPTIONSTATE_H
+#define SUBSCRIPTIONSTATE_H
 
-#include <QWidget>
-
-class SubscriptionManager : public QWidget
-{
-public:
-    SubscriptionManager();
-
-	bool activateSerial(const QString& serial, int& edition);
-	int checkSubscription(int& edition);
-	bool checkSubscriptionExist();
-	QString getLastError(){ return m_ErrorMessage; }
-
-private:
-	int getEditionType(QString& string);
-
-private:
-	QString m_ErrorMessage;
+enum qSubscriptionState {
+	kValid,
+	kInvalid,
+	kExpiredSoon,
+	kExpired
 };
+
+#endif // SUBSCRIPTIONSTATE_H

@@ -20,6 +20,7 @@
 #include "WebClient.h"
 #include "SubscriptionManager.h"
 #include "EditionType.h"
+#include "SubscriptionState.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
 
@@ -127,19 +128,19 @@ bool SetupWizard::validateCurrentPage()
 			else {
 				// create subscription file in profile directory
 				SubscriptionManager subscriptionManager;
-				bool r = subscriptionManager.activateSerial(m_pLineEditSerialKey->text());
+				bool r = subscriptionManager.activateSerial(m_pLineEditSerialKey->text(), m_Edition);
 				if (!r) {
+					message.setText(tr("An error occurred while trying to activate using a serial key. "
+									   "Please contact the helpdesk, and provide the "
+									   "following details.\n\n%1").arg(subscriptionManager.getLastError()));
+					message.exec();
+
 					return r;
 				}
 
-				// check if the serial is valid
-				r = subscriptionManager.checkSubscription(m_Edition);
+				m_pPluginPage->setEdition(m_Edition);
 
-				if (r) {
-					m_pPluginPage->setEdition(m_Edition);
-				}
-
-				return r;
+				return true;
 			}
 		}
 		else {

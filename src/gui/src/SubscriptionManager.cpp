@@ -19,31 +19,37 @@
 
 #include "CoreInterface.h"
 #include "EditionType.h"
+#include "SubscriptionState.h"
 
 #include <QMessageBox>
+#include <QFile>
 
 SubscriptionManager::SubscriptionManager()
 {
 }
 
-bool SubscriptionManager::activateSerial(const QString& serial)
+bool SubscriptionManager::activateSerial(const QString& serial, int& edition)
 {
+	edition = Unknown;
 	CoreInterface coreInterface;
+	QString output;
 
 	try
 	{
-		coreInterface.activateSerial(serial);
+		output = coreInterface.activateSerial(serial);
 	}
 	catch (std::exception& e)
 	{
-		showErrorDialog(e.what());
+		m_ErrorMessage = e.what();
 		return false;
 	}
+
+	edition = getEditionType(output);
 
 	return true;
 }
 
-bool SubscriptionManager::checkSubscription(int& edition)
+int SubscriptionManager::checkSubscription(int& edition)
 {
 	edition = Unknown;
 	CoreInterface coreInterface;
@@ -54,28 +60,30 @@ bool SubscriptionManager::checkSubscription(int& edition)
 	}
 	catch (std::exception& e)
 	{
-		showErrorDialog(e.what());
-		return false;
+		m_ErrorMessage = e.what();
+
+		if (m_ErrorMessage.contains("subscription has expired")) {
+			return kExpired;
+		}
+
+		return kInvalid;
 	}
 
 	if (output.contains("subscription will expire soon")) {
-		QMessageBox::warning(
-			this, tr("Activate Subscription"),
-			tr("Your subscription will be expired soon."));
+		return kExpiredSoon;
 	}
 
 	edition = getEditionType(output);
 
-	return true;
+	return kValid;
 }
 
-void SubscriptionManager::showErrorDialog(const QString& errorMsg)
+bool SubscriptionManager::checkSubscriptionExist()
 {
-	QMessageBox::critical(
-			this, "Activate Subscription",
-			tr("An error occurred while trying to activate using a serial key. "
-			"Please contact the helpdesk, and provide the "
-			"following details.\n\n%1").arg(errorMsg));
+	CoreInterface coreInterface;
+	QString subscriptionFilename = coreInterface.getSubscriptionFilename();
+
+	return QFile::exists(subscriptionFilename);
 }
 
 int SubscriptionManager::getEditionType(QString& string)
