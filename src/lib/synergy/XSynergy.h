@@ -23,6 +23,12 @@
 //! Generic synergy exception
 XBASE_SUBCLASS(XSynergy, XBase);
 
+//! Subscription error
+/*!
+Thrown when there is a problem with the subscription.
+*/
+XBASE_SUBCLASS(XSubscription, XSynergy);
+
 //! Client error exception
 /*!
 Thrown when the client fails to follow the protocol.

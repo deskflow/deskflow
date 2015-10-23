@@ -78,6 +78,8 @@ class AppConfig
 		QString activateEmail() { return m_ActivateEmail; }
 		void setUserToken(QString t) { m_UserToken = t; }
 		QString userToken() { return m_UserToken; }
+		void setSerialKey(QString serial) { m_Serialkey = serial; }
+		QString serialKey() { return m_Serialkey; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -129,6 +131,7 @@ class AppConfig
 		QString m_UserToken;
 		bool m_CryptoEnabled;
 		bool m_AutoHide;
+		QString m_Serialkey;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

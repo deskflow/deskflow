@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Synergy Si, Inc.
+ * Copyright (C) 2015 Synergy Seamless Inc.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,18 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ToolArgs.h"
+#pragma once
 
-ToolArgs::ToolArgs() :
-	m_printActiveDesktopName(false),
-	m_loginAuthenticate(false),
-	m_getPluginList(false),
-	m_getPluginDir(false),
-	m_getInstalledDir(false),
-	m_getProfileDir(false),
-	m_getArch(false),
-	m_getSubscriptionFilename(false),
-	m_checkSubscription(false),
-	m_subscriptionSerial()
-{
-}
+#include "base/String.h"
+
+struct SubscriptionKey {
+	String				m_name;
+	String				m_type;
+	int					m_userLimit;
+	int					m_warnTime;
+	int					m_expireTime;
+};

@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Synergy Si, Inc.
- * 
+ * Copyright (C) 2015 Synergy Seamless Inc.
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,18 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ToolArgs.h"
+#pragma once
 
-ToolArgs::ToolArgs() :
-	m_printActiveDesktopName(false),
-	m_loginAuthenticate(false),
-	m_getPluginList(false),
-	m_getPluginDir(false),
-	m_getInstalledDir(false),
-	m_getProfileDir(false),
-	m_getArch(false),
-	m_getSubscriptionFilename(false),
-	m_checkSubscription(false),
-	m_subscriptionSerial()
+#include <QWidget>
+
+class SubscriptionManager : public QWidget
 {
-}
+public:
+    SubscriptionManager();
+
+	bool activateSerial(const QString& serial);
+	bool checkSubscription(int& edition);
+
+private:
+	void showErrorDialog(const QString& errorMsg);
+	int getEditionType(QString& string);
+};

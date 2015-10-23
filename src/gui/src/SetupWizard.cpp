@@ -18,6 +18,7 @@
 #include "SetupWizard.h"
 #include "MainWindow.h"
 #include "WebClient.h"
+#include "SubscriptionManager.h"
 #include "EditionType.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
@@ -59,6 +60,9 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	AppConfig& appConfig = m_MainWindow.appConfig();
 
 	m_pLineEditEmail->setText(appConfig.activateEmail());
+	m_pLineEditSerialKey->setText(appConfig.serialKey());
+
+	m_pLineEditSerialKey->setEnabled(false);
 
 }
 
@@ -83,7 +87,7 @@ bool SetupWizard::validateCurrentPage()
 			}
 			else {
 				WebClient webClient;
-				m_Edition = webClient .getEdition(
+				m_Edition = webClient.getEdition(
 					m_pLineEditEmail->text(),
 					m_pLineEditPassword->text(),
 					message,
@@ -93,10 +97,33 @@ bool SetupWizard::validateCurrentPage()
 					return false;
 				}
 				else {
-					m_pPluginPage->setEmail(m_pLineEditEmail->text());
-					m_pPluginPage->setPassword(m_pLineEditPassword->text());
+					m_pPluginPage->setEdition(m_Edition);
 					return true;
 				}
+			}
+		}
+		else if (m_pRadioButtonSubscription->isChecked()) {
+			if (m_pLineEditSerialKey->text().isEmpty()) {
+				message.setText(tr("Please enter your subscription serial key."));
+				message.exec();
+				return false;
+			}
+			else {
+				// create subscription file in profile directory
+				SubscriptionManager subscriptionManager;
+				bool r = subscriptionManager.activateSerial(m_pLineEditSerialKey->text());
+				if (!r) {
+					return r;
+				}
+
+				// check if the serial is valid
+				r = subscriptionManager.checkSubscription(m_Edition);
+
+				if (r) {
+					m_pPluginPage->setEdition(m_Edition);
+				}
+
+				return r;
 			}
 		}
 		else {
@@ -168,6 +195,12 @@ void SetupWizard::accept()
 		appConfig.setUserToken(hashResult);
 		appConfig.setEdition(m_Edition);
 	}
+
+	if (m_pRadioButtonSubscription->isChecked())
+	{
+		appConfig.setSerialKey(m_pLineEditSerialKey->text());
+	}
+
 	m_MainWindow.setEdition(m_Edition);
 	m_MainWindow.updateLocalFingerprint();
 
@@ -206,6 +239,7 @@ void SetupWizard::on_m_pRadioButtonSkip_toggled(bool checked)
 	if (checked) {
 		m_pLineEditEmail->setEnabled(false);
 		m_pLineEditPassword->setEnabled(false);
+		m_pLineEditSerialKey->setEnabled(false);
 	}
 }
 
@@ -214,5 +248,15 @@ void SetupWizard::on_m_pRadioButtonActivate_toggled(bool checked)
 	if (checked) {
 		m_pLineEditEmail->setEnabled(true);
 		m_pLineEditPassword->setEnabled(true);
+		m_pLineEditSerialKey->setEnabled(false);
+	}
+}
+
+void SetupWizard::on_m_pRadioButtonSubscription_toggled(bool checked)
+{
+	if (checked) {
+		m_pLineEditEmail->setEnabled(false);
+		m_pLineEditPassword->setEnabled(false);
+		m_pLineEditSerialKey->setEnabled(true);
 	}
 }

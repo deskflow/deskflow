@@ -51,6 +51,20 @@ QString CoreInterface::getArch()
 	return run(args);
 }
 
+QString CoreInterface::activateSerial(const QString& serial)
+{
+	QStringList args("--subscription-serial");
+	args << serial;
+
+	return run(args);
+}
+
+QString CoreInterface::checkSubscription()
+{
+	QStringList args("--check-subscription");
+	return run(args);
+}
+
 QString CoreInterface::run(const QStringList& args, const QString& input)
 {
 	QString program(

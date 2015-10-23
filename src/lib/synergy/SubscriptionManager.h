@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Synergy Si, Inc.
+ * Copyright (C) 2015 Synergy Seamless Inc.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,18 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ToolArgs.h"
+#pragma once
 
-ToolArgs::ToolArgs() :
-	m_printActiveDesktopName(false),
-	m_loginAuthenticate(false),
-	m_getPluginList(false),
-	m_getPluginDir(false),
-	m_getInstalledDir(false),
-	m_getProfileDir(false),
-	m_getArch(false),
-	m_getSubscriptionFilename(false),
-	m_checkSubscription(false),
-	m_subscriptionSerial()
-{
-}
+#include "SubscriptionKey.h"
+#include "common/common.h"
+
+class SubscriptionManager {
+public:
+	SubscriptionManager();
+	
+	//! Check the subscription activation file
+	void				checkFile(const String& filename);
+
+	//! Create a subscription activation file based on a serial
+	void				activate(const String& serial);
+
+	//! Use standard output to return subscription filename to gui
+	void				printFilename();
+	
+private:
+	String				decode(const String& input);
+	void				parsePlainSerial(const String& plainText, SubscriptionKey& key);
+	String				getFilename();
+
+	SubscriptionKey		m_key;
+};

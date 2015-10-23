@@ -132,6 +132,7 @@ void AppConfig::loadSettings()
 	m_UserToken = settings().value("userToken", "").toString();
 	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
 	m_AutoHide = settings().value("autoHide", false).toBool();
+	m_Serialkey = settings().value("serialKey", "").toString();
 }
 
 void AppConfig::saveSettings()
@@ -153,6 +154,7 @@ void AppConfig::saveSettings()
 	settings().setValue("userToken", m_UserToken);
 	settings().setValue("cryptoEnabled", m_CryptoEnabled);
 	settings().setValue("autoHide", m_AutoHide);
+	settings().setValue("serialKey", m_Serialkey);
 }
 
 void AppConfig::setAutoConfig(bool autoConfig)

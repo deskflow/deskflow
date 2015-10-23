@@ -55,8 +55,6 @@ private:
 		const QStringList& args,
 		const QStringList& env);
 
-	//static QString getPluginOsSpecificName(const QString& pluginName);
-
 signals:
 	void error(QString e);
 	void info(QString i);
