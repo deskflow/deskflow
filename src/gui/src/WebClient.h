@@ -19,7 +19,6 @@
 #define WEBCLIENT_H
 
 #include <QString>
-#include <QStringList>
 #include <QObject>
 
 #include "CoreInterface.h"
@@ -45,8 +44,7 @@ signals:
 
 private:
 	QString request(const QString& email,
-			const QString& password,
-			QStringList& args);
+			const QString& password);
 
 private:
 	QString m_Email;

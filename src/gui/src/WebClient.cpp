@@ -34,8 +34,7 @@ int WebClient::getEdition(
 	QString responseJson;
 	int edition = Unknown;
 	try {
-		QStringList args("--login-auth");
-		responseJson = request(email, password, args);
+		responseJson = request(email, password);
 	}
 	catch (std::exception& e)
 	{
@@ -91,9 +90,9 @@ int WebClient::getEdition(
 
 QString WebClient::request(
 	const QString& email,
-	const QString& password,
-	QStringList& args)
+	const QString& password)
 {
+	QStringList args("--login-auth");
 	// hash password in case it contains interesting chars.
 	QString credentials(email + ":" + hash(password) + "\n");
 	return m_CoreInterface.run(args, credentials);

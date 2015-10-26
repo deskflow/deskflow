@@ -109,7 +109,8 @@ HEADERS += src/MainWindow.h \
     src/Plugin.h \
     src/WebClient.h \
     ../lib/common/PluginVersion.h \
-    src/SubscriptionManager.h
+    src/SubscriptionManager.h \
+    src/SubscriptionState.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 

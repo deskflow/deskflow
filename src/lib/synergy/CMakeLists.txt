@@ -36,6 +36,7 @@ endif()
 include_directories(
 	../
 	../../../ext
+	../../../ext/gtest-1.6.0/include
 )
 
 if (UNIX)
