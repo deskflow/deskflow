@@ -71,6 +71,12 @@ QString CoreInterface::checkSubscription()
 	return run(args);
 }
 
+QString CoreInterface::notifyActivation(const QString& input)
+{
+	QStringList args("--notify-activation");
+	return run(args, input);
+}
+
 QString CoreInterface::run(const QStringList& args, const QString& input)
 {
 	QString program(

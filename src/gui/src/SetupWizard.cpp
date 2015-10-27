@@ -216,6 +216,17 @@ void SetupWizard::accept()
 	if (m_pRadioButtonSubscription->isChecked())
 	{
 		appConfig.setSerialKey(m_pLineEditSerialKey->text());
+
+		QString info("serial:" + hash(getFirstMacAddress()) + "\n");
+		CoreInterface coreInterface;
+		coreInterface.notifyActivation(info);
+	}
+
+	if (m_pRadioButtonSkip->isChecked())
+	{
+		QString info("skip:" + hash(getFirstMacAddress()) + "\n");
+		CoreInterface coreInterface;
+		coreInterface.notifyActivation(info);
 	}
 
 	m_MainWindow.setEdition(m_Edition);

@@ -117,6 +117,9 @@ ToolApp::run(int argc, char** argv)
 				return kExitSubscription;
 			}
 		}
+		else if (m_args.m_notifyActivation) {
+			notifyActivation();
+		}
 		else {
 			throw XSynergy("Nothing to do");
 		}
@@ -149,14 +152,17 @@ ToolApp::loginAuth()
 	String credentials;
 	std::cin >> credentials;
 
-	size_t separator = credentials.find(':');
-	String email = credentials.substr(0, separator);
-	String password = credentials.substr(separator + 1, credentials.length());
+	size_t separator1 = credentials.find(':');
+	size_t separator2 = credentials.find(':', separator1 + 1);
+	String email = credentials.substr(0, separator1);
+	String password = credentials.substr(separator1 + 1, separator2 - separator1 - 1);
+	String macHash = credentials.substr(separator2 + 1, credentials.length() - separator2 - 1);
 
 	std::stringstream ss;
 	ss << JSON_URL << "auth/";
 	ss << "?email=" << ARCH->internet().urlEncode(email);
 	ss << "&password=" << password;
+	ss << "&mac=" << macHash;
 	ss << "&os=" << ARCH->internet().urlEncode(ARCH->getOSName());
 	ss << "&arch=" << ARCH->internet().urlEncode(ARCH->getPlatformName());
 
@@ -177,6 +183,26 @@ ToolApp::getPluginList()
 	ss <<  JSON_URL << "plugins/";
 	ss << "?email=" << ARCH->internet().urlEncode(email);
 	ss << "&password=" << password;
+
+	std::cout << ARCH->internet().get(ss.str()) << std::endl;
+}
+
+void 
+ToolApp::notifyActivation()
+{
+	String info;
+	std::cin >> info;
+
+	size_t separator = info.find(':');
+	String action = info.substr(0, separator);
+	String macHash = info.substr(separator + 1, info.length());
+
+	std::stringstream ss;
+	ss <<  JSON_URL << "notify/";
+	ss << "?action=" << action;
+	ss << "&mac=" << macHash;
+	ss << "&os=" << ARCH->internet().urlEncode(ARCH->getOSName());
+	ss << "&arch=" << ARCH->internet().urlEncode(ARCH->getPlatformName());
 
 	std::cout << ARCH->internet().get(ss.str()) << std::endl;
 }

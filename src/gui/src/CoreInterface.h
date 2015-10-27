@@ -31,5 +31,6 @@ public:
 	QString getSubscriptionFilename();
 	QString activateSerial(const QString& serial);
 	QString checkSubscription();
+	QString notifyActivation(const QString& input);
 	QString run(const QStringList& args, const QString& input = "");
 };
