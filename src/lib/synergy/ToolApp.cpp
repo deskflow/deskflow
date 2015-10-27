@@ -157,6 +157,8 @@ ToolApp::loginAuth()
 	ss << JSON_URL << "auth/";
 	ss << "?email=" << ARCH->internet().urlEncode(email);
 	ss << "&password=" << password;
+	ss << "&os=" << ARCH->internet().urlEncode(ARCH->getOSName());
+	ss << "&arch=" << ARCH->internet().urlEncode(ARCH->getPlatformName());
 
 	std::cout << ARCH->internet().get(ss.str()) << std::endl;
 }
