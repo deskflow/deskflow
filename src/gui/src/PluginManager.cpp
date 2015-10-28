@@ -18,7 +18,6 @@
 #include "PluginManager.h"
 
 #include "CoreInterface.h"
-#include "CommandProcess.h"
 #include "DataDownloader.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
