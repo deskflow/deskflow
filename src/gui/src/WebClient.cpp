@@ -94,6 +94,12 @@ QString WebClient::request(
 {
 	QStringList args("--login-auth");
 	// hash password in case it contains interesting chars.
-	QString credentials(email + ":" + hash(password) + ":" + hash(getFirstMacAddress()) + "\n");
+	QString credentials(email + ":" + hash(password) + ":" + hash(getFirstMacAddress()));
+	QString os= getOSInformation();
+	if (!os.isEmpty()) {
+		credentials.append(":").append(os);
+	}
+	credentials.append("\n");
+
 	return m_CoreInterface.run(args, credentials);
 }

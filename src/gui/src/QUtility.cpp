@@ -18,7 +18,7 @@
 #include "QUtility.h"
 
 #include "ProcessorArch.h"
-#include "CommandProcess"
+#include "CommandProcess.h"
 
 #if defined(Q_OS_LINUX)
 #include <QProcess>
@@ -94,18 +94,20 @@ qProcessorArch getProcessorArch()
 
 QString getOSInformation()
 {
-	QString output;
+	QString result;
 
 #if defined(Q_OS_LINUX)
-	CommandProcess cp("/bin/cat", "/etc/os-release");
+	QStringList arguments;
+	arguments.append("/etc/os-release");
+	CommandProcess cp("/bin/cat", arguments);
 	QString output = cp.run();
 
-	QRegExp resultRegex(".*PRETTY_NAME=\".*\".*");
+	QRegExp resultRegex(".*PRETTY_NAME=\"([^\"]+)\".*");
 	if (resultRegex.exactMatch(output)) {
 		QString OSInfo = resultRegex.cap(1);
-		output = OSInfo;
+		result = OSInfo;
 	}
 #endif
 
-	return output;
+	return result;
 }

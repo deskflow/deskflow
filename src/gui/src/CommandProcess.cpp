@@ -32,7 +32,7 @@ QString CommandProcess::run()
 	QProcess process;
 	process.setReadChannel(QProcess::StandardOutput);
 	process.start(m_Command, m_Arguments);
-	bool success = process.waitForFinished();
+	bool success = process.waitForStarted();
 
 	QString output, error;
 	if (success)
