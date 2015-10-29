@@ -100,3 +100,37 @@ TEST(StringTests, stringToUint)
 
 	EXPECT_EQ(123, value);
 }
+
+TEST(StringTests, splitString1)
+{
+	String string = "stub1:stub2:stub3";
+
+	std::vector<String> results = string::splitString(string, ':');
+
+	EXPECT_EQ(3, results.size());
+	EXPECT_EQ("stub1", results[0]);
+	EXPECT_EQ("stub2", results[1]);
+	EXPECT_EQ("stub3", results[2]);
+}
+
+TEST(StringTests, splitString2)
+{
+	String string = "stub1:stub2:";
+
+	std::vector<String> results = string::splitString(string, ':');
+
+	EXPECT_EQ(2, results.size());
+	EXPECT_EQ("stub1", results[0]);
+	EXPECT_EQ("stub2", results[1]);
+}
+
+TEST(StringTests, splitString3)
+{
+	String string = "stub1";
+
+	std::vector<String> results = string::splitString(string, ':');
+
+	EXPECT_EQ(1, results.size());
+	EXPECT_EQ("stub1", results[0]);
+}
+
