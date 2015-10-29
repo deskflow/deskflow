@@ -152,31 +152,35 @@ ToolApp::loginAuth()
 	String credentials;
 	std::cin >> credentials;
 
-	size_t separator1 = credentials.find(':');
-	size_t separator2 = credentials.find(':', separator1 + 1);
-	size_t separator3 = credentials.find(':', separator2 + 1);
-	String email = credentials.substr(0, separator1);
-	String password = credentials.substr(separator1 + 1, separator2 - separator1 - 1);
-	String macHash;
-	String os;
-	if (separator3 != String::npos) {
-		macHash = credentials.substr(separator2 + 1, separator3 - separator2 - 1);
-		os = credentials.substr(separator3 + 1, credentials.length() - separator3 - 1);
+	std::vector<String> parts = synergy::string::splitString(credentials, ':');
+	int count = parts.size();
+
+	if (count == 3 || count == 4) {
+		String email = parts[0];
+		String password = parts[1];
+		String macHash = parts[2];
+		String os;
+
+		if (count == 4) {
+			os = parts[3];
+		}
+		else {
+			os = ARCH->getOSName();
+		}
+
+		std::stringstream ss;
+		ss << JSON_URL << "auth/";
+		ss << "?email=" << ARCH->internet().urlEncode(email);
+		ss << "&password=" << password;
+		ss << "&mac=" << macHash;
+		ss << "&os=" << ARCH->internet().urlEncode(os);
+		ss << "&arch=" << ARCH->internet().urlEncode(ARCH->getPlatformName());
+
+		std::cout << ARCH->internet().get(ss.str()) << std::endl;
 	}
 	else {
-		macHash = credentials.substr(separator2 + 1, credentials.length() - separator2 - 1);
-		os = ARCH->getOSName();
+		throw XSynergy("Invalid credentials.");
 	}
-
-	std::stringstream ss;
-	ss << JSON_URL << "auth/";
-	ss << "?email=" << ARCH->internet().urlEncode(email);
-	ss << "&password=" << password;
-	ss << "&mac=" << macHash;
-	ss << "&os=" << ARCH->internet().urlEncode(os);
-	ss << "&arch=" << ARCH->internet().urlEncode(ARCH->getPlatformName());
-
-	std::cout << ARCH->internet().get(ss.str()) << std::endl;
 }
 
 void
@@ -203,16 +207,31 @@ ToolApp::notifyActivation()
 	String info;
 	std::cin >> info;
 
-	size_t separator = info.find(':');
-	String action = info.substr(0, separator);
-	String macHash = info.substr(separator + 1, info.length());
+	std::vector<String> parts = synergy::string::splitString(info, ':');
+	int count = parts.size();
 
-	std::stringstream ss;
-	ss <<  JSON_URL << "notify/";
-	ss << "?action=" << action;
-	ss << "&mac=" << macHash;
-	ss << "&os=" << ARCH->internet().urlEncode(ARCH->getOSName());
-	ss << "&arch=" << ARCH->internet().urlEncode(ARCH->getPlatformName());
+	if (count == 2 || count == 3) {
+		String action = parts[0];
+		String macHash = parts[1];
+		String os;
 
-	std::cout << ARCH->internet().get(ss.str()) << std::endl;
+		if (count == 3) {
+			os = parts[2];
+		}
+		else {
+			os = ARCH->getOSName();
+		}
+
+		std::stringstream ss;
+		ss <<  JSON_URL << "notify/";
+		ss << "?action=" << action;
+		ss << "&mac=" << macHash;
+		ss << "&os=" << ARCH->internet().urlEncode(ARCH->getOSName());
+		ss << "&arch=" << ARCH->internet().urlEncode(ARCH->getPlatformName());
+
+		std::cout << ARCH->internet().get(ss.str()) << std::endl;
+	}
+	else {
+		throw XSynergy("Invalid credentials.");
+	}
 }
