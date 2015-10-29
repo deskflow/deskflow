@@ -466,8 +466,8 @@ OSXScreen::constructMouseButtonEventMap()
 {
 	const CGEventType source[NumButtonIDs][3] = {
 		{kCGEventLeftMouseUp, kCGEventLeftMouseDragged, kCGEventLeftMouseDown},
-		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown},
 		{kCGEventRightMouseUp, kCGEventRightMouseDragged, kCGEventRightMouseDown},
+		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown},
 		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown},
 		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown}
 	};
@@ -541,7 +541,7 @@ void
 OSXScreen::fakeMouseButton(ButtonID id, bool press)
 {
 	// Buttons are indexed from one, but the button down array is indexed from zero
-	UInt32 index = id - kButtonLeft;
+	UInt32 index = mapSynergyButtonToMac(id) - kButtonLeft;
 	if (index >= NumButtonIDs) {
 		return;
 	}
@@ -594,7 +594,7 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
     
     MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
     CGEventType type = thisButtonMap[state];
-    
+
     CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, index);
     
     CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
@@ -1442,6 +1442,21 @@ OSXScreen::onHotKey(EventRef event) const
 								HotKeyInfo::alloc(id)));
 
 	return true;
+}
+
+ButtonID
+OSXScreen::mapSynergyButtonToMac(UInt16 button) const
+{
+    switch (button) {
+    case 1:
+        return kButtonLeft;
+    case 2:
+        return kMacButtonMiddle;
+    case 3:
+        return kMacButtonRight;
+    }
+
+    return static_cast<ButtonID>(button);
 }
 
 ButtonID 
