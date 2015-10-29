@@ -21,7 +21,7 @@
 
 using namespace synergy;
 
-TEST(StringTests, format)
+TEST(StringTests, format_formatWithArguments_formatedString)
 {
 	const char* format = "%%%{1}=%{2}";
 	const char* arg1 = "answer";
@@ -32,7 +32,7 @@ TEST(StringTests, format)
 	EXPECT_EQ("%answer=42", result);
 }
 
-TEST(StringTests, findReplaceAll)
+TEST(StringTests, findReplaceAll_inputString_replacedString)
 {
 	String subject = "foobar";
 	String find = "bar";
@@ -43,7 +43,7 @@ TEST(StringTests, findReplaceAll)
 	EXPECT_EQ("foobaz", subject);
 }
 
-TEST(StringTests, sprintf)
+TEST(StringTests, sprintf_formatWithArgument_formatedString)
 {
 	const char* format = "%s=%d";
 	const char* arg1 = "answer";
@@ -54,7 +54,7 @@ TEST(StringTests, sprintf)
 	EXPECT_EQ("answer=42", result);
 }
 
-TEST(StringTests, toHex)
+TEST(StringTests, toHex_plaintext_hexString)
 {
 	String subject = "foobar";
 	int width = 2;
@@ -64,7 +64,7 @@ TEST(StringTests, toHex)
 	EXPECT_EQ("666f6f626172", subject);
 }
 
-TEST(StringTests, uppercase)
+TEST(StringTests, uppercase_lowercaseInput_uppercaseOutput)
 {
 	String subject = "12foo3BaR";
 
@@ -73,7 +73,7 @@ TEST(StringTests, uppercase)
 	EXPECT_EQ("12FOO3BAR", subject);
 }
 
-TEST(StringTests, removeChar)
+TEST(StringTests, removeChar_inputString_removeAllSpecifiedCharactors)
 {
 	String subject = "foobar";
 	const char c = 'o';
@@ -83,7 +83,7 @@ TEST(StringTests, removeChar)
 	EXPECT_EQ("fbar", subject);
 }
 
-TEST(StringTests, intToString)
+TEST(StringTests, intToString_inputInt_outputString)
 {
 	size_t value = 123;
 
@@ -92,7 +92,7 @@ TEST(StringTests, intToString)
 	EXPECT_EQ("123", number);
 }
 
-TEST(StringTests, stringToUint)
+TEST(StringTests, stringToUint_inputString_outputInt)
 {
 	String number = "123";
 
