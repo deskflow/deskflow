@@ -18,6 +18,7 @@
 #include "CoreInterface.h"
 
 #include "CommandProcess.h"
+#include "QUtility.h"
 
 #include <QCoreApplication>
 #include <QProcess>
@@ -73,9 +74,17 @@ QString CoreInterface::checkSubscription()
 	return run(args);
 }
 
-QString CoreInterface::notifyActivation(const QString& input)
+QString CoreInterface::notifyActivation(const QString& action)
 {
 	QStringList args("--notify-activation");
+
+	QString input(action + ":" + hash(getFirstMacAddress()));
+	QString os= getOSInformation();
+	if (!os.isEmpty()) {
+		input.append(":").append(os);
+	}
+	input.append("\n");
+
 	return run(args, input);
 }
 
