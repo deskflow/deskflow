@@ -211,6 +211,9 @@ void SetupWizard::accept()
 		QString hashResult = hash(hashSrc);
 		appConfig.setUserToken(hashResult);
 		appConfig.setEdition(m_Edition);
+
+		CoreInterface coreInterface;
+		coreInterface.notifyActivation("login:" + m_pLineEditEmail->text());
 	}
 
 	if (m_pRadioButtonSubscription->isChecked())
@@ -218,13 +221,13 @@ void SetupWizard::accept()
 		appConfig.setSerialKey(m_pLineEditSerialKey->text());
 
 		CoreInterface coreInterface;
-		coreInterface.notifyActivation("serial");
+		coreInterface.notifyActivation("serial:" + m_pLineEditSerialKey->text());
 	}
 
 	if (m_pRadioButtonSkip->isChecked())
 	{
 		CoreInterface coreInterface;
-		coreInterface.notifyActivation("skip");
+		coreInterface.notifyActivation("skip:unknown");
 	}
 
 	m_MainWindow.setEdition(m_Edition);
@@ -250,6 +253,10 @@ void SetupWizard::reject()
 		m_MainWindow.setEdition(m_Edition);
 		m_MainWindow.open();
 	}
+
+	// treat cancel as skip
+	CoreInterface coreInterface;
+	coreInterface.notifyActivation("skip:unknown");
 
 	QWizard::reject();
 }

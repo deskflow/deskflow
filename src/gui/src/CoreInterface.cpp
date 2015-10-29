@@ -74,11 +74,11 @@ QString CoreInterface::checkSubscription()
 	return run(args);
 }
 
-QString CoreInterface::notifyActivation(const QString& action)
+QString CoreInterface::notifyActivation(const QString& identity)
 {
 	QStringList args("--notify-activation");
 
-	QString input(action + ":" + hash(getFirstMacAddress()));
+	QString input(identity + ":" + hash(getFirstMacAddress()));
 	QString os= getOSInformation();
 	if (!os.isEmpty()) {
 		input.append(":").append(os);

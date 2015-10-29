@@ -155,26 +155,14 @@ ToolApp::loginAuth()
 	std::vector<String> parts = synergy::string::splitString(credentials, ':');
 	int count = parts.size();
 
-	if (count == 3 || count == 4) {
+	if (count == 2 ) {
 		String email = parts[0];
 		String password = parts[1];
-		String macHash = parts[2];
-		String os;
-
-		if (count == 4) {
-			os = parts[3];
-		}
-		else {
-			os = ARCH->getOSName();
-		}
 
 		std::stringstream ss;
 		ss << JSON_URL << "auth/";
 		ss << "?email=" << ARCH->internet().urlEncode(email);
 		ss << "&password=" << password;
-		ss << "&mac=" << macHash;
-		ss << "&os=" << ARCH->internet().urlEncode(os);
-		ss << "&arch=" << ARCH->internet().urlEncode(ARCH->getPlatformName());
 
 		std::cout << ARCH->internet().get(ss.str()) << std::endl;
 	}
@@ -210,13 +198,14 @@ ToolApp::notifyActivation()
 	std::vector<String> parts = synergy::string::splitString(info, ':');
 	int count = parts.size();
 
-	if (count == 2 || count == 3) {
+	if (count == 3 || count == 4) {
 		String action = parts[0];
-		String macHash = parts[1];
+		String identity = parts[1];
+		String macHash = parts[2];
 		String os;
 
-		if (count == 3) {
-			os = parts[2];
+		if (count == 4) {
+			os = parts[3];
 		}
 		else {
 			os = ARCH->getOSName();
@@ -225,6 +214,7 @@ ToolApp::notifyActivation()
 		std::stringstream ss;
 		ss <<  JSON_URL << "notify/";
 		ss << "?action=" << action;
+		ss << "&identity=" << identity;
 		ss << "&mac=" << macHash;
 		ss << "&os=" << ARCH->internet().urlEncode(ARCH->getOSName());
 		ss << "&arch=" << ARCH->internet().urlEncode(ARCH->getPlatformName());
