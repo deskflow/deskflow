@@ -134,6 +134,15 @@ TEST(StringTests, splitString_noSeparator_returnOriginalString)
 	EXPECT_EQ("stub1", results[0]);
 }
 
+TEST(StringTests, splitString_emptyString_returnEmptyVector)
+{
+	String string;
+
+	std::vector<String> results = string::splitString(string, ':');
+
+	EXPECT_EQ(0, results.size());
+}
+
 TEST(StringTests, splitString_tailSeparator_returnTwoParts)
 {
 	String string = "stub1:stub2:";
