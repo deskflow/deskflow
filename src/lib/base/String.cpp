@@ -232,7 +232,9 @@ splitString(String string, const char c)
 	size_t head = 0;
 	size_t separator = string.find(c);
 	while (separator != String::npos) {
-		results.push_back(string.substr(head, separator - head));
+		if (head!=separator) {
+			results.push_back(string.substr(head, separator - head));
+		}
 		head = separator + 1;
 		separator = string.find(c, head);
 	}

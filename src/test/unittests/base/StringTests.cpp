@@ -101,7 +101,7 @@ TEST(StringTests, stringToUint)
 	EXPECT_EQ(123, value);
 }
 
-TEST(StringTests, splitString1)
+TEST(StringTests, splitString_twoSeparator_returnThreeParts)
 {
 	String string = "stub1:stub2:stub3";
 
@@ -113,7 +113,28 @@ TEST(StringTests, splitString1)
 	EXPECT_EQ("stub3", results[2]);
 }
 
-TEST(StringTests, splitString2)
+TEST(StringTests, splitString_oneSeparator_returnTwoParts)
+{
+	String string = "stub1:stub2";
+
+	std::vector<String> results = string::splitString(string, ':');
+
+	EXPECT_EQ(2, results.size());
+	EXPECT_EQ("stub1", results[0]);
+	EXPECT_EQ("stub2", results[1]);
+}
+
+TEST(StringTests, splitString_noSeparator_returnOriginalString)
+{
+	String string = "stub1";
+
+	std::vector<String> results = string::splitString(string, ':');
+
+	EXPECT_EQ(1, results.size());
+	EXPECT_EQ("stub1", results[0]);
+}
+
+TEST(StringTests, splitString_tailSeparator_returnTwoParts)
 {
 	String string = "stub1:stub2:";
 
@@ -124,13 +145,24 @@ TEST(StringTests, splitString2)
 	EXPECT_EQ("stub2", results[1]);
 }
 
-TEST(StringTests, splitString3)
+TEST(StringTests, splitString_headSeparator_returnTwoParts)
 {
-	String string = "stub1";
+	String string = ":stub1:stub2";
 
 	std::vector<String> results = string::splitString(string, ':');
 
-	EXPECT_EQ(1, results.size());
+	EXPECT_EQ(2, results.size());
 	EXPECT_EQ("stub1", results[0]);
+	EXPECT_EQ("stub2", results[1]);
 }
 
+TEST(StringTests, splitString_headAndTailSeparators_returnTwoParts)
+{
+	String string = ":stub1:stub2:";
+
+	std::vector<String> results = string::splitString(string, ':');
+
+	EXPECT_EQ(2, results.size());
+	EXPECT_EQ("stub1", results[0]);
+	EXPECT_EQ("stub2", results[1]);
+}
