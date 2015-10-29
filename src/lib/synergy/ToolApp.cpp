@@ -154,16 +154,26 @@ ToolApp::loginAuth()
 
 	size_t separator1 = credentials.find(':');
 	size_t separator2 = credentials.find(':', separator1 + 1);
+	size_t separator3 = credentials.find(':', separator2 + 1);
 	String email = credentials.substr(0, separator1);
 	String password = credentials.substr(separator1 + 1, separator2 - separator1 - 1);
-	String macHash = credentials.substr(separator2 + 1, credentials.length() - separator2 - 1);
+	String macHash;
+	String os;
+	if (separator3 != String::npos) {
+		macHash = credentials.substr(separator2 + 1, separator3 - separator2 - 1);
+		os = credentials.substr(separator3 + 1, credentials.length() - separator3 - 1);
+	}
+	else {
+		macHash = credentials.substr(separator2 + 1, credentials.length() - separator2 - 1);
+		os = ARCH->getOSName();
+	}
 
 	std::stringstream ss;
 	ss << JSON_URL << "auth/";
 	ss << "?email=" << ARCH->internet().urlEncode(email);
 	ss << "&password=" << password;
 	ss << "&mac=" << macHash;
-	ss << "&os=" << ARCH->internet().urlEncode(ARCH->getOSName());
+	ss << "&os=" << ARCH->internet().urlEncode(os);
 	ss << "&arch=" << ARCH->internet().urlEncode(ARCH->getPlatformName());
 
 	std::cout << ARCH->internet().get(ss.str()) << std::endl;
