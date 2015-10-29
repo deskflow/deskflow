@@ -590,7 +590,7 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
     
     EMouseButtonState state = press ? kMouseButtonDown : kMouseButtonUp;
     
-    LOG((CLOG_DEBUG1 "faking mouse button id: %d press: %s", id, press ? "pressed" : "released"));
+    LOG((CLOG_DEBUG1 "faking mouse button id: %d press: %s", index, press ? "pressed" : "released"));
     
     MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
     CGEventType type = thisButtonMap[state];
