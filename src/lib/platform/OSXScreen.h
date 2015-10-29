@@ -139,6 +139,9 @@ private:
 	void                hideCursor();
 
 	// map mac mouse button to synergy buttons
+	ButtonID			mapSynergyButtonToMac(UInt16) const;
+
+	// map mac mouse button to synergy buttons
 	ButtonID			mapMacButtonToSynergy(UInt16) const;
 
 	// map mac scroll wheel value to a synergy scroll wheel value
