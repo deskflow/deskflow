@@ -54,25 +54,40 @@ TEST(SubscriptionTests, parsePlainSerial_invalidSerial_throwException)
 	EXPECT_THROW(subscriptionManager.parsePlainSerial(painText, key), XSubscription);
 }
 
-TEST(SubscriptionTests, parsePlainSerial_validSerial_throwException)
+TEST(SubscriptionTests, parsePlainSerial_validSerial_validSubscriptionKey)
 {
+	// valid until 2 March 2049
 	SubscriptionManager subscriptionManager;
-	String painText("{v1;trial;Bob;1;1498297600;1498384000}");
+	String painText("{v1;trial;Bob;1;2147483647;2147483647}");
 	SubscriptionKey key;
 	subscriptionManager.parsePlainSerial(painText, key);
 
 	EXPECT_EQ("trial", key.m_type);
 	EXPECT_EQ("Bob", key.m_name);
 	EXPECT_EQ(1, key.m_userLimit);
-	EXPECT_EQ(1498297600, key.m_warnTime);
-	EXPECT_EQ(1498384000, key.m_expireTime);
+	EXPECT_EQ(2147483647, key.m_warnTime);
+	EXPECT_EQ(2147483647, key.m_expireTime);
 }
 
-TEST(SubscriptionTests, parsePlainSerial_expiredSerial_throwException)
+TEST(SubscriptionTests, parsePlainSerial_expiredTrialSerial_throwException)
 {
 	SubscriptionManager subscriptionManager;
 	String painText("{v1;trial;Bob;1;1398297600;1398384000}");
 	SubscriptionKey key;
 
 	EXPECT_THROW(subscriptionManager.parsePlainSerial(painText, key), XSubscription);
+}
+
+TEST(SubscriptionTests, parsePlainSerial_expiredBasicSerial_validSubscriptionKey)
+{
+	SubscriptionManager subscriptionManager;
+	String painText("{v1;basic;Bob;1;1398297600;1398384000}");
+	SubscriptionKey key;
+	subscriptionManager.parsePlainSerial(painText, key);
+
+	EXPECT_EQ("basic", key.m_type);
+	EXPECT_EQ("Bob", key.m_name);
+	EXPECT_EQ(1, key.m_userLimit);
+	EXPECT_EQ(1398297600, key.m_warnTime);
+	EXPECT_EQ(1398384000, key.m_expireTime);
 }

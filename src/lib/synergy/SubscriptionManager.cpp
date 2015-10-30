@@ -150,12 +150,14 @@ SubscriptionManager::parsePlainSerial(const String& plainText, SubscriptionKey& 
 			sscanf(parts.at(5).c_str(), "%d", &key.m_expireTime);
 
 			// TODO: use Arch time
-			if (time(0) > key.m_expireTime) {
+			if (time(0) > key.m_expireTime &&
+				key.m_type == "trial") {
 				throw XSubscription(synergy::string::sprintf(
 					"%s subscription has expired",
 					key.m_type.c_str()));
 			}
-			else if (time(0) > key.m_warnTime) {
+			else if (time(0) > key.m_warnTime &&
+				key.m_type == "trial") {
 				LOG((CLOG_WARN "%s subscription will expire soon",
 					key.m_type.c_str()));
 			}
