@@ -992,6 +992,9 @@ void MainWindow::setEdition(int type)
 	else if (type == Pro) {
 		title = "Synergy Pro";
 	}
+	else if (type == Trial) {
+		title = "Synergy Trial";
+	}
 	else {
 		title = "Synergy (UNREGISTERED)";
 	}

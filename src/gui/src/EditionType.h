@@ -21,6 +21,7 @@
 enum qEditionType {
 	Basic,
 	Pro,
+	Trial,
 	Unknown
 };
 
