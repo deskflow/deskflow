@@ -153,7 +153,7 @@ ToolApp::loginAuth()
 	std::cin >> credentials;
 
 	std::vector<String> parts = synergy::string::splitString(credentials, ':');
-	int count = parts.size();
+	size_t count = parts.size();
 
 	if (count == 2 ) {
 		String email = parts[0];
@@ -196,7 +196,7 @@ ToolApp::notifyActivation()
 	std::cin >> info;
 
 	std::vector<String> parts = synergy::string::splitString(info, ':');
-	int count = parts.size();
+	size_t count = parts.size();
 
 	if (count == 3 || count == 4) {
 		String action = parts[0];
