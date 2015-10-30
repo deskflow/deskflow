@@ -222,6 +222,6 @@ ToolApp::notifyActivation()
 		std::cout << ARCH->internet().get(ss.str()) << std::endl;
 	}
 	else {
-		throw XSynergy("Invalid credentials.");
+		LOG((CLOG_WARN "notify activation failed"));
 	}
 }
