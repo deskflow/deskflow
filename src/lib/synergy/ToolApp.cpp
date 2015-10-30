@@ -222,6 +222,6 @@ ToolApp::notifyActivation()
 		std::cout << ARCH->internet().get(ss.str()) << std::endl;
 	}
 	else {
-		LOG((CLOG_WARN "notify activation failed"));
+		LOG((CLOG_DEBUG "notify activation failed"));
 	}
 }
