@@ -109,6 +109,7 @@ static const KeyID		kKeyPause		= 0xEF13;	/* Pause, hold */
 static const KeyID		kKeyScrollLock	= 0xEF14;
 static const KeyID		kKeySysReq		= 0xEF15;
 static const KeyID		kKeyEscape		= 0xEF1B;
+static const KeyID		kKeyMuhenkan		= 0xEF22; /* Non-conversion */
 static const KeyID		kKeyHenkan		= 0xEF23;	/* Start/Stop Conversion */
 static const KeyID		kKeyHangulKana	= 0xEF26;	/* Hangul, Kana */
 static const KeyID		kKeyHiraganaKatakana = 0xEF27;	/* Hiragana/Katakana toggle */
