@@ -77,7 +77,11 @@ if (UNIX)
 
 	# warnings as errors:
 	# we have a problem with people checking in code with warnings.
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wno-unused-local-typedef")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+
+	if(NOT ("${CMAKE_C_COMPILER}" MATCHES "clang$" OR "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang"))
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedef")
+	endif()
 
 	if (NOT APPLE)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
