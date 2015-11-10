@@ -347,7 +347,8 @@ MSWindowsScreen::leave()
 
 		// warp to center
 		LOG((CLOG_DEBUG1 "warping cursor to center: %+d, %+d", m_xCenter, m_yCenter));
-		warpCursor(m_xCenter, m_yCenter);
+		float dpi = DpiHelper::getDpi();
+		warpCursor(m_xCenter / dpi, m_yCenter / dpi);
 
 		// disable special key sequences on win95 family
 		enableSpecialKeys(false);
@@ -568,7 +569,6 @@ MSWindowsScreen::warpCursor(SInt32 x, SInt32 y)
 }
 
 void MSWindowsScreen::saveMousePosition(SInt32 x, SInt32 y) {
-
 	m_xCursor = x;
 	m_yCursor = y;
 
@@ -1397,7 +1397,8 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		// will always try to return to the original entry point on the 
 		// secondary screen.
 		LOG((CLOG_DEBUG5 "warping server cursor to center: %+d,%+d", m_xCenter, m_yCenter));
-		warpCursorNoFlush(m_xCenter, m_yCenter);
+		float dpi = DpiHelper::getDpi();
+		warpCursorNoFlush(m_xCenter / dpi, m_yCenter / dpi);
 		
 		// examine the motion.  if it's about the distance
 		// from the center of the screen to an edge then
@@ -1405,10 +1406,11 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		// ignore (see warpCursorNoFlush() for a further
 		// description).
 		static SInt32 bogusZoneSize = 10;
-		if (-x + bogusZoneSize > m_xCenter - m_x ||
-			 x + bogusZoneSize > m_x + m_w - m_xCenter ||
-			-y + bogusZoneSize > m_yCenter - m_y ||
-			 y + bogusZoneSize > m_y + m_h - m_yCenter) {
+		LOG((CLOG_DEBUG "dpi: %f m_w: %d center: %d x: %d",dpi, m_w, m_xCenter, x));
+		if (-x + bogusZoneSize > (m_xCenter - m_x) / dpi ||
+			 x + bogusZoneSize > (m_x + m_w - m_xCenter) / dpi ||
+			-y + bogusZoneSize > (m_yCenter - m_y) / dpi ||
+			 y + bogusZoneSize > (m_y + m_h - m_yCenter) / dpi) {
 			
 			LOG((CLOG_DEBUG "dropped bogus delta motion: %+d,%+d", x, y));
 		}
@@ -1603,9 +1605,11 @@ MSWindowsScreen::updateScreenShape()
 {
 	// get shape and center
 	if (DpiHelper::s_dpiScaled) {
+		// use the original resolution size for width and height
 		m_w = (SInt32)DpiHelper::s_resolutionWidth;
 		m_h = (SInt32)DpiHelper::s_resolutionHeight;
 
+		// calculate center position according to the original size
 		m_xCenter = (SInt32)DpiHelper::s_primaryWidthCenter;
 		m_yCenter = (SInt32)DpiHelper::s_primaryHeightCenter;
 	}
