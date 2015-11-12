@@ -140,14 +140,16 @@ SubscriptionManager::parsePlainSerial(const String& plainText, SubscriptionKey& 
 			pos += 1;
 		}
 
-		// e.g.: {v1;trial;Bob;1;1398297600;1398384000}
-		if ((parts.size() == 6)
+		// e.g.: {v1;trial;Bob;1;email;company name;1398297600;1398384000}
+		if ((parts.size() == 8)
 			&& (parts.at(0).find("v1") != String::npos)) {
 			key.m_type = parts.at(1);
 			key.m_name = parts.at(2);
 			sscanf(parts.at(3).c_str(), "%d", &key.m_userLimit);
-			sscanf(parts.at(4).c_str(), "%d", &key.m_warnTime);
-			sscanf(parts.at(5).c_str(), "%d", &key.m_expireTime);
+			key.m_email = parts.at(4);
+			key.m_company = parts.at(5);
+			sscanf(parts.at(6).c_str(), "%d", &key.m_warnTime);
+			sscanf(parts.at(7).c_str(), "%d", &key.m_expireTime);
 
 			// TODO: use Arch time
 			if (time(0) > key.m_expireTime &&
