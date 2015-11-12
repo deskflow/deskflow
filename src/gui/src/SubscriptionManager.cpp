@@ -88,8 +88,14 @@ bool SubscriptionManager::checkSubscriptionExist()
 
 int SubscriptionManager::getEditionType(QString& string)
 {
-	if (string.contains("full subscription valid")) {
+	if (string.contains("pro subscription valid")) {
 		return Pro;
+	}
+	else if (string.contains("basic subscription valid")) {
+		return Basic;
+	}
+	else if (string.contains("trial subscription valid")) {
+		return Trial;
 	}
 
 	return Unknown;
