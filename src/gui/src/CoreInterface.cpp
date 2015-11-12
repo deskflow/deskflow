@@ -96,5 +96,4 @@ QString CoreInterface::run(const QStringList& args, const QString& input)
 
 	CommandProcess commandProcess(program, args, input);
 	return commandProcess.run();
-
 }
