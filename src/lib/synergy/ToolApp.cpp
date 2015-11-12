@@ -30,7 +30,7 @@
 #include "platform/MSWindowsSession.h"
 #endif
 
-#define JSON_URL "https://test.synergy-project.org/premium/json/"
+#define JSON_URL "http://test.synergy-project.org/premium/json/"
 
 enum {
 	kErrorOk,
@@ -219,9 +219,17 @@ ToolApp::notifyActivation()
 		ss << "&os=" << ARCH->internet().urlEncode(ARCH->getOSName());
 		ss << "&arch=" << ARCH->internet().urlEncode(ARCH->getPlatformName());
 
-		std::cout << ARCH->internet().get(ss.str()) << std::endl;
+		try {
+			std::cout << ARCH->internet().get(ss.str()) << std::endl;
+		}
+		catch (std::exception& e) {
+			LOG((CLOG_CRIT "An error occurred during notification: %s\n", e.what()));
+		}
+		catch (...) {
+			LOG((CLOG_CRIT "An unknown error occurred during notification.\n"));
+		}
 	}
 	else {
-		LOG((CLOG_DEBUG "notify activation failed"));
+		LOG((CLOG_DEBUG "notification failed"));
 	}
 }
