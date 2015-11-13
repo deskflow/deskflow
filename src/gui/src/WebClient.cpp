@@ -50,7 +50,7 @@ int WebClient::getEdition(
 	if (resultRegex.exactMatch(responseJson)) {
 		QString boolString = resultRegex.cap(1);
 		if (boolString == "true") {
-			QRegExp editionRegex(".*\"edition\".*:.*\"([^\"]+)\".*");
+			QRegExp editionRegex(".*\"edition\":(0|1|2|3).*");
 			if (editionRegex.exactMatch(responseJson)) {
 				QString e = editionRegex.cap(1);
 				edition = e.toInt();
