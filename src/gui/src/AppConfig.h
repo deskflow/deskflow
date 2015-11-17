@@ -80,6 +80,8 @@ class AppConfig
 		QString userToken() { return m_UserToken; }
 		void setSerialKey(QString serial) { m_Serialkey = serial; }
 		QString serialKey() { return m_Serialkey; }
+		int lastExpiringWarningTime() const { return m_LastExpiringWarningTime; }
+		void setLastExpiringWarningTime(int t) { m_LastExpiringWarningTime = t; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -132,6 +134,7 @@ class AppConfig
 		bool m_CryptoEnabled;
 		bool m_AutoHide;
 		QString m_Serialkey;
+		int m_LastExpiringWarningTime;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

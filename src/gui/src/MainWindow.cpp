@@ -32,7 +32,6 @@
 #include "DataDownloader.h"
 #include "CommandProcess.h"
 #include "SubscriptionManager.h"
-#include "SubscriptionState.h"
 #include "EditionType.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
@@ -699,7 +698,7 @@ QString MainWindow::appPath(const QString& name)
 bool MainWindow::serverArgs(QStringList& args, QString& app)
 {
 	int edition;
-	SubscriptionManager subscriptionManager(this, edition);
+	SubscriptionManager subscriptionManager(this, appConfig(), edition);
 	if (subscriptionManager.checkSubscriptionExist())
 	{
 		if (!subscriptionManager.checkSubscription()) {

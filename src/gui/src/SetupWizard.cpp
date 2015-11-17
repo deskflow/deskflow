@@ -20,7 +20,6 @@
 #include "WebClient.h"
 #include "SubscriptionManager.h"
 #include "EditionType.h"
-#include "SubscriptionState.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
 
@@ -127,7 +126,7 @@ bool SetupWizard::validateCurrentPage()
 			}
 			else {
 				// create subscription file in profile directory
-				SubscriptionManager subscriptionManager(this, m_Edition);
+				SubscriptionManager subscriptionManager(this, m_MainWindow.appConfig(), m_Edition);
 				if (!subscriptionManager.activateSerial(m_pLineEditSerialKey->text())) {
 					return false;
 				}

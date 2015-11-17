@@ -17,15 +17,19 @@
 
 #include "SubscriptionManager.h"
 
+
 #include "CoreInterface.h"
 #include "EditionType.h"
-#include "SubscriptionState.h"
+#include "AppConfig.h"
 
 #include <QMessageBox>
 #include <QFile>
+#include <QDateTime>
+#include <QDate>
 
-SubscriptionManager::SubscriptionManager(QWidget* parent, int& edition) :
+SubscriptionManager::SubscriptionManager(QWidget* parent,  AppConfig& appConfig, int& edition) :
 	m_pParent(parent),
+	m_AppConfig(appConfig),
 	m_Edition(edition)
 {
 
@@ -117,16 +121,31 @@ void SubscriptionManager::getEditionType(QString& output)
 
 void SubscriptionManager::checkExpiring(QString& output)
 {
-	if (output.contains("trial will end in")) {
+	if (output.contains("trial will end in") && shouldWarnExpiring()) {
 		QRegExp dayLeftRegex(".*trial will end in ([0-9]+) day.*");
 		if (dayLeftRegex.exactMatch(output)) {
 			QString dayLeft = dayLeftRegex.cap(1);
 
-			// TODO: warn user once a day
 			QMessageBox::warning(m_pParent, tr("Subscription warning"),
 				tr("Your trial will end in %1 %2. Click <a href='https://synergy-project.org/account/'>here</a> to purchase")
 				.arg(dayLeft)
 				.arg(dayLeft == "1" ? "day" : "days"));
 		}
 	}
+}
+
+bool SubscriptionManager::shouldWarnExpiring()
+{
+	// warn users about expiring subscription once a day
+	int lastExpiringWarningTime = m_AppConfig.lastExpiringWarningTime();
+	QDateTime currentDateTime = QDateTime::currentDateTime();
+	int currentTime = currentDateTime.toTime_t();
+	const int secondPerDay = 60 * 60 * 24;
+	bool result = false;
+	if ((currentTime - lastExpiringWarningTime) > secondPerDay) {
+		result = true;
+		m_AppConfig.setLastExpiringWarningTime(currentTime);
+	}
+
+	return result;
 }

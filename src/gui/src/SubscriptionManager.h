@@ -19,10 +19,12 @@
 
 #include <QWidget>
 
+class AppConfig;
+
 class SubscriptionManager : public QWidget
 {
 public:
-	SubscriptionManager(QWidget* parent, int& edition);
+	SubscriptionManager(QWidget* parent, AppConfig& appConfig, int& edition);
 
 	bool activateSerial(const QString& serial);
 	bool checkSubscription();
@@ -34,9 +36,11 @@ private:
 	void checkOutput(QString& output);
 	void getEditionType(QString& output);
 	void checkExpiring(QString& output);
+	bool shouldWarnExpiring();
 
 private:
 	QString m_ErrorMessage;
 	QWidget* m_pParent;
+	AppConfig& m_AppConfig;
 	int& m_Edition;
 };
