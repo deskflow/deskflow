@@ -103,7 +103,7 @@ bool SetupWizard::validateCurrentPage()
 						QMessageBox::StandardButton reply =
 							QMessageBox::information(
 							this, tr("Setup Synergy"),
-							tr("Would you like to use serial key to activate?"),
+							tr("Would you like to use your serial key instead?"),
 							QMessageBox::Yes | QMessageBox::No);
 
 						if (reply == QMessageBox::Yes) {
