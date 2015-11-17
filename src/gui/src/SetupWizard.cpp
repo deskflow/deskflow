@@ -127,15 +127,9 @@ bool SetupWizard::validateCurrentPage()
 			}
 			else {
 				// create subscription file in profile directory
-				SubscriptionManager subscriptionManager;
-				bool r = subscriptionManager.activateSerial(m_pLineEditSerialKey->text(), m_Edition);
-				if (!r) {
-					message.setText(tr("An error occurred while trying to activate using a serial key. "
-									   "Please contact the helpdesk, and provide the "
-									   "following details.\n\n%1").arg(subscriptionManager.getLastError()));
-					message.exec();
-
-					return r;
+				SubscriptionManager subscriptionManager(this, m_Edition);
+				if (!subscriptionManager.activateSerial(m_pLineEditSerialKey->text())) {
+					return false;
 				}
 
 				m_pPluginPage->setEdition(m_Edition);

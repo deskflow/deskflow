@@ -698,21 +698,18 @@ QString MainWindow::appPath(const QString& name)
 
 bool MainWindow::serverArgs(QStringList& args, QString& app)
 {
-	SubscriptionManager subscriptionManager;
+	int edition;
+	SubscriptionManager subscriptionManager(this, edition);
 	if (subscriptionManager.checkSubscriptionExist())
 	{
-		int edition;
-		int state = subscriptionManager.checkSubscription(edition);
-
-		if (state == kInvalid) {
+		if (!subscriptionManager.checkSubscription()) {
 			return false;
 		}
-		else if (state == kExpired) {
-			QMessageBox::warning(this, tr("Subscription is expired"),
-								 tr("Your subscription is expired. Please purchase."));
-			return false;
+		else {
+			setEdition(edition);
 		}
 	}
+
 
 	app = appPath(appConfig().synergysName());
 

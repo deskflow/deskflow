@@ -24,13 +24,16 @@
 #include <QMessageBox>
 #include <QFile>
 
-SubscriptionManager::SubscriptionManager()
+SubscriptionManager::SubscriptionManager(QWidget* parent, int& edition) :
+	m_pParent(parent),
+	m_Edition(edition)
 {
+
 }
 
-bool SubscriptionManager::activateSerial(const QString& serial, int& edition)
+bool SubscriptionManager::activateSerial(const QString& serial)
 {
-	edition = Unknown;
+	m_Edition = Unknown;
 	CoreInterface coreInterface;
 	QString output;
 
@@ -41,17 +44,18 @@ bool SubscriptionManager::activateSerial(const QString& serial, int& edition)
 	catch (std::exception& e)
 	{
 		m_ErrorMessage = e.what();
+		checkError(m_ErrorMessage);
 		return false;
 	}
 
-	edition = getEditionType(output);
+	checkOutput(output);
 
 	return true;
 }
 
-int SubscriptionManager::checkSubscription(int& edition)
+bool SubscriptionManager::checkSubscription()
 {
-	edition = Unknown;
+	m_Edition = Unknown;
 	CoreInterface coreInterface;
 	QString output;
 	try
@@ -61,21 +65,13 @@ int SubscriptionManager::checkSubscription(int& edition)
 	catch (std::exception& e)
 	{
 		m_ErrorMessage = e.what();
-
-		if (m_ErrorMessage.contains("subscription has expired")) {
-			return kExpired;
-		}
-
-		return kInvalid;
+		checkError(m_ErrorMessage);
+		return false;
 	}
 
-	if (output.contains("subscription will expire soon")) {
-		return kExpiredSoon;
-	}
+	checkOutput(output);
 
-	edition = getEditionType(output);
-
-	return kValid;
+	return true;
 }
 
 bool SubscriptionManager::checkSubscriptionExist()
@@ -86,17 +82,51 @@ bool SubscriptionManager::checkSubscriptionExist()
 	return QFile::exists(subscriptionFilename);
 }
 
-int SubscriptionManager::getEditionType(QString& string)
+void SubscriptionManager::checkError(QString& error)
 {
-	if (string.contains("pro subscription valid")) {
-		return Pro;
+	if (error.contains("trial has expired")) {
+		QMessageBox::warning(m_pParent, tr("Subscription warning"),
+			tr("Your trial has expired. Click <a href='https://synergy-project.org/account/'>here</a> to purchase"));
 	}
-	else if (string.contains("basic subscription valid")) {
-		return Basic;
+	else {
+		QMessageBox::warning(m_pParent, tr("Subscription error"),
+			tr("An error occurred while trying to activate using a serial key. "
+				"Please contact the helpdesk, and provide the "
+				"following details.\n\n%1").arg(error));
 	}
-	else if (string.contains("trial subscription valid")) {
-		return Trial;
-	}
+}
 
-	return Unknown;
+void SubscriptionManager::checkOutput(QString& output)
+{
+	getEditionType(output);
+	checkExpiring(output);
+}
+
+void SubscriptionManager::getEditionType(QString& output)
+{
+	if (output.contains("pro subscription valid")) {
+		m_Edition = Pro;
+	}
+	else if (output.contains("basic subscription valid")) {
+		m_Edition = Basic;
+	}
+	else if (output.contains("trial subscription valid")) {
+		m_Edition = Trial;
+	}
+}
+
+void SubscriptionManager::checkExpiring(QString& output)
+{
+	if (output.contains("trial will end in")) {
+		QRegExp dayLeftRegex(".*trial will end in ([0-9]+) day.*");
+		if (dayLeftRegex.exactMatch(output)) {
+			QString dayLeft = dayLeftRegex.cap(1);
+
+			// TODO: warn user once a day
+			QMessageBox::warning(m_pParent, tr("Subscription warning"),
+				tr("Your trial will end in %1 %2. Click <a href='https://synergy-project.org/account/'>here</a> to purchase")
+				.arg(dayLeft)
+				.arg(dayLeft == "1" ? "day" : "days"));
+		}
+	}
 }

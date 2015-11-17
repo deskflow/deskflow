@@ -22,16 +22,21 @@
 class SubscriptionManager : public QWidget
 {
 public:
-    SubscriptionManager();
+	SubscriptionManager(QWidget* parent, int& edition);
 
-	bool activateSerial(const QString& serial, int& edition);
-	int checkSubscription(int& edition);
+	bool activateSerial(const QString& serial);
+	bool checkSubscription();
 	bool checkSubscriptionExist();
 	QString getLastError(){ return m_ErrorMessage; }
 
 private:
-	int getEditionType(QString& string);
+	void checkError(QString& error);
+	void checkOutput(QString& output);
+	void getEditionType(QString& output);
+	void checkExpiring(QString& output);
 
 private:
 	QString m_ErrorMessage;
+	QWidget* m_pParent;
+	int& m_Edition;
 };

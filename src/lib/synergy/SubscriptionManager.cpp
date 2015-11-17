@@ -151,17 +151,19 @@ SubscriptionManager::parsePlainSerial(const String& plainText, SubscriptionKey& 
 			sscanf(parts.at(6).c_str(), "%d", &key.m_warnTime);
 			sscanf(parts.at(7).c_str(), "%d", &key.m_expireTime);
 
-			// TODO: use Arch time
-			if (time(0) > key.m_expireTime &&
-				key.m_type == "trial") {
-				throw XSubscription(synergy::string::sprintf(
-					"%s subscription has expired",
-					key.m_type.c_str()));
-			}
-			else if (time(0) > key.m_warnTime &&
-				key.m_type == "trial") {
-				LOG((CLOG_WARN "%s subscription will expire soon",
-					key.m_type.c_str()));
+			// only limit to trial version
+			if (key.m_type == "trial") {
+				if (time(0) > key.m_expireTime) {
+					throw XSubscription("trial has expired");
+				}
+				else if (time(0) > key.m_warnTime) {
+					int secLeft = key.m_expireTime - static_cast<int>(time(0));
+					const int spd = 60 * 60 * 24;
+					int dayLeft = secLeft / spd + 1;
+					LOG((CLOG_NOTE "trial will end in %d %s",
+						dayLeft,
+						dayLeft == 1 ? "day" : "days"));
+				}
 			}
 
 			const char* userText = (key.m_userLimit == 1) ? "user" : "users";
