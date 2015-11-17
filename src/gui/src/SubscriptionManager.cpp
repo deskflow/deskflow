@@ -27,6 +27,8 @@
 #include <QDateTime>
 #include <QDate>
 
+static const char purchaseURL[] = "https://synergy-project.org/account/";
+
 SubscriptionManager::SubscriptionManager(QWidget* parent,  AppConfig& appConfig, int& edition) :
 	m_pParent(parent),
 	m_AppConfig(appConfig),
@@ -90,7 +92,7 @@ void SubscriptionManager::checkError(QString& error)
 {
 	if (error.contains("trial has expired")) {
 		QMessageBox::warning(m_pParent, tr("Subscription warning"),
-			tr("Your trial has expired. Click <a href='https://synergy-project.org/account/'>here</a> to purchase"));
+			tr("Your trial has expired. Click <a href='%1'>here</a> to purchase").arg(purchaseURL));
 	}
 	else {
 		QMessageBox::warning(m_pParent, tr("Subscription error"),
@@ -127,9 +129,10 @@ void SubscriptionManager::checkExpiring(QString& output)
 			QString dayLeft = dayLeftRegex.cap(1);
 
 			QMessageBox::warning(m_pParent, tr("Subscription warning"),
-				tr("Your trial will end in %1 %2. Click <a href='https://synergy-project.org/account/'>here</a> to purchase")
+				tr("Your trial will end in %1 %2. Click <a href='%3'>here</a> to purchase")
 				.arg(dayLeft)
-				.arg(dayLeft == "1" ? "day" : "days"));
+				.arg(dayLeft == "1" ? "day" : "days")
+				.arg(purchaseURL));
 		}
 	}
 }
