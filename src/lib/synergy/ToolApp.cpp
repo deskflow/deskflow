@@ -214,8 +214,8 @@ ToolApp::notifyActivation()
 		std::stringstream ss;
 		ss <<  JSON_URL << "notify/";
 		ss << "?action=" << action;
-		ss << "&identity=" << identity;
-		ss << "&mac=" << macHash;
+		ss << "&identity=" << ARCH->internet().urlEncode(identity);
+		ss << "&mac=" << ARCH->internet().urlEncode(macHash);
 		ss << "&os=" << ARCH->internet().urlEncode(ARCH->getOSName());
 		ss << "&arch=" << ARCH->internet().urlEncode(ARCH->getPlatformName());
 
