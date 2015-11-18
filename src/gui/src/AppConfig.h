@@ -97,6 +97,8 @@ class AppConfig
 		void setAutoHide(bool b) { m_AutoHide = b; }
 		bool getAutoHide() { return m_AutoHide; }
 
+		void saveSettings();
+
 	protected:
 		QSettings& settings() { return *m_pSettings; }
 		void setScreenName(const QString& s) { m_ScreenName = s; }
@@ -111,7 +113,6 @@ class AppConfig
 		void setElevateMode(bool b) { m_ElevateMode = b; }
 
 		void loadSettings();
-		void saveSettings();
 
 	private:
 		QSettings* m_pSettings;

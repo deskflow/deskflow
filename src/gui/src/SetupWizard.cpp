@@ -223,9 +223,11 @@ void SetupWizard::accept()
 		coreInterface.notifyActivation("skip:unknown");
 	}
 
+	appConfig.setEdition(m_Edition);
 	m_MainWindow.setEdition(m_Edition);
 	m_MainWindow.updateLocalFingerprint();
 
+	appConfig.saveSettings();
 	settings.sync();
 
 	QWizard::accept();
