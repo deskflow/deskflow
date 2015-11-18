@@ -199,11 +199,6 @@ void SetupWizard::accept()
 
 	if (m_pRadioButtonActivate->isChecked()) {
 		appConfig.setActivateEmail(m_pLineEditEmail->text());
-		QString mac = getFirstMacAddress();
-		QString hashSrc = m_pLineEditEmail->text() + mac;
-		QString hashResult = hash(hashSrc);
-		appConfig.setUserToken(hashResult);
-		appConfig.setEdition(m_Edition);
 
 		CoreInterface coreInterface;
 		coreInterface.notifyActivation("login:" + m_pLineEditEmail->text());

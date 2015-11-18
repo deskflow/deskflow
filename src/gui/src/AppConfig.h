@@ -76,8 +76,6 @@ class AppConfig
 		int edition() { return m_Edition; }
 		void setActivateEmail(QString e) { m_ActivateEmail = e; }
 		QString activateEmail() { return m_ActivateEmail; }
-		void setUserToken(QString t) { m_UserToken = t; }
-		QString userToken() { return m_UserToken; }
 		void setSerialKey(QString serial) { m_Serialkey = serial; }
 		QString serialKey() { return m_Serialkey; }
 		int lastExpiringWarningTime() const { return m_LastExpiringWarningTime; }
@@ -131,7 +129,6 @@ class AppConfig
 		bool m_AutoConfigPrompted;
 		int m_Edition;
 		QString m_ActivateEmail;
-		QString m_UserToken;
 		bool m_CryptoEnabled;
 		bool m_AutoHide;
 		QString m_Serialkey;

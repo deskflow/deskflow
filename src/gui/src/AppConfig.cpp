@@ -130,7 +130,6 @@ void AppConfig::loadSettings()
 	m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
 	m_Edition = settings().value("edition", Unknown).toInt();
 	m_ActivateEmail = settings().value("activateEmail", "").toString();
-	m_UserToken = settings().value("userToken", "").toString();
 	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
 	m_AutoHide = settings().value("autoHide", false).toBool();
 	m_Serialkey = settings().value("serialKey", "").toString();
@@ -153,7 +152,6 @@ void AppConfig::saveSettings()
 	settings().setValue("autoConfigPrompted", m_AutoConfigPrompted);
 	settings().setValue("edition", m_Edition);
 	settings().setValue("activateEmail", m_ActivateEmail);
-	settings().setValue("userToken", m_UserToken);
 	settings().setValue("cryptoEnabled", m_CryptoEnabled);
 	settings().setValue("autoHide", m_AutoHide);
 	settings().setValue("serialKey", m_Serialkey);
