@@ -18,6 +18,7 @@
 #include "SetupWizard.h"
 #include "MainWindow.h"
 #include "WebClient.h"
+#include "ActivationNotifier.h"
 #include "SubscriptionManager.h"
 #include "EditionType.h"
 #include "QSynergyApplication.h"
@@ -200,22 +201,19 @@ void SetupWizard::accept()
 	if (m_pRadioButtonActivate->isChecked()) {
 		appConfig.setActivateEmail(m_pLineEditEmail->text());
 
-		CoreInterface coreInterface;
-		coreInterface.notifyActivation("login:" + m_pLineEditEmail->text());
+		notifyActivation("login:" + m_pLineEditEmail->text());
 	}
 
 	if (m_pRadioButtonSubscription->isChecked())
 	{
 		appConfig.setSerialKey(m_pLineEditSerialKey->text());
 
-		CoreInterface coreInterface;
-		coreInterface.notifyActivation("serial:" + m_pLineEditSerialKey->text());
+		notifyActivation("serial:" + m_pLineEditSerialKey->text());
 	}
 
 	if (m_pRadioButtonSkip->isChecked())
 	{
-		CoreInterface coreInterface;
-		coreInterface.notifyActivation("skip:unknown");
+		notifyActivation("skip:unknown");
 	}
 
 	appConfig.setEdition(m_Edition);
@@ -249,6 +247,21 @@ void SetupWizard::reject()
 	coreInterface.notifyActivation("skip:unknown");
 
 	QWizard::reject();
+}
+
+void SetupWizard::notifyActivation(QString identity)
+{
+	ActivationNotifier* notifier = new ActivationNotifier();
+	notifier->setIdentity(identity);
+	QThread* thread = new QThread;
+	connect(notifier, SIGNAL(finished()), thread, SLOT(quit()));
+	connect(notifier, SIGNAL(finished()), notifier, SLOT(deleteLater()));
+	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+	notifier->moveToThread(thread);
+	thread->start();
+
+	QMetaObject::invokeMethod(notifier, "notify", Qt::QueuedConnection);
 }
 
 void SetupWizard::on_m_pComboLanguage_currentIndexChanged(int index)
