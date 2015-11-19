@@ -223,13 +223,13 @@ ToolApp::notifyActivation()
 			std::cout << ARCH->internet().get(ss.str()) << std::endl;
 		}
 		catch (std::exception& e) {
-			LOG((CLOG_CRIT "An error occurred during notification: %s\n", e.what()));
+			LOG((CLOG_NOTE "An error occurred during notification: %s\n", e.what()));
 		}
 		catch (...) {
-			LOG((CLOG_CRIT "An unknown error occurred during notification.\n"));
+			LOG((CLOG_NOTE "An unknown error occurred during notification.\n"));
 		}
 	}
 	else {
-		LOG((CLOG_DEBUG "notification failed"));
+		LOG((CLOG_NOTE "notification failed"));
 	}
 }
