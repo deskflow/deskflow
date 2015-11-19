@@ -23,6 +23,7 @@
 #include "AppConfig.h"
 
 #include <QMessageBox>
+#include <QDir>
 #include <QFile>
 #include <QDateTime>
 #include <QDate>
@@ -34,12 +35,12 @@ SubscriptionManager::SubscriptionManager(QWidget* parent,  AppConfig& appConfig,
 	m_AppConfig(appConfig),
 	m_Edition(edition)
 {
-
 }
 
 bool SubscriptionManager::activateSerial(const QString& serial)
 {
 	m_Edition = Unknown;
+	persistDirectory();
 	CoreInterface coreInterface;
 	QString output;
 
@@ -62,6 +63,7 @@ bool SubscriptionManager::activateSerial(const QString& serial)
 bool SubscriptionManager::checkSubscription()
 {
 	m_Edition = Unknown;
+	persistDirectory();
 	CoreInterface coreInterface;
 	QString output;
 	try
@@ -151,4 +153,15 @@ bool SubscriptionManager::shouldWarnExpiring()
 	}
 
 	return result;
+}
+
+void SubscriptionManager::persistDirectory()
+{
+	CoreInterface coreInterface;
+	QString profileDir = coreInterface.getProfileDir();
+
+	QDir dir(profileDir);
+	if (!dir.exists()) {
+		dir.mkpath(".");
+	}
 }

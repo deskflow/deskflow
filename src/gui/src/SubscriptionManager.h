@@ -37,6 +37,7 @@ private:
 	void getEditionType(QString& output);
 	void checkExpiring(QString& output);
 	bool shouldWarnExpiring();
+	void persistDirectory();
 
 private:
 	QString m_ErrorMessage;
