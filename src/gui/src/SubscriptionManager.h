@@ -28,7 +28,7 @@ public:
 
 	bool activateSerial(const QString& serial);
 	bool checkSubscription();
-	bool checkSubscriptionExist();
+	bool fileExists();
 	QString getLastError(){ return m_ErrorMessage; }
 
 private:

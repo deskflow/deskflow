@@ -82,7 +82,7 @@ bool SubscriptionManager::checkSubscription()
 	return true;
 }
 
-bool SubscriptionManager::checkSubscriptionExist()
+bool SubscriptionManager::fileExists()
 {
 	CoreInterface coreInterface;
 	QString subscriptionFilename = coreInterface.getSubscriptionFilename();

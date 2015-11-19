@@ -699,7 +699,7 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 {
 	int edition;
 	SubscriptionManager subscriptionManager(this, appConfig(), edition);
-	if (subscriptionManager.checkSubscriptionExist())
+	if (subscriptionManager.fileExists())
 	{
 		if (!subscriptionManager.checkSubscription()) {
 			return false;
