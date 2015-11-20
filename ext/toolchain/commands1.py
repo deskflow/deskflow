@@ -475,7 +475,7 @@ class InternalCommands:
 
 	def configureGui(self, target="", extraArgs=""):
 		
-		self.verify_qmake_installed()
+		(qtMajor, qtSettings) = self.verify_qmake_installed()
 		
 		qmake_cmd_string = self.qmake_cmd + " " + self.qtpro_filename + " -r"
 
@@ -505,8 +505,7 @@ class InternalCommands:
 			
 			qmake_cmd_string += " QMAKE_MACOSX_DEPLOYMENT_TARGET=" + version
 
-			(qMajor, qMinor, qRev) = self.getQmakeVersion()
-			if qMajor <= 4:
+			if qtMajor <= 4:
 				# 4.6: qmake takes full sdk dir.
 				qmake_cmd_string += " QMAKE_MAC_SDK=" + sdkDir
 			else:
@@ -525,19 +524,6 @@ class InternalCommands:
 		
 		if err != 0:
 			raise Exception('QMake encountered error: ' + str(err))
-
-	def getQmakeVersion(self):
-		version = commands.getoutput("%s --version" % self.qmake_cmd)
-		result = re.search('(\d+)\.(\d+)\.(\d)', version)
-		
-		if not result:
-			raise Exception("Could not get qmake version.")
- 
-		major = int(result.group(1))
-		minor = int(result.group(2))
-		rev = int(result.group(3))
-		
-		return (major, minor, rev)
 
 	def getMacSdkDir(self):
 		sdkName = "macosx" + self.macSdk
@@ -801,12 +787,13 @@ class InternalCommands:
 			if err != 0:
 				raise Exception(bin + " failed with error: " + str(err))
 
-			(qMajor, qMinor, qRev) = self.getQmakeVersion()
-			if qMajor <= 4:
-				frameworkRootDir = "/Library/Frameworks"
-			else:
-				# TODO: auto-detect, qt can now be installed anywhere.
-				frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
+			(qtMajor, qtSettings) = self.verify_qmake_installed()
+			frameworkRootDir = self.extract_qmake_property(qtSettings, 'QT_INSTALL_LIBS')
+			if not frameworkRootDir:
+				if qtMajor <= 4:
+					frameworkRootDir = "/Library/Frameworks"
+				else:
+					frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
 
 			target = bundleTargetDir + "/Contents/Frameworks"
 
