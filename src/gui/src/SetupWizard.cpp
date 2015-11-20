@@ -29,7 +29,7 @@
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_MainWindow(mainWindow),
 	m_StartMain(startMain),
-	m_Edition(Unknown),
+	m_Edition(ET_Unknown),
 	m_LoginAttemps(0)
 {
 	setupUi(this);
@@ -95,7 +95,7 @@ bool SetupWizard::validateCurrentPage()
 					message,
 					this);
 
-				if (m_Edition == Unknown) {
+				if (m_Edition == ET_Unknown) {
 					m_LoginAttemps++;
 					if (m_LoginAttemps == kMaximiumLoginAttemps) {
 						m_LoginAttemps = 0;

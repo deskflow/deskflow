@@ -58,7 +58,7 @@ class AppConfig
 	public:
 		const QString& screenName() const { return m_ScreenName; }
 		int port() const { return m_Port; }
-		const QString& interface() const { return m_Interface; }
+		const QString& getInterface() const { return m_Interface; }
 		int logLevel() const { return m_LogLevel; }
 		bool logToFile() const { return m_LogToFile; }
 		const QString& logFilename() const { return m_LogFilename; }

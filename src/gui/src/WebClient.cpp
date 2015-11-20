@@ -32,7 +32,7 @@ int WebClient::getEdition(
 		QWidget* w)
 {
 	QString responseJson;
-	int edition = Unknown;
+	int edition = ET_Unknown;
 	try {
 		responseJson = request(email, password);
 	}

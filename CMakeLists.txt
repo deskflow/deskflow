@@ -313,7 +313,12 @@ else() # not-unix
 		/D_CRT_SECURE_NO_WARNINGS
 		/DVERSION=\"${VERSION}\"
 	)
-	
+
+	# workaround gtest requirement for variadic macros.
+	if (MSVC_VERSION EQUAL 1700)
+		add_definitions( /D_VARIADIC_MAX=10 )
+	endif()
+
 	if (MSVC_VERSION EQUAL 1600)
 		set(SLN_FILENAME "${CMAKE_CURRENT_BINARY_DIR}/synergy.sln")
 		if (EXISTS "${SLN_FILENAME}" )

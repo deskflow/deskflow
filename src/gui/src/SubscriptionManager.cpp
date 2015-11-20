@@ -30,7 +30,7 @@ SubscriptionManager::SubscriptionManager()
 
 bool SubscriptionManager::activateSerial(const QString& serial, int& edition)
 {
-	edition = Unknown;
+	edition = ET_Unknown;
 	CoreInterface coreInterface;
 	QString output;
 
@@ -51,7 +51,7 @@ bool SubscriptionManager::activateSerial(const QString& serial, int& edition)
 
 int SubscriptionManager::checkSubscription(int& edition)
 {
-	edition = Unknown;
+	edition = ET_Unknown;
 	CoreInterface coreInterface;
 	QString output;
 	try
@@ -89,8 +89,8 @@ bool SubscriptionManager::checkSubscriptionExist()
 int SubscriptionManager::getEditionType(QString& string)
 {
 	if (string.contains("full subscription valid")) {
-		return Pro;
+		return ET_Pro;
 	}
 
-	return Unknown;
+	return ET_Unknown;
 }

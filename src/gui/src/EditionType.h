@@ -19,9 +19,9 @@
 #define EDITIONTYPE_H
 
 enum qEditionType {
-	Basic,
-	Pro,
-	Unknown
+	ET_Basic,
+	ET_Pro,
+	ET_Unknown
 };
 
 #endif // EDITIONTYPE_H
