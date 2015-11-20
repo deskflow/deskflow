@@ -46,6 +46,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDesktopServices>
+#include <QDesktopWidget>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
