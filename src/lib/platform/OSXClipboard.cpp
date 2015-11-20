@@ -100,13 +100,13 @@ OSXClipboard::add(EFormat format, const String & data)
 		return;
 
 	LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
-	if(format == IClipboard::kText) {
+	if (format == IClipboard::kText) {
 		LOG((CLOG_DEBUG " format of data to be added to clipboard was kText"));
 	}
-	else if(format == IClipboard::kBitmap) {
+	else if (format == IClipboard::kBitmap) {
 		LOG((CLOG_DEBUG " format of data to be added to clipboard was kBitmap"));
 	}
-	else if(format == IClipboard::kHTML) {
+	else if (format == IClipboard::kHTML) {
 		LOG((CLOG_DEBUG " format of data to be added to clipboard was kHTML"));
 	}
 

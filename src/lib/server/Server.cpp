@@ -33,6 +33,7 @@
 #include "synergy/KeyState.h"
 #include "synergy/Screen.h"
 #include "synergy/PacketStreamFilter.h"
+#include "synergy/DpiHelper.h"
 #include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/IListenSocket.h"
@@ -2000,8 +2001,19 @@ Server::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 			m_sendFileThread = NULL;
 		}
 
+		SInt32 newX = m_x;
+		SInt32 newY = m_y;
+
+		if (DpiHelper::s_dpiScaled) {
+			// only scale if it's going back to server
+			if (newScreen->isPrimary()) {
+				newX = (SInt32)(newX / DpiHelper::getDpi());
+				newY = (SInt32)(newY / DpiHelper::getDpi());
+			}
+		}
+
 		// switch screens
-		switchScreen(newScreen, m_x, m_y, false);
+		switchScreen(newScreen, newX, newY, false);
 	}
 	else {
 		// same screen.  clamp mouse to edge.
