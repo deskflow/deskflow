@@ -620,7 +620,7 @@ class InternalCommands:
 			m = re.search('.*Using Qt version (\d+\.\d+\.\d+).*', stdout)
 			if m:
 				try:
-					major = re.search('(\d+)\..*', m.group(1)).group(1)
+					major = int(re.search('(\d+)\..*', m.group(1)).group(1))
 				except:
 					pass
 				if sys.platform == 'win32':
@@ -636,20 +636,25 @@ class InternalCommands:
 			else:
 				raise Exception('Could not find qmake version.')
 
-		if major >= 5:
-			try:
-				p = subprocess.Popen(
-					[self.qmake_cmd, '-query'], 
-					stdout=subprocess.PIPE, 
-					stderr=subprocess.PIPE)
-				stdout, stderr = p.communicate()
-				if p.returncode is 0:
-					props = stdout
-			except:
-				print >> sys.stderr, 'qmake version does not support -query.'
-				pass		
+		try:
+			p = subprocess.Popen(
+				[self.qmake_cmd, '-query'], 
+				stdout=subprocess.PIPE, 
+				stderr=subprocess.PIPE)
+			stdout, stderr = p.communicate()
+			if p.returncode is 0:
+				props = stdout
+		except:
+			print >> sys.stderr, 'qmake version does not support -query.'
+			pass		
 
 		return (major, props)
+
+	def extract_qmake_property(self, props, name):
+		name = '%s:' % name
+		for s in props.split("\n"):
+			if s.startswith(name):
+				return s.replace(name,'')
 
 	def ensureConfHasRun(self, target, skipConfig):
 		if self.hasConfRun(target):
@@ -1367,13 +1372,12 @@ class InternalCommands:
 			arch = 'x64'
 
 		(qtMajor, qtSettings) = self.verify_qmake_installed()
-		for s in qtSettings.split("\n"):
-			if 'QT_INSTALL_LIBEXECS:' in s:
-				qtDir = s.replace('QT_INSTALL_LIBEXECS:','')
+		if not qtDir:
+			qtDir = self.extract_qmake_property(qtSettings, 'QT_INSTALL_LIBEXECS')
 
 		# hardcode old values as fallback, don't break old builds
 		if not qtMajor:
-			qtMajor = "4"
+			qtMajor = 4
 		if not qtDir:
 			qtDir = "C:\\Qt\\2010.02\\qt\\bin"
 
@@ -1386,7 +1390,7 @@ class InternalCommands:
 			pass
 		
 		version = self.getVersionNumber()
-		args = ( "/p:DefineConstants=\"Version=%s;VcRuntimeVersion=%s;QtMajor=%s;QtPath=%s;\""
+		args = ( "/p:DefineConstants=\"Version=%s;VcRuntimeVersion=%s;QtMajor=%d;QtPath=%s;\""
 			% ( version, vcRuntimeVersion, qtMajor, qtDir ) )
 		
 		self.run_vcbuild(
