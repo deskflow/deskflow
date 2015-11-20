@@ -16,7 +16,7 @@
 
 # TODO: split this file up, it's too long!
 
-import sys, os, ConfigParser, shutil, re, ftputil, zipfile, glob, commands
+import sys, os, ConfigParser, shutil, re, ftputil, zipfile, glob, commands, fnmatch
 from generators import VisualStudioGenerator, EclipseGenerator, XcodeGenerator, MakefilesGenerator
 from getopt import gnu_getopt
 
@@ -44,6 +44,7 @@ class Toolchain:
 		'configure' : ['g:dr', ['generator=', 'debug', 'release', 'mac-sdk=', 'mac-identity=']],
 		'build'     : ['dr', ['debug', 'release']],
 		'clean'     : ['dr', ['debug', 'release']],
+		'distclean' : ['', []],
 		'update'    : ['', []],
 		'install'   : ['', []],
 		'doxygen'   : ['', []],
@@ -901,6 +902,40 @@ class InternalCommands:
 		# allow user to skip qui clean
 		if self.enableMakeGui:
 			self.cleanGui(targets)
+
+	def findMatchingFiles(self, directory, pattern):
+		for root, dirs, files in os.walk(directory):
+			for basename in fnmatch.filter(files, pattern):
+				filename = os.path.join(root, basename)
+				yield filename
+
+	# Remove a file or directory tree, don't report errors (don't care if doesn't exist)
+	def removeFileOrTree(self, path):
+		if '.git' in path:
+			print "  Ignoring %s" % path
+			return
+		print "  %s" % path
+		shutil.rmtree(path, True)
+		try:
+			os.remove(path)
+		except:
+			pass		
+
+	def distclean(self):
+		print "Cleaning generated files.  You'll need to re-run \"hm conf\" . . ."
+		with open('.gitignore') as openFile:
+			for f in openFile:
+				if f.startswith('# Everything above this line will be wiped'):
+					break
+				f = f.rstrip('\n')
+				if not f:
+					continue
+				if f.startswith("/"):
+					for foundFile in glob.glob("./%s" % f):
+						self.removeFileOrTree(foundFile)
+				else:
+					for foundFile in self.findMatchingFiles(".", f):
+						self.removeFileOrTree(foundFile)
 	
 	def cleanCore(self, targets):
 		generator = self.getGeneratorFromConfig().cmakeName
@@ -1958,6 +1993,9 @@ class CommandHandler:
 	
 	def clean(self):
 		self.ic.clean(self.build_targets)
+
+	def distclean(self):
+		self.ic.distclean()
 	
 	def update(self):
 		self.ic.update()
