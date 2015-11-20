@@ -418,7 +418,7 @@ class InternalCommands:
 	def configureCore(self, target="", extraArgs=""):
 		
 		# ensure that we have access to cmake
-		_cmake_cmd = self.persist_cmake()
+		_cmake_cmd = self.verify_cmake_installed()
 	
 		# now that we know we've got the latest setup, we can ask the config
 		# file for the generator (but again, we only fall back to this if not 
@@ -474,9 +474,8 @@ class InternalCommands:
 			raise Exception('CMake encountered error: ' + str(err))
 
 	def configureGui(self, target="", extraArgs=""):
-			
-		# make sure we have qmake
-		self.persist_qmake()
+		
+		self.verify_qmake_installed()
 		
 		qmake_cmd_string = self.qmake_cmd + " " + self.qtpro_filename + " -r"
 
@@ -573,7 +572,7 @@ class InternalCommands:
 		file.truncate()
 		file.close()
 				
-	def persist_cmake(self):
+	def verify_cmake_installed(self):
 		# even though we're running `cmake --version`, we're only doing this for the 0 return
 		# code; we don't care about the version, since CMakeLists worrys about this for us.
 		err = os.system('%s --version' % self.cmake_cmd)
@@ -588,13 +587,16 @@ class InternalCommands:
 		else:  
 			return self.cmake_cmd
 
-	def persist_qt(self):
-		self.persist_qmake()
+	def verify_qmake_installed(self):
+		
+		# Basic check is no exception, on success also return version and qmake paths
+		major = None
+		props = None
 
-	def persist_qmake(self):
 		# cannot use subprocess on < python 2.4
 		if sys.version_info < (2, 4):
-			return
+			print 'Warning, cannot validate qmake install with python < 2.4'
+			return (major, props)
 		
 		try:
 			p = subprocess.Popen(
@@ -613,10 +615,14 @@ class InternalCommands:
 		
 		stdout, stderr = p.communicate()
 		if p.returncode != 0:
-			raise Exception('Could not test for cmake: %s' % stderr)
+			raise Exception('Could not test for qmake: %s' % stderr)
 		else:
 			m = re.search('.*Using Qt version (\d+\.\d+\.\d+).*', stdout)
 			if m:
+				try:
+					major = re.search('(\d+)\..*', m.group(1)).group(1)
+				except:
+					pass
 				if sys.platform == 'win32':
 					ver = m.group(1)
 					if ver != self.w32_qt_version: # TODO: test properly
@@ -629,6 +635,21 @@ class InternalCommands:
 					pass # any version should be ok for other platforms
 			else:
 				raise Exception('Could not find qmake version.')
+
+		if major >= 5:
+			try:
+				p = subprocess.Popen(
+					[self.qmake_cmd, '-query'], 
+					stdout=subprocess.PIPE, 
+					stderr=subprocess.PIPE)
+				stdout, stderr = p.communicate()
+				if p.returncode is 0:
+					props = stdout
+			except:
+				print >> sys.stderr, 'qmake version does not support -query.'
+				pass		
+
+		return (major, props)
 
 	def ensureConfHasRun(self, target, skipConfig):
 		if self.hasConfRun(target):
@@ -1100,7 +1121,7 @@ class InternalCommands:
 		elif type == 'win':
 			if sys.platform == 'win32':
 				#self.distNsis(vcRedistDir, qtDir)
-				self.distWix()
+				self.distWix(qtDir)
 			else:
 				package_unsupported = True
 			
@@ -1338,15 +1359,35 @@ class InternalCommands:
 		err = os.system(cmd)
 		self.restore_chdir()
 
-	def distWix(self):
+	def distWix(self, qtDir):
 		generator = self.getGeneratorFromConfig().cmakeName
 		
 		arch = 'x86'
 		if generator.endswith('Win64'):
 			arch = 'x64'
+
+		(qtMajor, qtSettings) = self.verify_qmake_installed()
+		for s in qtSettings.split("\n"):
+			if 'QT_INSTALL_LIBEXECS:' in s:
+				qtDir = s.replace('QT_INSTALL_LIBEXECS:','')
+
+		# hardcode old values as fallback, don't break old builds
+		if not qtMajor:
+			qtMajor = "4"
+		if not qtDir:
+			qtDir = "C:\\Qt\\2010.02\\qt\\bin"
+
+		vcRuntimeVersion = '%03d' % ( 10 * self.get_vc_version_int(generator) )
+
+		# touch file, otherwise changes to command line params may be ignored
+		try:
+			os.utime('src/setup/win32/Include.wxi', None)
+		except:
+			pass
 		
 		version = self.getVersionNumber()
-		args = "/p:DefineConstants=\"Version=%s\"" % version
+		args = ( "/p:DefineConstants=\"Version=%s;VcRuntimeVersion=%s;QtMajor=%s;QtPath=%s;\""
+			% ( version, vcRuntimeVersion, qtMajor, qtDir ) )
 		
 		self.run_vcbuild(
 			generator, 'release', 'synergy.sln', args,
@@ -1772,6 +1813,23 @@ class InternalCommands:
 
 		return generators[generator_id]
 
+	def get_vc_version_int(self, generator):
+		if generator.startswith('Visual Studio 8'):
+			value = 8
+		elif generator.startswith('Visual Studio 9'):
+			value = 9
+		elif generator.startswith('Visual Studio 10'):
+			value = 10
+		elif generator.startswith('Visual Studio 11'):
+			value = 11
+		elif generator.startswith('Visual Studio 12'):
+			value = 12
+		elif generator.startswith('Visual Studio 14'):
+			value = 14
+		else:
+			value = None
+		return value
+
 	def get_vcvarsall(self, generator):
 		import platform, _winreg
 		
@@ -1789,18 +1847,9 @@ class InternalCommands:
 		except:
 			raise Exception('Unable to open Visual Studio registry key. Application may not be installed.')
 		
-		if generator.startswith('Visual Studio 8'):
-			value,type = _winreg.QueryValueEx(key, '8.0')
-		elif generator.startswith('Visual Studio 9'):
-			value,type = _winreg.QueryValueEx(key, '9.0')
-		elif generator.startswith('Visual Studio 10'):
-			value,type = _winreg.QueryValueEx(key, '10.0')
-		elif generator.startswith('Visual Studio 11'):
-			value,type = _winreg.QueryValueEx(key, '11.0')
-		elif generator.startswith('Visual Studio 12'):
-			value,type = _winreg.QueryValueEx(key, '12.0')
-		elif generator.startswith('Visual Studio 14'):
-			value,type = _winreg.QueryValueEx(key, '14.0')
+		intVersion = self.get_vc_version_int(generator);
+		if intVersion is not None:
+			value,type = _winreg.QueryValueEx(key, '%d.0' % intVersion)
 		else:
 			raise Exception('Cannot determine vcvarsall.bat location for: ' + generator)
 		

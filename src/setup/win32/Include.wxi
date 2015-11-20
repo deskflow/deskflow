@@ -7,7 +7,6 @@
   <?define BinPath="../../../bin/$(var.Configuration)" ?>
   <?define ResPath="../../../res" ?>
   <?define ExtPath="../../../ext" ?>
-  <?define QtPath="C:\Qt\2010.02\qt\bin" ?>
 
   <?ifndef Version ?>
   <?define Version="1.0.0" ?>
@@ -28,6 +27,6 @@
   <?define var.OpensslPath="openssl-win32" ?>
   <?endif?>
   
-  <?define CRT="$(env.CommonProgramFiles)\Merge Modules\Microsoft_VC100_CRT_$(var.Platform).msm" ?>
+  <?define CRT="$(env.CommonProgramFiles)\Merge Modules\Microsoft_VC$(var.VcRuntimeVersion)_CRT_$(var.Platform).msm" ?>
   
 </Include>
