@@ -27,6 +27,7 @@ ToolArgs::ToolArgs() :
 	m_getArch(false),
 	m_getSubscriptionFilename(false),
 	m_checkSubscription(false),
+	m_notifyActivation(false),
 	m_subscriptionSerial()
 {
 }

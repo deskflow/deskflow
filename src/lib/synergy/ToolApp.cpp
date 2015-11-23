@@ -30,7 +30,7 @@
 #include "platform/MSWindowsSession.h"
 #endif
 
-#define JSON_URL "https://synergy-project.org/premium/json/"
+#define JSON_URL "http://test.synergy-project.org/premium/json/"
 
 enum {
 	kErrorOk,
@@ -117,6 +117,9 @@ ToolApp::run(int argc, char** argv)
 				return kExitSubscription;
 			}
 		}
+		else if (m_args.m_notifyActivation) {
+			notifyActivation();
+		}
 		else {
 			throw XSynergy("Nothing to do");
 		}
@@ -149,16 +152,23 @@ ToolApp::loginAuth()
 	String credentials;
 	std::cin >> credentials;
 
-	size_t separator = credentials.find(':');
-	String email = credentials.substr(0, separator);
-	String password = credentials.substr(separator + 1, credentials.length());
+	std::vector<String> parts = synergy::string::splitString(credentials, ':');
+	size_t count = parts.size();
 
-	std::stringstream ss;
-	ss << JSON_URL << "auth/";
-	ss << "?email=" << ARCH->internet().urlEncode(email);
-	ss << "&password=" << password;
+	if (count == 2 ) {
+		String email = parts[0];
+		String password = parts[1];
 
-	std::cout << ARCH->internet().get(ss.str()) << std::endl;
+		std::stringstream ss;
+		ss << JSON_URL << "auth/";
+		ss << "?email=" << ARCH->internet().urlEncode(email);
+		ss << "&password=" << password;
+
+		std::cout << ARCH->internet().get(ss.str()) << std::endl;
+	}
+	else {
+		throw XSynergy("Invalid credentials.");
+	}
 }
 
 void
@@ -177,4 +187,49 @@ ToolApp::getPluginList()
 	ss << "&password=" << password;
 
 	std::cout << ARCH->internet().get(ss.str()) << std::endl;
+}
+
+void 
+ToolApp::notifyActivation()
+{
+	String info;
+	std::cin >> info;
+
+	std::vector<String> parts = synergy::string::splitString(info, ':');
+	size_t count = parts.size();
+
+	if (count == 3 || count == 4) {
+		String action = parts[0];
+		String identity = parts[1];
+		String macHash = parts[2];
+		String os;
+
+		if (count == 4) {
+			os = parts[3];
+		}
+		else {
+			os = ARCH->getOSName();
+		}
+
+		std::stringstream ss;
+		ss <<  JSON_URL << "notify/";
+		ss << "?action=" << action;
+		ss << "&identity=" << ARCH->internet().urlEncode(identity);
+		ss << "&mac=" << ARCH->internet().urlEncode(macHash);
+		ss << "&os=" << ARCH->internet().urlEncode(ARCH->getOSName());
+		ss << "&arch=" << ARCH->internet().urlEncode(ARCH->getPlatformName());
+
+		try {
+			std::cout << ARCH->internet().get(ss.str()) << std::endl;
+		}
+		catch (std::exception& e) {
+			LOG((CLOG_NOTE "An error occurred during notification: %s\n", e.what()));
+		}
+		catch (...) {
+			LOG((CLOG_NOTE "An unknown error occurred during notification.\n"));
+		}
+	}
+	else {
+		LOG((CLOG_NOTE "notification failed"));
+	}
 }

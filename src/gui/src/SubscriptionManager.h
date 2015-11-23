@@ -19,19 +19,29 @@
 
 #include <QWidget>
 
+class AppConfig;
+
 class SubscriptionManager : public QWidget
 {
 public:
-    SubscriptionManager();
+	SubscriptionManager(QWidget* parent, AppConfig& appConfig, int& edition);
 
-	bool activateSerial(const QString& serial, int& edition);
-	int checkSubscription(int& edition);
-	bool checkSubscriptionExist();
+	bool activateSerial(const QString& serial);
+	bool checkSubscription();
+	bool fileExists();
 	QString getLastError(){ return m_ErrorMessage; }
 
 private:
-	int getEditionType(QString& string);
+	void checkError(QString& error);
+	void checkOutput(QString& output);
+	void getEditionType(QString& output);
+	void checkExpiring(QString& output);
+	bool shouldWarnExpiring();
+	void persistDirectory();
 
 private:
 	QString m_ErrorMessage;
+	QWidget* m_pParent;
+	AppConfig& m_AppConfig;
+	int& m_Edition;
 };

@@ -15,14 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SUBSCRIPTIONSTATE_H
-#define SUBSCRIPTIONSTATE_H
+#include "ActivationNotifier.h"
 
-enum qSubscriptionState {
-	kValid,
-	kInvalid,
-	kExpiredSoon,
-	kExpired
-};
+#include "CoreInterface.h"
 
-#endif // SUBSCRIPTIONSTATE_H
+ActivationNotifier::ActivationNotifier(QObject *parent) :
+    QObject(parent)
+{
+}
+
+void ActivationNotifier::setIdentity(QString identity)
+{
+	m_Identity = identity;
+}
+
+void ActivationNotifier::notify()
+{
+	CoreInterface coreInterface;
+	coreInterface.notifyActivation(m_Identity);
+}
