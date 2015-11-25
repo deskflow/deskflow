@@ -169,8 +169,8 @@ if (UNIX)
 		message(STATUS "OSX_TARGET_MAJOR=${OSX_TARGET_MAJOR}")
 		message(STATUS "OSX_TARGET_MINOR=${OSX_TARGET_MINOR}")
 
-		if (NOT (OSX_TARGET_MAJOR EQUAL 10))
-			message(FATAL_ERROR "Mac OS X target must be 10.x")
+		if (OSX_TARGET_MAJOR LESS 10)
+			message(FATAL_ERROR "Mac OS X target must be at least 10.x")
 		endif ()
 
 		if (OSX_TARGET_MINOR LESS 6)
