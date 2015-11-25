@@ -1317,7 +1317,7 @@ XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 	// by badly behaved selection owners.
 	XEvent xevent;
 	std::vector<XEvent> events;
-	Stopwatch timeout(true);
+	Stopwatch timeout(false);	// timer not stopped, not triggered
 	static const double s_timeout = 0.25;	// FIXME -- is this too short?
 	bool noWait = false;
 	while (!m_done && !m_failed) {
@@ -1361,7 +1361,7 @@ XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 	XSelectInput(display, m_requestor, attr.your_event_mask);
 
 	// return success or failure
-	LOG((CLOG_DEBUG1 "request %s", m_failed ? "failed" : "succeeded"));
+	LOG((CLOG_DEBUG1 "request %s after %fs", m_failed ? "failed" : "succeeded", timeout.getTime()));
 	return !m_failed;
 }
 

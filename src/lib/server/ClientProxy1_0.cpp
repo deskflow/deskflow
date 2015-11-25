@@ -232,8 +232,7 @@ ClientProxy1_0::handleFlatline(const Event&, void*)
 bool
 ClientProxy1_0::getClipboard(ClipboardID id, IClipboard* clipboard) const
 {
-	Clipboard::copy(clipboard, &m_clipboard[id].m_clipboard);
-	return true;
+	return Clipboard::copy(clipboard, &m_clipboard[id].m_clipboard);
 }
 
 void

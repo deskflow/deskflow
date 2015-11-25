@@ -18,6 +18,7 @@
 
 #include "synergy/IClipboard.h"
 #include "common/stdvector.h"
+#include "base/Log.h"
 
 //
 // IClipboard
@@ -61,6 +62,40 @@ IClipboard::unmarshall(IClipboard* clipboard, const String& data, Time time)
 		// done
 		clipboard->close();
 	}
+}
+
+String
+IClipboard::dump(const String &d)
+{
+	if (d.size()<12) return String();
+
+	const char *s = d.data();
+	int nformats = readUInt32(s);
+	s+=4;
+
+	String out = synergy::string::sprintf("d.size()=%d nfmts=%d\n", d.size(), nformats);
+
+	for (int i=0; i<nformats && (s+8)<(d.data()+d.size()); i++) {
+		int fmt = readUInt32(s);
+		s+=4;
+		int fsize = readUInt32(s);
+		s+=4;
+		if (fmt==0) {
+			String tmp(s);
+
+			synergy::string::findReplaceAll(tmp, "\x0a", "\\n");
+			synergy::string::findReplaceAll(tmp, "\x0d", "\\r");
+			synergy::string::findReplaceAll(tmp, "\t", "\\t");
+
+			out += synergy::string::sprintf(" fmt=%d fsize=%d \"%s\"\n", fmt, fsize, tmp.c_str());
+		} else {
+			out += synergy::string::sprintf(" fmt=%d fsize=%d", fmt, fsize);
+		}
+
+		s+=fsize;
+	}
+
+	return out;
 }
 
 String
@@ -129,13 +164,22 @@ IClipboard::copy(IClipboard* dst, const IClipboard* src, Time time)
 					IClipboard::EFormat eFormat = (IClipboard::EFormat)format;
 					if (src->has(eFormat)) {
 						dst->add(eFormat, src->get(eFormat));
+						success = true;
 					}
 				}
-				success = true;
+				if (!success) {
+					LOG((CLOG_INFO "%s src does not have supported format\n", __FUNCTION__));
+				}
+			} else {
+				LOG((CLOG_INFO "%s dest->open failed\n", __FUNCTION__));
 			}
 			dst->close();
+		} else {
+			LOG((CLOG_INFO "%s dest->open failed\n", __FUNCTION__));
 		}
 		src->close();
+	} else {
+		LOG((CLOG_INFO "%s src->open failed\n", __FUNCTION__));
 	}
 
 	return success;

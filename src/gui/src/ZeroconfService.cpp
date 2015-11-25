@@ -33,8 +33,8 @@ static const QStringList preferedIPAddress(
 				"10." <<
 				"172.");
 
-const char* ZeroconfService:: m_ServerServiceName = "_synergyServerZeroconf._tcp";
-const char* ZeroconfService:: m_ClientServiceName = "_synergyClientZeroconf._tcp";
+const char* ZeroconfService:: m_ServerServiceName = "_synergyServer._tcp";
+const char* ZeroconfService:: m_ClientServiceName = "_synergyClient._tcp";
 
 ZeroconfService::ZeroconfService(MainWindow* mainWindow) :
 	m_pMainWindow(mainWindow),

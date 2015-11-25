@@ -48,6 +48,7 @@
 
 #include <cstring>
 #include <cstdlib>
+#include <cstdint>
 #include <sstream>
 #include <fstream>
 
@@ -490,8 +491,12 @@ Server::switchScreen(BaseClientProxy* dst,
 			for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 				ClipboardInfo& clipboard = m_clipboards[id];
 				if (clipboard.m_clipboardOwner == getName(m_primaryClient)) {
+					// LOG((CLOG_DEBUG "force triggering clipboard %d changed", id));
 					onClipboardChanged(m_primaryClient,
 						id, clipboard.m_clipboardSeqNum);
+				} else {
+					LOG((CLOG_DEBUG "clipboard %d not mine \"%s\"!=\"%s\"",
+						id, clipboard.m_clipboardOwner.c_str(), getName(m_primaryClient).c_str()));
 				}
 			}
 		}
@@ -1221,11 +1226,13 @@ Server::handleClipboardGrabbed(const Event& event, void* vclient)
 {
 	// ignore events from unknown clients
 	BaseClientProxy* grabber = reinterpret_cast<BaseClientProxy*>(vclient);
-	if (m_clientSet.count(grabber) == 0) {
-		return;
-	}
+	LOG((CLOG_DEBUG "screen \"%s\" clipboard grabbed", getName(grabber).c_str()));
 	const IScreen::ClipboardInfo* info =
 		reinterpret_cast<const IScreen::ClipboardInfo*>(event.getData());
+	if (m_clientSet.count(grabber) == 0) {
+		LOG((CLOG_INFO "client set count 0: screen \"%s\" grab of clipboard %d", getName(grabber).c_str(), info->m_id));
+		return;
+	}
 
 	// ignore grab if sequence number is old.  always allow primary
 	// screen to grab.
@@ -1265,9 +1272,12 @@ Server::handleClipboardGrabbed(const Event& event, void* vclient)
 void
 Server::handleClipboardChanged(const Event& event, void* vclient)
 {
+
 	// ignore events from unknown clients
 	BaseClientProxy* sender = reinterpret_cast<BaseClientProxy*>(vclient);
+	LOG((CLOG_DEBUG "screen \"%s\" clipboard changed", getName(sender).c_str()));
 	if (m_clientSet.count(sender) == 0) {
+		LOG((CLOG_DEBUG "screen \"%s\" clipboard sender unknown", getName(sender).c_str()));
 		return;
 	}
 	const IScreen::ClipboardInfo* info =
@@ -1519,11 +1529,16 @@ void
 Server::onClipboardChanged(BaseClientProxy* sender,
 				ClipboardID id, UInt32 seqNum)
 {
+	auto l_dump = [] (const String tag, const String d) {
+		// LOG((CLOG_DEBUG "%s: %s\n", tag, IClipboard::dump(d).c_str()));
+	};
+
 	ClipboardInfo& clipboard = m_clipboards[id];
 
 	// ignore update if sequence number is old
 	if (seqNum < clipboard.m_clipboardSeqNum) {
-		LOG((CLOG_INFO "ignored screen \"%s\" update of clipboard %d (missequenced)", getName(sender).c_str(), id));
+		LOG((CLOG_INFO "ignored screen \"%s\" update of clipboard %d (bad seq)",
+			getName(sender).c_str(), id));
 		return;
 	}
 
@@ -1531,14 +1546,27 @@ Server::onClipboardChanged(BaseClientProxy* sender,
 	assert(sender == m_clients.find(clipboard.m_clipboardOwner)->second);
 
 	// get data
-	sender->getClipboard(id, &clipboard.m_clipboard);
+	if (!sender->getClipboard(id, &clipboard.m_clipboard)) {
+		LOG((CLOG_WARN "getClipboard %d failed", id));
+		return;
+	}
 
 	// ignore if data hasn't changed
 	String data = clipboard.m_clipboard.marshall();
+	if (data.size()<=12) {
+		LOG((CLOG_INFO "Screen \"%s\" clipboard %d empty (len=%d)",
+			clipboard.m_clipboardOwner.c_str(), id, data.size()));
+		return; // NTL don't empty client clipboard.
+	}
+
 	if (data == clipboard.m_clipboardData) {
-		LOG((CLOG_DEBUG "ignored screen \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id));
+		l_dump("old", clipboard.m_clipboardData);
+		LOG((CLOG_DEBUG "Screen \"%s\" clipboard %d unchanged",
+			clipboard.m_clipboardOwner.c_str(), id));
 		return;
 	}
+
+	l_dump("new", data);
 
 	// got new data
 	LOG((CLOG_INFO "screen \"%s\" updated clipboard %d", clipboard.m_clipboardOwner.c_str(), id));
