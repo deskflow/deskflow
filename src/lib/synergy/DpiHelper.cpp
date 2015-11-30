@@ -46,7 +46,8 @@ void DpiHelper::calculateDpi(size_t width, size_t height)
             s_dpiScaled = true;
 
             LOG((CLOG_DEBUG "DPI: %d%%", s_dpi));
-            LOG((CLOG_DEBUG "physical resolution: %d, %d scaled resolution: %d, %d", s_resolutionWidth, s_resolutionHeight, width, height));
+            LOG((CLOG_DEBUG "physical resolution: %d, %d scaled resolution: %d, %d",
+				s_resolutionWidth, s_resolutionHeight, width, height));
         }
     }
 }
