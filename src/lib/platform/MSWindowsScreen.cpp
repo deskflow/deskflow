@@ -1406,7 +1406,6 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		// ignore (see warpCursorNoFlush() for a further
 		// description).
 		static SInt32 bogusZoneSize = 10;
-		LOG((CLOG_DEBUG "dpi: %f m_w: %d center: %d x: %d",dpi, m_w, m_xCenter, x));
 		if (-x + bogusZoneSize > (m_xCenter - m_x) / dpi ||
 			 x + bogusZoneSize > (m_x + m_w - m_xCenter) / dpi ||
 			-y + bogusZoneSize > (m_yCenter - m_y) / dpi ||
