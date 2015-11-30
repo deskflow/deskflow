@@ -227,5 +227,5 @@ private:
 	Thread*				m_sendClipboardThread;
 	Mutex*				m_mutex;
 	bool				m_condData;
-	CondVar<bool>*			m_condVar;
+	CondVar<bool>*		m_condVar;
 };
