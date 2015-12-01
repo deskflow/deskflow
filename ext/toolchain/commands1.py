@@ -1471,9 +1471,6 @@ class InternalCommands:
 
 	def getDistFilename(self, type):
 		pattern = self.getVersionForFilename()
-		if (type == 'src'):
-			pattern += '-Source'
-		
 		for filename in os.listdir(self.getBinDir('Release')):
 			if re.search(pattern, filename):
 				return filename
