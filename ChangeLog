@@ -1,6 +1,5 @@
 v1.8.0-beta
 =============
-Bug #5136 - Intermittently upload a package file as a source file
 Enhancement #4696 - Include 'ns' plugin in installers (instead of wizard download)
 Enhancement #4715 - Activation dialog which also accepts a serial key
 Enhancement #5020 - Recommend using serial key when online activation fails
