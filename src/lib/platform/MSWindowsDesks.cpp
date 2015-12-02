@@ -851,22 +851,15 @@ MSWindowsDesks::checkDesk()
 		desk = index->second;
 	}
 
-	// if we are told to shut down on desk switch, and this is not the
+	// if we are told to shut down on desk switch, and this is not the 
 	// first switch, then shut down.
 	// Issue #5041 workaround - prevent synergys from shutting down when screen
-	// saver activates - if it is restarted while the screen saver is active,
-	// the clipboard no longer works.
-	if (m_stopOnDeskSwitch && m_activeDesk != NULL && name != m_activeDeskName) {
-		if (!m_screensaver->isActive()) {
-		    LOG((CLOG_DEBUG "shutting down because of desk switch \"%s\"->\"%s\"",
-				m_activeDeskName.c_str(), name.c_str()));
-		    m_events->addEvent(Event(Event::kQuit));
-		    return;
-		}
-		LOG((CLOG_DEBUG "screen saver active, ignoring desk switch \"%s\"->\"%s\"",
-			m_activeDeskName.c_str(), name.c_str()));
-		m_activeDesk     = desk;
-		m_activeDeskName = name;
+	// saver activates - It does not come back cleanly.
+	if (m_stopOnDeskSwitch && m_activeDesk != NULL && name != m_activeDeskName
+		&& !m_screensaver->isActive()) {
+		LOG((CLOG_DEBUG "shutting down because of desk switch to \"%s\"", name.c_str()));
+		m_events->addEvent(Event(Event::kQuit));
+		return;
 	}
 
 	// if active desktop changed then tell the old and new desk threads
