@@ -95,7 +95,6 @@ OSXClipboard::synchronize()
 	void
 OSXClipboard::add(EFormat format, const String & data)
 {
-	bool emptied = false;
 	if (m_pboard == NULL)
 		return;
 
@@ -121,24 +120,16 @@ OSXClipboard::add(EFormat format, const String & data)
 			CFStringRef flavorType = converter->getOSXFormat();
 			CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, (UInt8 *)osXData.data(), osXData.size());
 
-			// integ tests showed that if you call add(...) twice, then the
-			// second call will actually fail to set clipboard data. calling
-			// empty() seems to solve this problem. but, only clear the clipboard
-			// for the first converter, otherwise further converters will wipe out
-			// what we just added.
-			if (!emptied) {
-				empty();
-				emptied = true;
-			}
-			
-			PasteboardPutItemFlavor(
-					m_pboard,
-					(PasteboardItemID) 0,
-					flavorType,
-					dataRef, 
-					kPasteboardFlavorNoFlags);
-			LOG((CLOG_DEBUG "added %d bytes to clipboard format: %d", data.size(), format));
-		}
+            PasteboardPutItemFlavor(
+                m_pboard,
+                (PasteboardItemID) 0,
+                flavorType,
+                dataRef,
+                kPasteboardFlavorNoFlags);
+            
+            LOG((CLOG_DEBUG "added %d bytes to clipboard format: %d", data.size(), format));
+        }
+        
 	}
 }
 
