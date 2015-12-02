@@ -189,8 +189,9 @@ MSWindowsClipboard::get(EFormat format) const
 								index != m_converters.end(); ++index) {
 			converter = *index;
 			if (converter->getFormat() == format) {
-				LOG((CLOG_DEBUG "using converter 0x%x for %d\n",
+				LOG((CLOG_DEBUG "using converter 0x%x%s for %d\n",
 					converter->getWin32Format(),
+					l_name(converter->getWin32Format()).c_str(),
 					format));
 				HANDLE win32Data = GetClipboardData(converter->getWin32Format());
 				if (win32Data != NULL)
