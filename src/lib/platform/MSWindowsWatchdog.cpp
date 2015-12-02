@@ -293,7 +293,7 @@ MSWindowsWatchdog::startProcess()
 
 	ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
 	HANDLE userToken = getUserToken(&sa);
-	m_elevateProcess = m_autoElevated;
+	m_elevateProcess = m_autoElevated ? m_autoElevated : m_elevateProcess;
 	m_autoElevated = false;
 
 	// patch by Jack Zhou and Henry Tung
