@@ -252,9 +252,7 @@ ServerProxy::parseMessage(const UInt8* code)
 	}
 
 	else if (memcmp(code, kMsgCKeepAlive, 4) == 0) {
-		// echo keep alives and reset alarm
-		ProtocolUtil::writef(m_stream, kMsgCKeepAlive);
-		resetKeepAliveAlarm();
+		keepAlive();
 	}
 
 	else if (memcmp(code, kMsgCNoop, 4) == 0) {
@@ -892,12 +890,21 @@ ServerProxy::dragInfoReceived()
 void
 ServerProxy::handleClipboardSendingEvent(const Event& event, void*)
 {
+	keepAlive();
 	ClipboardChunk::send(m_stream, event.getData());
+}
+
+void ServerProxy::keepAlive()
+{
+	// echo keep alives and reset alarm
+	ProtocolUtil::writef(m_stream, kMsgCKeepAlive);
+	resetKeepAliveAlarm();
 }
 
 void
 ServerProxy::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 {
+	keepAlive();
 	FileChunk::send(m_stream, mark, data, dataSize);
 }
 

@@ -35,16 +35,10 @@ ClientProxy1_5::ClientProxy1_5(const String& name, synergy::IStream* stream, Ser
 	ClientProxy1_4(name, stream, server, events),
 	m_events(events)
 {
-
-	m_events->adoptHandler(m_events->forFile().keepAlive(),
-							this,
-							new TMethodEventJob<ClientProxy1_3>(this,
-								&ClientProxy1_3::handleKeepAlive, NULL));
 }
 
 ClientProxy1_5::~ClientProxy1_5()
 {
-	m_events->removeHandler(m_events->forFile().keepAlive(), this);
 }
 
 void
@@ -58,6 +52,7 @@ ClientProxy1_5::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
 void
 ClientProxy1_5::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 {
+	keepAlive();
 	FileChunk::send(getStream(), mark, data, dataSize);
 }
 
