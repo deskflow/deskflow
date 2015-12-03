@@ -84,8 +84,6 @@ StreamChunker::sendFile(
 		}
 		
 		if (sendStopwatch.getTime() > SEND_THRESHOLD) {
-			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
-
 			// make sure we don't read too much from the mock data.
 			if (sentLength + chunkSize > size) {
 				chunkSize = size - sentLength;
@@ -151,8 +149,6 @@ StreamChunker::sendClipboard(
 		}
 
 		if (sendStopwatch.getTime() > SEND_THRESHOLD) {
-			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
-
 			// make sure we don't read too much from the mock data.
 			if (sentLength + chunkSize > size) {
 				chunkSize = size - sentLength;
