@@ -22,6 +22,8 @@
 struct SubscriptionKey {
 	String				m_name;
 	String				m_type;
+	String				m_email;
+	String				m_company;
 	int					m_userLimit;
 	int					m_warnTime;
 	int					m_expireTime;

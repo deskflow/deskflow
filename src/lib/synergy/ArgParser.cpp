@@ -225,6 +225,10 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 			args.m_checkSubscription = true;
 			return true;
 		}
+		else if (isArg(i, argc, argv, NULL, "--notify-activation", 0)) {
+			args.m_notifyActivation = true;
+			return true;
+		}
 		else {
 			return false;
 		}

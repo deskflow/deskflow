@@ -224,6 +224,28 @@ stringToSizeType(String string)
 	return value;
 }
 
+std::vector<String>
+splitString(String string, const char c)
+{
+	std::vector<String> results;
+
+	size_t head = 0;
+	size_t separator = string.find(c);
+	while (separator != String::npos) {
+		if (head!=separator) {
+			results.push_back(string.substr(head, separator - head));
+		}
+		head = separator + 1;
+		separator = string.find(c, head);
+	}
+
+	if (head < string.size()) {
+		results.push_back(string.substr(head, string.size() - head));
+	}
+
+	return results;
+}
+
 //
 // CaselessCmp
 //

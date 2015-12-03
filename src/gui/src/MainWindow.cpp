@@ -32,7 +32,6 @@
 #include "DataDownloader.h"
 #include "CommandProcess.h"
 #include "SubscriptionManager.h"
-#include "SubscriptionState.h"
 #include "EditionType.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
@@ -135,7 +134,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
 	m_pComboServerList->hide();
 
-	updateEdition();
+	setEdition(m_AppConfig.edition());
 
 	m_pLabelPadlock->hide();
 
@@ -698,21 +697,18 @@ QString MainWindow::appPath(const QString& name)
 
 bool MainWindow::serverArgs(QStringList& args, QString& app)
 {
-	SubscriptionManager subscriptionManager;
-	if (subscriptionManager.checkSubscriptionExist())
+	int edition;
+	SubscriptionManager subscriptionManager(this, appConfig(), edition);
+	if (subscriptionManager.fileExists())
 	{
-		int edition;
-		int state = subscriptionManager.checkSubscription(edition);
-
-		if (state == kInvalid) {
+		if (!subscriptionManager.checkSubscription()) {
 			return false;
 		}
-		else if (state == kExpired) {
-			QMessageBox::warning(this, tr("Subscription is expired"),
-								 tr("Your subscription is expired. Please purchase."));
-			return false;
+		else {
+			setEdition(edition);
 		}
 	}
+
 
 	app = appPath(appConfig().synergysName());
 
@@ -962,7 +958,7 @@ void MainWindow::changeEvent(QEvent* event)
 			retranslateUi(this);
 			retranslateMenuBar();
 
-			updateEdition();
+			setEdition(m_AppConfig.edition());
 
 			break;
 		}
@@ -1010,6 +1006,9 @@ void MainWindow::setEdition(int type)
 	}
 	else if (type == Pro) {
 		title = "Synergy Pro";
+	}
+	else if (type == Trial) {
+		title = "Synergy Trial";
 	}
 	else {
 		title = "Synergy (UNREGISTERED)";
@@ -1303,20 +1302,6 @@ void MainWindow::promptAutoConfig()
 	}
 
 	m_AppConfig.setAutoConfigPrompted(true);
-}
-
-void MainWindow::updateEdition()
-{
-	QString mac = getFirstMacAddress();
-	QString hashSrc = m_AppConfig.activateEmail() + mac;
-	QString hashResult = hash(hashSrc);
-
-	if (hashResult == m_AppConfig.userToken()) {
-		setEdition(m_AppConfig.edition());
-	}
-	else {
-		setEdition(Unknown);
-	}
 }
 
 void MainWindow::on_m_pComboServerList_currentIndexChanged(QString )
