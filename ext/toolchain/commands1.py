@@ -48,7 +48,7 @@ class Toolchain:
 		'update'    : ['', []],
 		'install'   : ['', []],
 		'doxygen'   : ['', []],
-		'dist'      : ['', ['vcredist-dir=', 'qt-dir=']],
+		'dist'      : ['dr', ['vcredist-dir=', 'qt-dir=']],
 		'distftp'   : ['', ['host=', 'user=', 'pass=', 'dir=']],
 		'kill'      : ['', []],
 		'usage'     : ['', []],
@@ -1099,7 +1099,7 @@ class InternalCommands:
 		if err != 0:
 			raise Exception('doxygen failed with error code: ' + str(err))
 				
-	def dist(self, type, vcRedistDir, qtDir):
+	def dist(self, type, targets, vcRedistDir, qtDir):
 
 		# Package is supported by default.
 		package_unsupported = False
@@ -1129,7 +1129,7 @@ class InternalCommands:
 		elif type == 'win':
 			if sys.platform == 'win32':
 				#self.distNsis(vcRedistDir, qtDir)
-				self.distWix(qtDir)
+				self.distWix(qtDir, targets)
 			else:
 				package_unsupported = True
 			
@@ -1367,7 +1367,7 @@ class InternalCommands:
 		err = os.system(cmd)
 		self.restore_chdir()
 
-	def distWix(self, qtDir):
+	def distWix(self, qtDir, targets):
 		generator = self.getGeneratorFromConfig().cmakeName
 		
 		arch = 'x86'
@@ -1386,6 +1386,9 @@ class InternalCommands:
 
 		vcRuntimeVersion = '%03d' % ( 10 * self.get_vc_version_int(generator) )
 
+		if len(targets) == 0:
+			targets = [ 'Release' ]
+
 		# touch file, otherwise changes to command line params may be ignored
 		try:
 			os.utime('src/setup/win32/Include.wxi', None)
@@ -1397,7 +1400,7 @@ class InternalCommands:
 			% ( version, vcRuntimeVersion, qtMajor, qtDir ) )
 		
 		self.run_vcbuild(
-			generator, 'release', 'synergy.sln', args,
+			generator, targets[0], 'synergy.sln', args,
 			'src/setup/win32/', 'x86')
 		
 		filename = "%s-%s-Windows-%s.msi" % (
@@ -1405,8 +1408,8 @@ class InternalCommands:
 			self.getVersionForFilename(),
 			arch)
 			
-		old = "bin/Release/synergy.msi"
-		new = "bin/Release/%s" % (filename)
+		old = self.getGenerator().getBinDir(targets[0]) + "/synergy.msi"
+		new = self.getGenerator().getBinDir(targets[0]) + "/%s" % (filename)
 		
 		try:
 			os.remove(new)
@@ -2068,7 +2071,7 @@ class CommandHandler:
 		if len(self.args) > 0:
 			type = self.args[0]    
 				
-		self.ic.dist(type, self.vcRedistDir, self.qtDir)
+		self.ic.dist(type, self.build_targets, self.vcRedistDir, self.qtDir)
 
 	def distftp(self):
 		type = None
