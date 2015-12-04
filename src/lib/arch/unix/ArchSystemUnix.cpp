@@ -44,8 +44,6 @@ ArchSystemUnix::getOSName() const
 		msg += info.sysname;
 		msg += " ";
 		msg += info.release;
-		msg += " ";
-		msg += info.version;
 		return msg;
 	}
 #endif

@@ -17,20 +17,30 @@
 
 #include "SubscriptionManager.h"
 
+
 #include "CoreInterface.h"
 #include "EditionType.h"
-#include "SubscriptionState.h"
+#include "AppConfig.h"
 
 #include <QMessageBox>
+#include <QDir>
 #include <QFile>
+#include <QDateTime>
+#include <QDate>
 
-SubscriptionManager::SubscriptionManager()
+static const char purchaseURL[] = "https://synergy-project.org/account/";
+
+SubscriptionManager::SubscriptionManager(QWidget* parent,  AppConfig& appConfig, int& edition) :
+	m_pParent(parent),
+	m_AppConfig(appConfig),
+	m_Edition(edition)
 {
 }
 
-bool SubscriptionManager::activateSerial(const QString& serial, int& edition)
+bool SubscriptionManager::activateSerial(const QString& serial)
 {
-	edition = ET_Unknown;
+	m_Edition = ET_Unknown;
+	persistDirectory();
 	CoreInterface coreInterface;
 	QString output;
 
@@ -41,17 +51,19 @@ bool SubscriptionManager::activateSerial(const QString& serial, int& edition)
 	catch (std::exception& e)
 	{
 		m_ErrorMessage = e.what();
+		checkError(m_ErrorMessage);
 		return false;
 	}
 
-	edition = getEditionType(output);
+	checkOutput(output);
 
 	return true;
 }
 
-int SubscriptionManager::checkSubscription(int& edition)
+bool SubscriptionManager::checkSubscription()
 {
-	edition = ET_Unknown;
+	m_Edition = ET_Unknown;
+	persistDirectory();
 	CoreInterface coreInterface;
 	QString output;
 	try
@@ -61,24 +73,16 @@ int SubscriptionManager::checkSubscription(int& edition)
 	catch (std::exception& e)
 	{
 		m_ErrorMessage = e.what();
-
-		if (m_ErrorMessage.contains("subscription has expired")) {
-			return kExpired;
-		}
-
-		return kInvalid;
+		checkError(m_ErrorMessage);
+		return false;
 	}
 
-	if (output.contains("subscription will expire soon")) {
-		return kExpiredSoon;
-	}
+	checkOutput(output);
 
-	edition = getEditionType(output);
-
-	return kValid;
+	return true;
 }
 
-bool SubscriptionManager::checkSubscriptionExist()
+bool SubscriptionManager::fileExists()
 {
 	CoreInterface coreInterface;
 	QString subscriptionFilename = coreInterface.getSubscriptionFilename();
@@ -86,11 +90,80 @@ bool SubscriptionManager::checkSubscriptionExist()
 	return QFile::exists(subscriptionFilename);
 }
 
-int SubscriptionManager::getEditionType(QString& string)
+void SubscriptionManager::checkError(QString& error)
 {
-	if (string.contains("full subscription valid")) {
-		return ET_Pro;
+	if (error.contains("trial has expired")) {
+		QMessageBox::warning(m_pParent, tr("Subscription warning"),
+			tr("Your trial has expired. Click <a href='%1'>here</a> to purchase").arg(purchaseURL));
+	}
+	else {
+		QMessageBox::warning(m_pParent, tr("Subscription error"),
+			tr("An error occurred while trying to activate using a serial key. "
+				"Please contact the helpdesk, and provide the "
+				"following details.\n\n%1").arg(error));
+	}
+}
+
+void SubscriptionManager::checkOutput(QString& output)
+{
+	getEditionType(output);
+	checkExpiring(output);
+}
+
+void SubscriptionManager::getEditionType(QString& output)
+{
+	if (output.contains("pro subscription valid")) {
+		m_Edition = ET_Pro;
+	}
+	else if (output.contains("basic subscription valid")) {
+		m_Edition = ET_Basic;
+	}
+	else if (output.contains("trial subscription valid")) {
+		m_Edition = ET_Trial;
+	} else {
+		m_Edition = ET_Unknown;
+	}
+}
+
+void SubscriptionManager::checkExpiring(QString& output)
+{
+	if (output.contains("trial will end in") && shouldWarnExpiring()) {
+		QRegExp dayLeftRegex(".*trial will end in ([0-9]+) day.*");
+		if (dayLeftRegex.exactMatch(output)) {
+			QString dayLeft = dayLeftRegex.cap(1);
+
+			QMessageBox::warning(m_pParent, tr("Subscription warning"),
+				tr("Your trial will end in %1 %2. Click <a href='%3'>here</a> to purchase")
+				.arg(dayLeft)
+				.arg(dayLeft == "1" ? "day" : "days")
+				.arg(purchaseURL));
+		}
+	}
+}
+
+bool SubscriptionManager::shouldWarnExpiring()
+{
+	// warn users about expiring subscription once a day
+	int lastExpiringWarningTime = m_AppConfig.lastExpiringWarningTime();
+	QDateTime currentDateTime = QDateTime::currentDateTime();
+	int currentTime = currentDateTime.toTime_t();
+	const int secondPerDay = 60 * 60 * 24;
+	bool result = false;
+	if ((currentTime - lastExpiringWarningTime) > secondPerDay) {
+		result = true;
+		m_AppConfig.setLastExpiringWarningTime(currentTime);
 	}
 
-	return ET_Unknown;
+	return result;
+}
+
+void SubscriptionManager::persistDirectory()
+{
+	CoreInterface coreInterface;
+	QString profileDir = coreInterface.getProfileDir();
+
+	QDir dir(profileDir);
+	if (!dir.exists()) {
+		dir.mkpath(".");
+	}
 }

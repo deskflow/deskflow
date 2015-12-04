@@ -95,5 +95,6 @@ QString WebClient::request(
 	QStringList args("--login-auth");
 	// hash password in case it contains interesting chars.
 	QString credentials(email + ":" + hash(password) + "\n");
+
 	return m_CoreInterface.run(args, credentials);
 }

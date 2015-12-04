@@ -18,9 +18,9 @@
 #include "SetupWizard.h"
 #include "MainWindow.h"
 #include "WebClient.h"
+#include "ActivationNotifier.h"
 #include "SubscriptionManager.h"
 #include "EditionType.h"
-#include "SubscriptionState.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
 
@@ -103,7 +103,7 @@ bool SetupWizard::validateCurrentPage()
 						QMessageBox::StandardButton reply =
 							QMessageBox::information(
 							this, tr("Setup Synergy"),
-							tr("Would you like to use serial key to activate?"),
+							tr("Would you like to use your serial key instead?"),
 							QMessageBox::Yes | QMessageBox::No);
 
 						if (reply == QMessageBox::Yes) {
@@ -127,15 +127,9 @@ bool SetupWizard::validateCurrentPage()
 			}
 			else {
 				// create subscription file in profile directory
-				SubscriptionManager subscriptionManager;
-				bool r = subscriptionManager.activateSerial(m_pLineEditSerialKey->text(), m_Edition);
-				if (!r) {
-					message.setText(tr("An error occurred while trying to activate using a serial key. "
-									   "Please contact the helpdesk, and provide the "
-									   "following details.\n\n%1").arg(subscriptionManager.getLastError()));
-					message.exec();
-
-					return r;
+				SubscriptionManager subscriptionManager(this, m_MainWindow.appConfig(), m_Edition);
+				if (!subscriptionManager.activateSerial(m_pLineEditSerialKey->text())) {
+					return false;
 				}
 
 				m_pPluginPage->setEdition(m_Edition);
@@ -206,21 +200,27 @@ void SetupWizard::accept()
 
 	if (m_pRadioButtonActivate->isChecked()) {
 		appConfig.setActivateEmail(m_pLineEditEmail->text());
-		QString mac = getFirstMacAddress();
-		QString hashSrc = m_pLineEditEmail->text() + mac;
-		QString hashResult = hash(hashSrc);
-		appConfig.setUserToken(hashResult);
-		appConfig.setEdition(m_Edition);
+
+		notifyActivation("login:" + m_pLineEditEmail->text());
 	}
 
 	if (m_pRadioButtonSubscription->isChecked())
 	{
 		appConfig.setSerialKey(m_pLineEditSerialKey->text());
+
+		notifyActivation("serial:" + m_pLineEditSerialKey->text());
 	}
 
+	if (m_pRadioButtonSkip->isChecked())
+	{
+		notifyActivation("skip:unknown");
+	}
+
+	appConfig.setEdition(m_Edition);
 	m_MainWindow.setEdition(m_Edition);
 	m_MainWindow.updateLocalFingerprint();
 
+	appConfig.saveSettings();
 	settings.sync();
 
 	QWizard::accept();
@@ -242,7 +242,26 @@ void SetupWizard::reject()
 		m_MainWindow.open();
 	}
 
+	// treat cancel as skip
+	CoreInterface coreInterface;
+	coreInterface.notifyActivation("skip:unknown");
+
 	QWizard::reject();
+}
+
+void SetupWizard::notifyActivation(QString identity)
+{
+	ActivationNotifier* notifier = new ActivationNotifier();
+	notifier->setIdentity(identity);
+	QThread* thread = new QThread;
+	connect(notifier, SIGNAL(finished()), thread, SLOT(quit()));
+	connect(notifier, SIGNAL(finished()), notifier, SLOT(deleteLater()));
+	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+	notifier->moveToThread(thread);
+	thread->start();
+
+	QMetaObject::invokeMethod(notifier, "notify", Qt::QueuedConnection);
 }
 
 void SetupWizard::on_m_pComboLanguage_currentIndexChanged(int index)

@@ -58,7 +58,8 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_ElevateMode(false),
 	m_AutoConfigPrompted(false),
 	m_CryptoEnabled(false),
-	m_AutoHide(false)
+	m_AutoHide(false),
+	m_LastExpiringWarningTime(0)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -129,10 +130,10 @@ void AppConfig::loadSettings()
 	m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
 	m_Edition = settings().value("edition", ET_Unknown).toInt();
 	m_ActivateEmail = settings().value("activateEmail", "").toString();
-	m_UserToken = settings().value("userToken", "").toString();
 	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
 	m_AutoHide = settings().value("autoHide", false).toBool();
 	m_Serialkey = settings().value("serialKey", "").toString();
+	m_LastExpiringWarningTime = settings().value("lastExpiringWarningTime", 0).toInt();
 }
 
 void AppConfig::saveSettings()
@@ -151,10 +152,10 @@ void AppConfig::saveSettings()
 	settings().setValue("autoConfigPrompted", m_AutoConfigPrompted);
 	settings().setValue("edition", m_Edition);
 	settings().setValue("activateEmail", m_ActivateEmail);
-	settings().setValue("userToken", m_UserToken);
 	settings().setValue("cryptoEnabled", m_CryptoEnabled);
 	settings().setValue("autoHide", m_AutoHide);
 	settings().setValue("serialKey", m_Serialkey);
+	settings().setValue("lastExpiringWarningTime", m_LastExpiringWarningTime);
 }
 
 void AppConfig::setAutoConfig(bool autoConfig)

@@ -172,7 +172,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool isBonjourRunning();
 		void downloadBonjour();
 		void promptAutoConfig();
-		void updateEdition();
 		QString getProfileRootForArg();
 		void checkConnected(const QString& line);
 		void checkFingerprint(const QString& line);
