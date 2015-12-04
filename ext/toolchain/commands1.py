@@ -1387,7 +1387,7 @@ class InternalCommands:
 		vcRuntimeVersion = '%03d' % ( 10 * self.get_vc_version_int(generator) )
 
 		if len(targets) == 0:
-			targets = [ 'Release' ]
+			targets = [ 'release' ]
 
 		# touch file, otherwise changes to command line params may be ignored
 		try:
@@ -2037,6 +2037,9 @@ class CommandHandler:
 				self.ic.macSdk = a
 			elif o == '--mac-identity':
 				self.ic.macIdentity = a
+
+		if len(self.build_targets) == 0:
+			self.build_targets += ['release',]
 	
 	def about(self):
 		self.ic.about()
