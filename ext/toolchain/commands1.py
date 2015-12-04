@@ -255,18 +255,18 @@ class InternalCommands:
 	gmockDir = 'gmock-1.6.0'
 
 	win32_generators = {
-		1 : VisualStudioGenerator('14'),
-		2 : VisualStudioGenerator('14 Win64'),   # 14-64 untested
-		3 : VisualStudioGenerator('12'),         # 12-32 untested
-		4 : VisualStudioGenerator('12 Win64'),	 # 12-64 untested	
-		5 : VisualStudioGenerator('11'),
-		6 : VisualStudioGenerator('11 Win64'),	
-		7 : VisualStudioGenerator('10'),
-		8 : VisualStudioGenerator('10 Win64'),
-		9 : VisualStudioGenerator('9 2008'),
-		10 : VisualStudioGenerator('9 2008 Win64'),
-		11 : VisualStudioGenerator('8 2005'),
-		12 : VisualStudioGenerator('8 2005 Win64')
+		1  : VisualStudioGenerator('10 2010'),
+		2  : VisualStudioGenerator('10 2010 Win64'),
+		3  : VisualStudioGenerator('9 2008'),
+		4  : VisualStudioGenerator('9 2008 Win64'),
+		5  : VisualStudioGenerator('8 2005'),
+		6  : VisualStudioGenerator('8 2005 Win64'),
+		7  : VisualStudioGenerator('11 2012'),         # untested
+		8  : VisualStudioGenerator('11 2012 Win64'),   # untested
+		9  : VisualStudioGenerator('12 2013'),
+		10 : VisualStudioGenerator('12 2013 Win64'),	
+		11 : VisualStudioGenerator('14 2015'),
+		12 : VisualStudioGenerator('14 2015 Win64')    # packager issues with 32 bit gui on QT5.5
 	}
 
 	unix_generators = {
@@ -1944,7 +1944,7 @@ class InternalCommands:
 		keys = generators.keys()
 		keys.sort()
 		for k in keys:
-			print str(k) + ': ' + generators[k].cmakeName
+			print "%3d: %s" % (k, generators[k].cmakeName)
 
 	def getMacVersion(self):
 		if not self.macSdk:
