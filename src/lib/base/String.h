@@ -22,6 +22,7 @@
 #include "common/stdstring.h"
 
 #include <stdarg.h>
+#include <vector>
 
 // use standard C++ string class for our string class
 typedef std::string String;
@@ -99,6 +100,12 @@ String sizeTypeToString(size_t n);
 Convert an a \c string to an size type
 */
 size_t stringToSizeType(String string);
+
+//! Split a string into substrings
+/*!
+Split a \c string that separated by a \c c into substrings
+*/
+std::vector<String> splitString(String string, const char c);
 
 //! Case-insensitive comparisons
 /*!

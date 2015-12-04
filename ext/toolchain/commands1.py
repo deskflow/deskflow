@@ -434,7 +434,9 @@ class InternalCommands:
 			cmake_args += ' -G "' + generator.cmakeName + '"'
 
 		# for makefiles always specify a build type (debug, release, etc)
-		if generator.cmakeName.find('Unix Makefiles') != -1:
+		if generator.cmakeName.startswith('Visual Studio'):
+			cmake_args += ' -DCMAKE_CONFIGURATION_TYPES=Debug;Release'
+		elif generator.cmakeName.find('Unix Makefiles') != -1:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 			
 		elif sys.platform == "darwin":
@@ -894,7 +896,8 @@ class InternalCommands:
 			raise Exception("signtool failed with error: " + str(err))
 	
 	def runBuildCommand(self, cmd, target):
-	
+
+		print "Build command: " + cmake_cmd_string	
 		self.try_chdir(self.getBuildDir(target))
 		err = os.system(cmd)
 		self.restore_chdir()

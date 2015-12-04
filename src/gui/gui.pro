@@ -62,7 +62,8 @@ SOURCES += src/main.cpp \
     src/Plugin.cpp \
     src/WebClient.cpp \
     ../lib/common/PluginVersion.cpp \
-    src/SubscriptionManager.cpp
+    src/SubscriptionManager.cpp \
+    src/ActivationNotifier.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -110,7 +111,7 @@ HEADERS += src/MainWindow.h \
     src/WebClient.h \
     ../lib/common/PluginVersion.h \
     src/SubscriptionManager.h \
-    src/SubscriptionState.h
+    src/ActivationNotifier.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 

@@ -140,24 +140,30 @@ SubscriptionManager::parsePlainSerial(const String& plainText, SubscriptionKey& 
 			pos += 1;
 		}
 
-		// e.g.: {v1;trial;Bob;1;1398297600;1398384000}
-		if ((parts.size() == 6)
+		// e.g.: {v1;trial;Bob;1;email;company name;1398297600;1398384000}
+		if ((parts.size() == 8)
 			&& (parts.at(0).find("v1") != String::npos)) {
 			key.m_type = parts.at(1);
 			key.m_name = parts.at(2);
 			sscanf(parts.at(3).c_str(), "%d", &key.m_userLimit);
-			sscanf(parts.at(4).c_str(), "%d", &key.m_warnTime);
-			sscanf(parts.at(5).c_str(), "%d", &key.m_expireTime);
+			key.m_email = parts.at(4);
+			key.m_company = parts.at(5);
+			sscanf(parts.at(6).c_str(), "%d", &key.m_warnTime);
+			sscanf(parts.at(7).c_str(), "%d", &key.m_expireTime);
 
-			// TODO: use Arch time
-			if (time(0) > key.m_expireTime) {
-				throw XSubscription(synergy::string::sprintf(
-					"%s subscription has expired",
-					key.m_type.c_str()));
-			}
-			else if (time(0) > key.m_warnTime) {
-				LOG((CLOG_WARN "%s subscription will expire soon",
-					key.m_type.c_str()));
+			// only limit to trial version
+			if (key.m_type == "trial") {
+				if (time(0) > key.m_expireTime) {
+					throw XSubscription("trial has expired");
+				}
+				else if (time(0) > key.m_warnTime) {
+					int secLeft = key.m_expireTime - static_cast<int>(time(0));
+					const int spd = 60 * 60 * 24;
+					int dayLeft = secLeft / spd + 1;
+					LOG((CLOG_NOTE "trial will end in %d %s",
+						dayLeft,
+						dayLeft == 1 ? "day" : "days"));
+				}
 			}
 
 			const char* userText = (key.m_userLimit == 1) ? "user" : "users";

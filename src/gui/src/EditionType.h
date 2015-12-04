@@ -21,6 +21,7 @@
 enum qEditionType {
 	ET_Basic,
 	ET_Pro,
+	ET_Trial,
 	ET_Unknown
 };
 

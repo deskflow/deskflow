@@ -17,6 +17,9 @@
 
 #include "CoreInterface.h"
 
+#include "CommandProcess.h"
+#include "QUtility.h"
+
 #include <QCoreApplication>
 #include <QProcess>
 #include <stdexcept>
@@ -71,39 +74,26 @@ QString CoreInterface::checkSubscription()
 	return run(args);
 }
 
+QString CoreInterface::notifyActivation(const QString& identity)
+{
+	QStringList args("--notify-activation");
+
+	QString input(identity + ":" + hash(getFirstMacAddress()));
+	QString os= getOSInformation();
+	if (!os.isEmpty()) {
+		input.append(":").append(os);
+	}
+	input.append("\n");
+
+	return run(args, input);
+}
+
 QString CoreInterface::run(const QStringList& args, const QString& input)
 {
 	QString program(
 		QCoreApplication::applicationDirPath()
 		+ "/" + kCoreBinary);
 
-	QProcess process;
-	process.setReadChannel(QProcess::StandardOutput);
-	process.start(program, args);
-	bool success = process.waitForStarted();
-
-	QString output, error;
-	if (success)
-	{
-		if (!input.isEmpty()) {
-			process.write(input.toStdString().c_str());
-		}
-
-		if (process.waitForFinished()) {
-			output = process.readAllStandardOutput().trimmed();
-			error = process.readAllStandardError().trimmed();
-		}
-	}
-
-	int code = process.exitCode();
-	if (!error.isEmpty() || !success || code != 0)
-	{
-		throw std::runtime_error(
-			QString("Code: %1\nError: %2")
-				.arg(process.exitCode())
-				.arg(error.isEmpty() ? "Unknown" : error)
-				.toStdString());
-	}
-
-	return output;
+	CommandProcess commandProcess(program, args, input);
+	return commandProcess.run();
 }
