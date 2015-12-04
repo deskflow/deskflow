@@ -910,7 +910,7 @@ class InternalCommands:
 	
 	def runBuildCommand(self, cmd, target):
 
-		print "Build command: " + cmake_cmd_string	
+		print "Build command: " + cmd	
 		self.try_chdir(self.getBuildDir(target))
 		err = os.system(cmd)
 		self.restore_chdir()
