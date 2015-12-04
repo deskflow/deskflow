@@ -48,7 +48,7 @@ class Toolchain:
 		'update'    : ['', []],
 		'install'   : ['', []],
 		'doxygen'   : ['', []],
-		'dist'      : ['d', ['vcredist-dir=', 'qt-dir=']],
+		'dist'      : ['dr', ['vcredist-dir=', 'qt-dir=']],
 		'distftp'   : ['', ['host=', 'user=', 'pass=', 'dir=']],
 		'kill'      : ['', []],
 		'usage'     : ['', []],
@@ -255,18 +255,18 @@ class InternalCommands:
 	gmockDir = 'gmock-1.6.0'
 
 	win32_generators = {
-		1 : VisualStudioGenerator('14'),
-		2 : VisualStudioGenerator('14 Win64'),   # 14-64 untested
-		3 : VisualStudioGenerator('12'),         # 12-32 untested
-		4 : VisualStudioGenerator('12 Win64'),	 # 12-64 untested	
-		5 : VisualStudioGenerator('11'),
-		6 : VisualStudioGenerator('11 Win64'),	
-		7 : VisualStudioGenerator('10'),
-		8 : VisualStudioGenerator('10 Win64'),
-		9 : VisualStudioGenerator('9 2008'),
-		10 : VisualStudioGenerator('9 2008 Win64'),
-		11 : VisualStudioGenerator('8 2005'),
-		12 : VisualStudioGenerator('8 2005 Win64')
+		1  : VisualStudioGenerator('10 2010'),
+		2  : VisualStudioGenerator('10 2010 Win64'),
+		3  : VisualStudioGenerator('9 2008'),
+		4  : VisualStudioGenerator('9 2008 Win64'),
+		5  : VisualStudioGenerator('8 2005'),
+		6  : VisualStudioGenerator('8 2005 Win64'),
+		7  : VisualStudioGenerator('11 2012'),         # untested
+		8  : VisualStudioGenerator('11 2012 Win64'),   # untested
+		9  : VisualStudioGenerator('12 2013'),
+		10 : VisualStudioGenerator('12 2013 Win64'),	
+		11 : VisualStudioGenerator('14 2015'),
+		12 : VisualStudioGenerator('14 2015 Win64')    # packager issues with 32 bit gui on QT5.5
 	}
 
 	unix_generators = {
@@ -313,7 +313,7 @@ class InternalCommands:
 			'  genlist     Shows the list of available platform generators\n'
 			'  usage       Shows the help screen\n'
 			'\n'
-			'Example: %s build -g 3'
+			'Example: %s conf -g 1'
 			) % (app, app)
 
 	def configureAll(self, targets, extraArgs=''):
@@ -1116,7 +1116,7 @@ class InternalCommands:
 		elif type == 'win':
 			if sys.platform == 'win32':
 				#self.distNsis(vcRedistDir, qtDir)
-				self.distWix(qtDir)
+				self.distWix(qtDir, targets)
 			else:
 				package_unsupported = True
 			
@@ -1357,7 +1357,7 @@ class InternalCommands:
 		err = os.system(cmd)
 		self.restore_chdir()
 
-	def distWix(self, qtDir):
+	def distWix(self, qtDir, targets):
 		generator = self.getGeneratorFromConfig().cmakeName
 		
 		arch = 'x86'
@@ -1376,6 +1376,9 @@ class InternalCommands:
 
 		vcRuntimeVersion = '%03d' % ( 10 * self.get_vc_version_int(generator) )
 
+		if len(targets) == 0:
+			targets = [ 'release' ]
+
 		# touch file, otherwise changes to command line params may be ignored
 		try:
 			os.utime('src/setup/win32/Include.wxi', None)
@@ -1387,7 +1390,7 @@ class InternalCommands:
 			% ( version, vcRuntimeVersion, qtMajor, qtDir ) )
 		
 		self.run_vcbuild(
-			generator, 'release', 'synergy.sln', args,
+			generator, targets[0], 'synergy.sln', args,
 			'src/setup/win32/', 'x86')
 		
 		filename = "%s-%s-Windows-%s.msi" % (
@@ -1395,8 +1398,8 @@ class InternalCommands:
 			self.getVersionForFilename(),
 			arch)
 			
-		old = "bin/Release/synergy.msi"
-		new = "bin/Release/%s" % (filename)
+		old = self.getGenerator().getBinDir(targets[0]) + "/synergy.msi"
+		new = self.getGenerator().getBinDir(targets[0]) + "/%s" % (filename)
 		
 		try:
 			os.remove(new)
@@ -1931,7 +1934,7 @@ class InternalCommands:
 		keys = generators.keys()
 		keys.sort()
 		for k in keys:
-			print str(k) + ': ' + generators[k].cmakeName
+			print "%3d: %s" % (k, generators[k].cmakeName)
 
 	def getMacVersion(self):
 		if not self.macSdk:
@@ -2024,6 +2027,9 @@ class CommandHandler:
 				self.ic.macSdk = a
 			elif o == '--mac-identity':
 				self.ic.macIdentity = a
+
+		if len(self.build_targets) == 0:
+			self.build_targets += ['release',]
 	
 	def about(self):
 		self.ic.about()

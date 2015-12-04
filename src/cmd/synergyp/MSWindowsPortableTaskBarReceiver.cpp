@@ -360,7 +360,7 @@ MSWindowsPortableTaskBarReceiver::staticDlgProc(HWND hwnd,
 	}
 	else {
 		// get the extra window data and forward the call
-		LONG data = (LONG)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		LONG_PTR data = (LONG)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		if (data != 0) {
 			self = reinterpret_cast<MSWindowsPortableTaskBarReceiver*>(
 							reinterpret_cast<void*>(data));

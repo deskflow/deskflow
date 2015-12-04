@@ -14,7 +14,7 @@
       Version="$(var.Version)"
       Manufacturer="$(var.Author)">
     
-    <Package InstallerVersion="300" Compressed="yes" InstallScope="perMachine" />
+    <Package InstallerVersion="405" Compressed="yes" InstallScope="perMachine" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of $(var.Name) is already installed." />
     <MediaTemplate EmbedCab="yes" />
     <UIRef Id="WixUI_InstallDir" />
@@ -151,5 +151,9 @@
       </Component>
     </ComponentGroup>
 
-  </Fragment>
+  </Fragment >
+
+  <?warning Using VC Runtime : $(var.CRT) ?>
+  <?warning It is safe to ignore other "LGHT1076: ICE03: String overflow" warnings ?>
+
 </Wix>
