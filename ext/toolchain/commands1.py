@@ -313,7 +313,7 @@ class InternalCommands:
 			'  genlist     Shows the list of available platform generators\n'
 			'  usage       Shows the help screen\n'
 			'\n'
-			'Example: %s build -g 3'
+			'Example: %s conf -g 1'
 			) % (app, app)
 
 	def configureAll(self, targets, extraArgs=''):
