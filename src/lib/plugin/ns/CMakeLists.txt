@@ -88,7 +88,7 @@ if (WIN32)
 endif()
 
 if (UNIX)
-	if (APPLE)
+	if (APPLE AND NOT CMAKE_GENERATOR STREQUAL "Unix Makefiles")
 		add_custom_command(
 			TARGET ns
 			POST_BUILD
@@ -101,28 +101,15 @@ if (UNIX)
 				${CMAKE_SOURCE_DIR}/bin/${CMAKE_CFG_INTDIR}/plugins/
 		)
 	else()
-		if (CMAKE_BUILD_TYPE STREQUAL Debug)
-			add_custom_command(
-				TARGET ns
-				POST_BUILD
-				COMMAND mkdir -p
-					${CMAKE_SOURCE_DIR}/bin/debug/plugins
-					&&
-					cp
-					${CMAKE_SOURCE_DIR}/lib/debug/libns.*
-					${CMAKE_SOURCE_DIR}/bin/debug/plugins/
-			)
-		else()
-			add_custom_command(
-				TARGET ns
-				POST_BUILD
-				COMMAND mkdir -p
-					${CMAKE_SOURCE_DIR}/bin/plugins
-					&&
-					cp
-					${CMAKE_SOURCE_DIR}/lib/libns.*
-					${CMAKE_SOURCE_DIR}/bin/plugins/
-			)
-		endif()
+		add_custom_command(
+			TARGET ns
+			POST_BUILD
+			COMMAND mkdir -p
+				${EXECUTABLE_OUTPUT_PATH}/plugins
+				&&
+				cp
+				${LIBRARY_OUTPUT_PATH}/libns.*
+				${EXECUTABLE_OUTPUT_PATH}/plugins/
+		)
 	endif()
 endif()
