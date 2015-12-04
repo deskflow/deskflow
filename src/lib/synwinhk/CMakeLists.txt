@@ -26,6 +26,11 @@ include_directories(
 
 add_library(synwinhk SHARED ${sources})
 
+# Quick fix for libucrt in VS2015
+if (NOT MSVC_VERSION VERSION_LESS 1900)
+	target_link_libraries(synwinhk "$<$<CONFIG:Debug>:libucrt>")
+endif()
+
 # copy the dlls (and supporting files) from the lib dir to 
 # the bin dir, so that synergyc and synergys can easily find them.
 # we should leave the other libraries compiling to the lib dir,

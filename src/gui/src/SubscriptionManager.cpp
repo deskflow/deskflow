@@ -39,7 +39,7 @@ SubscriptionManager::SubscriptionManager(QWidget* parent,  AppConfig& appConfig,
 
 bool SubscriptionManager::activateSerial(const QString& serial)
 {
-	m_Edition = Unknown;
+	m_Edition = ET_Unknown;
 	persistDirectory();
 	CoreInterface coreInterface;
 	QString output;
@@ -62,7 +62,7 @@ bool SubscriptionManager::activateSerial(const QString& serial)
 
 bool SubscriptionManager::checkSubscription()
 {
-	m_Edition = Unknown;
+	m_Edition = ET_Unknown;
 	persistDirectory();
 	CoreInterface coreInterface;
 	QString output;
@@ -113,13 +113,15 @@ void SubscriptionManager::checkOutput(QString& output)
 void SubscriptionManager::getEditionType(QString& output)
 {
 	if (output.contains("pro subscription valid")) {
-		m_Edition = Pro;
+		m_Edition = ET_Pro;
 	}
 	else if (output.contains("basic subscription valid")) {
-		m_Edition = Basic;
+		m_Edition = ET_Basic;
 	}
 	else if (output.contains("trial subscription valid")) {
-		m_Edition = Trial;
+		m_Edition = ET_Trial;
+	} else {
+		m_Edition = ET_Unknown;
 	}
 }
 

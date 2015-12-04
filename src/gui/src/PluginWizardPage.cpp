@@ -30,7 +30,7 @@
 PluginWizardPage::PluginWizardPage(MainWindow& mainWindow, QWidget *parent) :
 	QWizardPage(parent),
 	m_Finished(false),
-	m_Edition(Unknown),
+	m_Edition(ET_Unknown),
 	m_pSslCertificate(NULL),
 	m_mainWindow(mainWindow)
 {
@@ -64,7 +64,7 @@ void PluginWizardPage::initializePage()
 {
 	QWizardPage::initializePage();
 
-	if (m_Edition != Pro) {
+	if (m_Edition != ET_Pro) {
 		updateStatus(tr("Setup complete."));
 		showFinished();
 		return;

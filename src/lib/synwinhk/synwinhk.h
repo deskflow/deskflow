@@ -26,10 +26,10 @@
 #define _WIN32_WINNT 0x0400
 #endif
 
-#include "base/EventTypes.h"
-
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+
+#include "base/EventTypes.h"
 
 #if defined(synwinhk_EXPORTS)
 #define CSYNERGYHOOK_API __declspec(dllexport)
