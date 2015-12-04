@@ -48,7 +48,7 @@ class Toolchain:
 		'update'    : ['', []],
 		'install'   : ['', []],
 		'doxygen'   : ['', []],
-		'dist'      : ['', ['vcredist-dir=', 'qt-dir=']],
+		'dist'      : ['d', ['vcredist-dir=', 'qt-dir=']],
 		'distftp'   : ['', ['host=', 'user=', 'pass=', 'dir=']],
 		'kill'      : ['', []],
 		'usage'     : ['', []],
@@ -1086,7 +1086,7 @@ class InternalCommands:
 		if err != 0:
 			raise Exception('doxygen failed with error code: ' + str(err))
 				
-	def dist(self, type, vcRedistDir, qtDir):
+	def dist(self, type, targets, vcRedistDir, qtDir):
 
 		# Package is supported by default.
 		package_unsupported = False
@@ -1120,9 +1120,9 @@ class InternalCommands:
 			else:
 				package_unsupported = True
 			
-		elif type == 'mac':
+		elif type == 'mac' or type == 'osx':
 			if sys.platform == 'darwin':
-				self.distMac()
+				self.distMac(targets)
 			else:
 				package_unsupported = True
 			
@@ -1326,9 +1326,12 @@ class InternalCommands:
 		if err != 0:
 			raise Exception('Package failed: ' + str(err))
 		
-	def distMac(self):
+	def distMac(self, targets):
 		self.loadConfig()
-		binDir = self.getGenerator().getBinDir('Release')
+		if len(targets) == 0:
+			binDir = self.getGenerator().getBinDir('Release')
+		else:
+			binDir = self.getGenerator().getBinDir(targets[0])
 		name = "Synergy"
 		dist = binDir + "/" + name
 		
@@ -2055,7 +2058,7 @@ class CommandHandler:
 		if len(self.args) > 0:
 			type = self.args[0]    
 				
-		self.ic.dist(type, self.vcRedistDir, self.qtDir)
+		self.ic.dist(type, self.build_targets, self.vcRedistDir, self.qtDir)
 
 	def distftp(self):
 		type = None
