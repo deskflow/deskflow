@@ -45,7 +45,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 
 	m_pLineEditScreenName->setText(appConfig().screenName());
 	m_pSpinBoxPort->setValue(appConfig().port());
-	m_pLineEditInterface->setText(appConfig().interface());
+	m_pLineEditInterface->setText(appConfig().getInterface());
 	m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
 	m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
 	m_pLineEditLogFilename->setText(appConfig().logFilename());

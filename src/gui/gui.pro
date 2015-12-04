@@ -138,6 +138,6 @@ win32 {
     Release:DESTDIR = ../../bin/Release
     LIBS += -L"../../ext/bonjour/x64" \
         -ldnssd
-    INCLUDEPATH += "$(BONJOUR_SDK_HOME)/Include"
+    INCLUDEPATH += $$shell_quote($(BONJOUR_SDK_HOME)/Include)
 }
 else:DESTDIR = ../../bin

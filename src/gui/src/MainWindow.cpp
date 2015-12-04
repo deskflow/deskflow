@@ -45,13 +45,16 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDesktopServices>
+#include <QDesktopWidget>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
 #if defined(Q_OS_WIN)
+#ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0501
+#endif
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
@@ -686,7 +689,7 @@ QString MainWindow::configFilename()
 
 QString MainWindow::address()
 {
-	QString i = appConfig().interface();
+	QString i = appConfig().getInterface();
 	return (!i.isEmpty() ? i : "") + ":" + QString::number(appConfig().port());
 }
 
@@ -1001,13 +1004,13 @@ void MainWindow::serverDetected(const QString name)
 void MainWindow::setEdition(int type)
 {
 	QString title;
-	if (type == Basic) {
+	if (type == ET_Basic) {
 		title = "Synergy Basic";
 	}
-	else if (type == Pro) {
+	else if (type == ET_Pro) {
 		title = "Synergy Pro";
 	}
-	else if (type == Trial) {
+	else if (type == ET_Trial) {
 		title = "Synergy Trial";
 	}
 	else {
@@ -1237,11 +1240,23 @@ void MainWindow::downloadBonjour()
 #endif
 }
 
+#if defined(Q_OS_WIN)
+static const QString getQtTempPath()
+{
+#if QT_VERSION >= 0x050000
+	return QStandardPaths::writableLocation(
+				QStandardPaths::TempLocation);	
+#else
+	return QDesktopServices::storageLocation(
+				QDesktopServices::TempLocation);
+#endif		
+}
+#endif
+
 void MainWindow::installBonjour()
 {
 #if defined(Q_OS_WIN)
-	QString tempLocation = QDesktopServices::storageLocation(
-								QDesktopServices::TempLocation);
+	const QString tempLocation = getQtTempPath();
 	QString filename = tempLocation;
 	filename.append("\\").append(bonjourTargetFilename);
 	QFile file(filename);

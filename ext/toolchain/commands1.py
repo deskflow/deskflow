@@ -16,7 +16,7 @@
 
 # TODO: split this file up, it's too long!
 
-import sys, os, ConfigParser, shutil, re, ftputil, zipfile, glob, commands
+import sys, os, ConfigParser, shutil, re, ftputil, zipfile, glob, commands, fnmatch
 from generators import VisualStudioGenerator, EclipseGenerator, XcodeGenerator, MakefilesGenerator
 from getopt import gnu_getopt
 
@@ -44,10 +44,11 @@ class Toolchain:
 		'configure' : ['g:dr', ['generator=', 'debug', 'release', 'mac-sdk=', 'mac-identity=']],
 		'build'     : ['dr', ['debug', 'release']],
 		'clean'     : ['dr', ['debug', 'release']],
+		'distclean' : ['', []],
 		'update'    : ['', []],
 		'install'   : ['', []],
 		'doxygen'   : ['', []],
-		'dist'      : ['', ['vcredist-dir=', 'qt-dir=']],
+		'dist'      : ['dr', ['vcredist-dir=', 'qt-dir=']],
 		'distftp'   : ['', ['host=', 'user=', 'pass=', 'dir=']],
 		'kill'      : ['', []],
 		'usage'     : ['', []],
@@ -254,12 +255,18 @@ class InternalCommands:
 	gmockDir = 'gmock-1.6.0'
 
 	win32_generators = {
-		1 : VisualStudioGenerator('10'),
-		2 : VisualStudioGenerator('10 Win64'),
-		3 : VisualStudioGenerator('9 2008'),
-		4 : VisualStudioGenerator('9 2008 Win64'),
-		5 : VisualStudioGenerator('8 2005'),
-		6 : VisualStudioGenerator('8 2005 Win64')
+		1  : VisualStudioGenerator('10 2010'),
+		2  : VisualStudioGenerator('10 2010 Win64'),
+		3  : VisualStudioGenerator('9 2008'),
+		4  : VisualStudioGenerator('9 2008 Win64'),
+		5  : VisualStudioGenerator('8 2005'),
+		6  : VisualStudioGenerator('8 2005 Win64'),
+		7  : VisualStudioGenerator('11 2012'),         # untested
+		8  : VisualStudioGenerator('11 2012 Win64'),   # untested
+		9  : VisualStudioGenerator('12 2013'),
+		10 : VisualStudioGenerator('12 2013 Win64'),	
+		11 : VisualStudioGenerator('14 2015'),
+		12 : VisualStudioGenerator('14 2015 Win64')    # packager issues with 32 bit gui on QT5.5
 	}
 
 	unix_generators = {
@@ -306,7 +313,7 @@ class InternalCommands:
 			'  genlist     Shows the list of available platform generators\n'
 			'  usage       Shows the help screen\n'
 			'\n'
-			'Example: %s build -g 3'
+			'Example: %s conf -g 1'
 			) % (app, app)
 
 	def configureAll(self, targets, extraArgs=''):
@@ -411,7 +418,7 @@ class InternalCommands:
 	def configureCore(self, target="", extraArgs=""):
 		
 		# ensure that we have access to cmake
-		_cmake_cmd = self.persist_cmake()
+		_cmake_cmd = self.verify_cmake_installed()
 	
 		# now that we know we've got the latest setup, we can ask the config
 		# file for the generator (but again, we only fall back to this if not 
@@ -427,7 +434,9 @@ class InternalCommands:
 			cmake_args += ' -G "' + generator.cmakeName + '"'
 
 		# for makefiles always specify a build type (debug, release, etc)
-		if generator.cmakeName.find('Unix Makefiles') != -1:
+		if generator.cmakeName.startswith('Visual Studio'):
+			cmake_args += ' -DCMAKE_CONFIGURATION_TYPES=Debug;Release'
+		elif generator.cmakeName.find('Unix Makefiles') != -1:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 			
 		elif sys.platform == "darwin":
@@ -467,9 +476,8 @@ class InternalCommands:
 			raise Exception('CMake encountered error: ' + str(err))
 
 	def configureGui(self, target="", extraArgs=""):
-			
-		# make sure we have qmake
-		self.persist_qmake()
+		
+		self.verify_qmake_installed()
 		
 		qmake_cmd_string = self.qmake_cmd + " " + self.qtpro_filename + " -r"
 
@@ -521,7 +529,7 @@ class InternalCommands:
 			raise Exception('QMake encountered error: ' + str(err))
 
 	def getQmakeVersion(self):
-		version = commands.getoutput("qmake --version")
+		version = commands.getoutput("%s --version" % self.qmake_cmd)
 		result = re.search('(\d+)\.(\d+)\.(\d)', version)
 		
 		if not result:
@@ -566,7 +574,7 @@ class InternalCommands:
 		file.truncate()
 		file.close()
 				
-	def persist_cmake(self):
+	def verify_cmake_installed(self):
 		# even though we're running `cmake --version`, we're only doing this for the 0 return
 		# code; we don't care about the version, since CMakeLists worrys about this for us.
 		err = os.system('%s --version' % self.cmake_cmd)
@@ -581,13 +589,16 @@ class InternalCommands:
 		else:  
 			return self.cmake_cmd
 
-	def persist_qt(self):
-		self.persist_qmake()
+	def verify_qmake_installed(self):
+		
+		# Basic check is no exception, on success also return version and qmake paths
+		major = None
+		props = None
 
-	def persist_qmake(self):
 		# cannot use subprocess on < python 2.4
 		if sys.version_info < (2, 4):
-			return
+			print 'Warning, cannot validate qmake install with python < 2.4'
+			return (major, props)
 		
 		try:
 			p = subprocess.Popen(
@@ -606,21 +617,46 @@ class InternalCommands:
 		
 		stdout, stderr = p.communicate()
 		if p.returncode != 0:
-			raise Exception('Could not test for cmake: %s' % stderr)
+			raise Exception('Could not test for qmake: %s' % stderr)
 		else:
 			m = re.search('.*Using Qt version (\d+\.\d+\.\d+).*', stdout)
 			if m:
+				try:
+					major = int(re.search('(\d+)\..*', m.group(1)).group(1))
+				except:
+					pass
 				if sys.platform == 'win32':
 					ver = m.group(1)
 					if ver != self.w32_qt_version: # TODO: test properly
 						print >> sys.stderr, (
-							'Warning: Not using supported Qt version %s'
-							' (your version is %s).'
-							) % (self.w32_qt_version, ver)
+							'Warning: Continuing with unsupported Qt version %s'
+							' (desired version is %s).'
+							) % (ver, self.w32_qt_version)
+						pass
 				else:
 					pass # any version should be ok for other platforms
 			else:
 				raise Exception('Could not find qmake version.')
+
+		try:
+			p = subprocess.Popen(
+				[self.qmake_cmd, '-query'], 
+				stdout=subprocess.PIPE, 
+				stderr=subprocess.PIPE)
+			stdout, stderr = p.communicate()
+			if p.returncode is 0:
+				props = stdout
+		except:
+			print >> sys.stderr, 'qmake version does not support -query.'
+			pass		
+
+		return (major, props)
+
+	def extract_qmake_property(self, props, name):
+		name = '%s:' % name
+		for s in props.split("\n"):
+			if s.startswith(name):
+				return s.replace(name,'')
 
 	def ensureConfHasRun(self, target, skipConfig):
 		if self.hasConfRun(target):
@@ -873,7 +909,8 @@ class InternalCommands:
 			raise Exception("signtool failed with error: " + str(err))
 	
 	def runBuildCommand(self, cmd, target):
-	
+
+		print "Build command: " + cmd	
 		self.try_chdir(self.getBuildDir(target))
 		err = os.system(cmd)
 		self.restore_chdir()
@@ -894,18 +931,52 @@ class InternalCommands:
 		# allow user to skip qui clean
 		if self.enableMakeGui:
 			self.cleanGui(targets)
+
+	def findMatchingFiles(self, directory, pattern):
+		for root, dirs, files in os.walk(directory):
+			for basename in fnmatch.filter(files, pattern):
+				filename = os.path.join(root, basename)
+				yield filename
+
+	# Remove a file or directory tree, don't report errors (don't care if doesn't exist)
+	def removeFileOrTree(self, path):
+		if '.git' in path:
+			print "  Ignoring %s" % path
+			return
+		print "  %s" % path
+		shutil.rmtree(path, True)
+		try:
+			os.remove(path)
+		except:
+			pass		
+
+	def distclean(self):
+		print "Cleaning generated files.  You'll need to re-run \"hm conf\" . . ."
+		with open('.gitignore') as openFile:
+			for f in openFile:
+				if f.startswith('# Everything above this line will be wiped'):
+					break
+				f = f.rstrip('\n')
+				if not f:
+					continue
+				if f.startswith("/"):
+					for foundFile in glob.glob("./%s" % f):
+						self.removeFileOrTree(foundFile)
+				else:
+					for foundFile in self.findMatchingFiles(".", f):
+						self.removeFileOrTree(foundFile)
 	
 	def cleanCore(self, targets):
 		generator = self.getGeneratorFromConfig().cmakeName
 
 		if generator.startswith('Visual Studio'):
 			# special case for version 10, use new /target:clean
-			if generator.startswith('Visual Studio 10'):
+			if re.match('Visual Studio 1\d', generator):
 				for target in targets:
 					self.run_vcbuild(generator, target, self.sln_filepath(), '/target:clean')
 				
 			# any other version of visual studio, use /clean
-			elif generator.startswith('Visual Studio'):
+			else:
 				for target in targets:
 					self.run_vcbuild(generator, target, self.sln_filepath(), '/clean')
 
@@ -960,9 +1031,12 @@ class InternalCommands:
 		if sys.version_info < (2, 4):
 			raise Exception("Python 2.4 or greater required.")
 
-		p = subprocess.Popen(
-			["git", "log", "--pretty=format:%h", "-n", "1"],
-			stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		try:
+			p = subprocess.Popen(
+				["git", "log", "--pretty=format:%h", "-n", "1"],
+				stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		except:
+			raise Exception("Could not get revision, is git installed?")
 
 		stdout, stderr = p.communicate()
 
@@ -1025,7 +1099,7 @@ class InternalCommands:
 		if err != 0:
 			raise Exception('doxygen failed with error code: ' + str(err))
 				
-	def dist(self, type, vcRedistDir, qtDir):
+	def dist(self, type, targets, vcRedistDir, qtDir):
 
 		# Package is supported by default.
 		package_unsupported = False
@@ -1055,7 +1129,7 @@ class InternalCommands:
 		elif type == 'win':
 			if sys.platform == 'win32':
 				#self.distNsis(vcRedistDir, qtDir)
-				self.distWix()
+				self.distWix(qtDir, targets)
 			else:
 				package_unsupported = True
 			
@@ -1293,18 +1367,40 @@ class InternalCommands:
 		err = os.system(cmd)
 		self.restore_chdir()
 
-	def distWix(self):
+	def distWix(self, qtDir, targets):
 		generator = self.getGeneratorFromConfig().cmakeName
 		
 		arch = 'x86'
 		if generator.endswith('Win64'):
 			arch = 'x64'
+
+		(qtMajor, qtSettings) = self.verify_qmake_installed()
+		if not qtDir:
+			qtDir = self.extract_qmake_property(qtSettings, 'QT_INSTALL_LIBEXECS')
+
+		# hardcode old values as fallback, don't break old builds
+		if not qtMajor:
+			qtMajor = 4
+		if not qtDir:
+			qtDir = "C:\\Qt\\2010.02\\qt\\bin"
+
+		vcRuntimeVersion = '%03d' % ( 10 * self.get_vc_version_int(generator) )
+
+		if len(targets) == 0:
+			targets = [ 'release' ]
+
+		# touch file, otherwise changes to command line params may be ignored
+		try:
+			os.utime('src/setup/win32/Include.wxi', None)
+		except:
+			pass
 		
 		version = self.getVersionNumber()
-		args = "/p:DefineConstants=\"Version=%s\"" % version
+		args = ( "/p:DefineConstants=\"Version=%s;VcRuntimeVersion=%s;QtMajor=%d;QtPath=%s;\""
+			% ( version, vcRuntimeVersion, qtMajor, qtDir ) )
 		
 		self.run_vcbuild(
-			generator, 'release', 'synergy.sln', args,
+			generator, targets[0], 'synergy.sln', args,
 			'src/setup/win32/', 'x86')
 		
 		filename = "%s-%s-Windows-%s.msi" % (
@@ -1312,8 +1408,8 @@ class InternalCommands:
 			self.getVersionForFilename(),
 			arch)
 			
-		old = "bin/Release/synergy.msi"
-		new = "bin/Release/%s" % (filename)
+		old = self.getGenerator().getBinDir(targets[0]) + "/synergy.msi"
+		new = self.getGenerator().getBinDir(targets[0]) + "/%s" % (filename)
 		
 		try:
 			os.remove(new)
@@ -1727,6 +1823,23 @@ class InternalCommands:
 
 		return generators[generator_id]
 
+	def get_vc_version_int(self, generator):
+		if generator.startswith('Visual Studio 8'):
+			value = 8
+		elif generator.startswith('Visual Studio 9'):
+			value = 9
+		elif generator.startswith('Visual Studio 10'):
+			value = 10
+		elif generator.startswith('Visual Studio 11'):
+			value = 11
+		elif generator.startswith('Visual Studio 12'):
+			value = 12
+		elif generator.startswith('Visual Studio 14'):
+			value = 14
+		else:
+			value = None
+		return value
+
 	def get_vcvarsall(self, generator):
 		import platform, _winreg
 		
@@ -1744,12 +1857,9 @@ class InternalCommands:
 		except:
 			raise Exception('Unable to open Visual Studio registry key. Application may not be installed.')
 		
-		if generator.startswith('Visual Studio 8'):
-			value,type = _winreg.QueryValueEx(key, '8.0')
-		elif generator.startswith('Visual Studio 9'):
-			value,type = _winreg.QueryValueEx(key, '9.0')
-		elif generator.startswith('Visual Studio 10'):
-			value,type = _winreg.QueryValueEx(key, '10.0')
+		intVersion = self.get_vc_version_int(generator);
+		if intVersion is not None:
+			value,type = _winreg.QueryValueEx(key, '%d.0' % intVersion)
 		else:
 			raise Exception('Cannot determine vcvarsall.bat location for: ' + generator)
 		
@@ -1792,7 +1902,7 @@ class InternalCommands:
 		else:
 			config = 'Debug'
 				
-		if generator.startswith('Visual Studio 10'):
+		if re.match('Visual Studio 1\d', generator):
 			cmd = ('@echo off\n'
 				'call "%s" %s \n'
 				'cd "%s"\n'
@@ -1834,7 +1944,7 @@ class InternalCommands:
 		keys = generators.keys()
 		keys.sort()
 		for k in keys:
-			print str(k) + ': ' + generators[k].cmakeName
+			print "%3d: %s" % (k, generators[k].cmakeName)
 
 	def getMacVersion(self):
 		if not self.macSdk:
@@ -1927,6 +2037,9 @@ class CommandHandler:
 				self.ic.macSdk = a
 			elif o == '--mac-identity':
 				self.ic.macIdentity = a
+
+		if len(self.build_targets) == 0:
+			self.build_targets += ['release',]
 	
 	def about(self):
 		self.ic.about()
@@ -1942,6 +2055,9 @@ class CommandHandler:
 	
 	def clean(self):
 		self.ic.clean(self.build_targets)
+
+	def distclean(self):
+		self.ic.distclean()
 	
 	def update(self):
 		self.ic.update()
@@ -1958,7 +2074,7 @@ class CommandHandler:
 		if len(self.args) > 0:
 			type = self.args[0]    
 				
-		self.ic.dist(type, self.vcRedistDir, self.qtDir)
+		self.ic.dist(type, self.build_targets, self.vcRedistDir, self.qtDir)
 
 	def distftp(self):
 		type = None
