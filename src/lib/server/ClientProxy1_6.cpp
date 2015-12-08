@@ -50,12 +50,6 @@ ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
 	if (m_clipboard[id].m_dirty) {
 		// this clipboard is now clean
 		m_clipboard[id].m_dirty = false;
-
-		// add keep alive message before we do clipboard copy
-		// in case there is a big data inside and time that would
-		// comsume will cause connecton being dropped 
-		keepAlive();
-
 		Clipboard::copy(&m_clipboard[id].m_clipboard, clipboard);
 
 		String data = m_clipboard[id].m_clipboard.marshall();
@@ -72,9 +66,6 @@ ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
 void
 ClientProxy1_6::handleClipboardSendingEvent(const Event& event, void*)
 {
-	// add keep alive message before we send each clipboard data
-	keepAlive();
-
 	ClipboardChunk::send(getStream(), event.getData());
 }
 
