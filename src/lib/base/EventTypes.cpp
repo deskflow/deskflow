@@ -198,3 +198,4 @@ REGISTER_EVENT(Clipboard, clipboardSending)
 
 REGISTER_EVENT(File, fileChunkSending)
 REGISTER_EVENT(File, fileRecieveCompleted)
+REGISTER_EVENT(File, keepAlive)
