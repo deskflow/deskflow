@@ -841,6 +841,7 @@ OSXScreen::disable()
 	// FIXME -- stop watching jump zones, stop capturing input
 	
 	if (m_eventTapRLSR) {
+		CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
 		CFRelease(m_eventTapRLSR);
 		m_eventTapRLSR = nullptr;
 	}
