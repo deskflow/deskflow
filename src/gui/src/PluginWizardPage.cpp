@@ -64,8 +64,7 @@ void PluginWizardPage::initializePage()
 {
 	QWizardPage::initializePage();
 
-	if (m_Edition == Unknown ||
-		m_Edition == Basic) {
+	if (m_Edition != Pro) {
 		updateStatus(tr("Setup complete."));
 		showFinished();
 		return;

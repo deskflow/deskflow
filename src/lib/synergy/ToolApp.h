@@ -30,6 +30,7 @@ public:
 private:
 	void				loginAuth();
 	void				getPluginList();
+	void				notifyActivation();
 
 private:
 	ToolArgs			m_args;

@@ -43,6 +43,7 @@ protected:
 	void changeEvent(QEvent* event);
 	void accept();
 	void reject();
+	void notifyActivation(QString identity);
 
 private:
 	MainWindow& m_MainWindow;

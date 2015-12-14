@@ -37,7 +37,6 @@
 #include <UserEnv.h>
 #include <Shellapi.h>
 
-#define MAXIMUM_WAIT_TIME 3
 enum {
 	kOutputBufferSize = 4096
 };
@@ -550,14 +549,8 @@ MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
 		}
 
 		ARCH->lockMutex(m_mutex);
-		int waitTime = 0;
 		while (!m_ready) {
-			if (waitTime >= MAXIMUM_WAIT_TIME) {
-				break;
-			}
-
 			ARCH->waitCondVar(m_condVar, m_mutex, 1.0);
-			waitTime++;
 		}
 		m_ready = false;
 		ARCH->unlockMutex(m_mutex);
