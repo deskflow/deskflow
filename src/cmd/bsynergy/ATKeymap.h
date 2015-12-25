@@ -413,6 +413,7 @@ const static uint32 kXKeycodeMap[] = {
 	0x00, // unused
 	0x5b, // KP Enter
 	0x60, // Left Control
+	0x00, // ???
 	0x23, // KP Div
 	0x0e, // Print
 	0x5f, // Right Alt
