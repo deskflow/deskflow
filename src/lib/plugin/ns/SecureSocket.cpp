@@ -545,7 +545,7 @@ bool
 SecureSocket::verifyCertFingerprint()
 {
 	// calculate received certificate fingerprint
-	X509 *cert = cert = SSL_get_peer_certificate(m_ssl->m_ssl);
+	X509 *cert = SSL_get_peer_certificate(m_ssl->m_ssl);
 	EVP_MD* tempDigest;
 	unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
 	unsigned int tempFingerprintLen;
