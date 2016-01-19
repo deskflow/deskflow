@@ -215,7 +215,11 @@ private: // HACK
 	
 	// save last position of mouse to compute next delta movement
 	void saveMousePosition(SInt32 x, SInt32 y);
-	
+
+	// accumulates together a series of fractional pixel moves, each time
+	// taking away and returning just the integer part of the running total.
+	void accumulateFractionalMove(float x, float y, SInt32& intX, SInt32& intY);
+
 	// check if it is a modifier key repeating message
 	bool				isModifierRepeat(KeyModifierMask oldState, 
 							KeyModifierMask state, WPARAM wParam) const;
@@ -265,6 +269,9 @@ private:
 
 	// last mouse position
 	SInt32				m_xCursor, m_yCursor;
+
+	// accumulated fractional pixel moves
+	float					m_xFractionalMove, m_yFractionalMove;
 
 	// last clipboard
 	UInt32				m_sequenceNumber;

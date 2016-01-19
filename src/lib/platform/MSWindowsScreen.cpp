@@ -575,6 +575,21 @@ void MSWindowsScreen::saveMousePosition(SInt32 x, SInt32 y) {
 	LOG((CLOG_DEBUG5 "saved mouse position for next delta: %+d,%+d", x,y));
 }
 
+void MSWindowsScreen::accumulateFractionalMove(float x, float y, SInt32& intX, SInt32& intY)
+{
+	// Accumulate together the move into the running total
+	m_xFractionalMove += x;
+	m_yFractionalMove += y;
+
+	// Return the integer part
+	intX = (SInt32)m_xFractionalMove;
+	intY = (SInt32)m_yFractionalMove;
+
+	// And keep only the fractional part
+	m_xFractionalMove -= intX;
+	m_yFractionalMove -= intY;
+}
+
 UInt32
 MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
@@ -1355,16 +1370,18 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 {
 	SInt32 originalMX = mx;
 	SInt32 originalMY = my;
+	float scaledMX = mx;
+	float scaledMY = my;
 
 	if (DpiHelper::s_dpiScaled) {
-		mx = (SInt32)(mx / DpiHelper::getDpi());
-		my = (SInt32)(my / DpiHelper::getDpi());
+		scaledMX /= DpiHelper::getDpi();
+		scaledMY /= DpiHelper::getDpi();
 	}
 
 	// compute motion delta (relative to the last known
 	// mouse position)
-	SInt32 x = mx - m_xCursor;
-	SInt32 y = my - m_yCursor;
+	SInt32 x, y;
+	accumulateFractionalMove(scaledMX - m_xCursor, scaledMY - m_yCursor, x, y);
 
 	LOG((CLOG_DEBUG3
 		"mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)",
@@ -1377,7 +1394,7 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 	}
 
 	// save position to compute delta of next motion
-	saveMousePosition(mx, my);
+	saveMousePosition((SInt32)scaledMX, (SInt32)scaledMY);
 
 	if (m_isOnScreen) {
 		
