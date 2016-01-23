@@ -61,11 +61,11 @@ const KeyID				MSWindowsKeyState::s_virtualKey[] =
 	/* 0x012 */ { kKeyAlt_L },		// VK_MENU
 	/* 0x013 */ { kKeyPause },		// VK_PAUSE
 	/* 0x014 */ { kKeyCapsLock },	// VK_CAPITAL
-	/* 0x015 */ { kKeyHangulKana },	// VK_HANGUL, VK_KANA
+	/* 0x015 */ { kKeyKana },		// VK_HANGUL, VK_KANA
 	/* 0x016 */ { kKeyNone },		// undefined
 	/* 0x017 */ { kKeyNone },		// VK_JUNJA
 	/* 0x018 */ { kKeyNone },		// VK_FINAL
-	/* 0x019 */ { kKeyHanjaKanzi },	// VK_KANJI
+	/* 0x019 */ { kKeyKanzi },		// VK_HANJA, VK_KANJI
 	/* 0x01a */ { kKeyNone },		// undefined
 	/* 0x01b */ { kKeyEscape },		// VK_ESCAPE
 	/* 0x01c */ { kKeyHenkan },		// VK_CONVERT		
@@ -576,6 +576,8 @@ static const Win32Modifiers s_modifiers[] =
 	{ VK_RWIN,     KeyModifierSuper   }
 };
 
+bool MSWindowsKeyState::m_isKoreanLocale = false;
+
 MSWindowsKeyState::MSWindowsKeyState(
 	MSWindowsDesks* desks, void* eventTarget, IEventQueue* events) :
 	KeyState(events),
@@ -619,6 +621,7 @@ MSWindowsKeyState::init()
 	// look up symbol that's available on winNT family but not win95
 	HMODULE userModule = GetModuleHandle("user32.dll");
 	m_ToUnicodeEx = (ToUnicodeEx_t)GetProcAddress(userModule, "ToUnicodeEx");
+	m_isKoreanLocale = (LocaleNameToLCID(L"ko", 0) == GetUserDefaultLCID());
 }
 
 void
@@ -642,6 +645,7 @@ void
 MSWindowsKeyState::setKeyLayout(HKL keyLayout)
 {
 	m_keyLayout = keyLayout;
+	m_isKoreanLocale = (LocaleNameToLCID(L"ko", 0) == GetUserDefaultLCID());
 }
 
 bool
@@ -1341,6 +1345,15 @@ MSWindowsKeyState::setWindowGroup(SInt32 group)
 KeyID
 MSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button)
 {
+	if (m_isKoreanLocale) {
+		if (virtualKey == VK_HANGUL) {
+			return kKeyHangul;
+		}
+		if (virtualKey == VK_HANJA) {
+			return kKeyHanja;
+		}
+	}
+
 	if ((button & 0x100u) != 0) {
 		virtualKey += 0x100u;
 	}
@@ -1391,4 +1404,10 @@ MSWindowsKeyState::addKeyEntry(synergy::KeyMap& keyMap, synergy::KeyMap::KeyItem
 	if (item.m_group == 0) {
 		m_keyToVKMap[item.m_id] = static_cast<UINT>(item.m_client);
 	}
+}
+
+bool
+MSWindowsKeyState::isKoreanLocale()
+{
+	return m_isKoreanLocale;
 }
