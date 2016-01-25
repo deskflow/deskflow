@@ -159,6 +159,9 @@ public:
 	KeyModifierMask		getSavedModifiers() const { return m_savedModifiers; }
 	void				setSavedModifiers(KeyModifierMask value) { m_savedModifiers = value; }
 
+	// Fix to Korean keyboard issue
+	static bool			isKoreanLocale();
+
 protected:
 	// KeyState overrides
 	virtual void		getKeyMap(synergy::KeyMap& keyMap);
@@ -228,6 +231,11 @@ private:
 										UINT wFlags,
 										HKL dwhkl);
 	ToUnicodeEx_t		m_ToUnicodeEx;
+
+	// Korean and Japanese keyboards have same keycode for VK_HANGUL and VK_KANA.
+	// And VK_HANJA and VK_KANJI have same keycode.
+	// But They have different X11 keysym. So we have to update 's_virtualKey'.
+	static bool			m_isKoreanLocale;
 
 	static const KeyID	s_virtualKey[];
 };

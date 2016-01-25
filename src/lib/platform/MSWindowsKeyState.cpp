@@ -576,16 +576,11 @@ static const Win32Modifiers s_modifiers[] =
 	{ VK_RWIN,     KeyModifierSuper   }
 };
 
-/*
-	Korean and Japanese keyboards have same keycode for VK_HANGUL and VK_KANA.
-	And VK_HANJA and VK_KANJI have same keycode.
-	But They have different X11 keysym. So we have to update 's_virtualKey'.
-*/
-static bool s_isKoreanLocale = false;
+bool MSWindowsKeyState::m_isKoreanLocale = false;
 
-CMSWindowsKeyState::CMSWindowsKeyState(
-	CMSWindowsDesks* desks, void* eventTarget, IEventQueue* events) :
-	CKeyState(events),
+MSWindowsKeyState::MSWindowsKeyState(
+	MSWindowsDesks* desks, void* eventTarget, IEventQueue* events) :
+	KeyState(events),
 	m_eventTarget(eventTarget),
 	m_desks(desks),
 	m_keyLayout(GetKeyboardLayout(0)),
@@ -626,7 +621,7 @@ MSWindowsKeyState::init()
 	// look up symbol that's available on winNT family but not win95
 	HMODULE userModule = GetModuleHandle("user32.dll");
 	m_ToUnicodeEx = (ToUnicodeEx_t)GetProcAddress(userModule, "ToUnicodeEx");
-	s_isKoreanLocale = (LocaleNameToLCID(L"ko", 0) == GetUserDefaultLCID());
+	m_isKoreanLocale = (LocaleNameToLCID(L"ko", 0) == GetUserDefaultLCID());
 }
 
 void
@@ -650,7 +645,7 @@ void
 MSWindowsKeyState::setKeyLayout(HKL keyLayout)
 {
 	m_keyLayout = keyLayout;
-	s_isKoreanLocale = (LocaleNameToLCID(L"ko", 0) == GetUserDefaultLCID());
+	m_isKoreanLocale = (LocaleNameToLCID(L"ko", 0) == GetUserDefaultLCID());
 }
 
 bool
@@ -1350,7 +1345,7 @@ MSWindowsKeyState::setWindowGroup(SInt32 group)
 KeyID
 MSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button)
 {
-	if (s_isKoreanLocale) {
+	if (m_isKoreanLocale) {
 		if (virtualKey == VK_HANGUL) {
 			return kKeyHangul;
 		}
@@ -1409,4 +1404,10 @@ MSWindowsKeyState::addKeyEntry(synergy::KeyMap& keyMap, synergy::KeyMap::KeyItem
 	if (item.m_group == 0) {
 		m_keyToVKMap[item.m_id] = static_cast<UINT>(item.m_client);
 	}
+}
+
+bool
+MSWindowsKeyState::isKoreanLocale()
+{
+	return m_isKoreanLocale;
 }
