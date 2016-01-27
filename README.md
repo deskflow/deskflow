@@ -1,2 +1,3 @@
-This repository has moved:
-github.com/symless/synergy
+This repository has moved...
+
+http://github.com/symless/synergy
