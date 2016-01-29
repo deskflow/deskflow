@@ -1405,9 +1405,3 @@ MSWindowsKeyState::addKeyEntry(synergy::KeyMap& keyMap, synergy::KeyMap::KeyItem
 		m_keyToVKMap[item.m_id] = static_cast<UINT>(item.m_client);
 	}
 }
-
-bool
-MSWindowsKeyState::isKoreanLocale()
-{
-	return m_isKoreanLocale;
-}
