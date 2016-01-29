@@ -159,9 +159,6 @@ public:
 	KeyModifierMask		getSavedModifiers() const { return m_savedModifiers; }
 	void				setSavedModifiers(KeyModifierMask value) { m_savedModifiers = value; }
 
-	// Fix to Korean keyboard issue
-	static bool			isKoreanLocale();
-
 protected:
 	// KeyState overrides
 	virtual void		getKeyMap(synergy::KeyMap& keyMap);
