@@ -1370,8 +1370,8 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 {
 	SInt32 originalMX = mx;
 	SInt32 originalMY = my;
-	float scaledMX = mx;
-	float scaledMY = my;
+	float scaledMX = (float)mx;
+	float scaledMY = (float)my;
 
 	if (DpiHelper::s_dpiScaled) {
 		scaledMX /= DpiHelper::getDpi();
@@ -1380,8 +1380,8 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 
 	// compute motion delta (relative to the last known
 	// mouse position)
-	SInt32 x, y;
-	accumulateFractionalMove(scaledMX - m_xCursor, scaledMY - m_yCursor, x, y);
+	float x = scaledMX - m_xCursor;
+	float y = scaledMY - m_yCursor;
 
 	LOG((CLOG_DEBUG3
 		"mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)",
@@ -1432,7 +1432,9 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		}
 		else {
 			// send motion
-			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(x, y));
+			SInt32 ix, iy;
+			accumulateFractionalMove(x, y, ix, iy);
+			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(ix, iy));
 		}
 	}
 
