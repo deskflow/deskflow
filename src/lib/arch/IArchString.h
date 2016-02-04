@@ -50,8 +50,8 @@ public:
 	/*!
 	This method is equivalent to vsprintf() except it will not write
 	more than \c n bytes to the buffer, returning -1 if the output
-    was truncated and the number of bytes written not including the
-    trailing NUL otherwise.
+	was truncated and the number of bytes written not including the
+	trailing NUL otherwise.
 	*/
 	virtual int			vsnprintf(char* str,
 							int size, const char* fmt, va_list ap);

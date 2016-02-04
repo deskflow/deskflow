@@ -1,3 +1,8 @@
+v1.7.5-stable
+=============
+Bug #5030 - Display scaling breaks edge detection on Windows
+Bug #5064 - Compile fails on Mac OS X 10.11 (unused typedef)
+
 v1.7.4-stable
 =============
 Bug #4721 - High CPU usage for Windows service

@@ -23,7 +23,9 @@
 #include "synergy/ClientArgs.h"
 #include "synergy/ToolArgs.h"
 #include "synergy/ArgsBase.h"
+#include "synergy/DpiHelper.h"
 #include "base/Log.h"
+#include "base/String.h"
 
 ArgsBase* ArgParser::m_argsBase = NULL;
 
@@ -55,6 +57,18 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
 		else if (isArg(i, argc, argv, "-c", "--config", 1)) {
 			// save configuration file path
 			args.m_configFile = argv[++i];
+		}
+		else if (isArg(i, argc, argv, "", "--res-w", 1)) {
+			DpiHelper::s_resolutionWidth = synergy::string::stringToSizeType(argv[++i]);
+		}
+		else if (isArg(i, argc, argv, "", "--res-h", 1)) {
+			DpiHelper::s_resolutionHeight = synergy::string::stringToSizeType(argv[++i]);
+		}
+		else if (isArg(i, argc, argv, "", "--prm-wc", 1)) {
+			DpiHelper::s_primaryWidthCenter = synergy::string::stringToSizeType(argv[++i]);
+		}
+		else if (isArg(i, argc, argv, "", "--prm-hc", 1)) {
+			DpiHelper::s_primaryHeightCenter = synergy::string::stringToSizeType(argv[++i]);
 		}
 		else {
 			LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));

@@ -166,22 +166,19 @@ MSWindowsClipboard::get(EFormat format) const
 {
 	// find the converter for the first clipboard format we can handle
 	IMSWindowsClipboardConverter* converter = NULL;
-	UINT win32Format = EnumClipboardFormats(0);
-	while (converter == NULL && win32Format != 0) {
-		for (ConverterList::const_iterator index = m_converters.begin();
-								index != m_converters.end(); ++index) {
-			converter = *index;
-			if (converter->getWin32Format() == win32Format &&
-				converter->getFormat()      == format) {
-				break;
-			}
-			converter = NULL;
+	for (ConverterList::const_iterator index = m_converters.begin();
+		index != m_converters.end(); ++index) {
+
+		converter = *index;
+		if (converter->getFormat() == format) {
+			break;
 		}
-		win32Format = EnumClipboardFormats(win32Format);
+		converter = NULL;
 	}
 
 	// if no converter then we don't recognize any formats
 	if (converter == NULL) {
+		LOG((CLOG_WARN "no converter for format %d", format));
 		return String();
 	}
 

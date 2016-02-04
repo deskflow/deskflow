@@ -31,6 +31,7 @@
 #include "synergy/App.h"
 #include "synergy/ArgsBase.h"
 #include "synergy/ClientApp.h"
+#include "synergy/DpiHelper.h"
 #include "mt/Lock.h"
 #include "mt/Thread.h"
 #include "arch/win32/ArchMiscWindows.h"
@@ -143,6 +144,11 @@ MSWindowsScreen::MSWindowsScreen(
 								this, &MSWindowsScreen::updateKeysCB),
 							stopOnDeskSwitch);
 		m_keyState    = new MSWindowsKeyState(m_desks, getEventTarget(), m_events);
+
+		DpiHelper::calculateDpi(
+			GetSystemMetrics(SM_CXVIRTUALSCREEN),
+			GetSystemMetrics(SM_CYVIRTUALSCREEN));
+
 		updateScreenShape();
 		m_class       = createWindowClass();
 		m_window      = createWindow(m_class, "Synergy");
@@ -341,7 +347,8 @@ MSWindowsScreen::leave()
 
 		// warp to center
 		LOG((CLOG_DEBUG1 "warping cursor to center: %+d, %+d", m_xCenter, m_yCenter));
-		warpCursor(m_xCenter, m_yCenter);
+		float dpi = DpiHelper::getDpi();
+		warpCursor(m_xCenter / dpi, m_yCenter / dpi);
 
 		// disable special key sequences on win95 family
 		enableSpecialKeys(false);
@@ -562,7 +569,6 @@ MSWindowsScreen::warpCursor(SInt32 x, SInt32 y)
 }
 
 void MSWindowsScreen::saveMousePosition(SInt32 x, SInt32 y) {
-
 	m_xCursor = x;
 	m_yCursor = y;
 
@@ -1347,6 +1353,14 @@ MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 bool
 MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 {
+	SInt32 originalMX = mx;
+	SInt32 originalMY = my;
+
+	if (DpiHelper::s_dpiScaled) {
+		mx = (SInt32)(mx / DpiHelper::getDpi());
+		my = (SInt32)(my / DpiHelper::getDpi());
+	}
+
 	// compute motion delta (relative to the last known
 	// mouse position)
 	SInt32 x = mx - m_xCursor;
@@ -1370,7 +1384,7 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		// motion on primary screen
 		sendEvent(
 			m_events->forIPrimaryScreen().motionOnPrimary(),
-			MotionInfo::alloc(m_xCursor, m_yCursor));
+			MotionInfo::alloc(originalMX, originalMY));
 
 		if (m_buttons[kButtonLeft] == true && m_draggingStarted == false) {
 			m_draggingStarted = true;
@@ -1383,7 +1397,8 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		// will always try to return to the original entry point on the 
 		// secondary screen.
 		LOG((CLOG_DEBUG5 "warping server cursor to center: %+d,%+d", m_xCenter, m_yCenter));
-		warpCursorNoFlush(m_xCenter, m_yCenter);
+		float dpi = DpiHelper::getDpi();
+		warpCursorNoFlush(m_xCenter / dpi, m_yCenter / dpi);
 		
 		// examine the motion.  if it's about the distance
 		// from the center of the screen to an edge then
@@ -1391,10 +1406,10 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		// ignore (see warpCursorNoFlush() for a further
 		// description).
 		static SInt32 bogusZoneSize = 10;
-		if (-x + bogusZoneSize > m_xCenter - m_x ||
-			 x + bogusZoneSize > m_x + m_w - m_xCenter ||
-			-y + bogusZoneSize > m_yCenter - m_y ||
-			 y + bogusZoneSize > m_y + m_h - m_yCenter) {
+		if (-x + bogusZoneSize > (m_xCenter - m_x) / dpi ||
+			 x + bogusZoneSize > (m_x + m_w - m_xCenter) / dpi ||
+			-y + bogusZoneSize > (m_yCenter - m_y) / dpi ||
+			 y + bogusZoneSize > (m_y + m_h - m_yCenter) / dpi) {
 			
 			LOG((CLOG_DEBUG "dropped bogus delta motion: %+d,%+d", x, y));
 		}
@@ -1527,20 +1542,25 @@ MSWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
 	POINT cursorPos;
 	GetCursorPos(&cursorPos);
 
-	if ((cursorPos.x != x) && (cursorPos.y != y)) {
-		LOG((CLOG_DEBUG "SetCursorPos did not work; using fakeMouseMove instead"));
-		
-		// when at Vista/7 login screen, SetCursorPos does not work (which could be
-		// an MS security feature). instead we can use fakeMouseMove, which calls
-		// mouse_event.
-		// IMPORTANT: as of implementing this function, it has an annoying side 
-		// effect; instead of the mouse returning to the correct exit point, it
-		// returns to the center of the screen. this could have something to do with
-		// the center screen warping technique used (see comments for onMouseMove
-		// definition).
-		fakeMouseMove(x, y);
+	// there is a bug or round error in SetCursorPos and GetCursorPos on 
+	// a high DPI setting. The check here is for Vista/7 login screen. 
+	// since this feature is mainly for client, so only check on client.
+	if (!isPrimary()) {
+		if ((cursorPos.x != x) && (cursorPos.y != y)) {
+			LOG((CLOG_DEBUG "SetCursorPos did not work; using fakeMouseMove instead"));
+			LOG((CLOG_DEBUG "cursor pos %d, %d expected pos %d, %d", cursorPos.x, cursorPos.y, x, y));
+			// when at Vista/7 login screen, SetCursorPos does not work (which could be
+			// an MS security feature). instead we can use fakeMouseMove, which calls
+			// mouse_event.
+			// IMPORTANT: as of implementing this function, it has an annoying side 
+			// effect; instead of the mouse returning to the correct exit point, it
+			// returns to the center of the screen. this could have something to do with
+			// the center screen warping technique used (see comments for onMouseMove
+			// definition).
+			fakeMouseMove(x, y);
+		}
 	}
-	
+
 	// yield the CPU.  there's a race condition when warping:
 	//   a hardware mouse event occurs
 	//   the mouse hook is not called because that process doesn't have the CPU
@@ -1582,16 +1602,27 @@ MSWindowsScreen::ignore() const
 void
 MSWindowsScreen::updateScreenShape()
 {
-	// get shape
+	// get shape and center
+	if (DpiHelper::s_dpiScaled) {
+		// use the original resolution size for width and height
+		m_w = (SInt32)DpiHelper::s_resolutionWidth;
+		m_h = (SInt32)DpiHelper::s_resolutionHeight;
+
+		// calculate center position according to the original size
+		m_xCenter = (SInt32)DpiHelper::s_primaryWidthCenter;
+		m_yCenter = (SInt32)DpiHelper::s_primaryHeightCenter;
+	}
+	else {
+		m_w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+		m_h = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+
+		m_xCenter = GetSystemMetrics(SM_CXSCREEN) >> 1;
+		m_yCenter = GetSystemMetrics(SM_CYSCREEN) >> 1;
+	}
+
+	// get position
 	m_x = GetSystemMetrics(SM_XVIRTUALSCREEN);
 	m_y = GetSystemMetrics(SM_YVIRTUALSCREEN);
-	m_w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
-	m_h = GetSystemMetrics(SM_CYVIRTUALSCREEN);
-
-	// get center for cursor
-	m_xCenter = GetSystemMetrics(SM_CXSCREEN) >> 1;
-	m_yCenter = GetSystemMetrics(SM_CYSCREEN) >> 1;
-
 	// check for multiple monitors
 	m_multimon = (m_w != GetSystemMetrics(SM_CXSCREEN) ||
 				  m_h != GetSystemMetrics(SM_CYSCREEN));

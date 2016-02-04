@@ -5,6 +5,7 @@ config.h
 /bin
 /lib
 /build
+/CMakeFiles
 /ext/cryptopp562
 /ext/gmock-1.6.0
 /ext/gtest-1.6.0
