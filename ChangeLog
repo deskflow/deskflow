@@ -9,6 +9,16 @@ Enhancement #4793 - Additional logging to output OpenSSL version
 Enhancement #4932 - Notify activation system when wizard finishes
 Enhancement #4716 - Allow software to be time limited with serial key
 
+v1.7.6-stable
+=============
+Bug #451 - Fast cursor on any client with Mac server
+Bug #5041 - Copying from the Chrome web browser doesn't work
+Bug #4735 -	Clipboard doesn't work from client to server
+Bug #2909 - Clipboard copies only plaintext between Mac and Windows
+Bug #4353 - Large clipboard causes crash
+Bug #3774 - Missing MinGW dependencies after install on Windows
+Bug #4723 - Waiting for active desktop result freezes Windows service
+
 v1.7.5-stable
 =============
 Bug #5030 - Display scaling breaks edge detection on Windows
