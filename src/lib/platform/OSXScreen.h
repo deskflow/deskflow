@@ -138,6 +138,9 @@ private:
 	void                showCursor();
 	void                hideCursor();
 
+	// map synergy mouse button to mac buttons
+	ButtonID			mapSynergyButtonToMac(UInt16) const;
+
 	// map mac mouse button to synergy buttons
 	ButtonID			mapMacButtonToSynergy(UInt16) const;
 
