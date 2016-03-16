@@ -769,6 +769,15 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap,
 			for (std::set<UInt32>::iterator k = required.begin();
 											k != required.end(); ++k) {
 				item.m_required = mapModifiersFromOSX(*k << 8);
+				// Quick and dirty workaround for #2765
+				// #2765 could be due to a bug in the Apple CoreServices
+				// Framework
+				if (item.m_id == 0x20 && item.m_button == 0x7 &&
+						item.m_group == 0) {
+					item.m_button = 0x32;
+					LOG((CLOG_WARN "Key button for 0x20 patched"));
+				}
+
 				keyMap.addKeyEntry(item);
 			}
 		}
