@@ -66,6 +66,13 @@ IClipboard::unmarshall(IClipboard* clipboard, const String& data, Time time)
 String
 IClipboard::marshall(const IClipboard* clipboard)
 {
+	// return data format: 
+	// 4 bytes => number of formats included
+	// 4 bytes => format enum
+	// 4 bytes => clipboard data size n
+	// n bytes => clipboard data
+	// back to the second 4 bytes if there is another format
+	
 	assert(clipboard != NULL);
 
 	String data;

@@ -315,8 +315,8 @@ bool
 XWindowsClipboard::open(Time time) const
 {
 	if (m_open) {
-		return false;
 		LOG((CLOG_DEBUG "failed to open clipboard: already opened"));
+		return false;
 	}
 
 	LOG((CLOG_DEBUG "open clipboard %d", m_id));
