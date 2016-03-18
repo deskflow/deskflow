@@ -58,7 +58,11 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
 
 	m_pCheckBoxEnableDragAndDrop->setChecked(serverConfig().enableDragAndDrop());
 
+#ifdef SYSAPI_UNIX
 	m_pCheckBoxZconfIgnoreVboxInterfaces->setChecked(serverConfig().zconfIgnoreVboxInterfaces());
+#else
+	m_pCheckBoxZconfIgnoreVboxInterfaces->setVisible(false);
+#endif
 
 	foreach(const Hotkey& hotkey, serverConfig().hotkeys())
 		m_pListHotkeys->addItem(hotkey.text());
