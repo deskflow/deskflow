@@ -51,6 +51,7 @@ ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows ,
 	m_ServerName(serverName),
 	m_IgnoreAutoConfigClient(false),
 	m_EnableDragAndDrop(false),
+	m_ZconfIgnoreVboxInterfaces(false),
 	m_pMainWindow(mainWindow)
 {
 	Q_ASSERT(m_pSettings);
@@ -116,6 +117,7 @@ void ServerConfig::saveSettings()
 	settings().setValue("switchCornerSize", switchCornerSize());
 	settings().setValue("ignoreAutoConfigClient", ignoreAutoConfigClient());
 	settings().setValue("enableDragAndDrop", enableDragAndDrop());
+	settings().setValue("zconfIgnoreVboxInterfaces", zconfIgnoreVboxInterfaces());
 
 	writeSettings(settings(), switchCorners(), "switchCorner");
 
@@ -160,6 +162,7 @@ void ServerConfig::loadSettings()
 	setSwitchCornerSize(settings().value("switchCornerSize").toInt());
 	setIgnoreAutoConfigClient(settings().value("ignoreAutoConfigClient").toBool());
 	setEnableDragAndDrop(settings().value("enableDragAndDrop", true).toBool());
+	setZconfIgnoreVboxInterfaces(settings().value("zconfIgnoreVboxInterfaces").toBool());
 
 	readSettings(settings(), switchCorners(), "switchCorner", false, NumSwitchCorners);
 

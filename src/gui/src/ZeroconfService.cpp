@@ -105,8 +105,11 @@ QString ZeroconfService::getLocalIPAddresses()
 	QStringList addresses;
 
 	foreach (const QNetworkInterface& interface, QNetworkInterface::allInterfaces()) {
-		if (interface.flags().testFlag(QNetworkInterface::IsLoopBack) ||
-			interface.name().startsWith("vboxnet")) {
+		bool isLoopback = interface.flags().testFlag(QNetworkInterface::IsLoopBack);
+		bool ignoreVboxNetwork = (m_pMainWindow->serverConfig().zconfIgnoreVboxInterfaces() &&
+								  interface.name().startsWith("vboxnet"));
+
+		if (isLoopback || ignoreVboxNetwork) {
 			continue;
 		}
 

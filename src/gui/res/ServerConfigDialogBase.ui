@@ -506,6 +506,13 @@ Double click on a screen to edit its settings.</string>
            </widget>
           </item>
           <item row="6" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxZconfIgnoreVboxInterfaces">
+            <property name="text">
+             <string>Ignore VirtualBox interfaces in ZeroConf</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
            <spacer>
             <property name="orientation">
              <enum>Qt::Vertical</enum>
