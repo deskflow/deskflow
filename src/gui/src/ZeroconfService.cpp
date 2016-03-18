@@ -103,10 +103,19 @@ void ZeroconfService::errorHandle(DNSServiceErrorType errorCode)
 QString ZeroconfService::getLocalIPAddresses()
 {
 	QStringList addresses;
-	foreach (const QHostAddress& address, QNetworkInterface::allAddresses()) {
-		if (address.protocol() == QAbstractSocket::IPv4Protocol &&
-			address != QHostAddress(QHostAddress::LocalHost)) {
-			addresses.append(address.toString());
+
+	foreach (const QNetworkInterface& interface, QNetworkInterface::allInterfaces()) {
+		if (interface.flags().testFlag(QNetworkInterface::IsLoopBack) ||
+			interface.name().startsWith("vboxnet")) {
+			continue;
+		}
+
+		foreach (const QNetworkAddressEntry& addressEntry, interface.addressEntries()) {
+			QHostAddress address = addressEntry.ip();
+
+			if (address.protocol() == QAbstractSocket::IPv4Protocol) {
+				addresses.append(address.toString());
+			}
 		}
 	}
 
