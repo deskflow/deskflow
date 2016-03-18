@@ -2,7 +2,7 @@ v1.7.6-stable
 =============
 Bug #451 - Fast cursor on any client with Mac server
 Bug #5041 - Copying from the Chrome web browser doesn't work
-Bug #4735 -	Clipboard doesn't work from client to server
+Bug #4735 - Clipboard doesn't work from client to server
 Bug #2909 - Clipboard copies only plaintext between Mac and Windows
 Bug #4353 - Large clipboard causes crash
 Bug #3774 - Missing MinGW dependencies after install on Windows
