@@ -1059,7 +1059,7 @@ bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
 	return false;
 }
 
-bool  MainWindow::on_m_pActionSave_triggered()
+bool MainWindow::on_m_pActionSave_triggered()
 {
 	QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."));
 

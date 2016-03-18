@@ -20,6 +20,7 @@
 
 #define SERVERCONFIGDIALOG__H
 
+#include "MainWindow.h"
 #include "ScreenSetupModel.h"
 #include "ServerConfig.h"
 
@@ -32,7 +33,7 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
 	Q_OBJECT
 
 	public:
-		ServerConfigDialog(QWidget* parent, ServerConfig& config, const QString& defaultScreenName);
+		ServerConfigDialog(MainWindow* mainWindow, ServerConfig& config, const QString& defaultScreenName);
 
 	public slots:
 		void accept();
@@ -56,6 +57,7 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
 		ScreenSetupModel& model() { return m_ScreenSetupModel; }
 
 	private:
+		MainWindow* m_pMainWindow;
 		ServerConfig& m_OrigServerConfig;
 		ServerConfig m_ServerConfig;
 		ScreenSetupModel m_ScreenSetupModel;

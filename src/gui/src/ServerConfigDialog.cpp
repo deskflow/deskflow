@@ -25,9 +25,10 @@
 #include <QtGui>
 #include <QMessageBox>
 
-ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, const QString& defaultScreenName) :
-	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
+ServerConfigDialog::ServerConfigDialog(MainWindow* mainWindow, ServerConfig& config, const QString& defaultScreenName) :
+	QDialog(static_cast<QWidget*>(mainWindow), Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::ServerConfigDialogBase(),
+	m_pMainWindow(mainWindow),
 	m_OrigServerConfig(config),
 	m_ServerConfig(config),
 	m_ScreenSetupModel(serverConfig().screens(), serverConfig().numColumns(), serverConfig().numRows()),
@@ -111,6 +112,10 @@ void ServerConfigDialog::accept()
 	// now that the dialog has been accepted, copy the new server config to the original one,
 	// which is a reference to the one in MainWindow.
 	setOrigServerConfig(serverConfig());
+
+	// also update the zeroconf service since zconfIgnoreVboxInterfaces or
+	// other relevant settings may have changed
+	m_pMainWindow->updateZeroconfService();
 
 	QDialog::accept();
 }
