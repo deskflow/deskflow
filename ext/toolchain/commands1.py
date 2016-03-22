@@ -767,12 +767,7 @@ class InternalCommands:
 			if err != 0:
 				raise Exception(bin + " failed with error: " + str(err))
 
-			(qMajor, qMinor, qRev) = self.getQmakeVersion()
-			if qMajor <= 4:
-				frameworkRootDir = "/Library/Frameworks"
-			else:
-				# TODO: auto-detect, qt can now be installed anywhere.
-				frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
+			frameworkRootDir = commands.getoutput("qmake -query QT_INSTALL_LIBS")
 
 			target = bundleTargetDir + "/Contents/Frameworks"
 
