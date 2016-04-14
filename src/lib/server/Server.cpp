@@ -516,10 +516,10 @@ Server::switchScreen(BaseClientProxy* dst,
 		
 		// send the clipboard data to new active screen
 		m_sendClipboardThread = new Thread(
-										new TMethodJob<Server>(
-												this,
-												&Server::sendClipboardThread,
-												NULL));
+									new TMethodJob<Server>(
+										this,
+										&Server::sendClipboardThread,
+										NULL));
 
 		Server::SwitchToScreenInfo* info =
 			Server::SwitchToScreenInfo::alloc(m_active->getName());

@@ -37,6 +37,7 @@
 #include <UserEnv.h>
 #include <Shellapi.h>
 
+#define MAXIMUM_WAIT_TIME 3
 enum {
 	kOutputBufferSize = 4096
 };
@@ -292,6 +293,7 @@ MSWindowsWatchdog::startProcess()
 
 	ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
 	HANDLE userToken = getUserToken(&sa);
+	m_elevateProcess = m_autoElevated ? m_autoElevated : m_elevateProcess;
 	m_autoElevated = false;
 
 	// patch by Jack Zhou and Henry Tung
@@ -319,8 +321,10 @@ MSWindowsWatchdog::startProcess()
 		m_processRunning = true;
 		m_processFailures = 0;
 
-		LOG((CLOG_DEBUG "started process, session=%i, command=%s",
-			m_session.getActiveSessionId(), m_command.c_str()));
+		LOG((CLOG_DEBUG "started process, session=%i, elevated: %s, command=%s",
+			m_session.getActiveSessionId(),
+			m_elevateProcess ? "yes" : "no",
+			m_command.c_str()));
 	}
 }
 
@@ -549,8 +553,14 @@ MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
 		}
 
 		ARCH->lockMutex(m_mutex);
+		int waitTime = 0;
 		while (!m_ready) {
+			if (waitTime >= MAXIMUM_WAIT_TIME) {
+				break;
+			}
+
 			ARCH->waitCondVar(m_condVar, m_mutex, 1.0);
+			waitTime++;
 		}
 		m_ready = false;
 		ARCH->unlockMutex(m_mutex);
