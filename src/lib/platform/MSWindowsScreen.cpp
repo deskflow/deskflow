@@ -102,7 +102,7 @@ MSWindowsScreen::MSWindowsScreen(
 	m_class(0),
 	m_x(0), m_y(0),
 	m_w(0), m_h(0),
-	m_xCenter(0m), m_yCenter(0),
+	m_xCenter(0), m_yCenter(0),
 	m_multimon(false),
 	m_xCursor(0), m_yCursor(0),
 	m_xFractionalMove(0.0f), m_yFractionalMove(0.0f),
