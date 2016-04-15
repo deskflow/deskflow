@@ -271,7 +271,7 @@ private:
 	SInt32				m_xCursor, m_yCursor;
 
 	// accumulated fractional pixel moves
-	float					m_xFractionalMove, m_yFractionalMove;
+	float				m_xFractionalMove, m_yFractionalMove;
 
 	// last clipboard
 	UInt32				m_sequenceNumber;
