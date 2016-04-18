@@ -114,8 +114,8 @@ static const KeyID		kKeyKana		= 0xEF26;	/* Kana */
 static const KeyID		kKeyHiraganaKatakana = 0xEF27;	/* Hiragana/Katakana toggle */
 static const KeyID		kKeyZenkaku		= 0xEF2A;	/* Zenkaku/Hankaku */
 static const KeyID		kKeyKanzi		= 0xEF2A;	/* Kanzi */
-static const KeyID		kKeyHangul  	= 0xEF31;	/* Hangul */
-static const KeyID		kKeyHanja  		= 0xEF34;	/* Hanja */
+static const KeyID		kKeyHangul		= 0xEF31;	/* Hangul */
+static const KeyID		kKeyHanja		= 0xEF34;	/* Hanja */
 static const KeyID		kKeyDelete		= 0xEFFF;	/* Delete, rubout */
 
 // cursor control
