@@ -318,11 +318,11 @@ const KeyID				MSWindowsKeyState::s_virtualKey[] =
 	/* 0x112 */ { kKeyAlt_R },		// VK_MENU
 	/* 0x113 */ { kKeyNone },		// VK_PAUSE
 	/* 0x114 */ { kKeyNone },		// VK_CAPITAL
-	/* 0x115 */ { kKeyNone },		// VK_KANA			
-	/* 0x116 */ { kKeyNone },		// VK_HANGUL		
+	/* 0x115 */ { kKeyNone },		// VK_KANA, VK_HANGUL
+	/* 0x116 */ { kKeyNone },		// undefined
 	/* 0x117 */ { kKeyNone },		// VK_JUNJA			
 	/* 0x118 */ { kKeyNone },		// VK_FINAL			
-	/* 0x119 */ { kKeyNone },		// VK_KANJI			
+	/* 0x119 */ { kKeyNone },		// VK_HANJA, VK_KANJI
 	/* 0x11a */ { kKeyNone },		// undefined
 	/* 0x11b */ { kKeyNone },		// VK_ESCAPE
 	/* 0x11c */ { kKeyNone },		// VK_CONVERT		
@@ -576,8 +576,6 @@ static const Win32Modifiers s_modifiers[] =
 	{ VK_RWIN,     KeyModifierSuper   }
 };
 
-bool MSWindowsKeyState::m_isKoreanLocale = false;
-
 MSWindowsKeyState::MSWindowsKeyState(
 	MSWindowsDesks* desks, void* eventTarget, IEventQueue* events) :
 	KeyState(events),
@@ -621,7 +619,6 @@ MSWindowsKeyState::init()
 	// look up symbol that's available on winNT family but not win95
 	HMODULE userModule = GetModuleHandle("user32.dll");
 	m_ToUnicodeEx = (ToUnicodeEx_t)GetProcAddress(userModule, "ToUnicodeEx");
-	m_isKoreanLocale = (LocaleNameToLCID(L"ko", 0) == GetUserDefaultLCID());
 }
 
 void
@@ -645,7 +642,6 @@ void
 MSWindowsKeyState::setKeyLayout(HKL keyLayout)
 {
 	m_keyLayout = keyLayout;
-	m_isKoreanLocale = (LocaleNameToLCID(L"ko", 0) == GetUserDefaultLCID());
 }
 
 bool
@@ -1343,9 +1339,11 @@ MSWindowsKeyState::setWindowGroup(SInt32 group)
 }
 
 KeyID
-MSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button)
+MSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button) const
 {
-	if (m_isKoreanLocale) {
+	// VK_HANGUL == VK_KANA and VK_HANJA == VK_KANJI. (Those change IME mode)
+	// But they have different X11 keysym. So we should distinguish them.
+	if ((LOWORD(m_keyLayout) & 0xffffu) == 0x0412u) {	// 0x0412 : Korean Locale ID
 		if (virtualKey == VK_HANGUL) {
 			return kKeyHangul;
 		}
@@ -1405,3 +1403,4 @@ MSWindowsKeyState::addKeyEntry(synergy::KeyMap& keyMap, synergy::KeyMap::KeyItem
 		m_keyToVKMap[item.m_id] = static_cast<UINT>(item.m_client);
 	}
 }
+

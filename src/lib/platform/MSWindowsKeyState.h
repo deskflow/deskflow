@@ -122,7 +122,7 @@ public:
 	(button should include the extended key bit), or kKeyNone if there is
 	no such key.
 	*/
-	static KeyID		getKeyID(UINT virtualKey, KeyButton button);
+	KeyID				getKeyID(UINT virtualKey, KeyButton button) const;
 
 	//! Map button to virtual key
 	/*!
@@ -228,11 +228,6 @@ private:
 										UINT wFlags,
 										HKL dwhkl);
 	ToUnicodeEx_t		m_ToUnicodeEx;
-
-	// Korean and Japanese keyboards have same keycode for VK_HANGUL and VK_KANA.
-	// And VK_HANJA and VK_KANJI have same keycode.
-	// But They have different X11 keysym. So we have to update 's_virtualKey'.
-	static bool			m_isKoreanLocale;
 
 	static const KeyID	s_virtualKey[];
 };
