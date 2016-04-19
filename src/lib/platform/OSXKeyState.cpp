@@ -20,31 +20,18 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 
-#if defined(MAC_OS_X_VERSION_10_5)
 #include <Carbon/Carbon.h>
-#endif
 
 // Note that some virtual keys codes appear more than once.  The
 // first instance of a virtual key code maps to the KeyID that we
 // want to generate for that code.  The others are for mapping
 // different KeyIDs to a single key code.
-
-#if defined(MAC_OS_X_VERSION_10_5)
 static const UInt32 s_shiftVK    = kVK_Shift;
 static const UInt32 s_controlVK  = kVK_Control;
 static const UInt32 s_altVK      = kVK_Option;
 static const UInt32 s_superVK    = kVK_Command;
 static const UInt32 s_capsLockVK = kVK_CapsLock;
 static const UInt32 s_numLockVK  = kVK_ANSI_KeypadClear; // 71
-#else
-// Hardcoded virtual key table on 10.4 and below.
-static const UInt32 s_shiftVK    = 56;
-static const UInt32 s_controlVK  = 59;
-static const UInt32 s_altVK      = 58;
-static const UInt32 s_superVK    = 55;
-static const UInt32 s_capsLockVK = 57;
-static const UInt32 s_numLockVK  = 71;
-#endif
 
 static const UInt32 s_osxNumLock = 1 << 16;
 
@@ -54,7 +41,6 @@ public:
 	UInt32				m_virtualKey;
 };
 static const KeyEntry	s_controlKeys[] = {
-#if defined(MAC_OS_X_VERSION_10_5)
 	// cursor keys.  if we don't do this we'll may still get these from
 	// the keyboard resource but they may not correspond to the arrow
 	// keys.
@@ -103,56 +89,7 @@ static const KeyEntry	s_controlKeys[] = {
 	{ kKeyKP_Divide,	kVK_ANSI_KeypadDivide },
 	{ kKeyKP_Subtract,	kVK_ANSI_KeypadMinus },
 	{ kKeyKP_Enter,		kVK_ANSI_KeypadEnter },
-#else
-  // Hardcoded virtual key table on 10.4 and below.
-	// cursor keys.
-	{ kKeyLeft,			123 },
-	{ kKeyRight,		124 },
-	{ kKeyUp,			126 },
-	{ kKeyDown,			125 },
-	{ kKeyHome,			115 },
-	{ kKeyEnd,			119 },
-	{ kKeyPageUp,		116 },
-	{ kKeyPageDown,		121 },
-	{ kKeyInsert,		114 },
-
-	// function keys
-	{ kKeyF1,			122 },
-	{ kKeyF2,			120 },
-	{ kKeyF3,			99 },
-	{ kKeyF4,			118 },
-	{ kKeyF5,			96 },
-	{ kKeyF6,			97 },
-	{ kKeyF7,			98 },
-	{ kKeyF8,			100 },
-	{ kKeyF9,			101 },
-	{ kKeyF10,			109 },
-	{ kKeyF11,			103 },
-	{ kKeyF12,			111 },
-	{ kKeyF13,			105 },
-	{ kKeyF14,			107 },
-	{ kKeyF15,			113 },
-	{ kKeyF16,			106 },
-
-	{ kKeyKP_0,			82 },
-	{ kKeyKP_1,			83 },
-	{ kKeyKP_2,			84 },
-	{ kKeyKP_3,			85 },
-	{ kKeyKP_4,			86 },
-	{ kKeyKP_5,			87 },
-	{ kKeyKP_6,			88 },
-	{ kKeyKP_7,			89 },
-	{ kKeyKP_8,			91 },
-	{ kKeyKP_9,			92 },
-	{ kKeyKP_Decimal,	65 },
-	{ kKeyKP_Equal,		81 },
-	{ kKeyKP_Multiply,	67 },
-	{ kKeyKP_Add,		69 },
-	{ kKeyKP_Divide,	75 },
-	{ kKeyKP_Subtract,	78 },
-	{ kKeyKP_Enter,		76 },
-#endif
-
+	
 	// virtual key 110 is fn+enter and i have no idea what that's supposed
 	// to map to.  also the enter key with numlock on is a modifier but i
 	// don't know which.
@@ -303,13 +240,8 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
 	}
 
 	// get keyboard info
-
-#if defined(MAC_OS_X_VERSION_10_5)
 	TISInputSourceRef currentKeyboardLayout = TISCopyCurrentKeyboardLayoutInputSource(); 
-#else
-	KeyboardLayoutRef currentKeyboardLayout;
-	OSStatus status = KLGetCurrentKeyboardLayout(&currentKeyboardLayout);
-#endif
+
 	if (currentKeyboardLayout == NULL) {
 		return kKeyNone;
 	}
@@ -343,17 +275,10 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
 	}
 
 	// translate via uchr resource
-#if defined(MAC_OS_X_VERSION_10_5)
 	CFDataRef ref = (CFDataRef) TISGetInputSourceProperty(currentKeyboardLayout,
 								kTISPropertyUnicodeKeyLayoutData);
 	const UCKeyboardLayout* layout = (const UCKeyboardLayout*) CFDataGetBytePtr(ref);
 	const bool layoutValid = (layout != NULL);
-#else
-	const void* resource;
-	int err = KLGetKeyboardLayoutProperty(currentKeyboardLayout, kKLuchrData, &resource);
-	const bool layoutValid = (err == noErr);
-	const UCKeyboardLayout* layout = (const UCKeyboardLayout*)resource;
-#endif
 
 	if (layoutValid) {
 		// translate key
@@ -454,13 +379,7 @@ SInt32
 OSXKeyState::pollActiveGroup() const
 {
 	bool layoutValid = true;
-#if defined(MAC_OS_X_VERSION_10_5)
 	TISInputSourceRef keyboardLayout = TISCopyCurrentKeyboardLayoutInputSource();
-#else
-	KeyboardLayoutRef keyboardLayout;
-	OSStatus status = KLGetCurrentKeyboardLayout(&keyboardLayout);
-	layoutValid = (status == noErr);
-#endif
 	
 	if (layoutValid) {
 		GroupMap::const_iterator i = m_groupMap.find(keyboardLayout);
@@ -508,16 +427,11 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap)
 		
 		// add regular keys
 		// try uchr resource first
-		#if defined(MAC_OS_X_VERSION_10_5)
 		CFDataRef resourceRef = (CFDataRef)TISGetInputSourceProperty(
 			m_groups[g], kTISPropertyUnicodeKeyLayoutData);
 		layoutValid = resourceRef != NULL;
 		if (layoutValid)
 			resource = CFDataGetBytePtr(resourceRef);
-		#else
-		layoutValid = KLGetKeyboardLayoutProperty(
-			m_groups[g], kKLuchrData, &resource);
-		#endif
 
 		if (layoutValid) {
 			CUCHRKeyResource uchr(resource, keyboardType);
@@ -862,7 +776,6 @@ OSXKeyState::getGroups(GroupList& groups) const
 	CFIndex n;
 	bool gotLayouts = false;
 
-#if defined(MAC_OS_X_VERSION_10_5)
 	// get number of layouts
 	CFStringRef keys[] = { kTISPropertyInputSourceCategory };
 	CFStringRef values[] = { kTISCategoryKeyboardInputSource };
@@ -870,10 +783,6 @@ OSXKeyState::getGroups(GroupList& groups) const
 	CFArrayRef kbds = TISCreateInputSourceList(dict, false);
 	n = CFArrayGetCount(kbds);
 	gotLayouts = (n != 0);
-#else
-	OSStatus status = KLGetKeyboardLayoutCount(&n);
-	gotLayouts = (status == noErr);
-#endif
 
 	if (!gotLayouts) {
 		LOG((CLOG_DEBUG1 "can't get keyboard layouts"));
@@ -884,14 +793,9 @@ OSXKeyState::getGroups(GroupList& groups) const
 	groups.clear();
 	for (CFIndex i = 0; i < n; ++i) {
 		bool addToGroups = true;
-#if defined(MAC_OS_X_VERSION_10_5)
 		TISInputSourceRef keyboardLayout = 
 			(TISInputSourceRef)CFArrayGetValueAtIndex(kbds, i);
-#else
-		KeyboardLayoutRef keyboardLayout;
-		status = KLGetKeyboardLayoutAtIndex(i, &keyboardLayout);
-		addToGroups == (status == noErr);
-#endif
+		
 		if (addToGroups)
     		groups.push_back(keyboardLayout);
 	}
@@ -901,11 +805,7 @@ OSXKeyState::getGroups(GroupList& groups) const
 void
 OSXKeyState::setGroup(SInt32 group)
 {
-#if defined(MAC_OS_X_VERSION_10_5)
 	TISSetInputMethodKeyboardLayoutOverride(m_groups[group]);
-#else
-	KLSetCurrentKeyboardLayout(m_groups[group]);
-#endif
 }
 
 void
@@ -1050,14 +950,11 @@ OSXKeyState::KeyResource::getKeyID(UInt8 c)
 		str[0] = static_cast<char>(c);
 		str[1] = 0;
 
-#if defined(MAC_OS_X_VERSION_10_5)
 		// get current keyboard script
 		TISInputSourceRef isref = TISCopyCurrentKeyboardInputSource();
 		CFArrayRef langs = (CFArrayRef) TISGetInputSourceProperty(isref, kTISPropertyInputSourceLanguages);
-		CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)CFArrayGetValueAtIndex(langs, 0));
-#else
-		CFStringEncoding encoding = GetScriptManagerVariable(smKeyScript);
-#endif
+		CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding(
+										(CFStringRef)CFArrayGetValueAtIndex(langs, 0));
 		// convert to unicode
 		CFStringRef cfString =
 			CFStringCreateWithCStringNoCopy(

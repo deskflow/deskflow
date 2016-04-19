@@ -25,11 +25,7 @@
 
 #include <Carbon/Carbon.h>
 
-#if defined(MAC_OS_X_VERSION_10_5)
-	typedef TISInputSourceRef KeyLayout;
-#else
-	typedef KeyboardLayoutRef KeyLayout;
-#endif
+typedef TISInputSourceRef KeyLayout;
 
 //! OS X key state
 /*!
