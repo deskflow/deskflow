@@ -166,9 +166,9 @@ private:
 	};
 
 
-	class CUCHRKeyResource : public KeyResource {
+	class UchrKeyResource : public KeyResource {
 	public:
-		CUCHRKeyResource(const void*, UInt32 keyboardType);
+		UchrKeyResource(const void*, UInt32 keyboardType);
 
 		// KeyResource overrides
 		virtual bool	isValid() const;
