@@ -429,12 +429,13 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap)
 		// try uchr resource first
 		CFDataRef resourceRef = (CFDataRef)TISGetInputSourceProperty(
 			m_groups[g], kTISPropertyUnicodeKeyLayoutData);
+
 		layoutValid = resourceRef != NULL;
 		if (layoutValid)
 			resource = CFDataGetBytePtr(resourceRef);
 
 		if (layoutValid) {
-			CUCHRKeyResource uchr(resource, keyboardType);
+			UchrKeyResource uchr(resource, keyboardType);
 			if (uchr.isValid()) {
 				LOG((CLOG_DEBUG1 "using uchr resource for group %d", g));
 				getKeyMap(keyMap, g, uchr);
@@ -795,7 +796,7 @@ OSXKeyState::getGroups(GroupList& groups) const
 		bool addToGroups = true;
 		TISInputSourceRef keyboardLayout = 
 			(TISInputSourceRef)CFArrayGetValueAtIndex(kbds, i);
-		
+
 		if (addToGroups)
     		groups.push_back(keyboardLayout);
 	}
@@ -1026,10 +1027,10 @@ OSXKeyState::KeyResource::unicharToKeyID(UniChar c)
 
 
 //
-// OSXKeyState::CUCHRKeyResource
+// OSXKeyState::UchrKeyResource
 //
 
-OSXKeyState::CUCHRKeyResource::CUCHRKeyResource(const void* resource,
+OSXKeyState::UchrKeyResource::UchrKeyResource(const void* resource,
 				UInt32 keyboardType) :
 	m_m(NULL),
 	m_cti(NULL),
@@ -1099,32 +1100,32 @@ OSXKeyState::CUCHRKeyResource::CUCHRKeyResource(const void* resource,
 }
 
 bool
-OSXKeyState::CUCHRKeyResource::isValid() const
+OSXKeyState::UchrKeyResource::isValid() const
 {
 	return (m_m != NULL);
 }
 
 UInt32
-OSXKeyState::CUCHRKeyResource::getNumModifierCombinations() const
+OSXKeyState::UchrKeyResource::getNumModifierCombinations() const
 {
 	// only 32 (not 256) because the righthanded modifier bits are ignored
 	return 32;
 }
 
 UInt32
-OSXKeyState::CUCHRKeyResource::getNumTables() const
+OSXKeyState::UchrKeyResource::getNumTables() const
 {
 	return m_cti->keyToCharTableCount;
 }
 
 UInt32
-OSXKeyState::CUCHRKeyResource::getNumButtons() const
+OSXKeyState::UchrKeyResource::getNumButtons() const
 {
 	return m_cti->keyToCharTableSize;
 }
 
 UInt32
-OSXKeyState::CUCHRKeyResource::getTableForModifier(UInt32 mask) const
+OSXKeyState::UchrKeyResource::getTableForModifier(UInt32 mask) const
 {
 	if (mask >= m_m->modifiersCount) {
 		return m_m->defaultTableNum;
@@ -1135,7 +1136,7 @@ OSXKeyState::CUCHRKeyResource::getTableForModifier(UInt32 mask) const
 }
 
 KeyID
-OSXKeyState::CUCHRKeyResource::getKey(UInt32 table, UInt32 button) const
+OSXKeyState::UchrKeyResource::getKey(UInt32 table, UInt32 button) const
 {
 	assert(table < getNumTables());
 	assert(button < getNumButtons());
@@ -1171,7 +1172,7 @@ OSXKeyState::CUCHRKeyResource::getKey(UInt32 table, UInt32 button) const
 }
 
 bool
-OSXKeyState::CUCHRKeyResource::getDeadKey(
+OSXKeyState::UchrKeyResource::getDeadKey(
 				KeySequence& keys, UInt16 index) const
 {
 	if (m_sri == NULL || index >= m_sri->keyStateRecordCount) {
@@ -1214,7 +1215,7 @@ OSXKeyState::CUCHRKeyResource::getDeadKey(
 }
 
 bool
-OSXKeyState::CUCHRKeyResource::getKeyRecord(
+OSXKeyState::UchrKeyResource::getKeyRecord(
 				KeySequence& keys, UInt16 index, UInt16& state) const
 {
 	const UInt8* base = reinterpret_cast<const UInt8*>(m_resource);
@@ -1278,7 +1279,7 @@ OSXKeyState::CUCHRKeyResource::getKeyRecord(
 }
 
 bool
-OSXKeyState::CUCHRKeyResource::addSequence(
+OSXKeyState::UchrKeyResource::addSequence(
 				KeySequence& keys, UCKeyCharSeq c) const
 {
 	if ((c & kUCKeyOutputTestForIndexMask) == kUCKeyOutputSequenceIndexMask) {
