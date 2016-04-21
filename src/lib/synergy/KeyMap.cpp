@@ -692,7 +692,7 @@ KeyMap::findBestKey(const KeyEntryList& entryList,
 				KeyModifierMask desiredState) const
 {
 	// check for an item that can accommodate the desiredState exactly
-	for (SInt32 i = 0; i < (SInt32)entryList.size(); ++i) {
+	for (SInt32 i = (SInt32)entryList.size() - 1; i >= 0; --i) {
 		const KeyItem& item = entryList[i].back();
 		if ((item.m_required & desiredState) ==
 			(item.m_sensitive & desiredState)) {
@@ -704,7 +704,7 @@ KeyMap::findBestKey(const KeyEntryList& entryList,
 	// choose the item that requires the fewest modifier changes
 	SInt32 bestCount = 32;
 	SInt32 bestIndex = -1;
-	for (SInt32 i = 0; i < (SInt32)entryList.size(); ++i) {
+	for (SInt32 i = (SInt32)entryList.size() - 1; i >= 0; --i) {
 		const KeyItem& item = entryList[i].back();
 		KeyModifierMask change =
 			((item.m_required ^ desiredState) & item.m_sensitive);
