@@ -491,6 +491,15 @@ void MainWindow::restartSynergy()
 	startSynergy();
 }
 
+void MainWindow::proofreadInfo()
+{
+	setEdition(m_AppConfig.edition());
+
+	int oldState = m_SynergyState;
+	m_SynergyState = synergyDisconnected;
+	setSynergyState((qSynergyState)oldState);
+}
+
 void MainWindow::clearLog()
 {
 	m_pLogOutput->clear();
@@ -958,7 +967,7 @@ void MainWindow::changeEvent(QEvent* event)
 			retranslateUi(this);
 			retranslateMenuBar();
 
-			setEdition(m_AppConfig.edition());
+			proofreadInfo();
 
 			break;
 		}

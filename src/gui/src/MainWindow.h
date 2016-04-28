@@ -178,6 +178,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool autoHide();
 		QString getTimeStamp();
 		void restartSynergy();
+		void proofreadInfo();
 
 	private:
 		QSettings& m_Settings;
