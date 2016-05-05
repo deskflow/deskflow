@@ -18,7 +18,7 @@
 #pragma once
 
 #include "synergy/KeyState.h"
-#include "synergy/IKeyResource.h"
+#include "platform/OSXIKeyResource.h"
 
 #include <Carbon/Carbon.h>
 
