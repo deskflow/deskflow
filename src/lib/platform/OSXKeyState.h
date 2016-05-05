@@ -26,7 +26,7 @@
 #include <Carbon/Carbon.h>
 
 typedef TISInputSourceRef KeyLayout;
-class IKeyResource;
+class IOSXKeyResource;
 
 //! OS X key state
 /*!
@@ -113,7 +113,7 @@ private:
 
 	// Convert keyboard resource to a key map
 	bool				getKeyMap(synergy::KeyMap& keyMap,
-							SInt32 group, const IKeyResource& r) const;
+							SInt32 group, const IOSXKeyResource& r) const;
 
 	// Get the available keyboard groups
 	bool				getGroups(GroupList&) const;

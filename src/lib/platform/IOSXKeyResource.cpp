@@ -15,16 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "platform/OSXIKeyResource.h"
+#include "platform/IOSXKeyResource.h"
 
 #include <Carbon/Carbon.h>
 
-//
-// OSXKeyState::KeyResource
-//
-
 KeyID
-IKeyResource::getKeyID(UInt8 c)
+IOSXKeyResource::getKeyID(UInt8 c)
 {
 	if (c == 0) {
 		return kKeyNone;
@@ -163,7 +159,7 @@ IKeyResource::getKeyID(UInt8 c)
 }
 
 KeyID
-IKeyResource::unicharToKeyID(UniChar c)
+IOSXKeyResource::unicharToKeyID(UniChar c)
 {
 	switch (c) {
 	case 3:

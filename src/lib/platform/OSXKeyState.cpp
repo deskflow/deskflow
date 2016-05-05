@@ -297,7 +297,7 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
 			if (count != 0 || m_deadKeyState == 0) {
 				m_deadKeyState = 0;
 				for (UniCharCount i = 0; i < count; ++i) {
-					ids.push_back(IKeyResource::unicharToKeyID(chars[i]));
+					ids.push_back(IOSXKeyResource::unicharToKeyID(chars[i]));
 				}
 				adjustAltGrModifier(ids, maskOut, isCommand);
 				return mapVirtualKeyToKeyButton(vkCode);
@@ -581,7 +581,7 @@ OSXKeyState::getKeyMapForSpecialKeys(synergy::KeyMap& keyMap, SInt32 group) cons
 
 bool
 OSXKeyState::getKeyMap(synergy::KeyMap& keyMap,
-				SInt32 group, const IKeyResource& r) const
+				SInt32 group, const IOSXKeyResource& r) const
 {
 	if (!r.isValid()) {
 		return false;

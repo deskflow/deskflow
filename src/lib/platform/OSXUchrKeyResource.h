@@ -18,13 +18,13 @@
 #pragma once
 
 #include "synergy/KeyState.h"
-#include "platform/OSXIKeyResource.h"
+#include "platform/IOSXKeyResource.h"
 
 #include <Carbon/Carbon.h>
 
 typedef TISInputSourceRef KeyLayout;
 
-class OSXUchrKeyResource : public IKeyResource {
+class OSXUchrKeyResource : public IOSXKeyResource {
 public:
 	OSXUchrKeyResource(const void*, UInt32 keyboardType);
 	

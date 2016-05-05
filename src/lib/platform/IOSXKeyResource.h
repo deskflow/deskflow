@@ -19,7 +19,7 @@
 
 #include "synergy/KeyState.h"
 
-class IKeyResource : public IInterface {
+class IOSXKeyResource : public IInterface {
 public:
 	virtual bool	isValid() const = 0;
 	virtual UInt32	getNumModifierCombinations() const = 0;
