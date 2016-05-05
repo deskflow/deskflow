@@ -17,7 +17,7 @@
  */
 
 #include "platform/OSXKeyState.h"
-#include "platform/UchrKeyResource.h"
+#include "platform/OSXUchrKeyResource.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 
@@ -440,7 +440,7 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap)
 			resource = CFDataGetBytePtr(resourceRef);
 
 		if (layoutValid) {
-			UchrKeyResource uchr(resource, keyboardType);
+			OSXUchrKeyResource uchr(resource, keyboardType);
 			if (uchr.isValid()) {
 				LOG((CLOG_DEBUG1 "using uchr resource for group %d", g));
 				getKeyMap(keyMap, g, uchr);

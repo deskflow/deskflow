@@ -15,15 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "platform/UchrKeyResource.h"
+#include "platform/OSXUchrKeyResource.h"
 
 #include <Carbon/Carbon.h>
 
 //
-// OSXKeyState::UchrKeyResource
+// OSXUchrKeyResource
 //
 
-UchrKeyResource::UchrKeyResource(const void* resource,
+OSXUchrKeyResource::OSXUchrKeyResource(const void* resource,
 				UInt32 keyboardType) :
 	m_m(NULL),
 	m_cti(NULL),
@@ -93,32 +93,32 @@ UchrKeyResource::UchrKeyResource(const void* resource,
 }
 
 bool
-UchrKeyResource::isValid() const
+OSXUchrKeyResource::isValid() const
 {
 	return (m_m != NULL);
 }
 
 UInt32
-UchrKeyResource::getNumModifierCombinations() const
+OSXUchrKeyResource::getNumModifierCombinations() const
 {
 	// only 32 (not 256) because the righthanded modifier bits are ignored
 	return 32;
 }
 
 UInt32
-UchrKeyResource::getNumTables() const
+OSXUchrKeyResource::getNumTables() const
 {
 	return m_cti->keyToCharTableCount;
 }
 
 UInt32
-UchrKeyResource::getNumButtons() const
+OSXUchrKeyResource::getNumButtons() const
 {
 	return m_cti->keyToCharTableSize;
 }
 
 UInt32
-UchrKeyResource::getTableForModifier(UInt32 mask) const
+OSXUchrKeyResource::getTableForModifier(UInt32 mask) const
 {
 	if (mask >= m_m->modifiersCount) {
 		return m_m->defaultTableNum;
@@ -129,7 +129,7 @@ UchrKeyResource::getTableForModifier(UInt32 mask) const
 }
 
 KeyID
-UchrKeyResource::getKey(UInt32 table, UInt32 button) const
+OSXUchrKeyResource::getKey(UInt32 table, UInt32 button) const
 {
 	assert(table < getNumTables());
 	assert(button < getNumButtons());
@@ -165,7 +165,7 @@ UchrKeyResource::getKey(UInt32 table, UInt32 button) const
 }
 
 bool
-UchrKeyResource::getDeadKey(
+OSXUchrKeyResource::getDeadKey(
 	KeySequence& keys, UInt16 index) const
 {
 	if (m_sri == NULL || index >= m_sri->keyStateRecordCount) {
@@ -208,7 +208,7 @@ UchrKeyResource::getDeadKey(
 }
 
 bool
-UchrKeyResource::getKeyRecord(
+OSXUchrKeyResource::getKeyRecord(
 	KeySequence& keys, UInt16 index, UInt16& state) const
 {
 	const UInt8* base = reinterpret_cast<const UInt8*>(m_resource);
@@ -272,7 +272,7 @@ UchrKeyResource::getKeyRecord(
 }
 
 bool
-UchrKeyResource::addSequence(
+OSXUchrKeyResource::addSequence(
 	KeySequence& keys, UCKeyCharSeq c) const
 {
 	if ((c & kUCKeyOutputTestForIndexMask) == kUCKeyOutputSequenceIndexMask) {
