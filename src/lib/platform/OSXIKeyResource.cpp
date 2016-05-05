@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/IKeyResource.h"
+#include "platform/OSXIKeyResource.h"
 
 #include <Carbon/Carbon.h>
 
