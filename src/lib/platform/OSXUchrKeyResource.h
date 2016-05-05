@@ -18,15 +18,15 @@
 #pragma once
 
 #include "synergy/KeyState.h"
-#include "platform/IKeyResource.h"
+#include "synergy/IKeyResource.h"
 
 #include <Carbon/Carbon.h>
 
 typedef TISInputSourceRef KeyLayout;
 
-class UchrKeyResource : public IKeyResource {
+class OSXUchrKeyResource : public IKeyResource {
 public:
-	UchrKeyResource(const void*, UInt32 keyboardType);
+	OSXUchrKeyResource(const void*, UInt32 keyboardType);
 	
 	// KeyResource overrides
 	virtual bool	isValid() const;
