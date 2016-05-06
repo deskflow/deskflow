@@ -1,1 +1,4 @@
-Compiling: http://synergy-project.org/wiki/Compiling
+Just use "hm conf" and "hm build" to compile (./hm.sh on
+Linux and Mac).
+
+For more information see http://synergy-project.org/wiki/Compiling
