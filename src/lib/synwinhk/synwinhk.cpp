@@ -934,8 +934,10 @@ init(DWORD threadID)
 			// old process (probably) still exists so refuse to
 			// reinitialize this DLL (and thus steal it from the
 			// old process).
-			CloseHandle(process);
-			return 0;
+			int result = CloseHandle(process);
+			if (result == false) {
+				return 0;
+			}
 		}
 
 		// clean up after old process.  the system should've already
