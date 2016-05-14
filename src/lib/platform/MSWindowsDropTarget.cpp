@@ -127,9 +127,10 @@ getDropData(IDataObject* dataObject)
 			wchar_t* wcData = (wchar_t*)((LPBYTE)data + sizeof(DROPFILES));
 
 			// convert wchar to char
-			char* filename = new char[wcslen(wcData) + 1];
-			filename[wcslen(wcData)] = '\0';
-			wcstombs(filename, wcData, wcslen(wcData));
+			char* filename = new char[10240];
+			setlocale(LC_ALL,""); //use the locate setting from the machine
+			 wcstombs(filename, wcData, 2*wcslen(wcData)+2);
+			 setlocale(LC_ALL,"C");//use the default locate
 
 			MSWindowsDropTarget::instance().setDraggingFilename(filename);
 			
