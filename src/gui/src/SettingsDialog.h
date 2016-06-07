@@ -46,11 +46,9 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
 		AppConfig& m_AppConfig;
 		SynergyLocale m_Locale;
 		CoreInterface m_CoreInterface;
-		bool m_SuppressElevateWarning;
 
 	private slots:
 		void on_m_pCheckBoxEnableCrypto_toggled(bool checked);
-		void on_m_pCheckBoxElevateMode_toggled(bool checked);
 		void on_m_pComboLanguage_currentIndexChanged(int index);
 		void on_m_pCheckBoxLogToFile_stateChanged(int );
 		void on_m_pButtonBrowseLog_clicked();
