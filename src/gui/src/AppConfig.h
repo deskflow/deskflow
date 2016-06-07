@@ -45,6 +45,29 @@ enum ProcessMode {
 	Desktop
 };
 
+// The elevate mode tristate determines two behaviours on Windows.
+// The first, switch-on-desk-switch (SodS), passed through synergyd as a
+// command line argument to synergy core, determines if the server restarts
+// when switching Windows desktops (e.g. when Windows UAC dialog pops up).
+// The second, passed as a boolean flag to Synergyd over the IPC inside
+// kIpcCommandMessage, determines whether Synergy should be started with
+// elevated privileges.
+//
+// The matrix for these two behaviours is as follows:
+//                          SodS        Elevate
+//                     ___________________________
+//  ElevateAsNeeded    |    true    |   false
+//  ElevateAlways      |    false   |   true
+//  ElevateNever       |    false   |   false
+//
+enum ElevateMode {
+    ElevateAsNeeded = 0,
+    ElevateAlways = 1,
+    ElevateNever = 2
+};
+
+static const ElevateMode defaultElevateMode = ElevateAsNeeded;
+
 class AppConfig
 {
 	friend class SettingsDialog;
@@ -88,7 +111,7 @@ class AppConfig
 
 		bool detectPath(const QString& name, QString& path);
 		void persistLogDir();
-		bool elevateMode();
+		ElevateMode elevateMode();
 
 		void setCryptoEnabled(bool e) { m_CryptoEnabled = e; }
 		bool getCryptoEnabled() { return m_CryptoEnabled; }
@@ -108,7 +131,7 @@ class AppConfig
 		void setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
 		void setLanguage(const QString language) { m_Language = language; }
 		void setStartedBefore(bool b) { m_StartedBefore = b; }
-		void setElevateMode(bool b) { m_ElevateMode = b; }
+		void setElevateMode(ElevateMode em) { m_ElevateMode = em; }
 
 		void loadSettings();
 
@@ -125,7 +148,7 @@ class AppConfig
 		QString m_Language;
 		bool m_StartedBefore;
 		bool m_AutoConfig;
-		bool m_ElevateMode;
+		ElevateMode m_ElevateMode;
 		bool m_AutoConfigPrompted;
 		int m_Edition;
 		QString m_ActivateEmail;
