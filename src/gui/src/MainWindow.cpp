@@ -536,7 +536,14 @@ void MainWindow::startSynergy()
 		// is switched; this is because we may need to elevate or not
 		// based on which desk the user is in (login always needs
 		// elevation, where as default desk does not).
-		args << "--stop-on-desk-switch";
+		// Note that this is only enabled when synergy is set to elevate
+		// 'as needed' (e.g. on a UAC dialog popup) in order to prevent
+		// unnecessary restarts when synergy was started elevated or
+		// when it is not allowed to elevate. In these cases restarting
+		// the server is fruitless.
+		if (appConfig().elevateMode() == ElevateAsNeeded) {
+				args << "--stop-on-desk-switch";
+		}
 #endif
 	}
 
