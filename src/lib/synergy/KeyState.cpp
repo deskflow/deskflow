@@ -722,7 +722,13 @@ KeyState::fakeAllKeysUp()
 }
 
 bool
-KeyState::isKeyDown(KeyButton button) const
+CKeyState::fakeMediaKey(KeyID id)
+{
+	return false;
+}
+
+bool
+CKeyState::isKeyDown(KeyButton button) const
 {
 	return (m_keys[button & kButtonMask] > 0);
 }
