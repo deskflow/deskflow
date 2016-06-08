@@ -135,7 +135,7 @@ void AppConfig::loadSettings()
 	}
 	m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
 	m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
-	m_Edition = settings().value("edition", Unknown).toInt();
+	m_Edition = settings().value("edition", UnknownEdition).toInt();
 	m_ActivateEmail = settings().value("activateEmail", "").toString();
 	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
 	m_AutoHide = settings().value("autoHide", false).toBool();

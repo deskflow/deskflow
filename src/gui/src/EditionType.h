@@ -22,7 +22,7 @@ enum qEditionType {
 	Basic,
 	Pro,
 	Trial,
-	Unknown
+	UnknownEdition
 };
 
 #endif // EDITIONTYPE_H
