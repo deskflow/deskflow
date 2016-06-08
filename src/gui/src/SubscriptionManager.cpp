@@ -39,7 +39,7 @@ SubscriptionManager::SubscriptionManager(QWidget* parent,  AppConfig& appConfig,
 
 bool SubscriptionManager::activateSerial(const QString& serial)
 {
-	m_Edition = Unknown;
+	m_Edition = UnknownEdition;
 	persistDirectory();
 	CoreInterface coreInterface;
 	QString output;
@@ -62,7 +62,7 @@ bool SubscriptionManager::activateSerial(const QString& serial)
 
 bool SubscriptionManager::checkSubscription()
 {
-	m_Edition = Unknown;
+	m_Edition = UnknownEdition;
 	persistDirectory();
 	CoreInterface coreInterface;
 	QString output;

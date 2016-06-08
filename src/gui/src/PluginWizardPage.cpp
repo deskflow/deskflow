@@ -30,7 +30,7 @@
 PluginWizardPage::PluginWizardPage(MainWindow& mainWindow, QWidget *parent) :
 	QWizardPage(parent),
 	m_Finished(false),
-	m_Edition(Unknown),
+	m_Edition(UnknownEdition),
 	m_pSslCertificate(NULL),
 	m_mainWindow(mainWindow)
 {
