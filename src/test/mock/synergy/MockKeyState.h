@@ -54,21 +54,4 @@ typedef ::testing::NiceMock<MockKeyState> KeyStateImpl;
 typedef UInt32 KeyID;
 
 typedef void (*ForeachKeyCallback)(
-		KeyID, SInt32 group, synergy::KeyMap::KeyItem&, void* userData);
-
-void
-stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);
-
-void
-assertMaskIsOne(ForeachKeyCallback cb, void* userData);
-
-const synergy::KeyMap::KeyItem*
-stubMapKey(
-	synergy::KeyMap::Keystrokes& keys, KeyID id, SInt32 group,
-	synergy::KeyMap::ModifierToKeys& activeModifiers,
-	KeyModifierMask& currentState,
-	KeyModifierMask desiredMask,
-	bool isAutoRepeat);
-
-synergy::KeyMap::Keystroke s_stubKeystroke(1, false, false);
-synergy::KeyMap::KeyItem s_stubKeyItem;
+		KeyID, SInt32 group, CKeyMap::KeyItem&, void* userData);

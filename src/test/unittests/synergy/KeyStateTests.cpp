@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test/unittests/synergy/KeyStateTests.h"
-
+#include "test/mock/synergy/MockKeyState.h"
 #include "test/mock/synergy/MockEventQueue.h"
 #include "test/mock/synergy/MockKeyMap.h"
 
@@ -31,7 +30,24 @@ using ::testing::Return;
 using ::testing::ReturnRef;
 using ::testing::SaveArg;
 
-TEST(KeyStateTests, onKey_aKeyDown_keyStateOne)
+void
+stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);
+
+void
+assertMaskIsOne(ForeachKeyCallback cb, void* userData);
+
+const CKeyMap::KeyItem*
+stubMapKey(
+		   CKeyMap::Keystrokes& keys, KeyID id, SInt32 group,
+		   CKeyMap::ModifierToKeys& activeModifiers,
+		   KeyModifierMask& currentState,
+		   KeyModifierMask desiredMask,
+		   bool isAutoRepeat);
+
+CKeyMap::Keystroke s_stubKeystroke(1, false, false);
+CKeyMap::KeyItem s_stubKeyItem;
+
+TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne)
 {
 	MockKeyMap keyMap;
 	MockEventQueue eventQueue;
