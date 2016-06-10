@@ -111,7 +111,8 @@ HEADERS += src/MainWindow.h \
     src/WebClient.h \
     ../lib/common/PluginVersion.h \
     src/SubscriptionManager.h \
-    src/ActivationNotifier.h
+    src/ActivationNotifier.h \
+    src/ElevateMode.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 

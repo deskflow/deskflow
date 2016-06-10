@@ -21,6 +21,7 @@
 #define APPCONFIG_H
 
 #include <QString>
+#include "ElevateMode.h"
 
 // this should be incremented each time a new page is added. this is
 // saved to settings when the user finishes running the wizard. if
@@ -45,29 +46,6 @@ enum ProcessMode {
 	Service,
 	Desktop
 };
-
-// The elevate mode tristate determines two behaviours on Windows.
-// The first, switch-on-desk-switch (SodS), passed through synergyd as a
-// command line argument to synergy core, determines if the server restarts
-// when switching Windows desktops (e.g. when Windows UAC dialog pops up).
-// The second, passed as a boolean flag to Synergyd over the IPC inside
-// kIpcCommandMessage, determines whether Synergy should be started with
-// elevated privileges.
-//
-// The matrix for these two behaviours is as follows:
-//                          SodS        Elevate
-//                     ___________________________
-//  ElevateAsNeeded    |    true    |   false
-//  ElevateAlways      |    false   |   true
-//  ElevateNever       |    false   |   false
-//
-enum ElevateMode {
-    ElevateAsNeeded = 0,
-    ElevateAlways = 1,
-    ElevateNever = 2
-};
-
-static const ElevateMode defaultElevateMode = ElevateAsNeeded;
 
 class AppConfig
 {
