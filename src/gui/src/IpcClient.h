@@ -21,7 +21,7 @@
 #include <QObject>
 #include <QAbstractSocket>
 
-#include "AppConfig.h"
+#include "ElevateMode.h"
 
 class QTcpSocket;
 class IpcReader;
