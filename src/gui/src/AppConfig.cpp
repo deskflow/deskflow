@@ -27,7 +27,6 @@
 const char AppConfig::m_SynergysName[] = "synergys.exe";
 const char AppConfig::m_SynergycName[] = "synergyc.exe";
 const char AppConfig::m_SynergyLogDir[] = "log/";
-const ElevateMode defaultElevateMode = ElevateAsNeeded;
 #define DEFAULT_PROCESS_MODE Service
 #else
 const char AppConfig::m_SynergysName[] = "synergys";
@@ -35,6 +34,8 @@ const char AppConfig::m_SynergycName[] = "synergyc";
 const char AppConfig::m_SynergyLogDir[] = "/var/log/";
 #define DEFAULT_PROCESS_MODE Desktop
 #endif
+
+const ElevateMode defaultElevateMode = ElevateAsNeeded;
 
 static const char* logLevelNames[] =
 {
