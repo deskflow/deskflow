@@ -1475,6 +1475,7 @@ XWindowsScreen::onKeyPress(XKeyEvent& xkey)
 			keycode = static_cast<KeyButton>(m_lastKeycode);
 			if (keycode == 0) {
 				// no keycode
+				LOG((CLOG_DEBUG1 "event: KeyPress no keycode"));
 				return;
 			}
 		}
@@ -1489,6 +1490,9 @@ XWindowsScreen::onKeyPress(XKeyEvent& xkey)
 							false, false, key, mask, 1, keycode);
 		}
 	}
+    else {
+		LOG((CLOG_DEBUG1 "can't map keycode to key id"));
+    }
 }
 
 void
@@ -1862,8 +1866,12 @@ XWindowsScreen::mapKeyFromX(XKeyEvent* event) const
 		XLookupString(event, dummy, 0, &keysym, NULL);
 	}
 
+	LOG((CLOG_DEBUG2 "mapped code=%d to keysym=0x%04x", event->keycode, keysym));
+
 	// convert key
-	return XWindowsUtil::mapKeySymToKeyID(keysym);
+	KeyID result = CXWindowsUtil::mapKeySymToKeyID(keysym);
+	LOG((CLOG_DEBUG2 "mapped keysym=0x%04x to keyID=%d", keysym, result));
+	return result;
 }
 
 ButtonID
