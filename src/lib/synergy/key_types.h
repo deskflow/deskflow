@@ -282,8 +282,8 @@ static const KeyID		kKeyAppUser1		= 0xE0B6;
 static const KeyID		kKeyAppUser2		= 0xE0B7;
 static const KeyID		kKeyBrightnessDown	= 0xE0B8;
 static const KeyID		kKeyBrightnessUp	= 0xE0B9;
-static const KeyID		kKeyExposeDesktop	= 0xE0C0;
-static const KeyID		kKeyExposeApp		= 0xE0C1;
+static const KeyID		kKeyMissionControl	= 0xE0C0;
+static const KeyID		kKeyLaunchpad		= 0xE0C1;
 
 //@}
 
