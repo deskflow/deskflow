@@ -35,6 +35,9 @@ static const UInt32 s_superVK    = kVK_Command;
 static const UInt32 s_capsLockVK = kVK_CapsLock;
 static const UInt32 s_numLockVK  = kVK_ANSI_KeypadClear; // 71
 
+static const UInt32 s_missionControlVK = 160;
+static const UInt32 s_launchpadVK = 131;
+
 static const UInt32 s_osxNumLock = 1 << 16;
 
 struct KeyEntry {
@@ -111,7 +114,10 @@ static const KeyEntry	s_controlKeys[] = {
 
 	// toggle modifiers
 	{ kKeyNumLock,		s_numLockVK },
-	{ kKeyCapsLock,		s_capsLockVK }
+	{ kKeyCapsLock,		s_capsLockVK },
+	
+	{ kKeyMissionControl, s_missionControlVK },
+	{ kKeyLaunchpad, s_launchpadVK }
 };
 
 
