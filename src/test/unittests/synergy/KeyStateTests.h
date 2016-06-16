@@ -45,6 +45,7 @@ public:
 	MOCK_METHOD0(fakeCtrlAltDel, bool());
 	MOCK_METHOD1(getKeyMap, void(synergy::KeyMap&));
 	MOCK_METHOD1(fakeKey, void(const Keystroke&));
+	MOCK_METHOD2(fakeMediaKey, bool(KeyID, bool));
 	MOCK_CONST_METHOD1(pollPressedKeys, void(KeyButtonSet&));
 };
 
