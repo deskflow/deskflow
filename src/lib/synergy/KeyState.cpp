@@ -571,8 +571,18 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
 		m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
 								getActiveModifiersRValue(), mask, false);
 	if (keyItem == NULL) {
+		// a media key won't be mapped on mac, so we need to fake it in a
+		// special way
+		if (id == kKeyAudioDown || id == kKeyAudioUp || id == kKeyAudioMute ||
+			id == kKeyAudioPrev || id == kKeyAudioNext ||
+			id == kKeyAudioPlay) {
+			LOG((CLOG_DEBUG "emulating media key"));
+			fakeMediaKey(id);
+		}
+		
 		return;
 	}
+	
 	KeyButton localID = (KeyButton)(keyItem->m_button & kButtonMask);
 	updateModifierKeyState(localID, oldActiveModifiers, m_activeModifiers);
 	if (localID != 0) {

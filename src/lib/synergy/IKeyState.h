@@ -122,7 +122,14 @@ public:
 	complete and false if normal key processing should continue.
 	*/
 	virtual bool		fakeCtrlAltDel() = 0;
-
+	
+	//! Fake a media key
+	/*!
+	 Synthesizes a media key down and up. Only Mac would implement this by
+	 use cocoa appkit framework.
+	 */
+	virtual bool		fakeMediaKey(KeyID id) = 0;
+	
 	//@}
 	//! @name accessors
 	//@{

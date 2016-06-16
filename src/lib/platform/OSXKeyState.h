@@ -92,6 +92,7 @@ public:
 
 	// IKeyState overrides
 	virtual bool		fakeCtrlAltDel();
+	virtual bool		fakeMediaKey(KeyID id);
 	virtual KeyModifierMask
 						pollActiveModifiers() const;
 	virtual SInt32		pollActiveGroup() const;
