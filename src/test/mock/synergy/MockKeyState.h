@@ -54,4 +54,4 @@ typedef ::testing::NiceMock<MockKeyState> KeyStateImpl;
 typedef UInt32 KeyID;
 
 typedef void (*ForeachKeyCallback)(
-		KeyID, SInt32 group, CKeyMap::KeyItem&, void* userData);
+		KeyID, SInt32 group, synergy::KeyMap::KeyItem&, void* userData);

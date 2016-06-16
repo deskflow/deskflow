@@ -36,16 +36,16 @@ stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);
 void
 assertMaskIsOne(ForeachKeyCallback cb, void* userData);
 
-const CKeyMap::KeyItem*
+const synergy::KeyMap::KeyItem*
 stubMapKey(
-		   CKeyMap::Keystrokes& keys, KeyID id, SInt32 group,
-		   CKeyMap::ModifierToKeys& activeModifiers,
+		   synergy::KeyMap::Keystrokes& keys, KeyID id, SInt32 group,
+		   synergy::KeyMap::ModifierToKeys& activeModifiers,
 		   KeyModifierMask& currentState,
 		   KeyModifierMask desiredMask,
 		   bool isAutoRepeat);
 
-CKeyMap::Keystroke s_stubKeystroke(1, false, false);
-CKeyMap::KeyItem s_stubKeyItem;
+synergy::KeyMap::Keystroke s_stubKeystroke(1, false, false);
+synergy::KeyMap::KeyItem s_stubKeyItem;
 
 TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne)
 {
