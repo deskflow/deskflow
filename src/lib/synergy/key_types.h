@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "base/EventTypes.h"
+#include "common/basic_types.h"
 
 //! Key ID
 /*!
@@ -284,12 +284,10 @@ static const KeyID		kKeyAppUser2		= 0xE0B7;
 //@}
 
 struct KeyNameMapEntry {
-public:
 	const char*			m_name;
 	KeyID			 	m_id;
 };
 struct KeyModifierNameMapEntry {
-public:
 	const char*			m_name;
 	KeyModifierMask 	m_mask;
 };
@@ -300,11 +298,11 @@ A table of key names to the corresponding KeyID.  Only the keys listed
 above plus non-alphanumeric ASCII characters are in the table.  The end
 of the table is the first pair with a NULL m_name.
 */
-extern const KeyNameMapEntry kKeyNameMap[];
+extern const struct KeyNameMapEntry kKeyNameMap[];
 
 //! Modifier key name to KeyModifierMask table
 /*!
 A table of modifier key names to the corresponding KeyModifierMask.
 The end of the table is the first pair with a NULL m_name.
 */
-extern const KeyModifierNameMapEntry kModifierNameMap[];
+extern const struct KeyModifierNameMapEntry kModifierNameMap[];

@@ -180,6 +180,7 @@ public:
 	virtual bool		fakeKeyUp(KeyButton button) = 0;
 	virtual void		fakeAllKeysUp() = 0;
 	virtual bool		fakeCtrlAltDel() = 0;
+	virtual bool		fakeMediaKey(KeyID id);
 	virtual bool		isKeyDown(KeyButton) const = 0;
 	virtual KeyModifierMask
 						getActiveModifiers() const = 0;

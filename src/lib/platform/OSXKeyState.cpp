@@ -18,6 +18,7 @@
 
 #include "platform/OSXKeyState.h"
 #include "platform/OSXUchrKeyResource.h"
+#include "platform/OSXMediaKeySimulator.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 
@@ -314,6 +315,12 @@ OSXKeyState::fakeCtrlAltDel()
 {
 	// pass keys through unchanged
 	return false;
+}
+
+bool
+COSXKeyState::fakeMediaKey(KeyID id)
+{
+	return fakeNativeMediaKey(id);;
 }
 
 CGEventFlags
