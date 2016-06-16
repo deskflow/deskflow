@@ -324,7 +324,7 @@ OSXKeyState::fakeCtrlAltDel()
 }
 
 bool
-COSXKeyState::fakeMediaKey(KeyID id)
+OSXKeyState::fakeMediaKey(KeyID id)
 {
 	return fakeNativeMediaKey(id);;
 }
