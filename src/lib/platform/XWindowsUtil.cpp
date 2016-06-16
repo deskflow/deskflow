@@ -1260,7 +1260,7 @@ static const KeySym s_map1008FF[] =
 	/* 0x30 */ kKeyWWWFavorites, 0, kKeyAppMedia, 0, 0, 0, 0, 0,
 	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x40 */ kKeyAppUser1, kKeyAppUser2, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, kKeyExposeDesktop, kKeyExposeApp, 0, 0, 0, 0,
+	/* 0x48 */ 0, 0, kKeyMissionControl, kKeyLaunchpad, 0, 0, 0, 0,
 	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
