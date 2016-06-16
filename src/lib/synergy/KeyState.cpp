@@ -573,10 +573,12 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
 	if (keyItem == NULL) {
 		// a media key won't be mapped on mac, so we need to fake it in a
 		// special way
-		if (id == kKeyAudioDown || id == kKeyAudioUp || id == kKeyAudioMute ||
+		if (id == kKeyAudioDown || id == kKeyAudioUp ||
+			id == kKeyAudioMute || id == kKeyAudioPlay ||
 			id == kKeyAudioPrev || id == kKeyAudioNext ||
-			id == kKeyAudioPlay) {
-			LOG((CLOG_DEBUG "emulating media key"));
+			id == kKeyBrightnessDown || id == kKeyBrightnessUp
+			) {
+			LOG((CLOG_DEBUG1 "emulating media key"));
 			fakeMediaKey(id);
 		}
 		

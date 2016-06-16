@@ -19,15 +19,17 @@
 int convertKeyIDToNXKeyType(KeyID id)
 {
 	// hidsystem/ev_keymap.h
-	// NX_KEYTYPE_SOUND_UP		0
-	// NX_KEYTYPE_SOUND_DOWN	1
-	// NX_KEYTYPE_MUTE			7
-	// NX_KEYTYPE_EJECT			14
-	// NX_KEYTYPE_PLAY			16
-	// NX_KEYTYPE_NEXT			17
-	// NX_KEYTYPE_PREVIOUS		18
-	// NX_KEYTYPE_FAST			19
-	// NX_KEYTYPE_REWIND		20
+	// NX_KEYTYPE_SOUND_UP			0
+	// NX_KEYTYPE_SOUND_DOWN		1
+	// NX_KEYTYPE_BRIGHTNESS_UP		2
+	// NX_KEYTYPE_BRIGHTNESS_DOWN	3
+	// NX_KEYTYPE_MUTE				7
+	// NX_KEYTYPE_EJECT				14
+	// NX_KEYTYPE_PLAY				16
+	// NX_KEYTYPE_NEXT				17
+	// NX_KEYTYPE_PREVIOUS			18
+	// NX_KEYTYPE_FAST				19
+	// NX_KEYTYPE_REWIND			20
 
 	int type = -1;
 	switch (id) {
@@ -36,6 +38,12 @@ int convertKeyIDToNXKeyType(KeyID id)
 		break;
 	case kKeyAudioDown:
 		type = 1;
+		break;
+	case kKeyBrightnessUp:
+		type = 2;
+		break;
+	case kKeyBrightnessDown:
+		type = 3;
 		break;
 	case kKeyAudioMute:
 		type = 7;
