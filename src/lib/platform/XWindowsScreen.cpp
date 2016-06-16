@@ -1869,7 +1869,7 @@ XWindowsScreen::mapKeyFromX(XKeyEvent* event) const
 	LOG((CLOG_DEBUG2 "mapped code=%d to keysym=0x%04x", event->keycode, keysym));
 
 	// convert key
-	KeyID result = CXWindowsUtil::mapKeySymToKeyID(keysym);
+	KeyID result = XWindowsUtil::mapKeySymToKeyID(keysym);
 	LOG((CLOG_DEBUG2 "mapped keysym=0x%04x to keyID=%d", keysym, result));
 	return result;
 }
