@@ -36,6 +36,7 @@
 
 #include <cstring>
 #include <cstdlib>
+#include <algorithm>
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
@@ -1661,8 +1662,10 @@ XWindowsScreen::createBlankCursor() const
 	// this seems just a bit more complicated than really necessary
 
 	// get the closet cursor size to 1x1
-	unsigned int w, h;
+	unsigned int w = 0, h = 0;
 	XQueryBestCursor(m_display, m_root, 1, 1, &w, &h);
+	w = std::max(1u, w);
+	h = std::max(1u, h);
 
 	// make bitmap data for cursor of closet size.  since the cursor
 	// is blank we can use the same bitmap for shape and mask:  all
