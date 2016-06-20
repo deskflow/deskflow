@@ -312,6 +312,7 @@ else() # not-unix
 		/D_WINDOWS
 		/D_CRT_SECURE_NO_WARNINGS
 		/DVERSION=\"${VERSION}\"
+		/D_XKEYCHECK_H
 	)
 	
 	if (MSVC_VERSION EQUAL 1600)
