@@ -702,7 +702,7 @@ QString MainWindow::configFilename()
 
 QString MainWindow::address()
 {
-	QString i = appConfig().interface();
+	QString i = appConfig().networkInterface();
 	return (!i.isEmpty() ? i : "") + ":" + QString::number(appConfig().port());
 }
 
