@@ -14,7 +14,7 @@
       Version="$(var.Version)"
       Manufacturer="$(var.Author)">
     
-    <Package InstallerVersion="300" Compressed="yes" InstallScope="perMachine" />
+    <Package InstallerVersion="301" Compressed="yes" InstallScope="perMachine" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of $(var.Name) is already installed." />
     <MediaTemplate EmbedCab="yes" />
     <UIRef Id="WixUI_InstallDir" />
@@ -119,11 +119,22 @@
           <fire:FirewallException Id="GuiFirewallException" Name="$(var.Name)" Scope="any" IgnoreFailure="yes" />
         </File>
 
-        <File Source="$(var.QtPath)\libgcc_s_dw2-1.dll" />
-        <File Source="$(var.QtPath)\mingwm10.dll" />
-        <File Source="$(var.QtPath)\QtCore4.dll" />
-        <File Source="$(var.QtPath)\QtGui4.dll" />
-        <File Source="$(var.QtPath)\QtNetwork4.dll" />
+        <?if 5 = $(var.QtMajor) ?>
+          <File Source="$(var.QtPath)\Qt5Core.dll" />
+          <File Source="$(var.QtPath)\Qt5Gui.dll" />
+          <File Source="$(var.QtPath)\Qt5Network.dll" />
+          <File Source="$(var.QtPath)\Qt5Svg.dll" />
+          <File Source="$(var.QtPath)\Qt5Widgets.dll" />
+          <File Source="$(var.QtPath)\libGLESV2.dll" />
+          <File Source="$(var.QtPath)\libEGL.dll" />
+          <File Source="$(var.QtPath)\libstdc++-6.dll" />
+          <File Source="$(var.QtPath)\libwinpthread-1.dll" />
+        <?else?>
+          <File Source="$(var.QtPath)\mingwm10.dll" CompanionFile="GuiProgram" />
+          <File Source="$(var.QtPath)\QtCore4.dll" CompanionFile="GuiProgram" />
+          <File Source="$(var.QtPath)\QtGui4.dll" CompanionFile="GuiProgram" />
+          <File Source="$(var.QtPath)\QtNetwork4.dll" CompanionFile="GuiProgram" />
+        <?endif?>
         
         <File Source="$(var.ExtPath)\bonjour\x64\dnssd.dll" />
 
