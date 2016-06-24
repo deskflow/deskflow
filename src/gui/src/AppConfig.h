@@ -36,8 +36,9 @@
 //   5: ssl plugin 'ns' v1.1
 //   6: ssl plugin 'ns' v1.2
 //   7: serial key activation
+//   8: Visual Studio 2015 support
 //
-const int kWizardVersion = 7;
+const int kWizardVersion = 8;
 
 class QSettings;
 class SettingsDialog;
