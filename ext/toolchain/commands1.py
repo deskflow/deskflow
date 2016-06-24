@@ -209,7 +209,7 @@ class InternalCommands:
 	make_cmd = 'make'
 	xcodebuild_cmd = 'xcodebuild'
 	w32_make_cmd = 'mingw32-make'
-	w32_qt_version = '4.6.2'
+	w32_qt_version = '5.6.1'
 	defaultTarget = 'release'
 
 	cmake_dir = 'res'
@@ -607,13 +607,12 @@ class InternalCommands:
 				print (
 					'Suggestions:\n'
 					'1. Ensure that qmake.exe exists in your system path.\n'
-					'2. Try to download Qt (check our dev FAQ for links):\n'
-					'  qt-sdk-win-opensource-2010.02.exe')
+					'2. Try to download Qt 5.6\n')
 			raise Exception('Cannot continue without qmake.')
 		
 		stdout, stderr = p.communicate()
 		if p.returncode != 0:
-			raise Exception('Could not test for cmake: %s' % stderr)
+			raise Exception('Could not test for qmake: %s' % stderr)
 		else:
 			m = re.search('.*Using Qt version (\d+\.\d+\.\d+).*', stdout)
 			if m:
