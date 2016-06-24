@@ -27,8 +27,10 @@
 #include "base/Log.h"
 #include "base/String.h"
 
+#ifdef WINAPI_MSWINDOWS
 #include <VersionHelpers.h>
-
+#endif
+ 
 ArgsBase* ArgParser::m_argsBase = NULL;
 
 ArgParser::ArgParser(App* app) :
