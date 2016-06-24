@@ -34,7 +34,7 @@ class Toolchain:
 
 	# options used by all commands
 	globalOptions = 'v'
-	globalOptionsLong = ['no-prompts', 'verbose', 'skip-gui', 'skip-core']
+	globalOptionsLong = ['no-prompts', 'verbose', 'skip-gui', 'skip-core', 'skip-tests']
 
 	# list of valid commands as keys. the values are optarg strings, but most 
 	# are None for now (this is mainly for extensibility)
@@ -240,6 +240,9 @@ class InternalCommands:
 	
 	# by default, compile the gui
 	enableMakeGui = True
+
+	# by default, compile the tests
+	enableMakeTests = True
 	
 	# by default, unknown
 	macSdk = None
@@ -442,6 +445,8 @@ class InternalCommands:
 			cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macSdk
 			cmake_args += " -DOSX_TARGET_MAJOR=" + macSdkMatch.group(1)
 			cmake_args += " -DOSX_TARGET_MINOR=" + macSdkMatch.group(2)
+
+		cmake_args += " -DDISABLE_TESTS=" + str(int(not self.enableMakeTests))
 		
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
@@ -1914,6 +1919,8 @@ class CommandHandler:
 				self.ic.enableMakeGui = False
 			elif o == '--skip-core':
 				self.ic.enableMakeCore = False
+			elif o == '--skip-tests':
+				self.ic.enableMakeTests = False
 			elif o in ('-d', '--debug'):
 				self.build_targets += ['debug',]
 			elif o in ('-r', '--release'):
