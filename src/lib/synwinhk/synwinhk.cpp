@@ -728,19 +728,19 @@ static
 EWheelSupport
 getWheelSupport()
 {
-	// get operating system
-	OSVERSIONINFO info;
-	info.dwOSVersionInfoSize = sizeof(info);
-	if (!GetVersionEx(&info)) {
-		return kWheelNone;
-	}
-
 	// see if modern wheel is present
 	if (GetSystemMetrics(SM_MOUSEWHEELPRESENT)) {
-		// note if running on win2k
-		if (info.dwPlatformId   == VER_PLATFORM_WIN32_NT &&
-			info.dwMajorVersion == 5 &&
-			info.dwMinorVersion == 0) {
+		OSVERSIONINFOEX osvi;
+		osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+		osvi.dwPlatformId = VER_PLATFORM_WIN32_NT;
+		osvi.dwMajorVersion = 5;
+		osvi.dwMinorVersion = 0;
+		ULONGLONG condMask = 0;
+		VER_SET_CONDITION (condMask, VER_MAJORVERSION, VER_EQUAL);
+		VER_SET_CONDITION (condMask, VER_MINORVERSION, VER_EQUAL);
+		VER_SET_CONDITION (condMask, VER_PLATFORMID, VER_EQUAL);
+		if (VerifyVersionInfo(&osvi, VER_MAJORVERSION | VER_MINORVERSION |
+							  VER_PLATFORMID, condMask)) {
 			return kWheelWin2000;
 		}
 		return kWheelModern;
