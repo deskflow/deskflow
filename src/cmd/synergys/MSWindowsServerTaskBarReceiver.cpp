@@ -368,16 +368,14 @@ MSWindowsServerTaskBarReceiver::staticDlgProc(HWND hwnd,
 	// and put it in the extra window data then forward the call.
 	MSWindowsServerTaskBarReceiver* self = NULL;
 	if (msg == WM_INITDIALOG) {
-		self = reinterpret_cast<MSWindowsServerTaskBarReceiver*>(
-							reinterpret_cast<void*>(lParam));
+		self = reinterpret_cast<MSWindowsServerTaskBarReceiver*>(lParam);
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, lParam);
 	}
 	else {
 		// get the extra window data and forward the call
-		LONG data = (LONG)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		LONG_PTR  data = GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		if (data != 0) {
-			self = reinterpret_cast<MSWindowsServerTaskBarReceiver*>(
-							reinterpret_cast<void*>(data));
+			self = reinterpret_cast<MSWindowsServerTaskBarReceiver*>(data);
 		}
 	}
 
