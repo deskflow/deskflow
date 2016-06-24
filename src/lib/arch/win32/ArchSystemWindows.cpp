@@ -153,7 +153,7 @@ ArchSystemWindows::getLibsUsed(void) const
         for (i = 0; i < (cbNeeded / sizeof(HMODULE)); i++) {
             TCHAR szModName[MAX_PATH];
             if (GetModuleFileNameEx(hProcess, hMods[i], szModName, sizeof(szModName) / sizeof(TCHAR))) {
-				sprintf(hex,"(0x%08X)",hMods[i]);
+				sprintf(hex, "(0x%08llX)", reinterpret_cast<long long>(hMods[i]));
 				msg += szModName;
 				msg.append(hex);
 				msg.append("\n");
