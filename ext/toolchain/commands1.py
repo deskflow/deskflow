@@ -208,7 +208,7 @@ class InternalCommands:
 	qmake_cmd = 'qmake'
 	make_cmd = 'make'
 	xcodebuild_cmd = 'xcodebuild'
-	w32_make_cmd = 'mingw32-make'
+	w32_make_cmd = 'nmake'
 	w32_qt_version = '5.6.1'
 	defaultTarget = 'release'
 
