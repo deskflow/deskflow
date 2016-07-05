@@ -271,29 +271,38 @@ Client::leave()
 	m_active = false;
 
 	if (m_sendClipboardThread != NULL) {
-		StreamChunker::interruptClipboard();
+		StreamChunker::setClipboardInterrupt(true);
 		m_sendClipboardThread->wait();
+		delete m_sendClipboardThread;
 		m_sendClipboardThread = NULL;
-	}
-
-	m_condData = false;
-	m_sendClipboardThread = new Thread(
-								new TMethodJob<Client>(
-									this,
-									&Client::sendClipboardThread,
-									NULL));
-	// Bug #4735 - we can't leave() until fillClipboard()s all finish
-	Stopwatch timer(false);
-	m_mutex->lock();
-	while (!m_condData) {
-		if (!m_condVar->wait(timer, 0.5)) {
-			LOG((CLOG_WARN "timed out %fs waiting for clipboard fill",
-				(double) timer.getTime()));
-			break;
+		StreamChunker::setClipboardInterrupt(false);
+		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+			if (m_ownClipboard[id]) {
+				m_sentClipboard[id] = false;
+			}
 		}
-		LOG((CLOG_DEBUG1 "leave %fs elapsed", (double) timer.getTime()));
 	}
-	m_mutex->unlock();
+	
+	if (m_sendClipboardThread == NULL) {
+		m_condData = false;
+		m_sendClipboardThread = new Thread(
+										new TMethodJob<Client>(
+											this,
+											&Client::sendClipboardThread,
+											NULL));
+		// Bug #4735 - we can't leave() until fillClipboard()s all finish
+		Stopwatch timer(false);
+		m_mutex->lock();
+		while (!m_condData) {
+			if (!m_condVar->wait(timer, 0.5)) {
+				LOG((CLOG_WARN "timed out %fs waiting for clipboard fill",
+					 (double) timer.getTime()));
+				break;
+			}
+			LOG((CLOG_DEBUG1 "leave %fs elapsed", (double) timer.getTime()));
+		}
+		m_mutex->unlock();
+	}
 
 	m_screen->leave();
 
@@ -301,7 +310,7 @@ Client::leave()
 		m_receivedFileData.clear();
 		LOG((CLOG_DEBUG "file transmission interrupted"));
 	}
-
+	
 	return true;
 }
 

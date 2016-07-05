@@ -364,8 +364,6 @@ ServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
 	LOG((CLOG_DEBUG "sending clipboard %d seqnum=%d", id, m_seqNum));
 
 	StreamChunker::sendClipboard(data, data.size(), id, m_seqNum, m_events, this);
-
-	LOG((CLOG_DEBUG "sent clipboard size=%d", data.size()));
 }
 
 void

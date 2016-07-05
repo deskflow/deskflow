@@ -509,9 +509,11 @@ Server::switchScreen(BaseClientProxy* dst,
 		// if already sending clipboard, we need to interupt it, otherwise
 		// clipboard data could be corrupted on the other side
 		if (m_sendClipboardThread != NULL) {
-			StreamChunker::interruptClipboard();
+			StreamChunker::setClipboardInterrupt(true);
 			m_sendClipboardThread->wait();
+			delete m_sendClipboardThread;
 			m_sendClipboardThread = NULL;
+			StreamChunker::setClipboardInterrupt(false);
 		}
 		
 		// send the clipboard data to new active screen
