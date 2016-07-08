@@ -90,7 +90,7 @@ FileChunk::assemble(synergy::IStream* stream, String& dataReceived, size_t& expe
 		stopwatch.reset();
 
 		if (CLOG->getFilter() >= kDEBUG2) {
-			LOG((CLOG_DEBUG2 "recv file data from client: file size=%s", content.c_str()));
+			LOG((CLOG_DEBUG2 "recv file size=%s", content.c_str()));
 			stopwatch.start();
 		}
 		return kStart;
@@ -98,13 +98,13 @@ FileChunk::assemble(synergy::IStream* stream, String& dataReceived, size_t& expe
 	case kDataChunk:
 		dataReceived.append(content);
 		if (CLOG->getFilter() >= kDEBUG2) {
-				LOG((CLOG_DEBUG2 "recv file data from client: chunck size=%i", content.size()));
+				LOG((CLOG_DEBUG2 "recv file chunck size=%i", content.size()));
 				double interval = stopwatch.getTime();
 				receivedDataSize += content.size();
-				LOG((CLOG_DEBUG2 "recv file data from client: interval=%f s", interval));
+				LOG((CLOG_DEBUG2 "recv file interval=%f s", interval));
 				if (interval >= kIntervalThreshold) {
 					double averageSpeed = receivedDataSize / interval / 1000;
-					LOG((CLOG_DEBUG2 "recv file data from client: average speed=%f kb/s", averageSpeed));
+					LOG((CLOG_DEBUG2 "recv file average speed=%f kb/s", averageSpeed));
 
 					receivedDataSize = 0;
 					elapsedTime += interval;
@@ -120,12 +120,12 @@ FileChunk::assemble(synergy::IStream* stream, String& dataReceived, size_t& expe
 		}
 
 		if (CLOG->getFilter() >= kDEBUG2) {
-			LOG((CLOG_DEBUG2 "file data transfer finished"));
+			LOG((CLOG_DEBUG2 "file transfer finished"));
 			elapsedTime += stopwatch.getTime();
 			double averageSpeed = expectedSize / elapsedTime / 1000;
-			LOG((CLOG_DEBUG2 "file data transfer finished: total time consumed=%f s", elapsedTime));
-			LOG((CLOG_DEBUG2 "file data transfer finished: total data received=%i kb", expectedSize / 1000));
-			LOG((CLOG_DEBUG2 "file data transfer finished: total average speed=%f kb/s", averageSpeed));
+			LOG((CLOG_DEBUG2 "file transfer finished: total time consumed=%f s", elapsedTime));
+			LOG((CLOG_DEBUG2 "file transfer finished: total data received=%i kb", expectedSize / 1000));
+			LOG((CLOG_DEBUG2 "file transfer finished: total average speed=%f kb/s", averageSpeed));
 		}
 		return kFinish;
 	}
