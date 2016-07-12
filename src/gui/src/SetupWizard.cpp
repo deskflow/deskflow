@@ -243,8 +243,7 @@ void SetupWizard::reject()
 	}
 
 	// treat cancel as skip
-	CoreInterface coreInterface;
-	coreInterface.notifyActivation("skip:unknown");
+	notifyActivation("skip:unknown");
 
 	QWizard::reject();
 }
