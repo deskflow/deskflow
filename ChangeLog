@@ -1,3 +1,7 @@
+v1.8.1-stable
+=============
+Bug #5461 - GUI crash during activation on Mac
+
 v1.8.0-beta
 =============
 Enhancement #4696 - Include 'ns' plugin in installers (instead of wizard download)
