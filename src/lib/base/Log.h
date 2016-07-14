@@ -139,8 +139,6 @@ private:
 	int					m_maxPriority;
 };
 
-const UInt16 kLogMessageLength = 2048;
-
 /*!
 \def LOG(arg)
 Write to the log.  Because macros cannot accept variable arguments, this

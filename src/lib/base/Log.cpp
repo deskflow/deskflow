@@ -172,22 +172,33 @@ Log::print(const char* file, int line, const char* fmt, ...)
 	// do not prefix time and file for kPRINT (CLOG_PRINT)
 	if (priority != kPRINT) {
 
-		char message[kLogMessageLength];
-
 		struct tm *tm;
-		char tmp[220];
+		char timestamp[50];
 		time_t t;
 		time(&t);
 		tm = localtime(&t);
-		sprintf(tmp, "%04i-%02i-%02iT%02i:%02i:%02i", tm->tm_year + 1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+		sprintf(timestamp, "%04i-%02i-%02iT%02i:%02i:%02i", tm->tm_year + 1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
 
-#ifndef NDEBUG	
-		sprintf(message, "[%s] %s: %s\n\t%s,%d", tmp, g_priority[priority], buffer, file, line);
+		// square brackets, spaces, comma and null terminator take about 10
+		int size = 10;
+		size += strlen(timestamp);
+		size += strlen(g_priority[priority]);
+		size += strlen(buffer);
+#ifndef NDEBUG
+		size += strlen(file);
+		// assume there is no file contains over 100k lines of code
+		size += 6;
+#endif
+		char* message = new char[size];
+
+#ifndef NDEBUG
+		sprintf(message, "[%s] %s: %s\n\t%s,%d", timestamp, g_priority[priority], buffer, file, line);
 #else
-		sprintf(message, "[%s] %s: %s", tmp, g_priority[priority], buffer);
+		sprintf(message, "[%s] %s: %s", timestamp, g_priority[priority], buffer);
 #endif
 
 		output(priority, message);
+		delete[] message;
 	} else {
 		output(priority, buffer);
 	}
