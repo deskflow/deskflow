@@ -235,6 +235,9 @@
     </item>
     <item>
      <layout class="QFormLayout" name="formLayout_2">
+      <property name="formAlignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
       <property name="horizontalSpacing">
        <number>20</number>
       </property>
@@ -258,7 +261,7 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>400</width>
+          <width>200</width>
           <height>0</height>
          </size>
         </property>
