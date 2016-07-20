@@ -696,7 +696,7 @@ KeyMap::findBestKey(const KeyEntryList& entryList,
 		const KeyItem& item = entryList[i].back();
 		if ((item.m_required & desiredState) ==
 			(item.m_sensitive & desiredState)) {
-			LOG((CLOG_DEBUG1 "best key index %d of %d (exact)", i + 1, entryList.size()));
+			LOG((CLOG_DEBUG1 "best key index %d of %d (exact)", i, entryList.size()));
 			return i;
 		}
 	}
