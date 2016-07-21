@@ -1870,6 +1870,8 @@ Server::sendClipboardThread(void*)
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
 	}
+
+	m_sendClipboardThread = NULL;
 }
 
 void
