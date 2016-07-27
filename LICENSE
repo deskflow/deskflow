@@ -3,6 +3,9 @@ Copyright (C) 2012-2014 Synergy Si Ltd.
 Copyright (C) 2008-2014 Nick Bolton
 Copyright (C) 2002-2014 Chris Schoeneman
 
+This program is released under the GPL with the additional exemption 
+that compiling, linking, and/or using OpenSSL is allowed.
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
 
