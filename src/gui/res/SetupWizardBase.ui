@@ -303,7 +303,7 @@
        <string notr="true">color: rgb(100, 100, 100);</string>
       </property>
       <property name="text">
-       <string>You will see UNREGISTERED in the window title (not recommanded).</string>
+       <string>You will see UNREGISTERED in the window title (not recommended).</string>
       </property>
      </widget>
     </item>
