@@ -305,6 +305,9 @@
       <property name="text">
        <string>You will see UNREGISTERED in the window title (not recommended).</string>
       </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item>
