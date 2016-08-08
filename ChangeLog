@@ -1,3 +1,17 @@
+v1.8.2-stable
+=============
+Bug #3044 - Unable to drag-select in MS Office
+Bug #4768 - Copy paste causes 'server is dead' error on switching
+Bug #4792 - Server logging crashes when switching with clipboard data
+Bug #2975 - Middle click does not close Chrome tab on Mac client
+Bug #5471 - Subscription textbox on activation screen overflows on Mac
+Bug #4836 - Stop button resets to Start when settings dialog canceled
+Enhancement #5277 - Auto restart service when synwinhk.dll fails on Windows
+Enhancement #4913 - Future-proof GUI login by using newer auth URL
+Enhancement #4922 - Add --enable-crypto argument to help text
+Enhancement #5299 - High resolution App icon on Mac
+Enhancement #4894 - Improve grammar in connection notification dialog
+
 v1.8.1-stable
 =============
 Bug #5461 - GUI crash during activation on Mac
