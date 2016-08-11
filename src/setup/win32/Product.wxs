@@ -84,11 +84,18 @@
       <Component Id="Core" Guid="EC9AD3B0-277C-4157-B5C8-5FD5B6A5F4AD">
         
         <File Source="$(var.BinPath)/synergyd.exe" KeyPath="yes" />
-        
+
         <ServiceInstall
             Id="ServiceInstall" Name="Synergy" DisplayName="$(var.Name)"
             Description="Controls the $(var.Name) foreground processes."
-            Type="ownProcess" Start="auto" ErrorControl="normal" />
+            Type="ownProcess" Start="auto" ErrorControl="normal">
+          <util:ServiceConfig
+            FirstFailureActionType='restart'
+            SecondFailureActionType='restart'
+            ThirdFailureActionType='restart'
+            RestartServiceDelayInSeconds='1'
+            ResetPeriodInDays='1'/>
+        </ServiceInstall>
         
         <ServiceControl
             Id="ServiceControl" Name="Synergy"

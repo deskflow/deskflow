@@ -17,6 +17,8 @@
 
 #include "synergy/StreamChunker.h"
 
+#include "mt/Lock.h"
+#include "mt/Mutex.h"
 #include "synergy/FileChunk.h"
 #include "synergy/ClipboardChunk.h"
 #include "synergy/protocol_types.h"
@@ -43,7 +45,7 @@ bool StreamChunker::s_isChunkingClipboard = false;
 bool StreamChunker::s_interruptClipboard = false;
 bool StreamChunker::s_isChunkingFile = false;
 bool StreamChunker::s_interruptFile = false;
-
+Mutex* StreamChunker::s_interruptMutex = NULL;
 
 void
 StreamChunker::sendFile(
@@ -144,10 +146,15 @@ StreamChunker::sendClipboard(
 	sendStopwatch.start();
 	
 	while (true) {
-		if (s_interruptClipboard) {
-			s_interruptClipboard = false;
-			LOG((CLOG_DEBUG "clipboard transmission interrupted"));
-			break;
+		{
+			if (s_interruptMutex == NULL) {
+				s_interruptMutex = new Mutex();
+			}
+			Lock lock(s_interruptMutex);
+			if (s_interruptClipboard) {
+				LOG((CLOG_DEBUG "clipboard transmission interrupted"));
+				break;
+			}
 		}
 
 		if (sendStopwatch.getTime() > SEND_THRESHOLD) {
@@ -177,6 +184,8 @@ StreamChunker::sendClipboard(
 
 	events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, end));
 	
+	LOG((CLOG_DEBUG "sent clipboard size=%d", sentLength));
+
 	s_isChunkingClipboard = false;
 }
 
@@ -201,10 +210,24 @@ StreamChunker::interruptFile()
 }
 
 void
-StreamChunker::interruptClipboard()
+StreamChunker::setClipboardInterrupt(bool interrupt)
 {
-	if (s_isChunkingClipboard) {
-		s_interruptClipboard = true;
-		LOG((CLOG_INFO "previous clipboard data has become invalid"));
+	if (s_interruptMutex == NULL) {
+		s_interruptMutex = new Mutex();
+	}
+	Lock lock(s_interruptMutex);
+
+	if (interrupt) {
+		if (s_isChunkingClipboard) {
+			s_interruptClipboard = interrupt;
+			LOG((CLOG_INFO "previous clipboard data has become invalid"));
+		}
+		else {
+			LOG((CLOG_DEBUG "no clipboard to interrupt"));
+		}
+	}
+	else {
+		s_interruptClipboard = interrupt;
+		LOG((CLOG_DEBUG "reset clipboard interrupt"));
 	}
 }

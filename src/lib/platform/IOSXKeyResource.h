@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
- * Copyright (C) 2002 Chris Schoeneman
+ * Copyright (C) 2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,24 +17,20 @@
 
 #pragma once
 
-#include "base/EventTypes.h"
+#include "synergy/KeyState.h"
 
-//! Mouse button ID
-/*!
-Type to hold a mouse button identifier.
-*/
-typedef UInt8			ButtonID;
-
-//! @name Mouse button identifiers
-//@{
-static const ButtonID	kButtonNone   = 0;
-static const ButtonID	kButtonLeft   = 1;
-static const ButtonID	kButtonMiddle = 2;
-static const ButtonID	kButtonRight  = 3;
-static const ButtonID	kButtonExtra0 = 4;
-
-static const ButtonID   kMacButtonRight = 2;
-static const ButtonID   kMacButtonMiddle = 3;
-//@}
-
-static const UInt8      NumButtonIDs  = 5;
+class IOSXKeyResource : public IInterface {
+public:
+	virtual bool	isValid() const = 0;
+	virtual UInt32	getNumModifierCombinations() const = 0;
+	virtual UInt32	getNumTables() const = 0;
+	virtual UInt32	getNumButtons() const = 0;
+	virtual UInt32	getTableForModifier(UInt32 mask) const = 0;
+	virtual KeyID	getKey(UInt32 table, UInt32 button) const = 0;
+	
+	// Convert a character in the current script to the equivalent KeyID
+	static KeyID	getKeyID(UInt8);
+	
+	// Convert a unicode character to the equivalent KeyID.
+	static KeyID	unicharToKeyID(UniChar);
+};

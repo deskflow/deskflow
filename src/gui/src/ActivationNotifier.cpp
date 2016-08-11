@@ -32,5 +32,10 @@ void ActivationNotifier::setIdentity(QString identity)
 void ActivationNotifier::notify()
 {
 	CoreInterface coreInterface;
-	coreInterface.notifyActivation(m_Identity);
+	try {
+		coreInterface.notifyActivation(m_Identity);
+	}
+	catch (...) {
+		// catch all exceptions and fails silently
+	}
 }

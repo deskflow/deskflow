@@ -17,8 +17,8 @@
 # Version number for Synergy
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 8)
-set(VERSION_REV 1)
-set(VERSION_STAGE beta)
+set(VERSION_REV 2)
+set(VERSION_STAGE stable)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
 cmake_minimum_required(VERSION 2.6)

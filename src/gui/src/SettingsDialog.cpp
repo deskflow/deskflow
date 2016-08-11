@@ -89,7 +89,10 @@ void SettingsDialog::accept()
 
 void SettingsDialog::reject()
 {
-	QSynergyApplication::getInstance()->switchTranslator(appConfig().language());
+	if (appConfig().language() != m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString()) {
+		QSynergyApplication::getInstance()->switchTranslator(appConfig().language());
+	}
+
 	QDialog::reject();
 }
 

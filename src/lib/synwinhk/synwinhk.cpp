@@ -120,7 +120,6 @@ static LPARAM			g_deadLParam      = 0;
 static BYTE				g_deadKeyState[256] = { 0 };
 static BYTE				g_keyState[256]   = { 0 };
 static DWORD			g_hookThread      = 0;
-static DWORD			g_attachedThread  = 0;
 static bool				g_fakeInput       = false;
 
 #if defined(_MSC_VER)
@@ -135,53 +134,6 @@ extern "C" {
 int _fltused=0;
 }
 #endif
-
-
-//
-// internal functions
-//
-
-static
-void
-detachThread()
-{
-	if (g_attachedThread != 0 && g_hookThread != g_attachedThread) {
-		AttachThreadInput(g_hookThread, g_attachedThread, FALSE);
-		g_attachedThread = 0;
-	}
-}
-
-static
-bool
-attachThreadToForeground()
-{
-	// only attach threads if using low level hooks.  a low level hook
-	// runs in the thread that installed the hook but we have to make
-	// changes that require being attached to the target thread (which
-	// should be the foreground window).  a regular hook runs in the
-	// thread that just removed the event from its queue so we're
-	// already in the right thread.
-	if (g_hookThread != 0) {
-		HWND window    = GetForegroundWindow();
-        if (window == NULL)
-            return false;
-
-		DWORD threadID = GetWindowThreadProcessId(window, NULL);
-		// skip if no change
-		if (g_attachedThread != threadID) {
-			// detach from previous thread
-			detachThread();
-
-			// attach to new thread
-			if (threadID != 0 && threadID != g_hookThread) {
-				AttachThreadInput(g_hookThread, threadID, TRUE);
-				g_attachedThread = threadID;
-			}
-			return true;
-		}
-	}
-	return false;
-}
 
 #if !NO_GRAB_KEYBOARD
 static
@@ -497,7 +449,6 @@ static
 bool
 keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
-	attachThreadToForeground();
 	return doKeyboardHookHandler(wParam, lParam);
 }
 #endif
@@ -608,7 +559,6 @@ static
 bool
 mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 {
-//	attachThreadToForeground();
 	return doMouseHookHandler(wParam, x, y, data);
 }
 
@@ -934,8 +884,10 @@ init(DWORD threadID)
 			// old process (probably) still exists so refuse to
 			// reinitialize this DLL (and thus steal it from the
 			// old process).
-			CloseHandle(process);
-			return 0;
+			int result = CloseHandle(process);
+			if (result == false) {
+				return 0;
+			}
 		}
 
 		// clean up after old process.  the system should've already
@@ -1077,9 +1029,6 @@ uninstall(void)
 	// discard old dead keys
 	g_deadVirtKey = 0;
 	g_deadLParam  = 0;
-
-	// detach from thread
-	detachThread();
 
 	// uninstall hooks
 	if (g_keyboardLL != NULL) {

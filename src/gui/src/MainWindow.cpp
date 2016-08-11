@@ -415,8 +415,8 @@ void MainWindow::checkConnected(const QString& line)
 		if (!appConfig().startedBefore() && isVisible()) {
 				QMessageBox::information(
 					this, "Synergy",
-					tr("Synergy is now connected, You can close the "
-					"config window. Synergy will remain connected in "
+					tr("Synergy is now connected. You can close the "
+					"config window and Synergy will remain connected in "
 					"the background."));
 
 			appConfig().setStartedBefore(true);
@@ -489,6 +489,15 @@ void MainWindow::restartSynergy()
 {
 	stopSynergy();
 	startSynergy();
+}
+
+void MainWindow::proofreadInfo()
+{
+	setEdition(m_AppConfig.edition());
+
+	int oldState = m_SynergyState;
+	m_SynergyState = synergyDisconnected;
+	setSynergyState((qSynergyState)oldState);
 }
 
 void MainWindow::clearLog()
@@ -958,7 +967,7 @@ void MainWindow::changeEvent(QEvent* event)
 			retranslateUi(this);
 			retranslateMenuBar();
 
-			setEdition(m_AppConfig.edition());
+			proofreadInfo();
 
 			break;
 		}

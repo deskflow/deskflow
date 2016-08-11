@@ -136,15 +136,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 		}
 		
 		// install display manager notification handler
-#if defined(MAC_OS_X_VERSION_10_5)
 		CGDisplayRegisterReconfigurationCallback(displayReconfigurationCallback, this);
-#else
-		m_displayManagerNotificationUPP =
-			NewDMExtendedNotificationUPP(displayManagerCallback);
-		OSStatus err = GetCurrentProcess(&m_PSN);
-		err = DMRegisterExtendedNotifyProc(m_displayManagerNotificationUPP,
-							this, 0, &m_PSN);
-#endif
 
 		// install fast user switching event handler
 		EventTypeSpec switchEventTypes[2];
@@ -182,24 +174,8 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 		if (m_switchEventHandlerRef != 0) {
 			RemoveEventHandler(m_switchEventHandlerRef);
 		}
-#if defined(MAC_OS_X_VERSION_10_5)
+		
 		CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, this);
-#else
-		if (m_displayManagerNotificationUPP != NULL) {
-			DMRemoveExtendedNotifyProc(m_displayManagerNotificationUPP,
-							NULL, &m_PSN, 0);
-		}
-
-		if (m_hiddenWindow) {
-			ReleaseWindow(m_hiddenWindow);
-			m_hiddenWindow = NULL;
-		}
-
-		if (m_userInputWindow) {
-			ReleaseWindow(m_userInputWindow);
-			m_userInputWindow = NULL;
-		}
-#endif
 
 		delete m_keyState;
 		delete m_screensaver;
@@ -245,22 +221,7 @@ OSXScreen::~OSXScreen()
 
 	RemoveEventHandler(m_switchEventHandlerRef);
 
-#if defined(MAC_OS_X_VERSION_10_5)
 	CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, this);
-#else
-	DMRemoveExtendedNotifyProc(m_displayManagerNotificationUPP,
-							NULL, &m_PSN, 0);
-
-	if (m_hiddenWindow) {
-		ReleaseWindow(m_hiddenWindow);
-		m_hiddenWindow = NULL;
-	}
-
-	if (m_userInputWindow) {
-		ReleaseWindow(m_userInputWindow);
-		m_userInputWindow = NULL;
-	}
-#endif
 
 	delete m_keyState;
 	delete m_screensaver;
@@ -466,8 +427,8 @@ OSXScreen::constructMouseButtonEventMap()
 {
 	const CGEventType source[NumButtonIDs][3] = {
 		{kCGEventLeftMouseUp, kCGEventLeftMouseDragged, kCGEventLeftMouseDown},
-		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown},
 		{kCGEventRightMouseUp, kCGEventRightMouseDragged, kCGEventRightMouseDown},
+		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown},
 		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown},
 		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown}
 	};
@@ -541,7 +502,7 @@ void
 OSXScreen::fakeMouseButton(ButtonID id, bool press)
 {
 	// Buttons are indexed from one, but the button down array is indexed from zero
-	UInt32 index = id - kButtonLeft;
+	UInt32 index = mapSynergyButtonToMac(id) - kButtonLeft;
 	if (index >= NumButtonIDs) {
 		return;
 	}
@@ -590,11 +551,11 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
     
     EMouseButtonState state = press ? kMouseButtonDown : kMouseButtonUp;
     
-    LOG((CLOG_DEBUG1 "faking mouse button id: %d press: %s", id, press ? "pressed" : "released"));
+    LOG((CLOG_DEBUG1 "faking mouse button id: %d press: %s", index, press ? "pressed" : "released"));
     
     MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
     CGEventType type = thisButtonMap[state];
-    
+
     CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, index);
     
     CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
@@ -705,7 +666,6 @@ void
 OSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
 	if (xDelta != 0 || yDelta != 0) {
-#if defined(MAC_OS_X_VERSION_10_5)
 		// create a scroll event, post it and release it.  not sure if kCGScrollEventUnitLine
 		// is the right choice here over kCGScrollEventUnitPixel
 		CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(
@@ -719,12 +679,6 @@ OSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
         
 		CGEventPost(kCGHIDEventTap, scrollEvent);
 		CFRelease(scrollEvent);
-#else
-
-		CGPostScrollWheelEvent(
-			2, mapScrollWheelFromSynergy(yDelta),
-			-mapScrollWheelFromSynergy(xDelta));
-#endif
 	}
 }
 
@@ -1236,43 +1190,7 @@ OSXScreen::handleClipboardCheck(const Event&, void*)
 	checkClipboards();
 }
 
-#if !defined(MAC_OS_X_VERSION_10_5)
-pascal void 
-OSXScreen::displayManagerCallback(void* inUserData, SInt16 inMessage, void*)
-{
-	OSXScreen* screen = (OSXScreen*)inUserData;
-
-	if (inMessage == kDMNotifyEvent) {
-		screen->onDisplayChange();
-	}
-}
-
-bool
-OSXScreen::onDisplayChange()
-{
-	// screen resolution may have changed.  save old shape.
-	SInt32 xOld = m_x, yOld = m_y, wOld = m_w, hOld = m_h;
-
-	// update shape
-	updateScreenShape();
-
-	// do nothing if resolution hasn't changed
-	if (xOld != m_x || yOld != m_y || wOld != m_w || hOld != m_h) {
-		if (m_isPrimary) {
-			// warp mouse to center if off screen
-			if (!m_isOnScreen) {
-				warpCursor(m_xCenter, m_yCenter);
-			}
-		}
-
-		// send new screen info
-		sendEvent(m_events->forIPrimaryScreen().shapeChanged());
-	}
-
-	return true;
-}
-#else
-void 
+void
 OSXScreen::displayReconfigurationCallback(CGDirectDisplayID displayID, CGDisplayChangeSummaryFlags flags, void* inUserData)
 {
 	OSXScreen* screen = (OSXScreen*)inUserData;
@@ -1293,7 +1211,6 @@ OSXScreen::displayReconfigurationCallback(CGDirectDisplayID displayID, CGDisplay
 		screen->updateScreenShape(displayID, flags);
 	}
 }
-#endif
 
 bool
 OSXScreen::onKey(CGEventRef event)
@@ -1442,6 +1359,21 @@ OSXScreen::onHotKey(EventRef event) const
 								HotKeyInfo::alloc(id)));
 
 	return true;
+}
+
+ButtonID
+OSXScreen::mapSynergyButtonToMac(UInt16 button) const
+{
+    switch (button) {
+    case 1:
+        return kButtonLeft;
+    case 2:
+        return kMacButtonMiddle;
+    case 3:
+        return kMacButtonRight;
+    }
+
+    return static_cast<ButtonID>(button);
 }
 
 ButtonID 

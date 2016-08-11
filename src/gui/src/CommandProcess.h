@@ -18,6 +18,7 @@
 #ifndef COMMANDTHREAD_H
 #define COMMANDTHREAD_H
 
+#include <QObject>
 #include <QStringList>
 
 class CommandProcess : public QObject

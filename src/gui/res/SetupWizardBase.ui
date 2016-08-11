@@ -126,9 +126,41 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QRadioButton" name="m_pRadioButtonActivate">
+     <widget class="QLabel" name="label_9">
       <property name="text">
-       <string>Log in</string>
+       <string>Enable your &lt;a href=&quot;http://symless.com/pricing?source=gui&quot;&gt;Synergy Pro&lt;/a&gt;  and Synergy Basic features.</string>
+      </property>
+      <property name="openExternalLinks">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_4">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>10</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="m_pRadioButtonActivate">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>&amp;Account login</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -164,7 +196,7 @@
         <property name="minimumSize">
          <size>
           <width>200</width>
-          <height>0</height>
+          <height>20</height>
          </size>
         </property>
         <property name="echoMode">
@@ -190,7 +222,7 @@
         <property name="minimumSize">
          <size>
           <width>200</width>
-          <height>0</height>
+          <height>20</height>
          </size>
         </property>
         <property name="echoMode">
@@ -201,7 +233,7 @@
       <item row="2" column="1">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>&lt;a href=&quot;https://synergy-project.org/account/reset/&quot;&gt;Forgot password&lt;/a&gt;</string>
+         <string>&lt;a href=&quot;https://synergy-project.org/account/reset/?source=gui&quot;&gt;Forgot password&lt;/a&gt;</string>
         </property>
         <property name="openExternalLinks">
          <bool>true</bool>
@@ -228,43 +260,19 @@
     </item>
     <item>
      <widget class="QRadioButton" name="m_pRadioButtonSubscription">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="text">
-       <string>Subscription</string>
+       <string>&amp;Serial key</string>
       </property>
      </widget>
     </item>
     <item>
-     <layout class="QFormLayout" name="formLayout_2">
-      <property name="horizontalSpacing">
-       <number>20</number>
-      </property>
-      <property name="verticalSpacing">
-       <number>10</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Serial Key:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="m_pLineEditSerialKey">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>400</width>
-          <height>0</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="QTextEdit" name="m_pTextEditSerialKey"/>
     </item>
     <item>
      <spacer name="verticalSpacer_5">
@@ -285,7 +293,20 @@
     <item>
      <widget class="QRadioButton" name="m_pRadioButtonSkip">
       <property name="text">
-       <string>&amp;Skip activation</string>
+       <string>S&amp;kip activation</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_8">
+      <property name="styleSheet">
+       <string notr="true">color: rgb(100, 100, 100);</string>
+      </property>
+      <property name="text">
+       <string>You will see UNREGISTERED in the window title (not recommended).</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
       </property>
      </widget>
     </item>

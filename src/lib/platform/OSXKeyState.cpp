@@ -17,34 +17,22 @@
  */
 
 #include "platform/OSXKeyState.h"
+#include "platform/OSXUchrKeyResource.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 
-#if defined(MAC_OS_X_VERSION_10_5)
 #include <Carbon/Carbon.h>
-#endif
 
 // Note that some virtual keys codes appear more than once.  The
 // first instance of a virtual key code maps to the KeyID that we
 // want to generate for that code.  The others are for mapping
 // different KeyIDs to a single key code.
-
-#if defined(MAC_OS_X_VERSION_10_5)
 static const UInt32 s_shiftVK    = kVK_Shift;
 static const UInt32 s_controlVK  = kVK_Control;
 static const UInt32 s_altVK      = kVK_Option;
 static const UInt32 s_superVK    = kVK_Command;
 static const UInt32 s_capsLockVK = kVK_CapsLock;
 static const UInt32 s_numLockVK  = kVK_ANSI_KeypadClear; // 71
-#else
-// Hardcoded virtual key table on 10.4 and below.
-static const UInt32 s_shiftVK    = 56;
-static const UInt32 s_controlVK  = 59;
-static const UInt32 s_altVK      = 58;
-static const UInt32 s_superVK    = 55;
-static const UInt32 s_capsLockVK = 57;
-static const UInt32 s_numLockVK  = 71;
-#endif
 
 static const UInt32 s_osxNumLock = 1 << 16;
 
@@ -54,7 +42,6 @@ public:
 	UInt32				m_virtualKey;
 };
 static const KeyEntry	s_controlKeys[] = {
-#if defined(MAC_OS_X_VERSION_10_5)
 	// cursor keys.  if we don't do this we'll may still get these from
 	// the keyboard resource but they may not correspond to the arrow
 	// keys.
@@ -103,56 +90,7 @@ static const KeyEntry	s_controlKeys[] = {
 	{ kKeyKP_Divide,	kVK_ANSI_KeypadDivide },
 	{ kKeyKP_Subtract,	kVK_ANSI_KeypadMinus },
 	{ kKeyKP_Enter,		kVK_ANSI_KeypadEnter },
-#else
-  // Hardcoded virtual key table on 10.4 and below.
-	// cursor keys.
-	{ kKeyLeft,			123 },
-	{ kKeyRight,		124 },
-	{ kKeyUp,			126 },
-	{ kKeyDown,			125 },
-	{ kKeyHome,			115 },
-	{ kKeyEnd,			119 },
-	{ kKeyPageUp,		116 },
-	{ kKeyPageDown,		121 },
-	{ kKeyInsert,		114 },
-
-	// function keys
-	{ kKeyF1,			122 },
-	{ kKeyF2,			120 },
-	{ kKeyF3,			99 },
-	{ kKeyF4,			118 },
-	{ kKeyF5,			96 },
-	{ kKeyF6,			97 },
-	{ kKeyF7,			98 },
-	{ kKeyF8,			100 },
-	{ kKeyF9,			101 },
-	{ kKeyF10,			109 },
-	{ kKeyF11,			103 },
-	{ kKeyF12,			111 },
-	{ kKeyF13,			105 },
-	{ kKeyF14,			107 },
-	{ kKeyF15,			113 },
-	{ kKeyF16,			106 },
-
-	{ kKeyKP_0,			82 },
-	{ kKeyKP_1,			83 },
-	{ kKeyKP_2,			84 },
-	{ kKeyKP_3,			85 },
-	{ kKeyKP_4,			86 },
-	{ kKeyKP_5,			87 },
-	{ kKeyKP_6,			88 },
-	{ kKeyKP_7,			89 },
-	{ kKeyKP_8,			91 },
-	{ kKeyKP_9,			92 },
-	{ kKeyKP_Decimal,	65 },
-	{ kKeyKP_Equal,		81 },
-	{ kKeyKP_Multiply,	67 },
-	{ kKeyKP_Add,		69 },
-	{ kKeyKP_Divide,	75 },
-	{ kKeyKP_Subtract,	78 },
-	{ kKeyKP_Enter,		76 },
-#endif
-
+	
 	// virtual key 110 is fn+enter and i have no idea what that's supposed
 	// to map to.  also the enter key with numlock on is a modifier but i
 	// don't know which.
@@ -303,13 +241,8 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
 	}
 
 	// get keyboard info
-
-#if defined(MAC_OS_X_VERSION_10_5)
 	TISInputSourceRef currentKeyboardLayout = TISCopyCurrentKeyboardLayoutInputSource(); 
-#else
-	KeyboardLayoutRef currentKeyboardLayout;
-	OSStatus status = KLGetCurrentKeyboardLayout(&currentKeyboardLayout);
-#endif
+
 	if (currentKeyboardLayout == NULL) {
 		return kKeyNone;
 	}
@@ -343,17 +276,10 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
 	}
 
 	// translate via uchr resource
-#if defined(MAC_OS_X_VERSION_10_5)
 	CFDataRef ref = (CFDataRef) TISGetInputSourceProperty(currentKeyboardLayout,
 								kTISPropertyUnicodeKeyLayoutData);
 	const UCKeyboardLayout* layout = (const UCKeyboardLayout*) CFDataGetBytePtr(ref);
 	const bool layoutValid = (layout != NULL);
-#else
-	const void* resource;
-	int err = KLGetKeyboardLayoutProperty(currentKeyboardLayout, kKLuchrData, &resource);
-	const bool layoutValid = (err == noErr);
-	const UCKeyboardLayout* layout = (const UCKeyboardLayout*)resource;
-#endif
 
 	if (layoutValid) {
 		// translate key
@@ -371,7 +297,7 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
 			if (count != 0 || m_deadKeyState == 0) {
 				m_deadKeyState = 0;
 				for (UniCharCount i = 0; i < count; ++i) {
-					ids.push_back(KeyResource::unicharToKeyID(chars[i]));
+					ids.push_back(IOSXKeyResource::unicharToKeyID(chars[i]));
 				}
 				adjustAltGrModifier(ids, maskOut, isCommand);
 				return mapVirtualKeyToKeyButton(vkCode);
@@ -454,13 +380,7 @@ SInt32
 OSXKeyState::pollActiveGroup() const
 {
 	bool layoutValid = true;
-#if defined(MAC_OS_X_VERSION_10_5)
 	TISInputSourceRef keyboardLayout = TISCopyCurrentKeyboardLayoutInputSource();
-#else
-	KeyboardLayoutRef keyboardLayout;
-	OSStatus status = KLGetCurrentKeyboardLayout(&keyboardLayout);
-	layoutValid = (status == noErr);
-#endif
 	
 	if (layoutValid) {
 		GroupMap::const_iterator i = m_groupMap.find(keyboardLayout);
@@ -508,19 +428,15 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap)
 		
 		// add regular keys
 		// try uchr resource first
-		#if defined(MAC_OS_X_VERSION_10_5)
 		CFDataRef resourceRef = (CFDataRef)TISGetInputSourceProperty(
 			m_groups[g], kTISPropertyUnicodeKeyLayoutData);
+
 		layoutValid = resourceRef != NULL;
 		if (layoutValid)
 			resource = CFDataGetBytePtr(resourceRef);
-		#else
-		layoutValid = KLGetKeyboardLayoutProperty(
-			m_groups[g], kKLuchrData, &resource);
-		#endif
 
 		if (layoutValid) {
-			CUCHRKeyResource uchr(resource, keyboardType);
+			OSXUchrKeyResource uchr(resource, keyboardType);
 			if (uchr.isValid()) {
 				LOG((CLOG_DEBUG1 "using uchr resource for group %d", g));
 				getKeyMap(keyMap, g, uchr);
@@ -661,7 +577,7 @@ OSXKeyState::getKeyMapForSpecialKeys(synergy::KeyMap& keyMap, SInt32 group) cons
 
 bool
 OSXKeyState::getKeyMap(synergy::KeyMap& keyMap,
-				SInt32 group, const KeyResource& r) const
+				SInt32 group, const IOSXKeyResource& r) const
 {
 	if (!r.isValid()) {
 		return false;
@@ -862,7 +778,6 @@ OSXKeyState::getGroups(GroupList& groups) const
 	CFIndex n;
 	bool gotLayouts = false;
 
-#if defined(MAC_OS_X_VERSION_10_5)
 	// get number of layouts
 	CFStringRef keys[] = { kTISPropertyInputSourceCategory };
 	CFStringRef values[] = { kTISCategoryKeyboardInputSource };
@@ -870,10 +785,6 @@ OSXKeyState::getGroups(GroupList& groups) const
 	CFArrayRef kbds = TISCreateInputSourceList(dict, false);
 	n = CFArrayGetCount(kbds);
 	gotLayouts = (n != 0);
-#else
-	OSStatus status = KLGetKeyboardLayoutCount(&n);
-	gotLayouts = (status == noErr);
-#endif
 
 	if (!gotLayouts) {
 		LOG((CLOG_DEBUG1 "can't get keyboard layouts"));
@@ -884,14 +795,9 @@ OSXKeyState::getGroups(GroupList& groups) const
 	groups.clear();
 	for (CFIndex i = 0; i < n; ++i) {
 		bool addToGroups = true;
-#if defined(MAC_OS_X_VERSION_10_5)
 		TISInputSourceRef keyboardLayout = 
 			(TISInputSourceRef)CFArrayGetValueAtIndex(kbds, i);
-#else
-		KeyboardLayoutRef keyboardLayout;
-		status = KLGetKeyboardLayoutAtIndex(i, &keyboardLayout);
-		addToGroups == (status == noErr);
-#endif
+
 		if (addToGroups)
     		groups.push_back(keyboardLayout);
 	}
@@ -901,11 +807,7 @@ OSXKeyState::getGroups(GroupList& groups) const
 void
 OSXKeyState::setGroup(SInt32 group)
 {
-#if defined(MAC_OS_X_VERSION_10_5)
 	TISSetInputMethodKeyboardLayoutOverride(m_groups[group]);
-#else
-	KLSetCurrentKeyboardLayout(m_groups[group]);
-#endif
 }
 
 void
@@ -948,458 +850,4 @@ UInt32
 OSXKeyState::mapKeyButtonToVirtualKey(KeyButton keyButton)
 {
 	return static_cast<UInt32>(keyButton - KeyButtonOffset);
-}
-
-
-//
-// OSXKeyState::KeyResource
-//
-
-KeyID
-OSXKeyState::KeyResource::getKeyID(UInt8 c)
-{
-	if (c == 0) {
-		return kKeyNone;
-	}
-	else if (c >= 32 && c < 127) {
-		// ASCII
-		return static_cast<KeyID>(c);
-	}
-	else {
-		// handle special keys
-		switch (c) {
-		case 0x01:
-			return kKeyHome;
-
-		case 0x02:
-			return kKeyKP_Enter;
-
-		case 0x03:
-			return kKeyKP_Enter;
-
-		case 0x04:
-			return kKeyEnd;
-
-		case 0x05:
-			return kKeyHelp;
-
-		case 0x08:
-			return kKeyBackSpace;
-
-		case 0x09:
-			return kKeyTab;
-
-		case 0x0b:
-			return kKeyPageUp;
-
-		case 0x0c:
-			return kKeyPageDown;
-
-		case 0x0d:
-			return kKeyReturn;
-
-		case 0x10:
-			// OS X maps all the function keys (F1, etc) to this one key.
-			// we can't determine the right key here so we have to do it
-			// some other way.
-			return kKeyNone;
-
-		case 0x1b:
-			return kKeyEscape;
-
-		case 0x1c:
-			return kKeyLeft;
-
-		case 0x1d:
-			return kKeyRight;
-
-		case 0x1e:
-			return kKeyUp;
-
-		case 0x1f:
-			return kKeyDown;
-
-		case 0x7f:
-			return kKeyDelete;
-
-		case 0x06:
-		case 0x07:
-		case 0x0a:
-		case 0x0e:
-		case 0x0f:
-		case 0x11:
-		case 0x12:
-		case 0x13:
-		case 0x14:
-		case 0x15:
-		case 0x16:
-		case 0x17:
-		case 0x18:
-		case 0x19:
-		case 0x1a:
-			// discard other control characters
-			return kKeyNone;
-
-		default:
-			// not special or unknown
-			break;
-		}
-
-		// create string with character
-		char str[2];
-		str[0] = static_cast<char>(c);
-		str[1] = 0;
-
-#if defined(MAC_OS_X_VERSION_10_5)
-		// get current keyboard script
-		TISInputSourceRef isref = TISCopyCurrentKeyboardInputSource();
-		CFArrayRef langs = (CFArrayRef) TISGetInputSourceProperty(isref, kTISPropertyInputSourceLanguages);
-		CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)CFArrayGetValueAtIndex(langs, 0));
-#else
-		CFStringEncoding encoding = GetScriptManagerVariable(smKeyScript);
-#endif
-		// convert to unicode
-		CFStringRef cfString =
-			CFStringCreateWithCStringNoCopy(
-				kCFAllocatorDefault, str, encoding, kCFAllocatorNull);
-
-		// sometimes CFStringCreate...() returns NULL (e.g. Apple Korean
-		// encoding with char value 214).  if it did then make no key,
-		// otherwise CFStringCreateMutableCopy() will crash.
-		if (cfString == NULL) {
-			return kKeyNone; 
-		}
-
-		// convert to precomposed
-		CFMutableStringRef mcfString =
-			CFStringCreateMutableCopy(kCFAllocatorDefault, 0, cfString);
-		CFRelease(cfString);
-		CFStringNormalize(mcfString, kCFStringNormalizationFormC);
-
-		// check result
-		int unicodeLength = CFStringGetLength(mcfString);
-		if (unicodeLength == 0) {
-			CFRelease(mcfString);
-			return kKeyNone;
-		}
-		if (unicodeLength > 1) {
-			// FIXME -- more than one character, we should handle this
-			CFRelease(mcfString);
-			return kKeyNone;
-		}
-
-		// get unicode character
-		UniChar uc = CFStringGetCharacterAtIndex(mcfString, 0);
-		CFRelease(mcfString);
-
-		// convert to KeyID
-		return static_cast<KeyID>(uc);
-	}
-}
-
-KeyID
-OSXKeyState::KeyResource::unicharToKeyID(UniChar c)
-{
-	switch (c) {
-	case 3:
-		return kKeyKP_Enter;
-
-	case 8:
-		return kKeyBackSpace;
-
-	case 9:
-		return kKeyTab;
-
-	case 13:
-		return kKeyReturn;
-
-	case 27:
-		return kKeyEscape;
-
-	case 127:
-		return kKeyDelete;
-
-	default:
-		if (c < 32) {
-			return kKeyNone;
-		}
-		return static_cast<KeyID>(c);
-	}
-}
-
-
-//
-// OSXKeyState::CUCHRKeyResource
-//
-
-OSXKeyState::CUCHRKeyResource::CUCHRKeyResource(const void* resource,
-				UInt32 keyboardType) :
-	m_m(NULL),
-	m_cti(NULL),
-	m_sdi(NULL),
-	m_sri(NULL),
-	m_st(NULL)
-{
-	m_resource = reinterpret_cast<const UCKeyboardLayout*>(resource);
-	if (m_resource == NULL) {
-		return;
-	}
-
-	// find the keyboard info for the current keyboard type
-	const UCKeyboardTypeHeader* th = NULL;
-	const UCKeyboardLayout* r = m_resource;
-	for (ItemCount i = 0; i < r->keyboardTypeCount; ++i) {
-		if (keyboardType >= r->keyboardTypeList[i].keyboardTypeFirst &&
-			keyboardType <= r->keyboardTypeList[i].keyboardTypeLast) {
-			th = r->keyboardTypeList + i;
-			break;
-		}
-		if (r->keyboardTypeList[i].keyboardTypeFirst == 0) {
-			// found the default.  use it unless we find a match.
-			th = r->keyboardTypeList + i;
-		}
-	}
-	if (th == NULL) {
-		// cannot find a suitable keyboard type
-		return;
-	}
-
-	// get tables for keyboard type
-	const UInt8* base = reinterpret_cast<const UInt8*>(m_resource);
-	m_m   = reinterpret_cast<const UCKeyModifiersToTableNum*>(base +
-								th->keyModifiersToTableNumOffset);
-	m_cti = reinterpret_cast<const UCKeyToCharTableIndex*>(base +
-								th->keyToCharTableIndexOffset);
-	m_sdi = reinterpret_cast<const UCKeySequenceDataIndex*>(base +
-								th->keySequenceDataIndexOffset);
-	if (th->keyStateRecordsIndexOffset != 0) {
-		m_sri = reinterpret_cast<const UCKeyStateRecordsIndex*>(base +
-								th->keyStateRecordsIndexOffset);
-	}
-	if (th->keyStateTerminatorsOffset != 0) {
-		m_st = reinterpret_cast<const UCKeyStateTerminators*>(base +
-								th->keyStateTerminatorsOffset);
-	}
-
-	// find the space key, but only if it can combine with dead keys.
-	// a dead key followed by a space yields the non-dead version of
-	// the dead key.
-	m_spaceOutput = 0xffffu;
-	UInt32 table  = getTableForModifier(0);
-	for (UInt32 button = 0, n = getNumButtons(); button < n; ++button) {
-		KeyID id = getKey(table, button);
-		if (id == 0x20) {
-			UCKeyOutput c =
-				reinterpret_cast<const UCKeyOutput*>(base +
-								m_cti->keyToCharTableOffsets[table])[button];
-			if ((c & kUCKeyOutputTestForIndexMask) ==
-								kUCKeyOutputStateIndexMask) {
-				m_spaceOutput = (c & kUCKeyOutputGetIndexMask);
-				break;
-			}
-		}
-	}
-}
-
-bool
-OSXKeyState::CUCHRKeyResource::isValid() const
-{
-	return (m_m != NULL);
-}
-
-UInt32
-OSXKeyState::CUCHRKeyResource::getNumModifierCombinations() const
-{
-	// only 32 (not 256) because the righthanded modifier bits are ignored
-	return 32;
-}
-
-UInt32
-OSXKeyState::CUCHRKeyResource::getNumTables() const
-{
-	return m_cti->keyToCharTableCount;
-}
-
-UInt32
-OSXKeyState::CUCHRKeyResource::getNumButtons() const
-{
-	return m_cti->keyToCharTableSize;
-}
-
-UInt32
-OSXKeyState::CUCHRKeyResource::getTableForModifier(UInt32 mask) const
-{
-	if (mask >= m_m->modifiersCount) {
-		return m_m->defaultTableNum;
-	}
-	else {
-		return m_m->tableNum[mask];
-	}
-}
-
-KeyID
-OSXKeyState::CUCHRKeyResource::getKey(UInt32 table, UInt32 button) const
-{
-	assert(table < getNumTables());
-	assert(button < getNumButtons());
-
-	const UInt8* base   = reinterpret_cast<const UInt8*>(m_resource);
-	const UCKeyOutput* cPtr = reinterpret_cast<const UCKeyOutput*>(base +
-								m_cti->keyToCharTableOffsets[table]);
-
-  const UCKeyOutput c = cPtr[button];
-
-	KeySequence keys;
-	switch (c & kUCKeyOutputTestForIndexMask) {
-	case kUCKeyOutputStateIndexMask:
-		if (!getDeadKey(keys, c & kUCKeyOutputGetIndexMask)) {
-			return kKeyNone;
-		}
-		break;
-
-	case kUCKeyOutputSequenceIndexMask:
-	default:
-		if (!addSequence(keys, c)) {
-			return kKeyNone;
-		}
-		break;
-	}
-
-	// XXX -- no support for multiple characters
-	if (keys.size() != 1) {
-		return kKeyNone;
-	}
-
-	return keys.front();
-}
-
-bool
-OSXKeyState::CUCHRKeyResource::getDeadKey(
-				KeySequence& keys, UInt16 index) const
-{
-	if (m_sri == NULL || index >= m_sri->keyStateRecordCount) {
-		// XXX -- should we be using some other fallback?
-		return false;
-	}
-
-	UInt16 state = 0;
-	if (!getKeyRecord(keys, index, state)) {
-		return false;
-	}
-	if (state == 0) {
-		// not a dead key
-		return true;
-	}
-
-	// no dead keys if we couldn't find the space key
-	if (m_spaceOutput == 0xffffu) {
-		return false;
-	}
-
-	// the dead key should not have put anything in the key list
-	if (!keys.empty()) {
-		return false;
-	}
-
-	// get the character generated by pressing the space key after the
-	// dead key.  if we're still in a compose state afterwards then we're
-	// confused so we bail.
-	if (!getKeyRecord(keys, m_spaceOutput, state) || state != 0) {
-		return false;
-	}
-
-	// convert keys to their dead counterparts
-	for (KeySequence::iterator i = keys.begin(); i != keys.end(); ++i) {
-		*i = synergy::KeyMap::getDeadKey(*i);
-	}
-
-	return true;
-}
-
-bool
-OSXKeyState::CUCHRKeyResource::getKeyRecord(
-				KeySequence& keys, UInt16 index, UInt16& state) const
-{
-	const UInt8* base = reinterpret_cast<const UInt8*>(m_resource);
-	const UCKeyStateRecord* sr =
-		reinterpret_cast<const UCKeyStateRecord*>(base +
-								m_sri->keyStateRecordOffsets[index]);
-	const UCKeyStateEntryTerminal* kset =
-		reinterpret_cast<const UCKeyStateEntryTerminal*>(sr->stateEntryData);
-
-	UInt16 nextState = 0;
-	bool found       = false;
-	if (state == 0) {
-		found     = true;
-		nextState = sr->stateZeroNextState;
-		if (!addSequence(keys, sr->stateZeroCharData)) {
-			return false;
-		}
-	}
-	else {
-		// we have a next entry
-		switch (sr->stateEntryFormat) {
-		case kUCKeyStateEntryTerminalFormat:
-			for (UInt16 j = 0; j < sr->stateEntryCount; ++j) {
-				if (kset[j].curState == state) {
-					if (!addSequence(keys, kset[j].charData)) {
-						return false;
-					}
-					nextState = 0;
-					found     = true;
-					break;
-				}
-			}
-			break;
-
-		case kUCKeyStateEntryRangeFormat:
-			// XXX -- not supported yet
-			break;
-
-		default:
-			// XXX -- unknown format
-			return false;
-		}
-	}
-	if (!found) {
-		// use a terminator
-		if (m_st != NULL && state < m_st->keyStateTerminatorCount) {
-			if (!addSequence(keys, m_st->keyStateTerminators[state - 1])) {
-				return false;
-			}
-		}
-		nextState = sr->stateZeroNextState;
-		if (!addSequence(keys, sr->stateZeroCharData)) {
-			return false;
-		}
-	}
-
-	// next
-	state = nextState;
-
-	return true;
-}
-
-bool
-OSXKeyState::CUCHRKeyResource::addSequence(
-				KeySequence& keys, UCKeyCharSeq c) const
-{
-	if ((c & kUCKeyOutputTestForIndexMask) == kUCKeyOutputSequenceIndexMask) {
-		UInt16 index = (c & kUCKeyOutputGetIndexMask);
-		if (index < m_sdi->charSequenceCount &&
-			m_sdi->charSequenceOffsets[index] !=
-				m_sdi->charSequenceOffsets[index + 1]) {
-			// XXX -- sequences not supported yet
-			return false;
-		}
-	}
-
-	if (c != 0xfffe && c != 0xffff) {
-		KeyID id = unicharToKeyID(c);
-		if (id != kKeyNone) {
-			keys.push_back(id);
-		}
-	}
-
-	return true;
 }

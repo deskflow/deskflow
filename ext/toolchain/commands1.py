@@ -1957,7 +1957,7 @@ class CommandHandler:
 		type = None
 		if len(self.args) > 0:
 			type = self.args[0]    
-				
+
 		self.ic.dist(type, self.vcRedistDir, self.qtDir)
 
 	def distftp(self):
