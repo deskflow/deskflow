@@ -698,10 +698,10 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap,
 			}
 
 			// now add a key entry for each key/required modifier pair.
-			item.m_sensitive = mapModifiersFromOSX(sensitive << 8);
+			item.m_sensitive = mapModifiersFromOSX(sensitive << 16);
 			for (std::set<UInt32>::iterator k = required.begin();
 											k != required.end(); ++k) {
-				item.m_required = mapModifiersFromOSX(*k << 8);
+				item.m_required = mapModifiersFromOSX(*k << 16);
 				keyMap.addKeyEntry(item);
 			}
 		}
