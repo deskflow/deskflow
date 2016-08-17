@@ -170,7 +170,7 @@ TEST(KeyMapTests, isCommand_shiftMask_returnFalse)
 	KeyMap keyMap;
 	KeyModifierMask mask= KeyModifierShift;
 	
-	EXPECT_EQ(false, keyMap.isCommand(mask));
+	EXPECT_FALSE(keyMap.isCommand(mask));
 }
 	
 TEST(KeyMapTests, isCommand_controlMask_returnTrue)
