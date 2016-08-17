@@ -697,8 +697,7 @@ KeyMap::findBestKey(const KeyEntryList& entryList,
 	// check for an item that can accommodate the desiredState exactly
 	for (SInt32 i = 0; i < (SInt32)entryList.size(); ++i) {
 		const KeyItem& item = entryList[i].back();
-		if ((item.m_required & desiredState) ==
-			(item.m_sensitive & desiredState)) {
+		if ((item.m_required & desiredState) == item.m_required) {
 			LOG((CLOG_DEBUG1 "best key index %d of %d (exact)", i + 1, entryList.size()));
 			return i;
 		}
