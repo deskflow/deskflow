@@ -718,7 +718,8 @@ KeyMap::findBestKey(const KeyEntryList& entryList,
 		}
 	}
 	if (bestIndex != -1) {
-		LOG((CLOG_DEBUG1 "best key index %d of %d (%d modifiers)", bestIndex, entryList.size(), bestCount));
+		LOG((CLOG_DEBUG1 "best key index %d of %d (%d modifiers)",
+			 bestIndex + 1, entryList.size(), bestCount));
 	}
 
 	return bestIndex;
