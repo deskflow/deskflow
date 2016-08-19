@@ -1,3 +1,11 @@
+v1.8.3-stable
+=============
+Bug #2765 - A letter is typed when spacebar is pressed on Mac client
+Bug #5373 - Tab behaves like shift tab on client
+Bug #3241 - UAC causes discconnection while in elevate mode
+Enhancement #4323 - Make auto-elevate optional
+Enhancement #3305 - Media key support for Mac clients
+
 v1.8.2-stable
 =============
 Bug #3044 - Unable to drag-select in MS Office
