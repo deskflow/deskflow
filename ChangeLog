@@ -13,6 +13,11 @@ Enhancement #4922 - Add --enable-crypto argument to help text
 Enhancement #5299 - High resolution App icon on Mac
 Enhancement #4894 - Improve grammar in connection notification dialog
 
+=======
+v1.8.1-stable
+=============
+Bug #5461 - GUI crash during activation on Mac
+
 v1.8.0-beta
 =============
 Enhancement #4696 - Include 'ns' plugin in installers (instead of wizard download)
