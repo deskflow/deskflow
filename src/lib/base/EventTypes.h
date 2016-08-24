@@ -337,11 +337,19 @@ private:
 class ClientListenerEvents : public EventTypes {
 public:
 	ClientListenerEvents() :
+		m_accepted(Event::kUnknown),
 		m_connected(Event::kUnknown) { }
 
 	//! @name accessors
 	//@{
-		
+	
+	//! Get accepted event type
+	/*!
+	 Returns the accepted event type.  This is sent whenever a server
+	 accepts a client.
+	 */
+	Event::Type		accepted();
+	
 	//! Get connected event type
 	/*!
 	Returns the connected event type.  This is sent whenever a
@@ -352,6 +360,7 @@ public:
 	//@}
 
 private:
+	Event::Type		m_accepted;
 	Event::Type		m_connected;
 };
 

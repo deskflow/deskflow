@@ -108,6 +108,7 @@ REGISTER_EVENT(OSXScreen, confirmSleep)
 // ClientListener
 //
 
+REGISTER_EVENT(ClientListener, accepted)
 REGISTER_EVENT(ClientListener, connected)
 
 //
