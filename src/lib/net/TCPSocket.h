@@ -61,9 +61,6 @@ public:
 	
 	virtual ISocketMultiplexerJob*
 						newJob();
-	virtual void		secureConnect() {}
-	virtual void		secureAccept() {}
-	virtual void		setFingerprintFilename(String& f) {}
 
 protected:
 	enum EJobResult {
