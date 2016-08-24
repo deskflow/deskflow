@@ -58,6 +58,9 @@ public:
 	// IDataSocket overrides
 	virtual void		connect(const NetworkAddress&);
 
+	
+	virtual ISocketMultiplexerJob*
+						newJob();
 	virtual void		secureConnect() {}
 	virtual void		secureAccept() {}
 	virtual void		setFingerprintFilename(String& f) {}
@@ -71,8 +74,7 @@ protected:
 	virtual int			secureWrite(const void*, int, int& ) { return 0; }
 
 	void				setJob(ISocketMultiplexerJob*);
-	ISocketMultiplexerJob*
-						newJob();
+	
 	bool				isReadable() { return m_readable; }
 	bool				isWritable() { return m_writable; }
 
@@ -99,14 +101,14 @@ private:
 protected:
 	bool				m_readable;
 	bool				m_writable;
-
+	bool				m_connected;
+	IEventQueue*		m_events;
+	
 private:
 	Mutex				m_mutex;
 	ArchSocket			m_socket;
 	StreamBuffer		m_inputBuffer;
 	StreamBuffer		m_outputBuffer;
 	CondVar<bool>		m_flushed;
-	bool				m_connected;
-	IEventQueue*		m_events;
 	SocketMultiplexer*	m_socketMultiplexer;
 };

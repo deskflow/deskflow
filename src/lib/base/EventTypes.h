@@ -230,6 +230,7 @@ class IDataSocketEvents : public EventTypes {
 public:
 	IDataSocketEvents() :
 		m_connected(Event::kUnknown),
+		m_secureConnected(Event::kUnknown),
 		m_connectionFailed(Event::kUnknown) { }
 
 	//! @name accessors
@@ -241,6 +242,13 @@ public:
 	event when a remote connection has been established.
 	*/
 	Event::Type		connected();
+	
+	//! Get secure connected event type
+	/*!
+	 Returns the secure socket connected event type.  A secure socket sends
+	 this event when a remote connection has been established.
+	 */
+	Event::Type		secureConnected();
 
 	//! Get connection failed event type
 	/*!
@@ -254,6 +262,7 @@ public:
 
 private:
 	Event::Type		m_connected;
+	Event::Type		m_secureConnected;
 	Event::Type		m_connectionFailed;
 };
 
