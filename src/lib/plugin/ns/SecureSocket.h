@@ -48,6 +48,8 @@ public:
 						newJob();
 	void				secureConnect();
 	void				secureAccept();
+	EJobResult			doRead();
+	EJobResult			doWrite();
 	bool				isReady() const { return m_secureReady; }
 	bool				isFatal() const { return m_fatal; }
 	void				isFatal(bool b) { m_fatal = b; }

@@ -89,6 +89,7 @@ protected:
 	Mutex&				getMutex() { return m_mutex; }
 
 	void				sendEvent(Event::Type);
+	void				discardWrittenData(int bytesWrote);
 
 private:
 	void				init();
@@ -111,12 +112,12 @@ protected:
 	bool				m_writable;
 	bool				m_connected;
 	IEventQueue*		m_events;
+	StreamBuffer		m_inputBuffer;
+	StreamBuffer		m_outputBuffer;
 	
 private:
 	Mutex				m_mutex;
 	ArchSocket			m_socket;
-	StreamBuffer		m_inputBuffer;
-	StreamBuffer		m_outputBuffer;
 	CondVar<bool>		m_flushed;
 	SocketMultiplexer*	m_socketMultiplexer;
 };
