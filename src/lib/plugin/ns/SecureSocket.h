@@ -50,11 +50,9 @@ public:
 	void				secureAccept();
 	EJobResult			doRead();
 	EJobResult			doWrite();
-	bool				isReady() const { return m_secureReady; }
 	bool				isFatal() const { return m_fatal; }
 	void				isFatal(bool b) { m_fatal = b; }
 	bool				isSecureReady();
-	bool				isSecure() { return true; }
 	int					secureRead(void* buffer, int size, int& read);
 	int					secureWrite(const void* buffer, int size, int& wrote);
 	void				initSsl(bool server);
