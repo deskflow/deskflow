@@ -57,11 +57,10 @@ public:
 	as its name and \p address as the server's address and \p factory
 	to create the socket.  \p screen is	the local screen.
 	*/
-	Client(IEventQueue* events,
-							const String& name, const NetworkAddress& address,
-							ISocketFactory* socketFactory,
-							synergy::Screen* screen,
-							ClientArgs& args);
+	Client(IEventQueue* events, const String& name,
+		   const NetworkAddress& address, ISocketFactory* socketFactory,
+		   synergy::Screen* screen, ClientArgs const& args);
+
 	~Client();
 
 	//! @name manipulators
@@ -94,6 +93,7 @@ public:
 	
 	//! Send dragging file information back to server
 	void				sendDragInfo(UInt32 fileCount, String& info, size_t size);
+
 	
 	//@}
 	//! @name accessors
