@@ -66,12 +66,20 @@ public:
 	virtual void		setFingerprintFilename(String& f) {}
 
 protected:
+	enum EJobResult {
+		kBreak = -1,	//!< Break the Job chain
+		kRetry,			//!< Retry the same job
+		kNew			//!< Require a new job
+	};
+	
 	ArchSocket			getSocket() { return m_socket; }
 	IEventQueue*		getEvents() { return m_events; }
 	virtual bool		isSecureReady() { return false; }
 	virtual bool		isSecure() { return false; }
 	virtual int			secureRead(void* buffer, int, int& ) { return 0; }
 	virtual int			secureWrite(const void*, int, int& ) { return 0; }
+	virtual EJobResult	doRead();
+	virtual EJobResult	doWrite();
 
 	void				setJob(ISocketMultiplexerJob*);
 	
