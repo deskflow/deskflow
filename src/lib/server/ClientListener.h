@@ -69,6 +69,7 @@ public:
 private:
 	// client connection event handlers
 	void				handleClientConnecting(const Event&, void*);
+	void				handleClientAccepted(const Event&, void*);
 	void				handleUnknownClient(const Event&, void*);
 	void				handleClientDisconnected(const Event&, void*);
 
