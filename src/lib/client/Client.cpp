@@ -435,10 +435,19 @@ Client::setupConnecting()
 {
 	assert(m_stream != NULL);
 
-	m_events->adoptHandler(m_events->forIDataSocket().connected(),
-							m_stream->getEventTarget(),
-							new TMethodEventJob<Client>(this,
+	if (m_args.m_enableCrypto) {
+		m_events->adoptHandler(m_events->forIDataSocket().secureConnected(),
+					m_stream->getEventTarget(),
+						new TMethodEventJob<Client>(this,
 								&Client::handleConnected));
+	}
+	else {
+		m_events->adoptHandler(m_events->forIDataSocket().connected(),
+					m_stream->getEventTarget(),
+						new TMethodEventJob<Client>(this,
+								&Client::handleConnected));
+	}
+
 	m_events->adoptHandler(m_events->forIDataSocket().connectionFailed(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<Client>(this,
@@ -589,8 +598,6 @@ Client::handleConnected(const Event&, void*)
 		m_sentClipboard[id] = false;
 		m_timeClipboard[id] = 0;
 	}
-
-	m_socket->secureConnect();
 }
 
 void

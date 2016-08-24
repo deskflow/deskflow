@@ -18,6 +18,7 @@
 #include "SecureSocket.h"
 
 #include "net/TSocketMultiplexerMethodJob.h"
+#include "base/TMethodEventJob.h"
 #include "net/TCPSocket.h"
 #include "mt/Lock.h"
 #include "arch/XArch.h"
@@ -98,6 +99,29 @@ SecureSocket::close()
 	SSL_shutdown(m_ssl->m_ssl);
 
 	TCPSocket::close();
+}
+
+void
+SecureSocket::connect(const NetworkAddress& addr)
+{
+	m_events->adoptHandler(m_events->forIDataSocket().connected(),
+				getEventTarget(),
+				new TMethodEventJob<SecureSocket>(this,
+						&SecureSocket::handleTCPConnected));
+
+	TCPSocket::connect(addr);
+}
+
+ISocketMultiplexerJob*
+SecureSocket::newJob()
+{
+	// after TCP connection is established, SecureSocket will pick up
+	// connected event and do secureConnect
+	if (m_connected && !m_secureReady) {
+		return NULL;
+	}
+	
+	return TCPSocket::newJob();
 }
 
 void
@@ -609,6 +633,7 @@ SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 
 	// If status > 0, success
 	if (status > 0) {
+		sendEvent(m_events->forIDataSocket().secureConnected());
 		return newJob();
 	}
 
@@ -713,4 +738,10 @@ SecureSocket::showSecureConnectInfo()
 		LOG((CLOG_INFO "%s", msg));
 		}
 	return;
+}
+
+void
+SecureSocket::handleTCPConnected(const Event& event, void*)
+{
+	secureConnect();
 }

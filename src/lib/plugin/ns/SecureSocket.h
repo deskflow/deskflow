@@ -41,6 +41,11 @@ public:
 	// ISocket overrides
 	void				close();
 
+	// IDataSocket overrides
+	virtual void		connect(const NetworkAddress&);
+	
+	ISocketMultiplexerJob*
+						newJob();
 	void				secureConnect();
 	void				secureAccept();
 	bool				isReady() const { return m_secureReady; }
@@ -80,6 +85,8 @@ private:
 	void				showSecureConnectInfo();
 	void				showSecureLibInfo();
 	void				showSecureCipherInfo();
+	
+	void				handleTCPConnected(const Event& event, void*);
 
 private:
 	Ssl*				m_ssl;

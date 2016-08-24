@@ -39,9 +39,9 @@
 
 TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	IDataSocket(events),
+	m_events(events),
 	m_mutex(),
 	m_flushed(&m_mutex, true),
-	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {
 	try {
@@ -56,10 +56,10 @@ TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) 
 
 TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket) :
 	IDataSocket(events),
+	m_events(events),
 	m_mutex(),
 	m_socket(socket),
 	m_flushed(&m_mutex, true),
-	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {
 	assert(m_socket != NULL);
