@@ -61,11 +61,10 @@ SecureListenSocket::accept()
 			setListeningJob();
 		}
 
-		String certificateFilename = synergy::string::sprintf(
-			"%s/%s/%s",
-			ARCH->getProfileDirectory().c_str(),
-			s_certificateDir,
-			s_certificateFilename);
+		String certificateFilename = synergy::string::sprintf("%s/%s/%s",
+										ARCH->getProfileDirectory().c_str(),
+										s_certificateDir,
+										s_certificateFilename);
 
 		bool loaded = socket->loadCertificates(certificateFilename);
 		if (!loaded) {
