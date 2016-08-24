@@ -128,16 +128,16 @@ void
 SecureSocket::secureConnect()
 {
 	setJob(new TSocketMultiplexerMethodJob<SecureSocket>(
-			this, &SecureSocket::serviceConnect,
-			getSocket(), isReadable(), isWritable()));
+					this, &SecureSocket::serviceConnect,
+					getSocket(), isReadable(), isWritable()));
 }
 
 void
 SecureSocket::secureAccept()
 {
 	setJob(new TSocketMultiplexerMethodJob<SecureSocket>(
-			this, &SecureSocket::serviceAccept,
-			getSocket(), isReadable(), isWritable()));
+					this, &SecureSocket::serviceAccept,
+					getSocket(), isReadable(), isWritable()));
 }
 
 TCPSocket::EJobResult
@@ -218,7 +218,7 @@ SecureSocket::doWrite()
 	
 	if (bufferSize == 0) {
 		return kRetry;
-	}		
+	}
 
 	if (isSecureReady()) {
 		status = secureWrite(s_staticBuffer, bufferSize, bytesWrote);
