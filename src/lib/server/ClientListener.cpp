@@ -152,7 +152,7 @@ ClientListener::handleClientConnecting(const Event&, void*)
 	// has to call secure accept which may require retry
 	if (!m_args.m_enableCrypto) {
 		m_events->addEvent(Event(m_events->forClientListener().accepted(),
-								stream));
+								stream->getEventTarget()));
 	}
 }
 
