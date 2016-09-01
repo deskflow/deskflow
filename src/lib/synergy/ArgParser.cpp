@@ -326,7 +326,6 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 	}
 	else if (isArg(i, argc, argv, NULL, "--enable-crypto")) {
 		argsBase().m_enableCrypto = true;
-		StreamChunker::updateChunkSize(true);
 	}
 	else if (isArg(i, argc, argv, NULL, "--profile-dir", 1)) {
 		argsBase().m_profileDirectory = argv[++i];
