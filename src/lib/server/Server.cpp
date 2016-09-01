@@ -93,8 +93,7 @@ Server::Server(
 	m_ignoreFileTransfer(false),
 	m_enableDragDrop(enableDragDrop),
 	m_sendDragInfoThread(NULL),
-	m_waitDragInfoThread(true),
-	m_sendClipboardThread(NULL)
+	m_waitDragInfoThread(true)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
@@ -496,18 +495,6 @@ Server::switchScreen(BaseClientProxy* dst,
 			}
 		}
 
-		// if already sending clipboard, we need to interupt it, otherwise
-		// clipboard data could be corrupted on the other side
-		// interrupt before switch active, as send clipboard uses active
-		// client proxy, which would cause race condition
-		if (m_sendClipboardThread != NULL) {
-			StreamChunker::setClipboardInterrupt(true);
-			m_sendClipboardThread->wait();
-			delete m_sendClipboardThread;
-			m_sendClipboardThread = NULL;
-			StreamChunker::setClipboardInterrupt(false);
-		}
-
 		// cut over
 		m_active = dst;
 
@@ -518,13 +505,11 @@ Server::switchScreen(BaseClientProxy* dst,
 		m_active->enter(x, y, m_seqNum,
 								m_primaryClient->getToggleMask(),
 								forScreensaver);
-		
+
 		// send the clipboard data to new active screen
-		m_sendClipboardThread = new Thread(
-									new TMethodJob<Server>(
-										this,
-										&Server::sendClipboardThread,
-										NULL));
+		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+			m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
+		}
 
 		Server::SwitchToScreenInfo* info =
 			Server::SwitchToScreenInfo::alloc(m_active->getName());
@@ -1862,16 +1847,6 @@ Server::sendDragInfo(BaseClientProxy* newScreen)
 		LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
 		newScreen->sendDragInfo(fileCount, info, size);
 	}
-}
-
-void
-Server::sendClipboardThread(void*)
-{
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
-	}
-
-	m_sendClipboardThread = NULL;
 }
 
 void
