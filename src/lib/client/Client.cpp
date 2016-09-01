@@ -73,11 +73,7 @@ Client::Client(
 	m_writeToDropDirThread(NULL),
 	m_socket(NULL),
 	m_useSecureNetwork(false),
-	m_args(args),
-	m_sendClipboardThread(NULL),
-	m_mutex(NULL),
-	m_condData(false),
-	m_condVar(NULL)
+	m_args(args)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -109,8 +105,6 @@ Client::Client(
 			LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
 		}
 	}
-	m_mutex = new Mutex();
-	m_condVar = new CondVar<bool>(m_mutex, m_condData);
 }
 
 Client::~Client()
@@ -129,8 +123,6 @@ Client::~Client()
 	cleanupConnecting();
 	cleanupConnection();
 	delete m_socketFactory;
-	delete m_condVar;
-	delete m_mutex;
 }
 
 void
@@ -270,47 +262,15 @@ Client::leave()
 {
 	m_active = false;
 
-	if (m_sendClipboardThread != NULL) {
-		StreamChunker::setClipboardInterrupt(true);
-		m_sendClipboardThread->wait();
-		delete m_sendClipboardThread;
-		m_sendClipboardThread = NULL;
-		StreamChunker::setClipboardInterrupt(false);
-		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-			if (m_ownClipboard[id]) {
-				m_sentClipboard[id] = false;
-			}
-		}
-	}
-	
-	if (m_sendClipboardThread == NULL) {
-		m_condData = false;
-		m_sendClipboardThread = new Thread(
-										new TMethodJob<Client>(
-											this,
-											&Client::sendClipboardThread,
-											NULL));
-		// Bug #4735 - we can't leave() until fillClipboard()s all finish
-		Stopwatch timer(false);
-		m_mutex->lock();
-		while (!m_condData) {
-			if (!m_condVar->wait(timer, 0.5)) {
-				LOG((CLOG_WARN "timed out %fs waiting for clipboard fill",
-					 (double) timer.getTime()));
-				break;
-			}
-			LOG((CLOG_DEBUG1 "leave %fs elapsed", (double) timer.getTime()));
-		}
-		m_mutex->unlock();
-	}
-
 	m_screen->leave();
-
-	if (!m_receivedFileData.empty()) {
-		m_receivedFileData.clear();
-		LOG((CLOG_DEBUG "file transmission interrupted"));
-	}
 	
+	// send clipboards that we own and that have changed
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		if (m_ownClipboard[id]) {
+			sendClipboard(id);
+		}
+	}
+
 	return true;
 }
 
@@ -410,20 +370,9 @@ Client::getName() const
 }
 
 void
-Client::fillClipboard(ClipboardID id, Clipboard *clipboard)
+Client::sendClipboard(ClipboardID id)
 {
-	assert(m_screen != NULL);
-	assert(m_server != NULL);
-
-	if (clipboard->open(m_timeClipboard[id])) {
-		clipboard->close();
-	}
-	m_screen->getClipboard(id, clipboard);
-}
-
-void
-Client::sendClipboard(ClipboardID id, Clipboard *clipboard)
-{
+	// note -- m_mutex must be locked on entry
 	assert(m_screen != NULL);
 	assert(m_server != NULL);
 
@@ -431,21 +380,26 @@ Client::sendClipboard(ClipboardID id, Clipboard *clipboard)
 	// clipboard time before getting the data from the screen
 	// as the screen may detect an unchanged clipboard and
 	// avoid copying the data.
+	Clipboard clipboard;
+	if (clipboard.open(m_timeClipboard[id])) {
+		clipboard.close();
+	}
+	m_screen->getClipboard(id, &clipboard);
 
 	// check time
 	if (m_timeClipboard[id] == 0 ||
-		clipboard->getTime() != m_timeClipboard[id]) {
+		clipboard.getTime() != m_timeClipboard[id]) {
 		// save new time
-		m_timeClipboard[id] = clipboard->getTime();
+		m_timeClipboard[id] = clipboard.getTime();
 
 		// marshall the data
-		String data = clipboard->marshall();
+		String data = clipboard.marshall();
 
 		// save and send data if different or not yet sent
 		if (!m_sentClipboard[id] || data != m_dataClipboard[id]) {
 			m_sentClipboard[id] = true;
 			m_dataClipboard[id] = data;
-			m_server->onClipboardChanged(id, clipboard);
+			m_server->onClipboardChanged(id, &clipboard);
 		}
 	}
 }
@@ -707,10 +661,8 @@ Client::handleClipboardGrabbed(const Event& event, void*)
 
 	// if we're not the active screen then send the clipboard now,
 	// otherwise we'll wait until we leave.
-	Clipboard clipboard;
 	if (!m_active) {
-		fillClipboard(info->m_id, &clipboard);
-		sendClipboard(info->m_id, &clipboard);
+		sendClipboard(info->m_id);
 	}
 }
 
@@ -795,36 +747,6 @@ Client::onFileRecieveCompleted()
 			new TMethodJob<Client>(
 				this, &Client::writeToDropDirThread));
 	}
-}
-
-void
-Client::sendClipboardThread(void * data)
-{
-	Stopwatch timer(false);
-	Clipboard clipboard[kClipboardEnd];
-	// fill clipboards that we own and that have changed
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		if (m_ownClipboard[id]) {
-			fillClipboard(id, &clipboard[id]);
-		}
-	}
-	LOG((CLOG_DEBUG1 "fill took %fs, signaling", (double) timer.getTime()));
-
-	// signal that fill is done
-	m_mutex->lock();
-	m_condData = true;
-	m_condVar->signal();
-	m_mutex->unlock();
-
-	// send clipboards that we own and that have changed
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		if (m_ownClipboard[id]) {
-			sendClipboard(id, &clipboard[id]);
-		}
-	}
-
-	m_sendClipboardThread = NULL;
-	LOG((CLOG_DEBUG1 "send took %fs", (double) timer.getTime()));
 }
 
 void

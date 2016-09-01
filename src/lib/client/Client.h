@@ -163,8 +163,7 @@ public:
 	virtual String		getName() const;
 
 private:
-	void				fillClipboard(ClipboardID, Clipboard*);
-	void				sendClipboard(ClipboardID, Clipboard*);
+	void				sendClipboard(ClipboardID);
 	void				sendEvent(Event::Type, void*);
 	void				sendConnectionFailedEvent(const char* msg);
 	void				sendFileChunk(const void* data);
@@ -224,8 +223,4 @@ private:
 	TCPSocket*			m_socket;
 	bool				m_useSecureNetwork;
 	ClientArgs&			m_args;
-	Thread*				m_sendClipboardThread;
-	Mutex*				m_mutex;
-	bool				m_condData;
-	CondVar<bool>*		m_condVar;
 };
