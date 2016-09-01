@@ -37,10 +37,8 @@
 
 using namespace std;
 
-#define SOCKET_CHUNK_SIZE 512 * 1024; // 512kb
-#define SECURE_SOCKET_CHUNK_SIZE 2 * 1024; // 2kb
+#define CHUNK_SIZE 512 * 1024; // 512kb
 
-size_t StreamChunker::s_chunkSize = SOCKET_CHUNK_SIZE;
 bool StreamChunker::s_isChunkingClipboard = false;
 bool StreamChunker::s_interruptClipboard = false;
 bool StreamChunker::s_isChunkingFile = false;
@@ -73,7 +71,7 @@ StreamChunker::sendFile(
 
 	// send chunk messages with a fixed chunk size
 	size_t sentLength = 0;
-	size_t chunkSize = s_chunkSize;
+	size_t chunkSize = CHUNK_SIZE;
 	Stopwatch sendStopwatch;
 	sendStopwatch.start();
 	file.seekg (0, std::ios::beg);
@@ -141,7 +139,7 @@ StreamChunker::sendClipboard(
 
 	// send clipboard chunk with a fixed size
 	size_t sentLength = 0;
-	size_t chunkSize = s_chunkSize;
+	size_t chunkSize = CHUNK_SIZE;
 	Stopwatch sendStopwatch;
 	sendStopwatch.start();
 	
@@ -187,17 +185,6 @@ StreamChunker::sendClipboard(
 	LOG((CLOG_DEBUG "sent clipboard size=%d", sentLength));
 
 	s_isChunkingClipboard = false;
-}
-
-void
-StreamChunker::updateChunkSize(bool useSecureSocket)
-{
-	if (useSecureSocket) {
-		s_chunkSize = SECURE_SOCKET_CHUNK_SIZE;
-	}
-	else {
-		s_chunkSize = SOCKET_CHUNK_SIZE;
-	}
 }
 
 void
