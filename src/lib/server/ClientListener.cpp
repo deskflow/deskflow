@@ -137,7 +137,7 @@ void
 ClientListener::handleClientConnecting(const Event&, void*)
 {
 	// accept client connection
-	IDataSocket* socket	= m_listen->accept();
+	synergy::IStream* stream = m_listen->accept();
 
 	if (socket == NULL) {
 		return;
