@@ -222,5 +222,5 @@ private:
 	Thread*				m_writeToDropDirThread;
 	TCPSocket*			m_socket;
 	bool				m_useSecureNetwork;
-	ClientArgs&			m_args;
+	ClientArgs			m_args;
 };

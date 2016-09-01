@@ -150,7 +150,7 @@ ClientListener::handleClientConnecting(const Event&, void*)
 	
 	// When using non SSL, server accepts clients immediately, while SSL
 	// has to call secure accept which may require retry
-	if (!m_args.m_enableCrypto) {
+	if (!m_useSecureNetwork) {
 		m_events->addEvent(Event(m_events->forClientListener().accepted(),
 								stream->getEventTarget()));
 	}
