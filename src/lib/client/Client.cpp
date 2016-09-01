@@ -704,6 +704,14 @@ Client::handleClipboardGrabbed(const Event& event, void*)
 	m_ownClipboard[info->m_id]  = true;
 	m_sentClipboard[info->m_id] = false;
 	m_timeClipboard[info->m_id] = 0;
+
+	// if we're not the active screen then send the clipboard now,
+	// otherwise we'll wait until we leave.
+	Clipboard clipboard;
+	if (!m_active) {
+		fillClipboard(info->m_id, &clipboard);
+		sendClipboard(info->m_id, &clipboard);
+	}
 }
 
 void
