@@ -605,12 +605,6 @@ SecureSocket::checkResult(int status, int& retry)
 		break;
 	}
 
-	// If the retry max would exceed the allowed, treat it as a fatal error
-	if (retry > s_maxRetry) {
-		LOG((CLOG_DEBUG "retry exceeded %f sec", s_maxRetry * s_retryDelay));
-		isFatal(true);
-	}
-
 	if (isFatal()) {
 		retry = 0;
 		showError();
