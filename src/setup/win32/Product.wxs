@@ -122,6 +122,7 @@
         </File>
 
         <?if 5 = $(var.QtMajor) ?>
+          <File Source="$(var.QtPath)\libgcc_s_dw2-1.dll" />
           <File Source="$(var.QtPath)\Qt5Core.dll" />
           <File Source="$(var.QtPath)\Qt5Gui.dll" />
           <File Source="$(var.QtPath)\Qt5Network.dll" />
