@@ -1429,10 +1429,10 @@ XWindowsUtil::setWindowProperty(Display* display, Window window,
 Time
 XWindowsUtil::getCurrentTime(Display* display, Window window)
 {
+	XLockDisplay(display);
 	// select property events on window
 	XWindowAttributes attr;
 	XGetWindowAttributes(display, window, &attr);
-	XLockDisplay(display);
 	XSelectInput(display, window, attr.your_event_mask | PropertyChangeMask);
 
 	// make a property name to receive dummy change
