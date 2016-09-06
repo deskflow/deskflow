@@ -19,7 +19,7 @@
 
 #include "test/global/gtest.h"
 
-#define TEST_URL "https://synergy-project.org/tests/?testString"
+#define TEST_URL "https://symless.com/tests/?testString"
 //#define TEST_URL "http://localhost/synergy/tests/?testString"
 
 TEST(ArchInternetTests, get)

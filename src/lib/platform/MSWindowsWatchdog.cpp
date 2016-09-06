@@ -298,7 +298,7 @@ MSWindowsWatchdog::startProcess()
 
 	// patch by Jack Zhou and Henry Tung
 	// set UIAccess to fix Windows 8 GUI interaction
-	// http://synergy-project.org/spit/issues/details/3338/#c70
+	// http://symless.com/spit/issues/details/3338/#c70
 	DWORD uiAccess = 1;
 	SetTokenInformation(userToken, TokenUIAccess, &uiAccess, sizeof(DWORD));
 

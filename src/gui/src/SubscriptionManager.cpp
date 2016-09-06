@@ -28,7 +28,7 @@
 #include <QDateTime>
 #include <QDate>
 
-static const char purchaseURL[] = "https://synergy-project.org/account/";
+static const char purchaseURL[] = "https://symless.com/account/";
 
 SubscriptionManager::SubscriptionManager(QWidget* parent,  AppConfig& appConfig, int& edition) :
 	m_pParent(parent),

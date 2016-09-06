@@ -201,7 +201,7 @@ class InternalCommands:
 	
 	project = 'synergy'
 	setup_version = 5 # increment to force setup/config
-	website_url = 'http://synergy-project.org/'
+	website_url = 'http://symless.com/'
 
 	this_cmd = 'hm'
 	cmake_cmd = 'cmake'
