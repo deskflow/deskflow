@@ -52,7 +52,7 @@ bool checkMacAssistiveDevices();
 int main(int argc, char* argv[])
 {
 	QCoreApplication::setOrganizationName("Synergy");
-	QCoreApplication::setOrganizationDomain("http://synergy-project.org/");
+	QCoreApplication::setOrganizationDomain("http://symless.com/");
 	QCoreApplication::setApplicationName("Synergy");
 
 	QSynergyApplication app(argc, argv);

@@ -20,7 +20,7 @@
 !define platform "Windows"
 !define publisher "The Synergy Project"
 !define publisherOld "The Synergy+ Project"
-!define helpUrl "http://synergy-project.org/support"
+!define helpUrl "http://symless.com/support"
 !define vcRedistFile "vcredist_${arch}.exe"
 !define startMenuApp "synergy.exe"
 !define binDir "..\bin"

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define DOWNLOAD_URL "http://synergy-project.org/?source=gui"
+#define DOWNLOAD_URL "http://symless.com/?source=gui"
 
 #include <iostream>
 
@@ -59,7 +59,7 @@
 #if defined(Q_OS_WIN)
 static const char synergyConfigName[] = "synergy.sgc";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
-static QString bonjourBaseUrl = "http://synergy-project.org/bonjour/";
+static QString bonjourBaseUrl = "http://symless.com/bonjour/";
 static const char bonjourFilename32[] = "Bonjour.msi";
 static const char bonjourFilename64[] = "Bonjour64.msi";
 static const char bonjourTargetFilename[] = "Bonjour.msi";

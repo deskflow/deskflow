@@ -835,7 +835,7 @@ OSXScreen::enter()
 
 		// patch by Yutaka Tsutano
 		// wakes the client screen
-		// http://synergy-project.org/spit/issues/details/3287#c12
+		// http://symless.com/spit/issues/details/3287#c12
 		io_registry_entry_t entry = IORegistryEntryFromPath(
 			kIOMasterPortDefault,
 			"IOService:/IOResources/IODisplayWrangler");

@@ -5,7 +5,7 @@
 <!-- Mac OSX only: Copy this plist file into [~]/Library/LaunchAgents to start synergy server automatically. Make sure you change configuration file below -->
 <dict>
      <key>Label</key>
-     <string>org.synergy-project.org.synergys.plist</string>
+     <string>org.symless.com.synergys.plist</string>
      <key>OnDemand</key>
      <false/>
      <key>ProgramArguments</key>
