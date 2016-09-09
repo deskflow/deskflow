@@ -113,7 +113,7 @@ XWindowsClipboardBMPConverter::fromIClipboard(const String& bmp) const
 	toLE(dst, static_cast<UInt16>(0));
 	toLE(dst, static_cast<UInt16>(0));
 	toLE(dst, static_cast<UInt32>(14 + 40));
-	return String(static_cast<const char*>(header), 14) + bmp;
+	return String(reinterpret_cast<const char*>(header), 14) + bmp;
 }
 
 String
@@ -125,7 +125,7 @@ XWindowsClipboardBMPConverter::toIClipboard(const String& bmp) const
 	}
 
 	// check BMP file header
-	const UInt8* rawBMPHeader = static_cast<const UInt8*>(bmp.data());
+	const UInt8* rawBMPHeader = reinterpret_cast<const UInt8*>(bmp.data());
 	if (rawBMPHeader[0] != 'B' || rawBMPHeader[1] != 'M') {
 		return String();
 	}
