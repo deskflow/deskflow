@@ -31,6 +31,7 @@
 #include "common/stdvector.h"
 
 #include <cstdio>
+#include <cstring>
 #include <X11/Xatom.h>
 
 //
@@ -516,7 +517,7 @@ XWindowsClipboard::icccmFillCache()
 	}
 
 	XWindowsUtil::convertAtomProperty(data);
-	const Atom* targets = static_cast<const Atom*>(data.data());
+	const Atom* targets = reinterpret_cast<const Atom*>(data.data()); // TODO: Safe?
 	const UInt32 numTargets = data.size() / sizeof(Atom);
 	LOG((CLOG_DEBUG "  available targets: %s", XWindowsUtil::atomsToString(m_display, targets, numTargets).c_str()));
 
@@ -594,7 +595,7 @@ XWindowsClipboard::icccmGetTime() const
 	String data;
 	if (icccmGetSelection(m_atomTimestamp, &actualTarget, &data) &&
 		actualTarget == m_atomInteger) {
-		Time time = *static_cast<const Time*>(data.data());
+		Time time = *reinterpret_cast<const Time*>(data.data());
 		LOG((CLOG_DEBUG1 "got ICCCM time %d", time));
 		return time;
 	}
@@ -671,11 +672,11 @@ XWindowsClipboard::motifOwnsClipboard() const
 	}
 
 	// check the owner window against the current clipboard owner
-	const MotifClipHeader* header =
-						static_cast<const MotifClipHeader*>(data.data());
-	if (data.size() >= sizeof(MotifClipHeader) &&
-		header->m_id == kMotifClipHeader) {
-		if (static_cast<Window>(header->m_selectionOwner) == owner) {
+	if (data.size() >= sizeof(MotifClipHeader)) {
+		MotifClipHeader header;
+		std::memcpy (&header, data.data(), sizeof(header));
+		if ((header.m_id == kMotifClipHeader) &&
+		    (static_cast<Window>(header.m_selectionOwner) == owner)) {
 			return true;
 		}
 	}
@@ -699,18 +700,18 @@ XWindowsClipboard::motifFillCache()
 		return;
 	}
 
-	// check that the header is okay
-	const MotifClipHeader* header =
-						static_cast<const MotifClipHeader*>(data.data());
-	if (data.size() < sizeof(MotifClipHeader) ||
-		header->m_id != kMotifClipHeader ||
-		header->m_numItems < 1) {
+	MotifClipHeader header;
+	if (data.size() < sizeof(header)) { // check that the header is okay
+		return;
+	}
+	std::memcpy (&header, data.data(), sizeof(header));
+	if (header.m_id != kMotifClipHeader || header.m_numItems < 1) {
 		return;
 	}
 
 	// get the Motif item property from the root window
 	char name[18 + 20];
-	sprintf(name, "_MOTIF_CLIP_ITEM_%d", header->m_item);
+	sprintf(name, "_MOTIF_CLIP_ITEM_%d", header.m_item);
     Atom atomItem = XInternAtom(m_display, name, False);
 	data = "";
 	if (!XWindowsUtil::getWindowProperty(m_display, root,
@@ -719,18 +720,19 @@ XWindowsClipboard::motifFillCache()
 		return;
 	}
 
-	// check that the item is okay
-	const MotifClipItem* item =
-					static_cast<const MotifClipItem*>(data.data());
-	if (data.size() < sizeof(MotifClipItem) ||
-		item->m_id != kMotifClipItem ||
-		item->m_numFormats - item->m_numDeletedFormats < 1) {
+	MotifClipItem item;
+	if (data.size() < sizeof(item)) { // check that the item is okay
+		return;
+	}
+	std::memcpy (&item, data.data(), sizeof(item));
+	if (item.m_id != kMotifClipItem ||
+		item.m_numFormats - item.m_numDeletedFormats < 1) {
 		return;
 	}
 
 	// format list is after static item structure elements
-	const SInt32 numFormats = item->m_numFormats - item->m_numDeletedFormats;
-	const SInt32* formats   = static_cast<const SInt32*>(item->m_size +
+	const SInt32 numFormats = item.m_numFormats - item.m_numDeletedFormats;
+	const SInt32* formats   = reinterpret_cast<const SInt32*>(item.m_size +
 								static_cast<const char*>(data.data()));
 
 	// get the available formats
@@ -748,18 +750,20 @@ XWindowsClipboard::motifFillCache()
 		}
 
 		// check that the format is okay
-		const MotifClipFormat* motifFormat =
-						static_cast<const MotifClipFormat*>(data.data());
-		if (data.size() < sizeof(MotifClipFormat) ||
-			motifFormat->m_id != kMotifClipFormat ||
-			motifFormat->m_length < 0 ||
-			motifFormat->m_type == None ||
-			motifFormat->m_deleted != 0) {
+		MotifClipFormat motifFormat;
+		if (data.size() < sizeof(motifFormat)) {
+			continue;
+		}
+		std::memcpy (&motifFormat, data.data(), sizeof(motifFormat));
+		if (motifFormat.m_id != kMotifClipFormat ||
+			motifFormat.m_length < 0 ||
+			motifFormat.m_type == None ||
+			motifFormat.m_deleted != 0) {
 			continue;
 		}
 
 		// save it
-		motifFormats.insert(std::make_pair(motifFormat->m_type, data));
+		motifFormats.insert(std::make_pair(motifFormat.m_type, data));
 	}
 	//const UInt32 numMotifFormats = motifFormats.size();
 
@@ -782,15 +786,14 @@ XWindowsClipboard::motifFillCache()
 		}
 
 		// get format
-		const MotifClipFormat* motifFormat =
-								static_cast<const MotifClipFormat*>(
-									index2->second.data());
-		const Atom target                   = motifFormat->m_type;
+		MotifClipFormat motifFormat;
+		std::memcpy (&motifFormat, index2->second.data(), sizeof(motifFormat));
+		const Atom target = motifFormat.m_type;
 
 		// get the data (finally)
 		Atom actualTarget;
 		String targetData;
-		if (!motifGetSelection(motifFormat, &actualTarget, &targetData)) {
+		if (!motifGetSelection(&motifFormat, &actualTarget, &targetData)) {
 			LOG((CLOG_DEBUG1 "  no data for target %s", XWindowsUtil::atomToString(m_display, target).c_str()));
 			continue;
 		}
@@ -855,7 +858,7 @@ XWindowsClipboard::insertMultipleReply(Window requestor,
 
 	// data is a list of atom pairs:  target, property
 	XWindowsUtil::convertAtomProperty(data);
-	const Atom* targets = static_cast<const Atom*>(data.data());
+	const Atom* targets = reinterpret_cast<const Atom*>(data.data());
 	const UInt32 numTargets = data.size() / sizeof(Atom);
 
 	// add replies for each target
