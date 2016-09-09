@@ -21,6 +21,7 @@
 #include "synergy/protocol_types.h"
 #include "io/IStream.h"
 #include "base/Log.h"
+#include <cstring>
 
 size_t ClipboardChunk::s_expectedSize = 0;
 
@@ -41,8 +42,7 @@ ClipboardChunk::start(
 	char* chunk = start->m_chunk;
 
 	chunk[0] = id;
-	UInt32* seq = static_cast<UInt32*>(&chunk[1]);
-	*seq = sequence;
+	std::memcpy (&chunk[1], &sequence, 4);
 	chunk[5] = kDataStart;
 	memcpy(&chunk[6], size.c_str(), sizeLength);
 	chunk[sizeLength + CLIPBOARD_CHUNK_META_SIZE - 1] = '\0';
@@ -61,8 +61,7 @@ ClipboardChunk::data(
 	char* chunkData = chunk->m_chunk;
 
 	chunkData[0] = id;
-	UInt32* seq = static_cast<UInt32*>(&chunkData[1]);
-	*seq = sequence;
+	std::memcpy (&chunkData[1], &sequence, 4);
 	chunkData[5] = kDataChunk;
 	memcpy(&chunkData[6], data.c_str(), dataSize);
 	chunkData[dataSize + CLIPBOARD_CHUNK_META_SIZE - 1] = '\0';
@@ -77,8 +76,7 @@ ClipboardChunk::end(ClipboardID id, UInt32 sequence)
 	char* chunk = end->m_chunk;
 	
 	chunk[0] = id;
-	UInt32* seq = static_cast<UInt32*>(&chunk[1]);
-	*seq = sequence;
+	std::memcpy (&chunk[1], &sequence, 4);
 	chunk[5] = kDataEnd;
 	chunk[CLIPBOARD_CHUNK_META_SIZE - 1] = '\0';
 
@@ -133,8 +131,8 @@ ClipboardChunk::send(synergy::IStream* stream, void* data)
 
 	char* chunk = clipboardData->m_chunk;
 	ClipboardID id = chunk[0];
-	UInt32* seq = static_cast<UInt32*>(&chunk[1]);
-	UInt32 sequence = *seq;
+	UInt32 sequence;
+	std::memcpy (&sequence, &chunk[1], 4);
 	UInt8 mark = chunk[5];
 	String dataChunk(&chunk[6], clipboardData->m_dataSize);
 
