@@ -1665,35 +1665,35 @@ XWindowsUtil::convertAtomProperty(String& data)
 	// 64-bit numbers we have to ensure the last number is a full 64 bits.
 	if (sizeof(Atom) != 4 && ((data.size() / 4) & 1) != 0) {
 		UInt32 zero = 0;
-		data.append(static_cast<char*>(&zero), sizeof(zero));
+		data.append(reinterpret_cast<char*>(&zero), sizeof(zero));
 	}
 }
 
 void
 XWindowsUtil::appendAtomData(String& data, Atom atom)
 {
-	data.append(static_cast<char*>(&atom), sizeof(Atom));
+	data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
 }
 
 void
 XWindowsUtil::replaceAtomData(String& data, UInt32 index, Atom atom)
 {
 	data.replace(index * sizeof(Atom), sizeof(Atom),
-								static_cast<const char*>(&atom),
+								reinterpret_cast<const char*>(&atom),
 								sizeof(Atom));
 }
 
 void
 XWindowsUtil::appendTimeData(String& data, Time time)
 {
-	data.append(static_cast<char*>(&time), sizeof(Time));
+	data.append(reinterpret_cast<char*>(&time), sizeof(Time));
 }
 
 Bool
 XWindowsUtil::propertyNotifyPredicate(Display*, XEvent* xevent, XPointer arg)
 {
 	PropertyNotifyPredicateInfo* filter =
-						static_cast<PropertyNotifyPredicateInfo*>(arg);
+						reinterpret_cast<PropertyNotifyPredicateInfo*>(arg);
 	return (xevent->type             == PropertyNotify &&
 			xevent->xproperty.window == filter->m_window &&
 			xevent->xproperty.atom   == filter->m_property &&
