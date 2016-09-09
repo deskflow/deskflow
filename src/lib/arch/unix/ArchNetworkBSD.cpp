@@ -737,8 +737,7 @@ ArchNetworkBSD::addrToName(ArchNetAddress addr)
 
 	// mutexed name lookup (ugh)
 	ARCH->lockMutex(m_mutex);
-	struct hostent* info = gethostbyaddr(
-							static_cast<const char*>(&addr->m_addr),
+	struct hostent* info = gethostbyaddr(&addr->m_addr,
 							addr->m_len, addr->m_addr.sa_family);
 	if (info == NULL) {
 		ARCH->unlockMutex(m_mutex);
