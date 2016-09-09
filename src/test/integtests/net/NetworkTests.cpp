@@ -27,6 +27,7 @@
 #include "test/global/TestEventQueue.h"
 #include "server/Server.h"
 #include "server/ClientListener.h"
+#include "server/ClientProxy.h"
 #include "client/Client.h"
 #include "synergy/FileChunk.h"
 #include "synergy/StreamChunker.h"
@@ -336,7 +337,7 @@ NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vl
 		throw runtime_error("client is null");
 	}
 
-	BaseClientProxy* bcp = static_cast<BaseClientProxy*>(client);
+	BaseClientProxy* bcp = client;
 	server->adoptClient(bcp);
 	server->setActive(bcp);
 
@@ -363,7 +364,7 @@ NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vl
 		throw runtime_error("client is null");
 	}
 
-	BaseClientProxy* bcp = static_cast<BaseClientProxy*>(client);
+	BaseClientProxy* bcp = client;
 	server->adoptClient(bcp);
 	server->setActive(bcp);
 
@@ -491,7 +492,7 @@ createFile(fstream& file, const char* filename, size_t size)
 		throw runtime_error("file not open");
 	}
 
-	file.write(static_cast<char*>(buffer), size);
+	file.write(reinterpret_cast<char*>(buffer), size);
 	file.close();
 
 	delete[] buffer;
