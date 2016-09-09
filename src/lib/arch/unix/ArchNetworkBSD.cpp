@@ -646,7 +646,7 @@ ArchNetworkBSD::newAnyAddr(EAddressFamily family)
 	switch (family) {
 	case kINET: {
 		struct sockaddr_in* ipAddr =
-			static_cast<struct sockaddr_in*>(&addr->m_addr);
+				reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
 		ipAddr->sin_family         = AF_INET;
 		ipAddr->sin_port           = 0;
 		ipAddr->sin_addr.s_addr    = INADDR_ANY;
@@ -762,7 +762,7 @@ ArchNetworkBSD::addrToString(ArchNetAddress addr)
 	switch (getAddrFamily(addr)) {
 	case kINET: {
 		struct sockaddr_in* ipAddr =
-			static_cast<struct sockaddr_in*>(&addr->m_addr);
+			reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
 		ARCH->lockMutex(m_mutex);
 		std::string s = inet_ntoa(ipAddr->sin_addr);
 		ARCH->unlockMutex(m_mutex);
@@ -797,7 +797,7 @@ ArchNetworkBSD::setAddrPort(ArchNetAddress addr, int port)
 	switch (getAddrFamily(addr)) {
 	case kINET: {
 		struct sockaddr_in* ipAddr =
-			static_cast<struct sockaddr_in*>(&addr->m_addr);
+			reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
 		ipAddr->sin_port = htons(port);
 		break;
 	}
@@ -816,7 +816,7 @@ ArchNetworkBSD::getAddrPort(ArchNetAddress addr)
 	switch (getAddrFamily(addr)) {
 	case kINET: {
 		struct sockaddr_in* ipAddr =
-			static_cast<struct sockaddr_in*>(&addr->m_addr);
+			reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
 		return ntohs(ipAddr->sin_port);
 	}
 
@@ -834,7 +834,7 @@ ArchNetworkBSD::isAnyAddr(ArchNetAddress addr)
 	switch (getAddrFamily(addr)) {
 	case kINET: {
 		struct sockaddr_in* ipAddr =
-			static_cast<struct sockaddr_in*>(&addr->m_addr);
+				reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
 		return (ipAddr->sin_addr.s_addr == INADDR_ANY &&
 				addr->m_len == (socklen_t)sizeof(struct sockaddr_in));
 	}
