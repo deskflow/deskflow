@@ -161,7 +161,7 @@ ClientListener::handleClientAccepted(const Event&, void* vsocket)
 {
 	LOG((CLOG_NOTE "accepted client connection"));
 
-	IDataSocket* socket = reinterpret_cast<IDataSocket*>(vsocket);
+	IDataSocket* socket = static_cast<IDataSocket*>(vsocket);
 	
 	// filter socket messages, including a packetizing filter
 	bool adopt = !m_useSecureNetwork;
