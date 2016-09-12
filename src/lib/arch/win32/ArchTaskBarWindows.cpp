@@ -414,17 +414,16 @@ ArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
 	ArchTaskBarWindows* self = NULL;
 	if (msg == WM_NCCREATE) {
 		CREATESTRUCT* createInfo;
-		createInfo = static_cast<CREATESTRUCT*>(lParam);
+		createInfo = reinterpret_cast<CREATESTRUCT*>(lParam);
 		self       = static_cast<ArchTaskBarWindows*>(
 												createInfo->lpCreateParams);
-		SetWindowLong(hwnd, 0, static_cast<LONG>(self));
+		SetWindowLongPtr(hwnd, 0, self);
 	}
 	else {
 		// get the extra window data and forward the call
-		LONG data = GetWindowLong(hwnd, 0);
+		LONG_PTR data = GetWindowLongPtr(hwnd, 0);
 		if (data != 0) {
-			self = static_cast<ArchTaskBarWindows*>(
-							static_cast<void*>(data));
+			self = static_cast<ArchTaskBarWindows*>(reinterpret_cast<void*>(data));
 		}
 	}
 
@@ -444,6 +443,7 @@ ArchTaskBarWindows::threadMainLoop()
 	m_taskBarRestart        = RegisterWindowMessage(TEXT("TaskbarCreated"));
 
 	// register a window class
+	LPCTSTR className = TEXT("SynergyTaskBar");
 	WNDCLASSEX classInfo;
 	classInfo.cbSize        = sizeof(classInfo);
 	classInfo.style         = CS_NOCLOSE;
@@ -455,13 +455,13 @@ ArchTaskBarWindows::threadMainLoop()
 	classInfo.hCursor       = NULL;
 	classInfo.hbrBackground = NULL;
 	classInfo.lpszMenuName  = NULL;
-	classInfo.lpszClassName = TEXT("SynergyTaskBar");
+	classInfo.lpszClassName = className;
 	classInfo.hIconSm       = NULL;
 	ATOM windowClass        = RegisterClassEx(&classInfo);
 
 	// create window
 	m_hwnd = CreateWindowEx(WS_EX_TOOLWINDOW,
-							static_cast<LPCTSTR>(windowClass),
+							className,
 							TEXT("Synergy Task Bar"),
 							WS_POPUP,
 							0, 0, 1, 1,
@@ -478,7 +478,7 @@ ArchTaskBarWindows::threadMainLoop()
 
 	// handle failure
 	if (m_hwnd == NULL) {
-		UnregisterClass(static_cast<LPCTSTR>(windowClass), instanceWin32());
+		UnregisterClass(className, instanceWin32());
 		return;
 	}
 
@@ -494,7 +494,7 @@ ArchTaskBarWindows::threadMainLoop()
 	// clean up
 	removeAllIcons();
 	DestroyWindow(m_hwnd);
-	UnregisterClass(static_cast<LPCTSTR>(windowClass), instanceWin32());
+	UnregisterClass(className, instanceWin32());
 }
 
 void*
