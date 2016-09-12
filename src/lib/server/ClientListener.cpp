@@ -137,35 +137,34 @@ void
 ClientListener::handleClientConnecting(const Event&, void*)
 {
 	// accept client connection
-	synergy::IStream* stream = m_listen->accept();
+	IDataSocket* socket = m_listen->accept();
 
-	if (stream == NULL) {
+	if (socket == NULL) {
 		return;
 	}
 	
 	m_events->adoptHandler(m_events->forClientListener().accepted(),
-				stream->getEventTarget(),
+				socket->getEventTarget(),
 				new TMethodEventJob<ClientListener>(this,
-						&ClientListener::handleClientAccepted, stream));
+						&ClientListener::handleClientAccepted, socket));
 	
 	// When using non SSL, server accepts clients immediately, while SSL
 	// has to call secure accept which may require retry
 	if (!m_useSecureNetwork) {
 		m_events->addEvent(Event(m_events->forClientListener().accepted(),
-								stream->getEventTarget()));
+								socket->getEventTarget()));
 	}
 }
 
 void
-ClientListener::handleClientAccepted(const Event&, void* vstream)
+ClientListener::handleClientAccepted(const Event&, void* vsocket)
 {
 	LOG((CLOG_NOTE "accepted client connection"));
 
-	synergy::IStream* stream = reinterpret_cast<synergy::IStream*>(vstream);
-	IDataSocket* socket = dynamic_cast<IDataSocket*>(stream);
+	IDataSocket* socket = reinterpret_cast<IDataSocket*>(vsocket);
 	
 	// filter socket messages, including a packetizing filter
-	stream = new PacketStreamFilter(m_events, socket);
+	synergy::IStream* stream = new PacketStreamFilter(m_events, socket);
 	assert(m_server != NULL);
 
 	// create proxy for unknown client
