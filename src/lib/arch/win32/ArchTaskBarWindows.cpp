@@ -417,7 +417,7 @@ ArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
 		createInfo = reinterpret_cast<CREATESTRUCT*>(lParam);
 		self       = static_cast<ArchTaskBarWindows*>(
 												createInfo->lpCreateParams);
-		SetWindowLongPtr(hwnd, 0, self);
+		SetWindowLongPtr(hwnd, 0, reinterpret_cast<LONG_PTR>(createInfo->lpCreateParams));
 	}
 	else {
 		// get the extra window data and forward the call
