@@ -164,7 +164,8 @@ ClientListener::handleClientAccepted(const Event&, void* vsocket)
 	IDataSocket* socket = reinterpret_cast<IDataSocket*>(vsocket);
 	
 	// filter socket messages, including a packetizing filter
-	synergy::IStream* stream = new PacketStreamFilter(m_events, socket);
+	bool adopt = !m_useSecureNetwork;
+	synergy::IStream* stream = new PacketStreamFilter(m_events, socket, adopt);
 	assert(m_server != NULL);
 
 	// create proxy for unknown client
