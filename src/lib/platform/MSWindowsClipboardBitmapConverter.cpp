@@ -71,7 +71,7 @@ String
 MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 {
 	// get datator
-	const char* src = (const char*)GlobalLock(data);
+	LPVOID src = GlobalLock(data);
 	if (src == NULL) {
 		return String();
 	}
@@ -85,7 +85,7 @@ MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 		bitmap->bmiHeader.biBitCount == 32) &&
 		bitmap->bmiHeader.biCompression == BI_RGB) {
 		// already in canonical form
-		String image(src, srcSize);
+		String image(static_cast<char const*>(src), srcSize);
 		GlobalUnlock(data);
 		return image;
 	}
