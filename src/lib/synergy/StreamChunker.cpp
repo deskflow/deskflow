@@ -33,10 +33,9 @@
 
 #include <fstream>
 
-#define SEND_THRESHOLD 0.005f
-
 using namespace std;
 
+#define FAKE_HEARTBEAT_THRESHOLD 3
 #define CHUNK_SIZE 512 * 1024; // 512kb
 
 bool StreamChunker::s_isChunkingFile = false;
@@ -70,8 +69,8 @@ StreamChunker::sendFile(
 	// send chunk messages with a fixed chunk size
 	size_t sentLength = 0;
 	size_t chunkSize = CHUNK_SIZE;
-	Stopwatch sendStopwatch;
-	sendStopwatch.start();
+	Stopwatch fakeHeartbeatStopwatch;
+	fakeHeartbeatStopwatch.start();
 	file.seekg (0, std::ios::beg);
 
 	while (true) {
@@ -81,30 +80,29 @@ StreamChunker::sendFile(
 			break;
 		}
 		
-		if (sendStopwatch.getTime() > SEND_THRESHOLD) {
+		if (fakeHeartbeatStopwatch.getTime() > FAKE_HEARTBEAT_THRESHOLD) {
 			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
+			fakeHeartbeatStopwatch.reset();
+		}
+		
+		// make sure we don't read too much from the mock data.
+		if (sentLength + chunkSize > size) {
+			chunkSize = size - sentLength;
+		}
 
-			// make sure we don't read too much from the mock data.
-			if (sentLength + chunkSize > size) {
-				chunkSize = size - sentLength;
-			}
+		char* chunkData = new char[chunkSize];
+		file.read(chunkData, chunkSize);
+		UInt8* data = reinterpret_cast<UInt8*>(chunkData);
+		FileChunk* fileChunk = FileChunk::data(data, chunkSize);
+		delete[] chunkData;
 
-			char* chunkData = new char[chunkSize];
-			file.read(chunkData, chunkSize);
-			UInt8* data = reinterpret_cast<UInt8*>(chunkData);
-			FileChunk* fileChunk = FileChunk::data(data, chunkSize);
-			delete[] chunkData;
+		events->addEvent(Event(events->forFile().fileChunkSending(), eventTarget, fileChunk));
 
-			events->addEvent(Event(events->forFile().fileChunkSending(), eventTarget, fileChunk));
+		sentLength += chunkSize;
+		file.seekg (sentLength, std::ios::beg);
 
-			sentLength += chunkSize;
-			file.seekg (sentLength, std::ios::beg);
-
-			if (sentLength == size) {
-				break;
-			}
-
-			sendStopwatch.reset();
+		if (sentLength == size) {
+			break;
 		}
 	}
 
@@ -136,29 +134,28 @@ StreamChunker::sendClipboard(
 	// send clipboard chunk with a fixed size
 	size_t sentLength = 0;
 	size_t chunkSize = CHUNK_SIZE;
-	Stopwatch sendStopwatch;
-	sendStopwatch.start();
+	Stopwatch fakeHeartbeatStopwatch;
+	fakeHeartbeatStopwatch.start();
 	
 	while (true) {
-		if (sendStopwatch.getTime() > SEND_THRESHOLD) {
+		if (fakeHeartbeatStopwatch.getTime() > FAKE_HEARTBEAT_THRESHOLD) {
 			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
+			fakeHeartbeatStopwatch.reset();
+		}
+		
+		// make sure we don't read too much from the mock data.
+		if (sentLength + chunkSize > size) {
+			chunkSize = size - sentLength;
+		}
 
-			// make sure we don't read too much from the mock data.
-			if (sentLength + chunkSize > size) {
-				chunkSize = size - sentLength;
-			}
+		String chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
+		ClipboardChunk* dataChunk = ClipboardChunk::data(id, sequence, chunk);
+		
+		events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, dataChunk));
 
-			String chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
-			ClipboardChunk* dataChunk = ClipboardChunk::data(id, sequence, chunk);
-			
-			events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, dataChunk));
-
-			sentLength += chunkSize;
-			if (sentLength == size) {
-				break;
-			}
-
-			sendStopwatch.reset();
+		sentLength += chunkSize;
+		if (sentLength == size) {
+			break;
 		}
 	}
 
