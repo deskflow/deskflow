@@ -35,8 +35,9 @@
 
 using namespace std;
 
-#define FAKE_HEARTBEAT_THRESHOLD 3
-#define CHUNK_SIZE 512 * 1024; // 512kb
+
+static const double g_fakeHeartbeatThreshold = 3;
+static const size_t g_chunkSize = 512 * 1024; //512kb
 
 bool StreamChunker::s_isChunkingFile = false;
 bool StreamChunker::s_interruptFile = false;
@@ -68,7 +69,7 @@ StreamChunker::sendFile(
 
 	// send chunk messages with a fixed chunk size
 	size_t sentLength = 0;
-	size_t chunkSize = CHUNK_SIZE;
+	size_t chunkSize = g_chunkSize;
 	Stopwatch fakeHeartbeatStopwatch;
 	fakeHeartbeatStopwatch.start();
 	file.seekg (0, std::ios::beg);
@@ -80,7 +81,7 @@ StreamChunker::sendFile(
 			break;
 		}
 		
-		if (fakeHeartbeatStopwatch.getTime() > FAKE_HEARTBEAT_THRESHOLD) {
+		if (fakeHeartbeatStopwatch.getTime() > g_fakeHeartbeatThreshold) {
 			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
 			fakeHeartbeatStopwatch.reset();
 		}
@@ -133,12 +134,12 @@ StreamChunker::sendClipboard(
 
 	// send clipboard chunk with a fixed size
 	size_t sentLength = 0;
-	size_t chunkSize = CHUNK_SIZE;
+	size_t chunkSize = g_chunkSize;
 	Stopwatch fakeHeartbeatStopwatch;
 	fakeHeartbeatStopwatch.start();
 	
 	while (true) {
-		if (fakeHeartbeatStopwatch.getTime() > FAKE_HEARTBEAT_THRESHOLD) {
+		if (fakeHeartbeatStopwatch.getTime() > g_fakeHeartbeatThreshold) {
 			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
 			fakeHeartbeatStopwatch.reset();
 		}
