@@ -864,7 +864,7 @@ void
 MSWindowsScreen::destroyClass(ATOM windowClass) const
 {
 	if (windowClass != 0) {
-		UnregisterClass(static_cast<LPCTSTR>(windowClass), s_windowInstance);
+		UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass), s_windowInstance);
 	}
 }
 
@@ -874,7 +874,7 @@ MSWindowsScreen::createWindow(ATOM windowClass, const char* name) const
 	HWND window = CreateWindowEx(WS_EX_TOPMOST |
 									WS_EX_TRANSPARENT |
 									WS_EX_TOOLWINDOW,
-								static_cast<LPCTSTR>(windowClass),
+								reinterpret_cast<LPCTSTR>(windowClass),
 								name,
 								WS_POPUP,
 								0, 0, 1, 1,
@@ -895,7 +895,7 @@ MSWindowsScreen::createDropWindow(ATOM windowClass, const char* name) const
 		WS_EX_TOPMOST |
 		WS_EX_TRANSPARENT |
 		WS_EX_ACCEPTFILES,
-		static_cast<LPCTSTR>(m_class),
+		reinterpret_cast<LPCTSTR>(m_class),
 		name,
 		WS_POPUP,
 		0, 0, m_dropWindowSize, m_dropWindowSize,
