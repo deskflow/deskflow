@@ -287,7 +287,7 @@ MSWindowsClientTaskBarReceiver::createWindow()
 							MAKEINTRESOURCE(IDD_TASKBAR_STATUS),
 							NULL,
 							(DLGPROC)&MSWindowsClientTaskBarReceiver::staticDlgProc,
-							static_cast<LPARAM>(
+							reinterpret_cast<LPARAM>(
 								static_cast<void*>(this)));
 
 	// window should appear on top of everything, including (especially)
@@ -338,7 +338,7 @@ MSWindowsClientTaskBarReceiver::staticDlgProc(HWND hwnd,
 	MSWindowsClientTaskBarReceiver* self = NULL;
 	if (msg == WM_INITDIALOG) {
 		self = static_cast<MSWindowsClientTaskBarReceiver*>(
-							static_cast<void*>(lParam));
+							reinterpret_cast<void*>(lParam));
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR) lParam);
 	}
 	else {
