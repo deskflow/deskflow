@@ -318,7 +318,7 @@ MSWindowsServerTaskBarReceiver::createWindow()
 							MAKEINTRESOURCE(IDD_TASKBAR_STATUS),
 							NULL,
 							(DLGPROC)&MSWindowsServerTaskBarReceiver::staticDlgProc,
-							static_cast<LPARAM>(
+							reinterpret_cast<LPARAM>(
 								static_cast<void*>(this)));
 
 	// window should appear on top of everything, including (especially)
@@ -369,15 +369,15 @@ MSWindowsServerTaskBarReceiver::staticDlgProc(HWND hwnd,
 	MSWindowsServerTaskBarReceiver* self = NULL;
 	if (msg == WM_INITDIALOG) {
 		self = static_cast<MSWindowsServerTaskBarReceiver*>(
-							static_cast<void*>(lParam));
+							reinterpret_cast<void*>(lParam));
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, lParam);
 	}
 	else {
 		// get the extra window data and forward the call
-		LONG data = (LONG)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		LONG_PTR data = GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		if (data != 0) {
 			self = static_cast<MSWindowsServerTaskBarReceiver*>(
-							static_cast<void*>(data));
+							reinterpret_cast<void*>(data));
 		}
 	}
 
