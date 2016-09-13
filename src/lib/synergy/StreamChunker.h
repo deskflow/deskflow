@@ -37,11 +37,8 @@ public:
 							IEventQueue* events,
 							void* eventTarget);
 	static void			interruptFile();
-	static void			setClipboardInterrupt(bool interrupt);
 	
 private:
-	static bool			s_isChunkingClipboard;
-	static bool			s_interruptClipboard;
 	static bool			s_isChunkingFile;
 	static bool			s_interruptFile;
 	static Mutex*		s_interruptMutex;

@@ -39,8 +39,6 @@ using namespace std;
 
 #define CHUNK_SIZE 512 * 1024; // 512kb
 
-bool StreamChunker::s_isChunkingClipboard = false;
-bool StreamChunker::s_interruptClipboard = false;
 bool StreamChunker::s_isChunkingFile = false;
 bool StreamChunker::s_interruptFile = false;
 Mutex* StreamChunker::s_interruptMutex = NULL;
@@ -129,8 +127,6 @@ StreamChunker::sendClipboard(
 				IEventQueue* events,
 				void* eventTarget)
 {
-	s_isChunkingClipboard = true;
-	
 	// send first message (data size)
 	String dataSize = synergy::string::sizeTypeToString(size);
 	ClipboardChunk* sizeMessage = ClipboardChunk::start(id, sequence, dataSize);
@@ -144,17 +140,6 @@ StreamChunker::sendClipboard(
 	sendStopwatch.start();
 	
 	while (true) {
-		{
-			if (s_interruptMutex == NULL) {
-				s_interruptMutex = new Mutex();
-			}
-			Lock lock(s_interruptMutex);
-			if (s_interruptClipboard) {
-				LOG((CLOG_DEBUG "clipboard transmission interrupted"));
-				break;
-			}
-		}
-
 		if (sendStopwatch.getTime() > SEND_THRESHOLD) {
 			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
 
@@ -183,8 +168,6 @@ StreamChunker::sendClipboard(
 	events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, end));
 	
 	LOG((CLOG_DEBUG "sent clipboard size=%d", sentLength));
-
-	s_isChunkingClipboard = false;
 }
 
 void
@@ -193,28 +176,5 @@ StreamChunker::interruptFile()
 	if (s_isChunkingFile) {
 		s_interruptFile = true;
 		LOG((CLOG_INFO "previous dragged file has become invalid"));
-	}
-}
-
-void
-StreamChunker::setClipboardInterrupt(bool interrupt)
-{
-	if (s_interruptMutex == NULL) {
-		s_interruptMutex = new Mutex();
-	}
-	Lock lock(s_interruptMutex);
-
-	if (interrupt) {
-		if (s_isChunkingClipboard) {
-			s_interruptClipboard = interrupt;
-			LOG((CLOG_INFO "previous clipboard data has become invalid"));
-		}
-		else {
-			LOG((CLOG_DEBUG "no clipboard to interrupt"));
-		}
-	}
-	else {
-		s_interruptClipboard = interrupt;
-		LOG((CLOG_DEBUG "reset clipboard interrupt"));
 	}
 }
