@@ -415,7 +415,7 @@ OSXKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 {
 	::KeyMap km;
 	GetKeys(km);
-	const UInt8* m = static_cast<const UInt8*>(km);
+	const UInt8* m = reinterpret_cast<const UInt8*>(km);
 	for (UInt32 i = 0; i < 16; ++i) {
 		for (UInt32 j = 0; j < 8; ++j) {
 			if ((m[i] & (1u << j)) != 0) {
