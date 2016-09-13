@@ -35,8 +35,6 @@
 
 using namespace std;
 
-
-static const double g_fakeHeartbeatThreshold = 3;
 static const size_t g_chunkSize = 512 * 1024; //512kb
 
 bool StreamChunker::s_isChunkingFile = false;
@@ -70,8 +68,6 @@ StreamChunker::sendFile(
 	// send chunk messages with a fixed chunk size
 	size_t sentLength = 0;
 	size_t chunkSize = g_chunkSize;
-	Stopwatch fakeHeartbeatStopwatch;
-	fakeHeartbeatStopwatch.start();
 	file.seekg (0, std::ios::beg);
 
 	while (true) {
@@ -81,10 +77,7 @@ StreamChunker::sendFile(
 			break;
 		}
 		
-		if (fakeHeartbeatStopwatch.getTime() > g_fakeHeartbeatThreshold) {
-			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
-			fakeHeartbeatStopwatch.reset();
-		}
+		events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
 		
 		// make sure we don't read too much from the mock data.
 		if (sentLength + chunkSize > size) {
@@ -135,14 +128,9 @@ StreamChunker::sendClipboard(
 	// send clipboard chunk with a fixed size
 	size_t sentLength = 0;
 	size_t chunkSize = g_chunkSize;
-	Stopwatch fakeHeartbeatStopwatch;
-	fakeHeartbeatStopwatch.start();
 	
 	while (true) {
-		if (fakeHeartbeatStopwatch.getTime() > g_fakeHeartbeatThreshold) {
-			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
-			fakeHeartbeatStopwatch.reset();
-		}
+		events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
 		
 		// make sure we don't read too much from the mock data.
 		if (sentLength + chunkSize > size) {
