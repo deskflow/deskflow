@@ -82,6 +82,7 @@ REGISTER_EVENT(IpcServerProxy, messageReceived)
 //
 
 REGISTER_EVENT(IDataSocket, connected)
+REGISTER_EVENT(IDataSocket, secureConnected)
 REGISTER_EVENT(IDataSocket, connectionFailed)
 
 //
@@ -107,6 +108,7 @@ REGISTER_EVENT(OSXScreen, confirmSleep)
 // ClientListener
 //
 
+REGISTER_EVENT(ClientListener, accepted)
 REGISTER_EVENT(ClientListener, connected)
 
 //

@@ -56,6 +56,12 @@ ClientListener::ClientListener(const NetworkAddress& address,
 
 		m_listen = m_socketFactory->createListen(m_useSecureNetwork);
 
+		// setup event handler
+		m_events->adoptHandler(m_events->forIListenSocket().connecting(),
+					m_listen,
+					new TMethodEventJob<ClientListener>(this,
+							&ClientListener::handleClientConnecting));
+		
 		// bind listen address
 		LOG((CLOG_DEBUG1 "binding listen socket"));
 		m_listen->bind(address);
@@ -71,11 +77,6 @@ ClientListener::ClientListener(const NetworkAddress& address,
 		throw;
 	}
 	LOG((CLOG_DEBUG1 "listening for clients"));
-
-	// setup event handler
-	m_events->adoptHandler(m_events->forIListenSocket().connecting(), m_listen,
-							new TMethodEventJob<ClientListener>(this,
-								&ClientListener::handleClientConnecting));
 }
 
 ClientListener::~ClientListener()
@@ -136,46 +137,51 @@ void
 ClientListener::handleClientConnecting(const Event&, void*)
 {
 	// accept client connection
-	IDataSocket* socket	= m_listen->accept();
+	IDataSocket* socket = m_listen->accept();
 
 	if (socket == NULL) {
 		return;
 	}
+	
+	m_events->adoptHandler(m_events->forClientListener().accepted(),
+				socket->getEventTarget(),
+				new TMethodEventJob<ClientListener>(this,
+						&ClientListener::handleClientAccepted, socket));
+	
+	// When using non SSL, server accepts clients immediately, while SSL
+	// has to call secure accept which may require retry
+	if (!m_useSecureNetwork) {
+		m_events->addEvent(Event(m_events->forClientListener().accepted(),
+								socket->getEventTarget()));
+	}
+}
 
+void
+ClientListener::handleClientAccepted(const Event&, void* vsocket)
+{
 	LOG((CLOG_NOTE "accepted client connection"));
 
-	if (m_useSecureNetwork) {
-		LOG((CLOG_DEBUG2 "attempting sercure Connection"));
-		while (!socket->isReady()) {
-			if (socket->isFatal()) {
-				m_listen->deleteSocket(socket);
-				return;
-			}
-			LOG((CLOG_DEBUG2 "retrying sercure Connection"));
-			ARCH->sleep(.5f);
-		}
-	}
-
-	LOG((CLOG_DEBUG2 "sercure Connection established:%d"));
-
-	synergy::IStream* stream  = socket;
+	IDataSocket* socket = static_cast<IDataSocket*>(vsocket);
+	
 	// filter socket messages, including a packetizing filter
 	bool adopt = !m_useSecureNetwork;
-	stream = new PacketStreamFilter(m_events, stream, adopt);
-
+	synergy::IStream* stream = new PacketStreamFilter(m_events, socket, adopt);
 	assert(m_server != NULL);
 
 	// create proxy for unknown client
 	ClientProxyUnknown* client = new ClientProxyUnknown(stream, 30.0, m_server, m_events);
+
 	m_newClients.insert(client);
 
 	// watch for events from unknown client
-	m_events->adoptHandler(m_events->forClientProxyUnknown().success(), client,
-							new TMethodEventJob<ClientListener>(this,
-								&ClientListener::handleUnknownClient, client));
-	m_events->adoptHandler(m_events->forClientProxyUnknown().failure(), client,
-							new TMethodEventJob<ClientListener>(this,
-								&ClientListener::handleUnknownClient, client));
+	m_events->adoptHandler(m_events->forClientProxyUnknown().success(),
+				client,
+				new TMethodEventJob<ClientListener>(this,
+						&ClientListener::handleUnknownClient, client));
+	m_events->adoptHandler(m_events->forClientProxyUnknown().failure(),
+				client,
+				new TMethodEventJob<ClientListener>(this,
+						&ClientListener::handleUnknownClient, client));
 }
 
 void
@@ -193,7 +199,8 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
 	if (client != NULL) {
 		// handshake was successful
 		m_waitingClients.push_back(client);
-		m_events->addEvent(Event(m_events->forClientListener().connected(), this));
+		m_events->addEvent(Event(m_events->forClientListener().connected(),
+								 this));
 
 		// watch for client to disconnect while it's in our queue
 		m_events->adoptHandler(m_events->forClientProxy().disconnected(), client,
