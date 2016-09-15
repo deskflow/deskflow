@@ -765,6 +765,10 @@ Config::readSectionOptions(ConfigReadContext& s)
 		else if (name == "win32KeepForeground") {
 			addOption("", kOptionWin32KeepForeground, s.parseBoolean(value));
 		}
+		else if (name == "enableClipboard") {
+			addOption("", kOptionClipboardSharing, s.parseBoolean(value));
+		}
+
 		else {
 			handled = false;
 		}
