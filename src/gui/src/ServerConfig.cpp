@@ -51,7 +51,7 @@ ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows ,
 	m_ServerName(serverName),
 	m_IgnoreAutoConfigClient(false),
 	m_EnableDragAndDrop(false),
-	m_EnableClipboard(true),
+	m_ClipboardSharing(true),
 	m_pMainWindow(mainWindow)
 {
 	Q_ASSERT(m_pSettings);
@@ -247,7 +247,7 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
 	outStream << "\t" << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << endl;
 	outStream << "\t" << "screenSaverSync = " << (config.screenSaverSync() ? "true" : "false") << endl;
 	outStream << "\t" << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << endl;
-	outStream << "\t" << "enableClipboard = " << (config.enableClipboard() ? "true" : "false") << endl;
+	outStream << "\t" << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << endl;
 
 	if (config.hasSwitchDelay())
 		outStream << "\t" << "switchDelay = " << config.switchDelay() << endl;
