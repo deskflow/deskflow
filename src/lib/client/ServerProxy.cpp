@@ -833,9 +833,7 @@ ServerProxy::setOptions()
 			// update keep alive
 			setKeepAliveRate(1.0e-3 * static_cast<double>(options[i + 1]));
 		}
-		else if (options[i] == kOptionClipboardSharing) {
-			LOG((CLOG_DEBUG "disable clipboard sharing"));
-		}
+
 		if (id != kKeyModifierIDNull) {
 			m_modifierTranslationTable[id] =
 				static_cast<KeyModifierID>(options[i + 1]);
