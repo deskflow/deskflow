@@ -73,7 +73,8 @@ Client::Client(
 	m_writeToDropDirThread(NULL),
 	m_socket(NULL),
 	m_useSecureNetwork(false),
-	m_args(args)
+	m_args(args),
+	m_enableClipboard(true)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -264,10 +265,12 @@ Client::leave()
 
 	m_screen->leave();
 	
-	// send clipboards that we own and that have changed
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		if (m_ownClipboard[id]) {
-			sendClipboard(id);
+	if (m_enableClipboard) {
+		// send clipboards that we own and that have changed
+		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+			if (m_ownClipboard[id]) {
+				sendClipboard(id);
+			}
 		}
 	}
 
@@ -360,6 +363,20 @@ Client::resetOptions()
 void
 Client::setOptions(const OptionsList& options)
 {
+	for (OptionsList::const_iterator index = options.cbegin();
+		 index != options.cend(); ++index) {
+		const OptionID id       = *index;
+		if (id == kOptionClipboardSharing) {
+			index++;
+			if (*index == static_cast<OptionValue>(false)) {
+				LOG((CLOG_NOTE "clipboard sharing is disabled"));
+			}
+			m_enableClipboard = *index;
+
+			break;
+		}
+	}
+
 	m_screen->setOptions(options);
 }
 

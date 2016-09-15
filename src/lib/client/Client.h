@@ -223,4 +223,5 @@ private:
 	TCPSocket*			m_socket;
 	bool				m_useSecureNetwork;
 	ClientArgs			m_args;
+	bool				m_enableClipboard;
 };
