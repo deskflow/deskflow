@@ -363,8 +363,8 @@ Client::resetOptions()
 void
 Client::setOptions(const OptionsList& options)
 {
-	for (OptionsList::const_iterator index = options.cbegin();
-		 index != options.cend(); ++index) {
+	for (OptionsList::const_iterator index = options.begin();
+		 index != options.end(); ++index) {
 		const OptionID id       = *index;
 		if (id == kOptionClipboardSharing) {
 			index++;
