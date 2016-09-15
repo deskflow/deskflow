@@ -1941,7 +1941,7 @@ OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 		case NX_NULLEVENT:
 			break;
 		case NX_SYSDEFINED:
-			// Unknown, forward it
+			LOG((CLOG_DEBUG2 "unknown system defined event"));
 			return event;
 			break;
 		case NX_NUMPROCS:
