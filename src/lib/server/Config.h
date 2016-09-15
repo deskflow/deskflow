@@ -105,7 +105,7 @@ private:
 		bool			operator==(const String& name) const;
 
 	private:
-		Config*		m_config;
+		Config*			m_config;
 		String			m_name;
 	};
 
@@ -391,7 +391,8 @@ public:
 	link_const_iterator	endNeighbor(const String&) const;
 
 	//! Get the server address
-	const NetworkAddress&	getSynergyAddress() const;
+	const NetworkAddress&
+						getSynergyAddress() const;
 
 	//! Get the screen options
 	/*!
@@ -399,14 +400,15 @@ public:
 	if the screen is unknown and an empty collection if there are no
 	options.
 	*/
-	const ScreenOptions* getOptions(const String& name) const;
+	const ScreenOptions*
+						getOptions(const String& name) const;
 
 	//! Check for lock to screen action
 	/*!
 	Returns \c true if this configuration has a lock to screen action.
 	This is for backwards compatible support of ScrollLock locking.
 	*/
-	bool					hasLockToScreenAction() const;
+	bool				hasLockToScreenAction() const;
 
 	//! Compare configurations
 	bool				operator==(const Config&) const;
@@ -418,19 +420,21 @@ public:
 	Reads a configuration from a context.  Throws XConfigRead on error
 	and context is unchanged.
 	*/
-	void					read(ConfigReadContext& context);
+	void				read(ConfigReadContext& context);
 
 	//! Read configuration
 	/*!
 	Reads a configuration from a stream.  Throws XConfigRead on error.
 	*/
-	friend std::istream&	operator>>(std::istream&, Config&);
+	friend std::istream&
+						operator>>(std::istream&, Config&);
 
 	//! Write configuration
 	/*!
 	Writes a configuration to a stream.
 	*/
-	friend std::ostream&	operator<<(std::ostream&, const Config&);
+	friend std::ostream&
+						operator<<(std::ostream&, const Config&);
 
 	//! Get direction name
 	/*!
@@ -468,11 +472,11 @@ private:
 	static String		getOptionValue(OptionID, OptionValue);
 
 private:
-	CellMap			m_map;
-	NameMap			m_nameToCanonicalName;
+	CellMap				m_map;
+	NameMap				m_nameToCanonicalName;
 	NetworkAddress		m_synergyAddress;
 	ScreenOptions		m_globalOptions;
-	InputFilter		m_inputFilter;
+	InputFilter			m_inputFilter;
 	bool				m_hasLockToScreenAction;
 	IEventQueue*		m_events;
 };
@@ -488,41 +492,41 @@ public:
 	ConfigReadContext(std::istream&, SInt32 firstLine = 1);
 	~ConfigReadContext();
 
-	bool			readLine(String&);
-	UInt32			getLineNumber() const;
+	bool				readLine(String&);
+	UInt32				getLineNumber() const;
 
-	bool			operator!() const;
+	bool				operator!() const;
 
-	OptionValue		parseBoolean(const String&) const;
-	OptionValue		parseInt(const String&) const;
-	OptionValue		parseModifierKey(const String&) const;
-	OptionValue		parseCorner(const String&) const;
-	OptionValue		parseCorners(const String&) const;
+	OptionValue			parseBoolean(const String&) const;
+	OptionValue			parseInt(const String&) const;
+	OptionValue			parseModifierKey(const String&) const;
+	OptionValue			parseCorner(const String&) const;
+	OptionValue			parseCorners(const String&) const;
 	Config::Interval
-					parseInterval(const ArgList& args) const;
-	void			parseNameWithArgs(
-						const String& type, const String& line,
-						const String& delim, String::size_type& index,
-						String& name, ArgList& args) const;
+						parseInterval(const ArgList& args) const;
+	void				parseNameWithArgs(
+							const String& type, const String& line,
+							const String& delim, String::size_type& index,
+							String& name, ArgList& args) const;
 	IPlatformScreen::KeyInfo*
-					parseKeystroke(const String& keystroke) const;
+						parseKeystroke(const String& keystroke) const;
 	IPlatformScreen::KeyInfo*
-					parseKeystroke(const String& keystroke,
-						const std::set<String>& screens) const;
+						parseKeystroke(const String& keystroke,
+							const std::set<String>& screens) const;
 	IPlatformScreen::ButtonInfo*
-					parseMouse(const String& mouse) const;
-	KeyModifierMask	parseModifier(const String& modifiers) const;
-	std::istream&	getStream() const { return m_stream; };
+						parseMouse(const String& mouse) const;
+	KeyModifierMask		parseModifier(const String& modifiers) const;
+	std::istream&		getStream() const { return m_stream; };
 
 private:
 	// not implemented
 	ConfigReadContext&	operator=(const ConfigReadContext&);
 
-	static String	concatArgs(const ArgList& args);
+	static String		concatArgs(const ArgList& args);
 
 private:
-	std::istream&	m_stream;
-	SInt32			m_line;
+	std::istream&		m_stream;
+	SInt32				m_line;
 };
 
 //! Configuration stream read exception

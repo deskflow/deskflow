@@ -28,5 +28,5 @@ public:
 
 public:
 	String				m_configFile;
-	Config*			m_config;
+	Config*				m_config;
 };
