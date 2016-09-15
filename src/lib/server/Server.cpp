@@ -92,6 +92,7 @@ Server::Server(
 	m_writeToDropDirThread(NULL),
 	m_ignoreFileTransfer(false),
 	m_enableDragDrop(enableDragDrop),
+	m_enableClipboard(true),
 	m_sendDragInfoThread(NULL),
 	m_waitDragInfoThread(true)
 {
@@ -485,7 +486,7 @@ Server::switchScreen(BaseClientProxy* dst,
 
 		// update the primary client's clipboards if we're leaving the
 		// primary screen.
-		if (m_active == m_primaryClient) {
+		if (m_active == m_primaryClient && m_enableClipboard) {
 			for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 				ClipboardInfo& clipboard = m_clipboards[id];
 				if (clipboard.m_clipboardOwner == getName(m_primaryClient)) {
@@ -506,9 +507,11 @@ Server::switchScreen(BaseClientProxy* dst,
 								m_primaryClient->getToggleMask(),
 								forScreensaver);
 
-		// send the clipboard data to new active screen
-		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-			m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
+		if (m_enableClipboard) {
+			// send the clipboard data to new active screen
+			for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+				m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
+			}
 		}
 
 		Server::SwitchToScreenInfo* info =
@@ -1165,6 +1168,9 @@ Server::processOptions()
 		}
 		else if (id == kOptionRelativeMouseMoves) {
 			newRelativeMoves = (value != 0);
+		}
+		else if (id == kOptionClipboardSharing) {
+			m_enableClipboard = (value != 0);
 		}
 	}
 	if (m_relativeMoves && !newRelativeMoves) {

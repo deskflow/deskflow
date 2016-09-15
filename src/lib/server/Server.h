@@ -473,6 +473,7 @@ private:
 	String				m_dragFileExt;
 	bool				m_ignoreFileTransfer;
 	bool				m_enableDragDrop;
+	bool				m_enableClipboard;
 
 	Thread*				m_sendDragInfoThread;
 	bool				m_waitDragInfoThread;
