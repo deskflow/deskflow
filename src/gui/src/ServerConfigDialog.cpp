@@ -58,6 +58,8 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
 
 	m_pCheckBoxEnableDragAndDrop->setChecked(serverConfig().enableDragAndDrop());
 
+	m_pCheckBoxEnableClipboard->setChecked(serverConfig().enableClipboard());
+
 	foreach(const Hotkey& hotkey, serverConfig().hotkeys())
 		m_pListHotkeys->addItem(hotkey.text());
 
@@ -100,6 +102,7 @@ void ServerConfigDialog::accept()
 	serverConfig().setSwitchCornerSize(m_pSpinBoxSwitchCornerSize->value());
 	serverConfig().setIgnoreAutoConfigClient(m_pCheckBoxIgnoreAutoConfigClient->isChecked());
 	serverConfig().setEnableDragAndDrop(m_pCheckBoxEnableDragAndDrop->isChecked());
+	serverConfig().setEnableClipboard(m_pCheckBoxEnableClipboard->isChecked());
 
 	// now that the dialog has been accepted, copy the new server config to the original one,
 	// which is a reference to the one in MainWindow.
