@@ -62,6 +62,7 @@ class ServerConfig : public BaseConfig
 		const HotkeyList& hotkeys() const { return m_Hotkeys; }
 		bool ignoreAutoConfigClient() const { return m_IgnoreAutoConfigClient; }
 		bool enableDragAndDrop() const { return m_EnableDragAndDrop; }
+		bool enableClipboard() const { return m_EnableClipboard; }
 
 		void saveSettings();
 		void loadSettings();
@@ -90,6 +91,7 @@ class ServerConfig : public BaseConfig
 		void setSwitchCornerSize(int val) { m_SwitchCornerSize = val; }
 		void setIgnoreAutoConfigClient(bool on) { m_IgnoreAutoConfigClient = on; }
 		void setEnableDragAndDrop(bool on) { m_EnableDragAndDrop = on; }
+		void setEnableClipboard(bool on) { m_EnableClipboard = on; }
 		QList<bool>& switchCorners() { return m_SwitchCorners; }
 		HotkeyList& hotkeys() { return m_Hotkeys; }
 
@@ -122,6 +124,7 @@ class ServerConfig : public BaseConfig
 		QString m_ServerName;
 		bool m_IgnoreAutoConfigClient;
 		bool m_EnableDragAndDrop;
+		bool m_EnableClipboard;
 		MainWindow* m_pMainWindow;
 };
 
