@@ -1171,6 +1171,10 @@ Server::processOptions()
 		}
 		else if (id == kOptionClipboardSharing) {
 			m_enableClipboard = (value != 0);
+			
+			if (m_enableClipboard == false) {
+				LOG((CLOG_NOTE "clipboard sharing is disabled"));
+			}
 		}
 	}
 	if (m_relativeMoves && !newRelativeMoves) {
