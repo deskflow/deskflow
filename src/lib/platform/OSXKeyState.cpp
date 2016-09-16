@@ -35,6 +35,8 @@ static const UInt32 s_superVK    = kVK_Command;
 static const UInt32 s_capsLockVK = kVK_CapsLock;
 static const UInt32 s_numLockVK  = kVK_ANSI_KeypadClear; // 71
 
+static const UInt32 s_brightnessUp = 144;
+static const UInt32 s_brightnessDown = 145;
 static const UInt32 s_missionControlVK = 160;
 static const UInt32 s_launchpadVK = 131;
 
@@ -117,7 +119,9 @@ static const KeyEntry	s_controlKeys[] = {
 	{ kKeyCapsLock,		s_capsLockVK },
 	
 	{ kKeyMissionControl, s_missionControlVK },
-	{ kKeyLaunchpad, s_launchpadVK }
+	{ kKeyLaunchpad, s_launchpadVK },
+	{ kKeyBrightnessUp,  s_brightnessUp },
+	{ kKeyBrightnessDown, s_brightnessDown }
 };
 
 
