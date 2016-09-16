@@ -1219,6 +1219,10 @@ Server::handleShapeChanged(const Event&, void* vclient)
 void
 Server::handleClipboardGrabbed(const Event& event, void* vclient)
 {
+	if (!m_enableClipboard) {
+		return;
+	}
+
 	// ignore events from unknown clients
 	BaseClientProxy* grabber = reinterpret_cast<BaseClientProxy*>(vclient);
 	if (m_clientSet.count(grabber) == 0) {
