@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#import "platform/OSXMediaKeySimulator.h"
+#import "platform/OSXMediaKeySupport.h"
 #import <Cocoa/Cocoa.h>
 #import <IOKit/hidsystem/ev_keymap.h>
 

@@ -25,7 +25,7 @@
 #include "platform/OSXKeyState.h"
 #include "platform/OSXScreenSaver.h"
 #include "platform/OSXDragSimulator.h"
-#include "platform/OSXMediaKeySimulator.h"
+#include "platform/OSXMediaKeySupport.h"
 #include "platform/OSXPasteboardPeeker.h"
 #include "synergy/Clipboard.h"
 #include "synergy/KeyMap.h"
