@@ -18,7 +18,7 @@
 
 #include "platform/OSXKeyState.h"
 #include "platform/OSXUchrKeyResource.h"
-#include "platform/OSXMediaKeySimulator.h"
+#include "platform/OSXMediaKeySupport.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 
