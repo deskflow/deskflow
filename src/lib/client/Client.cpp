@@ -672,6 +672,10 @@ Client::handleShapeChanged(const Event&, void*)
 void
 Client::handleClipboardGrabbed(const Event& event, void*)
 {
+	if (!m_enableClipboard) {
+		return;
+	}
+
 	const IScreen::ClipboardInfo* info =
 		reinterpret_cast<const IScreen::ClipboardInfo*>(event.getData());
 
