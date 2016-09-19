@@ -147,7 +147,7 @@ Thread::threadFunc(void* vjob)
 	}
 
 	// get job
-	IJob* job = reinterpret_cast<IJob*>(vjob);
+	IJob* job = static_cast<IJob*>(vjob);
 
 	// run job
 	void* result = NULL;

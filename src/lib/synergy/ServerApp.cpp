@@ -259,7 +259,7 @@ ServerApp::forceReconnect(const Event&, void*)
 void 
 ServerApp::handleClientConnected(const Event&, void* vlistener)
 {
-	ClientListener* listener = reinterpret_cast<ClientListener*>(vlistener);
+	ClientListener* listener = static_cast<ClientListener*>(vlistener);
 	ClientProxy* client = listener->getNextClient();
 	if (client != NULL) {
 		m_server->adoptClient(client);

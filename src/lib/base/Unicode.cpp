@@ -101,7 +101,7 @@ bool
 Unicode::isUTF8(const String& src)
 {
 	// convert and test each character
-	const UInt8* data = reinterpret_cast<const UInt8*>(src.c_str());
+	const UInt8* data = static_cast<const UInt8*>(src.c_str());
 	for (UInt32 n = (UInt32)src.size(); n > 0; ) {
 		if (fromUTF8(data, n) == s_invalid) {
 			return false;
@@ -122,7 +122,7 @@ Unicode::UTF8ToUCS2(const String& src, bool* errors)
 	dst.reserve(2 * n);
 
 	// convert each character
-	const UInt8* data = reinterpret_cast<const UInt8*>(src.c_str());
+	const UInt8* data = static_cast<const UInt8*>(src.c_str());
 	while (n > 0) {
 		UInt32 c = fromUTF8(data, n);
 		if (c == s_invalid) {
@@ -133,7 +133,7 @@ Unicode::UTF8ToUCS2(const String& src, bool* errors)
 			c = s_replacement;
 		}
 		UInt16 ucs2 = static_cast<UInt16>(c);
-		dst.append(reinterpret_cast<const char*>(&ucs2), 2);
+		dst.append(static_cast<const char*>(&ucs2), 2);
 	}
 
 	return dst;
@@ -151,13 +151,13 @@ Unicode::UTF8ToUCS4(const String& src, bool* errors)
 	dst.reserve(4 * n);
 
 	// convert each character
-	const UInt8* data = reinterpret_cast<const UInt8*>(src.c_str());
+	const UInt8* data = static_cast<const UInt8*>(src.c_str());
 	while (n > 0) {
 		UInt32 c = fromUTF8(data, n);
 		if (c == s_invalid) {
 			c = s_replacement;
 		}
-		dst.append(reinterpret_cast<const char*>(&c), 4);
+		dst.append(static_cast<const char*>(&c), 4);
 	}
 
 	return dst;
@@ -175,7 +175,7 @@ Unicode::UTF8ToUTF16(const String& src, bool* errors)
 	dst.reserve(2 * n);
 
 	// convert each character
-	const UInt8* data = reinterpret_cast<const UInt8*>(src.c_str());
+	const UInt8* data = static_cast<const UInt8*>(src.c_str());
 	while (n > 0) {
 		UInt32 c = fromUTF8(data, n);
 		if (c == s_invalid) {
@@ -187,14 +187,14 @@ Unicode::UTF8ToUTF16(const String& src, bool* errors)
 		}
 		if (c < 0x00010000) {
 			UInt16 ucs2 = static_cast<UInt16>(c);
-			dst.append(reinterpret_cast<const char*>(&ucs2), 2);
+			dst.append(static_cast<const char*>(&ucs2), 2);
 		}
 		else {
 			c -= 0x00010000;
 			UInt16 utf16h = static_cast<UInt16>((c >> 10) + 0xd800);
 			UInt16 utf16l = static_cast<UInt16>((c & 0x03ff) + 0xdc00);
-			dst.append(reinterpret_cast<const char*>(&utf16h), 2);
-			dst.append(reinterpret_cast<const char*>(&utf16l), 2);
+			dst.append(static_cast<const char*>(&utf16h), 2);
+			dst.append(static_cast<const char*>(&utf16l), 2);
 		}
 	}
 
@@ -213,7 +213,7 @@ Unicode::UTF8ToUTF32(const String& src, bool* errors)
 	dst.reserve(4 * n);
 
 	// convert each character
-	const UInt8* data = reinterpret_cast<const UInt8*>(src.c_str());
+	const UInt8* data = static_cast<const UInt8*>(src.c_str());
 	while (n > 0) {
 		UInt32 c = fromUTF8(data, n);
 		if (c == s_invalid) {
@@ -223,7 +223,7 @@ Unicode::UTF8ToUTF32(const String& src, bool* errors)
 			setError(errors);
 			c = s_replacement;
 		}
-		dst.append(reinterpret_cast<const char*>(&c), 4);
+		dst.append(static_cast<const char*>(&c), 4);
 	}
 
 	return dst;
@@ -260,7 +260,7 @@ Unicode::UCS2ToUTF8(const String& src, bool* errors)
 
 	// convert
 	UInt32 n = (UInt32)src.size() >> 1;
-	return doUCS2ToUTF8(reinterpret_cast<const UInt8*>(src.data()), n, errors);
+	return doUCS2ToUTF8(static_cast<const UInt8*>(src.data()), n, errors);
 }
 
 String
@@ -271,7 +271,7 @@ Unicode::UCS4ToUTF8(const String& src, bool* errors)
 
 	// convert
 	UInt32 n = (UInt32)src.size() >> 2;
-	return doUCS4ToUTF8(reinterpret_cast<const UInt8*>(src.data()), n, errors);
+	return doUCS4ToUTF8(static_cast<const UInt8*>(src.data()), n, errors);
 }
 
 String
@@ -282,7 +282,7 @@ Unicode::UTF16ToUTF8(const String& src, bool* errors)
 
 	// convert
 	UInt32 n = (UInt32)src.size() >> 1;
-	return doUTF16ToUTF8(reinterpret_cast<const UInt8*>(src.data()), n, errors);
+	return doUTF16ToUTF8(static_cast<const UInt8*>(src.data()), n, errors);
 }
 
 String
@@ -293,7 +293,7 @@ Unicode::UTF32ToUTF8(const String& src, bool* errors)
 
 	// convert
 	UInt32 n = (UInt32)src.size() >> 2;
-	return doUTF32ToUTF8(reinterpret_cast<const UInt8*>(src.data()), n, errors);
+	return doUTF32ToUTF8(static_cast<const UInt8*>(src.data()), n, errors);
 }
 
 String
@@ -361,16 +361,16 @@ Unicode::wideCharToUTF8(const wchar_t* src, UInt32 size, bool* errors)
 	// the String's nul character).
 	switch (ARCH->getWideCharEncoding()) {
 	case IArchString::kUCS2:
-		return doUCS2ToUTF8(reinterpret_cast<const UInt8*>(src), size, errors);
+		return doUCS2ToUTF8(static_cast<const UInt8*>(src), size, errors);
 
 	case IArchString::kUCS4:
-		return doUCS4ToUTF8(reinterpret_cast<const UInt8*>(src), size, errors);
+		return doUCS4ToUTF8(static_cast<const UInt8*>(src), size, errors);
 
 	case IArchString::kUTF16:
-		return doUTF16ToUTF8(reinterpret_cast<const UInt8*>(src), size, errors);
+		return doUTF16ToUTF8(static_cast<const UInt8*>(src), size, errors);
 
 	case IArchString::kUTF32:
-		return doUTF32ToUTF8(reinterpret_cast<const UInt8*>(src), size, errors);
+		return doUTF32ToUTF8(static_cast<const UInt8*>(src), size, errors);
 
 	default:
 		assert(0 && "unknown wide character encoding");
@@ -741,25 +741,25 @@ Unicode::toUTF8(String& dst, UInt32 c, bool* errors)
 	// convert to UTF-8
 	if (c < 0x00000080) {
 		data[0] = static_cast<UInt8>(c);
-		dst.append(reinterpret_cast<char*>(data), 1);
+		dst.append(static_cast<char*>(data), 1);
 	}
 	else if (c < 0x00000800) {
 		data[0] = static_cast<UInt8>(((c >>  6) & 0x0000001f) + 0xc0);
 		data[1] = static_cast<UInt8>((c         & 0x0000003f) + 0x80);
-		dst.append(reinterpret_cast<char*>(data), 2);
+		dst.append(static_cast<char*>(data), 2);
 	}
 	else if (c < 0x00010000) {
 		data[0] = static_cast<UInt8>(((c >> 12) & 0x0000000f) + 0xe0);
 		data[1] = static_cast<UInt8>(((c >>  6) & 0x0000003f) + 0x80);
 		data[2] = static_cast<UInt8>((c         & 0x0000003f) + 0x80);
-		dst.append(reinterpret_cast<char*>(data), 3);
+		dst.append(static_cast<char*>(data), 3);
 	}
 	else if (c < 0x00200000) {
 		data[0] = static_cast<UInt8>(((c >> 18) & 0x00000007) + 0xf0);
 		data[1] = static_cast<UInt8>(((c >> 12) & 0x0000003f) + 0x80);
 		data[2] = static_cast<UInt8>(((c >>  6) & 0x0000003f) + 0x80);
 		data[3] = static_cast<UInt8>((c         & 0x0000003f) + 0x80);
-		dst.append(reinterpret_cast<char*>(data), 4);
+		dst.append(static_cast<char*>(data), 4);
 	}
 	else if (c < 0x04000000) {
 		data[0] = static_cast<UInt8>(((c >> 24) & 0x00000003) + 0xf8);
@@ -767,7 +767,7 @@ Unicode::toUTF8(String& dst, UInt32 c, bool* errors)
 		data[2] = static_cast<UInt8>(((c >> 12) & 0x0000003f) + 0x80);
 		data[3] = static_cast<UInt8>(((c >>  6) & 0x0000003f) + 0x80);
 		data[4] = static_cast<UInt8>((c         & 0x0000003f) + 0x80);
-		dst.append(reinterpret_cast<char*>(data), 5);
+		dst.append(static_cast<char*>(data), 5);
 	}
 	else if (c < 0x80000000) {
 		data[0] = static_cast<UInt8>(((c >> 30) & 0x00000001) + 0xfc);
@@ -776,7 +776,7 @@ Unicode::toUTF8(String& dst, UInt32 c, bool* errors)
 		data[3] = static_cast<UInt8>(((c >> 12) & 0x0000003f) + 0x80);
 		data[4] = static_cast<UInt8>(((c >>  6) & 0x0000003f) + 0x80);
 		data[5] = static_cast<UInt8>((c         & 0x0000003f) + 0x80);
-		dst.append(reinterpret_cast<char*>(data), 6);
+		dst.append(static_cast<char*>(data), 6);
 	}
 	else {
 		assert(0 && "character out of range");

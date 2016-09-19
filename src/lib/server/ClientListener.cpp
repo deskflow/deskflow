@@ -178,7 +178,7 @@ void
 ClientListener::handleUnknownClient(const Event&, void* vclient)
 {
 	ClientProxyUnknown* unknownClient =
-		reinterpret_cast<ClientProxyUnknown*>(vclient);
+		static_cast<ClientProxyUnknown*>(vclient);
 
 	// we should have the client in our new client list
 	assert(m_newClients.count(unknownClient) == 1);
@@ -222,7 +222,7 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
 void
 ClientListener::handleClientDisconnected(const Event&, void* vclient)
 {
-	ClientProxy* client = reinterpret_cast<ClientProxy*>(vclient);
+	ClientProxy* client = static_cast<ClientProxy*>(vclient);
 
 	// find client in waiting clients queue
 	for (WaitingClients::iterator i = m_waitingClients.begin(),

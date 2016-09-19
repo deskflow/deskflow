@@ -46,7 +46,7 @@ SocketMultiplexer::SocketMultiplexer() :
 	// this pointer just has to be unique and not NULL.  it will
 	// never be dereferenced.  it's used to identify cursor nodes
 	// in the jobs list.
-	m_cursorMark = reinterpret_cast<ISocketMultiplexerJob*>(this);
+	m_cursorMark = static_cast<ISocketMultiplexerJob*>(this);
 
 	// start thread
 	m_thread = new Thread(new TMethodJob<SocketMultiplexer>(

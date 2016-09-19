@@ -49,7 +49,7 @@ StreamChunker::sendFile(
 {
 	s_isChunkingFile = true;
 	
-	std::fstream file(reinterpret_cast<char*>(filename), std::ios::in | std::ios::binary);
+	std::fstream file(static_cast<char*>(filename), std::ios::in | std::ios::binary);
 
 	if (!file.is_open()) {
 		throw runtime_error("failed to open file");

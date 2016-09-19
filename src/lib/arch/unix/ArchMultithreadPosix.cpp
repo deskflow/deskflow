@@ -697,7 +697,7 @@ void*
 ArchMultithreadPosix::threadFunc(void* vrep)
 {
 	// get the thread
-	ArchThreadImpl* thread = reinterpret_cast<ArchThreadImpl*>(vrep);
+	ArchThreadImpl* thread = static_cast<ArchThreadImpl*>(vrep);
 
 	// setup pthreads
 	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);

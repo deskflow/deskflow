@@ -234,7 +234,7 @@ ArchMiscWindows::setValue(HKEY key,
 		return;
 	}
 	RegSetValueEx(key, name, 0, REG_SZ,
-								reinterpret_cast<const BYTE*>(value.c_str()),
+								static_cast<const BYTE*>(value.c_str()),
 								(DWORD)value.size() + 1);
 }
 
@@ -247,7 +247,7 @@ ArchMiscWindows::setValue(HKEY key, const TCHAR* name, DWORD value)
 		return;
 	}
 	RegSetValueEx(key, name, 0, REG_DWORD,
-								reinterpret_cast<CONST BYTE*>(&value),
+								static_cast<CONST BYTE*>(&value),
 								sizeof(DWORD));
 }
 
@@ -262,7 +262,7 @@ ArchMiscWindows::setValueBinary(HKEY key,
 		return;
 	}
 	RegSetValueEx(key, name, 0, REG_BINARY,
-								reinterpret_cast<const BYTE*>(value.data()),
+								static_cast<const BYTE*>(value.data()),
 								(DWORD)value.size());
 }
 
@@ -287,7 +287,7 @@ ArchMiscWindows::readBinaryOrString(HKEY key, const TCHAR* name, DWORD type)
 
 	// read it
 	result = RegQueryValueEx(key, name, 0, &actualType,
-								reinterpret_cast<BYTE*>(buffer), &size);
+								static_cast<BYTE*>(buffer), &size);
 	if (result != ERROR_SUCCESS || actualType != type) {
 		delete[] buffer;
 		return std::string();
@@ -322,7 +322,7 @@ ArchMiscWindows::readValueInt(HKEY key, const TCHAR* name)
 	DWORD value;
 	DWORD size = sizeof(value);
 	LONG result = RegQueryValueEx(key, name, 0, &type,
-								reinterpret_cast<BYTE*>(&value), &size);
+								static_cast<BYTE*>(&value), &size);
 	if (result != ERROR_SUCCESS || type != REG_DWORD) {
 		return 0;
 	}
@@ -374,7 +374,7 @@ ArchMiscWindows::setThreadExecutionState(DWORD busyModes)
 	if (s_stes == NULL) {
 		HINSTANCE kernel = LoadLibrary("kernel32.dll");
 		if (kernel != NULL) {
-			s_stes = reinterpret_cast<STES_t>(GetProcAddress(kernel,
+			s_stes = static_cast<STES_t>(GetProcAddress(kernel,
 							"SetThreadExecutionState"));
 		}
 		if (s_stes == NULL) {
@@ -414,7 +414,7 @@ ArchMiscWindows::wakeupDisplay()
 	if (s_stes == NULL) {
 		HINSTANCE kernel = LoadLibrary("kernel32.dll");
 		if (kernel != NULL) {
-			s_stes = reinterpret_cast<STES_t>(GetProcAddress(kernel,
+			s_stes = static_cast<STES_t>(GetProcAddress(kernel,
 							"SetThreadExecutionState"));
 		}
 		if (s_stes == NULL) {

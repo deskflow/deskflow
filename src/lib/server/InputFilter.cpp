@@ -121,7 +121,7 @@ InputFilter::KeystrokeCondition::match(const Event& event)
 
 	// check if it's our hotkey
 	IPrimaryScreen::HotKeyInfo* kinfo =
-		reinterpret_cast<IPlatformScreen::HotKeyInfo*>(event.getData());
+		static_cast<IPlatformScreen::HotKeyInfo*>(event.getData());
 	if (kinfo->m_id != m_id) {
 		return kNoMatch;
 	}
@@ -217,7 +217,7 @@ InputFilter::MouseButtonCondition::match(const Event& event)
 	// check if it's the right button and modifiers.  ignore modifiers
 	// that cannot be combined with a mouse button.
 	IPlatformScreen::ButtonInfo* minfo =
-		reinterpret_cast<IPlatformScreen::ButtonInfo*>(event.getData());
+		static_cast<IPlatformScreen::ButtonInfo*>(event.getData());
 	if (minfo->m_button != m_button ||
 		(minfo->m_mask & ~s_ignoreMask) != m_mask) {
 		return kNoMatch;
@@ -256,7 +256,7 @@ InputFilter::ScreenConnectedCondition::match(const Event& event)
 {
 	if (event.getType() == m_events->forServer().connected()) {
 		Server::ScreenConnectedInfo* info = 
-			reinterpret_cast<Server::ScreenConnectedInfo*>(event.getData());
+			static_cast<Server::ScreenConnectedInfo*>(event.getData());
 		if (m_screen == info->m_screen || m_screen.empty()) {
 			return kActivate;
 		}
@@ -357,7 +357,7 @@ InputFilter::SwitchToScreenAction::perform(const Event& event)
 	String screen = m_screen;
 	if (screen.empty() && event.getType() == m_events->forServer().connected()) {
 		Server::ScreenConnectedInfo* info = 
-			reinterpret_cast<Server::ScreenConnectedInfo*>(event.getData());
+			static_cast<Server::ScreenConnectedInfo*>(event.getData());
 		screen = info->m_screen;
 	}
 

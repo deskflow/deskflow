@@ -127,7 +127,7 @@ XWindowsClipboardAnyBitmapConverter::fromIClipboard(const String& bmp) const
 {
 	// fill BMP info header with native-endian data
 	CBMPInfoHeader infoHeader;
-	const UInt8* rawBMPInfoHeader = reinterpret_cast<const UInt8*>(bmp.data());
+	const UInt8* rawBMPInfoHeader = static_cast<const UInt8*>(bmp.data());
 	infoHeader.biSize             = fromLEU32(rawBMPInfoHeader +  0);
 	infoHeader.biWidth            = fromLES32(rawBMPInfoHeader +  4);
 	infoHeader.biHeight           = fromLES32(rawBMPInfoHeader +  8);
@@ -186,6 +186,6 @@ XWindowsClipboardAnyBitmapConverter::toIClipboard(const String& image) const
 	toLE(dst, static_cast<UInt32>(0));
 
 	// construct image
-	return String(reinterpret_cast<const char*>(infoHeader),
+	return String(static_cast<const char*>(infoHeader),
 							sizeof(infoHeader)) + rawBMP;
 }

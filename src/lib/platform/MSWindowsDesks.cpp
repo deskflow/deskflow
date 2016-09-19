@@ -241,7 +241,7 @@ void
 MSWindowsDesks::getCursorPos(SInt32& x, SInt32& y) const
 {
 	POINT pos;
-	sendMessage(SYNERGY_MSG_CURSOR_POS, reinterpret_cast<WPARAM>(&pos), 0);
+	sendMessage(SYNERGY_MSG_CURSOR_POS, static_cast<WPARAM>(&pos), 0);
 	x = pos.x;
 	y = pos.y;
 }
@@ -427,7 +427,7 @@ void
 MSWindowsDesks::destroyClass(ATOM windowClass) const
 {
 	if (windowClass != 0) {
-		UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass),
+		UnregisterClass(static_cast<LPCTSTR>(windowClass),
 							MSWindowsScreen::getWindowInstance());
 	}
 }
@@ -437,7 +437,7 @@ MSWindowsDesks::createWindow(ATOM windowClass, const char* name) const
 {
 	HWND window = CreateWindowEx(WS_EX_TRANSPARENT |
 									WS_EX_TOOLWINDOW,
-								reinterpret_cast<LPCTSTR>(windowClass),
+								static_cast<LPCTSTR>(windowClass),
 								name,
 								WS_POPUP,
 								0, 0, 1, 1,
@@ -656,7 +656,7 @@ MSWindowsDesks::deskThread(void* vdesk)
 	MSG msg;
 
 	// use given desktop for this thread
-	Desk* desk              = reinterpret_cast<Desk*>(vdesk);
+	Desk* desk              = static_cast<Desk*>(vdesk);
 	desk->m_threadID         = GetCurrentThreadId();
 	desk->m_window           = NULL;
 	desk->m_foregroundWindow = NULL;
@@ -757,7 +757,7 @@ MSWindowsDesks::deskThread(void* vdesk)
 			break;
 
 		case SYNERGY_MSG_CURSOR_POS: {
-			POINT* pos = reinterpret_cast<POINT*>(msg.wParam);
+			POINT* pos = static_cast<POINT*>(msg.wParam);
 			if (!GetCursorPos(pos)) {
 				pos->x = m_xCenter;
 				pos->y = m_yCenter;

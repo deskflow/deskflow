@@ -162,7 +162,7 @@ MSWindowsScreenSaver::deactivate()
 	if (desktop != NULL) {
 		EnumDesktopWindows(desktop,
 							&MSWindowsScreenSaver::killScreenSaverFunc,
-							reinterpret_cast<LPARAM>(&killed));
+							static_cast<LPARAM>(&killed));
 		CloseDesktop(desktop);
 	}
 
@@ -205,7 +205,7 @@ MSWindowsScreenSaver::killScreenSaverFunc(HWND hwnd, LPARAM arg)
 		HINSTANCE instance = (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE);
 		if (instance != MSWindowsScreen::getWindowInstance()) {
 			PostMessage(hwnd, WM_CLOSE, 0, 0);
-			*reinterpret_cast<bool*>(arg) = true;
+			*static_cast<bool*>(arg) = true;
 		}
 	}
 	return TRUE;

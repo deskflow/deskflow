@@ -245,7 +245,7 @@ ArchTaskBarWindows::modifyIconNoLock(
 	receiver->lock();
 
 	// get icon data
-	HICON icon = reinterpret_cast<HICON>(
+	HICON icon = static_cast<HICON>(
 				const_cast<IArchTaskBarReceiver::Icon>(receiver->getIcon()));
 
 	// get tool tip
@@ -414,17 +414,17 @@ ArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
 	ArchTaskBarWindows* self = NULL;
 	if (msg == WM_NCCREATE) {
 		CREATESTRUCT* createInfo;
-		createInfo = reinterpret_cast<CREATESTRUCT*>(lParam);
-		self       = reinterpret_cast<ArchTaskBarWindows*>(
+		createInfo = static_cast<CREATESTRUCT*>(lParam);
+		self       = static_cast<ArchTaskBarWindows*>(
 												createInfo->lpCreateParams);
-		SetWindowLong(hwnd, 0, reinterpret_cast<LONG>(self));
+		SetWindowLong(hwnd, 0, static_cast<LONG>(self));
 	}
 	else {
 		// get the extra window data and forward the call
 		LONG data = GetWindowLong(hwnd, 0);
 		if (data != 0) {
-			self = reinterpret_cast<ArchTaskBarWindows*>(
-							reinterpret_cast<void*>(data));
+			self = static_cast<ArchTaskBarWindows*>(
+							static_cast<void*>(data));
 		}
 	}
 
@@ -461,14 +461,14 @@ ArchTaskBarWindows::threadMainLoop()
 
 	// create window
 	m_hwnd = CreateWindowEx(WS_EX_TOOLWINDOW,
-							reinterpret_cast<LPCTSTR>(windowClass),
+							static_cast<LPCTSTR>(windowClass),
 							TEXT("Synergy Task Bar"),
 							WS_POPUP,
 							0, 0, 1, 1,
 							NULL,
 							NULL,
 							instanceWin32(),
-							reinterpret_cast<void*>(this));
+							static_cast<void*>(this));
 
 	// signal ready
 	ARCH->lockMutex(m_mutex);
@@ -478,7 +478,7 @@ ArchTaskBarWindows::threadMainLoop()
 
 	// handle failure
 	if (m_hwnd == NULL) {
-		UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass), instanceWin32());
+		UnregisterClass(static_cast<LPCTSTR>(windowClass), instanceWin32());
 		return;
 	}
 
@@ -494,13 +494,13 @@ ArchTaskBarWindows::threadMainLoop()
 	// clean up
 	removeAllIcons();
 	DestroyWindow(m_hwnd);
-	UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass), instanceWin32());
+	UnregisterClass(static_cast<LPCTSTR>(windowClass), instanceWin32());
 }
 
 void*
 ArchTaskBarWindows::threadEntry(void* self)
 {
-	reinterpret_cast<ArchTaskBarWindows*>(self)->threadMainLoop();
+	static_cast<ArchTaskBarWindows*>(self)->threadMainLoop();
 	return NULL;
 }
 

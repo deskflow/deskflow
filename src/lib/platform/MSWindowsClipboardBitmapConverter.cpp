@@ -78,7 +78,7 @@ MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 	UInt32 srcSize = (UInt32)GlobalSize(data);
 
 	// check image type
-	const BITMAPINFO* bitmap = reinterpret_cast<const BITMAPINFO*>(src);
+	const BITMAPINFO* bitmap = static_cast<const BITMAPINFO*>(src);
 	LOG((CLOG_INFO "bitmap: %dx%d %d", bitmap->bmiHeader.biWidth, bitmap->bmiHeader.biHeight, (int)bitmap->bmiHeader.biBitCount));
 	if (bitmap->bmiHeader.biPlanes == 1 &&
 		(bitmap->bmiHeader.biBitCount == 24 ||

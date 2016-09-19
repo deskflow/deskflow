@@ -31,7 +31,7 @@ OSXUchrKeyResource::OSXUchrKeyResource(const void* resource,
 	m_sri(NULL),
 	m_st(NULL)
 {
-	m_resource = reinterpret_cast<const UCKeyboardLayout*>(resource);
+	m_resource = static_cast<const UCKeyboardLayout*>(resource);
 	if (m_resource == NULL) {
 		return;
 	}
@@ -56,19 +56,19 @@ OSXUchrKeyResource::OSXUchrKeyResource(const void* resource,
 	}
 
 	// get tables for keyboard type
-	const UInt8* base = reinterpret_cast<const UInt8*>(m_resource);
-	m_m   = reinterpret_cast<const UCKeyModifiersToTableNum*>(base +
+	const UInt8* base = static_cast<const UInt8*>(m_resource);
+	m_m   = static_cast<const UCKeyModifiersToTableNum*>(base +
 								th->keyModifiersToTableNumOffset);
-	m_cti = reinterpret_cast<const UCKeyToCharTableIndex*>(base +
+	m_cti = static_cast<const UCKeyToCharTableIndex*>(base +
 								th->keyToCharTableIndexOffset);
-	m_sdi = reinterpret_cast<const UCKeySequenceDataIndex*>(base +
+	m_sdi = static_cast<const UCKeySequenceDataIndex*>(base +
 								th->keySequenceDataIndexOffset);
 	if (th->keyStateRecordsIndexOffset != 0) {
-		m_sri = reinterpret_cast<const UCKeyStateRecordsIndex*>(base +
+		m_sri = static_cast<const UCKeyStateRecordsIndex*>(base +
 								th->keyStateRecordsIndexOffset);
 	}
 	if (th->keyStateTerminatorsOffset != 0) {
-		m_st = reinterpret_cast<const UCKeyStateTerminators*>(base +
+		m_st = static_cast<const UCKeyStateTerminators*>(base +
 								th->keyStateTerminatorsOffset);
 	}
 
@@ -81,7 +81,7 @@ OSXUchrKeyResource::OSXUchrKeyResource(const void* resource,
 		KeyID id = getKey(table, button);
 		if (id == 0x20) {
 			UCKeyOutput c =
-				reinterpret_cast<const UCKeyOutput*>(base +
+				static_cast<const UCKeyOutput*>(base +
 								m_cti->keyToCharTableOffsets[table])[button];
 			if ((c & kUCKeyOutputTestForIndexMask) ==
 								kUCKeyOutputStateIndexMask) {
@@ -134,8 +134,8 @@ OSXUchrKeyResource::getKey(UInt32 table, UInt32 button) const
 	assert(table < getNumTables());
 	assert(button < getNumButtons());
 
-	const UInt8* base   = reinterpret_cast<const UInt8*>(m_resource);
-	const UCKeyOutput* cPtr = reinterpret_cast<const UCKeyOutput*>(base +
+	const UInt8* base   = static_cast<const UInt8*>(m_resource);
+	const UCKeyOutput* cPtr = static_cast<const UCKeyOutput*>(base +
 								m_cti->keyToCharTableOffsets[table]);
 
   const UCKeyOutput c = cPtr[button];
@@ -211,12 +211,12 @@ bool
 OSXUchrKeyResource::getKeyRecord(
 	KeySequence& keys, UInt16 index, UInt16& state) const
 {
-	const UInt8* base = reinterpret_cast<const UInt8*>(m_resource);
+	const UInt8* base = static_cast<const UInt8*>(m_resource);
 	const UCKeyStateRecord* sr =
-		reinterpret_cast<const UCKeyStateRecord*>(base +
+		static_cast<const UCKeyStateRecord*>(base +
 								m_sri->keyStateRecordOffsets[index]);
 	const UCKeyStateEntryTerminal* kset =
-		reinterpret_cast<const UCKeyStateEntryTerminal*>(sr->stateEntryData);
+		static_cast<const UCKeyStateEntryTerminal*>(sr->stateEntryData);
 
 	UInt16 nextState = 0;
 	bool found       = false;

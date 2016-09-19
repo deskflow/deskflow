@@ -1386,7 +1386,7 @@ XWindowsUtil::setWindowProperty(Display* display, Window window,
 				Atom type, SInt32 format)
 {
 	const UInt32 length       = 4 * XMaxRequestSize(display);
-	const unsigned char* data = reinterpret_cast<const unsigned char*>(vdata);
+	const unsigned char* data = static_cast<const unsigned char*>(vdata);
 	UInt32 datumSize    = static_cast<UInt32>(format / 8);
 	// format 32 on 64bit systems is 8 bytes not 4.
 	if (format == 32) {
@@ -1665,35 +1665,35 @@ XWindowsUtil::convertAtomProperty(String& data)
 	// 64-bit numbers we have to ensure the last number is a full 64 bits.
 	if (sizeof(Atom) != 4 && ((data.size() / 4) & 1) != 0) {
 		UInt32 zero = 0;
-		data.append(reinterpret_cast<char*>(&zero), sizeof(zero));
+		data.append(static_cast<char*>(&zero), sizeof(zero));
 	}
 }
 
 void
 XWindowsUtil::appendAtomData(String& data, Atom atom)
 {
-	data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
+	data.append(static_cast<char*>(&atom), sizeof(Atom));
 }
 
 void
 XWindowsUtil::replaceAtomData(String& data, UInt32 index, Atom atom)
 {
 	data.replace(index * sizeof(Atom), sizeof(Atom),
-								reinterpret_cast<const char*>(&atom),
+								static_cast<const char*>(&atom),
 								sizeof(Atom));
 }
 
 void
 XWindowsUtil::appendTimeData(String& data, Time time)
 {
-	data.append(reinterpret_cast<char*>(&time), sizeof(Time));
+	data.append(static_cast<char*>(&time), sizeof(Time));
 }
 
 Bool
 XWindowsUtil::propertyNotifyPredicate(Display*, XEvent* xevent, XPointer arg)
 {
 	PropertyNotifyPredicateInfo* filter =
-						reinterpret_cast<PropertyNotifyPredicateInfo*>(arg);
+						static_cast<PropertyNotifyPredicateInfo*>(arg);
 	return (xevent->type             == PropertyNotify &&
 			xevent->xproperty.window == filter->m_window &&
 			xevent->xproperty.atom   == filter->m_property &&
@@ -1784,5 +1784,5 @@ void
 XWindowsUtil::ErrorLock::saveHandler(Display*, XErrorEvent* e, void* flag)
 {
 	LOG((CLOG_DEBUG1 "flagging X error: %d", e->error_code));
-	*reinterpret_cast<bool*>(flag) = true;
+	*static_cast<bool*>(flag) = true;
 }

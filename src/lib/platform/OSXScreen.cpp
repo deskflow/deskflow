@@ -986,7 +986,7 @@ OSXScreen::sendClipboardEvent(Event::Type type, ClipboardID id) const
 void
 OSXScreen::handleSystemEvent(const Event& event, void*)
 {
-	EventRef* carbonEvent = reinterpret_cast<EventRef*>(event.getData());
+	EventRef* carbonEvent = static_cast<EventRef*>(event.getData());
 	assert(carbonEvent != NULL);
 
 	UInt32 eventClass = GetEventClass(*carbonEvent);
