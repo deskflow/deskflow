@@ -1,10 +1,14 @@
 v1.8.3-stable
 =============
-Bug #2765 - A letter is typed when spacebar is pressed on Mac client
+Bug #2765 - A letter appears on macOS clients when the spacebar is pressed
+Bug #3241 - Windows UAC disconnects clients when elevated
+Bug #4740 - Linux client crashes with "Assertion '!m_open' failed"
+Bug #4879 - Memory leak caused by IpcReader
 Bug #5373 - Tab behaves like shift tab on client
-Bug #3241 - UAC causes discconnection while in elevate mode
-Enhancement #4323 - Make auto-elevate optional
-Enhancement #3305 - Media key support for Mac clients
+Bug #5502 - Copy and paste from server to client doesn't work
+Enhancement #123 - Option to disable clipboard sharing
+Enhancement #3305 - Media key support on macOS
+Enhancement #4323 - Make automatic elevation on Windows optional
 
 v1.8.2-stable
 =============
