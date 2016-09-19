@@ -18,6 +18,7 @@
 #pragma once
 
 #import <CoreFoundation/CoreFoundation.h>
+#import <Carbon/Carbon.h>
 
 #include "synergy/key_types.h"
 
@@ -25,6 +26,8 @@
 extern "C" {
 #endif
 bool				fakeNativeMediaKey(KeyID id);
+bool				isMediaKeyEvent(CGEventRef event);
+bool				getMediaKeyEventInfo(CGEventRef event, KeyID* keyId, bool* down, bool* isRepeat);
 #if defined(__cplusplus)
 }
 #endif

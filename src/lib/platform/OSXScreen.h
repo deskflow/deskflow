@@ -128,6 +128,8 @@ private:
 	void				constructMouseButtonEventMap();
 
 	bool				onKey(CGEventRef event);
+
+	void				onMediaKey(CGEventRef event);
 	
 	bool				onHotKey(EventRef event) const;
 	
