@@ -1169,7 +1169,7 @@ XWindowsScreen::getKeyState() const
 Bool
 XWindowsScreen::findKeyEvent(Display*, XEvent* xevent, XPointer arg)
 {
-	KeyEventFilter* filter = reinterpret_cast<KeyEventFilter*>(arg);
+	KeyEventFilter* filter = static_cast<KeyEventFilter*>(arg);
 	return (xevent->type         == filter->m_event &&
 			xevent->xkey.window  == filter->m_window &&
 			xevent->xkey.time    == filter->m_time &&
@@ -1179,7 +1179,7 @@ XWindowsScreen::findKeyEvent(Display*, XEvent* xevent, XPointer arg)
 void
 XWindowsScreen::handleSystemEvent(const Event& event, void*)
 {
-	XEvent* xevent = reinterpret_cast<XEvent*>(event.getData());
+	XEvent* xevent = static_cast<XEvent*>(event.getData());
 	assert(xevent != NULL);
 
 	// update key state
@@ -1408,7 +1408,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 	default:
 #if HAVE_XKB_EXTENSION
 		if (m_xkb && xevent->type == m_xkbEventBase) {
-			XkbEvent* xkbEvent = reinterpret_cast<XkbEvent*>(xevent);
+			XkbEvent* xkbEvent = static_cast<XkbEvent*>(xevent);
 			switch (xkbEvent->any.xkb_type) {
 			case XkbMapNotify:
 				refreshKeyboard(xevent);
@@ -1426,7 +1426,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 		if (m_xrandr) {
 			if (xevent->type == m_xrandrEventBase + RRScreenChangeNotify
 			||  xevent->type == m_xrandrEventBase + RRNotify
-			&& reinterpret_cast<XRRNotifyEvent *>(xevent)->subtype == RRNotify_CrtcChange) {
+			&& static_cast<XRRNotifyEvent *>(xevent)->subtype == RRNotify_CrtcChange) {
 				LOG((CLOG_INFO "XRRScreenChangeNotifyEvent or RRNotify_CrtcChange received"));
 
 				// we're required to call back into XLib so XLib can update its internal state

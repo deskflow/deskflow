@@ -52,11 +52,11 @@ void
 init(void* log, void* arch)
 {
 	if (g_log == NULL) {
-		g_log = new Log(reinterpret_cast<Log*>(log));
+		g_log = new Log(static_cast<Log*>(log));
 	}
 
 	if (g_arch == NULL) {
-		Arch::setInstance(reinterpret_cast<Arch*>(arch));
+		Arch::setInstance(static_cast<Arch*>(arch));
 	}
 
 	LOG(( CLOG_DEBUG "library use: %s", helperGetLibsUsed().c_str()));
@@ -74,8 +74,8 @@ invoke(const char* command, void** args)
 	IEventQueue* arg1 = NULL;
 	SocketMultiplexer* arg2 = NULL;
 	if (args != NULL) {
-		arg1 = reinterpret_cast<IEventQueue*>(args[0]);
-		arg2 = reinterpret_cast<SocketMultiplexer*>(args[1]);
+		arg1 = static_cast<IEventQueue*>(args[0]);
+		arg2 = static_cast<SocketMultiplexer*>(args[1]);
 	}
 
 	if (strcmp(command, "getSocket") == 0) {

@@ -29,7 +29,7 @@ SynergyLocale::SynergyLocale()
 void SynergyLocale::loadLanguages()
 {
 	QResource resource(":/res/lang/Languages.xml");
-	QByteArray bytes(reinterpret_cast<const char*>(resource.data()), resource.size());
+	QByteArray bytes(static_cast<const char*>(resource.data()), resource.size());
 	QXmlStreamReader xml(bytes);
 
 	while (!xml.atEnd())

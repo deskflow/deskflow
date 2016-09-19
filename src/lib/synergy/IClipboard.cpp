@@ -151,7 +151,7 @@ IClipboard::copy(IClipboard* dst, const IClipboard* src, Time time)
 UInt32
 IClipboard::readUInt32(const char* buf)
 {
-	const unsigned char* ubuf = reinterpret_cast<const unsigned char*>(buf);
+	const unsigned char* ubuf = static_cast<const unsigned char*>(buf);
 	return	(static_cast<UInt32>(ubuf[0]) << 24) |
 			(static_cast<UInt32>(ubuf[1]) << 16) |
 			(static_cast<UInt32>(ubuf[2]) <<  8) |

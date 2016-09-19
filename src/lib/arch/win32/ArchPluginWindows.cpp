@@ -64,7 +64,7 @@ ArchPluginWindows::load()
 		
 		LOG((CLOG_DEBUG "loading plugin: %s", filename.c_str()));
 		HINSTANCE handle = LoadLibrary(path.c_str());
-		void* voidHandle = reinterpret_cast<void*>(handle);
+		void* voidHandle = static_cast<void*>(handle);
 
 		if (handle == NULL) {
 			String error = XArchEvalWindows().eval();
@@ -102,7 +102,7 @@ ArchPluginWindows::unload()
 	PluginTable::iterator it;
 	HINSTANCE lib;
 	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
-		lib = reinterpret_cast<HINSTANCE>(it->second);
+		lib = static_cast<HINSTANCE>(it->second);
 		cleanupFunc cleanup = (cleanupFunc)GetProcAddress(lib, "cleanup");
 		if (cleanup != NULL) {
 			cleanup();
@@ -122,7 +122,7 @@ ArchPluginWindows::init(void* log, void* arch)
 	PluginTable::iterator it;
 	HINSTANCE lib;
 	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
-		lib = reinterpret_cast<HINSTANCE>(it->second);
+		lib = static_cast<HINSTANCE>(it->second);
 		initFunc initPlugin = (initFunc)GetProcAddress(lib, "init");
 		if (initPlugin != NULL) {
 			initPlugin(log, arch);
@@ -142,7 +142,7 @@ ArchPluginWindows::initEvent(void* eventTarget, IEventQueue* events)
 	PluginTable::iterator it;
 	HINSTANCE lib;
 	for (it = m_pluginTable.begin(); it != m_pluginTable.end(); it++) {
-		lib = reinterpret_cast<HINSTANCE>(it->second);
+		lib = static_cast<HINSTANCE>(it->second);
 		initEventFunc initEventPlugin = (initEventFunc)GetProcAddress(lib, "initEvent");
 		if (initEventPlugin != NULL) {
 			initEventPlugin(&sendEvent);
@@ -175,7 +175,7 @@ ArchPluginWindows::invoke(
 		PluginTable::iterator it;
 		it = m_pluginTable.find(plugin);
 		if (it != m_pluginTable.end()) {
-			lib = reinterpret_cast<HINSTANCE>(it->second);
+			lib = static_cast<HINSTANCE>(it->second);
 		}
 		else {
 			LOG((CLOG_DEBUG "invoke command failed, plugin: %s command: %s",
@@ -184,7 +184,7 @@ ArchPluginWindows::invoke(
 		}
 	}
 	else {
-		lib = reinterpret_cast<HINSTANCE>(library);
+		lib = static_cast<HINSTANCE>(library);
 	}
 
 	invokeFunc invokePlugin = (invokeFunc)GetProcAddress(lib, "invoke");

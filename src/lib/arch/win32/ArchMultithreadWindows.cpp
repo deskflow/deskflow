@@ -303,7 +303,7 @@ ArchMultithreadWindows::newThread(ThreadFunc func, void* data)
 
 	// create thread
 	unsigned int id = 0;
-	thread->m_thread = reinterpret_cast<HANDLE>(_beginthreadex(NULL, 0,
+	thread->m_thread = static_cast<HANDLE>(_beginthreadex(NULL, 0,
 								threadFunc, (void*)thread, 0, &id));
 	thread->m_id     = static_cast<DWORD>(id);
 
@@ -661,7 +661,7 @@ unsigned int __stdcall
 ArchMultithreadWindows::threadFunc(void* vrep)
 {
 	// get the thread
-	ArchThreadImpl* thread = reinterpret_cast<ArchThreadImpl*>(vrep);
+	ArchThreadImpl* thread = static_cast<ArchThreadImpl*>(vrep);
 
 	// run thread
 	s_instance->doThreadFunc(thread);

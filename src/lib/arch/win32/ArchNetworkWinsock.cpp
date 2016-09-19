@@ -754,7 +754,7 @@ ArchNetworkWinsock::addrToName(ArchNetAddress addr)
 
 	// name lookup
 	struct hostent* info = gethostbyaddr_winsock(
-							reinterpret_cast<const char FAR*>(&addr->m_addr),
+							static_cast<const char FAR*>(&addr->m_addr),
 							addr->m_len, addr->m_addr.sa_family);
 	if (info == NULL) {
 		throwNameError(getsockerror_winsock());
@@ -772,7 +772,7 @@ ArchNetworkWinsock::addrToString(ArchNetAddress addr)
 	switch (getAddrFamily(addr)) {
 	case kINET: {
 		struct sockaddr_in* ipAddr =
-			reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
+			static_cast<struct sockaddr_in*>(&addr->m_addr);
 		return inet_ntoa_winsock(ipAddr->sin_addr);
 	}
 
@@ -804,7 +804,7 @@ ArchNetworkWinsock::setAddrPort(ArchNetAddress addr, int port)
 	switch (getAddrFamily(addr)) {
 	case kINET: {
 		struct sockaddr_in* ipAddr =
-			reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
+			static_cast<struct sockaddr_in*>(&addr->m_addr);
 		ipAddr->sin_port = htons_winsock(static_cast<u_short>(port));
 		break;
 	}
@@ -823,7 +823,7 @@ ArchNetworkWinsock::getAddrPort(ArchNetAddress addr)
 	switch (getAddrFamily(addr)) {
 	case kINET: {
 		struct sockaddr_in* ipAddr =
-			reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
+			static_cast<struct sockaddr_in*>(&addr->m_addr);
 		return ntohs_winsock(ipAddr->sin_port);
 	}
 
@@ -841,7 +841,7 @@ ArchNetworkWinsock::isAnyAddr(ArchNetAddress addr)
 	switch (getAddrFamily(addr)) {
 	case kINET: {
 		struct sockaddr_in* ipAddr =
-			reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
+			static_cast<struct sockaddr_in*>(&addr->m_addr);
 		return (addr->m_len == sizeof(struct sockaddr_in) &&
 				ipAddr->sin_addr.s_addr == INADDR_ANY);
 	}

@@ -439,7 +439,7 @@ Client::sendConnectionFailedEvent(const char* msg)
 void
 Client::sendFileChunk(const void* data)
 {
-	FileChunk* chunk = reinterpret_cast<FileChunk*>(const_cast<void*>(data));
+	FileChunk* chunk = static_cast<FileChunk*>(const_cast<void*>(data));
 	LOG((CLOG_DEBUG1 "send file chunk"));
 	assert(m_server != NULL);
 
@@ -621,7 +621,7 @@ void
 Client::handleConnectionFailed(const Event& event, void*)
 {
 	IDataSocket::ConnectionFailedInfo* info =
-		reinterpret_cast<IDataSocket::ConnectionFailedInfo*>(event.getData());
+		static_cast<IDataSocket::ConnectionFailedInfo*>(event.getData());
 
 	cleanupTimer();
 	cleanupConnecting();
@@ -677,7 +677,7 @@ Client::handleClipboardGrabbed(const Event& event, void*)
 	}
 
 	const IScreen::ClipboardInfo* info =
-		reinterpret_cast<const IScreen::ClipboardInfo*>(event.getData());
+		static_cast<const IScreen::ClipboardInfo*>(event.getData());
 
 	// grab ownership
 	m_server->onGrabClipboard(info->m_id);
@@ -826,14 +826,14 @@ Client::sendFileToServer(const char* filename)
 	m_sendFileThread = new Thread(
 		new TMethodJob<Client>(
 			this, &Client::sendFileThread,
-			reinterpret_cast<void*>(const_cast<char*>(filename))));
+			static_cast<void*>(const_cast<char*>(filename))));
 }
 
 void
 Client::sendFileThread(void* filename)
 {
 	try {
-		char* name  = reinterpret_cast<char*>(filename);
+		char* name  = static_cast<char*>(filename);
 		StreamChunker::sendFile(name, m_events, this);
 	}
 	catch (std::runtime_error error) {

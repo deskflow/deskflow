@@ -221,7 +221,7 @@ MSWindowsClientTaskBarReceiver::primaryAction()
 const IArchTaskBarReceiver::Icon
 MSWindowsClientTaskBarReceiver::getIcon() const
 {
-	return reinterpret_cast<Icon>(m_icon[getStatus()]);
+	return static_cast<Icon>(m_icon[getStatus()]);
 }
 
 void
@@ -263,7 +263,7 @@ MSWindowsClientTaskBarReceiver::loadIcon(UINT id)
 							IMAGE_ICON,
 							0, 0,
 							LR_DEFAULTCOLOR);
-	return reinterpret_cast<HICON>(icon);
+	return static_cast<HICON>(icon);
 }
 
 void
@@ -287,8 +287,8 @@ MSWindowsClientTaskBarReceiver::createWindow()
 							MAKEINTRESOURCE(IDD_TASKBAR_STATUS),
 							NULL,
 							(DLGPROC)&MSWindowsClientTaskBarReceiver::staticDlgProc,
-							reinterpret_cast<LPARAM>(
-								reinterpret_cast<void*>(this)));
+							static_cast<LPARAM>(
+								static_cast<void*>(this)));
 
 	// window should appear on top of everything, including (especially)
 	// the task bar.
@@ -337,8 +337,8 @@ MSWindowsClientTaskBarReceiver::staticDlgProc(HWND hwnd,
 	// and put it in the extra window data then forward the call.
 	MSWindowsClientTaskBarReceiver* self = NULL;
 	if (msg == WM_INITDIALOG) {
-		self = reinterpret_cast<MSWindowsClientTaskBarReceiver*>(
-							reinterpret_cast<void*>(lParam));
+		self = static_cast<MSWindowsClientTaskBarReceiver*>(
+							static_cast<void*>(lParam));
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR) lParam);
 	}
 	else {

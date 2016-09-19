@@ -328,7 +328,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 void 
 NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vlistener)
 {
-	ClientListener* listener = reinterpret_cast<ClientListener*>(vlistener);
+	ClientListener* listener = static_cast<ClientListener*>(vlistener);
 	Server* server = listener->getServer();
 
 	ClientProxy* client = listener->getNextClient();
@@ -336,7 +336,7 @@ NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vl
 		throw runtime_error("client is null");
 	}
 
-	BaseClientProxy* bcp = reinterpret_cast<BaseClientProxy*>(client);
+	BaseClientProxy* bcp = static_cast<BaseClientProxy*>(client);
 	server->adoptClient(bcp);
 	server->setActive(bcp);
 
@@ -346,7 +346,7 @@ NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vl
 void 
 NetworkTests::sendToClient_mockData_fileRecieveCompleted(const Event& event, void*)
 {
-	Client* client = reinterpret_cast<Client*>(event.getTarget());
+	Client* client = static_cast<Client*>(event.getTarget());
 	EXPECT_TRUE(client->isReceivedFileSizeValid());
 
 	m_events.raiseQuitEvent();
@@ -355,7 +355,7 @@ NetworkTests::sendToClient_mockData_fileRecieveCompleted(const Event& event, voi
 void 
 NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vlistener)
 {
-	ClientListener* listener = reinterpret_cast<ClientListener*>(vlistener);
+	ClientListener* listener = static_cast<ClientListener*>(vlistener);
 	Server* server = listener->getServer();
 
 	ClientProxy* client = listener->getNextClient();
@@ -363,7 +363,7 @@ NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vl
 		throw runtime_error("client is null");
 	}
 
-	BaseClientProxy* bcp = reinterpret_cast<BaseClientProxy*>(client);
+	BaseClientProxy* bcp = static_cast<BaseClientProxy*>(client);
 	server->adoptClient(bcp);
 	server->setActive(bcp);
 
@@ -373,7 +373,7 @@ NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vl
 void 
 NetworkTests::sendToClient_mockFile_fileRecieveCompleted(const Event& event, void*)
 {
-	Client* client = reinterpret_cast<Client*>(event.getTarget());
+	Client* client = static_cast<Client*>(event.getTarget());
 	EXPECT_TRUE(client->isReceivedFileSizeValid());
 
 	m_events.raiseQuitEvent();
@@ -382,14 +382,14 @@ NetworkTests::sendToClient_mockFile_fileRecieveCompleted(const Event& event, voi
 void 
 NetworkTests::sendToServer_mockData_handleClientConnected(const Event&, void* vclient)
 {
-	Client* client = reinterpret_cast<Client*>(vclient);
+	Client* client = static_cast<Client*>(vclient);
 	sendMockData(client);
 }
 
 void 
 NetworkTests::sendToServer_mockData_fileRecieveCompleted(const Event& event, void*)
 {
-	Server* server = reinterpret_cast<Server*>(event.getTarget());
+	Server* server = static_cast<Server*>(event.getTarget());
 	EXPECT_TRUE(server->isReceivedFileSizeValid());
 
 	m_events.raiseQuitEvent();
@@ -398,14 +398,14 @@ NetworkTests::sendToServer_mockData_fileRecieveCompleted(const Event& event, voi
 void 
 NetworkTests::sendToServer_mockFile_handleClientConnected(const Event&, void* vclient)
 {
-	Client* client = reinterpret_cast<Client*>(vclient);
+	Client* client = static_cast<Client*>(vclient);
 	client->sendFileToServer(kMockFilename);
 }
 
 void 
 NetworkTests::sendToServer_mockFile_fileRecieveCompleted(const Event& event, void*)
 {
-	Server* server = reinterpret_cast<Server*>(event.getTarget());
+	Server* server = static_cast<Server*>(event.getTarget());
 	EXPECT_TRUE(server->isReceivedFileSizeValid());
 
 	m_events.raiseQuitEvent();
@@ -491,7 +491,7 @@ createFile(fstream& file, const char* filename, size_t size)
 		throw runtime_error("file not open");
 	}
 
-	file.write(reinterpret_cast<char*>(buffer), size);
+	file.write(static_cast<char*>(buffer), size);
 	file.close();
 
 	delete[] buffer;

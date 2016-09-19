@@ -268,7 +268,7 @@ void
 ClientApp::handleClientRestart(const Event&, void* vtimer)
 {
 	// discard old timer
-	EventQueueTimer* timer = reinterpret_cast<EventQueueTimer*>(vtimer);
+	EventQueueTimer* timer = static_cast<EventQueueTimer*>(vtimer);
 	m_events->deleteTimer(timer);
 	m_events->removeHandler(Event::kTimer, timer);
 
@@ -301,7 +301,7 @@ void
 ClientApp::handleClientFailed(const Event& e, void*)
 {
 	Client::FailInfo* info =
-		reinterpret_cast<Client::FailInfo*>(e.getData());
+		static_cast<Client::FailInfo*>(e.getData());
 
 	updateStatus(String("Failed to connect to server: ") + info->m_what);
 	if (!args().m_restartable || !info->m_retry) {

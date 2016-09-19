@@ -785,7 +785,7 @@ void
 XWindowsKeyState::remapKeyModifiers(KeyID id, SInt32 group,
 							synergy::KeyMap::KeyItem& item, void* vself)
 {
-	XWindowsKeyState* self = reinterpret_cast<XWindowsKeyState*>(vself);
+	XWindowsKeyState* self = static_cast<XWindowsKeyState*>(vself);
 	item.m_required  =
 		self->mapModifiersFromX(XkbBuildCoreState(item.m_required, group));
 	item.m_sensitive =

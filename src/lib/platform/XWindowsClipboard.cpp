@@ -516,7 +516,7 @@ XWindowsClipboard::icccmFillCache()
 	}
 
 	XWindowsUtil::convertAtomProperty(data);
-	const Atom* targets = reinterpret_cast<const Atom*>(data.data());
+	const Atom* targets = static_cast<const Atom*>(data.data());
 	const UInt32 numTargets = data.size() / sizeof(Atom);
 	LOG((CLOG_DEBUG "  available targets: %s", XWindowsUtil::atomsToString(m_display, targets, numTargets).c_str()));
 
@@ -594,7 +594,7 @@ XWindowsClipboard::icccmGetTime() const
 	String data;
 	if (icccmGetSelection(m_atomTimestamp, &actualTarget, &data) &&
 		actualTarget == m_atomInteger) {
-		Time time = *reinterpret_cast<const Time*>(data.data());
+		Time time = *static_cast<const Time*>(data.data());
 		LOG((CLOG_DEBUG1 "got ICCCM time %d", time));
 		return time;
 	}
@@ -672,7 +672,7 @@ XWindowsClipboard::motifOwnsClipboard() const
 
 	// check the owner window against the current clipboard owner
 	const MotifClipHeader* header =
-						reinterpret_cast<const MotifClipHeader*>(data.data());
+						static_cast<const MotifClipHeader*>(data.data());
 	if (data.size() >= sizeof(MotifClipHeader) &&
 		header->m_id == kMotifClipHeader) {
 		if (static_cast<Window>(header->m_selectionOwner) == owner) {
@@ -701,7 +701,7 @@ XWindowsClipboard::motifFillCache()
 
 	// check that the header is okay
 	const MotifClipHeader* header =
-						reinterpret_cast<const MotifClipHeader*>(data.data());
+						static_cast<const MotifClipHeader*>(data.data());
 	if (data.size() < sizeof(MotifClipHeader) ||
 		header->m_id != kMotifClipHeader ||
 		header->m_numItems < 1) {
@@ -721,7 +721,7 @@ XWindowsClipboard::motifFillCache()
 
 	// check that the item is okay
 	const MotifClipItem* item =
-					reinterpret_cast<const MotifClipItem*>(data.data());
+					static_cast<const MotifClipItem*>(data.data());
 	if (data.size() < sizeof(MotifClipItem) ||
 		item->m_id != kMotifClipItem ||
 		item->m_numFormats - item->m_numDeletedFormats < 1) {
@@ -730,8 +730,8 @@ XWindowsClipboard::motifFillCache()
 
 	// format list is after static item structure elements
 	const SInt32 numFormats = item->m_numFormats - item->m_numDeletedFormats;
-	const SInt32* formats   = reinterpret_cast<const SInt32*>(item->m_size +
-								reinterpret_cast<const char*>(data.data()));
+	const SInt32* formats   = static_cast<const SInt32*>(item->m_size +
+								static_cast<const char*>(data.data()));
 
 	// get the available formats
 	typedef std::map<Atom, String> MotifFormatMap;
@@ -749,7 +749,7 @@ XWindowsClipboard::motifFillCache()
 
 		// check that the format is okay
 		const MotifClipFormat* motifFormat =
-						reinterpret_cast<const MotifClipFormat*>(data.data());
+						static_cast<const MotifClipFormat*>(data.data());
 		if (data.size() < sizeof(MotifClipFormat) ||
 			motifFormat->m_id != kMotifClipFormat ||
 			motifFormat->m_length < 0 ||
@@ -783,7 +783,7 @@ XWindowsClipboard::motifFillCache()
 
 		// get format
 		const MotifClipFormat* motifFormat =
-								reinterpret_cast<const MotifClipFormat*>(
+								static_cast<const MotifClipFormat*>(
 									index2->second.data());
 		const Atom target                   = motifFormat->m_type;
 
@@ -855,7 +855,7 @@ XWindowsClipboard::insertMultipleReply(Window requestor,
 
 	// data is a list of atom pairs:  target, property
 	XWindowsUtil::convertAtomProperty(data);
-	const Atom* targets = reinterpret_cast<const Atom*>(data.data());
+	const Atom* targets = static_cast<const Atom*>(data.data());
 	const UInt32 numTargets = data.size() / sizeof(Atom);
 
 	// add replies for each target
