@@ -114,6 +114,9 @@ HEADERS += src/MainWindow.h \
     src/ActivationNotifier.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
+unix {
+    DEFINES += SYSAPI_UNIX=1
+}
 macx { 
     QMAKE_INFO_PLIST = res/mac/Info.plist
     TARGET = Synergy
