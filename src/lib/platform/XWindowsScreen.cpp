@@ -1442,6 +1442,8 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 					XMoveWindow(m_display, m_window, m_x, m_y);
 					XResizeWindow(m_display, m_window, m_w, m_h);
 				}
+
+				sendEvent(m_events->forIScreen().shapeChanged());
 			}
 		}
 #endif
