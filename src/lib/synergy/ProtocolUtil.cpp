@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -230,7 +230,7 @@ ProtocolUtil::vreadf(synergy::IStream* stream, const char* fmt, va_list args)
 					throw;
 				}
 
-				LOG((CLOG_DEBUG2 "readf: read %d byte string: %.*s", len, len, sBuffer));
+				LOG((CLOG_DEBUG2 "readf: read %d byte string", len));
 
 				// save the data
 				String* dst = va_arg(args, String*);

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Synergy Si Ltd.
+ * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,7 @@
 
 #include "test/global/gtest.h"
 
-#define TEST_URL "https://synergy-project.org/tests/?testString"
+#define TEST_URL "https://symless.com/tests/?testString"
 //#define TEST_URL "http://localhost/synergy/tests/?testString"
 
 TEST(ArchInternetTests, get)

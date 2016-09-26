@@ -1,5 +1,5 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012 Synergy Si Ltd.
+# Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2009 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
@@ -201,7 +201,7 @@ class InternalCommands:
 	
 	project = 'synergy'
 	setup_version = 5 # increment to force setup/config
-	website_url = 'http://synergy-project.org/'
+	website_url = 'http://symless.com/'
 
 	this_cmd = 'hm'
 	cmake_cmd = 'cmake'
@@ -1516,7 +1516,7 @@ class InternalCommands:
 			'Replace [package-type] with one of:\n'
 			'  src    .tar.gz source (Posix only)\n'
 			'  rpm    .rpm package (Red Hat)\n'
-			'  deb    .deb paclage (Debian)\n'
+			'  deb    .deb package (Debian)\n'
 			'  win    .exe installer (Windows)\n'
 			'  mac    .dmg package (Mac OS X)\n'
 			'\n'

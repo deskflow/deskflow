@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Synergy Si, inc.
+ * Copyright (C) 2014-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -325,7 +325,6 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 	}
 	else if (isArg(i, argc, argv, NULL, "--enable-crypto")) {
 		argsBase().m_enableCrypto = true;
-		StreamChunker::updateChunkSize(true);
 	}
 	else if (isArg(i, argc, argv, NULL, "--profile-dir", 1)) {
 		argsBase().m_profileDirectory = argv[++i];

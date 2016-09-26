@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Synergy Si Ltd.
+ * Copyright (C) 2014-2016 Symless Ltd.
  * Patch by Ryan Chapman
  *
  * This package is free software; you can redistribute it and/or

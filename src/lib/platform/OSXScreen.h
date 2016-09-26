@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -128,6 +128,8 @@ private:
 	void				constructMouseButtonEventMap();
 
 	bool				onKey(CGEventRef event);
+
+	void				onMediaKey(CGEventRef event);
 	
 	bool				onHotKey(EventRef event) const;
 	

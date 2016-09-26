@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -159,7 +159,7 @@ private:
 		KeyButtonOffset = 1
 	};
 
-	typedef std::map<KeyLayout, SInt32> GroupMap;
+	typedef std::map<CFDataRef, SInt32> GroupMap;
 	typedef std::map<UInt32, KeyID> VirtualKeyMap;
 
 	VirtualKeyMap		m_virtualKeyMap;

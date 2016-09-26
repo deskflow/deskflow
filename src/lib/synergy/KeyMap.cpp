@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2005 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -535,14 +535,17 @@ KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, SInt32 group,
 				continue;
 			}
 
-			// only match based on shift;  we're after the right button
-			// not the right character.  we'll use desiredMask as-is,
-			// overriding the key's required modifiers, when synthesizing
-			// this button.
+			// match based on shift and make sure all required modifiers,
+			// except shift, are already in the desired mask;  we're
+			// after the right button not the right character.
+			// we'll use desiredMask as-is, overriding the key's required
+			// modifiers, when synthesizing this button.
 			const KeyItem& item = entryList[i].back();
-			if ((item.m_required & KeyModifierShift & desiredMask) ==
-				(item.m_sensitive & KeyModifierShift & desiredMask)) {
-				LOG((CLOG_DEBUG1 "found key in group %d", effectiveGroup));
+			KeyModifierMask desiredShiftMask = KeyModifierShift & desiredMask;
+			KeyModifierMask requiredIgnoreShiftMask = item.m_required & ~KeyModifierShift;
+			if ((item.m_required & desiredShiftMask) == (item.m_sensitive & desiredShiftMask) &&
+				((requiredIgnoreShiftMask & desiredMask) == requiredIgnoreShiftMask)) {
+				LOG((CLOG_INFO "found key in group %d", effectiveGroup));
 				keyItem = &item;
 				break;
 			}
@@ -694,9 +697,9 @@ KeyMap::findBestKey(const KeyEntryList& entryList,
 	// check for an item that can accommodate the desiredState exactly
 	for (SInt32 i = 0; i < (SInt32)entryList.size(); ++i) {
 		const KeyItem& item = entryList[i].back();
-		if ((item.m_required & desiredState) ==
-			(item.m_sensitive & desiredState)) {
-			LOG((CLOG_DEBUG1 "best key index %d of %d (exact)", i, entryList.size()));
+		if ((item.m_required & desiredState) == item.m_required &&
+			(item.m_required & desiredState) == (item.m_sensitive & desiredState)) {
+			LOG((CLOG_DEBUG1 "best key index %d of %d (exact)", i + 1, entryList.size()));
 			return i;
 		}
 	}
@@ -715,7 +718,8 @@ KeyMap::findBestKey(const KeyEntryList& entryList,
 		}
 	}
 	if (bestIndex != -1) {
-		LOG((CLOG_DEBUG1 "best key index %d of %d (%d modifiers)", bestIndex, entryList.size(), bestCount));
+		LOG((CLOG_DEBUG1 "best key index %d of %d (%d modifiers)",
+			 bestIndex + 1, entryList.size(), bestCount));
 	}
 
 	return bestIndex;

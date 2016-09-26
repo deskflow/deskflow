@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Si Ltd.
+ * Copyright (C) 2015-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,15 +41,20 @@ public:
 	// ISocket overrides
 	void				close();
 
-	void				secureConnect();
-	void				secureAccept();
-	bool				isReady() const { return m_secureReady; }
+	// IDataSocket overrides
+	virtual void		connect(const NetworkAddress&);
+	
+	ISocketMultiplexerJob*
+						newJob();
 	bool				isFatal() const { return m_fatal; }
 	void				isFatal(bool b) { m_fatal = b; }
 	bool				isSecureReady();
-	bool				isSecure() { return true; }
+	void				secureConnect();
+	void				secureAccept();
 	int					secureRead(void* buffer, int size, int& read);
 	int					secureWrite(const void* buffer, int size, int& wrote);
+	EJobResult			doRead();
+	EJobResult			doWrite();
 	void				initSsl(bool server);
 	bool				loadCertificates(String& CertFile);
 
@@ -80,6 +85,8 @@ private:
 	void				showSecureConnectInfo();
 	void				showSecureLibInfo();
 	void				showSecureCipherInfo();
+	
+	void				handleTCPConnected(const Event& event, void*);
 
 private:
 	Ssl*				m_ssl;

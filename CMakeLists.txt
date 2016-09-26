@@ -1,5 +1,5 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012 Synergy Si Ltd.
+# Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2009 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
@@ -16,8 +16,8 @@
 
 # Version number for Synergy
 set(VERSION_MAJOR 1)
-set(VERSION_MINOR 8)
-set(VERSION_REV 3)
+set(VERSION_MINOR 9)
+set(VERSION_REV 0)
 set(VERSION_STAGE beta)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 

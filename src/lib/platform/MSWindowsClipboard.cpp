@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -121,8 +121,8 @@ MSWindowsClipboard::open(Time time) const
 
 	if (!OpenClipboard(m_window)) {
 		// unable to cause this in integ tests; but this can happen!
-		// * http://synergy-project.org/pm/issues/86
-		// * http://synergy-project.org/pm/issues/1256
+		// * http://symless.com/pm/issues/86
+		// * http://symless.com/pm/issues/1256
 		// logging improved to see if we can catch more info next time.
 		LOG((CLOG_WARN "failed to open clipboard: %d", GetLastError()));
 		return false;

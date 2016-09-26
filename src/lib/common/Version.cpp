@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -19,10 +19,10 @@
 #include "common/Version.h"
 
 const char* kApplication = "Synergy";
-const char* kCopyright   = "Copyright (C) 2012-2014 Synergy Si Ltd.\n"
+const char* kCopyright   = "Copyright (C) 2012-2016 Symless Ltd.\n"
                            "Copyright (C) 2008-2014 Nick Bolton\n"
                            "Copyright (C) 2002-2014 Chris Schoeneman";
-const char* kContact     = "Email: nick@synergy-project.org";
-const char* kWebsite     = "http://synergy-project.org/";
+const char* kContact     = "Email: nick@symless.com";
+const char* kWebsite     = "http://symless.com/";
 const char* kVersion     = VERSION;
 const char* kAppVersion  = "Synergy " VERSION;

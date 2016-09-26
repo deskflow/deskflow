@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -367,9 +367,6 @@ private:
 	// send drag info to new client screen
 	void				sendDragInfo(BaseClientProxy* newScreen);
 
-	// thread funciton for sending clipboard
-	void				sendClipboardThread(void*);
-
 public:
 	bool				m_mock;
 
@@ -476,11 +473,10 @@ private:
 	String				m_dragFileExt;
 	bool				m_ignoreFileTransfer;
 	bool				m_enableDragDrop;
+	bool				m_enableClipboard;
 
 	Thread*				m_sendDragInfoThread;
 	bool				m_waitDragInfoThread;
 
 	ClientListener*		m_clientListener;
-
-	Thread*				m_sendClipboardThread;
 };
