@@ -14,10 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(lib)
+if (NOT HAIKU)
+	add_subdirectory(lib)
+endif()
 add_subdirectory(cmd)
 add_subdirectory(micro)
 
-if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "IRIX")
+if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "IRIX" AND NOT HAIKU)
 	add_subdirectory(test)
 endif()
