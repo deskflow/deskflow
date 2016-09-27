@@ -741,16 +741,6 @@ class InternalCommands:
 			shutil.copy(targetDir + "/synergys", bundleBinDir)
 			shutil.copy(targetDir + "/syntool", bundleBinDir)
 
-			# Copy all generated plugins to the package
-			bundlePluginDir = bundleBinDir + "plugins"
-			pluginDir = targetDir + "/plugins"
-			print "Copying plugins dirtree: " + pluginDir
-			if os.path.isdir(pluginDir):
-				print "Copying to: " + bundlePluginDir
-				shutil.copytree(pluginDir, bundlePluginDir)
-			else:
-				print "pluginDir doesn't exist, skipping"
-
 		self.loadConfig()
 		if not self.macIdentity:
 			raise Exception("run config with --mac-identity")
@@ -1151,14 +1141,12 @@ class InternalCommands:
 		controlFile.close()
 
 		targetBin = '%s/%s/usr/bin' % (debDir, package)
-		targetPlugin = '%s/%s/usr/lib/synergy/plugins' % (debDir, package)
 		targetShare = '%s/%s/usr/share' % (debDir, package)
 		targetApplications = "%s/applications" % targetShare
 		targetIcons = "%s/icons" % targetShare
 		targetDocs = "%s/doc/%s" % (targetShare, self.project)
 
 		os.makedirs(targetBin)
-		os.makedirs(targetPlugin)
 		os.makedirs(targetApplications)
 		os.makedirs(targetIcons)
 		os.makedirs(targetDocs)
@@ -1172,17 +1160,6 @@ class InternalCommands:
 			shutil.copy("%s/%s" % (binDir, f), targetBin)
 			target = "%s/%s" % (targetBin, f)
 			os.chmod(target, 0o0755)
-			err = os.system("strip " + target)
-			if err != 0:
-				raise Exception('strip failed: ' + str(err))
-
-		pluginDir = "%s/plugins" % binDir
-
-		pluginFiles = [ 'libns.so']
-		for f in pluginFiles:
-			shutil.copy("%s/%s" % (pluginDir, f), targetPlugin)
-			target = "%s/%s" % (targetPlugin, f)
-			os.chmod(target, 0o0644)
 			err = os.system("strip " + target)
 			if err != 0:
 				raise Exception('strip failed: ' + str(err))
@@ -1401,13 +1378,6 @@ class InternalCommands:
 		packageSource = binDir + '/' + filename
 		packageTarget = filename
 		ftp.upload(packageSource, packageTarget)
-
-		if type != 'src':
-			pluginsDir = binDir + '/plugins'
-			nsPluginSource = self.findLibraryFile(type, pluginsDir, 'ns')
-			if nsPluginSource:
-				nsPluginTarget = self.getLibraryDistFilename(type, pluginsDir, 'ns')
-				ftp.upload(nsPluginSource, nsPluginTarget, "plugins")
 
 	def getLibraryDistFilename(self, type, dir, name):
 		(platform, packageExt, libraryExt) = self.getDistributePlatformInfo(type)
