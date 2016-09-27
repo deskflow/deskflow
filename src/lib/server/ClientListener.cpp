@@ -46,14 +46,6 @@ ClientListener::ClientListener(const NetworkAddress& address,
 	assert(m_socketFactory != NULL);
 
 	try {
-		// create listen socket
-		if (enableCrypto) {
-			m_useSecureNetwork = ARCH->plugin().exists(s_pluginNames[kSecureSocket]);
-			if (m_useSecureNetwork == false) {
-				LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
-			}
-		}
-
 		m_listen = m_socketFactory->createListen(m_useSecureNetwork);
 
 		// setup event handler
@@ -250,13 +242,5 @@ ClientListener::handleClientDisconnected(const Event&, void* vclient)
 void
 ClientListener::cleanupListenSocket()
 {
-	if (!m_useSecureNetwork) {
-		delete m_listen;
-	}
-	else {
-		ARCH->plugin().invoke(
-			s_pluginNames[kSecureSocket],
-			"deleteListenSocket",
-			NULL);
-	}
+	delete m_listen;
 }
