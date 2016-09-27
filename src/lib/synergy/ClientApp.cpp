@@ -455,11 +455,6 @@ ClientApp::mainLoop()
 	SocketMultiplexer multiplexer;
 	setSocketMultiplexer(&multiplexer);
 
-	// load all available plugins.
-	ARCH->plugin().load();
-	// pass log and arch into plugins.
-	ARCH->plugin().init(Log::getInstance(), Arch::getInstance());
-
 	// start client, etc
 	appUtil().startNode();
 	
@@ -468,9 +463,6 @@ ClientApp::mainLoop()
 	if (argsBase().m_enableIpc) {
 		initIpcClient();
 	}
-
-	// init event for all available plugins.
-	ARCH->plugin().initEvent(m_clientScreen->getEventTarget(), m_events);
 
 	// run event loop.  if startClient() failed we're supposed to retry
 	// later.  the timer installed by startClient() will take care of
@@ -505,9 +497,6 @@ ClientApp::mainLoop()
 	if (argsBase().m_enableIpc) {
 		cleanupIpcClient();
 	}
-
-	// unload all plugins.
-	ARCH->plugin().unload();
 
 	return kExitSuccess;
 }
