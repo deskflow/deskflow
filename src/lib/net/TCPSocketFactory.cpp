@@ -21,7 +21,6 @@
 #include "net/TCPListenSocket.h"
 #include "net/SecureListenSocket.h"
 #include "arch/Arch.h"
-#include "common/PluginVersion.h"
 #include "base/Log.h"
 
 //

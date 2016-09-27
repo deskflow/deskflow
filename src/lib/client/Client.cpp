@@ -38,7 +38,6 @@
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
-#include "common/PluginVersion.h"
 #include "common/stdexcept.h"
 
 #include <cstring>
