@@ -17,9 +17,9 @@
  */
 
 #include "net/TCPSocketFactory.h"
-
 #include "net/TCPSocket.h"
 #include "net/TCPListenSocket.h"
+#include "net/SecureListenSocket.h"
 #include "arch/Arch.h"
 #include "common/PluginVersion.h"
 #include "base/Log.h"
@@ -45,12 +45,7 @@ TCPSocketFactory::create(bool secure) const
 {
 	IDataSocket* socket = NULL;
 	if (secure) {
-		void* args[2] = {
-			m_events,
-			m_socketMultiplexer
-		};
-		socket = static_cast<IDataSocket*>(
-			ARCH->plugin().invoke(s_pluginNames[kSecureSocket], "getSocket", args));
+		socket = new SecureSocket(m_events, m_socketMultiplexer);
 	}
 	else {
 		socket = new TCPSocket(m_events, m_socketMultiplexer);
@@ -64,12 +59,7 @@ TCPSocketFactory::createListen(bool secure) const
 {
 	IListenSocket* socket = NULL;
 	if (secure) {
-		void* args[2] = {
-			m_events,
-			m_socketMultiplexer
-		};
-		socket = static_cast<IListenSocket*>(
-			ARCH->plugin().invoke(s_pluginNames[kSecureSocket], "getListenSocket", args));
+		socket = new SecureListenSocket(m_events, m_socketMultiplexer);
 	}
 	else {
 		socket = new TCPListenSocket(m_events, m_socketMultiplexer);
