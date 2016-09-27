@@ -152,8 +152,7 @@ Client::connect()
 
 		// filter socket messages, including a packetizing filter
 		m_stream = socket;
-		bool adopt = !m_useSecureNetwork;
-		m_stream = new PacketStreamFilter(m_events, m_stream, adopt);
+		m_stream = new PacketStreamFilter(m_events, m_stream, true);
 
 		// connect
 		LOG((CLOG_DEBUG1 "connecting to server"));
