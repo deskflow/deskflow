@@ -174,19 +174,6 @@ ToolApp::loginAuth()
 void
 ToolApp::getPluginList()
 {
-	String credentials;
-	std::cin >> credentials;
-
-	size_t separator = credentials.find(':');
-	String email = credentials.substr(0, separator);
-	String password = credentials.substr(separator + 1, credentials.length());
-
-	std::stringstream ss;
-	ss <<  JSON_URL << "plugins/";
-	ss << "?email=" << ARCH->internet().urlEncode(email);
-	ss << "&password=" << password;
-
-	std::cout << ARCH->internet().get(ss.str()) << std::endl;
 }
 
 void 
