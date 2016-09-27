@@ -189,8 +189,16 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 			args.m_loginAuthenticate = true;
 			return true;
 		}
+		else if (isArg(i, argc, argv, NULL, "--get-plugin-list", 0)) {
+			args.m_getPluginList = true;
+			return true;
+		}
 		else if (isArg(i, argc, argv, NULL, "--get-installed-dir", 0)) {
 			args.m_getInstalledDir = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--get-plugin-dir", 0)) {
+			args.m_getPluginDir = true;
 			return true;
 		}
 		else if (isArg(i, argc, argv, NULL, "--get-profile-dir", 0)) {
@@ -322,6 +330,9 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 	else if (isArg(i, argc, argv, NULL, "--profile-dir", 1)) {
 		argsBase().m_profileDirectory = argv[++i];
 	}
+	else if (isArg(i, argc, argv, NULL, "--plugin-dir", 1)) {
+		argsBase().m_pluginDirectory = argv[++i];
+	}
 	else {
 		// option not supported here
 		return false;
@@ -336,10 +347,6 @@ ArgParser::parseDeprecatedArgs(int argc, const char* const* argv, int& i)
 	if (isArg(i, argc, argv, NULL, "--crypto-pass")) {
 		LOG((CLOG_NOTE "--crypto-pass is deprecated"));
 		i++;
-		return true;
-	} else if (isArg(i, argc, argv, NULL, "--plugin-dir", 1)) {
-		LOG((CLOG_NOTE "--plugin-dir is deprecated"));
-		++i;
 		return true;
 	}
 
