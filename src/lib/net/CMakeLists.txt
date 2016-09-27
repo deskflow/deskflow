@@ -23,6 +23,7 @@ endif()
 
 include_directories(
 	../
+	${OPENSSL_INCLUDE}
 )
 
 if (UNIX)

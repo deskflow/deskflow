@@ -58,7 +58,7 @@ endif()
 
 add_executable(synergyc ${sources})
 target_link_libraries(synergyc
-	arch base client common io mt net ipc platform server synergy ${libs})
+	arch base client common io mt net ipc platform server synergy ${libs} ${OPENSSL_LIBS})
 
 if (CONF_CPACK)
 	install(TARGETS
