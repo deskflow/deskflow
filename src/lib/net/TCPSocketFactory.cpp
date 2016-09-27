@@ -19,6 +19,7 @@
 #include "net/TCPSocketFactory.h"
 #include "net/TCPSocket.h"
 #include "net/TCPListenSocket.h"
+#include "net/SecureSocket.h"
 #include "net/SecureListenSocket.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
