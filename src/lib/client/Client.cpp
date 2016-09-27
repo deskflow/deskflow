@@ -18,7 +18,6 @@
 
 #include "client/Client.h"
 
-#include "../plugin/ns/SecureSocket.h"
 #include "client/ServerProxy.h"
 #include "synergy/Screen.h"
 #include "synergy/FileChunk.h"
@@ -33,6 +32,7 @@
 #include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/ISocketFactory.h"
+#include "net/SecureSocket.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
@@ -98,13 +98,6 @@ Client::Client(
 								this,
 								new TMethodEventJob<Client>(this,
 									&Client::handleFileRecieveCompleted));
-	}
-
-	if (m_args.m_enableCrypto) {
-		m_useSecureNetwork = ARCH->plugin().exists(s_pluginNames[kSecureSocket]);
-		if (m_useSecureNetwork == false) {
-			LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
-		}
 	}
 }
 
@@ -593,13 +586,6 @@ Client::cleanupStream()
 {
 	delete m_stream;
 	m_stream = NULL;
-
-	// PacketStreamFilter doen't adopt secure socket, because
-	// we need to tell the dynamic lib that allocated this object
-	// to do the deletion.
-	if (m_useSecureNetwork) {
-		ARCH->plugin().invoke(s_pluginNames[kSecureSocket], "deleteSocket", NULL);
-	}
 }
 
 void
