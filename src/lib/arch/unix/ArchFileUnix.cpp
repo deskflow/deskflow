@@ -105,6 +105,20 @@ ArchFileUnix::getLogDirectory()
 }
 
 std::string
+ArchFileUnix::getPluginDirectory()
+{
+	if (!m_pluginDirectory.empty()) {
+		return m_pluginDirectory;
+	}
+
+#if WINAPI_XWINDOWS
+	return getProfileDirectory().append("/plugins");
+#else
+	return getProfileDirectory().append("/Plugins");
+#endif
+}
+
+std::string
 ArchFileUnix::getProfileDirectory()
 {
 	String dir;
@@ -140,4 +154,10 @@ void
 ArchFileUnix::setProfileDirectory(const String& s)
 {
 	m_profileDirectory = s;
+}
+
+void
+ArchFileUnix::setPluginDirectory(const String& s)
+{
+	m_pluginDirectory = s;
 }
