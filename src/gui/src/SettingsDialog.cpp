@@ -18,7 +18,6 @@
 
 #include "SettingsDialog.h"
 
-#include "PluginManager.h"
 #include "CoreInterface.h"
 #include "SynergyLocale.h"
 #include "QSynergyApplication.h"
@@ -61,13 +60,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pComboElevate->hide();
 #endif
 
-	if (!PluginManager::exist(networkSecurity)) {
-		m_pGroupNetworkSecurity->setEnabled(false);
-		m_pCheckBoxEnableCrypto->setChecked(false);
-	}
-	else {
-		m_pCheckBoxEnableCrypto->setChecked(m_AppConfig.getCryptoEnabled());
-	}
+	m_pCheckBoxEnableCrypto->setChecked(m_AppConfig.getCryptoEnabled());
 }
 
 void SettingsDialog::accept()
