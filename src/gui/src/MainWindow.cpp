@@ -23,7 +23,6 @@
 #include "MainWindow.h"
 
 #include "Fingerprint.h"
-#include "PluginManager.h"
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
