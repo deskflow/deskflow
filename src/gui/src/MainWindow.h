@@ -63,8 +63,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
 	friend class QSynergyApplication;
 	friend class SetupWizard;
-	friend class PluginWizardPage;
-
+	
 	public:
 		enum qSynergyState
 		{

@@ -33,8 +33,6 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_LoginAttemps(0)
 {
 	setupUi(this);
-	m_pPluginPage = new PluginWizardPage(mainWindow);
-	addPage(m_pPluginPage);
 
 #if defined(Q_OS_MAC)
 
@@ -114,7 +112,6 @@ bool SetupWizard::validateCurrentPage()
 					return false;
 				}
 				else {
-					m_pPluginPage->setEdition(m_Edition);
 					return true;
 				}
 			}
@@ -131,8 +128,6 @@ bool SetupWizard::validateCurrentPage()
 				if (!subscriptionManager.activateSerial(m_pTextEditSerialKey->toPlainText())) {
 					return false;
 				}
-
-				m_pPluginPage->setEdition(m_Edition);
 
 				return true;
 			}

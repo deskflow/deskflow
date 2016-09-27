@@ -16,8 +16,7 @@ FORMS += res/MainWindowBase.ui \
     res/HotkeyDialogBase.ui \
     res/SettingsDialogBase.ui \
     res/SetupWizardBase.ui \
-    res/AddClientDialogBase.ui \
-    res/PluginWizardPageBase.ui
+    res/AddClientDialogBase.ui
 SOURCES += src/main.cpp \
     src/MainWindow.cpp \
     src/AboutDialog.cpp \
@@ -54,14 +53,10 @@ SOURCES += src/main.cpp \
     src/DataDownloader.cpp \
     src/AddClientDialog.cpp \
     src/CommandProcess.cpp \
-    src/PluginWizardPage.cpp \
-    src/PluginManager.cpp \
     src/CoreInterface.cpp \
     src/Fingerprint.cpp \
     src/SslCertificate.cpp \
-    src/Plugin.cpp \
     src/WebClient.cpp \
-    ../lib/common/PluginVersion.cpp \
     src/SubscriptionManager.cpp \
     src/ActivationNotifier.cpp
 HEADERS += src/MainWindow.h \
@@ -101,15 +96,11 @@ HEADERS += src/MainWindow.h \
     src/AddClientDialog.h \
     src/CommandProcess.h \
     src/EditionType.h \
-    src/PluginWizardPage.h \
     src/ProcessorArch.h \
-    src/PluginManager.h \
     src/CoreInterface.h \
     src/Fingerprint.h \
     src/SslCertificate.h \
-    src/Plugin.h \
     src/WebClient.h \
-    ../lib/common/PluginVersion.h \
     src/SubscriptionManager.h \
     src/ActivationNotifier.h \
     src/ElevateMode.h

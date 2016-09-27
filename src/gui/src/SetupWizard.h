@@ -19,7 +19,6 @@
 
 #include "ui_SetupWizardBase.h"
 #include "SynergyLocale.h"
-#include "PluginWizardPage.h"
 
 #include <QWizard>
 #include <QNetworkAccessManager>
@@ -50,7 +49,6 @@ private:
 	bool m_StartMain;
 	SynergyLocale m_Locale;
 	int m_Edition;
-	PluginWizardPage* m_pPluginPage;
 	int m_LoginAttemps;
 
 private slots:
