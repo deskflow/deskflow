@@ -63,13 +63,6 @@ public:
 	*/
 	virtual std::string	getLogDirectory() = 0;
 
-	//! Get plugins directory
-	/*!
-	Returns the plugin files directory. If no plugin directory is set,
-	this will return the plugin folder within the user's profile.
-	*/
-	virtual std::string	getPluginDirectory() = 0;
-
 	//! Get user's profile directory
 	/*!
 	Returns the user's profile directory. If no profile directory is set,
@@ -95,11 +88,4 @@ public:
 	Returns the user's profile directory.
 	*/
 	virtual void		setProfileDirectory(const String& s) = 0;
-
-	//@}
-	//! Set the user's plugin directory
-	/*
-	Returns the user's plugin directory.
-	*/
-	virtual void		setPluginDirectory(const String& s) = 0;
 };
