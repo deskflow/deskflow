@@ -97,6 +97,7 @@ XWindowsScreen::XWindowsScreen(
 		bool disableXInitThreads,
 		int mouseScrollDelta,
 		IEventQueue* events) :
+	PlatformScreen(events),
 	m_isPrimary(isPrimary),
 	m_mouseScrollDelta(mouseScrollDelta),
 	m_display(NULL),
@@ -121,8 +122,7 @@ XWindowsScreen::XWindowsScreen(
 	m_xkb(false),
 	m_xi2detected(false),
 	m_xrandr(false),
-	m_events(events),
-	PlatformScreen(events)
+	m_events(events)
 {
 	assert(s_screen == NULL);
 
@@ -1273,7 +1273,6 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 				cookie->extension == xi_opcode) {
 			if (cookie->evtype == XI_RawMotion) {
 				// Get current pointer's position
-				Window root, child;
 				XMotionEvent xmotion;
 				xmotion.type = MotionNotify;
 				xmotion.send_event = False; // Raw motion

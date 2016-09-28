@@ -332,7 +332,9 @@ ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
 		do {
 			ignore = read(unblockPipe[0], dummy, sizeof(dummy));
 		} while (errno != EAGAIN);
-
+		// without ignore there is a warning that the return value of read is ignored
+		// with ignore there is a warning that it is unused, so just "use" it.
+		ignore++;
 		// don't count this unblock pipe in return value
 		--n;
 	}
@@ -505,6 +507,9 @@ ArchNetworkBSD::unblockPollSocket(ArchThread thread)
 		int ignore;
 
 		ignore = write(unblockPipe[1], &dummy, 1);
+		// without ignore there is a warning that the return value of read is ignored
+		// with ignore there is a warning that it is unused, so just "use" it.
+		ignore++;
 	}
 }
 

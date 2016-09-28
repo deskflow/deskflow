@@ -21,14 +21,8 @@
 ArgsBase::ArgsBase() :
 #if SYSAPI_WIN32
 m_daemon(false), // daemon mode not supported on windows (use --service)
-m_debugServiceWait(false),
-m_pauseOnExit(false),
-m_stopOnDeskSwitch(false),
 #else
 m_daemon(true), // backward compatibility for unix (daemon by default)
-#endif
-#if WINAPI_XWINDOWS
-m_disableXInitThreads(false),
 #endif
 m_backend(false),
 m_restartable(true),
@@ -40,6 +34,14 @@ m_display(NULL),
 m_disableTray(false),
 m_enableIpc(false),
 m_enableDragDrop(false),
+#if SYSAPI_WIN32
+m_debugServiceWait(false),
+m_pauseOnExit(false),
+m_stopOnDeskSwitch(false),
+#endif
+#if WINAPI_XWINDOWS
+m_disableXInitThreads(false),
+#endif
 m_shouldExit(false),
 m_synergyAddress(),
 m_enableCrypto(false),
