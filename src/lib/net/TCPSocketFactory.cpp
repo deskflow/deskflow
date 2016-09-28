@@ -43,15 +43,14 @@ TCPSocketFactory::~TCPSocketFactory()
 IDataSocket*
 TCPSocketFactory::create(bool secure) const
 {
-	IDataSocket* socket = NULL;
 	if (secure) {
-		socket = new SecureSocket(m_events, m_socketMultiplexer);
+		SecureSocket* secureSocket = new SecureSocket(m_events, m_socketMultiplexer);
+		secureSocket->initSsl (false);
+		return secureSocket;
 	}
 	else {
-		socket = new TCPSocket(m_events, m_socketMultiplexer);
+		return new TCPSocket(m_events, m_socketMultiplexer);
 	}
-
-	return socket;
 }
 
 IListenSocket*
