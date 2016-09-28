@@ -71,7 +71,7 @@ Client::Client(
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
 	m_socket(NULL),
-	m_useSecureNetwork(false),
+	m_useSecureNetwork(args.m_enableCrypto),
 	m_args(args),
 	m_enableClipboard(true)
 {

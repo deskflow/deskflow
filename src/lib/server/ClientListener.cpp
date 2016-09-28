@@ -40,7 +40,7 @@ ClientListener::ClientListener(const NetworkAddress& address,
 	m_socketFactory(socketFactory),
 	m_server(NULL),
 	m_events(events),
-	m_useSecureNetwork(false)
+	m_useSecureNetwork(enableCrypto)
 {
 	assert(m_socketFactory != NULL);
 
