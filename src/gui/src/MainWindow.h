@@ -113,7 +113,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void serverDetected(const QString name);
 		void setEdition(int type);
 		void updateLocalFingerprint();
-
 	public slots:
 		void appendLogRaw(const QString& text);
 		void appendLogInfo(const QString& text);
@@ -130,6 +129,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void on_m_pActionAbout_triggered();
 		void on_m_pActionSettings_triggered();
 		void on_m_pActionWizard_triggered();
+		void on_m_pActivate_triggered();
 		void synergyFinished(int exitCode, QProcess::ExitStatus);
 		void trayActivated(QSystemTrayIcon::ActivationReason reason);
 		void stopSynergy();

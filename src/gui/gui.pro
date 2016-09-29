@@ -16,7 +16,8 @@ FORMS += res/MainWindowBase.ui \
     res/HotkeyDialogBase.ui \
     res/SettingsDialogBase.ui \
     res/SetupWizardBase.ui \
-    res/AddClientDialogBase.ui
+    res/AddClientDialogBase.ui \
+    res/ActivationDialog.ui
 SOURCES += src/main.cpp \
     src/MainWindow.cpp \
     src/AboutDialog.cpp \
@@ -58,7 +59,8 @@ SOURCES += src/main.cpp \
     src/SslCertificate.cpp \
     src/WebClient.cpp \
     src/SubscriptionManager.cpp \
-    src/ActivationNotifier.cpp
+    src/ActivationNotifier.cpp \
+    src/ActivationDialog.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -103,7 +105,8 @@ HEADERS += src/MainWindow.h \
     src/WebClient.h \
     src/SubscriptionManager.h \
     src/ActivationNotifier.h \
-    src/ElevateMode.h
+    src/ElevateMode.h \
+    src/ActivationDialog.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 
