@@ -14,6 +14,9 @@ class ActivationDialog : public QDialog
 public:
 	explicit ActivationDialog(QWidget *parent = 0);
 	~ActivationDialog();
+
+public slots:
+	void reject();
 	
 private:
 	Ui::ActivationDialog *ui;

@@ -1,5 +1,6 @@
 #include "ActivationDialog.h"
 #include "ui_ActivationDialog.h"
+#include "CancelActivationDialog.h"
 
 ActivationDialog::ActivationDialog(QWidget *parent) :
 	QDialog(parent),
@@ -11,4 +12,12 @@ ActivationDialog::ActivationDialog(QWidget *parent) :
 ActivationDialog::~ActivationDialog()
 {
 	delete ui;
+}
+
+void ActivationDialog::reject()
+{
+	CancelActivationDialog cancelActivationDialog(this);
+	if (QDialog::Accepted == cancelActivationDialog.exec()) {
+		QDialog::reject();
+	}
 }
