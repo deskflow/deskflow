@@ -159,7 +159,7 @@ void AppConfig::loadSettings()
 	m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
 	m_Edition = settings().value("edition", Unregistered).toInt();
 	m_ActivateEmail = settings().value("activateEmail", "").toString();
-	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
+	m_CryptoEnabled = settings().value("cryptoEnabled", true).toBool();
 	m_AutoHide = settings().value("autoHide", false).toBool();
 	m_Serialkey = settings().value("serialKey", "").toString();
 	m_LastExpiringWarningTime = settings().value("lastExpiringWarningTime", 0).toInt();
@@ -239,7 +239,7 @@ void AppConfig::setAutoConfigPrompted(bool prompted)
 
 void AppConfig::setEdition(int e) { m_Edition = e; }
 
-int AppConfig::edition() { return m_Edition; }
+int AppConfig::edition() const { return m_Edition; }
 
 bool AppConfig::setActivateEmail(QString e) {
 	m_ActivateEmail = e;
@@ -279,7 +279,9 @@ ElevateMode AppConfig::elevateMode()
 
 void AppConfig::setCryptoEnabled(bool e) { m_CryptoEnabled = e; }
 
-bool AppConfig::getCryptoEnabled() { return m_CryptoEnabled; }
+bool AppConfig::getCryptoEnabled() const { 
+	return (edition() == Pro) && m_CryptoEnabled;
+}
 
 void AppConfig::setAutoHide(bool b) { m_AutoHide = b; }
 

@@ -23,6 +23,7 @@
 #include "QSynergyApplication.h"
 #include "QUtility.h"
 #include "AppConfig.h"
+#include "EditionType.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -61,6 +62,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 #endif
 
 	m_pCheckBoxEnableCrypto->setChecked(m_AppConfig.getCryptoEnabled());
+	m_pCheckBoxEnableCrypto->setEnabled(m_AppConfig.edition() == Pro);
 }
 
 void SettingsDialog::accept()

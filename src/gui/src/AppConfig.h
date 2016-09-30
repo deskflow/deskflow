@@ -75,7 +75,7 @@ class AppConfig
 		bool autoConfigPrompted();
 		void setAutoConfigPrompted(bool prompted);
 		void setEdition(int e);
-		int edition();
+		int edition() const;
 		bool setActivateEmail(QString e);
 		QString activateEmail();
 		bool setSerialKey(QString serial, QString& error);
@@ -94,7 +94,7 @@ class AppConfig
 		ElevateMode elevateMode();
 
 		void setCryptoEnabled(bool e);
-		bool getCryptoEnabled();
+		bool getCryptoEnabled() const;
 		void setAutoHide(bool b);
 		bool getAutoHide();
 
