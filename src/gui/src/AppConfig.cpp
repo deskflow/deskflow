@@ -163,6 +163,7 @@ void AppConfig::loadSettings()
 	m_AutoHide = settings().value("autoHide", false).toBool();
 	m_Serialkey = settings().value("serialKey", "").toString();
 	m_LastExpiringWarningTime = settings().value("lastExpiringWarningTime", 0).toInt();
+	m_ActivationHasRun = settings().value("activationHasRun", false).toBool();
 }
 
 void AppConfig::saveSettings()
@@ -188,6 +189,18 @@ void AppConfig::saveSettings()
 	settings().setValue("autoHide", m_AutoHide);
 	settings().setValue("serialKey", m_Serialkey);
 	settings().setValue("lastExpiringWarningTime", m_LastExpiringWarningTime);
+	settings().setValue("activationHasRun", m_ActivationHasRun);
+}
+
+bool AppConfig::activationHasRun() const
+{
+	return m_ActivationHasRun;
+}
+
+AppConfig& AppConfig::activationHasRun(bool value)
+{
+	m_ActivationHasRun = value;
+	return *this;
 }
 
 QSettings &AppConfig::settings() { return *m_pSettings; }

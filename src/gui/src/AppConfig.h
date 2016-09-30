@@ -100,6 +100,9 @@ class AppConfig
 
 		void saveSettings();
 
+		bool activationHasRun() const;
+		AppConfig& activationHasRun(bool value);
+
 	protected:
 		QSettings& settings();
 		void setScreenName(const QString& s);
@@ -136,6 +139,7 @@ class AppConfig
 		bool m_AutoHide;
 		QString m_Serialkey;
 		int m_LastExpiringWarningTime;
+		bool m_ActivationHasRun;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

@@ -139,6 +139,12 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pLabelPadlock->hide();
 
 	updateLocalFingerprint();
+
+	if (!appConfig.activationHasRun() && (appConfig.edition() == Unregistered)) {
+		ActivationDialog activationDialog (this, appConfig);
+		activationDialog.exec();
+		appConfig.activationHasRun(true);
+	}
 }
 
 MainWindow::~MainWindow()
