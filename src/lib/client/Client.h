@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -57,11 +57,10 @@ public:
 	as its name and \p address as the server's address and \p factory
 	to create the socket.  \p screen is	the local screen.
 	*/
-	Client(IEventQueue* events,
-							const String& name, const NetworkAddress& address,
-							ISocketFactory* socketFactory,
-							synergy::Screen* screen,
-							ClientArgs& args);
+	Client(IEventQueue* events, const String& name,
+		   const NetworkAddress& address, ISocketFactory* socketFactory,
+		   synergy::Screen* screen, ClientArgs const& args);
+
 	~Client();
 
 	//! @name manipulators
@@ -94,6 +93,7 @@ public:
 	
 	//! Send dragging file information back to server
 	void				sendDragInfo(UInt32 fileCount, String& info, size_t size);
+
 	
 	//@}
 	//! @name accessors
@@ -163,8 +163,7 @@ public:
 	virtual String		getName() const;
 
 private:
-	void				fillClipboard(ClipboardID, Clipboard*);
-	void				sendClipboard(ClipboardID, Clipboard*);
+	void				sendClipboard(ClipboardID);
 	void				sendEvent(Event::Type, void*);
 	void				sendConnectionFailedEvent(const char* msg);
 	void				sendFileChunk(const void* data);
@@ -223,9 +222,6 @@ private:
 	Thread*				m_writeToDropDirThread;
 	TCPSocket*			m_socket;
 	bool				m_useSecureNetwork;
-	ClientArgs&			m_args;
-	Thread*				m_sendClipboardThread;
-	Mutex*				m_mutex;
-	bool				m_condData;
-	CondVar<bool>*		m_condVar;
+	ClientArgs			m_args;
+	bool				m_enableClipboard;
 };

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -1250,7 +1250,7 @@ XK_uhorn
 // map "Internet" keys to KeyIDs
 static const KeySym s_map1008FF[] =
 {
-	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x00 */ 0, 0, kKeyBrightnessUp, kKeyBrightnessDown, 0, 0, 0, 0,
 	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x10 */ 0, kKeyAudioDown, kKeyAudioMute, kKeyAudioUp,
 	/* 0x14 */ kKeyAudioPlay, kKeyAudioStop, kKeyAudioPrev, kKeyAudioNext,
@@ -1260,7 +1260,7 @@ static const KeySym s_map1008FF[] =
 	/* 0x30 */ kKeyWWWFavorites, 0, kKeyAppMedia, 0, 0, 0, 0, 0,
 	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x40 */ kKeyAppUser1, kKeyAppUser2, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x48 */ 0, 0, kKeyMissionControl, kKeyLaunchpad, 0, 0, 0, 0,
 	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
@@ -1429,10 +1429,10 @@ XWindowsUtil::setWindowProperty(Display* display, Window window,
 Time
 XWindowsUtil::getCurrentTime(Display* display, Window window)
 {
+	XLockDisplay(display);
 	// select property events on window
 	XWindowAttributes attr;
 	XGetWindowAttributes(display, window, &attr);
-	XLockDisplay(display);
 	XSelectInput(display, window, attr.your_event_mask | PropertyChangeMask);
 
 	// make a property name to receive dummy change

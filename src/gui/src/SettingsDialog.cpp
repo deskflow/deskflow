@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
  * This package is free software; you can redistribute it and/or
@@ -36,8 +36,7 @@ static const char networkSecurity[] = "ns";
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::SettingsDialogBase(),
-	m_AppConfig(config),
-	m_SuppressElevateWarning(false)
+       m_AppConfig(config)
 {
 	setupUi(this);
 
@@ -53,14 +52,13 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
 
 #if defined(Q_OS_WIN)
-	m_SuppressElevateWarning = true;
-	m_pCheckBoxElevateMode->setChecked(appConfig().elevateMode());
-	m_SuppressElevateWarning = false;
+       m_pComboElevate->setCurrentIndex(static_cast<int>(appConfig().elevateMode()));
 
 	m_pCheckBoxAutoHide->hide();
 #else
 	// elevate checkbox is only useful on ms windows.
-	m_pCheckBoxElevateMode->hide();
+	m_pLabelElevate->hide();
+	m_pComboElevate->hide();
 #endif
 
 	if (!PluginManager::exist(networkSecurity)) {
@@ -81,7 +79,7 @@ void SettingsDialog::accept()
 	appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
 	appConfig().setLogFilename(m_pLineEditLogFilename->text());
 	appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
-	appConfig().setElevateMode(m_pCheckBoxElevateMode->isChecked());
+       appConfig().setElevateMode(static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
 	appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
 	appConfig().saveSettings();
 	QDialog::accept();
@@ -145,24 +143,6 @@ void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 {
 	QString ietfCode = m_pComboLanguage->itemData(index).toString();
 	QSynergyApplication::getInstance()->switchTranslator(ietfCode);
-}
-
-void SettingsDialog::on_m_pCheckBoxElevateMode_toggled(bool checked)
-{
-	if (checked && !m_SuppressElevateWarning) {
-		int r = QMessageBox::warning(
-			this, tr("Elevate Synergy"),
-			tr("Are you sure you want to elevate Synergy?\n\n"
-			   "This allows Synergy to interact with elevated processes "
-			   "and the UAC dialog, but can cause problems with non-elevated "
-			   "processes. Elevate Synergy only if you really need to."),
-			QMessageBox::Yes | QMessageBox::No);
-
-		if (r != QMessageBox::Yes) {
-			m_pCheckBoxElevateMode->setChecked(false);
-			return;
-		}
-	}
 }
 
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)

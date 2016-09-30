@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -58,27 +58,31 @@ public:
 	// IDataSocket overrides
 	virtual void		connect(const NetworkAddress&);
 
-	virtual void		secureConnect() {}
-	virtual void		secureAccept() {}
-	virtual void		setFingerprintFilename(String& f) {}
+	
+	virtual ISocketMultiplexerJob*
+						newJob();
 
 protected:
+	enum EJobResult {
+		kBreak = -1,	//!< Break the Job chain
+		kRetry,			//!< Retry the same job
+		kNew			//!< Require a new job
+	};
+	
 	ArchSocket			getSocket() { return m_socket; }
 	IEventQueue*		getEvents() { return m_events; }
-	virtual bool		isSecureReady() { return false; }
-	virtual bool		isSecure() { return false; }
-	virtual int			secureRead(void* buffer, int, int& ) { return 0; }
-	virtual int			secureWrite(const void*, int, int& ) { return 0; }
+	virtual EJobResult	doRead();
+	virtual EJobResult	doWrite();
 
 	void				setJob(ISocketMultiplexerJob*);
-	ISocketMultiplexerJob*
-						newJob();
+	
 	bool				isReadable() { return m_readable; }
 	bool				isWritable() { return m_writable; }
 
 	Mutex&				getMutex() { return m_mutex; }
 
 	void				sendEvent(Event::Type);
+	void				discardWrittenData(int bytesWrote);
 
 private:
 	void				init();
@@ -99,14 +103,14 @@ private:
 protected:
 	bool				m_readable;
 	bool				m_writable;
-
+	bool				m_connected;
+	IEventQueue*		m_events;
+	StreamBuffer		m_inputBuffer;
+	StreamBuffer		m_outputBuffer;
+	
 private:
 	Mutex				m_mutex;
 	ArchSocket			m_socket;
-	StreamBuffer		m_inputBuffer;
-	StreamBuffer		m_outputBuffer;
 	CondVar<bool>		m_flushed;
-	bool				m_connected;
-	IEventQueue*		m_events;
 	SocketMultiplexer*	m_socketMultiplexer;
 };

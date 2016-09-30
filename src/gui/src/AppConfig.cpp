@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
  * This package is free software; you can redistribute it and/or
@@ -35,6 +35,8 @@ const char AppConfig::m_SynergyLogDir[] = "/var/log/";
 #define DEFAULT_PROCESS_MODE Desktop
 #endif
 
+const ElevateMode defaultElevateMode = ElevateAsNeeded;
+
 static const char* logLevelNames[] =
 {
 	"ERROR",
@@ -55,7 +57,7 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_WizardLastRun(0),
 	m_ProcessMode(DEFAULT_PROCESS_MODE),
 	m_AutoConfig(true),
-	m_ElevateMode(false),
+	m_ElevateMode(defaultElevateMode),
 	m_AutoConfigPrompted(false),
 	m_CryptoEnabled(false),
 	m_AutoHide(false),
@@ -126,7 +128,12 @@ void AppConfig::loadSettings()
 	m_Language = settings().value("language", QLocale::system().name()).toString();
 	m_StartedBefore = settings().value("startedBefore", false).toBool();
 	m_AutoConfig = settings().value("autoConfig", true).toBool();
-	m_ElevateMode = settings().value("elevateMode", false).toBool();
+	QVariant elevateMode = settings().value("elevateModeEnum");
+	if (!elevateMode.isValid()) {
+		elevateMode = settings().value ("elevateMode",
+	                                    QVariant(static_cast<int>(defaultElevateMode)));
+	}
+	m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
 	m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
 	m_Edition = settings().value("edition", Unknown).toInt();
 	m_ActivateEmail = settings().value("activateEmail", "").toString();
@@ -148,7 +155,10 @@ void AppConfig::saveSettings()
 	settings().setValue("language", m_Language);
 	settings().setValue("startedBefore", m_StartedBefore);
 	settings().setValue("autoConfig", m_AutoConfig);
-	settings().setValue("elevateMode", m_ElevateMode);
+    // Refer to enum ElevateMode declaration for insight in to why this
+    // flag is mapped this way
+	settings().setValue("elevateMode", m_ElevateMode == ElevateAlways);
+	settings().setValue("elevateModeEnum", static_cast<int>(m_ElevateMode));
 	settings().setValue("autoConfigPrompted", m_AutoConfigPrompted);
 	settings().setValue("edition", m_Edition);
 	settings().setValue("activateEmail", m_ActivateEmail);
@@ -168,7 +178,7 @@ void AppConfig::setAutoConfigPrompted(bool prompted)
 	m_AutoConfigPrompted = prompted;
 }
 
-bool AppConfig::elevateMode()
+ElevateMode AppConfig::elevateMode()
 {
 	return m_ElevateMode;
 }

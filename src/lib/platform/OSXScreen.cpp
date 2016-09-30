@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include "platform/OSXKeyState.h"
 #include "platform/OSXScreenSaver.h"
 #include "platform/OSXDragSimulator.h"
+#include "platform/OSXMediaKeySupport.h"
 #include "platform/OSXPasteboardPeeker.h"
 #include "synergy/Clipboard.h"
 #include "synergy/KeyMap.h"
@@ -835,7 +836,7 @@ OSXScreen::enter()
 
 		// patch by Yutaka Tsutano
 		// wakes the client screen
-		// http://synergy-project.org/spit/issues/details/3287#c12
+		// http://symless.com/spit/issues/details/3287#c12
 		io_registry_entry_t entry = IORegistryEntryFromPath(
 			kIOMasterPortDefault,
 			"IOService:/IOResources/IODisplayWrangler");
@@ -1331,6 +1332,27 @@ OSXScreen::onKey(CGEventRef event)
 	}
 
 	return true;
+}
+
+void
+OSXScreen::onMediaKey(CGEventRef event) 
+{
+	KeyID keyID;
+	bool down;
+	bool isRepeat;
+
+	if (!getMediaKeyEventInfo (event, &keyID, &down, &isRepeat)) {
+		LOG ((CLOG_ERR "Failed to decode media key event"));
+		return;
+	}
+
+	LOG ((CLOG_DEBUG2 "Media key event: keyID=0x%02x, %s, repeat=%s",
+						keyID, (down ? "down": "up"),
+						(isRepeat ? "yes" : "no")));
+
+	KeyButton button = 0;
+	KeyModifierMask mask = m_keyState->getActiveModifiers();
+	m_keyState->sendKeyEvent(getEventTarget(), down, isRepeat, keyID, mask, 1, button);
 }
 
 bool
@@ -1941,8 +1963,13 @@ OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 		case NX_NULLEVENT:
 			break;
 		case NX_SYSDEFINED:
-			// Unknown, forward it
-			return event;
+			if (isMediaKeyEvent (event)) {
+				LOG((CLOG_DEBUG2 "detected media key event"));
+				screen->onMediaKey (event);
+			} else {
+				LOG((CLOG_DEBUG2 "ignoring unknown system defined event"));
+				return event;
+			}
 			break;
 		case NX_NUMPROCS:
 			break;

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -45,28 +45,29 @@ typedef std::vector<UInt32> OptionsList;
 
 //! @name Option identifiers
 //@{
-static const OptionID	kOptionHalfDuplexCapsLock     = OPTION_CODE("HDCL");
-static const OptionID	kOptionHalfDuplexNumLock      = OPTION_CODE("HDNL");
-static const OptionID	kOptionHalfDuplexScrollLock   = OPTION_CODE("HDSL");
-static const OptionID	kOptionModifierMapForShift    = OPTION_CODE("MMFS");
-static const OptionID	kOptionModifierMapForControl  = OPTION_CODE("MMFC");
-static const OptionID	kOptionModifierMapForAlt      = OPTION_CODE("MMFA");
-static const OptionID	kOptionModifierMapForAltGr    = OPTION_CODE("MMFG");
-static const OptionID	kOptionModifierMapForMeta     = OPTION_CODE("MMFM");
-static const OptionID	kOptionModifierMapForSuper    = OPTION_CODE("MMFR");
-static const OptionID	kOptionHeartbeat              = OPTION_CODE("HART");
-static const OptionID	kOptionScreenSwitchCorners    = OPTION_CODE("SSCM");
-static const OptionID	kOptionScreenSwitchCornerSize = OPTION_CODE("SSCS");
-static const OptionID	kOptionScreenSwitchDelay      = OPTION_CODE("SSWT");
-static const OptionID	kOptionScreenSwitchTwoTap     = OPTION_CODE("SSTT");
+static const OptionID	kOptionHalfDuplexCapsLock		= OPTION_CODE("HDCL");
+static const OptionID	kOptionHalfDuplexNumLock		= OPTION_CODE("HDNL");
+static const OptionID	kOptionHalfDuplexScrollLock		= OPTION_CODE("HDSL");
+static const OptionID	kOptionModifierMapForShift		= OPTION_CODE("MMFS");
+static const OptionID	kOptionModifierMapForControl	= OPTION_CODE("MMFC");
+static const OptionID	kOptionModifierMapForAlt		= OPTION_CODE("MMFA");
+static const OptionID	kOptionModifierMapForAltGr		= OPTION_CODE("MMFG");
+static const OptionID	kOptionModifierMapForMeta		= OPTION_CODE("MMFM");
+static const OptionID	kOptionModifierMapForSuper		= OPTION_CODE("MMFR");
+static const OptionID	kOptionHeartbeat				= OPTION_CODE("HART");
+static const OptionID	kOptionScreenSwitchCorners		= OPTION_CODE("SSCM");
+static const OptionID	kOptionScreenSwitchCornerSize	= OPTION_CODE("SSCS");
+static const OptionID	kOptionScreenSwitchDelay		= OPTION_CODE("SSWT");
+static const OptionID	kOptionScreenSwitchTwoTap		= OPTION_CODE("SSTT");
 static const OptionID	kOptionScreenSwitchNeedsShift   = OPTION_CODE("SSNS");
 static const OptionID	kOptionScreenSwitchNeedsControl = OPTION_CODE("SSNC");
 static const OptionID	kOptionScreenSwitchNeedsAlt     = OPTION_CODE("SSNA");
-static const OptionID	kOptionScreenSaverSync        = OPTION_CODE("SSVR");
-static const OptionID	kOptionXTestXineramaUnaware   = OPTION_CODE("XTXU");
-static const OptionID	kOptionScreenPreserveFocus    = OPTION_CODE("SFOC");
-static const OptionID	kOptionRelativeMouseMoves     = OPTION_CODE("MDLT");
-static const OptionID	kOptionWin32KeepForeground    = OPTION_CODE("_KFW");
+static const OptionID	kOptionScreenSaverSync			= OPTION_CODE("SSVR");
+static const OptionID	kOptionXTestXineramaUnaware		= OPTION_CODE("XTXU");
+static const OptionID	kOptionScreenPreserveFocus		= OPTION_CODE("SFOC");
+static const OptionID	kOptionRelativeMouseMoves		= OPTION_CODE("MDLT");
+static const OptionID	kOptionWin32KeepForeground		= OPTION_CODE("_KFW");
+static const OptionID	kOptionClipboardSharing			= OPTION_CODE("CLPS");
 //@}
 
 //! @name Screen switch corner enumeration

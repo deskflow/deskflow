@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2009 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
@@ -298,7 +298,7 @@ MSWindowsWatchdog::startProcess()
 
 	// patch by Jack Zhou and Henry Tung
 	// set UIAccess to fix Windows 8 GUI interaction
-	// http://synergy-project.org/spit/issues/details/3338/#c70
+	// http://symless.com/spit/issues/details/3338/#c70
 	DWORD uiAccess = 1;
 	SetTokenInformation(userToken, TokenUIAccess, &uiAccess, sizeof(DWORD));
 

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define DOWNLOAD_URL "http://synergy-project.org/?source=gui"
+#define DOWNLOAD_URL "http://symless.com/?source=gui"
 
 #include <iostream>
 
@@ -59,7 +59,7 @@
 #if defined(Q_OS_WIN)
 static const char synergyConfigName[] = "synergy.sgc";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
-static QString bonjourBaseUrl = "http://synergy-project.org/bonjour/";
+static QString bonjourBaseUrl = "http://symless.com/bonjour/";
 static const char bonjourFilename32[] = "Bonjour.msi";
 static const char bonjourFilename64[] = "Bonjour64.msi";
 static const char bonjourTargetFilename[] = "Bonjour.msi";
@@ -536,7 +536,14 @@ void MainWindow::startSynergy()
 		// is switched; this is because we may need to elevate or not
 		// based on which desk the user is in (login always needs
 		// elevation, where as default desk does not).
-		args << "--stop-on-desk-switch";
+		// Note that this is only enabled when synergy is set to elevate
+		// 'as needed' (e.g. on a UAC dialog popup) in order to prevent
+		// unnecessary restarts when synergy was started elevated or
+		// when it is not allowed to elevate. In these cases restarting
+		// the server is fruitless.
+		if (appConfig().elevateMode() == ElevateAsNeeded) {
+				args << "--stop-on-desk-switch";
+		}
 #endif
 	}
 

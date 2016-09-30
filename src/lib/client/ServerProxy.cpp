@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -833,6 +833,7 @@ ServerProxy::setOptions()
 			// update keep alive
 			setKeepAliveRate(1.0e-3 * static_cast<double>(options[i + 1]));
 		}
+
 		if (id != kKeyModifierIDNull) {
 			m_modifierTranslationTable[id] =
 				static_cast<KeyModifierID>(options[i + 1]);

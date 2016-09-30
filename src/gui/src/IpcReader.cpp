@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
  *
  * This package is free software; you can redistribute it and/or
@@ -65,7 +65,7 @@ void IpcReader::read()
 			char* data = new char[len];
 			readStream(data, len);
 			QString line = QString::fromUtf8(data, len);
-			delete data;
+			delete[] data;
 
 			readLogLine(line);
 		}

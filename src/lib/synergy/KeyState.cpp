@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -571,8 +571,20 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
 		m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
 								getActiveModifiersRValue(), mask, false);
 	if (keyItem == NULL) {
+		// a media key won't be mapped on mac, so we need to fake it in a
+		// special way
+		if (id == kKeyAudioDown || id == kKeyAudioUp ||
+			id == kKeyAudioMute || id == kKeyAudioPlay ||
+			id == kKeyAudioPrev || id == kKeyAudioNext ||
+			id == kKeyBrightnessDown || id == kKeyBrightnessUp
+			) {
+			LOG((CLOG_DEBUG1 "emulating media key"));
+			fakeMediaKey(id);
+		}
+		
 		return;
 	}
+	
 	KeyButton localID = (KeyButton)(keyItem->m_button & kButtonMask);
 	updateModifierKeyState(localID, oldActiveModifiers, m_activeModifiers);
 	if (localID != 0) {
@@ -709,6 +721,12 @@ KeyState::fakeAllKeysUp()
 	memset(&m_serverKeys, 0, sizeof(m_serverKeys));
 	m_activeModifiers.clear();
 	m_mask = pollActiveModifiers();
+}
+
+bool
+KeyState::fakeMediaKey(KeyID id)
+{
+	return false;
 }
 
 bool

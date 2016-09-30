@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #define APPCONFIG_H
 
 #include <QString>
+#include "ElevateMode.h"
 
 // this should be incremented each time a new page is added. this is
 // saved to settings when the user finishes running the wizard. if
@@ -89,7 +90,7 @@ class AppConfig
 
 		bool detectPath(const QString& name, QString& path);
 		void persistLogDir();
-		bool elevateMode();
+		ElevateMode elevateMode();
 
 		void setCryptoEnabled(bool e) { m_CryptoEnabled = e; }
 		bool getCryptoEnabled() { return m_CryptoEnabled; }
@@ -109,7 +110,7 @@ class AppConfig
 		void setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
 		void setLanguage(const QString language) { m_Language = language; }
 		void setStartedBefore(bool b) { m_StartedBefore = b; }
-		void setElevateMode(bool b) { m_ElevateMode = b; }
+		void setElevateMode(ElevateMode em) { m_ElevateMode = em; }
 
 		void loadSettings();
 
@@ -126,7 +127,7 @@ class AppConfig
 		QString m_Language;
 		bool m_StartedBefore;
 		bool m_AutoConfig;
-		bool m_ElevateMode;
+		ElevateMode m_ElevateMode;
 		bool m_AutoConfigPrompted;
 		int m_Edition;
 		QString m_ActivateEmail;

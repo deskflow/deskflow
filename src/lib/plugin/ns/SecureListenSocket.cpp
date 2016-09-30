@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Si Ltd.
+ * Copyright (C) 2015-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -61,11 +61,10 @@ SecureListenSocket::accept()
 			setListeningJob();
 		}
 
-		String certificateFilename = synergy::string::sprintf(
-			"%s/%s/%s",
-			ARCH->getProfileDirectory().c_str(),
-			s_certificateDir,
-			s_certificateFilename);
+		String certificateFilename = synergy::string::sprintf("%s/%s/%s",
+										ARCH->getProfileDirectory().c_str(),
+										s_certificateDir,
+										s_certificateFilename);
 
 		bool loaded = socket->loadCertificates(certificateFilename);
 		if (!loaded) {

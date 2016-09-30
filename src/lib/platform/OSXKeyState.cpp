@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
 
 #include "platform/OSXKeyState.h"
 #include "platform/OSXUchrKeyResource.h"
+#include "platform/OSXMediaKeySupport.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 
@@ -33,6 +34,11 @@ static const UInt32 s_altVK      = kVK_Option;
 static const UInt32 s_superVK    = kVK_Command;
 static const UInt32 s_capsLockVK = kVK_CapsLock;
 static const UInt32 s_numLockVK  = kVK_ANSI_KeypadClear; // 71
+
+static const UInt32 s_brightnessUp = 144;
+static const UInt32 s_brightnessDown = 145;
+static const UInt32 s_missionControlVK = 160;
+static const UInt32 s_launchpadVK = 131;
 
 static const UInt32 s_osxNumLock = 1 << 16;
 
@@ -110,7 +116,12 @@ static const KeyEntry	s_controlKeys[] = {
 
 	// toggle modifiers
 	{ kKeyNumLock,		s_numLockVK },
-	{ kKeyCapsLock,		s_capsLockVK }
+	{ kKeyCapsLock,		s_capsLockVK },
+	
+	{ kKeyMissionControl, s_missionControlVK },
+	{ kKeyLaunchpad, s_launchpadVK },
+	{ kKeyBrightnessUp,  s_brightnessUp },
+	{ kKeyBrightnessDown, s_brightnessDown }
 };
 
 
@@ -316,6 +327,12 @@ OSXKeyState::fakeCtrlAltDel()
 	return false;
 }
 
+bool
+OSXKeyState::fakeMediaKey(KeyID id)
+{
+	return fakeNativeMediaKey(id);;
+}
+
 CGEventFlags
 OSXKeyState::getModifierStateAsOSXFlags()
 {
@@ -379,15 +396,17 @@ OSXKeyState::pollActiveModifiers() const
 SInt32
 OSXKeyState::pollActiveGroup() const
 {
-	bool layoutValid = true;
 	TISInputSourceRef keyboardLayout = TISCopyCurrentKeyboardLayoutInputSource();
+	CFDataRef id = (CFDataRef)TISGetInputSourceProperty(
+						keyboardLayout, kTISPropertyInputSourceID);
 	
-	if (layoutValid) {
-		GroupMap::const_iterator i = m_groupMap.find(keyboardLayout);
-		if (i != m_groupMap.end()) {
-			return i->second;
-		}
+	GroupMap::const_iterator i = m_groupMap.find(id);
+	if (i != m_groupMap.end()) {
+		return i->second;
 	}
+	
+	LOG((CLOG_DEBUG "can't get the active group, use the first group instead"));
+
 	return 0;
 }
 
@@ -414,7 +433,9 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap)
 		m_groupMap.clear();
 		SInt32 numGroups = (SInt32)m_groups.size();
 		for (SInt32 g = 0; g < numGroups; ++g) {
-			m_groupMap[m_groups[g]] = g;
+			CFDataRef id = (CFDataRef)TISGetInputSourceProperty(
+								m_groups[g], kTISPropertyInputSourceID);
+			m_groupMap[id] = g;
 		}
 	}
 
@@ -681,10 +702,10 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap,
 			}
 
 			// now add a key entry for each key/required modifier pair.
-			item.m_sensitive = mapModifiersFromOSX(sensitive << 8);
+			item.m_sensitive = mapModifiersFromOSX(sensitive << 16);
 			for (std::set<UInt32>::iterator k = required.begin();
 											k != required.end(); ++k) {
-				item.m_required = mapModifiersFromOSX(*k << 8);
+				item.m_required = mapModifiersFromOSX(*k << 16);
 				keyMap.addKeyEntry(item);
 			}
 		}

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or
@@ -45,6 +45,7 @@ public:
 	MOCK_METHOD0(fakeCtrlAltDel, bool());
 	MOCK_METHOD1(getKeyMap, void(synergy::KeyMap&));
 	MOCK_METHOD1(fakeKey, void(const Keystroke&));
+	MOCK_METHOD1(fakeMediaKey, bool(KeyID));
 	MOCK_CONST_METHOD1(pollPressedKeys, void(KeyButtonSet&));
 };
 
@@ -54,20 +55,3 @@ typedef UInt32 KeyID;
 
 typedef void (*ForeachKeyCallback)(
 		KeyID, SInt32 group, synergy::KeyMap::KeyItem&, void* userData);
-
-void
-stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);
-
-void
-assertMaskIsOne(ForeachKeyCallback cb, void* userData);
-
-const synergy::KeyMap::KeyItem*
-stubMapKey(
-	synergy::KeyMap::Keystrokes& keys, KeyID id, SInt32 group,
-	synergy::KeyMap::ModifierToKeys& activeModifiers,
-	KeyModifierMask& currentState,
-	KeyModifierMask desiredMask,
-	bool isAutoRepeat);
-
-synergy::KeyMap::Keystroke s_stubKeystroke(1, false, false);
-synergy::KeyMap::KeyItem s_stubKeyItem;

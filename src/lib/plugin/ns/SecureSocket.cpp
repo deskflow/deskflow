@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Si Ltd.
+ * Copyright (C) 2015-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,7 @@
 #include "SecureSocket.h"
 
 #include "net/TSocketMultiplexerMethodJob.h"
+#include "base/TMethodEventJob.h"
 #include "net/TCPSocket.h"
 #include "mt/Lock.h"
 #include "arch/XArch.h"
@@ -36,8 +37,6 @@
 
 #define MAX_ERROR_SIZE 65535
 
-// maxmium retry time limit set to 10s
-static const int s_maxRetry = 1000;
 static const float s_retryDelay = 0.01f;
 
 enum {
@@ -101,19 +100,151 @@ SecureSocket::close()
 }
 
 void
+SecureSocket::connect(const NetworkAddress& addr)
+{
+	m_events->adoptHandler(m_events->forIDataSocket().connected(),
+				getEventTarget(),
+				new TMethodEventJob<SecureSocket>(this,
+						&SecureSocket::handleTCPConnected));
+
+	TCPSocket::connect(addr);
+}
+
+ISocketMultiplexerJob*
+SecureSocket::newJob()
+{
+	// after TCP connection is established, SecureSocket will pick up
+	// connected event and do secureConnect
+	if (m_connected && !m_secureReady) {
+		return NULL;
+	}
+	
+	return TCPSocket::newJob();
+}
+
+void
 SecureSocket::secureConnect()
 {
 	setJob(new TSocketMultiplexerMethodJob<SecureSocket>(
-			this, &SecureSocket::serviceConnect,
-			getSocket(), isReadable(), isWritable()));
+					this, &SecureSocket::serviceConnect,
+					getSocket(), isReadable(), isWritable()));
 }
 
 void
 SecureSocket::secureAccept()
 {
 	setJob(new TSocketMultiplexerMethodJob<SecureSocket>(
-			this, &SecureSocket::serviceAccept,
-			getSocket(), isReadable(), isWritable()));
+					this, &SecureSocket::serviceAccept,
+					getSocket(), isReadable(), isWritable()));
+}
+
+TCPSocket::EJobResult
+SecureSocket::doRead()
+{
+	static UInt8 buffer[4096];
+	memset(buffer, 0, sizeof(buffer));
+	int bytesRead = 0;
+	int status = 0;
+
+	if (isSecureReady()) {
+		status = secureRead(buffer, sizeof(buffer), bytesRead);
+		if (status < 0) {
+			return kBreak;
+		}
+		else if (status == 0) {
+			return kNew;
+		}
+	}
+	else {
+		return kRetry;
+	}
+	
+	if (bytesRead > 0) {
+		bool wasEmpty = (m_inputBuffer.getSize() == 0);
+		
+		// slurp up as much as possible
+		do {
+			m_inputBuffer.write(buffer, bytesRead);
+			
+			status = secureRead(buffer, sizeof(buffer), bytesRead);
+			if (status < 0) {
+				return kBreak;
+			}
+		} while (bytesRead > 0 || status > 0);
+		
+		// send input ready if input buffer was empty
+		if (wasEmpty) {
+			sendEvent(m_events->forIStream().inputReady());
+		}
+	}
+	else {
+		// remote write end of stream hungup.  our input side
+		// has therefore shutdown but don't flush our buffer
+		// since there's still data to be read.
+		sendEvent(m_events->forIStream().inputShutdown());
+		if (!m_writable && m_inputBuffer.getSize() == 0) {
+			sendEvent(m_events->forISocket().disconnected());
+			m_connected = false;
+		}
+		m_readable = false;
+		return kNew;
+	}
+	
+	return kRetry;
+}
+
+TCPSocket::EJobResult
+SecureSocket::doWrite()
+{
+	static bool s_retry = false;
+	static int s_retrySize = 0;
+	static void* s_staticBuffer = NULL;
+
+	// write data
+	int bufferSize = 0;
+	int bytesWrote = 0;
+	int status = 0;
+	
+	if (s_retry) {
+		bufferSize = s_retrySize;
+	}
+	else {
+		bufferSize = m_outputBuffer.getSize();
+		s_staticBuffer = malloc(bufferSize);
+		memcpy(s_staticBuffer, m_outputBuffer.peek(bufferSize), bufferSize);
+	}
+	
+	if (bufferSize == 0) {
+		return kRetry;
+	}
+
+	if (isSecureReady()) {
+		status = secureWrite(s_staticBuffer, bufferSize, bytesWrote);
+		if (status > 0) {
+			s_retry = false;
+			bufferSize = 0;
+			free(s_staticBuffer);
+			s_staticBuffer = NULL;
+		}
+		else if (status < 0) {
+			return kBreak;
+		}
+		else if (status == 0) {
+			s_retry = true;
+			s_retrySize = bufferSize;
+			return kNew;
+		}
+	}
+	else {
+		return kRetry;
+	}
+	
+	if (bytesWrote > 0) {
+		discardWrittenData(bytesWrote);
+		return kNew;
+	}
+
+	return kRetry;
 }
 
 int
@@ -472,12 +603,6 @@ SecureSocket::checkResult(int status, int& retry)
 		break;
 	}
 
-	// If the retry max would exceed the allowed, treat it as a fatal error
-	if (retry > s_maxRetry) {
-		LOG((CLOG_DEBUG "retry exceeded %f sec", s_maxRetry * s_retryDelay));
-		isFatal(true);
-	}
-
 	if (isFatal()) {
 		retry = 0;
 		showError();
@@ -609,6 +734,7 @@ SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
 
 	// If status > 0, success
 	if (status > 0) {
+		sendEvent(m_events->forIDataSocket().secureConnected());
 		return newJob();
 	}
 
@@ -637,6 +763,7 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 
 	// If status > 0, success
 	if (status > 0) {
+		sendEvent(m_events->forClientListener().accepted());
 		return newJob();
 	}
 
@@ -713,4 +840,10 @@ SecureSocket::showSecureConnectInfo()
 		LOG((CLOG_INFO "%s", msg));
 		}
 	return;
+}
+
+void
+SecureSocket::handleTCPConnected(const Event& event, void*)
+{
+	secureConnect();
 }

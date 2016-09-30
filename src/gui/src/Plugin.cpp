@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Si Ltd.
+ * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,7 @@
 
 #include "CoreInterface.h"
 
-static const char kBaseUrl[] = "http://synergy-project.org/files";
+static const char kBaseUrl[] = "http://symless.com/files";
 static const char kDefaultVersion[] = "1.1";
 static const char kWinPackagePlatform32[] = "Windows-x86";
 static const char kWinPackagePlatform64[] = "Windows-x64";

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
  * This package is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ bool checkMacAssistiveDevices();
 int main(int argc, char* argv[])
 {
 	QCoreApplication::setOrganizationName("Synergy");
-	QCoreApplication::setOrganizationDomain("http://synergy-project.org/");
+	QCoreApplication::setOrganizationDomain("http://symless.com/");
 	QCoreApplication::setApplicationName("Synergy");
 
 	QSynergyApplication app(argc, argv);
