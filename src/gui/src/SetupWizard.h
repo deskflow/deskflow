@@ -42,7 +42,6 @@ protected:
 	void changeEvent(QEvent* event);
 	void accept();
 	void reject();
-	void notifyActivation(QString identity);
 
 private:
 	MainWindow& m_MainWindow;
@@ -52,8 +51,5 @@ private:
 	int m_LoginAttemps;
 
 private slots:
-	void on_m_pRadioButtonSubscription_toggled(bool checked);
-	void on_m_pRadioButtonActivate_toggled(bool checked);
-	void on_m_pRadioButtonSkip_toggled(bool checked);
 	void on_m_pComboLanguage_currentIndexChanged(int index);
 };
