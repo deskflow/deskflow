@@ -34,6 +34,7 @@
 #include "EditionType.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
+#include "SslCertificate.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -97,7 +98,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_SuppressAutoConfigWarning(false),
 	m_BonjourInstall(NULL),
 	m_SuppressEmptyServerWarning(false),
-	m_ExpectedRunningState(kStopped)
+	m_ExpectedRunningState(kStopped),
+	m_pSslCertificate(NULL)
 {
 	setupUi(this);
 
@@ -145,6 +147,11 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 		appConfig.activationHasRun(true);
 	}
 
+	if (appConfig.getCryptoEnabled()) {
+		m_pSslCertificate = new SslCertificate(this);
+		m_pSslCertificate->generateCertificate();
+	}
+
 	appConfig.saveSettings();
 }
 
@@ -166,6 +173,8 @@ MainWindow::~MainWindow()
 	if (m_BonjourInstall != NULL) {
 		delete m_BonjourInstall;
 	}
+
+	delete m_pSslCertificate;
 }
 
 void MainWindow::open()

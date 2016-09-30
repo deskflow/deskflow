@@ -57,6 +57,7 @@ class SetupWizard;
 class ZeroconfService;
 class DataDownloader;
 class CommandProcess;
+class SslCertificate;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase
 {
@@ -207,6 +208,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool m_SuppressEmptyServerWarning;
 		qRuningState m_ExpectedRunningState;
 		QMutex m_StopDesktopMutex;
+		SslCertificate* m_pSslCertificate;
 
 private slots:
 	void on_m_pCheckBoxAutoConfig_toggled(bool checked);
