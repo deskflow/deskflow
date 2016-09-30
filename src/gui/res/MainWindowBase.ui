@@ -481,14 +481,6 @@
     <string notr="true"/>
    </property>
   </action>
-  <action name="m_pActionWizard">
-   <property name="text">
-    <string>Run Wizard</string>
-   </property>
-   <property name="shortcut">
-    <string notr="true"/>
-   </property>
-  </action>
   <action name="m_pActivate">
    <property name="text">
     <string>Activate</string>

@@ -26,7 +26,6 @@
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include "SetupWizard.h"
 #include "ActivationDialog.h"
 #include "ZeroconfService.h"
 #include "DataDownloader.h"
@@ -269,8 +268,8 @@ void MainWindow::createMenuBar()
 	m_pMenuFile->addAction(m_pActionStartSynergy);
 	m_pMenuFile->addAction(m_pActionStopSynergy);
 	m_pMenuFile->addSeparator();
-	m_pMenuFile->addAction(m_pActionWizard);
 	m_pMenuFile->addAction(m_pActivate);
+	m_pMenuFile->addSeparator();
 	m_pMenuFile->addAction(m_pActionSave);
 	m_pMenuFile->addSeparator();
 	m_pMenuFile->addAction(m_pActionQuit);
@@ -1136,12 +1135,6 @@ void MainWindow::showConfigureServer(const QString& message)
 void MainWindow::on_m_pButtonConfigureServer_clicked()
 {
 	showConfigureServer();
-}
-
-void MainWindow::on_m_pActionWizard_triggered()
-{
-	SetupWizard wizard(*this, false);
-	wizard.exec();
 }
 
 void MainWindow::on_m_pActivate_triggered()
