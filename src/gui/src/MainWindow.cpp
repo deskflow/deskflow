@@ -1015,23 +1015,9 @@ void MainWindow::serverDetected(const QString name)
 	}
 }
 
-void MainWindow::setEdition(int type)
+void MainWindow::setEdition(int edition)
 {
-	QString title;
-	if (type == Basic) {
-		title = "Synergy Basic";
-	}
-	else if (type == Pro) {
-		title = "Synergy Pro";
-	}
-	else if (type == Trial) {
-		title = "Synergy Trial";
-	}
-	else {
-		title = "Synergy (UNREGISTERED)";
-	}
-
-	setWindowTitle(title);
+	setWindowTitle(getEditionName(edition));
 }
 
 void MainWindow::updateLocalFingerprint()
@@ -1154,7 +1140,7 @@ void MainWindow::on_m_pActionWizard_triggered()
 
 void MainWindow::on_m_pActivate_triggered()
 {
-	ActivationDialog activationDialog (this);
+	ActivationDialog activationDialog (this, this->appConfig());
 	activationDialog.exec();
 }
 

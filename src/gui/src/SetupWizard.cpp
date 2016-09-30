@@ -29,7 +29,7 @@
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_MainWindow(mainWindow),
 	m_StartMain(startMain),
-	m_Edition(Unknown),
+	m_Edition(Unregistered),
 	m_LoginAttemps(0)
 {
 	setupUi(this);
@@ -76,7 +76,7 @@ bool SetupWizard::validateCurrentPage()
 	message.setWindowTitle(tr("Setup Synergy"));
 	message.setIcon(QMessageBox::Information);
 
-	if (currentPage() == m_pActivatePage)
+	/*if (currentPage() == m_pActivatePage)
 	{
 		if (m_pRadioButtonActivate->isChecked()) {
 			if (m_pLineEditEmail->text().isEmpty() ||
@@ -136,7 +136,8 @@ bool SetupWizard::validateCurrentPage()
 			return true;
 		}
 	}
-	else if (currentPage() == m_pNodePage)
+	else */
+	if (currentPage() == m_pNodePage)
 	{
 		bool result = m_pClientRadioButton->isChecked() ||
 				 m_pServerRadioButton->isChecked();
@@ -201,7 +202,7 @@ void SetupWizard::accept()
 
 	if (m_pRadioButtonSubscription->isChecked())
 	{
-		appConfig.setSerialKey(m_pTextEditSerialKey->toPlainText());
+		//appConfig.setSerialKey(m_pTextEditSerialKey->toPlainText());
 
 		notifyActivation("serial:" + m_pTextEditSerialKey->toPlainText());
 	}

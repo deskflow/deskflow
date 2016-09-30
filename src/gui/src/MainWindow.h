@@ -33,6 +33,7 @@
 #include "VersionChecker.h"
 #include "IpcClient.h"
 #include "Ipc.h"
+#include "ActivationDialog.h"
 
 #include <QMutex>
 
@@ -63,6 +64,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
 	friend class QSynergyApplication;
 	friend class SetupWizard;
+	friend class ActivationDialog;
 	
 	public:
 		enum qSynergyState
@@ -111,7 +113,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void autoAddScreen(const QString name);
 		void updateZeroconfService();
 		void serverDetected(const QString name);
-		void setEdition(int type);
+		void setEdition(int edition);
 		void updateLocalFingerprint();
 	public slots:
 		void appendLogRaw(const QString& text);

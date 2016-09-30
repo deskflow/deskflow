@@ -19,6 +19,7 @@
 
 #include "ProcessorArch.h"
 #include "CommandProcess.h"
+#include "EditionType.h"
 
 #if defined(Q_OS_LINUX)
 #include <QProcess>
@@ -39,6 +40,22 @@ void setIndexFromItemData(QComboBox* comboBox, const QVariant& itemData)
 			comboBox->setCurrentIndex(i);
 			return;
 		}
+	}
+}
+
+QString 
+getEditionName (int edition) {
+	if (edition == Basic) {
+		return "Synergy Basic";
+	}
+	else if (edition == Pro) {
+		return "Synergy Pro";
+	}
+	else if (edition == Trial) {
+		return "Synergy Trial";
+	}
+	else {
+		return "Synergy (UNREGISTERED)";
 	}
 }
 

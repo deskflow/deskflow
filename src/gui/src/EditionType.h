@@ -18,11 +18,13 @@
 #ifndef EDITIONTYPE_H
 #define EDITIONTYPE_H
 
-enum qEditionType {
+/* Do not reorder these! */
+
+enum EditionType {
 	Basic,
 	Pro,
 	Trial,
-	Unknown
+	Unregistered
 };
 
 #endif // EDITIONTYPE_H
