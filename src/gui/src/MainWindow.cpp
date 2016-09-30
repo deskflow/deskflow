@@ -144,6 +144,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 		activationDialog.exec();
 		appConfig.activationHasRun(true);
 	}
+
+	appConfig.saveSettings();
 }
 
 MainWindow::~MainWindow()
