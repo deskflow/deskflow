@@ -37,6 +37,15 @@ endif()
 target_link_libraries(synergyd
 	arch base common io ipc mt net platform synergy ${libs})
 
+if (WIN32)
+	ADD_CUSTOM_COMMAND(
+		TARGET synergyd
+		POST_BUILD
+		COMMAND "mt.exe" -manifest \"${CMAKE_SOURCE_DIR}\\res\\dpiaware.manifest\" -inputresource:\"$<TARGET_FILE:synergyd>\"\;\#1 -outputresource:\"$<TARGET_FILE:synergyd>\"\;\#1
+		COMMENT "Adding display aware manifest..."
+	)
+endif()
+
 if (CONF_CPACK)
 	install(TARGETS
 		synergyd
