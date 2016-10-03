@@ -46,7 +46,7 @@ WebClient::getEdition (int& edition, QString& errorOut) {
 				throw std::runtime_error ("Unrecognised server response.");
 			}
 		} else {
-			errorOut = tr("Login failed. Invalid email or password.");
+			errorOut = tr("Login failed. Invalid email address or password.");
 			return false;
 		}
 	} else {

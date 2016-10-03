@@ -8,6 +8,7 @@
 #include "MainWindow.h"
 #include "QUtility.h"
 #include "SubscriptionManager.h"
+#include "FailedLoginDialog.h"
 
 #include <QMessageBox>
 #include <QThread>
@@ -116,9 +117,8 @@ void ActivationDialog::accept()
 				return;
 			}
 			else if (!webClient.getEdition (edition, error)) {
-				message.critical (this, "Activation Error",
-					tr("An error occurred while trying to activate Synergy. "
-						"The Symless server returned the following error:\n\n%1").arg(error));
+				FailedLoginDialog failedLoginDialog (this, error);
+				failedLoginDialog.exec();
 				return;
 			}
 

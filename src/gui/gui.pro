@@ -18,7 +18,8 @@ FORMS += res/MainWindowBase.ui \
     res/SetupWizardBase.ui \
     res/AddClientDialogBase.ui \
     res/ActivationDialog.ui \
-    res/CancelActivationDialog.ui
+    res/CancelActivationDialog.ui \
+    res/FailedLoginDialog.ui
 SOURCES += src/main.cpp \
     src/MainWindow.cpp \
     src/AboutDialog.cpp \
@@ -62,7 +63,8 @@ SOURCES += src/main.cpp \
     src/SubscriptionManager.cpp \
     src/ActivationNotifier.cpp \
     src/ActivationDialog.cpp \
-    src/CancelActivationDialog.cpp
+    src/CancelActivationDialog.cpp \
+    src/FailedLoginDialog.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -109,7 +111,8 @@ HEADERS += src/MainWindow.h \
     src/ActivationNotifier.h \
     src/ElevateMode.h \
     src/ActivationDialog.h \
-    src/CancelActivationDialog.h
+    src/CancelActivationDialog.h \
+    src/FailedLoginDialog.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 
