@@ -66,6 +66,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 	friend class QSynergyApplication;
 	friend class SetupWizard;
 	friend class ActivationDialog;
+	friend class SettingsDialog;
 	
 	public:
 		enum qSynergyState
@@ -181,6 +182,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void restartSynergy();
 		void proofreadInfo();
 
+		void showEvent(QShowEvent *event);
 	private:
 		QSettings& m_Settings;
 		AppConfig& m_AppConfig;

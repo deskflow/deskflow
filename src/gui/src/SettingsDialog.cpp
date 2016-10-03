@@ -151,5 +151,6 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
 		sslCertificate.generateCertificate();
 		MainWindow& mainWindow = dynamic_cast<MainWindow&> (*this->parent());
 		mainWindow.updateLocalFingerprint();
+		mainWindow.saveSettings();
 	}
 }

@@ -139,19 +139,20 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
 	m_pLabelPadlock->hide();
 
-	if (!appConfig.activationHasRun() && (appConfig.edition() == Unregistered)) {
-		ActivationDialog activationDialog (this, appConfig);
-		activationDialog.exec();
-		appConfig.activationHasRun(true);
-	}
-
 	if (appConfig.getCryptoEnabled()) {
 		m_pSslCertificate = new SslCertificate(this);
 		m_pSslCertificate->generateCertificate();
 	}
 
 	updateLocalFingerprint();
-	appConfig.saveSettings();
+}
+
+void
+MainWindow::showEvent(QShowEvent*) {
+	if (!m_AppConfig.activationHasRun() && (m_AppConfig.edition() == Unregistered)) {
+		ActivationDialog activationDialog (this, m_AppConfig);
+		activationDialog.exec();
+	}
 }
 
 MainWindow::~MainWindow()

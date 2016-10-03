@@ -152,6 +152,7 @@ void ActivationDialog::accept()
 	}
 
 	m_appConfig->setEdition(edition);
+	m_appConfig->activationHasRun(true);
 	m_appConfig->saveSettings();
 
 	message.information  (this, "Activated!", 
@@ -159,7 +160,7 @@ void ActivationDialog::accept()
 	MainWindow& mainWindow = dynamic_cast<MainWindow&>(*this->parent());
 	mainWindow.setEdition(edition);
 	mainWindow.updateLocalFingerprint();
-	mainWindow.settings().sync();
+	mainWindow.saveSettings();
 
 	QDialog::accept();
 }
