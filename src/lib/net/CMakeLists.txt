@@ -36,13 +36,6 @@ add_library(net STATIC ${sources})
 
 if (WIN32)
 	add_custom_command(
-		TARGET net 
-		POST_BUILD
-		COMMAND xcopy /Y /Q
-			..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\ns.*
-			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\plugins\\
-	)
-	add_custom_command(
 		TARGET net
 		POST_BUILD
 		COMMAND xcopy /Y /Q
