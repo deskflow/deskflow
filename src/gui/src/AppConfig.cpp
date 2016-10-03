@@ -190,6 +190,7 @@ void AppConfig::saveSettings()
 	settings().setValue("serialKey", m_Serialkey);
 	settings().setValue("lastExpiringWarningTime", m_LastExpiringWarningTime);
 	settings().setValue("activationHasRun", m_ActivationHasRun);
+	settings().sync();
 }
 
 bool AppConfig::activationHasRun() const
