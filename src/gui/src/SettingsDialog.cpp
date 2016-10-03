@@ -24,6 +24,8 @@
 #include "QUtility.h"
 #include "AppConfig.h"
 #include "EditionType.h"
+#include "SslCertificate.h"
+#include "MainWindow.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -143,4 +145,11 @@ void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
 {
 	m_AppConfig.setCryptoEnabled(checked);
+	m_AppConfig.saveSettings();
+	if (checked) {
+		SslCertificate sslCertificate;
+		sslCertificate.generateCertificate();
+		MainWindow& mainWindow = dynamic_cast<MainWindow&> (*this->parent());
+		mainWindow.updateLocalFingerprint();
+	}
 }
