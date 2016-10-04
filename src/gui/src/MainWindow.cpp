@@ -138,15 +138,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	setEdition(m_AppConfig.edition());
 
 	m_pLabelPadlock->hide();
-
-	if (appConfig.getCryptoEnabled()) {
-		m_pSslCertificate = new SslCertificate(this);
-		m_pSslCertificate->generateCertificate();
-	}
-
-	updateLocalFingerprint();
-
 	connect (this, SIGNAL(windowShown()), this, SLOT(on_windowShown()), Qt::QueuedConnection);
+	connect (&m_AppConfig, SIGNAL(editionSet(int)), this, SLOT(setEdition(int)), Qt::QueuedConnection);
 }
 
 MainWindow::~MainWindow()
@@ -1034,11 +1027,17 @@ void MainWindow::serverDetected(const QString name)
 void MainWindow::setEdition(int edition)
 {
 	setWindowTitle(getEditionName(edition));
+	if (m_AppConfig.getCryptoEnabled()) {
+		m_pSslCertificate = new SslCertificate(this);
+		m_pSslCertificate->generateCertificate();
+	}
+	updateLocalFingerprint();
+	saveSettings();
 }
 
 void MainWindow::updateLocalFingerprint()
 {
-	if (Fingerprint::local().fileExists()) {
+	if (m_AppConfig.getCryptoEnabled() && Fingerprint::local().fileExists()) {
 		m_pLabelFingerprint->setVisible(true);
 		m_pLabelLocalFingerprint->setVisible(true);
 		m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());

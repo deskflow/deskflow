@@ -115,10 +115,10 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void autoAddScreen(const QString name);
 		void updateZeroconfService();
 		void serverDetected(const QString name);
-		void setEdition(int edition);
 		void updateLocalFingerprint();
 
 	public slots:
+		void setEdition(int edition);
 		void appendLogRaw(const QString& text);
 		void appendLogInfo(const QString& text);
 		void appendLogDebug(const QString& text);

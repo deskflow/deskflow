@@ -238,7 +238,10 @@ void AppConfig::setAutoConfigPrompted(bool prompted)
 	m_AutoConfigPrompted = prompted;
 }
 
-void AppConfig::setEdition(int e) { m_Edition = e; }
+void AppConfig::setEdition(int e) {
+	m_Edition = e;
+	emit editionSet (e);
+}
 
 int AppConfig::edition() const { return m_Edition; }
 

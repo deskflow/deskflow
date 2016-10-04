@@ -28,9 +28,7 @@
 
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_MainWindow(mainWindow),
-	m_StartMain(startMain),
-	m_Edition(Unregistered),
-	m_LoginAttemps(0)
+	m_StartMain(startMain)
 {
 	setupUi(this);
 
@@ -141,7 +139,6 @@ void SetupWizard::reject()
 
 	if (m_StartMain)
 	{
-		m_MainWindow.setEdition(m_Edition);
 		m_MainWindow.open();
 	}
 

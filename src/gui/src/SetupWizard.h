@@ -47,8 +47,6 @@ private:
 	MainWindow& m_MainWindow;
 	bool m_StartMain;
 	SynergyLocale m_Locale;
-	int m_Edition;
-	int m_LoginAttemps;
 
 private slots:
 	void on_m_pComboLanguage_currentIndexChanged(int index);

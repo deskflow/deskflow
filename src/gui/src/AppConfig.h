@@ -20,6 +20,7 @@
 
 #define APPCONFIG_H
 
+#include <QObject>
 #include <QString>
 #include "ElevateMode.h"
 
@@ -47,8 +48,10 @@ enum ProcessMode {
 	Desktop
 };
 
-class AppConfig
+class AppConfig: public QObject
 {
+	Q_OBJECT
+
 	friend class SettingsDialog;
 	friend class MainWindow;
 	friend class SetupWizard;
@@ -144,6 +147,9 @@ class AppConfig
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];
 		static const char m_SynergyLogDir[];
+
+	signals:
+		void editionSet(int);
 };
 
 #endif

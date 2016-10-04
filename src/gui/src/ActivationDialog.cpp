@@ -161,10 +161,5 @@ void ActivationDialog::accept()
 
 	message.information  (this, "Activated!", 
 						  tr("Thanks for activating %1!").arg (getEditionName (edition)));
-	MainWindow& mainWindow = dynamic_cast<MainWindow&>(*this->parent());
-	mainWindow.setEdition(edition);
-	mainWindow.updateLocalFingerprint();
-	mainWindow.saveSettings();
-
 	QDialog::accept();
 }
