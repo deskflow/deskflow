@@ -52,5 +52,5 @@ if (WIN32)
 endif()
 
 if (UNIX)
-	target_link_libraries(net mt io)
+	target_link_libraries(net mt io ${OPENSSL_LIBS})
 endif()
