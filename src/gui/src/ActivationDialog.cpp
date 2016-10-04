@@ -68,6 +68,8 @@ void ActivationDialog::reject()
 	CancelActivationDialog cancelActivationDialog(this);
 	if (QDialog::Accepted == cancelActivationDialog.exec()) {
 		notifyActivation("skip:unknown");
+		m_appConfig->activationHasRun(true);
+		m_appConfig->saveSettings();
 		QDialog::reject();
 	}
 }
@@ -101,6 +103,9 @@ void ActivationDialog::accept()
 	QMessageBox message;
 	QString error;
 	int edition = Unregistered;
+
+	m_appConfig->activationHasRun(true);
+	m_appConfig->saveSettings();
 
 	try {
 		if (ui->m_pRadioButtonActivate->isChecked()) {
@@ -152,7 +157,6 @@ void ActivationDialog::accept()
 	}
 
 	m_appConfig->setEdition(edition);
-	m_appConfig->activationHasRun(true);
 	m_appConfig->saveSettings();
 
 	message.information  (this, "Activated!", 
