@@ -117,6 +117,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void serverDetected(const QString name);
 		void setEdition(int edition);
 		void updateLocalFingerprint();
+
 	public slots:
 		void appendLogRaw(const QString& text);
 		void appendLogInfo(const QString& text);
@@ -182,7 +183,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void restartSynergy();
 		void proofreadInfo();
 
-		void showEvent(QShowEvent *event);
+		void showEvent (QShowEvent*);
+
 	private:
 		QSettings& m_Settings;
 		AppConfig& m_AppConfig;
@@ -217,6 +219,10 @@ private slots:
 	void on_m_pComboServerList_currentIndexChanged(QString );
 	void on_m_pButtonApply_clicked();
 	void installBonjour();
+	void on_windowShown();
+
+signals:
+	void windowShown();
 };
 
 #endif

@@ -145,15 +145,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	}
 
 	updateLocalFingerprint();
-}
 
-void
-MainWindow::showEvent(QShowEvent* event) {
-	QMainWindow::showEvent (event);
-	if (!m_AppConfig.activationHasRun() && (m_AppConfig.edition() == Unregistered)) {
-		ActivationDialog activationDialog (this, m_AppConfig);
-		activationDialog.exec();
-	}
+	connect (this, SIGNAL(windowShown()), this, SLOT(on_windowShown()), Qt::QueuedConnection);
 }
 
 MainWindow::~MainWindow()
@@ -516,6 +509,12 @@ void MainWindow::proofreadInfo()
 	int oldState = m_SynergyState;
 	m_SynergyState = synergyDisconnected;
 	setSynergyState((qSynergyState)oldState);
+}
+
+void MainWindow::showEvent(QShowEvent* event)
+{
+	QMainWindow::showEvent(event);
+	emit windowShown();
 }
 
 void MainWindow::clearLog()
@@ -1365,6 +1364,14 @@ void MainWindow::bonjourInstallFinished()
 	appendLogInfo("Bonjour install finished");
 
 	m_pCheckBoxAutoConfig->setChecked(true);
+}
+
+void MainWindow::on_windowShown()
+{
+	if (!m_AppConfig.activationHasRun() && (m_AppConfig.edition() == Unregistered)) {
+		ActivationDialog activationDialog (this, m_AppConfig);
+		activationDialog.exec();
+	}
 }
 
 QString MainWindow::getProfileRootForArg()
