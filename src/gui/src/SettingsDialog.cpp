@@ -38,7 +38,7 @@ static const char networkSecurity[] = "ns";
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::SettingsDialogBase(),
-       m_AppConfig(config)
+       m_appConfig(config)
 {
 	setupUi(this);
 
@@ -63,8 +63,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pComboElevate->hide();
 #endif
 
-	m_pCheckBoxEnableCrypto->setChecked(m_AppConfig.getCryptoEnabled());
-	m_pCheckBoxEnableCrypto->setEnabled(m_AppConfig.edition() == Pro);
+	m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
+	m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.edition() == Pro);
 }
 
 void SettingsDialog::accept()
@@ -144,8 +144,8 @@ void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
 {
-	m_AppConfig.setCryptoEnabled(checked);
-	m_AppConfig.saveSettings();
+	m_appConfig.setCryptoEnabled(checked);
+	m_appConfig.saveSettings();
 	if (checked) {
 		SslCertificate sslCertificate;
 		sslCertificate.generateCertificate();

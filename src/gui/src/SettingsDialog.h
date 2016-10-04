@@ -40,10 +40,10 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
 		void accept();
 		void reject();
 		void changeEvent(QEvent* event);
-		AppConfig& appConfig() { return m_AppConfig; }
+		AppConfig& appConfig() { return m_appConfig; }
 
 	private:
-		AppConfig& m_AppConfig;
+		AppConfig& m_appConfig;
 		SynergyLocale m_Locale;
 		CoreInterface m_CoreInterface;
 
