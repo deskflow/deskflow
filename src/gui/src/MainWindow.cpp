@@ -148,7 +148,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 }
 
 void
-MainWindow::showEvent(QShowEvent*) {
+MainWindow::showEvent(QShowEvent* event) {
+	QMainWindow::showEvent (event);
 	if (!m_AppConfig.activationHasRun() && (m_AppConfig.edition() == Unregistered)) {
 		ActivationDialog activationDialog (this, m_AppConfig);
 		activationDialog.exec();
