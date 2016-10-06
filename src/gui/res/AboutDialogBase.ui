@@ -13,25 +13,19 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>350</height>
+    <height>378</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>450</width>
-    <height>350</height>
-   </size>
-  </property>
   <property name="maximumSize">
    <size>
     <width>450</width>
-    <height>350</height>
+    <height>378</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -41,48 +35,20 @@
    <bool>true</bool>
   </property>
   <layout class="QGridLayout">
-   <item row="2" column="1" colspan="2">
-    <widget class="QLabel" name="label_3">
+   <item row="0" column="1">
+    <widget class="QLabel" name="label_2">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="text">
-      <string>&lt;p&gt;
-Keyboard and mouse sharing application. Cross platform, open source, and totally awesome.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
-Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;
-Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (symless.com).
-&lt;/p&gt;
-Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;</string>
-     </property>
-     <property name="margin">
-      <number>1</number>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1" colspan="2">
-    <spacer>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Preferred</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
+     <property name="maximumSize">
       <size>
-       <width>20</width>
-       <height>100</height>
+       <width>450</width>
+       <height>16777215</height>
       </size>
      </property>
-    </spacer>
-   </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="label_2">
      <property name="text">
       <string/>
      </property>
@@ -196,6 +162,41 @@ Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="2" column="1" colspan="2">
+    <widget class="QLabel" name="label_3">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Keyboard and mouse sharing application. &lt;br/&gt;&lt;br/&gt;Copyright © 2012-2016 Symless Ltd.&lt;br/&gt;Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;/p&gt;&lt;p&gt;Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br/&gt;The Synergy GUI is based on QSynergy by Volker Lanz. &lt;/p&gt;&lt;p&gt;Synergy is released under the GNU General Public License (GPLv2).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+     <property name="margin">
+      <number>1</number>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="2">
+    <spacer>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Preferred</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>100</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
