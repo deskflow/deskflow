@@ -98,13 +98,14 @@ class AppConfig: public QObject
 
 		void setCryptoEnabled(bool e);
 		bool getCryptoEnabled() const;
+
 		void setAutoHide(bool b);
 		bool getAutoHide();
 
-		void saveSettings();
-
 		bool activationHasRun() const;
 		AppConfig& activationHasRun(bool value);
+
+		void saveSettings();
 
 	protected:
 		QSettings& settings();
@@ -118,7 +119,6 @@ class AppConfig: public QObject
 		void setLanguage(const QString language);
 		void setStartedBefore(bool b);
 		void setElevateMode(ElevateMode em);
-
 		void loadSettings();
 
 	private:
@@ -150,6 +150,7 @@ class AppConfig: public QObject
 
 	signals:
 		void editionSet(int);
+		void sslToggled(bool enabled);
 };
 
 #endif

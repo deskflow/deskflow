@@ -128,7 +128,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Fingerprint:</string>
+            <string>SSL Fingerprint:</string>
            </property>
           </widget>
          </item>

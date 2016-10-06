@@ -140,6 +140,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pLabelPadlock->hide();
 	connect (this, SIGNAL(windowShown()), this, SLOT(on_windowShown()), Qt::QueuedConnection);
 	connect (&m_AppConfig, SIGNAL(editionSet(int)), this, SLOT(setEdition(int)), Qt::QueuedConnection);
+	connect (&m_AppConfig, SIGNAL(sslToggled(bool)), this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
 }
 
 MainWindow::~MainWindow()
@@ -497,7 +498,7 @@ void MainWindow::restartSynergy()
 
 void MainWindow::proofreadInfo()
 {
-	setEdition(m_AppConfig.edition());
+	setEdition(m_AppConfig.edition()); // Why is this here?
 
 	int oldState = m_SynergyState;
 	m_SynergyState = synergyDisconnected;
@@ -626,6 +627,16 @@ void MainWindow::startSynergy()
 		QString command(app + " " + args.join(" "));
 		m_IpcClient.sendCommand(command, appConfig().elevateMode());
 	}
+}
+
+void
+MainWindow::sslToggled (bool enabled)
+{
+	if (enabled) {
+		m_pSslCertificate = new SslCertificate(this);
+		m_pSslCertificate->generateCertificate();
+	}
+	updateLocalFingerprint();
 }
 
 bool MainWindow::clientArgs(QStringList& args, QString& app)
