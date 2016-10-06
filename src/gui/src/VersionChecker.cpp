@@ -51,8 +51,10 @@ void VersionChecker::replyFinished(QNetworkReply* reply)
 	if (!newestVersion.isEmpty())
 	{
 		QString currentVersion = getVersion();
-		if (compareVersions(currentVersion, newestVersion) > 0)
-			emit updateFound(newestVersion);
+		if (currentVersion != "Unknown") {
+			if (compareVersions(currentVersion, newestVersion) > 0)
+				emit updateFound(newestVersion);
+		}
 	}
 }
 

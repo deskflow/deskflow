@@ -281,7 +281,10 @@ ElevateMode AppConfig::elevateMode()
 	return m_ElevateMode;
 }
 
-void AppConfig::setCryptoEnabled(bool e) { m_CryptoEnabled = e; }
+void AppConfig::setCryptoEnabled(bool e) {
+	m_CryptoEnabled = e;
+	emit sslToggled(e);
+}
 
 bool AppConfig::getCryptoEnabled() const { 
 	return (edition() == Pro) && m_CryptoEnabled;

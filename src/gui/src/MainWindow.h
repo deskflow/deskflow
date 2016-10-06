@@ -126,6 +126,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void startSynergy();
 
 	protected slots:
+		void sslToggled(bool enabled);
 		void on_m_pGroupClient_toggled(bool on);
 		void on_m_pGroupServer_toggled(bool on);
 		bool on_m_pButtonBrowseConfigFile_clicked();
