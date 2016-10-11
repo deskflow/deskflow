@@ -1,3 +1,17 @@
+v1.8.4-stable
+=============
+
+Bug #4041 UHD/4K DPI scaling broken on Windows servers
+Bug #4420 When XRandR adds a screen, it is inaccessible
+Bug #5603 Activation notification depends on existence of /etc/os-release
+Bug #5624 Update notification sometimes requests a downgrade
+Bug #5329 Current date is shown for build date in the about dialog
+Bug #5640 Synergy branding is inconsistent across platforms
+Enhancement #5617 Remove redundant plugin infrastructure
+Enhancement #5627 Move SSL certificate generation to main window
+Enhancement #5628 Move SSL implementation into core binary
+Enhancement #5629 Move activation from wizard into new dialog window
+
 v1.8.3-stable
 =============
 Bug #2765 - A letter appears on macOS clients when the spacebar is pressed
