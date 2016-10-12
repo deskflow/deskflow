@@ -71,21 +71,21 @@ String
 MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
 {
 	// get datator
-	const char* src = (const char*)GlobalLock(data);
+	LPVOID src = GlobalLock(data);
 	if (src == NULL) {
 		return String();
 	}
 	UInt32 srcSize = (UInt32)GlobalSize(data);
 
 	// check image type
-	const BITMAPINFO* bitmap = reinterpret_cast<const BITMAPINFO*>(src);
+	const BITMAPINFO* bitmap = static_cast<const BITMAPINFO*>(src);
 	LOG((CLOG_INFO "bitmap: %dx%d %d", bitmap->bmiHeader.biWidth, bitmap->bmiHeader.biHeight, (int)bitmap->bmiHeader.biBitCount));
 	if (bitmap->bmiHeader.biPlanes == 1 &&
 		(bitmap->bmiHeader.biBitCount == 24 ||
 		bitmap->bmiHeader.biBitCount == 32) &&
 		bitmap->bmiHeader.biCompression == BI_RGB) {
 		// already in canonical form
-		String image(src, srcSize);
+		String image(static_cast<char const*>(src), srcSize);
 		GlobalUnlock(data);
 		return image;
 	}

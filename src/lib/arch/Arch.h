@@ -50,7 +50,6 @@
 #	include "arch/win32/ArchSystemWindows.h"
 #	include "arch/win32/ArchTaskBarWindows.h"
 #	include "arch/win32/ArchTimeWindows.h"
-#	include "arch/win32/ArchPluginWindows.h"
 #	include "arch/win32/ArchInternetWindows.h"
 #elif SYSAPI_UNIX
 #	include "arch/unix/ArchConsoleUnix.h"
@@ -66,7 +65,6 @@
 #	include "arch/unix/ArchSystemUnix.h"
 #	include "arch/unix/ArchTaskBarXWindows.h"
 #	include "arch/unix/ArchTimeUnix.h"
-#	include "arch/unix/ArchPluginUnix.h"
 #	include "arch/unix/ArchInternetUnix.h"
 #endif
 
@@ -122,12 +120,10 @@ public:
 
 	static void			setInstance(Arch* s) { s_instance = s; }
 
-	ARCH_PLUGIN&		plugin() const { return (ARCH_PLUGIN&)m_plugin; }
 	ARCH_INTERNET&		internet() const { return (ARCH_INTERNET&)m_internet; }
 
 private:
 	static Arch*		s_instance;
-	ARCH_PLUGIN			m_plugin;
 	ARCH_INTERNET		m_internet;
 };
 

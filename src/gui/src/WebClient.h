@@ -32,21 +32,15 @@ class WebClient : public QObject
 	Q_OBJECT
 
 public:
-	int getEdition(const QString& email,
-			const QString& password,
-			QMessageBox& message,
-			QWidget* w);
-	void setEmail(QString& e) { m_Email = e; }
-	void setPassword(QString& p) { m_Password = p; }
-
+	bool getEdition (int& edition, QString& errorOut);
+	bool setEmail (QString email, QString& errorOut);
+	bool setPassword (QString password, QString& errorOut);
 signals:
 	void error(QString e);
 
 private:
-	QString request(const QString& email,
-			const QString& password);
-
-private:
+	QString request();
+	
 	QString m_Email;
 	QString m_Password;
 	CoreInterface m_CoreInterface;

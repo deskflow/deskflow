@@ -83,7 +83,7 @@ StreamFilter::shutdownOutput()
 void*
 StreamFilter::getEventTarget() const
 {
-	return const_cast<void*>(reinterpret_cast<const void*>(this));
+	return const_cast<void*>(static_cast<const void*>(this));
 }
 
 bool

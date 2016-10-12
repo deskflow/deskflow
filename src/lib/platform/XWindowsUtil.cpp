@@ -1386,7 +1386,7 @@ XWindowsUtil::setWindowProperty(Display* display, Window window,
 				Atom type, SInt32 format)
 {
 	const UInt32 length       = 4 * XMaxRequestSize(display);
-	const unsigned char* data = reinterpret_cast<const unsigned char*>(vdata);
+	const unsigned char* data = static_cast<const unsigned char*>(vdata);
 	UInt32 datumSize    = static_cast<UInt32>(format / 8);
 	// format 32 on 64bit systems is 8 bytes not 4.
 	if (format == 32) {
@@ -1784,5 +1784,5 @@ void
 XWindowsUtil::ErrorLock::saveHandler(Display*, XErrorEvent* e, void* flag)
 {
 	LOG((CLOG_DEBUG1 "flagging X error: %d", e->error_code));
-	*reinterpret_cast<bool*>(flag) = true;
+	*static_cast<bool*>(flag) = true;
 }

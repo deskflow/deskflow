@@ -19,6 +19,7 @@
 
 #include "ProcessorArch.h"
 #include "CommandProcess.h"
+#include "EditionType.h"
 
 #if defined(Q_OS_LINUX)
 #include <QProcess>
@@ -38,6 +39,22 @@ void setIndexFromItemData(QComboBox* comboBox, const QVariant& itemData)
 			comboBox->setCurrentIndex(i);
 			return;
 		}
+	}
+}
+
+QString 
+getEditionName (int edition) {
+	if (edition == Basic) {
+		return "Synergy Basic";
+	}
+	else if (edition == Pro) {
+		return "Synergy Pro";
+	}
+	else if (edition == Trial) {
+		return "Synergy Trial";
+	}
+	else {
+		return "Synergy (UNREGISTERED)";
 	}
 }
 
@@ -96,15 +113,18 @@ QString getOSInformation()
 	QString result;
 
 #if defined(Q_OS_LINUX)
-	QStringList arguments;
-	arguments.append("/etc/os-release");
-	CommandProcess cp("/bin/cat", arguments);
-	QString output = cp.run();
+	result = "Linux";
+	try {
+		QStringList arguments;
+		arguments.append("/etc/os-release");
+		CommandProcess cp("/bin/cat", arguments);
+		QString output = cp.run();
 
-	QRegExp resultRegex(".*PRETTY_NAME=\"([^\"]+)\".*");
-	if (resultRegex.exactMatch(output)) {
-		QString OSInfo = resultRegex.cap(1);
-		result = OSInfo;
+		QRegExp resultRegex(".*PRETTY_NAME=\"([^\"]+)\".*");
+		if (resultRegex.exactMatch(output)) {
+			result = resultRegex.cap(1);
+		}
+	} catch (...) {
 	}
 #endif
 

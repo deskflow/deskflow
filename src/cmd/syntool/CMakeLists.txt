@@ -29,7 +29,7 @@ endif()
 
 add_executable(syntool ${sources})
 target_link_libraries(syntool
-	synergy arch base client common io ipc mt net platform server ${libs})
+	synergy arch base client common io ipc mt net platform server ${libs} ${OPENSSL_LIBS})
 
 if (CONF_CPACK)
 	install(TARGETS

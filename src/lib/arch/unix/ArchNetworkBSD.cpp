@@ -646,7 +646,7 @@ ArchNetworkBSD::newAnyAddr(EAddressFamily family)
 	switch (family) {
 	case kINET: {
 		struct sockaddr_in* ipAddr =
-			reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
+				reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
 		ipAddr->sin_family         = AF_INET;
 		ipAddr->sin_port           = 0;
 		ipAddr->sin_addr.s_addr    = INADDR_ANY;
@@ -737,8 +737,7 @@ ArchNetworkBSD::addrToName(ArchNetAddress addr)
 
 	// mutexed name lookup (ugh)
 	ARCH->lockMutex(m_mutex);
-	struct hostent* info = gethostbyaddr(
-							reinterpret_cast<const char*>(&addr->m_addr),
+	struct hostent* info = gethostbyaddr(&addr->m_addr,
 							addr->m_len, addr->m_addr.sa_family);
 	if (info == NULL) {
 		ARCH->unlockMutex(m_mutex);
@@ -834,7 +833,7 @@ ArchNetworkBSD::isAnyAddr(ArchNetAddress addr)
 	switch (getAddrFamily(addr)) {
 	case kINET: {
 		struct sockaddr_in* ipAddr =
-			reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
+				reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
 		return (ipAddr->sin_addr.s_addr == INADDR_ANY &&
 				addr->m_len == (socklen_t)sizeof(struct sockaddr_in));
 	}

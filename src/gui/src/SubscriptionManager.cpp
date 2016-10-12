@@ -39,7 +39,7 @@ SubscriptionManager::SubscriptionManager(QWidget* parent,  AppConfig& appConfig,
 
 bool SubscriptionManager::activateSerial(const QString& serial)
 {
-	m_Edition = UnknownEdition;
+	m_Edition = Unregistered;
 	persistDirectory();
 	CoreInterface coreInterface;
 	QString output;
@@ -62,7 +62,7 @@ bool SubscriptionManager::activateSerial(const QString& serial)
 
 bool SubscriptionManager::checkSubscription()
 {
-	m_Edition = UnknownEdition;
+	m_Edition = Unregistered;
 	persistDirectory();
 	CoreInterface coreInterface;
 	QString output;
@@ -98,7 +98,7 @@ void SubscriptionManager::checkError(QString& error)
 	}
 	else {
 		QMessageBox::warning(m_pParent, tr("Subscription error"),
-			tr("An error occurred while trying to activate using a serial key. "
+			tr("An error occurred while trying to activate Synergy using your serial key. "
 				"Please contact the helpdesk, and provide the "
 				"following details.\n\n%1").arg(error));
 	}

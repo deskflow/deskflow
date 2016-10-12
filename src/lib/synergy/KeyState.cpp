@@ -524,7 +524,7 @@ KeyState::addActiveModifierCB(KeyID, SInt32 group,
 				synergy::KeyMap::KeyItem& keyItem, void* vcontext)
 {
 	AddActiveModifierContext* context =
-		reinterpret_cast<AddActiveModifierContext*>(vcontext);
+		static_cast<AddActiveModifierContext*>(vcontext);
 	if (group == context->m_activeGroup &&
 		(keyItem.m_generates & context->m_mask) != 0) {
 		context->m_activeModifiers.insert(std::make_pair(

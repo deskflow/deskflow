@@ -29,3 +29,4 @@ QString hash(const QString& string);
 QString getFirstMacAddress();
 qProcessorArch getProcessorArch();
 QString getOSInformation();
+QString getEditionName (int edition);

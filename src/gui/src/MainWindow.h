@@ -33,6 +33,7 @@
 #include "VersionChecker.h"
 #include "IpcClient.h"
 #include "Ipc.h"
+#include "ActivationDialog.h"
 
 #include <QMutex>
 
@@ -56,6 +57,7 @@ class SetupWizard;
 class ZeroconfService;
 class DataDownloader;
 class CommandProcess;
+class SslCertificate;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase
 {
@@ -63,8 +65,9 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
 	friend class QSynergyApplication;
 	friend class SetupWizard;
-	friend class PluginWizardPage;
-
+	friend class ActivationDialog;
+	friend class SettingsDialog;
+	
 	public:
 		enum qSynergyState
 		{
@@ -112,10 +115,10 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void autoAddScreen(const QString name);
 		void updateZeroconfService();
 		void serverDetected(const QString name);
-		void setEdition(int type);
 		void updateLocalFingerprint();
 
 	public slots:
+		void setEdition(int edition);
 		void appendLogRaw(const QString& text);
 		void appendLogInfo(const QString& text);
 		void appendLogDebug(const QString& text);
@@ -123,6 +126,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void startSynergy();
 
 	protected slots:
+		void sslToggled(bool enabled);
 		void on_m_pGroupClient_toggled(bool on);
 		void on_m_pGroupServer_toggled(bool on);
 		bool on_m_pButtonBrowseConfigFile_clicked();
@@ -130,7 +134,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool on_m_pActionSave_triggered();
 		void on_m_pActionAbout_triggered();
 		void on_m_pActionSettings_triggered();
-		void on_m_pActionWizard_triggered();
+		void on_m_pActivate_triggered();
 		void synergyFinished(int exitCode, QProcess::ExitStatus);
 		void trayActivated(QSystemTrayIcon::ActivationReason reason);
 		void stopSynergy();
@@ -180,6 +184,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void restartSynergy();
 		void proofreadInfo();
 
+		void showEvent (QShowEvent*);
+
 	private:
 		QSettings& m_Settings;
 		AppConfig& m_AppConfig;
@@ -207,12 +213,17 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool m_SuppressEmptyServerWarning;
 		qRuningState m_ExpectedRunningState;
 		QMutex m_StopDesktopMutex;
+		SslCertificate* m_pSslCertificate;
 
 private slots:
 	void on_m_pCheckBoxAutoConfig_toggled(bool checked);
 	void on_m_pComboServerList_currentIndexChanged(QString );
 	void on_m_pButtonApply_clicked();
 	void installBonjour();
+	void on_windowShown();
+
+signals:
+	void windowShown();
 };
 
 #endif

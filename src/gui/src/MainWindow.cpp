@@ -23,11 +23,10 @@
 #include "MainWindow.h"
 
 #include "Fingerprint.h"
-#include "PluginManager.h"
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include "SetupWizard.h"
+#include "ActivationDialog.h"
 #include "ZeroconfService.h"
 #include "DataDownloader.h"
 #include "CommandProcess.h"
@@ -35,6 +34,7 @@
 #include "EditionType.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
+#include "SslCertificate.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -98,7 +98,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_SuppressAutoConfigWarning(false),
 	m_BonjourInstall(NULL),
 	m_SuppressEmptyServerWarning(false),
-	m_ExpectedRunningState(kStopped)
+	m_ExpectedRunningState(kStopped),
+	m_pSslCertificate(NULL)
 {
 	setupUi(this);
 
@@ -137,8 +138,9 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	setEdition(m_AppConfig.edition());
 
 	m_pLabelPadlock->hide();
-
-	updateLocalFingerprint();
+	connect (this, SIGNAL(windowShown()), this, SLOT(on_windowShown()), Qt::QueuedConnection);
+	connect (&m_AppConfig, SIGNAL(editionSet(int)), this, SLOT(setEdition(int)), Qt::QueuedConnection);
+	connect (&m_AppConfig, SIGNAL(sslToggled(bool)), this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
 }
 
 MainWindow::~MainWindow()
@@ -159,6 +161,8 @@ MainWindow::~MainWindow()
 	if (m_BonjourInstall != NULL) {
 		delete m_BonjourInstall;
 	}
+
+	delete m_pSslCertificate;
 }
 
 void MainWindow::open()
@@ -263,7 +267,8 @@ void MainWindow::createMenuBar()
 	m_pMenuFile->addAction(m_pActionStartSynergy);
 	m_pMenuFile->addAction(m_pActionStopSynergy);
 	m_pMenuFile->addSeparator();
-	m_pMenuFile->addAction(m_pActionWizard);
+	m_pMenuFile->addAction(m_pActivate);
+	m_pMenuFile->addSeparator();
 	m_pMenuFile->addAction(m_pActionSave);
 	m_pMenuFile->addSeparator();
 	m_pMenuFile->addAction(m_pActionQuit);
@@ -493,11 +498,17 @@ void MainWindow::restartSynergy()
 
 void MainWindow::proofreadInfo()
 {
-	setEdition(m_AppConfig.edition());
+	setEdition(m_AppConfig.edition()); // Why is this here?
 
 	int oldState = m_SynergyState;
 	m_SynergyState = synergyDisconnected;
 	setSynergyState((qSynergyState)oldState);
+}
+
+void MainWindow::showEvent(QShowEvent* event)
+{
+	QMainWindow::showEvent(event);
+	emit windowShown();
 }
 
 void MainWindow::clearLog()
@@ -616,6 +627,16 @@ void MainWindow::startSynergy()
 		QString command(app + " " + args.join(" "));
 		m_IpcClient.sendCommand(command, appConfig().elevateMode());
 	}
+}
+
+void
+MainWindow::sslToggled (bool enabled)
+{
+	if (enabled) {
+		m_pSslCertificate = new SslCertificate(this);
+		m_pSslCertificate->generateCertificate();
+	}
+	updateLocalFingerprint();
 }
 
 bool MainWindow::clientArgs(QStringList& args, QString& app)
@@ -1014,28 +1035,20 @@ void MainWindow::serverDetected(const QString name)
 	}
 }
 
-void MainWindow::setEdition(int type)
+void MainWindow::setEdition(int edition)
 {
-	QString title;
-	if (type == Basic) {
-		title = "Synergy Basic";
+	setWindowTitle(getEditionName(edition));
+	if (m_AppConfig.getCryptoEnabled()) {
+		m_pSslCertificate = new SslCertificate(this);
+		m_pSslCertificate->generateCertificate();
 	}
-	else if (type == Pro) {
-		title = "Synergy Pro";
-	}
-	else if (type == Trial) {
-		title = "Synergy Trial";
-	}
-	else {
-		title = "Synergy (UNREGISTERED)";
-	}
-
-	setWindowTitle(title);
+	updateLocalFingerprint();
+	saveSettings();
 }
 
 void MainWindow::updateLocalFingerprint()
 {
-	if (Fingerprint::local().fileExists()) {
+	if (m_AppConfig.getCryptoEnabled() && Fingerprint::local().fileExists()) {
 		m_pLabelFingerprint->setVisible(true);
 		m_pLabelLocalFingerprint->setVisible(true);
 		m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
@@ -1145,10 +1158,10 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 	showConfigureServer();
 }
 
-void MainWindow::on_m_pActionWizard_triggered()
+void MainWindow::on_m_pActivate_triggered()
 {
-	SetupWizard wizard(*this, false);
-	wizard.exec();
+	ActivationDialog activationDialog (this, this->appConfig());
+	activationDialog.exec();
 }
 
 void MainWindow::on_m_pButtonApply_clicked()
@@ -1365,6 +1378,14 @@ void MainWindow::bonjourInstallFinished()
 	appendLogInfo("Bonjour install finished");
 
 	m_pCheckBoxAutoConfig->setChecked(true);
+}
+
+void MainWindow::on_windowShown()
+{
+	if (!m_AppConfig.activationHasRun() && (m_AppConfig.edition() == Unregistered)) {
+		ActivationDialog activationDialog (this, m_AppConfig);
+		activationDialog.exec();
+	}
 }
 
 QString MainWindow::getProfileRootForArg()

@@ -20,6 +20,7 @@
 
 #define APPCONFIG_H
 
+#include <QObject>
 #include <QString>
 #include "ElevateMode.h"
 
@@ -48,8 +49,10 @@ enum ProcessMode {
 	Desktop
 };
 
-class AppConfig
+class AppConfig: public QObject
 {
+	Q_OBJECT
+
 	friend class SettingsDialog;
 	friend class MainWindow;
 	friend class SetupWizard;
@@ -59,33 +62,34 @@ class AppConfig
 		~AppConfig();
 
 	public:
-		const QString& screenName() const { return m_ScreenName; }
-		int port() const { return m_Port; }
-		const QString& networkInterface() const { return m_Interface; }
-		int logLevel() const { return m_LogLevel; }
-		bool logToFile() const { return m_LogToFile; }
-		const QString& logFilename() const { return m_LogFilename; }
+		const QString& screenName() const;
+		int port() const;
+		const QString& networkInterface() const;
+		int logLevel() const;
+		bool logToFile() const;
+		const QString& logFilename() const;
 		const QString logFilenameCmd() const;
 		QString logLevelText() const;
-		ProcessMode processMode() const { return m_ProcessMode; }
-		bool wizardShouldRun() const { return m_WizardLastRun < kWizardVersion; }
-		const QString& language() const { return m_Language; }
-		bool startedBefore() const { return m_StartedBefore; }
-		bool autoConfig() const { return m_AutoConfig; }
+		ProcessMode processMode() const;
+		bool wizardShouldRun() const;
+		const QString& language() const;
+		bool startedBefore() const;
+		bool autoConfig() const;
 		void setAutoConfig(bool autoConfig);
-		bool autoConfigPrompted()  { return m_AutoConfigPrompted; }
+		bool autoConfigPrompted();
 		void setAutoConfigPrompted(bool prompted);
-		void setEdition(int e) { m_Edition = e; }
-		int edition() { return m_Edition; }
-		void setActivateEmail(QString e) { m_ActivateEmail = e; }
-		QString activateEmail() { return m_ActivateEmail; }
-		void setSerialKey(QString serial) { m_Serialkey = serial; }
-		QString serialKey() { return m_Serialkey; }
-		int lastExpiringWarningTime() const { return m_LastExpiringWarningTime; }
-		void setLastExpiringWarningTime(int t) { m_LastExpiringWarningTime = t; }
+		void setEdition(int e);
+		int edition() const;
+		bool setActivateEmail(QString e);
+		QString activateEmail();
+		bool setSerialKey(QString serial, QString& error);
+		void clearSerialKey();
+		QString serialKey();
+		int lastExpiringWarningTime() const;
+		void setLastExpiringWarningTime(int t);
 
-		QString synergysName() const { return m_SynergysName; }
-		QString synergycName() const { return m_SynergycName; }
+		QString synergysName() const;
+		QString synergycName() const;
 		QString synergyProgramDir() const;
 		QString synergyLogDir() const;
 
@@ -93,26 +97,29 @@ class AppConfig
 		void persistLogDir();
 		ElevateMode elevateMode();
 
-		void setCryptoEnabled(bool e) { m_CryptoEnabled = e; }
-		bool getCryptoEnabled() { return m_CryptoEnabled; }
-		void setAutoHide(bool b) { m_AutoHide = b; }
-		bool getAutoHide() { return m_AutoHide; }
+		void setCryptoEnabled(bool e);
+		bool getCryptoEnabled() const;
+
+		void setAutoHide(bool b);
+		bool getAutoHide();
+
+		bool activationHasRun() const;
+		AppConfig& activationHasRun(bool value);
 
 		void saveSettings();
 
 	protected:
-		QSettings& settings() { return *m_pSettings; }
-		void setScreenName(const QString& s) { m_ScreenName = s; }
-		void setPort(int i) { m_Port = i; }
-		void setNetworkInterface(const QString& s) { m_Interface = s; }
-		void setLogLevel(int i) { m_LogLevel = i; }
-		void setLogToFile(bool b) { m_LogToFile = b; }
-		void setLogFilename(const QString& s) { m_LogFilename = s; }
-		void setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
-		void setLanguage(const QString language) { m_Language = language; }
-		void setStartedBefore(bool b) { m_StartedBefore = b; }
-		void setElevateMode(ElevateMode em) { m_ElevateMode = em; }
-
+		QSettings& settings();
+		void setScreenName(const QString& s);
+		void setPort(int i);
+		void setNetworkInterface(const QString& s);
+		void setLogLevel(int i);
+		void setLogToFile(bool b);
+		void setLogFilename(const QString& s);
+		void setWizardHasRun();
+		void setLanguage(const QString language);
+		void setStartedBefore(bool b);
+		void setElevateMode(ElevateMode em);
 		void loadSettings();
 
 	private:
@@ -136,10 +143,15 @@ class AppConfig
 		bool m_AutoHide;
 		QString m_Serialkey;
 		int m_LastExpiringWarningTime;
+		bool m_ActivationHasRun;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];
 		static const char m_SynergyLogDir[];
+
+	signals:
+		void editionSet(int);
+		void sslToggled(bool enabled);
 };
 
 #endif

@@ -25,7 +25,6 @@
 #include "net/IListenSocket.h"
 #include "net/ISocketFactory.h"
 #include "net/XSocket.h"
-#include "common/PluginVersion.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
@@ -41,19 +40,11 @@ ClientListener::ClientListener(const NetworkAddress& address,
 	m_socketFactory(socketFactory),
 	m_server(NULL),
 	m_events(events),
-	m_useSecureNetwork(false)
+	m_useSecureNetwork(enableCrypto)
 {
 	assert(m_socketFactory != NULL);
 
 	try {
-		// create listen socket
-		if (enableCrypto) {
-			m_useSecureNetwork = ARCH->plugin().exists(s_pluginNames[kSecureSocket]);
-			if (m_useSecureNetwork == false) {
-				LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
-			}
-		}
-
 		m_listen = m_socketFactory->createListen(m_useSecureNetwork);
 
 		// setup event handler
@@ -164,8 +155,7 @@ ClientListener::handleClientAccepted(const Event&, void* vsocket)
 	IDataSocket* socket = static_cast<IDataSocket*>(vsocket);
 	
 	// filter socket messages, including a packetizing filter
-	bool adopt = !m_useSecureNetwork;
-	synergy::IStream* stream = new PacketStreamFilter(m_events, socket, adopt);
+	synergy::IStream* stream = new PacketStreamFilter(m_events, socket, true);
 	assert(m_server != NULL);
 
 	// create proxy for unknown client
@@ -188,7 +178,7 @@ void
 ClientListener::handleUnknownClient(const Event&, void* vclient)
 {
 	ClientProxyUnknown* unknownClient =
-		reinterpret_cast<ClientProxyUnknown*>(vclient);
+		static_cast<ClientProxyUnknown*>(vclient);
 
 	// we should have the client in our new client list
 	assert(m_newClients.count(unknownClient) == 1);
@@ -232,7 +222,7 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
 void
 ClientListener::handleClientDisconnected(const Event&, void* vclient)
 {
-	ClientProxy* client = reinterpret_cast<ClientProxy*>(vclient);
+	ClientProxy* client = static_cast<ClientProxy*>(vclient);
 
 	// find client in waiting clients queue
 	for (WaitingClients::iterator i = m_waitingClients.begin(),
@@ -250,13 +240,5 @@ ClientListener::handleClientDisconnected(const Event&, void* vclient)
 void
 ClientListener::cleanupListenSocket()
 {
-	if (!m_useSecureNetwork) {
-		delete m_listen;
-	}
-	else {
-		ARCH->plugin().invoke(
-			s_pluginNames[kSecureSocket],
-			"deleteListenSocket",
-			NULL);
-	}
+	delete m_listen;
 }

@@ -656,7 +656,7 @@ MSWindowsDesks::deskThread(void* vdesk)
 	MSG msg;
 
 	// use given desktop for this thread
-	Desk* desk              = reinterpret_cast<Desk*>(vdesk);
+	Desk* desk              = static_cast<Desk*>(vdesk);
 	desk->m_threadID         = GetCurrentThreadId();
 	desk->m_window           = NULL;
 	desk->m_foregroundWindow = NULL;

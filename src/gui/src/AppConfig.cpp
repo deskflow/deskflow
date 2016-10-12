@@ -73,6 +73,18 @@ AppConfig::~AppConfig()
 	saveSettings();
 }
 
+const QString &AppConfig::screenName() const { return m_ScreenName; }
+
+int AppConfig::port() const { return m_Port; }
+
+const QString &AppConfig::networkInterface() const { return m_Interface; }
+
+int AppConfig::logLevel() const { return m_LogLevel; }
+
+bool AppConfig::logToFile() const { return m_LogToFile; }
+
+const QString &AppConfig::logFilename() const { return m_LogFilename; }
+
 QString AppConfig::synergyLogDir() const
 {
 #if defined(Q_OS_WIN)
@@ -116,6 +128,16 @@ QString AppConfig::logLevelText() const
 	return logLevelNames[logLevel()];
 }
 
+ProcessMode AppConfig::processMode() const { return m_ProcessMode; }
+
+bool AppConfig::wizardShouldRun() const { return m_WizardLastRun < kWizardVersion; }
+
+const QString &AppConfig::language() const { return m_Language; }
+
+bool AppConfig::startedBefore() const { return m_StartedBefore; }
+
+bool AppConfig::autoConfig() const { return m_AutoConfig; }
+
 void AppConfig::loadSettings()
 {
 	m_ScreenName = settings().value("screenName", QHostInfo::localHostName()).toString();
@@ -135,12 +157,13 @@ void AppConfig::loadSettings()
 	}
 	m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
 	m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
-	m_Edition = settings().value("edition", UnknownEdition).toInt();
+	m_Edition = settings().value("edition", Unregistered).toInt();
 	m_ActivateEmail = settings().value("activateEmail", "").toString();
-	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
+	m_CryptoEnabled = settings().value("cryptoEnabled", true).toBool();
 	m_AutoHide = settings().value("autoHide", false).toBool();
 	m_Serialkey = settings().value("serialKey", "").toString();
 	m_LastExpiringWarningTime = settings().value("lastExpiringWarningTime", 0).toInt();
+	m_ActivationHasRun = settings().value("activationHasRun", false).toBool();
 }
 
 void AppConfig::saveSettings()
@@ -166,19 +189,107 @@ void AppConfig::saveSettings()
 	settings().setValue("autoHide", m_AutoHide);
 	settings().setValue("serialKey", m_Serialkey);
 	settings().setValue("lastExpiringWarningTime", m_LastExpiringWarningTime);
+	settings().setValue("activationHasRun", m_ActivationHasRun);
+	settings().sync();
 }
+
+bool AppConfig::activationHasRun() const
+{
+	return m_ActivationHasRun;
+}
+
+AppConfig& AppConfig::activationHasRun(bool value)
+{
+	m_ActivationHasRun = value;
+	return *this;
+}
+
+QSettings &AppConfig::settings() { return *m_pSettings; }
+
+void AppConfig::setScreenName(const QString &s) { m_ScreenName = s; }
+
+void AppConfig::setPort(int i) { m_Port = i; }
+
+void AppConfig::setNetworkInterface(const QString &s) { m_Interface = s; }
+
+void AppConfig::setLogLevel(int i) { m_LogLevel = i; }
+
+void AppConfig::setLogToFile(bool b) { m_LogToFile = b; }
+
+void AppConfig::setLogFilename(const QString &s) { m_LogFilename = s; }
+
+void AppConfig::setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
+
+void AppConfig::setLanguage(const QString language) { m_Language = language; }
+
+void AppConfig::setStartedBefore(bool b) { m_StartedBefore = b; }
+
+void AppConfig::setElevateMode(ElevateMode em) { m_ElevateMode = em; }
 
 void AppConfig::setAutoConfig(bool autoConfig)
 {
 	m_AutoConfig = autoConfig;
 }
 
+bool AppConfig::autoConfigPrompted()  { return m_AutoConfigPrompted; }
+
 void AppConfig::setAutoConfigPrompted(bool prompted)
 {
 	m_AutoConfigPrompted = prompted;
 }
 
+void AppConfig::setEdition(int e) {
+	m_Edition = e;
+	emit editionSet (e);
+}
+
+int AppConfig::edition() const { return m_Edition; }
+
+bool AppConfig::setActivateEmail(QString e) {
+	m_ActivateEmail = e;
+	return true; 
+}
+
+QString AppConfig::activateEmail() { return m_ActivateEmail; }
+
+bool AppConfig::setSerialKey(QString serial, QString& errorOut) {
+	if (serial.isEmpty()) {
+		errorOut = "Your serial key cannot be blank.";
+		return false;
+	}
+	m_Serialkey = serial; 
+	return true;
+}
+
+void AppConfig::clearSerialKey()
+{
+	m_Serialkey.clear();
+}
+
+QString AppConfig::serialKey() { return m_Serialkey; }
+
+int AppConfig::lastExpiringWarningTime() const { return m_LastExpiringWarningTime; }
+
+void AppConfig::setLastExpiringWarningTime(int t) { m_LastExpiringWarningTime = t; }
+
+QString AppConfig::synergysName() const { return m_SynergysName; }
+
+QString AppConfig::synergycName() const { return m_SynergycName; }
+
 ElevateMode AppConfig::elevateMode()
 {
 	return m_ElevateMode;
 }
+
+void AppConfig::setCryptoEnabled(bool e) {
+	m_CryptoEnabled = e;
+	emit sslToggled(e);
+}
+
+bool AppConfig::getCryptoEnabled() const { 
+	return (edition() == Pro) && m_CryptoEnabled;
+}
+
+void AppConfig::setAutoHide(bool b) { m_AutoHide = b; }
+
+bool AppConfig::getAutoHide() { return m_AutoHide; }
