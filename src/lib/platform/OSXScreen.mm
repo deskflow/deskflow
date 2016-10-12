@@ -45,6 +45,8 @@
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>
 
+#import <appkit/NSEvent.h>
+
 // Set some enums for fast user switching if we're building with an SDK
 // from before such support was added.
 #if !defined(MAC_OS_X_VERSION_10_3) || \
@@ -527,9 +529,7 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
 	// we define our own defaults.
 	const double maxDiff = sqrt(2) + 0.0001;
     
-    
-    NXEventHandle handle = NXOpenEventStatus();
-    double clickTime = NXClickTime(handle);
+    double clickTime = [NSEvent doubleClickInterval];
     
     // As long as the click is within the time window and distance window
     // increase clickState (double click, triple click, etc)
