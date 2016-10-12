@@ -26,6 +26,10 @@ include_directories(
 
 add_library(synwinhk SHARED ${sources})
 
+if (NOT MSVC_VERSION VERSION_LESS 1900)
+	target_link_libraries(synwinhk libucrt)
+endif()
+
 # copy the dlls (and supporting files) from the lib dir to 
 # the bin dir, so that synergyc and synergys can easily find them.
 # we should leave the other libraries compiling to the lib dir,

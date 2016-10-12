@@ -45,13 +45,13 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDesktopServices>
+#include <QDesktopWidget>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
 #if defined(Q_OS_WIN)
-#define _WIN32_WINNT 0x0501
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
@@ -116,7 +116,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	// ipc must always be enabled, so that we can disable command when switching to desktop mode.
 	connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLogRaw(const QString&)));
 	connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLogError(const QString&)));
-	connect(&m_IpcClient, SIGNAL(infoMessage(const QString&)), this, SLOT(appendLogNote(const QString&)));
+	connect(&m_IpcClient, SIGNAL(infoMessage(const QString&)), this, SLOT(appendLogInfo(const QString&)));
 	m_IpcClient.connectToHost();
 #endif
 
@@ -723,7 +723,7 @@ QString MainWindow::configFilename()
 
 QString MainWindow::address()
 {
-	QString i = appConfig().interface();
+	QString i = appConfig().networkInterface();
 	return (!i.isEmpty() ? i : "") + ":" + QString::number(appConfig().port());
 }
 
@@ -1269,8 +1269,12 @@ void MainWindow::downloadBonjour()
 void MainWindow::installBonjour()
 {
 #if defined(Q_OS_WIN)
+#if QT_VERSION >= 0x050000
+    QString tempLocation = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
+#else
 	QString tempLocation = QDesktopServices::storageLocation(
 								QDesktopServices::TempLocation);
+#endif
 	QString filename = tempLocation;
 	filename.append("\\").append(bonjourTargetFilename);
 	QFile file(filename);

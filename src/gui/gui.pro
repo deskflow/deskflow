@@ -134,11 +134,24 @@ release {
     MOC_DIR = tmp/release
     RCC_DIR = tmp/release
 }
+win32-msvc2015 {
+    LIBS += -lAdvapi32
+    QMAKE_LFLAGS += /NODEFAULTLIB:LIBCMT
+}
+win32-msvc* {
+    contains(QMAKE_HOST.arch, x86):{
+        QMAKE_LFLAGS *= /MACHINE:X86
+        LIBS += -L"$$(BONJOUR_SDK_HOME)/Lib/Win32" -ldnssd
+    }
+
+    contains(QMAKE_HOST.arch, x86_64):{
+        QMAKE_LFLAGS *= /MACHINE:X64
+        LIBS += -L"$$(BONJOUR_SDK_HOME)/Lib/x64" -ldnssd
+    }
+}
 win32 { 
     Debug:DESTDIR = ../../bin/Debug
     Release:DESTDIR = ../../bin/Release
-    LIBS += -L"../../ext/bonjour/x64" \
-        -ldnssd
-    INCLUDEPATH += "$(BONJOUR_SDK_HOME)/Include"
+    INCLUDEPATH += "$$(BONJOUR_SDK_HOME)/Include"
 }
 else:DESTDIR = ../../bin

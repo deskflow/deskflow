@@ -16,9 +16,9 @@
 
 # Version number for Synergy
 set(VERSION_MAJOR 1)
-set(VERSION_MINOR 8)
-set(VERSION_REV 4)
-set(VERSION_STAGE stable)
+set(VERSION_MINOR 9)
+set(VERSION_REV 0)
+set(VERSION_STAGE beta)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
 cmake_minimum_required(VERSION 2.6)
@@ -315,6 +315,7 @@ else() # not-unix
 		/D_WINDOWS
 		/D_CRT_SECURE_NO_WARNINGS
 		/DVERSION=\"${VERSION}\"
+		/D_XKEYCHECK_H
 	)
 	
 	if (MSVC_VERSION EQUAL 1600)

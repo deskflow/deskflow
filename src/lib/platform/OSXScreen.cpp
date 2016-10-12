@@ -45,17 +45,6 @@
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>
 
-// Set some enums for fast user switching if we're building with an SDK
-// from before such support was added.
-#if !defined(MAC_OS_X_VERSION_10_3) || \
-	(MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_3)
-enum {
-	kEventClassSystem				  = 'macs',
-	kEventSystemUserSessionActivated   = 10,
-	kEventSystemUserSessionDeactivated = 11
-};
-#endif
-
 // This isn't in any Apple SDK that I know of as of yet.
 enum {
 	kSynergyEventMouseScroll = 11,

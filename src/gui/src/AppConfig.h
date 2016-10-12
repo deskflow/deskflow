@@ -37,8 +37,9 @@
 //   5: ssl plugin 'ns' v1.1
 //   6: ssl plugin 'ns' v1.2
 //   7: serial key activation
+//   8: Visual Studio 2015 support
 //
-const int kWizardVersion = 7;
+const int kWizardVersion = 8;
 
 class QSettings;
 class SettingsDialog;
@@ -63,7 +64,7 @@ class AppConfig: public QObject
 	public:
 		const QString& screenName() const;
 		int port() const;
-		const QString& interface() const;
+		const QString& networkInterface() const;
 		int logLevel() const;
 		bool logToFile() const;
 		const QString& logFilename() const;
@@ -111,7 +112,7 @@ class AppConfig: public QObject
 		QSettings& settings();
 		void setScreenName(const QString& s);
 		void setPort(int i);
-		void setInterface(const QString& s);
+		void setNetworkInterface(const QString& s);
 		void setLogLevel(int i);
 		void setLogToFile(bool b);
 		void setLogFilename(const QString& s);

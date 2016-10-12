@@ -34,7 +34,7 @@ class Toolchain:
 
 	# options used by all commands
 	globalOptions = 'v'
-	globalOptionsLong = ['no-prompts', 'verbose', 'skip-gui', 'skip-core']
+	globalOptionsLong = ['no-prompts', 'verbose', 'skip-gui', 'skip-core', 'skip-tests']
 
 	# list of valid commands as keys. the values are optarg strings, but most 
 	# are None for now (this is mainly for extensibility)
@@ -208,8 +208,8 @@ class InternalCommands:
 	qmake_cmd = 'qmake'
 	make_cmd = 'make'
 	xcodebuild_cmd = 'xcodebuild'
-	w32_make_cmd = 'mingw32-make'
-	w32_qt_version = '4.6.2'
+	w32_make_cmd = 'nmake'
+	w32_qt_version = '5.6.1'
 	defaultTarget = 'release'
 
 	cmake_dir = 'res'
@@ -240,6 +240,9 @@ class InternalCommands:
 	
 	# by default, compile the gui
 	enableMakeGui = True
+
+	# by default, compile the tests
+	enableMakeTests = True
 	
 	# by default, unknown
 	macSdk = None
@@ -254,13 +257,15 @@ class InternalCommands:
 	gmockDir = 'gmock-1.6.0'
 
 	win32_generators = {
-		1 : VisualStudioGenerator('10'),
-		2 : VisualStudioGenerator('10 Win64'),
-		3 : VisualStudioGenerator('9 2008'),
-		4 : VisualStudioGenerator('9 2008 Win64'),
-		5 : VisualStudioGenerator('8 2005'),
-		6 : VisualStudioGenerator('8 2005 Win64')
-	}
+		1 : VisualStudioGenerator('14'),
+		2 : VisualStudioGenerator('14 Win64'),
+		3 : VisualStudioGenerator('10'),
+		4 : VisualStudioGenerator('10 Win64'),
+		5 : VisualStudioGenerator('9 2008'),
+		6 : VisualStudioGenerator('9 2008 Win64'),
+		7 : VisualStudioGenerator('8 2005'),
+		8 : VisualStudioGenerator('8 2005 Win64'),
+			}
 
 	unix_generators = {
 		1 : MakefilesGenerator(),
@@ -440,6 +445,8 @@ class InternalCommands:
 			cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macSdk
 			cmake_args += " -DOSX_TARGET_MAJOR=" + macSdkMatch.group(1)
 			cmake_args += " -DOSX_TARGET_MINOR=" + macSdkMatch.group(2)
+
+		cmake_args += " -DDISABLE_TESTS=" + str(int(not self.enableMakeTests))
 		
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
@@ -600,13 +607,12 @@ class InternalCommands:
 				print (
 					'Suggestions:\n'
 					'1. Ensure that qmake.exe exists in your system path.\n'
-					'2. Try to download Qt (check our dev FAQ for links):\n'
-					'  qt-sdk-win-opensource-2010.02.exe')
+					'2. Try to download Qt 5.6\n')
 			raise Exception('Cannot continue without qmake.')
 		
 		stdout, stderr = p.communicate()
 		if p.returncode != 0:
-			raise Exception('Could not test for cmake: %s' % stderr)
+			raise Exception('Could not test for qmake: %s' % stderr)
 		else:
 			m = re.search('.*Using Qt version (\d+\.\d+\.\d+).*', stdout)
 			if m:
@@ -757,12 +763,7 @@ class InternalCommands:
 			if err != 0:
 				raise Exception(bin + " failed with error: " + str(err))
 
-			(qMajor, qMinor, qRev) = self.getQmakeVersion()
-			if qMajor <= 4:
-				frameworkRootDir = "/Library/Frameworks"
-			else:
-				# TODO: auto-detect, qt can now be installed anywhere.
-				frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
+			frameworkRootDir = commands.getoutput("qmake -query QT_INSTALL_LIBS")
 
 			target = bundleTargetDir + "/Contents/Frameworks"
 
@@ -889,8 +890,8 @@ class InternalCommands:
 		generator = self.getGeneratorFromConfig().cmakeName
 
 		if generator.startswith('Visual Studio'):
-			# special case for version 10, use new /target:clean
-			if generator.startswith('Visual Studio 10'):
+			# special case for version 10 and above, use new /target:clean
+			if generator.startswith('Visual Studio 10') or generator.startswith('Visual Studio 14'):
 				for target in targets:
 					self.run_vcbuild(generator, target, self.sln_filepath(), '/target:clean')
 				
@@ -1720,6 +1721,8 @@ class InternalCommands:
 			value,type = _winreg.QueryValueEx(key, '9.0')
 		elif generator.startswith('Visual Studio 10'):
 			value,type = _winreg.QueryValueEx(key, '10.0')
+		elif generator.startswith('Visual Studio 14'):
+			value,type = _winreg.QueryValueEx(key, '14.0')
 		else:
 			raise Exception('Cannot determine vcvarsall.bat location for: ' + generator)
 		
@@ -1762,7 +1765,7 @@ class InternalCommands:
 		else:
 			config = 'Debug'
 				
-		if generator.startswith('Visual Studio 10'):
+		if generator.startswith('Visual Studio 10') or generator.startswith('Visual Studio 14'):
 			cmd = ('@echo off\n'
 				'call "%s" %s \n'
 				'cd "%s"\n'
@@ -1885,6 +1888,8 @@ class CommandHandler:
 				self.ic.enableMakeGui = False
 			elif o == '--skip-core':
 				self.ic.enableMakeCore = False
+			elif o == '--skip-tests':
+				self.ic.enableMakeTests = False
 			elif o in ('-d', '--debug'):
 				self.build_targets += ['debug',]
 			elif o in ('-r', '--release'):

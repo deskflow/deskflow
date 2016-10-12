@@ -49,56 +49,26 @@ ArchSystemWindows::~ArchSystemWindows()
 std::string
 ArchSystemWindows::getOSName() const
 {
-#if WINVER >= _WIN32_WINNT_WIN2K
-	OSVERSIONINFOEX info;
-#else
-	OSVERSIONINFO info;
-#endif
+	std::string osName ("Microsoft Windows <unknown>");
+	static const TCHAR* const windowsVersionKeyNames[] = {
+		_T("SOFTWARE"),
+		_T("Microsoft"),
+		_T("Windows NT"),
+		_T("CurrentVersion"),
+		NULL
+	};
 
-	info.dwOSVersionInfoSize = sizeof(info);
-	if (GetVersionEx((OSVERSIONINFO*) &info)) {
-		switch (info.dwPlatformId) {
-		case VER_PLATFORM_WIN32_NT:
-			#if WINVER >= _WIN32_WINNT_WIN2K
-			if (info.dwMajorVersion == 6) {
-				if (info.dwMinorVersion == 0) {
-					if (info.wProductType == VER_NT_WORKSTATION) {
-						return "Microsoft Windows Vista";
-					}
-					else {
-						return "Microsoft Windows Server 2008";
-					}
-				}
-				else if (info.dwMinorVersion == 1) {
-					if (info.wProductType == VER_NT_WORKSTATION) {
-						return "Microsoft Windows 7";
-					}
-					else {
-						return "Microsoft Windows Server 2008 R2";
-					}
-				}
-			}
-			#endif
-
-			if (info.dwMajorVersion == 5 && info.dwMinorVersion == 2) {
-				return "Microsoft Windows Server 2003";
-			}
-			if (info.dwMajorVersion == 5 && info.dwMinorVersion == 1) {
-				return "Microsoft Windows XP";
-			}
-			if (info.dwMajorVersion == 5 && info.dwMinorVersion == 0) {
-				return "Microsoft Windows Server 2000";
-			}
-			char buffer[100];
-			sprintf(buffer, "Microsoft Windows %d.%d",
-							info.dwMajorVersion, info.dwMinorVersion);
-			return buffer;
-
-		default:
-			break;
-		}
+	HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, windowsVersionKeyNames);
+	if (key == NULL) {
+		return osName;
 	}
-	return "Microsoft Windows <unknown>";
+
+	std::string productName = ArchMiscWindows::readValueString(key, "ProductName");
+	if (osName.empty()) {
+		return osName;
+	}
+
+	return "Microsoft " + productName;
 }
 
 std::string
@@ -183,7 +153,7 @@ ArchSystemWindows::getLibsUsed(void) const
         for (i = 0; i < (cbNeeded / sizeof(HMODULE)); i++) {
             TCHAR szModName[MAX_PATH];
             if (GetModuleFileNameEx(hProcess, hMods[i], szModName, sizeof(szModName) / sizeof(TCHAR))) {
-				sprintf(hex,"(0x%08X)",hMods[i]);
+				sprintf(hex, "(0x%08llX)", reinterpret_cast<long long>(hMods[i]));
 				msg += szModName;
 				msg.append(hex);
 				msg.append("\n");

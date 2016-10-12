@@ -77,7 +77,7 @@ const QString &AppConfig::screenName() const { return m_ScreenName; }
 
 int AppConfig::port() const { return m_Port; }
 
-const QString &AppConfig::interface() const { return m_Interface; }
+const QString &AppConfig::networkInterface() const { return m_Interface; }
 
 int AppConfig::logLevel() const { return m_LogLevel; }
 
@@ -210,7 +210,7 @@ void AppConfig::setScreenName(const QString &s) { m_ScreenName = s; }
 
 void AppConfig::setPort(int i) { m_Port = i; }
 
-void AppConfig::setInterface(const QString &s) { m_Interface = s; }
+void AppConfig::setNetworkInterface(const QString &s) { m_Interface = s; }
 
 void AppConfig::setLogLevel(int i) { m_LogLevel = i; }
 

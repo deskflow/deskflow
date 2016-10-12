@@ -119,6 +119,7 @@ static const KeyEntry	s_controlKeys[] = {
 	{ kKeyCapsLock,		s_capsLockVK },
 	
 	{ kKeyMissionControl, s_missionControlVK },
+	{ kKeyLaunchpad, s_launchpadVK }
 	{ kKeyLaunchpad, s_launchpadVK },
 	{ kKeyBrightnessUp,  s_brightnessUp },
 	{ kKeyBrightnessDown, s_brightnessDown }
