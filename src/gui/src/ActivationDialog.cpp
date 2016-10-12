@@ -17,7 +17,7 @@
 ActivationDialog::ActivationDialog(QWidget* parent, AppConfig& appConfig) :
 	QDialog(parent),
 	ui(new Ui::ActivationDialog),
-	m_appConfig (&appConfig)
+	m_appConfig(&appConfig)
 {
 	ui->setupUi(this);
 	ui->m_pTextEditSerialKey->setFocus();
@@ -68,13 +68,13 @@ void ActivationDialog::accept()
 	try {
 		QString serialKey = ui->m_pTextEditSerialKey->toPlainText();
 
-		if (!m_appConfig->setSerialKey (serialKey, error)) {
+		if (!m_appConfig->setSerialKey(serialKey, error)) {
 			message.critical(this, "Invalid Serial Key", tr("%1").arg(error));
 			return;
 		}
 
-		SubscriptionManager subscriptionManager (this, *m_appConfig, edition);
-		if (!subscriptionManager.activateSerial (serialKey)) {
+		SubscriptionManager subscriptionManager(this, *m_appConfig, edition);
+		if (!subscriptionManager.activateSerial(serialKey)) {
 			return;
 		}
 		m_appConfig->setActivateEmail("");
@@ -82,7 +82,7 @@ void ActivationDialog::accept()
 
 	}
 	catch (std::exception& e) {
-		message.critical (this, "Unknown Error",
+		message.critical(this, "Unknown Error",
 			tr("An error occurred while trying to activate Synergy. "
 				"Please contact the helpdesk, and provide the "
 				"following details.\n\n%1").arg(e.what()));
@@ -93,6 +93,6 @@ void ActivationDialog::accept()
 	m_appConfig->saveSettings();
 
 	message.information(this, "Activated!",
-				tr("Thanks for activating %1!").arg (getEditionName (edition)));
+				tr("Thanks for activating %1!").arg(getEditionName(edition)));
 	QDialog::accept();
 }
