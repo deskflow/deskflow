@@ -553,7 +553,8 @@ class InternalCommands:
 		if os.path.exists(sdkPath):
 			return sdkPath
 
-		return os.popen('xcodebuild -version -sdk macosx' + self.macSdk + ' Path').read().strip()
+		# return os.popen('xcodebuild -version -sdk macosx' + self.macSdk + ' Path').read().strip()
+		return "/Developer/SDKs/" + sdkDirName + ".sdk"
 	
 	# http://tinyurl.com/cs2rxxb
 	def fixCmakeEclipseBug(self):
