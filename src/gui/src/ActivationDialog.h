@@ -27,10 +27,6 @@ protected:
 private:
 	Ui::ActivationDialog *ui;
 	AppConfig* m_appConfig;
-	
-private slots:
-	void on_m_pRadioButtonSubscription_toggled(bool checked);
-	void on_m_pRadioButtonActivate_toggled(bool checked);
 };
 
 #endif // ACTIVATIONDIALOG_H

@@ -20,26 +20,8 @@ ActivationDialog::ActivationDialog(QWidget* parent, AppConfig& appConfig) :
 	m_appConfig (&appConfig)
 {
 	ui->setupUi(this);
-
-	ui->m_pLineEditEmail->setText(appConfig.activateEmail());
-	ui->m_pTextEditSerialKey->setText(appConfig.serialKey());
-
-	if (!appConfig.serialKey().isEmpty()) {
-		ui->m_pRadioButtonActivate->setAutoExclusive(false);
-		ui->m_pRadioButtonSubscription->setAutoExclusive(false);
-		ui->m_pRadioButtonActivate->setChecked(false);
-		ui->m_pRadioButtonSubscription->setChecked(true);
-		ui->m_pRadioButtonActivate->setAutoExclusive(true);
-		ui->m_pRadioButtonSubscription->setAutoExclusive(true);
-		ui->m_pTextEditSerialKey->setFocus();
-		ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
-	} else {
-		if (ui->m_pLineEditEmail->text().isEmpty()) {
-			ui->m_pLineEditEmail->setFocus();
-		} else {
-			ui->m_pLineEditPassword->setFocus();
-		}
-	}
+	ui->m_pTextEditSerialKey->setFocus();
+	ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
 }
 
 ActivationDialog::~ActivationDialog()
@@ -74,30 +56,6 @@ void ActivationDialog::reject()
 	}
 }
 
-void ActivationDialog::on_m_pRadioButtonSubscription_toggled(bool checked)
-{
-	if (checked) {
-		ui->m_pLineEditEmail->setEnabled(false);
-		ui->m_pLineEditPassword->setEnabled(false);
-		ui->m_pTextEditSerialKey->setEnabled(true);
-		ui->m_pTextEditSerialKey->setFocus();
-	}
-}
-
-void ActivationDialog::on_m_pRadioButtonActivate_toggled(bool checked)
-{
-	if (checked) {
-		ui->m_pLineEditEmail->setEnabled(true);
-		ui->m_pLineEditPassword->setEnabled(true);
-		ui->m_pTextEditSerialKey->setEnabled(false);
-		if (ui->m_pLineEditEmail->text().isEmpty()) {
-			ui->m_pLineEditEmail->setFocus();
-		} else {
-			ui->m_pLineEditPassword->setFocus();
-		}
-	}
-}
-
 void ActivationDialog::accept()
 {
 	QMessageBox message;
@@ -108,45 +66,20 @@ void ActivationDialog::accept()
 	m_appConfig->saveSettings();
 
 	try {
-		if (ui->m_pRadioButtonActivate->isChecked()) {
-			WebClient webClient;
-			QString email = ui->m_pLineEditEmail->text();
-			QString password = ui->m_pLineEditPassword->text();
+		QString serialKey = ui->m_pTextEditSerialKey->toPlainText();
 
-			if (!webClient.setEmail (email, error)) {
-				message.critical (this, "Invalid Email Address", tr("%1").arg(error));
-				return;
-			}
-			else if (!webClient.setPassword (password, error)) {
-				message.critical (this, "Invalid Password", tr("%1").arg(error));
-				return;
-			}
-			else if (!webClient.getEdition (edition, error)) {
-				FailedLoginDialog failedLoginDialog (this, error);
-				failedLoginDialog.exec();
-				return;
-			}
-
-			m_appConfig->setActivateEmail (email);
-			m_appConfig->clearSerialKey();
-			ui->m_pTextEditSerialKey->clear();
-			notifyActivation ("login:" + m_appConfig->activateEmail());
+		if (!m_appConfig->setSerialKey (serialKey, error)) {
+			message.critical(this, "Invalid Serial Key", tr("%1").arg(error));
+			return;
 		}
-		else {
-			QString serialKey = ui->m_pTextEditSerialKey->toPlainText();
 
-			if (!m_appConfig->setSerialKey (serialKey, error)) {
-				message.critical (this, "Invalid Serial Key", tr("%1").arg(error));
-				return;
-			}
-
-			SubscriptionManager subscriptionManager (this, *m_appConfig, edition);
-			if (!subscriptionManager.activateSerial (serialKey)) {
-				return;
-			}
-			m_appConfig->setActivateEmail("");
-			notifyActivation ("serial:" + m_appConfig->serialKey());
+		SubscriptionManager subscriptionManager (this, *m_appConfig, edition);
+		if (!subscriptionManager.activateSerial (serialKey)) {
+			return;
 		}
+		m_appConfig->setActivateEmail("");
+		notifyActivation("serial:" + m_appConfig->serialKey());
+
 	}
 	catch (std::exception& e) {
 		message.critical (this, "Unknown Error",
@@ -159,7 +92,7 @@ void ActivationDialog::accept()
 	m_appConfig->setEdition(edition);
 	m_appConfig->saveSettings();
 
-	message.information  (this, "Activated!", 
-						  tr("Thanks for activating %1!").arg (getEditionName (edition)));
+	message.information(this, "Activated!",
+				tr("Thanks for activating %1!").arg (getEditionName (edition)));
 	QDialog::accept();
 }
