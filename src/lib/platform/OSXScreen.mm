@@ -112,7 +112,8 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 	m_lastSingleClickYCursor(0),
 	m_autoShowHideCursor(autoShowHideCursor),
 	m_events(events),
-	m_getDropTargetThread(NULL)
+	m_getDropTargetThread(NULL),
+	m_impl(NULL)
 {
 	try {
 		m_displayID   = CGMainDisplayID();

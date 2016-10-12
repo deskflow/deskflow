@@ -344,4 +344,6 @@ private:
 	Mutex*					m_carbonLoopMutex;
 	CondVar<bool>*			m_carbonLoopReady;
 #endif
+
+	class OSXScreenImpl*	m_impl;
 };
