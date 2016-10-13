@@ -17,13 +17,23 @@
 
 #pragma once
 
-#include "base/String.h"
+#include <string>
 
-struct SubscriptionKey {
-	String				m_name;
-	String				m_type;
-	String				m_email;
-	String				m_company;
+class SerialKey {
+public:
+	SerialKey(std::string serial);
+	
+	bool				isValid(unsigned long long currentTime) const;
+	bool				isExpiring(unsigned long long currentTime) const;
+	bool				isExpired(unsigned long long currentTime) const;
+	bool				isTrial() const;
+	int					edition() const;
+		
+private:
+	std::string			m_name;
+	std::string			m_type;
+	std::string			m_email;
+	std::string			m_company;
 	int					m_userLimit;
 	int					m_warnTime;
 	int					m_expireTime;

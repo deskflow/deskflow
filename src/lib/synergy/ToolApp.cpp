@@ -18,7 +18,6 @@
 #include "synergy/ToolApp.h"
 
 #include "synergy/ArgParser.h"
-#include "synergy/SubscriptionManager.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/String.h"
