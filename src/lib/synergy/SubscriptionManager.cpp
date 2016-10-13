@@ -140,9 +140,11 @@ SubscriptionManager::parsePlainSerial(const String& plainText, SubscriptionKey& 
 			pos += 1;
 		}
 
-		// e.g.: {v1;trial;Bob;1;email;company name;1398297600;1398384000}
+		bool validSerial = false;
+		
 		if ((parts.size() == 8)
 			&& (parts.at(0).find("v1") != String::npos)) {
+			// e.g.: {v1;basic;Bob;1;email;company name;1398297600;1398384000}
 			key.m_type = parts.at(1);
 			key.m_name = parts.at(2);
 			sscanf(parts.at(3).c_str(), "%d", &key.m_userLimit);
@@ -150,9 +152,23 @@ SubscriptionManager::parsePlainSerial(const String& plainText, SubscriptionKey& 
 			key.m_company = parts.at(5);
 			sscanf(parts.at(6).c_str(), "%d", &key.m_warnTime);
 			sscanf(parts.at(7).c_str(), "%d", &key.m_expireTime);
-
+			
+			validSerial = true;
+		}
+		else if ((parts.size() == 9)
+				 && (parts.at(0).find("v2") != String::npos)) {
+			// e.g.: {v2;trial;basic;Bob;1;email;company name;1398297600;1398384000}
+			key.m_trial = parts.at(1) == "trial" ? true : false;
+			key.m_type = parts.at(2);
+			key.m_name = parts.at(3);
+			sscanf(parts.at(4).c_str(), "%d", &key.m_userLimit);
+			key.m_email = parts.at(5);
+			key.m_company = parts.at(6);
+			sscanf(parts.at(7).c_str(), "%d", &key.m_warnTime);
+			sscanf(parts.at(8).c_str(), "%d", &key.m_expireTime);
+			
 			// only limit to trial version
-			if (key.m_type == "trial") {
+			if (key.m_trial) {
 				if (time(0) > key.m_expireTime) {
 					throw XSubscription("trial has expired");
 				}
@@ -161,18 +177,25 @@ SubscriptionManager::parsePlainSerial(const String& plainText, SubscriptionKey& 
 					const int spd = 60 * 60 * 24;
 					int dayLeft = secLeft / spd + 1;
 					LOG((CLOG_NOTE "trial will end in %d %s",
-						dayLeft,
-						dayLeft == 1 ? "day" : "days"));
+						 dayLeft,
+						 dayLeft == 1 ? "day" : "days"));
+				}
+				else {
+					
 				}
 			}
-
+			
+			validSerial = true;
+		}
+		
+		if (validSerial) {
 			const char* userText = (key.m_userLimit == 1) ? "user" : "users";
 			LOG((CLOG_INFO "%s subscription valid is for %d %s, registered to %s",
-				key.m_type.c_str(),
-				key.m_userLimit,
-				userText,
-				key.m_name.c_str()));
-
+				 key.m_type.c_str(),
+				 key.m_userLimit,
+				 userText,
+				 key.m_name.c_str()));
+			
 			return;
 		}
 	}

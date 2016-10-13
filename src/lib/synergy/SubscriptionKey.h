@@ -27,4 +27,5 @@ struct SubscriptionKey {
 	int					m_userLimit;
 	int					m_warnTime;
 	int					m_expireTime;
+	bool				m_trial;
 };
