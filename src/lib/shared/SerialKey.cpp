@@ -15,27 +15,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "SerialKey.h"
 
-#include <string>
-
-class SerialKey {
-public:
-	SerialKey(std::string serial);
+SerialKey::SerialKey(std::string serial) :
+	m_userLimit(1),
+	m_warnTime(1),
+	m_expireTime(1),
+	m_trial(true)
+{
+	m_userLimit = 1;
+	m_warnTime = 1;
+	m_expireTime = 1;
+	m_trial = true;
+}
 	
-	bool				isValid(unsigned long long currentTime) const;
-	bool				isExpiring(unsigned long long currentTime) const;
-	bool				isExpired(unsigned long long currentTime) const;
-	bool				isTrial() const;
-	int					edition() const;
-		
-private:
-	std::string			m_name;
-	std::string			m_edition;
-	std::string			m_email;
-	std::string			m_company;
-	int					m_userLimit;
-	int					m_warnTime;
-	int					m_expireTime;
-	bool				m_trial;
-};
+bool
+SerialKey::isValid(unsigned long long currentTime) const
+{
+	return true;
+}
+
+bool
+SerialKey::isExpiring(unsigned long long currentTime) const
+{
+	return true;
+}
+
+bool
+SerialKey::isExpired(unsigned long long currentTime) const
+{
+	return true;
+}
+
+bool
+SerialKey::isTrial() const
+{
+	return true;
+}
+
+int
+SerialKey::edition() const
+{
+	return 1;
+}
