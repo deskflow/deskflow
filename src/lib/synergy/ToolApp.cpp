@@ -72,14 +72,8 @@ ToolApp::run(int argc, char** argv)
 		else if (m_args.m_loginAuthenticate) {
 			loginAuth();
 		}
-		else if (m_args.m_getPluginList) {
-			getPluginList();
-		}
 		else if (m_args.m_getInstalledDir) {
 			std::cout << ARCH->getInstalledDirectory() << std::endl;
-		}
-		else if (m_args.m_getPluginDir) {
-			std::cout << ARCH->getPluginDirectory() << std::endl;
 		}
 		else if (m_args.m_getProfileDir) {
 			std::cout << ARCH->getProfileDirectory() << std::endl;
@@ -169,11 +163,6 @@ ToolApp::loginAuth()
 	else {
 		throw XSynergy("Invalid credentials.");
 	}
-}
-
-void
-ToolApp::getPluginList()
-{
 }
 
 void 
