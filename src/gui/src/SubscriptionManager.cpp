@@ -85,9 +85,9 @@ bool SubscriptionManager::checkSubscription()
 bool SubscriptionManager::fileExists()
 {
 	CoreInterface coreInterface;
-	QString subscriptionFilename = coreInterface.getSubscriptionFilename();
+	QString serialKeyFilePath = coreInterface.getSerialKeyFilePath();
 
-	return QFile::exists(subscriptionFilename);
+	return QFile::exists(serialKeyFilePath);
 }
 
 void SubscriptionManager::checkError(QString& error)

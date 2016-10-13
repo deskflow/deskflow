@@ -28,7 +28,7 @@ public:
 	QString getProfileDir();
 	QString getInstalledDir();
 	QString getArch();
-	QString getSubscriptionFilename();
+	QString getSerialKeyFilePath();
 	QString activateSerial(const QString& serial);
 	QString checkSubscription();
 	QString notifyActivation(const QString& identity);
