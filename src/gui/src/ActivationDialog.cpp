@@ -77,7 +77,7 @@ void ActivationDialog::accept()
 		if (!subscriptionManager.activateSerial(serialKey)) {
 			return;
 		}
-		m_appConfig->setActivateEmail("");
+
 		notifyActivation("serial:" + m_appConfig->serialKey());
 
 	}

@@ -64,7 +64,8 @@ SOURCES += src/main.cpp \
     src/ActivationNotifier.cpp \
     src/ActivationDialog.cpp \
     src/CancelActivationDialog.cpp \
-    src/FailedLoginDialog.cpp
+    src/FailedLoginDialog.cpp \
+    ../lib/shared/SerialKey.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -112,7 +113,8 @@ HEADERS += src/MainWindow.h \
     src/ElevateMode.h \
     src/ActivationDialog.h \
     src/CancelActivationDialog.h \
-    src/FailedLoginDialog.h
+    src/FailedLoginDialog.h \
+    ../lib/shared/SerialKey.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 

@@ -79,8 +79,6 @@ class AppConfig: public QObject
 		void setAutoConfigPrompted(bool prompted);
 		void setEdition(int e);
 		int edition() const;
-		bool setActivateEmail(QString e);
-		QString activateEmail();
 		bool setSerialKey(QString serial, QString& error);
 		void clearSerialKey();
 		QString serialKey();

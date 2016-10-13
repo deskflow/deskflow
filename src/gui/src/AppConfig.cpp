@@ -184,7 +184,6 @@ void AppConfig::saveSettings()
 	settings().setValue("elevateModeEnum", static_cast<int>(m_ElevateMode));
 	settings().setValue("autoConfigPrompted", m_AutoConfigPrompted);
 	settings().setValue("edition", m_Edition);
-	settings().setValue("activateEmail", m_ActivateEmail);
 	settings().setValue("cryptoEnabled", m_CryptoEnabled);
 	settings().setValue("autoHide", m_AutoHide);
 	settings().setValue("serialKey", m_Serialkey);
@@ -244,13 +243,6 @@ void AppConfig::setEdition(int e) {
 }
 
 int AppConfig::edition() const { return m_Edition; }
-
-bool AppConfig::setActivateEmail(QString e) {
-	m_ActivateEmail = e;
-	return true; 
-}
-
-QString AppConfig::activateEmail() { return m_ActivateEmail; }
 
 bool AppConfig::setSerialKey(QString serial, QString& errorOut) {
 	if (serial.isEmpty()) {
