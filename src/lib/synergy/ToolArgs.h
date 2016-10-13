@@ -29,8 +29,5 @@ public:
 	bool				m_getInstalledDir;
 	bool				m_getProfileDir;
 	bool				m_getArch;
-	bool				m_getSubscriptionFilename;
-	bool				m_checkSubscription;
 	bool				m_notifyActivation;
-	String				m_subscriptionSerial;
 };
