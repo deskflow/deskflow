@@ -746,7 +746,6 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 		}
 	}
 
-
 	app = appPath(appConfig().synergysName());
 
 	if (!QFile::exists(app))
