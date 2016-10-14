@@ -45,11 +45,13 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "common/stdexcept.h"
+#include "shared/SerialKey.h"
 
 #include <cstring>
 #include <cstdlib>
 #include <sstream>
 #include <fstream>
+#include <ctime>
 
 //
 // Server
@@ -60,7 +62,7 @@ Server::Server(
 		PrimaryClient* primaryClient,
 		synergy::Screen* screen,
 		IEventQueue* events,
-		bool enableDragDrop) :
+		ServerArgs const& args) :
 	m_mock(false),
 	m_primaryClient(primaryClient),
 	m_active(primaryClient),
@@ -91,10 +93,10 @@ Server::Server(
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
 	m_ignoreFileTransfer(false),
-	m_enableDragDrop(enableDragDrop),
 	m_enableClipboard(true),
 	m_sendDragInfoThread(NULL),
-	m_waitDragInfoThread(true)
+	m_waitDragInfoThread(true),
+	m_args(args)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
@@ -184,7 +186,7 @@ Server::Server(
 							new TMethodEventJob<Server>(this,
 								&Server::handleFakeInputEndEvent));
 
-	if (m_enableDragDrop) {
+	if (m_args.m_enableDragDrop) {
 		m_events->adoptHandler(m_events->forFile().fileChunkSending(),
 								this,
 								new TMethodEventJob<Server>(this,
@@ -451,6 +453,17 @@ Server::switchScreen(BaseClientProxy* dst,
 				SInt32 x, SInt32 y, bool forScreensaver)
 {
 	assert(dst != NULL);
+	
+	// if trial is expired, exit the process
+	if (!m_args.m_serial.empty()) {
+		SerialKey serial(m_args.m_serial);
+		if (!serial.isValid(std::time(0))) {
+			LOG((CLOG_ERR "trial is expired, aborting server"));
+			exit(kExitSuccess);
+			return;
+		}
+	}
+
 #ifndef NDEBUG
 	{
 		SInt32 dx, dy, dw, dh;
@@ -1706,7 +1719,7 @@ Server::onMouseUp(ButtonID id)
 		return;
 	}
 	
-	if (m_enableDragDrop) {
+	if (m_args.m_enableDragDrop) {
 		if (!m_screen->isOnScreen()) {
 			String& file = m_screen->getDraggingFilename();
 			if (!file.empty()) {
@@ -1791,7 +1804,7 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 
 	// should we switch or not?
 	if (isSwitchOkay(newScreen, dir, x, y, xc, yc)) {
-		if (m_enableDragDrop
+		if (m_args.m_enableDragDrop
 			&& m_screen->isDraggingStarted()
 			&& m_active != newScreen
 			&& m_waitDragInfoThread) {
@@ -2393,7 +2406,7 @@ Server::sendFileThread(void* data)
 void
 Server::dragInfoReceived(UInt32 fileNum, String content)
 {
-	if (!m_enableDragDrop) {
+	if (!m_args.m_enableDragDrop) {
 		LOG((CLOG_DEBUG "drag drop not enabled, ignoring drag info."));
 		return;
 	}
