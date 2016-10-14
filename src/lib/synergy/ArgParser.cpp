@@ -70,6 +70,9 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
 		else if (isArg(i, argc, argv, "", "--prm-hc", 1)) {
 			DpiHelper::s_primaryHeightCenter = synergy::string::stringToSizeType(argv[++i]);
 		}
+		else if (isArg(i, argc, argv, "", "--serial-key", 1)) {
+			args.m_serial = argv[++i];
+		}
 		else {
 			LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
 			return false;
