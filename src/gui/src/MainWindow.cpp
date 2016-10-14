@@ -76,12 +76,14 @@ static const char* synergyIconFiles[] =
 	":/res/icons/16x16/synergy-transfering.png"
 };
 
-MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
+MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
+					   SubscriptionManager& subscriptionManager) :
 	m_Settings(settings),
-	m_AppConfig(appConfig),
+	m_AppConfig(&appConfig),
+	m_SubscriptionManager(&subscriptionManager),
 	m_pSynergy(NULL),
 	m_SynergyState(synergyDisconnected),
-	m_ServerConfig(&m_Settings, 5, 3, m_AppConfig.screenName(), this),
+	m_ServerConfig(&m_Settings, 5, 3, m_AppConfig->screenName(), this),
 	m_pTempConfigFile(NULL),
 	m_pTrayIcon(NULL),
 	m_pTrayIconMenu(NULL),
@@ -135,12 +137,12 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
 	m_pComboServerList->hide();
 
-	setEdition(m_AppConfig.edition());
+	setEdition(m_AppConfig->edition());
 
 	m_pLabelPadlock->hide();
 	connect (this, SIGNAL(windowShown()), this, SLOT(on_windowShown()), Qt::QueuedConnection);
-	connect (&m_AppConfig, SIGNAL(editionSet(int)), this, SLOT(setEdition(int)), Qt::QueuedConnection);
-	connect (&m_AppConfig, SIGNAL(sslToggled(bool)), this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
+	connect (m_AppConfig, SIGNAL(editionSet(int)), this, SLOT(setEdition(int)), Qt::QueuedConnection);
+	connect (m_AppConfig, SIGNAL(sslToggled(bool)), this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
 }
 
 MainWindow::~MainWindow()
@@ -498,7 +500,7 @@ void MainWindow::restartSynergy()
 
 void MainWindow::proofreadInfo()
 {
-	setEdition(m_AppConfig.edition()); // Why is this here?
+	setEdition(m_AppConfig->edition()); // Why is this here?
 
 	int oldState = m_SynergyState;
 	m_SynergyState = synergyDisconnected;
@@ -566,7 +568,7 @@ void MainWindow::startSynergy()
 
 #endif
 
-	if (m_AppConfig.getCryptoEnabled()) {
+	if (m_AppConfig->getCryptoEnabled()) {
 		args << "--enable-crypto";
 	}
 
@@ -734,18 +736,6 @@ QString MainWindow::appPath(const QString& name)
 
 bool MainWindow::serverArgs(QStringList& args, QString& app)
 {
-	int edition;
-	SubscriptionManager subscriptionManager(this, appConfig(), edition);
-	if (subscriptionManager.fileExists())
-	{
-		if (!subscriptionManager.checkSubscription()) {
-			return false;
-		}
-		else {
-			setEdition(edition);
-		}
-	}
-
 	app = appPath(appConfig().synergysName());
 
 	if (!QFile::exists(app))
@@ -894,7 +884,7 @@ void MainWindow::setSynergyState(qSynergyState state)
 	switch (state)
 	{
 	case synergyConnected: {
-		if (m_AppConfig.getCryptoEnabled()) {
+		if (m_AppConfig->getCryptoEnabled()) {
 			m_pLabelPadlock->show();
 		}
 		else {
@@ -1009,13 +999,13 @@ void MainWindow::updateZeroconfService()
 	QMutexLocker locker(&m_UpdateZeroconfMutex);
 
 	if (isBonjourRunning()) {
-		if (!m_AppConfig.wizardShouldRun()) {
+		if (!m_AppConfig->wizardShouldRun()) {
 			if (m_pZeroconfService) {
 				delete m_pZeroconfService;
 				m_pZeroconfService = NULL;
 			}
 
-			if (m_AppConfig.autoConfig() || synergyType() == synergyServer) {
+			if (m_AppConfig->autoConfig() || synergyType() == synergyServer) {
 				m_pZeroconfService = new ZeroconfService(this);
 			}
 		}
@@ -1037,7 +1027,7 @@ void MainWindow::serverDetected(const QString name)
 void MainWindow::setEdition(int edition)
 {
 	setWindowTitle(getEditionName(edition));
-	if (m_AppConfig.getCryptoEnabled()) {
+	if (m_AppConfig->getCryptoEnabled()) {
 		m_pSslCertificate = new SslCertificate(this);
 		m_pSslCertificate->generateCertificate();
 	}
@@ -1047,7 +1037,7 @@ void MainWindow::setEdition(int edition)
 
 void MainWindow::updateLocalFingerprint()
 {
-	if (m_AppConfig.getCryptoEnabled() && Fingerprint::local().fileExists()) {
+	if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists()) {
 		m_pLabelFingerprint->setVisible(true);
 		m_pLabelLocalFingerprint->setVisible(true);
 		m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
@@ -1056,6 +1046,12 @@ void MainWindow::updateLocalFingerprint()
 		m_pLabelFingerprint->setVisible(false);
 		m_pLabelLocalFingerprint->setVisible(false);
 	}
+}
+
+SubscriptionManager&
+MainWindow::subscriptionManager() const
+{
+	return *m_SubscriptionManager;
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
@@ -1159,7 +1155,7 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 
 void MainWindow::on_m_pActivate_triggered()
 {
-	ActivationDialog activationDialog (this, this->appConfig());
+	ActivationDialog activationDialog(this, appConfig(), subscriptionManager());
 	activationDialog.exec();
 }
 
@@ -1320,16 +1316,16 @@ void MainWindow::promptAutoConfig()
 			QMessageBox::Yes | QMessageBox::No);
 
 		if (r == QMessageBox::Yes) {
-			m_AppConfig.setAutoConfig(true);
+			m_AppConfig->setAutoConfig(true);
 			downloadBonjour();
 		}
 		else {
-			m_AppConfig.setAutoConfig(false);
+			m_AppConfig->setAutoConfig(false);
 			m_pCheckBoxAutoConfig->setChecked(false);
 		}
 	}
 
-	m_AppConfig.setAutoConfigPrompted(true);
+	m_AppConfig->setAutoConfigPrompted(true);
 }
 
 void MainWindow::on_m_pComboServerList_currentIndexChanged(QString )
@@ -1377,8 +1373,8 @@ void MainWindow::bonjourInstallFinished()
 
 void MainWindow::on_windowShown()
 {
-	if (!m_AppConfig.activationHasRun() && (m_AppConfig.edition() == Unregistered)) {
-		ActivationDialog activationDialog (this, m_AppConfig);
+	if (!m_AppConfig->activationHasRun() && (m_AppConfig->edition() == Unregistered)) {
+		ActivationDialog activationDialog (this, appConfig(), subscriptionManager());
 		activationDialog.exec();
 	}
 }

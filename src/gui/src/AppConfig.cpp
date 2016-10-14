@@ -244,13 +244,10 @@ void AppConfig::setEdition(int e) {
 
 int AppConfig::edition() const { return m_Edition; }
 
-bool AppConfig::setSerialKey(QString serial, QString& errorOut) {
-	if (serial.isEmpty()) {
-		errorOut = "Your serial key cannot be blank.";
-		return false;
-	}
-	m_Serialkey = serial; 
-	return true;
+QString AppConfig::setSerialKey(QString serial) {
+	using std::swap;
+	swap (serial, m_Serialkey);
+	return serial;
 }
 
 void AppConfig::clearSerialKey()

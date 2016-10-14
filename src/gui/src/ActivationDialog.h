@@ -2,6 +2,7 @@
 #define ACTIVATIONDIALOG_H
 
 #include <QDialog>
+#include <SubscriptionManager.h>
 
 namespace Ui {
 class ActivationDialog;
@@ -14,7 +15,8 @@ class ActivationDialog : public QDialog
 	Q_OBJECT
 	
 public:
-	explicit ActivationDialog(QWidget *parent, AppConfig& appConfig);
+	ActivationDialog(QWidget *parent, AppConfig& appConfig, 
+					 SubscriptionManager& subscriptionManager);
 	~ActivationDialog();
 
 public slots:
@@ -27,6 +29,7 @@ protected:
 private:
 	Ui::ActivationDialog *ui;
 	AppConfig* m_appConfig;
+	SubscriptionManager* m_subscriptionManager;
 };
 
 #endif // ACTIVATIONDIALOG_H

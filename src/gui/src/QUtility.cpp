@@ -51,9 +51,6 @@ getEditionName (int edition) {
 	else if (edition == Pro) {
 		return "Synergy Pro";
 	}
-	else if (edition == Trial) {
-		return "Synergy Trial";
-	}
 	else {
 		return "Synergy (UNREGISTERED)";
 	}

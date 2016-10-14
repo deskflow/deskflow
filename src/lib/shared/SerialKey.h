@@ -18,31 +18,29 @@
 #pragma once
 
 #include <string>
+#include <ctime>
+#include "EditionType.h"
 
 #ifdef TEST_ENV
 #include "gtest/gtest_prod.h"
 #endif
 
-enum Edition{
-	kBasic,
-	kPro
-};
-
 class SerialKey {
 public:
+	SerialKey();
 	SerialKey(std::string serial);
 	
-	bool				isValid(unsigned long long currentTime) const;
-	bool				isExpiring(unsigned long long currentTime) const;
-	bool				isExpired(unsigned long long currentTime) const;
+	bool				isValid(time_t currentTime) const;
+	bool				isExpiring(time_t currentTime) const;
+	bool				isExpired(time_t currentTime) const;
 	bool				isTrial() const;
-	int					edition() const;
-	unsigned long long	dayLeft(unsigned long long currentTime) const;
+	time_t				daysLeft(time_t currentTime) const;
+	Edition			edition() const;
 
 private:
 	std::string			decode(const std::string& serial) const;
 	void				parse(std::string plainSerial);
-	Edition				getEdition(std::string editionStr);
+	Edition			getEdition(std::string editionStr);
 
 #ifdef TEST_ENV
 private:
@@ -59,10 +57,21 @@ private:
 	std::string			m_name;
 	std::string			m_email;
 	std::string			m_company;
-	int					m_userLimit;
+	unsigned			m_userLimit;
 	unsigned long long	m_warnTime;
 	unsigned long long	m_expireTime;
-	Edition				m_edition;
+	Edition			m_edition;
 	bool				m_trial;
 	bool				m_valid;
 };
+
+
+inline bool
+operator== (SerialKey const& lhs, SerialKey const& rhs) {
+	return (lhs.edition() == rhs.edition());
+}
+
+inline bool
+operator!= (SerialKey const& lhs, SerialKey const& rhs) {
+	return !(lhs == rhs);
+}

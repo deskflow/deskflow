@@ -20,6 +20,7 @@
 #define TRAY_RETRY_WAIT 2000
 
 #include "QSynergyApplication.h"
+#include "SubscriptionManager.h"
 #include "MainWindow.h"
 #include "AppConfig.h"
 #include "SetupWizard.h"
@@ -82,11 +83,12 @@ int main(int argc, char* argv[])
 #endif
 
 	QSettings settings;
-	AppConfig appConfig(&settings);
+	AppConfig appConfig (&settings);
+	SubscriptionManager subscriptionManager (&appConfig);
 
 	app.switchTranslator(appConfig.language());
 
-	MainWindow mainWindow(settings, appConfig);
+	MainWindow mainWindow(settings, appConfig, subscriptionManager);
 	SetupWizard setupWizard(mainWindow, true);
 
 	if (appConfig.wizardShouldRun())

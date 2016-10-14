@@ -58,6 +58,7 @@ class ZeroconfService;
 class DataDownloader;
 class CommandProcess;
 class SslCertificate;
+class SubscriptionManager;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase
 {
@@ -94,7 +95,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		};
 
 	public:
-		MainWindow(QSettings& settings, AppConfig& appConfig);
+		MainWindow(QSettings& settings, AppConfig& appConfig, 
+				   SubscriptionManager& subscriptionManager);
 		~MainWindow();
 
 	public:
@@ -116,6 +118,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void updateZeroconfService();
 		void serverDetected(const QString name);
 		void updateLocalFingerprint();
+		SubscriptionManager& subscriptionManager() const;
 
 	public slots:
 		void setEdition(int edition);
@@ -145,7 +148,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
 	protected:
 		QSettings& settings() { return m_Settings; }
-		AppConfig& appConfig() { return m_AppConfig; }
+		AppConfig& appConfig() { return *m_AppConfig; }
 		QProcess* synergyProcess() { return m_pSynergy; }
 		void setSynergyProcess(QProcess* p) { m_pSynergy = p; }
 		void initConnections();
@@ -188,7 +191,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
 	private:
 		QSettings& m_Settings;
-		AppConfig& m_AppConfig;
+		AppConfig* m_AppConfig;
+		SubscriptionManager* m_SubscriptionManager;
 		QProcess* m_pSynergy;
 		int m_SynergyState;
 		ServerConfig m_ServerConfig;

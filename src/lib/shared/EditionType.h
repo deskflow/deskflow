@@ -20,10 +20,10 @@
 
 /* Do not reorder these! */
 
-enum EditionType {
+enum Edition {
 	Basic,
 	Pro,
-	Trial,
+	Trial_DO_NOT_USE_OR_THERE_WILL_BE_PAIN,
 	Unregistered
 };
 

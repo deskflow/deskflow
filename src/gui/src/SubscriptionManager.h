@@ -17,31 +17,23 @@
 
 #pragma once
 
-#include <QWidget>
+#include <QObject>
+#include <SerialKey.h>
 
 class AppConfig;
 
-class SubscriptionManager : public QWidget
+class SubscriptionManager: public QObject
 {
+	Q_OBJECT
+
 public:
-	SubscriptionManager(QWidget* parent, AppConfig& appConfig, int& edition);
-
-	bool activateSerial(const QString& serial);
-	bool checkSubscription();
-	bool fileExists();
-	QString getLastError(){ return m_ErrorMessage; }
+	SubscriptionManager (AppConfig* appConfig);
+	void setSerialKey (QString serialKey);
 
 private:
-	void checkError(QString& error);
-	void checkOutput(QString& output);
-	void getEditionType(QString& output);
-	void checkExpiring(QString& output);
-	bool shouldWarnExpiring();
-	void persistDirectory();
-
-private:
-	QString m_ErrorMessage;
-	QWidget* m_pParent;
-	AppConfig& m_AppConfig;
-	int& m_Edition;
+	AppConfig* m_AppConfig;
+	SerialKey m_serialKey;
+	
+signals:
+	void serialKeyChanged (SerialKey);
 };

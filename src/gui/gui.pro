@@ -7,7 +7,8 @@ DEFINES += VERSION_REVISION=\\\"$$QMAKE_VERSION_REVISION\\\"
 DEPENDPATH += . \
     res
 INCLUDEPATH += . \
-    src
+    src \
+    ../lib/shared/
 FORMS += res/MainWindowBase.ui \
     res/AboutDialogBase.ui \
     res/ServerConfigDialogBase.ui \
@@ -102,7 +103,6 @@ HEADERS += src/MainWindow.h \
     src/DataDownloader.h \
     src/AddClientDialog.h \
     src/CommandProcess.h \
-    src/EditionType.h \
     src/ProcessorArch.h \
     src/CoreInterface.h \
     src/Fingerprint.h \
@@ -114,6 +114,7 @@ HEADERS += src/MainWindow.h \
     src/ActivationDialog.h \
     src/CancelActivationDialog.h \
     src/FailedLoginDialog.h \
+    ../lib/shared/EditionType.h \
     ../lib/shared/SerialKey.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc

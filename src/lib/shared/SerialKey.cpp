@@ -24,11 +24,18 @@
 
 using namespace std;
 
+SerialKey::SerialKey():
+	m_warnTime(1),
+	m_expireTime(1),
+	m_trial(true)
+{
+}
+
 SerialKey::SerialKey(std::string serial) :
 	m_userLimit(1),
 	m_warnTime(0),
 	m_expireTime(0),
-	m_edition(kBasic),
+	m_edition(Edition::Basic),
 	m_trial(true),
 	m_valid(false)
 {
@@ -39,7 +46,7 @@ SerialKey::SerialKey(std::string serial) :
 }
 
 bool
-SerialKey::isValid(unsigned long long currentTime) const
+SerialKey::isValid(time_t currentTime) const
 {
 	bool result = false;
 	
@@ -58,7 +65,7 @@ SerialKey::isValid(unsigned long long currentTime) const
 }
 
 bool
-SerialKey::isExpiring(unsigned long long currentTime) const
+SerialKey::isExpiring(time_t currentTime) const
 {
 	bool result = false;
 	
@@ -72,7 +79,7 @@ SerialKey::isExpiring(unsigned long long currentTime) const
 }
 
 bool
-SerialKey::isExpired(unsigned long long currentTime) const
+SerialKey::isExpired(time_t currentTime) const
 {
 	bool result = false;
 	
@@ -91,14 +98,14 @@ SerialKey::isTrial() const
 	return m_trial;
 }
 
-int
+Edition 
 SerialKey::edition() const
 {
 	return m_edition;
 }
 
-unsigned long long
-SerialKey::dayLeft(unsigned long long currentTime) const
+time_t
+SerialKey::daysLeft(time_t currentTime) const
 {
 	unsigned long long timeLeft =  0;
 	if (m_expireTime > currentTime) {
@@ -195,9 +202,9 @@ SerialKey::parse(std::string plainSerial)
 Edition
 SerialKey::getEdition(std::string editionStr)
 {
-	Edition e = kBasic;
+	Edition e = Edition::Basic;
 	if (editionStr == "pro") {
-		e = kPro;
+		e = Edition::Pro;
 	}
 	
 	return e;

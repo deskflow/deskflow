@@ -14,10 +14,12 @@
 #include <QThread>
 #include <iostream>
 
-ActivationDialog::ActivationDialog(QWidget* parent, AppConfig& appConfig) :
+ActivationDialog::ActivationDialog(QWidget* parent, AppConfig& appConfig, 
+								   SubscriptionManager& subscriptionManager) :
 	QDialog(parent),
 	ui(new Ui::ActivationDialog),
-	m_appConfig(&appConfig)
+	m_appConfig(&appConfig),
+	m_subscriptionManager (&subscriptionManager)
 {
 	ui->setupUi(this);
 	ui->m_pTextEditSerialKey->setFocus();
@@ -67,17 +69,8 @@ void ActivationDialog::accept()
 
 	try {
 		QString serialKey = ui->m_pTextEditSerialKey->toPlainText();
-
-		if (!m_appConfig->setSerialKey(serialKey, error)) {
-			message.critical(this, "Invalid Serial Key", tr("%1").arg(error));
-			return;
-		}
-
-		SubscriptionManager subscriptionManager(this, *m_appConfig, edition);
-		if (!subscriptionManager.activateSerial(serialKey)) {
-			return;
-		}
-
+		SubscriptionManager subscriptionManager (m_appConfig);
+		subscriptionManager.setSerialKey (serialKey);
 		notifyActivation("serial:" + m_appConfig->serialKey());
 
 	}
