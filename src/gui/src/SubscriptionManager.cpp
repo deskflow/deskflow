@@ -19,6 +19,7 @@
 #include "EditionType.h"
 #include "AppConfig.h"
 #include <ctime>
+#include <QThread>
 
 SubscriptionManager::SubscriptionManager(AppConfig* appConfig) :
 	m_AppConfig(appConfig) {
@@ -30,6 +31,28 @@ SubscriptionManager::setSerialKey(QString serialKeyString)
 	SerialKey serialKey (serialKeyString.toStdString());
 	if (serialKey.isValid (::time(0)) && (serialKey != m_serialKey)) {
 		m_AppConfig->setSerialKey (serialKeyString);
+		notifyActivation ("serial:" + serialKeyString);
 		emit serialKeyChanged (serialKey);
 	}
+}
+
+void SubscriptionManager::notifySkip()
+{
+	notifyActivation ("skip:unknown");
+}
+
+void SubscriptionManager::notifyActivation(QString identity)
+{
+	ActivationNotifier* notifier = new ActivationNotifier();
+	notifier->setIdentity(identity);
+	
+	QThread* thread = new QThread();
+	connect(notifier, SIGNAL(finished()), thread, SLOT(quit()));
+	connect(notifier, SIGNAL(finished()), notifier, SLOT(deleteLater()));
+	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+	notifier->moveToThread(thread);
+	thread->start();
+
+	QMetaObject::invokeMethod(notifier, "notify", Qt::QueuedConnection);	
 }

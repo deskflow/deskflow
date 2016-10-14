@@ -31,27 +31,11 @@ ActivationDialog::~ActivationDialog()
 	delete ui;
 }
 
-void ActivationDialog::notifyActivation(QString identity)
-{
-	ActivationNotifier* notifier = new ActivationNotifier();
-	notifier->setIdentity(identity);
-	
-	QThread* thread = new QThread();
-	connect(notifier, SIGNAL(finished()), thread, SLOT(quit()));
-	connect(notifier, SIGNAL(finished()), notifier, SLOT(deleteLater()));
-	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
-	notifier->moveToThread(thread);
-	thread->start();
-
-	QMetaObject::invokeMethod(notifier, "notify", Qt::QueuedConnection);
-}
-
 void ActivationDialog::reject()
 {
 	CancelActivationDialog cancelActivationDialog(this);
 	if (QDialog::Accepted == cancelActivationDialog.exec()) {
-		notifyActivation("skip:unknown");
+		m_subscriptionManager->notifySkip();
 		m_appConfig->activationHasRun(true);
 		m_appConfig->saveSettings();
 		QDialog::reject();
@@ -69,10 +53,7 @@ void ActivationDialog::accept()
 
 	try {
 		QString serialKey = ui->m_pTextEditSerialKey->toPlainText();
-		SubscriptionManager subscriptionManager (m_appConfig);
-		subscriptionManager.setSerialKey (serialKey);
-		notifyActivation("serial:" + m_appConfig->serialKey());
-
+		m_subscriptionManager->setSerialKey(serialKey);
 	}
 	catch (std::exception& e) {
 		message.critical(this, "Unknown Error",

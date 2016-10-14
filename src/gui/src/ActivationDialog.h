@@ -22,9 +22,6 @@ public:
 public slots:
 	void reject();
 	void accept();
-
-protected:
-	void notifyActivation (QString identity);
 	
 private:
 	Ui::ActivationDialog *ui;

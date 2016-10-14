@@ -19,6 +19,7 @@
 
 #include <QObject>
 #include <SerialKey.h>
+#include <ActivationNotifier.h>
 
 class AppConfig;
 
@@ -29,11 +30,16 @@ class SubscriptionManager: public QObject
 public:
 	SubscriptionManager (AppConfig* appConfig);
 	void setSerialKey (QString serialKey);
+	void notifySkip ();
 
+private:
+	void notifyActivation (QString identity);
+	
 private:
 	AppConfig* m_AppConfig;
 	SerialKey m_serialKey;
 	
 signals:
 	void serialKeyChanged (SerialKey);
+	void editionChanged (Edition);
 };

@@ -35,12 +35,12 @@ public:
 	bool				isExpired(time_t currentTime) const;
 	bool				isTrial() const;
 	time_t				daysLeft(time_t currentTime) const;
-	Edition			edition() const;
+	Edition				edition() const;
 
 private:
 	std::string			decode(const std::string& serial) const;
 	void				parse(std::string plainSerial);
-	Edition			getEdition(std::string editionStr);
+	Edition				getEdition(std::string editionStr);
 
 #ifdef TEST_ENV
 private:
@@ -60,7 +60,7 @@ private:
 	unsigned			m_userLimit;
 	unsigned long long	m_warnTime;
 	unsigned long long	m_expireTime;
-	Edition			m_edition;
+	Edition				m_edition;
 	bool				m_trial;
 	bool				m_valid;
 };
