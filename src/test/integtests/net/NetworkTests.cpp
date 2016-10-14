@@ -129,7 +129,9 @@ TEST_F(NetworkTests, sendToClient_mockData)
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
+	ServerArgs serverArgs;
+	serverArgs.m_enableDragDrop = true;
+	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
 	server.m_mock = true;
 	listener.setServer(&server);
 
@@ -142,10 +144,10 @@ TEST_F(NetworkTests, sendToClient_mockData)
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
 
-	ClientArgs args;
-	args.m_enableDragDrop = true;
-	args.m_enableCrypto = false;
-	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, args);
+	ClientArgs clientArgs;
+	clientArgs.m_enableDragDrop = true;
+	clientArgs.m_enableCrypto = false;
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 		
 	m_events.adoptHandler(
 		m_events.forFile().fileRecieveCompleted(), &client,
@@ -185,7 +187,9 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
+	ServerArgs serverArgs;
+	serverArgs.m_enableDragDrop = true;
+	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
 	server.m_mock = true;
 	listener.setServer(&server);
 
@@ -198,10 +202,10 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
 
-	ClientArgs args;
-	args.m_enableDragDrop = true;
-	args.m_enableCrypto = false;
-	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, args);
+	ClientArgs clientArgs;
+	clientArgs.m_enableDragDrop = true;
+	clientArgs.m_enableCrypto = false;
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 		
 	m_events.adoptHandler(
 		m_events.forFile().fileRecieveCompleted(), &client,
@@ -235,7 +239,9 @@ TEST_F(NetworkTests, sendToServer_mockData)
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
+	ServerArgs serverArgs;
+	serverArgs.m_enableDragDrop = true;
+	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
 	server.m_mock = true;
 	listener.setServer(&server);
 
@@ -247,10 +253,10 @@ TEST_F(NetworkTests, sendToServer_mockData)
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	ClientArgs args;
-	args.m_enableDragDrop = true;
-	args.m_enableCrypto = false;
-	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, args);
+	ClientArgs clientArgs;
+	clientArgs.m_enableDragDrop = true;
+	clientArgs.m_enableCrypto = false;
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 	
 	m_events.adoptHandler(
 		m_events.forClientListener().connected(), &listener,
@@ -290,7 +296,9 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
+	ServerArgs serverArgs;
+	serverArgs.m_enableDragDrop = true;
+	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
 	server.m_mock = true;
 	listener.setServer(&server);
 
@@ -302,10 +310,10 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	ClientArgs args;
-	args.m_enableDragDrop = true;
-	args.m_enableCrypto = false;
-	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, args);
+	ClientArgs clientArgs;
+	clientArgs.m_enableDragDrop = true;
+	clientArgs.m_enableCrypto = false;
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 
 	m_events.adoptHandler(
 		m_events.forClientListener().connected(), &listener,
