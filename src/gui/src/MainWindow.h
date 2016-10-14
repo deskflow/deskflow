@@ -121,7 +121,9 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		SubscriptionManager& subscriptionManager() const;
 
 	public slots:
-		void setEdition(int edition);
+		void setEdition(Edition edition);
+		void beginTrial();
+		void endTrial();
 		void appendLogRaw(const QString& text);
 		void appendLogInfo(const QString& text);
 		void appendLogDebug(const QString& text);

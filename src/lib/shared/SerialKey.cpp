@@ -21,13 +21,17 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <climits>
 
 using namespace std;
 
-SerialKey::SerialKey():
-	m_warnTime(1),
-	m_expireTime(1),
-	m_trial(true)
+SerialKey::SerialKey(Edition edition):
+	m_userLimit(1),
+	m_warnTime(ULLONG_MAX),
+	m_expireTime(ULLONG_MAX),
+	m_edition(edition),
+	m_trial(false),
+	m_valid(true)
 {
 }
 
@@ -35,13 +39,13 @@ SerialKey::SerialKey(std::string serial) :
 	m_userLimit(1),
 	m_warnTime(0),
 	m_expireTime(0),
-	m_edition(Edition::Basic),
+	m_edition(Edition::kBasic),
 	m_trial(true),
 	m_valid(false)
 {
 	string plainText = decode(serial);
 	if (!plainText.empty()) {
-		parse(serial);
+		parse(plainText);
 	}
 }
 
@@ -70,7 +74,7 @@ SerialKey::isExpiring(time_t currentTime) const
 	bool result = false;
 	
 	if (m_valid) {
-		if (m_warnTime < currentTime && currentTime < m_expireTime) {
+		if (m_warnTime <= currentTime && currentTime < m_expireTime) {
 			result = true;
 		}
 	}
@@ -84,7 +88,7 @@ SerialKey::isExpired(time_t currentTime) const
 	bool result = false;
 	
 	if (m_valid) {
-		if (currentTime > m_expireTime) {
+		if (m_expireTime <= currentTime) {
 			result = true;
 		}
 	}
@@ -108,7 +112,7 @@ time_t
 SerialKey::daysLeft(time_t currentTime) const
 {
 	unsigned long long timeLeft =  0;
-	if (m_expireTime > currentTime) {
+	if (currentTime < m_expireTime) {
 		timeLeft = m_expireTime - currentTime;
 	}
 
@@ -170,12 +174,13 @@ SerialKey::parse(std::string plainSerial)
 			parts.push_back(plainSerial.substr(start, pos - start));
 			pos += 1;
 		}
-		
+
 		if ((parts.size() == 8)
 			&& (parts.at(0).find("v1") != string::npos)) {
 			// e.g.: {v1;basic;Bob;1;email;company name;1398297600;1398384000}
 			m_edition = getEdition(parts.at(1));
 			m_name = parts.at(2);
+			m_trial = false;
 			sscanf(parts.at(3).c_str(), "%d", &m_userLimit);
 			m_email = parts.at(4);
 			m_company = parts.at(5);
@@ -202,9 +207,9 @@ SerialKey::parse(std::string plainSerial)
 Edition
 SerialKey::getEdition(std::string editionStr)
 {
-	Edition e = Edition::Basic;
+	Edition e = Edition::kBasic;
 	if (editionStr == "pro") {
-		e = Edition::Pro;
+		e = Edition::kPro;
 	}
 	
 	return e;

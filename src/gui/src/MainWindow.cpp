@@ -136,13 +136,28 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
 	m_SuppressAutoConfigWarning = false;
 
 	m_pComboServerList->hide();
-
-	setEdition(m_AppConfig->edition());
-
 	m_pLabelPadlock->hide();
-	connect (this, SIGNAL(windowShown()), this, SLOT(on_windowShown()), Qt::QueuedConnection);
-	connect (m_AppConfig, SIGNAL(editionSet(int)), this, SLOT(setEdition(int)), Qt::QueuedConnection);
-	connect (m_AppConfig, SIGNAL(sslToggled(bool)), this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
+	setEdition (m_SubscriptionManager->edition());
+
+	this->m_trialWidget->hide();
+	if (m_SubscriptionManager->isTrial()) {
+		beginTrial();
+	}
+	
+	connect (this, SIGNAL(windowShown()), 
+			 this, SLOT(on_windowShown()), Qt::QueuedConnection);
+	
+	connect (m_SubscriptionManager, SIGNAL(editionChanged(Edition)), 
+			 this, SLOT(setEdition(Edition)), Qt::QueuedConnection);
+	
+	connect (m_SubscriptionManager, SIGNAL(beginTrial()), 
+			 this, SLOT(beginTrial()), Qt::QueuedConnection);
+	
+	connect (m_SubscriptionManager, SIGNAL(endTrial()), 
+			 this, SLOT(endTrial()), Qt::QueuedConnection);
+	
+	connect (m_AppConfig, SIGNAL(sslToggled(bool)), 
+			 this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
 }
 
 MainWindow::~MainWindow()
@@ -1024,7 +1039,7 @@ void MainWindow::serverDetected(const QString name)
 	}
 }
 
-void MainWindow::setEdition(int edition)
+void MainWindow::setEdition(Edition edition)
 {
 	setWindowTitle(getEditionName(edition));
 	if (m_AppConfig->getCryptoEnabled()) {
@@ -1033,6 +1048,16 @@ void MainWindow::setEdition(int edition)
 	}
 	updateLocalFingerprint();
 	saveSettings();
+}
+
+void MainWindow::beginTrial()
+{
+	this->m_trialWidget->show();
+}
+
+void MainWindow::endTrial()
+{
+	this->m_trialWidget->hide();
 }
 
 void MainWindow::updateLocalFingerprint()
@@ -1373,7 +1398,7 @@ void MainWindow::bonjourInstallFinished()
 
 void MainWindow::on_windowShown()
 {
-	if (!m_AppConfig->activationHasRun() && (m_AppConfig->edition() == Unregistered)) {
+	if (!m_AppConfig->activationHasRun() && (m_AppConfig->edition() == kUnregistered)) {
 		ActivationDialog activationDialog (this, appConfig(), subscriptionManager());
 		activationDialog.exec();
 	}

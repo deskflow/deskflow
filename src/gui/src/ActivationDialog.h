@@ -23,6 +23,9 @@ public slots:
 	void reject();
 	void accept();
 	
+protected:
+        void refreshSerialKey();
+        
 private:
 	Ui::ActivationDialog *ui;
 	AppConfig* m_appConfig;

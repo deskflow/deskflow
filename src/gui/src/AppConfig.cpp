@@ -157,7 +157,7 @@ void AppConfig::loadSettings()
 	}
 	m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
 	m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
-	m_Edition = settings().value("edition", Unregistered).toInt();
+	m_Edition = static_cast<Edition>(settings().value("edition", kUnregistered).toInt());
 	m_ActivateEmail = settings().value("activateEmail", "").toString();
 	m_CryptoEnabled = settings().value("cryptoEnabled", true).toBool();
 	m_AutoHide = settings().value("autoHide", false).toBool();
@@ -237,12 +237,11 @@ void AppConfig::setAutoConfigPrompted(bool prompted)
 	m_AutoConfigPrompted = prompted;
 }
 
-void AppConfig::setEdition(int e) {
+void AppConfig::setEdition(Edition e) {
 	m_Edition = e;
-	emit editionSet (e);
 }
 
-int AppConfig::edition() const { return m_Edition; }
+Edition AppConfig::edition() const { return m_Edition; }
 
 QString AppConfig::setSerialKey(QString serial) {
 	using std::swap;
@@ -276,7 +275,7 @@ void AppConfig::setCryptoEnabled(bool e) {
 }
 
 bool AppConfig::getCryptoEnabled() const { 
-	return (edition() == Pro) && m_CryptoEnabled;
+	return (edition() == kPro) && m_CryptoEnabled;
 }
 
 void AppConfig::setAutoHide(bool b) { m_AutoHide = b; }

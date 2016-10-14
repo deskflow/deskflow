@@ -26,9 +26,10 @@
 #endif
 
 class SerialKey {
+	friend bool operator== (SerialKey const&, SerialKey const&);
 public:
-	SerialKey();
-	SerialKey(std::string serial);
+	explicit SerialKey(Edition edition = Edition::kUnregistered);
+	explicit SerialKey(std::string serial);
 	
 	bool				isValid(time_t currentTime) const;
 	bool				isExpiring(time_t currentTime) const;
@@ -68,7 +69,15 @@ private:
 
 inline bool
 operator== (SerialKey const& lhs, SerialKey const& rhs) {
-	return (lhs.edition() == rhs.edition());
+	return (lhs.m_name == rhs.m_name) &&
+			(lhs.m_email == rhs.m_email) && 
+			(lhs.m_company == rhs.m_company) &&
+			(lhs.m_userLimit == rhs.m_userLimit) &&
+			(lhs.m_warnTime == rhs.m_warnTime) &&
+			(lhs.m_expireTime == rhs.m_expireTime) &&
+			(lhs.m_edition == rhs.m_edition) &&
+			(lhs.m_trial == rhs.m_trial) &&	
+			(lhs.m_valid == rhs.m_valid);
 }
 
 inline bool

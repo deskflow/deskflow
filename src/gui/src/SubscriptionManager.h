@@ -28,12 +28,14 @@ class SubscriptionManager: public QObject
 	Q_OBJECT
 
 public:
-	SubscriptionManager (AppConfig* appConfig);
-	void setSerialKey (QString serialKey);
-	void notifySkip ();
+	SubscriptionManager(AppConfig* appConfig);
+	SerialKey setSerialKey(QString serialKey);
+	Edition edition() const;
+	bool isTrial() const;
+	void skipActivation();
 
 private:
-	void notifyActivation (QString identity);
+	void notifyActivation(QString identity);
 	
 private:
 	AppConfig* m_AppConfig;
@@ -42,4 +44,6 @@ private:
 signals:
 	void serialKeyChanged (SerialKey);
 	void editionChanged (Edition);
+	void beginTrial ();
+	void endTrial ();
 };

@@ -22,8 +22,14 @@ ActivationDialog::ActivationDialog(QWidget* parent, AppConfig& appConfig,
 	m_subscriptionManager (&subscriptionManager)
 {
 	ui->setupUi(this);
+	refreshSerialKey();
+}
+
+void ActivationDialog::refreshSerialKey()
+{
+	ui->m_pTextEditSerialKey->setText(m_appConfig->serialKey());
 	ui->m_pTextEditSerialKey->setFocus();
-	ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
+	ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);	
 }
 
 ActivationDialog::~ActivationDialog()
@@ -33,21 +39,22 @@ ActivationDialog::~ActivationDialog()
 
 void ActivationDialog::reject()
 {
-	CancelActivationDialog cancelActivationDialog(this);
-	if (QDialog::Accepted == cancelActivationDialog.exec()) {
-		m_subscriptionManager->notifySkip();
-		m_appConfig->activationHasRun(true);
-		m_appConfig->saveSettings();
-		QDialog::reject();
+	if (m_subscriptionManager->edition() == Edition::kUnregistered) {
+		CancelActivationDialog cancelActivationDialog(this);
+		if (QDialog::Accepted == cancelActivationDialog.exec()) {
+			m_subscriptionManager->skipActivation();
+			m_appConfig->activationHasRun(true);
+			m_appConfig->saveSettings();
+		}
 	}
+	QDialog::reject();
 }
 
 void ActivationDialog::accept()
 {
 	QMessageBox message;
 	QString error;
-	int edition = Unregistered;
-
+	
 	m_appConfig->activationHasRun(true);
 	m_appConfig->saveSettings();
 
@@ -60,13 +67,14 @@ void ActivationDialog::accept()
 			tr("An error occurred while trying to activate Synergy. "
 				"Please contact the helpdesk, and provide the "
 				"following details.\n\n%1").arg(e.what()));
+		refreshSerialKey();
 		return;
 	}
 
-	m_appConfig->setEdition(edition);
-	m_appConfig->saveSettings();
-
-	message.information(this, "Activated!",
-				tr("Thanks for activating %1!").arg(getEditionName(edition)));
+	if (m_subscriptionManager->edition() != Edition::kUnregistered) {
+		message.information(this, "Activated!",
+					tr("Thanks for activating %1!").arg
+							(getEditionName(m_subscriptionManager->edition())));
+	}
 	QDialog::accept();
 }

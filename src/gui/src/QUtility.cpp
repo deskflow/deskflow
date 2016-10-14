@@ -45,10 +45,10 @@ void setIndexFromItemData(QComboBox* comboBox, const QVariant& itemData)
 
 QString 
 getEditionName (int edition) {
-	if (edition == Basic) {
+	if (edition == kBasic) {
 		return "Synergy Basic";
 	}
-	else if (edition == Pro) {
+	else if (edition == kPro) {
 		return "Synergy Pro";
 	}
 	else {

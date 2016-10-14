@@ -22,21 +22,59 @@
 #include <QThread>
 
 SubscriptionManager::SubscriptionManager(AppConfig* appConfig) :
-	m_AppConfig(appConfig) {
-}
-
-void 
-SubscriptionManager::setSerialKey(QString serialKeyString)
-{
-	SerialKey serialKey (serialKeyString.toStdString());
-	if (serialKey.isValid (::time(0)) && (serialKey != m_serialKey)) {
-		m_AppConfig->setSerialKey (serialKeyString);
-		notifyActivation ("serial:" + serialKeyString);
-		emit serialKeyChanged (serialKey);
+	m_AppConfig(appConfig), 
+	m_serialKey(appConfig->edition()) {
+	try {
+		setSerialKey(m_AppConfig->serialKey());
+	} catch (...) {
+		m_AppConfig->setSerialKey("");
 	}
 }
 
-void SubscriptionManager::notifySkip()
+SerialKey
+SubscriptionManager::setSerialKey(QString serialKeyString)
+{
+	SerialKey serialKey (serialKeyString.toStdString());
+	if (!serialKey.isValid (::time(0))) {
+		throw std::runtime_error ("Invalid serial key");
+	}
+
+	if (serialKey != m_serialKey) {
+		using std::swap;
+		swap (serialKey, m_serialKey);
+		
+		m_AppConfig->setSerialKey (serialKeyString);
+		notifyActivation ("serial:" + serialKeyString);
+		emit serialKeyChanged (m_serialKey);
+
+		if (m_serialKey.edition() != serialKey.edition()) {
+			m_AppConfig->setEdition (m_serialKey.edition());
+			emit editionChanged (m_serialKey.edition());
+		}
+
+		if (m_serialKey.isTrial() != serialKey.isTrial()) {
+			if (m_serialKey.isTrial()) {
+				emit beginTrial();
+			} else {
+				emit endTrial();
+			}
+		}
+	}
+
+	return serialKey;
+}
+
+Edition SubscriptionManager::edition() const
+{
+	return m_serialKey.edition();
+}
+
+bool SubscriptionManager::isTrial() const
+{
+	return m_serialKey.isTrial();
+}
+
+void SubscriptionManager::skipActivation()
 {
 	notifyActivation ("skip:unknown");
 }
@@ -45,7 +83,7 @@ void SubscriptionManager::notifyActivation(QString identity)
 {
 	ActivationNotifier* notifier = new ActivationNotifier();
 	notifier->setIdentity(identity);
-	
+
 	QThread* thread = new QThread();
 	connect(notifier, SIGNAL(finished()), thread, SLOT(quit()));
 	connect(notifier, SIGNAL(finished()), notifier, SLOT(deleteLater()));
@@ -54,5 +92,5 @@ void SubscriptionManager::notifyActivation(QString identity)
 	notifier->moveToThread(thread);
 	thread->start();
 
-	QMetaObject::invokeMethod(notifier, "notify", Qt::QueuedConnection);	
+	QMetaObject::invokeMethod(notifier, "notify", Qt::QueuedConnection);
 }
