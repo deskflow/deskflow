@@ -34,7 +34,7 @@ SerialKey::SerialKey(std::string serial) :
 {
 	string plainText = decode(serial);
 	if (!plainText.empty()) {
-		parse(serial);
+		parse(plainText);
 	}
 }
 
