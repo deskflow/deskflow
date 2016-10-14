@@ -101,13 +101,16 @@ unsigned long long
 SerialKey::dayLeft(unsigned long long currentTime) const
 {
 	unsigned long long timeLeft =  0;
+	unsigned long long day = 60 * 60 * 24;
+	
 	if (m_expireTime > currentTime) {
 		timeLeft = m_expireTime - currentTime;
 	}
 
-	unsigned long long day = 60 * 60 * 24;
+	unsigned long long dayLeft = 0;
+	dayLeft = timeLeft % day != 0 ? 1 : 0;
 	
-	return timeLeft / day;
+	return timeLeft / day + dayLeft;
 }
 
 std::string
