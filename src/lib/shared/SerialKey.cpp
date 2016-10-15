@@ -39,7 +39,7 @@ SerialKey::SerialKey(std::string serial) :
     m_userLimit(1),
     m_warnTime(0),
     m_expireTime(0),
-    m_edition(Edition::kBasic),
+    m_edition(kBasic),
     m_trial(true),
     m_valid(false)
 {
@@ -210,9 +210,9 @@ SerialKey::parse(std::string plainSerial)
 Edition
 SerialKey::parseEdition(std::string editionStr)
 {
-    Edition e = Edition::kBasic;
+    Edition e = kBasic;
     if (editionStr == "pro") {
-        e = Edition::kPro;
+        e = kPro;
     }
 
     return e;
