@@ -75,10 +75,6 @@ endif()
 # Depending on the platform, pass in the required defines.
 if (UNIX)
 
-	# warnings as errors:
-	# we have a problem with people checking in code with warnings.
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wno-unused-local-typedef")
-
 	if (NOT APPLE)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 	endif()
@@ -91,6 +87,19 @@ if (UNIX)
 	include(CheckIncludeFileCXX)
 	include(CheckSymbolExists)
 	include(CheckCSourceCompiles)
+	include(CheckCxxCompilerFlag)
+
+	check_cxx_compiler_flag(-Werror HAVE_CXX_FLAG_ERROR)
+	check_cxx_compiler_flag(-Wno-unused-local-typedef HAVE_CXX_FLAG_NO_UNUSED_LOCAL_TYPEDEF)
+
+	# warnings as errors:
+	# we have a problem with people checking in code with warnings.
+	if (HAVE_CXX_FLAG_ERROR)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+	endif()
+	if (HAVE_CXX_FLAG_NO_UNUSED_LOCAL_TYPEDEF)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedef")
+	endif()
 
 	check_include_file_cxx(istream HAVE_ISTREAM)
 	check_include_file_cxx(ostream HAVE_OSTREAM)
