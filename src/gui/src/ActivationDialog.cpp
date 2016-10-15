@@ -39,7 +39,7 @@ ActivationDialog::~ActivationDialog()
 
 void ActivationDialog::reject()
 {
-    if (m_subscriptionManager->activeLicense() == Edition::kUnregistered) {
+    if (m_subscriptionManager->activeLicense() == kUnregistered) {
         CancelActivationDialog cancelActivationDialog(this);
         if (QDialog::Accepted == cancelActivationDialog.exec()) {
             m_subscriptionManager->skipActivation();
@@ -71,7 +71,7 @@ void ActivationDialog::accept()
         return;
     }
 
-    if (m_subscriptionManager->activeLicense() != Edition::kUnregistered) {
+    if (m_subscriptionManager->activeLicense() != kUnregistered) {
         message.information(this, "Activated!",
                     tr("Thanks for activating %1!").arg
                             (getEditionName(m_subscriptionManager->activeLicense())));
