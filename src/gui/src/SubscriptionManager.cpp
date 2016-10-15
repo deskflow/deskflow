@@ -19,6 +19,7 @@
 #include "EditionType.h"
 #include "AppConfig.h"
 #include <ctime>
+#include <stdexcept>
 #include <QThread>
 
 SubscriptionManager::SubscriptionManager(AppConfig* appConfig) :
