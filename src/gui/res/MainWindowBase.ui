@@ -30,6 +30,18 @@
     <item>
      <widget class="QWidget" name="m_trialWidget" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>8</number>
+       </property>
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
@@ -41,9 +53,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="trialLabel">
+        <widget class="QLabel" name="m_trialLabel">
          <property name="text">
-          <string/>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;6&lt;/span&gt; days of your Synergy Pro trial remain. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
@@ -76,7 +88,7 @@
         <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>7</number>
+        <number>8</number>
        </property>
        <item>
         <widget class="QLabel" name="m_pIconUpdate">
