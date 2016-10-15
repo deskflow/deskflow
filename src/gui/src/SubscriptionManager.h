@@ -25,25 +25,25 @@ class AppConfig;
 
 class SubscriptionManager: public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	SubscriptionManager(AppConfig* appConfig);
-	SerialKey setSerialKey(QString serialKey);
-	Edition edition() const;
-	bool isTrial() const;
-	void skipActivation();
+    SubscriptionManager(AppConfig* appConfig);
+    SerialKey setSerialKey(QString serialKey);
+    void update() const;
+    Edition activeLicense() const;
+    void skipActivation();
 
 private:
-	void notifyActivation(QString identity);
-	
+    void notifyActivation(QString identity);
+
 private:
-	AppConfig* m_AppConfig;
-	SerialKey m_serialKey;
-	
+    AppConfig* m_AppConfig;
+    SerialKey m_serialKey;
+
 signals:
-	void serialKeyChanged (SerialKey);
-	void editionChanged (Edition);
-	void beginTrial ();
-	void endTrial ();
+    void serialKeyChanged (SerialKey) const;
+    void editionChanged (Edition) const;
+    void beginTrial (bool expiring) const;
+    void endTrial (bool expired) const;
 };

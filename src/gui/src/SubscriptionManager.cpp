@@ -22,75 +22,82 @@
 #include <QThread>
 
 SubscriptionManager::SubscriptionManager(AppConfig* appConfig) :
-	m_AppConfig(appConfig), 
-	m_serialKey(appConfig->edition()) {
-	try {
-		setSerialKey(m_AppConfig->serialKey());
-	} catch (...) {
-		m_AppConfig->setSerialKey("");
-	}
+    m_AppConfig(appConfig),
+    m_serialKey(appConfig->edition()) {
+    try {
+        setSerialKey(m_AppConfig->serialKey());
+    } catch (...) {
+        m_AppConfig->setSerialKey("");
+        m_AppConfig->saveSettings();
+    }
 }
 
 SerialKey
 SubscriptionManager::setSerialKey(QString serialKeyString)
 {
-	SerialKey serialKey (serialKeyString.toStdString());
-	if (!serialKey.isValid (::time(0))) {
-		throw std::runtime_error ("Invalid serial key");
-	}
+    SerialKey serialKey (serialKeyString.toStdString());
+    if (!serialKey.isValid (::time(0))) {
+        throw std::runtime_error ("Invalid serial key");
+    }
 
-	if (serialKey != m_serialKey) {
-		using std::swap;
-		swap (serialKey, m_serialKey);
-		
-		m_AppConfig->setSerialKey (serialKeyString);
-		notifyActivation ("serial:" + serialKeyString);
-		emit serialKeyChanged (m_serialKey);
+    if (serialKey != m_serialKey) {
+        using std::swap;
+        swap (serialKey, m_serialKey);
 
-		if (m_serialKey.edition() != serialKey.edition()) {
-			m_AppConfig->setEdition (m_serialKey.edition());
-			emit editionChanged (m_serialKey.edition());
-		}
+        m_AppConfig->setSerialKey (serialKeyString);
+        notifyActivation ("serial:" + serialKeyString);
+        emit serialKeyChanged (m_serialKey);
 
-		if (m_serialKey.isTrial() != serialKey.isTrial()) {
-			if (m_serialKey.isTrial()) {
-				emit beginTrial();
-			} else {
-				emit endTrial();
-			}
-		}
-	}
+        if (m_serialKey.edition() != serialKey.edition()) {
+            m_AppConfig->setEdition (m_serialKey.edition());
+            emit editionChanged (m_serialKey.edition());
+        }
 
-	return serialKey;
+        if (serialKey.isTrial()) {
+            emit endTrial(false);
+        }
+
+        if (m_serialKey.isTrial()) {
+            emit beginTrial(m_serialKey.isExpiring(::time(0)));
+        }
+
+        m_AppConfig->saveSettings();
+    }
+
+    return serialKey;
 }
 
-Edition SubscriptionManager::edition() const
+Edition SubscriptionManager::activeLicense() const
 {
-	return m_serialKey.edition();
+    return m_serialKey.edition();
 }
 
-bool SubscriptionManager::isTrial() const
+void SubscriptionManager::update() const
 {
-	return m_serialKey.isTrial();
+    emit serialKeyChanged (m_serialKey);
+    emit editionChanged (m_serialKey.edition());
+    if (m_serialKey.isTrial()) {
+        emit beginTrial(m_serialKey.isExpiring(::time(0)));
+    }
 }
 
 void SubscriptionManager::skipActivation()
 {
-	notifyActivation ("skip:unknown");
+    notifyActivation ("skip:unknown");
 }
 
 void SubscriptionManager::notifyActivation(QString identity)
 {
-	ActivationNotifier* notifier = new ActivationNotifier();
-	notifier->setIdentity(identity);
+    ActivationNotifier* notifier = new ActivationNotifier();
+    notifier->setIdentity(identity);
 
-	QThread* thread = new QThread();
-	connect(notifier, SIGNAL(finished()), thread, SLOT(quit()));
-	connect(notifier, SIGNAL(finished()), notifier, SLOT(deleteLater()));
-	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    QThread* thread = new QThread();
+    connect(notifier, SIGNAL(finished()), thread, SLOT(quit()));
+    connect(notifier, SIGNAL(finished()), notifier, SLOT(deleteLater()));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-	notifier->moveToThread(thread);
-	thread->start();
+    notifier->moveToThread(thread);
+    thread->start();
 
-	QMetaObject::invokeMethod(notifier, "notify", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(notifier, "notify", Qt::QueuedConnection);
 }
