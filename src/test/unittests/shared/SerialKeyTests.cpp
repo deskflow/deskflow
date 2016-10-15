@@ -135,7 +135,7 @@ TEST(SerialKeyTests, isExpiring_validV2TrialBasicSerial_returnFalse)
 	// {v2;trial;basic;Bob;1;email;company name;0;86400}
 	SerialKey serial("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
 	EXPECT_EQ(true, serial.isTrial());
-	EXPECT_FALSE(serial.isExpiring(0));
+	EXPECT_TRUE(serial.isExpiring(0));
 	EXPECT_EQ(kBasic, serial.edition());
 }
 
