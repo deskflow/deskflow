@@ -64,3 +64,17 @@ TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile)
 
 	EXPECT_EQ("mock_configFile", serverArgs.m_configFile);
 }
+
+TEST(ServerArgsParsingTests, parseServerArgs_serialArg_setSerial)
+{
+	NiceMock<MockArgParser> argParser;
+	ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
+	ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
+	ServerArgs serverArgs;
+	const int argc = 3;
+	const char* kSerialCmd[argc] = { "stub", "--serial-key", "mock_serial" };
+	
+	argParser.parseServerArgs(serverArgs, argc, kSerialCmd);
+	
+	EXPECT_EQ("mock_serial", serverArgs.m_serial);
+}

@@ -28,5 +28,6 @@ public:
 
 public:
 	String				m_configFile;
+	String				m_serial;
 	Config*				m_config;
 };
