@@ -411,12 +411,12 @@ void MainWindow::appendLogRaw(const QString& text)
 	foreach(QString line, text.split(QRegExp("\r|\n|\r\n"))) {
 		if (!line.isEmpty()) {
 			m_pLogOutput->append(line);
-			updateStateFromLogLine(line);
+			updateFromLogLine(line);
 		}
 	}
 }
 
-void MainWindow::updateStateFromLogLine(const QString &line)
+void MainWindow::updateFromLogLine(const QString &line)
 {
 	checkConnected(line);
 	checkFingerprint(line);
@@ -441,6 +441,13 @@ void MainWindow::checkConnected(const QString& line)
 			appConfig().setStartedBefore(true);
 			appConfig().saveSettings();
 		}
+	}
+}
+
+void MainWindow::checkLicense(const QString &line)
+{
+	if (line.contains("trial has expired")) {
+		m_SubscriptionManager->refresh();
 	}
 }
 

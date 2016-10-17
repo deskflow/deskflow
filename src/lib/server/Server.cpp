@@ -456,7 +456,7 @@ Server::switchScreen(BaseClientProxy* dst,
 
 	// if trial is expired, exit the process
 	if (!m_args.m_serial.isExpired(std::time(0))) {
-		LOG((CLOG_ERR "trial is expired, aborting server"));
+		LOG((CLOG_ERR "trial has expired, aborting server"));
 		exit(kExitSuccess);
 	}
 
