@@ -42,89 +42,38 @@ TEST(SerialKeyTests, decode_validSerial_returnPlainText)
 TEST(SerialKeyTests, parse_noParty_invalid)
 {
 	SerialKey serial;
-	serial.parse("MOCK");
-	EXPECT_FALSE(serial.isValid(0));
+	bool r = serial.parse("MOCK");
+	EXPECT_FALSE(r);
 }
 
 TEST(SerialKeyTests, parse_invalidPartsLenghth_invalid)
 {
 	SerialKey serial;
-	serial.parse("{Synergy;Rocks}");
-	EXPECT_FALSE(serial.isValid(0));
+	bool r = serial.parse("{Synergy;Rocks}");
+	EXPECT_FALSE(r);
 }
 
 TEST(SerialKeyTests, parse_validV1Serial_valid)
 {
 	SerialKey serial;
-	serial.parse("{v1;basic;Bob;1;email;company name;0;86400}");
-	EXPECT_EQ(true, serial.isValid(0));
+	bool r = serial.parse("{v1;basic;Bob;1;email;company name;0;86400}");
+	EXPECT_EQ(true, r);
 	EXPECT_EQ(kBasic, serial.edition());
 	EXPECT_FALSE(serial.isExpired(0));
 	EXPECT_EQ(true, serial.daysLeft(0));
-	EXPECT_EQ(true, serial.isExpiring(1));
+	EXPECT_FALSE(serial.isExpiring(1));
 }
 
 TEST(SerialKeyTests, parse_validV2Serial_valid)
 {
 	SerialKey serial;
-	serial.parse("{v2;trial;pro;Bob;1;email;company name;0;86400}");
-	EXPECT_EQ(true, serial.isValid(0));
+	bool r = serial.parse("{v2;trial;pro;Bob;1;email;company name;0;86400}");
+	EXPECT_EQ(true, r);
 	EXPECT_EQ(kPro, serial.edition());
 	EXPECT_FALSE(serial.isExpired(0));
 	EXPECT_EQ(true, serial.daysLeft(0));
 	EXPECT_EQ(true, serial.isExpiring(1));
 	EXPECT_EQ(true, serial.isTrial());
-}
-
-TEST(SerialKeyTests, isValid_validV1BasicSerial_valid)
-{
-	// {v1;basic;Bob;1;email;company name;0;86400}
-	SerialKey serial("7B76313B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
-	EXPECT_EQ(true, serial.isValid(0));
-	EXPECT_EQ(kBasic, serial.edition());
-}
-
-TEST(SerialKeyTests, isValid_expiredV1ProSerial_valid)
-{
-	// {v1;pro;Bob;1;email;company name;0;86400}
-	SerialKey serial("7B76313B70726F3B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
-	EXPECT_EQ(true, serial.isValid(0));
-	EXPECT_EQ(kPro, serial.edition());
-}
-
-TEST(SerialKeyTests, isValid_validV2LifetimeBasicSerial_valid)
-{
-	// {v2;lifetime;basic;Bob;1;email;company name;0;86400}
-	SerialKey serial("7B76323B6C69666574696D653B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
-	EXPECT_EQ(true, serial.isValid(0));
-	EXPECT_EQ(kBasic, serial.edition());
-}
-
-TEST(SerialKeyTests, isValid_validV2LifetimeProSerial_valid)
-{
-	// {v2;lifetime;pro;Bob;1;email;company name;0;86400}
-	SerialKey serial("7B76323B6C69666574696D653B70726F3B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
-	EXPECT_EQ(true, serial.isValid(0));
-	EXPECT_EQ(kPro, serial.edition());
-}
-
-TEST(SerialKeyTests, isValid_validV2TrialBasicSerial_valid)
-{
-	// {v2;trial;basic;Bob;1;email;company name;0;86400}
-	SerialKey serial("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
-	EXPECT_EQ(true, serial.isTrial());
-	EXPECT_EQ(true, serial.isValid(0));
-	EXPECT_EQ(kBasic, serial.edition());
-
-}
-
-TEST(SerialKeyTests, isValid_expiredV2TrialProSerial_invalid)
-{
-	// {v2;trial;pro;Bob;1;email;company name;0;86400}
-	SerialKey serial("7B76323B747269616C3B70726F3B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
-	EXPECT_EQ(true, serial.isTrial());
-	EXPECT_FALSE(serial.isValid(86401));
-	EXPECT_EQ(kPro, serial.edition());
 }
 
 TEST(SerialKeyTests, isExpiring_validV2TrialBasicSerial_returnFalse)
