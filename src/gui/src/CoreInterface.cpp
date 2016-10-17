@@ -38,12 +38,6 @@ CoreInterface::CoreInterface()
 {
 }
 
-QString CoreInterface::getPluginDir()
-{
-	QStringList args("--get-plugin-dir");
-	return run(args);
-}
-
 QString CoreInterface::getProfileDir()
 {
 	QStringList args("--get-profile-dir");
@@ -68,19 +62,6 @@ QString CoreInterface::getSerialKeyFilePath()
 	return filename;
 }
 
-QString CoreInterface::activateSerial(const QString& serial)
-{
-	QStringList args("--subscription-serial");
-	args << serial;
-
-	return run(args);
-}
-
-QString CoreInterface::checkSubscription()
-{
-	QStringList args("--check-subscription");
-	return run(args);
-}
 
 QString CoreInterface::notifyActivation(const QString& identity)
 {
