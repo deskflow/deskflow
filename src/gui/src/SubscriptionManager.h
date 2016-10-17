@@ -20,6 +20,7 @@
 #include <QObject>
 #include <SerialKey.h>
 #include <ActivationNotifier.h>
+#include <utility>
 
 class AppConfig;
 
@@ -29,10 +30,13 @@ class SubscriptionManager: public QObject
 
 public:
     SubscriptionManager(AppConfig* appConfig);
-    SerialKey setSerialKey(QString serialKey);
-    void update() const;
-    Edition activeLicense() const;
+    std::pair<bool, QString> setSerialKey(QString serialKey);
+    void refresh() const;
+    Edition activeEdition() const;
+	QString activeEditionName() const;
+	SerialKey serialKey() const;
     void skipActivation();
+	static QString getEditionName(Edition edition, bool trial = false);
 
 private:
     void notifyActivation(QString identity);

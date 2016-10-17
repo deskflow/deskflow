@@ -154,7 +154,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
     connect (m_AppConfig, SIGNAL(sslToggled(bool)),
              this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
 
-    m_SubscriptionManager->update();
+    m_SubscriptionManager->refresh();
 }
 
 MainWindow::~MainWindow()
@@ -546,6 +546,10 @@ void MainWindow::startSynergy()
 
 
     args << "--name" << getScreenName();
+
+	if (!appConfig().serialKey().isEmpty()) {
+		args << "--serial-key " << appConfig().serialKey();
+	}
 
     if (desktopMode)
     {
@@ -1038,7 +1042,7 @@ void MainWindow::serverDetected(const QString name)
 
 void MainWindow::setEdition(Edition edition)
 {
-    setWindowTitle(getEditionName(edition));
+    setWindowTitle(m_SubscriptionManager->getEditionName (edition));
     if (m_AppConfig->getCryptoEnabled()) {
         m_pSslCertificate = new SslCertificate(this);
         m_pSslCertificate->generateCertificate();
@@ -1050,8 +1054,19 @@ void MainWindow::setEdition(Edition edition)
 void MainWindow::beginTrial(bool isExpiring)
 {
     if (isExpiring) {
+		QString expiringNotice = "<html><head/><body><p><span style=\""
+								 "font-weight:600;\">%1</span> days of "
+								 "your Synergy Pro trial remain. <a href="
+								 "\"http://symless.com/pricing?src=gui\">"
+								 "<span style=\"text-decoration: underline;"
+								 " color:#0000ff;\">Buy now!</span></a>"
+								 "</p></body></html>";
+		expiringNotice = expiringNotice.arg
+				(m_SubscriptionManager->serialKey().daysLeft(::time(0)));
+		this->m_trialLabel->setText(expiringNotice);
         this->m_trialWidget->show();
     }
+	setWindowTitle (m_SubscriptionManager->activeEditionName());
 }
 
 void MainWindow::endTrial(bool isExpired)
@@ -1059,6 +1074,7 @@ void MainWindow::endTrial(bool isExpired)
     if (!isExpired) {
         this->m_trialWidget->hide();
     }
+	setWindowTitle (m_SubscriptionManager->activeEditionName());
 }
 
 void MainWindow::updateLocalFingerprint()

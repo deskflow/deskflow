@@ -20,6 +20,7 @@
 #include "AppConfig.h"
 #include <ctime>
 #include <stdexcept>
+#include <utility>
 #include <QThread>
 
 SubscriptionManager::SubscriptionManager(AppConfig* appConfig) :
@@ -28,18 +29,24 @@ SubscriptionManager::SubscriptionManager(AppConfig* appConfig) :
     try {
         setSerialKey(m_AppConfig->serialKey());
     } catch (...) {
+		/* Remove garbage serial keys from the registry */
         m_AppConfig->setSerialKey("");
+		m_AppConfig->setEdition(kUnregistered);
         m_AppConfig->saveSettings();
     }
 }
 
-SerialKey
+std::pair<bool, QString>
 SubscriptionManager::setSerialKey(QString serialKeyString)
 {
+	std::pair<bool, QString> ret (true, "");
+
     SerialKey serialKey (serialKeyString.toStdString());
-    if (!serialKey.isValid (::time(0))) {
-        throw std::runtime_error ("Invalid serial key");
-    }
+	if (serialKey.isExpired(::time(0))) {
+		ret.first = false;
+		ret.second = "Serial key expired";
+		return ret;
+	}
 
     if (serialKey != m_serialKey) {
         using std::swap;
@@ -65,15 +72,28 @@ SubscriptionManager::setSerialKey(QString serialKeyString)
         m_AppConfig->saveSettings();
     }
 
-    return serialKey;
+    return ret;
 }
 
-Edition SubscriptionManager::activeLicense() const
+Edition 
+SubscriptionManager::activeEdition() const
 {
-    return m_serialKey.edition();
+	return m_serialKey.edition();
 }
 
-void SubscriptionManager::update() const
+QString
+SubscriptionManager::activeEditionName() const
+{
+	return getEditionName(activeEdition(), m_serialKey.isTrial());
+}
+
+SerialKey 
+SubscriptionManager::serialKey() const
+{
+	return m_serialKey;
+}
+
+void SubscriptionManager::refresh() const
 {
     emit serialKeyChanged (m_serialKey);
     emit editionChanged (m_serialKey.edition());
@@ -84,7 +104,27 @@ void SubscriptionManager::update() const
 
 void SubscriptionManager::skipActivation()
 {
-    notifyActivation ("skip:unknown");
+	notifyActivation ("skip:unknown");
+}
+
+QString
+SubscriptionManager::getEditionName(Edition const edition, bool trial)
+{
+	std::string name ("Synergy ");
+	switch (edition) {
+		case kUnregistered:
+			name += "(UNREGISTERED)";
+			return QString::fromUtf8 (name.c_str(), name.size());
+		case kBasic:
+			name += "Basic";
+			break;
+		default:
+			name += "Pro";
+	}
+	if (trial) {
+		name += " (Trial)";
+	}
+	return QString::fromUtf8 (name.c_str(), name.size());
 }
 
 void SubscriptionManager::notifyActivation(QString identity)

@@ -39,7 +39,7 @@ ActivationDialog::~ActivationDialog()
 
 void ActivationDialog::reject()
 {
-    if (m_subscriptionManager->activeLicense() == kUnregistered) {
+    if (m_subscriptionManager->activeEdition() == kUnregistered) {
         CancelActivationDialog cancelActivationDialog(this);
         if (QDialog::Accepted == cancelActivationDialog.exec()) {
             m_subscriptionManager->skipActivation();
@@ -53,28 +53,35 @@ void ActivationDialog::reject()
 void ActivationDialog::accept()
 {
     QMessageBox message;
-    QString error;
-
     m_appConfig->activationHasRun(true);
     m_appConfig->saveSettings();
 
+	std::pair<bool, QString> result;
     try {
         QString serialKey = ui->m_pTextEditSerialKey->toPlainText();
-        m_subscriptionManager->setSerialKey(serialKey);
+        result = m_subscriptionManager->setSerialKey(serialKey);
     }
     catch (std::exception& e) {
         message.critical(this, "Unknown Error",
             tr("An error occurred while trying to activate Synergy. "
                 "Please contact the helpdesk, and provide the "
-                "following details.\n\n%1").arg(e.what()));
+                "following information:\n\n%1").arg(e.what()));
         refreshSerialKey();
         return;
     }
 
-    if (m_subscriptionManager->activeLicense() != kUnregistered) {
+	if (!result.first) {
+		message.critical(this, "Activation failed", 
+						 tr("%1").arg(result.second));
+		refreshSerialKey();
+		return;
+	}
+
+    if (m_subscriptionManager->activeEdition() != kUnregistered) {
         message.information(this, "Activated!",
                     tr("Thanks for activating %1!").arg
-                            (getEditionName(m_subscriptionManager->activeLicense())));
+                            (m_subscriptionManager->activeEditionName()));
     }
+
     QDialog::accept();
 }

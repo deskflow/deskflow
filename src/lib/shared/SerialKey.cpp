@@ -22,6 +22,9 @@
 #include <algorithm>
 #include <vector>
 #include <climits>
+#include <sstream>
+#include <iomanip>
+#include <stdexcept>
 
 using namespace std;
 
@@ -47,6 +50,9 @@ SerialKey::SerialKey(std::string serial) :
     if (!plainText.empty()) {
         parse(plainText);
     }
+	if (!m_valid) {
+		throw std::runtime_error ("Invalid serial key");
+	}
 }
 
 bool
@@ -105,7 +111,51 @@ SerialKey::isTrial() const
 Edition
 SerialKey::edition() const
 {
-    return m_edition;
+	return m_edition;
+}
+
+std::string
+SerialKey::editionString() const
+{
+	switch (edition()) {
+		case kBasic:
+			return "basic";
+		case kPro:
+			return "pro";
+		default: {
+			std::ostringstream oss;
+			oss << static_cast<int>(edition());
+			return oss.str();
+		}
+	}
+}
+
+static std::string
+hexEncode (std::string const& str) {
+	std::ostringstream oss;
+	for (size_t i = 0; i < str.size(); ++i) {
+		int c = str[i];
+		oss << std::setfill('0') << std::hex << std::setw(2) 
+			<< std::uppercase;
+		oss << c;
+	}
+	return oss.str();
+}
+
+std::string
+SerialKey::toString() const
+{
+	std::ostringstream oss;
+	oss << "v2;";
+	oss << (isTrial() ? "trial" : "lifetime") << ";";
+	oss << editionString() << ";";
+	oss << m_name << ";";
+	oss << m_userLimit << ";";
+	oss << m_email << ";";
+	oss << m_company << ";";
+	oss << m_warnTime << ";";
+	oss << m_expireTime;
+	return hexEncode(oss.str());
 }
 
 time_t
@@ -118,10 +168,16 @@ SerialKey::daysLeft(time_t currentTime) const
         timeLeft = m_expireTime - currentTime;
     }
 
-    unsigned long long dayLeft = 0;
-    dayLeft = timeLeft % day != 0 ? 1 : 0;
+    unsigned long long daysLeft = 0;
+    daysLeft = timeLeft % day != 0 ? 1 : 0;
 
-    return timeLeft / day + dayLeft;
+	return timeLeft / day + daysLeft;
+}
+
+std::string 
+SerialKey::email() const
+{
+	return m_email;
 }
 
 std::string
@@ -208,7 +264,7 @@ SerialKey::parse(std::string plainSerial)
 }
 
 Edition
-SerialKey::parseEdition(std::string editionStr)
+SerialKey::parseEdition(std::string const& editionStr)
 {
     Edition e = kBasic;
     if (editionStr == "pro") {

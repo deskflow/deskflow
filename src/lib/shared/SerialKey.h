@@ -36,12 +36,15 @@ public:
     bool				isExpired(time_t currentTime) const;
     bool				isTrial() const;
     time_t				daysLeft(time_t currentTime) const;
+	std::string			email() const;
     Edition				edition() const;
+	std::string			toString() const;
 
 private:
     std::string			decode(const std::string& serial) const;
     void				parse(std::string plainSerial);
-    Edition				parseEdition(std::string editionStr);
+    Edition				parseEdition(const std::string& editionStr);
+	std::string			editionString() const;
 
 #ifdef TEST_ENV
 private:
