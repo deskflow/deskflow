@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless Inc.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -129,10 +129,10 @@ TEST(SerialKeyTests, isValid_expiredV2TrialProSerial_invalid)
 
 TEST(SerialKeyTests, isExpiring_validV2TrialBasicSerial_returnFalse)
 {
-	// {v2;trial;basic;Bob;1;email;company name;0;86400}
-	SerialKey serial("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
+	// {v2;trial;basic;Bob;1;email;company name;1;86400}
+	SerialKey serial("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B313B38363430307D");
 	EXPECT_EQ(true, serial.isTrial());
-	EXPECT_TRUE(serial.isExpiring(0));
+	EXPECT_FALSE(serial.isExpiring(0));
 	EXPECT_EQ(kBasic, serial.edition());
 }
 
