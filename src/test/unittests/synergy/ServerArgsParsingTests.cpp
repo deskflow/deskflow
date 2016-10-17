@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -63,18 +63,4 @@ TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile)
 	argParser.parseServerArgs(serverArgs, argc, kConfigCmd);
 
 	EXPECT_EQ("mock_configFile", serverArgs.m_configFile);
-}
-
-TEST(ServerArgsParsingTests, parseServerArgs_serialArg_setSerial)
-{
-	NiceMock<MockArgParser> argParser;
-	ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
-	ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
-	ServerArgs serverArgs;
-	const int argc = 3;
-	const char* kSerialCmd[argc] = { "stub", "--serial-key", "mock_serial" };
-	
-	argParser.parseServerArgs(serverArgs, argc, kSerialCmd);
-	
-	EXPECT_EQ("mock_serial", serverArgs.m_serial);
 }

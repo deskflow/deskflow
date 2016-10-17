@@ -48,9 +48,6 @@ private:
 
 #ifdef TEST_ENV
 private:
-	FRIEND_TEST(SerialKeyTests, decode_empty_returnEmptyString);
-	FRIEND_TEST(SerialKeyTests, decode_invalidDigit_returnEmptyString);
-	FRIEND_TEST(SerialKeyTests, decode_validSerial_returnPlainText);
 	FRIEND_TEST(SerialKeyTests, parse_noParty_invalid);
 	FRIEND_TEST(SerialKeyTests, parse_invalidPartsLenghth_invalid);
 	FRIEND_TEST(SerialKeyTests, parse_validV1Serial_valid);

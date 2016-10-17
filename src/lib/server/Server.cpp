@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -453,15 +453,11 @@ Server::switchScreen(BaseClientProxy* dst,
 				SInt32 x, SInt32 y, bool forScreensaver)
 {
 	assert(dst != NULL);
-	
+
 	// if trial is expired, exit the process
-	if (!m_args.m_serial.empty()) {
-		SerialKey serial(m_args.m_serial);
-		if (!serial.isValid(std::time(0))) {
-			LOG((CLOG_ERR "trial is expired, aborting server"));
-			exit(kExitSuccess);
-			return;
-		}
+	if (!m_args.m_serial.isExpired(std::time(0))) {
+		LOG((CLOG_ERR "trial is expired, aborting server"));
+		exit(kExitSuccess);
 	}
 
 #ifndef NDEBUG
@@ -547,7 +543,7 @@ Server::jumpToScreen(BaseClientProxy* newScreen)
 	// get the last cursor position on the target screen
 	SInt32 x, y;
 	newScreen->getJumpCursorPos(x, y);
-	
+
 	switchScreen(newScreen, x, y, false);
 }
 
@@ -897,14 +893,14 @@ Server::isSwitchOkay(BaseClientProxy* newScreen,
 
 	if (!preventSwitch && (
 			(this->m_switchNeedsShift && ((mods & KeyModifierShift) != KeyModifierShift)) ||
-        	(this->m_switchNeedsControl && ((mods & KeyModifierControl) != KeyModifierControl)) ||
+			(this->m_switchNeedsControl && ((mods & KeyModifierControl) != KeyModifierControl)) ||
 			(this->m_switchNeedsAlt && ((mods & KeyModifierAlt) != KeyModifierAlt))
 		)) {
 		LOG((CLOG_DEBUG1 "need modifiers to switch"));
 		preventSwitch = true;
 		stopSwitch();
-	} 
-	
+	}
+
 	return !preventSwitch;
 }
 
@@ -1184,7 +1180,7 @@ Server::processOptions()
 		}
 		else if (id == kOptionClipboardSharing) {
 			m_enableClipboard = (value != 0);
-			
+
 			if (m_enableClipboard == false) {
 				LOG((CLOG_NOTE "clipboard sharing is disabled"));
 			}
@@ -1413,7 +1409,7 @@ Server::handleClientCloseTimeout(const Event&, void* vclient)
 void
 Server::handleSwitchToScreenEvent(const Event& event, void*)
 {
-	SwitchToScreenInfo* info = 
+	SwitchToScreenInfo* info =
 		static_cast<SwitchToScreenInfo*>(event.getData());
 
 	ClientList::const_iterator index = m_clients.find(info->m_screen);
@@ -1428,7 +1424,7 @@ Server::handleSwitchToScreenEvent(const Event& event, void*)
 void
 Server::handleSwitchInDirectionEvent(const Event& event, void*)
 {
-	SwitchInDirectionInfo* info = 
+	SwitchInDirectionInfo* info =
 		static_cast<SwitchInDirectionInfo*>(event.getData());
 
 	// jump to screen in chosen direction from center of this screen
@@ -1718,7 +1714,7 @@ Server::onMouseUp(ButtonID id)
 		m_ignoreFileTransfer = false;
 		return;
 	}
-	
+
 	if (m_args.m_enableDragDrop) {
 		if (!m_screen->isOnScreen()) {
 			String& file = m_screen->getDraggingFilename();
@@ -1823,7 +1819,7 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 		m_waitDragInfoThread = true;
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -1839,7 +1835,7 @@ Server::sendDragInfoThread(void* arg)
 		di.setFilename(dragFileList);
 		m_dragFileList.push_back(di);
 	}
-			
+
 #if defined(__APPLE__)
 	// on mac it seems that after faking a LMB up, system would signal back
 	// to synergy a mouse up event, which doesn't happen on windows. as a
@@ -1862,7 +1858,7 @@ Server::sendDragInfo(BaseClientProxy* newScreen)
 {
 	String infoString;
 	UInt32 fileCount = DragInformation::setupDragInfo(m_dragFileList, infoString);
-	
+
 	if (fileCount > 0) {
 		char* info = NULL;
 		size_t size = infoString.size();
@@ -2072,7 +2068,7 @@ Server::onFileChunkSending(const void* data)
 	assert(m_active != NULL);
 
 	// relay
- 	m_active->fileChunkSending(chunk->m_chunk[0], &chunk->m_chunk[1], chunk->m_dataSize);
+	m_active->fileChunkSending(chunk->m_chunk[0], &chunk->m_chunk[1], chunk->m_dataSize);
 }
 
 void
@@ -2381,7 +2377,7 @@ Server::sendFileToClient(const char* filename)
 	if (m_sendFileThread != NULL) {
 		StreamChunker::interruptFile();
 	}
-	
+
 	m_sendFileThread = new Thread(
 		new TMethodJob<Server>(
 			this, &Server::sendFileThread,
