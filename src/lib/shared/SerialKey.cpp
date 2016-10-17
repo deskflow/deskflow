@@ -59,8 +59,10 @@ SerialKey::isExpiring(time_t currentTime) const
 {
 	bool result = false;
 
-	if (m_warnTime <= currentTime && currentTime < m_expireTime) {
-		result = true;
+	if (m_trial) {
+		if (m_warnTime <= currentTime && currentTime < m_expireTime) {
+			result = true;
+		}
 	}
 
 	return result;
@@ -71,10 +73,11 @@ SerialKey::isExpired(time_t currentTime) const
 {
 	bool result = false;
 
-	if (m_expireTime <= currentTime) {
-		result = true;
+	if (m_trial) {
+		if (m_expireTime <= currentTime) {
+			result = true;
+		}
 	}
-
 
 	return result;
 }
