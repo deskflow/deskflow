@@ -24,30 +24,30 @@
 
 class AppConfig;
 
-class SubscriptionManager: public QObject
+class LicenseManager: public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    SubscriptionManager(AppConfig* appConfig);
-    std::pair<bool, QString> setSerialKey(QString serialKey);
-    void refresh() const;
-    Edition activeEdition() const;
+	LicenseManager(AppConfig* appConfig);
+	std::pair<bool, QString> setSerialKey(QString serialKey);
+	void refresh() const;
+	Edition activeEdition() const;
 	QString activeEditionName() const;
 	SerialKey serialKey() const;
-    void skipActivation();
+	void skipActivation();
 	static QString getEditionName(Edition edition, bool trial = false);
 
 private:
-    void notifyActivation(QString identity);
+	void notifyActivation(QString identity);
 
 private:
-    AppConfig* m_AppConfig;
-    SerialKey m_serialKey;
+	AppConfig* m_AppConfig;
+	SerialKey m_serialKey;
 
 signals:
-    void serialKeyChanged (SerialKey) const;
-    void editionChanged (Edition) const;
-    void beginTrial (bool expiring) const;
-    void endTrial (bool expired) const;
+	void serialKeyChanged (SerialKey) const;
+	void editionChanged (Edition) const;
+	void beginTrial (bool expiring) const;
+	void endTrial (bool expired) const;
 };

@@ -30,7 +30,7 @@
 #include "ZeroconfService.h"
 #include "DataDownloader.h"
 #include "CommandProcess.h"
-#include "SubscriptionManager.h"
+#include "LicenseManager.h"
 #include "EditionType.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
@@ -77,10 +77,10 @@ static const char* synergyIconFiles[] =
 };
 
 MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
-					   SubscriptionManager& subscriptionManager) :
+					   LicenseManager& licenseManager) :
 	m_Settings(settings),
 	m_AppConfig(&appConfig),
-	m_SubscriptionManager(&subscriptionManager),
+	m_LicenseManager(&licenseManager),
 	m_pSynergy(NULL),
 	m_SynergyState(synergyDisconnected),
 	m_ServerConfig(&m_Settings, 5, 3, m_AppConfig->screenName(), this),
@@ -142,19 +142,19 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
 	connect (this, SIGNAL(windowShown()),
 			 this, SLOT(on_windowShown()), Qt::QueuedConnection);
 
-	connect (m_SubscriptionManager, SIGNAL(editionChanged(Edition)),
+	connect (m_LicenseManager, SIGNAL(editionChanged(Edition)),
 			 this, SLOT(setEdition(Edition)), Qt::QueuedConnection);
 
-	connect (m_SubscriptionManager, SIGNAL(beginTrial(bool)),
+	connect (m_LicenseManager, SIGNAL(beginTrial(bool)),
 			 this, SLOT(beginTrial(bool)), Qt::QueuedConnection);
 
-	connect (m_SubscriptionManager, SIGNAL(endTrial(bool)),
+	connect (m_LicenseManager, SIGNAL(endTrial(bool)),
 			 this, SLOT(endTrial(bool)), Qt::QueuedConnection);
 
 	connect (m_AppConfig, SIGNAL(sslToggled(bool)),
 			 this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
 
-	m_SubscriptionManager->refresh();
+	m_LicenseManager->refresh();
 }
 
 MainWindow::~MainWindow()
@@ -447,7 +447,7 @@ void MainWindow::checkConnected(const QString& line)
 void MainWindow::checkLicense(const QString &line)
 {
 	if (line.contains("trial has expired")) {
-		m_SubscriptionManager->refresh();
+		m_LicenseManager->refresh();
 	}
 }
 
@@ -1049,7 +1049,7 @@ void MainWindow::serverDetected(const QString name)
 
 void MainWindow::setEdition(Edition edition)
 {
-	setWindowTitle(m_SubscriptionManager->getEditionName (edition));
+	setWindowTitle(m_LicenseManager->getEditionName (edition));
 	if (m_AppConfig->getCryptoEnabled()) {
 		m_pSslCertificate = new SslCertificate(this);
 		m_pSslCertificate->generateCertificate();
@@ -1069,11 +1069,11 @@ void MainWindow::beginTrial(bool isExpiring)
 								 " color:#0000ff;\">Buy now!</span></a>"
 								 "</p></body></html>";
 		expiringNotice = expiringNotice.arg
-				(m_SubscriptionManager->serialKey().daysLeft(::time(0)));
+				(m_LicenseManager->serialKey().daysLeft(::time(0)));
 		this->m_trialLabel->setText(expiringNotice);
 		this->m_trialWidget->show();
 	}
-	setWindowTitle (m_SubscriptionManager->activeEditionName());
+	setWindowTitle (m_LicenseManager->activeEditionName());
 }
 
 void MainWindow::endTrial(bool isExpired)
@@ -1081,7 +1081,7 @@ void MainWindow::endTrial(bool isExpired)
 	if (!isExpired) {
 		this->m_trialWidget->hide();
 	}
-	setWindowTitle (m_SubscriptionManager->activeEditionName());
+	setWindowTitle (m_LicenseManager->activeEditionName());
 }
 
 void MainWindow::updateLocalFingerprint()
@@ -1097,10 +1097,10 @@ void MainWindow::updateLocalFingerprint()
 	}
 }
 
-SubscriptionManager&
-MainWindow::subscriptionManager() const
+LicenseManager&
+MainWindow::licenseManager() const
 {
-	return *m_SubscriptionManager;
+	return *m_LicenseManager;
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
@@ -1204,7 +1204,7 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 
 void MainWindow::on_m_pActivate_triggered()
 {
-	ActivationDialog activationDialog(this, appConfig(), subscriptionManager());
+	ActivationDialog activationDialog(this, appConfig(), licenseManager());
 	activationDialog.exec();
 }
 
@@ -1423,7 +1423,7 @@ void MainWindow::bonjourInstallFinished()
 void MainWindow::on_windowShown()
 {
 	if (!m_AppConfig->activationHasRun() && (m_AppConfig->edition() == kUnregistered)) {
-		ActivationDialog activationDialog (this, appConfig(), subscriptionManager());
+		ActivationDialog activationDialog (this, appConfig(), licenseManager());
 		activationDialog.exec();
 	}
 }

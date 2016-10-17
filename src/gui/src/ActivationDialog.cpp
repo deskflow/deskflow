@@ -7,7 +7,7 @@
 #include "ActivationNotifier.h"
 #include "MainWindow.h"
 #include "QUtility.h"
-#include "SubscriptionManager.h"
+#include "LicenseManager.h"
 #include "FailedLoginDialog.h"
 
 #include <QMessageBox>
@@ -15,11 +15,11 @@
 #include <iostream>
 
 ActivationDialog::ActivationDialog(QWidget* parent, AppConfig& appConfig,
-								   SubscriptionManager& subscriptionManager) :
+								   LicenseManager& licenseManager) :
 	QDialog(parent),
 	ui(new Ui::ActivationDialog),
 	m_appConfig(&appConfig),
-	m_subscriptionManager (&subscriptionManager)
+	m_LicenseManager (&licenseManager)
 {
 	ui->setupUi(this);
 	refreshSerialKey();
@@ -39,10 +39,10 @@ ActivationDialog::~ActivationDialog()
 
 void ActivationDialog::reject()
 {
-	if (m_subscriptionManager->activeEdition() == kUnregistered) {
+	if (m_LicenseManager->activeEdition() == kUnregistered) {
 		CancelActivationDialog cancelActivationDialog(this);
 		if (QDialog::Accepted == cancelActivationDialog.exec()) {
-			m_subscriptionManager->skipActivation();
+			m_LicenseManager->skipActivation();
 			m_appConfig->activationHasRun(true);
 			m_appConfig->saveSettings();
 		}
@@ -59,7 +59,7 @@ void ActivationDialog::accept()
 	std::pair<bool, QString> result;
 	try {
 		QString serialKey = ui->m_pTextEditSerialKey->toPlainText();
-		result = m_subscriptionManager->setSerialKey(serialKey);
+		result = m_LicenseManager->setSerialKey(serialKey);
 	}
 	catch (std::exception& e) {
 		message.critical(this, "Unknown Error",
@@ -77,17 +77,17 @@ void ActivationDialog::accept()
 		return;
 	}
 
-	Edition edition = m_subscriptionManager->activeEdition();
+	Edition edition = m_LicenseManager->activeEdition();
 	if (edition != kUnregistered) {
-		if (m_subscriptionManager->serialKey().isTrial()) {
+		if (m_LicenseManager->serialKey().isTrial()) {
 			message.information(this, "Thanks!",
 					tr("Thanks for trying %1!").arg
-						(m_subscriptionManager->getEditionName(edition)));
+						(m_LicenseManager->getEditionName(edition)));
 		}
 		else {
 			message.information(this, "Activated!",
 					tr("Thanks for activating %1!").arg
-						(m_subscriptionManager->getEditionName(edition)));
+						(m_LicenseManager->getEditionName(edition)));
 		}
 	}
 

@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -20,7 +20,7 @@
 #define TRAY_RETRY_WAIT 2000
 
 #include "QSynergyApplication.h"
-#include "SubscriptionManager.h"
+#include "LicenseManager.h"
 #include "MainWindow.h"
 #include "AppConfig.h"
 #include "SetupWizard.h"
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 			"Please drag Synergy to the Applications folder, and open it from there.");
 		return 1;
 	}
-	
+
 	if (!checkMacAssistiveDevices())
 	{
 		return 1;
@@ -85,11 +85,11 @@ int main(int argc, char* argv[])
 	QSettings settings;
 	AppConfig appConfig (&settings);
 	qRegisterMetaType<Edition>("Edition");
-	SubscriptionManager subscriptionManager (&appConfig);
+	LicenseManager licenseManager (&appConfig);
 
 	app.switchTranslator(appConfig.language());
 
-	MainWindow mainWindow(settings, appConfig, subscriptionManager);
+	MainWindow mainWindow(settings, appConfig, licenseManager);
 	SetupWizard setupWizard(mainWindow, true);
 
 	if (appConfig.wizardShouldRun())
