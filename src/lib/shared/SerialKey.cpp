@@ -181,7 +181,7 @@ SerialKey::email() const
 }
 
 std::string
-SerialKey::decode(const std::string& serial) const
+SerialKey::decode(const std::string& serial)
 {
     static const char* const lut = "0123456789ABCDEF";
     string output;
@@ -214,6 +214,8 @@ SerialKey::parse(std::string plainSerial)
 {
     string parityStart = plainSerial.substr(0, 1);
     string parityEnd = plainSerial.substr(plainSerial.length() - 1, 1);
+
+    m_valid = false;
 
     // check for parity chars { and }, record parity result, then remove them.
     if (parityStart == "{" && parityEnd == "}") {

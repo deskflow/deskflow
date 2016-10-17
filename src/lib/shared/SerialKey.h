@@ -40,10 +40,11 @@ public:
     Edition				edition() const;
 	std::string			toString() const;
 
+    static std::string  decode(const std::string& serial);
+    static Edition      parseEdition(const std::string& editionStr);
+
 private:
-    std::string			decode(const std::string& serial) const;
     void				parse(std::string plainSerial);
-    Edition				parseEdition(const std::string& editionStr);
 	std::string			editionString() const;
 
 #ifdef TEST_ENV

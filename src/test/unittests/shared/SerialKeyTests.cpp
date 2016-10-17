@@ -23,42 +23,39 @@
 
 TEST(SerialKeyTests, decode_empty_returnEmptyString)
 {
-	SerialKey serial("");
-	std::string plainText = serial.decode("");
+	std::string plainText = SerialKey::decode("");
 	EXPECT_EQ(0, plainText.size());
 }
 
 TEST(SerialKeyTests, decode_invalidDigit_returnEmptyString)
 {
-	SerialKey serial("");
-	std::string plainText = serial.decode("MOCKZ");
+	std::string plainText = SerialKey::decode("MOCKZ");
 	EXPECT_EQ(0, plainText.size());
 }
 
 TEST(SerialKeyTests, decode_validSerial_returnPlainText)
 {
-	SerialKey serial("");
-	std::string plainText = serial.decode("53796E6572677920726F636B7321");
+	std::string plainText = SerialKey::decode("53796E6572677920726F636B7321");
 	EXPECT_EQ("Synergy rocks!", plainText);
 }
 
 TEST(SerialKeyTests, parse_noParty_invalid)
 {
-	SerialKey serial("");
+	SerialKey serial;
 	serial.parse("MOCK");
 	EXPECT_FALSE(serial.isValid(0));
 }
 
 TEST(SerialKeyTests, parse_invalidPartsLenghth_invalid)
 {
-	SerialKey serial("");
+	SerialKey serial;
 	serial.parse("{Synergy;Rocks}");
 	EXPECT_FALSE(serial.isValid(0));
 }
 
 TEST(SerialKeyTests, parse_validV1Serial_valid)
 {
-	SerialKey serial("");
+	SerialKey serial;
 	serial.parse("{v1;basic;Bob;1;email;company name;0;86400}");
 	EXPECT_EQ(true, serial.isValid(0));
 	EXPECT_EQ(kBasic, serial.edition());
@@ -69,7 +66,7 @@ TEST(SerialKeyTests, parse_validV1Serial_valid)
 
 TEST(SerialKeyTests, parse_validV2Serial_valid)
 {
-	SerialKey serial("");
+	SerialKey serial;
 	serial.parse("{v2;trial;pro;Bob;1;email;company name;0;86400}");
 	EXPECT_EQ(true, serial.isValid(0));
 	EXPECT_EQ(kPro, serial.edition());
