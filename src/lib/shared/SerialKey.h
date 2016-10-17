@@ -31,7 +31,6 @@ public:
 	explicit SerialKey(Edition edition = kUnregistered);
 	explicit SerialKey(std::string serial);
 
-	bool				isValid(time_t currentTime) const;
 	bool				isExpiring(time_t currentTime) const;
 	bool				isExpired(time_t currentTime) const;
 	bool				isTrial() const;
@@ -44,7 +43,7 @@ public:
 	static Edition      parseEdition(const std::string& editionStr);
 
 private:
-	void				parse(std::string plainSerial);
+	bool				parse(std::string plainSerial);
 	std::string			editionString() const;
 
 #ifdef TEST_ENV
@@ -67,7 +66,6 @@ private:
 	unsigned long long	m_expireTime;
 	Edition				m_edition;
 	bool				m_trial;
-	bool				m_valid;
 };
 
 
@@ -80,8 +78,7 @@ operator== (SerialKey const& lhs, SerialKey const& rhs) {
 			(lhs.m_warnTime == rhs.m_warnTime) &&
 			(lhs.m_expireTime == rhs.m_expireTime) &&
 			(lhs.m_edition == rhs.m_edition) &&
-			(lhs.m_trial == rhs.m_trial) &&
-			(lhs.m_valid == rhs.m_valid);
+			(lhs.m_trial == rhs.m_trial);
 }
 
 inline bool

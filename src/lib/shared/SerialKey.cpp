@@ -33,8 +33,7 @@ SerialKey::SerialKey(Edition edition):
 	m_warnTime(ULLONG_MAX),
 	m_expireTime(ULLONG_MAX),
 	m_edition(edition),
-	m_trial(false),
-	m_valid(true)
+	m_trial(false)
 {
 }
 
@@ -43,35 +42,16 @@ SerialKey::SerialKey(std::string serial) :
 	m_warnTime(0),
 	m_expireTime(0),
 	m_edition(kBasic),
-	m_trial(true),
-	m_valid(false)
+	m_trial(true)
 {
 	string plainText = decode(serial);
+	bool valid = false;
 	if (!plainText.empty()) {
-		parse(plainText);
+		valid = parse(plainText);
 	}
-	if (!m_valid) {
+	if (!valid) {
 		throw std::runtime_error ("Invalid serial key");
 	}
-}
-
-bool
-SerialKey::isValid(time_t currentTime) const
-{
-	bool result = false;
-
-	if (m_valid) {
-		if (m_trial) {
-			if (currentTime < m_expireTime) {
-				result = true;
-			}
-		}
-		else {
-			result = true;
-		}
-	}
-
-	return result;
 }
 
 bool
@@ -79,10 +59,8 @@ SerialKey::isExpiring(time_t currentTime) const
 {
 	bool result = false;
 
-	if (m_valid) {
-		if (m_warnTime <= currentTime && currentTime < m_expireTime) {
-			result = true;
-		}
+	if (m_warnTime <= currentTime && currentTime < m_expireTime) {
+		result = true;
 	}
 
 	return result;
@@ -93,11 +71,10 @@ SerialKey::isExpired(time_t currentTime) const
 {
 	bool result = false;
 
-	if (m_valid) {
-		if (m_expireTime <= currentTime) {
-			result = true;
-		}
+	if (m_expireTime <= currentTime) {
+		result = true;
 	}
+
 
 	return result;
 }
@@ -209,13 +186,13 @@ SerialKey::decode(const std::string& serial)
 	return output;
 }
 
-void
+bool
 SerialKey::parse(std::string plainSerial)
 {
 	string parityStart = plainSerial.substr(0, 1);
 	string parityEnd = plainSerial.substr(plainSerial.length() - 1, 1);
 
-	m_valid = false;
+	bool valid = false;
 
 	// check for parity chars { and }, record parity result, then remove them.
 	if (parityStart == "{" && parityEnd == "}") {
@@ -247,7 +224,7 @@ SerialKey::parse(std::string plainSerial)
 			m_company = parts.at(5);
 			sscanf(parts.at(6).c_str(), "%lld", &m_warnTime);
 			sscanf(parts.at(7).c_str(), "%lld", &m_expireTime);
-			m_valid = true;
+			valid = true;
 		}
 		else if ((parts.size() == 9)
 				 && (parts.at(0).find("v2") != string::npos)) {
@@ -260,9 +237,11 @@ SerialKey::parse(std::string plainSerial)
 			m_company = parts.at(6);
 			sscanf(parts.at(7).c_str(), "%lld", &m_warnTime);
 			sscanf(parts.at(8).c_str(), "%lld", &m_expireTime);
-			m_valid = true;
+			valid = true;
 		}
 	}
+
+	return valid;
 }
 
 Edition

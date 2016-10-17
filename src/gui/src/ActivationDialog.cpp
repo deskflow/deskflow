@@ -15,73 +15,81 @@
 #include <iostream>
 
 ActivationDialog::ActivationDialog(QWidget* parent, AppConfig& appConfig,
-                                   SubscriptionManager& subscriptionManager) :
-    QDialog(parent),
-    ui(new Ui::ActivationDialog),
-    m_appConfig(&appConfig),
-    m_subscriptionManager (&subscriptionManager)
+								   SubscriptionManager& subscriptionManager) :
+	QDialog(parent),
+	ui(new Ui::ActivationDialog),
+	m_appConfig(&appConfig),
+	m_subscriptionManager (&subscriptionManager)
 {
-    ui->setupUi(this);
-    refreshSerialKey();
+	ui->setupUi(this);
+	refreshSerialKey();
 }
 
 void ActivationDialog::refreshSerialKey()
 {
-    ui->m_pTextEditSerialKey->setText(m_appConfig->serialKey());
-    ui->m_pTextEditSerialKey->setFocus();
-    ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
+	ui->m_pTextEditSerialKey->setText(m_appConfig->serialKey());
+	ui->m_pTextEditSerialKey->setFocus();
+	ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
 }
 
 ActivationDialog::~ActivationDialog()
 {
-    delete ui;
+	delete ui;
 }
 
 void ActivationDialog::reject()
 {
-    if (m_subscriptionManager->activeEdition() == kUnregistered) {
-        CancelActivationDialog cancelActivationDialog(this);
-        if (QDialog::Accepted == cancelActivationDialog.exec()) {
-            m_subscriptionManager->skipActivation();
-            m_appConfig->activationHasRun(true);
-            m_appConfig->saveSettings();
-        }
-    }
-    QDialog::reject();
+	if (m_subscriptionManager->activeEdition() == kUnregistered) {
+		CancelActivationDialog cancelActivationDialog(this);
+		if (QDialog::Accepted == cancelActivationDialog.exec()) {
+			m_subscriptionManager->skipActivation();
+			m_appConfig->activationHasRun(true);
+			m_appConfig->saveSettings();
+		}
+	}
+	QDialog::reject();
 }
 
 void ActivationDialog::accept()
 {
-    QMessageBox message;
-    m_appConfig->activationHasRun(true);
-    m_appConfig->saveSettings();
+	QMessageBox message;
+	m_appConfig->activationHasRun(true);
+	m_appConfig->saveSettings();
 
 	std::pair<bool, QString> result;
-    try {
-        QString serialKey = ui->m_pTextEditSerialKey->toPlainText();
-        result = m_subscriptionManager->setSerialKey(serialKey);
-    }
-    catch (std::exception& e) {
-        message.critical(this, "Unknown Error",
-            tr("An error occurred while trying to activate Synergy. "
-                "Please contact the helpdesk, and provide the "
-                "following information:\n\n%1").arg(e.what()));
-        refreshSerialKey();
-        return;
-    }
+	try {
+		QString serialKey = ui->m_pTextEditSerialKey->toPlainText();
+		result = m_subscriptionManager->setSerialKey(serialKey);
+	}
+	catch (std::exception& e) {
+		message.critical(this, "Unknown Error",
+			tr("An error occurred while trying to activate Synergy. "
+				"Please contact the helpdesk, and provide the "
+				"following information:\n\n%1").arg(e.what()));
+		refreshSerialKey();
+		return;
+	}
 
 	if (!result.first) {
-		message.critical(this, "Activation failed", 
+		message.critical(this, "Activation failed",
 						 tr("%1").arg(result.second));
 		refreshSerialKey();
 		return;
 	}
 
-    if (m_subscriptionManager->activeEdition() != kUnregistered) {
-        message.information(this, "Activated!",
-                    tr("Thanks for activating %1!").arg
-                            (m_subscriptionManager->activeEditionName()));
-    }
+	Edition edition = m_subscriptionManager->activeEdition();
+	if (edition != kUnregistered) {
+		if (m_subscriptionManager->serialKey().isTrial()) {
+			message.information(this, "Thanks!",
+					tr("Thanks for trying %1!").arg
+						(m_subscriptionManager->getEditionName(edition)));
+		}
+		else {
+			message.information(this, "Activated!",
+					tr("Thanks for activating %1!").arg
+						(m_subscriptionManager->getEditionName(edition)));
+		}
+	}
 
-    QDialog::accept();
+	QDialog::accept();
 }
