@@ -554,10 +554,6 @@ void MainWindow::startSynergy()
 
 	args << "--name" << getScreenName();
 
-	if (!appConfig().serialKey().isEmpty()) {
-		args << "--serial-key" << appConfig().serialKey();
-	}
-
 	if (desktopMode)
 	{
 		setSynergyProcess(new QProcess(this));
@@ -786,6 +782,10 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 	configFilename = QString("\"%1\"").arg(configFilename);
 #endif
 	args << "-c" << configFilename << "--address" << address();
+
+	if (!appConfig().serialKey().isEmpty()) {
+		args << "--serial-key" << appConfig().serialKey();
+	}
 
 #if defined(Q_OS_WIN)
 	// pass in physical resolution and primary screen center
