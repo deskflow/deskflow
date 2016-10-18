@@ -448,7 +448,7 @@ void MainWindow::checkConnected(const QString& line)
 void MainWindow::checkLicense(const QString &line)
 {
 	if (line.contains("trial has expired")) {
-		m_LicenseManager->refresh();
+		m_LicenseManager->refresh(true);
 	}
 }
 
@@ -1096,6 +1096,8 @@ void MainWindow::endTrial(bool isExpired)
 
 		this->m_trialLabel->setText(expiredNotice);
 		this->m_trialWidget->show();
+		stopSynergy();
+		m_AppConfig->activationHasRun(false);
 	} else {
 		this->m_trialWidget->hide();
 	}
@@ -1440,7 +1442,10 @@ void MainWindow::bonjourInstallFinished()
 
 void MainWindow::on_windowShown()
 {
-	if (!m_AppConfig->activationHasRun() && (m_AppConfig->edition() == kUnregistered)) {
+	time_t currentTime = ::time(0);
+	if (!m_AppConfig->activationHasRun()
+			&& ((m_AppConfig->edition() == kUnregistered) ||
+				(m_LicenseManager->serialKey().isExpired(currentTime)))) {
 		ActivationDialog activationDialog (this, appConfig(), licenseManager());
 		activationDialog.exec();
 	}

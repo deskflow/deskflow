@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -153,7 +153,7 @@ void AppConfig::loadSettings()
 	QVariant elevateMode = settings().value("elevateModeEnum");
 	if (!elevateMode.isValid()) {
 		elevateMode = settings().value ("elevateMode",
-	                                    QVariant(static_cast<int>(defaultElevateMode)));
+										QVariant(static_cast<int>(defaultElevateMode)));
 	}
 	m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
 	m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
@@ -178,8 +178,8 @@ void AppConfig::saveSettings()
 	settings().setValue("language", m_Language);
 	settings().setValue("startedBefore", m_StartedBefore);
 	settings().setValue("autoConfig", m_AutoConfig);
-    // Refer to enum ElevateMode declaration for insight in to why this
-    // flag is mapped this way
+	// Refer to enum ElevateMode declaration for insight in to why this
+	// flag is mapped this way
 	settings().setValue("elevateMode", m_ElevateMode == ElevateAlways);
 	settings().setValue("elevateModeEnum", static_cast<int>(m_ElevateMode));
 	settings().setValue("autoConfigPrompted", m_AutoConfigPrompted);
@@ -274,7 +274,7 @@ void AppConfig::setCryptoEnabled(bool e) {
 	emit sslToggled(e);
 }
 
-bool AppConfig::getCryptoEnabled() const { 
+bool AppConfig::getCryptoEnabled() const {
 	return (edition() == kPro) && m_CryptoEnabled;
 }
 
