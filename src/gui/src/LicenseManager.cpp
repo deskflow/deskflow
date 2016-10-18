@@ -26,22 +26,16 @@
 LicenseManager::LicenseManager(AppConfig* appConfig) :
 	m_AppConfig(appConfig),
 	m_serialKey(appConfig->edition()) {
-	try {
-		setSerialKey(m_AppConfig->serialKey());
-	} catch (...) {
-		/* Remove garbage serial keys from the registry */
-		m_AppConfig->setSerialKey("");
-		m_AppConfig->saveSettings();
-	}
 }
 
 std::pair<bool, QString>
-LicenseManager::setSerialKey(QString serialKeyString)
+LicenseManager::setSerialKey(QString serialKeyString, bool acceptExpired)
 {
 	std::pair<bool, QString> ret (true, "");
-
+	time_t currentTime = ::time(0);
 	SerialKey serialKey (serialKeyString.toStdString());
-	if (serialKey.isExpired(::time(0))) {
+
+	if (!acceptExpired && serialKey.isExpired(currentTime)) {
 		ret.first = false;
 		ret.second = "Serial key expired";
 		return ret;
@@ -50,22 +44,25 @@ LicenseManager::setSerialKey(QString serialKeyString)
 	if (serialKey != m_serialKey) {
 		using std::swap;
 		swap (serialKey, m_serialKey);
-
 		m_AppConfig->setSerialKey (serialKeyString);
 		notifyActivation ("serial:" + serialKeyString);
 		emit serialKeyChanged (m_serialKey);
+
+		if (serialKey.isTrial()) {
+			emit endTrial(false);
+		}
 
 		if (m_serialKey.edition() != serialKey.edition()) {
 			m_AppConfig->setEdition (m_serialKey.edition());
 			emit editionChanged (m_serialKey.edition());
 		}
 
-		if (serialKey.isTrial()) {
-			emit endTrial(false);
-		}
-
 		if (m_serialKey.isTrial()) {
-			emit beginTrial(m_serialKey.isExpiring(::time(0)));
+			if (m_serialKey.isExpired(currentTime)) {
+				emit endTrial(true);
+			} else {
+				emit beginTrial(m_serialKey.isExpiring(currentTime));
+			}
 		}
 
 		m_AppConfig->saveSettings();
@@ -92,13 +89,9 @@ LicenseManager::serialKey() const
 	return m_serialKey;
 }
 
-void LicenseManager::refresh() const
+void LicenseManager::refresh(bool acceptExpired)
 {
-	emit serialKeyChanged (m_serialKey);
-	emit editionChanged (m_serialKey.edition());
-	if (m_serialKey.isTrial()) {
-		emit beginTrial(m_serialKey.isExpiring(::time(0)));
-	}
+	setSerialKey (m_AppConfig->serialKey(), acceptExpired);
 }
 
 void LicenseManager::skipActivation()
@@ -109,16 +102,16 @@ void LicenseManager::skipActivation()
 QString
 LicenseManager::getEditionName(Edition const edition, bool trial)
 {
-	std::string name ("Synergy ");
+	std::string name ("Synergy");
 	switch (edition) {
 		case kUnregistered:
-			name += "(UNREGISTERED)";
+			name += " (UNREGISTERED)";
 			return QString::fromUtf8 (name.c_str(), name.size());
 		case kBasic:
-			name += "Basic";
+			name += " Basic";
 			break;
 		default:
-			name += "Pro";
+			name += " Pro";
 	}
 	if (trial) {
 		name += " (Trial)";

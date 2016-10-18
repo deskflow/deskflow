@@ -81,8 +81,9 @@ void ActivationDialog::accept()
 	if (edition != kUnregistered) {
 		if (m_LicenseManager->serialKey().isTrial()) {
 			message.information(this, "Thanks!",
-					tr("Thanks for trying %1!").arg
-						(m_LicenseManager->getEditionName(edition)));
+			tr("Thanks for trying %1!\n\n%2 days of your trial remain").arg
+				(m_LicenseManager->getEditionName(edition)).arg
+				(m_LicenseManager->serialKey().daysLeft(::time(0))));
 		}
 		else {
 			message.information(this, "Activated!",

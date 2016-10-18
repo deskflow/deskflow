@@ -154,7 +154,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
 	connect (m_AppConfig, SIGNAL(sslToggled(bool)),
 			 this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
 
-	m_LicenseManager->refresh();
+	setWindowTitle (m_LicenseManager->activeEditionName());
+	m_LicenseManager->refresh(true);
 }
 
 MainWindow::~MainWindow()
@@ -1064,15 +1065,14 @@ void MainWindow::beginTrial(bool isExpiring)
 		QString expiringNotice ("<html><head/><body><p><span style=\""
 					 "font-weight:600;\">%1</span> days of "
 					 "your %2 trial remain. <a href="
-					 "\"http://symless.com/synergy/trial/thanks?id=%3\">"
+					 "\"http://symless.com/pricing\">"
 					 "<span style=\"text-decoration: underline;"
 					 " color:#0000ff;\">Buy now!</span></a>"
 					 "</p></body></html>");
-		expiringNotice = expiringNotice.arg
-			(m_LicenseManager->serialKey().daysLeft(::time(0))).arg
-			(LicenseManager::getEditionName(m_LicenseManager->activeEdition())).arg
-			(QString::fromStdString(m_LicenseManager->serialKey().toString()));
-
+		expiringNotice = expiringNotice
+			.arg (m_LicenseManager->serialKey().daysLeft(::time(0)))
+			.arg (LicenseManager::getEditionName
+					(m_LicenseManager->activeEdition()));
 		this->m_trialLabel->setText(expiringNotice);
 		this->m_trialWidget->show();
 	}
@@ -1081,7 +1081,22 @@ void MainWindow::beginTrial(bool isExpiring)
 
 void MainWindow::endTrial(bool isExpired)
 {
-	if (!isExpired) {
+	if (isExpired) {
+		QString expiredNotice (
+			"<html><head/><body><p>Your %1 trial has expired. <a href="
+			"\"http://symless.com/synergy/trial/thanks?id=%2\">"
+			"<span style=\"text-decoration: underline;color:#0000ff;\">"
+			"Buy now!</span></a></p></body></html>"
+		);
+		expiredNotice = expiredNotice
+			.arg(LicenseManager::getEditionName
+					(m_LicenseManager->activeEdition()))
+			.arg(QString::fromStdString
+					(m_LicenseManager->serialKey().toString()));
+
+		this->m_trialLabel->setText(expiredNotice);
+		this->m_trialWidget->show();
+	} else {
 		this->m_trialWidget->hide();
 	}
 	setWindowTitle (m_LicenseManager->activeEditionName());
