@@ -126,15 +126,20 @@ std::string
 SerialKey::toString() const
 {
 	std::ostringstream oss;
-	oss << "v2;";
-	oss << (isTrial() ? "trial" : "lifetime") << ";";
+	oss << "{";
+	if (isTrial()) {
+		oss << "v2;trial;";
+	} else {
+		oss << "v1;";
+	}
 	oss << editionString() << ";";
 	oss << m_name << ";";
 	oss << m_userLimit << ";";
 	oss << m_email << ";";
 	oss << m_company << ";";
-	oss << m_warnTime << ";";
-	oss << m_expireTime;
+	oss << (isTrial() ? m_warnTime : 0) << ";";
+	oss << (isTrial() ? m_expireTime : 0);
+	oss << "}";
 	return hexEncode(oss.str());
 }
 
