@@ -221,6 +221,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		qRuningState m_ExpectedRunningState;
 		QMutex m_StopDesktopMutex;
 		SslCertificate* m_pSslCertificate;
+		bool m_ActivationDialogRunning;
+		QStringList m_PendingClientNames;
 
 private slots:
 	void on_m_pCheckBoxAutoConfig_toggled(bool checked);
@@ -228,6 +230,7 @@ private slots:
 	void on_m_pButtonApply_clicked();
 	void installBonjour();
 	void on_windowShown();
+	void on_activationDialogFinish();
 
 signals:
 	void windowShown();
