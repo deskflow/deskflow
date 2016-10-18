@@ -1,8 +1,7 @@
 ### Operating Systems ###
 
-Client: Applesoft Windy OS 10
-
 Server: microOS Tiara
+Client: Applesoft Windy OS 10
 
 **READ ME, DELETE ME**: On Windows, hold the Windows key and press 'r', type 'winver' and hit return to get your OS version. On Mac, hit the Apple menu (top left of the screen) and check 'About this Mac'. Linux users... you know what you're using ;)
 
