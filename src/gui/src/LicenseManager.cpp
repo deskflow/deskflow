@@ -31,7 +31,6 @@ LicenseManager::LicenseManager(AppConfig* appConfig) :
 	} catch (...) {
 		/* Remove garbage serial keys from the registry */
 		m_AppConfig->setSerialKey("");
-		m_AppConfig->setEdition(kUnregistered);
 		m_AppConfig->saveSettings();
 	}
 }
