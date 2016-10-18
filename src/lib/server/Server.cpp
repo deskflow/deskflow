@@ -1378,10 +1378,7 @@ Server::handleClientDisconnected(const Event&, void* vclient)
 	removeActiveClient(client);
 	removeOldClient(client);
 
-	PacketStreamFilter* streamFileter = dynamic_cast<PacketStreamFilter*>(client->getStream());
-	TCPSocket* socket = dynamic_cast<TCPSocket*>(streamFileter->getStream());
 	delete client;
-	m_clientListener->deleteSocket(socket);
 }
 
 void
@@ -1391,10 +1388,8 @@ Server::handleClientCloseTimeout(const Event&, void* vclient)
 	BaseClientProxy* client = static_cast<BaseClientProxy*>(vclient);
 	LOG((CLOG_NOTE "forced disconnection of client \"%s\"", getName(client).c_str()));
 	removeOldClient(client);
-	PacketStreamFilter* streamFileter = dynamic_cast<PacketStreamFilter*>(client->getStream());
-	TCPSocket* socket = dynamic_cast<TCPSocket*>(streamFileter->getStream());
+
 	delete client;
-	m_clientListener->deleteSocket(socket);
 }
 
 void

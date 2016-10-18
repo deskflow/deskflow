@@ -43,7 +43,6 @@ public:
 	// IListenSocket overrides
 	virtual IDataSocket*
 						accept();
-	virtual void		deleteSocket(void*) { }
 
 protected:
 	void				setListeningJob();
