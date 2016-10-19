@@ -49,6 +49,8 @@ void ActivationDialog::reject()
 			m_LicenseManager->skipActivation();
 			m_appConfig->activationHasRun(true);
 			m_appConfig->saveSettings();
+		} else {
+			return;
 		}
 	}
 	QDialog::reject();
