@@ -420,8 +420,10 @@ void MainWindow::appendLogRaw(const QString& text)
 
 void MainWindow::updateFromLogLine(const QString &line)
 {
+	// TODO: this code makes Andrew cry
 	checkConnected(line);
 	checkFingerprint(line);
+	checkLicense(line);
 }
 
 void MainWindow::checkConnected(const QString& line)
@@ -449,7 +451,7 @@ void MainWindow::checkConnected(const QString& line)
 void MainWindow::checkLicense(const QString &line)
 {
 	if (line.contains("trial has expired")) {
-		m_LicenseManager->refresh(true);
+		raiseActivationDialog();
 	}
 }
 
@@ -541,6 +543,14 @@ void MainWindow::clearLog()
 
 void MainWindow::startSynergy()
 {
+	SerialKey serialKey = m_LicenseManager->serialKey();
+	time_t currentTime = ::time(0);
+	if (serialKey.isExpired(currentTime)) {
+		if (QDialog::Rejected == raiseActivationDialog()) {
+			return;
+		}
+	}
+
 	bool desktopMode = appConfig().processMode() == Desktop;
 	bool serviceMode = appConfig().processMode() == Service;
 
@@ -1233,11 +1243,7 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 
 void MainWindow::on_m_pActivate_triggered()
 {
-	ActivationDialog activationDialog(this, appConfig(), licenseManager());
-	m_ActivationDialogRunning = true;
-	connect (&activationDialog, SIGNAL(finished(int)),
-			 this, SLOT(on_activationDialogFinish()), Qt::QueuedConnection);
-	activationDialog.exec();
+	raiseActivationDialog();
 }
 
 void MainWindow::on_m_pButtonApply_clicked()
@@ -1452,22 +1458,16 @@ void MainWindow::bonjourInstallFinished()
 	m_pCheckBoxAutoConfig->setChecked(true);
 }
 
-void MainWindow::on_windowShown()
+int MainWindow::raiseActivationDialog()
 {
-	time_t currentTime = ::time(0);
-	if (!m_AppConfig->activationHasRun()
-			&& ((m_AppConfig->edition() == kUnregistered) ||
-				(m_LicenseManager->serialKey().isExpired(currentTime)))) {
-		ActivationDialog activationDialog (this, appConfig(), licenseManager());
-		m_ActivationDialogRunning = true;
-		connect (&activationDialog, SIGNAL(finished(int)),
-				 this, SLOT(on_activationDialogFinish()), Qt::QueuedConnection);
-		activationDialog.exec();
+	if (m_ActivationDialogRunning) {
+		return QDialog::Rejected;
 	}
-}
-
-void MainWindow::on_activationDialogFinish()
-{
+	ActivationDialog activationDialog (this, appConfig(), licenseManager());
+	m_ActivationDialogRunning = true;
+	connect (&activationDialog, SIGNAL(finished(int)),
+			 this, SLOT(on_activationDialogFinish()), Qt::QueuedConnection);
+	int result = activationDialog.exec();
 	m_ActivationDialogRunning = false;
 	if (!m_PendingClientNames.empty()) {
 		foreach (const QString& name, m_PendingClientNames) {
@@ -1475,6 +1475,20 @@ void MainWindow::on_activationDialogFinish()
 		}
 
 		m_PendingClientNames.clear();
+	}
+	if (result == QDialog::Accepted) {
+		restartSynergy();
+	}
+	return result;
+}
+
+void MainWindow::on_windowShown()
+{
+	time_t currentTime = ::time(0);
+	if (!m_AppConfig->activationHasRun()
+			&& ((m_AppConfig->edition() == kUnregistered) ||
+				(m_LicenseManager->serialKey().isExpired(currentTime)))) {
+		raiseActivationDialog();
 	}
 }
 

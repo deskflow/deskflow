@@ -120,7 +120,9 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void updateLocalFingerprint();
 		LicenseManager& licenseManager() const;
 
-	public slots:
+		int raiseActivationDialog();
+
+public slots:
 		void setEdition(Edition edition);
 		void beginTrial(bool isExpiring);
 		void endTrial(bool isExpired);
@@ -230,7 +232,6 @@ private slots:
 	void on_m_pButtonApply_clicked();
 	void installBonjour();
 	void on_windowShown();
-	void on_activationDialogFinish();
 
 signals:
 	void windowShown();

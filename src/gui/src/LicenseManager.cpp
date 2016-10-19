@@ -44,17 +44,17 @@ LicenseManager::setSerialKey(QString serialKeyString, bool acceptExpired)
 	if (serialKey != m_serialKey) {
 		using std::swap;
 		swap (serialKey, m_serialKey);
-		m_AppConfig->setSerialKey (serialKeyString);
-		notifyActivation ("serial:" + serialKeyString);
-		emit serialKeyChanged (m_serialKey);
+		m_AppConfig->setSerialKey(serialKeyString);
+		notifyActivation("serial:" + serialKeyString);
+		emit serialKeyChanged(m_serialKey);
 
 		if (serialKey.isTrial()) {
 			emit endTrial(false);
 		}
 
 		if (m_serialKey.edition() != serialKey.edition()) {
-			m_AppConfig->setEdition (m_serialKey.edition());
-			emit editionChanged (m_serialKey.edition());
+			m_AppConfig->setEdition(m_serialKey.edition());
+			emit editionChanged(m_serialKey.edition());
 		}
 
 		if (m_serialKey.isTrial()) {
@@ -91,7 +91,9 @@ LicenseManager::serialKey() const
 
 void LicenseManager::refresh(bool acceptExpired)
 {
-	setSerialKey (m_AppConfig->serialKey(), acceptExpired);
+	if (!m_AppConfig->serialKey().isEmpty()) {
+		setSerialKey(m_AppConfig->serialKey(), acceptExpired);
+	}
 }
 
 void LicenseManager::skipActivation()

@@ -23,6 +23,10 @@ ActivationDialog::ActivationDialog(QWidget* parent, AppConfig& appConfig,
 {
 	ui->setupUi(this);
 	refreshSerialKey();
+	time_t currentTime = ::time(0);
+	if (!m_LicenseManager->serialKey().isExpired(currentTime)) {
+		ui->m_trialWidget->hide();
+	}
 }
 
 void ActivationDialog::refreshSerialKey()
