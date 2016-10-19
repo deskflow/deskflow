@@ -85,11 +85,20 @@ void ActivationDialog::accept()
 
 	Edition edition = m_LicenseManager->activeEdition();
 	if (edition != kUnregistered) {
+		QString thanksMessage = tr("Thanks for trying %1! %3\n\n%2 days of "
+								   "your trial remain").
+				arg (m_LicenseManager->getEditionName(edition)).
+				arg	(m_LicenseManager->serialKey().daysLeft(::time(0)));
+
+		if (edition == kPro) {
+			thanksMessage = thanksMessage.arg("If you're using SSL, "
+							"remember to activate all of your devices.");
+		} else {
+			thanksMessage = thanksMessage.arg("");
+		}
+
 		if (m_LicenseManager->serialKey().isTrial()) {
-			message.information(this, "Thanks!",
-			tr("Thanks for trying %1!\n\n%2 days of your trial remain").arg
-				(m_LicenseManager->getEditionName(edition)).arg
-				(m_LicenseManager->serialKey().daysLeft(::time(0))));
+			message.information(this, "Thanks!", thanksMessage);
 		}
 		else {
 			message.information(this, "Activated!",
