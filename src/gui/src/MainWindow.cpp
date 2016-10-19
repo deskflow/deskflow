@@ -101,7 +101,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
 	m_BonjourInstall(NULL),
 	m_SuppressEmptyServerWarning(false),
 	m_ExpectedRunningState(kStopped),
-	m_pSslCertificate(NULL)
+	m_pSslCertificate(NULL),
+	m_ActivationDialogRunning(false)
 {
 	setupUi(this);
 
@@ -555,10 +556,6 @@ void MainWindow::startSynergy()
 
 	args << "--name" << getScreenName();
 
-	if (!appConfig().serialKey().isEmpty()) {
-		args << "--serial-key" << appConfig().serialKey();
-	}
-
 	if (desktopMode)
 	{
 		setSynergyProcess(new QProcess(this));
@@ -787,6 +784,10 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 	configFilename = QString("\"%1\"").arg(configFilename);
 #endif
 	args << "-c" << configFilename << "--address" << address();
+
+	if (!appConfig().serialKey().isEmpty()) {
+		args << "--serial-key" << appConfig().serialKey();
+	}
 
 #if defined(Q_OS_WIN)
 	// pass in physical resolution and primary screen center
@@ -1187,6 +1188,14 @@ void MainWindow::on_m_pActionSettings_triggered()
 void MainWindow::autoAddScreen(const QString name)
 {
 	if (!m_ServerConfig.ignoreAutoConfigClient()) {
+		if (m_ActivationDialogRunning) {
+			// TODO: refactor this code
+			// add this screen to the pending list and check this list until
+			// users finish activation dialog
+			m_PendingClientNames.append(name);
+			return;
+		}
+
 		int r = m_ServerConfig.autoAddScreen(name);
 		if (r != kAutoAddScreenOk) {
 			switch (r) {
@@ -1225,6 +1234,9 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 void MainWindow::on_m_pActivate_triggered()
 {
 	ActivationDialog activationDialog(this, appConfig(), licenseManager());
+	m_ActivationDialogRunning = true;
+	connect (&activationDialog, SIGNAL(finished(int)),
+			 this, SLOT(on_activationDialogFinish()), Qt::QueuedConnection);
 	activationDialog.exec();
 }
 
@@ -1447,7 +1459,22 @@ void MainWindow::on_windowShown()
 			&& ((m_AppConfig->edition() == kUnregistered) ||
 				(m_LicenseManager->serialKey().isExpired(currentTime)))) {
 		ActivationDialog activationDialog (this, appConfig(), licenseManager());
+		m_ActivationDialogRunning = true;
+		connect (&activationDialog, SIGNAL(finished(int)),
+				 this, SLOT(on_activationDialogFinish()), Qt::QueuedConnection);
 		activationDialog.exec();
+	}
+}
+
+void MainWindow::on_activationDialogFinish()
+{
+	m_ActivationDialogRunning = false;
+	if (!m_PendingClientNames.empty()) {
+		foreach (const QString& name, m_PendingClientNames) {
+			autoAddScreen(name);
+		}
+
+		m_PendingClientNames.clear();
 	}
 }
 
