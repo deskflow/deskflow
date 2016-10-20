@@ -1072,21 +1072,26 @@ void MainWindow::setEdition(Edition edition)
 
 void MainWindow::beginTrial(bool isExpiring)
 {
-	if (isExpiring) {
+	//Hack
+	//if (isExpiring) {
+	time_t daysLeft = m_LicenseManager->serialKey().daysLeft(::time(0));
 		QString expiringNotice ("<html><head/><body><p><span style=\""
-					 "font-weight:600;\">%1</span> days of "
+					 "font-weight:600;\">%1</span> day%3 of "
 					 "your %2 trial remain. <a href="
-					 "\"http://symless.com/pricing\">"
+					 "\"https://symless.com/synergy/trial/thanks?id=%4\">"
 					 "<span style=\"text-decoration: underline;"
 					 " color:#0000ff;\">Buy now!</span></a>"
 					 "</p></body></html>");
 		expiringNotice = expiringNotice
-			.arg (m_LicenseManager->serialKey().daysLeft(::time(0)))
+			.arg (daysLeft)
 			.arg (LicenseManager::getEditionName
-					(m_LicenseManager->activeEdition()));
+					(m_LicenseManager->activeEdition()))
+			.arg ((daysLeft == 1) ? "" : "s")
+			.arg(QString::fromStdString
+					(m_LicenseManager->serialKey().toString()));
 		this->m_trialLabel->setText(expiringNotice);
 		this->m_trialWidget->show();
-	}
+	//}
 	setWindowTitle (m_LicenseManager->activeEditionName());
 }
 
