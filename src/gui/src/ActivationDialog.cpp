@@ -91,11 +91,14 @@ void ActivationDialog::accept()
 	}
 
 	Edition edition = m_LicenseManager->activeEdition();
+	time_t daysLeft = m_LicenseManager->serialKey().daysLeft(::time(0));
 	if (edition != kUnregistered) {
-		QString thanksMessage = tr("Thanks for trying %1! %3\n\n%2 days of "
-								   "your trial remain").
+		QString thanksMessage = tr("Thanks for trying %1! %5\n\n%2 day%3 of "
+								   "your trial remain%4").
 				arg (m_LicenseManager->getEditionName(edition)).
-				arg	(m_LicenseManager->serialKey().daysLeft(::time(0)));
+				arg	(daysLeft).
+				arg ((daysLeft == 1) ? "" : "s").
+				arg ((daysLeft == 1) ? "s" : "");
 
 		if (edition == kPro) {
 			thanksMessage = thanksMessage.arg("If you're using SSL, "
