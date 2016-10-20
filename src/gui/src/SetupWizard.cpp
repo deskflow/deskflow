@@ -19,7 +19,7 @@
 #include "MainWindow.h"
 #include "WebClient.h"
 #include "ActivationNotifier.h"
-#include "SubscriptionManager.h"
+#include "LicenseManager.h"
 #include "EditionType.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"

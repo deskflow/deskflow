@@ -26,13 +26,8 @@ public:
 public:
 	bool				m_printActiveDesktopName;
 	bool				m_loginAuthenticate;
-	bool				m_getPluginList;
-	bool				m_getPluginDir;
 	bool				m_getInstalledDir;
 	bool				m_getProfileDir;
 	bool				m_getArch;
-	bool				m_getSubscriptionFilename;
-	bool				m_checkSubscription;
 	bool				m_notifyActivation;
-	String				m_subscriptionSerial;
 };

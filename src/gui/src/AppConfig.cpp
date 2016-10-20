@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -153,11 +153,11 @@ void AppConfig::loadSettings()
 	QVariant elevateMode = settings().value("elevateModeEnum");
 	if (!elevateMode.isValid()) {
 		elevateMode = settings().value ("elevateMode",
-	                                    QVariant(static_cast<int>(defaultElevateMode)));
+										QVariant(static_cast<int>(defaultElevateMode)));
 	}
 	m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
 	m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
-	m_Edition = settings().value("edition", Unregistered).toInt();
+	m_Edition = static_cast<Edition>(settings().value("edition", kUnregistered).toInt());
 	m_ActivateEmail = settings().value("activateEmail", "").toString();
 	m_CryptoEnabled = settings().value("cryptoEnabled", true).toBool();
 	m_AutoHide = settings().value("autoHide", false).toBool();
@@ -178,13 +178,12 @@ void AppConfig::saveSettings()
 	settings().setValue("language", m_Language);
 	settings().setValue("startedBefore", m_StartedBefore);
 	settings().setValue("autoConfig", m_AutoConfig);
-    // Refer to enum ElevateMode declaration for insight in to why this
-    // flag is mapped this way
+	// Refer to enum ElevateMode declaration for insight in to why this
+	// flag is mapped this way
 	settings().setValue("elevateMode", m_ElevateMode == ElevateAlways);
 	settings().setValue("elevateModeEnum", static_cast<int>(m_ElevateMode));
 	settings().setValue("autoConfigPrompted", m_AutoConfigPrompted);
 	settings().setValue("edition", m_Edition);
-	settings().setValue("activateEmail", m_ActivateEmail);
 	settings().setValue("cryptoEnabled", m_CryptoEnabled);
 	settings().setValue("autoHide", m_AutoHide);
 	settings().setValue("serialKey", m_Serialkey);
@@ -238,27 +237,16 @@ void AppConfig::setAutoConfigPrompted(bool prompted)
 	m_AutoConfigPrompted = prompted;
 }
 
-void AppConfig::setEdition(int e) {
+void AppConfig::setEdition(Edition e) {
 	m_Edition = e;
-	emit editionSet (e);
 }
 
-int AppConfig::edition() const { return m_Edition; }
+Edition AppConfig::edition() const { return m_Edition; }
 
-bool AppConfig::setActivateEmail(QString e) {
-	m_ActivateEmail = e;
-	return true; 
-}
-
-QString AppConfig::activateEmail() { return m_ActivateEmail; }
-
-bool AppConfig::setSerialKey(QString serial, QString& errorOut) {
-	if (serial.isEmpty()) {
-		errorOut = "Your serial key cannot be blank.";
-		return false;
-	}
-	m_Serialkey = serial; 
-	return true;
+QString AppConfig::setSerialKey(QString serial) {
+	using std::swap;
+	swap (serial, m_Serialkey);
+	return serial;
 }
 
 void AppConfig::clearSerialKey()
@@ -286,8 +274,8 @@ void AppConfig::setCryptoEnabled(bool e) {
 	emit sslToggled(e);
 }
 
-bool AppConfig::getCryptoEnabled() const { 
-	return (edition() == Pro) && m_CryptoEnabled;
+bool AppConfig::getCryptoEnabled() const {
+	return (edition() == kPro) && m_CryptoEnabled;
 }
 
 void AppConfig::setAutoHide(bool b) { m_AutoHide = b; }

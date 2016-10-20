@@ -24,13 +24,10 @@ class CoreInterface
 public:
 	CoreInterface();
 
-	QString getPluginDir();
 	QString getProfileDir();
 	QString getInstalledDir();
 	QString getArch();
-	QString getSubscriptionFilename();
-	QString activateSerial(const QString& serial);
-	QString checkSubscription();
+	QString getSerialKeyFilePath();
 	QString notifyActivation(const QString& identity);
 	QString run(const QStringList& args, const QString& input = "");
 };

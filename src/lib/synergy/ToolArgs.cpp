@@ -20,14 +20,9 @@
 ToolArgs::ToolArgs() :
 	m_printActiveDesktopName(false),
 	m_loginAuthenticate(false),
-	m_getPluginList(false),
-	m_getPluginDir(false),
 	m_getInstalledDir(false),
 	m_getProfileDir(false),
 	m_getArch(false),
-	m_getSubscriptionFilename(false),
-	m_checkSubscription(false),
-	m_notifyActivation(false),
-	m_subscriptionSerial()
+	m_notifyActivation(false)
 {
 }

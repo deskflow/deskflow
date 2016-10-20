@@ -64,7 +64,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 #endif
 
 	m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
-	m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.edition() == Pro);
+	m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.edition() == kPro);
 }
 
 void SettingsDialog::accept()

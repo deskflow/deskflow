@@ -7,39 +7,40 @@
 #include "ActivationNotifier.h"
 #include "MainWindow.h"
 #include "QUtility.h"
-#include "SubscriptionManager.h"
+#include "LicenseManager.h"
 #include "FailedLoginDialog.h"
 
 #include <QMessageBox>
 #include <QThread>
 #include <iostream>
 
-ActivationDialog::ActivationDialog(QWidget* parent, AppConfig& appConfig) :
+ActivationDialog::ActivationDialog(QWidget* parent, AppConfig& appConfig,
+								   LicenseManager& licenseManager) :
 	QDialog(parent),
 	ui(new Ui::ActivationDialog),
-	m_appConfig (&appConfig)
+	m_appConfig(&appConfig),
+	m_LicenseManager (&licenseManager)
 {
 	ui->setupUi(this);
-
-	ui->m_pLineEditEmail->setText(appConfig.activateEmail());
-	ui->m_pTextEditSerialKey->setText(appConfig.serialKey());
-
-	if (!appConfig.serialKey().isEmpty()) {
-		ui->m_pRadioButtonActivate->setAutoExclusive(false);
-		ui->m_pRadioButtonSubscription->setAutoExclusive(false);
-		ui->m_pRadioButtonActivate->setChecked(false);
-		ui->m_pRadioButtonSubscription->setChecked(true);
-		ui->m_pRadioButtonActivate->setAutoExclusive(true);
-		ui->m_pRadioButtonSubscription->setAutoExclusive(true);
-		ui->m_pTextEditSerialKey->setFocus();
-		ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
-	} else {
-		if (ui->m_pLineEditEmail->text().isEmpty()) {
-			ui->m_pLineEditEmail->setFocus();
-		} else {
-			ui->m_pLineEditPassword->setFocus();
-		}
+	refreshSerialKey();
+	time_t currentTime = ::time(0);
+	if (!m_LicenseManager->serialKey().isExpired(currentTime)) {
+		ui->m_trialWidget->hide();
 	}
+}
+
+void ActivationDialog::refreshSerialKey()
+{
+	ui->m_pTextEditSerialKey->setText(m_appConfig->serialKey());
+	ui->m_pTextEditSerialKey->setFocus();
+	ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
+	ui->m_trialLabel->setText(tr("<html><head/><body><p>Your trial has "
+								 "expired. <a href=\"https://symless.com/"
+								 "synergy/trial/thanks?id=%1\"><span "
+								 "style=\"text-decoration: underline; "
+								 "color:#0000ff;\">Buy now!</span></a>"
+								 "</p></body></html>")
+							  .arg (m_appConfig->serialKey()));
 }
 
 ActivationDialog::~ActivationDialog()
@@ -47,119 +48,71 @@ ActivationDialog::~ActivationDialog()
 	delete ui;
 }
 
-void ActivationDialog::notifyActivation(QString identity)
-{
-	ActivationNotifier* notifier = new ActivationNotifier();
-	notifier->setIdentity(identity);
-	
-	QThread* thread = new QThread();
-	connect(notifier, SIGNAL(finished()), thread, SLOT(quit()));
-	connect(notifier, SIGNAL(finished()), notifier, SLOT(deleteLater()));
-	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
-	notifier->moveToThread(thread);
-	thread->start();
-
-	QMetaObject::invokeMethod(notifier, "notify", Qt::QueuedConnection);
-}
-
 void ActivationDialog::reject()
 {
-	CancelActivationDialog cancelActivationDialog(this);
-	if (QDialog::Accepted == cancelActivationDialog.exec()) {
-		notifyActivation("skip:unknown");
-		m_appConfig->activationHasRun(true);
-		m_appConfig->saveSettings();
-		QDialog::reject();
-	}
-}
-
-void ActivationDialog::on_m_pRadioButtonSubscription_toggled(bool checked)
-{
-	if (checked) {
-		ui->m_pLineEditEmail->setEnabled(false);
-		ui->m_pLineEditPassword->setEnabled(false);
-		ui->m_pTextEditSerialKey->setEnabled(true);
-		ui->m_pTextEditSerialKey->setFocus();
-	}
-}
-
-void ActivationDialog::on_m_pRadioButtonActivate_toggled(bool checked)
-{
-	if (checked) {
-		ui->m_pLineEditEmail->setEnabled(true);
-		ui->m_pLineEditPassword->setEnabled(true);
-		ui->m_pTextEditSerialKey->setEnabled(false);
-		if (ui->m_pLineEditEmail->text().isEmpty()) {
-			ui->m_pLineEditEmail->setFocus();
+	if (m_LicenseManager->activeEdition() == kUnregistered) {
+		CancelActivationDialog cancelActivationDialog(this);
+		if (QDialog::Accepted == cancelActivationDialog.exec()) {
+			m_LicenseManager->skipActivation();
+			m_appConfig->activationHasRun(true);
+			m_appConfig->saveSettings();
 		} else {
-			ui->m_pLineEditPassword->setFocus();
+			return;
 		}
 	}
+	QDialog::reject();
 }
 
 void ActivationDialog::accept()
 {
 	QMessageBox message;
-	QString error;
-	int edition = Unregistered;
-
 	m_appConfig->activationHasRun(true);
 	m_appConfig->saveSettings();
 
+	std::pair<bool, QString> result;
 	try {
-		if (ui->m_pRadioButtonActivate->isChecked()) {
-			WebClient webClient;
-			QString email = ui->m_pLineEditEmail->text();
-			QString password = ui->m_pLineEditPassword->text();
-
-			if (!webClient.setEmail (email, error)) {
-				message.critical (this, "Invalid Email Address", tr("%1").arg(error));
-				return;
-			}
-			else if (!webClient.setPassword (password, error)) {
-				message.critical (this, "Invalid Password", tr("%1").arg(error));
-				return;
-			}
-			else if (!webClient.getEdition (edition, error)) {
-				FailedLoginDialog failedLoginDialog (this, error);
-				failedLoginDialog.exec();
-				return;
-			}
-
-			m_appConfig->setActivateEmail (email);
-			m_appConfig->clearSerialKey();
-			ui->m_pTextEditSerialKey->clear();
-			notifyActivation ("login:" + m_appConfig->activateEmail());
-		}
-		else {
-			QString serialKey = ui->m_pTextEditSerialKey->toPlainText();
-
-			if (!m_appConfig->setSerialKey (serialKey, error)) {
-				message.critical (this, "Invalid Serial Key", tr("%1").arg(error));
-				return;
-			}
-
-			SubscriptionManager subscriptionManager (this, *m_appConfig, edition);
-			if (!subscriptionManager.activateSerial (serialKey)) {
-				return;
-			}
-			m_appConfig->setActivateEmail("");
-			notifyActivation ("serial:" + m_appConfig->serialKey());
-		}
+		QString serialKey = ui->m_pTextEditSerialKey->toPlainText().trimmed();
+		result = m_LicenseManager->setSerialKey(serialKey);
 	}
 	catch (std::exception& e) {
-		message.critical (this, "Unknown Error",
+		message.critical(this, "Unknown Error",
 			tr("An error occurred while trying to activate Synergy. "
 				"Please contact the helpdesk, and provide the "
-				"following details.\n\n%1").arg(e.what()));
+				"following information:\n\n%1").arg(e.what()));
+		refreshSerialKey();
 		return;
 	}
 
-	m_appConfig->setEdition(edition);
-	m_appConfig->saveSettings();
+	if (!result.first) {
+		message.critical(this, "Activation failed",
+						 tr("%1").arg(result.second));
+		refreshSerialKey();
+		return;
+	}
 
-	message.information  (this, "Activated!", 
-						  tr("Thanks for activating %1!").arg (getEditionName (edition)));
+	Edition edition = m_LicenseManager->activeEdition();
+	if (edition != kUnregistered) {
+		QString thanksMessage = tr("Thanks for trying %1! %3\n\n%2 days of "
+								   "your trial remain").
+				arg (m_LicenseManager->getEditionName(edition)).
+				arg	(m_LicenseManager->serialKey().daysLeft(::time(0)));
+
+		if (edition == kPro) {
+			thanksMessage = thanksMessage.arg("If you're using SSL, "
+							"remember to activate all of your devices.");
+		} else {
+			thanksMessage = thanksMessage.arg("");
+		}
+
+		if (m_LicenseManager->serialKey().isTrial()) {
+			message.information(this, "Thanks!", thanksMessage);
+		}
+		else {
+			message.information(this, "Activated!",
+					tr("Thanks for activating %1!").arg
+						(m_LicenseManager->getEditionName(edition)));
+		}
+	}
+
 	QDialog::accept();
 }
