@@ -1095,7 +1095,7 @@ void MainWindow::endTrial(bool isExpired)
 	if (isExpired) {
 		QString expiredNotice (
 			"<html><head/><body><p>Your %1 trial has expired. <a href="
-			"\"http://symless.com/synergy/trial/thanks?id=%2\">"
+			"\"https://symless.com/synergy/trial/thanks?id=%2\">"
 			"<span style=\"text-decoration: underline;color:#0000ff;\">"
 			"Buy now!</span></a></p></body></html>"
 		);
