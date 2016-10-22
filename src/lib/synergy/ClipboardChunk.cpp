@@ -118,7 +118,7 @@ ClipboardChunk::assemble(synergy::IStream* stream,
 		return kFinish;
 	}
 
-	LOG((CLOG_ERR "clipboard transmission failed: unknow error"));
+	LOG((CLOG_ERR "clipboard transmission failed: unknown error"));
 	return kError;
 }
 
