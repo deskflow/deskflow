@@ -89,10 +89,13 @@ LicenseManager::serialKey() const
 	return m_serialKey;
 }
 
-void LicenseManager::refresh(bool acceptExpired)
+void LicenseManager::refresh()
 {
 	if (!m_AppConfig->serialKey().isEmpty()) {
-		setSerialKey(m_AppConfig->serialKey(), acceptExpired);
+		setSerialKey(m_AppConfig->serialKey(), true);
+	}
+	if (m_serialKey.isExpired(::time(0))) {
+		emit endTrial(true);
 	}
 }
 

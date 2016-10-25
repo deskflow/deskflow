@@ -156,7 +156,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
 			 this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
 
 	setWindowTitle (m_LicenseManager->activeEditionName());
-	m_LicenseManager->refresh(true);
+	m_LicenseManager->refresh();
 }
 
 MainWindow::~MainWindow()
@@ -451,6 +451,7 @@ void MainWindow::checkConnected(const QString& line)
 void MainWindow::checkLicense(const QString &line)
 {
 	if (line.contains("trial has expired")) {
+		licenseManager().refresh();
 		raiseActivationDialog();
 	}
 }
