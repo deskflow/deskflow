@@ -104,7 +104,11 @@ class AppConfig: public QObject
 		bool activationHasRun() const;
 		AppConfig& activationHasRun(bool value);
 
-		void saveSettings();;
+		QString lastVersion() const;
+
+		void saveSettings();
+		void setLastVersion(QString version);
+
 protected:
 		QSettings& settings();
 		void setScreenName(const QString& s);
@@ -139,6 +143,7 @@ protected:
 		bool m_CryptoEnabled;
 		bool m_AutoHide;
 		QString m_Serialkey;
+		QString m_lastVersion;
 		int m_LastExpiringWarningTime;
 		bool m_ActivationHasRun;
 

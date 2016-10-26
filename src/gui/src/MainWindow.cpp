@@ -156,6 +156,11 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
 
 	setWindowTitle (m_LicenseManager->activeEditionName());
 	m_LicenseManager->refresh();
+
+	QString currentVersion = m_VersionChecker.getVersion();
+	if (m_AppConfig->lastVersion() != currentVersion) {
+		m_AppConfig->setLastVersion (currentVersion);
+	}
 }
 
 MainWindow::~MainWindow()

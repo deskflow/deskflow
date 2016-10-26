@@ -162,6 +162,7 @@ void AppConfig::loadSettings()
 	m_CryptoEnabled = settings().value("cryptoEnabled", true).toBool();
 	m_AutoHide = settings().value("autoHide", false).toBool();
 	m_Serialkey = settings().value("serialKey", "").toString();
+	m_lastVersion = settings().value("lastVersion", "Unknown").toString();
 	m_LastExpiringWarningTime = settings().value("lastExpiringWarningTime", 0).toInt();
 	m_ActivationHasRun = settings().value("activationHasRun", false).toBool();
 }
@@ -187,6 +188,7 @@ void AppConfig::saveSettings()
 	settings().setValue("cryptoEnabled", m_CryptoEnabled);
 	settings().setValue("autoHide", m_AutoHide);
 	settings().setValue("serialKey", m_Serialkey);
+	settings().setValue("lastVersion", m_lastVersion);
 	settings().setValue("lastExpiringWarningTime", m_LastExpiringWarningTime);
 	settings().setValue("activationHasRun", m_ActivationHasRun);
 	settings().sync();
@@ -201,6 +203,15 @@ AppConfig& AppConfig::activationHasRun(bool value)
 {
 	m_ActivationHasRun = value;
 	return *this;
+}
+
+QString AppConfig::lastVersion() const
+{
+	return m_lastVersion;
+}
+
+void AppConfig::setLastVersion(QString version) {
+	m_lastVersion = version;
 }
 
 QSettings &AppConfig::settings() { return *m_pSettings; }
