@@ -21,6 +21,7 @@
 #include "ZeroconfRecord.h"
 
 #include <QtCore/QObject>
+#include <stdint.h>
 
 typedef int32_t  DNSServiceErrorType;
 
