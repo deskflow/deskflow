@@ -28,7 +28,18 @@
       <ComponentGroupRef Id="ProductComponents" />
       <ComponentGroupRef Id="OpenSslComponents" />
       <MergeRef Id="CRT" />
+      <ComponentRef Id="RegistryEntries" />
     </Feature>
+
+    <DirectoryRef Id="TARGETDIR">
+      <Component Id="RegistryEntries" Guid="7CF3564D-1F8E-4D3D-9781-E1EE22D5BD67">
+        <RegistryKey Root="HKCU"
+                     Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
+                     Action="createAndRemoveOnUninstall">
+          <RegistryValue Type="string" Name="[INSTALLFOLDER]synergys.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
+        </RegistryKey>
+      </Component>
+    </DirectoryRef>
 
     <Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
 
