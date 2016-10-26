@@ -36,6 +36,7 @@ public:
 	QString activeEditionName() const;
 	SerialKey serialKey() const;
 	void skipActivation();
+	void notifyUpdate(QString version);
 	static QString getEditionName(Edition edition, bool trial = false);
 
 private:

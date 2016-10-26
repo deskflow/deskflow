@@ -208,6 +208,10 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 			args.m_notifyActivation = true;
 			return true;
 		}
+		else if (isArg(i, argc, argv, NULL, "--notify-upgrade", 0)) {
+			args.m_notifyUpgrade = true;
+			return true;
+		}
 		else {
 			return false;
 		}

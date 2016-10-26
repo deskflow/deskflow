@@ -30,4 +30,5 @@ public:
 	bool				m_getProfileDir;
 	bool				m_getArch;
 	bool				m_notifyActivation;
+	bool                m_notifyUpgrade;
 };

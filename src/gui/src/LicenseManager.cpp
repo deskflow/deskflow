@@ -71,6 +71,11 @@ LicenseManager::setSerialKey(QString serialKeyString, bool acceptExpired)
 	return ret;
 }
 
+void
+LicenseManager::notifyUpdate(QString version) {
+
+}
+
 Edition
 LicenseManager::activeEdition() const
 {
