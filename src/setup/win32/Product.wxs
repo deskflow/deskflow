@@ -38,6 +38,10 @@
                      Action="createAndRemoveOnUninstall">
           <RegistryValue Type="string" Name="[INSTALLFOLDER]synergys.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
         </RegistryKey>
+
+        <Condition>
+          <![CDATA[Installed OR (VersionNT >= 602)]]>
+        </Condition>
       </Component>
     </DirectoryRef>
 
