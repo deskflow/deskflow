@@ -62,10 +62,11 @@ QString CoreInterface::getSerialKeyFilePath()
 	return filename;
 }
 
-QString CoreInterface::notifyUpgrade (QString const& version, 
-										QString const& serialKey) {
+QString CoreInterface::notifyUpdate (QString const& fromVersion,
+									  QString const& toVersion,
+									  QString const& serialKey) {
 	QStringList args("--notify-upgrade");
-	QString input(version + ":" + serialKey);
+	QString input(fromVersion + ":" + toVersion + ":" + serialKey);
 	return run(args, input);
 }
 

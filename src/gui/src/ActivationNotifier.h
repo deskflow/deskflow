@@ -24,18 +24,24 @@ class ActivationNotifier : public QObject
 {
 Q_OBJECT
 public:
-    explicit ActivationNotifier(QObject *parent = 0);
+	explicit ActivationNotifier(QObject *parent = 0);
 
 	void setIdentity(QString identity);
+	void setUpgradeInfo(QString const& fromVersion,
+						QString const& toVersion, QString const& serialKey);
 
 public slots:
 	void notify();
+	void notifyUpgrade();
 
 signals:
 	void finished();
 
 private:
 	QString m_Identity;
+	QString m_fromVersion;
+	QString m_toVersion;
+	QString m_serialKey;
 };
 
 #endif // ACTIVATIONNOTIFIER_H

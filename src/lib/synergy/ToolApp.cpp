@@ -146,11 +146,12 @@ ToolApp::notifyUpgrade()
 	std::vector<String> parts = synergy::string::splitString(data, ':');
 	size_t count = parts.size();
 
-	if (count == 2) {
+	if (count == 3) {
      	std::stringstream ss;
 		ss << JSON_URL << "notify/upgraded/";
-		ss << "?version=" << parts[0];
-		ss << "&serial=" << parts[1];
+		ss << "?from=" << parts[0];
+		ss << "&to=" << parts[1];
+		ss << "&serial=" << parts[2];
 
 		std::cout << ARCH->internet().get(ss.str()) << std::endl;
 	}
