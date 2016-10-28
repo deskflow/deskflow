@@ -72,6 +72,11 @@ LicenseManager::setSerialKey(QString serialKeyString, bool acceptExpired)
 
 void
 LicenseManager::notifyUpdate(QString fromVersion, QString toVersion) {
+	if ((fromVersion == "Unknown")
+		&& (m_serialKey == SerialKey(kUnregistered))) {
+		return;
+	}
+
 	ActivationNotifier* notifier = new ActivationNotifier();
 	notifier->setUpdateInfo (fromVersion, toVersion,
 							QString::fromStdString(m_serialKey.toString()));
