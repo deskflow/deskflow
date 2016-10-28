@@ -1590,13 +1590,11 @@ MSWindowsScreen::updateScreenShape()
 	// get shape and center
 	m_w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
 	m_h = GetSystemMetrics(SM_CYVIRTUALSCREEN);
-
+	m_x = GetSystemMetrics(SM_XVIRTUALSCREEN);
+	m_y = GetSystemMetrics(SM_YVIRTUALSCREEN);
 	m_xCenter = GetSystemMetrics(SM_CXSCREEN) >> 1;
 	m_yCenter = GetSystemMetrics(SM_CYSCREEN) >> 1;
 
-	// get position
-	m_x = GetSystemMetrics(SM_XVIRTUALSCREEN);
-	m_y = GetSystemMetrics(SM_YVIRTUALSCREEN);
 	// check for multiple monitors
 	m_multimon = (m_w != GetSystemMetrics(SM_CXSCREEN) ||
 				  m_h != GetSystemMetrics(SM_CYSCREEN));
