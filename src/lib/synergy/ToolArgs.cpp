@@ -24,6 +24,6 @@ ToolArgs::ToolArgs() :
 	m_getProfileDir(false),
 	m_getArch(false),
 	m_notifyActivation(false),
-	m_notifyUpgrade(false)
+	m_notifyUpdate(false)
 {
 }

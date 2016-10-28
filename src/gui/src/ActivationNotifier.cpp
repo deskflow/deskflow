@@ -29,7 +29,7 @@ void ActivationNotifier::setIdentity(QString identity)
 	m_Identity = identity;
 }
 
-void ActivationNotifier::setUpgradeInfo(QString const& fromVersion,
+void ActivationNotifier::setUpdateInfo(QString const& fromVersion,
 										QString const& toVersion,
 										QString const& serialKey)
 {
@@ -49,7 +49,7 @@ void ActivationNotifier::notify()
 	}
 }
 
-void ActivationNotifier::notifyUpgrade()
+void ActivationNotifier::notifyUpdate()
 {
 	try {
 		CoreInterface coreInterface;

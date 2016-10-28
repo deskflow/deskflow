@@ -30,7 +30,7 @@ public:
 private:
 	void				loginAuth();
 	void				notifyActivation();
-	void                notifyUpgrade();
+	void                notifyUpdate();
 
 private:
 	ToolArgs			m_args;

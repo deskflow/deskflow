@@ -27,12 +27,12 @@ public:
 	explicit ActivationNotifier(QObject *parent = 0);
 
 	void setIdentity(QString identity);
-	void setUpgradeInfo(QString const& fromVersion,
+	void setUpdateInfo(QString const& fromVersion,
 						QString const& toVersion, QString const& serialKey);
 
 public slots:
 	void notify();
-	void notifyUpgrade();
+	void notifyUpdate();
 
 signals:
 	void finished();

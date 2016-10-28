@@ -80,8 +80,8 @@ ToolApp::run(int argc, char** argv)
 		else if (m_args.m_getArch) {
 			std::cout << ARCH->getPlatformName() << std::endl;
 		}
-		else if (m_args.m_notifyUpgrade) {
-			notifyUpgrade();
+		else if (m_args.m_notifyUpdate) {
+			notifyUpdate();
 		}
 		else if (m_args.m_notifyActivation) {
 			notifyActivation();
@@ -138,7 +138,7 @@ ToolApp::loginAuth()
 }
 
 void
-ToolApp::notifyUpgrade()
+ToolApp::notifyUpdate()
 {
 	String data;
 	std::cin >> data;

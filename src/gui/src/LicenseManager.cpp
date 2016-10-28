@@ -74,7 +74,7 @@ LicenseManager::setSerialKey(QString serialKeyString, bool acceptExpired)
 void
 LicenseManager::notifyUpdate(QString fromVersion, QString toVersion) {
 	ActivationNotifier* notifier = new ActivationNotifier();
-	notifier->setUpgradeInfo (fromVersion, toVersion,
+	notifier->setUpdateInfo (fromVersion, toVersion,
 							QString::fromStdString(m_serialKey.toString()));
 
 	QThread* thread = new QThread();
@@ -85,7 +85,7 @@ LicenseManager::notifyUpdate(QString fromVersion, QString toVersion) {
 	notifier->moveToThread(thread);
 	thread->start();
 
-	QMetaObject::invokeMethod(notifier, "notifyUpgrade",
+	QMetaObject::invokeMethod(notifier, "notifyUpdate",
 							  Qt::QueuedConnection);
 }
 
