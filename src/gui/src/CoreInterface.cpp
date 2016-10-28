@@ -67,6 +67,7 @@ QString CoreInterface::notifyUpdate (QString const& fromVersion,
 									  QString const& serialKey) {
 	QStringList args("--notify-update");
 	QString input(fromVersion + ":" + toVersion + ":" + serialKey);
+	input.append("\n");
 	return run(args, input);
 }
 
