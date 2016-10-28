@@ -33,7 +33,7 @@
 
     <DirectoryRef Id="TARGETDIR">
       <Component Id="RegistryEntries" Guid="7CF3564D-1F8E-4D3D-9781-E1EE22D5BD67">
-        <RegistryKey Root="HKCU"
+        <RegistryKey Root="HKLM"
                      Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
                      Action="createAndRemoveOnUninstall">
           <RegistryValue Type="string" Name="[INSTALLFOLDER]synergys.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
