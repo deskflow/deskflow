@@ -7,7 +7,7 @@
   <?define BinPath="../../../bin/$(var.Configuration)" ?>
   <?define ResPath="../../../res" ?>
   <?define ExtPath="../../../ext" ?>
-  <?define QtPath="C:\Qt\4.8.7\bin" ?>
+  <?define QtPath="C:\Qt\2010.02\qt\bin" ?>
 
   <?ifndef Version ?>
   <?define Version="1.0.0" ?>
