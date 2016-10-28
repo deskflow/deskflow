@@ -800,25 +800,6 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 		args << "--serial-key" << appConfig().serialKey();
 	}
 
-#if defined(Q_OS_WIN)
-	// pass in physical resolution and primary screen center
-	// TODO: get this information in the core binary even when
-	// high DPI is used
-	int height = QApplication::desktop()->height();
-	int width = QApplication::desktop()->width();
-
-	QRect rec = QApplication::desktop()->screenGeometry();
-	int heightCenter = rec.height() / 2;
-	int widthCenter = rec.width() / 2;
-
-	appendLogDebug(tr("screen resolution: %1 %2 primary screen center: %3 %4")
-				   .arg(width).arg(height).arg(widthCenter).arg(heightCenter));
-
-	args << "--res-w" << QString::number(width);
-	args << "--res-h" << QString::number(height);
-	args << "--prm-wc" << QString::number(widthCenter);
-	args << "--prm-hc" << QString::number(heightCenter);
- #endif
 	return true;
 }
 
