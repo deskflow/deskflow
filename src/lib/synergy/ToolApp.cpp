@@ -148,7 +148,7 @@ ToolApp::notifyUpgrade()
 
 	if (count == 3) {
      	std::stringstream ss;
-		ss << JSON_URL << "notify/upgraded/";
+		ss << JSON_URL << "notify/upgrade";
 		ss << "?from=" << parts[0];
 		ss << "&to=" << parts[1];
 		ss << "&serial=" << parts[2];
