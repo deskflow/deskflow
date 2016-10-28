@@ -146,17 +146,17 @@ ToolApp::notifyUpdate()
 	std::vector<String> parts = synergy::string::splitString(data, ':');
 	size_t count = parts.size();
 
-	if (count == 3) {
-     	std::stringstream ss;
-		ss << JSON_URL << "notify/upgrade";
-		ss << "?from=" << parts[0];
-		ss << "&to=" << parts[1];
-		ss << "&serial=" << parts[2];
+    if (count == 3) {
+        std::stringstream ss;
+        ss << JSON_URL << "notify/update";
+        ss << "?from=" << parts[0];
+        ss << "&to=" << parts[1];
+        ss << "&serial=" << parts[2];
 
 		std::cout << ARCH->internet().get(ss.str()) << std::endl;
 	}
 	else {
-		throw XSynergy("Invalid upgrade data.");
+		throw XSynergy("Invalid update data.");
 	}
 }
 
