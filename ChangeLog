@@ -1,3 +1,10 @@
+v1.8.5-stable
+=============
+Bug #5680 - Server crashes when disconnecting SSL clients
+Bug #5626 - Build fails using Xcode 8 and macOS SDK 10.12
+Feature #5657 - Trial version support
+Feature #5707 - User upgrade statistics
+
 v1.8.4-stable
 =============
 Bug #5183 - Slowly moving the cursor has no effect on high DPI clients
