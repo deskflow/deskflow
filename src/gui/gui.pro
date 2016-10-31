@@ -7,7 +7,8 @@ DEFINES += VERSION_REVISION=\\\"$$QMAKE_VERSION_REVISION\\\"
 DEPENDPATH += . \
     res
 INCLUDEPATH += . \
-    src
+    src \
+    ../lib/shared/
 FORMS += res/MainWindowBase.ui \
     res/AboutDialogBase.ui \
     res/ServerConfigDialogBase.ui \
@@ -60,11 +61,12 @@ SOURCES += src/main.cpp \
     src/Fingerprint.cpp \
     src/SslCertificate.cpp \
     src/WebClient.cpp \
-    src/SubscriptionManager.cpp \
     src/ActivationNotifier.cpp \
     src/ActivationDialog.cpp \
     src/CancelActivationDialog.cpp \
-    src/FailedLoginDialog.cpp
+    src/FailedLoginDialog.cpp \
+    ../lib/shared/SerialKey.cpp \
+    src/LicenseManager.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -101,18 +103,19 @@ HEADERS += src/MainWindow.h \
     src/DataDownloader.h \
     src/AddClientDialog.h \
     src/CommandProcess.h \
-    src/EditionType.h \
     src/ProcessorArch.h \
     src/CoreInterface.h \
     src/Fingerprint.h \
     src/SslCertificate.h \
     src/WebClient.h \
-    src/SubscriptionManager.h \
     src/ActivationNotifier.h \
     src/ElevateMode.h \
     src/ActivationDialog.h \
     src/CancelActivationDialog.h \
-    src/FailedLoginDialog.h
+    src/FailedLoginDialog.h \
+    ../lib/shared/EditionType.h \
+    ../lib/shared/SerialKey.h \
+    src/LicenseManager.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 

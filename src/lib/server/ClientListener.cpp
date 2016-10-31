@@ -106,12 +106,6 @@ ClientListener::setServer(Server* server)
 	m_server = server;
 }
 
-void
-ClientListener::deleteSocket(void* socket)
-{
-	m_listen->deleteSocket(socket);
-}
-
 ClientProxy*
 ClientListener::getNextClient()
 {
@@ -213,10 +207,6 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
 	}
 
 	delete unknownClient;
-
-	if (m_useSecureNetwork && !handshakeOk) {
-		deleteSocket(socket);
-	}
 }
 
 void

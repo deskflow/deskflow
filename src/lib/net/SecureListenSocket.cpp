@@ -93,14 +93,3 @@ SecureListenSocket::accept()
 		throw ex;
 	}
 }
-
-void
-SecureListenSocket::deleteSocket(void* socket)
-{
-	SecureSocketSet::iterator it;
-	it = m_secureSocketSet.find((IDataSocket*)socket);
-	if (it != m_secureSocketSet.end()) {
-		delete *it;
-		m_secureSocketSet.erase(it);
-	}
-}

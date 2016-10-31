@@ -101,7 +101,8 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 	m_lastSingleClickYCursor(0),
 	m_autoShowHideCursor(autoShowHideCursor),
 	m_events(events),
-	m_getDropTargetThread(NULL)
+	m_getDropTargetThread(NULL),
+	m_impl(NULL)
 {
 	try {
 		m_displayID   = CGMainDisplayID();
@@ -515,9 +516,7 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
 	// we define our own defaults.
 	const double maxDiff = sqrt(2) + 0.0001;
     
-    
-    NXEventHandle handle = NXOpenEventStatus();
-    double clickTime = NXClickTime(handle);
+    double clickTime = [NSEvent doubleClickInterval];
     
     // As long as the click is within the time window and distance window
     // increase clickState (double click, triple click, etc)

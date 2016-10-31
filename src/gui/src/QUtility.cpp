@@ -42,22 +42,6 @@ void setIndexFromItemData(QComboBox* comboBox, const QVariant& itemData)
 	}
 }
 
-QString 
-getEditionName (int edition) {
-	if (edition == Basic) {
-		return "Synergy Basic";
-	}
-	else if (edition == Pro) {
-		return "Synergy Pro";
-	}
-	else if (edition == Trial) {
-		return "Synergy Trial";
-	}
-	else {
-		return "Synergy (UNREGISTERED)";
-	}
-}
-
 QString hash(const QString& string)
 {
 	QByteArray data = string.toUtf8();

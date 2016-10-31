@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -74,6 +74,9 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
 		else if (isArg(i, argc, argv, "", "--prm-hc", 1)) {
 			DpiHelper::s_primaryHeightCenter = synergy::string::stringToSizeType(argv[++i]);
 		}
+		else if (isArg(i, argc, argv, "", "--serial-key", 1)) {
+			args.m_serial = SerialKey(argv[++i]);
+		}
 		else {
 			LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
 			return false;
@@ -111,7 +114,7 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
 			// ignore -- included for backwards compatibility
 		}
 		else if (isArg(i, argc, argv, NULL, "--yscroll", 1)) {
-			// define scroll 
+			// define scroll
 			args.m_yscroll = atoi(argv[++i]);
 		}
 		else {
@@ -193,16 +196,8 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 			args.m_loginAuthenticate = true;
 			return true;
 		}
-		else if (isArg(i, argc, argv, NULL, "--get-plugin-list", 0)) {
-			args.m_getPluginList = true;
-			return true;
-		}
 		else if (isArg(i, argc, argv, NULL, "--get-installed-dir", 0)) {
 			args.m_getInstalledDir = true;
-			return true;
-		}
-		else if (isArg(i, argc, argv, NULL, "--get-plugin-dir", 0)) {
-			args.m_getPluginDir = true;
 			return true;
 		}
 		else if (isArg(i, argc, argv, NULL, "--get-profile-dir", 0)) {
@@ -213,24 +208,12 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 			args.m_getArch = true;
 			return true;
 		}
-		else if (isArg(i, argc, argv, NULL, "--subscription-serial", 1)) {
-			args.m_subscriptionSerial = argv[++i];
-			if (args.m_subscriptionSerial.empty()) {
-				LOG((CLOG_CRIT "subscription error: serial was not provided"));
-				return false;
-			}
-			return true;
-		}
-		else if (isArg(i, argc, argv, NULL, "--get-subscription-filename", 0)) {
-			args.m_getSubscriptionFilename = true;
-			return true;
-		}
-		else if (isArg(i, argc, argv, NULL, "--check-subscription", 0)) {
-			args.m_checkSubscription = true;
-			return true;
-		}
 		else if (isArg(i, argc, argv, NULL, "--notify-activation", 0)) {
 			args.m_notifyActivation = true;
+			return true;
+		}
+		else if (isArg(i, argc, argv, NULL, "--notify-update", 0)) {
+			args.m_notifyUpdate = true;
 			return true;
 		}
 		else {
@@ -296,10 +279,10 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 		argsBase().m_enableIpc = true;
 	}
 	else if (isArg(i, argc, argv, NULL, "--server")) {
-		// HACK: stop error happening when using portable (synergyp) 
+		// HACK: stop error happening when using portable (synergyp)
 	}
 	else if (isArg(i, argc, argv, NULL, "--client")) {
-		// HACK: stop error happening when using portable (synergyp) 
+		// HACK: stop error happening when using portable (synergyp)
 	}
 	else if (isArg(i, argc, argv, NULL, "--enable-drag-drop")) {
 		bool useDragDrop = true;
@@ -398,7 +381,7 @@ ArgParser::splitCommandString(String& command, std::vector<String>& argv)
 		else if (space > rightDoubleQuote){
 			searchDoubleQuotes(command, leftDoubleQuote, rightDoubleQuote, rightDoubleQuote + 1);
 		}
-		
+
 		if (!ignoreThisSpace) {
 			String subString = command.substr(startPos, space - startPos);
 
@@ -464,7 +447,7 @@ ArgParser::getArgv(std::vector<String>& argsArray)
 	// them to the inner array. So caller only need to use
 	// delete[] to delete the outer array
 	const char** argv = new const char*[argc];
-	
+
 	for (size_t i = 0; i < argc; i++) {
 		argv[i] = argsArray[i].c_str();
 	}
@@ -496,7 +479,7 @@ ArgParser::assembleCommand(std::vector<String>& argsArray,  String ignoreArg, in
 
 	if (!result.empty()) {
 		// remove the tail space
-	  	result = result.substr(0, result.size() - 1);
+		result = result.substr(0, result.size() - 1);
 	}
 
 	return result;
@@ -513,13 +496,13 @@ bool
 ArgParser::checkUnexpectedArgs()
 {
 #if SYSAPI_WIN32
-	// suggest that user installs as a windows service. when launched as 
+	// suggest that user installs as a windows service. when launched as
 	// service, process should automatically detect that it should run in
 	// daemon mode.
 	if (argsBase().m_daemon) {
-		LOG((CLOG_ERR 
+		LOG((CLOG_ERR
 			"the --daemon argument is not supported on windows. "
-			"instead, install %s as a service (--service install)", 
+			"instead, install %s as a service (--service install)",
 			argsBase().m_pname));
 		return true;
 	}

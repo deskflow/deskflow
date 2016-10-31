@@ -30,7 +30,7 @@
 #include "ZeroconfService.h"
 #include "DataDownloader.h"
 #include "CommandProcess.h"
-#include "SubscriptionManager.h"
+#include "LicenseManager.h"
 #include "EditionType.h"
 #include "QUtility.h"
 #include "ProcessorArch.h"
@@ -76,12 +76,14 @@ static const char* synergyIconFiles[] =
 	":/res/icons/16x16/synergy-transfering.png"
 };
 
-MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
+MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
+					   LicenseManager& licenseManager) :
 	m_Settings(settings),
-	m_AppConfig(appConfig),
+	m_AppConfig(&appConfig),
+	m_LicenseManager(&licenseManager),
 	m_pSynergy(NULL),
 	m_SynergyState(synergyDisconnected),
-	m_ServerConfig(&m_Settings, 5, 3, m_AppConfig.screenName(), this),
+	m_ServerConfig(&m_Settings, 5, 3, m_AppConfig->screenName(), this),
 	m_pTempConfigFile(NULL),
 	m_pTrayIcon(NULL),
 	m_pTrayIconMenu(NULL),
@@ -99,7 +101,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_BonjourInstall(NULL),
 	m_SuppressEmptyServerWarning(false),
 	m_ExpectedRunningState(kStopped),
-	m_pSslCertificate(NULL)
+	m_pSslCertificate(NULL),
+	m_ActivationDialogRunning(false)
 {
 	setupUi(this);
 
@@ -134,13 +137,34 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_SuppressAutoConfigWarning = false;
 
 	m_pComboServerList->hide();
-
-	setEdition(m_AppConfig.edition());
-
 	m_pLabelPadlock->hide();
-	connect (this, SIGNAL(windowShown()), this, SLOT(on_windowShown()), Qt::QueuedConnection);
-	connect (&m_AppConfig, SIGNAL(editionSet(int)), this, SLOT(setEdition(int)), Qt::QueuedConnection);
-	connect (&m_AppConfig, SIGNAL(sslToggled(bool)), this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
+	m_trialWidget->hide();
+
+	connect (this, SIGNAL(windowShown()),
+			 this, SLOT(on_windowShown()), Qt::QueuedConnection);
+
+	connect (m_LicenseManager, SIGNAL(editionChanged(Edition)),
+			 this, SLOT(setEdition(Edition)), Qt::QueuedConnection);
+
+	connect (m_LicenseManager, SIGNAL(beginTrial(bool)),
+			 this, SLOT(beginTrial(bool)), Qt::QueuedConnection);
+
+	connect (m_LicenseManager, SIGNAL(endTrial(bool)),
+			 this, SLOT(endTrial(bool)), Qt::QueuedConnection);
+
+	connect (m_AppConfig, SIGNAL(sslToggled(bool)),
+			 this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
+
+	setWindowTitle (m_LicenseManager->activeEditionName());
+	m_LicenseManager->refresh();
+
+	QString lastVersion = m_AppConfig->lastVersion();
+	QString currentVersion = m_VersionChecker.getVersion();
+	if (lastVersion != currentVersion) {
+		m_AppConfig->setLastVersion (currentVersion);
+		m_AppConfig->saveSettings();
+		m_LicenseManager->notifyUpdate (lastVersion, currentVersion);
+	}
 }
 
 MainWindow::~MainWindow()
@@ -397,15 +421,17 @@ void MainWindow::appendLogRaw(const QString& text)
 	foreach(QString line, text.split(QRegExp("\r|\n|\r\n"))) {
 		if (!line.isEmpty()) {
 			m_pLogOutput->append(line);
-			updateStateFromLogLine(line);
+			updateFromLogLine(line);
 		}
 	}
 }
 
-void MainWindow::updateStateFromLogLine(const QString &line)
+void MainWindow::updateFromLogLine(const QString &line)
 {
+	// TODO: this code makes Andrew cry
 	checkConnected(line);
 	checkFingerprint(line);
+	checkLicense(line);
 }
 
 void MainWindow::checkConnected(const QString& line)
@@ -427,6 +453,14 @@ void MainWindow::checkConnected(const QString& line)
 			appConfig().setStartedBefore(true);
 			appConfig().saveSettings();
 		}
+	}
+}
+
+void MainWindow::checkLicense(const QString &line)
+{
+	if (line.contains("trial has expired")) {
+		licenseManager().refresh();
+		raiseActivationDialog();
 	}
 }
 
@@ -498,7 +532,7 @@ void MainWindow::restartSynergy()
 
 void MainWindow::proofreadInfo()
 {
-	setEdition(m_AppConfig.edition()); // Why is this here?
+	setEdition(m_AppConfig->edition()); // Why is this here?
 
 	int oldState = m_SynergyState;
 	m_SynergyState = synergyDisconnected;
@@ -518,6 +552,14 @@ void MainWindow::clearLog()
 
 void MainWindow::startSynergy()
 {
+	SerialKey serialKey = m_LicenseManager->serialKey();
+	time_t currentTime = ::time(0);
+	if (serialKey.isExpired(currentTime)) {
+		if (QDialog::Rejected == raiseActivationDialog()) {
+			return;
+		}
+	}
+
 	bool desktopMode = appConfig().processMode() == Desktop;
 	bool serviceMode = appConfig().processMode() == Service;
 
@@ -566,7 +608,7 @@ void MainWindow::startSynergy()
 
 #endif
 
-	if (m_AppConfig.getCryptoEnabled()) {
+	if (m_AppConfig->getCryptoEnabled()) {
 		args << "--enable-crypto";
 	}
 
@@ -734,19 +776,6 @@ QString MainWindow::appPath(const QString& name)
 
 bool MainWindow::serverArgs(QStringList& args, QString& app)
 {
-	int edition;
-	SubscriptionManager subscriptionManager(this, appConfig(), edition);
-	if (subscriptionManager.fileExists())
-	{
-		if (!subscriptionManager.checkSubscription()) {
-			return false;
-		}
-		else {
-			setEdition(edition);
-		}
-	}
-
-
 	app = appPath(appConfig().synergysName());
 
 	if (!QFile::exists(app))
@@ -774,6 +803,10 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 	configFilename = QString("\"%1\"").arg(configFilename);
 #endif
 	args << "-c" << configFilename << "--address" << address();
+
+	if (!appConfig().serialKey().isEmpty()) {
+		args << "--serial-key" << appConfig().serialKey();
+	}
 
 #if defined(Q_OS_WIN)
 	// pass in physical resolution and primary screen center
@@ -895,7 +928,7 @@ void MainWindow::setSynergyState(qSynergyState state)
 	switch (state)
 	{
 	case synergyConnected: {
-		if (m_AppConfig.getCryptoEnabled()) {
+		if (m_AppConfig->getCryptoEnabled()) {
 			m_pLabelPadlock->show();
 		}
 		else {
@@ -1010,13 +1043,13 @@ void MainWindow::updateZeroconfService()
 	QMutexLocker locker(&m_UpdateZeroconfMutex);
 
 	if (isBonjourRunning()) {
-		if (!m_AppConfig.wizardShouldRun()) {
+		if (!m_AppConfig->wizardShouldRun()) {
 			if (m_pZeroconfService) {
 				delete m_pZeroconfService;
 				m_pZeroconfService = NULL;
 			}
 
-			if (m_AppConfig.autoConfig() || synergyType() == synergyServer) {
+			if (m_AppConfig->autoConfig() || synergyType() == synergyServer) {
 				m_pZeroconfService = new ZeroconfService(this);
 			}
 		}
@@ -1035,10 +1068,10 @@ void MainWindow::serverDetected(const QString name)
 	}
 }
 
-void MainWindow::setEdition(int edition)
+void MainWindow::setEdition(Edition edition)
 {
-	setWindowTitle(getEditionName(edition));
-	if (m_AppConfig.getCryptoEnabled()) {
+	setWindowTitle(m_LicenseManager->getEditionName (edition));
+	if (m_AppConfig->getCryptoEnabled()) {
 		m_pSslCertificate = new SslCertificate(this);
 		m_pSslCertificate->generateCertificate();
 	}
@@ -1046,9 +1079,60 @@ void MainWindow::setEdition(int edition)
 	saveSettings();
 }
 
+void MainWindow::beginTrial(bool isExpiring)
+{
+	//Hack
+	//if (isExpiring) {
+	time_t daysLeft = m_LicenseManager->serialKey().daysLeft(::time(0));
+		QString expiringNotice ("<html><head/><body><p><span style=\""
+					 "font-weight:600;\">%1</span> day%3 of "
+					 "your %2 trial remain%5. <a href="
+					 "\"https://symless.com/synergy/trial/thanks?id=%4\">"
+					 "<span style=\"text-decoration: underline;"
+					 " color:#0000ff;\">Buy now!</span></a>"
+					 "</p></body></html>");
+		expiringNotice = expiringNotice
+			.arg (daysLeft)
+			.arg (LicenseManager::getEditionName
+					(m_LicenseManager->activeEdition()))
+			.arg ((daysLeft == 1) ? "" : "s")
+			.arg (QString::fromStdString
+					(m_LicenseManager->serialKey().toString()))
+			.arg ((daysLeft == 1) ? "s" : "");
+		this->m_trialLabel->setText(expiringNotice);
+		this->m_trialWidget->show();
+	//}
+	setWindowTitle (m_LicenseManager->activeEditionName());
+}
+
+void MainWindow::endTrial(bool isExpired)
+{
+	if (isExpired) {
+		QString expiredNotice (
+			"<html><head/><body><p>Your %1 trial has expired. <a href="
+			"\"https://symless.com/synergy/trial/thanks?id=%2\">"
+			"<span style=\"text-decoration: underline;color:#0000ff;\">"
+			"Buy now!</span></a></p></body></html>"
+		);
+		expiredNotice = expiredNotice
+			.arg(LicenseManager::getEditionName
+					(m_LicenseManager->activeEdition()))
+			.arg(QString::fromStdString
+					(m_LicenseManager->serialKey().toString()));
+
+		this->m_trialLabel->setText(expiredNotice);
+		this->m_trialWidget->show();
+		stopSynergy();
+		m_AppConfig->activationHasRun(false);
+	} else {
+		this->m_trialWidget->hide();
+	}
+	setWindowTitle (m_LicenseManager->activeEditionName());
+}
+
 void MainWindow::updateLocalFingerprint()
 {
-	if (m_AppConfig.getCryptoEnabled() && Fingerprint::local().fileExists()) {
+	if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists()) {
 		m_pLabelFingerprint->setVisible(true);
 		m_pLabelLocalFingerprint->setVisible(true);
 		m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
@@ -1057,6 +1141,12 @@ void MainWindow::updateLocalFingerprint()
 		m_pLabelFingerprint->setVisible(false);
 		m_pLabelLocalFingerprint->setVisible(false);
 	}
+}
+
+LicenseManager&
+MainWindow::licenseManager() const
+{
+	return *m_LicenseManager;
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
@@ -1123,6 +1213,14 @@ void MainWindow::on_m_pActionSettings_triggered()
 void MainWindow::autoAddScreen(const QString name)
 {
 	if (!m_ServerConfig.ignoreAutoConfigClient()) {
+		if (m_ActivationDialogRunning) {
+			// TODO: refactor this code
+			// add this screen to the pending list and check this list until
+			// users finish activation dialog
+			m_PendingClientNames.append(name);
+			return;
+		}
+
 		int r = m_ServerConfig.autoAddScreen(name);
 		if (r != kAutoAddScreenOk) {
 			switch (r) {
@@ -1160,8 +1258,7 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 
 void MainWindow::on_m_pActivate_triggered()
 {
-	ActivationDialog activationDialog (this, this->appConfig());
-	activationDialog.exec();
+	raiseActivationDialog();
 }
 
 void MainWindow::on_m_pButtonApply_clicked()
@@ -1325,16 +1422,16 @@ void MainWindow::promptAutoConfig()
 			QMessageBox::Yes | QMessageBox::No);
 
 		if (r == QMessageBox::Yes) {
-			m_AppConfig.setAutoConfig(true);
+			m_AppConfig->setAutoConfig(true);
 			downloadBonjour();
 		}
 		else {
-			m_AppConfig.setAutoConfig(false);
+			m_AppConfig->setAutoConfig(false);
 			m_pCheckBoxAutoConfig->setChecked(false);
 		}
 	}
 
-	m_AppConfig.setAutoConfigPrompted(true);
+	m_AppConfig->setAutoConfigPrompted(true);
 }
 
 void MainWindow::on_m_pComboServerList_currentIndexChanged(QString )
@@ -1380,11 +1477,37 @@ void MainWindow::bonjourInstallFinished()
 	m_pCheckBoxAutoConfig->setChecked(true);
 }
 
+int MainWindow::raiseActivationDialog()
+{
+	if (m_ActivationDialogRunning) {
+		return QDialog::Rejected;
+	}
+	ActivationDialog activationDialog (this, appConfig(), licenseManager());
+	m_ActivationDialogRunning = true;
+	connect (&activationDialog, SIGNAL(finished(int)),
+			 this, SLOT(on_activationDialogFinish()), Qt::QueuedConnection);
+	int result = activationDialog.exec();
+	m_ActivationDialogRunning = false;
+	if (!m_PendingClientNames.empty()) {
+		foreach (const QString& name, m_PendingClientNames) {
+			autoAddScreen(name);
+		}
+
+		m_PendingClientNames.clear();
+	}
+	if (result == QDialog::Accepted) {
+		restartSynergy();
+	}
+	return result;
+}
+
 void MainWindow::on_windowShown()
 {
-	if (!m_AppConfig.activationHasRun() && (m_AppConfig.edition() == Unregistered)) {
-		ActivationDialog activationDialog (this, m_AppConfig);
-		activationDialog.exec();
+	time_t currentTime = ::time(0);
+	if (!m_AppConfig->activationHasRun()
+			&& ((m_AppConfig->edition() == kUnregistered) ||
+				(m_LicenseManager->serialKey().isExpired(currentTime)))) {
+		raiseActivationDialog();
 	}
 }
 
