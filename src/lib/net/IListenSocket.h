@@ -41,14 +41,7 @@ public:
 	*/
 	virtual IDataSocket*
 						accept() = 0;
-
-	//! Delete connection socket
-	/*!
-	This is used when the socket was created but not adopted by a client
-	proxy.
-	*/
-	virtual void		deleteSocket(void*) = 0;
-
+	
 	//@}
 
 	// ISocket overrides

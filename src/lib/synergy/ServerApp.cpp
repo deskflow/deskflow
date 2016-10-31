@@ -647,7 +647,7 @@ ServerApp::openClientListener(const NetworkAddress& address)
 Server* 
 ServerApp::openServer(Config& config, PrimaryClient* primaryClient)
 {
-	Server* server = new Server(config, primaryClient, m_serverScreen, m_events, args().m_enableDragDrop);
+	Server* server = new Server(config, primaryClient, m_serverScreen, m_events, args());
 	try {
 		m_events->adoptHandler(
 			m_events->forServer().disconnected(), server,

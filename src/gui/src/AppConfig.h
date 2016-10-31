@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -23,6 +23,7 @@
 #include <QObject>
 #include <QString>
 #include "ElevateMode.h"
+#include <EditionType.h>
 
 // this should be incremented each time a new page is added. this is
 // saved to settings when the user finishes running the wizard. if
@@ -77,11 +78,9 @@ class AppConfig: public QObject
 		void setAutoConfig(bool autoConfig);
 		bool autoConfigPrompted();
 		void setAutoConfigPrompted(bool prompted);
-		void setEdition(int e);
-		int edition() const;
-		bool setActivateEmail(QString e);
-		QString activateEmail();
-		bool setSerialKey(QString serial, QString& error);
+		void setEdition(Edition);
+		Edition edition() const;
+		QString setSerialKey(QString serial);
 		void clearSerialKey();
 		QString serialKey();
 		int lastExpiringWarningTime() const;
@@ -105,9 +104,12 @@ class AppConfig: public QObject
 		bool activationHasRun() const;
 		AppConfig& activationHasRun(bool value);
 
-		void saveSettings();
+		QString lastVersion() const;
 
-	protected:
+		void saveSettings();
+		void setLastVersion(QString version);
+
+protected:
 		QSettings& settings();
 		void setScreenName(const QString& s);
 		void setPort(int i);
@@ -136,11 +138,12 @@ class AppConfig: public QObject
 		bool m_AutoConfig;
 		ElevateMode m_ElevateMode;
 		bool m_AutoConfigPrompted;
-		int m_Edition;
+		Edition m_Edition;
 		QString m_ActivateEmail;
 		bool m_CryptoEnabled;
 		bool m_AutoHide;
 		QString m_Serialkey;
+		QString m_lastVersion;
 		int m_LastExpiringWarningTime;
 		bool m_ActivationHasRun;
 
@@ -149,7 +152,6 @@ class AppConfig: public QObject
 		static const char m_SynergyLogDir[];
 
 	signals:
-		void editionSet(int);
 		void sslToggled(bool enabled);
 };
 

@@ -1,6 +1,5 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012-2016 Symless Ltd.
-# Copyright (C) 2009 Nick Bolton
+# Copyright (C) 2016 Symless Ltd.
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -21,22 +20,13 @@ if (SYNERGY_ADD_HEADERS)
 	list(APPEND sources ${headers})
 endif()
 
+add_library(shared STATIC ${sources})
+
 include_directories(
 	../
 	../../../ext
 	../../../ext/gtest-1.6.0/include
 )
 
-if (UNIX)
-	include_directories(
-		../../..
-	)
-endif()
+target_link_libraries(shared arch base)
 
-add_library(server STATIC ${sources})
-
-target_link_libraries(server shared)
-
-if (UNIX)
-	target_link_libraries(server synergy)
-endif()

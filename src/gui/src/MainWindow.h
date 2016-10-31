@@ -58,6 +58,7 @@ class ZeroconfService;
 class DataDownloader;
 class CommandProcess;
 class SslCertificate;
+class LicenseManager;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase
 {
@@ -67,7 +68,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 	friend class SetupWizard;
 	friend class ActivationDialog;
 	friend class SettingsDialog;
-	
+
 	public:
 		enum qSynergyState
 		{
@@ -94,7 +95,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		};
 
 	public:
-		MainWindow(QSettings& settings, AppConfig& appConfig);
+		MainWindow(QSettings& settings, AppConfig& appConfig,
+				   LicenseManager& licenseManager);
 		~MainWindow();
 
 	public:
@@ -116,9 +118,14 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void updateZeroconfService();
 		void serverDetected(const QString name);
 		void updateLocalFingerprint();
+		LicenseManager& licenseManager() const;
 
-	public slots:
-		void setEdition(int edition);
+		int raiseActivationDialog();
+
+public slots:
+		void setEdition(Edition edition);
+		void beginTrial(bool isExpiring);
+		void endTrial(bool isExpired);
 		void appendLogRaw(const QString& text);
 		void appendLogInfo(const QString& text);
 		void appendLogDebug(const QString& text);
@@ -145,7 +152,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
 	protected:
 		QSettings& settings() { return m_Settings; }
-		AppConfig& appConfig() { return m_AppConfig; }
+		AppConfig& appConfig() { return *m_AppConfig; }
 		QProcess* synergyProcess() { return m_pSynergy; }
 		void setSynergyProcess(QProcess* p) { m_pSynergy = p; }
 		void initConnections();
@@ -162,7 +169,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void setStatus(const QString& status);
 		void sendIpcMessage(qIpcMessageType type, const char* buffer, bool showErrors);
 		void onModeChanged(bool startDesktop, bool applyService);
-		void updateStateFromLogLine(const QString& line);
+		void updateFromLogLine(const QString& line);
 		QString getIPAddresses();
 		void stopService();
 		void stopDesktop();
@@ -178,6 +185,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void promptAutoConfig();
 		QString getProfileRootForArg();
 		void checkConnected(const QString& line);
+		void checkLicense(const QString& line);
 		void checkFingerprint(const QString& line);
 		bool autoHide();
 		QString getTimeStamp();
@@ -188,7 +196,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
 	private:
 		QSettings& m_Settings;
-		AppConfig& m_AppConfig;
+		AppConfig* m_AppConfig;
+		LicenseManager* m_LicenseManager;
 		QProcess* m_pSynergy;
 		int m_SynergyState;
 		ServerConfig m_ServerConfig;
@@ -214,6 +223,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		qRuningState m_ExpectedRunningState;
 		QMutex m_StopDesktopMutex;
 		SslCertificate* m_pSslCertificate;
+		bool m_ActivationDialogRunning;
+		QStringList m_PendingClientNames;
 
 private slots:
 	void on_m_pCheckBoxAutoConfig_toggled(bool checked);
