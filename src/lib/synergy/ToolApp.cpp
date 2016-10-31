@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -80,6 +80,9 @@ ToolApp::run(int argc, char** argv)
 		else if (m_args.m_getArch) {
 			std::cout << ARCH->getPlatformName() << std::endl;
 		}
+		else if (m_args.m_notifyUpdate) {
+			notifyUpdate();
+		}
 		else if (m_args.m_notifyActivation) {
 			notifyActivation();
 		}
@@ -134,7 +137,30 @@ ToolApp::loginAuth()
 	}
 }
 
-void 
+void
+ToolApp::notifyUpdate()
+{
+	String data;
+	std::cin >> data;
+
+	std::vector<String> parts = synergy::string::splitString(data, ':');
+	size_t count = parts.size();
+
+    if (count == 3) {
+        std::stringstream ss;
+        ss << JSON_URL << "notify/update";
+        ss << "?from=" << parts[0];
+        ss << "&to=" << parts[1];
+        ss << "&serial=" << parts[2];
+
+		std::cout << ARCH->internet().get(ss.str()) << std::endl;
+	}
+	else {
+		throw XSynergy("Invalid update data.");
+	}
+}
+
+void
 ToolApp::notifyActivation()
 {
 	String info;

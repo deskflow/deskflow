@@ -29,5 +29,8 @@ public:
 	QString getArch();
 	QString getSerialKeyFilePath();
 	QString notifyActivation(const QString& identity);
+	QString notifyUpdate (QString const& fromVersion,
+						   QString const& toVersion,
+						   QString const& serialKey);
 	QString run(const QStringList& args, const QString& input = "");
 };

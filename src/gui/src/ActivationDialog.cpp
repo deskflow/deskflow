@@ -90,6 +90,7 @@ void ActivationDialog::accept()
 		return;
 	}
 
+	m_LicenseManager->notifyActivation("serial:" + m_appConfig->serialKey());
 	Edition edition = m_LicenseManager->activeEdition();
 	time_t daysLeft = m_LicenseManager->serialKey().daysLeft(::time(0));
 	if (edition != kUnregistered) {

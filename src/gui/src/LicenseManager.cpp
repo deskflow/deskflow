@@ -45,7 +45,6 @@ LicenseManager::setSerialKey(QString serialKeyString, bool acceptExpired)
 		using std::swap;
 		swap (serialKey, m_serialKey);
 		m_AppConfig->setSerialKey(serialKeyString);
-		notifyActivation("serial:" + serialKeyString);
 		emit serialKeyChanged(m_serialKey);
 
 		if (serialKey.isTrial()) {
@@ -69,6 +68,29 @@ LicenseManager::setSerialKey(QString serialKeyString, bool acceptExpired)
 	}
 
 	return ret;
+}
+
+void
+LicenseManager::notifyUpdate(QString fromVersion, QString toVersion) {
+	if ((fromVersion == "Unknown")
+		&& (m_serialKey == SerialKey(kUnregistered))) {
+		return;
+	}
+
+	ActivationNotifier* notifier = new ActivationNotifier();
+	notifier->setUpdateInfo (fromVersion, toVersion,
+							QString::fromStdString(m_serialKey.toString()));
+
+	QThread* thread = new QThread();
+	connect(notifier, SIGNAL(finished()), thread, SLOT(quit()));
+	connect(notifier, SIGNAL(finished()), notifier, SLOT(deleteLater()));
+	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+	notifier->moveToThread(thread);
+	thread->start();
+
+	QMetaObject::invokeMethod(notifier, "notifyUpdate",
+							  Qt::QueuedConnection);
 }
 
 Edition
