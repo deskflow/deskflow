@@ -29,11 +29,10 @@ LicenseManager::LicenseManager(AppConfig* appConfig) :
 }
 
 std::pair<bool, QString>
-LicenseManager::setSerialKey(QString serialKeyString, bool acceptExpired)
+LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
 {
 	std::pair<bool, QString> ret (true, "");
 	time_t currentTime = ::time(0);
-	SerialKey serialKey (serialKeyString.toStdString());
 
 	if (!acceptExpired && serialKey.isExpired(currentTime)) {
 		ret.first = false;
@@ -44,7 +43,8 @@ LicenseManager::setSerialKey(QString serialKeyString, bool acceptExpired)
 	if (serialKey != m_serialKey) {
 		using std::swap;
 		swap (serialKey, m_serialKey);
-		m_AppConfig->setSerialKey(serialKeyString);
+		m_AppConfig->setSerialKey(QString::fromStdString
+									(serialKey.toString()));
 		emit serialKeyChanged(m_serialKey);
 
 		if (serialKey.isTrial()) {
@@ -114,7 +114,13 @@ LicenseManager::serialKey() const
 void LicenseManager::refresh()
 {
 	if (!m_AppConfig->serialKey().isEmpty()) {
-		setSerialKey(m_AppConfig->serialKey(), true);
+		try {
+			SerialKey serialKey (m_AppConfig->serialKey().toStdString());
+			setSerialKey(serialKey, true);
+		} catch (...) {
+			m_AppConfig->setSerialKey("");
+			m_AppConfig->saveSettings();
+		}
 	}
 	if (m_serialKey.isExpired(::time(0))) {
 		emit endTrial(true);
