@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -63,13 +63,19 @@ CondVarBase::broadcast()
 bool
 CondVarBase::wait(Stopwatch& timer, double timeout) const
 {
-	// check timeout against timer
-	if (timeout >= 0.0) {
-		timeout -= timer.getTime();
-		if (timeout < 0.0)
-			return false;
-	}
-	return wait(timeout);
+	double remain = timeout-timer.getTime();
+	// Some ARCH wait()s return prematurely, retry until really timed out
+	// In particular, ArchMultithreadPosix::waitCondVar() returns every 100ms
+	do {
+		// Always call wait at least once, even if remain is 0, to give
+		// other thread a chance to grab the mutex to avoid deadlocks on
+        // busy waiting.
+		if (remain<0.0) remain=0.0;
+		if (wait(remain))
+			return true;
+		remain = timeout - timer.getTime();
+	} while (remain >= 0.0);
+	return false;
 }
 
 bool

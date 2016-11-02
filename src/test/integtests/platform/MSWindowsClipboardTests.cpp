@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -146,7 +146,7 @@ TEST_F(MSWindowsClipboardTests, close_isOpen_noErrors)
 }
 
 // looks like this test may fail intermittently:
-// * http://buildbot.synergy-project.org:8000/builders/trunk-win32/builds/246/steps/shell_3/logs/stdio
+// * http://buildbot.symless.com:8000/builders/trunk-win32/builds/246/steps/shell_3/logs/stdio
 /*TEST_F(MSWindowsClipboardTests, getTime_openWithNoEmpty_returnsOne)
 {
 	MSWindowsClipboard clipboard(NULL);
@@ -160,7 +160,7 @@ TEST_F(MSWindowsClipboardTests, close_isOpen_noErrors)
 }*/
 
 // this also fails intermittently:
-// http://buildbot.synergy-project.org:8000/builders/trunk-win32/builds/266/steps/shell_3/logs/stdio
+// http://buildbot.symless.com:8000/builders/trunk-win32/builds/266/steps/shell_3/logs/stdio
 /*TEST_F(MSWindowsClipboardTests, getTime_openAndEmpty_returnsOne)
 {
 	MSWindowsClipboard clipboard(NULL);

@@ -1,10 +1,10 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012 Synergy Si Ltd.
+# Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2009 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# found in the file COPYING that should have accompanied this file.
+# found in the file LICENSE that should have accompanied this file.
 # 
 # This package is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -58,7 +58,16 @@ endif()
 
 add_executable(synergyc ${sources})
 target_link_libraries(synergyc
-	arch base client common io mt net ipc platform server synergy cryptopp ${libs})
+	arch base client common io mt net ipc platform server synergy ${libs} ${OPENSSL_LIBS})
+
+if (WIN32)
+	ADD_CUSTOM_COMMAND(
+		TARGET synergyc
+		POST_BUILD
+		COMMAND "mt.exe" -manifest \"${CMAKE_SOURCE_DIR}\\res\\dpiaware.manifest\" -inputresource:\"$<TARGET_FILE:synergyc>\"\;\#1 -outputresource:\"$<TARGET_FILE:synergyc>\"\;\#1
+		COMMENT "Adding display aware manifest..."
+	)
+endif()
 
 if (CONF_CPACK)
 	install(TARGETS

@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,34 +17,52 @@
  */
 
 #include "net/TCPSocketFactory.h"
-
 #include "net/TCPSocket.h"
 #include "net/TCPListenSocket.h"
+#include "net/SecureSocket.h"
+#include "net/SecureListenSocket.h"
+#include "arch/Arch.h"
+#include "base/Log.h"
 
 //
-// CTCPSocketFactory
+// TCPSocketFactory
 //
 
-CTCPSocketFactory::CTCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
+TCPSocketFactory::TCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {
 	// do nothing
 }
 
-CTCPSocketFactory::~CTCPSocketFactory()
+TCPSocketFactory::~TCPSocketFactory()
 {
 	// do nothing
 }
 
 IDataSocket*
-CTCPSocketFactory::create() const
+TCPSocketFactory::create(bool secure) const
 {
-	return new CTCPSocket(m_events, m_socketMultiplexer);
+	if (secure) {
+		SecureSocket* secureSocket = new SecureSocket(m_events, m_socketMultiplexer);
+		secureSocket->initSsl (false);
+		return secureSocket;
+	}
+	else {
+		return new TCPSocket(m_events, m_socketMultiplexer);
+	}
 }
 
 IListenSocket*
-CTCPSocketFactory::createListen() const
+TCPSocketFactory::createListen(bool secure) const
 {
-	return new TCPListenSocket(m_events, m_socketMultiplexer);
+	IListenSocket* socket = NULL;
+	if (secure) {
+		socket = new SecureListenSocket(m_events, m_socketMultiplexer);
+	}
+	else {
+		socket = new TCPListenSocket(m_events, m_socketMultiplexer);
+	}
+
+	return socket;
 }

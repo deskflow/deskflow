@@ -2,10 +2,13 @@ QT += widgets \
     network
 TEMPLATE = app
 TARGET = synergy
+DEFINES += VERSION_STAGE=\\\"$$QMAKE_VERSION_STAGE\\\"
+DEFINES += VERSION_REVISION=\\\"$$QMAKE_VERSION_REVISION\\\"
 DEPENDPATH += . \
     res
 INCLUDEPATH += . \
-    src
+    src \
+    ../lib/shared/
 FORMS += res/MainWindowBase.ui \
     res/AboutDialogBase.ui \
     res/ServerConfigDialogBase.ui \
@@ -14,7 +17,10 @@ FORMS += res/MainWindowBase.ui \
     res/HotkeyDialogBase.ui \
     res/SettingsDialogBase.ui \
     res/SetupWizardBase.ui \
-    res/AddClientDialogBase.ui
+    res/AddClientDialogBase.ui \
+    res/ActivationDialog.ui \
+    res/CancelActivationDialog.ui \
+    res/FailedLoginDialog.ui
 SOURCES += src/main.cpp \
     src/MainWindow.cpp \
     src/AboutDialog.cpp \
@@ -50,7 +56,17 @@ SOURCES += src/main.cpp \
     src/ZeroconfService.cpp \
     src/DataDownloader.cpp \
     src/AddClientDialog.cpp \
-    src/CommandProcess.cpp
+    src/CommandProcess.cpp \
+    src/CoreInterface.cpp \
+    src/Fingerprint.cpp \
+    src/SslCertificate.cpp \
+    src/WebClient.cpp \
+    src/ActivationNotifier.cpp \
+    src/ActivationDialog.cpp \
+    src/CancelActivationDialog.cpp \
+    src/FailedLoginDialog.cpp \
+    ../lib/shared/SerialKey.cpp \
+    src/LicenseManager.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -86,12 +102,23 @@ HEADERS += src/MainWindow.h \
     src/ZeroconfService.h \
     src/DataDownloader.h \
     src/AddClientDialog.h \
-    src/CommandProcess.h
+    src/CommandProcess.h \
+    src/ProcessorArch.h \
+    src/CoreInterface.h \
+    src/Fingerprint.h \
+    src/SslCertificate.h \
+    src/WebClient.h \
+    src/ActivationNotifier.h \
+    src/ElevateMode.h \
+    src/ActivationDialog.h \
+    src/CancelActivationDialog.h \
+    src/FailedLoginDialog.h \
+    ../lib/shared/EditionType.h \
+    ../lib/shared/SerialKey.h \
+    src/LicenseManager.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 
-    HEADERS += src/AXDatabaseCleaner.h
-    OBJECTIVE_SOURCES += src/AXDatabaseCleaner.mm
     QMAKE_INFO_PLIST = res/mac/Info.plist
     TARGET = Synergy
     QSYNERGY_ICON.files = res/mac/Synergy.icns

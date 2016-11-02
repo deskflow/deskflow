@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -72,6 +72,11 @@ Log::Log()
 	insert(new ConsoleLogOutputter);
 
 	s_log = this;
+}
+
+Log::Log(Log* src)
+{
+	s_log = src;
 }
 
 Log::~Log()
@@ -167,21 +172,33 @@ Log::print(const char* file, int line, const char* fmt, ...)
 	// do not prefix time and file for kPRINT (CLOG_PRINT)
 	if (priority != kPRINT) {
 
-		char message[kLogMessageLength];
-
-#ifndef NDEBUG
 		struct tm *tm;
-		char tmp[220];
+		char timestamp[50];
 		time_t t;
 		time(&t);
 		tm = localtime(&t);
-		sprintf(tmp, "%04i-%02i-%02iT%02i:%02i:%02i", tm->tm_year + 1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
-		sprintf(message, "%s %s: %s\n\t%s,%d", tmp, g_priority[priority], buffer, file, line);
+		sprintf(timestamp, "%04i-%02i-%02iT%02i:%02i:%02i", tm->tm_year + 1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+
+		// square brackets, spaces, comma and null terminator take about 10
+		int size = 10;
+		size += strlen(timestamp);
+		size += strlen(g_priority[priority]);
+		size += strlen(buffer);
+#ifndef NDEBUG
+		size += strlen(file);
+		// assume there is no file contains over 100k lines of code
+		size += 6;
+#endif
+		char* message = new char[size];
+
+#ifndef NDEBUG
+		sprintf(message, "[%s] %s: %s\n\t%s,%d", timestamp, g_priority[priority], buffer, file, line);
 #else
-		sprintf(message, "%s: %s", g_priority[priority], buffer);
+		sprintf(message, "[%s] %s: %s", timestamp, g_priority[priority], buffer);
 #endif
 
 		output(priority, message);
+		delete[] message;
 	} else {
 		output(priority, buffer);
 	}

@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "base/EventTypes.h"
+#include "common/basic_types.h"
 
 //! Key ID
 /*!
@@ -280,16 +280,18 @@ static const KeyID		kKeyAppMail			= 0xE0B4;
 static const KeyID		kKeyAppMedia		= 0xE0B5;
 static const KeyID		kKeyAppUser1		= 0xE0B6;
 static const KeyID		kKeyAppUser2		= 0xE0B7;
+static const KeyID		kKeyBrightnessDown	= 0xE0B8;
+static const KeyID		kKeyBrightnessUp	= 0xE0B9;
+static const KeyID		kKeyMissionControl	= 0xE0C0;
+static const KeyID		kKeyLaunchpad		= 0xE0C1;
 
 //@}
 
 struct KeyNameMapEntry {
-public:
 	const char*			m_name;
 	KeyID			 	m_id;
 };
 struct KeyModifierNameMapEntry {
-public:
 	const char*			m_name;
 	KeyModifierMask 	m_mask;
 };
@@ -300,11 +302,11 @@ A table of key names to the corresponding KeyID.  Only the keys listed
 above plus non-alphanumeric ASCII characters are in the table.  The end
 of the table is the first pair with a NULL m_name.
 */
-extern const KeyNameMapEntry kKeyNameMap[];
+extern const struct KeyNameMapEntry kKeyNameMap[];
 
 //! Modifier key name to KeyModifierMask table
 /*!
 A table of modifier key names to the corresponding KeyModifierMask.
 The end of the table is the first pair with a NULL m_name.
 */
-extern const KeyModifierNameMapEntry kModifierNameMap[];
+extern const struct KeyModifierNameMapEntry kModifierNameMap[];

@@ -1,10 +1,10 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2013 Synergy Si Ltd.
+ * Copyright (C) 2013-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,6 +16,20 @@
  */
 
 #include "QUtility.h"
+
+#include "ProcessorArch.h"
+#include "CommandProcess.h"
+#include "EditionType.h"
+
+#if defined(Q_OS_LINUX)
+#include <QProcess>
+#endif
+
+#if defined(Q_OS_WIN)
+#define _WIN32_WINNT 0x0501
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#endif
 
 void setIndexFromItemData(QComboBox* comboBox, const QVariant& itemData)
 {
@@ -48,4 +62,56 @@ QString getFirstMacAddress()
 		}
 	}
 	return mac;
+}
+
+qProcessorArch getProcessorArch()
+{
+#if defined(Q_OS_WIN)
+	SYSTEM_INFO systemInfo;
+	GetNativeSystemInfo(&systemInfo);
+
+	switch (systemInfo.wProcessorArchitecture) {
+	case PROCESSOR_ARCHITECTURE_INTEL:
+		return kProcessorArchWin32;
+	case PROCESSOR_ARCHITECTURE_IA64:
+		return kProcessorArchWin64;
+	case PROCESSOR_ARCHITECTURE_AMD64:
+		return kProcessorArchWin64;
+	default:
+		return kProcessorArchUnknown;
+	}
+#endif
+
+#if defined(Q_OS_LINUX)
+#ifdef __i386__
+	return kProcessorArchLinux32;
+#else
+	return kProcessorArchLinux64;
+#endif
+#endif
+
+	return kProcessorArchUnknown;
+}
+
+QString getOSInformation()
+{
+	QString result;
+
+#if defined(Q_OS_LINUX)
+	result = "Linux";
+	try {
+		QStringList arguments;
+		arguments.append("/etc/os-release");
+		CommandProcess cp("/bin/cat", arguments);
+		QString output = cp.run();
+
+		QRegExp resultRegex(".*PRETTY_NAME=\"([^\"]+)\".*");
+		if (resultRegex.exactMatch(output)) {
+			result = resultRegex.cap(1);
+		}
+	} catch (...) {
+	}
+#endif
+
+	return result;
 }

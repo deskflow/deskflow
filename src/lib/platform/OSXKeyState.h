@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,11 +25,8 @@
 
 #include <Carbon/Carbon.h>
 
-#if defined(MAC_OS_X_VERSION_10_5)
-	typedef TISInputSourceRef KeyLayout;
-#else
-	typedef KeyboardLayoutRef KeyLayout;
-#endif
+typedef TISInputSourceRef KeyLayout;
+class IOSXKeyResource;
 
 //! OS X key state
 /*!
@@ -95,11 +92,13 @@ public:
 
 	// IKeyState overrides
 	virtual bool		fakeCtrlAltDel();
+	virtual bool		fakeMediaKey(KeyID id);
 	virtual KeyModifierMask
 						pollActiveModifiers() const;
 	virtual SInt32		pollActiveGroup() const;
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
+    CGEventFlags getModifierStateAsOSXFlags();
 protected:
 	// KeyState overrides
 	virtual void		getKeyMap(synergy::KeyMap& keyMap);
@@ -115,7 +114,7 @@ private:
 
 	// Convert keyboard resource to a key map
 	bool				getKeyMap(synergy::KeyMap& keyMap,
-							SInt32 group, const KeyResource& r) const;
+							SInt32 group, const IOSXKeyResource& r) const;
 
 	// Get the available keyboard groups
 	bool				getGroups(GroupList&) const;
@@ -152,53 +151,6 @@ private:
 	void				init();
 
 private:
-	class KeyResource : public IInterface {
-	public:
-		virtual bool	isValid() const = 0;
-		virtual UInt32	getNumModifierCombinations() const = 0;
-		virtual UInt32	getNumTables() const = 0;
-		virtual UInt32	getNumButtons() const = 0;
-		virtual UInt32	getTableForModifier(UInt32 mask) const = 0;
-		virtual KeyID	getKey(UInt32 table, UInt32 button) const = 0;
-
-		// Convert a character in the current script to the equivalent KeyID
-		static KeyID	getKeyID(UInt8);
-
-		// Convert a unicode character to the equivalent KeyID.
-		static KeyID	unicharToKeyID(UniChar);
-	};
-
-
-	class CUCHRKeyResource : public KeyResource {
-	public:
-		CUCHRKeyResource(const void*, UInt32 keyboardType);
-
-		// KeyResource overrides
-		virtual bool	isValid() const;
-		virtual UInt32	getNumModifierCombinations() const;
-		virtual UInt32	getNumTables() const;
-		virtual UInt32	getNumButtons() const;
-		virtual UInt32	getTableForModifier(UInt32 mask) const;
-		virtual KeyID	getKey(UInt32 table, UInt32 button) const;
-
-	private:
-		typedef std::vector<KeyID> KeySequence;
-
-		bool			getDeadKey(KeySequence& keys, UInt16 index) const;
-		bool			getKeyRecord(KeySequence& keys,
-							UInt16 index, UInt16& state) const;
-		bool			addSequence(KeySequence& keys, UCKeyCharSeq c) const;
-
-	private:
-		const UCKeyboardLayout*			m_resource;
-		const UCKeyModifiersToTableNum*	m_m;
-		const UCKeyToCharTableIndex*	m_cti;
-		const UCKeySequenceDataIndex*	m_sdi;
-		const UCKeyStateRecordsIndex*	m_sri;
-		const UCKeyStateTerminators*	m_st;
-		UInt16							m_spaceOutput;
-	};
-
 	// OS X uses a physical key if 0 for the 'A' key.  synergy reserves
 	// KeyButton 0 so we offset all OS X physical key ids by this much
 	// when used as a KeyButton and by minus this much to map a KeyButton
@@ -207,7 +159,7 @@ private:
 		KeyButtonOffset = 1
 	};
 
-	typedef std::map<KeyLayout, SInt32> GroupMap;
+	typedef std::map<CFDataRef, SInt32> GroupMap;
 	typedef std::map<UInt32, KeyID> VirtualKeyMap;
 
 	VirtualKeyMap		m_virtualKeyMap;

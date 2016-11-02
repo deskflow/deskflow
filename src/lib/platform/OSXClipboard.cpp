@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -95,18 +95,17 @@ OSXClipboard::synchronize()
 	void
 OSXClipboard::add(EFormat format, const String & data)
 {
-	bool emptied = false;
 	if (m_pboard == NULL)
 		return;
 
 	LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
-	if(format == IClipboard::kText) {
+	if (format == IClipboard::kText) {
 		LOG((CLOG_DEBUG " format of data to be added to clipboard was kText"));
 	}
-	else if(format == IClipboard::kBitmap) {
+	else if (format == IClipboard::kBitmap) {
 		LOG((CLOG_DEBUG " format of data to be added to clipboard was kBitmap"));
 	}
-	else if(format == IClipboard::kHTML) {
+	else if (format == IClipboard::kHTML) {
 		LOG((CLOG_DEBUG " format of data to be added to clipboard was kHTML"));
 	}
 
@@ -121,24 +120,16 @@ OSXClipboard::add(EFormat format, const String & data)
 			CFStringRef flavorType = converter->getOSXFormat();
 			CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, (UInt8 *)osXData.data(), osXData.size());
 
-			// integ tests showed that if you call add(...) twice, then the
-			// second call will actually fail to set clipboard data. calling
-			// empty() seems to solve this problem. but, only clear the clipboard
-			// for the first converter, otherwise further converters will wipe out
-			// what we just added.
-			if (!emptied) {
-				empty();
-				emptied = true;
-			}
-			
-			PasteboardPutItemFlavor(
-					m_pboard,
-					(PasteboardItemID) 0,
-					flavorType,
-					dataRef, 
-					kPasteboardFlavorNoFlags);
-			LOG((CLOG_DEBUG "added %d bytes to clipboard format: %d", data.size(), format));
-		}
+            PasteboardPutItemFlavor(
+                m_pboard,
+                nullptr,
+                flavorType,
+                dataRef,
+                kPasteboardFlavorNoFlags);
+            
+            LOG((CLOG_DEBUG "added %d bytes to clipboard format: %d", data.size(), format));
+        }
+        
 	}
 }
 

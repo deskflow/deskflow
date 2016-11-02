@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,6 +31,7 @@
 #include "common/stdvector.h"
 
 #include <cstdio>
+#include <cstring>
 #include <X11/Xatom.h>
 
 //
@@ -314,7 +315,10 @@ XWindowsClipboard::add(EFormat format, const String& data)
 bool
 XWindowsClipboard::open(Time time) const
 {
-	assert(!m_open);
+	if (m_open) {
+		LOG((CLOG_DEBUG "failed to open clipboard: already opened"));
+		return false;
+	}
 
 	LOG((CLOG_DEBUG "open clipboard %d", m_id));
 
@@ -513,7 +517,7 @@ XWindowsClipboard::icccmFillCache()
 	}
 
 	XWindowsUtil::convertAtomProperty(data);
-	const Atom* targets = reinterpret_cast<const Atom*>(data.data());
+	const Atom* targets = reinterpret_cast<const Atom*>(data.data()); // TODO: Safe?
 	const UInt32 numTargets = data.size() / sizeof(Atom);
 	LOG((CLOG_DEBUG "  available targets: %s", XWindowsUtil::atomsToString(m_display, targets, numTargets).c_str()));
 
@@ -558,7 +562,7 @@ XWindowsClipboard::icccmFillCache()
 		IClipboard::EFormat format = converter->getFormat();
 		m_data[format]  = converter->toIClipboard(targetData);
 		m_added[format] = true;
-		LOG((CLOG_DEBUG "  added format %d for target %s (%u %s)", format, XWindowsUtil::atomToString(m_display, target).c_str(), targetData.size(), targetData.size() == 1 ? "byte" : "bytes"));
+		LOG((CLOG_DEBUG "added format %d for target %s (%u %s)", format, XWindowsUtil::atomToString(m_display, target).c_str(), targetData.size(), targetData.size() == 1 ? "byte" : "bytes"));
 	}
 }
 
@@ -668,11 +672,11 @@ XWindowsClipboard::motifOwnsClipboard() const
 	}
 
 	// check the owner window against the current clipboard owner
-	const MotifClipHeader* header =
-						reinterpret_cast<const MotifClipHeader*>(data.data());
-	if (data.size() >= sizeof(MotifClipHeader) &&
-		header->m_id == kMotifClipHeader) {
-		if (static_cast<Window>(header->m_selectionOwner) == owner) {
+	if (data.size() >= sizeof(MotifClipHeader)) {
+		MotifClipHeader header;
+		std::memcpy (&header, data.data(), sizeof(header));
+		if ((header.m_id == kMotifClipHeader) &&
+		    (static_cast<Window>(header.m_selectionOwner) == owner)) {
 			return true;
 		}
 	}
@@ -696,18 +700,18 @@ XWindowsClipboard::motifFillCache()
 		return;
 	}
 
-	// check that the header is okay
-	const MotifClipHeader* header =
-						reinterpret_cast<const MotifClipHeader*>(data.data());
-	if (data.size() < sizeof(MotifClipHeader) ||
-		header->m_id != kMotifClipHeader ||
-		header->m_numItems < 1) {
+	MotifClipHeader header;
+	if (data.size() < sizeof(header)) { // check that the header is okay
+		return;
+	}
+	std::memcpy (&header, data.data(), sizeof(header));
+	if (header.m_id != kMotifClipHeader || header.m_numItems < 1) {
 		return;
 	}
 
 	// get the Motif item property from the root window
 	char name[18 + 20];
-	sprintf(name, "_MOTIF_CLIP_ITEM_%d", header->m_item);
+	sprintf(name, "_MOTIF_CLIP_ITEM_%d", header.m_item);
     Atom atomItem = XInternAtom(m_display, name, False);
 	data = "";
 	if (!XWindowsUtil::getWindowProperty(m_display, root,
@@ -716,19 +720,20 @@ XWindowsClipboard::motifFillCache()
 		return;
 	}
 
-	// check that the item is okay
-	const MotifClipItem* item =
-					reinterpret_cast<const MotifClipItem*>(data.data());
-	if (data.size() < sizeof(MotifClipItem) ||
-		item->m_id != kMotifClipItem ||
-		item->m_numFormats - item->m_numDeletedFormats < 1) {
+	MotifClipItem item;
+	if (data.size() < sizeof(item)) { // check that the item is okay
+		return;
+	}
+	std::memcpy (&item, data.data(), sizeof(item));
+	if (item.m_id != kMotifClipItem ||
+		item.m_numFormats - item.m_numDeletedFormats < 1) {
 		return;
 	}
 
 	// format list is after static item structure elements
-	const SInt32 numFormats = item->m_numFormats - item->m_numDeletedFormats;
-	const SInt32* formats   = reinterpret_cast<const SInt32*>(item->m_size +
-								reinterpret_cast<const char*>(data.data()));
+	const SInt32 numFormats = item.m_numFormats - item.m_numDeletedFormats;
+	const SInt32* formats   = reinterpret_cast<const SInt32*>(item.m_size +
+								static_cast<const char*>(data.data()));
 
 	// get the available formats
 	typedef std::map<Atom, String> MotifFormatMap;
@@ -745,18 +750,20 @@ XWindowsClipboard::motifFillCache()
 		}
 
 		// check that the format is okay
-		const MotifClipFormat* motifFormat =
-						reinterpret_cast<const MotifClipFormat*>(data.data());
-		if (data.size() < sizeof(MotifClipFormat) ||
-			motifFormat->m_id != kMotifClipFormat ||
-			motifFormat->m_length < 0 ||
-			motifFormat->m_type == None ||
-			motifFormat->m_deleted != 0) {
+		MotifClipFormat motifFormat;
+		if (data.size() < sizeof(motifFormat)) {
+			continue;
+		}
+		std::memcpy (&motifFormat, data.data(), sizeof(motifFormat));
+		if (motifFormat.m_id != kMotifClipFormat ||
+			motifFormat.m_length < 0 ||
+			motifFormat.m_type == None ||
+			motifFormat.m_deleted != 0) {
 			continue;
 		}
 
 		// save it
-		motifFormats.insert(std::make_pair(motifFormat->m_type, data));
+		motifFormats.insert(std::make_pair(motifFormat.m_type, data));
 	}
 	//const UInt32 numMotifFormats = motifFormats.size();
 
@@ -779,15 +786,14 @@ XWindowsClipboard::motifFillCache()
 		}
 
 		// get format
-		const MotifClipFormat* motifFormat =
-								reinterpret_cast<const MotifClipFormat*>(
-									index2->second.data());
-		const Atom target                   = motifFormat->m_type;
+		MotifClipFormat motifFormat;
+		std::memcpy (&motifFormat, index2->second.data(), sizeof(motifFormat));
+		const Atom target = motifFormat.m_type;
 
 		// get the data (finally)
 		Atom actualTarget;
 		String targetData;
-		if (!motifGetSelection(motifFormat, &actualTarget, &targetData)) {
+		if (!motifGetSelection(&motifFormat, &actualTarget, &targetData)) {
 			LOG((CLOG_DEBUG1 "  no data for target %s", XWindowsUtil::atomToString(m_display, target).c_str()));
 			continue;
 		}
@@ -796,7 +802,7 @@ XWindowsClipboard::motifFillCache()
 		IClipboard::EFormat format = converter->getFormat();
 		m_data[format]  = converter->toIClipboard(targetData);
 		m_added[format] = true;
-		LOG((CLOG_DEBUG "  added format %d for target %s", format, XWindowsUtil::atomToString(m_display, target).c_str()));
+		LOG((CLOG_DEBUG "added format %d for target %s", format, XWindowsUtil::atomToString(m_display, target).c_str()));
 	}
 }
 
@@ -1314,7 +1320,7 @@ XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 	// by badly behaved selection owners.
 	XEvent xevent;
 	std::vector<XEvent> events;
-	Stopwatch timeout(true);
+	Stopwatch timeout(false);	// timer not stopped, not triggered
 	static const double s_timeout = 0.25;	// FIXME -- is this too short?
 	bool noWait = false;
 	while (!m_done && !m_failed) {
@@ -1358,7 +1364,7 @@ XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 	XSelectInput(display, m_requestor, attr.your_event_mask);
 
 	// return success or failure
-	LOG((CLOG_DEBUG1 "request %s", m_failed ? "failed" : "succeeded"));
+	LOG((CLOG_DEBUG1 "request %s after %fs", m_failed ? "failed" : "succeeded", timeout.getTime()));
 	return !m_failed;
 }
 

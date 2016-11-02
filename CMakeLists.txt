@@ -1,10 +1,10 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012 Synergy Si Ltd.
+# Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2009 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# found in the file COPYING that should have accompanied this file.
+# found in the file LICENSE that should have accompanied this file.
 # 
 # This package is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,8 +16,9 @@
 
 # Version number for Synergy
 set(VERSION_MAJOR 1)
-set(VERSION_MINOR 6)
-set(VERSION_REV 3)
+set(VERSION_MINOR 8)
+set(VERSION_REV 5)
+set(VERSION_STAGE stable)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
 cmake_minimum_required(VERSION 2.6)
@@ -76,7 +77,11 @@ if (UNIX)
 
 	# warnings as errors:
 	# we have a problem with people checking in code with warnings.
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wno-unused-local-typedef")
+
+	if (NOT APPLE)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+	endif()
 
 	# For config.h, detect the libraries, functions, etc.
 	include(CheckIncludeFiles)
@@ -174,7 +179,7 @@ if (UNIX)
 				CACHE STRING "" FORCE)
 		else()
 			# >= 10.6: Intel only
-			set(CMAKE_OSX_ARCHITECTURES "i386;x86_64"
+			set(CMAKE_OSX_ARCHITECTURES "i386"
 				CACHE STRING "" FORCE)
 		endif()
 		
@@ -200,7 +205,10 @@ if (UNIX)
 		set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
 
 		set(XKBlib "X11/Xlib.h;X11/XKBlib.h")
-		check_symbol_exists("XRRNotifyEvent" "${XKBlib};X11/extensions/Xrandr.h" HAVE_X11_EXTENSIONS_XRANDR_H)
+		set(CMAKE_EXTRA_INCLUDE_FILES "${XKBlib};X11/extensions/Xrandr.h")
+		check_type_size("XRRNotifyEvent" X11_EXTENSIONS_XRANDR_H)
+		set(HAVE_X11_EXTENSIONS_XRANDR_H "${X11_EXTENSIONS_XRANDR_H}")
+		set(CMAKE_EXTRA_INCLUDE_FILES)
 
 		check_include_files("${XKBlib};X11/extensions/dpms.h" HAVE_X11_EXTENSIONS_DPMS_H)
 		check_include_files("X11/extensions/Xinerama.h" HAVE_X11_EXTENSIONS_XINERAMA_H)
@@ -319,7 +327,6 @@ else() # not-unix
 endif()
 
 add_subdirectory(src)
-add_subdirectory(ext)
 
 if (WIN32)
 	# TODO:	consider using /analyze to uncover potential bugs in the source code.

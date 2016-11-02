@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -121,8 +121,8 @@ MSWindowsClipboard::open(Time time) const
 
 	if (!OpenClipboard(m_window)) {
 		// unable to cause this in integ tests; but this can happen!
-		// * http://synergy-project.org/pm/issues/86
-		// * http://synergy-project.org/pm/issues/1256
+		// * http://symless.com/pm/issues/86
+		// * http://symless.com/pm/issues/1256
 		// logging improved to see if we can catch more info next time.
 		LOG((CLOG_WARN "failed to open clipboard: %d", GetLastError()));
 		return false;
@@ -166,22 +166,19 @@ MSWindowsClipboard::get(EFormat format) const
 {
 	// find the converter for the first clipboard format we can handle
 	IMSWindowsClipboardConverter* converter = NULL;
-	UINT win32Format = EnumClipboardFormats(0);
-	while (converter == NULL && win32Format != 0) {
-		for (ConverterList::const_iterator index = m_converters.begin();
-								index != m_converters.end(); ++index) {
-			converter = *index;
-			if (converter->getWin32Format() == win32Format &&
-				converter->getFormat()      == format) {
-				break;
-			}
-			converter = NULL;
+	for (ConverterList::const_iterator index = m_converters.begin();
+		index != m_converters.end(); ++index) {
+
+		converter = *index;
+		if (converter->getFormat() == format) {
+			break;
 		}
-		win32Format = EnumClipboardFormats(win32Format);
+		converter = NULL;
 	}
 
 	// if no converter then we don't recognize any formats
 	if (converter == NULL) {
+		LOG((CLOG_WARN "no converter for format %d", format));
 		return String();
 	}
 

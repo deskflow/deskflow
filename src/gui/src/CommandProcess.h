@@ -1,10 +1,10 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Synergy Si, Inc.
+ * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,6 +18,7 @@
 #ifndef COMMANDTHREAD_H
 #define COMMANDTHREAD_H
 
+#include <QObject>
 #include <QStringList>
 
 class CommandProcess : public QObject
@@ -25,17 +26,18 @@ class CommandProcess : public QObject
 	Q_OBJECT
 
 public:
-	CommandProcess(QString cmd, QStringList arguments);
+	CommandProcess(QString cmd, QStringList arguments, QString input = "");
 
 signals:
 	void finished();
 
 public slots:
-	void run();
+	QString run();
 
 private:
 	QString m_Command;
 	QStringList m_Arguments;
+	QString m_Input;
 };
 
 #endif // COMMANDTHREAD_H

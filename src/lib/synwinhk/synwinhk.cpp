@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -120,7 +120,6 @@ static LPARAM			g_deadLParam      = 0;
 static BYTE				g_deadKeyState[256] = { 0 };
 static BYTE				g_keyState[256]   = { 0 };
 static DWORD			g_hookThread      = 0;
-static DWORD			g_attachedThread  = 0;
 static bool				g_fakeInput       = false;
 
 #if defined(_MSC_VER)
@@ -135,53 +134,6 @@ extern "C" {
 int _fltused=0;
 }
 #endif
-
-
-//
-// internal functions
-//
-
-static
-void
-detachThread()
-{
-	if (g_attachedThread != 0 && g_hookThread != g_attachedThread) {
-		AttachThreadInput(g_hookThread, g_attachedThread, FALSE);
-		g_attachedThread = 0;
-	}
-}
-
-static
-bool
-attachThreadToForeground()
-{
-	// only attach threads if using low level hooks.  a low level hook
-	// runs in the thread that installed the hook but we have to make
-	// changes that require being attached to the target thread (which
-	// should be the foreground window).  a regular hook runs in the
-	// thread that just removed the event from its queue so we're
-	// already in the right thread.
-	if (g_hookThread != 0) {
-		HWND window    = GetForegroundWindow();
-        if (window == NULL)
-            return false;
-
-		DWORD threadID = GetWindowThreadProcessId(window, NULL);
-		// skip if no change
-		if (g_attachedThread != threadID) {
-			// detach from previous thread
-			detachThread();
-
-			// attach to new thread
-			if (threadID != 0 && threadID != g_hookThread) {
-				AttachThreadInput(g_hookThread, threadID, TRUE);
-				g_attachedThread = threadID;
-			}
-			return true;
-		}
-	}
-	return false;
-}
 
 #if !NO_GRAB_KEYBOARD
 static
@@ -236,7 +188,7 @@ static
 bool
 doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
-	DWORD vkCode = wParam;
+	DWORD vkCode = static_cast<DWORD>(wParam);
 	bool kf_up = (lParam & (KF_UP << 16)) != 0;
 
 	// check for special events indicating if we should start or stop
@@ -334,7 +286,7 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 	// map the key event to a character.  we have to put the dead
 	// key back first and this has the side effect of removing it.
 	if (g_deadVirtKey != 0) {
-		if(ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
+		if (ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
 					g_deadKeyState, &c, flags) == 2)
 		{
 			// If ToAscii returned 2, it means that we accidentally removed
@@ -366,7 +318,7 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 		PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
 							wParam | 0x05000000, lParam);
 		if (g_deadVirtKey != 0) {
-			if(ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
+			if (ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
 							g_deadKeyState, &c, flags) == 2)
 			{
 				ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
@@ -397,7 +349,7 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 	default:
 		// key is a dead key
 
-		if(lParam & 0x80000000u)
+		if (lParam & 0x80000000u)
 			// This handles the obscure situation where a key has been
 			// pressed which is both a dead key and a normal character
 			// depending on which modifiers have been pressed. We
@@ -497,7 +449,6 @@ static
 bool
 keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
-	attachThreadToForeground();
 	return doKeyboardHookHandler(wParam, lParam);
 }
 #endif
@@ -608,7 +559,6 @@ static
 bool
 mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 {
-//	attachThreadToForeground();
 	return doMouseHookHandler(wParam, x, y, data);
 }
 
@@ -934,8 +884,10 @@ init(DWORD threadID)
 			// old process (probably) still exists so refuse to
 			// reinitialize this DLL (and thus steal it from the
 			// old process).
-			CloseHandle(process);
-			return 0;
+			int result = CloseHandle(process);
+			if (result == false) {
+				return 0;
+			}
 		}
 
 		// clean up after old process.  the system should've already
@@ -1077,9 +1029,6 @@ uninstall(void)
 	// discard old dead keys
 	g_deadVirtKey = 0;
 	g_deadLParam  = 0;
-
-	// detach from thread
-	detachThread();
 
 	// uninstall hooks
 	if (g_keyboardLL != NULL) {

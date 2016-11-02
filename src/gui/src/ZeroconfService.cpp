@@ -1,10 +1,10 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Synergy Si Ltd.
+ * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -79,7 +79,7 @@ void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
 {
 	foreach (ZeroconfRecord record, list) {
 		registerService(false);
-		m_pMainWindow->appendLogNote(tr("zeroconf server detected: %1").arg(
+		m_pMainWindow->appendLogInfo(tr("zeroconf server detected: %1").arg(
 			record.serviceName));
 		m_pMainWindow->serverDetected(record.serviceName);
 	}
@@ -88,7 +88,7 @@ void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
 void ZeroconfService::clientDetected(const QList<ZeroconfRecord>& list)
 {
 	foreach (ZeroconfRecord record, list) {
-		m_pMainWindow->appendLogNote(tr("zeroconf client detected: %1").arg(
+		m_pMainWindow->appendLogInfo(tr("zeroconf client detected: %1").arg(
 			record.serviceName));
 		m_pMainWindow->autoAddScreen(record.serviceName);
 	}

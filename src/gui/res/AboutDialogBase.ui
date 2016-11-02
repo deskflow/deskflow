@@ -52,12 +52,12 @@
      <property name="text">
       <string>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2012 Synergy Si Ltd.&lt;br /&gt;
+Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (synergy-project.org).
+Visit our website for help and info (symless.com).
 &lt;/p&gt;</string>
      </property>
      <property name="margin">
@@ -146,6 +146,37 @@ Visit our website for help and info (synergy-project.org).
      </item>
      <item>
       <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="6" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Build Date: </string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="m_pLabelBuildDate">
+       <property name="text">
+        <string>Unknown</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>

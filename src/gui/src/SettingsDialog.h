@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,6 +23,7 @@
 #include <QDialog>
 #include "ui_SettingsDialogBase.h"
 #include "SynergyLocale.h"
+#include "CoreInterface.h"
 
 class AppConfig;
 
@@ -39,16 +40,15 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
 		void accept();
 		void reject();
 		void changeEvent(QEvent* event);
-		AppConfig& appConfig() { return m_AppConfig; }
+		AppConfig& appConfig() { return m_appConfig; }
 
 	private:
-		AppConfig& m_AppConfig;
+		AppConfig& m_appConfig;
 		SynergyLocale m_Locale;
-		bool m_SuppressElevateWarning;
+		CoreInterface m_CoreInterface;
 
 	private slots:
-		void on_m_pCheckBoxElevateMode_toggled(bool checked);
-		void on_m_pCheckBoxEnableCrypto_stateChanged(int );
+		void on_m_pCheckBoxEnableCrypto_toggled(bool checked);
 		void on_m_pComboLanguage_currentIndexChanged(int index);
 		void on_m_pCheckBoxLogToFile_stateChanged(int );
 		void on_m_pButtonBrowseLog_clicked();

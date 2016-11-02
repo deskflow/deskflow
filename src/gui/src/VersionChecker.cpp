@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,7 +25,7 @@
 #include <QLocale>
 
 #define VERSION_REGEX "(\\d+\\.\\d+\\.\\d+)"
-#define VERSION_URL "http://synergy-project.org/version/"
+#define VERSION_URL "http://symless.com/version/"
 
 VersionChecker::VersionChecker()
 {
@@ -51,8 +51,10 @@ void VersionChecker::replyFinished(QNetworkReply* reply)
 	if (!newestVersion.isEmpty())
 	{
 		QString currentVersion = getVersion();
-		if (compareVersions(currentVersion, newestVersion) > 0)
-			emit updateFound(newestVersion);
+		if (currentVersion != "Unknown") {
+			if (compareVersions(currentVersion, newestVersion) > 0)
+				emit updateFound(newestVersion);
+		}
 	}
 }
 
@@ -96,7 +98,9 @@ QString VersionChecker::getVersion()
 		QRegExp rx(VERSION_REGEX);
 		QString text = process.readLine();
 		if (rx.indexIn(text) != -1)
+		{
 			return rx.cap(1);
+		}
 	}
 
 	return tr("Unknown");

@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -120,7 +120,7 @@ ServerApp::help()
 #  define WINAPI_INFO
 #endif
 
-	char buffer[2000];
+	char buffer[3000];
 	sprintf(
 		buffer,
 		"Usage: %s"
@@ -259,7 +259,7 @@ ServerApp::forceReconnect(const Event&, void*)
 void 
 ServerApp::handleClientConnected(const Event&, void* vlistener)
 {
-	ClientListener* listener = reinterpret_cast<ClientListener*>(vlistener);
+	ClientListener* listener = static_cast<ClientListener*>(vlistener);
 	ClientProxy* client = listener->getNextClient();
 	if (client != NULL) {
 		m_server->adoptClient(client);
@@ -317,7 +317,7 @@ ServerApp::updateStatus()
 	updateStatus("");
 }
 
-void ServerApp::updateStatus( const String& msg )
+void ServerApp::updateStatus(const String& msg)
 {
 	if (m_taskBarReceiver)
 	{
@@ -338,8 +338,8 @@ void
 ServerApp::stopServer()
 {
 	if (m_serverState == kStarted) {
-		closeClientListener(m_listener);
 		closeServer(m_server);
+		closeClientListener(m_listener);
 		m_server      = NULL;
 		m_listener    = NULL;
 		m_serverState = kInitialized;
@@ -543,6 +543,7 @@ ServerApp::startServer()
 		listener   = openClientListener(args().m_config->getSynergyAddress());
 		m_server   = openServer(*args().m_config, m_primaryClient);
 		listener->setServer(m_server);
+		m_server->setListener(listener);
 		m_listener = listener;
 		updateStatus();
 		LOG((CLOG_NOTE "started server, waiting for clients"));
@@ -631,10 +632,9 @@ ServerApp::openClientListener(const NetworkAddress& address)
 {
 	ClientListener* listen = new ClientListener(
 		address,
-		new CTCPSocketFactory(m_events, getSocketMultiplexer()),
-		NULL,
-		args().m_crypto,
-		m_events);
+		new TCPSocketFactory(m_events, getSocketMultiplexer()),
+		m_events,
+		args().m_enableCrypto);
 	
 	m_events->adoptHandler(
 		m_events->forClientListener().connected(), listen,
@@ -647,7 +647,7 @@ ServerApp::openClientListener(const NetworkAddress& address)
 Server* 
 ServerApp::openServer(Config& config, PrimaryClient* primaryClient)
 {
-	Server* server = new Server(config, primaryClient, m_serverScreen, m_events, args().m_enableDragDrop);
+	Server* server = new Server(config, primaryClient, m_serverScreen, m_events, args());
 	try {
 		m_events->adoptHandler(
 			m_events->forServer().disconnected(), server,
@@ -715,9 +715,6 @@ ServerApp::mainLoop()
 	if (argsBase().m_enableIpc) {
 		initIpcClient();
 	}
-
-	// load all available plugins.
-	ARCH->plugin().init(m_serverScreen->getEventTarget(), m_events);
 
 	// handle hangup signal by reloading the server's configuration
 	ARCH->setSignalHandler(Arch::kHANGUP, &reloadSignalHandler, NULL);

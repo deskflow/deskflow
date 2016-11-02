@@ -1,10 +1,10 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,6 +17,10 @@
  
 #include "SetupWizard.h"
 #include "MainWindow.h"
+#include "WebClient.h"
+#include "ActivationNotifier.h"
+#include "LicenseManager.h"
+#include "EditionType.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
 
@@ -51,7 +55,6 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 
 	m_Locale.fillLanguageComboBox(m_pComboLanguage);
 	setIndexFromItemData(m_pComboLanguage, m_MainWindow.appConfig().language());
-
 }
 
 SetupWizard::~SetupWizard()
@@ -120,8 +123,6 @@ void SetupWizard::accept()
 		settings.setValue("groupClientChecked", true);
 		settings.setValue("groupServerChecked", false);
 	}
-
-	settings.sync();
 
 	QWizard::accept();
 

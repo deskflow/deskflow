@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -50,6 +50,8 @@ ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows ,
 	m_NumRows(numRows),
 	m_ServerName(serverName),
 	m_IgnoreAutoConfigClient(false),
+	m_EnableDragAndDrop(false),
+	m_ClipboardSharing(true),
 	m_pMainWindow(mainWindow)
 {
 	Q_ASSERT(m_pSettings);
@@ -114,6 +116,7 @@ void ServerConfig::saveSettings()
 	settings().setValue("switchDoubleTap", switchDoubleTap());
 	settings().setValue("switchCornerSize", switchCornerSize());
 	settings().setValue("ignoreAutoConfigClient", ignoreAutoConfigClient());
+	settings().setValue("enableDragAndDrop", enableDragAndDrop());
 
 	writeSettings(settings(), switchCorners(), "switchCorner");
 
@@ -157,6 +160,7 @@ void ServerConfig::loadSettings()
 	setSwitchDoubleTap(settings().value("switchDoubleTap", 250).toInt());
 	setSwitchCornerSize(settings().value("switchCornerSize").toInt());
 	setIgnoreAutoConfigClient(settings().value("ignoreAutoConfigClient").toBool());
+	setEnableDragAndDrop(settings().value("enableDragAndDrop", true).toBool());
 
 	readSettings(settings(), switchCorners(), "switchCorner", false, NumSwitchCorners);
 
@@ -243,6 +247,7 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
 	outStream << "\t" << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << endl;
 	outStream << "\t" << "screenSaverSync = " << (config.screenSaverSync() ? "true" : "false") << endl;
 	outStream << "\t" << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << endl;
+	outStream << "\t" << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << endl;
 
 	if (config.hasSwitchDelay())
 		outStream << "\t" << "switchDelay = " << config.switchDelay() << endl;
@@ -374,12 +379,15 @@ int ServerConfig::showAddClientDialog(const QString& clientName)
 {
 	int result = kAddClientIgnore;
 
-	if (m_pMainWindow->isActiveWindow()) {
-		AddClientDialog addClientDialog(clientName, m_pMainWindow);
-		addClientDialog.exec();
-		result = addClientDialog.addResult();
-		m_IgnoreAutoConfigClient = addClientDialog.ignoreAutoConfigClient();
+	if (!m_pMainWindow->isActiveWindow()) {
+		m_pMainWindow->showNormal();
+		m_pMainWindow->activateWindow();
 	}
+
+	AddClientDialog addClientDialog(clientName, m_pMainWindow);
+	addClientDialog.exec();
+	result = addClientDialog.addResult();
+	m_IgnoreAutoConfigClient = addClientDialog.ignoreAutoConfigClient();
 
 	return result;
 }

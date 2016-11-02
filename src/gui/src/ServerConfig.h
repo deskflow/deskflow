@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -61,6 +61,8 @@ class ServerConfig : public BaseConfig
 		const QList<bool>& switchCorners() const { return m_SwitchCorners; }
 		const HotkeyList& hotkeys() const { return m_Hotkeys; }
 		bool ignoreAutoConfigClient() const { return m_IgnoreAutoConfigClient; }
+		bool enableDragAndDrop() const { return m_EnableDragAndDrop; }
+		bool clipboardSharing() const { return m_ClipboardSharing; }
 
 		void saveSettings();
 		void loadSettings();
@@ -88,6 +90,8 @@ class ServerConfig : public BaseConfig
 		void setSwitchCorner(int c, bool on) { m_SwitchCorners[c] = on; }
 		void setSwitchCornerSize(int val) { m_SwitchCornerSize = val; }
 		void setIgnoreAutoConfigClient(bool on) { m_IgnoreAutoConfigClient = on; }
+		void setEnableDragAndDrop(bool on) { m_EnableDragAndDrop = on; }
+		void setClipboardSharing(bool on) { m_ClipboardSharing = on; }
 		QList<bool>& switchCorners() { return m_SwitchCorners; }
 		HotkeyList& hotkeys() { return m_Hotkeys; }
 
@@ -119,6 +123,8 @@ class ServerConfig : public BaseConfig
 		HotkeyList m_Hotkeys;
 		QString m_ServerName;
 		bool m_IgnoreAutoConfigClient;
+		bool m_EnableDragAndDrop;
+		bool m_ClipboardSharing;
 		MainWindow* m_pMainWindow;
 };
 

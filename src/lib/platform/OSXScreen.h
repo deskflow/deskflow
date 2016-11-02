@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -125,18 +125,20 @@ private:
 	bool				onMouseButton(bool pressed, UInt16 macButton);
 	bool				onMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
 	
-	#if !defined(MAC_OS_X_VERSION_10_5)
-	bool				onDisplayChange();
-	#endif
 	void				constructMouseButtonEventMap();
 
 	bool				onKey(CGEventRef event);
+
+	void				onMediaKey(CGEventRef event);
 	
 	bool				onHotKey(EventRef event) const;
 	
 	// Added here to allow the carbon cursor hack to be called. 
 	void                showCursor();
 	void                hideCursor();
+
+	// map synergy mouse button to mac buttons
+	ButtonID			mapSynergyButtonToMac(UInt16) const;
 
 	// map mac mouse button to synergy buttons
 	ButtonID			mapMacButtonToSynergy(UInt16) const;
@@ -162,14 +164,10 @@ private:
 	// clipboard check timer handler
 	void				handleClipboardCheck(const Event&, void*);
 
-#if defined(MAC_OS_X_VERSION_10_5)
 	// Resolution switch callback
 	static void	displayReconfigurationCallback(CGDirectDisplayID,
 							CGDisplayChangeSummaryFlags, void*);
-#else
-	static pascal void	displayManagerCallback(void* inUserData,
-							SInt16 inMessage, void* inNotifyData);
-#endif
+
 	// fast user switch callback
 	static pascal OSStatus
 						userSwitchCallback(EventHandlerCallRef nextHandler,
@@ -302,12 +300,6 @@ private:
 	// does not have focus.
 	WindowRef			m_userInputWindow;
 
-#if !defined(MAC_OS_X_VERSION_10_5)
-	// display manager stuff (to get screen resolution switches).
-	DMExtendedNotificationUPP   m_displayManagerNotificationUPP;
-	ProcessSerialNumber			m_PSN;
-#endif
-
 	// fast user switching
 	EventHandlerRef			m_switchEventHandlerRef;
 
@@ -335,8 +327,8 @@ private:
 	CFRunLoopSourceRef		m_eventTapRLSR;
 
 	// for double click coalescing.
-	double					m_lastSingleClick;
-	double					m_lastDoubleClick;
+	double					m_lastClickTime;
+    int                     m_clickState;
 	SInt32					m_lastSingleClickXCursor;
 	SInt32					m_lastSingleClickYCursor;
 
@@ -352,4 +344,6 @@ private:
 	Mutex*					m_carbonLoopMutex;
 	CondVar<bool>*			m_carbonLoopReady;
 #endif
+
+	class OSXScreenImpl*	m_impl;
 };

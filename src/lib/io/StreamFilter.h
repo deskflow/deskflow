@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -49,13 +49,13 @@ public:
 	virtual bool		isReady() const;
 	virtual UInt32		getSize() const;
 
-protected:
 	//! Get the stream
 	/*!
 	Returns the stream passed to the c'tor.
 	*/
 	synergy::IStream*	getStream() const;
 
+protected:
 	//! Handle events from source stream
 	/*!
 	Does the event filtering.  The default simply dispatches an event

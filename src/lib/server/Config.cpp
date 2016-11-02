@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -765,6 +765,10 @@ Config::readSectionOptions(ConfigReadContext& s)
 		else if (name == "win32KeepForeground") {
 			addOption("", kOptionWin32KeepForeground, s.parseBoolean(value));
 		}
+		else if (name == "clipboardSharing") {
+			addOption("", kOptionClipboardSharing, s.parseBoolean(value));
+		}
+
 		else {
 			handled = false;
 		}
@@ -1376,6 +1380,9 @@ Config::getOptionName(OptionID id)
 	if (id == kOptionScreenPreserveFocus) {
 		return "preserveFocus";
 	}
+	if (id == kOptionClipboardSharing) {
+		return "clipboardSharing";
+	}
 	return NULL;
 }
 
@@ -1392,7 +1399,8 @@ Config::getOptionValue(OptionID id, OptionValue value)
 		id == kOptionXTestXineramaUnaware ||
 		id == kOptionRelativeMouseMoves ||
 		id == kOptionWin32KeepForeground ||
-		id == kOptionScreenPreserveFocus) {
+		id == kOptionScreenPreserveFocus ||
+		id == kOptionClipboardSharing) {
 		return (value != 0) ? "true" : "false";
 	}
 	if (id == kOptionModifierMapForShift ||

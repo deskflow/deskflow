@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -56,6 +56,10 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
 
 	m_pCheckBoxIgnoreAutoConfigClient->setChecked(serverConfig().ignoreAutoConfigClient());
 
+	m_pCheckBoxEnableDragAndDrop->setChecked(serverConfig().enableDragAndDrop());
+
+	m_pCheckBoxEnableClipboard->setChecked(serverConfig().clipboardSharing());
+
 	foreach(const Hotkey& hotkey, serverConfig().hotkeys())
 		m_pListHotkeys->addItem(hotkey.text());
 
@@ -97,6 +101,8 @@ void ServerConfigDialog::accept()
 	serverConfig().setSwitchCorner(BaseConfig::BottomRight, m_pCheckBoxCornerBottomRight->isChecked());
 	serverConfig().setSwitchCornerSize(m_pSpinBoxSwitchCornerSize->value());
 	serverConfig().setIgnoreAutoConfigClient(m_pCheckBoxIgnoreAutoConfigClient->isChecked());
+	serverConfig().setEnableDragAndDrop(m_pCheckBoxEnableDragAndDrop->isChecked());
+	serverConfig().setClipboardSharing(m_pCheckBoxEnableClipboard->isChecked());
 
 	// now that the dialog has been accepted, copy the new server config to the original one,
 	// which is a reference to the one in MainWindow.

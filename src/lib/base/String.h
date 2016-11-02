@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,6 +22,7 @@
 #include "common/stdstring.h"
 
 #include <stdarg.h>
+#include <vector>
 
 // use standard C++ string class for our string class
 typedef std::string String;
@@ -63,6 +64,48 @@ String sprintf(const char* fmt, ...);
 Finds \c find inside \c subject and replaces it with \c replace
 */
 void findReplaceAll(String& subject, const String& find, const String& replace);
+
+//! Remove file extension
+/*!
+Finds the last dot and remove all characters from the dot to the end
+*/
+String removeFileExt(String filename);
+
+//! Convert into hexdecimal
+/*!
+Convert each character in \c subject into hexdecimal form with \c width
+*/
+void toHex(String& subject, int width, const char fill = '0');
+
+//! Convert to all uppercase
+/*!
+Convert each character in \c subject to uppercase
+*/
+void uppercase(String& subject);
+
+//! Remove all specific char in suject
+/*!
+Remove all specific \c c in \c suject
+*/
+void removeChar(String& subject, const char c);
+
+//! Convert a size type to a string
+/*!
+Convert an size type to a string
+*/
+String sizeTypeToString(size_t n);
+
+//! Convert a string to a size type
+/*!
+Convert an a \c string to an size type
+*/
+size_t stringToSizeType(String string);
+
+//! Split a string into substrings
+/*!
+Split a \c string that separated by a \c c into substrings
+*/
+std::vector<String> splitString(String string, const char c);
 
 //! Case-insensitive comparisons
 /*!

@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -268,7 +268,7 @@ void
 ClientApp::handleClientRestart(const Event&, void* vtimer)
 {
 	// discard old timer
-	EventQueueTimer* timer = reinterpret_cast<EventQueueTimer*>(vtimer);
+	EventQueueTimer* timer = static_cast<EventQueueTimer*>(vtimer);
 	m_events->deleteTimer(timer);
 	m_events->removeHandler(Event::kTimer, timer);
 
@@ -301,7 +301,7 @@ void
 ClientApp::handleClientFailed(const Event& e, void*)
 {
 	Client::FailInfo* info =
-		reinterpret_cast<Client::FailInfo*>(e.getData());
+		static_cast<Client::FailInfo*>(e.getData());
 
 	updateStatus(String("Failed to connect to server: ") + info->m_what);
 	if (!args().m_restartable || !info->m_retry) {
@@ -326,25 +326,22 @@ ClientApp::handleClientDisconnected(const Event&, void*)
 		m_events->addEvent(Event(Event::kQuit));
 	}
 	else if (!m_suspended) {
-		m_client->connect();
+		scheduleClientRestart(nextRestartTimeout());
 	}
 	updateStatus();
 }
 
-
 Client*
 ClientApp::openClient(const String& name, const NetworkAddress& address,
-				synergy::Screen* screen, const CryptoOptions& crypto)
+				synergy::Screen* screen)
 {
 	Client* client = new Client(
 		m_events,
 		name,
 		address,
-		new CTCPSocketFactory(m_events, getSocketMultiplexer()),
-		NULL,
+		new TCPSocketFactory(m_events, getSocketMultiplexer()),
 		screen,
-		crypto,
-		args().m_enableDragDrop);
+		args());
 
 	try {
 		m_events->adoptHandler(
@@ -402,7 +399,7 @@ ClientApp::startClient()
 		if (m_clientScreen == NULL) {
 			clientScreen = openClientScreen();
 			m_client     = openClient(args().m_name,
-				*m_serverAddress, clientScreen, args().m_crypto);
+				*m_serverAddress, clientScreen);
 			m_clientScreen  = clientScreen;
 			LOG((CLOG_NOTE "started client"));
 		}
@@ -466,9 +463,6 @@ ClientApp::mainLoop()
 	if (argsBase().m_enableIpc) {
 		initIpcClient();
 	}
-
-	// load all available plugins.
-	ARCH->plugin().init(m_clientScreen->getEventTarget(), m_events);
 
 	// run event loop.  if startClient() failed we're supposed to retry
 	// later.  the timer installed by startClient() will take care of

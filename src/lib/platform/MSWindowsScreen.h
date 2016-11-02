@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -215,7 +215,11 @@ private: // HACK
 	
 	// save last position of mouse to compute next delta movement
 	void saveMousePosition(SInt32 x, SInt32 y);
-	
+
+	// accumulates together a series of fractional pixel moves, each time
+	// taking away and returning just the integer part of the running total.
+	void accumulateFractionalMove(float x, float y, SInt32& intX, SInt32& intY);
+
 	// check if it is a modifier key repeating message
 	bool				isModifierRepeat(KeyModifierMask oldState, 
 							KeyModifierMask state, WPARAM wParam) const;
@@ -266,6 +270,9 @@ private:
 	// last mouse position
 	SInt32				m_xCursor, m_yCursor;
 
+	// accumulated fractional pixel moves
+	float				m_xFractionalMove, m_yFractionalMove;
+
 	// last clipboard
 	UInt32				m_sequenceNumber;
 
@@ -283,9 +290,10 @@ private:
 	HKL					m_keyLayout;
 
 	// screen saver stuff
-	MSWindowsScreenSaver*	m_screensaver;
-	bool					m_screensaverNotify;
-	bool					m_screensaverActive;
+	MSWindowsScreenSaver*
+						m_screensaver;
+	bool				m_screensaverNotify;
+	bool				m_screensaverActive;
 
 	// clipboard stuff.  our window is used mainly as a clipboard
 	// owner and as a link in the clipboard viewer chain.

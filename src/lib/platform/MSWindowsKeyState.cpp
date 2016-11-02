@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -810,11 +810,11 @@ MSWindowsKeyState::fakeCtrlAltDel()
 	// current thread must be on that desktop to do the broadcast
 	// and we can't switch just any thread because some own windows
 	// or hooks.  so start a new thread to do the real work.
-	HANDLE hEvtSendSas = OpenEvent( EVENT_MODIFY_STATE, FALSE, "Global\\SendSAS" );
-	if ( hEvtSendSas ) {
+	HANDLE hEvtSendSas = OpenEvent(EVENT_MODIFY_STATE, FALSE, "Global\\SendSAS");
+	if (hEvtSendSas) {
 		LOG((CLOG_DEBUG "found the SendSAS event - signaling my launcher to simulate ctrl+alt+del"));
-		SetEvent( hEvtSendSas );
-		CloseHandle( hEvtSendSas );
+		SetEvent(hEvtSendSas);
+		CloseHandle(hEvtSendSas);
 	}
 	else {
 		Thread cad(new FunctionJob(&MSWindowsKeyState::ctrlAltDelThread));

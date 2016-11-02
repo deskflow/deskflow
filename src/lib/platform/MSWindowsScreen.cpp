@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,6 +31,7 @@
 #include "synergy/App.h"
 #include "synergy/ArgsBase.h"
 #include "synergy/ClientApp.h"
+#include "synergy/DpiHelper.h"
 #include "mt/Lock.h"
 #include "mt/Thread.h"
 #include "arch/win32/ArchMiscWindows.h"
@@ -43,7 +44,6 @@
 #include "base/TMethodJob.h"
 
 #include <string.h>
-#include <pbt.h>
 #include <Shlobj.h>
 #include <comutil.h>
 #include <algorithm>
@@ -105,6 +105,7 @@ MSWindowsScreen::MSWindowsScreen(
 	m_xCenter(0), m_yCenter(0),
 	m_multimon(false),
 	m_xCursor(0), m_yCursor(0),
+	m_xFractionalMove(0.0f), m_yFractionalMove(0.0f),
 	m_sequenceNumber(0),
 	m_mark(0),
 	m_markReceived(0),
@@ -144,6 +145,11 @@ MSWindowsScreen::MSWindowsScreen(
 								this, &MSWindowsScreen::updateKeysCB),
 							stopOnDeskSwitch);
 		m_keyState    = new MSWindowsKeyState(m_desks, getEventTarget(), m_events);
+
+		DpiHelper::calculateDpi(
+			GetSystemMetrics(SM_CXVIRTUALSCREEN),
+			GetSystemMetrics(SM_CYVIRTUALSCREEN));
+
 		updateScreenShape();
 		m_class       = createWindowClass();
 		m_window      = createWindow(m_class, "Synergy");
@@ -311,7 +317,7 @@ MSWindowsScreen::enter()
 		// and that the screen is not in powersave mode.
 		ArchMiscWindows::wakeupDisplay();
 
-		if(m_screensaver != NULL && m_screensaverActive)
+		if (m_screensaver != NULL && m_screensaverActive)
 		{
 			m_screensaver->deactivate();
 			m_screensaverActive = 0;
@@ -342,7 +348,8 @@ MSWindowsScreen::leave()
 
 		// warp to center
 		LOG((CLOG_DEBUG1 "warping cursor to center: %+d, %+d", m_xCenter, m_yCenter));
-		warpCursor(m_xCenter, m_yCenter);
+		float dpi = DpiHelper::getDpi();
+		warpCursor(m_xCenter / dpi, m_yCenter / dpi);
 
 		// disable special key sequences on win95 family
 		enableSpecialKeys(false);
@@ -434,8 +441,8 @@ MSWindowsScreen::checkClipboards()
 	if (m_ownClipboard && !MSWindowsClipboard::isOwnedBySynergy()) {
 		LOG((CLOG_DEBUG "clipboard changed: lost ownership and no notification received"));
 		m_ownClipboard = false;
-		sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardClipboard);
-		sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardSelection);
+		sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardClipboard);
+		sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardSelection);
 	}
 }
 
@@ -563,11 +570,25 @@ MSWindowsScreen::warpCursor(SInt32 x, SInt32 y)
 }
 
 void MSWindowsScreen::saveMousePosition(SInt32 x, SInt32 y) {
-
 	m_xCursor = x;
 	m_yCursor = y;
 
 	LOG((CLOG_DEBUG5 "saved mouse position for next delta: %+d,%+d", x,y));
+}
+
+void MSWindowsScreen::accumulateFractionalMove(float x, float y, SInt32& intX, SInt32& intY)
+{
+	// Accumulate together the move into the running total
+	m_xFractionalMove += x;
+	m_yFractionalMove += y;
+
+	// Return the integer part
+	intX = (SInt32)m_xFractionalMove;
+	intY = (SInt32)m_yFractionalMove;
+
+	// And keep only the fractional part
+	m_xFractionalMove -= intX;
+	m_yFractionalMove -= intY;
 }
 
 UInt32
@@ -924,7 +945,7 @@ void
 MSWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id)
 {
 	ClipboardInfo* info   = (ClipboardInfo*)malloc(sizeof(ClipboardInfo));
-	if(info == NULL) {
+	if (info == NULL) {
 		LOG((CLOG_ERR "malloc failed on %s:%s", __FILE__, __LINE__ ));
 		return;
 	}
@@ -936,7 +957,7 @@ MSWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id)
 void
 MSWindowsScreen::handleSystemEvent(const Event& event, void*)
 {
-	MSG* msg = reinterpret_cast<MSG*>(event.getData());
+	MSG* msg = static_cast<MSG*>(event.getData());
 	assert(msg != NULL);
 
 	if (ArchMiscWindows::processDialog(msg)) {
@@ -1348,10 +1369,20 @@ MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 bool
 MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 {
+	SInt32 originalMX = mx;
+	SInt32 originalMY = my;
+	float scaledMX = (float)mx;
+	float scaledMY = (float)my;
+
+	if (DpiHelper::s_dpiScaled) {
+		scaledMX /= DpiHelper::getDpi();
+		scaledMY /= DpiHelper::getDpi();
+	}
+
 	// compute motion delta (relative to the last known
 	// mouse position)
-	SInt32 x = mx - m_xCursor;
-	SInt32 y = my - m_yCursor;
+	float x = scaledMX - m_xCursor;
+	float y = scaledMY - m_yCursor;
 
 	LOG((CLOG_DEBUG3
 		"mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)",
@@ -1364,14 +1395,14 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 	}
 
 	// save position to compute delta of next motion
-	saveMousePosition(mx, my);
+	saveMousePosition((SInt32)scaledMX, (SInt32)scaledMY);
 
 	if (m_isOnScreen) {
 		
 		// motion on primary screen
 		sendEvent(
 			m_events->forIPrimaryScreen().motionOnPrimary(),
-			MotionInfo::alloc(m_xCursor, m_yCursor));
+			MotionInfo::alloc(originalMX, originalMY));
 
 		if (m_buttons[kButtonLeft] == true && m_draggingStarted == false) {
 			m_draggingStarted = true;
@@ -1384,7 +1415,8 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		// will always try to return to the original entry point on the 
 		// secondary screen.
 		LOG((CLOG_DEBUG5 "warping server cursor to center: %+d,%+d", m_xCenter, m_yCenter));
-		warpCursorNoFlush(m_xCenter, m_yCenter);
+		float dpi = DpiHelper::getDpi();
+		warpCursorNoFlush(m_xCenter / dpi, m_yCenter / dpi);
 		
 		// examine the motion.  if it's about the distance
 		// from the center of the screen to an edge then
@@ -1392,16 +1424,18 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		// ignore (see warpCursorNoFlush() for a further
 		// description).
 		static SInt32 bogusZoneSize = 10;
-		if (-x + bogusZoneSize > m_xCenter - m_x ||
-			 x + bogusZoneSize > m_x + m_w - m_xCenter ||
-			-y + bogusZoneSize > m_yCenter - m_y ||
-			 y + bogusZoneSize > m_y + m_h - m_yCenter) {
+		if (-x + bogusZoneSize > (m_xCenter - m_x) / dpi ||
+			 x + bogusZoneSize > (m_x + m_w - m_xCenter) / dpi ||
+			-y + bogusZoneSize > (m_yCenter - m_y) / dpi ||
+			 y + bogusZoneSize > (m_y + m_h - m_yCenter) / dpi) {
 			
 			LOG((CLOG_DEBUG "dropped bogus delta motion: %+d,%+d", x, y));
 		}
 		else {
 			// send motion
-			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(x, y));
+			SInt32 ix, iy;
+			accumulateFractionalMove(x, y, ix, iy);
+			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(ix, iy));
 		}
 	}
 
@@ -1502,8 +1536,8 @@ MSWindowsScreen::onClipboardChange()
 		if (m_ownClipboard) {
 			LOG((CLOG_DEBUG "clipboard changed: lost ownership"));
 			m_ownClipboard = false;
-			sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardClipboard);
-			sendClipboardEvent(m_events->forIScreen().clipboardGrabbed(), kClipboardSelection);
+			sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardClipboard);
+			sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardSelection);
 		}
 	}
 	else if (!m_ownClipboard) {
@@ -1528,20 +1562,25 @@ MSWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
 	POINT cursorPos;
 	GetCursorPos(&cursorPos);
 
-	if ((cursorPos.x != x) && (cursorPos.y != y)) {
-		LOG((CLOG_DEBUG "SetCursorPos did not work; using fakeMouseMove instead"));
-		
-		// when at Vista/7 login screen, SetCursorPos does not work (which could be
-		// an MS security feature). instead we can use fakeMouseMove, which calls
-		// mouse_event.
-		// IMPORTANT: as of implementing this function, it has an annoying side 
-		// effect; instead of the mouse returning to the correct exit point, it
-		// returns to the center of the screen. this could have something to do with
-		// the center screen warping technique used (see comments for onMouseMove
-		// definition).
-		fakeMouseMove(x, y);
+	// there is a bug or round error in SetCursorPos and GetCursorPos on 
+	// a high DPI setting. The check here is for Vista/7 login screen. 
+	// since this feature is mainly for client, so only check on client.
+	if (!isPrimary()) {
+		if ((cursorPos.x != x) && (cursorPos.y != y)) {
+			LOG((CLOG_DEBUG "SetCursorPos did not work; using fakeMouseMove instead"));
+			LOG((CLOG_DEBUG "cursor pos %d, %d expected pos %d, %d", cursorPos.x, cursorPos.y, x, y));
+			// when at Vista/7 login screen, SetCursorPos does not work (which could be
+			// an MS security feature). instead we can use fakeMouseMove, which calls
+			// mouse_event.
+			// IMPORTANT: as of implementing this function, it has an annoying side 
+			// effect; instead of the mouse returning to the correct exit point, it
+			// returns to the center of the screen. this could have something to do with
+			// the center screen warping technique used (see comments for onMouseMove
+			// definition).
+			fakeMouseMove(x, y);
+		}
 	}
-	
+
 	// yield the CPU.  there's a race condition when warping:
 	//   a hardware mouse event occurs
 	//   the mouse hook is not called because that process doesn't have the CPU
@@ -1583,16 +1622,27 @@ MSWindowsScreen::ignore() const
 void
 MSWindowsScreen::updateScreenShape()
 {
-	// get shape
+	// get shape and center
+	if (DpiHelper::s_dpiScaled) {
+		// use the original resolution size for width and height
+		m_w = (SInt32)DpiHelper::s_resolutionWidth;
+		m_h = (SInt32)DpiHelper::s_resolutionHeight;
+
+		// calculate center position according to the original size
+		m_xCenter = (SInt32)DpiHelper::s_primaryWidthCenter;
+		m_yCenter = (SInt32)DpiHelper::s_primaryHeightCenter;
+	}
+	else {
+		m_w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+		m_h = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+
+		m_xCenter = GetSystemMetrics(SM_CXSCREEN) >> 1;
+		m_yCenter = GetSystemMetrics(SM_CYSCREEN) >> 1;
+	}
+
+	// get position
 	m_x = GetSystemMetrics(SM_XVIRTUALSCREEN);
 	m_y = GetSystemMetrics(SM_YVIRTUALSCREEN);
-	m_w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
-	m_h = GetSystemMetrics(SM_CYVIRTUALSCREEN);
-
-	// get center for cursor
-	m_xCenter = GetSystemMetrics(SM_CXSCREEN) >> 1;
-	m_yCenter = GetSystemMetrics(SM_CYSCREEN) >> 1;
-
 	// check for multiple monitors
 	m_multimon = (m_w != GetSystemMetrics(SM_CXSCREEN) ||
 				  m_h != GetSystemMetrics(SM_CYSCREEN));

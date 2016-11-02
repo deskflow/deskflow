@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -1250,7 +1250,7 @@ XK_uhorn
 // map "Internet" keys to KeyIDs
 static const KeySym s_map1008FF[] =
 {
-	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x00 */ 0, 0, kKeyBrightnessUp, kKeyBrightnessDown, 0, 0, 0, 0,
 	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x10 */ 0, kKeyAudioDown, kKeyAudioMute, kKeyAudioUp,
 	/* 0x14 */ kKeyAudioPlay, kKeyAudioStop, kKeyAudioPrev, kKeyAudioNext,
@@ -1260,7 +1260,7 @@ static const KeySym s_map1008FF[] =
 	/* 0x30 */ kKeyWWWFavorites, 0, kKeyAppMedia, 0, 0, 0, 0, 0,
 	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x40 */ kKeyAppUser1, kKeyAppUser2, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x48 */ 0, 0, kKeyMissionControl, kKeyLaunchpad, 0, 0, 0, 0,
 	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
@@ -1386,7 +1386,7 @@ XWindowsUtil::setWindowProperty(Display* display, Window window,
 				Atom type, SInt32 format)
 {
 	const UInt32 length       = 4 * XMaxRequestSize(display);
-	const unsigned char* data = reinterpret_cast<const unsigned char*>(vdata);
+	const unsigned char* data = static_cast<const unsigned char*>(vdata);
 	UInt32 datumSize    = static_cast<UInt32>(format / 8);
 	// format 32 on 64bit systems is 8 bytes not 4.
 	if (format == 32) {
@@ -1429,6 +1429,7 @@ XWindowsUtil::setWindowProperty(Display* display, Window window,
 Time
 XWindowsUtil::getCurrentTime(Display* display, Window window)
 {
+	XLockDisplay(display);
 	// select property events on window
 	XWindowAttributes attr;
 	XGetWindowAttributes(display, window, &attr);
@@ -1459,6 +1460,7 @@ XWindowsUtil::getCurrentTime(Display* display, Window window)
 
 	// restore event mask
 	XSelectInput(display, window, attr.your_event_mask);
+	XUnlockDisplay(display);
 
 	return xevent.xproperty.time;
 }
@@ -1782,5 +1784,5 @@ void
 XWindowsUtil::ErrorLock::saveHandler(Display*, XErrorEvent* e, void* flag)
 {
 	LOG((CLOG_DEBUG1 "flagging X error: %d", e->error_code));
-	*reinterpret_cast<bool*>(flag) = true;
+	*static_cast<bool*>(flag) = true;
 }

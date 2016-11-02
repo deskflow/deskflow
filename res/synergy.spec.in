@@ -4,10 +4,10 @@ Name: synergy
 Release: 1
 License: GPLv2
 Group: Applications/Productivity
-URL: http://synergy-project.org/
-Source: http://synergy-project.org/download/
+URL: http://symless.com/
+Source: http://symless.com/download/
 Vendor: The Synergy Project
-Packager: Nick Bolton <nick@synergy-project.org>
+Packager: Nick Bolton <nick@symless.com>
 Version: ${in:version}
 
 %description
@@ -40,5 +40,5 @@ cp $source/res/synergy.ico %{buildroot}%{_datarootdir}/icons
 %attr(644,-,-) %{_datarootdir}/icons/synergy.ico
 
 %changelog
-* Thu Mar 20 2014 Nick Bolton <nick@synergy-project.org>
+* Thu Mar 20 2014 Nick Bolton <nick@symless.com>
 - Initial version of the package

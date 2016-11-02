@@ -1,12 +1,12 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
- * 
+ * found in the file LICENSE that should have accompanied this file.
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -20,7 +20,10 @@
 
 #define APPCONFIG_H
 
+#include <QObject>
 #include <QString>
+#include "ElevateMode.h"
+#include <EditionType.h>
 
 // this should be incremented each time a new page is added. this is
 // saved to settings when the user finishes running the wizard. if
@@ -31,8 +34,12 @@
 //   1: first version
 //   2: added language page
 //   3: added premium page and removed
+//   4: ssl plugin 'ns' v1.0
+//   5: ssl plugin 'ns' v1.1
+//   6: ssl plugin 'ns' v1.2
+//   7: serial key activation
 //
-const int kWizardVersion = 3;
+const int kWizardVersion = 7;
 
 class QSettings;
 class SettingsDialog;
@@ -42,8 +49,10 @@ enum ProcessMode {
 	Desktop
 };
 
-class AppConfig
+class AppConfig: public QObject
 {
+	Q_OBJECT
+
 	friend class SettingsDialog;
 	friend class MainWindow;
 	friend class SetupWizard;
@@ -53,53 +62,66 @@ class AppConfig
 		~AppConfig();
 
 	public:
-		const QString& screenName() const { return m_ScreenName; }
-		int port() const { return m_Port; }
-		const QString& interface() const { return m_Interface; }
-		int logLevel() const { return m_LogLevel; }
-		bool logToFile() const { return m_LogToFile; }
-		const QString& logFilename() const { return m_LogFilename; }
+		const QString& screenName() const;
+		int port() const;
+		const QString& interface() const;
+		int logLevel() const;
+		bool logToFile() const;
+		const QString& logFilename() const;
 		const QString logFilenameCmd() const;
 		QString logLevelText() const;
-		const QString& cryptoPass() const { return m_CryptoPass; }
-		bool cryptoEnabled() const { return m_CryptoEnabled; }
-		QString cryptoModeString() const;
-		ProcessMode processMode() const { return m_ProcessMode; }
-		bool wizardShouldRun() const { return m_WizardLastRun < kWizardVersion; }
-		const QString& language() const { return m_Language; }
-		bool startedBefore() const { return m_StartedBefore; }
-		bool autoConfig() const { return m_AutoConfig; }
+		ProcessMode processMode() const;
+		bool wizardShouldRun() const;
+		const QString& language() const;
+		bool startedBefore() const;
+		bool autoConfig() const;
 		void setAutoConfig(bool autoConfig);
-		bool autoConfigPrompted()  { return m_AutoConfigPrompted; }
+		bool autoConfigPrompted();
 		void setAutoConfigPrompted(bool prompted);
+		void setEdition(Edition);
+		Edition edition() const;
+		QString setSerialKey(QString serial);
+		void clearSerialKey();
+		QString serialKey();
+		int lastExpiringWarningTime() const;
+		void setLastExpiringWarningTime(int t);
 
-		QString synergysName() const { return m_SynergysName; }
-		QString synergycName() const { return m_SynergycName; }
+		QString synergysName() const;
+		QString synergycName() const;
 		QString synergyProgramDir() const;
 		QString synergyLogDir() const;
 
 		bool detectPath(const QString& name, QString& path);
 		void persistLogDir();
-		bool elevateMode();
+		ElevateMode elevateMode();
 
-	protected:
-		QSettings& settings() { return *m_pSettings; }
-		void setScreenName(const QString& s) { m_ScreenName = s; }
-		void setPort(int i) { m_Port = i; }
-		void setInterface(const QString& s) { m_Interface = s; }
-		void setLogLevel(int i) { m_LogLevel = i; }
-		void setLogToFile(bool b) { m_LogToFile = b; }
-		void setLogFilename(const QString& s) { m_LogFilename = s; }
-		void setCryptoEnabled(bool b) { m_CryptoEnabled = b; }
-		void setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
-		void setLanguage(const QString language) { m_Language = language; }
-		void setStartedBefore(bool b) { m_StartedBefore = b; }
-		void setElevateMode(bool b) { m_ElevateMode = b; }
+		void setCryptoEnabled(bool e);
+		bool getCryptoEnabled() const;
 
-		void loadSettings();
+		void setAutoHide(bool b);
+		bool getAutoHide();
+
+		bool activationHasRun() const;
+		AppConfig& activationHasRun(bool value);
+
+		QString lastVersion() const;
+
 		void saveSettings();
+		void setLastVersion(QString version);
 
-		void setCryptoPass(const QString& s);
+protected:
+		QSettings& settings();
+		void setScreenName(const QString& s);
+		void setPort(int i);
+		void setInterface(const QString& s);
+		void setLogLevel(int i);
+		void setLogToFile(bool b);
+		void setLogFilename(const QString& s);
+		void setWizardHasRun();
+		void setLanguage(const QString language);
+		void setStartedBefore(bool b);
+		void setElevateMode(ElevateMode em);
+		void loadSettings();
 
 	private:
 		QSettings* m_pSettings;
@@ -110,18 +132,27 @@ class AppConfig
 		bool m_LogToFile;
 		QString m_LogFilename;
 		int m_WizardLastRun;
-		bool m_CryptoEnabled;
-		QString m_CryptoPass;
 		ProcessMode m_ProcessMode;
 		QString m_Language;
 		bool m_StartedBefore;
 		bool m_AutoConfig;
-		bool m_ElevateMode;
+		ElevateMode m_ElevateMode;
 		bool m_AutoConfigPrompted;
+		Edition m_Edition;
+		QString m_ActivateEmail;
+		bool m_CryptoEnabled;
+		bool m_AutoHide;
+		QString m_Serialkey;
+		QString m_lastVersion;
+		int m_LastExpiringWarningTime;
+		bool m_ActivationHasRun;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];
 		static const char m_SynergyLogDir[];
+
+	signals:
+		void sslToggled(bool enabled);
 };
 
 #endif

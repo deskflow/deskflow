@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,7 +27,7 @@
 // by Magnus Fromreide of the sstream in g++ 3.0.
 
 /* This is part of libio/iostream, providing -*- C++ -*- input/output.
-Copyright (C) 2012 Synergy Si Ltd.
+Copyright (C) 2012-2016 Symless Ltd.
 Copyright (C) 2000 Free Software Foundation
 
 This file is part of the GNU IO Library.  This library is free
@@ -42,7 +42,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this library; see the file COPYING.  If not, write to the Free
+along with this library; see the file LICENSE.  If not, write to the Free
 Software Foundation, 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 As a special exception, if you link this library with files

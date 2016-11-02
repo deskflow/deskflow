@@ -1,10 +1,10 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012 Synergy Si Ltd.
+# Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2009 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# found in the file COPYING that should have accompanied this file.
+# found in the file LICENSE that should have accompanied this file.
 # 
 # This package is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,8 +18,8 @@ if (WIN32)
 	file(GLOB headers "MSWindows*.h")
 	file(GLOB sources "MSWindows*.cpp")
 elseif (APPLE)
-	file(GLOB headers "OSX*.h")
-	file(GLOB sources "OSX*.cpp" "OSX*.m")
+	file(GLOB headers "OSX*.h" "IOSX*.h")
+	file(GLOB sources "OSX*.cpp" "IOSX*.cpp" "OSX*.m" "OSX*.mm")
 elseif (UNIX)
 	file(GLOB headers "XWindows*.h")
 	file(GLOB sources "XWindows*.cpp")
@@ -31,6 +31,7 @@ endif()
 
 include_directories(
 	../
+	../../../ext/gtest-1.6.0/include
 )
 
 if (UNIX)

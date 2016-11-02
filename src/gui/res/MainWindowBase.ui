@@ -28,6 +28,57 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
+     <widget class="QWidget" name="m_trialWidget" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>8</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="m_trialLabel">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; days of your Synergy Pro trial remain. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
      <widget class="QWidget" name="m_pWidgetUpdate" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <property name="leftMargin">
@@ -40,7 +91,7 @@
         <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>7</number>
+        <number>8</number>
        </property>
        <item>
         <widget class="QLabel" name="m_pIconUpdate">
@@ -87,7 +138,7 @@
        </sizepolicy>
       </property>
       <property name="title">
-       <string>&amp;Server (share this computer's mouse and keyboard):</string>
+       <string>Ser&amp;ver (share this computer's mouse and keyboard):</string>
       </property>
       <property name="checkable">
        <bool>true</bool>
@@ -118,6 +169,30 @@
         </layout>
        </item>
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLabel" name="m_pLabelFingerprint">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>SSL Fingerprint:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="m_pLabelLocalFingerprint">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
         <widget class="QRadioButton" name="m_pRadioInternalConfig">
          <property name="text">
           <string>Configure interactively:</string>
@@ -128,7 +203,7 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
           <widget class="QPushButton" name="m_pButtonConfigureServer">
            <property name="text">
@@ -308,6 +383,19 @@
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
       <item>
+       <widget class="QLabel" name="m_pLabelPadlock">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="Synergy.qrc">:/res/icons/16x16/padlock.png</pixmap>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="m_pStatusLabel">
         <property name="text">
          <string>Ready</string>
@@ -444,12 +532,12 @@
     <string notr="true"/>
    </property>
   </action>
-  <action name="m_pActionWizard">
+  <action name="m_pActivate">
    <property name="text">
-    <string>Run Wizard</string>
+    <string>Activate</string>
    </property>
-   <property name="shortcut">
-    <string notr="true"/>
+   <property name="toolTip">
+    <string>Activate</string>
    </property>
   </action>
  </widget>

@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,6 +25,7 @@
 #include "server/ClientProxy1_3.h"
 #include "server/ClientProxy1_4.h"
 #include "server/ClientProxy1_5.h"
+#include "server/ClientProxy1_6.h"
 #include "synergy/protocol_types.h"
 #include "synergy/ProtocolUtil.h"
 #include "synergy/XSynergy.h"
@@ -226,6 +227,10 @@ ClientProxyUnknown::handleData(const Event&, void*)
 
 			case 5:
 				m_proxy = new ClientProxy1_5(name, m_stream, m_server, m_events);
+				break;
+
+			case 6:
+				m_proxy = new ClientProxy1_6(name, m_stream, m_server, m_events);
 				break;
 			}
 		}
