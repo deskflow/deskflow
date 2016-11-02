@@ -118,7 +118,7 @@ void LicenseManager::refresh()
 			SerialKey serialKey (m_AppConfig->serialKey().toStdString());
 			setSerialKey(serialKey, true);
 		} catch (...) {
-			m_AppConfig->setSerialKey("");
+			m_AppConfig->clearSerialKey();
 			m_AppConfig->saveSettings();
 		}
 	}
