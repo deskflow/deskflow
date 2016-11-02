@@ -1,3 +1,0 @@
-This repository has moved...
-
-http://github.com/symless/synergy
