@@ -509,8 +509,8 @@ class InternalCommands:
 			sdkDir = self.getMacSdkDir()
 			shortForm = "macosx" + self.macSdk
 			version = str(major) + "." + str(minor)
-			
-			qmake_cmd_string += " QMAKE_MACOSX_DEPLOYMENT_TARGET=" + version
+
+			qmake_cmd_string += " QMAKE_MACOSX_DEPLOYMENT_TARGET=" + self.macDeploy
 
 			(qMajor, qMinor, qRev) = self.getQmakeVersion()
 			if qMajor <= 4:
