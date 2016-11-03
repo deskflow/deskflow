@@ -319,6 +319,26 @@ ArgParser::parseDeprecatedArgs(int argc, const char* const* argv, int& i)
 		i++;
 		return true;
 	}
+	else if (isArg(i, argc, argv, NULL, "--res-w")) {
+		LOG((CLOG_NOTE "--res-w is deprecated"));
+		i++;
+		return true;
+	}
+	else if (isArg(i, argc, argv, NULL, "--res-h")) {
+		LOG((CLOG_NOTE "--res-h is deprecated"));
+		i++;
+		return true;
+	}
+	else if (isArg(i, argc, argv, NULL, "--prm-wc")) {
+		LOG((CLOG_NOTE "--prm-wc is deprecated"));
+		i++;
+		return true;
+	}
+	else if (isArg(i, argc, argv, NULL, "--prm-hc")) {
+		LOG((CLOG_NOTE "--prm-hc is deprecated"));
+		i++;
+		return true;
+	}
 
 	return false;
 }
