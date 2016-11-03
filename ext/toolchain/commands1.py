@@ -1854,7 +1854,10 @@ class InternalCommands:
 		# version is major and minor with no dots (e.g. 106)
 		version = str(major) + str(minor)
 
-		return "MacOSX%s-%s" % (version, arch)
+		if (self.macDeploy == self.macSdk):
+			return "MacOSX%s-%s" % (version, arch)
+		else:
+			return "MacOSX-%s" % arch
 
 	def reset(self):
 		if os.path.exists('build'):
