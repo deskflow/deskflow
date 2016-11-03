@@ -667,6 +667,9 @@ class InternalCommands:
 		
 		if config.has_option("hm", "macSdk"):
 			self.macSdk = config.get("hm", "macSdk")
+
+		if config.has_option("hm", "macDeploy"):
+			self.macDeploy = config.get("hm", "macDeploy")
 		
 		if config.has_option("hm", "macIdentity"):
 			self.macIdentity = config.get("hm", "macIdentity")
