@@ -41,7 +41,7 @@ class Toolchain:
 	cmd_opt_dict = {
 		'about'     : ['', []],
 		'setup'     : ['g:', ['generator=']],
-		'configure' : ['g:dr', ['generator=', 'debug', 'release', 'mac-sdk=', 'mac-identity=']],
+		'configure' : ['g:dr', ['generator=', 'debug', 'release', 'mac-sdk=', 'mac-deploy=', 'mac-identity=']],
 		'build'     : ['dr', ['debug', 'release']],
 		'clean'     : ['dr', ['debug', 'release']],
 		'update'    : ['', []],
@@ -245,6 +245,9 @@ class InternalCommands:
 	macSdk = None
 	
 	# by default, unknown
+	macDeploy = None
+
+	# by default, unknown
 	macIdentity = None
 	
 	# gtest dir with version number
@@ -365,7 +368,7 @@ class InternalCommands:
 		# ensure latest setup and do not ask config for generator (only fall 
 		# back to prompt if not specified as arg)
 		self.ensure_setup_latest()
-		
+
 		if sys.platform == "darwin":
 			config = self.getConfig()
 		
@@ -374,6 +377,11 @@ class InternalCommands:
 			elif config.has_option("hm", "macSdk"):
 				self.macSdk = config.get('hm', 'macSdk')
 		
+			if self.macDeploy:
+				config.set('hm', 'macDeploy', self.macDeploy)
+			elif config.has_option("hm", "macDeploy"):
+				self.macSdk = config.get('hm', 'macDeploy')
+
 			if self.macIdentity:
 				config.set('hm', 'macIdentity', self.macIdentity)
 			elif config.has_option("hm", "macIdentity"):
@@ -383,7 +391,10 @@ class InternalCommands:
 		
 			if not self.macSdk:
 				raise Exception("Arg missing: --mac-sdk <version>");
-				
+			
+			if not self.macDeploy:
+				self.macDeploy = self.macSdk
+
 			if not self.macIdentity:
 				raise Exception("Arg missing: --mac-identity <name>");
 			
@@ -438,7 +449,7 @@ class InternalCommands:
 			if generator.cmakeName.find('Unix Makefiles') == -1:
 				sdkDir = self.getMacSdkDir()
 				cmake_args += " -DCMAKE_OSX_SYSROOT=" + sdkDir
-				cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macSdk
+				cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macDeploy
 
 			cmake_args += " -DOSX_TARGET_MAJOR=" + macSdkMatch.group(1)
 			cmake_args += " -DOSX_TARGET_MINOR=" + macSdkMatch.group(2)
@@ -498,8 +509,8 @@ class InternalCommands:
 			sdkDir = self.getMacSdkDir()
 			shortForm = "macosx" + self.macSdk
 			version = str(major) + "." + str(minor)
-			
-			qmake_cmd_string += " QMAKE_MACOSX_DEPLOYMENT_TARGET=" + version
+
+			qmake_cmd_string += " QMAKE_MACOSX_DEPLOYMENT_TARGET=" + self.macDeploy
 
 			(qMajor, qMinor, qRev) = self.getQmakeVersion()
 			if qMajor <= 4:
@@ -656,6 +667,9 @@ class InternalCommands:
 		
 		if config.has_option("hm", "macSdk"):
 			self.macSdk = config.get("hm", "macSdk")
+
+		if config.has_option("hm", "macDeploy"):
+			self.macDeploy = config.get("hm", "macDeploy")
 		
 		if config.has_option("hm", "macIdentity"):
 			self.macIdentity = config.get("hm", "macIdentity")
@@ -1843,7 +1857,10 @@ class InternalCommands:
 		# version is major and minor with no dots (e.g. 106)
 		version = str(major) + str(minor)
 
-		return "MacOSX%s-%s" % (version, arch)
+		if (self.macDeploy == self.macSdk):
+			return "MacOSX%s-%s" % (version, arch)
+		else:
+			return "MacOSX-%s" % arch
 
 	def reset(self):
 		if os.path.exists('build'):
@@ -1898,6 +1915,8 @@ class CommandHandler:
 				self.qtDir = a
 			elif o == '--mac-sdk':
 				self.ic.macSdk = a
+			elif o == '--mac-deploy':
+				self.ic.macDeploy = a
 			elif o == '--mac-identity':
 				self.ic.macIdentity = a
 	
