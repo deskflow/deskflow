@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -17,11 +17,11 @@
  */
 
 #include "net/TCPSocketFactory.h"
-
 #include "net/TCPSocket.h"
 #include "net/TCPListenSocket.h"
+#include "net/SecureSocket.h"
+#include "net/SecureListenSocket.h"
 #include "arch/Arch.h"
-#include "common/PluginVersion.h"
 #include "base/Log.h"
 
 //
@@ -43,20 +43,14 @@ TCPSocketFactory::~TCPSocketFactory()
 IDataSocket*
 TCPSocketFactory::create(bool secure) const
 {
-	IDataSocket* socket = NULL;
 	if (secure) {
-		void* args[2] = {
-			m_events,
-			m_socketMultiplexer
-		};
-		socket = static_cast<IDataSocket*>(
-			ARCH->plugin().invoke(s_pluginNames[kSecureSocket], "getSocket", args));
+		SecureSocket* secureSocket = new SecureSocket(m_events, m_socketMultiplexer);
+		secureSocket->initSsl (false);
+		return secureSocket;
 	}
 	else {
-		socket = new TCPSocket(m_events, m_socketMultiplexer);
+		return new TCPSocket(m_events, m_socketMultiplexer);
 	}
-
-	return socket;
 }
 
 IListenSocket*
@@ -64,12 +58,7 @@ TCPSocketFactory::createListen(bool secure) const
 {
 	IListenSocket* socket = NULL;
 	if (secure) {
-		void* args[2] = {
-			m_events,
-			m_socketMultiplexer
-		};
-		socket = static_cast<IListenSocket*>(
-			ARCH->plugin().invoke(s_pluginNames[kSecureSocket], "getListenSocket", args));
+		socket = new SecureListenSocket(m_events, m_socketMultiplexer);
 	}
 	else {
 		socket = new TCPListenSocket(m_events, m_socketMultiplexer);

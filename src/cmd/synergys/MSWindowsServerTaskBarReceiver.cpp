@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -252,7 +252,7 @@ MSWindowsServerTaskBarReceiver::primaryAction()
 const IArchTaskBarReceiver::Icon
 MSWindowsServerTaskBarReceiver::getIcon() const
 {
-	return reinterpret_cast<Icon>(m_icon[getStatus()]);
+	return static_cast<Icon>(m_icon[getStatus()]);
 }
 
 void
@@ -294,7 +294,7 @@ MSWindowsServerTaskBarReceiver::loadIcon(UINT id)
 							IMAGE_ICON,
 							0, 0,
 							LR_DEFAULTCOLOR);
-	return reinterpret_cast<HICON>(icon);
+	return static_cast<HICON>(icon);
 }
 
 void
@@ -319,7 +319,7 @@ MSWindowsServerTaskBarReceiver::createWindow()
 							NULL,
 							(DLGPROC)&MSWindowsServerTaskBarReceiver::staticDlgProc,
 							reinterpret_cast<LPARAM>(
-								reinterpret_cast<void*>(this)));
+								static_cast<void*>(this)));
 
 	// window should appear on top of everything, including (especially)
 	// the task bar.
@@ -368,15 +368,15 @@ MSWindowsServerTaskBarReceiver::staticDlgProc(HWND hwnd,
 	// and put it in the extra window data then forward the call.
 	MSWindowsServerTaskBarReceiver* self = NULL;
 	if (msg == WM_INITDIALOG) {
-		self = reinterpret_cast<MSWindowsServerTaskBarReceiver*>(
+		self = static_cast<MSWindowsServerTaskBarReceiver*>(
 							reinterpret_cast<void*>(lParam));
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, lParam);
 	}
 	else {
 		// get the extra window data and forward the call
-		LONG data = (LONG)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		LONG_PTR data = GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		if (data != 0) {
-			self = reinterpret_cast<MSWindowsServerTaskBarReceiver*>(
+			self = static_cast<MSWindowsServerTaskBarReceiver*>(
 							reinterpret_cast<void*>(data));
 		}
 	}

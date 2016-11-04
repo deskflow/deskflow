@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -102,7 +102,7 @@ TCPListenSocket::close()
 void*
 TCPListenSocket::getEventTarget() const
 {
-	return const_cast<void*>(reinterpret_cast<const void*>(this));
+	return const_cast<void*>(static_cast<const void*>(this));
 }
 
 IDataSocket*

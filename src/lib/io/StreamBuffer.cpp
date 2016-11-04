@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -59,7 +59,7 @@ StreamBuffer::peek(UInt32 n)
 		scan = m_chunks.erase(scan);
 	}
 
-	return reinterpret_cast<const void*>(&(head->begin()[m_headUsed]));
+	return static_cast<const void*>(&(head->begin()[m_headUsed]));
 }
 
 void
@@ -104,7 +104,7 @@ StreamBuffer::write(const void* vdata, UInt32 n)
 	m_size += n;
 
 	// cast data to bytes
-	const UInt8* data = reinterpret_cast<const UInt8*>(vdata);
+	const UInt8* data = static_cast<const UInt8*>(vdata);
 
 	// point to last chunk if it has space, otherwise append an empty chunk
 	ChunkList::iterator scan = m_chunks.end();

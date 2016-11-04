@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Si Ltd.
+ * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,18 +22,20 @@
 
 #include <QCoreApplication>
 #include <QProcess>
+#include <QtGlobal>
+#include <QDir>
 #include <stdexcept>
 
 static const char kCoreBinary[] = "syntool";
 
+#ifdef Q_WS_WIN
+static const char kSerialKeyFilename[] = "Synergy.subkey";
+#else
+static const char kSerialKeyFilename[] = ".synergy.subkey";
+#endif
+
 CoreInterface::CoreInterface()
 {
-}
-
-QString CoreInterface::getPluginDir()
-{
-	QStringList args("--get-plugin-dir");
-	return run(args);
 }
 
 QString CoreInterface::getProfileDir()
@@ -54,24 +56,19 @@ QString CoreInterface::getArch()
 	return run(args);
 }
 
-QString CoreInterface::getSubscriptionFilename()
+QString CoreInterface::getSerialKeyFilePath()
 {
-	QStringList args("--get-subscription-filename");
-	return run(args);
+	QString filename = getProfileDir() + QDir::separator() + kSerialKeyFilename;
+	return filename;
 }
 
-QString CoreInterface::activateSerial(const QString& serial)
-{
-	QStringList args("--subscription-serial");
-	args << serial;
-
-	return run(args);
-}
-
-QString CoreInterface::checkSubscription()
-{
-	QStringList args("--check-subscription");
-	return run(args);
+QString CoreInterface::notifyUpdate (QString const& fromVersion,
+									  QString const& toVersion,
+									  QString const& serialKey) {
+	QStringList args("--notify-update");
+	QString input(fromVersion + ":" + toVersion + ":" + serialKey);
+	input.append("\n");
+	return run(args, input);
 }
 
 QString CoreInterface::notifyActivation(const QString& identity)

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -661,7 +661,7 @@ unsigned int __stdcall
 ArchMultithreadWindows::threadFunc(void* vrep)
 {
 	// get the thread
-	ArchThreadImpl* thread = reinterpret_cast<ArchThreadImpl*>(vrep);
+	ArchThreadImpl* thread = static_cast<ArchThreadImpl*>(vrep);
 
 	// run thread
 	s_instance->doThreadFunc(thread);

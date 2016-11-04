@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -364,8 +364,6 @@ ServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
 	LOG((CLOG_DEBUG "sending clipboard %d seqnum=%d", id, m_seqNum));
 
 	StreamChunker::sendClipboard(data, data.size(), id, m_seqNum, m_events, this);
-
-	LOG((CLOG_DEBUG "sent clipboard size=%d", data.size()));
 }
 
 void
@@ -835,6 +833,7 @@ ServerProxy::setOptions()
 			// update keep alive
 			setKeepAliveRate(1.0e-3 * static_cast<double>(options[i + 1]));
 		}
+
 		if (id != kKeyModifierIDNull) {
 			m_modifierTranslationTable[id] =
 				static_cast<KeyModifierID>(options[i + 1]);

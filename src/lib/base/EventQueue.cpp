@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -54,7 +54,7 @@ static
 void
 interrupt(Arch::ESignal, void* data)
 {
-	EventQueue* events = reinterpret_cast<EventQueue*>(data);
+	EventQueue* events = static_cast<EventQueue*>(data);
 	events->addEvent(Event(Event::kQuit));
 }
 

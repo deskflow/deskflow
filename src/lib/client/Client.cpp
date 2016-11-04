@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -18,7 +18,6 @@
 
 #include "client/Client.h"
 
-#include "../plugin/ns/SecureSocket.h"
 #include "client/ServerProxy.h"
 #include "synergy/Screen.h"
 #include "synergy/FileChunk.h"
@@ -33,12 +32,12 @@
 #include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/ISocketFactory.h"
+#include "net/SecureSocket.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
-#include "common/PluginVersion.h"
 #include "common/stdexcept.h"
 
 #include <cstring>
@@ -55,7 +54,7 @@ Client::Client(
 		const String& name, const NetworkAddress& address,
 		ISocketFactory* socketFactory,
 		synergy::Screen* screen,
-		ClientArgs& args) :
+		ClientArgs const& args) :
 	m_mock(false),
 	m_name(name),
 	m_serverAddress(address),
@@ -72,12 +71,9 @@ Client::Client(
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
 	m_socket(NULL),
-	m_useSecureNetwork(false),
+	m_useSecureNetwork(args.m_enableCrypto),
 	m_args(args),
-	m_sendClipboardThread(NULL),
-	m_mutex(NULL),
-	m_condData(false),
-	m_condVar(NULL)
+	m_enableClipboard(true)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -102,15 +98,6 @@ Client::Client(
 								new TMethodEventJob<Client>(this,
 									&Client::handleFileRecieveCompleted));
 	}
-
-	if (m_args.m_enableCrypto) {
-		m_useSecureNetwork = ARCH->plugin().exists(s_pluginNames[kSecureSocket]);
-		if (m_useSecureNetwork == false) {
-			LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
-		}
-	}
-	m_mutex = new Mutex();
-	m_condVar = new CondVar<bool>(m_mutex, m_condData);
 }
 
 Client::~Client()
@@ -129,8 +116,6 @@ Client::~Client()
 	cleanupConnecting();
 	cleanupConnection();
 	delete m_socketFactory;
-	delete m_condVar;
-	delete m_mutex;
 }
 
 void
@@ -167,8 +152,7 @@ Client::connect()
 
 		// filter socket messages, including a packetizing filter
 		m_stream = socket;
-		bool adopt = !m_useSecureNetwork;
-		m_stream = new PacketStreamFilter(m_events, m_stream, adopt);
+		m_stream = new PacketStreamFilter(m_events, m_stream, true);
 
 		// connect
 		LOG((CLOG_DEBUG1 "connecting to server"));
@@ -270,36 +254,15 @@ Client::leave()
 {
 	m_active = false;
 
-	if (m_sendClipboardThread != NULL) {
-		StreamChunker::interruptClipboard();
-		m_sendClipboardThread->wait();
-		m_sendClipboardThread = NULL;
-	}
-
-	m_condData = false;
-	m_sendClipboardThread = new Thread(
-								new TMethodJob<Client>(
-									this,
-									&Client::sendClipboardThread,
-									NULL));
-	// Bug #4735 - we can't leave() until fillClipboard()s all finish
-	Stopwatch timer(false);
-	m_mutex->lock();
-	while (!m_condData) {
-		if (!m_condVar->wait(timer, 0.5)) {
-			LOG((CLOG_WARN "timed out %fs waiting for clipboard fill",
-				(double) timer.getTime()));
-			break;
-		}
-		LOG((CLOG_DEBUG1 "leave %fs elapsed", (double) timer.getTime()));
-	}
-	m_mutex->unlock();
-
 	m_screen->leave();
-
-	if (!m_receivedFileData.empty()) {
-		m_receivedFileData.clear();
-		LOG((CLOG_DEBUG "file transmission interrupted"));
+	
+	if (m_enableClipboard) {
+		// send clipboards that we own and that have changed
+		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+			if (m_ownClipboard[id]) {
+				sendClipboard(id);
+			}
+		}
 	}
 
 	return true;
@@ -391,6 +354,20 @@ Client::resetOptions()
 void
 Client::setOptions(const OptionsList& options)
 {
+	for (OptionsList::const_iterator index = options.begin();
+		 index != options.end(); ++index) {
+		const OptionID id       = *index;
+		if (id == kOptionClipboardSharing) {
+			index++;
+			if (*index == static_cast<OptionValue>(false)) {
+				LOG((CLOG_NOTE "clipboard sharing is disabled"));
+			}
+			m_enableClipboard = *index;
+
+			break;
+		}
+	}
+
 	m_screen->setOptions(options);
 }
 
@@ -401,20 +378,9 @@ Client::getName() const
 }
 
 void
-Client::fillClipboard(ClipboardID id, Clipboard *clipboard)
+Client::sendClipboard(ClipboardID id)
 {
-	assert(m_screen != NULL);
-	assert(m_server != NULL);
-
-	if (clipboard->open(m_timeClipboard[id])) {
-		clipboard->close();
-	}
-	m_screen->getClipboard(id, clipboard);
-}
-
-void
-Client::sendClipboard(ClipboardID id, Clipboard *clipboard)
-{
+	// note -- m_mutex must be locked on entry
 	assert(m_screen != NULL);
 	assert(m_server != NULL);
 
@@ -422,21 +388,26 @@ Client::sendClipboard(ClipboardID id, Clipboard *clipboard)
 	// clipboard time before getting the data from the screen
 	// as the screen may detect an unchanged clipboard and
 	// avoid copying the data.
+	Clipboard clipboard;
+	if (clipboard.open(m_timeClipboard[id])) {
+		clipboard.close();
+	}
+	m_screen->getClipboard(id, &clipboard);
 
 	// check time
 	if (m_timeClipboard[id] == 0 ||
-		clipboard->getTime() != m_timeClipboard[id]) {
+		clipboard.getTime() != m_timeClipboard[id]) {
 		// save new time
-		m_timeClipboard[id] = clipboard->getTime();
+		m_timeClipboard[id] = clipboard.getTime();
 
 		// marshall the data
-		String data = clipboard->marshall();
+		String data = clipboard.marshall();
 
 		// save and send data if different or not yet sent
 		if (!m_sentClipboard[id] || data != m_dataClipboard[id]) {
 			m_sentClipboard[id] = true;
 			m_dataClipboard[id] = data;
-			m_server->onClipboardChanged(id, clipboard);
+			m_server->onClipboardChanged(id, &clipboard);
 		}
 	}
 }
@@ -459,7 +430,7 @@ Client::sendConnectionFailedEvent(const char* msg)
 void
 Client::sendFileChunk(const void* data)
 {
-	FileChunk* chunk = reinterpret_cast<FileChunk*>(const_cast<void*>(data));
+	FileChunk* chunk = static_cast<FileChunk*>(const_cast<void*>(data));
 	LOG((CLOG_DEBUG1 "send file chunk"));
 	assert(m_server != NULL);
 
@@ -472,10 +443,19 @@ Client::setupConnecting()
 {
 	assert(m_stream != NULL);
 
-	m_events->adoptHandler(m_events->forIDataSocket().connected(),
-							m_stream->getEventTarget(),
-							new TMethodEventJob<Client>(this,
+	if (m_args.m_enableCrypto) {
+		m_events->adoptHandler(m_events->forIDataSocket().secureConnected(),
+					m_stream->getEventTarget(),
+						new TMethodEventJob<Client>(this,
 								&Client::handleConnected));
+	}
+	else {
+		m_events->adoptHandler(m_events->forIDataSocket().connected(),
+					m_stream->getEventTarget(),
+						new TMethodEventJob<Client>(this,
+								&Client::handleConnected));
+	}
+
 	m_events->adoptHandler(m_events->forIDataSocket().connectionFailed(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<Client>(this,
@@ -604,13 +584,6 @@ Client::cleanupStream()
 {
 	delete m_stream;
 	m_stream = NULL;
-
-	// PacketStreamFilter doen't adopt secure socket, because
-	// we need to tell the dynamic lib that allocated this object
-	// to do the deletion.
-	if (m_useSecureNetwork) {
-		ARCH->plugin().invoke(s_pluginNames[kSecureSocket], "deleteSocket", NULL);
-	}
 }
 
 void
@@ -626,15 +599,13 @@ Client::handleConnected(const Event&, void*)
 		m_sentClipboard[id] = false;
 		m_timeClipboard[id] = 0;
 	}
-
-	m_socket->secureConnect();
 }
 
 void
 Client::handleConnectionFailed(const Event& event, void*)
 {
 	IDataSocket::ConnectionFailedInfo* info =
-		reinterpret_cast<IDataSocket::ConnectionFailedInfo*>(event.getData());
+		static_cast<IDataSocket::ConnectionFailedInfo*>(event.getData());
 
 	cleanupTimer();
 	cleanupConnecting();
@@ -685,8 +656,12 @@ Client::handleShapeChanged(const Event&, void*)
 void
 Client::handleClipboardGrabbed(const Event& event, void*)
 {
+	if (!m_enableClipboard) {
+		return;
+	}
+
 	const IScreen::ClipboardInfo* info =
-		reinterpret_cast<const IScreen::ClipboardInfo*>(event.getData());
+		static_cast<const IScreen::ClipboardInfo*>(event.getData());
 
 	// grab ownership
 	m_server->onGrabClipboard(info->m_id);
@@ -698,10 +673,8 @@ Client::handleClipboardGrabbed(const Event& event, void*)
 
 	// if we're not the active screen then send the clipboard now,
 	// otherwise we'll wait until we leave.
-	Clipboard clipboard;
 	if (!m_active) {
-		fillClipboard(info->m_id, &clipboard);
-		sendClipboard(info->m_id, &clipboard);
+		sendClipboard(info->m_id);
 	}
 }
 
@@ -789,36 +762,6 @@ Client::onFileRecieveCompleted()
 }
 
 void
-Client::sendClipboardThread(void * data)
-{
-	Stopwatch timer(false);
-	Clipboard clipboard[kClipboardEnd];
-	// fill clipboards that we own and that have changed
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		if (m_ownClipboard[id]) {
-			fillClipboard(id, &clipboard[id]);
-		}
-	}
-	LOG((CLOG_DEBUG1 "fill took %fs, signaling", (double) timer.getTime()));
-
-	// signal that fill is done
-	m_mutex->lock();
-	m_condData = true;
-	m_condVar->signal();
-	m_mutex->unlock();
-
-	// send clipboards that we own and that have changed
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		if (m_ownClipboard[id]) {
-			sendClipboard(id, &clipboard[id]);
-		}
-	}
-
-	m_sendClipboardThread = NULL;
-	LOG((CLOG_DEBUG1 "send took %fs", (double) timer.getTime()));
-}
-
-void
 Client::handleStopRetry(const Event&, void*)
 {
 	m_args.m_restartable = false;
@@ -867,14 +810,14 @@ Client::sendFileToServer(const char* filename)
 	m_sendFileThread = new Thread(
 		new TMethodJob<Client>(
 			this, &Client::sendFileThread,
-			reinterpret_cast<void*>(const_cast<char*>(filename))));
+			static_cast<void*>(const_cast<char*>(filename))));
 }
 
 void
 Client::sendFileThread(void* filename)
 {
 	try {
-		char* name  = reinterpret_cast<char*>(filename);
+		char* name  = static_cast<char*>(filename);
 		StreamChunker::sendFile(name, m_events, this);
 	}
 	catch (std::runtime_error error) {

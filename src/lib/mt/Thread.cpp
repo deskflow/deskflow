@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -147,7 +147,7 @@ Thread::threadFunc(void* vjob)
 	}
 
 	// get job
-	IJob* job = reinterpret_cast<IJob*>(vjob);
+	IJob* job = static_cast<IJob*>(vjob);
 
 	// run job
 	void* result = NULL;

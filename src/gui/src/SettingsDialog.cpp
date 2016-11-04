@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
  * This package is free software; you can redistribute it and/or
@@ -18,12 +18,14 @@
 
 #include "SettingsDialog.h"
 
-#include "PluginManager.h"
 #include "CoreInterface.h"
 #include "SynergyLocale.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
 #include "AppConfig.h"
+#include "EditionType.h"
+#include "SslCertificate.h"
+#include "MainWindow.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -36,8 +38,7 @@ static const char networkSecurity[] = "ns";
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::SettingsDialogBase(),
-	m_AppConfig(config),
-	m_SuppressElevateWarning(false)
+       m_appConfig(config)
 {
 	setupUi(this);
 
@@ -53,23 +54,17 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
 
 #if defined(Q_OS_WIN)
-	m_SuppressElevateWarning = true;
-	m_pCheckBoxElevateMode->setChecked(appConfig().elevateMode());
-	m_SuppressElevateWarning = false;
+       m_pComboElevate->setCurrentIndex(static_cast<int>(appConfig().elevateMode()));
 
 	m_pCheckBoxAutoHide->hide();
 #else
 	// elevate checkbox is only useful on ms windows.
-	m_pCheckBoxElevateMode->hide();
+	m_pLabelElevate->hide();
+	m_pComboElevate->hide();
 #endif
 
-	if (!PluginManager::exist(networkSecurity)) {
-		m_pGroupNetworkSecurity->setEnabled(false);
-		m_pCheckBoxEnableCrypto->setChecked(false);
-	}
-	else {
-		m_pCheckBoxEnableCrypto->setChecked(m_AppConfig.getCryptoEnabled());
-	}
+	m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
+	m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.edition() == kPro);
 }
 
 void SettingsDialog::accept()
@@ -81,7 +76,7 @@ void SettingsDialog::accept()
 	appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
 	appConfig().setLogFilename(m_pLineEditLogFilename->text());
 	appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
-	appConfig().setElevateMode(m_pCheckBoxElevateMode->isChecked());
+       appConfig().setElevateMode(static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
 	appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
 	appConfig().saveSettings();
 	QDialog::accept();
@@ -89,7 +84,10 @@ void SettingsDialog::accept()
 
 void SettingsDialog::reject()
 {
-	QSynergyApplication::getInstance()->switchTranslator(appConfig().language());
+	if (appConfig().language() != m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString()) {
+		QSynergyApplication::getInstance()->switchTranslator(appConfig().language());
+	}
+
 	QDialog::reject();
 }
 
@@ -144,25 +142,14 @@ void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 	QSynergyApplication::getInstance()->switchTranslator(ietfCode);
 }
 
-void SettingsDialog::on_m_pCheckBoxElevateMode_toggled(bool checked)
-{
-	if (checked && !m_SuppressElevateWarning) {
-		int r = QMessageBox::warning(
-			this, tr("Elevate Synergy"),
-			tr("Are you sure you want to elevate Synergy?\n\n"
-			   "This allows Synergy to interact with elevated processes "
-			   "and the UAC dialog, but can cause problems with non-elevated "
-			   "processes. Elevate Synergy only if you really need to."),
-			QMessageBox::Yes | QMessageBox::No);
-
-		if (r != QMessageBox::Yes) {
-			m_pCheckBoxElevateMode->setChecked(false);
-			return;
-		}
-	}
-}
-
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
 {
-	m_AppConfig.setCryptoEnabled(checked);
+	m_appConfig.setCryptoEnabled(checked);
+	m_appConfig.saveSettings();
+	if (checked) {
+		SslCertificate sslCertificate;
+		sslCertificate.generateCertificate();
+		MainWindow& mainWindow = dynamic_cast<MainWindow&> (*this->parent());
+		mainWindow.updateLocalFingerprint();
+	}
 }

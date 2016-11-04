@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Si, Std.
+ * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,21 +32,15 @@ class WebClient : public QObject
 	Q_OBJECT
 
 public:
-	int getEdition(const QString& email,
-			const QString& password,
-			QMessageBox& message,
-			QWidget* w);
-	void setEmail(QString& e) { m_Email = e; }
-	void setPassword(QString& p) { m_Password = p; }
-
+	bool getEdition (int& edition, QString& errorOut);
+	bool setEmail (QString email, QString& errorOut);
+	bool setPassword (QString password, QString& errorOut);
 signals:
 	void error(QString e);
 
 private:
-	QString request(const QString& email,
-			const QString& password);
-
-private:
+	QString request();
+	
 	QString m_Email;
 	QString m_Password;
 	CoreInterface m_CoreInterface;

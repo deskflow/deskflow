@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -36,6 +36,7 @@
 
 #include <cstring>
 #include <cstdlib>
+#include <algorithm>
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
@@ -1178,7 +1179,7 @@ XWindowsScreen::findKeyEvent(Display*, XEvent* xevent, XPointer arg)
 void
 XWindowsScreen::handleSystemEvent(const Event& event, void*)
 {
-	XEvent* xevent = reinterpret_cast<XEvent*>(event.getData());
+	XEvent* xevent = static_cast<XEvent*>(event.getData());
 	assert(xevent != NULL);
 
 	// update key state
@@ -1441,6 +1442,8 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 					XMoveWindow(m_display, m_window, m_x, m_y);
 					XResizeWindow(m_display, m_window, m_w, m_h);
 				}
+
+				sendEvent(m_events->forIScreen().shapeChanged());
 			}
 		}
 #endif
@@ -1474,6 +1477,7 @@ XWindowsScreen::onKeyPress(XKeyEvent& xkey)
 			keycode = static_cast<KeyButton>(m_lastKeycode);
 			if (keycode == 0) {
 				// no keycode
+				LOG((CLOG_DEBUG1 "event: KeyPress no keycode"));
 				return;
 			}
 		}
@@ -1488,6 +1492,9 @@ XWindowsScreen::onKeyPress(XKeyEvent& xkey)
 							false, false, key, mask, 1, keycode);
 		}
 	}
+    else {
+		LOG((CLOG_DEBUG1 "can't map keycode to key id"));
+    }
 }
 
 void
@@ -1661,8 +1668,10 @@ XWindowsScreen::createBlankCursor() const
 	// this seems just a bit more complicated than really necessary
 
 	// get the closet cursor size to 1x1
-	unsigned int w, h;
+	unsigned int w = 0, h = 0;
 	XQueryBestCursor(m_display, m_root, 1, 1, &w, &h);
+	w = std::max(1u, w);
+	h = std::max(1u, h);
 
 	// make bitmap data for cursor of closet size.  since the cursor
 	// is blank we can use the same bitmap for shape and mask:  all
@@ -1859,8 +1868,12 @@ XWindowsScreen::mapKeyFromX(XKeyEvent* event) const
 		XLookupString(event, dummy, 0, &keysym, NULL);
 	}
 
+	LOG((CLOG_DEBUG2 "mapped code=%d to keysym=0x%04x", event->keycode, keysym));
+
 	// convert key
-	return XWindowsUtil::mapKeySymToKeyID(keysym);
+	KeyID result = XWindowsUtil::mapKeySymToKeyID(keysym);
+	LOG((CLOG_DEBUG2 "mapped keysym=0x%04x to keyID=%d", keysym, result));
+	return result;
 }
 
 ButtonID

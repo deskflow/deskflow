@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include "synergy/mouse_types.h"
 #include "synergy/INode.h"
 #include "synergy/DragInformation.h"
+#include "synergy/ServerArgs.h"
 #include "base/Event.h"
 #include "base/Stopwatch.h"
 #include "base/EventTypes.h"
@@ -106,7 +107,7 @@ public:
 	ownership of \p primaryClient.
 	*/
 	Server(Config& config, PrimaryClient* primaryClient,
-		synergy::Screen* screen, IEventQueue* events, bool enableDragDrop);
+		synergy::Screen* screen, IEventQueue* events, ServerArgs const& args);
 	~Server();
 
 #ifdef TEST_ENV
@@ -367,9 +368,6 @@ private:
 	// send drag info to new client screen
 	void				sendDragInfo(BaseClientProxy* newScreen);
 
-	// thread funciton for sending clipboard
-	void				sendClipboardThread(void*);
-
 public:
 	bool				m_mock;
 
@@ -475,12 +473,11 @@ private:
 	Thread*				m_writeToDropDirThread;
 	String				m_dragFileExt;
 	bool				m_ignoreFileTransfer;
-	bool				m_enableDragDrop;
+	bool				m_enableClipboard;
 
 	Thread*				m_sendDragInfoThread;
 	bool				m_waitDragInfoThread;
 
 	ClientListener*		m_clientListener;
-
-	Thread*				m_sendClipboardThread;
+	ServerArgs			m_args;
 };

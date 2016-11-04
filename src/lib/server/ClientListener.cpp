@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -25,7 +25,6 @@
 #include "net/IListenSocket.h"
 #include "net/ISocketFactory.h"
 #include "net/XSocket.h"
-#include "common/PluginVersion.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
@@ -41,21 +40,19 @@ ClientListener::ClientListener(const NetworkAddress& address,
 	m_socketFactory(socketFactory),
 	m_server(NULL),
 	m_events(events),
-	m_useSecureNetwork(false)
+	m_useSecureNetwork(enableCrypto)
 {
 	assert(m_socketFactory != NULL);
 
 	try {
-		// create listen socket
-		if (enableCrypto) {
-			m_useSecureNetwork = ARCH->plugin().exists(s_pluginNames[kSecureSocket]);
-			if (m_useSecureNetwork == false) {
-				LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
-			}
-		}
-
 		m_listen = m_socketFactory->createListen(m_useSecureNetwork);
 
+		// setup event handler
+		m_events->adoptHandler(m_events->forIListenSocket().connecting(),
+					m_listen,
+					new TMethodEventJob<ClientListener>(this,
+							&ClientListener::handleClientConnecting));
+		
 		// bind listen address
 		LOG((CLOG_DEBUG1 "binding listen socket"));
 		m_listen->bind(address);
@@ -71,11 +68,6 @@ ClientListener::ClientListener(const NetworkAddress& address,
 		throw;
 	}
 	LOG((CLOG_DEBUG1 "listening for clients"));
-
-	// setup event handler
-	m_events->adoptHandler(m_events->forIListenSocket().connecting(), m_listen,
-							new TMethodEventJob<ClientListener>(this,
-								&ClientListener::handleClientConnecting));
 }
 
 ClientListener::~ClientListener()
@@ -114,12 +106,6 @@ ClientListener::setServer(Server* server)
 	m_server = server;
 }
 
-void
-ClientListener::deleteSocket(void* socket)
-{
-	m_listen->deleteSocket(socket);
-}
-
 ClientProxy*
 ClientListener::getNextClient()
 {
@@ -136,53 +122,57 @@ void
 ClientListener::handleClientConnecting(const Event&, void*)
 {
 	// accept client connection
-	IDataSocket* socket	= m_listen->accept();
+	IDataSocket* socket = m_listen->accept();
 
 	if (socket == NULL) {
 		return;
 	}
+	
+	m_events->adoptHandler(m_events->forClientListener().accepted(),
+				socket->getEventTarget(),
+				new TMethodEventJob<ClientListener>(this,
+						&ClientListener::handleClientAccepted, socket));
+	
+	// When using non SSL, server accepts clients immediately, while SSL
+	// has to call secure accept which may require retry
+	if (!m_useSecureNetwork) {
+		m_events->addEvent(Event(m_events->forClientListener().accepted(),
+								socket->getEventTarget()));
+	}
+}
 
+void
+ClientListener::handleClientAccepted(const Event&, void* vsocket)
+{
 	LOG((CLOG_NOTE "accepted client connection"));
 
-	if (m_useSecureNetwork) {
-		LOG((CLOG_DEBUG2 "attempting sercure Connection"));
-		while (!socket->isReady()) {
-			if (socket->isFatal()) {
-				m_listen->deleteSocket(socket);
-				return;
-			}
-			LOG((CLOG_DEBUG2 "retrying sercure Connection"));
-			ARCH->sleep(.5f);
-		}
-	}
-
-	LOG((CLOG_DEBUG2 "sercure Connection established:%d"));
-
-	synergy::IStream* stream  = socket;
+	IDataSocket* socket = static_cast<IDataSocket*>(vsocket);
+	
 	// filter socket messages, including a packetizing filter
-	bool adopt = !m_useSecureNetwork;
-	stream = new PacketStreamFilter(m_events, stream, adopt);
-
+	synergy::IStream* stream = new PacketStreamFilter(m_events, socket, true);
 	assert(m_server != NULL);
 
 	// create proxy for unknown client
 	ClientProxyUnknown* client = new ClientProxyUnknown(stream, 30.0, m_server, m_events);
+
 	m_newClients.insert(client);
 
 	// watch for events from unknown client
-	m_events->adoptHandler(m_events->forClientProxyUnknown().success(), client,
-							new TMethodEventJob<ClientListener>(this,
-								&ClientListener::handleUnknownClient, client));
-	m_events->adoptHandler(m_events->forClientProxyUnknown().failure(), client,
-							new TMethodEventJob<ClientListener>(this,
-								&ClientListener::handleUnknownClient, client));
+	m_events->adoptHandler(m_events->forClientProxyUnknown().success(),
+				client,
+				new TMethodEventJob<ClientListener>(this,
+						&ClientListener::handleUnknownClient, client));
+	m_events->adoptHandler(m_events->forClientProxyUnknown().failure(),
+				client,
+				new TMethodEventJob<ClientListener>(this,
+						&ClientListener::handleUnknownClient, client));
 }
 
 void
 ClientListener::handleUnknownClient(const Event&, void* vclient)
 {
 	ClientProxyUnknown* unknownClient =
-		reinterpret_cast<ClientProxyUnknown*>(vclient);
+		static_cast<ClientProxyUnknown*>(vclient);
 
 	// we should have the client in our new client list
 	assert(m_newClients.count(unknownClient) == 1);
@@ -193,7 +183,8 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
 	if (client != NULL) {
 		// handshake was successful
 		m_waitingClients.push_back(client);
-		m_events->addEvent(Event(m_events->forClientListener().connected(), this));
+		m_events->addEvent(Event(m_events->forClientListener().connected(),
+								 this));
 
 		// watch for client to disconnect while it's in our queue
 		m_events->adoptHandler(m_events->forClientProxy().disconnected(), client,
@@ -216,16 +207,12 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
 	}
 
 	delete unknownClient;
-
-	if (m_useSecureNetwork && !handshakeOk) {
-		deleteSocket(socket);
-	}
 }
 
 void
 ClientListener::handleClientDisconnected(const Event&, void* vclient)
 {
-	ClientProxy* client = reinterpret_cast<ClientProxy*>(vclient);
+	ClientProxy* client = static_cast<ClientProxy*>(vclient);
 
 	// find client in waiting clients queue
 	for (WaitingClients::iterator i = m_waitingClients.begin(),
@@ -243,13 +230,5 @@ ClientListener::handleClientDisconnected(const Event&, void* vclient)
 void
 ClientListener::cleanupListenSocket()
 {
-	if (!m_useSecureNetwork) {
-		delete m_listen;
-	}
-	else {
-		ARCH->plugin().invoke(
-			s_pluginNames[kSecureSocket],
-			"deleteListenSocket",
-			NULL);
-	}
+	delete m_listen;
 }

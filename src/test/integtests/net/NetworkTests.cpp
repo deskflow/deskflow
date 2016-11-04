@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2013 Synergy Si Ltd.
+ * Copyright (C) 2013-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,6 +27,7 @@
 #include "test/global/TestEventQueue.h"
 #include "server/Server.h"
 #include "server/ClientListener.h"
+#include "server/ClientProxy.h"
 #include "client/Client.h"
 #include "synergy/FileChunk.h"
 #include "synergy/StreamChunker.h"
@@ -128,7 +129,9 @@ TEST_F(NetworkTests, sendToClient_mockData)
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
+	ServerArgs serverArgs;
+	serverArgs.m_enableDragDrop = true;
+	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
 	server.m_mock = true;
 	listener.setServer(&server);
 
@@ -141,10 +144,10 @@ TEST_F(NetworkTests, sendToClient_mockData)
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
 
-	ClientArgs args;
-	args.m_enableDragDrop = true;
-	args.m_enableCrypto = false;
-	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, args);
+	ClientArgs clientArgs;
+	clientArgs.m_enableDragDrop = true;
+	clientArgs.m_enableCrypto = false;
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 		
 	m_events.adoptHandler(
 		m_events.forFile().fileRecieveCompleted(), &client,
@@ -184,7 +187,9 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
+	ServerArgs serverArgs;
+	serverArgs.m_enableDragDrop = true;
+	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
 	server.m_mock = true;
 	listener.setServer(&server);
 
@@ -197,10 +202,10 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
 
-	ClientArgs args;
-	args.m_enableDragDrop = true;
-	args.m_enableCrypto = false;
-	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, args);
+	ClientArgs clientArgs;
+	clientArgs.m_enableDragDrop = true;
+	clientArgs.m_enableCrypto = false;
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 		
 	m_events.adoptHandler(
 		m_events.forFile().fileRecieveCompleted(), &client,
@@ -234,7 +239,9 @@ TEST_F(NetworkTests, sendToServer_mockData)
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
+	ServerArgs serverArgs;
+	serverArgs.m_enableDragDrop = true;
+	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
 	server.m_mock = true;
 	listener.setServer(&server);
 
@@ -246,10 +253,10 @@ TEST_F(NetworkTests, sendToServer_mockData)
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	ClientArgs args;
-	args.m_enableDragDrop = true;
-	args.m_enableCrypto = false;
-	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, args);
+	ClientArgs clientArgs;
+	clientArgs.m_enableDragDrop = true;
+	clientArgs.m_enableCrypto = false;
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 	
 	m_events.adoptHandler(
 		m_events.forClientListener().connected(), &listener,
@@ -289,7 +296,9 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 	ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
 	ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
 	
-	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, true);
+	ServerArgs serverArgs;
+	serverArgs.m_enableDragDrop = true;
+	Server server(serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
 	server.m_mock = true;
 	listener.setServer(&server);
 
@@ -301,10 +310,10 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 	ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
 	ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-	ClientArgs args;
-	args.m_enableDragDrop = true;
-	args.m_enableCrypto = false;
-	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, args);
+	ClientArgs clientArgs;
+	clientArgs.m_enableDragDrop = true;
+	clientArgs.m_enableCrypto = false;
+	Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 
 	m_events.adoptHandler(
 		m_events.forClientListener().connected(), &listener,
@@ -328,7 +337,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 void 
 NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vlistener)
 {
-	ClientListener* listener = reinterpret_cast<ClientListener*>(vlistener);
+	ClientListener* listener = static_cast<ClientListener*>(vlistener);
 	Server* server = listener->getServer();
 
 	ClientProxy* client = listener->getNextClient();
@@ -336,7 +345,7 @@ NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vl
 		throw runtime_error("client is null");
 	}
 
-	BaseClientProxy* bcp = reinterpret_cast<BaseClientProxy*>(client);
+	BaseClientProxy* bcp = client;
 	server->adoptClient(bcp);
 	server->setActive(bcp);
 
@@ -346,7 +355,7 @@ NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vl
 void 
 NetworkTests::sendToClient_mockData_fileRecieveCompleted(const Event& event, void*)
 {
-	Client* client = reinterpret_cast<Client*>(event.getTarget());
+	Client* client = static_cast<Client*>(event.getTarget());
 	EXPECT_TRUE(client->isReceivedFileSizeValid());
 
 	m_events.raiseQuitEvent();
@@ -355,7 +364,7 @@ NetworkTests::sendToClient_mockData_fileRecieveCompleted(const Event& event, voi
 void 
 NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vlistener)
 {
-	ClientListener* listener = reinterpret_cast<ClientListener*>(vlistener);
+	ClientListener* listener = static_cast<ClientListener*>(vlistener);
 	Server* server = listener->getServer();
 
 	ClientProxy* client = listener->getNextClient();
@@ -363,7 +372,7 @@ NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vl
 		throw runtime_error("client is null");
 	}
 
-	BaseClientProxy* bcp = reinterpret_cast<BaseClientProxy*>(client);
+	BaseClientProxy* bcp = client;
 	server->adoptClient(bcp);
 	server->setActive(bcp);
 
@@ -373,7 +382,7 @@ NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vl
 void 
 NetworkTests::sendToClient_mockFile_fileRecieveCompleted(const Event& event, void*)
 {
-	Client* client = reinterpret_cast<Client*>(event.getTarget());
+	Client* client = static_cast<Client*>(event.getTarget());
 	EXPECT_TRUE(client->isReceivedFileSizeValid());
 
 	m_events.raiseQuitEvent();
@@ -382,14 +391,14 @@ NetworkTests::sendToClient_mockFile_fileRecieveCompleted(const Event& event, voi
 void 
 NetworkTests::sendToServer_mockData_handleClientConnected(const Event&, void* vclient)
 {
-	Client* client = reinterpret_cast<Client*>(vclient);
+	Client* client = static_cast<Client*>(vclient);
 	sendMockData(client);
 }
 
 void 
 NetworkTests::sendToServer_mockData_fileRecieveCompleted(const Event& event, void*)
 {
-	Server* server = reinterpret_cast<Server*>(event.getTarget());
+	Server* server = static_cast<Server*>(event.getTarget());
 	EXPECT_TRUE(server->isReceivedFileSizeValid());
 
 	m_events.raiseQuitEvent();
@@ -398,14 +407,14 @@ NetworkTests::sendToServer_mockData_fileRecieveCompleted(const Event& event, voi
 void 
 NetworkTests::sendToServer_mockFile_handleClientConnected(const Event&, void* vclient)
 {
-	Client* client = reinterpret_cast<Client*>(vclient);
+	Client* client = static_cast<Client*>(vclient);
 	client->sendFileToServer(kMockFilename);
 }
 
 void 
 NetworkTests::sendToServer_mockFile_fileRecieveCompleted(const Event& event, void*)
 {
-	Server* server = reinterpret_cast<Server*>(event.getTarget());
+	Server* server = static_cast<Server*>(event.getTarget());
 	EXPECT_TRUE(server->isReceivedFileSizeValid());
 
 	m_events.raiseQuitEvent();

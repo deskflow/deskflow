@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2005 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -23,6 +23,8 @@
 #include "common/stdmap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
+
+#include "gtest/gtest_prod.h"
 
 namespace synergy {
 
@@ -323,6 +325,21 @@ public:
 	static bool			parseModifiers(String&, KeyModifierMask&);
 
 	//@}
+
+private:
+	FRIEND_TEST(KeyMapTests,
+				findBestKey_requiredDown_matchExactFirstItem);
+	FRIEND_TEST(KeyMapTests,
+		findBestKey_requiredAndExtraSensitiveDown_matchExactFirstItem);
+	FRIEND_TEST(KeyMapTests,
+		findBestKey_requiredAndExtraSensitiveDown_matchExactSecondItem);
+	FRIEND_TEST(KeyMapTests,
+		findBestKey_extraSensitiveDown_matchExactSecondItem);
+	FRIEND_TEST(KeyMapTests,
+				findBestKey_noRequiredDown_matchOneRequiredChangeItem);
+	FRIEND_TEST(KeyMapTests,
+				findBestKey_onlyOneRequiredDown_matchTwoRequiredChangesItem);
+	FRIEND_TEST(KeyMapTests, findBestKey_noRequiredDown_cannotMatch);
 
 private:
 	//! Ways to synthesize a key

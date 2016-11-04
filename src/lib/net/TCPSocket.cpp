@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -39,9 +39,9 @@
 
 TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
 	IDataSocket(events),
+	m_events(events),
 	m_mutex(),
 	m_flushed(&m_mutex, true),
-	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {
 	try {
@@ -56,10 +56,10 @@ TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) 
 
 TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket) :
 	IDataSocket(events),
+	m_events(events),
 	m_mutex(),
 	m_socket(socket),
 	m_flushed(&m_mutex, true),
-	m_events(events),
 	m_socketMultiplexer(socketMultiplexer)
 {
 	assert(m_socket != NULL);
@@ -125,7 +125,7 @@ TCPSocket::close()
 void*
 TCPSocket::getEventTarget() const
 {
-	return const_cast<void*>(reinterpret_cast<const void*>(this));
+	return const_cast<void*>(static_cast<const void*>(this));
 }
 
 UInt32
@@ -323,6 +323,65 @@ TCPSocket::init()
 	}
 }
 
+TCPSocket::EJobResult
+TCPSocket::doRead()
+{
+	UInt8 buffer[4096];
+	memset(buffer, 0, sizeof(buffer));
+	size_t bytesRead = 0;
+	
+	bytesRead = (int) ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+	
+	if (bytesRead > 0) {
+		bool wasEmpty = (m_inputBuffer.getSize() == 0);
+		
+		// slurp up as much as possible
+		do {
+			m_inputBuffer.write(buffer, bytesRead);
+
+			bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+		} while (bytesRead > 0);
+		
+		// send input ready if input buffer was empty
+		if (wasEmpty) {
+			sendEvent(m_events->forIStream().inputReady());
+		}
+	}
+	else {
+		// remote write end of stream hungup.  our input side
+		// has therefore shutdown but don't flush our buffer
+		// since there's still data to be read.
+		sendEvent(m_events->forIStream().inputShutdown());
+		if (!m_writable && m_inputBuffer.getSize() == 0) {
+			sendEvent(m_events->forISocket().disconnected());
+			m_connected = false;
+		}
+		m_readable = false;
+		return kNew;
+	}
+	
+	return kRetry;
+}
+
+TCPSocket::EJobResult
+TCPSocket::doWrite()
+{
+	// write data
+	UInt32 bufferSize = 0;
+	int bytesWrote = 0;
+
+	bufferSize = m_outputBuffer.getSize();
+	const void* buffer = m_outputBuffer.peek(bufferSize);
+	bytesWrote = (UInt32)ARCH->writeSocket(m_socket, buffer, bufferSize);
+
+	if (bytesWrote > 0) {
+		discardWrittenData(bytesWrote);
+		return kNew;
+	}
+	
+	return kRetry;
+}
+
 void
 TCPSocket::setJob(ISocketMultiplexerJob* job)
 {
@@ -375,6 +434,17 @@ void
 TCPSocket::sendEvent(Event::Type type)
 {
 	m_events->addEvent(Event(type, getEventTarget(), NULL));
+}
+
+void
+TCPSocket::discardWrittenData(int bytesWrote)
+{
+	m_outputBuffer.pop(bytesWrote);
+	if (m_outputBuffer.getSize() == 0) {
+		sendEvent(m_events->forIStream().outputFlushed());
+		m_flushed = true;
+		m_flushed.broadcast();
+	}
 }
 
 void
@@ -468,71 +538,10 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 		return newJob();
 	}
 
-	bool needNewJob = false;
-	
-	static bool s_retry = false;
-	static int s_retrySize = 0;
-	static void* s_staticBuffer = NULL;
-
+	EJobResult result = kRetry;
 	if (write) {
 		try {
-			// write data
-			int bufferSize = 0;
-			int bytesWrote = 0;
-			int status = 0;
-
-			if (s_retry) {
-				bufferSize = s_retrySize;
-			}
-			else {
-				bufferSize = m_outputBuffer.getSize();
-				s_staticBuffer = malloc(bufferSize);
-				memcpy(s_staticBuffer, m_outputBuffer.peek(bufferSize), bufferSize);
- 			}
-
-			if (bufferSize == 0) {
-				return job;
-			}
-
-			if (isSecure()) {
-				if (isSecureReady()) {
-					status = secureWrite(s_staticBuffer, bufferSize, bytesWrote);
-					if (status > 0) {
-						s_retry = false;
-						bufferSize = 0;
-						free(s_staticBuffer);
-						s_staticBuffer = NULL;
-					}
-					else if (status < 0) {
-						return NULL;
-					}
-					else if (status == 0) {
-						s_retry = true;
-						s_retrySize = bufferSize;
-						return newJob();
-					}
-				}
-				else {
-					return job;
-				}
-			}
-			else {
-				bytesWrote = (UInt32)ARCH->writeSocket(m_socket, s_staticBuffer, bufferSize);
-				bufferSize = 0;
-				free(s_staticBuffer);
-				s_staticBuffer = NULL;
-			}
-
-			// discard written data
-			if (bytesWrote > 0) {
-				m_outputBuffer.pop(bytesWrote);
-				if (m_outputBuffer.getSize() == 0) {
-					sendEvent(m_events->forIStream().outputFlushed());
-					m_flushed = true;
-					m_flushed.broadcast();
-					needNewJob = true;
-				}
-			}
+			result = doWrite();
 		}
 		catch (XArchNetworkShutdown&) {
 			// remote read end of stream hungup.  our output side
@@ -543,13 +552,13 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 				sendEvent(m_events->forISocket().disconnected());
 				m_connected = false;
 			}
-			needNewJob = true;
+			result = kNew;
 		}
 		catch (XArchNetworkDisconnected&) {
 			// stream hungup
 			onDisconnected();
 			sendEvent(m_events->forISocket().disconnected());
-			needNewJob = true;
+			result = kNew;
 		}
 		catch (XArchNetwork& e) {
 			// other write error
@@ -557,77 +566,19 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 			onDisconnected();
 			sendEvent(m_events->forIStream().outputError());
 			sendEvent(m_events->forISocket().disconnected());
-			needNewJob = true;
+			result = kNew;
 		}
 	}
 
 	if (read && m_readable) {
 		try {
-			static UInt8 buffer[4096];
-			memset(buffer, 0, sizeof(buffer));
-			int bytesRead = 0;
-			int status = 0;
-
-			if (isSecure()) {
-				if (isSecureReady()) {
-					status = secureRead(buffer, sizeof(buffer), bytesRead);
-					if (status < 0) {
-						return NULL;
-					}
-					else if (status == 0) {
-						return newJob();
-					}
-				}
-				else {
-					return job;
-				}
-			}
-			else {
-				bytesRead = (int) ARCH->readSocket(m_socket, buffer, sizeof(buffer));
-			}
-
-			if (bytesRead > 0) {
-				bool wasEmpty = (m_inputBuffer.getSize() == 0);
-
-				// slurp up as much as possible
-				do {
-					m_inputBuffer.write(buffer, bytesRead);
-
-					if (isSecure() && isSecureReady()) {
-						status = secureRead(buffer, sizeof(buffer), bytesRead);
-						if (status < 0) {
-							return NULL;
-						}
-					}
-					else {
-						bytesRead = (int) ARCH->readSocket(m_socket, buffer, sizeof(buffer));
-					}
-
-				} while (bytesRead > 0 || status > 0);
-
-				// send input ready if input buffer was empty
-				if (wasEmpty) {
-					sendEvent(m_events->forIStream().inputReady());
-				}
-			}
-			else {
-				// remote write end of stream hungup.  our input side
-				// has therefore shutdown but don't flush our buffer
-				// since there's still data to be read.
-				sendEvent(m_events->forIStream().inputShutdown());
-				if (!m_writable && m_inputBuffer.getSize() == 0) {
-					sendEvent(m_events->forISocket().disconnected());
-					m_connected = false;
-				}
-				m_readable = false;
-				needNewJob = true;
-			}
+			result = doRead();
 		}
 		catch (XArchNetworkDisconnected&) {
 			// stream hungup
 			sendEvent(m_events->forISocket().disconnected());
 			onDisconnected();
-			needNewJob = true;
+			result = kNew;
 		}
 		catch (XArchNetwork& e) {
 			// ignore other read error
@@ -635,5 +586,5 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 		}
 	}
 
-	return needNewJob ? newJob() : job;
+	return result == kBreak ? NULL : result == kNew ? newJob() : job;
 }

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -65,7 +65,7 @@ ArchTimeWindows::~ArchTimeWindows()
 {
 	s_freq = 0.0;
 	if (s_mmInstance == NULL) {
-		FreeLibrary(reinterpret_cast<HMODULE>(s_mmInstance));
+		FreeLibrary(static_cast<HMODULE>(s_mmInstance));
 		s_tgt        = NULL;
 		s_mmInstance = NULL;
 	}

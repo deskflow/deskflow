@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or
@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test/unittests/synergy/KeyStateTests.h"
-
+#include "test/mock/synergy/MockKeyState.h"
 #include "test/mock/synergy/MockEventQueue.h"
 #include "test/mock/synergy/MockKeyMap.h"
 
@@ -31,7 +30,24 @@ using ::testing::Return;
 using ::testing::ReturnRef;
 using ::testing::SaveArg;
 
-TEST(KeyStateTests, onKey_aKeyDown_keyStateOne)
+void
+stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);
+
+void
+assertMaskIsOne(ForeachKeyCallback cb, void* userData);
+
+const synergy::KeyMap::KeyItem*
+stubMapKey(
+		   synergy::KeyMap::Keystrokes& keys, KeyID id, SInt32 group,
+		   synergy::KeyMap::ModifierToKeys& activeModifiers,
+		   KeyModifierMask& currentState,
+		   KeyModifierMask desiredMask,
+		   bool isAutoRepeat);
+
+synergy::KeyMap::Keystroke s_stubKeystroke(1, false, false);
+synergy::KeyMap::KeyItem s_stubKeyItem;
+
+TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne)
 {
 	MockKeyMap keyMap;
 	MockEventQueue eventQueue;

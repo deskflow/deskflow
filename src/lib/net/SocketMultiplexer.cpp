@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -46,6 +46,7 @@ SocketMultiplexer::SocketMultiplexer() :
 	// this pointer just has to be unique and not NULL.  it will
 	// never be dereferenced.  it's used to identify cursor nodes
 	// in the jobs list.
+	// TODO: Remove this evilness
 	m_cursorMark = reinterpret_cast<ISocketMultiplexerJob*>(this);
 
 	// start thread

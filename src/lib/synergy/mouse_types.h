@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -33,6 +33,9 @@ static const ButtonID	kButtonLeft   = 1;
 static const ButtonID	kButtonMiddle = 2;
 static const ButtonID	kButtonRight  = 3;
 static const ButtonID	kButtonExtra0 = 4;
+
+static const ButtonID   kMacButtonRight = 2;
+static const ButtonID   kMacButtonMiddle = 3;
 //@}
 
 static const UInt8      NumButtonIDs  = 5;

@@ -1,5 +1,5 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012 Synergy Si Ltd.
+# Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2009 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
@@ -201,7 +201,7 @@ class InternalCommands:
 	
 	project = 'synergy'
 	setup_version = 5 # increment to force setup/config
-	website_url = 'http://synergy-project.org/'
+	website_url = 'http://symless.com/'
 
 	this_cmd = 'hm'
 	cmake_cmd = 'cmake'
@@ -430,14 +430,16 @@ class InternalCommands:
 		if generator.cmakeName.find('Unix Makefiles') != -1:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 			
-		elif sys.platform == "darwin":
+		if sys.platform == "darwin":
 			macSdkMatch = re.match("(\d+)\.(\d+)", self.macSdk)
 			if not macSdkMatch:
 				raise Exception("unknown osx version: " + self.macSdk)
 
-			sdkDir = self.getMacSdkDir()
-			cmake_args += " -DCMAKE_OSX_SYSROOT=" + sdkDir
-			cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macSdk
+			if generator.cmakeName.find('Unix Makefiles') == -1:
+				sdkDir = self.getMacSdkDir()
+				cmake_args += " -DCMAKE_OSX_SYSROOT=" + sdkDir
+				cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macSdk
+
 			cmake_args += " -DOSX_TARGET_MAJOR=" + macSdkMatch.group(1)
 			cmake_args += " -DOSX_TARGET_MINOR=" + macSdkMatch.group(2)
 		
@@ -551,6 +553,7 @@ class InternalCommands:
 		if os.path.exists(sdkPath):
 			return sdkPath
 
+		# return os.popen('xcodebuild -version -sdk macosx' + self.macSdk + ' Path').read().strip()
 		return "/Developer/SDKs/" + sdkDirName + ".sdk"
 	
 	# http://tinyurl.com/cs2rxxb
@@ -740,16 +743,6 @@ class InternalCommands:
 			shutil.copy(targetDir + "/synergyc", bundleBinDir)
 			shutil.copy(targetDir + "/synergys", bundleBinDir)
 			shutil.copy(targetDir + "/syntool", bundleBinDir)
-
-			# Copy all generated plugins to the package
-			bundlePluginDir = bundleBinDir + "plugins"
-			pluginDir = targetDir + "/plugins"
-			print "Copying plugins dirtree: " + pluginDir
-			if os.path.isdir(pluginDir):
-				print "Copying to: " + bundlePluginDir
-				shutil.copytree(pluginDir, bundlePluginDir)
-			else:
-				print "pluginDir doesn't exist, skipping"
 
 		self.loadConfig()
 		if not self.macIdentity:
@@ -1151,14 +1144,12 @@ class InternalCommands:
 		controlFile.close()
 
 		targetBin = '%s/%s/usr/bin' % (debDir, package)
-		targetPlugin = '%s/%s/usr/lib/synergy/plugins' % (debDir, package)
 		targetShare = '%s/%s/usr/share' % (debDir, package)
 		targetApplications = "%s/applications" % targetShare
 		targetIcons = "%s/icons" % targetShare
 		targetDocs = "%s/doc/%s" % (targetShare, self.project)
 
 		os.makedirs(targetBin)
-		os.makedirs(targetPlugin)
 		os.makedirs(targetApplications)
 		os.makedirs(targetIcons)
 		os.makedirs(targetDocs)
@@ -1172,17 +1163,6 @@ class InternalCommands:
 			shutil.copy("%s/%s" % (binDir, f), targetBin)
 			target = "%s/%s" % (targetBin, f)
 			os.chmod(target, 0o0755)
-			err = os.system("strip " + target)
-			if err != 0:
-				raise Exception('strip failed: ' + str(err))
-
-		pluginDir = "%s/plugins" % binDir
-
-		pluginFiles = [ 'libns.so']
-		for f in pluginFiles:
-			shutil.copy("%s/%s" % (pluginDir, f), targetPlugin)
-			target = "%s/%s" % (targetPlugin, f)
-			os.chmod(target, 0o0644)
 			err = os.system("strip " + target)
 			if err != 0:
 				raise Exception('strip failed: ' + str(err))
@@ -1402,13 +1382,6 @@ class InternalCommands:
 		packageTarget = filename
 		ftp.upload(packageSource, packageTarget)
 
-		if type != 'src':
-			pluginsDir = binDir + '/plugins'
-			nsPluginSource = self.findLibraryFile(type, pluginsDir, 'ns')
-			if nsPluginSource:
-				nsPluginTarget = self.getLibraryDistFilename(type, pluginsDir, 'ns')
-				ftp.upload(nsPluginSource, nsPluginTarget, "plugins")
-
 	def getLibraryDistFilename(self, type, dir, name):
 		(platform, packageExt, libraryExt) = self.getDistributePlatformInfo(type)
 		firstPart = '%s-%s-%s' % (name, self.getVersionForFilename(), platform)
@@ -1515,7 +1488,7 @@ class InternalCommands:
 			'Replace [package-type] with one of:\n'
 			'  src    .tar.gz source (Posix only)\n'
 			'  rpm    .rpm package (Red Hat)\n'
-			'  deb    .deb paclage (Debian)\n'
+			'  deb    .deb package (Debian)\n'
 			'  win    .exe installer (Windows)\n'
 			'  mac    .dmg package (Mac OS X)\n'
 			'\n'
@@ -1957,7 +1930,7 @@ class CommandHandler:
 		type = None
 		if len(self.args) > 0:
 			type = self.args[0]    
-				
+
 		self.ic.dist(type, self.vcRedistDir, self.qtDir)
 
 	def distftp(self):

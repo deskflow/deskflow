@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
  *
  * This package is free software; you can redistribute it and/or
@@ -98,7 +98,7 @@ void IpcClient::sendHello()
 	stream.writeRawData(typeBuf, 1);
 }
 
-void IpcClient::sendCommand(const QString& command, bool elevate)
+void IpcClient::sendCommand(const QString& command, ElevateMode const elevate)
 {
 	QDataStream stream(m_Socket);
 
@@ -114,7 +114,8 @@ void IpcClient::sendCommand(const QString& command, bool elevate)
 	stream.writeRawData(charCommand, length);
 
 	char elevateBuf[1];
-	elevateBuf[0] = elevate ? 1 : 0;
+    // Refer to enum ElevateMode documentation for why this flag is mapped this way
+	elevateBuf[0] = (elevate == ElevateAlways) ? 1 : 0;
 	stream.writeRawData(elevateBuf, 1);
 }
 

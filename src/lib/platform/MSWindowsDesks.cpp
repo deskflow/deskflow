@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -656,7 +656,7 @@ MSWindowsDesks::deskThread(void* vdesk)
 	MSG msg;
 
 	// use given desktop for this thread
-	Desk* desk              = reinterpret_cast<Desk*>(vdesk);
+	Desk* desk              = static_cast<Desk*>(vdesk);
 	desk->m_threadID         = GetCurrentThreadId();
 	desk->m_window           = NULL;
 	desk->m_foregroundWindow = NULL;

@@ -1,12 +1,12 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -45,11 +45,13 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "common/stdexcept.h"
+#include "shared/SerialKey.h"
 
 #include <cstring>
 #include <cstdlib>
 #include <sstream>
 #include <fstream>
+#include <ctime>
 
 //
 // Server
@@ -60,7 +62,7 @@ Server::Server(
 		PrimaryClient* primaryClient,
 		synergy::Screen* screen,
 		IEventQueue* events,
-		bool enableDragDrop) :
+		ServerArgs const& args) :
 	m_mock(false),
 	m_primaryClient(primaryClient),
 	m_active(primaryClient),
@@ -91,10 +93,10 @@ Server::Server(
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
 	m_ignoreFileTransfer(false),
-	m_enableDragDrop(enableDragDrop),
+	m_enableClipboard(true),
 	m_sendDragInfoThread(NULL),
 	m_waitDragInfoThread(true),
-	m_sendClipboardThread(NULL)
+	m_args(args)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
@@ -184,7 +186,7 @@ Server::Server(
 							new TMethodEventJob<Server>(this,
 								&Server::handleFakeInputEndEvent));
 
-	if (m_enableDragDrop) {
+	if (m_args.m_enableDragDrop) {
 		m_events->adoptHandler(m_events->forFile().fileChunkSending(),
 								this,
 								new TMethodEventJob<Server>(this,
@@ -451,6 +453,13 @@ Server::switchScreen(BaseClientProxy* dst,
 				SInt32 x, SInt32 y, bool forScreensaver)
 {
 	assert(dst != NULL);
+
+	// if trial is expired, exit the process
+	if (m_args.m_serial.isExpired(std::time(0))) {
+		LOG((CLOG_ERR "trial has expired, aborting server"));
+		exit(kExitSuccess);
+	}
+
 #ifndef NDEBUG
 	{
 		SInt32 dx, dy, dw, dh;
@@ -486,7 +495,7 @@ Server::switchScreen(BaseClientProxy* dst,
 
 		// update the primary client's clipboards if we're leaving the
 		// primary screen.
-		if (m_active == m_primaryClient) {
+		if (m_active == m_primaryClient && m_enableClipboard) {
 			for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 				ClipboardInfo& clipboard = m_clipboards[id];
 				if (clipboard.m_clipboardOwner == getName(m_primaryClient)) {
@@ -506,20 +515,13 @@ Server::switchScreen(BaseClientProxy* dst,
 		m_active->enter(x, y, m_seqNum,
 								m_primaryClient->getToggleMask(),
 								forScreensaver);
-		// if already sending clipboard, we need to interupt it, otherwise
-		// clipboard data could be corrupted on the other side
-		if (m_sendClipboardThread != NULL) {
-			StreamChunker::interruptClipboard();
-			m_sendClipboardThread->wait();
-			m_sendClipboardThread = NULL;
+
+		if (m_enableClipboard) {
+			// send the clipboard data to new active screen
+			for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+				m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
+			}
 		}
-		
-		// send the clipboard data to new active screen
-		m_sendClipboardThread = new Thread(
-									new TMethodJob<Server>(
-										this,
-										&Server::sendClipboardThread,
-										NULL));
 
 		Server::SwitchToScreenInfo* info =
 			Server::SwitchToScreenInfo::alloc(m_active->getName());
@@ -541,7 +543,7 @@ Server::jumpToScreen(BaseClientProxy* newScreen)
 	// get the last cursor position on the target screen
 	SInt32 x, y;
 	newScreen->getJumpCursorPos(x, y);
-	
+
 	switchScreen(newScreen, x, y, false);
 }
 
@@ -891,14 +893,14 @@ Server::isSwitchOkay(BaseClientProxy* newScreen,
 
 	if (!preventSwitch && (
 			(this->m_switchNeedsShift && ((mods & KeyModifierShift) != KeyModifierShift)) ||
-        	(this->m_switchNeedsControl && ((mods & KeyModifierControl) != KeyModifierControl)) ||
+			(this->m_switchNeedsControl && ((mods & KeyModifierControl) != KeyModifierControl)) ||
 			(this->m_switchNeedsAlt && ((mods & KeyModifierAlt) != KeyModifierAlt))
 		)) {
 		LOG((CLOG_DEBUG1 "need modifiers to switch"));
 		preventSwitch = true;
 		stopSwitch();
-	} 
-	
+	}
+
 	return !preventSwitch;
 }
 
@@ -1176,6 +1178,13 @@ Server::processOptions()
 		else if (id == kOptionRelativeMouseMoves) {
 			newRelativeMoves = (value != 0);
 		}
+		else if (id == kOptionClipboardSharing) {
+			m_enableClipboard = (value != 0);
+
+			if (m_enableClipboard == false) {
+				LOG((CLOG_NOTE "clipboard sharing is disabled"));
+			}
+		}
 	}
 	if (m_relativeMoves && !newRelativeMoves) {
 		stopRelativeMoves();
@@ -1187,7 +1196,7 @@ void
 Server::handleShapeChanged(const Event&, void* vclient)
 {
 	// ignore events from unknown clients
-	BaseClientProxy* client = reinterpret_cast<BaseClientProxy*>(vclient);
+	BaseClientProxy* client = static_cast<BaseClientProxy*>(vclient);
 	if (m_clientSet.count(client) == 0) {
 		return;
 	}
@@ -1219,13 +1228,17 @@ Server::handleShapeChanged(const Event&, void* vclient)
 void
 Server::handleClipboardGrabbed(const Event& event, void* vclient)
 {
+	if (!m_enableClipboard) {
+		return;
+	}
+
 	// ignore events from unknown clients
-	BaseClientProxy* grabber = reinterpret_cast<BaseClientProxy*>(vclient);
+	BaseClientProxy* grabber = static_cast<BaseClientProxy*>(vclient);
 	if (m_clientSet.count(grabber) == 0) {
 		return;
 	}
 	const IScreen::ClipboardInfo* info =
-		reinterpret_cast<const IScreen::ClipboardInfo*>(event.getData());
+		static_cast<const IScreen::ClipboardInfo*>(event.getData());
 
 	// ignore grab if sequence number is old.  always allow primary
 	// screen to grab.
@@ -1266,12 +1279,12 @@ void
 Server::handleClipboardChanged(const Event& event, void* vclient)
 {
 	// ignore events from unknown clients
-	BaseClientProxy* sender = reinterpret_cast<BaseClientProxy*>(vclient);
+	BaseClientProxy* sender = static_cast<BaseClientProxy*>(vclient);
 	if (m_clientSet.count(sender) == 0) {
 		return;
 	}
 	const IScreen::ClipboardInfo* info =
-		reinterpret_cast<const IScreen::ClipboardInfo*>(event.getData());
+		static_cast<const IScreen::ClipboardInfo*>(event.getData());
 	onClipboardChanged(sender, info->m_id, info->m_sequenceNumber);
 }
 
@@ -1279,7 +1292,7 @@ void
 Server::handleKeyDownEvent(const Event& event, void*)
 {
 	IPlatformScreen::KeyInfo* info =
-		reinterpret_cast<IPlatformScreen::KeyInfo*>(event.getData());
+		static_cast<IPlatformScreen::KeyInfo*>(event.getData());
 	onKeyDown(info->m_key, info->m_mask, info->m_button, info->m_screens);
 }
 
@@ -1287,7 +1300,7 @@ void
 Server::handleKeyUpEvent(const Event& event, void*)
 {
 	IPlatformScreen::KeyInfo* info =
-		 reinterpret_cast<IPlatformScreen::KeyInfo*>(event.getData());
+		 static_cast<IPlatformScreen::KeyInfo*>(event.getData());
 	onKeyUp(info->m_key, info->m_mask, info->m_button, info->m_screens);
 }
 
@@ -1295,7 +1308,7 @@ void
 Server::handleKeyRepeatEvent(const Event& event, void*)
 {
 	IPlatformScreen::KeyInfo* info =
-		reinterpret_cast<IPlatformScreen::KeyInfo*>(event.getData());
+		static_cast<IPlatformScreen::KeyInfo*>(event.getData());
 	onKeyRepeat(info->m_key, info->m_mask, info->m_count, info->m_button);
 }
 
@@ -1303,7 +1316,7 @@ void
 Server::handleButtonDownEvent(const Event& event, void*)
 {
 	IPlatformScreen::ButtonInfo* info =
-		reinterpret_cast<IPlatformScreen::ButtonInfo*>(event.getData());
+		static_cast<IPlatformScreen::ButtonInfo*>(event.getData());
 	onMouseDown(info->m_button);
 }
 
@@ -1311,7 +1324,7 @@ void
 Server::handleButtonUpEvent(const Event& event, void*)
 {
 	IPlatformScreen::ButtonInfo* info =
-		reinterpret_cast<IPlatformScreen::ButtonInfo*>(event.getData());
+		static_cast<IPlatformScreen::ButtonInfo*>(event.getData());
 	onMouseUp(info->m_button);
 }
 
@@ -1319,7 +1332,7 @@ void
 Server::handleMotionPrimaryEvent(const Event& event, void*)
 {
 	IPlatformScreen::MotionInfo* info =
-		reinterpret_cast<IPlatformScreen::MotionInfo*>(event.getData());
+		static_cast<IPlatformScreen::MotionInfo*>(event.getData());
 	onMouseMovePrimary(info->m_x, info->m_y);
 }
 
@@ -1327,7 +1340,7 @@ void
 Server::handleMotionSecondaryEvent(const Event& event, void*)
 {
 	IPlatformScreen::MotionInfo* info =
-		reinterpret_cast<IPlatformScreen::MotionInfo*>(event.getData());
+		static_cast<IPlatformScreen::MotionInfo*>(event.getData());
 	onMouseMoveSecondary(info->m_x, info->m_y);
 }
 
@@ -1335,7 +1348,7 @@ void
 Server::handleWheelEvent(const Event& event, void*)
 {
 	IPlatformScreen::WheelInfo* info =
-		reinterpret_cast<IPlatformScreen::WheelInfo*>(event.getData());
+		static_cast<IPlatformScreen::WheelInfo*>(event.getData());
 	onMouseWheel(info->m_xDelta, info->m_yDelta);
 }
 
@@ -1370,34 +1383,29 @@ Server::handleClientDisconnected(const Event&, void* vclient)
 {
 	// client has disconnected.  it might be an old client or an
 	// active client.  we don't care so just handle it both ways.
-	BaseClientProxy* client = reinterpret_cast<BaseClientProxy*>(vclient);
+	BaseClientProxy* client = static_cast<BaseClientProxy*>(vclient);
 	removeActiveClient(client);
 	removeOldClient(client);
 
-	PacketStreamFilter* streamFileter = dynamic_cast<PacketStreamFilter*>(client->getStream());
-	TCPSocket* socket = dynamic_cast<TCPSocket*>(streamFileter->getStream());
 	delete client;
-	m_clientListener->deleteSocket(socket);
 }
 
 void
 Server::handleClientCloseTimeout(const Event&, void* vclient)
 {
 	// client took too long to disconnect.  just dump it.
-	BaseClientProxy* client = reinterpret_cast<BaseClientProxy*>(vclient);
+	BaseClientProxy* client = static_cast<BaseClientProxy*>(vclient);
 	LOG((CLOG_NOTE "forced disconnection of client \"%s\"", getName(client).c_str()));
 	removeOldClient(client);
-	PacketStreamFilter* streamFileter = dynamic_cast<PacketStreamFilter*>(client->getStream());
-	TCPSocket* socket = dynamic_cast<TCPSocket*>(streamFileter->getStream());
+
 	delete client;
-	m_clientListener->deleteSocket(socket);
 }
 
 void
 Server::handleSwitchToScreenEvent(const Event& event, void*)
 {
-	SwitchToScreenInfo* info = 
-		reinterpret_cast<SwitchToScreenInfo*>(event.getData());
+	SwitchToScreenInfo* info =
+		static_cast<SwitchToScreenInfo*>(event.getData());
 
 	ClientList::const_iterator index = m_clients.find(info->m_screen);
 	if (index == m_clients.end()) {
@@ -1411,8 +1419,8 @@ Server::handleSwitchToScreenEvent(const Event& event, void*)
 void
 Server::handleSwitchInDirectionEvent(const Event& event, void*)
 {
-	SwitchInDirectionInfo* info = 
-		reinterpret_cast<SwitchInDirectionInfo*>(event.getData());
+	SwitchInDirectionInfo* info =
+		static_cast<SwitchInDirectionInfo*>(event.getData());
 
 	// jump to screen in chosen direction from center of this screen
 	SInt32 x = m_x, y = m_y;
@@ -1701,8 +1709,8 @@ Server::onMouseUp(ButtonID id)
 		m_ignoreFileTransfer = false;
 		return;
 	}
-	
-	if (m_enableDragDrop) {
+
+	if (m_args.m_enableDragDrop) {
 		if (!m_screen->isOnScreen()) {
 			String& file = m_screen->getDraggingFilename();
 			if (!file.empty()) {
@@ -1787,7 +1795,7 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 
 	// should we switch or not?
 	if (isSwitchOkay(newScreen, dir, x, y, xc, yc)) {
-		if (m_enableDragDrop
+		if (m_args.m_enableDragDrop
 			&& m_screen->isDraggingStarted()
 			&& m_active != newScreen
 			&& m_waitDragInfoThread) {
@@ -1806,14 +1814,14 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 		m_waitDragInfoThread = true;
 		return true;
 	}
-	
+
 	return false;
 }
 
 void
 Server::sendDragInfoThread(void* arg)
 {
-	BaseClientProxy* newScreen = reinterpret_cast<BaseClientProxy*>(arg);
+	BaseClientProxy* newScreen = static_cast<BaseClientProxy*>(arg);
 
 	m_dragFileList.clear();
 	String& dragFileList = m_screen->getDraggingFilename();
@@ -1822,7 +1830,7 @@ Server::sendDragInfoThread(void* arg)
 		di.setFilename(dragFileList);
 		m_dragFileList.push_back(di);
 	}
-			
+
 #if defined(__APPLE__)
 	// on mac it seems that after faking a LMB up, system would signal back
 	// to synergy a mouse up event, which doesn't happen on windows. as a
@@ -1845,7 +1853,7 @@ Server::sendDragInfo(BaseClientProxy* newScreen)
 {
 	String infoString;
 	UInt32 fileCount = DragInformation::setupDragInfo(m_dragFileList, infoString);
-	
+
 	if (fileCount > 0) {
 		char* info = NULL;
 		size_t size = infoString.size();
@@ -1856,14 +1864,6 @@ Server::sendDragInfo(BaseClientProxy* newScreen)
 		LOG((CLOG_DEBUG3 "dragging file list: %s", info));
 		LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
 		newScreen->sendDragInfo(fileCount, info, size);
-	}
-}
-
-void
-Server::sendClipboardThread(void*)
-{
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
 	}
 }
 
@@ -2057,13 +2057,13 @@ Server::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
 void
 Server::onFileChunkSending(const void* data)
 {
-	FileChunk* chunk = reinterpret_cast<FileChunk*>(const_cast<void*>(data));
+	FileChunk* chunk = static_cast<FileChunk*>(const_cast<void*>(data));
 
 	LOG((CLOG_DEBUG1 "sending file chunk"));
 	assert(m_active != NULL);
 
 	// relay
- 	m_active->fileChunkSending(chunk->m_chunk[0], &chunk->m_chunk[1], chunk->m_dataSize);
+	m_active->fileChunkSending(chunk->m_chunk[0], &chunk->m_chunk[1], chunk->m_dataSize);
 }
 
 void
@@ -2372,18 +2372,18 @@ Server::sendFileToClient(const char* filename)
 	if (m_sendFileThread != NULL) {
 		StreamChunker::interruptFile();
 	}
-	
+
 	m_sendFileThread = new Thread(
 		new TMethodJob<Server>(
 			this, &Server::sendFileThread,
-			reinterpret_cast<void*>(const_cast<char*>(filename))));
+			static_cast<void*>(const_cast<char*>(filename))));
 }
 
 void
 Server::sendFileThread(void* data)
 {
 	try {
-		char* filename = reinterpret_cast<char*>(data);
+		char* filename = static_cast<char*>(data);
 		LOG((CLOG_DEBUG "sending file to client, filename=%s", filename));
 		StreamChunker::sendFile(filename, m_events, this);
 	}
@@ -2397,7 +2397,7 @@ Server::sendFileThread(void* data)
 void
 Server::dragInfoReceived(UInt32 fileNum, String content)
 {
-	if (!m_enableDragDrop) {
+	if (!m_args.m_enableDragDrop) {
 		LOG((CLOG_DEBUG "drag drop not enabled, ignoring drag info."));
 		return;
 	}

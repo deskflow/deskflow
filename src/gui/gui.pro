@@ -7,7 +7,8 @@ DEFINES += VERSION_REVISION=\\\"$$QMAKE_VERSION_REVISION\\\"
 DEPENDPATH += . \
     res
 INCLUDEPATH += . \
-    src
+    src \
+    ../lib/shared/
 FORMS += res/MainWindowBase.ui \
     res/AboutDialogBase.ui \
     res/ServerConfigDialogBase.ui \
@@ -17,7 +18,9 @@ FORMS += res/MainWindowBase.ui \
     res/SettingsDialogBase.ui \
     res/SetupWizardBase.ui \
     res/AddClientDialogBase.ui \
-    res/PluginWizardPageBase.ui
+    res/ActivationDialog.ui \
+    res/CancelActivationDialog.ui \
+    res/FailedLoginDialog.ui
 SOURCES += src/main.cpp \
     src/MainWindow.cpp \
     src/AboutDialog.cpp \
@@ -54,16 +57,16 @@ SOURCES += src/main.cpp \
     src/DataDownloader.cpp \
     src/AddClientDialog.cpp \
     src/CommandProcess.cpp \
-    src/PluginWizardPage.cpp \
-    src/PluginManager.cpp \
     src/CoreInterface.cpp \
     src/Fingerprint.cpp \
     src/SslCertificate.cpp \
-    src/Plugin.cpp \
     src/WebClient.cpp \
-    ../lib/common/PluginVersion.cpp \
-    src/SubscriptionManager.cpp \
-    src/ActivationNotifier.cpp
+    src/ActivationNotifier.cpp \
+    src/ActivationDialog.cpp \
+    src/CancelActivationDialog.cpp \
+    src/FailedLoginDialog.cpp \
+    ../lib/shared/SerialKey.cpp \
+    src/LicenseManager.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -100,18 +103,19 @@ HEADERS += src/MainWindow.h \
     src/DataDownloader.h \
     src/AddClientDialog.h \
     src/CommandProcess.h \
-    src/EditionType.h \
-    src/PluginWizardPage.h \
     src/ProcessorArch.h \
-    src/PluginManager.h \
     src/CoreInterface.h \
     src/Fingerprint.h \
     src/SslCertificate.h \
-    src/Plugin.h \
     src/WebClient.h \
-    ../lib/common/PluginVersion.h \
-    src/SubscriptionManager.h \
-    src/ActivationNotifier.h
+    src/ActivationNotifier.h \
+    src/ElevateMode.h \
+    src/ActivationDialog.h \
+    src/CancelActivationDialog.h \
+    src/FailedLoginDialog.h \
+    ../lib/shared/EditionType.h \
+    ../lib/shared/SerialKey.h \
+    src/LicenseManager.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 

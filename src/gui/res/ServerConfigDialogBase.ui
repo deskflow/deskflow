@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>740</width>
-    <height>514</height>
+    <width>795</width>
+    <height>534</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -44,7 +44,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap>:/res/icons/64x64/user-trash.png</pixmap>
+            <pixmap resource="Synergy.qrc">:/res/icons/64x64/user-trash.png</pixmap>
            </property>
           </widget>
          </item>
@@ -82,7 +82,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap>:/res/icons/64x64/video-display.png</pixmap>
+            <pixmap resource="Synergy.qrc">:/res/icons/64x64/video-display.png</pixmap>
            </property>
           </widget>
          </item>
@@ -408,6 +408,36 @@ Double click on a screen to edit its settings.</string>
           <string>&amp;Options</string>
          </property>
          <layout class="QGridLayout">
+          <item row="3" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Don't take &amp;foreground window on Windows servers</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxRelativeMouseMoves">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Use &amp;relative mouse moves</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxScreenSaverSync">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>S&amp;ynchronize screen savers</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <layout class="QHBoxLayout">
             <item>
@@ -461,51 +491,7 @@ Double click on a screen to edit its settings.</string>
             </item>
            </layout>
           </item>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxRelativeMouseMoves">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Use &amp;relative mouse moves</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxScreenSaverSync">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>S&amp;ynchronize screen savers</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Don't take &amp;foreground window on Windows servers</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConfigClient">
-            <property name="text">
-             <string>Ignore auto config clients</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxEnableDragAndDrop">
-            <property name="text">
-             <string>Enable drag and drop file transfers</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
+          <item row="7" column="0">
            <spacer>
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -517,6 +503,30 @@ Double click on a screen to edit its settings.</string>
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="5" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxEnableDragAndDrop">
+            <property name="text">
+             <string>Enable drag and drop file transfers</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConfigClient">
+            <property name="text">
+             <string>Ignore auto config clients</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxEnableClipboard">
+            <property name="text">
+             <string>Enable clipboard sharing</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -651,7 +661,9 @@ Double click on a screen to edit its settings.</string>
    <header>TrashScreenWidget.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="Synergy.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>m_pButtonBox</sender>

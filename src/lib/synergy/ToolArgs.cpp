@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Synergy Si, Inc.
+ * Copyright (C) 2014-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,14 +20,10 @@
 ToolArgs::ToolArgs() :
 	m_printActiveDesktopName(false),
 	m_loginAuthenticate(false),
-	m_getPluginList(false),
-	m_getPluginDir(false),
 	m_getInstalledDir(false),
 	m_getProfileDir(false),
 	m_getArch(false),
-	m_getSubscriptionFilename(false),
-	m_checkSubscription(false),
 	m_notifyActivation(false),
-	m_subscriptionSerial()
+	m_notifyUpdate(false)
 {
 }

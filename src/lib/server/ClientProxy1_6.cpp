@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Si Inc.
+ * Copyright (C) 2015-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,8 +58,6 @@ ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
 		LOG((CLOG_DEBUG "sending clipboard %d to \"%s\"", id, getName().c_str()));
 
 		StreamChunker::sendClipboard(data, size, id, 0, m_events, this);
-
-		LOG((CLOG_DEBUG "sent clipboard size=%d", size));
 	}
 }
 

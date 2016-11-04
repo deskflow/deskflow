@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -122,7 +122,14 @@ public:
 	complete and false if normal key processing should continue.
 	*/
 	virtual bool		fakeCtrlAltDel() = 0;
-
+	
+	//! Fake a media key
+	/*!
+	 Synthesizes a media key down and up. Only Mac would implement this by
+	 use cocoa appkit framework.
+	 */
+	virtual bool		fakeMediaKey(KeyID id) = 0;
+	
 	//@}
 	//! @name accessors
 	//@{

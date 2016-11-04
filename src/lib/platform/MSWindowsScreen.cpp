@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -105,6 +105,7 @@ MSWindowsScreen::MSWindowsScreen(
 	m_xCenter(0), m_yCenter(0),
 	m_multimon(false),
 	m_xCursor(0), m_yCursor(0),
+	m_xFractionalMove(0.0f), m_yFractionalMove(0.0f),
 	m_sequenceNumber(0),
 	m_mark(0),
 	m_markReceived(0),
@@ -575,6 +576,21 @@ void MSWindowsScreen::saveMousePosition(SInt32 x, SInt32 y) {
 	LOG((CLOG_DEBUG5 "saved mouse position for next delta: %+d,%+d", x,y));
 }
 
+void MSWindowsScreen::accumulateFractionalMove(float x, float y, SInt32& intX, SInt32& intY)
+{
+	// Accumulate together the move into the running total
+	m_xFractionalMove += x;
+	m_yFractionalMove += y;
+
+	// Return the integer part
+	intX = (SInt32)m_xFractionalMove;
+	intY = (SInt32)m_yFractionalMove;
+
+	// And keep only the fractional part
+	m_xFractionalMove -= intX;
+	m_yFractionalMove -= intY;
+}
+
 UInt32
 MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
@@ -941,7 +957,7 @@ MSWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id)
 void
 MSWindowsScreen::handleSystemEvent(const Event& event, void*)
 {
-	MSG* msg = reinterpret_cast<MSG*>(event.getData());
+	MSG* msg = static_cast<MSG*>(event.getData());
 	assert(msg != NULL);
 
 	if (ArchMiscWindows::processDialog(msg)) {
@@ -1355,16 +1371,18 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 {
 	SInt32 originalMX = mx;
 	SInt32 originalMY = my;
+	float scaledMX = (float)mx;
+	float scaledMY = (float)my;
 
 	if (DpiHelper::s_dpiScaled) {
-		mx = (SInt32)(mx / DpiHelper::getDpi());
-		my = (SInt32)(my / DpiHelper::getDpi());
+		scaledMX /= DpiHelper::getDpi();
+		scaledMY /= DpiHelper::getDpi();
 	}
 
 	// compute motion delta (relative to the last known
 	// mouse position)
-	SInt32 x = mx - m_xCursor;
-	SInt32 y = my - m_yCursor;
+	float x = scaledMX - m_xCursor;
+	float y = scaledMY - m_yCursor;
 
 	LOG((CLOG_DEBUG3
 		"mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)",
@@ -1377,7 +1395,7 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 	}
 
 	// save position to compute delta of next motion
-	saveMousePosition(mx, my);
+	saveMousePosition((SInt32)scaledMX, (SInt32)scaledMY);
 
 	if (m_isOnScreen) {
 		
@@ -1415,7 +1433,9 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		}
 		else {
 			// send motion
-			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(x, y));
+			SInt32 ix, iy;
+			accumulateFractionalMove(x, y, ix, iy);
+			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(ix, iy));
 		}
 	}
 

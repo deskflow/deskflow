@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014 Synergy Si Ltd.
- * 
+ * Copyright (C) 2014-2016 Symless Ltd.
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -18,7 +18,6 @@
 #include "synergy/ToolApp.h"
 
 #include "synergy/ArgParser.h"
-#include "synergy/SubscriptionManager.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/String.h"
@@ -30,7 +29,7 @@
 #include "platform/MSWindowsSession.h"
 #endif
 
-#define JSON_URL "https://synergy-project.org/premium/json/"
+#define JSON_URL "https://symless.com/account/json/"
 
 enum {
 	kErrorOk,
@@ -72,14 +71,8 @@ ToolApp::run(int argc, char** argv)
 		else if (m_args.m_loginAuthenticate) {
 			loginAuth();
 		}
-		else if (m_args.m_getPluginList) {
-			getPluginList();
-		}
 		else if (m_args.m_getInstalledDir) {
 			std::cout << ARCH->getInstalledDirectory() << std::endl;
-		}
-		else if (m_args.m_getPluginDir) {
-			std::cout << ARCH->getPluginDirectory() << std::endl;
 		}
 		else if (m_args.m_getProfileDir) {
 			std::cout << ARCH->getProfileDirectory() << std::endl;
@@ -87,35 +80,8 @@ ToolApp::run(int argc, char** argv)
 		else if (m_args.m_getArch) {
 			std::cout << ARCH->getPlatformName() << std::endl;
 		}
-		else if (!m_args.m_subscriptionSerial.empty()) {
-			try {
-				SubscriptionManager subscriptionManager;
-				subscriptionManager.activate(m_args.m_subscriptionSerial);
-			}
-			catch (XSubscription& e) {
-				LOG((CLOG_CRIT "subscription error: %s", e.what()));
-				return kExitSubscription;
-			}
-		}
-		else if (m_args.m_getSubscriptionFilename) {
-			try {
-				SubscriptionManager subscriptionManager;
-				subscriptionManager.printFilename();
-			}
-			catch (XSubscription& e) {
-				LOG((CLOG_CRIT "subscription error: %s", e.what()));
-				return kExitSubscription;
-			}
-		}
-		else if (m_args.m_checkSubscription) {
-			try {
-				SubscriptionManager subscriptionManager;
-				subscriptionManager.checkFile("");
-			}
-			catch (XSubscription& e) {
-				LOG((CLOG_CRIT "subscription error: %s", e.what()));
-				return kExitSubscription;
-			}
+		else if (m_args.m_notifyUpdate) {
+			notifyUpdate();
 		}
 		else if (m_args.m_notifyActivation) {
 			notifyActivation();
@@ -172,24 +138,29 @@ ToolApp::loginAuth()
 }
 
 void
-ToolApp::getPluginList()
+ToolApp::notifyUpdate()
 {
-	String credentials;
-	std::cin >> credentials;
+	String data;
+	std::cin >> data;
 
-	size_t separator = credentials.find(':');
-	String email = credentials.substr(0, separator);
-	String password = credentials.substr(separator + 1, credentials.length());
+	std::vector<String> parts = synergy::string::splitString(data, ':');
+	size_t count = parts.size();
 
-	std::stringstream ss;
-	ss <<  JSON_URL << "plugins/";
-	ss << "?email=" << ARCH->internet().urlEncode(email);
-	ss << "&password=" << password;
+    if (count == 3) {
+        std::stringstream ss;
+        ss << JSON_URL << "notify/update";
+        ss << "?from=" << parts[0];
+        ss << "&to=" << parts[1];
+        ss << "&serial=" << parts[2];
 
-	std::cout << ARCH->internet().get(ss.str()) << std::endl;
+		std::cout << ARCH->internet().get(ss.str()) << std::endl;
+	}
+	else {
+		throw XSynergy("Invalid update data.");
+	}
 }
 
-void 
+void
 ToolApp::notifyActivation()
 {
 	String info;

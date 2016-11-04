@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Synergy Si Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -138,8 +138,6 @@ private:
 	int					m_maxNewlineLength;
 	int					m_maxPriority;
 };
-
-const UInt16 kLogMessageLength = 2048;
 
 /*!
 \def LOG(arg)

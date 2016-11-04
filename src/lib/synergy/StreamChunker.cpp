@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2013 Synergy Si Ltd.
+ * Copyright (C) 2013-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,8 @@
 
 #include "synergy/StreamChunker.h"
 
+#include "mt/Lock.h"
+#include "mt/Mutex.h"
 #include "synergy/FileChunk.h"
 #include "synergy/ClipboardChunk.h"
 #include "synergy/protocol_types.h"
@@ -31,19 +33,13 @@
 
 #include <fstream>
 
-#define SEND_THRESHOLD 0.005f
-
 using namespace std;
 
-#define SOCKET_CHUNK_SIZE 512 * 1024; // 512kb
-#define SECURE_SOCKET_CHUNK_SIZE 2 * 1024; // 2kb
+static const size_t g_chunkSize = 512 * 1024; //512kb
 
-size_t StreamChunker::s_chunkSize = SOCKET_CHUNK_SIZE;
-bool StreamChunker::s_isChunkingClipboard = false;
-bool StreamChunker::s_interruptClipboard = false;
 bool StreamChunker::s_isChunkingFile = false;
 bool StreamChunker::s_interruptFile = false;
-
+Mutex* StreamChunker::s_interruptMutex = NULL;
 
 void
 StreamChunker::sendFile(
@@ -53,7 +49,7 @@ StreamChunker::sendFile(
 {
 	s_isChunkingFile = true;
 	
-	std::fstream file(reinterpret_cast<char*>(filename), std::ios::in | std::ios::binary);
+	std::fstream file(static_cast<char*>(filename), std::ios::in | std::ios::binary);
 
 	if (!file.is_open()) {
 		throw runtime_error("failed to open file");
@@ -71,9 +67,7 @@ StreamChunker::sendFile(
 
 	// send chunk messages with a fixed chunk size
 	size_t sentLength = 0;
-	size_t chunkSize = s_chunkSize;
-	Stopwatch sendStopwatch;
-	sendStopwatch.start();
+	size_t chunkSize = g_chunkSize;
 	file.seekg (0, std::ios::beg);
 
 	while (true) {
@@ -83,30 +77,26 @@ StreamChunker::sendFile(
 			break;
 		}
 		
-		if (sendStopwatch.getTime() > SEND_THRESHOLD) {
-			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
+		events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
+		
+		// make sure we don't read too much from the mock data.
+		if (sentLength + chunkSize > size) {
+			chunkSize = size - sentLength;
+		}
 
-			// make sure we don't read too much from the mock data.
-			if (sentLength + chunkSize > size) {
-				chunkSize = size - sentLength;
-			}
+		char* chunkData = new char[chunkSize];
+		file.read(chunkData, chunkSize);
+		UInt8* data = reinterpret_cast<UInt8*>(chunkData);
+		FileChunk* fileChunk = FileChunk::data(data, chunkSize);
+		delete[] chunkData;
 
-			char* chunkData = new char[chunkSize];
-			file.read(chunkData, chunkSize);
-			UInt8* data = reinterpret_cast<UInt8*>(chunkData);
-			FileChunk* fileChunk = FileChunk::data(data, chunkSize);
-			delete[] chunkData;
+		events->addEvent(Event(events->forFile().fileChunkSending(), eventTarget, fileChunk));
 
-			events->addEvent(Event(events->forFile().fileChunkSending(), eventTarget, fileChunk));
+		sentLength += chunkSize;
+		file.seekg (sentLength, std::ios::beg);
 
-			sentLength += chunkSize;
-			file.seekg (sentLength, std::ios::beg);
-
-			if (sentLength == size) {
-				break;
-			}
-
-			sendStopwatch.reset();
+		if (sentLength == size) {
+			break;
 		}
 	}
 
@@ -129,8 +119,6 @@ StreamChunker::sendClipboard(
 				IEventQueue* events,
 				void* eventTarget)
 {
-	s_isChunkingClipboard = true;
-	
 	// send first message (data size)
 	String dataSize = synergy::string::sizeTypeToString(size);
 	ClipboardChunk* sizeMessage = ClipboardChunk::start(id, sequence, dataSize);
@@ -139,36 +127,24 @@ StreamChunker::sendClipboard(
 
 	// send clipboard chunk with a fixed size
 	size_t sentLength = 0;
-	size_t chunkSize = s_chunkSize;
-	Stopwatch sendStopwatch;
-	sendStopwatch.start();
+	size_t chunkSize = g_chunkSize;
 	
 	while (true) {
-		if (s_interruptClipboard) {
-			s_interruptClipboard = false;
-			LOG((CLOG_DEBUG "clipboard transmission interrupted"));
-			break;
+		events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
+		
+		// make sure we don't read too much from the mock data.
+		if (sentLength + chunkSize > size) {
+			chunkSize = size - sentLength;
 		}
 
-		if (sendStopwatch.getTime() > SEND_THRESHOLD) {
-			events->addEvent(Event(events->forFile().keepAlive(), eventTarget));
+		String chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
+		ClipboardChunk* dataChunk = ClipboardChunk::data(id, sequence, chunk);
+		
+		events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, dataChunk));
 
-			// make sure we don't read too much from the mock data.
-			if (sentLength + chunkSize > size) {
-				chunkSize = size - sentLength;
-			}
-
-			String chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
-			ClipboardChunk* dataChunk = ClipboardChunk::data(id, sequence, chunk);
-			
-			events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, dataChunk));
-
-			sentLength += chunkSize;
-			if (sentLength == size) {
-				break;
-			}
-
-			sendStopwatch.reset();
+		sentLength += chunkSize;
+		if (sentLength == size) {
+			break;
 		}
 	}
 
@@ -177,18 +153,7 @@ StreamChunker::sendClipboard(
 
 	events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, end));
 	
-	s_isChunkingClipboard = false;
-}
-
-void
-StreamChunker::updateChunkSize(bool useSecureSocket)
-{
-	if (useSecureSocket) {
-		s_chunkSize = SECURE_SOCKET_CHUNK_SIZE;
-	}
-	else {
-		s_chunkSize = SOCKET_CHUNK_SIZE;
-	}
+	LOG((CLOG_DEBUG "sent clipboard size=%d", sentLength));
 }
 
 void
@@ -197,14 +162,5 @@ StreamChunker::interruptFile()
 	if (s_isChunkingFile) {
 		s_interruptFile = true;
 		LOG((CLOG_INFO "previous dragged file has become invalid"));
-	}
-}
-
-void
-StreamChunker::interruptClipboard()
-{
-	if (s_isChunkingClipboard) {
-		s_interruptClipboard = true;
-		LOG((CLOG_INFO "previous clipboard data has become invalid"));
 	}
 }
