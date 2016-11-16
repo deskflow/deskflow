@@ -327,6 +327,38 @@ else() # not-unix
 
 endif()
 
+if (WIN32)
+	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+		set(OPENSSL_PLAT_DIR openssl-win64)
+	else()
+		set(OPENSSL_PLAT_DIR openssl-win32)
+	endif()
+	set(OPENSSL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/inc32)
+endif()
+
+if (APPLE)
+	set(OPENSSL_PLAT_DIR openssl-osx)
+	set(OPENSSL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/include)
+endif()
+
+if (WIN32)
+	set(OPENSSL_LIBS
+		${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/out32dll/libeay32.lib
+		${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/out32dll/ssleay32.lib
+	)
+endif()
+
+if (UNIX)
+	if (APPLE)
+		set(OPENSSL_LIBS
+		${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/libssl.a
+		${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/libcrypto.a
+		)
+	else()
+		set(OPENSSL_LIBS ssl crypto)
+	endif()
+endif()
+
 add_subdirectory(src)
 
 if (WIN32)
