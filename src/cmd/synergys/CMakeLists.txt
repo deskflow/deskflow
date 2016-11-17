@@ -66,3 +66,11 @@ if (CONF_CPACK)
 		COMPONENT core
 		DESTINATION bin)
 endif()
+
+add_custom_command(
+	TARGET synergys
+	POST_BUILD
+	COMMAND xcopy /Y /Q
+		..\\..\\..\\..\\..\\synergy\\bin\\${CMAKE_CFG_INTDIR}\\synergys.*
+		..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
+)

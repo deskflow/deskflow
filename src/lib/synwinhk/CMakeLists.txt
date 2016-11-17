@@ -39,6 +39,6 @@ add_custom_command(
 	TARGET synwinhk 
 	POST_BUILD
 	COMMAND xcopy /Y /Q
-		..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\synwinhk.*
-		..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
+		..\\..\\..\\..\\..\\synergy\\lib\\${CMAKE_CFG_INTDIR}\\synwinhk.*
+		..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
 )
