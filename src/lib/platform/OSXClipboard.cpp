@@ -119,10 +119,11 @@ OSXClipboard::add(EFormat format, const String & data)
 			String osXData = converter->fromIClipboard(data);
 			CFStringRef flavorType = converter->getOSXFormat();
 			CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, (UInt8 *)osXData.data(), osXData.size());
+			PasteboardItemID itemID = 0;
 
             PasteboardPutItemFlavor(
                 m_pboard,
-                nullptr,
+                itemID,
                 flavorType,
                 dataRef,
                 kPasteboardFlavorNoFlags);

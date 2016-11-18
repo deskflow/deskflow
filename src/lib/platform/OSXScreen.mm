@@ -44,6 +44,7 @@
 #include <mach-o/dyld.h>
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>
+#include <AppKit/NSEvent.h>
 
 // This isn't in any Apple SDK that I know of as of yet.
 enum {
@@ -475,7 +476,7 @@ OSXScreen::postMouseEvent(CGPoint& pos) const
 		type = thisButtonType[kMouseButtonDragged];
 	}
 
-	CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, button);
+	CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, static_cast<CGMouseButton>(button));
     
     // Dragging events also need the click state
     CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
@@ -561,7 +562,7 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
     MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
     CGEventType type = thisButtonMap[state];
 
-    CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, index);
+    CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, static_cast<CGMouseButton>(index));
     
     CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
     
@@ -754,7 +755,7 @@ OSXScreen::enable()
 		// FIXME -- start watching jump zones
 		
 		// kCGEventTapOptionDefault = 0x00000000 (Missing in 10.4, so specified literally)
-		m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, 0,
+		m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
 										kCGEventMaskForAllEvents, 
 										handleCGInputEvent, 
 										this);
@@ -772,7 +773,7 @@ OSXScreen::enable()
                 // there may be a better way to do this, but we register an event handler even if we're
                 // not on the primary display (acting as a client). This way, if a local event comes in
                 // (either keyboard or mouse), we can make sure to show the cursor if we've hidden it. 
-		m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, 0,
+		m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
 										kCGEventMaskForAllEvents, 
 										handleCGInputEventSecondary, 
 										this);
@@ -1966,7 +1967,8 @@ OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 			break;
 		case NX_NULLEVENT:
 			break;
-		case NX_SYSDEFINED:
+		default:
+			if (type == NX_SYSDEFINED) {
 			if (isMediaKeyEvent (event)) {
 				LOG((CLOG_DEBUG2 "detected media key event"));
 				screen->onMediaKey (event);
@@ -1975,9 +1977,8 @@ OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 				return event;
 			}
 			break;
-		case NX_NUMPROCS:
-			break;
-		default:
+			}
+			
 			LOG((CLOG_WARN "unknown quartz event type: 0x%02x", type));
 	}
 	
