@@ -60,17 +60,19 @@ add_executable(synergyc ${sources})
 target_link_libraries(synergyc
 	arch base client common io mt net ipc platform server synergy ${libs} ${OPENSSL_LIBS})
 
-if (CONF_CPACK)
-	install(TARGETS
-		synergyc
-		COMPONENT core
-		DESTINATION bin)
+if (WIN32)
+	add_custom_command(
+		TARGET synergyc
+		POST_BUILD
+		COMMAND xcopy /Y /Q
+			..\\..\\..\\..\\..\\synergy\\bin\\${CMAKE_CFG_INTDIR}\\synergyc.*
+			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
+	)
+else ()
+	if (CONF_CPACK)
+		install(TARGETS
+			synergyc
+			COMPONENT core
+			DESTINATION bin)
+	endif()
 endif()
-
-add_custom_command(
-	TARGET synergyc
-	POST_BUILD
-	COMMAND xcopy /Y /Q
-		..\\..\\..\\..\\..\\synergy\\bin\\${CMAKE_CFG_INTDIR}\\synergyc.*
-		..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
-)

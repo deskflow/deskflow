@@ -65,17 +65,19 @@ endif()
 target_link_libraries(synergyp
 	arch base client common io mt net ipc platform server synergy client ${libs} ${OPENSSL_LIBS})
 
-if (CONF_CPACK)
-	install(TARGETS
-		synergyp
-		COMPONENT core
-		DESTINATION bin)
+if (WIN32)
+	add_custom_command(
+		TARGET synergyp
+		POST_BUILD
+		COMMAND xcopy /Y /Q
+			..\\..\\..\\..\\..\\synergy\\bin\\${CMAKE_CFG_INTDIR}\\synergyp.*
+			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
+	)
+else ()
+	if (CONF_CPACK)
+		install(TARGETS
+			synergyp
+			COMPONENT core
+			DESTINATION bin)
+	endif()
 endif()
-
-add_custom_command(
-	TARGET synergyp
-	POST_BUILD
-	COMMAND xcopy /Y /Q
-		..\\..\\..\\..\\..\\synergy\\bin\\${CMAKE_CFG_INTDIR}\\synergyp.*
-		..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
-)
