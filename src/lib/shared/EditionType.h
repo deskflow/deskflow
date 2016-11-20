@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Seamless Inc.
- * 
+ * Copyright (C) 2015-2016 Symless Ltd.
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,16 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef EDITIONTYPE_H
+#define EDITIONTYPE_H
 
-#include "base/String.h"
+/* Do not reorder these! */
 
-struct SubscriptionKey {
-	String				m_name;
-	String				m_type;
-	String				m_email;
-	String				m_company;
-	int					m_userLimit;
-	int					m_warnTime;
-	int					m_expireTime;
+enum Edition {
+	kBasic,
+	kPro,
+	Trial_DO_NOT_USE_OR_THERE_WILL_BE_PAIN,
+	kUnregistered
 };
+
+#endif // EDITIONTYPE_H

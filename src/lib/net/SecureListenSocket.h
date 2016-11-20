@@ -33,7 +33,6 @@ public:
 	// IListenSocket overrides
 	virtual IDataSocket*
 						accept();
-	void				deleteSocket(void*);
 
 private:
 	typedef std::set<IDataSocket*> SecureSocketSet;

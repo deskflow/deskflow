@@ -1,7 +1,10 @@
 config.h
+.DS_Store
 *.pyc
+*.o
 *~
 \.*.swp
+*build-gui-Desktop_Qt*
 /bin
 /lib
 /build

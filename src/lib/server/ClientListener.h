@@ -48,8 +48,6 @@ public:
 
 	//@}
 
-	void				deleteSocket(void* socket);
-
 	//! @name accessors
 	//@{
 
