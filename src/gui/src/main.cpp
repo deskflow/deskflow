@@ -97,6 +97,10 @@ int main(int argc, char* argv[])
 	app.switchTranslator(appConfig.language());
 
 	MainWindow mainWindow(settings, appConfig, licenseManager);
+
+	QObject::connect(dynamic_cast<QObject*>(&app), SIGNAL(aboutToQuit()),
+				&mainWindow, SLOT(saveSettings()));
+
 	SetupWizard setupWizard(mainWindow, true);
 
 	if (appConfig.wizardShouldRun())
