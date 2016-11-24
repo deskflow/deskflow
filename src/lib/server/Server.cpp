@@ -288,7 +288,7 @@ Server::setConfig(const Config& config)
 	// we will unfortunately generate a warning.  if the user has
 	// configured a LockCursorToScreenAction then we don't add
 	// ScrollLock as a hotkey.
-	if (!m_config->hasLockToScreenAction()) {
+	if (!m_disableLockToScreen && !m_config->hasLockToScreenAction()) {
 		IPlatformScreen::KeyInfo* key =
 			IPlatformScreen::KeyInfo::alloc(kKeyScrollLock, 0, 0, 0);
 		InputFilter::Rule rule(new InputFilter::KeystrokeCondition(m_events, key));
