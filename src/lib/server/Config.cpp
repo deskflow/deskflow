@@ -765,10 +765,12 @@ Config::readSectionOptions(ConfigReadContext& s)
 		else if (name == "win32KeepForeground") {
 			addOption("", kOptionWin32KeepForeground, s.parseBoolean(value));
 		}
+		else if (name == "disableLockToScreen") {
+			addOption("", kOptionDisableLockToScreen, s.parseBoolean(value));
+		}
 		else if (name == "clipboardSharing") {
 			addOption("", kOptionClipboardSharing, s.parseBoolean(value));
 		}
-
 		else {
 			handled = false;
 		}
@@ -1379,6 +1381,9 @@ Config::getOptionName(OptionID id)
 	}
 	if (id == kOptionScreenPreserveFocus) {
 		return "preserveFocus";
+	}
+	if (id == kOptionDisableLockToScreen) {
+		return "disableLockToScreen";
 	}
 	if (id == kOptionClipboardSharing) {
 		return "clipboardSharing";
