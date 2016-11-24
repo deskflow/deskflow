@@ -1183,7 +1183,7 @@ Server::processOptions()
 			newRelativeMoves = (value != 0);
 		}
 		else if (id == kOptionDisableLockToScreen) {
-			m_disableLockToScreen = true;
+			m_disableLockToScreen = (value != 0);
 		}
 		else if (id == kOptionClipboardSharing) {
 			m_enableClipboard = (value != 0);
