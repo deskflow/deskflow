@@ -44,7 +44,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="Synergy.qrc">:/res/icons/64x64/user-trash.png</pixmap>
+            <pixmap resource="../res/Synergy.qrc">:/res/icons/64x64/user-trash.png</pixmap>
            </property>
           </widget>
          </item>
@@ -82,7 +82,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="Synergy.qrc">:/res/icons/64x64/video-display.png</pixmap>
+            <pixmap resource="../res/Synergy.qrc">:/res/icons/64x64/video-display.png</pixmap>
            </property>
           </widget>
          </item>
@@ -408,6 +408,13 @@ Double click on a screen to edit its settings.</string>
           <string>&amp;Options</string>
          </property>
          <layout class="QGridLayout">
+          <item row="5" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxEnableDragAndDrop">
+            <property name="text">
+             <string>Enable drag and drop file transfers</string>
+            </property>
+           </widget>
+          </item>
           <item row="3" column="0">
            <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground">
             <property name="enabled">
@@ -428,13 +435,33 @@ Double click on a screen to edit its settings.</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxScreenSaverSync">
-            <property name="enabled">
+          <item row="8" column="0">
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>16</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="7" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxEnableClipboard">
+            <property name="text">
+             <string>Enable clipboard sharing</string>
+            </property>
+            <property name="checked">
              <bool>true</bool>
             </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConfigClient">
             <property name="text">
-             <string>S&amp;ynchronize screen savers</string>
+             <string>Ignore auto config clients</string>
             </property>
            </widget>
           </item>
@@ -491,40 +518,20 @@ Double click on a screen to edit its settings.</string>
             </item>
            </layout>
           </item>
-          <item row="7" column="0">
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxScreenSaverSync">
+            <property name="enabled">
+             <bool>true</bool>
             </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>16</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="5" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxEnableDragAndDrop">
             <property name="text">
-             <string>Enable drag and drop file transfers</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConfigClient">
-            <property name="text">
-             <string>Ignore auto config clients</string>
+             <string>S&amp;ynchronize screen savers</string>
             </property>
            </widget>
           </item>
           <item row="6" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxEnableClipboard">
+           <widget class="QCheckBox" name="m_pCheckBoxDisableLockToScreen">
             <property name="text">
-             <string>Enable clipboard sharing</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
+             <string>Disable lock to screen</string>
             </property>
            </widget>
           </item>
@@ -662,7 +669,7 @@ Double click on a screen to edit its settings.</string>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="Synergy.qrc"/>
+  <include location="../res/Synergy.qrc"/>
  </resources>
  <connections>
   <connection>
