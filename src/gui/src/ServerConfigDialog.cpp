@@ -53,6 +53,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
     m_pCheckBoxCornerBottomLeft->setChecked(serverConfig().switchCorner(BaseConfig::BottomLeft));
     m_pCheckBoxCornerBottomRight->setChecked(serverConfig().switchCorner(BaseConfig::BottomRight));
     m_pSpinBoxSwitchCornerSize->setValue(serverConfig().switchCornerSize());
+    m_pCheckBoxDisableLockToScreen->setChecked(serverConfig().disableLockToScreen());
 
     m_pCheckBoxIgnoreAutoConfigClient->setChecked(serverConfig().ignoreAutoConfigClient());
 
@@ -102,6 +103,7 @@ void ServerConfigDialog::accept()
     serverConfig().setSwitchCornerSize(m_pSpinBoxSwitchCornerSize->value());
     serverConfig().setIgnoreAutoConfigClient(m_pCheckBoxIgnoreAutoConfigClient->isChecked());
     serverConfig().setEnableDragAndDrop(m_pCheckBoxEnableDragAndDrop->isChecked());
+    serverConfig().setDisableLockToScreen(m_pCheckBoxDisableLockToScreen->isChecked());
     serverConfig().setClipboardSharing(m_pCheckBoxEnableClipboard->isChecked());
 
     // now that the dialog has been accepted, copy the new server config to the original one,
