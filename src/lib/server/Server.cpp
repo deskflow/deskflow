@@ -91,6 +91,7 @@ Server::Server(
 	m_sendFileThread(nullptr),
 	m_writeToDropDirThread(nullptr),
 	m_ignoreFileTransfer(false),
+	m_disableLockToScreen(false),
 	m_enableClipboard(true),
     m_maximumClipboardSize(INT_MAX),
 	m_sendDragInfoThread(NULL),
@@ -418,6 +419,10 @@ Server::isLockedToScreenServer() const
 bool
 Server::isLockedToScreen() const
 {
+	if (m_disableLockToScreen) {
+		return false;
+	}
+
 	// locked if we say we're locked
 	if (isLockedToScreenServer()) {
 		LOG((CLOG_NOTE "Cursor is locked to screen, check Scroll Lock key"));
@@ -1174,6 +1179,9 @@ Server::processOptions()
 		}
 		else if (id == kOptionRelativeMouseMoves) {
 			newRelativeMoves = (value != 0);
+		}
+		else if (id == kOptionDisableLockToScreen) {
+			m_disableLockToScreen = true;
 		}
 		else if (id == kOptionClipboardSharing) {
 			m_enableClipboard = value;
