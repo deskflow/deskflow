@@ -306,7 +306,7 @@ class InternalCommands:
 			'  genlist     Shows the list of available platform generators\n'
 			'  usage       Shows the help screen\n'
 			'\n'
-			'Example: %s build -g 3'
+			'Example: %s conf -g 3'
 			) % (app, app)
 
 	def configureAll(self, targets, extraArgs=''):
@@ -953,11 +953,14 @@ class InternalCommands:
 		if sys.version_info < (2, 4):
 			raise Exception("Python 2.4 or greater required.")
 
-		p = subprocess.Popen(
-			["git", "log", "--pretty=format:%h", "-n", "1"],
-			stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		try:
+		    p = subprocess.Popen(
+			    ["git", "log", "--pretty=format:%h", "-n", "1"],
+			    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-		stdout, stderr = p.communicate()
+		    stdout, stderr = p.communicate()
+		except OSError:
+			raise Exception('Could not run git')
 
 		if p.returncode != 0:
 			raise Exception('Could not get revision, git error: ' + str(p.returncode))

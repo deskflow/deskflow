@@ -328,7 +328,7 @@ TCPSocket::doRead()
 {
 	UInt8 buffer[4096];
 	memset(buffer, 0, sizeof(buffer));
-	size_t bytesRead = 0;
+	int bytesRead = 0;
 	
 	bytesRead = (int) ARCH->readSocket(m_socket, buffer, sizeof(buffer));
 	
@@ -339,7 +339,7 @@ TCPSocket::doRead()
 		do {
 			m_inputBuffer.write(buffer, bytesRead);
 
-			bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+			bytesRead = (int) ARCH->readSocket(m_socket, buffer, sizeof(buffer));
 		} while (bytesRead > 0);
 		
 		// send input ready if input buffer was empty

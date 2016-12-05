@@ -349,7 +349,7 @@ MSWindowsScreen::leave()
 		// warp to center
 		LOG((CLOG_DEBUG1 "warping cursor to center: %+d, %+d", m_xCenter, m_yCenter));
 		float dpi = DpiHelper::getDpi();
-		warpCursor(m_xCenter / dpi, m_yCenter / dpi);
+		warpCursor((int)(m_xCenter / dpi), (int)(m_yCenter / dpi));
 
 		// disable special key sequences on win95 family
 		enableSpecialKeys(false);
@@ -1416,7 +1416,7 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		// secondary screen.
 		LOG((CLOG_DEBUG5 "warping server cursor to center: %+d,%+d", m_xCenter, m_yCenter));
 		float dpi = DpiHelper::getDpi();
-		warpCursorNoFlush(m_xCenter / dpi, m_yCenter / dpi);
+		warpCursorNoFlush((int)(m_xCenter / dpi), (int)(m_yCenter / dpi));
 		
 		// examine the motion.  if it's about the distance
 		// from the center of the screen to an edge then
