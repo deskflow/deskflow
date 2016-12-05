@@ -117,7 +117,7 @@ ArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
 	open("/dev/null", O_RDWR);
 	
 	int dupErr = dup(1);
-	if (dupErr)
+	if (dupErr<0) // dup returns fd or <0 on error 
 		// NB: file logging actually isn't working at this point!
 		LOG((CLOG_ERR "dup error: %i", dupErr));
 	
