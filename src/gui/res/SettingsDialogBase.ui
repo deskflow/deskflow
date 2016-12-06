@@ -330,11 +330,13 @@
   <tabstop>m_pLineEditScreenName</tabstop>
   <tabstop>m_pSpinBoxPort</tabstop>
   <tabstop>m_pLineEditInterface</tabstop>
+  <tabstop>m_pComboElevate</tabstop>
+  <tabstop>m_pCheckBoxAutoHide</tabstop>
+  <tabstop>m_pCheckBoxEnableCrypto</tabstop>
   <tabstop>m_pComboLogLevel</tabstop>
   <tabstop>m_pCheckBoxLogToFile</tabstop>
   <tabstop>m_pLineEditLogFilename</tabstop>
   <tabstop>m_pButtonBrowseLog</tabstop>
-  <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
  <connections>
