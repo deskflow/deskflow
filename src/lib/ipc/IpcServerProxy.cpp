@@ -94,7 +94,7 @@ IpcServerProxy::send(const IpcMessage& message)
 
 	case kIpcCommand: {
 		const IpcCommandMessage& cm = static_cast<const IpcCommandMessage&>(message);
-		String command = cm.command();
+		const String command = cm.command();
 		ProtocolUtil::writef(&m_stream, kIpcMsgCommand, &command);
 		break;
 	}
