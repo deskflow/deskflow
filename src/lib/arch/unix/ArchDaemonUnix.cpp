@@ -117,9 +117,11 @@ ArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
 	open("/dev/null", O_RDWR);
 	
 	int dupErr = dup(1);
-	if (dupErr)
+
+	if (dupErr < 0) {
 		// NB: file logging actually isn't working at this point!
 		LOG((CLOG_ERR "dup error: %i", dupErr));
+	}
 	
 #ifdef __APPLE__
 	return execSelfNonDaemonized();
