@@ -318,11 +318,11 @@ const KeyID				MSWindowsKeyState::s_virtualKey[] =
 	/* 0x112 */ { kKeyAlt_R },		// VK_MENU
 	/* 0x113 */ { kKeyNone },		// VK_PAUSE
 	/* 0x114 */ { kKeyNone },		// VK_CAPITAL
-	/* 0x115 */ { kKeyNone },		// VK_KANA, VK_HANGUL
+	/* 0x115 */ { kKeyHangul },		// VK_KANA, VK_HANGUL
 	/* 0x116 */ { kKeyNone },		// undefined
 	/* 0x117 */ { kKeyNone },		// VK_JUNJA			
 	/* 0x118 */ { kKeyNone },		// VK_FINAL			
-	/* 0x119 */ { kKeyNone },		// VK_HANJA, VK_KANJI
+	/* 0x119 */ { kKeyHanja },		// VK_HANJA, VK_KANJI
 	/* 0x11a */ { kKeyNone },		// undefined
 	/* 0x11b */ { kKeyNone },		// VK_ESCAPE
 	/* 0x11c */ { kKeyNone },		// VK_CONVERT		
@@ -727,6 +727,10 @@ MSWindowsKeyState::mapKeyFromEvent(WPARAM charAndVirtKey,
 			// are down) but we don't want the client to have to match
 			// that so we clear it.
 			active &= ~s_controlAlt;
+		}
+		if (id == kKeyHangul) {
+			// If shift-space is used to change input mode, clear shift modifier.
+			active &= ~KeyModifierShift;
 		}
 		*maskOut = active;
 	}
@@ -1341,15 +1345,15 @@ MSWindowsKeyState::setWindowGroup(SInt32 group)
 KeyID
 MSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button) const
 {
-	// VK_HANGUL == VK_KANA and VK_HANJA == VK_KANJI. (Those change IME mode)
+	// Some virtual keycodes have same values.
+	// VK_HANGUL == VK_KANA, VK_HANJA == NK_KANJI
+	// which are used to change the input mode of IME.
 	// But they have different X11 keysym. So we should distinguish them.
 	if ((LOWORD(m_keyLayout) & 0xffffu) == 0x0412u) {	// 0x0412 : Korean Locale ID
-		if (virtualKey == VK_HANGUL) {
-			return kKeyHangul;
-		}
-		if (virtualKey == VK_HANJA) {
-			return kKeyHanja;
-		}
+		if (virtualKey == VK_HANGUL || virtualKey == VK_HANJA) {
+			// If shift-space is used to change the input mode,
+			// the extented bit is not set. So add it to get right key id.
+			button |= 0x100u;
 	}
 
 	if ((button & 0x100u) != 0) {
