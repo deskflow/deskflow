@@ -805,7 +805,7 @@ ArchNetworkWinsock::setAddrPort(ArchNetAddress addr, int port)
 	case kINET: {
 		struct sockaddr_in* ipAddr =
 			reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
-		ipAddr->sin_port = htons_winsock(static_cast<u_short>(port));
+		ipAddr->sin_port = htons_winsock(port);
 		break;
 	}
 

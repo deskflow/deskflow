@@ -259,7 +259,7 @@ ServerApp::forceReconnect(const Event&, void*)
 void 
 ServerApp::handleClientConnected(const Event&, void* vlistener)
 {
-	ClientListener* listener = reinterpret_cast<ClientListener*>(vlistener);
+	ClientListener* listener = static_cast<ClientListener*>(vlistener);
 	ClientProxy* client = listener->getNextClient();
 	if (client != NULL) {
 		m_server->adoptClient(client);
@@ -647,7 +647,7 @@ ServerApp::openClientListener(const NetworkAddress& address)
 Server* 
 ServerApp::openServer(Config& config, PrimaryClient* primaryClient)
 {
-	Server* server = new Server(config, primaryClient, m_serverScreen, m_events, args().m_enableDragDrop);
+	Server* server = new Server(config, primaryClient, m_serverScreen, m_events, args());
 	try {
 		m_events->adoptHandler(
 			m_events->forServer().disconnected(), server,
@@ -707,11 +707,6 @@ ServerApp::mainLoop()
 		return kExitFailed;
 	}
 
-	// load all available plugins.
-	ARCH->plugin().load();
-	// pass log and arch into plugins.
-	ARCH->plugin().init(Log::getInstance(), Arch::getInstance());
-
 	// start server, etc
 	appUtil().startNode();
 	
@@ -720,9 +715,6 @@ ServerApp::mainLoop()
 	if (argsBase().m_enableIpc) {
 		initIpcClient();
 	}
-
-	// init event for all available plugins.
-	ARCH->plugin().initEvent(m_serverScreen->getEventTarget(), m_events);
 
 	// handle hangup signal by reloading the server's configuration
 	ARCH->setSignalHandler(Arch::kHANGUP, &reloadSignalHandler, NULL);
@@ -779,9 +771,6 @@ ServerApp::mainLoop()
 	if (argsBase().m_enableIpc) {
 		cleanupIpcClient();
 	}
-
-	// unload all plugins.
-	ARCH->plugin().unload();
 
 	return kExitSuccess;
 }

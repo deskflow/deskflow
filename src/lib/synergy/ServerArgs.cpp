@@ -19,6 +19,7 @@
 
 ServerArgs::ServerArgs() :
 	m_configFile(),
+	m_serial(),
 	m_config(NULL)
 {
 }

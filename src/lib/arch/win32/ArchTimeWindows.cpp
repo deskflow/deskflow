@@ -65,7 +65,7 @@ ArchTimeWindows::~ArchTimeWindows()
 {
 	s_freq = 0.0;
 	if (s_mmInstance == NULL) {
-		FreeLibrary(reinterpret_cast<HMODULE>(s_mmInstance));
+		FreeLibrary(static_cast<HMODULE>(s_mmInstance));
 		s_tgt        = NULL;
 		s_mmInstance = NULL;
 	}

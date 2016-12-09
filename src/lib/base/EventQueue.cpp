@@ -54,7 +54,7 @@ static
 void
 interrupt(Arch::ESignal, void* data)
 {
-	EventQueue* events = reinterpret_cast<EventQueue*>(data);
+	EventQueue* events = static_cast<EventQueue*>(data);
 	events->addEvent(Event(Event::kQuit));
 }
 

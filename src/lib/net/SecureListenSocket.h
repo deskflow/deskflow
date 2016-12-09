@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015-2016 Symless Ltd
+ * Copyright (C) 2015-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,25 +17,25 @@
 
 #pragma once
 
-#if defined _WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include "net/TCPListenSocket.h"
+#include "common/stdset.h"
 
-#if defined(ns_EXPORTS)
-#define NS_API __declspec(dllexport)
-#else
-#define NS_API __declspec(dllimport)
-#endif
+class IEventQueue;
+class SocketMultiplexer;
+class IDataSocket;
 
-#else
-#define NS_API
-#endif
+class SecureListenSocket : public TCPListenSocket{
+public:
+	SecureListenSocket(IEventQueue* events,
+		SocketMultiplexer* socketMultiplexer);
+	~SecureListenSocket();
 
-extern "C" {
+	// IListenSocket overrides
+	virtual IDataSocket*
+						accept();
 
-NS_API void				init(void* log, void* arch);
-NS_API int				initEvent(void (*sendEvent)(const char*, void*));
-NS_API void*			invoke(const char* command, void** args);
-NS_API void				cleanup();
+private:
+	typedef std::set<IDataSocket*> SecureSocketSet;
 
-}
+	SecureSocketSet		m_secureSocketSet;
+};

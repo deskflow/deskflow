@@ -116,7 +116,6 @@ CurlFacade::urlEncode(const String& url)
 	char* resultCStr = curl_easy_escape(m_curl, url.c_str(), 0);
 
 	if (resultCStr == NULL) {
-		curl_free(resultCStr);
 		throw XArch("CURL escape failed.");
 	}
 	

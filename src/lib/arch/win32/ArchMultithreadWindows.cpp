@@ -661,7 +661,7 @@ unsigned int __stdcall
 ArchMultithreadWindows::threadFunc(void* vrep)
 {
 	// get the thread
-	ArchThreadImpl* thread = reinterpret_cast<ArchThreadImpl*>(vrep);
+	ArchThreadImpl* thread = static_cast<ArchThreadImpl*>(vrep);
 
 	// run thread
 	s_instance->doThreadFunc(thread);

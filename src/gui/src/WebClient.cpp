@@ -25,76 +25,60 @@
 #include <QCoreApplication>
 #include <stdexcept>
 
-int WebClient::getEdition(
-		const QString& email,
-		const QString& password,
-		QMessageBox& message,
-		QWidget* w)
-{
-	QString responseJson;
-	int edition = Unknown;
-	try {
-		responseJson = request(email, password);
-	}
-	catch (std::exception& e)
-	{
-		message.critical(
-			w, "Error",
-			tr("An error occurred while trying to sign in. "
-			"Please contact the helpdesk, and provide the "
-			"following details.\n\n%1").arg(e.what()));
-		return edition;
-	}
+bool 
+WebClient::getEdition (int& edition, QString& errorOut) {
+	QString responseJson = request();
+	
+	/* TODO: This is horrible and should be ripped out as soon as we move 
+	 *		 to Qt 5. See issue #5630
+	 */
 
 	QRegExp resultRegex(".*\"result\".*:.*(true|false).*");
-	if (resultRegex.exactMatch(responseJson)) {
+	if (resultRegex.exactMatch (responseJson)) {
 		QString boolString = resultRegex.cap(1);
 		if (boolString == "true") {
 			QRegExp editionRegex(".*\"edition\".*:.*\"([^\"]+)\".*");
 			if (editionRegex.exactMatch(responseJson)) {
 				QString e = editionRegex.cap(1);
 				edition = e.toInt();
+				return true;
+			} else {
+				throw std::runtime_error ("Unrecognised server response.");
 			}
-
-			return edition;
+		} else {
+			errorOut = tr("Login failed. Invalid email address or password.");
+			return false;
 		}
-		else if (boolString == "false") {
-			message.critical(
-				w, "Error",
-				tr("Login failed, invalid email or password."));
-
-			return edition;
-		}
-	}
-	else {
+	} else {
 		QRegExp errorRegex(".*\"error\".*:.*\"([^\"]+)\".*");
-		if (errorRegex.exactMatch(responseJson)) {
-
-			// replace "\n" with real new lines.
-			QString error = errorRegex.cap(1).replace("\\n", "\n");
-			message.critical(
-				w, "Error",
-				tr("Login failed, an error occurred.\n\n%1").arg(error));
-
-			return edition;
+		if (errorRegex.exactMatch (responseJson)) {
+			errorOut = errorRegex.cap(1).replace("\\n", "\n");
+			return false;
+		} else {
+			throw std::runtime_error ("Unrecognised server response.");
 		}
 	}
-
-	message.critical(
-		w, "Error",
-		tr("Login failed, an error occurred.\n\nServer response:\n\n%1")
-		.arg(responseJson));
-
-	return edition;
 }
 
-QString WebClient::request(
-	const QString& email,
-	const QString& password)
-{
-	QStringList args("--login-auth");
-	// hash password in case it contains interesting chars.
-	QString credentials(email + ":" + hash(password) + "\n");
+bool
+WebClient::setEmail (QString email, QString& errorOut) {
+	if (email.isEmpty()) {
+		errorOut = tr("Your email address cannot be left blank.");
+		return false;
+	}
+	m_Email = email;
+	return true;
+}
 
-	return m_CoreInterface.run(args, credentials);
+bool
+WebClient::setPassword (QString password, QString&) {
+	m_Password = password;
+	return true;
+}
+
+QString
+WebClient::request() {
+	QStringList args("--login-auth");
+	QString credentials (m_Email + ":" + hash(m_Password) + "\n");
+	return m_CoreInterface.run (args, credentials);
 }

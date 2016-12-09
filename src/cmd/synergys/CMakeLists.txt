@@ -58,7 +58,16 @@ endif()
 
 add_executable(synergys ${sources})
 target_link_libraries(synergys
-	arch base client common io mt net ipc platform server synergy ${libs})
+	arch base client common io mt net ipc platform server synergy ${libs} ${OPENSSL_LIBS})
+
+if (WIN32)
+	ADD_CUSTOM_COMMAND(
+		TARGET synergys
+		POST_BUILD
+		COMMAND "mt.exe" -manifest \"${CMAKE_SOURCE_DIR}\\res\\dpiaware.manifest\" -inputresource:\"$<TARGET_FILE:synergys>\"\;\#1 -outputresource:\"$<TARGET_FILE:synergys>\"\;\#1
+		COMMENT "Adding display aware manifest..."
+	)
+endif()
 
 if (CONF_CPACK)
 	install(TARGETS

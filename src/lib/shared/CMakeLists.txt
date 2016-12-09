@@ -1,6 +1,5 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012-2016 Symless Ltd.
-# Copyright (C) 2012 Nick Bolton
+# Copyright (C) 2016 Symless Ltd.
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -14,15 +13,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if (WIN32)
-	add_subdirectory(winmmjoy)
+file(GLOB headers "*.h")
+file(GLOB sources "*.cpp")
+
+if (SYNERGY_ADD_HEADERS)
+	list(APPEND sources ${headers})
 endif()
 
-if (APPLE)
-	# 10.7 should be supported, but gives is a _NXArgv linker error
-	if (OSX_TARGET_MINOR GREATER 7)
-		add_subdirectory(ns)
-	endif()
-else()
-	add_subdirectory(ns)
-endif()
+add_library(shared STATIC ${sources})
+
+include_directories(
+	../
+	../../../ext
+	../../../ext/gtest-1.6.0/include
+)
+
+target_link_libraries(shared arch base)
+

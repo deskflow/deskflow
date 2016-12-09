@@ -90,55 +90,58 @@ bool SslCertificate::runTool(const QStringList& args)
 
 void SslCertificate::generateCertificate()
 {
-	QStringList arguments;
-
-	// self signed certificate
-	arguments.append("req");
-	arguments.append("-x509");
-	arguments.append("-nodes");
-
-	// valide duration
-	arguments.append("-days");
-	arguments.append(kCertificateLifetime);
-
-	// subject information
-	arguments.append("-subj");
-
-	QString subInfo(kCertificateSubjectInfo);
-	arguments.append(subInfo);
-
-	// private key
-	arguments.append("-newkey");
-	arguments.append("rsa:1024");
-
 	QString sslDirPath = QString("%1%2%3")
 		.arg(m_ProfileDir)
 		.arg(QDir::separator())
 		.arg(kSslDir);
-
-	QDir sslDir(sslDirPath);
-	if (!sslDir.exists()) {
-		sslDir.mkpath(".");
-	}
 
 	QString filename = QString("%1%2%3")
 		.arg(sslDirPath)
 		.arg(QDir::separator())
 		.arg(kCertificateFilename);
 
-	// key output filename
-	arguments.append("-keyout");
-	arguments.append(filename);
+	QFile file(filename);
+	if (!file.exists()) {
+		QStringList arguments;
 
-	// certificate output filename
-	arguments.append("-out");
-	arguments.append(filename);
+		// self signed certificate
+		arguments.append("req");
+		arguments.append("-x509");
+		arguments.append("-nodes");
 
-	if (!runTool(arguments)) {
-		return;
+		// valide duration
+		arguments.append("-days");
+		arguments.append(kCertificateLifetime);
+
+		// subject information
+		arguments.append("-subj");
+
+		QString subInfo(kCertificateSubjectInfo);
+		arguments.append(subInfo);
+
+		// private key
+		arguments.append("-newkey");
+		arguments.append("rsa:1024");
+
+		QDir sslDir(sslDirPath);
+		if (!sslDir.exists()) {
+			sslDir.mkpath(".");
+		}
+
+		// key output filename
+		arguments.append("-keyout");
+		arguments.append(filename);
+
+		// certificate output filename
+		arguments.append("-out");
+		arguments.append(filename);
+
+		if (!runTool(arguments)) {
+			return;
+		}
+
+		emit info(tr("SSL certificate generated."));
 	}
-
-	emit info(tr("SSL certificate generated."));
 
 	generateFingerprint(filename);
 

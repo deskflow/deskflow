@@ -18,12 +18,14 @@
 
 #include "SettingsDialog.h"
 
-#include "PluginManager.h"
 #include "CoreInterface.h"
 #include "SynergyLocale.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
 #include "AppConfig.h"
+#include "EditionType.h"
+#include "SslCertificate.h"
+#include "MainWindow.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -36,7 +38,7 @@ static const char networkSecurity[] = "ns";
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::SettingsDialogBase(),
-       m_AppConfig(config)
+       m_appConfig(config)
 {
 	setupUi(this);
 
@@ -61,13 +63,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pComboElevate->hide();
 #endif
 
-	if (!PluginManager::exist(networkSecurity)) {
-		m_pGroupNetworkSecurity->setEnabled(false);
-		m_pCheckBoxEnableCrypto->setChecked(false);
-	}
-	else {
-		m_pCheckBoxEnableCrypto->setChecked(m_AppConfig.getCryptoEnabled());
-	}
+	m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
+	m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.edition() == kPro);
 }
 
 void SettingsDialog::accept()
@@ -147,5 +144,12 @@ void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
 {
-	m_AppConfig.setCryptoEnabled(checked);
+	m_appConfig.setCryptoEnabled(checked);
+	m_appConfig.saveSettings();
+	if (checked) {
+		SslCertificate sslCertificate;
+		sslCertificate.generateCertificate();
+		MainWindow& mainWindow = dynamic_cast<MainWindow&> (*this->parent());
+		mainWindow.updateLocalFingerprint();
+	}
 }

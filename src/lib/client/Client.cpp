@@ -18,7 +18,6 @@
 
 #include "client/Client.h"
 
-#include "../plugin/ns/SecureSocket.h"
 #include "client/ServerProxy.h"
 #include "synergy/Screen.h"
 #include "synergy/FileChunk.h"
@@ -33,12 +32,12 @@
 #include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/ISocketFactory.h"
+#include "net/SecureSocket.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
-#include "common/PluginVersion.h"
 #include "common/stdexcept.h"
 
 #include <cstring>
@@ -72,7 +71,7 @@ Client::Client(
 	m_sendFileThread(NULL),
 	m_writeToDropDirThread(NULL),
 	m_socket(NULL),
-	m_useSecureNetwork(false),
+	m_useSecureNetwork(args.m_enableCrypto),
 	m_args(args),
 	m_enableClipboard(true)
 {
@@ -98,13 +97,6 @@ Client::Client(
 								this,
 								new TMethodEventJob<Client>(this,
 									&Client::handleFileRecieveCompleted));
-	}
-
-	if (m_args.m_enableCrypto) {
-		m_useSecureNetwork = ARCH->plugin().exists(s_pluginNames[kSecureSocket]);
-		if (m_useSecureNetwork == false) {
-			LOG((CLOG_NOTE "crypto disabled because of ns plugin not available"));
-		}
 	}
 }
 
@@ -160,8 +152,7 @@ Client::connect()
 
 		// filter socket messages, including a packetizing filter
 		m_stream = socket;
-		bool adopt = !m_useSecureNetwork;
-		m_stream = new PacketStreamFilter(m_events, m_stream, adopt);
+		m_stream = new PacketStreamFilter(m_events, m_stream, true);
 
 		// connect
 		LOG((CLOG_DEBUG1 "connecting to server"));
@@ -439,7 +430,7 @@ Client::sendConnectionFailedEvent(const char* msg)
 void
 Client::sendFileChunk(const void* data)
 {
-	FileChunk* chunk = reinterpret_cast<FileChunk*>(const_cast<void*>(data));
+	FileChunk* chunk = static_cast<FileChunk*>(const_cast<void*>(data));
 	LOG((CLOG_DEBUG1 "send file chunk"));
 	assert(m_server != NULL);
 
@@ -593,13 +584,6 @@ Client::cleanupStream()
 {
 	delete m_stream;
 	m_stream = NULL;
-
-	// PacketStreamFilter doen't adopt secure socket, because
-	// we need to tell the dynamic lib that allocated this object
-	// to do the deletion.
-	if (m_useSecureNetwork) {
-		ARCH->plugin().invoke(s_pluginNames[kSecureSocket], "deleteSocket", NULL);
-	}
 }
 
 void
@@ -621,7 +605,7 @@ void
 Client::handleConnectionFailed(const Event& event, void*)
 {
 	IDataSocket::ConnectionFailedInfo* info =
-		reinterpret_cast<IDataSocket::ConnectionFailedInfo*>(event.getData());
+		static_cast<IDataSocket::ConnectionFailedInfo*>(event.getData());
 
 	cleanupTimer();
 	cleanupConnecting();
@@ -677,7 +661,7 @@ Client::handleClipboardGrabbed(const Event& event, void*)
 	}
 
 	const IScreen::ClipboardInfo* info =
-		reinterpret_cast<const IScreen::ClipboardInfo*>(event.getData());
+		static_cast<const IScreen::ClipboardInfo*>(event.getData());
 
 	// grab ownership
 	m_server->onGrabClipboard(info->m_id);
@@ -826,14 +810,14 @@ Client::sendFileToServer(const char* filename)
 	m_sendFileThread = new Thread(
 		new TMethodJob<Client>(
 			this, &Client::sendFileThread,
-			reinterpret_cast<void*>(const_cast<char*>(filename))));
+			static_cast<void*>(const_cast<char*>(filename))));
 }
 
 void
 Client::sendFileThread(void* filename)
 {
 	try {
-		char* name  = reinterpret_cast<char*>(filename);
+		char* name  = static_cast<char*>(filename);
 		StreamChunker::sendFile(name, m_events, this);
 	}
 	catch (std::runtime_error error) {
