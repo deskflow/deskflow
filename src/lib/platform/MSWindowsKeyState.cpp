@@ -1354,6 +1354,7 @@ MSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button) const
 			// If shift-space is used to change the input mode,
 			// the extented bit is not set. So add it to get right key id.
 			button |= 0x100u;
+		}
 	}
 
 	if ((button & 0x100u) != 0) {
