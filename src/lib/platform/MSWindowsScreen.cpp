@@ -31,7 +31,6 @@
 #include "synergy/App.h"
 #include "synergy/ArgsBase.h"
 #include "synergy/ClientApp.h"
-#include "synergy/DpiHelper.h"
 #include "mt/Lock.h"
 #include "mt/Thread.h"
 #include "arch/win32/ArchMiscWindows.h"
@@ -105,7 +104,6 @@ MSWindowsScreen::MSWindowsScreen(
 	m_xCenter(0), m_yCenter(0),
 	m_multimon(false),
 	m_xCursor(0), m_yCursor(0),
-	m_xFractionalMove(0.0f), m_yFractionalMove(0.0f),
 	m_sequenceNumber(0),
 	m_mark(0),
 	m_markReceived(0),
@@ -145,10 +143,6 @@ MSWindowsScreen::MSWindowsScreen(
 								this, &MSWindowsScreen::updateKeysCB),
 							stopOnDeskSwitch);
 		m_keyState    = new MSWindowsKeyState(m_desks, getEventTarget(), m_events);
-
-		DpiHelper::calculateDpi(
-			GetSystemMetrics(SM_CXVIRTUALSCREEN),
-			GetSystemMetrics(SM_CYVIRTUALSCREEN));
 
 		updateScreenShape();
 		m_class       = createWindowClass();
@@ -348,8 +342,7 @@ MSWindowsScreen::leave()
 
 		// warp to center
 		LOG((CLOG_DEBUG1 "warping cursor to center: %+d, %+d", m_xCenter, m_yCenter));
-		float dpi = DpiHelper::getDpi();
-		warpCursor(m_xCenter / dpi, m_yCenter / dpi);
+		warpCursor(m_xCenter, m_yCenter);
 
 		// disable special key sequences on win95 family
 		enableSpecialKeys(false);
@@ -574,21 +567,6 @@ void MSWindowsScreen::saveMousePosition(SInt32 x, SInt32 y) {
 	m_yCursor = y;
 
 	LOG((CLOG_DEBUG5 "saved mouse position for next delta: %+d,%+d", x,y));
-}
-
-void MSWindowsScreen::accumulateFractionalMove(float x, float y, SInt32& intX, SInt32& intY)
-{
-	// Accumulate together the move into the running total
-	m_xFractionalMove += x;
-	m_yFractionalMove += y;
-
-	// Return the integer part
-	intX = (SInt32)m_xFractionalMove;
-	intY = (SInt32)m_yFractionalMove;
-
-	// And keep only the fractional part
-	m_xFractionalMove -= intX;
-	m_yFractionalMove -= intY;
 }
 
 UInt32
@@ -1369,20 +1347,10 @@ MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 bool
 MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 {
-	SInt32 originalMX = mx;
-	SInt32 originalMY = my;
-	float scaledMX = (float)mx;
-	float scaledMY = (float)my;
-
-	if (DpiHelper::s_dpiScaled) {
-		scaledMX /= DpiHelper::getDpi();
-		scaledMY /= DpiHelper::getDpi();
-	}
-
 	// compute motion delta (relative to the last known
 	// mouse position)
-	float x = scaledMX - m_xCursor;
-	float y = scaledMY - m_yCursor;
+	SInt32 x = mx - m_xCursor;
+	SInt32 y = my - m_yCursor;
 
 	LOG((CLOG_DEBUG3
 		"mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)",
@@ -1395,14 +1363,14 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 	}
 
 	// save position to compute delta of next motion
-	saveMousePosition((SInt32)scaledMX, (SInt32)scaledMY);
+	saveMousePosition(mx, my);
 
 	if (m_isOnScreen) {
 		
 		// motion on primary screen
 		sendEvent(
 			m_events->forIPrimaryScreen().motionOnPrimary(),
-			MotionInfo::alloc(originalMX, originalMY));
+			MotionInfo::alloc(m_xCursor, m_yCursor));
 
 		if (m_buttons[kButtonLeft] == true && m_draggingStarted == false) {
 			m_draggingStarted = true;
@@ -1415,8 +1383,7 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		// will always try to return to the original entry point on the 
 		// secondary screen.
 		LOG((CLOG_DEBUG5 "warping server cursor to center: %+d,%+d", m_xCenter, m_yCenter));
-		float dpi = DpiHelper::getDpi();
-		warpCursorNoFlush(m_xCenter / dpi, m_yCenter / dpi);
+		warpCursorNoFlush(m_xCenter, m_yCenter);
 		
 		// examine the motion.  if it's about the distance
 		// from the center of the screen to an edge then
@@ -1424,18 +1391,16 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		// ignore (see warpCursorNoFlush() for a further
 		// description).
 		static SInt32 bogusZoneSize = 10;
-		if (-x + bogusZoneSize > (m_xCenter - m_x) / dpi ||
-			 x + bogusZoneSize > (m_x + m_w - m_xCenter) / dpi ||
-			-y + bogusZoneSize > (m_yCenter - m_y) / dpi ||
-			 y + bogusZoneSize > (m_y + m_h - m_yCenter) / dpi) {
+		if (-x + bogusZoneSize > m_xCenter - m_x ||
+			 x + bogusZoneSize > m_x + m_w - m_xCenter ||
+			-y + bogusZoneSize > m_yCenter - m_y ||
+			 y + bogusZoneSize > m_y + m_h - m_yCenter) {
 			
 			LOG((CLOG_DEBUG "dropped bogus delta motion: %+d,%+d", x, y));
 		}
 		else {
 			// send motion
-			SInt32 ix, iy;
-			accumulateFractionalMove(x, y, ix, iy);
-			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(ix, iy));
+			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(x, y));
 		}
 	}
 
@@ -1623,26 +1588,13 @@ void
 MSWindowsScreen::updateScreenShape()
 {
 	// get shape and center
-	if (DpiHelper::s_dpiScaled) {
-		// use the original resolution size for width and height
-		m_w = (SInt32)DpiHelper::s_resolutionWidth;
-		m_h = (SInt32)DpiHelper::s_resolutionHeight;
-
-		// calculate center position according to the original size
-		m_xCenter = (SInt32)DpiHelper::s_primaryWidthCenter;
-		m_yCenter = (SInt32)DpiHelper::s_primaryHeightCenter;
-	}
-	else {
-		m_w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
-		m_h = GetSystemMetrics(SM_CYVIRTUALSCREEN);
-
-		m_xCenter = GetSystemMetrics(SM_CXSCREEN) >> 1;
-		m_yCenter = GetSystemMetrics(SM_CYSCREEN) >> 1;
-	}
-
-	// get position
+	m_w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+	m_h = GetSystemMetrics(SM_CYVIRTUALSCREEN);
 	m_x = GetSystemMetrics(SM_XVIRTUALSCREEN);
 	m_y = GetSystemMetrics(SM_YVIRTUALSCREEN);
+	m_xCenter = GetSystemMetrics(SM_CXSCREEN) >> 1;
+	m_yCenter = GetSystemMetrics(SM_CYSCREEN) >> 1;
+
 	// check for multiple monitors
 	m_multimon = (m_w != GetSystemMetrics(SM_CXSCREEN) ||
 				  m_h != GetSystemMetrics(SM_CYSCREEN));

@@ -159,7 +159,8 @@ bool checkMacAssistiveDevices()
 		QMessageBox::information(
 			NULL, "Synergy",
 			"Please enable access to assistive devices "
-			"(System Preferences), then re-open Synergy.");
+			"System Preferences -> Security & Privacy -> "
+			"Privacy -> Accessibility, then re-open Synergy.");
 	}
 	return result;
 
