@@ -1,3 +1,12 @@
+v1.8.6-stable
+=============
+Bug #5592 - Some keys don't work for macOS Sierra clients
+Bug #5186 - Cursor stuck on client when using multi-DPI server
+Bug #5722 - Malformed serial key in registry will crash GUI on startup
+Bug #5752 - Tab order is incorrect on Settings dialog
+Enhancement #5699 - Unified installers on macOS
+Feature #4836 - macOS Sierra build
+
 v1.8.5-stable
 =============
 Bug #5680 - Server crashes when disconnecting SSL clients
