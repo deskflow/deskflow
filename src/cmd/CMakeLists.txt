@@ -23,6 +23,3 @@ if (BUILD_SERVICE)
 	add_subdirectory(synergyd)
 endif (BUILD_SERVICE)
 
-if (WIN32)
-  add_subdirectory(synergyp)
-endif()
