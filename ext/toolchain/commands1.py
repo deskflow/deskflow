@@ -16,7 +16,7 @@
 
 # TODO: split this file up, it's too long!
 
-import sys, os, ConfigParser, shutil, re, ftputil, zipfile, glob, commands
+import sys, os, ConfigParser, shutil, re, ftputil, glob, commands
 from generators import VisualStudioGenerator, EclipseGenerator, XcodeGenerator, MakefilesGenerator
 from getopt import gnu_getopt
 
@@ -26,7 +26,6 @@ if sys.version_info >= (2, 4):
 class Toolchain:
 	
 	# minimum required version.
-	# 2.6 needed for ZipFile.extractall.
 	# do not change to 2.7, as the build machines are still at 2.6
 	# and are a massive pain in the ass to upgrade.
 	requiredMajor = 2
@@ -253,12 +252,6 @@ class InternalCommands:
 	# by default, unknown
 	macIdentity = None
 	
-	# gtest dir with version number
-	gtestDir = 'gtest-1.6.0'
-	
-	# gmock dir with version number
-	gmockDir = 'gmock-1.6.0'
-
 	win32_generators = {
 		1 : VisualStudioGenerator('14'),
 		2 : VisualStudioGenerator('14 Win64'),
@@ -325,48 +318,6 @@ class InternalCommands:
 
 		for target in targets:
 			self.configure(target)
-
-	def checkGTest(self):
-		dir = self.extDir + '/' + self.gtestDir
-		if (os.path.isdir(dir)):
-			return
-		
-		zipFilename = dir + '.zip'
-		if (not os.path.exists(zipFilename)):
-			raise Exception('GTest zip not found at: ' + zipFilename)
-		
-		if not os.path.exists(dir):
-			os.mkdir(dir)
-		
-		zip = zipfile.ZipFile(zipFilename)
-		self.zipExtractAll(zip, dir)
-
-	def checkGMock(self):
-		dir = self.extDir + '/' + self.gmockDir
-		if (os.path.isdir(dir)):
-			return
-		
-		zipFilename = dir + '.zip'
-		if (not os.path.exists(zipFilename)):
-			raise Exception('GMock zip not found at: ' + zipFilename)
-		
-		if not os.path.exists(dir):
-			os.mkdir(dir)
-		
-		zip = zipfile.ZipFile(zipFilename)
-		self.zipExtractAll(zip, dir)
-
-	# ZipFile.extractall() is buggy in 2.6.1
-	# http://bugs.python.org/issue4710
-	def zipExtractAll(self, z, dir):
-		if not dir.endswith("/"):
-			dir += "/"
-		
-		for f in z.namelist():
-			if f.endswith("/"):
-				os.makedirs(dir + f)
-			else:
-				z.extract(f, dir)
 
 	def configure(self, target='', extraArgs=''):
 
@@ -464,9 +415,6 @@ class InternalCommands:
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
 
-		self.checkGTest()
-		self.checkGMock()
-		
 		if extraArgs != '':
 			cmake_args += ' ' + extraArgs
 
