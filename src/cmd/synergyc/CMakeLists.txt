@@ -66,7 +66,7 @@ if (WIN32)
 		POST_BUILD
 		COMMAND xcopy /Y /Q
 			..\\..\\..\\..\\..\\synergy\\bin\\${CMAKE_CFG_INTDIR}\\synergyc.*
-			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
+			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
 	)
 else ()
 	if (CONF_CPACK)
