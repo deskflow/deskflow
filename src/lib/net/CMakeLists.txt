@@ -40,14 +40,14 @@ if (WIN32)
 		POST_BUILD
 		COMMAND xcopy /Y /Q
 			..\\..\\..\\..\\..\\synergy\\ext\\${OPENSSL_PLAT_DIR}\\out32dll\\libeay32.*
-			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
+			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
 	)
 	add_custom_command(
 		TARGET net 
 		POST_BUILD
 		COMMAND xcopy /Y /Q
 			..\\..\\..\\..\\..\\synergy\\ext\\${OPENSSL_PLAT_DIR}\\out32dll\\ssleay32.*
-			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
+			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
 	)
 endif()
 
