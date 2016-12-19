@@ -1258,15 +1258,8 @@ bool MainWindow::isServiceRunning(QString name)
 		return false;
 	}
 
-	SC_HANDLE hService;
-	int length = name.length();
-	wchar_t* array = new wchar_t[length + 1];
-	name.toWCharArray(array);
-	array[length] = '\0';
-
-	hService = OpenService(hSCManager, array, SERVICE_QUERY_STATUS);
-
-	delete[] array;
+	auto array = name.toLocal8Bit();
+	SC_HANDLE hService = OpenService(hSCManager, array.data(), SERVICE_QUERY_STATUS);
 
 	if (hService == NULL) {
 		appendLogDebug("failed to open service: " + name);
