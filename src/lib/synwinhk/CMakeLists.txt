@@ -29,16 +29,3 @@ add_library(synwinhk SHARED ${sources})
 if (NOT MSVC_VERSION VERSION_LESS 1900)
 	target_link_libraries(synwinhk libucrt)
 endif()
-
-# copy the dlls (and supporting files) from the lib dir to 
-# the bin dir, so that synergyc and synergys can easily find them.
-# we should leave the other libraries compiling to the lib dir,
-# so that the bin dir remains tidy. the path is relative to the
-# build dir (in this case, that's: build\src\lib\platform).
-add_custom_command(
-	TARGET synwinhk 
-	POST_BUILD
-	COMMAND xcopy /Y /Q
-		..\\..\\..\\..\\..\\synergy\\lib\\${CMAKE_CFG_INTDIR}\\synwinhk.*
-		..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
-)

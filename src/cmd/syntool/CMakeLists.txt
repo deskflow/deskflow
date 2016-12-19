@@ -32,13 +32,6 @@ target_link_libraries(syntool
 	synergy arch base client common io ipc mt net platform server ${libs} ${OPENSSL_LIBS})
 
 if (WIN32)
-	add_custom_command(
-		TARGET syntool
-		POST_BUILD
-		COMMAND xcopy /Y /Q
-			..\\..\\..\\..\\..\\synergy\\bin\\${CMAKE_CFG_INTDIR}\\syntool.*
-			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
-	)
 else ()
 	if (CONF_CPACK)
 		install(TARGETS

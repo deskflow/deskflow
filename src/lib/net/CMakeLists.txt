@@ -34,23 +34,6 @@ endif()
 
 add_library(net STATIC ${sources})
 
-if (WIN32)
-	add_custom_command(
-		TARGET net
-		POST_BUILD
-		COMMAND xcopy /Y /Q
-			..\\..\\..\\..\\..\\synergy\\ext\\${OPENSSL_PLAT_DIR}\\out32dll\\libeay32.*
-			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
-	)
-	add_custom_command(
-		TARGET net 
-		POST_BUILD
-		COMMAND xcopy /Y /Q
-			..\\..\\..\\..\\..\\synergy\\ext\\${OPENSSL_PLAT_DIR}\\out32dll\\ssleay32.*
-			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
-	)
-endif()
-
 if (UNIX)
 	target_link_libraries(net mt io ${OPENSSL_LIBS})
 endif()

@@ -61,13 +61,6 @@ target_link_libraries(synergys
 	arch base client common io mt net ipc platform server synergy ${libs} ${OPENSSL_LIBS})
 
 if (WIN32)
-	add_custom_command(
-		TARGET synergys
-		POST_BUILD
-		COMMAND xcopy /Y /Q
-			..\\..\\..\\..\\..\\synergy\\bin\\${CMAKE_CFG_INTDIR}\\synergys.*
-			..\\..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
-	)
 else ()
 	if (CONF_CPACK)
 		install(TARGETS
