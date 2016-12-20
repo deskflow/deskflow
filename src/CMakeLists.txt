@@ -16,7 +16,9 @@
 
 add_subdirectory(lib)
 add_subdirectory(cmd)
-add_subdirectory(gui)
+if (WIN32)
+    add_subdirectory(gui)
+endif()
 
 if ((NOT ${CMAKE_SYSTEM_NAME} MATCHES "IRIX") AND (NOT ${DISABLE_TESTS}))
 	add_subdirectory(test)
