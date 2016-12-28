@@ -4,23 +4,24 @@ TEMPLATE = app
 TARGET = synergy
 DEFINES += VERSION_STAGE=\\\"$$QMAKE_VERSION_STAGE\\\"
 DEFINES += VERSION_REVISION=\\\"$$QMAKE_VERSION_REVISION\\\"
+
 DEPENDPATH += . \
     res
 INCLUDEPATH += . \
     src \
     ../lib/shared/
-FORMS += res/MainWindowBase.ui \
-    res/AboutDialogBase.ui \
-    res/ServerConfigDialogBase.ui \
-    res/ScreenSettingsDialogBase.ui \
-    res/ActionDialogBase.ui \
-    res/HotkeyDialogBase.ui \
-    res/SettingsDialogBase.ui \
-    res/SetupWizardBase.ui \
-    res/AddClientDialogBase.ui \
-    res/ActivationDialog.ui \
-    res/CancelActivationDialog.ui \
-    res/FailedLoginDialog.ui
+FORMS += src/MainWindowBase.ui \
+    src/AboutDialogBase.ui \
+    src/ServerConfigDialogBase.ui \
+    src/ScreenSettingsDialogBase.ui \
+    src/ActionDialogBase.ui \
+    src/HotkeyDialogBase.ui \
+    src/SettingsDialogBase.ui \
+    src/SetupWizardBase.ui \
+    src/AddClientDialogBase.ui \
+    src/ActivationDialog.ui \
+    src/CancelActivationDialog.ui \
+    src/FailedLoginDialog.ui
 SOURCES += src/main.cpp \
     src/MainWindow.cpp \
     src/AboutDialog.cpp \
