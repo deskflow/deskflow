@@ -31,108 +31,108 @@ it sorts by std::greater, it has a forward iterator through the elements
 */
 template <class T, class Container = std::vector<T>,
 #if defined(_MSC_VER)
-			class Compare = std::greater<Container::value_type> >
+            class Compare = std::greater<Container::value_type> >
 #else
-			class Compare = std::greater<typename Container::value_type> >
+            class Compare = std::greater<typename Container::value_type> >
 #endif
 class PriorityQueue {
 public:
-	typedef typename Container::value_type value_type;
-	typedef typename Container::size_type size_type;
-	typedef typename Container::iterator iterator;
-	typedef typename Container::const_iterator const_iterator;
-	typedef Container container_type;
+    typedef typename Container::value_type value_type;
+    typedef typename Container::size_type size_type;
+    typedef typename Container::iterator iterator;
+    typedef typename Container::const_iterator const_iterator;
+    typedef Container container_type;
 
-	PriorityQueue() { }
-	PriorityQueue(Container& swappedIn) { swap(swappedIn); }
-	~PriorityQueue() { }
+    PriorityQueue() { }
+    PriorityQueue(Container& swappedIn) { swap(swappedIn); }
+    ~PriorityQueue() { }
 
-	//! @name manipulators
-	//@{
+    //! @name manipulators
+    //@{
 
-	//! Add element
-	void				push(const value_type& v)
-	{
-		c.push_back(v);
-		std::push_heap(c.begin(), c.end(), comp);
-	}
+    //! Add element
+    void                push(const value_type& v)
+    {
+        c.push_back(v);
+        std::push_heap(c.begin(), c.end(), comp);
+    }
 
-	//! Remove head element
-	void				pop()
-	{
-		std::pop_heap(c.begin(), c.end(), comp);
-		c.pop_back();
-	}
+    //! Remove head element
+    void                pop()
+    {
+        std::pop_heap(c.begin(), c.end(), comp);
+        c.pop_back();
+    }
 
-	//! Erase element
-	void				erase(iterator i)
-	{
-		c.erase(i);
-		std::make_heap(c.begin(), c.end(), comp);
-	}
+    //! Erase element
+    void                erase(iterator i)
+    {
+        c.erase(i);
+        std::make_heap(c.begin(), c.end(), comp);
+    }
 
-	//! Get start iterator
-	iterator			begin()
-	{
-		return c.begin();
-	}
+    //! Get start iterator
+    iterator            begin()
+    {
+        return c.begin();
+    }
 
-	//! Get end iterator
-	iterator			end()
-	{
-		return c.end();
-	}
+    //! Get end iterator
+    iterator            end()
+    {
+        return c.end();
+    }
 
-	//! Swap contents with another priority queue
-	void				swap(PriorityQueue<T, Container, Compare>& q)
-	{
-		c.swap(q.c);
-	}
+    //! Swap contents with another priority queue
+    void                swap(PriorityQueue<T, Container, Compare>& q)
+    {
+        c.swap(q.c);
+    }
 
-	//! Swap contents with another container
-	void				swap(Container& c2)
-	{
-		c.swap(c2);
-		std::make_heap(c.begin(), c.end(), comp);
-	}
+    //! Swap contents with another container
+    void                swap(Container& c2)
+    {
+        c.swap(c2);
+        std::make_heap(c.begin(), c.end(), comp);
+    }
 
-	//@}
-	//! @name accessors
-	//@{
+    //@}
+    //! @name accessors
+    //@{
 
-	//! Returns true if there are no elements
-	bool				empty() const
-	{
-		return c.empty();
-	}
+    //! Returns true if there are no elements
+    bool                empty() const
+    {
+        return c.empty();
+    }
 
-	//! Returns the number of elements
-	size_type			size() const
-	{
-		return c.size();
-	}
+    //! Returns the number of elements
+    size_type            size() const
+    {
+        return c.size();
+    }
 
-	//! Returns the head element
-	const value_type&	top() const
-	{
-		return c.front();
-	}
+    //! Returns the head element
+    const value_type&    top() const
+    {
+        return c.front();
+    }
 
-	//! Get start iterator
-	const_iterator		begin() const
-	{
-		return c.begin();
-	}
+    //! Get start iterator
+    const_iterator        begin() const
+    {
+        return c.begin();
+    }
 
-	//! Get end iterator
-	const_iterator		end() const
-	{
-		return c.end();
-	}
+    //! Get end iterator
+    const_iterator        end() const
+    {
+        return c.end();
+    }
 
-	//@}
+    //@}
 
 private:
-	Container			c;
-	Compare				comp;
+    Container            c;
+    Compare                comp;
 };

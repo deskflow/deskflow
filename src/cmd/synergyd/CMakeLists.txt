@@ -18,14 +18,14 @@ file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
 include_directories(
-	../
-	../../lib/
+    ../
+    ../../lib/
 )
 
 if (UNIX)
-	include_directories(
-		../../..
-	)
+    include_directories(
+        ../../..
+    )
 endif()
 
 if (WIN32)
@@ -35,11 +35,11 @@ else()
 endif()
 
 target_link_libraries(synergyd
-	arch base common io ipc mt net platform synergy shared ${libs} ${OPENSSL_LIBS})
+    arch base common io ipc mt net platform synergy shared ${libs} ${OPENSSL_LIBS})
 
 if (CONF_CPACK)
-	install(TARGETS
-		synergyd
-		COMPONENT core
-		DESTINATION bin)
+    install(TARGETS
+        synergyd
+        COMPONENT core
+        DESTINATION bin)
 endif()

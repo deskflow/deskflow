@@ -17,15 +17,15 @@ file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
 if (SYNERGY_ADD_HEADERS)
-	list(APPEND sources ${headers})
+    list(APPEND sources ${headers})
 endif()
 
 add_library(shared STATIC ${sources})
 
 include_directories(
-	../
-	../../../ext
-	../../../ext/gtest-1.6.0/include
+    ../
+    ../../../ext
+    ../../../ext/gtest-1.6.0/include
 )
 
 target_link_libraries(shared arch base)

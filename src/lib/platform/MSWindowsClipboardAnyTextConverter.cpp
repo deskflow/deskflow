@@ -24,126 +24,126 @@
 
 MSWindowsClipboardAnyTextConverter::MSWindowsClipboardAnyTextConverter()
 {
-	// do nothing
+    // do nothing
 }
 
 MSWindowsClipboardAnyTextConverter::~MSWindowsClipboardAnyTextConverter()
 {
-	// do nothing
+    // do nothing
 }
 
 IClipboard::EFormat
 MSWindowsClipboardAnyTextConverter::getFormat() const
 {
-	return IClipboard::kText;
+    return IClipboard::kText;
 }
 
 HANDLE
 MSWindowsClipboardAnyTextConverter::fromIClipboard(const String& data) const
 {
-	// convert linefeeds and then convert to desired encoding
-	String text = doFromIClipboard(convertLinefeedToWin32(data));
-	UInt32 size  = (UInt32)text.size();
+    // convert linefeeds and then convert to desired encoding
+    String text = doFromIClipboard(convertLinefeedToWin32(data));
+    UInt32 size  = (UInt32)text.size();
 
-	// copy to memory handle
-	HGLOBAL gData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, size);
-	if (gData != NULL) {
-		// get a pointer to the allocated memory
-		char* dst = (char*)GlobalLock(gData);
-		if (dst != NULL) {
-			memcpy(dst, text.data(), size);
-			GlobalUnlock(gData);
-		}
-		else {
-			GlobalFree(gData);
-			gData = NULL;
-		}
-	}
+    // copy to memory handle
+    HGLOBAL gData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, size);
+    if (gData != NULL) {
+        // get a pointer to the allocated memory
+        char* dst = (char*)GlobalLock(gData);
+        if (dst != NULL) {
+            memcpy(dst, text.data(), size);
+            GlobalUnlock(gData);
+        }
+        else {
+            GlobalFree(gData);
+            gData = NULL;
+        }
+    }
 
-	return gData;
+    return gData;
 }
 
 String
 MSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const
 {
-	// get datator
-	const char* src = (const char*)GlobalLock(data);
-	UInt32 srcSize = (UInt32)GlobalSize(data);
-	if (src == NULL || srcSize <= 1) {
-		return String();
-	}
+    // get datator
+    const char* src = (const char*)GlobalLock(data);
+    UInt32 srcSize = (UInt32)GlobalSize(data);
+    if (src == NULL || srcSize <= 1) {
+        return String();
+    }
 
-	// convert text
-	String text = doToIClipboard(String(src, srcSize));
+    // convert text
+    String text = doToIClipboard(String(src, srcSize));
 
-	// release handle
-	GlobalUnlock(data);
+    // release handle
+    GlobalUnlock(data);
 
-	// convert newlines
-	return convertLinefeedToUnix(text);
+    // convert newlines
+    return convertLinefeedToUnix(text);
 }
 
 String
 MSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
-				const String& src) const
+                const String& src) const
 {
-	// note -- we assume src is a valid UTF-8 string
+    // note -- we assume src is a valid UTF-8 string
 
-	// count newlines in string
-	UInt32 numNewlines = 0;
-	UInt32 n = (UInt32)src.size();
-	for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
-		if (*scan == '\n') {
-			++numNewlines;
-		}
-	}
-	if (numNewlines == 0) {
-		return src;
-	}
+    // count newlines in string
+    UInt32 numNewlines = 0;
+    UInt32 n = (UInt32)src.size();
+    for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
+        if (*scan == '\n') {
+            ++numNewlines;
+        }
+    }
+    if (numNewlines == 0) {
+        return src;
+    }
 
-	// allocate new string
-	String dst;
-	dst.reserve(src.size() + numNewlines);
+    // allocate new string
+    String dst;
+    dst.reserve(src.size() + numNewlines);
 
-	// copy string, converting newlines
-	n = (UInt32)src.size();
-	for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
-		if (scan[0] == '\n') {
-			dst += '\r';
-		}
-		dst += scan[0];
-	}
+    // copy string, converting newlines
+    n = (UInt32)src.size();
+    for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
+        if (scan[0] == '\n') {
+            dst += '\r';
+        }
+        dst += scan[0];
+    }
 
-	return dst;
+    return dst;
 }
 
 String
 MSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(
-				const String& src) const
+                const String& src) const
 {
-	// count newlines in string
-	UInt32 numNewlines = 0;
-	UInt32 n = (UInt32)src.size();
-	for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
-		if (scan[0] == '\r' && scan[1] == '\n') {
-			++numNewlines;
-		}
-	}
-	if (numNewlines == 0) {
-		return src;
-	}
+    // count newlines in string
+    UInt32 numNewlines = 0;
+    UInt32 n = (UInt32)src.size();
+    for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
+        if (scan[0] == '\r' && scan[1] == '\n') {
+            ++numNewlines;
+        }
+    }
+    if (numNewlines == 0) {
+        return src;
+    }
 
-	// allocate new string
-	String dst;
-	dst.reserve(src.size());
+    // allocate new string
+    String dst;
+    dst.reserve(src.size());
 
-	// copy string, converting newlines
-	n = (UInt32)src.size();
-	for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
-		if (scan[0] != '\r' || scan[1] != '\n') {
-			dst += scan[0];
-		}
-	}
+    // copy string, converting newlines
+    n = (UInt32)src.size();
+    for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
+        if (scan[0] != '\r' || scan[1] != '\n') {
+            dst += scan[0];
+        }
+    }
 
-	return dst;
+    return dst;
 }

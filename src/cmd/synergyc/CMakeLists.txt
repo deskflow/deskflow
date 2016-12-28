@@ -15,57 +15,57 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(sources
-	synergyc.cpp
+    synergyc.cpp
 )
 
 if (WIN32)
-	file(GLOB arch_headers "MSWindows*.h")
-	file(GLOB arch_sources "MSWindows*.cpp")
-	list(APPEND sources
-		resource.h
-		synergyc.ico
-		synergyc.rc
-		tb_error.ico
-		tb_idle.ico
-		tb_run.ico
-		tb_wait.ico
-	)
+    file(GLOB arch_headers "MSWindows*.h")
+    file(GLOB arch_sources "MSWindows*.cpp")
+    list(APPEND sources
+        resource.h
+        synergyc.ico
+        synergyc.rc
+        tb_error.ico
+        tb_idle.ico
+        tb_run.ico
+        tb_wait.ico
+    )
 elseif (APPLE)
-	file(GLOB arch_headers "OSX*.h")
-	file(GLOB arch_sources "OSX*.cpp")
+    file(GLOB arch_headers "OSX*.h")
+    file(GLOB arch_sources "OSX*.cpp")
 elseif (UNIX)
-	file(GLOB arch_headers "XWindows*.h")
-	file(GLOB arch_sources "XWindows*.cpp")
+    file(GLOB arch_headers "XWindows*.h")
+    file(GLOB arch_sources "XWindows*.cpp")
 endif()
 
 list(APPEND sources ${arch_sources})
 list(APPEND headers ${arch_headers})
 
 if (SYNERGY_ADD_HEADERS)
-	list(APPEND sources ${headers})
+    list(APPEND sources ${headers})
 endif()
 
 include_directories(
-	../
-	../../lib/
+    ../
+    ../../lib/
 )
 
 if (UNIX)
-	include_directories(
-		../../..
-	)
+    include_directories(
+        ../../..
+    )
 endif()
 
 add_executable(synergyc ${sources})
 target_link_libraries(synergyc
-	arch base client common io mt net ipc platform server synergy ${libs} ${OPENSSL_LIBS})
+    arch base client common io mt net ipc platform server synergy ${libs} ${OPENSSL_LIBS})
 
 if (WIN32)
 else ()
-	if (CONF_CPACK)
-		install(TARGETS
-			synergyc
-			COMPONENT core
-			DESTINATION bin)
-	endif()
+    if (CONF_CPACK)
+        install(TARGETS
+            synergyc
+            COMPONENT core
+            DESTINATION bin)
+    endif()
 endif()

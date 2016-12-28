@@ -27,13 +27,13 @@ class QWidget;
 
 class NewScreenWidget : public QLabel
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		NewScreenWidget(QWidget* parent);
+    public:
+        NewScreenWidget(QWidget* parent);
 
-	protected:
-		void mousePressEvent(QMouseEvent* event);
+    protected:
+        void mousePressEvent(QMouseEvent* event);
 };
 
 #endif

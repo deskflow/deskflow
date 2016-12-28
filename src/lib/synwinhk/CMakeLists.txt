@@ -17,15 +17,15 @@ file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
 if (SYNERGY_ADD_HEADERS)
-	list(APPEND sources ${headers})
+    list(APPEND sources ${headers})
 endif()
 
 include_directories(
-	../
+    ../
 )
 
 add_library(synwinhk SHARED ${sources})
 
 if (NOT MSVC_VERSION VERSION_LESS 1900)
-	target_link_libraries(synwinhk libucrt)
+    target_link_libraries(synwinhk libucrt)
 endif()

@@ -31,65 +31,65 @@ static const char s_certificateFilename[] = { "Synergy.pem" };
 //
 
 SecureListenSocket::SecureListenSocket(
-		IEventQueue* events,
-		SocketMultiplexer* socketMultiplexer) :
-	TCPListenSocket(events, socketMultiplexer)
+        IEventQueue* events,
+        SocketMultiplexer* socketMultiplexer) :
+    TCPListenSocket(events, socketMultiplexer)
 {
 }
 
 SecureListenSocket::~SecureListenSocket()
 {
-	SecureSocketSet::iterator it;
-	for (it = m_secureSocketSet.begin(); it != m_secureSocketSet.end(); it++) {
-		delete *it;
-	}
-	m_secureSocketSet.clear();
+    SecureSocketSet::iterator it;
+    for (it = m_secureSocketSet.begin(); it != m_secureSocketSet.end(); it++) {
+        delete *it;
+    }
+    m_secureSocketSet.clear();
 }
 
 IDataSocket*
 SecureListenSocket::accept()
 {
-	SecureSocket* socket = NULL;
-	try {
-		socket = new SecureSocket(
-						m_events,
-						m_socketMultiplexer,
-						ARCH->acceptSocket(m_socket, NULL));
-		socket->initSsl(true);
+    SecureSocket* socket = NULL;
+    try {
+        socket = new SecureSocket(
+                        m_events,
+                        m_socketMultiplexer,
+                        ARCH->acceptSocket(m_socket, NULL));
+        socket->initSsl(true);
 
-		if (socket != NULL) {
-			setListeningJob();
-		}
+        if (socket != NULL) {
+            setListeningJob();
+        }
 
-		String certificateFilename = synergy::string::sprintf("%s/%s/%s",
-										ARCH->getProfileDirectory().c_str(),
-										s_certificateDir,
-										s_certificateFilename);
+        String certificateFilename = synergy::string::sprintf("%s/%s/%s",
+                                        ARCH->getProfileDirectory().c_str(),
+                                        s_certificateDir,
+                                        s_certificateFilename);
 
-		bool loaded = socket->loadCertificates(certificateFilename);
-		if (!loaded) {
-			delete socket;
-			return NULL;
-		}
+        bool loaded = socket->loadCertificates(certificateFilename);
+        if (!loaded) {
+            delete socket;
+            return NULL;
+        }
 
-		socket->secureAccept();
+        socket->secureAccept();
 
-		m_secureSocketSet.insert(socket);
+        m_secureSocketSet.insert(socket);
 
-		return dynamic_cast<IDataSocket*>(socket);
-	}
-	catch (XArchNetwork&) {
-		if (socket != NULL) {
-			delete socket;
-			setListeningJob();
-		}
-		return NULL;
-	}
-	catch (std::exception &ex) {
-		if (socket != NULL) {
-			delete socket;
-			setListeningJob();
-		}
-		throw ex;
-	}
+        return dynamic_cast<IDataSocket*>(socket);
+    }
+    catch (XArchNetwork&) {
+        if (socket != NULL) {
+            delete socket;
+            setListeningJob();
+        }
+        return NULL;
+    }
+    catch (std::exception &ex) {
+        if (socket != NULL) {
+            delete socket;
+            setListeningJob();
+        }
+        throw ex;
+    }
 }

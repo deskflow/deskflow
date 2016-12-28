@@ -19,34 +19,34 @@ file(GLOB sources "*.cpp")
 
 # arch
 if (WIN32)
-	file(GLOB arch_headers "win32/*.h")
-	file(GLOB arch_sources "win32/*.cpp")
+    file(GLOB arch_headers "win32/*.h")
+    file(GLOB arch_sources "win32/*.cpp")
 elseif (UNIX)
-	file(GLOB arch_headers "unix/*.h")
-	file(GLOB arch_sources "unix/*.cpp")
+    file(GLOB arch_headers "unix/*.h")
+    file(GLOB arch_sources "unix/*.cpp")
 endif()
 
 list(APPEND sources ${arch_sources})
 list(APPEND headers ${arch_headers})
 
 if (SYNERGY_ADD_HEADERS)
-	list(APPEND sources ${headers})
+    list(APPEND sources ${headers})
 endif()
 
 include_directories(
-	../
-	../../../ext
-	../../../ext/gtest-1.6.0/include
+    ../
+    ../../../ext
+    ../../../ext/gtest-1.6.0/include
 )
 
 if (UNIX)
-	include_directories(
-		../../..
-	)
+    include_directories(
+        ../../..
+    )
 endif()
 
 add_library(synergy STATIC ${sources})
 
 if (UNIX)
-	target_link_libraries(synergy arch client ipc net base platform mt server)
+    target_link_libraries(synergy arch client ipc net base platform mt server)
 endif()

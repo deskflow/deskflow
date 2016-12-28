@@ -29,53 +29,53 @@
 String
 MSWindowsUtil::getString(HINSTANCE instance, DWORD id)
 {
-	char buffer[1024];
-	int size = static_cast<int>(sizeof(buffer) / sizeof(buffer[0]));
-	char* msg = buffer;
+    char buffer[1024];
+    int size = static_cast<int>(sizeof(buffer) / sizeof(buffer[0]));
+    char* msg = buffer;
 
-	// load string
-	int n = LoadString(instance, id, msg, size);
-	msg[n] = '\0';
-	if (n < size) {
-		return msg;
-	}
+    // load string
+    int n = LoadString(instance, id, msg, size);
+    msg[n] = '\0';
+    if (n < size) {
+        return msg;
+    }
 
-	// not enough buffer space.  keep trying larger buffers until
-	// we get the whole string.
-	msg = NULL;
-	do {
-		size <<= 1;
-		delete[] msg;
-		char* msg = new char[size];
-		n = LoadString(instance, id, msg, size);
-	} while (n == size);
-	msg[n] = '\0';
+    // not enough buffer space.  keep trying larger buffers until
+    // we get the whole string.
+    msg = NULL;
+    do {
+        size <<= 1;
+        delete[] msg;
+        char* msg = new char[size];
+        n = LoadString(instance, id, msg, size);
+    } while (n == size);
+    msg[n] = '\0';
 
-	String result(msg);
-	delete[] msg;
-	return result;
+    String result(msg);
+    delete[] msg;
+    return result;
 }
 
 String
 MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
 {
-	char* buffer;
-	if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-								FORMAT_MESSAGE_IGNORE_INSERTS |
-								FORMAT_MESSAGE_FROM_SYSTEM,
-								0,
-								error,
-								MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-								(LPTSTR)&buffer,
-								0,
-								NULL) == 0) {
-		String errorString = synergy::string::sprintf("%d", error);
-		return synergy::string::format(getString(hinstance, id).c_str(),
-							errorString.c_str());
-	}
-	else {
-		String result(buffer);
-		LocalFree(buffer);
-		return result;
-	}
+    char* buffer;
+    if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
+                                FORMAT_MESSAGE_IGNORE_INSERTS |
+                                FORMAT_MESSAGE_FROM_SYSTEM,
+                                0,
+                                error,
+                                MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                                (LPTSTR)&buffer,
+                                0,
+                                NULL) == 0) {
+        String errorString = synergy::string::sprintf("%d", error);
+        return synergy::string::format(getString(hinstance, id).c_str(),
+                            errorString.c_str());
+    }
+    else {
+        String result(buffer);
+        LocalFree(buffer);
+        return result;
+    }
 }

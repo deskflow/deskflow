@@ -21,10 +21,10 @@
 
 class Chunk {
 public:
-	Chunk(size_t size);
-	~Chunk();
+    Chunk(size_t size);
+    ~Chunk();
 
 public:
-	size_t				m_dataSize;
-	char*				m_chunk;
+    size_t                m_dataSize;
+    char*                m_chunk;
 };

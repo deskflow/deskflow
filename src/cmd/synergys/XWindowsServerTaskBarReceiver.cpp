@@ -24,44 +24,44 @@
 //
 
 CXWindowsServerTaskBarReceiver::CXWindowsServerTaskBarReceiver(
-		const BufferedLogOutputter*, IEventQueue* events) :
-	ServerTaskBarReceiver(events)
+        const BufferedLogOutputter*, IEventQueue* events) :
+    ServerTaskBarReceiver(events)
 {
-	// add ourself to the task bar
-	ARCH->addReceiver(this);
+    // add ourself to the task bar
+    ARCH->addReceiver(this);
 }
 
 CXWindowsServerTaskBarReceiver::~CXWindowsServerTaskBarReceiver()
 {
-	ARCH->removeReceiver(this);
+    ARCH->removeReceiver(this);
 }
 
 void
 CXWindowsServerTaskBarReceiver::showStatus()
 {
-	// do nothing
+    // do nothing
 }
 
 void
 CXWindowsServerTaskBarReceiver::runMenu(int, int)
 {
-	// do nothing
+    // do nothing
 }
 
 void
 CXWindowsServerTaskBarReceiver::primaryAction()
 {
-	// do nothing
+    // do nothing
 }
 
 const IArchTaskBarReceiver::Icon
 CXWindowsServerTaskBarReceiver::getIcon() const
 {
-	return NULL;
+    return NULL;
 }
 
 IArchTaskBarReceiver*
 createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events)
 {
-	return new CXWindowsServerTaskBarReceiver(logBuffer, events);
+    return new CXWindowsServerTaskBarReceiver(logBuffer, events);
 }

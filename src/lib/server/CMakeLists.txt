@@ -18,19 +18,19 @@ file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
 if (SYNERGY_ADD_HEADERS)
-	list(APPEND sources ${headers})
+    list(APPEND sources ${headers})
 endif()
 
 include_directories(
-	../
-	../../../ext
-	../../../ext/gtest-1.6.0/include
+    ../
+    ../../../ext
+    ../../../ext/gtest-1.6.0/include
 )
 
 if (UNIX)
-	include_directories(
-		../../..
-	)
+    include_directories(
+        ../../..
+    )
 endif()
 
 add_library(server STATIC ${sources})
@@ -38,5 +38,5 @@ add_library(server STATIC ${sources})
 target_link_libraries(server shared)
 
 if (UNIX)
-	target_link_libraries(server synergy)
+    target_link_libraries(server synergy)
 endif()

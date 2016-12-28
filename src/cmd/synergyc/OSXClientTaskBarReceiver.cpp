@@ -28,42 +28,42 @@ OSXClientTaskBarReceiver::OSXClientTaskBarReceiver(
         IEventQueue* events) :
     ClientTaskBarReceiver(events)
 {
-	// add ourself to the task bar
-	ARCH->addReceiver(this);
+    // add ourself to the task bar
+    ARCH->addReceiver(this);
 }
 
 OSXClientTaskBarReceiver::~OSXClientTaskBarReceiver()
 {
-	ARCH->removeReceiver(this);
+    ARCH->removeReceiver(this);
 }
 
 void
 OSXClientTaskBarReceiver::showStatus()
 {
-	// do nothing
+    // do nothing
 }
 
 void
 OSXClientTaskBarReceiver::runMenu(int, int)
 {
-	// do nothing
+    // do nothing
 }
 
 void
 OSXClientTaskBarReceiver::primaryAction()
 {
-	// do nothing
+    // do nothing
 }
 
 const IArchTaskBarReceiver::Icon
 OSXClientTaskBarReceiver::getIcon() const
 {
-	return NULL;
+    return NULL;
 }
 
 IArchTaskBarReceiver*
 createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events)
 {
-	return new OSXClientTaskBarReceiver(logBuffer, events);
+    return new OSXClientTaskBarReceiver(logBuffer, events);
 }
 

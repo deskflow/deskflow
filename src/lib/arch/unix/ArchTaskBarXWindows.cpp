@@ -24,28 +24,28 @@
 
 ArchTaskBarXWindows::ArchTaskBarXWindows()
 {
-	// do nothing
+    // do nothing
 }
 
 ArchTaskBarXWindows::~ArchTaskBarXWindows()
 {
-	// do nothing
+    // do nothing
 }
 
 void
 ArchTaskBarXWindows::addReceiver(IArchTaskBarReceiver* /*receiver*/)
 {
-	// do nothing
+    // do nothing
 }
 
 void
 ArchTaskBarXWindows::removeReceiver(IArchTaskBarReceiver* /*receiver*/)
 {
-	// do nothing
+    // do nothing
 }
 
 void
 ArchTaskBarXWindows::updateReceiver(IArchTaskBarReceiver* /*receiver*/)
 {
-	// do nothing
+    // do nothing
 }

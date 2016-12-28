@@ -26,35 +26,35 @@
 
 MSWindowsClipboardUTF16Converter::MSWindowsClipboardUTF16Converter()
 {
-	// do nothing
+    // do nothing
 }
 
 MSWindowsClipboardUTF16Converter::~MSWindowsClipboardUTF16Converter()
 {
-	// do nothing
+    // do nothing
 }
 
 UINT
 MSWindowsClipboardUTF16Converter::getWin32Format() const
 {
-	return CF_UNICODETEXT;
+    return CF_UNICODETEXT;
 }
 
 String
 MSWindowsClipboardUTF16Converter::doFromIClipboard(const String& data) const
 {
-	// convert and add nul terminator
-	return Unicode::UTF8ToUTF16(data).append(sizeof(wchar_t), 0);
+    // convert and add nul terminator
+    return Unicode::UTF8ToUTF16(data).append(sizeof(wchar_t), 0);
 }
 
 String
 MSWindowsClipboardUTF16Converter::doToIClipboard(const String& data) const
 {
-	// convert and strip nul terminator
-	String dst          = Unicode::UTF16ToUTF8(data);
-	String::size_type n = dst.find('\0');
-	if (n != String::npos) {
-		dst.erase(n);
-	}
-	return dst;
+    // convert and strip nul terminator
+    String dst          = Unicode::UTF16ToUTF8(data);
+    String::size_type n = dst.find('\0');
+    if (n != String::npos) {
+        dst.erase(n);
+    }
+    return dst;
 }

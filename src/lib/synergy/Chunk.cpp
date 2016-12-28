@@ -20,11 +20,11 @@
 
 Chunk::Chunk(size_t size)
 {
-	m_chunk = new char[size];
-	memset(m_chunk, 0, size);
+    m_chunk = new char[size];
+    memset(m_chunk, 0, size);
 }
 
 Chunk::~Chunk()
 {
-	delete[] m_chunk;
+    delete[] m_chunk;
 }

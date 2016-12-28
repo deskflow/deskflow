@@ -27,9 +27,9 @@
 #include <psapi.h>
 
 static const char* s_settingsKeyNames[] = {
-	_T("SOFTWARE"),
-	_T("Synergy"),
-	NULL
+    _T("SOFTWARE"),
+    _T("Synergy"),
+    NULL
 };
 
 //
@@ -38,52 +38,52 @@ static const char* s_settingsKeyNames[] = {
 
 ArchSystemWindows::ArchSystemWindows()
 {
-	// do nothing
+    // do nothing
 }
 
 ArchSystemWindows::~ArchSystemWindows()
 {
-	// do nothing
+    // do nothing
 }
 
 std::string
 ArchSystemWindows::getOSName() const
 {
-	std::string osName ("Microsoft Windows <unknown>");
-	static const TCHAR* const windowsVersionKeyNames[] = {
-		_T("SOFTWARE"),
-		_T("Microsoft"),
-		_T("Windows NT"),
-		_T("CurrentVersion"),
-		NULL
-	};
+    std::string osName ("Microsoft Windows <unknown>");
+    static const TCHAR* const windowsVersionKeyNames[] = {
+        _T("SOFTWARE"),
+        _T("Microsoft"),
+        _T("Windows NT"),
+        _T("CurrentVersion"),
+        NULL
+    };
 
-	HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, windowsVersionKeyNames);
-	if (key == NULL) {
-		return osName;
-	}
+    HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, windowsVersionKeyNames);
+    if (key == NULL) {
+        return osName;
+    }
 
-	std::string productName = ArchMiscWindows::readValueString(key, "ProductName");
-	if (osName.empty()) {
-		return osName;
-	}
+    std::string productName = ArchMiscWindows::readValueString(key, "ProductName");
+    if (osName.empty()) {
+        return osName;
+    }
 
-	return "Microsoft " + productName;
+    return "Microsoft " + productName;
 }
 
 std::string
 ArchSystemWindows::getPlatformName() const
 {
 #ifdef _X86_
-	if (isWOW64())
-		return "x86 (WOW64)";
-	else
-		return "x86";
+    if (isWOW64())
+        return "x86 (WOW64)";
+    else
+        return "x86";
 #else
 #ifdef _AMD64_
-	return "x64";
+    return "x64";
 #else
-	return "Unknown";
+    return "Unknown";
 #endif
 #endif
 }
@@ -91,42 +91,42 @@ ArchSystemWindows::getPlatformName() const
 std::string
 ArchSystemWindows::setting(const std::string& valueName) const
 {
-	HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
-	if (key == NULL)
-		return "";
+    HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
+    if (key == NULL)
+        return "";
 
-	return ArchMiscWindows::readValueString(key, valueName.c_str());
+    return ArchMiscWindows::readValueString(key, valueName.c_str());
 }
 
 void
 ArchSystemWindows::setting(const std::string& valueName, const std::string& valueString) const
 {
-	HKEY key = ArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
-	if (key == NULL)
-		throw XArch(std::string("could not access registry key: ") + valueName);
-	ArchMiscWindows::setValue(key, valueName.c_str(), valueString.c_str());
+    HKEY key = ArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
+    if (key == NULL)
+        throw XArch(std::string("could not access registry key: ") + valueName);
+    ArchMiscWindows::setValue(key, valueName.c_str(), valueString.c_str());
 }
 
 bool
 ArchSystemWindows::isWOW64() const
 {
 #if WINVER >= _WIN32_WINNT_WINXP
-	typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
-	HMODULE hModule = GetModuleHandle(TEXT("kernel32"));
-	if (!hModule) return FALSE;
+    typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
+    HMODULE hModule = GetModuleHandle(TEXT("kernel32"));
+    if (!hModule) return FALSE;
 
-	LPFN_ISWOW64PROCESS fnIsWow64Process =
-		(LPFN_ISWOW64PROCESS) GetProcAddress(hModule, "IsWow64Process");
+    LPFN_ISWOW64PROCESS fnIsWow64Process =
+        (LPFN_ISWOW64PROCESS) GetProcAddress(hModule, "IsWow64Process");
 
-	BOOL bIsWow64 = FALSE;
-	if (NULL != fnIsWow64Process &&
-		fnIsWow64Process(GetCurrentProcess(), &bIsWow64) &&
-		bIsWow64)
-	{
-		return true;
-	}
+    BOOL bIsWow64 = FALSE;
+    if (NULL != fnIsWow64Process &&
+        fnIsWow64Process(GetCurrentProcess(), &bIsWow64) &&
+        bIsWow64)
+    {
+        return true;
+    }
 #endif
-	return false;
+    return false;
 }
 #pragma comment(lib, "psapi")
 
@@ -137,26 +137,26 @@ ArchSystemWindows::getLibsUsed(void) const
     HANDLE hProcess;
     DWORD cbNeeded;
     unsigned int i;
-	char hex[16];
+    char hex[16];
 
-	DWORD pid = GetCurrentProcessId();
+    DWORD pid = GetCurrentProcessId();
 
-	std::string msg = "pid:" + std::to_string((_ULonglong)pid) + "\n";
+    std::string msg = "pid:" + std::to_string((_ULonglong)pid) + "\n";
 
     hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
 
     if (NULL == hProcess) {
         return msg;
-	}
+    }
 
     if (EnumProcessModules(hProcess, hMods, sizeof(hMods), &cbNeeded)) {
         for (i = 0; i < (cbNeeded / sizeof(HMODULE)); i++) {
             TCHAR szModName[MAX_PATH];
             if (GetModuleFileNameEx(hProcess, hMods[i], szModName, sizeof(szModName) / sizeof(TCHAR))) {
-				sprintf(hex, "(0x%08llX)", reinterpret_cast<long long>(hMods[i]));
-				msg += szModName;
-				msg.append(hex);
-				msg.append("\n");
+                sprintf(hex, "(0x%08llX)", reinterpret_cast<long long>(hMods[i]));
+                msg += szModName;
+                msg.append(hex);
+                msg.append("\n");
             }
         }
     }

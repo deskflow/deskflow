@@ -18,22 +18,22 @@ file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
 if (SYNERGY_ADD_HEADERS)
-	list(APPEND sources ${headers})
+    list(APPEND sources ${headers})
 endif()
 
 include_directories(
-	../
-	${OPENSSL_INCLUDE}
+    ../
+    ${OPENSSL_INCLUDE}
 )
 
 if (UNIX)
-	include_directories(
-		../../..
-	)
+    include_directories(
+        ../../..
+    )
 endif()
 
 add_library(net STATIC ${sources})
 
 if (UNIX)
-	target_link_libraries(net mt io ${OPENSSL_LIBS})
+    target_link_libraries(net mt io ${OPENSSL_LIBS})
 endif()

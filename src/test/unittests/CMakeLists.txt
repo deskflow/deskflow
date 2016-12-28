@@ -35,37 +35,37 @@ list(APPEND sources ${mock_sources})
 
 # platform
 if (WIN32)
-	file(GLOB platform_sources "platform/MSWindows*.cpp")
-	file(GLOB platform_headers "platform/MSWindows*.h")
+    file(GLOB platform_sources "platform/MSWindows*.cpp")
+    file(GLOB platform_headers "platform/MSWindows*.h")
 elseif (APPLE)
-	file(GLOB platform_sources "platform/OSX*.cpp")
-	file(GLOB platform_headers "platform/OSX*.h")
+    file(GLOB platform_sources "platform/OSX*.cpp")
+    file(GLOB platform_headers "platform/OSX*.h")
 elseif (UNIX)
-	file(GLOB platform_sources "platform/XWindows*.cpp")
-	file(GLOB platform_headers "platform/XWindows*.h")
+    file(GLOB platform_sources "platform/XWindows*.cpp")
+    file(GLOB platform_headers "platform/XWindows*.h")
 endif()
 
 list(APPEND sources ${platform_headers})
 list(APPEND headers ${platform_sources})
 
 include_directories(
-	../../
-	../../lib/
-	../../../ext/gtest-1.6.0/include
-	../../../ext/gmock-1.6.0/include
-	../../../ext
+    ../../
+    ../../lib/
+    ../../../ext/gtest-1.6.0/include
+    ../../../ext/gmock-1.6.0/include
+    ../../../ext
 )
 
 if (UNIX)
-	include_directories(
-		../../..
-	)
+    include_directories(
+        ../../..
+    )
 endif()
 
 if (SYNERGY_ADD_HEADERS)
-	list(APPEND sources ${headers})
+    list(APPEND sources ${headers})
 endif()
 
 add_executable(unittests ${sources})
 target_link_libraries(unittests
-	arch base client server common io net platform server synergy mt ipc gtest gmock shared ${libs} ${OPENSSL_LIBS})
+    arch base client server common io net platform server synergy mt ipc gtest gmock shared ${libs} ${OPENSSL_LIBS})

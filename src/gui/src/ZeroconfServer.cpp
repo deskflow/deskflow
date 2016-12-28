@@ -21,13 +21,13 @@
 #include <stdlib.h>
 
 ZeroconfServer::ZeroconfServer(QObject* parent) :
-	QTcpServer(parent)
+    QTcpServer(parent)
 {
 }
 
 void ZeroconfServer::incomingConnection(int socketDescriptor)
 {
-	ZeroconfThread* thread = new ZeroconfThread(socketDescriptor, this);
-	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-	thread->start();
+    ZeroconfThread* thread = new ZeroconfThread(socketDescriptor, this);
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    thread->start();
 }

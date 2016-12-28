@@ -25,27 +25,27 @@
 /*
 TEST(OSXScreenTests, hideCursor_notPrimary)
 {
-	EventQueue queue;
-	OSXScreen screen(true, false);
+    EventQueue queue;
+    OSXScreen screen(true, false);
 
-	screen.hideCursor();
+    screen.hideCursor();
 
-	EXPECT_EQ(false, CGCursorIsVisible());
+    EXPECT_EQ(false, CGCursorIsVisible());
 
-	// workaround for screen class race condition.
-	ARCH->sleep(.1f);
+    // workaround for screen class race condition.
+    ARCH->sleep(.1f);
 }
 
 TEST(OSXScreenTests, showCursor_notPrimary)
 {
-	EventQueue queue;
-	OSXScreen screen(false, false);
+    EventQueue queue;
+    OSXScreen screen(false, false);
 
-	screen.showCursor();
+    screen.showCursor();
 
-	EXPECT_EQ(true, CGCursorIsVisible());
+    EXPECT_EQ(true, CGCursorIsVisible());
 
-	// workaround for screen class race condition.
-	ARCH->sleep(.1f);
+    // workaround for screen class race condition.
+    ARCH->sleep(.1f);
 }
 */

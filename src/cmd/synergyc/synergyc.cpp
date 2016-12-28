@@ -35,16 +35,16 @@ int
 main(int argc, char** argv) 
 {
 #if SYSAPI_WIN32
-	// record window instance for tray icon, etc
-	ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+    // record window instance for tray icon, etc
+    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
-	
-	Arch arch;
-	arch.init();
+    
+    Arch arch;
+    arch.init();
 
-	Log log;
-	EventQueue events;
+    Log log;
+    EventQueue events;
 
-	ClientApp app(&events, createTaskBarReceiver);
-	return app.run(argc, argv);
+    ClientApp app(&events, createTaskBarReceiver);
+    return app.run(argc, argv);
 }

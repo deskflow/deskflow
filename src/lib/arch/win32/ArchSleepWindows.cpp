@@ -26,36 +26,36 @@
 
 ArchSleepWindows::ArchSleepWindows()
 {
-	// do nothing
+    // do nothing
 }
 
 ArchSleepWindows::~ArchSleepWindows()
 {
-	// do nothing
+    // do nothing
 }
 
 void
 ArchSleepWindows::sleep(double timeout)
 {
-	ARCH->testCancelThread();
-	if (timeout < 0.0) {
-		return;
-	}
+    ARCH->testCancelThread();
+    if (timeout < 0.0) {
+        return;
+    }
 
-	// get the cancel event from the current thread.  this only
-	// works if we're using the windows multithread object but
-	// this is windows so that's pretty certain;  we'll get a
-	// link error if we're not, though.
-	ArchMultithreadWindows* mt = ArchMultithreadWindows::getInstance();
-	if (mt != NULL) {
-		HANDLE cancelEvent = mt->getCancelEventForCurrentThread();
-		WaitForSingleObject(cancelEvent, (DWORD)(1000.0 * timeout));
-		if (timeout == 0.0) {
-			Sleep(0);
-		}
-	}
-	else {
-		Sleep((DWORD)(1000.0 * timeout));
-	}
-	ARCH->testCancelThread();	
+    // get the cancel event from the current thread.  this only
+    // works if we're using the windows multithread object but
+    // this is windows so that's pretty certain;  we'll get a
+    // link error if we're not, though.
+    ArchMultithreadWindows* mt = ArchMultithreadWindows::getInstance();
+    if (mt != NULL) {
+        HANDLE cancelEvent = mt->getCancelEventForCurrentThread();
+        WaitForSingleObject(cancelEvent, (DWORD)(1000.0 * timeout));
+        if (timeout == 0.0) {
+            Sleep(0);
+        }
+    }
+    else {
+        Sleep((DWORD)(1000.0 * timeout));
+    }
+    ARCH->testCancelThread();    
 }

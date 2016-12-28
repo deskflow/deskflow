@@ -18,9 +18,9 @@
 #include "synergy/ServerArgs.h"
 
 ServerArgs::ServerArgs() :
-	m_configFile(),
-	m_serial(),
-	m_config(NULL)
+    m_configFile(),
+    m_serial(),
+    m_config(NULL)
 {
 }
 

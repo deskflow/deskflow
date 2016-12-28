@@ -21,5 +21,5 @@ if (WIN32)
 endif()
 
 if ((NOT ${CMAKE_SYSTEM_NAME} MATCHES "IRIX") AND (NOT ${DISABLE_TESTS}))
-	add_subdirectory(test)
+    add_subdirectory(test)
 endif()

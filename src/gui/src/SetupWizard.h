@@ -27,27 +27,27 @@ class MainWindow;
 
 class SetupWizard : public QWizard, public Ui::SetupWizardBase
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	enum {
-		kMaximiumLoginAttemps = 3
-	};
+    enum {
+        kMaximiumLoginAttemps = 3
+    };
 
 public:
-	SetupWizard(MainWindow& mainWindow, bool startMain);
-	virtual ~SetupWizard();
-	bool validateCurrentPage();
+    SetupWizard(MainWindow& mainWindow, bool startMain);
+    virtual ~SetupWizard();
+    bool validateCurrentPage();
 
 protected:
-	void changeEvent(QEvent* event);
-	void accept();
-	void reject();
+    void changeEvent(QEvent* event);
+    void accept();
+    void reject();
 
 private:
-	MainWindow& m_MainWindow;
-	bool m_StartMain;
-	SynergyLocale m_Locale;
+    MainWindow& m_MainWindow;
+    bool m_StartMain;
+    SynergyLocale m_Locale;
 
 private slots:
-	void on_m_pComboLanguage_currentIndexChanged(int index);
+    void on_m_pComboLanguage_currentIndexChanged(int index);
 };
