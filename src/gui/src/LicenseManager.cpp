@@ -44,7 +44,7 @@ LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
 		using std::swap;
 		swap (serialKey, m_serialKey);
 		m_AppConfig->setSerialKey(QString::fromStdString
-									(serialKey.toString()));
+									(m_serialKey.toString()));
 		emit serialKeyChanged(m_serialKey);
 
 		if (serialKey.isTrial()) {
