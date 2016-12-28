@@ -1,0 +1,9 @@
+*.txt filter=spacify
+*.h filter=spacify
+*.hpp filter=spacify
+*.cpp filter=spacify
+*.m filter=spacify
+*.mm filter=spacify
+*.fbs filter=spacify
+*.qml filter=spacify
+*.py filter=spacify
