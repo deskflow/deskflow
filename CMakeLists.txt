@@ -174,7 +174,7 @@ if (UNIX)
 				CACHE STRING "" FORCE)
 		else()
 			# >= 10.6: Intel only
-			set(CMAKE_OSX_ARCHITECTURES "i386"
+			set(CMAKE_OSX_ARCHITECTURES "x86_64"
 				CACHE STRING "" FORCE)
 		endif()
 		
@@ -333,7 +333,8 @@ endif()
 
 if (APPLE)
 	set(OPENSSL_PLAT_DIR openssl-osx)
-	set(OPENSSL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/include)
+	set(OPENSSL_ARCH_DIR x86_64)
+	set(OPENSSL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/${OPENSSL_ARCH_DIR}/include)
 endif()
 
 if (WIN32)
@@ -345,9 +346,10 @@ endif()
 
 if (UNIX)
 	if (APPLE)
+		set(OPENSSL_ARCH_DIR x86_64)
 		set(OPENSSL_LIBS
-		${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/libssl.a
-		${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/libcrypto.a
+		${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/${OPENSSL_ARCH_DIR}/libssl.a
+		${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/${OPENSSL_ARCH_DIR}/libcrypto.a
 		)
 	else()
 		set(OPENSSL_LIBS ssl crypto)
