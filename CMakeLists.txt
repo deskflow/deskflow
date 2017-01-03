@@ -324,32 +324,24 @@ endif()
 
 if (WIN32)
 	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-		set(OPENSSL_PLAT_DIR openssl-win64)
+        set(OPENSSL_ARCH_DIR win64)
 	else()
-		set(OPENSSL_PLAT_DIR openssl-win32)
+        set(OPENSSL_ARCH_DIR win32)
 	endif()
-	set(OPENSSL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/inc32)
-endif()
-
-if (APPLE)
-	set(OPENSSL_PLAT_DIR openssl-osx)
-	set(OPENSSL_ARCH_DIR x86_64)
-	set(OPENSSL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/${OPENSSL_ARCH_DIR}/include)
-endif()
-
-if (WIN32)
+    set(OPENSSL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/${OPENSSL_ARCH_DIR}/include)
 	set(OPENSSL_LIBS
-		${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/out32dll/libeay32.lib
-		${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/out32dll/ssleay32.lib
+        ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/${OPENSSL_ARCH_DIR}/lib/libeay32.lib
+        ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/${OPENSSL_ARCH_DIR}/lib/ssleay32.lib
 	)
 endif()
 
 if (UNIX)
 	if (APPLE)
+        set(OPENSSL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/osx/include)
 		set(OPENSSL_ARCH_DIR x86_64)
 		set(OPENSSL_LIBS
-		${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/${OPENSSL_ARCH_DIR}/libssl.a
-		${CMAKE_CURRENT_SOURCE_DIR}/ext/${OPENSSL_PLAT_DIR}/${OPENSSL_ARCH_DIR}/libcrypto.a
+            ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/osx/${OPENSSL_ARCH_DIR}/libssl.a
+            ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/osx/${OPENSSL_ARCH_DIR}/libcrypto.a
 		)
 	else()
 		set(OPENSSL_LIBS ssl crypto)

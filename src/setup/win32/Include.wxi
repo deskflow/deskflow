@@ -19,14 +19,14 @@
   <?define ProgramFilesFolder="ProgramFiles64Folder" ?>
   <?define PlatformSimpleName="64-bit" ?>
   <?define UpgradeGuid="$(var.UpgradeGuid64)" ?>
-  <?define var.OpensslPath="openssl-win64" ?>
+  <?define var.OpensslPath="openssl/win64" ?>
   <?define var.QtPath="C:\Qt\5.6\msvc2015_64\bin" ?>
   <?define QtPlatformPath="C:\Qt\5.6\msvc2015_64\plugins\platforms" ?>
   <?else?>
   <?define ProgramFilesFolder="ProgramFilesFolder" ?>
   <?define PlatformSimpleName="32-bit" ?>
   <?define UpgradeGuid="$(var.UpgradeGuid32)" ?>
-  <?define var.OpensslPath="openssl-win32" ?>
+  <?define var.OpensslPath="openssl/win32" ?>
   <?define var.QtPath="C:\Qt\5.6\msvc2015\bin" ?>
   <?define QtPlatformPath="C:\Qt\5.6\msvc2015\plugins\platforms" ?>
   <?endif?>
