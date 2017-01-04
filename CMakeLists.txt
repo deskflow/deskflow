@@ -337,11 +337,11 @@ endif()
 
 if (UNIX)
 	if (APPLE)
-        set(OPENSSL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/osx/include)
-		set(OPENSSL_ARCH_DIR x86_64)
+        set(OPENSSL_BASE_DIR /usr/local/opt/openssl)
+        set(OPENSSL_INCLUDE ${OPENSSL_BASE_DIR}/include)
 		set(OPENSSL_LIBS
-            ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/osx/${OPENSSL_ARCH_DIR}/libssl.a
-            ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/osx/${OPENSSL_ARCH_DIR}/libcrypto.a
+            ${OPENSSL_BASE_DIR}/lib/libssl.a
+            ${OPENSSL_BASE_DIR}/lib/libcrypto.a
 		)
 	else()
 		set(OPENSSL_LIBS ssl crypto)
