@@ -20,6 +20,8 @@
 #include "base/Stopwatch.h"
 #include "arch/Arch.h"
 
+class EventQueueTimer { };
+
 //
 // SimpleEventQueueBuffer
 //
