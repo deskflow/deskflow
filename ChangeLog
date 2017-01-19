@@ -1,3 +1,7 @@
+v1.8.7-stable
+=============
+Bug #5784 - Edition changes when reopening GUI
+
 v1.8.6-stable
 =============
 Bug #5592 - Some keys don't work for macOS Sierra clients
