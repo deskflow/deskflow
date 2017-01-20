@@ -161,7 +161,7 @@ void AppConfig::loadSettings()
 	m_ActivateEmail = settings().value("activateEmail", "").toString();
 	m_CryptoEnabled = settings().value("cryptoEnabled", true).toBool();
 	m_AutoHide = settings().value("autoHide", false).toBool();
-	m_Serialkey = settings().value("serialKey", "").toString();
+	m_Serialkey = settings().value("serialKey", "").toString().trimmed();
 	m_lastVersion = settings().value("lastVersion", "Unknown").toString();
 	m_LastExpiringWarningTime = settings().value("lastExpiringWarningTime", 0).toInt();
 	m_ActivationHasRun = settings().value("activationHasRun", false).toBool();

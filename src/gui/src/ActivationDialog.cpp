@@ -71,7 +71,8 @@ void ActivationDialog::accept()
 
 	std::pair<bool, QString> result;
 	try {
-		QString serialKey = ui->m_pTextEditSerialKey->toPlainText().trimmed();
+		SerialKey serialKey (ui->m_pTextEditSerialKey->toPlainText().
+							 trimmed().toStdString());
 		result = m_LicenseManager->setSerialKey(serialKey);
 	}
 	catch (std::exception& e) {

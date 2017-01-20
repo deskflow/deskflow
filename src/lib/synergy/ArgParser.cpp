@@ -23,7 +23,6 @@
 #include "synergy/ClientArgs.h"
 #include "synergy/ToolArgs.h"
 #include "synergy/ArgsBase.h"
-#include "synergy/DpiHelper.h"
 #include "base/Log.h"
 #include "base/String.h"
 
@@ -61,18 +60,6 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
 		else if (isArg(i, argc, argv, "-c", "--config", 1)) {
 			// save configuration file path
 			args.m_configFile = argv[++i];
-		}
-		else if (isArg(i, argc, argv, "", "--res-w", 1)) {
-			DpiHelper::s_resolutionWidth = synergy::string::stringToSizeType(argv[++i]);
-		}
-		else if (isArg(i, argc, argv, "", "--res-h", 1)) {
-			DpiHelper::s_resolutionHeight = synergy::string::stringToSizeType(argv[++i]);
-		}
-		else if (isArg(i, argc, argv, "", "--prm-wc", 1)) {
-			DpiHelper::s_primaryWidthCenter = synergy::string::stringToSizeType(argv[++i]);
-		}
-		else if (isArg(i, argc, argv, "", "--prm-hc", 1)) {
-			DpiHelper::s_primaryHeightCenter = synergy::string::stringToSizeType(argv[++i]);
 		}
 		else if (isArg(i, argc, argv, "", "--serial-key", 1)) {
 			args.m_serial = SerialKey(argv[++i]);
@@ -328,6 +315,26 @@ ArgParser::parseDeprecatedArgs(int argc, const char* const* argv, int& i)
 {
 	if (isArg(i, argc, argv, NULL, "--crypto-pass")) {
 		LOG((CLOG_NOTE "--crypto-pass is deprecated"));
+		i++;
+		return true;
+	}
+	else if (isArg(i, argc, argv, NULL, "--res-w")) {
+		LOG((CLOG_NOTE "--res-w is deprecated"));
+		i++;
+		return true;
+	}
+	else if (isArg(i, argc, argv, NULL, "--res-h")) {
+		LOG((CLOG_NOTE "--res-h is deprecated"));
+		i++;
+		return true;
+	}
+	else if (isArg(i, argc, argv, NULL, "--prm-wc")) {
+		LOG((CLOG_NOTE "--prm-wc is deprecated"));
+		i++;
+		return true;
+	}
+	else if (isArg(i, argc, argv, NULL, "--prm-hc")) {
+		LOG((CLOG_NOTE "--prm-hc is deprecated"));
 		i++;
 		return true;
 	}

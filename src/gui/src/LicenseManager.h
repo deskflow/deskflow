@@ -30,7 +30,8 @@ class LicenseManager: public QObject
 
 public:
 	LicenseManager(AppConfig* appConfig);
-	std::pair<bool, QString> setSerialKey(QString serialKey, bool acceptExpired = false);
+	std::pair<bool, QString> setSerialKey(SerialKey serialKey,
+										  bool acceptExpired = false);
 	void refresh();
 	Edition activeEdition() const;
 	QString activeEditionName() const;
