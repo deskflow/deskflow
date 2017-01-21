@@ -42,6 +42,7 @@
 
 #include <math.h>
 #include <mach-o/dyld.h>
+#include <AppKit/AppKit.h>
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>
 

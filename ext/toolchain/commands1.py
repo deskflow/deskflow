@@ -789,7 +789,7 @@ class InternalCommands:
 				for dir in dirs:
 					if dir.startswith("Qt"):
 						shutil.copy(
-							frameworkRootDir + "/" + dir + "/Contents/Info.plist",
+							frameworkRootDir + "/" + dir + "/Resources/Info.plist",
 							target + "/" + dir + "/Resources/")
 
 	def symlink(self, source, target):
@@ -824,7 +824,6 @@ class InternalCommands:
 						if dir.startswith("Qt"):
 							self.try_chdir(target + "/" + dir +"/Versions")
 							self.symlink("5", "Current")
-							self.move("../Resources", "5")
 							self.restore_chdir()
 
 							self.try_chdir(target + "/" + dir)
