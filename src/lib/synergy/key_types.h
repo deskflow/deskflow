@@ -114,6 +114,8 @@ static const KeyID		kKeyHangulKana	= 0xEF26;	/* Hangul, Kana */
 static const KeyID		kKeyHiraganaKatakana = 0xEF27;	/* Hiragana/Katakana toggle */
 static const KeyID		kKeyZenkaku		= 0xEF2A;	/* Zenkaku/Hankaku */
 static const KeyID		kKeyHanjaKanzi	= 0xEF2A;	/* Hanja, Kanzi */
+static const KeyID		kKeyHangulEng	= 0xEF31;	/* Hangul/English toggle for Korean Keyboard */
+static const KeyID		kKeyHanja  		= 0xEF34;	/* Hanja for Korean Keyboard*/
 static const KeyID		kKeyDelete		= 0xEFFF;	/* Delete, rubout */
 
 // cursor control
