@@ -24,7 +24,7 @@ if (WIN32)
                   PATH_SUFFIXES "Lib/x64")
 endif()
 
-qt5_use_modules (synergyx Widgets Network)
+qt5_use_modules (synergyx Core Widgets Network)
 target_link_libraries (synergyx ${DNSSD_LIB} shared)
 set_target_properties (synergyx PROPERTIES 
                                 LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
