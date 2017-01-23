@@ -161,23 +161,6 @@ if (UNIX)
 	endif()
 	
 	if (APPLE)
-		message(STATUS "OSX_TARGET_MAJOR=${OSX_TARGET_MAJOR}")
-		message(STATUS "OSX_TARGET_MINOR=${OSX_TARGET_MINOR}")
-
-		if (NOT (OSX_TARGET_MAJOR EQUAL 10))
-			message(FATAL_ERROR "Mac OS X target must be 10.x")
-		endif ()
-
-		if (OSX_TARGET_MINOR LESS 6)
-			# <= 10.5: 32-bit Intel and PowerPC
-			set(CMAKE_OSX_ARCHITECTURES "ppc;i386"
-				CACHE STRING "" FORCE)
-		else()
-			# >= 10.6: Intel only
-			set(CMAKE_OSX_ARCHITECTURES "x86_64"
-				CACHE STRING "" FORCE)
-		endif()
-		
 		set(CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -DGTEST_USE_OWN_TR1_TUPLE=1")
 
 		find_library(lib_ScreenSaver ScreenSaver)
