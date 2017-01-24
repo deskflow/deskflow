@@ -42,8 +42,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
-#include <sstream>
-#include <utility>
+#include <algorithm>
 
 //
 // Client
@@ -68,11 +67,13 @@ Client::Client(
     m_suspended(false),
     m_connectOnResume(false),
     m_events(events),
-    m_sendFileThread(nullptr),
-    m_writeToDropDirThread(nullptr),
-    m_socket(nullptr),
-    m_args(std::move(args)),
-    m_enableClipboard(true)
+    m_sendFileThread(NULL),
+    m_writeToDropDirThread(NULL),
+    m_socket(NULL),
+    m_useSecureNetwork(args.m_enableCrypto),
+    m_args(args),
+    m_enableClipboard(true),
+    m_maximumClipboardSize(INT32_MAX)
 {
     assert(m_socketFactory != NULL);
     assert(m_screen        != NULL);
@@ -358,13 +359,24 @@ Client::setOptions(const OptionsList& options)
         const OptionID id       = *index;
         if (id == kOptionClipboardSharing) {
             index++;
-            if (*index == static_cast<OptionValue>(false)) {
-                LOG((CLOG_NOTE "clipboard sharing is disabled"));
+            if (index != options.end()) {
+                if (*index) {
+                    LOG((CLOG_NOTE "clipboard sharing is disabled"));
+                }
+                m_enableClipboard = *index;
             }
-            m_enableClipboard = (*index != 0u);
-
-            break;
+        } else if (id == kOptionClipboardSharingSize) {
+            index++;
+            if (index != options.end()) {
+                m_maximumClipboardSize = std::max(0u, *index);
+            }
         }
+    }
+
+    if (m_enableClipboard && !m_maximumClipboardSize) {
+        m_enableClipboard = false;
+        LOG((CLOG_NOTE "clipboard sharing is disabled because the server "
+                       "set the maximum clipboard size to 0"));
     }
 
     m_screen->setOptions(options);
@@ -647,7 +659,7 @@ Client::handleShapeChanged(const Event& /*unused*/, void* /*unused*/)
 void
 Client::handleClipboardGrabbed(const Event& event, void* /*unused*/)
 {
-    if (!m_enableClipboard) {
+    if (!m_enableClipboard || (m_maximumClipboardSize == 0)) {
         return;
     }
 
