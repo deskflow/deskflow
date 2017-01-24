@@ -94,7 +94,8 @@ Server::Server(
 	m_writeToDropDirThread(nullptr),
 	m_ignoreFileTransfer(false),
 	m_enableClipboard(true),
-	m_sendDragInfoThread(nullptr),
+	m_maximumClipboardSize(INT32_MAX),
+	m_sendDragInfoThread(NULL),
 	m_waitDragInfoThread(true),
 	m_args(std::move(args))
 {
@@ -1177,10 +1178,18 @@ Server::processOptions()
 			newRelativeMoves = (value != 0);
 		}
 		else if (id == kOptionClipboardSharing) {
-			m_enableClipboard = (value != 0);
-
+			m_enableClipboard = value;
 			if (!m_enableClipboard) {
 				LOG((CLOG_NOTE "clipboard sharing is disabled"));
+			}
+		}
+		else if (id == kOptionClipboardSharingSize) {
+			if (value <= 0) {
+				m_maximumClipboardSize = 0;
+				LOG((CLOG_NOTE "clipboard sharing is disabled because the "
+							   "maximum shared clipboard size is set to 0"));
+			} else {
+				m_maximumClipboardSize = static_cast<size_t>(value);
 			}
 		}
 	}
@@ -1226,7 +1235,7 @@ Server::handleShapeChanged(const Event& /*unused*/, void* vclient)
 void
 Server::handleClipboardGrabbed(const Event& event, void* vclient)
 {
-	if (!m_enableClipboard) {
+	if (!m_enableClipboard || (m_maximumClipboardSize == 0)) {
 		return;
 	}
 
