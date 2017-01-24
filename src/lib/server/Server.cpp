@@ -49,9 +49,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include <fstream>
-#include <sstream>
-#include <utility>
+#include <climits>
 
 //
 // Server
@@ -94,7 +92,7 @@ Server::Server(
 	m_writeToDropDirThread(nullptr),
 	m_ignoreFileTransfer(false),
 	m_enableClipboard(true),
-	m_maximumClipboardSize(INT32_MAX),
+    m_maximumClipboardSize(INT_MAX),
 	m_sendDragInfoThread(NULL),
 	m_waitDragInfoThread(true),
 	m_args(std::move(args))
