@@ -53,6 +53,7 @@ ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows ,
     m_EnableDragAndDrop(false),
     m_DisableLockToScreen(false),
     m_ClipboardSharing(true),
+    m_ClipboardSharingSize(defaultClipboardSharingSize()),
     m_pMainWindow(mainWindow)
 {
     Q_ASSERT(m_pSettings);
@@ -252,6 +253,7 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
     outStream << "\t" << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << endl;
     outStream << "\t" << "disableLockToScreen = " << (config.disableLockToScreen() ? "true" : "false") << endl;
     outStream << "\t" << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << endl;
+    outStream << "\t" << "clipboardSharingSize = " << config.clipboardSharingSize() << endl;
 
     if (config.hasSwitchDelay())
         outStream << "\t" << "switchDelay = " << config.switchDelay() << endl;
@@ -404,4 +406,22 @@ void::ServerConfig::addToFirstEmptyGrid(const QString &clientName)
             break;
         }
     }
+}
+
+size_t ServerConfig::defaultClipboardSharingSize() {
+	return 3 * 1024; // 3 MiB
+}
+
+size_t ServerConfig::setClipboardSharingSize(size_t size) {
+	if (size) {
+		size += 512; // Round up to the nearest megabyte
+		size /= 1024;
+		size *= 1024;
+		setClipboardSharing(true);
+	} else {
+		setClipboardSharing(false);
+	}
+	using std::swap;
+	swap (size, m_ClipboardSharingSize);
+	return size;
 }
