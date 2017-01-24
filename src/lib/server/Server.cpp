@@ -51,6 +51,7 @@
 #include <sstream>
 #include <fstream>
 #include <ctime>
+#include <climits>
 
 //
 // Server
@@ -94,7 +95,7 @@ Server::Server(
 	m_ignoreFileTransfer(false),
 	m_disableLockToScreen(false),
 	m_enableClipboard(true),
-    m_maximumClipboardSize(INT32_MAX),
+    m_maximumClipboardSize(INT_MAX),
 	m_sendDragInfoThread(NULL),
 	m_waitDragInfoThread(true),
 	m_args(args)
