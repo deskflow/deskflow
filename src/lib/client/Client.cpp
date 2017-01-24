@@ -43,7 +43,6 @@
 #include <cstring>
 #include <fstream>
 #include <algorithm>
-#include <climits>
 
 //
 // Client
@@ -74,7 +73,7 @@ Client::Client(
     m_useSecureNetwork(args.m_enableCrypto),
     m_args(args),
     m_enableClipboard(true),
-	m_maximumClipboardSize(INT_MAX)
+    m_maximumClipboardSize(INT32_MAX)
 {
     assert(m_socketFactory != NULL);
     assert(m_screen        != NULL);
@@ -369,7 +368,7 @@ Client::setOptions(const OptionsList& options)
         } else if (id == kOptionClipboardSharingSize) {
             index++;
             if (index != options.end()) {
-				m_maximumClipboardSize = *index;
+                m_maximumClipboardSize = std::max(0u, *index);
             }
         }
     }
