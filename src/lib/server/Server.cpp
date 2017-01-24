@@ -94,6 +94,7 @@ Server::Server(
 	m_ignoreFileTransfer(false),
 	m_disableLockToScreen(false),
 	m_enableClipboard(true),
+    m_maximumClipboardSize(INT32_MAX),
 	m_sendDragInfoThread(NULL),
 	m_waitDragInfoThread(true),
 	m_args(args)
@@ -1186,10 +1187,18 @@ Server::processOptions()
 			m_disableLockToScreen = (value != 0);
 		}
 		else if (id == kOptionClipboardSharing) {
-			m_enableClipboard = (value != 0);
-
-			if (m_enableClipboard == false) {
+			m_enableClipboard = value;
+			if (!m_enableClipboard) {
 				LOG((CLOG_NOTE "clipboard sharing is disabled"));
+			}
+		}
+		else if (id == kOptionClipboardSharingSize) {
+			if (value <= 0) {
+				m_maximumClipboardSize = 0;
+				LOG((CLOG_NOTE "clipboard sharing is disabled because the "
+							   "maximum shared clipboard size is set to 0"));
+			} else {
+				m_maximumClipboardSize = static_cast<size_t>(value);
 			}
 		}
 	}
@@ -1235,7 +1244,7 @@ Server::handleShapeChanged(const Event&, void* vclient)
 void
 Server::handleClipboardGrabbed(const Event& event, void* vclient)
 {
-	if (!m_enableClipboard) {
+	if (!m_enableClipboard || (m_maximumClipboardSize == 0)) {
 		return;
 	}
 
