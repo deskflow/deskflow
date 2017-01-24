@@ -198,11 +198,11 @@ public:
     bool                m_mock;
 
 private:
-    String                m_name;
-    NetworkAddress        m_serverAddress;
-    ISocketFactory*        m_socketFactory;
+    String              m_name;
+    NetworkAddress      m_serverAddress;
+    ISocketFactory*     m_socketFactory;
     synergy::Screen*    m_screen;
-    synergy::IStream*    m_stream;
+    synergy::IStream*   m_stream;
     EventQueueTimer*    m_timer;
     ServerProxy*        m_server;
     bool                m_ready;
@@ -212,16 +212,17 @@ private:
     bool                m_ownClipboard[kClipboardEnd];
     bool                m_sentClipboard[kClipboardEnd];
     IClipboard::Time    m_timeClipboard[kClipboardEnd];
-    String                m_dataClipboard[kClipboardEnd];
+    String              m_dataClipboard[kClipboardEnd];
     IEventQueue*        m_events;
-    std::size_t            m_expectedFileSize;
-    String                m_receivedFileData;
+    std::size_t         m_expectedFileSize;
+    String              m_receivedFileData;
     DragFileList        m_dragFileList;
-    String                m_dragFileExt;
-    Thread*                m_sendFileThread;
-    Thread*                m_writeToDropDirThread;
-    TCPSocket*            m_socket;
+    String              m_dragFileExt;
+    Thread*             m_sendFileThread;
+    Thread*             m_writeToDropDirThread;
+    TCPSocket*          m_socket;
     bool                m_useSecureNetwork;
-    ClientArgs            m_args;
+    ClientArgs          m_args;
     bool                m_enableClipboard;
+    size_t              m_maximumClipboardSize;
 };
