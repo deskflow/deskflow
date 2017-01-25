@@ -120,6 +120,8 @@ void ServerConfig::saveSettings()
     settings().setValue("ignoreAutoConfigClient", ignoreAutoConfigClient());
     settings().setValue("disableLockToScreen", disableLockToScreen());
     settings().setValue("enableDragAndDrop", enableDragAndDrop());
+	settings().setValue("clipboardSharing", clipboardSharing());
+	settings().setValue("clipboardSharingSize", QVariant::fromValue(clipboardSharingSize()));
 
     writeSettings(settings(), switchCorners(), "switchCorner");
 
@@ -165,6 +167,9 @@ void ServerConfig::loadSettings()
     setIgnoreAutoConfigClient(settings().value("ignoreAutoConfigClient").toBool());
     setDisableLockToScreen(settings().value("disableLockToScreen", false).toBool());
     setEnableDragAndDrop(settings().value("enableDragAndDrop", true).toBool());
+	setClipboardSharing(settings().value("clipboardSharing", true).toBool());
+	setClipboardSharingSize(settings().value("clipboardSharingSize",
+						(int) ServerConfig::defaultClipboardSharingSize()).toULongLong());
 
     readSettings(settings(), switchCorners(), "switchCorner", false, NumSwitchCorners);
 
