@@ -122,7 +122,7 @@ public:
 	(button should include the extended key bit), or kKeyNone if there is
 	no such key.
 	*/
-	static KeyID		getKeyID(UINT virtualKey, KeyButton button);
+	KeyID				getKeyID(UINT virtualKey, KeyButton button) const;
 
 	//! Map button to virtual key
 	/*!
