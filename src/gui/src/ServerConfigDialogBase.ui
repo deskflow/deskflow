@@ -530,7 +530,7 @@ Double click on a screen to edit its settings.</string>
             <item>
              <widget class="QSpinBox" name="m_pSpinBoxHeartbeat">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="minimum">
                <number>1000</number>
