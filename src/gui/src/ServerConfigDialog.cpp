@@ -221,6 +221,10 @@ void ServerConfigDialog::on_m_pButtonRemoveAction_clicked()
 void ServerConfigDialog::on_m_pCheckBoxEnableClipboard_stateChanged(int const state)
 {
     m_pSpinBoxClipboardSizeLimit->setEnabled (state == Qt::Checked);
+    if ((state == Qt::Checked) && (!m_pSpinBoxClipboardSizeLimit->value())) {
+        int size = (serverConfig().defaultClipboardSharingSize() + 512) / 1024;
+        m_pSpinBoxClipboardSizeLimit->setValue (size ? size : 1);
+    }
 }
 
 void ServerConfigDialog::on_m_pListActions_itemSelectionChanged()
