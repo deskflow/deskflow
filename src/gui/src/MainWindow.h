@@ -149,6 +149,7 @@ public slots:
         void logError();
         void updateFound(const QString& version);
         void bonjourInstallFinished();
+		void saveSettings();
 
     protected:
         QSettings& settings() { return m_Settings; }
@@ -160,7 +161,6 @@ public slots:
         void createStatusBar();
         void createTrayIcon();
         void loadSettings();
-        void saveSettings();
         void setIcon(qSynergyState state);
         void setSynergyState(qSynergyState state);
         bool checkForApp(int which, QString& app);
