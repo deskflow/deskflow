@@ -107,7 +107,8 @@ void ServerConfigDialog::accept()
     serverConfig().setEnableDragAndDrop(m_pCheckBoxEnableDragAndDrop->isChecked());
     serverConfig().setDisableLockToScreen(m_pCheckBoxDisableLockToScreen->isChecked());
     serverConfig().setClipboardSharingSize(m_pSpinBoxClipboardSizeLimit->value() * 1024);
-	serverConfig().setClipboardSharing(m_pCheckBoxEnableClipboard->isChecked());
+	serverConfig().setClipboardSharing(m_pCheckBoxEnableClipboard->isChecked() 
+					&& m_pSpinBoxClipboardSizeLimit->value());
 
     // now that the dialog has been accepted, copy the new server config to the original one,
     // which is a reference to the one in MainWindow.
