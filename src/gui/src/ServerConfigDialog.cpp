@@ -61,6 +61,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
 
     m_pCheckBoxEnableClipboard->setChecked(serverConfig().clipboardSharing());
     m_pSpinBoxClipboardSizeLimit->setValue(serverConfig().clipboardSharingSize() / 1024);
+	m_pSpinBoxClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
 
     foreach(const Hotkey& hotkey, serverConfig().hotkeys())
         m_pListHotkeys->addItem(hotkey.text());
@@ -214,6 +215,11 @@ void ServerConfigDialog::on_m_pButtonRemoveAction_clicked()
 
     hotkey.actions().removeAt(idxAction);
     delete m_pListActions->currentItem();
+}
+
+void ServerConfigDialog::on_m_pCheckBoxEnableClipboard_stateChanged(int const state)
+{
+    m_pSpinBoxClipboardSizeLimit->setEnabled (state == Qt::Checked);
 }
 
 void ServerConfigDialog::on_m_pListActions_itemSelectionChanged()
