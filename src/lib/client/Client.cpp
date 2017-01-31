@@ -361,7 +361,7 @@ Client::setOptions(const OptionsList& options)
         if (id == kOptionClipboardSharing) {
             index++;
             if (index != options.end()) {
-                if (*index) {
+				if (!*index) {
                     LOG((CLOG_NOTE "clipboard sharing is disabled"));
                 }
                 m_enableClipboard = *index;
