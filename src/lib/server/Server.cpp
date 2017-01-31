@@ -520,6 +520,10 @@ Server::switchScreen(BaseClientProxy* dst,
 		if (m_enableClipboard) {
 			// send the clipboard data to new active screen
 			for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+				// Hackity hackity hack
+				if (m_clipboards[id].m_clipboard.marshall().size() > (m_maximumClipboardSize * 1024)) {
+					continue;
+				}
 				m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
 			}
 		}
@@ -1555,6 +1559,12 @@ Server::onClipboardChanged(BaseClientProxy* sender,
 
 	// ignore if data hasn't changed
 	String data = clipboard.m_clipboard.marshall();
+	if (data.size() > m_maximumClipboardSize * 1024) {
+		LOG((CLOG_NOTE "not updating clipboard because it's over the size limit (%i KB) configured by the server",
+			m_maximumClipboardSize));
+		return;
+	}
+
 	if (data == clipboard.m_clipboardData) {
 		LOG((CLOG_DEBUG "ignored screen \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id));
 		return;
