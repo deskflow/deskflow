@@ -364,7 +364,7 @@ Client::setOptions(const OptionsList& options)
             index++;
             if (index != options.end()) {
 				if (!*index) {
-                    LOG((CLOG_NOTE "clipboard sharing is disabled"));
+					LOG((CLOG_NOTE "clipboard sharing disabled by server"));
                 }
                 m_enableClipboard = *index;
             }
