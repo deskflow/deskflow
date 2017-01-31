@@ -409,12 +409,17 @@ Client::sendClipboard(ClipboardID id)
     // check time
     if (m_timeClipboard[id] == 0 ||
         clipboard.getTime() != m_timeClipboard[id]) {
-        // save new time
-        m_timeClipboard[id] = clipboard.getTime();
-
         // marshall the data
-        String data = clipboard.marshall();
+		String data = clipboard.marshall();
+		if (data.size() >= m_maximumClipboardSize * 1024) {
+			LOG((CLOG_NOTE "Skipping clipboard transfer because the clipboard"
+				" contents exceeds the %i MB size limit set by the server",
+				m_maximumClipboardSize / 1024));
+			return;
+		}
 
+		// save new time
+		m_timeClipboard[id] = clipboard.getTime();
         // save and send data if different or not yet sent
         if (!m_sentClipboard[id] || data != m_dataClipboard[id]) {
             m_sentClipboard[id] = true;
