@@ -369,4 +369,4 @@ if (CONF_DOXYGEN)
 
 endif()
 
-option(BUILD_SERVICE "Build synergyd" ON)
+option(SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)

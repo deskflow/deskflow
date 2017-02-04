@@ -18,7 +18,7 @@ add_subdirectory(synergyc)
 add_subdirectory(synergys)
 add_subdirectory(syntool)
 
-if (BUILD_SERVICE)
+if (SYNERGY_BUILD_LEGACY_SERVICE)
     add_subdirectory(synergyd)
-endif (BUILD_SERVICE)
+endif (SYNERGY_BUILD_LEGACY_SERVICE)
 
