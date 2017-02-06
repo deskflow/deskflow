@@ -1,3 +1,18 @@
+v1.8.8-rc1
+==========
+Bug #5196 - Some keys on Korean and Japanese keyboards have the same keycode
+Bug #5578 - Pressing Hangul key results in alt+'a'
+Bug #5785 - Can't switch screens when cursor is in a corner
+Bug #3992 - macOS: Dragging is broken in Unity 3D
+Bug #5075 - macOS: Build fails on macOS 10.9 due to unknown compiler flag
+Bug #5809 - macOS: No version number is shown in the App Info dialog
+Bug #3197 - Linux: switchDoubleTap option is not working
+Bug #4477 - Linux: Mouse buttons higher than id 10 result in crash
+Bug #5832 - Linux: Screen size misdetected on multi-monitor display
+Enhancement #4504 - Improved Korean language description
+Enhancement #5525 - Added support for precise screen positioning in config file
+Enhancement #4290 - Windows: Removed annoying alt+print screen functionality
+
 v1.8.7-stable
 =============
 Bug #5784 - Edition changes when reopening GUI

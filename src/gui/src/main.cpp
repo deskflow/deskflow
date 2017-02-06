@@ -119,8 +119,8 @@ int waitForTray()
 		if (++trayAttempts > TRAY_RETRY_COUNT)
 		{
 			QMessageBox::critical(NULL, "Synergy",
-				QObject::tr("System tray is unavailable, quitting."));
-			return false;
+				QObject::tr("System tray is unavailable, don't close your window."));
+			return true;
 		}
 
 		QThreadImpl::msleep(TRAY_RETRY_WAIT);

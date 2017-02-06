@@ -36,11 +36,11 @@
 	<language ietfCode="ar" name="العربية" />
 	<language ietfCode="pes-IR" name="فارسی" />
 	<language ietfCode="ur" name="اردو" />
-  <language ietfCode="mr" name="मराठी" />
+	<language ietfCode="mr" name="मराठी" />
 	<language ietfCode="si" name="Sඉන්හල" />
 	<language ietfCode="th-TH" name="ภาษาไทย" />
 	<language ietfCode="zh-CN" name="中文 (简体)" />
 	<language ietfCode="zh-TW" name="中文 (繁體)" />
 	<language ietfCode="ja-JP" name="日本語" />
-	<language ietfCode="ko" name="한국의" />
+	<language ietfCode="ko" name="한국어" />
 </languages>

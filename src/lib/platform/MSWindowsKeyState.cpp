@@ -61,11 +61,11 @@ const KeyID				MSWindowsKeyState::s_virtualKey[] =
 	/* 0x012 */ { kKeyAlt_L },		// VK_MENU
 	/* 0x013 */ { kKeyPause },		// VK_PAUSE
 	/* 0x014 */ { kKeyCapsLock },	// VK_CAPITAL
-	/* 0x015 */ { kKeyHangulKana },	// VK_HANGUL, VK_KANA
+	/* 0x015 */ { kKeyKana },		// VK_HANGUL, VK_KANA
 	/* 0x016 */ { kKeyNone },		// undefined
 	/* 0x017 */ { kKeyNone },		// VK_JUNJA
 	/* 0x018 */ { kKeyNone },		// VK_FINAL
-	/* 0x019 */ { kKeyHanjaKanzi },	// VK_KANJI
+	/* 0x019 */ { kKeyKanzi },		// VK_HANJA, VK_KANJI
 	/* 0x01a */ { kKeyNone },		// undefined
 	/* 0x01b */ { kKeyEscape },		// VK_ESCAPE
 	/* 0x01c */ { kKeyHenkan },		// VK_CONVERT		
@@ -318,11 +318,11 @@ const KeyID				MSWindowsKeyState::s_virtualKey[] =
 	/* 0x112 */ { kKeyAlt_R },		// VK_MENU
 	/* 0x113 */ { kKeyNone },		// VK_PAUSE
 	/* 0x114 */ { kKeyNone },		// VK_CAPITAL
-	/* 0x115 */ { kKeyNone },		// VK_KANA			
-	/* 0x116 */ { kKeyNone },		// VK_HANGUL		
+	/* 0x115 */ { kKeyHangul },		// VK_HANGUL
+	/* 0x116 */ { kKeyNone },		// undefined
 	/* 0x117 */ { kKeyNone },		// VK_JUNJA			
 	/* 0x118 */ { kKeyNone },		// VK_FINAL			
-	/* 0x119 */ { kKeyNone },		// VK_KANJI			
+	/* 0x119 */ { kKeyHanja },		// VK_HANJA
 	/* 0x11a */ { kKeyNone },		// undefined
 	/* 0x11b */ { kKeyNone },		// VK_ESCAPE
 	/* 0x11c */ { kKeyNone },		// VK_CONVERT		
@@ -728,6 +728,10 @@ MSWindowsKeyState::mapKeyFromEvent(WPARAM charAndVirtKey,
 			// that so we clear it.
 			active &= ~s_controlAlt;
 		}
+		if (id == kKeyHangul) {
+			// If shift-space is used to change input mode, clear shift modifier.
+			active &= ~KeyModifierShift;
+		}
 		*maskOut = active;
 	}
 
@@ -1071,13 +1075,8 @@ MSWindowsKeyState::getKeyMap(synergy::KeyMap& keyMap)
 			}
 		}
 
-		// add alt+printscreen
-		if (m_buttonToVK[0x54u] == 0) {
-			m_buttonToVK[0x54u] = VK_SNAPSHOT;
-		}
-
 		// set virtual key to button table
-		if (GetKeyboardLayout(0) == m_groups[g]) {
+		if (activeLayout == m_groups[g]) {
 			for (KeyButton i = 0; i < 512; ++i) {
 				if (m_buttonToVK[i] != 0) {
 					if (m_virtualKeyToButton[m_buttonToVK[i]] == 0) {
@@ -1339,8 +1338,20 @@ MSWindowsKeyState::setWindowGroup(SInt32 group)
 }
 
 KeyID
-MSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button)
+MSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button) const
 {
+	// Some virtual keycodes have same values.
+	// VK_HANGUL == VK_KANA, VK_HANJA == NK_KANJI
+	// which are used to change the input mode of IME.
+	// But they have different X11 keysym. So we should distinguish them.
+	if ((LOWORD(m_keyLayout) & 0xffffu) == 0x0412u) {	// 0x0412 : Korean Locale ID
+		if (virtualKey == VK_HANGUL || virtualKey == VK_HANJA) {
+			// If shift-space is used to change the input mode,
+			// the extented bit is not set. So add it to get right key id.
+			button |= 0x100u;
+		}
+	}
+
 	if ((button & 0x100u) != 0) {
 		virtualKey += 0x100u;
 	}
@@ -1392,3 +1403,4 @@ MSWindowsKeyState::addKeyEntry(synergy::KeyMap& keyMap, synergy::KeyMap::KeyItem
 		m_keyToVKMap[item.m_id] = static_cast<UINT>(item.m_client);
 	}
 }
+
