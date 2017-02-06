@@ -974,22 +974,6 @@ XWindowsScreen::saveShape()
 	m_w = WidthOfScreen(DefaultScreenOfDisplay(m_display));
 	m_h = HeightOfScreen(DefaultScreenOfDisplay(m_display));
 
-#if HAVE_X11_EXTENSIONS_XRANDR_H
-	if (m_xrandr){
-	  int numSizes;
-	  XRRScreenSize* xrrs;
-	  Rotation rotation;
-	  xrrs = XRRSizes(m_display, DefaultScreen(m_display), &numSizes);
-	  XRRRotations(m_display, DefaultScreen(m_display), &rotation);
-	  if (xrrs != NULL) {
-	    if (rotation & (RR_Rotate_90|RR_Rotate_270) ){
-	      m_w = xrrs->height;
-	      m_h = xrrs->width;
-	    }
-	  }
-	}
-#endif
-
 	// get center of default screen
 	m_xCenter = m_x + (m_w >> 1);
 	m_yCenter = m_y + (m_h >> 1);
