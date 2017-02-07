@@ -78,13 +78,13 @@
 					<Shortcut Advertise="yes" Directory="ProgramMenuFolder" Icon="synergy.ico" Id="GuiShortcut" Name="$(var.Name)"/>
 					<fire:FirewallException Id="GuiFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
 				</File>
-				<File Source="$(var.QtPath)\Qt5Core.dll"/>
-				<File Source="$(var.QtPath)\Qt5Gui.dll"/>
-				<File Source="$(var.QtPath)\Qt5Network.dll"/>
-				<File Source="$(var.QtPath)\Qt5Svg.dll"/>
-				<File Source="$(var.QtPath)\Qt5Widgets.dll"/>
-				<File Source="$(var.QtPath)\libGLESv2.dll"/>
-				<File Source="$(var.QtPath)\libEGL.dll"/>
+				<File Source="$(var.QtBinPath)\Qt5Core.dll"/>
+				<File Source="$(var.QtBinPath)\Qt5Gui.dll"/>
+				<File Source="$(var.QtBinPath)\Qt5Network.dll"/>
+				<File Source="$(var.QtBinPath)\Qt5Svg.dll"/>
+				<File Source="$(var.QtBinPath)\Qt5Widgets.dll"/>
+				<File Source="$(var.QtBinPath)\libGLESv2.dll"/>
+				<File Source="$(var.QtBinPath)\libEGL.dll"/>
 			</Component>
 		</ComponentGroup>
 		<ComponentGroup Directory="PlatformsDir" Id="ProductQtPluginComponents">
