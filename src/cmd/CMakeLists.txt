@@ -16,7 +16,6 @@
 
 add_subdirectory(synergyc)
 add_subdirectory(synergys)
-add_subdirectory(usynergy)
 add_subdirectory(syntool)
 
 if (BUILD_SERVICE)
