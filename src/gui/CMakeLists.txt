@@ -25,9 +25,11 @@ if (WIN32)
 endif()
 
 qt5_use_modules (synergyx Core Widgets Network)
-target_link_libraries (synergyx ${DNSSD_LIB} shared)
+target_link_libraries (synergyx shared)
+target_compile_definitions (synergyx PRIVATE -DVERSION_STAGE="${VERSION_STAGE}")
+target_compile_definitions (synergyx PRIVATE -DVERSION_REVISION="")
 
 if (WIN32)
-    set_target_properties (synergyx PROPERTIES 
-                           LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
+	target_link_libraries (synergyx ${DNSSD_LIB})
+    set_target_properties (synergyx PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
 endif()
