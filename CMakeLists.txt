@@ -317,8 +317,6 @@ if (UNIX)
 	endif()
 endif()
 
-add_subdirectory(src)
-
 if (WIN32)
 	# TODO:	consider using /analyze to uncover potential bugs in the source code.
 
@@ -356,6 +354,14 @@ if (CONF_DOXYGEN)
 endif()
 
 configure_file (src/setup/win32/Include.wxi.in
-		"${CMAKE_BINARY_DIR}/setup/Include.wxi" NEWLINE_STYLE WIN32)
+				"${CMAKE_BINARY_DIR}/setup/Include.wxi" NEWLINE_STYLE WIN32)
+
+configure_file (src/setup/win32/Product.wxs
+				"${CMAKE_BINARY_DIR}/setup/Product.wxs" COPYONLY)
+
+configure_file (src/setup/win32/Synergy.wixproj
+				"${CMAKE_BINARY_DIR}/setup/Synergy.wixproj" COPYONLY)
 
 option(SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
+
+add_subdirectory(src)
