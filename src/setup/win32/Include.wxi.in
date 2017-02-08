@@ -21,5 +21,6 @@
     <?define QtBinPath="$(var.QtPath)\bin" ?>
     <?define QtPlatformPath="$(var.QtPath)\plugins\platforms" ?>
     <?define OpenSSLPath="$(var.ExtPath)\openssl\windows\$(var.Platform)" ?>
+    <?define OpenSSLBinPath="$(var.OpenSSLPath)\bin" ?>
     <?define CRT="$(env.CommonProgramFiles)\Merge Modules\Microsoft_VC140_CRT_$(var.Platform).msm" ?>
 </Include>

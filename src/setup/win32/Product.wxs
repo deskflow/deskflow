@@ -70,8 +70,8 @@
 				<File Source="$(var.BinPath)/synergyc.exe"/>
 				<File Source="$(var.BinPath)/syntool.exe"/>
 				<File Source="$(var.BinPath)/synwinhk.dll"/>
-				<File Source="$(var.BinPath)/libeay32.dll"/>
-				<File Source="$(var.BinPath)/ssleay32.dll"/>
+				<File Source="$(var.OpenSSLBinPath)/libeay32.dll"/>
+				<File Source="$(var.OpenSSLBinPath)/ssleay32.dll"/>
 			</Component>
 			<Component Guid="BAC8149B-6287-45BF-9C27-43D71ED40214" Id="Gui">
 				<File Id="GuiProgram" KeyPath="yes" Source="$(var.BinPath)/synergy.exe">
@@ -94,9 +94,9 @@
 		</ComponentGroup>
 		<ComponentGroup Directory="OpenSSLDir" Id="OpenSSLComponents">
 			<Component Guid="92648F77-65A6-4B16-AC59-A1F37BD341B1" Id="OpenSSL">
-				<File Id="OpenSSLDll1" Source="$(var.ExtPath)/$(var.OpenSSLPath)/bin/libeay32.dll"/>
-				<File Id="OpenSSLDll2" Source="$(var.ExtPath)/$(var.OpenSSLPath)/bin/ssleay32.dll"/>
-				<File Source="$(var.ExtPath)/$(var.OpenSSLPath)/bin/openssl.exe"/>
+				<File Id="OpenSSLDll1" Source="$(var.OpenSSLBinPath)/libeay32.dll"/>
+				<File Id="OpenSSLDll2" Source="$(var.OpenSSLBinPath)/ssleay32.dll"/>
+				<File Source="$(var.OpenSSLBinPath)/openssl.exe"/>
 				<File Source="$(var.ResPath)/openssl/synergy.conf"/>
 			</Component>
 		</ComponentGroup>
