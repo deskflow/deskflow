@@ -292,23 +292,22 @@ else() # not-unix
 endif()
 
 if (WIN32)
+    set(OPENSSL_BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/windows)
 	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set(OPENSSL_ARCH_DIR win64)
+        set(OPENSSL_BASE_DIR "${OPENSSL_BASE_DIR}/x64")
 	else()
-        set(OPENSSL_ARCH_DIR win32)
+        set(OPENSSL_BASE_DIR "${OPENSSL_BASE_DIR}/x86")
 	endif()
-    set(OPENSSL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/${OPENSSL_ARCH_DIR}/include)
 	set(OPENSSL_LIBS
-        ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/${OPENSSL_ARCH_DIR}/lib/libeay32.lib
-        ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/${OPENSSL_ARCH_DIR}/lib/ssleay32.lib
+        ${OPENSSL_BASE_DIR}/lib/libeay32.lib
+        ${OPENSSL_BASE_DIR}/lib/ssleay32.lib
 	)
 endif()
 
 if (UNIX)
 	if (APPLE)
         set(OPENSSL_BASE_DIR /usr/local/opt/openssl)
-        set(OPENSSL_INCLUDE ${OPENSSL_BASE_DIR}/include)
-		set(OPENSSL_LIBS
+        set(OPENSSL_LIBS
             ${OPENSSL_BASE_DIR}/lib/libssl.a
             ${OPENSSL_BASE_DIR}/lib/libcrypto.a
 		)
@@ -316,6 +315,8 @@ if (UNIX)
 		set(OPENSSL_LIBS ssl crypto)
 	endif()
 endif()
+
+set(OPENSSL_INCLUDE ${OPENSSL_BASE_DIR}/include)
 
 if (WIN32)
 	# TODO:	consider using /analyze to uncover potential bugs in the source code.
