@@ -38,5 +38,5 @@ add_library(server STATIC ${sources})
 target_link_libraries(server shared)
 
 if (UNIX)
-    target_link_libraries(server synergy)
+    target_link_libraries(server synlib)
 endif()

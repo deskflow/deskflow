@@ -58,7 +58,7 @@ endif()
 
 add_executable(synergys ${sources})
 target_link_libraries(synergys
-    arch base client common io mt net ipc platform server synergy ${libs} ${OPENSSL_LIBS})
+    arch base client common io mt net ipc platform server synlib ${libs} ${OPENSSL_LIBS})
 
 if (WIN32)
 else ()

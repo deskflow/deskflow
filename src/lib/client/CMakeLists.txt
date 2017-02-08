@@ -36,5 +36,5 @@ endif()
 add_library(client STATIC ${sources})
 
 if (UNIX)
-    target_link_libraries(client synergy io)
+    target_link_libraries(client synlib io)
 endif()

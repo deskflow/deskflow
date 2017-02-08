@@ -45,8 +45,8 @@ if (UNIX)
     )
 endif()
 
-add_library(synergy STATIC ${sources})
+add_library(synlib STATIC ${sources})
 
 if (UNIX)
-    target_link_libraries(synergy arch client ipc net base platform mt server)
+    target_link_libraries(synlib arch client ipc net base platform mt server)
 endif()
