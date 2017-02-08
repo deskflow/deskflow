@@ -19,10 +19,10 @@
 		</Feature>
 		<DirectoryRef Id="TARGETDIR">
 			<Component Guid="7CF3564D-1F8E-4D3D-9781-E1EE22D5BD67" Id="RegistryEntries">
-				<RegistryKey Action="createAndRemoveOnUninstall" Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" Root="HKLM">
+				<RegistryKey ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes" Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" Root="HKLM">
 					<RegistryValue Name="[INSTALLFOLDER]synergys.exe" Type="string" Value="~ HIGHDPIAWARE WIN7RTM"/>
 				</RegistryKey>
-				<Condition><![CDATA[Installed OR (VersionNT &gt;= 602)]]></Condition>
+				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
 			</Component>
 		</DirectoryRef>
 		<Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
