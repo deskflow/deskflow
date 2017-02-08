@@ -4,12 +4,12 @@
         <ProductVersion>3.10</ProductVersion>
         <ProjectGuid>{d4ba9f39-6a35-4c8f-9cb2-67fcbe5cab17}</ProjectGuid>
         <SchemaVersion>2.0</SchemaVersion>
-        <OutputName>synergy</OutputName>
+        <OutputName>Synergy</OutputName>
         <OutputType>Package</OutputType>
         <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
         <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
-        <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
-        <IntermediateOutputPath>..\..\..\build\wix\obj\$(Configuration)\</IntermediateOutputPath>
+        <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath> <!-- TODO: configure //-->
+        <IntermediateOutputPath>..\..\..\build\wix\obj\$(Configuration)\</IntermediateOutputPath> <!-- TODO: configure //-->
     </PropertyGroup>
     <ItemGroup>
         <WixExtension Include="WixFirewallExtension">
@@ -21,7 +21,7 @@
             <Name>WixUtilExtension</Name>
         </WixExtension>
         <WixExtension Include="WixUIExtension">
-            <HintPath>C:\Program Files (x86)\WiX Toolset v3.10\bin\WixUIExtension.dll</HintPath>
+            <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
             <Name>WixUIExtension</Name>
         </WixExtension>
         <Compile Include="Product.wxs"/>
