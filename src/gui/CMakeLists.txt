@@ -9,7 +9,7 @@ set (CMAKE_INCLUDE_CURRENT_DIR ON)
 file (GLOB LEGACY_GUI_SOURCE_FILES src/*.cpp src/*.h)
 file (GLOB LEGACY_GUI_UI_FILES res/*.ui)
 
-add_executable (synergyx
+add_executable (synergy
     ${LEGACY_GUI_SOURCE_FILES}
     ${LEGACY_GUI_UI_FILES}
     res/Synergy.qrc
@@ -24,12 +24,12 @@ if (WIN32)
                   PATH_SUFFIXES "Lib/x64")
 endif()
 
-qt5_use_modules (synergyx Core Widgets Network)
-target_link_libraries (synergyx shared)
-target_compile_definitions (synergyx PRIVATE -DVERSION_STAGE="${VERSION_STAGE}")
-target_compile_definitions (synergyx PRIVATE -DVERSION_REVISION="")
+qt5_use_modules (synergy Core Widgets Network)
+target_link_libraries (synergy shared)
+target_compile_definitions (synergy PRIVATE -DVERSION_STAGE="${VERSION_STAGE}")
+target_compile_definitions (synergy PRIVATE -DVERSION_REVISION="")
 
 if (WIN32)
-	target_link_libraries (synergyx ${DNSSD_LIB})
-    set_target_properties (synergyx PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
+	target_link_libraries (synergy ${DNSSD_LIB})
+    set_target_properties (synergy PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
 endif()
