@@ -9,7 +9,7 @@ set (CMAKE_INCLUDE_CURRENT_DIR ON)
 file (GLOB LEGACY_GUI_SOURCE_FILES src/*.cpp src/*.h)
 file (GLOB LEGACY_GUI_UI_FILES res/*.ui)
 
-add_executable (synergy
+add_executable (synergy WIN32
     ${LEGACY_GUI_SOURCE_FILES}
     ${LEGACY_GUI_UI_FILES}
     res/Synergy.qrc
@@ -27,7 +27,7 @@ endif()
 qt5_use_modules (synergy Core Widgets Network)
 target_link_libraries (synergy shared)
 target_compile_definitions (synergy PRIVATE -DVERSION_STAGE="${VERSION_STAGE}")
-target_compile_definitions (synergy PRIVATE -DVERSION_REVISION="")
+target_compile_definitions (synergy PRIVATE -DVERSION_REVISION="${SYNERGY_GIT_COMMIT}")
 
 if (WIN32)
 	target_link_libraries (synergy ${DNSSD_LIB})
