@@ -86,6 +86,7 @@
 				<File Source="$(var.QtBinPath)\Qt5Widgetsd.dll"/>
 				<File Source="$(var.QtBinPath)\libGLESv2d.dll"/>
 				<File Source="$(var.QtBinPath)\libEGLd.dll"/>
+				<File Source="C:\Program Files (x86)\Windows Kits\10\bin\$(var.Platform)\ucrt\ucrtbased.dll"/>
 				<?else ?>
 				<File Source="$(var.QtBinPath)\Qt5Core.dll"/>
 				<File Source="$(var.QtBinPath)\Qt5Gui.dll"/>
