@@ -352,14 +352,16 @@ if (CONF_DOXYGEN)
 
 endif()
 
-configure_file (src/setup/win32/Include.wxi.in
-				"${CMAKE_BINARY_DIR}/setup/Include.wxi" NEWLINE_STYLE WIN32)
+if (WIN32)
+	configure_file (dist/wix/Include.wxi.in
+					"${CMAKE_BINARY_DIR}/dist/wix/Include.wxi" NEWLINE_STYLE WIN32)
 
-configure_file (src/setup/win32/Product.wxs
-				"${CMAKE_BINARY_DIR}/setup/Product.wxs" COPYONLY)
+	configure_file (dist/wix/Product.wxs
+					"${CMAKE_BINARY_DIR}/dist/wix/Product.wxs" COPYONLY)
 
-configure_file (src/setup/win32/Synergy.wixproj
-				"${CMAKE_BINARY_DIR}/setup/Synergy.wixproj" COPYONLY)
+	configure_file (dist/wix/Synergy.wixproj
+					"${CMAKE_BINARY_DIR}/dist/wix/Synergy.wixproj" COPYONLY)
+endif()
 
 option(SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
 
