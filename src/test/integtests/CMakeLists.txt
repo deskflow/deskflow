@@ -56,8 +56,8 @@ endif()
 include_directories(
     ../../
     ../../lib/
-    ../../../ext/gtest-1.6.0/include
-    ../../../ext/gmock-1.6.0/include
+    ../../../ext/gtest/include
+    ../../../ext/gmock/include
 )
 
 if (UNIX)
