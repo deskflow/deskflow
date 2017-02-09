@@ -19,8 +19,3 @@ include_directories (${CMAKE_CURRENT_BINARY_DIR}/lib)
 add_subdirectory(lib)
 add_subdirectory(cmd)
 add_subdirectory(gui)
-
-
-if ((NOT ${CMAKE_SYSTEM_NAME} MATCHES "IRIX") AND (NOT ${DISABLE_TESTS}))
-    add_subdirectory(test)
-endif()

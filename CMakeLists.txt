@@ -333,12 +333,6 @@ if (WIN32)
 
 endif()
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "IRIX")
-	set_target_properties(synergys PROPERTIES LINK_FLAGS "-all -woff 33 -woff 84 -woff 15")
-	set_target_properties(synergyc PROPERTIES LINK_FLAGS "-all -woff 33 -woff 84 -woff 15")
-	set_target_properties(synergyd PROPERTIES LINK_FLAGS "-all -woff 33 -woff 84 -woff 15")
-endif()
-
 if (CONF_CPACK)
 	message(FATAL_ERROR "CPack support has been removed.")
 endif()
