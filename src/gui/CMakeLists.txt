@@ -7,7 +7,7 @@ set (CMAKE_AUTOUIC ON)
 set (CMAKE_INCLUDE_CURRENT_DIR ON)
 
 file (GLOB LEGACY_GUI_SOURCE_FILES src/*.cpp src/*.h)
-file (GLOB LEGACY_GUI_UI_FILES res/*.ui)
+file (GLOB LEGACY_GUI_UI_FILES src/*.ui)
 
 add_executable (synergy WIN32
     ${LEGACY_GUI_SOURCE_FILES}
