@@ -18,6 +18,7 @@ cmake_minimum_required(VERSION 3.4)
 
 # Version number for Synergy
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
+set(SYNERGY_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
 # CMake complains if we don't have this.
 if (COMMAND cmake_policy)
@@ -333,8 +334,36 @@ if (WIN32)
 
 endif()
 
-if (CONF_CPACK)
-	message(FATAL_ERROR "CPack support has been removed.")
+macro(configure_files srcDir destDir)
+	message(STATUS "Configuring directory ${destDir}")
+	make_directory (${destDir})
+
+	file (GLOB_RECURSE sourceFiles RELATIVE ${srcDir} ${srcDir}/*)
+	file (GLOB_RECURSE templateFiles LIST_DIRECTORIES false RELATIVE ${srcDir} ${srcDir}/*.in)
+	list (REMOVE_ITEM sourceFiles ${templateFiles})
+
+	foreach (sourceFile ${sourceFiles})
+		set (sourceFilePath ${srcDir}/${sourceFile})
+		if (IS_DIRECTORY ${sourceFilePath}) 
+			message (STATUS "Copying directory ${sourceFile}")
+			make_directory (${destDir/${sourceFile})
+		else ()
+			message (STATUS "Copying file ${sourceFile}")
+			configure_file (${sourceFilePath} ${destDir}/${sourceFile} COPYONLY)
+		endif ()
+	endforeach (sourceFile)
+
+	file (GLOB_RECURSE templateFiles RELATIVE ${srcDir} ${srcDir}/*.in)
+	foreach (templateFile ${templateFiles})
+		set (sourceTemplateFilePath ${srcDir}/${templateFile})
+                string (REGEX REPLACE "\.in$" "" templateFile ${templateFile})
+		message (STATUS "Configuring file ${templateFile}")
+		configure_file (${sourceTemplateFilePath} ${destDir}/${templateFile} @ONLY)
+	endforeach (templateFile)
+endmacro (configure_files)
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle ${CMAKE_BINARY_DIR}/bundle)
 endif()
 
 if (CONF_DOXYGEN)
