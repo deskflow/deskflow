@@ -364,6 +364,8 @@ endmacro (configure_files)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle ${CMAKE_BINARY_DIR}/bundle)
+	include (BundleUtilities)
+	verify_app (${CMAKE_BINARY_DIR}/bundle/Synergy.app)
 elseif(WIN32 AND NOT UNIX)
 	configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
 endif()
