@@ -14,10 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+cmake_minimum_required(VERSION 3.4)
+
 # Version number for Synergy
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
-
-cmake_minimum_required(VERSION 2.6)
 
 # CMake complains if we don't have this.
 if (COMMAND cmake_policy)
