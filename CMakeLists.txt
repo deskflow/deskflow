@@ -364,6 +364,8 @@ endmacro (configure_files)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle ${CMAKE_BINARY_DIR}/bundle)
+elseif(WIN32 AND NOT UNIX)
+	configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
 endif()
 
 if (CONF_DOXYGEN)
@@ -373,17 +375,6 @@ if (CONF_DOXYGEN)
 	# For doxygen.cfg, save the results based on a template (doxygen.cfg.in).
 	configure_file(${cmake_dir}/doxygen.cfg.in ${doc_dir}/doxygen.cfg)
 
-endif()
-
-if (WIN32)
-	configure_file (dist/wix/Include.wxi.in
-					"${CMAKE_BINARY_DIR}/dist/wix/Include.wxi" NEWLINE_STYLE WIN32)
-
-	configure_file (dist/wix/Product.wxs
-					"${CMAKE_BINARY_DIR}/dist/wix/Product.wxs" COPYONLY)
-
-	configure_file (dist/wix/Synergy.wixproj
-					"${CMAKE_BINARY_DIR}/dist/wix/Synergy.wixproj" COPYONLY)
 endif()
 
 option(SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
