@@ -368,15 +368,6 @@ elseif(WIN32 AND NOT UNIX)
 	configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
 endif()
 
-if (CONF_DOXYGEN)
-
-	set(VERSION, "${VERSION}")
-
-	# For doxygen.cfg, save the results based on a template (doxygen.cfg.in).
-	configure_file(${cmake_dir}/doxygen.cfg.in ${doc_dir}/doxygen.cfg)
-
-endif()
-
 option(SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
 
 add_subdirectory(src)
