@@ -353,13 +353,13 @@ macro(configure_files srcDir destDir)
 		endif ()
 	endforeach (sourceFile)
 
-	file (GLOB_RECURSE templateFiles RELATIVE ${srcDir} ${srcDir}/*.in)
 	foreach (templateFile ${templateFiles})
 		set (sourceTemplateFilePath ${srcDir}/${templateFile})
                 string (REGEX REPLACE "\.in$" "" templateFile ${templateFile})
 		message (STATUS "Configuring file ${templateFile}")
 		configure_file (${sourceTemplateFilePath} ${destDir}/${templateFile} @ONLY)
 	endforeach (templateFile)
+
 endmacro (configure_files)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
