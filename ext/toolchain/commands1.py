@@ -779,7 +779,7 @@ class InternalCommands:
 				frameworkRootDir = "/Library/Frameworks"
 			else:
 				# TODO: auto-detect, qt can now be installed anywhere.
-				frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
+				frameworkRootDir = "/usr/local/Cellar/qt5/5.8.0_1/Frameworks"
 
 			target = bundleTargetDir + "/Contents/Frameworks"
 
@@ -788,7 +788,7 @@ class InternalCommands:
 				for dir in dirs:
 					if dir.startswith("Qt"):
 						shutil.copy(
-							frameworkRootDir + "/" + dir + "/Contents/Info.plist",
+							frameworkRootDir + "/" + dir + "/Versions/Current/Resources/Info.plist",
 							target + "/" + dir + "/Resources/")
 
 	def symlink(self, source, target):

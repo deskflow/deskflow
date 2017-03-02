@@ -23,6 +23,11 @@ set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
 cmake_minimum_required(VERSION 2.6)
 
+# THIS HAS TO COME BEFORE THE PROJECT LINE
+set(CMAKE_C_COMPILER "gcc")
+set(CMAKE_CXX_COMPILER "g++")
+# THIS HAS TO COME BEFORE THE PROJECT LINE
+
 # CMake complains if we don't have this.
 if (COMMAND cmake_policy)
 	cmake_policy(SET CMP0003 NEW)
