@@ -776,7 +776,7 @@ class InternalCommands:
 
 			(qMajor, qMinor, qRev) = self.getQmakeVersion()
 			if qMajor <= 4:
-				frameworkRootDir = "/Library/Frameworks"
+				frameworkRootDir = "/usr/local/Cellar/qt/4.8.7_3/Frameworks"
 			else:
 				# TODO: auto-detect, qt can now be installed anywhere.
 				frameworkRootDir = "/usr/local/Cellar/qt/4.8.7_3/Frameworks"
@@ -788,7 +788,7 @@ class InternalCommands:
 				for dir in dirs:
 					if dir.startswith("Qt"):
 						shutil.copy(
-							frameworkRootDir + "/" + dir + "/Versions/Current/Resources/Info.plist",
+							frameworkRootDir + "/" + dir + "/Contents/Info.plist",
 							target + "/" + dir + "/Resources/")
 
 	def symlink(self, source, target):
