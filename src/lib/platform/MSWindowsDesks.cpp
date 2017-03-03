@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -87,6 +87,34 @@
 #define SYNERGY_MSG_FAKE_REL_MOVE	SYNERGY_HOOK_LAST_MSG + 11
 // enable; <unused>
 #define SYNERGY_MSG_FAKE_INPUT		SYNERGY_HOOK_LAST_MSG + 12
+
+
+static void
+send_keyboard_input(WORD wVk, WORD wScan, DWORD dwFlags)
+{
+	INPUT inp;
+	inp.type = INPUT_KEYBOARD;
+	inp.ki.wVk = (dwFlags & KEYEVENTF_UNICODE) ? 0 : wVk; // 1..254 inclusive otherwise
+	inp.ki.wScan = wScan;
+	inp.ki.dwFlags = dwFlags & 0xF;
+	inp.ki.time = 0;
+	inp.ki.dwExtraInfo = 0;
+	SendInput(1, &inp, sizeof(inp));
+}
+
+static void
+send_mouse_input(DWORD dwFlags, DWORD dx, DWORD dy, DWORD dwData)
+{
+	INPUT inp;
+	inp.type = INPUT_MOUSE;
+	inp.mi.dwFlags = dwFlags;
+	inp.mi.dx = dx;
+	inp.mi.dy = dy;
+	inp.mi.mouseData = dwData;
+	inp.mi.time = 0;
+	inp.mi.dwExtraInfo = 0;
+	SendInput(1, &inp, sizeof(inp));
+}
 
 //
 // MSWindowsDesks
@@ -247,10 +275,11 @@ MSWindowsDesks::getCursorPos(SInt32& x, SInt32& y) const
 }
 
 void
-MSWindowsDesks::fakeKeyEvent(
-				KeyButton button, UINT virtualKey,
-				bool press, bool /*isAutoRepeat*/) const
+MSWindowsDesks::fakeKeyEvent(WORD virtualKey, WORD scanCode, DWORD flags, bool /*isAutoRepeat*/) const
+				//KeyButton button, UINT virtualKey,
+				//bool press, bool /*isAutoRepeat*/) const
 {
+#if 0
 	// synthesize event
 	DWORD flags = 0;
 	if (((button & 0x100u) != 0)) {
@@ -259,9 +288,11 @@ MSWindowsDesks::fakeKeyEvent(
 	if (!press) {
 		flags |= KEYEVENTF_KEYUP;
 	}
-	sendMessage(SYNERGY_MSG_FAKE_KEY, flags,
-							MAKEWORD(static_cast<BYTE>(button & 0xffu),
-								static_cast<BYTE>(virtualKey & 0xffu)));
+#endif
+	// MAKELPARAM(wLow, wHigh)
+	sendMessage(SYNERGY_MSG_FAKE_KEY, flags, MAKELPARAM(scanCode, virtualKey));
+							//MAKEWORD(static_cast<BYTE>(button & 0xffu),
+							//	static_cast<BYTE>(virtualKey & 0xffu)));
 }
 
 void
@@ -499,10 +530,12 @@ MSWindowsDesks::deskMouseMove(SInt32 x, SInt32 y) const
 	// the primary screen.
 	SInt32 w = GetSystemMetrics(SM_CXSCREEN);
 	SInt32 h = GetSystemMetrics(SM_CYSCREEN);
-	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-							(DWORD)((65535.0f * x) / (w - 1) + 0.5f),
-							(DWORD)((65535.0f * y) / (h - 1) + 0.5f),
-							0, 0);
+	//mouse_event(
+	send_mouse_input(
+		MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
+		(DWORD)((65535.0f * x) / (w - 1) + 0.5f),
+		(DWORD)((65535.0f * y) / (h - 1) + 0.5f),
+		0/*, 0*/);
 }
 
 void
@@ -532,7 +565,8 @@ MSWindowsDesks::deskMouseRelativeMove(SInt32 dx, SInt32 dy) const
 	}
 
 	// move relative to mouse position
-	mouse_event(MOUSEEVENTF_MOVE, dx, dy, 0, 0);
+	//mouse_event(MOUSEEVENTF_MOVE, dx, dy, 0, 0);
+	send_mouse_input(MOUSEEVENTF_MOVE, dx, dy, 0);
 
 	// restore mouse speed & acceleration
 	if (accelChanged) {
@@ -730,12 +764,18 @@ MSWindowsDesks::deskThread(void* vdesk)
 			break;
 
 		case SYNERGY_MSG_FAKE_KEY:
-			keybd_event(HIBYTE(msg.lParam), LOBYTE(msg.lParam), (DWORD)msg.wParam, 0);
+			// Note, this is intended to be HI/LOWORD and not HI/LOBYTE
+			send_keyboard_input(
+				HIWORD(msg.lParam),
+				LOWORD(msg.lParam),
+				(DWORD)msg.wParam);
+			//keybd_event(HIBYTE(msg.lParam), LOBYTE(msg.lParam), (DWORD)msg.wParam, 0);
 			break;
 
 		case SYNERGY_MSG_FAKE_BUTTON:
 			if (msg.wParam != 0) {
-				mouse_event((DWORD)msg.wParam, 0, 0, (DWORD)msg.lParam, 0);
+				send_mouse_input((DWORD)msg.wParam, 0, 0, (DWORD)msg.lParam);
+				//mouse_event((DWORD)msg.wParam, 0, 0, (DWORD)msg.lParam, 0);
 			}
 			break;
 
@@ -752,7 +792,8 @@ MSWindowsDesks::deskThread(void* vdesk)
 		case SYNERGY_MSG_FAKE_WHEEL:
 			// XXX -- add support for x-axis scrolling
 			if (msg.lParam != 0) {
-				mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (DWORD)msg.lParam, 0);
+				send_mouse_input(MOUSEEVENTF_WHEEL, 0, 0, (DWORD)msg.lParam);
+				//mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (DWORD)msg.lParam, 0);
 			}
 			break;
 
@@ -781,9 +822,11 @@ MSWindowsDesks::deskThread(void* vdesk)
 			break;
 
 		case SYNERGY_MSG_FAKE_INPUT:
-			keybd_event(SYNERGY_HOOK_FAKE_INPUT_VIRTUAL_KEY,
-								SYNERGY_HOOK_FAKE_INPUT_SCANCODE,
-								msg.wParam ? 0 : KEYEVENTF_KEYUP, 0);
+			//keybd_event(
+			send_keyboard_input(
+				SYNERGY_HOOK_FAKE_INPUT_VIRTUAL_KEY,
+				SYNERGY_HOOK_FAKE_INPUT_SCANCODE,
+				msg.wParam ? 0 : KEYEVENTF_KEYUP);//, 0);
 			break;
 		}
 
@@ -851,7 +894,7 @@ MSWindowsDesks::checkDesk()
 		desk = index->second;
 	}
 
-	// if we are told to shut down on desk switch, and this is not the 
+	// if we are told to shut down on desk switch, and this is not the
 	// first switch, then shut down.
 	if (m_stopOnDeskSwitch && m_activeDesk != NULL && name != m_activeDeskName) {
 		LOG((CLOG_DEBUG "shutting down because of desk switch to \"%s\"", name.c_str()));
