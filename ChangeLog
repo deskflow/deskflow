@@ -1,4 +1,4 @@
-v1.8.8-rc1
+v1.8.8
 ==========
 Bug #5196 - Some keys on Korean and Japanese keyboards have the same keycode
 Bug #5578 - Pressing Hangul key results in alt+'a'
