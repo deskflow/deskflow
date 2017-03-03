@@ -115,6 +115,12 @@ static const KeyEntry	s_controlKeys[] = {
 	{ kKeyMeta_L,		s_superVK },
 	{ kKeyMeta_R,		s_superVK }, // 61
 
+	{ '\\',			kVK_JIS_Yen },
+	{ '_',			kVK_JIS_Underscore },
+	{ ',',			kVK_JIS_KeypadComma },
+	{ kKeyZenkaku,		kVK_JIS_Eisu },
+	{ kKeyHenkan,		kVK_JIS_Kana },
+
 	// toggle modifiers
 	{ kKeyNumLock,		s_numLockVK },
 	{ kKeyCapsLock,		s_capsLockVK },
