@@ -160,15 +160,12 @@ XWindowsScreen::XWindowsScreen(
 
 	// primary/secondary screen only initialization
 	if (m_isPrimary) {
-		// start watching for events on other windows
-		selectEvents(m_root);
-		m_xi2detected = detectXI2();
-
-		if (m_xi2detected) {
 #ifdef HAVE_XI2
+		m_xi2detected = detectXI2();
+		if (m_xi2detected) {
 			selectXIRawMotion();
-#endif
 		} else
+#endif
 		{
 			// start watching for events on other windows
 			selectEvents(m_root);
@@ -745,7 +742,7 @@ XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 		LOG((CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", synergy::KeyMap::formatKey(key, mask).c_str(), key, mask));
 		return 0;
 	}
-	
+
 	LOG((CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", synergy::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
 	return id;
 }
@@ -827,7 +824,7 @@ void
 XWindowsScreen::fakeMouseButton(ButtonID button, bool press)
 {
 	const unsigned int xButton = mapButtonToX(button);
-	if (xButton != 0) {
+	if (xButton > 0 && xButton < 11) {
 		XTestFakeButtonEvent(m_display, xButton,
 							press ? True : False, CurrentTime);
 		XFlush(m_display);
@@ -976,22 +973,6 @@ XWindowsScreen::saveShape()
 
 	m_w = WidthOfScreen(DefaultScreenOfDisplay(m_display));
 	m_h = HeightOfScreen(DefaultScreenOfDisplay(m_display));
-
-#if HAVE_X11_EXTENSIONS_XRANDR_H
-	if (m_xrandr){
-	  int numSizes;
-	  XRRScreenSize* xrrs;
-	  Rotation rotation;
-	  xrrs = XRRSizes(m_display, DefaultScreen(m_display), &numSizes);
-	  XRRRotations(m_display, DefaultScreen(m_display), &rotation);
-	  if (xrrs != NULL) {
-	    if (rotation & (RR_Rotate_90|RR_Rotate_270) ){
-	      m_w = xrrs->height;
-	      m_h = xrrs->width;
-	    }
-	  }
-	}
-#endif
 
 	// get center of default screen
 	m_xCenter = m_x + (m_w >> 1);
@@ -1300,7 +1281,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 	// handle the event ourself
 	switch (xevent->type) {
 	case CreateNotify:
-		if (m_isPrimary) {
+		if (m_isPrimary && !m_xi2detected) {
 			// select events on new window
 			selectEvents(xevent->xcreatewindow.window);
 		}
