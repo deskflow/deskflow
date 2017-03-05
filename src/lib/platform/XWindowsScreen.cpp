@@ -1167,19 +1167,22 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 	bool isRepeat = false;
 	if (m_isPrimary) {
 		if (xevent->type == KeyRelease) {
-			// check if this is a key repeat by getting the next
-			// KeyPress event that has the same key and time as
-			// this release event, if any.  first prepare the
-			// filter info.
-			KeyEventFilter filter;
-			filter.m_event   = KeyPress;
-			filter.m_window  = xevent->xkey.window;
-			filter.m_time    = xevent->xkey.time;
-			filter.m_keycode = xevent->xkey.keycode;
-			XEvent xevent2;
-			isRepeat = (XCheckIfEvent(m_display, &xevent2,
-							&XWindowsScreen::findKeyEvent,
-							(XPointer)&filter) == True);
+			XSync(m_display, False);
+			if(XQLength(m_display)) {
+				// check if this is a key repeat by getting the next
+				// KeyPress event that has the same key and time as
+				// this release event, if any.  first prepare the
+				// filter info.
+				KeyEventFilter filter;
+				filter.m_event   = KeyPress;
+				filter.m_window  = xevent->xkey.window;
+				filter.m_time    = xevent->xkey.time;
+				filter.m_keycode = xevent->xkey.keycode;
+				XEvent xevent2;
+				isRepeat = (XCheckIfEvent(m_display, &xevent2,
+								&XWindowsScreen::findKeyEvent,
+								(XPointer)&filter) == True);
+			}
 		}
 
 		if (xevent->type == KeyPress || xevent->type == KeyRelease) {
