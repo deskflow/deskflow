@@ -805,10 +805,15 @@ SecureSocket::showSecureCipherInfo()
 		showCipherStackDesc(sStack);
 	}
 
-	// m_ssl->m_ssl->session->ciphers is not forward compatable, In future release
-	// of OpenSSL, it's not visible, need to use SSL_get_client_ciphers() instead
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+	// m_ssl->m_ssl->session->ciphers is not forward compatable,
+	// In future release of OpenSSL, it's not visible,
 	STACK_OF(SSL_CIPHER) * cStack = m_ssl->m_ssl->session->ciphers;
-		if (cStack == NULL) {
+#else
+	// Use SSL_get_client_ciphers() for newer versions
+	STACK_OF(SSL_CIPHER) * cStack = SSL_get_client_ciphers(m_ssl->m_ssl);
+#endif
+	if (cStack == NULL) {
 		LOG((CLOG_DEBUG1 "remote cipher list not available"));
 	}
 	else {
