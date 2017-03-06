@@ -17,7 +17,7 @@
 # Version number for Synergy
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 8)
-set(VERSION_REV 7)
+set(VERSION_REV 8)
 set(VERSION_STAGE stable)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
@@ -74,11 +74,6 @@ endif()
 
 # Depending on the platform, pass in the required defines.
 if (UNIX)
-
-	# warnings as errors:
-	# we have a problem with people checking in code with warnings.
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wno-unused-local-typedef")
-
 	if (NOT APPLE)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 	endif()

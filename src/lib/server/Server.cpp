@@ -1766,52 +1766,66 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 	}
 
 	// see if we should change screens
-	EDirection dir;
+	// when the cursor is in a corner, there may be a screen either
+	// horizontally or vertically.  check both directions.
+	EDirection dirh = kNoDirection, dirv = kNoDirection;
+	SInt32 xh = x, yv = y;
 	if (x < ax + zoneSize) {
-		x  -= zoneSize;
-		dir = kLeft;
+		xh  -= zoneSize;
+		dirh = kLeft;
 	}
 	else if (x >= ax + aw - zoneSize) {
-		x  += zoneSize;
-		dir = kRight;
+		xh  += zoneSize;
+		dirh = kRight;
 	}
-	else if (y < ay + zoneSize) {
-		y  -= zoneSize;
-		dir = kTop;
+	if (y < ay + zoneSize) {
+		yv  -= zoneSize;
+		dirv = kTop;
 	}
 	else if (y >= ay + ah - zoneSize) {
-		y  += zoneSize;
-		dir = kBottom;
+		yv  += zoneSize;
+		dirv = kBottom;
 	}
-	else {
+	if (dirh == kNoDirection && dirv == kNoDirection) {
 		// still on local screen
 		noSwitch(x, y);
 		return false;
 	}
 
-	// get jump destination
-	BaseClientProxy* newScreen = mapToNeighbor(m_active, dir, x, y);
+	// check both horizontally and vertically
+	EDirection dirs[] = {dirh, dirv};
+	SInt32 xs[] = {xh, x}, ys[] = {y, yv};
+	for (int i = 0; i < 2; ++i) {
+		EDirection dir = dirs[i];
+		if (dir == kNoDirection) {
+			continue;
+		}
+		x = xs[i], y = ys[i];
 
-	// should we switch or not?
-	if (isSwitchOkay(newScreen, dir, x, y, xc, yc)) {
-		if (m_args.m_enableDragDrop
-			&& m_screen->isDraggingStarted()
-			&& m_active != newScreen
-			&& m_waitDragInfoThread) {
-			if (m_sendDragInfoThread == NULL) {
-				m_sendDragInfoThread = new Thread(
-					new TMethodJob<Server>(
-						this,
-						&Server::sendDragInfoThread, newScreen));
+		// get jump destination
+		BaseClientProxy* newScreen = mapToNeighbor(m_active, dir, x, y);
+
+		// should we switch or not?
+		if (isSwitchOkay(newScreen, dir, x, y, xc, yc)) {
+			if (m_args.m_enableDragDrop
+				&& m_screen->isDraggingStarted()
+				&& m_active != newScreen
+				&& m_waitDragInfoThread) {
+				if (m_sendDragInfoThread == NULL) {
+					m_sendDragInfoThread = new Thread(
+						new TMethodJob<Server>(
+							this,
+							&Server::sendDragInfoThread, newScreen));
+				}
+
+				return false;
 			}
 
-			return false;
+			// switch screen
+			switchScreen(newScreen, x, y, false);
+			m_waitDragInfoThread = true;
+			return true;
 		}
-
-		// switch screen
-		switchScreen(newScreen, x, y, false);
-		m_waitDragInfoThread = true;
-		return true;
 	}
 
 	return false;

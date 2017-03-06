@@ -2096,11 +2096,11 @@ ConfigReadContext::parseInterval(const ArgList& args) const
 	}
 
 	char* end;
-	long startValue = strtol(args[0].c_str(), &end, 10);
+	double startValue = strtod(args[0].c_str(), &end);
 	if (end[0] != '\0') {
 		throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
 	}
-	long endValue = strtol(args[1].c_str(), &end, 10);
+	double endValue = strtod(args[1].c_str(), &end);
 	if (end[0] != '\0') {
 		throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
 	}
