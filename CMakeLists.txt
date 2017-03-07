@@ -337,8 +337,7 @@ if (WIN32)
 
 	# /MP - use multi cores to compile.
 	# /D _BIND_TO_CURRENT_VCLIBS_VERSION - TODO: explain why.
-	# /D _SECURE_SCL=1 - find bugs with iterators.
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1 /D _SECURE_SCL=1")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1")
 	
 	# /MD - use multi-core libraries.
 	# /O2 - get the fastest code.
