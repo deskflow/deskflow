@@ -17,6 +17,19 @@
 cmake_minimum_required(VERSION 3.4)
 
 # Version number for Synergy
+if(DEFINED ENV{SYNERGY_VERSION_MAJOR})
+    set (VERSION_MAJOR $ENV{SYNERGY_VERSION_MAJOR})
+    set (VERSION_MINOR $ENV{SYNERGY_VERSION_MINOR})
+    set (VERSION_REV $ENV{SYNERGY_VERSION_PATCH})
+    set (VERSION_STAGE $ENV{SYNERGY_VERSION_STAGE})
+else()
+    message (WARNING "Synergy version number not set in build environment. Defaulting")
+    set (VERSION_MAJOR 1)
+    set (VERSION_MINOR 9)
+    set (VERSION_REV 0)
+    set (VERSION_STAGE git)
+endif()
+
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 set(SYNERGY_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
