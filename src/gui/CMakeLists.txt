@@ -38,3 +38,7 @@ if (WIN32)
 	target_link_libraries (synergy ${DNSSD_LIB})
     set_target_properties (synergy PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
 endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    install (TARGETS synergy DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
+endif()

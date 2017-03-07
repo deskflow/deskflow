@@ -371,17 +371,19 @@ macro(configure_files srcDir destDir)
 		message (STATUS "Configuring file ${templateFile}")
 		configure_file (${sourceTemplateFilePath} ${destDir}/${templateFile} @ONLY)
 	endforeach (templateFile)
-
 endmacro (configure_files)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle ${CMAKE_BINARY_DIR}/bundle)
-	include (BundleUtilities)
-	verify_app (${CMAKE_BINARY_DIR}/bundle/Synergy.app)
+	set (SYNERGY_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
+	set (SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
+	set (SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
+	set (SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
+
+	configure_files (${SYNERGY_BUNDLE_SOURCE_DIR} ${SYNERGY_BUNDLE_DIR})
 elseif(WIN32 AND NOT UNIX)
 	configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
 endif()
 
 option(SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
-
 add_subdirectory(src)
+
