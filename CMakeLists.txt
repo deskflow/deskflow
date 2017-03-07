@@ -197,7 +197,7 @@ if (UNIX)
 	else() # not-apple
 
 		# add include dir for bsd (posix uses /usr/include/)
-		set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
+		set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include:/usr/include")
 
 		set(XKBlib "X11/Xlib.h;X11/XKBlib.h")
 		set(CMAKE_EXTRA_INCLUDE_FILES "${XKBlib};X11/extensions/Xrandr.h")
