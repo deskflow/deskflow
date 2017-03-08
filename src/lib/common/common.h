@@ -102,14 +102,6 @@
 #    define SIZE_OF_LONG        4
 #endif
 
-// FIXME -- including fp.h from Carbon.h causes a undefined symbol error
-// on my build system.  the symbol is scalb.  since we don't need any
-// math functions we define __FP__, the include guard macro for fp.h, to
-// prevent fp.h from being included.
-#if defined(__APPLE__)
-#    define __FP__
-#endif
-
 // define NULL
 #include <stddef.h>
 
