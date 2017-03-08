@@ -22,7 +22,9 @@ option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
-
+#
+# Version
+#
 # TODO: Eliminate variables not prefixed with SYNERGY_
 if (DEFINED ENV{SYNERGY_VERSION_MAJOR})
     set (VERSION_MAJOR $ENV{SYNERGY_VERSION_MAJOR})
@@ -30,17 +32,16 @@ if (DEFINED ENV{SYNERGY_VERSION_MAJOR})
     set (VERSION_REV $ENV{SYNERGY_VERSION_PATCH})
     set (VERSION_STAGE $ENV{SYNERGY_VERSION_STAGE})
 else()
-    message (WARNING "Synergy version number not set in build environment. Defaulting")
+    message (WARNING "Synergy version number not set by build environment.")
     set (VERSION_MAJOR 1)
     set (VERSION_MINOR 9)
     set (VERSION_REV 0)
     set (VERSION_STAGE git)
 endif()
 
-
 set (SYNERGY_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
-set (VERSION $SYNERGY_VERSION)
-message (STATUS "Synergy version is " $SYNERGY_VERSION)
+set (VERSION ${SYNERGY_VERSION})
+message (STATUS "Synergy version is " ${SYNERGY_VERSION})
 
 
 # TODO: Find out why we need these, and remove them
