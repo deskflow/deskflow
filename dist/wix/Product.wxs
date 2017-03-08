@@ -25,6 +25,7 @@
 				<RegistryKey ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes" Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" Root="HKLM">
 					<RegistryValue Name="[INSTALLFOLDER]synergys.exe" Type="string" Value="~ HIGHDPIAWARE WIN7RTM"/>
 				</RegistryKey>
+				<!-- Windows 8 and later only -->
 				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
 			</Component>
 		</DirectoryRef>
@@ -92,6 +93,7 @@
 				<File Source="$(var.QtBinPath)\Qt5Widgetsd.dll"/>
 				<File Source="$(var.QtBinPath)\libGLESv2d.dll"/>
 				<File Source="$(var.QtBinPath)\libEGLd.dll"/>
+				<!-- Hacky -->
 				<File Source="C:\Program Files (x86)\Windows Kits\10\bin\$(var.Platform)\ucrt\ucrtbased.dll"/>
 				<?else ?>
 				<File Source="$(var.QtBinPath)\Qt5Core.dll"/>

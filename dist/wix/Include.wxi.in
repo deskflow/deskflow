@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
     <?define Name="Synergy" ?>
-    <?define Version="1.9.0" ?> <!-- TODO: Configure this externally //--> 
+    <?define Version="@SYNERGY_VERSION@" ?>
     <?define QtVersion="5.8" ?> <!-- TODO: Configure this externally //--> 
     <?define Author="Symless Ltd" ?>
     <?define BinPath="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/$(var.Configuration)" ?>
