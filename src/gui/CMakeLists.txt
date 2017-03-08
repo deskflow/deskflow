@@ -21,16 +21,18 @@ add_executable (synergy WIN32
 )
 
 include_directories (../lib/shared ./src)
+target_link_libraries (synergy shared)
 
 if (WIN32)
     include_directories ($ENV{BONJOUR_SDK_HOME}/Include)
     find_library (DNSSD_LIB dnssd.lib 
                   HINTS ENV BONJOUR_SDK_HOME
                   PATH_SUFFIXES "Lib/x64")
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    target_link_libraries (synergy dns_sd)
 endif()
 
 qt5_use_modules (synergy Core Widgets Network)
-target_link_libraries (synergy shared)
 target_compile_definitions (synergy PRIVATE -DVERSION_STAGE="${VERSION_STAGE}")
 target_compile_definitions (synergy PRIVATE -DVERSION_REVISION="${SYNERGY_GIT_COMMIT}")
 
