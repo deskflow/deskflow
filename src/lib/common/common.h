@@ -113,11 +113,6 @@
 // define NULL
 #include <stddef.h>
 
-// if not c++0x, future proof code by allowing use of nullptr
-#ifndef nullptr
-#    define nullptr NULL
-#endif
-
 // make assert available since we use it a lot
 #include <assert.h>
 #include <stdlib.h>
