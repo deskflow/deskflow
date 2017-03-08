@@ -262,8 +262,10 @@ class InternalCommands:
 		3 : VisualStudioGenerator('9 2008'),
 		4 : VisualStudioGenerator('9 2008 Win64'),
 		5 : VisualStudioGenerator('8 2005'),
-		6 : VisualStudioGenerator('8 2005 Win64')
-	}
+		6 : VisualStudioGenerator('8 2005 Win64'),
+		7 : VisualStudioGenerator('14'),
+		8 : VisualStudioGenerator('14 Win64'),
+			}
 
 	unix_generators = {
 		1 : MakefilesGenerator(),
@@ -906,8 +908,8 @@ class InternalCommands:
 		generator = self.getGeneratorFromConfig().cmakeName
 
 		if generator.startswith('Visual Studio'):
-			# special case for version 10, use new /target:clean
-			if generator.startswith('Visual Studio 10'):
+			# special case for version 10 and above, use new /target:clean
+			if generator.startswith('Visual Studio 10') or generator.startswith('Visual Studio 14'):
 				for target in targets:
 					self.run_vcbuild(generator, target, self.sln_filepath(), '/target:clean')
 				
@@ -1737,6 +1739,8 @@ class InternalCommands:
 			value,type = _winreg.QueryValueEx(key, '9.0')
 		elif generator.startswith('Visual Studio 10'):
 			value,type = _winreg.QueryValueEx(key, '10.0')
+		elif generator.startswith('Visual Studio 14'):
+			value,type = _winreg.QueryValueEx(key, '14.0')
 		else:
 			raise Exception('Cannot determine vcvarsall.bat location for: ' + generator)
 		
@@ -1779,7 +1783,7 @@ class InternalCommands:
 		else:
 			config = 'Debug'
 				
-		if generator.startswith('Visual Studio 10'):
+		if generator.startswith('Visual Studio 10') or generator.startswith('Visual Studio 14'):
 			cmd = ('@echo off\n'
 				'call "%s" %s \n'
 				'cd "%s"\n'
