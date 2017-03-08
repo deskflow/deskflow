@@ -18,9 +18,10 @@
 
 #pragma once
 
-// this file should be included, directly or indirectly by every other.
-
-#if HAVE_CONFIG_H
+#if defined(_WIN32)
+#	define SYSAPI_WIN32 1
+#	define WINAPI_MSWINDOWS 1
+#elif HAVE_CONFIG_H
 #	include "config.h"
 #else
 #	error "config.h missing"
