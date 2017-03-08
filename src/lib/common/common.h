@@ -21,72 +21,9 @@
 // this file should be included, directly or indirectly by every other.
 
 #if HAVE_CONFIG_H
-#    include "config.h"
-
-    // don't use poll() on mac
-#    if defined(__APPLE__)
-#        undef HAVE_POLL
-#    endif
+#	include "config.h"
 #else
-    // we may not have run configure on win32
-#    if defined(_WIN32)
-#        define SYSAPI_WIN32 1
-#        define WINAPI_MSWINDOWS 1
-#    endif
-
-    // we may not have run configure on OS X
-#    if defined(__APPLE__)
-#        define SYSAPI_UNIX 1
-#        define WINAPI_CARBON 1
-
-#        define HAVE_CXX_BOOL 1
-#        define HAVE_CXX_CASTS 1
-#        define HAVE_CXX_EXCEPTIONS 1
-#        define HAVE_CXX_MUTABLE 1
-#        define HAVE_CXX_STDLIB 1
-#        define HAVE_GETPWUID_R 1
-#        define HAVE_GMTIME_R 1
-#        define HAVE_INET_ATON 1
-#        define HAVE_INTTYPES_H 1
-#        define HAVE_ISTREAM 1
-#        define HAVE_MEMORY_H 1
-#        define HAVE_NANOSLEEP 1
-#        define HAVE_OSTREAM 1
-#        define HAVE_POSIX_SIGWAIT 1
-#        define HAVE_PTHREAD 1
-#        define HAVE_PTHREAD_SIGNAL 1
-#        include <sys/types.h>
-#        include <sys/socket.h>
-#        if defined(_SOCKLEN_T)
-#            define HAVE_SOCKLEN_T 1
-#        endif
-#        define HAVE_SSTREAM 1
-#        define HAVE_STDINT_H 1
-#        define HAVE_STDLIB_H 1
-#        define HAVE_STRINGS_H 1
-#        define HAVE_STRING_H 1
-#        define HAVE_SYS_SELECT_H 1
-#        define HAVE_SYS_SOCKET_H 1
-#        define HAVE_SYS_STAT_H 1
-#        define HAVE_SYS_TIME_H 1
-#        define HAVE_SYS_TYPES_H 1
-#        define HAVE_SYS_UTSNAME_H 1
-#        define HAVE_UNISTD_H 1
-#        define HAVE_VSNPRINTF 1
-/* disable this so we can build with the 10.2.8 SDK */
-/*#        define HAVE_WCHAR_H 1*/
-
-#        define SELECT_TYPE_ARG1 int
-#        define SELECT_TYPE_ARG234 (fd_set *)
-#        define SELECT_TYPE_ARG5 (struct timeval *)
-#        define SIZEOF_CHAR 1
-#        define SIZEOF_INT 4
-#        define SIZEOF_LONG 4
-#        define SIZEOF_SHORT 2
-#        define STDC_HEADERS 1
-#        define TIME_WITH_SYS_TIME 1
-#        define X_DISPLAY_MISSING 1
-#    endif
+#	error "config.h missing"
 #endif
 
 // VC++ has built-in sized types
