@@ -69,7 +69,7 @@ const KeyID				MSWindowsKeyState::s_virtualKey[] =
 	/* 0x01a */ { kKeyNone },		// undefined
 	/* 0x01b */ { kKeyEscape },		// VK_ESCAPE
 	/* 0x01c */ { kKeyHenkan },		// VK_CONVERT		
-	/* 0x01d */ { kKeyNone },		// VK_NONCONVERT	
+	/* 0x01d */ { kKeyMuhenkan },		// VK_NONCONVERT	
 	/* 0x01e */ { kKeyNone },		// VK_ACCEPT		
 	/* 0x01f */ { kKeyNone },		// VK_MODECHANGE	
 	/* 0x020 */ { kKeyNone },		// VK_SPACE
