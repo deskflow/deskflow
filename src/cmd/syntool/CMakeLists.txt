@@ -17,7 +17,6 @@ file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
 include_directories(
-    ../
     ../../lib/
 )
 

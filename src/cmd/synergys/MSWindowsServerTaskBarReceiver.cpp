@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergys/MSWindowsServerTaskBarReceiver.h"
+#include "MSWindowsServerTaskBarReceiver.h"
 
 #include "resource.h"
 #include "server/Server.h"

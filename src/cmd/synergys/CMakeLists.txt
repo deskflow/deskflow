@@ -46,7 +46,6 @@ if (SYNERGY_ADD_HEADERS)
 endif()
 
 include_directories(
-    ../
     ../../lib/
 )
 

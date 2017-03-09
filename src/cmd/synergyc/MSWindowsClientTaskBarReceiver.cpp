@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergyc/MSWindowsClientTaskBarReceiver.h"
+#include "MSWindowsClientTaskBarReceiver.h"
 
 #include "resource.h"
 #include "client/Client.h"

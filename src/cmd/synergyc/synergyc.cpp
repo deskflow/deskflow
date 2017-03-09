@@ -22,11 +22,11 @@
 #include "base/EventQueue.h"
 
 #if WINAPI_MSWINDOWS
-#include "synergyc/MSWindowsClientTaskBarReceiver.h"
+#include "MSWindowsClientTaskBarReceiver.h"
 #elif WINAPI_XWINDOWS
-#include "synergyc/XWindowsClientTaskBarReceiver.h"
+#include "XWindowsClientTaskBarReceiver.h"
 #elif WINAPI_CARBON
-#include "synergyc/OSXClientTaskBarReceiver.h"
+#include "OSXClientTaskBarReceiver.h"
 #else
 #error Platform not supported.
 #endif

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergys/OSXServerTaskBarReceiver.h"
+#include "OSXServerTaskBarReceiver.h"
 #include "arch/Arch.h"
 
 //

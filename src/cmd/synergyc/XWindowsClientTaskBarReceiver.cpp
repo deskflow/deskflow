@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergyc/XWindowsClientTaskBarReceiver.h"
+#include "XWindowsClientTaskBarReceiver.h"
 #include "arch/Arch.h"
 
 //
