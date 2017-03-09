@@ -41,12 +41,6 @@ include_directories(
     ../
 )
 
-if (UNIX)
-    include_directories(
-        ../../..
-    )
-endif()
-
 add_library(arch STATIC ${sources})
 
 if (UNIX)

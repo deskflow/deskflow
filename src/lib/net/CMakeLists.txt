@@ -26,12 +26,6 @@ include_directories(
     ${OPENSSL_INCLUDE}
 )
 
-if (UNIX)
-    include_directories(
-        ../../..
-    )
-endif()
-
 add_library(net STATIC ${sources})
 
 if (UNIX)

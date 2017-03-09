@@ -27,12 +27,6 @@ include_directories(
     ../../../ext/gtest/include
 )
 
-if (UNIX)
-    include_directories(
-        ../../..
-    )
-endif()
-
 add_library(server STATIC ${sources})
 
 target_link_libraries(server shared)

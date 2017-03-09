@@ -25,10 +25,4 @@ include_directories(
     ../
 )
 
-if (UNIX)
-    include_directories(
-        ../../..
-    )
-endif()
-
 add_library(common STATIC ${sources})

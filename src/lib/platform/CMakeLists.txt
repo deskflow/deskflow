@@ -34,12 +34,6 @@ include_directories(
     ../../../ext/gtest/include
 )
 
-if (UNIX)
-    include_directories(
-        ../../..
-    )
-endif()
-
 if (APPLE)
     list(APPEND inc
         /System/Library/Frameworks

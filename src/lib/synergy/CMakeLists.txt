@@ -39,12 +39,6 @@ include_directories(
     ../../../ext/gtest/include
 )
 
-if (UNIX)
-    include_directories(
-        ../../..
-    )
-endif()
-
 add_library(synlib STATIC ${sources})
 
 if (UNIX)

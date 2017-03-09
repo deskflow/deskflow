@@ -26,13 +26,6 @@ include_directories(
     ../../../ext
 )
 
-if (UNIX)
-    include_directories(
-        ../../..
-    )
-
-endif()
-
 add_library(client STATIC ${sources})
 
 if (UNIX)

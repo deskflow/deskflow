@@ -25,12 +25,6 @@ include_directories(
     ../
 )
 
-if (UNIX)
-    include_directories(
-        ../../..
-    )
-endif()
-
 add_library(ipc STATIC ${sources})
 
 if (UNIX)
