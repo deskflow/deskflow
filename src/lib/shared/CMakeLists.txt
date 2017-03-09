@@ -22,11 +22,5 @@ endif()
 
 add_library(shared STATIC ${sources})
 
-include_directories(
-    ../
-    ../../../ext
-    ../../../ext/gtest/include
-)
-
 target_link_libraries(shared arch base)
 

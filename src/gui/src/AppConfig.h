@@ -23,7 +23,7 @@
 #include <QObject>
 #include <QString>
 #include "ElevateMode.h"
-#include <EditionType.h>
+#include <shared/EditionType.h>
 
 // this should be incremented each time a new page is added. this is
 // saved to settings when the user finishes running the wizard. if

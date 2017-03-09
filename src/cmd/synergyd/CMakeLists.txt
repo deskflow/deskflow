@@ -17,10 +17,6 @@
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
-include_directories(
-    ../../lib/
-)
-
 if (WIN32)
   add_executable (synergyd WIN32 ${sources})
 else()

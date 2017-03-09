@@ -16,10 +16,6 @@
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
-include_directories(
-    ../../lib/
-)
-
 add_executable(syntool ${sources})
 target_link_libraries(syntool
     synlib arch base client common io ipc mt net platform server ${libs} ${OPENSSL_LIBS})

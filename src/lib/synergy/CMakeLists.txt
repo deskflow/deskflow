@@ -33,12 +33,6 @@ if (SYNERGY_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
-include_directories(
-    ../
-    ../../../ext
-    ../../../ext/gtest/include
-)
-
 add_library(synlib STATIC ${sources})
 
 if (UNIX)

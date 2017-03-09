@@ -3,7 +3,7 @@
 #include "CancelActivationDialog.h"
 #include "AppConfig.h"
 #include "WebClient.h"
-#include "EditionType.h"
+#include <shared/EditionType.h>
 #include "ActivationNotifier.h"
 #include "MainWindow.h"
 #include "QUtility.h"

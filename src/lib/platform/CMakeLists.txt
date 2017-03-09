@@ -29,11 +29,6 @@ if (SYNERGY_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
-include_directories(
-    ../
-    ../../../ext/gtest/include
-)
-
 if (APPLE)
     list(APPEND inc
         /System/Library/Frameworks

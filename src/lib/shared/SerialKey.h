@@ -22,7 +22,7 @@
 #include "EditionType.h"
 
 #ifdef TEST_ENV
-#include "gtest/gtest_prod.h"
+#include <gtest/gtest_prod.h>
 #endif
 
 class SerialKey {

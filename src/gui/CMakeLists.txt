@@ -10,7 +10,7 @@ file (GLOB LEGACY_GUI_SOURCE_FILES src/*.cpp src/*.h)
 file (GLOB LEGACY_GUI_UI_FILES src/*.ui)
 
 if (WIN32)
-	set (LEGACY_GUI_RC_FILES res/win/Synergy.rc)
+    set (LEGACY_GUI_RC_FILES res/win/Synergy.rc)
 endif()
 
 add_executable (synergy WIN32
@@ -20,7 +20,7 @@ add_executable (synergy WIN32
     res/Synergy.qrc
 )
 
-include_directories (../lib/shared ./src)
+include_directories (./src)
 target_link_libraries (synergy shared)
 
 if (WIN32)
@@ -37,7 +37,7 @@ target_compile_definitions (synergy PRIVATE -DVERSION_STAGE="${VERSION_STAGE}")
 target_compile_definitions (synergy PRIVATE -DVERSION_REVISION="${SYNERGY_GIT_COMMIT}")
 
 if (WIN32)
-	target_link_libraries (synergy ${DNSSD_LIB})
+    target_link_libraries (synergy ${DNSSD_LIB})
     set_target_properties (synergy PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
 endif()
 

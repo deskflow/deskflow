@@ -17,7 +17,6 @@
 
 #include "WebClient.h"
 
-#include "EditionType.h"
 #include "QUtility.h"
 
 #include <QProcess>

@@ -21,11 +21,6 @@ if (SYNERGY_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
-include_directories(
-    ../
-    ../../../ext
-)
-
 add_library(client STATIC ${sources})
 
 if (UNIX)

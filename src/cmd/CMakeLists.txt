@@ -19,6 +19,6 @@ add_subdirectory(synergys)
 add_subdirectory(syntool)
 
 if (SYNERGY_BUILD_LEGACY_SERVICE)
-    add_subdirectory(synergyd)
+	add_subdirectory(synergyd)
 endif (SYNERGY_BUILD_LEGACY_SERVICE)
 

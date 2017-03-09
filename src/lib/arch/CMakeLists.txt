@@ -37,10 +37,6 @@ if (SYNERGY_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
-include_directories(
-    ../
-)
-
 add_library(arch STATIC ${sources})
 
 if (UNIX)

@@ -19,7 +19,6 @@
 
 #include "ProcessorArch.h"
 #include "CommandProcess.h"
-#include "EditionType.h"
 
 #if defined(Q_OS_LINUX)
 #include <QProcess>

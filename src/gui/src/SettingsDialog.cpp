@@ -23,7 +23,6 @@
 #include "QSynergyApplication.h"
 #include "QUtility.h"
 #include "AppConfig.h"
-#include "EditionType.h"
 #include "SslCertificate.h"
 #include "MainWindow.h"
 

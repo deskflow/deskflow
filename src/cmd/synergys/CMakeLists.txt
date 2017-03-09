@@ -45,10 +45,6 @@ if (SYNERGY_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
-include_directories(
-    ../../lib/
-)
-
 add_executable(synergys ${sources})
 target_link_libraries(synergys
     arch base client common io mt net ipc platform server synlib ${libs} ${OPENSSL_LIBS})

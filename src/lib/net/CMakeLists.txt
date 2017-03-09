@@ -21,11 +21,6 @@ if (SYNERGY_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
-include_directories(
-    ../
-    ${OPENSSL_INCLUDE}
-)
-
 add_library(net STATIC ${sources})
 
 if (UNIX)

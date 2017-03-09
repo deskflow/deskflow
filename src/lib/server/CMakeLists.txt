@@ -21,12 +21,6 @@ if (SYNERGY_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
-include_directories(
-    ../
-    ../../../ext
-    ../../../ext/gtest/include
-)
-
 add_library(server STATIC ${sources})
 
 target_link_libraries(server shared)

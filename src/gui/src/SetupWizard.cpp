@@ -20,7 +20,6 @@
 #include "WebClient.h"
 #include "ActivationNotifier.h"
 #include "LicenseManager.h"
-#include "EditionType.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
 

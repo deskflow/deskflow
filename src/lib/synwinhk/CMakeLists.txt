@@ -20,10 +20,6 @@ if (SYNERGY_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
-include_directories(
-    ../
-)
-
 add_library(synwinhk SHARED ${sources})
 
 if (NOT MSVC_VERSION VERSION_LESS 1900)

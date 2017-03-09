@@ -24,7 +24,7 @@
 #include "common/stdset.h"
 #include "common/stdvector.h"
 
-#include "gtest/gtest_prod.h"
+#include <gtest/gtest_prod.h>
 
 namespace synergy {
 
