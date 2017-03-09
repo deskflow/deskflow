@@ -23,17 +23,10 @@ include_directories(
 )
 
 if (WIN32)
-  add_executable(synergyd WIN32 ${sources})
+  add_executable (synergyd WIN32 ${sources})
 else()
-  add_executable(synergyd ${sources})
+  add_executable (synergyd ${sources})
 endif()
 
-target_link_libraries(synergyd
+target_link_libraries (synergyd
     arch base common io ipc mt net platform synlib shared ${libs} ${OPENSSL_LIBS})
-
-if (CONF_CPACK)
-    install(TARGETS
-        synergyd
-        COMPONENT core
-        DESTINATION bin)
-endif()
