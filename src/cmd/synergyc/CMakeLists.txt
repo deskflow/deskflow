@@ -50,12 +50,6 @@ include_directories(
     ../../lib/
 )
 
-if (UNIX)
-    include_directories(
-        ../../..
-    )
-endif()
-
 add_executable(synergyc ${sources})
 target_link_libraries(synergyc
     arch base client common io mt net ipc platform server synlib ${libs} ${OPENSSL_LIBS})

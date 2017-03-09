@@ -21,12 +21,6 @@ include_directories(
     ../../lib/
 )
 
-if (UNIX)
-    include_directories(
-        ../../..
-    )
-endif()
-
 add_executable(syntool ${sources})
 target_link_libraries(syntool
     synlib arch base client common io ipc mt net platform server ${libs} ${OPENSSL_LIBS})
