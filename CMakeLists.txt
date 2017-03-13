@@ -18,6 +18,7 @@ cmake_minimum_required (VERSION 3.4)
 project (synergy C CXX)
 
 option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
+option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the installer" ON)
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
@@ -351,6 +352,11 @@ macro (configure_files srcDir destDir)
     endforeach (templateFile)
 endmacro (configure_files)
 
+message (STATUS "SYNERGY_BUILD_LEGACY_INSTALLER = " ${SYNERGY_BUILD_LEGACY_INSTALLER})
+
+if (${SYNERGY_BUILD_LEGACY_INSTALLER})
+message (STATUS "Configuring the v1 installer")
+
 #
 # macOS app Bundle
 #
@@ -370,6 +376,10 @@ endif()
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
+endif()
+
+else()
+message (STATUS "NOT configuring the v1 installer")
 endif()
 
 add_subdirectory (src)
