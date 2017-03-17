@@ -382,4 +382,9 @@ else()
 message (STATUS "NOT configuring the v1 installer")
 endif()
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    install(FILES res/synergy.desktop DESTINATION share/applications)
+    install(FILES res/synergy.svg DESTINATION share/icons)
+endif()
+
 add_subdirectory (src)
