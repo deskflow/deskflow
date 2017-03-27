@@ -23,4 +23,6 @@ if (SYNERGY_BUILD_LEGACY_GUI)
 add_subdirectory(gui)
 endif (SYNERGY_BUILD_LEGACY_GUI)
 
-add_subdirectory(test)
+if (BUILD_TESTS)
+	add_subdirectory(test)
+endif()
