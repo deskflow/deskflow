@@ -286,7 +286,7 @@ void AppConfig::setCryptoEnabled(bool e) {
 }
 
 bool AppConfig::getCryptoEnabled() const {
-	return (edition() == kPro) && m_CryptoEnabled;
+	return m_CryptoEnabled;
 }
 
 void AppConfig::setAutoHide(bool b) { m_AutoHide = b; }
