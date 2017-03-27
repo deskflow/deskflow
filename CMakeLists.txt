@@ -39,6 +39,8 @@ endif()
 # First, declare project (important for prerequisite checks).
 project(synergy C CXX)
 
+option(BUILD_TESTS "Override building of tests" ON)
+
 # put binaries in a different dir to make them easier to find.
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)

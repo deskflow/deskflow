@@ -50,6 +50,6 @@ add_subdirectory(lib)
 add_subdirectory(cmd)
 add_subdirectory(micro)
 
-if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "IRIX")
+if (BUILD_TESTS AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "IRIX")
 	add_subdirectory(test)
 endif()

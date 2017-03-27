@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define TEST_ENV
+
 #include "synergy/KeyMap.h"
 
 #include "test/global/gtest.h"
