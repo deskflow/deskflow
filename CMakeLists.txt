@@ -43,15 +43,6 @@ project(synergy C CXX)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-# for unix, put debug files in a separate bin "debug" dir.
-# release bin files should stay in the root of the bin dir.
-if (CMAKE_GENERATOR STREQUAL "Unix Makefiles")
-	if (CMAKE_BUILD_TYPE STREQUAL Debug)
-		set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/debug)
-		set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib/debug)
-	endif()
-endif()
-
 # Set some easy to type variables.
 set(root_dir ${CMAKE_SOURCE_DIR})
 set(cmake_dir ${root_dir}/res)
