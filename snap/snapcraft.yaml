@@ -1,0 +1,42 @@
+name: synergy
+version: 'v1.9'
+summary: Share one mouse and keyboard between multiple computers
+description: |
+  Synergy combines your desktop devices together in to one cohesive experience.
+  It's software for sharing your mouse and keyboard between multiple computers
+  on your desk. It works on Windows, macOS and Linux.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: strict
+
+apps:
+  synergy:
+    command: desktop-launch synergy
+    plugs: [x11]
+    desktop: share/applications/synergy.desktop
+  client:
+    command: synergyc
+    plugs: [network, x11]
+    aliases: [synergyc]
+  server:
+    command: synergys
+    plugs: [network-bind, x11]
+    aliases: [synergys]
+
+parts:
+  synergy:
+    source: .
+    plugin: cmake
+    configflags: ['-DCMAKE_CXX_FLAGS=-std=c++11']
+    build-packages:
+      - g++
+      - libx11-dev
+      - libxtst-dev
+      - libxinerama-dev
+      - libxrandr-dev
+      - libsm-dev
+      - libavahi-compat-libdnssd-dev
+      - libcurl4-openssl-dev
+      - libssl-dev
+    install: mv bin/synergy $SNAPCRAFT_PART_INSTALL/bin/
+    after: [desktop-qt5]
