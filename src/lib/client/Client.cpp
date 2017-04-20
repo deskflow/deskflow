@@ -820,7 +820,7 @@ Client::sendFileThread(void* filename)
 		char* name  = static_cast<char*>(filename);
 		StreamChunker::sendFile(name, m_events, this);
 	}
-	catch (std::runtime_error error) {
+	catch (std::runtime_error &error) {
 		LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));
 	}
 
