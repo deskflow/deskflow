@@ -391,7 +391,8 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
         install(FILES res/synergy2.desktop DESTINATION share/applications)
     else()
         install(FILES res/synergy.desktop DESTINATION share/applications)
-
+    endif()
+    
     install(FILES res/synergy.svg DESTINATION share/icons)
 endif()
 
