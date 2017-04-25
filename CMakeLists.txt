@@ -387,7 +387,11 @@ message (STATUS "NOT configuring the v1 installer")
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    install(FILES res/synergy.desktop DESTINATION share/applications)
+    if("${VERSION_MAJOR}" STREQUAL "2") 
+        install(FILES res/synergy2.desktop DESTINATION share/applications)
+    else()
+        install(FILES res/synergy.desktop DESTINATION share/applications)
+
     install(FILES res/synergy.svg DESTINATION share/icons)
 endif()
 
