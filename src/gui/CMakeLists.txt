@@ -43,4 +43,6 @@ endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     install (TARGETS synergy DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    install (TARGETS synergy DESTINATION bin)
 endif()
