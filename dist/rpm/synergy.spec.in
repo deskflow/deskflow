@@ -24,7 +24,7 @@ cp %{bindir}/synergys %{buildroot}%{_bindir}
 cp %{bindir}/synergyd %{buildroot}%{_bindir}
 cp %{bindir}/syntool %{buildroot}%{_bindir}
 cp %{sourcedir}/res/synergy.desktop %{buildroot}%{_datarootdir}/applications
-cp %{sourcedir}/res/synergy.ico %{buildroot}%{_datarootdir}/icons
+cp %{sourcedir}/res/synergy.svg %{buildroot}%{_datarootdir}/icons
 
 %files
 %defattr(755,root,root,-)
@@ -34,7 +34,7 @@ cp %{sourcedir}/res/synergy.ico %{buildroot}%{_datarootdir}/icons
 %{_bindir}/synergyd
 %{_bindir}/syntool
 %attr(644,-,-) %{_datarootdir}/applications/synergy.desktop
-%attr(644,-,-) %{_datarootdir}/icons/synergy.ico
+%attr(644,-,-) %{_datarootdir}/icons/synergy.svg
 
 %changelog
 * Wed Apr 26 2017 Symless <engineering@symless.com>
