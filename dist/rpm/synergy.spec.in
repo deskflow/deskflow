@@ -18,13 +18,13 @@ mkdir -p %{buildroot}/%{_datarootdir}/applications
 mkdir -p %{buildroot}/%{_datarootdir}/icons
 mkdir -p %{buildroot}/%{_bindir}
 
-cp $bindir/synergy %{buildroot}%{_bindir}
-cp $bindir/synergyc %{buildroot}%{_bindir}
-cp $bindir/synergys %{buildroot}%{_bindir}
-cp $bindir/synergyd %{buildroot}%{_bindir}
-cp $bindir/syntool %{buildroot}%{_bindir}
-cp $sourcedir/res/synergy.desktop %{buildroot}%{_datarootdir}/applications
-cp $sourcedir/res/synergy.ico %{buildroot}%{_datarootdir}/icons
+cp %{bindir}/synergy %{buildroot}%{_bindir}
+cp %{bindir}/synergyc %{buildroot}%{_bindir}
+cp %{bindir}/synergys %{buildroot}%{_bindir}
+cp %{bindir}/synergyd %{buildroot}%{_bindir}
+cp %{bindir}/syntool %{buildroot}%{_bindir}
+cp %{sourcedir}/res/synergy.desktop %{buildroot}%{_datarootdir}/applications
+cp %{sourcedir}/res/synergy.ico %{buildroot}%{_datarootdir}/icons
 
 %files
 %defattr(755,root,root,-)
