@@ -3,7 +3,7 @@ Section: utils
 Priority: optional
 Standards-Version: 3.9.7
 Homepage: https://www.symless.com/
-Maintainer: Symless Ltd <engineering@symless.com>
+Maintainer: Symless <engineering@symless.com>
 
 Package: synergy
 Architecture: amd64
@@ -18,4 +18,4 @@ Depends: ${shlibs:Depends},
 Description: Keyboard and mouse sharing solution
  Synergy allows you to share one mouse and keyboard between multiple computers.
  Work seamlessly across Windows, macOS and Linux.
-Homepage: https://www.symless.com/
+Homepage: https://symless.com/synergy
