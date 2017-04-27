@@ -356,17 +356,11 @@ macro (configure_files srcDir destDir)
     endforeach (templateFile)
 endmacro (configure_files)
 
-message (STATUS "SYNERGY_BUILD_LEGACY_INSTALLER = " ${SYNERGY_BUILD_LEGACY_INSTALLER})
-
-if (${SYNERGY_BUILD_LEGACY_INSTALLER})
-message (STATUS "Configuring the v1 installer")
-
 #
 # macOS app Bundle
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
-
     set (SYNERGY_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
     set (SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
     set (SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
@@ -379,23 +373,25 @@ endif()
 # Windows installer
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
+    if (${SYNERGY_BUILD_LEGACY_INSTALLER})
+        message (STATUS "Configuring the v1 installer")
+        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
+    else()
+        message (STATUS "NOT configuring the v1 installer")
+    endif()
 endif()
 
-else()
-message (STATUS "NOT configuring the v1 installer")
-endif()
-
+#
+# Linux installation
+#
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
-
+    install(FILES res/synergy.svg DESTINATION share/icons)
     if("${VERSION_MAJOR}" STREQUAL "2") 
         install(FILES res/synergy2.desktop DESTINATION share/applications)
     else()
         install(FILES res/synergy.desktop DESTINATION share/applications)
     endif()
-
-    install(FILES res/synergy.svg DESTINATION share/icons)
 endif()
 
 add_subdirectory (src)
