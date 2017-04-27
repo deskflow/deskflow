@@ -387,6 +387,8 @@ message (STATUS "NOT configuring the v1 installer")
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
+
     if("${VERSION_MAJOR}" STREQUAL "2") 
         install(FILES res/synergy2.desktop DESTINATION share/applications)
     else()
@@ -394,7 +396,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     endif()
 
     install(FILES res/synergy.svg DESTINATION share/icons)
-    configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
 endif()
 
 add_subdirectory (src)

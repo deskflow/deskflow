@@ -13,19 +13,6 @@ Release: 1
 Synergy allows you to share one mouse and keyboard between multiple computers.
 Work seamlessly across Windows, macOS and Linux.
 
-%prep
-mkdir -p %{buildroot}/%{_datarootdir}/applications
-mkdir -p %{buildroot}/%{_datarootdir}/icons
-mkdir -p %{buildroot}/%{_bindir}
-
-cp %{bindir}/synergy %{buildroot}%{_bindir}
-cp %{bindir}/synergyc %{buildroot}%{_bindir}
-cp %{bindir}/synergys %{buildroot}%{_bindir}
-cp %{bindir}/synergyd %{buildroot}%{_bindir}
-cp %{bindir}/syntool %{buildroot}%{_bindir}
-cp %{sourcedir}/res/synergy.desktop %{buildroot}%{_datarootdir}/applications
-cp %{sourcedir}/res/synergy.svg %{buildroot}%{_datarootdir}/icons
-
 %files
 %defattr(755,root,root,-)
 %{_bindir}/synergy
