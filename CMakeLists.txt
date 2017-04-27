@@ -309,7 +309,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         /DWIN32
         /D_WINDOWS
         /D_CRT_SECURE_NO_WARNINGS
-        /DVERSION=\"${VERSION}\"
+        /DSYNERGY_VERSION=\"${SYNERGY_VERSION}\"
         /D_XKEYCHECK_H
     )
 endif()
