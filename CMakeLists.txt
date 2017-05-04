@@ -17,6 +17,7 @@
 cmake_minimum_required (VERSION 3.4)
 project (synergy C CXX)
 
+option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI (synergy)" ON)
 option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
 option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the installer" ON)
 
