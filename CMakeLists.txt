@@ -379,6 +379,7 @@ macro (configure_files srcDir destDir)
     endforeach (templateFile)
 endmacro (configure_files)
 
+if (${SYNERGY_BUILD_LEGACY_INSTALLER})
 #
 # macOS app Bundle
 #
@@ -396,12 +397,8 @@ endif()
 # Windows installer
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    if (${SYNERGY_BUILD_LEGACY_INSTALLER})
         message (STATUS "Configuring the v1 installer")
         configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
-    else()
-        message (STATUS "NOT configuring the v1 installer")
-    endif()
 endif()
 
 #
@@ -417,4 +414,8 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     endif()
 endif()
 
+else()
+        message (STATUS "NOT configuring the v1 installer")
+endif()
 add_subdirectory (src)
+ctory (src)
