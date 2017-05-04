@@ -114,7 +114,8 @@ static std::string
 hexEncode (std::string const& str) {
     std::ostringstream oss;
     for (size_t i = 0; i < str.size(); ++i) {
-        int c = str[i];
+        unsigned c = str[i];
+        c %= 256;
         oss << std::setfill('0') << std::hex << std::setw(2)
             << std::uppercase;
         oss << c;
