@@ -2392,7 +2392,7 @@ Server::sendFileThread(void* data)
 		LOG((CLOG_DEBUG "sending file to client, filename=%s", filename));
 		StreamChunker::sendFile(filename, m_events, this);
 	}
-	catch (std::runtime_error error) {
+	catch (std::runtime_error &error) {
 		LOG((CLOG_ERR "failed sending file chunks, error: %s", error.what()));
 	}
 
