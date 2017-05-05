@@ -25,28 +25,28 @@
 
 class MSWindowsSession {
 public:
-	MSWindowsSession();
-	~MSWindowsSession();
+    MSWindowsSession();
+    ~MSWindowsSession();
 
-	//!
-	/*!
-	Returns true if the session ID has changed since updateActiveSession was called.
-	*/
-	BOOL				hasChanged();
-	
-	bool				isProcessInSession(const char* name, PHANDLE process);
+    //!
+    /*!
+    Returns true if the session ID has changed since updateActiveSession was called.
+    */
+    BOOL                hasChanged();
+    
+    bool                isProcessInSession(const char* name, PHANDLE process);
 
-	HANDLE				getUserToken(LPSECURITY_ATTRIBUTES security);
+    HANDLE                getUserToken(LPSECURITY_ATTRIBUTES security);
 
-	DWORD				getActiveSessionId() { return m_activeSessionId; }
+    DWORD                getActiveSessionId() { return m_activeSessionId; }
 
-	void				updateActiveSession();
+    void                updateActiveSession();
 
-	String				getActiveDesktopName();
-
-private:
-	BOOL				nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry);
+    String                getActiveDesktopName();
 
 private:
-	DWORD				m_activeSessionId;
+    BOOL                nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry);
+
+private:
+    DWORD                m_activeSessionId;
 };

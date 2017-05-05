@@ -29,21 +29,21 @@ class QStringList;
 
 class WebClient : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	bool getEdition (int& edition, QString& errorOut);
-	bool setEmail (QString email, QString& errorOut);
-	bool setPassword (QString password, QString& errorOut);
+    bool getEdition (int& edition, QString& errorOut);
+    bool setEmail (QString email, QString& errorOut);
+    bool setPassword (QString password, QString& errorOut);
 signals:
-	void error(QString e);
+    void error(QString e);
 
 private:
-	QString request();
-	
-	QString m_Email;
-	QString m_Password;
-	CoreInterface m_CoreInterface;
+    QString request();
+    
+    QString m_Email;
+    QString m_Password;
+    CoreInterface m_CoreInterface;
 };
 
 #endif // WEBCLIENT_H

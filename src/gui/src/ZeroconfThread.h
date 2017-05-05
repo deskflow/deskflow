@@ -22,17 +22,17 @@
 
 class ZeroconfThread : public QThread
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	ZeroconfThread(int socketDescriptor, QObject* parent);
+    ZeroconfThread(int socketDescriptor, QObject* parent);
 
-	void run();
+    void run();
 
 signals:
-	void error(QTcpSocket::SocketError socketError);
+    void error(QTcpSocket::SocketError socketError);
 
 private:
-	int m_SocketDescriptor;
-	QString m_Text;
+    int m_SocketDescriptor;
+    QString m_Text;
 };

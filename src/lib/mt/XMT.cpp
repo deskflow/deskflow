@@ -25,5 +25,5 @@
 String
 XMTThreadUnavailable::getWhat() const throw()
 {
-	return format("XMTThreadUnavailable", "cannot create thread");
+    return format("XMTThreadUnavailable", "cannot create thread");
 }

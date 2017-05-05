@@ -26,12 +26,12 @@ class IEventQueue;
 //! Implementation of ClientTaskBarReceiver for OS X
 class OSXClientTaskBarReceiver : public ClientTaskBarReceiver {
 public:
-	OSXClientTaskBarReceiver(const BufferedLogOutputter*, IEventQueue* events);
-	virtual ~OSXClientTaskBarReceiver();
+    OSXClientTaskBarReceiver(const BufferedLogOutputter*, IEventQueue* events);
+    virtual ~OSXClientTaskBarReceiver();
 
-	// IArchTaskBarReceiver overrides
-	virtual void		showStatus();
-	virtual void		runMenu(int x, int y);
-	virtual void		primaryAction();
-	virtual const Icon	getIcon() const;
+    // IArchTaskBarReceiver overrides
+    virtual void        showStatus();
+    virtual void        runMenu(int x, int y);
+    virtual void        primaryAction();
+    virtual const Icon    getIcon() const;
 };

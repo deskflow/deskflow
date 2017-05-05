@@ -18,21 +18,11 @@ file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
 if (SYNERGY_ADD_HEADERS)
-	list(APPEND sources ${headers})
-endif()
-
-include_directories(
-	../
-)
-
-if (UNIX)
-	include_directories(
-		../../..
-	)
+    list(APPEND sources ${headers})
 endif()
 
 add_library(ipc STATIC ${sources})
 
 if (UNIX)
-	target_link_libraries(ipc arch base common mt io net synergy)
+    target_link_libraries(ipc arch base common mt io net synlib)
 endif()

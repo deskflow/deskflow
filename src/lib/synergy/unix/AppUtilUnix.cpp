@@ -30,17 +30,17 @@ AppUtilUnix::~AppUtilUnix()
 int
 standardStartupStatic(int argc, char** argv)
 {
-	return AppUtil::instance().app().standardStartup(argc, argv);
+    return AppUtil::instance().app().standardStartup(argc, argv);
 }
 
 int
 AppUtilUnix::run(int argc, char** argv)
 {
-	return app().runInner(argc, argv, NULL, &standardStartupStatic);
+    return app().runInner(argc, argv, NULL, &standardStartupStatic);
 }
 
 void
 AppUtilUnix::startNode()
 {
-	app().startNode();
+    app().startNode();
 }

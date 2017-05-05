@@ -10,8 +10,6 @@ config.h
 /build
 /CMakeFiles
 /ext/cryptopp562
-/ext/gmock-1.6.0
-/ext/gtest-1.6.0
 /ext/openssl
 /src/gui/Makefile*
 /src/gui/object_script*

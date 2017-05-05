@@ -22,39 +22,39 @@
 
 //! Convert to/from some text encoding
 class XWindowsClipboardAnyBitmapConverter :
-				public IXWindowsClipboardConverter {
+                public IXWindowsClipboardConverter {
 public:
-	XWindowsClipboardAnyBitmapConverter();
-	virtual ~XWindowsClipboardAnyBitmapConverter();
+    XWindowsClipboardAnyBitmapConverter();
+    virtual ~XWindowsClipboardAnyBitmapConverter();
 
-	// IXWindowsClipboardConverter overrides
-	virtual IClipboard::EFormat
-						getFormat() const;
-	virtual Atom		getAtom() const = 0;
-	virtual int			getDataSize() const;
-	virtual String		fromIClipboard(const String&) const;
-	virtual String		toIClipboard(const String&) const;
+    // IXWindowsClipboardConverter overrides
+    virtual IClipboard::EFormat
+                        getFormat() const;
+    virtual Atom        getAtom() const = 0;
+    virtual int            getDataSize() const;
+    virtual String        fromIClipboard(const String&) const;
+    virtual String        toIClipboard(const String&) const;
 
 protected:
-	//! Convert from IClipboard format
-	/*!
-	Convert raw BGR pixel data to another image format.
-	*/
-	virtual String		doBGRFromIClipboard(const UInt8* bgrData,
-							UInt32 w, UInt32 h) const = 0;
+    //! Convert from IClipboard format
+    /*!
+    Convert raw BGR pixel data to another image format.
+    */
+    virtual String        doBGRFromIClipboard(const UInt8* bgrData,
+                            UInt32 w, UInt32 h) const = 0;
 
-	//! Convert from IClipboard format
-	/*!
-	Convert raw BGRA pixel data to another image format.
-	*/
-	virtual String		doBGRAFromIClipboard(const UInt8* bgrData,
-							UInt32 w, UInt32 h) const = 0;
+    //! Convert from IClipboard format
+    /*!
+    Convert raw BGRA pixel data to another image format.
+    */
+    virtual String        doBGRAFromIClipboard(const UInt8* bgrData,
+                            UInt32 w, UInt32 h) const = 0;
 
-	//! Convert to IClipboard format
-	/*!
-	Convert an image into raw BGR or BGRA image data and store the
-	width, height, and image depth (24 or 32).
-	*/
-	virtual String		doToIClipboard(const String&,
-							UInt32& w, UInt32& h, UInt32& depth) const = 0;
+    //! Convert to IClipboard format
+    /*!
+    Convert an image into raw BGR or BGRA image data and store the
+    width, height, and image depth (24 or 32).
+    */
+    virtual String        doToIClipboard(const String&,
+                            UInt32& w, UInt32& h, UInt32& depth) const = 0;
 };

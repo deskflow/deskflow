@@ -27,20 +27,20 @@ class IpcLogLineMessage;
 class IEventQueue;
 
 class IpcServerProxy {
-	friend class IpcClient;
+    friend class IpcClient;
 
 public:
-	IpcServerProxy(synergy::IStream& stream, IEventQueue* events);
-	virtual ~IpcServerProxy();
+    IpcServerProxy(synergy::IStream& stream, IEventQueue* events);
+    virtual ~IpcServerProxy();
 
 private:
-	void				send(const IpcMessage& message);
+    void                send(const IpcMessage& message);
 
-	void				handleData(const Event&, void*);
-	IpcLogLineMessage*	parseLogLine();
-	void				disconnect();
+    void                handleData(const Event&, void*);
+    IpcLogLineMessage*    parseLogLine();
+    void                disconnect();
 
 private:
-	synergy::IStream&	m_stream;
-	IEventQueue*		m_events;
+    synergy::IStream&    m_stream;
+    IEventQueue*        m_events;
 };

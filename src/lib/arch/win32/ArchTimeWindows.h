@@ -25,9 +25,9 @@
 //! Win32 implementation of IArchTime
 class ArchTimeWindows : public IArchTime {
 public:
-	ArchTimeWindows();
-	virtual ~ArchTimeWindows();
+    ArchTimeWindows();
+    virtual ~ArchTimeWindows();
 
-	// IArchTime overrides
-	virtual double		time();
+    // IArchTime overrides
+    virtual double        time();
 };

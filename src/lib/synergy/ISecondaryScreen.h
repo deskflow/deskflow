@@ -30,32 +30,32 @@ secondary screen implementations.
 */
 class ISecondaryScreen : public IInterface {
 public:
-	//! @name accessors
-	//@{
+    //! @name accessors
+    //@{
 
-	//! Fake mouse press/release
-	/*!
-	Synthesize a press or release of mouse button \c id.
-	*/
-	virtual void		fakeMouseButton(ButtonID id, bool press) = 0;
+    //! Fake mouse press/release
+    /*!
+    Synthesize a press or release of mouse button \c id.
+    */
+    virtual void        fakeMouseButton(ButtonID id, bool press) = 0;
 
-	//! Fake mouse move
-	/*!
-	Synthesize a mouse move to the absolute coordinates \c x,y.
-	*/
-	virtual void		fakeMouseMove(SInt32 x, SInt32 y) = 0;
+    //! Fake mouse move
+    /*!
+    Synthesize a mouse move to the absolute coordinates \c x,y.
+    */
+    virtual void        fakeMouseMove(SInt32 x, SInt32 y) = 0;
 
-	//! Fake mouse move
-	/*!
-	Synthesize a mouse move to the relative coordinates \c dx,dy.
-	*/
-	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const = 0;
+    //! Fake mouse move
+    /*!
+    Synthesize a mouse move to the relative coordinates \c dx,dy.
+    */
+    virtual void        fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const = 0;
 
-	//! Fake mouse wheel
-	/*!
-	Synthesize a mouse wheel event of amount \c xDelta and \c yDelta.
-	*/
-	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;
+    //! Fake mouse wheel
+    /*!
+    Synthesize a mouse wheel event of amount \c xDelta and \c yDelta.
+    */
+    virtual void        fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;
 
-	//@}
+    //@}
 };

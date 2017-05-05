@@ -251,7 +251,7 @@ Server::~Server()
 	// force immediate disconnection of secondary clients
 	disconnect();
 	for (OldClients::iterator index = m_oldClients.begin();
-							index != m_oldClients.begin(); ++index) {
+							index != m_oldClients.end(); ++index) {
 		BaseClientProxy* client = index->first;
 		m_events->deleteTimer(index->second);
 		m_events->removeHandler(Event::kTimer, client);

@@ -33,24 +33,24 @@ class ScreenSetupModel;
 
 class ScreenSetupView : public QTableView
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		ScreenSetupView(QWidget* parent);
+    public:
+        ScreenSetupView(QWidget* parent);
 
-	public:
-		void setModel(ScreenSetupModel* model);
-		ScreenSetupModel* model() const;
+    public:
+        void setModel(ScreenSetupModel* model);
+        ScreenSetupModel* model() const;
 
-	protected:
-		void mouseDoubleClickEvent(QMouseEvent*);
-		void setTableSize();
-		void resizeEvent(QResizeEvent*);
-		void dragEnterEvent(QDragEnterEvent* event);
-		void dragMoveEvent(QDragMoveEvent* event);
-		void startDrag(Qt::DropActions supportedActions);
-		QStyleOptionViewItem viewOptions() const;
-		void scrollTo(const QModelIndex&, ScrollHint) {}
+    protected:
+        void mouseDoubleClickEvent(QMouseEvent*);
+        void setTableSize();
+        void resizeEvent(QResizeEvent*);
+        void dragEnterEvent(QDragEnterEvent* event);
+        void dragMoveEvent(QDragMoveEvent* event);
+        void startDrag(Qt::DropActions supportedActions);
+        QStyleOptionViewItem viewOptions() const;
+        void scrollTo(const QModelIndex&, ScrollHint) {}
 };
 
 #endif

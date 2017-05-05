@@ -24,7 +24,7 @@
 /*!
 Type to hold a clipboard identifier.
 */
-typedef UInt8			ClipboardID;
+typedef UInt8            ClipboardID;
 
 //! @name Clipboard identifiers
 //@{
@@ -34,9 +34,9 @@ typedef UInt8			ClipboardID;
 // platforms that can treat the selection as a clipboard (e.g. X
 // windows).  clipboard identifiers must be sequential starting
 // at zero.
-static const ClipboardID	kClipboardClipboard = 0;
-static const ClipboardID	kClipboardSelection = 1;
+static const ClipboardID    kClipboardClipboard = 0;
+static const ClipboardID    kClipboardSelection = 1;
 
 // the number of clipboards (i.e. one greater than the last clipboard id)
-static const ClipboardID	kClipboardEnd       = 2;
+static const ClipboardID    kClipboardEnd       = 2;
 //@}

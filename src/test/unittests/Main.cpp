@@ -29,17 +29,17 @@ int
 main(int argc, char **argv)
 {
 #if SYSAPI_WIN32
-	// HACK: shouldn't be needed, but logging fails without this.
-	ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+    // HACK: shouldn't be needed, but logging fails without this.
+    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 
-	Arch arch;
-	arch.init();
-	
-	Log log;
-	log.setFilter(kDEBUG4);
+    Arch arch;
+    arch.init();
+    
+    Log log;
+    log.setFilter(kDEBUG4);
 
-	testing::InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
   
   // gtest seems to randomly finish with error codes (e.g. -1, -1073741819)
   // even when no tests have failed. not sure what causes this, but it

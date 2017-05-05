@@ -2,14 +2,14 @@
 #include "ui_FailedLoginDialog.h"
 
 FailedLoginDialog::FailedLoginDialog(QWidget *parent, QString message):
-	QDialog(parent),
-	ui(new Ui::FailedLoginDialog)
+    QDialog(parent),
+    ui(new Ui::FailedLoginDialog)
 {
-	ui->setupUi(this);
-	ui->messageLabel->setText(ui->messageLabel->text().arg(message));
+    ui->setupUi(this);
+    ui->messageLabel->setText(ui->messageLabel->text().arg(message));
 }
 
 FailedLoginDialog::~FailedLoginDialog()
 {
-	delete ui;
+    delete ui;
 }

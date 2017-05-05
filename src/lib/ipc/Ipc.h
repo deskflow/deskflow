@@ -22,31 +22,31 @@
 #define IPC_PORT 24801
 
 enum EIpcMessage {
-	kIpcHello,
-	kIpcLogLine,
-	kIpcCommand,
-	kIpcShutdown,
+    kIpcHello,
+    kIpcLogLine,
+    kIpcCommand,
+    kIpcShutdown,
 };
 
 enum EIpcClientType {
-	kIpcClientUnknown,
-	kIpcClientGui,
-	kIpcClientNode,
+    kIpcClientUnknown,
+    kIpcClientGui,
+    kIpcClientNode,
 };
 
 // handshake: node/gui -> daemon
 // $1 = type, the client identifies it's self as gui or node (synergyc/s).
-extern const char*		kIpcMsgHello;
+extern const char*        kIpcMsgHello;
 
 // log line: daemon -> gui
 // $1 = aggregate log lines collected from synergys/c or the daemon itself.
-extern const char*		kIpcMsgLogLine;
+extern const char*        kIpcMsgLogLine;
 
 // command: gui -> daemon
 // $1 = command; the command for the daemon to launch, typically the full
 // path to synergys/c. $2 = true when process must be elevated on ms windows.
-extern const char*		kIpcMsgCommand;
+extern const char*        kIpcMsgCommand;
 
 // shutdown: daemon -> node
 // the daemon tells synergys/c to shut down gracefully.
-extern const char*		kIpcMsgShutdown;
+extern const char*        kIpcMsgShutdown;
