@@ -23,43 +23,43 @@
 //
 
 XWindowsClipboardUTF8Converter::XWindowsClipboardUTF8Converter(
-				Display* display, const char* name) :
-	m_atom(XInternAtom(display, name, False))
+                Display* display, const char* name) :
+    m_atom(XInternAtom(display, name, False))
 {
-	// do nothing
+    // do nothing
 }
 
 XWindowsClipboardUTF8Converter::~XWindowsClipboardUTF8Converter()
 {
-	// do nothing
+    // do nothing
 }
 
 IClipboard::EFormat
 XWindowsClipboardUTF8Converter::getFormat() const
 {
-	return IClipboard::kText;
+    return IClipboard::kText;
 }
 
 Atom
 XWindowsClipboardUTF8Converter::getAtom() const
 {
-	return m_atom;
+    return m_atom;
 }
 
 int
 XWindowsClipboardUTF8Converter::getDataSize() const
 {
-	return 8;
+    return 8;
 }
 
 String
 XWindowsClipboardUTF8Converter::fromIClipboard(const String& data) const
 {
-	return data;
+    return data;
 }
 
 String
 XWindowsClipboardUTF8Converter::toIClipboard(const String& data) const
 {
-	return data;
+    return data;
 }

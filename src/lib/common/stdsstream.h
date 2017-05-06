@@ -63,15 +63,15 @@ namespace std
   class stringbuf : public streambuf
   {
   public:
-    typedef char	char_type;
-    typedef int		int_type;
-    typedef streampos	pos_type;
-    typedef streamoff	off_type;
+    typedef char    char_type;
+    typedef int        int_type;
+    typedef streampos    pos_type;
+    typedef streamoff    off_type;
 
     explicit
     stringbuf(int which=ios::in|ios::out)
       : streambuf(), mode(static_cast<ios::open_mode>(which)),
-	stream(NULL), stream_len(0)
+    stream(NULL), stream_len(0)
     {
       stringbuf_init();
     }
@@ -79,14 +79,14 @@ namespace std
     explicit
     stringbuf(const string &str, int which=ios::in|ios::out)
       : streambuf(), mode(static_cast<ios::open_mode>(which)),
-	stream(NULL), stream_len(0)
+    stream(NULL), stream_len(0)
     {
       if (mode & (ios::in|ios::out))
-	{
-	  stream_len = str.size();
-	  stream = new char_type[stream_len];
-	  str.copy(stream, stream_len);
-	}
+    {
+      stream_len = str.size();
+      stream = new char_type[stream_len];
+      str.copy(stream, stream_len);
+    }
       stringbuf_init();
     }
 
@@ -100,9 +100,9 @@ namespace std
     str() const
     {
       if (pbase() != 0)
-	return string(stream, pptr()-pbase());
+    return string(stream, pptr()-pbase());
       else
-	return string();
+    return string();
     }
 
     void
@@ -128,24 +128,24 @@ namespace std
     {
       int res;
       if (mode & ios::out)
-	{
-	  if (c != EOF)
-	    {
-	      streamsize old_stream_len = stream_len;
-	      stream_len += 1;
-	      char_type* new_stream = new char_type[stream_len];
-	      memcpy(new_stream, stream, old_stream_len);
-	      delete[] stream;
-	      stream = new_stream;
-	      stringbuf_sync(gptr()-eback(), pptr()-pbase());
-	      sputc(c);
-	      res = c;
-	    }
-	  else
-	    res = EOF;
-	}
+    {
+      if (c != EOF)
+        {
+          streamsize old_stream_len = stream_len;
+          stream_len += 1;
+          char_type* new_stream = new char_type[stream_len];
+          memcpy(new_stream, stream, old_stream_len);
+          delete[] stream;
+          stream = new_stream;
+          stringbuf_sync(gptr()-eback(), pptr()-pbase());
+          sputc(c);
+          res = c;
+        }
       else
-	res = 0;
+        res = EOF;
+    }
+      else
+    res = 0;
       return res;
     }
 
@@ -153,13 +153,13 @@ namespace std
     setbuf(char_type* s, streamsize n)
     {
       if (n != 0)
-	{
-	  delete[] stream;
-	  stream = new char_type[n];
-	  memcpy(stream, s, n);
-	  stream_len = n;
-	  stringbuf_sync(0, 0);
-	}
+    {
+      delete[] stream;
+      stream = new char_type[n];
+      memcpy(stream, s, n);
+      stream_len = n;
+      stringbuf_sync(0, 0);
+    }
       return this;
     }
 
@@ -172,50 +172,50 @@ namespace std
       bool testboth = testin && testout && way != ios::cur;
 
       if (stream_len && ((testin != testout) || testboth))
-	{
-	  char_type* beg = stream;
-	  char_type* curi = NULL;
-	  char_type* curo = NULL;
-	  char_type* endi = NULL;
-	  char_type* endo = NULL;
+    {
+      char_type* beg = stream;
+      char_type* curi = NULL;
+      char_type* curo = NULL;
+      char_type* endi = NULL;
+      char_type* endo = NULL;
 
-	  if (testin)
-	    {
-	      curi = gptr();
-	      endi = egptr();
-	    }
-	  if (testout)
-	    {
-	      curo = pptr();
-	      endo = epptr();
-	    }
+      if (testin)
+        {
+          curi = gptr();
+          endi = egptr();
+        }
+      if (testout)
+        {
+          curo = pptr();
+          endo = epptr();
+        }
 
-	  off_type newoffi = 0;
-	  off_type newoffo = 0;
-	  if (way == ios::beg)
-	    {
-	      newoffi = beg - curi;
-	      newoffo = beg - curo;
-	    }
-	  else if (way == ios::end)
-	    {
-	      newoffi = endi - curi;
-	      newoffo = endo - curo;
-	    }
+      off_type newoffi = 0;
+      off_type newoffo = 0;
+      if (way == ios::beg)
+        {
+          newoffi = beg - curi;
+          newoffo = beg - curo;
+        }
+      else if (way == ios::end)
+        {
+          newoffi = endi - curi;
+          newoffo = endo - curo;
+        }
 
-	  if (testin && newoffi + off + curi - beg >= 0 &&
-	      endi - beg >= newoffi + off + curi - beg)
-	    {
-	      gbump(newoffi + off);
-	      ret = pos_type(newoffi + off + curi);
-	    }
-	  if (testout && newoffo + off + curo - beg >= 0 &&
-	      endo - beg >= newoffo + off + curo - beg)
-	    {
-	      pbump(newoffo + off);
-	      ret = pos_type(newoffo + off + curo);
-	    }
-	}
+      if (testin && newoffi + off + curi - beg >= 0 &&
+          endi - beg >= newoffi + off + curi - beg)
+        {
+          gbump(newoffi + off);
+          ret = pos_type(newoffi + off + curi);
+        }
+      if (testout && newoffo + off + curo - beg >= 0 &&
+          endo - beg >= newoffo + off + curo - beg)
+        {
+          pbump(newoffo + off);
+          ret = pos_type(newoffo + off + curo);
+        }
+    }
       return ret;
     }
 
@@ -231,34 +231,34 @@ namespace std
     stringbuf_sync(streamsize i, streamsize o)
     {
       if (mode & ios::in)
-	setg(stream, stream + i, stream + stream_len);
+    setg(stream, stream + i, stream + stream_len);
       if (mode & ios::out)
-	{
-	  setp(stream, stream + stream_len);
-	  pbump(o);
-	}
+    {
+      setp(stream, stream + stream_len);
+      pbump(o);
+    }
     }
     void
     stringbuf_init()
     {
       if (mode & ios::ate)
-	stringbuf_sync(0, stream_len);
+    stringbuf_sync(0, stream_len);
       else
-	stringbuf_sync(0, 0);
+    stringbuf_sync(0, 0);
     }
 
   private:
-    ios::open_mode	mode;
-    char_type*		stream;
-    streamsize		stream_len;
+    ios::open_mode    mode;
+    char_type*        stream;
+    streamsize        stream_len;
   };
 
   class istringstream : public istream {
   public:
-    typedef char	char_type;
-    typedef int		int_type;
-    typedef streampos	pos_type;
-    typedef streamoff	off_type;
+    typedef char    char_type;
+    typedef int        int_type;
+    typedef streampos    pos_type;
+    typedef streamoff    off_type;
 
     explicit
     istringstream(int which=ios::in)
@@ -292,10 +292,10 @@ namespace std
 
   class ostringstream : public ostream {
   public:
-    typedef char	char_type;
-    typedef int		int_type;
-    typedef streampos	pos_type;
-    typedef streamoff	off_type;
+    typedef char    char_type;
+    typedef int        int_type;
+    typedef streampos    pos_type;
+    typedef streamoff    off_type;
 
     explicit
     ostringstream(int which=ios::out)
@@ -329,10 +329,10 @@ namespace std
 
   class stringstream : public iostream {
   public:
-    typedef char	char_type;
-    typedef int		int_type;
-    typedef streampos	pos_type;
-    typedef streamoff	off_type;
+    typedef char    char_type;
+    typedef int        int_type;
+    typedef streampos    pos_type;
+    typedef streamoff    off_type;
 
     explicit
     stringstream(int which=ios::out|ios::in)

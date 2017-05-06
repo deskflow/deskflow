@@ -16,7 +16,6 @@
  */
 
 #include "LicenseManager.h"
-#include "EditionType.h"
 #include "AppConfig.h"
 #include <ctime>
 #include <stdexcept>

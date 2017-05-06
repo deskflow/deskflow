@@ -26,13 +26,13 @@
 
 class CurlFacade {
 public:
-	CurlFacade();
-	~CurlFacade();
-	String				get(const String& url);
-	String				urlEncode(const String& url);
+    CurlFacade();
+    ~CurlFacade();
+    String                get(const String& url);
+    String                urlEncode(const String& url);
 
 private:
-	CURL*				m_curl;
+    CURL*                m_curl;
 };
 
 //
@@ -42,15 +42,15 @@ private:
 String
 ArchInternetUnix::get(const String& url)
 {
-	CurlFacade curl;
-	return curl.get(url);
+    CurlFacade curl;
+    return curl.get(url);
 }
 
 String
 ArchInternetUnix::urlEncode(const String& url)
 {
-	CurlFacade curl;
-	return curl.urlEncode(url);
+    CurlFacade curl;
+    return curl.urlEncode(url);
 }
 
 //
@@ -65,62 +65,62 @@ curlWriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
 }
 
 CurlFacade::CurlFacade() :
-	m_curl(NULL)
+    m_curl(NULL)
 {
-	CURLcode init = curl_global_init(CURL_GLOBAL_ALL);
-	if (init != CURLE_OK) {
-		throw XArch("CURL global init failed.");
-	}
+    CURLcode init = curl_global_init(CURL_GLOBAL_ALL);
+    if (init != CURLE_OK) {
+        throw XArch("CURL global init failed.");
+    }
 
-	m_curl = curl_easy_init();
-	if (m_curl == NULL) {
-		throw XArch("CURL easy init failed.");
-	}
+    m_curl = curl_easy_init();
+    if (m_curl == NULL) {
+        throw XArch("CURL easy init failed.");
+    }
 }
 
 CurlFacade::~CurlFacade()
 {
-	if (m_curl != NULL) {
-		curl_easy_cleanup(m_curl);
-	}
+    if (m_curl != NULL) {
+        curl_easy_cleanup(m_curl);
+    }
 
-	curl_global_cleanup();
+    curl_global_cleanup();
 }
 
 String
 CurlFacade::get(const String& url)
 {
-	curl_easy_setopt(m_curl, CURLOPT_URL, url.c_str());
-	curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, curlWriteCallback);
+    curl_easy_setopt(m_curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, curlWriteCallback);
 
-	std::stringstream userAgent;
-	userAgent << "Synergy ";
-	userAgent << kVersion;
-	curl_easy_setopt(m_curl, CURLOPT_USERAGENT, userAgent.str().c_str());
-	
-	std::string result;
-	curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, &result);
-			
-	CURLcode code = curl_easy_perform(m_curl);
-	if (code != CURLE_OK) {
-		LOG((CLOG_ERR "curl perform error: %s", curl_easy_strerror(code)));
-		throw XArch("CURL perform failed.");
-	}
-	
+    std::stringstream userAgent;
+    userAgent << "Synergy ";
+    userAgent << kVersion;
+    curl_easy_setopt(m_curl, CURLOPT_USERAGENT, userAgent.str().c_str());
+    
+    std::string result;
+    curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, &result);
+            
+    CURLcode code = curl_easy_perform(m_curl);
+    if (code != CURLE_OK) {
+        LOG((CLOG_ERR "curl perform error: %s", curl_easy_strerror(code)));
+        throw XArch("CURL perform failed.");
+    }
+    
     return result;
 }
 
 String
 CurlFacade::urlEncode(const String& url)
 {
-	char* resultCStr = curl_easy_escape(m_curl, url.c_str(), 0);
+    char* resultCStr = curl_easy_escape(m_curl, url.c_str(), 0);
 
-	if (resultCStr == NULL) {
-		throw XArch("CURL escape failed.");
-	}
-	
-	std::string result(resultCStr);
-	curl_free(resultCStr);
+    if (resultCStr == NULL) {
+        throw XArch("CURL escape failed.");
+    }
+    
+    std::string result(resultCStr);
+    curl_free(resultCStr);
 
-	return result;
+    return result;
 }

@@ -25,10 +25,10 @@
 //! Unix implementation of IArchString
 class ArchStringUnix : public IArchString {
 public:
-	ArchStringUnix();
-	virtual ~ArchStringUnix();
+    ArchStringUnix();
+    virtual ~ArchStringUnix();
 
-	// IArchString overrides
-	virtual EWideCharEncoding
-						getWideCharEncoding();
+    // IArchString overrides
+    virtual EWideCharEncoding
+                        getWideCharEncoding();
 };

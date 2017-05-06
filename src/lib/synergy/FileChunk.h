@@ -29,18 +29,18 @@ class IStream;
 
 class FileChunk : public Chunk {
 public:
-	FileChunk(size_t size);
+    FileChunk(size_t size);
 
-	static FileChunk*	start(const String& size);
-	static FileChunk*	data(UInt8* data, size_t dataSize);
-	static FileChunk*	end();
-	static int			assemble(
-							synergy::IStream* stream,
-							String& dataCached,
-							size_t& expectedSize);
-	static void			send(
-							synergy::IStream* stream,
-							UInt8 mark,
-							char* data,
-							size_t dataSize);
+    static FileChunk*    start(const String& size);
+    static FileChunk*    data(UInt8* data, size_t dataSize);
+    static FileChunk*    end();
+    static int            assemble(
+                            synergy::IStream* stream,
+                            String& dataCached,
+                            size_t& expectedSize);
+    static void            send(
+                            synergy::IStream* stream,
+                            UInt8 mark,
+                            char* data,
+                            size_t dataSize);
 };

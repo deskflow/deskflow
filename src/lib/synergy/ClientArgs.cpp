@@ -18,6 +18,6 @@
 #include "synergy/ClientArgs.h"
 
 ClientArgs::ClientArgs() :
-	m_yscroll(0)
+    m_yscroll(0)
 {
 }

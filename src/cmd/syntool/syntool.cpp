@@ -22,10 +22,10 @@ int
 main(int argc, char** argv) 
 {
 #if SYSAPI_WIN32
-	// record window instance for tray icon, etc
-	ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+    // record window instance for tray icon, etc
+    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 
-	ToolApp app;
-	return app.run(argc, argv);
+    ToolApp app;
+    return app.run(argc, argv);
 }

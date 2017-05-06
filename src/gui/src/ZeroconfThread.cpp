@@ -20,19 +20,19 @@
 #include <QtNetwork>
 
 ZeroconfThread::ZeroconfThread(int socketDescriptor, QObject* parent) :
-	QThread(parent),
-	m_SocketDescriptor(socketDescriptor)
+    QThread(parent),
+    m_SocketDescriptor(socketDescriptor)
 {
 }
 
 void ZeroconfThread::run()
 {
-	QTcpSocket tcpSocket;
-	if (!tcpSocket.setSocketDescriptor(m_SocketDescriptor)) {
-		emit error(tcpSocket.error());
-		return;
-	}
+    QTcpSocket tcpSocket;
+    if (!tcpSocket.setSocketDescriptor(m_SocketDescriptor)) {
+        emit error(tcpSocket.error());
+        return;
+    }
 
-	tcpSocket.disconnectFromHost();
-	tcpSocket.waitForDisconnected();
+    tcpSocket.disconnectFromHost();
+    tcpSocket.waitForDisconnected();
 }

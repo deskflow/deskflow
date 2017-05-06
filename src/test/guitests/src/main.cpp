@@ -21,6 +21,6 @@
 
 int main(int argc, char *argv[])
 {
-	VersionCheckerTests versionCheckerTests;
-	QTest::qExec(&versionCheckerTests, argc, argv);
+    VersionCheckerTests versionCheckerTests;
+    QTest::qExec(&versionCheckerTests, argc, argv);
 }

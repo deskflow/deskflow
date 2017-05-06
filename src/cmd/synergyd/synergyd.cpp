@@ -25,8 +25,8 @@
 int
 main(int argc, char** argv)
 {
-	DaemonApp app;
-	return app.run(argc, argv);
+    DaemonApp app;
+    return app.run(argc, argv);
 }
 
 #elif SYSAPI_WIN32
@@ -37,8 +37,8 @@ main(int argc, char** argv)
 int WINAPI
 WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	DaemonApp app;
-	return app.run(__argc, __argv);
+    DaemonApp app;
+    return app.run(__argc, __argv);
 }
 
 #endif

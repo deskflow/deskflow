@@ -25,14 +25,14 @@
 //! Unix implementation of IArchString
 class ArchSystemUnix : public IArchSystem {
 public:
-	ArchSystemUnix();
-	virtual ~ArchSystemUnix();
+    ArchSystemUnix();
+    virtual ~ArchSystemUnix();
 
-	// IArchSystem overrides
-	virtual std::string	getOSName() const;
-	virtual std::string getPlatformName() const;
-	virtual std::string setting(const std::string&) const;
-	virtual void setting(const std::string&, const std::string&) const;
-	virtual std::string getLibsUsed(void) const;
+    // IArchSystem overrides
+    virtual std::string    getOSName() const;
+    virtual std::string getPlatformName() const;
+    virtual std::string setting(const std::string&) const;
+    virtual void setting(const std::string&, const std::string&) const;
+    virtual std::string getLibsUsed(void) const;
 
 };
