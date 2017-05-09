@@ -31,7 +31,8 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 	QString version = m_versionChecker.getVersion();
 	version = version + '-' + SYNERGY_VERSION_STAGE;
 #ifdef SYNERGY_REVISION
-    version +=  '-' + SYNERGY_REVISION;
+    version +=  '-';
+    version += SYNERGY_REVISION;
 #endif
 	m_pLabelSynergyVersion->setText(version);
 
