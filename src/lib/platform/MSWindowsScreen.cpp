@@ -1055,7 +1055,7 @@ MSWindowsScreen::onPreDispatchSecondary(HWND,
 	switch (message) {
 		case SYNERGY_MSG_KEY:
 		case SYNERGY_MSG_MOUSE_BUTTON:
-			LOG((CLOG_DEBUG1 "local input detected"));
+			LOG((CLOG_INFO "local input detected"));
 	}
 
 	return false;
