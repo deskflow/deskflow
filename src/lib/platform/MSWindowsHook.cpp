@@ -43,7 +43,7 @@ MSWindowsHook::~MSWindowsHook()
 }
 
 void
-MSWindowsHook::loadLibrary()
+MSWindowsHook::loadLibrary(BOOL isPrimary)
 {
     // load library
     m_instance = LoadLibrary(g_name);
@@ -69,7 +69,7 @@ MSWindowsHook::loadLibrary()
     }
 
     // initialize library
-    if (init(GetCurrentThreadId()) == 0) {
+    if (init(GetCurrentThreadId(), isPrimary) == 0) {
         LOG((CLOG_ERR "failed to init %s.dll, another program may be using it", g_name));
         LOG((CLOG_INFO "restarting your computer may solve this error"));
         throw XScreenOpenFailure();
@@ -83,12 +83,12 @@ MSWindowsHook::getInstance() const
 }
 
 int
-MSWindowsHook::init(DWORD threadID)
+MSWindowsHook::init(DWORD threadID, BOOL isPrimary)
 {
     if (m_initFunc == NULL) {
         return NULL;
     }
-    return m_initFunc(threadID);
+    return m_initFunc(threadID, isPrimary);
 }
 
 int

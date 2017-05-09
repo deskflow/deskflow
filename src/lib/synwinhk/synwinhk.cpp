@@ -120,7 +120,8 @@ static LPARAM            g_deadLParam      = 0;
 static BYTE                g_deadKeyState[256] = { 0 };
 static BYTE                g_keyState[256]   = { 0 };
 static DWORD            g_hookThread      = 0;
-static bool                g_fakeInput       = false;
+static bool                g_fakeServerInput       = false;
+static BOOL				g_isPrimary = TRUE;
 
 #if defined(_MSC_VER)
 #pragma data_seg()
@@ -198,7 +199,7 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
     if (wParam == SYNERGY_HOOK_FAKE_INPUT_VIRTUAL_KEY &&
         ((lParam >> 16) & 0xffu) == SYNERGY_HOOK_FAKE_INPUT_SCANCODE) {
         // update flag
-        g_fakeInput = ((lParam & 0x80000000u) == 0);
+        g_fakeServerInput = ((lParam & 0x80000000u) == 0);
         PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
                                 0xff000000u | wParam, lParam);
 
@@ -208,7 +209,7 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 
     // if we're expecting fake input then just pass the event through
     // and do not forward to the server
-    if (g_fakeInput) {
+    if (g_fakeServerInput) {
         PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
                                 0xfe000000u | wParam, lParam);
         return false;
@@ -628,6 +629,7 @@ LRESULT CALLBACK
 getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 {
     if (code >= 0) {
+
         if (g_screenSaver) {
             MSG* msg = reinterpret_cast<MSG*>(lParam);
             if (msg->message == WM_SYSCOMMAND &&
@@ -671,6 +673,12 @@ keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
     if (code >= 0) {
         // decode the message
         KBDLLHOOKSTRUCT* info = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
+
+		bool const injected = (info->flags & LLKHF_INJECTED);
+		if (!g_isPrimary && injected) {
+			return CallNextHookEx (g_keyboardLL, code, wParam, lParam);
+		}
+
         WPARAM wParam = info->vkCode;
         LPARAM lParam = 1;                            // repeat code
         lParam      |= (info->scanCode << 16);        // scan code
@@ -709,6 +717,12 @@ mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
     if (code >= 0) {
         // decode the message
         MSLLHOOKSTRUCT* info = reinterpret_cast<MSLLHOOKSTRUCT*>(lParam);
+
+		bool const injected = info->flags & LLMHF_INJECTED;
+		if (!g_isPrimary && injected) {
+			return CallNextHookEx(g_mouseLL, code, wParam, lParam);
+		}
+
         SInt32 x = static_cast<SInt32>(info->pt.x);
         SInt32 y = static_cast<SInt32>(info->pt.y);
         SInt32 w = static_cast<SInt16>(HIWORD(info->mouseData));
@@ -871,9 +885,11 @@ void *  __cdecl memcpy(void * _Dst, const void * _Src, size_t _MaxCount)
 #endif
 
 int
-init(DWORD threadID)
+init(DWORD threadID, BOOL isPrimary)
 {
     assert(g_hinstance != NULL);
+
+	g_isPrimary = isPrimary;
 
     // try to open process that last called init() to see if it's
     // still running or if it died without cleaning up.
@@ -950,7 +966,7 @@ install()
     g_deadLParam  = 0;
 
     // reset fake input flag
-    g_fakeInput = false;
+    g_fakeServerInput = false;
 
     // check for mouse wheel support
     g_wheelSupport = getWheelSupport();

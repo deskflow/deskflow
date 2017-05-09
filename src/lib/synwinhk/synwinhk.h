@@ -67,7 +67,7 @@ enum EHookMode {
     kHOOK_RELAY_EVENTS
 };
 
-typedef int                (*InitFunc)(DWORD targetQueueThreadID);
+typedef int                (*InitFunc)(DWORD targetQueueThreadID, BOOL isPrimary);
 typedef int                (*CleanupFunc)(void);
 typedef EHookResult        (*InstallFunc)(void);
 typedef int                (*UninstallFunc)(void);
@@ -77,7 +77,7 @@ typedef void            (*SetSidesFunc)(UInt32);
 typedef void            (*SetZoneFunc)(SInt32, SInt32, SInt32, SInt32, SInt32);
 typedef void            (*SetModeFunc)(int);
 
-CSYNERGYHOOK_API int    init(DWORD);
+CSYNERGYHOOK_API int    init(DWORD, BOOL);
 CSYNERGYHOOK_API int    cleanup(void);
 CSYNERGYHOOK_API EHookResult    install(void);
 CSYNERGYHOOK_API int    uninstall(void);

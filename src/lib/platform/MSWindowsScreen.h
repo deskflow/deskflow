@@ -151,9 +151,13 @@ private: // HACK
     // the message should not be dispatched.
     bool                onPreDispatch(HWND, UINT, WPARAM, LPARAM);
 
-    // handle message before it gets dispatched.  returns true iff
+    // handle primary message before it gets dispatched.  returns true iff
     // the message should not be dispatched.
     bool                onPreDispatchPrimary(HWND, UINT, WPARAM, LPARAM);
+
+	// handle secondary message before it gets dispatched.  returns true iff
+	// the message should not be dispatched.
+	bool                onPreDispatchSecondary(HWND, UINT, WPARAM, LPARAM);
 
     // handle message.  returns true iff handled and optionally sets
     // \c *result (which defaults to 0).

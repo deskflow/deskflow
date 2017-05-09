@@ -30,9 +30,9 @@ public:
     MSWindowsHook();
     virtual ~MSWindowsHook();
 
-    void                loadLibrary();
+    void                loadLibrary(BOOL isPrimary);
     HINSTANCE            getInstance() const;
-    int                    init(DWORD threadID);
+	int                    init(DWORD threadID, BOOL isPrimary);
     int                    cleanup();
     void                setSides(UInt32 sides);
     void                setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h, SInt32 jumpZoneSize);

@@ -352,7 +352,7 @@ void
 MSWindowsDesks::queryHookLibrary(HINSTANCE hookLibrary)
 {
     // look up functions
-    if (m_isPrimary && !m_noHooks) {
+    if (!m_noHooks) {
         m_install   = (InstallFunc)GetProcAddress(hookLibrary, "install");
         m_uninstall = (UninstallFunc)GetProcAddress(hookLibrary, "uninstall");
         m_installScreensaver   =
@@ -690,7 +690,7 @@ MSWindowsDesks::deskThread(void* vdesk)
             continue;
 
         case SYNERGY_MSG_SWITCH:
-            if (m_isPrimary && !m_noHooks) {
+            if (!m_noHooks) {
                 m_uninstall();
                 if (m_screensaverNotify) {
                     m_uninstallScreensaver();

@@ -128,8 +128,8 @@ MSWindowsScreen::MSWindowsScreen(
 
     s_screen = this;
     try {
-        if (m_isPrimary && !m_noHooks) {
-            m_hook.loadLibrary();
+        if (!m_noHooks) {
+            m_hook.loadLibrary(m_isPrimary);
         }
 
         m_screensaver = new MSWindowsScreenSaver();
@@ -985,15 +985,16 @@ MSWindowsScreen::onPreDispatch(HWND hwnd,
     if (m_isPrimary) {
         return onPreDispatchPrimary(hwnd, message, wParam, lParam);
     }
-
-    return false;
+	else {
+		return onPreDispatchSecondary(hwnd, message, wParam, lParam);
+	}
 }
 
 bool
 MSWindowsScreen::onPreDispatchPrimary(HWND,
                 UINT message, WPARAM wParam, LPARAM lParam)
 {
-    LOG((CLOG_DEBUG5 "handling pre-dispatch primary"));
+    LOG((CLOG_DEBUG1 "handling primary pre-dispatch primary"));
 
     // handle event
     switch (message) {
@@ -1045,6 +1046,19 @@ MSWindowsScreen::onPreDispatchPrimary(HWND,
     }
 
     return false;
+}
+
+bool
+MSWindowsScreen::onPreDispatchSecondary(HWND,
+	UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message) {
+		case SYNERGY_MSG_KEY:
+		case SYNERGY_MSG_MOUSE_BUTTON:
+			LOG((CLOG_DEBUG1 "local input detected"));
+	}
+
+	return false;
 }
 
 bool
