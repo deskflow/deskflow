@@ -406,15 +406,12 @@ endif()
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
-    configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/deb ${CMAKE_BINARY_DIR}/debian)
-
+    install(FILES res/synergy.svg DESTINATION share/icons)
     if("${VERSION_MAJOR}" STREQUAL "2") 
         install(FILES res/synergy2.desktop DESTINATION share/applications)
     else()
         install(FILES res/synergy.desktop DESTINATION share/applications)
     endif()
-
-    install(FILES res/synergy.svg DESTINATION share/icons)
 endif()
 
 else()

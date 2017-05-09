@@ -1,5 +1,0 @@
-synergy (@SYNERGY_VERSION@~@SYNERGY_VERSION_STAGE@) unstable; urgency=medium
-
-  * Initial release.
-
- -- Symless Ltd <engineering@symless.com>  @SYNERGY_RELEASE_DATE@
