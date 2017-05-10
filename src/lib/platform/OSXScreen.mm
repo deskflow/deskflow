@@ -1844,20 +1844,18 @@ OSXScreen::handleCGInputEventSecondary(
 	CGEventRef event,
 	void* refcon)
 {
-    CGEventMask mask = kCGEventFlagMaskCommand;
-            mask = CGEventGetFlags(event);
-    LOG ((CLOG_INFO "%x", mask));
-    auto i = CGEventGetIntegerValueField(event, kCGEventSourceUnixProcessID);
-    LOG ((CLOG_INFO "Target PID:%lld", i));
+    static pid_t currentPid = getpid();
+    auto sourcePid = CGEventGetIntegerValueField(event, kCGEventSourceUnixProcessID);
 
-    switch(type) {
-        case kCGEventLeftMouseDown:
-        case kCGEventRightMouseDown:
-        case kCGEventOtherMouseDown:
-        case kCGEventScrollWheel:
-        case kCGEventKeyDown:
-        case kCGEventFlagsChanged:
-            ;//LOG((CLOG_INFO "local input detected"));
+    if (currentPid != sourcePid) {
+        switch(type) {
+            case kCGEventLeftMouseDown:
+            case kCGEventRightMouseDown:
+            case kCGEventOtherMouseDown:
+            case kCGEventKeyDown:
+            case kCGEventFlagsChanged:
+                LOG((CLOG_INFO "local input detected"));
+        }
     }
 
 	return event;
