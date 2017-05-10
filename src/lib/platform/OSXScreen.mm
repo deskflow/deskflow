@@ -18,8 +18,8 @@
 
 #include "platform/OSXScreen.h"
 
-#include "base/EventQueue.h"
 #include "client/Client.h"
+#include "platform/OSXIOHID.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXEventQueueBuffer.h"
 #include "platform/OSXKeyState.h"
@@ -35,16 +35,18 @@
 #include "mt/Mutex.h"
 #include "mt/Thread.h"
 #include "arch/XArch.h"
-#include "base/Log.h"
+#include "base/EventQueue.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
+#include "base/Log.h"
 
 #include <math.h>
 #include <mach-o/dyld.h>
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>
 #include <AppKit/NSEvent.h>
+#include <IOKit/hidsystem/IOHIDLib.h>
 
 // This isn't in any Apple SDK that I know of as of yet.
 enum {
@@ -514,67 +516,15 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
 	if (index >= NumButtonIDs) {
 		return;
 	}
-	
-	CGPoint pos;
-	if (!m_cursorPosValid) {
-		SInt32 x, y;
-		getCursorPos(x, y);
-	}
-	pos.x = m_xCursor;
-	pos.y = m_yCursor;
 
-	// variable used to detect mouse coordinate differences between
-	// old & new mouse clicks. Used in double click detection.
-	SInt32 xDiff = m_xCursor - m_lastSingleClickXCursor;
-	SInt32 yDiff = m_yCursor - m_lastSingleClickYCursor;
-	double diff = sqrt(xDiff * xDiff + yDiff * yDiff);
-	// max sqrt(x^2 + y^2) difference allowed to double click
-	// since we don't have double click distance in NX APIs
-	// we define our own defaults.
-	const double maxDiff = sqrt(2) + 0.0001;
-    
-    double clickTime = [NSEvent doubleClickInterval];
-    
-    // As long as the click is within the time window and distance window
-    // increase clickState (double click, triple click, etc)
-    // This will allow for higher than triple click but the quartz documenation
-    // does not specify that this should be limited to triple click
-    if (press) {
-        if ((ARCH->time() - m_lastClickTime) <= clickTime && diff <= maxDiff){
-            m_clickState++;
-        }
-        else {
-            m_clickState = 1;
-        }
-        
-        m_lastClickTime = ARCH->time();
-    }
-    
-    if (m_clickState == 1){
-        m_lastSingleClickXCursor = m_xCursor;
-        m_lastSingleClickYCursor = m_yCursor;
-    }
-    
-    EMouseButtonState state = press ? kMouseButtonDown : kMouseButtonUp;
-    
     LOG((CLOG_DEBUG1 "faking mouse button id: %d press: %s", index, press ? "pressed" : "released"));
     
-    MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
-    CGEventType type = thisButtonMap[state];
+    OSXIOHID hid;
+    hid.fakeMouseButton(index, press);
 
-    CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, static_cast<CGMouseButton>(index));
-    
-    CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
-    
-    // Fix for sticky keys
-    CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
-    CGEventSetFlags(event, modifiers);
-    
+    EMouseButtonState state = press ? kMouseButtonDown : kMouseButtonUp;
     m_buttonState.set(index, state);
-    CGEventPost(kCGHIDEventTap, event);
-    
-    CFRelease(event);
-    
+
 	if (!press && (id == kButtonLeft)) {
 		if (m_fakeDraggingStarted) {
 			m_getDropTargetThread = new Thread(new TMethodJob<OSXScreen>(
@@ -1894,21 +1844,22 @@ OSXScreen::handleCGInputEventSecondary(
 	CGEventRef event,
 	void* refcon)
 {
-	// this fix is really screwing with the correct show/hide behavior. it
-	// should be tested better before reintroducing.
-	return event;
+    CGEventMask mask = kCGEventFlagMaskCommand;
+            mask = CGEventGetFlags(event);
+    LOG ((CLOG_INFO "%x", mask));
+    auto i = CGEventGetIntegerValueField(event, kCGEventSourceUnixProcessID);
+    LOG ((CLOG_INFO "Target PID:%lld", i));
 
-	OSXScreen* screen = (OSXScreen*)refcon;
-	if (screen->m_cursorHidden && type == kCGEventMouseMoved) {
+    switch(type) {
+        case kCGEventLeftMouseDown:
+        case kCGEventRightMouseDown:
+        case kCGEventOtherMouseDown:
+        case kCGEventScrollWheel:
+        case kCGEventKeyDown:
+        case kCGEventFlagsChanged:
+            ;//LOG((CLOG_INFO "local input detected"));
+    }
 
-		CGPoint pos = CGEventGetLocation(event);
-		if (pos.x != screen->m_xCenter || pos.y != screen->m_yCenter) {
-
-			LOG((CLOG_DEBUG "show cursor on secondary, type=%d pos=%d,%d",
-					type, pos.x, pos.y));
-			screen->showCursor();
-		}
-	}
 	return event;
 }
 

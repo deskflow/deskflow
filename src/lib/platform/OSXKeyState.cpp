@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "platform/OSXIOHID.h"
 #include "platform/OSXKeyState.h"
 #include "platform/OSXUchrKeyResource.h"
 #include "platform/OSXMediaKeySupport.h"
@@ -470,46 +471,13 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap)
     }
 }
 
-static io_connect_t getEventDriver(void)
-{
-    static mach_port_t sEventDrvrRef = 0;
-    mach_port_t masterPort, service, iter;
-    kern_return_t kr;
-    
-    if (!sEventDrvrRef) {
-        // Get master device port
-        kr = IOMasterPort(bootstrap_port, &masterPort);
-        assert(KERN_SUCCESS == kr);
-        
-        kr = IOServiceGetMatchingServices(masterPort,
-                IOServiceMatching(kIOHIDSystemClass), &iter);
-        assert(KERN_SUCCESS == kr);
-        
-        service = IOIteratorNext(iter);
-        assert(service);
-        
-        kr = IOServiceOpen(service, mach_task_self(),
-                kIOHIDParamConnectType, &sEventDrvrRef);
-        assert(KERN_SUCCESS == kr);
-
-        IOObjectRelease(service);
-        IOObjectRelease(iter);
-    }
-    
-    return sEventDrvrRef;
-}
-
 void
 OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
                 const bool postDown)
 {
     static UInt32 modifiers = 0;
-    
-    NXEventData event;
-    IOGPoint loc = { 0, 0 };
     UInt32 modifiersDelta = 0;
-
-    bzero(&event, sizeof(NXEventData));
+    OSXIOHID hid;
 
     switch (virtualKeyCode)
     {
@@ -549,22 +517,12 @@ OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
         else {
             modifiers &= ~modifiersDelta;
         }
-            
-        kern_return_t kr;
-        kr = IOHIDPostEvent(getEventDriver(), NX_FLAGSCHANGED, loc,
-                &event, kNXEventDataVersion, modifiers, true);
-        assert(KERN_SUCCESS == kr);
+
+        hid.postModifierKeys(modifiers);
         break;
 
     default:
-        event.key.repeat = false;
-        event.key.keyCode = virtualKeyCode;
-        event.key.origCharSet = event.key.charSet = NX_ASCIISET;
-        event.key.origCharCode = event.key.charCode = 0;
-        kr = IOHIDPostEvent(getEventDriver(),
-                postDown ? NX_KEYDOWN : NX_KEYUP,
-                loc, &event, kNXEventDataVersion, 0, false);
-        assert(KERN_SUCCESS == kr);
+        hid.postKey(virtualKeyCode, postDown);
         break;
     }
 }
