@@ -30,6 +30,7 @@
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
+#include <cerrno>
 
 namespace synergy {
 namespace string {
@@ -50,8 +51,8 @@ vformat(const char* fmt, va_list args)
     // find highest indexed substitution and the locations of substitutions
     std::vector<size_t> pos;
     std::vector<size_t> width;
-    std::vector<int> index;
-    int maxIndex = 0;
+    std::vector<size_t> index;
+    size_t maxIndex = 0;
     for (const char* scan = fmt; *scan != '\0'; ++scan) {
         if (*scan == '%') {
             ++scan;
@@ -61,21 +62,22 @@ vformat(const char* fmt, va_list args)
             else if (*scan == '%') {
                 // literal
                 index.push_back(0);
-                pos.push_back(static_cast<int>(scan - 1 - fmt));
+                pos.push_back(static_cast<size_t>((scan - 1) - fmt));
                 width.push_back(2);
             }
             else if (*scan == '{') {
                 // get argument index
                 char* end;
-                int i = static_cast<int>(strtol(scan + 1, &end, 10));
-                if (*end != '}') {
+                errno = 0;
+                long i = strtol(scan + 1, &end, 10);
+                if (errno || (i < 0) || (*end != '}')) {
                     // invalid index -- ignore
-                    scan = end - 1;
+                    scan = end - 1; // BUG if there are digits?
                 }
                 else {
                     index.push_back(i);
-                    pos.push_back(static_cast<int>(scan - 1 - fmt));
-                    width.push_back(static_cast<int>(end - scan + 2));
+                    pos.push_back(static_cast<size_t>((scan - 1) - fmt));
+                    width.push_back(static_cast<size_t>((end - scan) + 2));
                     if (i > maxIndex) {
                         maxIndex = i;
                     }
