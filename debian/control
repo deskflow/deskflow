@@ -10,11 +10,7 @@ Architecture: amd64
 Section: utils
 Priority: optional
 Depends: ${shlibs:Depends},
-         ${misc:Depends},
-         qml-module-qtquick-controls (>= 5.0.2),
-         qml-module-qtquick-layouts (>= 5.0.2),
-         qml-module-qtquick-dialogs (>= 5.0.2),
-         qml-module-qtquick2 (>= 5.0.2)
+         ${misc:Depends}
 Description: Keyboard and mouse sharing solution
  Synergy allows you to share one mouse and keyboard between multiple computers.
  Work seamlessly across Windows, macOS and Linux.
