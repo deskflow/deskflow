@@ -187,7 +187,7 @@ MSWindowsSession::getActiveDesktopName()
             CloseDesktop(hd);
         }
     }
-    catch (std::exception error) {
+    catch (std::exception& error) {
         LOG((CLOG_ERR "failed to get active desktop name: %s", error.what()));
     }
 
