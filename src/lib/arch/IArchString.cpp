@@ -42,7 +42,7 @@ int
 IArchString::convStringWCToMB(char* dst,
                 const wchar_t* src, UInt32 n, bool* errors)
 {
-    int len = 0;
+    ptrdiff_t len = 0;
 
     bool dummyErrors;
     if (errors == NULL) {
@@ -58,14 +58,14 @@ IArchString::convStringWCToMB(char* dst,
     if (dst == NULL) {
         char dummy[MB_LEN_MAX];
         for (const wchar_t* scan = src; n > 0; ++scan, --n) {
-            int mblen = wctomb(dummy, *scan);
+            ptrdiff_t mblen = wctomb(dummy, *scan);
             if (mblen == -1) {
                 *errors = true;
                 mblen   = 1;
             }
             len += mblen;
         }
-        int mblen = wctomb(dummy, L'\0');
+        ptrdiff_t mblen = wctomb(dummy, L'\0');
         if (mblen != -1) {
             len += mblen - 1;
         }
@@ -73,7 +73,7 @@ IArchString::convStringWCToMB(char* dst,
     else {
         char* dst0 = dst;
         for (const wchar_t* scan = src; n > 0; ++scan, --n) {
-            int mblen = wctomb(dst, *scan);
+            ptrdiff_t mblen = wctomb(dst, *scan);
             if (mblen == -1) {
                 *errors = true;
                 *dst++  = '?';
@@ -82,12 +82,12 @@ IArchString::convStringWCToMB(char* dst,
                 dst    += mblen;
             }
         }
-        int mblen = wctomb(dst, L'\0');
+        ptrdiff_t mblen = wctomb(dst, L'\0');
         if (mblen != -1) {
             // don't include nul terminator
             dst += mblen - 1;
         }
-        len = (int)(dst - dst0);
+        len = dst - dst0;
     }
     ARCH->unlockMutex(s_mutex);
 
@@ -98,7 +98,7 @@ int
 IArchString::convStringMBToWC(wchar_t* dst,
                 const char* src, UInt32 n, bool* errors)
 {
-    int len = 0;
+    ptrdiff_t len = 0;
     wchar_t dummy;
 
     bool dummyErrors;
@@ -114,7 +114,7 @@ IArchString::convStringMBToWC(wchar_t* dst,
 
     if (dst == NULL) {
         for (const char* scan = src; n > 0; ) {
-            int mblen = mbtowc(&dummy, scan, n);
+            ptrdiff_t mblen = mbtowc(&dummy, scan, n);
             switch (mblen) {
             case -2:
                 // incomplete last character.  convert to unknown character.
@@ -150,7 +150,7 @@ IArchString::convStringMBToWC(wchar_t* dst,
     else {
         wchar_t* dst0 = dst;
         for (const char* scan = src; n > 0; ++dst) {
-            int mblen = mbtowc(dst, scan, n);
+            ptrdiff_t mblen = mbtowc(dst, scan, n);
             switch (mblen) {
             case -2:
                 // incomplete character.  convert to unknown character.
@@ -181,7 +181,7 @@ IArchString::convStringMBToWC(wchar_t* dst,
                 break;
             }
         }
-        len = (int)(dst - dst0);
+        len = dst - dst0;
     }
     ARCH->unlockMutex(s_mutex);
 
