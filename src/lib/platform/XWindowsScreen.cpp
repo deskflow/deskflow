@@ -216,8 +216,7 @@ XWindowsScreen::~XWindowsScreen()
 		if (m_im != NULL) {
 			XCloseIM(m_im);
 		}
-		XDestroyWindow(m_display, m_window);
-		XCloseDisplay(m_display);
+		XDestroyWindow(m_display, m_window);		XCloseDisplay(m_display);
 	}
 	XSetIOErrorHandler(NULL);
 
@@ -344,7 +343,7 @@ XWindowsScreen::leave()
 	XMapRaised(m_display, m_window);
 
 	// grab the mouse and keyboard, if primary and possible
-	if (m_isPrimary && !grabMouseAndKeyboard()) {
+	if (!grabMouseAndKeyboard()) {
 		XUnmapWindow(m_display, m_window);
 		return false;
 	}
@@ -353,7 +352,7 @@ XWindowsScreen::leave()
 	XGetInputFocus(m_display, &m_lastFocus, &m_lastFocusRevert);
 
 	// take focus
-	if (m_isPrimary || !m_preserveFocus) {
+	if (!m_preserveFocus) {
 		XSetInputFocus(m_display, m_window, RevertToPointerRoot, CurrentTime);
 	}
 
@@ -1044,7 +1043,7 @@ XWindowsScreen::openWindow() const
 		// moved.  we'll reposition the window as necessary so its
 		// position here doesn't matter.  it only needs to be 1x1 because
 		// it only needs to contain the cursor's hotspot.
-		attr.event_mask = LeaveWindowMask;
+		attr.event_mask = LeaveWindowMask | ButtonPressMask;
 		x = 0;
 		y = 0;
 		w = 1;
@@ -1369,6 +1368,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 		return;
 
 	case ButtonPress:
+        LOG ((CLOG_DEBUG "Yay, you clicked something!"));
 		if (m_isPrimary) {
 			onMousePress(xevent->xbutton);
 		}
