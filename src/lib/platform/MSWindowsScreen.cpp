@@ -1129,7 +1129,7 @@ MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
     KeyModifierMask oldState = pollActiveModifiers();
 
     // check for autorepeat
-    if (m_keyState->testAutoRepeat(down, (lParam & 0x40000000u) == 1, button)) {
+    if (m_keyState->testAutoRepeat(down, (lParam & 0x40000000u), button)) {
         lParam |= 0x40000000u;
     }
 
