@@ -39,7 +39,7 @@ class ScreenSetupView : public QTableView
         ScreenSetupView(QWidget* parent);
 
     public:
-        void setModel(ScreenSetupModel* model);
+        void setModel(QAbstractItemModel* model) override;
         ScreenSetupModel* model() const;
 
     protected:
