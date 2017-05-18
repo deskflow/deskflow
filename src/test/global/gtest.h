@@ -22,7 +22,7 @@
 // is that everything in the header file following this also has warnings
 // ignored, so we need to put it in a separate header file.
 #if __APPLE__
-#	pragma GCC system_header
+#    pragma GCC system_header
 #endif
 
 // gtest has a warning on osx106 (signed/unsigned int compare).

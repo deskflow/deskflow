@@ -26,30 +26,30 @@
 
 OSXClipboardUTF16Converter::OSXClipboardUTF16Converter()
 {
-	// do nothing
+    // do nothing
 }
 
 OSXClipboardUTF16Converter::~OSXClipboardUTF16Converter()
 {
-	// do nothing
+    // do nothing
 }
 
 CFStringRef
 OSXClipboardUTF16Converter::getOSXFormat() const
 {
-	return CFSTR("public.utf16-plain-text");
+    return CFSTR("public.utf16-plain-text");
 }
 
 String
 OSXClipboardUTF16Converter::doFromIClipboard(const String& data) const
 {
-	// convert and add nul terminator
-	return Unicode::UTF8ToUTF16(data);
+    // convert and add nul terminator
+    return Unicode::UTF8ToUTF16(data);
 }
 
 String
 OSXClipboardUTF16Converter::doToIClipboard(const String& data) const
 {
-	// convert and strip nul terminator
-	return Unicode::UTF16ToUTF8(data);
+    // convert and strip nul terminator
+    return Unicode::UTF16ToUTF8(data);
 }

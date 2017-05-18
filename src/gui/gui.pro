@@ -4,23 +4,25 @@ TEMPLATE = app
 TARGET = synergy
 DEFINES += VERSION_STAGE=\\\"$$QMAKE_VERSION_STAGE\\\"
 DEFINES += VERSION_REVISION=\\\"$$QMAKE_VERSION_REVISION\\\"
+DEFINES -= UNICODE
+DEFINES += _MBCS
 DEPENDPATH += . \
     res
 INCLUDEPATH += . \
     src \
     ../lib/shared/
-FORMS += res/MainWindowBase.ui \
-    res/AboutDialogBase.ui \
-    res/ServerConfigDialogBase.ui \
-    res/ScreenSettingsDialogBase.ui \
-    res/ActionDialogBase.ui \
-    res/HotkeyDialogBase.ui \
-    res/SettingsDialogBase.ui \
-    res/SetupWizardBase.ui \
-    res/AddClientDialogBase.ui \
-    res/ActivationDialog.ui \
-    res/CancelActivationDialog.ui \
-    res/FailedLoginDialog.ui
+FORMS += src/MainWindowBase.ui \
+    src/AboutDialogBase.ui \
+    src/ServerConfigDialogBase.ui \
+    src/ScreenSettingsDialogBase.ui \
+    src/ActionDialogBase.ui \
+    src/HotkeyDialogBase.ui \
+    src/SettingsDialogBase.ui \
+    src/SetupWizardBase.ui \
+    src/AddClientDialogBase.ui \
+    src/ActivationDialog.ui \
+    src/CancelActivationDialog.ui \
+    src/FailedLoginDialog.ui
 SOURCES += src/main.cpp \
     src/MainWindow.cpp \
     src/AboutDialog.cpp \
@@ -137,11 +139,24 @@ release {
     MOC_DIR = tmp/release
     RCC_DIR = tmp/release
 }
+win32-msvc2015 {
+    LIBS += -lAdvapi32
+    QMAKE_LFLAGS += /NODEFAULTLIB:LIBCMT
+}
+win32-msvc* {
+    contains(QMAKE_HOST.arch, x86):{
+        QMAKE_LFLAGS *= /MACHINE:X86
+        LIBS += -L"$$(BONJOUR_SDK_HOME)/Lib/Win32" -ldnssd
+    }
+
+    contains(QMAKE_HOST.arch, x86_64):{
+        QMAKE_LFLAGS *= /MACHINE:X64
+        LIBS += -L"$$(BONJOUR_SDK_HOME)/Lib/x64" -ldnssd
+    }
+}
 win32 { 
     Debug:DESTDIR = ../../bin/Debug
     Release:DESTDIR = ../../bin/Release
-    LIBS += -L"../../ext/bonjour/x64" \
-        -ldnssd
-    INCLUDEPATH += "$(BONJOUR_SDK_HOME)/Include"
+    INCLUDEPATH += "$$(BONJOUR_SDK_HOME)/Include"
 }
 else:DESTDIR = ../../bin

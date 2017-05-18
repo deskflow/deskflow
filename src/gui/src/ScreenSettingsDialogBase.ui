@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ScreenSettingsDialogBase</class>
+ <widget class="QDialog" name="ScreenSettingsDialogBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>434</width>
+    <height>437</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Screen Settings</string>
+  </property>
+  <layout class="QVBoxLayout">
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Screen &amp;name:</string>
+       </property>
+       <property name="buddy">
+        <cstring>m_pLineEditName</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="m_pLineEditName"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <widget class="QGroupBox" name="m_pGroupAliases">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="title">
+        <string>A&amp;liases</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+       <layout class="QGridLayout">
+        <item row="0" column="0">
+         <widget class="QLineEdit" name="m_pLineEditAlias"/>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="m_pButtonAddAlias">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>&amp;Add</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" rowspan="2">
+         <widget class="QListWidget" name="m_pListAliases">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="m_pButtonRemoveAlias">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>&amp;Remove</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>126</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="m_pGroupModifiers">
+       <property name="title">
+        <string>&amp;Modifier keys</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+       <layout class="QGridLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>&amp;Shift:</string>
+          </property>
+          <property name="buddy">
+           <cstring>m_pComboBoxShift</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="m_pComboBoxShift">
+          <item>
+           <property name="text">
+            <string>Shift</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Ctrl</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Alt</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Meta</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Super</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>&amp;Ctrl:</string>
+          </property>
+          <property name="buddy">
+           <cstring>m_pComboBoxCtrl</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="m_pComboBoxCtrl">
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>Shift</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Ctrl</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Alt</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Meta</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Super</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Al&amp;t:</string>
+          </property>
+          <property name="buddy">
+           <cstring>m_pComboBoxAlt</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="m_pComboBoxAlt">
+          <property name="currentIndex">
+           <number>2</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>Shift</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Ctrl</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Alt</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Meta</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Super</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>M&amp;eta:</string>
+          </property>
+          <property name="buddy">
+           <cstring>m_pComboBoxMeta</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QComboBox" name="m_pComboBoxMeta">
+          <property name="currentIndex">
+           <number>3</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>Shift</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Ctrl</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Alt</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Meta</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Super</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>S&amp;uper:</string>
+          </property>
+          <property name="buddy">
+           <cstring>m_pComboBoxSuper</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QComboBox" name="m_pComboBoxSuper">
+          <property name="currentIndex">
+           <number>4</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>Shift</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Ctrl</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Alt</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Meta</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Super</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <widget class="QGroupBox" name="m_pGroupSwitchCorners">
+       <property name="title">
+        <string>&amp;Dead corners</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+       <layout class="QGridLayout">
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="m_pCheckBoxCornerTopLeft">
+          <property name="text">
+           <string>Top-left</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QCheckBox" name="m_pCheckBoxCornerTopRight">
+          <property name="text">
+           <string>Top-right</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QCheckBox" name="m_pCheckBoxCornerBottomLeft">
+          <property name="text">
+           <string>Bottom-left</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QCheckBox" name="m_pCheckBoxCornerBottomRight">
+          <property name="text">
+           <string>Bottom-right</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <layout class="QHBoxLayout">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Corner Si&amp;ze:</string>
+            </property>
+            <property name="buddy">
+             <cstring>m_pSpinBoxSwitchCornerSize</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="m_pSpinBoxSwitchCornerSize"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="m_pGroupFixes">
+       <property name="title">
+        <string>&amp;Fixes</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+       <layout class="QGridLayout">
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="m_pCheckBoxCapsLock">
+          <property name="text">
+           <string>Fix CAPS LOCK key</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QCheckBox" name="m_pCheckBoxNumLock">
+          <property name="text">
+           <string>Fix NUM LOCK key</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QCheckBox" name="m_pCheckBoxScrollLock">
+          <property name="text">
+           <string>Fix SCROLL LOCK key</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QCheckBox" name="m_pCheckBoxXTest">
+          <property name="text">
+           <string>Fix XTest for Xinerama</string>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="m_pButtonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>m_pButtonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>ScreenSettingsDialogBase</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>222</x>
+     <y>502</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pButtonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>ScreenSettingsDialogBase</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>290</x>
+     <y>508</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

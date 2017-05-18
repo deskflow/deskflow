@@ -22,15 +22,15 @@
 
 //! Convert to/from some text encoding
 class MSWindowsClipboardBitmapConverter :
-				public IMSWindowsClipboardConverter {
+                public IMSWindowsClipboardConverter {
 public:
-	MSWindowsClipboardBitmapConverter();
-	virtual ~MSWindowsClipboardBitmapConverter();
+    MSWindowsClipboardBitmapConverter();
+    virtual ~MSWindowsClipboardBitmapConverter();
 
-	// IMSWindowsClipboardConverter overrides
-	virtual IClipboard::EFormat
-						getFormat() const;
-	virtual UINT		getWin32Format() const;
-	virtual HANDLE		fromIClipboard(const String&) const;
-	virtual String		toIClipboard(HANDLE) const;
+    // IMSWindowsClipboardConverter overrides
+    virtual IClipboard::EFormat
+                        getFormat() const;
+    virtual UINT        getWin32Format() const;
+    virtual HANDLE        fromIClipboard(const String&) const;
+    virtual String        toIClipboard(HANDLE) const;
 };

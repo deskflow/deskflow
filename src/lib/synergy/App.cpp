@@ -57,194 +57,194 @@ App* App::s_instance = nullptr;
 //
 
 App::App(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, ArgsBase* args) :
-	m_bye(&exit),
-	m_taskBarReceiver(NULL),
-	m_suspended(false),
-	m_events(events),
-	m_args(args),
-	m_createTaskBarReceiver(createTaskBarReceiver),
-	m_appUtil(events),
-	m_ipcClient(nullptr)
+    m_bye(&exit),
+    m_taskBarReceiver(NULL),
+    m_suspended(false),
+    m_events(events),
+    m_args(args),
+    m_createTaskBarReceiver(createTaskBarReceiver),
+    m_appUtil(events),
+    m_ipcClient(nullptr)
 {
-	assert(s_instance == nullptr);
-	s_instance = this;
+    assert(s_instance == nullptr);
+    s_instance = this;
 }
 
 App::~App()
 {
-	s_instance = nullptr;
-	delete m_args;
+    s_instance = nullptr;
+    delete m_args;
 }
 
 void
 App::version()
 {
-	char buffer[500];
-	sprintf(
-		buffer,
-		"%s %s, protocol version %d.%d\n%s",
-		argsBase().m_pname,
-		kVersion,
-		kProtocolMajorVersion,
-		kProtocolMinorVersion,
-		kCopyright
-		);
+    char buffer[500];
+    sprintf(
+        buffer,
+        "%s %s, protocol version %d.%d\n%s",
+        argsBase().m_pname,
+        kVersion,
+        kProtocolMajorVersion,
+        kProtocolMinorVersion,
+        kCopyright
+        );
 
-	std::cout << buffer << std::endl;
+    std::cout << buffer << std::endl;
 }
 
 int
 App::run(int argc, char** argv)
-{	
+{    
 #if MAC_OS_X_VERSION_10_7
-	// dock hide only supported on lion :(
-	ProcessSerialNumber psn = { 0, kCurrentProcess };
-	
+    // dock hide only supported on lion :(
+    ProcessSerialNumber psn = { 0, kCurrentProcess };
+    
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-	GetCurrentProcess(&psn);
+    GetCurrentProcess(&psn);
 #pragma GCC diagnostic pop
 
-	TransformProcessType(&psn, kProcessTransformToBackgroundApplication);
+    TransformProcessType(&psn, kProcessTransformToBackgroundApplication);
 #endif
 
-	// install application in to arch
-	appUtil().adoptApp(this);
-	
-	// HACK: fail by default (saves us setting result in each catch)
-	int result = kExitFailed;
+    // install application in to arch
+    appUtil().adoptApp(this);
+    
+    // HACK: fail by default (saves us setting result in each catch)
+    int result = kExitFailed;
 
-	try {
-		result = appUtil().run(argc, argv);
-	}
-	catch (XExitApp& e) {
-		// instead of showing a nasty error, just exit with the error code.
-		// not sure if i like this behaviour, but it's probably better than 
-		// using the exit(int) function!
-		result = e.getCode();
-	}
-	catch (std::exception& e) {
-		LOG((CLOG_CRIT "An error occurred: %s\n", e.what()));
-	}
-	catch (...) {
-		LOG((CLOG_CRIT "An unknown error occurred.\n"));
-	}
+    try {
+        result = appUtil().run(argc, argv);
+    }
+    catch (XExitApp& e) {
+        // instead of showing a nasty error, just exit with the error code.
+        // not sure if i like this behaviour, but it's probably better than 
+        // using the exit(int) function!
+        result = e.getCode();
+    }
+    catch (std::exception& e) {
+        LOG((CLOG_CRIT "An error occurred: %s\n", e.what()));
+    }
+    catch (...) {
+        LOG((CLOG_CRIT "An unknown error occurred.\n"));
+    }
 
-	appUtil().beforeAppExit();
-	
-	return result;
+    appUtil().beforeAppExit();
+    
+    return result;
 }
 
 int
 App::daemonMainLoop(int, const char**)
 {
 #if SYSAPI_WIN32
-	SystemLogger sysLogger(daemonName(), false);
+    SystemLogger sysLogger(daemonName(), false);
 #else
-	SystemLogger sysLogger(daemonName(), true);
+    SystemLogger sysLogger(daemonName(), true);
 #endif
-	return mainLoop();
+    return mainLoop();
 }
 
 void 
 App::setupFileLogging()
 {
-	if (argsBase().m_logFile != NULL) {
-		m_fileLog = new FileLogOutputter(argsBase().m_logFile);
-		CLOG->insert(m_fileLog);
-		LOG((CLOG_DEBUG1 "logging to file (%s) enabled", argsBase().m_logFile));
-	}
+    if (argsBase().m_logFile != NULL) {
+        m_fileLog = new FileLogOutputter(argsBase().m_logFile);
+        CLOG->insert(m_fileLog);
+        LOG((CLOG_DEBUG1 "logging to file (%s) enabled", argsBase().m_logFile));
+    }
 }
 
 void 
 App::loggingFilterWarning()
 {
-	if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
-		if (argsBase().m_logFile == NULL) {
-			LOG((CLOG_WARN "log messages above %s are NOT sent to console (use file logging)", 
-				CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
-		}
-	}
+    if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
+        if (argsBase().m_logFile == NULL) {
+            LOG((CLOG_WARN "log messages above %s are NOT sent to console (use file logging)", 
+                CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
+        }
+    }
 }
 
 void 
 App::initApp(int argc, const char** argv)
 {
-	// parse command line
-	parseArgs(argc, argv);
-	
-	ARCH->setProfileDirectory(argsBase().m_profileDirectory);
-	ARCH->setPluginDirectory(argsBase().m_pluginDirectory);
+    // parse command line
+    parseArgs(argc, argv);
+    
+    ARCH->setProfileDirectory(argsBase().m_profileDirectory);
+    ARCH->setPluginDirectory(argsBase().m_pluginDirectory);
 
-	// set log filter
-	if (!CLOG->setFilter(argsBase().m_logFilter)) {
-		LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
-			argsBase().m_pname, argsBase().m_logFilter, argsBase().m_pname));
-		m_bye(kExitArgs);
-	}
-	loggingFilterWarning();
-	
-	if (argsBase().m_enableDragDrop) {
-		LOG((CLOG_INFO "drag and drop enabled"));
-	}
+    // set log filter
+    if (!CLOG->setFilter(argsBase().m_logFilter)) {
+        LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
+            argsBase().m_pname, argsBase().m_logFilter, argsBase().m_pname));
+        m_bye(kExitArgs);
+    }
+    loggingFilterWarning();
+    
+    if (argsBase().m_enableDragDrop) {
+        LOG((CLOG_INFO "drag and drop enabled"));
+    }
 
-	// setup file logging after parsing args
-	setupFileLogging();
+    // setup file logging after parsing args
+    setupFileLogging();
 
-	// load configuration
-	loadConfig();
+    // load configuration
+    loadConfig();
 
-	if (!argsBase().m_disableTray) {
+    if (!argsBase().m_disableTray) {
 
-		// create a log buffer so we can show the latest message
-		// as a tray icon tooltip
-		BufferedLogOutputter* logBuffer = new BufferedLogOutputter(1000);
-		CLOG->insert(logBuffer, true);
+        // create a log buffer so we can show the latest message
+        // as a tray icon tooltip
+        BufferedLogOutputter* logBuffer = new BufferedLogOutputter(1000);
+        CLOG->insert(logBuffer, true);
 
-		// make the task bar receiver.  the user can control this app
-		// through the task bar.
-		m_taskBarReceiver = m_createTaskBarReceiver(logBuffer, m_events);
-	}
+        // make the task bar receiver.  the user can control this app
+        // through the task bar.
+        m_taskBarReceiver = m_createTaskBarReceiver(logBuffer, m_events);
+    }
 }
 
 void
 App::initIpcClient()
 {
-	m_ipcClient = new IpcClient(m_events, m_socketMultiplexer);
-	m_ipcClient->connect();
+    m_ipcClient = new IpcClient(m_events, m_socketMultiplexer);
+    m_ipcClient->connect();
 
-	m_events->adoptHandler(
-		m_events->forIpcClient().messageReceived(), m_ipcClient,
-		new TMethodEventJob<App>(this, &App::handleIpcMessage));
+    m_events->adoptHandler(
+        m_events->forIpcClient().messageReceived(), m_ipcClient,
+        new TMethodEventJob<App>(this, &App::handleIpcMessage));
 }
 
 void
 App::cleanupIpcClient()
 {
-	m_ipcClient->disconnect();
-	m_events->removeHandler(m_events->forIpcClient().messageReceived(), m_ipcClient);
-	delete m_ipcClient;
+    m_ipcClient->disconnect();
+    m_events->removeHandler(m_events->forIpcClient().messageReceived(), m_ipcClient);
+    delete m_ipcClient;
 }
 
 void
 App::handleIpcMessage(const Event& e, void*)
 {
-	IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
-	if (m->type() == kIpcShutdown) {
-		LOG((CLOG_INFO "got ipc shutdown message"));
-		m_events->addEvent(Event(Event::kQuit));
+    IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
+    if (m->type() == kIpcShutdown) {
+        LOG((CLOG_INFO "got ipc shutdown message"));
+        m_events->addEvent(Event(Event::kQuit));
     }
 }
 
 void
 App::runEventsLoop(void*)
 {
-	m_events->loop();
-	
+    m_events->loop();
+    
 #if defined(MAC_OS_X_VERSION_10_7)
-	
-	stopCocoaLoop();
-	
+    
+    stopCocoaLoop();
+    
 #endif
 }
 
@@ -253,10 +253,10 @@ App::runEventsLoop(void*)
 //
 
 MinimalApp::MinimalApp() :
-	App(NULL, NULL, new ArgsBase())
+    App(NULL, NULL, new ArgsBase())
 {
-	m_arch.init();
-	setEvents(m_events);
+    m_arch.init();
+    setEvents(m_events);
 }
 
 MinimalApp::~MinimalApp()
@@ -266,13 +266,13 @@ MinimalApp::~MinimalApp()
 int
 MinimalApp::standardStartup(int argc, char** argv)
 {
-	return 0;
+    return 0;
 }
 
 int
 MinimalApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
-	return 0;
+    return 0;
 }
 
 void
@@ -283,19 +283,19 @@ MinimalApp::startNode()
 int
 MinimalApp::mainLoop()
 {
-	return 0;
+    return 0;
 }
 
 int
 MinimalApp::foregroundStartup(int argc, char** argv)
 {
-	return 0;
+    return 0;
 }
 
 synergy::Screen*
 MinimalApp::createScreen()
 {
-	return NULL;
+    return NULL;
 }
 
 void
@@ -306,19 +306,19 @@ MinimalApp::loadConfig()
 bool
 MinimalApp::loadConfig(const String& pathname)
 {
-	return false;
+    return false;
 }
 
 const char*
 MinimalApp::daemonInfo() const
 {
-	return "";
+    return "";
 }
 
 const char*
 MinimalApp::daemonName() const
 {
-	return "";
+    return "";
 }
 
 void

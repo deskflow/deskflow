@@ -21,8 +21,8 @@
 
 @interface OSXDragView : NSView<NSDraggingSource,NSDraggingInfo>
 {
-	NSMutableString*	m_dropTarget;
-	NSString*	m_dragFileExt;
+    NSMutableString*    m_dropTarget;
+    NSString*    m_dragFileExt;
 }
 
 - (CFStringRef)getDropTarget;

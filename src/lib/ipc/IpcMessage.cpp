@@ -20,7 +20,7 @@
 #include "ipc/Ipc.h"
 
 IpcMessage::IpcMessage(UInt8 type) :
-	m_type(type)
+    m_type(type)
 {
 }
 
@@ -29,8 +29,8 @@ IpcMessage::~IpcMessage()
 }
 
 IpcHelloMessage::IpcHelloMessage(EIpcClientType clientType) :
-	IpcMessage(kIpcHello),
-	m_clientType(clientType)
+    IpcMessage(kIpcHello),
+    m_clientType(clientType)
 {
 }
 

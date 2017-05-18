@@ -23,20 +23,20 @@
 //! Convert to/from locale text encoding
 class XWindowsClipboardTextConverter : public IXWindowsClipboardConverter {
 public:
-	/*!
-	\c name is converted to an atom and that is reported by getAtom().
-	*/
-	XWindowsClipboardTextConverter(Display* display, const char* name);
-	virtual ~XWindowsClipboardTextConverter();
+    /*!
+    \c name is converted to an atom and that is reported by getAtom().
+    */
+    XWindowsClipboardTextConverter(Display* display, const char* name);
+    virtual ~XWindowsClipboardTextConverter();
 
-	// IXWindowsClipboardConverter overrides
-	virtual IClipboard::EFormat
-						getFormat() const;
-	virtual Atom		getAtom() const;
-	virtual int			getDataSize() const;
-	virtual String		fromIClipboard(const String&) const;
-	virtual String		toIClipboard(const String&) const;
+    // IXWindowsClipboardConverter overrides
+    virtual IClipboard::EFormat
+                        getFormat() const;
+    virtual Atom        getAtom() const;
+    virtual int            getDataSize() const;
+    virtual String        fromIClipboard(const String&) const;
+    virtual String        toIClipboard(const String&) const;
 
 private:
-	Atom				m_atom;
+    Atom                m_atom;
 };

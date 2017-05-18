@@ -48,8 +48,8 @@ MSWindowsDebugOutputter::show(bool showIfEmpty)
 bool
 MSWindowsDebugOutputter::write(ELevel level, const char* msg)
 {
-	OutputDebugString((std::string(msg) + "\n").c_str());
-	return true;
+    OutputDebugString((std::string(msg) + "\n").c_str());
+    return true;
 }
 
 void

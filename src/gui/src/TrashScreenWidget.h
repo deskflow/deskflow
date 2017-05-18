@@ -28,14 +28,14 @@ class QDropEvent;
 
 class TrashScreenWidget : public QLabel
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		TrashScreenWidget(QWidget* parent) : QLabel(parent) {}
+    public:
+        TrashScreenWidget(QWidget* parent) : QLabel(parent) {}
 
-	public:
-		void dragEnterEvent(QDragEnterEvent* event);
-		void dropEvent(QDropEvent* event);
+    public:
+        void dragEnterEvent(QDragEnterEvent* event);
+        void dropEvent(QDropEvent* event);
 };
 
 #endif

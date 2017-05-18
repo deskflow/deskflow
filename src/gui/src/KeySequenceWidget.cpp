@@ -22,124 +22,124 @@
 #include <QMouseEvent>
 
 KeySequenceWidget::KeySequenceWidget(QWidget* parent, const KeySequence& seq) :
-	QPushButton(parent),
-	m_KeySequence(seq),
-	m_BackupSequence(seq),
-	m_Status(Stopped),
-	m_MousePrefix("mousebutton("),
-	m_MousePostfix(")"),
-	m_KeyPrefix("keystroke("),
-	m_KeyPostfix(")")
+    QPushButton(parent),
+    m_KeySequence(seq),
+    m_BackupSequence(seq),
+    m_Status(Stopped),
+    m_MousePrefix("mousebutton("),
+    m_MousePostfix(")"),
+    m_KeyPrefix("keystroke("),
+    m_KeyPostfix(")")
 {
-	setFocusPolicy(Qt::NoFocus);
-	updateOutput();
+    setFocusPolicy(Qt::NoFocus);
+    updateOutput();
 }
 
 void KeySequenceWidget::setKeySequence(const KeySequence& seq)
 {
-	keySequence() = seq;
-	backupSequence() = seq;
+    keySequence() = seq;
+    backupSequence() = seq;
 
-	setStatus(Stopped);
-	updateOutput();
+    setStatus(Stopped);
+    updateOutput();
 }
 
 void KeySequenceWidget::mousePressEvent(QMouseEvent* event)
 {
-	event->accept();
+    event->accept();
 
-	if (status() == Stopped)
-	{
-		startRecording();
-		return;
-	}
+    if (status() == Stopped)
+    {
+        startRecording();
+        return;
+    }
 
-	if (m_KeySequence.appendMouseButton(event->button()))
-		stopRecording();
+    if (m_KeySequence.appendMouseButton(event->button()))
+        stopRecording();
 
-	updateOutput();
+    updateOutput();
 }
 
 void KeySequenceWidget::startRecording()
 {
-	keySequence() = KeySequence();
-	setDown(true);
-	setFocus();
-	grabKeyboard();
-	setStatus(Recording);
+    keySequence() = KeySequence();
+    setDown(true);
+    setFocus();
+    grabKeyboard();
+    setStatus(Recording);
 }
 
 void KeySequenceWidget::stopRecording()
 {
-	if (!keySequence().valid())
-	{
-		keySequence() = backupSequence();
-		updateOutput();
-	}
+    if (!keySequence().valid())
+    {
+        keySequence() = backupSequence();
+        updateOutput();
+    }
 
-	setDown(false);
-	focusNextChild();
-	releaseKeyboard();
-	setStatus(Stopped);
-	emit keySequenceChanged();
+    setDown(false);
+    focusNextChild();
+    releaseKeyboard();
+    setStatus(Stopped);
+    emit keySequenceChanged();
 }
 
 bool KeySequenceWidget::event(QEvent* event)
 {
-	if (status() == Recording)
-	{
-		switch(event->type())
-		{
-			case QEvent::KeyPress:
-				keyPressEvent(static_cast<QKeyEvent*>(event));
-				return true;
+    if (status() == Recording)
+    {
+        switch(event->type())
+        {
+            case QEvent::KeyPress:
+                keyPressEvent(static_cast<QKeyEvent*>(event));
+                return true;
 
-			case QEvent::MouseButtonRelease:
-				event->accept();
-				return true;
+            case QEvent::MouseButtonRelease:
+                event->accept();
+                return true;
 
-			case QEvent::ShortcutOverride:
-				event->accept();
-				return true;
+            case QEvent::ShortcutOverride:
+                event->accept();
+                return true;
 
-			case QEvent::FocusOut:
-				stopRecording();
-				if (!valid())
-				{
-					keySequence() = backupSequence();
-					updateOutput();
-				}
-				break;
+            case QEvent::FocusOut:
+                stopRecording();
+                if (!valid())
+                {
+                    keySequence() = backupSequence();
+                    updateOutput();
+                }
+                break;
 
-			default:
-				break;
-		}
-	}
+            default:
+                break;
+        }
+    }
 
-	return QPushButton::event(event);
+    return QPushButton::event(event);
 }
 
 void KeySequenceWidget::keyPressEvent(QKeyEvent* event)
 {
-	event->accept();
+    event->accept();
 
-	if (status() == Stopped)
-		return;
+    if (status() == Stopped)
+        return;
 
-	if (m_KeySequence.appendKey(event->key(), event->modifiers()))
-		stopRecording();
+    if (m_KeySequence.appendKey(event->key(), event->modifiers()))
+        stopRecording();
 
-	updateOutput();
+    updateOutput();
 }
 
 void KeySequenceWidget::updateOutput()
 {
-	QString s;
+    QString s;
 
-	if (m_KeySequence.isMouseButton())
-		s = mousePrefix() + m_KeySequence.toString() + mousePostfix();
-	else
-		s = keyPrefix() + m_KeySequence.toString() + keyPostfix();
+    if (m_KeySequence.isMouseButton())
+        s = mousePrefix() + m_KeySequence.toString() + mousePostfix();
+    else
+        s = keyPrefix() + m_KeySequence.toString() + keyPostfix();
 
-	setText(s);
+    setText(s);
 }

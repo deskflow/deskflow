@@ -37,213 +37,213 @@ namespace string {
 String
 format(const char* fmt, ...)
 {
-	va_list args;
-	va_start(args, fmt);
-	String result = vformat(fmt, args);
-	va_end(args);
-	return result;
+    va_list args;
+    va_start(args, fmt);
+    String result = vformat(fmt, args);
+    va_end(args);
+    return result;
 }
 
 String
 vformat(const char* fmt, va_list args)
 {
-	// find highest indexed substitution and the locations of substitutions
-	std::vector<size_t> pos;
-	std::vector<size_t> width;
-	std::vector<int> index;
-	int maxIndex = 0;
-	for (const char* scan = fmt; *scan != '\0'; ++scan) {
-		if (*scan == '%') {
-			++scan;
-			if (*scan == '\0') {
-				break;
-			}
-			else if (*scan == '%') {
-				// literal
-				index.push_back(0);
-				pos.push_back(static_cast<int>(scan - 1 - fmt));
-				width.push_back(2);
-			}
-			else if (*scan == '{') {
-				// get argument index
-				char* end;
-				int i = static_cast<int>(strtol(scan + 1, &end, 10));
-				if (*end != '}') {
-					// invalid index -- ignore
-					scan = end - 1;
-				}
-				else {
-					index.push_back(i);
-					pos.push_back(static_cast<int>(scan - 1 - fmt));
-					width.push_back(static_cast<int>(end - scan + 2));
-					if (i > maxIndex) {
-						maxIndex = i;
-					}
-					scan = end;
-				}
-			}
-			else {
-				// improper escape -- ignore
-			}
-		}
-	}
+    // find highest indexed substitution and the locations of substitutions
+    std::vector<size_t> pos;
+    std::vector<size_t> width;
+    std::vector<int> index;
+    int maxIndex = 0;
+    for (const char* scan = fmt; *scan != '\0'; ++scan) {
+        if (*scan == '%') {
+            ++scan;
+            if (*scan == '\0') {
+                break;
+            }
+            else if (*scan == '%') {
+                // literal
+                index.push_back(0);
+                pos.push_back(static_cast<int>(scan - 1 - fmt));
+                width.push_back(2);
+            }
+            else if (*scan == '{') {
+                // get argument index
+                char* end;
+                int i = static_cast<int>(strtol(scan + 1, &end, 10));
+                if (*end != '}') {
+                    // invalid index -- ignore
+                    scan = end - 1;
+                }
+                else {
+                    index.push_back(i);
+                    pos.push_back(static_cast<int>(scan - 1 - fmt));
+                    width.push_back(static_cast<int>(end - scan + 2));
+                    if (i > maxIndex) {
+                        maxIndex = i;
+                    }
+                    scan = end;
+                }
+            }
+            else {
+                // improper escape -- ignore
+            }
+        }
+    }
 
-	// get args
-	std::vector<const char*> value;
-	std::vector<size_t> length;
-	value.push_back("%");
-	length.push_back(1);
-	for (int i = 0; i < maxIndex; ++i) {
-		const char* arg = va_arg(args, const char*);
-		size_t len = strlen(arg);
-		value.push_back(arg);
-		length.push_back(len);
-	}
+    // get args
+    std::vector<const char*> value;
+    std::vector<size_t> length;
+    value.push_back("%");
+    length.push_back(1);
+    for (int i = 0; i < maxIndex; ++i) {
+        const char* arg = va_arg(args, const char*);
+        size_t len = strlen(arg);
+        value.push_back(arg);
+        length.push_back(len);
+    }
 
-	// compute final length
-	size_t resultLength = strlen(fmt);
-	const int n = static_cast<int>(pos.size());
-	for (int i = 0; i < n; ++i) {
-		resultLength -= width[i];
-		resultLength += length[index[i]];
-	}
+    // compute final length
+    size_t resultLength = strlen(fmt);
+    const int n = static_cast<int>(pos.size());
+    for (int i = 0; i < n; ++i) {
+        resultLength -= width[i];
+        resultLength += length[index[i]];
+    }
 
-	// substitute
-	String result;
-	result.reserve(resultLength);
-	size_t src = 0;
-	for (int i = 0; i < n; ++i) {
-		result.append(fmt + src, pos[i] - src);
-		result.append(value[index[i]]);
-		src = pos[i] + width[i];
-	}
-	result.append(fmt + src);
+    // substitute
+    String result;
+    result.reserve(resultLength);
+    size_t src = 0;
+    for (int i = 0; i < n; ++i) {
+        result.append(fmt + src, pos[i] - src);
+        result.append(value[index[i]]);
+        src = pos[i] + width[i];
+    }
+    result.append(fmt + src);
 
-	return result;
+    return result;
 }
 
 String
 sprintf(const char* fmt, ...)
 {
-	char tmp[1024];
-	char* buffer = tmp;
-	int len      = (int)(sizeof(tmp) / sizeof(tmp[0]));
-	String result;
-	while (buffer != NULL) {
-		// try printing into the buffer
-		va_list args;
-		va_start(args, fmt);
-		int n = ARCH->vsnprintf(buffer, len, fmt, args);
-		va_end(args);
+    char tmp[1024];
+    char* buffer = tmp;
+    int len      = (int)(sizeof(tmp) / sizeof(tmp[0]));
+    String result;
+    while (buffer != NULL) {
+        // try printing into the buffer
+        va_list args;
+        va_start(args, fmt);
+        int n = ARCH->vsnprintf(buffer, len, fmt, args);
+        va_end(args);
 
-		// if the buffer wasn't big enough then make it bigger and try again
-		if (n < 0 || n > len) {
-			if (buffer != tmp) {
-				delete[] buffer;
-			}
-			len   *= 2;
-			buffer = new char[len];
-		}
+        // if the buffer wasn't big enough then make it bigger and try again
+        if (n < 0 || n > len) {
+            if (buffer != tmp) {
+                delete[] buffer;
+            }
+            len   *= 2;
+            buffer = new char[len];
+        }
 
-		// if it was big enough then save the string and don't try again
-		else {
-			result = buffer;
-			if (buffer != tmp) {
-				delete[] buffer;
-			}
-			buffer = NULL;
-		}
-	}
+        // if it was big enough then save the string and don't try again
+        else {
+            result = buffer;
+            if (buffer != tmp) {
+                delete[] buffer;
+            }
+            buffer = NULL;
+        }
+    }
 
-	return result;
+    return result;
 }
 
 void
 findReplaceAll(
-	String& subject,
-	const String& find,
-	const String& replace)
+    String& subject,
+    const String& find,
+    const String& replace)
 {
-	size_t pos = 0;
-	while ((pos = subject.find(find, pos)) != String::npos) {
-		 subject.replace(pos, find.length(), replace);
-		 pos += replace.length();
-	}
+    size_t pos = 0;
+    while ((pos = subject.find(find, pos)) != String::npos) {
+         subject.replace(pos, find.length(), replace);
+         pos += replace.length();
+    }
 }
 
 String
 removeFileExt(String filename)
 {
-	size_t dot = filename.find_last_of('.');
+    size_t dot = filename.find_last_of('.');
 
-	if (dot == String::npos) {
-		return filename;
-	}
+    if (dot == String::npos) {
+        return filename;
+    }
 
-	return filename.substr(0, dot);
+    return filename.substr(0, dot);
 }
 
 void
 toHex(String& subject, int width, const char fill)
 {
-	std::stringstream ss;
-	ss << std::hex;
-	for (unsigned int i = 0; i < subject.length(); i++) {
-		ss << std::setw(width) << std::setfill(fill) << (int)(unsigned char)subject[i];
-	}
+    std::stringstream ss;
+    ss << std::hex;
+    for (unsigned int i = 0; i < subject.length(); i++) {
+        ss << std::setw(width) << std::setfill(fill) << (int)(unsigned char)subject[i];
+    }
 
-	subject = ss.str();
+    subject = ss.str();
 }
 
 void
 uppercase(String& subject)
 {
-	std::transform(subject.begin(), subject.end(), subject.begin(), ::toupper);
+    std::transform(subject.begin(), subject.end(), subject.begin(), ::toupper);
 }
 
 void
 removeChar(String& subject, const char c)
 {
-	subject.erase(std::remove(subject.begin(), subject.end(), c), subject.end());
+    subject.erase(std::remove(subject.begin(), subject.end(), c), subject.end());
 }
 
 String
 sizeTypeToString(size_t n)
 {
-	std::stringstream ss;
-	ss << n;
-	return ss.str();
+    std::stringstream ss;
+    ss << n;
+    return ss.str();
 }
 
 size_t
 stringToSizeType(String string)
 {
-	std::istringstream iss(string);
-	size_t value;
-	iss >> value;
-	return value;
+    std::istringstream iss(string);
+    size_t value;
+    iss >> value;
+    return value;
 }
 
 std::vector<String>
 splitString(String string, const char c)
 {
-	std::vector<String> results;
+    std::vector<String> results;
 
-	size_t head = 0;
-	size_t separator = string.find(c);
-	while (separator != String::npos) {
-		if (head!=separator) {
-			results.push_back(string.substr(head, separator - head));
-		}
-		head = separator + 1;
-		separator = string.find(c, head);
-	}
+    size_t head = 0;
+    size_t separator = string.find(c);
+    while (separator != String::npos) {
+        if (head!=separator) {
+            results.push_back(string.substr(head, separator - head));
+        }
+        head = separator + 1;
+        separator = string.find(c, head);
+    }
 
-	if (head < string.size()) {
-		results.push_back(string.substr(head, string.size() - head));
-	}
+    if (head < string.size()) {
+        results.push_back(string.substr(head, string.size() - head));
+    }
 
-	return results;
+    return results;
 }
 
 //
@@ -252,41 +252,41 @@ splitString(String string, const char c)
 
 bool
 CaselessCmp::cmpEqual(
-	const String::value_type& a,
-	const String::value_type& b)
+    const String::value_type& a,
+    const String::value_type& b)
 {
-	// should use std::tolower but not in all versions of libstdc++ have it
-	return tolower(a) == tolower(b);
+    // should use std::tolower but not in all versions of libstdc++ have it
+    return tolower(a) == tolower(b);
 }
 
 bool
 CaselessCmp::cmpLess(
-	const String::value_type& a,
-	const String::value_type& b)
+    const String::value_type& a,
+    const String::value_type& b)
 {
-	// should use std::tolower but not in all versions of libstdc++ have it
-	return tolower(a) < tolower(b);
+    // should use std::tolower but not in all versions of libstdc++ have it
+    return tolower(a) < tolower(b);
 }
 
 bool
 CaselessCmp::less(const String& a, const String& b)
 {
-	return std::lexicographical_compare(
-		a.begin(), a.end(),
-		b.begin(), b.end(),
-		&synergy::string::CaselessCmp::cmpLess);
+    return std::lexicographical_compare(
+        a.begin(), a.end(),
+        b.begin(), b.end(),
+        &synergy::string::CaselessCmp::cmpLess);
 }
 
 bool
 CaselessCmp::equal(const String& a, const String& b)
 {
-	return !(less(a, b) || less(b, a));
+    return !(less(a, b) || less(b, a));
 }
 
 bool
 CaselessCmp::operator()(const String& a, const String& b) const
 {
-	return less(a, b);
+    return less(a, b);
 }
 
 }

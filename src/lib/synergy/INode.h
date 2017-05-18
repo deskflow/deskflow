@@ -21,5 +21,5 @@
 #include "common/IInterface.h"
 
 class INode : IInterface {
-	
+    
 };

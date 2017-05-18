@@ -32,64 +32,64 @@ A secure socket using SSL.
 */
 class SecureSocket : public TCPSocket {
 public:
-	SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
-	SecureSocket(IEventQueue* events,
-		SocketMultiplexer* socketMultiplexer,
-		ArchSocket socket);
-	~SecureSocket();
+    SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+    SecureSocket(IEventQueue* events,
+        SocketMultiplexer* socketMultiplexer,
+        ArchSocket socket);
+    ~SecureSocket();
 
-	// ISocket overrides
-	void				close();
+    // ISocket overrides
+    void                close();
 
-	// IDataSocket overrides
-	virtual void		connect(const NetworkAddress&);
-	
-	ISocketMultiplexerJob*
-						newJob();
-	bool				isFatal() const { return m_fatal; }
-	void				isFatal(bool b) { m_fatal = b; }
-	bool				isSecureReady();
-	void				secureConnect();
-	void				secureAccept();
-	int					secureRead(void* buffer, int size, int& read);
-	int					secureWrite(const void* buffer, int size, int& wrote);
-	EJobResult			doRead();
-	EJobResult			doWrite();
-	void				initSsl(bool server);
-	bool				loadCertificates(String& CertFile);
-
-private:
-	// SSL
-	void				initContext(bool server);
-	void				createSSL();
-	int					secureAccept(int s);
-	int					secureConnect(int s);
-	bool				showCertificate();
-	void				checkResult(int n, int& retry);
-	void				showError(const char* reason = NULL);
-	String				getError();
-	void				disconnect();
-	void				formatFingerprint(String& fingerprint,
-											bool hex = true,
-											bool separator = true);
-	bool				verifyCertFingerprint();
-
-	ISocketMultiplexerJob*
-						serviceConnect(ISocketMultiplexerJob*,
-							bool, bool, bool);
-
-	ISocketMultiplexerJob*
-						serviceAccept(ISocketMultiplexerJob*,
-							bool, bool, bool);
-
-	void				showSecureConnectInfo();
-	void				showSecureLibInfo();
-	void				showSecureCipherInfo();
-	
-	void				handleTCPConnected(const Event& event, void*);
+    // IDataSocket overrides
+    virtual void        connect(const NetworkAddress&);
+    
+    ISocketMultiplexerJob*
+                        newJob();
+    bool                isFatal() const { return m_fatal; }
+    void                isFatal(bool b) { m_fatal = b; }
+    bool                isSecureReady();
+    void                secureConnect();
+    void                secureAccept();
+    int                    secureRead(void* buffer, int size, int& read);
+    int                    secureWrite(const void* buffer, int size, int& wrote);
+    EJobResult            doRead();
+    EJobResult            doWrite();
+    void                initSsl(bool server);
+    bool                loadCertificates(String& CertFile);
 
 private:
-	Ssl*				m_ssl;
-	bool				m_secureReady;
-	bool				m_fatal;
+    // SSL
+    void                initContext(bool server);
+    void                createSSL();
+    int                    secureAccept(int s);
+    int                    secureConnect(int s);
+    bool                showCertificate();
+    void                checkResult(int n, int& retry);
+    void                showError(const char* reason = NULL);
+    String                getError();
+    void                disconnect();
+    void                formatFingerprint(String& fingerprint,
+                                            bool hex = true,
+                                            bool separator = true);
+    bool                verifyCertFingerprint();
+
+    ISocketMultiplexerJob*
+                        serviceConnect(ISocketMultiplexerJob*,
+                            bool, bool, bool);
+
+    ISocketMultiplexerJob*
+                        serviceAccept(ISocketMultiplexerJob*,
+                            bool, bool, bool);
+
+    void                showSecureConnectInfo();
+    void                showSecureLibInfo();
+    void                showSecureCipherInfo();
+    
+    void                handleTCPConnected(const Event& event, void*);
+
+private:
+    Ssl*                m_ssl;
+    bool                m_secureReady;
+    bool                m_fatal;
 };

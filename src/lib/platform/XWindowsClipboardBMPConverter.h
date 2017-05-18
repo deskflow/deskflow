@@ -22,19 +22,19 @@
 
 //! Convert to/from some text encoding
 class XWindowsClipboardBMPConverter :
-				public IXWindowsClipboardConverter {
+                public IXWindowsClipboardConverter {
 public:
-	XWindowsClipboardBMPConverter(Display* display);
-	virtual ~XWindowsClipboardBMPConverter();
+    XWindowsClipboardBMPConverter(Display* display);
+    virtual ~XWindowsClipboardBMPConverter();
 
-	// IXWindowsClipboardConverter overrides
-	virtual IClipboard::EFormat
-						getFormat() const;
-	virtual Atom		getAtom() const;
-	virtual int			getDataSize() const;
-	virtual String		fromIClipboard(const String&) const;
-	virtual String		toIClipboard(const String&) const;
+    // IXWindowsClipboardConverter overrides
+    virtual IClipboard::EFormat
+                        getFormat() const;
+    virtual Atom        getAtom() const;
+    virtual int            getDataSize() const;
+    virtual String        fromIClipboard(const String&) const;
+    virtual String        toIClipboard(const String&) const;
 
 private:
-	Atom				m_atom;
+    Atom                m_atom;
 };

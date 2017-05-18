@@ -30,34 +30,34 @@ though each operation can be a no-op.
 */
 class IArchTaskBar : public IInterface {
 public:
-	//! @name manipulators
-	//@{
+    //! @name manipulators
+    //@{
 
-	//! Add a receiver
-	/*!
-	Add a receiver object to be notified of user and application
-	events.  This should be called before other methods.  When
-	the receiver is added to the task bar, its icon appears on
-	the task bar.
-	*/
-	virtual void		addReceiver(IArchTaskBarReceiver*) = 0;
+    //! Add a receiver
+    /*!
+    Add a receiver object to be notified of user and application
+    events.  This should be called before other methods.  When
+    the receiver is added to the task bar, its icon appears on
+    the task bar.
+    */
+    virtual void        addReceiver(IArchTaskBarReceiver*) = 0;
 
-	//! Remove a receiver
-	/*!
-	Remove a receiver object from the task bar.  This removes the
-	icon from the task bar.
-	*/
-	virtual void		removeReceiver(IArchTaskBarReceiver*) = 0;
+    //! Remove a receiver
+    /*!
+    Remove a receiver object from the task bar.  This removes the
+    icon from the task bar.
+    */
+    virtual void        removeReceiver(IArchTaskBarReceiver*) = 0;
 
-	//! Update a receiver
-	/*!
-	Updates the display of the receiver on the task bar.  This
-	should be called when the receiver appearance may have changed
-	(e.g. it's icon or tool tip has changed).
-	*/
-	virtual void		updateReceiver(IArchTaskBarReceiver*) = 0;
+    //! Update a receiver
+    /*!
+    Updates the display of the receiver on the task bar.  This
+    should be called when the receiver appearance may have changed
+    (e.g. it's icon or tool tip has changed).
+    */
+    virtual void        updateReceiver(IArchTaskBarReceiver*) = 0;
 
-	//@}
+    //@}
 
-	virtual void init() = 0;
+    virtual void init() = 0;
 };

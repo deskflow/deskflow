@@ -28,23 +28,23 @@ class IEventQueue;
 //! Event queue buffer for Win32
 class MSWindowsEventQueueBuffer : public IEventQueueBuffer {
 public:
-	MSWindowsEventQueueBuffer(IEventQueue* events);
-	virtual ~MSWindowsEventQueueBuffer();
+    MSWindowsEventQueueBuffer(IEventQueue* events);
+    virtual ~MSWindowsEventQueueBuffer();
 
-	// IEventQueueBuffer overrides
-	virtual	void		init() { }
-	virtual void		waitForEvent(double timeout);
-	virtual Type		getEvent(Event& event, UInt32& dataID);
-	virtual bool		addEvent(UInt32 dataID);
-	virtual bool		isEmpty() const;
-	virtual EventQueueTimer*
-						newTimer(double duration, bool oneShot) const;
-	virtual void		deleteTimer(EventQueueTimer*) const;
+    // IEventQueueBuffer overrides
+    virtual    void        init() { }
+    virtual void        waitForEvent(double timeout);
+    virtual Type        getEvent(Event& event, UInt32& dataID);
+    virtual bool        addEvent(UInt32 dataID);
+    virtual bool        isEmpty() const;
+    virtual EventQueueTimer*
+                        newTimer(double duration, bool oneShot) const;
+    virtual void        deleteTimer(EventQueueTimer*) const;
 
 private:
-	DWORD				m_thread;
-	UINT				m_userEvent;
-	MSG					m_event;
-	UINT				m_daemonQuit;
-	IEventQueue*		m_events;
+    DWORD                m_thread;
+    UINT                m_userEvent;
+    MSG                    m_event;
+    UINT                m_daemonQuit;
+    IEventQueue*        m_events;
 };

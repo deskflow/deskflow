@@ -29,65 +29,65 @@ class IEventQueue;
 //! Implementation of IArchTaskBarReceiver for the synergy server
 class ClientTaskBarReceiver : public IArchTaskBarReceiver {
 public:
-	ClientTaskBarReceiver(IEventQueue* events);
-	virtual ~ClientTaskBarReceiver();
+    ClientTaskBarReceiver(IEventQueue* events);
+    virtual ~ClientTaskBarReceiver();
 
-	//! @name manipulators
-	//@{
+    //! @name manipulators
+    //@{
 
-	//! Update status
-	/*!
-	Determine the status and query required information from the client.
-	*/
-	void				updateStatus(Client*, const String& errorMsg);
+    //! Update status
+    /*!
+    Determine the status and query required information from the client.
+    */
+    void                updateStatus(Client*, const String& errorMsg);
 
-	void updateStatus(INode* n, const String& errorMsg) { updateStatus((Client*)n, errorMsg); }
+    void updateStatus(INode* n, const String& errorMsg) { updateStatus((Client*)n, errorMsg); }
 
-	//@}
+    //@}
 
-	// IArchTaskBarReceiver overrides
-	virtual void		showStatus() = 0;
-	virtual void		runMenu(int x, int y) = 0;
-	virtual void		primaryAction() = 0;
-	virtual void		lock() const;
-	virtual void		unlock() const;
-	virtual const Icon	getIcon() const = 0;
-	virtual std::string	getToolTip() const;
-	virtual void cleanup() {}
+    // IArchTaskBarReceiver overrides
+    virtual void        showStatus() = 0;
+    virtual void        runMenu(int x, int y) = 0;
+    virtual void        primaryAction() = 0;
+    virtual void        lock() const;
+    virtual void        unlock() const;
+    virtual const Icon    getIcon() const = 0;
+    virtual std::string    getToolTip() const;
+    virtual void cleanup() {}
 
 protected:
-	enum EState {
-		kNotRunning,
-		kNotWorking,
-		kNotConnected,
-		kConnecting,
-		kConnected,
-		kMaxState
-	};
+    enum EState {
+        kNotRunning,
+        kNotWorking,
+        kNotConnected,
+        kConnecting,
+        kConnected,
+        kMaxState
+    };
 
-	//! Get status
-	EState				getStatus() const;
+    //! Get status
+    EState                getStatus() const;
 
-	//! Get error message
-	const String&		getErrorMessage() const;
+    //! Get error message
+    const String&        getErrorMessage() const;
 
-	//! Quit app
-	/*!
-	Causes the application to quit gracefully
-	*/
-	void				quit();
+    //! Quit app
+    /*!
+    Causes the application to quit gracefully
+    */
+    void                quit();
 
-	//! Status change notification
-	/*!
-	Called when status changes.  The default implementation does nothing.
-	*/
-	virtual void		onStatusChanged(Client* client);
+    //! Status change notification
+    /*!
+    Called when status changes.  The default implementation does nothing.
+    */
+    virtual void        onStatusChanged(Client* client);
 
 private:
-	EState				m_state;
-	String				m_errorMessage;
-	String				m_server;
-	IEventQueue*		m_events;
+    EState                m_state;
+    String                m_errorMessage;
+    String                m_server;
+    IEventQueue*        m_events;
 };
 
 IArchTaskBarReceiver* createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events);

@@ -30,31 +30,31 @@ class IStream;
 
 class ClipboardChunk : public Chunk {
 public:
-	ClipboardChunk(size_t size);
+    ClipboardChunk(size_t size);
 
-	static ClipboardChunk*
-						start(
-							ClipboardID id,
-							UInt32 sequence,
-							const String& size);
-	static ClipboardChunk*
-						data(
-							ClipboardID id,
-							UInt32 sequence,
-							const String& data);
-	static ClipboardChunk*
-						end(ClipboardID id, UInt32 sequence);
+    static ClipboardChunk*
+                        start(
+                            ClipboardID id,
+                            UInt32 sequence,
+                            const String& size);
+    static ClipboardChunk*
+                        data(
+                            ClipboardID id,
+                            UInt32 sequence,
+                            const String& data);
+    static ClipboardChunk*
+                        end(ClipboardID id, UInt32 sequence);
 
-	static int			assemble(
-							synergy::IStream* stream,
-							String& dataCached,
-							ClipboardID& id,
-							UInt32& sequence);
+    static int            assemble(
+                            synergy::IStream* stream,
+                            String& dataCached,
+                            ClipboardID& id,
+                            UInt32& sequence);
 
-	static void			send(synergy::IStream* stream, void* data);
+    static void            send(synergy::IStream* stream, void* data);
 
-	static size_t		getExpectedSize() { return s_expectedSize; }
+    static size_t        getExpectedSize() { return s_expectedSize; }
 
 private:
-	static size_t		s_expectedSize;
+    static size_t        s_expectedSize;
 };
