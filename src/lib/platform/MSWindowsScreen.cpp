@@ -868,7 +868,7 @@ MSWindowsScreen::createWindow(ATOM windowClass, const char* name) const
     HWND window = CreateWindowEx(WS_EX_TOPMOST |
                                     WS_EX_TRANSPARENT |
                                     WS_EX_TOOLWINDOW,
-                                reinterpret_cast<LPCTSTR>(windowClass),
+                                MAKEINTATOM(windowClass),
                                 name,
                                 WS_POPUP,
                                 0, 0, 1, 1,
