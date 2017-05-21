@@ -17,9 +17,9 @@
 cmake_minimum_required (VERSION 3.4)
 project (synergy C CXX)
 
-option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI (synergy)" ON)
+option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" ON)
 option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
-option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the installer" ON)
+option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" ON)
 
 set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_EXTENSIONS OFF)
@@ -34,14 +34,13 @@ endif()
 #
 # Version
 #
-# NOTE: We follow 'Semantic Versioning' now: http://semver.org/
-
 if (NOT DEFINED SYNERGY_VERSION_MAJOR)
     if (DEFINED ENV{SYNERGY_VERSION_MAJOR})
         set (SYNERGY_VERSION_MAJOR $ENV{SYNERGY_VERSION_MAJOR})
     else()
         set (SYNERGY_VERSION_MAJOR 1)
-        message (WARNING "SYNERGY_VERSION_MAJOR not set. Defaulted to ${SYNERGY_VERSION_MAJOR}")
+        message (WARNING
+            "SYNERGY_VERSION_MAJOR not set. Defaulted to ${SYNERGY_VERSION_MAJOR}")
     endif()
 endif()
 
@@ -50,7 +49,8 @@ if (NOT DEFINED SYNERGY_VERSION_MINOR)
         set (SYNERGY_VERSION_MINOR $ENV{SYNERGY_VERSION_MINOR})
     else()
         set (SYNERGY_VERSION_MINOR 9)
-        message (WARNING "(SYNERGY_VERSION_MINOR not set. Defaulted to ${SYNERGY_VERSION_MINOR}")
+        message (WARNING
+            "(SYNERGY_VERSION_MINOR not set. Defaulted to ${SYNERGY_VERSION_MINOR}")
     endif()
 endif()
 
@@ -59,7 +59,8 @@ if (NOT DEFINED SYNERGY_VERSION_PATCH)
         set (SYNERGY_VERSION_PATCH $ENV{SYNERGY_VERSION_PATCH})
     else()
         set (SYNERGY_VERSION_PATCH 0)
-        message (WARNING "SYNERGY_VERSION_PATCH not set. Defaulted to ${SYNERGY_VERSION_PATCH}")
+        message (WARNING
+            "SYNERGY_VERSION_PATCH not set. Defaulted to ${SYNERGY_VERSION_PATCH}")
     endif()
 endif()
 
@@ -68,15 +69,29 @@ if (NOT DEFINED SYNERGY_VERSION_STAGE)
         set (SYNERGY_VERSION_STAGE $ENV{SYNERGY_VERSION_STAGE})
     else()
         set (SYNERGY_VERSION_STAGE "git")
-        message (WARNING "SYNERGY_VERSION_STAGE not set. Defaulted to ${SYNERGY_VERSION_STAGE}")
+        message (WARNING "SYNERGY_VERSION_STAGE not set. Defaulted to '${SYNERGY_VERSION_STAGE}'")
     endif()
 endif()
 
-if ((NOT DEFINED SYNERGY_REVISION) AND (DEFINED ENV{SYNERGY_REVISION}))
-    set (SYNERGY_REVISION $ENV{SYNERGY_REVISION})
+if (NOT DEFINED SYNERGY_REVISION)
+    if (DEFINED ENV{GIT_COMMIT})
+        string (SUBSTRING $ENV{GIT_COMMIT} 0 7 SYNERGY_REVISION)
+    endif()
+endif()
+
+if (SYNERGY_VERSION_STAGE STREQUAL "git")
+    if (NOT DEFINED SYNERGY_REVISION)
+        message (FATAL_ERROR "Either SYNERGY_REVISION or SYNERGY_VERSION_STAGE must be set.")
+    endif()
+    set (SYNERGY_VERSION_TAG "g${SYNERGY_REVISION}")
+else()
+    set (SYNERGY_VERSION_TAG "${SYNERGY_VERSION_STAGE}")
 endif()
 
 set (SYNERGY_VERSION "${SYNERGY_VERSION_MAJOR}.${SYNERGY_VERSION_MINOR}.${SYNERGY_VERSION_PATCH}")
+set (SYNERGY_VERSION_STRING "${SYNERGY_VERSION}-${SYNERGY_VERSION_TAG}")
+message (STATUS "Full Synergy version string is " ${SYNERGY_VERSION_STRING})
+
 
 # TODO: Find out why we need these, and remove them
 if (COMMAND cmake_policy)
