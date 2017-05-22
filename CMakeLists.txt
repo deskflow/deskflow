@@ -75,7 +75,7 @@ endif()
 
 if (NOT DEFINED SYNERGY_REVISION)
     if (DEFINED ENV{GIT_COMMIT})
-        string (SUBSTRING $ENV{GIT_COMMIT} 0 7 SYNERGY_REVISION)
+        string (SUBSTRING $ENV{GIT_COMMIT} 0 8 SYNERGY_REVISION)
     elseif (SYNERGY_VERSION_STAGE STREQUAL "git")
         execute_process (
             COMMAND git rev-parse --short HEAD
@@ -86,9 +86,9 @@ if (NOT DEFINED SYNERGY_REVISION)
     endif()
 endif()
 
-#if (NOT "${SYNERGY_REVISION}" MATCHES "[a-f0-9]{8}")
-#	message (FATAL_ERROR "SYNERGY_VERSION='${SYNERGY_REVISION}' is an invalid git shorthash")
-#endif()
+if (NOT SYNERGY_REVISION MATCHES "[a-f0-9]{8}")
+    message (FATAL_ERROR "SYNERGY_VERSION='${SYNERGY_REVISION}' is invalid")
+endif()
 
 string (TIMESTAMP SYNERGY_BUILD_DATE "%Y%m%d" UTC)
 if (DEFINED ENV{BUILDS_TODAY})
