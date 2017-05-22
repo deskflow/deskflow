@@ -1,9 +1,13 @@
-v1.9.0-beta2
+v1.9.0-rc3
+============
+Bug #4132 - Laggy mouse cursor on macOS clients
+
+v1.9.0-rc2
 ===========
 Bug #5901 - Stored serial key corrupted on macOS
 Bug #5757 - Failure to build against OpenSSL v1.1.0
 
-v1.9.0-beta1
+v1.9.0-rc1
 ==========
 Bug #5467 - Failing to automatically download and install Bonjour
 Enhancement #5389 - Ported GUI to Qt 5
