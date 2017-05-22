@@ -80,7 +80,7 @@ IpcServer::~IpcServer()
     for (it = m_clients.begin(); it != m_clients.end(); it++) {
         deleteClient(*it);
     }
-    m_clients.empty();
+    m_clients.clear();
     ARCH->unlockMutex(m_clientsMutex);
     ARCH->closeMutex(m_clientsMutex);
     

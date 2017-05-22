@@ -30,7 +30,7 @@ public:
     ZeroconfServer(QObject* parent = 0);
 
 protected:
-    void incomingConnection(int socketDescriptor);
+    void incomingConnection(qintptr socketDescriptor) override;
 
 private:
     QStringList fortunes;

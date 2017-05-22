@@ -38,7 +38,7 @@ ScreenSetupView::ScreenSetupView(QWidget* parent) :
     verticalHeader()->hide();
 }
 
-void ScreenSetupView::setModel(ScreenSetupModel* model)
+void ScreenSetupView::setModel(QAbstractItemModel* model)
 {
     QTableView::setModel(model);
     setTableSize();

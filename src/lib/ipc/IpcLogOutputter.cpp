@@ -45,6 +45,7 @@ IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer, EIpcClientType clientType
     m_running(false),
     m_notifyCond(ARCH->newCondVar()),
     m_notifyMutex(ARCH->newMutex()),
+    m_bufferThreadId(0),
     m_bufferWaiting(false),
     m_bufferMaxSize(kBufferMaxSize),
     m_bufferRateWriteLimit(kBufferRateWriteLimit),

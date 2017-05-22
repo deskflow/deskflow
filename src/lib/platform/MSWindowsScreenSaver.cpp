@@ -50,6 +50,9 @@ MSWindowsScreenSaver::MSWindowsScreenSaver() :
     m_process(NULL),
     m_watch(NULL),
     m_threadID(0),
+    m_msg(0),
+    m_wParam(0),
+    m_lParam(0),
     m_active(false)
 {
     // check if screen saver is enabled

@@ -858,7 +858,7 @@ void
 MSWindowsScreen::destroyClass(ATOM windowClass) const
 {
     if (windowClass != 0) {
-        UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass), s_windowInstance);
+        UnregisterClass(MAKEINTATOM(windowClass), s_windowInstance);
     }
 }
 
@@ -868,7 +868,7 @@ MSWindowsScreen::createWindow(ATOM windowClass, const char* name) const
     HWND window = CreateWindowEx(WS_EX_TOPMOST |
                                     WS_EX_TRANSPARENT |
                                     WS_EX_TOOLWINDOW,
-                                reinterpret_cast<LPCTSTR>(windowClass),
+                                MAKEINTATOM(windowClass),
                                 name,
                                 WS_POPUP,
                                 0, 0, 1, 1,
@@ -889,7 +889,7 @@ MSWindowsScreen::createDropWindow(ATOM windowClass, const char* name) const
         WS_EX_TOPMOST |
         WS_EX_TRANSPARENT |
         WS_EX_ACCEPTFILES,
-        reinterpret_cast<LPCTSTR>(m_class),
+        MAKEINTATOM(m_class),
         name,
         WS_POPUP,
         0, 0, m_dropWindowSize, m_dropWindowSize,
@@ -1143,7 +1143,7 @@ MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
     KeyModifierMask oldState = pollActiveModifiers();
 
     // check for autorepeat
-    if (m_keyState->testAutoRepeat(down, (lParam & 0x40000000u) == 1, button)) {
+    if (m_keyState->testAutoRepeat(down, (lParam & 0x40000000u), button)) {
         lParam |= 0x40000000u;
     }
 

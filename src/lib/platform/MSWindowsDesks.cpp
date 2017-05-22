@@ -427,7 +427,7 @@ void
 MSWindowsDesks::destroyClass(ATOM windowClass) const
 {
     if (windowClass != 0) {
-        UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass),
+        UnregisterClass(MAKEINTATOM(windowClass),
                             MSWindowsScreen::getWindowInstance());
     }
 }
@@ -437,7 +437,7 @@ MSWindowsDesks::createWindow(ATOM windowClass, const char* name) const
 {
     HWND window = CreateWindowEx(WS_EX_TRANSPARENT |
                                     WS_EX_TOOLWINDOW,
-                                reinterpret_cast<LPCTSTR>(windowClass),
+                                MAKEINTATOM(windowClass),
                                 name,
                                 WS_POPUP,
                                 0, 0, 1, 1,
