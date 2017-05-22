@@ -88,7 +88,11 @@ MSWindowsClipboard::empty()
 
     // mark clipboard as being owned by synergy
     HGLOBAL data = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, 1);
-    SetClipboardData(getOwnershipFormat(), data);
+    if (NULL == SetClipboardData(getOwnershipFormat(), data)) {
+        LOG((CLOG_DEBUG "failed to set clipboard data"));
+        GlobalFree(data);
+        return false;
+    }
 
     return true;
 }

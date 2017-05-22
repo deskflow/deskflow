@@ -29,31 +29,14 @@
 String
 MSWindowsUtil::getString(HINSTANCE instance, DWORD id)
 {
-    char buffer[1024];
-    int size = static_cast<int>(sizeof(buffer) / sizeof(buffer[0]));
-    char* msg = buffer;
+    char* msg = NULL;
+    int n = LoadString(instance, id, reinterpret_cast<LPSTR>(&msg), 0);
 
-    // load string
-    int n = LoadString(instance, id, msg, size);
-    msg[n] = '\0';
-    if (n < size) {
-        return msg;
+    if (n <= 0) {
+        return String();
     }
 
-    // not enough buffer space.  keep trying larger buffers until
-    // we get the whole string.
-    msg = NULL;
-    do {
-        size <<= 1;
-        delete[] msg;
-        char* msg = new char[size];
-        n = LoadString(instance, id, msg, size);
-    } while (n == size);
-    msg[n] = '\0';
-
-    String result(msg);
-    delete[] msg;
-    return result;
+    return String (msg, n);
 }
 
 String

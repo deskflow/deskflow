@@ -330,7 +330,7 @@ TCPSocket::doRead()
     memset(buffer, 0, sizeof(buffer));
     size_t bytesRead = 0;
     
-    bytesRead = (int) ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+    bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
     
     if (bytesRead > 0) {
         bool wasEmpty = (m_inputBuffer.getSize() == 0);

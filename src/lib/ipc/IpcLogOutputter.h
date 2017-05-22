@@ -114,7 +114,6 @@ private:
     double                m_bufferRateTimeLimit;
     UInt16                m_bufferWriteCount;
     double                m_bufferRateStart;
-    bool                m_useThread;
     EIpcClientType        m_clientType;
     ArchMutex            m_runningMutex;
 };
