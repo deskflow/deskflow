@@ -7,5 +7,5 @@ Path=/usr/bin
 Exec=/usr/bin/synergy2
 Icon=/usr/share/icons/synergy.svg
 Terminal=false
-Categories=Network;
-
+Categories=Utility;
+Keywords=keyboard;mouse;sharing;network;share;
