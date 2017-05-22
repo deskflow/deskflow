@@ -76,22 +76,38 @@ endif()
 if (NOT DEFINED SYNERGY_REVISION)
     if (DEFINED ENV{GIT_COMMIT})
         string (SUBSTRING $ENV{GIT_COMMIT} 0 7 SYNERGY_REVISION)
+    elseif (SYNERGY_VERSION_STAGE STREQUAL "git")
+        execute_process (
+            COMMAND git rev-parse --short HEAD
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            OUTPUT_VARIABLE SYNERGY_REVISION
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
     endif()
 endif()
 
+#if (NOT "${SYNERGY_REVISION}" MATCHES "[a-f0-9]{8}")
+#	message (FATAL_ERROR "SYNERGY_VERSION='${SYNERGY_REVISION}' is an invalid git shorthash")
+#endif()
+
+string (TIMESTAMP SYNERGY_BUILD_DATE "%Y%m%d" UTC)
+if (DEFINED ENV{BUILD_NUMBER})
+    set (SYNERGY_BUILD_NUMBER $ENV{BUILD_NUMBER}})
+else()
+    set (SYNERGY_BUILD_NUMBER 1)
+endif()
+
+set (SYNERGY_VERSION "${SYNERGY_VERSION_MAJOR}.${SYNERGY_VERSION_MINOR}.${SYNERGY_VERSION_PATCH}")
+set (SYNERGY_SNAPSHOT_INFO "${SYNERGY_BUILD_DATE}.${SYNERGY_REVISION}")
+
 if (SYNERGY_VERSION_STAGE STREQUAL "git")
-    if (NOT DEFINED SYNERGY_REVISION)
-        message (FATAL_ERROR "Either SYNERGY_REVISION or SYNERGY_VERSION_STAGE must be set.")
-    endif()
-    set (SYNERGY_VERSION_TAG "g${SYNERGY_REVISION}")
+    set (SYNERGY_VERSION_TAG "b${SYNERGY_BUILD_NUMBER}.${SYNERGY_SNAPSHOT_INFO}")
 else()
     set (SYNERGY_VERSION_TAG "${SYNERGY_VERSION_STAGE}")
 endif()
 
-set (SYNERGY_VERSION "${SYNERGY_VERSION_MAJOR}.${SYNERGY_VERSION_MINOR}.${SYNERGY_VERSION_PATCH}")
 set (SYNERGY_VERSION_STRING "${SYNERGY_VERSION}-${SYNERGY_VERSION_TAG}")
 message (STATUS "Full Synergy version string is " ${SYNERGY_VERSION_STRING})
-
 
 # TODO: Find out why we need these, and remove them
 if (COMMAND cmake_policy)
@@ -430,6 +446,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 endif()
 
 else()
-        message (STATUS "NOT configuring the v1 installer")
+	message (STATUS "NOT configuring the v1 installer")
 endif()
 add_subdirectory (src)
