@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "QObject.h"
+#include "qobject.h"
 
 class VersionCheckerTests : public QObject
 {
