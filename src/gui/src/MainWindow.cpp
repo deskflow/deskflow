@@ -830,7 +830,9 @@ void MainWindow::stopSynergy()
 
     // HACK: deleting the object deletes the physical file, which is
     // bad, since it could be in use by the Windows service!
-    //delete m_pTempConfigFile;
+#if !defined(Q_OS_WIN)
+    delete m_pTempConfigFile;
+#endif
     m_pTempConfigFile = NULL;
 
     // reset so that new connects cause auto-hide.
