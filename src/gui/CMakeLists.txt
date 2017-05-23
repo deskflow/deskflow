@@ -33,8 +33,6 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 endif()
 
 qt5_use_modules (synergy Core Widgets Network)
-target_compile_definitions (synergy PRIVATE -DSYNERGY_VERSION_STAGE="${SYNERGY_VERSION_STAGE}")
-target_compile_definitions (synergy PRIVATE -DSYNERGY_REVISION="${SYNERGY_REVISION}")
 
 if (WIN32)
     target_link_libraries (synergy ${DNSSD_LIB})

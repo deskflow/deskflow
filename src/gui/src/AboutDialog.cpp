@@ -28,13 +28,7 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 	setupUi(this);
 
 	m_versionChecker.setApp(synergyApp);
-	QString version = m_versionChecker.getVersion();
-	version = version + '-' + SYNERGY_VERSION_STAGE;
-#ifdef SYNERGY_REVISION
-    version +=  '-';
-    version += SYNERGY_REVISION;
-#endif
-	m_pLabelSynergyVersion->setText(version);
+	m_pLabelSynergyVersion->setText(SYNERGY_VERSION_STRING);
 
 	QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
 	QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");

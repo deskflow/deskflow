@@ -120,6 +120,9 @@ endif()
 
 set (SYNERGY_VERSION "${SYNERGY_VERSION_MAJOR}.${SYNERGY_VERSION_MINOR}.${SYNERGY_VERSION_PATCH}")
 set (SYNERGY_VERSION_STRING "${SYNERGY_VERSION}-${SYNERGY_VERSION_TAG}")
+
+add_definitions (-DSYNERGY_VERSION="${SYNERGY_VERSION}")
+add_definitions (-DSYNERGY_VERSION_STRING="${SYNERGY_VERSION_STRING}")
 message (STATUS "Full Synergy version string is " ${SYNERGY_VERSION_STRING})
 
 # TODO: Find out why we need these, and remove them

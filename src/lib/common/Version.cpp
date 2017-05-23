@@ -25,4 +25,4 @@ const char* kCopyright   = "Copyright (C) 2012-2016 Symless Ltd.\n"
 const char* kContact     = "Email: engineering@symless.com";
 const char* kWebsite     = "https://symless.com/";
 const char* kVersion     = SYNERGY_VERSION;
-const char* kAppVersion  = "Synergy " SYNERGY_VERSION;
+const char* kAppVersion  = "Synergy " SYNERGY_VERSION_STRING;
