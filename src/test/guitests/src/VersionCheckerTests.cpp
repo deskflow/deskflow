@@ -18,7 +18,7 @@
 
 #include "VersionCheckerTests.h"
 #include "VersionChecker.cpp"
-#include "../../gui/tmp/debug/moc_VersionChecker.cpp"
+#include "../../gui/tmp/release/moc_VersionChecker.cpp"
 
 #include <QtTest/QTest>
 

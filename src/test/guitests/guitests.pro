@@ -8,8 +8,7 @@ TEMPLATE = app
 INCLUDEPATH += ../../gui/src
 SOURCES += src/main.cpp \
     src/VersionCheckerTests.cpp
-HEADERS += src/VersionCheckerTests.h \
-    src/VersionChecker.h
+HEADERS += src/VersionCheckerTests.h
 win32 { 
     Debug:DESTDIR = ../../../bin/Debug
     Release:DESTDIR = ../../../bin/Release

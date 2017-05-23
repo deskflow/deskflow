@@ -5,7 +5,8 @@ Name=Synergy
 Comment=Keyboard and mouse sharing solution
 Path=/usr/bin
 Exec=/usr/bin/synergy
-Icon=/usr/share/icons/synergy.svg
+Icon=synergy
 Terminal=false
-Categories=Network;
+Categories=Utility;
+Keywords=keyboard;mouse;sharing;network;share;
 
