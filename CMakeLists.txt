@@ -406,7 +406,7 @@ endif()
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
-    install(FILES res/synergy.svg DESTINATION share/icons)
+    install(FILES res/synergy.svg DESTINATION share/icons/hicolor/scalable/apps)
     if("${VERSION_MAJOR}" STREQUAL "2") 
         install(FILES res/synergy2.desktop DESTINATION share/applications)
     else()
