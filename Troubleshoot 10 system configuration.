@@ -1,0 +1,55 @@
+I have multiple networked devices that I am attempting to get working together. 
+A set of which are intended to function as a command center and employ synergy.
+
+*There appears to be server configuration issues for the base station "ANVIL"*
+
+Anvil is a Lenovo M50 series. M57 I think.
+Desktop, Win7HomePre 
+
+The wireless router is a supported U-Verse AT&T wireless router.
+The Iomega/Lenovo "Home Media" 2terabyte storage device attached to the network.
+May be the problem.
+
+After installing both softwares the network went haywire on ANVIL.
+
+The Synergy two client computers ( WHITE, and OWNER ) for the command station are seemingly unaffected.
+Tho they are generating the same error in the log.
+I have not attempted to alter the Synergy settings at all beyond checking the elevate;
+-- which produced no change in any behavior.
+
+Note: Implementing a third ( android ) device would be intruiging.
+
+ANVIL NETWORK HAYWIRE
+* UNABLE TO BROWSE *SPECIFICALLY* just the internet and synergy.
+* Network task icon indicates internet access.
+* Network map panel indicates no problems.
+* MS Troubleshooters and fixits indicate no problem.
+* CMD Ping command results in no problems.
+* NSLookup commands as well indicating no problems.
+* Synergy does not work:
+** Launching the GUI -> Prior to start the log view repetitively reiterates;
+--- NOTE: connecting to service...
+--- ERROR: ipc connection error, code=-1
+* The web is inaccessible
+** All web browsers in all profiles in or out of safe mode cannot find pages.
+* In all profiles and all modes the network map indicates no problems.
+* In all profiles and all modes ping is functioning fine with any website.
+* In all profiles and all modes workgroup network shares are available.
+
+*The Time Line*
+
+ANVIL was working fine and accessing the internet and synergy.
+I installed the Iomega/Lenovo "Home Media" drive into the network.
+The install CD came with Iomega software. 
+After installing the iomega software the iomega software said that I had to install Lenovo software.
+I installed the Lenovo Software from an in program prompt.
+After installing the LenovoEMC storage management software everything was working fine.
+I uninstalled the Iomega network storage management software.
+I rebooted ANVIL.
+ANVIL no longer connection to the internet but can access the network.
+Synergy was still working.
+I uninstalled all the network and storage monitoring software from my computer.
+Including all network driver controllers.
+I installed a new wireless adapter and installed its drivers w/o its ( TP-Linke ) wifi management console.
+I have not regained the ability to access the internet/web.
+Synergy produces the aforementioned error -- repeatedly -- in its log prior to hitting start.
