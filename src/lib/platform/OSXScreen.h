@@ -345,5 +345,7 @@ private:
 	CondVar<bool>*			m_carbonLoopReady;
 #endif
 
+    // Compat mode for Parallels style apps
 	class OSXScreenImpl*	m_impl;
+    void*                   m_compatDelegate;
 };

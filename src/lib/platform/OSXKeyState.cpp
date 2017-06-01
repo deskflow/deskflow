@@ -155,6 +155,7 @@ OSXKeyState::init()
 	m_altPressed = false;
 	m_superPressed = false;
 	m_capsPressed = false;
+    CompatModeActive = false;
 
 	// build virtual key map
 	for (size_t i = 0; i < sizeof(s_controlKeys) / sizeof(s_controlKeys[0]);
@@ -510,6 +511,10 @@ OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
 	UInt32 modifiersDelta = 0;
 
 	bzero(&event, sizeof(NXEventData));
+    
+    //LOG((CLOG_INFO
+    //     "  Key pressed. Compat Mode: %s",
+    //     CompatModeActive ? "true" : "false"));
 
 	switch (virtualKeyCode)
 	{
@@ -551,8 +556,24 @@ OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
 		}
 			
 		kern_return_t kr;
-		kr = IOHIDPostEvent(getEventDriver(), NX_FLAGSCHANGED, loc,
+            
+        // If we aren't in compat mode, send the modifiers as flags,
+        // otherwise send the raw keycode
+        if (!CompatModeActive) {
+            kr = IOHIDPostEvent(getEventDriver(), NX_FLAGSCHANGED, loc,
 				&event, kNXEventDataVersion, modifiers, true);
+        }
+        else {
+            event.key.repeat = false;
+            event.key.keyCode = virtualKeyCode;
+            event.key.origCharSet = event.key.charSet = NX_ASCIISET;
+            event.key.origCharCode = event.key.charCode = 0;
+            kr = IOHIDPostEvent(getEventDriver(),
+                                postDown ? NX_KEYDOWN : NX_KEYUP,
+                                loc, &event, kNXEventDataVersion, 0, false);
+            assert(KERN_SUCCESS == kr);
+        }
+            
 		assert(KERN_SUCCESS == kr);
 		break;
 
