@@ -511,7 +511,7 @@ OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
 	UInt32 modifiersDelta = 0;
 
 	bzero(&event, sizeof(NXEventData));
-    
+
 	switch (virtualKeyCode)
 	{
 	case s_shiftVK:
