@@ -175,10 +175,8 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 		m_pmWatchThread = new Thread(new TMethodJob<OSXScreen>
 								(this, &OSXScreen::watchSystemPowerThread));
         
-        m_compatDelegate = [[OSXCompatAppDelegate alloc]init];
-        [m_compatDelegate registerNotifications:&m_keyState->CompatModeActive];
-        
-        
+		m_compatDelegate = [[OSXCompatAppDelegate alloc]init];
+		[m_compatDelegate registerNotifications:&m_keyState->CompatModeActive];
 	}
 	catch (...) {
 		m_events->removeHandler(m_events->forOSXScreen().confirmSleep(),
@@ -243,7 +241,7 @@ OSXScreen::~OSXScreen()
 	delete m_carbonLoopReady;
 #endif
     
-    [m_compatDelegate unRegisterNotifications];
+	[m_compatDelegate unRegisterNotifications];
 }
 
 void*
