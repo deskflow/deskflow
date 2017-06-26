@@ -779,7 +779,8 @@ class InternalCommands:
 				frameworkRootDir = "/Library/Frameworks"
 			else:
 				# TODO: auto-detect, qt can now be installed anywhere.
-				frameworkRootDir = "/Developer/Qt5.2.1/5.2.1/clang_64/lib"
+				frameworkRootDir = subprocess.check_output("qmake", "-query",
+									   "\"QT_INSTALL_PREFIX\"")
 
 			target = bundleTargetDir + "/Contents/Frameworks"
 
