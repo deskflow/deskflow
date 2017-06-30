@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -28,114 +28,100 @@
 // ClientTaskBarReceiver
 //
 
-ClientTaskBarReceiver::ClientTaskBarReceiver(IEventQueue* events) :
-    m_state(kNotRunning),
-    m_events(events)
-{
+ClientTaskBarReceiver::ClientTaskBarReceiver (IEventQueue* events)
+    : m_state (kNotRunning), m_events (events) {
     // do nothing
 }
 
-ClientTaskBarReceiver::~ClientTaskBarReceiver()
-{
+ClientTaskBarReceiver::~ClientTaskBarReceiver () {
     // do nothing
 }
 
 void
-ClientTaskBarReceiver::updateStatus(Client* client, const String& errorMsg)
-{
+ClientTaskBarReceiver::updateStatus (Client* client, const String& errorMsg) {
     {
         // update our status
         m_errorMessage = errorMsg;
         if (client == NULL) {
-            if (m_errorMessage.empty()) {
+            if (m_errorMessage.empty ()) {
                 m_state = kNotRunning;
-            }
-            else {
+            } else {
                 m_state = kNotWorking;
             }
-        }
-        else {
-            m_server = client->getServerAddress().getHostname();
+        } else {
+            m_server = client->getServerAddress ().getHostname ();
 
-            if (client->isConnected()) {
+            if (client->isConnected ()) {
                 m_state = kConnected;
-            }
-            else if (client->isConnecting()) {
+            } else if (client->isConnecting ()) {
                 m_state = kConnecting;
-            }
-            else {
+            } else {
                 m_state = kNotConnected;
             }
         }
 
         // let subclasses have a go
-        onStatusChanged(client);
+        onStatusChanged (client);
     }
 
     // tell task bar
-    ARCH->updateReceiver(this);
+    ARCH->updateReceiver (this);
 }
 
 ClientTaskBarReceiver::EState
-ClientTaskBarReceiver::getStatus() const
-{
+ClientTaskBarReceiver::getStatus () const {
     return m_state;
 }
 
 const String&
-ClientTaskBarReceiver::getErrorMessage() const
-{
+ClientTaskBarReceiver::getErrorMessage () const {
     return m_errorMessage;
 }
 
 void
-ClientTaskBarReceiver::quit()
-{
-    m_events->addEvent(Event(Event::kQuit));
+ClientTaskBarReceiver::quit () {
+    m_events->addEvent (Event (Event::kQuit));
 }
 
 void
-ClientTaskBarReceiver::onStatusChanged(Client*)
-{
+ClientTaskBarReceiver::onStatusChanged (Client*) {
     // do nothing
 }
 
 void
-ClientTaskBarReceiver::lock() const
-{
+ClientTaskBarReceiver::lock () const {
     // do nothing
 }
 
 void
-ClientTaskBarReceiver::unlock() const
-{
+ClientTaskBarReceiver::unlock () const {
     // do nothing
 }
 
 std::string
-ClientTaskBarReceiver::getToolTip() const
-{
+ClientTaskBarReceiver::getToolTip () const {
     switch (m_state) {
-    case kNotRunning:
-        return synergy::string::sprintf("%s:  Not running", kAppVersion);
+        case kNotRunning:
+            return synergy::string::sprintf ("%s:  Not running", kAppVersion);
 
-    case kNotWorking:
-        return synergy::string::sprintf("%s:  %s",
-                                kAppVersion, m_errorMessage.c_str());
+        case kNotWorking:
+            return synergy::string::sprintf (
+                "%s:  %s", kAppVersion, m_errorMessage.c_str ());
 
-    case kNotConnected:
-        return synergy::string::sprintf("%s:  Not connected:  %s",
-                                kAppVersion, m_errorMessage.c_str());
+        case kNotConnected:
+            return synergy::string::sprintf ("%s:  Not connected:  %s",
+                                             kAppVersion,
+                                             m_errorMessage.c_str ());
 
-    case kConnecting:
-        return synergy::string::sprintf("%s:  Connecting to %s...",
-                                kAppVersion, m_server.c_str());
+        case kConnecting:
+            return synergy::string::sprintf (
+                "%s:  Connecting to %s...", kAppVersion, m_server.c_str ());
 
-    case kConnected:
-        return synergy::string::sprintf("%s:  Connected to %s",
-                                kAppVersion, m_server.c_str());
+        case kConnected:
+            return synergy::string::sprintf (
+                "%s:  Connected to %s", kAppVersion, m_server.c_str ());
 
-    default:
-        return "";
+        default:
+            return "";
     }
 }

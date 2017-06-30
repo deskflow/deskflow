@@ -22,16 +22,14 @@
 #define TEST_URL "https://symless.com/tests/?testString"
 //#define TEST_URL "http://localhost/synergy/tests/?testString"
 
-TEST(ArchInternetTests, get)
-{
+TEST (ArchInternetTests, get) {
     ARCH_INTERNET internet;
-    String result = internet.get(TEST_URL);
-    ASSERT_EQ("Hello world!", result);
+    String result = internet.get (TEST_URL);
+    ASSERT_EQ ("Hello world!", result);
 }
 
-TEST(ArchInternetTests, urlEncode)
-{
+TEST (ArchInternetTests, urlEncode) {
     ARCH_INTERNET internet;
-    String result = internet.urlEncode("hello=+&world");
-    ASSERT_EQ("hello%3D%2B%26world", result);
+    String result = internet.urlEncode ("hello=+&world");
+    ASSERT_EQ ("hello%3D%2B%26world", result);
 }

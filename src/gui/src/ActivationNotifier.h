@@ -20,22 +20,21 @@
 
 #include <QObject>
 
-class ActivationNotifier : public QObject
-{
-Q_OBJECT
+class ActivationNotifier : public QObject {
+    Q_OBJECT
 public:
-    explicit ActivationNotifier(QObject *parent = 0);
+    explicit ActivationNotifier (QObject* parent = 0);
 
-    void setIdentity(QString identity);
-    void setUpdateInfo(QString const& fromVersion,
-                        QString const& toVersion, QString const& serialKey);
+    void setIdentity (QString identity);
+    void setUpdateInfo (QString const& fromVersion, QString const& toVersion,
+                        QString const& serialKey);
 
 public slots:
-    void notify();
-    void notifyUpdate();
+    void notify ();
+    void notifyUpdate ();
 
 signals:
-    void finished();
+    void finished ();
 
 private:
     QString m_Identity;

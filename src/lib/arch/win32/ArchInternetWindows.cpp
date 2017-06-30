@@ -25,29 +25,29 @@
 #include <Shlwapi.h>
 
 struct WinINetUrl {
-    String                m_scheme;
-    String                m_host;
-    String                m_path;
-    INTERNET_PORT        m_port;
-    DWORD                m_flags;
+    String m_scheme;
+    String m_host;
+    String m_path;
+    INTERNET_PORT m_port;
+    DWORD m_flags;
 };
 
 class WinINetRequest {
 public:
-    WinINetRequest(const String& url);
-    ~WinINetRequest();
+    WinINetRequest (const String& url);
+    ~WinINetRequest ();
 
-    String                send();
-    void                openSession();
-    void                connect();
-    void                openRequest();
+    String send ();
+    void openSession ();
+    void connect ();
+    void openRequest ();
 
 private:
-    HINTERNET            m_session;
-    HINTERNET            m_connect;
-    HINTERNET            m_request;
-    WinINetUrl            m_url;
-    bool                m_used;
+    HINTERNET m_session;
+    HINTERNET m_connect;
+    HINTERNET m_request;
+    WinINetUrl m_url;
+    bool m_used;
 };
 
 //
@@ -55,29 +55,28 @@ private:
 //
 
 String
-ArchInternetWindows::get(const String& url)
-{
-    WinINetRequest request(url);
-    return request.send();
+ArchInternetWindows::get (const String& url) {
+    WinINetRequest request (url);
+    return request.send ();
 }
 
 String
-ArchInternetWindows::urlEncode(const String& url)
-{
+ArchInternetWindows::urlEncode (const String& url) {
     TCHAR buffer[1024];
-    DWORD bufferSize = sizeof(buffer);
+    DWORD bufferSize = sizeof (buffer);
 
-    if (UrlEscape(url.c_str(), buffer, &bufferSize, URL_ESCAPE_UNSAFE) != S_OK) {
-        throw XArch(new XArchEvalWindows());
+    if (UrlEscape (url.c_str (), buffer, &bufferSize, URL_ESCAPE_UNSAFE) !=
+        S_OK) {
+        throw XArch (new XArchEvalWindows ());
     }
 
-    String result(buffer);
+    String result (buffer);
 
     // the win32 url encoding funcitons are pretty useless (to us) and only
     // escape "unsafe" chars, but not + or =, so we need to replace these
     // manually (and probably many other chars).
-    synergy::string::findReplaceAll(result, "+", "%2B");
-    synergy::string::findReplaceAll(result, "=", "%3D");
+    synergy::string::findReplaceAll (result, "+", "%2B");
+    synergy::string::findReplaceAll (result, "=", "%3D");
 
     return result;
 }
@@ -86,114 +85,110 @@ ArchInternetWindows::urlEncode(const String& url)
 // WinINetRequest
 //
 
-static WinINetUrl parseUrl(const String& url);
+static WinINetUrl parseUrl (const String& url);
 
-WinINetRequest::WinINetRequest(const String& url) :
-    m_session(NULL),
-    m_connect(NULL),
-    m_request(NULL),
-    m_used(false),
-    m_url(parseUrl(url))
-{
+WinINetRequest::WinINetRequest (const String& url)
+    : m_session (NULL),
+      m_connect (NULL),
+      m_request (NULL),
+      m_used (false),
+      m_url (parseUrl (url)) {
 }
 
-WinINetRequest::~WinINetRequest()
-{
+WinINetRequest::~WinINetRequest () {
     if (m_request != NULL) {
-        InternetCloseHandle(m_request);
+        InternetCloseHandle (m_request);
     }
 
     if (m_connect != NULL) {
-        InternetCloseHandle(m_connect);
+        InternetCloseHandle (m_connect);
     }
 
     if (m_session != NULL) {
-        InternetCloseHandle(m_session);
+        InternetCloseHandle (m_session);
     }
 }
 
 String
-WinINetRequest::send()
-{
+WinINetRequest::send () {
     if (m_used) {
-        throw XArch("class is one time use.");
+        throw XArch ("class is one time use.");
     }
     m_used = true;
 
-    openSession();
-    connect();
-    openRequest();
-    
-    String headers("Content-Type: text/html");
-    if (!HttpSendRequest(m_request, headers.c_str(), (DWORD)headers.length(), NULL, NULL)) {
-        throw XArch(new XArchEvalWindows());
+    openSession ();
+    connect ();
+    openRequest ();
+
+    String headers ("Content-Type: text/html");
+    if (!HttpSendRequest (m_request,
+                          headers.c_str (),
+                          (DWORD) headers.length (),
+                          NULL,
+                          NULL)) {
+        throw XArch (new XArchEvalWindows ());
     }
-    
+
     std::stringstream result;
     CHAR buffer[1025];
     DWORD read = 0;
 
-    while (InternetReadFile(m_request, buffer, sizeof(buffer) - 1, &read) && (read != 0)) {
+    while (InternetReadFile (m_request, buffer, sizeof (buffer) - 1, &read) &&
+           (read != 0)) {
         buffer[read] = 0;
         result << buffer;
         read = 0;
     }
 
-    return result.str();
+    return result.str ();
 }
 
 void
-WinINetRequest::openSession()
-{
+WinINetRequest::openSession () {
     std::stringstream userAgent;
     userAgent << "Synergy ";
     userAgent << kVersion;
 
-    m_session = InternetOpen(
-        userAgent.str().c_str(),
-        INTERNET_OPEN_TYPE_PRECONFIG,
-        NULL,
-        NULL,
-        NULL);
+    m_session = InternetOpen (userAgent.str ().c_str (),
+                              INTERNET_OPEN_TYPE_PRECONFIG,
+                              NULL,
+                              NULL,
+                              NULL);
 
     if (m_session == NULL) {
-        throw XArch(new XArchEvalWindows());
+        throw XArch (new XArchEvalWindows ());
     }
 }
 
 void
-WinINetRequest::connect()
-{
-    m_connect = InternetConnect(
-        m_session,
-        m_url.m_host.c_str(),
-        m_url.m_port,
-        NULL,
-        NULL,
-        INTERNET_SERVICE_HTTP,
-        NULL,
-        NULL);
-    
+WinINetRequest::connect () {
+    m_connect = InternetConnect (m_session,
+                                 m_url.m_host.c_str (),
+                                 m_url.m_port,
+                                 NULL,
+                                 NULL,
+                                 INTERNET_SERVICE_HTTP,
+                                 NULL,
+                                 NULL);
+
     if (m_connect == NULL) {
-        throw XArch(new XArchEvalWindows());
+        throw XArch (new XArchEvalWindows ());
     }
 }
 
 void
-WinINetRequest::openRequest()
-{
-    m_request = HttpOpenRequest(
-        m_connect,
-        "GET",
-        m_url.m_path.c_str(),
-        HTTP_VERSION,
-        NULL,
-        NULL,
-        m_url.m_flags,
-        NULL);
+WinINetRequest::openRequest () {
+    m_request = HttpOpenRequest (m_connect,
+                                 "GET",
+                                 m_url.m_path.c_str (),
+                                 HTTP_VERSION,
+                                 NULL,
+                                 NULL,
+                                 m_url.m_flags,
+                                 NULL);
 
     if (m_request == NULL) {
-        throw XArch(new XArchEvalWindows());
+        throw XArch (new XArchEvalWindows ());
     }
 }
 
@@ -201,22 +196,21 @@ WinINetRequest::openRequest()
 // work. here's some (less robust) code to split the url into components.
 // this works fine with simple urls, but doesn't consider the full url spec.
 static WinINetUrl
-parseUrl(const String& url)
-{
+parseUrl (const String& url) {
     WinINetUrl parsed;
 
-    size_t schemeEnd = url.find("://");
-    size_t hostEnd = url.find('/', schemeEnd + 3);
+    size_t schemeEnd = url.find ("://");
+    size_t hostEnd   = url.find ('/', schemeEnd + 3);
 
-    parsed.m_scheme = url.substr(0, schemeEnd);
-    parsed.m_host = url.substr(schemeEnd + 3, hostEnd - (schemeEnd + 3));
-    parsed.m_path = url.substr(hostEnd);
+    parsed.m_scheme = url.substr (0, schemeEnd);
+    parsed.m_host   = url.substr (schemeEnd + 3, hostEnd - (schemeEnd + 3));
+    parsed.m_path   = url.substr (hostEnd);
 
-    parsed.m_port = INTERNET_DEFAULT_HTTP_PORT;
+    parsed.m_port  = INTERNET_DEFAULT_HTTP_PORT;
     parsed.m_flags = 0;
 
-    if (parsed.m_scheme.find("https") != String::npos) {
-        parsed.m_port = INTERNET_DEFAULT_HTTPS_PORT;
+    if (parsed.m_scheme.find ("https") != String::npos) {
+        parsed.m_port  = INTERNET_DEFAULT_HTTPS_PORT;
         parsed.m_flags = INTERNET_FLAG_SECURE;
     }
 

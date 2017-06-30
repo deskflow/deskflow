@@ -24,18 +24,17 @@
 
 #include "test/global/gmock.h"
 
-class MockPrimaryClient : public PrimaryClient
-{
+class MockPrimaryClient : public PrimaryClient {
 public:
-    MOCK_CONST_METHOD0(getEventTarget, void*());
-    MOCK_CONST_METHOD2(getCursorPos, void(SInt32&, SInt32&));
-    MOCK_CONST_METHOD2(setJumpCursorPos, void(SInt32, SInt32));
-    MOCK_METHOD1(reconfigure, void(UInt32));
-    MOCK_METHOD0(resetOptions, void());
-    MOCK_METHOD1(setOptions, void(const OptionsList&));
-    MOCK_METHOD0(enable, void());
-    MOCK_METHOD0(disable, void());
-    MOCK_METHOD2(registerHotKey, UInt32(KeyID, KeyModifierMask));
-    MOCK_CONST_METHOD0(getToggleMask, KeyModifierMask());
-    MOCK_METHOD1(unregisterHotKey, void(UInt32));
+    MOCK_CONST_METHOD0 (getEventTarget, void*());
+    MOCK_CONST_METHOD2 (getCursorPos, void(SInt32&, SInt32&));
+    MOCK_CONST_METHOD2 (setJumpCursorPos, void(SInt32, SInt32));
+    MOCK_METHOD1 (reconfigure, void(UInt32));
+    MOCK_METHOD0 (resetOptions, void());
+    MOCK_METHOD1 (setOptions, void(const OptionsList&));
+    MOCK_METHOD0 (enable, void());
+    MOCK_METHOD0 (disable, void());
+    MOCK_METHOD2 (registerHotKey, UInt32 (KeyID, KeyModifierMask));
+    MOCK_CONST_METHOD0 (getToggleMask, KeyModifierMask ());
+    MOCK_METHOD1 (unregisterHotKey, void(UInt32));
 };

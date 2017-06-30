@@ -26,28 +26,35 @@
 
 class QSocketNotifier;
 
-class ZeroconfBrowser : public QObject
-{
+class ZeroconfBrowser : public QObject {
     Q_OBJECT
 
 public:
-    ZeroconfBrowser(QObject* parent = 0);
-    ~ZeroconfBrowser();
-    void browseForType(const QString& type);
-    inline QList<ZeroconfRecord> currentRecords() const { return m_Records; }
-    inline QString serviceType() const { return m_BrowsingType; }
+    ZeroconfBrowser (QObject* parent = 0);
+    ~ZeroconfBrowser ();
+    void browseForType (const QString& type);
+    inline QList<ZeroconfRecord>
+    currentRecords () const {
+        return m_Records;
+    }
+    inline QString
+    serviceType () const {
+        return m_BrowsingType;
+    }
 
 signals:
-    void currentRecordsChanged(const QList<ZeroconfRecord>& list);
-    void error(DNSServiceErrorType err);
+    void currentRecordsChanged (const QList<ZeroconfRecord>& list);
+    void error (DNSServiceErrorType err);
 
 private slots:
-    void socketReadyRead();
+    void socketReadyRead ();
 
 private:
-    static void DNSSD_API browseReply(DNSServiceRef, DNSServiceFlags flags,
-            quint32, DNSServiceErrorType errorCode, const char* serviceName,
-            const char* regType, const char* replyDomain, void* context);
+    static void DNSSD_API browseReply (DNSServiceRef, DNSServiceFlags flags,
+                                       quint32, DNSServiceErrorType errorCode,
+                                       const char* serviceName,
+                                       const char* regType,
+                                       const char* replyDomain, void* context);
 
 private:
     DNSServiceRef m_DnsServiceRef;

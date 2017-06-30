@@ -22,28 +22,27 @@
 
 #include <QtCore/QObject>
 
-typedef int32_t  DNSServiceErrorType;
+typedef int32_t DNSServiceErrorType;
 
 class ZeroconfRegister;
 class ZeroconfBrowser;
 class MainWindow;
 
-class ZeroconfService : public QObject
-{
+class ZeroconfService : public QObject {
     Q_OBJECT
 
 public:
-    ZeroconfService(MainWindow* mainWindow);
-    ~ZeroconfService();
+    ZeroconfService (MainWindow* mainWindow);
+    ~ZeroconfService ();
 
 private slots:
-    void serverDetected(const QList<ZeroconfRecord>& list);
-    void clientDetected(const QList<ZeroconfRecord>& list);
-    void errorHandle(DNSServiceErrorType errorCode);
+    void serverDetected (const QList<ZeroconfRecord>& list);
+    void clientDetected (const QList<ZeroconfRecord>& list);
+    void errorHandle (DNSServiceErrorType errorCode);
 
 private:
-    QString getLocalIPAddresses();
-    bool registerService(bool server);
+    QString getLocalIPAddresses ();
+    bool registerService (bool server);
 
 private:
     MainWindow* m_pMainWindow;

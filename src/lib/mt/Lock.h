@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -33,17 +33,17 @@ exits (including by unwinding due to an exception).
 class Lock {
 public:
     //! Lock the mutex \c mutex
-    Lock(const Mutex* mutex);
+    Lock (const Mutex* mutex);
     //! Lock the condition variable \c cv
-    Lock(const CondVarBase* cv);
+    Lock (const CondVarBase* cv);
     //! Unlock the mutex or condition variable
-    ~Lock();
+    ~Lock ();
 
 private:
     // not implemented
-    Lock(const Lock&);
-    Lock& operator=(const Lock&);
+    Lock (const Lock&);
+    Lock& operator= (const Lock&);
 
 private:
-    const Mutex*        m_mutex;
+    const Mutex* m_mutex;
 };

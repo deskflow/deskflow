@@ -23,35 +23,34 @@
 #include "test/global/gtest.h"
 #include "test/global/gmock.h"
 
-TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnSynergyMask)
-{
+TEST (OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnSynergyMask) {
     synergy::KeyMap keyMap;
     MockEventQueue eventQueue;
-    OSXKeyState keyState(&eventQueue, keyMap);
+    OSXKeyState keyState (&eventQueue, keyMap);
 
     KeyModifierMask outMask = 0;
-    
+
     UInt32 shiftMask = 0 | kCGEventFlagMaskShift;
-    outMask = keyState.mapModifiersFromOSX(shiftMask);
-    EXPECT_EQ(KeyModifierShift, outMask);
-    
+    outMask          = keyState.mapModifiersFromOSX (shiftMask);
+    EXPECT_EQ (KeyModifierShift, outMask);
+
     UInt32 ctrlMask = 0 | kCGEventFlagMaskControl;
-    outMask = keyState.mapModifiersFromOSX(ctrlMask);
-    EXPECT_EQ(KeyModifierControl, outMask);
-    
+    outMask         = keyState.mapModifiersFromOSX (ctrlMask);
+    EXPECT_EQ (KeyModifierControl, outMask);
+
     UInt32 altMask = 0 | kCGEventFlagMaskAlternate;
-    outMask = keyState.mapModifiersFromOSX(altMask);
-    EXPECT_EQ(KeyModifierAlt, outMask);
-    
+    outMask        = keyState.mapModifiersFromOSX (altMask);
+    EXPECT_EQ (KeyModifierAlt, outMask);
+
     UInt32 cmdMask = 0 | kCGEventFlagMaskCommand;
-    outMask = keyState.mapModifiersFromOSX(cmdMask);
-    EXPECT_EQ(KeyModifierSuper, outMask);
-    
+    outMask        = keyState.mapModifiersFromOSX (cmdMask);
+    EXPECT_EQ (KeyModifierSuper, outMask);
+
     UInt32 capsMask = 0 | kCGEventFlagMaskAlphaShift;
-    outMask = keyState.mapModifiersFromOSX(capsMask);
-    EXPECT_EQ(KeyModifierCapsLock, outMask);
-    
+    outMask         = keyState.mapModifiersFromOSX (capsMask);
+    EXPECT_EQ (KeyModifierCapsLock, outMask);
+
     UInt32 numMask = 0 | kCGEventFlagMaskNumericPad;
-    outMask = keyState.mapModifiersFromOSX(numMask);
-    EXPECT_EQ(KeyModifierNumLock, outMask);
+    outMask        = keyState.mapModifiersFromOSX (numMask);
+    EXPECT_EQ (KeyModifierNumLock, outMask);
 }

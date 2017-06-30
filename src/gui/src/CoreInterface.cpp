@@ -34,63 +34,63 @@ static const char kSerialKeyFilename[] = "Synergy.subkey";
 static const char kSerialKeyFilename[] = ".synergy.subkey";
 #endif
 
-CoreInterface::CoreInterface()
-{
+CoreInterface::CoreInterface () {
 }
 
-QString CoreInterface::getProfileDir()
-{
-    QStringList args("--get-profile-dir");
-    return run(args);
+QString
+CoreInterface::getProfileDir () {
+    QStringList args ("--get-profile-dir");
+    return run (args);
 }
 
-QString CoreInterface::getInstalledDir()
-{
-    QStringList args("--get-installed-dir");
-    return run(args);
+QString
+CoreInterface::getInstalledDir () {
+    QStringList args ("--get-installed-dir");
+    return run (args);
 }
 
-QString CoreInterface::getArch()
-{
-    QStringList args("--get-arch");
-    return run(args);
+QString
+CoreInterface::getArch () {
+    QStringList args ("--get-arch");
+    return run (args);
 }
 
-QString CoreInterface::getSerialKeyFilePath()
-{
-    QString filename = getProfileDir() + QDir::separator() + kSerialKeyFilename;
+QString
+CoreInterface::getSerialKeyFilePath () {
+    QString filename =
+        getProfileDir () + QDir::separator () + kSerialKeyFilename;
     return filename;
 }
 
-QString CoreInterface::notifyUpdate (QString const& fromVersion,
-                                      QString const& toVersion,
-                                      QString const& serialKey) {
-    QStringList args("--notify-update");
-    QString input(fromVersion + ":" + toVersion + ":" + serialKey);
-    input.append("\n");
-    return run(args, input);
+QString
+CoreInterface::notifyUpdate (QString const& fromVersion,
+                             QString const& toVersion,
+                             QString const& serialKey) {
+    QStringList args ("--notify-update");
+    QString input (fromVersion + ":" + toVersion + ":" + serialKey);
+    input.append ("\n");
+    return run (args, input);
 }
 
-QString CoreInterface::notifyActivation(const QString& identity)
-{
-    QStringList args("--notify-activation");
+QString
+CoreInterface::notifyActivation (const QString& identity) {
+    QStringList args ("--notify-activation");
 
-    QString input(identity + ":" + hash(getFirstMacAddress()));
-    QString os= getOSInformation();
-    if (!os.isEmpty()) {
-        input.append(":").append(os);
+    QString input (identity + ":" + hash (getFirstMacAddress ()));
+    QString os = getOSInformation ();
+    if (!os.isEmpty ()) {
+        input.append (":").append (os);
     }
-    input.append("\n");
+    input.append ("\n");
 
-    return run(args, input);
+    return run (args, input);
 }
 
-QString CoreInterface::run(const QStringList& args, const QString& input)
-{
-    QString program(
-        QCoreApplication::applicationDirPath()
-        + "/" + kCoreBinary);
+QString
+CoreInterface::run (const QStringList& args, const QString& input) {
+    QString program (QCoreApplication::applicationDirPath () + "/" +
+                     kCoreBinary);
 
-    CommandProcess commandProcess(program, args, input);
-    return commandProcess.run();
+    CommandProcess commandProcess (program, args, input);
+    return commandProcess.run ();
 }

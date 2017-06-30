@@ -27,46 +27,47 @@
 #include <stdint.h>
 #include <dns_sd.h>
 
-static const QStringList preferedIPAddress(
-                QStringList() <<
-                "192.168." <<
-                "10." <<
-                "172.");
+static const QStringList preferedIPAddress (QStringList () << "192.168."
+                                                           << "10."
+                                                           << "172.");
 
-const char* ZeroconfService:: m_ServerServiceName = "_synergyServerZeroconf._tcp";
-const char* ZeroconfService:: m_ClientServiceName = "_synergyClientZeroconf._tcp";
+const char* ZeroconfService::m_ServerServiceName =
+    "_synergyServerZeroconf._tcp";
+const char* ZeroconfService::m_ClientServiceName =
+    "_synergyClientZeroconf._tcp";
 
-ZeroconfService::ZeroconfService(MainWindow* mainWindow) :
-    m_pMainWindow(mainWindow),
-    m_pZeroconfBrowser(0),
-    m_pZeroconfRegister(0),
-    m_ServiceRegistered(false)
-{
-    if (m_pMainWindow->synergyType() == MainWindow::synergyServer) {
-        if (registerService(true)) {
-            m_pZeroconfBrowser = new ZeroconfBrowser(this);
-            connect(m_pZeroconfBrowser, SIGNAL(
-                currentRecordsChanged(const QList<ZeroconfRecord>&)),
-                this, SLOT(clientDetected(const QList<ZeroconfRecord>&)));
-            m_pZeroconfBrowser->browseForType(
-                QLatin1String(m_ClientServiceName));
+ZeroconfService::ZeroconfService (MainWindow* mainWindow)
+    : m_pMainWindow (mainWindow),
+      m_pZeroconfBrowser (0),
+      m_pZeroconfRegister (0),
+      m_ServiceRegistered (false) {
+    if (m_pMainWindow->synergyType () == MainWindow::synergyServer) {
+        if (registerService (true)) {
+            m_pZeroconfBrowser = new ZeroconfBrowser (this);
+            connect (
+                m_pZeroconfBrowser,
+                SIGNAL (currentRecordsChanged (const QList<ZeroconfRecord>&)),
+                this,
+                SLOT (clientDetected (const QList<ZeroconfRecord>&)));
+            m_pZeroconfBrowser->browseForType (
+                QLatin1String (m_ClientServiceName));
         }
-    }
-    else {
-        m_pZeroconfBrowser = new ZeroconfBrowser(this);
-        connect(m_pZeroconfBrowser, SIGNAL(
-            currentRecordsChanged(const QList<ZeroconfRecord>&)),
-            this, SLOT(serverDetected(const QList<ZeroconfRecord>&)));
-        m_pZeroconfBrowser->browseForType(
-            QLatin1String(m_ServerServiceName));
+    } else {
+        m_pZeroconfBrowser = new ZeroconfBrowser (this);
+        connect (m_pZeroconfBrowser,
+                 SIGNAL (currentRecordsChanged (const QList<ZeroconfRecord>&)),
+                 this,
+                 SLOT (serverDetected (const QList<ZeroconfRecord>&)));
+        m_pZeroconfBrowser->browseForType (QLatin1String (m_ServerServiceName));
     }
 
-    connect(m_pZeroconfBrowser, SIGNAL(error(DNSServiceErrorType)),
-        this, SLOT(errorHandle(DNSServiceErrorType)));
+    connect (m_pZeroconfBrowser,
+             SIGNAL (error (DNSServiceErrorType)),
+             this,
+             SLOT (errorHandle (DNSServiceErrorType)));
 }
 
-ZeroconfService::~ZeroconfService()
-{
+ZeroconfService::~ZeroconfService () {
     if (m_pZeroconfBrowser) {
         delete m_pZeroconfBrowser;
     }
@@ -75,44 +76,45 @@ ZeroconfService::~ZeroconfService()
     }
 }
 
-void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
-{
+void
+ZeroconfService::serverDetected (const QList<ZeroconfRecord>& list) {
     foreach (ZeroconfRecord record, list) {
-        registerService(false);
-        m_pMainWindow->appendLogInfo(tr("zeroconf server detected: %1").arg(
-            record.serviceName));
-        m_pMainWindow->serverDetected(record.serviceName);
+        registerService (false);
+        m_pMainWindow->appendLogInfo (
+            tr ("zeroconf server detected: %1").arg (record.serviceName));
+        m_pMainWindow->serverDetected (record.serviceName);
     }
 }
 
-void ZeroconfService::clientDetected(const QList<ZeroconfRecord>& list)
-{
+void
+ZeroconfService::clientDetected (const QList<ZeroconfRecord>& list) {
     foreach (ZeroconfRecord record, list) {
-        m_pMainWindow->appendLogInfo(tr("zeroconf client detected: %1").arg(
-            record.serviceName));
-        m_pMainWindow->autoAddScreen(record.serviceName);
+        m_pMainWindow->appendLogInfo (
+            tr ("zeroconf client detected: %1").arg (record.serviceName));
+        m_pMainWindow->autoAddScreen (record.serviceName);
     }
 }
 
-void ZeroconfService::errorHandle(DNSServiceErrorType errorCode)
-{
-    QMessageBox::critical(0, tr("Zero configuration service"),
-        tr("Error code: %1.").arg(errorCode));
+void
+ZeroconfService::errorHandle (DNSServiceErrorType errorCode) {
+    QMessageBox::critical (0,
+                           tr ("Zero configuration service"),
+                           tr ("Error code: %1.").arg (errorCode));
 }
 
-QString ZeroconfService::getLocalIPAddresses()
-{
+QString
+ZeroconfService::getLocalIPAddresses () {
     QStringList addresses;
-    foreach (const QHostAddress& address, QNetworkInterface::allAddresses()) {
-        if (address.protocol() == QAbstractSocket::IPv4Protocol &&
-            address != QHostAddress(QHostAddress::LocalHost)) {
-            addresses.append(address.toString());
+    foreach (const QHostAddress& address, QNetworkInterface::allAddresses ()) {
+        if (address.protocol () == QAbstractSocket::IPv4Protocol &&
+            address != QHostAddress (QHostAddress::LocalHost)) {
+            addresses.append (address.toString ());
         }
     }
 
     foreach (const QString& preferedIP, preferedIPAddress) {
         foreach (const QString& address, addresses) {
-            if (address.startsWith(preferedIP)) {
+            if (address.startsWith (preferedIP)) {
                 return address;
             }
         }
@@ -121,39 +123,42 @@ QString ZeroconfService::getLocalIPAddresses()
     return "";
 }
 
-bool ZeroconfService::registerService(bool server)
-{
+bool
+ZeroconfService::registerService (bool server) {
     bool result = true;
 
     if (!m_ServiceRegistered) {
-        if (!m_zeroconfServer.listen()) {
-            QMessageBox::critical(0, tr("Zero configuration service"),
-                tr("Unable to start the zeroconf: %1.")
-                .arg(m_zeroconfServer.errorString()));
+        if (!m_zeroconfServer.listen ()) {
+            QMessageBox::critical (0,
+                                   tr ("Zero configuration service"),
+                                   tr ("Unable to start the zeroconf: %1.")
+                                       .arg (m_zeroconfServer.errorString ()));
             result = false;
-        }
-        else {
-            m_pZeroconfRegister = new ZeroconfRegister(this);
+        } else {
+            m_pZeroconfRegister = new ZeroconfRegister (this);
             if (server) {
-                QString localIP = getLocalIPAddresses();
-                if (localIP.isEmpty()) {
-                    QMessageBox::warning(m_pMainWindow, tr("Synergy"),
-                        tr("Failed to get local IP address. "
-                           "Please manually type in server address "
-                           "on your clients"));
+                QString localIP = getLocalIPAddresses ();
+                if (localIP.isEmpty ()) {
+                    QMessageBox::warning (
+                        m_pMainWindow,
+                        tr ("Synergy"),
+                        tr ("Failed to get local IP address. "
+                            "Please manually type in server address "
+                            "on your clients"));
+                } else {
+                    m_pZeroconfRegister->registerService (
+                        ZeroconfRecord (tr ("%1").arg (localIP),
+                                        QLatin1String (m_ServerServiceName),
+                                        QString ()),
+                        m_zeroconfServer.serverPort ());
                 }
-                else {
-                    m_pZeroconfRegister->registerService(
-                        ZeroconfRecord(tr("%1").arg(localIP),
-                        QLatin1String(m_ServerServiceName), QString()),
-                        m_zeroconfServer.serverPort());
-                }
-            }
-            else {
-                m_pZeroconfRegister->registerService(
-                    ZeroconfRecord(tr("%1").arg(m_pMainWindow->getScreenName()),
-                    QLatin1String(m_ClientServiceName), QString()),
-                    m_zeroconfServer.serverPort());
+            } else {
+                m_pZeroconfRegister->registerService (
+                    ZeroconfRecord (
+                        tr ("%1").arg (m_pMainWindow->getScreenName ()),
+                        QLatin1String (m_ClientServiceName),
+                        QString ()),
+                    m_zeroconfServer.serverPort ());
             }
 
             m_ServiceRegistered = true;

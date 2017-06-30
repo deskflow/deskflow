@@ -21,18 +21,17 @@
 #include <QObject>
 #include <QStringList>
 
-class CommandProcess : public QObject
-{
+class CommandProcess : public QObject {
     Q_OBJECT
 
 public:
-    CommandProcess(QString cmd, QStringList arguments, QString input = "");
+    CommandProcess (QString cmd, QStringList arguments, QString input = "");
 
 signals:
-    void finished();
+    void finished ();
 
 public slots:
-    QString run();
+    QString run ();
 
 private:
     QString m_Command;

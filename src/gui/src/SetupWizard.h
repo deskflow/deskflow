@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -25,23 +25,20 @@
 
 class MainWindow;
 
-class SetupWizard : public QWizard, public Ui::SetupWizardBase
-{
+class SetupWizard : public QWizard, public Ui::SetupWizardBase {
     Q_OBJECT
 public:
-    enum {
-        kMaximiumLoginAttemps = 3
-    };
+    enum { kMaximiumLoginAttemps = 3 };
 
 public:
-    SetupWizard(MainWindow& mainWindow, bool startMain);
-    virtual ~SetupWizard();
-    bool validateCurrentPage();
+    SetupWizard (MainWindow& mainWindow, bool startMain);
+    virtual ~SetupWizard ();
+    bool validateCurrentPage ();
 
 protected:
-    void changeEvent(QEvent* event);
-    void accept();
-    void reject();
+    void changeEvent (QEvent* event);
+    void accept ();
+    void reject ();
 
 private:
     MainWindow& m_MainWindow;
@@ -49,5 +46,5 @@ private:
     SynergyLocale m_Locale;
 
 private slots:
-    void on_m_pComboLanguage_currentIndexChanged(int index);
+    void on_m_pComboLanguage_currentIndexChanged (int index);
 };

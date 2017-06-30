@@ -23,26 +23,25 @@
 //! Convert to/from some text encoding
 class OSXClipboardAnyBitmapConverter : public IOSXClipboardConverter {
 public:
-    OSXClipboardAnyBitmapConverter();
-    virtual ~OSXClipboardAnyBitmapConverter();
+    OSXClipboardAnyBitmapConverter ();
+    virtual ~OSXClipboardAnyBitmapConverter ();
 
     // IOSXClipboardConverter overrides
-    virtual IClipboard::EFormat
-                        getFormat() const;
-    virtual CFStringRef    getOSXFormat() const = 0;
-    virtual String        fromIClipboard(const String &) const;
-    virtual String        toIClipboard(const String &) const;
+    virtual IClipboard::EFormat getFormat () const;
+    virtual CFStringRef getOSXFormat () const = 0;
+    virtual String fromIClipboard (const String&) const;
+    virtual String toIClipboard (const String&) const;
 
 protected:
     //! Convert from IClipboard format
     /*!
      Do UTF-8 conversion and linefeed conversion.
     */
-    virtual String        doFromIClipboard(const String&) const = 0;
+    virtual String doFromIClipboard (const String&) const = 0;
 
     //! Convert to IClipboard format
     /*!
      Do UTF-8 conversion and Linefeed conversion.
     */
-    virtual String        doToIClipboard(const String&) const = 0;
+    virtual String doToIClipboard (const String&) const = 0;
 };

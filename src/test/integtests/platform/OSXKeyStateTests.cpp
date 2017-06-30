@@ -32,82 +32,78 @@
 
 class OSXKeyStateTests : public ::testing::Test {
 public:
-    static bool isKeyPressed(const OSXKeyState& keyState, KeyButton button);
+    static bool isKeyPressed (const OSXKeyState& keyState, KeyButton button);
 };
 
 // fakeAndPoll_shift seems to always fail on osx10.6
 #if __MAC_OS_X_VERSION_MIN_REQUIRED > 1060
 
-TEST_F(OSXKeyStateTests, fakeAndPoll_shift)
-{
+TEST_F (OSXKeyStateTests, fakeAndPoll_shift) {
     synergy::KeyMap keyMap;
     MockEventQueue eventQueue;
-    OSXKeyState keyState(&eventQueue, keyMap);
-    keyState.updateKeyMap();
+    OSXKeyState keyState (&eventQueue, keyMap);
+    keyState.updateKeyMap ();
 
-    keyState.fakeKeyDown(SHIFT_ID_L, 0, 1);
-    EXPECT_TRUE(isKeyPressed(keyState, SHIFT_BUTTON));
+    keyState.fakeKeyDown (SHIFT_ID_L, 0, 1);
+    EXPECT_TRUE (isKeyPressed (keyState, SHIFT_BUTTON));
 
-    keyState.fakeKeyUp(1);
-    EXPECT_TRUE(!isKeyPressed(keyState, SHIFT_BUTTON));
+    keyState.fakeKeyUp (1);
+    EXPECT_TRUE (!isKeyPressed (keyState, SHIFT_BUTTON));
 
-    keyState.fakeKeyDown(SHIFT_ID_R, 0, 2);
-    EXPECT_TRUE(isKeyPressed(keyState, SHIFT_BUTTON));
+    keyState.fakeKeyDown (SHIFT_ID_R, 0, 2);
+    EXPECT_TRUE (isKeyPressed (keyState, SHIFT_BUTTON));
 
-    keyState.fakeKeyUp(2);
-    EXPECT_TRUE(!isKeyPressed(keyState, SHIFT_BUTTON));
+    keyState.fakeKeyUp (2);
+    EXPECT_TRUE (!isKeyPressed (keyState, SHIFT_BUTTON));
 }
 
-TEST_F(OSXKeyStateTests, fakeAndPoll_charKey)
-{
+TEST_F (OSXKeyStateTests, fakeAndPoll_charKey) {
     synergy::KeyMap keyMap;
     MockEventQueue eventQueue;
-    OSXKeyState keyState(&eventQueue, keyMap);
-    keyState.updateKeyMap();
+    OSXKeyState keyState (&eventQueue, keyMap);
+    keyState.updateKeyMap ();
 
-    keyState.fakeKeyDown(A_CHAR_ID, 0, 1);
-    EXPECT_TRUE(isKeyPressed(keyState, A_CHAR_BUTTON));
+    keyState.fakeKeyDown (A_CHAR_ID, 0, 1);
+    EXPECT_TRUE (isKeyPressed (keyState, A_CHAR_BUTTON));
 
-    keyState.fakeKeyUp(1);
-    EXPECT_TRUE(!isKeyPressed(keyState, A_CHAR_BUTTON));
+    keyState.fakeKeyUp (1);
+    EXPECT_TRUE (!isKeyPressed (keyState, A_CHAR_BUTTON));
 
     // HACK: delete the key in case it was typed into a text editor.
     // we should really set focus to an invisible window.
-    keyState.fakeKeyDown(kKeyBackSpace, 0, 2);
-    keyState.fakeKeyUp(2);
+    keyState.fakeKeyDown (kKeyBackSpace, 0, 2);
+    keyState.fakeKeyUp (2);
 }
 
-TEST_F(OSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
-{
+TEST_F (OSXKeyStateTests, fakeAndPoll_charKeyAndModifier) {
     synergy::KeyMap keyMap;
     MockEventQueue eventQueue;
-    OSXKeyState keyState(&eventQueue, keyMap);
-    keyState.updateKeyMap();
+    OSXKeyState keyState (&eventQueue, keyMap);
+    keyState.updateKeyMap ();
 
-    keyState.fakeKeyDown(A_CHAR_ID, KeyModifierShift, 1);
-    EXPECT_TRUE(isKeyPressed(keyState, A_CHAR_BUTTON));
+    keyState.fakeKeyDown (A_CHAR_ID, KeyModifierShift, 1);
+    EXPECT_TRUE (isKeyPressed (keyState, A_CHAR_BUTTON));
 
-    keyState.fakeKeyUp(1);
-    EXPECT_TRUE(!isKeyPressed(keyState, A_CHAR_BUTTON));
+    keyState.fakeKeyUp (1);
+    EXPECT_TRUE (!isKeyPressed (keyState, A_CHAR_BUTTON));
 
     // HACK: delete the key in case it was typed into a text editor.
     // we should really set focus to an invisible window.
-    keyState.fakeKeyDown(kKeyBackSpace, 0, 2);
-    keyState.fakeKeyUp(2);
+    keyState.fakeKeyDown (kKeyBackSpace, 0, 2);
+    keyState.fakeKeyUp (2);
 }
 
 bool
-OSXKeyStateTests::isKeyPressed(const OSXKeyState& keyState, KeyButton button)
-{
+OSXKeyStateTests::isKeyPressed (const OSXKeyState& keyState, KeyButton button) {
     // HACK: allow os to realize key state changes.
-    ARCH->sleep(.2);
+    ARCH->sleep (.2);
 
     IKeyState::KeyButtonSet pressed;
-    keyState.pollPressedKeys(pressed);
+    keyState.pollPressedKeys (pressed);
 
     IKeyState::KeyButtonSet::const_iterator it;
-    for (it = pressed.begin(); it != pressed.end(); ++it) {
-        LOG((CLOG_DEBUG "checking key %d", *it));
+    for (it = pressed.begin (); it != pressed.end (); ++it) {
+        LOG ((CLOG_DEBUG "checking key %d", *it));
         if (*it == button) {
             return true;
         }
@@ -116,4 +112,3 @@ OSXKeyStateTests::isKeyPressed(const OSXKeyState& keyState, KeyButton button)
 }
 
 #endif
-

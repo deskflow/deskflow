@@ -21,48 +21,44 @@
 #include <QXmlStreamReader>
 #include <QDebug>
 
-SynergyLocale::SynergyLocale()
-{
-    loadLanguages();
+SynergyLocale::SynergyLocale () {
+    loadLanguages ();
 }
 
-void SynergyLocale::loadLanguages()
-{
-    QResource resource(":/res/lang/Languages.xml");
-    QByteArray bytes(reinterpret_cast<const char*>(resource.data()), resource.size());
-    QXmlStreamReader xml(bytes);
+void
+SynergyLocale::loadLanguages () {
+    QResource resource (":/res/lang/Languages.xml");
+    QByteArray bytes (reinterpret_cast<const char*> (resource.data ()),
+                      resource.size ());
+    QXmlStreamReader xml (bytes);
 
-    while (!xml.atEnd())
-    {
-        QXmlStreamReader::TokenType token = xml.readNext();
-        if (xml.hasError())
-        {
-            qCritical() << xml.errorString();
-            throw std::exception();
+    while (!xml.atEnd ()) {
+        QXmlStreamReader::TokenType token = xml.readNext ();
+        if (xml.hasError ()) {
+            qCritical () << xml.errorString ();
+            throw std::exception ();
         }
 
-        if (xml.name() == "language" && token == QXmlStreamReader::StartElement)
-        {
-            QXmlStreamAttributes attributes = xml.attributes();
-            addLanguage(
-                attributes.value("ietfCode").toString(),
-                attributes.value("name").toString());
+        if (xml.name () == "language" &&
+            token == QXmlStreamReader::StartElement) {
+            QXmlStreamAttributes attributes = xml.attributes ();
+            addLanguage (attributes.value ("ietfCode").toString (),
+                         attributes.value ("name").toString ());
         }
     }
 }
 
-void SynergyLocale::addLanguage(const QString& ietfCode, const QString& name)
-{
-    m_Languages.push_back(SynergyLocale::Language(ietfCode, name));
+void
+SynergyLocale::addLanguage (const QString& ietfCode, const QString& name) {
+    m_Languages.push_back (SynergyLocale::Language (ietfCode, name));
 }
 
-void SynergyLocale::fillLanguageComboBox(QComboBox* comboBox)
-{
-    comboBox->blockSignals(true);
+void
+SynergyLocale::fillLanguageComboBox (QComboBox* comboBox) {
+    comboBox->blockSignals (true);
     QVector<SynergyLocale::Language>::iterator it;
-    for (it = m_Languages.begin(); it != m_Languages.end(); ++it)
-    {
-        comboBox->addItem((*it).m_Name, (*it).m_IetfCode);
+    for (it = m_Languages.begin (); it != m_Languages.end (); ++it) {
+        comboBox->addItem ((*it).m_Name, (*it).m_IetfCode);
     }
-    comboBox->blockSignals(false);
+    comboBox->blockSignals (false);
 }

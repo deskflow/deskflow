@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -29,25 +29,24 @@ class QString;
 
 class Screen;
 
-class ScreenSettingsDialog : public QDialog, public Ui::ScreenSettingsDialogBase
-{
+class ScreenSettingsDialog : public QDialog,
+                             public Ui::ScreenSettingsDialogBase {
     Q_OBJECT
 
-    public:
-        ScreenSettingsDialog(QWidget* parent, Screen* pScreen = NULL);
+public:
+    ScreenSettingsDialog (QWidget* parent, Screen* pScreen = NULL);
 
-    public slots:
-        void accept();
+public slots:
+    void accept ();
 
-    private slots:
-        void on_m_pButtonAddAlias_clicked();
-        void on_m_pButtonRemoveAlias_clicked();
-        void on_m_pLineEditAlias_textChanged(const QString& text);
-        void on_m_pListAliases_itemSelectionChanged();
+private slots:
+    void on_m_pButtonAddAlias_clicked ();
+    void on_m_pButtonRemoveAlias_clicked ();
+    void on_m_pLineEditAlias_textChanged (const QString& text);
+    void on_m_pListAliases_itemSelectionChanged ();
 
-    private:
-        Screen* m_pScreen;
+private:
+    Screen* m_pScreen;
 };
 
 #endif
-

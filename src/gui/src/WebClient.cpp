@@ -24,34 +24,34 @@
 #include <QCoreApplication>
 #include <stdexcept>
 
-bool 
+bool
 WebClient::getEdition (int& edition, QString& errorOut) {
-    QString responseJson = request();
-    
-    /* TODO: This is horrible and should be ripped out as soon as we move 
+    QString responseJson = request ();
+
+    /* TODO: This is horrible and should be ripped out as soon as we move
      *         to Qt 5. See issue #5630
      */
 
-    QRegExp resultRegex(".*\"result\".*:.*(true|false).*");
+    QRegExp resultRegex (".*\"result\".*:.*(true|false).*");
     if (resultRegex.exactMatch (responseJson)) {
-        QString boolString = resultRegex.cap(1);
+        QString boolString = resultRegex.cap (1);
         if (boolString == "true") {
-            QRegExp editionRegex(".*\"edition\".*:.*\"([^\"]+)\".*");
-            if (editionRegex.exactMatch(responseJson)) {
-                QString e = editionRegex.cap(1);
-                edition = e.toInt();
+            QRegExp editionRegex (".*\"edition\".*:.*\"([^\"]+)\".*");
+            if (editionRegex.exactMatch (responseJson)) {
+                QString e = editionRegex.cap (1);
+                edition   = e.toInt ();
                 return true;
             } else {
                 throw std::runtime_error ("Unrecognised server response.");
             }
         } else {
-            errorOut = tr("Login failed. Invalid email address or password.");
+            errorOut = tr ("Login failed. Invalid email address or password.");
             return false;
         }
     } else {
-        QRegExp errorRegex(".*\"error\".*:.*\"([^\"]+)\".*");
+        QRegExp errorRegex (".*\"error\".*:.*\"([^\"]+)\".*");
         if (errorRegex.exactMatch (responseJson)) {
-            errorOut = errorRegex.cap(1).replace("\\n", "\n");
+            errorOut = errorRegex.cap (1).replace ("\\n", "\n");
             return false;
         } else {
             throw std::runtime_error ("Unrecognised server response.");
@@ -61,8 +61,8 @@ WebClient::getEdition (int& edition, QString& errorOut) {
 
 bool
 WebClient::setEmail (QString email, QString& errorOut) {
-    if (email.isEmpty()) {
-        errorOut = tr("Your email address cannot be left blank.");
+    if (email.isEmpty ()) {
+        errorOut = tr ("Your email address cannot be left blank.");
         return false;
     }
     m_Email = email;
@@ -76,8 +76,8 @@ WebClient::setPassword (QString password, QString&) {
 }
 
 QString
-WebClient::request() {
-    QStringList args("--login-auth");
-    QString credentials (m_Email + ":" + hash(m_Password) + "\n");
+WebClient::request () {
+    QStringList args ("--login-auth");
+    QString credentials (m_Email + ":" + hash (m_Password) + "\n");
     return m_CoreInterface.run (args, credentials);
 }

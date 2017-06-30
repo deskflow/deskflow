@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -31,8 +31,8 @@ public:
     The default constructor does an implicit reset() or setTrigger().
     If triggered == false then the clock starts ticking.
     */
-    Stopwatch(bool triggered = false);
-    ~Stopwatch();
+    Stopwatch (bool triggered = false);
+    ~Stopwatch ();
 
     //! @name manipulators
     //@{
@@ -44,7 +44,7 @@ public:
     does it start a stopped clock.  If the clock is stopped then
     subsequent reset()'s will return 0.
     */
-    double                reset();
+    double reset ();
 
     //! Stop the timer
     /*!
@@ -52,14 +52,14 @@ public:
     counted by the stopwatch.  stop() does not remove the trigger.
     Has no effect if already stopped.
     */
-    void                stop();
+    void stop ();
 
     //! Start the timer
     /*!
     Start the stopwatch.  start() removes the trigger, even if the
     stopwatch was already started.
     */
-    void                start();
+    void start ();
 
     //! Stop the timer and set the trigger
     /*!
@@ -68,16 +68,16 @@ public:
     This is useful when you want the clock to start the first time
     you check it.
     */
-    void                setTrigger();
+    void setTrigger ();
 
     //! Get elapsed time
     /*!
     Returns the time since the last reset() (or calls reset() and
     returns zero if the trigger is set).
     */
-    double                getTime();
+    double getTime ();
     //! Same as getTime()
-                        operator double();
+    operator double ();
     //@}
     //! @name accessors
     //@{
@@ -86,24 +86,24 @@ public:
     /*!
     Returns true if the stopwatch is stopped.
     */
-    bool                isStopped() const;
+    bool isStopped () const;
 
-    // return the time since the last reset().  
+    // return the time since the last reset().
     //! Get elapsed time
     /*!
     Returns the time since the last reset().  This cannot trigger the
     stopwatch to start and will not clear the trigger.
     */
-    double                getTime() const;
+    double getTime () const;
     //! Same as getTime() const
-                        operator double() const;
+    operator double () const;
     //@}
 
 private:
-    double                getClock() const;
+    double getClock () const;
 
 private:
-    double                m_mark;
-    bool                m_triggered;
-    bool                m_stopped;
+    double m_mark;
+    bool m_triggered;
+    bool m_stopped;
 };

@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -28,8 +28,8 @@ This class maintains a FIFO (first-in, last-out) buffer of bytes.
 */
 class StreamBuffer {
 public:
-    StreamBuffer();
-    ~StreamBuffer();
+    StreamBuffer ();
+    ~StreamBuffer ();
 
     //! @name manipulators
     //@{
@@ -40,20 +40,20 @@ public:
     (which must be <= getSize()).  The caller must not modify the returned
     memory nor delete it.
     */
-    const void*            peek(UInt32 n);
+    const void* peek (UInt32 n);
 
     //! Discard data
     /*!
     Discards the next \c n bytes.  If \c n >= getSize() then the buffer
     is cleared.
     */
-    void                pop(UInt32 n);
+    void pop (UInt32 n);
 
     //! Write data to buffer
     /*!
     Appends \c n bytes from \c data to the buffer.
     */
-    void                write(const void* data, UInt32 n);
+    void write (const void* data, UInt32 n);
 
     //@}
     //! @name accessors
@@ -63,17 +63,17 @@ public:
     /*!
     Returns the number of bytes in the buffer.
     */
-    UInt32                getSize() const;
+    UInt32 getSize () const;
 
     //@}
 
 private:
-    static const UInt32    kChunkSize;
+    static const UInt32 kChunkSize;
 
     typedef std::vector<UInt8> Chunk;
     typedef std::list<Chunk> ChunkList;
 
-    ChunkList            m_chunks;
-    UInt32                m_size;
-    UInt32                m_headUsed;
+    ChunkList m_chunks;
+    UInt32 m_size;
+    UInt32 m_headUsed;
 };

@@ -28,133 +28,113 @@
 #include <X11/keysymdef.h>
 
 #if HAVE_XKB_EXTENSION
-#    include <X11/XKBlib.h>
+#include <X11/XKBlib.h>
 #endif
 
 #include "test/global/gtest.h"
 #include "test/global/gmock.h"
 #include <errno.h>
 
-class XWindowsKeyStateTests : public ::testing::Test
-{
+class XWindowsKeyStateTests : public ::testing::Test {
 protected:
-    XWindowsKeyStateTests() :
-        m_display(NULL)
-    {
+    XWindowsKeyStateTests () : m_display (NULL) {
     }
 
-    ~XWindowsKeyStateTests()
-    {
+    ~XWindowsKeyStateTests () {
         if (m_display != NULL) {
-            LOG((CLOG_DEBUG "closing display"));
-            XCloseDisplay(m_display);
+            LOG ((CLOG_DEBUG "closing display"));
+            XCloseDisplay (m_display);
         }
     }
 
     virtual void
-    SetUp()
-    {
+    SetUp () {
         // open the display only once for the entire test suite
         if (this->m_display == NULL) {
-            LOG((CLOG_DEBUG "opening display"));
-            this->m_display = XOpenDisplay(NULL);
+            LOG ((CLOG_DEBUG "opening display"));
+            this->m_display = XOpenDisplay (NULL);
 
-            ASSERT_TRUE(this->m_display != NULL)
+            ASSERT_TRUE (this->m_display != NULL)
                 << "unable to open display: " << errno;
         }
     }
 
     virtual void
-    TearDown()
-    {
+    TearDown () {
     }
 
     Display* m_display;
 };
 
-TEST_F(XWindowsKeyStateTests, setActiveGroup_pollAndSet_groupIsZero)
-{
+TEST_F (XWindowsKeyStateTests, setActiveGroup_pollAndSet_groupIsZero) {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState (m_display, true, &eventQueue, keyMap);
 
-    keyState.setActiveGroup(XWindowsKeyState::kGroupPollAndSet);
+    keyState.setActiveGroup (XWindowsKeyState::kGroupPollAndSet);
 
-    ASSERT_EQ(0, keyState.group());
+    ASSERT_EQ (0, keyState.group ());
 }
 
-TEST_F(XWindowsKeyStateTests, setActiveGroup_poll_groupIsNotSet)
-{
+TEST_F (XWindowsKeyStateTests, setActiveGroup_poll_groupIsNotSet) {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState (m_display, true, &eventQueue, keyMap);
 
-    keyState.setActiveGroup(XWindowsKeyState::kGroupPoll);
+    keyState.setActiveGroup (XWindowsKeyState::kGroupPoll);
 
-    ASSERT_LE(-1, keyState.group());
+    ASSERT_LE (-1, keyState.group ());
 }
 
-TEST_F(XWindowsKeyStateTests, setActiveGroup_customGroup_groupWasSet)
-{
+TEST_F (XWindowsKeyStateTests, setActiveGroup_customGroup_groupWasSet) {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState (m_display, true, &eventQueue, keyMap);
 
-    keyState.setActiveGroup(1);
+    keyState.setActiveGroup (1);
 
-    ASSERT_EQ(1, keyState.group());
+    ASSERT_EQ (1, keyState.group ());
 }
 
-TEST_F(XWindowsKeyStateTests, mapModifiersFromX_zeroState_zeroMask)
-{
+TEST_F (XWindowsKeyStateTests, mapModifiersFromX_zeroState_zeroMask) {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState (m_display, true, &eventQueue, keyMap);
 
-    int mask = keyState.mapModifiersFromX(0);
+    int mask = keyState.mapModifiersFromX (0);
 
-    ASSERT_EQ(0, mask);
+    ASSERT_EQ (0, mask);
 }
 
-TEST_F(XWindowsKeyStateTests, mapModifiersToX_zeroMask_resultIsTrue)
-{
+TEST_F (XWindowsKeyStateTests, mapModifiersToX_zeroMask_resultIsTrue) {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState (m_display, true, &eventQueue, keyMap);
 
     unsigned int modifiers = 0;
-    bool result = keyState.mapModifiersToX(0, modifiers);
+    bool result            = keyState.mapModifiersToX (0, modifiers);
 
-    ASSERT_TRUE(result);
+    ASSERT_TRUE (result);
 }
 
-TEST_F(XWindowsKeyStateTests, fakeCtrlAltDel_default_returnsFalse)
-{
+TEST_F (XWindowsKeyStateTests, fakeCtrlAltDel_default_returnsFalse) {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState (m_display, true, &eventQueue, keyMap);
 
-    bool result = keyState.fakeCtrlAltDel();
+    bool result = keyState.fakeCtrlAltDel ();
 
-    ASSERT_FALSE(result);
+    ASSERT_FALSE (result);
 }
 
-TEST_F(XWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero)
-{
+TEST_F (XWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero) {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState (m_display, true, &eventQueue, keyMap);
 
-    KeyModifierMask actual = keyState.pollActiveModifiers();
+    KeyModifierMask actual = keyState.pollActiveModifiers ();
 
-    ASSERT_EQ(0, actual);
+    ASSERT_EQ (0, actual);
 }
 
 #if 0 // TODO: fix, causes sigsegv
@@ -191,56 +171,48 @@ TEST_F(XWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCor
 }
 #endif
 
-TEST_F(XWindowsKeyStateTests, pollActiveGroup_defaultState_returnsZero)
-{
+TEST_F (XWindowsKeyStateTests, pollActiveGroup_defaultState_returnsZero) {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState (m_display, true, &eventQueue, keyMap);
 
-    SInt32 actual = keyState.pollActiveGroup();
+    SInt32 actual = keyState.pollActiveGroup ();
 
-    ASSERT_EQ(0, actual);
+    ASSERT_EQ (0, actual);
 }
 
-TEST_F(XWindowsKeyStateTests, pollActiveGroup_positiveGroup_returnsGroup)
-{
+TEST_F (XWindowsKeyStateTests, pollActiveGroup_positiveGroup_returnsGroup) {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState (m_display, true, &eventQueue, keyMap);
 
-    keyState.group(3);
+    keyState.group (3);
 
-    SInt32 actual = keyState.pollActiveGroup();
+    SInt32 actual = keyState.pollActiveGroup ();
 
-    ASSERT_EQ(3, actual);
+    ASSERT_EQ (3, actual);
 }
 
-TEST_F(XWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
-{
+TEST_F (XWindowsKeyStateTests, pollActiveGroup_xkb_areEqual) {
 #if HAVE_XKB_EXTENSION
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState (m_display, true, &eventQueue, keyMap);
 
     // reset the group
-    keyState.group(-1);
+    keyState.group (-1);
 
     XkbStateRec state;
 
     // compare pollActiveGroup() with XkbGetState()
-    if (XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
-        SInt32 actual = keyState.pollActiveGroup();
+    if (XkbGetState (m_display, XkbUseCoreKbd, &state) == Success) {
+        SInt32 actual = keyState.pollActiveGroup ();
 
-        ASSERT_EQ(state.group, actual);
-    }
-    else {
-        FAIL() << "XkbGetState() returned error " << errno;
+        ASSERT_EQ (state.group, actual);
+    } else {
+        FAIL () << "XkbGetState() returned error " << errno;
     }
 #else
-    SUCCEED() << "Xkb extension not installed";
+    SUCCEED () << "Xkb extension not installed";
 #endif
 }
-

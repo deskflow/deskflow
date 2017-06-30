@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -23,9 +23,8 @@
 //
 
 String
-XScreenOpenFailure::getWhat() const throw()
-{
-    return format("XScreenOpenFailure", "unable to open screen");
+XScreenOpenFailure::getWhat () const throw () {
+    return format ("XScreenOpenFailure", "unable to open screen");
 }
 
 
@@ -34,8 +33,7 @@ XScreenOpenFailure::getWhat() const throw()
 //
 
 String
-XScreenXInputFailure::getWhat() const throw()
-{
+XScreenXInputFailure::getWhat () const throw () {
     return "";
 }
 
@@ -44,25 +42,21 @@ XScreenXInputFailure::getWhat() const throw()
 // XScreenUnavailable
 //
 
-XScreenUnavailable::XScreenUnavailable(double timeUntilRetry) :
-    m_timeUntilRetry(timeUntilRetry)
-{
+XScreenUnavailable::XScreenUnavailable (double timeUntilRetry)
+    : m_timeUntilRetry (timeUntilRetry) {
     // do nothing
 }
 
-XScreenUnavailable::~XScreenUnavailable() _NOEXCEPT
-{
+XScreenUnavailable::~XScreenUnavailable () _NOEXCEPT {
     // do nothing
 }
 
 double
-XScreenUnavailable::getRetryTime() const
-{
+XScreenUnavailable::getRetryTime () const {
     return m_timeUntilRetry;
 }
 
 String
-XScreenUnavailable::getWhat() const throw()
-{
-    return format("XScreenUnavailable", "unable to open screen");
+XScreenUnavailable::getWhat () const throw () {
+    return format ("XScreenUnavailable", "unable to open screen");
 }

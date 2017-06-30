@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -23,72 +23,66 @@
 #include "net/TSocketMultiplexerMethodJob.h"
 #include "arch/XArch.h"
 
-static const char s_certificateDir[] = { "SSL" };
-static const char s_certificateFilename[] = { "Synergy.pem" };
+static const char s_certificateDir[]      = {"SSL"};
+static const char s_certificateFilename[] = {"Synergy.pem"};
 
 //
 // SecureListenSocket
 //
 
-SecureListenSocket::SecureListenSocket(
-        IEventQueue* events,
-        SocketMultiplexer* socketMultiplexer) :
-    TCPListenSocket(events, socketMultiplexer)
-{
+SecureListenSocket::SecureListenSocket (IEventQueue* events,
+                                        SocketMultiplexer* socketMultiplexer)
+    : TCPListenSocket (events, socketMultiplexer) {
 }
 
-SecureListenSocket::~SecureListenSocket()
-{
+SecureListenSocket::~SecureListenSocket () {
     SecureSocketSet::iterator it;
-    for (it = m_secureSocketSet.begin(); it != m_secureSocketSet.end(); it++) {
+    for (it = m_secureSocketSet.begin (); it != m_secureSocketSet.end ();
+         it++) {
         delete *it;
     }
-    m_secureSocketSet.clear();
+    m_secureSocketSet.clear ();
 }
 
 IDataSocket*
-SecureListenSocket::accept()
-{
+SecureListenSocket::accept () {
     SecureSocket* socket = NULL;
     try {
-        socket = new SecureSocket(
-                        m_events,
-                        m_socketMultiplexer,
-                        ARCH->acceptSocket(m_socket, NULL));
-        socket->initSsl(true);
+        socket = new SecureSocket (
+            m_events, m_socketMultiplexer, ARCH->acceptSocket (m_socket, NULL));
+        socket->initSsl (true);
 
         if (socket != NULL) {
-            setListeningJob();
+            setListeningJob ();
         }
 
-        String certificateFilename = synergy::string::sprintf("%s/%s/%s",
-                                        ARCH->getProfileDirectory().c_str(),
-                                        s_certificateDir,
-                                        s_certificateFilename);
+        String certificateFilename =
+            synergy::string::sprintf ("%s/%s/%s",
+                                      ARCH->getProfileDirectory ().c_str (),
+                                      s_certificateDir,
+                                      s_certificateFilename);
 
-        bool loaded = socket->loadCertificates(certificateFilename);
+        bool loaded = socket->loadCertificates (certificateFilename);
         if (!loaded) {
             delete socket;
             return NULL;
         }
 
-        socket->secureAccept();
+        socket->secureAccept ();
 
-        m_secureSocketSet.insert(socket);
+        m_secureSocketSet.insert (socket);
 
-        return dynamic_cast<IDataSocket*>(socket);
-    }
-    catch (XArchNetwork&) {
+        return dynamic_cast<IDataSocket*> (socket);
+    } catch (XArchNetwork&) {
         if (socket != NULL) {
             delete socket;
-            setListeningJob();
+            setListeningJob ();
         }
         return NULL;
-    }
-    catch (std::exception &ex) {
+    } catch (std::exception& ex) {
         if (socket != NULL) {
             delete socket;
-            setListeningJob();
+            setListeningJob ();
         }
         throw ex;
     }

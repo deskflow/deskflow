@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -47,14 +47,14 @@ public:
     Create and start a new thread executing the \c adoptedJob.  The
     new thread takes ownership of \c adoptedJob and will delete it.
     */
-    Thread(IJob* adoptedJob);
+    Thread (IJob* adoptedJob);
 
     //! Duplicate a thread handle
     /*!
     Make a new thread object that refers to an existing thread.
     This does \b not start a new thread.
     */
-    Thread(const Thread&);
+    Thread (const Thread&);
 
     //! Release a thread handle
     /*!
@@ -62,7 +62,7 @@ public:
     will keep running until the job completes or calls exit() or allows
     itself to be cancelled.
     */
-    ~Thread();
+    ~Thread ();
 
     //! @name manipulators
     //@{
@@ -73,7 +73,7 @@ public:
     makes this thread object refer to another thread.  It does \b not
     start a new thread.
     */
-    Thread&            operator=(const Thread&);
+    Thread& operator= (const Thread&);
 
     //! Terminate the calling thread
     /*!
@@ -88,7 +88,7 @@ public:
     \endcode
     or add the \c RETHROW_XTHREAD macro to the \c catch(...) block.
     */
-    static void            exit(void*);
+    static void exit (void*);
 
     //! Cancel thread
     /*!
@@ -98,7 +98,7 @@ public:
     enabled.  If cancellation is disabled then the cancel is
     remembered but not acted on until the first call to a
     cancellation point after cancellation is enabled.
-    
+
     A cancellation point is a function that can act on cancellation.
     A cancellation point does not return if there's a cancel pending.
     Instead, it unwinds the stack and destroys automatic objects, as
@@ -110,13 +110,13 @@ public:
     objects (like Lock).  Clients are strongly encouraged to do the latter.
     During cancellation, further cancel() calls are ignored (i.e.
     a thread cannot be interrupted by a cancel during cancellation).
-    
+
     Clients that \c catch(XThreadCancel) must always rethrow the
     exception.  Clients that \c catch(...) must either rethrow the
     exception or include a \c catch(XThreadCancel) handler that
     rethrows.  The \c RETHROW_XTHREAD macro may be useful for that.
     */
-    void                cancel();
+    void cancel ();
 
     //! Change thread priority
     /*!
@@ -124,14 +124,14 @@ public:
     the next lower, etc.  -1 is the next higher, etc. but boosting
     the priority may not be permitted and will be silenty ignored.
     */
-    void                setPriority(int n);
+    void setPriority (int n);
 
     //! Force pollSocket() to return
     /*!
     Forces a currently blocked pollSocket() in the thread to return
     immediately.
     */
-    void                unblockPollSocket();
+    void unblockPollSocket ();
 
     //@}
     //! @name accessors
@@ -141,7 +141,7 @@ public:
     /*!
     Return a Thread object representing the calling thread.
     */
-    static Thread        getCurrentThread();
+    static Thread getCurrentThread ();
 
     //! Test for cancellation
     /*!
@@ -152,7 +152,7 @@ public:
 
     (cancellation point)
     */
-    static void            testCancel();
+    static void testCancel ();
 
     //! Wait for thread to terminate
     /*!
@@ -165,7 +165,7 @@ public:
 
     (cancellation point)
     */
-    bool                wait(double timeout = -1.0) const;
+    bool wait (double timeout = -1.0) const;
 
     //! Get the exit result
     /*!
@@ -175,7 +175,7 @@ public:
 
     (cancellation point)
     */
-    void*                getResult() const;
+    void* getResult () const;
 
     //! Get the thread id
     /*!
@@ -183,28 +183,27 @@ public:
     check if two Thread objects refer to the same thread.  Use
     operator==() for that.
     */
-    IArchMultithread::ThreadID
-                        getID() const;
+    IArchMultithread::ThreadID getID () const;
 
     //! Compare thread handles
     /*!
     Returns true if two Thread objects refer to the same thread.
     */
-    bool                operator==(const Thread&) const;
+    bool operator== (const Thread&) const;
 
     //! Compare thread handles
     /*!
     Returns true if two Thread objects do not refer to the same thread.
     */
-    bool                operator!=(const Thread&) const;
+    bool operator!= (const Thread&) const;
 
     //@}
 
 private:
-    Thread(ArchThread);
+    Thread (ArchThread);
 
-    static void*        threadFunc(void*);
+    static void* threadFunc (void*);
 
 private:
-    ArchThread            m_thread;
+    ArchThread m_thread;
 };

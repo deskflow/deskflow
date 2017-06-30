@@ -20,76 +20,73 @@
 
 #include "base/Unicode.h"
 
-OSXClipboardHTMLConverter::OSXClipboardHTMLConverter()
-{
+OSXClipboardHTMLConverter::OSXClipboardHTMLConverter () {
     // do nothing
 }
 
-OSXClipboardHTMLConverter::~OSXClipboardHTMLConverter()
-{
+OSXClipboardHTMLConverter::~OSXClipboardHTMLConverter () {
     // do nothing
 }
 
 IClipboard::EFormat
-OSXClipboardHTMLConverter::getFormat() const
-{
+OSXClipboardHTMLConverter::getFormat () const {
     return IClipboard::kHTML;
 }
 
 CFStringRef
-OSXClipboardHTMLConverter::getOSXFormat() const
-{
-    return CFSTR("public.html");
+OSXClipboardHTMLConverter::getOSXFormat () const {
+    return CFSTR ("public.html");
 }
 
-String 
-OSXClipboardHTMLConverter::convertString(
-                                const String& data,
-                                CFStringEncoding fromEncoding,
-                                CFStringEncoding toEncoding)
-{
-    CFStringRef stringRef = CFStringCreateWithCString(
-                                kCFAllocatorDefault,
-                                data.c_str(), fromEncoding);
+String
+OSXClipboardHTMLConverter::convertString (const String& data,
+                                          CFStringEncoding fromEncoding,
+                                          CFStringEncoding toEncoding) {
+    CFStringRef stringRef = CFStringCreateWithCString (
+        kCFAllocatorDefault, data.c_str (), fromEncoding);
 
     if (stringRef == NULL) {
-        return String();
+        return String ();
     }
 
     CFIndex buffSize;
-    CFRange entireString = CFRangeMake(0, CFStringGetLength(stringRef));
+    CFRange entireString = CFRangeMake (0, CFStringGetLength (stringRef));
 
-    CFStringGetBytes(stringRef, entireString, toEncoding,
-        0, false, NULL, 0, &buffSize);
+    CFStringGetBytes (
+        stringRef, entireString, toEncoding, 0, false, NULL, 0, &buffSize);
 
     char* buffer = new char[buffSize];
 
     if (buffer == NULL) {
-        CFRelease(stringRef);
-        return String();
+        CFRelease (stringRef);
+        return String ();
     }
-    
-    CFStringGetBytes(stringRef, entireString, toEncoding,
-        0, false, (UInt8*)buffer, buffSize, NULL);
 
-    String result(buffer, buffSize);
+    CFStringGetBytes (stringRef,
+                      entireString,
+                      toEncoding,
+                      0,
+                      false,
+                      (UInt8*) buffer,
+                      buffSize,
+                      NULL);
+
+    String result (buffer, buffSize);
 
     delete[] buffer;
-    CFRelease(stringRef);
+    CFRelease (stringRef);
 
     return result;
 }
 
 String
-OSXClipboardHTMLConverter::doFromIClipboard(const String& data) const
-{
-    return convertString(data, kCFStringEncodingUTF8,
-                CFStringGetSystemEncoding());
+OSXClipboardHTMLConverter::doFromIClipboard (const String& data) const {
+    return convertString (
+        data, kCFStringEncodingUTF8, CFStringGetSystemEncoding ());
 }
 
 String
-OSXClipboardHTMLConverter::doToIClipboard(const String& data) const
-{
-    return convertString(data, CFStringGetSystemEncoding(),
-                kCFStringEncodingUTF8);
+OSXClipboardHTMLConverter::doToIClipboard (const String& data) const {
+    return convertString (
+        data, CFStringGetSystemEncoding (), kCFStringEncodingUTF8);
 }

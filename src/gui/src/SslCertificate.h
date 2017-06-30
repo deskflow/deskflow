@@ -21,24 +21,23 @@
 
 #include <QObject>
 
-class SslCertificate : public QObject
-{
-Q_OBJECT
+class SslCertificate : public QObject {
+    Q_OBJECT
 
 public:
-    explicit SslCertificate(QObject *parent = 0);
+    explicit SslCertificate (QObject* parent = 0);
 
 public slots:
-    void generateCertificate();
+    void generateCertificate ();
 
 signals:
-    void error(QString e);
-    void info(QString i);
-    void generateFinished();
+    void error (QString e);
+    void info (QString i);
+    void generateFinished ();
 
 private:
-    bool runTool(const QStringList& args);
-    void generateFingerprint(const QString& certificateFilename);
+    bool runTool (const QStringList& args);
+    void generateFingerprint (const QString& certificateFilename);
 
 private:
     QString m_ProfileDir;

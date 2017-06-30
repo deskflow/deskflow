@@ -34,26 +34,31 @@ enum {
     kAddClientIgnore
 };
 
-class AddClientDialog : public QDialog, public Ui::AddClientDialog
-{
+class AddClientDialog : public QDialog, public Ui::AddClientDialog {
     Q_OBJECT
 public:
-    AddClientDialog(const QString& clientName, QWidget* parent = 0);
-    ~AddClientDialog();
+    AddClientDialog (const QString& clientName, QWidget* parent = 0);
+    ~AddClientDialog ();
 
-    int addResult() { return m_AddResult; }
-    bool ignoreAutoConfigClient() { return m_IgnoreAutoConfigClient; }
+    int
+    addResult () {
+        return m_AddResult;
+    }
+    bool
+    ignoreAutoConfigClient () {
+        return m_IgnoreAutoConfigClient;
+    }
 
 protected:
-    void changeEvent(QEvent *e);
+    void changeEvent (QEvent* e);
 
 private slots:
-    void on_m_pCheckBoxIgnoreClient_toggled(bool checked);
-    void handleButtonLeft();
-    void handleButtonUp();
-    void handleButtonRight();
-    void handleButtonDown();
-    void handleButtonAdvanced();
+    void on_m_pCheckBoxIgnoreClient_toggled (bool checked);
+    void handleButtonLeft ();
+    void handleButtonUp ();
+    void handleButtonRight ();
+    void handleButtonDown ();
+    void handleButtonAdvanced ();
 
 private:
     QPushButton* m_pButtonLeft;

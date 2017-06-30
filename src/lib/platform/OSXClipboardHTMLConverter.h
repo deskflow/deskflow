@@ -23,22 +23,21 @@
 //! Convert to/from HTML encoding
 class OSXClipboardHTMLConverter : public OSXClipboardAnyTextConverter {
 public:
-    OSXClipboardHTMLConverter();
-    virtual ~OSXClipboardHTMLConverter();
+    OSXClipboardHTMLConverter ();
+    virtual ~OSXClipboardHTMLConverter ();
 
     // IMSWindowsClipboardConverter overrides
-    virtual IClipboard::EFormat
-                        getFormat() const;
+    virtual IClipboard::EFormat getFormat () const;
 
-    virtual CFStringRef    getOSXFormat() const;
+    virtual CFStringRef getOSXFormat () const;
 
 protected:
     // OSXClipboardAnyTextConverter overrides
-    virtual String        doFromIClipboard(const String&) const;
-    virtual String        doToIClipboard(const String&) const;
+    virtual String doFromIClipboard (const String&) const;
+    virtual String doToIClipboard (const String&) const;
 
     // generic encoding converter
-    static String        convertString(const String& data,
-                            CFStringEncoding fromEncoding,
-                            CFStringEncoding toEncoding);
+    static String
+    convertString (const String& data, CFStringEncoding fromEncoding,
+                   CFStringEncoding toEncoding);
 };

@@ -23,6 +23,6 @@
 
 class ArchInternetUnix {
 public:
-    String                get(const String& url);
-    String                urlEncode(const String& url);
+    String get (const String& url);
+    String urlEncode (const String& url);
 };

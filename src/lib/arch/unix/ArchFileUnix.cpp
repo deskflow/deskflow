@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -28,42 +28,37 @@
 // ArchFileUnix
 //
 
-ArchFileUnix::ArchFileUnix()
-{
+ArchFileUnix::ArchFileUnix () {
     // do nothing
 }
 
-ArchFileUnix::~ArchFileUnix()
-{
+ArchFileUnix::~ArchFileUnix () {
     // do nothing
 }
 
 const char*
-ArchFileUnix::getBasename(const char* pathname)
-{
+ArchFileUnix::getBasename (const char* pathname) {
     if (pathname == NULL) {
         return NULL;
     }
 
-    const char* basename = strrchr(pathname, '/');
+    const char* basename = strrchr (pathname, '/');
     if (basename != NULL) {
         return basename + 1;
-    }
-    else {
+    } else {
         return pathname;
     }
 }
 
 std::string
-ArchFileUnix::getUserDirectory()
-{
+ArchFileUnix::getUserDirectory () {
     char* buffer = NULL;
     std::string dir;
 #if HAVE_GETPWUID_R
     struct passwd pwent;
     struct passwd* pwentp;
 #if defined(_SC_GETPW_R_SIZE_MAX)
-    long size = sysconf(_SC_GETPW_R_SIZE_MAX);
+    long size = sysconf (_SC_GETPW_R_SIZE_MAX);
     if (size == -1) {
         size = BUFSIZ;
     }
@@ -71,9 +66,9 @@ ArchFileUnix::getUserDirectory()
     long size = BUFSIZ;
 #endif
     buffer = new char[size];
-    getpwuid_r(getuid(), &pwent, buffer, size, &pwentp);
+    getpwuid_r (getuid (), &pwent, buffer, size, &pwentp);
 #else
-    struct passwd* pwentp = getpwuid(getuid());
+    struct passwd* pwentp = getpwuid (getuid ());
 #endif
     if (pwentp != NULL && pwentp->pw_dir != NULL) {
         dir = pwentp->pw_dir;
@@ -83,14 +78,12 @@ ArchFileUnix::getUserDirectory()
 }
 
 std::string
-ArchFileUnix::getSystemDirectory()
-{
+ArchFileUnix::getSystemDirectory () {
     return "/etc";
 }
 
 std::string
-ArchFileUnix::getInstalledDirectory()
-{
+ArchFileUnix::getInstalledDirectory () {
 #if WINAPI_XWINDOWS
     return "/usr/bin";
 #else
@@ -99,51 +92,45 @@ ArchFileUnix::getInstalledDirectory()
 }
 
 std::string
-ArchFileUnix::getLogDirectory()
-{
+ArchFileUnix::getLogDirectory () {
     return "/var/log";
 }
 
 std::string
-ArchFileUnix::getPluginDirectory()
-{
-    if (!m_pluginDirectory.empty()) {
+ArchFileUnix::getPluginDirectory () {
+    if (!m_pluginDirectory.empty ()) {
         return m_pluginDirectory;
     }
 
 #if WINAPI_XWINDOWS
-    return getProfileDirectory().append("/plugins");
+    return getProfileDirectory ().append ("/plugins");
 #else
-    return getProfileDirectory().append("/Plugins");
+    return getProfileDirectory ().append ("/Plugins");
 #endif
 }
 
 std::string
-ArchFileUnix::getProfileDirectory()
-{
+ArchFileUnix::getProfileDirectory () {
     String dir;
-    if (!m_profileDirectory.empty()) {
+    if (!m_profileDirectory.empty ()) {
         dir = m_profileDirectory;
-    }
-    else {
+    } else {
 #if WINAPI_XWINDOWS
-        dir = getUserDirectory().append("/.synergy");
+        dir = getUserDirectory ().append ("/.synergy");
 #else
-        dir = getUserDirectory().append("/Library/Synergy");
+        dir = getUserDirectory ().append ("/Library/Synergy");
 #endif
     }
     return dir;
-
 }
 
 std::string
-ArchFileUnix::concatPath(const std::string& prefix,
-                const std::string& suffix)
-{
+ArchFileUnix::concatPath (const std::string& prefix,
+                          const std::string& suffix) {
     std::string path;
-    path.reserve(prefix.size() + 1 + suffix.size());
+    path.reserve (prefix.size () + 1 + suffix.size ());
     path += prefix;
-    if (path.size() == 0 || path[path.size() - 1] != '/') {
+    if (path.size () == 0 || path[path.size () - 1] != '/') {
         path += '/';
     }
     path += suffix;
@@ -151,13 +138,11 @@ ArchFileUnix::concatPath(const std::string& prefix,
 }
 
 void
-ArchFileUnix::setProfileDirectory(const String& s)
-{
+ArchFileUnix::setProfileDirectory (const String& s) {
     m_profileDirectory = s;
 }
 
 void
-ArchFileUnix::setPluginDirectory(const String& s)
-{
+ArchFileUnix::setPluginDirectory (const String& s) {
     m_pluginDirectory = s;
 }

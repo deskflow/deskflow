@@ -24,7 +24,7 @@
 #if defined(__cplusplus)
 extern "C" {
 #endif
-bool                fakeNativeMediaKey(KeyID id);
+bool fakeNativeMediaKey (KeyID id);
 #if defined(__cplusplus)
 }
 #endif

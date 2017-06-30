@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -31,14 +31,14 @@ it tries it will deadlock itself.
 */
 class Mutex {
 public:
-    Mutex();
+    Mutex ();
     //! Equivalent to default c'tor
     /*!
     Copy c'tor doesn't copy anything.  It just makes it possible to
     copy objects that contain a mutex.
     */
-    Mutex(const Mutex&);
-    ~Mutex();
+    Mutex (const Mutex&);
+    ~Mutex ();
 
     //! @name manipulators
     //@{
@@ -48,7 +48,7 @@ public:
     This does nothing.  It just makes it possible to assign objects
     that contain a mutex.
     */
-    Mutex&                operator=(const Mutex&);
+    Mutex& operator= (const Mutex&);
 
     //@}
     //! @name accessors
@@ -62,18 +62,18 @@ public:
 
     (cancellation point)
     */
-    void                lock() const;
+    void lock () const;
 
     //! Unlock the mutex
     /*!
     Unlocks the mutex, which must have been previously locked by the
     calling thread.
     */
-    void                unlock() const;
+    void unlock () const;
 
     //@}
 
 private:
     friend class CondVarBase;
-    ArchMutex            m_mutex;
+    ArchMutex m_mutex;
 };

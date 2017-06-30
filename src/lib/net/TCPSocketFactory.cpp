@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -28,40 +28,35 @@
 // TCPSocketFactory
 //
 
-TCPSocketFactory::TCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
-    m_events(events),
-    m_socketMultiplexer(socketMultiplexer)
-{
+TCPSocketFactory::TCPSocketFactory (IEventQueue* events,
+                                    SocketMultiplexer* socketMultiplexer)
+    : m_events (events), m_socketMultiplexer (socketMultiplexer) {
     // do nothing
 }
 
-TCPSocketFactory::~TCPSocketFactory()
-{
+TCPSocketFactory::~TCPSocketFactory () {
     // do nothing
 }
 
 IDataSocket*
-TCPSocketFactory::create(bool secure) const
-{
+TCPSocketFactory::create (bool secure) const {
     if (secure) {
-        SecureSocket* secureSocket = new SecureSocket(m_events, m_socketMultiplexer);
+        SecureSocket* secureSocket =
+            new SecureSocket (m_events, m_socketMultiplexer);
         secureSocket->initSsl (false);
         return secureSocket;
-    }
-    else {
-        return new TCPSocket(m_events, m_socketMultiplexer);
+    } else {
+        return new TCPSocket (m_events, m_socketMultiplexer);
     }
 }
 
 IListenSocket*
-TCPSocketFactory::createListen(bool secure) const
-{
+TCPSocketFactory::createListen (bool secure) const {
     IListenSocket* socket = NULL;
     if (secure) {
-        socket = new SecureListenSocket(m_events, m_socketMultiplexer);
-    }
-    else {
-        socket = new TCPListenSocket(m_events, m_socketMultiplexer);
+        socket = new SecureListenSocket (m_events, m_socketMultiplexer);
+    } else {
+        socket = new TCPListenSocket (m_events, m_socketMultiplexer);
     }
 
     return socket;

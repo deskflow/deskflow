@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -37,114 +37,103 @@
 // TCPSocket
 //
 
-TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
-    IDataSocket(events),
-    m_events(events),
-    m_mutex(),
-    m_flushed(&m_mutex, true),
-    m_socketMultiplexer(socketMultiplexer)
-{
+TCPSocket::TCPSocket (IEventQueue* events, SocketMultiplexer* socketMultiplexer)
+    : IDataSocket (events),
+      m_events (events),
+      m_mutex (),
+      m_flushed (&m_mutex, true),
+      m_socketMultiplexer (socketMultiplexer) {
     try {
-        m_socket = ARCH->newSocket(IArchNetwork::kINET, IArchNetwork::kSTREAM);
-    }
-    catch (XArchNetwork& e) {
-        throw XSocketCreate(e.what());
+        m_socket = ARCH->newSocket (IArchNetwork::kINET, IArchNetwork::kSTREAM);
+    } catch (XArchNetwork& e) {
+        throw XSocketCreate (e.what ());
     }
 
-    init();
+    init ();
 }
 
-TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket) :
-    IDataSocket(events),
-    m_events(events),
-    m_mutex(),
-    m_socket(socket),
-    m_flushed(&m_mutex, true),
-    m_socketMultiplexer(socketMultiplexer)
-{
-    assert(m_socket != NULL);
+TCPSocket::TCPSocket (IEventQueue* events, SocketMultiplexer* socketMultiplexer,
+                      ArchSocket socket)
+    : IDataSocket (events),
+      m_events (events),
+      m_mutex (),
+      m_socket (socket),
+      m_flushed (&m_mutex, true),
+      m_socketMultiplexer (socketMultiplexer) {
+    assert (m_socket != NULL);
 
     // socket starts in connected state
-    init();
-    onConnected();
-    setJob(newJob());
+    init ();
+    onConnected ();
+    setJob (newJob ());
 }
 
-TCPSocket::~TCPSocket()
-{
+TCPSocket::~TCPSocket () {
     try {
-        close();
-    }
-    catch (...) {
+        close ();
+    } catch (...) {
         // ignore
     }
 }
 
 void
-TCPSocket::bind(const NetworkAddress& addr)
-{
+TCPSocket::bind (const NetworkAddress& addr) {
     try {
-        ARCH->bindSocket(m_socket, addr.getAddress());
-    }
-    catch (XArchNetworkAddressInUse& e) {
-        throw XSocketAddressInUse(e.what());
-    }
-    catch (XArchNetwork& e) {
-        throw XSocketBind(e.what());
+        ARCH->bindSocket (m_socket, addr.getAddress ());
+    } catch (XArchNetworkAddressInUse& e) {
+        throw XSocketAddressInUse (e.what ());
+    } catch (XArchNetwork& e) {
+        throw XSocketBind (e.what ());
     }
 }
 
 void
-TCPSocket::close()
-{
+TCPSocket::close () {
     // remove ourself from the multiplexer
-    setJob(NULL);
+    setJob (NULL);
 
-    Lock lock(&m_mutex);
+    Lock lock (&m_mutex);
 
     // clear buffers and enter disconnected state
     if (m_connected) {
-        sendEvent(m_events->forISocket().disconnected());
+        sendEvent (m_events->forISocket ().disconnected ());
     }
-    onDisconnected();
+    onDisconnected ();
 
     // close the socket
     if (m_socket != NULL) {
         ArchSocket socket = m_socket;
-        m_socket = NULL;
+        m_socket          = NULL;
         try {
-            ARCH->closeSocket(socket);
-        }
-        catch (XArchNetwork& e) {
+            ARCH->closeSocket (socket);
+        } catch (XArchNetwork& e) {
             // ignore, there's not much we can do
-            LOG((CLOG_WARN "error closing socket: %s", e.what()));
+            LOG ((CLOG_WARN "error closing socket: %s", e.what ()));
         }
     }
 }
 
 void*
-TCPSocket::getEventTarget() const
-{
-    return const_cast<void*>(static_cast<const void*>(this));
+TCPSocket::getEventTarget () const {
+    return const_cast<void*> (static_cast<const void*> (this));
 }
 
 UInt32
-TCPSocket::read(void* buffer, UInt32 n)
-{
+TCPSocket::read (void* buffer, UInt32 n) {
     // copy data directly from our input buffer
-    Lock lock(&m_mutex);
-    UInt32 size = m_inputBuffer.getSize();
+    Lock lock (&m_mutex);
+    UInt32 size = m_inputBuffer.getSize ();
     if (n > size) {
         n = size;
     }
     if (buffer != NULL && n != 0) {
-        memcpy(buffer, m_inputBuffer.peek(n), n);
+        memcpy (buffer, m_inputBuffer.peek (n), n);
     }
-    m_inputBuffer.pop(n);
+    m_inputBuffer.pop (n);
 
     // if no more data and we cannot read or write then send disconnected
-    if (n > 0 && m_inputBuffer.getSize() == 0 && !m_readable && !m_writable) {
-        sendEvent(m_events->forISocket().disconnected());
+    if (n > 0 && m_inputBuffer.getSize () == 0 && !m_readable && !m_writable) {
+        sendEvent (m_events->forISocket ().disconnected ());
         m_connected = false;
     }
 
@@ -152,15 +141,14 @@ TCPSocket::read(void* buffer, UInt32 n)
 }
 
 void
-TCPSocket::write(const void* buffer, UInt32 n)
-{
+TCPSocket::write (const void* buffer, UInt32 n) {
     bool wasEmpty;
     {
-        Lock lock(&m_mutex);
+        Lock lock (&m_mutex);
 
         // must not have shutdown output
         if (!m_writable) {
-            sendEvent(m_events->forIStream().outputError());
+            sendEvent (m_events->forIStream ().outputError ());
             return;
         }
 
@@ -170,8 +158,8 @@ TCPSocket::write(const void* buffer, UInt32 n)
         }
 
         // copy data to the output buffer
-        wasEmpty = (m_outputBuffer.getSize() == 0);
-        m_outputBuffer.write(buffer, n);
+        wasEmpty = (m_outputBuffer.getSize () == 0);
+        m_outputBuffer.write (buffer, n);
 
         // there's data to write
         m_flushed = false;
@@ -179,127 +167,115 @@ TCPSocket::write(const void* buffer, UInt32 n)
 
     // make sure we're waiting to write
     if (wasEmpty) {
-        setJob(newJob());
+        setJob (newJob ());
     }
 }
 
 void
-TCPSocket::flush()
-{
-    Lock lock(&m_mutex);
+TCPSocket::flush () {
+    Lock lock (&m_mutex);
     while (m_flushed == false) {
-        m_flushed.wait();
+        m_flushed.wait ();
     }
 }
 
 void
-TCPSocket::shutdownInput()
-{
+TCPSocket::shutdownInput () {
     bool useNewJob = false;
     {
-        Lock lock(&m_mutex);
+        Lock lock (&m_mutex);
 
         // shutdown socket for reading
         try {
-            ARCH->closeSocketForRead(m_socket);
-        }
-        catch (XArchNetwork&) {
+            ARCH->closeSocketForRead (m_socket);
+        } catch (XArchNetwork&) {
             // ignore
         }
 
         // shutdown buffer for reading
         if (m_readable) {
-            sendEvent(m_events->forIStream().inputShutdown());
-            onInputShutdown();
+            sendEvent (m_events->forIStream ().inputShutdown ());
+            onInputShutdown ();
             useNewJob = true;
         }
     }
     if (useNewJob) {
-        setJob(newJob());
+        setJob (newJob ());
     }
 }
 
 void
-TCPSocket::shutdownOutput()
-{
+TCPSocket::shutdownOutput () {
     bool useNewJob = false;
     {
-        Lock lock(&m_mutex);
+        Lock lock (&m_mutex);
 
         // shutdown socket for writing
         try {
-            ARCH->closeSocketForWrite(m_socket);
-        }
-        catch (XArchNetwork&) {
+            ARCH->closeSocketForWrite (m_socket);
+        } catch (XArchNetwork&) {
             // ignore
         }
 
         // shutdown buffer for writing
         if (m_writable) {
-            sendEvent(m_events->forIStream().outputShutdown());
-            onOutputShutdown();
+            sendEvent (m_events->forIStream ().outputShutdown ());
+            onOutputShutdown ();
             useNewJob = true;
         }
     }
     if (useNewJob) {
-        setJob(newJob());
+        setJob (newJob ());
     }
 }
 
 bool
-TCPSocket::isReady() const
-{
-    Lock lock(&m_mutex);
-    return (m_inputBuffer.getSize() > 0);
+TCPSocket::isReady () const {
+    Lock lock (&m_mutex);
+    return (m_inputBuffer.getSize () > 0);
 }
 
 bool
-TCPSocket::isFatal() const
-{
+TCPSocket::isFatal () const {
     // TCP sockets aren't ever left in a fatal state.
-    LOG((CLOG_ERR "isFatal() not valid for non-secure connections"));
+    LOG ((CLOG_ERR "isFatal() not valid for non-secure connections"));
     return false;
 }
 
 UInt32
-TCPSocket::getSize() const
-{
-    Lock lock(&m_mutex);
-    return m_inputBuffer.getSize();
+TCPSocket::getSize () const {
+    Lock lock (&m_mutex);
+    return m_inputBuffer.getSize ();
 }
 
 void
-TCPSocket::connect(const NetworkAddress& addr)
-{
+TCPSocket::connect (const NetworkAddress& addr) {
     {
-        Lock lock(&m_mutex);
+        Lock lock (&m_mutex);
 
         // fail on attempts to reconnect
         if (m_socket == NULL || m_connected) {
-            sendConnectionFailedEvent("busy");
+            sendConnectionFailedEvent ("busy");
             return;
         }
 
         try {
-            if (ARCH->connectSocket(m_socket, addr.getAddress())) {
-                sendEvent(m_events->forIDataSocket().connected());
-                onConnected();
-            }
-            else {
+            if (ARCH->connectSocket (m_socket, addr.getAddress ())) {
+                sendEvent (m_events->forIDataSocket ().connected ());
+                onConnected ();
+            } else {
                 // connection is in progress
                 m_writable = true;
             }
-        }
-        catch (XArchNetwork& e) {
-            throw XSocketConnect(e.what());
+        } catch (XArchNetwork& e) {
+            throw XSocketConnect (e.what ());
         }
     }
-    setJob(newJob());
+    setJob (newJob ());
 }
 
 void
-TCPSocket::init()
-{
+TCPSocket::init () {
     // default state
     m_connected = false;
     m_readable  = false;
@@ -309,184 +285,173 @@ TCPSocket::init()
         // turn off Nagle algorithm.  we send lots of very short messages
         // that should be sent without (much) delay.  for example, the
         // mouse motion messages are much less useful if they're delayed.
-        ARCH->setNoDelayOnSocket(m_socket, true);
-    }
-    catch (XArchNetwork& e) {
+        ARCH->setNoDelayOnSocket (m_socket, true);
+    } catch (XArchNetwork& e) {
         try {
-            ARCH->closeSocket(m_socket);
+            ARCH->closeSocket (m_socket);
             m_socket = NULL;
-        }
-        catch (XArchNetwork&) {
+        } catch (XArchNetwork&) {
             // ignore
         }
-        throw XSocketCreate(e.what());
+        throw XSocketCreate (e.what ());
     }
 }
 
 TCPSocket::EJobResult
-TCPSocket::doRead()
-{
+TCPSocket::doRead () {
     UInt8 buffer[4096];
-    memset(buffer, 0, sizeof(buffer));
+    memset (buffer, 0, sizeof (buffer));
     size_t bytesRead = 0;
-    
-    bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
-    
+
+    bytesRead = ARCH->readSocket (m_socket, buffer, sizeof (buffer));
+
     if (bytesRead > 0) {
-        bool wasEmpty = (m_inputBuffer.getSize() == 0);
-        
+        bool wasEmpty = (m_inputBuffer.getSize () == 0);
+
         // slurp up as much as possible
         do {
-            m_inputBuffer.write(buffer, bytesRead);
+            m_inputBuffer.write (buffer, bytesRead);
 
-            bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+            bytesRead = ARCH->readSocket (m_socket, buffer, sizeof (buffer));
         } while (bytesRead > 0);
-        
+
         // send input ready if input buffer was empty
         if (wasEmpty) {
-            sendEvent(m_events->forIStream().inputReady());
+            sendEvent (m_events->forIStream ().inputReady ());
         }
-    }
-    else {
+    } else {
         // remote write end of stream hungup.  our input side
         // has therefore shutdown but don't flush our buffer
         // since there's still data to be read.
-        sendEvent(m_events->forIStream().inputShutdown());
-        if (!m_writable && m_inputBuffer.getSize() == 0) {
-            sendEvent(m_events->forISocket().disconnected());
+        sendEvent (m_events->forIStream ().inputShutdown ());
+        if (!m_writable && m_inputBuffer.getSize () == 0) {
+            sendEvent (m_events->forISocket ().disconnected ());
             m_connected = false;
         }
         m_readable = false;
         return kNew;
     }
-    
+
     return kRetry;
 }
 
 TCPSocket::EJobResult
-TCPSocket::doWrite()
-{
+TCPSocket::doWrite () {
     // write data
     UInt32 bufferSize = 0;
-    int bytesWrote = 0;
+    int bytesWrote    = 0;
 
-    bufferSize = m_outputBuffer.getSize();
-    const void* buffer = m_outputBuffer.peek(bufferSize);
-    bytesWrote = (UInt32)ARCH->writeSocket(m_socket, buffer, bufferSize);
+    bufferSize         = m_outputBuffer.getSize ();
+    const void* buffer = m_outputBuffer.peek (bufferSize);
+    bytesWrote = (UInt32) ARCH->writeSocket (m_socket, buffer, bufferSize);
 
     if (bytesWrote > 0) {
-        discardWrittenData(bytesWrote);
+        discardWrittenData (bytesWrote);
         return kNew;
     }
-    
+
     return kRetry;
 }
 
 void
-TCPSocket::setJob(ISocketMultiplexerJob* job)
-{
+TCPSocket::setJob (ISocketMultiplexerJob* job) {
     // multiplexer will delete the old job
     if (job == NULL) {
-        m_socketMultiplexer->removeSocket(this);
-    }
-    else {
-        m_socketMultiplexer->addSocket(this, job);
+        m_socketMultiplexer->removeSocket (this);
+    } else {
+        m_socketMultiplexer->addSocket (this, job);
     }
 }
 
 ISocketMultiplexerJob*
-TCPSocket::newJob()
-{
+TCPSocket::newJob () {
     // note -- must have m_mutex locked on entry
 
     if (m_socket == NULL) {
         return NULL;
-    }
-    else if (!m_connected) {
-        assert(!m_readable);
+    } else if (!m_connected) {
+        assert (!m_readable);
         if (!(m_readable || m_writable)) {
             return NULL;
         }
-        return new TSocketMultiplexerMethodJob<TCPSocket>(
-                                this, &TCPSocket::serviceConnecting,
-                                m_socket, m_readable, m_writable);
-    }
-    else {
-        if (!(m_readable || (m_writable && (m_outputBuffer.getSize() > 0)))) {
+        return new TSocketMultiplexerMethodJob<TCPSocket> (
+            this,
+            &TCPSocket::serviceConnecting,
+            m_socket,
+            m_readable,
+            m_writable);
+    } else {
+        if (!(m_readable || (m_writable && (m_outputBuffer.getSize () > 0)))) {
             return NULL;
         }
-        return new TSocketMultiplexerMethodJob<TCPSocket>(
-                                this, &TCPSocket::serviceConnected,
-                                m_socket, m_readable,
-                                m_writable && (m_outputBuffer.getSize() > 0));
+        return new TSocketMultiplexerMethodJob<TCPSocket> (
+            this,
+            &TCPSocket::serviceConnected,
+            m_socket,
+            m_readable,
+            m_writable && (m_outputBuffer.getSize () > 0));
     }
 }
 
 void
-TCPSocket::sendConnectionFailedEvent(const char* msg)
-{
-    ConnectionFailedInfo* info = new ConnectionFailedInfo(msg);
-    m_events->addEvent(Event(m_events->forIDataSocket().connectionFailed(),
-                            getEventTarget(), info, Event::kDontFreeData));
+TCPSocket::sendConnectionFailedEvent (const char* msg) {
+    ConnectionFailedInfo* info = new ConnectionFailedInfo (msg);
+    m_events->addEvent (Event (m_events->forIDataSocket ().connectionFailed (),
+                               getEventTarget (),
+                               info,
+                               Event::kDontFreeData));
 }
 
 void
-TCPSocket::sendEvent(Event::Type type)
-{
-    m_events->addEvent(Event(type, getEventTarget(), NULL));
+TCPSocket::sendEvent (Event::Type type) {
+    m_events->addEvent (Event (type, getEventTarget (), NULL));
 }
 
 void
-TCPSocket::discardWrittenData(int bytesWrote)
-{
-    m_outputBuffer.pop(bytesWrote);
-    if (m_outputBuffer.getSize() == 0) {
-        sendEvent(m_events->forIStream().outputFlushed());
+TCPSocket::discardWrittenData (int bytesWrote) {
+    m_outputBuffer.pop (bytesWrote);
+    if (m_outputBuffer.getSize () == 0) {
+        sendEvent (m_events->forIStream ().outputFlushed ());
         m_flushed = true;
-        m_flushed.broadcast();
+        m_flushed.broadcast ();
     }
 }
 
 void
-TCPSocket::onConnected()
-{
+TCPSocket::onConnected () {
     m_connected = true;
     m_readable  = true;
     m_writable  = true;
 }
 
 void
-TCPSocket::onInputShutdown()
-{
-    m_inputBuffer.pop(m_inputBuffer.getSize());
+TCPSocket::onInputShutdown () {
+    m_inputBuffer.pop (m_inputBuffer.getSize ());
     m_readable = false;
 }
 
 void
-TCPSocket::onOutputShutdown()
-{
-    m_outputBuffer.pop(m_outputBuffer.getSize());
+TCPSocket::onOutputShutdown () {
+    m_outputBuffer.pop (m_outputBuffer.getSize ());
     m_writable = false;
 
     // we're now flushed
     m_flushed = true;
-    m_flushed.broadcast();
+    m_flushed.broadcast ();
 }
 
 void
-TCPSocket::onDisconnected()
-{
+TCPSocket::onDisconnected () {
     // disconnected
-    onInputShutdown();
-    onOutputShutdown();
+    onInputShutdown ();
+    onOutputShutdown ();
     m_connected = false;
 }
 
 ISocketMultiplexerJob*
-TCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
-                bool, bool write, bool error)
-{
-    Lock lock(&m_mutex);
+TCPSocket::serviceConnecting (ISocketMultiplexerJob* job, bool, bool write,
+                              bool error) {
+    Lock lock (&m_mutex);
 
     // should only check for errors if error is true but checking a new
     // socket (and a socket that's connecting should be new) for errors
@@ -508,83 +473,76 @@ TCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
     if (error || true) {
         try {
             // connection may have failed or succeeded
-            ARCH->throwErrorOnSocket(m_socket);
-        }
-        catch (XArchNetwork& e) {
-            sendConnectionFailedEvent(e.what());
-            onDisconnected();
-            return newJob();
+            ARCH->throwErrorOnSocket (m_socket);
+        } catch (XArchNetwork& e) {
+            sendConnectionFailedEvent (e.what ());
+            onDisconnected ();
+            return newJob ();
         }
     }
 
     if (write) {
-        sendEvent(m_events->forIDataSocket().connected());
-        onConnected();
-        return newJob();
+        sendEvent (m_events->forIDataSocket ().connected ());
+        onConnected ();
+        return newJob ();
     }
 
     return job;
 }
 
 ISocketMultiplexerJob*
-TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
-                bool read, bool write, bool error)
-{
-    Lock lock(&m_mutex);
+TCPSocket::serviceConnected (ISocketMultiplexerJob* job, bool read, bool write,
+                             bool error) {
+    Lock lock (&m_mutex);
 
     if (error) {
-        sendEvent(m_events->forISocket().disconnected());
-        onDisconnected();
-        return newJob();
+        sendEvent (m_events->forISocket ().disconnected ());
+        onDisconnected ();
+        return newJob ();
     }
 
     EJobResult result = kRetry;
     if (write) {
         try {
-            result = doWrite();
-        }
-        catch (XArchNetworkShutdown&) {
+            result = doWrite ();
+        } catch (XArchNetworkShutdown&) {
             // remote read end of stream hungup.  our output side
             // has therefore shutdown.
-            onOutputShutdown();
-            sendEvent(m_events->forIStream().outputShutdown());
-            if (!m_readable && m_inputBuffer.getSize() == 0) {
-                sendEvent(m_events->forISocket().disconnected());
+            onOutputShutdown ();
+            sendEvent (m_events->forIStream ().outputShutdown ());
+            if (!m_readable && m_inputBuffer.getSize () == 0) {
+                sendEvent (m_events->forISocket ().disconnected ());
                 m_connected = false;
             }
             result = kNew;
-        }
-        catch (XArchNetworkDisconnected&) {
+        } catch (XArchNetworkDisconnected&) {
             // stream hungup
-            onDisconnected();
-            sendEvent(m_events->forISocket().disconnected());
+            onDisconnected ();
+            sendEvent (m_events->forISocket ().disconnected ());
             result = kNew;
-        }
-        catch (XArchNetwork& e) {
+        } catch (XArchNetwork& e) {
             // other write error
-            LOG((CLOG_WARN "error writing socket: %s", e.what()));
-            onDisconnected();
-            sendEvent(m_events->forIStream().outputError());
-            sendEvent(m_events->forISocket().disconnected());
+            LOG ((CLOG_WARN "error writing socket: %s", e.what ()));
+            onDisconnected ();
+            sendEvent (m_events->forIStream ().outputError ());
+            sendEvent (m_events->forISocket ().disconnected ());
             result = kNew;
         }
     }
 
     if (read && m_readable) {
         try {
-            result = doRead();
-        }
-        catch (XArchNetworkDisconnected&) {
+            result = doRead ();
+        } catch (XArchNetworkDisconnected&) {
             // stream hungup
-            sendEvent(m_events->forISocket().disconnected());
-            onDisconnected();
+            sendEvent (m_events->forISocket ().disconnected ());
+            onDisconnected ();
             result = kNew;
-        }
-        catch (XArchNetwork& e) {
+        } catch (XArchNetwork& e) {
             // ignore other read error
-            LOG((CLOG_WARN "error reading socket: %s", e.what()));
+            LOG ((CLOG_WARN "error reading socket: %s", e.what ()));
         }
     }
 
-    return result == kBreak ? NULL : result == kNew ? newJob() : job;
+    return result == kBreak ? NULL : result == kNew ? newJob () : job;
 }

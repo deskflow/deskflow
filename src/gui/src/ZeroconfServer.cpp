@@ -20,14 +20,12 @@
 
 #include <stdlib.h>
 
-ZeroconfServer::ZeroconfServer(QObject* parent) :
-    QTcpServer(parent)
-{
+ZeroconfServer::ZeroconfServer (QObject* parent) : QTcpServer (parent) {
 }
 
-void ZeroconfServer::incomingConnection(qintptr socketDescriptor)
-{
-    ZeroconfThread* thread = new ZeroconfThread(socketDescriptor, this);
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-    thread->start();
+void
+ZeroconfServer::incomingConnection (qintptr socketDescriptor) {
+    ZeroconfThread* thread = new ZeroconfThread (socketDescriptor, this);
+    connect (thread, SIGNAL (finished ()), thread, SLOT (deleteLater ()));
+    thread->start ();
 }

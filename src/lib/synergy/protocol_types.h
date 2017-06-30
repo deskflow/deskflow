@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -30,26 +30,26 @@
 // 1.5:  adds file transfer and removes home brew crypto
 // 1.6:  adds clipboard streaming
 // NOTE: with new version, synergy minor version should increment
-static const SInt16        kProtocolMajorVersion = 1;
-static const SInt16        kProtocolMinorVersion = 6;
+static const SInt16 kProtocolMajorVersion = 1;
+static const SInt16 kProtocolMinorVersion = 6;
 
 // default contact port number
-static const UInt16        kDefaultPort = 24800;
+static const UInt16 kDefaultPort = 24800;
 
 // maximum total length for greeting returned by client
-static const UInt32        kMaxHelloLength = 1024;
+static const UInt32 kMaxHelloLength = 1024;
 
 // time between kMsgCKeepAlive (in seconds).  a non-positive value disables
 // keep alives.  this is the default rate that can be overridden using an
 // option.
-static const double        kKeepAliveRate = 3.0;
+static const double kKeepAliveRate = 3.0;
 
 // number of skipped kMsgCKeepAlive messages that indicates a problem
-static const double        kKeepAlivesUntilDeath = 3.0;
+static const double kKeepAlivesUntilDeath = 3.0;
 
 // obsolete heartbeat stuff
-static const double        kHeartRate = -1.0;
-static const double        kHeartBeatsUntilDeath = 3.0;
+static const double kHeartRate            = -1.0;
+static const double kHeartBeatsUntilDeath = 3.0;
 
 // direction constants
 enum EDirection {
@@ -59,8 +59,8 @@ enum EDirection {
     kTop,
     kBottom,
     kFirstDirection = kLeft,
-    kLastDirection = kBottom,
-    kNumDirections = kLastDirection - kFirstDirection + 1
+    kLastDirection  = kBottom,
+    kNumDirections  = kLastDirection - kFirstDirection + 1
 };
 enum EDirectionMask {
     kNoDirMask  = 0,
@@ -71,19 +71,10 @@ enum EDirectionMask {
 };
 
 // Data transfer constants
-enum EDataTransfer {
-    kDataStart = 1,
-    kDataChunk = 2,
-    kDataEnd = 3
-};
+enum EDataTransfer { kDataStart = 1, kDataChunk = 2, kDataEnd = 3 };
 
 // Data received constants
-enum EDataReceived {
-    kStart,
-    kNotFinish,
-    kFinish,
-    kError
-};
+enum EDataReceived { kStart, kNotFinish, kFinish, kError };
 
 //
 // message codes (trailing NUL is not part of code).  in comments, $n
@@ -103,13 +94,13 @@ enum EDataReceived {
 // say hello to client;  primary -> secondary
 // $1 = protocol major version number supported by server.  $2 =
 // protocol minor version number supported by server.
-extern const char*        kMsgHello;
+extern const char* kMsgHello;
 
 // respond to hello from server;  secondary -> primary
 // $1 = protocol major version number supported by client.  $2 =
 // protocol minor version number supported by client.  $3 = client
 // name.
-extern const char*        kMsgHelloBack;
+extern const char* kMsgHelloBack;
 
 
 //
@@ -117,10 +108,10 @@ extern const char*        kMsgHelloBack;
 //
 
 // no operation;  secondary -> primary
-extern const char*        kMsgCNoop;
+extern const char* kMsgCNoop;
 
 // close connection;  primary -> secondary
-extern const char*        kMsgCClose;
+extern const char* kMsgCClose;
 
 // enter screen:  primary -> secondary
 // entering screen at screen position $1 = x, $2 = y.  x,y are
@@ -130,7 +121,7 @@ extern const char*        kMsgCClose;
 // mask.  this will have bits set for each toggle modifier key
 // that is activated on entry to the screen.  the secondary screen
 // should adjust its toggle modifiers to reflect that state.
-extern const char*        kMsgCEnter;
+extern const char* kMsgCEnter;
 
 // leave screen:  primary -> secondary
 // leaving screen.  the secondary screen should send clipboard
@@ -139,28 +130,28 @@ extern const char*        kMsgCEnter;
 // not received a kMsgCClipboard for with a greater sequence
 // number) and that were grabbed or have changed since the
 // last leave.
-extern const char*        kMsgCLeave;
+extern const char* kMsgCLeave;
 
 // grab clipboard:  primary <-> secondary
 // sent by screen when some other app on that screen grabs a
 // clipboard.  $1 = the clipboard identifier, $2 = sequence number.
 // secondary screens must use the sequence number passed in the
 // most recent kMsgCEnter.  the primary always sends 0.
-extern const char*        kMsgCClipboard;
+extern const char* kMsgCClipboard;
 
 // screensaver change:  primary -> secondary
 // screensaver on primary has started ($1 == 1) or closed ($1 == 0)
-extern const char*        kMsgCScreenSaver;
+extern const char* kMsgCScreenSaver;
 
 // reset options:  primary -> secondary
 // client should reset all of its options to their defaults.
-extern const char*        kMsgCResetOptions;
+extern const char* kMsgCResetOptions;
 
 // resolution change acknowledgment:  primary -> secondary
 // sent by primary in response to a secondary screen's kMsgDInfo.
 // this is sent for every kMsgDInfo, whether or not the primary
 // had sent a kMsgQInfo.
-extern const char*        kMsgCInfoAck;
+extern const char* kMsgCInfoAck;
 
 // keep connection alive:  primary <-> secondary
 // sent by the server periodically to verify that connections are still
@@ -170,7 +161,7 @@ extern const char*        kMsgCInfoAck;
 // client doesn't receive these (or any message) periodically then it
 // should disconnect from the server.  the appropriate interval is
 // defined by an option.
-extern const char*        kMsgCKeepAlive;
+extern const char* kMsgCKeepAlive;
 
 //
 // data codes
@@ -187,57 +178,57 @@ extern const char*        kMsgCKeepAlive;
 // the press.  this can happen with combining (dead) keys or if
 // the keyboard layouts are not identical and the user releases
 // a modifier key before releasing the modified key.
-extern const char*        kMsgDKeyDown;
+extern const char* kMsgDKeyDown;
 
 // key pressed 1.0:  same as above but without KeyButton
-extern const char*        kMsgDKeyDown1_0;
+extern const char* kMsgDKeyDown1_0;
 
 // key auto-repeat:  primary -> secondary
 // $1 = KeyID, $2 = KeyModifierMask, $3 = number of repeats, $4 = KeyButton
-extern const char*        kMsgDKeyRepeat;
+extern const char* kMsgDKeyRepeat;
 
 // key auto-repeat 1.0:  same as above but without KeyButton
-extern const char*        kMsgDKeyRepeat1_0;
+extern const char* kMsgDKeyRepeat1_0;
 
 // key released:  primary -> secondary
 // $1 = KeyID, $2 = KeyModifierMask, $3 = KeyButton
-extern const char*        kMsgDKeyUp;
+extern const char* kMsgDKeyUp;
 
 // key released 1.0:  same as above but without KeyButton
-extern const char*        kMsgDKeyUp1_0;
+extern const char* kMsgDKeyUp1_0;
 
 // mouse button pressed:  primary -> secondary
 // $1 = ButtonID
-extern const char*        kMsgDMouseDown;
+extern const char* kMsgDMouseDown;
 
 // mouse button released:  primary -> secondary
 // $1 = ButtonID
-extern const char*        kMsgDMouseUp;
+extern const char* kMsgDMouseUp;
 
 // mouse moved:  primary -> secondary
 // $1 = x, $2 = y.  x,y are absolute screen coordinates.
-extern const char*        kMsgDMouseMove;
+extern const char* kMsgDMouseMove;
 
 // relative mouse move:  primary -> secondary
 // $1 = dx, $2 = dy.  dx,dy are motion deltas.
-extern const char*        kMsgDMouseRelMove;
+extern const char* kMsgDMouseRelMove;
 
 // mouse scroll:  primary -> secondary
 // $1 = xDelta, $2 = yDelta.  the delta should be +120 for one tick forward
 // (away from the user) or right and -120 for one tick backward (toward
 // the user) or left.
-extern const char*        kMsgDMouseWheel;
+extern const char* kMsgDMouseWheel;
 
 // mouse vertical scroll:  primary -> secondary
 // like as kMsgDMouseWheel except only sends $1 = yDelta.
-extern const char*        kMsgDMouseWheel1_0;
+extern const char* kMsgDMouseWheel1_0;
 
 // clipboard data:  primary <-> secondary
 // $2 = sequence number, $3 = mark $4 = clipboard data.  the sequence number
 // is 0 when sent by the primary.  secondary screens should use the
 // sequence number from the most recent kMsgCEnter.  $1 = clipboard
 // identifier.
-extern const char*        kMsgDClipboard;
+extern const char* kMsgDClipboard;
 
 // client data:  secondary -> primary
 // $1 = coordinate of leftmost pixel on secondary screen,
@@ -253,25 +244,25 @@ extern const char*        kMsgDClipboard;
 // should ignore any kMsgDMouseMove messages until it receives a
 // kMsgCInfoAck in order to prevent attempts to move the mouse off
 // the new screen area.
-extern const char*        kMsgDInfo;
+extern const char* kMsgDInfo;
 
 // set options:  primary -> secondary
 // client should set the given option/value pairs.  $1 = option/value
 // pairs.
-extern const char*        kMsgDSetOptions;
+extern const char* kMsgDSetOptions;
 
 // file data:  primary <-> secondary
 // transfer file data. A mark is used in the first byte.
 // 0 means the content followed is the file size.
 // 1 means the content followed is the chunk data.
 // 2 means the file transfer is finished.
-extern const char*        kMsgDFileTransfer;
+extern const char* kMsgDFileTransfer;
 
 // drag infomation:  primary <-> secondary
 // transfer drag infomation. The first 2 bytes are used for storing
 // the number of dragging objects. Then the following string consists
 // of each object's directory.
-extern const char*        kMsgDDragInfo;
+extern const char* kMsgDDragInfo;
 
 //
 // query codes
@@ -279,7 +270,7 @@ extern const char*        kMsgDDragInfo;
 
 // query screen info:  primary -> secondary
 // client should reply with a kMsgDInfo.
-extern const char*        kMsgQInfo;
+extern const char* kMsgQInfo;
 
 
 //
@@ -288,19 +279,19 @@ extern const char*        kMsgQInfo;
 
 // incompatible versions:  primary -> secondary
 // $1 = major version of primary, $2 = minor version of primary.
-extern const char*        kMsgEIncompatible;
+extern const char* kMsgEIncompatible;
 
 // name provided when connecting is already in use:  primary -> secondary
-extern const char*        kMsgEBusy;
+extern const char* kMsgEBusy;
 
 // unknown client:  primary -> secondary
 // name provided when connecting is not in primary's screen
 // configuration map.
-extern const char*        kMsgEUnknown;
+extern const char* kMsgEUnknown;
 
 // protocol violation:  primary -> secondary
 // primary should disconnect after sending this message.
-extern const char*        kMsgEBad;
+extern const char* kMsgEBad;
 
 
 //
@@ -318,20 +309,20 @@ public:
     The position of the upper-left corner of the screen.  This is
     typically 0,0.
     */
-    SInt32                m_x, m_y;
+    SInt32 m_x, m_y;
 
     //! Screen size
     /*!
     The size of the screen in pixels.
     */
-    SInt32                m_w, m_h;
+    SInt32 m_w, m_h;
 
     //! Obsolete (jump zone size)
-    SInt32                obsolete1;
+    SInt32 obsolete1;
 
     //! Mouse position
     /*!
     The current location of the mouse cursor.
     */
-    SInt32                m_mx, m_my;
+    SInt32 m_mx, m_my;
 };

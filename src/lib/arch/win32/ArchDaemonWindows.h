@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -31,10 +31,10 @@
 //! Win32 implementation of IArchDaemon
 class ArchDaemonWindows : public IArchDaemon {
 public:
-    typedef int            (*RunFunc)(void);
+    typedef int (*RunFunc) (void);
 
-    ArchDaemonWindows();
-    virtual ~ArchDaemonWindows();
+    ArchDaemonWindows ();
+    virtual ~ArchDaemonWindows ();
 
     //! Run the daemon
     /*!
@@ -49,7 +49,7 @@ public:
     what \c runFunc returns.  \c runFunc should call \c daemonFailed() if
     the daemon fails.
     */
-    static int            runDaemon(RunFunc runFunc);
+    static int runDaemon (RunFunc runFunc);
 
     //! Indicate daemon is in main loop
     /*!
@@ -57,14 +57,14 @@ public:
     to indicate when it has entered (\c running is \c true) or exited
     (\c running is \c false) the main loop.
     */
-    static void            daemonRunning(bool running);
+    static void daemonRunning (bool running);
 
     //! Indicate failure of running daemon
     /*!
     The \c runFunc passed to \c runDaemon() should call this function
     to indicate failure.  \c result is returned by \c daemonize().
     */
-    static void            daemonFailed(int result);
+    static void daemonFailed (int result);
 
     //! Get daemon quit message
     /*!
@@ -72,71 +72,73 @@ public:
     message to it.  The thread must, of course, have a message queue
     for this to work.
     */
-    static UINT            getDaemonQuitMessage();
+    static UINT getDaemonQuitMessage ();
 
     // IArchDaemon overrides
-    virtual void        installDaemon(const char* name,
-                            const char* description,
-                            const char* pathname,
-                            const char* commandLine,
-                            const char* dependencies);
-    virtual void        uninstallDaemon(const char* name);
-    virtual void        installDaemon();
-    virtual void        uninstallDaemon();
-    virtual int            daemonize(const char* name, DaemonFunc func);
-    virtual bool        canInstallDaemon(const char* name);
-    virtual bool        isDaemonInstalled(const char* name);
-    std::string            commandLine() const { return m_commandLine; }
+    virtual void installDaemon (const char* name, const char* description,
+                                const char* pathname, const char* commandLine,
+                                const char* dependencies);
+    virtual void uninstallDaemon (const char* name);
+    virtual void installDaemon ();
+    virtual void uninstallDaemon ();
+    virtual int daemonize (const char* name, DaemonFunc func);
+    virtual bool canInstallDaemon (const char* name);
+    virtual bool isDaemonInstalled (const char* name);
+    std::string
+    commandLine () const {
+        return m_commandLine;
+    }
 
 private:
-    static HKEY            openNTServicesKey();
+    static HKEY openNTServicesKey ();
 
-    int                    doRunDaemon(RunFunc runFunc);
-    void                doDaemonRunning(bool running);
-    UINT                doGetDaemonQuitMessage();
+    int doRunDaemon (RunFunc runFunc);
+    void doDaemonRunning (bool running);
+    UINT doGetDaemonQuitMessage ();
 
-    static void            setStatus(DWORD state);
-    static void            setStatus(DWORD state, DWORD step, DWORD waitHint);
-    static void            setStatusError(DWORD error);
+    static void setStatus (DWORD state);
+    static void setStatus (DWORD state, DWORD step, DWORD waitHint);
+    static void setStatusError (DWORD error);
 
-    static bool            isRunState(DWORD state);
+    static bool isRunState (DWORD state);
 
-    void                serviceMain(DWORD, LPTSTR*);
-    static void WINAPI    serviceMainEntry(DWORD, LPTSTR*);
+    void serviceMain (DWORD, LPTSTR*);
+    static void WINAPI serviceMainEntry (DWORD, LPTSTR*);
 
-    void                serviceHandler(DWORD ctrl);
-    static void WINAPI    serviceHandlerEntry(DWORD ctrl);
+    void serviceHandler (DWORD ctrl);
+    static void WINAPI serviceHandlerEntry (DWORD ctrl);
 
-    void                start(const char* name);
-    void                stop(const char* name);
+    void start (const char* name);
+    void stop (const char* name);
 
 private:
     class XArchDaemonRunFailed {
     public:
-        XArchDaemonRunFailed(int result) : m_result(result) { }
+        XArchDaemonRunFailed (int result) : m_result (result) {
+        }
 
     public:
-        int                m_result;
+        int m_result;
     };
 
 private:
-    static ArchDaemonWindows*    s_daemon;
+    static ArchDaemonWindows* s_daemon;
 
-    ArchMutex            m_serviceMutex;
-    ArchCond            m_serviceCondVar;
-    DWORD                m_serviceState;
-    bool                m_serviceHandlerWaiting;
-    bool                m_serviceRunning;
+    ArchMutex m_serviceMutex;
+    ArchCond m_serviceCondVar;
+    DWORD m_serviceState;
+    bool m_serviceHandlerWaiting;
+    bool m_serviceRunning;
 
-    DWORD                m_daemonThreadID;
-    DaemonFunc            m_daemonFunc;
-    int                    m_daemonResult;
+    DWORD m_daemonThreadID;
+    DaemonFunc m_daemonFunc;
+    int m_daemonResult;
 
     SERVICE_STATUS_HANDLE m_statusHandle;
 
-    UINT                m_quitMessage;
+    UINT m_quitMessage;
 
-    std::string            m_commandLine;
+    std::string m_commandLine;
 };
 
 #define DEFAULT_DAEMON_NAME _T("Synergy")
@@ -145,10 +147,8 @@ private:
 #define LEGACY_SERVER_DAEMON_NAME _T("Synergy Server")
 #define LEGACY_CLIENT_DAEMON_NAME _T("Synergy Client")
 
-static const TCHAR* const g_daemonKeyPath[] = {
-    _T("SOFTWARE"),
-    _T("The Synergy Project"),
-    _T("Synergy"),
-    _T("Service"),
-    NULL
-};
+static const TCHAR* const g_daemonKeyPath[] = {_T("SOFTWARE"),
+                                               _T("The Synergy Project"),
+                                               _T("Synergy"),
+                                               _T("Service"),
+                                               NULL};

@@ -20,25 +20,25 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
 
-class ZeroconfRecord
-{
+class ZeroconfRecord {
 public:
-    ZeroconfRecord() {}
-    ZeroconfRecord(const QString& name, const QString& regType,
-                   const QString& domain)
-        : serviceName(name), registeredType(regType), replyDomain(domain)
-    {}
-    ZeroconfRecord(const char* name, const char* regType, const char* domain)
-    {
-        serviceName = QString::fromUtf8(name);
-        registeredType = QString::fromUtf8(regType);
-        replyDomain = QString::fromUtf8(domain);
+    ZeroconfRecord () {
+    }
+    ZeroconfRecord (const QString& name, const QString& regType,
+                    const QString& domain)
+        : serviceName (name), registeredType (regType), replyDomain (domain) {
+    }
+    ZeroconfRecord (const char* name, const char* regType, const char* domain) {
+        serviceName    = QString::fromUtf8 (name);
+        registeredType = QString::fromUtf8 (regType);
+        replyDomain    = QString::fromUtf8 (domain);
     }
 
-    bool operator==(const ZeroconfRecord& other) const {
-        return serviceName == other.serviceName
-            && registeredType == other.registeredType
-            && replyDomain == other.replyDomain;
+    bool
+    operator== (const ZeroconfRecord& other) const {
+        return serviceName == other.serviceName &&
+               registeredType == other.registeredType &&
+               replyDomain == other.replyDomain;
     }
 
 public:
@@ -47,4 +47,4 @@ public:
     QString replyDomain;
 };
 
-Q_DECLARE_METATYPE(ZeroconfRecord)
+Q_DECLARE_METATYPE (ZeroconfRecord)

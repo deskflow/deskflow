@@ -36,7 +36,7 @@ enum qIpcClientType {
     kIpcClientNode,
 };
 
-extern const char*        kIpcMsgHello;
-extern const char*        kIpcMsgLogLine;
-extern const char*        kIpcMsgCommand;
-extern const char*        kIpcMsgShutdown;
+extern const char* kIpcMsgHello;
+extern const char* kIpcMsgLogLine;
+extern const char* kIpcMsgCommand;
+extern const char* kIpcMsgShutdown;

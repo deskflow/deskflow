@@ -19,27 +19,26 @@
 
 #include <QString>
 
-class Fingerprint
-{
+class Fingerprint {
 private:
-    Fingerprint(const QString& filename);
+    Fingerprint (const QString& filename);
 
 public:
-    void trust(const QString& fingerprintText, bool append = true);
-    bool isTrusted(const QString& fingerprintText);
-    QStringList readList(const int readTo = -1);
-    QString readFirst();
-    QString filePath() const;
-    bool fileExists() const;
+    void trust (const QString& fingerprintText, bool append = true);
+    bool isTrusted (const QString& fingerprintText);
+    QStringList readList (const int readTo = -1);
+    QString readFirst ();
+    QString filePath () const;
+    bool fileExists () const;
 
 public:
-    static Fingerprint local();
-    static Fingerprint trustedServers();
-    static Fingerprint trustedClients();
-    static QString directoryPath();
-    static QString localFingerprint();
-    static bool localFingerprintExists();
-    static void persistDirectory();
+    static Fingerprint local ();
+    static Fingerprint trustedServers ();
+    static Fingerprint trustedClients ();
+    static QString directoryPath ();
+    static QString localFingerprint ();
+    static bool localFingerprintExists ();
+    static void persistDirectory ();
 
 private:
     QString m_Filename;

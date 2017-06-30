@@ -31,28 +31,32 @@ class QSocketNotifier;
 #endif
 #include <dns_sd.h>
 
-class ZeroconfRegister : public QObject
-{
+class ZeroconfRegister : public QObject {
     Q_OBJECT
 
 public:
-    ZeroconfRegister(QObject* parent = 0);
-    ~ZeroconfRegister();
+    ZeroconfRegister (QObject* parent = 0);
+    ~ZeroconfRegister ();
 
-    void registerService(const ZeroconfRecord& record, quint16 servicePort);
-    inline ZeroconfRecord registeredRecord() const { return finalRecord; }
+    void registerService (const ZeroconfRecord& record, quint16 servicePort);
+    inline ZeroconfRecord
+    registeredRecord () const {
+        return finalRecord;
+    }
 
 signals:
-    void error(DNSServiceErrorType error);
-    void serviceRegistered(const ZeroconfRecord& record);
+    void error (DNSServiceErrorType error);
+    void serviceRegistered (const ZeroconfRecord& record);
 
 private slots:
-    void socketReadyRead();
+    void socketReadyRead ();
 
 private:
-    static void DNSSD_API registerService(DNSServiceRef sdRef,
-        DNSServiceFlags, DNSServiceErrorType errorCode, const char* name,
-        const char* regtype, const char* domain, void* context);
+    static void DNSSD_API registerService (DNSServiceRef sdRef, DNSServiceFlags,
+                                           DNSServiceErrorType errorCode,
+                                           const char* name,
+                                           const char* regtype,
+                                           const char* domain, void* context);
 
 private:
     DNSServiceRef m_DnsServiceRef;

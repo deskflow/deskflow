@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -37,149 +37,131 @@
 #include <conio.h>
 #include <VersionHelpers.h>
 
-AppUtilWindows::AppUtilWindows(IEventQueue* events) :
-    m_events(events),
-    m_exitMode(kExitModeNormal)
-{
-    if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE)
-    {
-        throw XArch(new XArchEvalWindows());
+AppUtilWindows::AppUtilWindows (IEventQueue* events)
+    : m_events (events), m_exitMode (kExitModeNormal) {
+    if (SetConsoleCtrlHandler ((PHANDLER_ROUTINE) consoleHandler, TRUE) ==
+        FALSE) {
+        throw XArch (new XArchEvalWindows ());
     }
 }
 
-AppUtilWindows::~AppUtilWindows()
-{
+AppUtilWindows::~AppUtilWindows () {
 }
 
-BOOL WINAPI AppUtilWindows::consoleHandler(DWORD)
-{
-    LOG((CLOG_INFO "got shutdown signal"));
-    IEventQueue* events = AppUtil::instance().app().getEvents();
-    events->addEvent(Event(Event::kQuit));
+BOOL WINAPI
+AppUtilWindows::consoleHandler (DWORD) {
+    LOG ((CLOG_INFO "got shutdown signal"));
+    IEventQueue* events = AppUtil::instance ().app ().getEvents ();
+    events->addEvent (Event (Event::kQuit));
     return TRUE;
 }
 
-static
-int 
-mainLoopStatic() 
-{
-    return AppUtil::instance().app().mainLoop();
+static int
+mainLoopStatic () {
+    return AppUtil::instance ().app ().mainLoop ();
 }
 
-int 
-AppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
-{
-    app().initApp(argc, argv);
-    debugServiceWait();
+int
+AppUtilWindows::daemonNTMainLoop (int argc, const char** argv) {
+    app ().initApp (argc, argv);
+    debugServiceWait ();
 
     // NB: what the hell does this do?!
-    app().argsBase().m_backend = false;
-    
-    return ArchMiscWindows::runDaemon(mainLoopStatic);
-}
+    app ().argsBase ().m_backend = false;
 
-void 
-AppUtilWindows::exitApp(int code)
-{
-    switch (m_exitMode) {
-
-        case kExitModeDaemon:
-            ArchMiscWindows::daemonFailed(code);
-            break;
-
-        default:
-            throw XExitApp(code);
-    }
-}
-
-int daemonNTMainLoopStatic(int argc, const char** argv)
-{
-    return AppUtilWindows::instance().daemonNTMainLoop(argc, argv);
-}
-
-int 
-AppUtilWindows::daemonNTStartup(int, char**)
-{
-    SystemLogger sysLogger(app().daemonName(), false);
-    m_exitMode = kExitModeDaemon;
-    return ARCH->daemonize(app().daemonName(), daemonNTMainLoopStatic);
-}
-
-static
-int
-daemonNTStartupStatic(int argc, char** argv)
-{
-    return AppUtilWindows::instance().daemonNTStartup(argc, argv);
-}
-
-static
-int
-foregroundStartupStatic(int argc, char** argv)
-{
-    return AppUtil::instance().app().foregroundStartup(argc, argv);
+    return ArchMiscWindows::runDaemon (mainLoopStatic);
 }
 
 void
-AppUtilWindows::beforeAppExit()
-{
-    // this can be handy for debugging, since the application is launched in
-    // a new console window, and will normally close on exit (making it so
-    // that we can't see error messages).
-    if (app().argsBase().m_pauseOnExit) {
-        std::cout << std::endl << "press any key to exit..." << std::endl;
-        int c = _getch();
+AppUtilWindows::exitApp (int code) {
+    switch (m_exitMode) {
+
+        case kExitModeDaemon:
+            ArchMiscWindows::daemonFailed (code);
+            break;
+
+        default:
+            throw XExitApp (code);
     }
 }
 
 int
-AppUtilWindows::run(int argc, char** argv)
-{
-    if (!IsWindowsXPSP3OrGreater()) {
-        throw std::runtime_error("Synergy only supports Windows XP SP3 and above.");
+daemonNTMainLoopStatic (int argc, const char** argv) {
+    return AppUtilWindows::instance ().daemonNTMainLoop (argc, argv);
+}
+
+int
+AppUtilWindows::daemonNTStartup (int, char**) {
+    SystemLogger sysLogger (app ().daemonName (), false);
+    m_exitMode = kExitModeDaemon;
+    return ARCH->daemonize (app ().daemonName (), daemonNTMainLoopStatic);
+}
+
+static int
+daemonNTStartupStatic (int argc, char** argv) {
+    return AppUtilWindows::instance ().daemonNTStartup (argc, argv);
+}
+
+static int
+foregroundStartupStatic (int argc, char** argv) {
+    return AppUtil::instance ().app ().foregroundStartup (argc, argv);
+}
+
+void
+AppUtilWindows::beforeAppExit () {
+    // this can be handy for debugging, since the application is launched in
+    // a new console window, and will normally close on exit (making it so
+    // that we can't see error messages).
+    if (app ().argsBase ().m_pauseOnExit) {
+        std::cout << std::endl << "press any key to exit..." << std::endl;
+        int c = _getch ();
+    }
+}
+
+int
+AppUtilWindows::run (int argc, char** argv) {
+    if (!IsWindowsXPSP3OrGreater ()) {
+        throw std::runtime_error (
+            "Synergy only supports Windows XP SP3 and above.");
     }
 
     // record window instance for tray icon, etc
-    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+    ArchMiscWindows::setInstanceWin32 (GetModuleHandle (NULL));
 
-    MSWindowsScreen::init(ArchMiscWindows::instanceWin32());
-    Thread::getCurrentThread().setPriority(-14);
+    MSWindowsScreen::init (ArchMiscWindows::instanceWin32 ());
+    Thread::getCurrentThread ().setPriority (-14);
 
     StartupFunc startup;
-    if (ArchMiscWindows::wasLaunchedAsService()) {
+    if (ArchMiscWindows::wasLaunchedAsService ()) {
         startup = &daemonNTStartupStatic;
     } else {
-        startup = &foregroundStartupStatic;
-        app().argsBase().m_daemon = false;
+        startup                     = &foregroundStartupStatic;
+        app ().argsBase ().m_daemon = false;
     }
 
-    return app().runInner(argc, argv, NULL, startup);
+    return app ().runInner (argc, argv, NULL, startup);
 }
 
-AppUtilWindows& 
-AppUtilWindows::instance()
-{
-    return (AppUtilWindows&)AppUtil::instance();
+AppUtilWindows&
+AppUtilWindows::instance () {
+    return (AppUtilWindows&) AppUtil::instance ();
 }
 
-void 
-AppUtilWindows::debugServiceWait()
-{
-    if (app().argsBase().m_debugServiceWait)
-    {
-        while(true)
-        {
+void
+AppUtilWindows::debugServiceWait () {
+    if (app ().argsBase ().m_debugServiceWait) {
+        while (true) {
             // this code is only executed when the process is launched via the
-            // windows service controller (and --debug-service-wait arg is 
-            // used). to debug, set a breakpoint on this line so that 
+            // windows service controller (and --debug-service-wait arg is
+            // used). to debug, set a breakpoint on this line so that
             // execution is delayed until the debugger is attached.
-            ARCH->sleep(1);
-            LOG((CLOG_INFO "waiting for debugger to attach"));
+            ARCH->sleep (1);
+            LOG ((CLOG_INFO "waiting for debugger to attach"));
         }
     }
 }
 
-void 
-AppUtilWindows::startNode()
-{
-    app().startNode();
+void
+AppUtilWindows::startNode () {
+    app ().startNode ();
 }

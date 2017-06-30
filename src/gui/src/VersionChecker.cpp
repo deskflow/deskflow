@@ -27,81 +27,78 @@
 #define VERSION_REGEX "(\\d+\\.\\d+\\.\\d+)"
 #define VERSION_URL "http://symless.com/version/"
 
-VersionChecker::VersionChecker()
-{
-    m_manager = new QNetworkAccessManager(this);
+VersionChecker::VersionChecker () {
+    m_manager = new QNetworkAccessManager (this);
 
-    connect(m_manager, SIGNAL(finished(QNetworkReply*)),
-         this, SLOT(replyFinished(QNetworkReply*)));
+    connect (m_manager,
+             SIGNAL (finished (QNetworkReply*)),
+             this,
+             SLOT (replyFinished (QNetworkReply*)));
 }
 
-VersionChecker::~VersionChecker()
-{
+VersionChecker::~VersionChecker () {
     delete m_manager;
 }
 
-void VersionChecker::checkLatest()
-{
-    m_manager->get(QNetworkRequest(QUrl(VERSION_URL)));
+void
+VersionChecker::checkLatest () {
+    m_manager->get (QNetworkRequest (QUrl (VERSION_URL)));
 }
 
-void VersionChecker::replyFinished(QNetworkReply* reply)
-{
-    QString newestVersion = QString(reply->readAll());
-    if (!newestVersion.isEmpty())
-    {
-        QString currentVersion = getVersion();
+void
+VersionChecker::replyFinished (QNetworkReply* reply) {
+    QString newestVersion = QString (reply->readAll ());
+    if (!newestVersion.isEmpty ()) {
+        QString currentVersion = getVersion ();
         if (currentVersion != "Unknown") {
-            if (compareVersions(currentVersion, newestVersion) > 0)
-                emit updateFound(newestVersion);
+            if (compareVersions (currentVersion, newestVersion) > 0)
+                emit updateFound (newestVersion);
         }
     }
 }
 
-int VersionChecker::compareVersions(const QString& left, const QString& right)
-{
-    if (left.compare(right) == 0)
+int
+VersionChecker::compareVersions (const QString& left, const QString& right) {
+    if (left.compare (right) == 0)
         return 0; // versions are same.
 
-    QStringList leftSplit = left.split(QRegExp("\\."));
-    if (leftSplit.size() != 3)
+    QStringList leftSplit = left.split (QRegExp ("\\."));
+    if (leftSplit.size () != 3)
         return 1; // assume right wins.
 
-    QStringList rightSplit = right.split(QRegExp("\\."));
-    if (rightSplit.size() != 3)
+    QStringList rightSplit = right.split (QRegExp ("\\."));
+    if (rightSplit.size () != 3)
         return -1; // assume left wins.
 
-    int leftMajor = leftSplit.at(0).toInt();
-    int leftMinor = leftSplit.at(1).toInt();
-    int leftRev = leftSplit.at(2).toInt();
+    int leftMajor = leftSplit.at (0).toInt ();
+    int leftMinor = leftSplit.at (1).toInt ();
+    int leftRev   = leftSplit.at (2).toInt ();
 
-    int rightMajor = rightSplit.at(0).toInt();
-    int rightMinor = rightSplit.at(1).toInt();
-    int rightRev = rightSplit.at(2).toInt();
+    int rightMajor = rightSplit.at (0).toInt ();
+    int rightMinor = rightSplit.at (1).toInt ();
+    int rightRev   = rightSplit.at (2).toInt ();
 
-    bool rightWins =
-        (rightMajor > leftMajor) ||
-        ((rightMajor >= leftMajor) && (rightMinor > leftMinor)) ||
-        ((rightMajor >= leftMajor) && (rightMinor >= leftMinor) && (rightRev > leftRev));
+    bool rightWins = (rightMajor > leftMajor) ||
+                     ((rightMajor >= leftMajor) && (rightMinor > leftMinor)) ||
+                     ((rightMajor >= leftMajor) && (rightMinor >= leftMinor) &&
+                      (rightRev > leftRev));
 
     return rightWins ? 1 : -1;
 }
 
-QString VersionChecker::getVersion()
-{
+QString
+VersionChecker::getVersion () {
     QProcess process;
-    process.start(m_app, QStringList() << "--version");
+    process.start (m_app, QStringList () << "--version");
 
-    process.setReadChannel(QProcess::StandardOutput);
-    if (process.waitForStarted() && process.waitForFinished())
-    {
-        QRegExp rx(VERSION_REGEX);
-        QString text = process.readLine();
-        if (rx.indexIn(text) != -1)
-        {
-            return rx.cap(1);
+    process.setReadChannel (QProcess::StandardOutput);
+    if (process.waitForStarted () && process.waitForFinished ()) {
+        QRegExp rx (VERSION_REGEX);
+        QString text = process.readLine ();
+        if (rx.indexIn (text) != -1) {
+            return rx.cap (1);
         }
     }
 
-    return tr("Unknown");
+    return tr ("Unknown");
 }

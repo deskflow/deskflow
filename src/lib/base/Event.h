@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -23,8 +23,10 @@
 
 class EventData {
 public:
-    EventData() { }
-    virtual ~EventData() { }
+    EventData () {
+    }
+    virtual ~EventData () {
+    }
 };
 
 //! Event
@@ -35,21 +37,21 @@ class Event {
 public:
     typedef UInt32 Type;
     enum {
-        kUnknown,    //!< The event type is unknown
-        kQuit,        //!< The quit event
-        kSystem,    //!< The data points to a system event type
-        kTimer,        //!< The data points to timer info
-        kLast        //!< Must be last
+        kUnknown, //!< The event type is unknown
+        kQuit,    //!< The quit event
+        kSystem,  //!< The data points to a system event type
+        kTimer,   //!< The data points to timer info
+        kLast     //!< Must be last
     };
 
     typedef UInt32 Flags;
     enum {
-        kNone                = 0x00,    //!< No flags
-        kDeliverImmediately    = 0x01,    //!< Dispatch and free event immediately
-        kDontFreeData        = 0x02    //!< Don't free data in deleteData
+        kNone               = 0x00, //!< No flags
+        kDeliverImmediately = 0x01, //!< Dispatch and free event immediately
+        kDontFreeData       = 0x02  //!< Don't free data in deleteData
     };
 
-    Event();
+    Event ();
 
     //! Create \c Event with data (POD)
     /*!
@@ -60,8 +62,8 @@ public:
     \p target is the intended recipient of the event.
     \p flags is any combination of \c Flags.
     */
-    Event(Type type, void* target = NULL, void* data = NULL,
-                             Flags flags = kNone);
+    Event (Type type, void* target = NULL, void* data = NULL,
+           Flags flags = kNone);
 
     //! @name manipulators
     //@{
@@ -70,14 +72,14 @@ public:
     /*!
     Deletes event data for the given event (using free()).
     */
-    static void            deleteData(const Event&);
-    
+    static void deleteData (const Event&);
+
     //! Set data (non-POD)
     /*!
     Set non-POD (non plain old data), where delete is called when the event
     is deleted, and the destructor is called.
     */
-    void                setDataObject(EventData* dataObject);
+    void setDataObject (EventData* dataObject);
 
     //@}
     //! @name accessors
@@ -87,19 +89,19 @@ public:
     /*!
     Returns the event type.
     */
-    Type                getType() const;
+    Type getType () const;
 
     //! Get the event target
     /*!
     Returns the event target.
     */
-    void*                getTarget() const;
+    void* getTarget () const;
 
     //! Get the event data (POD).
     /*!
     Returns the event data (POD).
     */
-    void*                getData() const;
+    void* getData () const;
 
     //! Get the event data (non-POD)
     /*!
@@ -107,20 +109,20 @@ public:
     \c getData() is that when delete is called on this data, so non-POD
     (non plain old data) dtor is called.
     */
-    EventData*            getDataObject() const;
+    EventData* getDataObject () const;
 
     //! Get event flags
     /*!
     Returns the event flags.
     */
-    Flags                getFlags() const;
-    
+    Flags getFlags () const;
+
     //@}
 
 private:
-    Type                m_type;
-    void*                m_target;
-    void*                m_data;
-    Flags                m_flags;
-    EventData*            m_dataObject;
+    Type m_type;
+    void* m_target;
+    void* m_data;
+    Flags m_flags;
+    EventData* m_dataObject;
 };

@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -39,11 +39,12 @@ primary or secondary screen.
 */
 class Screen : public IScreen {
 public:
-    Screen(IPlatformScreen* platformScreen, IEventQueue* events);
-    virtual ~Screen();
+    Screen (IPlatformScreen* platformScreen, IEventQueue* events);
+    virtual ~Screen ();
 
 #ifdef TEST_ENV
-    Screen() : m_mock(true) { }
+    Screen () : m_mock (true) {
+    }
 #endif
 
     //! @name manipulators
@@ -55,27 +56,27 @@ public:
     For a secondary screen it also means disabling the screen saver if
     synchronizing it and preparing to synthesize events.
     */
-    virtual void        enable();
+    virtual void enable ();
 
     //! Deactivate screen
     /*!
     Undoes the operations in activate() and events are no longer
     reported.  It also releases keys that are logically pressed.
     */
-    virtual void        disable();
+    virtual void disable ();
 
     //! Enter screen
     /*!
     Called when the user navigates to this screen.  \p toggleMask has the
     toggle keys that should be turned on on the secondary screen.
     */
-    void                enter(KeyModifierMask toggleMask);
+    void enter (KeyModifierMask toggleMask);
 
     //! Leave screen
     /*!
     Called when the user navigates off this screen.
     */
-    bool                leave();
+    bool leave ();
 
     //! Update configuration
     /*!
@@ -83,7 +84,7 @@ public:
     is a bitmask of EDirectionMask indicating which sides of the
     primary screen are linked to clients.
     */
-    void                reconfigure(UInt32 activeSides);
+    void reconfigure (UInt32 activeSides);
 
     //! Warp cursor
     /*!
@@ -91,27 +92,27 @@ public:
     discards input events up to and including the warp before
     returning.
     */
-    void                warpCursor(SInt32 x, SInt32 y);
+    void warpCursor (SInt32 x, SInt32 y);
 
     //! Set clipboard
     /*!
     Sets the system's clipboard contents.  This is usually called
     soon after an enter().
     */
-    void                setClipboard(ClipboardID, const IClipboard*);
+    void setClipboard (ClipboardID, const IClipboard*);
 
     //! Grab clipboard
     /*!
     Grabs (i.e. take ownership of) the system clipboard.
     */
-    void                grabClipboard(ClipboardID);
+    void grabClipboard (ClipboardID);
 
     //! Activate/deactivate screen saver
     /*!
     Forcibly activates the screen saver if \c activate is true otherwise
     forcibly deactivates it.
     */
-    void                screensaver(bool activate);
+    void screensaver (bool activate);
 
     //! Notify of key press
     /*!
@@ -122,48 +123,47 @@ public:
     synthesize an up or repeat for the same client key synthesized by
     keyDown().
     */
-    void                keyDown(KeyID id, KeyModifierMask, KeyButton);
+    void keyDown (KeyID id, KeyModifierMask, KeyButton);
 
     //! Notify of key repeat
     /*!
     Synthesize key events to generate a press and release of key \c id
     \c count times.  If possible match the given modifier mask.
     */
-    void                keyRepeat(KeyID id, KeyModifierMask,
-                            SInt32 count, KeyButton);
+    void keyRepeat (KeyID id, KeyModifierMask, SInt32 count, KeyButton);
 
     //! Notify of key release
     /*!
     Synthesize key events to generate a release of key \c id.  If possible
     match the given modifier mask.
     */
-    void                keyUp(KeyID id, KeyModifierMask, KeyButton);
+    void keyUp (KeyID id, KeyModifierMask, KeyButton);
 
     //! Notify of mouse press
     /*!
     Synthesize mouse events to generate a press of mouse button \c id.
     */
-    void                mouseDown(ButtonID id);
+    void mouseDown (ButtonID id);
 
     //! Notify of mouse release
     /*!
     Synthesize mouse events to generate a release of mouse button \c id.
     */
-    void                mouseUp(ButtonID id);
+    void mouseUp (ButtonID id);
 
     //! Notify of mouse motion
     /*!
     Synthesize mouse events to generate mouse motion to the absolute
     screen position \c xAbs,yAbs.
     */
-    void                mouseMove(SInt32 xAbs, SInt32 yAbs);
+    void mouseMove (SInt32 xAbs, SInt32 yAbs);
 
     //! Notify of mouse motion
     /*!
     Synthesize mouse events to generate mouse motion by the relative
     amount \c xRel,yRel.
     */
-    void                mouseRelativeMove(SInt32 xRel, SInt32 yRel);
+    void mouseRelativeMove (SInt32 xRel, SInt32 yRel);
 
     //! Notify of mouse wheel motion
     /*!
@@ -172,39 +172,39 @@ public:
     to the right and negative for motion towards the user or to the left.
     Each wheel click should generate a delta of +/-120.
     */
-    void                mouseWheel(SInt32 xDelta, SInt32 yDelta);
+    void mouseWheel (SInt32 xDelta, SInt32 yDelta);
 
     //! Notify of options changes
     /*!
     Resets all options to their default values.
     */
-    virtual void        resetOptions();
+    virtual void resetOptions ();
 
     //! Notify of options changes
     /*!
     Set options to given values.  Ignores unknown options and doesn't
     modify options that aren't given in \c options.
     */
-    virtual void        setOptions(const OptionsList& options);
+    virtual void setOptions (const OptionsList& options);
 
     //! Set clipboard sequence number
     /*!
     Sets the sequence number to use in subsequent clipboard events.
     */
-    void                setSequenceNumber(UInt32);
+    void setSequenceNumber (UInt32);
 
     //! Register a system hotkey
     /*!
     Registers a system-wide hotkey for key \p key with modifiers \p mask.
     Returns an id used to unregister the hotkey.
     */
-    UInt32                registerHotKey(KeyID key, KeyModifierMask mask);
+    UInt32 registerHotKey (KeyID key, KeyModifierMask mask);
 
     //! Unregister a system hotkey
     /*!
     Unregisters a previously registered hot key.
     */
-    void                unregisterHotKey(UInt32 id);
+    void unregisterHotKey (UInt32 id);
 
     //! Prepare to synthesize input on primary screen
     /*!
@@ -213,21 +213,21 @@ public:
     ensures that we ignore it.  Calls to \c fakeInputBegin() may not be
     nested.
     */
-    void                fakeInputBegin();
+    void fakeInputBegin ();
 
     //! Done synthesizing input on primary screen
     /*!
     Undoes whatever \c fakeInputBegin() did.
     */
-    void                fakeInputEnd();
+    void fakeInputEnd ();
 
     //! Change dragging status
-    void                setDraggingStarted(bool started);
-    
-    //! Fake a files dragging operation
-    void                startDraggingFiles(DragFileList& fileList);
+    void setDraggingStarted (bool started);
 
-    void                setEnableDragDrop(bool enabled);
+    //! Fake a files dragging operation
+    void startDraggingFiles (DragFileList& fileList);
+
+    void setEnableDragDrop (bool enabled);
     //@}
     //! @name accessors
     //@{
@@ -236,7 +236,7 @@ public:
     /*!
     Returns true iff the cursor is on the screen.
     */
-    bool                isOnScreen() const;
+    bool isOnScreen () const;
 
     //! Get screen lock state
     /*!
@@ -245,14 +245,14 @@ public:
     pressed).  If this method returns true it logs a message as to
     why at the CLOG_DEBUG level.
     */
-    bool                isLockedToScreen() const;
+    bool isLockedToScreen () const;
 
     //! Get jump zone size
     /*!
     Return the jump zone size, the size of the regions on the edges of
     the screen that cause the cursor to jump to another screen.
     */
-    SInt32                getJumpZoneSize() const;
+    SInt32 getJumpZoneSize () const;
 
     //! Get cursor center position
     /*!
@@ -260,86 +260,88 @@ public:
     cursor to compute cursor motion deltas and should be far from
     the edges of the screen, typically the center.
     */
-    void                getCursorCenter(SInt32& x, SInt32& y) const;
+    void getCursorCenter (SInt32& x, SInt32& y) const;
 
     //! Get the active modifiers
     /*!
     Returns the modifiers that are currently active according to our
     shadowed state.
     */
-    KeyModifierMask        getActiveModifiers() const;
+    KeyModifierMask getActiveModifiers () const;
 
     //! Get the active modifiers from OS
     /*!
     Returns the modifiers that are currently active according to the
     operating system.
     */
-    KeyModifierMask        pollActiveModifiers() const;
+    KeyModifierMask pollActiveModifiers () const;
 
     //! Test if file is dragged on primary screen
-    bool                isDraggingStarted() const;
-    
+    bool isDraggingStarted () const;
+
     //! Test if file is dragged on secondary screen
-    bool                isFakeDraggingStarted() const;
+    bool isFakeDraggingStarted () const;
 
     //! Get the filename of the file being dragged
-    String&            getDraggingFilename() const;
+    String& getDraggingFilename () const;
 
     //! Clear the filename of the file that was dragged
-    void                clearDraggingFilename();
+    void clearDraggingFilename ();
 
     //! Get the drop target directory
-    const String&        getDropTarget() const;
+    const String& getDropTarget () const;
 
     //@}
 
     // IScreen overrides
-    virtual void*        getEventTarget() const;
-    virtual bool        getClipboard(ClipboardID id, IClipboard*) const;
-    virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const;
-    virtual void        getCursorPos(SInt32& x, SInt32& y) const;
-    
-    IPlatformScreen*    getPlatformScreen() { return m_screen; }
+    virtual void* getEventTarget () const;
+    virtual bool getClipboard (ClipboardID id, IClipboard*) const;
+    virtual void
+    getShape (SInt32& x, SInt32& y, SInt32& width, SInt32& height) const;
+    virtual void getCursorPos (SInt32& x, SInt32& y) const;
+
+    IPlatformScreen*
+    getPlatformScreen () {
+        return m_screen;
+    }
 
 protected:
-    void                enablePrimary();
-    void                enableSecondary();
-    void                disablePrimary();
-    void                disableSecondary();
+    void enablePrimary ();
+    void enableSecondary ();
+    void disablePrimary ();
+    void disableSecondary ();
 
-    void                enterPrimary();
-    void                enterSecondary(KeyModifierMask toggleMask);
-    void                leavePrimary();
-    void                leaveSecondary();
+    void enterPrimary ();
+    void enterSecondary (KeyModifierMask toggleMask);
+    void leavePrimary ();
+    void leaveSecondary ();
 
 private:
     // our platform dependent screen
-    IPlatformScreen*    m_screen;
+    IPlatformScreen* m_screen;
 
     // true if screen is being used as a primary screen, false otherwise
-    bool                m_isPrimary;
+    bool m_isPrimary;
 
     // true if screen is enabled
-    bool                m_enabled;
+    bool m_enabled;
 
     // true if the cursor is on this screen
-    bool                m_entered;
+    bool m_entered;
 
     // true if screen saver should be synchronized to server
-    bool                m_screenSaverSync;
+    bool m_screenSaverSync;
 
     // note toggle keys that toggles on up/down (false) or on
     // transition (true)
-    KeyModifierMask        m_halfDuplex;
+    KeyModifierMask m_halfDuplex;
 
     // true if we're faking input on a primary screen
-    bool                m_fakeInput;
+    bool m_fakeInput;
 
-    IEventQueue*        m_events;
+    IEventQueue* m_events;
 
-    bool                m_mock;
-    bool                m_enableDragDrop;
+    bool m_mock;
+    bool m_enableDragDrop;
 };
-
 }

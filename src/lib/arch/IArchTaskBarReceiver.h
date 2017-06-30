@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -43,20 +43,20 @@ public:
     Open a window displaying current status.  This should return
     immediately without waiting for the window to be closed.
     */
-    virtual void        showStatus() = 0;
+    virtual void showStatus () = 0;
 
     //! Popup menu
     /*!
     Popup a menu of operations at or around \c x,y and perform the
     chosen operation.
     */
-    virtual void        runMenu(int x, int y) = 0;
+    virtual void runMenu (int x, int y) = 0;
 
     //! Perform primary action
     /*!
     Perform the primary (default) action.
     */
-    virtual void        primaryAction() = 0;
+    virtual void primaryAction () = 0;
 
     //@}
     //! @name accessors
@@ -69,10 +69,10 @@ public:
     Each call to \c lock() must have a matching \c unlock() and
     locks cannot be nested.
     */
-    virtual void        lock() const = 0;
+    virtual void lock () const = 0;
 
     //! Unlock receiver
-    virtual void        unlock() const = 0;
+    virtual void unlock () const = 0;
 
     //! Get icon
     /*!
@@ -80,7 +80,7 @@ public:
     to set the icon is left to subclasses.  Getting and setting
     the icon must be thread safe.
     */
-    virtual const Icon    getIcon() const = 0;
+    virtual const Icon getIcon () const = 0;
 
     //! Get tooltip
     /*!
@@ -88,11 +88,13 @@ public:
     to set the tooltip is left to sublclasses.  Getting and setting
     the icon must be thread safe.
     */
-    virtual std::string    getToolTip() const = 0;
+    virtual std::string getToolTip () const = 0;
 
-    virtual void updateStatus(INode*, const String& errorMsg) = 0;
+    virtual void updateStatus (INode*, const String& errorMsg) = 0;
 
-    virtual void cleanup() {}
+    virtual void
+    cleanup () {
+    }
 
     //@}
 };

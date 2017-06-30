@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -34,40 +34,40 @@ public:
     //! Button event data
     class ButtonInfo {
     public:
-        static ButtonInfo* alloc(ButtonID, KeyModifierMask);
-        static ButtonInfo* alloc(const ButtonInfo&);
+        static ButtonInfo* alloc (ButtonID, KeyModifierMask);
+        static ButtonInfo* alloc (const ButtonInfo&);
 
-        static bool            equal(const ButtonInfo*, const ButtonInfo*);
+        static bool equal (const ButtonInfo*, const ButtonInfo*);
 
     public:
-        ButtonID        m_button;
-        KeyModifierMask    m_mask;
+        ButtonID m_button;
+        KeyModifierMask m_mask;
     };
     //! Motion event data
     class MotionInfo {
     public:
-        static MotionInfo* alloc(SInt32 x, SInt32 y);
+        static MotionInfo* alloc (SInt32 x, SInt32 y);
 
     public:
-        SInt32            m_x;
-        SInt32            m_y;
+        SInt32 m_x;
+        SInt32 m_y;
     };
     //! Wheel motion event data
     class WheelInfo {
     public:
-        static WheelInfo* alloc(SInt32 xDelta, SInt32 yDelta);
+        static WheelInfo* alloc (SInt32 xDelta, SInt32 yDelta);
 
     public:
-        SInt32            m_xDelta;
-        SInt32            m_yDelta;
+        SInt32 m_xDelta;
+        SInt32 m_yDelta;
     };
     //! Hot key event data
     class HotKeyInfo {
     public:
-        static HotKeyInfo* alloc(UInt32 id);
+        static HotKeyInfo* alloc (UInt32 id);
 
     public:
-        UInt32            m_id;
+        UInt32 m_id;
     };
 
     //! @name manipulators
@@ -80,7 +80,7 @@ public:
     primary screen are linked to clients.  Override to handle the
     possible change in jump zones.
     */
-    virtual void        reconfigure(UInt32 activeSides) = 0;
+    virtual void reconfigure (UInt32 activeSides) = 0;
 
     //! Warp cursor
     /*!
@@ -88,7 +88,7 @@ public:
     discard input events up to and including the warp before
     returning.
     */
-    virtual void        warpCursor(SInt32 x, SInt32 y) = 0;
+    virtual void warpCursor (SInt32 x, SInt32 y) = 0;
 
     //! Register a system hotkey
     /*!
@@ -111,13 +111,13 @@ public:
     the modifiers in any order or to require the user to press the given key
     last.
     */
-    virtual UInt32        registerHotKey(KeyID key, KeyModifierMask mask) = 0;
+    virtual UInt32 registerHotKey (KeyID key, KeyModifierMask mask) = 0;
 
     //! Unregister a system hotkey
     /*!
     Unregisters a previously registered hot key.
     */
-    virtual void        unregisterHotKey(UInt32 id) = 0;
+    virtual void unregisterHotKey (UInt32 id) = 0;
 
     //! Prepare to synthesize input on primary screen
     /*!
@@ -126,13 +126,13 @@ public:
     ensures that we ignore it.  Calls to \c fakeInputBegin() may not be
     nested.
     */
-    virtual void        fakeInputBegin() = 0;
+    virtual void fakeInputBegin () = 0;
 
     //! Done synthesizing input on primary screen
     /*!
     Undoes whatever \c fakeInputBegin() did.
     */
-    virtual void        fakeInputEnd() = 0;
+    virtual void fakeInputEnd () = 0;
 
     //@}
     //! @name accessors
@@ -143,7 +143,7 @@ public:
     Return the jump zone size, the size of the regions on the edges of
     the screen that cause the cursor to jump to another screen.
     */
-    virtual SInt32        getJumpZoneSize() const = 0;
+    virtual SInt32 getJumpZoneSize () const = 0;
 
     //! Test if mouse is pressed
     /*!
@@ -151,7 +151,7 @@ public:
     "current" means up to the last processed event but it can mean
     the current physical mouse button state.
     */
-    virtual bool        isAnyMouseButtonDown(UInt32& buttonID) const = 0;
+    virtual bool isAnyMouseButtonDown (UInt32& buttonID) const = 0;
 
     //! Get cursor center position
     /*!
@@ -159,7 +159,7 @@ public:
     cursor to compute cursor motion deltas and should be far from
     the edges of the screen, typically the center.
     */
-    virtual void        getCursorCenter(SInt32& x, SInt32& y) const = 0;
+    virtual void getCursorCenter (SInt32& x, SInt32& y) const = 0;
 
     //@}
 };

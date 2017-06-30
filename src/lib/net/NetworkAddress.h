@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -31,13 +31,13 @@ public:
     /*!
     Constructs the invalid address
     */
-    NetworkAddress();
+    NetworkAddress ();
 
     /*!
     Construct the wildcard address with the given port.  \c port must
     not be zero.
     */
-    NetworkAddress(int port);
+    NetworkAddress (int port);
 
     /*!
     Construct the network address for the given \c hostname and \c port.
@@ -49,13 +49,13 @@ public:
     is thrown with an error of \c XSocketAddress::kBadPort.  The hostname
     is not resolved by the c'tor;  use \c resolve to do that.
     */
-    NetworkAddress(const String& hostname, int port);
+    NetworkAddress (const String& hostname, int port);
 
-    NetworkAddress(const NetworkAddress&);
+    NetworkAddress (const NetworkAddress&);
 
-    ~NetworkAddress();
+    ~NetworkAddress ();
 
-    NetworkAddress&    operator=(const NetworkAddress&);
+    NetworkAddress& operator= (const NetworkAddress&);
 
     //! @name manipulators
     //@{
@@ -67,7 +67,7 @@ public:
     Throws XSocketAddress if resolution is unsuccessful, after which
     \c isValid returns false until the next call to this method.
     */
-    void                resolve();
+    void resolve ();
 
     //@}
     //! @name accessors
@@ -77,47 +77,47 @@ public:
     /*!
     Returns true if this address is equal to \p address.
     */
-    bool                operator==(const NetworkAddress& address) const;
+    bool operator== (const NetworkAddress& address) const;
 
     //! Check address inequality
     /*!
     Returns true if this address is not equal to \p address.
     */
-    bool                operator!=(const NetworkAddress& address) const;
+    bool operator!= (const NetworkAddress& address) const;
 
     //! Check address validity
     /*!
     Returns true if this is not the invalid address.
     */
-    bool                isValid() const;
+    bool isValid () const;
 
     //! Get address
     /*!
     Returns the address in the platform's native network address
     structure.
     */
-    const ArchNetAddress&    getAddress() const;
+    const ArchNetAddress& getAddress () const;
 
     //! Get port
     /*!
     Returns the port passed to the c'tor as a suffix to the hostname,
     if that existed, otherwise as passed directly to the c'tor.
     */
-    int                    getPort() const;
+    int getPort () const;
 
     //! Get hostname
     /*!
     Returns the hostname passed to the c'tor sans any port suffix.
     */
-    String                getHostname() const;
+    String getHostname () const;
 
     //@}
 
 private:
-    void                checkPort();
+    void checkPort ();
 
 private:
-    ArchNetAddress        m_address;
-    String                m_hostname;
-    int                    m_port;
+    ArchNetAddress m_address;
+    String m_hostname;
+    int m_port;
 };

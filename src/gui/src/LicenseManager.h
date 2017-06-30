@@ -25,22 +25,21 @@
 
 class AppConfig;
 
-class LicenseManager: public QObject
-{
+class LicenseManager : public QObject {
     Q_OBJECT
 
 public:
-    LicenseManager(AppConfig* appConfig);
-    std::pair<bool, QString> setSerialKey(SerialKey serialKey,
-                                          bool acceptExpired = false);
-    void refresh();
-    Edition activeEdition() const;
-    QString activeEditionName() const;
-    SerialKey serialKey() const;
-    void skipActivation();
-    void notifyUpdate(QString fromVersion, QString toVersion);
-    static QString getEditionName(Edition edition, bool trial = false);
-    void notifyActivation(QString identity);
+    LicenseManager (AppConfig* appConfig);
+    std::pair<bool, QString>
+    setSerialKey (SerialKey serialKey, bool acceptExpired = false);
+    void refresh ();
+    Edition activeEdition () const;
+    QString activeEditionName () const;
+    SerialKey serialKey () const;
+    void skipActivation ();
+    void notifyUpdate (QString fromVersion, QString toVersion);
+    static QString getEditionName (Edition edition, bool trial = false);
+    void notifyActivation (QString identity);
 
 private:
     AppConfig* m_AppConfig;

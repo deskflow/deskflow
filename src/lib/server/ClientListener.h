@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -35,16 +35,14 @@ class IEventQueue;
 class ClientListener {
 public:
     // The factories are adopted.
-    ClientListener(const NetworkAddress&,
-                            ISocketFactory*,
-                            IEventQueue* events,
-                            bool enableCrypto);
-    ~ClientListener();
+    ClientListener (const NetworkAddress&, ISocketFactory*, IEventQueue* events,
+                    bool enableCrypto);
+    ~ClientListener ();
 
     //! @name manipulators
     //@{
 
-    void                setServer(Server* server);
+    void setServer (Server* server);
 
     //@}
 
@@ -57,31 +55,34 @@ public:
     list.  The client is responsible for deleting the returned client.
     Returns NULL if no clients are available.
     */
-    ClientProxy*        getNextClient();
+    ClientProxy* getNextClient ();
 
     //! Get server which owns this listener
-    Server*                getServer() { return m_server; }
+    Server*
+    getServer () {
+        return m_server;
+    }
 
     //@}
 
 private:
     // client connection event handlers
-    void                handleClientConnecting(const Event&, void*);
-    void                handleClientAccepted(const Event&, void*);
-    void                handleUnknownClient(const Event&, void*);
-    void                handleClientDisconnected(const Event&, void*);
+    void handleClientConnecting (const Event&, void*);
+    void handleClientAccepted (const Event&, void*);
+    void handleUnknownClient (const Event&, void*);
+    void handleClientDisconnected (const Event&, void*);
 
-    void                cleanupListenSocket();
+    void cleanupListenSocket ();
 
 private:
     typedef std::set<ClientProxyUnknown*> NewClients;
     typedef std::deque<ClientProxy*> WaitingClients;
 
-    IListenSocket*        m_listen;
-    ISocketFactory*        m_socketFactory;
-    NewClients            m_newClients;
-    WaitingClients        m_waitingClients;
-    Server*                m_server;
-    IEventQueue*        m_events;
-    bool                m_useSecureNetwork;
+    IListenSocket* m_listen;
+    ISocketFactory* m_socketFactory;
+    NewClients m_newClients;
+    WaitingClients m_waitingClients;
+    Server* m_server;
+    IEventQueue* m_events;
+    bool m_useSecureNetwork;
 };

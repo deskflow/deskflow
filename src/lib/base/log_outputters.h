@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -35,14 +35,14 @@ this to prevent already inserted outputters from writing.
 */
 class StopLogOutputter : public ILogOutputter {
 public:
-    StopLogOutputter();
-    virtual ~StopLogOutputter();
+    StopLogOutputter ();
+    virtual ~StopLogOutputter ();
 
     // ILogOutputter overrides
-    virtual void        open(const char* title);
-    virtual void        close();
-    virtual void        show(bool showIfEmpty);
-    virtual bool        write(ELevel level, const char* message);
+    virtual void open (const char* title);
+    virtual void close ();
+    virtual void show (bool showIfEmpty);
+    virtual bool write (ELevel level, const char* message);
 };
 
 //! Write log to console
@@ -52,15 +52,15 @@ message is ignored.
 */
 class ConsoleLogOutputter : public ILogOutputter {
 public:
-    ConsoleLogOutputter();
-    virtual ~ConsoleLogOutputter();
+    ConsoleLogOutputter ();
+    virtual ~ConsoleLogOutputter ();
 
     // ILogOutputter overrides
-    virtual void        open(const char* title);
-    virtual void        close();
-    virtual void        show(bool showIfEmpty);
-    virtual bool        write(ELevel level, const char* message);
-    virtual void        flush();
+    virtual void open (const char* title);
+    virtual void close ();
+    virtual void show (bool showIfEmpty);
+    virtual bool write (ELevel level, const char* message);
+    virtual void flush ();
 };
 
 //! Write log to file
@@ -71,19 +71,19 @@ message is ignored.
 
 class FileLogOutputter : public ILogOutputter {
 public:
-    FileLogOutputter(const char* logFile);
-    virtual ~FileLogOutputter();
+    FileLogOutputter (const char* logFile);
+    virtual ~FileLogOutputter ();
 
     // ILogOutputter overrides
-    virtual void        open(const char* title);
-    virtual void        close();
-    virtual void        show(bool showIfEmpty);
-    virtual bool        write(ELevel level, const char* message);
+    virtual void open (const char* title);
+    virtual void close ();
+    virtual void show (bool showIfEmpty);
+    virtual bool write (ELevel level, const char* message);
 
-    void                setLogFilename(const char* title);
+    void setLogFilename (const char* title);
 
 private:
-    std::string            m_fileName;
+    std::string m_fileName;
 };
 
 //! Write log to system log
@@ -92,14 +92,14 @@ This outputter writes output to the system log.
 */
 class SystemLogOutputter : public ILogOutputter {
 public:
-    SystemLogOutputter();
-    virtual ~SystemLogOutputter();
+    SystemLogOutputter ();
+    virtual ~SystemLogOutputter ();
 
     // ILogOutputter overrides
-    virtual void        open(const char* title);
-    virtual void        close();
-    virtual void        show(bool showIfEmpty);
-    virtual bool        write(ELevel level, const char* message);
+    virtual void open (const char* title);
+    virtual void close ();
+    virtual void show (bool showIfEmpty);
+    virtual bool write (ELevel level, const char* message);
 };
 
 //! Write log to system log only
@@ -112,12 +112,12 @@ the scope.
 */
 class SystemLogger {
 public:
-    SystemLogger(const char* title, bool blockConsole);
-    ~SystemLogger();
+    SystemLogger (const char* title, bool blockConsole);
+    ~SystemLogger ();
 
 private:
-    ILogOutputter*        m_syslog;
-    ILogOutputter*        m_stop;
+    ILogOutputter* m_syslog;
+    ILogOutputter* m_stop;
 };
 
 //! Save log history
@@ -131,28 +131,29 @@ private:
 public:
     typedef Buffer::const_iterator const_iterator;
 
-    BufferedLogOutputter(UInt32 maxBufferSize);
-    virtual ~BufferedLogOutputter();
+    BufferedLogOutputter (UInt32 maxBufferSize);
+    virtual ~BufferedLogOutputter ();
 
     //! @name accessors
     //@{
 
     //! Get start of buffer
-    const_iterator        begin() const;
+    const_iterator begin () const;
 
     //! Get end of buffer
-    const_iterator        end() const;
+    const_iterator end () const;
 
     //@}
 
     // ILogOutputter overrides
-    virtual void        open(const char* title);
-    virtual void        close();
-    virtual void        show(bool showIfEmpty);
-    virtual bool        write(ELevel level, const char* message);
+    virtual void open (const char* title);
+    virtual void close ();
+    virtual void show (bool showIfEmpty);
+    virtual bool write (ELevel level, const char* message);
+
 private:
-    UInt32                m_maxBufferSize;
-    Buffer                m_buffer;
+    UInt32 m_maxBufferSize;
+    Buffer m_buffer;
 };
 
 //! Write log to message box
@@ -161,12 +162,12 @@ The level for each message is ignored.
 */
 class MesssageBoxLogOutputter : public ILogOutputter {
 public:
-    MesssageBoxLogOutputter();
-    virtual ~MesssageBoxLogOutputter();
+    MesssageBoxLogOutputter ();
+    virtual ~MesssageBoxLogOutputter ();
 
     // ILogOutputter overrides
-    virtual void        open(const char* title);
-    virtual void        close();
-    virtual void        show(bool showIfEmpty);
-    virtual bool        write(ELevel level, const char* message);
+    virtual void open (const char* title);
+    virtual void close ();
+    virtual void show (bool showIfEmpty);
+    virtual bool write (ELevel level, const char* message);
 };

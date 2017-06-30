@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -23,47 +23,39 @@
 // OSXClientTaskBarReceiver
 //
 
-OSXClientTaskBarReceiver::OSXClientTaskBarReceiver(
-        const BufferedLogOutputter*,
-        IEventQueue* events) :
-    ClientTaskBarReceiver(events)
-{
+OSXClientTaskBarReceiver::OSXClientTaskBarReceiver (const BufferedLogOutputter*,
+                                                    IEventQueue* events)
+    : ClientTaskBarReceiver (events) {
     // add ourself to the task bar
-    ARCH->addReceiver(this);
+    ARCH->addReceiver (this);
 }
 
-OSXClientTaskBarReceiver::~OSXClientTaskBarReceiver()
-{
-    ARCH->removeReceiver(this);
+OSXClientTaskBarReceiver::~OSXClientTaskBarReceiver () {
+    ARCH->removeReceiver (this);
 }
 
 void
-OSXClientTaskBarReceiver::showStatus()
-{
+OSXClientTaskBarReceiver::showStatus () {
     // do nothing
 }
 
 void
-OSXClientTaskBarReceiver::runMenu(int, int)
-{
+OSXClientTaskBarReceiver::runMenu (int, int) {
     // do nothing
 }
 
 void
-OSXClientTaskBarReceiver::primaryAction()
-{
+OSXClientTaskBarReceiver::primaryAction () {
     // do nothing
 }
 
 const IArchTaskBarReceiver::Icon
-OSXClientTaskBarReceiver::getIcon() const
-{
+OSXClientTaskBarReceiver::getIcon () const {
     return NULL;
 }
 
 IArchTaskBarReceiver*
-createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events)
-{
-    return new OSXClientTaskBarReceiver(logBuffer, events);
+createTaskBarReceiver (const BufferedLogOutputter* logBuffer,
+                       IEventQueue* events) {
+    return new OSXClientTaskBarReceiver (logBuffer, events);
 }
-

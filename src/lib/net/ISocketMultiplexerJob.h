@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -46,7 +46,7 @@ public:
     however, add or remove jobs for other sockets.
     */
     virtual ISocketMultiplexerJob*
-                        run(bool readable, bool writable, bool error) = 0;
+    run (bool readable, bool writable, bool error) = 0;
 
     //@}
     //! @name accessors
@@ -56,21 +56,21 @@ public:
     /*!
     Return the socket to multiplex
     */
-    virtual ArchSocket    getSocket() const = 0;
+    virtual ArchSocket getSocket () const = 0;
 
     //! Check for interest in readability
     /*!
     Return true if the job is interested in being run if the socket
     becomes readable.
     */
-    virtual bool        isReadable() const = 0;
+    virtual bool isReadable () const = 0;
 
     //! Check for interest in writability
     /*!
     Return true if the job is interested in being run if the socket
     becomes writable.
     */
-    virtual bool        isWritable() const = 0;
+    virtual bool isWritable () const = 0;
 
     //@}
 };

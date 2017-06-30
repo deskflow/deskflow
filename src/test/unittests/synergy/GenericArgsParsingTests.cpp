@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -26,290 +26,276 @@ using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
 
-bool g_helpShowed = false;
+bool g_helpShowed    = false;
 bool g_versionShowed = false;
 
 void
-showMockHelp()
-{
+showMockHelp () {
     g_helpShowed = true;
 }
 
 void
-showMockVersion()
-{
+showMockVersion () {
     g_versionShowed = true;
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_logLevelCmd_setLogLevel)
-{
-    int i = 1;
-    const int argc = 3;
-    const char* kLogLevelCmd[argc] = { "stub", "--debug", "DEBUG" };
+TEST (GenericArgsParsingTests, parseGenericArgs_logLevelCmd_setLogLevel) {
+    int i                          = 1;
+    const int argc                 = 3;
+    const char* kLogLevelCmd[argc] = {"stub", "--debug", "DEBUG"};
 
-    ArgParser argParser(NULL);
+    ArgParser argParser (NULL);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kLogLevelCmd, i);
+    argParser.setArgsBase (argsBase);
 
-    String logFilter(argsBase.m_logFilter);
+    argParser.parseGenericArgs (argc, kLogLevelCmd, i);
 
-    EXPECT_EQ("DEBUG", logFilter);
-    EXPECT_EQ(2, i);
+    String logFilter (argsBase.m_logFilter);
+
+    EXPECT_EQ ("DEBUG", logFilter);
+    EXPECT_EQ (2, i);
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_logFileCmd_saveLogFilename)
-{
-    int i = 1;
-    const int argc = 3;
-    const char* kLogFileCmd[argc] = { "stub", "--log", "mock_filename" };
+TEST (GenericArgsParsingTests, parseGenericArgs_logFileCmd_saveLogFilename) {
+    int i                         = 1;
+    const int argc                = 3;
+    const char* kLogFileCmd[argc] = {"stub", "--log", "mock_filename"};
 
-    ArgParser argParser(NULL);
+    ArgParser argParser (NULL);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kLogFileCmd, i);
+    argParser.setArgsBase (argsBase);
 
-    String logFile(argsBase.m_logFile);
+    argParser.parseGenericArgs (argc, kLogFileCmd, i);
 
-    EXPECT_EQ("mock_filename", logFile);
-    EXPECT_EQ(2, i);
+    String logFile (argsBase.m_logFile);
+
+    EXPECT_EQ ("mock_filename", logFile);
+    EXPECT_EQ (2, i);
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_logFileCmdWithSpace_saveLogFilename)
-{
-    int i = 1;
-    const int argc = 3;
-    const char* kLogFileCmdWithSpace[argc] = { "stub", "--log", "mo ck_filename" };
+TEST (GenericArgsParsingTests,
+      parseGenericArgs_logFileCmdWithSpace_saveLogFilename) {
+    int i                                  = 1;
+    const int argc                         = 3;
+    const char* kLogFileCmdWithSpace[argc] = {
+        "stub", "--log", "mo ck_filename"};
 
-    ArgParser argParser(NULL);
+    ArgParser argParser (NULL);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kLogFileCmdWithSpace, i);
+    argParser.setArgsBase (argsBase);
 
-    String logFile(argsBase.m_logFile);
+    argParser.parseGenericArgs (argc, kLogFileCmdWithSpace, i);
 
-    EXPECT_EQ("mo ck_filename", logFile);
-    EXPECT_EQ(2, i);
+    String logFile (argsBase.m_logFile);
+
+    EXPECT_EQ ("mo ck_filename", logFile);
+    EXPECT_EQ (2, i);
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_noDeamonCmd_daemonFalse)
-{
-    int i = 1;
-    const int argc = 2;
-    const char* kNoDeamonCmd[argc] = { "stub", "-f" };
+TEST (GenericArgsParsingTests, parseGenericArgs_noDeamonCmd_daemonFalse) {
+    int i                          = 1;
+    const int argc                 = 2;
+    const char* kNoDeamonCmd[argc] = {"stub", "-f"};
 
-    ArgParser argParser(NULL);
+    ArgParser argParser (NULL);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kNoDeamonCmd, i);
+    argParser.setArgsBase (argsBase);
 
-    EXPECT_FALSE(argsBase.m_daemon);
-    EXPECT_EQ(1, i);
+    argParser.parseGenericArgs (argc, kNoDeamonCmd, i);
+
+    EXPECT_FALSE (argsBase.m_daemon);
+    EXPECT_EQ (1, i);
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_deamonCmd_daemonTrue)
-{
-    int i = 1;
-    const int argc = 2;
-    const char* kDeamonCmd[argc] = { "stub", "--daemon" };
+TEST (GenericArgsParsingTests, parseGenericArgs_deamonCmd_daemonTrue) {
+    int i                        = 1;
+    const int argc               = 2;
+    const char* kDeamonCmd[argc] = {"stub", "--daemon"};
 
-    ArgParser argParser(NULL);
+    ArgParser argParser (NULL);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kDeamonCmd, i);
+    argParser.setArgsBase (argsBase);
 
-    EXPECT_EQ(true, argsBase.m_daemon);
-    EXPECT_EQ(1, i);
+    argParser.parseGenericArgs (argc, kDeamonCmd, i);
+
+    EXPECT_EQ (true, argsBase.m_daemon);
+    EXPECT_EQ (1, i);
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_nameCmd_saveName)
-{
-    int i = 1;
-    const int argc = 3;
-    const char* kNameCmd[argc] = { "stub", "--name", "mock" };
+TEST (GenericArgsParsingTests, parseGenericArgs_nameCmd_saveName) {
+    int i                      = 1;
+    const int argc             = 3;
+    const char* kNameCmd[argc] = {"stub", "--name", "mock"};
 
-    ArgParser argParser(NULL);
+    ArgParser argParser (NULL);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kNameCmd, i);
+    argParser.setArgsBase (argsBase);
 
-    EXPECT_EQ("mock", argsBase.m_name);
-    EXPECT_EQ(2, i);
+    argParser.parseGenericArgs (argc, kNameCmd, i);
+
+    EXPECT_EQ ("mock", argsBase.m_name);
+    EXPECT_EQ (2, i);
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_noRestartCmd_restartFalse)
-{
-    int i = 1;
-    const int argc = 2;
-    const char* kNoRestartCmd[argc] = { "stub", "--no-restart" };
+TEST (GenericArgsParsingTests, parseGenericArgs_noRestartCmd_restartFalse) {
+    int i                           = 1;
+    const int argc                  = 2;
+    const char* kNoRestartCmd[argc] = {"stub", "--no-restart"};
 
-    ArgParser argParser(NULL);
+    ArgParser argParser (NULL);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kNoRestartCmd, i);
+    argParser.setArgsBase (argsBase);
 
-    EXPECT_FALSE(argsBase.m_restartable);
-    EXPECT_EQ(1, i);
+    argParser.parseGenericArgs (argc, kNoRestartCmd, i);
+
+    EXPECT_FALSE (argsBase.m_restartable);
+    EXPECT_EQ (1, i);
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_restartCmd_restartTrue)
-{
-    int i = 1;
-    const int argc = 2;
-    const char* kRestartCmd[argc] = { "stub", "--restart" };
+TEST (GenericArgsParsingTests, parseGenericArgs_restartCmd_restartTrue) {
+    int i                         = 1;
+    const int argc                = 2;
+    const char* kRestartCmd[argc] = {"stub", "--restart"};
 
-    ArgParser argParser(NULL);
+    ArgParser argParser (NULL);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kRestartCmd, i);
+    argParser.setArgsBase (argsBase);
 
-    EXPECT_EQ(true, argsBase.m_restartable);
-    EXPECT_EQ(1, i);
+    argParser.parseGenericArgs (argc, kRestartCmd, i);
+
+    EXPECT_EQ (true, argsBase.m_restartable);
+    EXPECT_EQ (1, i);
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_backendCmd_backendTrue)
-{
-    int i = 1;
-    const int argc = 2;
-    const char* kBackendCmd[argc] = { "stub", "-z" };
+TEST (GenericArgsParsingTests, parseGenericArgs_backendCmd_backendTrue) {
+    int i                         = 1;
+    const int argc                = 2;
+    const char* kBackendCmd[argc] = {"stub", "-z"};
 
-    ArgParser argParser(NULL);
+    ArgParser argParser (NULL);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kBackendCmd, i);
+    argParser.setArgsBase (argsBase);
 
-    EXPECT_EQ(true, argsBase.m_backend);
-    EXPECT_EQ(1, i);
+    argParser.parseGenericArgs (argc, kBackendCmd, i);
+
+    EXPECT_EQ (true, argsBase.m_backend);
+    EXPECT_EQ (1, i);
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_noHookCmd_noHookTrue)
-{
-    int i = 1;
-    const int argc = 2;
-    const char* kNoHookCmd[argc] = { "stub", "--no-hooks" };
+TEST (GenericArgsParsingTests, parseGenericArgs_noHookCmd_noHookTrue) {
+    int i                        = 1;
+    const int argc               = 2;
+    const char* kNoHookCmd[argc] = {"stub", "--no-hooks"};
 
-    ArgParser argParser(NULL);
+    ArgParser argParser (NULL);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kNoHookCmd, i);
+    argParser.setArgsBase (argsBase);
 
-    EXPECT_EQ(true, argsBase.m_noHooks);
-    EXPECT_EQ(1, i);
+    argParser.parseGenericArgs (argc, kNoHookCmd, i);
+
+    EXPECT_EQ (true, argsBase.m_noHooks);
+    EXPECT_EQ (1, i);
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_helpCmd_showHelp)
-{
-    g_helpShowed = false;
-    int i = 1;
-    const int argc = 2;
-    const char* kHelpCmd[argc] = { "stub", "--help" };
+TEST (GenericArgsParsingTests, parseGenericArgs_helpCmd_showHelp) {
+    g_helpShowed               = false;
+    int i                      = 1;
+    const int argc             = 2;
+    const char* kHelpCmd[argc] = {"stub", "--help"};
 
     NiceMock<MockApp> app;
-    ArgParser argParser(&app);
+    ArgParser argParser (&app);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    ON_CALL(app, help()).WillByDefault(Invoke(showMockHelp));
-    
-    argParser.parseGenericArgs(argc, kHelpCmd, i);
+    argParser.setArgsBase (argsBase);
+    ON_CALL (app, help ()).WillByDefault (Invoke (showMockHelp));
 
-    EXPECT_EQ(true, g_helpShowed);
-    EXPECT_EQ(1, i);
+    argParser.parseGenericArgs (argc, kHelpCmd, i);
+
+    EXPECT_EQ (true, g_helpShowed);
+    EXPECT_EQ (1, i);
 }
 
 
-TEST(GenericArgsParsingTests, parseGenericArgs_versionCmd_showVersion)
-{
-    g_versionShowed = false;
-    int i = 1;
-    const int argc = 2;
-    const char* kVersionCmd[argc] = { "stub", "--version" };
+TEST (GenericArgsParsingTests, parseGenericArgs_versionCmd_showVersion) {
+    g_versionShowed               = false;
+    int i                         = 1;
+    const int argc                = 2;
+    const char* kVersionCmd[argc] = {"stub", "--version"};
 
     NiceMock<MockApp> app;
-    ArgParser argParser(&app);
+    ArgParser argParser (&app);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    ON_CALL(app, version()).WillByDefault(Invoke(showMockVersion));
-    
-    argParser.parseGenericArgs(argc, kVersionCmd, i);
+    argParser.setArgsBase (argsBase);
+    ON_CALL (app, version ()).WillByDefault (Invoke (showMockVersion));
 
-    EXPECT_EQ(true, g_versionShowed);
-    EXPECT_EQ(1, i);
+    argParser.parseGenericArgs (argc, kVersionCmd, i);
+
+    EXPECT_EQ (true, g_versionShowed);
+    EXPECT_EQ (1, i);
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_noTrayCmd_disableTrayTrue)
-{
-    int i = 1;
-    const int argc = 2;
-    const char* kNoTrayCmd[argc] = { "stub", "--no-tray" };
+TEST (GenericArgsParsingTests, parseGenericArgs_noTrayCmd_disableTrayTrue) {
+    int i                        = 1;
+    const int argc               = 2;
+    const char* kNoTrayCmd[argc] = {"stub", "--no-tray"};
 
-    ArgParser argParser(NULL);
+    ArgParser argParser (NULL);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kNoTrayCmd, i);
+    argParser.setArgsBase (argsBase);
 
-    EXPECT_EQ(true, argsBase.m_disableTray);
-    EXPECT_EQ(1, i);
+    argParser.parseGenericArgs (argc, kNoTrayCmd, i);
+
+    EXPECT_EQ (true, argsBase.m_disableTray);
+    EXPECT_EQ (1, i);
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue)
-{
-    int i = 1;
-    const int argc = 2;
-    const char* kIpcCmd[argc] = { "stub", "--ipc" };
+TEST (GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue) {
+    int i                     = 1;
+    const int argc            = 2;
+    const char* kIpcCmd[argc] = {"stub", "--ipc"};
 
-    ArgParser argParser(NULL);
+    ArgParser argParser (NULL);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kIpcCmd, i);
+    argParser.setArgsBase (argsBase);
 
-    EXPECT_EQ(true, argsBase.m_enableIpc);
-    EXPECT_EQ(1, i);
+    argParser.parseGenericArgs (argc, kIpcCmd, i);
+
+    EXPECT_EQ (true, argsBase.m_enableIpc);
+    EXPECT_EQ (1, i);
 }
 
-#ifndef  WINAPI_XWINDOWS
-TEST(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnNonLinux_enableDragDropTrue)
-{
-    int i = 1;
-    const int argc = 2;
-    const char* kDragDropCmd[argc] = { "stub", "--enable-drag-drop" };
+#ifndef WINAPI_XWINDOWS
+TEST (GenericArgsParsingTests,
+      parseGenericArgs_dragDropCmdOnNonLinux_enableDragDropTrue) {
+    int i                          = 1;
+    const int argc                 = 2;
+    const char* kDragDropCmd[argc] = {"stub", "--enable-drag-drop"};
 
-    ArgParser argParser(NULL);
+    ArgParser argParser (NULL);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kDragDropCmd, i);
+    argParser.setArgsBase (argsBase);
 
-    EXPECT_EQ(true, argsBase.m_enableDragDrop);
-    EXPECT_EQ(1, i);
+    argParser.parseGenericArgs (argc, kDragDropCmd, i);
+
+    EXPECT_EQ (true, argsBase.m_enableDragDrop);
+    EXPECT_EQ (1, i);
 }
 #endif
 
-#ifdef  WINAPI_XWINDOWS
-TEST(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnLinux_enableDragDropFalse)
-{
-    int i = 1;
-    const int argc = 2;
-    const char* kDragDropCmd[argc] = { "stub", "--enable-drag-drop" };
+#ifdef WINAPI_XWINDOWS
+TEST (GenericArgsParsingTests,
+      parseGenericArgs_dragDropCmdOnLinux_enableDragDropFalse) {
+    int i                          = 1;
+    const int argc                 = 2;
+    const char* kDragDropCmd[argc] = {"stub", "--enable-drag-drop"};
 
-    ArgParser argParser(NULL);
+    ArgParser argParser (NULL);
     ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kDragDropCmd, i);
+    argParser.setArgsBase (argsBase);
 
-    EXPECT_FALSE(argsBase.m_enableDragDrop);
-    EXPECT_EQ(1, i);
+    argParser.parseGenericArgs (argc, kDragDropCmd, i);
+
+    EXPECT_FALSE (argsBase.m_enableDragDrop);
+    EXPECT_EQ (1, i);
 }
 #endif

@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -38,14 +38,14 @@ public:
     for the console's title if appropriate for the architecture.  Calling
     this method on an already open console must have no effect.
     */
-    virtual void        openConsole(const char* title) = 0;
+    virtual void openConsole (const char* title) = 0;
 
     //! Close the console
     /*!
     Close the console.  Calling this method on an already closed console
     must have no effect.
     */
-    virtual void        closeConsole() = 0;
+    virtual void closeConsole () = 0;
 
     //! Show the console
     /*!
@@ -54,13 +54,13 @@ public:
     will do nothing.  Iff \p showIfEmpty is \c false then the implementation
     may optionally only show the console if it's not empty.
     */
-    virtual void        showConsole(bool showIfEmpty) = 0;
+    virtual void showConsole (bool showIfEmpty) = 0;
 
     //! Write to the console
     /*!
     Writes the given string to the console, opening it if necessary.
     */
-    virtual void        writeConsole(ELevel, const char*) = 0;
+    virtual void writeConsole (ELevel, const char*) = 0;
 
     //@}
 };

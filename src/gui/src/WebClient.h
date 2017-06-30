@@ -27,8 +27,7 @@ class QMessageBox;
 class QWidget;
 class QStringList;
 
-class WebClient : public QObject
-{
+class WebClient : public QObject {
     Q_OBJECT
 
 public:
@@ -36,11 +35,11 @@ public:
     bool setEmail (QString email, QString& errorOut);
     bool setPassword (QString password, QString& errorOut);
 signals:
-    void error(QString e);
+    void error (QString e);
 
 private:
-    QString request();
-    
+    QString request ();
+
     QString m_Email;
     QString m_Password;
     CoreInterface m_CoreInterface;

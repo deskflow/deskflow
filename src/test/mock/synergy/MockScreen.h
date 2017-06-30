@@ -23,14 +23,14 @@
 
 #include "test/global/gmock.h"
 
-class MockScreen : public synergy::Screen
-{
+class MockScreen : public synergy::Screen {
 public:
-    MockScreen() : synergy::Screen() { }
-    MOCK_METHOD0(disable, void());
-    MOCK_CONST_METHOD4(getShape, void(SInt32&, SInt32&, SInt32&, SInt32&));
-    MOCK_CONST_METHOD2(getCursorPos, void(SInt32&, SInt32&));
-    MOCK_METHOD0(resetOptions, void());
-    MOCK_METHOD1(setOptions, void(const OptionsList&));
-    MOCK_METHOD0(enable, void());
+    MockScreen () : synergy::Screen () {
+    }
+    MOCK_METHOD0 (disable, void());
+    MOCK_CONST_METHOD4 (getShape, void(SInt32&, SInt32&, SInt32&, SInt32&));
+    MOCK_CONST_METHOD2 (getCursorPos, void(SInt32&, SInt32&));
+    MOCK_METHOD0 (resetOptions, void());
+    MOCK_METHOD1 (setOptions, void(const OptionsList&));
+    MOCK_METHOD0 (enable, void());
 };

@@ -25,8 +25,8 @@
 
 class IEventQueue;
 
-class MockServer : public Server
-{
+class MockServer : public Server {
 public:
-    MockServer() : Server() { }
+    MockServer () : Server () {
+    }
 };

@@ -26,34 +26,33 @@
 class QTcpSocket;
 class IpcReader;
 
-class IpcClient : public QObject
-{
-     Q_OBJECT
+class IpcClient : public QObject {
+    Q_OBJECT
 
 public:
-    IpcClient();
-    virtual ~IpcClient();
+    IpcClient ();
+    virtual ~IpcClient ();
 
-    void sendHello();
-    void sendCommand(const QString& command, ElevateMode elevate);
-    void connectToHost();
-    void disconnectFromHost();
+    void sendHello ();
+    void sendCommand (const QString& command, ElevateMode elevate);
+    void connectToHost ();
+    void disconnectFromHost ();
 
 public slots:
-    void retryConnect();
+    void retryConnect ();
 
 private:
-    void intToBytes(int value, char* buffer, int size);
+    void intToBytes (int value, char* buffer, int size);
 
 private slots:
-    void connected();
-    void error(QAbstractSocket::SocketError error);
-    void handleReadLogLine(const QString& text);
+    void connected ();
+    void error (QAbstractSocket::SocketError error);
+    void handleReadLogLine (const QString& text);
 
 signals:
-    void readLogLine(const QString& text);
-    void infoMessage(const QString& text);
-    void errorMessage(const QString& text);
+    void readLogLine (const QString& text);
+    void infoMessage (const QString& text);
+    void errorMessage (const QString& text);
 
 private:
     QTcpSocket* m_Socket;
