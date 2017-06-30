@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -25,27 +25,27 @@
 /*
 TEST(OSXScreenTests, hideCursor_notPrimary)
 {
-	EventQueue queue;
-	OSXScreen screen(true, false);
+    EventQueue queue;
+    OSXScreen screen(true, false);
 
-	screen.hideCursor();
+    screen.hideCursor();
 
-	EXPECT_EQ(false, CGCursorIsVisible());
+    EXPECT_EQ(false, CGCursorIsVisible());
 
-	// workaround for screen class race condition.
-	ARCH->sleep(.1f);
+    // workaround for screen class race condition.
+    ARCH->sleep(.1f);
 }
 
 TEST(OSXScreenTests, showCursor_notPrimary)
 {
-	EventQueue queue;
-	OSXScreen screen(false, false);
+    EventQueue queue;
+    OSXScreen screen(false, false);
 
-	screen.showCursor();
+    screen.showCursor();
 
-	EXPECT_EQ(true, CGCursorIsVisible());
+    EXPECT_EQ(true, CGCursorIsVisible());
 
-	// workaround for screen class race condition.
-	ARCH->sleep(.1f);
+    // workaround for screen class race condition.
+    ARCH->sleep(.1f);
 }
 */

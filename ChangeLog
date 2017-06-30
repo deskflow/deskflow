@@ -1,4 +1,20 @@
-v1.8.8
+v1.9.0-rc3
+============
+Bug #4132 - Laggy mouse cursor on macOS clients
+
+v1.9.0-rc2
+===========
+Bug #5901 - Stored serial key corrupted on macOS
+Bug #5757 - Failure to build against OpenSSL v1.1.0
+
+v1.9.0-rc1
+==========
+Bug #5467 - Failing to automatically download and install Bonjour
+Enhancement #5389 - Ported GUI to Qt 5
+Enhancement #4978 - Windows: Added support for Visual Studio 2015
+Enhancement #5398 - Windows: Updated OpenSSL dependency to 1.0.2k
+
+v1.8.8-stable
 ==========
 Bug #5196 - Some keys on Korean and Japanese keyboards have the same keycode
 Bug #5578 - Pressing Hangul key results in alt+'a'

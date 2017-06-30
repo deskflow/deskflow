@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -24,61 +24,55 @@
 // ArchLogUnix
 //
 
-ArchLogUnix::ArchLogUnix()
-{
-	// do nothing
+ArchLogUnix::ArchLogUnix () {
+    // do nothing
 }
 
-ArchLogUnix::~ArchLogUnix()
-{
-	// do nothing
-}
-
-void
-ArchLogUnix::openLog(const char* name)
-{
-	openlog(name, 0, LOG_DAEMON);
+ArchLogUnix::~ArchLogUnix () {
+    // do nothing
 }
 
 void
-ArchLogUnix::closeLog()
-{
-	closelog();
+ArchLogUnix::openLog (const char* name) {
+    openlog (name, 0, LOG_DAEMON);
 }
 
 void
-ArchLogUnix::showLog(bool)
-{
-	// do nothing
+ArchLogUnix::closeLog () {
+    closelog ();
 }
 
 void
-ArchLogUnix::writeLog(ELevel level, const char* msg)
-{
-	// convert level
-	int priority;
-	switch (level) {
-	case kERROR:
-		priority = LOG_ERR;
-		break;
+ArchLogUnix::showLog (bool) {
+    // do nothing
+}
 
-	case kWARNING:
-		priority = LOG_WARNING;
-		break;
+void
+ArchLogUnix::writeLog (ELevel level, const char* msg) {
+    // convert level
+    int priority;
+    switch (level) {
+        case kERROR:
+            priority = LOG_ERR;
+            break;
 
-	case kNOTE:
-		priority = LOG_NOTICE;
-		break;
+        case kWARNING:
+            priority = LOG_WARNING;
+            break;
 
-	case kINFO:
-		priority = LOG_INFO;
-		break;
+        case kNOTE:
+            priority = LOG_NOTICE;
+            break;
 
-	default:
-		priority = LOG_DEBUG;
-		break;
-	}
+        case kINFO:
+            priority = LOG_INFO;
+            break;
 
-	// log it
-	syslog(priority, "%s", msg);
+        default:
+            priority = LOG_DEBUG;
+            break;
+    }
+
+    // log it
+    syslog (priority, "%s", msg);
 }

@@ -21,28 +21,28 @@
 #include <QVector>
 #include <QComboBox>
 
-class SynergyLocale
-{
-	class Language
-	{
-	public:
-		Language() { }
-		Language(const QString& IetfCode, const QString& name)
-			: m_IetfCode(IetfCode), m_Name(name) { }
+class SynergyLocale {
+    class Language {
+    public:
+        Language () {
+        }
+        Language (const QString& IetfCode, const QString& name)
+            : m_IetfCode (IetfCode), m_Name (name) {
+        }
 
-	public:
-		QString m_IetfCode;
-		QString m_Name;
-	};
+    public:
+        QString m_IetfCode;
+        QString m_Name;
+    };
 
 public:
-	SynergyLocale();
-	void fillLanguageComboBox(QComboBox* comboBox);
+    SynergyLocale ();
+    void fillLanguageComboBox (QComboBox* comboBox);
 
 private:
-	void loadLanguages();
-	void addLanguage(const QString& IetfCode, const QString& name);
+    void loadLanguages ();
+    void addLanguage (const QString& IetfCode, const QString& name);
 
 private:
-	QVector<Language> m_Languages;
+    QVector<Language> m_Languages;
 };
