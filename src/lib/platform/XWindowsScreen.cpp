@@ -806,6 +806,9 @@ XWindowsScreen::isAnyMouseButtonDown(UInt32& buttonID) const
 	unsigned int state;
 	if (XQueryPointer(m_display, m_root, &root, &window,
 								&xRoot, &yRoot, &xWindow, &yWindow, &state)) {
+		if ((state & Button1Mask) != 0) {
+			buttonID = kButtonLeft;
+		}
 		return ((state & (Button1Mask | Button2Mask | Button3Mask |
 							Button4Mask | Button5Mask)) != 0);
 	}
