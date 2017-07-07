@@ -30,28 +30,28 @@ class MainWindow;
 
 class ZeroconfService : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	ZeroconfService(MainWindow* mainWindow);
-	~ZeroconfService();
+    ZeroconfService(MainWindow* mainWindow);
+    ~ZeroconfService();
 
 private slots:
-	void serverDetected(const QList<ZeroconfRecord>& list);
-	void clientDetected(const QList<ZeroconfRecord>& list);
-	void errorHandle(DNSServiceErrorType errorCode);
+    void serverDetected(const QList<ZeroconfRecord>& list);
+    void clientDetected(const QList<ZeroconfRecord>& list);
+    void errorHandle(DNSServiceErrorType errorCode);
 
 private:
-	QString getLocalIPAddresses();
-	bool registerService(bool server);
+    QString getLocalIPAddresses();
+    bool registerService(bool server);
 
 private:
-	MainWindow* m_pMainWindow;
-	ZeroconfServer m_zeroconfServer;
-	ZeroconfBrowser* m_pZeroconfBrowser;
-	ZeroconfRegister* m_pZeroconfRegister;
-	bool m_ServiceRegistered;
+    MainWindow* m_pMainWindow;
+    ZeroconfServer m_zeroconfServer;
+    ZeroconfBrowser* m_pZeroconfBrowser;
+    ZeroconfRegister* m_pZeroconfRegister;
+    bool m_ServiceRegistered;
 
-	static const char* m_ServerServiceName;
-	static const char* m_ClientServiceName;
+    static const char* m_ServerServiceName;
+    static const char* m_ClientServiceName;
 };

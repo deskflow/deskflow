@@ -29,110 +29,110 @@
 //
 
 ServerTaskBarReceiver::ServerTaskBarReceiver(IEventQueue* events) :
-	m_state(kNotRunning),
-	m_events(events)
+    m_state(kNotRunning),
+    m_events(events)
 {
-	// do nothing
+    // do nothing
 }
 
 ServerTaskBarReceiver::~ServerTaskBarReceiver()
 {
-	// do nothing
+    // do nothing
 }
 
 void
 ServerTaskBarReceiver::updateStatus(Server* server, const String& errorMsg)
 {
-	{
-		// update our status
-		m_errorMessage = errorMsg;
-		if (server == NULL) {
-			if (m_errorMessage.empty()) {
-				m_state = kNotRunning;
-			}
-			else {
-				m_state = kNotWorking;
-			}
-		}
-		else {
-			m_clients.clear();
-			server->getClients(m_clients);
-			if (m_clients.size() <= 1) {
-				m_state = kNotConnected;
-			}
-			else {
-				m_state = kConnected;
-			}
-		}
+    {
+        // update our status
+        m_errorMessage = errorMsg;
+        if (server == NULL) {
+            if (m_errorMessage.empty()) {
+                m_state = kNotRunning;
+            }
+            else {
+                m_state = kNotWorking;
+            }
+        }
+        else {
+            m_clients.clear();
+            server->getClients(m_clients);
+            if (m_clients.size() <= 1) {
+                m_state = kNotConnected;
+            }
+            else {
+                m_state = kConnected;
+            }
+        }
 
-		// let subclasses have a go
-		onStatusChanged(server);
-	}
+        // let subclasses have a go
+        onStatusChanged(server);
+    }
 
-	// tell task bar
-	ARCH->updateReceiver(this);
+    // tell task bar
+    ARCH->updateReceiver(this);
 }
 
 ServerTaskBarReceiver::EState
 ServerTaskBarReceiver::getStatus() const
 {
-	return m_state;
+    return m_state;
 }
 
 const String&
 ServerTaskBarReceiver::getErrorMessage() const
 {
-	return m_errorMessage;
+    return m_errorMessage;
 }
 
 const ServerTaskBarReceiver::Clients&
 ServerTaskBarReceiver::getClients() const
 {
-	return m_clients;
+    return m_clients;
 }
 
 void
 ServerTaskBarReceiver::quit()
 {
-	m_events->addEvent(Event(Event::kQuit));
+    m_events->addEvent(Event(Event::kQuit));
 }
 
 void
 ServerTaskBarReceiver::onStatusChanged(Server*)
 {
-	// do nothing
+    // do nothing
 }
 
 void
 ServerTaskBarReceiver::lock() const
 {
-	// do nothing
+    // do nothing
 }
 
 void
 ServerTaskBarReceiver::unlock() const
 {
-	// do nothing
+    // do nothing
 }
 
 std::string
 ServerTaskBarReceiver::getToolTip() const
 {
-	switch (m_state) {
-	case kNotRunning:
-		return synergy::string::sprintf("%s:  Not running", kAppVersion);
+    switch (m_state) {
+    case kNotRunning:
+        return synergy::string::sprintf("%s:  Not running", kAppVersion);
 
-	case kNotWorking:
-		return synergy::string::sprintf("%s:  %s",
-								kAppVersion, m_errorMessage.c_str());
-						
-	case kNotConnected:
-		return synergy::string::sprintf("%s:  Waiting for clients", kAppVersion);
+    case kNotWorking:
+        return synergy::string::sprintf("%s:  %s",
+                                kAppVersion, m_errorMessage.c_str());
+                        
+    case kNotConnected:
+        return synergy::string::sprintf("%s:  Waiting for clients", kAppVersion);
 
-	case kConnected:
-		return synergy::string::sprintf("%s:  Connected", kAppVersion);
+    case kConnected:
+        return synergy::string::sprintf("%s:  Connected", kAppVersion);
 
-	default:
-		return "";
-	}
+    default:
+        return "";
+    }
 }

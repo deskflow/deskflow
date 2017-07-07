@@ -26,13 +26,13 @@ class IEventQueue;
 //! Implementation of ServerTaskBarReceiver for X Windows
 class CXWindowsServerTaskBarReceiver : public ServerTaskBarReceiver {
 public:
-	CXWindowsServerTaskBarReceiver(
-		const BufferedLogOutputter*, IEventQueue* events);
-	virtual ~CXWindowsServerTaskBarReceiver();
+    CXWindowsServerTaskBarReceiver(
+        const BufferedLogOutputter*, IEventQueue* events);
+    virtual ~CXWindowsServerTaskBarReceiver();
 
-	// IArchTaskBarReceiver overrides
-	virtual void		showStatus();
-	virtual void		runMenu(int x, int y);
-	virtual void		primaryAction();
-	virtual const Icon	getIcon() const;
+    // IArchTaskBarReceiver overrides
+    virtual void        showStatus();
+    virtual void        runMenu(int x, int y);
+    virtual void        primaryAction();
+    virtual const Icon    getIcon() const;
 };

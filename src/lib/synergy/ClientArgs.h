@@ -23,8 +23,8 @@ class NetworkAddress;
 
 class ClientArgs : public ArgsBase {
 public:
-	ClientArgs();
+    ClientArgs();
 
 public:
-	int					m_yscroll;
+    int                    m_yscroll;
 };

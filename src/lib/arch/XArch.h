@@ -44,7 +44,7 @@ exceptions.  Put this in your catch (...) handler after necessary
 cleanup but before leaving or returning from the handler.
 */
 #define RETHROW_XTHREAD \
-	try { throw; } catch (XThread&) { throw; } catch (...) { }
+    try { throw; } catch (XThread&) { throw; } catch (...) { }
 
 //! Lazy error message string evaluation
 /*!
@@ -55,26 +55,26 @@ string for that error code.
 */
 class XArchEval {
 public:
-	XArchEval() { }
-	virtual ~XArchEval() _NOEXCEPT { }
-	
-	virtual std::string	eval() const = 0;
+    XArchEval() { }
+    virtual ~XArchEval() _NOEXCEPT { }
+    
+    virtual std::string    eval() const = 0;
 };
 
 //! Generic exception architecture dependent library
 class XArch : public std::runtime_error {
 public:
-	XArch(XArchEval* adopted) : std::runtime_error(adopted->eval()) { delete adopted; }
-	XArch(const std::string& msg) : std::runtime_error(msg) { }
-	virtual ~XArch() _NOEXCEPT { }
+    XArch(XArchEval* adopted) : std::runtime_error(adopted->eval()) { delete adopted; }
+    XArch(const std::string& msg) : std::runtime_error(msg) { }
+    virtual ~XArch() _NOEXCEPT { }
 };
 
 // Macro to declare XArch derived types
-#define XARCH_SUBCLASS(name_, super_)									\
-class name_ : public super_ {											\
-public:																	\
-	name_(XArchEval* adoptedEvaluator) : super_(adoptedEvaluator) { }	\
-	name_(const std::string& msg) : super_(msg) { }						\
+#define XARCH_SUBCLASS(name_, super_)                                    \
+class name_ : public super_ {                                            \
+public:                                                                    \
+    name_(XArchEval* adoptedEvaluator) : super_(adoptedEvaluator) { }    \
+    name_(const std::string& msg) : super_(msg) { }                        \
 }
 
 //! Generic network exception

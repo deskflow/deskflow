@@ -251,7 +251,7 @@ Server::~Server()
 	// force immediate disconnection of secondary clients
 	disconnect();
 	for (OldClients::iterator index = m_oldClients.begin();
-							index != m_oldClients.begin(); ++index) {
+							index != m_oldClients.end(); ++index) {
 		BaseClientProxy* client = index->first;
 		m_events->deleteTimer(index->second);
 		m_events->removeHandler(Event::kTimer, client);
@@ -2392,7 +2392,7 @@ Server::sendFileThread(void* data)
 		LOG((CLOG_DEBUG "sending file to client, filename=%s", filename));
 		StreamChunker::sendFile(filename, m_events, this);
 	}
-	catch (std::runtime_error error) {
+	catch (std::runtime_error &error) {
 		LOG((CLOG_ERR "failed sending file chunks, error: %s", error.what()));
 	}
 

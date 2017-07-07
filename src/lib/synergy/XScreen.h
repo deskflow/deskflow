@@ -42,27 +42,27 @@ may be successful.
 */
 class XScreenUnavailable : public XScreenOpenFailure {
 public:
-	/*!
-	\c timeUntilRetry is the suggested time the caller should wait until
-	trying to open the screen again.
-	*/
-	XScreenUnavailable(double timeUntilRetry);
-	virtual ~XScreenUnavailable() _NOEXCEPT;
+    /*!
+    \c timeUntilRetry is the suggested time the caller should wait until
+    trying to open the screen again.
+    */
+    XScreenUnavailable(double timeUntilRetry);
+    virtual ~XScreenUnavailable() _NOEXCEPT;
 
-	//! @name manipulators
-	//@{
+    //! @name manipulators
+    //@{
 
-	//! Get retry time
-	/*!
-	Returns the suggested time to wait until retrying to open the screen.
-	*/
-	double				getRetryTime() const;
+    //! Get retry time
+    /*!
+    Returns the suggested time to wait until retrying to open the screen.
+    */
+    double                getRetryTime() const;
 
-	//@}
+    //@}
 
 protected:
-	virtual String		getWhat() const throw();
+    virtual String        getWhat() const throw();
 
 private:
-	double				m_timeUntilRetry;
+    double                m_timeUntilRetry;
 };

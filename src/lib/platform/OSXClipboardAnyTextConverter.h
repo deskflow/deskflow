@@ -23,31 +23,31 @@
 //! Convert to/from some text encoding
 class OSXClipboardAnyTextConverter : public IOSXClipboardConverter {
 public:
-	OSXClipboardAnyTextConverter();
-	virtual ~OSXClipboardAnyTextConverter();
+    OSXClipboardAnyTextConverter();
+    virtual ~OSXClipboardAnyTextConverter();
 
-	// IOSXClipboardConverter overrides
-	virtual IClipboard::EFormat
-						getFormat() const;
-	virtual CFStringRef
-						getOSXFormat() const = 0;
-	virtual String		fromIClipboard(const String &) const;
-	virtual String		toIClipboard(const String &) const;
+    // IOSXClipboardConverter overrides
+    virtual IClipboard::EFormat
+                        getFormat() const;
+    virtual CFStringRef
+                        getOSXFormat() const = 0;
+    virtual String        fromIClipboard(const String &) const;
+    virtual String        toIClipboard(const String &) const;
 
 protected:
-	//! Convert from IClipboard format
-	/*!
-	Do UTF-8 conversion and linefeed conversion.
-	*/
-	virtual String		doFromIClipboard(const String&) const = 0;
+    //! Convert from IClipboard format
+    /*!
+    Do UTF-8 conversion and linefeed conversion.
+    */
+    virtual String        doFromIClipboard(const String&) const = 0;
 
-	//! Convert to IClipboard format
-	/*!
-	Do UTF-8 conversion and Linefeed conversion.
-	*/
-	virtual String		doToIClipboard(const String&) const = 0;
+    //! Convert to IClipboard format
+    /*!
+    Do UTF-8 conversion and Linefeed conversion.
+    */
+    virtual String        doToIClipboard(const String&) const = 0;
 
 private:
-	static String		convertLinefeedToMacOS(const String&);
-	static String		convertLinefeedToUnix(const String&);
+    static String        convertLinefeedToMacOS(const String&);
+    static String        convertLinefeedToUnix(const String&);
 };

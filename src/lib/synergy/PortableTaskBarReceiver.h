@@ -31,66 +31,66 @@ class IEventQueue;
 //! Implementation of IArchTaskBarReceiver for the synergy server
 class PortableTaskBarReceiver : public IArchTaskBarReceiver {
 public:
-	PortableTaskBarReceiver(IEventQueue* events);
-	virtual ~PortableTaskBarReceiver();
+    PortableTaskBarReceiver(IEventQueue* events);
+    virtual ~PortableTaskBarReceiver();
 
-	//! @name manipulators
-	//@{
+    //! @name manipulators
+    //@{
 
-	//! Update status
-	/*!
-	Determine the status and query required information from the server.
-	*/
-	void				updateStatus(INode*, const String& errorMsg);
+    //! Update status
+    /*!
+    Determine the status and query required information from the server.
+    */
+    void                updateStatus(INode*, const String& errorMsg);
 
-	//@}
+    //@}
 
-	// IArchTaskBarReceiver overrides
-	virtual void		showStatus() = 0;
-	virtual void		runMenu(int x, int y) = 0;
-	virtual void		primaryAction() = 0;
-	virtual void		lock() const;
-	virtual void		unlock() const;
-	virtual const Icon	getIcon() const = 0;
-	virtual std::string	getToolTip() const;
+    // IArchTaskBarReceiver overrides
+    virtual void        showStatus() = 0;
+    virtual void        runMenu(int x, int y) = 0;
+    virtual void        primaryAction() = 0;
+    virtual void        lock() const;
+    virtual void        unlock() const;
+    virtual const Icon    getIcon() const = 0;
+    virtual std::string    getToolTip() const;
 
 protected:
-	typedef std::vector<String> Clients;
-	enum EState {
-		kNotRunning,
-		kNotWorking,
-		kNotConnected,
-		kConnected,
-		kMaxState
-	};
+    typedef std::vector<String> Clients;
+    enum EState {
+        kNotRunning,
+        kNotWorking,
+        kNotConnected,
+        kConnected,
+        kMaxState
+    };
 
-	//! Get status
-	EState				getStatus() const;
+    //! Get status
+    EState                getStatus() const;
 
-	//! Get error message
-	const String&		getErrorMessage() const;
+    //! Get error message
+    const String&        getErrorMessage() const;
 
-	//! Quit app
-	/*!
-	Causes the application to quit gracefully
-	*/
-	void				quit();
+    //! Quit app
+    /*!
+    Causes the application to quit gracefully
+    */
+    void                quit();
 
-	//! Status change notification
-	/*!
-	Called when status changes.  The default implementation does
-	nothing.
-	*/
-	virtual void		onStatusChanged(INode* node);
+    //! Status change notification
+    /*!
+    Called when status changes.  The default implementation does
+    nothing.
+    */
+    virtual void        onStatusChanged(INode* node);
 
 private:
-	EState				m_state;
-	String				m_errorMessage;
+    EState                m_state;
+    String                m_errorMessage;
 
-	String				m_server;
-	Clients			m_clients;
+    String                m_server;
+    Clients            m_clients;
 
-	IEventQueue*		m_events;
+    IEventQueue*        m_events;
 };
 
 IArchTaskBarReceiver* createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events);

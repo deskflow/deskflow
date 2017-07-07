@@ -28,10 +28,10 @@ XThreadExit, XThread, or ...).
 */
 class XThreadExit : public XThread {
 public:
-	//! \c result is the result of the thread
-	XThreadExit(void* result) : m_result(result) { }
-	~XThreadExit() { }
+    //! \c result is the result of the thread
+    XThreadExit(void* result) : m_result(result) { }
+    ~XThreadExit() { }
 
 public:
-	void*				m_result;
+    void*                m_result;
 };

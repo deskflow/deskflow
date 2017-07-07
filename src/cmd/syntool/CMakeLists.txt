@@ -16,24 +16,12 @@
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
-include_directories(
-	../
-	../../lib/
-)
-
-if (UNIX)
-	include_directories(
-		../../..
-	)
-endif()
-
 add_executable(syntool ${sources})
 target_link_libraries(syntool
-	synergy arch base client common io ipc mt net platform server ${libs} ${OPENSSL_LIBS})
+    synlib arch base client common io ipc mt net platform server ${libs} ${OPENSSL_LIBS})
 
-if (CONF_CPACK)
-	install(TARGETS
-		syntool
-		COMPONENT core
-		DESTINATION bin)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    install (TARGETS syntool DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    install (TARGETS syntool DESTINATION bin)
 endif()

@@ -27,27 +27,27 @@
 //
 
 IpcClient::IpcClient(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
-	m_serverAddress(NetworkAddress(IPC_HOST, IPC_PORT)),
-	m_socket(events, socketMultiplexer),
-	m_server(nullptr),
-	m_events(events)
+    m_serverAddress(NetworkAddress(IPC_HOST, IPC_PORT)),
+    m_socket(events, socketMultiplexer),
+    m_server(nullptr),
+    m_events(events)
 {
-	init();
+    init();
 }
 
 IpcClient::IpcClient(IEventQueue* events, SocketMultiplexer* socketMultiplexer, int port) :
-	m_serverAddress(NetworkAddress(IPC_HOST, port)),
-	m_socket(events, socketMultiplexer),
-	m_server(nullptr),
-	m_events(events)
+    m_serverAddress(NetworkAddress(IPC_HOST, port)),
+    m_socket(events, socketMultiplexer),
+    m_server(nullptr),
+    m_events(events)
 {
-	init();
+    init();
 }
 
 void
 IpcClient::init()
 {
-	m_serverAddress.resolve();
+    m_serverAddress.resolve();
 }
 
 IpcClient::~IpcClient()
@@ -57,52 +57,52 @@ IpcClient::~IpcClient()
 void
 IpcClient::connect()
 {
-	m_events->adoptHandler(
-		m_events->forIDataSocket().connected(), m_socket.getEventTarget(),
-		new TMethodEventJob<IpcClient>(
-		this, &IpcClient::handleConnected));
+    m_events->adoptHandler(
+        m_events->forIDataSocket().connected(), m_socket.getEventTarget(),
+        new TMethodEventJob<IpcClient>(
+        this, &IpcClient::handleConnected));
 
-	m_socket.connect(m_serverAddress);
-	m_server = new IpcServerProxy(m_socket, m_events);
+    m_socket.connect(m_serverAddress);
+    m_server = new IpcServerProxy(m_socket, m_events);
 
-	m_events->adoptHandler(
-		m_events->forIpcServerProxy().messageReceived(), m_server,
-		new TMethodEventJob<IpcClient>(
-		this, &IpcClient::handleMessageReceived));
+    m_events->adoptHandler(
+        m_events->forIpcServerProxy().messageReceived(), m_server,
+        new TMethodEventJob<IpcClient>(
+        this, &IpcClient::handleMessageReceived));
 }
 
 void
 IpcClient::disconnect()
 {
-	m_events->removeHandler(m_events->forIDataSocket().connected(), m_socket.getEventTarget());
-	m_events->removeHandler(m_events->forIpcServerProxy().messageReceived(), m_server);
+    m_events->removeHandler(m_events->forIDataSocket().connected(), m_socket.getEventTarget());
+    m_events->removeHandler(m_events->forIpcServerProxy().messageReceived(), m_server);
 
-	m_server->disconnect();
-	delete m_server;
-	m_server = nullptr;
+    m_server->disconnect();
+    delete m_server;
+    m_server = nullptr;
 }
 
 void
 IpcClient::send(const IpcMessage& message)
 {
-	assert(m_server != nullptr);
-	m_server->send(message);
+    assert(m_server != nullptr);
+    m_server->send(message);
 }
 
 void
 IpcClient::handleConnected(const Event&, void*)
 {
-	m_events->addEvent(Event(
-		m_events->forIpcClient().connected(), this, m_server, Event::kDontFreeData));
+    m_events->addEvent(Event(
+        m_events->forIpcClient().connected(), this, m_server, Event::kDontFreeData));
 
-	IpcHelloMessage message(kIpcClientNode);
-	send(message);
+    IpcHelloMessage message(kIpcClientNode);
+    send(message);
 }
 
 void
 IpcClient::handleMessageReceived(const Event& e, void*)
 {
-	Event event(m_events->forIpcClient().messageReceived(), this);
-	event.setDataObject(e.getDataObject());
-	m_events->addEvent(event);
+    Event event(m_events->forIpcClient().messageReceived(), this);
+    event.setDataObject(e.getDataObject());
+    m_events->addEvent(event);
 }

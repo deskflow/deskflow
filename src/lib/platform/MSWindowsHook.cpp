@@ -24,105 +24,105 @@
 static const char* g_name = "synwinhk";
 
 MSWindowsHook::MSWindowsHook() :
-	m_initFunc(NULL),
-	m_cleanupFunc(NULL),
-	m_setSidesFunc(NULL),
-	m_setZoneFunc(NULL),
-	m_setModeFunc(NULL),
-	m_instance(NULL)
+    m_initFunc(NULL),
+    m_cleanupFunc(NULL),
+    m_setSidesFunc(NULL),
+    m_setZoneFunc(NULL),
+    m_setModeFunc(NULL),
+    m_instance(NULL)
 {
 }
 
 MSWindowsHook::~MSWindowsHook()
 {
-	cleanup();
+    cleanup();
 
-	if (m_instance != NULL) {
-		FreeLibrary(m_instance);
-	}
+    if (m_instance != NULL) {
+        FreeLibrary(m_instance);
+    }
 }
 
 void
 MSWindowsHook::loadLibrary()
 {
-	// load library
-	m_instance = LoadLibrary(g_name);
-	if (m_instance == NULL) {
-		LOG((CLOG_ERR "failed to load hook library, %s.dll is missing or invalid", g_name));
-		throw XScreenOpenFailure();
-	}
+    // load library
+    m_instance = LoadLibrary(g_name);
+    if (m_instance == NULL) {
+        LOG((CLOG_ERR "failed to load hook library, %s.dll is missing or invalid", g_name));
+        throw XScreenOpenFailure();
+    }
 
-	// look up functions
-	m_setSidesFunc = (SetSidesFunc)GetProcAddress(m_instance, "setSides");
-	m_setZoneFunc = (SetZoneFunc)GetProcAddress(m_instance, "setZone");
-	m_setModeFunc = (SetModeFunc)GetProcAddress(m_instance, "setMode");
-	m_initFunc = (InitFunc)GetProcAddress(m_instance, "init");
-	m_cleanupFunc = (CleanupFunc)GetProcAddress(m_instance, "cleanup");
+    // look up functions
+    m_setSidesFunc = (SetSidesFunc)GetProcAddress(m_instance, "setSides");
+    m_setZoneFunc = (SetZoneFunc)GetProcAddress(m_instance, "setZone");
+    m_setModeFunc = (SetModeFunc)GetProcAddress(m_instance, "setMode");
+    m_initFunc = (InitFunc)GetProcAddress(m_instance, "init");
+    m_cleanupFunc = (CleanupFunc)GetProcAddress(m_instance, "cleanup");
 
-	if (m_setSidesFunc == NULL ||
-		m_setZoneFunc == NULL ||
-		m_setModeFunc == NULL ||
-		m_initFunc == NULL ||
-		m_cleanupFunc == NULL) {
-		LOG((CLOG_ERR "failed to load hook function, %s.dll could be out of date", g_name));
-		throw XScreenOpenFailure();
-	}
+    if (m_setSidesFunc == NULL ||
+        m_setZoneFunc == NULL ||
+        m_setModeFunc == NULL ||
+        m_initFunc == NULL ||
+        m_cleanupFunc == NULL) {
+        LOG((CLOG_ERR "failed to load hook function, %s.dll could be out of date", g_name));
+        throw XScreenOpenFailure();
+    }
 
-	// initialize library
-	if (init(GetCurrentThreadId()) == 0) {
-		LOG((CLOG_ERR "failed to init %s.dll, another program may be using it", g_name));
-		LOG((CLOG_INFO "restarting your computer may solve this error"));
-		throw XScreenOpenFailure();
-	}
+    // initialize library
+    if (init(GetCurrentThreadId()) == 0) {
+        LOG((CLOG_ERR "failed to init %s.dll, another program may be using it", g_name));
+        LOG((CLOG_INFO "restarting your computer may solve this error"));
+        throw XScreenOpenFailure();
+    }
 }
 
 HINSTANCE
 MSWindowsHook::getInstance() const
 {
-	return m_instance;
+    return m_instance;
 }
 
 int
 MSWindowsHook::init(DWORD threadID)
 {
-	if (m_initFunc == NULL) {
-		return NULL;
-	}
-	return m_initFunc(threadID);
+    if (m_initFunc == NULL) {
+        return NULL;
+    }
+    return m_initFunc(threadID);
 }
 
 int
 MSWindowsHook::cleanup()
 {
-	if (m_cleanupFunc == NULL) {
-		return NULL;
-	}
-	return m_cleanupFunc();
+    if (m_cleanupFunc == NULL) {
+        return NULL;
+    }
+    return m_cleanupFunc();
 }
 
 void
 MSWindowsHook::setSides(UInt32 sides)
 {
-	if (m_setSidesFunc == NULL) {
-		return;
-	}
-	m_setSidesFunc(sides);
+    if (m_setSidesFunc == NULL) {
+        return;
+    }
+    m_setSidesFunc(sides);
 }
 
 void
 MSWindowsHook::setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h, SInt32 jumpZoneSize)
 {
-	if (m_setZoneFunc == NULL) {
-		return;
-	}
-	m_setZoneFunc(x, y, w, h, jumpZoneSize);
+    if (m_setZoneFunc == NULL) {
+        return;
+    }
+    m_setZoneFunc(x, y, w, h, jumpZoneSize);
 }
 
 void
 MSWindowsHook::setMode(EHookMode mode)
 {
-	if (m_setModeFunc == NULL) {
-		return;
-	}
-	m_setModeFunc(mode);
+    if (m_setModeFunc == NULL) {
+        return;
+    }
+    m_setModeFunc(mode);
 }
