@@ -24,6 +24,6 @@
 
 class ArchConsoleUnix : public ArchConsoleStd {
 public:
-	ArchConsoleUnix();
-	virtual ~ArchConsoleUnix();
+    ArchConsoleUnix();
+    virtual ~ArchConsoleUnix();
 };

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergyc/XWindowsClientTaskBarReceiver.h"
+#include "XWindowsClientTaskBarReceiver.h"
 #include "arch/Arch.h"
 
 //
@@ -24,45 +24,45 @@
 //
 
 CXWindowsClientTaskBarReceiver::CXWindowsClientTaskBarReceiver(
-		const BufferedLogOutputter*,
-		IEventQueue* events) :
-	ClientTaskBarReceiver(events)
+        const BufferedLogOutputter*,
+        IEventQueue* events) :
+    ClientTaskBarReceiver(events)
 {
-	// add ourself to the task bar
-	ARCH->addReceiver(this);
+    // add ourself to the task bar
+    ARCH->addReceiver(this);
 }
 
 CXWindowsClientTaskBarReceiver::~CXWindowsClientTaskBarReceiver()
 {
-	ARCH->removeReceiver(this);
+    ARCH->removeReceiver(this);
 }
 
 void
 CXWindowsClientTaskBarReceiver::showStatus()
 {
-	// do nothing
+    // do nothing
 }
 
 void
 CXWindowsClientTaskBarReceiver::runMenu(int, int)
 {
-	// do nothing
+    // do nothing
 }
 
 void
 CXWindowsClientTaskBarReceiver::primaryAction()
 {
-	// do nothing
+    // do nothing
 }
 
 const IArchTaskBarReceiver::Icon
 CXWindowsClientTaskBarReceiver::getIcon() const
 {
-	return NULL;
+    return NULL;
 }
 
 IArchTaskBarReceiver*
 createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events)
 {
-	return new CXWindowsClientTaskBarReceiver(logBuffer, events);
+    return new CXWindowsClientTaskBarReceiver(logBuffer, events);
 }

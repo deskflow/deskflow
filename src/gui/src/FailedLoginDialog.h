@@ -10,14 +10,14 @@ class FailedLoginDialog;
 
 class FailedLoginDialog : public QDialog
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+    
 public:
-	explicit FailedLoginDialog(QWidget *parent = 0, QString message = "");
-	~FailedLoginDialog();
-	
+    explicit FailedLoginDialog(QWidget *parent = 0, QString message = "");
+    ~FailedLoginDialog();
+    
 private:
-	Ui::FailedLoginDialog *ui;
+    Ui::FailedLoginDialog *ui;
 };
 
 #endif // FAILEDLOGINDIALOG_H

@@ -23,15 +23,15 @@
 //! Convert to/from UTF-16 encoding
 class OSXClipboardUTF16Converter : public OSXClipboardAnyTextConverter {
 public:
-	OSXClipboardUTF16Converter();
-	virtual ~OSXClipboardUTF16Converter();
+    OSXClipboardUTF16Converter();
+    virtual ~OSXClipboardUTF16Converter();
 
-	// IOSXClipboardAnyTextConverter overrides
-	virtual CFStringRef
-						getOSXFormat() const;
+    // IOSXClipboardAnyTextConverter overrides
+    virtual CFStringRef
+                        getOSXFormat() const;
 
 protected:
-	// OSXClipboardAnyTextConverter overrides
-	virtual String		doFromIClipboard(const String&) const;
-	virtual String		doToIClipboard(const String&) const;
+    // OSXClipboardAnyTextConverter overrides
+    virtual String        doFromIClipboard(const String&) const;
+    virtual String        doToIClipboard(const String&) const;
 };

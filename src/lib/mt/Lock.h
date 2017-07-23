@@ -32,18 +32,18 @@ exits (including by unwinding due to an exception).
 */
 class Lock {
 public:
-	//! Lock the mutex \c mutex
-	Lock(const Mutex* mutex);
-	//! Lock the condition variable \c cv
-	Lock(const CondVarBase* cv);
-	//! Unlock the mutex or condition variable
-	~Lock();
+    //! Lock the mutex \c mutex
+    Lock(const Mutex* mutex);
+    //! Lock the condition variable \c cv
+    Lock(const CondVarBase* cv);
+    //! Unlock the mutex or condition variable
+    ~Lock();
 
 private:
-	// not implemented
-	Lock(const Lock&);
-	Lock& operator=(const Lock&);
+    // not implemented
+    Lock(const Lock&);
+    Lock& operator=(const Lock&);
 
 private:
-	const Mutex*		m_mutex;
+    const Mutex*        m_mutex;
 };

@@ -25,32 +25,32 @@
 #include <cstring>
 #include <cstdlib>
 #if HAVE_LOCALE_H
-#	include <locale.h>
+#    include <locale.h>
 #endif
 #if HAVE_WCHAR_H || defined(_MSC_VER)
-#	include <wchar.h>
+#    include <wchar.h>
 #elif __APPLE__
-	// wtf?  Darwin puts mbtowc() et al. in stdlib
-#	include <cstdlib>
+    // wtf?  Darwin puts mbtowc() et al. in stdlib
+#    include <cstdlib>
 #else
-	// platform apparently has no wchar_t support.  provide dummy
-	// implementations.  hopefully at least the C++ compiler has
-	// a built-in wchar_t type.
+    // platform apparently has no wchar_t support.  provide dummy
+    // implementations.  hopefully at least the C++ compiler has
+    // a built-in wchar_t type.
 
 static inline
 int
 mbtowc(wchar_t* dst, const char* src, int n)
 {
-	*dst = static_cast<wchar_t>(*src);
-	return 1;
+    *dst = static_cast<wchar_t>(*src);
+    return 1;
 }
 
 static inline
 int
 wctomb(char* dst, wchar_t src)
 {
-	*dst = static_cast<char>(src);
-	return 1;
+    *dst = static_cast<char>(src);
+    return 1;
 }
 
 #endif

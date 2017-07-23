@@ -35,14 +35,15 @@
 #include <sstream>
 #include <iostream>
 #include <conio.h>
+#include <VersionHelpers.h>
 
 AppUtilWindows::AppUtilWindows(IEventQueue* events) :
-	m_events(events),
-	m_exitMode(kExitModeNormal)
+    m_events(events),
+    m_exitMode(kExitModeNormal)
 {
-	if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE)
+    if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE)
     {
-		throw XArch(new XArchEvalWindows());
+        throw XArch(new XArchEvalWindows());
     }
 }
 
@@ -52,9 +53,9 @@ AppUtilWindows::~AppUtilWindows()
 
 BOOL WINAPI AppUtilWindows::consoleHandler(DWORD)
 {
-	LOG((CLOG_INFO "got shutdown signal"));
-	IEventQueue* events = AppUtil::instance().app().getEvents();
-	events->addEvent(Event(Event::kQuit));
+    LOG((CLOG_INFO "got shutdown signal"));
+    IEventQueue* events = AppUtil::instance().app().getEvents();
+    events->addEvent(Event(Event::kQuit));
     return TRUE;
 }
 
@@ -62,128 +63,123 @@ static
 int 
 mainLoopStatic() 
 {
-	return AppUtil::instance().app().mainLoop();
+    return AppUtil::instance().app().mainLoop();
 }
 
 int 
 AppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
 {
-	app().initApp(argc, argv);
-	debugServiceWait();
+    app().initApp(argc, argv);
+    debugServiceWait();
 
-	// NB: what the hell does this do?!
-	app().argsBase().m_backend = false;
-	
-	return ArchMiscWindows::runDaemon(mainLoopStatic);
+    // NB: what the hell does this do?!
+    app().argsBase().m_backend = false;
+    
+    return ArchMiscWindows::runDaemon(mainLoopStatic);
 }
 
 void 
 AppUtilWindows::exitApp(int code)
 {
-	switch (m_exitMode) {
+    switch (m_exitMode) {
 
-		case kExitModeDaemon:
-			ArchMiscWindows::daemonFailed(code);
-			break;
+        case kExitModeDaemon:
+            ArchMiscWindows::daemonFailed(code);
+            break;
 
-		default:
-			throw XExitApp(code);
-	}
+        default:
+            throw XExitApp(code);
+    }
 }
 
 int daemonNTMainLoopStatic(int argc, const char** argv)
 {
-	return AppUtilWindows::instance().daemonNTMainLoop(argc, argv);
+    return AppUtilWindows::instance().daemonNTMainLoop(argc, argv);
 }
 
 int 
 AppUtilWindows::daemonNTStartup(int, char**)
 {
-	SystemLogger sysLogger(app().daemonName(), false);
-	m_exitMode = kExitModeDaemon;
-	return ARCH->daemonize(app().daemonName(), daemonNTMainLoopStatic);
+    SystemLogger sysLogger(app().daemonName(), false);
+    m_exitMode = kExitModeDaemon;
+    return ARCH->daemonize(app().daemonName(), daemonNTMainLoopStatic);
 }
 
 static
 int
 daemonNTStartupStatic(int argc, char** argv)
 {
-	return AppUtilWindows::instance().daemonNTStartup(argc, argv);
+    return AppUtilWindows::instance().daemonNTStartup(argc, argv);
 }
 
 static
 int
 foregroundStartupStatic(int argc, char** argv)
 {
-	return AppUtil::instance().app().foregroundStartup(argc, argv);
+    return AppUtil::instance().app().foregroundStartup(argc, argv);
 }
 
 void
 AppUtilWindows::beforeAppExit()
 {
-	// this can be handy for debugging, since the application is launched in
-	// a new console window, and will normally close on exit (making it so
-	// that we can't see error messages).
-	if (app().argsBase().m_pauseOnExit) {
-		std::cout << std::endl << "press any key to exit..." << std::endl;
-		int c = _getch();
-	}
+    // this can be handy for debugging, since the application is launched in
+    // a new console window, and will normally close on exit (making it so
+    // that we can't see error messages).
+    if (app().argsBase().m_pauseOnExit) {
+        std::cout << std::endl << "press any key to exit..." << std::endl;
+        int c = _getch();
+    }
 }
 
 int
 AppUtilWindows::run(int argc, char** argv)
 {
-    OSVERSIONINFO osvi;
-    ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
-    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    GetVersionEx(&osvi);
-
-    if (osvi.dwMajorVersion < 5 || (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion < 1)) {
-		throw std::runtime_error("synergy only supports windows xp and above.");
+    if (!IsWindowsXPSP3OrGreater()) {
+        throw std::runtime_error("Synergy only supports Windows XP SP3 and above.");
     }
 
-	// record window instance for tray icon, etc
-	ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+    // record window instance for tray icon, etc
+    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 
-	MSWindowsScreen::init(ArchMiscWindows::instanceWin32());
-	Thread::getCurrentThread().setPriority(-14);
+    MSWindowsScreen::init(ArchMiscWindows::instanceWin32());
+    Thread::getCurrentThread().setPriority(-14);
 
-	StartupFunc startup;
-	if (ArchMiscWindows::wasLaunchedAsService()) {
-		startup = &daemonNTStartupStatic;
-	} else {
-		startup = &foregroundStartupStatic;
-		app().argsBase().m_daemon = false;
-	}
+    StartupFunc startup;
+    if (ArchMiscWindows::wasLaunchedAsService()) {
+        startup = &daemonNTStartupStatic;
+    } else {
+        startup = &foregroundStartupStatic;
+        app().argsBase().m_daemon = false;
+    }
 
-	return app().runInner(argc, argv, NULL, startup);
+    return app().runInner(argc, argv, NULL, startup);
 }
 
 AppUtilWindows& 
 AppUtilWindows::instance()
 {
-	return (AppUtilWindows&)AppUtil::instance();
+    return (AppUtilWindows&)AppUtil::instance();
 }
 
 void 
 AppUtilWindows::debugServiceWait()
 {
-	if (app().argsBase().m_debugServiceWait)
-	{
-		while(true)
-		{
-			// this code is only executed when the process is launched via the
-			// windows service controller (and --debug-service-wait arg is 
-			// used). to debug, set a breakpoint on this line so that 
-			// execution is delayed until the debugger is attached.
-			ARCH->sleep(1);
-			LOG((CLOG_INFO "waiting for debugger to attach"));
-		}
-	}
+    if (app().argsBase().m_debugServiceWait)
+    {
+        while(true)
+        {
+            // this code is only executed when the process is launched via the
+            // windows service controller (and --debug-service-wait arg is 
+            // used). to debug, set a breakpoint on this line so that 
+            // execution is delayed until the debugger is attached.
+            ARCH->sleep(1);
+            LOG((CLOG_INFO "waiting for debugger to attach"));
+        }
+    }
 }
 
 void 
 AppUtilWindows::startNode()
 {
-	app().startNode();
+    app().startNode();
 }

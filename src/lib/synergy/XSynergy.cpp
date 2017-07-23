@@ -26,7 +26,7 @@
 String
 XBadClient::getWhat() const throw()
 {
-	return "XBadClient";
+    return "XBadClient";
 }
 
 
@@ -35,30 +35,30 @@ XBadClient::getWhat() const throw()
 //
 
 XIncompatibleClient::XIncompatibleClient(int major, int minor) :
-	m_major(major),
-	m_minor(minor)
+    m_major(major),
+    m_minor(minor)
 {
-	// do nothing
+    // do nothing
 }
 
 int
 XIncompatibleClient::getMajor() const throw()
 {
-	return m_major;
+    return m_major;
 }
 
 int
 XIncompatibleClient::getMinor() const throw()
 {
-	return m_minor;
+    return m_minor;
 }
 
 String
 XIncompatibleClient::getWhat() const throw()
 {
-	return format("XIncompatibleClient", "incompatible client %{1}.%{2}",
-								synergy::string::sprintf("%d", m_major).c_str(),
-								synergy::string::sprintf("%d", m_minor).c_str());
+    return format("XIncompatibleClient", "incompatible client %{1}.%{2}",
+                                synergy::string::sprintf("%d", m_major).c_str(),
+                                synergy::string::sprintf("%d", m_minor).c_str());
 }
 
 
@@ -67,21 +67,21 @@ XIncompatibleClient::getWhat() const throw()
 //
 
 XDuplicateClient::XDuplicateClient(const String& name) :
-	m_name(name)
+    m_name(name)
 {
-	// do nothing
+    // do nothing
 }
 
 const String&
 XDuplicateClient::getName() const throw()
 {
-	return m_name;
+    return m_name;
 }
 
 String
 XDuplicateClient::getWhat() const throw()
 {
-	return format("XDuplicateClient", "duplicate client %{1}", m_name.c_str());
+    return format("XDuplicateClient", "duplicate client %{1}", m_name.c_str());
 }
 
 
@@ -90,21 +90,21 @@ XDuplicateClient::getWhat() const throw()
 //
 
 XUnknownClient::XUnknownClient(const String& name) :
-	m_name(name)
+    m_name(name)
 {
-	// do nothing
+    // do nothing
 }
 
 const String&
 XUnknownClient::getName() const throw()
 {
-	return m_name;
+    return m_name;
 }
 
 String
 XUnknownClient::getWhat() const throw()
 {
-	return format("XUnknownClient", "unknown client %{1}", m_name.c_str());
+    return format("XUnknownClient", "unknown client %{1}", m_name.c_str());
 }
 
 
@@ -113,21 +113,21 @@ XUnknownClient::getWhat() const throw()
 //
 
 XExitApp::XExitApp(int code) :
-	m_code(code)
+    m_code(code)
 {
-	// do nothing
+    // do nothing
 }
 
 int
 XExitApp::getCode() const throw()
 {
-	return m_code;
+    return m_code;
 }
 
 String
 XExitApp::getWhat() const throw()
 {
-	return format(
-		"XExitApp", "exiting with code %{1}", 
-		synergy::string::sprintf("%d", m_code).c_str());
+    return format(
+        "XExitApp", "exiting with code %{1}", 
+        synergy::string::sprintf("%d", m_code).c_str());
 }

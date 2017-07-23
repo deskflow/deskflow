@@ -27,40 +27,40 @@ This interface defines operations for querying system info.
 */
 class IArchSystem : public IInterface {
 public:
-	//! @name accessors
-	//@{
+    //! @name accessors
+    //@{
 
-	//! Identify the OS
-	/*!
-	Returns a string identifying the operating system.
-	*/
-	virtual std::string	getOSName() const = 0;
+    //! Identify the OS
+    /*!
+    Returns a string identifying the operating system.
+    */
+    virtual std::string    getOSName() const = 0;
 
-	//! Identify the platform
-	/*!
-	Returns a string identifying the platform this OS is running on.
-	*/
-	virtual std::string getPlatformName() const = 0;
-	//@}
+    //! Identify the platform
+    /*!
+    Returns a string identifying the platform this OS is running on.
+    */
+    virtual std::string getPlatformName() const = 0;
+    //@}
 
-	//! Get a Synergy setting
-	/*!
-	Reads a Synergy setting from the system.
-	*/
-	virtual std::string setting(const std::string& valueName) const = 0;
-	//@}
+    //! Get a Synergy setting
+    /*!
+    Reads a Synergy setting from the system.
+    */
+    virtual std::string setting(const std::string& valueName) const = 0;
+    //@}
 
-	//! Set a Synergy setting
-	/*!
-	Writes a Synergy setting from the system.
-	*/
-	virtual void setting(const std::string& valueName, const std::string& valueString) const = 0;
-	//@}
+    //! Set a Synergy setting
+    /*!
+    Writes a Synergy setting from the system.
+    */
+    virtual void setting(const std::string& valueName, const std::string& valueString) const = 0;
+    //@}
 
-	//! Get the pathnames of the libraries used by Synergy
-	/*
-	Returns a string containing the full path names of all loaded libraries at the point it is called.
-	*/
-	virtual std::string getLibsUsed(void) const = 0;
-	//@}
+    //! Get the pathnames of the libraries used by Synergy
+    /*
+    Returns a string containing the full path names of all loaded libraries at the point it is called.
+    */
+    virtual std::string getLibsUsed(void) const = 0;
+    //@}
 };

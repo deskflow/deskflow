@@ -25,48 +25,48 @@
 QSynergyApplication* QSynergyApplication::s_Instance = NULL;
 
 QSynergyApplication::QSynergyApplication(int& argc, char** argv) :
-	QApplication(argc, argv),
-	m_Translator(NULL)
+    QApplication(argc, argv),
+    m_Translator(NULL)
 {
-	s_Instance = this;
+    s_Instance = this;
 }
 
 QSynergyApplication::~QSynergyApplication()
 {
-	delete m_Translator;
+    delete m_Translator;
 }
 
 void QSynergyApplication::commitData(QSessionManager&)
 {
-	foreach(QWidget* widget, topLevelWidgets())
-	{
-		MainWindow* mainWindow = qobject_cast<MainWindow*>(widget);
-		if (mainWindow)
-			mainWindow->saveSettings();
-	}
+    foreach(QWidget* widget, topLevelWidgets())
+    {
+        MainWindow* mainWindow = qobject_cast<MainWindow*>(widget);
+        if (mainWindow)
+            mainWindow->saveSettings();
+    }
 }
 
 QSynergyApplication* QSynergyApplication::getInstance()
 {
-	return s_Instance;
+    return s_Instance;
 }
 
 void QSynergyApplication::switchTranslator(QString lang)
 {
-	if (m_Translator != NULL)
-	{
-		removeTranslator(m_Translator);
-		delete m_Translator;
-	}
+    if (m_Translator != NULL)
+    {
+        removeTranslator(m_Translator);
+        delete m_Translator;
+    }
 
-	QResource locale(":/res/lang/gui_" + lang + ".qm");
-	m_Translator = new QTranslator();
-	m_Translator->load(locale.data(), locale.size());
-	installTranslator(m_Translator);
+    QResource locale(":/res/lang/gui_" + lang + ".qm");
+    m_Translator = new QTranslator();
+    m_Translator->load(locale.data(), locale.size());
+    installTranslator(m_Translator);
 }
 
 void QSynergyApplication::setTranslator(QTranslator* translator)
 {
-	m_Translator = translator;
-	installTranslator(m_Translator);
+    m_Translator = translator;
+    installTranslator(m_Translator);
 }

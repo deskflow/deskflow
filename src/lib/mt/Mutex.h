@@ -31,49 +31,49 @@ it tries it will deadlock itself.
 */
 class Mutex {
 public:
-	Mutex();
-	//! Equivalent to default c'tor
-	/*!
-	Copy c'tor doesn't copy anything.  It just makes it possible to
-	copy objects that contain a mutex.
-	*/
-	Mutex(const Mutex&);
-	~Mutex();
+    Mutex();
+    //! Equivalent to default c'tor
+    /*!
+    Copy c'tor doesn't copy anything.  It just makes it possible to
+    copy objects that contain a mutex.
+    */
+    Mutex(const Mutex&);
+    ~Mutex();
 
-	//! @name manipulators
-	//@{
+    //! @name manipulators
+    //@{
 
-	//! Does nothing
-	/*!
-	This does nothing.  It just makes it possible to assign objects
-	that contain a mutex.
-	*/
-	Mutex&				operator=(const Mutex&);
+    //! Does nothing
+    /*!
+    This does nothing.  It just makes it possible to assign objects
+    that contain a mutex.
+    */
+    Mutex&                operator=(const Mutex&);
 
-	//@}
-	//! @name accessors
-	//@{
+    //@}
+    //! @name accessors
+    //@{
 
-	//! Lock the mutex
-	/*!
-	Locks the mutex, which must not have been previously locked by the
-	calling thread.  This blocks if the mutex is already locked by another
-	thread.
+    //! Lock the mutex
+    /*!
+    Locks the mutex, which must not have been previously locked by the
+    calling thread.  This blocks if the mutex is already locked by another
+    thread.
 
-	(cancellation point)
-	*/
-	void				lock() const;
+    (cancellation point)
+    */
+    void                lock() const;
 
-	//! Unlock the mutex
-	/*!
-	Unlocks the mutex, which must have been previously locked by the
-	calling thread.
-	*/
-	void				unlock() const;
+    //! Unlock the mutex
+    /*!
+    Unlocks the mutex, which must have been previously locked by the
+    calling thread.
+    */
+    void                unlock() const;
 
-	//@}
+    //@}
 
 private:
-	friend class CondVarBase;
-	ArchMutex			m_mutex;
+    friend class CondVarBase;
+    ArchMutex            m_mutex;
 };

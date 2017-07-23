@@ -41,24 +41,24 @@ Thrown when a client attempting to connect has an incompatible version.
 */
 class XIncompatibleClient : public XSynergy {
 public:
-	XIncompatibleClient(int major, int minor);
+    XIncompatibleClient(int major, int minor);
 
-	//! @name accessors
-	//@{
+    //! @name accessors
+    //@{
 
-	//! Get client's major version number
-	int					getMajor() const throw();
-	//! Get client's minor version number
-	int					getMinor() const throw();
+    //! Get client's major version number
+    int                    getMajor() const throw();
+    //! Get client's minor version number
+    int                    getMinor() const throw();
 
-	//@}
+    //@}
 
 protected:
-	virtual String		getWhat() const throw();
+    virtual String        getWhat() const throw();
 
 private:
-	int					m_major;
-	int					m_minor;
+    int                    m_major;
+    int                    m_minor;
 };
 
 //! Client already connected exception
@@ -68,23 +68,23 @@ a client that is already connected.
 */
 class XDuplicateClient : public XSynergy {
 public:
-	XDuplicateClient(const String& name);
-	virtual ~XDuplicateClient() _NOEXCEPT { }
+    XDuplicateClient(const String& name);
+    virtual ~XDuplicateClient() _NOEXCEPT { }
 
-	//! @name accessors
-	//@{
+    //! @name accessors
+    //@{
 
-	//! Get client's name
-	virtual const String&
-						getName() const throw();
+    //! Get client's name
+    virtual const String&
+                        getName() const throw();
 
-	//@}
+    //@}
 
 protected:
-	virtual String		getWhat() const throw();
+    virtual String        getWhat() const throw();
 
 private:
-	String				m_name;
+    String                m_name;
 };
 
 //! Client not in map exception
@@ -94,23 +94,23 @@ unknown to the server.
 */
 class XUnknownClient : public XSynergy {
 public:
-	XUnknownClient(const String& name);
-	virtual ~XUnknownClient() _NOEXCEPT { }
+    XUnknownClient(const String& name);
+    virtual ~XUnknownClient() _NOEXCEPT { }
 
-	//! @name accessors
-	//@{
+    //! @name accessors
+    //@{
 
-	//! Get the client's name
-	virtual const String&
-						getName() const throw();
+    //! Get the client's name
+    virtual const String&
+                        getName() const throw();
 
-	//@}
+    //@}
 
 protected:
-	virtual String		getWhat() const throw();
+    virtual String        getWhat() const throw();
 
 private:
-	String				m_name;
+    String                m_name;
 };
 
 //! Generic exit eception
@@ -121,15 +121,15 @@ exit(int).
 */
 class XExitApp : public XSynergy {
 public:
-	XExitApp(int code);
-	virtual ~XExitApp() _NOEXCEPT { }
+    XExitApp(int code);
+    virtual ~XExitApp() _NOEXCEPT { }
 
-	//! Get the exit code
-	int getCode() const throw();
+    //! Get the exit code
+    int getCode() const throw();
 
 protected:
-	virtual String	getWhat() const throw();
-	
+    virtual String    getWhat() const throw();
+    
 private:
-	int	m_code;
+    int    m_code;
 };

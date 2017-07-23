@@ -34,29 +34,29 @@ class MSWindowsWatchdog;
 class DaemonApp {
 
 public:
-	DaemonApp();
-	virtual ~DaemonApp();
-	int run(int argc, char** argv);
-	void mainLoop(bool logToFile);
+    DaemonApp();
+    virtual ~DaemonApp();
+    int run(int argc, char** argv);
+    void mainLoop(bool logToFile);
 
 private:
-	void daemonize();
-	void foregroundError(const char* message);
-	std::string			logFilename();
-	void				handleIpcMessage(const Event&, void*);
+    void daemonize();
+    void foregroundError(const char* message);
+    std::string            logFilename();
+    void                handleIpcMessage(const Event&, void*);
 
 public:
-	static DaemonApp* s_instance;
+    static DaemonApp* s_instance;
 
 #if SYSAPI_WIN32
-	MSWindowsWatchdog*	m_watchdog;
+    MSWindowsWatchdog*    m_watchdog;
 #endif
 
 private:
-	IpcServer*			m_ipcServer;
-	IpcLogOutputter*	m_ipcLogOutputter;
-	IEventQueue*		m_events;
-	FileLogOutputter*	m_fileLogOutputter;
+    IpcServer*            m_ipcServer;
+    IpcLogOutputter*    m_ipcLogOutputter;
+    IEventQueue*        m_events;
+    FileLogOutputter*    m_fileLogOutputter;
 };
 
 #define LOG_FILENAME "synergyd.log"

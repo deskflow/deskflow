@@ -29,34 +29,34 @@
 class IEventQueue;
 
 enum AppExitMode {
-	kExitModeNormal,
-	kExitModeDaemon
+    kExitModeNormal,
+    kExitModeDaemon
 };
 
 class AppUtilWindows : public AppUtil {
 public:
-	AppUtilWindows(IEventQueue* events);
-	virtual ~AppUtilWindows();
+    AppUtilWindows(IEventQueue* events);
+    virtual ~AppUtilWindows();
 
-	int daemonNTStartup(int, char**);
-	
-	int daemonNTMainLoop(int argc, const char** argv);
+    int daemonNTStartup(int, char**);
+    
+    int daemonNTMainLoop(int argc, const char** argv);
 
-	void debugServiceWait();
+    void debugServiceWait();
 
-	int run(int argc, char** argv);
+    int run(int argc, char** argv);
 
-	void exitApp(int code);
+    void exitApp(int code);
 
-	void beforeAppExit();
+    void beforeAppExit();
 
-	static AppUtilWindows& instance();
+    static AppUtilWindows& instance();
 
-	void startNode();
+    void startNode();
 
 private:
-	AppExitMode			m_exitMode;
-	IEventQueue*		m_events;
+    AppExitMode            m_exitMode;
+    IEventQueue*        m_events;
 
-	static BOOL WINAPI consoleHandler(DWORD Event);
+    static BOOL WINAPI consoleHandler(DWORD Event);
 };

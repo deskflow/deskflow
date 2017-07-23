@@ -18,30 +18,30 @@
 
 #include "VersionCheckerTests.h"
 #include "VersionChecker.cpp"
-#include "../../gui/tmp/debug/moc_VersionChecker.cpp"
+#include "../../gui/tmp/release/moc_VersionChecker.cpp"
 
 #include <QtTest/QTest>
 
 void VersionCheckerTests::compareVersions()
 {
-	VersionChecker versionChecker;
+    VersionChecker versionChecker;
 
-	// compare majors
-	QCOMPARE(versionChecker.compareVersions("1.0.0", "2.0.0"), 1);
-	QCOMPARE(versionChecker.compareVersions("2.0.0", "1.0.0"), -1);
-	QCOMPARE(versionChecker.compareVersions("1.0.0", "1.0.0"), 0);
-	QCOMPARE(versionChecker.compareVersions("1.4.8", "2.4.7"), 1);
-	QCOMPARE(versionChecker.compareVersions("2.4.7", "1.4.8"), -1);
+    // compare majors
+    QCOMPARE(versionChecker.compareVersions("1.0.0", "2.0.0"), 1);
+    QCOMPARE(versionChecker.compareVersions("2.0.0", "1.0.0"), -1);
+    QCOMPARE(versionChecker.compareVersions("1.0.0", "1.0.0"), 0);
+    QCOMPARE(versionChecker.compareVersions("1.4.8", "2.4.7"), 1);
+    QCOMPARE(versionChecker.compareVersions("2.4.7", "1.4.8"), -1);
 
-	// compare minors
-	QCOMPARE(versionChecker.compareVersions("1.3.0", "1.4.0"), 1);
-	QCOMPARE(versionChecker.compareVersions("1.4.0", "1.3.0"), -1);
-	QCOMPARE(versionChecker.compareVersions("1.4.0", "1.4.0"), 0);
-	QCOMPARE(versionChecker.compareVersions("1.3.8", "1.4.7"), 1);
-	QCOMPARE(versionChecker.compareVersions("1.4.7", "1.3.8"), -1);
+    // compare minors
+    QCOMPARE(versionChecker.compareVersions("1.3.0", "1.4.0"), 1);
+    QCOMPARE(versionChecker.compareVersions("1.4.0", "1.3.0"), -1);
+    QCOMPARE(versionChecker.compareVersions("1.4.0", "1.4.0"), 0);
+    QCOMPARE(versionChecker.compareVersions("1.3.8", "1.4.7"), 1);
+    QCOMPARE(versionChecker.compareVersions("1.4.7", "1.3.8"), -1);
 
-	// compare revs
-	QCOMPARE(versionChecker.compareVersions("1.4.7", "1.4.8"), 1);
-	QCOMPARE(versionChecker.compareVersions("1.4.8", "1.4.7"), -1);
-	QCOMPARE(versionChecker.compareVersions("1.4.7", "1.4.7"), 0);
+    // compare revs
+    QCOMPARE(versionChecker.compareVersions("1.4.7", "1.4.8"), 1);
+    QCOMPARE(versionChecker.compareVersions("1.4.8", "1.4.7"), -1);
+    QCOMPARE(versionChecker.compareVersions("1.4.7", "1.4.7"), 0);
 }

@@ -27,21 +27,21 @@ class IEventQueue;
 //! Event queue buffer for OS X
 class OSXEventQueueBuffer : public IEventQueueBuffer {
 public:
-	OSXEventQueueBuffer(IEventQueue* eventQueue);
-	virtual ~OSXEventQueueBuffer();
+    OSXEventQueueBuffer(IEventQueue* eventQueue);
+    virtual ~OSXEventQueueBuffer();
 
-	// IEventQueueBuffer overrides
-	virtual void		init();
-	virtual void		waitForEvent(double timeout);
-	virtual Type		getEvent(Event& event, UInt32& dataID);
-	virtual bool		addEvent(UInt32 dataID);
-	virtual bool		isEmpty() const;
-	virtual EventQueueTimer*
-						newTimer(double duration, bool oneShot) const;
-	virtual void		deleteTimer(EventQueueTimer*) const;
+    // IEventQueueBuffer overrides
+    virtual void        init();
+    virtual void        waitForEvent(double timeout);
+    virtual Type        getEvent(Event& event, UInt32& dataID);
+    virtual bool        addEvent(UInt32 dataID);
+    virtual bool        isEmpty() const;
+    virtual EventQueueTimer*
+                        newTimer(double duration, bool oneShot) const;
+    virtual void        deleteTimer(EventQueueTimer*) const;
 
 private:
-	EventRef			m_event;
-	IEventQueue*		m_eventQueue;
-	EventQueueRef		m_carbonEventQueue;
+    EventRef            m_event;
+    IEventQueue*        m_eventQueue;
+    EventQueueRef        m_carbonEventQueue;
 };

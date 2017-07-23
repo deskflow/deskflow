@@ -29,40 +29,40 @@ class IEventQueue;
 //! Implementation of ClientTaskBarReceiver for Microsoft Windows
 class MSWindowsClientTaskBarReceiver : public ClientTaskBarReceiver {
 public:
-	MSWindowsClientTaskBarReceiver(HINSTANCE, const BufferedLogOutputter*, IEventQueue* events);
-	virtual ~MSWindowsClientTaskBarReceiver();
+    MSWindowsClientTaskBarReceiver(HINSTANCE, const BufferedLogOutputter*, IEventQueue* events);
+    virtual ~MSWindowsClientTaskBarReceiver();
 
-	// IArchTaskBarReceiver overrides
-	virtual void		showStatus();
-	virtual void		runMenu(int x, int y);
-	virtual void		primaryAction();
-	virtual const Icon	getIcon() const;
-	void cleanup();
+    // IArchTaskBarReceiver overrides
+    virtual void        showStatus();
+    virtual void        runMenu(int x, int y);
+    virtual void        primaryAction();
+    virtual const Icon    getIcon() const;
+    void cleanup();
 
 protected:
-	void				copyLog() const;
+    void                copyLog() const;
 
-	// ClientTaskBarReceiver overrides
-	virtual void		onStatusChanged();
-
-private:
-	HICON				loadIcon(UINT);
-	void				deleteIcon(HICON);
-	void				createWindow();
-	void				destroyWindow();
-
-	BOOL				dlgProc(HWND hwnd,
-							UINT msg, WPARAM wParam, LPARAM lParam);
-	static BOOL CALLBACK
-						staticDlgProc(HWND hwnd,
-							UINT msg, WPARAM wParam, LPARAM lParam);
+    // ClientTaskBarReceiver overrides
+    virtual void        onStatusChanged();
 
 private:
-	HINSTANCE			m_appInstance;
-	HWND				m_window;
-	HMENU				m_menu;
-	HICON				m_icon[kMaxState];
-	const BufferedLogOutputter*	m_logBuffer;
+    HICON                loadIcon(UINT);
+    void                deleteIcon(HICON);
+    void                createWindow();
+    void                destroyWindow();
 
-	static const UINT	s_stateToIconID[];
+    BOOL                dlgProc(HWND hwnd,
+                            UINT msg, WPARAM wParam, LPARAM lParam);
+    static BOOL CALLBACK
+                        staticDlgProc(HWND hwnd,
+                            UINT msg, WPARAM wParam, LPARAM lParam);
+
+private:
+    HINSTANCE            m_appInstance;
+    HWND                m_window;
+    HMENU                m_menu;
+    HICON                m_icon[kMaxState];
+    const BufferedLogOutputter*    m_logBuffer;
+
+    static const UINT    s_stateToIconID[];
 };
