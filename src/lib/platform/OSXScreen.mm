@@ -1979,7 +1979,7 @@ OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 			break;
 			}
 			
-			LOG((CLOG_WARN "unknown quartz event type: 0x%02x", type));
+			LOG((CLOG_DEBUG3 "unknown quartz event type: 0x%02x", type));
 	}
 	
 	if (screen->m_isOnScreen) {
