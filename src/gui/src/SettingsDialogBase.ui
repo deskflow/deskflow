@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SettingsDialogBase</class>
+ <widget class="QDialog" name="SettingsDialogBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>368</width>
+    <height>380</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Settings</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="m_pGroupAdvanced">
+     <property name="title">
+      <string>&amp;Miscellaneous</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="1" column="0">
+       <widget class="QLabel" name="m_pLabel_19">
+        <property name="minimumSize">
+         <size>
+          <width>75</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Sc&amp;reen name:</string>
+        </property>
+        <property name="buddy">
+         <cstring>m_pLineEditScreenName</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="m_pLineEditScreenName">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="m_pLabel_20">
+        <property name="text">
+         <string>P&amp;ort:</string>
+        </property>
+        <property name="buddy">
+         <cstring>m_pSpinBoxPort</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QSpinBox" name="m_pSpinBoxPort">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximum">
+         <number>65535</number>
+        </property>
+        <property name="value">
+         <number>24800</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="m_pLabel_21">
+        <property name="text">
+         <string>&amp;Interface:</string>
+        </property>
+        <property name="buddy">
+         <cstring>m_pLineEditInterface</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="m_pLineEditInterface">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="m_pLabel_27">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>75</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>&amp;Language:</string>
+        </property>
+        <property name="buddy">
+         <cstring>m_pComboLanguage</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="m_pComboLanguage"/>
+      </item>
+      <item row="5" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
+        <property name="text">
+         <string>&amp;Hide on startup</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QComboBox" name="m_pComboElevate">
+        <property name="toolTip">
+         <string>Specify when the Synergy service should run at an elevated privilege level</string>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <item>
+         <property name="text">
+          <string>As Needed</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Always</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Never</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="m_pLabelElevate">
+        <property name="text">
+         <string>Elevate</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="m_pGroupNetworkSecurity">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>&amp;Network Security</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxEnableCrypto">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Use &amp;SSL encryption</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="m_pGroupLog">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Logging</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="m_pLabel_3">
+        <property name="minimumSize">
+         <size>
+          <width>75</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>&amp;Logging level:</string>
+        </property>
+        <property name="buddy">
+         <cstring>m_pComboLogLevel</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="QComboBox" name="m_pComboLogLevel">
+        <item>
+         <property name="text">
+          <string>Error</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Warning</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Note</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Info</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Debug</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Debug1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Debug2</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxLogToFile">
+        <property name="text">
+         <string>Log to file:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="m_pLineEditLogFilename">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="m_pButtonBrowseLog">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Browse...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>m_pComboLanguage</tabstop>
+  <tabstop>m_pLineEditScreenName</tabstop>
+  <tabstop>m_pSpinBoxPort</tabstop>
+  <tabstop>m_pLineEditInterface</tabstop>
+  <tabstop>m_pComboElevate</tabstop>
+  <tabstop>m_pCheckBoxAutoHide</tabstop>
+  <tabstop>m_pCheckBoxEnableCrypto</tabstop>
+  <tabstop>m_pComboLogLevel</tabstop>
+  <tabstop>m_pCheckBoxLogToFile</tabstop>
+  <tabstop>m_pLineEditLogFilename</tabstop>
+  <tabstop>m_pButtonBrowseLog</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>SettingsDialogBase</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>266</x>
+     <y>340</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>SettingsDialogBase</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>334</x>
+     <y>340</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

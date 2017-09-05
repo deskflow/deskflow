@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<languages>
+  <language ietfCode="en" name="English" />
+	<language ietfCode="ca-AD" name="Català (Andorra)" />
+	<language ietfCode="cs-CZ" name="Čeština" />
+	<language ietfCode="cy" name="Cymraeg" />
+	<language ietfCode="da" name="Dansk" />
+	<language ietfCode="de" name="Deutsch" />
+	<language ietfCode="es" name="Español" />
+	<language ietfCode="fr" name="Français" />
+	<language ietfCode="hr-HR" name="Hrvatski" />
+	<language ietfCode="id" name="Indonesia" />
+	<language ietfCode="it" name="Italiano" />
+	<language ietfCode="lv" name="Latvijas" />
+	<language ietfCode="lt" name="Lietuvos" />
+	<language ietfCode="hu-HU" name="Magyar" />
+	<language ietfCode="nl-NL" name="Nederlands" />
+	<language ietfCode="no" name="Norsk" />
+	<language ietfCode="pl-PL" name="Polski" />
+	<language ietfCode="pt-PT" name="Português" />
+	<language ietfCode="pt-BR" name="Português (Brasil)" />
+	<language ietfCode="ro" name="Română" />
+	<language ietfCode="sq-AL" name="Shqiptar" />
+	<language ietfCode="sl-SI" name="Slovenščina" />
+	<language ietfCode="sk-SK" name="Slovenčina" />
+	<language ietfCode="fi" name="Suomi" />
+	<language ietfCode="sv" name="Svenska" />
+	<language ietfCode="vi" name="Tiếng Việt" />
+	<language ietfCode="tr-TR" name="Türkçe" />
+	<language ietfCode="bg-BG" name="български" />
+	<language ietfCode="ru" name="Русский" />
+	<language ietfCode="sr" name="српски" />
+	<language ietfCode="uk" name="Український" />
+	<language ietfCode="grk" name="Ελληνικά" />
+	<language ietfCode="he" name="עברית" />
+	<language ietfCode="ar" name="العربية" />
+	<language ietfCode="pes-IR" name="فارسی" />
+	<language ietfCode="ur" name="اردو" />
+	<language ietfCode="mr" name="मराठी" />
+	<language ietfCode="si" name="Sඉන්හල" />
+	<language ietfCode="th-TH" name="ภาษาไทย" />
+	<language ietfCode="zh-CN" name="中文 (简体)" />
+	<language ietfCode="zh-TW" name="中文 (繁體)" />
+	<language ietfCode="ja-JP" name="日本語" />
+	<language ietfCode="ko" name="한국어" />
+</languages>

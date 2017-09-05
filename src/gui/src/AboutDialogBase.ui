@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AboutDialogBase</class>
+ <widget class="QDialog" name="AboutDialogBase">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>450</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>450</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>450</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>About Synergy</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QGridLayout">
+   <item row="2" column="1" colspan="2">
+    <widget class="QLabel" name="label_3">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>&lt;p&gt;
+Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
+Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Visit our website for help and info (symless.com).
+&lt;/p&gt;</string>
+     </property>
+     <property name="margin">
+      <number>1</number>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="2">
+    <spacer>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Preferred</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>100</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Synergy.qrc">:/res/image/about.png</pixmap>
+     </property>
+     <property name="margin">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="2">
+    <spacer name="spacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>5</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="5" column="1" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Version:</string>
+       </property>
+       <property name="margin">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="m_pLabelSynergyVersion">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Unknown</string>
+       </property>
+       <property name="margin">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="6" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Build Date: </string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="m_pLabelBuildDate">
+       <property name="text">
+        <string>Unknown</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonOk">
+       <property name="text">
+        <string>&amp;Ok</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="Synergy.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>buttonOk</sender>
+   <signal>clicked()</signal>
+   <receiver>AboutDialogBase</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>315</x>
+     <y>374</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>301</x>
+     <y>3</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

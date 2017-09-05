@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ActionDialogBase</class>
+ <widget class="QDialog" name="ActionDialogBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>372</width>
+    <height>484</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Configure Action</string>
+  </property>
+  <layout class="QVBoxLayout">
+   <item>
+    <widget class="QGroupBox" name="m_pGroupType">
+     <property name="title">
+      <string>Choose the action to perform</string>
+     </property>
+     <layout class="QVBoxLayout">
+      <item>
+       <widget class="QRadioButton" name="m_pRadioPress">
+        <property name="text">
+         <string>Press a hotkey</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="m_pRadioRelease">
+        <property name="text">
+         <string>Release a hotkey</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="m_pRadioPressAndRelease">
+        <property name="text">
+         <string>Press and release a hotkey</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="KeySequenceWidget" name="m_pKeySequenceWidgetHotkey">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>1</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>256</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="m_pGroupBoxScreens">
+        <property name="title">
+         <string>only on these screens</string>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <layout class="QHBoxLayout">
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QListWidget" name="m_pListScreens">
+           <property name="minimumSize">
+            <size>
+             <width>128</width>
+             <height>64</height>
+            </size>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::ExtendedSelection</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QRadioButton" name="m_pRadioSwitchToScreen">
+          <property name="text">
+           <string>Switch to screen</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QComboBox" name="m_pComboSwitchToScreen">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QRadioButton" name="m_pRadioSwitchInDirection">
+          <property name="text">
+           <string>Switch in direction</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QComboBox" name="m_pComboSwitchInDirection">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <item>
+           <property name="text">
+            <string>left</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>right</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>up</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>down</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QRadioButton" name="m_pRadioLockCursorToScreen">
+          <property name="text">
+           <string>Lock cursor to screen</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QComboBox" name="m_pComboLockCursorToScreen">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <item>
+           <property name="text">
+            <string>toggle</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>on</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>off</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>This action is performed when</string>
+     </property>
+     <layout class="QHBoxLayout">
+      <item>
+       <widget class="QRadioButton" name="m_pRadioHotkeyPressed">
+        <property name="text">
+         <string>the hotkey is pressed</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="m_pRadioHotkeyReleased">
+        <property name="text">
+         <string>the hotkey is released</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KeySequenceWidget</class>
+   <extends>QLineEdit</extends>
+   <header>KeySequenceWidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>ActionDialogBase</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>245</x>
+     <y>474</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>ActionDialogBase</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>313</x>
+     <y>474</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pGroupType</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>104</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>110</x>
+     <y>132</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioSwitchInDirection</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>118</x>
+     <y>322</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>81</x>
+     <y>129</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioLockCursorToScreen</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>353</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>68</x>
+     <y>126</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioPress</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>48</x>
+     <y>48</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>45</x>
+     <y>129</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioRelease</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>135</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>148</x>
+     <y>125</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioPressAndRelease</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>194</x>
+     <y>100</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>201</x>
+     <y>125</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioSwitchToScreen</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pComboSwitchToScreen</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>148</x>
+     <y>291</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>290</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioSwitchInDirection</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pComboSwitchInDirection</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
+     <y>322</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>321</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioLockCursorToScreen</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pComboLockCursorToScreen</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>180</x>
+     <y>353</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>352</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioPress</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pGroupBoxScreens</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>25</x>
+     <y>47</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>33</x>
+     <y>155</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioSwitchToScreen</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pGroupBoxScreens</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>48</x>
+     <y>278</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>98</x>
+     <y>153</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioRelease</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pGroupBoxScreens</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>264</x>
+     <y>67</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>241</x>
+     <y>158</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioPressAndRelease</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pGroupBoxScreens</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>286</x>
+     <y>98</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>290</x>
+     <y>156</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioSwitchInDirection</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pGroupBoxScreens</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>38</x>
+     <y>313</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>64</x>
+     <y>195</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioLockCursorToScreen</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pGroupBoxScreens</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>48</x>
+     <y>339</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>79</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioSwitchToScreen</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>84</x>
+     <y>280</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>123</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
