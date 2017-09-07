@@ -19,6 +19,11 @@
 
 #include "Fingerprint.h"
 
+#if defined(Q_OS_LINUX)
+#include <sys/types.h>
+#include <sys/stat.h>
+#endif
+
 #include <QProcess>
 #include <QDir>
 #include <QCoreApplication>
@@ -136,7 +141,15 @@ void SslCertificate::generateCertificate()
         arguments.append("-out");
         arguments.append(filename);
 
-        if (!runTool(arguments)) {
+#if defined(Q_OS_LINUX)
+        mode_t prevMask = umask(0);
+        umask(prevMask|S_IXUSR|S_IRWXG|S_IRWXO);
+#endif
+        bool generateSuccess = runTool(arguments);
+#if defined(Q_OS_LINUX)
+        umask(prevMask);
+#endif
+        if (!generateSuccess) {
             return;
         }
 
