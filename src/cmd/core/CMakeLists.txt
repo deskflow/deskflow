@@ -1,6 +1,6 @@
 # synergy -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2016 Symless Ltd.
-# Copyright (C) 2011 Nick Bolton
+# Copyright (C) 2009 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -14,6 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(core)
-add_subdirectory(synergyc)
-add_subdirectory(synergys)
+set(sources
+    main.cpp
+)
+
+add_executable(synergy-core ${sources})
+target_link_libraries(synergy-core
+    arch base client common io mt net ipc platform server core ${libs} ${OPENSSL_LIBS})
