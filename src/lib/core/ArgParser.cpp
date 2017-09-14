@@ -263,10 +263,10 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
         argsBase().m_enableIpc = true;
     }
     else if (isArg(i, argc, argv, NULL, "--server")) {
-        // HACK: stop error happening when using portable (synergyp)
+        // supress error when --server is used
     }
     else if (isArg(i, argc, argv, NULL, "--client")) {
-        // HACK: stop error happening when using portable (synergyp)
+        // supress error when --client is used
     }
     else if (isArg(i, argc, argv, NULL, "--enable-drag-drop")) {
         bool useDragDrop = true;
