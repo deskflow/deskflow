@@ -20,3 +20,4 @@ src/gui/.qmake.stash
 src/gui/.rnd
 src/setup/win32/synergy.suo
 CMakeCache.txt
+CMakeLists.txt.user
