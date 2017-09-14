@@ -15,30 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
+#pragma once
 
-#include "core/ServerApp.h"
-#include "arch/Arch.h"
-#include "base/Log.h"
-#include "base/EventQueue.h"
+#include "core/IAppUtil.h"
+#include "core/XSynergy.h"
 
-#include <iostream>
+class AppUtil : public IAppUtil {
+public:
+    AppUtil();
+    virtual ~AppUtil();
 
-int
-main(int argc, char** argv) 
-{
-    std::cerr << "warning: synergys is deprecated. instead, use: synergy-core --server" << std::endl;
+    virtual void adoptApp(IApp* app);
+    IApp& app() const;
+    virtual void exitApp(int code) { throw XExitApp(code); }
 
-#if SYSAPI_WIN32
-    // record window instance for tray icon, etc
-    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
-#endif
+    static AppUtil& instance();
+    static void exitAppStatic(int code) { instance().exitApp(code); }
+    virtual void beforeAppExit() {}
     
-    Arch arch;
-    arch.init();
-
-    Log log;
-    EventQueue events;
-
-    ServerApp app(&events);
-    return app.run(argc, argv);
-}
+private:
+    IApp* m_app;
+    static AppUtil* s_instance;
+};

@@ -1,12 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2002 Chris Schoeneman
- * 
+ * Copyright (C) 2014-2016 Symless Ltd.
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -16,29 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "core/ServerApp.h"
-#include "arch/Arch.h"
-#include "base/Log.h"
-#include "base/EventQueue.h"
+#pragma once
 
-#include <iostream>
+#include "core/ArgsBase.h"
+#include "shared/SerialKey.h"
 
-int
-main(int argc, char** argv) 
-{
-    std::cerr << "warning: synergys is deprecated. instead, use: synergy-core --server" << std::endl;
+class NetworkAddress;
+class Config;
 
-#if SYSAPI_WIN32
-    // record window instance for tray icon, etc
-    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
-#endif
-    
-    Arch arch;
-    arch.init();
+class ServerArgs : public ArgsBase {
+public:
+    ServerArgs();
 
-    Log log;
-    EventQueue events;
-
-    ServerApp app(&events);
-    return app.run(argc, argv);
-}
+public:
+    String                m_configFile;
+    SerialKey            m_serial;
+    Config*                m_config;
+};

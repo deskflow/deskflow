@@ -16,29 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "core/ServerApp.h"
-#include "arch/Arch.h"
-#include "base/Log.h"
-#include "base/EventQueue.h"
+#include "core/unix/AppUtilUnix.h"
+#include "core/ArgsBase.h"
 
-#include <iostream>
+AppUtilUnix::AppUtilUnix(IEventQueue* events)
+{
+}
+
+AppUtilUnix::~AppUtilUnix()
+{
+}
 
 int
-main(int argc, char** argv) 
+standardStartupStatic(int argc, char** argv)
 {
-    std::cerr << "warning: synergys is deprecated. instead, use: synergy-core --server" << std::endl;
+    return AppUtil::instance().app().standardStartup(argc, argv);
+}
 
-#if SYSAPI_WIN32
-    // record window instance for tray icon, etc
-    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
-#endif
-    
-    Arch arch;
-    arch.init();
+int
+AppUtilUnix::run(int argc, char** argv)
+{
+    return app().runInner(argc, argv, NULL, &standardStartupStatic);
+}
 
-    Log log;
-    EventQueue events;
-
-    ServerApp app(&events);
-    return app.run(argc, argv);
+void
+AppUtilUnix::startNode()
+{
+    app().startNode();
 }

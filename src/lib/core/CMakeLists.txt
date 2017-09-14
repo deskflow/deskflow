@@ -14,20 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(sources
-    synergyc.cpp
-)
+file(GLOB headers "*.h")
+file(GLOB sources "*.cpp")
 
+# arch
 if (WIN32)
-    list(APPEND sources
-        resource.h
-        synergyc.ico
-        synergyc.rc
-        tb_error.ico
-        tb_idle.ico
-        tb_run.ico
-        tb_wait.ico
-    )
+    file(GLOB arch_headers "win32/*.h")
+    file(GLOB arch_sources "win32/*.cpp")
+elseif (UNIX)
+    file(GLOB arch_headers "unix/*.h")
+    file(GLOB arch_sources "unix/*.cpp")
 endif()
 
 list(APPEND sources ${arch_sources})
@@ -37,6 +33,8 @@ if (SYNERGY_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
-add_executable(synergyc ${sources})
-target_link_libraries(synergyc
-    arch base client common io mt net ipc platform server core ${libs} ${OPENSSL_LIBS})
+add_library(core STATIC ${sources})
+
+if (UNIX)
+    target_link_libraries(core arch client ipc net base platform mt server)
+endif()

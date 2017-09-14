@@ -15,30 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
+#pragma once
 
-#include "core/ServerApp.h"
-#include "arch/Arch.h"
-#include "base/Log.h"
-#include "base/EventQueue.h"
+#include "common/IInterface.h"
+#include "core/IApp.h"
 
-#include <iostream>
-
-int
-main(int argc, char** argv) 
-{
-    std::cerr << "warning: synergys is deprecated. instead, use: synergy-core --server" << std::endl;
-
-#if SYSAPI_WIN32
-    // record window instance for tray icon, etc
-    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
-#endif
-    
-    Arch arch;
-    arch.init();
-
-    Log log;
-    EventQueue events;
-
-    ServerApp app(&events);
-    return app.run(argc, argv);
-}
+class IAppUtil : public IInterface {
+public:
+    virtual void adoptApp(IApp* app) = 0;
+    virtual IApp& app() const = 0;
+    virtual int run(int argc, char** argv) = 0;
+    virtual void beforeAppExit() = 0;
+    virtual void startNode() = 0;
+};

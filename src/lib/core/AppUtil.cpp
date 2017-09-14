@@ -15,30 +15,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
+#include "core/AppUtil.h"
 
-#include "core/ServerApp.h"
-#include "arch/Arch.h"
-#include "base/Log.h"
-#include "base/EventQueue.h"
-
-#include <iostream>
-
-int
-main(int argc, char** argv) 
+AppUtil* AppUtil::s_instance = nullptr;
+ 
+AppUtil::AppUtil() :
+m_app(nullptr)
 {
-    std::cerr << "warning: synergys is deprecated. instead, use: synergy-core --server" << std::endl;
+    s_instance = this;
+}
 
-#if SYSAPI_WIN32
-    // record window instance for tray icon, etc
-    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
-#endif
-    
-    Arch arch;
-    arch.init();
+AppUtil::~AppUtil()
+{
+}
 
-    Log log;
-    EventQueue events;
+void
+AppUtil::adoptApp(IApp* app)
+{
+    app->setByeFunc(&exitAppStatic);
+    m_app = app;
+}
 
-    ServerApp app(&events);
-    return app.run(argc, argv);
+IApp&
+AppUtil::app() const
+{
+    assert(m_app != nullptr);
+    return *m_app;
+}
+
+AppUtil&
+AppUtil::instance()
+{
+    assert(s_instance != nullptr);
+    return *s_instance;
 }

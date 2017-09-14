@@ -16,29 +16,53 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "core/ServerApp.h"
-#include "arch/Arch.h"
-#include "base/Log.h"
-#include "base/EventQueue.h"
+#include "core/XScreen.h"
 
-#include <iostream>
+//
+// XScreenOpenFailure
+//
 
-int
-main(int argc, char** argv) 
+String
+XScreenOpenFailure::getWhat() const throw()
 {
-    std::cerr << "warning: synergys is deprecated. instead, use: synergy-core --server" << std::endl;
+    return format("XScreenOpenFailure", "unable to open screen");
+}
 
-#if SYSAPI_WIN32
-    // record window instance for tray icon, etc
-    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
-#endif
-    
-    Arch arch;
-    arch.init();
 
-    Log log;
-    EventQueue events;
+//
+// XScreenXInputFailure
+//
 
-    ServerApp app(&events);
-    return app.run(argc, argv);
+String
+XScreenXInputFailure::getWhat() const throw()
+{
+    return "";
+}
+
+
+//
+// XScreenUnavailable
+//
+
+XScreenUnavailable::XScreenUnavailable(double timeUntilRetry) :
+    m_timeUntilRetry(timeUntilRetry)
+{
+    // do nothing
+}
+
+XScreenUnavailable::~XScreenUnavailable() _NOEXCEPT
+{
+    // do nothing
+}
+
+double
+XScreenUnavailable::getRetryTime() const
+{
+    return m_timeUntilRetry;
+}
+
+String
+XScreenUnavailable::getWhat() const throw()
+{
+    return format("XScreenUnavailable", "unable to open screen");
 }
