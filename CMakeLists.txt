@@ -17,10 +17,6 @@
 cmake_minimum_required (VERSION 3.4)
 project (synergy C CXX)
 
-option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" ON)
-option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
-option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" ON)
-
 set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_EXTENSIONS OFF)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -337,42 +333,4 @@ macro (configure_files srcDir destDir)
     endforeach (templateFile)
 endmacro (configure_files)
 
-if (${SYNERGY_BUILD_LEGACY_INSTALLER})
-#
-# macOS app Bundle
-#
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set (CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
-    set (SYNERGY_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
-    set (SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
-    set (SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
-    set (SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
-
-    configure_files (${SYNERGY_BUNDLE_SOURCE_DIR} ${SYNERGY_BUNDLE_DIR})
-endif()
-
-#
-# Windows installer
-#
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-        message (STATUS "Configuring the v1 installer")
-        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
-endif()
-
-#
-# Linux installation
-#
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
-    install(FILES res/synergy.svg DESTINATION share/icons/hicolor/scalable/apps)
-    if("${VERSION_MAJOR}" STREQUAL "2") 
-        install(FILES res/synergy2.desktop DESTINATION share/applications)
-    else()
-        install(FILES res/synergy.desktop DESTINATION share/applications)
-    endif()
-endif()
-
-else()
-    message (STATUS "NOT configuring the v1 installer")
-endif()
 add_subdirectory (src)
