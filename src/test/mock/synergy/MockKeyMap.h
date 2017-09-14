@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "synergy/KeyMap.h"
+#include "core/KeyMap.h"
 
 #include "test/global/gmock.h"
 

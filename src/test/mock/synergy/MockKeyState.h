@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "synergy/KeyState.h"
+#include "core/KeyState.h"
 
 #include "test/global/gmock.h"
 

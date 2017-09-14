@@ -19,7 +19,7 @@
 
 #define TEST_ENV
 
-#include "synergy/App.h"
+#include "core/App.h"
 
 #include "test/global/gmock.h"
 

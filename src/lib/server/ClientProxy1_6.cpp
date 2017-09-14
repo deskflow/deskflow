@@ -18,9 +18,9 @@
 #include "server/ClientProxy1_6.h"
 
 #include "server/Server.h"
-#include "synergy/ProtocolUtil.h"
-#include "synergy/StreamChunker.h"
-#include "synergy/ClipboardChunk.h"
+#include "core/ProtocolUtil.h"
+#include "core/StreamChunker.h"
+#include "core/ClipboardChunk.h"
 #include "io/IStream.h"
 #include "base/TMethodEventJob.h"
 #include "base/Log.h"

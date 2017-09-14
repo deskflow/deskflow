@@ -21,7 +21,7 @@
 #include "arch/IArchTaskBarReceiver.h"
 #include "arch/Arch.h"
 #include "arch/XArch.h"
-#include "synergy/win32/AppUtilWindows.h"
+#include "core/win32/AppUtilWindows.h"
 
 #include <string.h>
 #include <shellapi.h>

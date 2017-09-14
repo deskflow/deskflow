@@ -19,8 +19,8 @@
 #pragma once
 
 #include "platform/MSWindowsHook.h"
-#include "synergy/PlatformScreen.h"
-#include "synergy/DragInformation.h"
+#include "core/PlatformScreen.h"
+#include "core/DragInformation.h"
 #include "synwinhk/synwinhk.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"

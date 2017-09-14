@@ -18,12 +18,12 @@
 
 #pragma once
 
-#include "synergy/IClient.h"
+#include "core/IClient.h"
 
-#include "synergy/Clipboard.h"
-#include "synergy/DragInformation.h"
-#include "synergy/INode.h"
-#include "synergy/ClientArgs.h"
+#include "core/Clipboard.h"
+#include "core/DragInformation.h"
+#include "core/INode.h"
+#include "core/ClientArgs.h"
 #include "net/NetworkAddress.h"
 #include "base/EventTypes.h"
 #include "mt/CondVar.h"

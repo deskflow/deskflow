@@ -19,9 +19,9 @@
 #pragma once
 
 #include "synwinhk/synwinhk.h"
-#include "synergy/key_types.h"
-#include "synergy/mouse_types.h"
-#include "synergy/option_types.h"
+#include "core/key_types.h"
+#include "core/mouse_types.h"
+#include "core/option_types.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 #include "base/String.h"

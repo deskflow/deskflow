@@ -24,5 +24,5 @@ endif()
 add_library(ipc STATIC ${sources})
 
 if (UNIX)
-    target_link_libraries(ipc arch base common mt io net synlib)
+    target_link_libraries(ipc arch base common mt io net core)
 endif()

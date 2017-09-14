@@ -18,7 +18,7 @@
 
 #include "platform/MSWindowsHook.h"
 
-#include "synergy/XScreen.h"
+#include "core/XScreen.h"
 #include "base/Log.h"
 
 static const char* g_name = "synwinhk";

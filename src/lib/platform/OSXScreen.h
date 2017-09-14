@@ -19,8 +19,8 @@
 #pragma once
 
 #include "platform/OSXClipboard.h"
-#include "synergy/PlatformScreen.h"
-#include "synergy/DragInformation.h"
+#include "core/PlatformScreen.h"
+#include "core/DragInformation.h"
 #include "base/EventTypes.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"

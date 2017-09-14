@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ArgParser.h"
-#include "synergy/ArgsBase.h"
+#include "core/ArgParser.h"
+#include "core/ArgsBase.h"
 #include "test/mock/synergy/MockApp.h"
 
 #include "test/global/gtest.h"
@@ -258,7 +258,6 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noTrayCmd_disableTrayTrue)
     
     argParser.parseGenericArgs(argc, kNoTrayCmd, i);
 
-    EXPECT_EQ(true, argsBase.m_disableTray);
     EXPECT_EQ(1, i);
 }
 

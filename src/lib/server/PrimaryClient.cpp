@@ -18,8 +18,8 @@
 
 #include "server/PrimaryClient.h"
 
-#include "synergy/Screen.h"
-#include "synergy/Clipboard.h"
+#include "core/Screen.h"
+#include "core/Clipboard.h"
 #include "base/Log.h"
 
 //

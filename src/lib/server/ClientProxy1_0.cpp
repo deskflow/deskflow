@@ -18,8 +18,8 @@
 
 #include "server/ClientProxy1_0.h"
 
-#include "synergy/ProtocolUtil.h"
-#include "synergy/XSynergy.h"
+#include "core/ProtocolUtil.h"
+#include "core/XSynergy.h"
 #include "io/IStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"

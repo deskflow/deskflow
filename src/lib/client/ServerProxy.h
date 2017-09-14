@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "synergy/clipboard_types.h"
-#include "synergy/key_types.h"
+#include "core/clipboard_types.h"
+#include "core/key_types.h"
 #include "base/Event.h"
 #include "base/Stopwatch.h"
 #include "base/String.h"

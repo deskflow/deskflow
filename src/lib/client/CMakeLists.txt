@@ -24,5 +24,5 @@ endif()
 add_library(client STATIC ${sources})
 
 if (UNIX)
-    target_link_libraries(client synlib io)
+    target_link_libraries(client core io)
 endif()

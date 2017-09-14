@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "synergy/key_types.h"
-#include "synergy/mouse_types.h"
-#include "synergy/protocol_types.h"
-#include "synergy/IPlatformScreen.h"
+#include "core/key_types.h"
+#include "core/mouse_types.h"
+#include "core/protocol_types.h"
+#include "core/IPlatformScreen.h"
 #include "base/String.h"
 #include "common/stdmap.h"
 #include "common/stdset.h"

@@ -19,7 +19,7 @@
 #import "platform/OSXScreenSaver.h"
 
 #import "platform/OSXScreenSaverUtil.h"
-#import "synergy/IPrimaryScreen.h"
+#import "core/IPrimaryScreen.h"
 #import "base/Log.h"
 #import "base/IEventQueue.h"
 

@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "synergy/IScreenSaver.h"
+#include "core/IScreenSaver.h"
 #include "base/IEventQueue.h"
 #include "common/stdmap.h"
 

@@ -18,7 +18,7 @@
 
 #include "server/ClientProxy1_1.h"
 
-#include "synergy/ProtocolUtil.h"
+#include "core/ProtocolUtil.h"
 #include "base/Log.h"
 
 #include <cstring>

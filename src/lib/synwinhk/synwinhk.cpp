@@ -18,7 +18,7 @@
 
 #include "synwinhk/synwinhk.h"
 
-#include "synergy/protocol_types.h"
+#include "core/protocol_types.h"
 
 #include <zmouse.h>
 #include <tchar.h>

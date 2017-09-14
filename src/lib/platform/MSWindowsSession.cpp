@@ -18,7 +18,7 @@
 #include "platform/MSWindowsSession.h"
 
 #include "arch/win32/XArchWindows.h"
-#include "synergy/XSynergy.h"
+#include "core/XSynergy.h"
 #include "base/Log.h"
 
 #include <Wtsapi32.h>

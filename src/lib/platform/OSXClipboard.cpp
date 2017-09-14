@@ -18,7 +18,7 @@
 
 #include "platform/OSXClipboard.h"
 
-#include "synergy/Clipboard.h"
+#include "core/Clipboard.h"
 #include "platform/OSXClipboardUTF16Converter.h"
 #include "platform/OSXClipboardTextConverter.h"
 #include "platform/OSXClipboardBMPConverter.h"

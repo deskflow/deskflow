@@ -20,7 +20,7 @@
 
 #include "ipc/Ipc.h"
 #include "ipc/IpcMessage.h"
-#include "synergy/ProtocolUtil.h"
+#include "core/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "arch/Arch.h"
 #include "base/TMethodEventJob.h"

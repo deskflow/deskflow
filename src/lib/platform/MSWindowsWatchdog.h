@@ -19,7 +19,7 @@
 #pragma once
 
 #include "platform/MSWindowsSession.h"
-#include "synergy/XSynergy.h"
+#include "core/XSynergy.h"
 #include "arch/IArchMultithread.h"
 
 #define WIN32_LEAN_AND_MEAN

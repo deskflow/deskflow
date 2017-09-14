@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "synergy/IClipboard.h"
+#include "core/IClipboard.h"
 
 #include <Carbon/Carbon.h>
 #include <vector>

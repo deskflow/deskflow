@@ -19,7 +19,7 @@
 
 #import <CoreFoundation/CoreFoundation.h>
 
-#include "synergy/key_types.h"
+#include "core/key_types.h"
 
 #if defined(__cplusplus)
 extern "C" {

@@ -20,8 +20,8 @@
 
 #include "synwinhk/synwinhk.h"
 #include "platform/MSWindowsScreen.h"
-#include "synergy/IScreenSaver.h"
-#include "synergy/XScreen.h"
+#include "core/IScreenSaver.h"
+#include "core/XScreen.h"
 #include "mt/Lock.h"
 #include "mt/Thread.h"
 #include "arch/win32/ArchMiscWindows.h"

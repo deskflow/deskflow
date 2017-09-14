@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ClipboardChunk.h"
-#include "synergy/protocol_types.h"
+#include "core/ClipboardChunk.h"
+#include "core/protocol_types.h"
 
 #include "test/global/gtest.h"
 

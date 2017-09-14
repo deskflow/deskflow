@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "synergy/PlatformScreen.h"
-#include "synergy/KeyMap.h"
+#include "core/PlatformScreen.h"
+#include "core/KeyMap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
 

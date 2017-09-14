@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "synergy/IClient.h"
+#include "core/IClient.h"
 #include "base/String.h"
 
 namespace synergy { class IStream; }

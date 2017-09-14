@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "synergy/KeyState.h"
+#include "core/KeyState.h"
 
 class IOSXKeyResource : public IInterface {
 public:

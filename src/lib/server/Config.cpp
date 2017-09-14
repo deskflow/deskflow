@@ -19,8 +19,8 @@
 #include "server/Config.h"
 
 #include "server/Server.h"
-#include "synergy/KeyMap.h"
-#include "synergy/key_types.h"
+#include "core/KeyMap.h"
+#include "core/key_types.h"
 #include "net/XSocket.h"
 #include "base/IEventQueue.h"
 #include "common/stdistream.h"

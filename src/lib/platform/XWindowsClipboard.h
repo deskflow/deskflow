@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "synergy/clipboard_types.h"
-#include "synergy/IClipboard.h"
+#include "core/clipboard_types.h"
+#include "core/IClipboard.h"
 #include "common/stdmap.h"
 #include "common/stdlist.h"
 #include "common/stdvector.h"

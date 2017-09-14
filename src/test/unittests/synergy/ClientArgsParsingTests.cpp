@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ArgParser.h"
-#include "synergy/ClientArgs.h"
+#include "core/ArgParser.h"
+#include "core/ClientArgs.h"
 #include "test/mock/synergy/MockArgParser.h"
 
 #include "test/global/gtest.h"

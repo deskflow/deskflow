@@ -19,7 +19,7 @@
 
 #define TEST_ENV
 
-#include "synergy/ArgParser.h"
+#include "core/ArgParser.h"
 
 #include "test/global/gmock.h"
 

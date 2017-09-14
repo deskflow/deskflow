@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "synergy/IScreenSaver.h"
+#include "core/IScreenSaver.h"
 #include "base/String.h"
 
 #define WIN32_LEAN_AND_MEAN

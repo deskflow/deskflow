@@ -19,9 +19,9 @@
 #pragma once
 
 #include "server/InputFilter.h"
-#include "synergy/option_types.h"
-#include "synergy/protocol_types.h"
-#include "synergy/IPlatformScreen.h"
+#include "core/option_types.h"
+#include "core/protocol_types.h"
+#include "core/IPlatformScreen.h"
 #include "net/NetworkAddress.h"
 #include "base/String.h"
 #include "base/XBase.h"

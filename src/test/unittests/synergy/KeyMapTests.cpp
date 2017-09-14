@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/KeyMap.h"
+#include "core/KeyMap.h"
 
 #include "test/global/gtest.h"
 #include "test/global/gmock.h"

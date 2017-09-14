@@ -18,7 +18,7 @@
 
 #include "platform/XWindowsUtil.h"
 
-#include "synergy/key_types.h"
+#include "core/key_types.h"
 #include "mt/Thread.h"
 #include "base/Log.h"
 #include "base/String.h"

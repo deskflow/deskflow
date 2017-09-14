@@ -18,7 +18,7 @@
 
 #include "server/ClientProxy.h"
 
-#include "synergy/ProtocolUtil.h"
+#include "core/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "base/Log.h"
 #include "base/EventQueue.h"

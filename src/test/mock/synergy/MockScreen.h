@@ -19,7 +19,7 @@
 
 #define TEST_ENV
 
-#include "synergy/Screen.h"
+#include "core/Screen.h"
 
 #include "test/global/gmock.h"
 

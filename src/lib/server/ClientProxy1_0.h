@@ -19,8 +19,8 @@
 #pragma once
 
 #include "server/ClientProxy.h"
-#include "synergy/Clipboard.h"
-#include "synergy/protocol_types.h"
+#include "core/Clipboard.h"
+#include "core/protocol_types.h"
 
 class Event;
 class EventQueueTimer;

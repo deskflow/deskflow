@@ -19,7 +19,7 @@
 #pragma once
 
 #include "server/BaseClientProxy.h"
-#include "synergy/protocol_types.h"
+#include "core/protocol_types.h"
 
 namespace synergy { class Screen; }
 
