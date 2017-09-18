@@ -16,3 +16,9 @@
 add_executable(synergy-core main.cpp)
 target_link_libraries(synergy-core
     arch base client common io mt net ipc platform server core ${libs} ${OPENSSL_LIBS})
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    install (TARGETS synergy-core DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    install (TARGETS synergy-core DESTINATION bin)
+endif()
