@@ -398,17 +398,15 @@ OSXKeyState::pollActiveModifiers() const
 SInt32
 OSXKeyState::pollActiveGroup() const
 {
+    bool layoutValid = true;
     TISInputSourceRef keyboardLayout = TISCopyCurrentKeyboardLayoutInputSource();
-    CFDataRef id = (CFDataRef)TISGetInputSourceProperty(
-                        keyboardLayout, kTISPropertyInputSourceID);
     
-    GroupMap::const_iterator i = m_groupMap.find(id);
-    if (i != m_groupMap.end()) {
-        return i->second;
+    if (layoutValid) {
+        GroupMap::const_iterator i = m_groupMap.find(keyboardLayout);
+        if (i != m_groupMap.end()) {
+            return i->second;
+        }
     }
-    
-    LOG((CLOG_DEBUG "can't get the active group, use the first group instead"));
-
     return 0;
 }
 
@@ -435,9 +433,7 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap)
         m_groupMap.clear();
         SInt32 numGroups = (SInt32)m_groups.size();
         for (SInt32 g = 0; g < numGroups; ++g) {
-            CFDataRef id = (CFDataRef)TISGetInputSourceProperty(
-                                m_groups[g], kTISPropertyInputSourceID);
-            m_groupMap[id] = g;
+            m_groupMap[m_groups[g]] = g;
         }
     }
 
@@ -470,6 +466,7 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap)
         LOG((CLOG_DEBUG1 "no keyboard resource for group %d", g));
     }
 }
+
 
 void
 OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
