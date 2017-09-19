@@ -397,17 +397,15 @@ OSXKeyState::pollActiveModifiers() const
 SInt32
 OSXKeyState::pollActiveGroup() const
 {
+    bool layoutValid = true;
     TISInputSourceRef keyboardLayout = TISCopyCurrentKeyboardLayoutInputSource();
-    CFDataRef id = (CFDataRef)TISGetInputSourceProperty(
-                        keyboardLayout, kTISPropertyInputSourceID);
     
-    GroupMap::const_iterator i = m_groupMap.find(id);
-    if (i != m_groupMap.end()) {
-        return i->second;
+    if (layoutValid) {
+        GroupMap::const_iterator i = m_groupMap.find(keyboardLayout);
+        if (i != m_groupMap.end()) {
+            return i->second;
+        }
     }
-    
-    LOG((CLOG_DEBUG "can't get the active group, use the first group instead"));
-
     return 0;
 }
 
@@ -434,9 +432,7 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap)
         m_groupMap.clear();
         SInt32 numGroups = (SInt32)m_groups.size();
         for (SInt32 g = 0; g < numGroups; ++g) {
-            CFDataRef id = (CFDataRef)TISGetInputSourceProperty(
-                                m_groups[g], kTISPropertyInputSourceID);
-            m_groupMap[id] = g;
+            m_groupMap[m_groups[g]] = g;
         }
     }
 
@@ -475,19 +471,19 @@ static io_connect_t getEventDriver(void)
     static mach_port_t sEventDrvrRef = 0;
     mach_port_t masterPort, service, iter;
     kern_return_t kr;
-    
+
     if (!sEventDrvrRef) {
         // Get master device port
         kr = IOMasterPort(bootstrap_port, &masterPort);
         assert(KERN_SUCCESS == kr);
-        
+
         kr = IOServiceGetMatchingServices(masterPort,
                 IOServiceMatching(kIOHIDSystemClass), &iter);
         assert(KERN_SUCCESS == kr);
-        
+
         service = IOIteratorNext(iter);
         assert(service);
-        
+
         kr = IOServiceOpen(service, mach_task_self(),
                 kIOHIDParamConnectType, &sEventDrvrRef);
         assert(KERN_SUCCESS == kr);
@@ -495,7 +491,7 @@ static io_connect_t getEventDriver(void)
         IOObjectRelease(service);
         IOObjectRelease(iter);
     }
-    
+
     return sEventDrvrRef;
 }
 
@@ -504,7 +500,7 @@ OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
                 const bool postDown)
 {
     static UInt32 modifiers = 0;
-    
+
     NXEventData event;
     IOGPoint loc = { 0, 0 };
     UInt32 modifiersDelta = 0;
@@ -549,7 +545,7 @@ OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
         else {
             modifiers &= ~modifiersDelta;
         }
-            
+
         kern_return_t kr;
         kr = IOHIDPostEvent(getEventDriver(), NX_FLAGSCHANGED, loc,
                 &event, kNXEventDataVersion, modifiers, true);
