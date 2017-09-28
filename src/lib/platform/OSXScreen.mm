@@ -183,6 +183,33 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 
 	// install the platform event queue
 	m_events->adoptBuffer(new OSXEventQueueBuffer(m_events));
+
+    if (m_isPrimary) {
+        m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
+                                        kCGEventMaskForAllEvents,
+                                        handleCGInputEvent,
+                                        this);
+    }
+    else {
+        // there may be a better way to do this, but we register an event handler even if we're
+        // not on the primary display (acting as a client). This way, if a local event comes in
+        // (either keyboard or mouse), we can make sure to show the cursor if we've hidden it.
+        m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
+                                        kCGEventMaskForAllEvents,
+                                        handleCGInputEventSecondary,
+                                        this);
+    }
+
+    if (!m_eventTapPort) {
+        LOG((CLOG_ERR "failed to create quartz event tap"));
+    }
+
+    m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
+    if (!m_eventTapRLSR) {
+        LOG((CLOG_ERR "failed to create a CFRunLoopSourceRef for the quartz event tap"));
+    }
+
+    CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
 }
 
 OSXScreen::~OSXScreen()
@@ -220,6 +247,12 @@ OSXScreen::~OSXScreen()
 	delete m_keyState;
 	delete m_screensaver;
 	
+    if (m_eventTapPort) {
+        CGEventTapEnable(m_eventTapPort, false);
+        CFRelease(m_eventTapPort);
+        m_eventTapPort = nullptr;
+    }
+
 #if defined(MAC_OS_X_VERSION_10_7)
 	delete m_carbonLoopMutex;
 	delete m_carbonLoopReady;
@@ -701,44 +734,14 @@ OSXScreen::enable()
 							new TMethodEventJob<OSXScreen>(this,
 								&OSXScreen::handleClipboardCheck));
 
-	if (m_isPrimary) {
-		// FIXME -- start watching jump zones
-		
-		// kCGEventTapOptionDefault = 0x00000000 (Missing in 10.4, so specified literally)
-		m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
-										kCGEventMaskForAllEvents, 
-										handleCGInputEvent, 
-										this);
-	}
-	else {
-		// FIXME -- prevent system from entering power save mode
-
+    if (!m_isPrimary) {
 		if (m_autoShowHideCursor) {
 			hideCursor();
 		}
 
 		// warp the mouse to the cursor center
 		fakeMouseMove(m_xCenter, m_yCenter);
-
-                // there may be a better way to do this, but we register an event handler even if we're
-                // not on the primary display (acting as a client). This way, if a local event comes in
-                // (either keyboard or mouse), we can make sure to show the cursor if we've hidden it. 
-		m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
-										kCGEventMaskForAllEvents, 
-										handleCGInputEventSecondary, 
-										this);
 	}
-
-	if (!m_eventTapPort) {
-		LOG((CLOG_ERR "failed to create quartz event tap"));
-	}
-
-	m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
-	if (!m_eventTapRLSR) {
-		LOG((CLOG_ERR "failed to create a CFRunLoopSourceRef for the quartz event tap"));
-	}
-
-	CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
 }
 
 void
