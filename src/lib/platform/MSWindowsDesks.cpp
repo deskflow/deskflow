@@ -117,6 +117,10 @@ MSWindowsDesks::MSWindowsDesks(
     if (hookLibrary != NULL)
         queryHookLibrary(hookLibrary);
 
+    if (m_install != NULL && !m_isPrimary) {
+        m_install();
+    }
+
     m_cursor    = createBlankCursor();
     m_deskClass = createDeskWindowClass(m_isPrimary);
     m_keyLayout = GetKeyboardLayout(GetCurrentThreadId());
