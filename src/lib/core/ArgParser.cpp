@@ -299,9 +299,11 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
     else if (isArg(i, argc, argv, NULL, "--plugin-dir", 1)) {
         argsBase().m_pluginDirectory = argv[++i];
     }
+#if WINAPI_XWINDOWS
     else if (isArg(i, argc, argv, NULL, "--run-as-uid", 1)) {
         argsBase().m_runAsUid = std::stoi(argv[++i]);
     }
+#endif
     else {
         // option not supported here
         return false;
