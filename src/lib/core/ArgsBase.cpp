@@ -29,6 +29,7 @@ m_daemon(true), // backward compatibility for unix (daemon by default)
 #endif
 #if WINAPI_XWINDOWS
 m_disableXInitThreads(false),
+m_runAsUid(-1),
 #endif
 m_backend(false),
 m_restartable(true),

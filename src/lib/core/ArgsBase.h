@@ -44,6 +44,7 @@ public:
 #endif
 #if WINAPI_XWINDOWS
     bool                m_disableXInitThreads;
+    int                 m_runAsUid;
 #endif
     bool                m_shouldExit;
     String                m_synergyAddress;

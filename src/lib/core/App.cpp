@@ -33,21 +33,22 @@
 #include "ipc/Ipc.h"
 #include "base/EventQueue.h"
 
+#include <iostream>
+#include <stdio.h>
+
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodJob.h"
 #endif
 
-#include <iostream>
-#include <stdio.h>
-
 #if WINAPI_CARBON
 #include <ApplicationServices/ApplicationServices.h>
+#include "platform/OSXDragSimulator.h"
 #endif
 
-#if defined(__APPLE__)
-#include "platform/OSXDragSimulator.h"
+#if WINAPI_XWINDOWS
+#include <unistd.h>
 #endif
 
 App* App::s_instance = nullptr;
@@ -172,6 +173,21 @@ App::initApp(int argc, const char** argv)
 {
     // parse command line
     parseArgs(argc, argv);
+
+#if WINAPI_XWINDOWS
+    // for use on linux, tell the core process what user id it should run as.
+    // this is a simple way to allow the core process to talk to X. this avoids
+    // the "WARNING: primary screen unavailable: unable to open screen" error.
+    // a better way would be to use xauth cookie and dbus to get access to X.
+    if (!argsBase().m_runAsUid != -1) {
+        if (setuid(argsBase().m_runAsUid) == 0) {
+            LOG((CLOG_DEBUG "process uid was set to: %d", argsBase().m_runAsUid));
+        }
+        else {
+            LOG((CLOG_WARN "failed to set process uid to: %d", argsBase().m_runAsUid));
+        }
+    }
+#endif
     
     ARCH->setProfileDirectory(argsBase().m_profileDirectory);
     ARCH->setPluginDirectory(argsBase().m_pluginDirectory);
