@@ -200,6 +200,7 @@ SecureSocket::doWrite()
 {
     static bool s_retry = false;
     static int s_retrySize = 0;
+    static int s_staticBufferSize = 0;
     static void* s_staticBuffer = NULL;
 
     // write data
@@ -212,8 +213,13 @@ SecureSocket::doWrite()
     }
     else {
         bufferSize = m_outputBuffer.getSize();
-        s_staticBuffer = malloc(bufferSize);
-        memcpy(s_staticBuffer, m_outputBuffer.peek(bufferSize), bufferSize);
+        if (bufferSize != 0) {
+            if (bufferSize > s_staticBufferSize) {
+                s_staticBuffer = realloc(s_staticBuffer, bufferSize);
+                s_staticBufferSize = bufferSize;
+            }
+            memcpy(s_staticBuffer, m_outputBuffer.peek(bufferSize), bufferSize);
+        }
     }
     
     if (bufferSize == 0) {
@@ -225,8 +231,6 @@ SecureSocket::doWrite()
         if (status > 0) {
             s_retry = false;
             bufferSize = 0;
-            free(s_staticBuffer);
-            s_staticBuffer = NULL;
         }
         else if (status < 0) {
             return kBreak;
