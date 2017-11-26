@@ -17,12 +17,12 @@
  */
 
 #include "core/ClientTaskBarReceiver.h"
-#include "client/Client.h"
-#include "mt/Lock.h"
-#include "base/String.h"
-#include "base/IEventQueue.h"
 #include "arch/Arch.h"
+#include "base/IEventQueue.h"
+#include "base/String.h"
+#include "client/Client.h"
 #include "common/Version.h"
+#include "mt/Lock.h"
 
 //
 // ClientTaskBarReceiver
@@ -46,7 +46,7 @@ ClientTaskBarReceiver::updateStatus(Client* client, const String& errorMsg)
     {
         // update our status
         m_errorMessage = errorMsg;
-        if (client == NULL) {
+        if (client == nullptr) {
             if (m_errorMessage.empty()) {
                 m_state = kNotRunning;
             }
@@ -95,7 +95,7 @@ ClientTaskBarReceiver::quit()
 }
 
 void
-ClientTaskBarReceiver::onStatusChanged(Client*)
+ClientTaskBarReceiver::onStatusChanged(Client* /*unused*/)
 {
     // do nothing
 }

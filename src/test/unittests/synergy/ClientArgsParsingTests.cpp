@@ -26,7 +26,7 @@ using ::testing::Invoke;
 using ::testing::NiceMock;
 
 bool
-client_stubParseGenericArgs(int, const char* const*, int&)
+client_stubParseGenericArgs(int /*unused*/, const char* const* /*unused*/, int& /*unused*/)
 {
     return false;
 }

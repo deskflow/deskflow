@@ -18,19 +18,19 @@
 
 #include "client/ServerProxy.h"
 
+#include "base/IEventQueue.h"
+#include "base/Log.h"
+#include "base/TMethodEventJob.h"
+#include "base/XBase.h"
 #include "client/Client.h"
-#include "core/FileChunk.h"
-#include "core/ClipboardChunk.h"
-#include "core/StreamChunker.h"
 #include "core/Clipboard.h"
+#include "core/ClipboardChunk.h"
+#include "core/FileChunk.h"
 #include "core/ProtocolUtil.h"
+#include "core/StreamChunker.h"
 #include "core/option_types.h"
 #include "core/protocol_types.h"
 #include "io/IStream.h"
-#include "base/Log.h"
-#include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
-#include "base/XBase.h"
 
 #include <memory>
 
@@ -50,7 +50,7 @@ ServerProxy::ServerProxy(Client* client, synergy::IStream* stream, IEventQueue* 
     m_dyMouse(0),
     m_ignoreMouse(false),
     m_keepAliveAlarm(0.0),
-    m_keepAliveAlarmTimer(NULL),
+    m_keepAliveAlarmTimer(nullptr),
     m_parser(&ServerProxy::parseHandshakeMessage),
     m_events(events)
 {
@@ -58,8 +58,9 @@ ServerProxy::ServerProxy(Client* client, synergy::IStream* stream, IEventQueue* 
     assert(m_stream != NULL);
 
     // initialize modifier translation table
-    for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id)
+    for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id) {
         m_modifierTranslationTable[id] = id;
+}
 
     // handle data on stream
     m_events->adoptHandler(m_events->forIStream().inputReady(),
@@ -86,14 +87,14 @@ ServerProxy::~ServerProxy()
 void
 ServerProxy::resetKeepAliveAlarm()
 {
-    if (m_keepAliveAlarmTimer != NULL) {
+    if (m_keepAliveAlarmTimer != nullptr) {
         m_events->removeHandler(Event::kTimer, m_keepAliveAlarmTimer);
         m_events->deleteTimer(m_keepAliveAlarmTimer);
-        m_keepAliveAlarmTimer = NULL;
+        m_keepAliveAlarmTimer = nullptr;
     }
     if (m_keepAliveAlarm > 0.0) {
         m_keepAliveAlarmTimer =
-            m_events->newOneShotTimer(m_keepAliveAlarm, NULL);
+            m_events->newOneShotTimer(m_keepAliveAlarm, nullptr);
         m_events->adoptHandler(Event::kTimer, m_keepAliveAlarmTimer,
                             new TMethodEventJob<ServerProxy>(this,
                                 &ServerProxy::handleKeepAliveAlarm));
@@ -108,7 +109,7 @@ ServerProxy::setKeepAliveRate(double rate)
 }
 
 void
-ServerProxy::handleData(const Event&, void*)
+ServerProxy::handleData(const Event& /*unused*/, void* /*unused*/)
 {
     // handle messages until there are no more.  first read message code.
     UInt8 code[4];
@@ -179,7 +180,7 @@ ServerProxy::parseHandshakeMessage(const UInt8* code)
     else if (memcmp(code, kMsgCClose, 4) == 0) {
         // server wants us to hangup
         LOG((CLOG_DEBUG1 "recv close"));
-        m_client->disconnect(NULL);
+        m_client->disconnect(nullptr);
         return kDisconnect;
     }
 
@@ -307,7 +308,7 @@ ServerProxy::parseMessage(const UInt8* code)
     else if (memcmp(code, kMsgCClose, 4) == 0) {
         // server wants us to hangup
         LOG((CLOG_DEBUG1 "recv close"));
-        m_client->disconnect(NULL);
+        m_client->disconnect(nullptr);
         return kDisconnect;
     }
     else if (memcmp(code, kMsgEBad, 4) == 0) {
@@ -332,7 +333,7 @@ ServerProxy::parseMessage(const UInt8* code)
 }
 
 void
-ServerProxy::handleKeepAliveAlarm(const Event&, void*)
+ServerProxy::handleKeepAliveAlarm(const Event& /*unused*/, void* /*unused*/)
 {
     LOG((CLOG_NOTE "server is dead"));
     m_client->disconnect("server is not responding");
@@ -466,9 +467,9 @@ ServerProxy::translateKey(KeyID id) const
     if (id2 != kKeyModifierIDNull) {
         return s_translationTable[m_modifierTranslationTable[id2]][side];
     }
-    else {
+    
         return id;
-    }
+    
 }
 
 KeyModifierMask
@@ -605,8 +606,9 @@ ServerProxy::keyDown()
     KeyModifierMask mask2 = translateModifierMask(
                                 static_cast<KeyModifierMask>(mask));
     if (id2   != static_cast<KeyID>(id) ||
-        mask2 != static_cast<KeyModifierMask>(mask))
+        mask2 != static_cast<KeyModifierMask>(mask)) {
         LOG((CLOG_DEBUG1 "key down translated to id=0x%08x, mask=0x%04x", id2, mask2));
+}
 
     // forward
     m_client->keyDown(id2, mask2, button);
@@ -629,8 +631,9 @@ ServerProxy::keyRepeat()
     KeyModifierMask mask2 = translateModifierMask(
                                 static_cast<KeyModifierMask>(mask));
     if (id2   != static_cast<KeyID>(id) ||
-        mask2 != static_cast<KeyModifierMask>(mask))
+        mask2 != static_cast<KeyModifierMask>(mask)) {
         LOG((CLOG_DEBUG1 "key repeat translated to id=0x%08x, mask=0x%04x", id2, mask2));
+}
 
     // forward
     m_client->keyRepeat(id2, mask2, count, button);
@@ -652,8 +655,9 @@ ServerProxy::keyUp()
     KeyModifierMask mask2 = translateModifierMask(
                                 static_cast<KeyModifierMask>(mask));
     if (id2   != static_cast<KeyID>(id) ||
-        mask2 != static_cast<KeyModifierMask>(mask))
+        mask2 != static_cast<KeyModifierMask>(mask)) {
         LOG((CLOG_DEBUG1 "key up translated to id=0x%08x, mask=0x%04x", id2, mask2));
+}
 
     // forward
     m_client->keyUp(id2, mask2, button);
@@ -809,7 +813,7 @@ ServerProxy::setOptions()
     m_client->setOptions(options);
 
     // update modifier table
-    for (UInt32 i = 0, n = (UInt32)options.size(); i < n; i += 2) {
+    for (UInt32 i = 0, n = static_cast<UInt32>(options.size()); i < n; i += 2) {
         KeyModifierID id = kKeyModifierIDNull;
         if (options[i] == kOptionModifierMapForShift) {
             id = kKeyModifierIDShift;
@@ -845,7 +849,7 @@ ServerProxy::setOptions()
 void
 ServerProxy::queryInfo()
 {
-    ClientInfo info;
+    ClientInfo info{};
     m_client->getShape(info.m_x, info.m_y, info.m_w, info.m_h);
     m_client->getCursorPos(info.m_mx, info.m_my);
     sendInfo(info);
@@ -870,7 +874,7 @@ ServerProxy::fileChunkReceived()
         m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), m_client));
     }
     else if (result == kStart) {
-        if (m_client->getDragFileList().size() > 0) {
+        if (!m_client->getDragFileList().empty()) {
             String filename = m_client->getDragFileList().at(0).getFilename();
             LOG((CLOG_DEBUG "start receiving %s", filename.c_str()));
         }
@@ -889,7 +893,7 @@ ServerProxy::dragInfoReceived()
 }
 
 void
-ServerProxy::handleClipboardSendingEvent(const Event& event, void*)
+ServerProxy::handleClipboardSendingEvent(const Event& event, void* /*unused*/)
 {
     ClipboardChunk::send(m_stream, event.getData());
 }

@@ -18,8 +18,8 @@
 
 #include "server/ClientProxy1_1.h"
 
-#include "core/ProtocolUtil.h"
 #include "base/Log.h"
+#include "core/ProtocolUtil.h"
 
 #include <cstring>
 

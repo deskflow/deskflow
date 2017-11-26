@@ -25,7 +25,7 @@ class IEventQueue;
 //! Proxy for client implementing protocol version 1.6
 class ClientProxy1_6 : public ClientProxy1_5 {
 public:
-    ClientProxy1_6(const String& name, synergy::IStream* adoptedStream, Server* server, IEventQueue* events);
+    ClientProxy1_6(const String& name, synergy::IStream* stream, Server* server, IEventQueue* events);
     ~ClientProxy1_6();
 
     virtual void        setClipboard(ClipboardID id, const IClipboard* clipboard);

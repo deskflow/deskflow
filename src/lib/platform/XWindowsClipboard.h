@@ -149,7 +149,7 @@ private:
                             Atom* actualTarget, String* data);
 
     private:
-        bool            processEvent(Display* display, XEvent* event);
+        bool            processEvent(Display* display, XEvent* xevent);
 
     private:
         Window            m_requestor;
@@ -160,8 +160,8 @@ private:
         bool            m_done;
 
         // atoms needed for the protocol
-        Atom            m_atomNone;        // NONE, not None
-        Atom            m_atomIncr;
+        Atom            m_atomNone{};        // NONE, not None
+        Atom            m_atomIncr{};
 
         // true iff we've received the selection notify
         bool            m_reading;
@@ -223,7 +223,7 @@ private:
     public:
         Reply(Window, Atom target, ::Time);
         Reply(Window, Atom target, ::Time, Atom property,
-                            const String& data, Atom type, int format);
+                            String  data, Atom type, int format);
 
     public:
         // information about the request
@@ -296,13 +296,13 @@ private:
     Time                m_timeLost;
 
     // true iff open and clipboard owned by a motif app
-    mutable bool        m_motif;
+    mutable bool        m_motif{};
 
     // the added/cached clipboard data
-    mutable bool        m_checkCache;
-    bool                m_cached;
-    Time                m_cacheTime;
-    bool                m_added[kNumFormats];
+    mutable bool        m_checkCache{};
+    bool                m_cached{};
+    Time                m_cacheTime{};
+    bool                m_added[kNumFormats]{};
     String                m_data[kNumFormats];
 
     // conversion request replies

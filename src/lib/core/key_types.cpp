@@ -191,7 +191,7 @@ const KeyNameMapEntry kKeyNameMap[] = {
     { "Bar",            0x007c },
     { "BraceR",            0x007d },
     { "Tilde",            0x007e },
-    { NULL, 0 },
+    { nullptr, 0 },
 };
 
 const KeyModifierNameMapEntry kModifierNameMap[] = {
@@ -204,5 +204,5 @@ const KeyModifierNameMapEntry kModifierNameMap[] = {
 //    { "ScrollLock",        KeyModifierScrollLock },
     { "Shift",            KeyModifierShift },
     { "Super",            KeyModifierSuper },
-    { NULL, 0 },
+    { nullptr, 0 },
 };

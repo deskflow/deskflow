@@ -17,19 +17,19 @@
 
 #include "core/StreamChunker.h"
 
-#include "mt/Lock.h"
-#include "mt/Mutex.h"
-#include "core/FileChunk.h"
-#include "core/ClipboardChunk.h"
-#include "core/protocol_types.h"
-#include "base/EventTypes.h"
 #include "base/Event.h"
-#include "base/IEventQueue.h"
 #include "base/EventTypes.h"
+#include "base/EventTypes.h"
+#include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/Stopwatch.h"
 #include "base/String.h"
 #include "common/stdexcept.h"
+#include "core/ClipboardChunk.h"
+#include "core/FileChunk.h"
+#include "core/protocol_types.h"
+#include "mt/Lock.h"
+#include "mt/Mutex.h"
 
 #include <fstream>
 
@@ -39,7 +39,7 @@ static const size_t g_chunkSize = 32 * 1024; //32kb
 
 bool StreamChunker::s_isChunkingFile = false;
 bool StreamChunker::s_interruptFile = false;
-Mutex* StreamChunker::s_interruptMutex = NULL;
+Mutex* StreamChunker::s_interruptMutex = nullptr;
 
 void
 StreamChunker::sendFile(
@@ -57,7 +57,7 @@ StreamChunker::sendFile(
 
     // check file size
     file.seekg (0, std::ios::end);
-    size_t size = (size_t)file.tellg();
+    auto size = (size_t)file.tellg();
 
     // send first message (file size)
     String fileSize = synergy::string::sizeTypeToString(size);
@@ -84,9 +84,9 @@ StreamChunker::sendFile(
             chunkSize = size - sentLength;
         }
 
-        char* chunkData = new char[chunkSize];
+        auto* chunkData = new char[chunkSize];
         file.read(chunkData, chunkSize);
-        UInt8* data = reinterpret_cast<UInt8*>(chunkData);
+        auto* data = reinterpret_cast<UInt8*>(chunkData);
         FileChunk* fileChunk = FileChunk::data(data, chunkSize);
         delete[] chunkData;
 

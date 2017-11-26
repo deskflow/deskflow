@@ -17,12 +17,12 @@
  */
 
 #include "core/ServerTaskBarReceiver.h"
-#include "server/Server.h"
-#include "mt/Lock.h"
-#include "base/String.h"
-#include "base/IEventQueue.h"
 #include "arch/Arch.h"
+#include "base/IEventQueue.h"
+#include "base/String.h"
 #include "common/Version.h"
+#include "mt/Lock.h"
+#include "server/Server.h"
 
 //
 // ServerTaskBarReceiver
@@ -46,7 +46,7 @@ ServerTaskBarReceiver::updateStatus(Server* server, const String& errorMsg)
     {
         // update our status
         m_errorMessage = errorMsg;
-        if (server == NULL) {
+        if (server == nullptr) {
             if (m_errorMessage.empty()) {
                 m_state = kNotRunning;
             }
@@ -98,7 +98,7 @@ ServerTaskBarReceiver::quit()
 }
 
 void
-ServerTaskBarReceiver::onStatusChanged(Server*)
+ServerTaskBarReceiver::onStatusChanged(Server* /*unused*/)
 {
     // do nothing
 }

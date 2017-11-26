@@ -112,7 +112,7 @@ StreamFilter::filterEvent(const Event& event)
 }
 
 void
-StreamFilter::handleUpstreamEvent(const Event& event, void*)
+StreamFilter::handleUpstreamEvent(const Event& event, void* /*unused*/)
 {
     filterEvent(event);
 }

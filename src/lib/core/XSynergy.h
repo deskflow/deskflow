@@ -68,7 +68,7 @@ a client that is already connected.
 */
 class XDuplicateClient : public XSynergy {
 public:
-    XDuplicateClient(const String& name);
+    XDuplicateClient(String  name);
     virtual ~XDuplicateClient() _NOEXCEPT { }
 
     //! @name accessors
@@ -94,7 +94,7 @@ unknown to the server.
 */
 class XUnknownClient : public XSynergy {
 public:
-    XUnknownClient(const String& name);
+    XUnknownClient(String  name);
     virtual ~XUnknownClient() _NOEXCEPT { }
 
     //! @name accessors

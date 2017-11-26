@@ -18,6 +18,6 @@
 
 #include "arch/unix/ArchConsoleUnix.h"
 
-ArchConsoleUnix::ArchConsoleUnix() { }
+ArchConsoleUnix::ArchConsoleUnix() = default;
 
-ArchConsoleUnix::~ArchConsoleUnix() { }
+ArchConsoleUnix::~ArchConsoleUnix() = default;

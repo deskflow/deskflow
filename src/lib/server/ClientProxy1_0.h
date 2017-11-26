@@ -29,13 +29,13 @@ class IEventQueue;
 //! Proxy for client implementing protocol version 1.0
 class ClientProxy1_0 : public ClientProxy {
 public:
-    ClientProxy1_0(const String& name, synergy::IStream* adoptedStream, IEventQueue* events);
+    ClientProxy1_0(const String& name, synergy::IStream* stream, IEventQueue* events);
     ~ClientProxy1_0();
 
     // IScreen
     virtual bool        getClipboard(ClipboardID id, IClipboard*) const;
     virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const;
+                            SInt32& w, SInt32& h) const;
     virtual void        getCursorPos(SInt32& x, SInt32& y) const;
 
     // IClient overrides
@@ -55,7 +55,7 @@ public:
     virtual void        mouseMove(SInt32 xAbs, SInt32 yAbs);
     virtual void        mouseRelativeMove(SInt32 xRel, SInt32 yRel);
     virtual void        mouseWheel(SInt32 xDelta, SInt32 yDelta);
-    virtual void        screensaver(bool activate);
+    virtual void        screensaver(bool on);
     virtual void        resetOptions();
     virtual void        setOptions(const OptionsList& options);
     virtual void        sendDragInfo(UInt32 fileCount, const char* info, size_t size);
@@ -99,8 +99,8 @@ protected:
 private:
     typedef bool (ClientProxy1_0::*MessageParser)(const UInt8*);
 
-    ClientInfo            m_info;
-    double                m_heartbeatAlarm;
+    ClientInfo            m_info{};
+    double                m_heartbeatAlarm{};
     EventQueueTimer*    m_heartbeatTimer;
     MessageParser        m_parser;
     IEventQueue*        m_events;

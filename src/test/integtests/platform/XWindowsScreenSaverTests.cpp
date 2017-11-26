@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO: fix tests
+// TODO(andrew): fix tests
 #if 0
 
 #include "test/mock/synergy/MockEventQueue.h"

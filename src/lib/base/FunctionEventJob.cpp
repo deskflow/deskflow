@@ -38,7 +38,7 @@ FunctionEventJob::~FunctionEventJob()
 void
 FunctionEventJob::run(const Event& event)
 {
-    if (m_func != NULL) {
+    if (m_func != nullptr) {
         m_func(event, m_arg);
     }
 }

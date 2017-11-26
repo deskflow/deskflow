@@ -18,13 +18,13 @@
 
 #include "platform/XWindowsKeyState.h"
 
-#include "platform/XWindowsUtil.h"
 #include "base/Log.h"
 #include "base/String.h"
 #include "common/stdmap.h"
+#include "platform/XWindowsUtil.h"
 
-#include <cstddef>
 #include <algorithm>
+#include <cstddef>
 #if X_DISPLAY_MISSING
 #    error X11 is required to build synergy
 #else
@@ -63,14 +63,14 @@ XWindowsKeyState::XWindowsKeyState(
 XWindowsKeyState::~XWindowsKeyState()
 {
 #if HAVE_XKB_EXTENSION
-    if (m_xkb != NULL) {
+    if (m_xkb != nullptr) {
         XkbFreeKeyboard(m_xkb, 0, True);
     }
 #endif
 }
 
 void
-XWindowsKeyState::init(Display* display, bool useXKB)
+XWindowsKeyState::init(Display*  /*display*/, bool useXKB)
 {
     XGetKeyboardControl(m_display, &m_keyboardState);
 #if HAVE_XKB_EXTENSION
@@ -79,7 +79,7 @@ XWindowsKeyState::init(Display* display, bool useXKB)
                                 XkbAllClientInfoMask, XkbUseCoreKbd);
     }
     else {
-        m_xkb = NULL;
+        m_xkb = nullptr;
     }
 #endif
     setActiveGroup(kGroupPollAndSet);
@@ -138,13 +138,13 @@ XWindowsKeyState::mapModifiersToX(KeyModifierMask mask,
     for (SInt32 i = 0; i < kKeyModifierNumBits; ++i) {
         KeyModifierMask bit = (1u << i);
         if ((mask & bit) != 0) {
-            KeyModifierToXMask::const_iterator j = m_modifierToX.find(bit);
+            auto j = m_modifierToX.find(bit);
             if (j == m_modifierToX.end()) {
                 return false;
             }
-            else {
+            
                 modifiers |= j->second;
-            }
+            
         }
     }
 
@@ -158,7 +158,7 @@ XWindowsKeyState::mapKeyToKeycodes(KeyID key, KeycodeList& keycodes) const
     std::pair<KeyToKeyCodeMap::const_iterator,
         KeyToKeyCodeMap::const_iterator> range =
             m_keyCodeFromKey.equal_range(key);
-    for (KeyToKeyCodeMap::const_iterator i = range.first;
+    for (auto i = range.first;
                                 i != range.second; ++i) {
         keycodes.push_back(i->second);
     }
@@ -193,8 +193,8 @@ XWindowsKeyState::pollActiveGroup() const
     }
 
 #if HAVE_XKB_EXTENSION
-    if (m_xkb != NULL) {
-        XkbStateRec state;
+    if (m_xkb != nullptr) {
+        XkbStateRec state{};
         if (XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
             return state.group;
         }
@@ -227,7 +227,7 @@ XWindowsKeyState::getKeyMap(synergy::KeyMap& keyMap)
     m_keyboardState.global_auto_repeat = oldGlobalAutoRepeat;
 
 #if HAVE_XKB_EXTENSION
-    if (m_xkb != NULL) {
+    if (m_xkb != nullptr) {
         if (XkbGetUpdatedMap(m_display, XkbKeyActionsMask |
                 XkbKeyBehaviorsMask | XkbAllClientInfoMask, m_xkb) == Success) {
             updateKeysymMapXKB(keyMap);
@@ -263,7 +263,7 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
         if (keystroke.m_data.m_group.m_absolute) {
             LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
 #if HAVE_XKB_EXTENSION
-            if (m_xkb != NULL) {
+            if (m_xkb != nullptr) {
                 if (XkbLockGroup(m_display, XkbUseCoreKbd,
                             keystroke.m_data.m_group.m_group) == False) {
                     LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
@@ -278,7 +278,7 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
         else {
             LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
 #if HAVE_XKB_EXTENSION
-            if (m_xkb != NULL) {
+            if (m_xkb != nullptr) {
                 if (XkbLockGroup(m_display, XkbUseCoreKbd,
                             getEffectiveGroup(pollActiveGroup(),
                                 keystroke.m_data.m_group.m_group)) == False) {
@@ -331,7 +331,7 @@ XWindowsKeyState::updateKeysymMap(synergy::KeyMap& keyMap)
 
     // it's more convenient to always have maxKeysyms KeySyms per key
     {
-        KeySym* tmpKeysyms = new KeySym[maxKeysyms * numKeycodes];
+        auto* tmpKeysyms = new KeySym[maxKeysyms * numKeycodes];
         for (int i = 0; i < numKeycodes; ++i) {
             for (int j = 0; j < maxKeysyms; ++j) {
                 if (j < keysymsPerKeycode) {
@@ -391,10 +391,10 @@ XWindowsKeyState::updateKeysymMap(synergy::KeyMap& keyMap)
     }
 
     // add entries for each keycode
-    synergy::KeyMap::KeyItem item;
+    synergy::KeyMap::KeyItem item{};
     for (int i = 0; i < numKeycodes; ++i) {
         KeySym* keysyms = allKeysyms + maxKeysyms * i;
-        KeyCode keycode = static_cast<KeyCode>(i + minKeycode);
+        auto keycode = static_cast<KeyCode>(i + minKeycode);
         item.m_button   = static_cast<KeyButton>(keycode);
         item.m_client   = 0;
 
@@ -589,9 +589,9 @@ XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
 
     // check every button.  on this pass we save all modifiers as native
     // X modifier masks.
-    synergy::KeyMap::KeyItem item;
+    synergy::KeyMap::KeyItem item{};
     for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
-        KeyCode keycode = static_cast<KeyCode>(i);
+        auto keycode = static_cast<KeyCode>(i);
         item.m_button   = static_cast<KeyButton>(keycode);
         item.m_client   = 0;
 
@@ -621,7 +621,7 @@ XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
             for (int j = -1; j < type->map_count; ++j) {
                 const XkbKTMapEntryRec* mapEntry =
                     ((j == -1) ? &defMapEntry : type->map + j);
-                if (!mapEntry->active) {
+                if (mapEntry->active == 0) {
                     continue;
                 }
                 int level = mapEntry->level;
@@ -629,7 +629,7 @@ XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
                 // set required modifiers for this item
                 item.m_required = mapEntry->mods.mask;
                 if ((item.m_required & LockMask) != 0 &&
-                    j != -1 && type->preserve != NULL &&
+                    j != -1 && type->preserve != nullptr &&
                     (type->preserve[j].mask & LockMask) != 0) {
                     // sensitive caps lock and we preserve caps-lock.
                     // preserving caps-lock means we Xlib functions would
@@ -782,10 +782,10 @@ XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
 #endif
 
 void
-XWindowsKeyState::remapKeyModifiers(KeyID id, SInt32 group,
+XWindowsKeyState::remapKeyModifiers(KeyID  /*id*/, SInt32 group,
                             synergy::KeyMap::KeyItem& item, void* vself)
 {
-    XWindowsKeyState* self = static_cast<XWindowsKeyState*>(vself);
+    auto* self = static_cast<XWindowsKeyState*>(vself);
     item.m_required  =
         self->mapModifiersFromX(XkbBuildCoreState(item.m_required, group));
     item.m_sensitive =
@@ -798,7 +798,7 @@ XWindowsKeyState::hasModifiersXKB() const
 #if HAVE_XKB_EXTENSION
     // iterate over all keycodes
     for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
-        KeyCode keycode = static_cast<KeyCode>(i);
+        auto keycode = static_cast<KeyCode>(i);
         if (XkbKeyHasActions(m_xkb, keycode) == True) {
             // iterate over all groups
             int numGroups = XkbKeyNumGroups(m_xkb, keycode);
@@ -806,7 +806,7 @@ XWindowsKeyState::hasModifiersXKB() const
                 // iterate over all shift levels for the button (including none)
                 XkbKeyTypePtr type = XkbKeyKeyType(m_xkb, keycode, group);
                 for (int j = -1; j < type->map_count; ++j) {
-                    if (j != -1 && !type->map[j].active) {
+                    if (j != -1 && (type->map[j].active == 0)) {
                         continue;
                     }
                     int level = ((j == -1) ? 0 : type->map[j].level);
@@ -859,7 +859,7 @@ UInt32
 XWindowsKeyState::getGroupFromState(unsigned int state) const
 {
 #if HAVE_XKB_EXTENSION
-    if (m_xkb != NULL) {
+    if (m_xkb != nullptr) {
         return XkbGroupForCoreState(state);
     }
 #endif

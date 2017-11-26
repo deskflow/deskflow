@@ -101,9 +101,9 @@ private:
                             bool, bool, bool);
 
 protected:
-    bool                m_readable;
-    bool                m_writable;
-    bool                m_connected;
+    bool                m_readable{};
+    bool                m_writable{};
+    bool                m_connected{};
     IEventQueue*        m_events;
     StreamBuffer        m_inputBuffer;
     StreamBuffer        m_outputBuffer;

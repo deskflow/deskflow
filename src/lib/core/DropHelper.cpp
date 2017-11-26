@@ -26,7 +26,7 @@ DropHelper::writeToDir(const String& destination, DragFileList& fileList, String
 {
     LOG((CLOG_DEBUG "dropping file, files=%i target=%s", fileList.size(), destination.c_str()));
 
-    if (!destination.empty() && fileList.size() > 0) {
+    if (!destination.empty() && !fileList.empty()) {
         std::fstream file;
         String dropTarget = destination;
 #ifdef SYSAPI_WIN32

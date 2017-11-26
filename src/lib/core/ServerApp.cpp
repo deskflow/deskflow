@@ -18,27 +18,27 @@
 
 #include "core/ServerApp.h"
 
-#include "server/Server.h"
-#include "server/ClientListener.h"
-#include "server/ClientProxy.h"
-#include "server/PrimaryClient.h"
-#include "core/ArgParser.h"
-#include "core/Screen.h"
-#include "core/XScreen.h"
-#include "core/ServerTaskBarReceiver.h"
-#include "core/ServerArgs.h"
-#include "net/SocketMultiplexer.h"
-#include "net/TCPSocketFactory.h"
-#include "net/XSocket.h"
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
-#include "base/log_outputters.h"
 #include "base/FunctionEventJob.h"
-#include "base/TMethodJob.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
+#include "base/TMethodJob.h"
+#include "base/log_outputters.h"
 #include "common/Version.h"
+#include "core/ArgParser.h"
+#include "core/Screen.h"
+#include "core/ServerArgs.h"
+#include "core/ServerTaskBarReceiver.h"
+#include "core/XScreen.h"
+#include "net/SocketMultiplexer.h"
+#include "net/TCPSocketFactory.h"
+#include "net/XSocket.h"
+#include "server/ClientListener.h"
+#include "server/ClientProxy.h"
+#include "server/PrimaryClient.h"
+#include "server/Server.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -56,9 +56,9 @@
 #include "platform/OSXDragSimulator.h"
 #endif
 
+#include <fstream>
 #include <iostream>
 #include <stdio.h>
-#include <fstream>
 
 //
 // ServerApp
@@ -66,19 +66,18 @@
 
 ServerApp::ServerApp(IEventQueue* events) :
     App(events, new ServerArgs()),
-    m_server(NULL),
+    m_server(nullptr),
     m_serverState(kUninitialized),
-    m_serverScreen(NULL),
-    m_primaryClient(NULL),
-    m_listener(NULL),
-    m_timer(NULL),
-    m_synergyAddress(NULL)
+    m_serverScreen(nullptr),
+    m_primaryClient(nullptr),
+    m_listener(nullptr),
+    m_timer(nullptr),
+    m_synergyAddress(nullptr)
 {
 }
 
 ServerApp::~ServerApp()
-{
-}
+= default;
 
 void
 ServerApp::parseArgs(int argc, const char* const* argv)
@@ -159,7 +158,7 @@ ServerApp::help()
 }
 
 void
-ServerApp::reloadSignalHandler(Arch::ESignal, void*)
+ServerApp::reloadSignalHandler(Arch::ESignal /*unused*/, void* /*unused*/)
 {
     IEventQueue* events = App::instance().getEvents();
     events->addEvent(Event(events->forServerApp().reloadConfig(),
@@ -167,11 +166,11 @@ ServerApp::reloadSignalHandler(Arch::ESignal, void*)
 }
 
 void
-ServerApp::reloadConfig(const Event&, void*)
+ServerApp::reloadConfig(const Event& /*unused*/, void* /*unused*/)
 {
     LOG((CLOG_DEBUG "reload configuration"));
     if (loadConfig(args().m_configFile)) {
-        if (m_server != NULL) {
+        if (m_server != nullptr) {
             m_server->setConfig(*args().m_config);
         }
         LOG((CLOG_NOTE "reloaded configuration"));
@@ -249,26 +248,26 @@ ServerApp::loadConfig(const String& pathname)
 }
 
 void 
-ServerApp::forceReconnect(const Event&, void*)
+ServerApp::forceReconnect(const Event& /*unused*/, void* /*unused*/)
 {
-    if (m_server != NULL) {
+    if (m_server != nullptr) {
         m_server->disconnect();
     }
 }
 
 void 
-ServerApp::handleClientConnected(const Event&, void* vlistener)
+ServerApp::handleClientConnected(const Event& /*unused*/, void* vlistener)
 {
-    ClientListener* listener = static_cast<ClientListener*>(vlistener);
+    auto* listener = static_cast<ClientListener*>(vlistener);
     ClientProxy* client = listener->getNextClient();
-    if (client != NULL) {
+    if (client != nullptr) {
         m_server->adoptClient(client);
         updateStatus();
     }
 }
 
 void
-ServerApp::handleClientsDisconnected(const Event&, void*)
+ServerApp::handleClientsDisconnected(const Event& /*unused*/, void* /*unused*/)
 {
     m_events->addEvent(Event(Event::kQuit));
 }
@@ -276,7 +275,7 @@ ServerApp::handleClientsDisconnected(const Event&, void*)
 void
 ServerApp::closeServer(Server* server)
 {
-    if (server == NULL) {
+    if (server == nullptr) {
         return;
     }
 
@@ -285,7 +284,7 @@ ServerApp::closeServer(Server* server)
 
     // wait for clients to disconnect for up to timeout seconds
     double timeout = 3.0;
-    EventQueueTimer* timer = m_events->newOneShotTimer(timeout, NULL);
+    EventQueueTimer* timer = m_events->newOneShotTimer(timeout, nullptr);
     m_events->adoptHandler(Event::kTimer, timer,
         new TMethodEventJob<ServerApp>(this, &ServerApp::handleClientsDisconnected));
     m_events->adoptHandler(m_events->forServer().disconnected(), server,
@@ -304,10 +303,10 @@ ServerApp::closeServer(Server* server)
 void 
 ServerApp::stopRetryTimer()
 {
-    if (m_timer != NULL) {
+    if (m_timer != nullptr) {
         m_events->deleteTimer(m_timer);
-        m_events->removeHandler(Event::kTimer, NULL);
-        m_timer = NULL;
+        m_events->removeHandler(Event::kTimer, nullptr);
+        m_timer = nullptr;
     }
 }
 
@@ -317,14 +316,14 @@ ServerApp::updateStatus()
     updateStatus("");
 }
 
-void ServerApp::updateStatus(const String& msg)
+void ServerApp::updateStatus(const String&  /*msg*/)
 {
 }
 
 void 
 ServerApp::closeClientListener(ClientListener* listen)
 {
-    if (listen != NULL) {
+    if (listen != nullptr) {
         m_events->removeHandler(m_events->forClientListener().connected(), listen);
         delete listen;
     }
@@ -336,8 +335,8 @@ ServerApp::stopServer()
     if (m_serverState == kStarted) {
         closeServer(m_server);
         closeClientListener(m_listener);
-        m_server      = NULL;
-        m_listener    = NULL;
+        m_server      = nullptr;
+        m_listener    = nullptr;
         m_serverState = kInitialized;
     }
     else if (m_serverState == kStarting) {
@@ -357,7 +356,7 @@ ServerApp::closePrimaryClient(PrimaryClient* primaryClient)
 void 
 ServerApp::closeServerScreen(synergy::Screen* screen)
 {
-    if (screen != NULL) {
+    if (screen != nullptr) {
         m_events->removeHandler(m_events->forIScreen().error(),
             screen->getEventTarget());
         m_events->removeHandler(m_events->forIScreen().suspend(),
@@ -374,8 +373,8 @@ void ServerApp::cleanupServer()
     if (m_serverState == kInitialized) {
         closePrimaryClient(m_primaryClient);
         closeServerScreen(m_serverScreen);
-        m_primaryClient = NULL;
-        m_serverScreen  = NULL;
+        m_primaryClient = nullptr;
+        m_serverScreen  = nullptr;
         m_serverState   = kUninitialized;
     }
     else if (m_serverState == kInitializing ||
@@ -389,7 +388,7 @@ void ServerApp::cleanupServer()
 }
 
 void
-ServerApp::retryHandler(const Event&, void*)
+ServerApp::retryHandler(const Event& /*unused*/, void* /*unused*/)
 {
     // discard old timer
     assert(m_timer != NULL);
@@ -443,8 +442,8 @@ bool ServerApp::initServer()
     }
 
     double retryTime;
-    synergy::Screen* serverScreen         = NULL;
-    PrimaryClient* primaryClient = NULL;
+    synergy::Screen* serverScreen         = nullptr;
+    PrimaryClient* primaryClient = nullptr;
     try {
         String name    = args().m_config->getCanonicalName(args().m_name);
         serverScreen    = openServerScreen();
@@ -479,16 +478,16 @@ bool ServerApp::initServer()
         // install a timer and handler to retry later
         assert(m_timer == NULL);
         LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-        m_timer = m_events->newOneShotTimer(retryTime, NULL);
+        m_timer = m_events->newOneShotTimer(retryTime, nullptr);
         m_events->adoptHandler(Event::kTimer, m_timer,
             new TMethodEventJob<ServerApp>(this, &ServerApp::retryHandler));
         m_serverState = kInitializing;
         return true;
     }
-    else {
+    
         // don't try again
         return false;
-    }
+    
 }
 
 synergy::Screen*
@@ -534,7 +533,7 @@ ServerApp::startServer()
     }
 
     double retryTime;
-    ClientListener* listener = NULL;
+    ClientListener* listener = nullptr;
     try {
         listener   = openClientListener(args().m_config->getSynergyAddress());
         m_server   = openServer(*args().m_config, m_primaryClient);
@@ -562,16 +561,16 @@ ServerApp::startServer()
         // install a timer and handler to retry later
         assert(m_timer == NULL);
         LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-        m_timer = m_events->newOneShotTimer(retryTime, NULL);
+        m_timer = m_events->newOneShotTimer(retryTime, nullptr);
         m_events->adoptHandler(Event::kTimer, m_timer,
             new TMethodEventJob<ServerApp>(this, &ServerApp::retryHandler));
         m_serverState = kStarting;
         return true;
     }
-    else {
+    
         // don't try again
         return false;
-    }
+    
 }
 
 synergy::Screen* 
@@ -597,14 +596,14 @@ ServerApp::openPrimaryClient(const String& name, synergy::Screen* screen)
 }
 
 void
-ServerApp::handleScreenError(const Event&, void*)
+ServerApp::handleScreenError(const Event& /*unused*/, void* /*unused*/)
 {
     LOG((CLOG_CRIT "error on screen"));
     m_events->addEvent(Event(Event::kQuit));
 }
 
 void 
-ServerApp::handleSuspend(const Event&, void*)
+ServerApp::handleSuspend(const Event& /*unused*/, void* /*unused*/)
 {
     if (!m_suspended) {
         LOG((CLOG_INFO "suspend"));
@@ -614,7 +613,7 @@ ServerApp::handleSuspend(const Event&, void*)
 }
 
 void 
-ServerApp::handleResume(const Event&, void*)
+ServerApp::handleResume(const Event& /*unused*/, void* /*unused*/)
 {
     if (m_suspended) {
         LOG((CLOG_INFO "resume"));
@@ -626,7 +625,7 @@ ServerApp::handleResume(const Event&, void*)
 ClientListener*
 ServerApp::openClientListener(const NetworkAddress& address)
 {
-    ClientListener* listen = new ClientListener(
+    auto* listen = new ClientListener(
         address,
         new TCPSocketFactory(m_events, getSocketMultiplexer()),
         m_events);
@@ -642,7 +641,7 @@ ServerApp::openClientListener(const NetworkAddress& address)
 Server* 
 ServerApp::openServer(Config& config, PrimaryClient* primaryClient)
 {
-    Server* server = new Server(config, primaryClient, m_serverScreen, m_events, args());
+    auto* server = new Server(config, primaryClient, m_serverScreen, m_events, args());
     try {
         m_events->adoptHandler(
             m_events->forServer().disconnected(), server,
@@ -661,13 +660,13 @@ ServerApp::openServer(Config& config, PrimaryClient* primaryClient)
 }
 
 void
-ServerApp::handleNoClients(const Event&, void*)
+ServerApp::handleNoClients(const Event& /*unused*/, void* /*unused*/)
 {
     updateStatus();
 }
 
 void
-ServerApp::handleScreenSwitched(const Event& e, void*)
+ServerApp::handleScreenSwitched(const Event&  /*e*/, void* /*unused*/)
 {
 }
 
@@ -712,7 +711,7 @@ ServerApp::mainLoop()
     }
 
     // handle hangup signal by reloading the server's configuration
-    ARCH->setSignalHandler(Arch::kHANGUP, &reloadSignalHandler, NULL);
+    ARCH->setSignalHandler(Arch::kHANGUP, &reloadSignalHandler, nullptr);
     m_events->adoptHandler(m_events->forServerApp().reloadConfig(),
         m_events->getSystemTarget(),
         new TMethodEventJob<ServerApp>(this, &ServerApp::reloadConfig));
@@ -770,7 +769,7 @@ ServerApp::mainLoop()
     return kExitSuccess;
 }
 
-void ServerApp::resetServer(const Event&, void*)
+void ServerApp::resetServer(const Event& /*unused*/, void* /*unused*/)
 {
     LOG((CLOG_DEBUG1 "resetting server"));
     stopServer();
@@ -787,7 +786,7 @@ ServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
     args().m_pname          = ARCH->getBasename(argv[0]);
 
     // install caller's output filter
-    if (outputter != NULL) {
+    if (outputter != nullptr) {
         CLOG->insert(outputter);
     }
 
@@ -812,9 +811,9 @@ ServerApp::standardStartup(int argc, char** argv)
     if (args().m_daemon) {
         return ARCH->daemonize(daemonName(), daemonMainLoopStatic);
     }
-    else {
+    
         return mainLoop();
-    }
+    
 }
 
 int 

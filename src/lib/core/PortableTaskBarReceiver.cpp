@@ -17,11 +17,11 @@
  */
 
 #include "core/PortableTaskBarReceiver.h"
-#include "mt/Lock.h"
-#include "base/String.h"
-#include "base/IEventQueue.h"
 #include "arch/Arch.h"
+#include "base/IEventQueue.h"
+#include "base/String.h"
 #include "common/Version.h"
+#include "mt/Lock.h"
 
 //
 // PortableTaskBarReceiver
@@ -45,7 +45,7 @@ PortableTaskBarReceiver::updateStatus(INode* node, const String& errorMsg)
     {
         // update our status
         m_errorMessage = errorMsg;
-        if (node == NULL) {
+        if (node == nullptr) {
             if (m_errorMessage.empty()) {
                 m_state = kNotRunning;
             }
@@ -84,7 +84,7 @@ PortableTaskBarReceiver::quit()
 }
 
 void
-PortableTaskBarReceiver::onStatusChanged(INode*)
+PortableTaskBarReceiver::onStatusChanged(INode* /*unused*/)
 {
     // do nothing
 }

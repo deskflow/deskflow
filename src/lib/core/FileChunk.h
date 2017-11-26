@@ -36,7 +36,7 @@ public:
     static FileChunk*    end();
     static int            assemble(
                             synergy::IStream* stream,
-                            String& dataCached,
+                            String& dataReceived,
                             size_t& expectedSize);
     static void            send(
                             synergy::IStream* stream,

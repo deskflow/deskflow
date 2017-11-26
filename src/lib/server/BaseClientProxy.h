@@ -29,7 +29,7 @@ public:
     /*!
     \c name is the name of the client.
     */
-    BaseClientProxy(const String& name);
+    BaseClientProxy(String  name);
     ~BaseClientProxy();
 
     //! @name manipulators

@@ -18,19 +18,19 @@
 
 #include "net/TCPSocket.h"
 
+#include "arch/Arch.h"
+#include "arch/XArch.h"
+#include "base/IEventJob.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
+#include "mt/Lock.h"
 #include "net/NetworkAddress.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TSocketMultiplexerMethodJob.h"
 #include "net/XSocket.h"
-#include "mt/Lock.h"
-#include "arch/Arch.h"
-#include "arch/XArch.h"
-#include "base/Log.h"
-#include "base/IEventQueue.h"
-#include "base/IEventJob.h"
 
-#include <cstring>
 #include <cstdlib>
+#include <cstring>
 #include <memory>
 
 //
@@ -40,7 +40,6 @@
 TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
     IDataSocket(events),
     m_events(events),
-    m_mutex(),
     m_flushed(&m_mutex, true),
     m_socketMultiplexer(socketMultiplexer)
 {
@@ -57,7 +56,6 @@ TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) 
 TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket) :
     IDataSocket(events),
     m_events(events),
-    m_mutex(),
     m_socket(socket),
     m_flushed(&m_mutex, true),
     m_socketMultiplexer(socketMultiplexer)
@@ -98,7 +96,7 @@ void
 TCPSocket::close()
 {
     // remove ourself from the multiplexer
-    setJob(NULL);
+    setJob(nullptr);
 
     Lock lock(&m_mutex);
 
@@ -109,9 +107,9 @@ TCPSocket::close()
     onDisconnected();
 
     // close the socket
-    if (m_socket != NULL) {
+    if (m_socket != nullptr) {
         ArchSocket socket = m_socket;
-        m_socket = NULL;
+        m_socket = nullptr;
         try {
             ARCH->closeSocket(socket);
         }
@@ -137,7 +135,7 @@ TCPSocket::read(void* buffer, UInt32 n)
     if (n > size) {
         n = size;
     }
-    if (buffer != NULL && n != 0) {
+    if (buffer != nullptr && n != 0) {
         memcpy(buffer, m_inputBuffer.peek(n), n);
     }
     m_inputBuffer.pop(n);
@@ -187,7 +185,7 @@ void
 TCPSocket::flush()
 {
     Lock lock(&m_mutex);
-    while (m_flushed == false) {
+    while (!m_flushed) {
         m_flushed.wait();
     }
 }
@@ -273,7 +271,7 @@ TCPSocket::connect(const NetworkAddress& addr)
         Lock lock(&m_mutex);
 
         // fail on attempts to reconnect
-        if (m_socket == NULL || m_connected) {
+        if (m_socket == nullptr || m_connected) {
             sendConnectionFailedEvent("busy");
             return;
         }
@@ -312,7 +310,7 @@ TCPSocket::init()
     catch (XArchNetwork& e) {
         try {
             ARCH->closeSocket(m_socket);
-            m_socket = NULL;
+            m_socket = nullptr;
         }
         catch (XArchNetwork&) {
             // ignore
@@ -370,7 +368,7 @@ TCPSocket::doWrite()
 
     bufferSize = m_outputBuffer.getSize();
     const void* buffer = m_outputBuffer.peek(bufferSize);
-    bytesWrote = (UInt32)ARCH->writeSocket(m_socket, buffer, bufferSize);
+    bytesWrote = static_cast<UInt32>(ARCH->writeSocket(m_socket, buffer, bufferSize));
 
     if (bytesWrote > 0) {
         discardWrittenData(bytesWrote);
@@ -384,7 +382,7 @@ void
 TCPSocket::setJob(ISocketMultiplexerJob* job)
 {
     // multiplexer will delete the old job
-    if (job == NULL) {
+    if (job == nullptr) {
         m_socketMultiplexer->removeSocket(this);
     }
     else {
@@ -397,13 +395,13 @@ TCPSocket::newJob()
 {
     // note -- must have m_mutex locked on entry
 
-    if (m_socket == NULL) {
-        return NULL;
+    if (m_socket == nullptr) {
+        return nullptr;
     }
-    else if (!m_connected) {
+    if (!m_connected) {
         assert(!m_readable);
         if (!(m_readable || m_writable)) {
-            return NULL;
+            return nullptr;
         }
         return new TSocketMultiplexerMethodJob<TCPSocket>(
                                 this, &TCPSocket::serviceConnecting,
@@ -411,7 +409,7 @@ TCPSocket::newJob()
     }
     else {
         if (!(m_readable || (m_writable && (m_outputBuffer.getSize() > 0)))) {
-            return NULL;
+            return nullptr;
         }
         return new TSocketMultiplexerMethodJob<TCPSocket>(
                                 this, &TCPSocket::serviceConnected,
@@ -423,7 +421,7 @@ TCPSocket::newJob()
 void
 TCPSocket::sendConnectionFailedEvent(const char* msg)
 {
-    ConnectionFailedInfo* info = new ConnectionFailedInfo(msg);
+    auto* info = new ConnectionFailedInfo(msg);
     m_events->addEvent(Event(m_events->forIDataSocket().connectionFailed(),
                             getEventTarget(), info, Event::kDontFreeData));
 }
@@ -431,7 +429,7 @@ TCPSocket::sendConnectionFailedEvent(const char* msg)
 void
 TCPSocket::sendEvent(Event::Type type)
 {
-    m_events->addEvent(Event(type, getEventTarget(), NULL));
+    m_events->addEvent(Event(type, getEventTarget(), nullptr));
 }
 
 void
@@ -482,7 +480,7 @@ TCPSocket::onDisconnected()
 
 ISocketMultiplexerJob*
 TCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
-                bool, bool write, bool error)
+                bool /*unused*/, bool write, bool error)
 {
     Lock lock(&m_mutex);
 
@@ -503,7 +501,7 @@ TCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
     // connection refused.  when that happens it at least doesn't
     // report the socket as being writable so synergy is able to time
     // out the attempt.)
-    if (error || true) {
+    if (true) {
         try {
             // connection may have failed or succeeded
             ARCH->throwErrorOnSocket(m_socket);
@@ -584,5 +582,5 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
         }
     }
 
-    return result == kBreak ? NULL : result == kNew ? newJob() : job;
+    return result == kBreak ? nullptr : result == kNew ? newJob() : job;
 }

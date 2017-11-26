@@ -17,10 +17,10 @@
 
 #include "core/ToolApp.h"
 
-#include "core/ArgParser.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/String.h"
+#include "core/ArgParser.h"
 
 #include <iostream>
 #include <sstream>

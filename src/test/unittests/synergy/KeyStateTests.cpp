@@ -20,15 +20,14 @@
 #include "test/mock/synergy/MockEventQueue.h"
 #include "test/mock/synergy/MockKeyMap.h"
 
-#include "test/global/gtest.h"
 #include "test/global/gmock.h"
+#include "test/global/gtest.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Invoke;
 using ::testing::Return;
 using ::testing::ReturnRef;
-using ::testing::SaveArg;
 
 void
 stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);
@@ -90,7 +89,7 @@ TEST(KeyStateTests, sendKeyEvent_halfDuplexAndRepeat_addEventNotCalled)
 
     EXPECT_CALL(eventQueue, addEvent(_)).Times(0);
 
-    keyState.sendKeyEvent(NULL, false, true, kKeyCapsLock, 0, 0, 0);
+    keyState.sendKeyEvent(nullptr, false, true, kKeyCapsLock, 0, 0, 0);
 }
 
 TEST(KeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice)
@@ -106,7 +105,7 @@ TEST(KeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice)
 
     EXPECT_CALL(eventQueue, addEvent(_)).Times(2);
 
-    keyState.sendKeyEvent(NULL, false, false, kKeyCapsLock, 0, 0, 0);
+    keyState.sendKeyEvent(nullptr, false, false, kKeyCapsLock, 0, 0, 0);
 }
 
 TEST(KeyStateTests, sendKeyEvent_keyRepeat_addEventCalledOnce)
@@ -121,7 +120,7 @@ TEST(KeyStateTests, sendKeyEvent_keyRepeat_addEventCalledOnce)
 
     EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 
-    keyState.sendKeyEvent(NULL, false, true, 1, 0, 0, 0);
+    keyState.sendKeyEvent(nullptr, false, true, 1, 0, 0, 0);
 }
 
 TEST(KeyStateTests, sendKeyEvent_keyDown_addEventCalledOnce)
@@ -136,7 +135,7 @@ TEST(KeyStateTests, sendKeyEvent_keyDown_addEventCalledOnce)
 
     EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 
-    keyState.sendKeyEvent(NULL, true, false, 1, 0, 0, 0);
+    keyState.sendKeyEvent(nullptr, true, false, 1, 0, 0, 0);
 }
 
 TEST(KeyStateTests, sendKeyEvent_keyUp_addEventCalledOnce)
@@ -151,7 +150,7 @@ TEST(KeyStateTests, sendKeyEvent_keyUp_addEventCalledOnce)
 
     EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 
-    keyState.sendKeyEvent(NULL, false, false, 1, 0, 0, 0);
+    keyState.sendKeyEvent(nullptr, false, false, 1, 0, 0, 0);
 }
 
 TEST(KeyStateTests, updateKeyMap_mockKeyMap_keyMapGotMock)
@@ -324,14 +323,14 @@ TEST(KeyStateTests, fakeKeyRepeat_nullKey_returnsFalse)
     KeyStateImpl keyState(eventQueue, keyMap);
 
     // set the key to down (we need to make mapKey return a valid key to do this).
-    synergy::KeyMap::KeyItem keyItem;
+    synergy::KeyMap::KeyItem keyItem{};
     keyItem.m_client = 0;
     keyItem.m_button = 1;
     ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
     keyState.fakeKeyDown(1, 0, 0);
 
     // change mapKey to return NULL so that fakeKeyRepeat exits early.
-    synergy::KeyMap::KeyItem* nullKeyItem = NULL;
+    synergy::KeyMap::KeyItem* nullKeyItem = nullptr;
     ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(nullKeyItem));
 
     bool actual = keyState.fakeKeyRepeat(1, 0, 0, 0);
@@ -346,7 +345,7 @@ TEST(KeyStateTests, fakeKeyRepeat_invalidButton_returnsFalse)
     KeyStateImpl keyState(eventQueue, keyMap);
 
     // set the key to down (we need to make mapKey return a valid key to do this).
-    synergy::KeyMap::KeyItem keyItem;
+    synergy::KeyMap::KeyItem keyItem{};
     keyItem.m_client = 0;
     keyItem.m_button = 1; // set to 1 to make fakeKeyDown work.
     ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
@@ -470,18 +469,18 @@ stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys)
 }
 
 void
-assertMaskIsOne(ForeachKeyCallback cb, void* userData)
+assertMaskIsOne(ForeachKeyCallback  /*cb*/, void* userData)
 {
     ASSERT_EQ(1, ((KeyState::AddActiveModifierContext*)userData)->m_mask);
 }
 
 const synergy::KeyMap::KeyItem*
 stubMapKey(
-    synergy::KeyMap::Keystrokes& keys, KeyID id, SInt32 group,
-    synergy::KeyMap::ModifierToKeys& activeModifiers,
-    KeyModifierMask& currentState,
-    KeyModifierMask desiredMask,
-    bool isAutoRepeat)
+    synergy::KeyMap::Keystrokes& keys, KeyID  /*id*/, SInt32  /*group*/,
+    synergy::KeyMap::ModifierToKeys&  /*activeModifiers*/,
+    KeyModifierMask&  /*currentState*/,
+    KeyModifierMask  /*desiredMask*/,
+    bool  /*isAutoRepeat*/)
 {
     keys.push_back(s_stubKeystroke);
     return &s_stubKeyItem;

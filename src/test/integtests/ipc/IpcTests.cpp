@@ -16,26 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO: fix, tests failing intermittently on mac.
+// TODO(andrew): fix, tests failing intermittently on mac.
 #ifndef WINAPI_CARBON
 
 #define TEST_ENV
 
 #include "test/global/TestEventQueue.h"
-#include "ipc/IpcServer.h"
-#include "ipc/IpcClient.h"
-#include "ipc/IpcServerProxy.h"
-#include "ipc/IpcMessage.h"
-#include "ipc/IpcClientProxy.h"
-#include "ipc/Ipc.h"
-#include "net/SocketMultiplexer.h"
-#include "mt/Thread.h"
 #include "arch/Arch.h"
-#include "base/TMethodJob.h"
-#include "base/String.h"
-#include "base/Log.h"
 #include "base/EventQueue.h"
+#include "base/Log.h"
+#include "base/String.h"
 #include "base/TMethodEventJob.h"
+#include "base/TMethodJob.h"
+#include "ipc/Ipc.h"
+#include "ipc/IpcClient.h"
+#include "ipc/IpcClientProxy.h"
+#include "ipc/IpcMessage.h"
+#include "ipc/IpcServer.h"
+#include "ipc/IpcServerProxy.h"
+#include "mt/Thread.h"
+#include "net/SocketMultiplexer.h"
 
 #include "test/global/gtest.h"
 
@@ -45,22 +45,22 @@ class IpcTests : public ::testing::Test
 {
 public:
     IpcTests();
-    virtual ~IpcTests();
+    ~IpcTests() override;
     
-    void                connectToServer_handleMessageReceived(const Event&, void*);
-    void                sendMessageToServer_serverHandleMessageReceived(const Event&, void*);
-    void                sendMessageToClient_serverHandleClientConnected(const Event&, void*);
-    void                sendMessageToClient_clientHandleMessageReceived(const Event&, void*);
+    void                connectToServer_handleMessageReceived(const Event& /*e*/, void* /*unused*/);
+    void                sendMessageToServer_serverHandleMessageReceived(const Event& /*e*/, void* /*unused*/);
+    void                sendMessageToClient_serverHandleClientConnected(const Event& /*e*/, void* /*unused*/);
+    void                sendMessageToClient_clientHandleMessageReceived(const Event& /*e*/, void* /*unused*/);
 
 public:
     SocketMultiplexer    m_multiplexer;
-    bool                m_connectToServer_helloMessageReceived;
-    bool                m_connectToServer_hasClientNode;
-    IpcServer*            m_connectToServer_server;
+    bool                m_connectToServer_helloMessageReceived{false};
+    bool                m_connectToServer_hasClientNode{false};
+    IpcServer*            m_connectToServer_server{nullptr};
     String                m_sendMessageToServer_receivedString;
     String                m_sendMessageToClient_receivedString;
-    IpcClient*            m_sendMessageToServer_client;
-    IpcServer*            m_sendMessageToClient_server;
+    IpcClient*            m_sendMessageToServer_client{nullptr};
+    IpcServer*            m_sendMessageToClient_server{nullptr};
     TestEventQueue        m_events;
 
 };
@@ -143,23 +143,17 @@ TEST_F(IpcTests, sendMessageToClient)
     EXPECT_EQ("test", m_sendMessageToClient_receivedString);
 }
 
-IpcTests::IpcTests() :
-m_connectToServer_helloMessageReceived(false),
-m_connectToServer_hasClientNode(false),
-m_connectToServer_server(nullptr),
-m_sendMessageToClient_server(nullptr),
-m_sendMessageToServer_client(nullptr)
+IpcTests::IpcTests() 
 {
 }
 
 IpcTests::~IpcTests()
-{
-}
+= default;
 
 void
-IpcTests::connectToServer_handleMessageReceived(const Event& e, void*)
+IpcTests::connectToServer_handleMessageReceived(const Event& e, void* /*unused*/)
 {
-    IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
+    auto* m = dynamic_cast<IpcMessage*>(e.getDataObject());
     if (m->type() == kIpcHello) {
         m_connectToServer_hasClientNode =
             m_connectToServer_server->hasClients(kIpcClientNode);
@@ -169,16 +163,16 @@ IpcTests::connectToServer_handleMessageReceived(const Event& e, void*)
 }
 
 void
-IpcTests::sendMessageToServer_serverHandleMessageReceived(const Event& e, void*)
+IpcTests::sendMessageToServer_serverHandleMessageReceived(const Event& e, void* /*unused*/)
 {
-    IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
+    auto* m = dynamic_cast<IpcMessage*>(e.getDataObject());
     if (m->type() == kIpcHello) {
         LOG((CLOG_DEBUG "client said hello, sending test to server"));
         IpcCommandMessage m("test", true);
         m_sendMessageToServer_client->send(m);
     }
     else if (m->type() == kIpcCommand) {
-        IpcCommandMessage* cm = static_cast<IpcCommandMessage*>(m);
+        auto* cm = dynamic_cast<IpcCommandMessage*>(m);
         LOG((CLOG_DEBUG "got ipc command message, %d", cm->command().c_str()));
         m_sendMessageToServer_receivedString = cm->command();
         m_events.raiseQuitEvent();
@@ -186,9 +180,9 @@ IpcTests::sendMessageToServer_serverHandleMessageReceived(const Event& e, void*)
 }
 
 void
-IpcTests::sendMessageToClient_serverHandleClientConnected(const Event& e, void*)
+IpcTests::sendMessageToClient_serverHandleClientConnected(const Event& e, void* /*unused*/)
 {
-    IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
+    auto* m = dynamic_cast<IpcMessage*>(e.getDataObject());
     if (m->type() == kIpcHello) {
         LOG((CLOG_DEBUG "client said hello, sending test to client"));
         IpcLogLineMessage m("test");
@@ -197,11 +191,11 @@ IpcTests::sendMessageToClient_serverHandleClientConnected(const Event& e, void*)
 }
 
 void
-IpcTests::sendMessageToClient_clientHandleMessageReceived(const Event& e, void*)
+IpcTests::sendMessageToClient_clientHandleMessageReceived(const Event& e, void* /*unused*/)
 {
-    IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
+    auto* m = dynamic_cast<IpcMessage*>(e.getDataObject());
     if (m->type() == kIpcLogLine) {
-        IpcLogLineMessage* llm = static_cast<IpcLogLineMessage*>(m);
+        auto* llm = dynamic_cast<IpcLogLineMessage*>(m);
         LOG((CLOG_DEBUG "got ipc log message, %d", llm->logLine().c_str()));
         m_sendMessageToClient_receivedString = llm->logLine();
         m_events.raiseQuitEvent();

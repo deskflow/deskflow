@@ -18,28 +18,28 @@
 
 #include "core/ClientApp.h"
 
+#include "arch/Arch.h"
+#include "arch/IArchTaskBarReceiver.h"
+#include "base/Event.h"
+#include "base/EventQueue.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
+#include "base/String.h"
+#include "base/TMethodEventJob.h"
+#include "base/TMethodJob.h"
+#include "base/log_outputters.h"
 #include "client/Client.h"
+#include "common/Version.h"
 #include "core/ArgParser.h"
-#include "core/protocol_types.h"
+#include "core/ClientArgs.h"
 #include "core/Screen.h"
 #include "core/XScreen.h"
-#include "core/ClientArgs.h"
-#include "net/NetworkAddress.h"
-#include "net/TCPSocketFactory.h"
-#include "net/SocketMultiplexer.h"
-#include "net/XSocket.h"
+#include "core/protocol_types.h"
 #include "mt/Thread.h"
-#include "arch/IArchTaskBarReceiver.h"
-#include "arch/Arch.h"
-#include "base/String.h"
-#include "base/Event.h"
-#include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
-#include "base/log_outputters.h"
-#include "base/EventQueue.h"
-#include "base/TMethodJob.h"
-#include "base/Log.h"
-#include "common/Version.h"
+#include "net/NetworkAddress.h"
+#include "net/SocketMultiplexer.h"
+#include "net/TCPSocketFactory.h"
+#include "net/XSocket.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -58,21 +58,20 @@
 #endif
 
 #include <iostream>
-#include <stdio.h>
+#include <cstdio>
 
 #define RETRY_TIME 1.0
 
 ClientApp::ClientApp(IEventQueue* events) :
     App(events, new ClientArgs()),
-    m_client(NULL),
-    m_clientScreen(NULL),
-    m_serverAddress(NULL)
+    m_client(nullptr),
+    m_clientScreen(nullptr),
+    m_serverAddress(nullptr)
 {
 }
 
 ClientApp::~ClientApp()
-{
-}
+= default;
 
 void
 ClientApp::parseArgs(int argc, const char* const* argv)
@@ -192,7 +191,7 @@ ClientApp::updateStatus()
 
 
 void
-ClientApp::updateStatus(const String& msg)
+ClientApp::updateStatus(const String&  /*msg*/)
 {
 }
 
@@ -229,7 +228,7 @@ ClientApp::nextRestartTimeout()
 
 
 void
-ClientApp::handleScreenError(const Event&, void*)
+ClientApp::handleScreenError(const Event& /*unused*/, void* /*unused*/)
 {
     LOG((CLOG_CRIT "error on screen"));
     m_events->addEvent(Event(Event::kQuit));
@@ -252,7 +251,7 @@ ClientApp::openClientScreen()
 void
 ClientApp::closeClientScreen(synergy::Screen* screen)
 {
-    if (screen != NULL) {
+    if (screen != nullptr) {
         m_events->removeHandler(m_events->forIScreen().error(),
             screen->getEventTarget());
         delete screen;
@@ -261,10 +260,10 @@ ClientApp::closeClientScreen(synergy::Screen* screen)
 
 
 void
-ClientApp::handleClientRestart(const Event&, void* vtimer)
+ClientApp::handleClientRestart(const Event& /*unused*/, void* vtimer)
 {
     // discard old timer
-    EventQueueTimer* timer = static_cast<EventQueueTimer*>(vtimer);
+    auto* timer = static_cast<EventQueueTimer*>(vtimer);
     m_events->deleteTimer(timer);
     m_events->removeHandler(Event::kTimer, timer);
 
@@ -278,14 +277,14 @@ ClientApp::scheduleClientRestart(double retryTime)
 {
     // install a timer and handler to retry later
     LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-    EventQueueTimer* timer = m_events->newOneShotTimer(retryTime, NULL);
+    EventQueueTimer* timer = m_events->newOneShotTimer(retryTime, nullptr);
     m_events->adoptHandler(Event::kTimer, timer,
         new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientRestart, timer));
 }
 
 
 void
-ClientApp::handleClientConnected(const Event&, void*)
+ClientApp::handleClientConnected(const Event& /*unused*/, void* /*unused*/)
 {
     LOG((CLOG_NOTE "connected to server"));
     resetRestartTimeout();
@@ -294,9 +293,9 @@ ClientApp::handleClientConnected(const Event&, void*)
 
 
 void
-ClientApp::handleClientFailed(const Event& e, void*)
+ClientApp::handleClientFailed(const Event& e, void* /*unused*/)
 {
-    Client::FailInfo* info =
+    auto* info =
         static_cast<Client::FailInfo*>(e.getData());
 
     updateStatus(String("Failed to connect to server: ") + info->m_what);
@@ -315,7 +314,7 @@ ClientApp::handleClientFailed(const Event& e, void*)
 
 
 void
-ClientApp::handleClientDisconnected(const Event&, void*)
+ClientApp::handleClientDisconnected(const Event& /*unused*/, void* /*unused*/)
 {
     LOG((CLOG_NOTE "disconnected from server"));
     if (!args().m_restartable) {
@@ -331,7 +330,7 @@ Client*
 ClientApp::openClient(const String& name, const NetworkAddress& address,
                 synergy::Screen* screen)
 {
-    Client* client = new Client(
+    auto* client = new Client(
         m_events,
         name,
         address,
@@ -367,7 +366,7 @@ ClientApp::openClient(const String& name, const NetworkAddress& address,
 void
 ClientApp::closeClient(Client* client)
 {
-    if (client == NULL) {
+    if (client == nullptr) {
         return;
     }
 
@@ -390,9 +389,9 @@ bool
 ClientApp::startClient()
 {
     double retryTime;
-    synergy::Screen* clientScreen = NULL;
+    synergy::Screen* clientScreen = nullptr;
     try {
-        if (m_clientScreen == NULL) {
+        if (m_clientScreen == nullptr) {
             clientScreen = openClientScreen();
             m_client     = openClient(args().m_name,
                 *m_serverAddress, clientScreen);
@@ -426,10 +425,10 @@ ClientApp::startClient()
         scheduleClientRestart(retryTime);
         return true;
     }
-    else {
+    
         // don't try again
         return false;
-    }
+    
 }
 
 
@@ -438,8 +437,8 @@ ClientApp::stopClient()
 {
     closeClient(m_client);
     closeClientScreen(m_clientScreen);
-    m_client       = NULL;
-    m_clientScreen = NULL;
+    m_client       = nullptr;
+    m_clientScreen = nullptr;
 }
 
 
@@ -513,9 +512,9 @@ ClientApp::standardStartup(int argc, char** argv)
     if (args().m_daemon) {
         return ARCH->daemonize(daemonName(), &daemonMainLoopStatic);
     }
-    else {
+    
         return mainLoop();
-    }
+    
 }
 
 int
@@ -526,7 +525,7 @@ ClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
     args().m_pname         = ARCH->getBasename(argv[0]);
 
     // install caller's output filter
-    if (outputter != NULL) {
+    if (outputter != nullptr) {
         CLOG->insert(outputter);
     }
 

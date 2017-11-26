@@ -18,11 +18,11 @@
 
 #include "arch/unix/ArchFileUnix.h"
 
-#include <stdio.h>
-#include <unistd.h>
-#include <pwd.h>
-#include <sys/types.h>
 #include <cstring>
+#include <pwd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 //
 // ArchFileUnix
@@ -41,26 +41,26 @@ ArchFileUnix::~ArchFileUnix()
 const char*
 ArchFileUnix::getBasename(const char* pathname)
 {
-    if (pathname == NULL) {
-        return NULL;
+    if (pathname == nullptr) {
+        return nullptr;
     }
 
     const char* basename = strrchr(pathname, '/');
-    if (basename != NULL) {
+    if (basename != nullptr) {
         return basename + 1;
     }
-    else {
+    
         return pathname;
-    }
+    
 }
 
 std::string
 ArchFileUnix::getUserDirectory()
 {
-    char* buffer = NULL;
+    char* buffer = nullptr;
     std::string dir;
 #if HAVE_GETPWUID_R
-    struct passwd pwent;
+    struct passwd pwent{};
     struct passwd* pwentp;
 #if defined(_SC_GETPW_R_SIZE_MAX)
     long size = sysconf(_SC_GETPW_R_SIZE_MAX);
@@ -75,7 +75,7 @@ ArchFileUnix::getUserDirectory()
 #else
     struct passwd* pwentp = getpwuid(getuid());
 #endif
-    if (pwentp != NULL && pwentp->pw_dir != NULL) {
+    if (pwentp != nullptr && pwentp->pw_dir != nullptr) {
         dir = pwentp->pw_dir;
     }
     delete[] buffer;
@@ -143,7 +143,7 @@ ArchFileUnix::concatPath(const std::string& prefix,
     std::string path;
     path.reserve(prefix.size() + 1 + suffix.size());
     path += prefix;
-    if (path.size() == 0 || path[path.size() - 1] != '/') {
+    if (path.empty() || path[path.size() - 1] != '/') {
         path += '/';
     }
     path += suffix;

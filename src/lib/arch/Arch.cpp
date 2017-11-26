@@ -22,7 +22,7 @@
 // Arch
 //
 
-Arch*                    Arch::s_instance = NULL;
+Arch*                    Arch::s_instance = nullptr;
 
 Arch::Arch()
 {

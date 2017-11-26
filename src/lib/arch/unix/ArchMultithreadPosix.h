@@ -89,8 +89,8 @@ private:
     void                insert(ArchThreadImpl* thread);
     void                erase(ArchThreadImpl* thread);
 
-    void                refThread(ArchThreadImpl* rep);
-    void                testCancelThreadImpl(ArchThreadImpl* rep);
+    void                refThread(ArchThreadImpl* thread);
+    void                testCancelThreadImpl(ArchThreadImpl* thread);
 
     void                doThreadFunc(ArchThread thread);
     static void*        threadFunc(void* vrep);
@@ -109,7 +109,7 @@ private:
     ThreadList            m_threadList;
     ThreadID            m_nextID;
 
-    pthread_t            m_signalThread;
-    SignalFunc            m_signalFunc[kNUM_SIGNALS];
-    void*                m_signalUserData[kNUM_SIGNALS];
+    pthread_t            m_signalThread{};
+    SignalFunc            m_signalFunc[kNUM_SIGNALS]{};
+    void*                m_signalUserData[kNUM_SIGNALS]{};
 };

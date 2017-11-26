@@ -17,15 +17,9 @@
 
 #include "core/KeyMap.h"
 
-#include "test/global/gtest.h"
 #include "test/global/gmock.h"
+#include "test/global/gtest.h"
 
-using ::testing::_;
-using ::testing::NiceMock;
-using ::testing::Invoke;
-using ::testing::Return;
-using ::testing::ReturnRef;
-using ::testing::SaveArg;
 
 namespace synergy {
     
@@ -34,7 +28,7 @@ TEST(KeyMapTests, findBestKey_requiredDown_matchExactFirstItem)
     KeyMap keyMap;
     KeyMap::KeyEntryList entryList;
     KeyMap::KeyItemList itemList;
-    KeyMap::KeyItem item;
+    KeyMap::KeyItem item{};
     item.m_required = KeyModifierShift;
     item.m_sensitive = KeyModifierShift;
     KeyModifierMask currentState = KeyModifierShift;
@@ -50,7 +44,7 @@ TEST(KeyMapTests, findBestKey_requiredAndExtraSensitiveDown_matchExactFirstItem)
     KeyMap keyMap;
     KeyMap::KeyEntryList entryList;
     KeyMap::KeyItemList itemList;
-    KeyMap::KeyItem item;
+    KeyMap::KeyItem item{};
     item.m_required = KeyModifierShift;
     item.m_sensitive = KeyModifierShift | KeyModifierAlt;
     KeyModifierMask currentState = KeyModifierShift;
@@ -66,11 +60,11 @@ TEST(KeyMapTests, findBestKey_requiredAndExtraSensitiveDown_matchExactSecondItem
     KeyMap keyMap;
     KeyMap::KeyEntryList entryList;
     KeyMap::KeyItemList itemList1;
-    KeyMap::KeyItem item1;
+    KeyMap::KeyItem item1{};
     item1.m_required = KeyModifierAlt;
     item1.m_sensitive = KeyModifierShift | KeyModifierAlt;
     KeyMap::KeyItemList itemList2;
-    KeyMap::KeyItem item2;
+    KeyMap::KeyItem item2{};
     item2.m_required = KeyModifierShift;
     item2.m_sensitive = KeyModifierShift | KeyModifierAlt;
     KeyModifierMask currentState = KeyModifierShift;
@@ -88,11 +82,11 @@ TEST(KeyMapTests, findBestKey_extraSensitiveDown_matchExactSecondItem)
     KeyMap keyMap;
     KeyMap::KeyEntryList entryList;
     KeyMap::KeyItemList itemList1;
-    KeyMap::KeyItem item1;
+    KeyMap::KeyItem item1{};
     item1.m_required = 0;
     item1.m_sensitive = KeyModifierAlt;
     KeyMap::KeyItemList itemList2;
-    KeyMap::KeyItem item2;
+    KeyMap::KeyItem item2{};
     item2.m_required = 0;
     item2.m_sensitive = KeyModifierShift;
     KeyModifierMask currentState = KeyModifierAlt;
@@ -110,11 +104,11 @@ TEST(KeyMapTests, findBestKey_noRequiredDown_matchOneRequiredChangeItem)
     KeyMap keyMap;
     KeyMap::KeyEntryList entryList;
     KeyMap::KeyItemList itemList1;
-    KeyMap::KeyItem item1;
+    KeyMap::KeyItem item1{};
     item1.m_required = KeyModifierShift | KeyModifierAlt;
     item1.m_sensitive = KeyModifierShift | KeyModifierAlt;
     KeyMap::KeyItemList itemList2;
-    KeyMap::KeyItem item2;
+    KeyMap::KeyItem item2{};
     item2.m_required = KeyModifierShift;
     item2.m_sensitive = KeyModifierShift | KeyModifierAlt;
     KeyModifierMask currentState = 0;
@@ -132,11 +126,11 @@ TEST(KeyMapTests, findBestKey_onlyOneRequiredDown_matchTwoRequiredChangesItem)
     KeyMap keyMap;
     KeyMap::KeyEntryList entryList;
     KeyMap::KeyItemList itemList1;
-    KeyMap::KeyItem item1;
+    KeyMap::KeyItem item1{};
     item1.m_required = KeyModifierShift | KeyModifierAlt | KeyModifierControl;
     item1.m_sensitive = KeyModifierShift | KeyModifierAlt | KeyModifierControl;
     KeyMap::KeyItemList itemList2;
-    KeyMap::KeyItem item2;
+    KeyMap::KeyItem item2{};
     item2.m_required = KeyModifierShift| KeyModifierAlt;
     item2.m_sensitive = KeyModifierShift | KeyModifierAlt | KeyModifierControl;
     KeyModifierMask currentState = 0;
@@ -154,7 +148,7 @@ TEST(KeyMapTests, findBestKey_noRequiredDown_cannotMatch)
     KeyMap keyMap;
     KeyMap::KeyEntryList entryList;
     KeyMap::KeyItemList itemList;
-    KeyMap::KeyItem item;
+    KeyMap::KeyItem item{};
     item.m_required = 0xffffffff;
     item.m_sensitive = 0xffffffff;
     KeyModifierMask currentState = 0;
@@ -213,4 +207,4 @@ TEST(KeyMapTests, isCommand_superMask_returnTrue)
     EXPECT_EQ(true, keyMap.isCommand(mask));
 }
     
-}
+}  // namespace synergy

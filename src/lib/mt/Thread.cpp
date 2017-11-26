@@ -18,11 +18,11 @@
 
 #include "mt/Thread.h"
 
+#include "arch/Arch.h"
+#include "base/IJob.h"
+#include "base/Log.h"
 #include "mt/XMT.h"
 #include "mt/XThread.h"
-#include "arch/Arch.h"
-#include "base/Log.h"
-#include "base/IJob.h"
 
 //
 // Thread
@@ -31,7 +31,7 @@
 Thread::Thread(IJob* job)
 {
     m_thread = ARCH->newThread(&Thread::threadFunc, job);
-    if (m_thread == NULL) {
+    if (m_thread == nullptr) {
         // couldn't create thread
         delete job;
         throw XMTThreadUnavailable();
@@ -111,10 +111,11 @@ Thread::wait(double timeout) const
 void*
 Thread::getResult() const
 {
-    if (wait())
+    if (wait()) {
         return ARCH->getResultOfThread(m_thread);
-    else
-        return NULL;
+    } else {
+        return nullptr;
+    }
 }
 
 IArchMultithread::ThreadID
@@ -147,10 +148,10 @@ Thread::threadFunc(void* vjob)
     }
 
     // get job
-    IJob* job = static_cast<IJob*>(vjob);
+    auto* job = static_cast<IJob*>(vjob);
 
     // run job
-    void* result = NULL;
+    void* result = nullptr;
     try {
         // go
         LOG((CLOG_DEBUG1 "thread 0x%08x entry", id));

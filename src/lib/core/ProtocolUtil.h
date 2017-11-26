@@ -80,7 +80,7 @@ private:
 
     static UInt32        getLength(const char* fmt, va_list);
     static void            writef(void*, const char* fmt, va_list);
-    static UInt32        eatLength(const char** fmt);
+    static UInt32        eatLength(const char** pfmt);
     static void            read(synergy::IStream*, void*, UInt32);
 };
 

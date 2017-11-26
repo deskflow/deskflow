@@ -18,15 +18,15 @@
 
 #include "ipc/IpcServer.h"
 
+#include "base/Event.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
+#include "base/TMethodEventJob.h"
+#include "io/IStream.h"
 #include "ipc/Ipc.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcMessage.h"
 #include "net/IDataSocket.h"
-#include "io/IStream.h"
-#include "base/IEventQueue.h"
-#include "base/TMethodEventJob.h"
-#include "base/Event.h"
-#include "base/Log.h"
 
 //
 // IpcServer
@@ -71,9 +71,9 @@ IpcServer::~IpcServer()
         return;
     }
 
-    if (m_socket != nullptr) {
+    
         delete m_socket;
-    }
+    
 
     ARCH->lockMutex(m_clientsMutex);
     ClientList::iterator it;
@@ -94,17 +94,17 @@ IpcServer::listen()
 }
 
 void
-IpcServer::handleClientConnecting(const Event&, void*)
+IpcServer::handleClientConnecting(const Event& /*unused*/, void* /*unused*/)
 {
     synergy::IStream* stream = m_socket->accept();
-    if (stream == NULL) {
+    if (stream == nullptr) {
         return;
     }
 
     LOG((CLOG_DEBUG "accepted ipc client connection"));
 
     ARCH->lockMutex(m_clientsMutex);
-    IpcClientProxy* proxy = new IpcClientProxy(*stream, m_events);
+    auto* proxy = new IpcClientProxy(*stream, m_events);
     m_clients.push_back(proxy);
     ARCH->unlockMutex(m_clientsMutex);
 
@@ -123,9 +123,9 @@ IpcServer::handleClientConnecting(const Event&, void*)
 }
 
 void
-IpcServer::handleClientDisconnected(const Event& e, void*)
+IpcServer::handleClientDisconnected(const Event& e, void* /*unused*/)
 {
-    IpcClientProxy* proxy = static_cast<IpcClientProxy*>(e.getTarget());
+    auto* proxy = static_cast<IpcClientProxy*>(e.getTarget());
 
     ArchMutexLock lock(m_clientsMutex);
     m_clients.remove(proxy);
@@ -135,7 +135,7 @@ IpcServer::handleClientDisconnected(const Event& e, void*)
 }
 
 void
-IpcServer::handleMessageReceived(const Event& e, void*)
+IpcServer::handleMessageReceived(const Event& e, void* /*unused*/)
 {
     Event event(m_events->forIpcServer().messageReceived(), this);
     event.setDataObject(e.getDataObject());

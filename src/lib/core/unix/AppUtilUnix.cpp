@@ -19,13 +19,12 @@
 #include "core/unix/AppUtilUnix.h"
 #include "core/ArgsBase.h"
 
-AppUtilUnix::AppUtilUnix(IEventQueue* events)
+AppUtilUnix::AppUtilUnix(IEventQueue*  /*events*/)
 {
 }
 
 AppUtilUnix::~AppUtilUnix()
-{
-}
+= default;
 
 int
 standardStartupStatic(int argc, char** argv)
@@ -36,7 +35,7 @@ standardStartupStatic(int argc, char** argv)
 int
 AppUtilUnix::run(int argc, char** argv)
 {
-    return app().runInner(argc, argv, NULL, &standardStartupStatic);
+    return app().runInner(argc, argv, nullptr, &standardStartupStatic);
 }
 
 void

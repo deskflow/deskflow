@@ -67,10 +67,10 @@ public:
     virtual void        updateKeyState();
     virtual void        setHalfDuplexMask(KeyModifierMask);
     virtual void        fakeKeyDown(KeyID id, KeyModifierMask mask,
-                            KeyButton button);
+                            KeyButton serverID);
     virtual bool        fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-                            SInt32 count, KeyButton button);
-    virtual bool        fakeKeyUp(KeyButton button);
+                            SInt32 count, KeyButton serverID);
+    virtual bool        fakeKeyUp(KeyButton serverID);
     virtual void        fakeAllKeysUp();
     virtual bool        fakeCtrlAltDel() = 0;
     virtual bool        fakeMediaKey(KeyID id);
@@ -213,20 +213,20 @@ private:
     // current keyboard state (> 0 if pressed, 0 otherwise).  this is
     // initialized to the keyboard state according to the system then
     // it tracks synthesized events.
-    SInt32                m_keys[kNumButtons];
+    SInt32                m_keys[kNumButtons]{};
 
     // synthetic keyboard state (> 0 if pressed, 0 otherwise).  this
     // tracks the synthesized keyboard state.  if m_keys[n] > 0 but
     // m_syntheticKeys[n] == 0 then the key was pressed locally and
     // not synthesized yet.
-    SInt32                m_syntheticKeys[kNumButtons];
+    SInt32                m_syntheticKeys[kNumButtons]{};
 
     // client data for each pressed key
-    UInt32                m_keyClientData[kNumButtons];
+    UInt32                m_keyClientData[kNumButtons]{};
 
     // server keyboard state.  an entry is 0 if not the key isn't pressed
     // otherwise it's the local KeyButton synthesized for the server key.
-    KeyButton            m_serverKeys[kNumButtons];
+    KeyButton            m_serverKeys[kNumButtons]{};
 
     IEventQueue*        m_events;
 };

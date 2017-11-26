@@ -18,11 +18,11 @@
 #include "base/EventTypes.h"
 #include "base/IEventQueue.h"
 
-#include <assert.h>
-#include <stddef.h>
+#include <cassert>
+#include <cstddef>
 
 EventTypes::EventTypes() :
-    m_events(NULL)
+    m_events(nullptr)
 {
 }
 

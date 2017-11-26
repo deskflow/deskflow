@@ -107,7 +107,7 @@ public:
     ownership of \p primaryClient.
     */
     Server(Config& config, PrimaryClient* primaryClient,
-        synergy::Screen* screen, IEventQueue* events, ServerArgs const& args);
+        synergy::Screen* screen, IEventQueue* events, ServerArgs  args);
     ~Server();
 
 #ifdef TEST_ENV
@@ -202,7 +202,7 @@ private:
 
     // change the active screen
     void                switchScreen(BaseClientProxy*,
-                            SInt32 x, SInt32 y, bool forScreenSaver);
+                            SInt32 x, SInt32 y, bool forScreensaver);
 
     // jump to screen
     void                jumpToScreen(BaseClientProxy*);
@@ -242,7 +242,7 @@ private:
     // test if a switch is permitted.  this includes testing user
     // options like switch delay and tracking any state required to
     // implement them.  returns true iff a switch is permitted.
-    bool                isSwitchOkay(BaseClientProxy* dst, EDirection,
+    bool                isSwitchOkay(BaseClientProxy* newScreen, EDirection,
                             SInt32 x, SInt32 y, SInt32 xActive, SInt32 yActive);
 
     // update switch state due to a mouse move at \p x, \p y that
@@ -404,7 +404,7 @@ private:
 
     // current mouse position (in absolute screen coordinates) on
     // whichever screen is active
-    SInt32                m_x, m_y;
+    SInt32                m_x{}, m_y{};
 
     // last mouse deltas.  this is needed to smooth out double tap
     // on win32 which reports bogus mouse motion at the edge of
@@ -424,7 +424,7 @@ private:
 
     // state saved when screen saver activates
     BaseClientProxy*    m_activeSaver;
-    SInt32                m_xSaver, m_ySaver;
+    SInt32                m_xSaver{}, m_ySaver{};
 
     // common state for screen switch tests.  all tests are always
     // trying to reach the same screen in the same direction.
@@ -434,7 +434,7 @@ private:
     // state for delayed screen switching
     double                m_switchWaitDelay;
     EventQueueTimer*    m_switchWaitTimer;
-    SInt32                m_switchWaitX, m_switchWaitY;
+    SInt32                m_switchWaitX{}, m_switchWaitY{};
 
     // state for double-tap screen switching
     double                m_switchTwoTapDelay;
@@ -465,7 +465,7 @@ private:
     IEventQueue*        m_events;
 
     // file transfer
-    size_t                m_expectedFileSize;
+    size_t                m_expectedFileSize{};
     String                m_receivedFileData;
     DragFileList        m_dragFileList;
     DragFileList        m_fakeDragFileList;
@@ -478,6 +478,6 @@ private:
     Thread*                m_sendDragInfoThread;
     bool                m_waitDragInfoThread;
 
-    ClientListener*        m_clientListener;
+    ClientListener*        m_clientListener{};
     ServerArgs            m_args;
 };

@@ -18,13 +18,13 @@
 
 #include "ipc/IpcClientProxy.h"
 
-#include "ipc/Ipc.h"
-#include "ipc/IpcMessage.h"
+#include "arch/Arch.h"
+#include "base/Log.h"
+#include "base/TMethodEventJob.h"
 #include "core/ProtocolUtil.h"
 #include "io/IStream.h"
-#include "arch/Arch.h"
-#include "base/TMethodEventJob.h"
-#include "base/Log.h"
+#include "ipc/Ipc.h"
+#include "ipc/IpcMessage.h"
 
 //
 // IpcClientProxy
@@ -82,21 +82,21 @@ IpcClientProxy::~IpcClientProxy()
 }
 
 void
-IpcClientProxy::handleDisconnect(const Event&, void*)
+IpcClientProxy::handleDisconnect(const Event& /*unused*/, void* /*unused*/)
 {
     disconnect();
     LOG((CLOG_DEBUG "ipc client disconnected"));
 }
 
 void
-IpcClientProxy::handleWriteError(const Event&, void*)
+IpcClientProxy::handleWriteError(const Event& /*unused*/, void* /*unused*/)
 {
     disconnect();
     LOG((CLOG_DEBUG "ipc client write error"));
 }
 
 void
-IpcClientProxy::handleData(const Event&, void*)
+IpcClientProxy::handleData(const Event& /*unused*/, void* /*unused*/)
 {
     // don't allow the dtor to destroy the stream while we're using it.
     ArchMutexLock lock(m_readMutex);
@@ -123,7 +123,7 @@ IpcClientProxy::handleData(const Event&, void*)
         }
 
         // don't delete with this event; the data is passed to a new event.
-        Event e(m_events->forIpcClientProxy().messageReceived(), this, NULL, Event::kDontFreeData);
+        Event e(m_events->forIpcClientProxy().messageReceived(), this, nullptr, Event::kDontFreeData);
         e.setDataObject(m);
         m_events->addEvent(e);
 
@@ -145,7 +145,7 @@ IpcClientProxy::send(const IpcMessage& message)
 
     switch (message.type()) {
     case kIpcLogLine: {
-        const IpcLogLineMessage& llm = static_cast<const IpcLogLineMessage&>(message);
+        const auto& llm = dynamic_cast<const IpcLogLineMessage&>(message);
         const String logLine = llm.logLine();
         ProtocolUtil::writef(&m_stream, kIpcMsgLogLine, &logLine);
         break;

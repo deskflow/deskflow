@@ -70,7 +70,7 @@ public:
     virtual void        bindSocket(ArchSocket s, ArchNetAddress addr);
     virtual void        listenOnSocket(ArchSocket s);
     virtual ArchSocket    acceptSocket(ArchSocket s, ArchNetAddress* addr);
-    virtual bool        connectSocket(ArchSocket s, ArchNetAddress name);
+    virtual bool        connectSocket(ArchSocket s, ArchNetAddress addr);
     virtual int            pollSocket(PollEntry[], int num, double timeout);
     virtual void        unblockPollSocket(ArchThread thread);
     virtual size_t        readSocket(ArchSocket s, void* buf, size_t len);
@@ -100,5 +100,5 @@ private:
     void                throwNameError(int);
 
 private:
-    ArchMutex            m_mutex;
+    ArchMutex            m_mutex{};
 };

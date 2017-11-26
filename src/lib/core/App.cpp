@@ -18,23 +18,23 @@
 
 #include "core/App.h"
 
-#include "base/Log.h"
-#include "common/Version.h"
-#include "core/protocol_types.h"
 #include "arch/Arch.h"
-#include "base/XBase.h"
 #include "arch/XArch.h"
-#include "base/log_outputters.h"
-#include "core/XSynergy.h"
-#include "core/ArgsBase.h"
-#include "ipc/IpcServerProxy.h"
-#include "base/TMethodEventJob.h"
-#include "ipc/IpcMessage.h"
-#include "ipc/Ipc.h"
 #include "base/EventQueue.h"
+#include "base/Log.h"
+#include "base/TMethodEventJob.h"
+#include "base/XBase.h"
+#include "base/log_outputters.h"
+#include "common/Version.h"
+#include "core/ArgsBase.h"
+#include "core/XSynergy.h"
+#include "core/protocol_types.h"
+#include "ipc/Ipc.h"
+#include "ipc/IpcMessage.h"
+#include "ipc/IpcServerProxy.h"
 
 #include <iostream>
-#include <stdio.h>
+#include <cstdio>
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -137,7 +137,7 @@ App::run(int argc, char** argv)
 }
 
 int
-App::daemonMainLoop(int, const char**)
+App::daemonMainLoop(int /*unused*/, const char** /*unused*/)
 {
 #if SYSAPI_WIN32
     SystemLogger sysLogger(daemonName(), false);
@@ -150,7 +150,7 @@ App::daemonMainLoop(int, const char**)
 void 
 App::setupFileLogging()
 {
-    if (argsBase().m_logFile != NULL) {
+    if (argsBase().m_logFile != nullptr) {
         m_fileLog = new FileLogOutputter(argsBase().m_logFile);
         CLOG->insert(m_fileLog);
         LOG((CLOG_DEBUG1 "logging to file (%s) enabled", argsBase().m_logFile));
@@ -161,7 +161,7 @@ void
 App::loggingFilterWarning()
 {
     if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
-        if (argsBase().m_logFile == NULL) {
+        if (argsBase().m_logFile == nullptr) {
             LOG((CLOG_WARN "log messages above %s are NOT sent to console (use file logging)", 
                 CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
         }
@@ -179,7 +179,7 @@ App::initApp(int argc, const char** argv)
     // this is a simple way to allow the core process to talk to X. this avoids
     // the "WARNING: primary screen unavailable: unable to open screen" error.
     // a better way would be to use xauth cookie and dbus to get access to X.
-    if (!argsBase().m_runAsUid != -1) {
+    if (static_cast<int>((!(argsBase().m_runAsUid) == 0 != -1))) {
         if (setuid(argsBase().m_runAsUid) == 0) {
             LOG((CLOG_DEBUG "process uid was set to: %d", argsBase().m_runAsUid));
         }
@@ -231,9 +231,9 @@ App::cleanupIpcClient()
 }
 
 void
-App::handleIpcMessage(const Event& e, void*)
+App::handleIpcMessage(const Event& e, void* /*unused*/)
 {
-    IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
+    auto* m = dynamic_cast<IpcMessage*>(e.getDataObject());
     if (m->type() == kIpcShutdown) {
         LOG((CLOG_INFO "got ipc shutdown message"));
         m_events->addEvent(Event(Event::kQuit));
@@ -241,7 +241,7 @@ App::handleIpcMessage(const Event& e, void*)
 }
 
 void
-App::runEventsLoop(void*)
+App::runEventsLoop(void* /*unused*/)
 {
     m_events->loop();
     
@@ -257,24 +257,23 @@ App::runEventsLoop(void*)
 //
 
 MinimalApp::MinimalApp() :
-    App(NULL, new ArgsBase())
+    App(nullptr, new ArgsBase())
 {
     m_arch.init();
     setEvents(m_events);
 }
 
 MinimalApp::~MinimalApp()
-{
-}
+= default;
 
 int
-MinimalApp::standardStartup(int argc, char** argv)
+MinimalApp::standardStartup(int  /*argc*/, char**  /*argv*/)
 {
     return 0;
 }
 
 int
-MinimalApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
+MinimalApp::runInner(int  /*argc*/, char**  /*argv*/, ILogOutputter*  /*outputter*/, StartupFunc  /*startup*/)
 {
     return 0;
 }
@@ -291,7 +290,7 @@ MinimalApp::mainLoop()
 }
 
 int
-MinimalApp::foregroundStartup(int argc, char** argv)
+MinimalApp::foregroundStartup(int  /*argc*/, char**  /*argv*/)
 {
     return 0;
 }
@@ -299,7 +298,7 @@ MinimalApp::foregroundStartup(int argc, char** argv)
 synergy::Screen*
 MinimalApp::createScreen()
 {
-    return NULL;
+    return nullptr;
 }
 
 void
@@ -308,7 +307,7 @@ MinimalApp::loadConfig()
 }
 
 bool
-MinimalApp::loadConfig(const String& pathname)
+MinimalApp::loadConfig(const String&  /*pathname*/)
 {
     return false;
 }
@@ -326,6 +325,6 @@ MinimalApp::daemonName() const
 }
 
 void
-MinimalApp::parseArgs(int argc, const char* const* argv)
+MinimalApp::parseArgs(int  /*argc*/, const char* const*  /*argv*/)
 {
 }

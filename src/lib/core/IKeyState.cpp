@@ -19,14 +19,14 @@
 #include "core/IKeyState.h"
 #include "base/EventQueue.h"
 
-#include <cstring>
 #include <cstdlib>
+#include <cstring>
 
 //
 // IKeyState
 //
 
-IKeyState::IKeyState(IEventQueue* events)
+IKeyState::IKeyState(IEventQueue*  /*events*/)
 {
 }
 
@@ -38,12 +38,12 @@ IKeyState::KeyInfo*
 IKeyState::KeyInfo::alloc(KeyID id,
                 KeyModifierMask mask, KeyButton button, SInt32 count)
 {
-    KeyInfo* info           = (KeyInfo*)malloc(sizeof(KeyInfo));
+    auto* info           = static_cast<KeyInfo*>(malloc(sizeof(KeyInfo)));
     info->m_key              = id;
     info->m_mask             = mask;
     info->m_button           = button;
     info->m_count            = count;
-    info->m_screens          = NULL;
+    info->m_screens          = nullptr;
     info->m_screensBuffer[0] = '\0';
     return info;
 }
@@ -56,7 +56,7 @@ IKeyState::KeyInfo::alloc(KeyID id,
     String screens = join(destinations);
 
     // build structure
-    KeyInfo* info  = (KeyInfo*)malloc(sizeof(KeyInfo) + screens.size());
+    auto* info  = static_cast<KeyInfo*>(malloc(sizeof(KeyInfo) + screens.size()));
     info->m_key     = id;
     info->m_mask    = mask;
     info->m_button  = button;
@@ -69,13 +69,13 @@ IKeyState::KeyInfo::alloc(KeyID id,
 IKeyState::KeyInfo*
 IKeyState::KeyInfo::alloc(const KeyInfo& x)
 {
-    KeyInfo* info  = (KeyInfo*)malloc(sizeof(KeyInfo) +
-                                        strlen(x.m_screensBuffer));
+    auto* info  = static_cast<KeyInfo*>(malloc(sizeof(KeyInfo) +
+                                        strlen(x.m_screensBuffer)));
     info->m_key     = x.m_key;
     info->m_mask    = x.m_mask;
     info->m_button  = x.m_button;
     info->m_count   = x.m_count;
-    info->m_screens = x.m_screens ? info->m_screensBuffer : NULL;
+    info->m_screens = x.m_screens != nullptr ? info->m_screensBuffer : nullptr;
     strcpy(info->m_screensBuffer, x.m_screensBuffer);
     return info;
 }
@@ -83,7 +83,7 @@ IKeyState::KeyInfo::alloc(const KeyInfo& x)
 bool
 IKeyState::KeyInfo::isDefault(const char* screens)
 {
-    return (screens == NULL || screens[0] == '\0');
+    return (screens == nullptr || screens[0] == '\0');
 }
 
 bool
@@ -103,7 +103,7 @@ IKeyState::KeyInfo::contains(const char* screens, const String& name)
     match += ":";
     match += name;
     match += ":";
-    return (strstr(screens, match.c_str()) != NULL);
+    return (strstr(screens, match.c_str()) != nullptr);
 }
 
 bool
@@ -123,19 +123,18 @@ IKeyState::KeyInfo::join(const std::set<String>& destinations)
     // which makes searching easy.  the string is empty if there are no
     // destinations and "*" means all destinations.
     String screens;
-    for (std::set<String>::const_iterator i = destinations.begin();
-                                i != destinations.end(); ++i) {
-        if (*i == "*") {
+    for (const auto & destination : destinations) {
+        if (destination == "*") {
             screens = "*";
             break;
         }
-        else {
+        
             if (screens.empty()) {
                 screens = ":";
             }
-            screens += *i;
+            screens += destination;
             screens += ":";
-        }
+        
     }
     return screens;
 }

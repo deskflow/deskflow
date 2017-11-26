@@ -18,8 +18,8 @@
 #include "test/global/TestEventQueue.h"
 
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
 #include "base/SimpleEventQueueBuffer.h"
+#include "base/TMethodEventJob.h"
 #include "common/stdexcept.h"
 
 class EventQueueTimer { };
@@ -34,7 +34,7 @@ void
 TestEventQueue::initQuitTimeout(double timeout)
 {
     assert(m_quitTimeoutTimer == nullptr);
-    m_quitTimeoutTimer = newOneShotTimer(timeout, NULL);
+    m_quitTimeoutTimer = newOneShotTimer(timeout, nullptr);
     adoptHandler(Event::kTimer, m_quitTimeoutTimer,
         new TMethodEventJob<TestEventQueue>(
         this, &TestEventQueue::handleQuitTimeout));
@@ -49,7 +49,7 @@ TestEventQueue::cleanupQuitTimeout()
 }
 
 void
-TestEventQueue::handleQuitTimeout(const Event&, void* vclient)
+TestEventQueue::handleQuitTimeout(const Event& /*unused*/, void*  /*vclient*/)
 {
     throw std::runtime_error("test event queue timeout");
 }

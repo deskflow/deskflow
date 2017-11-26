@@ -17,8 +17,8 @@
  */
 
 #include "base/log_outputters.h"
-#include "base/TMethodJob.h"
 #include "arch/Arch.h"
+#include "base/TMethodJob.h"
 
 #include <fstream>
 
@@ -41,7 +41,7 @@ StopLogOutputter::~StopLogOutputter()
 }
 
 void
-StopLogOutputter::open(const char*)
+StopLogOutputter::open(const char* /*title*/)
 {
     // do nothing
 }
@@ -53,13 +53,13 @@ StopLogOutputter::close()
 }
 
 void
-StopLogOutputter::show(bool)
+StopLogOutputter::show(bool /*showIfEmpty*/)
 {
     // do nothing
 }
 
 bool
-StopLogOutputter::write(ELevel, const char*)
+StopLogOutputter::write(ELevel /*level*/, const char* /*message*/)
 {
     return false;
 }
@@ -70,12 +70,10 @@ StopLogOutputter::write(ELevel, const char*)
 //
 
 ConsoleLogOutputter::ConsoleLogOutputter()
-{
-}
+= default;
 
 ConsoleLogOutputter::~ConsoleLogOutputter()
-{
-}
+= default;
 
 void
 ConsoleLogOutputter::open(const char* title)
@@ -153,7 +151,7 @@ SystemLogOutputter::write(ELevel level, const char* msg)
 //
 
 SystemLogger::SystemLogger(const char* title, bool blockConsole) :
-    m_stop(NULL)
+    m_stop(nullptr)
 {
     // redirect log messages
     if (blockConsole) {
@@ -169,7 +167,7 @@ SystemLogger::~SystemLogger()
 {
     CLOG->remove(m_syslog);
     delete m_syslog;
-    if (m_stop != NULL) {
+    if (m_stop != nullptr) {
         CLOG->remove(m_stop);
         delete m_stop;
     }
@@ -204,7 +202,7 @@ BufferedLogOutputter::end() const
 }
 
 void
-BufferedLogOutputter::open(const char*)
+BufferedLogOutputter::open(const char* /*title*/)
 {
     // do nothing
 }
@@ -217,18 +215,18 @@ BufferedLogOutputter::close()
 }
 
 void
-BufferedLogOutputter::show(bool)
+BufferedLogOutputter::show(bool /*showIfEmpty*/)
 {
     // do nothing
 }
 
 bool
-BufferedLogOutputter::write(ELevel, const char* message)
+BufferedLogOutputter::write(ELevel /*level*/, const char* message)
 {
     while (m_buffer.size() >= m_maxBufferSize) {
         m_buffer.pop_front();
     }
-    m_buffer.push_back(String(message));
+    m_buffer.emplace_back(message);
     return true;
 }
 
@@ -243,8 +241,7 @@ FileLogOutputter::FileLogOutputter(const char* logFile)
 }
 
 FileLogOutputter::~FileLogOutputter()
-{
-}
+= default;
 
 void
 FileLogOutputter::setLogFilename(const char* logFile)
@@ -254,13 +251,13 @@ FileLogOutputter::setLogFilename(const char* logFile)
 }
 
 bool
-FileLogOutputter::write(ELevel level, const char *message)
+FileLogOutputter::write(ELevel  /*level*/, const char *message)
 {
     bool moveFile = false;
 
     std::ofstream m_handle;
     m_handle.open(m_fileName.c_str(), std::fstream::app);
-    if (m_handle.is_open() && m_handle.fail() != true) {
+    if (m_handle.is_open() && !m_handle.fail()) {
         m_handle << message << std::endl;
 
         // when file size exceeds limits, move to 'old log' filename.
@@ -281,13 +278,13 @@ FileLogOutputter::write(ELevel level, const char *message)
 }
 
 void
-FileLogOutputter::open(const char *title) {}
+FileLogOutputter::open(const char * /*title*/) {}
 
 void
 FileLogOutputter::close() {}
 
 void
-FileLogOutputter::show(bool showIfEmpty) {}
+FileLogOutputter::show(bool  /*showIfEmpty*/) {}
 
 //
 // MesssageBoxLogOutputter
@@ -304,7 +301,7 @@ MesssageBoxLogOutputter::~MesssageBoxLogOutputter()
 }
 
 void
-MesssageBoxLogOutputter::open(const char* title) 
+MesssageBoxLogOutputter::open(const char*  /*title*/) 
 {
     // do nothing
 }
@@ -316,13 +313,13 @@ MesssageBoxLogOutputter::close()
 }
 
 void
-MesssageBoxLogOutputter::show(bool showIfEmpty)
+MesssageBoxLogOutputter::show(bool  /*showIfEmpty*/)
 {
     // do nothing
 }
 
 bool
-MesssageBoxLogOutputter::write(ELevel level, const char* msg)
+MesssageBoxLogOutputter::write(ELevel level, const char*  /*msg*/)
 {
     // don't spam user with messages.
     if (level > kERROR) {

@@ -16,26 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO: split this class into windows and unix to get rid
+// TODO(andrew): split this class into windows and unix to get rid
 // of all the #ifdefs!
 
 #include "core/DaemonApp.h"
 
+#include "arch/XArch.h"
+#include "base/EventQueue.h"
+#include "base/Log.h"
+#include "base/Log.h"
+#include "base/TMethodEventJob.h"
+#include "base/TMethodJob.h"
+#include "base/log_outputters.h"
 #include "core/App.h"
 #include "core/ArgParser.h"
-#include "core/ServerArgs.h"
 #include "core/ClientArgs.h"
+#include "core/ServerArgs.h"
 #include "ipc/IpcClientProxy.h"
-#include "ipc/IpcMessage.h"
 #include "ipc/IpcLogOutputter.h"
+#include "ipc/IpcMessage.h"
 #include "net/SocketMultiplexer.h"
-#include "arch/XArch.h"
-#include "base/Log.h"
-#include "base/TMethodJob.h"
-#include "base/TMethodEventJob.h"
-#include "base/EventQueue.h"
-#include "base/log_outputters.h"
-#include "base/Log.h"
 
 #if SYSAPI_WIN32
 
@@ -52,13 +52,13 @@
 
 #endif
 
-#include <string>
 #include <iostream>
 #include <sstream>
+#include <string>
 
 using namespace std;
 
-DaemonApp* DaemonApp::s_instance = NULL;
+DaemonApp* DaemonApp::s_instance = nullptr;
 
 int
 mainLoopStatic()
@@ -68,7 +68,7 @@ mainLoopStatic()
 }
 
 int
-unixMainLoopStatic(int, const char**)
+unixMainLoopStatic(int /*unused*/, const char** /*unused*/)
 {
     return mainLoopStatic();
 }
@@ -94,8 +94,7 @@ DaemonApp::DaemonApp() :
 }
 
 DaemonApp::~DaemonApp()
-{
-}
+= default;
 
 int
 DaemonApp::run(int argc, char** argv)
@@ -122,8 +121,9 @@ DaemonApp::run(int argc, char** argv)
 
         // default log level to system setting.
         string logLevel = arch.setting("LogLevel");
-        if (logLevel != "")
+        if (!logLevel.empty()) {
             log.setFilter(logLevel.c_str());
+}
 
         bool foreground = false;
 
@@ -170,7 +170,7 @@ DaemonApp::run(int argc, char** argv)
     catch (XArch& e) {
         String message = e.what();
         if (uninstall && (message.find("The service has not been started") != String::npos)) {
-            // TODO: if we're keeping this use error code instead (what is it?!).
+            // TODO(andrew): if we're keeping this use error code instead (what is it?!).
             // HACK: this message happens intermittently, not sure where from but
             // it's quite misleading for the user. they thing something has gone
             // horribly wrong, but it's just the service manager reporting a false
@@ -288,12 +288,12 @@ DaemonApp::logFilename()
 }
 
 void
-DaemonApp::handleIpcMessage(const Event& e, void*)
+DaemonApp::handleIpcMessage(const Event& e, void* /*unused*/)
 {
-    IpcMessage* m = static_cast<IpcMessage*>(e.getDataObject());
+    auto* m = dynamic_cast<IpcMessage*>(e.getDataObject());
     switch (m->type()) {
         case kIpcCommand: {
-            IpcCommandMessage* cm = static_cast<IpcCommandMessage*>(m);
+            auto* cm = dynamic_cast<IpcCommandMessage*>(m);
             String command = cm->command();
 
             // if empty quotes, clear.
@@ -306,13 +306,13 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
 
                 std::vector<String> argsArray;
                 ArgParser::splitCommandString(command, argsArray);
-                ArgParser argParser(NULL);
+                ArgParser argParser(nullptr);
                 const char** argv = argParser.getArgv(argsArray);
                 ServerArgs serverArgs;
                 ClientArgs clientArgs;
-                int argc = static_cast<int>(argsArray.size());
-                bool server = argsArray[0].find("synergys") != String::npos ? true : false;
-                ArgsBase* argBase = NULL;
+                auto argc = static_cast<int>(argsArray.size());
+                bool server = argsArray[0].find("synergys") != String::npos;
+                ArgsBase* argBase = nullptr;
 
                 if (server) {
                     argParser.parseServerArgs(serverArgs, argc, argv);
@@ -364,7 +364,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                 // next starts.
                 ARCH->setting("Command", command);
 
-                // TODO: it would be nice to store bools/ints...
+                // TODO(andrew): it would be nice to store bools/ints...
                 ARCH->setting("Elevate", String(cm->elevate() ? "1" : "0"));
             }
             catch (XArch& e) {
@@ -381,7 +381,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
         }
 
         case kIpcHello:
-            IpcHelloMessage* hm = static_cast<IpcHelloMessage*>(m);
+            auto* hm = dynamic_cast<IpcHelloMessage*>(m);
             String type;
             switch (hm->clientType()) {
                 case kIpcClientGui: type = "gui"; break;

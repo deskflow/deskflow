@@ -18,10 +18,10 @@
 
 #include "platform/XWindowsEventQueueBuffer.h"
 
-#include "mt/Lock.h"
-#include "mt/Thread.h"
 #include "base/Event.h"
 #include "base/IEventQueue.h"
+#include "mt/Lock.h"
+#include "mt/Thread.h"
 
 #include <fcntl.h>
 #if HAVE_UNISTD_H
@@ -165,7 +165,7 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
     while (((dtimeout < 0.0) || (remaining > 0)) && QLength(m_display)==0 && retval==0){
 #if HAVE_POLL
     retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
-     if (pfds[1].revents & POLLIN) {
+     if ((pfds[1].revents & POLLIN) != 0) {
          ssize_t read_response = read(m_pipefd[0], buf, 15);
         
         // with linux automake, warnings are treated as errors by default
@@ -214,18 +214,18 @@ XWindowsEventQueueBuffer::getEvent(Event& event, UInt32& dataID)
         dataID = static_cast<UInt32>(m_event.xclient.data.l[0]);
         return kUser;
     }
-    else {
+    
         event = Event(Event::kSystem,
                             m_events->getSystemTarget(), &m_event);
         return kSystem;
-    }
+    
 }
 
 bool
 XWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 {
     // prepare a message
-    XEvent xevent;
+    XEvent xevent{};
     xevent.xclient.type         = ClientMessage;
     xevent.xclient.window       = m_window;
     xevent.xclient.message_type = m_userEvent;
@@ -266,7 +266,7 @@ XWindowsEventQueueBuffer::isEmpty() const
 }
 
 EventQueueTimer*
-XWindowsEventQueueBuffer::newTimer(double, bool) const
+XWindowsEventQueueBuffer::newTimer(double /*duration*/, bool /*oneShot*/) const
 {
     return new EventQueueTimer;
 }
@@ -283,8 +283,8 @@ XWindowsEventQueueBuffer::flush()
     // note -- m_mutex must be locked on entry
 
     // flush the posted event list to the X server
-    for (size_t i = 0; i < m_postedEvents.size(); ++i) {
-        XSendEvent(m_display, m_window, False, 0, &m_postedEvents[i]);
+    for (auto & m_postedEvent : m_postedEvents) {
+        XSendEvent(m_display, m_window, False, 0, &m_postedEvent);
     }
     XFlush(m_display);
     m_postedEvents.clear();

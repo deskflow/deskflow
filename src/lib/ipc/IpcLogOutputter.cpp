@@ -18,17 +18,17 @@
 
 #include "ipc/IpcLogOutputter.h"
 
-#include "ipc/IpcServer.h"
-#include "ipc/IpcMessage.h"
-#include "ipc/Ipc.h"
-#include "ipc/IpcClientProxy.h"
-#include "mt/Thread.h"
 #include "arch/Arch.h"
 #include "arch/XArch.h"
 #include "base/Event.h"
 #include "base/EventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
+#include "ipc/Ipc.h"
+#include "ipc/IpcClientProxy.h"
+#include "ipc/IpcMessage.h"
+#include "ipc/IpcServer.h"
+#include "mt/Thread.h"
 
 enum EIpcLogOutputter {
     kBufferMaxSize = 1000,
@@ -78,7 +78,7 @@ IpcLogOutputter::~IpcLogOutputter()
 }
 
 void
-IpcLogOutputter::open(const char* title)
+IpcLogOutputter::open(const char*  /*title*/)
 {
 }
 
@@ -94,12 +94,12 @@ IpcLogOutputter::close()
 }
 
 void
-IpcLogOutputter::show(bool showIfEmpty)
+IpcLogOutputter::show(bool  /*showIfEmpty*/)
 {
 }
 
 bool
-IpcLogOutputter::write(ELevel, const char* text)
+IpcLogOutputter::write(ELevel /*level*/, const char* text)
 {
     // ignore events from the buffer thread (would cause recursion).
     if (m_bufferThread != nullptr &&
@@ -148,7 +148,7 @@ IpcLogOutputter::isRunning()
 }
 
 void
-IpcLogOutputter::bufferThread(void*)
+IpcLogOutputter::bufferThread(void* /*unused*/)
 {
     m_bufferThreadId = m_bufferThread->getID();
     m_running = true;

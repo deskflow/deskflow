@@ -29,7 +29,7 @@ Mutex::Mutex()
     m_mutex = ARCH->newMutex();
 }
 
-Mutex::Mutex(const Mutex&)
+Mutex::Mutex(const Mutex& /*unused*/)
 {
     m_mutex = ARCH->newMutex();
 }
@@ -40,7 +40,7 @@ Mutex::~Mutex()
 }
 
 Mutex&
-Mutex::operator=(const Mutex&)
+Mutex::operator=(const Mutex& /*unused*/)
 {
     return *this;
 }

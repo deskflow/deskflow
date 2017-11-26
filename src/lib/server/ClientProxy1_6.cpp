@@ -17,13 +17,13 @@
 
 #include "server/ClientProxy1_6.h"
 
-#include "server/Server.h"
+#include "base/Log.h"
+#include "base/TMethodEventJob.h"
+#include "core/ClipboardChunk.h"
 #include "core/ProtocolUtil.h"
 #include "core/StreamChunker.h"
-#include "core/ClipboardChunk.h"
 #include "io/IStream.h"
-#include "base/TMethodEventJob.h"
-#include "base/Log.h"
+#include "server/Server.h"
 
 //
 // ClientProxy1_6
@@ -40,8 +40,7 @@ ClientProxy1_6::ClientProxy1_6(const String& name, synergy::IStream* stream, Ser
 }
 
 ClientProxy1_6::~ClientProxy1_6()
-{
-}
+= default;
 
 void
 ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
@@ -62,7 +61,7 @@ ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
 }
 
 void
-ClientProxy1_6::handleClipboardSendingEvent(const Event& event, void*)
+ClientProxy1_6::handleClipboardSendingEvent(const Event& event, void* /*unused*/)
 {
     ClipboardChunk::send(getStream(), event.getData());
 }
@@ -89,7 +88,7 @@ ClientProxy1_6::recvClipboard()
         m_clipboard[id].m_sequenceNumber = seq;
         
         // notify
-        ClipboardInfo* info = new ClipboardInfo;
+        auto* info = new ClipboardInfo;
         info->m_id = id;
         info->m_sequenceNumber = seq;
         m_events->addEvent(Event(m_events->forClipboard().clipboardChanged(),

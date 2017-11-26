@@ -19,10 +19,10 @@
 
 #include "test/mock/ipc/MockIpcServer.h"
 
-#include "mt/Thread.h"
-#include "ipc/IpcLogOutputter.h"
 #include "base/String.h"
 #include "common/common.h"
+#include "ipc/IpcLogOutputter.h"
+#include "mt/Thread.h"
 
 #include "test/global/gmock.h"
 #include "test/global/gtest.h"

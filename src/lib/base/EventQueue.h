@@ -130,7 +130,7 @@ private:
     Stopwatch            m_time;
     Timers                m_timers;
     TimerQueue            m_timerQueue;
-    TimerEvent            m_timerEvent;
+    TimerEvent            m_timerEvent{};
 
     // event handlers
     HandlerTable        m_handlers;

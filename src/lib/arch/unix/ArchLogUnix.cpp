@@ -47,7 +47,7 @@ ArchLogUnix::closeLog()
 }
 
 void
-ArchLogUnix::showLog(bool)
+ArchLogUnix::showLog(bool /*showIfEmpty*/)
 {
     // do nothing
 }

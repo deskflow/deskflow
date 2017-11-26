@@ -63,9 +63,9 @@ public:
 
 private:
     mutable bool        m_open;
-    mutable Time        m_time;
+    mutable Time        m_time{};
     bool                m_owner;
-    Time                m_timeOwned;
-    bool                m_added[kNumFormats];
+    Time                m_timeOwned{};
+    bool                m_added[kNumFormats]{};
     String                m_data[kNumFormats];
 };

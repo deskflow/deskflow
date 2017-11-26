@@ -27,8 +27,7 @@ m_app(nullptr)
 }
 
 AppUtil::~AppUtil()
-{
-}
+= default;
 
 void
 AppUtil::adoptApp(IApp* app)

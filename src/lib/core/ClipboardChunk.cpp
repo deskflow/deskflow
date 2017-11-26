@@ -17,10 +17,10 @@
 
 #include "core/ClipboardChunk.h"
 
+#include "base/Log.h"
 #include "core/ProtocolUtil.h"
 #include "core/protocol_types.h"
 #include "io/IStream.h"
-#include "base/Log.h"
 #include <cstring>
 
 size_t ClipboardChunk::s_expectedSize = 0;
@@ -38,7 +38,7 @@ ClipboardChunk::start(
                     const String& size)
 {
     size_t sizeLength = size.size();
-    ClipboardChunk* start = new ClipboardChunk(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
+    auto* start = new ClipboardChunk(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
     char* chunk = start->m_chunk;
 
     chunk[0] = id;
@@ -57,7 +57,7 @@ ClipboardChunk::data(
                     const String& data)
 {
     size_t dataSize = data.size();
-    ClipboardChunk* chunk = new ClipboardChunk(dataSize + CLIPBOARD_CHUNK_META_SIZE);
+    auto* chunk = new ClipboardChunk(dataSize + CLIPBOARD_CHUNK_META_SIZE);
     char* chunkData = chunk->m_chunk;
 
     chunkData[0] = id;
@@ -72,7 +72,7 @@ ClipboardChunk::data(
 ClipboardChunk*
 ClipboardChunk::end(ClipboardID id, UInt32 sequence)
 {
-    ClipboardChunk* end = new ClipboardChunk(CLIPBOARD_CHUNK_META_SIZE);
+    auto* end = new ClipboardChunk(CLIPBOARD_CHUNK_META_SIZE);
     char* chunk = end->m_chunk;
     
     chunk[0] = id;
@@ -102,7 +102,7 @@ ClipboardChunk::assemble(synergy::IStream* stream,
         dataCached.clear();
         return kStart;
     }
-    else if (mark == kDataChunk) {
+    if (mark == kDataChunk) {
         dataCached.append(data);
         return kNotFinish;
     }
@@ -111,7 +111,7 @@ ClipboardChunk::assemble(synergy::IStream* stream,
         if (id >= kClipboardEnd) {
             return kError;
         }
-        else if (s_expectedSize != dataCached.size()) {
+        if (s_expectedSize != dataCached.size()) {
             LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", s_expectedSize, dataCached.size()));
             return kError;
         }
@@ -125,7 +125,7 @@ ClipboardChunk::assemble(synergy::IStream* stream,
 void
 ClipboardChunk::send(synergy::IStream* stream, void* data)
 {
-    ClipboardChunk* clipboardData = static_cast<ClipboardChunk*>(data);
+    auto* clipboardData = static_cast<ClipboardChunk*>(data);
 
     LOG((CLOG_DEBUG1 "sending clipboard chunk"));
 

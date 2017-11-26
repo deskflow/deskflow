@@ -47,7 +47,7 @@ protected:
     the format string and returns the result.
     */
     virtual String        format(const char* id,
-                            const char* defaultFormat, ...) const throw();
+                            const char* fmt, ...) const throw();
 private:
     mutable String        m_what;
 };

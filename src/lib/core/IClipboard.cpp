@@ -41,7 +41,7 @@ IClipboard::unmarshall(IClipboard* clipboard, const String& data, Time time)
         // read each format
         for (UInt32 i = 0; i < numFormats; ++i) {
             // get the format id
-            IClipboard::EFormat format =
+            auto format =
                 static_cast<IClipboard::EFormat>(readUInt32(index));
             index += 4;
 
@@ -90,7 +90,7 @@ IClipboard::marshall(const IClipboard* clipboard)
                 ++numFormats;
                 formatData[format] =
                     clipboard->get(static_cast<IClipboard::EFormat>(format));
-                size += 4 + 4 + (UInt32)formatData[format].size();
+                size += 4 + 4 + static_cast<UInt32>(formatData[format].size());
             }
         }
 
@@ -102,7 +102,7 @@ IClipboard::marshall(const IClipboard* clipboard)
         for (UInt32 format = 0; format != IClipboard::kNumFormats; ++format) {
             if (clipboard->has(static_cast<IClipboard::EFormat>(format))) {
                 writeUInt32(&data, format);
-                writeUInt32(&data, (UInt32)formatData[format].size());
+                writeUInt32(&data, static_cast<UInt32>(formatData[format].size()));
                 data += formatData[format];
             }
         }
@@ -133,7 +133,7 @@ IClipboard::copy(IClipboard* dst, const IClipboard* src, Time time)
             if (dst->empty()) {
                 for (SInt32 format = 0;
                                 format != IClipboard::kNumFormats; ++format) {
-                    IClipboard::EFormat eFormat = (IClipboard::EFormat)format;
+                    auto eFormat = static_cast<IClipboard::EFormat>(format);
                     if (src->has(eFormat)) {
                         dst->add(eFormat, src->get(eFormat));
                     }
@@ -151,7 +151,7 @@ IClipboard::copy(IClipboard* dst, const IClipboard* src, Time time)
 UInt32
 IClipboard::readUInt32(const char* buf)
 {
-    const unsigned char* ubuf = reinterpret_cast<const unsigned char*>(buf);
+    const auto* ubuf = reinterpret_cast<const unsigned char*>(buf);
     return    (static_cast<UInt32>(ubuf[0]) << 24) |
             (static_cast<UInt32>(ubuf[1]) << 16) |
             (static_cast<UInt32>(ubuf[2]) <<  8) |

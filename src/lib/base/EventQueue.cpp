@@ -18,15 +18,15 @@
 
 #include "base/EventQueue.h"
 
-#include "mt/Mutex.h"
-#include "mt/Lock.h"
 #include "arch/Arch.h"
+#include "base/EventTypes.h"
+#include "base/IEventJob.h"
+#include "base/Log.h"
 #include "base/SimpleEventQueueBuffer.h"
 #include "base/Stopwatch.h"
-#include "base/IEventJob.h"
-#include "base/EventTypes.h"
-#include "base/Log.h"
 #include "base/XBase.h"
+#include "mt/Lock.h"
+#include "mt/Mutex.h"
 
 EVENT_TYPE_ACCESSOR(Client)
 EVENT_TYPE_ACCESSOR(IStream)
@@ -52,9 +52,9 @@ EVENT_TYPE_ACCESSOR(File)
 // interrupt handler.  this just adds a quit event to the queue.
 static
 void
-interrupt(Arch::ESignal, void* data)
+interrupt(Arch::ESignal /*unused*/, void* data)
 {
-    EventQueue* events = static_cast<EventQueue*>(data);
+    auto* events = static_cast<EventQueue*>(data);
     events->addEvent(Event(Event::kQuit));
 }
 
@@ -66,26 +66,26 @@ interrupt(Arch::ESignal, void* data)
 EventQueue::EventQueue() :
     m_systemTarget(0),
     m_nextType(Event::kLast),
-    m_typesForClient(NULL),
-    m_typesForIStream(NULL),
-    m_typesForIpcClient(NULL),
-    m_typesForIpcClientProxy(NULL),
-    m_typesForIpcServer(NULL),
-    m_typesForIpcServerProxy(NULL),
-    m_typesForIDataSocket(NULL),
-    m_typesForIListenSocket(NULL),
-    m_typesForISocket(NULL),
-    m_typesForOSXScreen(NULL),
-    m_typesForClientListener(NULL),
-    m_typesForClientProxy(NULL),
-    m_typesForClientProxyUnknown(NULL),
-    m_typesForServer(NULL),
-    m_typesForServerApp(NULL),
-    m_typesForIKeyState(NULL),
-    m_typesForIPrimaryScreen(NULL),
-    m_typesForIScreen(NULL),
-    m_typesForClipboard(NULL),
-    m_typesForFile(NULL),
+    m_typesForClient(nullptr),
+    m_typesForIStream(nullptr),
+    m_typesForIpcClient(nullptr),
+    m_typesForIpcClientProxy(nullptr),
+    m_typesForIpcServer(nullptr),
+    m_typesForIpcServerProxy(nullptr),
+    m_typesForIDataSocket(nullptr),
+    m_typesForIListenSocket(nullptr),
+    m_typesForISocket(nullptr),
+    m_typesForOSXScreen(nullptr),
+    m_typesForClientListener(nullptr),
+    m_typesForClientProxy(nullptr),
+    m_typesForClientProxyUnknown(nullptr),
+    m_typesForServer(nullptr),
+    m_typesForServerApp(nullptr),
+    m_typesForIKeyState(nullptr),
+    m_typesForIPrimaryScreen(nullptr),
+    m_typesForIScreen(nullptr),
+    m_typesForClipboard(nullptr),
+    m_typesForFile(nullptr),
     m_readyMutex(new Mutex),
     m_readyCondVar(new CondVar<bool>(m_readyMutex, false))
 {
@@ -101,8 +101,8 @@ EventQueue::~EventQueue()
     delete m_readyCondVar;
     delete m_readyMutex;
     
-    ARCH->setSignalHandler(Arch::kINTERRUPT, NULL, NULL);
-    ARCH->setSignalHandler(Arch::kTERMINATE, NULL, NULL);
+    ARCH->setSignalHandler(Arch::kINTERRUPT, nullptr, nullptr);
+    ARCH->setSignalHandler(Arch::kTERMINATE, nullptr, nullptr);
     ARCH->closeMutex(m_mutex);
 }
 
@@ -166,9 +166,9 @@ EventQueue::getTypeName(Event::Type type)
         if (i == m_typeMap.end()) {
             return "<unknown>";
         }
-        else {
+        
             return i->second;
-        }
+        
     }
 }
 
@@ -179,7 +179,7 @@ EventQueue::adoptBuffer(IEventQueueBuffer* buffer)
 
     LOG((CLOG_DEBUG "adopting new buffer"));
 
-    if (m_events.size() != 0) {
+    if (!m_events.empty()) {
         // this can come as a nasty surprise to programmers expecting
         // their events to be raised, only to have them deleted.
         LOG((CLOG_DEBUG "discarding %d event(s)", m_events.size()));
@@ -187,15 +187,15 @@ EventQueue::adoptBuffer(IEventQueueBuffer* buffer)
 
     // discard old buffer and old events
     delete m_buffer;
-    for (EventTable::iterator i = m_events.begin(); i != m_events.end(); ++i) {
-        Event::deleteData(i->second);
+    for (auto & m_event : m_events) {
+        Event::deleteData(m_event.second);
     }
     m_events.clear();
     m_oldEventIDs.clear();
 
     // use new buffer
     m_buffer = buffer;
-    if (m_buffer == NULL) {
+    if (m_buffer == nullptr) {
         m_buffer = new SimpleEventQueueBuffer;
     }
 }
@@ -264,10 +264,10 @@ EventQueue::dispatchEvent(const Event& event)
 {
     void* target   = event.getTarget();
     IEventJob* job = getHandler(event.getType(), target);
-    if (job == NULL) {
+    if (job == nullptr) {
         job = getHandler(Event::kUnknown, target);
     }
-    if (job != NULL) {
+    if (job != nullptr) {
         job->run(event);
         return true;
     }
@@ -322,7 +322,7 @@ EventQueue::newTimer(double duration, void* target)
     assert(duration > 0.0);
 
     EventQueueTimer* timer = m_buffer->newTimer(duration, false);
-    if (target == NULL) {
+    if (target == nullptr) {
         target = timer;
     }
     ArchMutexLock lock(m_mutex);
@@ -341,7 +341,7 @@ EventQueue::newOneShotTimer(double duration, void* target)
     assert(duration > 0.0);
 
     EventQueueTimer* timer = m_buffer->newTimer(duration, true);
-    if (target == NULL) {
+    if (target == nullptr) {
         target = timer;
     }
     ArchMutexLock lock(m_mutex);
@@ -358,14 +358,14 @@ void
 EventQueue::deleteTimer(EventQueueTimer* timer)
 {
     ArchMutexLock lock(m_mutex);
-    for (TimerQueue::iterator index = m_timerQueue.begin();
+    for (auto index = m_timerQueue.begin();
                             index != m_timerQueue.end(); ++index) {
         if (index->getTimer() == timer) {
             m_timerQueue.erase(index);
             break;
         }
     }
-    Timers::iterator index = m_timers.find(timer);
+    auto index = m_timers.find(timer);
     if (index != m_timers.end()) {
         m_timers.erase(index);
     }
@@ -384,13 +384,13 @@ EventQueue::adoptHandler(Event::Type type, void* target, IEventJob* handler)
 void
 EventQueue::removeHandler(Event::Type type, void* target)
 {
-    IEventJob* handler = NULL;
+    IEventJob* handler = nullptr;
     {
         ArchMutexLock lock(m_mutex);
-        HandlerTable::iterator index = m_handlers.find(target);
+        auto index = m_handlers.find(target);
         if (index != m_handlers.end()) {
             TypeHandlerTable& typeHandlers = index->second;
-            TypeHandlerTable::iterator index2 = typeHandlers.find(type);
+            auto index2 = typeHandlers.find(type);
             if (index2 != typeHandlers.end()) {
                 handler = index2->second;
                 typeHandlers.erase(index2);
@@ -406,22 +406,20 @@ EventQueue::removeHandlers(void* target)
     std::vector<IEventJob*> handlers;
     {
         ArchMutexLock lock(m_mutex);
-        HandlerTable::iterator index = m_handlers.find(target);
+        auto index = m_handlers.find(target);
         if (index != m_handlers.end()) {
             // copy to handlers array and clear table for target
             TypeHandlerTable& typeHandlers = index->second;
-            for (TypeHandlerTable::iterator index2 = typeHandlers.begin();
-                            index2 != typeHandlers.end(); ++index2) {
-                handlers.push_back(index2->second);
+            for (auto & typeHandler : typeHandlers) {
+                handlers.push_back(typeHandler.second);
             }
             typeHandlers.clear();
         }
     }
 
     // delete handlers
-    for (std::vector<IEventJob*>::iterator index = handlers.begin();
-                            index != handlers.end(); ++index) {
-        delete *index;
+    for (auto & handler : handlers) {
+        delete handler;
     }
 }
 
@@ -435,15 +433,15 @@ IEventJob*
 EventQueue::getHandler(Event::Type type, void* target) const
 {
     ArchMutexLock lock(m_mutex);
-    HandlerTable::const_iterator index = m_handlers.find(target);
+    auto index = m_handlers.find(target);
     if (index != m_handlers.end()) {
         const TypeHandlerTable& typeHandlers = index->second;
-        TypeHandlerTable::const_iterator index2 = typeHandlers.find(type);
+        auto index2 = typeHandlers.find(type);
         if (index2 != typeHandlers.end()) {
             return index2->second;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 UInt32
@@ -470,9 +468,9 @@ Event
 EventQueue::removeEvent(UInt32 eventID)
 {
     // look up id
-    EventTable::iterator index = m_events.find(eventID);
+    auto index = m_events.find(eventID);
     if (index == m_events.end()) {
-        return Event();
+        return {};
     }
 
     // get data
@@ -500,9 +498,8 @@ EventQueue::hasTimerExpired(Event& event)
     m_time.reset();
 
     // countdown elapsed time
-    for (TimerQueue::iterator index = m_timerQueue.begin();
-                            index != m_timerQueue.end(); ++index) {
-        (*index) -= time;
+    for (auto & index : m_timerQueue) {
+        index -= time;
     }
 
     // done if no timers are expired
@@ -545,9 +542,10 @@ EventQueue::getNextTimerTimeout() const
 Event::Type
 EventQueue::getRegisteredType(const String& name) const
 {
-    NameMap::const_iterator found = m_nameMap.find(name);
-    if (found != m_nameMap.end())
+    auto found = m_nameMap.find(name);
+    if (found != m_nameMap.end()) {
         return found->second;
+}
 
     return Event::kUnknown;
 }

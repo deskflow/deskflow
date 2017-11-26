@@ -17,6 +17,8 @@
  */
 
 #include "ipc/IpcMessage.h"
+
+#include <utility>
 #include "ipc/Ipc.h"
 
 IpcMessage::IpcMessage(UInt8 type) :
@@ -25,8 +27,7 @@ IpcMessage::IpcMessage(UInt8 type) :
 }
 
 IpcMessage::~IpcMessage()
-{
-}
+= default;
 
 IpcHelloMessage::IpcHelloMessage(EIpcClientType clientType) :
     IpcMessage(kIpcHello),
@@ -35,8 +36,7 @@ IpcHelloMessage::IpcHelloMessage(EIpcClientType clientType) :
 }
 
 IpcHelloMessage::~IpcHelloMessage()
-{
-}
+= default;
 
 IpcShutdownMessage::IpcShutdownMessage() :
 IpcMessage(kIpcShutdown)
@@ -44,26 +44,23 @@ IpcMessage(kIpcShutdown)
 }
 
 IpcShutdownMessage::~IpcShutdownMessage()
-{
-}
+= default;
 
-IpcLogLineMessage::IpcLogLineMessage(const String& logLine) :
+IpcLogLineMessage::IpcLogLineMessage(String  logLine) :
 IpcMessage(kIpcLogLine),
-m_logLine(logLine)
+m_logLine(std::move(logLine))
 {
 }
 
 IpcLogLineMessage::~IpcLogLineMessage()
-{
-}
+= default;
 
-IpcCommandMessage::IpcCommandMessage(const String& command, bool elevate) :
+IpcCommandMessage::IpcCommandMessage(String  command, bool elevate) :
 IpcMessage(kIpcCommand),
-m_command(command),
+m_command(std::move(command)),
 m_elevate(elevate)
 {
 }
 
 IpcCommandMessage::~IpcCommandMessage()
-{
-}
+= default;

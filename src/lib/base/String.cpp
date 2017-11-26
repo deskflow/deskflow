@@ -20,17 +20,17 @@
 #include "common/common.h"
 #include "common/stdvector.h"
 
+#include <algorithm>
+#include <algorithm>
 #include <cctype>
+#include <cerrno>
+#include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <algorithm>
-#include <stdio.h>
-#include <cstdarg>
-#include <sstream>
 #include <iomanip>
-#include <algorithm>
-#include <cerrno>
+#include <sstream>
+#include <stdio.h>
 
 namespace synergy {
 namespace string {
@@ -59,7 +59,7 @@ vformat(const char* fmt, va_list args)
             if (*scan == '\0') {
                 break;
             }
-            else if (*scan == '%') {
+            if (*scan == '%') {
                 // literal
                 index.push_back(0);
                 pos.push_back(static_cast<size_t>((scan - 1) - fmt));
@@ -104,7 +104,7 @@ vformat(const char* fmt, va_list args)
 
     // compute final length
     size_t resultLength = strlen(fmt);
-    const int n = static_cast<int>(pos.size());
+    const auto n = static_cast<int>(pos.size());
     for (int i = 0; i < n; ++i) {
         resultLength -= width[i];
         resultLength += length[index[i]];
@@ -129,9 +129,9 @@ sprintf(const char* fmt, ...)
 {
     char tmp[1024];
     char* buffer = tmp;
-    int len      = (int)(sizeof(tmp) / sizeof(tmp[0]));
+    auto len      = static_cast<int>(sizeof(tmp) / sizeof(tmp[0]));
     String result;
-    while (buffer != NULL) {
+    while (buffer != nullptr) {
         // try printing into the buffer
         va_list args;
         va_start(args, fmt);
@@ -153,7 +153,7 @@ sprintf(const char* fmt, ...)
             if (buffer != tmp) {
                 delete[] buffer;
             }
-            buffer = NULL;
+            buffer = nullptr;
         }
     }
 
@@ -190,8 +190,8 @@ toHex(String& subject, int width, const char fill)
 {
     std::stringstream ss;
     ss << std::hex;
-    for (unsigned int i = 0; i < subject.length(); i++) {
-        ss << std::setw(width) << std::setfill(fill) << (int)(unsigned char)subject[i];
+    for (char i : subject) {
+        ss << std::setw(width) << std::setfill(fill) << static_cast<int>(static_cast<unsigned char>(i));
     }
 
     subject = ss.str();
@@ -218,7 +218,7 @@ sizeTypeToString(size_t n)
 }
 
 size_t
-stringToSizeType(String string)
+stringToSizeType(const String& string)
 {
     std::istringstream iss(string);
     size_t value;
@@ -227,7 +227,7 @@ stringToSizeType(String string)
 }
 
 std::vector<String>
-splitString(String string, const char c)
+splitString(const String& string, const char c)
 {
     std::vector<String> results;
 
@@ -291,5 +291,5 @@ CaselessCmp::operator()(const String& a, const String& b) const
     return less(a, b);
 }
 
-}
-}
+}  // namespace string
+} // namespace synergy

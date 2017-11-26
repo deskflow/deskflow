@@ -103,7 +103,7 @@ public:
     // ScreenConnectedCondition
     class ScreenConnectedCondition : public Condition {
     public:
-        ScreenConnectedCondition(IEventQueue* events, const String& screen);
+        ScreenConnectedCondition(IEventQueue* events, String  screen);
         virtual ~ScreenConnectedCondition();
 
         // Condition overrides
@@ -153,7 +153,7 @@ public:
     // SwitchToScreenAction
     class SwitchToScreenAction : public Action {
     public:
-        SwitchToScreenAction(IEventQueue* events, const String& screen);
+        SwitchToScreenAction(IEventQueue* events, String  screen);
 
         String                    getScreen() const;
 
@@ -209,7 +209,7 @@ public:
     // KeystrokeAction
     class KeystrokeAction : public Action {
     public:
-        KeystrokeAction(IEventQueue* events, IPlatformScreen::KeyInfo* adoptedInfo, bool press);
+        KeystrokeAction(IEventQueue* events, IPlatformScreen::KeyInfo* info, bool press);
         ~KeystrokeAction();
 
         void                    adoptInfo(IPlatformScreen::KeyInfo*);
@@ -235,7 +235,7 @@ public:
     class MouseButtonAction : public Action {
     public:
         MouseButtonAction(IEventQueue* events,
-                                    IPlatformScreen::ButtonInfo* adoptedInfo,
+                                    IPlatformScreen::ButtonInfo* info,
                                     bool press);
         ~MouseButtonAction();
 
@@ -260,7 +260,7 @@ public:
     class Rule {
     public:
         Rule();
-        Rule(Condition* adopted);
+        Rule(Condition* adoptedCondition);
         Rule(const Rule&);
         ~Rule();
 

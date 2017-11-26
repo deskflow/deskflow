@@ -18,7 +18,7 @@
 #include "core/IPlatformScreen.h"
 
 bool
-IPlatformScreen::fakeMediaKey(KeyID id)
+IPlatformScreen::fakeMediaKey(KeyID  /*id*/)
 {
     return false;
 }

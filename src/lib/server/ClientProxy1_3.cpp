@@ -18,10 +18,10 @@
 
 #include "server/ClientProxy1_3.h"
 
-#include "core/ProtocolUtil.h"
-#include "base/Log.h"
 #include "base/IEventQueue.h"
+#include "base/Log.h"
 #include "base/TMethodEventJob.h"
+#include "core/ProtocolUtil.h"
 
 #include <cstring>
 #include <memory>
@@ -33,7 +33,7 @@
 ClientProxy1_3::ClientProxy1_3(const String& name, synergy::IStream* stream, IEventQueue* events) :
     ClientProxy1_2(name, stream, events),
     m_keepAliveRate(kKeepAliveRate),
-    m_keepAliveTimer(NULL),
+    m_keepAliveTimer(nullptr),
     m_events(events)
 {
     setHeartbeatRate(kKeepAliveRate, kKeepAliveRate * kKeepAlivesUntilDeath);
@@ -61,9 +61,9 @@ ClientProxy1_3::parseMessage(const UInt8* code)
         resetHeartbeatTimer();
         return true;
     }
-    else {
+    
         return ClientProxy1_2::parseMessage(code);
-    }
+    
 }
 
 void
@@ -73,7 +73,7 @@ ClientProxy1_3::resetHeartbeatRate()
 }
 
 void
-ClientProxy1_3::setHeartbeatRate(double rate, double)
+ClientProxy1_3::setHeartbeatRate(double rate, double /*alarm*/)
 {
     m_keepAliveRate = rate;
     ClientProxy1_2::setHeartbeatRate(rate, rate * kKeepAlivesUntilDeath);
@@ -92,10 +92,10 @@ ClientProxy1_3::addHeartbeatTimer()
 {
     // create and install a timer to periodically send keep alives
     if (m_keepAliveRate > 0.0) {
-        m_keepAliveTimer = m_events->newTimer(m_keepAliveRate, NULL);
+        m_keepAliveTimer = m_events->newTimer(m_keepAliveRate, nullptr);
         m_events->adoptHandler(Event::kTimer, m_keepAliveTimer,
                             new TMethodEventJob<ClientProxy1_3>(this,
-                                &ClientProxy1_3::handleKeepAlive, NULL));
+                                &ClientProxy1_3::handleKeepAlive, nullptr));
     }
 
     // superclass does the alarm
@@ -106,10 +106,10 @@ void
 ClientProxy1_3::removeHeartbeatTimer()
 {
     // remove the timer that sends keep alives periodically
-    if (m_keepAliveTimer != NULL) {
+    if (m_keepAliveTimer != nullptr) {
         m_events->removeHandler(Event::kTimer, m_keepAliveTimer);
         m_events->deleteTimer(m_keepAliveTimer);
-        m_keepAliveTimer = NULL;
+        m_keepAliveTimer = nullptr;
     }
 
     // superclass does the alarm
@@ -117,7 +117,7 @@ ClientProxy1_3::removeHeartbeatTimer()
 }
 
 void
-ClientProxy1_3::handleKeepAlive(const Event&, void*)
+ClientProxy1_3::handleKeepAlive(const Event& /*unused*/, void* /*unused*/)
 {
     keepAlive();
 }

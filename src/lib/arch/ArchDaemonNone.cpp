@@ -33,17 +33,17 @@ ArchDaemonNone::~ArchDaemonNone()
 }
 
 void
-ArchDaemonNone::installDaemon(const char*,
-                const char*,
-                const char*,
-                const char*,
-                const char*)
+ArchDaemonNone::installDaemon(const char* /*name*/,
+                const char* /*description*/,
+                const char* /*pathname*/,
+                const char* /*commandLine*/,
+                const char* /*dependencies*/)
 {
     // do nothing
 }
 
 void
-ArchDaemonNone::uninstallDaemon(const char*)
+ArchDaemonNone::uninstallDaemon(const char* /*name*/)
 {
     // do nothing
 }
@@ -57,13 +57,13 @@ ArchDaemonNone::daemonize(const char* name, DaemonFunc func)
 }
 
 bool
-ArchDaemonNone::canInstallDaemon(const char*)
+ArchDaemonNone::canInstallDaemon(const char* /*name*/)
 {
     return false;
 }
 
 bool
-ArchDaemonNone::isDaemonInstalled(const char*)
+ArchDaemonNone::isDaemonInstalled(const char* /*name*/)
 {
     return false;
 }

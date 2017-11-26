@@ -147,9 +147,9 @@ private:
 
     Display*            m_display;
 #if HAVE_XKB_EXTENSION
-    XkbDescPtr            m_xkb;
+    XkbDescPtr            m_xkb{};
 #endif
-    SInt32                m_group;
+    SInt32                m_group{};
     XKBModifierMap        m_lastGoodXKBModifiers;
     NonXKBModifierMap    m_lastGoodNonXKBModifiers;
 
@@ -163,7 +163,7 @@ private:
     KeyToKeyCodeMap        m_keyCodeFromKey;
 
     // autorepeat state
-    XKeyboardState        m_keyboardState;
+    XKeyboardState        m_keyboardState{};
 
 #ifdef TEST_ENV
 public:

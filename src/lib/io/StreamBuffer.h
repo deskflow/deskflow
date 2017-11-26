@@ -53,7 +53,7 @@ public:
     /*!
     Appends \c n bytes from \c data to the buffer.
     */
-    void                write(const void* data, UInt32 n);
+    void                write(const void* vdata, UInt32 n);
 
     //@}
     //! @name accessors

@@ -36,7 +36,7 @@ public:
     // IStream overrides
     virtual void        close();
     virtual UInt32        read(void* buffer, UInt32 n);
-    virtual void        write(const void* buffer, UInt32 n);
+    virtual void        write(const void* buffer, UInt32 count);
     virtual void        shutdownInput();
     virtual bool        isReady() const;
     virtual UInt32        getSize() const;

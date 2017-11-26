@@ -143,27 +143,27 @@ public:
     /*!
     Synthesize mouse events to generate a press of mouse button \c id.
     */
-    void                mouseDown(ButtonID id);
+    void                mouseDown(ButtonID button);
 
     //! Notify of mouse release
     /*!
     Synthesize mouse events to generate a release of mouse button \c id.
     */
-    void                mouseUp(ButtonID id);
+    void                mouseUp(ButtonID button);
 
     //! Notify of mouse motion
     /*!
     Synthesize mouse events to generate mouse motion to the absolute
     screen position \c xAbs,yAbs.
     */
-    void                mouseMove(SInt32 xAbs, SInt32 yAbs);
+    void                mouseMove(SInt32 x, SInt32 y);
 
     //! Notify of mouse motion
     /*!
     Synthesize mouse events to generate mouse motion by the relative
     amount \c xRel,yRel.
     */
-    void                mouseRelativeMove(SInt32 xRel, SInt32 yRel);
+    void                mouseRelativeMove(SInt32 dx, SInt32 dy);
 
     //! Notify of mouse wheel motion
     /*!
@@ -297,7 +297,7 @@ public:
     virtual void*        getEventTarget() const;
     virtual bool        getClipboard(ClipboardID id, IClipboard*) const;
     virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const;
+                            SInt32& w, SInt32& h) const;
     virtual void        getCursorPos(SInt32& x, SInt32& y) const;
     
     IPlatformScreen*    getPlatformScreen() { return m_screen; }
@@ -331,7 +331,7 @@ private:
 
     // note toggle keys that toggles on up/down (false) or on
     // transition (true)
-    KeyModifierMask        m_halfDuplex;
+    KeyModifierMask        m_halfDuplex{};
 
     // true if we're faking input on a primary screen
     bool                m_fakeInput;

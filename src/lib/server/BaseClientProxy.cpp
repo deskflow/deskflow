@@ -18,12 +18,14 @@
 
 #include "server/BaseClientProxy.h"
 
+#include <utility>
+
 //
 // BaseClientProxy
 //
 
-BaseClientProxy::BaseClientProxy(const String& name) :
-    m_name(name),
+BaseClientProxy::BaseClientProxy(String  name) :
+    m_name(std::move(name)),
     m_x(0),
     m_y(0)
 {

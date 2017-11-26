@@ -46,12 +46,12 @@ Stopwatch::reset()
         m_mark = 0.0;
         return dt;
     }
-    else {
+    
         const double t    = ARCH->time();
         const double dt = t - m_mark;
         m_mark = t;
         return dt;
-    }
+    
 }
 
 void
@@ -94,7 +94,7 @@ Stopwatch::getTime()
         start();
         return dt;
     }
-    else if (m_stopped) {
+    if (m_stopped) {
         return m_mark;
     }
     else {
@@ -119,9 +119,9 @@ Stopwatch::getTime() const
     if (m_stopped) {
         return m_mark;
     }
-    else {
+    
         return ARCH->time() - m_mark;
-    }
+    
 }
 
 Stopwatch::operator double() const

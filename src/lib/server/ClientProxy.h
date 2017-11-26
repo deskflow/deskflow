@@ -31,7 +31,7 @@ public:
     /*!
     \c name is the name of the client.
     */
-    ClientProxy(const String& name, synergy::IStream* adoptedStream);
+    ClientProxy(const String& name, synergy::IStream* stream);
     ~ClientProxy();
 
     //! @name manipulators

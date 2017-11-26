@@ -34,14 +34,14 @@ public:
     size_t                getFilesize() { return m_filesize; }
     void                setFilesize(size_t size) { m_filesize = size; }
     
-    static void            parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, String data);
-    static String        getDragFileExtension(String filename);
+    static void            parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, const String& data);
+    static String        getDragFileExtension(const String& filename);
     // helper function to setup drag info
     // example: filename1,filesize1,filename2,filesize2,
     // return file count
     static int            setupDragInfo(DragFileList& fileList, String& output);
 
-    static bool            isFileValid(String filename);
+    static bool            isFileValid(const String& filename);
 
 private:
     static size_t        stringToNum(String& str);

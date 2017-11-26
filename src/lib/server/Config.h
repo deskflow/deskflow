@@ -119,7 +119,7 @@ private:
         bool            add(const CellEdge& src, const CellEdge& dst);
         void            remove(EDirection side);
         void            remove(EDirection side, float position);
-        void            remove(const Name& destinationName);
+        void            remove(const Name& name);
         void            rename(const Name& oldName, const String& newName);
 
         bool            hasEdge(const CellEdge&) const;
@@ -459,10 +459,10 @@ private:
 
     InputFilter::Condition*
                         parseCondition(ConfigReadContext&,
-                            const String& condition,
+                            const String& name,
                             const std::vector<String>& args);
     void                parseAction(ConfigReadContext&,
-                            const String& action,
+                            const String& name,
                             const std::vector<String>& args,
                             InputFilter::Rule&, bool activate);
 

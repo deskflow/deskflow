@@ -38,7 +38,7 @@ public:
 
     // IEventQueueBuffer overrides
     virtual    void        init() { }
-    virtual void        waitForEvent(double timeout);
+    virtual void        waitForEvent(double dtimeout);
     virtual Type        getEvent(Event& event, UInt32& dataID);
     virtual bool        addEvent(UInt32 dataID);
     virtual bool        isEmpty() const;
@@ -56,9 +56,9 @@ private:
     Display*            m_display;
     Window                m_window;
     Atom                m_userEvent;
-    XEvent                m_event;
+    XEvent                m_event{};
     EventList            m_postedEvents;
     bool                m_waiting;
-    int                    m_pipefd[2];
+    int                    m_pipefd[2]{};
     IEventQueue*        m_events;
 };

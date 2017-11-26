@@ -17,8 +17,8 @@
  */
 
 #include "base/SimpleEventQueueBuffer.h"
-#include "base/Stopwatch.h"
 #include "arch/Arch.h"
+#include "base/Stopwatch.h"
 
 class EventQueueTimer { };
 
@@ -57,7 +57,7 @@ SimpleEventQueueBuffer::waitForEvent(double timeout)
 }
 
 IEventQueueBuffer::Type
-SimpleEventQueueBuffer::getEvent(Event&, UInt32& dataID)
+SimpleEventQueueBuffer::getEvent(Event& /*event*/, UInt32& dataID)
 {
     ArchMutexLock lock(m_queueMutex);
     if (!m_queueReady) {
@@ -89,7 +89,7 @@ SimpleEventQueueBuffer::isEmpty() const
 }
 
 EventQueueTimer*
-SimpleEventQueueBuffer::newTimer(double, bool) const
+SimpleEventQueueBuffer::newTimer(double /*duration*/, bool /*oneShot*/) const
 {
     return new EventQueueTimer;
 }

@@ -123,7 +123,7 @@ private:
 
     bool                m_ignoreMouse;
 
-    KeyModifierID        m_modifierTranslationTable[kKeyModifierIDLast];
+    KeyModifierID        m_modifierTranslationTable[kKeyModifierIDLast]{};
 
     double                m_keepAliveAlarm;
     EventQueueTimer*    m_keepAliveAlarmTimer;

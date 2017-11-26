@@ -17,10 +17,10 @@
  */
 
 #include "ipc/IpcClient.h"
-#include "ipc/Ipc.h"
-#include "ipc/IpcServerProxy.h"
-#include "ipc/IpcMessage.h"
 #include "base/TMethodEventJob.h"
+#include "ipc/Ipc.h"
+#include "ipc/IpcMessage.h"
+#include "ipc/IpcServerProxy.h"
 
 //
 // IpcClient
@@ -51,8 +51,7 @@ IpcClient::init()
 }
 
 IpcClient::~IpcClient()
-{
-}
+= default;
 
 void
 IpcClient::connect()
@@ -90,7 +89,7 @@ IpcClient::send(const IpcMessage& message)
 }
 
 void
-IpcClient::handleConnected(const Event&, void*)
+IpcClient::handleConnected(const Event& /*unused*/, void* /*unused*/)
 {
     m_events->addEvent(Event(
         m_events->forIpcClient().connected(), this, m_server, Event::kDontFreeData));
@@ -100,7 +99,7 @@ IpcClient::handleConnected(const Event&, void*)
 }
 
 void
-IpcClient::handleMessageReceived(const Event& e, void*)
+IpcClient::handleMessageReceived(const Event& e, void* /*unused*/)
 {
     Event event(m_events->forIpcClient().messageReceived(), this);
     event.setDataObject(e.getDataObject());

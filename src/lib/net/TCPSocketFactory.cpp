@@ -17,10 +17,10 @@
  */
 
 #include "net/TCPSocketFactory.h"
-#include "net/TCPSocket.h"
-#include "net/TCPListenSocket.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
+#include "net/TCPListenSocket.h"
+#include "net/TCPSocket.h"
 
 //
 // TCPSocketFactory

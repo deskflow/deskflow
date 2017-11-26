@@ -18,11 +18,12 @@
 
 #include "net/NetworkAddress.h"
 
-#include "net/XSocket.h"
 #include "arch/Arch.h"
 #include "arch/XArch.h"
+#include "net/XSocket.h"
 
 #include <cstdlib>
+#include <utility>
 
 //
 // NetworkAddress
@@ -31,8 +32,7 @@
 // name re-resolution adapted from a patch by Brent Priddy.
 
 NetworkAddress::NetworkAddress() :
-    m_address(NULL),
-    m_hostname(),
+    m_address(nullptr),
     m_port(0)
 {
     // note -- make no calls to Network socket interface here;
@@ -40,8 +40,7 @@ NetworkAddress::NetworkAddress() :
 }
 
 NetworkAddress::NetworkAddress(int port) :
-    m_address(NULL),
-    m_hostname(),
+    m_address(nullptr),
     m_port(port)
 {
     checkPort();
@@ -50,16 +49,16 @@ NetworkAddress::NetworkAddress(int port) :
 }
 
 NetworkAddress::NetworkAddress(const NetworkAddress& addr) :
-    m_address(addr.m_address != NULL ? ARCH->copyAddr(addr.m_address) : NULL),
+    m_address(addr.m_address != nullptr ? ARCH->copyAddr(addr.m_address) : nullptr),
     m_hostname(addr.m_hostname),
     m_port(addr.m_port)
 {
     // do nothing
 }
 
-NetworkAddress::NetworkAddress(const String& hostname, int port) :
-    m_address(NULL),
-    m_hostname(hostname),
+NetworkAddress::NetworkAddress(String  hostname, int port) :
+    m_address(nullptr),
+    m_hostname(std::move(hostname)),
     m_port(port)
 {
     // check for port suffix
@@ -111,7 +110,7 @@ NetworkAddress::NetworkAddress(const String& hostname, int port) :
 
 NetworkAddress::~NetworkAddress()
 {
-    if (m_address != NULL) {
+    if (m_address != nullptr) {
         ARCH->closeAddr(m_address);
     }
 }
@@ -119,11 +118,11 @@ NetworkAddress::~NetworkAddress()
 NetworkAddress&
 NetworkAddress::operator=(const NetworkAddress& addr)
 {
-    ArchNetAddress newAddr = NULL;
-    if (addr.m_address != NULL) {
+    ArchNetAddress newAddr = nullptr;
+    if (addr.m_address != nullptr) {
         newAddr = ARCH->copyAddr(addr.m_address);
     }
-    if (m_address != NULL) {
+    if (m_address != nullptr) {
         ARCH->closeAddr(m_address);
     }
     m_address  = newAddr;
@@ -136,9 +135,9 @@ void
 NetworkAddress::resolve()
 {
     // discard previous address
-    if (m_address != NULL) {
+    if (m_address != nullptr) {
         ARCH->closeAddr(m_address);
-        m_address = NULL;
+        m_address = nullptr;
     }
 
     try {
@@ -183,7 +182,7 @@ NetworkAddress::operator!=(const NetworkAddress& addr) const
 bool
 NetworkAddress::isValid() const
 {
-    return (m_address != NULL);
+    return (m_address != nullptr);
 }
 
 const ArchNetAddress&

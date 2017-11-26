@@ -17,6 +17,8 @@
  */
 
 #include "core/XSynergy.h"
+
+#include <utility>
 #include "base/String.h"
 
 //
@@ -24,7 +26,7 @@
 //
 
 String
-XBadClient::getWhat() const throw()
+XBadClient::getWhat() const noexcept
 {
     return "XBadClient";
 }
@@ -42,19 +44,19 @@ XIncompatibleClient::XIncompatibleClient(int major, int minor) :
 }
 
 int
-XIncompatibleClient::getMajor() const throw()
+XIncompatibleClient::getMajor() const noexcept
 {
     return m_major;
 }
 
 int
-XIncompatibleClient::getMinor() const throw()
+XIncompatibleClient::getMinor() const noexcept
 {
     return m_minor;
 }
 
 String
-XIncompatibleClient::getWhat() const throw()
+XIncompatibleClient::getWhat() const noexcept
 {
     return format("XIncompatibleClient", "incompatible client %{1}.%{2}",
                                 synergy::string::sprintf("%d", m_major).c_str(),
@@ -66,20 +68,20 @@ XIncompatibleClient::getWhat() const throw()
 // XDuplicateClient
 //
 
-XDuplicateClient::XDuplicateClient(const String& name) :
-    m_name(name)
+XDuplicateClient::XDuplicateClient(String  name) :
+    m_name(std::move(name))
 {
     // do nothing
 }
 
 const String&
-XDuplicateClient::getName() const throw()
+XDuplicateClient::getName() const noexcept
 {
     return m_name;
 }
 
 String
-XDuplicateClient::getWhat() const throw()
+XDuplicateClient::getWhat() const noexcept
 {
     return format("XDuplicateClient", "duplicate client %{1}", m_name.c_str());
 }
@@ -89,20 +91,20 @@ XDuplicateClient::getWhat() const throw()
 // XUnknownClient
 //
 
-XUnknownClient::XUnknownClient(const String& name) :
-    m_name(name)
+XUnknownClient::XUnknownClient(String  name) :
+    m_name(std::move(name))
 {
     // do nothing
 }
 
 const String&
-XUnknownClient::getName() const throw()
+XUnknownClient::getName() const noexcept
 {
     return m_name;
 }
 
 String
-XUnknownClient::getWhat() const throw()
+XUnknownClient::getWhat() const noexcept
 {
     return format("XUnknownClient", "unknown client %{1}", m_name.c_str());
 }
@@ -119,13 +121,13 @@ XExitApp::XExitApp(int code) :
 }
 
 int
-XExitApp::getCode() const throw()
+XExitApp::getCode() const noexcept
 {
     return m_code;
 }
 
 String
-XExitApp::getWhat() const throw()
+XExitApp::getWhat() const noexcept
 {
     return format(
         "XExitApp", "exiting with code %{1}", 

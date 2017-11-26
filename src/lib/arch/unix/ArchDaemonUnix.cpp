@@ -21,12 +21,12 @@
 #include "arch/unix/XArchUnix.h"
 #include "base/Log.h"
 
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <errno.h>
 #include <cstdlib>
+#include <errno.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 //
 // ArchDaemonUnix
@@ -96,11 +96,12 @@ ArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
 #ifndef __APPLE__
     // NB: don't run chdir on apple; causes strange behaviour.
     // chdir to root so we don't keep mounted filesystems points busy
-    // TODO: this is a bit of a hack - can we find a better solution?
+    // TODO(andrew): this is a bit of a hack - can we find a better solution?
     int chdirErr = chdir("/");
-    if (chdirErr)
+    if (chdirErr != 0) {
         // NB: file logging actually isn't working at this point!
         LOG((CLOG_ERR "chdir error: %i", chdirErr));
+}
 #endif
 
     // mask off permissions for any but owner
@@ -113,8 +114,8 @@ ArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
 
     // attach file descriptors 0, 1, 2 to /dev/null so inadvertent use
     // of standard I/O safely goes in the bit bucket.
-    open("/dev/null", O_RDONLY);
-    open("/dev/null", O_RDWR);
+    open("/dev/null", O_RDONLY | O_CLOEXEC);
+    open("/dev/null", O_RDWR | O_CLOEXEC);
     
     int dupErr = dup(1);
 

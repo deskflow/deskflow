@@ -54,7 +54,7 @@ public:
     */
     static bool            setWindowProperty(Display*,
                             Window window, Atom property,
-                            const void* data, UInt32 size,
+                            const void* vdata, UInt32 size,
                             Atom type, SInt32 format);
 
     //! Get X server time
@@ -142,12 +142,12 @@ public:
         /*!
         Set \c *errorFlag if any error occurs.
         */
-        ErrorLock(Display*, bool* errorFlag);
+        ErrorLock(Display*, bool* flag);
 
         /*!
         Call \c handler on each error.
         */
-        ErrorLock(Display*, ErrorHandler handler, void* userData);
+        ErrorLock(Display*, ErrorHandler handler, void* data);
 
         ~ErrorLock();
 
@@ -161,10 +161,10 @@ public:
         typedef int (*XErrorHandler)(Display*, XErrorEvent*);
 
         Display*        m_display;
-        ErrorHandler    m_handler;
-        void*            m_userData;
-        XErrorHandler    m_oldXHandler;
-        ErrorLock*        m_next;
+        ErrorHandler    m_handler{};
+        void*            m_userData{};
+        XErrorHandler    m_oldXHandler{};
+        ErrorLock*        m_next{};
         static ErrorLock*    s_top;
     };
 

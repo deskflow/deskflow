@@ -18,9 +18,9 @@
 
 #include "server/PrimaryClient.h"
 
-#include "core/Screen.h"
-#include "core/Clipboard.h"
 #include "base/Log.h"
+#include "core/Clipboard.h"
+#include "core/Screen.h"
 
 //
 // PrimaryClient
@@ -32,8 +32,8 @@ PrimaryClient::PrimaryClient(const String& name, synergy::Screen* screen) :
     m_fakeInputCount(0)
 {
     // all clipboards are clean
-    for (UInt32 i = 0; i < kClipboardEnd; ++i) {
-        m_clipboardDirty[i] = false;
+    for (bool & i : m_clipboardDirty) {
+        i = false;
     }
 }
 
@@ -196,7 +196,7 @@ PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
 }
 
 void
-PrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton)
+PrimaryClient::keyRepeat(KeyID /*unused*/, KeyModifierMask /*unused*/, SInt32 /*count*/, KeyButton /*unused*/)
 {
     // ignore
 }
@@ -214,13 +214,13 @@ PrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 }
 
 void
-PrimaryClient::mouseDown(ButtonID)
+PrimaryClient::mouseDown(ButtonID /*unused*/)
 {
     // ignore
 }
 
 void
-PrimaryClient::mouseUp(ButtonID)
+PrimaryClient::mouseUp(ButtonID /*unused*/)
 {
     // ignore
 }
@@ -232,31 +232,31 @@ PrimaryClient::mouseMove(SInt32 x, SInt32 y)
 }
 
 void
-PrimaryClient::mouseRelativeMove(SInt32, SInt32)
+PrimaryClient::mouseRelativeMove(SInt32 /*xRel*/, SInt32 /*yRel*/)
 {
     // ignore
 }
 
 void
-PrimaryClient::mouseWheel(SInt32, SInt32)
+PrimaryClient::mouseWheel(SInt32 /*xDelta*/, SInt32 /*yDelta*/)
 {
     // ignore
 }
 
 void
-PrimaryClient::screensaver(bool)
+PrimaryClient::screensaver(bool /*activate*/)
 {
     // ignore
 }
 
 void
-PrimaryClient::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
+PrimaryClient::sendDragInfo(UInt32  /*fileCount*/, const char*  /*info*/, size_t  /*size*/)
 {
     // ignore
 }
 
 void
-PrimaryClient::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
+PrimaryClient::fileChunkSending(UInt8  /*mark*/, char*  /*data*/, size_t  /*dataSize*/)
 {
     // ignore
 }

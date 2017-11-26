@@ -17,14 +17,14 @@
 
 #include "SerialKey.h"
 
-#include <fstream>
-#include <iostream>
 #include <algorithm>
-#include <vector>
 #include <climits>
-#include <sstream>
+#include <fstream>
 #include <iomanip>
+#include <iostream>
+#include <sstream>
 #include <stdexcept>
+#include <vector>
 
 using namespace std;
 
@@ -37,7 +37,7 @@ SerialKey::SerialKey(Edition edition):
 {
 }
 
-SerialKey::SerialKey(std::string serial) :
+SerialKey::SerialKey(const std::string& serial) :
     m_userLimit(1),
     m_warnTime(0),
     m_expireTime(0),
@@ -113,8 +113,7 @@ SerialKey::editionString() const
 static std::string
 hexEncode (std::string const& str) {
     std::ostringstream oss;
-    for (size_t i = 0; i < str.size(); ++i) {
-        unsigned c = str[i];
+    for (unsigned int c : str) {
         c %= 256;
         oss << std::setfill('0') << std::hex << std::setw(2)
             << std::uppercase;
@@ -172,7 +171,7 @@ SerialKey::decode(const std::string& serial)
     static const char* const lut = "0123456789ABCDEF";
     string output;
     size_t len = serial.length();
-    if (len & 1) {
+    if ((len & 1) != 0u) {
         return output;
     }
 
@@ -213,7 +212,7 @@ SerialKey::parse(std::string plainSerial)
         bool look = true;
         while (look) {
             std::string::size_type start = pos;
-            pos = plainSerial.find(";", pos);
+            pos = plainSerial.find(';', pos);
             if (pos == string::npos) {
                 pos = plainSerial.length();
                 look = false;
@@ -238,7 +237,7 @@ SerialKey::parse(std::string plainSerial)
         else if ((parts.size() == 9)
                  && (parts.at(0).find("v2") != string::npos)) {
             // e.g.: {v2;trial;basic;Bob;1;email;company name;1398297600;1398384000}
-            m_trial = parts.at(1) == "trial" ? true : false;
+            m_trial = parts.at(1) == "trial";
             m_edition = parseEdition(parts.at(2));
             m_name = parts.at(3);
             sscanf(parts.at(4).c_str(), "%d", &m_userLimit);

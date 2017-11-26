@@ -99,13 +99,13 @@ String sizeTypeToString(size_t n);
 /*!
 Convert an a \c string to an size type
 */
-size_t stringToSizeType(String string);
+size_t stringToSizeType(const String& string);
 
 //! Split a string into substrings
 /*!
 Split a \c string that separated by a \c c into substrings
 */
-std::vector<String> splitString(String string, const char c);
+std::vector<String> splitString(const String& string, const char c);
 
 //! Case-insensitive comparisons
 /*!

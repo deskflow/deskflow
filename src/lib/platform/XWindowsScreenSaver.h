@@ -140,10 +140,10 @@ private:
     Atom                m_atomScreenSaverDeactivate;
 
     // built-in screen saver settings
-    int                    m_timeout;
-    int                    m_interval;
-    int                    m_preferBlanking;
-    int                    m_allowExposures;
+    int                    m_timeout{};
+    int                    m_interval{};
+    int                    m_preferBlanking{};
+    int                    m_allowExposures{};
 
     // DPMS screen saver settings
     bool                m_dpms;

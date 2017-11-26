@@ -17,12 +17,12 @@
  */
 
 #include "core/Screen.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
+#include "base/TMethodEventJob.h"
 #include "core/IPlatformScreen.h"
 #include "core/protocol_types.h"
-#include "base/Log.h"
-#include "base/IEventQueue.h"
 #include "server/ClientProxy.h"
-#include "base/TMethodEventJob.h"
 
 namespace synergy {
 
@@ -172,7 +172,7 @@ Screen::setClipboard(ClipboardID id, const IClipboard* clipboard)
 void
 Screen::grabClipboard(ClipboardID id)
 {
-    m_screen->setClipboard(id, NULL);
+    m_screen->setClipboard(id, nullptr);
 }
 
 void
@@ -210,7 +210,7 @@ Screen::keyRepeat(KeyID id,
 }
 
 void
-Screen::keyUp(KeyID, KeyModifierMask, KeyButton button)
+Screen::keyUp(KeyID /*unused*/, KeyModifierMask /*unused*/, KeyButton button)
 {
     m_screen->fakeKeyUp(button);
 }
@@ -272,7 +272,7 @@ Screen::setOptions(const OptionsList& options)
 {
     // update options
     bool oldScreenSaverSync = m_screenSaverSync;
-    for (UInt32 i = 0, n = (UInt32)options.size(); i < n; i += 2) {
+    for (UInt32 i = 0, n = static_cast<UInt32>(options.size()); i < n; i += 2) {
         if (options[i] == kOptionScreenSaverSync) {
             m_screenSaverSync = (options[i + 1] != 0);
             LOG((CLOG_DEBUG1 "screen saver synchronization %s", m_screenSaverSync ? "on" : "off"));
@@ -378,11 +378,11 @@ Screen::isLockedToScreen() const
         }
         
         if (m_enableDragDrop) {
-            return (buttonID == kButtonLeft) ? false : true;
+            return buttonID != kButtonLeft;
         }
-        else {
+        
             return true;
-        }
+        
     }
 
     // not locked
@@ -395,9 +395,9 @@ Screen::getJumpZoneSize() const
     if (!m_isPrimary) {
         return 0;
     }
-    else {
+    
         return m_screen->getJumpZoneSize();
-    }
+    
 }
 
 void
@@ -535,7 +535,7 @@ Screen::enterPrimary()
 }
 
 void
-Screen::enterSecondary(KeyModifierMask)
+Screen::enterSecondary(KeyModifierMask /*unused*/)
 {
     // do nothing
 }
@@ -556,4 +556,4 @@ Screen::leaveSecondary()
     m_screen->fakeAllKeysUp();
 }
 
-}
+} // namespace synergy

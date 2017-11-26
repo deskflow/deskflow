@@ -57,9 +57,9 @@ public:
     as its name and \p address as the server's address and \p factory
     to create the socket.  \p screen is    the local screen.
     */
-    Client(IEventQueue* events, const String& name,
+    Client(IEventQueue* events, String  name,
            const NetworkAddress& address, ISocketFactory* socketFactory,
-           synergy::Screen* screen, ClientArgs const& args);
+           synergy::Screen* screen, ClientArgs  args);
 
     ~Client();
 
@@ -137,7 +137,7 @@ public:
     virtual void*        getEventTarget() const;
     virtual bool        getClipboard(ClipboardID id, IClipboard*) const;
     virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const;
+                            SInt32& w, SInt32& h) const;
     virtual void        getCursorPos(SInt32& x, SInt32& y) const;
 
     // IClient overrides
@@ -154,8 +154,8 @@ public:
     virtual void        keyUp(KeyID, KeyModifierMask, KeyButton);
     virtual void        mouseDown(ButtonID);
     virtual void        mouseUp(ButtonID);
-    virtual void        mouseMove(SInt32 xAbs, SInt32 yAbs);
-    virtual void        mouseRelativeMove(SInt32 xRel, SInt32 yRel);
+    virtual void        mouseMove(SInt32 x, SInt32 y);
+    virtual void        mouseRelativeMove(SInt32 dx, SInt32 dy);
     virtual void        mouseWheel(SInt32 xDelta, SInt32 yDelta);
     virtual void        screensaver(bool activate);
     virtual void        resetOptions();
@@ -209,12 +209,12 @@ private:
     bool                m_active;
     bool                m_suspended;
     bool                m_connectOnResume;
-    bool                m_ownClipboard[kClipboardEnd];
-    bool                m_sentClipboard[kClipboardEnd];
-    IClipboard::Time    m_timeClipboard[kClipboardEnd];
+    bool                m_ownClipboard[kClipboardEnd]{};
+    bool                m_sentClipboard[kClipboardEnd]{};
+    IClipboard::Time    m_timeClipboard[kClipboardEnd]{};
     String                m_dataClipboard[kClipboardEnd];
     IEventQueue*        m_events;
-    std::size_t            m_expectedFileSize;
+    std::size_t            m_expectedFileSize{};
     String                m_receivedFileData;
     DragFileList        m_dragFileList;
     String                m_dragFileExt;

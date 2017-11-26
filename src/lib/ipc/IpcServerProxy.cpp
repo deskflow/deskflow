@@ -18,12 +18,12 @@
 
 #include "ipc/IpcServerProxy.h"
 
-#include "ipc/IpcMessage.h"
-#include "ipc/Ipc.h"
+#include "base/Log.h"
+#include "base/TMethodEventJob.h"
 #include "core/ProtocolUtil.h"
 #include "io/IStream.h"
-#include "base/TMethodEventJob.h"
-#include "base/Log.h"
+#include "ipc/Ipc.h"
+#include "ipc/IpcMessage.h"
 
 //
 // IpcServerProxy
@@ -46,7 +46,7 @@ IpcServerProxy::~IpcServerProxy()
 }
 
 void
-IpcServerProxy::handleData(const Event&, void*)
+IpcServerProxy::handleData(const Event& /*unused*/, void* /*unused*/)
 {
     LOG((CLOG_DEBUG "start ipc handle data"));
 
@@ -70,7 +70,7 @@ IpcServerProxy::handleData(const Event&, void*)
         }
         
         // don't delete with this event; the data is passed to a new event.
-        Event e(m_events->forIpcServerProxy().messageReceived(), this, NULL, Event::kDontFreeData);
+        Event e(m_events->forIpcServerProxy().messageReceived(), this, nullptr, Event::kDontFreeData);
         e.setDataObject(m);
         m_events->addEvent(e);
 
@@ -87,13 +87,13 @@ IpcServerProxy::send(const IpcMessage& message)
 
     switch (message.type()) {
     case kIpcHello: {
-        const IpcHelloMessage& hm = static_cast<const IpcHelloMessage&>(message);
+        const auto& hm = dynamic_cast<const IpcHelloMessage&>(message);
         ProtocolUtil::writef(&m_stream, kIpcMsgHello, hm.clientType());
         break;
     }
 
     case kIpcCommand: {
-        const IpcCommandMessage& cm = static_cast<const IpcCommandMessage&>(message);
+        const auto& cm = dynamic_cast<const IpcCommandMessage&>(message);
         const String command = cm.command();
         ProtocolUtil::writef(&m_stream, kIpcMsgCommand, &command);
         break;

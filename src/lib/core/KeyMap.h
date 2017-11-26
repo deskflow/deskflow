@@ -82,7 +82,7 @@ public:
             kGroup                        //!< Set new group
         };
 
-        Keystroke(KeyButton, bool press, bool repeat, UInt32 clientData);
+        Keystroke(KeyButton, bool press, bool repeat, UInt32 data);
         Keystroke(SInt32 group, bool absolute, bool restore);
 
     public:
@@ -106,7 +106,7 @@ public:
         };
 
         EType            m_type;
-        Data            m_data;
+        Data            m_data{};
     };
 
     //! A sequence of keystrokes
@@ -278,7 +278,7 @@ public:
     /*!
     Put all the keys in \p modifiers into \p keys.
     */
-    static void            collectButtons(const ModifierToKeys& modifiers,
+    static void            collectButtons(const ModifierToKeys& mods,
                             ButtonToKeyMap& keys);
 
     //! Set modifier key state
@@ -500,7 +500,7 @@ private:
     KeySet                m_halfDuplexMods;        // half-duplex set by user
 
     // dummy KeyItem for changing modifiers
-    KeyItem                m_modifierKeyItem;
+    KeyItem                m_modifierKeyItem{};
 
     // parsing/formatting tables
     static NameToKeyMap*        s_nameToKeyMap;

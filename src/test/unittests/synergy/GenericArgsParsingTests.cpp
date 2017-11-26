@@ -22,7 +22,6 @@
 #include "test/global/gtest.h"
 
 using namespace synergy;
-using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
 
@@ -47,7 +46,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_logLevelCmd_setLogLevel)
     const int argc = 3;
     const char* kLogLevelCmd[argc] = { "stub", "--debug", "DEBUG" };
 
-    ArgParser argParser(NULL);
+    ArgParser argParser(nullptr);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
@@ -65,7 +64,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_logFileCmd_saveLogFilename)
     const int argc = 3;
     const char* kLogFileCmd[argc] = { "stub", "--log", "mock_filename" };
 
-    ArgParser argParser(NULL);
+    ArgParser argParser(nullptr);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
@@ -83,7 +82,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_logFileCmdWithSpace_saveLogFilena
     const int argc = 3;
     const char* kLogFileCmdWithSpace[argc] = { "stub", "--log", "mo ck_filename" };
 
-    ArgParser argParser(NULL);
+    ArgParser argParser(nullptr);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
@@ -101,7 +100,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noDeamonCmd_daemonFalse)
     const int argc = 2;
     const char* kNoDeamonCmd[argc] = { "stub", "-f" };
 
-    ArgParser argParser(NULL);
+    ArgParser argParser(nullptr);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
@@ -117,7 +116,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_deamonCmd_daemonTrue)
     const int argc = 2;
     const char* kDeamonCmd[argc] = { "stub", "--daemon" };
 
-    ArgParser argParser(NULL);
+    ArgParser argParser(nullptr);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
@@ -133,7 +132,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_nameCmd_saveName)
     const int argc = 3;
     const char* kNameCmd[argc] = { "stub", "--name", "mock" };
 
-    ArgParser argParser(NULL);
+    ArgParser argParser(nullptr);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
@@ -149,7 +148,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noRestartCmd_restartFalse)
     const int argc = 2;
     const char* kNoRestartCmd[argc] = { "stub", "--no-restart" };
 
-    ArgParser argParser(NULL);
+    ArgParser argParser(nullptr);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
@@ -165,7 +164,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_restartCmd_restartTrue)
     const int argc = 2;
     const char* kRestartCmd[argc] = { "stub", "--restart" };
 
-    ArgParser argParser(NULL);
+    ArgParser argParser(nullptr);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
@@ -181,7 +180,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_backendCmd_backendTrue)
     const int argc = 2;
     const char* kBackendCmd[argc] = { "stub", "-z" };
 
-    ArgParser argParser(NULL);
+    ArgParser argParser(nullptr);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
@@ -197,7 +196,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noHookCmd_noHookTrue)
     const int argc = 2;
     const char* kNoHookCmd[argc] = { "stub", "--no-hooks" };
 
-    ArgParser argParser(NULL);
+    ArgParser argParser(nullptr);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
@@ -252,7 +251,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noTrayCmd_disableTrayTrue)
     const int argc = 2;
     const char* kNoTrayCmd[argc] = { "stub", "--no-tray" };
 
-    ArgParser argParser(NULL);
+    ArgParser argParser(nullptr);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
@@ -267,7 +266,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue)
     const int argc = 2;
     const char* kIpcCmd[argc] = { "stub", "--ipc" };
 
-    ArgParser argParser(NULL);
+    ArgParser argParser(nullptr);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
@@ -302,7 +301,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnLinux_enableDragDrop
     const int argc = 2;
     const char* kDragDropCmd[argc] = { "stub", "--enable-drag-drop" };
 
-    ArgParser argParser(NULL);
+    ArgParser argParser(nullptr);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     

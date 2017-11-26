@@ -18,16 +18,16 @@
 
 #include "net/SocketMultiplexer.h"
 
-#include "net/ISocketMultiplexerJob.h"
-#include "mt/CondVar.h"
-#include "mt/Lock.h"
-#include "mt/Mutex.h"
-#include "mt/Thread.h"
 #include "arch/Arch.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "common/stdvector.h"
+#include "mt/CondVar.h"
+#include "mt/Lock.h"
+#include "mt/Mutex.h"
+#include "mt/Thread.h"
+#include "net/ISocketMultiplexerJob.h"
 
 //
 // SocketMultiplexer
@@ -35,18 +35,18 @@
 
 SocketMultiplexer::SocketMultiplexer() :
     m_mutex(new Mutex),
-    m_thread(NULL),
+    m_thread(nullptr),
     m_update(false),
     m_jobsReady(new CondVar<bool>(m_mutex, false)),
     m_jobListLock(new CondVar<bool>(m_mutex, false)),
     m_jobListLockLocked(new CondVar<bool>(m_mutex, false)),
-    m_jobListLocker(NULL),
-    m_jobListLockLocker(NULL)
+    m_jobListLocker(nullptr),
+    m_jobListLockLocker(nullptr)
 {
     // this pointer just has to be unique and not NULL.  it will
     // never be dereferenced.  it's used to identify cursor nodes
     // in the jobs list.
-    // TODO: Remove this evilness
+    // TODO(andrew): Remove this evilness
     m_cursorMark = reinterpret_cast<ISocketMultiplexerJob*>(this);
 
     // start thread
@@ -68,9 +68,8 @@ SocketMultiplexer::~SocketMultiplexer()
     delete m_mutex;
 
     // clean up jobs
-    for (SocketJobMap::iterator i = m_socketJobMap.begin();
-                        i != m_socketJobMap.end(); ++i) {
-        delete *(i->second);
+    for (auto & i : m_socketJobMap) {
+        delete *(i.second);
     }
 }
 
@@ -90,17 +89,17 @@ SocketMultiplexer::addSocket(ISocket* socket, ISocketMultiplexerJob* job)
     lockJobList();
 
     // insert/replace job
-    SocketJobMap::iterator i = m_socketJobMap.find(socket);
+    auto i = m_socketJobMap.find(socket);
     if (i == m_socketJobMap.end()) {
         // we *must* put the job at the end so the order of jobs in
         // the list continue to match the order of jobs in pfds in
         // serviceThread().
-        JobCursor j = m_socketJobs.insert(m_socketJobs.end(), job);
+        auto j = m_socketJobs.insert(m_socketJobs.end(), job);
         m_update     = true;
         m_socketJobMap.insert(std::make_pair(socket, j));
     }
     else {
-        JobCursor j = i->second;
+        auto j = i->second;
         if (*j != job) {
             delete *j;
             *j = job;
@@ -129,7 +128,7 @@ SocketMultiplexer::removeSocket(ISocket* socket)
     // remove job.  rather than removing it from the map we put NULL
     // in the list instead so the order of jobs in the list continues
     // to match the order of jobs in pfds in serviceThread().
-    SocketJobMap::iterator i = m_socketJobMap.find(socket);
+    auto i = m_socketJobMap.find(socket);
     if (i != m_socketJobMap.end()) {
         if (*(i->second) != NULL) {
             delete *(i->second);
@@ -143,10 +142,10 @@ SocketMultiplexer::removeSocket(ISocket* socket)
 }
 
 void
-SocketMultiplexer::serviceThread(void*)
+SocketMultiplexer::serviceThread(void* /*unused*/)
 {
     std::vector<IArchNetwork::PollEntry> pfds;
-    IArchNetwork::PollEntry pfd;
+    IArchNetwork::PollEntry pfd{};
 
     // service the connections
     for (;;) {
@@ -170,11 +169,11 @@ SocketMultiplexer::serviceThread(void*)
             pfds.clear();
             pfds.reserve(m_socketJobMap.size());
 
-            JobCursor cursor    = newCursor();
-            JobCursor jobCursor = nextCursor(cursor);
+            auto cursor    = newCursor();
+            auto jobCursor = nextCursor(cursor);
             while (jobCursor != m_socketJobs.end()) {
                 ISocketMultiplexerJob* job = *jobCursor;
-                if (job != NULL) {
+                if (job != nullptr) {
                     pfd.m_socket = job->getSocket();
                     pfd.m_events = 0;
                     if (job->isReadable()) {
@@ -194,7 +193,7 @@ SocketMultiplexer::serviceThread(void*)
         try {
             // check for status
             if (!pfds.empty()) {
-                status = ARCH->pollSocket(&pfds[0], (int)pfds.size(), -1);
+                status = ARCH->pollSocket(&pfds[0], static_cast<int>(pfds.size()), -1);
             }
             else {
                 status = 0;
@@ -209,8 +208,8 @@ SocketMultiplexer::serviceThread(void*)
             // iterate over socket jobs, invoking each and saving the
             // new job.
             UInt32 i             = 0;
-            JobCursor cursor    = newCursor();
-            JobCursor jobCursor = nextCursor(cursor);
+            auto cursor    = newCursor();
+            auto jobCursor = nextCursor(cursor);
             while (i < pfds.size() && jobCursor != m_socketJobs.end()) {
                 if (*jobCursor != NULL) {
                     // get poll state
@@ -241,7 +240,7 @@ SocketMultiplexer::serviceThread(void*)
         }
 
         // delete any removed socket jobs
-        for (SocketJobMap::iterator i = m_socketJobMap.begin();
+        for (auto i = m_socketJobMap.begin();
                             i != m_socketJobMap.end();) {
             if (*(i->second) == NULL) {
                 m_socketJobs.erase(i->second);
@@ -269,8 +268,8 @@ SocketMultiplexer::JobCursor
 SocketMultiplexer::nextCursor(JobCursor cursor)
 {
     Lock lock(m_mutex);
-    JobCursor j = m_socketJobs.end();
-    JobCursor i = cursor;
+    auto j = m_socketJobs.end();
+    auto i = cursor;
     while (++i != m_socketJobs.end()) {
         if (*i != m_cursorMark) {
             // found a real job (as opposed to a cursor)
@@ -322,7 +321,7 @@ SocketMultiplexer::lockJobList()
     // take ownership of the lock
     *m_jobListLock      = true;
     m_jobListLocker     = m_jobListLockLocker;
-    m_jobListLockLocker = NULL;
+    m_jobListLockLocker = nullptr;
 
     // release the lock on the lock
     *m_jobListLockLocked = false;
@@ -339,7 +338,7 @@ SocketMultiplexer::unlockJobList()
 
     // release the lock
     delete m_jobListLocker;
-    m_jobListLocker = NULL;
+    m_jobListLocker = nullptr;
     *m_jobListLock  = false;
     m_jobListLock->signal();
 

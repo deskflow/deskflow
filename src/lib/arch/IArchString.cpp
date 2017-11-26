@@ -21,10 +21,10 @@
 #include "common/common.h"
 
 #include <climits>
-#include <cstring>
 #include <cstdlib>
+#include <cstring>
 
-static ArchMutex              s_mutex = NULL;
+static ArchMutex              s_mutex = nullptr;
 
 //
 // use C library non-reentrant multibyte conversion with mutex
@@ -32,9 +32,9 @@ static ArchMutex              s_mutex = NULL;
 
 IArchString::~IArchString()
 {
-    if (s_mutex != NULL) {
+    if (s_mutex != nullptr) {
         ARCH->closeMutex(s_mutex);
-        s_mutex = NULL;
+        s_mutex = nullptr;
     }
 }
 
@@ -45,17 +45,17 @@ IArchString::convStringWCToMB(char* dst,
     ptrdiff_t len = 0;
 
     bool dummyErrors;
-    if (errors == NULL) {
+    if (errors == nullptr) {
         errors = &dummyErrors;
     }
 
-    if (s_mutex == NULL) {
+    if (s_mutex == nullptr) {
         s_mutex = ARCH->newMutex();
     }
 
     ARCH->lockMutex(s_mutex);
 
-    if (dst == NULL) {
+    if (dst == nullptr) {
         char dummy[MB_LEN_MAX];
         for (const wchar_t* scan = src; n > 0; ++scan, --n) {
             ptrdiff_t mblen = wctomb(dummy, *scan);
@@ -102,17 +102,17 @@ IArchString::convStringMBToWC(wchar_t* dst,
     wchar_t dummy;
 
     bool dummyErrors;
-    if (errors == NULL) {
+    if (errors == nullptr) {
         errors = &dummyErrors;
     }
 
-    if (s_mutex == NULL) {
+    if (s_mutex == nullptr) {
         s_mutex = ARCH->newMutex();
     }
 
     ARCH->lockMutex(s_mutex);
 
-    if (dst == NULL) {
+    if (dst == nullptr) {
         for (const char* scan = src; n > 0; ) {
             ptrdiff_t mblen = mbtowc(&dummy, scan, n);
             switch (mblen) {
@@ -155,7 +155,7 @@ IArchString::convStringMBToWC(wchar_t* dst,
             case -2:
                 // incomplete character.  convert to unknown character.
                 *errors = true;
-                *dst    = (wchar_t)0xfffd;
+                *dst    = static_cast<wchar_t>(0xfffd);
                 n       = 0;
                 break;
 
@@ -163,13 +163,13 @@ IArchString::convStringMBToWC(wchar_t* dst,
                 // invalid character.  count one unknown character and
                 // start at the next byte.
                 *errors = true;
-                *dst    = (wchar_t)0xfffd;
+                *dst    = static_cast<wchar_t>(0xfffd);
                 scan   += 1;
                 n      -= 1;
                 break;
 
             case 0:
-                *dst    = (wchar_t)0x0000;
+                *dst    = static_cast<wchar_t>(0x0000);
                 scan   += 1;
                 n      -= 1;
                 break;

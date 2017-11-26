@@ -129,13 +129,13 @@ private:
                             UInt32 size, bool* errors);
 
     // internal conversion to UTF8
-    static String        doUCS2ToUTF8(const UInt8* src, UInt32 n, bool* errors);
-    static String        doUCS4ToUTF8(const UInt8* src, UInt32 n, bool* errors);
-    static String        doUTF16ToUTF8(const UInt8* src, UInt32 n, bool* errors);
-    static String        doUTF32ToUTF8(const UInt8* src, UInt32 n, bool* errors);
+    static String        doUCS2ToUTF8(const UInt8* data, UInt32 n, bool* errors);
+    static String        doUCS4ToUTF8(const UInt8* data, UInt32 n, bool* errors);
+    static String        doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors);
+    static String        doUTF32ToUTF8(const UInt8* data, UInt32 n, bool* errors);
 
     // convert characters to/from UTF8
-    static UInt32        fromUTF8(const UInt8*& src, UInt32& size);
+    static UInt32        fromUTF8(const UInt8*& data, UInt32& n);
     static void            toUTF8(String& dst, UInt32 c, bool* errors);
 
 private:

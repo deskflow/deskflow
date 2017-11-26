@@ -15,36 +15,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO: fix, tests failing intermittently on mac.
+// TODO(andrew): fix, tests failing intermittently on mac.
 #ifndef WINAPI_CARBON
 
 #define TEST_ENV
 
 #include "test/mock/server/MockConfig.h"
-#include "test/mock/server/MockPrimaryClient.h"
-#include "test/mock/synergy/MockScreen.h"
-#include "test/mock/server/MockInputFilter.h"
-#include "test/global/TestEventQueue.h"
-#include "server/Server.h"
-#include "server/ClientListener.h"
-#include "server/ClientProxy.h"
-#include "client/Client.h"
-#include "core/FileChunk.h"
-#include "core/StreamChunker.h"
-#include "net/SocketMultiplexer.h"
-#include "net/NetworkAddress.h"
-#include "net/TCPSocketFactory.h"
-#include "mt/Thread.h"
+#include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
-#include "base/Log.h"
+#include "client/Client.h"
 #include "common/stdexcept.h"
+#include "core/FileChunk.h"
+#include "core/StreamChunker.h"
+#include "mt/Thread.h"
+#include "net/NetworkAddress.h"
+#include "net/SocketMultiplexer.h"
+#include "net/TCPSocketFactory.h"
+#include "server/ClientListener.h"
+#include "server/ClientProxy.h"
+#include "server/Server.h"
+#include "test/global/TestEventQueue.h"
+#include "test/mock/server/MockInputFilter.h"
+#include "test/mock/server/MockPrimaryClient.h"
+#include "test/mock/synergy/MockScreen.h"
 
 #include "test/global/gtest.h"
-#include <sstream>
 #include <fstream>
 #include <iostream>
-#include <stdio.h>
+#include <sstream>
+#include <cstdio>
 
 using namespace std;
 using ::testing::_;
@@ -69,15 +69,13 @@ class NetworkTests : public ::testing::Test
 {
 public:
     NetworkTests() :
-        m_mockData(NULL),
-        m_mockDataSize(0),
-        m_mockFileSize(0)
+        m_mockData(nullptr)
     {
         m_mockData = newMockData(kMockDataSize);
         createFile(m_mockFile, kMockFilename, kMockFileSize);
     }
 
-    ~NetworkTests()
+    ~NetworkTests() override
     {
         remove(kMockFilename);
         delete[] m_mockData;
@@ -85,24 +83,24 @@ public:
 
     void                sendMockData(void* eventTarget);
     
-    void                sendToClient_mockData_handleClientConnected(const Event&, void* vlistener);
-    void                sendToClient_mockData_fileRecieveCompleted(const Event&, void*);
+    void                sendToClient_mockData_handleClientConnected(const Event& /*unused*/, void* vlistener);
+    void                sendToClient_mockData_fileRecieveCompleted(const Event& /*event*/, void* /*unused*/);
     
-    void                sendToClient_mockFile_handleClientConnected(const Event&, void* vlistener);
-    void                sendToClient_mockFile_fileRecieveCompleted(const Event& event, void*);
+    void                sendToClient_mockFile_handleClientConnected(const Event& /*unused*/, void* vlistener);
+    void                sendToClient_mockFile_fileRecieveCompleted(const Event& event, void* /*unused*/);
     
-    void                sendToServer_mockData_handleClientConnected(const Event&, void* vlistener);
-    void                sendToServer_mockData_fileRecieveCompleted(const Event& event, void*);
+    void                sendToServer_mockData_handleClientConnected(const Event& /*unused*/, void* vclient);
+    void                sendToServer_mockData_fileRecieveCompleted(const Event& event, void* /*unused*/);
 
-    void                sendToServer_mockFile_handleClientConnected(const Event&, void* vlistener);
-    void                sendToServer_mockFile_fileRecieveCompleted(const Event& event, void*);
+    void                sendToServer_mockFile_handleClientConnected(const Event& /*unused*/, void* vclient);
+    void                sendToServer_mockFile_fileRecieveCompleted(const Event& event, void* /*unused*/);
     
 public:
     TestEventQueue        m_events;
     UInt8*                m_mockData;
-    size_t                m_mockDataSize;
+    size_t                m_mockDataSize{0};
     fstream                m_mockFile;
-    size_t                m_mockFileSize;
+    size_t                m_mockFileSize{0};
 };
 
 TEST_F(NetworkTests, sendToClient_mockData)
@@ -114,7 +112,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
     
     // server
     SocketMultiplexer serverSocketMultiplexer;
-    TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
+    auto* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
     ClientListener listener(serverAddress, serverSocketFactory, &m_events);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
@@ -138,7 +136,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
     // client
     NiceMock<MockScreen> clientScreen;
     SocketMultiplexer clientSocketMultiplexer;
-    TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
+    auto* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
     
     ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
     ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
@@ -171,7 +169,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
     
     // server
     SocketMultiplexer serverSocketMultiplexer;
-    TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
+    auto* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
     ClientListener listener(serverAddress, serverSocketFactory, &m_events);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
@@ -195,7 +193,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
     // client
     NiceMock<MockScreen> clientScreen;
     SocketMultiplexer clientSocketMultiplexer;
-    TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
+    auto* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
     
     ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
     ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
@@ -227,7 +225,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
 
     // server
     SocketMultiplexer serverSocketMultiplexer;
-    TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
+    auto* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
     ClientListener listener(serverAddress, serverSocketFactory, &m_events);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
@@ -246,7 +244,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
     // client
     NiceMock<MockScreen> clientScreen;
     SocketMultiplexer clientSocketMultiplexer;
-    TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
+    auto* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
     
     ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
     ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
@@ -283,7 +281,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 
     // server
     SocketMultiplexer serverSocketMultiplexer;
-    TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
+    auto* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
     ClientListener listener(serverAddress, serverSocketFactory, &m_events);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
@@ -302,7 +300,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
     // client
     NiceMock<MockScreen> clientScreen;
     SocketMultiplexer clientSocketMultiplexer;
-    TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
+    auto* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
     
     ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
     ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
@@ -331,13 +329,13 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 }
 
 void 
-NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vlistener)
+NetworkTests::sendToClient_mockData_handleClientConnected(const Event& /*unused*/, void* vlistener)
 {
-    ClientListener* listener = static_cast<ClientListener*>(vlistener);
+    auto* listener = static_cast<ClientListener*>(vlistener);
     Server* server = listener->getServer();
 
     ClientProxy* client = listener->getNextClient();
-    if (client == NULL) {
+    if (client == nullptr) {
         throw runtime_error("client is null");
     }
 
@@ -349,22 +347,22 @@ NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vl
 }
 
 void 
-NetworkTests::sendToClient_mockData_fileRecieveCompleted(const Event& event, void*)
+NetworkTests::sendToClient_mockData_fileRecieveCompleted(const Event& event, void* /*unused*/)
 {
-    Client* client = static_cast<Client*>(event.getTarget());
+    auto* client = static_cast<Client*>(event.getTarget());
     EXPECT_TRUE(client->isReceivedFileSizeValid());
 
     m_events.raiseQuitEvent();
 }
 
 void 
-NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vlistener)
+NetworkTests::sendToClient_mockFile_handleClientConnected(const Event& /*unused*/, void* vlistener)
 {
-    ClientListener* listener = static_cast<ClientListener*>(vlistener);
+    auto* listener = static_cast<ClientListener*>(vlistener);
     Server* server = listener->getServer();
 
     ClientProxy* client = listener->getNextClient();
-    if (client == NULL) {
+    if (client == nullptr) {
         throw runtime_error("client is null");
     }
 
@@ -376,41 +374,41 @@ NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vl
 }
 
 void 
-NetworkTests::sendToClient_mockFile_fileRecieveCompleted(const Event& event, void*)
+NetworkTests::sendToClient_mockFile_fileRecieveCompleted(const Event& event, void* /*unused*/)
 {
-    Client* client = static_cast<Client*>(event.getTarget());
+    auto* client = static_cast<Client*>(event.getTarget());
     EXPECT_TRUE(client->isReceivedFileSizeValid());
 
     m_events.raiseQuitEvent();
 }
 
 void 
-NetworkTests::sendToServer_mockData_handleClientConnected(const Event&, void* vclient)
+NetworkTests::sendToServer_mockData_handleClientConnected(const Event& /*unused*/, void* vclient)
 {
-    Client* client = static_cast<Client*>(vclient);
+    auto* client = static_cast<Client*>(vclient);
     sendMockData(client);
 }
 
 void 
-NetworkTests::sendToServer_mockData_fileRecieveCompleted(const Event& event, void*)
+NetworkTests::sendToServer_mockData_fileRecieveCompleted(const Event& event, void* /*unused*/)
 {
-    Server* server = static_cast<Server*>(event.getTarget());
+    auto* server = static_cast<Server*>(event.getTarget());
     EXPECT_TRUE(server->isReceivedFileSizeValid());
 
     m_events.raiseQuitEvent();
 }
 
 void 
-NetworkTests::sendToServer_mockFile_handleClientConnected(const Event&, void* vclient)
+NetworkTests::sendToServer_mockFile_handleClientConnected(const Event& /*unused*/, void* vclient)
 {
-    Client* client = static_cast<Client*>(vclient);
+    auto* client = static_cast<Client*>(vclient);
     client->sendFileToServer(kMockFilename);
 }
 
 void 
-NetworkTests::sendToServer_mockFile_fileRecieveCompleted(const Event& event, void*)
+NetworkTests::sendToServer_mockFile_fileRecieveCompleted(const Event& event, void* /*unused*/)
 {
-    Server* server = static_cast<Server*>(event.getTarget());
+    auto* server = static_cast<Server*>(event.getTarget());
     EXPECT_TRUE(server->isReceivedFileSizeValid());
 
     m_events.raiseQuitEvent();
@@ -457,7 +455,7 @@ NetworkTests::sendMockData(void* eventTarget)
 UInt8*
 newMockData(size_t size)
 {
-    UInt8* buffer = new UInt8[size];
+    auto* buffer = new UInt8[size];
 
     UInt8* data = buffer;
     const UInt8 head[] = "mock head... ";

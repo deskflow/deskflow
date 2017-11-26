@@ -19,9 +19,9 @@
 #define TEST_ENV
 
 #include "test/mock/synergy/MockKeyMap.h"
-#include "test/mock/synergy/MockEventQueue.h"
-#include "platform/XWindowsKeyState.h"
 #include "base/Log.h"
+#include "platform/XWindowsKeyState.h"
+#include "test/mock/synergy/MockEventQueue.h"
 
 #define XK_LATIN1
 #define XK_MISCELLANY
@@ -31,41 +31,41 @@
 #    include <X11/XKBlib.h>
 #endif
 
-#include "test/global/gtest.h"
 #include "test/global/gmock.h"
-#include <errno.h>
+#include "test/global/gtest.h"
+#include <cerrno>
 
 class XWindowsKeyStateTests : public ::testing::Test
 {
 protected:
     XWindowsKeyStateTests() :
-        m_display(NULL)
+        m_display(nullptr)
     {
     }
 
-    ~XWindowsKeyStateTests()
+    ~XWindowsKeyStateTests() override
     {
-        if (m_display != NULL) {
+        if (m_display != nullptr) {
             LOG((CLOG_DEBUG "closing display"));
             XCloseDisplay(m_display);
         }
     }
 
-    virtual void
-    SetUp()
+    void
+    SetUp() override
     {
         // open the display only once for the entire test suite
-        if (this->m_display == NULL) {
+        if (this->m_display == nullptr) {
             LOG((CLOG_DEBUG "opening display"));
-            this->m_display = XOpenDisplay(NULL);
+            this->m_display = XOpenDisplay(nullptr);
 
-            ASSERT_TRUE(this->m_display != NULL)
+            ASSERT_TRUE(this->m_display != nullptr)
                 << "unable to open display: " << errno;
         }
     }
 
-    virtual void
-    TearDown()
+    void
+    TearDown() override
     {
     }
 
@@ -157,7 +157,7 @@ TEST_F(XWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero)
     ASSERT_EQ(0, actual);
 }
 
-#if 0 // TODO: fix, causes sigsegv
+#if 0 // TODO(andrew): fix, causes sigsegv
 TEST_F(XWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCorrect)
 {
     MockKeyMap keyMap;
@@ -228,7 +228,7 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
     // reset the group
     keyState.group(-1);
 
-    XkbStateRec state;
+    XkbStateRec state{};
 
     // compare pollActiveGroup() with XkbGetState()
     if (XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {

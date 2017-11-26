@@ -50,7 +50,7 @@ public:
     virtual void*        getEventTarget() const;
     virtual bool        getClipboard(ClipboardID id, IClipboard*) const;
     virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const;
+                            SInt32& w, SInt32& h) const;
     virtual void        getCursorPos(SInt32& x, SInt32& y) const;
 
     // IPrimaryScreen overrides
@@ -65,7 +65,7 @@ public:
     virtual void        getCursorCenter(SInt32& x, SInt32& y) const;
 
     // ISecondaryScreen overrides
-    virtual void        fakeMouseButton(ButtonID id, bool press);
+    virtual void        fakeMouseButton(ButtonID button, bool press);
     virtual void        fakeMouseMove(SInt32 x, SInt32 y);
     virtual void        fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
     virtual void        fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
@@ -104,11 +104,11 @@ private:
     ClipboardID            getClipboardID(Atom selection) const;
 
     // continue processing a selection request
-    void                processClipboardRequest(Window window,
+    void                processClipboardRequest(Window requestor,
                             Time time, Atom property);
 
     // terminate a selection request
-    void                destroyClipboardRequest(Window window);
+    void                destroyClipboardRequest(Window requestor);
 
     // X I/O error handler
     void                onError();
@@ -208,7 +208,7 @@ private:
     FilteredKeycodes    m_filtered;
 
     // clipboards
-    XWindowsClipboard*    m_clipboard[kClipboardEnd];
+    XWindowsClipboard*    m_clipboard[kClipboardEnd]{};
     UInt32                m_sequenceNumber;
 
     // screen saver stuff
@@ -220,14 +220,14 @@ private:
     std::vector<unsigned char>    m_buttons;
 
     // true if global auto-repeat was enabled before we turned it off
-    bool                m_autoRepeat;
+    bool                m_autoRepeat{};
 
     // stuff to workaround xtest being xinerama unaware.  attempting
     // to fake a mouse motion under xinerama may behave strangely,
     // especially if screen 0 is not at 0,0 or if faking a motion on
     // a screen other than screen 0.
     bool                m_xtestIsXineramaUnaware;
-    bool                m_xinerama;
+    bool                m_xinerama{};
 
     // stuff to work around lost focus issues on certain systems
     // (ie: a MythTV front-end).
@@ -235,13 +235,13 @@ private:
 
     // XKB extension stuff
     bool                m_xkb;
-    int                    m_xkbEventBase;
+    int                    m_xkbEventBase{};
 
     bool                m_xi2detected;
 
     // XRandR extension stuff
     bool                m_xrandr;
-    int                 m_xrandrEventBase;
+    int                 m_xrandrEventBase{};
 
     IEventQueue*        m_events;
     synergy::KeyMap                m_keyMap;

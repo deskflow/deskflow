@@ -18,10 +18,10 @@
 
 #include "server/ClientProxy.h"
 
+#include "base/EventQueue.h"
+#include "base/Log.h"
 #include "core/ProtocolUtil.h"
 #include "io/IStream.h"
-#include "base/Log.h"
-#include "base/EventQueue.h"
 
 //
 // ClientProxy

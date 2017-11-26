@@ -25,7 +25,7 @@ TEST(ArgParserTests, isArg_abbreviationsArg_returnTrue)
     int i = 1;
     const int argc = 2;
     const char* argv[argc] = { "stub", "-t" };
-    bool result = ArgParser::isArg(i, argc, argv, "-t", NULL);
+    bool result = ArgParser::isArg(i, argc, argv, "-t", nullptr);
 
     EXPECT_EQ(true, result);
 }
@@ -35,7 +35,7 @@ TEST(ArgParserTests, isArg_fullArg_returnTrue)
     int i = 1;
     const int argc = 2;
     const char* argv[argc] = { "stub", "--test" };
-    bool result = ArgParser::isArg(i, argc, argv, NULL, "--test");
+    bool result = ArgParser::isArg(i, argc, argv, nullptr, "--test");
 
     EXPECT_EQ(true, result);
 }
@@ -45,11 +45,11 @@ TEST(ArgParserTests, isArg_missingArgs_returnFalse)
     int i = 1;
     const int argc = 2;
     const char* argv[argc] = { "stub", "-t" };
-    ArgParser argParser(NULL);
+    ArgParser argParser(nullptr);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
 
-    bool result = ArgParser::isArg(i, argc, argv, "-t", NULL, 1);
+    bool result = ArgParser::isArg(i, argc, argv, "-t", nullptr, 1);
 
     EXPECT_FALSE(result);
     EXPECT_EQ(true, argsBase.m_shouldExit);
@@ -119,7 +119,7 @@ TEST(ArgParserTests, splitCommandString_twoArgs_returnArgv)
 
 TEST(ArgParserTests, splitCommandString_doubleQuotedArgs_returnArgv)
 {
-    String command("\"stub1\" stub2 \"stub3\"");
+    String command(R"("stub1" stub2 "stub3")");
     std::vector<String> argv;
 
     ArgParser::splitCommandString(command, argv);
@@ -132,7 +132,7 @@ TEST(ArgParserTests, splitCommandString_doubleQuotedArgs_returnArgv)
 
 TEST(ArgParserTests, splitCommandString_spaceDoubleQuotedArgs_returnArgv)
 {
-    String command("\"stub1\" stub2 \"stub3 space\"");
+    String command(R"("stub1" stub2 "stub3 space")");
     std::vector<String> argv;
 
     ArgParser::splitCommandString(command, argv);
@@ -146,9 +146,9 @@ TEST(ArgParserTests, splitCommandString_spaceDoubleQuotedArgs_returnArgv)
 TEST(ArgParserTests, getArgv_stringArray_return2DArray)
 {
     std::vector<String> argArray;
-    argArray.push_back("stub1");
-    argArray.push_back("stub2");
-    argArray.push_back("stub3 space");
+    argArray.emplace_back("stub1");
+    argArray.emplace_back("stub2");
+    argArray.emplace_back("stub3 space");
     const char** argv = ArgParser::getArgv(argArray);
 
     String row1(argv[0]);
@@ -165,8 +165,8 @@ TEST(ArgParserTests, getArgv_stringArray_return2DArray)
 TEST(ArgParserTests, assembleCommand_stringArray_returnCommand)
 {
     std::vector<String> argArray;
-    argArray.push_back("stub1");
-    argArray.push_back("stub2");
+    argArray.emplace_back("stub1");
+    argArray.emplace_back("stub2");
     String command = ArgParser::assembleCommand(argArray);
 
     EXPECT_EQ("stub1 stub2", command);
@@ -175,8 +175,8 @@ TEST(ArgParserTests, assembleCommand_stringArray_returnCommand)
 TEST(ArgParserTests, assembleCommand_ignoreSecondArg_returnCommand)
 {
     std::vector<String> argArray;
-    argArray.push_back("stub1");
-    argArray.push_back("stub2");
+    argArray.emplace_back("stub1");
+    argArray.emplace_back("stub2");
     String command = ArgParser::assembleCommand(argArray, "stub2");
 
     EXPECT_EQ("stub1", command);
@@ -185,10 +185,10 @@ TEST(ArgParserTests, assembleCommand_ignoreSecondArg_returnCommand)
 TEST(ArgParserTests, assembleCommand_ignoreSecondArgWithOneParameter_returnCommand)
 {
     std::vector<String> argArray;
-    argArray.push_back("stub1");
-    argArray.push_back("stub2");
-    argArray.push_back("stub3");
-    argArray.push_back("stub4");
+    argArray.emplace_back("stub1");
+    argArray.emplace_back("stub2");
+    argArray.emplace_back("stub3");
+    argArray.emplace_back("stub4");
     String command = ArgParser::assembleCommand(argArray, "stub2", 1);
 
     EXPECT_EQ("stub1 stub4", command);
@@ -197,9 +197,9 @@ TEST(ArgParserTests, assembleCommand_ignoreSecondArgWithOneParameter_returnComma
 TEST(ArgParserTests, assembleCommand_stringArrayWithSpace_returnCommand)
 {
     std::vector<String> argArray;
-    argArray.push_back("stub1 space");
-    argArray.push_back("stub2");
-    argArray.push_back("stub3 space");
+    argArray.emplace_back("stub1 space");
+    argArray.emplace_back("stub2");
+    argArray.emplace_back("stub3 space");
     String command = ArgParser::assembleCommand(argArray);
 
     EXPECT_EQ("\"stub1 space\" stub2 \"stub3 space\"", command);

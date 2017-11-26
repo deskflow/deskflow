@@ -18,8 +18,8 @@
 
 #include "core/PacketStreamFilter.h"
 #include "base/IEventQueue.h"
-#include "mt/Lock.h"
 #include "base/TMethodEventJob.h"
+#include "mt/Lock.h"
 
 #include <cstring>
 #include <memory>
@@ -71,7 +71,7 @@ PacketStreamFilter::read(void* buffer, UInt32 n)
     }
 
     // read it
-    if (buffer != NULL) {
+    if (buffer != nullptr) {
         memcpy(buffer, m_buffer.peek(n), n);
     }
     m_buffer.pop(n);
@@ -83,7 +83,7 @@ PacketStreamFilter::read(void* buffer, UInt32 n)
 
     if (m_inputShutdown && m_size == 0) {
         m_events->addEvent(Event(m_events->forIStream().inputShutdown(),
-                        getEventTarget(), NULL));
+                        getEventTarget(), nullptr));
     }
 
     return n;
@@ -94,10 +94,10 @@ PacketStreamFilter::write(const void* buffer, UInt32 count)
 {
     // write the length of the payload
     UInt8 length[4];
-    length[0] = (UInt8)((count >> 24) & 0xff);
-    length[1] = (UInt8)((count >> 16) & 0xff);
-    length[2] = (UInt8)((count >>  8) & 0xff);
-    length[3] = (UInt8)( count        & 0xff);
+    length[0] = static_cast<UInt8>((count >> 24) & 0xff);
+    length[1] = static_cast<UInt8>((count >> 16) & 0xff);
+    length[2] = static_cast<UInt8>((count >>  8) & 0xff);
+    length[3] = static_cast<UInt8>( count        & 0xff);
     getStream()->write(length, sizeof(length));
 
     // write the payload
@@ -142,10 +142,10 @@ PacketStreamFilter::readPacketSize()
         UInt8 buffer[4];
         memcpy(buffer, m_buffer.peek(sizeof(buffer)), sizeof(buffer));
         m_buffer.pop(sizeof(buffer));
-        m_size = ((UInt32)buffer[0] << 24) |
-                 ((UInt32)buffer[1] << 16) |
-                 ((UInt32)buffer[2] <<  8) |
-                  (UInt32)buffer[3];
+        m_size = (static_cast<UInt32>(buffer[0]) << 24) |
+                 (static_cast<UInt32>(buffer[1]) << 16) |
+                 (static_cast<UInt32>(buffer[2]) <<  8) |
+                  static_cast<UInt32>(buffer[3]);
     }
 }
 

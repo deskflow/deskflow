@@ -25,20 +25,19 @@
 using namespace std;
 
 DragInformation::DragInformation() :
-    m_filename(),
     m_filesize(0)
 {
 }
 
 void
-DragInformation::parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, String data)
+DragInformation::parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, const String& data)
 {
     size_t startPos = 0;
     size_t findResult1 = 0;
     size_t findResult2 = 0;
     dragFileList.clear();
     String slash("\\");
-    if (data.find("/", startPos) != string::npos) {
+    if (data.find('/', startPos) != string::npos) {
         slash = "/";
     }
     
@@ -48,7 +47,7 @@ DragInformation::parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, Strin
         findResult2 = data.find_last_of(slash, findResult1);
 
         if (findResult1 == startPos) {
-            //TODO: file number does not match, something goes wrong
+            // TODO(andrew): file number does not match, something goes wrong
             break;
         }
         
@@ -86,22 +85,22 @@ DragInformation::parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, Strin
 }
 
 String
-DragInformation::getDragFileExtension(String filename)
+DragInformation::getDragFileExtension(const String& filename)
 {
     size_t findResult = string::npos;
-    findResult = filename.find_last_of(".", filename.size());
+    findResult = filename.find_last_of('.', filename.size());
     if (findResult != string::npos) {
         return filename.substr(findResult + 1, filename.size() - findResult - 1);
     }
-    else {
+    
         return "";
-    }
+    
 }
 
 int
 DragInformation::setupDragInfo(DragFileList& fileList, String& output)
 {
-    int size = static_cast<int>(fileList.size());
+    auto size = static_cast<int>(fileList.size());
     for (int i = 0; i < size; ++i) {
         output.append(fileList.at(i).getFilename());
         output.append(",");
@@ -113,7 +112,7 @@ DragInformation::setupDragInfo(DragFileList& fileList, String& output)
 }
 
 bool
-DragInformation::isFileValid(String filename)
+DragInformation::isFileValid(const String& filename)
 {
     bool result = false;
     std::fstream file(filename.c_str(), ios::in|ios::binary);
@@ -130,7 +129,7 @@ DragInformation::isFileValid(String filename)
 size_t
 DragInformation::stringToNum(String& str)
 {
-    istringstream iss(str.c_str());
+    istringstream iss(str);
     size_t size;
     iss >> size;
     return size;
@@ -147,7 +146,7 @@ DragInformation::getFileSize(String& filename)
 
     // check file size
     file.seekg (0, std::ios::end);
-    size_t size = (size_t)file.tellg();
+    auto size = (size_t)file.tellg();
 
     stringstream ss;
     ss << size;

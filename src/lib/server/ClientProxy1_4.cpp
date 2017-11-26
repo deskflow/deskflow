@@ -18,11 +18,11 @@
 
 #include "server/ClientProxy1_4.h"
 
-#include "server/Server.h"
-#include "core/ProtocolUtil.h"
-#include "base/Log.h"
 #include "base/IEventQueue.h"
+#include "base/Log.h"
 #include "base/TMethodEventJob.h"
+#include "core/ProtocolUtil.h"
+#include "server/Server.h"
 
 #include <cstring>
 #include <memory>
@@ -38,8 +38,7 @@ ClientProxy1_4::ClientProxy1_4(const String& name, synergy::IStream* stream, Ser
 }
 
 ClientProxy1_4::~ClientProxy1_4()
-{
-}
+= default;
 
 void
 ClientProxy1_4::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)

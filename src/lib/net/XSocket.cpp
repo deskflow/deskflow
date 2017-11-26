@@ -17,6 +17,8 @@
  */
 
 #include "net/XSocket.h"
+
+#include <utility>
 #include "base/String.h"
 
 //
@@ -24,34 +26,34 @@
 //
 
 XSocketAddress::XSocketAddress(EError error,
-                const String& hostname, int port) _NOEXCEPT :
+                String  hostname, int port) noexcept :
     m_error(error),
-    m_hostname(hostname),
+    m_hostname(std::move(hostname)),
     m_port(port)
 {
     // do nothing
 }
 
 XSocketAddress::EError
-XSocketAddress::getError() const throw()
+XSocketAddress::getError() const noexcept
 {
     return m_error;
 }
 
 String
-XSocketAddress::getHostname() const throw()
+XSocketAddress::getHostname() const noexcept
 {
     return m_hostname;
 }
 
 int
-XSocketAddress::getPort() const throw()
+XSocketAddress::getPort() const noexcept
 {
     return m_port;
 }
 
 String
-XSocketAddress::getWhat() const throw()
+XSocketAddress::getWhat() const noexcept
 {
     static const char* s_errorID[] = {
         "XSocketAddressUnknown",
@@ -78,7 +80,7 @@ XSocketAddress::getWhat() const throw()
 //
 
 String
-XSocketIOClose::getWhat() const throw()
+XSocketIOClose::getWhat() const noexcept
 {
     return format("XSocketIOClose", "close: %{1}", what());
 }
@@ -89,7 +91,7 @@ XSocketIOClose::getWhat() const throw()
 //
 
 String
-XSocketBind::getWhat() const throw()
+XSocketBind::getWhat() const noexcept
 {
     return format("XSocketBind", "cannot bind address: %{1}", what());
 }
@@ -100,7 +102,7 @@ XSocketBind::getWhat() const throw()
 //
 
 String
-XSocketConnect::getWhat() const throw()
+XSocketConnect::getWhat() const noexcept
 {
     return format("XSocketConnect", "cannot connect socket: %{1}", what());
 }
@@ -111,7 +113,7 @@ XSocketConnect::getWhat() const throw()
 //
 
 String
-XSocketCreate::getWhat() const throw()
+XSocketCreate::getWhat() const noexcept
 {
     return format("XSocketCreate", "cannot create socket: %{1}", what());
 }

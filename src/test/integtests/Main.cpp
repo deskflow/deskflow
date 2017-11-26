@@ -24,15 +24,15 @@
 #endif
 
 #include "test/global/gtest.h"
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 #define LOCK_TIMEOUT 30
 
 using namespace std;
 
-void lock(string lockFile);
-void unlock(string lockFile);
+void lock(const string& lockFile);
+void unlock(const string& lockFile);
 
 int
 main(int argc, char **argv)
@@ -50,7 +50,7 @@ main(int argc, char **argv)
 
     string lockFile;
     for (int i = 0; i < argc; i++) {
-        if (string(argv[i]).compare("--lock-file") == 0) {
+        if (string(argv[i]) == "--lock-file") {
             lockFile = argv[i + 1];
         }
     }
@@ -77,7 +77,7 @@ main(int argc, char **argv)
 }
 
 void
-lock(string lockFile)
+lock(const string& lockFile)
 {
     double start = ARCH->time();
     
@@ -102,7 +102,7 @@ lock(string lockFile)
 }
 
 void
-unlock(string lockFile) 
+unlock(const string& lockFile) 
 {
     remove(lockFile.c_str());
 }

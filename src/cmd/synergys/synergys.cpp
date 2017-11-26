@@ -18,8 +18,8 @@
 
 #include "core/ServerApp.h"
 #include "arch/Arch.h"
-#include "base/Log.h"
 #include "base/EventQueue.h"
+#include "base/Log.h"
 
 #include <iostream>
 

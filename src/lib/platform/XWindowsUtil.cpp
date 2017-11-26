@@ -18,10 +18,10 @@
 
 #include "platform/XWindowsUtil.h"
 
-#include "core/key_types.h"
-#include "mt/Thread.h"
 #include "base/Log.h"
 #include "base/String.h"
+#include "core/key_types.h"
+#include "mt/Thread.h"
 
 #include <X11/Xatom.h>
 #define XK_APL
@@ -1345,8 +1345,8 @@ XWindowsUtil::getWindowProperty(Display* display, Window window,
         }
 
         // append data
-        if (data != NULL) {
-            data->append((char*)rawData, numBytes);
+        if (data != nullptr) {
+            data->append(reinterpret_cast<char*>(rawData), numBytes);
         }
         else {
             // data is not required so don't try to get any more
@@ -1363,21 +1363,21 @@ XWindowsUtil::getWindowProperty(Display* display, Window window,
     }
 
     // save property info
-    if (type != NULL) {
+    if (type != nullptr) {
         *type = actualType;
     }
-    if (format != NULL) {
+    if (format != nullptr) {
         *format = static_cast<SInt32>(actualDatumSize);
     }
 
     if (okay) {
-        LOG((CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property, window, (data == NULL) ? 0 : data->size()));
+        LOG((CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property, window, (data == nullptr) ? 0 : data->size()));
         return true;
     }
-    else {
+    
         LOG((CLOG_DEBUG2 "can't read property %d on window 0x%08x", property, window));
         return false;
-    }
+    
 }
 
 bool
@@ -1386,8 +1386,8 @@ XWindowsUtil::setWindowProperty(Display* display, Window window,
                 Atom type, SInt32 format)
 {
     const UInt32 length       = 4 * XMaxRequestSize(display);
-    const unsigned char* data = static_cast<const unsigned char*>(vdata);
-    UInt32 datumSize    = static_cast<UInt32>(format / 8);
+    const auto* data = static_cast<const unsigned char*>(vdata);
+    auto datumSize    = static_cast<UInt32>(format / 8);
     // format 32 on 64bit systems is 8 bytes not 4.
     if (format == 32) {
         datumSize = sizeof(Atom);
@@ -1431,7 +1431,7 @@ XWindowsUtil::getCurrentTime(Display* display, Window window)
 {
     XLockDisplay(display);
     // select property events on window
-    XWindowAttributes attr;
+    XWindowAttributes attr{};
     XGetWindowAttributes(display, window, &attr);
     XSelectInput(display, window, attr.your_event_mask | PropertyChangeMask);
 
@@ -1446,14 +1446,14 @@ XWindowsUtil::getCurrentTime(Display* display, Window window)
                                 &dummy, 0);
 
     // look for property notify events with the following
-    PropertyNotifyPredicateInfo filter;
+    PropertyNotifyPredicateInfo filter{};
     filter.m_window   = window;
     filter.m_property = atom;
 
     // wait for reply
-    XEvent xevent;
+    XEvent xevent{};
     XIfEvent(display, &xevent, &XWindowsUtil::propertyNotifyPredicate,
-                                (XPointer)&filter);
+                                reinterpret_cast<XPointer>(&filter));
     assert(xevent.type             == PropertyNotify);
     assert(xevent.xproperty.window == window);
     assert(xevent.xproperty.atom   == atom);
@@ -1619,31 +1619,31 @@ XWindowsUtil::atomToString(Display* display, Atom atom)
     XWindowsUtil::ErrorLock lock(display, &error);
     char* name = XGetAtomName(display, atom);
     if (error) {
-        return synergy::string::sprintf("<UNKNOWN> (%d)", (int)atom);
+        return synergy::string::sprintf("<UNKNOWN> (%d)", static_cast<int>(atom));
     }
-    else {
-        String msg = synergy::string::sprintf("%s (%d)", name, (int)atom);
+    
+        String msg = synergy::string::sprintf("%s (%d)", name, static_cast<int>(atom));
         XFree(name);
         return msg;
-    }
+    
 }
 
 String
 XWindowsUtil::atomsToString(Display* display, const Atom* atom, UInt32 num)
 {
-    char** names = new char*[num];
+    auto** names = new char*[num];
     bool error = false;
     XWindowsUtil::ErrorLock lock(display, &error);
-    XGetAtomNames(display, const_cast<Atom*>(atom), (int)num, names);
+    XGetAtomNames(display, const_cast<Atom*>(atom), static_cast<int>(num), names);
     String msg;
     if (error) {
         for (UInt32 i = 0; i < num; ++i) {
-            msg += synergy::string::sprintf("<UNKNOWN> (%d), ", (int)atom[i]);
+            msg += synergy::string::sprintf("<UNKNOWN> (%d), ", static_cast<int>(atom[i]));
         }
     }
     else {
         for (UInt32 i = 0; i < num; ++i) {
-            msg += synergy::string::sprintf("%s (%d), ", names[i], (int)atom[i]);
+            msg += synergy::string::sprintf("%s (%d), ", names[i], static_cast<int>(atom[i]));
             XFree(names[i]);
         }
     }
@@ -1690,9 +1690,9 @@ XWindowsUtil::appendTimeData(String& data, Time time)
 }
 
 Bool
-XWindowsUtil::propertyNotifyPredicate(Display*, XEvent* xevent, XPointer arg)
+XWindowsUtil::propertyNotifyPredicate(Display* /*unused*/, XEvent* xevent, XPointer arg)
 {
-    PropertyNotifyPredicateInfo* filter =
+    auto* filter =
                         reinterpret_cast<PropertyNotifyPredicateInfo*>(arg);
     return (xevent->type             == PropertyNotify &&
             xevent->xproperty.window == filter->m_window &&
@@ -1704,8 +1704,8 @@ void
 XWindowsUtil::initKeyMaps()
 {
     if (s_keySymToUCS4.empty()) {
-        for (size_t i =0; i < sizeof(s_keymap) / sizeof(s_keymap[0]); ++i) {
-            s_keySymToUCS4[s_keymap[i].keysym] = s_keymap[i].ucs4;
+        for (auto & i : s_keymap) {
+            s_keySymToUCS4[i.keysym] = i.ucs4;
         }
     }
 }
@@ -1715,12 +1715,12 @@ XWindowsUtil::initKeyMaps()
 // XWindowsUtil::ErrorLock
 //
 
-XWindowsUtil::ErrorLock*    XWindowsUtil::ErrorLock::s_top = NULL;
+XWindowsUtil::ErrorLock*    XWindowsUtil::ErrorLock::s_top = nullptr;
 
 XWindowsUtil::ErrorLock::ErrorLock(Display* display) :
     m_display(display)
 {
-    install(&XWindowsUtil::ErrorLock::ignoreHandler, NULL);
+    install(&XWindowsUtil::ErrorLock::ignoreHandler, nullptr);
 }
 
 XWindowsUtil::ErrorLock::ErrorLock(Display* display, bool* flag) :
@@ -1739,7 +1739,7 @@ XWindowsUtil::ErrorLock::ErrorLock(Display* display,
 XWindowsUtil::ErrorLock::~ErrorLock()
 {
     // make sure everything finishes before uninstalling handler
-    if (m_display != NULL) {
+    if (m_display != nullptr) {
         XSync(m_display, False);
     }
 
@@ -1752,7 +1752,7 @@ void
 XWindowsUtil::ErrorLock::install(ErrorHandler handler, void* data)
 {
     // make sure everything finishes before installing handler
-    if (m_display != NULL) {
+    if (m_display != nullptr) {
         XSync(m_display, False);
     }
 
@@ -1768,20 +1768,20 @@ XWindowsUtil::ErrorLock::install(ErrorHandler handler, void* data)
 int
 XWindowsUtil::ErrorLock::internalHandler(Display* display, XErrorEvent* event)
 {
-    if (s_top != NULL && s_top->m_handler != NULL) {
+    if (s_top != nullptr && s_top->m_handler != nullptr) {
         s_top->m_handler(display, event, s_top->m_userData);
     }
     return 0;
 }
 
 void
-XWindowsUtil::ErrorLock::ignoreHandler(Display*, XErrorEvent* e, void*)
+XWindowsUtil::ErrorLock::ignoreHandler(Display* /*unused*/, XErrorEvent* e, void* /*unused*/)
 {
     LOG((CLOG_DEBUG1 "ignoring X error: %d", e->error_code));
 }
 
 void
-XWindowsUtil::ErrorLock::saveHandler(Display*, XErrorEvent* e, void* flag)
+XWindowsUtil::ErrorLock::saveHandler(Display* /*unused*/, XErrorEvent* e, void* flag)
 {
     LOG((CLOG_DEBUG1 "flagging X error: %d", e->error_code));
     *static_cast<bool*>(flag) = true;

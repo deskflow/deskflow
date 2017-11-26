@@ -76,10 +76,10 @@ private:
     bool                m_mock;
     IEventQueue*        m_events;
     SocketMultiplexer*    m_socketMultiplexer;
-    TCPListenSocket*    m_socket;
+    TCPListenSocket*    m_socket{};
     NetworkAddress        m_address;
     ClientList            m_clients;
-    ArchMutex            m_clientsMutex;
+    ArchMutex            m_clientsMutex{};
 
 #ifdef TEST_ENV
 public:

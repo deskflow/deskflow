@@ -126,7 +126,7 @@ public:
     // IClient overrides
     virtual void        enter(SInt32 xAbs, SInt32 yAbs,
                             UInt32 seqNum, KeyModifierMask mask,
-                            bool forScreensaver);
+                            bool screensaver);
     virtual bool        leave();
     virtual void        setClipboard(ClipboardID, const IClipboard*);
     virtual void        grabClipboard(ClipboardID);
@@ -137,7 +137,7 @@ public:
     virtual void        keyUp(KeyID, KeyModifierMask, KeyButton);
     virtual void        mouseDown(ButtonID);
     virtual void        mouseUp(ButtonID);
-    virtual void        mouseMove(SInt32 xAbs, SInt32 yAbs);
+    virtual void        mouseMove(SInt32 x, SInt32 y);
     virtual void        mouseRelativeMove(SInt32 xRel, SInt32 yRel);
     virtual void        mouseWheel(SInt32 xDelta, SInt32 yDelta);
     virtual void        screensaver(bool activate);
@@ -151,6 +151,6 @@ public:
     bool                isPrimary() const { return true; }
 private:
     synergy::Screen*    m_screen;
-    bool                m_clipboardDirty[kClipboardEnd];
+    bool                m_clipboardDirty[kClipboardEnd]{};
     SInt32                m_fakeInputCount;
 };

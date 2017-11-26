@@ -58,7 +58,7 @@ public:
 
 class IpcLogLineMessage : public IpcMessage {
 public:
-    IpcLogLineMessage(const String& logLine);
+    IpcLogLineMessage(String  logLine);
     virtual ~IpcLogLineMessage();
 
     //! Gets the log line.
@@ -70,7 +70,7 @@ private:
 
 class IpcCommandMessage : public IpcMessage {
 public:
-    IpcCommandMessage(const String& command, bool elevate);
+    IpcCommandMessage(String  command, bool elevate);
     virtual ~IpcCommandMessage();
 
     //! Gets the command.

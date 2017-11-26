@@ -25,8 +25,8 @@
 
 Event::Event() :
     m_type(kUnknown),
-    m_target(NULL),
-    m_data(NULL),
+    m_target(nullptr),
+    m_data(nullptr),
     m_flags(0),
     m_dataObject(nullptr)
 {

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO: fix tests - compile error on linux
+// TODO(andrew): fix tests - compile error on linux
 #if 0
 
 #include "platform/XWindowsClipboard.h"

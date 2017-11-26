@@ -59,7 +59,7 @@ public:
     virtual void        open(const char* title);
     virtual void        close();
     virtual void        show(bool showIfEmpty);
-    virtual bool        write(ELevel level, const char* message);
+    virtual bool        write(ELevel level, const char* msg);
     virtual void        flush();
 };
 
@@ -80,7 +80,7 @@ public:
     virtual void        show(bool showIfEmpty);
     virtual bool        write(ELevel level, const char* message);
 
-    void                setLogFilename(const char* title);
+    void                setLogFilename(const char* logFile);
 
 private:
     std::string            m_fileName;
@@ -99,7 +99,7 @@ public:
     virtual void        open(const char* title);
     virtual void        close();
     virtual void        show(bool showIfEmpty);
-    virtual bool        write(ELevel level, const char* message);
+    virtual bool        write(ELevel level, const char* msg);
 };
 
 //! Write log to system log only

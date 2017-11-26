@@ -62,7 +62,7 @@ public:
     By default, the logger has one outputter installed which writes to
     the console.
     */
-    void                insert(ILogOutputter* adopted,
+    void                insert(ILogOutputter* outputter,
                                bool alwaysAtHead = false);
 
     //! Remove an outputter from the list
@@ -71,7 +71,7 @@ public:
     outputter list.  It does nothing if the outputter is not in the
     list.  The outputter is not deleted.
     */
-    void                remove(ILogOutputter* orphaned);
+    void                remove(ILogOutputter* outputter);
 
     //! Remove the outputter from the head of the list
     /*!
@@ -89,7 +89,7 @@ public:
     true if the priority \c name was recognized;  if \c name is NULL
     then it simply returns true.
     */
-    bool                setFilter(const char* name);
+    bool                setFilter(const char* maxPriority);
     
     //! Set the minimum priority filter (by ordinal).
     void                setFilter(int);
@@ -105,7 +105,7 @@ public:
     neither the file nor the line are printed.
     */
     void                print(const char* file, int line,
-                            const char* format, ...);
+                            const char* fmt, ...);
 
     //! Get the minimum priority level.
     int                    getFilter() const;
@@ -132,11 +132,11 @@ private:
 
     static Log*        s_log;
 
-    ArchMutex            m_mutex;
+    ArchMutex            m_mutex{};
     OutputterList        m_outputters;
     OutputterList        m_alwaysOutputters;
-    int                    m_maxNewlineLength;
-    int                    m_maxPriority;
+    int                    m_maxNewlineLength{};
+    int                    m_maxPriority{};
 };
 
 /*!

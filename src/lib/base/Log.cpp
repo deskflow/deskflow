@@ -25,8 +25,8 @@
 
 #include <cstdio>
 #include <cstring>
-#include <iostream>
 #include <ctime> 
+#include <iostream>
 
 // names of priorities
 static const char*        g_priority[] = {
@@ -44,7 +44,7 @@ static const char*        g_priority[] = {
 };
 
 // number of priorities
-static const int g_numPriority = (int)(sizeof(g_priority) / sizeof(g_priority[0]));
+static const int g_numPriority = static_cast<int>(sizeof(g_priority) / sizeof(g_priority[0]));
 
 // the default priority
 #ifndef NDEBUG
@@ -57,7 +57,7 @@ static const int        g_defaultMaxPriority = kINFO;
 // Log
 //
 
-Log*                 Log::s_log = NULL;
+Log*                 Log::s_log = nullptr;
 
 Log::Log()
 {
@@ -82,13 +82,11 @@ Log::Log(Log* src)
 Log::~Log()
 {
     // clean up
-    for (OutputterList::iterator index    = m_outputters.begin();
-                                    index != m_outputters.end(); ++index) {
-        delete *index;
+    for (auto & m_outputter : m_outputters) {
+        delete m_outputter;
     }
-    for (OutputterList::iterator index    = m_alwaysOutputters.begin();
-                                    index != m_alwaysOutputters.end(); ++index) {
-        delete *index;
+    for (auto & m_alwaysOutputter : m_alwaysOutputters) {
+        delete m_alwaysOutputter;
     }
     ARCH->closeMutex(m_mutex);
 }
@@ -116,7 +114,7 @@ Log::getFilterName(int level) const
 }
 
 void
-Log::print(const char* file, int line, const char* fmt, ...)
+Log::print(const char*  /*file*/, int  /*line*/, const char* fmt, ...)
 {
     // check if fmt begins with a priority argument
     ELevel priority = kINFO;
@@ -125,7 +123,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
         // 060 in octal is 0 (48 in decimal), so subtracting this converts ascii
         // number it a true number. we could use atoi instead, but this is how
         // it was done originally.
-        priority = (ELevel)(fmt[2] - '\060');
+        priority = static_cast<ELevel>(fmt[2] - '\060');
 
         // move the pointer on past the debug priority char
         fmt += 3;
@@ -145,7 +143,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
     // print to buffer, leaving space for a newline at the end and prefix
     // at the beginning.
     char* buffer = stack;
-    int len            = (int)(sizeof(stack) / sizeof(stack[0]));
+    auto len            = static_cast<int>(sizeof(stack) / sizeof(stack[0]));
     while (true) {
         // try printing into the buffer
         va_list args;
@@ -154,7 +152,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
         va_end(args);
 
         // if the buffer wasn't big enough then make it bigger and try again
-        if (n < 0 || n > (int)len) {
+        if (n < 0 || n > len) {
             if (buffer != stack) {
                 delete[] buffer;
             }
@@ -189,7 +187,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
         // assume there is no file contains over 100k lines of code
         size += 6;
 #endif
-        char* message = new char[size];
+        auto* message = new char[size];
 
 #ifndef NDEBUG
         sprintf(message, "[%s] %s: %s\n\t%s,%d", timestamp, g_priority[priority], buffer, file, line);
@@ -256,7 +254,7 @@ Log::pop_front(bool alwaysAtHead)
 bool
 Log::setFilter(const char* maxPriority)
 {
-    if (maxPriority != NULL) {
+    if (maxPriority != nullptr) {
         for (int i = 0; i < g_numPriority; ++i) {
             if (strcmp(maxPriority, g_priority[i]) == 0) {
                 setFilter(i);
@@ -287,7 +285,8 @@ Log::output(ELevel priority, char* msg)
 {
     assert(priority >= -1 && priority < g_numPriority);
     assert(msg != NULL);
-    if (!msg) return;
+    if (msg == nullptr) { return;
+}
 
     ArchMutexLock lock(m_mutex);
 

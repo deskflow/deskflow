@@ -18,11 +18,11 @@
 #include "arch/unix/ArchInternetUnix.h"
 
 #include "arch/XArch.h"
-#include "common/Version.h"
 #include "base/Log.h"
+#include "common/Version.h"
 
-#include <sstream>
 #include <curl/curl.h>
+#include <sstream>
 
 class CurlFacade {
 public:
@@ -60,12 +60,12 @@ ArchInternetUnix::urlEncode(const String& url)
 static size_t
 curlWriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    (static_cast<std::string*>(userp))->append(static_cast<char*>(contents), size * nmemb);
     return size * nmemb;
 }
 
 CurlFacade::CurlFacade() :
-    m_curl(NULL)
+    m_curl(nullptr)
 {
     CURLcode init = curl_global_init(CURL_GLOBAL_ALL);
     if (init != CURLE_OK) {
@@ -73,14 +73,14 @@ CurlFacade::CurlFacade() :
     }
 
     m_curl = curl_easy_init();
-    if (m_curl == NULL) {
+    if (m_curl == nullptr) {
         throw XArch("CURL easy init failed.");
     }
 }
 
 CurlFacade::~CurlFacade()
 {
-    if (m_curl != NULL) {
+    if (m_curl != nullptr) {
         curl_easy_cleanup(m_curl);
     }
 
@@ -115,7 +115,7 @@ CurlFacade::urlEncode(const String& url)
 {
     char* resultCStr = curl_easy_escape(m_curl, url.c_str(), 0);
 
-    if (resultCStr == NULL) {
+    if (resultCStr == nullptr) {
         throw XArch("CURL escape failed.");
     }
     

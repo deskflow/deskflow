@@ -24,10 +24,11 @@
 void
 ArchConsoleStd::writeConsole(ELevel level, const char* str)
 {
-    if ((level >= kFATAL) && (level <= kWARNING))
+    if ((level >= kFATAL) && (level <= kWARNING)) {
         std::cerr << str << std::endl;
-    else
+    } else {
         std::cout << str << std::endl;
+}
 
     std::cout.flush();
 }

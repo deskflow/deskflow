@@ -34,19 +34,17 @@ m_runAsUid(-1),
 m_backend(false),
 m_restartable(true),
 m_noHooks(false),
-m_pname(NULL),
-m_logFilter(NULL),
-m_logFile(NULL),
-m_display(NULL),
+m_pname(nullptr),
+m_logFilter(nullptr),
+m_logFile(nullptr),
+m_display(nullptr),
 m_enableIpc(false),
 m_enableDragDrop(false),
 m_shouldExit(false),
-m_synergyAddress(),
 m_profileDirectory(""),
 m_pluginDirectory("")
 {
 }
 
 ArgsBase::~ArgsBase()
-{
-}
+= default;
