@@ -19,8 +19,6 @@
 #include "net/TCPSocketFactory.h"
 #include "net/TCPSocket.h"
 #include "net/TCPListenSocket.h"
-#include "net/SecureSocket.h"
-#include "net/SecureListenSocket.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 
@@ -41,28 +39,13 @@ TCPSocketFactory::~TCPSocketFactory()
 }
 
 IDataSocket*
-TCPSocketFactory::create(bool secure) const
+TCPSocketFactory::create() const
 {
-    if (secure) {
-        SecureSocket* secureSocket = new SecureSocket(m_events, m_socketMultiplexer);
-        secureSocket->initSsl (false);
-        return secureSocket;
-    }
-    else {
-        return new TCPSocket(m_events, m_socketMultiplexer);
-    }
+    return new TCPSocket(m_events, m_socketMultiplexer);
 }
 
 IListenSocket*
-TCPSocketFactory::createListen(bool secure) const
+TCPSocketFactory::createListen() const
 {
-    IListenSocket* socket = NULL;
-    if (secure) {
-        socket = new SecureListenSocket(m_events, m_socketMultiplexer);
-    }
-    else {
-        socket = new TCPListenSocket(m_events, m_socketMultiplexer);
-    }
-
-    return socket;
+    return new TCPListenSocket(m_events, m_socketMultiplexer);
 }

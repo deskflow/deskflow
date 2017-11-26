@@ -256,8 +256,6 @@ TCPSocket::isReady() const
 bool
 TCPSocket::isFatal() const
 {
-    // TCP sockets aren't ever left in a fatal state.
-    LOG((CLOG_ERR "isFatal() not valid for non-secure connections"));
     return false;
 }
 

@@ -82,7 +82,6 @@ REGISTER_EVENT(IpcServerProxy, messageReceived)
 //
 
 REGISTER_EVENT(IDataSocket, connected)
-REGISTER_EVENT(IDataSocket, secureConnected)
 REGISTER_EVENT(IDataSocket, connectionFailed)
 
 //

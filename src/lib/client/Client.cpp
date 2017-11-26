@@ -32,7 +32,6 @@
 #include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/ISocketFactory.h"
-#include "net/SecureSocket.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
@@ -71,7 +70,6 @@ Client::Client(
     m_sendFileThread(NULL),
     m_writeToDropDirThread(NULL),
     m_socket(NULL),
-    m_useSecureNetwork(args.m_enableCrypto),
     m_args(args),
     m_enableClipboard(true)
 {
@@ -147,7 +145,7 @@ Client::connect()
         }
 
         // create the socket
-        IDataSocket* socket = m_socketFactory->create(m_useSecureNetwork);
+        IDataSocket* socket = m_socketFactory->create();
         m_socket = dynamic_cast<TCPSocket*>(socket);
 
         // filter socket messages, including a packetizing filter
@@ -443,18 +441,10 @@ Client::setupConnecting()
 {
     assert(m_stream != NULL);
 
-    if (m_args.m_enableCrypto) {
-        m_events->adoptHandler(m_events->forIDataSocket().secureConnected(),
-                    m_stream->getEventTarget(),
-                        new TMethodEventJob<Client>(this,
-                                &Client::handleConnected));
-    }
-    else {
-        m_events->adoptHandler(m_events->forIDataSocket().connected(),
-                    m_stream->getEventTarget(),
-                        new TMethodEventJob<Client>(this,
-                                &Client::handleConnected));
-    }
+    m_events->adoptHandler(m_events->forIDataSocket().connected(),
+                m_stream->getEventTarget(),
+                    new TMethodEventJob<Client>(this,
+                            &Client::handleConnected));
 
     m_events->adoptHandler(m_events->forIDataSocket().connectionFailed(),
                             m_stream->getEventTarget(),

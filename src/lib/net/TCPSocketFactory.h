@@ -31,9 +31,9 @@ public:
 
     // ISocketFactory overrides
     virtual IDataSocket*
-                        create(bool secure) const;
+                        create() const;
     virtual IListenSocket*
-                        createListen(bool secure) const;
+                        createListen() const;
 
 private:
     IEventQueue*        m_events;

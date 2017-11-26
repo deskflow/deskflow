@@ -22,6 +22,8 @@
 #include "base/SimpleEventQueueBuffer.h"
 #include "common/stdexcept.h"
 
+class EventQueueTimer { };
+
 void
 TestEventQueue::raiseQuitEvent() 
 {

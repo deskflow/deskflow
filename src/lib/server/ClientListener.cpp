@@ -35,17 +35,15 @@
 
 ClientListener::ClientListener(const NetworkAddress& address,
                 ISocketFactory* socketFactory,
-                IEventQueue* events,
-                bool enableCrypto) :
+                IEventQueue* events) :
     m_socketFactory(socketFactory),
     m_server(NULL),
-    m_events(events),
-    m_useSecureNetwork(enableCrypto)
+    m_events(events)
 {
     assert(m_socketFactory != NULL);
 
     try {
-        m_listen = m_socketFactory->createListen(m_useSecureNetwork);
+        m_listen = m_socketFactory->createListen();
 
         // setup event handler
         m_events->adoptHandler(m_events->forIListenSocket().connecting(),
@@ -133,12 +131,8 @@ ClientListener::handleClientConnecting(const Event&, void*)
                 new TMethodEventJob<ClientListener>(this,
                         &ClientListener::handleClientAccepted, socket));
     
-    // When using non SSL, server accepts clients immediately, while SSL
-    // has to call secure accept which may require retry
-    if (!m_useSecureNetwork) {
-        m_events->addEvent(Event(m_events->forClientListener().accepted(),
-                                socket->getEventTarget()));
-    }
+    m_events->addEvent(Event(m_events->forClientListener().accepted(),
+                            socket->getEventTarget()));
 }
 
 void

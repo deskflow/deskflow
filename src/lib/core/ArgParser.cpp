@@ -291,7 +291,8 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
         }
     }
     else if (isArg(i, argc, argv, NULL, "--enable-crypto")) {
-        argsBase().m_enableCrypto = true;
+        LOG((CLOG_INFO "--enable-crypto ignored, TLS is no longer supported in Synergy Core"));
+        return false;
     }
     else if (isArg(i, argc, argv, NULL, "--profile-dir", 1)) {
         argsBase().m_profileDirectory = argv[++i];

@@ -42,7 +42,6 @@ m_enableIpc(false),
 m_enableDragDrop(false),
 m_shouldExit(false),
 m_synergyAddress(),
-m_enableCrypto(false),
 m_profileDirectory(""),
 m_pluginDirectory("")
 {

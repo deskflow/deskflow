@@ -155,8 +155,7 @@ private:
     "  -1, --no-restart         do not try to restart on failure.\n" \
     "*     --restart            restart the server automatically if it fails.\n" \
     "  -l  --log <file>         write log messages to file.\n" \
-    "      --enable-drag-drop   enable file drag & drop.\n" \
-    "      --enable-crypto      enable the crypto (ssl) plugin.\n"
+    "      --enable-drag-drop   enable file drag & drop.\n"
 
 #define HELP_COMMON_INFO_2 \
     "  -h, --help               display this help and exit.\n" \

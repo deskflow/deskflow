@@ -37,8 +37,7 @@ public:
     // The factories are adopted.
     ClientListener(const NetworkAddress&,
                             ISocketFactory*,
-                            IEventQueue* events,
-                            bool enableCrypto);
+                            IEventQueue* events);
     ~ClientListener();
 
     //! @name manipulators
@@ -83,5 +82,4 @@ private:
     WaitingClients        m_waitingClients;
     Server*                m_server;
     IEventQueue*        m_events;
-    bool                m_useSecureNetwork;
 };

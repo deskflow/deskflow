@@ -115,7 +115,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
     // server
     SocketMultiplexer serverSocketMultiplexer;
     TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-    ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
+    ClientListener listener(serverAddress, serverSocketFactory, &m_events);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
     NiceMock<MockConfig> serverConfig;
@@ -146,7 +146,6 @@ TEST_F(NetworkTests, sendToClient_mockData)
 
     ClientArgs clientArgs;
     clientArgs.m_enableDragDrop = true;
-    clientArgs.m_enableCrypto = false;
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
         
     m_events.adoptHandler(
@@ -173,7 +172,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
     // server
     SocketMultiplexer serverSocketMultiplexer;
     TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-    ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
+    ClientListener listener(serverAddress, serverSocketFactory, &m_events);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
     NiceMock<MockConfig> serverConfig;
@@ -204,7 +203,6 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 
     ClientArgs clientArgs;
     clientArgs.m_enableDragDrop = true;
-    clientArgs.m_enableCrypto = false;
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
         
     m_events.adoptHandler(
@@ -230,7 +228,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
     // server
     SocketMultiplexer serverSocketMultiplexer;
     TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-    ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
+    ClientListener listener(serverAddress, serverSocketFactory, &m_events);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
     NiceMock<MockConfig> serverConfig;
@@ -255,7 +253,6 @@ TEST_F(NetworkTests, sendToServer_mockData)
 
     ClientArgs clientArgs;
     clientArgs.m_enableDragDrop = true;
-    clientArgs.m_enableCrypto = false;
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
     
     m_events.adoptHandler(
@@ -287,7 +284,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
     // server
     SocketMultiplexer serverSocketMultiplexer;
     TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-    ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
+    ClientListener listener(serverAddress, serverSocketFactory, &m_events);
     NiceMock<MockScreen> serverScreen;
     NiceMock<MockPrimaryClient> primaryClient;
     NiceMock<MockConfig> serverConfig;
@@ -312,7 +309,6 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 
     ClientArgs clientArgs;
     clientArgs.m_enableDragDrop = true;
-    clientArgs.m_enableCrypto = false;
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
 
     m_events.adoptHandler(
