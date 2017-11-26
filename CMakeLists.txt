@@ -29,6 +29,19 @@ if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions (-DNDEBUG)
 endif()
 
+find_program (CLANG_TIDY_EXE
+    NAMES "clang-tidy"
+    DOC "Path to clang-tidy executable")
+
+if (SYNERGY_TIDY)
+    if (NOT CLANG_TIDY_EXE)
+        message (STATUS "clang-tidy not found.")
+    else ()
+        message (STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
+        set (DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "-checks=* -fix")
+    endif ()
+endif()
+
 #
 # Synergy version
 #
@@ -336,3 +349,9 @@ macro (configure_files srcDir destDir)
 endmacro (configure_files)
 
 add_subdirectory (src)
+
+if (SYNERGY_TIDY)
+    set_property (TARGET synergys synergyc synergy-core
+                         arch base client common core io ipc mt net platform server shared
+                  PROPERTY CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
+endif()
