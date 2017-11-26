@@ -39,4 +39,4 @@ endif()
 
 add_executable(synergyc ${sources})
 target_link_libraries(synergyc
-    arch base client common io mt net ipc platform server core ${libs} ${OPENSSL_LIBS})
+    arch base client common io mt net ipc platform server core ${libs})
