@@ -319,7 +319,7 @@ MesssageBoxLogOutputter::show(bool  /*showIfEmpty*/)
 }
 
 bool
-MesssageBoxLogOutputter::write(ELevel level, const char*  /*msg*/)
+MesssageBoxLogOutputter::write(ELevel level, const char* msg)
 {
     // don't spam user with messages.
     if (level > kERROR) {
