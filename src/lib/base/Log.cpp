@@ -114,7 +114,7 @@ Log::getFilterName(int level) const
 }
 
 void
-Log::print(const char*  /*file*/, int  /*line*/, const char* fmt, ...)
+Log::print(const char* file, int line, const char* fmt, ...)
 {
     // check if fmt begins with a priority argument
     ELevel priority = kINFO;
