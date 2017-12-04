@@ -449,7 +449,7 @@ ArchMultithreadPosix::cancelThread(ArchThread thread)
 }
 
 void
-ArchMultithreadPosix::setPriorityOfThread(ArchThread  /*thread*/, int /*n*/)
+ArchMultithreadPosix::setPriorityOfThread(ArchThread  thread, int /*n*/)
 {
     assert(thread != NULL);
 
