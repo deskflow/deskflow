@@ -47,6 +47,7 @@
 #include <IOKit/hidsystem/event_status_driver.h>
 #include <AppKit/NSEvent.h>
 #include <IOKit/hidsystem/IOHIDLib.h>
+#include <cstdlib>
 
 // This isn't in any Apple SDK that I know of as of yet.
 enum {
@@ -2061,8 +2062,8 @@ OSXScreen::waitForCarbonLoop() const
 	double timeout = ARCH->time() + kCarbonLoopWaitTimeout;
 	while (!m_carbonLoopReady->wait()) {
 		if (ARCH->time() > timeout) {
-			LOG((CLOG_DEBUG "carbon loop not ready, waiting again"));
-			timeout = ARCH->time() + kCarbonLoopWaitTimeout;
+			LOG((CLOG_DEBUG "carbon loop not ready, aborting"));
+			::abort();
 		}
 	}
 
