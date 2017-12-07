@@ -43,7 +43,7 @@ Clipboard::empty()
 
     // clear all data
     for (SInt32 index = 0; index < kNumFormats; ++index) {
-        m_data[index]  = "";
+        m_data[index].clear();
         m_added[index] = false;
     }
 

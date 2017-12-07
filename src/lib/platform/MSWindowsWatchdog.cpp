@@ -568,7 +568,7 @@ MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
 } 
 
 void
-MSWindowsWatchdog::testOutput(String buffer)
+MSWindowsWatchdog::testOutput(const String& buffer)
 {
     // HACK: check standard output seems hacky.
     size_t i = buffer.find(g_activeDesktop);

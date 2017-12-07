@@ -687,7 +687,7 @@ KeyState::fakeKeyUp(KeyButton serverID)
             ++i;
             m_activeModifiers.erase(tmp);
 
-            if (m_activeModifiers.count(mask) == 0) {
+            if (m_activeModifiers.find(mask) == m_activeModifiers.end()) {
                 // no key for modifier is down so deactivate modifier
                 m_mask &= ~mask;
                 LOG((CLOG_DEBUG1 "new state %04x", m_mask));

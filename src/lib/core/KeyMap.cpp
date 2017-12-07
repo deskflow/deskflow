@@ -999,7 +999,7 @@ KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
             }
 
             // if no more keys for this modifier then deactivate modifier
-            if (activeModifiers.count(keyItem.m_generates) == 0) {
+            if (activeModifiers.find(keyItem.m_generates) == activeModifiers.end()) {
                 currentState &= ~keyItem.m_generates;
             }
         }
@@ -1245,7 +1245,7 @@ KeyMap::parseModifiers(String& x, KeyModifierMask& mask)
             String::size_type tb = x.find_first_not_of(" \t");
             String::size_type te = x.find_last_not_of(" \t");
             if (tb == String::npos) {
-                x = "";
+                x.clear();
             }
             else {
                 x = x.substr(tb, te - tb + 1);

@@ -28,7 +28,7 @@ int
 main(int argc, char** argv) 
 {
     // TODO(andrew): use existing arg parse code
-    bool server, client;
+    bool server = false, client = false;
     if (argc > 1) {
         server = std::string(argv[1]) == "--server";
         client = std::string(argv[1]) == "--client";

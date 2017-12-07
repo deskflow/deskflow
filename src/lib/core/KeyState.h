@@ -161,7 +161,7 @@ private:
     class ButtonToKeyLess {
     public:
         bool operator()(const synergy::KeyMap::ButtonToKeyMap::value_type& a,
-                        const synergy::KeyMap::ButtonToKeyMap::value_type b) const
+                        const synergy::KeyMap::ButtonToKeyMap::value_type& b) const
         {
             return (a.first < b.first);
         }

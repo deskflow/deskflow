@@ -174,7 +174,7 @@ findReplaceAll(
 }
 
 String
-removeFileExt(String filename)
+removeFileExt(const String& filename)
 {
     size_t dot = filename.find_last_of('.');
 
