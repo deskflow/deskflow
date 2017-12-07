@@ -69,7 +69,7 @@ void findReplaceAll(String& subject, const String& find, const String& replace);
 /*!
 Finds the last dot and remove all characters from the dot to the end
 */
-String removeFileExt(String filename);
+String removeFileExt(const String& filename);
 
 //! Convert into hexdecimal
 /*!

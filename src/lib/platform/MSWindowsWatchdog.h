@@ -58,7 +58,7 @@ private:
     BOOL                doStartProcess(String& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
     void                sendSas();
     void                getActiveDesktop(LPSECURITY_ATTRIBUTES security);
-    void                testOutput(String buffer);
+    void                testOutput(const String& buffer);
 
 private:
     Thread*                m_thread;

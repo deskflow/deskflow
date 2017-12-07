@@ -960,7 +960,7 @@ Config::readSectionLinks(ConfigReadContext& s)
 			// in the range [0,100] and start < end.  if not given the
 			// interval is taken to be (0,100).
 			String::size_type i = 0;
-			String side, dstScreen, srcArgString, dstArgString;
+			String side, dstScreen;
 			ConfigReadContext::ArgList srcArgs, dstArgs;
 			s.parseNameWithArgs("link", line, "=", i, side, srcArgs);
 			++i;
@@ -1791,7 +1791,6 @@ operator<<(std::ostream& s, const Config& config)
 	s << "end" << std::endl;
 
 	// links section
-	String neighbor;
 	s << "section: links" << std::endl;
 	for (Config::const_iterator screen = config.begin();
 								screen != config.end(); ++screen) {
