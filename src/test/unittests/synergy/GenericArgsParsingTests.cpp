@@ -260,22 +260,6 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noTrayCmd_disableTrayTrue)
     EXPECT_EQ(1, i);
 }
 
-TEST(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue)
-{
-    int i = 1;
-    const int argc = 2;
-    const char* kIpcCmd[argc] = { "stub", "--ipc" };
-
-    ArgParser argParser(nullptr);
-    ArgsBase argsBase;
-    argParser.setArgsBase(argsBase);
-    
-    argParser.parseGenericArgs(argc, kIpcCmd, i);
-
-    EXPECT_EQ(true, argsBase.m_enableIpc);
-    EXPECT_EQ(1, i);
-}
-
 #ifndef  WINAPI_XWINDOWS
 TEST(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnNonLinux_enableDragDropTrue)
 {

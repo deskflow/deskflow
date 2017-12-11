@@ -704,12 +704,6 @@ ServerApp::mainLoop()
     // start server, etc
     appUtil().startNode();
     
-    // init ipc client after node start, since create a new screen wipes out
-    // the event queue (the screen ctors call adoptBuffer).
-    if (argsBase().m_enableIpc) {
-        initIpcClient();
-    }
-
     // handle hangup signal by reloading the server's configuration
     ARCH->setSignalHandler(Arch::kHANGUP, &reloadSignalHandler, nullptr);
     m_events->adoptHandler(m_events->forServerApp().reloadConfig(),
@@ -761,10 +755,6 @@ ServerApp::mainLoop()
     cleanupServer();
     updateStatus();
     LOG((CLOG_NOTE "stopped server"));
-
-    if (argsBase().m_enableIpc) {
-        cleanupIpcClient();
-    }
 
     return kExitSuccess;
 }

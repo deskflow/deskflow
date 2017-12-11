@@ -32,9 +32,6 @@
 #include "core/ArgParser.h"
 #include "core/ClientArgs.h"
 #include "core/ServerArgs.h"
-#include "ipc/IpcClientProxy.h"
-#include "ipc/IpcLogOutputter.h"
-#include "ipc/IpcMessage.h"
 #include "net/SocketMultiplexer.h"
 
 #if SYSAPI_WIN32
@@ -44,7 +41,6 @@
 #include "core/Screen.h"
 #include "platform/MSWindowsScreen.h"
 #include "platform/MSWindowsDebugOutputter.h"
-#include "platform/MSWindowsWatchdog.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
 
 #define WIN32_LEAN_AND_MEAN
@@ -82,8 +78,6 @@ winMainLoopStatic(int, const char**)
 #endif
 
 DaemonApp::DaemonApp() :
-    m_ipcServer(nullptr),
-    m_ipcLogOutputter(nullptr),
     #if SYSAPI_WIN32
     m_watchdog(nullptr),
     #endif
@@ -206,53 +200,8 @@ DaemonApp::mainLoop(bool logToFile)
         // create socket multiplexer.  this must happen after daemonization
         // on unix because threads evaporate across a fork().
         SocketMultiplexer multiplexer;
-
-        // uses event queue, must be created here.
-        m_ipcServer = new IpcServer(m_events, &multiplexer);
-
-        // send logging to gui via ipc, log system adopts outputter.
-        m_ipcLogOutputter = new IpcLogOutputter(*m_ipcServer, kIpcClientGui, true);
-        CLOG->insert(m_ipcLogOutputter);
-        
-#if SYSAPI_WIN32
-        m_watchdog = new MSWindowsWatchdog(false, *m_ipcServer, *m_ipcLogOutputter);
-        m_watchdog->setFileLogOutputter(m_fileLogOutputter);
-#endif
-        
-        m_events->adoptHandler(
-            m_events->forIpcServer().messageReceived(), m_ipcServer,
-            new TMethodEventJob<DaemonApp>(this, &DaemonApp::handleIpcMessage));
-
-        m_ipcServer->listen();
-        
-#if SYSAPI_WIN32
-
-        // install the platform event queue to handle service stop events.
-        m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
-        
-        String command = ARCH->setting("Command");
-        bool elevate = ARCH->setting("Elevate") == "1";
-        if (command != "") {
-            LOG((CLOG_INFO "using last known command: %s", command.c_str()));
-            m_watchdog->setCommand(command, elevate);
-        }
-
-        m_watchdog->startAsync();
-#endif
         m_events->loop();
 
-#if SYSAPI_WIN32
-        m_watchdog->stop();
-        delete m_watchdog;
-#endif
-
-        m_events->removeHandler(
-            m_events->forIpcServer().messageReceived(), m_ipcServer);
-        
-        CLOG->remove(m_ipcLogOutputter);
-        delete m_ipcLogOutputter;
-        delete m_ipcServer;
-        
         DAEMON_RUNNING(false);
     }
     catch (std::exception& e) {
@@ -285,118 +234,4 @@ DaemonApp::logFilename()
     }
 
     return logFilename;
-}
-
-void
-DaemonApp::handleIpcMessage(const Event& e, void* /*unused*/)
-{
-    auto* m = dynamic_cast<IpcMessage*>(e.getDataObject());
-    switch (m->type()) {
-        case kIpcCommand: {
-            auto* cm = dynamic_cast<IpcCommandMessage*>(m);
-            String command = cm->command();
-
-            // if empty quotes, clear.
-            if (command == "\"\"") {
-                command.clear();
-            }
-
-            if (!command.empty()) {
-                LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
-
-                std::vector<String> argsArray;
-                ArgParser::splitCommandString(command, argsArray);
-                ArgParser argParser(nullptr);
-                const char** argv = argParser.getArgv(argsArray);
-                ServerArgs serverArgs;
-                ClientArgs clientArgs;
-                auto argc = static_cast<int>(argsArray.size());
-                bool server = argsArray[0].find("synergys") != String::npos;
-                ArgsBase* argBase = nullptr;
-
-                if (server) {
-                    argParser.parseServerArgs(serverArgs, argc, argv);
-                    argBase = &serverArgs;
-                }
-                else {
-                    argParser.parseClientArgs(clientArgs, argc, argv);
-                    argBase = &clientArgs;
-                }
-
-                delete[] argv;
-                
-                String logLevel(argBase->m_logFilter);
-                if (!logLevel.empty()) {
-                    try {
-                        // change log level based on that in the command string
-                        // and change to that log level now.
-                        ARCH->setting("LogLevel", logLevel);
-                        CLOG->setFilter(logLevel.c_str());
-                    }
-                    catch (XArch& e) {
-                        LOG((CLOG_ERR "failed to save LogLevel setting, %s", e.what()));
-                    }
-                }
-
-#if SYSAPI_WIN32
-                String logFilename;
-                if (argBase->m_logFile != NULL) {
-                    logFilename = String(argBase->m_logFile);
-                    ARCH->setting("LogFilename", logFilename);
-                    m_watchdog->setFileLogOutputter(m_fileLogOutputter);
-                    command = ArgParser::assembleCommand(argsArray, "--log", 1);
-                    LOG((CLOG_DEBUG "removed log file argument and filename %s from command ", logFilename.c_str()));
-                    LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
-                }
-                else {
-                    m_watchdog->setFileLogOutputter(NULL);
-                }
-
-                m_fileLogOutputter->setLogFilename(logFilename.c_str());
-#endif
-            }
-            else {
-                LOG((CLOG_DEBUG "empty command, elevate=%d", cm->elevate()));
-            }
-
-            try {
-                // store command in system settings. this is used when the daemon
-                // next starts.
-                ARCH->setting("Command", command);
-
-                // TODO(andrew): it would be nice to store bools/ints...
-                ARCH->setting("Elevate", String(cm->elevate() ? "1" : "0"));
-            }
-            catch (XArch& e) {
-                LOG((CLOG_ERR "failed to save settings, %s", e.what()));
-            }
-
-#if SYSAPI_WIN32
-            // tell the relauncher about the new command. this causes the
-            // relauncher to stop the existing command and start the new
-            // command.
-            m_watchdog->setCommand(command, cm->elevate());
-#endif
-            break;
-        }
-
-        case kIpcHello:
-            auto* hm = dynamic_cast<IpcHelloMessage*>(m);
-            String type;
-            switch (hm->clientType()) {
-                case kIpcClientGui: type = "gui"; break;
-                case kIpcClientNode: type = "node"; break;
-                default: type = "unknown"; break;
-            }
-
-            LOG((CLOG_DEBUG "ipc hello, type=%s", type.c_str()));
-
-#if SYSAPI_WIN32
-            String watchdogStatus = m_watchdog->isProcessActive() ? "ok" : "error";
-            LOG((CLOG_INFO "watchdog status: %s", watchdogStatus.c_str()));
-#endif
-
-            m_ipcLogOutputter->notifyBuffer();
-            break;
-    }
 }

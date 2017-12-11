@@ -141,10 +141,6 @@ public:
     //
     ClientEvents&                forClient();
     IStreamEvents&                forIStream();
-    IpcClientEvents&            forIpcClient();
-    IpcClientProxyEvents&        forIpcClientProxy();
-    IpcServerEvents&            forIpcServer();
-    IpcServerProxyEvents&        forIpcServerProxy();
     IDataSocketEvents&            forIDataSocket();
     IListenSocketEvents&        forIListenSocket();
     ISocketEvents&                forISocket();
@@ -163,10 +159,6 @@ public:
 private:
     ClientEvents*                m_typesForClient;
     IStreamEvents*                m_typesForIStream;
-    IpcClientEvents*            m_typesForIpcClient;
-    IpcClientProxyEvents*        m_typesForIpcClientProxy;
-    IpcServerEvents*            m_typesForIpcServer;
-    IpcServerProxyEvents*        m_typesForIpcServerProxy;
     IDataSocketEvents*            m_typesForIDataSocket;
     IListenSocketEvents*        m_typesForIListenSocket;
     ISocketEvents*                m_typesForISocket;

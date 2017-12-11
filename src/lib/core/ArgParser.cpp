@@ -252,7 +252,7 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
         argsBase().m_shouldExit = true;
     }
     else if (isArg(i, argc, argv, nullptr, "--ipc")) {
-        argsBase().m_enableIpc = true;
+        LOG((CLOG_INFO "ignoring --ipc. The old IPC was removed."));
     }
     else if (isArg(i, argc, argv, nullptr, "--server")) {
         // supress error when --server is used

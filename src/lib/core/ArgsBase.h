@@ -35,7 +35,6 @@ public:
     const char*            m_logFile;
     const char*            m_display;
     String                m_name;
-    bool                m_enableIpc;
     bool                m_enableDragDrop;
 #if SYSAPI_WIN32
     bool                m_debugServiceWait;

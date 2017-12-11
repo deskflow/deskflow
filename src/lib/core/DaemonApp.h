@@ -19,17 +19,16 @@
 #pragma once
 
 #include "arch/Arch.h"
-#include "ipc/IpcServer.h"
-
 #include <string>
 
 class Event;
-class IpcLogOutputter;
 class FileLogOutputter;
 
 #if SYSAPI_WIN32
 class MSWindowsWatchdog;
 #endif
+
+class IEventQueue;
 
 class DaemonApp {
 
@@ -43,7 +42,6 @@ private:
     void daemonize();
     void foregroundError(const char* message);
     std::string            logFilename();
-    void                handleIpcMessage(const Event&, void*);
 
 public:
     static DaemonApp* s_instance;
@@ -53,8 +51,6 @@ public:
 #endif
 
 private:
-    IpcServer*            m_ipcServer;
-    IpcLogOutputter*    m_ipcLogOutputter;
     IEventQueue*        m_events;
     FileLogOutputter*    m_fileLogOutputter;
 };

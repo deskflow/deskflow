@@ -15,7 +15,7 @@
 
 add_executable(synergy-core main.cpp)
 target_link_libraries(synergy-core
-    arch base client common io mt net ipc platform server core ${libs})
+    arch base client common io mt net platform server core ${libs})
 
 if (SYNERGY_CORE_INSTALL)
     if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")

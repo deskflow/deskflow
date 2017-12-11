@@ -30,10 +30,6 @@
 
 EVENT_TYPE_ACCESSOR(Client)
 EVENT_TYPE_ACCESSOR(IStream)
-EVENT_TYPE_ACCESSOR(IpcClient)
-EVENT_TYPE_ACCESSOR(IpcClientProxy)
-EVENT_TYPE_ACCESSOR(IpcServer)
-EVENT_TYPE_ACCESSOR(IpcServerProxy)
 EVENT_TYPE_ACCESSOR(IDataSocket)
 EVENT_TYPE_ACCESSOR(IListenSocket)
 EVENT_TYPE_ACCESSOR(ISocket)
@@ -68,10 +64,6 @@ EventQueue::EventQueue() :
     m_nextType(Event::kLast),
     m_typesForClient(nullptr),
     m_typesForIStream(nullptr),
-    m_typesForIpcClient(nullptr),
-    m_typesForIpcClientProxy(nullptr),
-    m_typesForIpcServer(nullptr),
-    m_typesForIpcServerProxy(nullptr),
     m_typesForIDataSocket(nullptr),
     m_typesForIListenSocket(nullptr),
     m_typesForISocket(nullptr),

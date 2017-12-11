@@ -45,10 +45,6 @@ public:
     MOCK_METHOD0(getSystemTarget, void*());
     MOCK_METHOD0(forClient, ClientEvents&());
     MOCK_METHOD0(forIStream, IStreamEvents&());
-    MOCK_METHOD0(forIpcClient, IpcClientEvents&());
-    MOCK_METHOD0(forIpcClientProxy, IpcClientProxyEvents&());
-    MOCK_METHOD0(forIpcServer, IpcServerEvents&());
-    MOCK_METHOD0(forIpcServerProxy, IpcServerProxyEvents&());
     MOCK_METHOD0(forIDataSocket, IDataSocketEvents&());
     MOCK_METHOD0(forIListenSocket, IListenSocketEvents&());
     MOCK_METHOD0(forISocket, ISocketEvents&());

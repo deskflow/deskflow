@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "ipc/IpcClient.h"
 #include "core/IApp.h"
 #include "base/String.h"
 #include "base/Log.h"
@@ -95,12 +94,7 @@ public:
 
     void                setEvents(EventQueue& events) { m_events = &events; }
 
-private:
-    void                handleIpcMessage(const Event&, void*);
-
 protected:
-    void                initIpcClient();
-    void                cleanupIpcClient();
     void                runEventsLoop(void*);
 
     bool m_suspended;
@@ -111,7 +105,6 @@ private:
     static App* s_instance;
     FileLogOutputter* m_fileLog;
     ARCH_APP_UTIL m_appUtil;
-    IpcClient*            m_ipcClient;
     SocketMultiplexer*    m_socketMultiplexer;
 };
 

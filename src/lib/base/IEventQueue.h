@@ -32,10 +32,6 @@ class EventQueueTimer;
 // Event type registration classes.
 class ClientEvents;
 class IStreamEvents;
-class IpcClientEvents;
-class IpcClientProxyEvents;
-class IpcServerEvents;
-class IpcServerProxyEvents;
 class IDataSocketEvents;
 class IListenSocketEvents;
 class ISocketEvents;
@@ -230,10 +226,6 @@ public:
 
     virtual ClientEvents&                forClient() = 0;
     virtual IStreamEvents&                forIStream() = 0;
-    virtual IpcClientEvents&            forIpcClient() = 0;
-    virtual IpcClientProxyEvents&        forIpcClientProxy() = 0;
-    virtual IpcServerEvents&            forIpcServer() = 0;
-    virtual IpcServerProxyEvents&        forIpcServerProxy() = 0;
     virtual IDataSocketEvents&            forIDataSocket() = 0;
     virtual IListenSocketEvents&        forIListenSocket() = 0;
     virtual ISocketEvents&                forISocket() = 0;

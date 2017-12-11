@@ -322,6 +322,6 @@ add_subdirectory (src)
 
 if (SYNERGY_TIDY)
     set_property (TARGET synergys synergyc synergy-core
-                         arch base client common core io ipc mt net platform server shared
+                         arch base client common core io mt net platform server shared
                   PROPERTY CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
 endif()

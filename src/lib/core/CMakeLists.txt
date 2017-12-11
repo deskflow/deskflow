@@ -36,5 +36,5 @@ endif()
 add_library(core STATIC ${sources})
 
 if (UNIX)
-    target_link_libraries(core arch client ipc net base platform mt server)
+    target_link_libraries(core arch client net base platform mt server)
 endif()

@@ -29,9 +29,6 @@
 #include "core/ArgsBase.h"
 #include "core/XSynergy.h"
 #include "core/protocol_types.h"
-#include "ipc/Ipc.h"
-#include "ipc/IpcMessage.h"
-#include "ipc/IpcServerProxy.h"
 
 #include <iostream>
 #include <cstdio>
@@ -64,7 +61,6 @@ App::App(IEventQueue* events, ArgsBase* args) :
     m_args(args),
     m_fileLog(nullptr),
     m_appUtil(events),
-    m_ipcClient(nullptr),
     m_socketMultiplexer(nullptr)
 {
     assert(s_instance == nullptr);
@@ -209,35 +205,6 @@ App::initApp(int argc, const char** argv)
 
     // load configuration
     loadConfig();
-}
-
-void
-App::initIpcClient()
-{
-    m_ipcClient = new IpcClient(m_events, m_socketMultiplexer);
-    m_ipcClient->connect();
-
-    m_events->adoptHandler(
-        m_events->forIpcClient().messageReceived(), m_ipcClient,
-        new TMethodEventJob<App>(this, &App::handleIpcMessage));
-}
-
-void
-App::cleanupIpcClient()
-{
-    m_ipcClient->disconnect();
-    m_events->removeHandler(m_events->forIpcClient().messageReceived(), m_ipcClient);
-    delete m_ipcClient;
-}
-
-void
-App::handleIpcMessage(const Event& e, void* /*unused*/)
-{
-    auto* m = dynamic_cast<IpcMessage*>(e.getDataObject());
-    if (m->type() == kIpcShutdown) {
-        LOG((CLOG_INFO "got ipc shutdown message"));
-        m_events->addEvent(Event(Event::kQuit));
-    }
 }
 
 void

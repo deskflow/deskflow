@@ -40,7 +40,7 @@ add_library(platform STATIC ${sources})
 target_link_libraries(platform client ${libs})
 
 if (UNIX)
-    target_link_libraries(platform io net ipc core client ${libs})
+    target_link_libraries(platform io net core client ${libs})
 endif()
 
 if (APPLE)

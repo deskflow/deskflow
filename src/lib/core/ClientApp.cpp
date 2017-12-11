@@ -453,12 +453,6 @@ ClientApp::mainLoop()
     // start client, etc
     appUtil().startNode();
     
-    // init ipc client after node start, since create a new screen wipes out
-    // the event queue (the screen ctors call adoptBuffer).
-    if (argsBase().m_enableIpc) {
-        initIpcClient();
-    }
-
     // run event loop.  if startClient() failed we're supposed to retry
     // later.  the timer installed by startClient() will take care of
     // that.
@@ -488,10 +482,6 @@ ClientApp::mainLoop()
     stopClient();
     updateStatus();
     LOG((CLOG_NOTE "stopped client"));
-
-    if (argsBase().m_enableIpc) {
-        cleanupIpcClient();
-    }
 
     return kExitSuccess;
 }
