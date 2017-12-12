@@ -19,7 +19,7 @@ target_link_libraries(synergy-core
 
 if (SYNERGY_CORE_INSTALL)
     if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-        install (TARGETS synergy-core DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
+        install (TARGETS synergy-core DESTINATION ${SYNERGY_BUNDLE_RESOURSES_DIR})
     elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
         install (TARGETS synergy-core DESTINATION bin)
     endif()
