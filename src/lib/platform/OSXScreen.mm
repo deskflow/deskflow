@@ -192,6 +192,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
                                         this);
     }
     else {
+        LOG((CLOG_DEBUG "creating quartz event tap"));
         // there may be a better way to do this, but we register an event handler even if we're
         // not on the primary display (acting as a client). This way, if a local event comes in
         // (either keyboard or mouse), we can make sure to show the cursor if we've hidden it.
@@ -203,11 +204,13 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 
     if (!m_eventTapPort) {
         LOG((CLOG_ERR "failed to create quartz event tap"));
+        m_events->addEvent(Event(Event::kQuit));
     }
 
     m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
     if (!m_eventTapRLSR) {
         LOG((CLOG_ERR "failed to create a CFRunLoopSourceRef for the quartz event tap"));
+        m_events->addEvent(Event(Event::kQuit));
     }
 
     CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
@@ -248,6 +251,13 @@ OSXScreen::~OSXScreen()
 	delete m_keyState;
 	delete m_screensaver;
 	
+    if (m_eventTapRLSR) {
+        LOG((CLOG_DEBUG "releasing quartz event tap"));
+        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
+        CFRelease(m_eventTapRLSR);
+        m_eventTapRLSR = nullptr;
+    }
+
     if (m_eventTapPort) {
         CGEventTapEnable(m_eventTapPort, false);
         CFRelease(m_eventTapPort);
@@ -752,19 +762,7 @@ OSXScreen::disable()
 		showCursor();
 	}
     
-	// FIXME -- stop watching jump zones, stop capturing input
-	
-	if (m_eventTapRLSR) {
-		CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
-		CFRelease(m_eventTapRLSR);
-		m_eventTapRLSR = nullptr;
-	}
-
-	if (m_eventTapPort) {
-		CGEventTapEnable(m_eventTapPort, false);
-		CFRelease(m_eventTapPort);
-		m_eventTapPort = nullptr;
-	}
+    // FIXME -- stop watching jump zones, stop capturing input
 	// FIXME -- allow system to enter power saving mode
 
 	// disable drag handling
