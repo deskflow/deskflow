@@ -39,16 +39,6 @@
 //
 #define NO_GRAB_KEYBOARD 0
 
-//
-// extra mouse wheel stuff
-//
-
-enum EWheelSupport {
-    kWheelNone,
-    kWheelWin2000,
-    kWheelModern
-};
-
 // declare extended mouse hook struct.  useable on win2k
 typedef struct tagMOUSEHOOKSTRUCTWin2000 {
     MOUSEHOOKSTRUCT mhs;
@@ -67,7 +57,6 @@ typedef struct tagMOUSEHOOKSTRUCTWin2000 {
 
 static HINSTANCE        g_hinstance       = NULL;
 static DWORD            g_processID       = 0;
-static EWheelSupport    g_wheelSupport    = kWheelNone;
 static DWORD            g_threadID        = 0;
 static HHOOK            g_getMessage      = NULL;
 static HHOOK            g_keyboardLL      = NULL;
@@ -611,37 +600,6 @@ mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
     return CallNextHookEx(g_mouseLL, code, wParam, lParam);
 }
 
-static
-EWheelSupport
-getWheelSupport()
-{
-    // see if modern wheel is present
-    if (GetSystemMetrics(SM_MOUSEWHEELPRESENT)) {
-        OSVERSIONINFOEX osvi;
-        osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-        osvi.dwPlatformId = VER_PLATFORM_WIN32_NT;
-        osvi.dwMajorVersion = 5;
-        osvi.dwMinorVersion = 0;
-        ULONGLONG condMask = 0;
-        VER_SET_CONDITION (condMask, VER_MAJORVERSION, VER_EQUAL);
-        VER_SET_CONDITION (condMask, VER_MINORVERSION, VER_EQUAL);
-        VER_SET_CONDITION (condMask, VER_PLATFORMID, VER_EQUAL);
-        if (VerifyVersionInfo(&osvi, VER_MAJORVERSION | VER_MINORVERSION |
-                              VER_PLATFORMID, condMask)) {
-            return kWheelWin2000;
-        }
-        return kWheelModern;
-    }
-
-    // assume modern.  we don't do anything special in this case
-    // except respond to WM_MOUSEWHEEL messages.  GetSystemMetrics()
-    // can apparently return FALSE even if a mouse wheel is present
-    // though i'm not sure exactly when it does that (WinME returns
-    // FALSE for my logitech USB trackball).
-    return kWheelModern;
-}
-
-
 //
 // external functions
 //
@@ -768,7 +726,6 @@ init(DWORD threadID, BOOL isPrimary)
         // removed the hooks so we just need to reset our state.
         g_hinstance       = GetModuleHandle(_T("synwinhk"));
         g_processID       = GetCurrentProcessId();
-        g_wheelSupport    = kWheelNone;
         g_threadID        = 0;
         g_getMessage      = NULL;
         g_keyboardLL      = NULL;
@@ -821,9 +778,6 @@ install()
 
     // reset fake input flag
     g_fakeServerInput = false;
-
-    // check for mouse wheel support
-    g_wheelSupport = getWheelSupport();
 
     // install low-level hooks.  we require that they both get installed.
     g_mouseLL = SetWindowsHookEx(WH_MOUSE_LL,
@@ -887,7 +841,6 @@ uninstall(void)
         UnhookWindowsHookEx(g_getMessage);
         g_getMessage = NULL;
     }
-    g_wheelSupport = kWheelNone;
 
     return 1;
 }
