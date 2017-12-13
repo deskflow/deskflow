@@ -203,11 +203,13 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 
     if (!m_eventTapPort) {
         LOG((CLOG_ERR "failed to create quartz event tap"));
+        m_events->addEvent(Event(Event::kQuit));
     }
 
     m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
     if (!m_eventTapRLSR) {
         LOG((CLOG_ERR "failed to create a CFRunLoopSourceRef for the quartz event tap"));
+        m_events->addEvent(Event(Event::kQuit));
     }
 
     CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
