@@ -251,6 +251,13 @@ OSXScreen::~OSXScreen()
 	delete m_keyState;
 	delete m_screensaver;
 	
+    if (m_eventTapRLSR) {
+        LOG((CLOG_DEBUG "releasing quartz event tap"));
+        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
+        CFRelease(m_eventTapRLSR);
+        m_eventTapRLSR = nullptr;
+    }
+
     if (m_eventTapPort) {
         CGEventTapEnable(m_eventTapPort, false);
         CFRelease(m_eventTapPort);
@@ -755,20 +762,7 @@ OSXScreen::disable()
 		showCursor();
 	}
     
-	// FIXME -- stop watching jump zones, stop capturing input
-	
-	if (m_eventTapRLSR) {
-        LOG((CLOG_DEBUG "releasing quartz event tap"));
-		CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
-		CFRelease(m_eventTapRLSR);
-		m_eventTapRLSR = nullptr;
-	}
-
-	if (m_eventTapPort) {
-		CGEventTapEnable(m_eventTapPort, false);
-		CFRelease(m_eventTapPort);
-		m_eventTapPort = nullptr;
-	}
+    // FIXME -- stop watching jump zones, stop capturing input
 	// FIXME -- allow system to enter power saving mode
 
 	// disable drag handling
