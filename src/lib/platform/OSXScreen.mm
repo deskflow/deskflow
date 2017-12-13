@@ -192,6 +192,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
                                         this);
     }
     else {
+        LOG((CLOG_DEBUG "creating quartz event tap"));
         // there may be a better way to do this, but we register an event handler even if we're
         // not on the primary display (acting as a client). This way, if a local event comes in
         // (either keyboard or mouse), we can make sure to show the cursor if we've hidden it.
