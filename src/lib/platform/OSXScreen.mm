@@ -758,6 +758,7 @@ OSXScreen::disable()
 	// FIXME -- stop watching jump zones, stop capturing input
 	
 	if (m_eventTapRLSR) {
+        LOG((CLOG_DEBUG "releasing quartz event tap"));
 		CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
 		CFRelease(m_eventTapRLSR);
 		m_eventTapRLSR = nullptr;
