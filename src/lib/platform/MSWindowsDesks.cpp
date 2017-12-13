@@ -18,7 +18,7 @@
 
 #include "platform/MSWindowsDesks.h"
 
-#include "synwinhk/synwinhk.h"
+#include "platform/synwinhk.h"
 #include "platform/MSWindowsScreen.h"
 #include "core/IScreenSaver.h"
 #include "core/XScreen.h"
@@ -92,8 +92,7 @@
 // MSWindowsDesks
 //
 
-MSWindowsDesks::MSWindowsDesks(
-        bool isPrimary, bool noHooks, HINSTANCE hookLibrary,
+MSWindowsDesks::MSWindowsDesks(bool isPrimary, bool noHooks,
         const IScreenSaver* screensaver, IEventQueue* events,
         IJob* updateKeys, bool stopOnDeskSwitch) :
     m_isPrimary(isPrimary),
@@ -114,11 +113,8 @@ MSWindowsDesks::MSWindowsDesks(
     m_events(events),
     m_stopOnDeskSwitch(stopOnDeskSwitch)
 {
-    if (hookLibrary != NULL)
-        queryHookLibrary(hookLibrary);
-
-    if (m_install != NULL && !m_isPrimary) {
-        m_install();
+    if (!m_isPrimary) {
+        MSWindowsHook::install();
     }
 
     m_cursor    = createBlankCursor();
@@ -349,35 +345,6 @@ MSWindowsDesks::sendMessage(UINT msg, WPARAM wParam, LPARAM lParam) const
     if (m_activeDesk != NULL && m_activeDesk->m_window != NULL) {
         PostThreadMessage(m_activeDesk->m_threadID, msg, wParam, lParam);
         waitForDesk();
-    }
-}
-
-void
-MSWindowsDesks::queryHookLibrary(HINSTANCE hookLibrary)
-{
-    // look up functions
-    if (!m_noHooks) {
-        m_install   = (InstallFunc)GetProcAddress(hookLibrary, "install");
-        m_uninstall = (UninstallFunc)GetProcAddress(hookLibrary, "uninstall");
-        m_installScreensaver   =
-                  (InstallScreenSaverFunc)GetProcAddress(
-                                hookLibrary, "installScreenSaver");
-        m_uninstallScreensaver =
-                  (UninstallScreenSaverFunc)GetProcAddress(
-                                hookLibrary, "uninstallScreenSaver");
-        if (m_install              == NULL ||
-            m_uninstall            == NULL ||
-            m_installScreensaver   == NULL ||
-            m_uninstallScreensaver == NULL) {
-            LOG((CLOG_ERR "Invalid hook library"));
-            throw XScreenOpenFailure();
-        }
-    }
-    else {
-        m_install              = NULL;
-        m_uninstall            = NULL;
-        m_installScreensaver   = NULL;
-        m_uninstallScreensaver = NULL;
     }
 }
 
@@ -695,12 +662,12 @@ MSWindowsDesks::deskThread(void* vdesk)
 
         case SYNERGY_MSG_SWITCH:
             if (!m_noHooks) {
-                m_uninstall();
+                MSWindowsHook::uninstall();
                 if (m_screensaverNotify) {
-                    m_uninstallScreensaver();
-                    m_installScreensaver();
+                    MSWindowsHook::uninstallScreenSaver();
+                    MSWindowsHook::installScreenSaver();
                 }
-                switch (m_install()) {
+                switch (MSWindowsHook::install()) {
                 case kHOOK_FAILED:
                     // we won't work on this desk
                     desk->m_lowLevel = false;
@@ -776,10 +743,10 @@ MSWindowsDesks::deskThread(void* vdesk)
         case SYNERGY_MSG_SCREENSAVER:
             if (!m_noHooks) {
                 if (msg.wParam != 0) {
-                    m_installScreensaver();
+                    MSWindowsHook::installScreenSaver();
                 }
                 else {
-                    m_uninstallScreensaver();
+                    MSWindowsHook::uninstallScreenSaver();
                 }
             }
             break;

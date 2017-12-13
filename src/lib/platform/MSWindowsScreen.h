@@ -21,7 +21,7 @@
 #include "platform/MSWindowsHook.h"
 #include "core/PlatformScreen.h"
 #include "core/DragInformation.h"
-#include "synwinhk/synwinhk.h"
+#include "platform/synwinhk.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 #include "base/String.h"
