@@ -21,7 +21,7 @@
 #include "platform/MSWindowsHook.h"
 #include "synergy/PlatformScreen.h"
 #include "synergy/DragInformation.h"
-#include "synwinhk/synwinhk.h"
+#include "platform/synwinhk.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 #include "base/String.h"
@@ -173,6 +173,10 @@ private: // HACK
     // handle message before it gets dispatched.  returns true iff
     // the message should not be dispatched.
     bool                onPreDispatchPrimary(HWND, UINT, WPARAM, LPARAM);
+
+	// handle secondary message before it gets dispatched.  returns true iff
+	// the message should not be dispatched.
+	bool                onPreDispatchSecondary(HWND, UINT, WPARAM, LPARAM);
 
     // handle message.  returns true iff handled and optionally sets
     // \c *result (which defaults to 0).
