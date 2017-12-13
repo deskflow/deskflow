@@ -22,10 +22,9 @@
 
 #include <zmouse.h>
 #include <tchar.h>
- 
-#if _MSC_VER >= 1400
-// VS2005 hack - we don't use assert here because we don't want to link with the CRT.
+
 #undef assert
+
 #if _DEBUG
 #define assert(_X_) if (!(_X_)) __debugbreak()
 #else
@@ -34,7 +33,6 @@
 // VS2005 is a bit more smart than VC6 and optimize simple copy loop to
 // intrinsic memcpy.
 #pragma function(memcpy)
-#endif
 
 //
 // debugging compile flag.  when not zero the server doesn't grab
@@ -43,12 +41,6 @@
 // all user input would normally be caught by the hook procedures.
 //
 #define NO_GRAB_KEYBOARD 0
-
-//
-// debugging compile flag.  when not zero the server will not
-// install low level hooks.
-//
-#define NO_LOWLEVEL_HOOKS 0
 
 //
 // extra mouse wheel stuff
@@ -67,25 +59,6 @@ typedef struct tagMOUSEHOOKSTRUCTWin2000 {
     DWORD mouseData;
 } MOUSEHOOKSTRUCTWin2000;
 
-#if !defined(SM_MOUSEWHEELPRESENT)
-#define SM_MOUSEWHEELPRESENT 75
-#endif
-
-// X button stuff
-#if !defined(WM_XBUTTONDOWN)
-#define WM_XBUTTONDOWN        0x020B
-#define WM_XBUTTONUP        0x020C
-#define WM_XBUTTONDBLCLK    0x020D
-#define WM_NCXBUTTONDOWN    0x00AB
-#define WM_NCXBUTTONUP        0x00AC
-#define WM_NCXBUTTONDBLCLK    0x00AD
-#define MOUSEEVENTF_XDOWN    0x0080
-#define MOUSEEVENTF_XUP        0x0100
-#define XBUTTON1            0x0001
-#define XBUTTON2            0x0002
-#endif
-
-
 //
 // globals
 //
@@ -101,8 +74,6 @@ static DWORD            g_processID       = 0;
 static EWheelSupport    g_wheelSupport    = kWheelNone;
 static UINT                g_wmMouseWheel    = 0;
 static DWORD            g_threadID        = 0;
-static HHOOK            g_keyboard        = NULL;
-static HHOOK            g_mouse           = NULL;
 static HHOOK            g_getMessage      = NULL;
 static HHOOK            g_keyboardLL      = NULL;
 static HHOOK            g_mouseLL         = NULL;
@@ -187,7 +158,7 @@ keyboardGetState(BYTE keys[256], DWORD vkCode, bool kf_up)
 
 static
 bool
-doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
+keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
     DWORD vkCode = static_cast<DWORD>(wParam);
     bool kf_up = (lParam & (KF_UP << 16)) != 0;
@@ -445,18 +416,11 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 
     return false;
 }
-
-static
-bool
-keyboardHookHandler(WPARAM wParam, LPARAM lParam)
-{
-    return doKeyboardHookHandler(wParam, lParam);
-}
 #endif
 
 static
 bool
-doMouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
+mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 {
     switch (wParam) {
     case WM_LBUTTONDOWN:
@@ -557,74 +521,6 @@ doMouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 }
 
 static
-bool
-mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
-{
-    return doMouseHookHandler(wParam, x, y, data);
-}
-
-#if !NO_GRAB_KEYBOARD
-static
-LRESULT CALLBACK
-keyboardHook(int code, WPARAM wParam, LPARAM lParam)
-{
-    if (code >= 0) {
-        // handle the message
-        if (keyboardHookHandler(wParam, lParam)) {
-            return 1;
-        }
-    }
-
-    return CallNextHookEx(g_keyboard, code, wParam, lParam);
-}
-#endif
-
-static
-LRESULT CALLBACK
-mouseHook(int code, WPARAM wParam, LPARAM lParam)
-{
-    if (code >= 0) {
-        // decode message
-        const MOUSEHOOKSTRUCT* info = (const MOUSEHOOKSTRUCT*)lParam;
-        SInt32 x = (SInt32)info->pt.x;
-        SInt32 y = (SInt32)info->pt.y;
-        SInt32 w = 0;
-        if (wParam == WM_MOUSEWHEEL) {
-            // win2k and other systems supporting WM_MOUSEWHEEL in
-            // the mouse hook are gratuitously different (and poorly
-            // documented).  if a low-level mouse hook is in place
-            // it should capture these events so we'll never see
-            // them.
-            switch (g_wheelSupport) {
-            case kWheelModern:
-                w = static_cast<SInt16>(LOWORD(info->dwExtraInfo));
-                break;
-
-            case kWheelWin2000: {
-                const MOUSEHOOKSTRUCTWin2000* info2k =
-                        (const MOUSEHOOKSTRUCTWin2000*)lParam;
-                w = static_cast<SInt16>(HIWORD(info2k->mouseData));
-                break;
-            }
-
-            default:
-                break;
-            }
-        }
-
-        // handle the message.  note that we don't handle X buttons
-        // here.  that's okay because they're only supported on
-        // win2k and winxp and up and on those platforms we'll get
-        // get the mouse events through the low level hook.
-        if (mouseHookHandler(wParam, x, y, w)) {
-            return 1;
-        }
-    }
-
-    return CallNextHookEx(g_mouse, code, wParam, lParam);
-}
-
-static
 LRESULT CALLBACK
 getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 {
@@ -656,8 +552,6 @@ getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 
     return CallNextHookEx(g_getMessage, code, wParam, lParam);
 }
-
-#if (_WIN32_WINNT >= 0x0400) && defined(_MSC_VER) && !NO_LOWLEVEL_HOOKS
 
 //
 // low-level keyboard hook -- this allows us to capture and handle
@@ -735,8 +629,6 @@ mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
 
     return CallNextHookEx(g_mouseLL, code, wParam, lParam);
 }
-
-#endif
 
 static
 EWheelSupport
@@ -912,8 +804,6 @@ init(DWORD threadID, BOOL isPrimary)
         g_processID       = GetCurrentProcessId();
         g_wheelSupport    = kWheelNone;
         g_threadID        = 0;
-        g_keyboard        = NULL;
-        g_mouse           = NULL;
         g_getMessage      = NULL;
         g_keyboardLL      = NULL;
         g_mouseLL         = NULL;
@@ -952,8 +842,6 @@ EHookResult
 install()
 {
     assert(g_hinstance  != NULL);
-    assert(g_keyboard   == NULL);
-    assert(g_mouse      == NULL);
     assert(g_getMessage == NULL || g_screenSaver);
 
     // must be initialized
@@ -980,7 +868,6 @@ install()
     }
 
     // install low-level hooks.  we require that they both get installed.
-#if (_WIN32_WINNT >= 0x0400) && defined(_MSC_VER) && !NO_LOWLEVEL_HOOKS
     g_mouseLL = SetWindowsHookEx(WH_MOUSE_LL,
                                 &mouseLLHook,
                                 g_hinstance,
@@ -1001,30 +888,13 @@ install()
         }
     }
 #endif
-#endif
-
-    // install regular hooks
-    if (g_mouseLL == NULL) {
-        g_mouse = SetWindowsHookEx(WH_MOUSE,
-                                &mouseHook,
-                                g_hinstance,
-                                0);
-    }
-#if !NO_GRAB_KEYBOARD
-    if (g_keyboardLL == NULL) {
-        g_keyboard = SetWindowsHookEx(WH_KEYBOARD,
-                                &keyboardHook,
-                                g_hinstance,
-                                0);
-    }
-#endif
 
     // check that we got all the hooks we wanted
     if ((g_getMessage == NULL && g_wheelSupport == kWheelOld) ||
 #if !NO_GRAB_KEYBOARD
-        (g_keyboardLL == NULL && g_keyboard     == NULL) ||
+        (g_keyboardLL == NULL) ||
 #endif
-        (g_mouseLL    == NULL && g_mouse        == NULL)) {
+        (g_mouseLL    == NULL)) {
         uninstall();
         return kHOOK_FAILED;
     }
@@ -1054,14 +924,6 @@ uninstall(void)
     if (g_mouseLL != NULL) {
         UnhookWindowsHookEx(g_mouseLL);
         g_mouseLL = NULL;
-    }
-    if (g_keyboard != NULL) {
-        UnhookWindowsHookEx(g_keyboard);
-        g_keyboard = NULL;
-    }
-    if (g_mouse != NULL) {
-        UnhookWindowsHookEx(g_mouse);
-        g_mouse = NULL;
     }
     if (g_getMessage != NULL && !g_screenSaver) {
         UnhookWindowsHookEx(g_getMessage);
