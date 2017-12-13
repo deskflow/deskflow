@@ -17,10 +17,7 @@
  */
 
 #include "synwinhk/synwinhk.h"
-
 #include "core/protocol_types.h"
-
-#include <zmouse.h>
 #include <tchar.h>
 
 #undef assert
@@ -48,7 +45,6 @@
 
 enum EWheelSupport {
     kWheelNone,
-    kWheelOld,
     kWheelWin2000,
     kWheelModern
 };
@@ -72,7 +68,6 @@ typedef struct tagMOUSEHOOKSTRUCTWin2000 {
 static HINSTANCE        g_hinstance       = NULL;
 static DWORD            g_processID       = 0;
 static EWheelSupport    g_wheelSupport    = kWheelNone;
-static UINT                g_wmMouseWheel    = 0;
 static DWORD            g_threadID        = 0;
 static HHOOK            g_getMessage      = NULL;
 static HHOOK            g_keyboardLL      = NULL;
@@ -525,7 +520,6 @@ LRESULT CALLBACK
 getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 {
     if (code >= 0) {
-
         if (g_screenSaver) {
             MSG* msg = reinterpret_cast<MSG*>(lParam);
             if (msg->message == WM_SYSCOMMAND &&
@@ -533,19 +527,6 @@ getMessageHook(int code, WPARAM wParam, LPARAM lParam)
                 // broadcast screen saver started message
                 PostThreadMessage(g_threadID,
                                 SYNERGY_MSG_SCREEN_SAVER, TRUE, 0);
-            }
-        }
-        if (g_mode == kHOOK_RELAY_EVENTS) {
-            MSG* msg = reinterpret_cast<MSG*>(lParam);
-            if (g_wheelSupport == kWheelOld && msg->message == g_wmMouseWheel) {
-                // post message to our window
-                PostThreadMessage(g_threadID,
-                                SYNERGY_MSG_MOUSE_WHEEL,
-                                static_cast<SInt16>(msg->wParam & 0xffffu), 0);
-
-                // zero out the delta in the message so it's (hopefully)
-                // ignored
-                msg->wParam = 0;
             }
         }
     }
@@ -568,7 +549,7 @@ keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
         // decode the message
         KBDLLHOOKSTRUCT* info = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
 
-		bool const injected = (info->flags & LLKHF_INJECTED);
+        bool const injected = info->flags & LLKHF_INJECTED;
 		if (!g_isPrimary && injected) {
 			return CallNextHookEx (g_keyboardLL, code, wParam, lParam);
 		}
@@ -651,21 +632,6 @@ getWheelSupport()
         }
         return kWheelModern;
     }
-
-    // not modern.  see if we've got old-style support.
-#if defined(MSH_WHEELSUPPORT)
-    UINT wheelSupportMsg    = RegisterWindowMessage(MSH_WHEELSUPPORT);
-    HWND wheelSupportWindow = FindWindow(MSH_WHEELMODULE_CLASS,
-                                        MSH_WHEELMODULE_TITLE);
-    if (wheelSupportWindow != NULL && wheelSupportMsg != 0) {
-        if (SendMessage(wheelSupportWindow, wheelSupportMsg, 0, 0) != 0) {
-            g_wmMouseWheel = RegisterWindowMessage(MSH_MOUSEWHEEL);
-            if (g_wmMouseWheel != 0) {
-                return kWheelOld;
-            }
-        }
-    }
-#endif
 
     // assume modern.  we don't do anything special in this case
     // except respond to WM_MOUSEWHEEL messages.  GetSystemMetrics()
@@ -859,14 +825,6 @@ install()
     // check for mouse wheel support
     g_wheelSupport = getWheelSupport();
 
-    // install GetMessage hook (unless already installed)
-    if (g_wheelSupport == kWheelOld && g_getMessage == NULL) {
-        g_getMessage = SetWindowsHookEx(WH_GETMESSAGE,
-                                &getMessageHook,
-                                g_hinstance,
-                                0);
-    }
-
     // install low-level hooks.  we require that they both get installed.
     g_mouseLL = SetWindowsHookEx(WH_MOUSE_LL,
                                 &mouseLLHook,
@@ -890,11 +848,11 @@ install()
 #endif
 
     // check that we got all the hooks we wanted
-    if ((g_getMessage == NULL && g_wheelSupport == kWheelOld) ||
+    if ((g_mouseLL    == NULL) ||
 #if !NO_GRAB_KEYBOARD
-        (g_keyboardLL == NULL) ||
+        (g_keyboardLL == NULL)
 #endif
-        (g_mouseLL    == NULL)) {
+        ) {
         uninstall();
         return kHOOK_FAILED;
     }
@@ -964,7 +922,7 @@ uninstallScreenSaver(void)
     assert(g_hinstance != NULL);
 
     // uninstall hook unless the mouse wheel hook is installed
-    if (g_getMessage != NULL && g_wheelSupport != kWheelOld) {
+    if (g_getMessage != NULL) {
         UnhookWindowsHookEx(g_getMessage);
         g_getMessage = NULL;
     }
