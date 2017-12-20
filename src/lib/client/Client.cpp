@@ -674,7 +674,7 @@ Client::handleHello(const Event& /*unused*/, void* /*unused*/)
 {
     SInt16 major, minor;
     if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor)) {
-        sendConnectionFailedEvent("Protocol error from server, check encryption settings");
+        sendConnectionFailedEvent("Protocol error from server. Aborting");
         cleanupTimer();
         cleanupConnection();
         return;
