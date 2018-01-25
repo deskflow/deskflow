@@ -8,7 +8,7 @@ Client: Applesoft Windy OS 10
 
 ### Barrier Version ###
 
-1.8.π
+1.9.π
 
 **READ ME, DELETE ME**: Go to the 'Help' (on Windows) or 'Barrier' (on macOS) menu and then 'About Barrier' to check your version. Verify that you are using the same version across all of your machines, and that your issue still occurs with the latest release available at https://symless.com/account/login
 
