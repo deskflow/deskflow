@@ -1,0 +1,21 @@
+# Barrier
+
+KVM software forked from Symless's synergy 1.9 codebase.
+
+### What's different?
+
+Whereas synergy has moved beyond its goals from the 1.x era, barrier aims to maintain that simplicity. Barrier will let you use your keyboard and mouse from machine A to control machine B (or more). That's it.
+
+### Project goals
+
+Hassle-free reliability. We are users, too. Barrier was created so that we could solve the issues we had with synergy and then share these fixes with other users.
+
+Compatibility. We use more than one operating system and you probably do, too. Windows, OSX, Linux, FreeBSD... Barrier should "just work". We will also have our eye on Wayland when the time comes.
+
+Communication. Everything we do is in the open. Our issue tracker will let you see if others are having the same problem you're having and will allow you to add additional information. You will also be able to see when progress is made and how the issue gets resolved.
+
+### Contact & support
+
+Please be aware that the *only* way to draw our attention to a bug is to create a new PR in the issue tracker. Write a clear, concise, detailed report and you will get a clear, concise, detailed response. Priority is always give to issues that affect a wider range of users.
+
+For short and simple questions or to just say hello find us on the Freenode IRC network in the #barrier channel.
