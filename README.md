@@ -1,6 +1,8 @@
 # Barrier
 
-KVM software forked from Symless's synergy 1.9 codebase.
+### What is it?
+
+Barrier is KVM software forked from Symless's synergy 1.9 codebase. Synergy was a commercialized reimplementation of the original CosmoSynergy written by Chris Schoeneman.
 
 ### What's different?
 
@@ -19,3 +21,7 @@ Communication. Everything we do is in the open. Our issue tracker will let you s
 Please be aware that the *only* way to draw our attention to a bug is to create a new PR in the issue tracker. Write a clear, concise, detailed report and you will get a clear, concise, detailed response. Priority is always give to issues that affect a wider range of users.
 
 For short and simple questions or to just say hello find us on the Freenode IRC network in the #barrier channel.
+
+### Contributions
+
+At this time we are looking for developers to help fix the issues found in the issue tracker. Submit pull requests once you've polished up your patch and if we use it you will be appropriately credited in the log.
