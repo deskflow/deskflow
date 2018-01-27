@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define DOWNLOAD_URL "http://symless.com/?source=gui"
+#define DOWNLOAD_URL "http://github.com/debauchee/barrier/"
 
 #include <iostream>
 
@@ -57,23 +57,23 @@
 #endif
 
 #if defined(Q_OS_WIN)
-static const char synergyConfigName[] = "synergy.sgc";
-static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
+static const char barrierConfigName[] = "barrier.sgc";
+static const QString barrierConfigFilter(QObject::tr("Barrier Configurations (*.sgc);;All files (*.*)"));
 static QString bonjourBaseUrl = "http://binaries.symless.com/bonjour/";
 static const char bonjourFilename32[] = "Bonjour.msi";
 static const char bonjourFilename64[] = "Bonjour64.msi";
 static const char bonjourTargetFilename[] = "Bonjour.msi";
 #else
-static const char synergyConfigName[] = "synergy.conf";
-static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
+static const char barrierConfigName[] = "barrier.conf";
+static const QString barrierConfigFilter(QObject::tr("Barrier Configurations (*.conf);;All files (*.*)"));
 #endif
 
-static const char* synergyIconFiles[] =
+static const char* barrierIconFiles[] =
 {
-    ":/res/icons/16x16/synergy-disconnected.png",
-    ":/res/icons/16x16/synergy-disconnected.png",
-    ":/res/icons/16x16/synergy-connected.png",
-    ":/res/icons/16x16/synergy-transfering.png"
+    ":/res/icons/16x16/barrier-disconnected.png",
+    ":/res/icons/16x16/barrier-disconnected.png",
+    ":/res/icons/16x16/barrier-connected.png",
+    ":/res/icons/16x16/barrier-transfering.png"
 };
 
 MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
@@ -81,8 +81,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
     m_Settings(settings),
     m_AppConfig(&appConfig),
     m_LicenseManager(&licenseManager),
-    m_pSynergy(NULL),
-    m_SynergyState(synergyDisconnected),
+    m_pBarrier(NULL),
+    m_BarrierState(barrierDisconnected),
     m_ServerConfig(&m_Settings, 5, 3, m_AppConfig->screenName(), this),
     m_pTempConfigFile(NULL),
     m_pTrayIcon(NULL),
@@ -111,7 +111,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
     initConnections();
 
     m_pWidgetUpdate->hide();
-    m_VersionChecker.setApp(appPath(appConfig.synergycName()));
+    m_VersionChecker.setApp(appPath(appConfig.barriercName()));
     m_pLabelScreenName->setText(getScreenName());
     m_pLabelIpAddresses->setText(getIPAddresses());
 
@@ -204,11 +204,11 @@ void MainWindow::open()
     }
 
     // only start if user has previously started. this stops the gui from
-    // auto hiding before the user has configured synergy (which of course
-    // confuses first time users, who think synergy has crashed).
+    // auto hiding before the user has configured barrier (which of course
+    // confuses first time users, who think barrier has crashed).
     if (appConfig().startedBefore() && appConfig().processMode() == Desktop) {
         m_SuppressEmptyServerWarning = true;
-        startSynergy();
+        startBarrier();
         m_SuppressEmptyServerWarning = false;
     }
 }
@@ -219,19 +219,19 @@ void MainWindow::onModeChanged(bool startDesktop, bool applyService)
     {
         // ensure that the apply button actually does something, since desktop
         // mode screws around with connecting/disconnecting the action.
-        disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
-        connect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
+        disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartBarrier, SLOT(trigger()));
+        connect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartBarrier, SLOT(trigger()));
 
         if (applyService)
         {
             stopDesktop();
-            startSynergy();
+            startBarrier();
         }
     }
     else if ((appConfig().processMode() == Desktop) && startDesktop)
     {
         stopService();
-        startSynergy();
+        startBarrier();
     }
 }
 
@@ -244,8 +244,8 @@ void MainWindow::createTrayIcon()
 {
     m_pTrayIconMenu = new QMenu(this);
 
-    m_pTrayIconMenu->addAction(m_pActionStartSynergy);
-    m_pTrayIconMenu->addAction(m_pActionStopSynergy);
+    m_pTrayIconMenu->addAction(m_pActionStartBarrier);
+    m_pTrayIconMenu->addAction(m_pActionStopBarrier);
     m_pTrayIconMenu->addSeparator();
 
     m_pTrayIconMenu->addAction(m_pActionMinimize);
@@ -259,7 +259,7 @@ void MainWindow::createTrayIcon()
     connect(m_pTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
 
-    setIcon(synergyDisconnected);
+    setIcon(barrierDisconnected);
 
     m_pTrayIcon->show();
 }
@@ -288,8 +288,8 @@ void MainWindow::createMenuBar()
 #endif
     m_pMenuBar->addAction(m_pMenuHelp->menuAction());
 
-    m_pMenuFile->addAction(m_pActionStartSynergy);
-    m_pMenuFile->addAction(m_pActionStopSynergy);
+    m_pMenuFile->addAction(m_pActionStartBarrier);
+    m_pMenuFile->addAction(m_pActionStopBarrier);
     m_pMenuFile->addSeparator();
     m_pMenuFile->addAction(m_pActivate);
     m_pMenuFile->addSeparator();
@@ -312,7 +312,7 @@ void MainWindow::loadSettings()
     m_pRadioInternalConfig->setChecked(settings().value("useInternalConfig", true).toBool());
 
     m_pGroupServer->setChecked(settings().value("groupServerChecked", false).toBool());
-    m_pLineEditConfigFile->setText(settings().value("configFile", QDir::homePath() + "/" + synergyConfigName).toString());
+    m_pLineEditConfigFile->setText(settings().value("configFile", QDir::homePath() + "/" + barrierConfigName).toString());
     m_pGroupClient->setChecked(settings().value("groupClientChecked", true).toBool());
     m_pLineEditHostname->setText(settings().value("serverHostname").toString());
 }
@@ -321,8 +321,8 @@ void MainWindow::initConnections()
 {
     connect(m_pActionMinimize, SIGNAL(triggered()), this, SLOT(hide()));
     connect(m_pActionRestore, SIGNAL(triggered()), this, SLOT(showNormal()));
-    connect(m_pActionStartSynergy, SIGNAL(triggered()), this, SLOT(startSynergy()));
-    connect(m_pActionStopSynergy, SIGNAL(triggered()), this, SLOT(stopSynergy()));
+    connect(m_pActionStartBarrier, SIGNAL(triggered()), this, SLOT(startBarrier()));
+    connect(m_pActionStopBarrier, SIGNAL(triggered()), this, SLOT(stopBarrier()));
     connect(m_pActionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(&m_VersionChecker, SIGNAL(updateFound(const QString&)), this, SLOT(updateFound(const QString&)));
 }
@@ -340,10 +340,10 @@ void MainWindow::saveSettings()
     settings().sync();
 }
 
-void MainWindow::setIcon(qSynergyState state)
+void MainWindow::setIcon(qBarrierState state)
 {
     QIcon icon;
-    icon.addFile(synergyIconFiles[state]);
+    icon.addFile(barrierIconFiles[state]);
 
     if (m_pTrayIcon)
         m_pTrayIcon->setIcon(icon);
@@ -369,9 +369,9 @@ void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::logOutput()
 {
-    if (m_pSynergy)
+    if (m_pBarrier)
     {
-        QString text(m_pSynergy->readAllStandardOutput());
+        QString text(m_pBarrier->readAllStandardOutput());
         foreach(QString line, text.split(QRegExp("\r|\n|\r\n")))
         {
             if (!line.isEmpty())
@@ -384,9 +384,9 @@ void MainWindow::logOutput()
 
 void MainWindow::logError()
 {
-    if (m_pSynergy)
+    if (m_pBarrier)
     {
-        appendLogRaw(m_pSynergy->readAllStandardError());
+        appendLogRaw(m_pBarrier->readAllStandardError());
     }
 }
 
@@ -394,7 +394,7 @@ void MainWindow::updateFound(const QString &version)
 {
     m_pWidgetUpdate->show();
     m_pLabelUpdate->setText(
-        tr("<p>Your version of Synergy is out of date. "
+        tr("<p>Your version of Barrier is out of date. "
            "Version <b>%1</b> is now available to "
            "<a href=\"%2\">download</a>.</p>")
         .arg(version).arg(DOWNLOAD_URL));
@@ -441,13 +441,13 @@ void MainWindow::checkConnected(const QString& line)
         line.contains("connected to server") ||
         line.contains("watchdog status: ok"))
     {
-        setSynergyState(synergyConnected);
+        setBarrierState(barrierConnected);
 
         if (!appConfig().startedBefore() && isVisible()) {
                 QMessageBox::information(
-                    this, "Synergy",
-                    tr("Synergy is now connected. You can close the "
-                    "config window and Synergy will remain connected in "
+                    this, "Barrier",
+                    tr("Barrier is now connected. You can close the "
+                    "config window and Barrier will remain connected in "
                     "the background."));
 
             appConfig().setStartedBefore(true);
@@ -479,7 +479,7 @@ void MainWindow::checkFingerprint(const QString& line)
     static bool messageBoxAlreadyShown = false;
 
     if (!messageBoxAlreadyShown) {
-        stopSynergy();
+        stopBarrier();
 
         messageBoxAlreadyShown = true;
         QMessageBox::StandardButton fingerprintReply =
@@ -500,7 +500,7 @@ void MainWindow::checkFingerprint(const QString& line)
         if (fingerprintReply == QMessageBox::Yes) {
             // restart core process after trusting fingerprint.
             Fingerprint::trustedServers().trust(fingerprint);
-            startSynergy();
+            startBarrier();
         }
 
         messageBoxAlreadyShown = false;
@@ -524,19 +524,19 @@ QString MainWindow::getTimeStamp()
     return '[' + current.toString(Qt::ISODate) + ']';
 }
 
-void MainWindow::restartSynergy()
+void MainWindow::restartBarrier()
 {
-    stopSynergy();
-    startSynergy();
+    stopBarrier();
+    startBarrier();
 }
 
 void MainWindow::proofreadInfo()
 {
     setEdition(m_AppConfig->edition()); // Why is this here?
 
-    int oldState = m_SynergyState;
-    m_SynergyState = synergyDisconnected;
-    setSynergyState((qSynergyState)oldState);
+    int oldState = m_BarrierState;
+    m_BarrierState = barrierDisconnected;
+    setBarrierState((qBarrierState)oldState);
 }
 
 void MainWindow::showEvent(QShowEvent* event)
@@ -550,7 +550,7 @@ void MainWindow::clearLog()
     m_pLogOutput->clear();
 }
 
-void MainWindow::startSynergy()
+void MainWindow::startBarrier()
 {
     SerialKey serialKey = m_LicenseManager->serialKey();
     time_t currentTime = ::time(0);
@@ -565,7 +565,7 @@ void MainWindow::startSynergy()
 
     appendLogDebug("starting process");
     m_ExpectedRunningState = kStarted;
-    setSynergyState(synergyConnecting);
+    setBarrierState(barrierConnecting);
 
     QString app;
     QStringList args;
@@ -577,7 +577,7 @@ void MainWindow::startSynergy()
 
     if (desktopMode)
     {
-        setSynergyProcess(new QProcess(this));
+        setBarrierProcess(new QProcess(this));
     }
     else
     {
@@ -589,9 +589,9 @@ void MainWindow::startSynergy()
         // is switched; this is because we may need to elevate or not
         // based on which desk the user is in (login always needs
         // elevation, where as default desk does not).
-        // Note that this is only enabled when synergy is set to elevate
+        // Note that this is only enabled when barrier is set to elevate
         // 'as needed' (e.g. on a UAC dialog popup) in order to prevent
-        // unnecessary restarts when synergy was started elevated or
+        // unnecessary restarts when barrier was started elevated or
         // when it is not allowed to elevate. In these cases restarting
         // the server is fruitless.
         if (appConfig().elevateMode() == ElevateAsNeeded) {
@@ -620,25 +620,25 @@ void MainWindow::startSynergy()
     args << "--profile-dir" << getProfileRootForArg();
 #endif
 
-    if ((synergyType() == synergyClient && !clientArgs(args, app))
-        || (synergyType() == synergyServer && !serverArgs(args, app)))
+    if ((barrierType() == barrierClient && !clientArgs(args, app))
+        || (barrierType() == barrierServer && !serverArgs(args, app)))
     {
-        stopSynergy();
+        stopBarrier();
         return;
     }
 
     if (desktopMode)
     {
-        connect(synergyProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(synergyFinished(int, QProcess::ExitStatus)));
-        connect(synergyProcess(), SIGNAL(readyReadStandardOutput()), this, SLOT(logOutput()));
-        connect(synergyProcess(), SIGNAL(readyReadStandardError()), this, SLOT(logError()));
+        connect(barrierProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(barrierFinished(int, QProcess::ExitStatus)));
+        connect(barrierProcess(), SIGNAL(readyReadStandardOutput()), this, SLOT(logOutput()));
+        connect(barrierProcess(), SIGNAL(readyReadStandardError()), this, SLOT(logError()));
     }
 
     // put a space between last log output and new instance.
     if (!m_pLogOutput->toPlainText().isEmpty())
         appendLogRaw("");
 
-    appendLogInfo("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
+    appendLogInfo("starting " + QString(barrierType() == barrierServer ? "server" : "client"));
 
     qDebug() << args;
 
@@ -655,8 +655,8 @@ void MainWindow::startSynergy()
 
     if (desktopMode)
     {
-        synergyProcess()->start(app, args);
-        if (!synergyProcess()->waitForStarted())
+        barrierProcess()->start(app, args);
+        if (!barrierProcess()->waitForStarted())
         {
             show();
             QMessageBox::warning(this, tr("Program can not be started"), QString(tr("The executable<br><br>%1<br><br>could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.").arg(app)));
@@ -683,13 +683,13 @@ MainWindow::sslToggled (bool enabled)
 
 bool MainWindow::clientArgs(QStringList& args, QString& app)
 {
-    app = appPath(appConfig().synergycName());
+    app = appPath(appConfig().barriercName());
 
     if (!QFile::exists(app))
     {
         show();
-        QMessageBox::warning(this, tr("Synergy client not found"),
-                             tr("The executable for the synergy client does not exist."));
+        QMessageBox::warning(this, tr("Barrier client not found"),
+                             tr("The executable for the barrier client does not exist."));
         return false;
     }
 
@@ -718,7 +718,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
         show();
         if (!m_SuppressEmptyServerWarning) {
             QMessageBox::warning(this, tr("Hostname is empty"),
-                             tr("Please fill in a hostname for the synergy client to connect to."));
+                             tr("Please fill in a hostname for the barrier client to connect to."));
         }
         return false;
     }
@@ -738,7 +738,7 @@ QString MainWindow::configFilename()
         m_pTempConfigFile = new QTemporaryFile();
         if (!m_pTempConfigFile->open())
         {
-            QMessageBox::critical(this, tr("Cannot write configuration file"), tr("The temporary configuration file required to start synergy can not be written."));
+            QMessageBox::critical(this, tr("Cannot write configuration file"), tr("The temporary configuration file required to start barrier can not be written."));
             return "";
         }
 
@@ -752,7 +752,7 @@ QString MainWindow::configFilename()
         if (!QFile::exists(m_pLineEditConfigFile->text()))
         {
             if (QMessageBox::warning(this, tr("Configuration filename invalid"),
-                tr("You have not filled in a valid configuration file for the synergy server. "
+                tr("You have not filled in a valid configuration file for the barrier server. "
                         "Do you want to browse for the configuration file now?"), QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes
                     || !on_m_pButtonBrowseConfigFile_clicked())
                 return "";
@@ -771,17 +771,17 @@ QString MainWindow::address()
 
 QString MainWindow::appPath(const QString& name)
 {
-    return appConfig().synergyProgramDir() + name;
+    return appConfig().barrierProgramDir() + name;
 }
 
 bool MainWindow::serverArgs(QStringList& args, QString& app)
 {
-    app = appPath(appConfig().synergysName());
+    app = appPath(appConfig().barriersName());
 
     if (!QFile::exists(app))
     {
-        QMessageBox::warning(this, tr("Synergy server not found"),
-                             tr("The executable for the synergy server does not exist."));
+        QMessageBox::warning(this, tr("Barrier server not found"),
+                             tr("The executable for the barrier server does not exist."));
         return false;
     }
 
@@ -811,7 +811,7 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
     return true;
 }
 
-void MainWindow::stopSynergy()
+void MainWindow::stopBarrier()
 {
     appendLogDebug("stopping process");
 
@@ -826,7 +826,7 @@ void MainWindow::stopSynergy()
         stopDesktop();
     }
 
-    setSynergyState(synergyDisconnected);
+    setBarrierState(barrierDisconnected);
 
     // HACK: deleting the object deletes the physical file, which is
     // bad, since it could be in use by the Windows service!
@@ -848,21 +848,21 @@ void MainWindow::stopService()
 void MainWindow::stopDesktop()
 {
     QMutexLocker locker(&m_StopDesktopMutex);
-    if (!synergyProcess()) {
+    if (!barrierProcess()) {
         return;
     }
 
-    appendLogInfo("stopping synergy desktop process");
+    appendLogInfo("stopping barrier desktop process");
 
-    if (synergyProcess()->isOpen()) {
-        synergyProcess()->close();
+    if (barrierProcess()->isOpen()) {
+        barrierProcess()->close();
     }
 
-    delete synergyProcess();
-    setSynergyProcess(NULL);
+    delete barrierProcess();
+    setBarrierProcess(NULL);
 }
 
-void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
+void MainWindow::barrierFinished(int exitCode, QProcess::ExitStatus)
 {
     if (exitCode == 0) {
         appendLogInfo(QString("process exited normally"));
@@ -872,45 +872,45 @@ void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
     }
 
     if (m_ExpectedRunningState == kStarted) {
-        QTimer::singleShot(1000, this, SLOT(startSynergy()));
+        QTimer::singleShot(1000, this, SLOT(startBarrier()));
         appendLogInfo(QString("detected process not running, auto restarting"));
     }
     else {
-        setSynergyState(synergyDisconnected);
+        setBarrierState(barrierDisconnected);
     }
 }
 
-void MainWindow::setSynergyState(qSynergyState state)
+void MainWindow::setBarrierState(qBarrierState state)
 {
-    if (synergyState() == state)
+    if (barrierState() == state)
         return;
 
-    if (state == synergyConnected || state == synergyConnecting)
+    if (state == barrierConnected || state == barrierConnecting)
     {
-        disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
-        connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
+        disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartBarrier, SLOT(trigger()));
+        connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopBarrier, SLOT(trigger()));
         m_pButtonToggleStart->setText(tr("&Stop"));
         m_pButtonApply->setEnabled(true);
     }
-    else if (state == synergyDisconnected)
+    else if (state == barrierDisconnected)
     {
-        disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
-        connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
+        disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopBarrier, SLOT(trigger()));
+        connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartBarrier, SLOT(trigger()));
         m_pButtonToggleStart->setText(tr("&Start"));
         m_pButtonApply->setEnabled(false);
     }
 
     bool connected = false;
-    if (state == synergyConnected || state == synergyTransfering) {
+    if (state == barrierConnected || state == barrierTransfering) {
         connected = true;
     }
 
-    m_pActionStartSynergy->setEnabled(!connected);
-    m_pActionStopSynergy->setEnabled(connected);
+    m_pActionStartBarrier->setEnabled(!connected);
+    m_pActionStopBarrier->setEnabled(connected);
 
     switch (state)
     {
-    case synergyConnected: {
+    case barrierConnected: {
         if (m_AppConfig->getCryptoEnabled()) {
             m_pLabelPadlock->show();
         }
@@ -918,25 +918,25 @@ void MainWindow::setSynergyState(qSynergyState state)
             m_pLabelPadlock->hide();
         }
 
-        setStatus(tr("Synergy is running."));
+        setStatus(tr("Barrier is running."));
 
         break;
     }
-    case synergyConnecting:
+    case barrierConnecting:
         m_pLabelPadlock->hide();
-        setStatus(tr("Synergy is starting."));
+        setStatus(tr("Barrier is starting."));
         break;
-    case synergyDisconnected:
+    case barrierDisconnected:
         m_pLabelPadlock->hide();
-        setStatus(tr("Synergy is not running."));
+        setStatus(tr("Barrier is not running."));
         break;
-    case synergyTransfering:
+    case barrierTransfering:
         break;
     }
 
     setIcon(state);
 
-    m_SynergyState = state;
+    m_BarrierState = state;
 }
 
 void MainWindow::setVisible(bool visible)
@@ -1035,7 +1035,7 @@ void MainWindow::updateZeroconfService()
                 m_pZeroconfService = NULL;
             }
 
-            if (m_AppConfig->autoConfig() || synergyType() == synergyServer) {
+            if (m_AppConfig->autoConfig() || barrierType() == barrierServer) {
                 m_pZeroconfService = new ZeroconfService(this);
             }
         }
@@ -1045,7 +1045,7 @@ void MainWindow::updateZeroconfService()
 void MainWindow::serverDetected(const QString name)
 {
     if (m_pComboServerList->findText(name) == -1) {
-        // Note: the first added item triggers startSynergy
+        // Note: the first added item triggers startBarrier
         m_pComboServerList->addItem(name);
     }
 
@@ -1073,7 +1073,7 @@ void MainWindow::beginTrial(bool isExpiring)
         QString expiringNotice ("<html><head/><body><p><span style=\""
                      "font-weight:600;\">%1</span> day%3 of "
                      "your %2 trial remain%5. <a href="
-                     "\"https://symless.com/synergy/trial/thanks?id=%4\">"
+                     "\"https://symless.com/barrier/trial/thanks?id=%4\">"
                      "<span style=\"text-decoration: underline;"
                      " color:#0000ff;\">Buy now!</span></a>"
                      "</p></body></html>");
@@ -1096,7 +1096,7 @@ void MainWindow::endTrial(bool isExpired)
     if (isExpired) {
         QString expiredNotice (
             "<html><head/><body><p>Your %1 trial has expired. <a href="
-            "\"https://symless.com/synergy/trial/thanks?id=%2\">"
+            "\"https://symless.com/barrier/trial/thanks?id=%2\">"
             "<span style=\"text-decoration: underline;color:#0000ff;\">"
             "Buy now!</span></a></p></body></html>"
         );
@@ -1108,7 +1108,7 @@ void MainWindow::endTrial(bool isExpired)
 
         this->m_trialLabel->setText(expiredNotice);
         this->m_trialWidget->show();
-        stopSynergy();
+        stopBarrier();
         m_AppConfig->activationHasRun(false);
     } else {
         this->m_trialWidget->hide();
@@ -1153,7 +1153,7 @@ void MainWindow::on_m_pGroupServer_toggled(bool on)
 
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a synergys config file"), QString(), synergyConfigFilter);
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a barriers config file"), QString(), barrierConfigFilter);
 
     if (!fileName.isEmpty())
     {
@@ -1179,7 +1179,7 @@ bool  MainWindow::on_m_pActionSave_triggered()
 
 void MainWindow::on_m_pActionAbout_triggered()
 {
-    AboutDialog dlg(this, appPath(appConfig().synergycName()));
+    AboutDialog dlg(this, appPath(appConfig().barriercName()));
     dlg.exec();
 }
 
@@ -1225,7 +1225,7 @@ void MainWindow::autoAddScreen(const QString name)
             }
         }
         else {
-            restartSynergy();
+            restartBarrier();
         }
     }
 }
@@ -1249,7 +1249,7 @@ void MainWindow::on_m_pActivate_triggered()
 
 void MainWindow::on_m_pButtonApply_clicked()
 {
-    restartSynergy();
+    restartBarrier();
 }
 
 #if defined(Q_OS_WIN)
@@ -1312,7 +1312,7 @@ void MainWindow::downloadBonjour()
     }
     else {
         QMessageBox::critical(
-            this, tr("Synergy"),
+            this, tr("Barrier"),
             tr("Failed to detect system architecture."));
         return;
     }
@@ -1326,7 +1326,7 @@ void MainWindow::downloadBonjour()
 
     if (m_DownloadMessageBox == NULL) {
         m_DownloadMessageBox = new QMessageBox(this);
-        m_DownloadMessageBox->setWindowTitle("Synergy");
+        m_DownloadMessageBox->setWindowTitle("Barrier");
         m_DownloadMessageBox->setIcon(QMessageBox::Information);
         m_DownloadMessageBox->setText("Installing Bonjour, please wait...");
         m_DownloadMessageBox->setStandardButtons(0);
@@ -1358,7 +1358,7 @@ void MainWindow::installBonjour()
         m_DownloadMessageBox->hide();
 
         QMessageBox::warning(
-            this, "Synergy",
+            this, "Barrier",
             tr("Failed to download Bonjour installer to location: %1")
             .arg(tempLocation));
         return;
@@ -1395,7 +1395,7 @@ void MainWindow::promptAutoConfig()
 {
     if (!isBonjourRunning()) {
         int r = QMessageBox::question(
-            this, tr("Synergy"),
+            this, tr("Barrier"),
             tr("Do you want to enable auto config and install Bonjour?\n\n"
                "This feature helps you establish the connection."),
             QMessageBox::Yes | QMessageBox::No);
@@ -1416,7 +1416,7 @@ void MainWindow::promptAutoConfig()
 void MainWindow::on_m_pComboServerList_currentIndexChanged(QString )
 {
     if (m_pComboServerList->count() != 0) {
-        restartSynergy();
+        restartBarrier();
     }
 }
 
@@ -1425,7 +1425,7 @@ void MainWindow::on_m_pCheckBoxAutoConfig_toggled(bool checked)
     if (!isBonjourRunning() && checked) {
         if (!m_SuppressAutoConfigWarning) {
             int r = QMessageBox::information(
-                this, tr("Synergy"),
+                this, tr("Barrier"),
                 tr("Auto config feature requires Bonjour.\n\n"
                    "Do you want to install Bonjour?"),
                 QMessageBox::Yes | QMessageBox::No);
@@ -1475,7 +1475,7 @@ int MainWindow::raiseActivationDialog()
         m_PendingClientNames.clear();
     }
     if (result == QDialog::Accepted) {
-        restartSynergy();
+        restartBarrier();
     }
     return result;
 }
@@ -1497,9 +1497,9 @@ QString MainWindow::getProfileRootForArg()
 
     // HACK: strip our app name since we're returning the root dir.
 #if defined(Q_OS_WIN)
-    dir.replace("\\Synergy", "");
+    dir.replace("\\Barrier", "");
 #else
-    dir.replace("/.synergy", "");
+    dir.replace("/.barrier", "");
 #endif
 
     return QString("\"%1\"").arg(dir);

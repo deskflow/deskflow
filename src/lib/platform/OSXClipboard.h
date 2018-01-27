@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "synergy/IClipboard.h"
+#include "barrier/IClipboard.h"
 
 #include <Carbon/Carbon.h>
 #include <vector>
@@ -31,8 +31,8 @@ public:
     OSXClipboard();
     virtual ~OSXClipboard();
 
-    //! Test if clipboard is owned by synergy
-    static bool            isOwnedBySynergy();
+    //! Test if clipboard is owned by barrier
+    static bool            isOwnedByBarrier();
 
     // IClipboard overrides
     virtual bool        empty();

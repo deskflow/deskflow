@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
@@ -25,7 +25,7 @@ class IArchTaskBarReceiver;
 //! Interface for architecture dependent task bar control
 /*!
 This interface defines the task bar icon operations required
-by synergy.  Each architecture must implement this interface
+by barrier.  Each architecture must implement this interface
 though each operation can be a no-op.
 */
 class IArchTaskBar : public IInterface {

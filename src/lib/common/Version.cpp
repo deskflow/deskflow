@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -18,11 +18,12 @@
 
 #include "common/Version.h"
 
-const char* kApplication = "Synergy";
-const char* kCopyright   = "Copyright (C) 2012-2016 Symless Ltd.\n"
+const char* kApplication = "Barrier";
+const char* kCopyright   = "Copyright (C) 2018 Debauchee Open Source Group\n"
+                           "Copyright (C) 2012-2016 Symless Ltd.\n"
                            "Copyright (C) 2008-2014 Nick Bolton\n"
                            "Copyright (C) 2002-2014 Chris Schoeneman";
-const char* kContact     = "Email: engineering@symless.com";
-const char* kWebsite     = "https://symless.com/";
-const char* kVersion     = SYNERGY_VERSION;
-const char* kAppVersion  = "Synergy " SYNERGY_VERSION;
+const char* kContact     = "Email: todo@mail.com";
+const char* kWebsite     = "https://github.com/debauchee/barrier/";
+const char* kVersion     = BARRIER_VERSION;
+const char* kAppVersion  = "Barrier " BARRIER_VERSION;

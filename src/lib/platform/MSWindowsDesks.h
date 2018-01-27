@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -19,9 +19,9 @@
 #pragma once
 
 #include "synwinhk/synwinhk.h"
-#include "synergy/key_types.h"
-#include "synergy/mouse_types.h"
-#include "synergy/option_types.h"
+#include "barrier/key_types.h"
+#include "barrier/mouse_types.h"
+#include "barrier/option_types.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 #include "base/String.h"
@@ -46,9 +46,9 @@ desk at a time, you can't switch desks if the thread has any hooks
 installed or owns any windows, windows cannot exist on multiple
 desks at once, etc.  Basically, they're useless except for running
 the login window or the screensaver, which is what they're used
-for.  Synergy must deal with them mainly because of the login
+for.  Barrier must deal with them mainly because of the login
 window and screensaver but users can create their own desks and
-synergy should work on those too.
+barrier should work on those too.
 
 This class encapsulates all the desk nastiness.  Clients of this
 object don't have to know anything about desks.

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -23,14 +23,14 @@
 #include <QtNetwork>
 
 #if defined(Q_OS_WIN)
-const char AppConfig::m_SynergysName[] = "synergys.exe";
-const char AppConfig::m_SynergycName[] = "synergyc.exe";
-const char AppConfig::m_SynergyLogDir[] = "log/";
+const char AppConfig::m_BarriersName[] = "barriers.exe";
+const char AppConfig::m_BarriercName[] = "barrierc.exe";
+const char AppConfig::m_BarrierLogDir[] = "log/";
 #define DEFAULT_PROCESS_MODE Service
 #else
-const char AppConfig::m_SynergysName[] = "synergys";
-const char AppConfig::m_SynergycName[] = "synergyc";
-const char AppConfig::m_SynergyLogDir[] = "/var/log/";
+const char AppConfig::m_BarriersName[] = "barriers";
+const char AppConfig::m_BarriercName[] = "barrierc";
+const char AppConfig::m_BarrierLogDir[] = "/var/log/";
 #define DEFAULT_PROCESS_MODE Desktop
 #endif
 
@@ -84,26 +84,26 @@ bool AppConfig::logToFile() const { return m_LogToFile; }
 
 const QString &AppConfig::logFilename() const { return m_LogFilename; }
 
-QString AppConfig::synergyLogDir() const
+QString AppConfig::barrierLogDir() const
 {
 #if defined(Q_OS_WIN)
     // on windows, we want to log to program files
-    return synergyProgramDir() + "log/";
+    return barrierProgramDir() + "log/";
 #else
     // on unix, we'll log to the standard log dir
     return "/var/log/";
 #endif
 }
 
-QString AppConfig::synergyProgramDir() const
+QString AppConfig::barrierProgramDir() const
 {
-    // synergy binaries should be in the same dir.
+    // barrier binaries should be in the same dir.
     return QCoreApplication::applicationDirPath() + "/";
 }
 
 void AppConfig::persistLogDir()
 {
-    QDir dir = synergyLogDir();
+    QDir dir = barrierLogDir();
 
     // persist the log directory
     if (!dir.exists())
@@ -144,7 +144,7 @@ void AppConfig::loadSettings()
     m_Interface = settings().value("interface").toString();
     m_LogLevel = settings().value("logLevel", 3).toInt(); // level 3: INFO
     m_LogToFile = settings().value("logToFile", false).toBool();
-    m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
+    m_LogFilename = settings().value("logFilename", barrierLogDir() + "barrier.log").toString();
     m_WizardLastRun = settings().value("wizardLastRun", 0).toInt();
     m_Language = settings().value("language", QLocale::system().name()).toString();
     m_StartedBefore = settings().value("startedBefore", false).toBool();
@@ -270,9 +270,9 @@ int AppConfig::lastExpiringWarningTime() const { return m_LastExpiringWarningTim
 
 void AppConfig::setLastExpiringWarningTime(int t) { m_LastExpiringWarningTime = t; }
 
-QString AppConfig::synergysName() const { return m_SynergysName; }
+QString AppConfig::barriersName() const { return m_BarriersName; }
 
-QString AppConfig::synergycName() const { return m_SynergycName; }
+QString AppConfig::barriercName() const { return m_BarriercName; }
 
 ElevateMode AppConfig::elevateMode()
 {

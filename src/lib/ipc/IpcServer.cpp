@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
  * 
@@ -96,7 +96,7 @@ IpcServer::listen()
 void
 IpcServer::handleClientConnecting(const Event&, void*)
 {
-    synergy::IStream* stream = m_socket->accept();
+    barrier::IStream* stream = m_socket->accept();
     if (stream == NULL) {
         return;
     }

@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Synergy</string>
+   <string>Barrier</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -48,14 +48,14 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
+          <pixmap resource="Barrier.qrc">:/res/icons/16x16/warning.png</pixmap>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QLabel" name="m_trialLabel">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; days of your Synergy Pro trial remain. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; days of your Barrier Pro trial remain. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="openExternalLinks">
           <bool>true</bool>
@@ -99,7 +99,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
+          <pixmap resource="Barrier.qrc">:/res/icons/16x16/warning.png</pixmap>
          </property>
         </widget>
        </item>
@@ -391,7 +391,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="Synergy.qrc">:/res/icons/16x16/padlock.png</pixmap>
+         <pixmap resource="Barrier.qrc">:/res/icons/16x16/padlock.png</pixmap>
         </property>
        </widget>
       </item>
@@ -438,7 +438,7 @@
   </widget>
   <action name="m_pActionAbout">
    <property name="text">
-    <string>&amp;About Synergy...</string>
+    <string>&amp;About Barrier...</string>
    </property>
    <property name="shortcut">
     <string notr="true"/>
@@ -455,7 +455,7 @@
     <string notr="true">Ctrl+Q</string>
    </property>
   </action>
-  <action name="m_pActionStartSynergy">
+  <action name="m_pActionStartBarrier">
    <property name="text">
     <string>&amp;Start</string>
    </property>
@@ -466,7 +466,7 @@
     <string notr="true">Ctrl+S</string>
    </property>
   </action>
-  <action name="m_pActionStopSynergy">
+  <action name="m_pActionStopBarrier">
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -542,7 +542,7 @@
   </action>
  </widget>
  <resources>
-  <include location="Synergy.qrc"/>
+  <include location="Barrier.qrc"/>
  </resources>
  <connections>
   <connection>
@@ -596,7 +596,7 @@
   <connection>
    <sender>m_pButtonToggleStart</sender>
    <signal>clicked()</signal>
-   <receiver>m_pActionStartSynergy</receiver>
+   <receiver>m_pActionStartBarrier</receiver>
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">

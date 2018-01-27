@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProductVersion>3.10</ProductVersion>
+        <ProjectGuid>{d4ba9f39-6a35-4c8f-9cb2-67fcbe5cab17}</ProjectGuid>
+        <SchemaVersion>2.0</SchemaVersion>
+        <OutputName>Barrier</OutputName>
+        <OutputType>Package</OutputType>
+        <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+        <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+        <OutputPath>bin\$(Configuration)\</OutputPath>
+        <IntermediateOutputPath>wix\obj\$(Configuration)\</IntermediateOutputPath>
+    </PropertyGroup>
+    <ItemGroup>
+        <WixExtension Include="WixFirewallExtension">
+            <HintPath>$(WixExtDir)\WixFirewallExtension.dll</HintPath>
+            <Name>WixFirewallExtension</Name>
+        </WixExtension>
+        <WixExtension Include="WixUtilExtension">
+            <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+            <Name>WixUtilExtension</Name>
+        </WixExtension>
+        <WixExtension Include="WixUIExtension">
+            <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+            <Name>WixUIExtension</Name>
+        </WixExtension>
+        <Compile Include="Product.wxs"/>
+        <Content Include="Include.wxi"/>
+    </ItemGroup>
+    <Import Project="$(WixTargetsPath)"/>
+</Project>

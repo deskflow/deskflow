@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -19,15 +19,15 @@
 #include "client/Client.h"
 
 #include "client/ServerProxy.h"
-#include "synergy/Screen.h"
-#include "synergy/FileChunk.h"
-#include "synergy/DropHelper.h"
-#include "synergy/PacketStreamFilter.h"
-#include "synergy/ProtocolUtil.h"
-#include "synergy/protocol_types.h"
-#include "synergy/XSynergy.h"
-#include "synergy/StreamChunker.h"
-#include "synergy/IPlatformScreen.h"
+#include "barrier/Screen.h"
+#include "barrier/FileChunk.h"
+#include "barrier/DropHelper.h"
+#include "barrier/PacketStreamFilter.h"
+#include "barrier/ProtocolUtil.h"
+#include "barrier/protocol_types.h"
+#include "barrier/XBarrier.h"
+#include "barrier/StreamChunker.h"
+#include "barrier/IPlatformScreen.h"
 #include "mt/Thread.h"
 #include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
@@ -53,7 +53,7 @@ Client::Client(
         IEventQueue* events,
         const String& name, const NetworkAddress& address,
         ISocketFactory* socketFactory,
-        synergy::Screen* screen,
+        barrier::Screen* screen,
         ClientArgs const& args) :
     m_mock(false),
     m_name(name),

@@ -3,8 +3,8 @@
     <name>AboutDialogBase</name>
     <message>
         <location filename="res/AboutDialogBase.ui" line="38"/>
-        <source>About Synergy</source>
-        <translation type="finished">Synergy에 대하여</translation>
+        <source>About Barrier</source>
+        <translation type="finished">Barrier에 대하여</translation>
     </message>
     <message utf8="true">
         <location filename="res/AboutDialogBase.ui" line="53"/>
@@ -12,18 +12,18 @@
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Barrier is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Barrier is based on CosmoBarrier by Richard Lee and Adam Feder.&lt;br /&gt;
+The Barrier GUI is based on QBarrier by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Barrier is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Barrier is based on CosmoBarrier by Richard Lee and Adam Feder.&lt;br /&gt;
+The Barrier GUI is based on QBarrier by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</oldsource>
         <translation type="unfinished"></translation>
@@ -202,7 +202,7 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="364"/>
-        <source>&lt;p&gt;Your version of Synergy is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Your version of Barrier is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
         <oldsource>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</oldsource>
         <translation type="finished">&lt;p&gt;사용 중인 시너지는 최신 버전이 아닙니다. 새 버전(&lt;b&gt;%1&lt;/b&gt;)을 &lt;a href=&quot;%2&quot;&gt;다운로드&lt;/a&gt; 받을 수 있습니다.&lt;/p&gt;</translation>
     </message>
@@ -218,13 +218,13 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="596"/>
-        <source>Synergy client not found</source>
-        <translation type="finished">Synergy 클라이언트를 찾을 수 없습니다.</translation>
+        <source>Barrier client not found</source>
+        <translation type="finished">Barrier 클라이언트를 찾을 수 없습니다.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="597"/>
-        <source>The executable for the synergy client does not exist.</source>
-        <translation type="finished">Synergy 클라이언트 실행 파일이 존재하지 않습니다.</translation>
+        <source>The executable for the barrier client does not exist.</source>
+        <translation type="finished">Barrier 클라이언트 실행 파일이 존재하지 않습니다.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="625"/>
@@ -233,7 +233,7 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="626"/>
-        <source>Please fill in a hostname for the synergy client to connect to.</source>
+        <source>Please fill in a hostname for the barrier client to connect to.</source>
         <translation type="finished">클라이언트가 접속할 호스트명을 입력해주세요.</translation>
     </message>
     <message>
@@ -243,8 +243,8 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="646"/>
-        <source>The temporary configuration file required to start synergy can not be written.</source>
-        <translation type="finished">Synergy를 구동하기 위해 필요한 임시 설정 파일을 작성할 수 없습니다.</translation>
+        <source>The temporary configuration file required to start barrier can not be written.</source>
+        <translation type="finished">Barrier를 구동하기 위해 필요한 임시 설정 파일을 작성할 수 없습니다.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="659"/>
@@ -253,28 +253,28 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="660"/>
-        <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
-        <translation type="finished">Synergy 서버를 실행하기 위한 설정 파일이 제대로 작성되어 있지 않습니다. 지금 설정 파일을 찾아 보시겠습니까?</translation>
+        <source>You have not filled in a valid configuration file for the barrier server. Do you want to browse for the configuration file now?</source>
+        <translation type="finished">Barrier 서버를 실행하기 위한 설정 파일이 제대로 작성되어 있지 않습니다. 지금 설정 파일을 찾아 보시겠습니까?</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="688"/>
-        <source>Synergy server not found</source>
-        <translation type="finished">Synergy 서버를 찾을 수 없습니다</translation>
+        <source>Barrier server not found</source>
+        <translation type="finished">Barrier 서버를 찾을 수 없습니다</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="689"/>
-        <source>The executable for the synergy server does not exist.</source>
-        <translation type="finished">Synergy 서버 실행 파일이 존재하지 않습니다.</translation>
+        <source>The executable for the barrier server does not exist.</source>
+        <translation type="finished">Barrier 서버 실행 파일이 존재하지 않습니다.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
-        <source>Synergy terminated with an error</source>
-        <translation type="finished">Synergy가 오류로 인해 종료되었습니다</translation>
+        <source>Barrier terminated with an error</source>
+        <translation type="finished">Barrier가 오류로 인해 종료되었습니다</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
-        <source>Synergy terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
-        <translation type="finished">Synergy가 %1의 코드로 비 정상적으로 종료되었습니다.&lt;br&gt;&lt;br&gt;자세한 사항은 로그 출력결과를 확인하세요</translation>
+        <source>Barrier terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
+        <translation type="finished">Barrier가 %1의 코드로 비 정상적으로 종료되었습니다.&lt;br&gt;&lt;br&gt;자세한 사항은 로그 출력결과를 확인하세요</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="783"/>
@@ -322,18 +322,18 @@ Do you want to install Bonjour?</source>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="815"/>
-        <source>Synergy is starting.</source>
-        <translation type="finished">Synergy가 실행 중 입니다.</translation>
+        <source>Barrier is starting.</source>
+        <translation type="finished">Barrier가 실행 중 입니다.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="809"/>
-        <source>Synergy is running.</source>
-        <translation type="finished">Synergy가 실행 중 입니다.</translation>
+        <source>Barrier is running.</source>
+        <translation type="finished">Barrier가 실행 중 입니다.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="819"/>
-        <source>Synergy is not running.</source>
-        <translation type="finished">Synergy가 실행 중이지 않습니다.</translation>
+        <source>Barrier is not running.</source>
+        <translation type="finished">Barrier가 실행 중이지 않습니다.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="870"/>
@@ -344,17 +344,17 @@ Do you want to install Bonjour?</source>
         <location filename="src/MainWindow.cpp" line="1146"/>
         <location filename="src/MainWindow.cpp" line="1225"/>
         <location filename="src/MainWindow.cpp" line="1269"/>
-        <source>Synergy</source>
-        <translation type="finished">Synergy</translation>
+        <source>Barrier</source>
+        <translation type="finished">Barrier</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="987"/>
-        <source>Browse for a synergys config file</source>
-        <translation type="finished">synergys 설정 파일 탐색</translation>
+        <source>Browse for a barriers config file</source>
+        <translation type="finished">barriers 설정 파일 탐색</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="408"/>
-        <source>Synergy is now connected, You can close the config window. Synergy will remain connected in the background.</source>
+        <source>Barrier is now connected, You can close the config window. Barrier will remain connected in the background.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -393,8 +393,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>MainWindowBase</name>
     <message>
         <location filename="res/MainWindowBase.ui" line="26"/>
-        <source>Synergy</source>
-        <translation type="finished">Synergy</translation>
+        <source>Barrier</source>
+        <translation type="finished">Barrier</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="90"/>
@@ -479,8 +479,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="390"/>
-        <source>&amp;About Synergy...</source>
-        <translation type="finished">Synergy에 관하여(&amp;A)...</translation>
+        <source>&amp;About Barrier...</source>
+        <translation type="finished">Barrier에 관하여(&amp;A)...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="398"/>
@@ -599,7 +599,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>PluginWizardPage</name>
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="14"/>
-        <source>Setup Synergy</source>
+        <source>Setup Barrier</source>
         <translation type="finished">시너지 설정</translation>
     </message>
     <message>
@@ -648,13 +648,13 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>QObject</name>
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
-        <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
-        <translation type="finished">Synergy 설정파일 (*.sgc);;모든 파일 (*.*)</translation>
+        <source>Barrier Configurations (*.sgc);;All files (*.*)</source>
+        <translation type="finished">Barrier 설정파일 (*.sgc);;모든 파일 (*.*)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="67"/>
-        <source>Synergy Configurations (*.conf);;All files (*.*)</source>
-        <translation type="finished">Synergy 설정파일 (*.conf);;모든 파일 (*.*)</translation>
+        <source>Barrier Configurations (*.conf);;All files (*.*)</source>
+        <translation type="finished">Barrier 설정파일 (*.conf);;모든 파일 (*.*)</translation>
     </message>
     <message>
         <location filename="src/main.cpp" line="119"/>
@@ -887,8 +887,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="60"/>
-        <source>Configure the layout of your synergy server configuration.</source>
-        <translation type="finished">Synergy 서버 구성과 레이아웃을 설정하세요.</translation>
+        <source>Configure the layout of your barrier server configuration.</source>
+        <translation type="finished">Barrier 서버 구성과 레이아웃을 설정하세요.</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="73"/>
@@ -1046,16 +1046,16 @@ Double click on a screen to edit its settings.</source>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="151"/>
-        <source>Elevate Synergy</source>
-        <translation type="finished">Synergy 승급</translation>
+        <source>Elevate Barrier</source>
+        <translation type="finished">Barrier 승급</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="152"/>
-        <source>Are you sure you want to elevate Synergy?
+        <source>Are you sure you want to elevate Barrier?
 
-This allows Synergy to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Synergy only if you really need to.</source>
-        <translation type="finished">Synergy의 권한을 승급 하시겠습니까?
-이것을 허용하게 되면 Synergy와 승급된 프로세스, UAC 대화상자와 상호작용 할 수 있지만, 승급되지 않은 프로세스들과 문제가 생길 수 있습니다. Synergy 권한 승급은 반드시 필요한 경우에만 사용하세요.</translation>
+This allows Barrier to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Barrier only if you really need to.</source>
+        <translation type="finished">Barrier의 권한을 승급 하시겠습니까?
+이것을 허용하게 되면 Barrier와 승급된 프로세스, UAC 대화상자와 상호작용 할 수 있지만, 승급되지 않은 프로세스들과 문제가 생길 수 있습니다. Barrier 권한 승급은 반드시 필요한 경우에만 사용하세요.</translation>
     </message>
 </context>
 <context>
@@ -1170,7 +1170,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <name>SetupWizard</name>
     <message>
         <location filename="src/SetupWizard.cpp" line="72"/>
-        <source>Setup Synergy</source>
+        <source>Setup Barrier</source>
         <translation type="finished">시너지 설정</translation>
     </message>
     <message>
@@ -1188,7 +1188,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     <name>SetupWizardBase</name>
     <message>
         <location filename="res/SetupWizardBase.ui" line="26"/>
-        <source>Setup Synergy</source>
+        <source>Setup Barrier</source>
         <translation type="finished">시너지 설정</translation>
     </message>
     <message>
@@ -1198,13 +1198,13 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="39"/>
-        <source>Thanks for installing Synergy!</source>
+        <source>Thanks for installing Barrier!</source>
         <translation type="finished">시너지를 설치하여 주셔서 감사합니다.</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="114"/>
-        <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-        <translation type="finished">Synergy는 마우스와 키보드를  여러 컴퓨터에 쉽게 공유하여 사용할 수 있게 해주는 무료 오픈 소스 프로그램입니다. 마우스를 한쪽 컴퓨터의 화면 끝으로 옮기기만 하면 다른 컴퓨터의 화면으로 이동할 수 있으며 클립보드의 내용까지도 공유할 수 있습니다. 필요한 것은 단지 네트워크 연결 뿐이며 Synergy는 여러 플랫폼(Windows와 Mac OS X, Linux)에서 사용할 수 있습니다. </translation>
+        <source>Barrier lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Barrier is cross-platform (works on Windows, Mac OS X and Linux).</source>
+        <translation type="finished">Barrier는 마우스와 키보드를  여러 컴퓨터에 쉽게 공유하여 사용할 수 있게 해주는 무료 오픈 소스 프로그램입니다. 마우스를 한쪽 컴퓨터의 화면 끝으로 옮기기만 하면 다른 컴퓨터의 화면으로 이동할 수 있으며 클립보드의 내용까지도 공유할 수 있습니다. 필요한 것은 단지 네트워크 연결 뿐이며 Barrier는 여러 플랫폼(Windows와 Mac OS X, Linux)에서 사용할 수 있습니다. </translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="125"/>
@@ -1393,8 +1393,8 @@ Server response:
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="140"/>
-        <source>Synergy</source>
-        <translation type="finished">Synergy</translation>
+        <source>Barrier</source>
+        <translation type="finished">Barrier</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="141"/>

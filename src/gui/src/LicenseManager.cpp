@@ -1,6 +1,6 @@
 /*
- * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Seamless Inc.
+ * barrier -- mouse and keyboard sharing utility
+ * Copyright (C) 2015 Barrier Seamless Inc.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -134,7 +134,7 @@ void LicenseManager::skipActivation()
 QString
 LicenseManager::getEditionName(Edition const edition, bool trial)
 {
-	std::string name ("Synergy");
+	std::string name ("Barrier");
 	switch (edition) {
 		case kUnregistered:
 			name += " (UNREGISTERED)";

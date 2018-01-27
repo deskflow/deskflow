@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -46,7 +46,7 @@ ArchDaemonUnix::~ArchDaemonUnix()
 #ifdef __APPLE__
 
 // In Mac OS X, fork()'d child processes can't use most APIs (the frameworks
-// that Synergy uses in fact prevent it and make the process just up and die),
+// that Barrier uses in fact prevent it and make the process just up and die),
 // so need to exec a copy of the program that doesn't fork so isn't limited.
 int
 execSelfNonDaemonized()
@@ -54,14 +54,14 @@ execSelfNonDaemonized()
     extern char** NXArgv;
     char** selfArgv = NXArgv;
     
-    setenv("_SYNERGY_DAEMONIZED", "", 1);
+    setenv("_BARRIER_DAEMONIZED", "", 1);
     
     execvp(selfArgv[0], selfArgv);
     return 0;
 }
 
 bool alreadyDaemonized() {
-    return getenv("_SYNERGY_DAEMONIZED") != NULL;
+    return getenv("_BARRIER_DAEMONIZED") != NULL;
 }
 
 #endif

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ToolApp.h"
+#include "barrier/ToolApp.h"
 #include "arch/Arch.h"
 
 int

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2009 Chris Schoeneman
  *
@@ -22,8 +22,8 @@
 #include "ipc/IpcServer.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/Ipc.h"
-#include "synergy/App.h"
-#include "synergy/ArgsBase.h"
+#include "barrier/App.h"
+#include "barrier/ArgsBase.h"
 #include "mt/Thread.h"
 #include "arch/win32/ArchDaemonWindows.h"
 #include "arch/win32/XArchWindows.h"
@@ -138,7 +138,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
 {
     // always elevate if we are at the vista/7 login screen. we could also 
     // elevate for the uac dialog (consent.exe) but this would be pointless,
-    // since synergy would re-launch as non-elevated after the desk switch,
+    // since barrier would re-launch as non-elevated after the desk switch,
     // and so would be unusable with the new elevated process taking focus.
     if (m_elevateProcess
         || m_autoElevated
@@ -460,9 +460,9 @@ MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
             double elapsed = (ARCH->time() - start);
             if (elapsed > timeout) {
                 // if timeout reached, kill forcefully.
-                // calling TerminateProcess on synergy is very bad!
+                // calling TerminateProcess on barrier is very bad!
                 // it causes the hook DLL to stay loaded in some apps,
-                // making it impossible to start synergy again.
+                // making it impossible to start barrier again.
                 LOG((CLOG_WARN "shutdown timed out after %d secs, forcefully terminating", (int)elapsed));
                 TerminateProcess(handle, kExitSuccess);
                 break;
@@ -501,8 +501,8 @@ MSWindowsWatchdog::shutdownExistingProcesses()
         // make sure we're not checking the system process
         if (entry.th32ProcessID != 0) {
 
-            if (_stricmp(entry.szExeFile, "synergyc.exe") == 0 ||
-                _stricmp(entry.szExeFile, "synergys.exe") == 0) {
+            if (_stricmp(entry.szExeFile, "barrierc.exe") == 0 ||
+                _stricmp(entry.szExeFile, "barriers.exe") == 0) {
                 
                 HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
                 shutdownProcess(handle, entry.th32ProcessID, 10);

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -18,29 +18,29 @@
 
 #pragma once
 
-#include "synergy/IClient.h"
+#include "barrier/IClient.h"
 
-#include "synergy/Clipboard.h"
-#include "synergy/DragInformation.h"
-#include "synergy/INode.h"
-#include "synergy/ClientArgs.h"
+#include "barrier/Clipboard.h"
+#include "barrier/DragInformation.h"
+#include "barrier/INode.h"
+#include "barrier/ClientArgs.h"
 #include "net/NetworkAddress.h"
 #include "base/EventTypes.h"
 #include "mt/CondVar.h"
 
 class EventQueueTimer;
-namespace synergy { class Screen; }
+namespace barrier { class Screen; }
 class ServerProxy;
 class IDataSocket;
 class ISocketFactory;
-namespace synergy { class IStream; }
+namespace barrier { class IStream; }
 class IEventQueue;
 class Thread;
 class TCPSocket;
 
-//! Synergy client
+//! Barrier client
 /*!
-This class implements the top-level client algorithms for synergy.
+This class implements the top-level client algorithms for barrier.
 */
 class Client : public IClient, public INode {
 public:
@@ -59,7 +59,7 @@ public:
     */
     Client(IEventQueue* events, const String& name,
            const NetworkAddress& address, ISocketFactory* socketFactory,
-           synergy::Screen* screen, ClientArgs const& args);
+           barrier::Screen* screen, ClientArgs const& args);
 
     ~Client();
 
@@ -201,8 +201,8 @@ private:
     String                m_name;
     NetworkAddress        m_serverAddress;
     ISocketFactory*        m_socketFactory;
-    synergy::Screen*    m_screen;
-    synergy::IStream*    m_stream;
+    barrier::Screen*    m_screen;
+    barrier::IStream*    m_stream;
     EventQueueTimer*    m_timer;
     ServerProxy*        m_server;
     bool                m_ready;

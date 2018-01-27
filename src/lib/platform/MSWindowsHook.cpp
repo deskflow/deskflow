@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Chris Schoeneman
  * 
@@ -18,7 +18,7 @@
 
 #include "platform/MSWindowsHook.h"
 
-#include "synergy/XScreen.h"
+#include "barrier/XScreen.h"
 #include "base/Log.h"
 
 static const char* g_name = "synwinhk";

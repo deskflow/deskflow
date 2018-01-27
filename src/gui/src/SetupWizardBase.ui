@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Setup Synergy</string>
+   <string>Setup Barrier</string>
   </property>
   <widget class="QWizardPage" name="m_pWelcomePage">
    <property name="title">
@@ -36,7 +36,7 @@
     <item>
      <widget class="QLabel" name="label_3">
       <property name="text">
-       <string>Thanks for installing Synergy!</string>
+       <string>Thanks for installing Barrier!</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
@@ -111,7 +111,7 @@
        <locale language="English" country="UnitedKingdom"/>
       </property>
       <property name="text">
-       <string>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</string>
+       <string>Barrier lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Barrier is cross-platform (works on Windows, Mac OS X and Linux).</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>

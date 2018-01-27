@@ -1,4 +1,4 @@
-# synergy -- mouse and keyboard sharing utility
+# barrier -- mouse and keyboard sharing utility
 # Copyright (C) 2016 Symless Ltd.
 # 
 # This package is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
-if (SYNERGY_ADD_HEADERS)
+if (BARRIER_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 

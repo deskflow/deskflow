@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "synergy/KeyState.h"
+#include "barrier/KeyState.h"
 #include "base/String.h"
 #include "common/stdvector.h"
 
@@ -37,7 +37,7 @@ This class maps KeyIDs to keystrokes.
 class MSWindowsKeyState : public KeyState {
 public:
 	MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events);
-	MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, synergy::KeyMap& keyMap);
+	MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, barrier::KeyMap& keyMap);
 	virtual ~MSWindowsKeyState();
 
 	//! @name manipulators
@@ -161,7 +161,7 @@ public:
 
 protected:
 	// KeyState overrides
-	virtual void		getKeyMap(synergy::KeyMap& keyMap);
+	virtual void		getKeyMap(barrier::KeyMap& keyMap);
 	virtual void		fakeKey(const Keystroke& keystroke);
 	virtual KeyModifierMask&
 						getActiveModifiersRValue();
@@ -175,11 +175,11 @@ private:
 	bool				getGroups(GroupList&) const;
 	void				setWindowGroup(SInt32 group);
 
-	KeyID				getIDForKey(synergy::KeyMap::KeyItem& item,
+	KeyID				getIDForKey(barrier::KeyMap::KeyItem& item,
 							KeyButton button, UINT virtualKey,
 							PBYTE keyState, HKL hkl) const;
 
-	void				addKeyEntry(synergy::KeyMap& keyMap, synergy::KeyMap::KeyItem& item);
+	void				addKeyEntry(barrier::KeyMap& keyMap, barrier::KeyMap::KeyItem& item);
 
 	void				init();
 

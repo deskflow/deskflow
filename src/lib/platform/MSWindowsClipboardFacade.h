@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -20,7 +20,7 @@
 
 #include "platform/IMSWindowsClipboardFacade.h"
 
-#include "synergy/IClipboard.h"
+#include "barrier/IClipboard.h"
 
 class MSWindowsClipboardFacade : public IMSWindowsClipboardFacade
 {

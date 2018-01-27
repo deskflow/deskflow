@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
  * 
@@ -20,7 +20,7 @@
 
 #include "ipc/IpcMessage.h"
 #include "ipc/Ipc.h"
-#include "synergy/ProtocolUtil.h"
+#include "barrier/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "base/TMethodEventJob.h"
 #include "base/Log.h"
@@ -29,7 +29,7 @@
 // IpcServerProxy
 //
 
-IpcServerProxy::IpcServerProxy(synergy::IStream& stream, IEventQueue* events) :
+IpcServerProxy::IpcServerProxy(barrier::IStream& stream, IEventQueue* events) :
     m_stream(stream),
     m_events(events)
 {

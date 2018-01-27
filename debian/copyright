@@ -1,5 +1,5 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: Synergy
-Source: https://www.symless.com/synergy
+Upstream-Name: Barrier
+Source: https://github.com/debauchee/barrier/
 Disclaimer: This package is not part of the Debian project as it contains closed source proprietary components
-Copyright: Copyright (C) 2012-2017 Symless Ltd
+Copyright: Copyright (C) 2018 Debauchee Open Source Group

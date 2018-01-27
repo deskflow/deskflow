@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -19,7 +19,7 @@
 #include "platform/XWindowsScreenSaver.h"
 
 #include "platform/XWindowsUtil.h"
-#include "synergy/IPlatformScreen.h"
+#include "barrier/IPlatformScreen.h"
 #include "base/Log.h"
 #include "base/Event.h"
 #include "base/IEventQueue.h"
@@ -29,7 +29,7 @@
 #if HAVE_X11_EXTENSIONS_XTEST_H
 #    include <X11/extensions/XTest.h>
 #else
-#    error The XTest extension is required to build synergy
+#    error The XTest extension is required to build barrier
 #endif
 #if HAVE_X11_EXTENSIONS_DPMS_H
 extern "C" {

@@ -3,7 +3,7 @@
     <name>AboutDialogBase</name>
     <message>
         <location filename="res/AboutDialogBase.ui" line="38"/>
-        <source>About Synergy</source>
+        <source>About Barrier</source>
         <translation type="finished">Rreth Sunergy</translation>
     </message>
     <message utf8="true">
@@ -12,18 +12,18 @@
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Barrier is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Barrier is based on CosmoBarrier by Richard Lee and Adam Feder.&lt;br /&gt;
+The Barrier GUI is based on QBarrier by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Barrier is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Barrier is based on CosmoBarrier by Richard Lee and Adam Feder.&lt;br /&gt;
+The Barrier GUI is based on QBarrier by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</oldsource>
         <translation type="unfinished"></translation>
@@ -202,7 +202,7 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="364"/>
-        <source>&lt;p&gt;Your version of Synergy is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Your version of Barrier is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
         <oldsource>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
@@ -218,13 +218,13 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="596"/>
-        <source>Synergy client not found</source>
+        <source>Barrier client not found</source>
         <translation type="finished">Klienti nuk u gjet</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="597"/>
-        <source>The executable for the synergy client does not exist.</source>
-        <translation type="finished">Skedari i ekzekutueshem per serverin e synergy nuk egziston.</translation>
+        <source>The executable for the barrier client does not exist.</source>
+        <translation type="finished">Skedari i ekzekutueshem per serverin e barrier nuk egziston.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="625"/>
@@ -233,7 +233,7 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="626"/>
-        <source>Please fill in a hostname for the synergy client to connect to.</source>
+        <source>Please fill in a hostname for the barrier client to connect to.</source>
         <translation type="finished">Ju lutem vendosni nje host te klientit qe deshironi te lidheni.</translation>
     </message>
     <message>
@@ -243,8 +243,8 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="646"/>
-        <source>The temporary configuration file required to start synergy can not be written.</source>
-        <translation type="finished">Skedari i perkohshem qe eshte i nevojshem per te startuar Synergy nuk mund te shkruhet.</translation>
+        <source>The temporary configuration file required to start barrier can not be written.</source>
+        <translation type="finished">Skedari i perkohshem qe eshte i nevojshem per te startuar Barrier nuk mund te shkruhet.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="659"/>
@@ -253,28 +253,28 @@ Visit our website for help and info (symless.com).
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="660"/>
-        <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
+        <source>You have not filled in a valid configuration file for the barrier server. Do you want to browse for the configuration file now?</source>
         <translation type="finished">Nuk keni krijuar nje skedar konfiguracioni per serverin synergu. Deshironi te kerkoni per nje skedar konfiguracioni tani?</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="688"/>
-        <source>Synergy server not found</source>
-        <translation type="finished">Serveri Synergy nuk u gjet</translation>
+        <source>Barrier server not found</source>
+        <translation type="finished">Serveri Barrier nuk u gjet</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="689"/>
-        <source>The executable for the synergy server does not exist.</source>
-        <translation type="finished">Skedari i ekzekutueshem per serverin e synergy nuk egziston.</translation>
+        <source>The executable for the barrier server does not exist.</source>
+        <translation type="finished">Skedari i ekzekutueshem per serverin e barrier nuk egziston.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
-        <source>Synergy terminated with an error</source>
-        <translation type="finished">Synergy ndaloi nga nje gabim</translation>
+        <source>Barrier terminated with an error</source>
+        <translation type="finished">Barrier ndaloi nga nje gabim</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
-        <source>Synergy terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
-        <translation type="finished">Synergy ndaloi papritur me nje kod gabimi %1.&lt;br&gt;&lt;br&gt; Ju lutem shikoni detajet e te dhenave.</translation>
+        <source>Barrier terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
+        <translation type="finished">Barrier ndaloi papritur me nje kod gabimi %1.&lt;br&gt;&lt;br&gt; Ju lutem shikoni detajet e te dhenave.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="783"/>
@@ -322,18 +322,18 @@ Do you want to install Bonjour?</source>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="815"/>
-        <source>Synergy is starting.</source>
-        <translation type="finished">Synergy po fillon.</translation>
+        <source>Barrier is starting.</source>
+        <translation type="finished">Barrier po fillon.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="809"/>
-        <source>Synergy is running.</source>
+        <source>Barrier is running.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="819"/>
-        <source>Synergy is not running.</source>
-        <translation type="finished">Synergy nuk po ekzekutohet.</translation>
+        <source>Barrier is not running.</source>
+        <translation type="finished">Barrier nuk po ekzekutohet.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="870"/>
@@ -344,17 +344,17 @@ Do you want to install Bonjour?</source>
         <location filename="src/MainWindow.cpp" line="1146"/>
         <location filename="src/MainWindow.cpp" line="1225"/>
         <location filename="src/MainWindow.cpp" line="1269"/>
-        <source>Synergy</source>
-        <translation type="finished">Synergy</translation>
+        <source>Barrier</source>
+        <translation type="finished">Barrier</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="987"/>
-        <source>Browse for a synergys config file</source>
-        <translation type="finished">Kerko per nje skedarin e konfigurimit te Synergy</translation>
+        <source>Browse for a barriers config file</source>
+        <translation type="finished">Kerko per nje skedarin e konfigurimit te Barrier</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="408"/>
-        <source>Synergy is now connected, You can close the config window. Synergy will remain connected in the background.</source>
+        <source>Barrier is now connected, You can close the config window. Barrier will remain connected in the background.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -393,8 +393,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>MainWindowBase</name>
     <message>
         <location filename="res/MainWindowBase.ui" line="26"/>
-        <source>Synergy</source>
-        <translation type="finished">Synergy</translation>
+        <source>Barrier</source>
+        <translation type="finished">Barrier</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="90"/>
@@ -479,8 +479,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="390"/>
-        <source>&amp;About Synergy...</source>
-        <translation type="finished">Rreth Synergy...</translation>
+        <source>&amp;About Barrier...</source>
+        <translation type="finished">Rreth Barrier...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="398"/>
@@ -599,8 +599,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>PluginWizardPage</name>
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="14"/>
-        <source>Setup Synergy</source>
-        <translation type="finished">Vendos Synergy</translation>
+        <source>Setup Barrier</source>
+        <translation type="finished">Vendos Barrier</translation>
     </message>
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="101"/>
@@ -648,13 +648,13 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>QObject</name>
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
-        <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
-        <translation type="finished">Konfiguracioni i Synergy  (*.sgc);;Te gjithe  (*.*)</translation>
+        <source>Barrier Configurations (*.sgc);;All files (*.*)</source>
+        <translation type="finished">Konfiguracioni i Barrier  (*.sgc);;Te gjithe  (*.*)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="67"/>
-        <source>Synergy Configurations (*.conf);;All files (*.*)</source>
-        <translation type="finished">Konfiguracioni i Synergy  (*.conf);;Te gjithe  (*.*)</translation>
+        <source>Barrier Configurations (*.conf);;All files (*.*)</source>
+        <translation type="finished">Konfiguracioni i Barrier  (*.conf);;Te gjithe  (*.*)</translation>
     </message>
     <message>
         <location filename="src/main.cpp" line="119"/>
@@ -887,7 +887,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="60"/>
-        <source>Configure the layout of your synergy server configuration.</source>
+        <source>Configure the layout of your barrier server configuration.</source>
         <translation type="finished">Konfiguroni paraqitjen e konfiguraciont te serverit.</translation>
     </message>
     <message>
@@ -1046,16 +1046,16 @@ Dopjo klik mbi nje ekran per te ndryshuar konfigurimet e tij.</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="151"/>
-        <source>Elevate Synergy</source>
-        <translation type="finished">Permireso Synergy</translation>
+        <source>Elevate Barrier</source>
+        <translation type="finished">Permireso Barrier</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="152"/>
-        <source>Are you sure you want to elevate Synergy?
+        <source>Are you sure you want to elevate Barrier?
 
-This allows Synergy to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Synergy only if you really need to.</source>
-        <translation type="finished"> Jeni te sigurte qe doni te permiresoni Synergy?
-Kjo i jep mundesi Synergy te bashkeveproje me procese te larta dhe UAC, por ju mund te shkaktoni probleme me proceset e uleta. Permiresoni Synergy vetem nese ju nevojitet.</translation>
+This allows Barrier to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Barrier only if you really need to.</source>
+        <translation type="finished"> Jeni te sigurte qe doni te permiresoni Barrier?
+Kjo i jep mundesi Barrier te bashkeveproje me procese te larta dhe UAC, por ju mund te shkaktoni probleme me proceset e uleta. Permiresoni Barrier vetem nese ju nevojitet.</translation>
     </message>
 </context>
 <context>
@@ -1170,8 +1170,8 @@ Kjo i jep mundesi Synergy te bashkeveproje me procese te larta dhe UAC, por ju m
     <name>SetupWizard</name>
     <message>
         <location filename="src/SetupWizard.cpp" line="72"/>
-        <source>Setup Synergy</source>
-        <translation type="finished">Vendos Synergy</translation>
+        <source>Setup Barrier</source>
+        <translation type="finished">Vendos Barrier</translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="113"/>
@@ -1188,8 +1188,8 @@ Kjo i jep mundesi Synergy te bashkeveproje me procese te larta dhe UAC, por ju m
     <name>SetupWizardBase</name>
     <message>
         <location filename="res/SetupWizardBase.ui" line="26"/>
-        <source>Setup Synergy</source>
-        <translation type="finished">Vendos Synergy</translation>
+        <source>Setup Barrier</source>
+        <translation type="finished">Vendos Barrier</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="30"/>
@@ -1198,12 +1198,12 @@ Kjo i jep mundesi Synergy te bashkeveproje me procese te larta dhe UAC, por ju m
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="39"/>
-        <source>Thanks for installing Synergy!</source>
+        <source>Thanks for installing Barrier!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="114"/>
-        <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
+        <source>Barrier lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Barrier is cross-platform (works on Windows, Mac OS X and Linux).</source>
         <translation type="finished">Sunergy ju mundeson lehtesisht te ndani mausin dhe tastieren me disa komopjutera te tjere ne tavolinen tuaj, eshte FALAS dhe me KOD TE HAPUR. Vetem levizni mausin nga kompjuteri juaj ne nje kompjuter tjeter. Madje mund te beni ndani te gjitha ekranet. Ju duhet vem nje lidhje interneti. Sunergy eshte nje platformi e gjere (punon ne Windows, MAC OS X dhe Linux).</translation>
     </message>
     <message>
@@ -1390,8 +1390,8 @@ Server response:
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="140"/>
-        <source>Synergy</source>
-        <translation type="finished">Synergy</translation>
+        <source>Barrier</source>
+        <translation type="finished">Barrier</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="141"/>

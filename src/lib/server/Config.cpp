@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -19,8 +19,8 @@
 #include "server/Config.h"
 
 #include "server/Server.h"
-#include "synergy/KeyMap.h"
-#include "synergy/key_types.h"
+#include "barrier/KeyMap.h"
+#include "barrier/key_types.h"
 #include "net/XSocket.h"
 #include "base/IEventQueue.h"
 #include "common/stdistream.h"
@@ -28,7 +28,7 @@
 
 #include <cstdlib>
 
-using namespace synergy::string;
+using namespace barrier::string;
 
 //
 // Config
@@ -280,9 +280,9 @@ Config::disconnect(const String& srcName, EDirection srcSide, float position)
 }
 
 void
-Config::setSynergyAddress(const NetworkAddress& addr)
+Config::setBarrierAddress(const NetworkAddress& addr)
 {
-	m_synergyAddress = addr;
+	m_barrierAddress = addr;
 }
 
 bool
@@ -529,9 +529,9 @@ Config::endNeighbor(const String& srcName) const
 }
 
 const NetworkAddress&
-Config::getSynergyAddress() const
+Config::getBarrierAddress() const
 {
-	return m_synergyAddress;
+	return m_barrierAddress;
 }
 
 const Config::ScreenOptions*
@@ -562,7 +562,7 @@ Config::hasLockToScreenAction() const
 bool
 Config::operator==(const Config& x) const
 {
-	if (m_synergyAddress != x.m_synergyAddress) {
+	if (m_barrierAddress != x.m_barrierAddress) {
 		return false;
 	}
 	if (m_map.size() != x.m_map.size()) {
@@ -647,7 +647,7 @@ Config::formatInterval(const Interval& x)
 	if (x.first == 0.0f && x.second == 1.0f) {
 		return "";
 	}
-	return synergy::string::sprintf("(%d,%d)", (int)(x.first * 100.0f + 0.5f),
+	return barrier::string::sprintf("(%d,%d)", (int)(x.first * 100.0f + 0.5f),
 										(int)(x.second * 100.0f + 0.5f));
 }
 
@@ -724,8 +724,8 @@ Config::readSectionOptions(ConfigReadContext& s)
 		bool handled = true;
 		if (name == "address") {
 			try {
-				m_synergyAddress = NetworkAddress(value, kDefaultPort);
-				m_synergyAddress.resolve();
+				m_barrierAddress = NetworkAddress(value, kDefaultPort);
+				m_barrierAddress.resolve();
 			}
 			catch (XSocketAddress& e) {
 				throw XConfigRead(s,
@@ -1436,7 +1436,7 @@ Config::getOptionValue(OptionID id, OptionValue value)
 		id == kOptionScreenSwitchCornerSize ||
 		id == kOptionScreenSwitchDelay ||
 		id == kOptionScreenSwitchTwoTap) {
-		return synergy::string::sprintf("%d", value);
+		return barrier::string::sprintf("%d", value);
 	}
 	if (id == kOptionScreenSwitchCorners) {
 		std::string result("none");
@@ -1862,9 +1862,9 @@ operator<<(std::ostream& s, const Config& config)
 			}
 		}
 	}
-	if (config.m_synergyAddress.isValid()) {
+	if (config.m_barrierAddress.isValid()) {
 		s << "\taddress = " <<
-			config.m_synergyAddress.getHostname().c_str() << std::endl;
+			config.m_barrierAddress.getHostname().c_str() << std::endl;
 	}
 	s << config.m_inputFilter.format("\t");
 	s << "end" << std::endl;
@@ -1917,7 +1917,7 @@ ConfigReadContext::readLine(String& line)
 				if (!isgraph(line[i]) && line[i] != ' ' && line[i] != '\t') {
 					throw XConfigRead(*this,
 								"invalid character %{1}",
-								synergy::string::sprintf("%#2x", line[i]));
+								barrier::string::sprintf("%#2x", line[i]));
 				}
 			}
 
@@ -2233,12 +2233,12 @@ ConfigReadContext::parseKeystroke(const String& keystroke,
 	String s = keystroke;
 
 	KeyModifierMask mask;
-	if (!synergy::KeyMap::parseModifiers(s, mask)) {
+	if (!barrier::KeyMap::parseModifiers(s, mask)) {
 		throw XConfigRead(*this, "unable to parse key modifiers");
 	}
 
 	KeyID key;
-	if (!synergy::KeyMap::parseKey(s, key)) {
+	if (!barrier::KeyMap::parseKey(s, key)) {
 		throw XConfigRead(*this, "unable to parse key");
 	}
 
@@ -2255,7 +2255,7 @@ ConfigReadContext::parseMouse(const String& mouse) const
 	String s = mouse;
 
 	KeyModifierMask mask;
-	if (!synergy::KeyMap::parseModifiers(s, mask)) {
+	if (!barrier::KeyMap::parseModifiers(s, mask)) {
 		throw XConfigRead(*this, "unable to parse button modifiers");
 	}
 
@@ -2277,7 +2277,7 @@ ConfigReadContext::parseModifier(const String& modifiers) const
 	String s = modifiers;
 
 	KeyModifierMask mask;
-	if (!synergy::KeyMap::parseModifiers(s, mask)) {
+	if (!barrier::KeyMap::parseModifiers(s, mask)) {
 		throw XConfigRead(*this, "unable to parse modifiers");
 	}
 
@@ -2309,7 +2309,7 @@ ConfigReadContext::concatArgs(const ArgList& args)
 
 XConfigRead::XConfigRead(const ConfigReadContext& context,
 				const String& error) :
-	m_error(synergy::string::sprintf("line %d: %s",
+	m_error(barrier::string::sprintf("line %d: %s",
 							context.getLineNumber(), error.c_str()))
 {
 	// do nothing
@@ -2317,8 +2317,8 @@ XConfigRead::XConfigRead(const ConfigReadContext& context,
 
 XConfigRead::XConfigRead(const ConfigReadContext& context,
 				const char* errorFmt, const String& arg) :
-	m_error(synergy::string::sprintf("line %d: ", context.getLineNumber()) +
-							synergy::string::format(errorFmt, arg.c_str()))
+	m_error(barrier::string::sprintf("line %d: ", context.getLineNumber()) +
+							barrier::string::format(errorFmt, arg.c_str()))
 {
 	// do nothing
 }

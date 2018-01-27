@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -494,16 +494,16 @@ TCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
     // non-blocking stream socket that fails to connect immediately is
     // reported by select as being writable (i.e. connected) even when
     // the connection has failed.  this is easily demonstrated on OS X
-    // 10.3.4 by starting a synergy client and telling to connect to
-    // another system that's not running a synergy server.  it will
+    // 10.3.4 by starting a barrier client and telling to connect to
+    // another system that's not running a barrier server.  it will
     // claim to have connected then quickly disconnect (i guess because
-    // read returns 0 bytes).  unfortunately, synergy attempts to
+    // read returns 0 bytes).  unfortunately, barrier attempts to
     // reconnect immediately, the process repeats and we end up
     // spinning the CPU.  luckily, OS X does set SO_ERROR on the
     // socket correctly when the connection has failed so checking for
     // errors works.  (curiously, sometimes OS X doesn't report
     // connection refused.  when that happens it at least doesn't
-    // report the socket as being writable so synergy is able to time
+    // report the socket as being writable so barrier is able to time
     // out the attempt.)
     if (error || true) {
         try {

@@ -1,0 +1,27 @@
+Name: barrier
+Version: @BARRIER_VERSION@
+Summary: Keyboard and mouse sharing solution
+Group: Applications/Productivity
+URL: https://github.com/debauchee/barrier/
+Source: https://github.com/debauchee/barrier/
+Vendor: Debauchee
+Packager: Debauchee <todo@mail.com>
+License: GPLv2
+Release: @BARRIER_BUILD_NUMBER@@BARRIER_SNAPSHOT_INFO@%{?dist}
+
+%description
+Barrier allows you to share one mouse and keyboard between multiple computers.
+Work seamlessly across Windows, macOS and Linux.
+
+%files
+%defattr(755,root,root,-)
+%{_bindir}/barrier
+%{_bindir}/barrierc
+%{_bindir}/barriers
+%{_bindir}/syntool
+%attr(644,-,-) %{_datarootdir}/applications/barrier.desktop
+%attr(644,-,-) %{_datarootdir}/icons/hicolor/scalable/apps/barrier.svg
+
+%changelog
+* Sat Jan 27 2018 Debauchee <todo@mail.com>
+- Initial version of the package

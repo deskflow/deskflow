@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -28,7 +28,7 @@
 This interface defines the methods common to all network sockets that
 represent a full-duplex data stream.
 */
-class IDataSocket : public ISocket, public synergy::IStream {
+class IDataSocket : public ISocket, public barrier::IStream {
 public:
     class ConnectionFailedInfo {
     public:

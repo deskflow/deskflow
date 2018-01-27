@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
@@ -26,7 +26,7 @@
 #include <cstddef>
 #include <algorithm>
 #if X_DISPLAY_MISSING
-#    error X11 is required to build synergy
+#    error X11 is required to build barrier
 #else
 #    include <X11/X.h>
 #    include <X11/Xutil.h>
@@ -52,7 +52,7 @@ XWindowsKeyState::XWindowsKeyState(
 
 XWindowsKeyState::XWindowsKeyState(
     Display* display, bool useXKB,
-    IEventQueue* events, synergy::KeyMap& keyMap) :
+    IEventQueue* events, barrier::KeyMap& keyMap) :
     KeyState(events, keyMap),
     m_display(display),
     m_modifierFromX(ModifiersFromXDefaultSize)
@@ -218,10 +218,10 @@ XWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 }
 
 void
-XWindowsKeyState::getKeyMap(synergy::KeyMap& keyMap)
+XWindowsKeyState::getKeyMap(barrier::KeyMap& keyMap)
 {
     // get autorepeat info.  we must use the global_auto_repeat told to
-    // us because it may have modified by synergy.
+    // us because it may have modified by barrier.
     int oldGlobalAutoRepeat = m_keyboardState.global_auto_repeat;
     XGetKeyboardControl(m_display, &m_keyboardState);
     m_keyboardState.global_auto_repeat = oldGlobalAutoRepeat;
@@ -297,7 +297,7 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
 }
 
 void
-XWindowsKeyState::updateKeysymMap(synergy::KeyMap& keyMap)
+XWindowsKeyState::updateKeysymMap(barrier::KeyMap& keyMap)
 {
     // there are up to 4 keysyms per keycode
     static const int maxKeysyms = 4;
@@ -391,7 +391,7 @@ XWindowsKeyState::updateKeysymMap(synergy::KeyMap& keyMap)
     }
 
     // add entries for each keycode
-    synergy::KeyMap::KeyItem item;
+    barrier::KeyMap::KeyItem item;
     for (int i = 0; i < numKeycodes; ++i) {
         KeySym* keysyms = allKeysyms + maxKeysyms * i;
         KeyCode keycode = static_cast<KeyCode>(i + minKeycode);
@@ -495,7 +495,7 @@ XWindowsKeyState::updateKeysymMap(synergy::KeyMap& keyMap)
             item.m_lock      = false;
             if (modifierButtons.count(keycode) > 0) {
                 // get flags for modifier keys
-                synergy::KeyMap::initModifierKey(item);
+                barrier::KeyMap::initModifierKey(item);
 
                 // add mapping from X (unless we already have)
                 if (item.m_generates != 0) {
@@ -543,7 +543,7 @@ XWindowsKeyState::updateKeysymMap(synergy::KeyMap& keyMap)
 
 #if HAVE_XKB_EXTENSION
 void
-XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
+XWindowsKeyState::updateKeysymMapXKB(barrier::KeyMap& keyMap)
 {
     static const XkbKTMapEntryRec defMapEntry = {
         True,        // active
@@ -589,7 +589,7 @@ XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
 
     // check every button.  on this pass we save all modifiers as native
     // X modifier masks.
-    synergy::KeyMap::KeyItem item;
+    barrier::KeyMap::KeyItem item;
     for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
         KeyCode keycode = static_cast<KeyCode>(i);
         item.m_button   = static_cast<KeyButton>(keycode);
@@ -773,7 +773,7 @@ XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
         }
     }
 
-    // change all modifier masks to synergy masks from X masks
+    // change all modifier masks to barrier masks from X masks
     keyMap.foreachKey(&XWindowsKeyState::remapKeyModifiers, this);
 
     // allow composition across groups
@@ -783,7 +783,7 @@ XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
 
 void
 XWindowsKeyState::remapKeyModifiers(KeyID id, SInt32 group,
-                            synergy::KeyMap::KeyItem& item, void* vself)
+                            barrier::KeyMap::KeyItem& item, void* vself)
 {
     XWindowsKeyState* self = static_cast<XWindowsKeyState*>(vself);
     item.m_required  =

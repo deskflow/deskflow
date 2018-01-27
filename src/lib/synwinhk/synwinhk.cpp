@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -18,7 +18,7 @@
 
 #include "synwinhk/synwinhk.h"
 
-#include "synergy/protocol_types.h"
+#include "barrier/protocol_types.h"
 
 #include <zmouse.h>
 #include <tchar.h>
@@ -195,11 +195,11 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
     // passing events through and not report them to the server.  this
     // is used to allow the server to synthesize events locally but
     // not pick them up as user events.
-    if (wParam == SYNERGY_HOOK_FAKE_INPUT_VIRTUAL_KEY &&
-        ((lParam >> 16) & 0xffu) == SYNERGY_HOOK_FAKE_INPUT_SCANCODE) {
+    if (wParam == BARRIER_HOOK_FAKE_INPUT_VIRTUAL_KEY &&
+        ((lParam >> 16) & 0xffu) == BARRIER_HOOK_FAKE_INPUT_SCANCODE) {
         // update flag
         g_fakeInput = ((lParam & 0x80000000u) == 0);
-        PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+        PostThreadMessage(g_threadID, BARRIER_MSG_DEBUG,
                                 0xff000000u | wParam, lParam);
 
         // discard event
@@ -209,7 +209,7 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
     // if we're expecting fake input then just pass the event through
     // and do not forward to the server
     if (g_fakeInput) {
-        PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+        PostThreadMessage(g_threadID, BARRIER_MSG_DEBUG,
                                 0xfe000000u | wParam, lParam);
         return false;
     }
@@ -221,13 +221,13 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
     }
 
     // tell server about event
-    PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG, wParam, lParam);
+    PostThreadMessage(g_threadID, BARRIER_MSG_DEBUG, wParam, lParam);
 
     // ignore dead key release
     if ((g_deadVirtKey == wParam || g_deadRelease == wParam) &&
         (lParam & 0x80000000u) != 0) {
         g_deadRelease = 0;
-        PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+        PostThreadMessage(g_threadID, BARRIER_MSG_DEBUG,
                         wParam | 0x04000000, lParam);
         return false;
     }
@@ -309,13 +309,13 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
     // if mapping failed and ctrl and alt are pressed then try again
     // with both not pressed.  this handles the case where ctrl and
     // alt are being used as individual modifiers rather than AltGr.
-    // we note that's the case in the message sent back to synergy
+    // we note that's the case in the message sent back to barrier
     // because there's no simple way to deduce it after the fact.
     // we have to put the dead key back first, if there was one.
     bool noAltGr = false;
     if (n == 0 && (control & 0x80) != 0 && (menu & 0x80) != 0) {
         noAltGr = true;
-        PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+        PostThreadMessage(g_threadID, BARRIER_MSG_DEBUG,
                             wParam | 0x05000000, lParam);
         if (g_deadVirtKey != 0) {
             if (ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
@@ -339,7 +339,7 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
         n = ToAscii((UINT)wParam, scanCode, keys2, &c, flags);
     }
 
-    PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+    PostThreadMessage(g_threadID, BARRIER_MSG_DEBUG,
                             wParam | ((c & 0xff) << 8) |
                             ((n & 0xff) << 16) | 0x06000000,
                             lParam);
@@ -381,9 +381,9 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
         // and release for the dead key to our window.
         WPARAM deadCharAndVirtKey =
                             makeKeyMsg((UINT)g_deadVirtKey, (char)LOBYTE(c), noAltGr);
-        PostThreadMessage(g_threadID, SYNERGY_MSG_KEY,
+        PostThreadMessage(g_threadID, BARRIER_MSG_KEY,
                             deadCharAndVirtKey, g_deadLParam & 0x7fffffffu);
-        PostThreadMessage(g_threadID, SYNERGY_MSG_KEY,
+        PostThreadMessage(g_threadID, BARRIER_MSG_KEY,
                             deadCharAndVirtKey, g_deadLParam | 0x80000000u);
 
         // use uncomposed character
@@ -412,9 +412,9 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
     // XXX -- with hot keys for actions we may only need to do this when
     // forwarding.
     if (charAndVirtKey != 0) {
-        PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+        PostThreadMessage(g_threadID, BARRIER_MSG_DEBUG,
                             charAndVirtKey | 0x07000000, lParam);
-        PostThreadMessage(g_threadID, SYNERGY_MSG_KEY, charAndVirtKey, lParam);
+        PostThreadMessage(g_threadID, BARRIER_MSG_KEY, charAndVirtKey, lParam);
     }
 
     if (g_mode == kHOOK_RELAY_EVENTS) {
@@ -483,13 +483,13 @@ doMouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
     case WM_NCRBUTTONUP:
     case WM_NCXBUTTONUP:
         // always relay the event.  eat it if relaying.
-        PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_BUTTON, wParam, data);
+        PostThreadMessage(g_threadID, BARRIER_MSG_MOUSE_BUTTON, wParam, data);
         return (g_mode == kHOOK_RELAY_EVENTS);
 
     case WM_MOUSEWHEEL:
         if (g_mode == kHOOK_RELAY_EVENTS) {
             // relay event
-            PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_WHEEL, data, 0);
+            PostThreadMessage(g_threadID, BARRIER_MSG_MOUSE_WHEEL, data, 0);
         }
         return (g_mode == kHOOK_RELAY_EVENTS);
 
@@ -497,7 +497,7 @@ doMouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
     case WM_MOUSEMOVE:
         if (g_mode == kHOOK_RELAY_EVENTS) {
             // relay and eat event
-            PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
+            PostThreadMessage(g_threadID, BARRIER_MSG_MOUSE_MOVE, x, y);
             return true;
         }
         else if (g_mode == kHOOK_WATCH_JUMP_ZONE) {
@@ -544,7 +544,7 @@ doMouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
             }
 
             // relay the event
-            PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
+            PostThreadMessage(g_threadID, BARRIER_MSG_MOUSE_MOVE, x, y);
 
             // if inside and not bogus then eat the event
             return inside && !bogus;
@@ -634,7 +634,7 @@ getMessageHook(int code, WPARAM wParam, LPARAM lParam)
                 msg->wParam  == SC_SCREENSAVE) {
                 // broadcast screen saver started message
                 PostThreadMessage(g_threadID,
-                                SYNERGY_MSG_SCREEN_SAVER, TRUE, 0);
+                                BARRIER_MSG_SCREEN_SAVER, TRUE, 0);
             }
         }
         if (g_mode == kHOOK_RELAY_EVENTS) {
@@ -642,7 +642,7 @@ getMessageHook(int code, WPARAM wParam, LPARAM lParam)
             if (g_wheelSupport == kWheelOld && msg->message == g_wmMouseWheel) {
                 // post message to our window
                 PostThreadMessage(g_threadID,
-                                SYNERGY_MSG_MOUSE_WHEEL,
+                                BARRIER_MSG_MOUSE_WHEEL,
                                 static_cast<SInt16>(msg->wParam & 0xffffu), 0);
 
                 // zero out the delta in the message so it's (hopefully)

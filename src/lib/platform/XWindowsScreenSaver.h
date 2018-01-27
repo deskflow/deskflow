@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -18,12 +18,12 @@
 
 #pragma once
 
-#include "synergy/IScreenSaver.h"
+#include "barrier/IScreenSaver.h"
 #include "base/IEventQueue.h"
 #include "common/stdmap.h"
 
 #if X_DISPLAY_MISSING
-#    error X11 is required to build synergy
+#    error X11 is required to build barrier
 #else
 #    include <X11/Xlib.h>
 #endif

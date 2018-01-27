@@ -19,7 +19,7 @@
      <property name="text">
       <string>Are you sure?
 
-If you don't activate Synergy you'll be missing out on some great features.</string>
+If you don't activate Barrier you'll be missing out on some great features.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

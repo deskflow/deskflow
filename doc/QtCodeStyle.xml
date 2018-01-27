@@ -34,7 +34,7 @@
  </data>
  <data>
   <variable>DisplayName</variable>
-  <value type="QString">Synergy</value>
+  <value type="QString">Barrier</value>
  </data>
 </qtcreator>
 <?xml version="1.0" encoding="UTF-8"?>
@@ -73,7 +73,7 @@
  </data>
  <data>
   <variable>DisplayName</variable>
-  <value type="QString">Synergy</value>
+  <value type="QString">Barrier</value>
  </data>
 </qtcreator>
 <?xml version="1.0" encoding="UTF-8"?>
@@ -112,7 +112,7 @@
  </data>
  <data>
   <variable>DisplayName</variable>
-  <value type="QString">Synergy</value>
+  <value type="QString">Barrier</value>
  </data>
 </qtcreator>
 <?xml version="1.0" encoding="UTF-8"?>
@@ -151,7 +151,7 @@
  </data>
  <data>
   <variable>DisplayName</variable>
-  <value type="QString">Synergy</value>
+  <value type="QString">Barrier</value>
  </data>
 </qtcreator>
 <?xml version="1.0" encoding="UTF-8"?>
@@ -190,7 +190,7 @@
  </data>
  <data>
   <variable>DisplayName</variable>
-  <value type="QString">Synergy</value>
+  <value type="QString">Barrier</value>
  </data>
 </qtcreator>
 <?xml version="1.0" encoding="UTF-8"?>
@@ -229,6 +229,6 @@
  </data>
  <data>
   <variable>DisplayName</variable>
-  <value type="QString">Synergy</value>
+  <value type="QString">Barrier</value>
  </data>
 </qtcreator>

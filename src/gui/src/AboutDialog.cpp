@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
@@ -21,20 +21,20 @@
 #include <QtCore>
 #include <QtGui>
 
-AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
+AboutDialog::AboutDialog(QWidget* parent, const QString& barrierApp) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::AboutDialogBase()
 {
 	setupUi(this);
 
-	m_versionChecker.setApp(synergyApp);
+	m_versionChecker.setApp(barrierApp);
 	QString version = m_versionChecker.getVersion();
-	version = version + '-' + SYNERGY_VERSION_STAGE;
-#ifdef SYNERGY_REVISION
+	version = version + '-' + BARRIER_VERSION_STAGE;
+#ifdef BARRIER_REVISION
     version +=  '-';
-    version += SYNERGY_REVISION;
+    version += BARRIER_REVISION;
 #endif
-	m_pLabelSynergyVersion->setText(version);
+	m_pLabelBarrierVersion->setText(version);
 
 	QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
 	QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");

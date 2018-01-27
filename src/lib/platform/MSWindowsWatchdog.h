@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2009 Chris Schoeneman
  *
@@ -19,7 +19,7 @@
 #pragma once
 
 #include "platform/MSWindowsSession.h"
-#include "synergy/XSynergy.h"
+#include "barrier/XBarrier.h"
 #include "arch/IArchMultithread.h"
 
 #define WIN32_LEAN_AND_MEAN
@@ -87,9 +87,9 @@ private:
 /*!
 An error occured in the process watchdog.
 */
-class XMSWindowsWatchdogError : public XSynergy {
+class XMSWindowsWatchdogError : public XBarrier {
 public:
-    XMSWindowsWatchdogError(const String& msg) : XSynergy(msg) { }
+    XMSWindowsWatchdogError(const String& msg) : XBarrier(msg) { }
 
     // XBase overrides
     virtual String        getWhat() const throw() { return what(); }

@@ -1,0 +1,8 @@
+#!/bin/sh
+cd "$(dirname $0)" || exit 1
+rm -rf build
+mkdir build || exit 1
+cd build || exit 1
+cmake -D CMAKE_BUILD_TYPE=Debug .. || exit 1
+make || exit 1
+echo "Build completed successfully"

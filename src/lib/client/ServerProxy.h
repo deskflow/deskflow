@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "synergy/clipboard_types.h"
-#include "synergy/key_types.h"
+#include "barrier/clipboard_types.h"
+#include "barrier/key_types.h"
 #include "base/Event.h"
 #include "base/Stopwatch.h"
 #include "base/String.h"
@@ -28,7 +28,7 @@ class Client;
 class ClientInfo;
 class EventQueueTimer;
 class IClipboard;
-namespace synergy { class IStream; }
+namespace barrier { class IStream; }
 class IEventQueue;
 
 //! Proxy for server
@@ -42,7 +42,7 @@ public:
     Process messages from the server on \p stream and forward to
     \p client.
     */
-    ServerProxy(Client* client, synergy::IStream* stream, IEventQueue* events);
+    ServerProxy(Client* client, barrier::IStream* stream, IEventQueue* events);
     ~ServerProxy();
 
     //! @name manipulators
@@ -112,7 +112,7 @@ private:
     typedef EResult (ServerProxy::*MessageParser)(const UInt8*);
 
     Client*            m_client;
-    synergy::IStream*    m_stream;
+    barrier::IStream*    m_stream;
 
     UInt32                m_seqNum;
 

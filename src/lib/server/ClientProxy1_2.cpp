@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -18,14 +18,14 @@
 
 #include "server/ClientProxy1_2.h"
 
-#include "synergy/ProtocolUtil.h"
+#include "barrier/ProtocolUtil.h"
 #include "base/Log.h"
 
 //
 // ClientProxy1_1
 //
 
-ClientProxy1_2::ClientProxy1_2(const String& name, synergy::IStream* stream, IEventQueue* events) :
+ClientProxy1_2::ClientProxy1_2(const String& name, barrier::IStream* stream, IEventQueue* events) :
     ClientProxy1_1(name, stream, events)
 {
     // do nothing

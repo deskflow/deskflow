@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
@@ -21,7 +21,7 @@
 #include "arch/IArchTaskBarReceiver.h"
 #include "arch/Arch.h"
 #include "arch/XArch.h"
-#include "synergy/win32/AppUtilWindows.h"
+#include "barrier/win32/AppUtilWindows.h"
 
 #include <string.h>
 #include <shellapi.h>
@@ -447,7 +447,7 @@ ArchTaskBarWindows::threadMainLoop()
     m_taskBarRestart        = RegisterWindowMessage(TEXT("TaskbarCreated"));
 
     // register a window class
-    LPCTSTR className = TEXT("SynergyTaskBar");
+    LPCTSTR className = TEXT("BarrierTaskBar");
     WNDCLASSEX classInfo;
     classInfo.cbSize        = sizeof(classInfo);
     classInfo.style         = CS_NOCLOSE;
@@ -466,7 +466,7 @@ ArchTaskBarWindows::threadMainLoop()
     // create window
     m_hwnd = CreateWindowEx(WS_EX_TOOLWINDOW,
                             className,
-                            TEXT("Synergy Task Bar"),
+                            TEXT("Barrier Task Bar"),
                             WS_POPUP,
                             0, 0, 1, 1,
                             NULL,

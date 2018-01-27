@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2013-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
@@ -22,15 +22,15 @@
 
 #include "test/mock/server/MockConfig.h"
 #include "test/mock/server/MockPrimaryClient.h"
-#include "test/mock/synergy/MockScreen.h"
+#include "test/mock/barrier/MockScreen.h"
 #include "test/mock/server/MockInputFilter.h"
 #include "test/global/TestEventQueue.h"
 #include "server/Server.h"
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
 #include "client/Client.h"
-#include "synergy/FileChunk.h"
-#include "synergy/StreamChunker.h"
+#include "barrier/FileChunk.h"
+#include "barrier/StreamChunker.h"
 #include "net/SocketMultiplexer.h"
 #include "net/NetworkAddress.h"
 #include "net/TCPSocketFactory.h"
@@ -424,7 +424,7 @@ void
 NetworkTests::sendMockData(void* eventTarget)
 {
     // send first message (file size)
-    String size = synergy::string::sizeTypeToString(kMockDataSize);
+    String size = barrier::string::sizeTypeToString(kMockDataSize);
     FileChunk* sizeMessage = FileChunk::start(size);
     
     m_events.addEvent(Event(m_events.forFile().fileChunkSending(), eventTarget, sizeMessage));
@@ -468,19 +468,19 @@ newMockData(size_t size)
     size_t headSize = sizeof(head) - 1;
     const UInt8 tail[] = "... mock tail";
     size_t tailSize = sizeof(tail) - 1;
-    const UInt8 synergyRocks[] = "synergy\0 rocks! ";
-    size_t synergyRocksSize = sizeof(synergyRocks) - 1;
+    const UInt8 barrierRocks[] = "barrier\0 rocks! ";
+    size_t barrierRocksSize = sizeof(barrierRocks) - 1;
 
     memcpy(data, head, headSize);
     data += headSize;
 
-    size_t times = (size - headSize - tailSize) / synergyRocksSize;
+    size_t times = (size - headSize - tailSize) / barrierRocksSize;
     for (size_t i = 0; i < times; ++i) {
-        memcpy(data, synergyRocks, synergyRocksSize);
-        data += synergyRocksSize;
+        memcpy(data, barrierRocks, barrierRocksSize);
+        data += barrierRocksSize;
     }
 
-    size_t remainder = (size - headSize - tailSize) % synergyRocksSize;
+    size_t remainder = (size - headSize - tailSize) % barrierRocksSize;
     if (remainder != 0) {
         memset(data, '.', remainder);
         data += remainder;

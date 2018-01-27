@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -23,7 +23,7 @@
 #include "base/String.h"
 #include "base/EventTypes.h"
 
-namespace synergy { class IStream; }
+namespace barrier { class IStream; }
 
 //! Generic proxy for client
 class ClientProxy : public BaseClientProxy {
@@ -31,7 +31,7 @@ public:
     /*!
     \c name is the name of the client.
     */
-    ClientProxy(const String& name, synergy::IStream* adoptedStream);
+    ClientProxy(const String& name, barrier::IStream* adoptedStream);
     ~ClientProxy();
 
     //! @name manipulators
@@ -51,7 +51,7 @@ public:
     /*!
     Returns the original stream passed to the c'tor.
     */
-    synergy::IStream*    getStream() const;
+    barrier::IStream*    getStream() const;
 
     //@}
 
@@ -87,5 +87,5 @@ public:
     virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;
 
 private:
-    synergy::IStream*    m_stream;
+    barrier::IStream*    m_stream;
 };

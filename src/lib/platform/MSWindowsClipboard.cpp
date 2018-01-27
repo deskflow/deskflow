@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -86,7 +86,7 @@ MSWindowsClipboard::empty()
         return false;
     }
 
-    // mark clipboard as being owned by synergy
+    // mark clipboard as being owned by barrier
     HGLOBAL data = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, 1);
     if (NULL == SetClipboardData(getOwnershipFormat(), data)) {
         LOG((CLOG_DEBUG "failed to set clipboard data"));
@@ -210,11 +210,11 @@ MSWindowsClipboard::clearConverters()
 }
 
 bool
-MSWindowsClipboard::isOwnedBySynergy()
+MSWindowsClipboard::isOwnedByBarrier()
 {
     // create ownership format if we haven't yet
     if (s_ownershipFormat == 0) {
-        s_ownershipFormat = RegisterClipboardFormat(TEXT("SynergyOwnership"));
+        s_ownershipFormat = RegisterClipboardFormat(TEXT("BarrierOwnership"));
     }
     return (IsClipboardFormatAvailable(getOwnershipFormat()) != 0);
 }
@@ -224,7 +224,7 @@ MSWindowsClipboard::getOwnershipFormat()
 {
     // create ownership format if we haven't yet
     if (s_ownershipFormat == 0) {
-        s_ownershipFormat = RegisterClipboardFormat(TEXT("SynergyOwnership"));
+        s_ownershipFormat = RegisterClipboardFormat(TEXT("BarrierOwnership"));
     }
 
     // return the format

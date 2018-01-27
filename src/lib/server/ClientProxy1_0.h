@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -19,8 +19,8 @@
 #pragma once
 
 #include "server/ClientProxy.h"
-#include "synergy/Clipboard.h"
-#include "synergy/protocol_types.h"
+#include "barrier/Clipboard.h"
+#include "barrier/protocol_types.h"
 
 class Event;
 class EventQueueTimer;
@@ -29,7 +29,7 @@ class IEventQueue;
 //! Proxy for client implementing protocol version 1.0
 class ClientProxy1_0 : public ClientProxy {
 public:
-    ClientProxy1_0(const String& name, synergy::IStream* adoptedStream, IEventQueue* events);
+    ClientProxy1_0(const String& name, barrier::IStream* adoptedStream, IEventQueue* events);
     ~ClientProxy1_0();
 
     // IScreen

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Activate Synergy</string>
+   <string>Activate Barrier</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -78,7 +78,7 @@ p, li { white-space: pre-wrap; }
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="Synergy.qrc">:/res/icons/16x16/money.png</pixmap>
+         <pixmap resource="Barrier.qrc">:/res/icons/16x16/money.png</pixmap>
         </property>
        </widget>
       </item>
@@ -124,7 +124,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>m_pTextEditSerialKey</tabstop>
  </tabstops>
  <resources>
-  <include location="Synergy.qrc"/>
+  <include location="Barrier.qrc"/>
  </resources>
  <connections>
   <connection>

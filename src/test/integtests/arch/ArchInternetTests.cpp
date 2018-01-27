@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include "test/global/gtest.h"
 
 #define TEST_URL "https://symless.com/tests/?testString"
-//#define TEST_URL "http://localhost/synergy/tests/?testString"
+//#define TEST_URL "http://localhost/barrier/tests/?testString"
 
 TEST(ArchInternetTests, get)
 {

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
@@ -22,7 +22,7 @@
 
 #include <QDialog>
 #include "ui_SettingsDialogBase.h"
-#include "SynergyLocale.h"
+#include "BarrierLocale.h"
 #include "CoreInterface.h"
 
 class AppConfig;
@@ -33,8 +33,8 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
 
     public:
         SettingsDialog(QWidget* parent, AppConfig& config);
-        static QString browseForSynergyc(QWidget* parent, const QString& programDir, const QString& synergycName);
-        static QString browseForSynergys(QWidget* parent, const QString& programDir, const QString& synergysName);
+        static QString browseForBarrierc(QWidget* parent, const QString& programDir, const QString& barriercName);
+        static QString browseForBarriers(QWidget* parent, const QString& programDir, const QString& barriersName);
 
     protected:
         void accept();
@@ -44,7 +44,7 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
 
     private:
         AppConfig& m_appConfig;
-        SynergyLocale m_Locale;
+        BarrierLocale m_Locale;
         CoreInterface m_CoreInterface;
 
     private slots:

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -94,7 +94,7 @@ CurlFacade::get(const String& url)
     curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, curlWriteCallback);
 
     std::stringstream userAgent;
-    userAgent << "Synergy ";
+    userAgent << "Barrier ";
     userAgent << kVersion;
     curl_easy_setopt(m_curl, CURLOPT_USERAGENT, userAgent.str().c_str());
     

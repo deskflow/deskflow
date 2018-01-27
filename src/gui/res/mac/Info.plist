@@ -4,18 +4,18 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>English</string>
     <key>CFBundleDisplayName</key>
-    <string>Synergy</string>
+    <string>Barrier</string>
     <key>CFBundleExecutable</key>
-    <string>Synergy</string>
+    <string>Barrier</string>
     <key>CFBundleIconFile</key>
-    <string>Synergy.icns</string>
+    <string>Barrier.icns</string>
     <key>CFBundleIdentifier</key>
-    <string>synergy</string>
+    <string>barrier</string>
     <!-- TODO: Fix this in v2.0 //-->
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>Synergy</string>
+    <string>Barrier</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>

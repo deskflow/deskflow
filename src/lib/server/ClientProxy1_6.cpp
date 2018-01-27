@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
@@ -18,9 +18,9 @@
 #include "server/ClientProxy1_6.h"
 
 #include "server/Server.h"
-#include "synergy/ProtocolUtil.h"
-#include "synergy/StreamChunker.h"
-#include "synergy/ClipboardChunk.h"
+#include "barrier/ProtocolUtil.h"
+#include "barrier/StreamChunker.h"
+#include "barrier/ClipboardChunk.h"
 #include "io/IStream.h"
 #include "base/TMethodEventJob.h"
 #include "base/Log.h"
@@ -29,7 +29,7 @@
 // ClientProxy1_6
 //
 
-ClientProxy1_6::ClientProxy1_6(const String& name, synergy::IStream* stream, Server* server, IEventQueue* events) :
+ClientProxy1_6::ClientProxy1_6(const String& name, barrier::IStream* stream, Server* server, IEventQueue* events) :
     ClientProxy1_5(name, stream, server, events),
     m_events(events)
 {

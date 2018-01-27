@@ -23,21 +23,21 @@
 		<DirectoryRef Id="TARGETDIR">
 			<Component Guid="7CF3564D-1F8E-4D3D-9781-E1EE22D5BD67" Id="RegistryEntries">
 				<RegistryKey ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes" Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" Root="HKLM">
-					<RegistryValue Name="[INSTALLFOLDER]synergys.exe" Type="string" Value="~ HIGHDPIAWARE WIN7RTM"/>
+					<RegistryValue Name="[INSTALLFOLDER]barriers.exe" Type="string" Value="~ HIGHDPIAWARE WIN7RTM"/>
 				</RegistryKey>
 				<!-- Windows 8 and later only -->
 				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
 			</Component>
 		</DirectoryRef>
-		<Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
+		<Icon Id="barrier.ico" SourceFile="$(var.ResPath)/barrier.ico"/>
 		<WixVariable Id="WixUILicenseRtf" Value="$(var.ResPath)\License.rtf"/>
 		<WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\banner.bmp"/>
 		<WixVariable Id="WixUIDialogBmp" Value="$(var.ResPath)\dialog.bmp"/>
-		<Property Id="ARPPRODUCTICON" Value="synergy.ico"/>
+		<Property Id="ARPPRODUCTICON" Value="barrier.ico"/>
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER"/>
 		<Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable"/>
 		<Property Id="LEGACY_UNINSTALL_EXISTS">
-			<RegistrySearch Id="LegacyRegistrySearch" Key="SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Synergy" Name="UninstallString" Root="HKLM" Type="file" Win64="no">
+			<RegistrySearch Id="LegacyRegistrySearch" Key="SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Barrier" Name="UninstallString" Root="HKLM" Type="file" Win64="no">
 				<FileSearch Id="LegacyFileSearch" Name="uninstall.exe"/>
 			</RegistrySearch>
 		</Property>
@@ -66,23 +66,23 @@
 	<Fragment>
 		<ComponentGroup Directory="INSTALLFOLDER" Id="ProductComponents">
 			<Component Guid="EC9AD3B0-277C-4157-B5C8-5FD5B6A5F4AD" Id="Core">
-				<File KeyPath="yes" Source="$(var.BinPath)/synergyd.exe"/>
-				<ServiceInstall Description="Controls the $(var.Name) foreground processes." DisplayName="$(var.Name)" ErrorControl="normal" Id="ServiceInstall" Name="Synergy" Start="auto" Type="ownProcess">
+				<File KeyPath="yes" Source="$(var.BinPath)/barrierd.exe"/>
+				<ServiceInstall Description="Controls the $(var.Name) foreground processes." DisplayName="$(var.Name)" ErrorControl="normal" Id="ServiceInstall" Name="Barrier" Start="auto" Type="ownProcess">
 					<util:ServiceConfig FirstFailureActionType="restart" ResetPeriodInDays="1" RestartServiceDelayInSeconds="1" SecondFailureActionType="restart" ThirdFailureActionType="restart"/>
 				</ServiceInstall>
-				<ServiceControl Id="ServiceControl" Name="Synergy" Remove="uninstall" Start="install" Stop="both"/>
-				<File Source="$(var.BinPath)/synergys.exe">
+				<ServiceControl Id="ServiceControl" Name="Barrier" Remove="uninstall" Start="install" Stop="both"/>
+				<File Source="$(var.BinPath)/barriers.exe">
 					<fire:FirewallException Id="ServerFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
 				</File>
-				<File Source="$(var.BinPath)/synergyc.exe"/>
+				<File Source="$(var.BinPath)/barrierc.exe"/>
 				<File Source="$(var.BinPath)/syntool.exe"/>
 				<File Source="$(var.BinPath)/synwinhk.dll"/>
 				<File Source="$(var.OpenSSLBinPath)/libeay32.dll"/>
 				<File Source="$(var.OpenSSLBinPath)/ssleay32.dll"/>
 			</Component>
 			<Component Guid="BAC8149B-6287-45BF-9C27-43D71ED40214" Id="Gui">
-				<File Id="GuiProgram" KeyPath="yes" Source="$(var.BinPath)/synergy.exe">
-					<Shortcut Advertise="yes" Directory="ProgramMenuFolder" Icon="synergy.ico" Id="GuiShortcut" Name="$(var.Name)"/>
+				<File Id="GuiProgram" KeyPath="yes" Source="$(var.BinPath)/barrier.exe">
+					<Shortcut Advertise="yes" Directory="ProgramMenuFolder" Icon="barrier.ico" Id="GuiShortcut" Name="$(var.Name)"/>
 					<fire:FirewallException Id="GuiFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
 				</File>
 				<?if $(var.Configuration) = "Debug" ?>
@@ -120,7 +120,7 @@
 				<File Id="OpenSSLDll1" Source="$(var.OpenSSLBinPath)/libeay32.dll"/>
 				<File Id="OpenSSLDll2" Source="$(var.OpenSSLBinPath)/ssleay32.dll"/>
 				<File Source="$(var.OpenSSLBinPath)/openssl.exe"/>
-				<File Source="$(var.ResPath)/openssl/synergy.conf"/>
+				<File Source="$(var.ResPath)/openssl/barrier.conf"/>
 			</Component>
 		</ComponentGroup>
 	</Fragment>

@@ -1,4 +1,4 @@
-# synergy -- mouse and keyboard sharing utility
+# barrier -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2011 Nick Bolton
 # 

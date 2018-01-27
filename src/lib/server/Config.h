@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -19,9 +19,9 @@
 #pragma once
 
 #include "server/InputFilter.h"
-#include "synergy/option_types.h"
-#include "synergy/protocol_types.h"
-#include "synergy/IPlatformScreen.h"
+#include "barrier/option_types.h"
+#include "barrier/protocol_types.h"
+#include "barrier/IPlatformScreen.h"
 #include "net/NetworkAddress.h"
 #include "base/String.h"
 #include "base/XBase.h"
@@ -140,8 +140,8 @@ private:
     public:
         ScreenOptions    m_options;
     };
-    typedef std::map<String, Cell, synergy::string::CaselessCmp> CellMap;
-    typedef std::map<String, String, synergy::string::CaselessCmp> NameMap;
+    typedef std::map<String, Cell, barrier::string::CaselessCmp> CellMap;
+    typedef std::map<String, String, barrier::string::CaselessCmp> NameMap;
 
 public:
     typedef Cell::const_iterator link_const_iterator;
@@ -283,10 +283,10 @@ public:
 
     //! Set server address
     /*!
-    Set the synergy listen addresses.  There is no default address so
+    Set the barrier listen addresses.  There is no default address so
     this must be called to run a server using this configuration.
     */
-    void                setSynergyAddress(const NetworkAddress&);
+    void                setBarrierAddress(const NetworkAddress&);
 
     //! Add a screen option
     /*!
@@ -392,7 +392,7 @@ public:
 
     //! Get the server address
     const NetworkAddress&
-                        getSynergyAddress() const;
+                        getBarrierAddress() const;
 
     //! Get the screen options
     /*!
@@ -474,7 +474,7 @@ private:
 private:
     CellMap                m_map;
     NameMap                m_nameToCanonicalName;
-    NetworkAddress        m_synergyAddress;
+    NetworkAddress        m_barrierAddress;
     ScreenOptions        m_globalOptions;
     InputFilter            m_inputFilter;
     bool                m_hasLockToScreenAction;

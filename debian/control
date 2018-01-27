@@ -1,17 +1,17 @@
-Source: synergy
+Source: barrier
 Section: utils
 Priority: optional
 Standards-Version: 3.9.7
-Homepage: https://www.symless.com/
-Maintainer: Symless <engineering@symless.com>
+Homepage: https://github.com/debauchee/barrier/
+Maintainer: Debauchee Open Source Group <todo@mail.com>
 
-Package: synergy
+Package: barrier
 Architecture: amd64
 Section: utils
 Priority: optional
 Depends: ${shlibs:Depends},
          ${misc:Depends}
 Description: Keyboard and mouse sharing solution
- Synergy allows you to share one mouse and keyboard between multiple computers.
+ Barrier allows you to share one mouse and keyboard between multiple computers.
  Work seamlessly across Windows, macOS and Linux.
-Homepage: https://symless.com/synergy
+Homepage: https://github.com/debauchee/barrier/

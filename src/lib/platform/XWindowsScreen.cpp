@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -23,9 +23,9 @@
 #include "platform/XWindowsKeyState.h"
 #include "platform/XWindowsScreenSaver.h"
 #include "platform/XWindowsUtil.h"
-#include "synergy/Clipboard.h"
-#include "synergy/KeyMap.h"
-#include "synergy/XScreen.h"
+#include "barrier/Clipboard.h"
+#include "barrier/KeyMap.h"
+#include "barrier/XScreen.h"
 #include "arch/XArch.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
@@ -38,7 +38,7 @@
 #include <cstdlib>
 #include <algorithm>
 #if X_DISPLAY_MISSING
-#	error X11 is required to build synergy
+#	error X11 is required to build barrier
 #else
 #	include <X11/X.h>
 #	include <X11/Xutil.h>
@@ -53,7 +53,7 @@
 #	if HAVE_X11_EXTENSIONS_XTEST_H
 #		include <X11/extensions/XTest.h>
 #	else
-#		error The XTest extension is required to build synergy
+#		error The XTest extension is required to build barrier
 #	endif
 #	if HAVE_X11_EXTENSIONS_XINERAMA_H
 		// Xinerama.h may lack extern "C" for inclusion by C++
@@ -739,11 +739,11 @@ XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 
 		m_oldHotKeyIDs.push_back(id);
 		m_hotKeys.erase(id);
-		LOG((CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", synergy::KeyMap::formatKey(key, mask).c_str(), key, mask));
+		LOG((CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", barrier::KeyMap::formatKey(key, mask).c_str(), key, mask));
 		return 0;
 	}
 
-	LOG((CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", synergy::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
+	LOG((CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", barrier::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
 	return id;
 }
 
@@ -987,7 +987,7 @@ XWindowsScreen::saveShape()
 	// 0,0 to Wm,Hm where Wm (Hm) is the minimum width (height) over
 	// all physical screens.  this warp only seems to happen if the
 	// pointer wasn't in that region before the XWarpPointer().  the
-	// second (unexpected) warp causes synergy to think the pointer
+	// second (unexpected) warp causes barrier to think the pointer
 	// has been moved when it hasn't.  to work around the problem,
 	// we warp the pointer to the center of the first physical
 	// screen instead of the logical screen.
@@ -1073,7 +1073,7 @@ XWindowsScreen::openIM()
 		return;
 	}
 
-	// find the appropriate style.  synergy supports XIMPreeditNothing
+	// find the appropriate style.  barrier supports XIMPreeditNothing
 	// only at the moment.
 	XIMStyles* styles;
 	if (XGetIMValues(im, XNQueryInputStyle, &styles, NULL) != NULL ||

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -40,7 +40,7 @@ MSWindowsEventQueueBuffer::MSWindowsEventQueueBuffer(IEventQueue* events) :
     m_thread     = GetCurrentThreadId();
 
     // create a message type for custom events
-    m_userEvent  = RegisterWindowMessage("SYNERGY_USER_EVENT");
+    m_userEvent  = RegisterWindowMessage("BARRIER_USER_EVENT");
 
     // get message type for daemon quit
     m_daemonQuit = ArchMiscWindows::getDaemonQuitMessage();

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -69,7 +69,7 @@ XSocketAddress::getWhat() const throw()
     };
     return format(s_errorID[m_error], s_errorMsg[m_error],
                                 m_hostname.c_str(), 
-                                synergy::string::sprintf("%d", m_port).c_str());
+                                barrier::string::sprintf("%d", m_port).c_str());
 }
 
 

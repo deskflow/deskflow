@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -23,7 +23,7 @@
 //! Proxy for client implementing protocol version 1.1
 class ClientProxy1_1 : public ClientProxy1_0 {
 public:
-    ClientProxy1_1(const String& name, synergy::IStream* adoptedStream, IEventQueue* events);
+    ClientProxy1_1(const String& name, barrier::IStream* adoptedStream, IEventQueue* events);
     ~ClientProxy1_1();
 
     // IClient overrides

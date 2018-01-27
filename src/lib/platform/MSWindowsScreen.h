@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -19,8 +19,8 @@
 #pragma once
 
 #include "platform/MSWindowsHook.h"
-#include "synergy/PlatformScreen.h"
-#include "synergy/DragInformation.h"
+#include "barrier/PlatformScreen.h"
+#include "barrier/DragInformation.h"
 #include "synwinhk/synwinhk.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"

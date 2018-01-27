@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -18,7 +18,7 @@
 
 #include "platform/OSXClipboard.h"
 
-#include "synergy/Clipboard.h"
+#include "barrier/Clipboard.h"
 #include "platform/OSXClipboardUTF16Converter.h"
 #include "platform/OSXClipboardTextConverter.h"
 #include "platform/OSXClipboardBMPConverter.h"

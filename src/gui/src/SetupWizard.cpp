@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include "WebClient.h"
 #include "ActivationNotifier.h"
 #include "LicenseManager.h"
-#include "QSynergyApplication.h"
+#include "QBarrierApplication.h"
 #include "QUtility.h"
 
 #include <QMessageBox>
@@ -63,7 +63,7 @@ SetupWizard::~SetupWizard()
 bool SetupWizard::validateCurrentPage()
 {    
     QMessageBox message;
-    message.setWindowTitle(tr("Setup Synergy"));
+    message.setWindowTitle(tr("Setup Barrier"));
     message.setIcon(QMessageBox::Information);
 
     if (currentPage() == m_pNodePage)
@@ -134,7 +134,7 @@ void SetupWizard::accept()
 
 void SetupWizard::reject()
 {
-    QSynergyApplication::getInstance()->switchTranslator(m_MainWindow.appConfig().language());
+    QBarrierApplication::getInstance()->switchTranslator(m_MainWindow.appConfig().language());
 
     if (m_StartMain)
     {
@@ -147,5 +147,5 @@ void SetupWizard::reject()
 void SetupWizard::on_m_pComboLanguage_currentIndexChanged(int index)
 {
     QString ietfCode = m_pComboLanguage->itemData(index).toString();
-    QSynergyApplication::getInstance()->switchTranslator(ietfCode);
+    QBarrierApplication::getInstance()->switchTranslator(ietfCode);
 }

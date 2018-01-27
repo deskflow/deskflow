@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -62,7 +62,7 @@ XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(
     assert(m_display != NULL);
     assert(m_window  != None);
 
-    m_userEvent = XInternAtom(m_display, "SYNERGY_USER_EVENT", False);
+    m_userEvent = XInternAtom(m_display, "BARRIER_USER_EVENT", False);
     // set up for pipe hack
     int result = pipe(m_pipefd);
     assert(result == 0);

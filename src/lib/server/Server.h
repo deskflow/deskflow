@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -19,13 +19,13 @@
 #pragma once
 
 #include "server/Config.h"
-#include "synergy/clipboard_types.h"
-#include "synergy/Clipboard.h"
-#include "synergy/key_types.h"
-#include "synergy/mouse_types.h"
-#include "synergy/INode.h"
-#include "synergy/DragInformation.h"
-#include "synergy/ServerArgs.h"
+#include "barrier/clipboard_types.h"
+#include "barrier/Clipboard.h"
+#include "barrier/key_types.h"
+#include "barrier/mouse_types.h"
+#include "barrier/INode.h"
+#include "barrier/DragInformation.h"
+#include "barrier/ServerArgs.h"
 #include "base/Event.h"
 #include "base/Stopwatch.h"
 #include "base/EventTypes.h"
@@ -37,14 +37,14 @@ class BaseClientProxy;
 class EventQueueTimer;
 class PrimaryClient;
 class InputFilter;
-namespace synergy { class Screen; }
+namespace barrier { class Screen; }
 class IEventQueue;
 class Thread;
 class ClientListener;
 
-//! Synergy server
+//! Barrier server
 /*!
-This class implements the top-level server algorithms for synergy.
+This class implements the top-level server algorithms for barrier.
 */
 class Server : public INode {
 public:
@@ -107,7 +107,7 @@ public:
     ownership of \p primaryClient.
     */
     Server(Config& config, PrimaryClient* primaryClient,
-        synergy::Screen* screen, IEventQueue* events, ServerArgs const& args);
+        barrier::Screen* screen, IEventQueue* events, ServerArgs const& args);
     ~Server();
 
 #ifdef TEST_ENV
@@ -460,7 +460,7 @@ private:
     bool                m_lockedToScreen;
 
     // server screen
-    synergy::Screen*    m_screen;
+    barrier::Screen*    m_screen;
 
     IEventQueue*        m_events;
 

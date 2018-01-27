@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -24,7 +24,7 @@
 // StreamFilter
 //
 
-StreamFilter::StreamFilter(IEventQueue* events, synergy::IStream* stream, bool adoptStream) :
+StreamFilter::StreamFilter(IEventQueue* events, barrier::IStream* stream, bool adoptStream) :
     m_stream(stream),
     m_adopted(adoptStream),
     m_events(events)
@@ -98,7 +98,7 @@ StreamFilter::getSize() const
     return getStream()->getSize();
 }
 
-synergy::IStream*
+barrier::IStream*
 StreamFilter::getStream() const
 {
     return m_stream;

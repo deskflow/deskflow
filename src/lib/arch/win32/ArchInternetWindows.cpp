@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -76,8 +76,8 @@ ArchInternetWindows::urlEncode(const String& url)
     // the win32 url encoding funcitons are pretty useless (to us) and only
     // escape "unsafe" chars, but not + or =, so we need to replace these
     // manually (and probably many other chars).
-    synergy::string::findReplaceAll(result, "+", "%2B");
-    synergy::string::findReplaceAll(result, "=", "%3D");
+    barrier::string::findReplaceAll(result, "+", "%2B");
+    barrier::string::findReplaceAll(result, "=", "%3D");
 
     return result;
 }
@@ -146,7 +146,7 @@ void
 WinINetRequest::openSession()
 {
     std::stringstream userAgent;
-    userAgent << "Synergy ";
+    userAgent << "Barrier ";
     userAgent << kVersion;
 
     m_session = InternetOpen(

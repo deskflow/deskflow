@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -25,7 +25,7 @@
 //! Interface for architecture dependent file system operations
 /*!
 This interface defines the file system operations required by
-synergy.  Each architecture must implement this interface.
+barrier.  Each architecture must implement this interface.
 */
 class IArchFile : public IInterface {
 public:
@@ -53,7 +53,7 @@ public:
 
     //! Get installed directory
     /*!
-    Returns the directory in which Synergy is installed.
+    Returns the directory in which Barrier is installed.
     */
     virtual std::string    getInstalledDirectory() = 0;
 

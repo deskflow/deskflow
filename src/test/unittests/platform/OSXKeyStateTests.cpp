@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  *
@@ -16,16 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test/mock/synergy/MockKeyMap.h"
-#include "test/mock/synergy/MockEventQueue.h"
+#include "test/mock/barrier/MockKeyMap.h"
+#include "test/mock/barrier/MockEventQueue.h"
 #include "platform/OSXKeyState.h"
 
 #include "test/global/gtest.h"
 #include "test/global/gmock.h"
 
-TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnSynergyMask)
+TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnBarrierMask)
 {
-    synergy::KeyMap keyMap;
+    barrier::KeyMap keyMap;
     MockEventQueue eventQueue;
     OSXKeyState keyState(&eventQueue, keyMap);
 

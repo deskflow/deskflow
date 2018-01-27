@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -272,7 +272,7 @@ FileLogOutputter::write(ELevel level, const char *message)
     m_handle.close();
 
     if (moveFile) {
-        String oldLogFilename = synergy::string::sprintf("%s.1", m_fileName.c_str());
+        String oldLogFilename = barrier::string::sprintf("%s.1", m_fileName.c_str());
         remove(oldLogFilename.c_str());
         rename(m_fileName.c_str(), oldLogFilename.c_str());
     }

@@ -1,0 +1,32 @@
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>English</string>
+    <key>CFBundleDisplayName</key>
+    <string>Barrier</string>
+    <key>CFBundleExecutable</key>
+    <string>barrier</string>
+    <key>CFBundleIconFile</key>
+    <string>Barrier.icns</string>
+    <key>CFBundleIdentifier</key>
+    <string>barrier</string>
+    <!-- TODO: Fix this in v2.0 //-->
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>Barrier</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleSignature</key>
+    <string>SYN1</string>
+    <key>CFBundleShortVersionString</key>
+    <string>@BARRIER_VERSION@</string>
+    <key>CFBundleVersion</key>
+    <string>@BARRIER_VERSION@</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>© 2018 Debauchee Open Source Group</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.9.0</string>
+  </dict>
+</plist>

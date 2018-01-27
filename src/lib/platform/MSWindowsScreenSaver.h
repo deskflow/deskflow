@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "synergy/IScreenSaver.h"
+#include "barrier/IScreenSaver.h"
 #include "base/String.h"
 
 #define WIN32_LEAN_AND_MEAN

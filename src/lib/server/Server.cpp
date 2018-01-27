@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -22,17 +22,17 @@
 #include "server/ClientProxyUnknown.h"
 #include "server/PrimaryClient.h"
 #include "server/ClientListener.h"
-#include "synergy/FileChunk.h"
-#include "synergy/IPlatformScreen.h"
-#include "synergy/DropHelper.h"
-#include "synergy/option_types.h"
-#include "synergy/protocol_types.h"
-#include "synergy/XScreen.h"
-#include "synergy/XSynergy.h"
-#include "synergy/StreamChunker.h"
-#include "synergy/KeyState.h"
-#include "synergy/Screen.h"
-#include "synergy/PacketStreamFilter.h"
+#include "barrier/FileChunk.h"
+#include "barrier/IPlatformScreen.h"
+#include "barrier/DropHelper.h"
+#include "barrier/option_types.h"
+#include "barrier/protocol_types.h"
+#include "barrier/XScreen.h"
+#include "barrier/XBarrier.h"
+#include "barrier/StreamChunker.h"
+#include "barrier/KeyState.h"
+#include "barrier/Screen.h"
+#include "barrier/PacketStreamFilter.h"
 #include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/IListenSocket.h"
@@ -59,7 +59,7 @@
 Server::Server(
 		Config& config,
 		PrimaryClient* primaryClient,
-		synergy::Screen* screen,
+		barrier::Screen* screen,
 		IEventQueue* events,
 		ServerArgs const& args) :
 	m_mock(false),
@@ -1846,8 +1846,8 @@ Server::sendDragInfoThread(void* arg)
 
 #if defined(__APPLE__)
 	// on mac it seems that after faking a LMB up, system would signal back
-	// to synergy a mouse up event, which doesn't happen on windows. as a
-	// result, synergy would send dragging file to client twice. This variable
+	// to barrier a mouse up event, which doesn't happen on windows. as a
+	// result, barrier would send dragging file to client twice. This variable
 	// is used to ignore the first file sending.
 	m_ignoreFileTransfer = true;
 #endif

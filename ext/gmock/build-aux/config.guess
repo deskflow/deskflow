@@ -461,7 +461,7 @@ EOF
     Motorola:*:4.3:PL8-*)
 	echo powerpc-harris-powermax
 	exit ;;
-    Night_Hawk:*:*:PowerMAX_OS | Synergy:PowerMAX_OS:*:*)
+    Night_Hawk:*:*:PowerMAX_OS | Barrier:PowerMAX_OS:*:*)
 	echo powerpc-harris-powermax
 	exit ;;
     Night_Hawk:Power_UNIX:*:*)

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -43,21 +43,21 @@ public:
     virtual std::string getPlatformName() const = 0;
     //@}
 
-    //! Get a Synergy setting
+    //! Get a Barrier setting
     /*!
-    Reads a Synergy setting from the system.
+    Reads a Barrier setting from the system.
     */
     virtual std::string setting(const std::string& valueName) const = 0;
     //@}
 
-    //! Set a Synergy setting
+    //! Set a Barrier setting
     /*!
-    Writes a Synergy setting from the system.
+    Writes a Barrier setting from the system.
     */
     virtual void setting(const std::string& valueName, const std::string& valueString) const = 0;
     //@}
 
-    //! Get the pathnames of the libraries used by Synergy
+    //! Get the pathnames of the libraries used by Barrier
     /*
     Returns a string containing the full path names of all loaded libraries at the point it is called.
     */

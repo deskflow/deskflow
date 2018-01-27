@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -19,7 +19,7 @@
 #pragma once
 
 #include "platform/MSWindowsClipboardFacade.h"
-#include "synergy/IClipboard.h"
+#include "barrier/IClipboard.h"
 #include "common/stdvector.h"
 
 #define WIN32_LEAN_AND_MEAN
@@ -41,17 +41,17 @@ public:
     This must be called between a successful open() and close().
     Return false if the clipboard ownership could not be taken;
     the clipboard should not be emptied in this case.  Unlike
-    empty(), isOwnedBySynergy() will return false when emptied
-    this way.  This is useful when synergy wants to put data on
+    empty(), isOwnedByBarrier() will return false when emptied
+    this way.  This is useful when barrier wants to put data on
     clipboard but pretend (to itself) that some other app did it.
-    When using empty(), synergy assumes the data came from the
+    When using empty(), barrier assumes the data came from the
     server and doesn't need to be sent back.  emptyUnowned()
-    makes synergy send the data to the server.
+    makes barrier send the data to the server.
     */
     bool                emptyUnowned();
 
-    //! Test if clipboard is owned by synergy
-    static bool            isOwnedBySynergy();
+    //! Test if clipboard is owned by barrier
+    static bool            isOwnedByBarrier();
 
     // IClipboard overrides
     virtual bool        empty();

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2005 Chris Schoeneman
  * 
@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "synergy/key_types.h"
-#include "synergy/mouse_types.h"
-#include "synergy/protocol_types.h"
-#include "synergy/IPlatformScreen.h"
+#include "barrier/key_types.h"
+#include "barrier/mouse_types.h"
+#include "barrier/protocol_types.h"
+#include "barrier/IPlatformScreen.h"
 #include "base/String.h"
 #include "common/stdmap.h"
 #include "common/stdset.h"

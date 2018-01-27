@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -52,8 +52,8 @@ MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
                                 (LPTSTR)&buffer,
                                 0,
                                 NULL) == 0) {
-        String errorString = synergy::string::sprintf("%d", error);
-        return synergy::string::format(getString(hinstance, id).c_str(),
+        String errorString = barrier::string::sprintf("%d", error);
+        return barrier::string::format(getString(hinstance, id).c_str(),
                             errorString.c_str());
     }
     else {

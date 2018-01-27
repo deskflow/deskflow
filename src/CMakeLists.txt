@@ -1,4 +1,4 @@
-# synergy -- mouse and keyboard sharing utility
+# barrier -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2011 Nick Bolton
 # 
@@ -19,6 +19,6 @@ include_directories (${CMAKE_CURRENT_BINARY_DIR}/lib)
 
 add_subdirectory(lib)
 add_subdirectory(cmd)
-if (SYNERGY_BUILD_LEGACY_GUI)
+if (BARRIER_BUILD_LEGACY_GUI)
 add_subdirectory(gui)
-endif (SYNERGY_BUILD_LEGACY_GUI)
+endif (BARRIER_BUILD_LEGACY_GUI)

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -94,7 +94,7 @@ ArchFileUnix::getInstalledDirectory()
 #if WINAPI_XWINDOWS
     return "/usr/bin";
 #else
-    return "/Applications/Synergy.app/Contents/MacOS";
+    return "/Applications/Barrier.app/Contents/MacOS";
 #endif
 }
 
@@ -127,9 +127,9 @@ ArchFileUnix::getProfileDirectory()
     }
     else {
 #if WINAPI_XWINDOWS
-        dir = getUserDirectory().append("/.synergy");
+        dir = getUserDirectory().append("/.barrier");
 #else
-        dir = getUserDirectory().append("/Library/Synergy");
+        dir = getUserDirectory().append("/Library/Barrier");
 #endif
     }
     return dir;

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 #pragma once
 
 #include "ui_SetupWizardBase.h"
-#include "SynergyLocale.h"
+#include "BarrierLocale.h"
 
 #include <QWizard>
 #include <QNetworkAccessManager>
@@ -46,7 +46,7 @@ protected:
 private:
     MainWindow& m_MainWindow;
     bool m_StartMain;
-    SynergyLocale m_Locale;
+    BarrierLocale m_Locale;
 
 private slots:
     void on_m_pComboLanguage_currentIndexChanged(int index);

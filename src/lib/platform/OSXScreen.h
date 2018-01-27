@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -19,8 +19,8 @@
 #pragma once
 
 #include "platform/OSXClipboard.h"
-#include "synergy/PlatformScreen.h"
-#include "synergy/DragInformation.h"
+#include "barrier/PlatformScreen.h"
+#include "barrier/DragInformation.h"
 #include "base/EventTypes.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"
@@ -137,17 +137,17 @@ private:
     void                showCursor();
     void                hideCursor();
 
-    // map synergy mouse button to mac buttons
-    ButtonID            mapSynergyButtonToMac(UInt16) const;
+    // map barrier mouse button to mac buttons
+    ButtonID            mapBarrierButtonToMac(UInt16) const;
 
-    // map mac mouse button to synergy buttons
-    ButtonID            mapMacButtonToSynergy(UInt16) const;
+    // map mac mouse button to barrier buttons
+    ButtonID            mapMacButtonToBarrier(UInt16) const;
 
-    // map mac scroll wheel value to a synergy scroll wheel value
-    SInt32                mapScrollWheelToSynergy(SInt32) const;
+    // map mac scroll wheel value to a barrier scroll wheel value
+    SInt32                mapScrollWheelToBarrier(SInt32) const;
 
-    // map synergy scroll wheel value to a mac scroll wheel value
-    SInt32                mapScrollWheelFromSynergy(SInt32) const;
+    // map barrier scroll wheel value to a mac scroll wheel value
+    SInt32                mapScrollWheelFromBarrier(SInt32) const;
 
     // get the current scroll wheel speed
     double                getScrollSpeed() const;

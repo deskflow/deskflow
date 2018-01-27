@@ -1,4 +1,5 @@
-# Synergy -- mouse and keyboard sharing utility
+# Barrier -- mouse and keyboard sharing utility
+# Copyright (C) 2018 Debauchee Open Source Group
 # Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2009 Nick Bolton
 #
@@ -15,11 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 cmake_minimum_required (VERSION 3.4)
-project (synergy C CXX)
+project (barrier C CXX)
 
-option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" ON)
-option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
-option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" ON)
+option (BARRIER_BUILD_LEGACY_GUI "Build the legacy GUI" ON)
+option (BARRIER_BUILD_LEGACY_SERVICE "Build the legacy service (barrierd)" ON)
+option (BARRIER_BUILD_LEGACY_INSTALLER "Build the legacy installer" ON)
 
 set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_EXTENSIONS OFF)
@@ -32,7 +33,7 @@ if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 #
-# Synergy version
+# Barrier version
 #
 include (cmake/Version.cmake)
 
@@ -44,9 +45,9 @@ endif()
 
 # Add headers to source list
 if (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
-    set (SYNERGY_ADD_HEADERS FALSE)
+    set (BARRIER_ADD_HEADERS FALSE)
 else()
-    set (SYNERGY_ADD_HEADERS TRUE)
+    set (BARRIER_ADD_HEADERS TRUE)
 endif()
 
 set (libs)
@@ -272,7 +273,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         /DWIN32
         /D_WINDOWS
         /D_CRT_SECURE_NO_WARNINGS
-        /DSYNERGY_VERSION=\"${SYNERGY_VERSION}\"
+        /DBARRIER_VERSION=\"${BARRIER_VERSION}\"
         /D_XKEYCHECK_H
     )
 endif()
@@ -337,18 +338,18 @@ macro (configure_files srcDir destDir)
     endforeach (templateFile)
 endmacro (configure_files)
 
-if (${SYNERGY_BUILD_LEGACY_INSTALLER})
+if (${BARRIER_BUILD_LEGACY_INSTALLER})
 #
 # macOS app Bundle
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
-    set (SYNERGY_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
-    set (SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
-    set (SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
-    set (SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
+    set (BARRIER_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
+    set (BARRIER_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
+    set (BARRIER_BUNDLE_APP_DIR ${BARRIER_BUNDLE_DIR}/Barrier.app)
+    set (BARRIER_BUNDLE_BINARY_DIR ${BARRIER_BUNDLE_APP_DIR}/Contents/MacOS)
 
-    configure_files (${SYNERGY_BUNDLE_SOURCE_DIR} ${SYNERGY_BUNDLE_DIR})
+    configure_files (${BARRIER_BUNDLE_SOURCE_DIR} ${BARRIER_BUNDLE_DIR})
 endif()
 
 #
@@ -364,11 +365,11 @@ endif()
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
-    install(FILES res/synergy.svg DESTINATION share/icons/hicolor/scalable/apps)
+    install(FILES res/barrier.svg DESTINATION share/icons/hicolor/scalable/apps)
     if("${VERSION_MAJOR}" STREQUAL "2") 
-        install(FILES res/synergy2.desktop DESTINATION share/applications)
+        install(FILES res/barrier2.desktop DESTINATION share/applications)
     else()
-        install(FILES res/synergy.desktop DESTINATION share/applications)
+        install(FILES res/barrier.desktop DESTINATION share/applications)
     endif()
 endif()
 

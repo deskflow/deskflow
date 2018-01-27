@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -52,7 +52,7 @@ class QMessageBox;
 class QAbstractButton;
 
 class LogDialog;
-class QSynergyApplication;
+class QBarrierApplication;
 class SetupWizard;
 class ZeroconfService;
 class DataDownloader;
@@ -64,24 +64,24 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 {
     Q_OBJECT
 
-    friend class QSynergyApplication;
+    friend class QBarrierApplication;
     friend class SetupWizard;
     friend class ActivationDialog;
     friend class SettingsDialog;
 
     public:
-        enum qSynergyState
+        enum qBarrierState
         {
-            synergyDisconnected,
-            synergyConnecting,
-            synergyConnected,
-            synergyTransfering
+            barrierDisconnected,
+            barrierConnecting,
+            barrierConnected,
+            barrierTransfering
         };
 
-        enum qSynergyType
+        enum qBarrierType
         {
-            synergyClient,
-            synergyServer
+            barrierClient,
+            barrierServer
         };
 
         enum qLevel {
@@ -101,8 +101,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
     public:
         void setVisible(bool visible);
-        int synergyType() const { return m_pGroupClient->isChecked() ? synergyClient : synergyServer; }
-        int synergyState() const { return m_SynergyState; }
+        int barrierType() const { return m_pGroupClient->isChecked() ? barrierClient : barrierServer; }
+        int barrierState() const { return m_BarrierState; }
         QString hostname() const { return m_pLineEditHostname->text(); }
         QString configFilename();
         QString address();
@@ -130,7 +130,7 @@ public slots:
         void appendLogInfo(const QString& text);
         void appendLogDebug(const QString& text);
         void appendLogError(const QString& text);
-        void startSynergy();
+        void startBarrier();
 
     protected slots:
         void sslToggled(bool enabled);
@@ -142,9 +142,9 @@ public slots:
         void on_m_pActionAbout_triggered();
         void on_m_pActionSettings_triggered();
         void on_m_pActivate_triggered();
-        void synergyFinished(int exitCode, QProcess::ExitStatus);
+        void barrierFinished(int exitCode, QProcess::ExitStatus);
         void trayActivated(QSystemTrayIcon::ActivationReason reason);
-        void stopSynergy();
+        void stopBarrier();
         void logOutput();
         void logError();
         void updateFound(const QString& version);
@@ -153,16 +153,16 @@ public slots:
     protected:
         QSettings& settings() { return m_Settings; }
         AppConfig& appConfig() { return *m_AppConfig; }
-        QProcess* synergyProcess() { return m_pSynergy; }
-        void setSynergyProcess(QProcess* p) { m_pSynergy = p; }
+        QProcess* barrierProcess() { return m_pBarrier; }
+        void setBarrierProcess(QProcess* p) { m_pBarrier = p; }
         void initConnections();
         void createMenuBar();
         void createStatusBar();
         void createTrayIcon();
         void loadSettings();
         void saveSettings();
-        void setIcon(qSynergyState state);
-        void setSynergyState(qSynergyState state);
+        void setIcon(qBarrierState state);
+        void setBarrierState(qBarrierState state);
         bool checkForApp(int which, QString& app);
         bool clientArgs(QStringList& args, QString& app);
         bool serverArgs(QStringList& args, QString& app);
@@ -189,7 +189,7 @@ public slots:
         void checkFingerprint(const QString& line);
         bool autoHide();
         QString getTimeStamp();
-        void restartSynergy();
+        void restartBarrier();
         void proofreadInfo();
 
         void showEvent (QShowEvent*);
@@ -198,8 +198,8 @@ public slots:
         QSettings& m_Settings;
         AppConfig* m_AppConfig;
         LicenseManager* m_LicenseManager;
-        QProcess* m_pSynergy;
-        int m_SynergyState;
+        QProcess* m_pBarrier;
+        int m_BarrierState;
         ServerConfig m_ServerConfig;
         QTemporaryFile* m_pTempConfigFile;
         QSystemTrayIcon* m_pTrayIcon;

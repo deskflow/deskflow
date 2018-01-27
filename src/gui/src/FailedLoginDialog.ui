@@ -55,7 +55,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>An error occurred while trying to activate Synergy. The Symless server returned the following error:
+    <string>An error occurred while trying to activate Barrier. The Symless server returned the following error:
 
 %1</string>
    </property>

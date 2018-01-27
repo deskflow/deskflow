@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -19,13 +19,13 @@
 #include "client/ServerProxy.h"
 
 #include "client/Client.h"
-#include "synergy/FileChunk.h"
-#include "synergy/ClipboardChunk.h"
-#include "synergy/StreamChunker.h"
-#include "synergy/Clipboard.h"
-#include "synergy/ProtocolUtil.h"
-#include "synergy/option_types.h"
-#include "synergy/protocol_types.h"
+#include "barrier/FileChunk.h"
+#include "barrier/ClipboardChunk.h"
+#include "barrier/StreamChunker.h"
+#include "barrier/Clipboard.h"
+#include "barrier/ProtocolUtil.h"
+#include "barrier/option_types.h"
+#include "barrier/protocol_types.h"
 #include "io/IStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
@@ -38,7 +38,7 @@
 // ServerProxy
 //
 
-ServerProxy::ServerProxy(Client* client, synergy::IStream* stream, IEventQueue* events) :
+ServerProxy::ServerProxy(Client* client, barrier::IStream* stream, IEventQueue* events) :
     m_client(client),
     m_stream(stream),
     m_seqNum(0),

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -87,10 +87,10 @@ class AppConfig: public QObject
         int lastExpiringWarningTime() const;
         void setLastExpiringWarningTime(int t);
 
-        QString synergysName() const;
-        QString synergycName() const;
-        QString synergyProgramDir() const;
-        QString synergyLogDir() const;
+        QString barriersName() const;
+        QString barriercName() const;
+        QString barrierProgramDir() const;
+        QString barrierLogDir() const;
 
         bool detectPath(const QString& name, QString& path);
         void persistLogDir();
@@ -148,9 +148,9 @@ protected:
         int m_LastExpiringWarningTime;
         bool m_ActivationHasRun;
 
-        static const char m_SynergysName[];
-        static const char m_SynergycName[];
-        static const char m_SynergyLogDir[];
+        static const char m_BarriersName[];
+        static const char m_BarriercName[];
+        static const char m_BarrierLogDir[];
 
     signals:
         void sslToggled(bool enabled);

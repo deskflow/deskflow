@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -56,7 +56,7 @@ typedef ArchNetAddressImpl* ArchNetAddress;
 //! Interface for architecture dependent networking
 /*!
 This interface defines the networking operations required by
-synergy.  Each architecture must implement this interface.
+barrier.  Each architecture must implement this interface.
 */
 class IArchNetwork : public IInterface {
 public:

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 
 #include "test/global/gtest.h"
 
-using namespace synergy;
+using namespace barrier;
 
 TEST(StringTests, format_formatWithArguments_formatedString)
 {

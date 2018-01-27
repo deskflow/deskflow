@@ -1,4 +1,4 @@
-# synergy -- mouse and keyboard sharing utility
+# barrier -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2009 Nick Bolton
 # 
@@ -49,7 +49,7 @@ file(GLOB_RECURSE mock_sources "../../test/mock/*.cpp")
 list(APPEND headers ${mock_headers})
 list(APPEND sources ${mock_sources})
 
-if (SYNERGY_ADD_HEADERS)
+if (BARRIER_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
@@ -68,4 +68,4 @@ endif()
 
 add_executable(integtests ${sources})
 target_link_libraries(integtests
-    arch base client common io ipc mt net platform server synergy gtest gmock ${libs} ${OPENSSL_LIBS})
+    arch base client common io ipc mt net platform server barrier gtest gmock ${libs} ${OPENSSL_LIBS})

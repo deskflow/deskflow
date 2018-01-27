@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "synergy/KeyState.h"
+#include "barrier/KeyState.h"
 
 class IOSXKeyResource : public IInterface {
 public:

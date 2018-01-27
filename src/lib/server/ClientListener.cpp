@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -20,7 +20,7 @@
 
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
-#include "synergy/PacketStreamFilter.h"
+#include "barrier/PacketStreamFilter.h"
 #include "net/IDataSocket.h"
 #include "net/IListenSocket.h"
 #include "net/ISocketFactory.h"
@@ -149,7 +149,7 @@ ClientListener::handleClientAccepted(const Event&, void* vsocket)
     IDataSocket* socket = static_cast<IDataSocket*>(vsocket);
     
     // filter socket messages, including a packetizing filter
-    synergy::IStream* stream = new PacketStreamFilter(m_events, socket, true);
+    barrier::IStream* stream = new PacketStreamFilter(m_events, socket, true);
     assert(m_server != NULL);
 
     // create proxy for unknown client

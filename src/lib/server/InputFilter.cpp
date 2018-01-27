@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2005 Chris Schoeneman
  * 
@@ -19,7 +19,7 @@
 #include "server/InputFilter.h"
 #include "server/Server.h"
 #include "server/PrimaryClient.h"
-#include "synergy/KeyMap.h"
+#include "barrier/KeyMap.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
@@ -98,8 +98,8 @@ InputFilter::KeystrokeCondition::clone() const
 String
 InputFilter::KeystrokeCondition::format() const
 {
-    return synergy::string::sprintf("keystroke(%s)",
-                            synergy::KeyMap::formatKey(m_key, m_mask).c_str());
+    return barrier::string::sprintf("keystroke(%s)",
+                            barrier::KeyMap::formatKey(m_key, m_mask).c_str());
 }
 
 InputFilter::EFilterStatus
@@ -186,11 +186,11 @@ InputFilter::MouseButtonCondition::clone() const
 String
 InputFilter::MouseButtonCondition::format() const
 {
-    String key = synergy::KeyMap::formatKey(kKeyNone, m_mask);
+    String key = barrier::KeyMap::formatKey(kKeyNone, m_mask);
     if (!key.empty()) {
         key += "+";
     }
-    return synergy::string::sprintf("mousebutton(%s%d)", key.c_str(), m_button);
+    return barrier::string::sprintf("mousebutton(%s%d)", key.c_str(), m_button);
 }
 
 InputFilter::EFilterStatus        
@@ -248,7 +248,7 @@ InputFilter::ScreenConnectedCondition::clone() const
 String
 InputFilter::ScreenConnectedCondition::format() const
 {
-    return synergy::string::sprintf("connect(%s)", m_screen.c_str());
+    return barrier::string::sprintf("connect(%s)", m_screen.c_str());
 }
 
 InputFilter::EFilterStatus
@@ -303,7 +303,7 @@ InputFilter::LockCursorToScreenAction::format() const
 {
     static const char* s_mode[] = { "off", "on", "toggle" };
 
-    return synergy::string::sprintf("lockCursorToScreen(%s)", s_mode[m_mode]);
+    return barrier::string::sprintf("lockCursorToScreen(%s)", s_mode[m_mode]);
 }
 
 void
@@ -346,7 +346,7 @@ InputFilter::SwitchToScreenAction::clone() const
 String
 InputFilter::SwitchToScreenAction::format() const
 {
-    return synergy::string::sprintf("switchToScreen(%s)", m_screen.c_str());
+    return barrier::string::sprintf("switchToScreen(%s)", m_screen.c_str());
 }
 
 void
@@ -400,7 +400,7 @@ InputFilter::SwitchInDirectionAction::format() const
         "down"
     };
 
-    return synergy::string::sprintf("switchInDirection(%s)", s_names[m_direction]);
+    return barrier::string::sprintf("switchInDirection(%s)", s_names[m_direction]);
 }
 
 void
@@ -459,10 +459,10 @@ InputFilter::KeyboardBroadcastAction::format() const
     static const char* s_name = "keyboardBroadcast";
 
     if (m_screens.empty() || m_screens[0] == '*') {
-        return synergy::string::sprintf("%s(%s)", s_name, s_mode[m_mode]);
+        return barrier::string::sprintf("%s(%s)", s_name, s_mode[m_mode]);
     }
     else {
-        return synergy::string::sprintf("%s(%s,%.*s)", s_name, s_mode[m_mode],
+        return barrier::string::sprintf("%s(%s,%.*s)", s_name, s_mode[m_mode],
                             m_screens.size() - 2,
                             m_screens.c_str() + 1);
     }
@@ -531,18 +531,18 @@ InputFilter::KeystrokeAction::format() const
     const char* type = formatName();
 
     if (m_keyInfo->m_screens[0] == '\0') {
-        return synergy::string::sprintf("%s(%s)", type,
-                            synergy::KeyMap::formatKey(m_keyInfo->m_key,
+        return barrier::string::sprintf("%s(%s)", type,
+                            barrier::KeyMap::formatKey(m_keyInfo->m_key,
                                 m_keyInfo->m_mask).c_str());
     }
     else if (m_keyInfo->m_screens[0] == '*') {
-        return synergy::string::sprintf("%s(%s,*)", type,
-                            synergy::KeyMap::formatKey(m_keyInfo->m_key,
+        return barrier::string::sprintf("%s(%s,*)", type,
+                            barrier::KeyMap::formatKey(m_keyInfo->m_key,
                                 m_keyInfo->m_mask).c_str());
     }
     else {
-        return synergy::string::sprintf("%s(%s,%.*s)", type,
-                            synergy::KeyMap::formatKey(m_keyInfo->m_key,
+        return barrier::string::sprintf("%s(%s,%.*s)", type,
+                            barrier::KeyMap::formatKey(m_keyInfo->m_key,
                                 m_keyInfo->m_mask).c_str(),
                             strlen(m_keyInfo->m_screens + 1) - 1,
                             m_keyInfo->m_screens + 1);
@@ -612,8 +612,8 @@ InputFilter::MouseButtonAction::format() const
 {
     const char* type = formatName();
 
-    String key = synergy::KeyMap::formatKey(kKeyNone, m_buttonInfo->m_mask);
-    return synergy::string::sprintf("%s(%s%s%d)", type,
+    String key = barrier::KeyMap::formatKey(kKeyNone, m_buttonInfo->m_mask);
+    return barrier::string::sprintf("%s(%s%s%d)", type,
                             key.c_str(), key.empty() ? "" : "+",
                             m_buttonInfo->m_button);
 }

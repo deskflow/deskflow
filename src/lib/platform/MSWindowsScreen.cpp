@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -25,12 +25,12 @@
 #include "platform/MSWindowsEventQueueBuffer.h"
 #include "platform/MSWindowsKeyState.h"
 #include "platform/MSWindowsScreenSaver.h"
-#include "synergy/Clipboard.h"
-#include "synergy/KeyMap.h"
-#include "synergy/XScreen.h"
-#include "synergy/App.h"
-#include "synergy/ArgsBase.h"
-#include "synergy/ClientApp.h"
+#include "barrier/Clipboard.h"
+#include "barrier/KeyMap.h"
+#include "barrier/XScreen.h"
+#include "barrier/App.h"
+#include "barrier/ArgsBase.h"
+#include "barrier/ClientApp.h"
 #include "mt/Lock.h"
 #include "mt/Thread.h"
 #include "arch/win32/ArchMiscWindows.h"
@@ -146,7 +146,7 @@ MSWindowsScreen::MSWindowsScreen(
 
         updateScreenShape();
         m_class       = createWindowClass();
-        m_window      = createWindow(m_class, "Synergy");
+        m_window      = createWindow(m_class, "Barrier");
         forceShowCursor();
         LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
         LOG((CLOG_DEBUG "window is 0x%08x", m_window));
@@ -431,7 +431,7 @@ MSWindowsScreen::checkClipboards()
     // next reboot we do this double check.  clipboard ownership
     // won't be reflected on other screens until we leave but at
     // least the clipboard itself will work.
-    if (m_ownClipboard && !MSWindowsClipboard::isOwnedBySynergy()) {
+    if (m_ownClipboard && !MSWindowsClipboard::isOwnedByBarrier()) {
         LOG((CLOG_DEBUG "clipboard changed: lost ownership and no notification received"));
         m_ownClipboard = false;
         sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardClipboard);
@@ -553,8 +553,8 @@ MSWindowsScreen::warpCursor(SInt32 x, SInt32 y)
 
     // remove all input events before and including warp
     MSG msg;
-    while (PeekMessage(&msg, NULL, SYNERGY_MSG_INPUT_FIRST,
-                                SYNERGY_MSG_INPUT_LAST, PM_REMOVE)) {
+    while (PeekMessage(&msg, NULL, BARRIER_MSG_INPUT_FIRST,
+                                BARRIER_MSG_INPUT_LAST, PM_REMOVE)) {
         // do nothing
     }
 
@@ -638,11 +638,11 @@ MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
     else {
         m_oldHotKeyIDs.push_back(id);
         m_hotKeys.erase(id);
-        LOG((CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", synergy::KeyMap::formatKey(key, mask).c_str(), key, mask));
+        LOG((CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", barrier::KeyMap::formatKey(key, mask).c_str(), key, mask));
         return 0;
     }
     
-    LOG((CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", synergy::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
+    LOG((CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", barrier::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
     return id;
 }
 
@@ -849,7 +849,7 @@ MSWindowsScreen::createWindowClass() const
     classInfo.hCursor       = NULL;
     classInfo.hbrBackground = NULL;
     classInfo.lpszMenuName  = NULL;
-    classInfo.lpszClassName = "Synergy";
+    classInfo.lpszClassName = "Barrier";
     classInfo.hIconSm       = NULL;
     return RegisterClassEx(&classInfo);
 }
@@ -974,10 +974,10 @@ MSWindowsScreen::onPreDispatch(HWND hwnd,
 {
     // handle event
     switch (message) {
-    case SYNERGY_MSG_SCREEN_SAVER:
+    case BARRIER_MSG_SCREEN_SAVER:
         return onScreensaver(wParam != 0);
 
-    case SYNERGY_MSG_DEBUG:
+    case BARRIER_MSG_DEBUG:
         LOG((CLOG_DEBUG1 "hook: 0x%08x 0x%08x", wParam, lParam));
         return true;
     }
@@ -997,24 +997,24 @@ MSWindowsScreen::onPreDispatchPrimary(HWND,
 
     // handle event
     switch (message) {
-    case SYNERGY_MSG_MARK:
+    case BARRIER_MSG_MARK:
         return onMark(static_cast<UInt32>(wParam));
 
-    case SYNERGY_MSG_KEY:
+    case BARRIER_MSG_KEY:
         return onKey(wParam, lParam);
 
-    case SYNERGY_MSG_MOUSE_BUTTON:
+    case BARRIER_MSG_MOUSE_BUTTON:
         return onMouseButton(wParam, lParam);
 
-    case SYNERGY_MSG_MOUSE_MOVE:
+    case BARRIER_MSG_MOUSE_MOVE:
         return onMouseMove(static_cast<SInt32>(wParam),
                             static_cast<SInt32>(lParam));
 
-    case SYNERGY_MSG_MOUSE_WHEEL:
+    case BARRIER_MSG_MOUSE_WHEEL:
         // XXX -- support x-axis scrolling
         return onMouseWheel(0, static_cast<SInt32>(wParam));
 
-    case SYNERGY_MSG_PRE_WARP:
+    case BARRIER_MSG_PRE_WARP:
         {
             // save position to compute delta of next motion
             saveMousePosition(static_cast<SInt32>(wParam), static_cast<SInt32>(lParam));
@@ -1026,13 +1026,13 @@ MSWindowsScreen::onPreDispatchPrimary(HWND,
             // event.
             MSG msg;
             do {
-                GetMessage(&msg, NULL, SYNERGY_MSG_MOUSE_MOVE,
-                                        SYNERGY_MSG_POST_WARP);
-            } while (msg.message != SYNERGY_MSG_POST_WARP);
+                GetMessage(&msg, NULL, BARRIER_MSG_MOUSE_MOVE,
+                                        BARRIER_MSG_POST_WARP);
+            } while (msg.message != BARRIER_MSG_POST_WARP);
         }
         return true;
 
-    case SYNERGY_MSG_POST_WARP:
+    case BARRIER_MSG_POST_WARP:
         LOG((CLOG_WARN "unmatched post warp"));
         return true;
 
@@ -1337,7 +1337,7 @@ MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 }
 
 // here's how mouse movements are sent across the network to a client:
-//   1. synergy checks the mouse position on server screen
+//   1. barrier checks the mouse position on server screen
 //   2. records the delta (current x,y minus last x,y)
 //   3. records the current x,y as "last" (so we can calc delta next time)
 //   4. on the server, puts the cursor back to the center of the screen
@@ -1430,14 +1430,14 @@ MSWindowsScreen::onScreensaver(bool activated)
     // send SC_SCREENSAVE until the screen saver starts, even if
     // the screen saver is disabled!
     MSG msg;
-    if (PeekMessage(&msg, NULL, SYNERGY_MSG_SCREEN_SAVER,
-                        SYNERGY_MSG_SCREEN_SAVER, PM_NOREMOVE)) {
+    if (PeekMessage(&msg, NULL, BARRIER_MSG_SCREEN_SAVER,
+                        BARRIER_MSG_SCREEN_SAVER, PM_NOREMOVE)) {
         return true;
     }
 
     if (activated) {
         if (!m_screensaverActive &&
-            m_screensaver->checkStarted(SYNERGY_MSG_SCREEN_SAVER, FALSE, 0)) {
+            m_screensaver->checkStarted(BARRIER_MSG_SCREEN_SAVER, FALSE, 0)) {
             m_screensaverActive = true;
             sendEvent(m_events->forIPrimaryScreen().screensaverActivated());
 
@@ -1497,7 +1497,7 @@ MSWindowsScreen::onClipboardChange()
 {
     // now notify client that somebody changed the clipboard (unless
     // we're the owner).
-    if (!MSWindowsClipboard::isOwnedBySynergy()) {
+    if (!MSWindowsClipboard::isOwnedByBarrier()) {
         if (m_ownClipboard) {
             LOG((CLOG_DEBUG "clipboard changed: lost ownership"));
             m_ownClipboard = false;
@@ -1506,7 +1506,7 @@ MSWindowsScreen::onClipboardChange()
         }
     }
     else if (!m_ownClipboard) {
-        LOG((CLOG_DEBUG "clipboard changed: synergy owned"));
+        LOG((CLOG_DEBUG "clipboard changed: barrier owned"));
         m_ownClipboard = true;
     }
 
@@ -1517,7 +1517,7 @@ void
 MSWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
 {
     // send an event that we can recognize before the mouse warp
-    PostThreadMessage(GetCurrentThreadId(), SYNERGY_MSG_PRE_WARP, x, y);
+    PostThreadMessage(GetCurrentThreadId(), BARRIER_MSG_PRE_WARP, x, y);
 
     // warp mouse.  hopefully this inserts a mouse motion event
     // between the previous message and the following message.
@@ -1565,7 +1565,7 @@ MSWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
     ARCH->sleep(0.0);
 
     // send an event that we can recognize after the mouse warp
-    PostThreadMessage(GetCurrentThreadId(), SYNERGY_MSG_POST_WARP, 0, 0);
+    PostThreadMessage(GetCurrentThreadId(), BARRIER_MSG_POST_WARP, 0, 0);
 }
 
 void
@@ -1575,7 +1575,7 @@ MSWindowsScreen::nextMark()
     ++m_mark;
 
     // mark point in message queue where the mark was changed
-    PostThreadMessage(GetCurrentThreadId(), SYNERGY_MSG_MARK, m_mark, 0);
+    PostThreadMessage(GetCurrentThreadId(), BARRIER_MSG_MARK, m_mark, 0);
 }
 
 bool

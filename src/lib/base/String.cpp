@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
 #include <algorithm>
 #include <cerrno>
 
-namespace synergy {
+namespace barrier {
 namespace string {
 
 String
@@ -276,7 +276,7 @@ CaselessCmp::less(const String& a, const String& b)
     return std::lexicographical_compare(
         a.begin(), a.end(),
         b.begin(), b.end(),
-        &synergy::string::CaselessCmp::cmpLess);
+        &barrier::string::CaselessCmp::cmpLess);
 }
 
 bool

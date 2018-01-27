@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #include "arch/XArch.h"
 
 static const char s_certificateDir[] = { "SSL" };
-static const char s_certificateFilename[] = { "Synergy.pem" };
+static const char s_certificateFilename[] = { "Barrier.pem" };
 
 //
 // SecureListenSocket
@@ -61,7 +61,7 @@ SecureListenSocket::accept()
             setListeningJob();
         }
 
-        String certificateFilename = synergy::string::sprintf("%s/%s/%s",
+        String certificateFilename = barrier::string::sprintf("%s/%s/%s",
                                         ARCH->getProfileDirectory().c_str(),
                                         s_certificateDir,
                                         s_certificateFilename);

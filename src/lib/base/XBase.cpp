@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -65,7 +65,7 @@ XBase::format(const char* /*id*/, const char* fmt, ...) const throw()
     va_list args;
     va_start(args, fmt);
     try {
-        result = synergy::string::vformat(fmt, args);
+        result = barrier::string::vformat(fmt, args);
     }
     catch (...) {
         // ignore

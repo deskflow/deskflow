@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -139,16 +139,16 @@ private:
     std::string            m_commandLine;
 };
 
-#define DEFAULT_DAEMON_NAME _T("Synergy")
-#define DEFAULT_DAEMON_INFO _T("Manages the Synergy foreground processes.")
+#define DEFAULT_DAEMON_NAME _T("Barrier")
+#define DEFAULT_DAEMON_INFO _T("Manages the Barrier foreground processes.")
 
-#define LEGACY_SERVER_DAEMON_NAME _T("Synergy Server")
-#define LEGACY_CLIENT_DAEMON_NAME _T("Synergy Client")
+#define LEGACY_SERVER_DAEMON_NAME _T("Barrier Server")
+#define LEGACY_CLIENT_DAEMON_NAME _T("Barrier Client")
 
 static const TCHAR* const g_daemonKeyPath[] = {
     _T("SOFTWARE"),
-    _T("The Synergy Project"),
-    _T("Synergy"),
+    _T("The Barrier Project"),
+    _T("Barrier"),
     _T("Service"),
     NULL
 };

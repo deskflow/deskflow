@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
@@ -653,11 +653,11 @@ SecureSocket::formatFingerprint(String& fingerprint, bool hex, bool separator)
 {
     if (hex) {
         // to hexidecimal
-        synergy::string::toHex(fingerprint, 2);
+        barrier::string::toHex(fingerprint, 2);
     }
 
     // all uppercase
-    synergy::string::uppercase(fingerprint);
+    barrier::string::uppercase(fingerprint);
 
     if (separator) {
         // add colon to separate each 2 charactors
@@ -690,7 +690,7 @@ SecureSocket::verifyCertFingerprint()
     LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
     String trustedServersFilename;
-    trustedServersFilename = synergy::string::sprintf(
+    trustedServersFilename = barrier::string::sprintf(
         "%s/%s/%s",
         ARCH->getProfileDirectory().c_str(),
         kFingerprintDirName,

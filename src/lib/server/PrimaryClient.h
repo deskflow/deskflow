@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -19,9 +19,9 @@
 #pragma once
 
 #include "server/BaseClientProxy.h"
-#include "synergy/protocol_types.h"
+#include "barrier/protocol_types.h"
 
-namespace synergy { class Screen; }
+namespace barrier { class Screen; }
 
 //! Primary screen as pseudo-client
 /*!
@@ -34,7 +34,7 @@ public:
     /*!
     \c name is the name of the server and \p screen is primary screen.
     */
-    PrimaryClient(const String& name, synergy::Screen* screen);
+    PrimaryClient(const String& name, barrier::Screen* screen);
     ~PrimaryClient();
 
 #ifdef TEST_ENV
@@ -146,11 +146,11 @@ public:
     virtual void        sendDragInfo(UInt32 fileCount, const char* info, size_t size);
     virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize);
 
-    virtual synergy::IStream*
+    virtual barrier::IStream*
                         getStream() const { return NULL; }
     bool                isPrimary() const { return true; }
 private:
-    synergy::Screen*    m_screen;
+    barrier::Screen*    m_screen;
     bool                m_clipboardDirty[kClipboardEnd];
     SInt32                m_fakeInputCount;
 };

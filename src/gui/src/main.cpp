@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -19,7 +19,7 @@
 #define TRAY_RETRY_COUNT 10
 #define TRAY_RETRY_WAIT 2000
 
-#include "QSynergyApplication.h"
+#include "QBarrierApplication.h"
 #include "LicenseManager.h"
 #include "MainWindow.h"
 #include "AppConfig.h"
@@ -59,18 +59,18 @@ int main(int argc, char* argv[])
     /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is instantiated" */
     ::setenv ("QT_BEARER_POLL_TIMEOUT", "-1", 1);
 #endif
-	QCoreApplication::setOrganizationName("Synergy");
-	QCoreApplication::setOrganizationDomain("http://symless.com/");
-	QCoreApplication::setApplicationName("Synergy");
+	QCoreApplication::setOrganizationName("Barrier");
+	QCoreApplication::setOrganizationDomain("http://github.com/");
+	QCoreApplication::setApplicationName("Barrier");
 
-	QSynergyApplication app(argc, argv);
+	QBarrierApplication app(argc, argv);
 
 #if defined(Q_OS_MAC)
 
 	if (app.applicationDirPath().startsWith("/Volumes/")) {
 		QMessageBox::information(
-			NULL, "Synergy",
-			"Please drag Synergy to the Applications folder, and open it from there.");
+			NULL, "Barrier",
+			"Please drag Barrier to the Applications folder, and open it from there.");
 		return 1;
 	}
 
@@ -125,7 +125,7 @@ int waitForTray()
 
 		if (++trayAttempts > TRAY_RETRY_COUNT)
 		{
-			QMessageBox::critical(NULL, "Synergy",
+			QMessageBox::critical(NULL, "Barrier",
 				QObject::tr("System tray is unavailable, don't close your window."));
 			return true;
 		}
@@ -143,7 +143,7 @@ bool checkMacAssistiveDevices()
 	// new in mavericks, applications are trusted individually
 	// with use of the accessibility api. this call will show a
 	// prompt which can show the security/privacy/accessibility
-	// tab, with a list of allowed applications. synergy should
+	// tab, with a list of allowed applications. barrier should
 	// show up there automatically, but will be unchecked.
 
 	if (AXIsProcessTrusted()) {
@@ -164,10 +164,10 @@ bool checkMacAssistiveDevices()
 	bool result = AXAPIEnabled();
 	if (!result) {
 		QMessageBox::information(
-			NULL, "Synergy",
+			NULL, "Barrier",
 			"Please enable access to assistive devices "
 			"System Preferences -> Security & Privacy -> "
-			"Privacy -> Accessibility, then re-open Synergy.");
+			"Privacy -> Accessibility, then re-open Barrier.");
 	}
 	return result;
 

@@ -1,7 +1,7 @@
 QT += widgets \
     network
 TEMPLATE = app
-TARGET = synergy
+TARGET = barrier
 DEFINES += VERSION_STAGE=\\\"$$QMAKE_VERSION_STAGE\\\"
 DEFINES += VERSION_REVISION=\\\"$$QMAKE_VERSION_REVISION\\\"
 DEFINES -= UNICODE
@@ -43,13 +43,13 @@ SOURCES += src/main.cpp \
     src/KeySequenceWidget.cpp \
     src/SettingsDialog.cpp \
     src/AppConfig.cpp \
-    src/QSynergyApplication.cpp \
+    src/QBarrierApplication.cpp \
     src/VersionChecker.cpp \
     src/SetupWizard.cpp \
     src/IpcClient.cpp \
     src/IpcReader.cpp \
     src/Ipc.cpp \
-    src/SynergyLocale.cpp \
+    src/BarrierLocale.cpp \
     src/QUtility.cpp \
     src/ZeroconfServer.cpp \
     src/ZeroconfThread.cpp \
@@ -88,13 +88,13 @@ HEADERS += src/MainWindow.h \
     src/KeySequenceWidget.h \
     src/SettingsDialog.h \
     src/AppConfig.h \
-    src/QSynergyApplication.h \
+    src/QBarrierApplication.h \
     src/VersionChecker.h \
     src/SetupWizard.h \
     src/IpcClient.h \
     src/IpcReader.h \
     src/Ipc.h \
-    src/SynergyLocale.h \
+    src/BarrierLocale.h \
     src/QUtility.h \
     src/ZeroconfServer.h \
     src/ZeroconfThread.h \
@@ -118,14 +118,14 @@ HEADERS += src/MainWindow.h \
     ../lib/shared/EditionType.h \
     ../lib/shared/SerialKey.h \
     src/LicenseManager.h
-RESOURCES += res/Synergy.qrc
-RC_FILE = res/win/Synergy.rc
+RESOURCES += res/Barrier.qrc
+RC_FILE = res/win/Barrier.rc
 macx { 
     QMAKE_INFO_PLIST = res/mac/Info.plist
-    TARGET = Synergy
-    QSYNERGY_ICON.files = res/mac/Synergy.icns
-    QSYNERGY_ICON.path = Contents/Resources
-    QMAKE_BUNDLE_DATA += QSYNERGY_ICON
+    TARGET = Barrier
+    QBARRIER_ICON.files = res/mac/Barrier.icns
+    QBARRIER_ICON.path = Contents/Resources
+    QMAKE_BUNDLE_DATA += QBARRIER_ICON
     LIBS += $$MACX_LIBS
 }
 unix:!macx:LIBS += -ldns_sd

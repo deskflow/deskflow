@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless Inc.
  *
  * This package is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ TEST(SerialKeyTests, decode_invalidDigit_returnEmptyString)
 TEST(SerialKeyTests, decode_validSerial_returnPlainText)
 {
     std::string plainText = SerialKey::decode("53796E6572677920726F636B7321");
-    EXPECT_EQ("Synergy rocks!", plainText);
+    EXPECT_EQ("Barrier rocks!", plainText);
 }
 
 TEST(SerialKeyTests, parse_noParty_invalid)
@@ -49,7 +49,7 @@ TEST(SerialKeyTests, parse_noParty_invalid)
 TEST(SerialKeyTests, parse_invalidPartsLenghth_invalid)
 {
     SerialKey serial;
-    bool r = serial.parse("{Synergy;Rocks}");
+    bool r = serial.parse("{Barrier;Rocks}");
     EXPECT_FALSE(r);
 }
 

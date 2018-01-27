@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Barrier
+Comment=Keyboard and mouse sharing solution
+Path=/usr/bin
+Exec=/usr/bin/barrier
+Icon=barrier
+Terminal=false
+Categories=Utility;
+Keywords=keyboard;mouse;sharing;network;share;
+

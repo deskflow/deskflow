@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "synergy/KeyState.h"
+#include "barrier/KeyState.h"
 #include "common/stdmap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
@@ -37,7 +37,7 @@ public:
     typedef std::vector<KeyID> KeyIDs;
 
     OSXKeyState(IEventQueue* events);
-    OSXKeyState(IEventQueue* events, synergy::KeyMap& keyMap);
+    OSXKeyState(IEventQueue* events, barrier::KeyMap& keyMap);
     virtual ~OSXKeyState();
 
     //! @name modifiers
@@ -55,9 +55,9 @@ public:
     //! @name accessors
     //@{
 
-    //! Convert OS X modifier mask to synergy mask
+    //! Convert OS X modifier mask to barrier mask
     /*!
-    Returns the synergy modifier mask corresponding to the OS X modifier
+    Returns the barrier modifier mask corresponding to the OS X modifier
     mask in \p mask.
     */
     KeyModifierMask        mapModifiersFromOSX(UInt32 mask) const;
@@ -84,7 +84,7 @@ public:
     Calculates mac virtual key and mask for a key \p key and modifiers
     \p mask.  Returns \c true if the key can be mapped, \c false otherwise.
     */
-    bool                mapSynergyHotKeyToMac(KeyID key, KeyModifierMask mask,
+    bool                mapBarrierHotKeyToMac(KeyID key, KeyModifierMask mask,
                             UInt32& macVirtualKey,
                             UInt32& macModifierMask) const;
 
@@ -101,19 +101,19 @@ public:
     CGEventFlags getModifierStateAsOSXFlags();
 protected:
     // KeyState overrides
-    virtual void        getKeyMap(synergy::KeyMap& keyMap);
+    virtual void        getKeyMap(barrier::KeyMap& keyMap);
     virtual void        fakeKey(const Keystroke& keystroke);
 
 private:
     class KeyResource;
     typedef std::vector<KeyLayout> GroupList;
 
-    // Add hard coded special keys to a synergy::KeyMap.
+    // Add hard coded special keys to a barrier::KeyMap.
     void                getKeyMapForSpecialKeys(
-                            synergy::KeyMap& keyMap, SInt32 group) const;
+                            barrier::KeyMap& keyMap, SInt32 group) const;
 
     // Convert keyboard resource to a key map
-    bool                getKeyMap(synergy::KeyMap& keyMap,
+    bool                getKeyMap(barrier::KeyMap& keyMap,
                             SInt32 group, const IOSXKeyResource& r) const;
 
     // Get the available keyboard groups
@@ -157,7 +157,7 @@ private:
                             const bool postDown);
 
 private:
-    // OS X uses a physical key if 0 for the 'A' key.  synergy reserves
+    // OS X uses a physical key if 0 for the 'A' key.  barrier reserves
     // KeyButton 0 so we offset all OS X physical key ids by this much
     // when used as a KeyButton and by minus this much to map a KeyButton
     // to a physical button.

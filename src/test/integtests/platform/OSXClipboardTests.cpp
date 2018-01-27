@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  * 
@@ -35,7 +35,7 @@ TEST(OSXClipboardTests, empty_singleFormat_hasReturnsFalse)
 {
     OSXClipboard clipboard;
     clipboard.open(0);
-    clipboard.add(OSXClipboard::kText, "synergy rocks!");
+    clipboard.add(OSXClipboard::kText, "barrier rocks!");
     
     clipboard.empty();
     
@@ -48,10 +48,10 @@ TEST(OSXClipboardTests, add_newValue_valueWasStored)
     OSXClipboard clipboard;
     clipboard.open(0);
     
-    clipboard.add(IClipboard::kText, "synergy rocks!");
+    clipboard.add(IClipboard::kText, "barrier rocks!");
     
     String actual = clipboard.get(IClipboard::kText);
-    EXPECT_EQ("synergy rocks!", actual);
+    EXPECT_EQ("barrier rocks!", actual);
 }
 
 TEST(OSXClipboardTests, add_replaceValue_valueWasReplaced)
@@ -59,7 +59,7 @@ TEST(OSXClipboardTests, add_replaceValue_valueWasReplaced)
     OSXClipboard clipboard;
     clipboard.open(0);
     
-    clipboard.add(IClipboard::kText, "synergy rocks!");
+    clipboard.add(IClipboard::kText, "barrier rocks!");
     clipboard.add(IClipboard::kText, "maxivista sucks"); // haha, just kidding.
     
     String actual = clipboard.get(IClipboard::kText);
@@ -122,7 +122,7 @@ TEST(OSXClipboardTests, has_withFormatAdded_returnsTrue)
     OSXClipboard clipboard;
     clipboard.open(0);
     clipboard.empty();
-    clipboard.add(IClipboard::kText, "synergy rocks!");
+    clipboard.add(IClipboard::kText, "barrier rocks!");
     
     bool actual = clipboard.has(IClipboard::kText);
     
@@ -156,9 +156,9 @@ TEST(OSXClipboardTests, get_withFormatAdded_returnsExpected)
     OSXClipboard clipboard;
     clipboard.open(0);
     clipboard.empty();
-    clipboard.add(IClipboard::kText, "synergy rocks!");
+    clipboard.add(IClipboard::kText, "barrier rocks!");
     
     String actual = clipboard.get(IClipboard::kText);
     
-    EXPECT_EQ("synergy rocks!", actual);
+    EXPECT_EQ("barrier rocks!", actual);
 }

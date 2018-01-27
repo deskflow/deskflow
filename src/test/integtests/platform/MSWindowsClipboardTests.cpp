@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  * 
@@ -74,7 +74,7 @@ TEST_F(MSWindowsClipboardTests, empty_singleFormat_hasReturnsFalse)
 {
     MSWindowsClipboard clipboard(NULL);
     clipboard.open(0);
-    clipboard.add(MSWindowsClipboard::kText, "synergy rocks!");
+    clipboard.add(MSWindowsClipboard::kText, "barrier rocks!");
 
     clipboard.empty();
 
@@ -87,10 +87,10 @@ TEST_F(MSWindowsClipboardTests, add_newValue_valueWasStored)
     MSWindowsClipboard clipboard(NULL);
     clipboard.open(0);
 
-    clipboard.add(IClipboard::kText, "synergy rocks!");
+    clipboard.add(IClipboard::kText, "barrier rocks!");
 
     String actual = clipboard.get(IClipboard::kText);
-    EXPECT_EQ("synergy rocks!", actual);
+    EXPECT_EQ("barrier rocks!", actual);
 }
 
 TEST_F(MSWindowsClipboardTests, add_newValue_writeWasCalled)
@@ -102,7 +102,7 @@ TEST_F(MSWindowsClipboardTests, add_newValue_writeWasCalled)
     clipboard.setFacade(facade);
     clipboard.open(0);
 
-    clipboard.add(IClipboard::kText, "synergy rocks!");
+    clipboard.add(IClipboard::kText, "barrier rocks!");
 }
 
 TEST_F(MSWindowsClipboardTests, add_replaceValue_valueWasReplaced)
@@ -110,7 +110,7 @@ TEST_F(MSWindowsClipboardTests, add_replaceValue_valueWasReplaced)
     MSWindowsClipboard clipboard(NULL);
     clipboard.open(0);
 
-    clipboard.add(IClipboard::kText, "synergy rocks!");
+    clipboard.add(IClipboard::kText, "barrier rocks!");
     clipboard.add(IClipboard::kText, "maxivista sucks"); // haha, just kidding.
 
     String actual = clipboard.get(IClipboard::kText);
@@ -177,7 +177,7 @@ TEST_F(MSWindowsClipboardTests, has_withFormatAdded_returnsTrue)
     MSWindowsClipboard clipboard(NULL);
     clipboard.open(0);
     clipboard.empty();
-    clipboard.add(IClipboard::kText, "synergy rocks!");
+    clipboard.add(IClipboard::kText, "barrier rocks!");
 
     bool actual = clipboard.has(IClipboard::kText);
 
@@ -211,19 +211,19 @@ TEST_F(MSWindowsClipboardTests, get_withFormatAdded_returnsExpected)
     MSWindowsClipboard clipboard(NULL);
     clipboard.open(0);
     clipboard.empty();
-    clipboard.add(IClipboard::kText, "synergy rocks!");
+    clipboard.add(IClipboard::kText, "barrier rocks!");
 
     String actual = clipboard.get(IClipboard::kText);
 
-    EXPECT_EQ("synergy rocks!", actual);
+    EXPECT_EQ("barrier rocks!", actual);
 }
 
-TEST_F(MSWindowsClipboardTests, isOwnedBySynergy_defaultState_noError)
+TEST_F(MSWindowsClipboardTests, isOwnedByBarrier_defaultState_noError)
 {
     MSWindowsClipboard clipboard(NULL);
     clipboard.open(0);
 
-    bool actual = clipboard.isOwnedBySynergy();
+    bool actual = clipboard.isOwnedByBarrier();
 
     EXPECT_EQ(true, actual);
 }

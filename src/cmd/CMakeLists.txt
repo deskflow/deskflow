@@ -1,4 +1,4 @@
-# synergy -- mouse and keyboard sharing utility
+# barrier -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2011 Nick Bolton
 # 
@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(synergyc)
-add_subdirectory(synergys)
+add_subdirectory(barrierc)
+add_subdirectory(barriers)
 add_subdirectory(syntool)
 
-if (SYNERGY_BUILD_LEGACY_SERVICE)
-	add_subdirectory(synergyd)
-endif (SYNERGY_BUILD_LEGACY_SERVICE)
+if (BARRIER_BUILD_LEGACY_SERVICE)
+	add_subdirectory(barrierd)
+endif (BARRIER_BUILD_LEGACY_SERVICE)
 

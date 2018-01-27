@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -27,9 +27,9 @@
 #include "platform/OSXDragSimulator.h"
 #include "platform/OSXMediaKeySupport.h"
 #include "platform/OSXPasteboardPeeker.h"
-#include "synergy/Clipboard.h"
-#include "synergy/KeyMap.h"
-#include "synergy/ClientApp.h"
+#include "barrier/Clipboard.h"
+#include "barrier/KeyMap.h"
+#include "barrier/ClientApp.h"
 #include "mt/CondVar.h"
 #include "mt/Lock.h"
 #include "mt/Mutex.h"
@@ -48,9 +48,9 @@
 
 // This isn't in any Apple SDK that I know of as of yet.
 enum {
-	kSynergyEventMouseScroll = 11,
-	kSynergyMouseScrollAxisX = 'saxx',
-	kSynergyMouseScrollAxisY = 'saxy'
+	kBarrierEventMouseScroll = 11,
+	kBarrierMouseScrollAxisX = 'saxx',
+	kBarrierMouseScrollAxisY = 'saxy'
 };
 
 enum {
@@ -319,9 +319,9 @@ OSXScreen::getCursorCenter(SInt32& x, SInt32& y) const
 UInt32
 OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
-	// get mac virtual key and modifier mask matching synergy key and mask
+	// get mac virtual key and modifier mask matching barrier key and mask
 	UInt32 macKey, macMask;
-	if (!m_keyState->mapSynergyHotKeyToMac(key, mask, macKey, macMask)) {
+	if (!m_keyState->mapBarrierHotKeyToMac(key, mask, macKey, macMask)) {
 		LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
 		return 0;
 	}
@@ -361,13 +361,13 @@ OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 	if (!okay) {
 		m_oldHotKeyIDs.push_back(id);
 		m_hotKeyToIDMap.erase(HotKeyItem(macKey, macMask));
-		LOG((CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", synergy::KeyMap::formatKey(key, mask).c_str(), key, mask));
+		LOG((CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", barrier::KeyMap::formatKey(key, mask).c_str(), key, mask));
 		return 0;
 	}
 
 	m_hotKeys.insert(std::make_pair(id, HotKeyItem(ref, macKey, macMask)));
 	
-	LOG((CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", synergy::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
+	LOG((CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", barrier::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
 	return id;
 }
 
@@ -510,7 +510,7 @@ void
 OSXScreen::fakeMouseButton(ButtonID id, bool press)
 {
 	// Buttons are indexed from one, but the button down array is indexed from zero
-	UInt32 index = mapSynergyButtonToMac(id) - kButtonLeft;
+	UInt32 index = mapBarrierButtonToMac(id) - kButtonLeft;
 	if (index >= NumButtonIDs) {
 		return;
 	}
@@ -676,8 +676,8 @@ OSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 		// is the right choice here over kCGScrollEventUnitPixel
 		CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(
 			NULL, kCGScrollEventUnitLine, 2,
-			mapScrollWheelFromSynergy(yDelta),
-			-mapScrollWheelFromSynergy(xDelta));
+			mapScrollWheelFromBarrier(yDelta),
+			-mapScrollWheelFromBarrier(xDelta));
 		
         // Fix for sticky keys
         CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
@@ -999,7 +999,7 @@ OSXScreen::handleSystemEvent(const Event& event, void*)
 	switch (eventClass) {
 	case kEventClassMouse:
 		switch (GetEventKind(*carbonEvent)) {
-		case kSynergyEventMouseScroll:
+		case kBarrierEventMouseScroll:
 		{
 			OSStatus r;
 			long xScroll;
@@ -1007,7 +1007,7 @@ OSXScreen::handleSystemEvent(const Event& event, void*)
 
 			// get scroll amount
 			r = GetEventParameter(*carbonEvent,
-					kSynergyMouseScrollAxisX,
+					kBarrierMouseScrollAxisX,
 					typeSInt32,
 					NULL,
 					sizeof(xScroll),
@@ -1017,7 +1017,7 @@ OSXScreen::handleSystemEvent(const Event& event, void*)
 				xScroll = 0;
 			}
 			r = GetEventParameter(*carbonEvent,
-					kSynergyMouseScrollAxisY,
+					kBarrierMouseScrollAxisY,
 					typeSInt32,
 					NULL,
 					sizeof(yScroll),
@@ -1028,8 +1028,8 @@ OSXScreen::handleSystemEvent(const Event& event, void*)
 			}
 
 			if (xScroll != 0 || yScroll != 0) {
-				onMouseWheel(-mapScrollWheelToSynergy(xScroll),
-								mapScrollWheelToSynergy(yScroll));
+				onMouseWheel(-mapScrollWheelToBarrier(xScroll),
+								mapScrollWheelToBarrier(yScroll));
 			}
 		}
 		}
@@ -1129,7 +1129,7 @@ bool
 OSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 {
 	// Buttons 2 and 3 are inverted on the mac
-	ButtonID button = mapMacButtonToSynergy(macButton);
+	ButtonID button = mapMacButtonToBarrier(macButton);
 
 	if (pressed) {
 		LOG((CLOG_DEBUG1 "event: button press button=%d", button));
@@ -1389,7 +1389,7 @@ OSXScreen::onHotKey(EventRef event) const
 }
 
 ButtonID
-OSXScreen::mapSynergyButtonToMac(UInt16 button) const
+OSXScreen::mapBarrierButtonToMac(UInt16 button) const
 {
     switch (button) {
     case 1:
@@ -1404,7 +1404,7 @@ OSXScreen::mapSynergyButtonToMac(UInt16 button) const
 }
 
 ButtonID 
-OSXScreen::mapMacButtonToSynergy(UInt16 macButton) const
+OSXScreen::mapMacButtonToBarrier(UInt16 macButton) const
 {
 	switch (macButton) {
 	case 1:
@@ -1421,7 +1421,7 @@ OSXScreen::mapMacButtonToSynergy(UInt16 macButton) const
 }
 
 SInt32
-OSXScreen::mapScrollWheelToSynergy(SInt32 x) const
+OSXScreen::mapScrollWheelToBarrier(SInt32 x) const
 {
 	// return accelerated scrolling but not exponentially scaled as it is
 	// on the mac.
@@ -1430,7 +1430,7 @@ OSXScreen::mapScrollWheelToSynergy(SInt32 x) const
 }
 
 SInt32
-OSXScreen::mapScrollWheelFromSynergy(SInt32 x) const
+OSXScreen::mapScrollWheelFromBarrier(SInt32 x) const
 {
 	// use server's acceleration with a little boost since other platforms
 	// take one wheel step as a larger step than the mac does.
@@ -1885,7 +1885,7 @@ OSXScreen::HotKeyItem::operator<(const HotKeyItem& x) const
 }
 
 // Quartz event tap support for the secondary display. This makes sure that we
-// will show the cursor if a local event comes in while synergy has the cursor
+// will show the cursor if a local event comes in while barrier has the cursor
 // off the screen.
 CGEventRef
 OSXScreen::handleCGInputEventSecondary(
@@ -1947,9 +1947,9 @@ OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 			return event;
 			break;
 		case kCGEventScrollWheel:
-			screen->onMouseWheel(screen->mapScrollWheelToSynergy(
+			screen->onMouseWheel(screen->mapScrollWheelToBarrier(
 								 CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis2)),
-								 screen->mapScrollWheelToSynergy(
+								 screen->mapScrollWheelToBarrier(
 								 CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis1)));
 			break;
 		case kCGEventKeyDown:

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -28,7 +28,7 @@
 
 static const char* s_settingsKeyNames[] = {
     _T("SOFTWARE"),
-    _T("Synergy"),
+    _T("Barrier"),
     NULL
 };
 

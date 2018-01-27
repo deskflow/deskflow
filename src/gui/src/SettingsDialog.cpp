@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
@@ -19,8 +19,8 @@
 #include "SettingsDialog.h"
 
 #include "CoreInterface.h"
-#include "SynergyLocale.h"
-#include "QSynergyApplication.h"
+#include "BarrierLocale.h"
+#include "QBarrierApplication.h"
 #include "QUtility.h"
 #include "AppConfig.h"
 #include "SslCertificate.h"
@@ -84,7 +84,7 @@ void SettingsDialog::accept()
 void SettingsDialog::reject()
 {
     if (appConfig().language() != m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString()) {
-        QSynergyApplication::getInstance()->switchTranslator(appConfig().language());
+        QBarrierApplication::getInstance()->switchTranslator(appConfig().language());
     }
 
     QDialog::reject();
@@ -138,7 +138,7 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked()
 void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 {
     QString ietfCode = m_pComboLanguage->itemData(index).toString();
-    QSynergyApplication::getInstance()->switchTranslator(ietfCode);
+    QBarrierApplication::getInstance()->switchTranslator(ietfCode);
 }
 
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)

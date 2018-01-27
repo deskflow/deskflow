@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -23,13 +23,13 @@
 
 class ClientProxy;
 class EventQueueTimer;
-namespace synergy { class IStream; }
+namespace barrier { class IStream; }
 class Server;
 class IEventQueue;
 
 class ClientProxyUnknown {
 public:
-    ClientProxyUnknown(synergy::IStream* stream, double timeout, Server* server, IEventQueue* events);
+    ClientProxyUnknown(barrier::IStream* stream, double timeout, Server* server, IEventQueue* events);
     ~ClientProxyUnknown();
 
     //! @name manipulators
@@ -44,7 +44,7 @@ public:
     ClientProxy*        orphanClientProxy();
 
     //! Get the stream
-    synergy::IStream*    getStream() { return m_stream; }
+    barrier::IStream*    getStream() { return m_stream; }
 
     //@}
 
@@ -62,7 +62,7 @@ private:
     void                handleReady(const Event&, void*);
 
 private:
-    synergy::IStream*    m_stream;
+    barrier::IStream*    m_stream;
     EventQueueTimer*    m_timer;
     ClientProxy*        m_proxy;
     bool                m_ready;

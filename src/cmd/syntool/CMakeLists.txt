@@ -1,4 +1,4 @@
-# synergy -- mouse and keyboard sharing utility
+# barrier -- mouse and keyboard sharing utility
 # Copyright (C) 2014-2016 Symless Ltd.
 # 
 # This package is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ target_link_libraries(syntool
     synlib arch base client common io ipc mt net platform server ${libs} ${OPENSSL_LIBS})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    install (TARGETS syntool DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
+    install (TARGETS syntool DESTINATION ${BARRIER_BUNDLE_BINARY_DIR})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     install (TARGETS syntool DESTINATION bin)
 endif()

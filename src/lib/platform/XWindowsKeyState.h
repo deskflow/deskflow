@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  * 
@@ -18,18 +18,18 @@
 
 #pragma once
 
-#include "synergy/KeyState.h"
+#include "barrier/KeyState.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"
 
 #if X_DISPLAY_MISSING
-#    error X11 is required to build synergy
+#    error X11 is required to build barrier
 #else
 #    include <X11/Xlib.h>
 #    if HAVE_X11_EXTENSIONS_XTEST_H
 #        include <X11/extensions/XTest.h>
 #    else
-#        error The XTest extension is required to build synergy
+#        error The XTest extension is required to build barrier
 #    endif
 #    if HAVE_XKB_EXTENSION
 #        include <X11/extensions/XKBstr.h>
@@ -52,7 +52,7 @@ public:
 
     XWindowsKeyState(Display*, bool useXKB, IEventQueue* events);
     XWindowsKeyState(Display*, bool useXKB,
-        IEventQueue* events, synergy::KeyMap& keyMap);
+        IEventQueue* events, barrier::KeyMap& keyMap);
     ~XWindowsKeyState();
 
     //! @name modifiers
@@ -78,24 +78,24 @@ public:
     //! @name accessors
     //@{
 
-    //! Convert X modifier mask to synergy mask
+    //! Convert X modifier mask to barrier mask
     /*!
-    Returns the synergy modifier mask corresponding to the X modifier
+    Returns the barrier modifier mask corresponding to the X modifier
     mask in \p state.
     */
     KeyModifierMask        mapModifiersFromX(unsigned int state) const;
 
-    //! Convert synergy modifier mask to X mask
+    //! Convert barrier modifier mask to X mask
     /*!
-    Converts the synergy modifier mask to the corresponding X modifier
+    Converts the barrier modifier mask to the corresponding X modifier
     mask.  Returns \c true if successful and \c false if any modifier
     could not be converted.
     */
     bool                mapModifiersToX(KeyModifierMask, unsigned int&) const;
 
-    //! Convert synergy key to all corresponding X keycodes
+    //! Convert barrier key to all corresponding X keycodes
     /*!
-    Converts the synergy key \p key to all of the keycodes that map to
+    Converts the barrier key \p key to all of the keycodes that map to
     that key.
     */
     void                mapKeyToKeycodes(KeyID key,
@@ -112,19 +112,19 @@ public:
 
 protected:
     // KeyState overrides
-    virtual void        getKeyMap(synergy::KeyMap& keyMap);
+    virtual void        getKeyMap(barrier::KeyMap& keyMap);
     virtual void        fakeKey(const Keystroke& keystroke);
 
 private:
     void                init(Display* display, bool useXKB);
-    void                updateKeysymMap(synergy::KeyMap&);
-    void                updateKeysymMapXKB(synergy::KeyMap&);
+    void                updateKeysymMap(barrier::KeyMap&);
+    void                updateKeysymMapXKB(barrier::KeyMap&);
     bool                hasModifiersXKB() const;
     int                    getEffectiveGroup(KeyCode, int group) const;
     UInt32                getGroupFromState(unsigned int state) const;
 
     static void            remapKeyModifiers(KeyID, SInt32,
-                            synergy::KeyMap::KeyItem&, void*);
+                            barrier::KeyMap::KeyItem&, void*);
 
 private:
     struct XKBModifierInfo {
@@ -153,10 +153,10 @@ private:
     XKBModifierMap        m_lastGoodXKBModifiers;
     NonXKBModifierMap    m_lastGoodNonXKBModifiers;
 
-    // X modifier (bit number) to synergy modifier (mask) mapping
+    // X modifier (bit number) to barrier modifier (mask) mapping
     KeyModifierMaskList    m_modifierFromX;
 
-    // synergy modifier (mask) to X modifier (mask)
+    // barrier modifier (mask) to X modifier (mask)
     KeyModifierToXMask    m_modifierToX;
 
     // map KeyID to all keycodes that can synthesize that KeyID

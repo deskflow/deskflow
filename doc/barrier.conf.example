@@ -1,0 +1,37 @@
+# sample barrier configuration file
+#
+# comments begin with the # character and continue to the end of
+# line.  comments may appear anywhere the syntax permits.
+
+section: screens
+	# three hosts named:  moe, larry, and curly
+	moe:
+	larry:
+	curly:
+end
+
+section: links
+	# larry is to the right of moe and curly is above moe
+	moe:
+		right = larry
+		up    = curly
+
+	# moe is to the left of larry and curly is above larry.
+	# note that curly is above both moe and larry and moe
+	# and larry have a symmetric connection (they're in
+	# opposite directions of each other).
+	larry:
+		left  = moe
+		up    = curly
+
+	# larry is below curly.  if you move up from moe and then
+	# down, you'll end up on larry.
+	curly:
+		down  = larry
+end
+
+section: aliases
+	# curly is also known as shemp
+	curly:
+		shemp
+end

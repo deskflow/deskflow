@@ -36,7 +36,7 @@ void ActivationDialog::refreshSerialKey()
     ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
     ui->m_trialLabel->setText(tr("<html><head/><body><p>Your trial has "
                                  "expired. <a href=\"https://symless.com/"
-                                 "synergy/trial/thanks?id=%1\"><span "
+                                 "barrier/trial/thanks?id=%1\"><span "
                                  "style=\"text-decoration: underline; "
                                  "color:#0000ff;\">Buy now!</span></a>"
                                  "</p></body></html>")
@@ -77,7 +77,7 @@ void ActivationDialog::accept()
     }
     catch (std::exception& e) {
         message.critical(this, "Unknown Error",
-            tr("An error occurred while trying to activate Synergy. "
+            tr("An error occurred while trying to activate Barrier. "
                 "Please contact the helpdesk, and provide the "
                 "following information:\n\n%1").arg(e.what()));
         refreshSerialKey();

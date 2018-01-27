@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -18,13 +18,13 @@
 
 #pragma once
 
-#include "synergy/PlatformScreen.h"
-#include "synergy/KeyMap.h"
+#include "barrier/PlatformScreen.h"
+#include "barrier/KeyMap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
 
 #if X_DISPLAY_MISSING
-#    error X11 is required to build synergy
+#    error X11 is required to build barrier
 #else
 #    include <X11/Xlib.h>
 #endif
@@ -244,7 +244,7 @@ private:
     int                 m_xrandrEventBase;
 
     IEventQueue*        m_events;
-    synergy::KeyMap                m_keyMap;
+    barrier::KeyMap                m_keyMap;
 
     // pointer to (singleton) screen.  this is only needed by
     // ioErrorHandler().

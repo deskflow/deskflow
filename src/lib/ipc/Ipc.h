@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
  * 
@@ -35,18 +35,18 @@ enum EIpcClientType {
 };
 
 // handshake: node/gui -> daemon
-// $1 = type, the client identifies it's self as gui or node (synergyc/s).
+// $1 = type, the client identifies it's self as gui or node (barrierc/s).
 extern const char*        kIpcMsgHello;
 
 // log line: daemon -> gui
-// $1 = aggregate log lines collected from synergys/c or the daemon itself.
+// $1 = aggregate log lines collected from barriers/c or the daemon itself.
 extern const char*        kIpcMsgLogLine;
 
 // command: gui -> daemon
 // $1 = command; the command for the daemon to launch, typically the full
-// path to synergys/c. $2 = true when process must be elevated on ms windows.
+// path to barriers/c. $2 = true when process must be elevated on ms windows.
 extern const char*        kIpcMsgCommand;
 
 // shutdown: daemon -> node
-// the daemon tells synergys/c to shut down gracefully.
+// the daemon tells barriers/c to shut down gracefully.
 extern const char*        kIpcMsgShutdown;

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -29,9 +29,9 @@
 static const char kCoreBinary[] = "syntool";
 
 #ifdef Q_WS_WIN
-static const char kSerialKeyFilename[] = "Synergy.subkey";
+static const char kSerialKeyFilename[] = "Barrier.subkey";
 #else
-static const char kSerialKeyFilename[] = ".synergy.subkey";
+static const char kSerialKeyFilename[] = ".barrier.subkey";
 #endif
 
 CoreInterface::CoreInterface()

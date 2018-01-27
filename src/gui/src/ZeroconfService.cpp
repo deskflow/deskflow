@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -33,8 +33,8 @@ static const QStringList preferedIPAddress(
                 "10." <<
                 "172.");
 
-const char* ZeroconfService:: m_ServerServiceName = "_synergyServerZeroconf._tcp";
-const char* ZeroconfService:: m_ClientServiceName = "_synergyClientZeroconf._tcp";
+const char* ZeroconfService:: m_ServerServiceName = "_barrierServerZeroconf._tcp";
+const char* ZeroconfService:: m_ClientServiceName = "_barrierClientZeroconf._tcp";
 
 ZeroconfService::ZeroconfService(MainWindow* mainWindow) :
     m_pMainWindow(mainWindow),
@@ -42,7 +42,7 @@ ZeroconfService::ZeroconfService(MainWindow* mainWindow) :
     m_pZeroconfRegister(0),
     m_ServiceRegistered(false)
 {
-    if (m_pMainWindow->synergyType() == MainWindow::synergyServer) {
+    if (m_pMainWindow->barrierType() == MainWindow::barrierServer) {
         if (registerService(true)) {
             m_pZeroconfBrowser = new ZeroconfBrowser(this);
             connect(m_pZeroconfBrowser, SIGNAL(
@@ -137,7 +137,7 @@ bool ZeroconfService::registerService(bool server)
             if (server) {
                 QString localIP = getLocalIPAddresses();
                 if (localIP.isEmpty()) {
-                    QMessageBox::warning(m_pMainWindow, tr("Synergy"),
+                    QMessageBox::warning(m_pMainWindow, tr("Barrier"),
                         tr("Failed to get local IP address. "
                            "Please manually type in server address "
                            "on your clients"));

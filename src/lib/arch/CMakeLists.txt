@@ -1,4 +1,4 @@
-# synergy -- mouse and keyboard sharing utility
+# barrier -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2016 Symless Ltd.
 # Copyright (C) 2009 Nick Bolton
 # 
@@ -17,7 +17,7 @@
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
-if (SYNERGY_ADD_HEADERS)
+if (BARRIER_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
@@ -33,7 +33,7 @@ endif()
 list(APPEND sources ${arch_sources})
 list(APPEND headers ${arch_headers})
 
-if (SYNERGY_ADD_HEADERS)
+if (BARRIER_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
