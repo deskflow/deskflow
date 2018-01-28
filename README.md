@@ -4,7 +4,7 @@ Eliminate the barrier between your machines.
 
 ### What is it?
 
-Barrier is KVM software forked from Symless's barrier 1.9 codebase. Barrier was a commercialized reimplementation of the original CosmoBarrier written by Chris Schoeneman.
+Barrier is KVM software forked from Symless's barrier 1.9 codebase. Barrier was a commercialized reimplementation of the original CosmoSynergy written by Chris Schoeneman.
 
 ### What's different?
 
