@@ -133,6 +133,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_pComboServerList->hide();
     m_pLabelPadlock->hide();
 
+    sslToggled(appConfig.getCryptoEnabled());
+
     connect (this, SIGNAL(windowShown()),
              this, SLOT(on_windowShown()), Qt::QueuedConnection);
 
@@ -494,12 +496,6 @@ void MainWindow::restartBarrier()
 
 void MainWindow::proofreadInfo()
 {
-    if (m_AppConfig->getCryptoEnabled()) {
-        m_pSslCertificate = new SslCertificate(this);
-        m_pSslCertificate->generateCertificate();
-    }
-    updateLocalFingerprint();
-    saveSettings();
     int oldState = m_BarrierState;
     m_BarrierState = barrierDisconnected;
     setBarrierState((qBarrierState)oldState);
