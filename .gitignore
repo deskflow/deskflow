@@ -1,3 +1,4 @@
+winbuild_env.bat
 config.h
 .DS_Store
 *.pyc
