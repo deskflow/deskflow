@@ -30,8 +30,8 @@ static const char kSslDir[] = "SSL";
 static const char kUnixOpenSslCommand[] = "openssl";
 
 #if defined(Q_OS_WIN)
-static const char kWinOpenSslBinary[] = "OpenSSL\\openssl.exe";
-static const char kConfigFile[] = "OpenSSL\\barrier.conf";
+static const char kWinOpenSslBinary[] = "openssl.exe";
+static const char kConfigFile[] = "barrier.conf";
 #endif
 
 SslCertificate::SslCertificate(QObject *parent) :
