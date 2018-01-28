@@ -24,4 +24,4 @@ else()
 endif()
 
 target_link_libraries (barrierd
-    arch base common io ipc mt net platform synlib shared ${libs} ${OPENSSL_LIBS})
+    arch base common io ipc mt net platform synlib ${libs} ${OPENSSL_LIBS})

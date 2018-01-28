@@ -59,8 +59,7 @@ AppConfig::AppConfig(QSettings* settings) :
     m_ElevateMode(defaultElevateMode),
     m_AutoConfigPrompted(false),
     m_CryptoEnabled(false),
-    m_AutoHide(false),
-    m_LastExpiringWarningTime(0)
+    m_AutoHide(false)
 {
     Q_ASSERT(m_pSettings);
 
@@ -156,14 +155,8 @@ void AppConfig::loadSettings()
     }
     m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
     m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
-    m_Edition = static_cast<Edition>(settings().value("edition", kUnregistered).toInt());
-    m_ActivateEmail = settings().value("activateEmail", "").toString();
     m_CryptoEnabled = settings().value("cryptoEnabled", true).toBool();
     m_AutoHide = settings().value("autoHide", false).toBool();
-    m_Serialkey = settings().value("serialKey", "").toString().trimmed();
-    m_lastVersion = settings().value("lastVersion", "Unknown").toString();
-    m_LastExpiringWarningTime = settings().value("lastExpiringWarningTime", 0).toInt();
-    m_ActivationHasRun = settings().value("activationHasRun", false).toBool();
 }
 
 void AppConfig::saveSettings()
@@ -183,34 +176,9 @@ void AppConfig::saveSettings()
     settings().setValue("elevateMode", m_ElevateMode == ElevateAlways);
     settings().setValue("elevateModeEnum", static_cast<int>(m_ElevateMode));
     settings().setValue("autoConfigPrompted", m_AutoConfigPrompted);
-    settings().setValue("edition", m_Edition);
     settings().setValue("cryptoEnabled", m_CryptoEnabled);
     settings().setValue("autoHide", m_AutoHide);
-    settings().setValue("serialKey", m_Serialkey);
-    settings().setValue("lastVersion", m_lastVersion);
-    settings().setValue("lastExpiringWarningTime", m_LastExpiringWarningTime);
-    settings().setValue("activationHasRun", m_ActivationHasRun);
     settings().sync();
-}
-
-bool AppConfig::activationHasRun() const
-{
-    return m_ActivationHasRun;
-}
-
-AppConfig& AppConfig::activationHasRun(bool value)
-{
-    m_ActivationHasRun = value;
-    return *this;
-}
-
-QString AppConfig::lastVersion() const
-{
-    return m_lastVersion;
-}
-
-void AppConfig::setLastVersion(QString version) {
-    m_lastVersion = version;
 }
 
 QSettings &AppConfig::settings() { return *m_pSettings; }
@@ -247,29 +215,6 @@ void AppConfig::setAutoConfigPrompted(bool prompted)
     m_AutoConfigPrompted = prompted;
 }
 
-void AppConfig::setEdition(Edition e) {
-    m_Edition = e;
-}
-
-Edition AppConfig::edition() const { return m_Edition; }
-
-QString AppConfig::setSerialKey(QString serial) {
-    using std::swap;
-    swap (serial, m_Serialkey);
-    return serial;
-}
-
-void AppConfig::clearSerialKey()
-{
-    m_Serialkey.clear();
-}
-
-QString AppConfig::serialKey() { return m_Serialkey; }
-
-int AppConfig::lastExpiringWarningTime() const { return m_LastExpiringWarningTime; }
-
-void AppConfig::setLastExpiringWarningTime(int t) { m_LastExpiringWarningTime = t; }
-
 QString AppConfig::barriersName() const { return m_BarriersName; }
 
 QString AppConfig::barriercName() const { return m_BarriercName; }
@@ -285,7 +230,7 @@ void AppConfig::setCryptoEnabled(bool e) {
 }
 
 bool AppConfig::getCryptoEnabled() const {
-    return (edition() == kPro) && m_CryptoEnabled;
+    return m_CryptoEnabled;
 }
 
 void AppConfig::setAutoHide(bool b) { m_AutoHide = b; }

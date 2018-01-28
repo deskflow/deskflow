@@ -25,7 +25,6 @@ add_subdirectory(net)
 add_subdirectory(platform)
 add_subdirectory(server)
 add_subdirectory(barrier)
-add_subdirectory(shared)
 
 if (WIN32)
     add_subdirectory(synwinhk)

@@ -26,12 +26,9 @@
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include "ActivationDialog.h"
 #include "ZeroconfService.h"
 #include "DataDownloader.h"
 #include "CommandProcess.h"
-#include "LicenseManager.h"
-#include <shared/EditionType.h>
 #include "QUtility.h"
 #include "ProcessorArch.h"
 #include "SslCertificate.h"
@@ -76,11 +73,9 @@ static const char* barrierIconFiles[] =
     ":/res/icons/16x16/barrier-transfering.png"
 };
 
-MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
-                       LicenseManager& licenseManager) :
+MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_Settings(settings),
     m_AppConfig(&appConfig),
-    m_LicenseManager(&licenseManager),
     m_pBarrier(NULL),
     m_BarrierState(barrierDisconnected),
     m_ServerConfig(&m_Settings, 5, 3, m_AppConfig->screenName(), this),
@@ -101,8 +96,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
     m_BonjourInstall(NULL),
     m_SuppressEmptyServerWarning(false),
     m_ExpectedRunningState(kStopped),
-    m_pSslCertificate(NULL),
-    m_ActivationDialogRunning(false)
+    m_pSslCertificate(NULL)
 {
     setupUi(this);
 
@@ -138,33 +132,12 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
 
     m_pComboServerList->hide();
     m_pLabelPadlock->hide();
-    m_trialWidget->hide();
 
     connect (this, SIGNAL(windowShown()),
              this, SLOT(on_windowShown()), Qt::QueuedConnection);
 
-    connect (m_LicenseManager, SIGNAL(editionChanged(Edition)),
-             this, SLOT(setEdition(Edition)), Qt::QueuedConnection);
-
-    connect (m_LicenseManager, SIGNAL(beginTrial(bool)),
-             this, SLOT(beginTrial(bool)), Qt::QueuedConnection);
-
-    connect (m_LicenseManager, SIGNAL(endTrial(bool)),
-             this, SLOT(endTrial(bool)), Qt::QueuedConnection);
-
     connect (m_AppConfig, SIGNAL(sslToggled(bool)),
              this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
-
-    setWindowTitle (m_LicenseManager->activeEditionName());
-    m_LicenseManager->refresh();
-
-    QString lastVersion = m_AppConfig->lastVersion();
-    QString currentVersion = m_VersionChecker.getVersion();
-    if (lastVersion != currentVersion) {
-        m_AppConfig->setLastVersion (currentVersion);
-        m_AppConfig->saveSettings();
-        m_LicenseManager->notifyUpdate (lastVersion, currentVersion);
-    }
 }
 
 MainWindow::~MainWindow()
@@ -290,8 +263,6 @@ void MainWindow::createMenuBar()
 
     m_pMenuFile->addAction(m_pActionStartBarrier);
     m_pMenuFile->addAction(m_pActionStopBarrier);
-    m_pMenuFile->addSeparator();
-    m_pMenuFile->addAction(m_pActivate);
     m_pMenuFile->addSeparator();
     m_pMenuFile->addAction(m_pActionSave);
     m_pMenuFile->addSeparator();
@@ -431,7 +402,6 @@ void MainWindow::updateFromLogLine(const QString &line)
     // TODO: this code makes Andrew cry
     checkConnected(line);
     checkFingerprint(line);
-    checkLicense(line);
 }
 
 void MainWindow::checkConnected(const QString& line)
@@ -453,14 +423,6 @@ void MainWindow::checkConnected(const QString& line)
             appConfig().setStartedBefore(true);
             appConfig().saveSettings();
         }
-    }
-}
-
-void MainWindow::checkLicense(const QString &line)
-{
-    if (line.contains("trial has expired")) {
-        licenseManager().refresh();
-        raiseActivationDialog();
     }
 }
 
@@ -532,8 +494,12 @@ void MainWindow::restartBarrier()
 
 void MainWindow::proofreadInfo()
 {
-    setEdition(m_AppConfig->edition()); // Why is this here?
-
+    if (m_AppConfig->getCryptoEnabled()) {
+        m_pSslCertificate = new SslCertificate(this);
+        m_pSslCertificate->generateCertificate();
+    }
+    updateLocalFingerprint();
+    saveSettings();
     int oldState = m_BarrierState;
     m_BarrierState = barrierDisconnected;
     setBarrierState((qBarrierState)oldState);
@@ -552,14 +518,6 @@ void MainWindow::clearLog()
 
 void MainWindow::startBarrier()
 {
-    SerialKey serialKey = m_LicenseManager->serialKey();
-    time_t currentTime = ::time(0);
-    if (serialKey.isExpired(currentTime)) {
-        if (QDialog::Rejected == raiseActivationDialog()) {
-            return;
-        }
-    }
-
     bool desktopMode = appConfig().processMode() == Desktop;
     bool serviceMode = appConfig().processMode() == Service;
 
@@ -803,10 +761,6 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
     configFilename = QString("\"%1\"").arg(configFilename);
 #endif
     args << "-c" << configFilename << "--address" << address();
-
-    if (!appConfig().serialKey().isEmpty()) {
-        args << "--serial-key" << appConfig().serialKey();
-    }
 
     return true;
 }
@@ -1054,68 +1008,6 @@ void MainWindow::serverDetected(const QString name)
     }
 }
 
-void MainWindow::setEdition(Edition edition)
-{
-    setWindowTitle(m_LicenseManager->getEditionName (edition));
-    if (m_AppConfig->getCryptoEnabled()) {
-        m_pSslCertificate = new SslCertificate(this);
-        m_pSslCertificate->generateCertificate();
-    }
-    updateLocalFingerprint();
-    saveSettings();
-}
-
-void MainWindow::beginTrial(bool isExpiring)
-{
-    //Hack
-    //if (isExpiring) {
-    time_t daysLeft = m_LicenseManager->serialKey().daysLeft(::time(0));
-        QString expiringNotice ("<html><head/><body><p><span style=\""
-                     "font-weight:600;\">%1</span> day%3 of "
-                     "your %2 trial remain%5. <a href="
-                     "\"https://symless.com/barrier/trial/thanks?id=%4\">"
-                     "<span style=\"text-decoration: underline;"
-                     " color:#0000ff;\">Buy now!</span></a>"
-                     "</p></body></html>");
-        expiringNotice = expiringNotice
-            .arg (daysLeft)
-            .arg (LicenseManager::getEditionName
-                    (m_LicenseManager->activeEdition()))
-            .arg ((daysLeft == 1) ? "" : "s")
-            .arg (QString::fromStdString
-                    (m_LicenseManager->serialKey().toString()))
-            .arg ((daysLeft == 1) ? "s" : "");
-        this->m_trialLabel->setText(expiringNotice);
-        this->m_trialWidget->show();
-    //}
-    setWindowTitle (m_LicenseManager->activeEditionName());
-}
-
-void MainWindow::endTrial(bool isExpired)
-{
-    if (isExpired) {
-        QString expiredNotice (
-            "<html><head/><body><p>Your %1 trial has expired. <a href="
-            "\"https://symless.com/barrier/trial/thanks?id=%2\">"
-            "<span style=\"text-decoration: underline;color:#0000ff;\">"
-            "Buy now!</span></a></p></body></html>"
-        );
-        expiredNotice = expiredNotice
-            .arg(LicenseManager::getEditionName
-                    (m_LicenseManager->activeEdition()))
-            .arg(QString::fromStdString
-                    (m_LicenseManager->serialKey().toString()));
-
-        this->m_trialLabel->setText(expiredNotice);
-        this->m_trialWidget->show();
-        stopBarrier();
-        m_AppConfig->activationHasRun(false);
-    } else {
-        this->m_trialWidget->hide();
-    }
-    setWindowTitle (m_LicenseManager->activeEditionName());
-}
-
 void MainWindow::updateLocalFingerprint()
 {
     if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists()) {
@@ -1127,12 +1019,6 @@ void MainWindow::updateLocalFingerprint()
         m_pLabelFingerprint->setVisible(false);
         m_pLabelLocalFingerprint->setVisible(false);
     }
-}
-
-LicenseManager&
-MainWindow::licenseManager() const
-{
-    return *m_LicenseManager;
 }
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
@@ -1199,14 +1085,6 @@ void MainWindow::on_m_pActionSettings_triggered()
 void MainWindow::autoAddScreen(const QString name)
 {
     if (!m_ServerConfig.ignoreAutoConfigClient()) {
-        if (m_ActivationDialogRunning) {
-            // TODO: refactor this code
-            // add this screen to the pending list and check this list until
-            // users finish activation dialog
-            m_PendingClientNames.append(name);
-            return;
-        }
-
         int r = m_ServerConfig.autoAddScreen(name);
         if (r != kAutoAddScreenOk) {
             switch (r) {
@@ -1240,11 +1118,6 @@ void MainWindow::showConfigureServer(const QString& message)
 void MainWindow::on_m_pButtonConfigureServer_clicked()
 {
     showConfigureServer();
-}
-
-void MainWindow::on_m_pActivate_triggered()
-{
-    raiseActivationDialog();
 }
 
 void MainWindow::on_m_pButtonApply_clicked()
@@ -1456,38 +1329,9 @@ void MainWindow::bonjourInstallFinished()
     m_pCheckBoxAutoConfig->setChecked(true);
 }
 
-int MainWindow::raiseActivationDialog()
-{
-    if (m_ActivationDialogRunning) {
-        return QDialog::Rejected;
-    }
-    ActivationDialog activationDialog (this, appConfig(), licenseManager());
-    m_ActivationDialogRunning = true;
-    connect (&activationDialog, SIGNAL(finished(int)),
-             this, SLOT(on_activationDialogFinish()), Qt::QueuedConnection);
-    int result = activationDialog.exec();
-    m_ActivationDialogRunning = false;
-    if (!m_PendingClientNames.empty()) {
-        foreach (const QString& name, m_PendingClientNames) {
-            autoAddScreen(name);
-        }
-
-        m_PendingClientNames.clear();
-    }
-    if (result == QDialog::Accepted) {
-        restartBarrier();
-    }
-    return result;
-}
-
 void MainWindow::on_windowShown()
 {
-    time_t currentTime = ::time(0);
-    if (!m_AppConfig->activationHasRun()
-            && ((m_AppConfig->edition() == kUnregistered) ||
-                (m_LicenseManager->serialKey().isExpired(currentTime)))) {
-        raiseActivationDialog();
-    }
+    // removed activation garbage; leaving stub to be optimized out
 }
 
 QString MainWindow::getProfileRootForArg()

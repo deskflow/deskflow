@@ -23,7 +23,6 @@
 #include <QObject>
 #include <QString>
 #include "ElevateMode.h"
-#include <shared/EditionType.h>
 
 // this should be incremented each time a new page is added. this is
 // saved to settings when the user finishes running the wizard. if
@@ -39,8 +38,9 @@
 //   6: ssl plugin 'ns' v1.2
 //   7: serial key activation
 //   8: Visual Studio 2015 support
+//   9: synergy->barrier and de-commercialized
 //
-const int kWizardVersion = 8;
+const int kWizardVersion = 9;
 
 class QSettings;
 class SettingsDialog;
@@ -79,13 +79,6 @@ class AppConfig: public QObject
         void setAutoConfig(bool autoConfig);
         bool autoConfigPrompted();
         void setAutoConfigPrompted(bool prompted);
-        void setEdition(Edition);
-        Edition edition() const;
-        QString setSerialKey(QString serial);
-        void clearSerialKey();
-        QString serialKey();
-        int lastExpiringWarningTime() const;
-        void setLastExpiringWarningTime(int t);
 
         QString barriersName() const;
         QString barriercName() const;
@@ -102,13 +95,7 @@ class AppConfig: public QObject
         void setAutoHide(bool b);
         bool getAutoHide();
 
-        bool activationHasRun() const;
-        AppConfig& activationHasRun(bool value);
-
-        QString lastVersion() const;
-
         void saveSettings();
-        void setLastVersion(QString version);
 
 protected:
         QSettings& settings();
@@ -139,14 +126,8 @@ protected:
         bool m_AutoConfig;
         ElevateMode m_ElevateMode;
         bool m_AutoConfigPrompted;
-        Edition m_Edition;
-        QString m_ActivateEmail;
         bool m_CryptoEnabled;
         bool m_AutoHide;
-        QString m_Serialkey;
-        QString m_lastVersion;
-        int m_LastExpiringWarningTime;
-        bool m_ActivationHasRun;
 
         static const char m_BarriersName[];
         static const char m_BarriercName[];

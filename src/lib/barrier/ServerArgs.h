@@ -18,7 +18,6 @@
 #pragma once
 
 #include "barrier/ArgsBase.h"
-#include "shared/SerialKey.h"
 
 class NetworkAddress;
 class Config;
@@ -29,6 +28,5 @@ public:
 
 public:
     String                m_configFile;
-    SerialKey            m_serial;
     Config*                m_config;
 };

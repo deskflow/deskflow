@@ -44,7 +44,6 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "common/stdexcept.h"
-#include "shared/SerialKey.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -452,12 +451,6 @@ Server::switchScreen(BaseClientProxy* dst,
 				SInt32 x, SInt32 y, bool forScreensaver)
 {
 	assert(dst != NULL);
-
-	// if trial is expired, exit the process
-	if (m_args.m_serial.isExpired(std::time(0))) {
-		LOG((CLOG_ERR "trial has expired, aborting server"));
-		exit(kExitSuccess);
-	}
 
 #ifndef NDEBUG
 	{

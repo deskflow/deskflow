@@ -21,7 +21,7 @@ add_executable (barrier WIN32
 )
 
 include_directories (./src)
-target_link_libraries (barrier shared)
+target_link_libraries (barrier)
 
 if (WIN32)
     include_directories ($ENV{BONJOUR_SDK_HOME}/Include)

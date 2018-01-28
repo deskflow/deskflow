@@ -151,7 +151,6 @@ ToolApp::notifyUpdate()
         ss << JSON_URL << "notify/update";
         ss << "?from=" << parts[0];
         ss << "&to=" << parts[1];
-        ss << "&serial=" << parts[2];
 
         std::cout << ARCH->internet().get(ss.str()) << std::endl;
     }
