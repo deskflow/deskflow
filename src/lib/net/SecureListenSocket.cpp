@@ -37,15 +37,6 @@ SecureListenSocket::SecureListenSocket(
 {
 }
 
-SecureListenSocket::~SecureListenSocket()
-{
-    SecureSocketSet::iterator it;
-    for (it = m_secureSocketSet.begin(); it != m_secureSocketSet.end(); it++) {
-        delete *it;
-    }
-    m_secureSocketSet.clear();
-}
-
 IDataSocket*
 SecureListenSocket::accept()
 {
@@ -73,8 +64,6 @@ SecureListenSocket::accept()
         }
 
         socket->secureAccept();
-
-        m_secureSocketSet.insert(socket);
 
         return dynamic_cast<IDataSocket*>(socket);
     }
