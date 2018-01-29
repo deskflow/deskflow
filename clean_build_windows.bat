@@ -55,3 +55,4 @@ set B_QT_ROOT=
 set B_BONJOUR=
 
 cd /d %savedir%
+set savedir=
