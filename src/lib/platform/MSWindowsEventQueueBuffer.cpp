@@ -62,7 +62,7 @@ MSWindowsEventQueueBuffer::waitForEvent(double timeout)
     // MsgWaitForMultipleObjects() will block even if the queue isn't
     // empty if the messages in the queue were there before the last
     // call to GetMessage()/PeekMessage().
-    if (HIWORD(GetQueueStatus(QS_ALLINPUT)) != 0) {
+    if (!isEmpty()) {
         return;
     }
 
@@ -128,7 +128,9 @@ MSWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 bool
 MSWindowsEventQueueBuffer::isEmpty() const
 {
-    return (HIWORD(GetQueueStatus(QS_ALLINPUT)) == 0);
+    // don't use QS_POINTER, QS_TOUCH, or any meta-flags that include them (like QS_ALLINPUT)
+    // because they can cause GetQueueStatus() to always return 0 and we miss events
+    return (HIWORD(GetQueueStatus(QS_POSTMESSAGE)) == 0);
 }
 
 EventQueueTimer*
