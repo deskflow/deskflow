@@ -31,6 +31,7 @@ class IListenSocket;
 class ISocketFactory;
 class Server;
 class IEventQueue;
+class IDataSocket;
 
 class ClientListener {
 public:
@@ -72,10 +73,12 @@ private:
     void                handleClientDisconnected(const Event&, void*);
 
     void                cleanupListenSocket();
+    void                cleanupClientSockets();
 
 private:
     typedef std::set<ClientProxyUnknown*> NewClients;
     typedef std::deque<ClientProxy*> WaitingClients;
+    typedef std::set<IDataSocket*> ClientSockets;
 
     IListenSocket*        m_listen;
     ISocketFactory*        m_socketFactory;
@@ -84,4 +87,5 @@ private:
     Server*                m_server;
     IEventQueue*        m_events;
     bool                m_useSecureNetwork;
+    ClientSockets      m_clientSockets;
 };
