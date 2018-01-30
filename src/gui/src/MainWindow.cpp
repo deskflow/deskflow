@@ -223,28 +223,6 @@ void MainWindow::open()
     }
 }
 
-void MainWindow::onModeChanged(bool startDesktop, bool applyService)
-{
-    if (appConfig().processMode() == Service)
-    {
-        // ensure that the apply button actually does something, since desktop
-        // mode screws around with connecting/disconnecting the action.
-        disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
-        connect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
-
-        if (applyService)
-        {
-            stopDesktop();
-            startSynergy();
-        }
-    }
-    else if ((appConfig().processMode() == Desktop) && startDesktop)
-    {
-        stopService();
-        startSynergy();
-    }
-}
-
 void MainWindow::setStatus(const QString &status)
 {
     m_pStatusLabel->setText(status);
@@ -1093,10 +1071,15 @@ void MainWindow::changeEvent(QEvent* event)
 
             break;
         }
-        default:
-            QMainWindow::changeEvent(event);
+        case QEvent::WindowStateChange:
+        {
+            windowStateChanged();
+            break;
+        }
         }
     }
+    // all that do not return are allowing the event to propagate
+    QMainWindow::changeEvent(event);
 }
 
 void MainWindow::addZeroconfServer(const QString name)
@@ -1291,21 +1274,7 @@ void MainWindow::updateAutoConfigWidgets()
 
 void MainWindow::on_m_pActionSettings_triggered()
 {
-    ProcessMode lastProcessMode = appConfig().processMode();
-    bool lastAutoConfig = appConfig().autoConfig();
-
-    SettingsDialog dlg(this, appConfig());
-    dlg.exec();
-
-    if (lastProcessMode != appConfig().processMode())
-    {
-        onModeChanged(true, true);
-    }
-
-    if (lastAutoConfig != appConfig().autoConfig()) {
-        updateAutoConfigWidgets();
-        updateZeroconfService();
-    }
+    SettingsDialog(this, appConfig()).exec();
 }
 
 void MainWindow::autoAddScreen(const QString name)
@@ -1438,4 +1407,10 @@ void MainWindow::on_m_pComboServerList_currentIndexChanged(const QString &server
 {
     appConfig().setAutoConfigServer(server);
     appConfig().saveSettings();
+}
+
+void MainWindow::windowStateChanged()
+{
+    if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray())
+        hide();
 }
