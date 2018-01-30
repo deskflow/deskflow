@@ -59,7 +59,8 @@ AppConfig::AppConfig(QSettings* settings) :
     m_ElevateMode(defaultElevateMode),
     m_AutoConfigPrompted(false),
     m_CryptoEnabled(false),
-    m_AutoHide(false)
+    m_AutoHide(false),
+    m_MinimizeToTray(false)
 {
     Q_ASSERT(m_pSettings);
 
@@ -157,6 +158,7 @@ void AppConfig::loadSettings()
     m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
     m_CryptoEnabled = settings().value("cryptoEnabled", true).toBool();
     m_AutoHide = settings().value("autoHide", false).toBool();
+    m_MinimizeToTray = settings().value("minimizeToTray", false).toBool();
 }
 
 void AppConfig::saveSettings()
@@ -178,6 +180,7 @@ void AppConfig::saveSettings()
     settings().setValue("autoConfigPrompted", m_AutoConfigPrompted);
     settings().setValue("cryptoEnabled", m_CryptoEnabled);
     settings().setValue("autoHide", m_AutoHide);
+    settings().setValue("minimizeToTray", m_MinimizeToTray);
     settings().sync();
 }
 
@@ -236,3 +239,7 @@ bool AppConfig::getCryptoEnabled() const {
 void AppConfig::setAutoHide(bool b) { m_AutoHide = b; }
 
 bool AppConfig::getAutoHide() { return m_AutoHide; }
+
+void AppConfig::setMinimizeToTray(bool b) { m_MinimizeToTray = b; }
+
+bool AppConfig::getMinimizeToTray() { return m_MinimizeToTray; }

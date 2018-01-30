@@ -190,28 +190,6 @@ void MainWindow::open()
     }
 }
 
-void MainWindow::onModeChanged(bool startDesktop, bool applyService)
-{
-    if (appConfig().processMode() == Service)
-    {
-        // ensure that the apply button actually does something, since desktop
-        // mode screws around with connecting/disconnecting the action.
-        disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartBarrier, SLOT(trigger()));
-        connect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartBarrier, SLOT(trigger()));
-
-        if (applyService)
-        {
-            stopDesktop();
-            startBarrier();
-        }
-    }
-    else if ((appConfig().processMode() == Desktop) && startDesktop)
-    {
-        stopService();
-        startBarrier();
-    }
-}
-
 void MainWindow::setStatus(const QString &status)
 {
     m_pStatusLabel->setText(status);
@@ -958,10 +936,15 @@ void MainWindow::changeEvent(QEvent* event)
 
             break;
         }
-        default:
-            QMainWindow::changeEvent(event);
+        case QEvent::WindowStateChange:
+        {
+            windowStateChanged();
+            break;
+        }
         }
     }
+    // all that do not return are allowing the event to propagate
+    QMainWindow::changeEvent(event);
 }
 
 void MainWindow::updateZeroconfService()
@@ -1057,15 +1040,7 @@ void MainWindow::on_m_pActionAbout_triggered()
 
 void MainWindow::on_m_pActionSettings_triggered()
 {
-    ProcessMode lastProcessMode = appConfig().processMode();
-
-    SettingsDialog dlg(this, appConfig());
-    dlg.exec();
-
-    if (lastProcessMode != appConfig().processMode())
-    {
-        onModeChanged(true, true);
-    }
+    SettingsDialog(this, appConfig()).exec();
 }
 
 void MainWindow::autoAddScreen(const QString name)
@@ -1333,4 +1308,10 @@ QString MainWindow::getProfileRootForArg()
 #endif
 
     return QString("\"%1\"").arg(dir);
+}
+
+void MainWindow::windowStateChanged()
+{
+    if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray())
+        hide();
 }
