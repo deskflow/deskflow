@@ -175,7 +175,6 @@ public slots:
         QString getProfileRootForArg();
         void checkConnected(const QString& line);
         void checkFingerprint(const QString& line);
-        bool autoHide();
         QString getTimeStamp();
         void restartBarrier();
         void proofreadInfo();

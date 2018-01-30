@@ -168,7 +168,9 @@ void MainWindow::open()
 {
     createTrayIcon();
 
-    if (!autoHide()) {
+    if (appConfig().getAutoHide()) {
+        hide();
+    } else {
         showNormal();
     }
 
@@ -468,17 +470,6 @@ void MainWindow::checkFingerprint(const QString& line)
 
         messageBoxAlreadyShown = false;
     }
-}
-
-bool MainWindow::autoHide()
-{
-    if ((appConfig().processMode() == Desktop) &&
-        appConfig().getAutoHide()) {
-        hide();
-        return true;
-    }
-
-    return false;
 }
 
 QString MainWindow::getTimeStamp()

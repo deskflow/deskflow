@@ -184,7 +184,7 @@
       <item row="2" column="0">
        <widget class="QCheckBox" name="m_pCheckBoxEnableCrypto">
         <property name="text">
-         <string>Use Enable &amp;SSL</string>
+         <string>Enable &amp;SSL</string>
         </property>
        </widget>
       </item>
