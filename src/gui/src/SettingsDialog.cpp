@@ -57,6 +57,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     m_pLineEditLogFilename->setText(appConfig().logFilename());
     setIndexFromItemData(m_pComboLanguage, appConfig().language());
     m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
+    m_pCheckBoxMinimizeToTray->setChecked(appConfig().getMinimizeToTray());
+    m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
 
 #if defined(Q_OS_WIN)
     m_pBonjourWindows = new BonjourWindows(this, m_pMainWindow, m_appConfig);
@@ -66,7 +68,6 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 
     m_pComboElevate->setCurrentIndex(static_cast<int>(appConfig().elevateMode()));
 
-    m_pCheckBoxAutoHide->hide();
 #else
     // elevate checkbox is only useful on ms windows.
     m_pLabelElevate->hide();
@@ -106,9 +107,10 @@ void SettingsDialog::accept()
     appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
     appConfig().setLogFilename(m_pLineEditLogFilename->text());
     appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
-       appConfig().setElevateMode(static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
+    appConfig().setElevateMode(static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
     appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
     appConfig().setAutoConfig(m_pCheckBoxAutoConfig->isChecked());
+    appConfig().setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
     appConfig().saveSettings();
     QDialog::accept();
 }

@@ -114,13 +114,6 @@
       <item row="0" column="1">
        <widget class="QComboBox" name="m_pComboLanguage"/>
       </item>
-      <item row="5" column="0">
-       <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
-        <property name="text">
-         <string>&amp;Hide on startup</string>
-        </property>
-       </widget>
-      </item>
       <item row="4" column="1">
        <widget class="QComboBox" name="m_pComboElevate">
         <property name="toolTip">
@@ -150,6 +143,20 @@
        <widget class="QLabel" name="m_pLabelElevate">
         <property name="text">
          <string>Elevate</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
+        <property name="text">
+         <string>&amp;Hide on startup</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxMinimizeToTray">
+        <property name="text">
+         <string>Minimize to System &amp;Tray</string>
         </property>
        </widget>
       </item>
@@ -392,6 +399,7 @@
   <tabstop>m_pLineEditScreenName</tabstop>
   <tabstop>m_pSpinBoxPort</tabstop>
   <tabstop>m_pLineEditInterface</tabstop>
+  <tabstop>m_pCheckBoxMinimizeToTray</tabstop>
   <tabstop>m_pComboElevate</tabstop>
   <tabstop>m_pCheckBoxAutoHide</tabstop>
   <tabstop>m_pComboLogLevel</tabstop>
