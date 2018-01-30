@@ -46,5 +46,12 @@ main(int argc, char** argv)
     EventQueue events;
 
     ServerApp app(&events, createTaskBarReceiver);
-    return app.run(argc, argv);
+    int result = app.run(argc, argv);
+#if SYSAPI_WIN32
+    if (IsDebuggerPresent()) {
+        printf("\n\nHit a key to close...\n");
+        getchar();
+    }
+#endif
+    return result;
 }
