@@ -15,80 +15,23 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="m_pGroupAdvanced">
-     <property name="title">
-      <string>&amp;Miscellaneous</string>
+    <widget class="QGroupBox" name="m_pGroupGeneral">
+     <property name="enabled">
+      <bool>true</bool>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="1" column="0">
-       <widget class="QLabel" name="m_pLabel_19">
-        <property name="minimumSize">
-         <size>
-          <width>75</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Sc&amp;reen name:</string>
-        </property>
-        <property name="buddy">
-         <cstring>m_pLineEditScreenName</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="m_pLineEditScreenName">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="m_pLabel_20">
-        <property name="text">
-         <string>P&amp;ort:</string>
-        </property>
-        <property name="buddy">
-         <cstring>m_pSpinBoxPort</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QSpinBox" name="m_pSpinBoxPort">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximum">
-         <number>65535</number>
-        </property>
-        <property name="value">
-         <number>24800</number>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="m_pLabel_21">
-        <property name="text">
-         <string>&amp;Interface:</string>
-        </property>
-        <property name="buddy">
-         <cstring>m_pLineEditInterface</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="m_pLineEditInterface">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>General</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+      </property>
       <item row="0" column="0">
        <widget class="QLabel" name="m_pLabel_27">
         <property name="sizePolicy">
@@ -114,14 +57,37 @@
       <item row="0" column="1">
        <widget class="QComboBox" name="m_pComboLanguage"/>
       </item>
-      <item row="5" column="0">
-       <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
+      <item row="1" column="0">
+       <widget class="QLabel" name="m_pLabel_19">
+        <property name="minimumSize">
+         <size>
+          <width>75</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
-         <string>&amp;Hide on startup</string>
+         <string>Sc&amp;reen name:</string>
+        </property>
+        <property name="buddy">
+         <cstring>m_pLineEditScreenName</cstring>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="m_pLineEditScreenName">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="m_pLabelElevate">
+        <property name="text">
+         <string>Elevate</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
        <widget class="QComboBox" name="m_pComboElevate">
         <property name="toolTip">
          <string>Specify when the Barrier service should run at an elevated privilege level</string>
@@ -146,10 +112,17 @@
         </item>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="m_pLabelElevate">
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxMinimizeToTray">
         <property name="text">
-         <string>Elevate</string>
+         <string>Minimize to System &amp;Tray</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
+        <property name="text">
+         <string>&amp;Hide on startup</string>
         </property>
        </widget>
       </item>
@@ -157,42 +130,63 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="m_pGroupNetworkSecurity">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+    <widget class="QGroupBox" name="m_pGroupNetworking">
      <property name="title">
-      <string>&amp;Network Security</string>
+      <string>Networking</string>
      </property>
-     <layout class="QFormLayout" name="formLayout">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
+     <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="0">
-       <widget class="QCheckBox" name="m_pCheckBoxEnableCrypto">
+       <widget class="QLabel" name="m_pLabel_20">
         <property name="text">
-         <string>Use &amp;SSL encryption</string>
+         <string>P&amp;ort:</string>
+        </property>
+        <property name="buddy">
+         <cstring>m_pSpinBoxPort</cstring>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+       <widget class="QSpinBox" name="m_pSpinBoxPort">
+        <property name="enabled">
+         <bool>true</bool>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
-       </spacer>
+        <property name="maximum">
+         <number>65535</number>
+        </property>
+        <property name="value">
+         <number>24800</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="m_pLabel_21">
+        <property name="text">
+         <string>&amp;Interface:</string>
+        </property>
+        <property name="buddy">
+         <cstring>m_pLineEditInterface</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="m_pLineEditInterface">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxEnableCrypto">
+        <property name="text">
+         <string>Use Enable &amp;SSL</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -325,10 +319,11 @@
  <tabstops>
   <tabstop>m_pComboLanguage</tabstop>
   <tabstop>m_pLineEditScreenName</tabstop>
+  <tabstop>m_pComboElevate</tabstop>
+  <tabstop>m_pCheckBoxMinimizeToTray</tabstop>
+  <tabstop>m_pCheckBoxAutoHide</tabstop>
   <tabstop>m_pSpinBoxPort</tabstop>
   <tabstop>m_pLineEditInterface</tabstop>
-  <tabstop>m_pComboElevate</tabstop>
-  <tabstop>m_pCheckBoxAutoHide</tabstop>
   <tabstop>m_pCheckBoxEnableCrypto</tabstop>
   <tabstop>m_pComboLogLevel</tabstop>
   <tabstop>m_pCheckBoxLogToFile</tabstop>

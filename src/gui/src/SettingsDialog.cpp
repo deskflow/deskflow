@@ -53,9 +53,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
 
 #if defined(Q_OS_WIN)
-       m_pComboElevate->setCurrentIndex(static_cast<int>(appConfig().elevateMode()));
-
-    m_pCheckBoxAutoHide->hide();
+    m_pComboElevate->setCurrentIndex(static_cast<int>(appConfig().elevateMode()));
 #else
     // elevate checkbox is only useful on ms windows.
     m_pLabelElevate->hide();
