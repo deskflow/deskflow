@@ -196,7 +196,6 @@ public slots:
 #ifndef SYNERGY_ENTERPRISE
         void checkLicense(const QString& line);
 #endif
-        bool autoHide();
         QString getTimeStamp();
         void restartSynergy();
         void proofreadInfo();
