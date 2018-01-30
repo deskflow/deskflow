@@ -58,8 +58,8 @@ int main(int argc, char* argv[])
     /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is instantiated" */
     ::setenv ("QT_BEARER_POLL_TIMEOUT", "-1", 1);
 #endif
-	QCoreApplication::setOrganizationName("Barrier");
-	QCoreApplication::setOrganizationDomain("http://github.com/");
+	QCoreApplication::setOrganizationName("Debauchee");
+	QCoreApplication::setOrganizationDomain("github.com");
 	QCoreApplication::setApplicationName("Barrier");
 
 	QBarrierApplication app(argc, argv);
