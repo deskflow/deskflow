@@ -207,7 +207,9 @@ void MainWindow::open()
 {
     createTrayIcon();
 
-    if (!autoHide()) {
+    if (appConfig().getAutoHide()) {
+        hide();
+    } else {
         showNormal();
     }
 
@@ -539,24 +541,12 @@ void MainWindow::checkFingerprint(const QString& line)
 
 void MainWindow::checkSecureSocket(const QString& line)
 {
-    // obviously not very secure, since this can be tricked by injecting something
-    // into the log. however, since we don't have IPC between core and GUI... patches welcome.
-    if (line.contains(tlsCheckString)) {
-        secureSocket(true);
-    }
+	// obviously not very secure, since this can be tricked by injecting something
+	// into the log. however, since we don't have IPC between core and GUI... patches welcome.
+	if (line.contains(tlsCheckString)) {
+		secureSocket(true);
+	}
 }
-
-bool MainWindow::autoHide()
-{
-    if ((appConfig().processMode() == Desktop) &&
-        appConfig().getAutoHide()) {
-        hide();
-        return true;
-    }
-
-    return false;
-}
-
 QString MainWindow::getTimeStamp()
 {
     QDateTime current = QDateTime::currentDateTime();
