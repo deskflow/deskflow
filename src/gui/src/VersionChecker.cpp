@@ -25,37 +25,41 @@
 #include <QLocale>
 
 #define VERSION_REGEX "(\\d+\\.\\d+\\.\\d+)"
-#define VERSION_URL "http://symless.com/version/"
+//#define VERSION_URL "http://www.TODO.com/"
 
-VersionChecker::VersionChecker()
+VersionChecker::VersionChecker(QObject* parent)
+    : QObject(parent)
 {
-    m_manager = new QNetworkAccessManager(this);
-
-    connect(m_manager, SIGNAL(finished(QNetworkReply*)),
-         this, SLOT(replyFinished(QNetworkReply*)));
-}
-
-VersionChecker::~VersionChecker()
-{
-    delete m_manager;
 }
 
 void VersionChecker::checkLatest()
 {
-    m_manager->get(QNetworkRequest(QUrl(VERSION_URL)));
+    // calling m_manager->get(..) is causing an access violation on app close
+    // atm there is nothing to check the version against, so removing until we need a version checker again
+
+    //m_manager = new QNetworkAccessManager(this);
+
+    //connect(m_manager, SIGNAL(finished(QNetworkReply*)),
+    //    this, SLOT(replyFinished(QNetworkReply*)));
+
+    //m_manager->get(QNetworkRequest(QUrl(VERSION_URL)));
 }
 
 void VersionChecker::replyFinished(QNetworkReply* reply)
 {
-    QString newestVersion = QString(reply->readAll());
-    if (!newestVersion.isEmpty())
-    {
-        QString currentVersion = getVersion();
-        if (currentVersion != "Unknown") {
-            if (compareVersions(currentVersion, newestVersion) > 0)
-                emit updateFound(newestVersion);
+    if (reply->error()) {
+        // TODO: handle me
+    } else {
+        QString newestVersion = QString(reply->readAll());
+        if (!newestVersion.isEmpty()) {
+            QString currentVersion = getVersion();
+            if (currentVersion != "Unknown") {
+                if (compareVersions(currentVersion, newestVersion) > 0)
+                    emit updateFound(newestVersion);
+            }
         }
     }
+    reply->deleteLater();
 }
 
 int VersionChecker::compareVersions(const QString& left, const QString& right)
