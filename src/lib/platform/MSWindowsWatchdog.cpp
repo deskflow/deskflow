@@ -47,6 +47,7 @@ typedef VOID (WINAPI *SendSas)(BOOL asUser);
 const char g_activeDesktop[] = {"activeDesktop:"};
 
 MSWindowsWatchdog::MSWindowsWatchdog(
+    bool daemonized,
     bool autoDetectCommand,
     IpcServer& ipcServer,
     IpcLogOutputter& ipcLogOutputter) :
@@ -63,7 +64,8 @@ MSWindowsWatchdog::MSWindowsWatchdog(
     m_processRunning(false),
     m_fileLogOutputter(NULL),
     m_autoElevated(false),
-    m_ready(false)
+    m_ready(false),
+    m_daemonized(daemonized)
 {
     m_mutex = ARCH->newMutex();
     m_condVar = ARCH->newCondVar();
@@ -286,23 +288,28 @@ MSWindowsWatchdog::startProcess()
 
     m_session.updateActiveSession();
 
-    SECURITY_ATTRIBUTES sa;
-    ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
+    BOOL createRet;
+    if (!m_daemonized) {
+        createRet = doStartProcessAsSelf(m_command);
+    } else {
+        SECURITY_ATTRIBUTES sa;
+        ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
 
-    getActiveDesktop(&sa);
+        getActiveDesktop(&sa);
 
-    ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
-    HANDLE userToken = getUserToken(&sa);
-    m_elevateProcess = m_autoElevated ? m_autoElevated : m_elevateProcess;
-    m_autoElevated = false;
+        ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
+        HANDLE userToken = getUserToken(&sa);
+        m_elevateProcess = m_autoElevated ? m_autoElevated : m_elevateProcess;
+        m_autoElevated = false;
 
-    // patch by Jack Zhou and Henry Tung
-    // set UIAccess to fix Windows 8 GUI interaction
-    // http://symless.com/spit/issues/details/3338/#c70
-    DWORD uiAccess = 1;
-    SetTokenInformation(userToken, TokenUIAccess, &uiAccess, sizeof(DWORD));
+        // patch by Jack Zhou and Henry Tung
+        // set UIAccess to fix Windows 8 GUI interaction
+        // http://symless.com/spit/issues/details/3338/#c70
+        DWORD uiAccess = 1;
+        SetTokenInformation(userToken, TokenUIAccess, &uiAccess, sizeof(DWORD));
 
-    BOOL createRet = doStartProcess(m_command, userToken, &sa);
+        createRet = doStartProcessAsUser(m_command, userToken, &sa);
+    }
 
     if (!createRet) {
         LOG((CLOG_ERR "could not launch"));
@@ -329,7 +336,27 @@ MSWindowsWatchdog::startProcess()
 }
 
 BOOL
-MSWindowsWatchdog::doStartProcess(String& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
+MSWindowsWatchdog::doStartProcessAsSelf(String& command)
+{
+    DWORD creationFlags =
+        NORMAL_PRIORITY_CLASS |
+        CREATE_NO_WINDOW |
+        CREATE_UNICODE_ENVIRONMENT;
+
+    STARTUPINFO si;
+    ZeroMemory(&si, sizeof(STARTUPINFO));
+    si.cb = sizeof(STARTUPINFO);
+    si.lpDesktop = "winsta0\\Default"; // TODO: maybe this should be \winlogon if we have logonui.exe?
+    si.hStdError = m_stdOutWrite;
+    si.hStdOutput = m_stdOutWrite;
+    si.dwFlags |= STARTF_USESTDHANDLES;
+
+    LOG((CLOG_INFO "starting new process as self"));
+    return CreateProcess(NULL, LPSTR(command.c_str()), NULL, NULL, FALSE, creationFlags, NULL, NULL, &si, &m_processInfo);
+}
+
+BOOL
+MSWindowsWatchdog::doStartProcessAsUser(String& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
 {
     // clear, as we're reusing process info struct
     ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
@@ -355,7 +382,7 @@ MSWindowsWatchdog::doStartProcess(String& command, HANDLE userToken, LPSECURITY_
         CREATE_UNICODE_ENVIRONMENT;
 
     // re-launch in current active user session
-    LOG((CLOG_INFO "starting new process"));
+    LOG((CLOG_INFO "starting new process as privileged user"));
     BOOL createRet = CreateProcessAsUser(
         userToken, NULL, LPSTR(command.c_str()),
         sa, NULL, TRUE, creationFlags,
@@ -542,7 +569,7 @@ MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
         HANDLE userToken = getUserToken(security);
         m_elevateProcess = elevateProcess;
 
-        BOOL createRet = doStartProcess(syntoolCommand, userToken, security);
+        BOOL createRet = doStartProcessAsUser(syntoolCommand, userToken, security);
 
         if (!createRet) {
             DWORD rc = GetLastError();

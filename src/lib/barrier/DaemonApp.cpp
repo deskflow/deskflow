@@ -192,13 +192,13 @@ DaemonApp::run(int argc, char** argv)
 }
 
 void
-DaemonApp::mainLoop(bool logToFile)
+DaemonApp::mainLoop(bool daemonized)
 {
     try
     {
         DAEMON_RUNNING(true);
         
-        if (logToFile) {
+        if (daemonized) {
             m_fileLogOutputter = new FileLogOutputter(logFilename().c_str());
             CLOG->insert(m_fileLogOutputter);
         }
@@ -215,7 +215,7 @@ DaemonApp::mainLoop(bool logToFile)
         CLOG->insert(m_ipcLogOutputter);
         
 #if SYSAPI_WIN32
-        m_watchdog = new MSWindowsWatchdog(false, *m_ipcServer, *m_ipcLogOutputter);
+        m_watchdog = new MSWindowsWatchdog(daemonized, false, *m_ipcServer, *m_ipcLogOutputter);
         m_watchdog->setFileLogOutputter(m_fileLogOutputter);
 #endif
         
@@ -339,20 +339,21 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                 }
 
 #if SYSAPI_WIN32
-                String logFilename;
-                if (argBase->m_logFile != NULL) {
-                    logFilename = String(argBase->m_logFile);
-                    ARCH->setting("LogFilename", logFilename);
-                    m_watchdog->setFileLogOutputter(m_fileLogOutputter);
-                    command = ArgParser::assembleCommand(argsArray, "--log", 1);
-                    LOG((CLOG_DEBUG "removed log file argument and filename %s from command ", logFilename.c_str()));
-                    LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
+                // eg. no log-to-file while running in foreground
+                if (m_fileLogOutputter != nullptr) {
+                    String logFilename;
+                    if (argBase->m_logFile != NULL) {
+                        logFilename = String(argBase->m_logFile);
+                        ARCH->setting("LogFilename", logFilename);
+                        m_watchdog->setFileLogOutputter(m_fileLogOutputter);
+                        command = ArgParser::assembleCommand(argsArray, "--log", 1);
+                        LOG((CLOG_DEBUG "removed log file argument and filename %s from command ", logFilename.c_str()));
+                        LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
+                    } else {
+                        m_watchdog->setFileLogOutputter(NULL);
+                    }
+                    m_fileLogOutputter->setLogFilename(logFilename.c_str());
                 }
-                else {
-                    m_watchdog->setFileLogOutputter(NULL);
-                }
-
-                m_fileLogOutputter->setLogFilename(logFilename.c_str());
 #endif
             }
             else {
@@ -392,8 +393,8 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
             LOG((CLOG_DEBUG "ipc hello, type=%s", type.c_str()));
 
 #if SYSAPI_WIN32
-            String watchdogStatus = m_watchdog->isProcessActive() ? "ok" : "error";
-            LOG((CLOG_INFO "watchdog status: %s", watchdogStatus.c_str()));
+            const char * serverstatus = m_watchdog->isProcessActive() ? "active" : "not active";
+            LOG((CLOG_INFO "server status: %s", serverstatus));
 #endif
 
             m_ipcLogOutputter->notifyBuffer();
