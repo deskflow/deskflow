@@ -230,6 +230,7 @@ void MainWindow::createTrayIcon()
 
     m_pTrayIcon = new QSystemTrayIcon(this);
     m_pTrayIcon->setContextMenu(m_pTrayIconMenu);
+    m_pTrayIcon->setToolTip("Barrier");
 
     connect(m_pTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
@@ -324,7 +325,6 @@ void MainWindow::setIcon(qBarrierState state)
 
 void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
 {
-#ifndef Q_OS_WIN
     if (reason == QSystemTrayIcon::DoubleClick)
     {
         if (isVisible())
@@ -337,7 +337,6 @@ void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
             activateWindow();
         }
     }
-#endif
 }
 
 void MainWindow::logOutput()
