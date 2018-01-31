@@ -91,13 +91,14 @@ IArchString::convStringWCToMB(char* dst,
     }
     ARCH->unlockMutex(s_mutex);
 
-    return len;
+    return (int)len;
 }
 
 int
 IArchString::convStringMBToWC(wchar_t* dst,
-                const char* src, UInt32 n, bool* errors)
+                const char* src, UInt32 n_param, bool* errors)
 {
+    ptrdiff_t n = (ptrdiff_t)n_param; // fix compiler warning
     ptrdiff_t len = 0;
     wchar_t dummy;
 
@@ -185,5 +186,5 @@ IArchString::convStringMBToWC(wchar_t* dst,
     }
     ARCH->unlockMutex(s_mutex);
 
-    return len;
+    return (int)len;
 }

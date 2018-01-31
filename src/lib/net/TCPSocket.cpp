@@ -337,7 +337,7 @@ TCPSocket::doRead()
         
         // slurp up as much as possible
         do {
-            m_inputBuffer.write(buffer, bytesRead);
+            m_inputBuffer.write(buffer, (UInt32)bytesRead);
 
             bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
         } while (bytesRead > 0);

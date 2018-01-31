@@ -180,7 +180,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
         sprintf(timestamp, "%04i-%02i-%02iT%02i:%02i:%02i", tm->tm_year + 1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
 
         // square brackets, spaces, comma and null terminator take about 10
-        int size = 10;
+        size_t size = 10;
         size += strlen(timestamp);
         size += strlen(g_priority[priority]);
         size += strlen(buffer);
