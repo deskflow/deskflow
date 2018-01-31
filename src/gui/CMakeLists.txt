@@ -21,24 +21,22 @@ add_executable (barrier WIN32
 )
 
 include_directories (./src)
-target_link_libraries (barrier)
-
-if (WIN32)
-    include_directories ($ENV{BONJOUR_SDK_HOME}/Include)
-    find_library (DNSSD_LIB dnssd.lib 
-                  HINTS ENV BONJOUR_SDK_HOME
-                  PATH_SUFFIXES "Lib/x64")
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    target_link_libraries (barrier dns_sd)
-endif()
 
 qt5_use_modules (barrier Core Widgets Network)
 target_compile_definitions (barrier PRIVATE -DBARRIER_VERSION_STAGE="${BARRIER_VERSION_STAGE}")
 target_compile_definitions (barrier PRIVATE -DBARRIER_REVISION="${BARRIER_REVISION}")
 
 if (WIN32)
-    target_link_libraries (barrier ${DNSSD_LIB})
+    include_directories ($ENV{BONJOUR_SDK_HOME}/Include)
+    find_library (DNSSD_LIB dnssd.lib 
+                  HINTS ENV BONJOUR_SDK_HOME
+                  PATH_SUFFIXES "Lib/x64")
     set_target_properties (barrier PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
+    target_link_libraries (barrier ${DNSSD_LIB})
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    target_link_libraries (barrier dns_sd)
+else()
+    target_link_libraries (barrier)
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
