@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if !defined(_WIN32)
+
 #include "base/NonBlockingStream.h"
 
 #include <unistd.h> // tcgetattr/tcsetattr, read
@@ -46,7 +48,7 @@ NonBlockingStream::~NonBlockingStream()
     delete _p_ta_previous;
 }
 
-bool NonBlockingStream::try_read_char(char &ch)
+bool NonBlockingStream::try_read_char(char &ch) const
 {
     int result = read(_fd, &ch, 1);
     if (result == 1)
@@ -54,3 +56,5 @@ bool NonBlockingStream::try_read_char(char &ch)
     assert(result == -1 && (errno == EAGAIN || errno == EWOULDBLOCK));
     return false;
 }
+
+#endif // !defined(_WIN32)

@@ -202,13 +202,19 @@ EventQueue::adoptBuffer(IEventQueueBuffer* buffer)
 }
 
 bool
+EventQueue::parent_requests_shutdown() const
+{
+    char ch;
+    return m_parentStream.try_read_char(ch) && ch == ShutdownCh;
+}
+
+bool
 EventQueue::getEvent(Event& event, double timeout)
 {
     Stopwatch timer(true);
 retry:
-    // check to see if parent wants us to shutdown now
-    char ch;
-    if (m_parentStream.try_read_char(ch) && ch == ShutdownCh) {
+    // before handling any events make sure we don't need to shutdown
+    if (parent_requests_shutdown()) {
         event = Event(Event::kQuit);
         return false;
     }
