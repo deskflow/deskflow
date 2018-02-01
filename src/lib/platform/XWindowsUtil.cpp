@@ -1781,8 +1781,10 @@ XWindowsUtil::ErrorLock::ignoreHandler(Display*, XErrorEvent* e, void*)
 }
 
 void
-XWindowsUtil::ErrorLock::saveHandler(Display*, XErrorEvent* e, void* flag)
+XWindowsUtil::ErrorLock::saveHandler(Display* display, XErrorEvent* e, void* flag)
 {
-    LOG((CLOG_DEBUG1 "flagging X error: %d", e->error_code));
+    char errtxt[1024];
+    XGetErrorText(display, e->error_code, errtxt, 1023);
+    LOG((CLOG_DEBUG1 "flagging X error: %d - %.1023s", e->error_code, errtxt));
     *static_cast<bool*>(flag) = true;
 }
