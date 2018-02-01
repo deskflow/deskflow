@@ -51,6 +51,8 @@ TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) 
         throw XSocketCreate(e.what());
     }
 
+    LOG((CLOG_DEBUG "Opening new socket: %08X", m_socket));
+
     init();
 }
 
@@ -63,6 +65,8 @@ TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, 
     m_socketMultiplexer(socketMultiplexer)
 {
     assert(m_socket != NULL);
+
+    LOG((CLOG_DEBUG "Opening new socket: %08X", m_socket));
 
     // socket starts in connected state
     init();
@@ -97,6 +101,8 @@ TCPSocket::bind(const NetworkAddress& addr)
 void
 TCPSocket::close()
 {
+    LOG((CLOG_DEBUG "Closing socket: %08X", m_socket));
+
     // remove ourself from the multiplexer
     setJob(NULL);
 
