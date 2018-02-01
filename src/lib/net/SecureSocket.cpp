@@ -869,5 +869,9 @@ SecureSocket::showSecureConnectInfo()
 void
 SecureSocket::handleTCPConnected(const Event& event, void*)
 {
+    if (getSocket() == nullptr) {
+        LOG((CLOG_DEBUG "disregarding stale connect event"));
+        return;
+    }
     secureConnect();
 }
