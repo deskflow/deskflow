@@ -76,6 +76,10 @@ SecureSocket::SecureSocket(IEventQueue* events,
 SecureSocket::~SecureSocket()
 {
     isFatal(true);
+    // take socket from multiplexer ASAP otherwise the race condition
+    // could cause events to get called on a dead object. TCPSocket
+    // will do this, too, but the double-call is harmless
+    setJob(NULL);
     if (m_ssl->m_ssl != NULL) {
         SSL_shutdown(m_ssl->m_ssl);
 
@@ -86,7 +90,6 @@ SecureSocket::~SecureSocket()
         SSL_CTX_free(m_ssl->m_context);
         m_ssl->m_context = NULL;
     }
-    ARCH->sleep(1);
     delete m_ssl;
 }
 
@@ -408,6 +411,7 @@ SecureSocket::createSSL()
     // I assume just one instance is needed
     // get new SSL state with context
     if (m_ssl->m_ssl == NULL) {
+        assert(m_ssl->m_context != NULL);
         m_ssl->m_ssl = SSL_new(m_ssl->m_context);
     }
 }
