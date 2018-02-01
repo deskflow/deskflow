@@ -32,6 +32,7 @@
 #include "QUtility.h"
 #include "ProcessorArch.h"
 #include "SslCertificate.h"
+#include "ShutdownCh.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -773,6 +774,9 @@ void MainWindow::stopDesktop()
     appendLogInfo("stopping barrier desktop process");
 
     if (barrierProcess()->isOpen()) {
+        // try to shutdown child gracefully
+        barrierProcess()->write(&ShutdownCh, 1);
+        barrierProcess()->waitForFinished(5000);
         barrierProcess()->close();
     }
 

@@ -27,6 +27,7 @@
 #include "base/EventTypes.h"
 #include "base/Log.h"
 #include "base/XBase.h"
+#include "../gui/src/ShutdownCh.h"
 
 EVENT_TYPE_ACCESSOR(Client)
 EVENT_TYPE_ACCESSOR(IStream)
@@ -205,6 +206,12 @@ EventQueue::getEvent(Event& event, double timeout)
 {
     Stopwatch timer(true);
 retry:
+    // check to see if parent wants us to shutdown now
+    char ch;
+    if (m_parentStream.try_read_char(ch) && ch == ShutdownCh) {
+        event = Event(Event::kQuit);
+        return false;
+    }
     // if no events are waiting then handle timers and then wait
     while (m_buffer->isEmpty()) {
         // handle timers first

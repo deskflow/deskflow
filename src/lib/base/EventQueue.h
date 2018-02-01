@@ -26,6 +26,7 @@
 #include "base/Stopwatch.h"
 #include "common/stdmap.h"
 #include "common/stdset.h"
+#include "base/NonBlockingStream.h"
 
 #include <queue>
 
@@ -184,6 +185,7 @@ private:
     Mutex*                        m_readyMutex;
     CondVar<bool>*                m_readyCondVar;
     std::queue<Event>            m_pending;
+    NonBlockingStream            m_parentStream;
 };
 
 #define EVENT_TYPE_ACCESSOR(type_)                                            \
