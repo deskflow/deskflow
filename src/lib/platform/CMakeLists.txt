@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 if (WIN32)
-    file(GLOB headers "MSWindows*.h")
-    file(GLOB sources "MSWindows*.cpp")
+    file(GLOB headers "MSWindows*.h ImmuneKeysReader.h")
+    file(GLOB sources "MSWindows*.cpp ImmuneKeysReader.cpp")
 elseif (APPLE)
     file(GLOB headers "OSX*.h" "IOSX*.h")
     file(GLOB sources "OSX*.cpp" "IOSX*.cpp" "OSX*.m" "OSX*.mm")
