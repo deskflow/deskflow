@@ -286,6 +286,7 @@ private:
     // hook library stuff
     InstallFunc            m_install;
     UninstallFunc        m_uninstall;
+    SetImmuneKeysFunc    m_setImmuneKeys;
     InstallScreenSaverFunc
                         m_installScreensaver;
     UninstallScreenSaverFunc

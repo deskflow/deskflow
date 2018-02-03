@@ -85,6 +85,18 @@ typedef struct tagMOUSEHOOKSTRUCTWin2000 {
 #define XBUTTON2            0x0002
 #endif
 
+// because all of our global data is shared between processes,
+// allocating shared data on-the-fly is tricky. therefore let's
+// store all of our immune keys in a pre-allocated array. the
+// downside here is that we have to pick a maximum number of
+// immune keys to store. who would ever want barrier to ignore
+// more than 32 keys on their keyboard??
+struct ImmuneKeys
+{
+    static const std::size_t MaxKeys = 32;
+    DWORD list[MaxKeys];
+    std::size_t count;
+};
 
 //
 // globals
@@ -121,6 +133,7 @@ static BYTE                g_deadKeyState[256] = { 0 };
 static BYTE                g_keyState[256]   = { 0 };
 static DWORD            g_hookThread      = 0;
 static bool                g_fakeInput       = false;
+static ImmuneKeys          g_immuneKeys{ {0}, 0 };
 
 #if defined(_MSC_VER)
 #pragma data_seg()
@@ -445,10 +458,23 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
     return false;
 }
 
+inline static
+bool is_immune_key(DWORD target)
+{
+    for (std::size_t idx = 0; idx < g_immuneKeys.count; ++idx) {
+        if (g_immuneKeys.list[idx] == target)
+            return true;
+    }
+    return false;
+}
+
 static
 bool
 keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
+    // allow all immune keys to pass without filtering
+    if (is_immune_key(static_cast<DWORD>(wParam)))
+        return false;
     return doKeyboardHookHandler(wParam, lParam);
 }
 #endif
@@ -1121,6 +1147,19 @@ setMode(EHookMode mode)
         return;
     }
     g_mode = mode;
+}
+
+// do not call this while the hooks are active!
+void
+setImmuneKeys(const DWORD *list, std::size_t size)
+{
+    if (size > ImmuneKeys::MaxKeys)
+        size = ImmuneKeys::MaxKeys;
+    g_immuneKeys.count = size;
+    if (size > 0) {
+        for (std::size_t idx = 0; idx < size; ++idx)
+            g_immuneKeys.list[idx] = list[idx];
+    }
 }
 
 }

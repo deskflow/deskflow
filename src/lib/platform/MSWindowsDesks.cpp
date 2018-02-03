@@ -20,6 +20,7 @@
 
 #include "synwinhk/synwinhk.h"
 #include "platform/MSWindowsScreen.h"
+#include "platform/ImmuneKeysReader.h"
 #include "barrier/IScreenSaver.h"
 #include "barrier/XScreen.h"
 #include "mt/Lock.h"
@@ -88,6 +89,17 @@
 // enable; <unused>
 #define BARRIER_MSG_FAKE_INPUT        BARRIER_HOOK_LAST_MSG + 12
 
+static const std::string ImmuneKeysPath = ArchFileWindows().getProfileDirectory() + "\\ImmuneKeys.txt";
+
+static std::vector<DWORD> immune_keys_list()
+{
+    std::vector<DWORD> keys;
+    std::string badLine;
+    if (!ImmuneKeysReader::get_list(ImmuneKeysPath.c_str(), keys, badLine))
+        LOG((CLOG_ERR "Reading immune keys stopped at: %s", badLine.c_str()));
+    return keys;
+}
+
 //
 // MSWindowsDesks
 //
@@ -114,6 +126,8 @@ MSWindowsDesks::MSWindowsDesks(
     m_events(events),
     m_stopOnDeskSwitch(stopOnDeskSwitch)
 {
+    LOG((CLOG_DEBUG "Immune Keys Path: %s", ImmuneKeysPath));
+
     if (hookLibrary != NULL)
         queryHookLibrary(hookLibrary);
 
@@ -355,14 +369,17 @@ MSWindowsDesks::queryHookLibrary(HINSTANCE hookLibrary)
     if (m_isPrimary && !m_noHooks) {
         m_install   = (InstallFunc)GetProcAddress(hookLibrary, "install");
         m_uninstall = (UninstallFunc)GetProcAddress(hookLibrary, "uninstall");
+        m_setImmuneKeys = (SetImmuneKeysFunc)GetProcAddress(hookLibrary, "setImmuneKeys");
         m_installScreensaver   =
                   (InstallScreenSaverFunc)GetProcAddress(
                                 hookLibrary, "installScreenSaver");
         m_uninstallScreensaver =
                   (UninstallScreenSaverFunc)GetProcAddress(
                                 hookLibrary, "uninstallScreenSaver");
+
         if (m_install              == NULL ||
             m_uninstall            == NULL ||
+            m_setImmuneKeys        == NULL ||
             m_installScreensaver   == NULL ||
             m_uninstallScreensaver == NULL) {
             LOG((CLOG_ERR "Invalid hook library"));
@@ -372,6 +389,7 @@ MSWindowsDesks::queryHookLibrary(HINSTANCE hookLibrary)
     else {
         m_install              = NULL;
         m_uninstall            = NULL;
+        m_setImmuneKeys        = NULL;
         m_installScreensaver   = NULL;
         m_uninstallScreensaver = NULL;
     }
@@ -696,6 +714,10 @@ MSWindowsDesks::deskThread(void* vdesk)
                     m_uninstallScreensaver();
                     m_installScreensaver();
                 }
+                // populate immune keys list in the DLL's shared memory
+                // before the hooks are activated
+                auto list = immune_keys_list();
+                m_setImmuneKeys(list.data(), list.size());
                 switch (m_install()) {
                 case kHOOK_FAILED:
                     // we won't work on this desk
