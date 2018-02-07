@@ -4,15 +4,15 @@ Eliminate the barrier between your machines.
 
 ### What is it?
 
-Barrier is KVM software forked from Symless's barrier 1.9 codebase. Barrier was a commercialized reimplementation of the original CosmoSynergy written by Chris Schoeneman.
+Barrier is KVM software forked from Symless's synergy 1.9 codebase. Synergy was a commercialized reimplementation of the original CosmoSynergy written by Chris Schoeneman.
 
 ### What's different?
 
-Whereas barrier has moved beyond its goals from the 1.x era, barrier aims to maintain that simplicity. Barrier will let you use your keyboard and mouse from machine A to control machine B (or more). That's it.
+Whereas synergy has moved beyond its goals from the 1.x era, barrier aims to maintain that simplicity. Barrier will let you use your keyboard and mouse from machine A to control machine B (or more). That's it.
 
 ### Project goals
 
-Hassle-free reliability. We are users, too. Barrier was created so that we could solve the issues we had with barrier and then share these fixes with other users.
+Hassle-free reliability. We are users, too. Barrier was created so that we could solve the issues we had with synergy and then share these fixes with other users.
 
 Compatibility. We use more than one operating system and you probably do, too. Windows, OSX, Linux, FreeBSD... Barrier should "just work". We will also have our eye on Wayland when the time comes.
 
