@@ -12,8 +12,6 @@
 		</Upgrade>
 		<Feature Id="ProductFeature" Title="$(var.Name)">
 			<ComponentGroupRef Id="ProductComponents"/>
-			<ComponentGroupRef Id="OpenSSLComponents"/>
-			<ComponentGroupRef Id="ProductQtPluginComponents"/>
 			<MergeRef Id="CRT"/>
             <?if $(var.Configuration) = "Debug" ?>
 			    <MergeRef Id="DebugCRT"/>
@@ -79,6 +77,8 @@
 				<File Source="$(var.BinPath)/synwinhk.dll"/>
 				<File Source="$(var.OpenSSLBinPath)/libeay32.dll"/>
 				<File Source="$(var.OpenSSLBinPath)/ssleay32.dll"/>
+				<File Source="$(var.OpenSSLBinPath)/openssl.exe"/>
+				<File Source="$(var.ResPath)/openssl/barrier.conf"/>
 			</Component>
 			<Component Guid="BAC8149B-6287-45BF-9C27-43D71ED40214" Id="Gui">
 				<File Id="GuiProgram" KeyPath="yes" Source="$(var.BinPath)/barrier.exe">
@@ -104,23 +104,6 @@
 				<File Source="$(var.QtBinPath)\libGLESv2.dll"/>
 				<File Source="$(var.QtBinPath)\libEGL.dll"/>
 				<?endif ?>
-			</Component>
-		</ComponentGroup>
-		<ComponentGroup Directory="PlatformsDir" Id="ProductQtPluginComponents">
-			<Component Guid="684EFA14-856B-440E-A5E6-E90E04E36B41" Id="QtPlatformPlugin">
-				<?if $(var.Configuration) = "Debug" ?>
-				<File Source="$(var.QtPlatformPath)\qwindowsd.dll"/>
-				<?else ?>
-				<File Source="$(var.QtPlatformPath)\qwindows.dll"/>
-				<?endif ?>
-			</Component>
-		</ComponentGroup>
-		<ComponentGroup Directory="OpenSSLDir" Id="OpenSSLComponents">
-			<Component Guid="92648F77-65A6-4B16-AC59-A1F37BD341B1" Id="OpenSSL">
-				<File Id="OpenSSLDll1" Source="$(var.OpenSSLBinPath)/libeay32.dll"/>
-				<File Id="OpenSSLDll2" Source="$(var.OpenSSLBinPath)/ssleay32.dll"/>
-				<File Source="$(var.OpenSSLBinPath)/openssl.exe"/>
-				<File Source="$(var.ResPath)/openssl/barrier.conf"/>
 			</Component>
 		</ComponentGroup>
 	</Fragment>
