@@ -21,7 +21,7 @@ goto done
 echo To build a 64-bit Windows installer:
 echo  - set Q_BUILD_TYPE=Release in winbuild_env.bat
 echo  - also set other environmental overrides necessary for your build environment
-echo  - run clean_build_windows.bat to build Barrier and verify that it succeeds
+echo  - run clean_build.bat to build Barrier and verify that it succeeds
 echo  - re-run this script to create the installation package
 goto done
 

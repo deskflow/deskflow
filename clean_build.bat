@@ -1,6 +1,6 @@
 @echo off
 
-REM defaults - override them by creating a winbuild_env file
+REM defaults - override them by creating a winbuild_env.bat file
 set B_BUILD_TYPE=Debug
 set B_QT_ROOT=C:\Qt\5.6.3\msvc2015_64
 set B_BONJOUR=C:\Program Files\Bonjour SDK
@@ -49,10 +49,10 @@ goto done
 echo Build failed
 
 :done
+cd /d %savedir%
+
 set BONJOUR_SDK_HOME=
 set B_BUILD_TYPE=
 set B_QT_ROOT=
 set B_BONJOUR=
-
-cd /d %savedir%
 set savedir=
