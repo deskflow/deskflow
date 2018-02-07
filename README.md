@@ -1,3 +1,3 @@
 # Synergy Core
 
-Open source core legacy component of Synergy, keyboard and mouse sharing software
+This is the open source core component of Synergy, a keyboard and mouse sharing tool.
