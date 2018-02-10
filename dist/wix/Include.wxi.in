@@ -2,7 +2,7 @@
 <Include>
     <?define Name="Barrier" ?>
     <?define Version="@BARRIER_VERSION@" ?>
-    <?define QtVersion="5.6.3" ?> <!-- TODO: Configure this externally //--> 
+    <?define QtVersion="@QT_VERSION@" ?>
     <?define Author="Debauchee Open Source Group" ?>
     <?define BinPath="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/$(var.Configuration)" ?>
     <?define ResPath="@CMAKE_CURRENT_SOURCE_DIR@/res" ?>
