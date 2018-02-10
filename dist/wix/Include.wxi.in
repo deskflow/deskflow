@@ -22,8 +22,4 @@
     <?define QtPlatformPath="$(var.QtPath)\plugins\platforms" ?>
     <?define OpenSSLPath="$(var.ExtPath)\openssl\windows\$(var.Platform)" ?>
     <?define OpenSSLBinPath="$(var.OpenSSLPath)\bin" ?>
-    <?if $(var.Configuration) = "Debug" ?>
-        <?define DebugCRT="$(env.ProgramFiles)\Microsoft Visual Studio\2017\Community\VC\Redist\MSVC\14.11.25325\Merge Modules\Microsoft_VC141_DebugCRT_$(var.Platform).msm" ?>
-    <?endif ?>
-    <?define CRT="$(env.ProgramFiles)\Microsoft Visual Studio\2017\Community\VC\Redist\MSVC\14.11.25325\MergeModules\Microsoft_VC141_CRT_$(var.Platform).msm" ?>
 </Include>
