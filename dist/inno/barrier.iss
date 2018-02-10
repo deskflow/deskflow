@@ -1,0 +1,74 @@
+#define MyAppName "Barrier"
+#define MyAppVersion "1.9"
+#define MyAppPublisher "Debauchee Open Source Group"
+#define MyAppURL "https://github.com/debauchee/barrier/wiki"
+#define MyAppExeName "barrier.exe"
+#define MyAppServiceName "Barrier"
+#define MyAppServiceExe "barrierd.exe"
+#define MyAppServiceDesc "Manages the Barrier background processes."
+
+[Setup]
+AppId={{41036EA6-3F7A-4803-8AE0-469E5E91EFCC}
+AppName={#MyAppName}
+AppVersion={#MyAppVersion}
+AppVerName={#MyAppName} {#MyAppVersion}
+AppPublisher={#MyAppPublisher}
+AppPublisherURL={#MyAppURL}
+AppSupportURL={#MyAppURL}
+AppUpdatesURL={#MyAppURL}
+DefaultDirName={pf}\{#MyAppName}
+DisableProgramGroupPage=yes
+LicenseFile=E:\Projects\vs\barrier-release.git\res\License.rtf
+OutputDir=E:\Projects\vs\barrier-release.git\build\installer\bin
+OutputBaseFilename=BarrierSetup
+SetupIconFile=E:\Projects\vs\barrier-release.git\res\barrier.ico
+Compression=lzma
+SolidCompression=yes
+ArchitecturesInstallIn64BitMode=x64 ia64
+
+#include "scripts\lang\english.iss"
+
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+
+[Files]
+Source: "E:\Projects\vs\barrier-release.git\build\bin\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+
+[Icons]
+Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+
+[Run]
+Filename: {sys}\sc.exe; Parameters: "create {#MyAppServiceName} start= auto binPath= ""{app}\{#MyAppServiceExe}"""; Flags: runhidden
+Filename: {sys}\sc.exe; Parameters: "description {#MyAppServiceName} ""{#MyAppServiceDesc}"""; Flags: runhidden
+Filename: {sys}\sc.exe; Parameters: "start {#MyAppServiceName}"; Flags: runhidden
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+
+[UninstallDelete]
+Type: files; Name: "{app}\barrierd.log"
+
+[UninstallRun]
+Filename: {sys}\sc.exe; Parameters: "stop {#MyAppServiceName}"; Flags: runhidden
+Filename: {sys}\sc.exe; Parameters: "delete {#MyAppServiceName}"; Flags: runhidden
+
+[CustomMessages]
+DependenciesDir="redist"
+
+; shared code for installing the products
+#include "scripts\products.iss"
+#include "scripts\products\stringversion.iss"
+#include "scripts\products\winversion.iss"
+#include "scripts\products\msiproduct.iss"
+#include "scripts\products\vcredist2017.iss"
+
+[Code]
+function InitializeSetup(): boolean;
+begin
+	// initialize windows version
+	initwinversion();
+
+  vcredist2017('14'); // min allowed version is 14.0
+
+	Result := true;
+end;

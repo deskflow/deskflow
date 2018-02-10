@@ -43,6 +43,8 @@ if exist bin\Debug (
     copy %B_QT_FULLPATH%\bin\Qt5Core.dll bin\Release\ > NUL
     copy ..\ext\openssl\windows\x64\bin\* bin\Release\ > NUL
     copy ..\res\openssl\barrier.conf bin\Release\ > NUL
+    mkdir bin\Release\platforms
+    copy %B_QT_FULLPATH%\plugins\platforms\qwindows.dll bin\Release\platforms\ > NUL
 ) else (
     echo Remember to copy supporting binaries and confiuration files!
 )
