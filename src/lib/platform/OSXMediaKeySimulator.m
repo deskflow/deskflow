@@ -71,14 +71,14 @@ bool
 fakeNativeMediaKey(KeyID id)
 {
 	
-	NSEvent* downRef = [NSEvent otherEventWithType:NSSystemDefined
+	NSEvent* downRef = [NSEvent otherEventWithType:NSEventTypeSystemDefined
 					location: NSMakePoint(0, 0) modifierFlags:0xa00
 					timestamp:0 windowNumber:0 context:0 subtype:8
 					data1:(convertKeyIDToNXKeyType(id) << 16) | ((0xa) << 8)
 					data2:-1];
 	CGEventRef downEvent = [downRef CGEvent];
 	
-	NSEvent* upRef = [NSEvent otherEventWithType:NSSystemDefined
+	NSEvent* upRef = [NSEvent otherEventWithType:NSEventTypeSystemDefined
 					location: NSMakePoint(0, 0) modifierFlags:0xa00
 					timestamp:0 windowNumber:0 context:0 subtype:8
 					data1:(convertKeyIDToNXKeyType(id) << 16) | ((0xb) << 8)

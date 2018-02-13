@@ -945,6 +945,10 @@ void MainWindow::changeEvent(QEvent* event)
             windowStateChanged();
             break;
         }
+        default:
+        {
+            break;
+        }
         }
     }
     // all that do not return are allowing the event to propagate
