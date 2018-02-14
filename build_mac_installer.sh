@@ -10,6 +10,12 @@ read
 
 cd $(dirname $0)
 
+B_REREF_SCRIPT=$(pwd)/mac_reref_dylibs.sh
+if [ ! -x $B_REREF_SCRIPT ]; then
+    echo Missing script: $B_REREF_SCRIPT
+    exit 1
+fi
+
 # remove any old copies so there's no confusion about whever this
 # process completes successfully or not
 rm -rf build/bundle/{bundle.dmg,$B_DMG}
@@ -31,18 +37,28 @@ cd MacOS || exit 1
 # copy all executables
 cp ${B_BINARY_PATH}/* . || exit 1
 
-# only one executable (barrier) needs non-system libraries.
-# get a list of them and make local copies
-B_LIBS=$(otool -XL barrier | awk '{ print $1 }' | grep -Ev '^(/usr/lib|/System)')
-[ $? -ne 0 ] && exit 1
-for B_SRC in $B_LIBS; do
-    cp $B_SRC . || exit 1
-    B_DST=@executable_path/$(basename $B_SRC)
-    # adjust the executable's metadata to point to the local copy
-    # rather than the system-wide copy which would only exist on
-    # a development machine
-    install_name_tool -change $B_SRC $B_DST  barrier || exit 1
-done
+# copy the qt platform plugin
+# TODO: this is hacky and will probably break if there is more than one qt
+# version installed. need a better way to find this library
+B_COCOA=$(find /usr/local/Cellar/qt -type f -name libqcocoa.dylib | head -1)
+if [ $? -ne 0 ] || [ "x$B_COCOA" = "x" ]; then
+    echo "Could not find cocoa platform plugin"
+    exit 1
+fi
+mkdir platforms
+cp $B_COCOA platforms/ || exit 1
+
+# make sure we can r/w all these binaries
+chmod -R u+rw * || exit 1
+
+# only one executable (barrier) needs non-system libraries although it's
+# libraries can call each other. use a recursive script to handle the
+# re-referencing
+$B_REREF_SCRIPT barrier || exit 1
+# the cocoa platform plugin also needs to know where to find the qt libraries.
+# because it exists in a subdirectory we append ../ to the relative path of the
+# libraries in its metadata
+$B_REREF_SCRIPT platforms/libqcocoa.dylib ../ || exit 1
 
 # create a startup script that will change to the binary directory
 # before starting barrier
@@ -51,7 +67,7 @@ chmod +x barrier.sh
 
 # create the DMG to be distributed in build/bundle
 cd ../../..
-hdiutil create -size 32m -fs HFS+ -volname "Barrier" bundle.dmg || exit 1
+hdiutil create -size 64m -fs HFS+ -volname "Barrier" bundle.dmg || exit 1
 hdiutil attach bundle.dmg -mountpoint mnt || exit 1
 cp -r Barrier.app mnt/ || exit 1
 hdiutil detach mnt || exit 1
