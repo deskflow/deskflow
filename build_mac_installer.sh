@@ -3,12 +3,14 @@
 # change this to rename the installer package
 B_DMG="Barrier-v1.9.dmg"
 
-# sanity check so we don't distribute packages full of debug symbols
-echo Make sure you have built the Release version!!
-echo Press Enter to continue or Ctrl+C to abort
-read
-
 cd $(dirname $0)
+
+# sanity check so we don't distribute packages full of debug symbols
+B_BUILD_TYPE=$(grep -E ^CMAKE_BUILD_TYPE build/CMakeCache.txt | cut -d= -f2)
+if [ "$B_BUILD_TYPE" != "Release" ]; then
+    echo Will only build installers for Release builds
+    exit 1
+fi
 
 B_REREF_SCRIPT=$(pwd)/mac_reref_dylibs.sh
 if [ ! -x $B_REREF_SCRIPT ]; then

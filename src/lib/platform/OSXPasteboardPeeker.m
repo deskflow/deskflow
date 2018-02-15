@@ -21,7 +21,7 @@
 CFStringRef
 getDraggedFileURL()
 {
-	NSString* pbName = NSPasteboardNameDrag;
+	NSString* pbName = NSDragPboard;
 	NSPasteboard* pboard = [NSPasteboard pasteboardWithName:pbName];
 	
 	NSMutableString* string;
