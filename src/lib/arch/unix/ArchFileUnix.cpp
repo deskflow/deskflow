@@ -129,7 +129,7 @@ ArchFileUnix::getProfileDirectory()
 #if WINAPI_XWINDOWS
         dir = getUserDirectory().append("/.barrier");
 #else
-        dir = getUserDirectory().append("/Library/Barrier");
+        dir = getUserDirectory().append("/Library/Application Support/Barrier");
 #endif
     }
     return dir;
