@@ -12,7 +12,7 @@ if [ "$B_BUILD_TYPE" != "Release" ]; then
     exit 1
 fi
 
-B_REREF_SCRIPT=$(pwd)/mac_reref_dylibs.sh
+B_REREF_SCRIPT=$(pwd)/osx_reref_dylibs.sh
 if [ ! -x $B_REREF_SCRIPT ]; then
     echo Missing script: $B_REREF_SCRIPT
     exit 1
