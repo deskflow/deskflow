@@ -6,7 +6,7 @@
     <key>CFBundleDisplayName</key>
     <string>Barrier</string>
     <key>CFBundleExecutable</key>
-    <string>barrier</string>
+    <string>barrier.sh</string>
     <key>CFBundleIconFile</key>
     <string>Barrier.icns</string>
     <key>CFBundleIdentifier</key>

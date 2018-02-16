@@ -43,14 +43,14 @@ class ScreenSetupView : public QTableView
         ScreenSetupModel* model() const;
 
     protected:
-        void mouseDoubleClickEvent(QMouseEvent*);
+        void mouseDoubleClickEvent(QMouseEvent*) override;
         void setTableSize();
-        void resizeEvent(QResizeEvent*);
-        void dragEnterEvent(QDragEnterEvent* event);
-        void dragMoveEvent(QDragMoveEvent* event);
-        void startDrag(Qt::DropActions supportedActions);
-        QStyleOptionViewItem viewOptions() const;
-        void scrollTo(const QModelIndex&, ScrollHint) {}
+        void resizeEvent(QResizeEvent*) override;
+        void dragEnterEvent(QDragEnterEvent* event) override;
+        void dragMoveEvent(QDragMoveEvent* event) override;
+        void startDrag(Qt::DropActions supportedActions) override;
+        QStyleOptionViewItem viewOptions() const override;
+        void scrollTo(const QModelIndex&, ScrollHint) override {}
 };
 
 #endif

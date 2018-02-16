@@ -25,6 +25,17 @@
 @dynamic animatesToDestination;
 @dynamic numberOfValidItemsForDrop;
 
+/* springLoadingHighlight is a property that will not be auto-synthesized by
+   clang. explicitly synthesizing it here as well as defining an empty handler
+   for resetSpringLoading() satisfies the compiler */
+@synthesize springLoadingHighlight = _springLoadingHighlight;
+
+/* unused */
+- (void)
+resetSpringLoading
+{
+}
+
 - (id)
 initWithFrame:(NSRect)frame
 {
