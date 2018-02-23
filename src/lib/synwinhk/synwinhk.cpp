@@ -86,12 +86,6 @@ setImmuneKeys(const DWORD *list, std::size_t size)
 //
 #define NO_GRAB_KEYBOARD 0
 
-// declare extended mouse hook struct.  useable on win2k
-typedef struct tagMOUSEHOOKSTRUCTWin2000 {
-    MOUSEHOOKSTRUCT mhs;
-    DWORD mouseData;
-} MOUSEHOOKSTRUCTWin2000;
-
 //
 // globals
 //

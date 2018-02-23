@@ -369,7 +369,7 @@ MSWindowsDesks::queryHookLibrary(HINSTANCE hookLibrary)
     if (m_isPrimary && !m_noHooks) {
         m_install   = (InstallFunc)GetProcAddress(hookLibrary, "install");
         m_uninstall = (UninstallFunc)GetProcAddress(hookLibrary, "uninstall");
-        m_setImmuneKeys = (SetImmuneKeysFunc)GetProcAddress(hookLibrary, "setImmuneKeys");
+        //m_setImmuneKeys = (SetImmuneKeysFunc)GetProcAddress(hookLibrary, "setImmuneKeys");
         m_installScreensaver   =
                   (InstallScreenSaverFunc)GetProcAddress(
                                 hookLibrary, "installScreenSaver");
@@ -379,7 +379,7 @@ MSWindowsDesks::queryHookLibrary(HINSTANCE hookLibrary)
 
         if (m_install              == NULL ||
             m_uninstall            == NULL ||
-            m_setImmuneKeys        == NULL ||
+            //m_setImmuneKeys        == NULL ||
             m_installScreensaver   == NULL ||
             m_uninstallScreensaver == NULL) {
             LOG((CLOG_ERR "Invalid hook library"));
@@ -389,7 +389,7 @@ MSWindowsDesks::queryHookLibrary(HINSTANCE hookLibrary)
     else {
         m_install              = NULL;
         m_uninstall            = NULL;
-        m_setImmuneKeys        = NULL;
+        //m_setImmuneKeys        = NULL;
         m_installScreensaver   = NULL;
         m_uninstallScreensaver = NULL;
     }
@@ -718,7 +718,7 @@ MSWindowsDesks::deskThread(void* vdesk)
                 // before the hooks are activated
                 auto list = immune_keys_list();
                 LOG((CLOG_DEBUG "Found %u immune keys", list.size()));
-                m_setImmuneKeys(list.data(), list.size());
+                //m_setImmuneKeys(list.data(), list.size());
                 switch (m_install()) {
                 case kHOOK_FAILED:
                     // we won't work on this desk
