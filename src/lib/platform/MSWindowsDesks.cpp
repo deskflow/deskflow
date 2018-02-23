@@ -126,7 +126,7 @@ MSWindowsDesks::MSWindowsDesks(
     m_events(events),
     m_stopOnDeskSwitch(stopOnDeskSwitch)
 {
-    LOG((CLOG_DEBUG "Immune Keys Path: %s", ImmuneKeysPath));
+    LOG((CLOG_DEBUG "Immune Keys Path: %s", ImmuneKeysPath.c_str()));
 
     if (hookLibrary != NULL)
         queryHookLibrary(hookLibrary);
@@ -717,6 +717,7 @@ MSWindowsDesks::deskThread(void* vdesk)
                 // populate immune keys list in the DLL's shared memory
                 // before the hooks are activated
                 auto list = immune_keys_list();
+                LOG((CLOG_DEBUG "Found %u immune keys", list.size()));
                 m_setImmuneKeys(list.data(), list.size());
                 switch (m_install()) {
                 case kHOOK_FAILED:

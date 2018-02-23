@@ -422,7 +422,6 @@ Server::isLockedToScreen() const
 {
 	// locked if we say we're locked
 	if (isLockedToScreenServer()) {
-		LOG((CLOG_NOTE "Cursor is locked to screen, check Scroll Lock key"));
 		return true;
 	}
 

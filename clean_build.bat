@@ -18,6 +18,9 @@ set BONJOUR_SDK_HOME=%B_BONJOUR%
 REM full path to Qt stuff we need
 set B_QT_FULLPATH=%B_QT_ROOT%\%B_QT_VER%\%B_QT_MSVC%
 
+echo Bonjour: %BONJOUR_SDK_HOME%
+echo Qt: %B_QT_FULLPATH%
+
 rmdir /q /s build
 mkdir build
 if ERRORLEVEL 1 goto failed

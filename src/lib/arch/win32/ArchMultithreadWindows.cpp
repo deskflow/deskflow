@@ -232,6 +232,7 @@ ArchMultithreadWindows::waitCondVar(ArchCond cond,
     unlockMutex(mutex);
 
     // wait for a signal or broadcast
+    // TODO: this doesn't always signal when kill signals are sent
     DWORD result = WaitForMultipleObjects(3, handles, FALSE, winTimeout);
 
     // cancel takes priority
