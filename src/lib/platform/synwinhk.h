@@ -1,5 +1,6 @@
 /*
  * barrier -- mouse and keyboard sharing utility
+ * Copyright (C) 2018 Debauchee Open Source Group
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -58,27 +59,6 @@ enum EHookMode {
     kHOOK_WATCH_JUMP_ZONE,
     kHOOK_RELAY_EVENTS
 };
-
-typedef int                (*InitFunc)(DWORD targetQueueThreadID);
-typedef int                (*CleanupFunc)(void);
-typedef EHookResult        (*InstallFunc)(void);
-typedef int                (*UninstallFunc)(void);
-typedef int                (*InstallScreenSaverFunc)(void);
-typedef int                (*UninstallScreenSaverFunc)(void);
-typedef void            (*SetSidesFunc)(UInt32);
-typedef void            (*SetZoneFunc)(SInt32, SInt32, SInt32, SInt32, SInt32);
-typedef void            (*SetModeFunc)(int);
-
-CBARRIERHOOK_API int    init(DWORD);
-CBARRIERHOOK_API int    cleanup(void);
-CBARRIERHOOK_API EHookResult    install(void);
-CBARRIERHOOK_API int    uninstall(void);
-CBARRIERHOOK_API int    installScreenSaver(void);
-CBARRIERHOOK_API int    uninstallScreenSaver(void);
-CBARRIERHOOK_API void    setSides(UInt32 sides);
-CBARRIERHOOK_API void    setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h,
-                            SInt32 jumpZoneSize);
-CBARRIERHOOK_API void    setMode(EHookMode mode);
 
 /* REMOVED ImmuneKeys for migration of synwinhk out of DLL
 

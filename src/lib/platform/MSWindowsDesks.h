@@ -1,5 +1,6 @@
 /*
  * barrier -- mouse and keyboard sharing utility
+ * Copyright (C) 2018 Debauchee Open Source Group
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -18,7 +19,7 @@
 
 #pragma once
 
-#include "synwinhk/synwinhk.h"
+#include "platform/synwinhk.h"
 #include "barrier/key_types.h"
 #include "barrier/mouse_types.h"
 #include "barrier/option_types.h"
@@ -65,7 +66,7 @@ public:
     \p hookLibrary must be a handle to the hook library.
     */
     MSWindowsDesks(
-        bool isPrimary, bool noHooks, HINSTANCE hookLibrary,
+        bool isPrimary, bool noHooks,
         const IScreenSaver* screensaver, IEventQueue* events,
         IJob* updateKeys, bool stopOnDeskSwitch);
     ~MSWindowsDesks();
@@ -206,7 +207,6 @@ private:
     typedef std::map<String, Desk*> Desks;
 
     // initialization and shutdown operations
-    void                queryHookLibrary(HINSTANCE hookLibrary);
     HCURSOR                createBlankCursor() const;
     void                destroyCursor(HCURSOR cursor) const;
     ATOM                createDeskWindowClass(bool isPrimary) const;
@@ -282,15 +282,6 @@ private:
     Mutex                m_mutex;
     CondVar<bool>        m_deskReady;
     Desks                m_desks;
-
-    // hook library stuff
-    InstallFunc            m_install;
-    UninstallFunc        m_uninstall;
-    //SetImmuneKeysFunc    m_setImmuneKeys;
-    InstallScreenSaverFunc
-                        m_installScreensaver;
-    UninstallScreenSaverFunc
-                        m_uninstallScreensaver;
 
     // keyboard stuff
     IJob*                m_updateKeys;

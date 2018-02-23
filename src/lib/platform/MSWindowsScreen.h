@@ -1,5 +1,6 @@
 /*
  * barrier -- mouse and keyboard sharing utility
+ * Copyright (C) 2018 Debauchee Open Source Group
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -21,7 +22,7 @@
 #include "platform/MSWindowsHook.h"
 #include "barrier/PlatformScreen.h"
 #include "barrier/DragInformation.h"
-#include "synwinhk/synwinhk.h"
+#include "platform/synwinhk.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 #include "base/String.h"

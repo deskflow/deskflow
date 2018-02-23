@@ -1,5 +1,6 @@
 /*
  * barrier -- mouse and keyboard sharing utility
+ * Copyright (C) 2018 Debauchee Open Source Group
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  * 
@@ -136,7 +137,6 @@ MSWindowsScreen::MSWindowsScreen(
         m_desks       = new MSWindowsDesks(
                             m_isPrimary,
                             m_noHooks,
-                            m_hook.getInstance(),
                             m_screensaver,
                             m_events,
                             new TMethodJob<MSWindowsScreen>(
