@@ -68,7 +68,6 @@ typedef int                (*UninstallScreenSaverFunc)(void);
 typedef void            (*SetSidesFunc)(UInt32);
 typedef void            (*SetZoneFunc)(SInt32, SInt32, SInt32, SInt32, SInt32);
 typedef void            (*SetModeFunc)(int);
-typedef void            (*SetImmuneKeysFunc)(const DWORD*, std::size_t);
 
 CBARRIERHOOK_API int    init(DWORD);
 CBARRIERHOOK_API int    cleanup(void);
@@ -81,7 +80,13 @@ CBARRIERHOOK_API void    setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h,
                             SInt32 jumpZoneSize);
 CBARRIERHOOK_API void    setMode(EHookMode mode);
 
+/* REMOVED ImmuneKeys for migration of synwinhk out of DLL
+
+typedef void            (*SetImmuneKeysFunc)(const DWORD*, std::size_t);
+
 // do not call setImmuneKeys() while the hooks are active!
 CBARRIERHOOK_API void    setImmuneKeys(const DWORD *list, std::size_t size);
+
+*/
 
 }
