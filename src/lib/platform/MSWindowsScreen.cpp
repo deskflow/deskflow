@@ -129,10 +129,6 @@ MSWindowsScreen::MSWindowsScreen(
 
     s_screen = this;
     try {
-        if (m_isPrimary && !m_noHooks) {
-            m_hook.loadLibrary();
-        }
-
         m_screensaver = new MSWindowsScreenSaver();
         m_desks       = new MSWindowsDesks(
                             m_isPrimary,

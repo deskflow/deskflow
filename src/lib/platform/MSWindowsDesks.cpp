@@ -547,7 +547,7 @@ MSWindowsDesks::deskEnter(Desk* desk)
     AttachThreadInput(thatThread, thisThread, TRUE);
     SetForegroundWindow(desk->m_foregroundWindow);
     AttachThreadInput(thatThread, thisThread, FALSE);
-    EnableWindow(desk->m_window, desk->m_lowLevel ? FALSE : TRUE);
+    EnableWindow(desk->m_window, FALSE);
     desk->m_foregroundWindow = NULL;
 }
 
@@ -560,35 +560,16 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
         // layout we choose rather than the keyboard layout of the last
         // active window.
         int x, y, w, h;
-        if (desk->m_lowLevel) {
-            // with a low level hook the cursor will never budge so
-            // just a 1x1 window is sufficient.
-            x = m_xCenter;
-            y = m_yCenter;
-            w = 1;
-            h = 1;
-        }
-        else {
-            // with regular hooks the cursor will jitter as it's moved
-            // by the user then back to the center by us.  to be sure
-            // we never lose it, cover all the monitors with the window.
-            x = m_x;
-            y = m_y;
-            w = m_w;
-            h = m_h;
-        }
+        // with a low level hook the cursor will never budge so
+        // just a 1x1 window is sufficient.
+        x = m_xCenter;
+        y = m_yCenter;
+        w = 1;
+        h = 1;
         SetWindowPos(desk->m_window, HWND_TOP, x, y, w, h,
                             SWP_NOACTIVATE | SWP_SHOWWINDOW);
 
-        // if not using low-level hooks we have to also activate the
-        // window to ensure we don't lose keyboard focus.
-        // FIXME -- see if this can be avoided.  if so then always
-        // disable the window (see handling of BARRIER_MSG_SWITCH).
-        if (!desk->m_lowLevel) {
-            SetActiveWindow(desk->m_window);
-        }
-
-        // if using low-level hooks then disable the foreground window
+        // since we're using low-level hooks, disable the foreground window
         // so it can't mess up any of our keyboard events.  the console
         // program, for example, will cause characters to be reported as
         // unshifted, regardless of the shift key state.  interestingly
@@ -596,19 +577,17 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
         //
         // note that we must enable the window to activate it and we
         // need to disable the window on deskEnter.
-        else {
-            desk->m_foregroundWindow = getForegroundWindow();
-            if (desk->m_foregroundWindow != NULL) {
-                EnableWindow(desk->m_window, TRUE);
-                SetActiveWindow(desk->m_window);
-                DWORD thisThread =
-                    GetWindowThreadProcessId(desk->m_window, NULL);
-                DWORD thatThread =
-                    GetWindowThreadProcessId(desk->m_foregroundWindow, NULL);
-                AttachThreadInput(thatThread, thisThread, TRUE);
-                SetForegroundWindow(desk->m_window);
-                AttachThreadInput(thatThread, thisThread, FALSE);
-            }
+        desk->m_foregroundWindow = getForegroundWindow();
+        if (desk->m_foregroundWindow != NULL) {
+            EnableWindow(desk->m_window, TRUE);
+            SetActiveWindow(desk->m_window);
+            DWORD thisThread =
+                GetWindowThreadProcessId(desk->m_window, NULL);
+            DWORD thatThread =
+                GetWindowThreadProcessId(desk->m_foregroundWindow, NULL);
+            AttachThreadInput(thatThread, thisThread, TRUE);
+            SetForegroundWindow(desk->m_window);
+            AttachThreadInput(thatThread, thisThread, FALSE);
         }
 
         // switch to requested keyboard layout
@@ -683,25 +662,14 @@ MSWindowsDesks::deskThread(void* vdesk)
                 auto list = immune_keys_list();
                 LOG((CLOG_DEBUG "Found %u immune keys", list.size()));
                 //m_setImmuneKeys(list.data(), list.size());
-                switch (MSWindowsHook::install()) {
-                case kHOOK_FAILED:
+                if (!MSWindowsHook::install()) {
                     // we won't work on this desk
-                    desk->m_lowLevel = false;
-                    break;
-
-                case kHOOK_OKAY:
-                    desk->m_lowLevel = false;
-                    break;
-
-                case kHOOK_OKAY_LL:
-                    desk->m_lowLevel = true;
-                    break;
+                    LOG((CLOG_DEBUG "Cannot hook on this desk"));
                 }
-
                 // a window on the primary screen with low-level hooks
                 // should never activate.
                 if (desk->m_window)
-                    EnableWindow(desk->m_window, desk->m_lowLevel ? FALSE : TRUE);
+                    EnableWindow(desk->m_window, FALSE);
             }
             break;
 

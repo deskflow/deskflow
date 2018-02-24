@@ -28,18 +28,12 @@
 class MSWindowsHook
 {
 public:
-    MSWindowsHook();
-    virtual ~MSWindowsHook();
-
-    void                loadLibrary();
-    int                    init(DWORD threadID);
-    int                    cleanup();
     void                setSides(UInt32 sides);
     void                setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h, SInt32 jumpZoneSize);
     void                setMode(EHookMode mode);
 
-    static EHookResult install();
-    static int uninstall();
-    static int installScreenSaver();
-    static int uninstallScreenSaver();
+    static bool install();
+    static void uninstall();
+    static bool installScreenSaver();
+    static void uninstallScreenSaver();
 };

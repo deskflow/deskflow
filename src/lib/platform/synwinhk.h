@@ -48,12 +48,6 @@
 
 extern "C" {
 
-enum EHookResult {
-    kHOOK_FAILED,
-    kHOOK_OKAY,
-    kHOOK_OKAY_LL
-};
-
 enum EHookMode {
     kHOOK_DISABLE,
     kHOOK_WATCH_JUMP_ZONE,

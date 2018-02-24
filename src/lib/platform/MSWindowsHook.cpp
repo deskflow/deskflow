@@ -18,6 +18,7 @@
  */
 
 #include "platform/MSWindowsHook.h"
+#include "platform/MSWindowsHookResource.h"
 #include "barrier/protocol_types.h"
 #include "barrier/XScreen.h"
 #include "base/Log.h"
@@ -30,14 +31,11 @@
  //
 #define NO_GRAB_KEYBOARD 0
 
-static const char* g_name = "synwinhk";
+static const DWORD      g_threadID = GetCurrentThreadId();
 
-static DWORD            g_processID = 0;
-static DWORD            g_threadID = 0;
-static HHOOK            g_getMessage = NULL;
-static HHOOK            g_keyboardLL = NULL;
-static HHOOK            g_mouseLL = NULL;
-static bool                g_screenSaver = false;
+static WindowsHookResource  g_hkMessage;
+static WindowsHookResource  g_hkKeyboard;
+static WindowsHookResource  g_hkMouse;
 static EHookMode        g_mode = kHOOK_DISABLE;
 static UInt32            g_zoneSides = 0;
 static SInt32            g_zoneSize = 0;
@@ -50,90 +48,7 @@ static WPARAM            g_deadRelease = 0;
 static LPARAM            g_deadLParam = 0;
 static BYTE                g_deadKeyState[256] = { 0 };
 static BYTE                g_keyState[256] = { 0 };
-static DWORD            g_hookThread = 0;
 static bool                g_fakeServerInput = false;
-static BOOL                g_isPrimary = TRUE;
-
-MSWindowsHook::MSWindowsHook()
-{
-}
-
-MSWindowsHook::~MSWindowsHook()
-{
-    cleanup();
-
-    if (g_processID == GetCurrentProcessId()) {
-        uninstall();
-        uninstallScreenSaver();
-        g_processID = 0;
-    }
-}
-
-void
-MSWindowsHook::loadLibrary()
-{
-    if (g_processID == 0) {
-        g_processID = GetCurrentProcessId();
-    }
-    if (init(GetCurrentThreadId()) == 0) {
-        LOG((CLOG_ERR "failed to init hooks handler"));
-        throw XScreenOpenFailure();
-    }
-}
-
-int
-MSWindowsHook::init(DWORD threadID)
-{
-    // try to open process that last called init() to see if it's
-    // still running or if it died without cleaning up.
-    if (g_processID != 0 && g_processID != GetCurrentProcessId()) {
-        HANDLE process = OpenProcess(STANDARD_RIGHTS_REQUIRED,
-            FALSE, g_processID);
-        if (process != NULL) {
-            // old process (probably) still exists so refuse to
-            // reinitialize this DLL (and thus steal it from the
-            // old process).
-            int result = CloseHandle(process);
-            if (result == false) {
-                return 0;
-            }
-        }
-
-        // clean up after old process.  the system should've already
-        // removed the hooks so we just need to reset our state.
-        g_processID = GetCurrentProcessId();
-        g_threadID = 0;
-        g_getMessage = NULL;
-        g_keyboardLL = NULL;
-        g_mouseLL = NULL;
-        g_screenSaver = false;
-    }
-
-    // save thread id.  we'll post messages to this thread's
-    // message queue.
-    g_threadID = threadID;
-
-    // set defaults
-    g_mode = kHOOK_DISABLE;
-    g_zoneSides = 0;
-    g_zoneSize = 0;
-    g_xScreen = 0;
-    g_yScreen = 0;
-    g_wScreen = 0;
-    g_hScreen = 0;
-
-    return 1;
-}
-
-int
-MSWindowsHook::cleanup()
-{
-    if (g_processID == GetCurrentProcessId()) {
-        g_threadID = 0;
-    }
-
-    return 1;
-}
 
 void
 MSWindowsHook::setSides(UInt32 sides)
@@ -445,14 +360,9 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
             // pass event on.  we want to let these through to
             // the window proc because otherwise the keyboard
             // lights may not stay synchronized.
-            break;
-
         case VK_HANGUL:
-            // pass these modifiers if using a low level hook, discard
-            // them if not.
-            if (g_hookThread == 0) {
-                return true;
-            }
+            // pass event on because we're using a low level hook
+
             break;
 
         default:
@@ -493,7 +403,7 @@ keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
         }
     }
 
-    return CallNextHookEx(g_keyboardLL, code, wParam, lParam);
+    return CallNextHookEx(g_hkKeyboard, code, wParam, lParam);
 }
 #endif // !NO_GRAB_KEYBOARD
 
@@ -613,19 +523,12 @@ mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
         }
     }
 
-    return CallNextHookEx(g_mouseLL, code, wParam, lParam);
+    return CallNextHookEx(g_hkMouse, code, wParam, lParam);
 }
 
-EHookResult
+bool
 MSWindowsHook::install()
 {
-    assert(g_getMessage == NULL || g_screenSaver);
-
-    // must be initialized
-    if (g_threadID == 0) {
-        return kHOOK_FAILED;
-    }
-
     // discard old dead keys
     g_deadVirtKey = 0;
     g_deadLParam = 0;
@@ -633,68 +536,34 @@ MSWindowsHook::install()
     // reset fake input flag
     g_fakeServerInput = false;
 
-    // install low-level hooks.  we require that they both get installed.
-    g_mouseLL = SetWindowsHookEx(WH_MOUSE_LL,
-        &mouseLLHook,
-        NULL,
-        0);
-#if !NO_GRAB_KEYBOARD
-    g_keyboardLL = SetWindowsHookEx(WH_KEYBOARD_LL,
-        &keyboardLLHook,
-        NULL,
-        0);
-    if (g_mouseLL == NULL || g_keyboardLL == NULL) {
-        if (g_keyboardLL != NULL) {
-            UnhookWindowsHookEx(g_keyboardLL);
-            g_keyboardLL = NULL;
-        }
-        if (g_mouseLL != NULL) {
-            UnhookWindowsHookEx(g_mouseLL);
-            g_mouseLL = NULL;
-        }
+#if NO_GRAB_KEYBOARD
+    // we only need the mouse hook
+    if (!g_hkMouse.set(WH_MOUSE_LL, &mouseLLHook, NULL, 0))
+        return false;
+#else
+    // we need both hooks. if either fails, discard the other
+    if (!g_hkMouse.set(WH_MOUSE_LL, &mouseLLHook, NULL, 0) ||
+        !g_hkKeyboard.set(WH_KEYBOARD_LL, &keyboardLLHook, NULL, 0)) {
+        g_hkMouse.unset();
+        g_hkKeyboard.unset();
+        return false;
     }
 #endif
 
-    // check that we got all the hooks we wanted
-    if ((g_mouseLL == NULL)
-#if !NO_GRAB_KEYBOARD
-       || (g_keyboardLL == NULL)
-#endif
-        ) {
-        uninstall();
-        return kHOOK_FAILED;
-    }
-
-    if (g_keyboardLL != NULL || g_mouseLL != NULL) {
-        g_hookThread = GetCurrentThreadId();
-        return kHOOK_OKAY_LL;
-    }
-
-    return kHOOK_OKAY;
+    return true;
 }
 
-int
+void
 MSWindowsHook::uninstall()
 {
     // discard old dead keys
     g_deadVirtKey = 0;
     g_deadLParam = 0;
 
-    // uninstall hooks
-    if (g_keyboardLL != NULL) {
-        UnhookWindowsHookEx(g_keyboardLL);
-        g_keyboardLL = NULL;
-    }
-    if (g_mouseLL != NULL) {
-        UnhookWindowsHookEx(g_mouseLL);
-        g_mouseLL = NULL;
-    }
-    if (g_getMessage != NULL && !g_screenSaver) {
-        UnhookWindowsHookEx(g_getMessage);
-        g_getMessage = NULL;
-    }
+    g_hkMouse.unset();
+    g_hkKeyboard.unset();
 
-    return 1;
+    uninstallScreenSaver();
 }
 
 static
@@ -702,53 +571,29 @@ LRESULT CALLBACK
 getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 {
     if (code >= 0) {
-        if (g_screenSaver) {
-            MSG* msg = reinterpret_cast<MSG*>(lParam);
-            if (msg->message == WM_SYSCOMMAND &&
-                msg->wParam == SC_SCREENSAVE) {
-                // broadcast screen saver started message
-                PostThreadMessage(g_threadID,
-                    BARRIER_MSG_SCREEN_SAVER, TRUE, 0);
-            }
+        MSG* msg = reinterpret_cast<MSG*>(lParam);
+        if (msg->message == WM_SYSCOMMAND &&
+            msg->wParam == SC_SCREENSAVE) {
+            // broadcast screen saver started message
+            PostThreadMessage(g_threadID,
+                BARRIER_MSG_SCREEN_SAVER, TRUE, 0);
         }
     }
 
-    return CallNextHookEx(g_getMessage, code, wParam, lParam);
+    return CallNextHookEx(g_hkMessage, code, wParam, lParam);
 }
 
-int
+bool
 MSWindowsHook::installScreenSaver()
 {
-    // must be initialized
-    if (g_threadID == 0) {
-        return 0;
-    }
-
-    // generate screen saver messages
-    g_screenSaver = true;
-
     // install hook unless it's already installed
-    if (g_getMessage == NULL) {
-        g_getMessage = SetWindowsHookEx(WH_GETMESSAGE,
-            &getMessageHook,
-            NULL,
-            0);
-    }
-
-    return (g_getMessage != NULL) ? 1 : 0;
+    if (g_hkMessage.is_set())
+        return true;
+    return g_hkMessage.set(WH_GETMESSAGE, &getMessageHook, NULL, 0);
 }
 
-int
+void
 MSWindowsHook::uninstallScreenSaver()
 {
-    // uninstall hook unless the mouse wheel hook is installed
-    if (g_getMessage != NULL) {
-        UnhookWindowsHookEx(g_getMessage);
-        g_getMessage = NULL;
-    }
-
-    // screen saver hook is no longer installed
-    g_screenSaver = false;
-
-    return 1;
+    g_hkMessage.unset();
 }
