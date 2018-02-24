@@ -11,8 +11,6 @@ if [ $? -eq 0 ]; then
 else
     B_CMAKE=cmake
 fi
-echo CMAKE=$B_CMAKE
-exit 0
 # default build configuration
 B_BUILD_TYPE=${B_BUILD_TYPE:-Debug}
 if [ "$(uname)" = "Darwin" ]; then
