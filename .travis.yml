@@ -3,6 +3,7 @@ before_install:
 - sudo apt-get update -qq
 - sudo apt-get install -qq libxtst-dev
 - sudo apt-get install -qq qtdeclarative5-dev
+- sudo apt-get install -qq libavahi-compat-libdnssd-dev
 script: sh -x ./clean_build.sh
 # skip install phase since we have a customized install package
 # creation tool for each supported platform
