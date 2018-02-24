@@ -35,7 +35,7 @@
 
 using namespace std;
 
-static const size_t g_chunkSize = 512 * 1024; //512kb
+static const size_t g_chunkSize = 32 * 1024; //32kb
 
 bool StreamChunker::s_isChunkingFile = false;
 bool StreamChunker::s_interruptFile = false;
