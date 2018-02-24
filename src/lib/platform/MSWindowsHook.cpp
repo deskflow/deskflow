@@ -19,6 +19,7 @@
 
 #include "platform/MSWindowsHook.h"
 #include "platform/MSWindowsHookResource.h"
+#include "platform/ImmuneKeysReader.h"
 #include "barrier/protocol_types.h"
 #include "barrier/XScreen.h"
 #include "base/Log.h"
@@ -49,6 +50,28 @@ static LPARAM            g_deadLParam = 0;
 static BYTE                g_deadKeyState[256] = { 0 };
 static BYTE                g_keyState[256] = { 0 };
 static bool                g_fakeServerInput = false;
+static std::vector<DWORD> g_immuneKeys;
+
+static const std::string ImmuneKeysPath = ArchFileWindows().getProfileDirectory() + "\\ImmuneKeys.txt";
+
+static std::vector<DWORD> immune_keys_list()
+{
+    std::vector<DWORD> keys;
+    std::string badLine;
+    if (!ImmuneKeysReader::get_list(ImmuneKeysPath.c_str(), keys, badLine))
+        LOG((CLOG_ERR "Reading immune keys stopped at: %s", badLine.c_str()));
+    return keys;
+}
+
+inline static
+bool is_immune_key(DWORD target)
+{
+    for (auto key : g_immuneKeys) {
+        if (key == target)
+            return true;
+    }
+    return false;
+}
 
 void
 MSWindowsHook::setSides(UInt32 sides)
@@ -378,9 +401,11 @@ static
 LRESULT CALLBACK
 keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
 {
-    if (code >= 0) {
-        // decode the message
-        KBDLLHOOKSTRUCT* info = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
+    // decode the message
+    KBDLLHOOKSTRUCT* info = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
+
+    // do not filter non-action events nor immune keys
+    if (code == HC_ACTION && !is_immune_key(info->vkCode)) {
         WPARAM wParam = info->vkCode;
         LPARAM lParam = 1;                            // repeat code
         lParam |= (info->scanCode << 16);        // scan code
@@ -510,7 +535,8 @@ static
 LRESULT CALLBACK
 mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
 {
-    if (code >= 0) {
+    // do not filter non-action events
+    if (code == HC_ACTION) {
         // decode the message
         MSLLHOOKSTRUCT* info = reinterpret_cast<MSLLHOOKSTRUCT*>(lParam);
         SInt32 x = static_cast<SInt32>(info->pt.x);
@@ -535,6 +561,10 @@ MSWindowsHook::install()
 
     // reset fake input flag
     g_fakeServerInput = false;
+
+    // setup immune keys
+    g_immuneKeys = immune_keys_list();
+    LOG((CLOG_DEBUG "Found %u immune keys in %s", g_immuneKeys.size(), ImmuneKeysPath.c_str()));
 
 #if NO_GRAB_KEYBOARD
     // we only need the mouse hook

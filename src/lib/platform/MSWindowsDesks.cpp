@@ -20,7 +20,6 @@
 #include "platform/MSWindowsDesks.h"
 
 #include "platform/MSWindowsScreen.h"
-#include "platform/ImmuneKeysReader.h"
 #include "barrier/IScreenSaver.h"
 #include "barrier/XScreen.h"
 #include "mt/Lock.h"
@@ -89,17 +88,6 @@
 // enable; <unused>
 #define BARRIER_MSG_FAKE_INPUT        BARRIER_HOOK_LAST_MSG + 12
 
-static const std::string ImmuneKeysPath = ArchFileWindows().getProfileDirectory() + "\\ImmuneKeys.txt";
-
-static std::vector<DWORD> immune_keys_list()
-{
-    std::vector<DWORD> keys;
-    std::string badLine;
-    if (!ImmuneKeysReader::get_list(ImmuneKeysPath.c_str(), keys, badLine))
-        LOG((CLOG_ERR "Reading immune keys stopped at: %s", badLine.c_str()));
-    return keys;
-}
-
 //
 // MSWindowsDesks
 //
@@ -126,8 +114,6 @@ MSWindowsDesks::MSWindowsDesks(
     m_events(events),
     m_stopOnDeskSwitch(stopOnDeskSwitch)
 {
-    LOG((CLOG_DEBUG "Immune Keys Path: %s", ImmuneKeysPath.c_str()));
-
     m_cursor    = createBlankCursor();
     m_deskClass = createDeskWindowClass(m_isPrimary);
     m_keyLayout = GetKeyboardLayout(GetCurrentThreadId());
@@ -657,11 +643,6 @@ MSWindowsDesks::deskThread(void* vdesk)
                     MSWindowsHook::uninstallScreenSaver();
                     MSWindowsHook::installScreenSaver();
                 }
-                // populate immune keys list in the DLL's shared memory
-                // before the hooks are activated
-                auto list = immune_keys_list();
-                LOG((CLOG_DEBUG "Found %u immune keys", list.size()));
-                //m_setImmuneKeys(list.data(), list.size());
                 if (!MSWindowsHook::install()) {
                     // we won't work on this desk
                     LOG((CLOG_DEBUG "Cannot hook on this desk"));
