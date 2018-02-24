@@ -1,4 +1,5 @@
-script: sh ./clean_build.sh
+language: cpp
+script: sh -x ./clean_build.sh
 # skip install phase since we have a customized install package
 # creation tool for each supported platform
 install: true
