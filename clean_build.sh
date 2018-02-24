@@ -5,8 +5,14 @@ mkdir build || exit 1
 cd build || exit 1
 # some environments have cmake v2 as 'cmake' and v3 as 'cmake3'
 # check for cmake3 first then fallback to just cmake
-B_CMAKE=`type cmake3 2>/dev/null | cut -d' ' -f3`
-[ $? -ne 0 -o "x$B_CMAKE" = "x" ] && B_CMAKE=cmake
+B_CMAKE=`type cmake3 2>/dev/null`
+if [ $? -eq 0 ]; then
+    B_CMAKE=`echo $B_CMAKE | cut -d' ' -f3`
+else
+    B_CMAKE=cmake
+fi
+echo CMAKE=$B_CMAKE
+exit 0
 # default build configuration
 B_BUILD_TYPE=${B_BUILD_TYPE:-Debug}
 if [ "$(uname)" = "Darwin" ]; then
