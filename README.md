@@ -2,6 +2,8 @@
 
 Eliminate the barrier between your machines.
 
+Master branch build status: &nbsp; [![Build Status](https://travis-ci.org/debauchee/barrier.svg?branch=master)](https://travis-ci.org/debauchee/barrier)
+
 ### What is it?
 
 Barrier is KVM software forked from Symless's synergy 1.9 codebase. Synergy was a commercialized reimplementation of the original CosmoSynergy written by Chris Schoeneman.
@@ -26,4 +28,4 @@ For short and simple questions or to just say hello find us on the Freenode IRC 
 
 ### Contributions
 
-At this time we are looking for developers to help fix the issues found in the issue tracker. Submit pull requests once you've polished up your patch and if we use it you will be appropriately credited in the log.
+At this time we are looking for developers to help fix the issues found in the issue tracker. Submit pull requests once you've polished up your patch and we'll review and possibly merge it.
