@@ -30,6 +30,7 @@
 #include <cstdlib>
 #include <memory>
 #include <fstream>
+#include <memory>
 
 //
 // SecureSocket
@@ -206,45 +207,43 @@ SecureSocket::doWrite()
 {
     static bool s_retry = false;
     static int s_retrySize = 0;
-    static void* s_staticBuffer = NULL;
+    static std::unique_ptr<char[]> s_staticBuffer;
+    static std::size_t s_staticBufferSize = 0;
 
     // write data
     int bufferSize = 0;
     int bytesWrote = 0;
     int status = 0;
-    
+
+    if (!isSecureReady())
+        return kRetry;
+
     if (s_retry) {
         bufferSize = s_retrySize;
-    }
-    else {
+    } else {
         bufferSize = m_outputBuffer.getSize();
-        s_staticBuffer = malloc(bufferSize);
-        memcpy(s_staticBuffer, m_outputBuffer.peek(bufferSize), bufferSize);
+        if (bufferSize > s_staticBufferSize) {
+            s_staticBuffer.reset(new char[bufferSize]);
+            s_staticBufferSize = bufferSize;
+        }
+        if (bufferSize > 0) {
+            memcpy(s_staticBuffer.get(), m_outputBuffer.peek(bufferSize), bufferSize);
+        }
     }
     
     if (bufferSize == 0) {
         return kRetry;
     }
 
-    if (isSecureReady()) {
-        status = secureWrite(s_staticBuffer, bufferSize, bytesWrote);
-        if (status > 0) {
-            s_retry = false;
-            bufferSize = 0;
-            free(s_staticBuffer);
-            s_staticBuffer = NULL;
-        }
-        else if (status < 0) {
-            return kBreak;
-        }
-        else if (status == 0) {
-            s_retry = true;
-            s_retrySize = bufferSize;
-            return kNew;
-        }
-    }
-    else {
-        return kRetry;
+    status = secureWrite(s_staticBuffer.get(), bufferSize, bytesWrote);
+    if (status > 0) {
+        s_retry = false;
+    } else if (status < 0) {
+        return kBreak;
+    } else if (status == 0) {
+        s_retry = true;
+        s_retrySize = bufferSize;
+        return kNew;
     }
     
     if (bytesWrote > 0) {
