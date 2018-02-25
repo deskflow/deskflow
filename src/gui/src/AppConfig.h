@@ -85,7 +85,6 @@ class AppConfig: public QObject
         QString barrierProgramDir() const;
         QString barrierLogDir() const;
 
-        bool detectPath(const QString& name, QString& path);
         void persistLogDir();
         ElevateMode elevateMode();
 
@@ -136,9 +135,6 @@ protected:
         static const char m_BarriersName[];
         static const char m_BarriercName[];
         static const char m_BarrierLogDir[];
-
-    signals:
-        void sslToggled(bool enabled);
 };
 
 #endif

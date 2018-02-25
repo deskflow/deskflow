@@ -113,7 +113,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         void autoAddScreen(const QString name);
         void updateZeroconfService();
         void serverDetected(const QString name);
-        void updateLocalFingerprint();
 
 public slots:
         void appendLogRaw(const QString& text);
@@ -123,7 +122,6 @@ public slots:
         void startBarrier();
 
     protected slots:
-        void sslToggled(bool enabled);
         void on_m_pGroupClient_toggled(bool on);
         void on_m_pGroupServer_toggled(bool on);
         bool on_m_pButtonBrowseConfigFile_clicked();
@@ -173,9 +171,8 @@ public slots:
         QString getTimeStamp();
         void restartBarrier();
         void proofreadInfo();
-
         void windowStateChanged();
-
+        void updateSSLFingerprint();
 
     private:
         QSettings& m_Settings;

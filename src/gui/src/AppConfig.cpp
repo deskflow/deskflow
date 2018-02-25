@@ -206,35 +206,21 @@ void AppConfig::setStartedBefore(bool b) { m_StartedBefore = b; }
 
 void AppConfig::setElevateMode(ElevateMode em) { m_ElevateMode = em; }
 
-void AppConfig::setAutoConfig(bool autoConfig)
-{
-    m_AutoConfig = autoConfig;
-}
+void AppConfig::setAutoConfig(bool autoConfig) { m_AutoConfig = autoConfig; }
 
 bool AppConfig::autoConfigPrompted()  { return m_AutoConfigPrompted; }
 
-void AppConfig::setAutoConfigPrompted(bool prompted)
-{
-    m_AutoConfigPrompted = prompted;
-}
+void AppConfig::setAutoConfigPrompted(bool prompted) { m_AutoConfigPrompted = prompted; }
 
 QString AppConfig::barriersName() const { return m_BarriersName; }
 
 QString AppConfig::barriercName() const { return m_BarriercName; }
 
-ElevateMode AppConfig::elevateMode()
-{
-    return m_ElevateMode;
-}
+ElevateMode AppConfig::elevateMode() { return m_ElevateMode; }
 
-void AppConfig::setCryptoEnabled(bool e) {
-    m_CryptoEnabled = e;
-    emit sslToggled(e);
-}
+void AppConfig::setCryptoEnabled(bool e) { m_CryptoEnabled = e; }
 
-bool AppConfig::getCryptoEnabled() const {
-    return m_CryptoEnabled;
-}
+bool AppConfig::getCryptoEnabled() const { return m_CryptoEnabled; }
 
 void AppConfig::setAutoHide(bool b) { m_AutoHide = b; }
 

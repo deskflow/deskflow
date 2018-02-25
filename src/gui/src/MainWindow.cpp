@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define DOWNLOAD_URL "http://github.com/debauchee/barrier/"
-
 #include <iostream>
 
 #include "MainWindow.h"
@@ -117,10 +115,10 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     // change default size based on os
 #if defined(Q_OS_MAC)
     resize(720, 550);
-    setMinimumSize(size());
+    setMinimumSize(720, 0);
 #elif defined(Q_OS_LINUX)
     resize(700, 530);
-    setMinimumSize(size());
+    setMinimumSize(700, 0);
 #endif
 
     m_SuppressAutoConfigWarning = true;
@@ -130,10 +128,10 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_pComboServerList->hide();
     m_pLabelPadlock->hide();
 
-    sslToggled(appConfig.getCryptoEnabled());
+    updateSSLFingerprint();
 
-    connect (m_AppConfig, SIGNAL(sslToggled(bool)),
-             this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
+    // resize window to smallest reasonable size
+    resize(0, 0);
 }
 
 MainWindow::~MainWindow()
@@ -146,15 +144,8 @@ MainWindow::~MainWindow()
     saveSettings();
 
     delete m_pZeroconfService;
-
-    if (m_DownloadMessageBox != NULL) {
-        delete m_DownloadMessageBox;
-    }
-
-    if (m_BonjourInstall != NULL) {
-        delete m_BonjourInstall;
-    }
-
+    delete m_DownloadMessageBox;
+    delete m_BonjourInstall;
     delete m_pSslCertificate;
 }
 
@@ -556,16 +547,6 @@ void MainWindow::startBarrier()
     }
 }
 
-void
-MainWindow::sslToggled (bool enabled)
-{
-    if (enabled) {
-        m_pSslCertificate = new SslCertificate(this);
-        m_pSslCertificate->generateCertificate();
-    }
-    updateLocalFingerprint();
-}
-
 bool MainWindow::clientArgs(QStringList& args, QString& app)
 {
     app = appPath(appConfig().barriercName());
@@ -947,16 +928,16 @@ void MainWindow::serverDetected(const QString name)
     }
 }
 
-void MainWindow::updateLocalFingerprint()
+void MainWindow::updateSSLFingerprint()
 {
-    if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists()) {
-        m_pLabelFingerprint->setVisible(true);
-        m_pLabelLocalFingerprint->setVisible(true);
-        m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
+    if (m_AppConfig->getCryptoEnabled() && m_pSslCertificate == nullptr) {
+        m_pSslCertificate = new SslCertificate(this);
+        m_pSslCertificate->generateCertificate();
     }
-    else {
-        m_pLabelFingerprint->setVisible(false);
-        m_pLabelLocalFingerprint->setVisible(false);
+    if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists()) {
+        m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
+    } else {
+        m_pLabelLocalFingerprint->setText("Disabled");
     }
 }
 
@@ -1004,13 +985,13 @@ bool  MainWindow::on_m_pActionSave_triggered()
 
 void MainWindow::on_m_pActionAbout_triggered()
 {
-    AboutDialog dlg(this, appPath(appConfig().barriercName()));
-    dlg.exec();
+    AboutDialog(this, appPath(appConfig().barriercName())).exec();
 }
 
 void MainWindow::on_m_pActionSettings_triggered()
 {
-    SettingsDialog(this, appConfig()).exec();
+    if (SettingsDialog(this, appConfig()).exec() == QDialog::Accepted)
+        updateSSLFingerprint();
 }
 
 void MainWindow::autoAddScreen(const QString name)

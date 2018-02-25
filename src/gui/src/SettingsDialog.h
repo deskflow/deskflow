@@ -33,8 +33,6 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
 
     public:
         SettingsDialog(QWidget* parent, AppConfig& config);
-        static QString browseForBarrierc(QWidget* parent, const QString& programDir, const QString& barriercName);
-        static QString browseForBarriers(QWidget* parent, const QString& programDir, const QString& barriersName);
 
     protected:
         void accept();
@@ -48,7 +46,6 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         CoreInterface m_CoreInterface;
 
     private slots:
-        void on_m_pCheckBoxEnableCrypto_toggled(bool checked);
         void on_m_pComboLanguage_currentIndexChanged(int index);
         void on_m_pCheckBoxLogToFile_stateChanged(int );
         void on_m_pButtonBrowseLog_clicked();

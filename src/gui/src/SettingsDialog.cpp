@@ -65,26 +65,26 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 
 void SettingsDialog::accept()
 {
-    appConfig().setScreenName(m_pLineEditScreenName->text());
-    appConfig().setPort(m_pSpinBoxPort->value());
-    appConfig().setNetworkInterface(m_pLineEditInterface->text());
-    appConfig().setLogLevel(m_pComboLogLevel->currentIndex());
-    appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
-    appConfig().setLogFilename(m_pLineEditLogFilename->text());
-    appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
-    appConfig().setElevateMode(static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
-    appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
-    appConfig().setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
-    appConfig().saveSettings();
+    m_appConfig.setScreenName(m_pLineEditScreenName->text());
+    m_appConfig.setPort(m_pSpinBoxPort->value());
+    m_appConfig.setNetworkInterface(m_pLineEditInterface->text());
+    m_appConfig.setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
+    m_appConfig.setLogLevel(m_pComboLogLevel->currentIndex());
+    m_appConfig.setLogToFile(m_pCheckBoxLogToFile->isChecked());
+    m_appConfig.setLogFilename(m_pLineEditLogFilename->text());
+    m_appConfig.setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
+    m_appConfig.setElevateMode(static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
+    m_appConfig.setAutoHide(m_pCheckBoxAutoHide->isChecked());
+    m_appConfig.setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
+    m_appConfig.saveSettings();
     QDialog::accept();
 }
 
 void SettingsDialog::reject()
 {
-    if (appConfig().language() != m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString()) {
-        QBarrierApplication::getInstance()->switchTranslator(appConfig().language());
+    if (m_appConfig.language() != m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString()) {
+        QBarrierApplication::getInstance()->switchTranslator(m_appConfig.language());
     }
-
     QDialog::reject();
 }
 
@@ -137,16 +137,4 @@ void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 {
     QString ietfCode = m_pComboLanguage->itemData(index).toString();
     QBarrierApplication::getInstance()->switchTranslator(ietfCode);
-}
-
-void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
-{
-    m_appConfig.setCryptoEnabled(checked);
-    m_appConfig.saveSettings();
-    if (checked) {
-        SslCertificate sslCertificate;
-        sslCertificate.generateCertificate();
-        MainWindow& mainWindow = dynamic_cast<MainWindow&> (*this->parent());
-        mainWindow.updateLocalFingerprint();
-    }
 }
