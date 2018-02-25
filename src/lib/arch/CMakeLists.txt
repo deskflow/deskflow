@@ -40,5 +40,5 @@ endif()
 add_library(arch STATIC ${sources})
 
 if (UNIX)
-    target_link_libraries(arch dl ${libs})
+    target_link_libraries(arch ${CMAKE_DL_LIBS} ${libs})
 endif()
