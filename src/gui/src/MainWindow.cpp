@@ -85,9 +85,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_pTrayIconMenu(NULL),
     m_AlreadyHidden(false),
     m_pMenuBar(NULL),
-    m_pMenuFile(NULL),
-    m_pMenuEdit(NULL),
-    m_pMenuWindow(NULL),
+    m_pMenuBarrier(NULL),
     m_pMenuHelp(NULL),
     m_pZeroconfService(NULL),
     m_pDataDownloader(NULL),
@@ -105,8 +103,6 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     loadSettings();
     initConnections();
 
-    m_pWidgetUpdate->hide();
-    m_VersionChecker.setApp(appPath(appConfig.barriercName()));
     m_pLabelScreenName->setText(getScreenName());
     m_pLabelIpAddresses->setText(getIPAddresses());
 
@@ -135,9 +131,6 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_pLabelPadlock->hide();
 
     sslToggled(appConfig.getCryptoEnabled());
-
-    connect (this, SIGNAL(windowShown()),
-             this, SLOT(on_windowShown()), Qt::QueuedConnection);
 
     connect (m_AppConfig, SIGNAL(sslToggled(bool)),
              this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
@@ -174,8 +167,6 @@ void MainWindow::open()
     } else {
         showNormal();
     }
-
-    m_VersionChecker.checkLatest();
 
     if (!appConfig().autoConfigPrompted()) {
         promptAutoConfig();
@@ -223,37 +214,25 @@ void MainWindow::createTrayIcon()
 
 void MainWindow::retranslateMenuBar()
 {
-    m_pMenuFile->setTitle(tr("&File"));
-    m_pMenuEdit->setTitle(tr("&Edit"));
-    m_pMenuWindow->setTitle(tr("&Window"));
+    m_pMenuBarrier->setTitle(tr("&Barrier"));
     m_pMenuHelp->setTitle(tr("&Help"));
 }
 
 void MainWindow::createMenuBar()
 {
     m_pMenuBar = new QMenuBar(this);
-    m_pMenuFile = new QMenu("", m_pMenuBar);
-    m_pMenuEdit = new QMenu("", m_pMenuBar);
-    m_pMenuWindow = new QMenu("", m_pMenuBar);
+    m_pMenuBarrier = new QMenu("", m_pMenuBar);
     m_pMenuHelp = new QMenu("", m_pMenuBar);
     retranslateMenuBar();
 
-    m_pMenuBar->addAction(m_pMenuFile->menuAction());
-    m_pMenuBar->addAction(m_pMenuEdit->menuAction());
-#if !defined(Q_OS_MAC)
-    m_pMenuBar->addAction(m_pMenuWindow->menuAction());
-#endif
+    m_pMenuBar->addAction(m_pMenuBarrier->menuAction());
     m_pMenuBar->addAction(m_pMenuHelp->menuAction());
 
-    m_pMenuFile->addAction(m_pActionStartBarrier);
-    m_pMenuFile->addAction(m_pActionStopBarrier);
-    m_pMenuFile->addSeparator();
-    m_pMenuFile->addAction(m_pActionSave);
-    m_pMenuFile->addSeparator();
-    m_pMenuFile->addAction(m_pActionQuit);
-    m_pMenuEdit->addAction(m_pActionSettings);
-    m_pMenuWindow->addAction(m_pActionMinimize);
-    m_pMenuWindow->addAction(m_pActionRestore);
+    m_pMenuBarrier->addAction(m_pActionSave);
+    m_pMenuBarrier->addSeparator();
+    m_pMenuBarrier->addAction(m_pActionSettings);
+    m_pMenuBarrier->addSeparator();
+    m_pMenuBarrier->addAction(m_pActionQuit);
     m_pMenuHelp->addAction(m_pActionAbout);
 
     setMenuBar(m_pMenuBar);
@@ -279,7 +258,6 @@ void MainWindow::initConnections()
     connect(m_pActionStartBarrier, SIGNAL(triggered()), this, SLOT(startBarrier()));
     connect(m_pActionStopBarrier, SIGNAL(triggered()), this, SLOT(stopBarrier()));
     connect(m_pActionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
-    connect(&m_VersionChecker, SIGNAL(updateFound(const QString&)), this, SLOT(updateFound(const QString&)));
 }
 
 void MainWindow::saveSettings()
@@ -341,16 +319,6 @@ void MainWindow::logError()
     {
         appendLogRaw(m_pBarrier->readAllStandardError());
     }
-}
-
-void MainWindow::updateFound(const QString &version)
-{
-    m_pWidgetUpdate->show();
-    m_pLabelUpdate->setText(
-        tr("<p>Your version of Barrier is out of date. "
-           "Version <b>%1</b> is now available to "
-           "<a href=\"%2\">download</a>.</p>")
-        .arg(version).arg(DOWNLOAD_URL));
 }
 
 void MainWindow::appendLogInfo(const QString& text)
@@ -468,12 +436,6 @@ void MainWindow::proofreadInfo()
     int oldState = m_BarrierState;
     m_BarrierState = barrierDisconnected;
     setBarrierState((qBarrierState)oldState);
-}
-
-void MainWindow::showEvent(QShowEvent* event)
-{
-    QMainWindow::showEvent(event);
-    emit windowShown();
 }
 
 void MainWindow::clearLog()
@@ -1119,12 +1081,15 @@ bool MainWindow::isServiceRunning(QString name)
             return true;
         }
     }
+
+    return false;
+}
 #else
 bool MainWindow::isServiceRunning()
 {
-#endif
     return false;
 }
+#endif
 
 bool MainWindow::isBonjourRunning()
 {
@@ -1296,11 +1261,6 @@ void MainWindow::bonjourInstallFinished()
     appendLogInfo("Bonjour install finished");
 
     m_pCheckBoxAutoConfig->setChecked(true);
-}
-
-void MainWindow::on_windowShown()
-{
-    // removed activation garbage; leaving stub to be optimized out
 }
 
 QString MainWindow::getProfileRootForArg()

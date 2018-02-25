@@ -136,7 +136,6 @@ public slots:
         void stopBarrier();
         void logOutput();
         void logError();
-        void updateFound(const QString& version);
         void bonjourInstallFinished();
 
     protected:
@@ -146,17 +145,14 @@ public slots:
         void setBarrierProcess(QProcess* p) { m_pBarrier = p; }
         void initConnections();
         void createMenuBar();
-        void createStatusBar();
         void createTrayIcon();
         void loadSettings();
         void saveSettings();
         void setIcon(qBarrierState state);
         void setBarrierState(qBarrierState state);
-        bool checkForApp(int which, QString& app);
         bool clientArgs(QStringList& args, QString& app);
         bool serverArgs(QStringList& args, QString& app);
         void setStatus(const QString& status);
-        void sendIpcMessage(qIpcMessageType type, const char* buffer, bool showErrors);
         void updateFromLogLine(const QString& line);
         QString getIPAddresses();
         void stopService();
@@ -178,8 +174,6 @@ public slots:
         void restartBarrier();
         void proofreadInfo();
 
-        void showEvent (QShowEvent*);
-
         void windowStateChanged();
 
 
@@ -196,9 +190,7 @@ public slots:
         VersionChecker m_VersionChecker;
         IpcClient m_IpcClient;
         QMenuBar* m_pMenuBar;
-        QMenu* m_pMenuFile;
-        QMenu* m_pMenuEdit;
-        QMenu* m_pMenuWindow;
+        QMenu* m_pMenuBarrier;
         QMenu* m_pMenuHelp;
         ZeroconfService* m_pZeroconfService;
         DataDownloader* m_pDataDownloader;
@@ -218,10 +210,7 @@ private slots:
     void on_m_pComboServerList_currentIndexChanged(QString );
     void on_m_pButtonApply_clicked();
     void installBonjour();
-    void on_windowShown();
 
-signals:
-    void windowShown();
 };
 
 #endif
