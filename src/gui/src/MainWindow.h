@@ -33,6 +33,7 @@
 #include "VersionChecker.h"
 #include "IpcClient.h"
 #include "Ipc.h"
+#include "LogWindow.h"
 
 #include <QMutex>
 
@@ -104,7 +105,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         QString address();
         QString appPath(const QString& name);
         void open();
-        void clearLog();
         VersionChecker& versionChecker() { return m_VersionChecker; }
         QString getScreenName();
         ServerConfig& serverConfig() { return m_ServerConfig; }
@@ -135,6 +135,7 @@ public slots:
         void logOutput();
         void logError();
         void bonjourInstallFinished();
+        void showLogWindow();
 
     protected:
         QSettings& settings() { return m_Settings; }
@@ -168,7 +169,6 @@ public slots:
         QString getProfileRootForArg();
         void checkConnected(const QString& line);
         void checkFingerprint(const QString& line);
-        QString getTimeStamp();
         void restartBarrier();
         void proofreadInfo();
         void windowStateChanged();
@@ -201,6 +201,7 @@ public slots:
         QMutex m_StopDesktopMutex;
         SslCertificate* m_pSslCertificate;
         QStringList m_PendingClientNames;
+        LogWindow *m_pLogWindow;
 
 private slots:
     void on_m_pCheckBoxAutoConfig_toggled(bool checked);

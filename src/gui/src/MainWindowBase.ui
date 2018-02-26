@@ -240,42 +240,6 @@
      </widget>
     </item>
     <item>
-     <widget class="QGroupBox" name="m_pGroupLog">
-      <property name="title">
-       <string>Log</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QTextEdit" name="m_pLogOutput">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="font">
-          <font>
-           <family>Courier</family>
-          </font>
-         </property>
-         <property name="autoFillBackground">
-          <bool>false</bool>
-         </property>
-         <property name="undoRedoEnabled">
-          <bool>false</bool>
-         </property>
-         <property name="lineWrapMode">
-          <enum>QTextEdit::NoWrap</enum>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
@@ -378,14 +342,6 @@
     <string notr="true">Ctrl+T</string>
    </property>
   </action>
-  <action name="actionShowStatus">
-   <property name="text">
-    <string>S&amp;how Status</string>
-   </property>
-   <property name="shortcut">
-    <string notr="true">Ctrl+H</string>
-   </property>
-  </action>
   <action name="m_pActionMinimize">
    <property name="text">
     <string>&amp;Hide</string>
@@ -410,7 +366,7 @@
   </action>
   <action name="m_pActionSave">
    <property name="text">
-    <string>Save configuration &amp;as...</string>
+    <string>S&amp;ave configuration</string>
    </property>
    <property name="statusTip">
     <string>Save the interactively generated server configuration to a file.</string>
@@ -421,13 +377,24 @@
   </action>
   <action name="m_pActionSettings">
    <property name="text">
-    <string>Settings</string>
+    <string>Change &amp;Settings</string>
    </property>
    <property name="statusTip">
     <string>Edit settings</string>
    </property>
    <property name="shortcut">
-    <string notr="true"/>
+    <string notr="true">F4</string>
+   </property>
+  </action>
+  <action name="m_pActionShowLog">
+   <property name="text">
+       <string>Show &amp;Log</string>
+   </property>
+   <property name="toolTip">
+    <string>Show Log</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">F2</string>
    </property>
   </action>
  </widget>

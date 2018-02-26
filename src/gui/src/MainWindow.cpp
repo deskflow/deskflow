@@ -93,7 +93,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_BonjourInstall(NULL),
     m_SuppressEmptyServerWarning(false),
     m_ExpectedRunningState(kStopped),
-    m_pSslCertificate(NULL)
+    m_pSslCertificate(NULL),
+    m_pLogWindow(new LogWindow(nullptr))
 {
     setupUi(this);
 
@@ -147,6 +148,13 @@ MainWindow::~MainWindow()
     delete m_DownloadMessageBox;
     delete m_BonjourInstall;
     delete m_pSslCertificate;
+
+    // LogWindow is created as a sibling of the MainWindow rather than a child
+    // so that the main window can be hidden without hiding the log. because of
+    // this it does not get properly cleaned up by the QObject system. also by
+    // the time this destructor is called the event loop will no longer be able
+    // to clean up the LogWindow so ->deleteLater() will not work
+    delete m_pLogWindow;
 }
 
 void MainWindow::open()
@@ -184,6 +192,7 @@ void MainWindow::createTrayIcon()
 
     m_pTrayIconMenu->addAction(m_pActionStartBarrier);
     m_pTrayIconMenu->addAction(m_pActionStopBarrier);
+    m_pTrayIconMenu->addAction(m_pActionShowLog);
     m_pTrayIconMenu->addSeparator();
 
     m_pTrayIconMenu->addAction(m_pActionMinimize);
@@ -219,9 +228,10 @@ void MainWindow::createMenuBar()
     m_pMenuBar->addAction(m_pMenuBarrier->menuAction());
     m_pMenuBar->addAction(m_pMenuHelp->menuAction());
 
-    m_pMenuBarrier->addAction(m_pActionSave);
-    m_pMenuBarrier->addSeparator();
+    m_pMenuBarrier->addAction(m_pActionShowLog);
     m_pMenuBarrier->addAction(m_pActionSettings);
+    m_pMenuBarrier->addSeparator();
+    m_pMenuBarrier->addAction(m_pActionSave);
     m_pMenuBarrier->addSeparator();
     m_pMenuBarrier->addAction(m_pActionQuit);
     m_pMenuHelp->addAction(m_pActionAbout);
@@ -248,6 +258,7 @@ void MainWindow::initConnections()
     connect(m_pActionRestore, SIGNAL(triggered()), this, SLOT(showNormal()));
     connect(m_pActionStartBarrier, SIGNAL(triggered()), this, SLOT(startBarrier()));
     connect(m_pActionStopBarrier, SIGNAL(triggered()), this, SLOT(stopBarrier()));
+    connect(m_pActionShowLog, SIGNAL(triggered()), this, SLOT(showLogWindow()));
     connect(m_pActionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 
@@ -314,25 +325,25 @@ void MainWindow::logError()
 
 void MainWindow::appendLogInfo(const QString& text)
 {
-    appendLogRaw(getTimeStamp() + " INFO: " + text);
+    m_pLogWindow->appendInfo(text);
 }
 
 void MainWindow::appendLogDebug(const QString& text) {
     if (appConfig().logLevel() >= 4) {
-        appendLogRaw(getTimeStamp() + " DEBUG: " + text);
+        m_pLogWindow->appendDebug(text);
     }
 }
 
 void MainWindow::appendLogError(const QString& text)
 {
-    appendLogRaw(getTimeStamp() + " ERROR: " + text);
+    m_pLogWindow->appendError(text);
 }
 
 void MainWindow::appendLogRaw(const QString& text)
 {
     foreach(QString line, text.split(QRegExp("\r|\n|\r\n"))) {
         if (!line.isEmpty()) {
-            m_pLogOutput->append(line);
+            m_pLogWindow->appendRaw(line);
             updateFromLogLine(line);
         }
     }
@@ -350,7 +361,7 @@ void MainWindow::checkConnected(const QString& line)
     // TODO: implement ipc connection state messages to replace this hack.
     if (line.contains("started server") ||
         line.contains("connected to server") ||
-        line.contains("watchdog status: ok"))
+        line.contains("server status: active"))
     {
         setBarrierState(barrierConnected);
 
@@ -410,12 +421,6 @@ void MainWindow::checkFingerprint(const QString& line)
     }
 }
 
-QString MainWindow::getTimeStamp()
-{
-    QDateTime current = QDateTime::currentDateTime();
-    return '[' + current.toString(Qt::ISODate) + ']';
-}
-
 void MainWindow::restartBarrier()
 {
     stopBarrier();
@@ -427,11 +432,6 @@ void MainWindow::proofreadInfo()
     int oldState = m_BarrierState;
     m_BarrierState = barrierDisconnected;
     setBarrierState((qBarrierState)oldState);
-}
-
-void MainWindow::clearLog()
-{
-    m_pLogOutput->clear();
 }
 
 void MainWindow::startBarrier()
@@ -510,9 +510,7 @@ void MainWindow::startBarrier()
         connect(barrierProcess(), SIGNAL(readyReadStandardError()), this, SLOT(logError()));
     }
 
-    // put a space between last log output and new instance.
-    if (!m_pLogOutput->toPlainText().isEmpty())
-        appendLogRaw("");
+    m_pLogWindow->startNewInstance();
 
     appendLogInfo("starting " + QString(barrierType() == barrierServer ? "server" : "client"));
 
@@ -1263,4 +1261,9 @@ void MainWindow::windowStateChanged()
 {
     if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray())
         hide();
+}
+
+void MainWindow::showLogWindow()
+{
+    m_pLogWindow->show();
 }
