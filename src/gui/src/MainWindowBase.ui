@@ -350,7 +350,7 @@
     <string>Hide</string>
    </property>
    <property name="shortcut">
-    <string notr="true"/>
+    <string notr="true">F5</string>
    </property>
   </action>
   <action name="m_pActionRestore">

@@ -96,6 +96,13 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_pSslCertificate(NULL),
     m_pLogWindow(new LogWindow(nullptr))
 {
+    // explicitly unset DeleteOnClose so the window can be show and hidden
+    // repeatedly until Barrier is finished
+    setAttribute(Qt::WA_DeleteOnClose, false);
+    // mark the windows as sort of "dialog" window so that tiling window
+    // managers will float it by default (X11)
+    setAttribute(Qt::WA_X11NetWmWindowTypeDialog, true);
+
     setupUi(this);
 
     createMenuBar();
@@ -230,6 +237,7 @@ void MainWindow::createMenuBar()
 
     m_pMenuBarrier->addAction(m_pActionShowLog);
     m_pMenuBarrier->addAction(m_pActionSettings);
+    m_pMenuBarrier->addAction(m_pActionMinimize);
     m_pMenuBarrier->addSeparator();
     m_pMenuBarrier->addAction(m_pActionSave);
     m_pMenuBarrier->addSeparator();
