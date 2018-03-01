@@ -39,7 +39,7 @@ endif()
 if (NOT DEFINED BARRIER_REVISION)
     if (DEFINED ENV{GIT_COMMIT})
         string (SUBSTRING $ENV{GIT_COMMIT} 0 8 BARRIER_REVISION)
-    elseif (BARRIER_VERSION_STAGE STREQUAL "snapshot")
+    else()
         execute_process (
             COMMAND git rev-parse --short=8 HEAD
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}

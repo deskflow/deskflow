@@ -1,5 +1,5 @@
 #define MyAppName "Barrier"
-#define MyAppVersion "1.9"
+#define MyAppVersion "@BARRIER_VERSION@"
 #define MyAppPublisher "Debauchee Open Source Group"
 #define MyAppURL "https://github.com/debauchee/barrier/wiki"
 #define MyAppExeName "barrier.exe"
@@ -18,10 +18,10 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
-LicenseFile=E:\Projects\vs\barrier-release.git\res\License.rtf
-OutputDir=E:\Projects\vs\barrier-release.git\build\installer\bin
-OutputBaseFilename=BarrierSetup
-SetupIconFile=E:\Projects\vs\barrier-release.git\res\barrier.ico
+LicenseFile=@CMAKE_CURRENT_SOURCE_DIR@/res/License.rtf
+OutputDir=@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/../installer-inno/bin
+OutputBaseFilename=BarrierSetup-{#MyAppVersion}
+SetupIconFile=@CMAKE_CURRENT_SOURCE_DIR@/res/barrier.ico
 Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64 ia64
@@ -32,7 +32,7 @@ ArchitecturesInstallIn64BitMode=x64 ia64
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "E:\Projects\vs\barrier-release.git\build\bin\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/Release/*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

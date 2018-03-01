@@ -356,8 +356,10 @@ endif()
 # Windows installer
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-        message (STATUS "Configuring the v1 installer")
-        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
+        message (STATUS "Configuring the wix installer")
+        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer-wix)
+        message (STATUS "Configuring the inno installer")
+        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/inno ${CMAKE_BINARY_DIR}/installer-inno)
 endif()
 
 #
