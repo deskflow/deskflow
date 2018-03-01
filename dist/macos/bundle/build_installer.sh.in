@@ -1,29 +1,27 @@
 #!/bin/sh
 
 # change this to rename the installer package
-B_DMG="Barrier-v1.9.dmg"
-
-cd $(dirname $0)
+B_DMG="Barrier-@BARRIER_VERSION@.dmg"
 
 # sanity check so we don't distribute packages full of debug symbols
-B_BUILD_TYPE=$(grep -E ^CMAKE_BUILD_TYPE build/CMakeCache.txt | cut -d= -f2)
-if [ "$B_BUILD_TYPE" != "Release" ]; then
+if [ "@CMAKE_BUILD_TYPE@" != "Release" ]; then
     echo Will only build installers for Release builds
     exit 1
 fi
 
-B_REREF_SCRIPT=$(pwd)/osx_reref_dylibs.sh
+cd @CMAKE_CURRENT_SOURCE_DIR@/build/bundle || exit 1
+
+B_REREF_SCRIPT=./reref_dylibs.sh
 if [ ! -x $B_REREF_SCRIPT ]; then
     echo Missing script: $B_REREF_SCRIPT
     exit 1
 fi
 
-# remove any old copies so there's no confusion about whever this
+# remove any old copies so there's no confusion about whether this
 # process completes successfully or not
-rm -rf build/bundle/{bundle.dmg,$B_DMG}
+rm -rf temp.dmg $B_DMG
 
-B_BINARY_PATH=$(pwd)/build/bin
-cd build/bundle/Barrier.app/Contents 2>/dev/null
+cd Barrier.app/Contents 2>/dev/null
 if [ $? -ne 0 ]; then
     echo Please make sure that the build completed successfully
     echo before trying to create the installer.
@@ -37,7 +35,7 @@ mkdir MacOS || exit 1
 cd MacOS || exit 1
 
 # copy all executables
-cp ${B_BINARY_PATH}/* . || exit 1
+cp @CMAKE_RUNTIME_OUTPUT_DIR@/* . || exit 1
 
 # copy the qt platform plugin
 # TODO: this is hacky and will probably break if there is more than one qt
@@ -69,11 +67,11 @@ chmod +x barrier.sh
 
 # create the DMG to be distributed in build/bundle
 cd ../../..
-hdiutil create -size 64m -fs HFS+ -volname "Barrier" bundle.dmg || exit 1
-hdiutil attach bundle.dmg -mountpoint mnt || exit 1
+hdiutil create -size 64m -fs HFS+ -volname "Barrier" temp.dmg || exit 1
+hdiutil attach temp.dmg -mountpoint mnt || exit 1
 cp -r Barrier.app mnt/ || exit 1
 hdiutil detach mnt || exit 1
-hdiutil convert bundle.dmg -format UDZO -o $B_DMG || exit 1
-rm bundle.dmg
+hdiutil convert temp.dmg -format UDZO -o $B_DMG || exit 1
+rm temp.dmg
 
 echo "Installer created successfully"

@@ -1,6 +1,6 @@
 @echo off
 
-REM defaults - override them by creating a winbuild_env.bat file
+REM defaults - override them by creating a build_env.bat file
 set B_BUILD_TYPE=Debug
 set B_QT_ROOT=C:\Qt
 set B_QT_VER=5.6.3
@@ -10,7 +10,7 @@ set B_BONJOUR=C:\Program Files\Bonjour SDK
 set savedir=%cd%
 cd /d %~dp0
 
-if exist winbuild_env.bat call winbuild_env.bat
+if exist build_env.bat call build_env.bat
 
 REM needed by cmake to set bonjour include dir
 set BONJOUR_SDK_HOME=%B_BONJOUR%

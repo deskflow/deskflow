@@ -17,7 +17,7 @@ if [ "$(uname)" = "Darwin" ]; then
     B_CMAKE_FLAGS="-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 $B_CMAKE_FLAGS"
 fi
 # allow local customizations to build environment
-[ -r ./unixbuild_env.sh ] && source ./unixbuild_env.sh
+[ -r ./build_env.sh ] && source ./build_env.sh
 B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=$B_BUILD_TYPE $B_CMAKE_FLAGS"
 rm -rf build
 mkdir build || exit 1
