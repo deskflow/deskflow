@@ -11,7 +11,7 @@ fi
 
 cd @CMAKE_CURRENT_SOURCE_DIR@/build/bundle || exit 1
 
-B_REREF_SCRIPT=./reref_dylibs.sh
+B_REREF_SCRIPT=@CMAKE_CURRENT_SOURCE_DIR@/reref_dylibs.sh
 if [ ! -x $B_REREF_SCRIPT ]; then
     echo Missing script: $B_REREF_SCRIPT
     exit 1
@@ -35,7 +35,7 @@ mkdir MacOS || exit 1
 cd MacOS || exit 1
 
 # copy all executables
-cp @CMAKE_RUNTIME_OUTPUT_DIR@/* . || exit 1
+cp @CMAKE_RUNTIME_OUTPUT_DIRECTORY@/* . || exit 1
 
 # copy the qt platform plugin
 # TODO: this is hacky and will probably break if there is more than one qt
