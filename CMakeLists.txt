@@ -157,9 +157,14 @@ if (UNIX)
         )
 
     else() # not-apple
-
-        # add include dir for bsd (posix uses /usr/include/)
-        set (CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
+        # FreeBSD uses /usr/local for anything not part of base
+        # Also package avahi-libdns puts dns_sd.h a bit deeper
+        if (${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
+            set (CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};/usr/local/include;/usr/local/include/avahi-compat-libdns_sd")
+            set (CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -L/usr/local/lib")
+            include_directories("/usr/local/include" "/usr/local/include/avahi-compat-libdns_sd")
+            link_directories("/usr/local/lib")
+        endif()
 
         set (XKBlib "X11/Xlib.h;X11/XKBlib.h")
         set (CMAKE_EXTRA_INCLUDE_FILES "${XKBlib};X11/extensions/Xrandr.h")
@@ -174,6 +179,7 @@ if (UNIX)
         check_include_files ("X11/extensions/XTest.h" HAVE_X11_EXTENSIONS_XTEST_H)
         check_include_files ("${XKBlib}" HAVE_X11_XKBLIB_H)
         check_include_files ("X11/extensions/XInput2.h" HAVE_XI2)
+        check_include_files ("dns_sd.h" HAVE_DNSSD)
 
         if (HAVE_X11_EXTENSIONS_DPMS_H)
             # Assume that function prototypes declared, when include exists.
@@ -182,6 +188,10 @@ if (UNIX)
 
         if (NOT HAVE_X11_XKBLIB_H)
             message (FATAL_ERROR "Missing header: " ${XKBlib})
+        endif()
+
+        if (NOT HAVE_DNSSD)
+            message (FATAL_ERROR "Missing header: dns_sd.h")
         endif()
 
         check_library_exists ("SM;ICE" IceConnectionNumber "" HAVE_ICE)
@@ -305,7 +315,14 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set (OPENSSL_LIBS ssl crypto)
 else()
-    message (FATAL_ERROR "Couldn't find OpenSSL")
+    find_library (lib_ssl ssl)
+    find_library (lib_crypto crypto)
+    if (NOT lib_ssl)
+        message(FATAL_ERROR "openssl library not found")
+    elseif (NOT lib_crypto)
+        message(FATAL_ERROR "crypto library not found")
+    endif()
+    set (OPENSSL_LIBS ${lib_ssl} ${lib_crypto})
 endif()
 
 #
