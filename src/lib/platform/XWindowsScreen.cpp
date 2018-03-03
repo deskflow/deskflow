@@ -1405,9 +1405,9 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 
 #if HAVE_X11_EXTENSIONS_XRANDR_H
 		if (m_xrandr) {
-			if (xevent->type == m_xrandrEventBase + RRScreenChangeNotify
-			||  xevent->type == m_xrandrEventBase + RRNotify
-			&& reinterpret_cast<XRRNotifyEvent *>(xevent)->subtype == RRNotify_CrtcChange) {
+			if (xevent->type == m_xrandrEventBase + RRScreenChangeNotify ||
+			    (xevent->type == m_xrandrEventBase + RRNotify &&
+			     reinterpret_cast<XRRNotifyEvent *>(xevent)->subtype == RRNotify_CrtcChange)) {
 				LOG((CLOG_INFO "XRRScreenChangeNotifyEvent or RRNotify_CrtcChange received"));
 
 				// we're required to call back into XLib so XLib can update its internal state
