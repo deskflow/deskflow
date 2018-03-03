@@ -288,6 +288,8 @@ void MainWindow::setIcon(qBarrierState state)
     QIcon icon;
     icon.addFile(barrierIconFiles[state]);
 
+    setWindowIcon(icon);
+
     if (m_pTrayIcon)
         m_pTrayIcon->setIcon(icon);
 }
