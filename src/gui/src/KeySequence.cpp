@@ -22,7 +22,7 @@
 #include <QtGui>
 
 // this table originally comes from Qt sources (gui/kernel/qkeysequence.cpp)
-// and is heavily modified for QBarrier
+// and is heavily modified
 static const struct
 {
     int key;

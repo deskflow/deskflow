@@ -14,7 +14,7 @@ Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Barrier is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Barrier is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Barrier GUI is based on QBarrier by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+The Barrier GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</source>
         <oldsource>&lt;p&gt;
@@ -23,7 +23,7 @@ Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Barrier is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Barrier is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Barrier GUI is based on QBarrier by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+The Barrier GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</oldsource>
         <translation type="unfinished"></translation>
