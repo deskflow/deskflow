@@ -39,8 +39,10 @@ elseif (APPLE)
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR
         ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
     target_link_libraries (barrier dns_sd)
-else()
-    target_link_libraries (barrier)
+endif()
+
+if (HAVE_X11)
+    target_link_libraries (barrier X11)
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")

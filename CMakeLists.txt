@@ -212,7 +212,7 @@ if (UNIX)
         if (HAVE_Xtst)
 
             # Xtxt depends on X11.
-            set (HAVE_X11)
+            set (HAVE_X11 1)
             list (APPEND libs Xtst X11)
 
         else()

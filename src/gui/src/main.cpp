@@ -23,6 +23,7 @@
 #include "MainWindow.h"
 #include "AppConfig.h"
 #include "SetupWizard.h"
+#include "DisplayIsValid.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -54,6 +55,14 @@ bool checkMacAssistiveDevices();
 
 int main(int argc, char* argv[])
 {
+#ifdef WINAPI_XWINDOWS
+    // QApplication's constructor will call a fscking abort() if
+    // DISPLAY is bad. Let's check it first and handle it gracefully
+    if (!display_is_valid()) {
+        fprintf(stderr, "The Barrier GUI requires a display. Quitting...\n");
+        return 1;
+    }
+#endif
 #ifdef Q_OS_DARWIN
     /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is instantiated" */
     ::setenv ("QT_BEARER_POLL_TIMEOUT", "-1", 1);
