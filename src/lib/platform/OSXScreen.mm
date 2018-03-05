@@ -1080,20 +1080,20 @@ OSXScreen::handleSystemEvent(const Event& event, void*)
 }
 
 bool 
-OSXScreen::onMouseMove(SInt32 mx, SInt32 my)
+OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 {
-	LOG((CLOG_DEBUG2 "mouse move %+d,%+d", mx, my));
+	LOG((CLOG_DEBUG2 "mouse move %+f,%+f", mx, my));
 
-	SInt32 x = mx - m_xCursor;
-	SInt32 y = my - m_yCursor;
+	CGFloat x = mx - m_xCursor;
+	CGFloat y = my - m_yCursor;
 
 	if ((x == 0 && y == 0) || (mx == m_xCenter && mx == m_yCenter)) {
 		return true;
 	}
 
 	// save position to compute delta of next motion
-	m_xCursor = mx;
-	m_yCursor = my;
+	m_xCursor = (SInt32)mx;
+	m_yCursor = (SInt32)my;
 
 	if (m_isOnScreen) {
 		// motion on primary screen
@@ -1122,7 +1122,21 @@ OSXScreen::onMouseMove(SInt32 mx, SInt32 my)
 		}
 		else {
 			// send motion
-			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(x, y));
+			// Accumulate together the move into the running total
+			static CGFloat m_xFractionalMove = 0;
+			static CGFloat m_yFractionalMove = 0;
+
+			m_xFractionalMove += x;
+			m_yFractionalMove += y;
+
+			// Return the integer part
+			SInt32 intX = (SInt32)m_xFractionalMove;
+			SInt32 intY = (SInt32)m_yFractionalMove;
+
+			// And keep only the fractional part
+			m_xFractionalMove -= intX;
+			m_yFractionalMove -= intY;
+			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(intX, intY));
 		}
 	}
 
