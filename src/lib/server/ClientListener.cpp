@@ -45,7 +45,9 @@ ClientListener::ClientListener(const NetworkAddress& address,
     assert(m_socketFactory != NULL);
 
     try {
-        m_listen = m_socketFactory->createListen(m_useSecureNetwork);
+        m_listen = m_socketFactory->createListen(
+                ARCH->getAddrFamily(address.getAddress()),
+                m_useSecureNetwork);
 
         // setup event handler
         m_events->adoptHandler(m_events->forIListenSocket().connecting(),

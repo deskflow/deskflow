@@ -36,7 +36,7 @@ A data socket using TCP.
 */
 class TCPSocket : public IDataSocket {
 public:
-    TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+    TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
     TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket);
     virtual ~TCPSocket();
 

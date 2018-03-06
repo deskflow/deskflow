@@ -32,8 +32,9 @@ static const char s_certificateFilename[] = { "Barrier.pem" };
 
 SecureListenSocket::SecureListenSocket(
         IEventQueue* events,
-        SocketMultiplexer* socketMultiplexer) :
-    TCPListenSocket(events, socketMultiplexer)
+        SocketMultiplexer* socketMultiplexer,
+        IArchNetwork::EAddressFamily family) :
+    TCPListenSocket(events, socketMultiplexer, family)
 {
 }
 
