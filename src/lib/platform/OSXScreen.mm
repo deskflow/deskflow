@@ -1175,7 +1175,7 @@ OSXScreen::displayReconfigurationCallback(CGDirectDisplayID displayID, CGDisplay
 		kCGDisplayMirrorFlag | kCGDisplayUnMirrorFlag | 
 		kCGDisplayDesktopShapeChangedFlag;
  
-	LOG((CLOG_DEBUG1 "event: display was reconfigured: %x %x %x", flags, mask, flags & mask));
+	LOG((CLOG_DEBUG "event: display was reconfigured: %x %x %x", flags, mask, flags & mask));
 
 	if (flags & mask) { /* Something actually did change */
 		
