@@ -1391,8 +1391,6 @@ XWindowsScreen::handleSystemEvent(const Event& event, void* /*unused*/)
 	case MotionNotify:
 		if (m_isPrimary) {
 			onMouseMove(xevent->xmotion);
-		} else if (!m_isOnScreen && (xevent->xmotion.send_event == False)) {
-			LOG ((CLOG_INFO "local input detected"));
 		}
 		return;
 
