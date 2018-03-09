@@ -102,7 +102,7 @@ XWindowsScreen::XWindowsScreen(
 	m_display(nullptr),
 	m_root(None),
 	m_window(None),
-	m_isOnScreen(true),
+	m_isOnScreen(isPrimary),
 	m_x(0), m_y(0),
 	m_w(0), m_h(0),
 	m_xCenter(0), m_yCenter(0),
