@@ -31,12 +31,6 @@
 		<Property Id="ARPPRODUCTICON" Value="barrier.ico"/>
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER"/>
 		<Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable"/>
-		<Property Id="LEGACY_UNINSTALL_EXISTS">
-			<RegistrySearch Id="LegacyRegistrySearch" Key="SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Barrier" Name="UninstallString" Root="HKLM" Type="file" Win64="no">
-				<FileSearch Id="LegacyFileSearch" Name="uninstall.exe"/>
-			</RegistrySearch>
-		</Property>
-		<Condition Message="An existing installation of $(var.Name) was detected, please uninstall it before continuing.">NOT LEGACY_UNINSTALL_EXISTS
     </Condition>
 		<CustomAction ExeCommand="" FileKey="GuiProgram" Id="StartGui" Return="asyncNoWait"/>
 		<UI>

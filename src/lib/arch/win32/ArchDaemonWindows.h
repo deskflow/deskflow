@@ -142,9 +142,6 @@ private:
 #define DEFAULT_DAEMON_NAME _T("Barrier")
 #define DEFAULT_DAEMON_INFO _T("Manages the Barrier foreground processes.")
 
-#define LEGACY_SERVER_DAEMON_NAME _T("Barrier Server")
-#define LEGACY_CLIENT_DAEMON_NAME _T("Barrier Client")
-
 static const TCHAR* const g_daemonKeyPath[] = {
     _T("SOFTWARE"),
     _T("The Barrier Project"),

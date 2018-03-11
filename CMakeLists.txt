@@ -18,9 +18,8 @@
 cmake_minimum_required (VERSION 3.4)
 project (barrier C CXX)
 
-option (BARRIER_BUILD_LEGACY_GUI "Build the legacy GUI" ON)
-option (BARRIER_BUILD_LEGACY_SERVICE "Build the legacy service (barrierd)" ON)
-option (BARRIER_BUILD_LEGACY_INSTALLER "Build the legacy installer" ON)
+option (BARRIER_BUILD_GUI "Build the GUI" ON)
+option (BARRIER_BUILD_INSTALLER "Build the installer" ON)
 
 set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_EXTENSIONS OFF)
@@ -355,7 +354,7 @@ macro (configure_files srcDir destDir)
     endforeach (templateFile)
 endmacro (configure_files)
 
-if (${BARRIER_BUILD_LEGACY_INSTALLER})
+if (${BARRIER_BUILD_INSTALLER})
 #
 # macOS app Bundle
 #
@@ -393,6 +392,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 endif()
 
 else()
-    message (STATUS "NOT configuring the v1 installer")
+    message (STATUS "NOT configuring the installer")
 endif()
 add_subdirectory (src)

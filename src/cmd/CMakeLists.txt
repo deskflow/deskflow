@@ -18,7 +18,7 @@ add_subdirectory(barrierc)
 add_subdirectory(barriers)
 add_subdirectory(syntool)
 
-if (BARRIER_BUILD_LEGACY_SERVICE)
+if (WIN32)
 	add_subdirectory(barrierd)
-endif (BARRIER_BUILD_LEGACY_SERVICE)
+endif()
 

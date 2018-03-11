@@ -697,15 +697,7 @@ ArchDaemonWindows::installDaemon()
 void
 ArchDaemonWindows::uninstallDaemon()
 {
-    // remove legacy services if installed.
-    if (isDaemonInstalled(LEGACY_SERVER_DAEMON_NAME)) {
-        uninstallDaemon(LEGACY_SERVER_DAEMON_NAME);
-    }
-    if (isDaemonInstalled(LEGACY_CLIENT_DAEMON_NAME)) {
-        uninstallDaemon(LEGACY_CLIENT_DAEMON_NAME);
-    }
-
-    // remove new service if installed.
+    // remove service if installed.
     if (isDaemonInstalled(DEFAULT_DAEMON_NAME)) {
         uninstallDaemon(DEFAULT_DAEMON_NAME);
     }
