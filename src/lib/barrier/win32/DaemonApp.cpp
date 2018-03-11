@@ -16,10 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO: split this class into windows and unix to get rid
-// of all the #ifdefs!
-
-#include "barrier/DaemonApp.h"
+#include "barrier/win32/DaemonApp.h"
 
 #include "barrier/App.h"
 #include "barrier/ArgParser.h"
@@ -37,8 +34,6 @@
 #include "base/log_outputters.h"
 #include "base/Log.h"
 
-#if SYSAPI_WIN32
-
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "barrier/Screen.h"
@@ -49,8 +44,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-
-#endif
 
 #include <string>
 #include <iostream>
@@ -68,25 +61,15 @@ mainLoopStatic()
 }
 
 int
-unixMainLoopStatic(int, const char**)
-{
-    return mainLoopStatic();
-}
-
-#if SYSAPI_WIN32
-int
-winMainLoopStatic(int, const char**)
+mainLoopStatic(int, const char**)
 {
     return ArchMiscWindows::runDaemon(mainLoopStatic);
 }
-#endif
 
 DaemonApp::DaemonApp() :
     m_ipcServer(nullptr),
     m_ipcLogOutputter(nullptr),
-    #if SYSAPI_WIN32
     m_watchdog(nullptr),
-    #endif
     m_events(nullptr),
     m_fileLogOutputter(nullptr)
 {
@@ -100,10 +83,8 @@ DaemonApp::~DaemonApp()
 int
 DaemonApp::run(int argc, char** argv)
 {
-#if SYSAPI_WIN32
     // win32 instance needed for threading, etc.
     ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
-#endif
     
     Arch arch;
     arch.init();
@@ -115,10 +96,8 @@ DaemonApp::run(int argc, char** argv)
     bool uninstall = false;
     try
     {
-#if SYSAPI_WIN32
         // sends debug messages to visual studio console window.
         log.insert(new MSWindowsDebugOutputter());
-#endif
 
         // default log level to system setting.
         string logLevel = arch.setting("LogLevel");
@@ -133,7 +112,6 @@ DaemonApp::run(int argc, char** argv)
             if (arg == "/f" || arg == "-f") {
                 foreground = true;
             }
-#if SYSAPI_WIN32
             else if (arg == "/install") {
                 uninstall = true;
                 arch.installDaemon();
@@ -143,7 +121,6 @@ DaemonApp::run(int argc, char** argv)
                 arch.uninstallDaemon();
                 return kExitSuccess;
             }
-#endif
             else {
                 stringstream ss;
                 ss << "Unrecognized argument: " << arg;
@@ -158,11 +135,7 @@ DaemonApp::run(int argc, char** argv)
             mainLoop(false);
         }
         else {
-#if SYSAPI_WIN32
-            arch.daemonize("Barrier", winMainLoopStatic);
-#elif SYSAPI_UNIX
-            arch.daemonize("Barrier", unixMainLoopStatic);
-#endif
+            arch.daemonize("Barrier", mainLoopStatic);
         }
 
         return kExitSuccess;
@@ -214,10 +187,8 @@ DaemonApp::mainLoop(bool daemonized)
         m_ipcLogOutputter = new IpcLogOutputter(*m_ipcServer, kIpcClientGui, true);
         CLOG->insert(m_ipcLogOutputter);
         
-#if SYSAPI_WIN32
         m_watchdog = new MSWindowsWatchdog(daemonized, false, *m_ipcServer, *m_ipcLogOutputter);
         m_watchdog->setFileLogOutputter(m_fileLogOutputter);
-#endif
         
         m_events->adoptHandler(
             m_events->forIpcServer().messageReceived(), m_ipcServer,
@@ -225,8 +196,6 @@ DaemonApp::mainLoop(bool daemonized)
 
         m_ipcServer->listen();
         
-#if SYSAPI_WIN32
-
         // install the platform event queue to handle service stop events.
         m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
         
@@ -238,13 +207,11 @@ DaemonApp::mainLoop(bool daemonized)
         }
 
         m_watchdog->startAsync();
-#endif
+
         m_events->loop();
 
-#if SYSAPI_WIN32
         m_watchdog->stop();
         delete m_watchdog;
-#endif
 
         m_events->removeHandler(
             m_events->forIpcServer().messageReceived(), m_ipcServer);
@@ -266,11 +233,7 @@ DaemonApp::mainLoop(bool daemonized)
 void
 DaemonApp::foregroundError(const char* message)
 {
-#if SYSAPI_WIN32
     MessageBox(NULL, message, "Barrier Service", MB_OK | MB_ICONERROR);
-#elif SYSAPI_UNIX
-    cerr << message << endl;
-#endif
 }
 
 std::string
@@ -338,7 +301,6 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                     }
                 }
 
-#if SYSAPI_WIN32
                 // eg. no log-to-file while running in foreground
                 if (m_fileLogOutputter != nullptr) {
                     String logFilename;
@@ -354,7 +316,6 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                     }
                     m_fileLogOutputter->setLogFilename(logFilename.c_str());
                 }
-#endif
             }
             else {
                 LOG((CLOG_DEBUG "empty command, elevate=%d", cm->elevate()));
@@ -372,12 +333,11 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                 LOG((CLOG_ERR "failed to save settings, %s", e.what()));
             }
 
-#if SYSAPI_WIN32
             // tell the relauncher about the new command. this causes the
             // relauncher to stop the existing command and start the new
             // command.
             m_watchdog->setCommand(command, cm->elevate());
-#endif
+
             break;
         }
 
@@ -392,10 +352,8 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
 
             LOG((CLOG_DEBUG "ipc hello, type=%s", type.c_str()));
 
-#if SYSAPI_WIN32
             const char * serverstatus = m_watchdog->isProcessActive() ? "active" : "not active";
             LOG((CLOG_INFO "server status: %s", serverstatus));
-#endif
 
             m_ipcLogOutputter->notifyBuffer();
             break;

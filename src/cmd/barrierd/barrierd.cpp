@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "barrier/DaemonApp.h"
+#include "barrier/win32/DaemonApp.h"
 
 #include <iostream>
 

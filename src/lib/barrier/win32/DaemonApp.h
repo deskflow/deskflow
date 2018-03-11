@@ -27,9 +27,7 @@ class Event;
 class IpcLogOutputter;
 class FileLogOutputter;
 
-#if SYSAPI_WIN32
 class MSWindowsWatchdog;
-#endif
 
 class DaemonApp {
 
@@ -48,9 +46,7 @@ private:
 public:
     static DaemonApp* s_instance;
 
-#if SYSAPI_WIN32
     MSWindowsWatchdog*    m_watchdog;
-#endif
 
 private:
     IpcServer*            m_ipcServer;
