@@ -980,7 +980,7 @@ bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
 
 bool  MainWindow::on_m_pActionSave_triggered()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."));
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."), QString(), tr("Barrier Configuration (*.sgc)"));
 
     if (!fileName.isEmpty() && !serverConfig().save(fileName))
     {
