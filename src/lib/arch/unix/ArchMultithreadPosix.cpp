@@ -150,6 +150,7 @@ ArchMultithreadPosix::~ArchMultithreadPosix()
 
     closeMutex(m_threadMutex);
     s_instance = nullptr;
+    delete  m_mainThread;
 }
 
 void
