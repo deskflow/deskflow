@@ -122,6 +122,8 @@ ClientApp::help()
     char buffer[2000];
     sprintf(
         buffer,
+        "Start the barrier client and connect to a remote server component.\n"
+        "\n"
         "Usage: %s"
         " [--yscroll <delta>]"
         WINAPI_ARG
@@ -129,8 +131,7 @@ ClientApp::help()
         HELP_COMMON_ARGS
         " <server-address>"
         "\n\n"
-        "Connect to a barrier mouse/keyboard sharing server.\n"
-        "\n"
+        "Options:\n"
         HELP_COMMON_INFO_1
         WINAPI_INFO
         HELP_SYS_INFO
@@ -138,7 +139,7 @@ ClientApp::help()
         "                             120 by default.\n"
         HELP_COMMON_INFO_2
         "\n"
-        "* marks defaults.\n"
+        "Default options are marked with a *\n"
         "\n"
         "The server address is of the form: [<hostname>][:<port>].  The hostname\n"
         "must be the address or hostname of the server.  The port overrides the\n"

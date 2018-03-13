@@ -112,6 +112,9 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
         }
     }
 
+    if (args.m_shouldExit)
+        return true;
+
     // exactly one non-option argument (server-address)
     if (i == argc) {
         LOG((CLOG_PRINT "%s: a server address or name is required" BYE,

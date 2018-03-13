@@ -123,6 +123,8 @@ ServerApp::help()
     char buffer[3000];
     sprintf(
         buffer,
+        "Start the barrier server component.\n"
+        "\n"
         "Usage: %s"
         " [--address <address>]"
         " [--config <pathname>]"
@@ -130,8 +132,7 @@ ServerApp::help()
         HELP_SYS_ARGS
         HELP_COMMON_ARGS
         "\n\n"
-        "Start the barrier mouse/keyboard sharing server.\n"
-        "\n"
+        "Options:\n"
         "  -a, --address <address>  listen for clients on the given address.\n"
         "  -c, --config <pathname>  use the named configuration file instead.\n"
         HELP_COMMON_INFO_1
@@ -139,7 +140,7 @@ ServerApp::help()
         HELP_SYS_INFO
         HELP_COMMON_INFO_2
         "\n"
-        "* marks defaults.\n"
+        "Default options are marked with a *\n"
         "\n"
         "The argument for --address is of the form: [<hostname>][:<port>].  The\n"
         "hostname must be the address or hostname of an interface on the system.\n"
@@ -148,10 +149,10 @@ ServerApp::help()
         "\n"
         "If no configuration file pathname is provided then the first of the\n"
         "following to load successfully sets the configuration:\n"
-        "  %s\n"
+        "  $HOME/%s\n"
         "  %s\n",
         args().m_pname, kDefaultPort,
-        ARCH->concatPath(ARCH->getUserDirectory(), USR_CONFIG_NAME).c_str(),
+        USR_CONFIG_NAME,
         ARCH->concatPath(ARCH->getSystemDirectory(), SYS_CONFIG_NAME).c_str()
     );
 

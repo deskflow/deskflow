@@ -160,7 +160,7 @@ private:
     "  -n, --name <screen-name> use screen-name instead the hostname to identify\n" \
     "                             this screen in the configuration.\n" \
     "  -1, --no-restart         do not try to restart on failure.\n" \
-    "*     --restart            restart the server automatically if it fails.\n" \
+    "      --restart            restart the server automatically if it fails. (*)\n" \
     "  -l  --log <file>         write log messages to file.\n" \
     "      --no-tray            disable the system tray icon.\n" \
     "      --enable-drag-drop   enable file drag & drop.\n" \
@@ -183,7 +183,7 @@ private:
     " [--daemon|--no-daemon]"
 #  define HELP_SYS_INFO \
     "  -f, --no-daemon          run in the foreground.\n"    \
-    "*     --daemon             run as a daemon.\n"
+    "      --daemon             run as a daemon. (*)\n"
 
 #elif SYSAPI_WIN32
 

@@ -1,0 +1,5 @@
+To recreate the barrierc manpage use a command like:
+  help2man -N --output=barrierc.1 --name='Barrier Keyboard/Mouse Client' /path/to/barrierc
+
+And for barriers:
+  help2man -N --output=barriers.1 --name='Barrier Keyboard/Mouse Server' /path/to/barriers
