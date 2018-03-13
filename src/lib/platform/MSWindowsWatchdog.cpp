@@ -142,10 +142,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
     // elevate for the uac dialog (consent.exe) but this would be pointless,
     // since barrier would re-launch as non-elevated after the desk switch,
     // and so would be unusable with the new elevated process taking focus.
-    if (m_elevateProcess
-        || m_autoElevated
-        || m_session.isProcessInSession("logonui.exe", NULL)) {
-        
+    if (m_elevateProcess || m_autoElevated) {
         LOG((CLOG_DEBUG "getting elevated token, %s",
             (m_elevateProcess ? "elevation required" : "at login screen")));
         
@@ -155,8 +152,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
         }
 
         return duplicateProcessToken(process, security);
-    }
-    else {
+    } else {
         LOG((CLOG_DEBUG "getting non-elevated token"));
         return m_session.getUserToken(security);
     }
