@@ -27,7 +27,7 @@ if ERRORLEVEL 1 goto failed
 cd build
 cmake -G "Visual Studio 15 2017 Win64" -D CMAKE_BUILD_TYPE=%B_BUILD_TYPE% -D CMAKE_PREFIX_PATH="%B_QT_FULLPATH%" -D DNSSD_LIB="%B_BONJOUR%\Lib\x64\dnssd.lib" -D QT_VERSION=%B_QT_VER% ..
 if ERRORLEVEL 1 goto failed
-echo @msbuild barrier.sln /p:Platform="x64" /p:Configuration=%B_BUILD_TYPE% /m > make.bat
+echo @msbuild barrier.sln /p:Platform="x64" /p:Configuration=%B_BUILD_TYPE% /m %B_BUILD_OPTIONS% > make.bat
 call make.bat
 if ERRORLEVEL 1 goto failed
 if exist bin\Debug (
