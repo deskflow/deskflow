@@ -27,6 +27,13 @@
 #include <stdint.h>
 #include <dns_sd.h>
 
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#else
+#include <stdlib.h>
+#endif
+
 static const QStringList preferedIPAddress(
                 QStringList() <<
                 "192.168." <<
@@ -36,12 +43,29 @@ static const QStringList preferedIPAddress(
 const char* ZeroconfService:: m_ServerServiceName = "_barrierServerZeroconf._tcp";
 const char* ZeroconfService:: m_ClientServiceName = "_barrierClientZeroconf._tcp";
 
+static void silence_avahi_warning()
+{
+    // the libavahi folks seemingly find Apple's bonjour API distasteful
+    // and are quite liberal in taking it out on users...unless we set
+    // this environmental variable before calling the avahi library.
+    // additionally, Microsoft does not give us a POSIX setenv() so
+    // we use their OS-specific API instead
+    const char *name  = "AVAHI_COMPAT_NOWARN";
+    const char *value = "1";
+#ifdef _WIN32
+    SetEnvironmentVariable(name, value);
+#else
+    setenv(name, value, 1);
+#endif
+}
+
 ZeroconfService::ZeroconfService(MainWindow* mainWindow) :
     m_pMainWindow(mainWindow),
     m_pZeroconfBrowser(0),
     m_pZeroconfRegister(0),
     m_ServiceRegistered(false)
 {
+    silence_avahi_warning();
     if (m_pMainWindow->barrierType() == MainWindow::barrierServer) {
         if (registerService(true)) {
             m_pZeroconfBrowser = new ZeroconfBrowser(this);
