@@ -109,8 +109,8 @@ protected:
     virtual IKeyState*    getKeyState() const;
 
 private:
-    void                updateScreenShape();
-    void                updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
+    bool                updateScreenShape();
+    bool                updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
     void                postMouseEvent(CGPoint&) const;
     
     // convenience function to send events
