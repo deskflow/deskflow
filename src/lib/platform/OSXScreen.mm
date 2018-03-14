@@ -108,9 +108,12 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 	m_getDropTargetThread(NULL),
 	m_impl(NULL)
 {
+    m_displayID = CGMainDisplayID();
+    if (!updateScreenShape(m_displayID, 0)) {
+        throw std::runtime_error ("failed to initialize screen shape");
+    }
+
 	try {
-		m_displayID   = CGMainDisplayID();
-		updateScreenShape(m_displayID, 0);
 		m_screensaver = new OSXScreenSaver(m_events, getEventTarget());
 		m_keyState	  = new OSXKeyState(m_events);
 		
@@ -1178,9 +1181,10 @@ OSXScreen::displayReconfigurationCallback(CGDirectDisplayID displayID, CGDisplay
 	LOG((CLOG_DEBUG "event: display was reconfigured: %x %x %x", flags, mask, flags & mask));
 
 	if (flags & mask) { /* Something actually did change */
-		
 		LOG((CLOG_DEBUG1 "event: screen changed shape; refreshing dimensions"));
-		screen->updateScreenShape(displayID, flags);
+        if (!screen->updateScreenShape(displayID, flags)) {
+            LOG((CLOG_ERR "failed to update screen shape during display reconfiguration"));
+        }
 	}
 }
 
@@ -1484,35 +1488,34 @@ OSXScreen::getKeyState() const
 	return m_keyState;
 }
 
-void
-OSXScreen::updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags flags)
+bool OSXScreen::updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags flags)
 {
-	updateScreenShape();
+    return updateScreenShape();
 }
 
-void
+bool
 OSXScreen::updateScreenShape()
 {
 	// get info for each display
 	CGDisplayCount displayCount = 0;
 
 	if (CGGetActiveDisplayList(0, NULL, &displayCount) != CGDisplayNoErr) {
-		return;
+        return false;
 	}
 	
 	if (displayCount == 0) {
-		return;
+        return false;
 	}
 
 	CGDirectDisplayID* displays = new CGDirectDisplayID[displayCount];
 	if (displays == NULL) {
-		return;
+        return false;
 	}
 
 	if (CGGetActiveDisplayList(displayCount,
 							displays, &displayCount) != CGDisplayNoErr) {
 		delete[] displays;
-		return;
+        return false;
 	}
 
 	// get smallest rect enclosing all display rects
@@ -1541,6 +1544,8 @@ OSXScreen::updateScreenShape()
 	LOG((CLOG_DEBUG "screen shape: center=%d,%d size=%dx%d on %u %s",
          m_x, m_y, m_w, m_h, displayCount,
          (displayCount == 1) ? "display" : "displays"));
+
+    return true;
 }
 
 #pragma mark - 
