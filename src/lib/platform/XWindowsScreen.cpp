@@ -97,6 +97,7 @@ XWindowsScreen::XWindowsScreen(
 		bool disableXInitThreads,
 		int mouseScrollDelta,
 		IEventQueue* events) :
+	PlatformScreen(events),
 	m_isPrimary(isPrimary),
 	m_mouseScrollDelta(mouseScrollDelta),
 	m_display(nullptr),
@@ -121,8 +122,7 @@ XWindowsScreen::XWindowsScreen(
 	m_xkb(false),
 	m_xi2detected(false),
 	m_xrandr(false),
-	m_events(events),
-	PlatformScreen(events)
+	m_events(events)
 {
 	assert(s_screen == NULL);
 
@@ -1415,8 +1415,8 @@ XWindowsScreen::handleSystemEvent(const Event& event, void* /*unused*/)
 
 #if HAVE_X11_EXTENSIONS_XRANDR_H
 		if (m_xrandr) {
-			if (xevent->type == m_xrandrEventBase + RRScreenChangeNotify
-			||  xevent->type == m_xrandrEventBase + RRNotify
+			if ((xevent->type == m_xrandrEventBase + RRScreenChangeNotify
+			||  xevent->type == m_xrandrEventBase + RRNotify)
 			&& reinterpret_cast<XRRNotifyEvent *>(xevent)->subtype == RRNotify_CrtcChange) {
 				LOG((CLOG_INFO "XRRScreenChangeNotifyEvent or RRNotify_CrtcChange received"));
 

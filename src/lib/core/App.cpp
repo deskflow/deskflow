@@ -175,7 +175,7 @@ App::initApp(int argc, const char** argv)
     // this is a simple way to allow the core process to talk to X. this avoids
     // the "WARNING: primary screen unavailable: unable to open screen" error.
     // a better way would be to use xauth cookie and dbus to get access to X.
-    if (static_cast<int>((!(argsBase().m_runAsUid) == 0 != -1))) {
+    if (argsBase().m_runAsUid >= 0) {
         if (setuid(argsBase().m_runAsUid) == 0) {
             LOG((CLOG_DEBUG "process uid was set to: %d", argsBase().m_runAsUid));
         }
