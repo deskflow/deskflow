@@ -59,6 +59,7 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <sstream>
 
 #define RETRY_TIME 1.0
 
@@ -119,35 +120,25 @@ ClientApp::help()
 #  define WINAPI_INFO
 #endif
 
-    char buffer[2000];
-    sprintf(
-        buffer,
-        "Start the barrier client and connect to a remote server component.\n"
-        "\n"
-        "Usage: %s"
-        " [--yscroll <delta>]"
-        WINAPI_ARG
-        HELP_SYS_ARGS
-        HELP_COMMON_ARGS
-        " <server-address>"
-        "\n\n"
-        "Options:\n"
-        HELP_COMMON_INFO_1
-        WINAPI_INFO
-        HELP_SYS_INFO
-        "      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
-        "                             120 by default.\n"
-        HELP_COMMON_INFO_2
-        "\n"
-        "Default options are marked with a *\n"
-        "\n"
-        "The server address is of the form: [<hostname>][:<port>].  The hostname\n"
-        "must be the address or hostname of the server.  The port overrides the\n"
-        "default port, %d.\n",
-        args().m_pname, kDefaultPort
-    );
+    std::ostringstream buffer;
+    buffer << "Start the barrier client and connect to a remote server component." << std::endl
+           << std::endl
+           << "Usage: " << args().m_pname << " [--yscroll <delta>]" <<  WINAPI_ARG << HELP_SYS_ARGS
+           << HELP_COMMON_ARGS << " <server-address>" << std::endl
+           << std::endl
+           << "Options:" << std::endl
+           << HELP_COMMON_INFO_1 << WINAPI_INFO << HELP_SYS_INFO
+           << "      --yscroll <delta>    defines the vertical scrolling delta, which is" << std::endl
+           << "                           120 by default." << std::endl
+           << HELP_COMMON_INFO_2
+           << std::endl
+           << "Default options are marked with a *" << std::endl
+           << std::endl
+           << "The server address is of the form: [<hostname>][:<port>].  The hostname" << std::endl
+           << "must be the address or hostname of the server.  The port overrides the" << std::endl
+           << "default port, " << kDefaultPort << "." << std::endl;
 
-    LOG((CLOG_PRINT "%s", buffer));
+    LOG((CLOG_PRINT "%s", buffer.str().c_str()));
 }
 
 const char*
