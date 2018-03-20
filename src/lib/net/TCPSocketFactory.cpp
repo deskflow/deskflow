@@ -41,7 +41,7 @@ TCPSocketFactory::~TCPSocketFactory()
 }
 
 IDataSocket*
-TCPSocketFactory::create(IArchNetwork::EAddressFamily family) const
+TCPSocketFactory::create(bool secure, IArchNetwork::EAddressFamily family) const
 {
     if (secure) {
         SecureSocket* secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family);
@@ -54,7 +54,7 @@ TCPSocketFactory::create(IArchNetwork::EAddressFamily family) const
 }
 
 IListenSocket*
-TCPSocketFactory::createListen(IArchNetwork::EAddressFamily family) const
+TCPSocketFactory::createListen(bool secure, IArchNetwork::EAddressFamily family) const
 {
     IListenSocket* socket = NULL;
     if (secure) {

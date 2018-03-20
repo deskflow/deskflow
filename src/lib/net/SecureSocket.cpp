@@ -53,18 +53,16 @@ struct Ssl {
     SSL*        m_ssl;
 };
 
-SecureSocket::SecureSocket(
-        IEventQueue* events,
-        SocketMultiplexer* socketMultiplexer) :
-    TCPSocket(events, socketMultiplexer),
+SecureSocket::SecureSocket(IEventQueue* events,
+        SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
+    TCPSocket(events, socketMultiplexer, family),
     m_ssl(nullptr),
     m_secureReady(false),
     m_fatal(false)
 {
 }
 
-SecureSocket::SecureSocket(
-        IEventQueue* events,
+SecureSocket::SecureSocket(IEventQueue* events,
         SocketMultiplexer* socketMultiplexer,
         ArchSocket socket) :
     TCPSocket(events, socketMultiplexer, socket),
