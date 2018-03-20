@@ -19,7 +19,7 @@
 #pragma once
 
 #include "net/ISocketFactory.h"
-#include "arch/IArchNetwork.h
+#include "arch/IArchNetwork.h"
 
 class IEventQueue;
 class SocketMultiplexer;
