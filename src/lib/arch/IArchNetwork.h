@@ -64,6 +64,7 @@ public:
     enum EAddressFamily {
         kUNKNOWN,
         kINET,
+        kINET6,
     };
 
     //! Supported socket types
