@@ -117,8 +117,8 @@ ServerApp::help()
     "      --display <display>  connect to the X server at <display>\n" \
     "      --no-xinitthreads    do not call XInitThreads()\n"
 #else
-#  define WINAPI_ARGS
-#  define WINAPI_INFO
+#  define WINAPI_ARGS ""
+#  define WINAPI_INFO ""
 #endif
 
     std::ostringstream buffer;
