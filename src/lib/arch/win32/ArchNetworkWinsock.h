@@ -18,8 +18,11 @@
 
 #pragma once
 
+#include <ws2tcpip.h>
 // declare no functions in winsock2
+#ifndef INCL_WINSOCK_API_PROTOTYPES
 #define INCL_WINSOCK_API_PROTOTYPES 0
+#endif
 #define INCL_WINSOCK_API_TYPEDEFS 0
 
 #include "arch/IArchNetwork.h"
@@ -29,6 +32,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <list>
+
+#pragma comment(lib, "ws2_32.lib")
 
 #define ARCH_NETWORK ArchNetworkWinsock
 
@@ -45,8 +50,8 @@ public:
     static ArchNetAddressImpl* alloc(size_t);
 
 public:
-    int                    m_len;
-    struct sockaddr        m_addr;
+    int                            m_len;
+    struct sockaddr_storage        m_addr;
 };
 #define ADDR_HDR_SIZE    offsetof(ArchNetAddressImpl, m_addr)
 #define TYPED_ADDR(type_, addr_) (reinterpret_cast<type_*>(&addr_->m_addr))

@@ -87,7 +87,7 @@ NetworkAddress::NetworkAddress(const String& hostname, int port) :
         // notation.  in that case we assume it's not a port suffix.
         // the user can replace the double colon with zeros to
         // disambiguate.
-        if ((!doubleColon || dotNotation) || !colonNotation) {
+        if ((!doubleColon || dotNotation) && !colonNotation) {
             // parse port from hostname
             char* end;
             const char* chostname = m_hostname.c_str();

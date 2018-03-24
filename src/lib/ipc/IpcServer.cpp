@@ -54,7 +54,7 @@ IpcServer::IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer, 
 void
 IpcServer::init()
 {
-    m_socket = new TCPListenSocket(m_events, m_socketMultiplexer);
+    m_socket = new TCPListenSocket(m_events, m_socketMultiplexer, IArchNetwork::kINET);
 
     m_clientsMutex = ARCH->newMutex();
     m_address.resolve();

@@ -32,7 +32,7 @@ A secure socket using SSL.
 */
 class SecureSocket : public TCPSocket {
 public:
-    SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+    SecureSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
     SecureSocket(IEventQueue* events,
         SocketMultiplexer* socketMultiplexer,
         ArchSocket socket);

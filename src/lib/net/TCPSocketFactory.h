@@ -19,6 +19,7 @@
 #pragma once
 
 #include "net/ISocketFactory.h"
+#include "arch/IArchNetwork.h"
 
 class IEventQueue;
 class SocketMultiplexer;
@@ -30,10 +31,12 @@ public:
     virtual ~TCPSocketFactory();
 
     // ISocketFactory overrides
-    virtual IDataSocket*
-                        create(bool secure) const;
-    virtual IListenSocket*
-                        createListen(bool secure) const;
+    virtual IDataSocket* create(
+            IArchNetwork::EAddressFamily family,
+            bool secure) const;
+    virtual IListenSocket* createListen(
+            IArchNetwork::EAddressFamily family,
+            bool secure) const;
 
 private:
     IEventQueue*        m_events;

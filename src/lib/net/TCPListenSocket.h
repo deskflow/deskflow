@@ -32,7 +32,7 @@ A listen socket using TCP.
 */
 class TCPListenSocket : public IListenSocket {
 public:
-    TCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+    TCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
     virtual ~TCPListenSocket();
 
     // ISocket overrides
