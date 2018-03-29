@@ -31,6 +31,7 @@
 #include "ProcessorArch.h"
 #include "SslCertificate.h"
 #include "ShutdownCh.h"
+#include "common/DataDirectories.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -1254,8 +1255,7 @@ void MainWindow::bonjourInstallFinished()
 
 QString MainWindow::getProfileRootForArg()
 {
-    CoreInterface coreInterface;
-    QString dir = coreInterface.getProfileDir();
+    auto dir = QString::fromStdString(DataDirectories::profile());
 
     // HACK: strip our app name since we're returning the root dir.
 #if defined(Q_OS_WIN)

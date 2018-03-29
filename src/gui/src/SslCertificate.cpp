@@ -16,8 +16,8 @@
  */
 
 #include "SslCertificate.h"
-
 #include "Fingerprint.h"
+#include "common/DataDirectories.h"
 
 #include <QProcess>
 #include <QDir>
@@ -37,7 +37,7 @@ static const char kConfigFile[] = "barrier.conf";
 SslCertificate::SslCertificate(QObject *parent) :
     QObject(parent)
 {
-    m_ProfileDir = m_CoreInterface.getProfileDir();
+    m_ProfileDir = QString::fromStdString(DataDirectories::profile());
     if (m_ProfileDir.isEmpty()) {
         emit error(tr("Failed to get profile directory."));
     }

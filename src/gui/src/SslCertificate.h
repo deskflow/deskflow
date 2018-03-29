@@ -17,8 +17,6 @@
 
 #pragma once
 
-#include "CoreInterface.h"
-
 #include <QObject>
 
 class SslCertificate : public QObject
@@ -43,5 +41,4 @@ private:
 private:
     QString m_ProfileDir;
     QString m_ToolOutput;
-    CoreInterface m_CoreInterface;
 };

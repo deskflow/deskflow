@@ -23,7 +23,6 @@
 #include <QDialog>
 #include "ui_SettingsDialogBase.h"
 #include "BarrierLocale.h"
-#include "CoreInterface.h"
 
 class AppConfig;
 
@@ -43,7 +42,6 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
     private:
         AppConfig& m_appConfig;
         BarrierLocale m_Locale;
-        CoreInterface m_CoreInterface;
 
     private slots:
         void on_m_pComboLanguage_currentIndexChanged(int index);

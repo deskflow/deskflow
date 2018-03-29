@@ -18,7 +18,6 @@
 
 #include "SettingsDialog.h"
 
-#include "CoreInterface.h"
 #include "BarrierLocale.h"
 #include "QBarrierApplication.h"
 #include "QUtility.h"
