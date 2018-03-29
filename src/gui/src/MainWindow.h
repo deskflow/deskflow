@@ -166,7 +166,6 @@ public slots:
         bool isBonjourRunning();
         void downloadBonjour();
         void promptAutoConfig();
-        QString getProfileRootForArg();
         void checkConnected(const QString& line);
         void checkFingerprint(const QString& line);
         void restartBarrier();
