@@ -17,6 +17,17 @@
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
+if (WIN32)
+    file(GLOB arch_headers "win32/*.h")
+    file(GLOB arch_sources "win32/*.cpp")
+elseif (UNIX)
+    file(GLOB arch_headers "unix/*.h")
+    file(GLOB arch_sources "unix/*.cpp")
+endif()
+
+list(APPEND headers ${arch_headers})
+list(APPEND sources ${arch_sources})
+
 if (BARRIER_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
