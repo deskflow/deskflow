@@ -42,6 +42,5 @@ public:
     virtual void        setPluginDirectory(const String& s);
 
 private:
-    String                m_profileDirectory;
     String                m_pluginDirectory;
 };

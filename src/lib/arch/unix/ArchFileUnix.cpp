@@ -17,6 +17,7 @@
  */
 
 #include "arch/unix/ArchFileUnix.h"
+#include "common/DataDirectories.h"
 
 #include <stdio.h>
 #include <unistd.h>
@@ -57,29 +58,7 @@ ArchFileUnix::getBasename(const char* pathname)
 std::string
 ArchFileUnix::getUserDirectory()
 {
-    char* buffer = NULL;
-    std::string dir;
-#if HAVE_GETPWUID_R
-    struct passwd pwent;
-    struct passwd* pwentp;
-#if defined(_SC_GETPW_R_SIZE_MAX)
-    long size = sysconf(_SC_GETPW_R_SIZE_MAX);
-    if (size == -1) {
-        size = BUFSIZ;
-    }
-#else
-    long size = BUFSIZ;
-#endif
-    buffer = new char[size];
-    getpwuid_r(getuid(), &pwent, buffer, size, &pwentp);
-#else
-    struct passwd* pwentp = getpwuid(getuid());
-#endif
-    if (pwentp != NULL && pwentp->pw_dir != NULL) {
-        dir = pwentp->pw_dir;
-    }
-    delete[] buffer;
-    return dir;
+    return DataDirectories::personal();
 }
 
 std::string
@@ -121,19 +100,7 @@ ArchFileUnix::getPluginDirectory()
 std::string
 ArchFileUnix::getProfileDirectory()
 {
-    String dir;
-    if (!m_profileDirectory.empty()) {
-        dir = m_profileDirectory;
-    }
-    else {
-#if WINAPI_XWINDOWS
-        dir = getUserDirectory().append("/.barrier");
-#else
-        dir = getUserDirectory().append("/Library/Application Support/Barrier");
-#endif
-    }
-    return dir;
-
+    return DataDirectories::profile();
 }
 
 std::string
@@ -153,7 +120,7 @@ ArchFileUnix::concatPath(const std::string& prefix,
 void
 ArchFileUnix::setProfileDirectory(const String& s)
 {
-    m_profileDirectory = s;
+    DataDirectories::profile(s);
 }
 
 void

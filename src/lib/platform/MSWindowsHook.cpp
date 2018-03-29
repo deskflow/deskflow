@@ -22,6 +22,7 @@
 #include "platform/ImmuneKeysReader.h"
 #include "barrier/protocol_types.h"
 #include "barrier/XScreen.h"
+#include "common/DataDirectories.h"
 #include "base/Log.h"
 
  //
@@ -52,7 +53,7 @@ static BYTE                g_keyState[256] = { 0 };
 static bool                g_fakeServerInput = false;
 static std::vector<DWORD> g_immuneKeys;
 
-static const std::string ImmuneKeysPath = ArchFileWindows().getProfileDirectory() + "\\ImmuneKeys.txt";
+static const std::string ImmuneKeysPath = DataDirectories::profile() + "\\ImmuneKeys.txt";
 
 static std::vector<DWORD> immune_keys_list()
 {
