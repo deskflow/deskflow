@@ -32,6 +32,7 @@
 #include "ipc/IpcMessage.h"
 #include "ipc/Ipc.h"
 #include "base/EventQueue.h"
+#include "DisplayInvalidException.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -49,6 +50,7 @@
 #if defined(__APPLE__)
 #include "platform/OSXDragSimulator.h"
 #endif
+
 
 App* App::s_instance = nullptr;
 
@@ -124,6 +126,15 @@ App::run(int argc, char** argv)
         // not sure if i like this behaviour, but it's probably better than 
         // using the exit(int) function!
         result = e.getCode();
+    }
+    catch (DisplayInvalidException& die) {
+        LOG((CLOG_CRIT "A display invalid exception error occurred: %s\n", die.what()));
+        // display invalid exceptions can occur when going to sleep. When this process exits, the
+        // UI will restart us instantly. We don't really want that behevior, so we quies for a bit
+        (void)sleep(10);
+    }
+    catch (std::runtime_error& re) {
+        LOG((CLOG_CRIT "A runtime error occurred: %s\n", re.what()));
     }
     catch (std::exception& e) {
         LOG((CLOG_CRIT "An error occurred: %s\n", e.what()));
