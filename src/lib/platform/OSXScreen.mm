@@ -39,7 +39,7 @@
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
-#include "base/Log.h"
+#include "synergy/DisplayInvalidException.h"
 
 #include <math.h>
 #include <mach-o/dyld.h>
@@ -110,7 +110,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 {
     m_displayID = CGMainDisplayID();
     if (!updateScreenShape(m_displayID, 0)) {
-        throw std::runtime_error ("failed to initialize screen shape");
+        throw DisplayInvalidException ("failed to initialize screen shape");
     }
 
 	try {
