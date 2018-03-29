@@ -130,8 +130,10 @@ DaemonApp::run(int argc, char** argv)
         }
 
         if (foreground) {
-            // run process in foreground instead of daemonizing.
-            // useful for debugging.
+            // add a console to catch Ctrl+C and run process in foreground
+            // instead of daemonizing. useful for debugging.
+            if (IsDebuggerPresent())
+                AllocConsole();
             mainLoop(false);
         }
         else {
