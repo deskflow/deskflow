@@ -1,4 +1,4 @@
-#include "DataDirectories.h"
+#include "../DataDirectories.h"
 
 #include <Shlobj.h>
 
@@ -52,3 +52,4 @@ const std::string& DataDirectories::profile(const std::string& path)
     _profile = path;
     return _profile;
 }
+

@@ -33,3 +33,8 @@ if (BARRIER_ADD_HEADERS)
 endif()
 
 add_library(common STATIC ${sources})
+
+if (HAVE_GETPWUID_R)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_GETPWUID_R=1")
+endif()
+
