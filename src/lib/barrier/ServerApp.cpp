@@ -39,6 +39,7 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "common/Version.h"
+#include "common/DataDirectories.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -181,7 +182,7 @@ ServerApp::loadConfig()
     // load the default configuration if no explicit file given
     else {
         // get the user's home directory
-        String path = ARCH->getUserDirectory();
+        String path = DataDirectories::personal();
         if (!path.empty()) {
             // complete path
             path = ARCH->concatPath(path, USR_CONFIG_NAME);

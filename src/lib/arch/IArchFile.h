@@ -38,26 +38,11 @@ public:
     */
     virtual const char*    getBasename(const char* pathname) = 0;
 
-    //! Get user's home directory
-    /*!
-    Returns the user's home directory.  Returns the empty string if
-    this cannot be determined.
-    */
-    virtual std::string    getUserDirectory() = 0;
-
     //! Get system directory
     /*!
     Returns the ussystem configuration file directory.
     */
     virtual std::string    getSystemDirectory() = 0;
-
-    //! Get user's profile directory
-    /*!
-    Returns the user's profile directory. If no profile directory is set,
-    this will return the user's profile according to the operating system,
-    which will depend on which user launched the program.
-    */
-    virtual std::string    getProfileDirectory() = 0;
 
     //! Concatenate path components
     /*!
@@ -69,11 +54,4 @@ public:
     virtual std::string    concatPath(
                             const std::string& prefix,
                             const std::string& suffix) = 0;
-    
-    //@}
-    //! Set the user's profile directory
-    /*
-    Returns the user's profile directory.
-    */
-    virtual void        setProfileDirectory(const String& s) = 0;
 };

@@ -29,16 +29,6 @@
 // ArchFileUnix
 //
 
-ArchFileUnix::ArchFileUnix()
-{
-    // do nothing
-}
-
-ArchFileUnix::~ArchFileUnix()
-{
-    // do nothing
-}
-
 const char*
 ArchFileUnix::getBasename(const char* pathname)
 {
@@ -56,21 +46,9 @@ ArchFileUnix::getBasename(const char* pathname)
 }
 
 std::string
-ArchFileUnix::getUserDirectory()
-{
-    return DataDirectories::personal();
-}
-
-std::string
 ArchFileUnix::getSystemDirectory()
 {
     return "/etc";
-}
-
-std::string
-ArchFileUnix::getProfileDirectory()
-{
-    return DataDirectories::profile();
 }
 
 std::string
@@ -85,16 +63,4 @@ ArchFileUnix::concatPath(const std::string& prefix,
     }
     path += suffix;
     return path;
-}
-
-void
-ArchFileUnix::setProfileDirectory(const String& s)
-{
-    DataDirectories::profile(s);
-}
-
-void
-ArchFileUnix::setPluginDirectory(const String& s)
-{
-    m_pluginDirectory = s;
 }

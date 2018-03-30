@@ -55,12 +55,6 @@ ArchFileWindows::getBasename(const char* pathname)
 }
 
 std::string
-ArchFileWindows::getUserDirectory()
-{
-    return DataDirectories::personal();
-}
-
-std::string
 ArchFileWindows::getSystemDirectory()
 {
     // get windows directory
@@ -72,12 +66,6 @@ ArchFileWindows::getSystemDirectory()
         // can't get it.  use C:\ as a default.
         return "C:";
     }
-}
-
-std::string
-ArchFileWindows::getProfileDirectory()
-{
-    return DataDirectories::profile();
 }
 
 std::string
@@ -94,10 +82,4 @@ ArchFileWindows::concatPath(const std::string& prefix,
     }
     path += suffix;
     return path;
-}
-
-void
-ArchFileWindows::setProfileDirectory(const String& s)
-{
-    DataDirectories::profile(s);
 }
