@@ -144,7 +144,7 @@ ServerApp::help()
            << "If no configuration file pathname is provided then the first of the" << std::endl
            << "following to load successfully sets the configuration:" << std::endl
            << "  $HOME/" << USR_CONFIG_NAME << std::endl
-           << "  " << ARCH->concatPath(ARCH->getSystemDirectory(), SYS_CONFIG_NAME) << std::endl;
+           << "  " << ARCH->concatPath(DataDirectories::systemconfig(), SYS_CONFIG_NAME) << std::endl;
 
     LOG((CLOG_PRINT "%s", buffer.str().c_str()));
 }
@@ -195,7 +195,7 @@ ServerApp::loadConfig()
         }
         if (!loaded) {
             // try the system-wide config file
-            path = ARCH->getSystemDirectory();
+            path = DataDirectories::systemconfig();
             if (!path.empty()) {
                 path = ARCH->concatPath(path, SYS_CONFIG_NAME);
                 if (loadConfig(path)) {

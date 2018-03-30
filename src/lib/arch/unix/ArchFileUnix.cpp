@@ -46,12 +46,6 @@ ArchFileUnix::getBasename(const char* pathname)
 }
 
 std::string
-ArchFileUnix::getSystemDirectory()
-{
-    return "/etc";
-}
-
-std::string
 ArchFileUnix::concatPath(const std::string& prefix,
                 const std::string& suffix)
 {

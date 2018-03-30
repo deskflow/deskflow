@@ -2,11 +2,6 @@
 
 #include <Shlobj.h>
 
-// static member
-std::string DataDirectories::_personal;
-std::string DataDirectories::_profile;
-std::string DataDirectories::_global;
-
 std::string unicode_to_mb(const WCHAR* utfStr)
 {
     int utfLength = lstrlenW(utfStr);
@@ -62,4 +57,20 @@ const std::string& DataDirectories::global(const std::string& path)
 {
     _global = path;
     return _global;
+}
+
+const std::string& DataDirectories::systemconfig()
+{
+    // systemconfig() is a special case in that it will track the current value
+    // of global() unless and until it is explictly set otherwise
+    // previously it would default to the windows folder which was horrible!
+    if (_systemconfig.empty())
+        return global();
+    return _systemconfig;
+}
+
+const std::string& DataDirectories::systemconfig(const std::string& path)
+{
+    _systemconfig = path;
+    return _systemconfig;
 }

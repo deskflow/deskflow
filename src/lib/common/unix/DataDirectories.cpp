@@ -10,11 +10,6 @@ const std::string ProfileSubdir = "/.barrier";
 const std::string ProfileSubdir = "/Library/Application Support/Barrier";
 #endif
 
-// static members
-std::string DataDirectories::_personal;
-std::string DataDirectories::_profile;
-std::string DataDirectories::_global;
-
 static std::string pw_dir(struct passwd* pwentp)
 {
     if (pwentp != NULL && pwentp->pw_dir != NULL)
@@ -87,3 +82,15 @@ const std::string& DataDirectories::global(const std::string& path)
     return _global;
 }
 
+const std::string& DataDirectories::systemconfig()
+{
+    if (_systemconfig.empty())
+        _systemconfig = "/etc";
+    return _systemconfig;
+}
+
+const std::string& DataDirectories::systemconfig(const std::string& path)
+{
+    _systemconfig = path;
+    return _systemconfig;
+}

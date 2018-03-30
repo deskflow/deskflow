@@ -38,12 +38,6 @@ public:
     */
     virtual const char*    getBasename(const char* pathname) = 0;
 
-    //! Get system directory
-    /*!
-    Returns the ussystem configuration file directory.
-    */
-    virtual std::string    getSystemDirectory() = 0;
-
     //! Concatenate path components
     /*!
     Concatenate pathname components with a directory separator
