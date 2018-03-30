@@ -29,16 +29,6 @@
 // ArchFileWindows
 //
 
-ArchFileWindows::ArchFileWindows()
-{
-    // do nothing
-}
-
-ArchFileWindows::~ArchFileWindows()
-{
-    // do nothing
-}
-
 const char*
 ArchFileWindows::getBasename(const char* pathname)
 {
@@ -85,36 +75,6 @@ ArchFileWindows::getSystemDirectory()
 }
 
 std::string
-ArchFileWindows::getInstalledDirectory()
-{
-    char fileNameBuffer[MAX_PATH];
-    GetModuleFileName(NULL, fileNameBuffer, MAX_PATH);
-    std::string fileName(fileNameBuffer);
-    size_t lastSlash = fileName.find_last_of("\\");
-    fileName = fileName.substr(0, lastSlash);
-
-    return fileName;
-}
-
-std::string
-ArchFileWindows::getLogDirectory()
-{
-    return getInstalledDirectory();
-}
-
-std::string
-ArchFileWindows::getPluginDirectory()
-{
-    if (!m_pluginDirectory.empty()) {
-        return m_pluginDirectory;
-    }
-
-    std::string dir = getProfileDirectory();
-    dir.append("\\Plugins");
-    return dir;
-}
-
-std::string
 ArchFileWindows::getProfileDirectory()
 {
     return DataDirectories::profile();
@@ -140,10 +100,4 @@ void
 ArchFileWindows::setProfileDirectory(const String& s)
 {
     DataDirectories::profile(s);
-}
-
-void
-ArchFileWindows::setPluginDirectory(const String& s)
-{
-    m_pluginDirectory = s;
 }

@@ -5,6 +5,7 @@
 // static member
 std::string DataDirectories::_personal;
 std::string DataDirectories::_profile;
+std::string DataDirectories::_global;
 
 std::string unicode_to_mb(const WCHAR* utfStr)
 {
@@ -33,7 +34,6 @@ const std::string& DataDirectories::personal()
         _personal = known_folder_path(FOLDERID_Documents);
     return _personal;
 }
-
 const std::string& DataDirectories::personal(const std::string& path)
 {
     _personal = path;
@@ -46,10 +46,20 @@ const std::string& DataDirectories::profile()
         _profile = known_folder_path(FOLDERID_LocalAppData) + "\\Barrier";
     return _profile;
 }
-
 const std::string& DataDirectories::profile(const std::string& path)
 {
     _profile = path;
     return _profile;
 }
 
+const std::string& DataDirectories::global()
+{
+    if (_global.empty())
+        _global = known_folder_path(FOLDERID_ProgramData) + "\\Barrier";
+    return _global;
+}
+const std::string& DataDirectories::global(const std::string& path)
+{
+    _global = path;
+    return _global;
+}

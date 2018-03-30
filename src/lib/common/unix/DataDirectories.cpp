@@ -13,6 +13,7 @@ const std::string ProfileSubdir = "/Library/Application Support/Barrier";
 // static members
 std::string DataDirectories::_personal;
 std::string DataDirectories::_profile;
+std::string DataDirectories::_global;
 
 static std::string pw_dir(struct passwd* pwentp)
 {
@@ -54,7 +55,6 @@ const std::string& DataDirectories::personal()
         _personal = unix_home();
     return _personal;
 }
-
 const std::string& DataDirectories::personal(const std::string& path)
 {
     _personal = path;
@@ -67,10 +67,23 @@ const std::string& DataDirectories::profile()
         _profile = personal() + ProfileSubdir;
     return _profile;
 }
-
 const std::string& DataDirectories::profile(const std::string& path)
 {
     _profile = path;
     return _profile;
+}
+
+const std::string& DataDirectories::global()
+{
+    if (_global.empty())
+        // TODO: where on a unix system should public/global shared data go?
+        // as of march 2018 global() is not used for unix
+        _global = "/tmp";
+    return _global;
+}
+const std::string& DataDirectories::global(const std::string& path)
+{
+    _global = path;
+    return _global;
 }
 

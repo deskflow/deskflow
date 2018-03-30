@@ -33,6 +33,7 @@
 #include "base/EventQueue.h"
 #include "base/log_outputters.h"
 #include "base/Log.h"
+#include "common/DataDirectories.h"
 
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
@@ -41,6 +42,7 @@
 #include "platform/MSWindowsDebugOutputter.h"
 #include "platform/MSWindowsWatchdog.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
+#include "platform/MSWindowsUtil.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -241,14 +243,10 @@ DaemonApp::foregroundError(const char* message)
 std::string
 DaemonApp::logFilename()
 {
-    string logFilename;
-    logFilename = ARCH->setting("LogFilename");
-    if (logFilename.empty()) {
-        logFilename = ARCH->getLogDirectory();
-        logFilename.append("/");
-        logFilename.append(LOG_FILENAME);
-    }
-
+    string logFilename = ARCH->setting("LogFilename");
+    if (logFilename.empty())
+        logFilename = DataDirectories::global() + "\\" + LOG_FILENAME;
+    MSWindowsUtil::createDirectory(logFilename, true);
     return logFilename;
 }
 

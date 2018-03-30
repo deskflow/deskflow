@@ -68,36 +68,6 @@ ArchFileUnix::getSystemDirectory()
 }
 
 std::string
-ArchFileUnix::getInstalledDirectory()
-{
-#if WINAPI_XWINDOWS
-    return "/usr/bin";
-#else
-    return "/Applications/Barrier.app/Contents/MacOS";
-#endif
-}
-
-std::string
-ArchFileUnix::getLogDirectory()
-{
-    return "/var/log";
-}
-
-std::string
-ArchFileUnix::getPluginDirectory()
-{
-    if (!m_pluginDirectory.empty()) {
-        return m_pluginDirectory;
-    }
-
-#if WINAPI_XWINDOWS
-    return getProfileDirectory().append("/plugins");
-#else
-    return getProfileDirectory().append("/Plugins");
-#endif
-}
-
-std::string
 ArchFileUnix::getProfileDirectory()
 {
     return DataDirectories::profile();

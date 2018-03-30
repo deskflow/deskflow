@@ -62,3 +62,14 @@ MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
         return result;
     }
 }
+
+void
+MSWindowsUtil::createDirectory(const std::string& path, bool stripLast)
+{
+    // create parent directories
+    for (auto pos = path.find_first_of('\\'); pos != std::string::npos; pos = path.find_first_of('\\', pos + 1))
+        CreateDirectory(path.substr(0, pos).c_str(), NULL);
+    if (!stripLast)
+        // create innermost directory
+        CreateDirectory(path.c_str(), NULL);
+}

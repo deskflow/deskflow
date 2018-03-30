@@ -25,22 +25,12 @@
 //! Win32 implementation of IArchFile
 class ArchFileWindows : public IArchFile {
 public:
-    ArchFileWindows();
-    virtual ~ArchFileWindows();
-
     // IArchFile overrides
     virtual const char*    getBasename(const char* pathname);
     virtual std::string    getUserDirectory();
     virtual std::string    getSystemDirectory();
-    virtual std::string    getInstalledDirectory();
-    virtual std::string    getLogDirectory();
-    virtual std::string    getPluginDirectory();
     virtual std::string    getProfileDirectory();
     virtual std::string    concatPath(const std::string& prefix,
                             const std::string& suffix);
     virtual void        setProfileDirectory(const String& s);
-    virtual void        setPluginDirectory(const String& s);
-
-private:
-    String                m_pluginDirectory;
 };
