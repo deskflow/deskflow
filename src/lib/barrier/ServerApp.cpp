@@ -144,7 +144,7 @@ ServerApp::help()
            << std::endl
            << "If no configuration file pathname is provided then the first of the" << std::endl
            << "following to load successfully sets the configuration:" << std::endl
-           << "  " << PathUtilities::concat(DataDirectories::personal(), SYS_CONFIG_NAME) << std::endl
+           << "  " << PathUtilities::concat(DataDirectories::profile(), SYS_CONFIG_NAME) << std::endl
            << "  " << PathUtilities::concat(DataDirectories::systemconfig(), SYS_CONFIG_NAME) << std::endl;
 
     LOG((CLOG_PRINT "%s", buffer.str().c_str()));
@@ -182,8 +182,7 @@ ServerApp::loadConfig()
 
     // load the default configuration if no explicit file given
     else {
-        // get the user's home directory
-        String path = DataDirectories::personal();
+        String path = DataDirectories::profile();
         if (!path.empty()) {
             // complete path
             path = PathUtilities::concat(path, USR_CONFIG_NAME);

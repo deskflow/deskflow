@@ -44,22 +44,10 @@ static std::string unix_home()
 
 #endif // HAVE_GETPWUID_R
 
-const std::string& DataDirectories::personal()
-{
-    if (_personal.empty())
-        _personal = unix_home();
-    return _personal;
-}
-const std::string& DataDirectories::personal(const std::string& path)
-{
-    _personal = path;
-    return _personal;
-}
-
 const std::string& DataDirectories::profile()
 {
     if (_profile.empty())
-        _profile = personal() + ProfileSubdir;
+        _profile = unix_home() + ProfileSubdir;
     return _profile;
 }
 const std::string& DataDirectories::profile(const std::string& path)

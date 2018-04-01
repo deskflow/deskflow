@@ -23,18 +23,6 @@ std::string known_folder_path(const KNOWNFOLDERID& id)
     return path;
 }
 
-const std::string& DataDirectories::personal()
-{
-    if (_personal.empty())
-        _personal = known_folder_path(FOLDERID_Documents);
-    return _personal;
-}
-const std::string& DataDirectories::personal(const std::string& path)
-{
-    _personal = path;
-    return _personal;
-}
-
 const std::string& DataDirectories::profile()
 {
     if (_profile.empty())
