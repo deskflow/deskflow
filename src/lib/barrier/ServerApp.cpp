@@ -40,6 +40,7 @@
 #include "base/TMethodEventJob.h"
 #include "common/Version.h"
 #include "common/DataDirectories.h"
+#include "common/PathUtilities.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -143,8 +144,8 @@ ServerApp::help()
            << std::endl
            << "If no configuration file pathname is provided then the first of the" << std::endl
            << "following to load successfully sets the configuration:" << std::endl
-           << "  $HOME/" << USR_CONFIG_NAME << std::endl
-           << "  " << ARCH->concatPath(DataDirectories::systemconfig(), SYS_CONFIG_NAME) << std::endl;
+           << "  " << PathUtilities::concat(DataDirectories::personal(), SYS_CONFIG_NAME) << std::endl
+           << "  " << PathUtilities::concat(DataDirectories::systemconfig(), SYS_CONFIG_NAME) << std::endl;
 
     LOG((CLOG_PRINT "%s", buffer.str().c_str()));
 }
@@ -185,7 +186,7 @@ ServerApp::loadConfig()
         String path = DataDirectories::personal();
         if (!path.empty()) {
             // complete path
-            path = ARCH->concatPath(path, USR_CONFIG_NAME);
+            path = PathUtilities::concat(path, USR_CONFIG_NAME);
 
             // now try loading the user's configuration
             if (loadConfig(path)) {
@@ -197,7 +198,7 @@ ServerApp::loadConfig()
             // try the system-wide config file
             path = DataDirectories::systemconfig();
             if (!path.empty()) {
-                path = ARCH->concatPath(path, SYS_CONFIG_NAME);
+                path = PathUtilities::concat(path, SYS_CONFIG_NAME);
                 if (loadConfig(path)) {
                     loaded            = true;
                     args().m_configFile = path;
@@ -780,7 +781,7 @@ ServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
     // general initialization
     m_barrierAddress = new NetworkAddress;
     args().m_config         = new Config(m_events);
-    args().m_pname          = ARCH->getBasename(argv[0]);
+    args().m_pname = PathUtilities::basename(argv[0]).c_str();
 
     // install caller's output filter
     if (outputter != NULL) {

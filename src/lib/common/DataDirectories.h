@@ -26,4 +26,3 @@ private:
     static std::string _global;
     static std::string _systemconfig;
 };
-

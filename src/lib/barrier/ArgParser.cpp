@@ -24,6 +24,7 @@
 #include "barrier/ArgsBase.h"
 #include "base/Log.h"
 #include "base/String.h"
+#include "common/PathUtilities.h"
 
 #ifdef WINAPI_MSWINDOWS
 #include <VersionHelpers.h>
@@ -455,7 +456,7 @@ void
 ArgParser::updateCommonArgs(const char* const* argv)
 {
     argsBase().m_name = ARCH->getHostName();
-    argsBase().m_pname = ARCH->getBasename(argv[0]);
+    argsBase().m_pname = PathUtilities::basename(argv[0]).c_str();
 }
 
 bool
