@@ -55,6 +55,7 @@ std::string activeDesktopName()
             name = buffer;
         CloseDesktop(desk);
     }
+    LOG((CLOG_DEBUG "found desktop name: %.64s", name.c_str()));
     return name;
 }
 
