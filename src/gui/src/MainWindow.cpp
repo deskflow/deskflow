@@ -73,6 +73,8 @@ static const char* barrierIconFiles[] =
     ":/res/icons/16x16/barrier-transfering.png"
 };
 
+static const char* barrierLargeIcon = ":/res/icons/256x256/barrier.ico";
+
 MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     m_Settings(settings),
     m_AppConfig(&appConfig),
@@ -105,7 +107,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
     setAttribute(Qt::WA_X11NetWmWindowTypeDialog, true);
 
     setupUi(this);
-
+    setWindowIcon(QIcon(barrierLargeIcon));
     createMenuBar();
     loadSettings();
     initConnections();
@@ -286,13 +288,8 @@ void MainWindow::saveSettings()
 
 void MainWindow::setIcon(qBarrierState state)
 {
-    QIcon icon;
-    icon.addFile(barrierIconFiles[state]);
-
-    setWindowIcon(icon);
-
     if (m_pTrayIcon)
-        m_pTrayIcon->setIcon(icon);
+        m_pTrayIcon->setIcon(QIcon(barrierIconFiles[state]));
 }
 
 void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
