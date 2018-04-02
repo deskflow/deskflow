@@ -81,6 +81,7 @@ ServerProxy::~ServerProxy()
     setKeepAliveRate(-1.0);
     m_events->removeHandler(m_events->forIStream().inputReady(),
                             m_stream->getEventTarget());
+    m_events->removeHandler(m_events->forClipboard().clipboardSending(), this);
 }
 
 void
