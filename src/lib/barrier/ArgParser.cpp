@@ -21,10 +21,10 @@
 #include "barrier/App.h"
 #include "barrier/ServerArgs.h"
 #include "barrier/ClientArgs.h"
-#include "barrier/ToolArgs.h"
 #include "barrier/ArgsBase.h"
 #include "base/Log.h"
 #include "base/String.h"
+#include "common/PathUtilities.h"
 
 #ifdef WINAPI_MSWINDOWS
 #include <VersionHelpers.h>
@@ -169,46 +169,6 @@ ArgParser::parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* con
     // no options for carbon
     return false;
 #endif
-}
-
-bool
-ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
-{
-    for (int i = 1; i < argc; ++i) {
-        if (isArg(i, argc, argv, NULL, "--get-active-desktop", 0)) {
-            args.m_printActiveDesktopName = true;
-            return true;
-        }
-        else if (isArg(i, argc, argv, NULL, "--login-auth", 0)) {
-            args.m_loginAuthenticate = true;
-            return true;
-        }
-        else if (isArg(i, argc, argv, NULL, "--get-installed-dir", 0)) {
-            args.m_getInstalledDir = true;
-            return true;
-        }
-        else if (isArg(i, argc, argv, NULL, "--get-profile-dir", 0)) {
-            args.m_getProfileDir = true;
-            return true;
-        }
-        else if (isArg(i, argc, argv, NULL, "--get-arch", 0)) {
-            args.m_getArch = true;
-            return true;
-        }
-        else if (isArg(i, argc, argv, NULL, "--notify-activation", 0)) {
-            args.m_notifyActivation = true;
-            return true;
-        }
-        else if (isArg(i, argc, argv, NULL, "--notify-update", 0)) {
-            args.m_notifyUpdate = true;
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    return false;
 }
 
 bool
@@ -496,7 +456,7 @@ void
 ArgParser::updateCommonArgs(const char* const* argv)
 {
     argsBase().m_name = ARCH->getHostName();
-    argsBase().m_pname = ARCH->getBasename(argv[0]);
+    argsBase().m_pname = PathUtilities::basename(argv[0]).c_str();
 }
 
 bool

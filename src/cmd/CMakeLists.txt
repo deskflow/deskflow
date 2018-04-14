@@ -16,7 +16,6 @@
 
 add_subdirectory(barrierc)
 add_subdirectory(barriers)
-add_subdirectory(syntool)
 
 if (WIN32)
 	add_subdirectory(barrierd)

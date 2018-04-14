@@ -37,4 +37,11 @@ public:
     found return the string for \p id, replacing ${1} with \p error.
     */
     static String        getErrorString(HINSTANCE, DWORD error, DWORD id);
+
+    //! Create directory
+    /*!
+    Create directory \p recursively optionally stripping the last component
+    (presumably the filename) if \p is set.
+    */
+    static void createDirectory(const std::string& path, bool stripLast = false);
 };

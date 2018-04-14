@@ -22,6 +22,7 @@
 #include "net/SocketMultiplexer.h"
 #include "net/TSocketMultiplexerMethodJob.h"
 #include "arch/XArch.h"
+#include "common/DataDirectories.h"
 
 static const char s_certificateDir[] = { "SSL" };
 static const char s_certificateFilename[] = { "Barrier.pem" };
@@ -54,7 +55,7 @@ SecureListenSocket::accept()
         }
 
         String certificateFilename = barrier::string::sprintf("%s/%s/%s",
-                                        ARCH->getProfileDirectory().c_str(),
+                                        DataDirectories::profile().c_str(),
                                         s_certificateDir,
                                         s_certificateFilename);
 

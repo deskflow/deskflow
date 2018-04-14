@@ -44,7 +44,20 @@ enum {
 
 typedef VOID (WINAPI *SendSas)(BOOL asUser);
 
-const char g_activeDesktop[] = {"activeDesktop:"};
+std::string activeDesktopName()
+{
+    const std::size_t BufferLength = 1024;
+    std::string name;
+    HDESK desk = OpenInputDesktop(0, FALSE, GENERIC_READ);
+    if (desk != NULL) {
+        TCHAR buffer[BufferLength];
+        if (GetUserObjectInformation(desk, UOI_NAME, buffer, BufferLength - 1, NULL) == TRUE)
+            name = buffer;
+        CloseDesktop(desk);
+    }
+    LOG((CLOG_DEBUG "found desktop name: %.64s", name.c_str()));
+    return name;
+}
 
 MSWindowsWatchdog::MSWindowsWatchdog(
     bool daemonized,
@@ -64,22 +77,8 @@ MSWindowsWatchdog::MSWindowsWatchdog(
     m_processRunning(false),
     m_fileLogOutputter(NULL),
     m_autoElevated(false),
-    m_ready(false),
     m_daemonized(daemonized)
 {
-    m_mutex = ARCH->newMutex();
-    m_condVar = ARCH->newCondVar();
-}
-
-MSWindowsWatchdog::~MSWindowsWatchdog()
-{
-    if (m_condVar != NULL) {
-        ARCH->closeCondVar(m_condVar);
-    }
-
-    if (m_mutex != NULL) {
-        ARCH->closeMutex(m_mutex);
-    }
 }
 
 void 
@@ -288,12 +287,9 @@ MSWindowsWatchdog::startProcess()
     if (!m_daemonized) {
         createRet = doStartProcessAsSelf(m_command);
     } else {
-        SECURITY_ATTRIBUTES sa;
-        ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
+        m_autoElevated = activeDesktopName() != "Default";
 
-        getActiveDesktop(&sa);
-
-        ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
+        SECURITY_ATTRIBUTES sa{ 0 };
         HANDLE userToken = getUserToken(&sa);
         m_elevateProcess = m_autoElevated ? m_autoElevated : m_elevateProcess;
         m_autoElevated = false;
@@ -444,11 +440,7 @@ MSWindowsWatchdog::outputLoop(void*)
         }
         else {
             buffer[bytesRead] = '\0';
-
-            testOutput(buffer);
-
             m_ipcLogOutputter.write(kINFO, buffer);
-
             if (m_fileLogOutputter != NULL) {
                 m_fileLogOutputter->write(kINFO, buffer);
             }
@@ -548,64 +540,4 @@ MSWindowsWatchdog::shutdownExistingProcesses()
 
     CloseHandle(snapshot);
     m_processRunning = false;
-}
-
-void
-MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
-{
-    String installedDir = ARCH->getInstalledDirectory();
-    if (!installedDir.empty()) {
-        String syntoolCommand;
-        syntoolCommand.append("\"").append(installedDir).append("\\").append("syntool").append("\"");
-        syntoolCommand.append(" --get-active-desktop");
-
-        m_session.updateActiveSession();
-        bool elevateProcess = m_elevateProcess;
-        m_elevateProcess = true;
-        HANDLE userToken = getUserToken(security);
-        m_elevateProcess = elevateProcess;
-
-        BOOL createRet = doStartProcessAsUser(syntoolCommand, userToken, security);
-
-        if (!createRet) {
-            DWORD rc = GetLastError();
-            RevertToSelf();
-        }
-        else {
-            LOG((CLOG_DEBUG "launched syntool to check active desktop"));
-        }
-
-        ARCH->lockMutex(m_mutex);
-        int waitTime = 0;
-        while (!m_ready) {
-            if (waitTime >= MAXIMUM_WAIT_TIME) {
-                break;
-            }
-
-            ARCH->waitCondVar(m_condVar, m_mutex, 1.0);
-            waitTime++;
-        }
-        m_ready = false;
-        ARCH->unlockMutex(m_mutex);
-    }
-} 
-
-void
-MSWindowsWatchdog::testOutput(String buffer)
-{
-    // HACK: check standard output seems hacky.
-    size_t i = buffer.find(g_activeDesktop);
-    if (i != String::npos) {
-        size_t s = sizeof(g_activeDesktop);
-        String defaultDesktop("Default");
-        String sub = buffer.substr(i + s - 1, defaultDesktop.size());
-        if (sub != defaultDesktop) {
-            m_autoElevated = true;
-        }
-
-        ARCH->lockMutex(m_mutex);
-        m_ready = true;
-        ARCH->broadcastCondVar(m_condVar);
-        ARCH->unlockMutex(m_mutex);
-    }
 }

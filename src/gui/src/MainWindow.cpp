@@ -31,6 +31,7 @@
 #include "ProcessorArch.h"
 #include "SslCertificate.h"
 #include "ShutdownCh.h"
+#include "common/DataDirectories.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -500,7 +501,7 @@ void MainWindow::startBarrier()
     // launched the process (e.g. when launched with elevation). setting the
     // profile dir on launch ensures it uses the same profile dir is used
     // no matter how its relaunched.
-    args << "--profile-dir" << getProfileRootForArg();
+    args << "--profile-dir" << QString::fromStdString("\"" + DataDirectories::profile() + "\"");
 #endif
 
     if ((barrierType() == barrierClient && !clientArgs(args, app))
@@ -1247,21 +1248,6 @@ void MainWindow::bonjourInstallFinished()
     appendLogInfo("Bonjour install finished");
 
     m_pCheckBoxAutoConfig->setChecked(true);
-}
-
-QString MainWindow::getProfileRootForArg()
-{
-    CoreInterface coreInterface;
-    QString dir = coreInterface.getProfileDir();
-
-    // HACK: strip our app name since we're returning the root dir.
-#if defined(Q_OS_WIN)
-    dir.replace("\\Barrier", "");
-#else
-    dir.replace("/.barrier", "");
-#endif
-
-    return QString("\"%1\"").arg(dir);
 }
 
 void MainWindow::windowStateChanged()

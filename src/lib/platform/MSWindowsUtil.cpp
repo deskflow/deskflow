@@ -62,3 +62,23 @@ MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
         return result;
     }
 }
+
+/*
+
+This is a quick and dirty iterative CreateDirectory() wrapper that does zero
+error checking. A much better cross-platform option exists in C++17 via
+std::filesystem. If/when the project is updated to use 17 this function should
+absolutley be replaced!
+
+*/
+
+void
+MSWindowsUtil::createDirectory(const std::string& path, bool stripLast)
+{
+    // create parent directories
+    for (auto pos = path.find_first_of('\\'); pos != std::string::npos; pos = path.find_first_of('\\', pos + 1))
+        CreateDirectory(path.substr(0, pos).c_str(), NULL);
+    if (!stripLast)
+        // create innermost directory
+        CreateDirectory(path.c_str(), NULL);
+}

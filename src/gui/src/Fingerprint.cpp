@@ -17,7 +17,7 @@
 
 #include "Fingerprint.h"
 
-#include "CoreInterface.h"
+#include "common/DataDirectories.h"
 
 #include <QDir>
 #include <QTextStream>
@@ -125,8 +125,7 @@ void Fingerprint::persistDirectory()
 
 QString Fingerprint::directoryPath()
 {
-    CoreInterface coreInterface;
-    QString profileDir = coreInterface.getProfileDir();
+    auto profileDir = QString::fromStdString(DataDirectories::profile());
 
     return QString("%1/%2")
       .arg(profileDir)

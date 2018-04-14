@@ -22,7 +22,6 @@
 
 class ServerArgs;
 class ClientArgs;
-class ToolArgs;
 class ArgsBase;
 class App;
 
@@ -34,7 +33,6 @@ public:
     bool                parseServerArgs(ServerArgs& args, int argc, const char* const* argv);
     bool                parseClientArgs(ClientArgs& args, int argc, const char* const* argv);
     bool                parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
-    bool                parseToolArgs(ToolArgs& args, int argc, const char* const* argv);
     bool                parseGenericArgs(int argc, const char* const* argv, int& i);
     bool                parseDeprecatedArgs(int argc, const char* const* argv, int& i);
     void                setArgsBase(ArgsBase& argsBase) { m_argsBase = &argsBase; }

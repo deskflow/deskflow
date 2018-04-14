@@ -39,7 +39,6 @@ public:
         bool autoDetectCommand,
         IpcServer& ipcServer,
         IpcLogOutputter& ipcLogOutputter);
-    virtual ~MSWindowsWatchdog();
 
     void                startAsync();
     std::string            getCommand() const;
@@ -58,9 +57,6 @@ private:
     void                startProcess();
     BOOL                doStartProcessAsUser(String& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
     BOOL                doStartProcessAsSelf(String& command);
-    void                sendSas();
-    void                getActiveDesktop(LPSECURITY_ATTRIBUTES security);
-    void                testOutput(String buffer);
 
 private:
     Thread*                m_thread;
@@ -80,9 +76,6 @@ private:
     bool                m_processRunning;
     FileLogOutputter*    m_fileLogOutputter;
     bool                m_autoElevated;
-    ArchMutex            m_mutex;
-    ArchCond            m_condVar;
-    bool                m_ready;
     bool                m_daemonized;
 };
 

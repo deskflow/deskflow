@@ -40,7 +40,6 @@
 #if SYSAPI_WIN32
 #    include "arch/win32/ArchConsoleWindows.h"
 #    include "arch/win32/ArchDaemonWindows.h"
-#    include "arch/win32/ArchFileWindows.h"
 #    include "arch/win32/ArchLogWindows.h"
 #    include "arch/win32/ArchMiscWindows.h"
 #    include "arch/win32/ArchMultithreadWindows.h"
@@ -54,7 +53,6 @@
 #elif SYSAPI_UNIX
 #    include "arch/unix/ArchConsoleUnix.h"
 #    include "arch/unix/ArchDaemonUnix.h"
-#    include "arch/unix/ArchFileUnix.h"
 #    include "arch/unix/ArchLogUnix.h"
 #    if HAVE_PTHREAD
 #        include "arch/unix/ArchMultithreadPosix.h"
@@ -86,7 +84,6 @@ typically at the beginning of \c main().
 */
 class Arch : public ARCH_CONSOLE,
                 public ARCH_DAEMON,
-                public ARCH_FILE,
                 public ARCH_LOG,
                 public ARCH_MULTITHREAD,
                 public ARCH_NETWORK,
