@@ -1,3 +1,6 @@
+## Read before raising an issue ##
+Please only raise issue for *actual* problems or enhacements to synergy-core. For developer support topics, such as designs, compiling issues etc, please see the Core Developers forum: https://symless.com/forums/forum/19-core-developers/
+
 ### Operating Systems ###
 
 Server: microOS Tiara
