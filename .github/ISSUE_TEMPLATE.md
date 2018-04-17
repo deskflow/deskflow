@@ -12,7 +12,7 @@ Client: Applesoft Windy OS 10
 
 1.8.π
 
-**READ ME, DELETE ME**: Go to the 'Help' (on Windows) or 'Synergy' (on macOS) menu and then 'About Synergy' to check your version. Verify that you are using the same version across all of your machines, and that your issue still occurs with the latest release available at https://symless.com/account/login
+**READ ME, DELETE ME**: Synergy 2.x run `synergy-core --version` and Synergy 1.x run `synergys --version` (please do not rely on package manager versioning)
 
 ### Command Line ###
 
