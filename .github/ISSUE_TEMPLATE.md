@@ -11,7 +11,10 @@ Client: Applesoft Windy OS 10
 
 **READ ME, DELETE ME**: Go to the 'Help' (on Windows) or 'Synergy' (on macOS) menu and then 'About Synergy' to check your version. Verify that you are using the same version across all of your machines, and that your issue still occurs with the latest release available at https://symless.com/account/login
 
-**READ ME, DELETE ME**: Are you running Synergy Core directly (if running 2.x version)
+### Command Line ###
+
+**READ ME, DELETE ME**: How are you running Synergy? Please include all command line arguments.
+
 
 ### Steps to reproduce bug ###
 
