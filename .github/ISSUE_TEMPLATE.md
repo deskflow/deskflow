@@ -12,7 +12,7 @@ Client: Applesoft Windy OS 10
 
 1.8.π
 
-**READ ME, DELETE ME**: Synergy 2.x run `synergy-core --version` and Synergy 1.x run `synergys --version` (please do not rely on package manager versioning)
+**READ ME, DELETE ME**: Synergy 2.x run `synergy-core --server --version` and Synergy 1.x run `synergys --version` (please do not rely on package manager versioning)
 
 ### Command Line ###
 
