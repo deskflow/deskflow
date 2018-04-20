@@ -136,13 +136,6 @@ if (UNIX)
         message (FATAL_ERROR "Missing library: pthread")
     endif()
 
-    # curl is used on both Linux and Mac
-    find_package (CURL)
-    if (CURL_FOUND)
-        list (APPEND libs curl)
-    else()
-        message (FATAL_ERROR "Missing library: curl")
-    endif()
 
     if (APPLE)
         set (CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -DGTEST_USE_OWN_TR1_TUPLE=1")
