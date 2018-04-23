@@ -65,7 +65,6 @@
 #    include "arch/unix/ArchSystemUnix.h"
 #    include "arch/unix/ArchTaskBarXWindows.h"
 #    include "arch/unix/ArchTimeUnix.h"
-#    include "arch/unix/ArchInternetUnix.h"
 #endif
 
 /*!
@@ -120,11 +119,9 @@ public:
 
     static void            setInstance(Arch* s) { s_instance = s; }
 
-    ARCH_INTERNET&        internet() const { return (ARCH_INTERNET&)m_internet; }
 
 private:
     static Arch*        s_instance;
-    ARCH_INTERNET        m_internet;
 };
 
 //! Convenience object to lock/unlock an arch mutex
