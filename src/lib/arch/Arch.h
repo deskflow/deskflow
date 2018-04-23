@@ -50,7 +50,6 @@
 #    include "arch/win32/ArchSystemWindows.h"
 #    include "arch/win32/ArchTaskBarWindows.h"
 #    include "arch/win32/ArchTimeWindows.h"
-#    include "arch/win32/ArchInternetWindows.h"
 #elif SYSAPI_UNIX
 #    include "arch/unix/ArchConsoleUnix.h"
 #    include "arch/unix/ArchDaemonUnix.h"
