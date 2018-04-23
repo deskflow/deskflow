@@ -1,3 +1,6 @@
+### Read before raising an issue ###
+Please only raise issue for *actual* bugs on synergy-core. For developer support topics, such as designs, compiling issues etc, please see the Core Developers forum: https://symless.com/forums/forum/19-core-developers/
+
 ### Operating Systems ###
 
 Server: microOS Tiara
@@ -9,7 +12,12 @@ Client: Applesoft Windy OS 10
 
 1.8.π
 
-**READ ME, DELETE ME**: Go to the 'Help' (on Windows) or 'Synergy' (on macOS) menu and then 'About Synergy' to check your version. Verify that you are using the same version across all of your machines, and that your issue still occurs with the latest release available at https://symless.com/account/login
+**READ ME, DELETE ME**: Synergy 2.x run `synergy-core --server --version` and Synergy 1.x run `synergys --version` (please do not rely on package manager versioning)
+
+### Command Line ###
+
+**READ ME, DELETE ME**: How are you running Synergy? Please include all command line arguments.
+
 
 ### Steps to reproduce bug ###
 
