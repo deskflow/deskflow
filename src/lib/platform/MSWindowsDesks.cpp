@@ -154,16 +154,6 @@ MSWindowsDesks::enable()
 void
 MSWindowsDesks::disable()
 {
-    // remove timer
-    if (m_timer != NULL) {
-        m_events->removeHandler(Event::kTimer, m_timer);
-        m_events->deleteTimer(m_timer);
-        m_timer = NULL;
-    }
-
-    // destroy desks
-    removeDesks();
-
     m_isOnScreen = m_isPrimary;
 }
 
