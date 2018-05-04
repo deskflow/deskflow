@@ -14,6 +14,8 @@ Client: Applesoft Windy OS 10
 
 **READ ME, DELETE ME**: Synergy 2.x run `synergy-core --server --version` and Synergy 1.x run `synergys --version` (please do not rely on package manager versioning)
 
+**READ ME, DELETE ME**: If you are running Synergy 2.x, have a issue and are *not* running the core manually, please raise an issue with Syngery Support
+
 ### Command Line ###
 
 **READ ME, DELETE ME**: How are you running Synergy? Please include all command line arguments.
