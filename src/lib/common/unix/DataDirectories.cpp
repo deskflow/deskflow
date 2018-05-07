@@ -18,14 +18,11 @@
 #include "../DataDirectories.h"
 
 #include <unistd.h>    // sysconf
+#include <stdlib.h>    // getenv
 #include <sys/types.h> // getpwuid(_r)
 #include <pwd.h>       // getpwuid(_r)
 
-#ifdef WINAPI_XWINDOWS
-const std::string ProfileSubdir = "/.barrier";
-#else // macos
-const std::string ProfileSubdir = "/Library/Application Support/Barrier";
-#endif
+const std::string ProfileSubdir = "/barrier";
 
 static std::string pw_dir(struct passwd* pwentp)
 {
@@ -61,10 +58,26 @@ static std::string unix_home()
 
 #endif // HAVE_GETPWUID_R
 
+static std::string profile_basedir()
+{
+#ifdef WINAPI_XWINDOWS
+    // linux/bsd adheres to freedesktop standards
+    // https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+    const char* dir = getenv("XDG_DATA_HOME");
+    if (dir != NULL)
+        return dir;
+    return unix_home() + "/.local/share";
+#else
+    // macos has its own standards
+    // https://developer.apple.com/library/content/documentation/General/Conceptual/MOSXAppProgrammingGuide/AppRuntime/AppRuntime.html
+    return unix_home() + "/Library/Application Support";
+#endif
+}
+
 const std::string& DataDirectories::profile()
 {
     if (_profile.empty())
-        _profile = unix_home() + ProfileSubdir;
+        _profile = profile_basedir() + ProfileSubdir;
     return _profile;
 }
 const std::string& DataDirectories::profile(const std::string& path)
