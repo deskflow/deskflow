@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.4)
 
 set (BARRIER_VERSION_MAJOR 2)
-set (BARRIER_VERSION_MINOR 0)
+set (BARRIER_VERSION_MINOR 1)
 set (BARRIER_VERSION_PATCH 0)
 
 #
@@ -44,12 +44,18 @@ if (NOT DEFINED BARRIER_REVISION)
     if (DEFINED ENV{GIT_COMMIT})
         string (SUBSTRING $ENV{GIT_COMMIT} 0 8 BARRIER_REVISION)
     else()
-        execute_process (
-            COMMAND git rev-parse --short=8 HEAD
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-            OUTPUT_VARIABLE BARRIER_REVISION
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
+        find_program (GIT_BINARY git)
+        if (GIT_BINARY STREQUAL "GIT_BINARY-NOTFOUND")
+            set (BARRIER_REVISION "00000000")
+            message (WARNING "git not found. revision hash set to ${BARRIER_REVISION}")
+        else()
+            execute_process (
+                COMMAND git rev-parse --short=8 HEAD
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                OUTPUT_VARIABLE BARRIER_REVISION
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+            )
+        endif()
     endif()
 endif()
 
