@@ -1,10 +1,9 @@
 [Desktop Entry]
 Type=Application
-Version=1.0
+Version=2.1
 Name=Barrier
 Comment=Keyboard and mouse sharing solution
-Path=/usr/bin
-Exec=/usr/bin/barrier
+Exec=barrier
 Icon=barrier
 Terminal=false
 Categories=Utility;
