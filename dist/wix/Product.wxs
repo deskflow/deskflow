@@ -60,8 +60,6 @@
 					<fire:FirewallException Id="ServerFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
 				</File>
 				<File Source="$(var.BinPath)/barrierc.exe"/>
-				<File Source="$(var.BinPath)/syntool.exe"/>
-				<File Source="$(var.BinPath)/synwinhk.dll"/>
 				<File Source="$(var.OpenSSLBinPath)/libeay32.dll"/>
 				<File Source="$(var.OpenSSLBinPath)/ssleay32.dll"/>
 				<File Source="$(var.OpenSSLBinPath)/openssl.exe"/>

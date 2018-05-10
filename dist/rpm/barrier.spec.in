@@ -18,7 +18,6 @@ Work seamlessly across Windows, macOS and Linux.
 %{_bindir}/barrier
 %{_bindir}/barrierc
 %{_bindir}/barriers
-%{_bindir}/syntool
 %attr(644,-,-) %{_datarootdir}/applications/barrier.desktop
 %attr(644,-,-) %{_datarootdir}/icons/hicolor/scalable/apps/barrier.svg
 
