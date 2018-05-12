@@ -21,9 +21,6 @@
 
 class Fingerprint
 {
-private:
-    Fingerprint(const QString& filename);
-
 public:
     void trust(const QString& fingerprintText, bool append = true);
     bool isTrusted(const QString& fingerprintText);
@@ -32,15 +29,14 @@ public:
     QString filePath() const;
     bool fileExists() const;
 
-public:
     static Fingerprint local();
     static Fingerprint trustedServers();
     static Fingerprint trustedClients();
     static QString directoryPath();
-    static QString localFingerprint();
-    static bool localFingerprintExists();
     static void persistDirectory();
 
 private:
+    Fingerprint(const QString& filename);
+
     QString m_Filename;
 };
