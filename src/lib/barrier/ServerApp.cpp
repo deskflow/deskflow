@@ -101,7 +101,7 @@ ServerApp::parseArgs(int argc, const char* const* argv)
             }
             catch (XSocketAddress& e) {
                 LOG((CLOG_PRINT "%s: %s" BYE,
-                    args().m_pname, e.what(), args().m_pname));
+                    args().m_exename.c_str(), e.what(), args().m_exename.c_str()));
                 m_bye(kExitArgs);
             }
         }
@@ -126,7 +126,7 @@ ServerApp::help()
     std::ostringstream buffer;
     buffer << "Start the barrier server component." << std::endl
            << std::endl
-           << "Usage: " << args().m_pname
+           << "Usage: " << args().m_exename
            << " [--address <address>]"
            << " [--config <pathname>]"
            << WINAPI_ARGS << HELP_SYS_ARGS << HELP_COMMON_ARGS << std::endl
@@ -207,7 +207,7 @@ ServerApp::loadConfig()
     }
 
     if (!loaded) {
-        LOG((CLOG_PRINT "%s: no configuration available", args().m_pname));
+        LOG((CLOG_PRINT "%s: no configuration available", args().m_exename.c_str()));
         m_bye(kExitConfig);
     }
 }
@@ -780,7 +780,7 @@ ServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
     // general initialization
     m_barrierAddress = new NetworkAddress;
     args().m_config         = new Config(m_events);
-    args().m_pname = PathUtilities::basename(argv[0]).c_str();
+    args().m_exename = PathUtilities::basename(argv[0]);
 
     // install caller's output filter
     if (outputter != NULL) {

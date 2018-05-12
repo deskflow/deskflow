@@ -95,7 +95,7 @@ ClientApp::parseArgs(int argc, const char* const* argv)
                 // Priddy.
                 if (!args().m_restartable || e.getError() == XSocketAddress::kBadPort) {
                     LOG((CLOG_PRINT "%s: %s" BYE,
-                        args().m_pname, e.what(), args().m_pname));
+                        args().m_exename.c_str(), e.what(), args().m_exename.c_str()));
                     m_bye(kExitFailed);
                 }
             }
@@ -120,7 +120,7 @@ ClientApp::help()
     std::ostringstream buffer;
     buffer << "Start the barrier client and connect to a remote server component." << std::endl
            << std::endl
-           << "Usage: " << args().m_pname << " [--yscroll <delta>]" <<  WINAPI_ARG << HELP_SYS_ARGS
+           << "Usage: " << args().m_exename << " [--yscroll <delta>]" <<  WINAPI_ARG << HELP_SYS_ARGS
            << HELP_COMMON_ARGS << " <server-address>" << std::endl
            << std::endl
            << "Options:" << std::endl
@@ -516,7 +516,7 @@ ClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
 {
     // general initialization
     m_serverAddress = new NetworkAddress;
-    args().m_pname = PathUtilities::basename(argv[0]).c_str();
+    args().m_exename = PathUtilities::basename(argv[0]);
 
     // install caller's output filter
     if (outputter != NULL) {

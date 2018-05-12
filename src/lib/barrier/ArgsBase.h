@@ -30,7 +30,7 @@ public:
     bool                m_backend;
     bool                m_restartable;
     bool                m_noHooks;
-    const char*            m_pname;
+    std::string            m_exename;
     const char*            m_logFilter;
     const char*            m_logFile;
     const char*            m_display;

@@ -79,18 +79,9 @@ App::~App()
 void
 App::version()
 {
-    char buffer[500];
-    sprintf(
-        buffer,
-        "%s %s, protocol version %d.%d\n%s",
-        argsBase().m_pname,
-        kVersion,
-        kProtocolMajorVersion,
-        kProtocolMinorVersion,
-        kCopyright
-        );
+    std::cout << argsBase().m_exename << " " << kVersion << ", protocol version " << kProtocolMajorVersion << "." << kProtocolMinorVersion << std::endl;
+    std::cout << kCopyright << std::endl;
 
-    std::cout << buffer << std::endl;
 }
 
 int
@@ -178,7 +169,7 @@ App::initApp(int argc, const char** argv)
     // set log filter
     if (!CLOG->setFilter(argsBase().m_logFilter)) {
         LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
-            argsBase().m_pname, argsBase().m_logFilter, argsBase().m_pname));
+            argsBase().m_exename.c_str(), argsBase().m_logFilter, argsBase().m_exename.c_str()));
         m_bye(kExitArgs);
     }
     loggingFilterWarning();

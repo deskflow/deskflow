@@ -404,7 +404,7 @@ MSWindowsWatchdog::getCommand() const
     }
 
     // seems like a fairly convoluted way to get the process name
-    const char* launchName = App::instance().argsBase().m_pname;
+    const char* launchName = App::instance().argsBase().m_exename.c_str();
     std::string args = ARCH->commandLine();
 
     // build up a full command line
