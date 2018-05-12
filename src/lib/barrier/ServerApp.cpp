@@ -139,8 +139,9 @@ ServerApp::help()
            << std::endl
            << "The argument for --address is of the form: [<hostname>][:<port>].  The" << std::endl
            << "hostname must be the address or hostname of an interface on the system." << std::endl
-           << "The default is to listen on all interfaces.  The port overrides the" << std::endl
-           << "default port, " << kDefaultPort << "." << std::endl
+           << "Placing brackets around an IPv6 address is required when also specifying " << std::endl
+           << "a port number and optional otherwise. The default is to listen on all" << std::endl
+           << "interfaces using port number " << kDefaultPort << "." << std::endl
            << std::endl
            << "If no configuration file pathname is provided then the first of the" << std::endl
            << "following to load successfully sets the configuration:" << std::endl
@@ -506,6 +507,16 @@ ServerApp::openServerScreen()
     return screen;
 }
 
+static const char* const family_string(IArchNetwork::EAddressFamily family)
+{
+    if (family == IArchNetwork::kINET)
+        return "IPv4";
+    if (family == IArchNetwork::kINET6)
+        // assume IPv6 sockets are setup to support IPv4 traffic as well
+        return "IPv4/IPv6";
+    return "Unknown";
+}
+
 bool 
 ServerApp::startServer()
 {
@@ -531,13 +542,15 @@ ServerApp::startServer()
     double retryTime;
     ClientListener* listener = NULL;
     try {
-        listener   = openClientListener(args().m_config->getBarrierAddress());
+        auto listenAddress = args().m_config->getBarrierAddress();
+        auto family = family_string(ARCH->getAddrFamily(listenAddress.getAddress()));
+        listener   = openClientListener(listenAddress);
         m_server   = openServer(*args().m_config, m_primaryClient);
         listener->setServer(m_server);
         m_server->setListener(listener);
         m_listener = listener;
         updateStatus();
-        LOG((CLOG_NOTE "started server, waiting for clients"));
+        LOG((CLOG_NOTE "started server (%s), waiting for clients", family));
         m_serverState = kStarted;
         return true;
     }

@@ -28,6 +28,45 @@
 // NetworkAddress
 //
 
+static bool parse_address(const std::string& address, std::string& host, int& port)
+{
+    /* Three cases ---
+    * brackets:  parse inside for host, check end for port as :INTEGER. DONE
+    * one colon: ipv4 address with port. DONE
+    * otherwise: all host, no port. DONE
+    *
+    * very, very little error checking. depends on address being trimmed before call.
+    *
+    * does not override port with a default value if no port was found in address.
+    */
+
+    if (address[0] == '[') {
+        // bracketed host possibly followed by port as :INTEGER
+        auto endBracket = address.find(']', 1);
+        if (endBracket == std::string::npos)
+            return false;
+        host = address.substr(1, endBracket - 1);
+        if (endBracket + 1 < address.length()) {
+            // port follows (or garbage)
+            if (address[endBracket + 1] != ':')
+                return false;
+            port = std::strtol(&address[endBracket + 2], nullptr, 10);
+        }
+    } else {
+        auto colon = address.find(':');
+        if (colon != std::string::npos && address.find(':', colon + 1) == std::string::npos) {
+            // one single colon, must be ipv4 with port
+            host = address.substr(0, colon);
+            port = std::strtol(&address[colon + 1], nullptr, 10);
+        } else {
+            // no colons (ipv4) or more than one colon (ipv6), both without port
+            host = address;
+        }
+    }
+
+    return true;
+}
+
 // name re-resolution adapted from a patch by Brent Priddy.
 
 NetworkAddress::NetworkAddress() :
@@ -62,50 +101,9 @@ NetworkAddress::NetworkAddress(const String& hostname, int port) :
     m_hostname(hostname),
     m_port(port)
 {
-    // check for port suffix
-    String::size_type i = m_hostname.rfind(':');
-    if (i != String::npos && i + 1 < m_hostname.size()) {
-        // found a colon.  see if it looks like an IPv6 address.
-        bool colonNotation = false;
-        bool dotNotation   = false;
-        bool doubleColon   = false;
-        for (String::size_type j = 0; j < i; ++j) {
-            if (m_hostname[j] == ':') {
-                colonNotation = true;
-                dotNotation   = false;
-                if (m_hostname[j + 1] == ':') {
-                    doubleColon = true;
-                }
-            }
-            else if (m_hostname[j] == '.' && colonNotation) {
-                dotNotation = true;
-            }
-        }
-
-        // port suffix is ambiguous with IPv6 notation if there's
-        // a double colon and the end of the address is not in dot
-        // notation.  in that case we assume it's not a port suffix.
-        // the user can replace the double colon with zeros to
-        // disambiguate.
-        if ((!doubleColon || dotNotation) && !colonNotation) {
-            // parse port from hostname
-            char* end;
-            const char* chostname = m_hostname.c_str();
-            long suffixPort = strtol(chostname + i + 1, &end, 10);
-            if (end == chostname + i + 1 || *end != '\0') {
-                throw XSocketAddress(XSocketAddress::kBadPort,
-                                            m_hostname, m_port);
-            }
-
-            // trim port from hostname
-            m_hostname.erase(i);
-
-            // save port
-            m_port = static_cast<int>(suffixPort);
-        }
-    }
-
-    // check port number
+    if (!parse_address(hostname, m_hostname, m_port))
+        throw XSocketAddress(XSocketAddress::kUnknown,
+            m_hostname, m_port);
     checkPort();
 }
 
@@ -145,7 +143,7 @@ NetworkAddress::resolve()
         // if hostname is empty then use wildcard address otherwise look
         // up the name.
         if (m_hostname.empty()) {
-            m_address = ARCH->newAnyAddr(IArchNetwork::kINET);
+            m_address = ARCH->newAnyAddr(IArchNetwork::kINET6);
         }
         else {
             m_address = ARCH->nameToAddr(m_hostname);

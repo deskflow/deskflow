@@ -581,7 +581,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
     if (m_pCheckBoxAutoConfig->isChecked()) {
         if (m_pComboServerList->count() != 0) {
             QString serverIp = m_pComboServerList->currentText();
-            args << serverIp + ":" + QString::number(appConfig().port());
+            args << "[" + serverIp + "]:" + QString::number(appConfig().port());
             return true;
         }
     }
@@ -595,7 +595,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
         return false;
     }
 
-    args << m_pLineEditHostname->text() + ":" + QString::number(appConfig().port());
+    args << "[" + m_pLineEditHostname->text() + "]:" + QString::number(appConfig().port());
 
     return true;
 }
@@ -637,8 +637,10 @@ QString MainWindow::configFilename()
 
 QString MainWindow::address()
 {
-    QString i = appConfig().networkInterface();
-    return (!i.isEmpty() ? i : "") + ":" + QString::number(appConfig().port());
+    QString address = appConfig().networkInterface();
+    if (!address.isEmpty())
+        address = "[" + address + "]";
+    return address + ":" + QString::number(appConfig().port());
 }
 
 QString MainWindow::appPath(const QString& name)

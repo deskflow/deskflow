@@ -131,9 +131,10 @@ ClientApp::help()
            << std::endl
            << "Default options are marked with a *" << std::endl
            << std::endl
-           << "The server address is of the form: [<hostname>][:<port>].  The hostname" << std::endl
-           << "must be the address or hostname of the server.  The port overrides the" << std::endl
-           << "default port, " << kDefaultPort << "." << std::endl;
+           << "The server address is of the form: [<hostname>][:<port>]. The hostname" << std::endl
+           << "must be the address or hostname of the server. Placing brackets around" << std::endl
+           << "an IPv6 address is required when also specifying a port number and " << std::endl
+           << "optional otherwise. The default port number is " << kDefaultPort << "." << std::endl;
 
     LOG((CLOG_PRINT "%s", buffer.str().c_str()));
 }

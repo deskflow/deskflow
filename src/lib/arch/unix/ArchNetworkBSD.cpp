@@ -113,6 +113,11 @@ ArchNetworkBSD::newSocket(EAddressFamily family, ESocketType type)
     }
     try {
         setBlockingOnSocket(fd, false);
+        if (family == kINET6) {
+            int flag = 0;
+            if (setsockopt(fd, IPPROTO_IPV6, IPV6_V6ONLY, &flag, sizeof(flag)) != 0)
+                throwError(errno);
+        }
     }
     catch (...) {
         close(fd);
@@ -647,8 +652,8 @@ ArchNetworkBSD::newAnyAddr(EAddressFamily family)
     switch (family) {
     case kINET: {
         auto* ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
+        memset(ipAddr, 0, sizeof(struct sockaddr_in));
         ipAddr->sin_family         = AF_INET;
-        ipAddr->sin_port           = 0;
         ipAddr->sin_addr.s_addr    = INADDR_ANY;
         addr->m_len                = (socklen_t)sizeof(struct sockaddr_in);
         break;
@@ -656,8 +661,8 @@ ArchNetworkBSD::newAnyAddr(EAddressFamily family)
 
     case kINET6: {
         auto* ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
+        memset(ipAddr, 0, sizeof(struct sockaddr_in6));
         ipAddr->sin6_family         = AF_INET6;
-        ipAddr->sin6_port           = 0;
         memcpy(&ipAddr->sin6_addr, &in6addr_any, sizeof(in6addr_any));
         addr->m_len                = (socklen_t)sizeof(struct sockaddr_in6);
         break;
