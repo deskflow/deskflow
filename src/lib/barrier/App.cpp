@@ -79,9 +79,9 @@ App::~App()
 void
 App::version()
 {
-    std::cout << argsBase().m_exename << " " << kVersion << ", protocol version " << kProtocolMajorVersion << "." << kProtocolMinorVersion << std::endl;
+    std::cout << argsBase().m_exename << " " << kVersion << std::endl;
+    std::cout <<"Protocol version " << kProtocolMajorVersion << "." << kProtocolMinorVersion << std::endl;
     std::cout << kCopyright << std::endl;
-
 }
 
 int
