@@ -39,13 +39,13 @@ TCPSocketFactory::~TCPSocketFactory()
 }
 
 IDataSocket*
-TCPSocketFactory::create() const
+TCPSocketFactory::create(IArchNetwork::EAddressFamily family) const
 {
-    return new TCPSocket(m_events, m_socketMultiplexer);
+    return new TCPSocket(m_events, m_socketMultiplexer, family);
 }
 
 IListenSocket*
-TCPSocketFactory::createListen() const
+TCPSocketFactory::createListen(IArchNetwork::EAddressFamily family) const
 {
-    return new TCPListenSocket(m_events, m_socketMultiplexer);
+    return new TCPListenSocket(m_events, m_socketMultiplexer, family);
 }

@@ -37,14 +37,14 @@
 // TCPSocket
 //
 
-TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer) :
+TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
     IDataSocket(events),
     m_events(events),
     m_flushed(&m_mutex, true),
     m_socketMultiplexer(socketMultiplexer)
 {
     try {
-        m_socket = ARCH->newSocket(IArchNetwork::kINET, IArchNetwork::kSTREAM);
+        m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
     }
     catch (XArchNetwork& e) {
         throw XSocketCreate(e.what());
