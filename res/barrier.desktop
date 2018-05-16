@@ -1,6 +1,5 @@
 [Desktop Entry]
 Type=Application
-Version=2.1
 Name=Barrier
 Comment=Keyboard and mouse sharing solution
 Exec=barrier
