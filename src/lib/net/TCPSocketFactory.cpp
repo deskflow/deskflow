@@ -41,27 +41,27 @@ TCPSocketFactory::~TCPSocketFactory()
 }
 
 IDataSocket*
-TCPSocketFactory::create(bool secure) const
+TCPSocketFactory::create(bool secure, IArchNetwork::EAddressFamily family) const
 {
     if (secure) {
-        SecureSocket* secureSocket = new SecureSocket(m_events, m_socketMultiplexer);
+        SecureSocket* secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family);
         secureSocket->initSsl (false);
         return secureSocket;
     }
     else {
-        return new TCPSocket(m_events, m_socketMultiplexer);
+        return new TCPSocket(m_events, m_socketMultiplexer, family);
     }
 }
 
 IListenSocket*
-TCPSocketFactory::createListen(bool secure) const
+TCPSocketFactory::createListen(bool secure, IArchNetwork::EAddressFamily family) const
 {
     IListenSocket* socket = NULL;
     if (secure) {
-        socket = new SecureListenSocket(m_events, m_socketMultiplexer);
+        socket = new SecureListenSocket(m_events, m_socketMultiplexer, family);
     }
     else {
-        socket = new TCPListenSocket(m_events, m_socketMultiplexer);
+        socket = new TCPListenSocket(m_events, m_socketMultiplexer, family);
     }
 
     return socket;
