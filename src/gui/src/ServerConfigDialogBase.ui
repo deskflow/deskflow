@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="m_pTabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="m_pTabScreens">
       <attribute name="title">
@@ -530,7 +530,7 @@ Double click on a screen to edit its settings.</string>
             <item>
              <widget class="QSpinBox" name="m_pSpinBoxHeartbeat">
               <property name="enabled">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
               <property name="minimum">
                <number>1000</number>
