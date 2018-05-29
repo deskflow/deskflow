@@ -25,6 +25,18 @@
 				<RegistryKey ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes" Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" Root="HKLM">
 					<RegistryValue Name="[INSTALLFOLDER]synergys.exe" Type="string" Value="~ HIGHDPIAWARE WIN7RTM"/>
 				</RegistryKey>
+
+				<RegistryKey Root="HKLM"
+					Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
+					Action="createAndRemoveOnUninstall">
+					<RegistryValue Type="string" Name="[INSTALLFOLDER]synergyc.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
+				</RegistryKey>
+
+				<RegistryKey Root="HKLM"
+					Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
+					Action="createAndRemoveOnUninstall">
+					<RegistryValue Type="string" Name="[INSTALLFOLDER]synergy.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
+				</RegistryKey>
 				<!-- Windows 8 and later only -->
 				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
 			</Component>
