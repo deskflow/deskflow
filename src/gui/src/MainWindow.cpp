@@ -99,7 +99,9 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
     m_pMenuEdit(NULL),
     m_pMenuWindow(NULL),
     m_pMenuHelp(NULL),
+#ifndef SYNERGY_ENTERPRISE
     m_pZeroconfService(NULL),
+#endif
     m_pDataDownloader(NULL),
     m_DownloadMessageBox(NULL),
     m_pCancelButton(NULL),
@@ -183,6 +185,7 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
 
 #ifdef SYNERGY_ENTERPRISE
     m_pActivate->setVisible(false);
+    m_pCheckBoxAutoConfig->setVisible(false);
 #endif
 }
 
@@ -195,7 +198,9 @@ MainWindow::~MainWindow()
 
     saveSettings();
 
+#ifndef SYNERGY_ENTERPRISE
     delete m_pZeroconfService;
+#endif
 
     if (m_DownloadMessageBox != NULL) {
         delete m_DownloadMessageBox;
@@ -218,9 +223,11 @@ void MainWindow::open()
 
     m_VersionChecker.checkLatest();
 
+#ifndef SYNERGY_ENTERPRISE
     if (!appConfig().autoConfigPrompted()) {
         promptAutoConfig();
     }
+#endif
 
     // only start if user has previously started. this stops the gui from
     // auto hiding before the user has configured synergy (which of course
@@ -729,6 +736,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
         args << "--log" << appConfig().logFilenameCmd();
     }
 
+#ifndef SYNERGY_ENTERPRISE
     // check auto config first, if it is disabled or no server detected,
     // use line edit host name if it is not empty
     if (m_pCheckBoxAutoConfig->isChecked()) {
@@ -738,6 +746,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
             return true;
         }
     }
+#endif
 
     if (m_pLineEditHostname->text().isEmpty()) {
         show();
@@ -1051,6 +1060,7 @@ void MainWindow::changeEvent(QEvent* event)
     }
 }
 
+#ifndef SYNERGY_ENTERPRISE
 void MainWindow::updateZeroconfService()
 {
     QMutexLocker locker(&m_UpdateZeroconfMutex);
@@ -1068,6 +1078,7 @@ void MainWindow::updateZeroconfService()
         }
     }
 }
+#endif
 
 void MainWindow::serverDetected(const QString name)
 {
@@ -1171,17 +1182,21 @@ MainWindow::licenseManager() const
 void MainWindow::on_m_pGroupClient_toggled(bool on)
 {
     m_pGroupServer->setChecked(!on);
+#ifndef SYNERGY_ENTERPRISE
     if (on) {
         updateZeroconfService();
     }
+#endif
 }
 
 void MainWindow::on_m_pGroupServer_toggled(bool on)
 {
     m_pGroupClient->setChecked(!on);
+#ifndef SYNERGY_ENTERPRISE
     if (on) {
         updateZeroconfService();
     }
+#endif
 }
 
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
@@ -1321,6 +1336,7 @@ bool MainWindow::isServiceRunning()
     return false;
 }
 
+#ifndef SYNERGY_ENTERPRISE
 bool MainWindow::isBonjourRunning()
 {
     bool result = false;
@@ -1493,7 +1509,6 @@ void MainWindow::bonjourInstallFinished()
     m_pCheckBoxAutoConfig->setChecked(true);
 }
 
-#ifndef SYNERGY_ENTERPRISE
 int MainWindow::raiseActivationDialog()
 {
     if (m_ActivationDialogRunning) {
