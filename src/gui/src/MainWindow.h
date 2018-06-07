@@ -95,8 +95,12 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         };
 
     public:
+#ifdef SYNERGY_ENTERPRISE
+        MainWindow(QSettings& settings, AppConfig& appConfig);
+#else
         MainWindow(QSettings& settings, AppConfig& appConfig,
                    LicenseManager& licenseManager);
+#endif
         ~MainWindow();
 
     public:
@@ -118,14 +122,17 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         void updateZeroconfService();
         void serverDetected(const QString name);
         void updateLocalFingerprint();
+#ifndef SYNERGY_ENTERPRISE
         LicenseManager& licenseManager() const;
-
         int raiseActivationDialog();
+#endif
 
 public slots:
         void setEdition(Edition edition);
+#ifndef SYNERGY_ENTERPRISE
         void beginTrial(bool isExpiring);
         void endTrial(bool isExpired);
+#endif
         void appendLogRaw(const QString& text);
         void appendLogInfo(const QString& text);
         void appendLogDebug(const QString& text);
@@ -149,7 +156,7 @@ public slots:
         void logError();
         void updateFound(const QString& version);
         void bonjourInstallFinished();
-		void saveSettings();
+        void saveSettings();
 
     protected:
         QSettings& settings() { return m_Settings; }
@@ -185,7 +192,9 @@ public slots:
         void promptAutoConfig();
         QString getProfileRootForArg();
         void checkConnected(const QString& line);
+#ifndef SYNERGY_ENTERPRISE
         void checkLicense(const QString& line);
+#endif
         void checkFingerprint(const QString& line);
         bool autoHide();
         QString getTimeStamp();
@@ -223,8 +232,10 @@ public slots:
         qRuningState m_ExpectedRunningState;
         QMutex m_StopDesktopMutex;
         SslCertificate* m_pSslCertificate;
+#ifndef SYNERGY_ENTERPRISE
         bool m_ActivationDialogRunning;
         QStringList m_PendingClientNames;
+#endif
 
 private slots:
     void on_m_pCheckBoxAutoConfig_toggled(bool checked);

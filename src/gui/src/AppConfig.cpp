@@ -86,8 +86,8 @@ const QString &AppConfig::logFilename() const { return m_LogFilename; }
 
 QString AppConfig::synergyLogDir() const
 {
-	// by default log to home dir
-	return QDir::home().absolutePath() + "/";
+    // by default log to home dir
+    return QDir::home().absolutePath() + "/";
 }
 
 QString AppConfig::synergyProgramDir() const
@@ -188,6 +188,7 @@ void AppConfig::saveSettings()
     settings().sync();
 }
 
+#ifndef SYNERGY_ENTERPRISE
 bool AppConfig::activationHasRun() const
 {
     return m_ActivationHasRun;
@@ -198,6 +199,7 @@ AppConfig& AppConfig::activationHasRun(bool value)
     m_ActivationHasRun = value;
     return *this;
 }
+#endif
 
 QString AppConfig::lastVersion() const
 {
@@ -242,6 +244,7 @@ void AppConfig::setAutoConfigPrompted(bool prompted)
     m_AutoConfigPrompted = prompted;
 }
 
+#ifndef SYNERGY_ENTERPRISE
 void AppConfig::setEdition(Edition e) {
     m_Edition = e;
 }
@@ -264,6 +267,7 @@ QString AppConfig::serialKey() { return m_Serialkey; }
 int AppConfig::lastExpiringWarningTime() const { return m_LastExpiringWarningTime; }
 
 void AppConfig::setLastExpiringWarningTime(int t) { m_LastExpiringWarningTime = t; }
+#endif
 
 QString AppConfig::synergysName() const { return m_SynergysName; }
 
@@ -280,7 +284,11 @@ void AppConfig::setCryptoEnabled(bool e) {
 }
 
 bool AppConfig::getCryptoEnabled() const {
-    return (edition() == kPro) && m_CryptoEnabled;
+    return
+#ifndef SYNERGY_ENTERPRISE
+    (edition() == kPro) &&
+#endif
+    m_CryptoEnabled;
 }
 
 void AppConfig::setAutoHide(bool b) { m_AutoHide = b; }
