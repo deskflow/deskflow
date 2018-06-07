@@ -79,6 +79,7 @@ class AppConfig: public QObject
         void setAutoConfig(bool autoConfig);
         bool autoConfigPrompted();
         void setAutoConfigPrompted(bool prompted);
+#ifndef SYNERGY_ENTERPRISE
         void setEdition(Edition);
         Edition edition() const;
         QString setSerialKey(QString serial);
@@ -86,6 +87,7 @@ class AppConfig: public QObject
         QString serialKey();
         int lastExpiringWarningTime() const;
         void setLastExpiringWarningTime(int t);
+#endif
 
         QString synergysName() const;
         QString synergycName() const;
@@ -101,9 +103,10 @@ class AppConfig: public QObject
 
         void setAutoHide(bool b);
         bool getAutoHide();
-
+#ifndef SYNERGY_ENTERPRISE
         bool activationHasRun() const;
         AppConfig& activationHasRun(bool value);
+#endif
 
         QString lastVersion() const;
 

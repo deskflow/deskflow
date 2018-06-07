@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -63,7 +63,11 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 #endif
 
     m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
+#ifdef SYNERGY_ENTERPRISE
+     m_pCheckBoxEnableCrypto->setEnabled(true);
+#else
     m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.edition() == kPro);
+#endif
 }
 
 void SettingsDialog::accept()

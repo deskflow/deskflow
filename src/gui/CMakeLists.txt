@@ -8,6 +8,12 @@ set (CMAKE_INCLUDE_CURRENT_DIR ON)
 
 file (GLOB LEGACY_GUI_SOURCE_FILES src/*.cpp src/*.h)
 file (GLOB LEGACY_GUI_UI_FILES src/*.ui)
+file (GLOB LEGACY_ACTIVATION_FILES src/*Activation* src/*License*)
+
+if (SYNERGY_ENTERPRISE)
+    list (REMOVE_ITEM LEGACY_GUI_SOURCE_FILES ${LEGACY_ACTIVATION_FILES})
+    list (REMOVE_ITEM LEGACY_GUI_UI_FILES ${LEGACY_ACTIVATION_FILES})
+endif ()
 
 if (WIN32)
     set (LEGACY_GUI_RC_FILES res/win/Synergy.rc)
@@ -26,15 +32,15 @@ target_link_libraries (synergy shared)
 if (WIN32)
     include_directories ($ENV{BONJOUR_SDK_HOME}/Include)
     if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-        find_library (DNSSD_LIB dnssd.lib 
+        find_library (DNSSD_LIB dnssd.lib
                   HINTS ENV BONJOUR_SDK_HOME
                   PATH_SUFFIXES "Lib/x64")
     else()
-        find_library (DNSSD_LIB dnssd.lib 
+        find_library (DNSSD_LIB dnssd.lib
                   HINTS ENV BONJOUR_SDK_HOME
                   PATH_SUFFIXES "Lib/Win32")
     endif()
-    
+
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_link_libraries (synergy dns_sd)
 endif()
