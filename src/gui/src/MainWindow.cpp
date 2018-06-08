@@ -76,11 +76,17 @@ static const char* synergyIconFiles[] =
     ":/res/icons/16x16/synergy-transfering.png"
 };
 
-MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
-                       LicenseManager& licenseManager) :
-    m_Settings(settings),
+#ifdef SYNERGY_ENTERPRISE
+MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig)
+#else
+MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
+                        LicenseManager& licenseManager)
+#endif
+:   m_Settings(settings),
     m_AppConfig(&appConfig),
+#ifndef SYNERGY_ENTERPRISE
     m_LicenseManager(&licenseManager),
+#endif
     m_pSynergy(NULL),
     m_SynergyState(synergyDisconnected),
     m_ServerConfig(&m_Settings, 5, 3, m_AppConfig->screenName(), this),
@@ -93,7 +99,9 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
     m_pMenuEdit(NULL),
     m_pMenuWindow(NULL),
     m_pMenuHelp(NULL),
+#ifndef SYNERGY_ENTERPRISE
     m_pZeroconfService(NULL),
+#endif
     m_pDataDownloader(NULL),
     m_DownloadMessageBox(NULL),
     m_pCancelButton(NULL),
@@ -101,8 +109,10 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
     m_BonjourInstall(NULL),
     m_SuppressEmptyServerWarning(false),
     m_ExpectedRunningState(kStopped),
-    m_pSslCertificate(NULL),
-    m_ActivationDialogRunning(false)
+    m_pSslCertificate(NULL)
+#ifndef SYNERGY_ENTERPRISE
+    , m_ActivationDialogRunning(false)
+#endif
 {
     setupUi(this);
 
@@ -142,7 +152,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
 
     connect (this, SIGNAL(windowShown()),
              this, SLOT(on_windowShown()), Qt::QueuedConnection);
-
+#ifndef SYNERGY_ENTERPRISE
     connect (m_LicenseManager, SIGNAL(editionChanged(Edition)),
              this, SLOT(setEdition(Edition)), Qt::QueuedConnection);
 
@@ -151,20 +161,32 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig,
 
     connect (m_LicenseManager, SIGNAL(endTrial(bool)),
              this, SLOT(endTrial(bool)), Qt::QueuedConnection);
+#endif
 
     connect (m_AppConfig, SIGNAL(sslToggled(bool)),
              this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
 
+#ifdef SYNERGY_ENTERPRISE
+    setWindowTitle ("Synergy Enterprise");
+#else
     setWindowTitle (m_LicenseManager->activeEditionName());
     m_LicenseManager->refresh();
+#endif
 
     QString lastVersion = m_AppConfig->lastVersion();
     QString currentVersion = m_VersionChecker.getVersion();
     if (lastVersion != currentVersion) {
         m_AppConfig->setLastVersion (currentVersion);
         m_AppConfig->saveSettings();
+#ifndef SYNERGY_ENTERPRISE
         m_LicenseManager->notifyUpdate (lastVersion, currentVersion);
+#endif
     }
+
+#ifdef SYNERGY_ENTERPRISE
+    m_pActivate->setVisible(false);
+    m_pCheckBoxAutoConfig->setVisible(false);
+#endif
 }
 
 MainWindow::~MainWindow()
@@ -176,7 +198,9 @@ MainWindow::~MainWindow()
 
     saveSettings();
 
+#ifndef SYNERGY_ENTERPRISE
     delete m_pZeroconfService;
+#endif
 
     if (m_DownloadMessageBox != NULL) {
         delete m_DownloadMessageBox;
@@ -199,9 +223,11 @@ void MainWindow::open()
 
     m_VersionChecker.checkLatest();
 
+#ifndef SYNERGY_ENTERPRISE
     if (!appConfig().autoConfigPrompted()) {
         promptAutoConfig();
     }
+#endif
 
     // only start if user has previously started. this stops the gui from
     // auto hiding before the user has configured synergy (which of course
@@ -431,7 +457,9 @@ void MainWindow::updateFromLogLine(const QString &line)
     // TODO: this code makes Andrew cry
     checkConnected(line);
     checkFingerprint(line);
+#ifndef SYNERGY_ENTERPRISE
     checkLicense(line);
+#endif
 }
 
 void MainWindow::checkConnected(const QString& line)
@@ -456,6 +484,7 @@ void MainWindow::checkConnected(const QString& line)
     }
 }
 
+#ifndef SYNERGY_ENTERPRISE
 void MainWindow::checkLicense(const QString &line)
 {
     if (line.contains("trial has expired")) {
@@ -463,6 +492,7 @@ void MainWindow::checkLicense(const QString &line)
         raiseActivationDialog();
     }
 }
+#endif
 
 void MainWindow::checkFingerprint(const QString& line)
 {
@@ -532,8 +562,9 @@ void MainWindow::restartSynergy()
 
 void MainWindow::proofreadInfo()
 {
+#ifndef SYNERGY_ENTERPRISE
     setEdition(m_AppConfig->edition()); // Why is this here?
-
+#endif
     int oldState = m_SynergyState;
     m_SynergyState = synergyDisconnected;
     setSynergyState((qSynergyState)oldState);
@@ -552,6 +583,7 @@ void MainWindow::clearLog()
 
 void MainWindow::startSynergy()
 {
+#ifndef SYNERGY_ENTERPRISE
     SerialKey serialKey = m_LicenseManager->serialKey();
     time_t currentTime = ::time(0);
     if (serialKey.isExpired(currentTime)) {
@@ -559,7 +591,7 @@ void MainWindow::startSynergy()
             return;
         }
     }
-
+#endif
     bool desktopMode = appConfig().processMode() == Desktop;
     bool serviceMode = appConfig().processMode() == Service;
 
@@ -704,6 +736,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
         args << "--log" << appConfig().logFilenameCmd();
     }
 
+#ifndef SYNERGY_ENTERPRISE
     // check auto config first, if it is disabled or no server detected,
     // use line edit host name if it is not empty
     if (m_pCheckBoxAutoConfig->isChecked()) {
@@ -713,6 +746,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
             return true;
         }
     }
+#endif
 
     if (m_pLineEditHostname->text().isEmpty()) {
         show();
@@ -804,9 +838,11 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 #endif
     args << "-c" << configFilename << "--address" << address();
 
+#ifndef SYNERGY_ENTERPRISE
     if (!appConfig().serialKey().isEmpty()) {
         args << "--serial-key" << appConfig().serialKey();
     }
+#endif
 
     return true;
 }
@@ -1024,6 +1060,7 @@ void MainWindow::changeEvent(QEvent* event)
     }
 }
 
+#ifndef SYNERGY_ENTERPRISE
 void MainWindow::updateZeroconfService()
 {
     QMutexLocker locker(&m_UpdateZeroconfMutex);
@@ -1041,6 +1078,7 @@ void MainWindow::updateZeroconfService()
         }
     }
 }
+#endif
 
 void MainWindow::serverDetected(const QString name)
 {
@@ -1056,7 +1094,9 @@ void MainWindow::serverDetected(const QString name)
 
 void MainWindow::setEdition(Edition edition)
 {
+#ifndef SYNERGY_ENTERPRISE
     setWindowTitle(m_LicenseManager->getEditionName (edition));
+#endif
     if (m_AppConfig->getCryptoEnabled()) {
         m_pSslCertificate = new SslCertificate(this);
         m_pSslCertificate->generateCertificate();
@@ -1065,6 +1105,7 @@ void MainWindow::setEdition(Edition edition)
     saveSettings();
 }
 
+#ifndef SYNERGY_ENTERPRISE
 void MainWindow::beginTrial(bool isExpiring)
 {
     //Hack
@@ -1115,6 +1156,7 @@ void MainWindow::endTrial(bool isExpired)
     }
     setWindowTitle (m_LicenseManager->activeEditionName());
 }
+#endif
 
 void MainWindow::updateLocalFingerprint()
 {
@@ -1129,26 +1171,32 @@ void MainWindow::updateLocalFingerprint()
     }
 }
 
+#ifndef SYNERGY_ENTERPRISE
 LicenseManager&
 MainWindow::licenseManager() const
 {
     return *m_LicenseManager;
 }
+#endif
 
 void MainWindow::on_m_pGroupClient_toggled(bool on)
 {
     m_pGroupServer->setChecked(!on);
+#ifndef SYNERGY_ENTERPRISE
     if (on) {
         updateZeroconfService();
     }
+#endif
 }
 
 void MainWindow::on_m_pGroupServer_toggled(bool on)
 {
     m_pGroupClient->setChecked(!on);
+#ifndef SYNERGY_ENTERPRISE
     if (on) {
         updateZeroconfService();
     }
+#endif
 }
 
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
@@ -1199,6 +1247,7 @@ void MainWindow::on_m_pActionSettings_triggered()
 void MainWindow::autoAddScreen(const QString name)
 {
     if (!m_ServerConfig.ignoreAutoConfigClient()) {
+#ifndef SYNERGY_ENTERPRISE
         if (m_ActivationDialogRunning) {
             // TODO: refactor this code
             // add this screen to the pending list and check this list until
@@ -1206,6 +1255,7 @@ void MainWindow::autoAddScreen(const QString name)
             m_PendingClientNames.append(name);
             return;
         }
+#endif
 
         int r = m_ServerConfig.autoAddScreen(name);
         if (r != kAutoAddScreenOk) {
@@ -1244,7 +1294,9 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 
 void MainWindow::on_m_pActivate_triggered()
 {
+#ifndef SYNERGY_ENTERPRISE
     raiseActivationDialog();
+#endif
 }
 
 void MainWindow::on_m_pButtonApply_clicked()
@@ -1284,6 +1336,7 @@ bool MainWindow::isServiceRunning()
     return false;
 }
 
+#ifndef SYNERGY_ENTERPRISE
 bool MainWindow::isBonjourRunning()
 {
     bool result = false;
@@ -1479,15 +1532,18 @@ int MainWindow::raiseActivationDialog()
     }
     return result;
 }
+#endif
 
 void MainWindow::on_windowShown()
 {
+#ifndef SYNERGY_ENTERPRISE
     time_t currentTime = ::time(0);
     if (!m_AppConfig->activationHasRun()
             && ((m_AppConfig->edition() == kUnregistered) ||
                 (m_LicenseManager->serialKey().isExpired(currentTime)))) {
         raiseActivationDialog();
     }
+#endif
 }
 
 QString MainWindow::getProfileRootForArg()
