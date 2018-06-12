@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 cmake_minimum_required (VERSION 3.4)
-project (synergy C CXX)
+project (synergy-core C CXX)
 
 option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" ON)
 option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
