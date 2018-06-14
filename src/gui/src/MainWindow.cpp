@@ -167,7 +167,7 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
              this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
 
 #ifdef SYNERGY_ENTERPRISE
-    setWindowTitle ("Synergy Enterprise");
+    setWindowTitle ("Synergy 1 Enterprise");
 #else
     setWindowTitle (m_LicenseManager->activeEditionName());
     m_LicenseManager->refresh();
