@@ -134,7 +134,7 @@ void LicenseManager::skipActivation()
 QString
 LicenseManager::getEditionName(Edition const edition, bool trial)
 {
-	std::string name ("Synergy");
+    std::string name ("Synergy 1");
 	switch (edition) {
 		case kUnregistered:
 			name += " (UNREGISTERED)";
