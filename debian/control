@@ -6,7 +6,7 @@ Homepage: https://www.symless.com/
 Maintainer: Symless <engineering@symless.com>
 
 Package: synergy
-Architecture: amd64
+Architecture: any
 Section: utils
 Priority: optional
 Depends: ${shlibs:Depends},
