@@ -17,4 +17,4 @@ Not for the faint hearted. Only use these if you know what you're doing.
 * <a href="https://github.com/symless/synergy-core/wiki/Getting-Started">Getting Started</a> - How to checkout the code from git and use the right branch.
 * <a href="https://github.com/symless/synergy-core/wiki/Compiling">Compiling</a> - Instructions on how to compile Synergy Core from source.
 * <a href="https://github.com/symless/synergy-core/wiki/Text-Config">Text Config</a> - Write a text config file when running Synergy Core manually.
-* <a href="https://github.com/symless/synergy-core/wiki/Text-Config">Command-Line</a> - Go full manual and run Synergy Core from the command line.
+* <a href="https://github.com/symless/synergy-core/wiki/Command-Line">Command Line</a> - Go full manual and run Synergy Core from the command line.
