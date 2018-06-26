@@ -62,29 +62,6 @@ QString CoreInterface::getSerialKeyFilePath()
     return filename;
 }
 
-QString CoreInterface::notifyUpdate (QString const& fromVersion,
-                                      QString const& toVersion,
-                                      QString const& serialKey) {
-    QStringList args("--notify-update");
-    QString input(fromVersion + ":" + toVersion + ":" + serialKey);
-    input.append("\n");
-    return run(args, input);
-}
-
-QString CoreInterface::notifyActivation(const QString& identity)
-{
-    QStringList args("--notify-activation");
-
-    QString input(identity + ":" + hash(getFirstMacAddress()));
-    QString os= getOSInformation();
-    if (!os.isEmpty()) {
-        input.append(":").append(os);
-    }
-    input.append("\n");
-
-    return run(args, input);
-}
-
 QString CoreInterface::run(const QStringList& args, const QString& input)
 {
     QString program(

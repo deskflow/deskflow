@@ -40,21 +40,10 @@ void ActivationNotifier::setUpdateInfo(QString const& fromVersion,
 
 void ActivationNotifier::notify()
 {
-    CoreInterface coreInterface;
-    try {
-        coreInterface.notifyActivation(m_Identity);
-    }
-    catch (...) {
-        // catch all exceptions and fails silently
-    }
+    // TODO: use something other than CURL
 }
 
 void ActivationNotifier::notifyUpdate()
 {
-    try {
-        CoreInterface coreInterface;
-        coreInterface.notifyUpdate(m_fromVersion, m_toVersion,
-                                    m_serialKey);
-    } catch (...) {
-    }
+    // TODO: use something other than CURL
 }

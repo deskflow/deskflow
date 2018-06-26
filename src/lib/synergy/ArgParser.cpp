@@ -179,10 +179,6 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
             args.m_printActiveDesktopName = true;
             return true;
         }
-        else if (isArg(i, argc, argv, NULL, "--login-auth", 0)) {
-            args.m_loginAuthenticate = true;
-            return true;
-        }
         else if (isArg(i, argc, argv, NULL, "--get-installed-dir", 0)) {
             args.m_getInstalledDir = true;
             return true;
@@ -193,14 +189,6 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
         }
         else if (isArg(i, argc, argv, NULL, "--get-arch", 0)) {
             args.m_getArch = true;
-            return true;
-        }
-        else if (isArg(i, argc, argv, NULL, "--notify-activation", 0)) {
-            args.m_notifyActivation = true;
-            return true;
-        }
-        else if (isArg(i, argc, argv, NULL, "--notify-update", 0)) {
-            args.m_notifyUpdate = true;
             return true;
         }
         else {
