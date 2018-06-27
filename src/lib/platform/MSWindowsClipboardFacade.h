@@ -20,10 +20,10 @@
 
 #include "platform/IMSWindowsClipboardFacade.h"
 
-#include "synergy/IClipboard.h"
+#include "core/IClipboard.h"
 
 class MSWindowsClipboardFacade : public IMSWindowsClipboardFacade
 {
 public:
-	virtual void write(HANDLE win32Data, UINT win32Format);
+    virtual void write(HANDLE win32Data, UINT win32Format);
 };

@@ -18,25 +18,25 @@
 #include "base/EventTypes.h"
 #include "base/IEventQueue.h"
 
-#include <assert.h>
-#include <stddef.h>
+#include <cassert>
+#include <cstddef>
 
 EventTypes::EventTypes() :
-	m_events(NULL)
+    m_events(nullptr)
 {
 }
 
 IEventQueue*
 EventTypes::getEvents() const
 {
-	assert(m_events != NULL);
-	return m_events;
+    assert(m_events != NULL);
+    return m_events;
 }
 
 void
 EventTypes::setEvents(IEventQueue* events)
 {
-	m_events = events;
+    m_events = events;
 }
 
 //
@@ -58,31 +58,10 @@ REGISTER_EVENT(IStream, inputShutdown)
 REGISTER_EVENT(IStream, outputShutdown)
 
 //
-// IpcClient
-//
-
-REGISTER_EVENT(IpcClient, connected)
-REGISTER_EVENT(IpcClient, messageReceived)
-
-//
-// IpcClientProxy
-//
-
-REGISTER_EVENT(IpcClientProxy, messageReceived)
-REGISTER_EVENT(IpcClientProxy, disconnected)
-
-//
-// IpcServerProxy
-//
-
-REGISTER_EVENT(IpcServerProxy, messageReceived)
-
-//
 // IDataSocket
 //
 
 REGISTER_EVENT(IDataSocket, connected)
-REGISTER_EVENT(IDataSocket, secureConnected)
 REGISTER_EVENT(IDataSocket, connectionFailed)
 
 //
@@ -178,13 +157,6 @@ REGISTER_EVENT(IScreen, error)
 REGISTER_EVENT(IScreen, shapeChanged)
 REGISTER_EVENT(IScreen, suspend)
 REGISTER_EVENT(IScreen, resume)
-
-//
-// IpcServer
-//
-
-REGISTER_EVENT(IpcServer, clientConnected)
-REGISTER_EVENT(IpcServer, messageReceived)
 
 //
 // Clipboard

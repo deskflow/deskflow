@@ -19,15 +19,15 @@
 
 #define TEST_ENV
 
-#include "synergy/ArgParser.h"
+#include "core/ArgParser.h"
 
 #include "test/global/gmock.h"
 
 class MockArgParser : public ArgParser
 {
 public:
-	MockArgParser() : ArgParser(NULL) { }
+    MockArgParser() : ArgParser(NULL) { }
 
-	MOCK_METHOD3(parseGenericArgs, bool(int, const char* const*, int&));
-	MOCK_METHOD0(checkUnexpectedArgs, bool());
+    MOCK_METHOD3(parseGenericArgs, bool(int, const char* const*, int&));
+    MOCK_METHOD0(checkUnexpectedArgs, bool());
 };

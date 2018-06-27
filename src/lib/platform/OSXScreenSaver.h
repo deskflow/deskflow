@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "synergy/IScreenSaver.h"
+#include "core/IScreenSaver.h"
 
 #include <Carbon/Carbon.h>
 
@@ -27,33 +27,33 @@ class IEventQueue;
 //! OSX screen saver implementation
 class OSXScreenSaver : public IScreenSaver {
 public:
-	OSXScreenSaver(IEventQueue* events, void* eventTarget);
-	virtual ~OSXScreenSaver();
+    OSXScreenSaver(IEventQueue* events, void* eventTarget);
+    virtual ~OSXScreenSaver();
 
-	// IScreenSaver overrides
-	virtual void		enable();
-	virtual void		disable();
-	virtual void		activate();
-	virtual void		deactivate();
-	virtual bool		isActive() const;
-	
+    // IScreenSaver overrides
+    virtual void        enable();
+    virtual void        disable();
+    virtual void        activate();
+    virtual void        deactivate();
+    virtual bool        isActive() const;
+    
 private:
-	void				processLaunched(ProcessSerialNumber psn);
-	void				processTerminated(ProcessSerialNumber psn);
-	
-	static pascal OSStatus
-						launchTerminationCallback(
-							EventHandlerCallRef nextHandler,
-							EventRef theEvent, void* userData);
+    void                processLaunched(ProcessSerialNumber psn);
+    void                processTerminated(ProcessSerialNumber psn);
+    
+    static pascal OSStatus
+                        launchTerminationCallback(
+                            EventHandlerCallRef nextHandler,
+                            EventRef theEvent, void* userData);
 
 private:
-	// the target for the events we generate
-	void*				m_eventTarget;
+    // the target for the events we generate
+    void*                m_eventTarget;
 
-	bool				m_enabled;
-	void*				m_screenSaverController;
-	void*				m_autoReleasePool;
-	EventHandlerRef		m_launchTerminationEventHandlerRef;
-	ProcessSerialNumber	m_screenSaverPSN;
+    bool                m_enabled;
+    void*                m_screenSaverController;
+    void*                m_autoReleasePool;
+    EventHandlerRef        m_launchTerminationEventHandlerRef;
+    ProcessSerialNumber    m_screenSaverPSN;
     IEventQueue*        m_events;
 };

@@ -1,5 +1,5 @@
 /* Define version here for Unix, but using /D for Windows. */
-#cmakedefine VERSION "${VERSION}"
+#cmakedefine SYNERGY_VERSION "${SYNERGY_VERSION}"
 
 /* Define to the base type of arg 3 for `accept`. */
 #cmakedefine ACCEPT_TYPE_ARG3 ${ACCEPT_TYPE_ARG3}

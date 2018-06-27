@@ -27,89 +27,89 @@
 
 class ArchCondImpl {
 public:
-	pthread_cond_t		m_cond;
+    pthread_cond_t        m_cond;
 };
 
 class ArchMutexImpl {
 public:
-	pthread_mutex_t		m_mutex;
+    pthread_mutex_t        m_mutex;
 };
 
 //! Posix implementation of IArchMultithread
 class ArchMultithreadPosix : public IArchMultithread {
 public:
-	ArchMultithreadPosix();
-	virtual ~ArchMultithreadPosix();
+    ArchMultithreadPosix();
+    virtual ~ArchMultithreadPosix();
 
-	//! @name manipulators
-	//@{
+    //! @name manipulators
+    //@{
 
-	void				setNetworkDataForCurrentThread(void*);
+    void                setNetworkDataForCurrentThread(void*);
 
-	//@}
-	//! @name accessors
-	//@{
+    //@}
+    //! @name accessors
+    //@{
 
-	void*				getNetworkDataForThread(ArchThread);
+    void*                getNetworkDataForThread(ArchThread);
 
-	static ArchMultithreadPosix*	getInstance();
+    static ArchMultithreadPosix*    getInstance();
 
-	//@}
+    //@}
 
-	// IArchMultithread overrides
-	virtual ArchCond	newCondVar();
-	virtual void		closeCondVar(ArchCond);
-	virtual void		signalCondVar(ArchCond);
-	virtual void		broadcastCondVar(ArchCond);
-	virtual bool		waitCondVar(ArchCond, ArchMutex, double timeout);
-	virtual ArchMutex	newMutex();
-	virtual void		closeMutex(ArchMutex);
-	virtual void		lockMutex(ArchMutex);
-	virtual void		unlockMutex(ArchMutex);
-	virtual ArchThread	newThread(ThreadFunc, void*);
-	virtual ArchThread	newCurrentThread();
-	virtual ArchThread	copyThread(ArchThread);
-	virtual void		closeThread(ArchThread);
-	virtual void		cancelThread(ArchThread);
-	virtual void		setPriorityOfThread(ArchThread, int n);
-	virtual void		testCancelThread();
-	virtual bool		wait(ArchThread, double timeout);
-	virtual bool		isSameThread(ArchThread, ArchThread);
-	virtual bool		isExitedThread(ArchThread);
-	virtual void*		getResultOfThread(ArchThread);
-	virtual ThreadID	getIDOfThread(ArchThread);
-	virtual void		setSignalHandler(ESignal, SignalFunc, void*);
-	virtual void		raiseSignal(ESignal);
-
-private:
-	void				startSignalHandler();
-
-	ArchThreadImpl*	find(pthread_t thread);
-	ArchThreadImpl*	findNoRef(pthread_t thread);
-	void				insert(ArchThreadImpl* thread);
-	void				erase(ArchThreadImpl* thread);
-
-	void				refThread(ArchThreadImpl* rep);
-	void				testCancelThreadImpl(ArchThreadImpl* rep);
-
-	void				doThreadFunc(ArchThread thread);
-	static void*		threadFunc(void* vrep);
-	static void			threadCancel(int);
-	static void*		threadSignalHandler(void* vrep);
+    // IArchMultithread overrides
+    virtual ArchCond    newCondVar();
+    virtual void        closeCondVar(ArchCond);
+    virtual void        signalCondVar(ArchCond);
+    virtual void        broadcastCondVar(ArchCond);
+    virtual bool        waitCondVar(ArchCond, ArchMutex, double timeout);
+    virtual ArchMutex    newMutex();
+    virtual void        closeMutex(ArchMutex);
+    virtual void        lockMutex(ArchMutex);
+    virtual void        unlockMutex(ArchMutex);
+    virtual ArchThread    newThread(ThreadFunc, void*);
+    virtual ArchThread    newCurrentThread();
+    virtual ArchThread    copyThread(ArchThread);
+    virtual void        closeThread(ArchThread);
+    virtual void        cancelThread(ArchThread);
+    virtual void        setPriorityOfThread(ArchThread, int n);
+    virtual void        testCancelThread();
+    virtual bool        wait(ArchThread, double timeout);
+    virtual bool        isSameThread(ArchThread, ArchThread);
+    virtual bool        isExitedThread(ArchThread);
+    virtual void*        getResultOfThread(ArchThread);
+    virtual ThreadID    getIDOfThread(ArchThread);
+    virtual void        setSignalHandler(ESignal, SignalFunc, void*);
+    virtual void        raiseSignal(ESignal);
 
 private:
-	typedef std::list<ArchThread> ThreadList;
+    void                startSignalHandler();
 
-	static ArchMultithreadPosix*	s_instance;
+    ArchThreadImpl*    find(pthread_t thread);
+    ArchThreadImpl*    findNoRef(pthread_t thread);
+    void                insert(ArchThreadImpl* thread);
+    void                erase(ArchThreadImpl* thread);
 
-	bool				m_newThreadCalled;
+    void                refThread(ArchThreadImpl* thread);
+    void                testCancelThreadImpl(ArchThreadImpl* thread);
 
-	ArchMutex			m_threadMutex;
-	ArchThread			m_mainThread;
-	ThreadList			m_threadList;
-	ThreadID			m_nextID;
+    void                doThreadFunc(ArchThread thread);
+    static void*        threadFunc(void* vrep);
+    static void            threadCancel(int);
+    static void*        threadSignalHandler(void* vrep);
 
-	pthread_t			m_signalThread;
-	SignalFunc			m_signalFunc[kNUM_SIGNALS];
-	void*				m_signalUserData[kNUM_SIGNALS];
+private:
+    typedef std::list<ArchThread> ThreadList;
+
+    static ArchMultithreadPosix*    s_instance;
+
+    bool                m_newThreadCalled;
+
+    ArchMutex            m_threadMutex;
+    ArchThread            m_mainThread;
+    ThreadList            m_threadList;
+    ThreadID            m_nextID;
+
+    pthread_t            m_signalThread{};
+    SignalFunc            m_signalFunc[kNUM_SIGNALS]{};
+    void*                m_signalUserData[kNUM_SIGNALS]{};
 };

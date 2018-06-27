@@ -2,6 +2,7 @@ config.h
 .DS_Store
 *.pyc
 *.o
+*.a
 *~
 \.*.swp
 *build-gui-Desktop_Qt*
@@ -10,9 +11,6 @@ config.h
 /build
 /CMakeFiles
 /ext/cryptopp562
-/ext/gmock-1.6.0
-/ext/gtest-1.6.0
-/ext/openssl
 /src/gui/Makefile*
 /src/gui/object_script*
 /src/gui/tmp
@@ -21,3 +19,10 @@ src/gui/gui.pro.user*
 src/gui/.qmake.stash
 src/gui/.rnd
 src/setup/win32/synergy.suo
+CMakeCache.txt
+CMakeLists.txt.user
+Makefile
+cmake_install.cmake
+CMakeFiles/
+.idea
+/cmake-build-debug

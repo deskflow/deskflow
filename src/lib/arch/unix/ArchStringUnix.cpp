@@ -18,7 +18,7 @@
 
 #include "arch/unix/ArchStringUnix.h"
 
-#include <stdio.h>
+#include <cstdio>
 
 //
 // ArchStringUnix
@@ -28,15 +28,13 @@
 #include "arch/vsnprintf.h"
 
 ArchStringUnix::ArchStringUnix()
-{
-}
+= default;
 
 ArchStringUnix::~ArchStringUnix()
-{
-}
+= default;
 
 IArchString::EWideCharEncoding
 ArchStringUnix::getWideCharEncoding()
 {
-	return kUCS4;
+    return kUCS4;
 }

@@ -32,38 +32,38 @@ Thrown when attempting to create an invalid network address.
 */
 class XSocketAddress : public XSocket {
 public:
-	//! Failure codes
-	enum EError {
-		kUnknown,		//!< Unknown error
-		kNotFound,		//!< The hostname is unknown
-		kNoAddress,		//!< The hostname is valid but has no IP address
-		kUnsupported,	//!< The hostname is valid but has no supported address
-		kBadPort		//!< The port is invalid
-	};
+    //! Failure codes
+    enum EError {
+        kUnknown,        //!< Unknown error
+        kNotFound,        //!< The hostname is unknown
+        kNoAddress,        //!< The hostname is valid but has no IP address
+        kUnsupported,    //!< The hostname is valid but has no supported address
+        kBadPort        //!< The port is invalid
+    };
 
-	XSocketAddress(EError, const String& hostname, int port) _NOEXCEPT;
-	virtual ~XSocketAddress() _NOEXCEPT { }
+    XSocketAddress(EError, String  hostname, int port) _NOEXCEPT;
+    virtual ~XSocketAddress() _NOEXCEPT { }
 
-	//! @name accessors
-	//@{
+    //! @name accessors
+    //@{
 
-	//! Get the error code
-	EError				getError() const throw();
-	//! Get the hostname
-	String				getHostname() const throw();
-	//! Get the port
-	int					getPort() const throw();
+    //! Get the error code
+    EError                getError() const throw();
+    //! Get the hostname
+    String                getHostname() const throw();
+    //! Get the port
+    int                    getPort() const throw();
 
-	//@}
+    //@}
 
 protected:
-	// XBase overrides
-	virtual String		getWhat() const throw();
+    // XBase overrides
+    virtual String        getWhat() const throw();
 
 private:
-	EError				m_error;
-	String				m_hostname;
-	int					m_port;
+    EError                m_error;
+    String                m_hostname;
+    int                    m_port;
 };
 
 //! I/O closing exception

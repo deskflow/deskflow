@@ -30,22 +30,22 @@ listen for incoming connections.
 */
 class IListenSocket : public ISocket {
 public:
-	//! @name manipulators
-	//@{
+    //! @name manipulators
+    //@{
 
-	//! Accept connection
-	/*!
-	Accept a connection, returning a socket representing the full-duplex
-	data stream.  Returns NULL if no socket is waiting to be accepted.
-	This is only valid after a call to \c bind().
-	*/
-	virtual IDataSocket*
-						accept() = 0;
-	
-	//@}
+    //! Accept connection
+    /*!
+    Accept a connection, returning a socket representing the full-duplex
+    data stream.  Returns NULL if no socket is waiting to be accepted.
+    This is only valid after a call to \c bind().
+    */
+    virtual IDataSocket*
+                        accept() = 0;
+    
+    //@}
 
-	// ISocket overrides
-	virtual void		bind(const NetworkAddress&) = 0;
-	virtual void		close() = 0;
-	virtual void*		getEventTarget() const = 0;
+    // ISocket overrides
+    virtual void        bind(const NetworkAddress&) = 0;
+    virtual void        close() = 0;
+    virtual void*        getEventTarget() const = 0;
 };

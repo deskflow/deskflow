@@ -34,54 +34,52 @@ class IEventQueue;
 
 class ClientListener {
 public:
-	// The factories are adopted.
-	ClientListener(const NetworkAddress&,
-							ISocketFactory*,
-							IEventQueue* events,
-							bool enableCrypto);
-	~ClientListener();
+    // The factories are adopted.
+    ClientListener(const NetworkAddress&,
+                            ISocketFactory*,
+                            IEventQueue* events);
+    ~ClientListener();
 
-	//! @name manipulators
-	//@{
+    //! @name manipulators
+    //@{
 
-	void				setServer(Server* server);
+    void                setServer(Server* server);
 
-	//@}
+    //@}
 
-	//! @name accessors
-	//@{
+    //! @name accessors
+    //@{
 
-	//! Get next connected client
-	/*!
-	Returns the next connected client and removes it from the internal
-	list.  The client is responsible for deleting the returned client.
-	Returns NULL if no clients are available.
-	*/
-	ClientProxy*		getNextClient();
+    //! Get next connected client
+    /*!
+    Returns the next connected client and removes it from the internal
+    list.  The client is responsible for deleting the returned client.
+    Returns NULL if no clients are available.
+    */
+    ClientProxy*        getNextClient();
 
-	//! Get server which owns this listener
-	Server*				getServer() { return m_server; }
+    //! Get server which owns this listener
+    Server*                getServer() { return m_server; }
 
-	//@}
-
-private:
-	// client connection event handlers
-	void				handleClientConnecting(const Event&, void*);
-	void				handleClientAccepted(const Event&, void*);
-	void				handleUnknownClient(const Event&, void*);
-	void				handleClientDisconnected(const Event&, void*);
-
-	void				cleanupListenSocket();
+    //@}
 
 private:
-	typedef std::set<ClientProxyUnknown*> NewClients;
-	typedef std::deque<ClientProxy*> WaitingClients;
+    // client connection event handlers
+    void                handleClientConnecting(const Event&, void*);
+    void                handleClientAccepted(const Event&, void*);
+    void                handleUnknownClient(const Event&, void*);
+    void                handleClientDisconnected(const Event&, void*);
 
-	IListenSocket*		m_listen;
-	ISocketFactory*		m_socketFactory;
-	NewClients			m_newClients;
-	WaitingClients		m_waitingClients;
-	Server*				m_server;
-	IEventQueue*		m_events;
-	bool				m_useSecureNetwork;
+    void                cleanupListenSocket();
+
+private:
+    typedef std::set<ClientProxyUnknown*> NewClients;
+    typedef std::deque<ClientProxy*> WaitingClients;
+
+    IListenSocket*        m_listen;
+    ISocketFactory*        m_socketFactory;
+    NewClients            m_newClients;
+    WaitingClients        m_waitingClients;
+    Server*                m_server;
+    IEventQueue*        m_events;
 };

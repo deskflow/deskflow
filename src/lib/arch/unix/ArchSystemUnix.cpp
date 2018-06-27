@@ -26,55 +26,55 @@
 
 ArchSystemUnix::ArchSystemUnix()
 {
-	// do nothing
+    // do nothing
 }
 
 ArchSystemUnix::~ArchSystemUnix()
 {
-	// do nothing
+    // do nothing
 }
 
 std::string
 ArchSystemUnix::getOSName() const
 {
 #if defined(HAVE_SYS_UTSNAME_H)
-	struct utsname info;
-	if (uname(&info) == 0) {
-		std::string msg;
-		msg += info.sysname;
-		msg += " ";
-		msg += info.release;
-		return msg;
-	}
+    struct utsname info{};
+    if (uname(&info) == 0) {
+        std::string msg;
+        msg += info.sysname;
+        msg += " ";
+        msg += info.release;
+        return msg;
+    }
 #endif
-	return "Unix";
+    return "Unix";
 }
 
 std::string
 ArchSystemUnix::getPlatformName() const
 {
 #if defined(HAVE_SYS_UTSNAME_H)
-	struct utsname info;
-	if (uname(&info) == 0) {
-		return std::string(info.machine);
-	}
+    struct utsname info{};
+    if (uname(&info) == 0) {
+        return std::string(info.machine);
+    }
 #endif
-	return "unknown";
+    return "unknown";
 }
 
 std::string
-ArchSystemUnix::setting(const std::string&) const
+ArchSystemUnix::setting(const std::string& /*valueName*/) const
 {
-	return "";
+    return "";
 }
 
 void
-ArchSystemUnix::setting(const std::string&, const std::string&) const
+ArchSystemUnix::setting(const std::string& /*valueName*/, const std::string& /*valueString*/) const
 {
 }
 
 std::string
-ArchSystemUnix::getLibsUsed(void) const
+ArchSystemUnix::getLibsUsed() const
 {
-	return "not implemented.\nuse lsof on shell";
+    return "not implemented.\nuse lsof on shell";
 }

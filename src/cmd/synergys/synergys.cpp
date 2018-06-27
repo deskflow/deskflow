@@ -16,35 +16,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ServerApp.h"
+#include "core/ServerApp.h"
 #include "arch/Arch.h"
-#include "base/Log.h"
 #include "base/EventQueue.h"
+#include "base/Log.h"
 
-#if WINAPI_MSWINDOWS
-#include "synergys/MSWindowsServerTaskBarReceiver.h"
-#elif WINAPI_XWINDOWS
-#include "synergys/XWindowsServerTaskBarReceiver.h"
-#elif WINAPI_CARBON
-#include "synergys/OSXServerTaskBarReceiver.h"
-#else
-#error Platform not supported.
-#endif
+#include <iostream>
 
 int
 main(int argc, char** argv) 
 {
+    std::cerr << "warning: synergys is deprecated. instead, use: synergy-core --server" << std::endl;
+
 #if SYSAPI_WIN32
-	// record window instance for tray icon, etc
-	ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+    // record window instance for tray icon, etc
+    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
-	
-	Arch arch;
-	arch.init();
+    
+    Arch arch;
+    arch.init();
 
-	Log log;
-	EventQueue events;
+    Log log;
+    EventQueue events;
 
-	ServerApp app(&events, createTaskBarReceiver);
-	return app.run(argc, argv);
+    ServerApp app(&events);
+    return app.run(argc, argv);
 }

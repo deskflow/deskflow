@@ -26,33 +26,33 @@
 
 Mutex::Mutex()
 {
-	m_mutex = ARCH->newMutex();
+    m_mutex = ARCH->newMutex();
 }
 
-Mutex::Mutex(const Mutex&)
+Mutex::Mutex(const Mutex& /*unused*/)
 {
-	m_mutex = ARCH->newMutex();
+    m_mutex = ARCH->newMutex();
 }
 
 Mutex::~Mutex()
 {
-	ARCH->closeMutex(m_mutex);
+    ARCH->closeMutex(m_mutex);
 }
 
 Mutex&
-Mutex::operator=(const Mutex&)
+Mutex::operator=(const Mutex& /*unused*/)
 {
-	return *this;
+    return *this;
 }
 
 void
 Mutex::lock() const
 {
-	ARCH->lockMutex(m_mutex);
+    ARCH->lockMutex(m_mutex);
 }
 
 void
 Mutex::unlock() const
 {
-	ARCH->unlockMutex(m_mutex);
+    ARCH->unlockMutex(m_mutex);
 }

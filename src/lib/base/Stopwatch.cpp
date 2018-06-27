@@ -24,107 +24,107 @@
 //
 
 Stopwatch::Stopwatch(bool triggered) :
-	m_mark(0.0),
-	m_triggered(triggered),
-	m_stopped(triggered)
+    m_mark(0.0),
+    m_triggered(triggered),
+    m_stopped(triggered)
 {
-	if (!triggered) {
-		m_mark = ARCH->time();
-	}
+    if (!triggered) {
+        m_mark = ARCH->time();
+    }
 }
 
 Stopwatch::~Stopwatch()
 {
-	// do nothing
+    // do nothing
 }
 
 double
 Stopwatch::reset()
 {
-	if (m_stopped) {
-		const double dt = m_mark;
-		m_mark = 0.0;
-		return dt;
-	}
-	else {
-		const double t	= ARCH->time();
-		const double dt = t - m_mark;
-		m_mark = t;
-		return dt;
-	}
+    if (m_stopped) {
+        const double dt = m_mark;
+        m_mark = 0.0;
+        return dt;
+    }
+    
+        const double t    = ARCH->time();
+        const double dt = t - m_mark;
+        m_mark = t;
+        return dt;
+    
 }
 
 void
 Stopwatch::stop()
 {
-	if (m_stopped) {
-		return;
-	}
+    if (m_stopped) {
+        return;
+    }
 
-	// save the elapsed time
-	m_mark	  = ARCH->time() - m_mark;
-	m_stopped = true;
+    // save the elapsed time
+    m_mark      = ARCH->time() - m_mark;
+    m_stopped = true;
 }
 
 void
 Stopwatch::start()
 {
-	m_triggered = false;
-	if (!m_stopped) {
-		return;
-	}
+    m_triggered = false;
+    if (!m_stopped) {
+        return;
+    }
 
-	// set the mark such that it reports the time elapsed at stop()
-	m_mark	  = ARCH->time() - m_mark;
-	m_stopped = false;
+    // set the mark such that it reports the time elapsed at stop()
+    m_mark      = ARCH->time() - m_mark;
+    m_stopped = false;
 }
 
 void
 Stopwatch::setTrigger()
 {
-	stop();
-	m_triggered = true;
+    stop();
+    m_triggered = true;
 }
 
 double
 Stopwatch::getTime()
 {
-	if (m_triggered) {
-		const double dt = m_mark;
-		start();
-		return dt;
-	}
-	else if (m_stopped) {
-		return m_mark;
-	}
-	else {
-		return ARCH->time() - m_mark;
-	}
+    if (m_triggered) {
+        const double dt = m_mark;
+        start();
+        return dt;
+    }
+    if (m_stopped) {
+        return m_mark;
+    }
+    else {
+        return ARCH->time() - m_mark;
+    }
 }
 
 Stopwatch::operator double()
 {
-	return getTime();
+    return getTime();
 }
 
 bool
 Stopwatch::isStopped() const
 {
-	return m_stopped;
+    return m_stopped;
 }
 
 double
 Stopwatch::getTime() const
 {
-	if (m_stopped) {
-		return m_mark;
-	}
-	else {
-		return ARCH->time() - m_mark;
-	}
+    if (m_stopped) {
+        return m_mark;
+    }
+    
+        return ARCH->time() - m_mark;
+    
 }
 
 Stopwatch::operator double() const
 {
-	return getTime();
+    return getTime();
 }

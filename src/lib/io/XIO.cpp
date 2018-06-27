@@ -23,9 +23,9 @@
 //
 
 String
-XIOClosed::getWhat() const throw()
+XIOClosed::getWhat() const noexcept
 {
-	return format("XIOClosed", "already closed");
+    return format("XIOClosed", "already closed");
 }
 
 
@@ -34,9 +34,9 @@ XIOClosed::getWhat() const throw()
 //
 
 String
-XIOEndOfStream::getWhat() const throw()
+XIOEndOfStream::getWhat() const noexcept
 {
-	return format("XIOEndOfStream", "reached end of stream");
+    return format("XIOEndOfStream", "reached end of stream");
 }
 
 
@@ -45,7 +45,7 @@ XIOEndOfStream::getWhat() const throw()
 //
 
 String
-XIOWouldBlock::getWhat() const throw()
+XIOWouldBlock::getWhat() const noexcept
 {
-	return format("XIOWouldBlock", "stream operation would block");
+    return format("XIOWouldBlock", "stream operation would block");
 }

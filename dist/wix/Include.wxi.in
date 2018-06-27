@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+    <?define Name="Synergy" ?>
+    <?define Version="@SYNERGY_VERSION@" ?>
+    <?define QtVersion="5.9.3" ?> <!-- TODO: Configure this externally //--> 
+    <?define Author="Symless" ?>
+    <?define BinPath="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/$(var.Configuration)" ?>
+    <?define ResPath="@CMAKE_CURRENT_SOURCE_DIR@/res" ?>
+    <?define ExtPath="@CMAKE_CURRENT_SOURCE_DIR@/ext" ?>
+    <?if $(var.Platform) = "x64" ?>
+        <?define ProgramFilesFolder="ProgramFiles64Folder" ?>
+        <?define PlatformSimpleName="64-bit" ?>
+        <?define UpgradeGuid="E8A4FA54-14B9-4FD1-8E00-7BC46555FDA0" ?>
+        <?define QtPath="C:\Qt\$(var.QtVersion)\msvc2015_64" ?>
+    <?else ?>
+        <?define ProgramFilesFolder="ProgramFilesFolder" ?>
+        <?define PlatformSimpleName="32-bit" ?>
+        <?define UpgradeGuid="BE0B9FD8-45E2-4A8E-A0D8-1F774D074A78" ?>
+        <?define QtPath="C:\Qt\$(var.QtVersion)\msvc2015" ?>
+    <?endif ?>
+    <?define QtBinPath="$(var.QtPath)\bin" ?>
+    <?define QtPlatformPath="$(var.QtPath)\plugins\platforms" ?>
+    <?if $(var.Configuration) = "Debug" ?>
+        <?define DebugCRT="$(env.CommonProgramFiles)\Merge Modules\Microsoft_VC140_DebugCRT_$(var.Platform).msm" ?>
+    <?endif ?>
+    <?define CRT="$(env.CommonProgramFiles)\Merge Modules\Microsoft_VC140_CRT_$(var.Platform).msm" ?>
+</Include>

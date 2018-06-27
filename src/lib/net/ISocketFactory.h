@@ -30,14 +30,14 @@ create sockets.
 */
 class ISocketFactory : public IInterface {
 public:
-	//! @name accessors
-	//@{
+    //! @name accessors
+    //@{
 
-	//! Create data socket
-	virtual IDataSocket*	create(bool secure) const = 0;
+    //! Create data socket
+    virtual IDataSocket*    create() const = 0;
 
-	//! Create listen socket
-	virtual IListenSocket*	createListen(bool secure) const = 0;
+    //! Create listen socket
+    virtual IListenSocket*    createListen() const = 0;
 
-	//@}
+    //@}
 };

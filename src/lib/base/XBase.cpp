@@ -27,50 +27,50 @@
 //
 
 XBase::XBase() :
-	std::runtime_error("")
+    std::runtime_error("")
 {
-	// do nothing
+    // do nothing
 }
 
 XBase::XBase(const String& msg) :
-	std::runtime_error(msg)
+    std::runtime_error(msg)
 {
-	// do nothing
+    // do nothing
 }
 
-XBase::~XBase() _NOEXCEPT
+XBase::~XBase() noexcept
 {
-	// do nothing
+    // do nothing
 }
 
 const char*
-XBase::what() const _NOEXCEPT
+XBase::what() const noexcept
 {
-	const char* what = std::runtime_error::what();
-	if (strlen(what) == 0) {
-		m_what = getWhat();
-		return m_what.c_str();
-	}
-	return what;
+    const char* what = std::runtime_error::what();
+    if (strlen(what) == 0) {
+        m_what = getWhat();
+        return m_what.c_str();
+    }
+    return what;
 }
 
 String
-XBase::format(const char* /*id*/, const char* fmt, ...) const throw()
+XBase::format(const char* /*id*/, const char* fmt, ...) const noexcept
 {
-	// FIXME -- lookup message string using id as an index.  set
-	// fmt to that string if it exists.
+    // FIXME -- lookup message string using id as an index.  set
+    // fmt to that string if it exists.
 
-	// format
-	String result;
-	va_list args;
-	va_start(args, fmt);
-	try {
-		result = synergy::string::vformat(fmt, args);
-	}
-	catch (...) {
-		// ignore
-	}
-	va_end(args);
+    // format
+    String result;
+    va_list args;
+    va_start(args, fmt);
+    try {
+        result = synergy::string::vformat(fmt, args);
+    }
+    catch (...) {
+        // ignore
+    }
+    va_end(args);
 
-	return result;
+    return result;
 }

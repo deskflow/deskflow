@@ -23,7 +23,7 @@
 //
 
 String
-XMTThreadUnavailable::getWhat() const throw()
+XMTThreadUnavailable::getWhat() const noexcept
 {
-	return format("XMTThreadUnavailable", "cannot create thread");
+    return format("XMTThreadUnavailable", "cannot create thread");
 }

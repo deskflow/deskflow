@@ -17,6 +17,8 @@
  */
 
 #include "net/XSocket.h"
+
+#include <utility>
 #include "base/String.h"
 
 //
@@ -24,52 +26,52 @@
 //
 
 XSocketAddress::XSocketAddress(EError error,
-				const String& hostname, int port) _NOEXCEPT :
-	m_error(error),
-	m_hostname(hostname),
-	m_port(port)
+                String  hostname, int port) noexcept :
+    m_error(error),
+    m_hostname(std::move(hostname)),
+    m_port(port)
 {
-	// do nothing
+    // do nothing
 }
 
 XSocketAddress::EError
-XSocketAddress::getError() const throw()
+XSocketAddress::getError() const noexcept
 {
-	return m_error;
+    return m_error;
 }
 
 String
-XSocketAddress::getHostname() const throw()
+XSocketAddress::getHostname() const noexcept
 {
-	return m_hostname;
+    return m_hostname;
 }
 
 int
-XSocketAddress::getPort() const throw()
+XSocketAddress::getPort() const noexcept
 {
-	return m_port;
+    return m_port;
 }
 
 String
-XSocketAddress::getWhat() const throw()
+XSocketAddress::getWhat() const noexcept
 {
-	static const char* s_errorID[] = {
-		"XSocketAddressUnknown",
-		"XSocketAddressNotFound",
-		"XSocketAddressNoAddress",
-		"XSocketAddressUnsupported",
-		"XSocketAddressBadPort"
-	};
-	static const char* s_errorMsg[] = {
-		"unknown error for: %{1}:%{2}",
-		"address not found for: %{1}",
-		"no address for: %{1}",
-		"unsupported address for: %{1}",
-		"invalid port"				// m_port may not be set to the bad port
-	};
-	return format(s_errorID[m_error], s_errorMsg[m_error],
-								m_hostname.c_str(), 
-								synergy::string::sprintf("%d", m_port).c_str());
+    static const char* s_errorID[] = {
+        "XSocketAddressUnknown",
+        "XSocketAddressNotFound",
+        "XSocketAddressNoAddress",
+        "XSocketAddressUnsupported",
+        "XSocketAddressBadPort"
+    };
+    static const char* s_errorMsg[] = {
+        "unknown error for: %{1}:%{2}",
+        "address not found for: %{1}",
+        "no address for: %{1}",
+        "unsupported address for: %{1}",
+        "invalid port"                // m_port may not be set to the bad port
+    };
+    return format(s_errorID[m_error], s_errorMsg[m_error],
+                                m_hostname.c_str(), 
+                                synergy::string::sprintf("%d", m_port).c_str());
 }
 
 
@@ -78,9 +80,9 @@ XSocketAddress::getWhat() const throw()
 //
 
 String
-XSocketIOClose::getWhat() const throw()
+XSocketIOClose::getWhat() const noexcept
 {
-	return format("XSocketIOClose", "close: %{1}", what());
+    return format("XSocketIOClose", "close: %{1}", what());
 }
 
 
@@ -89,9 +91,9 @@ XSocketIOClose::getWhat() const throw()
 //
 
 String
-XSocketBind::getWhat() const throw()
+XSocketBind::getWhat() const noexcept
 {
-	return format("XSocketBind", "cannot bind address: %{1}", what());
+    return format("XSocketBind", "cannot bind address: %{1}", what());
 }
 
 
@@ -100,9 +102,9 @@ XSocketBind::getWhat() const throw()
 //
 
 String
-XSocketConnect::getWhat() const throw()
+XSocketConnect::getWhat() const noexcept
 {
-	return format("XSocketConnect", "cannot connect socket: %{1}", what());
+    return format("XSocketConnect", "cannot connect socket: %{1}", what());
 }
 
 
@@ -111,7 +113,7 @@ XSocketConnect::getWhat() const throw()
 //
 
 String
-XSocketCreate::getWhat() const throw()
+XSocketCreate::getWhat() const noexcept
 {
-	return format("XSocketCreate", "cannot create socket: %{1}", what());
+    return format("XSocketCreate", "cannot create socket: %{1}", what());
 }

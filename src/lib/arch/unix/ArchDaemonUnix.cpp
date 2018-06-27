@@ -21,12 +21,12 @@
 #include "arch/unix/XArchUnix.h"
 #include "base/Log.h"
 
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <errno.h>
 #include <cstdlib>
+#include <errno.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 //
 // ArchDaemonUnix
@@ -34,12 +34,12 @@
 
 ArchDaemonUnix::ArchDaemonUnix()
 {
-	// do nothing
+    // do nothing
 }
 
 ArchDaemonUnix::~ArchDaemonUnix()
 {
-	// do nothing
+    // do nothing
 }
 
 
@@ -51,17 +51,17 @@ ArchDaemonUnix::~ArchDaemonUnix()
 int
 execSelfNonDaemonized()
 {
-	extern char** NXArgv;
-	char** selfArgv = NXArgv;
-	
-	setenv("_SYNERGY_DAEMONIZED", "", 1);
-	
-	execvp(selfArgv[0], selfArgv);
-	return 0;
+    extern char** NXArgv;
+    char** selfArgv = NXArgv;
+    
+    setenv("_SYNERGY_DAEMONIZED", "", 1);
+    
+    execvp(selfArgv[0], selfArgv);
+    return 0;
 }
 
 bool alreadyDaemonized() {
-	return getenv("_SYNERGY_DAEMONIZED") != NULL;
+    return getenv("_SYNERGY_DAEMONIZED") != NULL;
 }
 
 #endif
@@ -70,63 +70,64 @@ int
 ArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
 {
 #ifdef __APPLE__
-	if (alreadyDaemonized())
-		return func(1, &name);
+    if (alreadyDaemonized())
+        return func(1, &name);
 #endif
-	
-	// fork so shell thinks we're done and so we're not a process
-	// group leader
-	switch (fork()) {
-	case -1:
-		// failed
-		throw XArchDaemonFailed(new XArchEvalUnix(errno));
+    
+    // fork so shell thinks we're done and so we're not a process
+    // group leader
+    switch (fork()) {
+    case -1:
+        // failed
+        throw XArchDaemonFailed(new XArchEvalUnix(errno));
 
-	case 0:
-		// child
-		break;
+    case 0:
+        // child
+        break;
 
-	default:
-		// parent exits
-		exit(0);
-	}
+    default:
+        // parent exits
+        exit(0);
+    }
 
-	// become leader of a new session
-	setsid();
-	
+    // become leader of a new session
+    setsid();
+    
 #ifndef __APPLE__
-	// NB: don't run chdir on apple; causes strange behaviour.
-	// chdir to root so we don't keep mounted filesystems points busy
-	// TODO: this is a bit of a hack - can we find a better solution?
-	int chdirErr = chdir("/");
-	if (chdirErr)
-		// NB: file logging actually isn't working at this point!
-		LOG((CLOG_ERR "chdir error: %i", chdirErr));
+    // NB: don't run chdir on apple; causes strange behaviour.
+    // chdir to root so we don't keep mounted filesystems points busy
+    // TODO(andrew): this is a bit of a hack - can we find a better solution?
+    int chdirErr = chdir("/");
+    if (chdirErr != 0) {
+        // NB: file logging actually isn't working at this point!
+        LOG((CLOG_ERR "chdir error: %i", chdirErr));
+}
 #endif
 
-	// mask off permissions for any but owner
-	umask(077);
+    // mask off permissions for any but owner
+    umask(077);
 
-	// close open files.  we only expect stdin, stdout, stderr to be open.
-	close(0);
-	close(1);
-	close(2);
+    // close open files.  we only expect stdin, stdout, stderr to be open.
+    close(0);
+    close(1);
+    close(2);
 
-	// attach file descriptors 0, 1, 2 to /dev/null so inadvertent use
-	// of standard I/O safely goes in the bit bucket.
-	open("/dev/null", O_RDONLY);
-	open("/dev/null", O_RDWR);
-	
-	int dupErr = dup(1);
+    // attach file descriptors 0, 1, 2 to /dev/null so inadvertent use
+    // of standard I/O safely goes in the bit bucket.
+    open("/dev/null", O_RDONLY | O_CLOEXEC);
+    open("/dev/null", O_RDWR | O_CLOEXEC);
+    
+    int dupErr = dup(1);
 
-	if (dupErr < 0) {
-		// NB: file logging actually isn't working at this point!
-		LOG((CLOG_ERR "dup error: %i", dupErr));
-	}
-	
+    if (dupErr < 0) {
+        // NB: file logging actually isn't working at this point!
+        LOG((CLOG_ERR "dup error: %i", dupErr));
+    }
+    
 #ifdef __APPLE__
-	return execSelfNonDaemonized();
+    return execSelfNonDaemonized();
 #endif
-	
-	// invoke function
-	return func(1, &name);
+    
+    // invoke function
+    return func(1, &name);
 }

@@ -18,39 +18,11 @@ file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
 if (SYNERGY_ADD_HEADERS)
-	list(APPEND sources ${headers})
-endif()
-
-include_directories(
-	../
-	${OPENSSL_INCLUDE}
-)
-
-if (UNIX)
-	include_directories(
-		../../..
-	)
+    list(APPEND sources ${headers})
 endif()
 
 add_library(net STATIC ${sources})
 
-if (WIN32)
-	add_custom_command(
-		TARGET net
-		POST_BUILD
-		COMMAND xcopy /Y /Q
-			..\\..\\..\\..\\ext\\${OPENSSL_PLAT_DIR}\\out32dll\\libeay32.*
-			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
-	)
-	add_custom_command(
-		TARGET net 
-		POST_BUILD
-		COMMAND xcopy /Y /Q
-			..\\..\\..\\..\\ext\\${OPENSSL_PLAT_DIR}\\out32dll\\ssleay32.*
-			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
-	)
-endif()
-
 if (UNIX)
-	target_link_libraries(net mt io ${OPENSSL_LIBS})
+    target_link_libraries(net mt io)
 endif()

@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "synergy/clipboard_types.h"
-#include "synergy/key_types.h"
+#include "core/clipboard_types.h"
+#include "core/key_types.h"
 #include "base/Event.h"
 #include "base/Stopwatch.h"
 #include "base/String.h"
@@ -38,96 +38,96 @@ to the server and messages from the server to calls on the client.
 */
 class ServerProxy {
 public:
-	/*!
-	Process messages from the server on \p stream and forward to
-	\p client.
-	*/
-	ServerProxy(Client* client, synergy::IStream* stream, IEventQueue* events);
-	~ServerProxy();
+    /*!
+    Process messages from the server on \p stream and forward to
+    \p client.
+    */
+    ServerProxy(Client* client, synergy::IStream* stream, IEventQueue* events);
+    ~ServerProxy();
 
-	//! @name manipulators
-	//@{
+    //! @name manipulators
+    //@{
 
-	void				onInfoChanged();
-	bool				onGrabClipboard(ClipboardID);
-	void				onClipboardChanged(ClipboardID, const IClipboard*);
+    void                onInfoChanged();
+    bool                onGrabClipboard(ClipboardID);
+    void                onClipboardChanged(ClipboardID, const IClipboard*);
 
-	//@}
+    //@}
 
-	// sending file chunk to server
-	void				fileChunkSending(UInt8 mark, char* data, size_t dataSize);
+    // sending file chunk to server
+    void                fileChunkSending(UInt8 mark, char* data, size_t dataSize);
 
-	// sending dragging information to server
-	void				sendDragInfo(UInt32 fileCount, const char* info, size_t size);
-	
+    // sending dragging information to server
+    void                sendDragInfo(UInt32 fileCount, const char* info, size_t size);
+    
 #ifdef TEST_ENV
-	void				handleDataForTest() { handleData(Event(), NULL); }
+    void                handleDataForTest() { handleData(Event(), NULL); }
 #endif
 
 protected:
-	enum EResult { kOkay, kUnknown, kDisconnect };
-	EResult				parseHandshakeMessage(const UInt8* code);
-	EResult				parseMessage(const UInt8* code);
+    enum EResult { kOkay, kUnknown, kDisconnect };
+    EResult                parseHandshakeMessage(const UInt8* code);
+    EResult                parseMessage(const UInt8* code);
 
 private:
-	// if compressing mouse motion then send the last motion now
-	void				flushCompressedMouse();
+    // if compressing mouse motion then send the last motion now
+    void                flushCompressedMouse();
 
-	void				sendInfo(const ClientInfo&);
+    void                sendInfo(const ClientInfo&);
 
-	void				resetKeepAliveAlarm();
-	void				setKeepAliveRate(double);
+    void                resetKeepAliveAlarm();
+    void                setKeepAliveRate(double);
 
-	// modifier key translation
-	KeyID				translateKey(KeyID) const;
-	KeyModifierMask			translateModifierMask(KeyModifierMask) const;
+    // modifier key translation
+    KeyID                translateKey(KeyID) const;
+    KeyModifierMask            translateModifierMask(KeyModifierMask) const;
 
-	// event handlers
-	void				handleData(const Event&, void*);
-	void				handleKeepAliveAlarm(const Event&, void*);
+    // event handlers
+    void                handleData(const Event&, void*);
+    void                handleKeepAliveAlarm(const Event&, void*);
 
-	// message handlers
-	void				enter();
-	void				leave();
-	void				setClipboard();
-	void				grabClipboard();
-	void				keyDown();
-	void				keyRepeat();
-	void				keyUp();
-	void				mouseDown();
-	void				mouseUp();
-	void				mouseMove();
-	void				mouseRelativeMove();
-	void				mouseWheel();
-	void				screensaver();
-	void				resetOptions();
-	void				setOptions();
-	void				queryInfo();
-	void				infoAcknowledgment();
-	void				fileChunkReceived();
-	void				dragInfoReceived();
-	void				handleClipboardSendingEvent(const Event&, void*);
+    // message handlers
+    void                enter();
+    void                leave();
+    void                setClipboard();
+    void                grabClipboard();
+    void                keyDown();
+    void                keyRepeat();
+    void                keyUp();
+    void                mouseDown();
+    void                mouseUp();
+    void                mouseMove();
+    void                mouseRelativeMove();
+    void                mouseWheel();
+    void                screensaver();
+    void                resetOptions();
+    void                setOptions();
+    void                queryInfo();
+    void                infoAcknowledgment();
+    void                fileChunkReceived();
+    void                dragInfoReceived();
+    void                handleClipboardSendingEvent(const Event&, void*);
 
 private:
-	typedef EResult (ServerProxy::*MessageParser)(const UInt8*);
+    typedef EResult (ServerProxy::*MessageParser)(const UInt8*);
 
-	Client*			m_client;
-	synergy::IStream*	m_stream;
+    Client*            m_client;
+    synergy::IStream*    m_stream;
 
-	UInt32				m_seqNum;
+    UInt32                m_seqNum;
 
-	bool				m_compressMouse;
-	bool				m_compressMouseRelative;
-	SInt32				m_xMouse, m_yMouse;
-	SInt32				m_dxMouse, m_dyMouse;
+    bool                m_compressMouse;
+    bool                m_compressMouseRelative;
+    SInt32                m_xMouse, m_yMouse;
+    SInt32                m_dxMouse, m_dyMouse;
 
-	bool				m_ignoreMouse;
+    bool                m_ignoreMouse;
 
-	KeyModifierID		m_modifierTranslationTable[kKeyModifierIDLast];
+    KeyModifierID        m_modifierTranslationTable[kKeyModifierIDLast]{};
 
-	double				m_keepAliveAlarm;
-	EventQueueTimer*	m_keepAliveAlarmTimer;
+    double                m_keepAliveAlarm;
+    EventQueueTimer*    m_keepAliveAlarmTimer;
 
-	MessageParser		m_parser;
-	IEventQueue*		m_events;
+    MessageParser        m_parser;
+    IEventQueue*        m_events;
 };

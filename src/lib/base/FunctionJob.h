@@ -26,14 +26,14 @@ A job class that invokes a function.
 */
 class FunctionJob : public IJob {
 public:
-	//! run() invokes \c func(arg)
-	FunctionJob(void (*func)(void*), void* arg = NULL);
-	virtual ~FunctionJob();
+    //! run() invokes \c func(arg)
+    FunctionJob(void (*func)(void*), void* arg = NULL);
+    virtual ~FunctionJob();
 
-	// IJob overrides
-	virtual void		run();
+    // IJob overrides
+    virtual void        run();
 
 private:
-	void				(*m_func)(void*);
-	void*				m_arg;
+    void                (*m_func)(void*);
+    void*                m_arg;
 };

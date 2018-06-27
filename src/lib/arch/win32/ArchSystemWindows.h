@@ -25,15 +25,15 @@
 //! Win32 implementation of IArchString
 class ArchSystemWindows : public IArchSystem {
 public:
-	ArchSystemWindows();
-	virtual ~ArchSystemWindows();
+    ArchSystemWindows();
+    virtual ~ArchSystemWindows();
 
-	// IArchSystem overrides
-	virtual std::string	getOSName() const;
-	virtual std::string getPlatformName() const;
-	virtual std::string setting(const std::string& valueName) const;
-	virtual void setting(const std::string& valueName, const std::string& valueString) const;
-	virtual std::string getLibsUsed(void) const;
+    // IArchSystem overrides
+    virtual std::string    getOSName() const;
+    virtual std::string getPlatformName() const;
+    virtual std::string setting(const std::string& valueName) const;
+    virtual void setting(const std::string& valueName, const std::string& valueString) const;
+    virtual std::string getLibsUsed(void) const;
 
-	bool isWOW64() const;
+    bool isWOW64() const;
 };

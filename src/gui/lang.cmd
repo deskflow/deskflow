@@ -1,1 +1,0 @@
-lupdate -noobsolete gui.pro -ts gui.ts

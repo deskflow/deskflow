@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO: fix tests
+// TODO(andrew): fix tests
 #if 0
 
 #include "test/mock/synergy/MockEventQueue.h"
@@ -30,19 +30,19 @@ using ::testing::_;
 // TODO: not working on build machine for some reason
 TEST(CXWindowsScreenSaverTests, activate_defaultScreen_todo)
 {
-	Display* display = XOpenDisplay(":0.0");
-	Window window = DefaultRootWindow(display);
-	MockEventQueue eventQueue;
-	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(1);
-	CXWindowsScreenSaver screenSaver(
-		display, window, NULL, &eventQueue);
+    Display* display = XOpenDisplay(":0.0");
+    Window window = DefaultRootWindow(display);
+    MockEventQueue eventQueue;
+    EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(1);
+    CXWindowsScreenSaver screenSaver(
+        display, window, NULL, &eventQueue);
 
-	screenSaver.activate();
+    screenSaver.activate();
 
-	bool isActive = screenSaver.isActive();
+    bool isActive = screenSaver.isActive();
 
-	screenSaver.deactivate();
+    screenSaver.deactivate();
 
-	ASSERT_EQ(true, isActive);
+    ASSERT_EQ(true, isActive);
 }
 #endif

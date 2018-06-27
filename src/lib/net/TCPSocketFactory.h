@@ -26,16 +26,16 @@ class SocketMultiplexer;
 //! Socket factory for TCP sockets
 class TCPSocketFactory : public ISocketFactory {
 public:
-	TCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
-	virtual ~TCPSocketFactory();
+    TCPSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+    virtual ~TCPSocketFactory();
 
-	// ISocketFactory overrides
-	virtual IDataSocket*
-						create(bool secure) const;
-	virtual IListenSocket*
-						createListen(bool secure) const;
+    // ISocketFactory overrides
+    virtual IDataSocket*
+                        create() const;
+    virtual IListenSocket*
+                        createListen() const;
 
 private:
-	IEventQueue*		m_events;
-	SocketMultiplexer*	m_socketMultiplexer;
+    IEventQueue*        m_events;
+    SocketMultiplexer*    m_socketMultiplexer;
 };

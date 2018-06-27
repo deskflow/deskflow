@@ -18,19 +18,19 @@
 
 #pragma once
 
-#include "synergy/KeyMap.h"
+#include "core/KeyMap.h"
 
 #include "test/global/gmock.h"
 
 class MockKeyMap : public synergy::KeyMap
 {
 public:
-	MOCK_METHOD1(swap, void(KeyMap&));
-	MOCK_METHOD0(finish, void());
-	MOCK_METHOD2(foreachKey, void(ForeachKeyCallback, void*));
-	MOCK_METHOD1(addHalfDuplexModifier, void(KeyID));
-	MOCK_CONST_METHOD2(isHalfDuplex, bool(KeyID, KeyButton));
-	MOCK_CONST_METHOD7(mapKey, const KeyMap::KeyItem*(
-		Keystrokes&, KeyID, SInt32, ModifierToKeys&, KeyModifierMask&,
-		KeyModifierMask, bool));
+    MOCK_METHOD1(swap, void(KeyMap&));
+    MOCK_METHOD0(finish, void());
+    MOCK_METHOD2(foreachKey, void(ForeachKeyCallback, void*));
+    MOCK_METHOD1(addHalfDuplexModifier, void(KeyID));
+    MOCK_CONST_METHOD2(isHalfDuplex, bool(KeyID, KeyButton));
+    MOCK_CONST_METHOD7(mapKey, const KeyMap::KeyItem*(
+        Keystrokes&, KeyID, SInt32, ModifierToKeys&, KeyModifierMask&,
+        KeyModifierMask, bool));
 };

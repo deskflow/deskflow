@@ -24,6 +24,6 @@
 
 class ArchConsoleWindows : public ArchConsoleStd {
 public:
-	ArchConsoleWindows();
-	virtual ~ArchConsoleWindows();
+    ArchConsoleWindows();
+    virtual ~ArchConsoleWindows();
 };

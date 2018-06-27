@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ClipboardChunk.h"
-#include "synergy/protocol_types.h"
+#include "core/ClipboardChunk.h"
+#include "core/protocol_types.h"
 
 #include "test/global/gtest.h"
 
@@ -36,7 +36,7 @@ TEST(ClipboardChunkTests, start_formatStartChunk)
 	EXPECT_EQ('0', chunk->m_chunk[7]);
 	EXPECT_EQ('\0', chunk->m_chunk[8]);
 
-	delete chunk;
+    delete chunk;
 }
 
 TEST(ClipboardChunkTests, data_formatDataChunk)
@@ -62,7 +62,7 @@ TEST(ClipboardChunkTests, data_formatDataChunk)
 	EXPECT_EQ('a', chunk->m_chunk[14]);
 	EXPECT_EQ('\0', chunk->m_chunk[15]);
 
-	delete chunk;
+    delete chunk;
 }
 
 TEST(ClipboardChunkTests, end_formatDataChunk)
@@ -78,5 +78,5 @@ TEST(ClipboardChunkTests, end_formatDataChunk)
 	EXPECT_EQ(kDataEnd, chunk->m_chunk[5]);
 	EXPECT_EQ('\0', chunk->m_chunk[6]);
 
-	delete chunk;
+    delete chunk;
 }

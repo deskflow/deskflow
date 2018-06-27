@@ -25,18 +25,18 @@
 //
 
 Lock::Lock(const Mutex* mutex) :
-	m_mutex(mutex)
+    m_mutex(mutex)
 {
-	m_mutex->lock();
+    m_mutex->lock();
 }
 
 Lock::Lock(const CondVarBase* cv) :
-	m_mutex(cv->getMutex())
+    m_mutex(cv->getMutex())
 {
-	m_mutex->lock();
+    m_mutex->lock();
 }
 
 Lock::~Lock()
 {
-	m_mutex->unlock();
+    m_mutex->unlock();
 }

@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- *
+ * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- *
+ * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "synwinhk/synwinhk.h"
-#include "synergy/key_types.h"
-#include "synergy/mouse_types.h"
-#include "synergy/option_types.h"
+#include "platform/synwinhk.h"
+#include "core/key_types.h"
+#include "core/mouse_types.h"
+#include "core/option_types.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 #include "base/String.h"
@@ -55,253 +55,244 @@ object don't have to know anything about desks.
 */
 class MSWindowsDesks {
 public:
-	//! Constructor
-	/*!
-	\p isPrimary is true iff the desk is for a primary screen.
-	\p screensaver points to a screensaver object and it's used
-	only to check if the screensaver is active.  The \p updateKeys
-	job is adopted and is called when the key state should be
-	updated in a thread attached to the current desk.
-	\p hookLibrary must be a handle to the hook library.
-	*/
-	MSWindowsDesks(
-		bool isPrimary, bool noHooks, HINSTANCE hookLibrary,
-		const IScreenSaver* screensaver, IEventQueue* events,
-		IJob* updateKeys, bool stopOnDeskSwitch);
-	~MSWindowsDesks();
+    //! Constructor
+    /*!
+    \p isPrimary is true iff the desk is for a primary screen.
+    \p screensaver points to a screensaver object and it's used
+    only to check if the screensaver is active.  The \p updateKeys
+    job is adopted and is called when the key state should be
+    updated in a thread attached to the current desk.
+    \p hookLibrary must be a handle to the hook library.
+    */
+    MSWindowsDesks(
+        bool isPrimary, bool noHooks,
+        const IScreenSaver* screensaver, IEventQueue* events,
+        IJob* updateKeys, bool stopOnDeskSwitch);
+    ~MSWindowsDesks();
 
-	//! @name manipulators
-	//@{
+    //! @name manipulators
+    //@{
 
-	//! Enable desk tracking
-	/*!
-	Enables desk tracking.  While enabled, this object checks to see
-	if the desk has changed and ensures that the hooks are installed
-	on the new desk.  \c setShape should be called at least once
-	before calling \c enable.
-	*/
-	void				enable();
+    //! Enable desk tracking
+    /*!
+    Enables desk tracking.  While enabled, this object checks to see
+    if the desk has changed and ensures that the hooks are installed
+    on the new desk.  \c setShape should be called at least once
+    before calling \c enable.
+    */
+    void                enable();
 
-	//! Disable desk tracking
-	/*!
-	Disables desk tracking.  \sa enable.
-	*/
-	void				disable();
+    //! Disable desk tracking
+    /*!
+    Disables desk tracking.  \sa enable.
+    */
+    void                disable();
 
-	//! Notify of entering a desk
-	/*!
-	Prepares a desk for when the cursor enters it.
-	*/
-	void				enter();
+    //! Notify of entering a desk
+    /*!
+    Prepares a desk for when the cursor enters it.
+    */
+    void                enter();
 
-	//! Notify of leaving a desk
-	/*!
-	Prepares a desk for when the cursor leaves it.
-	*/
-	void				leave(HKL keyLayout);
+    //! Notify of leaving a desk
+    /*!
+    Prepares a desk for when the cursor leaves it.
+    */
+    void                leave(HKL keyLayout);
 
-	//! Notify of options changes
-	/*!
-	Resets all options to their default values.
-	*/
-	void				resetOptions();
+    //! Notify of options changes
+    /*!
+    Resets all options to their default values.
+    */
+    void                resetOptions();
 
-	//! Notify of options changes
-	/*!
-	Set options to given values.  Ignores unknown options and doesn't
-	modify options that aren't given in \c options.
-	*/
-	void				setOptions(const OptionsList& options);
+    //! Notify of options changes
+    /*!
+    Set options to given values.  Ignores unknown options and doesn't
+    modify options that aren't given in \c options.
+    */
+    void                setOptions(const OptionsList& options);
 
-	//! Update the key state
-	/*!
-	Causes the key state to get updated to reflect the physical keyboard
-	state and current keyboard mapping.
-	*/
-	void				updateKeys();
+    //! Update the key state
+    /*!
+    Causes the key state to get updated to reflect the physical keyboard
+    state and current keyboard mapping.
+    */
+    void                updateKeys();
 
-	//! Tell desk about new size
-	/*!
-	This tells the desks that the display size has changed.
-	*/
-	void				setShape(SInt32 x, SInt32 y,
-							SInt32 width, SInt32 height,
-							SInt32 xCenter, SInt32 yCenter, bool isMultimon);
+    //! Tell desk about new size
+    /*!
+    This tells the desks that the display size has changed.
+    */
+    void                setShape(SInt32 x, SInt32 y,
+                            SInt32 width, SInt32 height,
+                            SInt32 xCenter, SInt32 yCenter, bool isMultimon);
 
-	//! Install/uninstall screensaver hooks
-	/*!
-	If \p install is true then the screensaver hooks are installed and,
-	if desk tracking is enabled, updated whenever the desk changes.  If
-	\p install is false then the screensaver hooks are uninstalled.
-	*/
-	void				installScreensaverHooks(bool install);
+    //! Install/uninstall screensaver hooks
+    /*!
+    If \p install is true then the screensaver hooks are installed and,
+    if desk tracking is enabled, updated whenever the desk changes.  If
+    \p install is false then the screensaver hooks are uninstalled.
+    */
+    void                installScreensaverHooks(bool install);
 
-	//! Start ignoring user input
-	/*!
-	Starts ignoring user input so we don't pick up our own synthesized events.
-	*/
-	void				fakeInputBegin();
+    //! Start ignoring user input
+    /*!
+    Starts ignoring user input so we don't pick up our own synthesized events.
+    */
+    void                fakeInputBegin();
 
-	//! Stop ignoring user input
-	/*!
-	Undoes whatever \c fakeInputBegin() did.
-	*/
-	void				fakeInputEnd();
+    //! Stop ignoring user input
+    /*!
+    Undoes whatever \c fakeInputBegin() did.
+    */
+    void                fakeInputEnd();
 
-	//@}
-	//! @name accessors
-	//@{
+    //@}
+    //! @name accessors
+    //@{
 
-	//! Get cursor position
-	/*!
-	Return the current position of the cursor in \c x and \c y.
-	*/
-	void				getCursorPos(SInt32& x, SInt32& y) const;
+    //! Get cursor position
+    /*!
+    Return the current position of the cursor in \c x and \c y.
+    */
+    void                getCursorPos(SInt32& x, SInt32& y) const;
 
-	//! Fake key press/release
-	/*!
-	Synthesize a press or release of key \c button.
-	*/
-	void				fakeKeyEvent(WORD virtualKey, WORD scanCode,
+    //! Fake key press/release
+    /*!
+    Synthesize a press or release of key \c button.
+    */
+    void				fakeKeyEvent(WORD virtualKey, WORD scanCode,
 							DWORD flags, bool isAutoRepeat) const;
-	//void				fakeKeyEvent(KeyButton button, UINT virtualKey,
-	//						bool press, bool isAutoRepeat) const;
+	//void              fakeKeyEvent(KeyButton button, UINT virtualKey,
+	//                      bool press, bool isAutoRepeat) const;
 
-	//! Fake mouse press/release
-	/*!
-	Synthesize a press or release of mouse button \c id.
-	*/
-	void				fakeMouseButton(ButtonID id, bool press);
+    //! Fake mouse press/release
+    /*!
+    Synthesize a press or release of mouse button \c id.
+    */
+    void                fakeMouseButton(ButtonID id, bool press);
 
-	//! Fake mouse move
-	/*!
-	Synthesize a mouse move to the absolute coordinates \c x,y.
-	*/
-	void				fakeMouseMove(SInt32 x, SInt32 y) const;
+    //! Fake mouse move
+    /*!
+    Synthesize a mouse move to the absolute coordinates \c x,y.
+    */
+    void                fakeMouseMove(SInt32 x, SInt32 y) const;
 
-	//! Fake mouse move
-	/*!
-	Synthesize a mouse move to the relative coordinates \c dx,dy.
-	*/
-	void				fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
+    //! Fake mouse move
+    /*!
+    Synthesize a mouse move to the relative coordinates \c dx,dy.
+    */
+    void                fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
 
-	//! Fake mouse wheel
-	/*!
-	Synthesize a mouse wheel event of amount \c delta in direction \c axis.
-	*/
-	void				fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
+    //! Fake mouse wheel
+    /*!
+    Synthesize a mouse wheel event of amount \c delta in direction \c axis.
+    */
+    void                fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
 
-	//@}
-
-private:
-	class Desk {
-	public:
-		String			m_name;
-		Thread*		m_thread;
-		DWORD			m_threadID;
-		DWORD			m_targetID;
-		HDESK			m_desk;
-		HWND			m_window;
-		HWND			m_foregroundWindow;
-		bool			m_lowLevel;
-	};
-	typedef std::map<String, Desk*> Desks;
-
-	// initialization and shutdown operations
-	void				queryHookLibrary(HINSTANCE hookLibrary);
-	HCURSOR				createBlankCursor() const;
-	void				destroyCursor(HCURSOR cursor) const;
-	ATOM				createDeskWindowClass(bool isPrimary) const;
-	void				destroyClass(ATOM windowClass) const;
-	HWND				createWindow(ATOM windowClass, const char* name) const;
-	void				destroyWindow(HWND) const;
-
-	// message handlers
-	void				deskMouseMove(SInt32 x, SInt32 y) const;
-	void				deskMouseRelativeMove(SInt32 dx, SInt32 dy) const;
-	void				deskEnter(Desk* desk);
-	void				deskLeave(Desk* desk, HKL keyLayout);
-	void				deskThread(void* vdesk);
-
-	// desk switch checking and handling
-	Desk*				addDesk(const String& name, HDESK hdesk);
-	void				removeDesks();
-	void				checkDesk();
-	bool				isDeskAccessible(const Desk* desk) const;
-	void				handleCheckDesk(const Event& event, void*);
-
-	// communication with desk threads
-	void				waitForDesk() const;
-	void				sendMessage(UINT, WPARAM, LPARAM) const;
-
-	// work around for messed up keyboard events from low-level hooks
-	HWND				getForegroundWindow() const;
-
-	// desk API wrappers
-	HDESK				openInputDesktop();
-	void				closeDesktop(HDESK);
-	String				getDesktopName(HDESK);
-
-	// our desk window procs
-	static LRESULT CALLBACK primaryDeskProc(HWND, UINT, WPARAM, LPARAM);
-	static LRESULT CALLBACK secondaryDeskProc(HWND, UINT, WPARAM, LPARAM);
+    //@}
 
 private:
-	// true if screen is being used as a primary screen, false otherwise
-	bool				m_isPrimary;
+    class Desk {
+    public:
+        String            m_name;
+        Thread*        m_thread;
+        DWORD            m_threadID;
+        DWORD            m_targetID;
+        HDESK            m_desk;
+        HWND            m_window;
+        HWND            m_foregroundWindow;
+        bool            m_lowLevel;
+    };
+    typedef std::map<String, Desk*> Desks;
 
-	// true if hooks are not to be installed (useful for debugging)
-	bool				m_noHooks;
+    // initialization and shutdown operations
+    HCURSOR                createBlankCursor() const;
+    void                destroyCursor(HCURSOR cursor) const;
+    ATOM                createDeskWindowClass(bool isPrimary) const;
+    void                destroyClass(ATOM windowClass) const;
+    HWND                createWindow(ATOM windowClass, const char* name) const;
+    void                destroyWindow(HWND) const;
 
-	// true if mouse has entered the screen
-	bool				m_isOnScreen;
+    // message handlers
+    void                deskMouseMove(SInt32 x, SInt32 y) const;
+    void                deskMouseRelativeMove(SInt32 dx, SInt32 dy) const;
+    void                deskEnter(Desk* desk);
+    void                deskLeave(Desk* desk, HKL keyLayout);
+    void                deskThread(void* vdesk);
 
-	// our resources
-	ATOM				m_deskClass;
-	HCURSOR				m_cursor;
+    // desk switch checking and handling
+    Desk*                addDesk(const String& name, HDESK hdesk);
+    void                removeDesks();
+    void                checkDesk();
+    bool                isDeskAccessible(const Desk* desk) const;
+    void                handleCheckDesk(const Event& event, void*);
 
-	// screen shape stuff
-	SInt32				m_x, m_y;
-	SInt32				m_w, m_h;
-	SInt32				m_xCenter, m_yCenter;
+    // communication with desk threads
+    void                waitForDesk() const;
+    void                sendMessage(UINT, WPARAM, LPARAM) const;
 
-	// true if system appears to have multiple monitors
-	bool				m_multimon;
+    // work around for messed up keyboard events from low-level hooks
+    HWND                getForegroundWindow() const;
 
-	// the timer used to check for desktop switching
-	EventQueueTimer*	m_timer;
+    // desk API wrappers
+    HDESK                openInputDesktop();
+    void                closeDesktop(HDESK);
+    String                getDesktopName(HDESK);
 
-	// screen saver stuff
-	DWORD				m_threadID;
-	const IScreenSaver*	m_screensaver;
-	bool				m_screensaverNotify;
+    // our desk window procs
+    static LRESULT CALLBACK primaryDeskProc(HWND, UINT, WPARAM, LPARAM);
+    static LRESULT CALLBACK secondaryDeskProc(HWND, UINT, WPARAM, LPARAM);
 
-	// the current desk and it's name
-	Desk*				m_activeDesk;
-	String				m_activeDeskName;
+private:
+    // true if screen is being used as a primary screen, false otherwise
+    bool                m_isPrimary;
 
-	// one desk per desktop and a cond var to communicate with it
-	Mutex				m_mutex;
-	CondVar<bool>		m_deskReady;
-	Desks				m_desks;
+    // true if hooks are not to be installed (useful for debugging)
+    bool                m_noHooks;
 
-	// hook library stuff
-	InstallFunc			m_install;
-	UninstallFunc		m_uninstall;
-	InstallScreenSaverFunc
-						m_installScreensaver;
-	UninstallScreenSaverFunc
-						m_uninstallScreensaver;
+    // true if mouse has entered the screen
+    bool                m_isOnScreen;
 
-	// keyboard stuff
-	IJob*				m_updateKeys;
-	HKL					m_keyLayout;
+    // our resources
+    ATOM                m_deskClass;
+    HCURSOR                m_cursor;
 
-	// options
-	bool				m_leaveForegroundOption;
+    // screen shape stuff
+    SInt32                m_x, m_y;
+    SInt32                m_w, m_h;
+    SInt32                m_xCenter, m_yCenter;
 
-	IEventQueue*		m_events;
+    // true if system appears to have multiple monitors
+    bool                m_multimon;
 
-	// true if program should stop on desk switch.
-	bool				m_stopOnDeskSwitch;
+    // the timer used to check for desktop switching
+    EventQueueTimer*    m_timer;
+
+    // screen saver stuff
+    DWORD                m_threadID;
+    const IScreenSaver*    m_screensaver;
+    bool                m_screensaverNotify;
+
+    // the current desk and it's name
+    Desk*                m_activeDesk;
+    String                m_activeDeskName;
+
+    // one desk per desktop and a cond var to communicate with it
+    Mutex                m_mutex;
+    CondVar<bool>        m_deskReady;
+    Desks                m_desks;
+
+    // keyboard stuff
+    IJob*                m_updateKeys;
+    HKL                    m_keyLayout;
+
+    // options
+    bool                m_leaveForegroundOption;
+
+    IEventQueue*        m_events;
+
+    // true if program should stop on desk switch.
+    bool                m_stopOnDeskSwitch;
 };

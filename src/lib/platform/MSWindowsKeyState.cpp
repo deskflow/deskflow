@@ -1075,9 +1075,9 @@ MSWindowsKeyState::getKeyMap(synergy::KeyMap& keyMap)
 			}
 		}
 
-		// add the extended printscreen (alt+printscreen)
-		// or maybe it's the non-extended printscreen?
-		// scancodes and keyboard inputs are complicated
+        // add the extended printscreen (alt+printscreen)
+        // or maybe it's the non-extended printscreen?
+        // scancodes and keyboard inputs are complicated
 		if (m_buttonToVK[0x54u] == 0) {
 			m_buttonToVK[0x54u] = VK_SNAPSHOT;
 		}

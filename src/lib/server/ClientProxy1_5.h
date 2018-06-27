@@ -27,15 +27,15 @@ class IEventQueue;
 //! Proxy for client implementing protocol version 1.5
 class ClientProxy1_5 : public ClientProxy1_4 {
 public:
-	ClientProxy1_5(const String& name, synergy::IStream* adoptedStream, Server* server, IEventQueue* events);
-	~ClientProxy1_5();
+    ClientProxy1_5(const String& name, synergy::IStream* stream, Server* server, IEventQueue* events);
+    ~ClientProxy1_5();
 
-	virtual void		sendDragInfo(UInt32 fileCount, const char* info, size_t size);
-	virtual void		fileChunkSending(UInt8 mark, char* data, size_t dataSize);
-	virtual bool		parseMessage(const UInt8* code);
-	void				fileChunkReceived();
-	void				dragInfoReceived();
+    virtual void        sendDragInfo(UInt32 fileCount, const char* info, size_t size);
+    virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize);
+    virtual bool        parseMessage(const UInt8* code);
+    void                fileChunkReceived();
+    void                dragInfoReceived();
 
 private:
-	IEventQueue*		m_events;
+    IEventQueue*        m_events;
 };

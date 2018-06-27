@@ -23,12 +23,12 @@
 //! Proxy for client implementing protocol version 1.1
 class ClientProxy1_1 : public ClientProxy1_0 {
 public:
-	ClientProxy1_1(const String& name, synergy::IStream* adoptedStream, IEventQueue* events);
-	~ClientProxy1_1();
+    ClientProxy1_1(const String& name, synergy::IStream* stream, IEventQueue* events);
+    ~ClientProxy1_1();
 
-	// IClient overrides
-	virtual void		keyDown(KeyID, KeyModifierMask, KeyButton);
-	virtual void		keyRepeat(KeyID, KeyModifierMask,
-							SInt32 count, KeyButton);
-	virtual void		keyUp(KeyID, KeyModifierMask, KeyButton);
+    // IClient overrides
+    virtual void        keyDown(KeyID, KeyModifierMask, KeyButton);
+    virtual void        keyRepeat(KeyID, KeyModifierMask,
+                            SInt32 count, KeyButton);
+    virtual void        keyUp(KeyID, KeyModifierMask, KeyButton);
 };

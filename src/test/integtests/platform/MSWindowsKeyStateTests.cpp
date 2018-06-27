@@ -40,7 +40,7 @@ class MSWindowsKeyStateTests : public ::testing::Test
 protected:
 	virtual void SetUp()
 	{
-		m_hook.loadLibrary();
+		m_hook.loadLibrary(TRUE);
 		m_screensaver = new MSWindowsScreenSaver();
 	}
 
@@ -52,7 +52,7 @@ protected:
 	MSWindowsDesks* newDesks(IEventQueue* eventQueue)
 	{
 		return new MSWindowsDesks(
-			true, false, m_hook.getInstance(), m_screensaver, eventQueue,
+            true, false, m_screensaver, eventQueue,
 			new TMethodJob<MSWindowsKeyStateTests>(
 				this, &MSWindowsKeyStateTests::updateKeysCB), false);
 	}
