@@ -144,10 +144,10 @@ private:
     ButtonID            mapMacButtonToBarrier(UInt16) const;
 
     // map mac scroll wheel value to a barrier scroll wheel value
-    SInt32                mapScrollWheelToBarrier(SInt32) const;
+    SInt32                mapScrollWheelToBarrier(float) const;
 
     // map barrier scroll wheel value to a mac scroll wheel value
-    SInt32                mapScrollWheelFromBarrier(SInt32) const;
+    SInt32                mapScrollWheelFromBarrier(float) const;
 
     // get the current scroll wheel speed
     double                getScrollSpeed() const;

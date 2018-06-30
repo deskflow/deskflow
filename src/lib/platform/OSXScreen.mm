@@ -1421,7 +1421,7 @@ OSXScreen::mapMacButtonToBarrier(UInt16 macButton) const
 }
 
 SInt32
-OSXScreen::mapScrollWheelToBarrier(SInt32 x) const
+OSXScreen::mapScrollWheelToBarrier(float x) const
 {
 	// return accelerated scrolling but not exponentially scaled as it is
 	// on the mac.
@@ -1430,7 +1430,7 @@ OSXScreen::mapScrollWheelToBarrier(SInt32 x) const
 }
 
 SInt32
-OSXScreen::mapScrollWheelFromBarrier(SInt32 x) const
+OSXScreen::mapScrollWheelFromBarrier(float x) const
 {
 	// use server's acceleration with a little boost since other platforms
 	// take one wheel step as a larger step than the mac does.
@@ -1948,9 +1948,9 @@ OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 			break;
 		case kCGEventScrollWheel:
 			screen->onMouseWheel(screen->mapScrollWheelToBarrier(
-								 CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis2)),
+								 CGEventGetIntegerValueField(event, kCGScrollWheelEventFixedPtDeltaAxis2) / 65536.0f),
 								 screen->mapScrollWheelToBarrier(
-								 CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis1)));
+								 CGEventGetIntegerValueField(event, kCGScrollWheelEventFixedPtDeltaAxis1) / 65536.0f));
 			break;
 		case kCGEventKeyDown:
 		case kCGEventKeyUp:
