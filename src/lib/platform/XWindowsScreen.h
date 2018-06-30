@@ -136,6 +136,10 @@ private:
     void                onMouseRelease(const XButtonEvent&);
     void                onMouseMove(const XMotionEvent&);
 
+    // Returns the number of scroll events needed after the current delta has
+    // been taken into account
+    int                 accumulateMouseScroll(SInt32 yDelta) const;
+
     bool                detectXI2();
 #ifdef HAVE_XI2
     void                selectXIRawMotion();
@@ -172,7 +176,14 @@ private:
 
     // true if screen is being used as a primary screen, false otherwise
     bool                m_isPrimary;
+
+    // The size of a smallest supported scroll event, in points
     int                 m_mouseScrollDelta;
+
+    // Accumulates scrolls of less than m_mouseScrollDelta across multiple
+    // scroll events. We dispatch a scroll event whenever the accumulated scroll
+    // becomes larger than m_mouseScrollDelta
+    mutable int         m_accumulatedScroll;
 
     Display*            m_display;
     Window                m_root;

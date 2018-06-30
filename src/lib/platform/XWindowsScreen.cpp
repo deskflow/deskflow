@@ -99,6 +99,7 @@ XWindowsScreen::XWindowsScreen(
 		IEventQueue* events) :
 	m_isPrimary(isPrimary),
 	m_mouseScrollDelta(mouseScrollDelta),
+    m_accumulatedScroll(0),
 	m_display(NULL),
 	m_root(None),
 	m_window(None),
@@ -865,9 +866,11 @@ XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const
 		return;
 	}
 
-	// choose button depending on rotation direction
-	const unsigned int xButton = mapButtonToX(static_cast<ButtonID>(
-												(yDelta >= 0) ? -1 : -2));
+    int numEvents = accumulateMouseScroll(yDelta);
+
+    // choose button depending on rotation direction
+    const unsigned int xButton = mapButtonToX(static_cast<ButtonID>(
+												(numEvents >= 0) ? -1 : -2));
 	if (xButton == 0) {
 		// If we get here, then the XServer does not support the scroll
 		// wheel buttons, so send PageUp/PageDown keystrokes instead.
@@ -886,20 +889,14 @@ XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const
 		return;
 	}
 
-	// now use absolute value of delta
-	if (yDelta < 0) {
-		yDelta = -yDelta;
-	}
-
-	if (yDelta < m_mouseScrollDelta) {
-		LOG((CLOG_WARN "Wheel scroll delta (%d) smaller than threshold (%d)", yDelta, m_mouseScrollDelta));
-	}
+    numEvents = std::abs(numEvents);
 
 	// send as many clicks as necessary
-	for (; yDelta >= m_mouseScrollDelta; yDelta -= m_mouseScrollDelta) {
+    for (; numEvents > 0; numEvents--) {
 		XTestFakeButtonEvent(m_display, xButton, True, CurrentTime);
 		XTestFakeButtonEvent(m_display, xButton, False, CurrentTime);
 	}
+
 	XFlush(m_display);
 }
 
@@ -1641,6 +1638,15 @@ XWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(x, y));
 		}
 	}
+}
+
+int
+XWindowsScreen::accumulateMouseScroll(SInt32 yDelta) const
+{
+    m_accumulatedScroll += yDelta;
+    int numEvents = m_accumulatedScroll / m_mouseScrollDelta;
+    m_accumulatedScroll -= numEvents * m_mouseScrollDelta;
+    return numEvents;
 }
 
 Cursor
