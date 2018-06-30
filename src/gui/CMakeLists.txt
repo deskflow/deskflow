@@ -22,7 +22,7 @@ add_executable (barrier WIN32
 
 include_directories (./src)
 
-qt5_use_modules (barrier Core Widgets Network)
+target_link_libraries (barrier Qt5::Core Qt5::Widgets Qt5::Network)
 target_compile_definitions (barrier PRIVATE -DBARRIER_VERSION_STAGE="${BARRIER_VERSION_STAGE}")
 target_compile_definitions (barrier PRIVATE -DBARRIER_REVISION="${BARRIER_REVISION}")
 
