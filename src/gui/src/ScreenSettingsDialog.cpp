@@ -23,6 +23,19 @@
 #include <QtGui>
 #include <QMessageBox>
 
+static const QRegExp ValidScreenName("[a-z0-9\\._-]{,255}", Qt::CaseInsensitive);
+
+static QString check_name_param(QString name)
+{
+    // after internationalization happens the default name "Unnamed" might
+    // be translated with spaces (or other chars). let's replace the spaces
+    // with dashes and just give up if that doesn't pass the regexp
+    name.replace(' ', '-');
+    if (ValidScreenName.exactMatch(name))
+        return name;
+    return "";
+}
+
 ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
     Ui::ScreenSettingsDialogBase(),
@@ -30,13 +43,11 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
 {
     setupUi(this);
 
-    QRegExp validScreenName("[a-z0-9\\._-]{,255}", Qt::CaseInsensitive);
-
-    m_pLineEditName->setText(m_pScreen->name());
-    m_pLineEditName->setValidator(new QRegExpValidator(validScreenName, m_pLineEditName));
+    m_pLineEditName->setText(check_name_param(m_pScreen->name()));
+    m_pLineEditName->setValidator(new QRegExpValidator(ValidScreenName, m_pLineEditName));
     m_pLineEditName->selectAll();
 
-    m_pLineEditAlias->setValidator(new QRegExpValidator(validScreenName, m_pLineEditName));
+    m_pLineEditAlias->setValidator(new QRegExpValidator(ValidScreenName, m_pLineEditName));
 
     for (int i = 0; i < m_pScreen->aliases().count(); i++)
         new QListWidgetItem(m_pScreen->aliases()[i], m_pListAliases);
