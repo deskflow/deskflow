@@ -303,7 +303,16 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     )
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
-    if (IS_DIRECTORY /usr/local/opt/openssl)
+    if (IS_DIRECTORY /opt/local)
+        # macports
+        set (OPENSSL_ROOT /opt/local)
+
+        set (OPENSSL_LIBS
+            ${OPENSSL_ROOT}/lib/libssl.a
+            ${OPENSSL_ROOT}/lib/libcrypto.a
+            z
+        )
+    elseif (IS_DIRECTORY /usr/local/opt/openssl)
         # brew
         set (OPENSSL_ROOT /usr/local/opt/openssl)
 
@@ -312,15 +321,6 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
         set (OPENSSL_LIBS
             ${OPENSSL_ROOT}/lib/libssl.a
             ${OPENSSL_ROOT}/lib/libcrypto.a
-        )
-    else(IS_DIRECTORY /opt/local)
-        # macports
-        set (OPENSSL_ROOT /opt/local)
-
-        set (OPENSSL_LIBS
-            ${OPENSSL_ROOT}/lib/libssl.a
-            ${OPENSSL_ROOT}/lib/libcrypto.a
-            z
         )
     endif()
 
