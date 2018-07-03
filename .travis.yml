@@ -3,6 +3,8 @@ language: cpp
 matrix:
   include:
     - os: linux
+      sudo: false
+      dist: trusty
       addons:
         apt:
           packages:
