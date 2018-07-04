@@ -446,6 +446,13 @@ void MainWindow::appendLogRaw(const QString& text)
 {
     foreach(QString line, text.split(QRegExp("\r|\n|\r\n"))) {
         if (!line.isEmpty()) {
+
+            // HACK: macOS 10.13.4+ spamming error lines in logs making them
+            // impossible to read and debug; giving users a red herring.
+            if (line.contains("calling TIS/TSM in non-main thread environment")) {
+                continue;
+            }
+
             m_pLogOutput->append(line);
             updateFromLogLine(line);
         }
