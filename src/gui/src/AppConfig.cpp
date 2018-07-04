@@ -143,7 +143,7 @@ void AppConfig::loadSettings()
     m_WizardLastRun = settings().value("wizardLastRun", 0).toInt();
     m_Language = settings().value("language", QLocale::system().name()).toString();
     m_StartedBefore = settings().value("startedBefore", false).toBool();
-    m_AutoConfig = settings().value("autoConfig", true).toBool();
+    m_AutoConfig = settings().value("autoConfig", false).toBool();
     QVariant elevateMode = settings().value("elevateModeEnum");
     if (!elevateMode.isValid()) {
         elevateMode = settings().value ("elevateMode",
