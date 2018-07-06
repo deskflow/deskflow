@@ -20,3 +20,9 @@ Not for the faint hearted. Only use these if you know what you're doing.
 * [Compiling](https://github.com/symless/synergy-core/wiki/Compiling) - Instructions on how to compile Synergy Core from source.
 * [Text Config](https://github.com/symless/synergy-core/wiki/Text-Config) - Write a text config file when running Synergy Core manually.
 * [Command Line](https://github.com/symless/synergy-core/wiki/Command-Line) - Go full manual and run Synergy Core from the command line.
+
+## Awesome Tools
+
+Here are some of the awesome tools Symless make use of across various projects including Synergy.
+
+<a href="https://backtrace.io/?utm_source=referral&utm_medium=SymlessEA"><img src="https://i.imgur.com/Q2vwqzf.png" alt="Backtrace" width="100" /></a>
