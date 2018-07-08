@@ -221,7 +221,6 @@ private:
     Thread*             m_sendFileThread;
     Thread*             m_writeToDropDirThread;
     TCPSocket*          m_socket;
-    bool                m_useSecureNetwork;
     ClientArgs          m_args;
     bool                m_enableClipboard;
     size_t              m_maximumClipboardSize;
