@@ -1,21 +1,56 @@
-v1.9.0-rc3
-============
-Bug #4132 - Laggy mouse cursor on macOS clients
+v1.10.0-stable
+==============
 
-v1.9.0-rc2
-===========
-Bug #5901 - Stored serial key corrupted on macOS
-Bug #5757 - Failure to build against OpenSSL v1.1.0
+Bug fixes:
+- #6347 Log to file defaults to unwritable location
+- #6345 Losing GUI config when restarting the OS
+- #4991 Oversized Bonjour protocol name could conflict
 
-v1.9.0-rc1
-==========
-Bug #5467 - Failing to automatically download and install Bonjour
-Enhancement #5389 - Ported GUI to Qt 5
-Enhancement #4978 - Windows: Added support for Visual Studio 2015
-Enhancement #5398 - Windows: Updated OpenSSL dependency to 1.0.2k
+Enhancements:
+- #6348 Use different hard coded Qt path for CI
+- #6346 CLI argument to control screen lock feature
+- #6344 Customizable size limit on clipboard sharing
+- #6332 Decouple version from CI build properties
+- #6319 Bonjour auto-config disabled by default
+- #6318 Hide TIS/TSM error on config app log
+- #6312 Removal of redundant CURL library
+- #6306 Show version number in config app title
+- #6305 Support for Raspbian in package config
+- #6301 Combine enterprise and community codebases
+
+v1.9.1-stable
+=============
+
+Bug fix:
+- #5964 Can't click after sleep on Mac client
+
+Enhancements:
+- #6310 More robust macOS screen shape detection
+- #6309 Update OpenSSL to v1.0.2o for better security
+
+v1.9.0-stable
+=============
+
+Bug fixes:
+- #6251 Service hangs after GUI is opened
+- #5844 Icon causes Linux package manager to fail
+- #4132 Laggy mouse cursor on macOS clients
+
+Enhancements:
+- #6116 Quieter quartz event log entry on Mac
+- #6037 Solve defects reported by PVS Studio
+- #6014 Code sign binaries on Windows
+- #6012 Jenkins integration for Ubuntu
+- #5836 Jenkins integration for macOS
+- #5834 Jenkins integration for Fedora
+- #5390 Allow tests to be skipped during build
+- #5389 Qt 5 library support for config app
+- #5019 Raspbian armhf support for Raspberry Pi
+- #4978 Visual Studio 2015 support on Windows 10
+- #4154 IPv6 support for Windows and Linux
 
 v1.8.8-stable
-==========
+=============
 Bug #5196 - Some keys on Korean and Japanese keyboards have the same keycode
 Bug #5578 - Pressing Hangul key results in alt+'a'
 Bug #5785 - Can't switch screens when cursor is in a corner
