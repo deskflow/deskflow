@@ -43,7 +43,7 @@ ClientListener::ClientListener(const NetworkAddress& address,
     assert(m_socketFactory != NULL);
 
     try {
-        m_listen = m_socketFactory->createListen();
+        m_listen = m_socketFactory->createListen(m_useSecureNetwork, ARCH->getAddrFamily(address.getAddress()));
 
         // setup event handler
         m_events->adoptHandler(m_events->forIListenSocket().connecting(),
