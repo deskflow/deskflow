@@ -35,10 +35,10 @@ public:
     //@{
 
     //! Create data socket
-    virtual IDataSocket*    create(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const = 0;
+    virtual IDataSocket*    create(IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const = 0;
 
     //! Create listen socket
-    virtual IListenSocket*    createListen(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const = 0;
+    virtual IListenSocket*    createListen(IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const = 0;
 
     //@}
 };

@@ -32,9 +32,9 @@ public:
 
     // ISocketFactory overrides
     virtual IDataSocket*
-                        create(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const;
+                        create(IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const;
     virtual IListenSocket*
-                        createListen(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const;
+                        createListen(IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const;
 
 private:
     IEventQueue*        m_events;
