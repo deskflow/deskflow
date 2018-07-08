@@ -29,10 +29,10 @@
 #include "core/ArgsBase.h"
 #include "core/XSynergy.h"
 #include "core/protocol_types.h"
+#include "synergy/DisplayInvalidException.h"
 
 #include <iostream>
 #include <cstdio>
-#include "DisplayInvalidException.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
