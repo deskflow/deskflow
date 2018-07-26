@@ -47,7 +47,6 @@
 		<WixVariable Id="WixUIDialogBmp" Value="$(var.ResPath)\dialog.bmp"/>
 		<Property Id="ARPPRODUCTICON" Value="synergy.ico"/>
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER"/>
-		<Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable"/>
 		<Property Id="LEGACY_UNINSTALL_EXISTS">
 			<RegistrySearch Id="LegacyRegistrySearch" Key="SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Synergy" Name="UninstallString" Root="HKLM" Type="file" Win64="no">
 				<FileSearch Id="LegacyFileSearch" Name="uninstall.exe"/>
