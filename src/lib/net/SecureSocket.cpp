@@ -375,20 +375,22 @@ SecureSocket::initContext(bool server)
         showSecureLibInfo();
     }
 
-    // SSLv23_method uses TLSv1, with the ability to fall back to SSLv3
+    // only use TLS 1.2 (latest as of 27 jul 18). previously we were using
+    // the SSLv23_server_method and SSLv23_client_method functions with
+    // SSL_OP_NO_SSLv3, but not SSL_OP_NO_SSLv2, so there was a potential
+    // vulnerability where it could fall back to SSLv2 (not TLS). also,
+    // the SSLv23_*_method functions could fall back to TLS 1.0 and 1.1,
+    // which are nolonger PCI compliant.
     if (server) {
-        method = SSLv23_server_method();
+        method = TLSv1_2_server_method();
     }
     else {
-        method = SSLv23_client_method();
+        method = TLSv1_2_client_method();
     }
     
     // create new context from method
     SSL_METHOD* m = const_cast<SSL_METHOD*>(method);
     m_ssl->m_context = SSL_CTX_new(m);
-
-    // drop SSLv3 support
-    SSL_CTX_set_options(m_ssl->m_context, SSL_OP_NO_SSLv3);
 
     if (m_ssl->m_context == NULL) {
         showError();
