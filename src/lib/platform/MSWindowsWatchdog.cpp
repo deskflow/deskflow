@@ -452,7 +452,7 @@ MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
         GetExitCodeProcess(handle, &exitCode);
         if (exitCode != STILL_ACTIVE) {
             // yay, we got a graceful shutdown. there should be no hook in use errors!
-            LOG((CLOG_INFO "process %d was shutdown gracefully", pid));
+            LOG((CLOG_DEBUG "process %d was shutdown gracefully", pid));
             break;
         }
         else {

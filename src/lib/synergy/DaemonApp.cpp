@@ -392,8 +392,8 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
             LOG((CLOG_DEBUG "ipc hello, type=%s", type.c_str()));
 
 #if SYSAPI_WIN32
-            String watchdogStatus = m_watchdog->isProcessActive() ? "ok" : "error";
-            LOG((CLOG_INFO "watchdog status: %s", watchdogStatus.c_str()));
+            String watchdogStatus = m_watchdog->isProcessActive() ? "active" : "idle";
+            LOG((CLOG_INFO "service status: %s", watchdogStatus.c_str()));
 #endif
 
             m_ipcLogOutputter->notifyBuffer();
