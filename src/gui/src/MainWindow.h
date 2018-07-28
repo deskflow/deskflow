@@ -75,7 +75,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
             synergyDisconnected,
             synergyConnecting,
             synergyConnected,
-            synergyTransfering
+            synergyListening
         };
 
         enum qSynergyType
@@ -208,7 +208,7 @@ public slots:
         void proofreadInfo();
 
         void showEvent (QShowEvent*);
-        bool secureSocket(bool secureSocket);
+        void secureSocket(bool secureSocket);
 
     private:
         QSettings& m_Settings;

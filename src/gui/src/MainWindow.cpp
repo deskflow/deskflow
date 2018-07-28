@@ -480,9 +480,8 @@ void MainWindow::updateFromLogLine(const QString &line)
 void MainWindow::checkConnected(const QString& line)
 {
     // TODO: implement ipc connection state messages to replace this hack.
-    if (line.contains("started server") ||
-        line.contains("connected to server") ||
-        line.contains("watchdog status: ok"))
+    if (line.contains("connected to server") ||
+        line.contains("accepted client connection"))
     {
         setSynergyState(synergyConnected);
 
@@ -496,6 +495,10 @@ void MainWindow::checkConnected(const QString& line)
             appConfig().setStartedBefore(true);
             appConfig().saveSettings();
         }
+    }
+    else if (line.contains("started server"))
+    {
+        setSynergyState(synergyListening);
     }
 }
 
@@ -951,7 +954,7 @@ void MainWindow::setSynergyState(qSynergyState state)
     if (synergyState() == state)
         return;
 
-    if (state == synergyConnected || state == synergyConnecting)
+    if ((state == synergyConnected) || (state == synergyConnecting) || (state == synergyListening))
     {
         disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
         connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
@@ -966,24 +969,30 @@ void MainWindow::setSynergyState(qSynergyState state)
         m_pButtonApply->setEnabled(false);
     }
 
-    bool connected = false;
-    if (state == synergyConnected || state == synergyTransfering) {
-        connected = true;
+    bool running = false;
+    if (state == synergyConnected || state == synergyListening) {
+        running = true;
     }
 
-    m_pActionStartSynergy->setEnabled(!connected);
-    m_pActionStopSynergy->setEnabled(connected);
+    m_pActionStartSynergy->setEnabled(!running);
+    m_pActionStopSynergy->setEnabled(running);
 
     switch (state)
     {
+    case synergyListening: {
+        if (synergyType() == synergyServer) {
+            setStatus(tr("Synergy is waiting for clients").arg(tlsVersion));
+        }
+
+        break;
+    }
     case synergyConnected: {
         if (m_SecureSocket) {
-            setStatus(tr("Synergy is running (with %1)").arg(tlsVersion));
+            setStatus(tr("Synergy is connected (with %1)").arg(tlsVersion));
         }
         else {
             setStatus(tr("Synergy is running (without %1)").arg(tlsVersion));
         }
-
         break;
     }
     case synergyConnecting:
@@ -991,8 +1000,6 @@ void MainWindow::setSynergyState(qSynergyState state)
         break;
     case synergyDisconnected:
         setStatus(tr("Synergy is not running"));
-        break;
-    case synergyTransfering:
         break;
     }
 
@@ -1587,7 +1594,7 @@ QString MainWindow::getProfileRootForArg()
     return QString("\"%1\"").arg(dir);
 }
 
-bool MainWindow::secureSocket(bool secureSocket)
+void MainWindow::secureSocket(bool secureSocket)
 {
     m_SecureSocket = secureSocket;
     if (secureSocket) {

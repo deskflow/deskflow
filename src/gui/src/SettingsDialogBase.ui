@@ -180,7 +180,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Use &amp;SSL encryption</string>
+         <string>Use &amp;TLS encryption</string>
         </property>
        </widget>
       </item>
