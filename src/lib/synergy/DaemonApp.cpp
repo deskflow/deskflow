@@ -337,23 +337,6 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                         LOG((CLOG_ERR "failed to save LogLevel setting, %s", e.what()));
                     }
                 }
-
-#if SYSAPI_WIN32
-                String logFilename;
-                if (argBase->m_logFile != NULL) {
-                    logFilename = String(argBase->m_logFile);
-                    ARCH->setting("LogFilename", logFilename);
-                    m_watchdog->setFileLogOutputter(m_fileLogOutputter);
-                    command = ArgParser::assembleCommand(argsArray, "--log", 1);
-                    LOG((CLOG_DEBUG "removed log file argument and filename %s from command ", logFilename.c_str()));
-                    LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
-                }
-                else {
-                    m_watchdog->setFileLogOutputter(NULL);
-                }
-
-                m_fileLogOutputter->setLogFilename(logFilename.c_str());
-#endif
             }
             else {
                 LOG((CLOG_DEBUG "empty command, elevate=%d", cm->elevate()));
