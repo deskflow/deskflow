@@ -197,16 +197,18 @@ public slots:
 #endif
         QString getProfileRootForArg();
         void checkConnected(const QString& line);
+        void checkFingerprint(const QString& line);
+        void checkSecureSocket(const QString& line);
 #ifndef SYNERGY_ENTERPRISE
         void checkLicense(const QString& line);
 #endif
-        void checkFingerprint(const QString& line);
         bool autoHide();
         QString getTimeStamp();
         void restartSynergy();
         void proofreadInfo();
 
         void showEvent (QShowEvent*);
+        bool secureSocket(bool secureSocket);
 
     private:
         QSettings& m_Settings;
@@ -243,6 +245,7 @@ public slots:
         bool m_ActivationDialogRunning;
         QStringList m_PendingClientNames;
 #endif
+        bool m_SecureSocket;
 
 private slots:
     void on_m_pButtonApply_clicked();

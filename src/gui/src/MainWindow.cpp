@@ -68,6 +68,9 @@ static const char synergyConfigName[] = "synergy.conf";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
 #endif
 
+static const char* tlsVersion = "TLS 1.2";
+static const char* tlsCheckString = "network encryption protocol: TLSv1.2";
+
 static const char* synergyIconFiles[] =
 {
     ":/res/icons/16x16/synergy-disconnected.png",
@@ -113,6 +116,7 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
 #ifndef SYNERGY_ENTERPRISE
     , m_ActivationDialogRunning(false)
 #endif
+    , m_SecureSocket(false)
 {
     setupUi(this);
 
@@ -147,8 +151,10 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
     m_SuppressAutoConfigWarning = false;
 
     m_pComboServerList->hide();
-    m_pLabelPadlock->hide();
     m_trialWidget->hide();
+
+    // hide padlock icon
+    secureSocket(false);
 
     connect (this, SIGNAL(windowShown()),
              this, SLOT(on_windowShown()), Qt::QueuedConnection);
@@ -464,6 +470,8 @@ void MainWindow::updateFromLogLine(const QString &line)
     // TODO: this code makes Andrew cry
     checkConnected(line);
     checkFingerprint(line);
+    checkSecureSocket(line);
+
 #ifndef SYNERGY_ENTERPRISE
     checkLicense(line);
 #endif
@@ -522,11 +530,10 @@ void MainWindow::checkFingerprint(const QString& line)
         QMessageBox::StandardButton fingerprintReply =
             QMessageBox::information(
             this, tr("Security question"),
-            tr("Do you trust this fingerprint?\n\n"
+            tr("You are connecting to a server. Here is it's fingerprint:\n\n"
                "%1\n\n"
-               "This is a server fingerprint. You should compare this "
-               "fingerprint to the one on your server's screen. If the "
-               "two don't match exactly, then it's probably not the server "
+               "Compare this fingerprint to the one on your server's screen."
+               "If the two don't match exactly, then it's probably not the server "
                "you're expecting (it could be a malicious user).\n\n"
                "To automatically trust this fingerprint for future "
                "connections, click Yes. To reject this fingerprint and "
@@ -541,6 +548,15 @@ void MainWindow::checkFingerprint(const QString& line)
         }
 
         messageBoxAlreadyShown = false;
+    }
+}
+
+void MainWindow::checkSecureSocket(const QString& line)
+{
+    // obviously not very secure, since this can be tricked by injecting something
+    // into the log. however, since we don't have IPC between core and GUI... patches welcome.
+    if (line.contains(tlsCheckString)) {
+        secureSocket(true);
     }
 }
 
@@ -925,6 +941,13 @@ void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
 
 void MainWindow::setSynergyState(qSynergyState state)
 {
+    // always assume connection is not secure when connection changes
+    // to anything except connected. the only way the padlock shows is
+    // when the correct TLS version string is detected.
+    if (state != synergyConnected) {
+        secureSocket(false);
+    }
+
     if (synergyState() == state)
         return;
 
@@ -954,24 +977,20 @@ void MainWindow::setSynergyState(qSynergyState state)
     switch (state)
     {
     case synergyConnected: {
-        if (m_AppConfig->getCryptoEnabled()) {
-            m_pLabelPadlock->show();
+        if (m_SecureSocket) {
+            setStatus(tr("Synergy is running (with %1)").arg(tlsVersion));
         }
         else {
-            m_pLabelPadlock->hide();
+            setStatus(tr("Synergy is running (without %1)").arg(tlsVersion));
         }
-
-        setStatus(tr("Synergy is running."));
 
         break;
     }
     case synergyConnecting:
-        m_pLabelPadlock->hide();
-        setStatus(tr("Synergy is starting."));
+        setStatus(tr("Synergy is starting..."));
         break;
     case synergyDisconnected:
-        m_pLabelPadlock->hide();
-        setStatus(tr("Synergy is not running."));
+        setStatus(tr("Synergy is not running"));
         break;
     case synergyTransfering:
         break;
@@ -1566,4 +1585,15 @@ QString MainWindow::getProfileRootForArg()
 #endif
 
     return QString("\"%1\"").arg(dir);
+}
+
+bool MainWindow::secureSocket(bool secureSocket)
+{
+    m_SecureSocket = secureSocket;
+    if (secureSocket) {
+        m_pLabelPadlock->show();
+    }
+    else {
+        m_pLabelPadlock->hide();
+    }
 }
