@@ -500,6 +500,14 @@ void MainWindow::checkConnected(const QString& line)
     {
         setSynergyState(synergyListening);
     }
+    else if (line.contains("disconnected from server") || line.contains("process exited"))
+    {
+        setSynergyState(synergyDisconnected);
+    }
+    else if (line.contains("connecting to"))
+    {
+        setSynergyState(synergyConnecting);
+    }
 }
 
 #ifndef SYNERGY_ENTERPRISE
