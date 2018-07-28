@@ -38,9 +38,6 @@ const ElevateMode defaultElevateMode = ElevateAsNeeded;
 
 static const char* logLevelNames[] =
 {
-    "ERROR",
-    "WARNING",
-    "NOTE",
     "INFO",
     "DEBUG",
     "DEBUG1",
@@ -137,7 +134,7 @@ void AppConfig::loadSettings()
     m_ScreenName = settings().value("screenName", QHostInfo::localHostName()).toString();
     m_Port = settings().value("port", 24800).toInt();
     m_Interface = settings().value("interface").toString();
-    m_LogLevel = settings().value("logLevel", 3).toInt(); // level 3: INFO
+    m_LogLevel = settings().value("logLevel2", 0).toInt(); // level 0: INFO
     m_LogToFile = settings().value("logToFile", false).toBool();
     m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
     m_WizardLastRun = settings().value("wizardLastRun", 0).toInt();
@@ -166,7 +163,7 @@ void AppConfig::saveSettings()
     settings().setValue("screenName", m_ScreenName);
     settings().setValue("port", m_Port);
     settings().setValue("interface", m_Interface);
-    settings().setValue("logLevel", m_LogLevel);
+    settings().setValue("logLevel2", m_LogLevel);
     settings().setValue("logToFile", m_LogToFile);
     settings().setValue("logFilename", m_LogFilename);
     settings().setValue("wizardLastRun", kWizardVersion);
