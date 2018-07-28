@@ -38,6 +38,7 @@
 #define MAX_ERROR_SIZE 65535
 
 static const float s_retryDelay = 0.01f;
+const char* k_tlsString = "TLSv1.2";
 
 enum {
     kMsgSize = 128
@@ -277,7 +278,7 @@ int
 SecureSocket::secureWrite(const void* buffer, int size, int& wrote)
 {
     if (m_ssl->m_ssl != NULL) {
-        LOG((CLOG_DEBUG2 "writing secure socket:%p", this));
+        LOG((CLOG_DEBUG2 "writing secure socket: %p", this));
 
         wrote = SSL_write(m_ssl->m_ssl, buffer, size);
         
@@ -320,7 +321,7 @@ bool
 SecureSocket::loadCertificates(String& filename)
 {
     if (filename.empty()) {
-        showError("ssl certificate is not specified");
+        showError("tls certificate is not specified");
         return false;
     }
     else {
@@ -329,7 +330,7 @@ SecureSocket::loadCertificates(String& filename)
         file.close();
 
         if (!exist) {
-            String errorMsg("ssl certificate doesn't exist: ");
+            String errorMsg("tls certificate doesn't exist: ");
             errorMsg.append(filename);
             showError(errorMsg.c_str());
             return false;
@@ -339,19 +340,19 @@ SecureSocket::loadCertificates(String& filename)
     int r = 0;
     r = SSL_CTX_use_certificate_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
     if (r <= 0) {
-        showError("could not use ssl certificate");
+        showError("could not use tls certificate");
         return false;
     }
 
     r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
     if (r <= 0) {
-        showError("could not use ssl private key");
+        showError("could not use tls private key");
         return false;
     }
 
     r = SSL_CTX_check_private_key(m_ssl->m_context);
     if (!r) {
-        showError("could not verify ssl private key");
+        showError("could not verify tls private key");
         return false;
     }
 
@@ -425,7 +426,7 @@ SecureSocket::secureAccept(int socket)
     if (isFatal()) {
         // tell user and sleep so the socket isn't hammered.
         LOG((CLOG_ERR "failed to accept secure socket"));
-        LOG((CLOG_INFO "client connection may not be secure"));
+        LOG((CLOG_WARN "client connection may not be secure"));
         m_secureReady = false;
         ARCH->sleep(1);
         retry = 0;
@@ -518,12 +519,12 @@ SecureSocket::showCertificate()
     cert = SSL_get_peer_certificate(m_ssl->m_ssl);
     if (cert != NULL) {
         line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
-        LOG((CLOG_INFO "server ssl certificate info: %s", line));
+        LOG((CLOG_INFO "server tls certificate info: %s", line));
         OPENSSL_free(line);
         X509_free(cert);
     }
     else {
-        showError("server has no ssl certificate");
+        showError("server has no tls certificate");
         return false;
     }
 
@@ -547,7 +548,7 @@ SecureSocket::checkResult(int status, int& retry)
     case SSL_ERROR_ZERO_RETURN:
         // connection closed
         isFatal(true);
-        LOG((CLOG_DEBUG "ssl connection closed"));
+        LOG((CLOG_DEBUG "tls connection closed"));
         break;
 
     case SSL_ERROR_WANT_READ:
@@ -575,10 +576,10 @@ SecureSocket::checkResult(int status, int& retry)
         break;
 
     case SSL_ERROR_SYSCALL:
-        LOG((CLOG_ERR "ssl error occurred (system call failure)"));
+        LOG((CLOG_ERR "tls error occurred (system call failure)"));
         if (ERR_peek_error() == 0) {
             if (status == 0) {
-                LOG((CLOG_ERR "eof violates ssl protocol"));
+                LOG((CLOG_ERR "eof violates tls protocol"));
             }
             else if (status == -1) {
                 // underlying socket I/O reproted an error
@@ -595,12 +596,12 @@ SecureSocket::checkResult(int status, int& retry)
         break;
 
     case SSL_ERROR_SSL:
-        LOG((CLOG_ERR "ssl error occurred (generic failure)"));
+        LOG((CLOG_ERR "tls error occurred (generic failure)"));
         isFatal(true);
         break;
 
     default:
-        LOG((CLOG_ERR "ssl error occurred (unknown failure)"));
+        LOG((CLOG_ERR "tls error occurred (unknown failure)"));
         isFatal(true);
         break;
     }
@@ -616,12 +617,12 @@ void
 SecureSocket::showError(const char* reason)
 {
     if (reason != NULL) {
-        LOG((CLOG_ERR "%s", reason));
+        LOG((CLOG_ERR "secure socket error: %s", reason));
     }
 
     String error = getError();
     if (!error.empty()) {
-        LOG((CLOG_ERR "%s", error.c_str()));
+        LOG((CLOG_ERR "openssl error: %s", error.c_str()));
     }
 }
 
@@ -828,11 +829,11 @@ SecureSocket::showSecureCipherInfo()
 void
 SecureSocket::showSecureLibInfo()
 {
-    LOG((CLOG_INFO "%s",SSLeay_version(SSLEAY_VERSION)));
-    LOG((CLOG_DEBUG1 "openSSL : %s",SSLeay_version(SSLEAY_CFLAGS)));
-    LOG((CLOG_DEBUG1 "openSSL : %s",SSLeay_version(SSLEAY_BUILT_ON)));
-    LOG((CLOG_DEBUG1 "openSSL : %s",SSLeay_version(SSLEAY_PLATFORM)));
-    LOG((CLOG_DEBUG1 "%s",SSLeay_version(SSLEAY_DIR)));
+    LOG((CLOG_DEBUG "openssl version: %s", SSLeay_version(SSLEAY_VERSION)));
+    LOG((CLOG_DEBUG1 "openssl flags: %s", SSLeay_version(SSLEAY_CFLAGS)));
+    LOG((CLOG_DEBUG1 "openssl built on: %s", SSLeay_version(SSLEAY_BUILT_ON)));
+    LOG((CLOG_DEBUG1 "openssl platform: %s", SSLeay_version(SSLEAY_PLATFORM)));
+    LOG((CLOG_DEBUG1 "openssl dir: %s", SSLeay_version(SSLEAY_DIR)));
     return;
 }
 
@@ -844,8 +845,16 @@ SecureSocket::showSecureConnectInfo()
     if (cipher != NULL) {
         char msg[kMsgSize];
         SSL_CIPHER_description(cipher, msg, kMsgSize);
-        LOG((CLOG_INFO "%s", msg));
+        LOG((CLOG_DEBUG "openssl cipher: %s", msg));
+
+        // show user a simpler version of the openssl cipher output
+        if (std::string(msg).find(k_tlsString) != std::string::npos) {
+            LOG((CLOG_INFO "network encryption protocol: %s", k_tlsString));
         }
+    }
+    else {
+        LOG((CLOG_ERR "could not get secure socket cipher"));
+    }
     return;
 }
 
