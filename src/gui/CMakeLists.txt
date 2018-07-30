@@ -49,7 +49,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 endif()
 endif()
 
-target_link_libraries (synergy Qt5::Core Qt5::Widgets Qt5::Network)
+qt5_use_modules (synergy Core Widgets Network)
 target_compile_definitions (synergy PRIVATE -DSYNERGY_VERSION_STAGE="${SYNERGY_VERSION_STAGE}")
 target_compile_definitions (synergy PRIVATE -DSYNERGY_REVISION="${SYNERGY_REVISION}")
 
