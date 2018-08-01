@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "common/common.h"
+
 // VC++ has built-in sized types
 // moved from common.h (why was it there?)
 #if defined(_MSC_VER)
