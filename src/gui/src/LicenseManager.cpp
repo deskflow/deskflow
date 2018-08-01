@@ -138,7 +138,7 @@ LicenseManager::getEditionName(Edition const edition, bool trial)
 	switch (edition) {
 		case kUnregistered:
 			name += " (UNREGISTERED)";
-			return QString::fromUtf8 (name.c_str(), name.size());
+			return QString::fromUtf8 (name.c_str(), static_cast<int>(name.size()));
 		case kBasic:
 			name += " Basic";
 			break;
@@ -148,7 +148,7 @@ LicenseManager::getEditionName(Edition const edition, bool trial)
 	if (trial) {
 		name += " (Trial)";
 	}
-	return QString::fromUtf8 (name.c_str(), name.size());
+	return QString::fromUtf8 (name.c_str(), static_cast<int>(name.size()));
 }
 
 void LicenseManager::notifyActivation(QString identity)

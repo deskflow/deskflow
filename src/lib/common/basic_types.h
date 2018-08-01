@@ -18,7 +18,14 @@
 
 #pragma once
 
-#include "common/common.h"
+// VC++ has built-in sized types
+// moved from common.h (why was it there?)
+#if defined(_MSC_VER)
+#    include <wchar.h>
+#    define TYPE_OF_SIZE_1 __int8
+#    define TYPE_OF_SIZE_2 __int16
+#    define TYPE_OF_SIZE_4 __int32
+#endif
 
 //
 // pick types of particular sizes

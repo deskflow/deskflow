@@ -60,7 +60,8 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
     m_pCheckBoxEnableDragAndDrop->setChecked(serverConfig().enableDragAndDrop());
 
     m_pCheckBoxEnableClipboard->setChecked(serverConfig().clipboardSharing());
-    m_pSpinBoxClipboardSizeLimit->setValue(serverConfig().clipboardSharingSize() / 1024);
+	int clipboardSharingSizeM = static_cast<int>(serverConfig().clipboardSharingSize() / 1024);
+    m_pSpinBoxClipboardSizeLimit->setValue(clipboardSharingSizeM);
 	m_pSpinBoxClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
 
     foreach(const Hotkey& hotkey, serverConfig().hotkeys())
@@ -222,7 +223,7 @@ void ServerConfigDialog::on_m_pCheckBoxEnableClipboard_stateChanged(int const st
 {
     m_pSpinBoxClipboardSizeLimit->setEnabled (state == Qt::Checked);
     if ((state == Qt::Checked) && (!m_pSpinBoxClipboardSizeLimit->value())) {
-        int size = (serverConfig().defaultClipboardSharingSize() + 512) / 1024;
+        int size = static_cast<int>((serverConfig().defaultClipboardSharingSize() + 512) / 1024);
         m_pSpinBoxClipboardSizeLimit->setValue (size ? size : 1);
     }
 }

@@ -60,7 +60,8 @@ SerialKey::isExpiring(time_t currentTime) const
     bool result = false;
 
     if (m_trial) {
-        if (m_warnTime <= currentTime && currentTime < m_expireTime) {
+		unsigned long long currentTimeAsLL = static_cast<unsigned long long>(currentTime);
+        if ((m_warnTime <= currentTimeAsLL) && (currentTimeAsLL < m_expireTime)) {
             result = true;
         }
     }
@@ -74,7 +75,8 @@ SerialKey::isExpired(time_t currentTime) const
     bool result = false;
 
     if (m_trial) {
-        if (m_expireTime <= currentTime) {
+		unsigned long long currentTimeAsLL = static_cast<unsigned long long>(currentTime);
+        if (m_expireTime <= currentTimeAsLL) {
             result = true;
         }
     }
@@ -150,8 +152,9 @@ SerialKey::daysLeft(time_t currentTime) const
     unsigned long long timeLeft =  0;
     unsigned long long const day = 60 * 60 * 24;
 
-    if (currentTime < m_expireTime) {
-        timeLeft = m_expireTime - currentTime;
+	unsigned long long currentTimeAsLL = static_cast<unsigned long long>(currentTime);
+    if (currentTimeAsLL < m_expireTime) {
+        timeLeft = m_expireTime - currentTimeAsLL;
     }
 
     unsigned long long daysLeft = 0;

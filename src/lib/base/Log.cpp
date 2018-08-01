@@ -181,11 +181,11 @@ Log::print(const char* file, int line, const char* fmt, ...)
 
         // square brackets, spaces, comma and null terminator take about 10
         int size = 10;
-        size += strlen(timestamp);
-        size += strlen(g_priority[priority]);
-        size += strlen(buffer);
+        size += static_cast<int>(strlen(timestamp));
+        size += static_cast<int>(strlen(g_priority[priority]));
+        size += static_cast<int>(strlen(buffer));
 #ifndef NDEBUG
-        size += strlen(file);
+        size += static_cast<int>(strlen(file));
         // assume there is no file contains over 100k lines of code
         size += 6;
 #endif

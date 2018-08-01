@@ -27,19 +27,6 @@
 #	error "config.h missing"
 #endif
 
-// VC++ has built-in sized types
-#if defined(_MSC_VER)
-#    include <wchar.h>
-#    define TYPE_OF_SIZE_1 __int8
-#    define TYPE_OF_SIZE_2 __int16
-#    define TYPE_OF_SIZE_4 __int32
-#else
-#    define SIZE_OF_CHAR        1
-#    define SIZE_OF_SHORT    2
-#    define SIZE_OF_INT        4
-#    define SIZE_OF_LONG        4
-#endif
-
 // define NULL
 #include <stddef.h>
 

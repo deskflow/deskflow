@@ -28,6 +28,7 @@
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/IEventJob.h"
+#include "common/convert_types.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -337,7 +338,7 @@ TCPSocket::doRead()
         
         // slurp up as much as possible
         do {
-            m_inputBuffer.write(buffer, bytesRead);
+            m_inputBuffer.write(buffer, static_cast<UInt32>(bytesRead));
 
             bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
         } while (bytesRead > 0);

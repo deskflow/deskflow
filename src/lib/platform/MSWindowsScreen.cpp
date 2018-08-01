@@ -47,6 +47,9 @@
 #include <comutil.h>
 #include <algorithm>
 
+// suppress warning about GetVersionEx, which is used indirectly in this compilation unit.
+#pragma warning(disable: 4996)
+
 //
 // add backwards compatible multihead support (and suppress bogus warning).
 // this isn't supported on MinGW yet AFAICT.
