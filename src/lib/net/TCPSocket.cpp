@@ -28,7 +28,6 @@
 #include "base/Log.h"
 #include "base/IEventQueue.h"
 #include "base/IEventJob.h"
-#include "common/convert_types.h"
 
 #include <cstring>
 #include <cstdlib>
