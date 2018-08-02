@@ -37,7 +37,7 @@ public:
     DaemonApp();
     virtual ~DaemonApp();
     int run(int argc, char** argv);
-    void mainLoop(bool logToFile);
+    void mainLoop(bool logToFile, bool foreground = false);
 
 private:
     void daemonize();

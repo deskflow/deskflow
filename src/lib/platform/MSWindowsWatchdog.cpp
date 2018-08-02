@@ -49,7 +49,8 @@ const char g_activeDesktop[] = {"activeDesktop:"};
 MSWindowsWatchdog::MSWindowsWatchdog(
     bool autoDetectCommand,
     IpcServer& ipcServer,
-    IpcLogOutputter& ipcLogOutputter) :
+    IpcLogOutputter& ipcLogOutputter,
+	bool foreground) :
     m_thread(NULL),
     m_autoDetectCommand(autoDetectCommand),
     m_monitoring(true),
@@ -63,7 +64,8 @@ MSWindowsWatchdog::MSWindowsWatchdog(
     m_processRunning(false),
     m_fileLogOutputter(NULL),
     m_autoElevated(false),
-    m_ready(false)
+    m_ready(false),
+	m_foreground(foreground)
 {
     m_mutex = ARCH->newMutex();
     m_condVar = ARCH->newCondVar();
@@ -105,104 +107,118 @@ MSWindowsWatchdog::stop()
 HANDLE
 MSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security)
 {
-    HANDLE sourceToken;
+	HANDLE sourceToken;
 
-    BOOL tokenRet = OpenProcessToken(
-        process,
-        TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS,
-        &sourceToken);
+	BOOL tokenRet = OpenProcessToken(
+		process,
+		TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS,
+		&sourceToken);
 
-    if (!tokenRet) {
-        LOG((CLOG_ERR "could not open token, process handle: %d", process));
-        throw XArch(new XArchEvalWindows());
-    }
-    
-    LOG((CLOG_DEBUG "got token %i, duplicating", sourceToken));
+	if (!tokenRet) {
+		LOG((CLOG_ERR "could not open token, process handle: %d", process));
+		throw XArch(new XArchEvalWindows());
+	}
 
-    HANDLE newToken;
-    BOOL duplicateRet = DuplicateTokenEx(
-        sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
-        SecurityImpersonation, TokenPrimary, &newToken);
+	LOG((CLOG_DEBUG "got token %i, duplicating", sourceToken));
 
-    if (!duplicateRet) {
-        LOG((CLOG_ERR "could not duplicate token %i", sourceToken));
-        throw XArch(new XArchEvalWindows());
-    }
-    
-    LOG((CLOG_DEBUG "duplicated, new token: %i", newToken));
-    return newToken;
+	HANDLE newToken;
+	BOOL duplicateRet = DuplicateTokenEx(
+		sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
+		SecurityImpersonation, TokenPrimary, &newToken);
+
+	if (!duplicateRet) {
+		LOG((CLOG_ERR "could not duplicate token %i", sourceToken));
+		throw XArch(new XArchEvalWindows());
+	}
+
+	LOG((CLOG_DEBUG "duplicated, new token: %i", newToken));
+	return newToken;
 }
 
-HANDLE 
+HANDLE
 MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
 {
-    // always elevate if we are at the vista/7 login screen. we could also 
-    // elevate for the uac dialog (consent.exe) but this would be pointless,
-    // since synergy would re-launch as non-elevated after the desk switch,
-    // and so would be unusable with the new elevated process taking focus.
-    if (m_elevateProcess
-        || m_autoElevated
-        || m_session.isProcessInSession("logonui.exe", NULL)) {
-        
-        LOG((CLOG_DEBUG "getting elevated token, %s",
-            (m_elevateProcess ? "elevation required" : "at login screen")));
-        
-        HANDLE process;
-        if (!m_session.isProcessInSession("winlogon.exe", &process)) {
-            throw XMSWindowsWatchdogError("cannot get user token without winlogon.exe");
-        }
+	// always elevate if we are at the vista/7 login screen. we could also 
+	// elevate for the uac dialog (consent.exe) but this would be pointless,
+	// since synergy would re-launch as non-elevated after the desk switch,
+	// and so would be unusable with the new elevated process taking focus.
+	if (m_elevateProcess
+		|| m_autoElevated
+		|| m_session.isProcessInSession("logonui.exe", NULL)) {
 
-        return duplicateProcessToken(process, security);
-    }
-    else {
-        LOG((CLOG_DEBUG "getting non-elevated token"));
-        return m_session.getUserToken(security);
-    }
+		LOG((CLOG_DEBUG "getting elevated token, %s",
+			(m_elevateProcess ? "elevation required" : "at login screen")));
+
+		HANDLE process;
+		if (!m_session.isProcessInSession("winlogon.exe", &process)) {
+			throw XMSWindowsWatchdogError("cannot get user token without winlogon.exe");
+		}
+
+		return duplicateProcessToken(process, security);
+	}
+	else {
+		LOG((CLOG_DEBUG "getting non-elevated token"));
+		return m_session.getUserToken(security);
+	}
 }
 
 void
 MSWindowsWatchdog::mainLoop(void*)
 {
-    shutdownExistingProcesses();
+	shutdownExistingProcesses();
 
-    SendSas sendSasFunc = NULL;
-    HINSTANCE sasLib = LoadLibrary("sas.dll");
-    if (sasLib) {
-        LOG((CLOG_DEBUG "found sas.dll"));
-        sendSasFunc = (SendSas)GetProcAddress(sasLib, "SendSAS");
-    }
+	SendSas sendSasFunc = NULL;
+	HINSTANCE sasLib = LoadLibrary("sas.dll");
+	if (sasLib) {
+		LOG((CLOG_DEBUG "found sas.dll"));
+		sendSasFunc = (SendSas)GetProcAddress(sasLib, "SendSAS");
+	}
 
-    SECURITY_ATTRIBUTES saAttr; 
-    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
-    saAttr.bInheritHandle = TRUE; 
-    saAttr.lpSecurityDescriptor = NULL; 
+	SECURITY_ATTRIBUTES saAttr;
+	saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+	saAttr.bInheritHandle = TRUE;
+	saAttr.lpSecurityDescriptor = NULL;
 
-    if (!CreatePipe(&m_stdOutRead, &m_stdOutWrite, &saAttr, 0)) {
-        throw XArch(new XArchEvalWindows());
-    }
+	if (!CreatePipe(&m_stdOutRead, &m_stdOutWrite, &saAttr, 0)) {
+		throw XArch(new XArchEvalWindows());
+	}
 
-    ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
+	ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
 
-    while (m_monitoring) {
-        try {
+	while (m_monitoring) {
+		try {
 
-            if (m_processRunning && getCommand().empty()) {
-                LOG((CLOG_INFO "process started but command is empty, shutting down"));
-                shutdownExistingProcesses();
-                m_processRunning = false;
-                continue;
-            }
+			if (m_processRunning && getCommand().empty()) {
+				LOG((CLOG_INFO "process started but command is empty, shutting down"));
+				shutdownExistingProcesses();
+				m_processRunning = false;
+				continue;
+			}
 
-            if (m_processFailures != 0) {
-                // increasing backoff period, maximum of 10 seconds.
-                int timeout = (m_processFailures * 2) < 10 ? (m_processFailures * 2) : 10;
-                LOG((CLOG_INFO "backing off, wait=%ds, failures=%d", timeout, m_processFailures));
-                ARCH->sleep(timeout);
-            }
-        
-            if (!getCommand().empty() && ((m_processFailures != 0) || m_session.hasChanged() || m_commandChanged)) {
-                startProcess();
-            }
+			if (m_processFailures != 0) {
+				// increasing backoff period, maximum of 10 seconds.
+				int timeout = (m_processFailures * 2) < 10 ? (m_processFailures * 2) : 10;
+				LOG((CLOG_INFO "backing off, wait=%ds, failures=%d", timeout, m_processFailures));
+				ARCH->sleep(timeout);
+			}
+
+			if (!getCommand().empty()) {
+				bool startNeeded = false;
+
+				if (m_processFailures != 0) {
+					startNeeded = true;
+				}
+				else if (!m_foreground && m_session.hasChanged()) {
+					startNeeded = true;
+				}
+				else if (m_commandChanged) {
+					startNeeded = true;
+				}
+
+				if (startNeeded) {
+					startProcess();
+				}
+			}
 
             if (m_processRunning && !isProcessActive()) {
 
@@ -284,28 +300,35 @@ MSWindowsWatchdog::startProcess()
         m_processRunning = false;
     }
 
-    m_session.updateActiveSession();
+	BOOL createRet;
+	if (m_foreground) {
+		LOG((CLOG_DEBUG "starting command in foreground"));
+		createRet = startProcessInForeground(m_command);
+	}
+	else {
+		LOG((CLOG_DEBUG "starting command as session user"));
+		m_session.updateActiveSession();
 
-    SECURITY_ATTRIBUTES sa;
-    ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
+		SECURITY_ATTRIBUTES sa;
+		ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
 
-    getActiveDesktop(&sa);
+		getActiveDesktop(&sa);
 
-    ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
-    HANDLE userToken = getUserToken(&sa);
-    m_elevateProcess = m_autoElevated ? m_autoElevated : m_elevateProcess;
-    m_autoElevated = false;
+		ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
+		HANDLE userToken = getUserToken(&sa);
+		m_elevateProcess = m_autoElevated ? m_autoElevated : m_elevateProcess;
+		m_autoElevated = false;
 
-    // patch by Jack Zhou and Henry Tung
-    // set UIAccess to fix Windows 8 GUI interaction
-    // http://symless.com/spit/issues/details/3338/#c70
-    DWORD uiAccess = 1;
-    SetTokenInformation(userToken, TokenUIAccess, &uiAccess, sizeof(DWORD));
+		// patch by Jack Zhou and Henry Tung
+		// set UIAccess to fix Windows 8 GUI interaction
+		DWORD uiAccess = 1;
+		SetTokenInformation(userToken, TokenUIAccess, &uiAccess, sizeof(DWORD));
 
-    BOOL createRet = doStartProcess(m_command, userToken, &sa);
+		createRet = startProcessAsUser(m_command, userToken, &sa);
+	}
 
     if (!createRet) {
-        LOG((CLOG_ERR "could not launch"));
+        LOG((CLOG_ERR "could not launch command"));
         DWORD exitCode = 0;
         GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
         LOG((CLOG_ERR "exit code: %d", exitCode));
@@ -329,7 +352,21 @@ MSWindowsWatchdog::startProcess()
 }
 
 BOOL
-MSWindowsWatchdog::doStartProcess(String& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
+MSWindowsWatchdog::startProcessInForeground(String& command)
+{
+	// clear, as we're reusing process info struct
+	ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
+
+	STARTUPINFO startupInfo;
+	ZeroMemory(&startupInfo, sizeof(STARTUPINFO));
+
+	return CreateProcess(
+		NULL, LPSTR(command.c_str()), NULL, NULL,
+		FALSE, 0, NULL, NULL, &startupInfo, &m_processInfo);
+}
+
+BOOL
+MSWindowsWatchdog::startProcessAsUser(String& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
 {
     // clear, as we're reusing process info struct
     ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
@@ -542,7 +579,7 @@ MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
         HANDLE userToken = getUserToken(security);
         m_elevateProcess = elevateProcess;
 
-        BOOL createRet = doStartProcess(syntoolCommand, userToken, security);
+        BOOL createRet = startProcessAsUser(syntoolCommand, userToken, security);
 
         if (!createRet) {
             DWORD rc = GetLastError();

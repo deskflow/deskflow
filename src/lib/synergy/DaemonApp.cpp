@@ -155,7 +155,7 @@ DaemonApp::run(int argc, char** argv)
         if (foreground) {
             // run process in foreground instead of daemonizing.
             // useful for debugging.
-            mainLoop(false);
+            mainLoop(false, foreground);
         }
         else {
 #if SYSAPI_WIN32
@@ -192,7 +192,7 @@ DaemonApp::run(int argc, char** argv)
 }
 
 void
-DaemonApp::mainLoop(bool logToFile)
+DaemonApp::mainLoop(bool logToFile, bool foreground)
 {
     try
     {
@@ -215,7 +215,7 @@ DaemonApp::mainLoop(bool logToFile)
         CLOG->insert(m_ipcLogOutputter);
         
 #if SYSAPI_WIN32
-        m_watchdog = new MSWindowsWatchdog(false, *m_ipcServer, *m_ipcLogOutputter);
+        m_watchdog = new MSWindowsWatchdog(false, *m_ipcServer, *m_ipcLogOutputter, foreground);
         m_watchdog->setFileLogOutputter(m_fileLogOutputter);
 #endif
         
