@@ -373,7 +373,7 @@ MSWindowsWatchdog::startProcessInForeground(String& command)
 
 	return CreateProcess(
 		NULL, LPSTR(command.c_str()), NULL, NULL,
-		TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, &m_processInfo);
+		TRUE, 0, NULL, NULL, &si, &m_processInfo);
 }
 
 BOOL
