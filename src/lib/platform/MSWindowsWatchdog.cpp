@@ -472,6 +472,16 @@ MSWindowsWatchdog::outputLoop(void*)
             if (m_fileLogOutputter != NULL) {
                 m_fileLogOutputter->write(kINFO, buffer);
             }
+
+#if SYSAPI_WIN32
+			if (m_foreground) {
+				// when in foreground mode (useful for debugging), send the core
+				// process output to the VS debug output window.
+				// we could use the MSWindowsDebugOutputter, but it's really fiddly to so,
+				// and there doesn't seem to be an advantage of doing that.
+				OutputDebugString(buffer);
+			}
+#endif
         }    
     }
 }
