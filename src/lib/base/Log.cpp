@@ -46,7 +46,12 @@ static const char*        g_priority[] = {
 // number of priorities
 static const int g_numPriority = (int)(sizeof(g_priority) / sizeof(g_priority[0]));
 
-// the default priority
+// if NDEBUG (not debug) is not specified, i.e. you're building in debug,
+// then set default log level to DEBUG, otherwise the max level is INFO.
+//
+// GOTCHA: if `-DCMAKE_BUILD_TYPE=Debug` isn't set when configuring cmake
+// for visual studio, then NDEBUG will be set (even if your VS solution
+// config is Debug).
 #ifndef NDEBUG
 static const int        g_defaultMaxPriority = kDEBUG;
 #else
