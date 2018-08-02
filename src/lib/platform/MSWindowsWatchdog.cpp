@@ -368,8 +368,13 @@ MSWindowsWatchdog::startProcessInForeground(String& command)
 	// clear, as we're reusing process info struct
 	ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
 
+	// show the console window when in foreground mode,
+	// so we can close it gracefully, but minimize it
+	// so it doesn't get in the way.
 	STARTUPINFO si;
 	setStartupInfo(si);
+	si.dwFlags |= STARTF_USESHOWWINDOW;
+	si.wShowWindow = SW_MINIMIZE;
 
 	return CreateProcess(
 		NULL, LPSTR(command.c_str()), NULL, NULL,
