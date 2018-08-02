@@ -36,8 +36,7 @@ if (WIN32)
 elseif (APPLE)
     find_library(APPSERVICES_LIB ApplicationServices)
     target_link_libraries(barrier ${APPSERVICES_LIB})
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR
-        ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
+else()
     target_link_libraries (barrier dns_sd)
 endif()
 
