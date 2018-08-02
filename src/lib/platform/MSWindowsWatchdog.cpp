@@ -357,12 +357,17 @@ MSWindowsWatchdog::startProcessInForeground(String& command)
 	// clear, as we're reusing process info struct
 	ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
 
-	STARTUPINFO startupInfo;
-	ZeroMemory(&startupInfo, sizeof(STARTUPINFO));
+	STARTUPINFO si;
+	ZeroMemory(&si, sizeof(STARTUPINFO));
+	si.cb = sizeof(STARTUPINFO);
+	si.lpDesktop = "winsta0\\Default"; // TODO: maybe this should be \winlogon if we have logonui.exe?
+	si.hStdError = m_stdOutWrite;
+	si.hStdOutput = m_stdOutWrite;
+	si.dwFlags |= STARTF_USESTDHANDLES;
 
 	return CreateProcess(
 		NULL, LPSTR(command.c_str()), NULL, NULL,
-		FALSE, 0, NULL, NULL, &startupInfo, &m_processInfo);
+		TRUE, 0, NULL, NULL, &si, &m_processInfo);
 }
 
 BOOL
