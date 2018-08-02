@@ -351,6 +351,17 @@ MSWindowsWatchdog::startProcess()
     }
 }
 
+void
+MSWindowsWatchdog::setStartupInfo(STARTUPINFO& si)
+{
+	ZeroMemory(&si, sizeof(STARTUPINFO));
+	si.cb = sizeof(STARTUPINFO);
+	si.lpDesktop = "winsta0\\Default"; // TODO: maybe this should be \winlogon if we have logonui.exe?
+	si.hStdError = m_stdOutWrite;
+	si.hStdOutput = m_stdOutWrite;
+	si.dwFlags |= STARTF_USESTDHANDLES;
+}
+
 BOOL
 MSWindowsWatchdog::startProcessInForeground(String& command)
 {
@@ -358,12 +369,7 @@ MSWindowsWatchdog::startProcessInForeground(String& command)
 	ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
 
 	STARTUPINFO si;
-	ZeroMemory(&si, sizeof(STARTUPINFO));
-	si.cb = sizeof(STARTUPINFO);
-	si.lpDesktop = "winsta0\\Default"; // TODO: maybe this should be \winlogon if we have logonui.exe?
-	si.hStdError = m_stdOutWrite;
-	si.hStdOutput = m_stdOutWrite;
-	si.dwFlags |= STARTF_USESTDHANDLES;
+	setStartupInfo(si);
 
 	return CreateProcess(
 		NULL, LPSTR(command.c_str()), NULL, NULL,
@@ -377,12 +383,7 @@ MSWindowsWatchdog::startProcessAsUser(String& command, HANDLE userToken, LPSECUR
     ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
 
     STARTUPINFO si;
-    ZeroMemory(&si, sizeof(STARTUPINFO));
-    si.cb = sizeof(STARTUPINFO);
-    si.lpDesktop = "winsta0\\Default"; // TODO: maybe this should be \winlogon if we have logonui.exe?
-    si.hStdError = m_stdOutWrite;
-    si.hStdOutput = m_stdOutWrite;
-    si.dwFlags |= STARTF_USESTDHANDLES;
+	setStartupInfo(si);
 
     LPVOID environment;
     BOOL blockRet = CreateEnvironmentBlock(&environment, userToken, FALSE);

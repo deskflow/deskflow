@@ -61,6 +61,7 @@ private:
     void                sendSas();
     void                getActiveDesktop(LPSECURITY_ATTRIBUTES security);
     void                testOutput(String buffer);
+	void				setStartupInfo(STARTUPINFO& si);
 
 private:
     Thread*                m_thread;
