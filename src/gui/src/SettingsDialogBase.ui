@@ -157,7 +157,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="m_pGroupNetworkSecurity">
+    <widget class="QGroupBox" name="m_pGroupNetwork">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -168,7 +168,7 @@
       </sizepolicy>
      </property>
      <property name="title">
-      <string>&amp;Network Security</string>
+      <string>&amp;Network</string>
      </property>
      <layout class="QFormLayout" name="formLayout">
       <property name="fieldGrowthPolicy">
@@ -180,22 +180,42 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Use &amp;TLS encryption</string>
+         <string>Enable &amp;TLS Encryption</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxAutoConfig">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Enable Auto Config</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="m_pLabelInstallBonjour">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Install Bonjour&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::RichText</enum>
+        </property>
+        <property name="openExternalLinks">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+       <widget class="QLabel" name="m_pLabelProUpgrade">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account?source=gui&amp;amp;intent=upgrade&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Upgrade to Pro&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
+        <property name="textFormat">
+         <enum>Qt::RichText</enum>
         </property>
-       </spacer>
+       </widget>
       </item>
      </layout>
     </widget>

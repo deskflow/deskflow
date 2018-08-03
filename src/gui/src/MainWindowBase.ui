@@ -48,7 +48,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
+          <pixmap resource="../res/Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
          </property>
         </widget>
        </item>
@@ -99,7 +99,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
+          <pixmap resource="../res/Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
          </property>
         </widget>
        </item>
@@ -315,13 +315,6 @@
        <item row="2" column="1">
         <widget class="QLineEdit" name="m_pLineEditHostname"/>
        </item>
-       <item row="3" column="0">
-        <widget class="QCheckBox" name="m_pCheckBoxAutoConfig">
-         <property name="text">
-          <string>Auto config</string>
-         </property>
-        </widget>
-       </item>
        <item row="3" column="1">
         <widget class="QComboBox" name="m_pComboServerList">
          <property name="sizePolicy">
@@ -335,6 +328,13 @@
            <width>120</width>
            <height>0</height>
           </size>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="m_pLabelAutoDetected">
+         <property name="text">
+          <string>Auto detected:</string>
          </property>
         </widget>
        </item>
@@ -391,7 +391,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="Synergy.qrc">:/res/icons/16x16/padlock.png</pixmap>
+         <pixmap resource="../res/Synergy.qrc">:/res/icons/16x16/padlock.png</pixmap>
         </property>
        </widget>
       </item>
@@ -542,7 +542,7 @@
   </action>
  </widget>
  <resources>
-  <include location="Synergy.qrc"/>
+  <include location="../res/Synergy.qrc"/>
  </resources>
  <connections>
   <connection>

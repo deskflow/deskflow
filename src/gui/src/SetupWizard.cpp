@@ -126,9 +126,6 @@ void SetupWizard::accept()
 
     if (m_StartMain)
     {
-#ifndef SYNERGY_ENTERPRISE
-        m_MainWindow.updateZeroconfService();
-#endif
         m_MainWindow.open();
     }
 }

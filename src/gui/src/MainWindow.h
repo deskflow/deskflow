@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(MAINWINDOW__H)
-
-#define MAINWINDOW__H
+#pragma once
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
@@ -54,11 +52,11 @@ class QAbstractButton;
 class LogDialog;
 class QSynergyApplication;
 class SetupWizard;
-class ZeroconfService;
 class DataDownloader;
 class CommandProcess;
 class SslCertificate;
 class LicenseManager;
+class Zeroconf;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase
 {
@@ -119,10 +117,10 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         void showConfigureServer(const QString& message);
         void showConfigureServer() { showConfigureServer(""); }
         void autoAddScreen(const QString name);
-        void serverDetected(const QString name);
+        void zeroconfServerDetected(const QString name);
         void updateLocalFingerprint();
+        Zeroconf& zeroconf() { return *m_pZeroconf; }
 #ifndef SYNERGY_ENTERPRISE
-        void updateZeroconfService();
         LicenseManager& licenseManager() const;
         int raiseActivationDialog();
 #endif
@@ -155,9 +153,6 @@ public slots:
         void logOutput();
         void logError();
         void updateFound(const QString& version);
-#ifndef SYNERGY_ENTERPRISE
-        void bonjourInstallFinished();
-#endif
         void saveSettings();
 
     protected:
@@ -190,11 +185,6 @@ public slots:
         bool isServiceRunning();
 #endif
 
-#ifndef SYNERGY_ENTERPRISE
-        bool isBonjourRunning();
-        void downloadBonjour();
-        void promptAutoConfig();
-#endif
         QString getProfileRootForArg();
         void checkConnected(const QString& line);
         void checkFingerprint(const QString& line);
@@ -211,9 +201,14 @@ public slots:
         void secureSocket(bool secureSocket);
 
     private:
+#ifndef SYNERGY_ENTERPRISE
+        LicenseManager* m_LicenseManager;
+        Zeroconf* m_pZeroconf;
+        bool m_ActivationDialogRunning;
+        QStringList m_PendingClientNames;
+#endif
         QSettings& m_Settings;
         AppConfig* m_AppConfig;
-        LicenseManager* m_LicenseManager;
         QProcess* m_pSynergy;
         int m_SynergyState;
         ServerConfig m_ServerConfig;
@@ -228,37 +223,20 @@ public slots:
         QMenu* m_pMenuEdit;
         QMenu* m_pMenuWindow;
         QMenu* m_pMenuHelp;
-#ifndef SYNERGY_ENTERPRISE
-        ZeroconfService* m_pZeroconfService;
-#endif
-        DataDownloader* m_pDataDownloader;
-        QMessageBox* m_DownloadMessageBox;
         QAbstractButton* m_pCancelButton;
-        QMutex m_UpdateZeroconfMutex;
         bool m_SuppressAutoConfigWarning;
-        CommandProcess* m_BonjourInstall;
         bool m_SuppressEmptyServerWarning;
         qRuningState m_ExpectedRunningState;
         QMutex m_StopDesktopMutex;
         SslCertificate* m_pSslCertificate;
-#ifndef SYNERGY_ENTERPRISE
-        bool m_ActivationDialogRunning;
-        QStringList m_PendingClientNames;
-#endif
         bool m_SecureSocket;
 
 private slots:
     void on_m_pButtonApply_clicked();
-#ifndef SYNERGY_ENTERPRISE
-    void on_m_pCheckBoxAutoConfig_toggled(bool checked);
-    void on_m_pComboServerList_currentIndexChanged(QString );
-    void installBonjour();
-#endif
     void on_windowShown();
+
+    void on_m_pComboServerList_currentIndexChanged(const QString &arg1);
 
 signals:
     void windowShown();
 };
-
-#endif
-
