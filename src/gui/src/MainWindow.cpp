@@ -79,9 +79,9 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
 :
 #ifndef SYNERGY_ENTERPRISE
     m_LicenseManager(&licenseManager),
-    m_pZeroconf(nullptr),
     m_ActivationDialogRunning(false),
 #endif
+    m_pZeroconf(nullptr),
     m_Settings(settings),
     m_AppConfig(&appConfig),
     m_pSynergy(NULL),
@@ -178,9 +178,8 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
     m_pActivate->setVisible(false);
 #endif
 
-    m_pZeroconf = new Zeroconf(this);
-
 #ifndef SYNERGY_ENTERPRISE
+    m_pZeroconf = new Zeroconf(this);
     if (m_AppConfig->autoConfig()) {
         m_pZeroconf->startService();
     }
@@ -195,9 +194,7 @@ MainWindow::~MainWindow()
     }
 
 #ifndef SYNERGY_ENTERPRISE
-    if (m_AppConfig->autoConfig()) {
-        m_pZeroconf->stopService();
-    }
+    delete m_pZeroconf;
 #endif
 
     saveSettings();
@@ -1302,6 +1299,7 @@ void MainWindow::on_m_pComboServerList_currentIndexChanged(const QString &arg1)
     }
 }
 
+#ifndef SYNERGY_ENTERPRISE
 int MainWindow::raiseActivationDialog()
 {
     if (m_ActivationDialogRunning) {
@@ -1325,6 +1323,7 @@ int MainWindow::raiseActivationDialog()
     }
     return result;
 }
+#endif
 
 void MainWindow::on_windowShown()
 {

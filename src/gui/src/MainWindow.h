@@ -203,10 +203,10 @@ public slots:
     private:
 #ifndef SYNERGY_ENTERPRISE
         LicenseManager* m_LicenseManager;
-        Zeroconf* m_pZeroconf;
         bool m_ActivationDialogRunning;
         QStringList m_PendingClientNames;
 #endif
+        Zeroconf* m_pZeroconf;
         QSettings& m_Settings;
         AppConfig* m_AppConfig;
         QProcess* m_pSynergy;

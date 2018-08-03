@@ -189,10 +189,12 @@ void SettingsDialog::on_m_pLabelInstallBonjour_linkActivated(const QString&)
 
 void SettingsDialog::on_m_pCheckBoxAutoConfig_toggled(bool checked)
 {
+#ifndef SYNERGY_ENTERPRISE
     if (checked) {
         m_pMainWindow->zeroconf().startService();
     }
     else {
         m_pMainWindow->zeroconf().stopService();
     }
+#endif
 }
