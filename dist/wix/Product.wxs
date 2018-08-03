@@ -42,7 +42,6 @@
 			</Component>
 		</DirectoryRef>
 		<Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
-		<WixVariable Id="WixUILicenseRtf" Value="$(var.ResPath)\License.rtf"/>
 		<WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\banner.bmp"/>
 		<WixVariable Id="WixUIDialogBmp" Value="$(var.ResPath)\dialog.bmp"/>
 		<Property Id="ARPPRODUCTICON" Value="synergy.ico"/>
@@ -56,6 +55,17 @@
     </Condition>
 		<CustomAction ExeCommand="" FileKey="GuiProgram" Id="StartGui" Return="asyncNoWait"/>
 		<UI>
+		    <UIRef Id="WixUI_InstallDir" />
+		    <Publish Dialog="WelcomeDlg"
+		          Control="Next"
+			  Event="NewDialog"
+			  Value="InstallDirDlg"
+			  Order="2">1</Publish>
+			<Publish Dialog="InstallDirDlg"
+			  Control="Back"
+			  Event="NewDialog"
+			  Value="WelcomeDlg"
+			  Order="2">1</Publish>
 			<Publish Control="Finish" Dialog="ExitDialog" Event="DoAction" Value="StartGui">NOT Installed</Publish>
 		</UI>
 	</Product>
