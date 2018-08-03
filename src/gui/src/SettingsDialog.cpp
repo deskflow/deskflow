@@ -182,7 +182,9 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
 
 void SettingsDialog::on_m_pLabelInstallBonjour_linkActivated(const QString&)
 {
+#if defined(Q_OS_WIN)
     m_pBonjourWindows->download();
+#endif
 }
 
 void SettingsDialog::on_m_pCheckBoxAutoConfig_toggled(bool checked)
