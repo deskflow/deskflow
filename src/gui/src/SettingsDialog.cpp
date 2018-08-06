@@ -78,13 +78,21 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 #endif
 
     m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
+
 #ifdef SYNERGY_ENTERPRISE
+
      m_pCheckBoxEnableCrypto->setEnabled(true);
      m_pLabelProUpgrade->hide();
+
+     m_pCheckBoxAutoConfig->hide();
+     m_pLabelInstallBonjour->hide();
+
 #else
+
     bool isPro = m_appConfig.edition() == kPro;
     m_pCheckBoxEnableCrypto->setEnabled(isPro);
     m_pLabelProUpgrade->setVisible(!isPro);
+
 #endif
 }
 
