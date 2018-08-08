@@ -1,3 +1,19 @@
+v1.10.1-stable
+==============
+
+Bug fixes:
+- #6339 Windows validating install step freezes
+- #6374 Windows background service crashes randomly
+- #6376 Undeclared identifier compile error in VS2017
+
+Enhancements:
+- #6372 Forced use of TLS 1.2 without fallback method
+- #6338 Auto config checkbox on settings screen
+- #6384 Removal of GPL screen on Windows installer
+- #6383 Extend foreground mode for Windows daemon
+- #6382 Code comment for MSVC debugger logging
+- #6380 Compile without warnings using VS2017
+
 v1.10.0-stable
 ==============
 
