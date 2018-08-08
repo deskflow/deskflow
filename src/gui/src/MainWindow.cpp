@@ -62,6 +62,8 @@ static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.
 static const char* tlsVersion = "TLS 1.2";
 static const char* tlsCheckString = "network encryption protocol: TLSv1.2";
 
+static const int debugLogLevel = 1;
+
 static const char* synergyIconFiles[] =
 {
     ":/res/icons/16x16/synergy-disconnected.png",
@@ -408,7 +410,7 @@ void MainWindow::appendLogInfo(const QString& text)
 }
 
 void MainWindow::appendLogDebug(const QString& text) {
-    if (appConfig().logLevel() >= 4) {
+    if (appConfig().logLevel() >= debugLogLevel) {
         appendLogRaw(getTimeStamp() + " DEBUG: " + text);
     }
 }
@@ -1285,36 +1287,36 @@ void MainWindow::on_m_pActionSettings_triggered()
 
 void MainWindow::autoAddScreen(const QString name)
 {
-    if (!m_ServerConfig.ignoreAutoConfigClient()) {
+    if (m_ServerConfig.ignoreAutoConfigClient()) {
+        appendLogDebug(QString("ignoring zeroconf screen: %1").arg(name));
+        return;
+    }
+
 #ifndef SYNERGY_ENTERPRISE
-        if (m_ActivationDialogRunning) {
-            // TODO: refactor this code
-            // add this screen to the pending list and check this list until
-            // users finish activation dialog
-            m_PendingClientNames.append(name);
-            return;
-        }
+    if (m_ActivationDialogRunning) {
+        // TODO: refactor this code
+        // add this screen to the pending list and check this list until
+        // users finish activation dialog
+        m_PendingClientNames.append(name);
+        return;
+    }
 #endif
 
-        int r = m_ServerConfig.autoAddScreen(name);
-        if (r != kAutoAddScreenOk) {
-            switch (r) {
-            case kAutoAddScreenManualServer:
-                showConfigureServer(
-                    tr("Please add the server (%1) to the grid.")
-                        .arg(appConfig().screenName()));
-                break;
+    int r = m_ServerConfig.autoAddScreen(name);
+    if (r != kAutoAddScreenOk) {
+        switch (r) {
+        case kAutoAddScreenManualServer:
+            showConfigureServer(
+                tr("Please add the server (%1) to the grid.")
+                    .arg(appConfig().screenName()));
+            break;
 
-            case kAutoAddScreenManualClient:
-                showConfigureServer(
-                    tr("Please drag the new client screen (%1) "
-                        "to the desired position on the grid.")
-                        .arg(name));
-                break;
-            }
-        }
-        else {
-            restartSynergy();
+        case kAutoAddScreenManualClient:
+            showConfigureServer(
+                tr("Please drag the new client screen (%1) "
+                    "to the desired position on the grid.")
+                    .arg(name));
+            break;
         }
     }
 }
@@ -1361,9 +1363,6 @@ int MainWindow::raiseActivationDialog()
         }
 
         m_PendingClientNames.clear();
-    }
-    if (result == QDialog::Accepted) {
-        restartSynergy();
     }
     return result;
 }
