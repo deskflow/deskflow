@@ -1071,6 +1071,11 @@ void MainWindow::changeEvent(QEvent* event)
 
 void MainWindow::zeroconfServerDetected(const QString name)
 {
+    // don't add to the server combo box if not in client mode.
+    if (synergyType() != synergyClient) {
+        return;
+    }
+
     // don't add yourself to the server list.
     if (getIPAddresses().contains(name)) {
         return;
@@ -1221,6 +1226,11 @@ void MainWindow::on_m_pActionAbout_triggered()
 void MainWindow::updateZeroconfService()
 {
 #ifndef SYNERGY_ENTERPRISE
+
+    // reset the server list in case one has gone away.
+    // it'll be re-added after the zeroconf service restarts.
+    m_pComboServerList->clear();
+
     if (m_pZeroconf != nullptr) {
         if (appConfig().autoConfig()) {
             m_pZeroconf->startService();
