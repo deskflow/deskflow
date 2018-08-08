@@ -32,22 +32,26 @@ class SettingsDialog;
 class MainWindow;
 class CommandProcess;
 class DataDownloader;
+class AppConfig;
 
 class BonjourWindows : public QObject
 {
     Q_OBJECT
 
 public:
-    BonjourWindows(SettingsDialog* settingsDialog, MainWindow* mainWindow);
+    BonjourWindows(SettingsDialog* settingsDialog, MainWindow* mainWindow, AppConfig& appConfig);
     virtual ~BonjourWindows();
 
 public:
-    void download();
-    void install();
+    void downloadAndInstall();
     bool isRunning() const;
 
 protected slots:
+    void downloadFinished();
     void installFinished();
+
+private:
+    void install();
 
 private:
     SettingsDialog* m_pSettingsDialog;
@@ -55,6 +59,7 @@ private:
     CommandProcess* m_pBonjourInstall;
     QMessageBox* m_pDownloadMessageBox;
     DataDownloader* m_pDataDownloader;
+    AppConfig& m_appConfig;
 };
 
 #endif // Q_OS_WIN

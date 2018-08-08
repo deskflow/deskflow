@@ -58,7 +58,6 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         void on_m_pCheckBoxLogToFile_stateChanged(int );
         void on_m_pButtonBrowseLog_clicked();
         void on_m_pLabelInstallBonjour_linkActivated(const QString &link);
-        void on_m_pCheckBoxAutoConfig_toggled(bool checked);
 };
 
 #endif

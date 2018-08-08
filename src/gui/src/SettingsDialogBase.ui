@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>SettingsDialogBase</class>
  <widget class="QDialog" name="SettingsDialogBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>357</width>
+    <height>496</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
@@ -154,12 +162,12 @@
       <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeType">
-      <enum>QSizePolicy::MinimumExpanding</enum>
+      <enum>QSizePolicy::Minimum</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>15</height>
+       <height>10</height>
       </size>
      </property>
     </spacer>
@@ -230,9 +238,6 @@
           <property name="textFormat">
            <enum>Qt::RichText</enum>
           </property>
-          <property name="openExternalLinks">
-           <bool>true</bool>
-          </property>
          </widget>
         </item>
         <item row="1" column="1">
@@ -242,6 +247,9 @@
           </property>
           <property name="textFormat">
            <enum>Qt::RichText</enum>
+          </property>
+          <property name="openExternalLinks">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -256,12 +264,12 @@
       <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeType">
-      <enum>QSizePolicy::MinimumExpanding</enum>
+      <enum>QSizePolicy::Minimum</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>15</height>
+       <height>10</height>
       </size>
      </property>
     </spacer>
@@ -362,7 +370,7 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>15</height>
+       <height>10</height>
       </size>
      </property>
     </spacer>

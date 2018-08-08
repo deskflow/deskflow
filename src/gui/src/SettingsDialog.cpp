@@ -59,10 +59,9 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
 
 #if defined(Q_OS_WIN)
-    m_pBonjourWindows = new BonjourWindows(this, m_pMainWindow);
+    m_pBonjourWindows = new BonjourWindows(this, m_pMainWindow, m_appConfig);
     if (m_pBonjourWindows->isRunning()) {
         allowAutoConfig();
-        m_pCheckBoxAutoConfig->setChecked(m_appConfig.autoConfig());
     }
 
     m_pComboElevate->setCurrentIndex(static_cast<int>(appConfig().elevateMode()));
@@ -93,6 +92,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     m_pCheckBoxEnableCrypto->setEnabled(isPro);
     m_pLabelProUpgrade->setVisible(!isPro);
 
+    m_pCheckBoxAutoConfig->setChecked(appConfig().autoConfig());
+
 #endif
 }
 
@@ -107,6 +108,7 @@ void SettingsDialog::accept()
     appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
        appConfig().setElevateMode(static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
     appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
+    appConfig().setAutoConfig(m_pCheckBoxAutoConfig->isChecked());
     appConfig().saveSettings();
     QDialog::accept();
 }
@@ -148,6 +150,7 @@ void SettingsDialog::allowAutoConfig()
 {
     m_pLabelInstallBonjour->hide();
     m_pCheckBoxAutoConfig->setEnabled(true);
+    m_pCheckBoxAutoConfig->setChecked(m_appConfig.autoConfig());
 }
 
 void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i)
@@ -191,18 +194,6 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
 void SettingsDialog::on_m_pLabelInstallBonjour_linkActivated(const QString&)
 {
 #if defined(Q_OS_WIN)
-    m_pBonjourWindows->download();
-#endif
-}
-
-void SettingsDialog::on_m_pCheckBoxAutoConfig_toggled(bool checked)
-{
-#ifndef SYNERGY_ENTERPRISE
-    if (checked) {
-        m_pMainWindow->zeroconf().startService();
-    }
-    else {
-        m_pMainWindow->zeroconf().stopService();
-    }
+    m_pBonjourWindows->downloadAndInstall();
 #endif
 }

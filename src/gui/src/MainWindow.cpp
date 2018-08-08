@@ -97,12 +97,14 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
     m_pMenuWindow(NULL),
     m_pMenuHelp(NULL),
     m_pCancelButton(NULL),
-    m_SuppressAutoConfigWarning(false),
-    m_SuppressEmptyServerWarning(false),
     m_ExpectedRunningState(kStopped),
     m_pSslCertificate(NULL),
     m_SecureSocket(false)
 {
+#ifndef SYNERGY_ENTERPRISE
+    m_pZeroconf = new Zeroconf(this);
+#endif
+
     setupUi(this);
 
     createMenuBar();
@@ -130,11 +132,6 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
     resize(700, 530);
     setMinimumSize(size());
 #endif
-
-    m_SuppressAutoConfigWarning = true;
-    m_pLabelAutoDetected->setVisible(appConfig.autoConfig());
-    m_pComboServerList->setVisible(appConfig.autoConfig());
-    m_SuppressAutoConfigWarning = false;
 
     m_trialWidget->hide();
 
@@ -179,10 +176,8 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
 #endif
 
 #ifndef SYNERGY_ENTERPRISE
-    m_pZeroconf = new Zeroconf(this);
-    if (m_AppConfig->autoConfig()) {
-        m_pZeroconf->startService();
-    }
+    updateZeroconfService();
+    updateAutoConfigWidgets();
 #endif
 }
 
@@ -216,9 +211,7 @@ void MainWindow::open()
     // auto hiding before the user has configured synergy (which of course
     // confuses first time users, who think synergy has crashed).
     if (appConfig().startedBefore() && appConfig().processMode() == Desktop) {
-        m_SuppressEmptyServerWarning = true;
         startSynergy();
-        m_SuppressEmptyServerWarning = false;
     }
 }
 
@@ -761,15 +754,13 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 
     if (m_pLineEditHostname->text().isEmpty()) {
         show();
-        if (!m_SuppressEmptyServerWarning) {
-            QMessageBox::warning(this, tr("Hostname is empty"),
-                             tr("Please fill in a hostname for the synergy client to connect to."));
-        }
+        QMessageBox::warning(
+            this, tr("Hostname is empty"),
+            tr("Please fill in a hostname for the synergy client to connect to."));
         return false;
     }
 
     args << m_pLineEditHostname->text() + ":" + QString::number(appConfig().port());
-
     return true;
 }
 
@@ -1080,8 +1071,12 @@ void MainWindow::changeEvent(QEvent* event)
 
 void MainWindow::zeroconfServerDetected(const QString name)
 {
+    // don't add yourself to the server list.
+    if (getIPAddresses().contains(name)) {
+        return;
+    }
+
     if (m_pComboServerList->findText(name) == -1) {
-        // Note: the first added item triggers startSynergy
         m_pComboServerList->addItem(name);
     }
 
@@ -1180,6 +1175,10 @@ MainWindow::licenseManager() const
 void MainWindow::on_m_pGroupClient_toggled(bool on)
 {
     m_pGroupServer->setChecked(!on);
+
+    // only call in either client or server toggle, but not both
+    // since the toggle functions call eachother indirectly.
+    updateZeroconfService();
 }
 
 void MainWindow::on_m_pGroupServer_toggled(bool on)
@@ -1219,9 +1218,43 @@ void MainWindow::on_m_pActionAbout_triggered()
     dlg.exec();
 }
 
+void MainWindow::updateZeroconfService()
+{
+#ifndef SYNERGY_ENTERPRISE
+    if (m_pZeroconf != nullptr) {
+        if (appConfig().autoConfig()) {
+            m_pZeroconf->startService();
+        }
+        else {
+            m_pZeroconf->stopService();
+        }
+    }
+#endif
+}
+
+void MainWindow::updateAutoConfigWidgets()
+{
+    if (appConfig().autoConfig()) {
+        m_pLabelAutoDetected->show();
+        m_pComboServerList->show();
+
+        m_pLabelServerName->hide();
+        m_pLineEditHostname->hide();
+
+    }
+    else {
+        m_pLabelServerName->show();
+        m_pLineEditHostname->show();
+
+        m_pLabelAutoDetected->hide();
+        m_pComboServerList->hide();
+    }
+}
+
 void MainWindow::on_m_pActionSettings_triggered()
 {
     ProcessMode lastProcessMode = appConfig().processMode();
+    bool lastAutoConfig = appConfig().autoConfig();
 
     SettingsDialog dlg(this, appConfig());
     dlg.exec();
@@ -1229,6 +1262,11 @@ void MainWindow::on_m_pActionSettings_triggered()
     if (lastProcessMode != appConfig().processMode())
     {
         onModeChanged(true, true);
+    }
+
+    if (lastAutoConfig != appConfig().autoConfig()) {
+        updateAutoConfigWidgets();
+        updateZeroconfService();
     }
 }
 
@@ -1290,13 +1328,6 @@ void MainWindow::on_m_pActivate_triggered()
 void MainWindow::on_m_pButtonApply_clicked()
 {
     restartSynergy();
-}
-
-void MainWindow::on_m_pComboServerList_currentIndexChanged(const QString &arg1)
-{
-    if (m_pComboServerList->count() != 0) {
-        restartSynergy();
-    }
 }
 
 #ifndef SYNERGY_ENTERPRISE

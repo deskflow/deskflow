@@ -125,6 +125,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         int raiseActivationDialog();
 #endif
 
+        void updateZeroconfService();
+
 public slots:
         void setEdition(Edition edition);
 #ifndef SYNERGY_ENTERPRISE
@@ -224,18 +226,16 @@ public slots:
         QMenu* m_pMenuWindow;
         QMenu* m_pMenuHelp;
         QAbstractButton* m_pCancelButton;
-        bool m_SuppressAutoConfigWarning;
-        bool m_SuppressEmptyServerWarning;
         qRuningState m_ExpectedRunningState;
         QMutex m_StopDesktopMutex;
         SslCertificate* m_pSslCertificate;
         bool m_SecureSocket;
 
+        void updateAutoConfigWidgets();
+        
 private slots:
     void on_m_pButtonApply_clicked();
     void on_windowShown();
-
-    void on_m_pComboServerList_currentIndexChanged(const QString &arg1);
 
 signals:
     void windowShown();

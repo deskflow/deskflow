@@ -34,12 +34,16 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-BonjourWindows::BonjourWindows(SettingsDialog* settingsDialog, MainWindow* mainWindow) :
+BonjourWindows::BonjourWindows(
+        SettingsDialog* settingsDialog,
+        MainWindow* mainWindow,
+        AppConfig& appConfig) :
     m_pSettingsDialog(settingsDialog),
     m_pMainWindow(mainWindow),
     m_pBonjourInstall(nullptr),
     m_pDownloadMessageBox(nullptr),
-    m_pDataDownloader(nullptr)
+    m_pDataDownloader(nullptr),
+    m_appConfig(appConfig)
 {
 }
 
@@ -58,17 +62,17 @@ BonjourWindows::~BonjourWindows()
     }
 }
 
-void BonjourWindows::download()
+void BonjourWindows::downloadAndInstall()
 {
     QUrl url;
     int arch = getProcessorArch();
     if (arch == kProcessorArchWin32) {
         url.setUrl(bonjourBaseUrl + bonjourFilename32);
-        m_pMainWindow->appendLogInfo("downloading 32-bit bonjour");
+        m_pMainWindow->appendLogInfo("downloading bonjour (32-bit)");
     }
     else if (arch == kProcessorArchWin64) {
         url.setUrl(bonjourBaseUrl + bonjourFilename64);
-        m_pMainWindow->appendLogInfo("downloading 64-bit bonjour");
+        m_pMainWindow->appendLogInfo("downloading bonjour (64-bit)");
     }
     else {
         QMessageBox::critical(
@@ -79,7 +83,7 @@ void BonjourWindows::download()
 
     if (m_pDataDownloader == nullptr) {
         m_pDataDownloader = new DataDownloader(this);
-        connect(m_pDataDownloader, SIGNAL(isComplete()), SLOT(installBonjour()));
+        connect(m_pDataDownloader, SIGNAL(isComplete()), SLOT(downloadFinished()));
     }
 
     m_pDataDownloader->download(url);
@@ -90,7 +94,7 @@ void BonjourWindows::download()
     }
 
     m_pDownloadMessageBox = new QMessageBox(m_pSettingsDialog);
-    m_pDownloadMessageBox->setWindowTitle("Synergy");
+    m_pDownloadMessageBox->setWindowTitle("Synergy Auto Config");
     m_pDownloadMessageBox->setIcon(QMessageBox::Information);
     m_pDownloadMessageBox->setText("Installing Bonjour, please wait...");
     QAbstractButton* cancel = m_pDownloadMessageBox->addButton(
@@ -103,8 +107,16 @@ void BonjourWindows::download()
     }
 }
 
+void BonjourWindows::downloadFinished()
+{
+    m_pMainWindow->appendLogInfo("bonjour downloaded");
+    install();
+}
+
 void BonjourWindows::install()
 {
+    m_pMainWindow->appendLogInfo("installing bonjour");
+
     QString tempLocation = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
 
     QString filename = tempLocation;
@@ -137,8 +149,7 @@ void BonjourWindows::install()
     m_pBonjourInstall = new CommandProcess("msiexec", arguments);
 
     QThread* thread = new QThread;
-    connect(m_pBonjourInstall, SIGNAL(finished()), this,
-        SLOT(bonjourInstallFinished()));
+    connect(m_pBonjourInstall, SIGNAL(finished()), this, SLOT(installFinished()));
     connect(m_pBonjourInstall, SIGNAL(finished()), thread, SLOT(quit()));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
@@ -184,7 +195,8 @@ bool BonjourWindows::isRunning() const
 
 void BonjourWindows::installFinished()
 {
-    m_pMainWindow->appendLogInfo("bonjour install finished");
+    m_pMainWindow->appendLogInfo("bonjour installed");
+    m_appConfig.setAutoConfig(true);
     m_pSettingsDialog->allowAutoConfig();
 }
 
