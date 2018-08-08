@@ -38,8 +38,8 @@ const char* ZeroconfService:: m_ClientServiceName = "_synergyClient._tcp";
 
 ZeroconfService::ZeroconfService(MainWindow* mainWindow) :
     m_pMainWindow(mainWindow),
-    m_pZeroconfBrowser(0),
-    m_pZeroconfRegister(0),
+    m_pZeroconfBrowser(nullptr),
+    m_pZeroconfRegister(nullptr),
     m_ServiceRegistered(false)
 {
     if (m_pMainWindow->synergyType() == MainWindow::synergyServer) {
@@ -81,7 +81,7 @@ void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
         registerService(false);
         m_pMainWindow->appendLogInfo(tr("zeroconf server detected: %1").arg(
             record.serviceName));
-        m_pMainWindow->serverDetected(record.serviceName);
+        m_pMainWindow->zeroconfServerDetected(record.serviceName);
     }
 }
 
@@ -96,7 +96,8 @@ void ZeroconfService::clientDetected(const QList<ZeroconfRecord>& list)
 
 void ZeroconfService::errorHandle(DNSServiceErrorType errorCode)
 {
-    QMessageBox::critical(0, tr("Zero configuration service"),
+    QMessageBox::critical(
+        m_pMainWindow, tr("Synergy Auto Config"),
         tr("Error code: %1.").arg(errorCode));
 }
 
@@ -127,8 +128,9 @@ bool ZeroconfService::registerService(bool server)
 
     if (!m_ServiceRegistered) {
         if (!m_zeroconfServer.listen()) {
-            QMessageBox::critical(0, tr("Zero configuration service"),
-                tr("Unable to start the zeroconf: %1.")
+            QMessageBox::critical(
+                m_pMainWindow, tr("Synergy Auto Config"),
+                tr("Unable to start zeroconf: %1.")
                 .arg(m_zeroconfServer.errorString()));
             result = false;
         }
@@ -137,7 +139,8 @@ bool ZeroconfService::registerService(bool server)
             if (server) {
                 QString localIP = getLocalIPAddresses();
                 if (localIP.isEmpty()) {
-                    QMessageBox::warning(m_pMainWindow, tr("Synergy"),
+                    QMessageBox::warning(
+                        m_pMainWindow, tr("Synergy Auto Config"),
                         tr("Failed to get local IP address. "
                            "Please manually type in server address "
                            "on your clients"));

@@ -25,7 +25,9 @@
 #include "SynergyLocale.h"
 #include "CoreInterface.h"
 
+class MainWindow;
 class AppConfig;
+class BonjourWindows;
 
 class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
 {
@@ -35,6 +37,7 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         SettingsDialog(QWidget* parent, AppConfig& config);
         static QString browseForSynergyc(QWidget* parent, const QString& programDir, const QString& synergycName);
         static QString browseForSynergys(QWidget* parent, const QString& programDir, const QString& synergysName);
+        void allowAutoConfig();
 
     protected:
         void accept();
@@ -43,15 +46,18 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         AppConfig& appConfig() { return m_appConfig; }
 
     private:
+        MainWindow* m_pMainWindow;
         AppConfig& m_appConfig;
         SynergyLocale m_Locale;
         CoreInterface m_CoreInterface;
+        BonjourWindows* m_pBonjourWindows;
 
     private slots:
         void on_m_pCheckBoxEnableCrypto_toggled(bool checked);
         void on_m_pComboLanguage_currentIndexChanged(int index);
         void on_m_pCheckBoxLogToFile_stateChanged(int );
         void on_m_pButtonBrowseLog_clicked();
+        void on_m_pLabelInstallBonjour_linkActivated(const QString &link);
 };
 
 #endif

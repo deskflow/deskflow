@@ -54,7 +54,6 @@ AppConfig::AppConfig(QSettings* settings) :
     m_ProcessMode(DEFAULT_PROCESS_MODE),
     m_AutoConfig(true),
     m_ElevateMode(defaultElevateMode),
-    m_AutoConfigPrompted(false),
     m_CryptoEnabled(false),
     m_AutoHide(false),
     m_LastExpiringWarningTime(0)
@@ -147,7 +146,6 @@ void AppConfig::loadSettings()
                                         QVariant(static_cast<int>(defaultElevateMode)));
     }
     m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
-    m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
     m_Edition = static_cast<Edition>(settings().value("edition", kUnregistered).toInt());
     m_ActivateEmail = settings().value("activateEmail", "").toString();
     m_CryptoEnabled = settings().value("cryptoEnabled", true).toBool();
@@ -174,7 +172,6 @@ void AppConfig::saveSettings()
     // flag is mapped this way
     settings().setValue("elevateMode", m_ElevateMode == ElevateAlways);
     settings().setValue("elevateModeEnum", static_cast<int>(m_ElevateMode));
-    settings().setValue("autoConfigPrompted", m_AutoConfigPrompted);
     settings().setValue("edition", m_Edition);
     settings().setValue("cryptoEnabled", m_CryptoEnabled);
     settings().setValue("autoHide", m_AutoHide);
@@ -232,13 +229,6 @@ void AppConfig::setElevateMode(ElevateMode em) { m_ElevateMode = em; }
 void AppConfig::setAutoConfig(bool autoConfig)
 {
     m_AutoConfig = autoConfig;
-}
-
-bool AppConfig::autoConfigPrompted()  { return m_AutoConfigPrompted; }
-
-void AppConfig::setAutoConfigPrompted(bool prompted)
-{
-    m_AutoConfigPrompted = prompted;
 }
 
 #ifndef SYNERGY_ENTERPRISE

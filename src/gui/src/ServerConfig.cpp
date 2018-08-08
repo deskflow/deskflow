@@ -303,7 +303,7 @@ int ServerConfig::autoAddScreen(const QString name)
         }
     }
     if (findScreenName(name, targetIndex)) {
-        // already exists.
+        m_pMainWindow->appendLogDebug(QString("ignoring screen already in config: %1").arg(name));
         return kAutoAddScreenIgnore;
     }
 

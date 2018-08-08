@@ -48,7 +48,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
+          <pixmap resource="../res/Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
          </property>
         </widget>
        </item>
@@ -99,7 +99,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
+          <pixmap resource="../res/Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
          </property>
         </widget>
        </item>
@@ -122,6 +122,81 @@
           <size>
            <width>469</width>
            <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="m_pWidgetAutoConfig" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>28</height>
+       </size>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>8</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="m_pIconAutoConfig">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>16</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>244</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../res/Synergy.qrc">:/res/icons/16x16/auto-config.png</pixmap>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="m_pLabelAutoConfig">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manual Config mode active, consider using Auto Config instead (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Settings&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::RichText</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="m_pSpacerAutoConfig">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>200</width>
+           <height>0</height>
           </size>
          </property>
         </spacer>
@@ -289,9 +364,9 @@
         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
        </property>
        <item row="0" column="0">
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="m_pLabelComputerName">
          <property name="text">
-          <string>Screen name:</string>
+          <string>Client name:</string>
          </property>
         </widget>
        </item>
@@ -305,7 +380,7 @@
        <item row="2" column="0">
         <widget class="QLabel" name="m_pLabelServerName">
          <property name="text">
-          <string>&amp;Server IP:</string>
+          <string>&amp;Server:</string>
          </property>
          <property name="buddy">
           <cstring>m_pLineEditHostname</cstring>
@@ -313,16 +388,25 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLineEdit" name="m_pLineEditHostname"/>
-       </item>
-       <item row="3" column="0">
-        <widget class="QCheckBox" name="m_pCheckBoxAutoConfig">
-         <property name="text">
-          <string>Auto config</string>
+        <widget class="QLineEdit" name="m_pLineEditHostname">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Hostname or IP address of the server computer.</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
+       <item row="4" column="1">
         <widget class="QComboBox" name="m_pComboServerList">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -332,9 +416,16 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>120</width>
+           <width>200</width>
            <height>0</height>
           </size>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="m_pLabelAutoDetected">
+         <property name="text">
+          <string>Server:</string>
          </property>
         </widget>
        </item>
@@ -391,7 +482,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="Synergy.qrc">:/res/icons/16x16/padlock.png</pixmap>
+         <pixmap resource="../res/Synergy.qrc">:/res/icons/16x16/padlock.png</pixmap>
         </property>
        </widget>
       </item>
@@ -542,7 +633,7 @@
   </action>
  </widget>
  <resources>
-  <include location="Synergy.qrc"/>
+  <include location="../res/Synergy.qrc"/>
  </resources>
  <connections>
   <connection>

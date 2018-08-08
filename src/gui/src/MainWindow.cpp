@@ -27,7 +27,6 @@
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
 #include "ActivationDialog.h"
-#include "ZeroconfService.h"
 #include "DataDownloader.h"
 #include "CommandProcess.h"
 #include "LicenseManager.h"
@@ -35,6 +34,7 @@
 #include "QUtility.h"
 #include "ProcessorArch.h"
 #include "SslCertificate.h"
+#include "Zeroconf.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -52,17 +52,8 @@
 #endif
 
 #if defined(Q_OS_WIN)
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#endif
-
-#if defined(Q_OS_WIN)
 static const char synergyConfigName[] = "synergy.sgc";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
-static QString bonjourBaseUrl = "http://binaries.symless.com/bonjour/";
-static const char bonjourFilename32[] = "Bonjour.msi";
-static const char bonjourFilename64[] = "Bonjour64.msi";
-static const char bonjourTargetFilename[] = "Bonjour.msi";
 #else
 static const char synergyConfigName[] = "synergy.conf";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
@@ -70,6 +61,8 @@ static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.
 
 static const char* tlsVersion = "TLS 1.2";
 static const char* tlsCheckString = "network encryption protocol: TLSv1.2";
+
+static const int debugLogLevel = 1;
 
 static const char* synergyIconFiles[] =
 {
@@ -85,11 +78,14 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig)
 MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
                         LicenseManager& licenseManager)
 #endif
-:   m_Settings(settings),
-    m_AppConfig(&appConfig),
+:
 #ifndef SYNERGY_ENTERPRISE
     m_LicenseManager(&licenseManager),
+    m_ActivationDialogRunning(false),
 #endif
+    m_pZeroconf(nullptr),
+    m_Settings(settings),
+    m_AppConfig(&appConfig),
     m_pSynergy(NULL),
     m_SynergyState(synergyDisconnected),
     m_ServerConfig(&m_Settings, 5, 3, m_AppConfig->screenName(), this),
@@ -102,22 +98,15 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
     m_pMenuEdit(NULL),
     m_pMenuWindow(NULL),
     m_pMenuHelp(NULL),
-#ifndef SYNERGY_ENTERPRISE
-    m_pZeroconfService(NULL),
-#endif
-    m_pDataDownloader(NULL),
-    m_DownloadMessageBox(NULL),
     m_pCancelButton(NULL),
-    m_SuppressAutoConfigWarning(false),
-    m_BonjourInstall(NULL),
-    m_SuppressEmptyServerWarning(false),
     m_ExpectedRunningState(kStopped),
-    m_pSslCertificate(NULL)
-#ifndef SYNERGY_ENTERPRISE
-    , m_ActivationDialogRunning(false)
-#endif
-    , m_SecureSocket(false)
+    m_pSslCertificate(NULL),
+    m_SecureSocket(false)
 {
+#ifndef SYNERGY_ENTERPRISE
+    m_pZeroconf = new Zeroconf(this);
+#endif
+
     setupUi(this);
 
     createMenuBar();
@@ -146,11 +135,6 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
     setMinimumSize(size());
 #endif
 
-    m_SuppressAutoConfigWarning = true;
-    m_pCheckBoxAutoConfig->setChecked(appConfig.autoConfig());
-    m_SuppressAutoConfigWarning = false;
-
-    m_pComboServerList->hide();
     m_trialWidget->hide();
 
     // hide padlock icon
@@ -191,7 +175,11 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
 
 #ifdef SYNERGY_ENTERPRISE
     m_pActivate->setVisible(false);
-    m_pCheckBoxAutoConfig->setVisible(false);
+#endif
+
+#ifndef SYNERGY_ENTERPRISE
+    updateZeroconfService();
+    updateAutoConfigWidgets();
 #endif
 }
 
@@ -202,19 +190,11 @@ MainWindow::~MainWindow()
         stopDesktop();
     }
 
-    saveSettings();
-
 #ifndef SYNERGY_ENTERPRISE
-    delete m_pZeroconfService;
+    delete m_pZeroconf;
 #endif
 
-    if (m_DownloadMessageBox != NULL) {
-        delete m_DownloadMessageBox;
-    }
-
-    if (m_BonjourInstall != NULL) {
-        delete m_BonjourInstall;
-    }
+    saveSettings();
 
     delete m_pSslCertificate;
 }
@@ -229,19 +209,11 @@ void MainWindow::open()
 
     m_VersionChecker.checkLatest();
 
-#ifndef SYNERGY_ENTERPRISE
-    if (!appConfig().autoConfigPrompted()) {
-        promptAutoConfig();
-    }
-#endif
-
     // only start if user has previously started. this stops the gui from
     // auto hiding before the user has configured synergy (which of course
     // confuses first time users, who think synergy has crashed).
     if (appConfig().startedBefore() && appConfig().processMode() == Desktop) {
-        m_SuppressEmptyServerWarning = true;
         startSynergy();
-        m_SuppressEmptyServerWarning = false;
     }
 }
 
@@ -438,7 +410,7 @@ void MainWindow::appendLogInfo(const QString& text)
 }
 
 void MainWindow::appendLogDebug(const QString& text) {
-    if (appConfig().logLevel() >= 4) {
+    if (appConfig().logLevel() >= debugLogLevel) {
         appendLogRaw(getTimeStamp() + " DEBUG: " + text);
     }
 }
@@ -773,7 +745,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 #ifndef SYNERGY_ENTERPRISE
     // check auto config first, if it is disabled or no server detected,
     // use line edit host name if it is not empty
-    if (m_pCheckBoxAutoConfig->isChecked()) {
+    if (appConfig().autoConfig()) {
         if (m_pComboServerList->count() != 0) {
             QString serverIp = m_pComboServerList->currentText();
             args << serverIp + ":" + QString::number(appConfig().port());
@@ -784,15 +756,13 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 
     if (m_pLineEditHostname->text().isEmpty()) {
         show();
-        if (!m_SuppressEmptyServerWarning) {
-            QMessageBox::warning(this, tr("Hostname is empty"),
-                             tr("Please fill in a hostname for the synergy client to connect to."));
-        }
+        QMessageBox::warning(
+            this, tr("Hostname is empty"),
+            tr("Please fill in a hostname for the synergy client to connect to."));
         return false;
     }
 
     args << m_pLineEditHostname->text() + ":" + QString::number(appConfig().port());
-
     return true;
 }
 
@@ -1101,30 +1071,19 @@ void MainWindow::changeEvent(QEvent* event)
     }
 }
 
-#ifndef SYNERGY_ENTERPRISE
-void MainWindow::updateZeroconfService()
+void MainWindow::zeroconfServerDetected(const QString name)
 {
-    QMutexLocker locker(&m_UpdateZeroconfMutex);
-
-    if (isBonjourRunning()) {
-        if (!m_AppConfig->wizardShouldRun()) {
-            if (m_pZeroconfService) {
-                delete m_pZeroconfService;
-                m_pZeroconfService = NULL;
-            }
-
-            if (m_AppConfig->autoConfig() || synergyType() == synergyServer) {
-                m_pZeroconfService = new ZeroconfService(this);
-            }
-        }
+    // don't add to the server combo box if not in client mode.
+    if (synergyType() != synergyClient) {
+        return;
     }
-}
-#endif
 
-void MainWindow::serverDetected(const QString name)
-{
+    // don't add yourself to the server list.
+    if (getIPAddresses().contains(name)) {
+        return;
+    }
+
     if (m_pComboServerList->findText(name) == -1) {
-        // Note: the first added item triggers startSynergy
         m_pComboServerList->addItem(name);
     }
 
@@ -1223,21 +1182,15 @@ MainWindow::licenseManager() const
 void MainWindow::on_m_pGroupClient_toggled(bool on)
 {
     m_pGroupServer->setChecked(!on);
-#ifndef SYNERGY_ENTERPRISE
-    if (on) {
-        updateZeroconfService();
-    }
-#endif
+
+    // only call in either client or server toggle, but not both
+    // since the toggle functions call eachother indirectly.
+    updateZeroconfService();
 }
 
 void MainWindow::on_m_pGroupServer_toggled(bool on)
 {
     m_pGroupClient->setChecked(!on);
-#ifndef SYNERGY_ENTERPRISE
-    if (on) {
-        updateZeroconfService();
-    }
-#endif
 }
 
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
@@ -1272,9 +1225,51 @@ void MainWindow::on_m_pActionAbout_triggered()
     dlg.exec();
 }
 
+void MainWindow::updateZeroconfService()
+{
+#ifndef SYNERGY_ENTERPRISE
+
+    // reset the server list in case one has gone away.
+    // it'll be re-added after the zeroconf service restarts.
+    m_pComboServerList->clear();
+
+    if (m_pZeroconf != nullptr) {
+        if (appConfig().autoConfig()) {
+            m_pZeroconf->startService();
+        }
+        else {
+            m_pZeroconf->stopService();
+        }
+    }
+#endif
+}
+
+void MainWindow::updateAutoConfigWidgets()
+{
+    if (appConfig().autoConfig()) {
+        m_pLabelAutoDetected->show();
+        m_pComboServerList->show();
+
+        m_pLabelServerName->hide();
+        m_pLineEditHostname->hide();
+
+        m_pWidgetAutoConfig->hide();
+    }
+    else {
+        m_pLabelServerName->show();
+        m_pLineEditHostname->show();
+
+        m_pLabelAutoDetected->hide();
+        m_pComboServerList->hide();
+
+        m_pWidgetAutoConfig->show();
+    }
+}
+
 void MainWindow::on_m_pActionSettings_triggered()
 {
     ProcessMode lastProcessMode = appConfig().processMode();
+    bool lastAutoConfig = appConfig().autoConfig();
 
     SettingsDialog dlg(this, appConfig());
     dlg.exec();
@@ -1283,40 +1278,45 @@ void MainWindow::on_m_pActionSettings_triggered()
     {
         onModeChanged(true, true);
     }
+
+    if (lastAutoConfig != appConfig().autoConfig()) {
+        updateAutoConfigWidgets();
+        updateZeroconfService();
+    }
 }
 
 void MainWindow::autoAddScreen(const QString name)
 {
-    if (!m_ServerConfig.ignoreAutoConfigClient()) {
+    if (m_ServerConfig.ignoreAutoConfigClient()) {
+        appendLogDebug(QString("ignoring zeroconf screen: %1").arg(name));
+        return;
+    }
+
 #ifndef SYNERGY_ENTERPRISE
-        if (m_ActivationDialogRunning) {
-            // TODO: refactor this code
-            // add this screen to the pending list and check this list until
-            // users finish activation dialog
-            m_PendingClientNames.append(name);
-            return;
-        }
+    if (m_ActivationDialogRunning) {
+        // TODO: refactor this code
+        // add this screen to the pending list and check this list until
+        // users finish activation dialog
+        m_PendingClientNames.append(name);
+        return;
+    }
 #endif
 
-        int r = m_ServerConfig.autoAddScreen(name);
-        if (r != kAutoAddScreenOk) {
-            switch (r) {
-            case kAutoAddScreenManualServer:
-                showConfigureServer(
-                    tr("Please add the server (%1) to the grid.")
-                        .arg(appConfig().screenName()));
-                break;
+    int r = m_ServerConfig.autoAddScreen(name);
+    if (r != kAutoAddScreenOk) {
+        switch (r) {
+        case kAutoAddScreenManualServer:
+            showConfigureServer(
+                tr("Please add the server (%1) to the grid.")
+                    .arg(appConfig().screenName()));
+            break;
 
-            case kAutoAddScreenManualClient:
-                showConfigureServer(
-                    tr("Please drag the new client screen (%1) "
-                        "to the desired position on the grid.")
-                        .arg(name));
-                break;
-            }
-        }
-        else {
-            restartSynergy();
+        case kAutoAddScreenManualClient:
+            showConfigureServer(
+                tr("Please drag the new client screen (%1) "
+                    "to the desired position on the grid.")
+                    .arg(name));
+            break;
         }
     }
 }
@@ -1345,211 +1345,7 @@ void MainWindow::on_m_pButtonApply_clicked()
     restartSynergy();
 }
 
-#if defined(Q_OS_WIN)
-bool MainWindow::isServiceRunning(QString name)
-{
-    SC_HANDLE hSCManager;
-    hSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_CONNECT);
-    if (hSCManager == NULL) {
-        appendLogError("failed to open a service controller manager, error: " +
-            GetLastError());
-        return false;
-    }
-
-    auto array = name.toLocal8Bit();
-    SC_HANDLE hService = OpenService(hSCManager, array.data(), SERVICE_QUERY_STATUS);
-
-    if (hService == NULL) {
-        appendLogDebug("failed to open service: " + name);
-        return false;
-    }
-
-    SERVICE_STATUS status;
-    if (QueryServiceStatus(hService, &status)) {
-        if (status.dwCurrentState == SERVICE_RUNNING) {
-            return true;
-        }
-    }
-#else
-bool MainWindow::isServiceRunning()
-{
-#endif
-    return false;
-}
-
 #ifndef SYNERGY_ENTERPRISE
-bool MainWindow::isBonjourRunning()
-{
-    bool result = false;
-
-#if defined(Q_OS_WIN)
-    result = isServiceRunning("Bonjour Service");
-#else
-    result = true;
-#endif
-
-    return result;
-}
-
-void MainWindow::downloadBonjour()
-{
-#if defined(Q_OS_WIN)
-    QUrl url;
-    int arch = getProcessorArch();
-    if (arch == kProcessorArchWin32) {
-        url.setUrl(bonjourBaseUrl + bonjourFilename32);
-        appendLogInfo("downloading 32-bit Bonjour");
-    }
-    else if (arch == kProcessorArchWin64) {
-        url.setUrl(bonjourBaseUrl + bonjourFilename64);
-        appendLogInfo("downloading 64-bit Bonjour");
-    }
-    else {
-        QMessageBox::critical(
-            this, tr("Synergy"),
-            tr("Failed to detect system architecture."));
-        return;
-    }
-
-    if (m_pDataDownloader == NULL) {
-        m_pDataDownloader = new DataDownloader(this);
-        connect(m_pDataDownloader, SIGNAL(isComplete()), SLOT(installBonjour()));
-    }
-
-    m_pDataDownloader->download(url);
-
-    if (m_DownloadMessageBox == NULL) {
-        m_DownloadMessageBox = new QMessageBox(this);
-        m_DownloadMessageBox->setWindowTitle("Synergy");
-        m_DownloadMessageBox->setIcon(QMessageBox::Information);
-        m_DownloadMessageBox->setText("Installing Bonjour, please wait...");
-        m_DownloadMessageBox->setStandardButtons(0);
-        m_pCancelButton = m_DownloadMessageBox->addButton(
-            tr("Cancel"), QMessageBox::RejectRole);
-    }
-
-    m_DownloadMessageBox->exec();
-
-    if (m_DownloadMessageBox->clickedButton() == m_pCancelButton) {
-        m_pDataDownloader->cancel();
-    }
-#endif
-}
-
-void MainWindow::installBonjour()
-{
-#if defined(Q_OS_WIN)
-#if QT_VERSION >= 0x050000
-    QString tempLocation = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
-#else
-    QString tempLocation = QDesktopServices::storageLocation(
-                                QDesktopServices::TempLocation);
-#endif
-    QString filename = tempLocation;
-    filename.append("\\").append(bonjourTargetFilename);
-    QFile file(filename);
-    if (!file.open(QIODevice::WriteOnly)) {
-        m_DownloadMessageBox->hide();
-
-        QMessageBox::warning(
-            this, "Synergy",
-            tr("Failed to download Bonjour installer to location: %1")
-            .arg(tempLocation));
-        return;
-    }
-
-    file.write(m_pDataDownloader->data());
-    file.close();
-
-    QStringList arguments;
-    arguments.append("/i");
-    QString winFilename = QDir::toNativeSeparators(filename);
-    arguments.append(winFilename);
-    arguments.append("/passive");
-    if (m_BonjourInstall == NULL) {
-        m_BonjourInstall = new CommandProcess("msiexec", arguments);
-    }
-
-    QThread* thread = new QThread;
-    connect(m_BonjourInstall, SIGNAL(finished()), this,
-        SLOT(bonjourInstallFinished()));
-    connect(m_BonjourInstall, SIGNAL(finished()), thread, SLOT(quit()));
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
-    m_BonjourInstall->moveToThread(thread);
-    thread->start();
-
-    QMetaObject::invokeMethod(m_BonjourInstall, "run", Qt::QueuedConnection);
-
-    m_DownloadMessageBox->hide();
-#endif
-}
-
-void MainWindow::promptAutoConfig()
-{
-    if (!isBonjourRunning()) {
-        int r = QMessageBox::question(
-            this, tr("Synergy"),
-            tr("Do you want to enable auto config and install Bonjour?\n\n"
-               "This feature helps you establish the connection."),
-            QMessageBox::Yes | QMessageBox::No);
-
-        if (r == QMessageBox::Yes) {
-            m_AppConfig->setAutoConfig(true);
-            downloadBonjour();
-        }
-        else {
-            m_AppConfig->setAutoConfig(false);
-            m_pCheckBoxAutoConfig->setChecked(false);
-        }
-    }
-
-    m_AppConfig->setAutoConfigPrompted(true);
-}
-
-void MainWindow::on_m_pComboServerList_currentIndexChanged(QString )
-{
-    if (m_pComboServerList->count() != 0) {
-        restartSynergy();
-    }
-}
-
-void MainWindow::on_m_pCheckBoxAutoConfig_toggled(bool checked)
-{
-    if (!isBonjourRunning() && checked) {
-        if (!m_SuppressAutoConfigWarning) {
-            int r = QMessageBox::information(
-                this, tr("Synergy"),
-                tr("Auto config feature requires Bonjour.\n\n"
-                   "Do you want to install Bonjour?"),
-                QMessageBox::Yes | QMessageBox::No);
-
-            if (r == QMessageBox::Yes) {
-                downloadBonjour();
-            }
-        }
-
-        m_pCheckBoxAutoConfig->setChecked(false);
-        return;
-    }
-
-    m_pLineEditHostname->setDisabled(checked);
-    appConfig().setAutoConfig(checked);
-    updateZeroconfService();
-
-    if (!checked) {
-        m_pComboServerList->clear();
-        m_pComboServerList->hide();
-    }
-}
-
-void MainWindow::bonjourInstallFinished()
-{
-    appendLogInfo("Bonjour install finished");
-
-    m_pCheckBoxAutoConfig->setChecked(true);
-}
-
 int MainWindow::raiseActivationDialog()
 {
     if (m_ActivationDialogRunning) {
@@ -1567,9 +1363,6 @@ int MainWindow::raiseActivationDialog()
         }
 
         m_PendingClientNames.clear();
-    }
-    if (result == QDialog::Accepted) {
-        restartSynergy();
     }
     return result;
 }
@@ -1611,4 +1404,9 @@ void MainWindow::secureSocket(bool secureSocket)
     else {
         m_pLabelPadlock->hide();
     }
+}
+
+void MainWindow::on_m_pLabelAutoConfig_linkActivated(const QString &)
+{
+    m_pActionSettings->trigger();
 }

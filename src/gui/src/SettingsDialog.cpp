@@ -25,6 +25,8 @@
 #include "AppConfig.h"
 #include "SslCertificate.h"
 #include "MainWindow.h"
+#include "BonjourWindows.h"
+#include "Zeroconf.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -37,9 +39,13 @@ static const char networkSecurity[] = "ns";
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
     Ui::SettingsDialogBase(),
-       m_appConfig(config)
+    m_appConfig(config),
+    m_pBonjourWindows(nullptr)
 {
     setupUi(this);
+
+    // TODO: maybe just accept MainWindow type in ctor?
+    m_pMainWindow = dynamic_cast<MainWindow*>(parent);
 
     m_Locale.fillLanguageComboBox(m_pComboLanguage);
 
@@ -53,20 +59,41 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
 
 #if defined(Q_OS_WIN)
-       m_pComboElevate->setCurrentIndex(static_cast<int>(appConfig().elevateMode()));
+    m_pBonjourWindows = new BonjourWindows(this, m_pMainWindow, m_appConfig);
+    if (m_pBonjourWindows->isRunning()) {
+        allowAutoConfig();
+    }
+
+    m_pComboElevate->setCurrentIndex(static_cast<int>(appConfig().elevateMode()));
 
     m_pCheckBoxAutoHide->hide();
 #else
     // elevate checkbox is only useful on ms windows.
     m_pLabelElevate->hide();
     m_pComboElevate->hide();
+
+    // for linux and mac, allow auto config by default
+    allowAutoConfig();
 #endif
 
     m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
+
 #ifdef SYNERGY_ENTERPRISE
+
      m_pCheckBoxEnableCrypto->setEnabled(true);
+     m_pLabelProUpgrade->hide();
+
+     m_pCheckBoxAutoConfig->hide();
+     m_pLabelInstallBonjour->hide();
+
 #else
-    m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.edition() == kPro);
+
+    bool isPro = m_appConfig.edition() == kPro;
+    m_pCheckBoxEnableCrypto->setEnabled(isPro);
+    m_pLabelProUpgrade->setVisible(!isPro);
+
+    m_pCheckBoxAutoConfig->setChecked(appConfig().autoConfig());
+
 #endif
 }
 
@@ -81,6 +108,7 @@ void SettingsDialog::accept()
     appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
        appConfig().setElevateMode(static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
     appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
+    appConfig().setAutoConfig(m_pCheckBoxAutoConfig->isChecked());
     appConfig().saveSettings();
     QDialog::accept();
 }
@@ -96,7 +124,7 @@ void SettingsDialog::reject()
 
 void SettingsDialog::changeEvent(QEvent* event)
 {
-    if (event != 0)
+    if (event != nullptr)
     {
         switch (event->type())
         {
@@ -116,6 +144,13 @@ void SettingsDialog::changeEvent(QEvent* event)
             QDialog::changeEvent(event);
         }
     }
+}
+
+void SettingsDialog::allowAutoConfig()
+{
+    m_pLabelInstallBonjour->hide();
+    m_pCheckBoxAutoConfig->setEnabled(true);
+    m_pCheckBoxAutoConfig->setChecked(m_appConfig.autoConfig());
 }
 
 void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i)
@@ -152,7 +187,13 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
     if (checked) {
         SslCertificate sslCertificate;
         sslCertificate.generateCertificate();
-        MainWindow& mainWindow = dynamic_cast<MainWindow&> (*this->parent());
-        mainWindow.updateLocalFingerprint();
+        m_pMainWindow->updateLocalFingerprint();
     }
+}
+
+void SettingsDialog::on_m_pLabelInstallBonjour_linkActivated(const QString&)
+{
+#if defined(Q_OS_WIN)
+    m_pBonjourWindows->downloadAndInstall();
+#endif
 }
