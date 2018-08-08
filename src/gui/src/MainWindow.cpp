@@ -1251,6 +1251,7 @@ void MainWindow::updateAutoConfigWidgets()
         m_pLabelServerName->hide();
         m_pLineEditHostname->hide();
 
+        m_pWidgetAutoConfig->hide();
     }
     else {
         m_pLabelServerName->show();
@@ -1258,6 +1259,8 @@ void MainWindow::updateAutoConfigWidgets()
 
         m_pLabelAutoDetected->hide();
         m_pComboServerList->hide();
+
+        m_pWidgetAutoConfig->show();
     }
 }
 
@@ -1402,4 +1405,9 @@ void MainWindow::secureSocket(bool secureSocket)
     else {
         m_pLabelPadlock->hide();
     }
+}
+
+void MainWindow::on_m_pLabelAutoConfig_linkActivated(const QString &)
+{
+    m_pActionSettings->trigger();
 }

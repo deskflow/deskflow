@@ -237,6 +237,8 @@ private slots:
     void on_m_pButtonApply_clicked();
     void on_windowShown();
 
+    void on_m_pLabelAutoConfig_linkActivated(const QString &link);
+
 signals:
     void windowShown();
 };
