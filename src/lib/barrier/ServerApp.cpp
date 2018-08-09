@@ -145,7 +145,7 @@ ServerApp::help()
            << std::endl
            << "If no configuration file pathname is provided then the first of the" << std::endl
            << "following to load successfully sets the configuration:" << std::endl
-           << "  " << PathUtilities::concat(DataDirectories::profile(), SYS_CONFIG_NAME) << std::endl
+           << "  " << PathUtilities::concat(DataDirectories::profile(), USR_CONFIG_NAME) << std::endl
            << "  " << PathUtilities::concat(DataDirectories::systemconfig(), SYS_CONFIG_NAME) << std::endl;
 
     LOG((CLOG_PRINT "%s", buffer.str().c_str()));
