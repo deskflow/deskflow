@@ -628,25 +628,25 @@ Unicode::fromUTF8(const UInt8*& data, UInt32& n)
     case 4:
         c = ((static_cast<UInt32>(data[0]) & 0x07) << 18) |
             ((static_cast<UInt32>(data[1]) & 0x3f) << 12) |
-            ((static_cast<UInt32>(data[1]) & 0x3f) <<  6) |
-            ((static_cast<UInt32>(data[1]) & 0x3f)      );
+            ((static_cast<UInt32>(data[2]) & 0x3f) <<  6) |
+            ((static_cast<UInt32>(data[3]) & 0x3f)      );
         break;
 
     case 5:
         c = ((static_cast<UInt32>(data[0]) & 0x03) << 24) |
             ((static_cast<UInt32>(data[1]) & 0x3f) << 18) |
-            ((static_cast<UInt32>(data[1]) & 0x3f) << 12) |
-            ((static_cast<UInt32>(data[1]) & 0x3f) <<  6) |
-            ((static_cast<UInt32>(data[1]) & 0x3f)      );
+            ((static_cast<UInt32>(data[2]) & 0x3f) << 12) |
+            ((static_cast<UInt32>(data[3]) & 0x3f) <<  6) |
+            ((static_cast<UInt32>(data[4]) & 0x3f)      );
         break;
 
     case 6:
         c = ((static_cast<UInt32>(data[0]) & 0x01) << 30) |
             ((static_cast<UInt32>(data[1]) & 0x3f) << 24) |
-            ((static_cast<UInt32>(data[1]) & 0x3f) << 18) |
-            ((static_cast<UInt32>(data[1]) & 0x3f) << 12) |
-            ((static_cast<UInt32>(data[1]) & 0x3f) <<  6) |
-            ((static_cast<UInt32>(data[1]) & 0x3f)      );
+            ((static_cast<UInt32>(data[2]) & 0x3f) << 18) |
+            ((static_cast<UInt32>(data[3]) & 0x3f) << 12) |
+            ((static_cast<UInt32>(data[4]) & 0x3f) <<  6) |
+            ((static_cast<UInt32>(data[5]) & 0x3f)      );
         break;
 
     default:
