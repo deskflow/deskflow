@@ -179,10 +179,11 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
 
 #ifndef SYNERGY_ENTERPRISE
     updateZeroconfService();
-    updateAutoConfigWidgets();
 
     addZeroconfServer(m_AppConfig->autoConfigServer());
 #endif
+
+    updateAutoConfigWidgets();
 }
 
 MainWindow::~MainWindow()
@@ -1262,7 +1263,11 @@ void MainWindow::updateAutoConfigWidgets()
         m_pLabelAutoDetected->hide();
         m_pComboServerList->hide();
 
+#ifndef SYNERGY_ENTERPRISE
         m_pWidgetAutoConfig->show();
+#else
+        m_pWidgetAutoConfig->hide();
+#endif
     }
 }
 
