@@ -81,7 +81,7 @@ void ZeroconfService::serverDetected(const QList<ZeroconfRecord>& list)
         registerService(false);
         m_pMainWindow->appendLogInfo(tr("zeroconf server detected: %1").arg(
             record.serviceName));
-        m_pMainWindow->zeroconfServerDetected(record.serviceName);
+        m_pMainWindow->addZeroconfServer(record.serviceName);
     }
 }
 

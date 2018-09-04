@@ -180,6 +180,8 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
 #ifndef SYNERGY_ENTERPRISE
     updateZeroconfService();
     updateAutoConfigWidgets();
+
+    addZeroconfServer(m_AppConfig->autoConfigServer());
 #endif
 }
 
@@ -751,6 +753,13 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
             args << serverIp + ":" + QString::number(appConfig().port());
             return true;
         }
+        else {
+            show();
+            QMessageBox::warning(
+                this, tr("No server selected"),
+                tr("No auto config server was selected, try manual mode instead."));
+            return false;
+        }
     }
 #endif
 
@@ -1071,13 +1080,8 @@ void MainWindow::changeEvent(QEvent* event)
     }
 }
 
-void MainWindow::zeroconfServerDetected(const QString name)
+void MainWindow::addZeroconfServer(const QString name)
 {
-    // don't add to the server combo box if not in client mode.
-    if (synergyType() != synergyClient) {
-        return;
-    }
-
     // don't add yourself to the server list.
     if (getIPAddresses().contains(name)) {
         return;
@@ -1085,10 +1089,6 @@ void MainWindow::zeroconfServerDetected(const QString name)
 
     if (m_pComboServerList->findText(name) == -1) {
         m_pComboServerList->addItem(name);
-    }
-
-    if (m_pComboServerList->count() > 1) {
-        m_pComboServerList->show();
     }
 }
 
@@ -1409,4 +1409,10 @@ void MainWindow::secureSocket(bool secureSocket)
 void MainWindow::on_m_pLabelAutoConfig_linkActivated(const QString &)
 {
     m_pActionSettings->trigger();
+}
+
+void MainWindow::on_m_pComboServerList_currentIndexChanged(const QString &server)
+{
+    appConfig().setAutoConfigServer(server);
+    appConfig().saveSettings();
 }
