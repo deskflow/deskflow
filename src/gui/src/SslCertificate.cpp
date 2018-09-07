@@ -121,7 +121,7 @@ void SslCertificate::generateCertificate()
 
         // private key
         arguments.append("-newkey");
-        arguments.append("rsa:1024");
+        arguments.append("rsa:2048");
 
         QDir sslDir(sslDirPath);
         if (!sslDir.exists()) {
