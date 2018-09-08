@@ -6,6 +6,7 @@
 #define MyAppServiceName "Barrier"
 #define MyAppServiceExe "barrierd.exe"
 #define MyAppServiceDesc "Manages the Barrier background processes."
+#define MyAppListenerDesc "Barrier Listener"
 
 [Setup]
 AppId={{41036EA6-3F7A-4803-8AE0-469E5E91EFCC}
@@ -40,6 +41,10 @@ Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
+; there's no "check if exists" or "insert if not exists" for netsh's firewall commands
+; to avoid duplicate entries remove the existing rule (fails if it doesn't exist) before adding
+Filename: {sys}\netsh.exe; Parameters: "advfirewall firewall delete rule name=""{#MyAppListenerDesc}"""; Flags: runhidden
+Filename: {sys}\netsh.exe; Parameters: "advfirewall firewall add rule name=""{#MyAppListenerDesc}"" protocol=TCP dir=in localport=24800 action=allow"; Flags: runhidden
 Filename: {sys}\sc.exe; Parameters: "create {#MyAppServiceName} start= auto binPath= ""{app}\{#MyAppServiceExe}"""; Flags: runhidden
 Filename: {sys}\sc.exe; Parameters: "description {#MyAppServiceName} ""{#MyAppServiceDesc}"""; Flags: runhidden
 Filename: {sys}\sc.exe; Parameters: "start {#MyAppServiceName}"; Flags: runhidden
@@ -51,6 +56,7 @@ Type: files; Name: "{app}\barrierd.log"
 [UninstallRun]
 Filename: {sys}\sc.exe; Parameters: "stop {#MyAppServiceName}"; Flags: runhidden
 Filename: {sys}\sc.exe; Parameters: "delete {#MyAppServiceName}"; Flags: runhidden
+Filename: {sys}\netsh.exe; Parameters: "advfirewall firewall delete rule name=""{#MyAppListenerDesc}"""; Flags: runhidden
 
 [CustomMessages]
 DependenciesDir="redist"
@@ -68,7 +74,7 @@ begin
 	// initialize windows version
 	initwinversion();
 
-  vcredist2017('14'); // min allowed version is 14.0
+	vcredist2017('14'); // min allowed version is 14.0
 
 	Result := true;
 end;
