@@ -167,7 +167,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="m_pLabel_21">
         <property name="text">
-         <string>&amp;Interface:</string>
+         <string>&amp;Address:</string>
         </property>
         <property name="buddy">
          <cstring>m_pLineEditInterface</cstring>
