@@ -41,7 +41,5 @@ add_library(arch STATIC ${sources})
 
 if (UNIX)
     target_link_libraries(arch ${libs})
-    if (NOT CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-        target_link_libraries(arch dl)
-    endif()
+    target_link_libraries(arch ${CMAKE_DL_LIBS})
 endif()

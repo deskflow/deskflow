@@ -132,7 +132,9 @@ if (UNIX)
     # curl is used on both Linux and Mac
     find_package (CURL)
     if (CURL_FOUND)
-        list (APPEND libs curl)
+        include_directories(${CURL_INCLUDE_DIRS})
+        list (APPEND libs ${CURL_LIBRARIES})
+
     else()
         message (FATAL_ERROR "Missing library: curl")
     endif()
