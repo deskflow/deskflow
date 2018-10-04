@@ -47,7 +47,7 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 	setMinimumSize(size);
 	resize(size);
 #elif defined(Q_OS_LINUX)
-	QSize size(600, 330);
+	QSize size(600, 350);
 	setMaximumSize(size);
 	setMinimumSize(size);
 	resize(size);

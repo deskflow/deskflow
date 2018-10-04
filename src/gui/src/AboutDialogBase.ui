@@ -87,7 +87,7 @@ Visit our website for help and info (symless.com).
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="Synergy.qrc">:/res/image/about.png</pixmap>
+      <pixmap resource="../res/Synergy.qrc">:/res/image/about.png</pixmap>
      </property>
      <property name="margin">
       <number>0</number>
@@ -159,7 +159,25 @@ Visit our website for help and info (symless.com).
      </item>
     </layout>
    </item>
-   <item row="6" column="1">
+   <item row="0" column="2">
+    <widget class="QLabel" name="label_4">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Synergy</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QLabel" name="label_5">
@@ -200,7 +218,8 @@ Visit our website for help and info (symless.com).
   </layout>
  </widget>
  <resources>
-  <include location="Synergy.qrc"/>
+  <include location="../res/Synergy.qrc"/>
+  <include location="../res/Synergy.qrc"/>
  </resources>
  <connections>
   <connection>
