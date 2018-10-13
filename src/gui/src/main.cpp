@@ -88,15 +88,19 @@ int main(int argc, char* argv[])
 	}
 #endif
 
-	if (!waitForTray())
-	{
-		return -1;
-	}
+	int trayAvailable = waitForTray();
 
 	QApplication::setQuitOnLastWindowClosed(false);
 
 	QSettings settings;
 	AppConfig appConfig (&settings);
+
+	if (appConfig.getAutoHide() && !trayAvailable)
+	{
+		// force auto hide to false - otherwise there is no way to get the GUI back
+		fprintf(stdout, "System tray not available, force disabling auto hide!\n");
+		appConfig.setAutoHide(false);
+	}
 
 	app.switchTranslator(appConfig.language());
 
@@ -131,7 +135,7 @@ int waitForTray()
 		{
 			QMessageBox::critical(NULL, "Barrier",
 				QObject::tr("System tray is unavailable, don't close your window."));
-			return true;
+			return false;
 		}
 
 		QThreadImpl::msleep(TRAY_RETRY_WAIT);
