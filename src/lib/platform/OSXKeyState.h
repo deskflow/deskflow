@@ -166,7 +166,6 @@ private:
     };
 
     typedef std::map<KeyLayout, SInt32> GroupMap;
-    // typedef std::map<CFDataRef, SInt32> GroupMap;
     typedef std::map<UInt32, KeyID> VirtualKeyMap;
 
     VirtualKeyMap        m_virtualKeyMap;
