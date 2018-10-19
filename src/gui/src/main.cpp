@@ -74,8 +74,13 @@ int main(int argc, char* argv[])
 	QBarrierApplication app(argc, argv);
 
 #if defined(Q_OS_MAC)
-
 	if (app.applicationDirPath().startsWith("/Volumes/")) {
+        // macOS preferences track applications allowed assistive access by path
+        // Unfortunately, there's no user-friendly way to allow assistive access
+        // to applications that are not in default paths (/Applications),
+        // especially if an identically named application already exists in
+        // /Applications). Thus we require Barrier to reside in the /Applications
+        // folder
 		QMessageBox::information(
 			NULL, "Barrier",
 			"Please drag Barrier to the Applications folder, and open it from there.");
