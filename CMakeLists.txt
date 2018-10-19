@@ -388,6 +388,13 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (BARRIER_BUNDLE_BINARY_DIR ${BARRIER_BUNDLE_APP_DIR}/Contents/MacOS)
 
     configure_files (${BARRIER_BUNDLE_SOURCE_DIR} ${BARRIER_BUNDLE_DIR})
+
+    if (CMAKE_BUILD_TYPE STREQUAL "Release")
+        add_custom_target(Barrier_dmg ALL
+                          bash build_installer.sh
+                          DEPENDS barrier barriers barrierc
+                          WORKING_DIRECTORY ${BARRIER_BUNDLE_DIR})
+    endif()
 endif()
 
 #

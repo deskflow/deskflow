@@ -41,7 +41,10 @@ cp @CMAKE_RUNTIME_OUTPUT_DIRECTORY@/* . || exit 1
 # TODO: this is hacky and will probably break if there is more than one qt
 # version installed. need a better way to find this library
 B_COCOA=$(find /usr/local/Cellar/qt -type f -name libqcocoa.dylib | head -1)
-if [ $? -ne 0 ] || [ "x$B_COCOA" = "x" ]; then
+if [ "x$B_COCOA" = "x" ]; then
+    B_COCOA=$(find /opt/local/libexec/qt5/plugins -type f -name libqcocoa.dylib | head -1)
+fi
+if [ "x$B_COCOA" = "x" ]; then
     echo "Could not find cocoa platform plugin"
     exit 1
 fi
