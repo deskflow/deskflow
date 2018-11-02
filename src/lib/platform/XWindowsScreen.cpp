@@ -1004,6 +1004,53 @@ XWindowsScreen::saveShape()
 #endif
 }
 
+void
+XWindowsScreen::setShape(SInt32 width, SInt32 height)
+{
+	// set shape
+	m_x = 0;
+	m_y = 0;
+
+	m_w = width;
+	m_h = height;
+
+	// get center of default screen
+	m_xCenter = m_x + (m_w >> 1);
+	m_yCenter = m_y + (m_h >> 1);
+
+	// check if xinerama is enabled and there is more than one screen.
+	// get center of first Xinerama screen.  Xinerama appears to have
+	// a bug when XWarpPointer() is used in combination with
+	// XGrabPointer().  in that case, the warp is successful but the
+	// next pointer motion warps the pointer again, apparently to
+	// constrain it to some unknown region, possibly the region from
+	// 0,0 to Wm,Hm where Wm (Hm) is the minimum width (height) over
+	// all physical screens.  this warp only seems to happen if the
+	// pointer wasn't in that region before the XWarpPointer().  the
+	// second (unexpected) warp causes synergy to think the pointer
+	// has been moved when it hasn't.  to work around the problem,
+	// we warp the pointer to the center of the first physical
+	// screen instead of the logical screen.
+	m_xinerama = false;
+#if HAVE_X11_EXTENSIONS_XINERAMA_H
+	int eventBase, errorBase;
+	if ((XineramaQueryExtension(m_display, &eventBase, &errorBase) != 0) &&
+		(XineramaIsActive(m_display) != 0)) {
+		int numScreens;
+		XineramaScreenInfo* screens;
+		screens = XineramaQueryScreens(m_display, &numScreens);
+		if (screens != nullptr) {
+			if (numScreens > 1) {
+				m_xinerama = true;
+				m_xCenter  = screens[0].x_org + (screens[0].width  >> 1);
+				m_yCenter  = screens[0].y_org + (screens[0].height >> 1);
+			}
+			XFree(screens);
+		}
+	}
+#endif
+}
+
 Window
 XWindowsScreen::openWindow() const
 {
@@ -1120,6 +1167,9 @@ XWindowsScreen::openIM()
 	XWindowAttributes attr{};
 	XGetWindowAttributes(m_display, m_window, &attr);
 	XSelectInput(m_display, m_window, attr.your_event_mask | mask);
+
+	// listen for screen-resize messages
+	XSelectInput (m_display, m_root, StructureNotifyMask);
 }
 
 void
@@ -1391,6 +1441,13 @@ XWindowsScreen::handleSystemEvent(const Event& event, void* /*unused*/)
 	case MotionNotify:
 		if (m_isPrimary) {
 			onMouseMove(xevent->xmotion);
+		}
+		return;
+
+	case ConfigureNotify:
+		if (!m_isPrimary && xevent->xconfigure.window == m_root) {
+			setShape(xevent->xconfigure.width, xevent->xconfigure.height);
+			sendEvent(m_events->forIScreen().shapeChanged());
 		}
 		return;
 
