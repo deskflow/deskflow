@@ -344,7 +344,7 @@ XWindowsScreen::leave()
 	XMapRaised(m_display, m_window);
 
 	// grab the mouse and keyboard, if primary and possible
-	if (!grabMouseAndKeyboard()) {
+	if (m_isPrimary && !grabMouseAndKeyboard()) {
 		XUnmapWindow(m_display, m_window);
 		return false;
 	}
