@@ -590,6 +590,7 @@ ServerApp::createScreen()
         true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
 #elif WINAPI_XWINDOWS
     return new barrier::Screen(new XWindowsScreen(
+        new XWindowsImpl(),
         args().m_display, true, args().m_disableXInitThreads, 0, m_events), m_events);
 #elif WINAPI_CARBON
     return new barrier::Screen(new OSXScreen(m_events, true), m_events);

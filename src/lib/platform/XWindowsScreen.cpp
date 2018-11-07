@@ -37,40 +37,6 @@
 #include <cstring>
 #include <cstdlib>
 #include <algorithm>
-#if X_DISPLAY_MISSING
-#	error X11 is required to build barrier
-#else
-#	include <X11/X.h>
-#	include <X11/Xutil.h>
-#	define XK_MISCELLANY
-#	define XK_XKB_KEYS
-#	include <X11/keysymdef.h>
-#	if HAVE_X11_EXTENSIONS_DPMS_H
-		extern "C" {
-#		include <X11/extensions/dpms.h>
-		}
-#	endif
-#	if HAVE_X11_EXTENSIONS_XTEST_H
-#		include <X11/extensions/XTest.h>
-#	else
-#		error The XTest extension is required to build barrier
-#	endif
-#	if HAVE_X11_EXTENSIONS_XINERAMA_H
-		// Xinerama.h may lack extern "C" for inclusion by C++
-		extern "C" {
-#		include <X11/extensions/Xinerama.h>
-		}
-#	endif
-#	if HAVE_X11_EXTENSIONS_XRANDR_H
-#		include <X11/extensions/Xrandr.h>
-#	endif
-#	if HAVE_XKB_EXTENSION
-#		include <X11/XKBlib.h>
-#	endif
-#	ifdef HAVE_XI2
-#		include <X11/extensions/XInput2.h>
-#	endif
-#endif
 
 static int xi_opcode;
 
@@ -92,6 +58,7 @@ static int xi_opcode;
 XWindowsScreen*		XWindowsScreen::s_screen = NULL;
 
 XWindowsScreen::XWindowsScreen(
+        IXWindowsImpl* impl,
 		const char* displayName,
 		bool isPrimary,
 		bool disableXInitThreads,
@@ -125,6 +92,7 @@ XWindowsScreen::XWindowsScreen(
 	m_events(events),
 	PlatformScreen(events)
 {
+    m_impl = impl;
 	assert(s_screen == NULL);
 
 	if (mouseScrollDelta==0) m_mouseScrollDelta=120;
@@ -132,18 +100,18 @@ XWindowsScreen::XWindowsScreen(
 	
 	if (!disableXInitThreads) {
 	  // initializes Xlib support for concurrent threads.
-	  if (XInitThreads() == 0)
+      if (m_impl->XInitThreads() == 0)
 	    throw XArch("XInitThreads() returned zero");
 	} else {
 		LOG((CLOG_DEBUG "skipping XInitThreads()"));
 	}
 
 	// set the X I/O error handler so we catch the display disconnecting
-	XSetIOErrorHandler(&XWindowsScreen::ioErrorHandler);
+    m_impl->XSetIOErrorHandler(&XWindowsScreen::ioErrorHandler);
 
 	try {
 		m_display     = openDisplay(displayName);
-		m_root        = DefaultRootWindow(m_display);
+        m_root        = m_impl->do_DefaultRootWindow(m_display);
 		saveShape();
 		m_window      = openWindow();
 		m_screensaver = new XWindowsScreenSaver(m_display,
@@ -154,10 +122,10 @@ XWindowsScreen::XWindowsScreen(
 	}
 	catch (...) {
 		if (m_display != NULL) {
-			XCloseDisplay(m_display);
+            m_impl->XCloseDisplay(m_display);
 		}
 		throw;
-	}
+    }
 
 	// primary/secondary screen only initialization
 	if (m_isPrimary) {
@@ -177,7 +145,7 @@ XWindowsScreen::XWindowsScreen(
 	}
 	else {
 		// become impervious to server grabs
-		XTestGrabControl(m_display, True);
+        m_impl->XTestGrabControl(m_display, True);
 	}
 
 	// initialize the clipboards
@@ -205,24 +173,25 @@ XWindowsScreen::~XWindowsScreen()
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		delete m_clipboard[id];
 	}
-	delete m_keyState;
+    delete m_keyState;
 	delete m_screensaver;
 	m_keyState    = NULL;
 	m_screensaver = NULL;
 	if (m_display != NULL) {
 		// FIXME -- is it safe to clean up the IC and IM without a display?
 		if (m_ic != NULL) {
-			XDestroyIC(m_ic);
+            m_impl->XDestroyIC(m_ic);
 		}
 		if (m_im != NULL) {
-			XCloseIM(m_im);
+            m_impl->XCloseIM(m_im);
 		}
-		XDestroyWindow(m_display, m_window);
-		XCloseDisplay(m_display);
+        m_impl->XDestroyWindow(m_display, m_window);
+        m_impl->XCloseDisplay(m_display);
 	}
-	XSetIOErrorHandler(NULL);
+    m_impl->XSetIOErrorHandler(NULL);
 
 	s_screen = NULL;
+    delete m_impl;
 }
 
 void
@@ -231,16 +200,16 @@ XWindowsScreen::enable()
 	if (!m_isPrimary) {
 		// get the keyboard control state
 		XKeyboardState keyControl;
-		XGetKeyboardControl(m_display, &keyControl);
+        m_impl->XGetKeyboardControl(m_display, &keyControl);
 		m_autoRepeat = (keyControl.global_auto_repeat == AutoRepeatModeOn);
 		m_keyState->setAutoRepeat(keyControl);
 
 		// move hider window under the cursor center
-		XMoveWindow(m_display, m_window, m_xCenter, m_yCenter);
+        m_impl->XMoveWindow(m_display, m_window, m_xCenter, m_yCenter);
 
 		// raise and show the window
 		// FIXME -- take focus?
-		XMapRaised(m_display, m_window);
+        m_impl->XMapRaised(m_display, m_window);
 
 		// warp the mouse to the cursor center
 		fakeMouseMove(m_xCenter, m_yCenter);
@@ -252,12 +221,12 @@ XWindowsScreen::disable()
 {
 	// release input context focus
 	if (m_ic != NULL) {
-		XUnsetICFocus(m_ic);
+        m_impl->XUnsetICFocus(m_ic);
 	}
 
 	// unmap the hider/grab window.  this also ungrabs the mouse and
 	// keyboard if they're grabbed.
-	XUnmapWindow(m_display, m_window);
+    m_impl->XUnmapWindow(m_display, m_window);
 
 	// restore auto-repeat state
 	if (!m_isPrimary && m_autoRepeat) {
@@ -272,14 +241,14 @@ XWindowsScreen::enter()
 
 	// release input context focus
 	if (m_ic != NULL) {
-		XUnsetICFocus(m_ic);
+        m_impl->XUnsetICFocus(m_ic);
 	}
 
 	// set the input focus to what it had been when we took it
 	if (m_lastFocus != None) {
 		// the window may not exist anymore so ignore errors
 		XWindowsUtil::ErrorLock lock(m_display);
-		XSetInputFocus(m_display, m_lastFocus, m_lastFocusRevert, CurrentTime);
+        m_impl->XSetInputFocus(m_display, m_lastFocus, m_lastFocusRevert, CurrentTime);
 	}
 
 	#if HAVE_X11_EXTENSIONS_DPMS_H
@@ -288,18 +257,18 @@ XWindowsScreen::enter()
 	int dummy;
 	CARD16 powerlevel;
 	BOOL enabled;
-	if (DPMSQueryExtension(m_display, &dummy, &dummy) &&
-	    DPMSCapable(m_display) &&
-	    DPMSInfo(m_display, &powerlevel, &enabled))
+    if (m_impl->DPMSQueryExtension(m_display, &dummy, &dummy) &&
+        m_impl->DPMSCapable(m_display) &&
+        m_impl->DPMSInfo(m_display, &powerlevel, &enabled))
 	{
 		if (enabled && powerlevel != DPMSModeOn)
-			DPMSForceLevel(m_display, DPMSModeOn);
+            m_impl->DPMSForceLevel(m_display, DPMSModeOn);
 	}
 	#endif
 	
 	// unmap the hider/grab window.  this also ungrabs the mouse and
 	// keyboard if they're grabbed.
-	XUnmapWindow(m_display, m_window);
+    m_impl->XUnmapWindow(m_display, m_window);
 
 /* maybe call this if entering for the screensaver
 	// set keyboard focus to root window.  the screensaver should then
@@ -310,7 +279,7 @@ XWindowsScreen::enter()
 	if (!m_isPrimary) {
 		// get the keyboard control state
 		XKeyboardState keyControl;
-		XGetKeyboardControl(m_display, &keyControl);
+        m_impl->XGetKeyboardControl(m_display, &keyControl);
 		m_autoRepeat = (keyControl.global_auto_repeat == AutoRepeatModeOn);
 		m_keyState->setAutoRepeat(keyControl);
 
@@ -338,24 +307,24 @@ XWindowsScreen::leave()
 		}
 
 		// move hider window under the cursor center
-		XMoveWindow(m_display, m_window, m_xCenter, m_yCenter);
+        m_impl->XMoveWindow(m_display, m_window, m_xCenter, m_yCenter);
 	}
 
 	// raise and show the window
-	XMapRaised(m_display, m_window);
+    m_impl->XMapRaised(m_display, m_window);
 
 	// grab the mouse and keyboard, if primary and possible
 	if (m_isPrimary && !grabMouseAndKeyboard()) {
-		XUnmapWindow(m_display, m_window);
+        m_impl->XUnmapWindow(m_display, m_window);
 		return false;
 	}
 
 	// save current focus
-	XGetInputFocus(m_display, &m_lastFocus, &m_lastFocusRevert);
+    m_impl->XGetInputFocus(m_display, &m_lastFocus, &m_lastFocusRevert);
 
 	// take focus
 	if (m_isPrimary || !m_preserveFocus) {
-		XSetInputFocus(m_display, m_window, RevertToPointerRoot, CurrentTime);
+        m_impl->XSetInputFocus(m_display, m_window, RevertToPointerRoot, CurrentTime);
 	}
 
 	// now warp the mouse.  we warp after showing the window so we're
@@ -371,7 +340,7 @@ XWindowsScreen::leave()
 	// set input context focus to our window
 	if (m_ic != NULL) {
 		XmbResetIC(m_ic);
-		XSetICFocus(m_ic);
+        m_impl->XSetICFocus(m_ic);
 		m_filtered.clear();
 	}
 
@@ -515,7 +484,7 @@ XWindowsScreen::getCursorPos(SInt32& x, SInt32& y) const
 	Window root, window;
 	int mx, my, xWindow, yWindow;
 	unsigned int mask;
-	if (XQueryPointer(m_display, m_root, &root, &window,
+    if (m_impl->XQueryPointer(m_display, m_root, &root, &window,
 								&mx, &my, &xWindow, &yWindow, &mask)) {
 		x = mx;
 		y = my;
@@ -540,7 +509,7 @@ XWindowsScreen::warpCursor(SInt32 x, SInt32 y)
 
 	// remove all input events before and including warp
 	XEvent event;
-	while (XCheckMaskEvent(m_display, PointerMotionMask |
+    while (m_impl->XCheckMaskEvent(m_display, PointerMotionMask |
 								ButtonPressMask | ButtonReleaseMask |
 								KeyPressMask | KeyReleaseMask |
 								KeymapStateMask,
@@ -609,7 +578,7 @@ XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 				KeyModifierSuper
 			};
 
-			XModifierKeymap* modKeymap = XGetModifierMapping(m_display);
+            XModifierKeymap* modKeymap = m_impl->XGetModifierMapping(m_display);
 			for (size_t j = 0; j < sizeof(s_hotKeyModifiers) /
 									sizeof(s_hotKeyModifiers[0]) && !err; ++j) {
 				// skip modifier if not in mask
@@ -672,7 +641,7 @@ XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 				for (int k = 0; k < modKeymap->max_keypermod && !err; ++k) {
 					KeyCode code = modifiermap[k];
 					if (modifiermap[k] != 0) {
-						XGrabKey(m_display, code, modifiers2, m_root,
+                        m_impl->XGrabKey(m_display, code, modifiers2, m_root,
 									False, GrabModeAsync, GrabModeAsync);
 						if (!err) {
 							hotKeys.push_back(std::make_pair(code, modifiers2));
@@ -681,7 +650,7 @@ XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 					}
 				}
 			}
-			XFreeModifiermap(modKeymap);
+            m_impl->XFreeModifiermap(modKeymap);
 		}
 
 		// a non-modifier key must be insensitive to CapsLock, NumLock and
@@ -719,7 +688,7 @@ XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 					}
 
 					// add grab
-					XGrabKey(m_display, *j, tmpModifiers, m_root,
+                    m_impl->XGrabKey(m_display, *j, tmpModifiers, m_root,
 										False, GrabModeAsync, GrabModeAsync);
 					if (!err) {
 						hotKeys.push_back(std::make_pair(*j, tmpModifiers));
@@ -734,7 +703,7 @@ XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 		// if any failed then unregister any we did get
 		for (HotKeyList::iterator j = hotKeys.begin();
 								j != hotKeys.end(); ++j) {
-			XUngrabKey(m_display, j->first, j->second, m_root);
+            m_impl->XUngrabKey(m_display, j->first, j->second, m_root);
 			m_hotKeyToIDMap.erase(HotKeyItem(j->first, j->second));
 		}
 
@@ -764,7 +733,7 @@ XWindowsScreen::unregisterHotKey(UInt32 id)
 		HotKeyList& hotKeys = i->second;
 		for (HotKeyList::iterator j = hotKeys.begin();
 								j != hotKeys.end(); ++j) {
-			XUngrabKey(m_display, j->first, j->second, m_root);
+            m_impl->XUngrabKey(m_display, j->first, j->second, m_root);
 			m_hotKeyToIDMap.erase(HotKeyItem(j->first, j->second));
 		}
 	}
@@ -805,7 +774,7 @@ XWindowsScreen::isAnyMouseButtonDown(UInt32& buttonID) const
 	Window root, window;
 	int xRoot, yRoot, xWindow, yWindow;
 	unsigned int state;
-	if (XQueryPointer(m_display, m_root, &root, &window,
+    if (m_impl->XQueryPointer(m_display, m_root, &root, &window,
 								&xRoot, &yRoot, &xWindow, &yWindow, &state)) {
 		return ((state & (Button1Mask | Button2Mask | Button3Mask |
 							Button4Mask | Button5Mask)) != 0);
@@ -826,9 +795,9 @@ XWindowsScreen::fakeMouseButton(ButtonID button, bool press)
 {
 	const unsigned int xButton = mapButtonToX(button);
 	if (xButton > 0 && xButton < 11) {
-		XTestFakeButtonEvent(m_display, xButton,
+        m_impl->XTestFakeButtonEvent(m_display, xButton,
 							press ? True : False, CurrentTime);
-		XFlush(m_display);
+        m_impl->XFlush(m_display);
 	}
 }
 
@@ -836,13 +805,13 @@ void
 XWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y)
 {
 	if (m_xinerama && m_xtestIsXineramaUnaware) {
-		XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
+        m_impl->XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
 	}
 	else {
 		XTestFakeMotionEvent(m_display, DefaultScreen(m_display),
 							x, y, CurrentTime);
 	}
-	XFlush(m_display);
+    m_impl->XFlush(m_display);
 }
 
 void
@@ -850,12 +819,12 @@ XWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 {
 	// FIXME -- ignore xinerama for now
 	if (false && m_xinerama && m_xtestIsXineramaUnaware) {
-//		XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
+//		m_impl->XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
 	}
 	else {
-		XTestFakeRelativeMotionEvent(m_display, dx, dy, CurrentTime);
+        m_impl->XTestFakeRelativeMotionEvent(m_display, dx, dy, CurrentTime);
 	}
-	XFlush(m_display);
+    m_impl->XFlush(m_display);
 }
 
 void
@@ -877,14 +846,14 @@ XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const
 		// Patch by Tom Chadwick.
 		KeyCode keycode = 0;
 		if (yDelta >= 0) {
-			keycode = XKeysymToKeycode(m_display, XK_Page_Up);
+            keycode = m_impl->XKeysymToKeycode(m_display, XK_Page_Up);
 		}
 		else {
-			keycode = XKeysymToKeycode(m_display, XK_Page_Down);
+            keycode = m_impl->XKeysymToKeycode(m_display, XK_Page_Down);
 		}
 		if (keycode != 0) {
-			XTestFakeKeyEvent(m_display, keycode, True,  CurrentTime);
-			XTestFakeKeyEvent(m_display, keycode, False, CurrentTime);
+            m_impl->XTestFakeKeyEvent(m_display, keycode, True,  CurrentTime);
+            m_impl->XTestFakeKeyEvent(m_display, keycode, False, CurrentTime);
 		}
 		return;
 	}
@@ -893,11 +862,11 @@ XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const
 
 	// send as many clicks as necessary
     for (; numEvents > 0; numEvents--) {
-		XTestFakeButtonEvent(m_display, xButton, True, CurrentTime);
-		XTestFakeButtonEvent(m_display, xButton, False, CurrentTime);
+        m_impl->XTestFakeButtonEvent(m_display, xButton, True, CurrentTime);
+        m_impl->XTestFakeButtonEvent(m_display, xButton, False, CurrentTime);
 	}
 
-	XFlush(m_display);
+    m_impl->XFlush(m_display);
 }
 
 Display*
@@ -913,7 +882,7 @@ XWindowsScreen::openDisplay(const char* displayName)
 
 	// open the display
 	LOG((CLOG_DEBUG "XOpenDisplay(\"%s\")", displayName));
-	Display* display = XOpenDisplay(displayName);
+    Display* display = m_impl->XOpenDisplay(displayName);
 	if (display == NULL) {
 		throw XScreenUnavailable(60.0);
 	}
@@ -921,10 +890,10 @@ XWindowsScreen::openDisplay(const char* displayName)
 	// verify the availability of the XTest extension
 	if (!m_isPrimary) {
 		int majorOpcode, firstEvent, firstError;
-		if (!XQueryExtension(display, XTestExtensionName,
+        if (!m_impl->XQueryExtension(display, XTestExtensionName,
 							&majorOpcode, &firstEvent, &firstError)) {
 			LOG((CLOG_ERR "XTEST extension not available"));
-			XCloseDisplay(display);
+            m_impl->XCloseDisplay(display);
 			throw XScreenOpenFailure();
 		}
 	}
@@ -933,14 +902,14 @@ XWindowsScreen::openDisplay(const char* displayName)
 	{
 		m_xkb = false;
 		int major = XkbMajorVersion, minor = XkbMinorVersion;
-		if (XkbLibraryVersion(&major, &minor)) {
+        if (m_impl->XkbLibraryVersion(&major, &minor)) {
 			int opcode, firstError;
-			if (XkbQueryExtension(display, &opcode, &m_xkbEventBase,
+            if (m_impl->XkbQueryExtension(display, &opcode, &m_xkbEventBase,
 								&firstError, &major, &minor)) {
 				m_xkb = true;
-				XkbSelectEvents(display, XkbUseCoreKbd,
+                m_impl->XkbSelectEvents(display, XkbUseCoreKbd,
 								XkbMapNotifyMask, XkbMapNotifyMask);
-				XkbSelectEventDetails(display, XkbUseCoreKbd,
+                m_impl->XkbSelectEventDetails(display, XkbUseCoreKbd,
 								XkbStateNotifyMask,
 								XkbGroupStateMask, XkbGroupStateMask);
 			}
@@ -951,10 +920,10 @@ XWindowsScreen::openDisplay(const char* displayName)
 #if HAVE_X11_EXTENSIONS_XRANDR_H
 	// query for XRandR extension
 	int dummyError;
-	m_xrandr = XRRQueryExtension(display, &m_xrandrEventBase, &dummyError);
+    m_xrandr = m_impl->XRRQueryExtension(display, &m_xrandrEventBase, &dummyError);
 	if (m_xrandr) {
 		// enable XRRScreenChangeNotifyEvent
-		XRRSelectInput(display, DefaultRootWindow(display), RRScreenChangeNotifyMask | RRCrtcChangeNotifyMask);
+        m_impl->XRRSelectInput(display, DefaultRootWindow(display), RRScreenChangeNotifyMask | RRCrtcChangeNotifyMask);
 	}
 #endif
 
@@ -991,11 +960,13 @@ XWindowsScreen::saveShape()
 	m_xinerama = false;
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
 	int eventBase, errorBase;
-	if (XineramaQueryExtension(m_display, &eventBase, &errorBase) &&
-		XineramaIsActive(m_display)) {
+    if (m_impl->XineramaQueryExtension(m_display, &eventBase, &errorBase) &&
+        m_impl->XineramaIsActive(m_display)) {
 		int numScreens;
 		XineramaScreenInfo* screens;
-		screens = XineramaQueryScreens(m_display, &numScreens);
+        screens = reinterpret_cast<XineramaScreenInfo*>(
+            XineramaQueryScreens(m_display, &numScreens));
+
 		if (screens != NULL) {
 			if (numScreens > 1) {
 				m_xinerama = true;
@@ -1049,7 +1020,7 @@ XWindowsScreen::openWindow() const
 	}
 
 	// create and return the window
-	Window window = XCreateWindow(m_display, m_root, x, y, w, h, 0, 0,
+    Window window = m_impl->XCreateWindow(m_display, m_root, x, y, w, h, 0, 0,
 							InputOnly, CopyFromParent,
 							CWDontPropagate | CWEventMask |
 							CWOverrideRedirect | CWCursor,
@@ -1064,7 +1035,7 @@ void
 XWindowsScreen::openIM()
 {
 	// open the input methods
-	XIM im = XOpenIM(m_display, NULL, NULL, NULL);
+    XIM im = m_impl->XOpenIM(m_display, NULL, NULL, NULL);
 	if (im == NULL) {
 		LOG((CLOG_INFO "no support for IM"));
 		return;
@@ -1073,10 +1044,10 @@ XWindowsScreen::openIM()
 	// find the appropriate style.  barrier supports XIMPreeditNothing
 	// only at the moment.
 	XIMStyles* styles;
-	if (XGetIMValues(im, XNQueryInputStyle, &styles, NULL) != NULL ||
+    if (m_impl->XGetIMValues(im, XNQueryInputStyle, &styles) != nullptr ||
 		styles == NULL) {
 		LOG((CLOG_WARN "cannot get IM styles"));
-		XCloseIM(im);
+        m_impl->XCloseIM(im);
 		return;
 	}
 	XIMStyle style = 0;
@@ -1091,24 +1062,24 @@ XWindowsScreen::openIM()
 	XFree(styles);
 	if (style == 0) {
 		LOG((CLOG_INFO "no supported IM styles"));
-		XCloseIM(im);
+        m_impl->XCloseIM(im);
 		return;
 	}
 
 	// create an input context for the style and tell it about our window
-	XIC ic = XCreateIC(im, XNInputStyle, style, XNClientWindow, m_window, NULL);
+    XIC ic = m_impl->XCreateIC(im, XNInputStyle, style, XNClientWindow, m_window);
 	if (ic == NULL) {
 		LOG((CLOG_WARN "cannot create IC"));
-		XCloseIM(im);
+        m_impl->XCloseIM(im);
 		return;
 	}
 
 	// find out the events we must select for and do so
 	unsigned long mask;
-	if (XGetICValues(ic, XNFilterEvents, &mask, NULL) != NULL) {
+    if (m_impl->XGetICValues(ic, XNFilterEvents, &mask) != NULL) {
 		LOG((CLOG_WARN "cannot get IC filter events"));
-		XDestroyIC(ic);
-		XCloseIM(im);
+        m_impl->XDestroyIC(ic);
+        m_impl->XCloseIM(im);
 		return;
 	}
 
@@ -1119,8 +1090,8 @@ XWindowsScreen::openIM()
 
 	// select events on our window that IM requires
 	XWindowAttributes attr;
-	XGetWindowAttributes(m_display, m_window, &attr);
-	XSelectInput(m_display, m_window, attr.your_event_mask | mask);
+    m_impl->XGetWindowAttributes(m_display, m_window, &attr);
+    m_impl->XSelectInput(m_display, m_window, attr.your_event_mask | mask);
 }
 
 void
@@ -1174,7 +1145,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 			filter.m_time    = xevent->xkey.time;
 			filter.m_keycode = xevent->xkey.keycode;
 			XEvent xevent2;
-			isRepeat = (XCheckIfEvent(m_display, &xevent2,
+            isRepeat = (m_impl->XCheckIfEvent(m_display, &xevent2,
 							&XWindowsScreen::findKeyEvent,
 							(XPointer)&filter) == True);
 		}
@@ -1219,7 +1190,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 		}
 
 		// now filter the event
-		if (XFilterEvent(xevent, DefaultRootWindow(m_display))) {
+        if (m_impl->XFilterEvent(xevent, DefaultRootWindow(m_display))) {
 			if (xevent->type == KeyPress) {
 				// add filtered presses to the filtered list
 				m_filtered.insert(m_lastKeycode);
@@ -1246,7 +1217,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 	if (m_xi2detected) {
 		// Process RawMotion
 		XGenericEventCookie *cookie = (XGenericEventCookie*)&xevent->xcookie;
-			if (XGetEventData(m_display, cookie) &&
+            if (m_impl->XGetEventData(m_display, cookie) &&
 				cookie->type == GenericEvent &&
 				cookie->extension == xi_opcode) {
 			if (cookie->evtype == XI_RawMotion) {
@@ -1259,7 +1230,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 				xmotion.window = m_window;
 				/* xmotion's time, state and is_hint are not used */
 				unsigned int msk;
-					xmotion.same_screen = XQueryPointer(
+                    xmotion.same_screen = m_impl->XQueryPointer(
 						m_display, m_root, &xmotion.root, &xmotion.subwindow,
 						&xmotion.x_root,
 						&xmotion.y_root,
@@ -1267,10 +1238,10 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 						&xmotion.y,
 						&msk);
 					onMouseMove(xmotion);
-					XFreeEventData(m_display, cookie);
+                    m_impl->XFreeEventData(m_display, cookie);
 					return;
 			}
-        		XFreeEventData(m_display, cookie);
+                m_impl->XFreeEventData(m_display, cookie);
 		}
 	}
 #endif
@@ -1291,7 +1262,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 	case LeaveNotify:
 		if (!m_isPrimary) {
 			// mouse moved out of hider window somehow.  hide the window.
-			XUnmapWindow(m_display, m_window);
+            m_impl->XUnmapWindow(m_display, m_window);
 		}
 		break;
 
@@ -1315,7 +1286,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 		// retrieval methods.  we'll just delete the property
 		// with the data (satisfying the usual ICCCM protocol).
 		if (xevent->xselection.property != None) {
-			XDeleteProperty(m_display,
+            m_impl->XDeleteProperty(m_display,
 								xevent->xselection.requestor,
 								xevent->xselection.property);
 		}
@@ -1417,8 +1388,8 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 				// off the server onto the client causes the pointer to warp to the
 				// center of the server (so you can't move the pointer off the server)
 				if (m_isPrimary) {
-					XMoveWindow(m_display, m_window, m_x, m_y);
-					XResizeWindow(m_display, m_window, m_w, m_h);
+                    m_impl->XMoveWindow(m_display, m_window, m_x, m_y);
+                    m_impl->XResizeWindow(m_display, m_window, m_w, m_h);
 				}
 
 				sendEvent(m_events->forIScreen().shapeChanged());
@@ -1594,7 +1565,7 @@ XWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 		XEvent xevent;
 		char cntr = 0;
 		do {
-			XMaskEvent(m_display, PointerMotionMask, &xevent);
+            m_impl->XMaskEvent(m_display, PointerMotionMask, &xevent);
 			if (cntr++ > 10) {
 				LOG((CLOG_WARN "too many discarded events! %d", cntr));
 				break;
@@ -1656,7 +1627,7 @@ XWindowsScreen::createBlankCursor() const
 
 	// get the closet cursor size to 1x1
 	unsigned int w = 0, h = 0;
-	XQueryBestCursor(m_display, m_root, 1, 1, &w, &h);
+    m_impl->XQueryBestCursor(m_display, m_root, 1, 1, &w, &h);
 	w = std::max(1u, w);
 	h = std::max(1u, h);
 
@@ -1668,7 +1639,7 @@ XWindowsScreen::createBlankCursor() const
 	memset(data, 0, size);
 
 	// make bitmap
-	Pixmap bitmap = XCreateBitmapFromData(m_display, m_root, data, w, h);
+    Pixmap bitmap = m_impl->XCreateBitmapFromData(m_display, m_root, data, w, h);
 
 	// need an arbitrary color for the cursor
 	XColor color;
@@ -1677,12 +1648,12 @@ XWindowsScreen::createBlankCursor() const
 	color.flags = DoRed | DoGreen | DoBlue;
 
 	// make cursor from bitmap
-	Cursor cursor = XCreatePixmapCursor(m_display, bitmap, bitmap,
+    Cursor cursor = m_impl->XCreatePixmapCursor(m_display, bitmap, bitmap,
 								&color, &color, 0, 0);
 
 	// don't need bitmap or the data anymore
 	delete[] data;
-	XFreePixmap(m_display, bitmap);
+    m_impl->XFreePixmap(m_display, bitmap);
 
 	return cursor;
 }
@@ -1794,7 +1765,7 @@ XWindowsScreen::doSelectEvents(Window w) const
        // it already.
        long mask = SubstructureNotifyMask;
        XWindowAttributes attr;
-       XGetWindowAttributes(m_display, w, &attr);
+       m_impl->XGetWindowAttributes(m_display, w, &attr);
        if ((attr.all_event_masks & PointerMotionMask) == PointerMotionMask) {
                mask |= PointerMotionMask;
        }
@@ -1802,12 +1773,12 @@ XWindowsScreen::doSelectEvents(Window w) const
 	// select events of interest.  do this before querying the tree so
 	// we'll get notifications of children created after the XQueryTree()
 	// so we won't miss them.
-       XSelectInput(m_display, w, mask);
+       m_impl->XSelectInput(m_display, w, mask);
 
 	// recurse on child windows
 	Window rw, pw, *cw;
 	unsigned int nc;
-	if (XQueryTree(m_display, w, &rw, &pw, &cw, &nc)) {
+    if (m_impl->XQueryTree(m_display, w, &rw, &pw, &cw, &nc)) {
 		for (unsigned int i = 0; i < nc; ++i) {
 			doSelectEvents(cw[i]);
 		}
@@ -1827,11 +1798,11 @@ XWindowsScreen::mapKeyFromX(XKeyEvent* event) const
 		int n        = sizeof(scratch) / sizeof(scratch[0]);
 		char* buffer = scratch;
 		int status;
-		n = XmbLookupString(m_ic, event, buffer, n, &keysym, &status);
+        n = m_impl->XmbLookupString(m_ic, event, buffer, n, &keysym, &status);
 		if (status == XBufferOverflow) {
 			// not enough space.  grow buffer and try again.
 			buffer = new char[n];
-			n = XmbLookupString(m_ic, event, buffer, n, &keysym, &status);
+            n = m_impl->XmbLookupString(m_ic, event, buffer, n, &keysym, &status);
 			delete[] buffer;
 		}
 
@@ -1852,7 +1823,7 @@ XWindowsScreen::mapKeyFromX(XKeyEvent* event) const
 	else {
 		// plain old lookup
 		char dummy[1];
-		XLookupString(event, dummy, 0, &keysym, NULL);
+        m_impl->XLookupString(event, dummy, 0, &keysym, NULL);
 	}
 
 	LOG((CLOG_DEBUG2 "mapped code=%d to keysym=0x%04x", event->keycode, keysym));
@@ -1935,14 +1906,14 @@ XWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
 	eventBefore.xmotion.is_hint     = NotifyNormal;
 	eventBefore.xmotion.same_screen = True;
 	XEvent eventAfter               = eventBefore;
-	XSendEvent(m_display, m_window, False, 0, &eventBefore);
+    m_impl->XSendEvent(m_display, m_window, False, 0, &eventBefore);
 
 	// warp mouse
-	XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
+    m_impl->XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
 
 	// send an event that we can recognize after the mouse warp
-	XSendEvent(m_display, m_window, False, 0, &eventAfter);
-	XSync(m_display, False);
+    m_impl->XSendEvent(m_display, m_window, False, 0, &eventAfter);
+    m_impl->XSync(m_display, False);
 
 	LOG((CLOG_DEBUG2 "warped to %d,%d", x, y));
 }
@@ -1951,9 +1922,9 @@ void
 XWindowsScreen::updateButtons()
 {
 	// query the button mapping
-	UInt32 numButtons = XGetPointerMapping(m_display, NULL, 0);
+    UInt32 numButtons = m_impl->XGetPointerMapping(m_display, NULL, 0);
 	unsigned char* tmpButtons = new unsigned char[numButtons];
-	XGetPointerMapping(m_display, tmpButtons, numButtons);
+    m_impl->XGetPointerMapping(m_display, tmpButtons, numButtons);
 
 	// find the largest logical button id
 	unsigned char maxButton = 0;
@@ -1993,7 +1964,7 @@ XWindowsScreen::grabMouseAndKeyboard()
 	do {
 		// keyboard first
 		do {
-			result = XGrabKeyboard(m_display, m_window, True,
+            result = m_impl->XGrabKeyboard(m_display, m_window, True,
 								GrabModeAsync, GrabModeAsync, CurrentTime);
 			assert(result != GrabNotViewable);
 			if (result != GrabSuccess) {
@@ -2008,13 +1979,13 @@ XWindowsScreen::grabMouseAndKeyboard()
 		LOG((CLOG_DEBUG2 "grabbed keyboard"));
 
 		// now the mouse --- use event_mask to get EnterNotify, LeaveNotify events
-		result = XGrabPointer(m_display, m_window, False, event_mask,
+        result = m_impl->XGrabPointer(m_display, m_window, False, event_mask,
 								GrabModeAsync, GrabModeAsync,
 								m_window, None, CurrentTime);
 		assert(result != GrabNotViewable);
 		if (result != GrabSuccess) {
 			// back off to avoid grab deadlock
-			XUngrabKeyboard(m_display, CurrentTime);
+            m_impl->XUngrabKeyboard(m_display, CurrentTime);
 			LOG((CLOG_DEBUG2 "ungrabbed keyboard, waiting to grab pointer"));
 			ARCH->sleep(0.05);
 			if (timer.getTime() >= s_timeout) {
@@ -2031,9 +2002,9 @@ XWindowsScreen::grabMouseAndKeyboard()
 void
 XWindowsScreen::refreshKeyboard(XEvent* event)
 {
-	if (XPending(m_display) > 0) {
+    if (m_impl->XPending(m_display) > 0) {
 		XEvent tmpEvent;
-		XPeekEvent(m_display, &tmpEvent);
+        m_impl->XPeekEvent(m_display, &tmpEvent);
 		if (tmpEvent.type == MappingNotify) {
 			// discard this event since another follows.
 			// we tend to get a bunch of these in a row.
@@ -2044,12 +2015,12 @@ XWindowsScreen::refreshKeyboard(XEvent* event)
 	// keyboard mapping changed
 #if HAVE_XKB_EXTENSION
 	if (m_xkb && event->type == m_xkbEventBase) {
-		XkbRefreshKeyboardMapping((XkbMapNotifyEvent*)event);
+        m_impl->XkbRefreshKeyboardMapping((XkbMapNotifyEvent*)event);
 	}
 	else
 #else
 	{
-		XRefreshKeyboardMapping(&event->xmapping);
+        m_impl->XRefreshKeyboardMapping(&event->xmapping);
 	}
 #endif
 	m_keyState->updateKeyMap();
@@ -2079,7 +2050,7 @@ bool
 XWindowsScreen::detectXI2()
 {
 	int event, error;
-	return XQueryExtension(m_display,
+    return m_impl->XQueryExtension(m_display,
 			"XInputExtension", &xi_opcode, &event, &error);
 }
 
@@ -2096,7 +2067,7 @@ XWindowsScreen::selectXIRawMotion()
 	memset(mask.mask, 0, 2);
     XISetMask(mask.mask, XI_RawKeyRelease);
 	XISetMask(mask.mask, XI_RawMotion);
-	XISelectEvents(m_display, DefaultRootWindow(m_display), &mask, 1);
+    m_impl->XISelectEvents(m_display, DefaultRootWindow(m_display), &mask, 1);
 	free(mask.mask);
 }
 #endif

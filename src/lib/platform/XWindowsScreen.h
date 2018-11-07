@@ -22,6 +22,7 @@
 #include "barrier/KeyMap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
+#include "XWindowsImpl.h"
 
 #if X_DISPLAY_MISSING
 #    error X11 is required to build barrier
@@ -36,7 +37,7 @@ class XWindowsScreenSaver;
 //! Implementation of IPlatformScreen for X11
 class XWindowsScreen : public PlatformScreen {
 public:
-    XWindowsScreen(const char* displayName, bool isPrimary,
+    XWindowsScreen(IXWindowsImpl* impl, const char* displayName, bool isPrimary,
         bool disableXInitThreads, int mouseScrollDelta,
         IEventQueue* events);
     virtual ~XWindowsScreen();
@@ -173,6 +174,8 @@ private:
     typedef std::map<UInt32, HotKeyList> HotKeyMap;
     typedef std::vector<UInt32> HotKeyIDList;
     typedef std::map<HotKeyItem, UInt32> HotKeyToIDMap;
+
+    IXWindowsImpl*       m_impl;
 
     // true if screen is being used as a primary screen, false otherwise
     bool                m_isPrimary;
