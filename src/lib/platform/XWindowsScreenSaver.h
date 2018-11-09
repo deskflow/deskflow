@@ -21,6 +21,7 @@
 #include "barrier/IScreenSaver.h"
 #include "base/IEventQueue.h"
 #include "common/stdmap.h"
+#include "XWindowsImpl.h"
 
 #if X_DISPLAY_MISSING
 #    error X11 is required to build barrier
@@ -34,7 +35,8 @@ class EventQueueTimer;
 //! X11 screen saver implementation
 class XWindowsScreenSaver : public IScreenSaver {
 public:
-    XWindowsScreenSaver(Display*, Window, void* eventTarget, IEventQueue* events);
+    XWindowsScreenSaver(IXWindowsImpl* impl, Display*, Window,
+                        void* eventTarget, IEventQueue* events);
     virtual ~XWindowsScreenSaver();
 
     //! @name manipulators
@@ -111,6 +113,8 @@ private:
 
 private:
     typedef std::map<Window, long> WatchList;
+
+    IXWindowsImpl*       m_impl;
 
     // the X display
     Display*            m_display;

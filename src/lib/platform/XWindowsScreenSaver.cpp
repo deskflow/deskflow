@@ -58,8 +58,9 @@ extern Status DPMSInfo(Display *, CARD16 *, BOOL *);
 // XWindowsScreenSaver
 //
 
-XWindowsScreenSaver::XWindowsScreenSaver(
-                Display* display, Window window, void* eventTarget, IEventQueue* events) :
+XWindowsScreenSaver::XWindowsScreenSaver(IXWindowsImpl* impl, Display* display,
+                                         Window window, void* eventTarget,
+                                         IEventQueue* events) :
     m_display(display),
     m_xscreensaverSink(window),
     m_eventTarget(eventTarget),
@@ -72,22 +73,23 @@ XWindowsScreenSaver::XWindowsScreenSaver(
     m_disablePos(0),
     m_events(events)
 {
+    m_impl = impl;
     // get atoms
-    m_atomScreenSaver           = XInternAtom(m_display,
-                                        "SCREENSAVER", False);
-    m_atomScreenSaverVersion    = XInternAtom(m_display,
-                                        "_SCREENSAVER_VERSION", False);
-    m_atomScreenSaverActivate   = XInternAtom(m_display,
-                                        "ACTIVATE", False);
-    m_atomScreenSaverDeactivate = XInternAtom(m_display,
-                                        "DEACTIVATE", False);
+    m_atomScreenSaver = m_impl->XInternAtom(m_display, "SCREENSAVER", False);
+    m_atomScreenSaverVersion = m_impl->XInternAtom(m_display,
+                                                   "_SCREENSAVER_VERSION",
+                                                   False);
+    m_atomScreenSaverActivate = m_impl->XInternAtom(m_display, "ACTIVATE",
+                                                    False);
+    m_atomScreenSaverDeactivate = m_impl->XInternAtom(m_display, "DEACTIVATE",
+                                                      False);
 
     // check for DPMS extension.  this is an alternative screen saver
     // that powers down the display.
 #if HAVE_X11_EXTENSIONS_DPMS_H
     int eventBase, errorBase;
-    if (DPMSQueryExtension(m_display, &eventBase, &errorBase)) {
-        if (DPMSCapable(m_display)) {
+    if (m_impl->DPMSQueryExtension(m_display, &eventBase, &errorBase)) {
+        if (m_impl->DPMSCapable(m_display)) {
             // we have DPMS
             m_dpms  = true;
         }
@@ -98,11 +100,12 @@ XWindowsScreenSaver::XWindowsScreenSaver(
     bool error = false;
     {
         XWindowsUtil::ErrorLock lock(m_display, &error);
-        Window root = DefaultRootWindow(m_display);
+        Window root = m_impl->do_DefaultRootWindow(m_display);
         XWindowAttributes attr;
-        XGetWindowAttributes(m_display, root, &attr);
+        m_impl->XGetWindowAttributes(m_display, root, &attr);
         m_rootEventMask = attr.your_event_mask;
-        XSelectInput(m_display, root, m_rootEventMask | SubstructureNotifyMask);
+        m_impl->XSelectInput(m_display, root,
+                             m_rootEventMask | SubstructureNotifyMask);
     }
     if (error) {
         LOG((CLOG_DEBUG "didn't set root event mask"));
@@ -110,8 +113,8 @@ XWindowsScreenSaver::XWindowsScreenSaver(
     }
 
     // get the built-in settings
-    XGetScreenSaver(m_display, &m_timeout, &m_interval,
-                                &m_preferBlanking, &m_allowExposures);
+    m_impl->XGetScreenSaver(m_display, &m_timeout, &m_interval,
+                            &m_preferBlanking, &m_allowExposures);
 
     // get the DPMS settings
     m_dpmsEnabled = isDPMSEnabled();
@@ -137,11 +140,12 @@ XWindowsScreenSaver::~XWindowsScreenSaver()
 
     if (m_display != NULL) {
         enableDPMS(m_dpmsEnabled);
-        XSetScreenSaver(m_display, m_timeout, m_interval,
-                                m_preferBlanking, m_allowExposures);
+       m_impl->XSetScreenSaver(m_display, m_timeout, m_interval,
+                               m_preferBlanking, m_allowExposures);
         clearWatchForXScreenSaver();
         XWindowsUtil::ErrorLock lock(m_display);
-        XSelectInput(m_display, DefaultRootWindow(m_display), m_rootEventMask);
+        m_impl->XSelectInput(m_display, DefaultRootWindow(m_display),
+                             m_rootEventMask);
     }
 }
 
@@ -221,8 +225,8 @@ XWindowsScreenSaver::enable()
     updateDisableTimer();
 
     // for built-in X screen saver
-    XSetScreenSaver(m_display, m_timeout, m_interval,
-                                m_preferBlanking, m_allowExposures);
+    m_impl->XSetScreenSaver(m_display, m_timeout, m_interval, m_preferBlanking,
+                            m_allowExposures);
 
     // for DPMS
     enableDPMS(m_dpmsEnabled);
@@ -236,10 +240,10 @@ XWindowsScreenSaver::disable()
     updateDisableTimer();
 
     // use built-in X screen saver
-    XGetScreenSaver(m_display, &m_timeout, &m_interval,
-                                &m_preferBlanking, &m_allowExposures);
-    XSetScreenSaver(m_display, 0, m_interval,
-                                m_preferBlanking, m_allowExposures);
+    m_impl->XGetScreenSaver(m_display, &m_timeout, &m_interval,
+                            &m_preferBlanking, &m_allowExposures);
+    m_impl->XSetScreenSaver(m_display, 0, m_interval, m_preferBlanking,
+                            m_allowExposures);
 
     // for DPMS
     m_dpmsEnabled = isDPMSEnabled();
@@ -267,7 +271,7 @@ XWindowsScreenSaver::activate()
 
     // try built-in X screen saver
     if (m_timeout != 0) {
-        XForceScreenSaver(m_display, ScreenSaverActive);
+        m_impl->XForceScreenSaver(m_display, ScreenSaverActive);
     }
 
     // try DPMS
@@ -297,7 +301,7 @@ XWindowsScreenSaver::deactivate()
     }
 
     // use built-in X screen saver
-    XForceScreenSaver(m_display, ScreenSaverReset);
+    m_impl->XForceScreenSaver(m_display, ScreenSaverReset);
 }
 
 bool
@@ -326,14 +330,14 @@ XWindowsScreenSaver::findXScreenSaver()
         Window root = DefaultRootWindow(m_display);
         Window rw, pw, *cw;
         unsigned int nc;
-        if (XQueryTree(m_display, root, &rw, &pw, &cw, &nc)) {
+        if (m_impl->XQueryTree(m_display, root, &rw, &pw, &cw, &nc)) {
             for (unsigned int i = 0; i < nc; ++i) {
                 if (isXScreenSaver(cw[i])) {
                     setXScreenSaver(cw[i]);
                     break;
                 }
             }
-            XFree(cw);
+            m_impl->XFree(cw);
         }
     }
 
@@ -357,7 +361,7 @@ XWindowsScreenSaver::setXScreenSaver(Window window)
         XWindowAttributes attr;
         {
             XWindowsUtil::ErrorLock lock(m_display, &error);
-            XGetWindowAttributes(m_display, m_xscreensaver, &attr);
+            m_impl->XGetWindowAttributes(m_display, m_xscreensaver, &attr);
         }
         setXScreenSaverActive(!error && attr.map_state != IsUnmapped);
 
@@ -430,7 +434,7 @@ XWindowsScreenSaver::sendXScreenSaverCommand(Atom cmd, long arg1, long arg2)
     bool error = false;
     {
         XWindowsUtil::ErrorLock lock(m_display, &error);
-        XSendEvent(m_display, m_xscreensaver, False, 0, &event);
+        m_impl->XSendEvent(m_display, m_xscreensaver, False, 0, &event);
     }
     if (error) {
         findXScreenSaver();
@@ -447,11 +451,11 @@ XWindowsScreenSaver::watchForXScreenSaver()
     Window root = DefaultRootWindow(m_display);
     Window rw, pw, *cw;
     unsigned int nc;
-    if (XQueryTree(m_display, root, &rw, &pw, &cw, &nc)) {
+    if (m_impl->XQueryTree(m_display, root, &rw, &pw, &cw, &nc)) {
         for (unsigned int i = 0; i < nc; ++i) {
             addWatchXScreenSaver(cw[i]);
         }
-        XFree(cw);
+        m_impl->XFree(cw);
     }
 
     // now check for xscreensaver window in case it set the property
@@ -469,7 +473,7 @@ XWindowsScreenSaver::clearWatchForXScreenSaver()
     XWindowsUtil::ErrorLock lock(m_display);
     for (WatchList::iterator index = m_watchWindows.begin();
                                 index != m_watchWindows.end(); ++index) {
-        XSelectInput(m_display, index->first, index->second);
+        m_impl->XSelectInput(m_display, index->first, index->second);
     }
     m_watchWindows.clear();
 }
@@ -482,7 +486,7 @@ XWindowsScreenSaver::addWatchXScreenSaver(Window window)
     XWindowAttributes attr;
     {
         XWindowsUtil::ErrorLock lock(m_display, &error);
-        XGetWindowAttributes(m_display, window, &attr);
+        m_impl->XGetWindowAttributes(m_display, window, &attr);
     }
 
     // if successful and window uses override_redirect (like xscreensaver
@@ -491,8 +495,8 @@ XWindowsScreenSaver::addWatchXScreenSaver(Window window)
         error = false;
         {
             XWindowsUtil::ErrorLock lock(m_display, &error);
-            XSelectInput(m_display, window,
-                                attr.your_event_mask | PropertyChangeMask);
+            m_impl->XSelectInput(m_display, window,
+                                 attr.your_event_mask | PropertyChangeMask);
         }
         if (!error) {
             // if successful then add the window to our list
@@ -535,7 +539,7 @@ XWindowsScreenSaver::handleDisableTimer(const Event&, void*)
         event.xmotion.same_screen  = True;
 
         XWindowsUtil::ErrorLock lock(m_display);
-        XSendEvent(m_display, m_xscreensaver, False, 0, &event);
+        m_impl->XSendEvent(m_display, m_xscreensaver, False, 0, &event);
 
         m_disablePos = 20 - m_disablePos;
     }
@@ -548,7 +552,8 @@ XWindowsScreenSaver::activateDPMS(bool activate)
     if (m_dpms) {
         // DPMSForceLevel will generate a BadMatch if DPMS is disabled
         XWindowsUtil::ErrorLock lock(m_display);
-        DPMSForceLevel(m_display, activate ? DPMSModeStandby : DPMSModeOn);
+        m_impl->DPMSForceLevel(m_display,
+                               activate ? DPMSModeStandby : DPMSModeOn);
     }
 #endif
 }
@@ -559,10 +564,10 @@ XWindowsScreenSaver::enableDPMS(bool enable)
 #if HAVE_X11_EXTENSIONS_DPMS_H
     if (m_dpms) {
         if (enable) {
-            DPMSEnable(m_display);
+            m_impl->DPMSEnable(m_display);
         }
         else {
-            DPMSDisable(m_display);
+            m_impl->DPMSDisable(m_display);
         }
     }
 #endif
@@ -575,7 +580,7 @@ XWindowsScreenSaver::isDPMSEnabled() const
     if (m_dpms) {
         CARD16 level;
         BOOL state;
-        DPMSInfo(m_display, &level, &state);
+        m_impl->DPMSInfo(m_display, &level, &state);
         return (state != False);
     }
     else {
@@ -593,7 +598,7 @@ XWindowsScreenSaver::isDPMSActivated() const
     if (m_dpms) {
         CARD16 level;
         BOOL state;
-        DPMSInfo(m_display, &level, &state);
+        m_impl->DPMSInfo(m_display, &level, &state);
         return (level != DPMSModeOn);
     }
     else {

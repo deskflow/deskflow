@@ -148,5 +148,15 @@ public:
     virtual int XRefreshKeyboardMapping(XMappingEvent* event_map);
     virtual int XISelectEvents(Display* display, Window w, XIEventMask* masks,
                                int num_masks);
+    virtual Atom XInternAtom(Display* display, _Xconst char* atom_name,
+                             Bool only_if_exists);
+    virtual int XGetScreenSaver(Display* display, int* timeout_return,
+                            int*  interval_return, int* prefer_blanking_return,
+                            int* allow_exposures_return);
+    virtual int XSetScreenSaver(Display* display, int timeout, int interval,
+                            int prefer_blanking, int allow_exposures);
+    virtual int XForceScreenSaver(Display* display, int mode);
+    virtual int XFree(void* data);
+    virtual Status DPMSEnable(Display* display);
+    virtual Status DPMSDisable(Display* display);
 };
-

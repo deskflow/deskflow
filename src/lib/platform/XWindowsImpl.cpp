@@ -487,3 +487,44 @@ int XWindowsImpl::XISelectEvents(Display* display, Window w, XIEventMask* masks,
     return ::XISelectEvents(display, w, masks, num_masks);
 }
 
+Atom XWindowsImpl::XInternAtom(Display* display, _Xconst char* atom_name,
+                         Bool only_if_exists)
+{
+    return ::XInternAtom(display, atom_name, only_if_exists);
+}
+
+int XWindowsImpl::XGetScreenSaver(Display* display, int* timeout_return,
+                                  int*  interval_return,
+                                  int* prefer_blanking_return,
+                                  int* allow_exposures_return)
+{
+    return ::XGetScreenSaver(display, timeout_return, interval_return,
+                             prefer_blanking_return, allow_exposures_return);
+}
+
+int XWindowsImpl::XSetScreenSaver(Display* display, int timeout, int interval,
+                                  int prefer_blanking, int allow_exposures)
+{
+    return ::XSetScreenSaver(display, timeout, interval, prefer_blanking,
+                             allow_exposures);
+}
+
+int XWindowsImpl::XForceScreenSaver(Display* display, int mode)
+{
+    return ::XForceScreenSaver(display, mode);
+}
+
+int XWindowsImpl::XFree(void* data)
+{
+    return ::XFree(data);
+}
+
+Status XWindowsImpl::DPMSEnable(Display* display)
+{
+    return ::DPMSEnable(display);
+}
+
+Status XWindowsImpl::DPMSDisable(Display* display)
+{
+    return ::DPMSDisable(display);
+}
