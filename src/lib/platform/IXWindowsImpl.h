@@ -197,4 +197,10 @@ public:
     virtual int XFree(void* data) = 0;
     virtual Status DPMSEnable(Display* display) = 0;
     virtual Status DPMSDisable(Display* display) = 0;
+    virtual int XSetSelectionOwner(Display* display, Atom selection, Window w,
+                                   Time time) = 0;
+    virtual Window XGetSelectionOwner(Display* display, Atom selection) = 0;
+    virtual Atom* XListProperties(Display* display, Window w,
+                                  int* num_prop_return) = 0;
+    virtual char* XGetAtomName(Display* display, Atom atom) = 0;
 };

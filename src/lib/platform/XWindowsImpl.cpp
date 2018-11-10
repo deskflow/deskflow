@@ -528,3 +528,25 @@ Status XWindowsImpl::DPMSDisable(Display* display)
 {
     return ::DPMSDisable(display);
 }
+
+int XWindowsImpl::XSetSelectionOwner(Display* display, Atom selection, Window w,
+                                     Time time)
+{
+    return ::XSetSelectionOwner(display, selection, w, time);
+}
+
+Window XWindowsImpl::XGetSelectionOwner(Display* display, Atom selection)
+{
+     return ::XGetSelectionOwner(display, selection);
+}
+
+Atom* XWindowsImpl::XListProperties(Display* display, Window w,
+                                    int* num_prop_return)
+{
+    return ::XListProperties(display, w, num_prop_return);
+}
+
+char* XWindowsImpl::XGetAtomName(Display* display, Atom atom)
+{
+    return ::XGetAtomName(display, atom);
+}

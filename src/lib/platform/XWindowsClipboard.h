@@ -23,6 +23,7 @@
 #include "common/stdmap.h"
 #include "common/stdlist.h"
 #include "common/stdvector.h"
+#include "XWindowsImpl.h"
 
 #if X_DISPLAY_MISSING
 #    error X11 is required to build barrier
@@ -39,7 +40,8 @@ public:
     Use \c window as the window that owns or interacts with the
     clipboard identified by \c id.
     */
-    XWindowsClipboard(Display*, Window window, ClipboardID id);
+    XWindowsClipboard(IXWindowsImpl* impl, Display*, Window window,
+                      ClipboardID id);
     virtual ~XWindowsClipboard();
 
     //! Notify clipboard was lost
@@ -284,6 +286,7 @@ private:
 
 private:
     typedef std::vector<IXWindowsClipboardConverter*> ConverterList;
+    IXWindowsImpl*       m_impl;
 
     Display*            m_display;
     Window                m_window;

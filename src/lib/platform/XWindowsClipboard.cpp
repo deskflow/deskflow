@@ -38,7 +38,7 @@
 // XWindowsClipboard
 //
 
-XWindowsClipboard::XWindowsClipboard(Display* display,
+XWindowsClipboard::XWindowsClipboard(IXWindowsImpl* impl, Display* display,
                 Window window, ClipboardID id) :
     m_display(display),
     m_window(window),
@@ -49,25 +49,30 @@ XWindowsClipboard::XWindowsClipboard(Display* display,
     m_timeOwned(0),
     m_timeLost(0)
 {
+    m_impl = impl;
     // get some atoms
-    m_atomTargets         = XInternAtom(m_display, "TARGETS", False);
-    m_atomMultiple        = XInternAtom(m_display, "MULTIPLE", False);
-    m_atomTimestamp       = XInternAtom(m_display, "TIMESTAMP", False);
-    m_atomInteger         = XInternAtom(m_display, "INTEGER", False);
-    m_atomAtom            = XInternAtom(m_display, "ATOM", False);
-    m_atomAtomPair        = XInternAtom(m_display, "ATOM_PAIR", False);
-    m_atomData            = XInternAtom(m_display, "CLIP_TEMPORARY", False);
-    m_atomINCR            = XInternAtom(m_display, "INCR", False);
-    m_atomMotifClipLock   = XInternAtom(m_display, "_MOTIF_CLIP_LOCK", False);
-    m_atomMotifClipHeader = XInternAtom(m_display, "_MOTIF_CLIP_HEADER", False);
-    m_atomMotifClipAccess = XInternAtom(m_display,
+    m_atomTargets         = m_impl->XInternAtom(m_display, "TARGETS", False);
+    m_atomMultiple        = m_impl->XInternAtom(m_display, "MULTIPLE", False);
+    m_atomTimestamp       = m_impl->XInternAtom(m_display, "TIMESTAMP", False);
+    m_atomInteger         = m_impl->XInternAtom(m_display, "INTEGER", False);
+    m_atomAtom            = m_impl->XInternAtom(m_display, "ATOM", False);
+    m_atomAtomPair        = m_impl->XInternAtom(m_display, "ATOM_PAIR", False);
+    m_atomData            = m_impl->XInternAtom(m_display, "CLIP_TEMPORARY",
+                                                False);
+    m_atomINCR            = m_impl->XInternAtom(m_display, "INCR", False);
+    m_atomMotifClipLock   = m_impl->XInternAtom(m_display, "_MOTIF_CLIP_LOCK",
+                                                False);
+    m_atomMotifClipHeader = m_impl->XInternAtom(m_display, "_MOTIF_CLIP_HEADER",
+                                                False);
+    m_atomMotifClipAccess = m_impl->XInternAtom(m_display,
                                 "_MOTIF_CLIP_LOCK_ACCESS_VALID", False);
-    m_atomGDKSelection    = XInternAtom(m_display, "GDK_SELECTION", False);
+    m_atomGDKSelection    = m_impl->XInternAtom(m_display, "GDK_SELECTION",
+                                                False);
 
     // set selection atom based on clipboard id
     switch (id) {
     case kClipboardClipboard:
-        m_selection = XInternAtom(m_display, "CLIPBOARD", False);
+        m_selection = m_impl->XInternAtom(m_display, "CLIPBOARD", False);
         break;
 
     case kClipboardSelection:
@@ -273,8 +278,8 @@ XWindowsClipboard::empty()
     LOG((CLOG_DEBUG "empty clipboard %d", m_id));
 
     // assert ownership of clipboard
-    XSetSelectionOwner(m_display, m_selection, m_window, m_time);
-    if (XGetSelectionOwner(m_display, m_selection) != m_window) {
+    m_impl->XSetSelectionOwner(m_display, m_selection, m_window, m_time);
+    if (m_impl->XGetSelectionOwner(m_display, m_selection) != m_window) {
         LOG((CLOG_DEBUG "failed to grab clipboard %d", m_id));
         return false;
     }
@@ -610,7 +615,7 @@ bool
 XWindowsClipboard::motifLockClipboard() const
 {
     // fail if anybody owns the lock (even us, so this is non-recursive)
-    Window lockOwner = XGetSelectionOwner(m_display, m_atomMotifClipLock);
+    Window lockOwner = m_impl->XGetSelectionOwner(m_display, m_atomMotifClipLock);
     if (lockOwner != None) {
         LOG((CLOG_DEBUG1 "motif lock owner 0x%08x", lockOwner));
         return false;
@@ -621,8 +626,8 @@ XWindowsClipboard::motifLockClipboard() const
     // A grabs successfully, B grabs successfully, A thinks it
     // still has the grab until it gets a SelectionClear.
     Time time = XWindowsUtil::getCurrentTime(m_display, m_window);
-    XSetSelectionOwner(m_display, m_atomMotifClipLock, m_window, time);
-    lockOwner = XGetSelectionOwner(m_display, m_atomMotifClipLock);
+    m_impl->XSetSelectionOwner(m_display, m_atomMotifClipLock, m_window, time);
+    lockOwner = m_impl->XGetSelectionOwner(m_display, m_atomMotifClipLock);
     if (lockOwner != m_window) {
         LOG((CLOG_DEBUG1 "motif lock owner 0x%08x", lockOwner));
         return false;
@@ -638,14 +643,14 @@ XWindowsClipboard::motifUnlockClipboard() const
     LOG((CLOG_DEBUG1 "unlocked motif clipboard"));
 
     // fail if we don't own the lock
-    Window lockOwner = XGetSelectionOwner(m_display, m_atomMotifClipLock);
+    Window lockOwner = m_impl->XGetSelectionOwner(m_display, m_atomMotifClipLock);
     if (lockOwner != m_window) {
         return;
     }
 
     // release lock
     Time time = XWindowsUtil::getCurrentTime(m_display, m_window);
-    XSetSelectionOwner(m_display, m_atomMotifClipLock, None, time);
+    m_impl->XSetSelectionOwner(m_display, m_atomMotifClipLock, None, time);
 }
 
 bool
@@ -655,7 +660,7 @@ XWindowsClipboard::motifOwnsClipboard() const
     // FIXME -- this can't be right.  even if the window is destroyed
     // Motif will still have a valid clipboard.  how can we tell if
     // some other client owns CLIPBOARD?
-    Window owner = XGetSelectionOwner(m_display, m_selection);
+    Window owner = m_impl->XGetSelectionOwner(m_display, m_selection);
     if (owner == None) {
         return false;
     }
@@ -712,7 +717,7 @@ XWindowsClipboard::motifFillCache()
     // get the Motif item property from the root window
     char name[18 + 20];
     sprintf(name, "_MOTIF_CLIP_ITEM_%d", header.m_item);
-    Atom atomItem = XInternAtom(m_display, name, False);
+    Atom atomItem = m_impl->XInternAtom(m_display, name, False);
     data = "";
     if (!XWindowsUtil::getWindowProperty(m_display, root,
                                 atomItem, &data,
@@ -741,7 +746,7 @@ XWindowsClipboard::motifFillCache()
     for (SInt32 i = 0; i < numFormats; ++i) {
         // get Motif format property from the root window
         sprintf(name, "_MOTIF_CLIP_ITEM_%d", formats[i]);
-        Atom atomFormat = XInternAtom(m_display, name, False);
+        Atom atomFormat = m_impl->XInternAtom(m_display, name, False);
         String data;
         if (!XWindowsUtil::getWindowProperty(m_display, root,
                                     atomFormat, &data,
@@ -824,7 +829,7 @@ XWindowsClipboard::motifGetSelection(const MotifClipFormat* format,
     // part that i don't know.
     char name[18 + 20];
     sprintf(name, "_MOTIF_CLIP_ITEM_%d", format->m_data);
-       Atom target = XInternAtom(m_display, name, False);
+       Atom target = m_impl->XInternAtom(m_display, name, False);
     Window root = RootWindow(m_display, DefaultScreen(m_display));
     return XWindowsUtil::getWindowProperty(m_display, root,
                                 target, data,
@@ -919,11 +924,11 @@ XWindowsClipboard::insertReply(Reply* reply)
 
             // get and save the current event mask
             XWindowAttributes attr;
-            XGetWindowAttributes(m_display, reply->m_requestor, &attr);
+            m_impl->XGetWindowAttributes(m_display, reply->m_requestor, &attr);
             m_eventMasks[reply->m_requestor] = attr.your_event_mask;
 
             // add the events we want
-            XSelectInput(m_display, reply->m_requestor, attr.your_event_mask |
+            m_impl->XSelectInput(m_display, reply->m_requestor, attr.your_event_mask |
                                     StructureNotifyMask | PropertyChangeMask);
         }
 
@@ -979,7 +984,7 @@ XWindowsClipboard::pushReplies(ReplyMap::iterator& mapIndex,
     if (replies.empty()) {
         XWindowsUtil::ErrorLock lock(m_display);
         Window requestor = mapIndex->first;
-        XSelectInput(m_display, requestor, m_eventMasks[requestor]);
+        m_impl->XSelectInput(m_display, requestor, m_eventMasks[requestor]);
         m_replies.erase(mapIndex++);
         m_eventMasks.erase(requestor);
     }
@@ -1055,7 +1060,7 @@ XWindowsClipboard::sendReply(Reply* reply)
         reply->m_done = true;
         if (reply->m_property != None) {
             XWindowsUtil::ErrorLock lock(m_display);
-            XDeleteProperty(m_display, reply->m_requestor, reply->m_property);
+            m_impl->XDeleteProperty(m_display, reply->m_requestor, reply->m_property);
         }
 
         if (!reply->m_replied) {
@@ -1091,12 +1096,13 @@ XWindowsClipboard::sendReply(Reply* reply)
         if (CLOG->getFilter() >= kDEBUG2) {
             XWindowsUtil::ErrorLock lock(m_display);
             int n;
-            Atom* props = XListProperties(m_display, reply->m_requestor, &n);
+            Atom* props = m_impl->XListProperties(m_display, reply->m_requestor,
+                                                  &n);
             LOG((CLOG_DEBUG2 "properties of 0x%08x:", reply->m_requestor));
             for (int i = 0; i < n; ++i) {
                 Atom target;
                 String data;
-                char* name = XGetAtomName(m_display, props[i]);
+                char* name = m_impl->XGetAtomName(m_display, props[i]);
                 if (!XWindowsUtil::getWindowProperty(m_display,
                                 reply->m_requestor,
                                 props[i], &data, &target, NULL, False)) {
@@ -1120,18 +1126,18 @@ XWindowsClipboard::sendReply(Reply* reply)
                             break;
                         }
                     }
-                    char* type = XGetAtomName(m_display, target);
+                    char* type = m_impl->XGetAtomName(m_display, target);
                     LOG((CLOG_DEBUG2 "  %s (%s): %s", name, type, data.c_str()));
                     if (type != NULL) {
-                        XFree(type);
+                        m_impl->XFree(type);
                     }
                 }
                 if (name != NULL) {
-                    XFree(name);
+                    m_impl->XFree(name);
                 }
             }
             if (props != NULL) {
-                XFree(props);
+                m_impl->XFree(props);
             }
         }
 
@@ -1178,7 +1184,7 @@ XWindowsClipboard::sendNotify(Window requestor,
     event.xselection.property  = property;
     event.xselection.time      = time;
     XWindowsUtil::ErrorLock lock(m_display);
-    XSendEvent(m_display, requestor, False, 0, &event);
+    m_impl->XSendEvent(m_display, requestor, False, 0, &event);
 }
 
 bool

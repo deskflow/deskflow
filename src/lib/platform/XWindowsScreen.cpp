@@ -150,7 +150,7 @@ XWindowsScreen::XWindowsScreen(
 
 	// initialize the clipboards
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		m_clipboard[id] = new XWindowsClipboard(m_display, m_window, id);
+        m_clipboard[id] = new XWindowsClipboard(m_impl, m_display, m_window, id);
 	}
 
 	// install event handlers
