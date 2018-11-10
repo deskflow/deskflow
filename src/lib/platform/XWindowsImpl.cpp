@@ -225,12 +225,14 @@ Bool XWindowsImpl::XkbSelectEvents(Display* display, unsigned int deviceID,
     return ::XkbSelectEvents(display, deviceID, affect, values);
 }
 
-Bool XWindowsImpl::XkbSelectEventDetails(Display* display, unsigned int deviceID,
+Bool XWindowsImpl::XkbSelectEventDetails(Display* display,
+                                         unsigned int deviceID,
                                          unsigned int eventType,
                                          unsigned long affect,
                                          unsigned long details)
 {
-    return ::XkbSelectEventDetails(display, deviceID, eventType, affect, details);
+    return ::XkbSelectEventDetails(display, deviceID, eventType, affect,
+                                   details);
 }
 
 Bool XWindowsImpl::XRRQueryExtension(Display* display, int* event_base_return,
@@ -271,8 +273,7 @@ Bool XWindowsImpl::XineramaIsActive(Display* display)
 #endif
 }
 
-void* XWindowsImpl::XineramaQueryScreens(Display* display,
-                                         int* number)
+void* XWindowsImpl::XineramaQueryScreens(Display* display, int* number)
 {
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
     return ::XineramaQueryScreens(display, number);
@@ -281,7 +282,8 @@ void* XWindowsImpl::XineramaQueryScreens(Display* display,
 #endif
 }
 
-Window XWindowsImpl::XCreateWindow(Display* display, Window parent, int x, int y,
+Window XWindowsImpl::XCreateWindow(Display* display, Window parent,
+                                   int x, int y,
                                    unsigned int width, unsigned int height,
                                    unsigned int border_width, int depth,
                                    unsigned int klass, Visual* visual,
@@ -326,7 +328,8 @@ int XWindowsImpl::XSelectInput(Display* display, Window w, long event_mask)
 }
 
 Bool XWindowsImpl::XCheckIfEvent(Display* display, XEvent* event,
-                                 Bool (*predicate)(Display *, XEvent *, XPointer),
+                                 Bool (*predicate)(Display *, XEvent *,
+                                                   XPointer),
                                  XPointer arg)
 {
     return ::XCheckIfEvent(display, event, predicate, arg);
@@ -482,13 +485,13 @@ int XWindowsImpl::XRefreshKeyboardMapping(XMappingEvent* event_map)
 }
 
 int XWindowsImpl::XISelectEvents(Display* display, Window w, XIEventMask* masks,
-                           int num_masks)
+                                 int num_masks)
 {
     return ::XISelectEvents(display, w, masks, num_masks);
 }
 
 Atom XWindowsImpl::XInternAtom(Display* display, _Xconst char* atom_name,
-                         Bool only_if_exists)
+                               Bool only_if_exists)
 {
     return ::XInternAtom(display, atom_name, only_if_exists);
 }
@@ -549,4 +552,90 @@ Atom* XWindowsImpl::XListProperties(Display* display, Window w,
 char* XWindowsImpl::XGetAtomName(Display* display, Atom atom)
 {
     return ::XGetAtomName(display, atom);
+}
+
+void XWindowsImpl::XkbFreeKeyboard(XkbDescPtr xkb, unsigned int which,
+                                   Bool freeDesc)
+{
+    ::XkbFreeKeyboard(xkb, which, freeDesc);
+}
+
+XkbDescPtr XWindowsImpl::XkbGetMap(Display* display, unsigned int which,
+                                   unsigned int deviceSpec)
+{
+    return ::XkbGetMap(display, which, deviceSpec);
+}
+
+Status XWindowsImpl::XkbGetState(Display* display, unsigned int deviceSet,
+                                 XkbStatePtr rtrnState)
+{
+    return ::XkbGetState(display, deviceSet, rtrnState);
+}
+
+int XWindowsImpl::XQueryKeymap(Display* display, char keys_return[32])
+{
+    return ::XQueryKeymap(display, keys_return);
+}
+
+Status XWindowsImpl::XkbGetUpdatedMap(Display* display, unsigned int which,
+                                      XkbDescPtr desc)
+{
+    return ::XkbGetUpdatedMap(display, which, desc);
+}
+
+Bool XWindowsImpl::XkbLockGroup(Display* display, unsigned int deviceSpec,
+                                unsigned int group)
+{
+    return ::XkbLockGroup(display, deviceSpec, group);
+}
+
+int XWindowsImpl::XDisplayKeycodes(Display* display, int* min_keycodes_return,
+                                   int* max_keycodes_return)
+{
+    return ::XDisplayKeycodes(display, min_keycodes_return,
+                              max_keycodes_return);
+}
+
+KeySym* XWindowsImpl::XGetKeyboardMapping(Display* display,
+                                          unsigned int first_keycode,
+                                          int keycode_count,
+                                          int* keysyms_per_keycode_return)
+{
+    return ::XGetKeyboardMapping(display, first_keycode, keycode_count,
+                                 keysyms_per_keycode_return);
+}
+
+int XWindowsImpl::do_XkbKeyNumGroups(XkbDescPtr m_xkb, KeyCode desc)
+
+{
+    return XkbKeyNumGroups(m_xkb, desc);
+}
+
+XkbKeyTypePtr XWindowsImpl::do_XkbKeyKeyType(XkbDescPtr m_xkb, KeyCode keycode,
+                                             int eGroup)
+{
+    return do_XkbKeyKeyType(m_xkb, keycode, eGroup);
+}
+
+KeySym XWindowsImpl::do_XkbKeySymEntry(XkbDescPtr m_xkb, KeyCode keycode,
+                                       int level, int eGroup)
+{
+    return do_XkbKeySymEntry(m_xkb, keycode, level, eGroup);
+}
+
+Bool XWindowsImpl::do_XkbKeyHasActions(XkbDescPtr m_xkb, KeyCode keycode)
+{
+    return do_XkbKeyHasActions(m_xkb, keycode);
+}
+
+XkbAction* XWindowsImpl::do_XkbKeyActionEntry(XkbDescPtr m_xkb, KeyCode keycode,
+                                              int level, int eGroup)
+{
+    return do_XkbKeyActionEntry(m_xkb, keycode, level, eGroup);
+}
+
+unsigned char XWindowsImpl::do_XkbKeyGroupInfo(XkbDescPtr m_xkb,
+                                               KeyCode keycode)
+{
+    return do_XkbKeyGroupInfo(m_xkb, keycode);
 }

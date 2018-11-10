@@ -77,14 +77,13 @@ public:
     virtual Bool XineramaQueryExtension(Display* display, int* event_base,
                                         int* error_base);
     virtual Bool XineramaIsActive(Display* display);
-    virtual void* XineramaQueryScreens(Display* display,
-                                                     int* number);
+    virtual void* XineramaQueryScreens(Display* display, int* number);
     virtual Window XCreateWindow(Display* display, Window parent, int x, int y,
-                                     unsigned int width, unsigned int height,
-                                     unsigned int border_width, int depth,
-                                     unsigned int klass, Visual* visual,
-                                     unsigned long valuemask,
-                                     XSetWindowAttributes* attributes);
+                                 unsigned int width, unsigned int height,
+                                 unsigned int border_width, int depth,
+                                 unsigned int klass, Visual* visual,
+                                 unsigned long valuemask,
+                                 XSetWindowAttributes* attributes);
     virtual XIM XOpenIM(Display* display, _XrmHashBucketRec* rdb,
                         char* res_name, char* res_class);
     virtual char* XGetIMValues(XIM im, const char* type, void* ptr);
@@ -151,10 +150,11 @@ public:
     virtual Atom XInternAtom(Display* display, _Xconst char* atom_name,
                              Bool only_if_exists);
     virtual int XGetScreenSaver(Display* display, int* timeout_return,
-                            int*  interval_return, int* prefer_blanking_return,
-                            int* allow_exposures_return);
+                                int*  interval_return,
+                                int* prefer_blanking_return,
+                                int* allow_exposures_return);
     virtual int XSetScreenSaver(Display* display, int timeout, int interval,
-                            int prefer_blanking, int allow_exposures);
+                                int prefer_blanking, int allow_exposures);
     virtual int XForceScreenSaver(Display* display, int mode);
     virtual int XFree(void* data);
     virtual Status DPMSEnable(Display* display);
@@ -165,4 +165,31 @@ public:
     virtual Atom* XListProperties(Display* display, Window w,
                                   int* num_prop_return);
     virtual char* XGetAtomName(Display* display, Atom atom);
+    virtual void XkbFreeKeyboard(XkbDescPtr xkb, unsigned int which,
+                                 Bool freeDesc);
+    virtual XkbDescPtr XkbGetMap(Display* display, unsigned int which,
+                                 unsigned int deviceSpec);
+    virtual Status	XkbGetState(Display* display, unsigned int deviceSet,
+                                XkbStatePtr rtrnState);
+    virtual int XQueryKeymap(Display* display, char keys_return[32]);
+    virtual Status	XkbGetUpdatedMap(Display* display, unsigned int which,
+                                     XkbDescPtr desc);
+    virtual Bool XkbLockGroup(Display* display, unsigned int deviceSpec,
+                              unsigned int group);
+    virtual int XDisplayKeycodes(Display* display, int* min_keycodes_return,
+                                 int* max_keycodes_return);
+    virtual KeySym* XGetKeyboardMapping(Display* display,
+                                        unsigned int first_keycode,
+                                        int keycode_count,
+                                        int* keysyms_per_keycode_return);
+    virtual int do_XkbKeyNumGroups(XkbDescPtr m_xkb, KeyCode desc);
+    virtual XkbKeyTypePtr do_XkbKeyKeyType(XkbDescPtr m_xkb, KeyCode keycode,
+                                           int eGroup);
+    virtual KeySym do_XkbKeySymEntry(XkbDescPtr m_xkb, KeyCode keycode,
+                                     int level, int eGroup);
+    virtual Bool do_XkbKeyHasActions(XkbDescPtr m_xkb, KeyCode keycode);
+    virtual XkbAction* do_XkbKeyActionEntry(XkbDescPtr m_xkb, KeyCode keycode,
+                                            int level, int eGroup);
+    virtual unsigned char do_XkbKeyGroupInfo(XkbDescPtr m_xkb,
+                                             KeyCode keycode);
 };

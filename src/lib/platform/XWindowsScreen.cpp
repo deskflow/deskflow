@@ -116,7 +116,8 @@ XWindowsScreen::XWindowsScreen(
 		m_window      = openWindow();
         m_screensaver = new XWindowsScreenSaver(m_impl, m_display,
 								m_window, getEventTarget(), events);
-		m_keyState    = new XWindowsKeyState(m_display, m_xkb, events, m_keyMap);
+        m_keyState    = new XWindowsKeyState(m_impl, m_display, m_xkb, events,
+                                             m_keyMap);
 		LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_xinerama ? "(xinerama)" : ""));
 		LOG((CLOG_DEBUG "window is 0x%08x", m_window));
 	}

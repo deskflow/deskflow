@@ -40,17 +40,19 @@
 
 static const size_t ModifiersFromXDefaultSize = 32;
 
-XWindowsKeyState::XWindowsKeyState(
+XWindowsKeyState::XWindowsKeyState(IXWindowsImpl* impl,
         Display* display, bool useXKB,
         IEventQueue* events) :
     KeyState(events),
     m_display(display),
     m_modifierFromX(ModifiersFromXDefaultSize)
 {
+     m_impl = impl;
+
     init(display, useXKB);
 }
 
-XWindowsKeyState::XWindowsKeyState(
+XWindowsKeyState::XWindowsKeyState(IXWindowsImpl* impl,
     Display* display, bool useXKB,
     IEventQueue* events, barrier::KeyMap& keyMap) :
     KeyState(events, keyMap),
@@ -64,7 +66,7 @@ XWindowsKeyState::~XWindowsKeyState()
 {
 #if HAVE_XKB_EXTENSION
     if (m_xkb != NULL) {
-        XkbFreeKeyboard(m_xkb, 0, True);
+        m_impl->XkbFreeKeyboard(m_xkb, 0, True);
     }
 #endif
 }
@@ -75,8 +77,9 @@ XWindowsKeyState::init(Display* display, bool useXKB)
     XGetKeyboardControl(m_display, &m_keyboardState);
 #if HAVE_XKB_EXTENSION
     if (useXKB) {
-        m_xkb = XkbGetMap(m_display, XkbKeyActionsMask | XkbKeyBehaviorsMask |
-                                XkbAllClientInfoMask, XkbUseCoreKbd);
+        m_xkb = m_impl->XkbGetMap(m_display,
+                                  XkbKeyActionsMask | XkbKeyBehaviorsMask |
+                                  XkbAllClientInfoMask, XkbUseCoreKbd);
     }
     else {
         m_xkb = NULL;
@@ -177,8 +180,9 @@ XWindowsKeyState::pollActiveModifiers() const
     Window root = DefaultRootWindow(m_display), window;
     int xRoot, yRoot, xWindow, yWindow;
     unsigned int state = 0;
-    if (XQueryPointer(m_display, root, &root, &window,
-            &xRoot, &yRoot, &xWindow, &yWindow, &state) == False) {
+    if (m_impl->XQueryPointer(m_display, root, &root, &window,
+                              &xRoot, &yRoot, &xWindow, &yWindow, &state
+                              ) == False) {
         state = 0;
     }
     return mapModifiersFromX(state);
@@ -195,7 +199,7 @@ XWindowsKeyState::pollActiveGroup() const
 #if HAVE_XKB_EXTENSION
     if (m_xkb != NULL) {
         XkbStateRec state;
-        if (XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
+        if (m_impl->XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
             return state.group;
         }
     }
@@ -207,7 +211,7 @@ void
 XWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 {
     char keys[32];
-    XQueryKeymap(m_display, keys);
+    m_impl->XQueryKeymap(m_display, keys);
     for (UInt32 i = 0; i < 32; ++i) {
         for (UInt32 j = 0; j < 8; ++j) {
             if ((keys[i] & (1u << j)) != 0) {
@@ -228,8 +232,9 @@ XWindowsKeyState::getKeyMap(barrier::KeyMap& keyMap)
 
 #if HAVE_XKB_EXTENSION
     if (m_xkb != NULL) {
-        if (XkbGetUpdatedMap(m_display, XkbKeyActionsMask |
-                XkbKeyBehaviorsMask | XkbAllClientInfoMask, m_xkb) == Success) {
+        unsigned mask = XkbKeyActionsMask | XkbKeyBehaviorsMask |
+                        XkbAllClientInfoMask;
+        if (m_impl->XkbGetUpdatedMap(m_display, mask, m_xkb) == Success) {
             updateKeysymMapXKB(keyMap);
             return;
         }
@@ -254,9 +259,9 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
                 break;
             }
         }
-        XTestFakeKeyEvent(m_display, keystroke.m_data.m_button.m_button,
-                            keystroke.m_data.m_button.m_press ? True : False,
-                            CurrentTime);
+        m_impl->XTestFakeKeyEvent(m_display, keystroke.m_data.m_button.m_button,
+                                  keystroke.m_data.m_button.m_press,
+                                  CurrentTime);
         break;
 
     case Keystroke::kGroup:
@@ -264,8 +269,9 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
             LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
 #if HAVE_XKB_EXTENSION
             if (m_xkb != NULL) {
-                if (XkbLockGroup(m_display, XkbUseCoreKbd,
-                            keystroke.m_data.m_group.m_group) == False) {
+                if (m_impl->XkbLockGroup(m_display, XkbUseCoreKbd,
+                                         keystroke.m_data.m_group.m_group
+                                         ) == False) {
                     LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
                 }
             }
@@ -279,9 +285,10 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
             LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
 #if HAVE_XKB_EXTENSION
             if (m_xkb != NULL) {
-                if (XkbLockGroup(m_display, XkbUseCoreKbd,
-                            getEffectiveGroup(pollActiveGroup(),
-                                keystroke.m_data.m_group.m_group)) == False) {
+                if (m_impl->XkbLockGroup(m_display, XkbUseCoreKbd,
+                                         getEffectiveGroup(pollActiveGroup(),
+                                         keystroke.m_data.m_group.m_group)
+                                         ) == False) {
                     LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
                 }
             }
@@ -320,14 +327,14 @@ XWindowsKeyState::updateKeysymMap(barrier::KeyMap& keyMap)
 
     // get the number of keycodes
     int minKeycode, maxKeycode;
-    XDisplayKeycodes(m_display, &minKeycode, &maxKeycode);
+    m_impl->XDisplayKeycodes(m_display, &minKeycode, &maxKeycode);
     int numKeycodes = maxKeycode - minKeycode + 1;
 
     // get the keyboard mapping for all keys
     int keysymsPerKeycode;
-    KeySym* allKeysyms = XGetKeyboardMapping(m_display,
-                                minKeycode, numKeycodes,
-                                &keysymsPerKeycode);
+    KeySym* allKeysyms = m_impl->XGetKeyboardMapping(m_display,
+                                                     minKeycode, numKeycodes,
+                                                     &keysymsPerKeycode);
 
     // it's more convenient to always have maxKeysyms KeySyms per key
     {
@@ -343,7 +350,7 @@ XWindowsKeyState::updateKeysymMap(barrier::KeyMap& keyMap)
                 }
             }    
         }
-        XFree(allKeysyms);
+        m_impl->XFree(allKeysyms);
         allKeysyms = tmpKeysyms;
     }
 
@@ -365,7 +372,7 @@ XWindowsKeyState::updateKeysymMap(barrier::KeyMap& keyMap)
     // going to ignore all KeySyms except the first modifier KeySym,
     // which means button 1 above won't map to Meta, just Alt.
     std::map<KeyCode, unsigned int> modifierButtons;
-    XModifierKeymap* modifiers = XGetModifierMapping(m_display);
+    XModifierKeymap* modifiers = m_impl->XGetModifierMapping(m_display);
     for (unsigned int i = 0; i < 8; ++i) {
         const KeyCode* buttons =
             modifiers->modifiermap + i * modifiers->max_keypermod;
@@ -560,7 +567,7 @@ XWindowsKeyState::updateKeysymMapXKB(barrier::KeyMap& keyMap)
     // find the number of groups
     int maxNumGroups = 0;
     for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
-        int numGroups = XkbKeyNumGroups(m_xkb, static_cast<KeyCode>(i));
+        int numGroups = m_impl->do_XkbKeyNumGroups(m_xkb, static_cast<KeyCode>(i));
         if (numGroups > maxNumGroups) {
             maxNumGroups = numGroups;
         }
@@ -596,7 +603,7 @@ XWindowsKeyState::updateKeysymMapXKB(barrier::KeyMap& keyMap)
         item.m_client   = 0;
 
         // skip keys with no groups (they generate no symbols)
-        if (XkbKeyNumGroups(m_xkb, keycode) == 0) {
+        if (m_impl->do_XkbKeyNumGroups(m_xkb, keycode) == 0) {
             continue;
         }
 
@@ -612,7 +619,8 @@ XWindowsKeyState::updateKeysymMapXKB(barrier::KeyMap& keyMap)
             int eGroup   = getEffectiveGroup(keycode, group);
 
             // get key info
-            XkbKeyTypePtr type = XkbKeyKeyType(m_xkb, keycode, eGroup);
+            XkbKeyTypePtr type = m_impl->do_XkbKeyKeyType(m_xkb, keycode,
+                                                          eGroup);
 
             // set modifiers the item is sensitive to
             item.m_sensitive = type->mods.mask;
@@ -641,16 +649,18 @@ XWindowsKeyState::updateKeysymMapXKB(barrier::KeyMap& keyMap)
                 }
 
                 // get the keysym for this item
-                KeySym keysym = XkbKeySymEntry(m_xkb, keycode, level, eGroup);
+                KeySym keysym = m_impl->do_XkbKeySymEntry(m_xkb, keycode, level,
+                                                          eGroup);
 
                 // check for group change actions, locking modifiers, and
                 // modifier masks.
                 item.m_lock         = false;
                 bool isModifier     = false;
                 UInt32 modifierMask = m_xkb->map->modmap[keycode];
-                if (XkbKeyHasActions(m_xkb, keycode) == True) {
+                if (m_impl->do_XkbKeyHasActions(m_xkb, keycode) == True) {
                     XkbAction* action =
-                        XkbKeyActionEntry(m_xkb, keycode, level, eGroup);
+                        m_impl->do_XkbKeyActionEntry(m_xkb, keycode, level,
+                                                     eGroup);
                     if (action->type == XkbSA_SetMods ||
                         action->type == XkbSA_LockMods) {
                         isModifier  = true;
@@ -799,19 +809,19 @@ XWindowsKeyState::hasModifiersXKB() const
     // iterate over all keycodes
     for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
         KeyCode keycode = static_cast<KeyCode>(i);
-        if (XkbKeyHasActions(m_xkb, keycode) == True) {
+        if (m_impl->do_XkbKeyHasActions(m_xkb, keycode) == True) {
             // iterate over all groups
-            int numGroups = XkbKeyNumGroups(m_xkb, keycode);
+            int numGroups = m_impl->do_XkbKeyNumGroups(m_xkb, keycode);
             for (int group = 0; group < numGroups; ++group) {
                 // iterate over all shift levels for the button (including none)
-                XkbKeyTypePtr type = XkbKeyKeyType(m_xkb, keycode, group);
+                XkbKeyTypePtr type = m_impl->do_XkbKeyKeyType(m_xkb, keycode, group);
                 for (int j = -1; j < type->map_count; ++j) {
                     if (j != -1 && !type->map[j].active) {
                         continue;
                     }
                     int level = ((j == -1) ? 0 : type->map[j].level);
                     XkbAction* action =
-                        XkbKeyActionEntry(m_xkb, keycode, level, group);
+                        m_impl->do_XkbKeyActionEntry(m_xkb, keycode, level, group);
                     if (action->type == XkbSA_SetMods ||
                         action->type == XkbSA_LockMods) {
                         return true;
@@ -830,9 +840,9 @@ XWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const
     (void)keycode;
 #if HAVE_XKB_EXTENSION
     // get effective group for key
-    int numGroups = XkbKeyNumGroups(m_xkb, keycode);
+    int numGroups = m_impl->do_XkbKeyNumGroups(m_xkb, keycode);
     if (group >= numGroups) {
-        unsigned char groupInfo = XkbKeyGroupInfo(m_xkb, keycode);
+        unsigned char groupInfo = m_impl->do_XkbKeyGroupInfo(m_xkb, keycode);
         switch (XkbOutOfRangeGroupAction(groupInfo)) {
         case XkbClampIntoRange:
             group = numGroups - 1;

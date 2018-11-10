@@ -203,4 +203,31 @@ public:
     virtual Atom* XListProperties(Display* display, Window w,
                                   int* num_prop_return) = 0;
     virtual char* XGetAtomName(Display* display, Atom atom) = 0;
+    virtual void XkbFreeKeyboard(XkbDescPtr xkb, unsigned int which,
+                                 Bool freeDesc) = 0;
+    virtual XkbDescPtr XkbGetMap(Display* display, unsigned int which,
+                                 unsigned int deviceSpec) = 0;
+    virtual Status	XkbGetState(Display* display, unsigned int deviceSet,
+                                XkbStatePtr rtrnState) = 0;
+    virtual int XQueryKeymap(Display* display, char keys_return[32]) = 0;
+    virtual Status	XkbGetUpdatedMap(Display* display, unsigned int which,
+                                     XkbDescPtr desc) = 0;
+    virtual Bool XkbLockGroup(Display* display, unsigned int deviceSpec,
+                              unsigned int group) = 0;
+    virtual int XDisplayKeycodes(Display* display, int* min_keycodes_return,
+                                 int* max_keycodes_return) = 0;
+    virtual KeySym* XGetKeyboardMapping(Display* display,
+                                        unsigned int first_keycode,
+                                        int keycode_count,
+                                        int* keysyms_per_keycode_return) = 0;
+    virtual int do_XkbKeyNumGroups(XkbDescPtr m_xkb, KeyCode desc) = 0;
+    virtual XkbKeyTypePtr do_XkbKeyKeyType(XkbDescPtr m_xkb, KeyCode keycode,
+                                           int eGroup) = 0;
+    virtual KeySym do_XkbKeySymEntry(XkbDescPtr m_xkb, KeyCode keycode,
+                                     int level, int eGroup) = 0;
+    virtual Bool do_XkbKeyHasActions(XkbDescPtr m_xkb, KeyCode keycode) = 0;
+    virtual XkbAction* do_XkbKeyActionEntry(XkbDescPtr m_xkb, KeyCode keycode,
+                                            int level, int eGroup) = 0;
+    virtual unsigned char do_XkbKeyGroupInfo(XkbDescPtr m_xkb,
+                                             KeyCode keycode) = 0;
 };

@@ -21,6 +21,7 @@
 #include "barrier/KeyState.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"
+#include "XWindowsImpl.h"
 
 #if X_DISPLAY_MISSING
 #    error X11 is required to build barrier
@@ -50,9 +51,10 @@ public:
         kGroupPollAndSet = -2
     };
 
-    XWindowsKeyState(Display*, bool useXKB, IEventQueue* events);
-    XWindowsKeyState(Display*, bool useXKB,
-        IEventQueue* events, barrier::KeyMap& keyMap);
+    XWindowsKeyState(IXWindowsImpl* impl, Display*, bool useXKB,
+                     IEventQueue* events);
+    XWindowsKeyState(IXWindowsImpl* impl, Display*, bool useXKB,
+                     IEventQueue* events, barrier::KeyMap& keyMap);
     ~XWindowsKeyState();
 
     //! @name modifiers
@@ -144,6 +146,8 @@ private:
     typedef std::multimap<KeyID, KeyCode> KeyToKeyCodeMap;
     typedef std::map<KeyCode, unsigned int> NonXKBModifierMap;
     typedef std::map<UInt32, XKBModifierInfo> XKBModifierMap;
+
+    IXWindowsImpl* m_impl;
 
     Display*            m_display;
 #if HAVE_XKB_EXTENSION
