@@ -160,7 +160,7 @@ XWindowsScreen::XWindowsScreen(
 								&XWindowsScreen::handleSystemEvent));
 
 	// install the platform event queue
-	m_events->adoptBuffer(new XWindowsEventQueueBuffer(
+    m_events->adoptBuffer(new XWindowsEventQueueBuffer(m_impl,
 		m_display, m_window, m_events));
 }
 

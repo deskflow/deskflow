@@ -21,6 +21,7 @@
 #include "mt/Mutex.h"
 #include "base/IEventQueueBuffer.h"
 #include "common/stdvector.h"
+#include "XWindowsImpl.h"
 
 #if X_DISPLAY_MISSING
 #    error X11 is required to build barrier
@@ -33,7 +34,8 @@ class IEventQueue;
 //! Event queue buffer for X11
 class XWindowsEventQueueBuffer : public IEventQueueBuffer {
 public:
-    XWindowsEventQueueBuffer(Display*, Window, IEventQueue* events);
+    XWindowsEventQueueBuffer(IXWindowsImpl* impl, Display*, Window,
+                             IEventQueue* events);
     virtual ~XWindowsEventQueueBuffer();
 
     // IEventQueueBuffer overrides
@@ -51,6 +53,7 @@ private:
 
 private:
     typedef std::vector<XEvent> EventList;
+     IXWindowsImpl*       m_impl;
 
     Mutex                m_mutex;
     Display*            m_display;

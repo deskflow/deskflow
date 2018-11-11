@@ -52,17 +52,18 @@ class EventQueueTimer { };
 // XWindowsEventQueueBuffer
 //
 
-XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(
+XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(IXWindowsImpl* impl,
         Display* display, Window window, IEventQueue* events) :
     m_events(events),
     m_display(display),
     m_window(window),
     m_waiting(false)
 {
+    m_impl = impl;
     assert(m_display != NULL);
     assert(m_window  != None);
 
-    m_userEvent = XInternAtom(m_display, "BARRIER_USER_EVENT", False);
+    m_userEvent = m_impl->XInternAtom(m_display, "BARRIER_USER_EVENT", False);
     // set up for pipe hack
     int result = pipe(m_pipefd);
     assert(result == 0);
@@ -206,7 +207,7 @@ XWindowsEventQueueBuffer::getEvent(Event& event, UInt32& dataID)
     flush();
 
     // get next event
-    XNextEvent(m_display, &m_event);
+    m_impl->XNextEvent(m_display, &m_event);
 
     // process event
     if (m_event.xany.type == ClientMessage &&
@@ -262,7 +263,7 @@ bool
 XWindowsEventQueueBuffer::isEmpty() const
 {
     Lock lock(&m_mutex);
-    return (XPending(m_display) == 0 );
+    return (m_impl->XPending(m_display) == 0 );
 }
 
 EventQueueTimer*
@@ -284,8 +285,8 @@ XWindowsEventQueueBuffer::flush()
 
     // flush the posted event list to the X server
     for (size_t i = 0; i < m_postedEvents.size(); ++i) {
-        XSendEvent(m_display, m_window, False, 0, &m_postedEvents[i]);
+        m_impl->XSendEvent(m_display, m_window, False, 0, &m_postedEvents[i]);
     }
-    XFlush(m_display);
+    m_impl->XFlush(m_display);
     m_postedEvents.clear();
 }

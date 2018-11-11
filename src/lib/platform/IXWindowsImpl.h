@@ -230,4 +230,5 @@ public:
                                             int level, int eGroup) = 0;
     virtual unsigned char do_XkbKeyGroupInfo(XkbDescPtr m_xkb,
                                              KeyCode keycode) = 0;
+    virtual int XNextEvent(Display* display, XEvent* event_return) = 0;
 };

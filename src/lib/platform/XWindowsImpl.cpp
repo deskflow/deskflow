@@ -639,3 +639,8 @@ unsigned char XWindowsImpl::do_XkbKeyGroupInfo(XkbDescPtr m_xkb,
 {
     return do_XkbKeyGroupInfo(m_xkb, keycode);
 }
+
+int XWindowsImpl::XNextEvent(Display* display, XEvent* event_return)
+{
+    return ::XNextEvent(display, event_return);
+}
