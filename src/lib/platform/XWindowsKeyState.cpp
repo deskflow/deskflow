@@ -59,6 +59,7 @@ XWindowsKeyState::XWindowsKeyState(IXWindowsImpl* impl,
     m_display(display),
     m_modifierFromX(ModifiersFromXDefaultSize)
 {
+    m_impl = impl;
     init(display, useXKB);
 }
 

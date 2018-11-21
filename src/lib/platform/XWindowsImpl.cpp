@@ -278,7 +278,7 @@ void* XWindowsImpl::XineramaQueryScreens(Display* display, int* number)
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
     return ::XineramaQueryScreens(display, number);
 #else
-    nullptr;
+    return nullptr;
 #endif
 }
 
@@ -614,30 +614,30 @@ int XWindowsImpl::do_XkbKeyNumGroups(XkbDescPtr m_xkb, KeyCode desc)
 XkbKeyTypePtr XWindowsImpl::do_XkbKeyKeyType(XkbDescPtr m_xkb, KeyCode keycode,
                                              int eGroup)
 {
-    return do_XkbKeyKeyType(m_xkb, keycode, eGroup);
+    return XkbKeyKeyType(m_xkb, keycode, eGroup);
 }
 
 KeySym XWindowsImpl::do_XkbKeySymEntry(XkbDescPtr m_xkb, KeyCode keycode,
                                        int level, int eGroup)
 {
-    return do_XkbKeySymEntry(m_xkb, keycode, level, eGroup);
+    return XkbKeySymEntry(m_xkb, keycode, level, eGroup);
 }
 
 Bool XWindowsImpl::do_XkbKeyHasActions(XkbDescPtr m_xkb, KeyCode keycode)
 {
-    return do_XkbKeyHasActions(m_xkb, keycode);
+    return XkbKeyHasActions(m_xkb, keycode);
 }
 
 XkbAction* XWindowsImpl::do_XkbKeyActionEntry(XkbDescPtr m_xkb, KeyCode keycode,
                                               int level, int eGroup)
 {
-    return do_XkbKeyActionEntry(m_xkb, keycode, level, eGroup);
+    return XkbKeyActionEntry(m_xkb, keycode, level, eGroup);
 }
 
 unsigned char XWindowsImpl::do_XkbKeyGroupInfo(XkbDescPtr m_xkb,
                                                KeyCode keycode)
 {
-    return do_XkbKeyGroupInfo(m_xkb, keycode);
+    return XkbKeyGroupInfo(m_xkb, keycode);
 }
 
 int XWindowsImpl::XNextEvent(Display* display, XEvent* event_return)
