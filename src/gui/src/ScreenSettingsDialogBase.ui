@@ -462,7 +462,17 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="0">
+	<item row="4" column="0">
+         <widget class="QCheckBox" name="m_pCheckBoxPreserveFocus">
+          <property name="text">
+           <string>Fix Preserve Focus</string>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
          <spacer>
           <property name="orientation">
            <enum>Qt::Vertical</enum>

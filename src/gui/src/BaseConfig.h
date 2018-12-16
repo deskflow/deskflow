@@ -29,7 +29,7 @@ class BaseConfig
     public:
         enum Modifier { DefaultMod = -1, Shift, Ctrl, Alt, Meta, Super, None, NumModifiers };
         enum SwitchCorner { TopLeft, TopRight, BottomLeft, BottomRight, NumSwitchCorners };
-        enum Fix { CapsLock, NumLock, ScrollLock, XTest, NumFixes };
+        enum Fix { CapsLock, NumLock, ScrollLock, XTest, PreserveFocus, NumFixes };
 
     protected:
         BaseConfig() {}
