@@ -704,18 +704,30 @@ SecureSocket::verifyCertFingerprint()
         kFingerprintDirName,
         kFingerprintTrustedServersFilename);
 
+    // Provide debug hint as to what file is being used to verify fingerprint trust
+    LOG((CLOG_NOTE "trustedServersFilename: %s", trustedServersFilename.c_str() ));
+
     // check if this fingerprint exist
     String fileLine;
     std::ifstream file;
     file.open(trustedServersFilename.c_str());
+
+    if ( ! file.is_open() ) {
+      LOG((CLOG_NOTE "Unable to open trustedServersFile: %s", trustedServersFilename.c_str() ));
+    } else {
+      LOG((CLOG_NOTE "Opened trustedServersFilename: %s", trustedServersFilename.c_str() ));
+    }
 
     bool isValid = false;
     while (!file.eof() && file.is_open()) {
         getline(file,fileLine);
         if (!fileLine.empty()) {
             if (fileLine.compare(fingerprint) == 0) {
+                LOG((CLOG_NOTE "Fingerprint matchs trusted fingerprint"));
                 isValid = true;
                 break;
+            } else {
+                LOG((CLOG_NOTE "Fingerprint does not match trusted fingerprint"));
             }
         }
     }
