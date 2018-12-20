@@ -723,7 +723,7 @@ SecureSocket::verifyCertFingerprint()
         getline(file,fileLine);
         if (!fileLine.empty()) {
             if (fileLine.compare(fingerprint) == 0) {
-                LOG((CLOG_NOTE "Fingerprint matchs trusted fingerprint"));
+                LOG((CLOG_NOTE "Fingerprint matches trusted fingerprint"));
                 isValid = true;
                 break;
             } else {
