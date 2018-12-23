@@ -712,10 +712,10 @@ SecureSocket::verifyCertFingerprint()
     std::ifstream file;
     file.open(trustedServersFilename.c_str());
 
-    if ( ! file.is_open() ) {
-      LOG((CLOG_NOTE "Unable to open trustedServersFile: %s", trustedServersFilename.c_str() ));
+    if (!file.is_open()) {
+        LOG((CLOG_NOTE "Unable to open trustedServersFile: %s", trustedServersFilename.c_str() ));
     } else {
-      LOG((CLOG_NOTE "Opened trustedServersFilename: %s", trustedServersFilename.c_str() ));
+        LOG((CLOG_NOTE "Opened trustedServersFilename: %s", trustedServersFilename.c_str() ));
     }
 
     bool isValid = false;
