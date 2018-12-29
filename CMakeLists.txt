@@ -311,8 +311,10 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         ${OPENSSL_ROOT}/lib/ssleay32.lib
     )
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-
-    if (IS_DIRECTORY /opt/local)
+    find_program(BREW_PROGRAM "brew")
+    find_program(PORT_PROGRAM "ports")
+    
+    if (IS_DIRECTORY /opt/local AND PORT_PROGRAM)
         # macports
         set (OPENSSL_ROOT /opt/local)
 
@@ -321,7 +323,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
             ${OPENSSL_ROOT}/lib/libcrypto.a
             z
         )
-    elseif (IS_DIRECTORY /usr/local/opt/openssl)
+    elseif (IS_DIRECTORY /usr/local/opt/openssl AND BREW_PROGRAM)
         # brew
         set (OPENSSL_ROOT /usr/local/opt/openssl)
 
