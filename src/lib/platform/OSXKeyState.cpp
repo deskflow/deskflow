@@ -521,19 +521,19 @@ OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
         switch (virtualKeyCode)
         {
         case s_shiftVK:
-                modifiersDelta = NX_SHIFTMASK;
+                modifiersDelta = NX_SHIFTMASK | NX_DEVICELSHIFTKEYMASK;
                 m_shiftPressed = postDown;
                 break;
         case s_superVK:
-                modifiersDelta = NX_COMMANDMASK;
+                modifiersDelta = NX_COMMANDMASK | NX_DEVICELCMDKEYMASK;
                 m_superPressed = postDown;
                 break;
         case s_altVK:
-                modifiersDelta = NX_ALTERNATEMASK;
+                modifiersDelta = NX_ALTERNATEMASK | NX_DEVICELALTKEYMASK;
                 m_altPressed = postDown;
                 break;
         case s_controlVK:
-                modifiersDelta = NX_CONTROLMASK;
+                modifiersDelta = NX_CONTROLMASK | NX_DEVICELCTLKEYMASK;
                 m_controlPressed = postDown;
                 break;
         case s_capsLockVK:
@@ -551,6 +551,7 @@ OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
         }
             
         kern_return_t kr;
+        event.key.keyCode = virtualKeyCode;
         kr = IOHIDPostEvent(getEventDriver(), NX_FLAGSCHANGED, loc,
                 &event, kNXEventDataVersion, modifiers, true);
         assert(KERN_SUCCESS == kr);
