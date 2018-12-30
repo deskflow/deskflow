@@ -544,10 +544,11 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
         return newJob();
     }
 
-    EJobResult result = kRetry;
+    EJobResult writeResult = kRetry;
+    EJobResult readResult = kRetry;
     if (write) {
         try {
-            result = doWrite();
+            writeResult = doWrite();
         }
         catch (XArchNetworkShutdown&) {
             // remote read end of stream hungup.  our output side
@@ -558,13 +559,13 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
                 sendEvent(m_events->forISocket().disconnected());
                 m_connected = false;
             }
-            result = kNew;
+            writeResult = kNew;
         }
         catch (XArchNetworkDisconnected&) {
             // stream hungup
             onDisconnected();
             sendEvent(m_events->forISocket().disconnected());
-            result = kNew;
+            writeResult = kNew;
         }
         catch (XArchNetwork& e) {
             // other write error
@@ -572,19 +573,19 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
             onDisconnected();
             sendEvent(m_events->forIStream().outputError());
             sendEvent(m_events->forISocket().disconnected());
-            result = kNew;
+            writeResult = kNew;
         }
     }
 
     if (read && m_readable) {
         try {
-            result = doRead();
+            readResult = doRead();
         }
         catch (XArchNetworkDisconnected&) {
             // stream hungup
             sendEvent(m_events->forISocket().disconnected());
             onDisconnected();
-            result = kNew;
+            readResult = kNew;
         }
         catch (XArchNetwork& e) {
             // ignore other read error
@@ -592,5 +593,11 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
         }
     }
 
-    return result == kBreak ? NULL : result == kNew ? newJob() : job;
+    if (writeResult == kBreak || readResult == kBreak) {
+        return NULL;
+    } else if (writeResult == kNew || readResult == kNew) {
+        return newJob();
+    } else {
+        return job;
+    }
 }
