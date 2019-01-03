@@ -312,7 +312,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     )
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     find_program(BREW_PROGRAM "brew")
-    find_program(PORT_PROGRAM "ports")
+    find_program(PORT_PROGRAM "port")
     
     if (IS_DIRECTORY /opt/local AND PORT_PROGRAM)
         # macports
