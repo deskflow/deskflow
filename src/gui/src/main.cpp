@@ -138,8 +138,7 @@ int waitForTray()
 
 		if (++trayAttempts > TRAY_RETRY_COUNT)
 		{
-			QMessageBox::critical(NULL, "Barrier",
-				QObject::tr("System tray is unavailable, don't close your window."));
+			fprintf(stdout, "System tray is unavailable.\n");
 			return false;
 		}
 
