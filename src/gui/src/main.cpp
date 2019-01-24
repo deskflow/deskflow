@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define TRAY_RETRY_COUNT 10
+#define TRAY_RETRY_COUNT 5
 #define TRAY_RETRY_WAIT 2000
 
 #include "QBarrierApplication.h"
@@ -138,8 +138,7 @@ int waitForTray()
 
 		if (++trayAttempts > TRAY_RETRY_COUNT)
 		{
-			QMessageBox::critical(NULL, "Barrier",
-				QObject::tr("System tray is unavailable, don't close your window."));
+			fprintf(stdout, "System tray is unavailable.\n");
 			return false;
 		}
 
