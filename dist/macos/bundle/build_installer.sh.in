@@ -3,12 +3,6 @@
 # change this to rename the installer package
 B_DMG="Barrier-@BARRIER_VERSION@.dmg"
 
-# sanity check so we don't distribute packages full of debug symbols
-if [ "@CMAKE_BUILD_TYPE@" != "Release" ]; then
-    echo Will only build installers for Release builds
-    exit 1
-fi
-
 cd @CMAKE_CURRENT_SOURCE_DIR@/build/bundle || exit 1
 
 B_REREF_SCRIPT=@CMAKE_CURRENT_SOURCE_DIR@/build/bundle/reref_dylibs.sh
@@ -68,6 +62,14 @@ $B_REREF_SCRIPT platforms/libqcocoa.dylib ../ || exit 1
 printf "%s\n" "#!/bin/sh" "cd \$(dirname \$0)" "exec ./barrier" > barrier.sh
 chmod +x barrier.sh
 
+echo "Barrier.app created successfully"
+
+# sanity check so we don't distribute a dmg with debug symbols
+if [ "@CMAKE_BUILD_TYPE@" != "Release" ]; then
+    echo "dmg only created for Release builds"
+    exit 1
+fi
+
 # create the DMG to be distributed in build/bundle
 cd ../../..
 hdiutil create -size 64m -fs HFS+ -volname "Barrier" temp.dmg || exit 1
@@ -77,4 +79,4 @@ hdiutil detach mnt || exit 1
 hdiutil convert temp.dmg -format UDZO -o $B_DMG || exit 1
 rm temp.dmg
 
-echo "Installer created successfully"
+echo "dmg $B_DMB created successfully"
