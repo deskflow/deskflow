@@ -694,7 +694,7 @@ ServerApp::handleScreenSwitched(const Event& e, void*)
             cmd += info->m_screen;
             cmd += " &";
 
-            system(cmd.c_str());
+            std::system(cmd.c_str());
         }
     #endif
 }
