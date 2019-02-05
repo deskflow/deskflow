@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -95,7 +95,7 @@ ServerApp::parseArgs(int argc, const char* const* argv)
     else {
         if (!args().m_barrierAddress.empty()) {
             try {
-                *m_barrierAddress = NetworkAddress(args().m_barrierAddress, 
+                *m_barrierAddress = NetworkAddress(args().m_barrierAddress,
                     kDefaultPort);
                 m_barrierAddress->resolve();
             }
@@ -117,7 +117,10 @@ ServerApp::help()
     " [--display <display>] [--no-xinitthreads]"
 #  define WINAPI_INFO \
     "      --display <display>  connect to the X server at <display>\n" \
-    "      --no-xinitthreads    do not call XInitThreads()\n"
+    "      --no-xinitthreads    do not call XInitThreads()\n" \
+    "      --screen-change-script <path>\n" \
+    "                           path to script to run on screen change\n" \
+    "                           first argument is screen name\n"
 #else
 #  define WINAPI_ARGS ""
 #  define WINAPI_INFO ""
@@ -240,7 +243,7 @@ ServerApp::loadConfig(const String& pathname)
     return false;
 }
 
-void 
+void
 ServerApp::forceReconnect(const Event&, void*)
 {
     if (m_server != NULL) {
@@ -248,7 +251,7 @@ ServerApp::forceReconnect(const Event&, void*)
     }
 }
 
-void 
+void
 ServerApp::handleClientConnected(const Event&, void* vlistener)
 {
     ClientListener* listener = static_cast<ClientListener*>(vlistener);
@@ -282,7 +285,7 @@ ServerApp::closeServer(Server* server)
         new TMethodEventJob<ServerApp>(this, &ServerApp::handleClientsDisconnected));
     m_events->adoptHandler(m_events->forServer().disconnected(), server,
         new TMethodEventJob<ServerApp>(this, &ServerApp::handleClientsDisconnected));
-    
+
     m_events->loop();
 
     m_events->removeHandler(Event::kTimer, timer);
@@ -293,7 +296,7 @@ ServerApp::closeServer(Server* server)
     delete server;
 }
 
-void 
+void
 ServerApp::stopRetryTimer()
 {
     if (m_timer != NULL) {
@@ -317,7 +320,7 @@ void ServerApp::updateStatus(const String& msg)
     }
 }
 
-void 
+void
 ServerApp::closeClientListener(ClientListener* listen)
 {
     if (listen != NULL) {
@@ -326,7 +329,7 @@ ServerApp::closeClientListener(ClientListener* listen)
     }
 }
 
-void 
+void
 ServerApp::stopServer()
 {
     if (m_serverState == kStarted) {
@@ -350,7 +353,7 @@ ServerApp::closePrimaryClient(PrimaryClient* primaryClient)
     delete primaryClient;
 }
 
-void 
+void
 ServerApp::closeServerScreen(barrier::Screen* screen)
 {
     if (screen != NULL) {
@@ -517,7 +520,7 @@ static const char* const family_string(IArchNetwork::EAddressFamily family)
     return "Unknown";
 }
 
-bool 
+bool
 ServerApp::startServer()
 {
     // skip if already started or starting
@@ -582,7 +585,7 @@ ServerApp::startServer()
     }
 }
 
-barrier::Screen* 
+barrier::Screen*
 ServerApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
@@ -597,7 +600,7 @@ ServerApp::createScreen()
 #endif
 }
 
-PrimaryClient* 
+PrimaryClient*
 ServerApp::openPrimaryClient(const String& name, barrier::Screen* screen)
 {
     LOG((CLOG_DEBUG1 "creating primary screen"));
@@ -612,7 +615,7 @@ ServerApp::handleScreenError(const Event&, void*)
     m_events->addEvent(Event(Event::kQuit));
 }
 
-void 
+void
 ServerApp::handleSuspend(const Event&, void*)
 {
     if (!m_suspended) {
@@ -622,7 +625,7 @@ ServerApp::handleSuspend(const Event&, void*)
     }
 }
 
-void 
+void
 ServerApp::handleResume(const Event&, void*)
 {
     if (m_suspended) {
@@ -640,16 +643,16 @@ ServerApp::openClientListener(const NetworkAddress& address)
         new TCPSocketFactory(m_events, getSocketMultiplexer()),
         m_events,
         args().m_enableCrypto);
-    
+
     m_events->adoptHandler(
         m_events->forClientListener().connected(), listen,
         new TMethodEventJob<ServerApp>(
             this, &ServerApp::handleClientConnected, listen));
-    
+
     return listen;
 }
 
-Server* 
+Server*
 ServerApp::openServer(Config& config, PrimaryClient* primaryClient)
 {
     Server* server = new Server(config, primaryClient, m_serverScreen, m_events, args());
@@ -679,6 +682,21 @@ ServerApp::handleNoClients(const Event&, void*)
 void
 ServerApp::handleScreenSwitched(const Event& e, void*)
 {
+    Server::SwitchToScreenInfo* info = (Server::SwitchToScreenInfo*)(e.getData());
+
+    #ifdef WINAPI_XWINDOWS
+        if (!args().m_screenChangeScript.empty()) {
+            LOG((CLOG_INFO "Running shell script for screen \"%s\"", info->m_screen));
+
+            std::string cmd = std::string(args().m_screenChangeScript);
+
+            cmd += " ";
+            cmd += info->m_screen;
+            cmd += " &";
+
+            system(cmd.c_str());
+        }
+    #endif
 }
 
 int
@@ -714,7 +732,7 @@ ServerApp::mainLoop()
 
     // start server, etc
     appUtil().startNode();
-    
+
     // init ipc client after node start, since create a new screen wipes out
     // the event queue (the screen ctors call adoptBuffer).
     if (argsBase().m_enableIpc) {
@@ -743,24 +761,24 @@ ServerApp::mainLoop()
     // later.  the timer installed by startServer() will take care of
     // that.
     DAEMON_RUNNING(true);
-    
+
 #if defined(MAC_OS_X_VERSION_10_7)
-    
+
     Thread thread(
         new TMethodJob<ServerApp>(
             this, &ServerApp::runEventsLoop,
             NULL));
-    
+
     // wait until carbon loop is ready
     OSXScreen* screen = dynamic_cast<OSXScreen*>(
         m_serverScreen->getPlatformScreen());
     screen->waitForCarbonLoop();
-    
+
     runCocoaApp();
 #else
     m_events->loop();
 #endif
-    
+
     DAEMON_RUNNING(false);
 
     // close down
@@ -788,7 +806,7 @@ void ServerApp::resetServer(const Event&, void*)
     startServer();
 }
 
-int 
+int
 ServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
     // general initialization
@@ -819,7 +837,7 @@ int daemonMainLoopStatic(int argc, const char** argv) {
     return ServerApp::instance().daemonMainLoop(argc, argv);
 }
 
-int 
+int
 ServerApp::standardStartup(int argc, char** argv)
 {
     initApp(argc, argv);
@@ -833,7 +851,7 @@ ServerApp::standardStartup(int argc, char** argv)
     }
 }
 
-int 
+int
 ServerApp::foregroundStartup(int argc, char** argv)
 {
     initApp(argc, argv);
@@ -842,7 +860,7 @@ ServerApp::foregroundStartup(int argc, char** argv)
     return mainLoop();
 }
 
-const char* 
+const char*
 ServerApp::daemonName() const
 {
 #if SYSAPI_WIN32
@@ -852,7 +870,7 @@ ServerApp::daemonName() const
 #endif
 }
 
-const char* 
+const char*
 ServerApp::daemonInfo() const
 {
 #if SYSAPI_WIN32
