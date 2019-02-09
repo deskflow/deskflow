@@ -49,6 +49,8 @@
 #if WINAPI_MSWINDOWS
 #include "platform/MSWindowsScreen.h"
 #elif WINAPI_XWINDOWS
+#include <unistd.h>
+#include <signal.h>
 #include "platform/XWindowsScreen.h"
 #elif WINAPI_CARBON
 #include "platform/OSXScreen.h"
@@ -119,8 +121,8 @@ ServerApp::help()
     "      --display <display>  connect to the X server at <display>\n" \
     "      --no-xinitthreads    do not call XInitThreads()\n" \
     "      --screen-change-script <path>\n" \
-    "                           path to script to run on screen change\n" \
-    "                           first argument is screen name\n"
+    "                           full path to script to run on screen change\n" \
+    "                           first argument is the new screen name\n"
 #else
 #  define WINAPI_ARGS ""
 #  define WINAPI_INFO ""
@@ -688,13 +690,20 @@ ServerApp::handleScreenSwitched(const Event& e, void*)
         if (!args().m_screenChangeScript.empty()) {
             LOG((CLOG_INFO "Running shell script for screen \"%s\"", info->m_screen));
 
-            std::string cmd = std::string(args().m_screenChangeScript);
+            signal(SIGCHLD, SIG_IGN);
 
-            cmd += " ";
-            cmd += info->m_screen;
-            cmd += " &";
-
-            std::system(cmd.c_str());
+            if (!access(args().m_screenChangeScript.c_str(), X_OK)) {
+                pid_t pid = fork();
+                if (pid == 0) {
+                    execl(args().m_screenChangeScript.c_str(),args().m_screenChangeScript.c_str(),info->m_screen,NULL);
+                    exit(0);
+                } else if (pid < 0) {
+                    LOG((CLOG_ERR "Script forking error"));
+                    exit(1);
+                }
+            } else {
+                LOG((CLOG_ERR "Script not accessible \"%s\"", args().m_screenChangeScript.c_str()));
+            }
         }
     #endif
 }
