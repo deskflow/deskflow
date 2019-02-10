@@ -29,4 +29,5 @@ public:
 public:
     String                m_configFile;
     Config*                m_config;
+    String                m_screenChangeScript;
 };

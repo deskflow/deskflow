@@ -29,7 +29,7 @@
 #ifdef WINAPI_MSWINDOWS
 #include <VersionHelpers.h>
 #endif
- 
+
 ArgsBase* ArgParser::m_argsBase = NULL;
 
 ArgParser::ArgParser(App* app) :
@@ -60,6 +60,10 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
         else if (isArg(i, argc, argv, "-c", "--config", 1)) {
             // save configuration file path
             args.m_configFile = argv[++i];
+        }
+        else if (isArg(i, argc, argv, NULL, "--screen-change-script", 1)) {
+            // save screen change script path
+            args.m_screenChangeScript = argv[++i];
         }
         else {
             LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_exename.c_str(), argv[i], args.m_exename.c_str()));
