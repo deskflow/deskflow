@@ -49,9 +49,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include <fstream>
-#include <sstream>
-#include <utility>
+#include <climits>
 
 //
 // Server
@@ -93,8 +91,10 @@ Server::Server(
 	m_sendFileThread(nullptr),
 	m_writeToDropDirThread(nullptr),
 	m_ignoreFileTransfer(false),
+	m_disableLockToScreen(false),
 	m_enableClipboard(true),
-	m_sendDragInfoThread(nullptr),
+    m_maximumClipboardSize(INT_MAX),
+	m_sendDragInfoThread(NULL),
 	m_waitDragInfoThread(true),
 	m_args(std::move(args))
 {
@@ -288,7 +288,7 @@ Server::setConfig(const Config& config)
 	// we will unfortunately generate a warning.  if the user has
 	// configured a LockCursorToScreenAction then we don't add
 	// ScrollLock as a hotkey.
-	if (!m_config->hasLockToScreenAction()) {
+	if (!m_disableLockToScreen && !m_config->hasLockToScreenAction()) {
 		IPlatformScreen::KeyInfo* key =
 			IPlatformScreen::KeyInfo::alloc(kKeyScrollLock, 0, 0, 0);
 		InputFilter::Rule rule(new InputFilter::KeystrokeCondition(m_events, key));
@@ -419,6 +419,10 @@ Server::isLockedToScreenServer() const
 bool
 Server::isLockedToScreen() const
 {
+	if (m_disableLockToScreen) {
+		return false;
+	}
+
 	// locked if we say we're locked
 	if (isLockedToScreenServer()) {
 		LOG((CLOG_NOTE "Cursor is locked to screen, check Scroll Lock key"));
@@ -516,6 +520,10 @@ Server::switchScreen(BaseClientProxy* dst,
 		if (m_enableClipboard) {
 			// send the clipboard data to new active screen
 			for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+				// Hackity hackity hack
+				if (m_clipboards[id].m_clipboard.marshall().size() > (m_maximumClipboardSize * 1024)) {
+					continue;
+				}
 				m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
 			}
 		}
@@ -1176,11 +1184,22 @@ Server::processOptions()
 		else if (id == kOptionRelativeMouseMoves) {
 			newRelativeMoves = (value != 0);
 		}
+		else if (id == kOptionDisableLockToScreen) {
+			m_disableLockToScreen = (value != 0);
+		}
 		else if (id == kOptionClipboardSharing) {
-			m_enableClipboard = (value != 0);
-
+			m_enableClipboard = value;
 			if (!m_enableClipboard) {
 				LOG((CLOG_NOTE "clipboard sharing is disabled"));
+			}
+		}
+		else if (id == kOptionClipboardSharingSize) {
+			if (value <= 0) {
+				m_maximumClipboardSize = 0;
+				LOG((CLOG_NOTE "clipboard sharing is disabled because the "
+							   "maximum shared clipboard size is set to 0"));
+			} else {
+				m_maximumClipboardSize = static_cast<size_t>(value);
 			}
 		}
 	}
@@ -1226,7 +1245,7 @@ Server::handleShapeChanged(const Event& /*unused*/, void* vclient)
 void
 Server::handleClipboardGrabbed(const Event& event, void* vclient)
 {
-	if (!m_enableClipboard) {
+	if (!m_enableClipboard || (m_maximumClipboardSize == 0)) {
 		return;
 	}
 
@@ -1540,6 +1559,12 @@ Server::onClipboardChanged(BaseClientProxy* sender,
 
 	// ignore if data hasn't changed
 	String data = clipboard.m_clipboard.marshall();
+	if (data.size() > m_maximumClipboardSize * 1024) {
+		LOG((CLOG_NOTE "not updating clipboard because it's over the size limit (%i KB) configured by the server",
+			m_maximumClipboardSize));
+		return;
+	}
+
 	if (data == clipboard.m_clipboardData) {
 		LOG((CLOG_DEBUG "ignored screen \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id));
 		return;

@@ -933,6 +933,10 @@ struct codepair {
 { XK_oe,                          0x0153 }, /* LATIN SMALL LIGATURE OE */
 { XK_Ydiaeresis,                  0x0178 }, /* LATIN CAPITAL LETTER Y WITH DIAERESIS */
 { XK_EuroSign,                    0x20ac }, /* EURO SIGN */
+{ 0x1000218,                      0x0218},  /* LATIN CAPITAL LETTER S WITH COMMA BELOW */
+{ 0x1000219,                      0x0219},  /* LATIN SMALL LETTER S WITH COMMA BELOW */
+{ 0x100021a,                      0x021a},  /* LATIN CAPITAL LETTER T WITH COMMA BELOW */
+{ 0x100021b,                      0x021b},  /* LATIN CAPITAL LETTER T WITH COMMA BELOW */
 
 /* combining dead keys */
 { XK_dead_abovedot,               0x0307 }, /* COMBINING DOT ABOVE */

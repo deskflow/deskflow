@@ -1,32 +1,94 @@
 ### Operating Systems ###
 
-Server: microOS Tiara
-Client: Applesoft Windy OS 10
+# README & DELETE #
 
-**READ ME, DELETE ME**: On Windows, hold the Windows key and press 'r', type 'winver' and hit return to get your OS version. On Mac, hit the Apple menu (top left of the screen) and check 'About this Mac'. Linux users... you know what you're using ;)
+---BEGIN HELP---
+
+For example:
+
+Server: exampleOS 10.13
+Client: Foobar XP
+
+Note: Please use this issue tracker only for raising bugs.
+
+- Feature requests: https://symless.com/forums/forum/18-feature-ideas/
+- Technical support: https://symless.com/contact/customer-support?help-option=GitHub
+
+It's very important that you distinguish which operating system is the client and which
+is the server. The server is the computer that the mouse and keyboard are shared from.
+
+Remember: Delete the `# README & DELETE #` sections (including `---BEGIN HELP---` and
+`---END HELP---`).
+
+---END HELP---
 
 ### Synergy Version ###
 
-1.8.π
+# README & DELETE #
 
-**READ ME, DELETE ME**: Go to the 'Help' (on Windows) or 'Synergy' (on macOS) menu and then 'About Synergy' to check your version. Verify that you are using the same version across all of your machines, and that your issue still occurs with the latest release available at https://symless.com/account/login
+---BEGIN HELP---
 
-### Steps to reproduce bug ###
+If you're not using the latest version of Synergy, please update first:
+https://symless.com/synergy/downloads
 
-**READ ME, DELETE ME**: Try to be succinct. If your bug is intermittent, try and describe what you're doing when it happens most.
+Please don't rely on Linux package manager versioning, they sometimes get it wrong.
+If using the command line, you can use the `--version` arg to get your installed
+Synergy version, like so:
 
-1. Click things.
-2. Type things.
-3. Bug occurs.
-4. ... 
-5. Profit?
+Synergy 1: `synergys --version`
+Synergy 2: `synergy-core --server --version`
 
-### Other info ###
+If you're using the Synergy 1 config app (main Synergy app) then go to the Help
+menu, and click About. In Synergy 2 Beta, the version is displayed at all times.
 
-* When did the problem start to occur? When I...
-* Is there a way to work around it? No/Yes, you can...
-* Does this bug prevent you from using Synergy entirely? Yes/No
+---END HELP---
 
-Please follow the link below to send us logs from both your server and client sides if it's appropriate. https://github.com/symless/synergy-core/wiki/Sending-logs
+### Steps to Reproduce ###
 
-Put anything else you can think of here.
+---BEGIN HELP---
+
+This is the most important part. Try to remember exactly what exact steps caused
+the bug. Please make sure the steps are numbered and concise, like so:
+
+1. Do a little dance
+2. Make a little love
+3. Get down tonight
+
+Expected: Awesome things to happen
+Actual: Not so awesome things happened
+
+Before submitting, try to reproduce the bug based on the steps you provided.
+
+---END HELP---
+
+### Log URLs ###
+
+# README & DELETE #
+
+---BEGIN HELP---
+
+Please do not paste entire logs here, it looks really silly. Instead, upload your logs,
+and share the URLs to the uploaded logs. Here's how you that:
+
+Synergy 1: https://symless.com/help/s1-troubleshooting/s1-sending-logs
+Synergy 2: https://symless.com/help/s2-troubleshooting/s2-sending-logs
+
+Make sure you say which log is for which computer, and also which computer is the
+client and which one is the server. This helps to avoid any confusion.
+
+---END HELP---
+
+### Extra Info ###
+
+# README & DELETE #
+
+---BEGIN HELP---
+
+* What maybe causing it?
+* Are there any workarounds?
+* What other apps are you running?
+* Does it stop you using Synergy entirely?
+* Did restarting Synergy or the computer help?
+* Is there anything else you can think of
+
+---END HELP---

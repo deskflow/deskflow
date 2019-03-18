@@ -473,7 +473,9 @@ private:
     Thread*                m_writeToDropDirThread;
     String                m_dragFileExt;
     bool                m_ignoreFileTransfer;
+    bool                m_disableLockToScreen;
     bool                m_enableClipboard;
+    size_t				m_maximumClipboardSize;
 
     Thread*                m_sendDragInfoThread;
     bool                m_waitDragInfoThread;

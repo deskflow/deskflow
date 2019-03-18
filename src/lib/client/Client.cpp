@@ -42,8 +42,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
-#include <sstream>
-#include <utility>
+#include <algorithm>
+#include <climits>
 
 //
 // Client
@@ -68,11 +68,12 @@ Client::Client(
     m_suspended(false),
     m_connectOnResume(false),
     m_events(events),
-    m_sendFileThread(nullptr),
-    m_writeToDropDirThread(nullptr),
-    m_socket(nullptr),
-    m_args(std::move(args)),
-    m_enableClipboard(true)
+    m_sendFileThread(NULL),
+    m_writeToDropDirThread(NULL),
+    m_socket(NULL),
+    m_args(args),
+    m_enableClipboard(true),
+	m_maximumClipboardSize(INT_MAX)
 {
     assert(m_socketFactory != NULL);
     assert(m_screen        != NULL);
@@ -146,7 +147,7 @@ Client::connect()
         }
 
         // create the socket
-        IDataSocket* socket = m_socketFactory->create();
+        IDataSocket* socket = m_socketFactory->create(ARCH->getAddrFamily(m_serverAddress.getAddress()));
         m_socket = dynamic_cast<TCPSocket*>(socket);
 
         // filter socket messages, including a packetizing filter
@@ -358,13 +359,24 @@ Client::setOptions(const OptionsList& options)
         const OptionID id       = *index;
         if (id == kOptionClipboardSharing) {
             index++;
-            if (*index == static_cast<OptionValue>(false)) {
-                LOG((CLOG_NOTE "clipboard sharing is disabled"));
+            if (index != options.end()) {
+				if (!*index) {
+					LOG((CLOG_NOTE "clipboard sharing disabled by server"));
+                }
+                m_enableClipboard = *index;
             }
-            m_enableClipboard = (*index != 0u);
-
-            break;
+        } else if (id == kOptionClipboardSharingSize) {
+            index++;
+            if (index != options.end()) {
+				m_maximumClipboardSize = *index;
+            }
         }
+    }
+
+    if (m_enableClipboard && !m_maximumClipboardSize) {
+        m_enableClipboard = false;
+        LOG((CLOG_NOTE "clipboard sharing is disabled because the server "
+                       "set the maximum clipboard size to 0"));
     }
 
     m_screen->setOptions(options);
@@ -396,12 +408,17 @@ Client::sendClipboard(ClipboardID id)
     // check time
     if (m_timeClipboard[id] == 0 ||
         clipboard.getTime() != m_timeClipboard[id]) {
-        // save new time
-        m_timeClipboard[id] = clipboard.getTime();
-
         // marshall the data
-        String data = clipboard.marshall();
+		String data = clipboard.marshall();
+		if (data.size() >= m_maximumClipboardSize * 1024) {
+			LOG((CLOG_NOTE "Skipping clipboard transfer because the clipboard"
+				" contents exceeds the %i MB size limit set by the server",
+				m_maximumClipboardSize / 1024));
+			return;
+		}
 
+		// save new time
+		m_timeClipboard[id] = clipboard.getTime();
         // save and send data if different or not yet sent
         if (!m_sentClipboard[id] || data != m_dataClipboard[id]) {
             m_sentClipboard[id] = true;
@@ -647,7 +664,7 @@ Client::handleShapeChanged(const Event& /*unused*/, void* /*unused*/)
 void
 Client::handleClipboardGrabbed(const Event& event, void* /*unused*/)
 {
-    if (!m_enableClipboard) {
+    if (!m_enableClipboard || (m_maximumClipboardSize == 0)) {
         return;
     }
 

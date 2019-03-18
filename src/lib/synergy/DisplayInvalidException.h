@@ -1,6 +1,7 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014-2016 Symless Ltd.
+ * Copyright (C) 2012-2018 Symless Ltd.
+ * Copyright (C) 2002 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,15 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef SYNERGY_DISPLAYINVALIDEXCEPTION_H
+#define SYNERGY_DISPLAYINVALIDEXCEPTION_H
 
-#pragma once
 
-#define ARCH_INTERNET ArchInternetWindows
+#include <stdexcept>
+#include <string>
 
-#include "base/String.h"
+class DisplayInvalidException : public std::runtime_error {
+    public:
+        DisplayInvalidException(const char* msg):
+                std::runtime_error(msg)
+        {
+        }
 
-class ArchInternetWindows {
-public:
-    String                get(const String& url);
-    String                urlEncode(const String& url);
+        DisplayInvalidException(std::string msg):
+                std::runtime_error(msg)
+        {
+        }
 };
+
+
+#endif //SYNERGY_DISPLAYINVALIDEXCEPTION_H

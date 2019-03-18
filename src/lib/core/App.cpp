@@ -29,6 +29,7 @@
 #include "core/ArgsBase.h"
 #include "core/XSynergy.h"
 #include "core/protocol_types.h"
+#include "synergy/DisplayInvalidException.h"
 
 #include <iostream>
 #include <cstdio>
@@ -47,6 +48,7 @@
 #if WINAPI_XWINDOWS
 #include <unistd.h>
 #endif
+
 
 App* App::s_instance = nullptr;
 
@@ -120,6 +122,15 @@ App::run(int argc, char** argv)
         // using the exit(int) function!
         result = e.getCode();
     }
+    catch (DisplayInvalidException& die) {
+        LOG((CLOG_CRIT "A display invalid exception error occurred: %s\n", die.what()));
+        // display invalid exceptions can occur when going to sleep. When this process exits, the
+        // UI will restart us instantly. We don't really want that behevior, so we quies for a bit
+        ARCH->sleep(10);
+    }
+    catch (std::runtime_error& re) {
+        LOG((CLOG_CRIT "A runtime error occurred: %s\n", re.what()));
+    }
     catch (std::exception& e) {
         LOG((CLOG_CRIT "An error occurred: %s\n", e.what()));
     }
@@ -175,7 +186,7 @@ App::initApp(int argc, const char** argv)
     // this is a simple way to allow the core process to talk to X. this avoids
     // the "WARNING: primary screen unavailable: unable to open screen" error.
     // a better way would be to use xauth cookie and dbus to get access to X.
-    if (static_cast<int>((!(argsBase().m_runAsUid) == 0 != -1))) {
+    if (argsBase().m_runAsUid >= 0) {
         if (setuid(argsBase().m_runAsUid) == 0) {
             LOG((CLOG_DEBUG "process uid was set to: %d", argsBase().m_runAsUid));
         }

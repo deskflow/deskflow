@@ -97,12 +97,13 @@ XWindowsScreen::XWindowsScreen(
 		bool disableXInitThreads,
 		int mouseScrollDelta,
 		IEventQueue* events) :
+	PlatformScreen(events),
 	m_isPrimary(isPrimary),
 	m_mouseScrollDelta(mouseScrollDelta),
 	m_display(nullptr),
 	m_root(None),
 	m_window(None),
-	m_isOnScreen(true),
+	m_isOnScreen(isPrimary),
 	m_x(0), m_y(0),
 	m_w(0), m_h(0),
 	m_xCenter(0), m_yCenter(0),
@@ -121,8 +122,7 @@ XWindowsScreen::XWindowsScreen(
 	m_xkb(false),
 	m_xi2detected(false),
 	m_xrandr(false),
-	m_events(events),
-	PlatformScreen(events)
+	m_events(events)
 {
 	assert(s_screen == NULL);
 
@@ -1391,8 +1391,6 @@ XWindowsScreen::handleSystemEvent(const Event& event, void* /*unused*/)
 	case MotionNotify:
 		if (m_isPrimary) {
 			onMouseMove(xevent->xmotion);
-		} else if (!m_isOnScreen && (xevent->xmotion.send_event == False)) {
-			LOG ((CLOG_INFO "local input detected"));
 		}
 		return;
 
@@ -1415,8 +1413,8 @@ XWindowsScreen::handleSystemEvent(const Event& event, void* /*unused*/)
 
 #if HAVE_X11_EXTENSIONS_XRANDR_H
 		if (m_xrandr) {
-			if (xevent->type == m_xrandrEventBase + RRScreenChangeNotify
-			||  xevent->type == m_xrandrEventBase + RRNotify
+			if ((xevent->type == m_xrandrEventBase + RRScreenChangeNotify
+			||  xevent->type == m_xrandrEventBase + RRNotify)
 			&& reinterpret_cast<XRRNotifyEvent *>(xevent)->subtype == RRNotify_CrtcChange) {
 				LOG((CLOG_INFO "XRRScreenChangeNotifyEvent or RRNotify_CrtcChange received"));
 

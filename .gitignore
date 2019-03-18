@@ -2,6 +2,7 @@ config.h
 .DS_Store
 *.pyc
 *.o
+*.a
 *~
 \.*.swp
 *build-gui-Desktop_Qt*
@@ -20,3 +21,8 @@ src/gui/.rnd
 src/setup/win32/synergy.suo
 CMakeCache.txt
 CMakeLists.txt.user
+Makefile
+cmake_install.cmake
+CMakeFiles/
+.idea
+/cmake-build-debug
