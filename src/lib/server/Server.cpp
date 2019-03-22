@@ -2262,6 +2262,10 @@ Server::forceLeaveClient(BaseClientProxy* client)
 			m_primaryClient->enter(m_x, m_y, m_seqNum,
 								m_primaryClient->getToggleMask(), false);
 		}
+
+		Server::SwitchToScreenInfo* info =
+			Server::SwitchToScreenInfo::alloc(m_active->getName());
+		m_events->addEvent(Event(m_events->forServer().screenSwitched(), this, info));
 	}
 
 	// if this screen had the cursor when the screen saver activated
