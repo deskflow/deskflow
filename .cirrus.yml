@@ -1,3 +1,14 @@
+ubuntu1404Build_task:
+  container:
+    dockerfile: CI/ubuntu1404.Dockerfile
+  script: 
+    - pwd
+    - ls -la
+    - mkdir build 
+    - cd build
+    - cmake ..
+    - make
+    
 ubuntu1604Build_task:
   container:
     dockerfile: CI/ubuntu1604.Dockerfile
