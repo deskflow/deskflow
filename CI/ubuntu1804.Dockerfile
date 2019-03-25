@@ -5,7 +5,7 @@
 #
 
 # Pull base image.
-FROM ubuntu:latest
+FROM ubuntu:18.04
 
 # Install.
 RUN \

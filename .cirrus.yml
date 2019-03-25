@@ -1,6 +1,6 @@
-ubuntuBuild_task:
+ubuntu1604Build_task:
   container:
-    dockerfile: ubuntu.Dockerfile
+    dockerfile: CI\ubuntu1604.Dockerfile
   script: 
     - pwd
     - ls -la
@@ -9,3 +9,16 @@ ubuntuBuild_task:
     - cd build
     - cmake ..
     - make
+
+ubuntu1804Build_task:
+  container:
+    dockerfile: CI\ubuntu1804.Dockerfile
+  script: 
+    - pwd
+    - ls -la
+    - mkdir build 
+    - GIT_COMMIT="00000000"
+    - cd build
+    - cmake ..
+    - make
+    
