@@ -1,0 +1,15 @@
+container:
+  image: gcc:latest
+
+
+install_dep:
+  script: sudo apt install qtcreator qtbase5-dev cmake make g++ xorg-dev libssl-dev libx11-dev libsodium-dev libgl1-mesa-glx libegl1-mesa libcurl4-openssl-dev libavahi-compat-libdnssd-dev qtdeclarative5-dev libqt5svg5-dev libsystemd-dev
+	
+
+test_task:
+  depends_on: install_dep
+  script: 
+    - mkdir build 
+    - cd build
+    - cmake ..
+    - make
