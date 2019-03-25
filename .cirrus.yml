@@ -5,6 +5,7 @@ ubuntuBuild_task:
     - pwd
     - ls -la
     - mkdir build 
+    - GIT_COMMIT="00000000"
     - cd build
     - cmake ..
     - make
