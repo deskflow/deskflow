@@ -11,7 +11,7 @@ FROM ubuntu:14.04
 RUN \
   sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
   apt-get update && \
-  apt-get install -y git qtbase5-dev cmake make g++ xorg-dev libssl-dev libx11-dev libsodium-dev libgl1-mesa-glx libegl1-mesa libcurl4-openssl-dev libavahi-compat-libdnssd-dev 
+  apt-get install -y git qtbase5-dev cmake make g++ xorg-dev libssl-dev libx11-dev libgl1-mesa-glx libegl1-mesa libcurl4-openssl-dev libavahi-compat-libdnssd-dev 
   
 # Set environment variables.
 ENV HOME /root
