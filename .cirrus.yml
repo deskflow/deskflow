@@ -1,5 +1,5 @@
 macos_task:
     osx_instance:
         image: mojave-xcode-10.1
-    test_task:
+    script:
         - brew help
