@@ -12,6 +12,6 @@ macos_task:
     script:
         - if [ ! -d "${QT_INSTALL_PATH}" ] ; then curl -L -O https://download.qt.io/archive/qt/${QT_VER_SHORT}/${QT_VER}/${QT_INSTALLER_FILE}.dmg ; fi
         - if [ ! -d "${QT_INSTALL_PATH}" ] ; then hdiutil attach -noverify ${QT_INSTALLER_FILE}.dmg ; fi
-        - if [ ! -d "${QT_INSTALL_PATH}" ] ; then /Volumes/${QT_INSTALLER_FILE}/${QT_INSTALLER_FILE}.app/Contents/MacOS/${QT_INSTALLER_FILE} --script CI/MacOS/qtifwsilent.qs -platform minimal ; fi
+        - if [ ! -d "${QT_INSTALL_PATH}" ] ; then /Volumes/${QT_INSTALLER_FILE}/${QT_INSTALLER_FILE}.app/Contents/MacOS/${QT_INSTALLER_FILE} --script CI/MacOS/qtifwsilent.qs ; fi
         - if [ -d "/Volumes/${QT_INSTALLER_FILE}" ] ; then hdiutil detach /Volumes/${QT_INSTALLER_FILE} ; fi
         - rm -rf ${QT_INSTALLER_FILE}.dmg
