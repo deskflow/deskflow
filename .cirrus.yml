@@ -1,47 +1,19 @@
-ubuntu1604_task:
-  container:
-    dockerfile: CI/ubuntu1604.Dockerfile
-  build_script: 
-    - pwd
-    - ls -la
-    - mkdir build 
-    - cd build
-    - cmake ..
-    - make
+linux_task:
+    container:
+        matrix:
+            dockerfile: CI/ubuntu1604.Dockerfile
+            dockerfile: CI/ubuntu1804.Dockerfile
+            dockerfile: CI/centos7.Dockerfile
+            dockerfile: CI/fedora28.Dockerfile
 
-ubuntu1804_task:
-  container:
-    dockerfile: CI/ubuntu1804.Dockerfile
-  build_script: 
-    - pwd
-    - ls -la
-    - mkdir build 
-    - cd build
-    - cmake ..
-    - make
+    build_script: 
+        - pwd
+        - ls -la
+        - mkdir build 
+        - cd build
+        - cmake ..
+        - make
 
-centos7_task:
-  container:
-    dockerfile: CI/centos7.Dockerfile
-  build_script: 
-    - pwd
-    - ls -la
-    - mkdir build 
-    - cd build
-    - cmake ..
-    - make
-
-fedora28_task:
-  container:
-    dockerfile: CI/fedora28.Dockerfile
-  build_script: 
-    - pwd
-    - ls -la
-    - mkdir build 
-    - cd build
-    - cmake ..
-    - make
-   
 windows_task:
     env:
         QT_VER_SHORT: 5.9
