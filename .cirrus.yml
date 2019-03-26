@@ -1,7 +1,7 @@
-ubuntu1604Build_task:
+ubuntu1604_task:
   container:
     dockerfile: CI/ubuntu1604.Dockerfile
-  script: 
+  build_script: 
     - pwd
     - ls -la
     - mkdir build 
@@ -9,10 +9,32 @@ ubuntu1604Build_task:
     - cmake ..
     - make
 
-ubuntu1804Build_task:
+ubuntu1804_task:
   container:
     dockerfile: CI/ubuntu1804.Dockerfile
-  script: 
+  build_script: 
+    - pwd
+    - ls -la
+    - mkdir build 
+    - cd build
+    - cmake ..
+    - make
+
+centos7_task:
+  container:
+    dockerfile: CI/centos7.Dockerfile
+  build_script: 
+    - pwd
+    - ls -la
+    - mkdir build 
+    - cd build
+    - cmake ..
+    - make
+
+fedora28_task:
+  container:
+    dockerfile: CI/fedora28.Dockerfile
+  build_script: 
     - pwd
     - ls -la
     - mkdir build 
@@ -20,7 +42,7 @@ ubuntu1804Build_task:
     - cmake ..
     - make
    
-windowsBuild_task:
+windows_task:
     env:
         QT_VER_SHORT: 5.9
         QT_VER: 5.9.5
