@@ -40,7 +40,7 @@ RUN C:\TEMP\Install.cmd C:\TEMP\vs_buildtools.exe --quiet --wait --norestart --n
 
 #Install QT
 RUN powershell -NoProfile -ExecutionPolicy Bypass -Command $ErrorActionPreference = 'Stop'; `
-    $Wc = New-Object System.Net.WebClient ; \
+    $Wc = New-Object System.Net.WebClient ; `
     $Wc.DownloadFile('https://download.qt.io/official_releases/qt/5.9/5.9.5/qt-opensource-windows-x86-5.9.5.exe', 'C:\qt.exe') ; `
     Echo 'Downloaded qt-opensource-windows-x86-5.9.5.exe' ; `
     $Env:QT_INSTALL_DIR = 'C:\\Qt' ; `
