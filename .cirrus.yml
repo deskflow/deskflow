@@ -1,34 +1,41 @@
-ubuntu1604Build_task:
-  container:
-    dockerfile: CI/ubuntu1604.Dockerfile
-  script: 
-    - pwd
-    - ls -la
-    - mkdir build 
-    - cd build
-    - cmake ..
-    - make
+#ubuntu1604Build_task:
+#  container:
+#    dockerfile: CI/ubuntu1604.Dockerfile
+#  script: 
+#    - pwd
+#    - ls -la
+#    - mkdir build 
+#    - cd build
+#   - cmake ..
+#    - make
 
-ubuntu1804Build_task:
-  container:
-    dockerfile: CI/ubuntu1804.Dockerfile
-  script: 
-    - pwd
-    - ls -la
-    - mkdir build 
-    - cd build
-    - cmake ..
-    - make
+#ubuntu1804Build_task:
+#  container:
+#    dockerfile: CI/ubuntu1804.Dockerfile
+#  script: 
+#    - pwd
+#    - ls -la
+#    - mkdir build 
+#    - cd build
+#    - cmake ..
+#    - make
     
 
-windowsBuild_task:
-    container:
-        platform: windows
-        os_version: 2019
-        dockerfile: CI/windows.Dockerfile
-    script:
-        - mkdir build
-        - cd build
-        - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
-        - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_BUILD_TYPE=Debug ..
-        - msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Debug /m
+#windowsBuild_task:
+#    container:
+#        platform: windows
+#        os_version: 2019
+#        dockerfile: CI/windows.Dockerfile
+#    script:
+#        - mkdir build
+#        - cd build
+#        - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
+#        - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_BUILD_TYPE=Debug ..
+#        - msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Debug /m
+
+
+macos_task:
+    osx_instance:
+        image: mojave-xcode-10.1
+    test_task:
+        - brew help
