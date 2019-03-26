@@ -1,5 +1,17 @@
+
 macos_task:
     osx_instance:
         image: mojave-xcode-10.1
+
+    env:
+      QT_VER_SHORT: 5.9
+      QT_VER: 5.9.5
+      QT_INSTALLER_FILE: qt-opensource-mac-x64-${QT_VER}
+      QT_INSTALL_PATH: ${HOME}/Qt
+
     script:
-        - brew help
+        - if [ ! -d "${QT_INSTALL_PATH}" ] ; then curl -L -O https://download.qt.io/archive/qt/${QT_VER_SHORT}/${QT_VER}/${QT_INSTALLER_FILE}.dmg ; fi
+        - if [ ! -d "${QT_INSTALL_PATH}" ] ; then hdiutil attach -noverify ${QT_INSTALLER_FILE}.dmg ; fi
+        - if [ ! -d "${QT_INSTALL_PATH}" ] ; then travis_wait 20 /Volumes/${QT_INSTALLER_FILE}/${QT_INSTALLER_FILE}.app/Contents/MacOS/${QT_INSTALLER_FILE} --script CI/MacOS/qtifwsilent.qs -platform minimal ; fi
+        - if [ -d "/Volumes/${QT_INSTALLER_FILE}" ] ; then hdiutil detach /Volumes/${QT_INSTALLER_FILE} ; fi
+        - rm -rf ${QT_INSTALLER_FILE}.dmg
