@@ -16,8 +16,6 @@ macos_task:
         - if [ -d "/Volumes/${QT_INSTALLER_FILE}" ] ; then hdiutil detach /Volumes/${QT_INSTALLER_FILE} ; fi
         - rm -rf ${QT_INSTALLER_FILE}.dmg
         - ls -la ${HOME}/Qt
-
-    compile_script:
         - mkdir build
         - cd build
         - QT_PATH=$HOME/Qt/5.9.5/clang_64
