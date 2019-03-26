@@ -6,12 +6,15 @@ FROM buildtools2017native:latest
 # Restore the default Windows shell for correct batch processing below.
 SHELL ["cmd", "/S", "/C"]
 
+# Disable crash dialog for release-mode runtimes
+RUN reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v Disabled /t REG_DWORD /d 1 /f
+RUN reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v DontShowUI /t REG_DWORD /d 1 /f
+
 # Add the silent installer script
 COPY qtifwsilent.qs C:\qtifwsilent.qs
 
 # Install QT
-RUN powershell -NoProfile -ExecutionPolicy Bypass -Command \
-    $ErrorActionPreference = 'Stop'; \
+RUN powershell -NoProfile -ExecutionPolicy Bypass -Command $ErrorActionPreference = 'Stop'; \
     $Wc = New-Object System.Net.WebClient ; \
     $Wc.DownloadFile('https://download.qt.io/official_releases/qt/5.9/5.9.5/qt-opensource-windows-x86-5.9.5.exe', 'C:\qt.exe') ; \
     Echo 'Downloaded qt-opensource-windows-x86-5.9.5.exe' ; \
