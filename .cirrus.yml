@@ -1,14 +1,3 @@
-ubuntu1404Build_task:
-  container:
-    dockerfile: CI/ubuntu1404.Dockerfile
-  script: 
-    - pwd
-    - ls -la
-    - mkdir build 
-    - cd build
-    - cmake ..
-    - make
-    
 ubuntu1604Build_task:
   container:
     dockerfile: CI/ubuntu1604.Dockerfile
@@ -31,3 +20,13 @@ ubuntu1804Build_task:
     - cmake ..
     - make
     
+
+windowsBuild_task:
+    container:
+        dockerfile: CI/windows.Dockerfile
+    script:
+        - mkdir build
+        - cd build
+        - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
+        - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_BUILD_TYPE=Debug ..
+        - msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Debug /m
