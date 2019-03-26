@@ -1,3 +1,47 @@
+ubuntu1604Build_task:
+  container:
+    dockerfile: CI/ubuntu1604.Dockerfile
+  script: 
+    - pwd
+    - ls -la
+    - mkdir build 
+    - cd build
+    - cmake ..
+    - make
+
+ubuntu1804Build_task:
+  container:
+    dockerfile: CI/ubuntu1804.Dockerfile
+  script: 
+    - pwd
+    - ls -la
+    - mkdir build 
+    - cd build
+    - cmake ..
+    - make
+   
+windowsBuild_task:
+    windows_container:
+        image: cirrusci/windowsservercore:1803
+        os_version: 1803       
+        
+        env:
+            QT_VER_SHORT: 5.9
+            QT_VER: 5.9.5
+            QT_INSTALLER_FILE: qt-opensource-windows-x86-${QT_VER}
+            QT_INSTALL_DIR: C:\\Qt
+
+        install_script: 
+        - choco install -y microsoft-build-tools
+        - ps: Invoke-WebRequest https://download.qt.io/archive/qt/${QT_VER_SHORT}/${QT_VER}/${QT_INSTALLER_FILE}.exe -OutFile ${QT_INSTALLER_FILE}.exe
+        - ps: Start-Process ${QT_INSTALLER_FILE}.exe -ArgumentList '--verbose --script CI\Windows\qtifwsilent.qs' -NoNewWindow -Wait
+
+    build_script:
+        - mkdir build
+        - cd build
+        - call "C:\Program Files (x86)\Microsoft Visual Studio 15.0\VC\vcvarsall.bat"
+        - cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=Debug ..
+        - msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Debug /m
 
 macos_task:
     osx_instance:

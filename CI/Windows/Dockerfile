@@ -24,6 +24,9 @@ ADD ${CHANNEL_URL} C:\TEMP\VisualStudio.chman
 # Download and install Build Tools for Visual Studio 2017 for native desktop workload.
 ADD https://aka.ms/vs/15/release/vs_buildtools.exe C:\TEMP\vs_buildtools.exe
 
+#Download the QT files
+ADD https://download.qt.io/official_releases/qt/5.9/5.9.5/qt-opensource-windows-x86-5.9.5.exe C:\qt.exe
+
 # Disable crash dialog for release-mode runtimes
 RUN reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v Disabled /t REG_DWORD /d 1 /f
 RUN reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v DontShowUI /t REG_DWORD /d 1 /f
@@ -39,14 +42,7 @@ RUN C:\TEMP\Install.cmd C:\TEMP\vs_buildtools.exe --quiet --wait --norestart --n
     --installPath C:\BuildTools
 
 #Install QT
-RUN powershell -NoProfile -ExecutionPolicy Bypass -Command $ErrorActionPreference = 'Stop'; `
-    $Wc = New-Object System.Net.WebClient ; `
-    $Wc.DownloadFile('https://download.qt.io/official_releases/qt/5.9/5.9.5/qt-opensource-windows-x86-5.9.5.exe', 'C:\qt.exe') ; `
-    Echo 'Downloaded qt-opensource-windows-x86-5.9.5.exe' ; `
-    $Env:QT_INSTALL_DIR = 'C:\\Qt' ; `
-    Start-Process C:\qt.exe -ArgumentList '--verbose --script C:/qtifwsilent.qs' -NoNewWindow -Wait ; `
-    Remove-Item C:\qt.exe -Force ; `
-    Remove-Item C:\qtifwsilent.qs -Force
+RUN powershell -command "$Env:QT_INSTALL_DIR = 'C:\\Qt'; Start-Process C:\qt.exe -ArgumentList '--verbose --script C:\qtifwsilent.qs' -NoNewWindow -Wait"
 ENV QTDIR C:\\Qt\\5.9.5\\msvc2015
 ENV QTDIR64 C:\\Qt\\5.9.5\\msvc2015_64
 RUN dir "%QTDIR%" && dir "%QTDIR64%" && dir "%QTDIR%\bin\Qt5Script.dll" && dir "%QTDIR64%\bin\Qt5Script.dll"
