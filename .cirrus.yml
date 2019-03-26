@@ -9,10 +9,18 @@ macos_task:
       QT_INSTALLER_FILE: qt-opensource-mac-x64-${QT_VER}
       QT_INSTALL_PATH: ${HOME}/Qt
 
-    script:
+    install_script:
         - if [ ! -d "${QT_INSTALL_PATH}" ] ; then curl -L -O https://download.qt.io/archive/qt/${QT_VER_SHORT}/${QT_VER}/${QT_INSTALLER_FILE}.dmg ; fi
         - if [ ! -d "${QT_INSTALL_PATH}" ] ; then hdiutil attach -noverify ${QT_INSTALLER_FILE}.dmg ; fi
         - if [ ! -d "${QT_INSTALL_PATH}" ] ; then /Volumes/${QT_INSTALLER_FILE}/${QT_INSTALLER_FILE}.app/Contents/MacOS/${QT_INSTALLER_FILE} --verbose --script CI/MacOS/qtifwsilent.qs ; fi
         - if [ -d "/Volumes/${QT_INSTALLER_FILE}" ] ; then hdiutil detach /Volumes/${QT_INSTALLER_FILE} ; fi
         - rm -rf ${QT_INSTALLER_FILE}.dmg
         - ls -la ${HOME}/Qt
+
+    compile_script:
+        - mkdir build
+        - cd build
+        - QT_PATH=$HOME/Qt/5.9.5/clang_64
+        - export PATH=$PATH:/usr/local/bin:$QT_PATH/bin
+        - cmake  -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -DCMAKE_CONFIGURATION_TYPES=$CMAKE_BUILD_TYPE ..
+        - make
