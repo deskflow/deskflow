@@ -1,6 +1,4 @@
-# escape=`
-
-# Use the latest Windows Server Core image with .NET Framework 4.7.1.
+# 
 FROM buildtools2017native:latest
 
 # Restore the default Windows shell for correct batch processing below.
