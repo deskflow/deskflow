@@ -23,6 +23,8 @@ ubuntu1804Build_task:
 
 windowsBuild_task:
     container:
+        platform: windows
+        os_version: 2019
         dockerfile: CI/windows.Dockerfile
     script:
         - mkdir build
