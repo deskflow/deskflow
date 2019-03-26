@@ -31,10 +31,10 @@ windowsBuild_task:
         image: cirrusci/windowsservercore:1803
         os_version: 1803       
         
-        install_script: 
-        - choco install -y microsoft-build-tools
-        - ps: Invoke-WebRequest https://download.qt.io/archive/qt/${QT_VER_SHORT}/${QT_VER}/${QT_INSTALLER_FILE}.exe -OutFile ${QT_INSTALLER_FILE}.exe
-        - ps: Start-Process ${QT_INSTALLER_FILE}.exe -ArgumentList '--verbose --script CI\Windows\qtifwsilent.qs' -NoNewWindow -Wait
+    install_script: 
+    - choco install -y microsoft-build-tools
+    - ps: Invoke-WebRequest https://download.qt.io/archive/qt/${QT_VER_SHORT}/${QT_VER}/${QT_INSTALLER_FILE}.exe -OutFile ${QT_INSTALLER_FILE}.exe
+    - ps: Start-Process ${QT_INSTALLER_FILE}.exe -ArgumentList '--verbose --script CI\Windows\qtifwsilent.qs' -NoNewWindow -Wait
 
     build_script:
         - mkdir build
