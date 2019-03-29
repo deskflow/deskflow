@@ -32,7 +32,7 @@ RUN reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v Disable
 RUN reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v DontShowUI /t REG_DWORD /d 1 /f
 
 # Add the silent installer script for QT
-COPY qtifwsilent.qs C:\qtifwsilent.qs
+COPY CI\Windows\qtifwsilent.qs C:\qtifwsilent.qs
 
 #Install MSBuild tools
 RUN C:\TEMP\Install.cmd C:\TEMP\vs_buildtools.exe --quiet --wait --norestart --nocache `
