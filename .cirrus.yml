@@ -1,34 +1,6 @@
-linux_task:
-    container:
-        matrix:
-            dockerfile: CI/ubuntu1604.Dockerfile
-            dockerfile: CI/ubuntu1804.Dockerfile
-            dockerfile: CI/centos7.Dockerfile
-            dockerfile: CI/fedora28.Dockerfile
-
-    build_script: 
-        - pwd
-        - ls -la
-        - mkdir build 
-        - cd build
-        - cmake ..
-        - make
-
 windows_task:
-    env:
-        QT_VER_SHORT: 5.9
-        QT_VER: 5.9.5
-        QT_INSTALLER_FILE: qt-opensource-windows-x86-${QT_VER}
-        QT_INSTALL_DIR: C:\\Qt
-
-    windows_container:
-        image: cirrusci/windowsservercore:1803
-        os_version: 1803       
-        
-    install_script: 
-    - choco install -y microsoft-build-tools
-    - ps: Invoke-WebRequest https://download.qt.io/archive/qt/${QT_VER_SHORT}/${QT_VER}/${QT_INSTALLER_FILE}.exe -OutFile ${QT_INSTALLER_FILE}.exe
-    - ps: Start-Process ${QT_INSTALLER_FILE}.exe -ArgumentList '--verbose --script CI\Windows\qtifwsilent.qs' -NoNewWindow -Wait
+    container:
+        dockerfile: CI/Windows/Dockerfile
 
     build_script:
         - mkdir build
@@ -36,27 +8,3 @@ windows_task:
         - call "C:\Program Files (x86)\Microsoft Visual Studio 15.0\VC\vcvarsall.bat"
         - cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=Debug ..
         - msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Debug /m
-
-macos_task:
-    osx_instance:
-        image: mojave-xcode-10.1
-
-    env:
-      QT_VER_SHORT: 5.9
-      QT_VER: 5.9.5
-      QT_INSTALLER_FILE: qt-opensource-mac-x64-${QT_VER}
-      QT_INSTALL_PATH: ${HOME}/Qt
-
-    install_script:
-        - if [ ! -d "${QT_INSTALL_PATH}" ] ; then curl -L -O https://download.qt.io/archive/qt/${QT_VER_SHORT}/${QT_VER}/${QT_INSTALLER_FILE}.dmg ; fi
-        - if [ ! -d "${QT_INSTALL_PATH}" ] ; then hdiutil attach -noverify ${QT_INSTALLER_FILE}.dmg ; fi
-        - if [ ! -d "${QT_INSTALL_PATH}" ] ; then /Volumes/${QT_INSTALLER_FILE}/${QT_INSTALLER_FILE}.app/Contents/MacOS/${QT_INSTALLER_FILE} --verbose --script CI/MacOS/qtifwsilent.qs ; fi
-        - if [ -d "/Volumes/${QT_INSTALLER_FILE}" ] ; then hdiutil detach /Volumes/${QT_INSTALLER_FILE} ; fi
-        - rm -rf ${QT_INSTALLER_FILE}.dmg
-        - ls -la ${HOME}/Qt
-        - mkdir build
-        - cd build
-        - QT_PATH=$HOME/Qt/5.9.5/clang_64
-        - export PATH=$PATH:/usr/local/bin:$QT_PATH/bin
-        - cmake  -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -DCMAKE_CONFIGURATION_TYPES=$CMAKE_BUILD_TYPE ..
-        - make
