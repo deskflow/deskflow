@@ -43,9 +43,7 @@ RUN C:\TEMP\Install.cmd C:\TEMP\vs_buildtools.exe --quiet --wait --norestart --n
 
 #Install QT
 RUN powershell -command "$Env:QT_INSTALL_DIR = 'C:\\Qt'; Start-Process C:\qt.exe -ArgumentList '--verbose --script C:\qtifwsilent.qs' -NoNewWindow -Wait"
-ENV QTDIR C:\\Qt\\5.9.5\\msvc2015
-ENV QTDIR64 C:\\Qt\\5.9.5\\msvc2015_64
-RUN dir "%QTDIR%" && dir "%QTDIR64%" && dir "%QTDIR%\bin\Qt5Script.dll" && dir "%QTDIR64%\bin\Qt5Script.dll"
+RUN dir "C:\Qt\5.9.5\msvc2015" && dir "C:\Qt\5.9.5\msvc2015_64" && dir "C:\Qt\5.9.5\msvc2015\bin\Qt5Script.dll" && dir "C:\Qt\5.9.5\msvc2015_64\bin\Qt5Script.dll"
 
 # Use developer command prompt and start PowerShell if no other command specified.
 ENTRYPOINT C:\BuildTools\Common7\Tools\VsDevCmd.bat &&
