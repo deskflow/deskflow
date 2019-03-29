@@ -1,5 +1,6 @@
 windows_task:
     windows_container:
+        os_version: 1709
         dockerfile: CI/Windows/Dockerfile
 
     build_script:
