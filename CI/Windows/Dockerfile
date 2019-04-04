@@ -45,6 +45,10 @@ RUN C:\TEMP\Install.cmd C:\TEMP\vs_buildtools.exe --quiet --wait --norestart --n
 RUN powershell -command "$Env:QT_INSTALL_DIR = 'C:\\Qt'; Start-Process C:\qt.exe -ArgumentList '--verbose --script C:\qtifwsilent.qs' -NoNewWindow -Wait"
 RUN dir "C:\Qt\5.9.5\msvc2015" && dir "C:\Qt\5.9.5\msvc2015_64" && dir "C:\Qt\5.9.5\msvc2015\bin\Qt5Script.dll" && dir "C:\Qt\5.9.5\msvc2015_64\bin\Qt5Script.dll"
 
+#Delee the installers as they arnt needed anymore
+RUN del C:\TEMP\node-install.msi
+RUN del C:\TEMP\vs_buildtools.exe
+RUN del C:\qt.exe
 # Use developer command prompt and start PowerShell if no other command specified.
 ENTRYPOINT C:\BuildTools\Common7\Tools\VsDevCmd.bat &&
 CMD ["powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
