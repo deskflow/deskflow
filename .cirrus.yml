@@ -1,4 +1,5 @@
 windows_task:
+	timeout_in: 90m
     windows_container:
         os_version: 1709
         dockerfile: CI/Windows/Dockerfile
