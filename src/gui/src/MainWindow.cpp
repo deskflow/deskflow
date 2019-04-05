@@ -761,13 +761,12 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
         if (!appConfig().autoConfig())
         {
 #endif
-            if (m_pLineEditHostname->text().isEmpty()) {
-                show();
-                QMessageBox::warning(
-                    this, tr("Hostname is empty"),
-                    tr("Please fill in a hostname for the synergy client to connect to."));
-                return false;
-            }
+            show();
+            QMessageBox::warning(
+                this, tr("Hostname is empty"),
+                tr("Please fill in a hostname for the synergy client to connect to."));
+            return false;
+
 #ifndef SYNERGY_ENTERPRISE
         }
         else
