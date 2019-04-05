@@ -56,7 +56,8 @@ AppConfig::AppConfig(QSettings* settings) :
     m_ElevateMode(defaultElevateMode),
     m_CryptoEnabled(false),
     m_AutoHide(false),
-    m_LastExpiringWarningTime(0)
+    m_LastExpiringWarningTime(0),
+    m_AutoConfigServer()
 {
     Q_ASSERT(m_pSettings);
 
@@ -128,6 +129,8 @@ bool AppConfig::startedBefore() const { return m_StartedBefore; }
 
 bool AppConfig::autoConfig() const { return m_AutoConfig; }
 
+QString AppConfig::autoConfigServer() const { return m_AutoConfigServer; }
+
 void AppConfig::loadSettings()
 {
     m_ScreenName = settings().value("screenName", QHostInfo::localHostName()).toString();
@@ -140,6 +143,7 @@ void AppConfig::loadSettings()
     m_Language = settings().value("language", QLocale::system().name()).toString();
     m_StartedBefore = settings().value("startedBefore", false).toBool();
     m_AutoConfig = settings().value("autoConfig", false).toBool();
+    m_AutoConfigServer = settings().value("autoConfigServer", "").toString();
     QVariant elevateMode = settings().value("elevateModeEnum");
     if (!elevateMode.isValid()) {
         elevateMode = settings().value ("elevateMode",
@@ -168,6 +172,7 @@ void AppConfig::saveSettings()
     settings().setValue("language", m_Language);
     settings().setValue("startedBefore", m_StartedBefore);
     settings().setValue("autoConfig", m_AutoConfig);
+    settings().setValue("autoConfigServer", m_AutoConfigServer);
     // Refer to enum ElevateMode declaration for insight in to why this
     // flag is mapped this way
     settings().setValue("elevateMode", m_ElevateMode == ElevateAlways);
@@ -229,6 +234,11 @@ void AppConfig::setElevateMode(ElevateMode em) { m_ElevateMode = em; }
 void AppConfig::setAutoConfig(bool autoConfig)
 {
     m_AutoConfig = autoConfig;
+}
+
+void AppConfig::setAutoConfigServer(QString autoConfigServer)
+{
+    m_AutoConfigServer = autoConfigServer;
 }
 
 #ifndef SYNERGY_ENTERPRISE

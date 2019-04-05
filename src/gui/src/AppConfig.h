@@ -77,6 +77,8 @@ class AppConfig: public QObject
         bool startedBefore() const;
         bool autoConfig() const;
         void setAutoConfig(bool autoConfig);
+        QString autoConfigServer() const;
+        void setAutoConfigServer(QString autoConfigServer);
 #ifndef SYNERGY_ENTERPRISE
         void setEdition(Edition);
         Edition edition() const;
@@ -138,6 +140,7 @@ protected:
         QString m_Language;
         bool m_StartedBefore;
         bool m_AutoConfig;
+        QString m_AutoConfigServer;
         ElevateMode m_ElevateMode;
         Edition m_Edition;
         QString m_ActivateEmail;
