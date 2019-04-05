@@ -1,30 +1,30 @@
 windows_task:
-	windows_container:
+    windows_container:
         image: cirrusci/windowsservercore:1709
         os_version: 1709
 
     env:
         TEMP: c:\TEMP
-		VS_BUILDTOLLS_VER: 15
+        VS_BUILDTOLLS_VER: 15
         QT_VER_SHORT: 5.9
         QT_VER: 5.9.5
-		QT_INSTALL_DIR: c:\QT
-		VS_INSTALL_DIR: C:\BuildTools
+        QT_INSTALL_DIR: c:\QT
+        VS_INSTALL_DIR: C:\BuildTools
 
-		CHANNEL_URL: https://aka.ms/vs/15/release/channel
-		CHANNELFILE: VisualStudio.chman
+        CHANNEL_URL: https://aka.ms/vs/15/release/channel
+        CHANNELFILE: VisualStudio.chman
         BUILD_TOOLS_WEB: https://aka.ms/vs/${VS_BUILDTOLLS_VER}/release/vs_buildtools.exe
         QT_INSTALLER_WEB: https://download.qt.io/official_releases/qt/${QT_VER_SHORT}/${QT_VER}/qt-opensource-windows-x86-${QT_VER}.exe
     build_script:
-	
-		- ps: (New-Object System.Net.WebClient).DownloadFile(${BUILD_TOOLS_WEB},${TEMP}\vs_buildtools.exe)
-		- ps: (New-Object System.Net.WebClient).DownloadFile(${QT_INSTALLER_WEB},${TEMP}\qt.exe)
-		- ps: (New-Object System.Net.WebClient).DownloadFile(${CHANNEL_URL},${TEMP}\${CHANNELFILE})
-		- ps: Install.cmd ${TEMP}\vs_buildtools.exe --quiet --wait --norestart --nocache --channelUri ${TEMP}\${CHANNELFILE} --installChannelUri ${TEMP}\${CHANNELFILE} --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --installPath ${VS_INSTALL_DIR}
-		- ps: Start-Process ${TEMP}\qt.exe -ArgumentList '--verbose --script CI\Windows\qtifwsilent.qs' -NoNewWindow -Wait";
-		- del ${TEMP}\vs_buildtools.exe
-		- del ${TEMP}\qt.exe
-		- del ${TEMP}\${CHANNELFILE}
+    
+        - ps: (New-Object System.Net.WebClient).DownloadFile(${BUILD_TOOLS_WEB},${TEMP}\vs_buildtools.exe)
+        - ps: (New-Object System.Net.WebClient).DownloadFile(${QT_INSTALLER_WEB},${TEMP}\qt.exe)
+        - ps: (New-Object System.Net.WebClient).DownloadFile(${CHANNEL_URL},${TEMP}\${CHANNELFILE})
+        - ps: Install.cmd ${TEMP}\vs_buildtools.exe --quiet --wait --norestart --nocache --channelUri ${TEMP}\${CHANNELFILE} --installChannelUri ${TEMP}\${CHANNELFILE} --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --installPath ${VS_INSTALL_DIR}
+        - ps: Start-Process ${TEMP}\qt.exe -ArgumentList '--verbose --script CI\Windows\qtifwsilent.qs' -NoNewWindow -Wait";
+        - del ${TEMP}\vs_buildtools.exe
+        - del ${TEMP}\qt.exe
+        - del ${TEMP}\${CHANNELFILE}
         - mkdir build
         - cd build
         - call "C:\Program Files (x86)\Microsoft Visual Studio 15.0\VC\vcvarsall.bat"
