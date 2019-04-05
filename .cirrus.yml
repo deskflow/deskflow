@@ -17,11 +17,11 @@ windows_task:
         QT_INSTALLER_WEB: https://download.qt.io/official_releases/qt/${QT_VER_SHORT}/${QT_VER}/qt-opensource-windows-x86-${QT_VER}.exe
     build_script:
     
-        - ps: (New-Object System.Net.WebClient).DownloadFile(${BUILD_TOOLS_WEB},${TEMP}\vs_buildtools.exe)
-        - ps: (New-Object System.Net.WebClient).DownloadFile(${QT_INSTALLER_WEB},${TEMP}\qt.exe)
-        - ps: (New-Object System.Net.WebClient).DownloadFile(${CHANNEL_URL},${TEMP}\${CHANNELFILE})
-        - ps: Install.cmd ${TEMP}\vs_buildtools.exe --quiet --wait --norestart --nocache --channelUri ${TEMP}\${CHANNELFILE} --installChannelUri ${TEMP}\${CHANNELFILE} --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --installPath ${VS_INSTALL_DIR}
-        - ps: Start-Process ${TEMP}\qt.exe -ArgumentList '--verbose --script CI\Windows\qtifwsilent.qs' -NoNewWindow -Wait";
+        - ps: (New-Object System.Net.WebClient).DownloadFile($Env:BUILD_TOOLS_WEB,$Env:TEMP\vs_buildtools.exe)
+        - ps: (New-Object System.Net.WebClient).DownloadFile($Env:QT_INSTALLER_WEB,$Env:TEMP\qt.exe)
+        - ps: (New-Object System.Net.WebClient).DownloadFile($Env:CHANNEL_URL,$Env:TEMP\$Env:CHANNELFILE)
+        - ps: Install.cmd $Env:TEMP\vs_buildtools.exe --quiet --wait --norestart --nocache --channelUri $Env:TEMP\$Env:CHANNELFILE --installChannelUri $Env:TEMP\$Env:CHANNELFILE --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --installPath $Env:VS_INSTALL_DIR
+        - ps: Start-Process $Env:TEMP\qt.exe -ArgumentList '--verbose --script CI\Windows\qtifwsilent.qs' -NoNewWindow -Wait";
         - del ${TEMP}\vs_buildtools.exe
         - del ${TEMP}\qt.exe
         - del ${TEMP}\${CHANNELFILE}
