@@ -1,17 +1,16 @@
-@rem Copyright (C) Microsoft Corporation. All rights reserved.
-@rem Licensed under the MIT license. See LICENSE.txt in the project root for license information.
+start /wait msiexec.exe /i C:\TEMP\node-install.msi /l*vx "%TEMP%\MSI-node-install.log" /qn ADDLOCAL=ALL
 
-@if not defined _echo echo off
-setlocal enabledelayedexpansion
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v Disabled /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v DontShowUI /t REG_DWORD /d 1 /f
 
-call %*
-if "%ERRORLEVEL%"=="3010" (
-    exit /b 0
-) else (
-    if not "%ERRORLEVEL%"=="0" (
-        set ERR=%ERRORLEVEL%
-        call C:\TEMP\collect.exe -zip:C:\vslogs.zip
+C:\TEMP\InstallVS.cmd C:\TEMP\vs_buildtools.exe --quiet --wait --norestart --nocache `
+    --channelUri C:\TEMP\VisualStudio.chman `
+    --installChannelUri C:\TEMP\VisualStudio.chman `
+    --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended`
+    --installPath C:\BuildTools
 
-        exit /b !ERR!
-    )
-)
+powershell -command "$Env:QT_INSTALL_DIR = 'C:\\Qt'; Start-Process C:\qt.exe -ArgumentList '--verbose --script C:\qtifwsilent.qs' -NoNewWindow -Wait"
+
+del C:\TEMP\node-install.msi
+del C:\TEMP\vs_buildtools.exe
+del C:\qt.exe

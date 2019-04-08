@@ -3,30 +3,8 @@ windows_task:
         image: cirrusci/windowsservercore:1709
         os_version: 1709
 
-    env:
-        TEMP: c:\TEMP
-        VS_BUILDTOLLS_VER: 15
-        QT_VER_SHORT: 5.9
-        QT_VER: 5.9.5
-        QT_INSTALL_DIR: c:\QT
-        VS_INSTALL_DIR: C:\BuildTools
-
-        CHANNEL_URL: https://aka.ms/vs/15/release/channel
-        CHANNELFILE: VisualStudio.chman
-        BUILD_TOOLS_WEB: https://aka.ms/vs/${VS_BUILDTOLLS_VER}/release/vs_buildtools.exe
-        QT_INSTALLER_WEB: https://download.qt.io/official_releases/qt/${QT_VER_SHORT}/${QT_VER}/qt-opensource-windows-x86-${QT_VER}.exe
     build_script:
-    
-        - ps: (New-Object System.Net.WebClient).DownloadFile($Env:BUILD_TOOLS_WEB,$Env:TEMP\vs_buildtools.exe)
-        - ps: (New-Object System.Net.WebClient).DownloadFile($Env:QT_INSTALLER_WEB,$Env:TEMP\qt.exe)
-        - ps: (New-Object System.Net.WebClient).DownloadFile($Env:CHANNEL_URL,$Env:TEMP\$Env:CHANNELFILE)
-        - ps: Install.cmd $Env:TEMP\vs_buildtools.exe --quiet --wait --norestart --nocache --channelUri $Env:TEMP\$Env:CHANNELFILE --installChannelUri $Env:TEMP\$Env:CHANNELFILE --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --installPath $Env:VS_INSTALL_DIR
-        - ps: Start-Process $Env:TEMP\qt.exe -ArgumentList '--verbose --script CI\Windows\qtifwsilent.qs' -NoNewWindow -Wait";
-        - del ${TEMP}\vs_buildtools.exe
-        - del ${TEMP}\qt.exe
-        - del ${TEMP}\${CHANNELFILE}
         - mkdir build
         - cd build
-        - call "C:\Program Files (x86)\Microsoft Visual Studio 15.0\VC\vcvarsall.bat"
-        - cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=Debug ..
+        - cmake -DCMAKE_BUILD_TYPE=Debug ..
         - msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Debug /m
