@@ -932,7 +932,7 @@ void MainWindow::setSynergyState(qSynergyState state)
     if (synergyState() == state)
         return;
 
-    if ((state == synergyConnected) || (state == synergyConnecting) || (state == synergyListening))
+    if ((state == synergyConnected) || (state == synergyListening))
     {
         disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
         connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
