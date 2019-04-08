@@ -1,7 +1,8 @@
 windows_task:
+    timeout_in: 90m
     windows_container:
-        image: cirrusci/windowsservercore:1709
-        os_version: 1709
+        os_version: 2019
+        dockerfile: CI/Windows/Dockerfile
 
     build_script:
         - mkdir build
