@@ -30,7 +30,7 @@ ADD ${BUILD_TOOLS_WEB} C:\TEMP\vs_buildtools.exe
 #Download the QT files
 ADD ${QT_INSTALLER_WEB} C:\qt.exe
 
-RUN C:\TEMP\InstallVS.cmd
+RUN C:\TEMP\Install.cmd
 
 ENTRYPOINT C:\BuildTools\Common7\Tools\VsDevCmd.bat &&
 CMD ["powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
