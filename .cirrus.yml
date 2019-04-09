@@ -2,7 +2,7 @@ windows_task:
     use_compute_credits: $CIRRUS_USER_COLLABORATOR == 'true'
     timeout_in: 90m
     windows_container:
-		cpu: 4
+        cpu: 4
         os_version: 2019
         dockerfile: CI/Windows/Dockerfile
 
