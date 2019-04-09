@@ -22,6 +22,7 @@ ADD https://aka.ms/vs/16/release/vs_buildtools.exe C:\TEMP\vs_buildtools.exe
 
 #Download the QT files
 ADD https://download.qt.io/official_releases/qt/5.9/5.9.5/qt-opensource-windows-x86-5.9.5.exe C:\qt.exe
+#RUN move /Y C:\TEMP\qt-opensource-windows-x86-5.9.5.exe C:\TEMP\qt.exe
 
 RUN C:\TEMP\Install.cmd
 
