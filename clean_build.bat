@@ -10,6 +10,18 @@ set B_BONJOUR=C:\Program Files\Bonjour SDK
 set savedir=%cd%
 cd /d %~dp0
 
+REM cmake generator name for the target build system
+if "%VisualStudioVersion%"=="15.0" (
+    set cmake_gen=Visual Studio 15 2017 Win64
+) else if "%VisualStudioVersion%"=="16.0" (
+    set cmake_gen=Visual Studio 16 2019
+) else (
+    echo Visual Studio version was not detected.
+    echo Did you forget to run inside a VS developer prompt?
+    echo Using the default cmake generator.
+    set cmake_gen=Visual Studio 16 2019
+)
+
 if exist build_env.bat call build_env.bat
 
 REM needed by cmake to set bonjour include dir
@@ -17,9 +29,6 @@ set BONJOUR_SDK_HOME=%B_BONJOUR%
 
 REM full path to Qt stuff we need
 set B_QT_FULLPATH=%B_QT_ROOT%\%B_QT_VER%\%B_QT_MSVC%
-
-REM cmake generator name for the target build system
-set cmake_gen=Visual Studio 16 2019
 
 echo Bonjour: %BONJOUR_SDK_HOME%
 echo Qt: %B_QT_FULLPATH%
