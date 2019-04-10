@@ -4,27 +4,34 @@
 # Licensed under the MIT license. See LICENSE.txt in the project root for license information.
 
 ARG FROM_IMAGE=mcr.microsoft.com/dotnet/framework/sdk:3.5-windowsservercore-ltsc2019
-
 FROM ${FROM_IMAGE}
 
 # Reset the shell.
-SHELL ["cmd", "/S", "/C"]
+SHELL ["powershell", "-command"]
+
+ENV TEMP=C:\TEMP\
+
+ENV VS_VERSION=15
+ENV QT_VER=5.9.5
+ENV QT_VER_S=5.9
+
+ENV QT_INSTALL_DIR=C:\Qt\
 
 # Set up environment to collect install errors.
 COPY CI\Windows\ C:\TEMP\
-ADD https://aka.ms/vscollect.exe C:\TEMP\collect.exe
-# Install Node.js LTS
-ADD https://nodejs.org/dist/v8.11.3/node-v8.11.3-x64.msi C:\TEMP\node-install.msi
-# Download channel for fixed install.
-ADD https://aka.ms/vs/16/release/channel C:\TEMP\VisualStudio.chman
-# Download and install Build Tools for Visual Studio
-ADD https://aka.ms/vs/16/release/vs_buildtools.exe C:\TEMP\vs_buildtools.exe
 
-#Download the QT files
-ADD https://download.qt.io/official_releases/qt/5.9/5.9.5/qt-opensource-windows-x86-5.9.5.exe C:\qt.exe
-#RUN move /Y C:\TEMP\qt-opensource-windows-x86-5.9.5.exe C:\TEMP\qt.exe
+#To reduce the number of layers as windows is massive as it is download, install, and delete the installers in one RUN step
+RUN echo \"Downloading build tools (https://aka.ms/vs/${env:VS_VERSION}/release/channel and https://aka.ms/vs/${env:VS_VERSION}/release/vs_buildtools.exe)\"; `
+    wget https://aka.ms/vs/${env:VS_VERSION}/release/channel -OutFile ${env:TEMP}VisualStudio.chman; `
+    wget https://aka.ms/vs/${env:VS_VERSION}/release/vs_buildtools.exe -OutFile ${env:TEMP}vs_buildtools.exe; `
+    echo \"Installing build tools\"; `
+    Start-Process ${env:TEMP}vs_buildtools.exe -ArgumentList \"--quiet --wait --norestart --nocache --channelUri ${env:TEMP}VisualStudio.chman --installChannelUri ${env:TEMP}VisualStudio.chman --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --installPath C:\BuildTools\" -NoNewWindow -Wait; `
+    echo \"Downloading QT (Sit back and relax, this is going to take some time)\"; `
+    wget https://download.qt.io/official_releases/qt/${env:QT_VER_S}/${env:QT_VER}/qt-opensource-windows-x86-${env:QT_VER}.exe -OutFile ${env:TEMP}qt.exe; `
+    echo \"Installing QT\"; `
+    Start-Process ${env:TEMP}qt.exe -ArgumentList \"--verbose --script ${env:TEMP}qtifwsilent.qs\" -NoNewWindow -Wait; `
+    Remove-Item -Path ${env:TEMP}VisualStudio.chman; `
+    Remove-Item -Path ${env:TEMP}vs_buildtools.exe; `
+    Remove-Item -Path ${env:TEMP}qt.exe;
 
-RUN C:\TEMP\Install.cmd
-
-ENTRYPOINT C:\BuildTools\Common7\Tools\VsDevCmd.bat &&
 CMD ["powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]

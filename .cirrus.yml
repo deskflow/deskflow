@@ -7,6 +7,7 @@ windows_task:
         dockerfile: CI/Windows/Dockerfile
 
     build_script:
+		- "c:\BuildTools\Common7\Tools\VsDevCmd.bat"
         - mkdir build
         - cd build
         - cmake -DCMAKE_BUILD_TYPE=Debug ..
