@@ -6,7 +6,7 @@ cd /d %~dp0
 
 if not exist build\bin\Release goto buildproject
 
-cd build\installer
+cd build\installer-wix
 if ERRORLEVEL 1 goto buildproject
 
 echo Building 64-bit Windows installer...
@@ -19,7 +19,7 @@ goto done
 
 :buildproject
 echo To build a 64-bit Windows installer:
-echo  - set Q_BUILD_TYPE=Release in build_env.bat
+echo  - set B_BUILD_TYPE=Release in build_env.bat
 echo  - also set other environmental overrides necessary for your build environment
 echo  - run clean_build.bat to build Barrier and verify that it succeeds
 echo  - re-run this script to create the installation package
