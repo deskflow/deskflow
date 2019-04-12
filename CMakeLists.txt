@@ -403,6 +403,7 @@ endif()
 # Windows installer
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        set (BARRIER_WIX_VERSION "${BARRIER_VERSION_MAJOR}.${BARRIER_VERSION_MINOR}.${BARRIER_VERSION_PATCH}")
         message (STATUS "Configuring the wix installer")
         configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer-wix)
         message (STATUS "Configuring the inno installer")

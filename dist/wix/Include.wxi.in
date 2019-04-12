@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
     <?define Name="Barrier" ?>
-    <?define Version="@BARRIER_VERSION@" ?>
+    <?define Version="@BARRIER_WIX_VERSION@" ?>
     <?define QtVersion="@QT_VERSION@" ?>
     <?define Author="Debauchee Open Source Group" ?>
     <?define BinPath="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/$(var.Configuration)" ?>
