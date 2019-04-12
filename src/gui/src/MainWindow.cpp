@@ -763,14 +763,14 @@ void MainWindow::setBarrierState(qBarrierState state)
         disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartBarrier, SLOT(trigger()));
         connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopBarrier, SLOT(trigger()));
         m_pButtonToggleStart->setText(tr("&Stop"));
-        m_pButtonApply->setEnabled(true);
+        m_pButtonReload->setEnabled(true);
     }
     else if (state == barrierDisconnected)
     {
         disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopBarrier, SLOT(trigger()));
         connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartBarrier, SLOT(trigger()));
         m_pButtonToggleStart->setText(tr("&Start"));
-        m_pButtonApply->setEnabled(false);
+        m_pButtonReload->setEnabled(false);
     }
 
     bool connected = false;
@@ -1040,7 +1040,7 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
     showConfigureServer();
 }
 
-void MainWindow::on_m_pButtonApply_clicked()
+void MainWindow::on_m_pButtonReload_clicked()
 {
     restartBarrier();
 }
