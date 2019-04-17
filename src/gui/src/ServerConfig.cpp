@@ -117,6 +117,7 @@ void ServerConfig::saveSettings()
     settings().setValue("switchCornerSize", switchCornerSize());
     settings().setValue("ignoreAutoConfigClient", ignoreAutoConfigClient());
     settings().setValue("enableDragAndDrop", enableDragAndDrop());
+    settings().setValue("clipboardSharing", clipboardSharing());
 
     writeSettings(settings(), switchCorners(), "switchCorner");
 
@@ -161,6 +162,7 @@ void ServerConfig::loadSettings()
     setSwitchCornerSize(settings().value("switchCornerSize").toInt());
     setIgnoreAutoConfigClient(settings().value("ignoreAutoConfigClient").toBool());
     setEnableDragAndDrop(settings().value("enableDragAndDrop", true).toBool());
+    setClipboardSharing(settings().value("clipboardSharing", true).toBool());
 
     readSettings(settings(), switchCorners(), "switchCorner", false, NumSwitchCorners);
 
