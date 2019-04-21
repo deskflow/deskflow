@@ -31,7 +31,6 @@
 		<Property Id="ARPPRODUCTICON" Value="barrier.ico"/>
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER"/>
 		<Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable"/>
-    </Condition>
 		<CustomAction ExeCommand="" FileKey="GuiProgram" Id="StartGui" Return="asyncNoWait"/>
 		<UI>
 			<Publish Control="Finish" Dialog="ExitDialog" Event="DoAction" Value="StartGui">NOT Installed</Publish>

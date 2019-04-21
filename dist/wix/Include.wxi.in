@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
     <?define Name="Barrier" ?>
-    <?define Version="@BARRIER_VERSION@" ?>
+    <?define Version="@BARRIER_WIX_VERSION@" ?>
     <?define QtVersion="@QT_VERSION@" ?>
     <?define Author="Debauchee Open Source Group" ?>
     <?define BinPath="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/$(var.Configuration)" ?>
@@ -11,12 +11,12 @@
         <?define ProgramFilesFolder="ProgramFiles64Folder" ?>
         <?define PlatformSimpleName="64-bit" ?>
         <?define UpgradeGuid="E8A4FA54-14B9-4FD1-8E00-7BC46555FDA0" ?>
-        <?define QtPath="E:\Qt\$(var.QtVersion)\msvc2015_64" ?>
+        <?define QtPath="@CMAKE_PREFIX_PATH@" ?>
     <?else ?>
         <?define ProgramFilesFolder="ProgramFilesFolder" ?>
         <?define PlatformSimpleName="32-bit" ?>
         <?define UpgradeGuid="BE0B9FD8-45E2-4A8E-A0D8-1F774D074A78" ?>
-        <?define QtPath="E:\Qt\$(var.QtVersion)\msvc2015" ?>
+        <?define QtPath="@CMAKE_PREFIX_PATH@" ?>
     <?endif ?>
     <?define QtBinPath="$(var.QtPath)\bin" ?>
     <?define QtPlatformPath="$(var.QtPath)\plugins\platforms" ?>
