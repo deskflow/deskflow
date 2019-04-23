@@ -54,7 +54,7 @@ macos_task:
         - rm -rf ${QT_INSTALLER_FILE}.dmg
         - ls -la ${HOME}/Qt
 
-	build_script:
+    build_script:
         - mkdir build
         - cd build
         - QT_PATH=$HOME/Qt/5.9.5/clang_64
