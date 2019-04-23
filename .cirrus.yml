@@ -1,0 +1,63 @@
+gcp_credentials: ENCRYPTED[9db0914d89d93085d861edad0b45c559f5b28aaad45ca25c27e54679f80353532b49b721676734770b1b17fd8d0d583c]
+
+windows_task:
+  gce_instance:
+    image_project: buildcluster-237411
+    image_name: image-1
+    platform: windows
+    zone: us-central1-a
+    type: n1-highcpu-16
+    disk: 32
+
+  env: 
+    BONJOUR_SDK_HOME: C:\Program Files\Bonjour SDK\
+    CMAKE_PREFIX_PATH: C:\Qt\5.9.5\msvc2017_64
+    CIRRUS_WORKING_DIR: D:\
+
+  build_script:
+    - .\CI\Windows\build.bat
+
+ubuntu1604_task:
+  use_compute_credits: true
+  container:
+    dockerfile: CI/ubuntu1604.Dockerfile
+  build_script: 
+    - pwd; ls -la
+    - chmod +x ./CI/build.sh
+    - ./CI/build.sh
+
+ubuntu1804_task:
+  use_compute_credits: true
+  container:
+    dockerfile: CI/ubuntu1804.Dockerfile
+  build_script: 
+    - pwd; ls -la
+    - chmod +x ./CI/build.sh
+    - ./CI/build.sh
+
+macos_task:
+    use_compute_credits: true
+    osx_instance:
+        image: mojave-xcode-10.1
+
+    env:
+      QT_VER_SHORT: 5.9
+      QT_VER: 5.9.5
+      QT_INSTALLER_FILE: qt-opensource-mac-x64-${QT_VER}
+      QT_INSTALL_PATH: ${HOME}/Qt
+
+    install_script:
+        - if [ ! -d "${QT_INSTALL_PATH}" ] ; then curl -L -O http://qt.mirror.constant.com/official_releases/qt/${QT_VER_SHORT}/${QT_VER}/${QT_INSTALLER_FILE}.dmg ; fi
+        - if [ ! -d "${QT_INSTALL_PATH}" ] ; then hdiutil attach -noverify ${QT_INSTALLER_FILE}.dmg ; fi
+        - if [ ! -d "${QT_INSTALL_PATH}" ] ; then /Volumes/${QT_INSTALLER_FILE}/${QT_INSTALLER_FILE}.app/Contents/MacOS/${QT_INSTALLER_FILE} --verbose --script CI/MacOS/qtifwsilent.qs ; fi
+        - if [ -d "/Volumes/${QT_INSTALLER_FILE}" ] ; then hdiutil detach /Volumes/${QT_INSTALLER_FILE} ; fi
+        - rm -rf ${QT_INSTALLER_FILE}.dmg
+        - ls -la ${HOME}/Qt
+
+	build_script:
+        - mkdir build
+        - cd build
+        - QT_PATH=$HOME/Qt/5.9.5/clang_64
+        - export PATH=$PATH:/usr/local/bin:$QT_PATH/bin
+        - cmake  -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -DCMAKE_CONFIGURATION_TYPES=$CMAKE_BUILD_TYPE ..
+        - make
