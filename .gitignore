@@ -22,3 +22,4 @@ src/setup/win32/synergy.suo
 /.idea
 /cmake-build-debug
 /CMakeLists.txt.user
+.vs/

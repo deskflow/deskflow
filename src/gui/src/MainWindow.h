@@ -93,12 +93,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         };
 
     public:
-#ifdef SYNERGY_ENTERPRISE
-        MainWindow(QSettings& settings, AppConfig& appConfig);
-#else
         MainWindow(QSettings& settings, AppConfig& appConfig,
                    LicenseManager& licenseManager);
-#endif
         ~MainWindow();
 
     public:
@@ -120,19 +116,17 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         void addZeroconfServer(const QString name);
         void updateLocalFingerprint();
         Zeroconf& zeroconf() { return *m_pZeroconf; }
-#ifndef SYNERGY_ENTERPRISE
+
         LicenseManager& licenseManager() const;
+
         int raiseActivationDialog();
-#endif
 
         void updateZeroconfService();
 
 public slots:
         void setEdition(Edition edition);
-#ifndef SYNERGY_ENTERPRISE
         void beginTrial(bool isExpiring);
         void endTrial(bool isExpired);
-#endif
         void appendLogRaw(const QString& text);
         void appendLogInfo(const QString& text);
         void appendLogDebug(const QString& text);
@@ -191,9 +185,9 @@ public slots:
         void checkConnected(const QString& line);
         void checkFingerprint(const QString& line);
         void checkSecureSocket(const QString& line);
-#ifndef SYNERGY_ENTERPRISE
+
         void checkLicense(const QString& line);
-#endif
+
         bool autoHide();
         QString getTimeStamp();
         void restartSynergy();
@@ -203,11 +197,10 @@ public slots:
         void secureSocket(bool secureSocket);
 
     private:
-#ifndef SYNERGY_ENTERPRISE
         LicenseManager* m_LicenseManager;
         bool m_ActivationDialogRunning;
         QStringList m_PendingClientNames;
-#endif
+
         Zeroconf* m_pZeroconf;
         QSettings& m_Settings;
         AppConfig* m_AppConfig;
@@ -233,6 +226,7 @@ public slots:
 
         void updateAutoConfigWidgets();
         
+
 private slots:
     void on_m_pButtonApply_clicked();
     void on_windowShown();

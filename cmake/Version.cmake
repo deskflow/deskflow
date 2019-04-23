@@ -81,6 +81,3 @@ if (SYNERGY_DEVELOPER_MODE)
     add_definitions (-DSYNERGY_DEVELOPER_MODE=1)
 endif()
 
-if (SYNERGY_ENTERPRISE)
-    add_definitions (-DSYNERGY_ENTERPRISE=1)
-endif()

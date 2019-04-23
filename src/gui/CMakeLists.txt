@@ -35,15 +35,15 @@ if (NOT SYNERGY_ENTERPRISE)
 if (WIN32)
     include_directories ($ENV{BONJOUR_SDK_HOME}/Include)
     if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-        find_library (DNSSD_LIB dnssd.lib
+        find_library (DNSSD_LIB dnssd.lib 
                   HINTS ENV BONJOUR_SDK_HOME
                   PATH_SUFFIXES "Lib/x64")
     else()
-        find_library (DNSSD_LIB dnssd.lib
+        find_library (DNSSD_LIB dnssd.lib 
                   HINTS ENV BONJOUR_SDK_HOME
                   PATH_SUFFIXES "Lib/Win32")
     endif()
-
+    
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_link_libraries (synergy dns_sd)
 endif()
