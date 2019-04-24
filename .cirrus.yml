@@ -19,7 +19,7 @@ windows_task:
     - .\CI\Windows\build.bat
 
 ubuntu1604_task:
-  only_if: $CIRRUS_BRANCH == 'master' || $CIRRUS_BRANCH == 'v1-dev' || $CIRRUS_BRANCH =~ 'pull/.*'
+  only_if: $BRANCH =~ 'pull/.*'
   use_compute_credits: true
   container:
     dockerfile: CI/ubuntu1604.Dockerfile
@@ -29,7 +29,7 @@ ubuntu1604_task:
     - ./CI/build.sh
 
 ubuntu1804_task:
-  only_if: $CIRRUS_BRANCH == 'master' || $CIRRUS_BRANCH == 'v1-dev' || $CIRRUS_BRANCH =~ 'pull/.*'
+  only_if: $CIRRUS_BRANCH =~ 'pull/.*'
   use_compute_credits: true
   container:
     dockerfile: CI/ubuntu1804.Dockerfile
