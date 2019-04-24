@@ -36,7 +36,7 @@ ubuntu1804_task:
     - ./CI/build.sh
 
 macos_task:
- use_compute_credits: true
+  use_compute_credits: true
   osx_instance:
       image: mojave-xcode-10.1
 
