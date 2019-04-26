@@ -336,6 +336,23 @@ macro (configure_files srcDir destDir)
     endforeach (templateFile)
 endmacro (configure_files)
 
+macro(generate_versionfile)
+	if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin" OR ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+		FILE(WRITE ${CMAKE_BINARY_DIR}/version
+		"export SYNERGY_VERSION_MAJOR=\"${SYNERGY_VERSION_MAJOR}\"\n"
+		"export SYNERGY_VERSION_MINOR=\"${SYNERGY_VERSION_MINOR}\"\n"
+		"export SYNERGY_VERSION_PATCH=\"${SYNERGY_VERSION_PATCH}\"\n"
+		"export SYNERGY_VERSION_STAGE=\"${SYNERGY_VERSION_STAGE}\"\n")
+	elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+		FILE(WRITE ${CMAKE_BINARY_DIR}/version
+		"$env:SYNERGY_VERSION_MAJOR=\"${SYNERGY_VERSION_MAJOR}\"\n"
+		"$env:SYNERGY_VERSION_MINOR=\"${SYNERGY_VERSION_MINOR}\"\n"
+		"$env:SYNERGY_VERSION_PATCH=\"${SYNERGY_VERSION_PATCH}\"\n"
+		"$env:SYNERGY_VERSION_STAGE=\"${SYNERGY_VERSION_STAGE}\"\n")
+	endif()
+endmacro(generate_versionfile)
+
+
 if (${SYNERGY_BUILD_LEGACY_INSTALLER})
 #
 # macOS app Bundle
@@ -346,7 +363,8 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
     set (SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
     set (SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
-
+	
+	generate_versionfile()
     configure_files (${SYNERGY_BUNDLE_SOURCE_DIR} ${SYNERGY_BUNDLE_DIR})
 endif()
 
@@ -356,6 +374,7 @@ endif()
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         message (STATUS "Configuring the v1 installer")
         configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
+		generate_versionfile()
 endif()
 
 #
@@ -369,6 +388,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     else()
         install(FILES res/synergy.desktop DESTINATION share/applications)
     endif()
+	generate_versionfile()
 endif()
 
 else()
