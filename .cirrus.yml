@@ -26,10 +26,6 @@ ubuntu1604_task:
     - pwd; ls -la
     - chmod +x ./CI/build.sh
     - ./CI/build.sh
-  package_script:
-    - pwd; ls -la
-    - chmod +x ./CI/package.sh
-    - ./CI/package.sh
 
 ubuntu1804_task:
   use_compute_credits: true
@@ -39,10 +35,6 @@ ubuntu1804_task:
     - pwd; ls -la
     - chmod +x ./CI/build.sh
     - ./CI/build.sh
-  package_script:
-    - pwd; ls -la
-    - chmod +x ./CI/package.sh
-    - ./CI/package.sh
 
 ubuntu1904_task:
   use_compute_credits: true
@@ -52,10 +44,6 @@ ubuntu1904_task:
     - pwd; ls -la
     - chmod +x ./CI/build.sh
     - ./CI/build.sh
-  package_script:
-    - pwd; ls -la
-    - chmod +x ./CI/package.sh
-    - ./CI/package.sh
 
 macos_task:
     use_compute_credits: true
