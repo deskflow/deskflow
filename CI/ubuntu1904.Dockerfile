@@ -11,7 +11,8 @@ FROM ubuntu:19.04
 RUN \
   sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
   apt-get update && \
-  apt-get install -y git qtbase5-dev cmake make g++ xorg-dev libssl-dev libx11-dev libsodium-dev libgl1-mesa-glx libegl1-mesa libcurl4-openssl-dev libavahi-compat-libdnssd-dev 
+  apt-get install -y git cmake qtbase5-dev build-essential libx11-dev libxtst-dev libgl1-mesa-dev libssl-dev libavahi-compat-libdnssd-dev && \
+  apt-get install -y debhelper devscripts
   
 # Set environment variables.
 ENV HOME /root

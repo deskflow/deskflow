@@ -1,4 +1,6 @@
-source Build.properties
+cd ${CIRRUS_WORKING_DIR}
+
+source ./build/version
 
 SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
 SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
