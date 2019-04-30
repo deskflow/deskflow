@@ -66,11 +66,11 @@ static const int debugLogLevel = 1;
 
 static const char* synergyIconFiles[] =
 {
-    ":/res/icons/16x16/synergy-disconnected.png",	//synergyDisconnected
-    ":/res/icons/16x16/synergy-disconnected.png",	//synergyConnecting
-    ":/res/icons/16x16/synergy-connected.png",		//synergyConnected
-    ":/res/icons/16x16/synergy-transfering.png",	//synergyListening
-	":/res/icons/16x16/synergy-disconnected.png"	//synergyPendingRetry
+    ":/res/icons/16x16/synergy-disconnected.png",   //synergyDisconnected
+    ":/res/icons/16x16/synergy-disconnected.png",   //synergyConnecting
+    ":/res/icons/16x16/synergy-connected.png",      //synergyConnected
+    ":/res/icons/16x16/synergy-transfering.png",    //synergyListening
+    ":/res/icons/16x16/synergy-disconnected.png"    //synergyPendingRetry
 };
 
 #ifdef SYNERGY_ENTERPRISE
@@ -714,12 +714,12 @@ void MainWindow::startSynergy()
 
 void MainWindow::retryStart()
 {
-	//This function is only called after a failed start
-	//Only start synergy if the current state is pending retry
-	if (m_SynergyState == synergyPendingRetry)
-	{
-		startSynergy();
-	}
+    //This function is only called after a failed start
+    //Only start synergy if the current state is pending retry
+    if (m_SynergyState == synergyPendingRetry)
+    {
+        startSynergy();
+    }
 }
 
 void
@@ -946,7 +946,7 @@ void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
 
     if (m_ExpectedRunningState == kStarted) {
 
-		setSynergyState(synergyPendingRetry);
+        setSynergyState(synergyPendingRetry);
         QTimer::singleShot(1000, this, SLOT(retryStart()));
         appendLogInfo(QString("detected process not running, auto restarting"));
     }
@@ -967,7 +967,7 @@ void MainWindow::setSynergyState(qSynergyState state)
     if (synergyState() == state)
         return;
 
-	if ((state == synergyConnected) || (state == synergyConnecting) || (state == synergyListening) || (state == synergyPendingRetry))
+    if ((state == synergyConnected) || (state == synergyConnecting) || (state == synergyListening) || (state == synergyPendingRetry))
     {
         disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
         connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
@@ -1010,9 +1010,9 @@ void MainWindow::setSynergyState(qSynergyState state)
     }
     case synergyConnecting:
         setStatus(tr("Synergy is starting..."));
-		break;
-	case synergyPendingRetry:
-		setStatus(tr("There was an error, retrying..."));
+        break;
+    case synergyPendingRetry:
+        setStatus(tr("There was an error, retrying..."));
         break;
     case synergyDisconnected:
         setStatus(tr("Synergy is not running"));
