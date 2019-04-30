@@ -914,6 +914,7 @@ void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
     if (m_ExpectedRunningState == kStarted) {
         QTimer::singleShot(1000, this, SLOT(startSynergy()));
         appendLogInfo(QString("detected process not running, auto restarting"));
+		setSynergyState(synergyPendingRetry);
     }
     else {
         setSynergyState(synergyDisconnected);
@@ -932,7 +933,7 @@ void MainWindow::setSynergyState(qSynergyState state)
     if (synergyState() == state)
         return;
 
-    if ((state == synergyConnected) || (state == synergyListening))
+	if ((state == synergyConnected) || (state == synergyConnecting) || (state == synergyListening) || (state == synergyPendingRetry))
     {
         disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
         connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));

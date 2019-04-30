@@ -73,7 +73,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
             synergyDisconnected,
             synergyConnecting,
             synergyConnected,
-            synergyListening
+            synergyListening,
+			synergyPendingRetry
         };
 
         enum qSynergyType
