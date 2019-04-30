@@ -74,7 +74,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
             synergyConnecting,
             synergyConnected,
             synergyListening,
-			synergyPendingRetry
+            synergyPendingRetry
         };
 
         enum qSynergyType
@@ -139,7 +139,7 @@ public slots:
         void appendLogDebug(const QString& text);
         void appendLogError(const QString& text);
         void startSynergy();
-		void retryStart(); // If the connection failed this will retry a startSynergy
+        void retryStart(); // If the connection failed this will retry a startSynergy
 
     protected slots:
         void sslToggled(bool enabled);

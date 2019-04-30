@@ -1303,7 +1303,7 @@ XWindowsUtil::getWindowProperty(Display* display, Window window,
     int actualDatumSize;
 
     // ignore errors.  XGetWindowProperty() will report failure.
-    // XWindowsUtil::ErrorLock lock(display);
+    XWindowsUtil::ErrorLock lock(display);
 
     // read the property
     bool okay = true;
