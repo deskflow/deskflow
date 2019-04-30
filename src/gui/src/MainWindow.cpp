@@ -66,10 +66,11 @@ static const int debugLogLevel = 1;
 
 static const char* synergyIconFiles[] =
 {
-    ":/res/icons/16x16/synergy-disconnected.png",
-    ":/res/icons/16x16/synergy-disconnected.png",
-    ":/res/icons/16x16/synergy-connected.png",
-    ":/res/icons/16x16/synergy-transfering.png"
+    ":/res/icons/16x16/synergy-disconnected.png",	//synergyDisconnected
+    ":/res/icons/16x16/synergy-disconnected.png",	//synergyConnecting
+    ":/res/icons/16x16/synergy-connected.png",		//synergyConnected
+    ":/res/icons/16x16/synergy-transfering.png",	//synergyListening
+	":/res/icons/16x16/synergy-disconnected.png"	//synergyPendingRetry
 };
 
 #ifdef SYNERGY_ENTERPRISE
@@ -441,7 +442,7 @@ void MainWindow::appendLogRaw(const QString& text)
 
 void MainWindow::updateFromLogLine(const QString &line)
 {
-    // TODO: this code makes Andrew cry
+    // TODO: This shouldn't be updating from log needs a better way of doing this
     checkConnected(line);
     checkFingerprint(line);
     checkSecureSocket(line);
@@ -711,6 +712,16 @@ void MainWindow::startSynergy()
     }
 }
 
+void MainWindow::retryStart()
+{
+	//This function is only called after a failed start
+	//Only start synergy if the current state is pending retry
+	if (m_SynergyState == synergyPendingRetry)
+	{
+		startSynergy();
+	}
+}
+
 void
 MainWindow::sslToggled (bool enabled)
 {
@@ -934,9 +945,10 @@ void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
     }
 
     if (m_ExpectedRunningState == kStarted) {
-        QTimer::singleShot(1000, this, SLOT(startSynergy()));
-        appendLogInfo(QString("detected process not running, auto restarting"));
+
 		setSynergyState(synergyPendingRetry);
+        QTimer::singleShot(1000, this, SLOT(retryStart()));
+        appendLogInfo(QString("detected process not running, auto restarting"));
     }
     else {
         setSynergyState(synergyDisconnected);
@@ -998,6 +1010,9 @@ void MainWindow::setSynergyState(qSynergyState state)
     }
     case synergyConnecting:
         setStatus(tr("Synergy is starting..."));
+		break;
+	case synergyPendingRetry:
+		setStatus(tr("There was an error, retrying..."));
         break;
     case synergyDisconnected:
         setStatus(tr("Synergy is not running"));
