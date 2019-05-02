@@ -25,7 +25,7 @@
 
 #include <QtCore>
 #include <QtGui>
-#include <qbuttongroup.h>
+#include <QButtonGroup>
 
 ActionDialog::ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey, Action& action) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
