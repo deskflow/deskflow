@@ -26,24 +26,24 @@
 //! Lazy error message string evaluation for windows
 class XArchEvalWindows : public XArchEval {
 public:
-	XArchEvalWindows() : m_error(GetLastError()) { }
-	XArchEvalWindows(DWORD error) : m_error(error) { }
-	virtual ~XArchEvalWindows() { }
+    XArchEvalWindows() : m_error(GetLastError()) { }
+    XArchEvalWindows(DWORD error) : m_error(error) { }
+    virtual ~XArchEvalWindows() { }
 
-	virtual std::string	eval() const;
+    virtual std::string    eval() const;
 
 private:
-	DWORD				m_error;
+    DWORD                m_error;
 };
 
 //! Lazy error message string evaluation for winsock
 class XArchEvalWinsock : public XArchEval {
 public:
-	XArchEvalWinsock(int error) : m_error(error) { }
-	virtual ~XArchEvalWinsock() { }
+    XArchEvalWinsock(int error) : m_error(error) { }
+    virtual ~XArchEvalWinsock() { }
 
-	virtual std::string	eval() const;
+    virtual std::string    eval() const;
 
 private:
-	int					m_error;
+    int                    m_error;
 };

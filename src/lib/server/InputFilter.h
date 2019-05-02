@@ -32,330 +32,330 @@ class IEventQueue;
 
 class InputFilter {
 public:
-	// -------------------------------------------------------------------------
-	// Input Filter Condition Classes
-	// -------------------------------------------------------------------------
-	enum EFilterStatus {
-		kNoMatch,
-		kActivate,
-		kDeactivate
-	};
-
-	class Condition {
-	public:
-		Condition();
-		virtual ~Condition();
-
-		virtual Condition*		clone() const = 0;
-		virtual String			format() const = 0;
-
-		virtual EFilterStatus	match(const Event&) = 0;
-
-		virtual void			enablePrimary(PrimaryClient*);
-		virtual void			disablePrimary(PrimaryClient*);
-	};
-	
-	// KeystrokeCondition
-	class KeystrokeCondition : public Condition {
-	public:
-		KeystrokeCondition(IEventQueue* events, IPlatformScreen::KeyInfo*);
-		KeystrokeCondition(IEventQueue* events, KeyID key, KeyModifierMask mask);
-		virtual ~KeystrokeCondition();
-
-		KeyID					getKey() const;
-		KeyModifierMask			getMask() const;
-
-		// Condition overrides
-		virtual Condition*		clone() const;
-		virtual String			format() const;
-		virtual EFilterStatus	match(const Event&);
-		virtual void			enablePrimary(PrimaryClient*);
-		virtual void			disablePrimary(PrimaryClient*);
-
-	private:
-		UInt32					m_id;
-		KeyID					m_key;
-		KeyModifierMask			m_mask;
-		IEventQueue*			m_events;
-	};
-
-	// MouseButtonCondition
-	class MouseButtonCondition : public Condition {
-	public:
-		MouseButtonCondition(IEventQueue* events, IPlatformScreen::ButtonInfo*);
-		MouseButtonCondition(IEventQueue* events, ButtonID, KeyModifierMask mask);
-		virtual ~MouseButtonCondition();
-
-		ButtonID				getButton() const;
-		KeyModifierMask			getMask() const;
-
-		// Condition overrides
-		virtual Condition*		clone() const;
-		virtual String			format() const;
-		virtual EFilterStatus	match(const Event&);
-
-	private:
-		ButtonID				m_button;
-		KeyModifierMask			m_mask;
-		IEventQueue*			m_events;
-	};
-
-	// ScreenConnectedCondition
-	class ScreenConnectedCondition : public Condition {
-	public:
-		ScreenConnectedCondition(IEventQueue* events, const String& screen);
-		virtual ~ScreenConnectedCondition();
-
-		// Condition overrides
-		virtual Condition*		clone() const;
-		virtual String			format() const;
-		virtual EFilterStatus	match(const Event&);
-
-	private:
-		String					m_screen;
-		IEventQueue*			m_events;
-	};
-
-	// -------------------------------------------------------------------------
-	// Input Filter Action Classes
-	// -------------------------------------------------------------------------
-	
-	class Action {
-    public:
-		Action();
-		virtual	~Action();
-
-		virtual Action*		clone() const = 0;
-		virtual String			format() const = 0;
-
-        virtual void			perform(const Event&) = 0;
+    // -------------------------------------------------------------------------
+    // Input Filter Condition Classes
+    // -------------------------------------------------------------------------
+    enum EFilterStatus {
+        kNoMatch,
+        kActivate,
+        kDeactivate
     };
-	
-	// LockCursorToScreenAction
-	class LockCursorToScreenAction : public Action {
-	public:
-		enum Mode { kOff, kOn, kToggle };
 
-		LockCursorToScreenAction(IEventQueue* events, Mode = kToggle);
+    class Condition {
+    public:
+        Condition();
+        virtual ~Condition();
 
-		Mode					getMode() const;
+        virtual Condition*        clone() const = 0;
+        virtual String            format() const = 0;
 
-		// Action overrides
-		virtual Action*		clone() const;
-		virtual String			format() const;
-		virtual void			perform(const Event&);
+        virtual EFilterStatus    match(const Event&) = 0;
 
-	private:
-		Mode					m_mode;
-		IEventQueue*			m_events;
-	};
-	
-	// SwitchToScreenAction
-	class SwitchToScreenAction : public Action {
-	public:
-		SwitchToScreenAction(IEventQueue* events, const String& screen);
+        virtual void            enablePrimary(PrimaryClient*);
+        virtual void            disablePrimary(PrimaryClient*);
+    };
+    
+    // KeystrokeCondition
+    class KeystrokeCondition : public Condition {
+    public:
+        KeystrokeCondition(IEventQueue* events, IPlatformScreen::KeyInfo*);
+        KeystrokeCondition(IEventQueue* events, KeyID key, KeyModifierMask mask);
+        virtual ~KeystrokeCondition();
 
-		String					getScreen() const;
+        KeyID                    getKey() const;
+        KeyModifierMask            getMask() const;
 
-		// Action overrides
-		virtual Action*		clone() const;
-		virtual String			format() const;
-		virtual void			perform(const Event&);
+        // Condition overrides
+        virtual Condition*        clone() const;
+        virtual String            format() const;
+        virtual EFilterStatus    match(const Event&);
+        virtual void            enablePrimary(PrimaryClient*);
+        virtual void            disablePrimary(PrimaryClient*);
 
-	private:
-		String					m_screen;
-		IEventQueue*			m_events;
-	};
-	
-	// SwitchInDirectionAction
-	class SwitchInDirectionAction : public Action {
-	public:
-		SwitchInDirectionAction(IEventQueue* events, EDirection);
+    private:
+        UInt32                    m_id;
+        KeyID                    m_key;
+        KeyModifierMask            m_mask;
+        IEventQueue*            m_events;
+    };
 
-		EDirection				getDirection() const;
+    // MouseButtonCondition
+    class MouseButtonCondition : public Condition {
+    public:
+        MouseButtonCondition(IEventQueue* events, IPlatformScreen::ButtonInfo*);
+        MouseButtonCondition(IEventQueue* events, ButtonID, KeyModifierMask mask);
+        virtual ~MouseButtonCondition();
 
-		// Action overrides
-		virtual Action*		clone() const;
-		virtual String			format() const;
-		virtual void			perform(const Event&);
+        ButtonID                getButton() const;
+        KeyModifierMask            getMask() const;
 
-	private:
-		EDirection				m_direction;
-		IEventQueue*			m_events;
-	};
-	
-	// KeyboardBroadcastAction
-	class KeyboardBroadcastAction : public Action {
-	public:
-		enum Mode { kOff, kOn, kToggle };
+        // Condition overrides
+        virtual Condition*        clone() const;
+        virtual String            format() const;
+        virtual EFilterStatus    match(const Event&);
 
-		KeyboardBroadcastAction(IEventQueue* events, Mode = kToggle);
-		KeyboardBroadcastAction(IEventQueue* events, Mode, const std::set<String>& screens);
+    private:
+        ButtonID                m_button;
+        KeyModifierMask            m_mask;
+        IEventQueue*            m_events;
+    };
 
-		Mode					getMode() const;
-		std::set<String>		getScreens() const;
+    // ScreenConnectedCondition
+    class ScreenConnectedCondition : public Condition {
+    public:
+        ScreenConnectedCondition(IEventQueue* events, const String& screen);
+        virtual ~ScreenConnectedCondition();
 
-		// Action overrides
-		virtual Action*		clone() const;
-		virtual String			format() const;
-		virtual void			perform(const Event&);
+        // Condition overrides
+        virtual Condition*        clone() const;
+        virtual String            format() const;
+        virtual EFilterStatus    match(const Event&);
 
-	private:
-		Mode					m_mode;
-		String					m_screens;
-		IEventQueue*			m_events;
-	};
+    private:
+        String                    m_screen;
+        IEventQueue*            m_events;
+    };
 
-	// KeystrokeAction
-	class KeystrokeAction : public Action {
-	public:
-		KeystrokeAction(IEventQueue* events, IPlatformScreen::KeyInfo* adoptedInfo, bool press);
-		~KeystrokeAction();
+    // -------------------------------------------------------------------------
+    // Input Filter Action Classes
+    // -------------------------------------------------------------------------
+    
+    class Action {
+    public:
+        Action();
+        virtual    ~Action();
 
-		void					adoptInfo(IPlatformScreen::KeyInfo*);
-		const IPlatformScreen::KeyInfo*
-								getInfo() const;
-		bool					isOnPress() const;
+        virtual Action*        clone() const = 0;
+        virtual String            format() const = 0;
 
-		// Action overrides
-		virtual Action*		clone() const;
-		virtual String			format() const;
-		virtual void			perform(const Event&);
+        virtual void            perform(const Event&) = 0;
+    };
+    
+    // LockCursorToScreenAction
+    class LockCursorToScreenAction : public Action {
+    public:
+        enum Mode { kOff, kOn, kToggle };
 
-	protected:
-		virtual const char*		formatName() const;
+        LockCursorToScreenAction(IEventQueue* events, Mode = kToggle);
 
-	private:
-		IPlatformScreen::KeyInfo*	m_keyInfo;
-		bool					m_press;
-		IEventQueue*			m_events;
-	};
+        Mode                    getMode() const;
 
-	// MouseButtonAction -- modifier combinations not implemented yet
-	class MouseButtonAction : public Action {
-	public:
-		MouseButtonAction(IEventQueue* events,
-									IPlatformScreen::ButtonInfo* adoptedInfo,
-									bool press);
-		~MouseButtonAction();
+        // Action overrides
+        virtual Action*        clone() const;
+        virtual String            format() const;
+        virtual void            perform(const Event&);
 
-		const IPlatformScreen::ButtonInfo*
-								getInfo() const;
-		bool					isOnPress() const;
+    private:
+        Mode                    m_mode;
+        IEventQueue*            m_events;
+    };
+    
+    // SwitchToScreenAction
+    class SwitchToScreenAction : public Action {
+    public:
+        SwitchToScreenAction(IEventQueue* events, const String& screen);
 
-		// Action overrides
-		virtual Action*		clone() const;
-		virtual String			format() const;
-		virtual void			perform(const Event&);
+        String                    getScreen() const;
 
-	protected:
-		virtual const char*		formatName() const;
+        // Action overrides
+        virtual Action*        clone() const;
+        virtual String            format() const;
+        virtual void            perform(const Event&);
 
-	private:
-		IPlatformScreen::ButtonInfo*	m_buttonInfo;
-		bool					m_press;
-		IEventQueue*			m_events;
-	};
+    private:
+        String                    m_screen;
+        IEventQueue*            m_events;
+    };
+    
+    // SwitchInDirectionAction
+    class SwitchInDirectionAction : public Action {
+    public:
+        SwitchInDirectionAction(IEventQueue* events, EDirection);
 
-	class Rule {
-	public:
-		Rule();
-		Rule(Condition* adopted);
-		Rule(const Rule&);
-		~Rule();
+        EDirection                getDirection() const;
 
-		Rule& operator=(const Rule&);
+        // Action overrides
+        virtual Action*        clone() const;
+        virtual String            format() const;
+        virtual void            perform(const Event&);
 
-		// replace the condition
-		void			setCondition(Condition* adopted);
+    private:
+        EDirection                m_direction;
+        IEventQueue*            m_events;
+    };
+    
+    // KeyboardBroadcastAction
+    class KeyboardBroadcastAction : public Action {
+    public:
+        enum Mode { kOff, kOn, kToggle };
 
-		// add an action to the rule
-		void			adoptAction(Action*, bool onActivation);
+        KeyboardBroadcastAction(IEventQueue* events, Mode = kToggle);
+        KeyboardBroadcastAction(IEventQueue* events, Mode, const std::set<String>& screens);
 
-		// remove an action from the rule
-		void			removeAction(bool onActivation, UInt32 index);
+        Mode                    getMode() const;
+        std::set<String>        getScreens() const;
 
-		// replace an action in the rule
-		void			replaceAction(Action* adopted,
-							bool onActivation, UInt32 index);
+        // Action overrides
+        virtual Action*        clone() const;
+        virtual String            format() const;
+        virtual void            perform(const Event&);
 
-		// enable/disable
-		void			enable(PrimaryClient*);
-		void			disable(PrimaryClient*);
+    private:
+        Mode                    m_mode;
+        String                    m_screens;
+        IEventQueue*            m_events;
+    };
 
-		// event handling
-		bool			handleEvent(const Event&);
+    // KeystrokeAction
+    class KeystrokeAction : public Action {
+    public:
+        KeystrokeAction(IEventQueue* events, IPlatformScreen::KeyInfo* adoptedInfo, bool press);
+        ~KeystrokeAction();
 
-		// convert rule to a string
-		String			format() const;
+        void                    adoptInfo(IPlatformScreen::KeyInfo*);
+        const IPlatformScreen::KeyInfo*
+                                getInfo() const;
+        bool                    isOnPress() const;
 
-		// get the rule's condition
-		const Condition*
-						getCondition() const;
+        // Action overrides
+        virtual Action*        clone() const;
+        virtual String            format() const;
+        virtual void            perform(const Event&);
 
-		// get number of actions
-		UInt32			getNumActions(bool onActivation) const;
+    protected:
+        virtual const char*        formatName() const;
 
-		// get action by index
-		const Action&	getAction(bool onActivation, UInt32 index) const;
+    private:
+        IPlatformScreen::KeyInfo*    m_keyInfo;
+        bool                    m_press;
+        IEventQueue*            m_events;
+    };
 
-	private:
-		void			clear();
-		void			copy(const Rule&);
+    // MouseButtonAction -- modifier combinations not implemented yet
+    class MouseButtonAction : public Action {
+    public:
+        MouseButtonAction(IEventQueue* events,
+                                    IPlatformScreen::ButtonInfo* adoptedInfo,
+                                    bool press);
+        ~MouseButtonAction();
 
-	private:
-		typedef std::vector<Action*> ActionList;
+        const IPlatformScreen::ButtonInfo*
+                                getInfo() const;
+        bool                    isOnPress() const;
 
-		Condition*		m_condition;
-		ActionList		m_activateActions;
-		ActionList		m_deactivateActions;
-	};
+        // Action overrides
+        virtual Action*        clone() const;
+        virtual String            format() const;
+        virtual void            perform(const Event&);
 
-	// -------------------------------------------------------------------------
-	// Input Filter Class
-	// -------------------------------------------------------------------------
-	typedef std::vector<Rule> RuleList;
+    protected:
+        virtual const char*        formatName() const;
 
-	InputFilter(IEventQueue* events);
-	InputFilter(const InputFilter&);
-	virtual ~InputFilter();
+    private:
+        IPlatformScreen::ButtonInfo*    m_buttonInfo;
+        bool                    m_press;
+        IEventQueue*            m_events;
+    };
+
+    class Rule {
+    public:
+        Rule();
+        Rule(Condition* adopted);
+        Rule(const Rule&);
+        ~Rule();
+
+        Rule& operator=(const Rule&);
+
+        // replace the condition
+        void            setCondition(Condition* adopted);
+
+        // add an action to the rule
+        void            adoptAction(Action*, bool onActivation);
+
+        // remove an action from the rule
+        void            removeAction(bool onActivation, UInt32 index);
+
+        // replace an action in the rule
+        void            replaceAction(Action* adopted,
+                            bool onActivation, UInt32 index);
+
+        // enable/disable
+        void            enable(PrimaryClient*);
+        void            disable(PrimaryClient*);
+
+        // event handling
+        bool            handleEvent(const Event&);
+
+        // convert rule to a string
+        String            format() const;
+
+        // get the rule's condition
+        const Condition*
+                        getCondition() const;
+
+        // get number of actions
+        UInt32            getNumActions(bool onActivation) const;
+
+        // get action by index
+        const Action&    getAction(bool onActivation, UInt32 index) const;
+
+    private:
+        void            clear();
+        void            copy(const Rule&);
+
+    private:
+        typedef std::vector<Action*> ActionList;
+
+        Condition*        m_condition;
+        ActionList        m_activateActions;
+        ActionList        m_deactivateActions;
+    };
+
+    // -------------------------------------------------------------------------
+    // Input Filter Class
+    // -------------------------------------------------------------------------
+    typedef std::vector<Rule> RuleList;
+
+    InputFilter(IEventQueue* events);
+    InputFilter(const InputFilter&);
+    virtual ~InputFilter();
 
 #ifdef TEST_ENV
-	InputFilter() : m_primaryClient(NULL) { }
+    InputFilter() : m_primaryClient(NULL) { }
 #endif
 
-	InputFilter&		operator=(const InputFilter&);
+    InputFilter&        operator=(const InputFilter&);
 
-	// add rule, adopting the condition and the actions
-	void				addFilterRule(const Rule& rule);
+    // add rule, adopting the condition and the actions
+    void                addFilterRule(const Rule& rule);
 
-	// remove a rule
-	void				removeFilterRule(UInt32 index);
+    // remove a rule
+    void                removeFilterRule(UInt32 index);
 
-	// get rule by index
-	Rule&				getRule(UInt32 index);
+    // get rule by index
+    Rule&                getRule(UInt32 index);
 
-	// enable event filtering using the given primary client.  disable
-	// if client is NULL.
-	virtual void		setPrimaryClient(PrimaryClient* client);
+    // enable event filtering using the given primary client.  disable
+    // if client is NULL.
+    virtual void        setPrimaryClient(PrimaryClient* client);
 
-	// convert rules to a string
-	String				format(const String& linePrefix) const;
+    // convert rules to a string
+    String                format(const String& linePrefix) const;
 
-	// get number of rules
-	UInt32				getNumRules() const;
+    // get number of rules
+    UInt32                getNumRules() const;
 
-	//! Compare filters
-	bool				operator==(const InputFilter&) const;
-	//! Compare filters
-	bool				operator!=(const InputFilter&) const;
-
-private:
-	// event handling
-	void				handleEvent(const Event&, void*);
+    //! Compare filters
+    bool                operator==(const InputFilter&) const;
+    //! Compare filters
+    bool                operator!=(const InputFilter&) const;
 
 private:
-	RuleList			m_ruleList;
-	PrimaryClient*		m_primaryClient;
-	IEventQueue*		m_events;
+    // event handling
+    void                handleEvent(const Event&, void*);
+
+private:
+    RuleList            m_ruleList;
+    PrimaryClient*        m_primaryClient;
+    IEventQueue*        m_events;
 };

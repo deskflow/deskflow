@@ -27,18 +27,18 @@ synergy.  Each architecture must implement this interface.
 */
 class IArchSleep : public IInterface {
 public:
-	//! @name manipulators
-	//@{
+    //! @name manipulators
+    //@{
 
-	//! Sleep
-	/*!
-	Blocks the calling thread for \c timeout seconds.  If
-	\c timeout < 0.0 then the call returns immediately.  If \c timeout
-	== 0.0 then the calling thread yields the CPU.
+    //! Sleep
+    /*!
+    Blocks the calling thread for \c timeout seconds.  If
+    \c timeout < 0.0 then the call returns immediately.  If \c timeout
+    == 0.0 then the calling thread yields the CPU.
 
-	(cancellation point)
-	*/
-	virtual void		sleep(double timeout) = 0;
+    (cancellation point)
+    */
+    virtual void        sleep(double timeout) = 0;
 
-	//@}
+    //@}
 };

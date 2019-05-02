@@ -39,24 +39,13 @@
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
+#include "synergy/DisplayInvalidException.h"
 
 #include <math.h>
 #include <mach-o/dyld.h>
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>
-
-#import <appkit/NSEvent.h>
-
-// Set some enums for fast user switching if we're building with an SDK
-// from before such support was added.
-#if !defined(MAC_OS_X_VERSION_10_3) || \
-	(MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_3)
-enum {
-	kEventClassSystem				  = 'macs',
-	kEventSystemUserSessionActivated   = 10,
-	kEventSystemUserSessionDeactivated = 11
-};
-#endif
+#include <AppKit/NSEvent.h>
 
 // This isn't in any Apple SDK that I know of as of yet.
 enum {
@@ -117,9 +106,12 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 	m_getDropTargetThread(NULL),
 	m_impl(NULL)
 {
+    m_displayID = CGMainDisplayID();
+    if (!updateScreenShape(m_displayID, 0)) {
+        throw DisplayInvalidException ("failed to initialize screen shape");
+    }
+
 	try {
-		m_displayID   = CGMainDisplayID();
-		updateScreenShape(m_displayID, 0);
 		m_screensaver = new OSXScreenSaver(m_events, getEventTarget());
 		m_keyState	  = new OSXKeyState(m_events);
 		
@@ -488,7 +480,7 @@ OSXScreen::postMouseEvent(CGPoint& pos) const
 		type = thisButtonType[kMouseButtonDragged];
 	}
 
-	CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, button);
+	CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, static_cast<CGMouseButton>(button));
     
     // Dragging events also need the click state
     CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
@@ -574,7 +566,7 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
     MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
     CGEventType type = thisButtonMap[state];
 
-    CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, index);
+    CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, static_cast<CGMouseButton>(index));
     
     CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
     
@@ -767,7 +759,7 @@ OSXScreen::enable()
 		// FIXME -- start watching jump zones
 		
 		// kCGEventTapOptionDefault = 0x00000000 (Missing in 10.4, so specified literally)
-		m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, 0,
+		m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
 										kCGEventMaskForAllEvents, 
 										handleCGInputEvent, 
 										this);
@@ -785,7 +777,7 @@ OSXScreen::enable()
                 // there may be a better way to do this, but we register an event handler even if we're
                 // not on the primary display (acting as a client). This way, if a local event comes in
                 // (either keyboard or mouse), we can make sure to show the cursor if we've hidden it. 
-		m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, 0,
+		m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
 										kCGEventMaskForAllEvents, 
 										handleCGInputEventSecondary, 
 										this);
@@ -1088,20 +1080,20 @@ OSXScreen::handleSystemEvent(const Event& event, void*)
 }
 
 bool 
-OSXScreen::onMouseMove(SInt32 mx, SInt32 my)
+OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 {
-	LOG((CLOG_DEBUG2 "mouse move %+d,%+d", mx, my));
+	LOG((CLOG_DEBUG2 "mouse move %+f,%+f", mx, my));
 
-	SInt32 x = mx - m_xCursor;
-	SInt32 y = my - m_yCursor;
+	CGFloat x = mx - m_xCursor;
+	CGFloat y = my - m_yCursor;
 
 	if ((x == 0 && y == 0) || (mx == m_xCenter && mx == m_yCenter)) {
 		return true;
 	}
 
 	// save position to compute delta of next motion
-	m_xCursor = mx;
-	m_yCursor = my;
+	m_xCursor = (SInt32)mx;
+	m_yCursor = (SInt32)my;
 
 	if (m_isOnScreen) {
 		// motion on primary screen
@@ -1130,7 +1122,21 @@ OSXScreen::onMouseMove(SInt32 mx, SInt32 my)
 		}
 		else {
 			// send motion
-			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(x, y));
+			// Accumulate together the move into the running total
+			static CGFloat m_xFractionalMove = 0;
+			static CGFloat m_yFractionalMove = 0;
+
+			m_xFractionalMove += x;
+			m_yFractionalMove += y;
+
+			// Return the integer part
+			SInt32 intX = (SInt32)m_xFractionalMove;
+			SInt32 intY = (SInt32)m_yFractionalMove;
+
+			// And keep only the fractional part
+			m_xFractionalMove -= intX;
+			m_yFractionalMove -= intY;
+			sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(intX, intY));
 		}
 	}
 
@@ -1224,9 +1230,10 @@ OSXScreen::displayReconfigurationCallback(CGDirectDisplayID displayID, CGDisplay
 	LOG((CLOG_DEBUG1 "event: display was reconfigured: %x %x %x", flags, mask, flags & mask));
 
 	if (flags & mask) { /* Something actually did change */
-		
 		LOG((CLOG_DEBUG1 "event: screen changed shape; refreshing dimensions"));
-		screen->updateScreenShape(displayID, flags);
+        if (!screen->updateScreenShape(displayID, flags)) {
+            LOG((CLOG_ERR "failed to update screen shape during display reconfiguration"));
+        }
 	}
 }
 
@@ -1530,35 +1537,34 @@ OSXScreen::getKeyState() const
 	return m_keyState;
 }
 
-void
-OSXScreen::updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags flags)
+bool OSXScreen::updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags flags)
 {
-	updateScreenShape();
+    return updateScreenShape();
 }
 
-void
+bool
 OSXScreen::updateScreenShape()
 {
 	// get info for each display
 	CGDisplayCount displayCount = 0;
 
 	if (CGGetActiveDisplayList(0, NULL, &displayCount) != CGDisplayNoErr) {
-		return;
+        return false;
 	}
 	
 	if (displayCount == 0) {
-		return;
+        return false;
 	}
 
 	CGDirectDisplayID* displays = new CGDirectDisplayID[displayCount];
 	if (displays == NULL) {
-		return;
+        return false;
 	}
 
 	if (CGGetActiveDisplayList(displayCount,
 							displays, &displayCount) != CGDisplayNoErr) {
 		delete[] displays;
-		return;
+        return false;
 	}
 
 	// get smallest rect enclosing all display rects
@@ -1587,6 +1593,8 @@ OSXScreen::updateScreenShape()
 	LOG((CLOG_DEBUG "screen shape: center=%d,%d size=%dx%d on %u %s",
          m_x, m_y, m_w, m_h, displayCount,
          (displayCount == 1) ? "display" : "displays"));
+
+    return true;
 }
 
 #pragma mark - 
@@ -1979,7 +1987,8 @@ OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 			break;
 		case NX_NULLEVENT:
 			break;
-		case NX_SYSDEFINED:
+		default:
+			if (type == NX_SYSDEFINED) {
 			if (isMediaKeyEvent (event)) {
 				LOG((CLOG_DEBUG2 "detected media key event"));
 				screen->onMediaKey (event);
@@ -1988,10 +1997,9 @@ OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 				return event;
 			}
 			break;
-		case NX_NUMPROCS:
-			break;
-		default:
-			LOG((CLOG_WARN "unknown quartz event type: 0x%02x", type));
+			}
+			
+			LOG((CLOG_DEBUG3 "unknown quartz event type: 0x%02x", type));
 	}
 	
 	if (screen->m_isOnScreen) {

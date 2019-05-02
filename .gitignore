@@ -10,8 +10,6 @@ config.h
 /build
 /CMakeFiles
 /ext/cryptopp562
-/ext/gmock-1.6.0
-/ext/gtest-1.6.0
 /ext/openssl
 /src/gui/Makefile*
 /src/gui/object_script*
@@ -21,3 +19,6 @@ src/gui/gui.pro.user*
 src/gui/.qmake.stash
 src/gui/.rnd
 src/setup/win32/synergy.suo
+/.idea
+/cmake-build-debug
+/CMakeLists.txt.user

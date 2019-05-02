@@ -30,13 +30,13 @@ class QString;
 
 class AboutDialog : public QDialog, public Ui::AboutDialogBase
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		AboutDialog(QWidget* parent, const QString& synergyApp = QString());
+    public:
+        AboutDialog(QWidget* parent, const QString& synergyApp = QString());
 
-	private:
-		VersionChecker m_versionChecker;
+    private:
+        VersionChecker m_versionChecker;
 };
 
 #endif

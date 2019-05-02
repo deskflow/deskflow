@@ -112,23 +112,23 @@ std::vector<String> splitString(String string, const char c);
 This class provides case-insensitve comparison functions.
 */
 class CaselessCmp {
-	public:
-	//! Same as less()
-	bool			operator()(const String& a, const String& b) const;
+    public:
+    //! Same as less()
+    bool            operator()(const String& a, const String& b) const;
 
-	//! Returns true iff \c a is lexicographically less than \c b
-	static bool		less(const String& a, const String& b);
+    //! Returns true iff \c a is lexicographically less than \c b
+    static bool        less(const String& a, const String& b);
 
-	//! Returns true iff \c a is lexicographically equal to \c b
-	static bool		equal(const String& a, const String& b);
+    //! Returns true iff \c a is lexicographically equal to \c b
+    static bool        equal(const String& a, const String& b);
 
-	//! Returns true iff \c a is lexicographically less than \c b
-	static bool		cmpLess(const String::value_type& a,
-						const String::value_type& b);
+    //! Returns true iff \c a is lexicographically less than \c b
+    static bool        cmpLess(const String::value_type& a,
+                        const String::value_type& b);
 
-	//! Returns true iff \c a is lexicographically equal to \c b
-	static bool		cmpEqual(const String::value_type& a,
-						const String::value_type& b);
+    //! Returns true iff \c a is lexicographically equal to \c b
+    static bool        cmpEqual(const String::value_type& a,
+                        const String::value_type& b);
 };
 
 }

@@ -9,14 +9,14 @@ class CancelActivationDialog;
 
 class CancelActivationDialog : public QDialog
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+    
 public:
-	explicit CancelActivationDialog(QWidget *parent = 0);
-	~CancelActivationDialog();
-	
+    explicit CancelActivationDialog(QWidget *parent = 0);
+    ~CancelActivationDialog();
+    
 private:
-	Ui::CancelActivationDialog *ui;
+    Ui::CancelActivationDialog *ui;
 };
 
 #endif // CANCELACTIVATIONDIALOG_H

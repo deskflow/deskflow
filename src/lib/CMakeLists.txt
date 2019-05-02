@@ -28,5 +28,5 @@ add_subdirectory(synergy)
 add_subdirectory(shared)
 
 if (WIN32)
-	add_subdirectory(synwinhk)
+    add_subdirectory(synwinhk)
 endif()

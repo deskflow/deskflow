@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergys/OSXServerTaskBarReceiver.h"
+#include "OSXServerTaskBarReceiver.h"
 #include "arch/Arch.h"
 
 //
@@ -24,44 +24,44 @@
 //
 
 OSXServerTaskBarReceiver::OSXServerTaskBarReceiver(
-		const BufferedLogOutputter*, IEventQueue* events) :
+        const BufferedLogOutputter*, IEventQueue* events) :
     ServerTaskBarReceiver(events)
 {
-	// add ourself to the task bar
-	ARCH->addReceiver(this);
+    // add ourself to the task bar
+    ARCH->addReceiver(this);
 }
 
 OSXServerTaskBarReceiver::~OSXServerTaskBarReceiver()
 {
-	ARCH->removeReceiver(this);
+    ARCH->removeReceiver(this);
 }
 
 void
 OSXServerTaskBarReceiver::showStatus()
 {
-	// do nothing
+    // do nothing
 }
 
 void
 OSXServerTaskBarReceiver::runMenu(int, int)
 {
-	// do nothing
+    // do nothing
 }
 
 void
 OSXServerTaskBarReceiver::primaryAction()
 {
-	// do nothing
+    // do nothing
 }
 
 const IArchTaskBarReceiver::Icon
 OSXServerTaskBarReceiver::getIcon() const
 {
-	return NULL;
+    return NULL;
 }
 
 IArchTaskBarReceiver*
 createTaskBarReceiver(const BufferedLogOutputter* logBuffer, IEventQueue* events)
 {
-	return new OSXServerTaskBarReceiver(logBuffer, events);
+    return new OSXServerTaskBarReceiver(logBuffer, events);
 }

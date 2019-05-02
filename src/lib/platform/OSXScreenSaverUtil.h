@@ -24,16 +24,16 @@
 extern "C" {
 #endif
 
-void*					screenSaverUtilCreatePool();
-void					screenSaverUtilReleasePool(void*);
+void*                    screenSaverUtilCreatePool();
+void                    screenSaverUtilReleasePool(void*);
 
-void*					screenSaverUtilCreateController();
-void					screenSaverUtilReleaseController(void*);
-void					screenSaverUtilEnable(void*);
-void					screenSaverUtilDisable(void*);
-void					screenSaverUtilActivate(void*);
-void					screenSaverUtilDeactivate(void*, int isEnabled);
-int						screenSaverUtilIsActive(void*);
+void*                    screenSaverUtilCreateController();
+void                    screenSaverUtilReleaseController(void*);
+void                    screenSaverUtilEnable(void*);
+void                    screenSaverUtilDisable(void*);
+void                    screenSaverUtilActivate(void*);
+void                    screenSaverUtilDeactivate(void*, int isEnabled);
+int                        screenSaverUtilIsActive(void*);
 
 #if defined(__cplusplus)
 }

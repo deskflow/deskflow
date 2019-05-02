@@ -15,54 +15,44 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(sources
-	synergys.cpp
+    synergys.cpp
 )
 
 if (WIN32)
-	file(GLOB arch_headers "MSWindows*.h")
-	file(GLOB arch_sources "MSWindows*.cpp")
-	list(APPEND sources
-		resource.h
-		synergys.ico
-		synergys.rc
-		tb_error.ico
-		tb_idle.ico
-		tb_run.ico
-		tb_wait.ico
-	)
+    file(GLOB arch_headers "MSWindows*.h")
+    file(GLOB arch_sources "MSWindows*.cpp")
+    list(APPEND sources
+        resource.h
+        synergys.ico
+        synergys.rc
+        tb_error.ico
+        tb_idle.ico
+        tb_run.ico
+        tb_wait.ico
+    )
 elseif (APPLE)
-	file(GLOB arch_headers "OSX*.h")
-	file(GLOB arch_sources "OSX*.cpp")
+    file(GLOB arch_headers "OSX*.h")
+    file(GLOB arch_sources "OSX*.cpp")
 elseif (UNIX)
-	file(GLOB arch_headers "XWindows*.h")
-	file(GLOB arch_sources "XWindows*.cpp")
+    file(GLOB arch_headers "XWindows*.h")
+    file(GLOB arch_sources "XWindows*.cpp")
 endif()
 
 list(APPEND sources ${arch_sources})
 list(APPEND headers ${arch_headers})
 
 if (SYNERGY_ADD_HEADERS)
-	list(APPEND sources ${headers})
-endif()
-
-include_directories(
-	../
-	../../lib/
-)
-
-if (UNIX)
-	include_directories(
-		../../..
-	)
+    list(APPEND sources ${headers})
 endif()
 
 add_executable(synergys ${sources})
 target_link_libraries(synergys
-	arch base client common io mt net ipc platform server synergy ${libs} ${OPENSSL_LIBS})
+    arch base client common io mt net ipc platform server synlib ${libs} ${OPENSSL_LIBS})
 
-if (CONF_CPACK)
-	install(TARGETS
-		synergys
-		COMPONENT core
-		DESTINATION bin)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    install (TARGETS synergys DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    install (TARGETS synergys DESTINATION bin)
 endif()
+
+

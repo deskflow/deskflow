@@ -18,11 +18,12 @@
 #include "DataDownloader.h"
 
 DataDownloader::DataDownloader(QObject* parent) :
-	QObject(parent),
-	m_IsFinished(false)
+    QObject(parent),
+    m_pReply(nullptr),
+    m_IsFinished(false)
 {
-	connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
-		SLOT(complete(QNetworkReply*)));
+    connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
+        SLOT(complete(QNetworkReply*)));
 }
 
 DataDownloader::~DataDownloader()
@@ -31,27 +32,30 @@ DataDownloader::~DataDownloader()
 
 void DataDownloader::complete(QNetworkReply* reply)
 {
-	m_Data = reply->readAll();
-	reply->deleteLater();
+    m_Data = reply->readAll();
+    reply->deleteLater();
+	m_pReply = nullptr;
 
-	if (!m_Data.isEmpty()) {
-		m_IsFinished = true;
-		emit isComplete();
-	}
+    if (!m_Data.isEmpty()) {
+        m_IsFinished = true;
+        emit isComplete();
+    }
 }
 
 QByteArray DataDownloader::data() const
 {
-	return m_Data;
+    return m_Data;
 }
 
 void DataDownloader::cancel()
 {
-	m_pReply->abort();
+    if (m_pReply != nullptr) {
+        m_pReply->abort();
+    }
 }
 
 void DataDownloader::download(QUrl url)
 {
-	QNetworkRequest request(url);
-	m_pReply = m_NetworkManager.get(request);
+    QNetworkRequest request(url);
+    m_pReply = m_NetworkManager.get(request);
 }

@@ -20,41 +20,30 @@
 #include "CoreInterface.h"
 
 ActivationNotifier::ActivationNotifier(QObject *parent) :
-	QObject(parent)
+    QObject(parent)
 {
 }
 
 void ActivationNotifier::setIdentity(QString identity)
 {
-	m_Identity = identity;
+    m_Identity = identity;
 }
 
 void ActivationNotifier::setUpdateInfo(QString const& fromVersion,
-										QString const& toVersion,
-										QString const& serialKey)
+                                        QString const& toVersion,
+                                        QString const& serialKey)
 {
-	m_fromVersion = fromVersion;
-	m_toVersion = toVersion;
-	m_serialKey = serialKey;
+    m_fromVersion = fromVersion;
+    m_toVersion = toVersion;
+    m_serialKey = serialKey;
 }
 
 void ActivationNotifier::notify()
 {
-	CoreInterface coreInterface;
-	try {
-		coreInterface.notifyActivation(m_Identity);
-	}
-	catch (...) {
-		// catch all exceptions and fails silently
-	}
+    // TODO: use something other than CURL
 }
 
 void ActivationNotifier::notifyUpdate()
 {
-	try {
-		CoreInterface coreInterface;
-		coreInterface.notifyUpdate(m_fromVersion, m_toVersion,
-									m_serialKey);
-	} catch (...) {
-	}
+    // TODO: use something other than CURL
 }

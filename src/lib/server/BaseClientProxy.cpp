@@ -23,34 +23,34 @@
 //
 
 BaseClientProxy::BaseClientProxy(const String& name) :
-	m_name(name),
-	m_x(0),
-	m_y(0)
+    m_name(name),
+    m_x(0),
+    m_y(0)
 {
-	// do nothing
+    // do nothing
 }
 
 BaseClientProxy::~BaseClientProxy()
 {
-	// do nothing
+    // do nothing
 }
 
 void
 BaseClientProxy::setJumpCursorPos(SInt32 x, SInt32 y)
 {
-	m_x = x;
-	m_y = y;
+    m_x = x;
+    m_y = y;
 }
 
 void
 BaseClientProxy::getJumpCursorPos(SInt32& x, SInt32& y) const
 {
-	x = m_x;
-	y = m_y;
+    x = m_x;
+    y = m_y;
 }
 
 String
 BaseClientProxy::getName() const
 {
-	return m_name;
+    return m_name;
 }

@@ -26,21 +26,21 @@ class QSessionManager;
 
 class QSynergyApplication : public QApplication
 {
-	public:
-		QSynergyApplication(int& argc, char** argv);
-		~QSynergyApplication();
+    public:
+        QSynergyApplication(int& argc, char** argv);
+        ~QSynergyApplication();
 
-	public:
-		void commitData(QSessionManager& manager);
-		void switchTranslator(QString lang);
-		void setTranslator(QTranslator* translator);
+    public:
+        void commitData(QSessionManager& manager);
+        void switchTranslator(QString lang);
+        void setTranslator(QTranslator* translator);
 
-		static QSynergyApplication* getInstance();
+        static QSynergyApplication* getInstance();
 
-	private:
-		QTranslator* m_Translator;
+    private:
+        QTranslator* m_Translator;
 
-		static QSynergyApplication* s_Instance;
+        static QSynergyApplication* s_Instance;
 };
 
 #endif

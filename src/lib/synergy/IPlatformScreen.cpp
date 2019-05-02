@@ -20,5 +20,5 @@
 bool
 IPlatformScreen::fakeMediaKey(KeyID id)
 {
-	return false;
+    return false;
 }

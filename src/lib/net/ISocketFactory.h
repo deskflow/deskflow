@@ -19,6 +19,7 @@
 #pragma once
 
 #include "common/IInterface.h"
+#include "arch/IArchNetwork.h"
 
 class IDataSocket;
 class IListenSocket;
@@ -30,14 +31,14 @@ create sockets.
 */
 class ISocketFactory : public IInterface {
 public:
-	//! @name accessors
-	//@{
+    //! @name accessors
+    //@{
 
-	//! Create data socket
-	virtual IDataSocket*	create(bool secure) const = 0;
+    //! Create data socket
+    virtual IDataSocket*    create(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const = 0;
 
-	//! Create listen socket
-	virtual IListenSocket*	createListen(bool secure) const = 0;
+    //! Create listen socket
+    virtual IListenSocket*    createListen(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const = 0;
 
-	//@}
+    //@}
 };

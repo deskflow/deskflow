@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+	<?include Include.wxi?>
+	<Product Id="*" Language="1033" Manufacturer="$(var.Author)" Name="$(var.Name) ($(var.PlatformSimpleName))" UpgradeCode="$(var.UpgradeGuid)" Version="$(var.Version)">
+		<Package Compressed="yes" InstallScope="perMachine" InstallerVersion="301"/>
+		<MajorUpgrade DowngradeErrorMessage="A newer version of $(var.Name) is already installed."/>
+		<MediaTemplate EmbedCab="yes"/>
+		<UIRef Id="WixUI_InstallDir"/>
+		<!-- causes ICE61 warning, but stops user from installing many instances from nightly builds. -->
+		<Upgrade Id="$(var.UpgradeGuid)">
+			<UpgradeVersion Minimum="0.0.0.0" Property="UPGRADE"/>
+		</Upgrade>
+		<Feature Id="ProductFeature" Title="$(var.Name)">
+			<ComponentGroupRef Id="ProductComponents"/>
+			<ComponentGroupRef Id="OpenSSLComponents"/>
+			<ComponentGroupRef Id="ProductQtPluginComponents"/>
+			<MergeRef Id="CRT"/>
+            <?if $(var.Configuration) = "Debug" ?>
+			    <MergeRef Id="DebugCRT"/>
+	        <?endif ?>
+			<ComponentRef Id="RegistryEntries"/>
+		</Feature>
+		<DirectoryRef Id="TARGETDIR">
+			<Component Guid="7CF3564D-1F8E-4D3D-9781-E1EE22D5BD67" Id="RegistryEntries">
+				<RegistryKey Id="synergys" ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes" Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" Root="HKLM">
+					<RegistryValue Name="[INSTALLFOLDER]synergys.exe" Type="string" Value="~ HIGHDPIAWARE WIN7RTM"/>
+				</RegistryKey>
+
+				<RegistryKey Id="synergyc" Root="HKLM"
+					Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
+					Action="createAndRemoveOnUninstall">
+					<RegistryValue Type="string" Name="[INSTALLFOLDER]synergyc.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
+				</RegistryKey>
+
+				<RegistryKey Id="synergy" Root="HKLM"
+					Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
+					Action="createAndRemoveOnUninstall">
+					<RegistryValue Type="string" Name="[INSTALLFOLDER]synergy.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
+				</RegistryKey>
+				<!-- Windows 8 and later only -->
+				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
+			</Component>
+		</DirectoryRef>
+		<Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
+		<WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\banner.bmp"/>
+		<WixVariable Id="WixUIDialogBmp" Value="$(var.ResPath)\dialog.bmp"/>
+		<Property Id="ARPPRODUCTICON" Value="synergy.ico"/>
+		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER"/>
+		<Property Id="LEGACY_UNINSTALL_EXISTS">
+			<RegistrySearch Id="LegacyRegistrySearch" Key="SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Synergy" Name="UninstallString" Root="HKLM" Type="file" Win64="no">
+				<FileSearch Id="LegacyFileSearch" Name="uninstall.exe"/>
+			</RegistrySearch>
+		</Property>
+		<Condition Message="An existing installation of $(var.Name) was detected, please uninstall it before continuing.">NOT LEGACY_UNINSTALL_EXISTS
+    </Condition>
+		<CustomAction ExeCommand="" FileKey="GuiProgram" Id="StartGui" Return="asyncNoWait"/>
+		<UI>
+		    <UIRef Id="WixUI_InstallDir" />
+		    <Publish Dialog="WelcomeDlg"
+		          Control="Next"
+			  Event="NewDialog"
+			  Value="InstallDirDlg"
+			  Order="2">1</Publish>
+			<Publish Dialog="InstallDirDlg"
+			  Control="Back"
+			  Event="NewDialog"
+			  Value="WelcomeDlg"
+			  Order="2">1</Publish>
+			<Publish Control="Finish" Dialog="ExitDialog" Event="DoAction" Value="StartGui">NOT Installed</Publish>
+		</UI>
+	</Product>
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="$(var.ProgramFilesFolder)">
+				<Directory Id="INSTALLFOLDER" Name="$(var.Name)">
+					<Merge DiskId="1" Id="CRT" Language="0" SourceFile="$(var.CRT)"/>
+					<?if $(var.Configuration) = "Debug" ?>
+					    <Merge DiskId="1" Id="DebugCRT" Language="0" SourceFile="$(var.DebugCRT)"/>
+				    <?endif ?>
+					<Directory Id="OpenSSLDir" Name="OpenSSL"/>
+					<Directory Id="PlatformsDir" Name="Platforms"/>
+				</Directory>
+			</Directory>
+			<Directory Id="ProgramMenuFolder"/>
+		</Directory>
+	</Fragment>
+	<Fragment>
+		<ComponentGroup Directory="INSTALLFOLDER" Id="ProductComponents">
+			<Component Guid="EC9AD3B0-277C-4157-B5C8-5FD5B6A5F4AD" Id="Core">
+				<File KeyPath="yes" Source="$(var.BinPath)/synergyd.exe"/>
+				<ServiceInstall Description="Controls the $(var.Name) foreground processes." DisplayName="$(var.Name)" ErrorControl="normal" Id="ServiceInstall" Name="Synergy" Start="auto" Type="ownProcess">
+					<util:ServiceConfig FirstFailureActionType="restart" ResetPeriodInDays="1" RestartServiceDelayInSeconds="1" SecondFailureActionType="restart" ThirdFailureActionType="restart"/>
+				</ServiceInstall>
+				<ServiceControl Id="ServiceControl" Name="Synergy" Remove="uninstall" Start="install" Stop="both"/>
+				<File Source="$(var.BinPath)/synergys.exe">
+					<fire:FirewallException Id="ServerFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
+				</File>
+				<File Source="$(var.BinPath)/synergyc.exe"/>
+				<File Source="$(var.BinPath)/syntool.exe"/>
+				<File Source="$(var.BinPath)/synwinhk.dll"/>
+				<File Source="$(var.OpenSSLBinPath)/libeay32.dll"/>
+				<File Source="$(var.OpenSSLBinPath)/ssleay32.dll"/>
+			</Component>
+			<Component Guid="BAC8149B-6287-45BF-9C27-43D71ED40214" Id="Gui">
+				<File Id="GuiProgram" KeyPath="yes" Source="$(var.BinPath)/synergy.exe">
+					<Shortcut Advertise="yes" Directory="ProgramMenuFolder" Icon="synergy.ico" Id="GuiShortcut" Name="$(var.Name)"/>
+					<fire:FirewallException Id="GuiFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
+				</File>
+				<?if $(var.Configuration) = "Debug" ?>
+				<File Source="$(var.QtBinPath)\Qt5Cored.dll"/>
+				<File Source="$(var.QtBinPath)\Qt5Guid.dll"/>
+				<File Source="$(var.QtBinPath)\Qt5Networkd.dll"/>
+				<File Source="$(var.QtBinPath)\Qt5Svgd.dll"/>
+				<File Source="$(var.QtBinPath)\Qt5Widgetsd.dll"/>
+				<File Source="$(var.QtBinPath)\libGLESv2d.dll"/>
+				<File Source="$(var.QtBinPath)\libEGLd.dll"/>
+				<!-- Hacky -->
+				<File Source="C:\Program Files (x86)\Windows Kits\10\bin\$(var.Platform)\ucrt\ucrtbased.dll"/>
+				<?else ?>
+				<File Source="$(var.QtBinPath)\Qt5Core.dll"/>
+				<File Source="$(var.QtBinPath)\Qt5Gui.dll"/>
+				<File Source="$(var.QtBinPath)\Qt5Network.dll"/>
+				<File Source="$(var.QtBinPath)\Qt5Svg.dll"/>
+				<File Source="$(var.QtBinPath)\Qt5Widgets.dll"/>
+				<File Source="$(var.QtBinPath)\libGLESv2.dll"/>
+				<File Source="$(var.QtBinPath)\libEGL.dll"/>
+				<?endif ?>
+			</Component>
+		</ComponentGroup>
+		<ComponentGroup Directory="PlatformsDir" Id="ProductQtPluginComponents">
+			<Component Guid="684EFA14-856B-440E-A5E6-E90E04E36B41" Id="QtPlatformPlugin">
+				<?if $(var.Configuration) = "Debug" ?>
+				<File Source="$(var.QtPlatformPath)\qwindowsd.dll"/>
+				<?else ?>
+				<File Source="$(var.QtPlatformPath)\qwindows.dll"/>
+				<?endif ?>
+			</Component>
+		</ComponentGroup>
+		<ComponentGroup Directory="OpenSSLDir" Id="OpenSSLComponents">
+			<Component Guid="92648F77-65A6-4B16-AC59-A1F37BD341B1" Id="OpenSSL">
+				<File Id="OpenSSLDll1" Source="$(var.OpenSSLBinPath)/libeay32.dll"/>
+				<File Id="OpenSSLDll2" Source="$(var.OpenSSLBinPath)/ssleay32.dll"/>
+				<File Source="$(var.OpenSSLBinPath)/openssl.exe"/>
+				<File Source="$(var.ResPath)/openssl/synergy.conf"/>
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>

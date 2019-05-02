@@ -28,94 +28,94 @@
 //
 
 PortableTaskBarReceiver::PortableTaskBarReceiver(IEventQueue* events) :
-	m_state(kNotRunning),
-	m_events(events)
+    m_state(kNotRunning),
+    m_events(events)
 {
-	// do nothing
+    // do nothing
 }
 
 PortableTaskBarReceiver::~PortableTaskBarReceiver()
 {
-	// do nothing
+    // do nothing
 }
 
 void
 PortableTaskBarReceiver::updateStatus(INode* node, const String& errorMsg)
 {
-	{
-		// update our status
-		m_errorMessage = errorMsg;
-		if (node == NULL) {
-			if (m_errorMessage.empty()) {
-				m_state = kNotRunning;
-			}
-			else {
-				m_state = kNotWorking;
-			}
-		}
-		else {
-			m_state = kNotConnected;
-		}
+    {
+        // update our status
+        m_errorMessage = errorMsg;
+        if (node == NULL) {
+            if (m_errorMessage.empty()) {
+                m_state = kNotRunning;
+            }
+            else {
+                m_state = kNotWorking;
+            }
+        }
+        else {
+            m_state = kNotConnected;
+        }
 
-		// let subclasses have a go
-		onStatusChanged(node);
-	}
+        // let subclasses have a go
+        onStatusChanged(node);
+    }
 
-	// tell task bar
-	ARCH->updateReceiver(this);
+    // tell task bar
+    ARCH->updateReceiver(this);
 }
 
 PortableTaskBarReceiver::EState
 PortableTaskBarReceiver::getStatus() const
 {
-	return m_state;
+    return m_state;
 }
 
 const String&
 PortableTaskBarReceiver::getErrorMessage() const
 {
-	return m_errorMessage;
+    return m_errorMessage;
 }
 
 void
 PortableTaskBarReceiver::quit()
 {
-	m_events->addEvent(Event(Event::kQuit));
+    m_events->addEvent(Event(Event::kQuit));
 }
 
 void
 PortableTaskBarReceiver::onStatusChanged(INode*)
 {
-	// do nothing
+    // do nothing
 }
 
 void
 PortableTaskBarReceiver::lock() const
 {
-	// do nothing
+    // do nothing
 }
 
 void
 PortableTaskBarReceiver::unlock() const
 {
-	// do nothing
+    // do nothing
 }
 
 std::string
 PortableTaskBarReceiver::getToolTip() const
 {
-	switch (m_state) {
-	case kNotRunning:
-		return synergy::string::sprintf("%s:  Not running", kAppVersion);
+    switch (m_state) {
+    case kNotRunning:
+        return synergy::string::sprintf("%s:  Not running", kAppVersion);
 
-	case kNotWorking:
-		return synergy::string::sprintf("%s:  %s",
-								kAppVersion, m_errorMessage.c_str());
-						
-	case kNotConnected:
-		return synergy::string::sprintf("%s:  Unknown", kAppVersion);
+    case kNotWorking:
+        return synergy::string::sprintf("%s:  %s",
+                                kAppVersion, m_errorMessage.c_str());
+                        
+    case kNotConnected:
+        return synergy::string::sprintf("%s:  Unknown", kAppVersion);
 
-	default:
-		return "";
-	}
+    default:
+        return "";
+    }
 }

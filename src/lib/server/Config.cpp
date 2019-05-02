@@ -765,10 +765,15 @@ Config::readSectionOptions(ConfigReadContext& s)
 		else if (name == "win32KeepForeground") {
 			addOption("", kOptionWin32KeepForeground, s.parseBoolean(value));
 		}
+		else if (name == "disableLockToScreen") {
+			addOption("", kOptionDisableLockToScreen, s.parseBoolean(value));
+		}
 		else if (name == "clipboardSharing") {
 			addOption("", kOptionClipboardSharing, s.parseBoolean(value));
 		}
-
+		else if (name == "clipboardSharingSize") {
+			addOption("", kOptionClipboardSharingSize, s.parseInt(value));
+		}
 		else {
 			handled = false;
 		}
@@ -1380,8 +1385,14 @@ Config::getOptionName(OptionID id)
 	if (id == kOptionScreenPreserveFocus) {
 		return "preserveFocus";
 	}
+	if (id == kOptionDisableLockToScreen) {
+		return "disableLockToScreen";
+	}
 	if (id == kOptionClipboardSharing) {
 		return "clipboardSharing";
+	}
+	if (id == kOptionClipboardSharingSize) {
+		return "clipboardSharingSize";
 	}
 	return NULL;
 }
@@ -1400,7 +1411,8 @@ Config::getOptionValue(OptionID id, OptionValue value)
 		id == kOptionRelativeMouseMoves ||
 		id == kOptionWin32KeepForeground ||
 		id == kOptionScreenPreserveFocus ||
-		id == kOptionClipboardSharing) {
+		id == kOptionClipboardSharing ||
+		id == kOptionClipboardSharingSize) {
 		return (value != 0) ? "true" : "false";
 	}
 	if (id == kOptionModifierMapForShift ||
@@ -2111,7 +2123,9 @@ ConfigReadContext::parseInterval(const ArgList& args) const
 		throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
 	}
 
-	return Config::Interval(startValue / 100.0f, endValue / 100.0f);
+	float startInterval = static_cast<float>(startValue / 100.0f);
+	float endInterval = static_cast<float>(endValue / 100.0f);
+	return Config::Interval(startInterval, endInterval);
 }
 
 void

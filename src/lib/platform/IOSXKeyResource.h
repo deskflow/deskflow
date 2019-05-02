@@ -21,16 +21,16 @@
 
 class IOSXKeyResource : public IInterface {
 public:
-	virtual bool	isValid() const = 0;
-	virtual UInt32	getNumModifierCombinations() const = 0;
-	virtual UInt32	getNumTables() const = 0;
-	virtual UInt32	getNumButtons() const = 0;
-	virtual UInt32	getTableForModifier(UInt32 mask) const = 0;
-	virtual KeyID	getKey(UInt32 table, UInt32 button) const = 0;
-	
-	// Convert a character in the current script to the equivalent KeyID
-	static KeyID	getKeyID(UInt8);
-	
-	// Convert a unicode character to the equivalent KeyID.
-	static KeyID	unicharToKeyID(UniChar);
+    virtual bool    isValid() const = 0;
+    virtual UInt32    getNumModifierCombinations() const = 0;
+    virtual UInt32    getNumTables() const = 0;
+    virtual UInt32    getNumButtons() const = 0;
+    virtual UInt32    getTableForModifier(UInt32 mask) const = 0;
+    virtual KeyID    getKey(UInt32 table, UInt32 button) const = 0;
+    
+    // Convert a character in the current script to the equivalent KeyID
+    static KeyID    getKeyID(UInt8);
+    
+    // Convert a unicode character to the equivalent KeyID.
+    static KeyID    unicharToKeyID(UniChar);
 };

@@ -18,12 +18,9 @@
 #include "synergy/ToolArgs.h"
 
 ToolArgs::ToolArgs() :
-	m_printActiveDesktopName(false),
-	m_loginAuthenticate(false),
-	m_getInstalledDir(false),
-	m_getProfileDir(false),
-	m_getArch(false),
-	m_notifyActivation(false),
-	m_notifyUpdate(false)
+    m_printActiveDesktopName(false),
+    m_getInstalledDir(false),
+    m_getProfileDir(false),
+    m_getArch(false)
 {
 }
