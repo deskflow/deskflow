@@ -1,0 +1,82 @@
+trigger:
+  tags:
+    include:
+    - '*'
+  branches:
+    include:
+    - '*'
+
+jobs:
+- job: WinBuild
+  displayName: Windows Build
+  pool:
+    vmImage: 'vs2017-win2016'
+  strategy:
+    matrix:
+      Debug:
+        CI_ENV_BUILD_TYPE: Debug
+      Release with Release Installer:
+        CI_ENV_BUILD_TYPE: Release
+  steps:
+    # Gather Dependencies
+    - task: PowerShell@2
+      displayName: Download Bonjour SDK-like
+      inputs:
+        filePath: azure-pipelines/download_install_bonjour_sdk_like.ps1
+    - task: UsePythonVersion@0
+      displayName: Selecting Python Installer for QLI Installer
+      inputs:
+        versionSpec: '3.7'
+    - task: PowerShell@2
+      displayName: Installing QT
+      condition: ne(variables['CacheRestored'], 'true')
+      inputs:
+        filePath: azure-pipelines/download_install_qt.ps1
+    # Build time!
+    - powershell: Copy-Item azure-pipelines\build_env_tmpl.bat build_env.bat
+      displayName: Layering Azure Pipeline's build_env.bat
+    - script: |
+          call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\Tools\\vsdevcmd" -arch=x64 && clean_build.bat
+      displayName: Clean Build
+    - task: ArchiveFiles@2
+      displayName: Archive Completed Build Directory
+      inputs:
+        rootFolderOrFile: build\bin\$(CI_ENV_BUILD_TYPE)\
+        includeRootFolder: true
+        archiveFile: $(Build.ArtifactStagingDirectory)\$(CI_ENV_BUILD_TYPE).zip
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Completed Build Directory Archive Build Artifact
+      inputs:
+        pathtoPublish: $(Build.ArtifactStagingDirectory)\$(CI_ENV_BUILD_TYPE).zip
+        artifactName: $(CI_ENV_BUILD_TYPE)
+    - script: build_installer.bat
+      displayName: Build Installer
+      condition: eq(variables['CI_ENV_BUILD_TYPE'], 'Release')
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Release Installer
+      condition: eq(variables['CI_ENV_BUILD_TYPE'], 'Release')
+      inputs:
+        pathtoPublish: build\installer-inno\bin
+        artifactName: Release Installer
+
+- job: LinuxBuild
+  displayName: Linux Build
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+    - script: sudo apt-get install -y libxtst-dev qtdeclarative5-dev libavahi-compat-libdnssd-dev libcurl4-openssl-dev
+      displayName: Install Dependencies
+    - script: sh -x ./clean_build.sh
+      displayName: Clean Build
+
+- job: MacBuild
+  displayName: Mac Build
+  pool:
+    vmImage: 'macOS-10.14'
+  steps:
+    - script: brew update
+      displayName: Update brew
+    - script: brew install qt openssl
+      displayName: Install Dependencies
+    - script: sh -x ./clean_build.sh
+      displayName: Clean Build
