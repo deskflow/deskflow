@@ -344,7 +344,6 @@ macro(generate_versionfile)
 		"export SYNERGY_VERSION_PATCH=\"${SYNERGY_VERSION_PATCH}\"\n"
 		"export SYNERGY_VERSION_STAGE=\"${SYNERGY_VERSION_STAGE}\"\n")
 	elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-		#This might be run is either PS or CMD so set both type od envs
 		FILE(WRITE ${CMAKE_BINARY_DIR}/version.bat
 		"SET SYNERGY_VERSION_MAJOR=\"${SYNERGY_VERSION_MAJOR}\"\n"
 		"SET SYNERGY_VERSION_MINOR=\"${SYNERGY_VERSION_MINOR}\"\n"
