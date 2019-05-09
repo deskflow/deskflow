@@ -338,7 +338,7 @@ endmacro (configure_files)
 
 macro(generate_versionfile)
 	if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin" OR ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-		FILE(WRITE ${CMAKE_BINARY_DIR}/version.sh
+		FILE(WRITE ${CMAKE_BINARY_DIR}/version
 		"export SYNERGY_VERSION_MAJOR=\"${SYNERGY_VERSION_MAJOR}\"\n"
 		"export SYNERGY_VERSION_MINOR=\"${SYNERGY_VERSION_MINOR}\"\n"
 		"export SYNERGY_VERSION_PATCH=\"${SYNERGY_VERSION_PATCH}\"\n"
