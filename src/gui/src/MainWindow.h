@@ -73,7 +73,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
             synergyDisconnected,
             synergyConnecting,
             synergyConnected,
-            synergyListening
+            synergyListening,
+            synergyPendingRetry
         };
 
         enum qSynergyType
@@ -117,7 +118,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         void showConfigureServer(const QString& message);
         void showConfigureServer() { showConfigureServer(""); }
         void autoAddScreen(const QString name);
-        void zeroconfServerDetected(const QString name);
+        void addZeroconfServer(const QString name);
         void updateLocalFingerprint();
         Zeroconf& zeroconf() { return *m_pZeroconf; }
 #ifndef SYNERGY_ENTERPRISE
@@ -138,6 +139,7 @@ public slots:
         void appendLogDebug(const QString& text);
         void appendLogError(const QString& text);
         void startSynergy();
+        void retryStart(); // If the connection failed this will retry a startSynergy
 
     protected slots:
         void sslToggled(bool enabled);
@@ -238,6 +240,8 @@ private slots:
     void on_windowShown();
 
     void on_m_pLabelAutoConfig_linkActivated(const QString &link);
+
+    void on_m_pComboServerList_currentIndexChanged(const QString &arg1);
 
 signals:
     void windowShown();

@@ -304,11 +304,11 @@ ServerApp::closeServer(Server* server)
 void 
 ServerApp::stopRetryTimer()
 {
-    if (m_timer != NULL) {
-        m_events->deleteTimer(m_timer);
-        m_events->removeHandler(Event::kTimer, NULL);
-        m_timer = NULL;
-    }
+	if (m_timer != NULL) {
+		m_events->removeHandler(Event::kTimer, m_timer);
+		m_events->deleteTimer(m_timer);
+		m_timer = NULL;
+	}
 }
 
 void

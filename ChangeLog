@@ -1,3 +1,22 @@
+v1.10.2-rc2
+==============
+
+Bug fixes:
+- #6495 Event queue memory leak in server cleanup
+- #6471 Unable to stop core retry loop in config app
+- #6460 TLS memory leak on Linux server when using client
+- #6407 Enterprise config app shows auto-config elements
+- #6403 Mouse cursor movement drifts over time
+- #6392 Hostname alert shows unnecessarily on every open
+- #6373 Compile fails on BSD Unix with dl error
+
+Enhancements:
+- #6485 Readme for master branch with download help
+- #6475 Change master branch to current version
+- #6470 CI solution with on-demand containers
+- #6397 Remember last server used in Auto Config
+- #6375 Support for Qt 5.11 framework on Windows
+
 v1.10.1-stable
 ==============
 

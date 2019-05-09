@@ -66,10 +66,11 @@ static const int debugLogLevel = 1;
 
 static const char* synergyIconFiles[] =
 {
-    ":/res/icons/16x16/synergy-disconnected.png",
-    ":/res/icons/16x16/synergy-disconnected.png",
-    ":/res/icons/16x16/synergy-connected.png",
-    ":/res/icons/16x16/synergy-transfering.png"
+    ":/res/icons/16x16/synergy-disconnected.png",   //synergyDisconnected
+    ":/res/icons/16x16/synergy-disconnected.png",   //synergyConnecting
+    ":/res/icons/16x16/synergy-connected.png",      //synergyConnected
+    ":/res/icons/16x16/synergy-transfering.png",    //synergyListening
+    ":/res/icons/16x16/synergy-disconnected.png"    //synergyPendingRetry
 };
 
 #ifdef SYNERGY_ENTERPRISE
@@ -179,8 +180,11 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
 
 #ifndef SYNERGY_ENTERPRISE
     updateZeroconfService();
-    updateAutoConfigWidgets();
+
+    addZeroconfServer(m_AppConfig->autoConfigServer());
 #endif
+
+    updateAutoConfigWidgets();
 }
 
 MainWindow::~MainWindow()
@@ -439,7 +443,7 @@ void MainWindow::appendLogRaw(const QString& text)
 
 void MainWindow::updateFromLogLine(const QString &line)
 {
-    // TODO: this code makes Andrew cry
+    // TODO: This shouldn't be updating from log needs a better way of doing this
     checkConnected(line);
     checkFingerprint(line);
     checkSecureSocket(line);
@@ -709,6 +713,16 @@ void MainWindow::startSynergy()
     }
 }
 
+void MainWindow::retryStart()
+{
+    //This function is only called after a failed start
+    //Only start synergy if the current state is pending retry
+    if (m_SynergyState == synergyPendingRetry)
+    {
+        startSynergy();
+    }
+}
+
 void
 MainWindow::sslToggled (bool enabled)
 {
@@ -751,17 +765,37 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
             args << serverIp + ":" + QString::number(appConfig().port());
             return true;
         }
+        else {
+            show();
+            QMessageBox::warning(
+                this, tr("No server selected"),
+                tr("No auto config server was selected, try manual mode instead."));
+            return false;
+        }
     }
 #endif
 
-    if (m_pLineEditHostname->text().isEmpty()) {
-        show();
-        QMessageBox::warning(
-            this, tr("Hostname is empty"),
-            tr("Please fill in a hostname for the synergy client to connect to."));
-        return false;
-    }
+    if (m_pLineEditHostname->text().isEmpty())
+    {
+#ifndef SYNERGY_ENTERPRISE
+        //check if autoconfig mode is enabled
+        if (!appConfig().autoConfig())
+        {
+#endif
+            show();
+            QMessageBox::warning(
+                this, tr("Hostname is empty"),
+                tr("Please fill in a hostname for the synergy client to connect to."));
+            return false;
 
+#ifndef SYNERGY_ENTERPRISE
+        }
+        else
+        {
+            return false;
+        }
+#endif
+    }
     args << m_pLineEditHostname->text() + ":" + QString::number(appConfig().port());
     return true;
 }
@@ -912,7 +946,9 @@ void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
     }
 
     if (m_ExpectedRunningState == kStarted) {
-        QTimer::singleShot(1000, this, SLOT(startSynergy()));
+
+        setSynergyState(synergyPendingRetry);
+        QTimer::singleShot(1000, this, SLOT(retryStart()));
         appendLogInfo(QString("detected process not running, auto restarting"));
     }
     else {
@@ -932,7 +968,7 @@ void MainWindow::setSynergyState(qSynergyState state)
     if (synergyState() == state)
         return;
 
-    if ((state == synergyConnected) || (state == synergyConnecting) || (state == synergyListening))
+    if ((state == synergyConnected) || (state == synergyConnecting) || (state == synergyListening) || (state == synergyPendingRetry))
     {
         disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
         connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
@@ -975,6 +1011,9 @@ void MainWindow::setSynergyState(qSynergyState state)
     }
     case synergyConnecting:
         setStatus(tr("Synergy is starting..."));
+        break;
+    case synergyPendingRetry:
+        setStatus(tr("There was an error, retrying..."));
         break;
     case synergyDisconnected:
         setStatus(tr("Synergy is not running"));
@@ -1071,13 +1110,8 @@ void MainWindow::changeEvent(QEvent* event)
     }
 }
 
-void MainWindow::zeroconfServerDetected(const QString name)
+void MainWindow::addZeroconfServer(const QString name)
 {
-    // don't add to the server combo box if not in client mode.
-    if (synergyType() != synergyClient) {
-        return;
-    }
-
     // don't add yourself to the server list.
     if (getIPAddresses().contains(name)) {
         return;
@@ -1085,10 +1119,6 @@ void MainWindow::zeroconfServerDetected(const QString name)
 
     if (m_pComboServerList->findText(name) == -1) {
         m_pComboServerList->addItem(name);
-    }
-
-    if (m_pComboServerList->count() > 1) {
-        m_pComboServerList->show();
     }
 }
 
@@ -1262,7 +1292,11 @@ void MainWindow::updateAutoConfigWidgets()
         m_pLabelAutoDetected->hide();
         m_pComboServerList->hide();
 
+#ifndef SYNERGY_ENTERPRISE
         m_pWidgetAutoConfig->show();
+#else
+        m_pWidgetAutoConfig->hide();
+#endif
     }
 }
 
@@ -1409,4 +1443,10 @@ void MainWindow::secureSocket(bool secureSocket)
 void MainWindow::on_m_pLabelAutoConfig_linkActivated(const QString &)
 {
     m_pActionSettings->trigger();
+}
+
+void MainWindow::on_m_pComboServerList_currentIndexChanged(const QString &server)
+{
+    appConfig().setAutoConfigServer(server);
+    appConfig().saveSettings();
 }
