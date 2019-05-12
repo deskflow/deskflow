@@ -11,6 +11,13 @@ file (GLOB LEGACY_GUI_UI_FILES src/*.ui)
 file (GLOB LEGACY_ACTIVATION_FILES src/*Activation* src/*License*)
 file (GLOB LEGACY_ZEROCONF_FILES src/Zeroconf*)
 
+# Retrieve the absolute path to qmake and then use that path to find
+# the binaries
+get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
+get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
+find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_qt_bin_dir}")
+
 if (SYNERGY_ENTERPRISE)
     list (REMOVE_ITEM LEGACY_GUI_SOURCE_FILES ${LEGACY_ACTIVATION_FILES})
     list (REMOVE_ITEM LEGACY_GUI_UI_FILES ${LEGACY_ACTIVATION_FILES})
@@ -62,6 +69,9 @@ endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     install (TARGETS synergy DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
+    install (CODE "MESSAGE (\"Running macdeployqt to install frameworks in bundle\")")
+    install (CODE "execute_process(COMMAND ${MACDEPLOYQT_EXECUTABLE} 
+             ${SYNERGY_BUNDLE_APP_DIR} -always-overwrite)")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     install (TARGETS synergy DESTINATION bin)
 endif()
