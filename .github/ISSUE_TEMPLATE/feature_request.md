@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest an idea for this project
 title: Make beep sound when moving from client to server
-labels: enhancement
+labels: enhancement, triage
 assignees: ''
 
 ---
