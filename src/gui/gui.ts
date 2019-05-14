@@ -456,7 +456,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="373"/>
-        <source>&amp;Apply</source>
+        <source>&amp;Reload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
