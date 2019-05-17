@@ -1,6 +1,11 @@
 # Barrier
 
-Eliminate the barrier between your machines.
+Eliminate the barrier between your machines. 
+Find [releaes here](https://github.com/debauchee/barrier/releases).
+
+### Contact info:
+
+- `#barrier` on freenode
 
 Master branch build status: &nbsp; [![Build Status](https://travis-ci.org/debauchee/barrier.svg?branch=master)](https://travis-ci.org/debauchee/barrier)
 
