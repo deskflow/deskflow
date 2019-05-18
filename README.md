@@ -1,7 +1,7 @@
 # Barrier
 
 Eliminate the barrier between your machines. 
-Find [releaes here](https://github.com/debauchee/barrier/releases).
+Find [releases here](https://github.com/debauchee/barrier/releases).
 
 ### Contact info:
 
