@@ -46,6 +46,7 @@
 #define SYNERGY_MSG_PRE_WARP        WM_APP + 0x0017    // x; y
 #define SYNERGY_MSG_SCREEN_SAVER    WM_APP + 0x0018    // activated; <unused>
 #define SYNERGY_MSG_DEBUG            WM_APP + 0x0019    // data, data
+#define SYNERGY_MSG_SCREEN_POWER_OFF WM_APP + 0x0020    // poweroff; <unused>
 #define SYNERGY_MSG_INPUT_FIRST        SYNERGY_MSG_KEY
 #define SYNERGY_MSG_INPUT_LAST        SYNERGY_MSG_PRE_WARP
 #define SYNERGY_HOOK_LAST_MSG        SYNERGY_MSG_DEBUG

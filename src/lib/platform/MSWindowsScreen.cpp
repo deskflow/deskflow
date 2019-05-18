@@ -115,6 +115,7 @@ MSWindowsScreen::MSWindowsScreen(
     m_screensaver(NULL),
     m_screensaverNotify(false),
     m_screensaverActive(false),
+    m_screensaverPowerOff(false),
     m_window(NULL),
     m_nextClipboardWindow(NULL),
     m_ownClipboard(false),
@@ -980,12 +981,24 @@ MSWindowsScreen::onPreDispatch(HWND hwnd,
     case SYNERGY_MSG_SCREEN_SAVER:
         return onScreensaver(wParam != 0);
 
+    case SYNERGY_MSG_SCREEN_POWER_OFF:
+        LOG((CLOG_DEBUG2 "power off: 0x%08x 0x%08x 0x%08x", message, wParam, lParam));
+        // wParam = -1: monitor on
+        //           1: monitor low power
+        //           2: monitor off
+        // FIXME: we never get the -1 event. See below.
+        m_screensaverPowerOff = (wParam != -1);
+        return true;
+
     case SYNERGY_MSG_DEBUG:
         LOG((CLOG_DEBUG1 "hook: 0x%08x 0x%08x", wParam, lParam));
         return true;
     }
 
     if (m_isPrimary) {
+        // FIXME: if anything happens, assume monitor powered up
+        if (m_screensaverPowerOff)
+            m_screensaverPowerOff = false;
         return onPreDispatchPrimary(hwnd, message, wParam, lParam);
     }
 
@@ -1438,14 +1451,16 @@ MSWindowsScreen::onScreensaver(bool activated)
         return true;
     }
 
-    if (activated) {
-        if (!m_screensaverActive &&
-            m_screensaver->checkStarted(SYNERGY_MSG_SCREEN_SAVER, FALSE, 0)) {
-            m_screensaverActive = true;
-            sendEvent(m_events->forIPrimaryScreen().screensaverActivated());
+    if (activated || m_screensaverPowerOff) {
+        if (!m_screensaverActive) {
+            if (m_screensaver->checkStarted(SYNERGY_MSG_SCREEN_SAVER, FALSE, 0) ||
+                m_screensaverPowerOff) {
+                m_screensaverActive = true;
+                sendEvent(m_events->forIPrimaryScreen().screensaverActivated());
 
-            // enable display power down
-            ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
+                // enable display power down
+                ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
+            }
         }
     }
     else {

@@ -287,6 +287,7 @@ private:
                         m_screensaver;
     bool                m_screensaverNotify;
     bool                m_screensaverActive;
+    bool                m_screensaverPowerOff;
 
     // clipboard stuff.  our window is used mainly as a clipboard
     // owner and as a link in the clipboard viewer chain.

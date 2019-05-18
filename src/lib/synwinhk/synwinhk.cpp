@@ -630,11 +630,17 @@ getMessageHook(int code, WPARAM wParam, LPARAM lParam)
     if (code >= 0) {
         if (g_screenSaver) {
             MSG* msg = reinterpret_cast<MSG*>(lParam);
-            if (msg->message == WM_SYSCOMMAND &&
-                msg->wParam  == SC_SCREENSAVE) {
-                // broadcast screen saver started message
-                PostThreadMessage(g_threadID,
-                                SYNERGY_MSG_SCREEN_SAVER, TRUE, 0);
+            if (msg->message == WM_SYSCOMMAND) {
+                if (msg->wParam == SC_SCREENSAVE) {
+                    // broadcast screen saver started message
+                    PostThreadMessage(g_threadID,
+                                    SYNERGY_MSG_SCREEN_SAVER, TRUE, 0);
+                }
+                else if (msg->wParam == SC_MONITORPOWER) {
+                    // broadcast monitor power off/on message
+                    PostThreadMessage(g_threadID,
+                                    SYNERGY_MSG_SCREEN_POWER_OFF, msg->lParam, 0);
+                }
             }
         }
         if (g_mode == kHOOK_RELAY_EVENTS) {
