@@ -75,9 +75,9 @@ jobs:
   pool:
     vmImage: 'macOS-10.14'
   steps:
-    - script: brew update
-      displayName: Update brew
-    - script: brew install qt openssl
-      displayName: Install Dependencies
+    - script: brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/aac86fc018c48d7b6f23a2e7535276899774567a/Formula/qt.rb
+      displayName: Installed Pinned Qt
+    - script: brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/aac86fc018c48d7b6f23a2e7535276899774567a/Formula/openssl.rb
+      displayName: Installed Pinned OpenSSL
     - script: sh -x ./clean_build.sh
       displayName: Clean Build
