@@ -48,7 +48,7 @@ jobs:
       displayName: Publish Completed Build Directory Archive Build Artifact
       inputs:
         pathtoPublish: $(Build.ArtifactStagingDirectory)\$(CI_ENV_BUILD_TYPE).zip
-        artifactName: $(CI_ENV_BUILD_TYPE)
+        artifactName: Windows $(CI_ENV_BUILD_TYPE)
     - script: build_installer.bat
       displayName: Build Installer
       condition: eq(variables['CI_ENV_BUILD_TYPE'], 'Release')
@@ -57,7 +57,7 @@ jobs:
       condition: eq(variables['CI_ENV_BUILD_TYPE'], 'Release')
       inputs:
         pathtoPublish: build\installer-inno\bin
-        artifactName: Release Installer
+        artifactName: Windows Release Installer
 
 - job: LinuxBuild
   displayName: Linux Build
