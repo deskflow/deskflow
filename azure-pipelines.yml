@@ -74,6 +74,11 @@ jobs:
   displayName: Mac Build
   pool:
     vmImage: 'macOS-10.14'
+  strategy:
+    matrix:
+      Release:
+        B_BUILD_TYPE: Release
+        BARRIER_VERSION_STAGE: Release
   steps:
     - script: brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/aac86fc018c48d7b6f23a2e7535276899774567a/Formula/qt.rb
       displayName: Installed Pinned Qt
