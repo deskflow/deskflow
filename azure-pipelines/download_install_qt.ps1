@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$qli_install_version = '2019.05.12.4'
+$qli_install_version = '2019.05.26.1'
 $qt_version = '5.12.3'
 
 New-Item -Force -ItemType Directory -Path ".\deps\"
@@ -21,5 +21,6 @@ Write-Output 'Installed QLI Installer Dependencies'
 
 Write-Output 'Starting QT Installer'
 $Env:QLI_OUT_DIR = ".\deps\Qt\Qt$qt_version"
+$Env:QLI_BASE_URL = "http://mirrors.ocf.berkeley.edu/qt/online/qtsdkrepository/"
 python .\deps\qli-installer\qli-installer.py $qt_version windows desktop win64_msvc2017_64
 Write-Output 'Installed QT Installer'
