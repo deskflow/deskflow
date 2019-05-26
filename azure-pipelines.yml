@@ -64,6 +64,7 @@ jobs:
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
+    - script: sudo apt-get update -y
     - script: sudo apt-get install -y libxtst-dev qtdeclarative5-dev libavahi-compat-libdnssd-dev libcurl4-openssl-dev
       displayName: Install Dependencies
     - script: sh -x ./clean_build.sh
