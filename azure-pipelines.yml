@@ -86,3 +86,9 @@ jobs:
       displayName: Installed Pinned OpenSSL
     - script: sh -x ./clean_build.sh
       displayName: Clean Build
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Release DMG
+      condition: eq(variables['B_BUILD_TYPE'], 'Release')
+      inputs:
+        pathtoPublish: build/bundle
+        artifactName: Mac Release Disk Image and App
