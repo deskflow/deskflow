@@ -11,6 +11,12 @@ Master branch build status: &nbsp; [![Build Status](https://travis-ci.org/debauc
 
 Azure Pipelines build status: [![Build Status](https://dev.azure.com/debauchee/Barrier/_apis/build/status/debauchee.barrier?branchName=master)](https://dev.azure.com/debauchee/Barrier/_build/latest?definitionId=1&branchName=master)
 
+### FAQ
+
+Q: Does drag and drop work on linux?
+
+A: no
+
 ### What is it?
 
 Barrier is KVM software forked from Symless's synergy 1.9 codebase. Synergy was a commercialized reimplementation of the original CosmoSynergy written by Chris Schoeneman.
