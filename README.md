@@ -17,6 +17,14 @@ Q: Does drag and drop work on linux?
 
 A: no
 
+Q: What OSes are supported?
+
+A:
+  - Windows 7, 8, 8.1, and 10
+  - MacOS/OS X
+  - Linux
+  - FreeBSD
+
 ### What is it?
 
 Barrier is KVM software forked from Symless's synergy 1.9 codebase. Synergy was a commercialized reimplementation of the original CosmoSynergy written by Chris Schoeneman.
