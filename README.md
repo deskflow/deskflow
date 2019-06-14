@@ -15,7 +15,7 @@ Azure Pipelines build status: [![Build Status](https://dev.azure.com/debauchee/B
 
 Q: Does drag and drop work on linux?
 
-A: no
+A: No
 
 Q: What OSes are supported?
 
@@ -24,6 +24,10 @@ A:
   - MacOS/OS X
   - Linux
   - FreeBSD
+
+Q: Are 32-bit versions of Windows supported?
+
+A: No
 
 ### What is it?
 
