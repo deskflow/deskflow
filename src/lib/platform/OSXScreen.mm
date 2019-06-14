@@ -1263,36 +1263,23 @@ OSXScreen::onKey(CGEventRef event)
 		return true;
 	}
 
-	// check for hot key.  when we're on a secondary screen we disable
-	// all hotkeys so we can capture the OS defined hot keys as regular
-	// keystrokes but that means we don't get our own hot keys either.
-	// so we check for a key/modifier match in our hot key map.
-	if (!m_isOnScreen) {
-		HotKeyToIDMap::const_iterator i =
-			m_hotKeyToIDMap.find(HotKeyItem(virtualKey, 
-											 m_keyState->mapModifiersToCarbon(macMask) 
-											 & 0xff00u));
-		if (i != m_hotKeyToIDMap.end()) {
-			UInt32 id = i->second;
-	
-			// determine event type
-			Event::Type type;
-			//UInt32 eventKind = GetEventKind(event);
-			if (eventKind == kCGEventKeyDown) {
-				type = m_events->forIPrimaryScreen().hotKeyDown();
-			}
-			else if (eventKind == kCGEventKeyUp) {
-				type = m_events->forIPrimaryScreen().hotKeyUp();
-			}
-			else {
-				return false;
-			}
-	
-			m_events->addEvent(Event(type, getEventTarget(),
-										HotKeyInfo::alloc(id)));
-		
-			return true;
+	HotKeyToIDMap::const_iterator i = m_hotKeyToIDMap.find(HotKeyItem(virtualKey, m_keyState->mapModifiersToCarbon(macMask) & 0xff00u));
+	if (i != m_hotKeyToIDMap.end()) {
+		UInt32 id = i->second;
+		// determine event type
+		Event::Type type;
+		//UInt32 eventKind = GetEventKind(event);
+		if (eventKind == kCGEventKeyDown) {
+			type = m_events->forIPrimaryScreen().hotKeyDown();
 		}
+		else if (eventKind == kCGEventKeyUp) {
+			type = m_events->forIPrimaryScreen().hotKeyUp();
+		}
+		else {
+			return false;
+		}
+		m_events->addEvent(Event(type, getEventTarget(), HotKeyInfo::alloc(id)));
+		return true;
 	}
 
 	// decode event type
