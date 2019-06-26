@@ -11,24 +11,6 @@ Master branch build status: &nbsp; [![Build Status](https://travis-ci.org/debauc
 
 Azure Pipelines build status: [![Build Status](https://dev.azure.com/debauchee/Barrier/_apis/build/status/debauchee.barrier?branchName=master)](https://dev.azure.com/debauchee/Barrier/_build/latest?definitionId=1&branchName=master)
 
-### FAQ
-
-Q: Does drag and drop work on linux?
-
-A: No
-
-Q: What OSes are supported?
-
-A:
-  - Windows 7, 8, 8.1, and 10
-  - MacOS/OS X
-  - Linux
-  - FreeBSD
-
-Q: Are 32-bit versions of Windows supported?
-
-A: No
-
 ### What is it?
 
 Barrier is KVM software forked from Symless's synergy 1.9 codebase. Synergy was a commercialized reimplementation of the original CosmoSynergy written by Chris Schoeneman.
@@ -54,3 +36,21 @@ For short and simple questions or to just say hello find us on the Freenode IRC 
 ### Contributions
 
 At this time we are looking for developers to help fix the issues found in the issue tracker. Submit pull requests once you've polished up your patch and we'll review and possibly merge it.
+
+### FAQ
+
+Q: Does drag and drop work on linux?
+
+A: No
+
+Q: What OSes are supported?
+
+A:
+  - Windows 7, 8, 8.1, and 10
+  - MacOS/OS X
+  - Linux
+  - FreeBSD
+
+Q: Are 32-bit versions of Windows supported?
+
+A: No
