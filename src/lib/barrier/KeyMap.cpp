@@ -1104,6 +1104,7 @@ KeyMap::getDeadKey(KeyID key)
     case '`':
         return kKeyDeadGrave;
 
+    case '\'':
     case 0xb4u:
         return kKeyDeadAcute;
 
