@@ -49,6 +49,9 @@ jobs:
       inputs:
         pathtoPublish: $(Build.ArtifactStagingDirectory)\$(CI_ENV_BUILD_TYPE).zip
         artifactName: Windows $(CI_ENV_BUILD_TYPE)
+    - script: choco install innosetup --version 5.6.1.20190126 --allow-downgrade
+      displayName: Ensure desired version of Inno Setup is installed.
+      condition: eq(variables['CI_ENV_BUILD_TYPE'], 'Release')
     - script: build_installer.bat
       displayName: Build Installer
       condition: eq(variables['CI_ENV_BUILD_TYPE'], 'Release')
