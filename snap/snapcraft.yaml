@@ -11,7 +11,7 @@ grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
 
 apps:
-  barrier-kvm:
+  barrier:
     command: desktop-launch barrier #first run might take longer
     plugs: &plugs
       - desktop
@@ -25,6 +25,12 @@ apps:
       - unity7
       - wayland
       - x11
+  barrierc:
+    command: desktop-launch barrierc
+    plugs: *plugs
+  barriers:
+    command: desktop-launch barriers
+    plugs: *plugs
 
 parts:
   desktop:
