@@ -42,32 +42,29 @@ parts:
     source: .
     plugin: cmake
     build-packages:
-      - g++
-      - gcc
-      - make
       - xorg-dev 
       - libcurl4-openssl-dev
       - libavahi-compat-libdnssd-dev
       - libssl-dev
       - libx11-dev
-      - libqt4-dev
       - qtbase5-dev
       - qt5-style-plugins
-      - qt5ct
-    stage-packages:
       - libxinerama-dev
-      - libxinerama1
       - libxrandr-dev
-      - libxrandr2
       - libxrender-dev
-      - libxrender1
       - libxtst-dev
       - qtdeclarative5-dev
-      - libavahi-compat-libdnssd-dev
-      - libqt5gui5
       - libavahi-common-dev
+      - libqt5svg5-dev
+    stage-packages:
+      - libxinerama1
+      - libxrandr2
+      - libxrender1
+      - libqt5gui5
       - libqt5x11extras5
       - libqt5svg5
-      - libqt5svg5-dev
-      - qt5ct
+      - libxtst6
+      - libavahi-client3
+      - libavahi-common3
+      - libavahi-compat-libdnssd1
     after: [desktop-qt5]
