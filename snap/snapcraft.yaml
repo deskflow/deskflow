@@ -9,6 +9,8 @@ description: |
        CosmoSynergy written by Chris Schoeneman.
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
+icon: res/barrier.svg
+license: GPL-2.0
 
 apps:
   barrier:
