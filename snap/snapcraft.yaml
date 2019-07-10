@@ -13,14 +13,19 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 apps:
   barrier-kvm:
     command: desktop-launch barrier #first run might take longer
-    plugs:
-      gnome-3-26-1604:
-        interface: content
-        target: gnome-platform
-        default-provider: gnome-3-26-1604:gnome-3-26-1604
-    plugs: [gnome-3-26-1604]
-    plugs: [x11]
-parts: [qt5conf]
+    plugs: &plugs
+      - desktop
+      - desktop-legacy
+      - home
+      - joystick
+      - network
+      - opengl
+      - pulseaudio
+      - screen-inhibit-control
+      - unity7
+      - wayland
+      - x11
+
 parts:
   desktop:
     plugin: nil
