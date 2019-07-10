@@ -13,6 +13,7 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 apps:
   barrier:
     command: desktop-launch barrier #first run might take longer
+    desktop: usr/share/applications/barrier.desktop
     plugs: &plugs
       - desktop
       - desktop-legacy
@@ -41,6 +42,8 @@ parts:
   barrier:
     source: .
     plugin: cmake
+    configflags:
+      - "-DCMAKE_INSTALL_PREFIX=/usr"
     build-packages:
       - xorg-dev 
       - libcurl4-openssl-dev
@@ -68,3 +71,9 @@ parts:
       - libavahi-common3
       - libavahi-compat-libdnssd1
     after: [desktop-qt5]
+
+  fix-icon:
+    plugin: nil
+    override-build:
+      sed -i 's|Icon=barrier|Icon=/usr/share/icons/hicolor/scalable/apps/barrier.svg|' $SNAPCRAFT_STAGE/usr/share/applications/barrier.desktop
+    after: [barrier]
