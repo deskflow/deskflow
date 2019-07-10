@@ -2,11 +2,7 @@ name: barrier-kvm # the Barrier Snappy for Linux / not tested on MAC yet
 base: core18 
 version: master
 version-script: git -C parts/barrier/src/ describe --tags --long | sed "s/^v//"
-summary: Eliminate the barrier between your machines.
-description: |
-       Barrier is KVM software forked from Symless's synergy 1.9 codebase. 
-       Synergy was a commercialized reimplementation of the original 
-       CosmoSynergy written by Chris Schoeneman.
+adopt-info: appstream-flathub
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
 icon: res/barrier.svg
@@ -16,6 +12,7 @@ apps:
   barrier:
     command: desktop-launch barrier #first run might take longer
     desktop: usr/share/applications/barrier.desktop
+    common-id: com.github.debauchee.barrier
     plugs: &plugs
       - desktop
       - desktop-legacy
@@ -79,3 +76,8 @@ parts:
     override-build:
       sed -i 's|Icon=barrier|Icon=/usr/share/icons/hicolor/scalable/apps/barrier.svg|' $SNAPCRAFT_STAGE/usr/share/applications/barrier.desktop
     after: [barrier]
+
+  appstream-flathub:
+    plugin: dump
+    source: https://github.com/flathub/com.github.debauchee.barrier.git
+    parse-info: [com.github.debauchee.barrier.appdata.xml]
