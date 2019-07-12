@@ -289,8 +289,8 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
     include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
     set (OPENSSL_LIBS
-        ${OPENSSL_ROOT}/lib/libeay32.lib
-        ${OPENSSL_ROOT}/lib/ssleay32.lib
+        ${OPENSSL_ROOT}/lib/libssl.lib
+        ${OPENSSL_ROOT}/lib/libcrypto.lib
     )
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (OPENSSL_ROOT /usr/local/opt/openssl)

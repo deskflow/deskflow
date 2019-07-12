@@ -59,8 +59,7 @@ static const char synergyConfigName[] = "synergy.conf";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
 #endif
 
-static const char* tlsVersion = "TLS 1.2";
-static const char* tlsCheckString = "network encryption protocol: TLSv1.2";
+static const char* tlsCheckString = "network encryption protocol: ";
 
 static const int debugLogLevel = 1;
 
@@ -540,11 +539,15 @@ void MainWindow::checkFingerprint(const QString& line)
 
 void MainWindow::checkSecureSocket(const QString& line)
 {
-    // obviously not very secure, since this can be tricked by injecting something
-    // into the log. however, since we don't have IPC between core and GUI... patches welcome.
-    if (line.contains(tlsCheckString)) {
-        secureSocket(true);
-    }
+	// obviously not very secure, since this can be tricked by injecting something
+	// into the log. however, since we don't have IPC between core and GUI... patches welcome.
+    const int index = line.indexOf(tlsCheckString, 0, Qt::CaseInsensitive);
+	if (index > 0) {
+		secureSocket(true);
+
+        //Get the protocol version from the line
+        m_SecureSocketVersion = line.mid(index + strlen(tlsCheckString));
+	}
 }
 
 bool MainWindow::autoHide()
@@ -995,17 +998,17 @@ void MainWindow::setSynergyState(qSynergyState state)
     {
     case synergyListening: {
         if (synergyType() == synergyServer) {
-            setStatus(tr("Synergy is waiting for clients").arg(tlsVersion));
+            setStatus(tr("Synergy is waiting for clients").arg(m_SecureSocketVersion));
         }
 
         break;
     }
     case synergyConnected: {
         if (m_SecureSocket) {
-            setStatus(tr("Synergy is connected (with %1)").arg(tlsVersion));
+            setStatus(tr("Synergy is connected (with %1)").arg(m_SecureSocketVersion));
         }
         else {
-            setStatus(tr("Synergy is running (without %1)").arg(tlsVersion));
+            setStatus(tr("Synergy is running (without %1)").arg(m_SecureSocketVersion));
         }
         break;
     }
