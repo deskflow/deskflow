@@ -1,7 +1,7 @@
 name: barrier-kvm # the Barrier Snappy for Linux / not tested on MAC yet
 base: core18 
 version: master
-version-script: git -C parts/barrier/src/ describe --tags --long | sed "s/^v//"
+version-script: git describe --tags --long | sed "s/^v//"
 adopt-info: appstream-flathub
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
