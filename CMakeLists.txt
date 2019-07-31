@@ -293,8 +293,12 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         ${OPENSSL_ROOT}/lib/libcrypto.lib
     )
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set (OPENSSL_ROOT /usr/local/opt/openssl)
-
+    #Try use 1.1 for the latest features. otherwise use the default
+    IF(EXISTS /usr/local/opt/openssl@1.1)
+        set (OPENSSL_ROOT /usr/local/opt/openssl@1.1)
+    else()
+        set (OPENSSL_ROOT /usr/local/opt/openssl)
+    endif()
     include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
     set (OPENSSL_LIBS
         ${OPENSSL_ROOT}/lib/libssl.a
