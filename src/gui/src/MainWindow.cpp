@@ -206,7 +206,9 @@ void MainWindow::open()
 {
     createTrayIcon();
 
-    if (!autoHide()) {
+    if (appConfig().getAutoHide()) {
+        hide();
+    } else {
         showNormal();
     }
 
@@ -216,28 +218,6 @@ void MainWindow::open()
     // auto hiding before the user has configured synergy (which of course
     // confuses first time users, who think synergy has crashed).
     if (appConfig().startedBefore() && appConfig().processMode() == Desktop) {
-        startSynergy();
-    }
-}
-
-void MainWindow::onModeChanged(bool startDesktop, bool applyService)
-{
-    if (appConfig().processMode() == Service)
-    {
-        // ensure that the apply button actually does something, since desktop
-        // mode screws around with connecting/disconnecting the action.
-        disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
-        connect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
-
-        if (applyService)
-        {
-            stopDesktop();
-            startSynergy();
-        }
-    }
-    else if ((appConfig().processMode() == Desktop) && startDesktop)
-    {
-        stopService();
         startSynergy();
     }
 }
@@ -262,6 +242,7 @@ void MainWindow::createTrayIcon()
 
     m_pTrayIcon = new QSystemTrayIcon(this);
     m_pTrayIcon->setContextMenu(m_pTrayIconMenu);
+    m_pTrayIcon->setToolTip("Synergy");
 
     connect(m_pTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
@@ -358,7 +339,6 @@ void MainWindow::setIcon(qSynergyState state)
 
 void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
 {
-#ifndef Q_OS_WIN
     if (reason == QSystemTrayIcon::DoubleClick)
     {
         if (isVisible())
@@ -371,7 +351,6 @@ void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
             activateWindow();
         }
     }
-#endif
 }
 
 void MainWindow::logOutput()
@@ -539,28 +518,16 @@ void MainWindow::checkFingerprint(const QString& line)
 
 void MainWindow::checkSecureSocket(const QString& line)
 {
-	// obviously not very secure, since this can be tricked by injecting something
-	// into the log. however, since we don't have IPC between core and GUI... patches welcome.
+    // obviously not very secure, since this can be tricked by injecting something
+    // into the log. however, since we don't have IPC between core and GUI... patches welcome.
     const int index = line.indexOf(tlsCheckString, 0, Qt::CaseInsensitive);
-	if (index > 0) {
-		secureSocket(true);
+	  if (index > 0) {
+		    secureSocket(true);
 
         //Get the protocol version from the line
         m_SecureSocketVersion = line.mid(index + strlen(tlsCheckString));
-	}
+    }   
 }
-
-bool MainWindow::autoHide()
-{
-    if ((appConfig().processMode() == Desktop) &&
-        appConfig().getAutoHide()) {
-        hide();
-        return true;
-    }
-
-    return false;
-}
-
 QString MainWindow::getTimeStamp()
 {
     QDateTime current = QDateTime::currentDateTime();
@@ -1107,10 +1074,15 @@ void MainWindow::changeEvent(QEvent* event)
 
             break;
         }
-        default:
-            QMainWindow::changeEvent(event);
+        case QEvent::WindowStateChange:
+        {
+            windowStateChanged();
+            break;
+        }
         }
     }
+    // all that do not return are allowing the event to propagate
+    QMainWindow::changeEvent(event);
 }
 
 void MainWindow::addZeroconfServer(const QString name)
@@ -1305,21 +1277,7 @@ void MainWindow::updateAutoConfigWidgets()
 
 void MainWindow::on_m_pActionSettings_triggered()
 {
-    ProcessMode lastProcessMode = appConfig().processMode();
-    bool lastAutoConfig = appConfig().autoConfig();
-
-    SettingsDialog dlg(this, appConfig());
-    dlg.exec();
-
-    if (lastProcessMode != appConfig().processMode())
-    {
-        onModeChanged(true, true);
-    }
-
-    if (lastAutoConfig != appConfig().autoConfig()) {
-        updateAutoConfigWidgets();
-        updateZeroconfService();
-    }
+    SettingsDialog(this, appConfig()).exec();
 }
 
 void MainWindow::autoAddScreen(const QString name)
@@ -1452,4 +1410,10 @@ void MainWindow::on_m_pComboServerList_currentIndexChanged(const QString &server
 {
     appConfig().setAutoConfigServer(server);
     appConfig().saveSettings();
+}
+
+void MainWindow::windowStateChanged()
+{
+    if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray())
+        hide();
 }

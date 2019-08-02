@@ -110,6 +110,9 @@ class AppConfig: public QObject
 
         QString lastVersion() const;
 
+        void setMinimizeToTray(bool b);
+        bool getMinimizeToTray();
+
         void saveSettings();
         void setLastVersion(QString version);
 
@@ -150,6 +153,7 @@ protected:
         QString m_lastVersion;
         int m_LastExpiringWarningTime;
         bool m_ActivationHasRun;
+        bool m_MinimizeToTray;
 
         static const char m_SynergysName[];
         static const char m_SynergycName[];

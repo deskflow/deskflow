@@ -96,6 +96,7 @@ ClientListener::~ClientListener()
 
     m_events->removeHandler(m_events->forIListenSocket().connecting(), m_listen);
     cleanupListenSocket();
+    cleanupClientSockets();
     delete m_socketFactory;
 }
 
@@ -128,6 +129,8 @@ ClientListener::handleClientConnecting(const Event&, void*)
         return;
     }
     
+    m_clientSockets.insert(socket);
+
     m_events->adoptHandler(m_events->forClientListener().accepted(),
                 socket->getEventTarget(),
                 new TMethodEventJob<ClientListener>(this,
@@ -149,7 +152,7 @@ ClientListener::handleClientAccepted(const Event&, void* vsocket)
     IDataSocket* socket = static_cast<IDataSocket*>(vsocket);
     
     // filter socket messages, including a packetizing filter
-    synergy::IStream* stream = new PacketStreamFilter(m_events, socket, true);
+    synergy::IStream* stream = new PacketStreamFilter(m_events, socket, false);
     assert(m_server != NULL);
 
     // create proxy for unknown client
@@ -221,7 +224,14 @@ ClientListener::handleClientDisconnected(const Event&, void* vclient)
             m_waitingClients.erase(i);
             m_events->removeHandler(m_events->forClientProxy().disconnected(),
                             client);
+
+            // pull out the socket before deleting the client so
+            // we know which socket we no longer need
+            IDataSocket* socket = static_cast<IDataSocket*>(client->getStream());
             delete client;
+            m_clientSockets.erase(socket);
+            delete socket;
+
             break;
         }
     }
@@ -231,4 +241,14 @@ void
 ClientListener::cleanupListenSocket()
 {
     delete m_listen;
+}
+
+void
+ClientListener::cleanupClientSockets()
+{
+    ClientSockets::iterator it;
+    for (it = m_clientSockets.begin(); it != m_clientSockets.end(); it++) {
+        delete *it;
+    }
+    m_clientSockets.clear();
 }

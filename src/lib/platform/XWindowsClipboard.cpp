@@ -1333,6 +1333,12 @@ XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
         // process events if any otherwise sleep
         if (noWait || XPending(display) > 0) {
             while (!m_done && !m_failed && (noWait || XPending(display) > 0)) {
+                // fail if timeout has expired
+                if (timeout.getTime() >= s_timeout) {
+                    m_failed = true;
+                    break;
+                }
+
                 XNextEvent(display, &xevent);
                 if (!processEvent(display, &xevent)) {
                     // not processed so save it

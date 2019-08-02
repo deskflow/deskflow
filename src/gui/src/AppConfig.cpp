@@ -57,7 +57,8 @@ AppConfig::AppConfig(QSettings* settings) :
     m_CryptoEnabled(false),
     m_AutoHide(false),
     m_LastExpiringWarningTime(0),
-    m_AutoConfigServer()
+    m_AutoConfigServer(),
+    m_MinimizeToTray(false)
 {
     Q_ASSERT(m_pSettings);
 
@@ -165,6 +166,7 @@ void AppConfig::loadSettings()
     m_lastVersion = settings().value("lastVersion", "Unknown").toString();
     m_LastExpiringWarningTime = settings().value("lastExpiringWarningTime", 0).toInt();
     m_ActivationHasRun = settings().value("activationHasRun", false).toBool();
+    m_MinimizeToTray = settings().value("minimizeToTray", false).toBool();
 }
 
 void AppConfig::saveSettings()
@@ -191,6 +193,7 @@ void AppConfig::saveSettings()
     settings().setValue("lastVersion", m_lastVersion);
     settings().setValue("lastExpiringWarningTime", m_LastExpiringWarningTime);
     settings().setValue("activationHasRun", m_ActivationHasRun);
+    settings().setValue("minimizeToTray", m_MinimizeToTray);
     settings().sync();
 }
 
@@ -298,3 +301,7 @@ bool AppConfig::getCryptoEnabled() const {
 void AppConfig::setAutoHide(bool b) { m_AutoHide = b; }
 
 bool AppConfig::getAutoHide() { return m_AutoHide; }
+
+void AppConfig::setMinimizeToTray(bool b) { m_MinimizeToTray = b; }
+
+bool AppConfig::getMinimizeToTray() { return m_MinimizeToTray; }

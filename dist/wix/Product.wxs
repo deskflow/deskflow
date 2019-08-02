@@ -14,10 +14,6 @@
 			<ComponentGroupRef Id="ProductComponents"/>
 			<ComponentGroupRef Id="OpenSSLComponents"/>
 			<ComponentGroupRef Id="ProductQtPluginComponents"/>
-			<MergeRef Id="CRT"/>
-            <?if $(var.Configuration) = "Debug" ?>
-			    <MergeRef Id="DebugCRT"/>
-	        <?endif ?>
 			<ComponentRef Id="RegistryEntries"/>
 		</Feature>
 		<DirectoryRef Id="TARGETDIR">
@@ -73,10 +69,6 @@
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="$(var.ProgramFilesFolder)">
 				<Directory Id="INSTALLFOLDER" Name="$(var.Name)">
-					<Merge DiskId="1" Id="CRT" Language="0" SourceFile="$(var.CRT)"/>
-					<?if $(var.Configuration) = "Debug" ?>
-					    <Merge DiskId="1" Id="DebugCRT" Language="0" SourceFile="$(var.DebugCRT)"/>
-				    <?endif ?>
 					<Directory Id="OpenSSLDir" Name="OpenSSL"/>
 					<Directory Id="PlatformsDir" Name="Platforms"/>
 				</Directory>

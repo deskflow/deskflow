@@ -176,7 +176,6 @@ public slots:
         bool serverArgs(QStringList& args, QString& app);
         void setStatus(const QString& status);
         void sendIpcMessage(qIpcMessageType type, const char* buffer, bool showErrors);
-        void onModeChanged(bool startDesktop, bool applyService);
         void updateFromLogLine(const QString& line);
         QString getIPAddresses();
         void stopService();
@@ -196,13 +195,15 @@ public slots:
 #ifndef SYNERGY_ENTERPRISE
         void checkLicense(const QString& line);
 #endif
-        bool autoHide();
         QString getTimeStamp();
         void restartSynergy();
         void proofreadInfo();
 
         void showEvent (QShowEvent*);
         void secureSocket(bool secureSocket);
+
+        void windowStateChanged();
+
 
     private:
 #ifndef SYNERGY_ENTERPRISE
