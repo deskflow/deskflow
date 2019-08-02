@@ -51,10 +51,10 @@ public:
     bool                isSecureReady();
     void                secureConnect();
     void                secureAccept();
-    int                    secureRead(void* buffer, int size, int& read);
-    int                    secureWrite(const void* buffer, int size, int& wrote);
-    EJobResult            doRead();
-    EJobResult            doWrite();
+    int                 secureRead(void* buffer, int size, int& read);
+    int                 secureWrite(const void* buffer, int size, int& wrote);
+    EJobResult          doRead();
+    EJobResult          doWrite();
     void                initSsl(bool server);
     bool                loadCertificates(String& CertFile);
 
@@ -62,12 +62,12 @@ private:
     // SSL
     void                initContext(bool server);
     void                createSSL();
-    int                    secureAccept(int s);
-    int                    secureConnect(int s);
+    int                 secureAccept(int s);
+    int                 secureConnect(int s);
     bool                showCertificate();
     void                checkResult(int n, int& retry);
     void                showError(const char* reason = NULL);
-    String                getError();
+    String              getError();
     void                disconnect();
     void                formatFingerprint(String& fingerprint,
                                             bool hex = true,

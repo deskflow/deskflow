@@ -207,34 +207,35 @@ public slots:
 
     private:
 #ifndef SYNERGY_ENTERPRISE
-        LicenseManager* m_LicenseManager;
-        bool m_ActivationDialogRunning;
-        QStringList m_PendingClientNames;
+        LicenseManager*     m_LicenseManager;
+        bool                m_ActivationDialogRunning;
+        QStringList         m_PendingClientNames;
 #endif
-        Zeroconf* m_pZeroconf;
-        QSettings& m_Settings;
-        AppConfig* m_AppConfig;
-        QProcess* m_pSynergy;
-        int m_SynergyState;
-        ServerConfig m_ServerConfig;
-        QTemporaryFile* m_pTempConfigFile;
-        QSystemTrayIcon* m_pTrayIcon;
-        QMenu* m_pTrayIconMenu;
-        bool m_AlreadyHidden;
-        VersionChecker m_VersionChecker;
-        IpcClient m_IpcClient;
-        QMenuBar* m_pMenuBar;
-        QMenu* m_pMenuFile;
-        QMenu* m_pMenuEdit;
-        QMenu* m_pMenuWindow;
-        QMenu* m_pMenuHelp;
-        QAbstractButton* m_pCancelButton;
-        qRuningState m_ExpectedRunningState;
-        QMutex m_StopDesktopMutex;
-        SslCertificate* m_pSslCertificate;
-        bool m_SecureSocket;
+        Zeroconf*           m_pZeroconf;
+        QSettings&          m_Settings;
+        AppConfig*          m_AppConfig;
+        QProcess*           m_pSynergy;
+        int                 m_SynergyState;
+        ServerConfig        m_ServerConfig;
+        QTemporaryFile*     m_pTempConfigFile;
+        QSystemTrayIcon*    m_pTrayIcon;
+        QMenu*              m_pTrayIconMenu;
+        bool                m_AlreadyHidden;
+        VersionChecker      m_VersionChecker;
+        IpcClient           m_IpcClient;
+        QMenuBar*           m_pMenuBar;
+        QMenu*              m_pMenuFile;
+        QMenu*              m_pMenuEdit;
+        QMenu*              m_pMenuWindow;
+        QMenu*              m_pMenuHelp;
+        QAbstractButton*    m_pCancelButton;
+        qRuningState        m_ExpectedRunningState;
+        QMutex              m_StopDesktopMutex;
+        SslCertificate*     m_pSslCertificate;
+        bool                m_SecureSocket;             // brief Is the program running a secure socket protocol (SSL/TLS)
+        QString             m_SecureSocketVersion;      // brief Contains the version of the Secure Socket currently active
 
-        void updateAutoConfigWidgets();
+        void                updateAutoConfigWidgets();
         
 private slots:
     void on_m_pButtonApply_clicked();
