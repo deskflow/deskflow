@@ -23,6 +23,10 @@
 #include <QDir>
 #include <QCoreApplication>
 
+
+
+static const char kCertificateKeyLength[] = "rsa:1024"; //RSA Bit length (e.g. 1024/2048/4096)
+static const char kCertificateHashAlgorithm[] = "-sha1"; //fingerprint hashing algorithm
 static const char kCertificateLifetime[] = "365";
 static const char kCertificateSubjectInfo[] = "/CN=Synergy";
 static const char kCertificateFilename[] = "Synergy.pem";
@@ -85,6 +89,7 @@ bool SslCertificate::runTool(const QStringList& args)
         return false;
     }
 
+
     return true;
 }
 
@@ -121,7 +126,7 @@ void SslCertificate::generateCertificate()
 
         // private key
         arguments.append("-newkey");
-        arguments.append("rsa:1024");
+        arguments.append(kCertificateKeyLength);
 
         QDir sslDir(sslDirPath);
         if (!sslDir.exists()) {
@@ -153,7 +158,7 @@ void SslCertificate::generateFingerprint(const QString& certificateFilename)
     QStringList arguments;
     arguments.append("x509");
     arguments.append("-fingerprint");
-    arguments.append("-sha1");
+    arguments.append(kCertificateHashAlgorithm);
     arguments.append("-noout");
     arguments.append("-in");
     arguments.append(certificateFilename);

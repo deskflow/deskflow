@@ -37,8 +37,16 @@
 
 #define MAX_ERROR_SIZE 65535
 
+//Add the new function names in case older ones are deprecated
+#if OPENSSL_VERSION_NUMBER > 0x10100000L
+#define SSL_SERVER_METHOD TLS_server_method
+#define SSL_CLIENT_METHOD TLS_client_method
+#else
+#define SSL_SERVER_METHOD SSLv23_server_method
+#define SSL_CLIENT_METHOD SSLv23_server_method
+#endif
+
 static const float s_retryDelay = 0.01f;
-const char* k_tlsString = "TLSv1.2";
 
 enum {
     kMsgSize = 128
@@ -383,17 +391,11 @@ SecureSocket::initContext(bool server)
         showSecureLibInfo();
     }
 
-    // only use TLS 1.2 (latest as of 27 jul 18). previously we were using
-    // the SSLv23_server_method and SSLv23_client_method functions with
-    // SSL_OP_NO_SSLv3, but not SSL_OP_NO_SSLv2, so there was a potential
-    // vulnerability where it could fall back to SSLv2 (not TLS). also,
-    // the SSLv23_*_method functions could fall back to TLS 1.0 and 1.1,
-    // which are nolonger PCI compliant.
     if (server) {
-        method = TLSv1_2_server_method();
+        method = SSL_SERVER_METHOD();
     }
     else {
-        method = TLSv1_2_client_method();
+        method = SSL_CLIENT_METHOD();
     }
     
     // create new context from method
@@ -855,10 +857,8 @@ SecureSocket::showSecureConnectInfo()
         SSL_CIPHER_description(cipher, msg, kMsgSize);
         LOG((CLOG_DEBUG "openssl cipher: %s", msg));
 
-        // show user a simpler version of the openssl cipher output
-        if (std::string(msg).find(k_tlsString) != std::string::npos) {
-            LOG((CLOG_INFO "network encryption protocol: %s", k_tlsString));
-        }
+        LOG((CLOG_INFO "network encryption protocol: %s", SSL_CIPHER_get_version(cipher)));
+
     }
     else {
         LOG((CLOG_ERR "could not get secure socket cipher"));

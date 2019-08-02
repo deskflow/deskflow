@@ -55,6 +55,7 @@ macos_task:
 
     install_script:
         - brew install qt
+        - brew install openssl@1.1
     build_script:
         - mkdir build
         - cd build
