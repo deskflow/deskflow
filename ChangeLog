@@ -1,3 +1,26 @@
+v1.10.3-stable
+==============
+
+Bug fixes:
+- #6527 Config app renders incorrectly on high DPI screens
+- #6526 New TLS/SSL socket handled when no socket
+- #6525 Race condition on disconnecting TLS/SSL socket
+- #6521 Access violation in TLS/SSL socket close
+- #6409 Server freezes when clipboard contains an image
+- #3705 Hotkeys not working on Mac server
+
+
+Enhancements:
+- #6529 Cleaner redistributable use in Windows installer
+- #6528 More verbose message for Linux display errors
+- #6524 Minimize config app to system tray
+- #6523 Restore auto hide on startup for config app
+- #6522 Double click Windows tray icon to show and hide
+- #6520 Support for 32-bit Linux for legacy users
+- #6519 Support for Ubuntu 14.04 LTS for legacy users
+- #6390 Support for OpenSSL 1.1.1 for better security
+
+
 v1.10.2-stable
 ==============
 
