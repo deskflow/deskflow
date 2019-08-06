@@ -307,7 +307,7 @@ private:
     HotKeyToIDMap        m_hotKeyToIDMap;
 
     // map of button state
-    bool                m_buttons[1 + kButtonExtra0 + 1];
+    bool                m_buttons[NumButtonIDs];
 
     // the system shows the mouse cursor when an internal display count
     // is >= 0.  this count is maintained per application but there's

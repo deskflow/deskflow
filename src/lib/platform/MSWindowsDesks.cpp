@@ -45,6 +45,10 @@
 #define SPI_GETSCREENSAVERRUNNING 114
 #endif
 
+#if !defined(MOUSEEVENTF_HWHEEL)
+#define MOUSEEVENTF_HWHEEL 0x1000
+#endif
+
 // X button stuff
 #if !defined(WM_XBUTTONDOWN)
 #define WM_XBUTTONDOWN        0x020B
@@ -296,12 +300,12 @@ MSWindowsDesks::fakeMouseButton(ButtonID button, bool press)
         flags = press ? MOUSEEVENTF_RIGHTDOWN : MOUSEEVENTF_RIGHTUP;
         break;
 
-    case kButtonExtra0 + 0:
+    case kButtonExtra0:
         data = XBUTTON1;
         flags = press ? MOUSEEVENTF_XDOWN : MOUSEEVENTF_XUP;
         break;
 
-    case kButtonExtra0 + 1:
+    case kButtonExtra1:
         data = XBUTTON2;
         flags = press ? MOUSEEVENTF_XDOWN : MOUSEEVENTF_XUP;
         break;
@@ -602,6 +606,16 @@ MSWindowsDesks::deskThread(void* vdesk)
 {
     MSG msg;
 
+	BOOL vistaOrGreater = FALSE;
+
+	{
+        OSVERSIONINFOW osvi;
+        osvi.dwOSVersionInfoSize = sizeof(osvi);
+        if (GetVersionExW(&osvi)) {
+            vistaOrGreater = osvi.dwMajorVersion >= 6;
+        }
+    }
+
     // use given desktop for this thread
     Desk* desk              = static_cast<Desk*>(vdesk);
     desk->m_threadID         = GetCurrentThreadId();
@@ -686,9 +700,11 @@ MSWindowsDesks::deskThread(void* vdesk)
             break;
 
         case BARRIER_MSG_FAKE_WHEEL:
-            // XXX -- add support for x-axis scrolling
             if (msg.lParam != 0) {
                 mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (DWORD)msg.lParam, 0);
+            }
+            else if (vistaOrGreater && msg.wParam != 0) {
+                mouse_event(MOUSEEVENTF_HWHEEL, 0, 0, (DWORD)msg.wParam, 0);
             }
             break;
 

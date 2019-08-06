@@ -952,9 +952,9 @@ MSWindowsScreen::updateButtons()
     m_buttons[kButtonLeft]       = (GetKeyState(VK_LBUTTON)  < 0);
     m_buttons[kButtonRight]      = (GetKeyState(VK_RBUTTON)  < 0);
     m_buttons[kButtonMiddle]     = (GetKeyState(VK_MBUTTON)  < 0);
-    m_buttons[kButtonExtra0 + 0] = (numButtons >= 4) &&
+    m_buttons[kButtonExtra0]     = (numButtons >= 4) &&
                                    (GetKeyState(VK_XBUTTON1) < 0);
-    m_buttons[kButtonExtra0 + 1] = (numButtons >= 5) &&
+    m_buttons[kButtonExtra1]     = (numButtons >= 5) &&
                                    (GetKeyState(VK_XBUTTON2) < 0);
 }
 
@@ -1007,8 +1007,7 @@ MSWindowsScreen::onPreDispatchPrimary(HWND,
                             static_cast<SInt32>(lParam));
 
     case BARRIER_MSG_MOUSE_WHEEL:
-        // XXX -- support x-axis scrolling
-        return onMouseWheel(0, static_cast<SInt32>(wParam));
+        return onMouseWheel(static_cast<SInt32>(lParam), static_cast<SInt32>(wParam));
 
     case BARRIER_MSG_PRE_WARP:
         {
@@ -1670,13 +1669,13 @@ MSWindowsScreen::mapButtonFromEvent(WPARAM msg, LPARAM button) const
         switch (button) {
         case XBUTTON1:
             if (GetSystemMetrics(SM_CMOUSEBUTTONS) >= 4) {
-                return kButtonExtra0 + 0;
+                return kButtonExtra0;
             }
             break;
 
         case XBUTTON2:
             if (GetSystemMetrics(SM_CMOUSEBUTTONS) >= 5) {
-                return kButtonExtra0 + 1;
+                return kButtonExtra1;
             }
             break;
         }

@@ -139,7 +139,8 @@ private:
 
     // Returns the number of scroll events needed after the current delta has
     // been taken into account
-    int                 accumulateMouseScroll(SInt32 yDelta) const;
+    int                 x_accumulateMouseScroll(SInt32 xDelta) const;
+    int                 y_accumulateMouseScroll(SInt32 yDelta) const;
 
     bool                detectXI2();
 #ifdef HAVE_XI2
@@ -183,10 +184,11 @@ private:
     // The size of a smallest supported scroll event, in points
     int                 m_mouseScrollDelta;
 
-    // Accumulates scrolls of less than m_mouseScrollDelta across multiple
+    // Accumulates scrolls of less than m_?_mouseScrollDelta across multiple
     // scroll events. We dispatch a scroll event whenever the accumulated scroll
-    // becomes larger than m_mouseScrollDelta
-    mutable int         m_accumulatedScroll;
+    // becomes larger than m_?_mouseScrollDelta
+    mutable int         m_x_accumulatedScroll;
+    mutable int         m_y_accumulatedScroll;
 
     Display*            m_display;
     Window                m_root;

@@ -31,3 +31,4 @@ CMakeCache.txt
 .vscode/
 # Transient in-project-directory dependencies
 /deps/
+/out/build/x64-Debug
