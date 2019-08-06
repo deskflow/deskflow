@@ -1870,7 +1870,7 @@ XWindowsScreen::mapButtonFromX(const XButtonEvent* event) const
 	case 8: // mouse button 4
 		return kButtonExtra0;
 	case 9: // mouse button 5
-		return kButtonExtra0;
+		return kButtonExtra1;
 	default: // unknown button
 		return kButtonNone;
 	}
