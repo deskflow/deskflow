@@ -33,6 +33,7 @@
 #include "base/IEventQueue.h"
 
 #include <malloc.h>
+#include <VersionHelpers.h>
 
 // these are only defined when WINVER >= 0x0500
 #if !defined(SPI_GETMOUSESPEED)
@@ -606,16 +607,6 @@ MSWindowsDesks::deskThread(void* vdesk)
 {
     MSG msg;
 
-	BOOL vistaOrGreater = FALSE;
-
-	{
-        OSVERSIONINFOW osvi;
-        osvi.dwOSVersionInfoSize = sizeof(osvi);
-        if (GetVersionExW(&osvi)) {
-            vistaOrGreater = osvi.dwMajorVersion >= 6;
-        }
-    }
-
     // use given desktop for this thread
     Desk* desk              = static_cast<Desk*>(vdesk);
     desk->m_threadID         = GetCurrentThreadId();
@@ -703,7 +694,7 @@ MSWindowsDesks::deskThread(void* vdesk)
             if (msg.lParam != 0) {
                 mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (DWORD)msg.lParam, 0);
             }
-            else if (vistaOrGreater && msg.wParam != 0) {
+            else if (IsWindowsVistaOrGreater() && msg.wParam != 0) {
                 mouse_event(MOUSEEVENTF_HWHEEL, 0, 0, (DWORD)msg.wParam, 0);
             }
             break;
