@@ -19,10 +19,10 @@
 #pragma once
 
 #include "net/IListenSocket.h"
+#include "net/ISocketMultiplexerJob.h"
 #include "arch/IArchNetwork.h"
 
 class Mutex;
-class ISocketMultiplexerJob;
 class IEventQueue;
 class SocketMultiplexer;
 
@@ -48,9 +48,7 @@ protected:
     void                setListeningJob();
 
 public:
-    ISocketMultiplexerJob*
-                        serviceListening(ISocketMultiplexerJob*,
-                            bool, bool, bool);
+    MultiplexerJobStatus serviceListening(ISocketMultiplexerJob*, bool, bool, bool);
 
 protected:
     ArchSocket            m_socket;

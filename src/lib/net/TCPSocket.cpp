@@ -388,40 +388,42 @@ TCPSocket::doWrite()
     return kRetry;
 }
 
-void
-TCPSocket::setJob(ISocketMultiplexerJob* job)
+void TCPSocket::removeJob()
 {
     // multiplexer will delete the old job
-    if (job == NULL) {
-        m_socketMultiplexer->removeSocket(this);
-    }
-    else {
-        m_socketMultiplexer->addSocket(this, job);
+    m_socketMultiplexer->removeSocket(this);
+}
+
+void TCPSocket::setJob(std::unique_ptr<ISocketMultiplexerJob>&& job)
+{
+    if (job.get() == nullptr) {
+        removeJob();
+    } else {
+        m_socketMultiplexer->addSocket(this, std::move(job));
     }
 }
 
-ISocketMultiplexerJob*
-TCPSocket::newJob()
+std::unique_ptr<ISocketMultiplexerJob> TCPSocket::newJob()
 {
     // note -- must have m_mutex locked on entry
 
     if (m_socket == NULL) {
-        return NULL;
+        return {};
     }
     else if (!m_connected) {
         assert(!m_readable);
         if (!(m_readable || m_writable)) {
-            return NULL;
+            return {};
         }
-        return new TSocketMultiplexerMethodJob<TCPSocket>(
+        return std::make_unique<TSocketMultiplexerMethodJob<TCPSocket>>(
                                 this, &TCPSocket::serviceConnecting,
                                 m_socket, m_readable, m_writable);
     }
     else {
         if (!(m_readable || (m_writable && (m_outputBuffer.getSize() > 0)))) {
-            return NULL;
+            return {};
         }
-        return new TSocketMultiplexerMethodJob<TCPSocket>(
+        return std::make_unique<TSocketMultiplexerMethodJob<TCPSocket>>(
                                 this, &TCPSocket::serviceConnected,
                                 m_socket, m_readable,
                                 m_writable && (m_outputBuffer.getSize() > 0));
@@ -488,9 +490,7 @@ TCPSocket::onDisconnected()
     m_connected = false;
 }
 
-ISocketMultiplexerJob*
-TCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
-                bool, bool write, bool error)
+MultiplexerJobStatus TCPSocket::serviceConnecting(ISocketMultiplexerJob* job, bool, bool write, bool error)
 {
     Lock lock(&m_mutex);
 
@@ -519,29 +519,36 @@ TCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
         catch (XArchNetwork& e) {
             sendConnectionFailedEvent(e.what());
             onDisconnected();
-            return newJob();
+            auto new_job = newJob();
+            if (new_job)
+                return {true, std::move(new_job)};
+            else
+                return {false, {}};
         }
     }
 
     if (write) {
         sendEvent(m_events->forIDataSocket().connected());
         onConnected();
-        return newJob();
+        auto new_job = newJob();
+        if (new_job)
+            return {true, std::move(new_job)};
+        else
+            return {false, {}};
     }
 
-    return job;
+    return {true, {}};
 }
 
-ISocketMultiplexerJob*
-TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
-                bool read, bool write, bool error)
+MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
+                                                 bool read, bool write, bool error)
 {
     Lock lock(&m_mutex);
 
     if (error) {
         sendEvent(m_events->forISocket().disconnected());
         onDisconnected();
-        return newJob();
+        return {true, newJob()};
     }
 
     EJobResult writeResult = kRetry;
@@ -594,10 +601,10 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
     }
 
     if (writeResult == kBreak || readResult == kBreak) {
-        return NULL;
+        return {false, {}};
     } else if (writeResult == kNew || readResult == kNew) {
-        return newJob();
+        return {true, newJob()};
     } else {
-        return job;
+        return {true, {}};
     }
 }
