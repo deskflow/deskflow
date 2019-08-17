@@ -443,8 +443,7 @@ ClientApp::mainLoop()
 {
     // create socket multiplexer.  this must happen after daemonization
     // on unix because threads evaporate across a fork().
-    SocketMultiplexer multiplexer;
-    setSocketMultiplexer(&multiplexer);
+    setSocketMultiplexer(std::make_unique<SocketMultiplexer>());
 
     // start client, etc
     appUtil().startNode();

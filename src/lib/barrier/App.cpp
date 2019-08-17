@@ -200,7 +200,7 @@ App::initApp(int argc, const char** argv)
 void
 App::initIpcClient()
 {
-    m_ipcClient = new IpcClient(m_events, m_socketMultiplexer);
+    m_ipcClient = new IpcClient(m_events, m_socketMultiplexer.get());
     m_ipcClient->connect();
 
     m_events->adoptHandler(
