@@ -28,9 +28,8 @@
 #include "common/stdset.h"
 #include "base/NonBlockingStream.h"
 
+#include <mutex>
 #include <queue>
-
-class Mutex;
 
 //! Event queue
 /*!
@@ -114,7 +113,7 @@ private:
     typedef std::map<void*, TypeHandlerTable> HandlerTable;
 
     int                    m_systemTarget;
-    ArchMutex            m_mutex;
+    mutable std::mutex m_mutex;
 
     // registered events
     Event::Type        m_nextType;
