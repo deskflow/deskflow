@@ -39,7 +39,6 @@ enum EIpcLogOutputter {
 
 IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer, EIpcClientType clientType, bool useThread) :
     m_ipcServer(ipcServer),
-    m_bufferMutex(ARCH->newMutex()),
     m_sending(false),
     m_bufferThread(nullptr),
     m_running(false),
@@ -52,8 +51,7 @@ IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer, EIpcClientType clientType
     m_bufferRateTimeLimit(kBufferRateTimeLimit),
     m_bufferWriteCount(0),
     m_bufferRateStart(ARCH->time()),
-    m_clientType(clientType),
-    m_runningMutex(ARCH->newMutex())
+    m_clientType(clientType)
 {
     if (useThread) {
         m_bufferThread = new Thread(new TMethodJob<IpcLogOutputter>(
@@ -64,8 +62,6 @@ IpcLogOutputter::IpcLogOutputter(IpcServer& ipcServer, EIpcClientType clientType
 IpcLogOutputter::~IpcLogOutputter()
 {
     close();
-
-    ARCH->closeMutex(m_bufferMutex);
 
     if (m_bufferThread != nullptr) {
         m_bufferThread->cancel();
@@ -86,7 +82,7 @@ void
 IpcLogOutputter::close()
 {
     if (m_bufferThread != nullptr) {
-        ArchMutexLock lock(m_runningMutex);
+        std::lock_guard<std::mutex> lock(m_runningMutex);
         m_running = false;
         notifyBuffer();
         m_bufferThread->wait(5);
@@ -116,7 +112,7 @@ IpcLogOutputter::write(ELevel, const char* text)
 void
 IpcLogOutputter::appendBuffer(const String& text)
 {
-    ArchMutexLock lock(m_bufferMutex);
+    std::lock_guard<std::mutex> lock(m_bufferMutex);
 
     double elapsed = ARCH->time() - m_bufferRateStart;
     if (elapsed < m_bufferRateTimeLimit) {
@@ -143,7 +139,7 @@ IpcLogOutputter::appendBuffer(const String& text)
 bool
 IpcLogOutputter::isRunning()
 {
-    ArchMutexLock lock(m_runningMutex);
+    std::lock_guard<std::mutex> lock(m_runningMutex);
     return m_running;
 }
 
@@ -180,7 +176,7 @@ IpcLogOutputter::notifyBuffer()
 String
 IpcLogOutputter::getChunk(size_t count)
 {
-    ArchMutexLock lock(m_bufferMutex);
+    std::lock_guard<std::mutex> lock(m_bufferMutex);
 
     if (m_buffer.size() < count) {
         count = m_buffer.size();
