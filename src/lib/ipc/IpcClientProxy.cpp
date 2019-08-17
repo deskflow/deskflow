@@ -34,8 +34,6 @@ IpcClientProxy::IpcClientProxy(barrier::IStream& stream, IEventQueue* events) :
     m_stream(stream),
     m_clientType(kIpcClientUnknown),
     m_disconnecting(false),
-    m_readMutex(ARCH->newMutex()),
-    m_writeMutex(ARCH->newMutex()),
     m_events(events)
 {
     m_events->adoptHandler(
@@ -71,14 +69,11 @@ IpcClientProxy::~IpcClientProxy()
         m_events->forIStream().outputShutdown(), m_stream.getEventTarget());
     
     // don't delete the stream while it's being used.
-    ARCH->lockMutex(m_readMutex);
-    ARCH->lockMutex(m_writeMutex);
-    delete &m_stream;
-    ARCH->unlockMutex(m_readMutex);
-    ARCH->unlockMutex(m_writeMutex);
-
-    ARCH->closeMutex(m_readMutex);
-    ARCH->closeMutex(m_writeMutex);
+    {
+        std::lock_guard<std::mutex> lock_read(m_readMutex);
+        std::lock_guard<std::mutex> lock_write(m_writeMutex);
+        delete &m_stream;
+    }
 }
 
 void
@@ -99,7 +94,7 @@ void
 IpcClientProxy::handleData(const Event&, void*)
 {
     // don't allow the dtor to destroy the stream while we're using it.
-    ArchMutexLock lock(m_readMutex);
+    std::lock_guard<std::mutex> lock(m_readMutex);
 
     LOG((CLOG_DEBUG "start ipc handle data"));
 
@@ -139,7 +134,7 @@ IpcClientProxy::send(const IpcMessage& message)
     // don't allow other threads to write until we've finished the entire
     // message. stream write is locked, but only for that single write.
     // also, don't allow the dtor to destroy the stream while we're using it.
-    ArchMutexLock lock(m_writeMutex);
+    std::lock_guard<std::mutex> lock(m_writeMutex);
 
     LOG((CLOG_DEBUG4 "ipc write: %d", message.type()));
 
