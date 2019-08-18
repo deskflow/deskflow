@@ -1,5 +1,5 @@
 name: barrier-kvm # the Barrier Snappy for Linux / not tested on MAC yet
-base: core18 
+base: core18
 version: master
 version-script: git describe --tags --long | sed "s/^v//"
 adopt-info: appstream-flathub
@@ -43,8 +43,9 @@ parts:
     plugin: cmake
     configflags:
       - "-DCMAKE_INSTALL_PREFIX=/usr"
+      - "-DCMAKE_BUILD_TYPE=Release"
     build-packages:
-      - xorg-dev 
+      - xorg-dev
       - libcurl4-openssl-dev
       - libavahi-compat-libdnssd-dev
       - libssl-dev
