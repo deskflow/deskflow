@@ -11,7 +11,7 @@ function check_dir_exists() {
     fi
 }
 
-if [ ! $BARRIER_BUILD_ENV ]; then
+if [ ! "$BARRIER_BUILD_ENV" ]; then
     check_dir_exists '/Applications/Xcode.app' 'Xcode'
 
     printf "Modifying environment for Barrier build...\n"
