@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set +eu
+
 # Checks if directory exists, otherwise asks to install package.
 function check_dir_exists() {
     local path=$1
