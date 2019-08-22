@@ -1,4 +1,4 @@
-name: barrier-kvm # the Barrier Snappy for Linux / not tested on MAC yet
+name: barrier
 base: core18
 version: master
 version-script: git describe --tags --long | sed "s/^v//"
