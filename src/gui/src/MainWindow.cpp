@@ -975,7 +975,7 @@ void MainWindow::setSynergyState(qSynergyState state)
             setStatus(tr("Synergy is connected (with %1)").arg(m_SecureSocketVersion));
         }
         else {
-            setStatus(tr("Synergy is running (without %1)").arg(m_SecureSocketVersion));
+            setStatus(tr("Synergy is running (without TLS encryption)").arg(m_SecureSocketVersion));
         }
         break;
     }
