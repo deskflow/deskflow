@@ -7,7 +7,7 @@ cmake_minimum_required (VERSION 3.4)
 set (SYNERGY_VERSION_MAJOR 1)
 set (SYNERGY_VERSION_MINOR 10)
 set (SYNERGY_VERSION_PATCH 3)
-set (SYNERGY_VERSION_STAGE "rc1")
+set (SYNERGY_VERSION_STAGE "rc2")
 
 #
 # Version from CI
