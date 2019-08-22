@@ -24,7 +24,9 @@
 #include <cstring>
 #include <cstdlib>
 
-static ArchMutex              s_mutex = NULL;
+#include <mutex>
+
+std::mutex s_mutex;
 
 //
 // use C library non-reentrant multibyte conversion with mutex
@@ -32,28 +34,20 @@ static ArchMutex              s_mutex = NULL;
 
 IArchString::~IArchString()
 {
-    if (s_mutex != NULL) {
-        ARCH->closeMutex(s_mutex);
-        s_mutex = NULL;
-    }
 }
 
 int
 IArchString::convStringWCToMB(char* dst,
                 const wchar_t* src, UInt32 n, bool* errors)
 {
+    std::lock_guard<std::mutex> lock(s_mutex);
+
     ptrdiff_t len = 0;
 
     bool dummyErrors;
     if (errors == NULL) {
         errors = &dummyErrors;
     }
-
-    if (s_mutex == NULL) {
-        s_mutex = ARCH->newMutex();
-    }
-
-    ARCH->lockMutex(s_mutex);
 
     if (dst == NULL) {
         char dummy[MB_LEN_MAX];
@@ -89,7 +83,6 @@ IArchString::convStringWCToMB(char* dst,
         }
         len = dst - dst0;
     }
-    ARCH->unlockMutex(s_mutex);
 
     return (int)len;
 }
@@ -98,6 +91,8 @@ int
 IArchString::convStringMBToWC(wchar_t* dst,
                 const char* src, UInt32 n_param, bool* errors)
 {
+    std::lock_guard<std::mutex> lock(s_mutex);
+
     ptrdiff_t n = (ptrdiff_t)n_param; // fix compiler warning
     ptrdiff_t len = 0;
     wchar_t dummy;
@@ -106,12 +101,6 @@ IArchString::convStringMBToWC(wchar_t* dst,
     if (errors == NULL) {
         errors = &dummyErrors;
     }
-
-    if (s_mutex == NULL) {
-        s_mutex = ARCH->newMutex();
-    }
-
-    ARCH->lockMutex(s_mutex);
 
     if (dst == NULL) {
         for (const char* scan = src; n > 0; ) {
@@ -184,7 +173,6 @@ IArchString::convStringMBToWC(wchar_t* dst,
         }
         len = dst - dst0;
     }
-    ARCH->unlockMutex(s_mutex);
 
     return (int)len;
 }

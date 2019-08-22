@@ -24,6 +24,7 @@
 #include "common/stdlist.h"
 
 #include <stdarg.h>
+#include <mutex>
 
 #define CLOG (Log::getInstance())
 #define BYE "\nTry `%s --help' for more information."
@@ -132,7 +133,7 @@ private:
 
     static Log*        s_log;
 
-    ArchMutex            m_mutex;
+    mutable std::mutex m_mutex;
     OutputterList        m_outputters;
     OutputterList        m_alwaysOutputters;
     int                    m_maxNewlineLength;

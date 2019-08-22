@@ -24,6 +24,7 @@
 #include "ipc/Ipc.h"
 
 #include <deque>
+#include <mutex>
 
 class IpcServer;
 class Event;
@@ -100,7 +101,7 @@ private:
 
     IpcServer&            m_ipcServer;
     Buffer                m_buffer;
-    ArchMutex            m_bufferMutex;
+    std::mutex m_bufferMutex;
     bool                m_sending;
     Thread*                m_bufferThread;
     bool                m_running;
@@ -115,5 +116,5 @@ private:
     UInt16                m_bufferWriteCount;
     double                m_bufferRateStart;
     EIpcClientType        m_clientType;
-    ArchMutex            m_runningMutex;
+    std::mutex m_runningMutex;
 };

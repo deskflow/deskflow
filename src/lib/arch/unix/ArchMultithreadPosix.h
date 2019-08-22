@@ -22,6 +22,7 @@
 #include "common/stdlist.h"
 
 #include <pthread.h>
+#include <mutex>
 
 #define ARCH_MULTITHREAD ArchMultithreadPosix
 
@@ -104,7 +105,7 @@ private:
 
     bool                m_newThreadCalled;
 
-    ArchMutex            m_threadMutex;
+    std::mutex m_threadMutex;
     ArchThread            m_mainThread;
     ThreadList            m_threadList;
     ThreadID            m_nextID;

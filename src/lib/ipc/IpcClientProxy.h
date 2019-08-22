@@ -23,6 +23,8 @@
 #include "base/EventTypes.h"
 #include "base/Event.h"
 
+#include <mutex>
+
 namespace barrier { class IStream; }
 class IpcMessage;
 class IpcCommandMessage;
@@ -49,7 +51,7 @@ private:
     barrier::IStream&    m_stream;
     EIpcClientType        m_clientType;
     bool                m_disconnecting;
-    ArchMutex            m_readMutex;
-    ArchMutex            m_writeMutex;
+    std::mutex m_readMutex;
+    std::mutex m_writeMutex;
     IEventQueue*        m_events;
 };
