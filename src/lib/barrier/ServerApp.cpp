@@ -713,8 +713,7 @@ ServerApp::mainLoop()
 {
     // create socket multiplexer.  this must happen after daemonization
     // on unix because threads evaporate across a fork().
-    SocketMultiplexer multiplexer;
-    setSocketMultiplexer(&multiplexer);
+    setSocketMultiplexer(std::make_unique<SocketMultiplexer>());
 
     // if configuration has no screens then add this system
     // as the default

@@ -23,7 +23,9 @@
 #include "base/String.h"
 #include "base/Log.h"
 #include "base/EventQueue.h"
+#include "net/SocketMultiplexer.h"
 #include "common/common.h"
+#include <memory>
 
 #if SYSAPI_WIN32
 #include "barrier/win32/AppUtilWindows.h"
@@ -95,8 +97,8 @@ public:
     
     virtual IEventQueue* getEvents() const { return m_events; }
 
-    void                setSocketMultiplexer(SocketMultiplexer* sm) { m_socketMultiplexer = sm; }
-    SocketMultiplexer*    getSocketMultiplexer() const { return m_socketMultiplexer; }
+    void setSocketMultiplexer(std::unique_ptr<SocketMultiplexer>&& sm) { m_socketMultiplexer = std::move(sm); }
+    SocketMultiplexer*    getSocketMultiplexer() const { return m_socketMultiplexer.get(); }
 
     void                setEvents(EventQueue& events) { m_events = &events; }
 
@@ -119,7 +121,7 @@ private:
     CreateTaskBarReceiverFunc m_createTaskBarReceiver;
     ARCH_APP_UTIL m_appUtil;
     IpcClient*            m_ipcClient;
-    SocketMultiplexer*    m_socketMultiplexer;
+    std::unique_ptr<SocketMultiplexer> m_socketMultiplexer;
 };
 
 class MinimalApp : public App {

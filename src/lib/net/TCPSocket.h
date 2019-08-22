@@ -19,14 +19,15 @@
 #pragma once
 
 #include "net/IDataSocket.h"
+#include "net/ISocketMultiplexerJob.h"
 #include "io/StreamBuffer.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 #include "arch/IArchNetwork.h"
+#include <memory>
 
 class Mutex;
 class Thread;
-class ISocketMultiplexerJob;
 class IEventQueue;
 class SocketMultiplexer;
 
@@ -59,8 +60,7 @@ public:
     virtual void        connect(const NetworkAddress&);
 
     
-    virtual ISocketMultiplexerJob*
-                        newJob();
+    virtual std::unique_ptr<ISocketMultiplexerJob> newJob();
 
 protected:
     enum EJobResult {
@@ -74,7 +74,8 @@ protected:
     virtual EJobResult    doRead();
     virtual EJobResult    doWrite();
 
-    void                setJob(ISocketMultiplexerJob*);
+    void removeJob();
+    void setJob(std::unique_ptr<ISocketMultiplexerJob>&& job);
     
     bool                isReadable() { return m_readable; }
     bool                isWritable() { return m_writable; }
@@ -93,12 +94,8 @@ private:
     void                onOutputShutdown();
     void                onDisconnected();
 
-    ISocketMultiplexerJob*
-                        serviceConnecting(ISocketMultiplexerJob*,
-                            bool, bool, bool);
-    ISocketMultiplexerJob*
-                        serviceConnected(ISocketMultiplexerJob*,
-                            bool, bool, bool);
+    MultiplexerJobStatus serviceConnecting(ISocketMultiplexerJob*, bool, bool, bool);
+    MultiplexerJobStatus serviceConnected(ISocketMultiplexerJob*, bool, bool, bool);
 
 protected:
     bool                m_readable;

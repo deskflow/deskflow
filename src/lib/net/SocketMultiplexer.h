@@ -21,6 +21,7 @@
 #include "arch/IArchNetwork.h"
 #include "common/stdlist.h"
 #include "common/stdmap.h"
+#include <memory>
 
 template <class T>
 class CondVar;
@@ -41,7 +42,7 @@ public:
     //! @name manipulators
     //@{
 
-    void                addSocket(ISocket*, ISocketMultiplexerJob*);
+    void                addSocket(ISocket*, std::unique_ptr<ISocketMultiplexerJob>&& job);
 
     void                removeSocket(ISocket*);
 
@@ -58,7 +59,7 @@ public:
 private:
     // list of jobs.  we use a list so we can safely iterate over it
     // while other threads modify it.
-    typedef std::list<ISocketMultiplexerJob*> SocketJobs;
+    using SocketJobs = std::list<std::unique_ptr<ISocketMultiplexerJob>>;
     typedef SocketJobs::iterator JobCursor;
     typedef std::map<ISocket*, JobCursor> SocketJobMap;
 
@@ -106,6 +107,4 @@ private:
 
     SocketJobs            m_socketJobs;
     SocketJobMap        m_socketJobMap;
-    ISocketMultiplexerJob*
-                        m_cursorMark;
 };

@@ -69,10 +69,11 @@ TCPListenSocket::bind(const NetworkAddress& addr)
         ARCH->setReuseAddrOnSocket(m_socket, true);
         ARCH->bindSocket(m_socket, addr.getAddress());
         ARCH->listenOnSocket(m_socket);
-        m_socketMultiplexer->addSocket(this,
-                            new TSocketMultiplexerMethodJob<TCPListenSocket>(
-                                this, &TCPListenSocket::serviceListening,
-                                m_socket, true, false));
+
+        auto new_job = std::make_unique<TSocketMultiplexerMethodJob<TCPListenSocket>>(
+                this, &TCPListenSocket::serviceListening, m_socket, true, false);
+
+        m_socketMultiplexer->addSocket(this, std::move(new_job));
     }
     catch (XArchNetworkAddressInUse& e) {
         throw XSocketAddressInUse(e.what());
@@ -135,24 +136,22 @@ TCPListenSocket::accept()
 void
 TCPListenSocket::setListeningJob()
 {
-    m_socketMultiplexer->addSocket(this,
-                            new TSocketMultiplexerMethodJob<TCPListenSocket>(
-                                this, &TCPListenSocket::serviceListening,
-                                m_socket, true, false));
+    auto new_job = std::make_unique<TSocketMultiplexerMethodJob<TCPListenSocket>>(
+        this, &TCPListenSocket::serviceListening, m_socket, true, false);
+    m_socketMultiplexer->addSocket(this, std::move(new_job));
 }
 
-ISocketMultiplexerJob*
-TCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
-                            bool read, bool, bool error)
+MultiplexerJobStatus TCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
+                                                       bool read, bool, bool error)
 {
     if (error) {
         close();
-        return NULL;
+        return {false, {}};
     }
     if (read) {
         m_events->addEvent(Event(m_events->forIListenSocket().connecting(), this, NULL));
         // stop polling on this socket until the client accepts
-        return NULL;
+        return {false, {}};
     }
-    return job;
+    return {true, {}};
 }
