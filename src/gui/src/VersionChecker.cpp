@@ -24,8 +24,11 @@
 #include <QProcess>
 #include <QLocale>
 
-#define VERSION_REGEX "(\\d+\\.\\d+\\.\\d+)"
-#define VERSION_URL "http://symless.com/version/"
+#define VERSION_REGEX "(\\d+\\.\\d+\\.\\d+-[a-z1-9]*)"
+#define VERSION_REGEX_SECTIONED "(\\d+)\\.(\\d+)\\.(\\d+)-([a-z1-9]*)"
+#define VERSION_SEGMENT_COUNT 4
+#define VERSION_URL "http://version.symless.com/synergy"
+
 
 VersionChecker::VersionChecker()
 {
@@ -58,31 +61,64 @@ void VersionChecker::replyFinished(QNetworkReply* reply)
     }
 }
 
+int VersionChecker::getStageVersion(QString stage)
+{
+    const int valueStable   = INT_MAX; //Stable will always be considered the highest value
+    const int valueRC       = 2;
+    const int valueSnapshot = 1;
+    const int valueOther    = 0;
+
+    //Stable should always be considered highest, followed by rc[0-9] then snapshots with everything else at the end
+    //HACK There is probably a much better way of doing this
+    if (stage == "stable")
+    {
+        return valueStable;
+    }
+    else if (stage.startsWith("rc") || stage.startsWith("RC"))
+    {
+        QRegExp rx("\\d*", Qt::CaseInsensitive);
+        if (rx.indexIn(stage) != -1)
+        {
+            //Return the RC value plus the RC version as in int 
+            return valueRC + rx.cap(1).toInt();
+        }
+    }
+    else if (stage == "snapshot")
+    {
+        return valueSnapshot;
+    }
+
+    return valueOther;
+}
+
 int VersionChecker::compareVersions(const QString& left, const QString& right)
 {
     if (left.compare(right) == 0)
         return 0; // versions are same.
 
-    QStringList leftSplit = left.split(QRegExp("\\."));
-    if (leftSplit.size() != 3)
+    QStringList leftSplit = left.split(QRegExp("[\\.-]"));
+    if (leftSplit.size() != VERSION_SEGMENT_COUNT)
         return 1; // assume right wins.
 
-    QStringList rightSplit = right.split(QRegExp("\\."));
-    if (rightSplit.size() != 3)
+    QStringList rightSplit = right.split(QRegExp("[\\.-]"));
+    if (rightSplit.size() != VERSION_SEGMENT_COUNT)
         return -1; // assume left wins.
 
-    int leftMajor = leftSplit.at(0).toInt();
-    int leftMinor = leftSplit.at(1).toInt();
-    int leftRev = leftSplit.at(2).toInt();
+    const int leftMajor = leftSplit.at(0).toInt();
+    const int leftMinor = leftSplit.at(1).toInt();
+    const int leftRev   = leftSplit.at(2).toInt();
+    const int leftStage = getStageVersion(leftSplit.at(3));
 
-    int rightMajor = rightSplit.at(0).toInt();
-    int rightMinor = rightSplit.at(1).toInt();
-    int rightRev = rightSplit.at(2).toInt();
+    const int rightMajor = rightSplit.at(0).toInt();
+    const int rightMinor = rightSplit.at(1).toInt();
+    const int rightRev   = rightSplit.at(2).toInt();
+    const int rightStage = getStageVersion(rightSplit.at(3));
 
-    bool rightWins =
-        (rightMajor > leftMajor) ||
+    const bool rightWins =
+        ( rightMajor >  leftMajor) ||
         ((rightMajor >= leftMajor) && (rightMinor > leftMinor)) ||
-        ((rightMajor >= leftMajor) && (rightMinor >= leftMinor) && (rightRev > leftRev));
+        ((rightMajor >= leftMajor) && (rightMinor >= leftMinor) && (rightRev > leftRev)) ||
+        ((rightMajor >= leftMajor) && (rightMinor >= leftMinor) && (rightRev >= leftRev) && (rightStage > leftStage));
 
     return rightWins ? 1 : -1;
 }
@@ -95,7 +131,7 @@ QString VersionChecker::getVersion()
     process.setReadChannel(QProcess::StandardOutput);
     if (process.waitForStarted() && process.waitForFinished())
     {
-        QRegExp rx(VERSION_REGEX);
+        QRegExp rx(VERSION_REGEX,Qt::CaseInsensitive);
         QString text = process.readLine();
         if (rx.indexIn(text) != -1)
         {

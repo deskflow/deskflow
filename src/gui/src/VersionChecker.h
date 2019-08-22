@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012-2019 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
  *
  * This package is free software; you can redistribute it and/or
@@ -41,4 +41,11 @@ signals:
 private:
     QNetworkAccessManager* m_manager;
     QString m_app;
+
+    /**
+     * \brief Converts a string stage to a integer value
+     * \param stage The string containing the stage version
+     * \return An integer representation of the stage, the higher the number the more recent the version
+     */
+    int getStageVersion(QString stage);
 };
