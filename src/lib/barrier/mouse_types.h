@@ -32,10 +32,13 @@ static const ButtonID    kButtonNone   = 0;
 static const ButtonID    kButtonLeft   = 1;
 static const ButtonID    kButtonMiddle = 2;
 static const ButtonID    kButtonRight  = 3;
+// mouse button 4
 static const ButtonID    kButtonExtra0 = 4;
+// mouse button 5
+static const ButtonID    kButtonExtra1 = 5;
 
 static const ButtonID   kMacButtonRight = 2;
 static const ButtonID   kMacButtonMiddle = 3;
 //@}
 
-static const UInt8      NumButtonIDs  = 5;
+static const UInt8      NumButtonIDs  = 6;

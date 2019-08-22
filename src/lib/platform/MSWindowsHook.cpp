@@ -25,6 +25,10 @@
 #include "common/DataDirectories.h"
 #include "base/Log.h"
 
+#ifndef WM_MOUSEHWHEEL
+#define WM_MOUSEHWHEEL 0x020E
+#endif
+
  //
  // debugging compile flag.  when not zero the server doesn't grab
  // the keyboard when the mouse leaves the server screen.  this
@@ -470,6 +474,13 @@ mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
         if (g_mode == kHOOK_RELAY_EVENTS) {
             // relay event
             PostThreadMessage(g_threadID, BARRIER_MSG_MOUSE_WHEEL, data, 0);
+        }
+        return (g_mode == kHOOK_RELAY_EVENTS);
+
+    case WM_MOUSEHWHEEL:
+        if (g_mode == kHOOK_RELAY_EVENTS) {
+            // relay event
+            PostThreadMessage(g_threadID, BARRIER_MSG_MOUSE_WHEEL, 0, data);
         }
         return (g_mode == kHOOK_RELAY_EVENTS);
 

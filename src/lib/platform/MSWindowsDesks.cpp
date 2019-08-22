@@ -33,6 +33,7 @@
 #include "base/IEventQueue.h"
 
 #include <malloc.h>
+#include <VersionHelpers.h>
 
 // these are only defined when WINVER >= 0x0500
 #if !defined(SPI_GETMOUSESPEED)
@@ -43,6 +44,10 @@
 #endif
 #if !defined(SPI_GETSCREENSAVERRUNNING)
 #define SPI_GETSCREENSAVERRUNNING 114
+#endif
+
+#if !defined(MOUSEEVENTF_HWHEEL)
+#define MOUSEEVENTF_HWHEEL 0x1000
 #endif
 
 // X button stuff
@@ -296,12 +301,12 @@ MSWindowsDesks::fakeMouseButton(ButtonID button, bool press)
         flags = press ? MOUSEEVENTF_RIGHTDOWN : MOUSEEVENTF_RIGHTUP;
         break;
 
-    case kButtonExtra0 + 0:
+    case kButtonExtra0:
         data = XBUTTON1;
         flags = press ? MOUSEEVENTF_XDOWN : MOUSEEVENTF_XUP;
         break;
 
-    case kButtonExtra0 + 1:
+    case kButtonExtra1:
         data = XBUTTON2;
         flags = press ? MOUSEEVENTF_XDOWN : MOUSEEVENTF_XUP;
         break;
@@ -686,9 +691,11 @@ MSWindowsDesks::deskThread(void* vdesk)
             break;
 
         case BARRIER_MSG_FAKE_WHEEL:
-            // XXX -- add support for x-axis scrolling
             if (msg.lParam != 0) {
                 mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (DWORD)msg.lParam, 0);
+            }
+            else if (IsWindowsVistaOrGreater() && msg.wParam != 0) {
+                mouse_event(MOUSEEVENTF_HWHEEL, 0, 0, (DWORD)msg.wParam, 0);
             }
             break;
 

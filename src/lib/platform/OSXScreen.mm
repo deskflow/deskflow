@@ -422,6 +422,7 @@ OSXScreen::constructMouseButtonEventMap()
 		{kCGEventRightMouseUp, kCGEventRightMouseDragged, kCGEventRightMouseDown},
 		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown},
 		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown},
+		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown},
 		{kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown}
 	};
 
