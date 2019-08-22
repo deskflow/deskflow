@@ -1034,8 +1034,10 @@ QString MainWindow::getIPAddresses()
                 hinted = true;
                 format = "<b>%1</b>, ";
             }
-
-            result += format.arg(address);
+            //Prevent self assigned IPs being displayed
+            if (!address.startsWith("169.254")) {
+                result += format.arg(address);
+            }
         }
     }
 
