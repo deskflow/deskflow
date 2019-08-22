@@ -1,7 +1,9 @@
-v1.10.3-stable
+v1.10.3-rc2
 ==============
 
 Bug fixes:
+- #6546 Filtered out self assigned ip addresses from being displayed
+- #6541 Fixed connected info text to include without TLS encryption
 - #6527 Config app renders incorrectly on high DPI screens
 - #6526 New TLS/SSL socket handled when no socket
 - #6525 Race condition on disconnecting TLS/SSL socket
@@ -11,6 +13,7 @@ Bug fixes:
 
 
 Enhancements:
+- #6535 Version URL and added stage check to version check
 - #6529 Cleaner redistributable use in Windows installer
 - #6528 More verbose message for Linux display errors
 - #6524 Minimize config app to system tray
