@@ -84,16 +84,8 @@ SecureSocket::~SecureSocket()
     // could cause events to get called on a dead object. TCPSocket
     // will do this, too, but the double-call is harmless
     setJob(NULL);
-    if (m_ssl->m_ssl != NULL) {
-        SSL_shutdown(m_ssl->m_ssl);
+    freeSSLResources();
 
-        SSL_free(m_ssl->m_ssl);
-        m_ssl->m_ssl = NULL;
-    }
-    if (m_ssl->m_context != NULL) {
-        SSL_CTX_free(m_ssl->m_context);
-        m_ssl->m_context = NULL;
-    }
     // removing sleep() because I have no idea why you would want to do it
     // ... smells of trying to cover up a bug you don't understand
     //ARCH->sleep(1);
@@ -104,10 +96,22 @@ void
 SecureSocket::close()
 {
     isFatal(true);
-
-    SSL_shutdown(m_ssl->m_ssl);
-
+    freeSSLResources();
     TCPSocket::close();
+}
+
+void SecureSocket::freeSSLResources()
+{
+    if (m_ssl->m_ssl != NULL) {
+        SSL_shutdown(m_ssl->m_ssl);
+        SSL_free(m_ssl->m_ssl);
+        m_ssl->m_ssl = NULL;
+    }
+
+    if (m_ssl->m_context != NULL) {
+        SSL_CTX_free(m_ssl->m_context);
+        m_ssl->m_context = NULL;
+    }
 }
 
 void

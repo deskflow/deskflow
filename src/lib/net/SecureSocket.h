@@ -88,6 +88,8 @@ private:
     
     void                handleTCPConnected(const Event& event, void*);
 
+    void freeSSLResources();
+
 private:
     Ssl*                m_ssl;
     bool                m_secureReady;
