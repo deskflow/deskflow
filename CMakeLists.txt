@@ -53,7 +53,7 @@ include_directories (BEFORE SYSTEM ./ext/gtest/include)
 
 if (UNIX)
     if (NOT APPLE)
-        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+        set (CMAKE_POSITION_INDEPENDENT_CODE TRUE)
     endif()
 
     # For config.h, detect the libraries, functions, etc.
