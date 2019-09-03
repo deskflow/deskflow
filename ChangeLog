@@ -1,4 +1,4 @@
-v1.10.3-rc2
+v1.10.3-stable
 ==============
 
 Bug fixes:
@@ -10,7 +10,6 @@ Bug fixes:
 - #6521 Access violation in TLS/SSL socket close
 - #6409 Server freezes when clipboard contains an image
 - #3705 Hotkeys not working on Mac server
-
 
 Enhancements:
 - #6535 Version URL and added stage check to version check
