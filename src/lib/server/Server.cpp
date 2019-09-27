@@ -1562,16 +1562,10 @@ Server::onClipboardChanged(BaseClientProxy* sender,
 	// get data
 	sender->getClipboard(id, &clipboard.m_clipboard);
 
-	// ignore if data hasn't changed
 	String data = clipboard.m_clipboard.marshall();
 	if (data.size() > m_maximumClipboardSize * 1024) {
 		LOG((CLOG_NOTE "not updating clipboard because it's over the size limit (%i KB) configured by the server",
 			m_maximumClipboardSize));
-		return;
-	}
-
-	if (data == clipboard.m_clipboardData) {
-		LOG((CLOG_DEBUG "ignored screen \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id));
 		return;
 	}
 

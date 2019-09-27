@@ -210,9 +210,7 @@ private:
     bool                m_suspended;
     bool                m_connectOnResume;
     bool                m_ownClipboard[kClipboardEnd];
-    bool                m_sentClipboard[kClipboardEnd];
     IClipboard::Time    m_timeClipboard[kClipboardEnd];
-    String              m_dataClipboard[kClipboardEnd];
     IEventQueue*        m_events;
     std::size_t         m_expectedFileSize;
     String              m_receivedFileData;
