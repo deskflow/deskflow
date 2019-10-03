@@ -501,12 +501,19 @@ Server::switchScreen(BaseClientProxy* dst,
 
 		// update the primary client's clipboards if we're leaving the
 		// primary screen.
-		if (m_active == m_primaryClient && m_enableClipboard) {
+		if (m_enableClipboard) {
 			for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 				ClipboardInfo& clipboard = m_clipboards[id];
-				if (clipboard.m_clipboardOwner == getName(m_primaryClient)) {
-					onClipboardChanged(m_primaryClient,
-						id, clipboard.m_clipboardSeqNum);
+				if (m_active == m_primaryClient && clipboard.m_clipboardOwner == getName(m_primaryClient)) {
+					m_active->getClipboard(id, &clipboard.m_clipboard);
+				}
+				String data = clipboard.m_clipboard.marshall();
+				if (data != clipboard.m_clipboardData) {
+					for (ClientList::const_iterator index = m_clients.begin(); index != m_clients.end(); ++index) {
+						BaseClientProxy* client = index->second;
+						client->setClipboardDirty(id, client != m_active);
+					}
+					clipboard.m_clipboardData = data;
 				}
 			}
 		}
