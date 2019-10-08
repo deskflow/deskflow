@@ -2,6 +2,10 @@
 
 This is the open source core component of Synergy, a keyboard and mouse sharing tool.
 
+**[We're hiring!](https://careers.symless.com/)** *Join the Synergy Team (Node.js, React, C++)*
+
+**News:** [We Are Putting UX First](https://symless.com/blog/putting-ux-first) (Symless Blog)
+
 ## Recommended
 
 Things most people will need.
@@ -11,6 +15,7 @@ Things most people will need.
 * [Help Guides](https://symless.com/synergy-help) - Self-help guides and information for when you don't want to talk to people.
 * [Join us on Slack](http://bitly.com/synergy-slack) - Talk to other Synergy users in real time using instant messaging.
 * [Symless Forums](https://symless.com/forums/forum/11-synergy/) - Discuss Synergy issues on the Symless Forums.
+* [Symless Blog](https://symless.com/blog/) - Find out what's happening with Synergy development.
 
 ## Advanced Users
 
