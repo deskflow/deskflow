@@ -1,4 +1,4 @@
-barrier (2.3.2) UNRELEASED; urgency=medium
+barrier (2.3.2) disco; urgency=medium
 
   [ walker0643 ]
   * remove (wrong) version line from .desktop file
@@ -251,7 +251,7 @@ barrier (2.3.2) UNRELEASED; urgency=medium
   [ Adrian Lucrèce Céleste ]
   * [Version] bump to 2.3.2, stable
 
- -- Pablo Catalina <pablo.catalina@gmail.com>  Wed, 09 Oct 2019 12:29:39 +0200
+ -- Pablo Catalina <pablo.catalina@gmail.com>  Wed, 09 Oct 2019 12:52:10 +0200
 
 barrier (2.1-1) unstable; urgency=low
 
