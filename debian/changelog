@@ -1,3 +1,258 @@
+barrier (2.3.2) disco; urgency=medium
+
+  [ walker0643 ]
+  * remove (wrong) version line from .desktop file
+
+  [ Povilas Kanapickas ]
+  * Improve precision of grabbed scroll events on OSX server
+  * Accumulate scrolls less than supported scroll on XWindows
+  * Add fake changelog so that debian package may be built
+
+  [ walker0643 ]
+  * non-GUI build should not require bonjour headers
+  * add patch from Gentoo packager to fix cmake issue (reported on Arch, too). ref #49
+  * fix email in debian changelog
+  * screen settings dialog handles internationalized default name better (ref #71)
+  * rephrase language in README.md
+
+  [ sidneys ]
+  * fix(macos-build): use standard methods for detecting default XCode installation and default macOS platform SDK
+
+  [ Povilas Kanapickas ]
+  * OSX: Add support for building on macports
+  * OSX: Prefer Macports over Homebrew if available
+  * travis: Rewrite the CI config to use platform matrix
+  * travis: Add macports-based OSX script
+  * travis: Add homebrew-based OSX script
+
+  [ Adrian Lucrèce Céleste ]
+  * [Travis] use container builds for linux (#85)
+  * Merge pkgconfig branch into master (#86)
+
+  [ walker0643 ]
+  * fix formatting in last merge
+
+  [ coypu ]
+  * Also add curl include directories.
+  * have all other OSes handled in the else case.
+  * Use ${CMAKE_DL_LIBS} rather than listing OSes.
+
+  [ walker0643 ]
+  * bump version to 2.2
+  * bump qt/vs versions on windows
+
+  [ Pawel Bogut ]
+  * Fix config file name in server help message
+
+  [ Josh Stone ]
+  * Fix data indexes in Unicode::fromUTF8
+
+  [ walker0643 ]
+  * bump ssl cert key size up to 2048 from 1024. fixes #126
+  * enable high-dps awareness for barriers/barrierc. fixes screen geometry calculations for screens with >100% scaling
+  * rename field Interface to Address in GUI settings dialog
+  * add firewall rule for default port on installation (windows)
+  * Update README.md
+
+  [ Epakai ]
+  * Update openssl key size in barrier.conf (#150)
+
+  [ Adrian Lucrèce Céleste ]
+  * add pre-build script for building barrier on windows from SSH (#152)
+
+  [ Christopher N. Hesse ]
+  * gui: Fix auto hide behavior (#140)
+
+  [ Povilas Kanapickas ]
+  * Build full installer via clean_build.sh (#157)
+  * OSX: Explain why the app needs to go into /Applications (#158)
+
+  [ Monika Kairaityte ]
+  * x11: Wrap platform functions in an interface that can be mocked later
+  * x11: Wrap platform functions in XWindowsScreenSaver class
+  * x11: Wrap platform functions in XWindowsClipboard class
+  * x11: Wrap platform functions in XWindowsKeyState class
+  * x11: Wrap platform functions in XWindowsEventQueueBuffer class
+  * Fix tests wrapper
+
+  [ Chris Simons ]
+  * Added preserveFocus fix (#178)
+
+  [ Dayne Broderson ]
+  * add debug notes to help identify where trusted fingerprints file is
+  * fix spelling of matches
+  * fixing style to be consistent per @p12tic
+
+  [ Robert Sandell ]
+  * Spelling correction (#209)
+
+  [ Moron ]
+  * Fix #204 modifier keys not working in remote desktop on MacOS
+
+  [ jwestfall ]
+  * Properly deal with a socket that is readable and writable at the same time
+
+  [ Miroslav Lences ]
+  * Fix macos build issues
+
+  [ Jim Westfall ]
+  * Fix OSX builds for macports
+
+  [ Girts Folkmanis ]
+  * add checks to osx_environment.sh
+
+  [ Thomas A. F. Thorne ]
+  * Reduce Sysmtem Tray Retry Attempts
+  * Do Not Warn About Missing System Tray
+
+  [ jwestfall ]
+  * OSX: let build_installer.sh create a working Barrier.app on debug builds
+
+  [ Szymon Szeląg ]
+  * Screen change script argument
+  * Use std::system
+  * Start script via execl
+  * Fire screen switch event on client disconnect
+
+  [ Povilas Kanapickas ]
+  * Fix memory leak during socket shutdown
+
+  [ PayouZon MagIT ]
+  * Update snapcraft.yaml
+  * Update snapcraft.yaml
+  * Barrier Snappy
+
+  [ Wendall Cada ]
+  * Working spec file for Fedora
+
+  [ noisyshape ]
+  * Update Windows build script for VS2019
+  * Add support for multiple VS versions
+  * Normalize cmake generator strings
+  * Correct path and instructions
+  * Create version number for wix
+  * Remove hardcoded paths
+  * Fix XML
+
+  [ Mike Salvatore ]
+  * Fix #278 "Enable Clipboard Sharing" always reset after restart
+  * Rename the "Apply" button to "Reload"
+
+  [ noisyshape ]
+  * Replace Wix with Inno Setup
+
+  [ Matthijs Wensveen ]
+  * Add dpiAwareness: PerMonitor to manifest to better handle multiple monitors with different DPI settings.
+
+  [ Nelson Chen ]
+  * Initial Azure Pipelines
+
+  [ Adrian Lucrèce Céleste ]
+  * :pencil: add release link and contact info
+
+  [ pack ]
+  * typo fix (#311)
+
+  [ Nelson Chen ]
+  * Update Apt on Linux before installing dependencies on Azure Pipelines (#321)
+  * Prefix Windows artifact names with 'Windows' on Azure Pipelines (#319)
+  * Install Pinned Qt and OpenSSL on Mac
+  * Build Release version of Barrier on Mac
+  * Publish Mac Artifacts
+  * Upgrade QLI Installer and use Cal's Qt Mirror
+
+  [ Adrian Lucrèce Céleste ]
+  * fix #163
+  * Add a quick Q/A about what OSes are supported
+  * Add Q/A about 32-bit windows
+
+  [ Chun Wang ]
+  * Fix #232 MACOS serious config file errors - hotkeys totally broken
+
+  [ Adrian Lucrèce Céleste ]
+  * [README] Add FaQ to the bottom
+  * [Release] Bump up to a new release version
+  * [Cmake] bump version to 2.3.0
+
+  [ Nelson Chen ]
+  * Ensure Inno Setup 5 is installed in Azure Pipelines
+
+  [ Patrizio Tufarolo ]
+  * Fixed quote key on US International keyboard
+
+  [ Maximiliano Bertacchini ]
+  * Use version from git tag.
+  * Fix interface plugs.
+  * Add commands: `barrier`, `barrierc`, `barriers`.
+  * Drop custom qt5, use distro provided one.
+  * Update build-packages and stage-packages.
+  * Add desktop entry with an app icon.
+  * Set snap icon and license.
+  * Use appstream metadata from flathub.
+  * Fix snap version-control script for local lxd builds.
+
+  [ Dom Rodriguez ]
+  * Feature: CMake now generates compile_commands.json
+
+  [ Thomas Thorne ]
+  * Reference Only Microsoft Azue Pipelines In Readme.md
+  * Delete .travis.yml As We Switch To Azure Pipelines
+
+  [ Evan Maddock ]
+  * Reimplement patch for horizontal scrolling and extra mouse buttons
+  * Used the wrong key button by accident
+  * Use Windows helper function to check for Windows version
+
+  [ walker0643 ]
+  * Drop Travis CI
+
+  [ Adrian Lucrèce Céleste ]
+  * [Version] bump to 2.3.1 for new release
+
+  [ Povilas Kanapickas ]
+  * Make ownership of SocketMultiplexer explicit
+  * Make ownership of SocketMultiplexerJob explicit
+  * Use std::mutex instead of ArchMutex in ArchMultithreadPosix
+  * Use std::mutex instead of ArchMutex in EventQueue
+  * Use std::mutex instead of ArchMutex in Log
+  * Use std::mutex instead of ArchMutex in IpcServer
+  * Use std::mutex instead of ArchMutex in IpcClientProxy
+  * Use std::mutex instead of ArchMutex in IpcLogOutputter
+  * Fix race condition in IArchString
+
+  [ Adrian Lucrèce Céleste ]
+  * [Build[ update pre-build script to call VS2019
+
+  [ Dom Rodriguez ]
+  * Snap: Change CMake builds to be of Release type
+  * Fix: CMake now checks for required Qt5 libraries
+  * Tidy up and fix lint errors in build scripts
+  * Interim fix for failed macOS builds
+
+  [ Povilas Kanapickas ]
+  * Fix retry timer not being unregistered properly
+
+  [ Maximiliano Bertacchini ]
+  * Rename the snap as `barrier`.
+
+  [ Adrian Lucrèce Céleste ]
+  * Revert "Tidy up and fix lint errors in build scripts"
+  * [CMake] properly declare FPIC
+  * [Azure Pipelines] use QT 5.13.0 (#418)
+  * Add snap build status
+  * [README] update README with info about packages
+
+  [ Casey Barton ]
+  * Merged mouse drift fix from synergy-core
+
+  [ mirh ]
+  * Fix debug build launch
+
+  [ Adrian Lucrèce Céleste ]
+  * [Version] bump to 2.3.2, stable
+
+ -- Pablo Catalina <pablo.catalina@gmail.com>  Wed, 09 Oct 2019 12:52:10 +0200
+
 barrier (2.1-1) unstable; urgency=low
 
   * Initial release (Closes: #123456)
