@@ -25,8 +25,8 @@
 
 
 
-static const char kCertificateKeyLength[] = "rsa:1024"; //RSA Bit length (e.g. 1024/2048/4096)
-static const char kCertificateHashAlgorithm[] = "-sha1"; //fingerprint hashing algorithm
+static const char kCertificateKeyLength[] = "rsa:2048"; //RSA Bit length (e.g. 1024/2048/4096)
+static const char kCertificateHashAlgorithm[] = "-sha256"; //fingerprint hashing algorithm
 static const char kCertificateLifetime[] = "365";
 static const char kCertificateSubjectInfo[] = "/CN=Synergy";
 static const char kCertificateFilename[] = "Synergy.pem";
