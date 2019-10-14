@@ -305,6 +305,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
         ${OPENSSL_ROOT}/lib/libcrypto.a
     )
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(OPENSSL_USE_STATIC_LIBS TRUE)
     set (OPENSSL_LIBS ssl crypto)
 else()
     message (FATAL_ERROR "Couldn't find OpenSSL")
