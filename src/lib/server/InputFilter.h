@@ -149,6 +149,24 @@ public:
         Mode                    m_mode;
         IEventQueue*            m_events;
     };
+
+    class RestartServer : public Action {
+    public:
+        enum Mode { restart };
+
+        RestartServer(IEventQueue* events, Mode = restart);
+
+        Mode                    getMode() const;
+
+        // Action overrides
+        virtual Action*        clone() const;
+        virtual String            format() const;
+        virtual void            perform(const Event&);
+
+    private:
+        Mode                    m_mode;
+        IEventQueue*            m_events;
+    };
     
     // SwitchToScreenAction
     class SwitchToScreenAction : public Action {

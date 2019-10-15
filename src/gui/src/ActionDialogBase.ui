@@ -239,6 +239,17 @@
         </item>
        </layout>
       </item>
+      <item>
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QRadioButton" name="m_pRadioRestartAllConnections">
+          <property name="text">
+           <string>Restart server</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
      </layout>
     </widget>
    </item>
@@ -355,6 +366,22 @@
   </connection>
   <connection>
    <sender>m_pRadioLockCursorToScreen</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>353</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>68</x>
+     <y>126</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioRestartAllConnections</sender>
    <signal>toggled(bool)</signal>
    <receiver>m_pKeySequenceWidgetHotkey</receiver>
    <slot>setDisabled(bool)</slot>
@@ -547,6 +574,22 @@
   </connection>
   <connection>
    <sender>m_pRadioLockCursorToScreen</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pGroupBoxScreens</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>48</x>
+     <y>339</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>79</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioRestartAllConnections</sender>
    <signal>toggled(bool)</signal>
    <receiver>m_pGroupBoxScreens</receiver>
    <slot>setDisabled(bool)</slot>
