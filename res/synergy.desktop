@@ -1,7 +1,12 @@
 [Desktop Entry]
-Name=Synergy
-Comment=Share your keyboard and mouse over a network
-Exec=synergy
-Icon=/usr/share/icons/synergy.ico
 Type=Application
+Version=1.0
+Name=Synergy
+Comment=Keyboard and mouse sharing solution
+Path=/usr/bin
+Exec=/usr/bin/synergy
+Icon=synergy
+Terminal=false
 Categories=Utility;
+Keywords=keyboard;mouse;sharing;network;share;
+

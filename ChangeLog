@@ -1,5 +1,116 @@
-v1.8.8
-==========
+v1.10.3-stable
+==============
+
+Bug fixes:
+- #6546 Filtered out self assigned ip addresses from being displayed
+- #6541 Fixed connected info text to include without TLS encryption
+- #6527 Config app renders incorrectly on high DPI screens
+- #6526 New TLS/SSL socket handled when no socket
+- #6525 Race condition on disconnecting TLS/SSL socket
+- #6521 Access violation in TLS/SSL socket close
+- #6409 Server freezes when clipboard contains an image
+- #3705 Hotkeys not working on Mac server
+
+Enhancements:
+- #6535 Version URL and added stage check to version check
+- #6529 Cleaner redistributable use in Windows installer
+- #6528 More verbose message for Linux display errors
+- #6524 Minimize config app to system tray
+- #6523 Restore auto hide on startup for config app
+- #6522 Double click Windows tray icon to show and hide
+- #6520 Support for 32-bit Linux for legacy users
+- #6519 Support for Ubuntu 14.04 LTS for legacy users
+- #6390 Support for OpenSSL 1.1.1 for better security
+
+
+v1.10.2-stable
+==============
+
+Bug fixes:
+- #6495 Event queue memory leak in server cleanup
+- #6471 Unable to stop core retry loop in config app
+- #6460 TLS memory leak on Linux server when using client
+- #6407 Enterprise config app shows auto-config elements
+- #6403 Mouse cursor movement drifts over time
+- #6392 Hostname alert shows unnecessarily on every open
+- #6373 Compile fails on BSD Unix with dl error
+
+Enhancements:
+- #6485 Readme for master branch with download help
+- #6475 Change master branch to current version
+- #6470 CI solution with on-demand containers
+- #6397 Remember last server used in Auto Config
+- #6375 Support for Qt 5.11 framework on Windows
+
+v1.10.1-stable
+==============
+
+Bug fixes:
+- #6339 Windows validating install step freezes
+- #6374 Windows background service crashes randomly
+- #6376 Undeclared identifier compile error in VS2017
+
+Enhancements:
+- #6372 Forced use of TLS 1.2 without fallback method
+- #6338 Auto config checkbox on settings screen
+- #6384 Removal of GPL screen on Windows installer
+- #6383 Extend foreground mode for Windows daemon
+- #6382 Code comment for MSVC debugger logging
+- #6380 Compile without warnings using VS2017
+
+v1.10.0-stable
+==============
+
+Bug fixes:
+- #6347 Log to file defaults to unwritable location
+- #6345 Losing GUI config when restarting the OS
+- #4991 Oversized Bonjour protocol name could conflict
+
+Enhancements:
+- #6348 Use different hard coded Qt path for CI
+- #6346 CLI argument to control screen lock feature
+- #6344 Customizable size limit on clipboard sharing
+- #6332 Decouple version from CI build properties
+- #6319 Bonjour auto-config disabled by default
+- #6318 Hide TIS/TSM error on config app log
+- #6312 Removal of redundant CURL library
+- #6306 Show version number in config app title
+- #6305 Support for Raspbian in package config
+- #6301 Combine enterprise and community codebases
+
+v1.9.1-stable
+=============
+
+Bug fix:
+- #5964 Can't click after sleep on Mac client
+
+Enhancements:
+- #6310 More robust macOS screen shape detection
+- #6309 Update OpenSSL to v1.0.2o for better security
+
+v1.9.0-stable
+=============
+
+Bug fixes:
+- #6251 Service hangs after GUI is opened
+- #5844 Icon causes Linux package manager to fail
+- #4132 Laggy mouse cursor on macOS clients
+
+Enhancements:
+- #6116 Quieter quartz event log entry on Mac
+- #6037 Solve defects reported by PVS Studio
+- #6014 Code sign binaries on Windows
+- #6012 Jenkins integration for Ubuntu
+- #5836 Jenkins integration for macOS
+- #5834 Jenkins integration for Fedora
+- #5390 Allow tests to be skipped during build
+- #5389 Qt 5 library support for config app
+- #5019 Raspbian armhf support for Raspberry Pi
+- #4978 Visual Studio 2015 support on Windows 10
+- #4154 IPv6 support for Windows and Linux
+
+v1.8.8-stable
+=============
 Bug #5196 - Some keys on Korean and Japanese keyboards have the same keycode
 Bug #5578 - Pressing Hangul key results in alt+'a'
 Bug #5785 - Can't switch screens when cursor is in a corner
@@ -407,4 +518,3 @@ Feature #3119: Mac OS X secondary screen
 Task #2905: Unit tests: Clipboard classes
 Task #3072: Downgrade Linux build machines
 Task #3090: CXWindowsKeyState integ test args wrong
-

@@ -18,11 +18,11 @@
 
 #pragma once
 
-#include "QObject.h"
+#include "qobject.h"
 
 class VersionCheckerTests : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 private slots:
-	void compareVersions();
+    void compareVersions();
 };

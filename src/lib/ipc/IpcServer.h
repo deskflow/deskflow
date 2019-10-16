@@ -41,52 +41,52 @@ and allows the daemon and client/server to send log data to the GUI.
 */
 class IpcServer {
 public:
-	IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
-	IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer, int port);
-	virtual ~IpcServer();
+    IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+    IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer, int port);
+    virtual ~IpcServer();
 
-	//! @name manipulators
-	//@{
+    //! @name manipulators
+    //@{
 
-	//! Opens a TCP socket only allowing local connections.
-	virtual void		listen();
+    //! Opens a TCP socket only allowing local connections.
+    virtual void        listen();
 
-	//! Send a message to all clients matching the filter type.
-	virtual void		send(const IpcMessage& message, EIpcClientType filterType);
+    //! Send a message to all clients matching the filter type.
+    virtual void        send(const IpcMessage& message, EIpcClientType filterType);
 
-	//@}
-	//! @name accessors
-	//@{
+    //@}
+    //! @name accessors
+    //@{
 
-	//! Returns true when there are clients of the specified type connected.
-	virtual bool		hasClients(EIpcClientType clientType) const;
+    //! Returns true when there are clients of the specified type connected.
+    virtual bool        hasClients(EIpcClientType clientType) const;
 
-	//@}
-
-private:
-	void				init();
-	void				handleClientConnecting(const Event&, void*);
-	void				handleClientDisconnected(const Event&, void*);
-	void				handleMessageReceived(const Event&, void*);
-	void				deleteClient(IpcClientProxy* proxy);
+    //@}
 
 private:
-	typedef std::list<IpcClientProxy*> ClientList;
-	
-	bool				m_mock;
-	IEventQueue*		m_events;
-	SocketMultiplexer*	m_socketMultiplexer;
-	TCPListenSocket*	m_socket;
-	NetworkAddress		m_address;
-	ClientList			m_clients;
-	ArchMutex			m_clientsMutex;
+    void                init();
+    void                handleClientConnecting(const Event&, void*);
+    void                handleClientDisconnected(const Event&, void*);
+    void                handleMessageReceived(const Event&, void*);
+    void                deleteClient(IpcClientProxy* proxy);
+
+private:
+    typedef std::list<IpcClientProxy*> ClientList;
+    
+    bool                m_mock;
+    IEventQueue*        m_events;
+    SocketMultiplexer*    m_socketMultiplexer;
+    TCPListenSocket*    m_socket;
+    NetworkAddress        m_address;
+    ClientList            m_clients;
+    ArchMutex            m_clientsMutex;
 
 #ifdef TEST_ENV
 public:
-	IpcServer() :
-		m_mock(true),
-		m_events(nullptr),
-		m_socketMultiplexer(nullptr),
-		m_socket(nullptr) { }
+    IpcServer() :
+        m_mock(true),
+        m_events(nullptr),
+        m_socketMultiplexer(nullptr),
+        m_socket(nullptr) { }
 #endif
 };

@@ -18,7 +18,8 @@
 #pragma once
 
 #include <QObject>
-#include <SerialKey.h>
+#include <shared/EditionType.h>
+#include <shared/SerialKey.h>
 #include <ActivationNotifier.h>
 #include <utility>
 
@@ -26,28 +27,28 @@ class AppConfig;
 
 class LicenseManager: public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	LicenseManager(AppConfig* appConfig);
-	std::pair<bool, QString> setSerialKey(SerialKey serialKey,
-										  bool acceptExpired = false);
-	void refresh();
-	Edition activeEdition() const;
-	QString activeEditionName() const;
-	SerialKey serialKey() const;
-	void skipActivation();
-	void notifyUpdate(QString fromVersion, QString toVersion);
-	static QString getEditionName(Edition edition, bool trial = false);
-	void notifyActivation(QString identity);
+    LicenseManager(AppConfig* appConfig);
+    std::pair<bool, QString> setSerialKey(SerialKey serialKey,
+                                          bool acceptExpired = false);
+    void refresh();
+    Edition activeEdition() const;
+    QString activeEditionName() const;
+    SerialKey serialKey() const;
+    void skipActivation();
+    void notifyUpdate(QString fromVersion, QString toVersion);
+    static QString getEditionName(Edition edition, bool trial = false);
+    void notifyActivation(QString identity);
 
 private:
-	AppConfig* m_AppConfig;
-	SerialKey m_serialKey;
+    AppConfig* m_AppConfig;
+    SerialKey m_serialKey;
 
 signals:
-	void serialKeyChanged (SerialKey) const;
-	void editionChanged (Edition) const;
-	void beginTrial (bool expiring) const;
-	void endTrial (bool expired) const;
+    void serialKeyChanged (SerialKey) const;
+    void editionChanged (Edition) const;
+    void beginTrial (bool expiring) const;
+    void endTrial (bool expired) const;
 };

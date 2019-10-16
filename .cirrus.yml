@@ -1,0 +1,63 @@
+gcp_credentials: ENCRYPTED[d3110e2399b82e1d2adb6f9294917064a448a4d102c42c5023815723841db4ff7aa1d0df64a44281ed25b3adbeb08eff]
+
+windows_task:
+  gce_instance:
+    image_project: buildcluster-237411
+    image_name: windows2019-vs2017-ramdisk
+    platform: windows
+    zone: us-central1-a
+    type: n1-highcpu-16
+    disk: 32
+    use_ssd: true
+
+  env: 
+    BONJOUR_SDK_HOME: C:\Program Files\Bonjour SDK\
+    CMAKE_PREFIX_PATH: C:\Qt\5.9.5\msvc2017_64
+    CIRRUS_WORKING_DIR: D:\
+
+  build_script:
+    - .\CI\Windows\build.bat
+
+ubuntu1604_task:
+  use_compute_credits: true
+  container:
+    dockerfile: CI/ubuntu1604.Dockerfile
+  build_script: 
+    - pwd; ls -la
+    - chmod +x ./CI/build.sh
+    - ./CI/build.sh
+
+ubuntu1804_task:
+  use_compute_credits: true
+  container:
+    dockerfile: CI/ubuntu1804.Dockerfile
+  build_script: 
+    - pwd; ls -la
+    - chmod +x ./CI/build.sh
+    - ./CI/build.sh
+
+ubuntu1904_task:
+  use_compute_credits: true
+  container:
+    dockerfile: CI/ubuntu1904.Dockerfile
+  build_script: 
+    - pwd; ls -la
+    - chmod +x ./CI/build.sh
+    - ./CI/build.sh
+
+macos_task:
+    use_compute_credits: true
+    osx_instance:
+        image: mojave-xcode-10.2
+        
+    env:
+        PATH: /usr/local/opt/qt/bin:$PATH
+
+    install_script:
+        - brew install qt
+        - brew install openssl@1.1
+    build_script:
+        - mkdir build
+        - cd build
+        - cmake  -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -DCMAKE_CONFIGURATION_TYPES=$CMAKE_BUILD_TYPE ..
+        - make

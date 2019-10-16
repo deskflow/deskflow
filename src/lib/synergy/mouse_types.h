@@ -24,15 +24,15 @@
 /*!
 Type to hold a mouse button identifier.
 */
-typedef UInt8			ButtonID;
+typedef UInt8            ButtonID;
 
 //! @name Mouse button identifiers
 //@{
-static const ButtonID	kButtonNone   = 0;
-static const ButtonID	kButtonLeft   = 1;
-static const ButtonID	kButtonMiddle = 2;
-static const ButtonID	kButtonRight  = 3;
-static const ButtonID	kButtonExtra0 = 4;
+static const ButtonID    kButtonNone   = 0;
+static const ButtonID    kButtonLeft   = 1;
+static const ButtonID    kButtonMiddle = 2;
+static const ButtonID    kButtonRight  = 3;
+static const ButtonID    kButtonExtra0 = 4;
 
 static const ButtonID   kMacButtonRight = 2;
 static const ButtonID   kMacButtonMiddle = 3;

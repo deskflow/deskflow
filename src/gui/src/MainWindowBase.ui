@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindowBase</class>
+ <widget class="QMainWindow" name="MainWindowBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>550</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Synergy</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QWidget" name="m_trialWidget" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>8</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../res/Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="m_trialLabel">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; days of your Synergy Pro trial remain. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="m_pWidgetUpdate" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>8</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="m_pIconUpdate">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../res/Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="m_pLabelUpdate">
+         <property name="text">
+          <string notr="true">m_pLabelUpdate</string>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="m_pSpacerUpdate">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>469</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="m_pWidgetAutoConfig" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>28</height>
+       </size>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>8</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="m_pIconAutoConfig">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>16</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>244</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../res/Synergy.qrc">:/res/icons/16x16/auto-config.png</pixmap>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="m_pLabelAutoConfig">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manual Config mode active, consider using Auto Config instead (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Settings&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::RichText</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="m_pSpacerAutoConfig">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="m_pGroupServer">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="title">
+       <string>Ser&amp;ver (share this computer's mouse and keyboard):</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+      <layout class="QVBoxLayout">
+       <item>
+        <layout class="QFormLayout" name="formLayout">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>IP addresses:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="m_pLabelIpAddresses">
+           <property name="text">
+            <string notr="true"/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLabel" name="m_pLabelFingerprint">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>SSL Fingerprint:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="m_pLabelLocalFingerprint">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="m_pRadioInternalConfig">
+         <property name="text">
+          <string>Configure interactively:</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QPushButton" name="m_pButtonConfigureServer">
+           <property name="text">
+            <string>&amp;Configure Server...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="m_pRadioExternalConfig">
+         <property name="text">
+          <string>Use existing configuration:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout">
+         <item>
+          <widget class="QLabel" name="m_pLabelConfigurationFile">
+           <property name="text">
+            <string>&amp;Configuration file:</string>
+           </property>
+           <property name="buddy">
+            <cstring>m_pLineEditConfigFile</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="m_pLineEditConfigFile">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_pButtonBrowseConfigFile">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>&amp;Browse...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="m_pGroupClient">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="title">
+       <string>&amp;Client (use another computer's mouse and keyboard):</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+      <layout class="QFormLayout" name="formLayout_3">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="m_pLabelComputerName">
+         <property name="text">
+          <string>Client name:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="m_pLabelScreenName">
+         <property name="text">
+          <string notr="true"/>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="m_pLabelServerName">
+         <property name="text">
+          <string>&amp;Server:</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_pLineEditHostname</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="m_pLineEditHostname">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Hostname or IP address of the server computer.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QComboBox" name="m_pComboServerList">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="m_pLabelAutoDetected">
+         <property name="text">
+          <string>Server:</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="m_pGroupLog">
+      <property name="title">
+       <string>Log</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QTextEdit" name="m_pLogOutput">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <family>Courier</family>
+          </font>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="undoRedoEnabled">
+          <bool>false</bool>
+         </property>
+         <property name="lineWrapMode">
+          <enum>QTextEdit::NoWrap</enum>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+      <item>
+       <widget class="QLabel" name="m_pLabelPadlock">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../res/Synergy.qrc">:/res/icons/16x16/padlock.png</pixmap>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="m_pStatusLabel">
+        <property name="text">
+         <string>Ready</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="spacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="m_pButtonApply">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>&amp;Apply</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="m_pButtonToggleStart">
+        <property name="text">
+         <string>&amp;Start</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <action name="m_pActionAbout">
+   <property name="text">
+    <string>&amp;About Synergy...</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true"/>
+   </property>
+  </action>
+  <action name="m_pActionQuit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+   <property name="statusTip">
+    <string>Quit</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="m_pActionStartSynergy">
+   <property name="text">
+    <string>&amp;Start</string>
+   </property>
+   <property name="statusTip">
+    <string>Run</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+S</string>
+   </property>
+  </action>
+  <action name="m_pActionStopSynergy">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>S&amp;top</string>
+   </property>
+   <property name="statusTip">
+    <string>Stop</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+T</string>
+   </property>
+  </action>
+  <action name="actionShowStatus">
+   <property name="text">
+    <string>S&amp;how Status</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+H</string>
+   </property>
+  </action>
+  <action name="m_pActionMinimize">
+   <property name="text">
+    <string>&amp;Hide</string>
+   </property>
+   <property name="toolTip">
+    <string>Hide</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true"/>
+   </property>
+  </action>
+  <action name="m_pActionRestore">
+   <property name="text">
+    <string>&amp;Show</string>
+   </property>
+   <property name="toolTip">
+    <string>Show</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true"/>
+   </property>
+  </action>
+  <action name="m_pActionSave">
+   <property name="text">
+    <string>Save configuration &amp;as...</string>
+   </property>
+   <property name="statusTip">
+    <string>Save the interactively generated server configuration to a file.</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Alt+S</string>
+   </property>
+  </action>
+  <action name="m_pActionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+   <property name="statusTip">
+    <string>Edit settings</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true"/>
+   </property>
+  </action>
+  <action name="m_pActivate">
+   <property name="text">
+    <string>Activate</string>
+   </property>
+   <property name="toolTip">
+    <string>Activate</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../res/Synergy.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>m_pRadioExternalConfig</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pLineEditConfigFile</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>156</x>
+     <y>179</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>169</x>
+     <y>209</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioExternalConfig</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pButtonBrowseConfigFile</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>353</x>
+     <y>182</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>356</x>
+     <y>211</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioInternalConfig</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pButtonConfigureServer</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>204</x>
+     <y>244</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>212</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pButtonToggleStart</sender>
+   <signal>clicked()</signal>
+   <receiver>m_pActionStartSynergy</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>361</x>
+     <y>404</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

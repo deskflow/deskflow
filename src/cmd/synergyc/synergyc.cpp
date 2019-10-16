@@ -22,11 +22,11 @@
 #include "base/EventQueue.h"
 
 #if WINAPI_MSWINDOWS
-#include "synergyc/MSWindowsClientTaskBarReceiver.h"
+#include "MSWindowsClientTaskBarReceiver.h"
 #elif WINAPI_XWINDOWS
-#include "synergyc/XWindowsClientTaskBarReceiver.h"
+#include "XWindowsClientTaskBarReceiver.h"
 #elif WINAPI_CARBON
-#include "synergyc/OSXClientTaskBarReceiver.h"
+#include "OSXClientTaskBarReceiver.h"
 #else
 #error Platform not supported.
 #endif
@@ -35,16 +35,16 @@ int
 main(int argc, char** argv) 
 {
 #if SYSAPI_WIN32
-	// record window instance for tray icon, etc
-	ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+    // record window instance for tray icon, etc
+    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
-	
-	Arch arch;
-	arch.init();
+    
+    Arch arch;
+    arch.init();
 
-	Log log;
-	EventQueue events;
+    Log log;
+    EventQueue events;
 
-	ClientApp app(&events, createTaskBarReceiver);
-	return app.run(argc, argv);
+    ClientApp app(&events, createTaskBarReceiver);
+    return app.run(argc, argv);
 }

@@ -23,11 +23,11 @@
 //! Lazy error message string evaluation for unix
 class XArchEvalUnix : public XArchEval {
 public:
-	XArchEvalUnix(int error) : m_error(error) { }
-	virtual ~XArchEvalUnix() _NOEXCEPT { }
+    XArchEvalUnix(int error) : m_error(error) { }
+    virtual ~XArchEvalUnix() _NOEXCEPT { }
 
-	virtual std::string	eval() const;
+    virtual std::string    eval() const;
 
 private:
-	int					m_error;
+    int                    m_error;
 };

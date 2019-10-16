@@ -27,23 +27,23 @@
 
 class HotkeyDialog : public QDialog, public Ui::HotkeyDialogBase
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		HotkeyDialog(QWidget* parent, Hotkey& hotkey);
+    public:
+        HotkeyDialog(QWidget* parent, Hotkey& hotkey);
 
-	public:
-		const Hotkey& hotkey() const { return m_Hotkey; }
+    public:
+        const Hotkey& hotkey() const { return m_Hotkey; }
 
-	protected slots:
-		void accept();
+    protected slots:
+        void accept();
 
-	protected:
-		const KeySequenceWidget* sequenceWidget() const { return m_pKeySequenceWidgetHotkey; }
-		Hotkey& hotkey() { return m_Hotkey; }
+    protected:
+        const KeySequenceWidget* sequenceWidget() const { return m_pKeySequenceWidgetHotkey; }
+        Hotkey& hotkey() { return m_Hotkey; }
 
-	private:
-		Hotkey& m_Hotkey;
+    private:
+        Hotkey& m_Hotkey;
 };
 
 #endif

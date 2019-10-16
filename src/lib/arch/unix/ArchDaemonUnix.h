@@ -26,11 +26,11 @@
 //! Unix implementation of IArchDaemon
 class ArchDaemonUnix : public ArchDaemonNone {
 public:
-	ArchDaemonUnix();
-	virtual ~ArchDaemonUnix();
+    ArchDaemonUnix();
+    virtual ~ArchDaemonUnix();
 
-	// IArchDaemon overrides
-	virtual int			daemonize(const char* name, DaemonFunc func);
+    // IArchDaemon overrides
+    virtual int            daemonize(const char* name, DaemonFunc func);
 };
 
 #define CONFIG_FILE "/etc/synergy/synergyd.conf"

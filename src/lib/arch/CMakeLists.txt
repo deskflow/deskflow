@@ -18,37 +18,27 @@ file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
 if (SYNERGY_ADD_HEADERS)
-	list(APPEND sources ${headers})
+    list(APPEND sources ${headers})
 endif()
 
 # arch
 if (WIN32)
-	file(GLOB arch_headers "win32/*.h")
-	file(GLOB arch_sources "win32/*.cpp")
+    file(GLOB arch_headers "win32/*.h")
+    file(GLOB arch_sources "win32/*.cpp")
 elseif (UNIX)
-	file(GLOB arch_headers "unix/*.h")
-	file(GLOB arch_sources "unix/*.cpp")
+    file(GLOB arch_headers "unix/*.h")
+    file(GLOB arch_sources "unix/*.cpp")
 endif()
 
 list(APPEND sources ${arch_sources})
 list(APPEND headers ${arch_headers})
 
 if (SYNERGY_ADD_HEADERS)
-	list(APPEND sources ${headers})
-endif()
-
-include_directories(
-	../
-)
-
-if (UNIX)
-	include_directories(
-		../../..
-	)
+    list(APPEND sources ${headers})
 endif()
 
 add_library(arch STATIC ${sources})
 
 if (UNIX)
-	target_link_libraries(arch dl ${libs})
+    target_link_libraries(arch ${CMAKE_DL_LIBS} ${libs})
 endif()

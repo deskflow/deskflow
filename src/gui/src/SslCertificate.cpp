@@ -23,6 +23,10 @@
 #include <QDir>
 #include <QCoreApplication>
 
+
+
+static const char kCertificateKeyLength[] = "rsa:1024"; //RSA Bit length (e.g. 1024/2048/4096)
+static const char kCertificateHashAlgorithm[] = "-sha1"; //fingerprint hashing algorithm
 static const char kCertificateLifetime[] = "365";
 static const char kCertificateSubjectInfo[] = "/CN=Synergy";
 static const char kCertificateFilename[] = "Synergy.pem";
@@ -35,144 +39,145 @@ static const char kConfigFile[] = "OpenSSL\\synergy.conf";
 #endif
 
 SslCertificate::SslCertificate(QObject *parent) :
-	QObject(parent)
+    QObject(parent)
 {
-	m_ProfileDir = m_CoreInterface.getProfileDir();
-	if (m_ProfileDir.isEmpty()) {
-		emit error(tr("Failed to get profile directory."));
-	}
+    m_ProfileDir = m_CoreInterface.getProfileDir();
+    if (m_ProfileDir.isEmpty()) {
+        emit error(tr("Failed to get profile directory."));
+    }
 }
 
 bool SslCertificate::runTool(const QStringList& args)
 {
-	QString program;
+    QString program;
 #if defined(Q_OS_WIN)
-	program = QCoreApplication::applicationDirPath();
-	program.append("\\").append(kWinOpenSslBinary);
+    program = QCoreApplication::applicationDirPath();
+    program.append("\\").append(kWinOpenSslBinary);
 #else
-	program = kUnixOpenSslCommand;
+    program = kUnixOpenSslCommand;
 #endif
 
 
-	QStringList environment;
+    QStringList environment;
 #if defined(Q_OS_WIN)
-	environment << QString("OPENSSL_CONF=%1\\%2")
-		.arg(QCoreApplication::applicationDirPath())
-		.arg(kConfigFile);
+    environment << QString("OPENSSL_CONF=%1\\%2")
+        .arg(QCoreApplication::applicationDirPath())
+        .arg(kConfigFile);
 #endif
 
-	QProcess process;
-	process.setEnvironment(environment);
-	process.start(program, args);
+    QProcess process;
+    process.setEnvironment(environment);
+    process.start(program, args);
 
-	bool success = process.waitForStarted();
+    bool success = process.waitForStarted();
 
-	QString standardError;
-	if (success && process.waitForFinished())
-	{
-		m_ToolOutput = process.readAllStandardOutput().trimmed();
-		standardError = process.readAllStandardError().trimmed();
-	}
+    QString standardError;
+    if (success && process.waitForFinished())
+    {
+        m_ToolOutput = process.readAllStandardOutput().trimmed();
+        standardError = process.readAllStandardError().trimmed();
+    }
 
-	int code = process.exitCode();
-	if (!success || code != 0)
-	{
-		emit error(
-			QString("SSL tool failed: %1\n\nCode: %2\nError: %3")
-				.arg(program)
-				.arg(process.exitCode())
-				.arg(standardError.isEmpty() ? "Unknown" : standardError));
-		return false;
-	}
+    int code = process.exitCode();
+    if (!success || code != 0)
+    {
+        emit error(
+            QString("SSL tool failed: %1\n\nCode: %2\nError: %3")
+                .arg(program)
+                .arg(process.exitCode())
+                .arg(standardError.isEmpty() ? "Unknown" : standardError));
+        return false;
+    }
 
-	return true;
+
+    return true;
 }
 
 void SslCertificate::generateCertificate()
 {
-	QString sslDirPath = QString("%1%2%3")
-		.arg(m_ProfileDir)
-		.arg(QDir::separator())
-		.arg(kSslDir);
+    QString sslDirPath = QString("%1%2%3")
+        .arg(m_ProfileDir)
+        .arg(QDir::separator())
+        .arg(kSslDir);
 
-	QString filename = QString("%1%2%3")
-		.arg(sslDirPath)
-		.arg(QDir::separator())
-		.arg(kCertificateFilename);
+    QString filename = QString("%1%2%3")
+        .arg(sslDirPath)
+        .arg(QDir::separator())
+        .arg(kCertificateFilename);
 
-	QFile file(filename);
-	if (!file.exists()) {
-		QStringList arguments;
+    QFile file(filename);
+    if (!file.exists()) {
+        QStringList arguments;
 
-		// self signed certificate
-		arguments.append("req");
-		arguments.append("-x509");
-		arguments.append("-nodes");
+        // self signed certificate
+        arguments.append("req");
+        arguments.append("-x509");
+        arguments.append("-nodes");
 
-		// valide duration
-		arguments.append("-days");
-		arguments.append(kCertificateLifetime);
+        // valide duration
+        arguments.append("-days");
+        arguments.append(kCertificateLifetime);
 
-		// subject information
-		arguments.append("-subj");
+        // subject information
+        arguments.append("-subj");
 
-		QString subInfo(kCertificateSubjectInfo);
-		arguments.append(subInfo);
+        QString subInfo(kCertificateSubjectInfo);
+        arguments.append(subInfo);
 
-		// private key
-		arguments.append("-newkey");
-		arguments.append("rsa:1024");
+        // private key
+        arguments.append("-newkey");
+        arguments.append(kCertificateKeyLength);
 
-		QDir sslDir(sslDirPath);
-		if (!sslDir.exists()) {
-			sslDir.mkpath(".");
-		}
+        QDir sslDir(sslDirPath);
+        if (!sslDir.exists()) {
+            sslDir.mkpath(".");
+        }
 
-		// key output filename
-		arguments.append("-keyout");
-		arguments.append(filename);
+        // key output filename
+        arguments.append("-keyout");
+        arguments.append(filename);
 
-		// certificate output filename
-		arguments.append("-out");
-		arguments.append(filename);
+        // certificate output filename
+        arguments.append("-out");
+        arguments.append(filename);
 
-		if (!runTool(arguments)) {
-			return;
-		}
+        if (!runTool(arguments)) {
+            return;
+        }
 
-		emit info(tr("SSL certificate generated."));
-	}
+        emit info(tr("SSL certificate generated."));
+    }
 
-	generateFingerprint(filename);
+    generateFingerprint(filename);
 
-	emit generateFinished();
+    emit generateFinished();
 }
 
 void SslCertificate::generateFingerprint(const QString& certificateFilename)
 {
-	QStringList arguments;
-	arguments.append("x509");
-	arguments.append("-fingerprint");
-	arguments.append("-sha1");
-	arguments.append("-noout");
-	arguments.append("-in");
-	arguments.append(certificateFilename);
+    QStringList arguments;
+    arguments.append("x509");
+    arguments.append("-fingerprint");
+    arguments.append(kCertificateHashAlgorithm);
+    arguments.append("-noout");
+    arguments.append("-in");
+    arguments.append(certificateFilename);
 
-	if (!runTool(arguments)) {
-		return;
-	}
+    if (!runTool(arguments)) {
+        return;
+    }
 
-	// find the fingerprint from the tool output
-	int i = m_ToolOutput.indexOf("=");
-	if (i != -1) {
-		i++;
-		QString fingerprint = m_ToolOutput.mid(
-			i, m_ToolOutput.size() - i);
+    // find the fingerprint from the tool output
+    int i = m_ToolOutput.indexOf("=");
+    if (i != -1) {
+        i++;
+        QString fingerprint = m_ToolOutput.mid(
+            i, m_ToolOutput.size() - i);
 
-		Fingerprint::local().trust(fingerprint, false);
-		emit info(tr("SSL fingerprint generated."));
-	}
-	else {
-		emit error(tr("Failed to find SSL fingerprint."));
-	}
+        Fingerprint::local().trust(fingerprint, false);
+        emit info(tr("SSL fingerprint generated."));
+    }
+    else {
+        emit error(tr("Failed to find SSL fingerprint."));
+    }
 }

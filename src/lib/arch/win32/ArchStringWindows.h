@@ -25,10 +25,10 @@
 //! Win32 implementation of IArchString
 class ArchStringWindows : public IArchString {
 public:
-	ArchStringWindows();
-	virtual ~ArchStringWindows();
+    ArchStringWindows();
+    virtual ~ArchStringWindows();
 
-	// IArchString overrides
-	virtual EWideCharEncoding
-						getWideCharEncoding();
+    // IArchString overrides
+    virtual EWideCharEncoding
+                        getWideCharEncoding();
 };

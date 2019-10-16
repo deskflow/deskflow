@@ -77,8 +77,8 @@
  */
 
 struct codepair {
-	KeySym				keysym;
-	UInt32				ucs4;
+    KeySym                keysym;
+    UInt32                ucs4;
 } s_keymap[] = {
 { XK_Aogonek,                     0x0104 }, /* LATIN CAPITAL LETTER A WITH OGONEK */
 { XK_breve,                       0x02d8 }, /* BREVE */
@@ -1250,39 +1250,39 @@ XK_uhorn
 // map "Internet" keys to KeyIDs
 static const KeySym s_map1008FF[] =
 {
-	/* 0x00 */ 0, 0, kKeyBrightnessUp, kKeyBrightnessDown, 0, 0, 0, 0,
-	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x10 */ 0, kKeyAudioDown, kKeyAudioMute, kKeyAudioUp,
-	/* 0x14 */ kKeyAudioPlay, kKeyAudioStop, kKeyAudioPrev, kKeyAudioNext,
-	/* 0x18 */ kKeyWWWHome, kKeyAppMail, 0, kKeyWWWSearch, 0, 0, 0, 0,
-	/* 0x20 */ 0, 0, 0, 0, 0, 0, kKeyWWWBack, kKeyWWWForward,
-	/* 0x28 */ kKeyWWWStop, kKeyWWWRefresh, 0, 0, kKeyEject, 0, 0, 0,
-	/* 0x30 */ kKeyWWWFavorites, 0, kKeyAppMedia, 0, 0, 0, 0, 0,
-	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x40 */ kKeyAppUser1, kKeyAppUser2, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, kKeyMissionControl, kKeyLaunchpad, 0, 0, 0, 0,
-	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
+    /* 0x00 */ 0, 0, kKeyBrightnessUp, kKeyBrightnessDown, 0, 0, 0, 0,
+    /* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x10 */ 0, kKeyAudioDown, kKeyAudioMute, kKeyAudioUp,
+    /* 0x14 */ kKeyAudioPlay, kKeyAudioStop, kKeyAudioPrev, kKeyAudioNext,
+    /* 0x18 */ kKeyWWWHome, kKeyAppMail, 0, kKeyWWWSearch, 0, 0, 0, 0,
+    /* 0x20 */ 0, 0, 0, 0, 0, 0, kKeyWWWBack, kKeyWWWForward,
+    /* 0x28 */ kKeyWWWStop, kKeyWWWRefresh, 0, 0, kKeyEject, 0, 0, 0,
+    /* 0x30 */ kKeyWWWFavorites, 0, kKeyAppMedia, 0, 0, 0, 0, 0,
+    /* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x40 */ kKeyAppUser1, kKeyAppUser2, 0, 0, 0, 0, 0, 0,
+    /* 0x48 */ 0, 0, kKeyMissionControl, kKeyLaunchpad, 0, 0, 0, 0,
+    /* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
 };
 
 
@@ -1290,424 +1290,424 @@ static const KeySym s_map1008FF[] =
 // XWindowsUtil
 //
 
-XWindowsUtil::KeySymMap	XWindowsUtil::s_keySymToUCS4;
+XWindowsUtil::KeySymMap    XWindowsUtil::s_keySymToUCS4;
 
 bool
 XWindowsUtil::getWindowProperty(Display* display, Window window,
-				Atom property, String* data, Atom* type,
-				SInt32* format, bool deleteProperty)
+                Atom property, String* data, Atom* type,
+                SInt32* format, bool deleteProperty)
 {
-	assert(display != NULL);
+    assert(display != NULL);
 
-	Atom actualType;
-	int actualDatumSize;
+    Atom actualType;
+    int actualDatumSize;
 
-	// ignore errors.  XGetWindowProperty() will report failure.
-	XWindowsUtil::ErrorLock lock(display);
+    // ignore errors.  XGetWindowProperty() will report failure.
+    XWindowsUtil::ErrorLock lock(display);
 
-	// read the property
-	bool okay = true;
-	const long length = XMaxRequestSize(display);
-	long offset = 0;
-	unsigned long bytesLeft = 1;
-	while (bytesLeft != 0) {
-		// get more data
-		unsigned long numItems;
-		unsigned char* rawData;
-		if (XGetWindowProperty(display, window, property,
-								offset, length, False, AnyPropertyType,
-								&actualType, &actualDatumSize,
-								&numItems, &bytesLeft, &rawData) != Success ||
-			actualType == None || actualDatumSize == 0) {
-			// failed
-			okay = false;
-			break;
-		}
+    // read the property
+    bool okay = true;
+    const long length = XMaxRequestSize(display);
+    long offset = 0;
+    unsigned long bytesLeft = 1;
+    while (bytesLeft != 0) {
+        // get more data
+        unsigned long numItems;
+        unsigned char* rawData;
+        if (XGetWindowProperty(display, window, property,
+                                offset, length, False, AnyPropertyType,
+                                &actualType, &actualDatumSize,
+                                &numItems, &bytesLeft, &rawData) != Success ||
+            actualType == None || actualDatumSize == 0) {
+            // failed
+            okay = false;
+            break;
+        }
 
-		// compute bytes read and advance offset
-		unsigned long numBytes;
-		switch (actualDatumSize) {
-		case 8:
-		default:
-			numBytes = numItems;
-			offset  += numItems / 4;
-			break;
+        // compute bytes read and advance offset
+        unsigned long numBytes;
+        switch (actualDatumSize) {
+        case 8:
+        default:
+            numBytes = numItems;
+            offset  += numItems / 4;
+            break;
 
-		case 16:
-			numBytes = 2 * numItems;
-			offset  += numItems / 2;
-			break;
+        case 16:
+            numBytes = 2 * numItems;
+            offset  += numItems / 2;
+            break;
 
-		case 32:
-			numBytes = 4 * numItems;
-			offset  += numItems;
-			break;
-		}
+        case 32:
+            numBytes = 4 * numItems;
+            offset  += numItems;
+            break;
+        }
 
-		// append data
-		if (data != NULL) {
-			data->append((char*)rawData, numBytes);
-		}
-		else {
-			// data is not required so don't try to get any more
-			bytesLeft = 0;
-		}
+        // append data
+        if (data != NULL) {
+            data->append((char*)rawData, numBytes);
+        }
+        else {
+            // data is not required so don't try to get any more
+            bytesLeft = 0;
+        }
 
-		// done with returned data
-		XFree(rawData);
-	}
+        // done with returned data
+        XFree(rawData);
+    }
 
-	// delete the property if requested
-	if (deleteProperty) {
-		XDeleteProperty(display, window, property);
-	}
+    // delete the property if requested
+    if (deleteProperty) {
+        XDeleteProperty(display, window, property);
+    }
 
-	// save property info
-	if (type != NULL) {
-		*type = actualType;
-	}
-	if (format != NULL) {
-		*format = static_cast<SInt32>(actualDatumSize);
-	}
+    // save property info
+    if (type != NULL) {
+        *type = actualType;
+    }
+    if (format != NULL) {
+        *format = static_cast<SInt32>(actualDatumSize);
+    }
 
-	if (okay) {
-		LOG((CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property, window, (data == NULL) ? 0 : data->size()));
-		return true;
-	}
-	else {
-		LOG((CLOG_DEBUG2 "can't read property %d on window 0x%08x", property, window));
-		return false;
-	}
+    if (okay) {
+        LOG((CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property, window, (data == NULL) ? 0 : data->size()));
+        return true;
+    }
+    else {
+        LOG((CLOG_DEBUG2 "can't read property %d on window 0x%08x", property, window));
+        return false;
+    }
 }
 
 bool
 XWindowsUtil::setWindowProperty(Display* display, Window window,
-				Atom property, const void* vdata, UInt32 size,
-				Atom type, SInt32 format)
+                Atom property, const void* vdata, UInt32 size,
+                Atom type, SInt32 format)
 {
-	const UInt32 length       = 4 * XMaxRequestSize(display);
-	const unsigned char* data = static_cast<const unsigned char*>(vdata);
-	UInt32 datumSize    = static_cast<UInt32>(format / 8);
-	// format 32 on 64bit systems is 8 bytes not 4.
-	if (format == 32) {
-		datumSize = sizeof(Atom);
-	}
+    const UInt32 length       = 4 * XMaxRequestSize(display);
+    const unsigned char* data = static_cast<const unsigned char*>(vdata);
+    UInt32 datumSize    = static_cast<UInt32>(format / 8);
+    // format 32 on 64bit systems is 8 bytes not 4.
+    if (format == 32) {
+        datumSize = sizeof(Atom);
+    }
 
-	// save errors
-	bool error = false;
-	XWindowsUtil::ErrorLock lock(display, &error);
+    // save errors
+    bool error = false;
+    XWindowsUtil::ErrorLock lock(display, &error);
 
-	// how much data to send in first chunk?
-	UInt32 chunkSize = size;
-	if (chunkSize > length) {
-		chunkSize = length;
-	}
+    // how much data to send in first chunk?
+    UInt32 chunkSize = size;
+    if (chunkSize > length) {
+        chunkSize = length;
+    }
 
-	// send first chunk
-	XChangeProperty(display, window, property,
-								type, format, PropModeReplace,
-								data, chunkSize / datumSize);
+    // send first chunk
+    XChangeProperty(display, window, property,
+                                type, format, PropModeReplace,
+                                data, chunkSize / datumSize);
 
-	// append remaining chunks
-	data += chunkSize;
-	size -= chunkSize;
-	while (!error && size > 0) {
-		chunkSize = size;
-		if (chunkSize > length) {
-			chunkSize = length;
-		}
-		XChangeProperty(display, window, property,
-								type, format, PropModeAppend,
-								data, chunkSize / datumSize);
-		data += chunkSize;
-		size -= chunkSize;
-	}
+    // append remaining chunks
+    data += chunkSize;
+    size -= chunkSize;
+    while (!error && size > 0) {
+        chunkSize = size;
+        if (chunkSize > length) {
+            chunkSize = length;
+        }
+        XChangeProperty(display, window, property,
+                                type, format, PropModeAppend,
+                                data, chunkSize / datumSize);
+        data += chunkSize;
+        size -= chunkSize;
+    }
 
-	return !error;
+    return !error;
 }
 
 Time
 XWindowsUtil::getCurrentTime(Display* display, Window window)
 {
-	XLockDisplay(display);
-	// select property events on window
-	XWindowAttributes attr;
-	XGetWindowAttributes(display, window, &attr);
-	XSelectInput(display, window, attr.your_event_mask | PropertyChangeMask);
+    XLockDisplay(display);
+    // select property events on window
+    XWindowAttributes attr;
+    XGetWindowAttributes(display, window, &attr);
+    XSelectInput(display, window, attr.your_event_mask | PropertyChangeMask);
 
-	// make a property name to receive dummy change
-	Atom atom = XInternAtom(display, "TIMESTAMP", False);
+    // make a property name to receive dummy change
+    Atom atom = XInternAtom(display, "TIMESTAMP", False);
 
-	// do a zero-length append to get the current time
-	unsigned char dummy;
-	XChangeProperty(display, window, atom,
-								XA_INTEGER, 8,
-								PropModeAppend,
-								&dummy, 0);
+    // do a zero-length append to get the current time
+    unsigned char dummy;
+    XChangeProperty(display, window, atom,
+                                XA_INTEGER, 8,
+                                PropModeAppend,
+                                &dummy, 0);
 
-	// look for property notify events with the following
-	PropertyNotifyPredicateInfo filter;
-	filter.m_window   = window;
-	filter.m_property = atom;
+    // look for property notify events with the following
+    PropertyNotifyPredicateInfo filter;
+    filter.m_window   = window;
+    filter.m_property = atom;
 
-	// wait for reply
-	XEvent xevent;
-	XIfEvent(display, &xevent, &XWindowsUtil::propertyNotifyPredicate,
-								(XPointer)&filter);
-	assert(xevent.type             == PropertyNotify);
-	assert(xevent.xproperty.window == window);
-	assert(xevent.xproperty.atom   == atom);
+    // wait for reply
+    XEvent xevent;
+    XIfEvent(display, &xevent, &XWindowsUtil::propertyNotifyPredicate,
+                                (XPointer)&filter);
+    assert(xevent.type             == PropertyNotify);
+    assert(xevent.xproperty.window == window);
+    assert(xevent.xproperty.atom   == atom);
 
-	// restore event mask
-	XSelectInput(display, window, attr.your_event_mask);
-	XUnlockDisplay(display);
+    // restore event mask
+    XSelectInput(display, window, attr.your_event_mask);
+    XUnlockDisplay(display);
 
-	return xevent.xproperty.time;
+    return xevent.xproperty.time;
 }
 
 KeyID
 XWindowsUtil::mapKeySymToKeyID(KeySym k)
 {
-	initKeyMaps();
+    initKeyMaps();
 
-	switch (k & 0xffffff00) {
-	case 0x0000:
-		// Latin-1
-		return static_cast<KeyID>(k);
+    switch (k & 0xffffff00) {
+    case 0x0000:
+        // Latin-1
+        return static_cast<KeyID>(k);
 
-	case 0xfe00:
-		// ISO 9995 Function and Modifier Keys
-		switch (k) {
-		case XK_ISO_Left_Tab:
-			return kKeyLeftTab;
+    case 0xfe00:
+        // ISO 9995 Function and Modifier Keys
+        switch (k) {
+        case XK_ISO_Left_Tab:
+            return kKeyLeftTab;
 
-		case XK_ISO_Level3_Shift:
-			return kKeyAltGr;
+        case XK_ISO_Level3_Shift:
+            return kKeyAltGr;
 
 #ifdef XK_ISO_Level5_Shift
-		case XK_ISO_Level5_Shift:
-			return XK_ISO_Level5_Shift; //FIXME: there is no "usual" key for this...
+        case XK_ISO_Level5_Shift:
+            return XK_ISO_Level5_Shift; //FIXME: there is no "usual" key for this...
 #endif
 
-		case XK_ISO_Next_Group:
-			return kKeyNextGroup;
+        case XK_ISO_Next_Group:
+            return kKeyNextGroup;
 
-		case XK_ISO_Prev_Group:
-			return kKeyPrevGroup;
+        case XK_ISO_Prev_Group:
+            return kKeyPrevGroup;
 
-		case XK_dead_grave:
-			return kKeyDeadGrave;
+        case XK_dead_grave:
+            return kKeyDeadGrave;
 
-		case XK_dead_acute:
-			return kKeyDeadAcute;
+        case XK_dead_acute:
+            return kKeyDeadAcute;
 
-		case XK_dead_circumflex:
-			return kKeyDeadCircumflex;
+        case XK_dead_circumflex:
+            return kKeyDeadCircumflex;
 
-		case XK_dead_tilde:
-			return kKeyDeadTilde;
+        case XK_dead_tilde:
+            return kKeyDeadTilde;
 
-		case XK_dead_macron:
-			return kKeyDeadMacron;
+        case XK_dead_macron:
+            return kKeyDeadMacron;
 
-		case XK_dead_breve:
-			return kKeyDeadBreve;
+        case XK_dead_breve:
+            return kKeyDeadBreve;
 
-		case XK_dead_abovedot:
-			return kKeyDeadAbovedot;
+        case XK_dead_abovedot:
+            return kKeyDeadAbovedot;
 
-		case XK_dead_diaeresis:
-			return kKeyDeadDiaeresis;
+        case XK_dead_diaeresis:
+            return kKeyDeadDiaeresis;
 
-		case XK_dead_abovering:
-			return kKeyDeadAbovering;
+        case XK_dead_abovering:
+            return kKeyDeadAbovering;
 
-		case XK_dead_doubleacute:
-			return kKeyDeadDoubleacute;
+        case XK_dead_doubleacute:
+            return kKeyDeadDoubleacute;
 
-		case XK_dead_caron:
-			return kKeyDeadCaron;
+        case XK_dead_caron:
+            return kKeyDeadCaron;
 
-		case XK_dead_cedilla:
-			return kKeyDeadCedilla;
+        case XK_dead_cedilla:
+            return kKeyDeadCedilla;
 
-		case XK_dead_ogonek:
-			return kKeyDeadOgonek;
+        case XK_dead_ogonek:
+            return kKeyDeadOgonek;
 
-		default:
-			return kKeyNone;
-		}
+        default:
+            return kKeyNone;
+        }
 
-	case 0xff00:
-		// MISCELLANY
-		return static_cast<KeyID>(k - 0xff00 + 0xef00);
+    case 0xff00:
+        // MISCELLANY
+        return static_cast<KeyID>(k - 0xff00 + 0xef00);
 
-	case 0x1008ff00:
-		// "Internet" keys
-		return s_map1008FF[k & 0xff];
+    case 0x1008ff00:
+        // "Internet" keys
+        return s_map1008FF[k & 0xff];
 
-	default: {
-		// lookup character in table
-		KeySymMap::const_iterator index = s_keySymToUCS4.find(k);
-		if (index != s_keySymToUCS4.end()) {
-			return static_cast<KeyID>(index->second);
-		}
+    default: {
+        // lookup character in table
+        KeySymMap::const_iterator index = s_keySymToUCS4.find(k);
+        if (index != s_keySymToUCS4.end()) {
+            return static_cast<KeyID>(index->second);
+        }
 
-		// unknown character
-		return kKeyNone;
-	}
-	}
+        // unknown character
+        return kKeyNone;
+    }
+    }
 }
 
 UInt32
 XWindowsUtil::getModifierBitForKeySym(KeySym keysym)
 {
-	switch (keysym) {
-	case XK_Shift_L:
-	case XK_Shift_R:
-		return kKeyModifierBitShift;
+    switch (keysym) {
+    case XK_Shift_L:
+    case XK_Shift_R:
+        return kKeyModifierBitShift;
 
-	case XK_Control_L:
-	case XK_Control_R:
-		return kKeyModifierBitControl;
+    case XK_Control_L:
+    case XK_Control_R:
+        return kKeyModifierBitControl;
 
-	case XK_Alt_L:
-	case XK_Alt_R:
-		return kKeyModifierBitAlt;
+    case XK_Alt_L:
+    case XK_Alt_R:
+        return kKeyModifierBitAlt;
 
-	case XK_Meta_L:
-	case XK_Meta_R:
-		return kKeyModifierBitMeta;
+    case XK_Meta_L:
+    case XK_Meta_R:
+        return kKeyModifierBitMeta;
 
-	case XK_Super_L:
-	case XK_Super_R:
-	case XK_Hyper_L:
-	case XK_Hyper_R:
-		return kKeyModifierBitSuper;
+    case XK_Super_L:
+    case XK_Super_R:
+    case XK_Hyper_L:
+    case XK_Hyper_R:
+        return kKeyModifierBitSuper;
 
-	case XK_Mode_switch:
-	case XK_ISO_Level3_Shift:
-		return kKeyModifierBitAltGr;
+    case XK_Mode_switch:
+    case XK_ISO_Level3_Shift:
+        return kKeyModifierBitAltGr;
 
 #ifdef XK_ISO_Level5_Shift
-	case XK_ISO_Level5_Shift:
-		return kKeyModifierBitLevel5Lock;
+    case XK_ISO_Level5_Shift:
+        return kKeyModifierBitLevel5Lock;
 #endif
 
-	case XK_Caps_Lock:
-		return kKeyModifierBitCapsLock;
+    case XK_Caps_Lock:
+        return kKeyModifierBitCapsLock;
 
-	case XK_Num_Lock:
-		return kKeyModifierBitNumLock;
+    case XK_Num_Lock:
+        return kKeyModifierBitNumLock;
 
-	case XK_Scroll_Lock:
-		return kKeyModifierBitScrollLock;
+    case XK_Scroll_Lock:
+        return kKeyModifierBitScrollLock;
 
-	default:
-		return kKeyModifierBitNone;
-	}
+    default:
+        return kKeyModifierBitNone;
+    }
 }
 
 String
 XWindowsUtil::atomToString(Display* display, Atom atom)
 {
-	if (atom == 0) {
-		return "None";
-	}
+    if (atom == 0) {
+        return "None";
+    }
 
-	bool error = false;
-	XWindowsUtil::ErrorLock lock(display, &error);
-	char* name = XGetAtomName(display, atom);
-	if (error) {
-		return synergy::string::sprintf("<UNKNOWN> (%d)", (int)atom);
-	}
-	else {
-		String msg = synergy::string::sprintf("%s (%d)", name, (int)atom);
-		XFree(name);
-		return msg;
-	}
+    bool error = false;
+    XWindowsUtil::ErrorLock lock(display, &error);
+    char* name = XGetAtomName(display, atom);
+    if (error) {
+        return synergy::string::sprintf("<UNKNOWN> (%d)", (int)atom);
+    }
+    else {
+        String msg = synergy::string::sprintf("%s (%d)", name, (int)atom);
+        XFree(name);
+        return msg;
+    }
 }
 
 String
 XWindowsUtil::atomsToString(Display* display, const Atom* atom, UInt32 num)
 {
-	char** names = new char*[num];
-	bool error = false;
-	XWindowsUtil::ErrorLock lock(display, &error);
-	XGetAtomNames(display, const_cast<Atom*>(atom), (int)num, names);
-	String msg;
-	if (error) {
-		for (UInt32 i = 0; i < num; ++i) {
-			msg += synergy::string::sprintf("<UNKNOWN> (%d), ", (int)atom[i]);
-		}
-	}
-	else {
-		for (UInt32 i = 0; i < num; ++i) {
-			msg += synergy::string::sprintf("%s (%d), ", names[i], (int)atom[i]);
-			XFree(names[i]);
-		}
-	}
-	delete[] names;
-	if (msg.size() > 2) {
-		msg.erase(msg.size() - 2);
-	}
-	return msg;
+    char** names = new char*[num];
+    bool error = false;
+    XWindowsUtil::ErrorLock lock(display, &error);
+    XGetAtomNames(display, const_cast<Atom*>(atom), (int)num, names);
+    String msg;
+    if (error) {
+        for (UInt32 i = 0; i < num; ++i) {
+            msg += synergy::string::sprintf("<UNKNOWN> (%d), ", (int)atom[i]);
+        }
+    }
+    else {
+        for (UInt32 i = 0; i < num; ++i) {
+            msg += synergy::string::sprintf("%s (%d), ", names[i], (int)atom[i]);
+            XFree(names[i]);
+        }
+    }
+    delete[] names;
+    if (msg.size() > 2) {
+        msg.erase(msg.size() - 2);
+    }
+    return msg;
 }
 
 void
 XWindowsUtil::convertAtomProperty(String& data)
 {
-	// as best i can tell, 64-bit systems don't pack Atoms into properties
-	// as 32-bit numbers but rather as the 64-bit numbers they are.  that
-	// seems wrong but we have to cope.  sometimes we'll get a list of
-	// atoms that's 8*n+4 bytes long, missing the trailing 4 bytes which
-	// should all be 0.  since we're going to reference the Atoms as
-	// 64-bit numbers we have to ensure the last number is a full 64 bits.
-	if (sizeof(Atom) != 4 && ((data.size() / 4) & 1) != 0) {
-		UInt32 zero = 0;
-		data.append(reinterpret_cast<char*>(&zero), sizeof(zero));
-	}
+    // as best i can tell, 64-bit systems don't pack Atoms into properties
+    // as 32-bit numbers but rather as the 64-bit numbers they are.  that
+    // seems wrong but we have to cope.  sometimes we'll get a list of
+    // atoms that's 8*n+4 bytes long, missing the trailing 4 bytes which
+    // should all be 0.  since we're going to reference the Atoms as
+    // 64-bit numbers we have to ensure the last number is a full 64 bits.
+    if (sizeof(Atom) != 4 && ((data.size() / 4) & 1) != 0) {
+        UInt32 zero = 0;
+        data.append(reinterpret_cast<char*>(&zero), sizeof(zero));
+    }
 }
 
 void
 XWindowsUtil::appendAtomData(String& data, Atom atom)
 {
-	data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
+    data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
 }
 
 void
 XWindowsUtil::replaceAtomData(String& data, UInt32 index, Atom atom)
 {
-	data.replace(index * sizeof(Atom), sizeof(Atom),
-								reinterpret_cast<const char*>(&atom),
-								sizeof(Atom));
+    data.replace(index * sizeof(Atom), sizeof(Atom),
+                                reinterpret_cast<const char*>(&atom),
+                                sizeof(Atom));
 }
 
 void
 XWindowsUtil::appendTimeData(String& data, Time time)
 {
-	data.append(reinterpret_cast<char*>(&time), sizeof(Time));
+    data.append(reinterpret_cast<char*>(&time), sizeof(Time));
 }
 
 Bool
 XWindowsUtil::propertyNotifyPredicate(Display*, XEvent* xevent, XPointer arg)
 {
-	PropertyNotifyPredicateInfo* filter =
-						reinterpret_cast<PropertyNotifyPredicateInfo*>(arg);
-	return (xevent->type             == PropertyNotify &&
-			xevent->xproperty.window == filter->m_window &&
-			xevent->xproperty.atom   == filter->m_property &&
-			xevent->xproperty.state  == PropertyNewValue) ? True : False;
+    PropertyNotifyPredicateInfo* filter =
+                        reinterpret_cast<PropertyNotifyPredicateInfo*>(arg);
+    return (xevent->type             == PropertyNotify &&
+            xevent->xproperty.window == filter->m_window &&
+            xevent->xproperty.atom   == filter->m_property &&
+            xevent->xproperty.state  == PropertyNewValue) ? True : False;
 }
 
 void
 XWindowsUtil::initKeyMaps()
 {
-	if (s_keySymToUCS4.empty()) {
-		for (size_t i =0; i < sizeof(s_keymap) / sizeof(s_keymap[0]); ++i) {
-			s_keySymToUCS4[s_keymap[i].keysym] = s_keymap[i].ucs4;
-		}
-	}
+    if (s_keySymToUCS4.empty()) {
+        for (size_t i =0; i < sizeof(s_keymap) / sizeof(s_keymap[0]); ++i) {
+            s_keySymToUCS4[s_keymap[i].keysym] = s_keymap[i].ucs4;
+        }
+    }
 }
 
 
@@ -1715,74 +1715,76 @@ XWindowsUtil::initKeyMaps()
 // XWindowsUtil::ErrorLock
 //
 
-XWindowsUtil::ErrorLock*	XWindowsUtil::ErrorLock::s_top = NULL;
+XWindowsUtil::ErrorLock*    XWindowsUtil::ErrorLock::s_top = NULL;
 
 XWindowsUtil::ErrorLock::ErrorLock(Display* display) :
-	m_display(display)
+    m_display(display)
 {
-	install(&XWindowsUtil::ErrorLock::ignoreHandler, NULL);
+    install(&XWindowsUtil::ErrorLock::ignoreHandler, NULL);
 }
 
 XWindowsUtil::ErrorLock::ErrorLock(Display* display, bool* flag) :
-	m_display(display)
+    m_display(display)
 {
-	install(&XWindowsUtil::ErrorLock::saveHandler, flag);
+    install(&XWindowsUtil::ErrorLock::saveHandler, flag);
 }
 
 XWindowsUtil::ErrorLock::ErrorLock(Display* display,
-				ErrorHandler handler, void* data) :
-	m_display(display)
+                ErrorHandler handler, void* data) :
+    m_display(display)
 {
-	install(handler, data);
+    install(handler, data);
 }
 
 XWindowsUtil::ErrorLock::~ErrorLock()
 {
-	// make sure everything finishes before uninstalling handler
-	if (m_display != NULL) {
-		XSync(m_display, False);
-	}
+    // make sure everything finishes before uninstalling handler
+    if (m_display != NULL) {
+        XSync(m_display, False);
+    }
 
-	// restore old handler
-	XSetErrorHandler(m_oldXHandler);
-	s_top = m_next;
+    // restore old handler
+    XSetErrorHandler(m_oldXHandler);
+    s_top = m_next;
 }
 
 void
 XWindowsUtil::ErrorLock::install(ErrorHandler handler, void* data)
 {
-	// make sure everything finishes before installing handler
-	if (m_display != NULL) {
-		XSync(m_display, False);
-	}
+    // make sure everything finishes before installing handler
+    if (m_display != NULL) {
+        XSync(m_display, False);
+    }
 
-	// install handler
-	m_handler     = handler;
-	m_userData    = data;
-	m_oldXHandler = XSetErrorHandler(
-								&XWindowsUtil::ErrorLock::internalHandler);
-	m_next        = s_top;
-	s_top         = this;
+    // install handler
+    m_handler     = handler;
+    m_userData    = data;
+    m_oldXHandler = XSetErrorHandler(
+                                &XWindowsUtil::ErrorLock::internalHandler);
+    m_next        = s_top;
+    s_top         = this;
 }
 
 int
 XWindowsUtil::ErrorLock::internalHandler(Display* display, XErrorEvent* event)
 {
-	if (s_top != NULL && s_top->m_handler != NULL) {
-		s_top->m_handler(display, event, s_top->m_userData);
-	}
-	return 0;
+    if (s_top != NULL && s_top->m_handler != NULL) {
+        s_top->m_handler(display, event, s_top->m_userData);
+    }
+    return 0;
 }
 
 void
 XWindowsUtil::ErrorLock::ignoreHandler(Display*, XErrorEvent* e, void*)
 {
-	LOG((CLOG_DEBUG1 "ignoring X error: %d", e->error_code));
+    LOG((CLOG_DEBUG1 "ignoring X error: %d", e->error_code));
 }
 
 void
-XWindowsUtil::ErrorLock::saveHandler(Display*, XErrorEvent* e, void* flag)
+XWindowsUtil::ErrorLock::saveHandler(Display* display, XErrorEvent* e, void* flag)
 {
-	LOG((CLOG_DEBUG1 "flagging X error: %d", e->error_code));
-	*static_cast<bool*>(flag) = true;
+    char errtxt[1024];
+    XGetErrorText(display, e->error_code, errtxt, 1023);
+    LOG((CLOG_DEBUG1 "flagging X error: %d - %.1023s", e->error_code, errtxt));
+    *static_cast<bool*>(flag) = true;
 }

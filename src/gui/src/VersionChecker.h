@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012-2019 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
  *
  * This package is free software; you can redistribute it and/or
@@ -26,19 +26,26 @@ class QNetworkReply;
 
 class VersionChecker : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	VersionChecker();
-	virtual ~VersionChecker();
-	void checkLatest();
-	QString getVersion();
-	void setApp(const QString& app) { m_app = app; }
-	int compareVersions(const QString& left, const QString& right);
+    VersionChecker();
+    virtual ~VersionChecker();
+    void checkLatest();
+    QString getVersion();
+    void setApp(const QString& app) { m_app = app; }
+    int compareVersions(const QString& left, const QString& right);
 public slots:
-	void replyFinished(QNetworkReply* reply);
+    void replyFinished(QNetworkReply* reply);
 signals:
-	void updateFound(const QString& version);
+    void updateFound(const QString& version);
 private:
-	QNetworkAccessManager* m_manager;
-	QString m_app;
+    QNetworkAccessManager* m_manager;
+    QString m_app;
+
+    /**
+     * \brief Converts a string stage to a integer value
+     * \param stage The string containing the stage version
+     * \return An integer representation of the stage, the higher the number the more recent the version
+     */
+    int getStageVersion(QString stage);
 };

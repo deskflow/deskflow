@@ -19,14 +19,14 @@
 #include "arch/unix/ArchTimeUnix.h"
 
 #if TIME_WITH_SYS_TIME
-#	include <sys/time.h>
-#	include <time.h>
+#    include <sys/time.h>
+#    include <time.h>
 #else
-#	if HAVE_SYS_TIME_H
-#		include <sys/time.h>
-#	else
-#		include <time.h>
-#	endif
+#    if HAVE_SYS_TIME_H
+#        include <sys/time.h>
+#    else
+#        include <time.h>
+#    endif
 #endif
 
 //
@@ -35,18 +35,18 @@
 
 ArchTimeUnix::ArchTimeUnix()
 {
-	// do nothing
+    // do nothing
 }
 
 ArchTimeUnix::~ArchTimeUnix()
 {
-	// do nothing
+    // do nothing
 }
 
 double
 ArchTimeUnix::time()
 {
-	struct timeval t;
-	gettimeofday(&t, NULL);
-	return (double)t.tv_sec + 1.0e-6 * (double)t.tv_usec;
+    struct timeval t;
+    gettimeofday(&t, NULL);
+    return (double)t.tv_sec + 1.0e-6 * (double)t.tv_usec;
 }

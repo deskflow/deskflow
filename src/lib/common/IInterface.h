@@ -27,6 +27,6 @@ only pure virtual methods.
 */
 class IInterface {
 public:
-	//! Interface destructor does nothing
-	virtual ~IInterface() { }
+    //! Interface destructor does nothing
+    virtual ~IInterface() { }
 };
