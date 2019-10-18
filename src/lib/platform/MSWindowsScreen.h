@@ -75,6 +75,25 @@ public:
                             SInt32& width, SInt32& height) const;
     virtual void        getCursorPos(SInt32& x, SInt32& y) const;
 
+    /**
+     * \brief Get the position of the cursor on the current machine
+     * \param pos the object that the function will use to store the position of the cursor
+     * \return true if the function was successful
+     */
+    virtual bool        getThisCursorPos(LPPOINT pos);
+    /**
+     * \brief Sets the cursor position on the current machine
+     * \param x The x coordinate of the cursor
+     * \param y The Y coordinate of the cursor
+     * \return True is successful
+     */
+    virtual bool        setThisCursorPos(int x, int y);
+
+    /**
+     * \brief This function will attempt to switch to the current desktop the mouse is located on
+     */
+    virtual void        updateDesktopThread();
+
     // IPrimaryScreen overrides
     virtual void        reconfigure(UInt32 activeSides);
     virtual void        warpCursor(SInt32 x, SInt32 y);
