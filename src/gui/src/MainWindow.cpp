@@ -140,6 +140,8 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
     // hide padlock icon
     secureSocket(false);
 
+    sslToggled(appConfig.getCryptoEnabled());
+
     connect (this, SIGNAL(windowShown()),
              this, SLOT(on_windowShown()), Qt::QueuedConnection);
 #ifndef SYNERGY_ENTERPRISE
@@ -1104,12 +1106,6 @@ void MainWindow::setEdition(Edition edition)
 #ifndef SYNERGY_ENTERPRISE
     setWindowTitle(m_LicenseManager->getEditionName (edition));
 #endif
-    if (m_AppConfig->getCryptoEnabled()) {
-        m_pSslCertificate = new SslCertificate(this);
-        m_pSslCertificate->generateCertificate();
-    }
-    updateLocalFingerprint();
-    saveSettings();
 }
 
 #ifndef SYNERGY_ENTERPRISE
