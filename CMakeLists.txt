@@ -175,7 +175,7 @@ if (UNIX)
             link_directories("/usr/X11R6/lib")
         endif()
 
-        if (${PKG_CONFIG_FOUND})
+        if (BARRIER_BUILD_GUI AND ${PKG_CONFIG_FOUND})
             pkg_check_modules (AVAHI_COMPAT REQUIRED avahi-compat-libdns_sd)
             include_directories (BEFORE SYSTEM ${AVAHI_COMPAT_INCLUDE_DIRS})
             set (CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${AVAHI_COMPAT_INCLUDE_DIRS}")
