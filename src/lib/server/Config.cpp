@@ -1241,6 +1241,26 @@ Config::parseAction(ConfigReadContext& s,
 		action = new InputFilter::LockCursorToScreenAction(m_events, mode);
 	}
 
+    else if (name == "restartServer") {
+        if (args.size() > 1) {
+            throw XConfigRead(s, "syntax for action: restartServer([{{restart}}])");
+        }
+
+        InputFilter::RestartServer::Mode mode =
+                InputFilter::RestartServer::restart;
+
+        if (args.size() == 1) {
+            if (args[0] == "restart") {
+                mode = InputFilter::RestartServer::restart;
+            }
+            else {
+                throw XConfigRead(s, "syntax for action: restartServer([{restart}])");
+            }
+        }
+
+        action = new InputFilter::RestartServer(m_events, mode);
+    }
+
 	else if (name == "keyboardBroadcast") {
 		if (args.size() > 2) {
 			throw XConfigRead(s, "syntax for action: keyboardBroadcast([{off|on|toggle}[,screens]])");

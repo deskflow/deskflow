@@ -323,6 +323,40 @@ InputFilter::LockCursorToScreenAction::perform(const Event& event)
                                 Event::kDeliverImmediately));
 }
 
+
+InputFilter::RestartServer::RestartServer(
+        IEventQueue* events, Mode mode) :
+        m_mode(mode),
+        m_events(events)
+{
+    // do nothing
+}
+
+InputFilter::RestartServer::Mode
+InputFilter::RestartServer::getMode() const
+{
+    return m_mode;
+}
+
+InputFilter::Action *InputFilter::RestartServer::clone() const {
+    return new RestartServer(*this);
+}
+
+String
+InputFilter::RestartServer::format() const
+{
+    static const char* s_mode[] = { "restart" };
+
+    return synergy::string::sprintf("restartServer(%s)", s_mode[m_mode]);
+}
+
+void
+InputFilter::RestartServer::perform(const Event& event)
+{
+    //HACK Super hack we should gracefully exit
+   exit(0);
+}
+
 InputFilter::SwitchToScreenAction::SwitchToScreenAction(
         IEventQueue* events, const String& screen) :
     m_screen(screen),
@@ -1088,3 +1122,4 @@ InputFilter::handleEvent(const Event& event, void*)
     // not handled so pass through
     m_events->addEvent(myEvent);
 }
+

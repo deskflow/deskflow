@@ -39,7 +39,7 @@ ActionDialog::ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey
 
     // work around Qt Designer's lack of a QButtonGroup; we need it to get
     // at the button id of the checked radio button
-    QRadioButton* const typeButtons[] = { m_pRadioPress, m_pRadioRelease, m_pRadioPressAndRelease, m_pRadioSwitchToScreen, m_pRadioSwitchInDirection, m_pRadioLockCursorToScreen };
+    QRadioButton* const typeButtons[] = { m_pRadioPress, m_pRadioRelease, m_pRadioPressAndRelease, m_pRadioSwitchToScreen, m_pRadioSwitchInDirection, m_pRadioLockCursorToScreen , m_pRadioRestartAllConnections};
 
     for (unsigned int i = 0; i < sizeof(typeButtons) / sizeof(typeButtons[0]); i++)
         m_pButtonGroupType->addButton(typeButtons[i], i);
@@ -91,6 +91,7 @@ void ActionDialog::accept()
     m_Action.setSwitchDirection(m_pComboSwitchInDirection->currentIndex());
     m_Action.setLockCursorMode(m_pComboLockCursorToScreen->currentIndex());
     m_Action.setActiveOnRelease(m_pRadioHotkeyReleased->isChecked());
+    m_Action.setRestartServer(m_pRadioRestartAllConnections->isChecked());
 
     QDialog::accept();
 }
