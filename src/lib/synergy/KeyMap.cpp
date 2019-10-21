@@ -545,7 +545,7 @@ KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, SInt32 group,
             KeyModifierMask requiredIgnoreShiftMask = item.m_required & ~KeyModifierShift;
             if ((item.m_required & desiredShiftMask) == (item.m_sensitive & desiredShiftMask) &&
                 ((requiredIgnoreShiftMask & desiredMask) == requiredIgnoreShiftMask)) {
-                LOG((CLOG_INFO "found key in group %d", effectiveGroup));
+                LOG((CLOG_DEBUG1 "found key in group %d", effectiveGroup));
                 keyItem = &item;
                 break;
             }
