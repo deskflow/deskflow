@@ -15,6 +15,7 @@
 			<ComponentGroupRef Id="OpenSSLComponents"/>
 			<ComponentGroupRef Id="ProductQtPluginComponents"/>
 			<ComponentRef Id="RegistryEntries"/>
+      <MergeRef Id="VC_Redist"/>
 		</Feature>
 		<DirectoryRef Id="TARGETDIR">
 			<Component Guid="7CF3564D-1F8E-4D3D-9781-E1EE22D5BD67" Id="RegistryEntries">
@@ -36,6 +37,11 @@
 				<!-- Windows 8 and later only -->
 				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
 			</Component>
+      <?if $(var.Platform) = x64 ?>
+        <Merge Id="VC_Redist" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC140_CRT_x64.msm" DiskId="1" Language="0"/>
+      <?else ?>
+        <Merge Id="VC_Redist" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC140_CRT_x86.msm" DiskId="1" Language="0"/>
+      <?endif ?>
 		</DirectoryRef>
 		<Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
 		<WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\banner.bmp"/>

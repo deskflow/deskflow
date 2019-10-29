@@ -349,10 +349,10 @@ macro(generate_versionfile)
 		"export SYNERGY_VERSION_STAGE=\"${SYNERGY_VERSION_STAGE}\"\n")
 	elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 		FILE(WRITE ${CMAKE_BINARY_DIR}/version.bat
-		"SET SYNERGY_VERSION_MAJOR=\"${SYNERGY_VERSION_MAJOR}\"\n"
-		"SET SYNERGY_VERSION_MINOR=\"${SYNERGY_VERSION_MINOR}\"\n"
-		"SET SYNERGY_VERSION_PATCH=\"${SYNERGY_VERSION_PATCH}\"\n"
-		"SET SYNERGY_VERSION_STAGE=\"${SYNERGY_VERSION_STAGE}\"\n")
+		"SET SYNERGY_VERSION_MAJOR=${SYNERGY_VERSION_MAJOR}\n"
+		"SET SYNERGY_VERSION_MINOR=${SYNERGY_VERSION_MINOR}\n"
+		"SET SYNERGY_VERSION_PATCH=${SYNERGY_VERSION_PATCH}\n"
+		"SET SYNERGY_VERSION_STAGE=${SYNERGY_VERSION_STAGE}\n")
 	endif()
 endmacro(generate_versionfile)
 
@@ -377,8 +377,9 @@ endif()
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         message (STATUS "Configuring the v1 installer")
-        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
 		generate_versionfile()
+		set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
+        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
 endif()
 
 #
