@@ -27,7 +27,7 @@
 #define VERSION_REGEX "(\\d+\\.\\d+\\.\\d+-[a-z1-9]*)"
 #define VERSION_REGEX_SECTIONED "(\\d+)\\.(\\d+)\\.(\\d+)-([a-z1-9]*)"
 #define VERSION_SEGMENT_COUNT 4
-#define VERSION_URL "http://version.symless.com/synergy"
+#define VERSION_URL "https://version.symless.com/synergy"
 
 
 VersionChecker::VersionChecker()
@@ -45,7 +45,10 @@ VersionChecker::~VersionChecker()
 
 void VersionChecker::checkLatest()
 {
-    m_manager->get(QNetworkRequest(QUrl(VERSION_URL)));
+    auto request = QNetworkRequest(QUrl(VERSION_URL));
+    request.setHeader(QNetworkRequest::UserAgentHeader, QString("Synergy GUI ") + getVersion().toStdString().c_str());
+    request.setRawHeader("X-Synergy-Version", getVersion().toStdString().c_str() );
+    m_manager->get(request);
 }
 
 void VersionChecker::replyFinished(QNetworkReply* reply)
