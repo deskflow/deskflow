@@ -576,7 +576,7 @@ bool MSWindowsScreen::setThisCursorPos(int x, int y)
     {
         result = SetCursorPos(x, y);
         error = GetLastError();
-        LOG((CLOG_INFO "%s Attempt: 2, status %d, code: %d", __func__, result, error));
+        LOG((CLOG_DEBUG3 "%s Attempt: 2, status %d, code: %d", __func__, result, error));
         updateDesktopThread();
     }
 
