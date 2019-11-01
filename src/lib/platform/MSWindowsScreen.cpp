@@ -561,7 +561,7 @@ bool MSWindowsScreen::getThisCursorPos(LPPOINT pos)
     {
         result = GetCursorPos(pos);
         error = GetLastError();
-        LOG((CLOG_INFO "%s Attempt: 2, status %d, code: %d Pos {%d, %d}", __func__, result, error, pos->x, pos->y));
+        LOG((CLOG_DEBUG3 "%s Attempt: 2, status %d, code: %d Pos {%d, %d}", __func__, result, error, pos->x, pos->y));
         updateDesktopThread();
     }
     return result;
