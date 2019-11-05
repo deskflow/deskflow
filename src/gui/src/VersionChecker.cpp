@@ -46,7 +46,7 @@ VersionChecker::~VersionChecker()
 void VersionChecker::checkLatest()
 {
     auto request = QNetworkRequest(QUrl(VERSION_URL));
-    request.setHeader(QNetworkRequest::UserAgentHeader, QString("Synergy GUI ") + getVersion().toStdString().c_str());
+    request.setHeader(QNetworkRequest::UserAgentHeader, QString("Synergy (") + getVersion() + ") " + QSysInfo::prettyProductName());
     request.setRawHeader("X-Synergy-Version", getVersion().toStdString().c_str() );
     m_manager->get(request);
 }
