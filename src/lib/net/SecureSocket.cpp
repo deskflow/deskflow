@@ -37,15 +37,6 @@
 
 #define MAX_ERROR_SIZE 65535
 
-//Add the new function names in case older ones are deprecated
-#if OPENSSL_VERSION_NUMBER > 0x10100000L
-#define SSL_SERVER_METHOD TLS_server_method
-#define SSL_CLIENT_METHOD TLS_client_method
-#else
-#define SSL_SERVER_METHOD SSLv23_server_method
-#define SSL_CLIENT_METHOD SSLv23_server_method
-#endif
-
 static const float s_retryDelay = 0.01f;
 
 enum {
@@ -392,10 +383,10 @@ SecureSocket::initContext(bool server)
     }
 
     if (server) {
-        method = SSL_SERVER_METHOD();
+        method = SSLv23_server_method();
     }
     else {
-        method = SSL_CLIENT_METHOD();
+        method = SSLv23_client_method();
     }
     
     // create new context from method
