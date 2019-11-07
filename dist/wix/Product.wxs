@@ -13,6 +13,7 @@
 		<Feature Id="ProductFeature" Title="$(var.Name)">
 			<ComponentGroupRef Id="ProductComponents"/>
 			<ComponentGroupRef Id="OpenSSLComponents"/>
+			<ComponentGroupRef Id="ProductQtStylesComponents"/>
 			<ComponentGroupRef Id="ProductQtPluginComponents"/>
 			<ComponentRef Id="RegistryEntries"/>
       <MergeRef Id="VC_Redist"/>
@@ -77,6 +78,7 @@
 				<Directory Id="INSTALLFOLDER" Name="$(var.Name)">
 					<Directory Id="OpenSSLDir" Name="OpenSSL"/>
 					<Directory Id="PlatformsDir" Name="Platforms"/>
+					<Directory Id="QTStylesDir" Name="styles"/>
 				</Directory>
 			</Directory>
 			<Directory Id="ProgramMenuFolder"/>
@@ -130,12 +132,17 @@
 				<?endif ?>
 			</Component>
 		</ComponentGroup>
+		<ComponentGroup Directory="QTStylesDir" Id="ProductQtStylesComponents">
+      <Component Guid="96E0F8D8-64FD-4CE8-94D1-F6EDCBBB4995" Id="Styles">
+        <File Id="qwindowsvistastyle" Source="$(var.QtPluginsPath)\styles\qwindowsvistastyle.dll"/>
+      </Component>
+		</ComponentGroup>
 		<ComponentGroup Directory="PlatformsDir" Id="ProductQtPluginComponents">
 			<Component Guid="684EFA14-856B-440E-A5E6-E90E04E36B41" Id="QtPlatformPlugin">
 				<?if $(var.Configuration) = "Debug" ?>
-				<File Source="$(var.QtPlatformPath)\qwindowsd.dll"/>
+				<File Source="$(var.QtPluginsPath)\platforms\qwindowsd.dll"/>
 				<?else ?>
-				<File Source="$(var.QtPlatformPath)\qwindows.dll"/>
+				<File Source="$(var.QtPluginsPath)\platforms\qwindows.dll"/>
 				<?endif ?>
 			</Component>
 		</ComponentGroup>
