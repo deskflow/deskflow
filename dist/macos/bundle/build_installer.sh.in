@@ -3,9 +3,10 @@
 # change this to rename the installer package
 B_DMG="Barrier-@BARRIER_VERSION@.dmg"
 
-cd @CMAKE_CURRENT_SOURCE_DIR@/build/bundle || exit 1
+cd "$( dirname '$0' )"
+OWNDIR="$( pwd )"
 
-B_REREF_SCRIPT=@CMAKE_CURRENT_SOURCE_DIR@/build/bundle/reref_dylibs.sh
+B_REREF_SCRIPT="$OWNDIR/reref_dylibs.sh"
 if [ ! -x $B_REREF_SCRIPT ]; then
     echo Missing script: $B_REREF_SCRIPT
     exit 1
