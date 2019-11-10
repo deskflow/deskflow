@@ -57,11 +57,6 @@ $B_REREF_SCRIPT barrier || exit 1
 # libraries in its metadata
 $B_REREF_SCRIPT platforms/libqcocoa.dylib ../ || exit 1
 
-# create a startup script that will change to the binary directory
-# before starting barrier
-printf "%s\n" "#!/bin/sh" "cd \$(dirname \$0)" "exec ./barrier" > barrier.sh
-chmod +x barrier.sh
-
 echo "Barrier.app created successfully"
 
 # sanity check so we don't distribute a dmg with debug symbols
