@@ -24,6 +24,10 @@
     <string>@BARRIER_VERSION@</string>
     <key>CFBundleVersion</key>
     <string>@BARRIER_VERSION@</string>
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+    <key>NSHighResolutionCapable</key>
+    <string>True</string>
     <key>NSHumanReadableCopyright</key>
     <string>© 2018 Debauchee Open Source Group</string>
     <key>LSMinimumSystemVersion</key>
