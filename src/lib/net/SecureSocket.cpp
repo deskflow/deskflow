@@ -393,6 +393,9 @@ SecureSocket::initContext(bool server)
     SSL_METHOD* m = const_cast<SSL_METHOD*>(method);
     m_ssl->m_context = SSL_CTX_new(m);
 
+    //Prevent the usage of of all version prior to TLSv1.2 as they are known to be vulnerable
+    SSL_CTX_set_options(m_ssl->m_context, SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1);
+
     if (m_ssl->m_context == NULL) {
         showError();
     }
@@ -848,7 +851,7 @@ SecureSocket::showSecureConnectInfo()
         SSL_CIPHER_description(cipher, msg, kMsgSize);
         LOG((CLOG_DEBUG "openssl cipher: %s", msg));
 
-        LOG((CLOG_INFO "network encryption protocol: %s", SSL_CIPHER_get_version(cipher)));
+        LOG((CLOG_INFO "network encryption protocol: %s", SSL_get_version(m_ssl->m_ssl)));
 
     }
     else {
