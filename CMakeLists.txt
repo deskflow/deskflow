@@ -293,12 +293,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         ${OPENSSL_ROOT}/lib/libcrypto.lib
     )
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    #Try use 1.1 for the latest features. otherwise use the default
-    IF(EXISTS /usr/local/opt/openssl@1.1)
-        set (OPENSSL_ROOT /usr/local/opt/openssl@1.1)
-    else()
-        set (OPENSSL_ROOT /usr/local/opt/openssl)
-    endif()
+    set (OPENSSL_ROOT /usr/local/opt/openssl)
     include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
     set (OPENSSL_LIBS
         ${OPENSSL_ROOT}/lib/libssl.a
@@ -325,7 +320,7 @@ macro (configure_files srcDir destDir)
         set (sourceFilePath ${srcDir}/${sourceFile})
         if (IS_DIRECTORY ${sourceFilePath})
             message (STATUS "Copying directory ${sourceFile}")
-            make_directory (${destDir/${sourceFile})
+            make_directory (${destDir}/${sourceFile})
         else()
             message (STATUS "Copying file ${sourceFile}")
             configure_file (${sourceFilePath} ${destDir}/${sourceFile} COPYONLY)
