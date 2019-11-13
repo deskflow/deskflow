@@ -30,6 +30,7 @@
 #include <cstdlib>
 #include <memory>
 #include <fstream>
+#include <regex>
 
 //
 // SecureSocket
@@ -850,9 +851,18 @@ SecureSocket::showSecureConnectInfo()
         char msg[kMsgSize];
         SSL_CIPHER_description(cipher, msg, kMsgSize);
         LOG((CLOG_DEBUG "openssl cipher: %s", msg));
-
-        LOG((CLOG_INFO "network encryption protocol: %s", SSL_get_version(m_ssl->m_ssl)));
-
+        
+        //For some reason SSL_get_version is return mismatching information to SSL_CIPHER_description
+        // so grab the version out the description instead, This seems like a hacky way of doing it.
+        // But when the cipher says "TLSv1.2" but the get_version returns "TLSv1/SSLv3" we it doesn't look right
+        const std::regex match(R"(^([\w-]*)\s+([\w-.]*).*$)");
+        const std::string message(msg);
+        std::smatch stringMatch;
+        
+        if (std::regex_search(message, stringMatch, match)) {
+            const std::string protocol = stringMatch[2];
+            LOG((CLOG_INFO "network encryption protocol: %s", protocol.c_str()));
+        }
     }
     else {
         LOG((CLOG_ERR "could not get secure socket cipher"));
