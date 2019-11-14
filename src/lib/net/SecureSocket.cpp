@@ -28,10 +28,10 @@
 #include <openssl/err.h>
 #include <cstring>
 #include <sstream>
+#include <iterator>
 #include <cstdlib>
 #include <memory>
 #include <fstream>
-#include <regex>
 
 //
 // SecureSocket
