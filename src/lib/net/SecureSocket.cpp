@@ -27,6 +27,7 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <cstring>
+#include <sstream>
 #include <cstdlib>
 #include <memory>
 #include <fstream>
@@ -855,13 +856,23 @@ SecureSocket::showSecureConnectInfo()
         //For some reason SSL_get_version is return mismatching information to SSL_CIPHER_description
         // so grab the version out the description instead, This seems like a hacky way of doing it.
         // But when the cipher says "TLSv1.2" but the get_version returns "TLSv1/SSLv3" we it doesn't look right
-        const std::regex match(R"(^([\w-]*)\s+([\w-.]*).*$)");
-        const std::string message(msg);
-        std::smatch stringMatch;
-        
-        if (std::regex_search(message, stringMatch, match)) {
-            const std::string protocol = stringMatch[2];
-            LOG((CLOG_INFO "network encryption protocol: %s", protocol.c_str()));
+        // For some reason macOS hates regex's so stringstream is used
+
+        std::istringstream iss(msg);
+
+        //Take the stream input and splits it into a vetor directly
+        const std::vector<std::string> parts{std::istream_iterator<std::string>{iss},
+                                       std::istream_iterator<std::string>{}};
+        if (parts.size() > 2)
+        {
+            //log the section containing the protocol version
+            LOG((CLOG_INFO "network encryption protocol: %s", parts[1].c_str()));
+        }
+        else
+        {
+            //log the error in spliting then display the whole description rather then nothing
+            LOG((CLOG_ERR "could not split cipher for protocol"));
+            LOG((CLOG_INFO "network encryption protocol: %s", msg));
         }
     }
     else {
