@@ -31,8 +31,6 @@
 #include <QFileDialog>
 #include <QDir>
 
-static const char networkSecurity[] = "ns";
-
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
     Ui::SettingsDialogBase(),

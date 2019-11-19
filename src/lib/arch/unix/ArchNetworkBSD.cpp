@@ -690,7 +690,6 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
     // allocate address
     ArchNetAddressImpl* addr = new ArchNetAddressImpl;
 
-    char ipstr[INET6_ADDRSTRLEN];
     struct addrinfo hints;
     struct addrinfo *p;
     int ret;

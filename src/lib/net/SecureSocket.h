@@ -39,21 +39,21 @@ public:
     ~SecureSocket();
 
     // ISocket overrides
-    void                close();
+    void                close() override;
 
     // IDataSocket overrides
-    virtual void        connect(const NetworkAddress&);
+    virtual void        connect(const NetworkAddress&) override;
     
     std::unique_ptr<ISocketMultiplexerJob> newJob() override;
-    bool                isFatal() const { return m_fatal; }
+    bool                isFatal() const override { return m_fatal; }
     void                isFatal(bool b) { m_fatal = b; }
     bool                isSecureReady();
     void                secureConnect();
     void                secureAccept();
     int                    secureRead(void* buffer, int size, int& read);
     int                    secureWrite(const void* buffer, int size, int& wrote);
-    EJobResult            doRead();
-    EJobResult            doWrite();
+    EJobResult            doRead() override;
+    EJobResult            doWrite() override;
     void                initSsl(bool server);
     bool                loadCertificates(String& CertFile);
 
