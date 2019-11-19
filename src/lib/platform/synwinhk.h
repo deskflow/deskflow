@@ -67,25 +67,4 @@ enum EHookMode {
     kHOOK_RELAY_EVENTS
 };
 
-typedef int                (*InitFunc)(DWORD targetQueueThreadID);
-typedef int                (*CleanupFunc)(void);
-typedef EHookResult        (*InstallFunc)(void);
-typedef int                (*UninstallFunc)(void);
-typedef int                (*InstallScreenSaverFunc)(void);
-typedef int                (*UninstallScreenSaverFunc)(void);
-typedef void            (*SetSidesFunc)(UInt32);
-typedef void            (*SetZoneFunc)(SInt32, SInt32, SInt32, SInt32, SInt32);
-typedef void            (*SetModeFunc)(int);
-
-CSYNERGYHOOK_API int    init(DWORD);
-CSYNERGYHOOK_API int    cleanup(void);
-CSYNERGYHOOK_API EHookResult    install(void);
-CSYNERGYHOOK_API int    uninstall(void);
-CSYNERGYHOOK_API int    installScreenSaver(void);
-CSYNERGYHOOK_API int    uninstallScreenSaver(void);
-CSYNERGYHOOK_API void    setSides(UInt32 sides);
-CSYNERGYHOOK_API void    setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h,
-                            SInt32 jumpZoneSize);
-CSYNERGYHOOK_API void    setMode(EHookMode mode);
-
 }
