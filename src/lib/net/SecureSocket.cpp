@@ -27,6 +27,8 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <cstring>
+#include <sstream>
+#include <iterator>
 #include <cstdlib>
 #include <memory>
 #include <fstream>
@@ -392,6 +394,9 @@ SecureSocket::initContext(bool server)
     // create new context from method
     SSL_METHOD* m = const_cast<SSL_METHOD*>(method);
     m_ssl->m_context = SSL_CTX_new(m);
+
+    //Prevent the usage of of all version prior to TLSv1.2 as they are known to be vulnerable
+    SSL_CTX_set_options(m_ssl->m_context, SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1);
 
     if (m_ssl->m_context == NULL) {
         showError();
@@ -847,9 +852,28 @@ SecureSocket::showSecureConnectInfo()
         char msg[kMsgSize];
         SSL_CIPHER_description(cipher, msg, kMsgSize);
         LOG((CLOG_DEBUG "openssl cipher: %s", msg));
+        
+        //For some reason SSL_get_version is return mismatching information to SSL_CIPHER_description
+        // so grab the version out the description instead, This seems like a hacky way of doing it.
+        // But when the cipher says "TLSv1.2" but the get_version returns "TLSv1/SSLv3" we it doesn't look right
+        // For some reason macOS hates regex's so stringstream is used
 
-        LOG((CLOG_INFO "network encryption protocol: %s", SSL_CIPHER_get_version(cipher)));
+        std::istringstream iss(msg);
 
+        //Take the stream input and splits it into a vetor directly
+        const std::vector<std::string> parts{std::istream_iterator<std::string>{iss},
+                                       std::istream_iterator<std::string>{}};
+        if (parts.size() > 2)
+        {
+            //log the section containing the protocol version
+            LOG((CLOG_INFO "network encryption protocol: %s", parts[1].c_str()));
+        }
+        else
+        {
+            //log the error in spliting then display the whole description rather then nothing
+            LOG((CLOG_ERR "could not split cipher for protocol"));
+            LOG((CLOG_INFO "network encryption protocol: %s", msg));
+        }
     }
     else {
         LOG((CLOG_ERR "could not get secure socket cipher"));
