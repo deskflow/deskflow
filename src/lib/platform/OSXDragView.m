@@ -129,13 +129,13 @@ draggingSourceOperationMask
 
 - (NSPoint)draggingLocation
 {
-	NSPoint point;
+	NSPoint point = NSMakePoint(0, 0);
 	return point;
 }
 
 - (NSPoint)draggedImageLocation
 {
-	NSPoint point;
+	NSPoint point = NSMakePoint(0, 0);
 	return point;
 }
 
