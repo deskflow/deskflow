@@ -13,6 +13,7 @@ Bug fixes:
 
 Enhancements:
 - #6588 Version number header with update check
+- #4957 Server fails to start up due to synwinhk.dll is in use
 
 Features:
 - #6518 Key combination that will force a server restart
