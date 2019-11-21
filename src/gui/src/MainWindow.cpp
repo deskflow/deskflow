@@ -67,10 +67,17 @@ static const QString barrierConfigFilter(QObject::tr("Barrier Configurations (*.
 
 static const char* barrierIconFiles[] =
 {
+#if defined(Q_OS_MAC)
+    ":/res/icons/32x32/barrier-disconnected-mask.png",
+    ":/res/icons/32x32/barrier-disconnected-mask.png",
+    ":/res/icons/32x32/barrier-connected-mask.png",
+    ":/res/icons/32x32/barrier-transfering-mask.png"
+#else
     ":/res/icons/16x16/barrier-disconnected.png",
     ":/res/icons/16x16/barrier-disconnected.png",
     ":/res/icons/16x16/barrier-connected.png",
     ":/res/icons/16x16/barrier-transfering.png"
+#endif
 };
 
 static const char* barrierLargeIcon = ":/res/icons/256x256/barrier.ico";
@@ -288,8 +295,13 @@ void MainWindow::saveSettings()
 
 void MainWindow::setIcon(qBarrierState state)
 {
-    if (m_pTrayIcon)
-        m_pTrayIcon->setIcon(QIcon(barrierIconFiles[state]));
+    if (m_pTrayIcon) {
+        QIcon icon = QIcon(barrierIconFiles[state]);
+#if defined(Q_OS_MAC)
+        icon.setIsMask(true);
+#endif
+        m_pTrayIcon->setIcon(icon);
+    }
 }
 
 void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
