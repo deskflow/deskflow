@@ -54,5 +54,8 @@
         <file>image/spinning-wheel.gif</file>
         <file>icons/16x16/padlock.png</file>
         <file>icons/16x16/barrier-transfering.png</file>
+        <file>icons/32x32/barrier-connected-mask.png</file>
+        <file>icons/32x32/barrier-disconnected-mask.png</file>
+        <file>icons/32x32/barrier-transfering-mask.png</file>
     </qresource>
 </RCC>
