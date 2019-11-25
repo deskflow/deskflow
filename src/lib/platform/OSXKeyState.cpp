@@ -337,26 +337,26 @@ OSXKeyState::fakeMediaKey(KeyID id)
 CGEventFlags
 OSXKeyState::getModifierStateAsOSXFlags()
 {
-    CGEventFlags modifiers = 0;
+    CGEventFlags modifiers = CGEventFlags(0);
     
     if (m_shiftPressed) {
-        modifiers |= kCGEventFlagMaskShift;
+        modifiers |= CGEventFlags(kCGEventFlagMaskShift);
     }
     
     if (m_controlPressed) {
-        modifiers |= kCGEventFlagMaskControl;
+        modifiers |= CGEventFlags(kCGEventFlagMaskControl);
     }
     
     if (m_altPressed) {
-        modifiers |= kCGEventFlagMaskAlternate;
+        modifiers |= CGEventFlags(kCGEventFlagMaskAlternate);
     }
     
     if (m_superPressed) {
-        modifiers |= kCGEventFlagMaskCommand;
+        modifiers |= CGEventFlags(kCGEventFlagMaskCommand);
     }
     
     if (m_capsPressed) {
-        modifiers |= kCGEventFlagMaskAlphaShift;
+        modifiers |= CGEventFlags(kCGEventFlagMaskAlphaShift);
     }
     
     return modifiers;
