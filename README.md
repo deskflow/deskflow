@@ -3,7 +3,8 @@
 Eliminate the barrier between your machines. 
 Find [releases for windows and macOS here](https://github.com/debauchee/barrier/releases).
 Your distro probably already has barrier packaged for it, see [distro specific packages](#distro-specific-packages)
-below for a list. Alternatively, we also provide a [flatpak](https://github.com/flathub/com.github.debauchee.barrier).
+below for a list. Alternatively, we also provide a [flatpak](https://github.com/flathub/com.github.debauchee.barrier)
+and a [snap](https://snapcraft.io/barrier).
 
 ### Contact info:
 
