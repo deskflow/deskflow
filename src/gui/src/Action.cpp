@@ -24,7 +24,7 @@
 const char* Action::m_ActionTypeNames[] =
 {
     "keyDown", "keyUp", "keystroke",
-    "switchToScreen", "switchInDirection", "lockCursorToScreen",
+    "switchToScreen", "switchInDirection", "lockCursorToScreen", "restartServer",
     "mouseDown", "mouseUp", "mousebutton"
 };
 
@@ -87,6 +87,9 @@ QString Action::text() const
             text += m_LockCursorModeNames[m_LockCursorMode];
             break;
 
+        case restartAllConnections:
+            text += "restart";
+            break;
         default:
             Q_ASSERT(0);
             break;
@@ -116,6 +119,7 @@ void Action::loadSettings(QSettings& settings)
     setLockCursorMode(settings.value("lockCursorToScreen", lockCursorToggle).toInt());
     setActiveOnRelease(settings.value("activeOnRelease", false).toBool());
     setHaveScreens(settings.value("hasScreens", false).toBool());
+    setRestartServer(settings.value("restartServer", false).toBool());
 }
 
 void Action::saveSettings(QSettings& settings) const
@@ -136,6 +140,7 @@ void Action::saveSettings(QSettings& settings) const
     settings.setValue("lockCursorToScreen", lockCursorMode());
     settings.setValue("activeOnRelease", activeOnRelease());
     settings.setValue("hasScreens", haveScreens());
+    settings.setValue("restartServer", restartServer());
 }
 
 QTextStream& operator<<(QTextStream& outStream, const Action& action)

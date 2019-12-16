@@ -13,8 +13,10 @@
 		<Feature Id="ProductFeature" Title="$(var.Name)">
 			<ComponentGroupRef Id="ProductComponents"/>
 			<ComponentGroupRef Id="OpenSSLComponents"/>
+			<ComponentGroupRef Id="ProductQtStylesComponents"/>
 			<ComponentGroupRef Id="ProductQtPluginComponents"/>
 			<ComponentRef Id="RegistryEntries"/>
+      <MergeRef Id="VC_Redist"/>
 		</Feature>
 		<DirectoryRef Id="TARGETDIR">
 			<Component Guid="7CF3564D-1F8E-4D3D-9781-E1EE22D5BD67" Id="RegistryEntries">
@@ -36,6 +38,11 @@
 				<!-- Windows 8 and later only -->
 				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
 			</Component>
+      <?if $(var.Platform) = x64 ?>
+        <Merge Id="VC_Redist" SourceFile="$(env.ProgramFiles)\Microsoft Visual Studio\2019\BuildTools\VC\Redist\MSVC\14.23.27820\MergeModules\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="0"/>
+      <?else ?>
+        <Merge Id="VC_Redist" SourceFile="$(env.ProgramFiles)\Microsoft Visual Studio\2019\BuildTools\VC\Redist\MSVC\14.23.27820\MergeModules\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
+      <?endif ?>
 		</DirectoryRef>
 		<Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
 		<WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\banner.bmp"/>
@@ -71,6 +78,7 @@
 				<Directory Id="INSTALLFOLDER" Name="$(var.Name)">
 					<Directory Id="OpenSSLDir" Name="OpenSSL"/>
 					<Directory Id="PlatformsDir" Name="Platforms"/>
+					<Directory Id="QTStylesDir" Name="styles"/>
 				</Directory>
 			</Directory>
 			<Directory Id="ProgramMenuFolder"/>
@@ -89,7 +97,6 @@
 				</File>
 				<File Source="$(var.BinPath)/synergyc.exe"/>
 				<File Source="$(var.BinPath)/syntool.exe"/>
-				<File Source="$(var.BinPath)/synwinhk.dll"/>
         <?if $(var.Platform) = x64 ?>
 				  <File Source="$(var.OpenSSLBinPath)/libssl-1_1-x64.dll"/>
 				  <File Source="$(var.OpenSSLBinPath)/libcrypto-1_1-x64.dll"/>
@@ -124,12 +131,17 @@
 				<?endif ?>
 			</Component>
 		</ComponentGroup>
+		<ComponentGroup Directory="QTStylesDir" Id="ProductQtStylesComponents">
+      <Component Guid="96E0F8D8-64FD-4CE8-94D1-F6EDCBBB4995" Id="Styles">
+        <File Id="qwindowsvistastyle" Source="$(var.QtPluginsPath)\styles\qwindowsvistastyle.dll"/>
+      </Component>
+		</ComponentGroup>
 		<ComponentGroup Directory="PlatformsDir" Id="ProductQtPluginComponents">
 			<Component Guid="684EFA14-856B-440E-A5E6-E90E04E36B41" Id="QtPlatformPlugin">
 				<?if $(var.Configuration) = "Debug" ?>
-				<File Source="$(var.QtPlatformPath)\qwindowsd.dll"/>
+				<File Source="$(var.QtPluginsPath)\platforms\qwindowsd.dll"/>
 				<?else ?>
-				<File Source="$(var.QtPlatformPath)\qwindows.dll"/>
+				<File Source="$(var.QtPluginsPath)\platforms\qwindows.dll"/>
 				<?endif ?>
 			</Component>
 		</ComponentGroup>

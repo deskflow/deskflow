@@ -36,9 +36,29 @@ class Action
     friend QTextStream& operator<<(QTextStream& outStream, const Action& action);
 
     public:
-        enum ActionType { keyDown, keyUp, keystroke, switchToScreen, switchInDirection, lockCursorToScreen, mouseDown, mouseUp, mousebutton };
-        enum SwitchDirection { switchLeft, switchRight, switchUp, switchDown };
-        enum LockCursorMode { lockCursorToggle, lockCursonOn, lockCursorOff  };
+    enum ActionType {
+        keyDown,
+        keyUp,
+        keystroke,
+        switchToScreen,
+        switchInDirection,
+        lockCursorToScreen,
+        restartAllConnections,
+        mouseDown,
+        mouseUp,
+        mousebutton,
+    };
+    enum SwitchDirection {
+        switchLeft,
+        switchRight,
+        switchUp,
+        switchDown
+    };
+    enum LockCursorMode {
+        lockCursorToggle,
+        lockCursonOn,
+        lockCursorOff
+    };
 
     public:
         Action();
@@ -55,6 +75,7 @@ class Action
         int lockCursorMode() const { return m_LockCursorMode; }
         bool activeOnRelease() const { return m_ActiveOnRelease; }
         bool haveScreens() const { return m_HasScreens; }
+        bool restartServer() const { return m_restartServer; }
 
     protected:
         KeySequence& keySequence() { return m_KeySequence; }
@@ -66,6 +87,7 @@ class Action
         void setLockCursorMode(int m) { m_LockCursorMode = m; }
         void setActiveOnRelease(bool b) { m_ActiveOnRelease = b; }
         void setHaveScreens(bool b) { m_HasScreens = b; }
+        void setRestartServer( bool b) { m_restartServer = b; }
 
     private:
         KeySequence m_KeySequence;
@@ -76,6 +98,7 @@ class Action
         int m_LockCursorMode;
         bool m_ActiveOnRelease;
         bool m_HasScreens;
+        bool m_restartServer;
 
         static const char* m_ActionTypeNames[];
         static const char* m_SwitchDirectionNames[];

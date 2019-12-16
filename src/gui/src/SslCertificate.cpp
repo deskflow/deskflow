@@ -25,8 +25,8 @@
 
 
 
-static const char kCertificateKeyLength[] = "rsa:1024"; //RSA Bit length (e.g. 1024/2048/4096)
-static const char kCertificateHashAlgorithm[] = "-sha1"; //fingerprint hashing algorithm
+static const char kCertificateKeyLength[] = "rsa:2048"; //RSA Bit length (e.g. 1024/2048/4096)
+static const char kCertificateHashAlgorithm[] = "-sha256"; //fingerprint hashing algorithm
 static const char kCertificateLifetime[] = "365";
 static const char kCertificateSubjectInfo[] = "/CN=Synergy";
 static const char kCertificateFilename[] = "Synergy.pem";
@@ -34,8 +34,8 @@ static const char kSslDir[] = "SSL";
 static const char kUnixOpenSslCommand[] = "openssl";
 
 #if defined(Q_OS_WIN)
-static const char kWinOpenSslBinary[] = "OpenSSL\\openssl.exe";
-static const char kConfigFile[] = "OpenSSL\\synergy.conf";
+static const char kWinOpenSslBinary[] = "openssl.exe";
+static const char kConfigFile[] = "synergy.conf";
 #endif
 
 SslCertificate::SslCertificate(QObject *parent) :

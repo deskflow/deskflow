@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "synwinhk/synwinhk.h"
+#include "platform/synwinhk.h"
 #include "synergy/key_types.h"
 #include "synergy/mouse_types.h"
 #include "synergy/option_types.h"
@@ -65,7 +65,7 @@ public:
     \p hookLibrary must be a handle to the hook library.
     */
     MSWindowsDesks(
-        bool isPrimary, bool noHooks, HINSTANCE hookLibrary,
+        bool isPrimary, bool noHooks,
         const IScreenSaver* screensaver, IEventQueue* events,
         IJob* updateKeys, bool stopOnDeskSwitch);
     ~MSWindowsDesks();
@@ -206,7 +206,6 @@ private:
     typedef std::map<String, Desk*> Desks;
 
     // initialization and shutdown operations
-    void                queryHookLibrary(HINSTANCE hookLibrary);
     HCURSOR                createBlankCursor() const;
     void                destroyCursor(HCURSOR cursor) const;
     ATOM                createDeskWindowClass(bool isPrimary) const;
@@ -282,14 +281,6 @@ private:
     Mutex                m_mutex;
     CondVar<bool>        m_deskReady;
     Desks                m_desks;
-
-    // hook library stuff
-    InstallFunc            m_install;
-    UninstallFunc        m_uninstall;
-    InstallScreenSaverFunc
-                        m_installScreensaver;
-    UninstallScreenSaverFunc
-                        m_uninstallScreensaver;
 
     // keyboard stuff
     IJob*                m_updateKeys;

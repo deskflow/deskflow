@@ -1,3 +1,24 @@
+v1.11.0-stable
+==============
+
+Bug fixes:
+- #6575 Service start error on Windows
+- #6570 Hotkey capture of ctrl and cmd swapped on macOS
+- #6569 Unable to run on macOS 10.15 Catalina
+- #6566 Debug message output mistakenly as info message
+- #6561 Debian buster no longer supports CA key length of 1024
+- #6556 Function missing error from OpenSSL/TLS
+- #5959 User interface failed to load local fingerprint
+- #5294 Cursor lockout at Windows server login screen
+
+Enhancements:
+- #6588 Version number header with update check
+- #4957 Server fails to start up due to synwinhk.dll is in use
+
+Features:
+- #6518 Key combination that will force a server restart
+
+
 v1.10.3-stable
 ==============
 
