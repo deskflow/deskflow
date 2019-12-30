@@ -39,7 +39,7 @@ Communication. Everything we do is in the open. Our issue tracker will let you s
 
 ### Contact & support
 
-Please be aware that the *only* way to draw our attention to a bug is to create a new PR in the issue tracker. Write a clear, concise, detailed report and you will get a clear, concise, detailed response. Priority is always given to issues that affect a wider range of users.
+Please be aware that the *only* way to draw our attention to a bug is to create a new issue in [the issue tracker](https://github.com/debauchee/barrier/issues). Write a clear, concise, detailed report and you will get a clear, concise, detailed response. Priority is always given to issues that affect a wider range of users.
 
 For short and simple questions or to just say hello find us on the Freenode IRC network in the #barrier channel.
 
