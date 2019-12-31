@@ -184,6 +184,24 @@ Visit our website for help and info (symless.com).
     </message>
 </context>
 <context>
+    <name>LogWindowBase</name>
+    <message>
+        <location filename="res/LogWindowBase.ui" line="26"/>
+        <source>Log - Barrier</source>
+        <translation>ログ - Barrier</translation>
+    </message>
+    <message>
+        <location filename="res/LogWindowBase.ui" line="71"/>
+        <source>&amp;Clear Log</source>
+        <translation>ログ消去(&amp;C)</translation>
+    </message>
+    <message>
+        <location filename="res/LogWindowBase.ui" line="78"/>
+        <source>&amp;Hide</source>
+        <translation>閉じる</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <location filename="src/MainWindow.cpp" line="790"/>
@@ -429,7 +447,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="257"/>
         <source>&amp;Server IP:</source>
-        <translation>サーバー IP (&amp;S):</translation>
+        <translation type="unfinished">サーバー IP (&amp;S):</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="380"/>
@@ -510,12 +528,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="401"/>
         <source>Quit</source>
-        <translation>終了</translation>
+        <translation>終了(&amp;Q)</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="412"/>
         <source>Run</source>
-        <translation>実行</translation>
+        <translation>開始(&amp;R)</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="423"/>
@@ -525,7 +543,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="426"/>
         <source>Stop</source>
-        <translation>停止</translation>
+        <translation>停止(&amp;S)</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="434"/>
@@ -540,7 +558,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="445"/>
         <source>Hide</source>
-        <translation>隠す</translation>
+        <translation>隠す(&amp;H)</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="453"/>
@@ -550,7 +568,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="456"/>
         <source>Show</source>
-        <translation>表示</translation>
+        <translation>表示(&amp;S)</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="464"/>
@@ -576,6 +594,31 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="res/MainWindowBase.ui" line="486"/>
         <source>Run Wizard</source>
         <translation>ウィザードを実行</translation>
+    </message>
+    <message>
+        <location filename="res/MainWindowBase.ui" line="367"/>
+        <source>S&amp;ave configuration</source>
+        <translation>構成設定の保存(&amp;A)</translation>
+    </message>
+    <message>
+        <location filename="res/MainWindowBase.ui" line="380"/>
+        <source>Change &amp;Settings</source>
+        <translation>設定の変更(&amp;S)</translation>
+    </message>
+    <message>
+        <location filename="res/MainWindowBase.ui" line="391"/>
+        <source>Show &amp;Log</source>
+        <translation>ログを表示(&amp;L)</translation>
+    </message>
+    <message>
+        <location filename="res/MainWindowBase.ui" line="394"/>
+        <source>Show Log</source>
+        <translation>ログを表示(&amp;L)</translation>
+    </message>
+    <message>
+        <location filename="res/MainWindowBase.ui" line="132"/>
+        <source>SSL Fingerprint:</source>
+        <translation>SSLフィンガープリント:</translation>
     </message>
 </context>
 <context>
@@ -872,6 +915,11 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <source>Fix XTest for Xinerama</source>
         <translation>Xinerama 向けに XTest を修正</translation>
     </message>
+    <message>
+        <location filename="res/ScreenSettingsDialogBase.ui" line="468"/>
+        <source>Fix Preserve Focus</source>
+        <translation>フォーカスの維持を修正</translation>
+    </message>
 </context>
 <context>
     <name>ScreenSetupModel</name>
@@ -1057,6 +1105,16 @@ Double click on a screen to edit its settings.</source>
         <source>Cor&amp;ner Size:</source>
         <translation>隅の大きさ(&amp;N):</translation>
     </message>
+    <message>
+        <location filename="res/ServerConfigDialogBase.ui" line="510"/>
+        <source>Enable drag and drop file transfers</source>
+        <translation>ドラッグアンドドロップでファイル転送する</translation>
+    </message>
+    <message>
+        <location filename="res/ServerConfigDialogBase.ui" line="524"/>
+        <source>Enable clipboard sharing</source>
+        <translation>クリップボードを共有</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>
@@ -1185,6 +1243,61 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
         <location filename="res/SettingsDialogBase.ui" line="243"/>
         <source>Debug2</source>
         <translation>デバッグ情報2</translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="29"/>
+        <source>General</source>
+        <translation>一般</translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="86"/>
+        <source>Elevate</source>
+        <translation>権限昇格</translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="93"/>
+        <source>Specify when the Barrier service should run at an elevated privilege level</source>
+        <translation>Barrier のサービスを昇格した権限で実行するタイミングの指定</translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="100"/>
+        <source>As Needed</source>
+        <translation>必要に応じて</translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="105"/>
+        <source>Always</source>
+        <translation>常に</translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="110"/>
+        <source>Never</source>
+        <translation>なし</translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="118"/>
+        <source>Minimize to System &amp;Tray</source>
+        <translation>システムトレイに最小化(&amp;T)</translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="135"/>
+        <source>Networking</source>
+        <translation>ネットワーク</translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="170"/>
+        <source>&amp;Address:</source>
+        <translation>アドレス(&amp;A):</translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="187"/>
+        <source>Enable &amp;SSL</source>
+        <translation>SSLを使用(&amp;S)</translation>
+    </message>
+    <message>
+        <location filename="res/SettingsDialogBase.ui" line="132"/>
+        <source>Start &amp;Barrier on startup</source>
+        <translation type="unfinished">起動時に Barrier を開始する (&amp;B)</translation>
     </message>
 </context>
 <context>
