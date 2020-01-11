@@ -1216,16 +1216,9 @@ MSWindowsKeyState::getKeyMap(synergy::KeyMap& keyMap)
 						item.m_required  |= KeyModifierControl;
 						item.m_sensitive |= KeyModifierControl;
 						break;
-#if 0
-					case VK_SNAPSHOT:
-						item.m_sensitive |= KeyModifierAlt;
-						if ((i & 0x100u) == 0) {
-							// non-extended snapshot key requires alt
-							item.m_required |= KeyModifierAlt;
-						}
-						break;
+
 					}
-#endif
+
 					addKeyEntry(keyMap, item);
 				}
 			}

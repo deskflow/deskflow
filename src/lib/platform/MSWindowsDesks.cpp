@@ -275,16 +275,6 @@ MSWindowsDesks::getCursorPos(SInt32& x, SInt32& y) const
 void
 MSWindowsDesks::fakeKeyEvent(WORD virtualKey, WORD scanCode, DWORD flags, bool /*isAutoRepeat*/) const
 {
-#if 0
-    // synthesize event
-    DWORD flags = 0;
-    if (((button & 0x100u) != 0)) {
-        flags |= KEYEVENTF_EXTENDEDKEY;
-    }
-    if (!press) {
-        flags |= KEYEVENTF_KEYUP;
-    }
-#endif
     sendMessage(SYNERGY_MSG_FAKE_KEY, flags, MAKELPARAM(scanCode, virtualKey));
 }
 
