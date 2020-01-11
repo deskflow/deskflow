@@ -1248,7 +1248,7 @@ MSWindowsKeyState::fakeKey(const Keystroke& keystroke)
 		WORD vk = (WORD)keystroke.m_data.m_button.m_client;
 		DWORD flags = 0;
 
-		if (keystroke.m_data.m_button.m_press = false)
+		if (keystroke.m_data.m_button.m_press == false)
 			flags |= KEYEVENTF_KEYUP;
 
 		// special handling of VK_SNAPSHOT
