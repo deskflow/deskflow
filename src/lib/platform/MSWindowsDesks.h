@@ -162,8 +162,8 @@ public:
     /*!
     Synthesize a press or release of key \c button.
     */
-    void                fakeKeyEvent(KeyButton button, UINT virtualKey,
-                            bool press, bool isAutoRepeat) const;
+    void                fakeKeyEvent(WORD virtualKey, WORD scanCode,
+                            DWORD flags, bool isAutoRepeat) const;
 
     //! Fake mouse press/release
     /*!
