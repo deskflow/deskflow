@@ -36,6 +36,10 @@
 #include "SslCertificate.h"
 #include "Zeroconf.h"
 
+#if defined(Q_OS_MAC)
+#include "OSXHelpers.h"
+#endif
+
 #include <QtCore>
 #include <QtGui>
 #include <QtNetwork>
@@ -63,7 +67,25 @@ static const char* tlsCheckString = "network encryption protocol: ";
 
 static const int debugLogLevel = 1;
 
-static const char* synergyIconFiles[] =
+static const char* synergyLightIconFiles[] =
+{
+    ":/res/icons/64x64/synergy-light-disconnected.png",
+    ":/res/icons/64x64/synergy-light-disconnected.png",
+    ":/res/icons/64x64/synergy-light-connected.png",
+    ":/res/icons/64x64/synergy-light-transfering.png",
+    ":/res/icons/64x64/synergy-light-disconnected.png"
+};
+
+static const char* synergyDarkIconFiles[] =
+{
+    ":/res/icons/64x64/synergy-dark-disconnected.png",
+    ":/res/icons/64x64/synergy-dark-disconnected.png",
+    ":/res/icons/64x64/synergy-dark-connected.png",
+    ":/res/icons/64x64/synergy-dark-transfering.png",
+    ":/res/icons/64x64/synergy-dark-disconnected.png"    //synergyPendingRetry
+};
+
+static const char* synergyDefaultIconFiles[] =
 {
     ":/res/icons/16x16/synergy-disconnected.png",   //synergyDisconnected
     ":/res/icons/16x16/synergy-disconnected.png",   //synergyConnecting
@@ -333,7 +355,15 @@ void MainWindow::saveSettings()
 void MainWindow::setIcon(qSynergyState state)
 {
     QIcon icon;
-    icon.addFile(synergyIconFiles[state]);
+
+#ifdef Q_OS_MAC
+    if (isOSXInterfaceStyleDark())
+        icon.addFile(synergyDarkIconFiles[state]);
+    else
+        icon.addFile(synergyLightIconFiles[state]);
+#else
+    icon.addFile(synergyDefaultIconFiles[state]);
+#endif
 
     if (m_pTrayIcon)
         m_pTrayIcon->setIcon(icon);
@@ -528,7 +558,7 @@ void MainWindow::checkSecureSocket(const QString& line)
 
         //Get the protocol version from the line
         m_SecureSocketVersion = line.mid(index + strlen(tlsCheckString));
-    }   
+    }
 }
 QString MainWindow::getTimeStamp()
 {
