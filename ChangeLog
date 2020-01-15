@@ -1,3 +1,11 @@
+v1.11.1-snapshot
+==============
+
+Bug fixes:
+- #6608 Synergy cant create TLS certificate on windows
+- #6611 Mismatched TLS SHA fingerprint types
+
+
 v1.11.0-stable
 ==============
 
