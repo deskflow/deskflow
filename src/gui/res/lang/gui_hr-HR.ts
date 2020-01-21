@@ -6,7 +6,7 @@
     <message>
       <location filename="src/AboutDialogBase.ui" line="38"/>
       <source>About Synergy</source>
-      <translation type="unfinished">About Synergy</translation>
+      <translation>O Synergyu</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="53"/>
@@ -32,13 +32,13 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="124"/>
       <source>Version:</source>
-      <translation type="unfinished">Version:</translation>
+      <translation>Inačica:</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="140"/>
       <location filename="src/AboutDialogBase.ui" line="174"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>Nepoznato</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="167"/>
@@ -48,7 +48,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="194"/>
       <source>&amp;Ok</source>
-      <translation type="unfinished">&amp;Ok</translation>
+      <translation>&amp;U redu</translation>
     </message>
   </context>
   <context>
@@ -56,82 +56,82 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="14"/>
       <source>Configure Action</source>
-      <translation type="unfinished">Configure Action</translation>
+      <translation>Podesite radnje</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="20"/>
       <source>Choose the action to perform</source>
-      <translation type="unfinished">Choose the action to perform</translation>
+      <translation>Odaberite radnju za izvođenje</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="26"/>
       <source>Press a hotkey</source>
-      <translation type="unfinished">Press a hotkey</translation>
+      <translation>Pritisnite tipku prečaca</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="36"/>
       <source>Release a hotkey</source>
-      <translation type="unfinished">Release a hotkey</translation>
+      <translation>Oslobodite tipku prečaca</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="43"/>
       <source>Press and release a hotkey</source>
-      <translation type="unfinished">Press and release a hotkey</translation>
+      <translation>Pritisnite i oslobodite tipku prečaca</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="69"/>
       <source>only on these screens</source>
-      <translation type="unfinished">only on these screens</translation>
+      <translation>samo na ovim zaslonima</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="119"/>
       <source>Switch to screen</source>
-      <translation type="unfinished">Switch to screen</translation>
+      <translation>Prebaci na zaslon</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="150"/>
       <source>Switch in direction</source>
-      <translation type="unfinished">Switch in direction</translation>
+      <translation>Prebaci u smjeru</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="174"/>
       <source>left</source>
-      <translation type="unfinished">left</translation>
+      <translation>lijevo</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="179"/>
       <source>right</source>
-      <translation type="unfinished">right</translation>
+      <translation>desno</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="184"/>
       <source>up</source>
-      <translation type="unfinished">up</translation>
+      <translation>gore</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="189"/>
       <source>down</source>
-      <translation type="unfinished">down</translation>
+      <translation>dolje</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="201"/>
       <source>Lock cursor to screen</source>
-      <translation type="unfinished">Lock cursor to screen</translation>
+      <translation>Zaključaj pokazivač na zaslon</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="225"/>
       <source>toggle</source>
-      <translation type="unfinished">toggle</translation>
+      <translation>uključi/isključi</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="230"/>
       <source>on</source>
-      <translation type="unfinished">on</translation>
+      <translation>Uključeno</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="235"/>
       <source>off</source>
-      <translation type="unfinished">off</translation>
+      <translation>Isključeno</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="247"/>
@@ -141,17 +141,17 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="259"/>
       <source>This action is performed when</source>
-      <translation type="unfinished">This action is performed when</translation>
+      <translation>Ova radnja se izvodi kada</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="265"/>
       <source>the hotkey is pressed</source>
-      <translation type="unfinished">the hotkey is pressed</translation>
+      <translation>je tipka prečaca pritisnuta</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="275"/>
       <source>the hotkey is released</source>
-      <translation type="unfinished">the hotkey is released</translation>
+      <translation>je tipka prečaca oslobođena</translation>
     </message>
   </context>
   <context>
@@ -290,12 +290,12 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/HotkeyDialogBase.ui" line="14"/>
       <source>Hotkey</source>
-      <translation type="unfinished">Hotkey</translation>
+      <translation>Tipka prečaca</translation>
     </message>
     <message>
       <location filename="src/HotkeyDialogBase.ui" line="20"/>
       <source>Enter the specification for the hotkey:</source>
-      <translation type="unfinished">Enter the specification for the hotkey:</translation>
+      <translation>Odredite tipku prečaca</translation>
     </message>
   </context>
   <context>
@@ -303,22 +303,22 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/MainWindow.cpp" line="259"/>
       <source>&amp;File</source>
-      <translation type="unfinished">&amp;File</translation>
+      <translation>&amp;Datoteka</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="260"/>
       <source>&amp;Edit</source>
-      <translation type="unfinished">&amp;Edit</translation>
+      <translation>&amp;Uredi</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="261"/>
       <source>&amp;Window</source>
-      <translation type="unfinished">&amp;Window</translation>
+      <translation>&amp;Prozor</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="262"/>
       <source>&amp;Help</source>
-      <translation type="unfinished">&amp;Help</translation>
+      <translation>&amp;Pomoć</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="385"/>
@@ -355,22 +355,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="676"/>
       <source>Program can not be started</source>
-      <translation type="unfinished">Program can not be started</translation>
+      <translation>Program ne može biti pokrenut</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="676"/>
       <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-      <translation type="unfinished">The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</translation>
+      <translation>Izvršna datoteka&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;ne može se pokrenuti, kao da ne postoji. Provjerite imate li potrebne dozvole za pokretanje ovog programa.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="715"/>
       <source>Synergy client not found</source>
-      <translation type="unfinished">Synergy client not found</translation>
+      <translation>Synergy klijent nije pronađen</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="716"/>
       <source>The executable for the synergy client does not exist.</source>
-      <translation type="unfinished">The executable for the synergy client does not exist.</translation>
+      <translation>Izvršna datoteka synergy klijenta ne postoji.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="743"/>
@@ -385,52 +385,52 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="759"/>
       <source>Hostname is empty</source>
-      <translation type="unfinished">Hostname is empty</translation>
+      <translation>Naziv računala nedostaje</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="760"/>
       <source>Please fill in a hostname for the synergy client to connect to.</source>
-      <translation type="unfinished">Please fill in a hostname for the synergy client to connect to.</translation>
+      <translation>Upišite naziv računala synergy klijenta na koji se spajate.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="785"/>
       <source>Cannot write configuration file</source>
-      <translation type="unfinished">Cannot write configuration file</translation>
+      <translation>Nemoguće ispisivanje datoteke postavki</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="785"/>
       <source>The temporary configuration file required to start synergy can not be written.</source>
-      <translation type="unfinished">The temporary configuration file required to start synergy can not be written.</translation>
+      <translation>Privremena datoteka postavki potrebna za pokretanje synergya ne može biti zapisana.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="798"/>
       <source>Configuration filename invalid</source>
-      <translation type="unfinished">Configuration filename invalid</translation>
+      <translation>Pogrešan naziv datoteke postavki</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="799"/>
       <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
-      <translation type="unfinished">You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</translation>
+      <translation>Niste odabrali valjanu datoteku postavki za synergy poslužitelj. Želite li sada odabrati datoteku postavki?</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="827"/>
       <source>Synergy server not found</source>
-      <translation type="unfinished">Synergy server not found</translation>
+      <translation>Synergy poslužitelj nije pronađen</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="828"/>
       <source>The executable for the synergy server does not exist.</source>
-      <translation type="unfinished">The executable for the synergy server does not exist.</translation>
+      <translation>Izvršna datoteka synergy poslužitelja ne postoji.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="947"/>
       <source>&amp;Stop</source>
-      <translation type="unfinished">&amp;Stop</translation>
+      <translation>&amp;Zaustavi</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="954"/>
       <source>&amp;Start</source>
-      <translation type="unfinished">&amp;Start</translation>
+      <translation>&amp;Pokreni</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="970"/>
@@ -465,27 +465,27 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1047"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>Nepoznato</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1201"/>
       <source>Browse for a synergys config file</source>
-      <translation type="unfinished">Browse for a synergys config file</translation>
+      <translation>Odaberite synergy datoteku postavki</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1214"/>
       <source>Save configuration as...</source>
-      <translation type="unfinished">Save configuration as...</translation>
+      <translation>Spremi postavke kao...</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1218"/>
       <source>Save failed</source>
-      <translation type="unfinished">Save failed</translation>
+      <translation>Neuspjelo spremanje</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1218"/>
       <source>Could not save configuration to file.</source>
-      <translation type="unfinished">Could not save configuration to file.</translation>
+      <translation>Nemoguće spremanje postavki u datoteku.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1303"/>
@@ -523,7 +523,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="233"/>
       <source>IP addresses:</source>
-      <translation type="unfinished">IP addresses:</translation>
+      <translation>IP adresa:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="257"/>
@@ -533,27 +533,27 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="273"/>
       <source>Configure interactively:</source>
-      <translation type="unfinished">Configure interactively:</translation>
+      <translation>Podesite interaktivno:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="285"/>
       <source>&amp;Configure Server...</source>
-      <translation type="unfinished">&amp;Configure Server...</translation>
+      <translation>&amp;Podesite poslužitelj...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="307"/>
       <source>Use existing configuration:</source>
-      <translation type="unfinished">Use existing configuration:</translation>
+      <translation>Koristi postojeće postavke:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="316"/>
       <source>&amp;Configuration file:</source>
-      <translation type="unfinished">&amp;Configuration file:</translation>
+      <translation>&amp;Datoteka postavki:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="336"/>
       <source>&amp;Browse...</source>
-      <translation type="unfinished">&amp;Browse...</translation>
+      <translation>&amp;Pregledaj...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="354"/>
@@ -583,98 +583,98 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="438"/>
       <source>Log</source>
-      <translation type="unfinished">Log</translation>
+      <translation>Zapis</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="492"/>
       <source>Ready</source>
-      <translation type="unfinished">Ready</translation>
+      <translation>Spreman</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="515"/>
       <source>&amp;Apply</source>
-      <translation type="unfinished">&amp;Apply</translation>
+      <translation>&amp;Primijeni</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="522"/>
       <location filename="src/MainWindowBase.ui" line="551"/>
       <source>&amp;Start</source>
-      <translation type="unfinished">&amp;Start</translation>
+      <translation>&amp;Pokreni</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="532"/>
       <source>&amp;About Synergy...</source>
-      <translation type="unfinished">&amp;About Synergy...</translation>
+      <translation>&amp;O Synergyu...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="540"/>
       <source>&amp;Quit</source>
-      <translation type="unfinished">&amp;Quit</translation>
+      <translation>&amp;Zatvori</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="543"/>
       <source>Quit</source>
-      <translation type="unfinished">Quit</translation>
+      <translation>Zatvori</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="554"/>
       <source>Run</source>
-      <translation type="unfinished">Run</translation>
+      <translation>Pokreni</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="565"/>
       <source>S&amp;top</source>
-      <translation type="unfinished">S&amp;top</translation>
+      <translation>Z&amp;austavi</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="568"/>
       <source>Stop</source>
-      <translation type="unfinished">Stop</translation>
+      <translation>Zaustavi</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="576"/>
       <source>S&amp;how Status</source>
-      <translation type="unfinished">S&amp;how Status</translation>
+      <translation>P&amp;rikaži status</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="584"/>
       <source>&amp;Hide</source>
-      <translation type="unfinished">&amp;Hide</translation>
+      <translation>&amp;Sakrij</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="587"/>
       <source>Hide</source>
-      <translation type="unfinished">Hide</translation>
+      <translation>Sakrij</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="595"/>
       <source>&amp;Show</source>
-      <translation type="unfinished">&amp;Show</translation>
+      <translation>&amp;Prikaži</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="598"/>
       <source>Show</source>
-      <translation type="unfinished">Show</translation>
+      <translation>Prikaži</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="606"/>
       <source>Save configuration &amp;as...</source>
-      <translation type="unfinished">Save configuration &amp;as...</translation>
+      <translation>Spremi postavke &amp;kao...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="609"/>
       <source>Save the interactively generated server configuration to a file.</source>
-      <translation type="unfinished">Save the interactively generated server configuration to a file.</translation>
+      <translation>Spremi interaktivno generirane postavke poslužitelja u datoteku...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="617"/>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Postavke</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="620"/>
       <source>Edit settings</source>
-      <translation type="unfinished">Edit settings</translation>
+      <translation>Uredi postavke</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="628"/>
@@ -688,7 +688,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/NewScreenWidget.cpp" line="32"/>
       <source>Unnamed</source>
-      <translation type="unfinished">Unnamed</translation>
+      <translation>Neimenovan</translation>
     </message>
   </context>
   <context>
@@ -696,12 +696,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="56"/>
       <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
-      <translation type="unfinished">Synergy Configurations (*.sgc);;All files (*.*)</translation>
+      <translation>Synergy postavke (*.sgc);;Sve datoteke (*.*)</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="59"/>
       <source>Synergy Configurations (*.conf);;All files (*.*)</source>
-      <translation type="unfinished">Synergy Configurations (*.conf);;All files (*.*)</translation>
+      <translation>Synergy postavke (*.conf);;Sve datoteke (*.*)</translation>
     </message>
     <message>
       <location filename="src/main.cpp" line="139"/>
@@ -714,7 +714,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialog.cpp" line="67"/>
       <source>Screen name is empty</source>
-      <translation type="unfinished">Screen name is empty</translation>
+      <translation>Naziv zaslona nije upisan</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialog.cpp" line="68"/>
@@ -737,32 +737,32 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="14"/>
       <source>Screen Settings</source>
-      <translation type="unfinished">Screen Settings</translation>
+      <translation>Postavke zaslona</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="22"/>
       <source>Screen &amp;name:</source>
-      <translation type="unfinished">Screen &amp;name:</translation>
+      <translation>Naziv &amp;zaslona:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="42"/>
       <source>A&amp;liases</source>
-      <translation type="unfinished">A&amp;liases</translation>
+      <translation>N&amp;adimci</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="57"/>
       <source>&amp;Add</source>
-      <translation type="unfinished">&amp;Add</translation>
+      <translation>&amp;Dodaj</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="74"/>
       <source>&amp;Remove</source>
-      <translation type="unfinished">&amp;Remove</translation>
+      <translation>&amp;Ukloni</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="97"/>
       <source>&amp;Modifier keys</source>
-      <translation type="unfinished">&amp;Modifier keys</translation>
+      <translation>&amp;Promijeni tipke</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="106"/>
@@ -821,7 +821,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="283"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="330"/>
       <source>None</source>
-      <translation type="unfinished">None</translation>
+      <translation>Nijedan</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="150"/>
@@ -846,57 +846,57 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="358"/>
       <source>&amp;Dead corners</source>
-      <translation type="unfinished">&amp;Dead corners</translation>
+      <translation>&amp;Mrtvi kutovi</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="367"/>
       <source>Top-left</source>
-      <translation type="unfinished">Top-left</translation>
+      <translation>Gore-lijevo</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="374"/>
       <source>Top-right</source>
-      <translation type="unfinished">Top-right</translation>
+      <translation>Gore-desno</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="381"/>
       <source>Bottom-left</source>
-      <translation type="unfinished">Bottom-left</translation>
+      <translation>Dolje-lijevo</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="388"/>
       <source>Bottom-right</source>
-      <translation type="unfinished">Bottom-right</translation>
+      <translation>Dolje-desno</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="397"/>
       <source>Corner Si&amp;ze:</source>
-      <translation type="unfinished">Corner Si&amp;ze:</translation>
+      <translation>Veličina ku&amp;ta:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="428"/>
       <source>&amp;Fixes</source>
-      <translation type="unfinished">&amp;Fixes</translation>
+      <translation>&amp;Popraci</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="437"/>
       <source>Fix CAPS LOCK key</source>
-      <translation type="unfinished">Fix CAPS LOCK key</translation>
+      <translation>Popravi CAPS LOCK tipku</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="444"/>
       <source>Fix NUM LOCK key</source>
-      <translation type="unfinished">Fix NUM LOCK key</translation>
+      <translation>Popravi NUM LOCK tipku</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="451"/>
       <source>Fix SCROLL LOCK key</source>
-      <translation type="unfinished">Fix SCROLL LOCK key</translation>
+      <translation>Popravi SCROLL LOCK tipku</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="458"/>
       <source>Fix XTest for Xinerama</source>
-      <translation type="unfinished">Fix XTest for Xinerama</translation>
+      <translation>Popravi XTest za Xinerama</translation>
     </message>
   </context>
   <context>
@@ -904,7 +904,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSetupModel.cpp" line="51"/>
       <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-      <translation type="unfinished">&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</translation>
+      <translation>&lt;center&gt;Zaslon: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Dvostruko kliknite za uređivanje postavki&lt;br&gt;Za uklanjanje zaslona dovucite ga do ikone smeća i ispustite ga</translation>
     </message>
   </context>
   <context>
@@ -920,96 +920,96 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="14"/>
       <source>Server Configuration</source>
-      <translation type="unfinished">Server Configuration</translation>
+      <translation>Postavke poslužitelja</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="24"/>
       <source>Screens and links</source>
-      <translation type="unfinished">Screens and links</translation>
+      <translation>Zasloni i poveznice</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="35"/>
       <source>Drag a screen from the grid to the trashcan to remove it.</source>
-      <translation type="unfinished">Drag a screen from the grid to the trashcan to remove it.</translation>
+      <translation>Za uklanjanje odvucite zaslon iz polja u ikonu smeća.</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="60"/>
       <source>Configure the layout of your synergy server configuration.</source>
-      <translation type="unfinished">Configure the layout of your synergy server configuration.</translation>
+      <translation>Podesite izlaz vašeg synergy poslužitelja.</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="73"/>
       <source>Drag this button to the grid to add a new screen.</source>
-      <translation type="unfinished">Drag this button to the grid to add a new screen.</translation>
+      <translation>Povucite ovu ikonu zaslona do odabranog polja ispod.</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="128"/>
       <source>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
-      <translation type="unfinished">Drag new screens to the grid or move existing ones around.
-Drag a screen to the trashcan to delete it.
-Double click on a screen to edit its settings.</translation>
+      <translation>Dovucite novi zaslon u odabrano polje ili premjestite iz trenutnog polja.
+Za brisanje zaslona odvucite ga u ikonu smeća.
+Za uređivanje postavki dvostruko kliknite na zaslon.</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="157"/>
       <source>Hotkeys</source>
-      <translation type="unfinished">Hotkeys</translation>
+      <translation>Tipke prečaca</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="163"/>
       <source>&amp;Hotkeys</source>
-      <translation type="unfinished">&amp;Hotkeys</translation>
+      <translation>&amp;Tipke prečaca</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="175"/>
       <source>&amp;New</source>
-      <translation type="unfinished">&amp;New</translation>
+      <translation>&amp;Nova</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="185"/>
       <source>&amp;Edit</source>
-      <translation type="unfinished">&amp;Edit</translation>
+      <translation>&amp;Uredi</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="195"/>
       <source>&amp;Remove</source>
-      <translation type="unfinished">&amp;Remove</translation>
+      <translation>&amp;Ukloni</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="218"/>
       <source>A&amp;ctions</source>
-      <translation type="unfinished">A&amp;ctions</translation>
+      <translation>R&amp;adnje</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="230"/>
       <source>Ne&amp;w</source>
-      <translation type="unfinished">Ne&amp;w</translation>
+      <translation>No&amp;va</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="240"/>
       <source>E&amp;dit</source>
-      <translation type="unfinished">E&amp;dit</translation>
+      <translation>U&amp;redi</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="250"/>
       <source>Re&amp;move</source>
-      <translation type="unfinished">Re&amp;move</translation>
+      <translation>Uk&amp;loni</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="274"/>
       <source>Advanced server settings</source>
-      <translation type="unfinished">Advanced server settings</translation>
+      <translation>Napredne postavke poslužitelja</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="280"/>
       <source>&amp;Switch</source>
-      <translation type="unfinished">&amp;Switch</translation>
+      <translation>&amp;Uključi</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="291"/>
       <source>Switch &amp;after waiting</source>
-      <translation type="unfinished">Switch &amp;after waiting</translation>
+      <translation>Uključi &amp;nakon čekanja</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="330"/>
@@ -1021,12 +1021,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="344"/>
       <source>Switch on double &amp;tap within</source>
-      <translation type="unfinished">Switch on double &amp;tap within</translation>
+      <translation>Uključi dvostrukim &amp;dodirom za</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="408"/>
       <source>&amp;Options</source>
-      <translation type="unfinished">&amp;Options</translation>
+      <translation>&amp;Mogućnosti</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="416"/>
@@ -1046,12 +1046,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="471"/>
       <source>Don&apos;t take &amp;foreground window on Windows servers</source>
-      <translation type="unfinished">Don&apos;t take &amp;foreground window on Windows servers</translation>
+      <translation>Ne uzimaj &amp;prozor u prednjem planu na Windows poslužiteljima</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="481"/>
       <source>Use &amp;relative mouse moves</source>
-      <translation type="unfinished">Use &amp;relative mouse moves</translation>
+      <translation>Koristi &amp;relativne pokrete miša</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="501"/>
@@ -1061,12 +1061,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="513"/>
       <source>&amp;Check clients every</source>
-      <translation type="unfinished">&amp;Check clients every</translation>
+      <translation>&amp;Provjeri klijent svakih</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="564"/>
       <source>S&amp;ynchronize screen savers</source>
-      <translation type="unfinished">S&amp;ynchronize screen savers</translation>
+      <translation>U&amp;skladi čuvare zaslona</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="571"/>
@@ -1076,32 +1076,32 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="581"/>
       <source>&amp;Dead corners</source>
-      <translation type="unfinished">&amp;Dead corners</translation>
+      <translation>&amp;Mrtvi kutovi</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="590"/>
       <source>To&amp;p-left</source>
-      <translation type="unfinished">To&amp;p-left</translation>
+      <translation>Go&amp;re-lijevo</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="597"/>
       <source>Top-rig&amp;ht</source>
-      <translation type="unfinished">Top-rig&amp;ht</translation>
+      <translation>Gore-des&amp;no</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="604"/>
       <source>&amp;Bottom-left</source>
-      <translation type="unfinished">&amp;Bottom-left</translation>
+      <translation>&amp;Dolje-lijevo</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="611"/>
       <source>Bottom-ri&amp;ght</source>
-      <translation type="unfinished">Bottom-ri&amp;ght</translation>
+      <translation>Dolje-de&amp;sno</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="633"/>
       <source>Cor&amp;ner Size:</source>
-      <translation type="unfinished">Cor&amp;ner Size:</translation>
+      <translation>Vel&amp;ičina kuta:</translation>
     </message>
   </context>
   <context>
@@ -1109,7 +1109,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialog.cpp" line="169"/>
       <source>Save log file to...</source>
-      <translation type="unfinished">Save log file to...</translation>
+      <translation>Spremi datoteku zapisa u...</translation>
     </message>
   </context>
   <context>
@@ -1117,7 +1117,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="14"/>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Postavke</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="20"/>
@@ -1127,22 +1127,22 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="32"/>
       <source>Sc&amp;reen name:</source>
-      <translation type="unfinished">Sc&amp;reen name:</translation>
+      <translation>Na&amp;ziv zaslona:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="49"/>
       <source>P&amp;ort:</source>
-      <translation type="unfinished">P&amp;ort:</translation>
+      <translation>U&amp;laz:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="78"/>
       <source>&amp;Interface:</source>
-      <translation type="unfinished">&amp;Interface:</translation>
+      <translation>&amp;Sučelje:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="107"/>
       <source>&amp;Language:</source>
-      <translation type="unfinished">&amp;Language:</translation>
+      <translation>Jezik:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="120"/>
@@ -1207,12 +1207,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="293"/>
       <source>Logging</source>
-      <translation type="unfinished">Logging</translation>
+      <translation>Prijavljivanje</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="311"/>
       <source>&amp;Logging level:</source>
-      <translation type="unfinished">&amp;Logging level:</translation>
+      <translation>&amp;Razina prijavljivanja:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="322"/>
@@ -1222,27 +1222,27 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="327"/>
       <source>Debug</source>
-      <translation type="unfinished">Debug</translation>
+      <translation>Otklanjanje greške</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="332"/>
       <source>Debug1</source>
-      <translation type="unfinished">Debug1</translation>
+      <translation>Otklanjanje greške1</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="337"/>
       <source>Debug2</source>
-      <translation type="unfinished">Debug2</translation>
+      <translation>Otklanjanje greške2</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="345"/>
       <source>Log to file:</source>
-      <translation type="unfinished">Log to file:</translation>
+      <translation>Prijava u datoteku:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="362"/>
       <source>Browse...</source>
-      <translation type="unfinished">Browse...</translation>
+      <translation>Odaberi...</translation>
     </message>
   </context>
   <context>
@@ -1250,12 +1250,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizard.cpp" line="65"/>
       <source>Setup Synergy</source>
-      <translation type="unfinished">Setup Synergy</translation>
+      <translation>Podesite Synergy</translation>
     </message>
     <message>
       <location filename="src/SetupWizard.cpp" line="75"/>
       <source>Please select an option.</source>
-      <translation type="unfinished">Please select an option.</translation>
+      <translation>Molim, odaberite mogućnost.</translation>
     </message>
   </context>
   <context>
@@ -1263,27 +1263,27 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizardBase.ui" line="26"/>
       <source>Setup Synergy</source>
-      <translation type="unfinished">Setup Synergy</translation>
+      <translation>Podesite Synergy</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="30"/>
       <source>Welcome</source>
-      <translation type="unfinished">Welcome</translation>
+      <translation>Dobrodošli</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="39"/>
       <source>Thanks for installing Synergy!</source>
-      <translation type="unfinished">Thanks for installing Synergy!</translation>
+      <translation>Hvala što ste instalirali Synergy!</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="114"/>
       <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-      <translation type="unfinished">Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</translation>
+      <translation>Synergy vam omogućuje lagano dijeljenje vašg miša i tipkovnice između više računala na vašoj radnoj površini. Synergy je besplatan i otvorenog kôda. Jednostavno pomaknite vaš miš preko ruba zaslona jednog računala na zaslon drugog računala. Čak možete dijeliti sve vaše međuspremnike. Sve što trebate je Internet veza. Synergy je više platformska aplikacija (radi na Windowsima, Mac OS X i Linuxu).</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="131"/>
       <source>Server or Client?</source>
-      <translation type="unfinished">Server or Client?</translation>
+      <translation>Poslužitelj ili klijent?</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="146"/>
@@ -1350,7 +1350,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/VersionChecker.cpp" line="145"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>Nepoznato</translation>
     </message>
   </context>
   <context>
