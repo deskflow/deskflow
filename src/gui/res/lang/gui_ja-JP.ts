@@ -6,7 +6,7 @@
     <message>
       <location filename="src/AboutDialogBase.ui" line="38"/>
       <source>About Synergy</source>
-      <translation type="unfinished">About Synergy</translation>
+      <translation>Synergyについて</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="53"/>
@@ -32,13 +32,13 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="124"/>
       <source>Version:</source>
-      <translation type="unfinished">Version:</translation>
+      <translation>バージョン:</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="140"/>
       <location filename="src/AboutDialogBase.ui" line="174"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>不明</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="167"/>
@@ -48,7 +48,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="194"/>
       <source>&amp;Ok</source>
-      <translation type="unfinished">&amp;Ok</translation>
+      <translation>OK</translation>
     </message>
   </context>
   <context>
@@ -56,82 +56,82 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="14"/>
       <source>Configure Action</source>
-      <translation type="unfinished">Configure Action</translation>
+      <translation>動作を構成</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="20"/>
       <source>Choose the action to perform</source>
-      <translation type="unfinished">Choose the action to perform</translation>
+      <translation>実行する動作を選択</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="26"/>
       <source>Press a hotkey</source>
-      <translation type="unfinished">Press a hotkey</translation>
+      <translation>ホットキーを押す</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="36"/>
       <source>Release a hotkey</source>
-      <translation type="unfinished">Release a hotkey</translation>
+      <translation>ホットキーを離す</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="43"/>
       <source>Press and release a hotkey</source>
-      <translation type="unfinished">Press and release a hotkey</translation>
+      <translation>ホットキーを押して離す</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="69"/>
       <source>only on these screens</source>
-      <translation type="unfinished">only on these screens</translation>
+      <translation>これらの画面だけ</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="119"/>
       <source>Switch to screen</source>
-      <translation type="unfinished">Switch to screen</translation>
+      <translation>画面に切り替え</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="150"/>
       <source>Switch in direction</source>
-      <translation type="unfinished">Switch in direction</translation>
+      <translation>切り替える方向</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="174"/>
       <source>left</source>
-      <translation type="unfinished">left</translation>
+      <translation>左</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="179"/>
       <source>right</source>
-      <translation type="unfinished">right</translation>
+      <translation>右</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="184"/>
       <source>up</source>
-      <translation type="unfinished">up</translation>
+      <translation>上</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="189"/>
       <source>down</source>
-      <translation type="unfinished">down</translation>
+      <translation>下</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="201"/>
       <source>Lock cursor to screen</source>
-      <translation type="unfinished">Lock cursor to screen</translation>
+      <translation>カーソルを画面に限定</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="225"/>
       <source>toggle</source>
-      <translation type="unfinished">toggle</translation>
+      <translation>切り替え</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="230"/>
       <source>on</source>
-      <translation type="unfinished">on</translation>
+      <translation>オン</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="235"/>
       <source>off</source>
-      <translation type="unfinished">off</translation>
+      <translation>オフ</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="247"/>
@@ -141,17 +141,17 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="259"/>
       <source>This action is performed when</source>
-      <translation type="unfinished">This action is performed when</translation>
+      <translation>この動作を実行する時: </translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="265"/>
       <source>the hotkey is pressed</source>
-      <translation type="unfinished">the hotkey is pressed</translation>
+      <translation>ホットキーを押したとき</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="275"/>
       <source>the hotkey is released</source>
-      <translation type="unfinished">the hotkey is released</translation>
+      <translation>ホットキーを離したとき</translation>
     </message>
   </context>
   <context>
@@ -290,12 +290,12 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/HotkeyDialogBase.ui" line="14"/>
       <source>Hotkey</source>
-      <translation type="unfinished">Hotkey</translation>
+      <translation>ホットキー</translation>
     </message>
     <message>
       <location filename="src/HotkeyDialogBase.ui" line="20"/>
       <source>Enter the specification for the hotkey:</source>
-      <translation type="unfinished">Enter the specification for the hotkey:</translation>
+      <translation>ホットキーの指定方法を入力してください:</translation>
     </message>
   </context>
   <context>
@@ -303,22 +303,22 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/MainWindow.cpp" line="259"/>
       <source>&amp;File</source>
-      <translation type="unfinished">&amp;File</translation>
+      <translation>ファイル</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="260"/>
       <source>&amp;Edit</source>
-      <translation type="unfinished">&amp;Edit</translation>
+      <translation>編集</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="261"/>
       <source>&amp;Window</source>
-      <translation type="unfinished">&amp;Window</translation>
+      <translation>ウィンドウ</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="262"/>
       <source>&amp;Help</source>
-      <translation type="unfinished">&amp;Help</translation>
+      <translation>ヘルプ</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="385"/>
@@ -355,22 +355,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="676"/>
       <source>Program can not be started</source>
-      <translation type="unfinished">Program can not be started</translation>
+      <translation>プログラムを開始できません</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="676"/>
       <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-      <translation type="unfinished">The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</translation>
+      <translation>実行ファイル&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;は存在しますが、開始できませんでした。このプログラムを動作させる十分な権限があるかどうか確認してください。</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="715"/>
       <source>Synergy client not found</source>
-      <translation type="unfinished">Synergy client not found</translation>
+      <translation>Synergyクライアントが見つかりません</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="716"/>
       <source>The executable for the synergy client does not exist.</source>
-      <translation type="unfinished">The executable for the synergy client does not exist.</translation>
+      <translation>Synergyクライアントの実行ファイルが存在しません。</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="743"/>
@@ -385,52 +385,52 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="759"/>
       <source>Hostname is empty</source>
-      <translation type="unfinished">Hostname is empty</translation>
+      <translation>ホスト名が入力されていません</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="760"/>
       <source>Please fill in a hostname for the synergy client to connect to.</source>
-      <translation type="unfinished">Please fill in a hostname for the synergy client to connect to.</translation>
+      <translation>Synergyクライアントで接続するホスト名を入力してください。</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="785"/>
       <source>Cannot write configuration file</source>
-      <translation type="unfinished">Cannot write configuration file</translation>
+      <translation>構成ファイルに書き込めません</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="785"/>
       <source>The temporary configuration file required to start synergy can not be written.</source>
-      <translation type="unfinished">The temporary configuration file required to start synergy can not be written.</translation>
+      <translation>Synergyの開始に必要な一時的な構成ファイルを書き込めません。</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="798"/>
       <source>Configuration filename invalid</source>
-      <translation type="unfinished">Configuration filename invalid</translation>
+      <translation>構成ファイル名が正しくありません。</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="799"/>
       <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
-      <translation type="unfinished">You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</translation>
+      <translation>Synergyサーバーの正しい構成ファイルを書き込んでいません。今、構成ファイルを閲覧しますか?</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="827"/>
       <source>Synergy server not found</source>
-      <translation type="unfinished">Synergy server not found</translation>
+      <translation>Synergyサーバーが見つかりません</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="828"/>
       <source>The executable for the synergy server does not exist.</source>
-      <translation type="unfinished">The executable for the synergy server does not exist.</translation>
+      <translation>Synergyサーバーの実行ファイルが存在しません。</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="947"/>
       <source>&amp;Stop</source>
-      <translation type="unfinished">&amp;Stop</translation>
+      <translation>停止</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="954"/>
       <source>&amp;Start</source>
-      <translation type="unfinished">&amp;Start</translation>
+      <translation>開始</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="970"/>
@@ -465,27 +465,27 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1047"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>不明</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1201"/>
       <source>Browse for a synergys config file</source>
-      <translation type="unfinished">Browse for a synergys config file</translation>
+      <translation>Synergyの設定ファイルを参照</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1214"/>
       <source>Save configuration as...</source>
-      <translation type="unfinished">Save configuration as...</translation>
+      <translation>設定に名前をつけて保存</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1218"/>
       <source>Save failed</source>
-      <translation type="unfinished">Save failed</translation>
+      <translation>保存できませんでした</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1218"/>
       <source>Could not save configuration to file.</source>
-      <translation type="unfinished">Could not save configuration to file.</translation>
+      <translation>設定をファイルに保存できませんでした</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1303"/>
@@ -523,7 +523,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="233"/>
       <source>IP addresses:</source>
-      <translation type="unfinished">IP addresses:</translation>
+      <translation>IPアドレス:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="257"/>
@@ -533,27 +533,27 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="273"/>
       <source>Configure interactively:</source>
-      <translation type="unfinished">Configure interactively:</translation>
+      <translation>インタラクティブモードで設定:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="285"/>
       <source>&amp;Configure Server...</source>
-      <translation type="unfinished">&amp;Configure Server...</translation>
+      <translation>サーバーを設定</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="307"/>
       <source>Use existing configuration:</source>
-      <translation type="unfinished">Use existing configuration:</translation>
+      <translation>既存の設定を使用</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="316"/>
       <source>&amp;Configuration file:</source>
-      <translation type="unfinished">&amp;Configuration file:</translation>
+      <translation>設定ファイル:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="336"/>
       <source>&amp;Browse...</source>
-      <translation type="unfinished">&amp;Browse...</translation>
+      <translation>参照</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="354"/>
@@ -583,98 +583,98 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="438"/>
       <source>Log</source>
-      <translation type="unfinished">Log</translation>
+      <translation>ログ</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="492"/>
       <source>Ready</source>
-      <translation type="unfinished">Ready</translation>
+      <translation>準備完了</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="515"/>
       <source>&amp;Apply</source>
-      <translation type="unfinished">&amp;Apply</translation>
+      <translation>適用</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="522"/>
       <location filename="src/MainWindowBase.ui" line="551"/>
       <source>&amp;Start</source>
-      <translation type="unfinished">&amp;Start</translation>
+      <translation>開始</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="532"/>
       <source>&amp;About Synergy...</source>
-      <translation type="unfinished">&amp;About Synergy...</translation>
+      <translation>Synergyについて...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="540"/>
       <source>&amp;Quit</source>
-      <translation type="unfinished">&amp;Quit</translation>
+      <translation>終了</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="543"/>
       <source>Quit</source>
-      <translation type="unfinished">Quit</translation>
+      <translation>終了</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="554"/>
       <source>Run</source>
-      <translation type="unfinished">Run</translation>
+      <translation>実行</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="565"/>
       <source>S&amp;top</source>
-      <translation type="unfinished">S&amp;top</translation>
+      <translation>停止</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="568"/>
       <source>Stop</source>
-      <translation type="unfinished">Stop</translation>
+      <translation>停止</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="576"/>
       <source>S&amp;how Status</source>
-      <translation type="unfinished">S&amp;how Status</translation>
+      <translation>状態を表示</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="584"/>
       <source>&amp;Hide</source>
-      <translation type="unfinished">&amp;Hide</translation>
+      <translation>隠す</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="587"/>
       <source>Hide</source>
-      <translation type="unfinished">Hide</translation>
+      <translation>隠す</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="595"/>
       <source>&amp;Show</source>
-      <translation type="unfinished">&amp;Show</translation>
+      <translation>表示する</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="598"/>
       <source>Show</source>
-      <translation type="unfinished">Show</translation>
+      <translation>表示する</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="606"/>
       <source>Save configuration &amp;as...</source>
-      <translation type="unfinished">Save configuration &amp;as...</translation>
+      <translation>設定に名前をつけて保存</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="609"/>
       <source>Save the interactively generated server configuration to a file.</source>
-      <translation type="unfinished">Save the interactively generated server configuration to a file.</translation>
+      <translation>インタラクティブモードで生成したサーバ設定をファイルに保存</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="617"/>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>設定</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="620"/>
       <source>Edit settings</source>
-      <translation type="unfinished">Edit settings</translation>
+      <translation>設定を編集</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="628"/>
@@ -688,7 +688,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/NewScreenWidget.cpp" line="32"/>
       <source>Unnamed</source>
-      <translation type="unfinished">Unnamed</translation>
+      <translation>名前なし</translation>
     </message>
   </context>
   <context>
@@ -696,12 +696,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="56"/>
       <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
-      <translation type="unfinished">Synergy Configurations (*.sgc);;All files (*.*)</translation>
+      <translation>Synergyの構成(*.sgc);;すべてのファイル(*.*)</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="59"/>
       <source>Synergy Configurations (*.conf);;All files (*.*)</source>
-      <translation type="unfinished">Synergy Configurations (*.conf);;All files (*.*)</translation>
+      <translation>Synergyの構成(*.conf);;すべてのファイル(*.*)</translation>
     </message>
     <message>
       <location filename="src/main.cpp" line="139"/>
@@ -714,22 +714,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialog.cpp" line="67"/>
       <source>Screen name is empty</source>
-      <translation type="unfinished">Screen name is empty</translation>
+      <translation>画面の名前が空です。</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialog.cpp" line="68"/>
       <source>The screen name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-      <translation type="unfinished">The screen name cannot be empty. Please either fill in a name or cancel the dialog.</translation>
+      <translation>画面の名前を空にすることはできません。名前を入力するかダイアログをキャンセルしてください。</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialog.cpp" line="83"/>
       <source>Screen name matches alias</source>
-      <translation type="unfinished">Screen name matches alias</translation>
+      <translation>画面の名前は別名と一致</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialog.cpp" line="84"/>
       <source>The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</source>
-      <translation type="unfinished">The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</translation>
+      <translation>画面の名前を別名と同じにすることは出来ません。別名を削除するか画面の名前を変更してください。</translation>
     </message>
   </context>
   <context>
@@ -737,37 +737,37 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="14"/>
       <source>Screen Settings</source>
-      <translation type="unfinished">Screen Settings</translation>
+      <translation>画面の設定</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="22"/>
       <source>Screen &amp;name:</source>
-      <translation type="unfinished">Screen &amp;name:</translation>
+      <translation>画面の名前</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="42"/>
       <source>A&amp;liases</source>
-      <translation type="unfinished">A&amp;liases</translation>
+      <translation>別名</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="57"/>
       <source>&amp;Add</source>
-      <translation type="unfinished">&amp;Add</translation>
+      <translation>追加</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="74"/>
       <source>&amp;Remove</source>
-      <translation type="unfinished">&amp;Remove</translation>
+      <translation>削除</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="97"/>
       <source>&amp;Modifier keys</source>
-      <translation type="unfinished">&amp;Modifier keys</translation>
+      <translation>修飾キー</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="106"/>
       <source>&amp;Shift:</source>
-      <translation type="unfinished">&amp;Shift:</translation>
+      <translation>シフト</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="117"/>
@@ -776,7 +776,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="258"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="305"/>
       <source>Shift</source>
-      <translation type="unfinished">Shift</translation>
+      <translation>シフト</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="122"/>
@@ -785,7 +785,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="263"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="310"/>
       <source>Ctrl</source>
-      <translation type="unfinished">Ctrl</translation>
+      <translation>コントロール</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="127"/>
@@ -803,7 +803,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="273"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="320"/>
       <source>Meta</source>
-      <translation type="unfinished">Meta</translation>
+      <translation>メタ</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="137"/>
@@ -812,7 +812,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="278"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="325"/>
       <source>Super</source>
-      <translation type="unfinished">Super</translation>
+      <translation>スーパー</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="142"/>
@@ -821,82 +821,82 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="283"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="330"/>
       <source>None</source>
-      <translation type="unfinished">None</translation>
+      <translation>なし</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="150"/>
       <source>&amp;Ctrl:</source>
-      <translation type="unfinished">&amp;Ctrl:</translation>
+      <translation>&amp;undefinedCtrl:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="197"/>
       <source>Al&amp;t:</source>
-      <translation type="unfinished">Al&amp;t:</translation>
+      <translation>&amp;undefinedl&amp;t:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="244"/>
       <source>M&amp;eta:</source>
-      <translation type="unfinished">M&amp;eta:</translation>
+      <translation>&amp;undefined&amp;eta:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="291"/>
       <source>S&amp;uper:</source>
-      <translation type="unfinished">S&amp;uper:</translation>
+      <translation>&amp;undefined&amp;uper:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="358"/>
       <source>&amp;Dead corners</source>
-      <translation type="unfinished">&amp;Dead corners</translation>
+      <translation>無効とする角</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="367"/>
       <source>Top-left</source>
-      <translation type="unfinished">Top-left</translation>
+      <translation>左上</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="374"/>
       <source>Top-right</source>
-      <translation type="unfinished">Top-right</translation>
+      <translation>右上</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="381"/>
       <source>Bottom-left</source>
-      <translation type="unfinished">Bottom-left</translation>
+      <translation>左下</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="388"/>
       <source>Bottom-right</source>
-      <translation type="unfinished">Bottom-right</translation>
+      <translation>右下</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="397"/>
       <source>Corner Si&amp;ze:</source>
-      <translation type="unfinished">Corner Si&amp;ze:</translation>
+      <translation>角の大きさ</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="428"/>
       <source>&amp;Fixes</source>
-      <translation type="unfinished">&amp;Fixes</translation>
+      <translation>修正</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="437"/>
       <source>Fix CAPS LOCK key</source>
-      <translation type="unfinished">Fix CAPS LOCK key</translation>
+      <translation>CAPSロックキーを固定</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="444"/>
       <source>Fix NUM LOCK key</source>
-      <translation type="unfinished">Fix NUM LOCK key</translation>
+      <translation>NUMロックキーを固定</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="451"/>
       <source>Fix SCROLL LOCK key</source>
-      <translation type="unfinished">Fix SCROLL LOCK key</translation>
+      <translation>SCROLLロックキーを固定</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="458"/>
       <source>Fix XTest for Xinerama</source>
-      <translation type="unfinished">Fix XTest for Xinerama</translation>
+      <translation>Xinerama向けにXTestを修正</translation>
     </message>
   </context>
   <context>
@@ -904,7 +904,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSetupModel.cpp" line="51"/>
       <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-      <translation type="unfinished">&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</translation>
+      <translation>&lt;center&gt;画面: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;ダブルクリックで設定を編集&lt;br&gt;削除するときは画面をゴミ箱にドラッグします</translation>
     </message>
   </context>
   <context>
@@ -920,113 +920,113 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="14"/>
       <source>Server Configuration</source>
-      <translation type="unfinished">Server Configuration</translation>
+      <translation>サーバーの構成</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="24"/>
       <source>Screens and links</source>
-      <translation type="unfinished">Screens and links</translation>
+      <translation>画面とリンク</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="35"/>
       <source>Drag a screen from the grid to the trashcan to remove it.</source>
-      <translation type="unfinished">Drag a screen from the grid to the trashcan to remove it.</translation>
+      <translation>削除する時はグリッド内の画面をゴミ箱にドラッグしてください。</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="60"/>
       <source>Configure the layout of your synergy server configuration.</source>
-      <translation type="unfinished">Configure the layout of your synergy server configuration.</translation>
+      <translation>サーバ構成の配置を設定する</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="73"/>
       <source>Drag this button to the grid to add a new screen.</source>
-      <translation type="unfinished">Drag this button to the grid to add a new screen.</translation>
+      <translation>新規画面の追加はこのボタンをグリッド内にドラッグします。</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="128"/>
       <source>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
-      <translation type="unfinished">Drag new screens to the grid or move existing ones around.
-Drag a screen to the trashcan to delete it.
-Double click on a screen to edit its settings.</translation>
+      <translation>新規画面をグリッド内にドラッグするか既存画面を移動してください。
+画面をゴミ箱にドラッグすると削除します。
+設定を編集する場合は画面上でダブルクリックしてください。</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="157"/>
       <source>Hotkeys</source>
-      <translation type="unfinished">Hotkeys</translation>
+      <translation>ホットキー</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="163"/>
       <source>&amp;Hotkeys</source>
-      <translation type="unfinished">&amp;Hotkeys</translation>
+      <translation>ホットキー</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="175"/>
       <source>&amp;New</source>
-      <translation type="unfinished">&amp;New</translation>
+      <translation>新規</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="185"/>
       <source>&amp;Edit</source>
-      <translation type="unfinished">&amp;Edit</translation>
+      <translation>編集</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="195"/>
       <source>&amp;Remove</source>
-      <translation type="unfinished">&amp;Remove</translation>
+      <translation>削除</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="218"/>
       <source>A&amp;ctions</source>
-      <translation type="unfinished">A&amp;ctions</translation>
+      <translation>アクション</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="230"/>
       <source>Ne&amp;w</source>
-      <translation type="unfinished">Ne&amp;w</translation>
+      <translation>新規</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="240"/>
       <source>E&amp;dit</source>
-      <translation type="unfinished">E&amp;dit</translation>
+      <translation>編集</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="250"/>
       <source>Re&amp;move</source>
-      <translation type="unfinished">Re&amp;move</translation>
+      <translation>削除</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="274"/>
       <source>Advanced server settings</source>
-      <translation type="unfinished">Advanced server settings</translation>
+      <translation>サーバーの詳細な設定</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="280"/>
       <source>&amp;Switch</source>
-      <translation type="unfinished">&amp;Switch</translation>
+      <translation>切り替え</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="291"/>
       <source>Switch &amp;after waiting</source>
-      <translation type="unfinished">Switch &amp;after waiting</translation>
+      <translation>次の時間の後切り替え</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="330"/>
       <location filename="src/ServerConfigDialogBase.ui" line="383"/>
       <location filename="src/ServerConfigDialogBase.ui" line="552"/>
       <source>ms</source>
-      <translation type="unfinished">ms</translation>
+      <translation>ミリ秒</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="344"/>
       <source>Switch on double &amp;tap within</source>
-      <translation type="unfinished">Switch on double &amp;tap within</translation>
+      <translation>次の時間内のダブルタップで切り替え</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="408"/>
       <source>&amp;Options</source>
-      <translation type="unfinished">&amp;Options</translation>
+      <translation>オプション</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="416"/>
@@ -1046,12 +1046,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="471"/>
       <source>Don&apos;t take &amp;foreground window on Windows servers</source>
-      <translation type="unfinished">Don&apos;t take &amp;foreground window on Windows servers</translation>
+      <translation>Windowsサーバでウィンドウを前面に表示しない</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="481"/>
       <source>Use &amp;relative mouse moves</source>
-      <translation type="unfinished">Use &amp;relative mouse moves</translation>
+      <translation>マウスの相対的な動きを使用</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="501"/>
@@ -1061,12 +1061,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="513"/>
       <source>&amp;Check clients every</source>
-      <translation type="unfinished">&amp;Check clients every</translation>
+      <translation>クライアント確認頻度</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="564"/>
       <source>S&amp;ynchronize screen savers</source>
-      <translation type="unfinished">S&amp;ynchronize screen savers</translation>
+      <translation>スクリーンセーバーの同期</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="571"/>
@@ -1076,32 +1076,32 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="581"/>
       <source>&amp;Dead corners</source>
-      <translation type="unfinished">&amp;Dead corners</translation>
+      <translation>無効とする角</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="590"/>
       <source>To&amp;p-left</source>
-      <translation type="unfinished">To&amp;p-left</translation>
+      <translation>左上</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="597"/>
       <source>Top-rig&amp;ht</source>
-      <translation type="unfinished">Top-rig&amp;ht</translation>
+      <translation>右上</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="604"/>
       <source>&amp;Bottom-left</source>
-      <translation type="unfinished">&amp;Bottom-left</translation>
+      <translation>左下</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="611"/>
       <source>Bottom-ri&amp;ght</source>
-      <translation type="unfinished">Bottom-ri&amp;ght</translation>
+      <translation>右下</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="633"/>
       <source>Cor&amp;ner Size:</source>
-      <translation type="unfinished">Cor&amp;ner Size:</translation>
+      <translation>隅の大きさ:</translation>
     </message>
   </context>
   <context>
@@ -1109,7 +1109,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialog.cpp" line="169"/>
       <source>Save log file to...</source>
-      <translation type="unfinished">Save log file to...</translation>
+      <translation>ログファイルの保存先</translation>
     </message>
   </context>
   <context>
@@ -1117,32 +1117,32 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="14"/>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>設定</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="20"/>
       <source>&amp;Miscellaneous</source>
-      <translation type="unfinished">&amp;Miscellaneous</translation>
+      <translation>その他</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="32"/>
       <source>Sc&amp;reen name:</source>
-      <translation type="unfinished">Sc&amp;reen name:</translation>
+      <translation>スクリーン名:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="49"/>
       <source>P&amp;ort:</source>
-      <translation type="unfinished">P&amp;ort:</translation>
+      <translation>ポート:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="78"/>
       <source>&amp;Interface:</source>
-      <translation type="unfinished">&amp;Interface:</translation>
+      <translation>インターフェース:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="107"/>
       <source>&amp;Language:</source>
-      <translation type="unfinished">&amp;Language:</translation>
+      <translation>言語</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="120"/>
@@ -1207,42 +1207,42 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="293"/>
       <source>Logging</source>
-      <translation type="unfinished">Logging</translation>
+      <translation>ログ</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="311"/>
       <source>&amp;Logging level:</source>
-      <translation type="unfinished">&amp;Logging level:</translation>
+      <translation>ログレベル:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="322"/>
       <source>Info</source>
-      <translation type="unfinished">Info</translation>
+      <translation>情報</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="327"/>
       <source>Debug</source>
-      <translation type="unfinished">Debug</translation>
+      <translation>デバッグ情報</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="332"/>
       <source>Debug1</source>
-      <translation type="unfinished">Debug1</translation>
+      <translation>デバッグ情報1</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="337"/>
       <source>Debug2</source>
-      <translation type="unfinished">Debug2</translation>
+      <translation>デバッグ情報2</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="345"/>
       <source>Log to file:</source>
-      <translation type="unfinished">Log to file:</translation>
+      <translation>ログ記録先ファイル:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="362"/>
       <source>Browse...</source>
-      <translation type="unfinished">Browse...</translation>
+      <translation>参照...</translation>
     </message>
   </context>
   <context>
@@ -1250,12 +1250,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizard.cpp" line="65"/>
       <source>Setup Synergy</source>
-      <translation type="unfinished">Setup Synergy</translation>
+      <translation>Synergyのセットアップ</translation>
     </message>
     <message>
       <location filename="src/SetupWizard.cpp" line="75"/>
       <source>Please select an option.</source>
-      <translation type="unfinished">Please select an option.</translation>
+      <translation>オプションを選択してください。</translation>
     </message>
   </context>
   <context>
@@ -1263,27 +1263,27 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizardBase.ui" line="26"/>
       <source>Setup Synergy</source>
-      <translation type="unfinished">Setup Synergy</translation>
+      <translation>Synergyのセットアップ</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="30"/>
       <source>Welcome</source>
-      <translation type="unfinished">Welcome</translation>
+      <translation>ようこそ</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="39"/>
       <source>Thanks for installing Synergy!</source>
-      <translation type="unfinished">Thanks for installing Synergy!</translation>
+      <translation>Synergyをインストールしていただき、ありがとうございます！</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="114"/>
       <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-      <translation type="unfinished">Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</translation>
+      <translation>Synergyは複数のコンピュータ間のマウスとキーボードを簡単に共有することができるフリーのオープンソースソフトウェアです。あるコンピュータの画面の端にマウスを移動すると別のコンピュータの画面に移ります。クリップボードを共有することもできます。必要なのは ネットワーク接続だけです。 SynergyはクロスプラットフォームでWindows, Mac OS X, Linux上で動作します。</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="131"/>
       <source>Server or Client?</source>
-      <translation type="unfinished">Server or Client?</translation>
+      <translation>サーバーまたはクライアント</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="146"/>
@@ -1350,7 +1350,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/VersionChecker.cpp" line="145"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>不明</translation>
     </message>
   </context>
   <context>
