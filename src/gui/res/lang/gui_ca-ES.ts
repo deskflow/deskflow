@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="uk" sourcelanguage="en">
+<TS version="2.1" language="ca-ES" sourcelanguage="en">
 <context>
     <name>AboutDialogBase</name>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="38"/>
         <source>About Synergy</source>
-        <translation>Про Synergy</translation>
+        <translation>En quant a Synergy</translation>
     </message>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="140"/>
         <location filename="../../src/AboutDialogBase.ui" line="174"/>
         <source>Unknown</source>
-        <translation>Невідомо</translation>
+        <translation>Desconegut </translation>
     </message>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="124"/>
         <source>Version:</source>
-        <translation>Версія:</translation>
+        <translation>Versió:</translation>
     </message>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="53"/>
@@ -40,7 +40,7 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="194"/>
         <source>&amp;Ok</source>
-        <translation>OK</translation>
+        <translation>Ok</translation>
     </message>
 </context>
 <context>
@@ -48,82 +48,82 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="14"/>
         <source>Configure Action</source>
-        <translation>Налаштування дій</translation>
+        <translation>Configurar Acció</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="20"/>
         <source>Choose the action to perform</source>
-        <translation>Виберіть дію, що виконується</translation>
+        <translation>Tria l&apos;acció a realitzar</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="26"/>
         <source>Press a hotkey</source>
-        <translation>Натисніть гарячу клавішу</translation>
+        <translation>Prem una tecla d&apos;accés ràpid</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="36"/>
         <source>Release a hotkey</source>
-        <translation>Відпустіть гарячу клавішу</translation>
+        <translation>Allibera una tecla d&apos;accés ràpid</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="43"/>
         <source>Press and release a hotkey</source>
-        <translation>Натисніть та відпустіть гарячу клавішу</translation>
+        <translation>Prem i allibera una tecla d&apos;accés ràpid</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="69"/>
         <source>only on these screens</source>
-        <translation>тільки на цих екранах</translation>
+        <translation>només en aquestes pantalles</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="119"/>
         <source>Switch to screen</source>
-        <translation>Перехід на екран</translation>
+        <translation>Canviar de pantalla</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="150"/>
         <source>Switch in direction</source>
-        <translation>Перехід в напрямку</translation>
+        <translation>Canviar de direcció</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="174"/>
         <source>left</source>
-        <translation>вліво</translation>
+        <translation>esquerra</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="179"/>
         <source>right</source>
-        <translation>вправо</translation>
+        <translation>dreta</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="184"/>
         <source>up</source>
-        <translation>вверх</translation>
+        <translation>amunt</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="189"/>
         <source>down</source>
-        <translation>вниз</translation>
+        <translation>avall</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="201"/>
         <source>Lock cursor to screen</source>
-        <translation>Закріпити курсор за екраном</translation>
+        <translation>Bloquejar el cursor a la pantalla</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="225"/>
         <source>toggle</source>
-        <translation>переключити</translation>
+        <translation>intercanviar</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="230"/>
         <source>on</source>
-        <translation>ввімк.</translation>
+        <translation>on</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="235"/>
         <source>off</source>
-        <translation>вимк.</translation>
+        <translation>off</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="247"/>
@@ -133,17 +133,17 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="259"/>
         <source>This action is performed when</source>
-        <translation>Ця дія виконується коли</translation>
+        <translation>Aquesta acció es realitza quan</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="265"/>
         <source>the hotkey is pressed</source>
-        <translation>гаряча клавіша натиснута</translation>
+        <translation>s&apos;ha premut la tecla d&apos;accés ràpid</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="275"/>
         <source>the hotkey is released</source>
-        <translation>гаряча клавіша відпущена</translation>
+        <translation>s&apos;ha allibrerat la tecla d&apos;accés ràpid</translation>
     </message>
 </context>
 <context>
@@ -270,12 +270,12 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
         <location filename="../../src/HotkeyDialogBase.ui" line="14"/>
         <source>Hotkey</source>
-        <translation>Гаряча клавіша</translation>
+        <translation>Accés Ràpid</translation>
     </message>
     <message>
         <location filename="../../src/HotkeyDialogBase.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
-        <translation>Вкажіть специфікацію гарячої клавіші:</translation>
+        <translation>Entrar l&apos;especificació per la tecla d&apos;accés ràpid</translation>
     </message>
 </context>
 <context>
@@ -283,33 +283,33 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
         <location filename="../../src/MainWindow.cpp" line="954"/>
         <source>&amp;Start</source>
-        <translation>Старт</translation>
+        <translation>&amp;Engegar</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="259"/>
         <source>&amp;File</source>
-        <translation>Файл</translation>
+        <translation>&amp;Arxiu</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="260"/>
         <source>&amp;Edit</source>
-        <translation>Редагування</translation>
+        <translation>&amp;Editar</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="261"/>
         <source>&amp;Window</source>
-        <translation>Вікно</translation>
+        <translation>&amp;Finestra</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="262"/>
         <source>&amp;Help</source>
-        <translation>Допомога</translation>
+        <translation>&amp;Ajuda</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="385"/>
         <source>&lt;p&gt;Your version of Synergy is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
         <oldsource>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</oldsource>
-        <translation>&lt;p&gt;Ваша версія Synergy застаріла. Зараз доступна версія &lt;b&gt;%1&lt;/b&gt; для &lt;a href=&quot;%2&quot;&gt;завантаження&lt;/a&gt;.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;La teva versió de Synergy està desactualitzada. La nova versió &lt;b&gt;%1&lt;/b&gt; està ara disponible per &lt;a href=&quot;%2&quot;&gt;descarregar&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="447"/>
@@ -330,22 +330,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="676"/>
         <source>Program can not be started</source>
-        <translation>Програма не може бути запущена</translation>
+        <translation>El programa no ha pogut iniciar-se</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="676"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation>Виконуваний фал &lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;не може запуститись, хоча він існує. Будь ласка, перевірте чи у Вас достатньо прав для запуску цієї програми.</translation>
+        <translation>L&apos;executable &lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;no ha pogut ser iniciat correctament, tot i que aquest existeix. Si us plau revisa si tens permisos suficients per executar aquest programa.</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="715"/>
         <source>Synergy client not found</source>
-        <translation>Не знайдено жодного клієнта Synergy</translation>
+        <translation>No s&apos;ha trobat cap client de Synergy</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="716"/>
         <source>The executable for the synergy client does not exist.</source>
-        <translation>Виконуваної програми для клієнта Synergy не існує.</translation>
+        <translation>L&apos;executable del client de Synergy no existeix.</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="743"/>
@@ -360,47 +360,47 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="759"/>
         <source>Hostname is empty</source>
-        <translation>Ім&apos;я хосту не вказане</translation>
+        <translation>El nom de Host està buit</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="760"/>
         <source>Please fill in a hostname for the synergy client to connect to.</source>
-        <translation>Будь ласка вкажіть ім&apos;я хосту до якого повинен приєднатися клієнт Synergy.</translation>
+        <translation>Si us plau completa el camp nom de host per al client de Synergy per connectar-t&apos;hi.</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="785"/>
         <source>Cannot write configuration file</source>
-        <translation>Неможливо здійснити запис у файл конфігурації</translation>
+        <translation>No es pot escriure el fitxer de configuració</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="785"/>
         <source>The temporary configuration file required to start synergy can not be written.</source>
-        <translation>Тимчасовий файл конфігурації, який необхідний для запуску Synergy заблокований для запису.</translation>
+        <translation>No s&apos;ha pogut escriure al fitxer de configuració temporal requerit per iniciar Synergy </translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="798"/>
         <source>Configuration filename invalid</source>
-        <translation>Неправильне ім&apos;я файлу конфігурації</translation>
+        <translation>Nom del fitxer de configuració invàlid</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="799"/>
         <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
-        <translation>Ви не заповнили правильний файл конфігурації для сервера Synergy . Бажаєте зробити це зараз?</translation>
+        <translation>No has omplert un arxiu de configuració vàlid per al servidor de Synergy. Vols veure ara el fitxer de configuració?</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="827"/>
         <source>Synergy server not found</source>
-        <translation>Неможливо знайти сервер Synergy</translation>
+        <translation>No s&apos;ha trobat el Servidor de Synergy</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="828"/>
         <source>The executable for the synergy server does not exist.</source>
-        <translation>Виконуваної програми для серверу Synergy не існує.</translation>
+        <translation>L&apos;executable del servidor de Synergy no existeix.</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="947"/>
         <source>&amp;Stop</source>
-        <translation>Стоп</translation>
+        <translation>A&amp;turar</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="970"/>
@@ -445,12 +445,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="1047"/>
         <source>Unknown</source>
-        <translation>Невідомо</translation>
+        <translation>Desconegut </translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="1201"/>
         <source>Browse for a synergys config file</source>
-        <translation>Вкажіть файл конфігурації Synergy</translation>
+        <translation>Mostrar el fitxer de configuració de Sygergy</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="499"/>
@@ -460,17 +460,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="1214"/>
         <source>Save configuration as...</source>
-        <translation>Зберегти конфігурацію як...</translation>
+        <translation>Desar configuració com...</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="1218"/>
         <source>Save failed</source>
-        <translation>Посилка збереження</translation>
+        <translation>Error al guardar</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="1218"/>
         <source>Could not save configuration to file.</source>
-        <translation>Неможливо зберегти файл конфігурації.</translation>
+        <translation>No es pot guardar la configuració a l&apos;arxiu.</translation>
     </message>
 </context>
 <context>
@@ -489,12 +489,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="../../src/MainWindowBase.ui" line="522"/>
         <location filename="../../src/MainWindowBase.ui" line="551"/>
         <source>&amp;Start</source>
-        <translation>Старт</translation>
+        <translation>&amp;Engegar</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="307"/>
         <source>Use existing configuration:</source>
-        <translation>Використати існуючу конфігурацію:</translation>
+        <translation>Utilitzar la configuració actual:</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="58"/>
@@ -514,22 +514,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="316"/>
         <source>&amp;Configuration file:</source>
-        <translation>Файл конфігурації:</translation>
+        <translation>Fitxer &amp;configuració:</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="336"/>
         <source>&amp;Browse...</source>
-        <translation>Перегляд...</translation>
+        <translation>&amp;Mostrar...</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="273"/>
         <source>Configure interactively:</source>
-        <translation>Налаштувати інтерактивно:</translation>
+        <translation>Configurar interactivament:</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="285"/>
         <source>&amp;Configure Server...</source>
-        <translation>Налаштувати сервер...</translation>
+        <translation>&amp;Configurar Servidor...</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="369"/>
@@ -554,22 +554,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="492"/>
         <source>Ready</source>
-        <translation>Готово</translation>
+        <translation>Llest</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="438"/>
         <source>Log</source>
-        <translation>Лог</translation>
+        <translation>Log</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="515"/>
         <source>&amp;Apply</source>
-        <translation>Застосувати</translation>
+        <translation>Aplicar</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="233"/>
         <source>IP addresses:</source>
-        <translation>IP адреси:</translation>
+        <translation>Adreces IP:</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="354"/>
@@ -579,77 +579,77 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="532"/>
         <source>&amp;About Synergy...</source>
-        <translation>Про Synergy</translation>
+        <translation>En &amp;quant a Synergy...</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="540"/>
         <source>&amp;Quit</source>
-        <translation>Закрити</translation>
+        <translation>&amp;Sortir</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="543"/>
         <source>Quit</source>
-        <translation>Закрити</translation>
+        <translation>Sortir</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="554"/>
         <source>Run</source>
-        <translation>Запустити</translation>
+        <translation>Executa</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="565"/>
         <source>S&amp;top</source>
-        <translation>Зупинити</translation>
+        <translation>A&amp;turar</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="568"/>
         <source>Stop</source>
-        <translation>Зупинити</translation>
+        <translation>Aturar</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="576"/>
         <source>S&amp;how Status</source>
-        <translation>Показати статус</translation>
+        <translation>&amp;Mostrar Estat</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="584"/>
         <source>&amp;Hide</source>
-        <translation>Приховати</translation>
+        <translation>A&amp;maga</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="587"/>
         <source>Hide</source>
-        <translation>Приховати</translation>
+        <translation>Amaga</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="595"/>
         <source>&amp;Show</source>
-        <translation>Показати</translation>
+        <translation>Mo&amp;stra</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="598"/>
         <source>Show</source>
-        <translation>Показати</translation>
+        <translation>Mostra</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="606"/>
         <source>Save configuration &amp;as...</source>
-        <translation>Зберегти конфігурацію як...</translation>
+        <translation>&amp;Guardar configuració com...</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="609"/>
         <source>Save the interactively generated server configuration to a file.</source>
-        <translation>Зберегти інтерактивно згенеровану конфігурацію сервера у файл.</translation>
+        <translation>Guardar la configuració del servidor generada interactivament a un fitxer.</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="617"/>
         <source>Settings</source>
-        <translation>Налаштування</translation>
+        <translation>Configuració</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="620"/>
         <source>Edit settings</source>
-        <translation>Редагувати налаштування</translation>
+        <translation>Editar configuració</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="628"/>
@@ -663,7 +663,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/NewScreenWidget.cpp" line="32"/>
         <source>Unnamed</source>
-        <translation>Без назви</translation>
+        <translation>Sense nom</translation>
     </message>
 </context>
 <context>
@@ -671,12 +671,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="56"/>
         <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
-        <translation>Конфігурація Synergy (*.sgc);;Всі файли (*.*)</translation>
+        <translation>Configuracions Synergy (*.sgc);;Tots els arxius (*.*)</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="59"/>
         <source>Synergy Configurations (*.conf);;All files (*.*)</source>
-        <translation>Конфігурація Synergy (*.conf);;Всі файли (*.*)</translation>
+        <translation>Configuracions Synergy (*.conf);;Tots els arxius (*.*)</translation>
     </message>
     <message>
         <location filename="../../src/main.cpp" line="139"/>
@@ -689,22 +689,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ScreenSettingsDialog.cpp" line="67"/>
         <source>Screen name is empty</source>
-        <translation>Ім&apos;я екрану порожнє</translation>
+        <translation>El nom de pantalla és buit</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialog.cpp" line="68"/>
         <source>The screen name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-        <translation>Ім&apos;я екрану не може бути порожнім. Будь ласка вкажіть ім&apos;я або скасуйте діалог.</translation>
+        <translation>El nom de pantalla no pot estar buit. Si us plau introdueix un nom o cancel·la el diàleg.</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialog.cpp" line="83"/>
         <source>Screen name matches alias</source>
-        <translation>Ім&apos;я екрану співпадає з псевдонімом</translation>
+        <translation>Nom de pantalla coincideix amb l&apos;àlies</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialog.cpp" line="84"/>
         <source>The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</source>
-        <translation>Ім&apos;я екрану не може бути таким самим як псевдонім. Будь ласка видаліть псевдонім або змініть ім&apos;я екрану</translation>
+        <translation>El nom de pantalla no pot ser el mateix que un àlies. Si us plau treu l&apos;àlies o bé canvia el nom de la pantalla.</translation>
     </message>
 </context>
 <context>
@@ -712,37 +712,37 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="14"/>
         <source>Screen Settings</source>
-        <translation>Налаштування екрану</translation>
+        <translation>Configuració Pantalla</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="22"/>
         <source>Screen &amp;name:</source>
-        <translation>Ім&apos;я екрану:</translation>
+        <translation>&amp;Nom pantalla:</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="42"/>
         <source>A&amp;liases</source>
-        <translation>Псевдоніми</translation>
+        <translation>À&amp;lies</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="57"/>
         <source>&amp;Add</source>
-        <translation>Додати</translation>
+        <translation>A&amp;fegir</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="74"/>
         <source>&amp;Remove</source>
-        <translation>Видалити</translation>
+        <translation>Elimina&amp;r</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="97"/>
         <source>&amp;Modifier keys</source>
-        <translation>Клавіші-модифікатори</translation>
+        <translation>&amp;Modificar claus</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="106"/>
         <source>&amp;Shift:</source>
-        <translation>Shift:</translation>
+        <translation>&amp;Shift:</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="117"/>
@@ -796,82 +796,82 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="283"/>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="330"/>
         <source>None</source>
-        <translation>Жодна</translation>
+        <translation>Cap</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="150"/>
         <source>&amp;Ctrl:</source>
-        <translation>Ctrl:</translation>
+        <translation>&amp;Ctrl:</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="197"/>
         <source>Al&amp;t:</source>
-        <translation>Alt:</translation>
+        <translation>Al&amp;t:</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="244"/>
         <source>M&amp;eta:</source>
-        <translation>Meta:</translation>
+        <translation>M&amp;eta:</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="291"/>
         <source>S&amp;uper:</source>
-        <translation>Super:</translation>
+        <translation>S&amp;uper:</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="358"/>
         <source>&amp;Dead corners</source>
-        <translation>Мертві кути</translation>
+        <translation>&amp;Cantonades mortes</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="367"/>
         <source>Top-left</source>
-        <translation>Верхній лівий</translation>
+        <translation>Amunt-esquerra</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="374"/>
         <source>Top-right</source>
-        <translation>Верхній правий</translation>
+        <translation>Amunt-dreta</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="381"/>
         <source>Bottom-left</source>
-        <translation>Нижній лівий</translation>
+        <translation>Avall-esquerra</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="388"/>
         <source>Bottom-right</source>
-        <translation>Нижній правий</translation>
+        <translation>Avall-dreta</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="397"/>
         <source>Corner Si&amp;ze:</source>
-        <translation>Розмір кута:</translation>
+        <translation>Mida cantonada:</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="428"/>
         <source>&amp;Fixes</source>
-        <translation>Фіксація</translation>
+        <translation>&amp;Fixes</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="437"/>
         <source>Fix CAPS LOCK key</source>
-        <translation>Фіксувати CAPS LOCK</translation>
+        <translation>Arreglar tecla CAPS LOCK</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="444"/>
         <source>Fix NUM LOCK key</source>
-        <translation>Фіксувати NUM LOCK</translation>
+        <translation>Arreglar tecla NUM LOCK</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="451"/>
         <source>Fix SCROLL LOCK key</source>
-        <translation>Фіксувати SCROLL LOCK</translation>
+        <translation>Arreglar tecla SCROLL LOCK</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="458"/>
         <source>Fix XTest for Xinerama</source>
-        <translation>Фіксувати XTest для Xinerama</translation>
+        <translation>Arreglar XTest per Xinerama</translation>
     </message>
 </context>
 <context>
@@ -879,7 +879,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ScreenSetupModel.cpp" line="51"/>
         <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-        <translation>&lt;center&gt;Екран: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Подвійний клік для редагування налаштувань&lt;br&gt;Перетягніть екран у кошик для видалення</translation>
+        <translation>&lt;center&gt;Pantalla: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Doble clic per editar configuració &lt;br&gt;Arrossega la pantalla a la paperera per eliminar-la</translation>
     </message>
 </context>
 <context>
@@ -895,113 +895,113 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="14"/>
         <source>Server Configuration</source>
-        <translation>Конфігурація сервера</translation>
+        <translation>Configuració Servidor</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="24"/>
         <source>Screens and links</source>
-        <translation>Екрани і зв&apos;язки</translation>
+        <translation>Pantalles i enllaços</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="35"/>
         <source>Drag a screen from the grid to the trashcan to remove it.</source>
-        <translation>Перетягніть екран у кошик для видалення</translation>
+        <translation>Arrossega una pantalla de la graella a la paperera per eliminar-la.</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="60"/>
         <source>Configure the layout of your synergy server configuration.</source>
-        <translation>Налаштувати розташування конфігурації сервера Synergy .</translation>
+        <translation>Configura la disposició de configuració del teu servidor synergy.</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="73"/>
         <source>Drag this button to the grid to add a new screen.</source>
-        <translation>Перетягніть цю кнопку на сітку, щоб додати новий екран.</translation>
+        <translation>Arrossega aquest botó a la graella per afegir una nova pantalla.</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="128"/>
         <source>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
-        <translation>Перетягуйте нові екрани на сітку або пересувайте існуючі місцями.
-Перетягніть екран в кошик, щоб видалити його.
-Подвійний клік на екрані для його налаштування.</translation>
+        <translation>Arrossega noves pantalles a la graella o mou les actuals al voltant. 
+Arrossega una pantalla a la paperera per eliminar-la. 
+Fes doble clic a una pantalla per editar la seva configuració.</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="157"/>
         <source>Hotkeys</source>
-        <translation>Гарячі клавіші</translation>
+        <translation>Accés ràpid</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="163"/>
         <source>&amp;Hotkeys</source>
-        <translation>Гарячі клавіші</translation>
+        <translation>&amp;Accés ràpid</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="175"/>
         <source>&amp;New</source>
-        <translation>Новий</translation>
+        <translation>&amp;Nou</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="185"/>
         <source>&amp;Edit</source>
-        <translation>Редагування</translation>
+        <translation>&amp;Editar</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="195"/>
         <source>&amp;Remove</source>
-        <translation>Видалити</translation>
+        <translation>Elimina&amp;r</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="218"/>
         <source>A&amp;ctions</source>
-        <translation>Дії</translation>
+        <translation>A&amp;ccions</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="230"/>
         <source>Ne&amp;w</source>
-        <translation>Новий</translation>
+        <translation>No&amp;u</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="240"/>
         <source>E&amp;dit</source>
-        <translation>Редагувати</translation>
+        <translation>E&amp;ditar</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="250"/>
         <source>Re&amp;move</source>
-        <translation>Видалити</translation>
+        <translation>Eli&amp;minar</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="274"/>
         <source>Advanced server settings</source>
-        <translation>Додаткові налаштування сервера</translation>
+        <translation>Configuracions avançades del servidor</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="280"/>
         <source>&amp;Switch</source>
-        <translation>Перехід</translation>
+        <translation>Can&amp;viar</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="291"/>
         <source>Switch &amp;after waiting</source>
-        <translation>Перехід після очікування</translation>
+        <translation>Canvia després d&apos;esperar</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="330"/>
         <location filename="../../src/ServerConfigDialogBase.ui" line="383"/>
         <location filename="../../src/ServerConfigDialogBase.ui" line="552"/>
         <source>ms</source>
-        <translation>мсек</translation>
+        <translation>ms</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="344"/>
         <source>Switch on double &amp;tap within</source>
-        <translation>Перехід після подвійного натискання протягом</translation>
+        <translation>Canvia a doble &amp;toc a</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="408"/>
         <source>&amp;Options</source>
-        <translation>Опції</translation>
+        <translation>&amp;Opcions</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="416"/>
@@ -1021,22 +1021,22 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="513"/>
         <source>&amp;Check clients every</source>
-        <translation>Перевіряти клієнтів кожні</translation>
+        <translation>Comprova clients cada</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="481"/>
         <source>Use &amp;relative mouse moves</source>
-        <translation>Використовувати рідні налаштування курсору</translation>
+        <translation>Utilitza moviments relatius ratolí</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="564"/>
         <source>S&amp;ynchronize screen savers</source>
-        <translation>Синхронізувати заставки</translation>
+        <translation>Sincronitza protectors de pantalla</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="471"/>
         <source>Don&apos;t take &amp;foreground window on Windows servers</source>
-        <translation>Не залишати вікно сервера зверху (у Windows)</translation>
+        <translation>No prenguis la finestra en primer pla en Windows servers</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="501"/>
@@ -1051,32 +1051,32 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="581"/>
         <source>&amp;Dead corners</source>
-        <translation>Мертві кути</translation>
+        <translation>&amp;Cantonades mortes</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="590"/>
         <source>To&amp;p-left</source>
-        <translation>Верхній лівий</translation>
+        <translation>Amunt-&amp;esquerra</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="597"/>
         <source>Top-rig&amp;ht</source>
-        <translation>Верхній правий</translation>
+        <translation>Amunt-&amp;dreta</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="604"/>
         <source>&amp;Bottom-left</source>
-        <translation>Нижній лівий</translation>
+        <translation>Avall-&amp;esquerra</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="611"/>
         <source>Bottom-ri&amp;ght</source>
-        <translation>Нижній правий</translation>
+        <translation>Avall-&amp;dreta</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="633"/>
         <source>Cor&amp;ner Size:</source>
-        <translation>Розмір кута:</translation>
+        <translation>Mida ca&amp;ntonada:</translation>
     </message>
 </context>
 <context>
@@ -1084,7 +1084,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SettingsDialog.cpp" line="169"/>
         <source>Save log file to...</source>
-        <translation>Зберегти log-файл в...</translation>
+        <translation>Guardar fitxer log a...</translation>
     </message>
 </context>
 <context>
@@ -1092,22 +1092,22 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="14"/>
         <source>Settings</source>
-        <translation>Налаштування</translation>
+        <translation>Configuració</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="32"/>
         <source>Sc&amp;reen name:</source>
-        <translation>Ім&apos;я екрану:</translation>
+        <translation>Nom pantalla:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="49"/>
         <source>P&amp;ort:</source>
-        <translation>Порт:</translation>
+        <translation>Port:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="78"/>
         <source>&amp;Interface:</source>
-        <translation>Інтерфейс:</translation>
+        <translation>&amp;Interfície:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="120"/>
@@ -1172,52 +1172,52 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="293"/>
         <source>Logging</source>
-        <translation>Запис</translation>
+        <translation>Logging</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="311"/>
         <source>&amp;Logging level:</source>
-        <translation>Рівень запису:</translation>
+        <translation>Nivell &amp;logging:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="345"/>
         <source>Log to file:</source>
-        <translation>Записувати у фал:</translation>
+        <translation>Log a fitxer:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="362"/>
         <source>Browse...</source>
-        <translation>Перегляд...</translation>
+        <translation>Mostrar...</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="107"/>
         <source>&amp;Language:</source>
-        <translation>Мова:</translation>
+        <translation>Idioma:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="20"/>
         <source>&amp;Miscellaneous</source>
-        <translation>&amp;Додатково</translation>
+        <translation>Miscel·lània</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="322"/>
         <source>Info</source>
-        <translation>Інформація</translation>
+        <translation>Info</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="327"/>
         <source>Debug</source>
-        <translation>Налагодження</translation>
+        <translation>Debug</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="332"/>
         <source>Debug1</source>
-        <translation>Налагодження1</translation>
+        <translation>Debug1</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="337"/>
         <source>Debug2</source>
-        <translation>Налагодження2</translation>
+        <translation>Debug2</translation>
     </message>
 </context>
 <context>
@@ -1225,12 +1225,12 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SetupWizard.cpp" line="65"/>
         <source>Setup Synergy</source>
-        <translation>Встановлення Synergy</translation>
+        <translation>Configurar Synergy</translation>
     </message>
     <message>
         <location filename="../../src/SetupWizard.cpp" line="75"/>
         <source>Please select an option.</source>
-        <translation>Будь ласка, оберіть опцію.</translation>
+        <translation>Siusplau tria una opció.</translation>
     </message>
 </context>
 <context>
@@ -1238,22 +1238,22 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="26"/>
         <source>Setup Synergy</source>
-        <translation>Встановлення Synergy</translation>
+        <translation>Configurar Synergy</translation>
     </message>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="30"/>
         <source>Welcome</source>
-        <translation>Вітаемо</translation>
+        <translation>Benvingut</translation>
     </message>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="39"/>
         <source>Thanks for installing Synergy!</source>
-        <translation>Дякуємо за встановлення Synergy!</translation>
+        <translation>Gràcies per instal·lar Synergy!</translation>
     </message>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="114"/>
         <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-        <translation>Synergy дозволить Вам легко використовувати мишку та клавіатуру між декількома комп&apos;ютерами за вашим столом, і це зовсім безкоштовний та відкритий продукт. Тільки підведіть курсор мишки до краю одного з комп&apos;ютерів і він автоматично переміститься на інший. Також можна використовувати один буфер обміну між декількома комп&apos;ютерами. Все що необхідно, це мережеве з&apos;єднання. Synergy являється міжплатформовим продуктом  (працює з Windows, Mac OS X та Linux).</translation>
+        <translation>Synergy et permet compartir fàcilment el ratolí i teclat entre diversos ordinadors al teu escriptori, i és lliure i de codi obert. Només cal moure el punter del ratolí per la vora de la pantalla d&apos;un ordinador a un altre. Fins i tot pots compartir el portapapers. Únicament el que necessites és una connexió de xarxa. Synergy és multiplataforma (funciona en Windows, Mac OS X i Linux).</translation>
     </message>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="146"/>
@@ -1286,7 +1286,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="131"/>
         <source>Server or Client?</source>
-        <translation>Сервер чи клієнт?</translation>
+        <translation>Servidor o Client?</translation>
     </message>
 </context>
 <context>
@@ -1317,7 +1317,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/VersionChecker.cpp" line="145"/>
         <source>Unknown</source>
-        <translation>Невідомо</translation>
+        <translation>Desconegut </translation>
     </message>
 </context>
 <context>

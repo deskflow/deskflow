@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="id" sourcelanguage="en">
+<TS version="2.1" language="vi-VN" sourcelanguage="en">
 <context>
     <name>AboutDialogBase</name>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="38"/>
         <source>About Synergy</source>
-        <translation>Tentang Synergy</translation>
+        <translation>Thông tin về Synergy</translation>
     </message>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="140"/>
         <location filename="../../src/AboutDialogBase.ui" line="174"/>
         <source>Unknown</source>
-        <translation>Tak dikenal</translation>
+        <translation>Không biết</translation>
     </message>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="124"/>
         <source>Version:</source>
-        <translation>Versi:</translation>
+        <translation>Phiên bản:</translation>
     </message>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="53"/>
@@ -40,7 +40,7 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="194"/>
         <source>&amp;Ok</source>
-        <translation>Oke</translation>
+        <translation>Ok</translation>
     </message>
 </context>
 <context>
@@ -88,22 +88,22 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="174"/>
         <source>left</source>
-        <translation type="unfinished"></translation>
+        <translation>trái</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="179"/>
         <source>right</source>
-        <translation type="unfinished"></translation>
+        <translation>phải</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="184"/>
         <source>up</source>
-        <translation type="unfinished"></translation>
+        <translation>lên</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="189"/>
         <source>down</source>
-        <translation type="unfinished"></translation>
+        <translation>xuống</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="201"/>
@@ -118,12 +118,12 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="230"/>
         <source>on</source>
-        <translation type="unfinished"></translation>
+        <translation>bật</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="235"/>
         <source>off</source>
-        <translation type="unfinished"></translation>
+        <translation>tắt</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="247"/>
@@ -133,7 +133,7 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="259"/>
         <source>This action is performed when</source>
-        <translation type="unfinished"></translation>
+        <translation>Lệnh này được thực hiện khi </translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="265"/>
@@ -283,7 +283,7 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
         <location filename="../../src/MainWindow.cpp" line="954"/>
         <source>&amp;Start</source>
-        <translation type="unfinished"></translation>
+        <translation>Bắt đầu</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="259"/>
@@ -309,7 +309,7 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
         <location filename="../../src/MainWindow.cpp" line="385"/>
         <source>&lt;p&gt;Your version of Synergy is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
         <oldsource>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Phiên bản Synergy của bạn đã cũ. Phiên bản mới &lt;b&gt;%1&lt;/b&gt; đã có để &lt;a href=&quot;%2&quot;&gt;tải về&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="447"/>
@@ -330,7 +330,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="676"/>
         <source>Program can not be started</source>
-        <translation type="unfinished"></translation>
+        <translation>Chương trình không thể khởi động.</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="676"/>
@@ -390,7 +390,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="827"/>
         <source>Synergy server not found</source>
-        <translation type="unfinished"></translation>
+        <translation>Không tìm thấy máy chủ Synergy</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="828"/>
@@ -400,7 +400,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="947"/>
         <source>&amp;Stop</source>
-        <translation type="unfinished"></translation>
+        <translation>Dừng</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="970"/>
@@ -445,7 +445,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="1047"/>
         <source>Unknown</source>
-        <translation>Tak dikenal</translation>
+        <translation>Không biết</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="1201"/>
@@ -478,7 +478,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="26"/>
         <source>Synergy</source>
-        <translation type="unfinished"></translation>
+        <translation>Synergy</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="216"/>
@@ -489,7 +489,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="../../src/MainWindowBase.ui" line="522"/>
         <location filename="../../src/MainWindowBase.ui" line="551"/>
         <source>&amp;Start</source>
-        <translation type="unfinished"></translation>
+        <translation>Bắt đầu</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="307"/>
@@ -554,12 +554,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="492"/>
         <source>Ready</source>
-        <translation>Siap</translation>
+        <translation>Sẵn sàng</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="438"/>
         <source>Log</source>
-        <translation>Laporan</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="515"/>
@@ -569,7 +569,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="233"/>
         <source>IP addresses:</source>
-        <translation>Alamat IP:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="354"/>
@@ -589,37 +589,37 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="543"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Thoát</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="554"/>
         <source>Run</source>
-        <translation>Jalankan</translation>
+        <translation>Chạy</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="565"/>
         <source>S&amp;top</source>
-        <translation>Berhenti</translation>
+        <translation>Dừng</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="568"/>
         <source>Stop</source>
-        <translation>Berhenti</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="576"/>
         <source>S&amp;how Status</source>
-        <translation>Perlihatkan kondisi</translation>
+        <translation>Hiển thị tình trạng</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="584"/>
         <source>&amp;Hide</source>
-        <translation>&amp;Sembunyi</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="587"/>
         <source>Hide</source>
-        <translation>Sembunyi</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="595"/>
@@ -634,7 +634,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="606"/>
         <source>Save configuration &amp;as...</source>
-        <translation>Simpan konfigurasi sebagai...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="609"/>
@@ -644,12 +644,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="617"/>
         <source>Settings</source>
-        <translation>Pengaturan</translation>
+        <translation>Cài đặt</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="620"/>
         <source>Edit settings</source>
-        <translation>Ubah pengaturan</translation>
+        <translation>Chỉnh sửa cài đặt</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="628"/>
@@ -663,7 +663,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/NewScreenWidget.cpp" line="32"/>
         <source>Unnamed</source>
-        <translation>Tanpa nama</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -689,7 +689,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ScreenSettingsDialog.cpp" line="67"/>
         <source>Screen name is empty</source>
-        <translation>Nama layar kosong</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialog.cpp" line="68"/>
@@ -712,27 +712,27 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="14"/>
         <source>Screen Settings</source>
-        <translation>Pengaturan Layar</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="22"/>
         <source>Screen &amp;name:</source>
-        <translation>Nama Layar:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="42"/>
         <source>A&amp;liases</source>
-        <translation>Nama lain</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="57"/>
         <source>&amp;Add</source>
-        <translation>Masukan</translation>
+        <translation>Thêm</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="74"/>
         <source>&amp;Remove</source>
-        <translation>Hapus</translation>
+        <translation>Xóa</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="97"/>
@@ -742,7 +742,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="106"/>
         <source>&amp;Shift:</source>
-        <translation type="unfinished"></translation>
+        <translation>Shift: </translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="117"/>
@@ -751,7 +751,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="258"/>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="305"/>
         <source>Shift</source>
-        <translation type="unfinished"></translation>
+        <translation>Shift</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="122"/>
@@ -760,7 +760,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="263"/>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="310"/>
         <source>Ctrl</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl </translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="127"/>
@@ -769,7 +769,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="268"/>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="315"/>
         <source>Alt</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="132"/>
@@ -796,7 +796,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="283"/>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="330"/>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>Không</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="150"/>
@@ -806,7 +806,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="197"/>
         <source>Al&amp;t:</source>
-        <translation>Alt:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="244"/>
@@ -826,22 +826,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="367"/>
         <source>Top-left</source>
-        <translation>Atas-kiri</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="374"/>
         <source>Top-right</source>
-        <translation>Atas-kanan</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="381"/>
         <source>Bottom-left</source>
-        <translation>Bawah-kiri</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="388"/>
         <source>Bottom-right</source>
-        <translation>Bawah-kanan</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="397"/>
@@ -895,7 +895,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="14"/>
         <source>Server Configuration</source>
-        <translation>Konfigurasi server</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="24"/>
@@ -937,7 +937,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="175"/>
         <source>&amp;New</source>
-        <translation>Baru</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="185"/>
@@ -947,7 +947,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="195"/>
         <source>&amp;Remove</source>
-        <translation>Hapus</translation>
+        <translation>Xóa</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="218"/>
@@ -957,22 +957,22 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="230"/>
         <source>Ne&amp;w</source>
-        <translation>Baru</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="240"/>
         <source>E&amp;dit</source>
-        <translation>Ubah</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="250"/>
         <source>Re&amp;move</source>
-        <translation>Hapus</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="274"/>
         <source>Advanced server settings</source>
-        <translation>Pengaturan server lanjutan</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="280"/>
@@ -1090,7 +1090,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="14"/>
         <source>Settings</source>
-        <translation>Pengaturan</translation>
+        <translation>Cài đặt</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="32"/>
@@ -1190,7 +1190,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="107"/>
         <source>&amp;Language:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ngôn ngữ:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="20"/>
@@ -1200,7 +1200,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="322"/>
         <source>Info</source>
-        <translation>Informasi</translation>
+        <translation>Thông tin</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="327"/>
@@ -1251,7 +1251,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="114"/>
         <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-        <translation>Synergy akan mempermudah dalam membagi tetikus dan papan ketik diantara beberapa komputer yang berlainan, dan ini adalah software bebas dan bersumber terbuka. Hanya dengan menggeser tetikus ke pojok layar komputer maka akan berpindah ke layar komputer lainnya. Bahkan kamu dapat membagikan clipboard kamu. Yang kamu butuhkan hanya koneksi jaringan. Synerg adalah program yang dapat berjalan di beberapa Operating System yang berbeda. </translation>
+        <translation>Sức mạnh tổng hợp cho phép bạn dễ dàng chia sẻ chuột và bàn phím giữa nhiều máy tính trên bàn của bạn, và nó là miễn phí và mã nguồn mở. Chỉ cần di chuyển chuột của bạn khỏi các cạnh của màn hình một máy tính khác. Bạn thậm chí có thể chia sẻ tất cả các clipboards của bạn. Tất cả bạn cần là một kết nối mạng. Synergy là nền tảng chéo (hoạt động trên Windows, Mac OS X và Linux).</translation>
     </message>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="146"/>
@@ -1315,7 +1315,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/VersionChecker.cpp" line="145"/>
         <source>Unknown</source>
-        <translation>Tak dikenal</translation>
+        <translation>Không biết</translation>
     </message>
 </context>
 <context>

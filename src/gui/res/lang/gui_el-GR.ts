@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="grk" sourcelanguage="en">
+<TS version="2.1" language="el-GR" sourcelanguage="en">
 <context>
     <name>AboutDialogBase</name>
     <message>
