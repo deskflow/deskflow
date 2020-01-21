@@ -6,7 +6,7 @@
     <message>
       <location filename="src/AboutDialogBase.ui" line="38"/>
       <source>About Synergy</source>
-      <translation type="unfinished">About Synergy</translation>
+      <translation>Acerca de Synergy</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="53"/>
@@ -32,13 +32,13 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="124"/>
       <source>Version:</source>
-      <translation type="unfinished">Version:</translation>
+      <translation>Versão</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="140"/>
       <location filename="src/AboutDialogBase.ui" line="174"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>Desconhecido</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="167"/>
@@ -56,82 +56,82 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="14"/>
       <source>Configure Action</source>
-      <translation type="unfinished">Configure Action</translation>
+      <translation>Definir a ação</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="20"/>
       <source>Choose the action to perform</source>
-      <translation type="unfinished">Choose the action to perform</translation>
+      <translation>Seleccionar a ação a executar</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="26"/>
       <source>Press a hotkey</source>
-      <translation type="unfinished">Press a hotkey</translation>
+      <translation>Pressionar uma tecla de atalho</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="36"/>
       <source>Release a hotkey</source>
-      <translation type="unfinished">Release a hotkey</translation>
+      <translation>Largar uma tecla de atalho</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="43"/>
       <source>Press and release a hotkey</source>
-      <translation type="unfinished">Press and release a hotkey</translation>
+      <translation>Pressionar e largar uma tecla de atalho</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="69"/>
       <source>only on these screens</source>
-      <translation type="unfinished">only on these screens</translation>
+      <translation>apenas nestes ecrãs</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="119"/>
       <source>Switch to screen</source>
-      <translation type="unfinished">Switch to screen</translation>
+      <translation>Mudar para o ecrã</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="150"/>
       <source>Switch in direction</source>
-      <translation type="unfinished">Switch in direction</translation>
+      <translation>Mudar na direcção</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="174"/>
       <source>left</source>
-      <translation type="unfinished">left</translation>
+      <translation>esquerda</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="179"/>
       <source>right</source>
-      <translation type="unfinished">right</translation>
+      <translation>direita</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="184"/>
       <source>up</source>
-      <translation type="unfinished">up</translation>
+      <translation>cima</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="189"/>
       <source>down</source>
-      <translation type="unfinished">down</translation>
+      <translation>baixo</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="201"/>
       <source>Lock cursor to screen</source>
-      <translation type="unfinished">Lock cursor to screen</translation>
+      <translation>Manter o cursor no ecrã</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="225"/>
       <source>toggle</source>
-      <translation type="unfinished">toggle</translation>
+      <translation>alternar</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="230"/>
       <source>on</source>
-      <translation type="unfinished">on</translation>
+      <translation>ligado</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="235"/>
       <source>off</source>
-      <translation type="unfinished">off</translation>
+      <translation>desligado</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="247"/>
@@ -141,17 +141,17 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="259"/>
       <source>This action is performed when</source>
-      <translation type="unfinished">This action is performed when</translation>
+      <translation>Esta ação é executada quando</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="265"/>
       <source>the hotkey is pressed</source>
-      <translation type="unfinished">the hotkey is pressed</translation>
+      <translation>a tecla de atalho é pressionada</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="275"/>
       <source>the hotkey is released</source>
-      <translation type="unfinished">the hotkey is released</translation>
+      <translation>a tecla de atalho é largada</translation>
     </message>
   </context>
   <context>
@@ -290,12 +290,12 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/HotkeyDialogBase.ui" line="14"/>
       <source>Hotkey</source>
-      <translation type="unfinished">Hotkey</translation>
+      <translation>Tecla de atalho</translation>
     </message>
     <message>
       <location filename="src/HotkeyDialogBase.ui" line="20"/>
       <source>Enter the specification for the hotkey:</source>
-      <translation type="unfinished">Enter the specification for the hotkey:</translation>
+      <translation>Coloque a descrição para a tecla de atalho</translation>
     </message>
   </context>
   <context>
@@ -303,27 +303,27 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/MainWindow.cpp" line="259"/>
       <source>&amp;File</source>
-      <translation type="unfinished">&amp;File</translation>
+      <translation>&amp;Ficheiro</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="260"/>
       <source>&amp;Edit</source>
-      <translation type="unfinished">&amp;Edit</translation>
+      <translation>&amp;Editar</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="261"/>
       <source>&amp;Window</source>
-      <translation type="unfinished">&amp;Window</translation>
+      <translation>&amp;Janela</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="262"/>
       <source>&amp;Help</source>
-      <translation type="unfinished">&amp;Help</translation>
+      <translation>&amp;Ajuda</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="385"/>
       <source>&lt;p&gt;Your version of Synergy is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
-      <translation type="unfinished">&lt;p&gt;Your version of Synergy is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</translation>
+      <translation>&lt;p&gt;A tua versão do Synergy está desatualizada. Versão&lt;b&gt;%1&lt;/b&gt; está agora disponivel &lt;a href=&quot;%2&quot;&gt;para download&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="447"/>
@@ -355,22 +355,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="676"/>
       <source>Program can not be started</source>
-      <translation type="unfinished">Program can not be started</translation>
+      <translation>O programa não consegue iniciar</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="676"/>
       <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-      <translation type="unfinished">The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</translation>
+      <translation>O programa&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;, embora exista, não teve êxito a iniciar. Por favor, verifique se tem permissões suficientes para o executar.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="715"/>
       <source>Synergy client not found</source>
-      <translation type="unfinished">Synergy client not found</translation>
+      <translation>O cliente Synergy não foi encontrado</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="716"/>
       <source>The executable for the synergy client does not exist.</source>
-      <translation type="unfinished">The executable for the synergy client does not exist.</translation>
+      <translation>O executável de cliente de Synergy não existe</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="743"/>
@@ -385,52 +385,52 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="759"/>
       <source>Hostname is empty</source>
-      <translation type="unfinished">Hostname is empty</translation>
+      <translation>O nome de computador não está preenchido</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="760"/>
       <source>Please fill in a hostname for the synergy client to connect to.</source>
-      <translation type="unfinished">Please fill in a hostname for the synergy client to connect to.</translation>
+      <translation>Por favor coloque o nome de computador ao qual o cliente Synergy vai ligar-se</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="785"/>
       <source>Cannot write configuration file</source>
-      <translation type="unfinished">Cannot write configuration file</translation>
+      <translation>Não foi possivel escrever no ficheiro de configuração</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="785"/>
       <source>The temporary configuration file required to start synergy can not be written.</source>
-      <translation type="unfinished">The temporary configuration file required to start synergy can not be written.</translation>
+      <translation>Não foi possível escrever no ficheiro temporário de configuração de synergy, o qual é indispensável para o iniciar.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="798"/>
       <source>Configuration filename invalid</source>
-      <translation type="unfinished">Configuration filename invalid</translation>
+      <translation>Ficheiro de configuração inválido</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="799"/>
       <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
-      <translation type="unfinished">You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</translation>
+      <translation>Não colocaste um ficheiro de configuração válido para o servidor de synergy. Queres seleccionar o ficheiro de configuração agora?</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="827"/>
       <source>Synergy server not found</source>
-      <translation type="unfinished">Synergy server not found</translation>
+      <translation>O servidor de synergy não foi encontrado</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="828"/>
       <source>The executable for the synergy server does not exist.</source>
-      <translation type="unfinished">The executable for the synergy server does not exist.</translation>
+      <translation>O executável de servidor de synergy não existe.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="947"/>
       <source>&amp;Stop</source>
-      <translation type="unfinished">&amp;Stop</translation>
+      <translation>&amp;Parar</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="954"/>
       <source>&amp;Start</source>
-      <translation type="unfinished">&amp;Start</translation>
+      <translation>&amp;Iniciar</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="970"/>
@@ -465,27 +465,27 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1047"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>Desconhecido</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1201"/>
       <source>Browse for a synergys config file</source>
-      <translation type="unfinished">Browse for a synergys config file</translation>
+      <translation>Seleccionar um ficheiro de configuração de synergy</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1214"/>
       <source>Save configuration as...</source>
-      <translation type="unfinished">Save configuration as...</translation>
+      <translation>Guardar a configuração como...</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1218"/>
       <source>Save failed</source>
-      <translation type="unfinished">Save failed</translation>
+      <translation>Falhou o registo</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1218"/>
       <source>Could not save configuration to file.</source>
-      <translation type="unfinished">Could not save configuration to file.</translation>
+      <translation>Não foi possível guardar a configuração para o ficheiro.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1303"/>
@@ -523,7 +523,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="233"/>
       <source>IP addresses:</source>
-      <translation type="unfinished">IP addresses:</translation>
+      <translation>Endereços IP:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="257"/>
@@ -533,27 +533,27 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="273"/>
       <source>Configure interactively:</source>
-      <translation type="unfinished">Configure interactively:</translation>
+      <translation>Configuração interativa:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="285"/>
       <source>&amp;Configure Server...</source>
-      <translation type="unfinished">&amp;Configure Server...</translation>
+      <translation>&amp;Configurar Servidor...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="307"/>
       <source>Use existing configuration:</source>
-      <translation type="unfinished">Use existing configuration:</translation>
+      <translation>Usar uma configuração guardada:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="316"/>
       <source>&amp;Configuration file:</source>
-      <translation type="unfinished">&amp;Configuration file:</translation>
+      <translation>Ficheiro de &amp;configuração:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="336"/>
       <source>&amp;Browse...</source>
-      <translation type="unfinished">&amp;Browse...</translation>
+      <translation>&amp;Explorar...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="354"/>
@@ -583,98 +583,98 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="438"/>
       <source>Log</source>
-      <translation type="unfinished">Log</translation>
+      <translation>Registo de eventos</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="492"/>
       <source>Ready</source>
-      <translation type="unfinished">Ready</translation>
+      <translation>Pronto</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="515"/>
       <source>&amp;Apply</source>
-      <translation type="unfinished">&amp;Apply</translation>
+      <translation>&amp;Aplicar</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="522"/>
       <location filename="src/MainWindowBase.ui" line="551"/>
       <source>&amp;Start</source>
-      <translation type="unfinished">&amp;Start</translation>
+      <translation>&amp;Iniciar</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="532"/>
       <source>&amp;About Synergy...</source>
-      <translation type="unfinished">&amp;About Synergy...</translation>
+      <translation>&amp;Acerca de Synergy...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="540"/>
       <source>&amp;Quit</source>
-      <translation type="unfinished">&amp;Quit</translation>
+      <translation>&amp;Sair</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="543"/>
       <source>Quit</source>
-      <translation type="unfinished">Quit</translation>
+      <translation>Sair</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="554"/>
       <source>Run</source>
-      <translation type="unfinished">Run</translation>
+      <translation>Executar</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="565"/>
       <source>S&amp;top</source>
-      <translation type="unfinished">S&amp;top</translation>
+      <translation>&amp;Parar</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="568"/>
       <source>Stop</source>
-      <translation type="unfinished">Stop</translation>
+      <translation>Parar</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="576"/>
       <source>S&amp;how Status</source>
-      <translation type="unfinished">S&amp;how Status</translation>
+      <translation>M&amp;ostrar Estado</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="584"/>
       <source>&amp;Hide</source>
-      <translation type="unfinished">&amp;Hide</translation>
+      <translation>&amp;Esconder</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="587"/>
       <source>Hide</source>
-      <translation type="unfinished">Hide</translation>
+      <translation>Esconder</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="595"/>
       <source>&amp;Show</source>
-      <translation type="unfinished">&amp;Show</translation>
+      <translation>&amp;Mostrar</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="598"/>
       <source>Show</source>
-      <translation type="unfinished">Show</translation>
+      <translation>Mostrar</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="606"/>
       <source>Save configuration &amp;as...</source>
-      <translation type="unfinished">Save configuration &amp;as...</translation>
+      <translation>Guardar a configuração &amp;como...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="609"/>
       <source>Save the interactively generated server configuration to a file.</source>
-      <translation type="unfinished">Save the interactively generated server configuration to a file.</translation>
+      <translation>Guardar a configuração gerada interactivamente para um ficheiro.</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="617"/>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Definições</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="620"/>
       <source>Edit settings</source>
-      <translation type="unfinished">Edit settings</translation>
+      <translation>Alterar definições</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="628"/>
@@ -688,7 +688,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/NewScreenWidget.cpp" line="32"/>
       <source>Unnamed</source>
-      <translation type="unfinished">Unnamed</translation>
+      <translation>Sem nome</translation>
     </message>
   </context>
   <context>
@@ -696,12 +696,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="56"/>
       <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
-      <translation type="unfinished">Synergy Configurations (*.sgc);;All files (*.*)</translation>
+      <translation>Configuração de synergy (*.sgc);;Todos os ficheiros (*.*)</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="59"/>
       <source>Synergy Configurations (*.conf);;All files (*.*)</source>
-      <translation type="unfinished">Synergy Configurations (*.conf);;All files (*.*)</translation>
+      <translation>Configuração de synergy (*.conf);;Todos os ficheiros (*.*)</translation>
     </message>
     <message>
       <location filename="src/main.cpp" line="139"/>
@@ -714,12 +714,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialog.cpp" line="67"/>
       <source>Screen name is empty</source>
-      <translation type="unfinished">Screen name is empty</translation>
+      <translation>O nome do ecrã não foi definido</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialog.cpp" line="68"/>
       <source>The screen name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-      <translation type="unfinished">The screen name cannot be empty. Please either fill in a name or cancel the dialog.</translation>
+      <translation>O nome do ecrã não pode estar vazio. Preenche a nome ou fecha a janela.</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialog.cpp" line="83"/>
@@ -737,32 +737,32 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="14"/>
       <source>Screen Settings</source>
-      <translation type="unfinished">Screen Settings</translation>
+      <translation>Configurações de ecrã</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="22"/>
       <source>Screen &amp;name:</source>
-      <translation type="unfinished">Screen &amp;name:</translation>
+      <translation>&amp;Nome do ecrã:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="42"/>
       <source>A&amp;liases</source>
-      <translation type="unfinished">A&amp;liases</translation>
+      <translation>Nomes al&amp;ternativos</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="57"/>
       <source>&amp;Add</source>
-      <translation type="unfinished">&amp;Add</translation>
+      <translation>&amp;Adicionar</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="74"/>
       <source>&amp;Remove</source>
-      <translation type="unfinished">&amp;Remove</translation>
+      <translation>&amp;Remover</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="97"/>
       <source>&amp;Modifier keys</source>
-      <translation type="unfinished">&amp;Modifier keys</translation>
+      <translation>&amp;Teclas de modulação</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="106"/>
@@ -821,7 +821,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="283"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="330"/>
       <source>None</source>
-      <translation type="unfinished">None</translation>
+      <translation>Nenhum</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="150"/>
@@ -846,57 +846,57 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="358"/>
       <source>&amp;Dead corners</source>
-      <translation type="unfinished">&amp;Dead corners</translation>
+      <translation>&amp;Cantos inacessíveis</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="367"/>
       <source>Top-left</source>
-      <translation type="unfinished">Top-left</translation>
+      <translation>Canto superior esquerdo</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="374"/>
       <source>Top-right</source>
-      <translation type="unfinished">Top-right</translation>
+      <translation>Canto superior direito</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="381"/>
       <source>Bottom-left</source>
-      <translation type="unfinished">Bottom-left</translation>
+      <translation>Canto inferior esquerdo</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="388"/>
       <source>Bottom-right</source>
-      <translation type="unfinished">Bottom-right</translation>
+      <translation>Canto inferior direito</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="397"/>
       <source>Corner Si&amp;ze:</source>
-      <translation type="unfinished">Corner Si&amp;ze:</translation>
+      <translation>Di&amp;mensão do canto:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="428"/>
       <source>&amp;Fixes</source>
-      <translation type="unfinished">&amp;Fixes</translation>
+      <translation>Co&amp;rrecções</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="437"/>
       <source>Fix CAPS LOCK key</source>
-      <translation type="unfinished">Fix CAPS LOCK key</translation>
+      <translation>Corrigir a tecla CAPS LOCK</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="444"/>
       <source>Fix NUM LOCK key</source>
-      <translation type="unfinished">Fix NUM LOCK key</translation>
+      <translation>Corrigir a tecla NUM LOCK</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="451"/>
       <source>Fix SCROLL LOCK key</source>
-      <translation type="unfinished">Fix SCROLL LOCK key</translation>
+      <translation>Corrigir a tecla SCROLL LOCK</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="458"/>
       <source>Fix XTest for Xinerama</source>
-      <translation type="unfinished">Fix XTest for Xinerama</translation>
+      <translation>Corrigir XTest para Xinerama</translation>
     </message>
   </context>
   <context>
@@ -904,7 +904,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSetupModel.cpp" line="51"/>
       <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-      <translation type="unfinished">&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</translation>
+      <translation>&lt;center&gt;Ecrã: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;duplo clique para alterar as definições&lt;br&gt;Arrastar o ecrã para o lixo para o remover</translation>
     </message>
   </context>
   <context>
@@ -920,96 +920,96 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="14"/>
       <source>Server Configuration</source>
-      <translation type="unfinished">Server Configuration</translation>
+      <translation>Configuração do servidor</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="24"/>
       <source>Screens and links</source>
-      <translation type="unfinished">Screens and links</translation>
+      <translation>Ecrãs e ligações</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="35"/>
       <source>Drag a screen from the grid to the trashcan to remove it.</source>
-      <translation type="unfinished">Drag a screen from the grid to the trashcan to remove it.</translation>
+      <translation>Arrastar um ecrã da grelha para o lixo para o remover.</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="60"/>
       <source>Configure the layout of your synergy server configuration.</source>
-      <translation type="unfinished">Configure the layout of your synergy server configuration.</translation>
+      <translation>Configurar a disposição na configuração do servidor de synergy</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="73"/>
       <source>Drag this button to the grid to add a new screen.</source>
-      <translation type="unfinished">Drag this button to the grid to add a new screen.</translation>
+      <translation>Arrastar este botão para a grelha para adicionar um novo ecrã.</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="128"/>
       <source>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
-      <translation type="unfinished">Drag new screens to the grid or move existing ones around.
-Drag a screen to the trashcan to delete it.
-Double click on a screen to edit its settings.</translation>
+      <translation>Arrastar novos ecrãs para a grelha ou mover os existentes.
+Arrastar um ecrã para o lixo para o remover.
+Faça duplo clique num ecrã para alterar as suas definições.</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="157"/>
       <source>Hotkeys</source>
-      <translation type="unfinished">Hotkeys</translation>
+      <translation>Teclas de atalho</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="163"/>
       <source>&amp;Hotkeys</source>
-      <translation type="unfinished">&amp;Hotkeys</translation>
+      <translation>&amp;Teclas de atalho</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="175"/>
       <source>&amp;New</source>
-      <translation type="unfinished">&amp;New</translation>
+      <translation>&amp;Novo</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="185"/>
       <source>&amp;Edit</source>
-      <translation type="unfinished">&amp;Edit</translation>
+      <translation>&amp;Editar</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="195"/>
       <source>&amp;Remove</source>
-      <translation type="unfinished">&amp;Remove</translation>
+      <translation>&amp;Remover</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="218"/>
       <source>A&amp;ctions</source>
-      <translation type="unfinished">A&amp;ctions</translation>
+      <translation>&amp;Ações</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="230"/>
       <source>Ne&amp;w</source>
-      <translation type="unfinished">Ne&amp;w</translation>
+      <translation>No&amp;vo</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="240"/>
       <source>E&amp;dit</source>
-      <translation type="unfinished">E&amp;dit</translation>
+      <translation>&amp;Alterar</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="250"/>
       <source>Re&amp;move</source>
-      <translation type="unfinished">Re&amp;move</translation>
+      <translation>Re&amp;mover</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="274"/>
       <source>Advanced server settings</source>
-      <translation type="unfinished">Advanced server settings</translation>
+      <translation>Definições avançadas do servidor</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="280"/>
       <source>&amp;Switch</source>
-      <translation type="unfinished">&amp;Switch</translation>
+      <translation>&amp;Alternar</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="291"/>
       <source>Switch &amp;after waiting</source>
-      <translation type="unfinished">Switch &amp;after waiting</translation>
+      <translation>Alternar &amp;após aguardar</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="330"/>
@@ -1021,12 +1021,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="344"/>
       <source>Switch on double &amp;tap within</source>
-      <translation type="unfinished">Switch on double &amp;tap within</translation>
+      <translation>Alternar ao tocar duas &amp;vezes em</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="408"/>
       <source>&amp;Options</source>
-      <translation type="unfinished">&amp;Options</translation>
+      <translation>&amp;Opções</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="416"/>
@@ -1046,12 +1046,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="471"/>
       <source>Don&apos;t take &amp;foreground window on Windows servers</source>
-      <translation type="unfinished">Don&apos;t take &amp;foreground window on Windows servers</translation>
+      <translation>Não tirar o &amp;foco da janela activa nos servidores Windows</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="481"/>
       <source>Use &amp;relative mouse moves</source>
-      <translation type="unfinished">Use &amp;relative mouse moves</translation>
+      <translation>Utilizar movimentos &amp;relativos do rato</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="501"/>
@@ -1061,12 +1061,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="513"/>
       <source>&amp;Check clients every</source>
-      <translation type="unfinished">&amp;Check clients every</translation>
+      <translation>&amp;Verificar clientes a cada</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="564"/>
       <source>S&amp;ynchronize screen savers</source>
-      <translation type="unfinished">S&amp;ynchronize screen savers</translation>
+      <translation>S&amp;incronizar protectores de ecrã</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="571"/>
@@ -1076,32 +1076,32 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="581"/>
       <source>&amp;Dead corners</source>
-      <translation type="unfinished">&amp;Dead corners</translation>
+      <translation>&amp;Cantos inacessíveis</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="590"/>
       <source>To&amp;p-left</source>
-      <translation type="unfinished">To&amp;p-left</translation>
+      <translation>Canto su&amp;perior esquerdo</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="597"/>
       <source>Top-rig&amp;ht</source>
-      <translation type="unfinished">Top-rig&amp;ht</translation>
+      <translation>Canto superior &amp;direito</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="604"/>
       <source>&amp;Bottom-left</source>
-      <translation type="unfinished">&amp;Bottom-left</translation>
+      <translation>Canto &amp;inferior esquerdo</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="611"/>
       <source>Bottom-ri&amp;ght</source>
-      <translation type="unfinished">Bottom-ri&amp;ght</translation>
+      <translation>Canto inferior direit&amp;o</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="633"/>
       <source>Cor&amp;ner Size:</source>
-      <translation type="unfinished">Cor&amp;ner Size:</translation>
+      <translation>Dimensão do Ca&amp;nto:</translation>
     </message>
   </context>
   <context>
@@ -1109,7 +1109,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialog.cpp" line="169"/>
       <source>Save log file to...</source>
-      <translation type="unfinished">Save log file to...</translation>
+      <translation>Guardar ficheiro de registo de eventos para...</translation>
     </message>
   </context>
   <context>
@@ -1117,7 +1117,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="14"/>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Definições</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="20"/>
@@ -1127,12 +1127,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="32"/>
       <source>Sc&amp;reen name:</source>
-      <translation type="unfinished">Sc&amp;reen name:</translation>
+      <translation>Nome do ecrã:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="49"/>
       <source>P&amp;ort:</source>
-      <translation type="unfinished">P&amp;ort:</translation>
+      <translation>P&amp;orto:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="78"/>
@@ -1142,7 +1142,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="107"/>
       <source>&amp;Language:</source>
-      <translation type="unfinished">&amp;Language:</translation>
+      <translation>&amp;Linguagem:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="120"/>
@@ -1207,42 +1207,42 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="293"/>
       <source>Logging</source>
-      <translation type="unfinished">Logging</translation>
+      <translation>Registo de eventos</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="311"/>
       <source>&amp;Logging level:</source>
-      <translation type="unfinished">&amp;Logging level:</translation>
+      <translation>&amp;Nivel de registo:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="322"/>
       <source>Info</source>
-      <translation type="unfinished">Info</translation>
+      <translation>Informação</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="327"/>
       <source>Debug</source>
-      <translation type="unfinished">Debug</translation>
+      <translation>Depuração</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="332"/>
       <source>Debug1</source>
-      <translation type="unfinished">Debug1</translation>
+      <translation>Depuração1</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="337"/>
       <source>Debug2</source>
-      <translation type="unfinished">Debug2</translation>
+      <translation>Depuração2</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="345"/>
       <source>Log to file:</source>
-      <translation type="unfinished">Log to file:</translation>
+      <translation>Ficheiro de registo:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="362"/>
       <source>Browse...</source>
-      <translation type="unfinished">Browse...</translation>
+      <translation>Explorar...</translation>
     </message>
   </context>
   <context>
@@ -1250,12 +1250,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizard.cpp" line="65"/>
       <source>Setup Synergy</source>
-      <translation type="unfinished">Setup Synergy</translation>
+      <translation>Configurar Synergy</translation>
     </message>
     <message>
       <location filename="src/SetupWizard.cpp" line="75"/>
       <source>Please select an option.</source>
-      <translation type="unfinished">Please select an option.</translation>
+      <translation>Por favor selecciona uma opção.</translation>
     </message>
   </context>
   <context>
@@ -1263,27 +1263,27 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizardBase.ui" line="26"/>
       <source>Setup Synergy</source>
-      <translation type="unfinished">Setup Synergy</translation>
+      <translation>Configurar Synergy</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="30"/>
       <source>Welcome</source>
-      <translation type="unfinished">Welcome</translation>
+      <translation>Bem-vindo(a)</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="39"/>
       <source>Thanks for installing Synergy!</source>
-      <translation type="unfinished">Thanks for installing Synergy!</translation>
+      <translation>Obrigado por instalares o Synergy!</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="114"/>
       <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-      <translation type="unfinished">Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</translation>
+      <translation>Synergy permite que uses o teu rato e teclado para controlar vários computadores na tua secretária em simultâneo, é gratuito e Open Source. Basta mover o rato para um lado ou para outro para mudar de ecrã. Podes até copiar e colar de um ecrã para o outro. Precisas apenas de uma ligação de rede. O Synergy é cross-platform (funciona em Windows, Mac OS X e Linux).</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="131"/>
       <source>Server or Client?</source>
-      <translation type="unfinished">Server or Client?</translation>
+      <translation>Servidor ou Cliente?</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="146"/>
@@ -1350,7 +1350,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/VersionChecker.cpp" line="145"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>Desconhecido</translation>
     </message>
   </context>
   <context>
