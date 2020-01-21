@@ -1217,7 +1217,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="322"/>
       <source>Info</source>
-      <translation type="unfinished">Info</translation>
+      <translation>Информације</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="327"/>
