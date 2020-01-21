@@ -1217,7 +1217,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="322"/>
       <source>Info</source>
-      <translation type="unfinished">Info</translation>
+      <translation>معلومات</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="327"/>
@@ -1278,7 +1278,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizardBase.ui" line="114"/>
       <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-      <translation type="unfinished">Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</translation>
+      <translation>Synergy آپ کو آسانی سے اپنا ما٘وس اور کیبورڈ متعدد کمپیوٹرز کے ساتھ استعمال کرنے کی سہولت میسر کرتا ہے۔Synergy مفت اور اوپن سورس ہے۔ صرف ایک کمپیوٹر اسکرین کے کنارے سے دوسرے پر اپنے ماؤس لے جائیں اور بس۔ آپ تمام کمپیوٹرز کے کلپ بورڈ ایک دوسرے کے ساتھ تبدیل بھی کر سکتے ہیں۔ یہ سب کرنے کے لیے صرف ایک نیٹ ورک کنکشن کی ضرورت ہے۔ Synergy متعدد آپریٹنگ سسٹمز (ونڈوز، میک OS X اور لینکس) کے ساتھ استعمال کیا جا سکتا ہے </translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="131"/>
