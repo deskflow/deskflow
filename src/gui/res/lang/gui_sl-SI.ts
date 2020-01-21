@@ -6,7 +6,7 @@
     <message>
       <location filename="src/AboutDialogBase.ui" line="38"/>
       <source>About Synergy</source>
-      <translation type="unfinished">About Synergy</translation>
+      <translation>O Synergy</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="53"/>
@@ -32,13 +32,13 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="124"/>
       <source>Version:</source>
-      <translation type="unfinished">Version:</translation>
+      <translation>Različica:</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="140"/>
       <location filename="src/AboutDialogBase.ui" line="174"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>Neznano</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="167"/>
@@ -48,7 +48,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="194"/>
       <source>&amp;Ok</source>
-      <translation type="unfinished">&amp;Ok</translation>
+      <translation>V redu</translation>
     </message>
   </context>
   <context>
@@ -465,7 +465,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1047"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>Neznano</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1201"/>
@@ -1217,7 +1217,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="322"/>
       <source>Info</source>
-      <translation type="unfinished">Info</translation>
+      <translation>Informacije</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="327"/>
@@ -1278,7 +1278,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizardBase.ui" line="114"/>
       <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-      <translation type="unfinished">Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</translation>
+      <translation>Synergy omogoča preprosto souporabo miške in tipkovnice med mnogimi računalniki na vaši mizi. Je brezplačen in prostokodni program. Miškin kazalec lahko preprosto premaknemo preko roba ekrana enega računalnika na ekran drugega. Omogoča tudi souporabo odložišča. Vse kar potrebujete je mrežna povezava. Synergy podpira mnogo operacijskih sistemov (npr. Windows, Mac OS X in Linux).</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="131"/>
@@ -1350,7 +1350,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/VersionChecker.cpp" line="145"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>Neznano</translation>
     </message>
   </context>
   <context>
