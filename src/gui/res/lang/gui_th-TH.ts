@@ -6,7 +6,7 @@
     <message>
       <location filename="src/AboutDialogBase.ui" line="38"/>
       <source>About Synergy</source>
-      <translation type="unfinished">About Synergy</translation>
+      <translation>เกี่ยวกับเรา Synergy</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="53"/>
@@ -32,7 +32,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="124"/>
       <source>Version:</source>
-      <translation type="unfinished">Version:</translation>
+      <translation>รุ่น:</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="140"/>
@@ -48,7 +48,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="194"/>
       <source>&amp;Ok</source>
-      <translation type="unfinished">&amp;Ok</translation>
+      <translation>&amp;ตกลง</translation>
     </message>
   </context>
   <context>
@@ -56,7 +56,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="14"/>
       <source>Configure Action</source>
-      <translation type="unfinished">Configure Action</translation>
+      <translation>กำหนดค่าการกระทำ</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="20"/>
@@ -96,22 +96,22 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="174"/>
       <source>left</source>
-      <translation type="unfinished">left</translation>
+      <translation>ซ้าย</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="179"/>
       <source>right</source>
-      <translation type="unfinished">right</translation>
+      <translation>ขวา</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="184"/>
       <source>up</source>
-      <translation type="unfinished">up</translation>
+      <translation>ขึ้น</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="189"/>
       <source>down</source>
-      <translation type="unfinished">down</translation>
+      <translation>ลง</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="201"/>
@@ -126,12 +126,12 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="230"/>
       <source>on</source>
-      <translation type="unfinished">on</translation>
+      <translation>เปิด</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="235"/>
       <source>off</source>
-      <translation type="unfinished">off</translation>
+      <translation>ปิด</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="247"/>
@@ -303,22 +303,22 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/MainWindow.cpp" line="259"/>
       <source>&amp;File</source>
-      <translation type="unfinished">&amp;File</translation>
+      <translation>&amp;ไฟล์</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="260"/>
       <source>&amp;Edit</source>
-      <translation type="unfinished">&amp;Edit</translation>
+      <translation>&amp;แก้ไข</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="261"/>
       <source>&amp;Window</source>
-      <translation type="unfinished">&amp;Window</translation>
+      <translation>&amp;หน้าต่าง</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="262"/>
       <source>&amp;Help</source>
-      <translation type="unfinished">&amp;Help</translation>
+      <translation>&amp;ช่วยเหลือ</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="385"/>
@@ -425,12 +425,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="947"/>
       <source>&amp;Stop</source>
-      <translation type="unfinished">&amp;Stop</translation>
+      <translation>&amp;หยุด</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="954"/>
       <source>&amp;Start</source>
-      <translation type="unfinished">&amp;Start</translation>
+      <translation>&amp;เริ่มต้น</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="970"/>
@@ -583,12 +583,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="438"/>
       <source>Log</source>
-      <translation type="unfinished">Log</translation>
+      <translation>บันทึกการเปลี่ยนแปลง</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="492"/>
       <source>Ready</source>
-      <translation type="unfinished">Ready</translation>
+      <translation>พร้อมแล้ว</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="515"/>
@@ -599,7 +599,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/MainWindowBase.ui" line="522"/>
       <location filename="src/MainWindowBase.ui" line="551"/>
       <source>&amp;Start</source>
-      <translation type="unfinished">&amp;Start</translation>
+      <translation>&amp;เริ่มต้น</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="532"/>
@@ -609,17 +609,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="540"/>
       <source>&amp;Quit</source>
-      <translation type="unfinished">&amp;Quit</translation>
+      <translation>&amp;ออก</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="543"/>
       <source>Quit</source>
-      <translation type="unfinished">Quit</translation>
+      <translation>ออก</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="554"/>
       <source>Run</source>
-      <translation type="unfinished">Run</translation>
+      <translation>เปิดทำงาน</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="565"/>
@@ -629,7 +629,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="568"/>
       <source>Stop</source>
-      <translation type="unfinished">Stop</translation>
+      <translation>หยุด</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="576"/>
@@ -639,22 +639,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="584"/>
       <source>&amp;Hide</source>
-      <translation type="unfinished">&amp;Hide</translation>
+      <translation>&amp;ซ่อน</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="587"/>
       <source>Hide</source>
-      <translation type="unfinished">Hide</translation>
+      <translation>ซ๋อน</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="595"/>
       <source>&amp;Show</source>
-      <translation type="unfinished">&amp;Show</translation>
+      <translation>&amp;แสดง</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="598"/>
       <source>Show</source>
-      <translation type="unfinished">Show</translation>
+      <translation>แสดง</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="606"/>
@@ -669,12 +669,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="617"/>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>ตั้งค่า</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="620"/>
       <source>Edit settings</source>
-      <translation type="unfinished">Edit settings</translation>
+      <translation>แก้ไขการตั้งค่า</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="628"/>
@@ -688,7 +688,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/NewScreenWidget.cpp" line="32"/>
       <source>Unnamed</source>
-      <translation type="unfinished">Unnamed</translation>
+      <translation>ยังไม่มีชื่อ</translation>
     </message>
   </context>
   <context>
@@ -737,7 +737,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="14"/>
       <source>Screen Settings</source>
-      <translation type="unfinished">Screen Settings</translation>
+      <translation>ตั้งค่าหน้าจอ</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="22"/>
@@ -752,12 +752,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="57"/>
       <source>&amp;Add</source>
-      <translation type="unfinished">&amp;Add</translation>
+      <translation>&amp;เพิ่ม</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="74"/>
       <source>&amp;Remove</source>
-      <translation type="unfinished">&amp;Remove</translation>
+      <translation>&amp;ลบออก</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="97"/>
@@ -969,12 +969,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="185"/>
       <source>&amp;Edit</source>
-      <translation type="unfinished">&amp;Edit</translation>
+      <translation>&amp;แก้ไข</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="195"/>
       <source>&amp;Remove</source>
-      <translation type="unfinished">&amp;Remove</translation>
+      <translation>&amp;ลบออก</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="218"/>
@@ -1117,7 +1117,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="14"/>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>ตั้งค่า</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="20"/>
@@ -1217,7 +1217,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="322"/>
       <source>Info</source>
-      <translation type="unfinished">Info</translation>
+      <translation>ข้อมูล</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="327"/>
@@ -1278,7 +1278,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizardBase.ui" line="114"/>
       <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-      <translation type="unfinished">Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</translation>
+      <translation>Synergy ช่วยให้คุณสามารถแบ่งปันเมาส์และแป้นพิมพ์ระหว่างคอมพิวเตอร์หลายเครื่องบนโต๊ะทำงานของคุณและก็ฟรีและ Open Source เพียงแค่เลื่อนเมาส์ของคุณปิดขอบของหน้าจอคอมพิวเตอร์เครื่องหนึ่งของเมื่อไปยังอีก คุณยังสามารถแบ่งปันทั้งหมดของ clipboards ของคุณ ทั้งหมดที่คุณต้องมีการเชื่อมต่อเครือข่าย Synergy เป็นข้ามแพลตฟอร์ม (เมื่อใช้งานบน Windows, Mac OS X และ Linux)</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="131"/>
