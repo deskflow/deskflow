@@ -118,6 +118,53 @@ HEADERS += src/MainWindow.h \
     ../lib/shared/EditionType.h \
     ../lib/shared/SerialKey.h \
     src/LicenseManager.h
+TRANSLATIONS = res/lang/gui_af-ZA.ts \
+    res/lang/gui_ar.ts \
+    res/lang/gui_bg-BG.ts \
+    res/lang/gui_ca-AD.ts \
+    res/lang/gui_cs-CZ.ts \
+    res/lang/gui_cy.ts \
+    res/lang/gui_da.ts \
+    res/lang/gui_de.ts \
+    res/lang/gui_es.ts \
+    res/lang/gui_et-EE.ts \
+    res/lang/gui_fi.ts \
+    res/lang/gui_fr.ts \
+    res/lang/gui_gl.ts \
+    res/lang/gui_grk.ts \
+    res/lang/gui_he.ts \
+    res/lang/gui_hi.ts \
+    res/lang/gui_hr-HR.ts \
+    res/lang/gui_hu-HU.ts \
+    res/lang/gui_id.ts \
+    res/lang/gui_is-IS.ts \
+    res/lang/gui_it.ts \
+    res/lang/gui_ja-JP.ts \
+    res/lang/gui_ko.ts \
+    res/lang/gui_lt.ts \
+    res/lang/gui_lv.ts \
+    res/lang/gui_mr.ts \
+    res/lang/gui_nl-NL.ts \
+    res/lang/gui_no.ts \
+    res/lang/gui_pes-IR.ts \
+    res/lang/gui_pl-PL.ts \
+    res/lang/gui_pt-BR.ts \
+    res/lang/gui_pt-PT.ts \
+    res/lang/gui_ro.ts \
+    res/lang/gui_ru.ts \
+    res/lang/gui_si.ts \
+    res/lang/gui_sk-SK.ts \
+    res/lang/gui_sl-SI.ts \
+    res/lang/gui_sq-AL.ts \
+    res/lang/gui_sr.ts \
+    res/lang/gui_sv.ts \
+    res/lang/gui_th-TH.ts \
+    res/lang/gui_tr-TR.ts \
+    res/lang/gui_uk.ts \
+    res/lang/gui_ur.ts \
+    res/lang/gui_vi.ts \
+    res/lang/gui_zh-CN.ts \
+    res/lang/gui_zh-TW.ts
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 
