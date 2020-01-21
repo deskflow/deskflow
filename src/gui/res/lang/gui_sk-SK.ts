@@ -206,7 +206,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/ActivationDialog.cpp" line="88"/>
       <source>%1</source>
-      <translation type="unfinished">%1</translation>
+      <translation>%1</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="97"/>
@@ -803,7 +803,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="273"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="320"/>
       <source>Meta</source>
-      <translation type="unfinished">Meta</translation>
+      <translation>Meta</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="137"/>
@@ -812,7 +812,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="278"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="325"/>
       <source>Super</source>
-      <translation type="unfinished">Super</translation>
+      <translation>Super</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="142"/>
@@ -826,22 +826,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="150"/>
       <source>&amp;Ctrl:</source>
-      <translation type="unfinished">&amp;Ctrl:</translation>
+      <translation>&amp;Ctrl:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="197"/>
       <source>Al&amp;t:</source>
-      <translation type="unfinished">Al&amp;t:</translation>
+      <translation>Al&amp;t:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="244"/>
       <source>M&amp;eta:</source>
-      <translation type="unfinished">M&amp;eta:</translation>
+      <translation>M&amp;eta:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="291"/>
       <source>S&amp;uper:</source>
-      <translation type="unfinished">S&amp;uper:</translation>
+      <translation>S&amp;uper:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="358"/>
@@ -1016,7 +1016,7 @@ Dvojitým kliknutím na obrazovku upravíte jej nastavenia.</translation>
       <location filename="src/ServerConfigDialogBase.ui" line="383"/>
       <location filename="src/ServerConfigDialogBase.ui" line="552"/>
       <source>ms</source>
-      <translation type="unfinished">ms</translation>
+      <translation>ms</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="344"/>
