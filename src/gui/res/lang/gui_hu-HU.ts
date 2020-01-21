@@ -6,7 +6,7 @@
     <message>
       <location filename="src/AboutDialogBase.ui" line="38"/>
       <source>About Synergy</source>
-      <translation type="unfinished">About Synergy</translation>
+      <translation>Synergy névjegy</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="53"/>
@@ -32,13 +32,13 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="124"/>
       <source>Version:</source>
-      <translation type="unfinished">Version:</translation>
+      <translation>Verzió:</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="140"/>
       <location filename="src/AboutDialogBase.ui" line="174"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>Ismeretlen</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="167"/>
@@ -56,82 +56,82 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="14"/>
       <source>Configure Action</source>
-      <translation type="unfinished">Configure Action</translation>
+      <translation>Beállítás</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="20"/>
       <source>Choose the action to perform</source>
-      <translation type="unfinished">Choose the action to perform</translation>
+      <translation>Válasszon egy műveletet</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="26"/>
       <source>Press a hotkey</source>
-      <translation type="unfinished">Press a hotkey</translation>
+      <translation>Nyomjon le egy gyorsbillentyűt</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="36"/>
       <source>Release a hotkey</source>
-      <translation type="unfinished">Release a hotkey</translation>
+      <translation>Engedje fel a gyorsbillentyűt</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="43"/>
       <source>Press and release a hotkey</source>
-      <translation type="unfinished">Press and release a hotkey</translation>
+      <translation>Nyomja le, majd engedje fel a gyorsbillentyűt</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="69"/>
       <source>only on these screens</source>
-      <translation type="unfinished">only on these screens</translation>
+      <translation>csak ezeken a képernyőkön</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="119"/>
       <source>Switch to screen</source>
-      <translation type="unfinished">Switch to screen</translation>
+      <translation>Képernyőváltás</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="150"/>
       <source>Switch in direction</source>
-      <translation type="unfinished">Switch in direction</translation>
+      <translation>Irányváltás</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="174"/>
       <source>left</source>
-      <translation type="unfinished">left</translation>
+      <translation>bal</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="179"/>
       <source>right</source>
-      <translation type="unfinished">right</translation>
+      <translation>jobb</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="184"/>
       <source>up</source>
-      <translation type="unfinished">up</translation>
+      <translation>fel</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="189"/>
       <source>down</source>
-      <translation type="unfinished">down</translation>
+      <translation>le</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="201"/>
       <source>Lock cursor to screen</source>
-      <translation type="unfinished">Lock cursor to screen</translation>
+      <translation>Kurzor zárolása a képernyőn</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="225"/>
       <source>toggle</source>
-      <translation type="unfinished">toggle</translation>
+      <translation>váltó</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="230"/>
       <source>on</source>
-      <translation type="unfinished">on</translation>
+      <translation>BE</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="235"/>
       <source>off</source>
-      <translation type="unfinished">off</translation>
+      <translation>KI</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="247"/>
@@ -141,17 +141,17 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="259"/>
       <source>This action is performed when</source>
-      <translation type="unfinished">This action is performed when</translation>
+      <translation>Ez a művelet történik amikor</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="265"/>
       <source>the hotkey is pressed</source>
-      <translation type="unfinished">the hotkey is pressed</translation>
+      <translation>a gyorsgomb lenyomva</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="275"/>
       <source>the hotkey is released</source>
-      <translation type="unfinished">the hotkey is released</translation>
+      <translation>a gyorsgomb felengedve</translation>
     </message>
   </context>
   <context>
@@ -290,12 +290,12 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/HotkeyDialogBase.ui" line="14"/>
       <source>Hotkey</source>
-      <translation type="unfinished">Hotkey</translation>
+      <translation>Gyorsgomb</translation>
     </message>
     <message>
       <location filename="src/HotkeyDialogBase.ui" line="20"/>
       <source>Enter the specification for the hotkey:</source>
-      <translation type="unfinished">Enter the specification for the hotkey:</translation>
+      <translation>Adjon meg leírást a gyorsgombhoz:</translation>
     </message>
   </context>
   <context>
@@ -303,22 +303,22 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/MainWindow.cpp" line="259"/>
       <source>&amp;File</source>
-      <translation type="unfinished">&amp;File</translation>
+      <translation>Fájl</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="260"/>
       <source>&amp;Edit</source>
-      <translation type="unfinished">&amp;Edit</translation>
+      <translation>Szerkeszt</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="261"/>
       <source>&amp;Window</source>
-      <translation type="unfinished">&amp;Window</translation>
+      <translation>Ablak</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="262"/>
       <source>&amp;Help</source>
-      <translation type="unfinished">&amp;Help</translation>
+      <translation>Súgó</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="385"/>
@@ -355,22 +355,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="676"/>
       <source>Program can not be started</source>
-      <translation type="unfinished">Program can not be started</translation>
+      <translation>A program nem tud elindulni</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="676"/>
       <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-      <translation type="unfinished">The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</translation>
+      <translation>A végrehajtandó&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;nem indul, esetleg nem létezik. Kérjük ellenőrizze, hogy rendelkezik-e a szükséges engedélyekkel a futtatáshoz.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="715"/>
       <source>Synergy client not found</source>
-      <translation type="unfinished">Synergy client not found</translation>
+      <translation>Synergy kliens nem található</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="716"/>
       <source>The executable for the synergy client does not exist.</source>
-      <translation type="unfinished">The executable for the synergy client does not exist.</translation>
+      <translation>A Synergy kliens futtatható állománya nem található.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="743"/>
@@ -385,47 +385,47 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="759"/>
       <source>Hostname is empty</source>
-      <translation type="unfinished">Hostname is empty</translation>
+      <translation>A gépnév üres.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="760"/>
       <source>Please fill in a hostname for the synergy client to connect to.</source>
-      <translation type="unfinished">Please fill in a hostname for the synergy client to connect to.</translation>
+      <translation>Kérjük adja meg a Synergy kliens gép nevét a csatlakozáshoz.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="785"/>
       <source>Cannot write configuration file</source>
-      <translation type="unfinished">Cannot write configuration file</translation>
+      <translation>A konfigurációs fájl nem írható.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="785"/>
       <source>The temporary configuration file required to start synergy can not be written.</source>
-      <translation type="unfinished">The temporary configuration file required to start synergy can not be written.</translation>
+      <translation>Az ideiglenes konfigurációs fájl, amely szükséges a Synergy indításához, nem jött létre.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="798"/>
       <source>Configuration filename invalid</source>
-      <translation type="unfinished">Configuration filename invalid</translation>
+      <translation>Konfigurációs fájlnév érvénytelen</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="799"/>
       <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
-      <translation type="unfinished">You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</translation>
+      <translation>Nem adott meg érvényes konfigurációs fájlnevet a synergy szerveren. Meg akarja keresni a konfigurációs fájlt most?</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="827"/>
       <source>Synergy server not found</source>
-      <translation type="unfinished">Synergy server not found</translation>
+      <translation>Synergy szerver nem elérhető</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="828"/>
       <source>The executable for the synergy server does not exist.</source>
-      <translation type="unfinished">The executable for the synergy server does not exist.</translation>
+      <translation>A Synergy szerver futtatható állománya nem található.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="947"/>
       <source>&amp;Stop</source>
-      <translation type="unfinished">&amp;Stop</translation>
+      <translation>Stop</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="954"/>
@@ -465,27 +465,27 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1047"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>Ismeretlen</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1201"/>
       <source>Browse for a synergys config file</source>
-      <translation type="unfinished">Browse for a synergys config file</translation>
+      <translation>A Synergy konfigurációs fájl kijelölése</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1214"/>
       <source>Save configuration as...</source>
-      <translation type="unfinished">Save configuration as...</translation>
+      <translation>Mentse másként a konfigurációt...</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1218"/>
       <source>Save failed</source>
-      <translation type="unfinished">Save failed</translation>
+      <translation>Mentés sikertelen</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1218"/>
       <source>Could not save configuration to file.</source>
-      <translation type="unfinished">Could not save configuration to file.</translation>
+      <translation>A konfigurációs fájlt nem lehet menteni.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1303"/>
@@ -533,27 +533,27 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="273"/>
       <source>Configure interactively:</source>
-      <translation type="unfinished">Configure interactively:</translation>
+      <translation>Interaktív konfiguráció:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="285"/>
       <source>&amp;Configure Server...</source>
-      <translation type="unfinished">&amp;Configure Server...</translation>
+      <translation>Szerver konfiguráció...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="307"/>
       <source>Use existing configuration:</source>
-      <translation type="unfinished">Use existing configuration:</translation>
+      <translation>A létező konfiguráció használata:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="316"/>
       <source>&amp;Configuration file:</source>
-      <translation type="unfinished">&amp;Configuration file:</translation>
+      <translation>Konfigurációs fájl:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="336"/>
       <source>&amp;Browse...</source>
-      <translation type="unfinished">&amp;Browse...</translation>
+      <translation>Tallózás...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="354"/>
@@ -583,17 +583,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="438"/>
       <source>Log</source>
-      <translation type="unfinished">Log</translation>
+      <translation>Napló</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="492"/>
       <source>Ready</source>
-      <translation type="unfinished">Ready</translation>
+      <translation>Kész</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="515"/>
       <source>&amp;Apply</source>
-      <translation type="unfinished">&amp;Apply</translation>
+      <translation>Alkalmaz</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="522"/>
@@ -604,22 +604,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="532"/>
       <source>&amp;About Synergy...</source>
-      <translation type="unfinished">&amp;About Synergy...</translation>
+      <translation>Synergy névjegy...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="540"/>
       <source>&amp;Quit</source>
-      <translation type="unfinished">&amp;Quit</translation>
+      <translation>Kilépés</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="543"/>
       <source>Quit</source>
-      <translation type="unfinished">Quit</translation>
+      <translation>Kilépés</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="554"/>
       <source>Run</source>
-      <translation type="unfinished">Run</translation>
+      <translation>Fut :-)</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="565"/>
@@ -659,22 +659,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="606"/>
       <source>Save configuration &amp;as...</source>
-      <translation type="unfinished">Save configuration &amp;as...</translation>
+      <translation>Konfig mentése mint...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="609"/>
       <source>Save the interactively generated server configuration to a file.</source>
-      <translation type="unfinished">Save the interactively generated server configuration to a file.</translation>
+      <translation>Mentse az interaktívan létrehozott szerver konfigurációt fájlba.</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="617"/>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Beállítások</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="620"/>
       <source>Edit settings</source>
-      <translation type="unfinished">Edit settings</translation>
+      <translation>Beállítások módosítása</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="628"/>
@@ -688,7 +688,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/NewScreenWidget.cpp" line="32"/>
       <source>Unnamed</source>
-      <translation type="unfinished">Unnamed</translation>
+      <translation>Névtelen</translation>
     </message>
   </context>
   <context>
@@ -696,12 +696,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="56"/>
       <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
-      <translation type="unfinished">Synergy Configurations (*.sgc);;All files (*.*)</translation>
+      <translation>Synergy konfiguráció (*.sgc);;Minden fájl (*.*)</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="59"/>
       <source>Synergy Configurations (*.conf);;All files (*.*)</source>
-      <translation type="unfinished">Synergy Configurations (*.conf);;All files (*.*)</translation>
+      <translation>Synergy konfiguráció (*.conf);;Minden fájl (*.*)</translation>
     </message>
     <message>
       <location filename="src/main.cpp" line="139"/>
@@ -714,7 +714,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialog.cpp" line="67"/>
       <source>Screen name is empty</source>
-      <translation type="unfinished">Screen name is empty</translation>
+      <translation>Képernyőnév üres.</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialog.cpp" line="68"/>
@@ -737,32 +737,32 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="14"/>
       <source>Screen Settings</source>
-      <translation type="unfinished">Screen Settings</translation>
+      <translation>Képernyő beállítások</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="22"/>
       <source>Screen &amp;name:</source>
-      <translation type="unfinished">Screen &amp;name:</translation>
+      <translation>Képernyőnév:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="42"/>
       <source>A&amp;liases</source>
-      <translation type="unfinished">A&amp;liases</translation>
+      <translation>Álnevek</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="57"/>
       <source>&amp;Add</source>
-      <translation type="unfinished">&amp;Add</translation>
+      <translation>Hozzáad</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="74"/>
       <source>&amp;Remove</source>
-      <translation type="unfinished">&amp;Remove</translation>
+      <translation>Eltávolít</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="97"/>
       <source>&amp;Modifier keys</source>
-      <translation type="unfinished">&amp;Modifier keys</translation>
+      <translation>Módosító billentyűk</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="106"/>
@@ -851,47 +851,47 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="367"/>
       <source>Top-left</source>
-      <translation type="unfinished">Top-left</translation>
+      <translation>Bal-felső</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="374"/>
       <source>Top-right</source>
-      <translation type="unfinished">Top-right</translation>
+      <translation>Jobb-felső</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="381"/>
       <source>Bottom-left</source>
-      <translation type="unfinished">Bottom-left</translation>
+      <translation>Bal-alsó</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="388"/>
       <source>Bottom-right</source>
-      <translation type="unfinished">Bottom-right</translation>
+      <translation>Jobb-alsó</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="397"/>
       <source>Corner Si&amp;ze:</source>
-      <translation type="unfinished">Corner Si&amp;ze:</translation>
+      <translation>Sarokméret:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="428"/>
       <source>&amp;Fixes</source>
-      <translation type="unfinished">&amp;Fixes</translation>
+      <translation>Rögzít</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="437"/>
       <source>Fix CAPS LOCK key</source>
-      <translation type="unfinished">Fix CAPS LOCK key</translation>
+      <translation>Rögzíti a CAPS LOCK-ot</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="444"/>
       <source>Fix NUM LOCK key</source>
-      <translation type="unfinished">Fix NUM LOCK key</translation>
+      <translation>Rögzíti a NUM LOCK-ot</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="451"/>
       <source>Fix SCROLL LOCK key</source>
-      <translation type="unfinished">Fix SCROLL LOCK key</translation>
+      <translation>Rögzíti a SCROLL LOCK-ot</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="458"/>
@@ -904,7 +904,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSetupModel.cpp" line="51"/>
       <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-      <translation type="unfinished">&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</translation>
+      <translation>&lt;center&gt;Képernyő: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Dupla klikk a módosításhoz&lt;br&gt;Húzd a szemetesre a törléshez</translation>
     </message>
   </context>
   <context>
@@ -920,17 +920,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="14"/>
       <source>Server Configuration</source>
-      <translation type="unfinished">Server Configuration</translation>
+      <translation>Szerver konfiguráció</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="24"/>
       <source>Screens and links</source>
-      <translation type="unfinished">Screens and links</translation>
+      <translation>Képernyők és kapcsolatok</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="35"/>
       <source>Drag a screen from the grid to the trashcan to remove it.</source>
-      <translation type="unfinished">Drag a screen from the grid to the trashcan to remove it.</translation>
+      <translation>Húzd a képernyőt a listából a szemetesre, hogy eltávolítsd.</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="60"/>
@@ -940,41 +940,41 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="73"/>
       <source>Drag this button to the grid to add a new screen.</source>
-      <translation type="unfinished">Drag this button to the grid to add a new screen.</translation>
+      <translation>Húzd ezt a gombot a listába, hogy új képernyőt adj hozzá.</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="128"/>
       <source>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
-      <translation type="unfinished">Drag new screens to the grid or move existing ones around.
-Drag a screen to the trashcan to delete it.
-Double click on a screen to edit its settings.</translation>
+      <translation>Húzza az új képernyőket a listába vagy mozgassa a meglévőket.
+Húzza a képernyőt a szemetesre, hogy törlődjön.
+Dupla kattintással szerkesztheti a beállításokat.</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="157"/>
       <source>Hotkeys</source>
-      <translation type="unfinished">Hotkeys</translation>
+      <translation>Gyorsgombok</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="163"/>
       <source>&amp;Hotkeys</source>
-      <translation type="unfinished">&amp;Hotkeys</translation>
+      <translation>Gyorsgombok</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="175"/>
       <source>&amp;New</source>
-      <translation type="unfinished">&amp;New</translation>
+      <translation>Új</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="185"/>
       <source>&amp;Edit</source>
-      <translation type="unfinished">&amp;Edit</translation>
+      <translation>Szerkeszt</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="195"/>
       <source>&amp;Remove</source>
-      <translation type="unfinished">&amp;Remove</translation>
+      <translation>Eltávolít</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="218"/>
@@ -999,7 +999,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="274"/>
       <source>Advanced server settings</source>
-      <translation type="unfinished">Advanced server settings</translation>
+      <translation>További szerver beállítások</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="280"/>
@@ -1009,7 +1009,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="291"/>
       <source>Switch &amp;after waiting</source>
-      <translation type="unfinished">Switch &amp;after waiting</translation>
+      <translation>Váltás a várakozás után</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="330"/>
@@ -1026,7 +1026,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="408"/>
       <source>&amp;Options</source>
-      <translation type="unfinished">&amp;Options</translation>
+      <translation>Beállítások</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="416"/>
@@ -1046,12 +1046,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="471"/>
       <source>Don&apos;t take &amp;foreground window on Windows servers</source>
-      <translation type="unfinished">Don&apos;t take &amp;foreground window on Windows servers</translation>
+      <translation>Don&apos;t take &amp;foreground window on Windows servers</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="481"/>
       <source>Use &amp;relative mouse moves</source>
-      <translation type="unfinished">Use &amp;relative mouse moves</translation>
+      <translation>Relatív egér mozgás használata</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="501"/>
@@ -1061,12 +1061,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="513"/>
       <source>&amp;Check clients every</source>
-      <translation type="unfinished">&amp;Check clients every</translation>
+      <translation>Kliensek ellenőrzése</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="564"/>
       <source>S&amp;ynchronize screen savers</source>
-      <translation type="unfinished">S&amp;ynchronize screen savers</translation>
+      <translation>Képernyővédők szinkronizálása</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="571"/>
@@ -1081,27 +1081,27 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="590"/>
       <source>To&amp;p-left</source>
-      <translation type="unfinished">To&amp;p-left</translation>
+      <translation>Bal-felső</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="597"/>
       <source>Top-rig&amp;ht</source>
-      <translation type="unfinished">Top-rig&amp;ht</translation>
+      <translation>Jobb-felső</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="604"/>
       <source>&amp;Bottom-left</source>
-      <translation type="unfinished">&amp;Bottom-left</translation>
+      <translation>Bal-alsó</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="611"/>
       <source>Bottom-ri&amp;ght</source>
-      <translation type="unfinished">Bottom-ri&amp;ght</translation>
+      <translation>Jobb-alsó</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="633"/>
       <source>Cor&amp;ner Size:</source>
-      <translation type="unfinished">Cor&amp;ner Size:</translation>
+      <translation>Sarok méret</translation>
     </message>
   </context>
   <context>
@@ -1109,7 +1109,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialog.cpp" line="169"/>
       <source>Save log file to...</source>
-      <translation type="unfinished">Save log file to...</translation>
+      <translation>Napló mentése mint...</translation>
     </message>
   </context>
   <context>
@@ -1117,7 +1117,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="14"/>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Beállítások</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="20"/>
@@ -1127,7 +1127,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="32"/>
       <source>Sc&amp;reen name:</source>
-      <translation type="unfinished">Sc&amp;reen name:</translation>
+      <translation>Képernyő neve:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="49"/>
@@ -1207,17 +1207,17 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="293"/>
       <source>Logging</source>
-      <translation type="unfinished">Logging</translation>
+      <translation>Naplózás</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="311"/>
       <source>&amp;Logging level:</source>
-      <translation type="unfinished">&amp;Logging level:</translation>
+      <translation>Naplózási szint:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="322"/>
       <source>Info</source>
-      <translation type="unfinished">Info</translation>
+      <translation>Infó</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="327"/>
@@ -1237,12 +1237,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="345"/>
       <source>Log to file:</source>
-      <translation type="unfinished">Log to file:</translation>
+      <translation>Napló fájlba:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="362"/>
       <source>Browse...</source>
-      <translation type="unfinished">Browse...</translation>
+      <translation>Tallózás...</translation>
     </message>
   </context>
   <context>
@@ -1250,12 +1250,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizard.cpp" line="65"/>
       <source>Setup Synergy</source>
-      <translation type="unfinished">Setup Synergy</translation>
+      <translation>Synergy beállítás</translation>
     </message>
     <message>
       <location filename="src/SetupWizard.cpp" line="75"/>
       <source>Please select an option.</source>
-      <translation type="unfinished">Please select an option.</translation>
+      <translation>Kérem válaszon egy opciót.</translation>
     </message>
   </context>
   <context>
@@ -1263,7 +1263,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizardBase.ui" line="26"/>
       <source>Setup Synergy</source>
-      <translation type="unfinished">Setup Synergy</translation>
+      <translation>Synergy beállítás</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="30"/>
@@ -1278,12 +1278,12 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizardBase.ui" line="114"/>
       <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-      <translation type="unfinished">Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</translation>
+      <translation>A Synergy lehetővé teszi a billentyűzet és egér megosztását több számítógép között és ráadásul Ingyenes és nyílt forráskódú. Csak mozgassa az egeret a képernyő szélére, hogy átkerüljön a másik számítógépe monitorára. A számítógépek között a vágólap is megosztásra kerül. Nincs másra szüksége csak hálózati kapcsolatra a két számítógép között. A Synergy operációs rendszer független, így használhatja Windows, Mac OS X és Linux rendszerű számítógéppel.</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="131"/>
       <source>Server or Client?</source>
-      <translation type="unfinished">Server or Client?</translation>
+      <translation>Szerver vagy kliens?</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="146"/>
@@ -1350,7 +1350,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/VersionChecker.cpp" line="145"/>
       <source>Unknown</source>
-      <translation type="unfinished">Unknown</translation>
+      <translation>Ismeretlen</translation>
     </message>
   </context>
   <context>
