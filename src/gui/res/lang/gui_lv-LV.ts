@@ -1217,7 +1217,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="322"/>
       <source>Info</source>
-      <translation type="unfinished">Info</translation>
+      <translation>Informācija</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="327"/>
@@ -1278,7 +1278,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizardBase.ui" line="114"/>
       <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-      <translation type="unfinished">Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</translation>
+      <translation>Synergy ļauj tev viegli izmantot savu peli un klaviatūru vairākos datoros vienlaicīgi, un tā ir bezmakas un atvērtā koda programma. Vienkārši virzi kursoru no viena datora ekrāna malas uz cita datora ekrānu. Arī starpliktuve var būt kopīga. Vienīgais, kas tev nepieciešams, ir tīkla savienojums. Synergy darbojas uz dažādām operētājsistēmām – Windows, OS X un Linux.</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="131"/>
