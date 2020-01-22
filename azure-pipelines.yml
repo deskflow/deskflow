@@ -2,7 +2,7 @@ trigger:
 - master
 
 jobs: 
-- job: Linux
+- job: LinuxDeb
   pool: 
     vmImage: 'ubuntu-16.04'
   strategy:
@@ -13,6 +13,8 @@ jobs:
         image: symless/ubuntu-sudo:18.04
       ubuntu19:
         image: symless/ubuntu-sudo:19.04
+      debian9:
+        image: debian:stretch
 
   container: $[ variables['image'] ]
 
