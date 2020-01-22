@@ -680,7 +680,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/MainWindowBase.ui" line="628"/>
       <location filename="src/MainWindowBase.ui" line="631"/>
       <source>Activate</source>
-      <translation type="unfinished">Activate</translation>
+      <translation>Activar</translation>
     </message>
   </context>
   <context>
