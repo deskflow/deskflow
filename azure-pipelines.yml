@@ -1,6 +1,19 @@
 trigger:
 - master
 
+# Add sudo command to the container as its not provided and we arnt logged in as root
+resources:
+  containers:
+    - container: u16
+      image: ubuntu:16.04
+      options: '-v /usr/bin/sudo:/usr/bin/sudo -v /usr/lib/sudo/libsudo_util.so.0:/usr/lib/sudo/libsudo_util.so.0 -v /usr/lib/sudo/sudoers.so:/usr/lib/sudo/sudoers.so -v /etc/sudoers:/etc/sudoers'
+    - container: u18
+      image: ubuntu:18.04
+      options: '-v /usr/bin/sudo:/usr/bin/sudo -v /usr/lib/sudo/libsudo_util.so.0:/usr/lib/sudo/libsudo_util.so.0 -v /usr/lib/sudo/sudoers.so:/usr/lib/sudo/sudoers.so -v /etc/sudoers:/etc/sudoers'
+    - container: u19
+      image: ubuntu:18.04
+      options: '-v /usr/bin/sudo:/usr/bin/sudo -v /usr/lib/sudo/libsudo_util.so.0:/usr/lib/sudo/libsudo_util.so.0 -v /usr/lib/sudo/sudoers.so:/usr/lib/sudo/sudoers.so -v /etc/sudoers:/etc/sudoers'
+
 jobs: 
 - job: Linux
   pool: 
@@ -8,22 +21,18 @@ jobs:
   strategy:
     matrix:
       ubuntu16:
-        containerImage: ubuntu:16.04
+        containerResource: u16
       ubuntu18:
-        containerImage: ubuntu:18.04
+        containerResource: u18
       ubuntu19:
-        containerImage: ubuntu:19.04
-      debian9:
-        containerImage: debain:9
+        containerResource: u19
 
-  container: $[ variables['containerImage'] ]
+  container: $[ variables['containerResource'] ]
 
   steps:
   - script: |
-      whoami
       sudo apt-get install git cmake qtbase5-dev qttools5-dev build-essential libx11-dev libxtst-dev libgl1-mesa-dev libssl-dev libavahi-compat-libdnssd-dev debhelper devscripts
     displayName: 'Install Pakages'
-
 
   - script: |
       mkdir build
