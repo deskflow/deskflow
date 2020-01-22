@@ -9,10 +9,13 @@ jobs:
     matrix:
       ubuntu16:
         image: symless/ubuntu-sudo:16.04
+        endpoint: 'docker-hub'
       ubuntu18:
         image: symless/ubuntu-sudo:18.04
+        endpoint: 'docker-hub'
       ubuntu19:
         image: symless/ubuntu-sudo:19.04
+        endpoint: 'docker-hub'
 
   container: $[ variables['containerResource'] ]
 
