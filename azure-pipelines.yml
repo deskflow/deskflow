@@ -19,8 +19,8 @@ jobs:
   steps:
   - script: |
       sudo ln -snf /usr/share/zoneinfo/Europe/London /etc/localtime
-      sudo echo "Europe/London" > /etc/timezone
-    displayName: 'Sort out timezones as they are preventing non interactive builds'
+      sudo bash -c "echo 'Europe/London' > /etc/timezone"
+    displayName: 'Sort out timezones for updates'
 
   - script: |
       sudo DEBIAN_FRONTEND=noninteractive 
