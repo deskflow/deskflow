@@ -1,19 +1,6 @@
 trigger:
 - master
 
-# Add sudo command to the container as its not provided and we arnt logged in as root
-resources:
-  containers:
-    - container: u16
-      image: ubuntu:16.04
-      options: '-v /usr/bin/sudo:/usr/bin/sudo -v /usr/lib/sudo/libsudo_util.so.0:/usr/lib/sudo/libsudo_util.so.0 -v /usr/lib/sudo/sudoers.so:/usr/lib/sudo/sudoers.so -v /etc/sudoers:/etc/sudoers'
-    - container: u18
-      image: ubuntu:18.04
-      options: '-v /usr/bin/sudo:/usr/bin/sudo -v /usr/lib/sudo/libsudo_util.so.0:/usr/lib/sudo/libsudo_util.so.0 -v /usr/lib/sudo/sudoers.so:/usr/lib/sudo/sudoers.so -v /etc/sudoers:/etc/sudoers'
-    - container: u19
-      image: ubuntu:18.04
-      options: '-v /usr/bin/sudo:/usr/bin/sudo -v /usr/lib/sudo/libsudo_util.so.0:/usr/lib/sudo/libsudo_util.so.0 -v /usr/lib/sudo/sudoers.so:/usr/lib/sudo/sudoers.so -v /etc/sudoers:/etc/sudoers'
-
 jobs: 
 - job: Linux
   pool: 
@@ -21,11 +8,11 @@ jobs:
   strategy:
     matrix:
       ubuntu16:
-        containerResource: u16
+        image: symless/ubuntu-sudo:16.04
       ubuntu18:
-        containerResource: u18
+        image: symless/ubuntu-sudo:18.04
       ubuntu19:
-        containerResource: u19
+        image: symless/ubuntu-sudo:19.04
 
   container: $[ variables['containerResource'] ]
 
