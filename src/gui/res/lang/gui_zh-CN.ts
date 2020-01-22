@@ -206,7 +206,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/ActivationDialog.cpp" line="88"/>
       <source>%1</source>
-      <translation type="unfinished">%1</translation>
+      <translation>%1</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="97"/>
@@ -228,17 +228,17 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/AddClientDialogBase.ui" line="20"/>
       <source>Dialog</source>
-      <translation type="unfinished">Dialog</translation>
+      <translation>对话框</translation>
     </message>
     <message>
       <location filename="src/AddClientDialogBase.ui" line="35"/>
       <source>TextLabel</source>
-      <translation type="unfinished">TextLabel</translation>
+      <translation>文字标题</translation>
     </message>
     <message>
       <location filename="src/AddClientDialogBase.ui" line="83"/>
       <source>Ignore auto connect clients</source>
-      <translation type="unfinished">Ignore auto connect clients</translation>
+      <translation>忽略自动连接客户端</translation>
     </message>
   </context>
   <context>
@@ -333,7 +333,7 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/MainWindow.cpp" line="499"/>
       <source>Security question</source>
-      <translation type="unfinished">Security question</translation>
+      <translation>安全问题</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="500"/>
@@ -490,12 +490,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1303"/>
       <source>Please add the server (%1) to the grid.</source>
-      <translation type="unfinished">Please add the server (%1) to the grid.</translation>
+      <translation>请在网格中添加服务器 (%1)。</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1309"/>
       <source>Please drag the new client screen (%1) to the desired position on the grid.</source>
-      <translation type="unfinished">Please drag the new client screen (%1) to the desired position on the grid.</translation>
+      <translation>请新客户端屏幕 (%1) 拖动到网格上的所需位置。</translation>
     </message>
   </context>
   <context>
@@ -503,7 +503,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="26"/>
       <source>Synergy</source>
-      <translation type="unfinished">Synergy</translation>
+      <translation>Synergy</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="58"/>
@@ -680,7 +680,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/MainWindowBase.ui" line="628"/>
       <location filename="src/MainWindowBase.ui" line="631"/>
       <source>Activate</source>
-      <translation type="unfinished">Activate</translation>
+      <translation>激活</translation>
     </message>
   </context>
   <context>
@@ -776,7 +776,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="258"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="305"/>
       <source>Shift</source>
-      <translation type="unfinished">Shift</translation>
+      <translation>Shift键</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="122"/>
@@ -785,7 +785,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="263"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="310"/>
       <source>Ctrl</source>
-      <translation type="unfinished">Ctrl</translation>
+      <translation>Ctrl 键</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="127"/>
@@ -794,7 +794,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="268"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="315"/>
       <source>Alt</source>
-      <translation type="unfinished">Alt</translation>
+      <translation>Alt 键</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="132"/>
@@ -803,7 +803,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="273"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="320"/>
       <source>Meta</source>
-      <translation type="unfinished">Meta</translation>
+      <translation>Meta键</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="137"/>
@@ -912,7 +912,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ServerConfigDialog.cpp" line="83"/>
       <source>Configure server</source>
-      <translation type="unfinished">Configure server</translation>
+      <translation>配置服务器</translation>
     </message>
   </context>
   <context>
@@ -1056,7 +1056,7 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="501"/>
       <source>Ignore auto config clients</source>
-      <translation type="unfinished">Ignore auto config clients</translation>
+      <translation>忽略自动配置客户端</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="513"/>
@@ -1172,7 +1172,7 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="152"/>
       <source>&amp;Hide on startup</source>
-      <translation type="unfinished">&amp;Hide on startup</translation>
+      <translation>启动后隐藏</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="159"/>
@@ -1327,22 +1327,22 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/SslCertificate.cpp" line="46"/>
       <source>Failed to get profile directory.</source>
-      <translation type="unfinished">Failed to get profile directory.</translation>
+      <translation>未能获取配置文件目录。</translation>
     </message>
     <message>
       <location filename="src/SslCertificate.cpp" line="148"/>
       <source>SSL certificate generated.</source>
-      <translation type="unfinished">SSL certificate generated.</translation>
+      <translation>生成的 SSL 证书。</translation>
     </message>
     <message>
       <location filename="src/SslCertificate.cpp" line="178"/>
       <source>SSL fingerprint generated.</source>
-      <translation type="unfinished">SSL fingerprint generated.</translation>
+      <translation>SSL 指纹生成。</translation>
     </message>
     <message>
       <location filename="src/SslCertificate.cpp" line="181"/>
       <source>Failed to find SSL fingerprint.</source>
-      <translation type="unfinished">Failed to find SSL fingerprint.</translation>
+      <translation>未能找到 SSL 指纹。</translation>
     </message>
   </context>
   <context>
@@ -1358,12 +1358,12 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/ZeroconfService.cpp" line="82"/>
       <source>zeroconf server detected: %1</source>
-      <translation type="unfinished">zeroconf server detected: %1</translation>
+      <translation>检测到的自动配置服务器: %1</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="91"/>
       <source>zeroconf client detected: %1</source>
-      <translation type="unfinished">zeroconf client detected: %1</translation>
+      <translation>自动配置客户端检测到: %1</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="100"/>
@@ -1375,7 +1375,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/ZeroconfService.cpp" line="101"/>
       <source>Error code: %1.</source>
-      <translation type="unfinished">Error code: %1.</translation>
+      <translation>错误代码: %1。</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="133"/>
@@ -1385,13 +1385,13 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/ZeroconfService.cpp" line="144"/>
       <source>Failed to get local IP address. Please manually type in server address on your clients</source>
-      <translation type="unfinished">Failed to get local IP address. Please manually type in server address on your clients</translation>
+      <translation>无法获取本地 IP 地址。请手动输入服务器地址和您的客户端</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="150"/>
       <location filename="src/ZeroconfService.cpp" line="157"/>
       <source>%1</source>
-      <translation type="unfinished">%1</translation>
+      <translation>%1</translation>
     </message>
   </context>
 </TS>
