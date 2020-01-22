@@ -18,13 +18,13 @@ jobs:
 
   steps:
   - script: |
-      sudo TZ=Europe/London
-      sudo ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
-      sudo echo $TZ > /etc/timezone
+      sudo ln -snf /usr/share/zoneinfo/Europe/London /etc/localtime
+      sudo echo "Europe/London" > /etc/timezone
     displayName: 'Sort out timezones as they are preventing non interactive builds'
 
   - script: |
       sudo DEBIAN_FRONTEND=noninteractive 
+      sudo apt-get -y update
       sudo apt-get -y upgrade
       sudo apt-get -y install git cmake qtbase5-dev qttools5-dev build-essential libx11-dev libxtst-dev libgl1-mesa-dev libssl-dev libavahi-compat-libdnssd-dev debhelper devscripts
     displayName: 'Install Pakages'
