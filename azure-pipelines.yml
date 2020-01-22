@@ -27,6 +27,7 @@ jobs:
       sudo apt-get -y update
       sudo apt-get -y upgrade
       sudo apt-get -y install git cmake qtbase5-dev build-essential libx11-dev libxtst-dev libgl1-mesa-dev libssl-dev libavahi-compat-libdnssd-dev debhelper devscripts
+      sudo apt-get -y qttools5-dev qttools5-dev-tools --no-install-recommends #These will try to install gnome if we allow dependancies
     displayName: 'Install Pakages'
 
   - script: |
