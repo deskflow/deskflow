@@ -20,7 +20,7 @@ jobs:
 
   steps:
   - script: |
-      sudo apt install git cmake qtbase5-dev qttools5-dev build-essential libx11-dev libxtst-dev libgl1-mesa-dev libssl-dev libavahi-compat-libdnssd-dev debhelper devscripts
+      apt-get install git cmake qtbase5-dev qttools5-dev build-essential libx11-dev libxtst-dev libgl1-mesa-dev libssl-dev libavahi-compat-libdnssd-dev debhelper devscripts
     displayName: 'Install Pakages'
 
 
