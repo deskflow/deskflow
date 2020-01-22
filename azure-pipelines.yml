@@ -3,7 +3,8 @@ trigger:
 
 jobs: 
 - job: Linux
-  pool: 'ubuntu-16.04'
+  pool: 
+    vmImage: 'ubuntu-16.04'
   strategy:
     matrix:
       ubuntu16:
