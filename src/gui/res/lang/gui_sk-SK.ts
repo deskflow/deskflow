@@ -1391,7 +1391,7 @@ p, li { white-space: pre-wrap; }
       <location filename="src/ZeroconfService.cpp" line="150"/>
       <location filename="src/ZeroconfService.cpp" line="157"/>
       <source>%1</source>
-      <translation type="unfinished">%1</translation>
+      <translation>%1</translation>
     </message>
   </context>
 </TS>
