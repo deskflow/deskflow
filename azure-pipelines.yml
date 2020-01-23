@@ -53,7 +53,7 @@ jobs:
       script: |
         New-Item -Force -ItemType Directory -Path ".\deps\"
         $client = new-object System.Net.WebClient
-        $client.DownloadFile("https://download.developer.apple.com/Developer_Tools/bonjour_sdk_for_windows_v3.0/bonjoursdksetup.exe","deps\bonjoursdksetup.exe")
+        $client.DownloadFile("https://binaries.symless.com/bonjour/bonjoursdksetup.exe","deps\bonjoursdksetup.exe")
     displayName: 'Downloading Bonjour SKD'
 
   - task: PowerShell@2
