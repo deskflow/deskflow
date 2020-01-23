@@ -75,8 +75,8 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        Tree /F c:\
-        Tree /F d:\
+        Get-ChildItem -Path C:\ -Recurse -Directory -Force -ErrorAction SilentlyContinue | Select-Object FullName
+        Get-ChildItem -Path D:\ -Recurse -Directory -Force -ErrorAction SilentlyContinue | Select-Object FullName
 
   - script: |
       mkdir build
