@@ -32,7 +32,7 @@ jobs:
     displayName: 'Extracting QLI'
   - task: CopyFiles@2
     inputs:
-      Contents: '.\deps\**\*'
+      Contents: '.\deps\qli-installer-2019.05.26.1\*'
       TargetFolder: '.\deps'
 
   - task: PowerShell@2
