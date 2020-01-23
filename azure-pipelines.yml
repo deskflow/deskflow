@@ -71,6 +71,13 @@ jobs:
         echo $(QT_PATH)
         Tree /F
 
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        Tree /F c:\
+        Tree /F d:\
+
   - script: |
       mkdir build
       cd build
