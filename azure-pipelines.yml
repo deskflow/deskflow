@@ -15,9 +15,9 @@ jobs:
   variables:
     QT_VERSION: '5.9.9'
     QLI_VERSION: '2019.05.26.1'
-    QLI_OUT_DIR: '.\deps\Qt\Qt$(QT_VERSION)'
+    QLI_OUT_DIR: '.\deps\Qt'
     QLI_BASE_URL: 'http://mirrors.ocf.berkeley.edu/qt/online/qtsdkrepository/'
-    CMAKE_PREFIX_PATH: '$(QLI_OUT_DIR)\win64_msvc2017_64'
+    CMAKE_PREFIX_PATH: '$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
 
   steps:
 #As the official installer is rather 'slow' use an unofficial installer QLI
