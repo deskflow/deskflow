@@ -48,7 +48,7 @@ jobs:
     inputs:
       scriptSource: 'filePath'
       scriptPath: '.\deps\qli-installer.py'
-      arguments: '5.9.5 windows desktop win32_msvc2017 win64_msvc2017_64'
+      arguments: '5.9.5 windows desktop win64_msvc2017_64'
 
   - script: |
       mkdir build
