@@ -35,11 +35,11 @@ jobs:
       targetType: 'inline'
       script: 'pip install -r .\deps\qli\requirements.txt'
     displayName: 'Install QLI requirements'
-- task: PythonScript@0
-  inputs:
-    scriptSource: 'filePath'
-    scriptPath: '.\deps\qli\qli-installer.py'
-    arguments: '5.9.5 windows desktop win32_msvc2017 win64_msvc2017_64'
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: '.\deps\qli\qli-installer.py'
+      arguments: '5.9.5 windows desktop win32_msvc2017 win64_msvc2017_64'
 
   - script: |
       mkdir build
