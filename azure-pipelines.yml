@@ -17,7 +17,7 @@ jobs:
     QLI_VERSION: '2019.05.26.1'
     QLI_OUT_DIR: '.\deps\Qt'
     QLI_BASE_URL: 'http://mirrors.ocf.berkeley.edu/qt/online/qtsdkrepository/'
-    QT_PATH: '$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
+    QT_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
 
   steps:
 #As the official installer is rather 'slow' use an unofficial installer QLI
@@ -49,7 +49,9 @@ jobs:
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: 'Tree /F'
+      script: |
+        echo $(QT_PATH)
+        Tree /F
   - script: |
       mkdir build
       cd build
