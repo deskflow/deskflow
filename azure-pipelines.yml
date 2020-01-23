@@ -21,7 +21,7 @@ jobs:
       script: |
         New-Item -Force -ItemType Directory -Path ".\deps\"
         $client = new-object System.Net.WebClient
-        $client.DownloadFile("https://github.com/nelsonjchen/qli-installer/archive/v$qli_install_version.zip","deps\qli.exe")
+        $client.DownloadFile("https://github.com/nelsonjchen/qli-installer/archive/v2019.05.26.1.zip","deps\qli.zip")
     displayName: 'Downloading QLI'
   - task: ExtractFiles@1
     inputs:
