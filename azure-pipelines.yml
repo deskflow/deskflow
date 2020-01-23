@@ -2,39 +2,31 @@ trigger:
 - master
 
 jobs: 
-- job: LinuxDeb
-  pool: 
-    vmImage: 'ubuntu-16.04'
+- job: Windows
   strategy:
     matrix:
-      ubuntu16:
-        image: symless/ubuntu-sudo:16.04
-      ubuntu18:
-        image: symless/ubuntu-sudo:18.04
-      ubuntu19:
-        image: symless/ubuntu-sudo:19.04
-      debian9:
-        image: symless/debian-sudo:stretch
+      vs2019:
+        image: windows-2019
 
-  container: $[ variables['image'] ]
-
-  steps:
-  - script: |
-      sudo ln -snf /usr/share/zoneinfo/Europe/London /etc/localtime
-      sudo bash -c "echo 'Europe/London' > /etc/timezone"
-    displayName: 'Sort out timezones for updates'
+  pool: 
+    vmImage: $[ variables['image'] ]
 
   - script: |
-      sudo DEBIAN_FRONTEND=noninteractive 
-      sudo apt-get -y update
-      sudo apt-get -y upgrade
-      sudo apt-get -y install git cmake qtbase5-dev build-essential libx11-dev libxtst-dev libgl1-mesa-dev libssl-dev libavahi-compat-libdnssd-dev debhelper devscripts
-      sudo apt-get -y install qttools5-dev qttools5-dev-tools --no-install-recommends #These will try to install gnome if we allow dependancies
-    displayName: 'Install Pakages'
+     $client = new-object System.Net.WebClient
+     $client.DownloadFile("http://download.qt.io/official_releases/qt/5.9/5.9.9/qt-opensource-windows-x86-5.9.9.exe","C:\tmp\qt-opensource-windows.exe")
+     C:\tmp\qt-opensource-windows.exe --script qt-installer-noninteractive.qt
+    displayName: 'Install QT 5.9.9'
 
   - script: |
       mkdir build
       cd build
-      cmake ..
-      make
-    displayName: 'Build'
+      cmake -G "Visual Studio 16 2019 Win64" -DCMAKE_BUILD_TYPE=Release ..
+      msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Release /m
+    displayName: 'Build x64'
+  
+  - script: |
+      mkdir build
+      cd build
+      cmake -G "Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release ..
+      msbuild synergy-core.sln /p:Platform="x86" /p:Configuration=Release /m
+    displayName: 'Build x86'
