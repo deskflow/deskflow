@@ -46,12 +46,29 @@ jobs:
       scriptSource: 'filePath'
       scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
       arguments: '$(QT_VERSION) windows desktop win64_msvc2017_64'
+
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        New-Item -Force -ItemType Directory -Path ".\deps\"
+        $client = new-object System.Net.WebClient
+        $client.DownloadFile("https://download.developer.apple.com/Developer_Tools/bonjour_sdk_for_windows_v3.0/bonjoursdksetup.exe","deps\bonjoursdksetup.exe")
+    displayName: 'Downloading Bonjour SKD'
+
+  - task: PowerShell@2
+    inputs:
+      filePath: 'deps\bonjoursdksetup.exe'
+      arguments: '/quiet'
+    displayName: 'Installing bonjour SDK'
+
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
       script: |
         echo $(QT_PATH)
         Tree /F
+
   - script: |
       mkdir build
       cd build
