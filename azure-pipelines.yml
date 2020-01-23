@@ -18,9 +18,10 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
+        mkdir
         $client = new-object System.Net.WebClient
-        $client.DownloadFile("http://download.qt.io/official_releases/qt/5.9/5.9.9/qt-opensource-windows-x86-5.9.9.exe","C:\tmp\qt-opensource-windows.exe")
-        C:\tmp\qt-opensource-windows.exe --script CI/Windows/qtifwsilent.qs
+        $client.DownloadFile("http://download.qt.io/official_releases/qt/5.9/5.9.9/qt-opensource-windows-x86-5.9.9.exe","qt-opensource-windows.exe")
+        qt-opensource-windows.exe --script CI/Windows/qtifwsilent.qs
     displayName: 'Install QT 5.9.9'
 
   - script: |
