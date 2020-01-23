@@ -13,7 +13,9 @@ jobs:
     vmImage: $[ variables['image'] ]
 
   variables:
-    QLI_OUT_DIR: '.\deps\Qt\Qt$qt_version'
+    QT_VERSION: '5.9.9'
+    QLI_VERSION: '2019.05.26.1'
+    QLI_OUT_DIR: '.\deps\Qt\Qt$(QT_VERSION)'
     QLI_BASE_URL: 'http://mirrors.ocf.berkeley.edu/qt/online/qtsdkrepository/'
 
   steps:
@@ -24,7 +26,7 @@ jobs:
       script: |
         New-Item -Force -ItemType Directory -Path ".\deps\"
         $client = new-object System.Net.WebClient
-        $client.DownloadFile("https://github.com/nelsonjchen/qli-installer/archive/v2019.05.26.1.zip","deps\qli.zip")
+        $client.DownloadFile("https://github.com/nelsonjchen/qli-installer/archive/v$(QLI_VERSION).zip","deps\qli.zip")
     displayName: 'Downloading QLI'
   - task: ExtractFiles@1
     inputs:
@@ -32,33 +34,21 @@ jobs:
       destinationFolder: './deps/'
       cleanDestinationFolder: false
     displayName: 'Extracting QLI'
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: '.\deps\qli-installer-2019.05.26.1'
-      Contents: '**'
-      TargetFolder: '.\deps'
 
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: 'pip install -r .\deps\requirements.txt'
+      script: 'pip install -r .\deps\qli-installer-$(QLI_VERSION)\requirements.txt'
     displayName: 'Install QLI requirements'
   - task: PythonScript@0
     inputs:
       scriptSource: 'filePath'
-      scriptPath: '.\deps\qli-installer.py'
-      arguments: '5.9.5 windows desktop win64_msvc2017_64'
+      scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
+      arguments: '$(QT_VERSION) windows desktop win64_msvc2017_64'
 
   - script: |
       mkdir build
       cd build
-      cmake -G "Visual Studio 16 2019 Win64" -DCMAKE_BUILD_TYPE=Release ..
+      cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=Release ..
       msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Release /m
     displayName: 'Build x64'
-  
-  - script: |
-      mkdir build
-      cd build
-      cmake -G "Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release ..
-      msbuild synergy-core.sln /p:Platform="x86" /p:Configuration=Release /m
-    displayName: 'Build x86'
