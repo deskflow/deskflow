@@ -46,7 +46,10 @@ jobs:
       scriptSource: 'filePath'
       scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
       arguments: '$(QT_VERSION) windows desktop win64_msvc2017_64'
-
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: 'Tree /F'
   - script: |
       mkdir build
       cd build
