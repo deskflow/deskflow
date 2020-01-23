@@ -1,4 +1,5 @@
 trigger:
+
 - master
 
 jobs: 
@@ -29,6 +30,11 @@ jobs:
       destinationFolder: './deps/'
       cleanDestinationFolder: false
     displayName: 'Extracting QLI'
+  - task: CopyFiles@2
+    inputs:
+      Contents: '.\deps\**\*'
+      TargetFolder: '.\deps'
+
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
