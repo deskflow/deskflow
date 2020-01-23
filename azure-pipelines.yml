@@ -11,6 +11,7 @@ jobs:
   pool: 
     vmImage: $[ variables['image'] ]
 
+  steps:
   - script: |
      $client = new-object System.Net.WebClient
      $client.DownloadFile("http://download.qt.io/official_releases/qt/5.9/5.9.9/qt-opensource-windows-x86-5.9.9.exe","C:\tmp\qt-opensource-windows.exe")
