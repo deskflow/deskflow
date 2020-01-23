@@ -58,8 +58,9 @@ jobs:
 
   - task: PowerShell@2
     inputs:
-      filePath: 'deps\bonjoursdksetup.exe'
-      arguments: '/quiet'
+      targetType: 'inline'
+      script: |
+        'deps\bonjoursdksetup.exe /quiet'
     displayName: 'Installing bonjour SDK'
 
   - task: PowerShell@2
