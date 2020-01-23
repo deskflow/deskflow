@@ -14,14 +14,21 @@ jobs:
 
 
   steps:
+#As the official installer is rather 'slow' use an unofficial installer QLI
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
       script: |
+        New-Item -Force -ItemType Directory -Path ".\deps\"
         $client = new-object System.Net.WebClient
-        $client.DownloadFile("http://download.qt.io/official_releases/qt/5.9/5.9.9/qt-opensource-windows-x86-5.9.9.exe","qt-opensource-windows.exe")
-        qt-opensource-windows.exe --script CI/Windows/qtifwsilent.qs
-    displayName: 'Install QT 5.9.9'
+        $client.DownloadFile("https://github.com/nelsonjchen/qli-installer/archive/v$qli_install_version.zip","deps\qli.exe")
+    displayName: 'Downloading QLI'
+  - task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: './deps/*.zip'
+      destinationFolder: './deps/'
+      cleanDestinationFolder: false
+    displayName: 'Extracting QLI'
 
   - script: |
       mkdir build
