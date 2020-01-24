@@ -82,7 +82,7 @@ jobs:
 
   - script: |
       call "$(ENV_BAT)" -arch=x64
-      set BONJOUR_SDK_HOME=$(pwd)\$(BONJOUR_SDK_DIR)
+      set BONJOUR_SDK_HOME=%cd%\$(BONJOUR_SDK_DIR)
       mkdir build64
       cd build64
       cmake -G "Visual Studio 16 2019" -A x64 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH) -DDNSSD_LIB=$(pwd)\$(BONJOUR_SDK_LIB) ..
