@@ -23,6 +23,7 @@ jobs:
     BONJOUR_SDK_LIB: '$(BONJOUR_SDK_HOME)\Lib\x64\dnssd.lib'
     BONJOUR_SDK_LIB_32: '$(BONJOUR_SDK_HOME)\Lib\Win32\dnssd.lib'
     MSBUILD_PATH: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\amd64'
+    ENV_BAT: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\vsdevcmd'
 
   steps:
 #As the official installer is rather 'slow' use an unofficial installer QLI
@@ -81,10 +82,11 @@ jobs:
     displayName: 'Installing bonjour SDK'
 
   - script: |
+      call "$(ENV_BAT)\vsdevcmd" -arch=x64
       mkdir build64
       cd build64
       cmake -G "Visual Studio 16 2019" -A x64 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH) -DDNSSD_LIB=$(BONJOUR_SDK_LIB) ..
-      "$(MSBUILD_PATH)\msbuild.exe" .\synergy-core.sln /m /p:platform="x64" /p:configuration="Release" /verbosity:m
+      "msbuild.exe" .\synergy-core.sln /m /p:platform="x64" /p:configuration="Release" /verbosity:m
     displayName: 'Cmake x64'
 
   - script: |
