@@ -89,6 +89,14 @@ jobs:
       cmake -G "Visual Studio 16 2019" -A Win32 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH_32) -DDNSSD_LIB=$(BONJOUR_SDK_LIB_32)  ..
     displayName: 'Cmake x86'
 
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        Get-Content -Path build64/synergy-core.sln
+        Get-Item -Path Env:* | Get-Member
+
+
   - task: MSBuild@1
     inputs:
       solution: 'build64/synergy-core.sln'
