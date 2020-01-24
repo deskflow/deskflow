@@ -21,7 +21,7 @@ jobs:
     QT_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
     BONJOUR_SDK_DIR: 'C:\Program Files\Bonjour SDK'
     BONJOUR_SDK_LIB: '$(BONJOUR_SDK_DIR)\Lib\x64\dnssd.lib'
-    BONJOUR_SDK_LIB_32: '$(BONJOUR_SDK_DIR)\Lib\x64\dnssd.lib'
+    BONJOUR_SDK_LIB_32: '$(BONJOUR_SDK_DIR)\Lib\Win32\dnssd.lib'
 
   steps:
 #As the official installer is rather 'slow' use an unofficial installer QLI
