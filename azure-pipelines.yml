@@ -84,7 +84,7 @@ jobs:
       mkdir build64
       cd build64
       cmake -G "Visual Studio 16 2019" -A x64 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH) -DDNSSD_LIB=$(BONJOUR_SDK_LIB) ..
-      $(MSBUILD_PATH)\msbuild.exe build64/synergy-core.sln /m /p:platform="x64" /p:configuration="Release" /verbosity:m
+      "$(MSBUILD_PATH)\msbuild.exe" build64/synergy-core.sln /m /p:platform="x64" /p:configuration="Release" /verbosity:m
     displayName: 'Cmake x64'
 
   - script: |
