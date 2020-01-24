@@ -80,13 +80,13 @@ jobs:
   - script: |
       mkdir build64
       cd build64
-      cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH) -DDNSSD_LIB=$(BONJOUR_SDK_LIB) ..
+      cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=Release  -DBONJOUR_SDK_HOME=$(BONJOUR_SDK_DIR) -DCMAKE_PREFIX_PATH=$(QT_PATH) -DDNSSD_LIB=$(BONJOUR_SDK_LIB) ..
     displayName: 'Cmake x64'
 
   - script: |
       mkdir build32
       cd build32
-      cmake -G "Visual Studio 16 2019" -A Win32 -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH_32) -DDNSSD_LIB=$(BONJOUR_SDK_LIB_32) ..
+      cmake -G "Visual Studio 16 2019" -A Win32 -DCMAKE_BUILD_TYPE=Release -DBONJOUR_SDK_HOME=$(BONJOUR_SDK_DIR) -DCMAKE_PREFIX_PATH=$(QT_PATH_32) -DDNSSD_LIB=$(BONJOUR_SDK_LIB_32)  ..
     displayName: 'Cmake x86'
 
   - task: MSBuild@1
