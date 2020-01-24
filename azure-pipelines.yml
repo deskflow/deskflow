@@ -97,8 +97,7 @@ jobs:
       targetType: 'inline'
       script: |
         Get-Content -Path build64\src\gui\synergy.vcxproj
-        Get-ChildItem 'C:\Program Files\Bonjour SDK'
-
+        Get-ChildItem $(BONJOUR_SDK_HOME)
 
   - task: MSBuild@1
     inputs:
