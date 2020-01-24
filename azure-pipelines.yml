@@ -77,7 +77,6 @@ jobs:
       script: |
         Get-ChildItem '.\deps'
         msiexec.exe /i ${pwd}\deps\Bonjour64.msi INSTALLDIR="${pwd}\deps\Bonjour" /qb
-        msiexec.exe /i ${pwd}\deps\bonjoursdksetup.exe INSTALLDIR="${pwd}\deps\Bonjour SDK" /qb
     displayName: 'Installing bonjour SDK'
 
   - script: |
@@ -97,7 +96,7 @@ jobs:
       targetType: 'inline'
       script: |
         Get-Content -Path build64\src\gui\synergy.vcxproj
-        Get-ChildItem $(BONJOUR_SDK_HOME)
+        Get-ChildItem -Path D:\ -Recurse -Depth 6 -Directory -Force -ErrorAction SilentlyContinue | Select-Object FullName
 
   - task: MSBuild@1
     inputs:
