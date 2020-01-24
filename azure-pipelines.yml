@@ -9,6 +9,8 @@ jobs:
     matrix:
       centos7:
         image: symless/centos-sudo:7
+      fedora28:
+        image: symless/fedora-sudo:28
 
   container: $[ variables['image'] ]
 
