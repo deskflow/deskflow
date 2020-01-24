@@ -106,7 +106,7 @@ jobs:
       platform: 'x64'
       configuration: 'Release'
       msbuildArguments: '/m'
-      maximumCpuCount: true
+      maximumCpuCount: false
     displayName: 'Compiling x64'
 
   - task: MSBuild@1
