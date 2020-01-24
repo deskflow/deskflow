@@ -22,6 +22,7 @@ jobs:
     BONJOUR_SDK_HOME: '.\deps\BonjourSDK'
     BONJOUR_SDK_LIB: '$(BONJOUR_SDK_HOME)\Lib\x64\dnssd.lib'
     BONJOUR_SDK_LIB_32: '$(BONJOUR_SDK_HOME)\Lib\Win32\dnssd.lib'
+    MSBUILD_PATH: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\amd64'
 
   steps:
 #As the official installer is rather 'slow' use an unofficial installer QLI
@@ -83,6 +84,7 @@ jobs:
       mkdir build64
       cd build64
       cmake -G "Visual Studio 16 2019" -A x64 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH) -DDNSSD_LIB=$(BONJOUR_SDK_LIB) ..
+      $(MSBUILD_PATH)\msbuild.exe build64/synergy-core.sln /m /p:platform="x64" /p:configuration="Release" /verbosity:m
     displayName: 'Cmake x64'
 
   - script: |
@@ -90,31 +92,6 @@ jobs:
       cd build32
       cmake -G "Visual Studio 16 2019" -A Win32 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH_32) -DDNSSD_LIB=$(BONJOUR_SDK_LIB_32)  ..
     displayName: 'Cmake x86'
-
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: |
-        Get-Content -Path build64\src\gui\synergy.vcxproj
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: |
-        Get-Content -Path build64/synergy-core.sln
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: |
-        Get-ChildItem -Path ${pwd}\deps -Recurse -Depth 6 -Force -ErrorAction SilentlyContinue | Select-Object FullName
-  - task: MSBuild@1
-    inputs:
-      solution: 'build64/synergy-core.sln'
-      msbuildVersion: '16.0'
-      msbuildArchitecture: 'x64'
-      platform: 'x64'
-      configuration: 'Release'
-      msbuildArguments: '/m /p:useenv=true'
-    displayName: 'Compiling x64'
 
   - task: MSBuild@1
     inputs:
