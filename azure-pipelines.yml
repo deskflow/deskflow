@@ -65,16 +65,17 @@ jobs:
       script: |
         New-Item -Force -ItemType Directory -Path ".\deps\"
         $client = new-object System.Net.WebClient
-        $client.DownloadFile("https://binaries.symless.com/bonjour/bonjoursdksetup.exe","deps\bonjoursdksetup.exe")
-        $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi","deps\Bonjour64.msi")
+        $client.DownloadFile("https://binaries.symless.com/bonjour/bonjoursdksetup.exe",".\deps\bonjoursdksetup.exe")
+        $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi",".\deps\Bonjour64.msi")
     displayName: 'Downloading Bonjour SKD'
 
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
       script: |
-        'deps\Bonjour64.msi /quiet'
-        'deps\bonjoursdksetup.exe /quiet'
+        Get-ChildItem '.\deps'
+        '.\deps\Bonjour64.msi /quiet'
+        '.\deps\bonjoursdksetup.exe /quiet'
     displayName: 'Installing bonjour SDK'
 
   - script: |
