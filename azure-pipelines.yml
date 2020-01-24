@@ -93,7 +93,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        Get-Content -Path build64/synergy-core.sln
+        Get-Content -Path build64\src\gui\synergy.vcxproj
         Get-Item -Path Env:* | Get-Member
 
 
