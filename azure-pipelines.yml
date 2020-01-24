@@ -19,7 +19,7 @@ jobs:
     QLI_BASE_URL: 'http://mirrors.ocf.berkeley.edu/qt/online/qtsdkrepository/'
     QT_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
     QT_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
-    BONJOUR_SDK_HOME: '.\deps\Bonjour SDK'
+    BONJOUR_SDK_HOME: '.\deps\BonjourSDK'
     BONJOUR_SDK_LIB: '$(BONJOUR_SDK_HOME)\Lib\x64\dnssd.lib'
     BONJOUR_SDK_LIB_32: '$(BONJOUR_SDK_HOME)\Lib\Win32\dnssd.lib'
 
@@ -40,7 +40,7 @@ jobs:
       script: |
         New-Item -Force -ItemType Directory -Path ".\deps\"
         $client = new-object System.Net.WebClient
-        $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour+SDK.zip",".\deps\bonjoursdk.zip")
+        $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\deps\bonjoursdk.zip")
         $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi",".\deps\Bonjour64.msi")
     displayName: 'Downloading Bonjour SKD'
 
@@ -96,7 +96,7 @@ jobs:
       targetType: 'inline'
       script: |
         Get-Content -Path build64\src\gui\synergy.vcxproj
-        Get-ChildItem -Path "D:\a\1\s\src\gui\.\deps\Bonjour SDK\Include" -Recurse -Depth 6 -Directory -Force -ErrorAction SilentlyContinue | Select-Object FullName
+        Get-ChildItem -Path "D:\a\1\s\src\gui\.\deps\BonjourSDK\Include" -Recurse -Depth 6 -Directory -Force -ErrorAction SilentlyContinue | Select-Object FullName
 
   - task: MSBuild@1
     inputs:
