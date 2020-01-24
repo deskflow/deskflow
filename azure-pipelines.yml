@@ -56,20 +56,6 @@ jobs:
       script: 'pip install -r .\deps\qli-installer-$(QLI_VERSION)\requirements.txt'
     displayName: 'Install QLI requirements'
 
-  - task: PythonScript@0
-    inputs:
-      scriptSource: 'filePath'
-      scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
-      arguments: '$(QT_VERSION) windows desktop win64_msvc2017_64'
-    displayName: 'Installing QT $(QT_VERSION) x64'
-
-  - task: PythonScript@0
-    inputs:
-      scriptSource: 'filePath'
-      scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
-      arguments: '$(QT_VERSION) windows desktop win32_msvc2017'
-    displayName: 'Installing QT $(QT_VERSION) x32'
-
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
@@ -77,6 +63,13 @@ jobs:
         Get-ChildItem '.\deps'
         msiexec.exe /i ${pwd}\deps\Bonjour64.msi INSTALLDIR="${pwd}\deps\Bonjour" /qb
     displayName: 'Installing bonjour SDK'
+
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
+      arguments: '$(QT_VERSION) windows desktop win64_msvc2017_64'
+    displayName: 'Installing QT $(QT_VERSION) x64'
 
   - script: |
       call "$(ENV_BAT)" -arch=x64
@@ -97,19 +90,26 @@ jobs:
       maximumCpuCount: true
     displayName: 'Compiling x64'
 
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
+      arguments: '$(QT_VERSION) windows desktop win32_msvc2017'
+    displayName: 'Installing QT $(QT_VERSION) x32'
+
   - script: |
-      call "$(ENV_BAT)" -arch=Win32
+      call "$(ENV_BAT)" -arch=x86
       set BONJOUR_SDK_HOME=%cd%\$(BONJOUR_SDK_DIR)
       mkdir build32
       cd build32
-      cmake -G "Visual Studio 16 2019" -A Win32 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH) ..
-    displayName: 'Cmake x64'
+      cmake -G "Visual Studio 16 2019" -A Win32 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH_32) ..
+    displayName: 'Cmake x86'
   - task: MSBuild@1
     inputs:
       solution: 'build32/synergy-core.sln'
       msbuildVersion: '16.0'
       msbuildArchitecture: 'x86'
-      platform: 'Win32'
+      platform: 'x86'
       configuration: 'Release'
       msbuildArguments: '/m'
       maximumCpuCount: true
