@@ -19,7 +19,7 @@ jobs:
     QLI_BASE_URL: 'http://mirrors.ocf.berkeley.edu/qt/online/qtsdkrepository/'
     QT_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
     QT_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
-    BONJOUR_SDK_HOME: 'C:\Program Files\Bonjour SDK'
+    BONJOUR_SDK_HOME: '.\deps\Bonjour SDK'
     BONJOUR_SDK_LIB: '$(BONJOUR_SDK_HOME)\Lib\x64\dnssd.lib'
     BONJOUR_SDK_LIB_32: '$(BONJOUR_SDK_HOME)\Lib\Win32\dnssd.lib'
 
@@ -33,18 +33,30 @@ jobs:
         $client = new-object System.Net.WebClient
         $client.DownloadFile("https://github.com/nelsonjchen/qli-installer/archive/v$(QLI_VERSION).zip","deps\qli.zip")
     displayName: 'Downloading QLI v$(QLI_VERSION)'
+
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        New-Item -Force -ItemType Directory -Path ".\deps\"
+        $client = new-object System.Net.WebClient
+        $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour+SDK.zip",".\deps\bonjoursdk.zip")
+        $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi",".\deps\Bonjour64.msi")
+    displayName: 'Downloading Bonjour SKD'
+
   - task: ExtractFiles@1
     inputs:
       archiveFilePatterns: './deps/*.zip'
       destinationFolder: './deps/'
       cleanDestinationFolder: false
-    displayName: 'Extracting QLI '
+    displayName: 'Extracting zips'
 
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
       script: 'pip install -r .\deps\qli-installer-$(QLI_VERSION)\requirements.txt'
     displayName: 'Install QLI requirements'
+
   - task: PythonScript@0
     inputs:
       scriptSource: 'filePath'
@@ -63,19 +75,9 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        New-Item -Force -ItemType Directory -Path ".\deps\"
-        $client = new-object System.Net.WebClient
-        $client.DownloadFile("https://binaries.symless.com/bonjour/bonjoursdksetup.exe",".\deps\bonjoursdksetup.exe")
-        $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi",".\deps\Bonjour64.msi")
-    displayName: 'Downloading Bonjour SKD'
-
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: |
         Get-ChildItem '.\deps'
-        '.\deps\Bonjour64.msi /quiet'
-        '.\deps\bonjoursdksetup.exe /quiet'
+        msiexec.exe /i ${pwd}\deps\Bonjour64.msi INSTALLDIR="${pwd}\deps\Bonjour" /qb
+        msiexec.exe /i ${pwd}\deps\bonjoursdksetup.exe INSTALLDIR="${pwd}\deps\Bonjour SDK" /qb
     displayName: 'Installing bonjour SDK'
 
   - script: |
