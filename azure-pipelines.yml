@@ -96,7 +96,7 @@ jobs:
       targetType: 'inline'
       script: |
         Get-Content -Path build64\src\gui\synergy.vcxproj
-        Get-ChildItem -Path "D:\a\1\s\src\gui\.\deps\BonjourSDK\Include" -Recurse -Depth 6 -Directory -Force -ErrorAction SilentlyContinue | Select-Object FullName
+        Get-ChildItem -Path ${pwd}\deps -Recurse -Depth 6 -Force -ErrorAction SilentlyContinue | Select-Object FullName
 
   - task: MSBuild@1
     inputs:
