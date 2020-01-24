@@ -18,8 +18,10 @@ jobs:
     QLI_OUT_DIR: '.\deps\Qt'
     QLI_BASE_URL: 'http://mirrors.ocf.berkeley.edu/qt/online/qtsdkrepository/'
     QT_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
+    QT_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
     BONJOUR_SDK_DIR: 'C:\Program Files\Bonjour SDK'
     BONJOUR_SDK_LIB: '$(BONJOUR_SDK_DIR)\Lib\x64\dnssd.lib'
+    BONJOUR_SDK_LIB_32: '$(BONJOUR_SDK_DIR)\Lib\x64\dnssd.lib'
 
   steps:
 #As the official installer is rather 'slow' use an unofficial installer QLI
@@ -30,13 +32,13 @@ jobs:
         New-Item -Force -ItemType Directory -Path ".\deps\"
         $client = new-object System.Net.WebClient
         $client.DownloadFile("https://github.com/nelsonjchen/qli-installer/archive/v$(QLI_VERSION).zip","deps\qli.zip")
-    displayName: 'Downloading QLI'
+    displayName: 'Downloading QLI v$(QLI_VERSION)'
   - task: ExtractFiles@1
     inputs:
       archiveFilePatterns: './deps/*.zip'
       destinationFolder: './deps/'
       cleanDestinationFolder: false
-    displayName: 'Extracting QLI'
+    displayName: 'Extracting QLI '
 
   - task: PowerShell@2
     inputs:
@@ -48,6 +50,14 @@ jobs:
       scriptSource: 'filePath'
       scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
       arguments: '$(QT_VERSION) windows desktop win64_msvc2017_64'
+    displayName: 'Installing QT $(QT_VERSION) x64'
+
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
+      arguments: '$(QT_VERSION) windows desktop win32_msvc2017'
+    displayName: 'Installing QT $(QT_VERSION) x32'
 
   - task: PowerShell@2
     inputs:
@@ -67,16 +77,36 @@ jobs:
         'deps\bonjoursdksetup.exe /quiet'
     displayName: 'Installing bonjour SDK'
 
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: |
-        echo $(QT_PATH)
-        Tree /F
+  - script: |
+      mkdir build64
+      cd build64
+      cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH) -DDNSSD_LIB=$(BONJOUR_SDK_LIB) ..
+      msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Release /m
+    displayName: 'Cmake 64'
 
   - script: |
-      mkdir build
-      cd build
-      cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH) -DDNSSD_LIB=$(DNSSD_LIB) ..
-      msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Release /m
-    displayName: 'Build x64'
+      mkdir build32
+      cd build32
+      cmake -G "Visual Studio 16 2019" -A Win32 -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH_32) -DDNSSD_LIB=$(BONJOUR_SDK_LIB_32) ..
+      msbuild synergy-core.sln /p:Platform="Win32" /p:Configuration=Release /m
+    displayName: 'Cmake 32'
+
+  - task: MSBuild@1
+    inputs:
+      solution: 'build64/synergy-core.sln'
+      msbuildVersion: '16.0'
+      msbuildArchitecture: 'x64'
+      platform: 'x64'
+      configuration: 'Release'
+      msbuildArguments: '/m'
+      maximumCpuCount: true
+
+  - task: MSBuild@1
+    inputs:
+      solution: 'build32/synergy-core.sln'
+      msbuildVersion: '16.0'
+      msbuildArchitecture: 'x86'
+      platform: 'Win32'
+      configuration: 'Release'
+      msbuildArguments: '/m'
+      maximumCpuCount: true
