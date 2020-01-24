@@ -15,7 +15,7 @@ jobs:
   steps:
   - script: |
       sudo yum -y groupinstall "Development Tools"
-      sudo yum -y install epel-release boost-static git libXtst-devel qt5-qtbase-devel qt5-qtdeclarative-devel libcurl-devel openssl-devel
+      sudo yum -y install epel-release boost-static git libXtst-devel qt5-qtbase-devel qt5-qtdeclarative-devel libcurl-devel openssl-devel libavahi-compat-libdnssd-dev
       sudo yum -y install cmake3 #for some reason this needs to be seperate otherwise it wont install
     displayName: 'Install Pakages'
     
