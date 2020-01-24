@@ -19,7 +19,7 @@ jobs:
     QLI_BASE_URL: 'http://mirrors.ocf.berkeley.edu/qt/online/qtsdkrepository/'
     QT_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
     QT_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
-    BONJOUR_SDK_HOME: '.\deps\BonjourSDK'
+    BONJOUR_SDK_DIR: 'deps\BonjourSDK'
     BONJOUR_SDK_LIB: '$(BONJOUR_SDK_HOME)\Lib\x64\dnssd.lib'
     BONJOUR_SDK_LIB_32: '$(BONJOUR_SDK_HOME)\Lib\Win32\dnssd.lib'
     MSBUILD_PATH: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\amd64'
@@ -82,17 +82,18 @@ jobs:
     displayName: 'Installing bonjour SDK'
 
   - script: |
+      set BONJOUR_SDK_HOME=$(pwd)\$(BONJOUR_SDK_DIR)
       call "$(ENV_BAT)" -arch=x64
       mkdir build64
       cd build64
-      cmake -G "Visual Studio 16 2019" -A x64 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH) -DDNSSD_LIB=$(BONJOUR_SDK_LIB) ..
+      cmake -G "Visual Studio 16 2019" -A x64 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH) -DDNSSD_LIB=$(pwd)\$(BONJOUR_SDK_LIB) ..
       "msbuild.exe" .\synergy-core.sln /m /p:platform="x64" /p:configuration="Release" /verbosity:diag
     displayName: 'Cmake x64'
 
   - script: |
       mkdir build32
       cd build32
-      cmake -G "Visual Studio 16 2019" -A Win32 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH_32) -DDNSSD_LIB=$(BONJOUR_SDK_LIB_32)  ..
+      cmake -G "Visual Studio 16 2019" -A Win32 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH_32) -DDNSSD_LIB=$(pwd)\$(BONJOUR_SDK_LIB_32)  ..
     displayName: 'Cmake x86'
 
   - task: MSBuild@1
