@@ -109,7 +109,7 @@ jobs:
       solution: 'build32/synergy-core.sln'
       msbuildVersion: '16.0'
       msbuildArchitecture: 'x86'
-      platform: 'x86'
+      platform: 'Win32'
       configuration: 'Release'
       msbuildArguments: '/m'
       maximumCpuCount: true
