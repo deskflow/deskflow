@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="th-TH" sourcelanguage="en">
+<TS version="2.1" language="mr-IN" sourcelanguage="en">
 <context>
     <name>AboutDialogBase</name>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="38"/>
         <source>About Synergy</source>
-        <translation>เกี่ยวกับเรา Synergy</translation>
+        <translation>सिनर्जी बद्दल</translation>
     </message>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="140"/>
@@ -17,7 +17,7 @@
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="124"/>
         <source>Version:</source>
-        <translation>รุ่น:</translation>
+        <translation>आवृत्ती:</translation>
     </message>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="53"/>
@@ -40,7 +40,7 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="194"/>
         <source>&amp;Ok</source>
-        <translation>&amp;ตกลง</translation>
+        <translation>&amp;ठीक</translation>
     </message>
 </context>
 <context>
@@ -48,82 +48,82 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="14"/>
         <source>Configure Action</source>
-        <translation>กำหนดค่าการกระทำ</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="20"/>
         <source>Choose the action to perform</source>
-        <translation type="unfinished"></translation>
+        <translation>कृती निवडा</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="26"/>
         <source>Press a hotkey</source>
-        <translation type="unfinished"></translation>
+        <translation>हॉटकी दाबा</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="36"/>
         <source>Release a hotkey</source>
-        <translation type="unfinished"></translation>
+        <translation>हॉटकी सो़डा</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="43"/>
         <source>Press and release a hotkey</source>
-        <translation type="unfinished"></translation>
+        <translation>हॉटकी दाबून सोडा</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="69"/>
         <source>only on these screens</source>
-        <translation type="unfinished"></translation>
+        <translation>केवळ या पडद्यांवरच</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="119"/>
         <source>Switch to screen</source>
-        <translation type="unfinished"></translation>
+        <translation>पडद्याकडे वळा</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="150"/>
         <source>Switch in direction</source>
-        <translation type="unfinished"></translation>
+        <translation>दिशेला वळा</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="174"/>
         <source>left</source>
-        <translation>ซ้าย</translation>
+        <translation>डावे</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="179"/>
         <source>right</source>
-        <translation>ขวา</translation>
+        <translation>उजवे</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="184"/>
         <source>up</source>
-        <translation>ขึ้น</translation>
+        <translation>वर</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="189"/>
         <source>down</source>
-        <translation>ลง</translation>
+        <translation>खाली</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="201"/>
         <source>Lock cursor to screen</source>
-        <translation type="unfinished"></translation>
+        <translation>कर्सर पडद्याशी बद्ध करा </translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="225"/>
         <source>toggle</source>
-        <translation type="unfinished"></translation>
+        <translation>टॉगल</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="230"/>
         <source>on</source>
-        <translation>เปิด</translation>
+        <translation>चालू</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="235"/>
         <source>off</source>
-        <translation>ปิด</translation>
+        <translation>बंद</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="247"/>
@@ -133,17 +133,17 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="259"/>
         <source>This action is performed when</source>
-        <translation type="unfinished"></translation>
+        <translation>ही कृती केली जाते जेव्हा</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="265"/>
         <source>the hotkey is pressed</source>
-        <translation type="unfinished"></translation>
+        <translation>हॉटकी दाबली गेली आहे</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="275"/>
         <source>the hotkey is released</source>
-        <translation type="unfinished"></translation>
+        <translation>हॉटकी सोडण्यात आली आहे</translation>
     </message>
 </context>
 <context>
@@ -270,12 +270,12 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
         <location filename="../../src/HotkeyDialogBase.ui" line="14"/>
         <source>Hotkey</source>
-        <translation type="unfinished"></translation>
+        <translation>हॉटकी</translation>
     </message>
     <message>
         <location filename="../../src/HotkeyDialogBase.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
-        <translation type="unfinished"></translation>
+        <translation>हॉटकीचे तपशील पुरवा:</translation>
     </message>
 </context>
 <context>
@@ -283,27 +283,27 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
         <location filename="../../src/MainWindow.cpp" line="954"/>
         <source>&amp;Start</source>
-        <translation>&amp;เริ่มต้น</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="259"/>
         <source>&amp;File</source>
-        <translation>&amp;ไฟล์</translation>
+        <translation>&amp;फाईल</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="260"/>
         <source>&amp;Edit</source>
-        <translation>&amp;แก้ไข</translation>
+        <translation>&amp;बदल</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="261"/>
         <source>&amp;Window</source>
-        <translation>&amp;หน้าต่าง</translation>
+        <translation>&amp;खिडकी</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="262"/>
         <source>&amp;Help</source>
-        <translation>&amp;ช่วยเหลือ</translation>
+        <translation>&amp;मदत</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="385"/>
@@ -330,7 +330,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="676"/>
         <source>Program can not be started</source>
-        <translation type="unfinished"></translation>
+        <translation>कार्यक्रम सुरू होऊ शकला नाही.</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="676"/>
@@ -400,7 +400,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="947"/>
         <source>&amp;Stop</source>
-        <translation>&amp;หยุด</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="970"/>
@@ -489,7 +489,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="../../src/MainWindowBase.ui" line="522"/>
         <location filename="../../src/MainWindowBase.ui" line="551"/>
         <source>&amp;Start</source>
-        <translation>&amp;เริ่มต้น</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="307"/>
@@ -554,12 +554,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="492"/>
         <source>Ready</source>
-        <translation>พร้อมแล้ว</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="438"/>
         <source>Log</source>
-        <translation>บันทึกการเปลี่ยนแปลง</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="515"/>
@@ -584,17 +584,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="540"/>
         <source>&amp;Quit</source>
-        <translation>&amp;ออก</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="543"/>
         <source>Quit</source>
-        <translation>ออก</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="554"/>
         <source>Run</source>
-        <translation>เปิดทำงาน</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="565"/>
@@ -604,7 +604,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="568"/>
         <source>Stop</source>
-        <translation>หยุด</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="576"/>
@@ -614,22 +614,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="584"/>
         <source>&amp;Hide</source>
-        <translation>&amp;ซ่อน</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="587"/>
         <source>Hide</source>
-        <translation>ซ๋อน</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="595"/>
         <source>&amp;Show</source>
-        <translation>&amp;แสดง</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="598"/>
         <source>Show</source>
-        <translation>แสดง</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="606"/>
@@ -644,12 +644,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="617"/>
         <source>Settings</source>
-        <translation>ตั้งค่า</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="620"/>
         <source>Edit settings</source>
-        <translation>แก้ไขการตั้งค่า</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="628"/>
@@ -663,7 +663,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/NewScreenWidget.cpp" line="32"/>
         <source>Unnamed</source>
-        <translation>ยังไม่มีชื่อ</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -712,7 +712,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="14"/>
         <source>Screen Settings</source>
-        <translation>ตั้งค่าหน้าจอ</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="22"/>
@@ -727,12 +727,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="57"/>
         <source>&amp;Add</source>
-        <translation>&amp;เพิ่ม</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="74"/>
         <source>&amp;Remove</source>
-        <translation>&amp;ลบออก</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="97"/>
@@ -751,7 +751,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="258"/>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="305"/>
         <source>Shift</source>
-        <translation>Shift</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="122"/>
@@ -760,7 +760,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="263"/>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="310"/>
         <source>Ctrl</source>
-        <translation>Ctrl</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="127"/>
@@ -769,7 +769,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="268"/>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="315"/>
         <source>Alt</source>
-        <translation>Alt</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="132"/>
@@ -942,12 +942,12 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="185"/>
         <source>&amp;Edit</source>
-        <translation>&amp;แก้ไข</translation>
+        <translation>&amp;बदल</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="195"/>
         <source>&amp;Remove</source>
-        <translation>&amp;ลบออก</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="218"/>
@@ -1090,7 +1090,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="14"/>
         <source>Settings</source>
-        <translation>ตั้งค่า</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="32"/>
@@ -1190,7 +1190,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="107"/>
         <source>&amp;Language:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;भाषा:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="20"/>
@@ -1200,7 +1200,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="322"/>
         <source>Info</source>
-        <translation>ข้อมูล</translation>
+        <translation>माहिती</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="327"/>
@@ -1241,17 +1241,17 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="30"/>
         <source>Welcome</source>
-        <translation type="unfinished"></translation>
+        <translation>स्वागतम्</translation>
     </message>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="39"/>
         <source>Thanks for installing Synergy!</source>
-        <translation type="unfinished"></translation>
+        <translation>सिनर्जी इन्स्टॉल केल्याबद्दल धन्यवाद.</translation>
     </message>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="114"/>
         <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-        <translation>Synergy ช่วยให้คุณสามารถแบ่งปันเมาส์และแป้นพิมพ์ระหว่างคอมพิวเตอร์หลายเครื่องบนโต๊ะทำงานของคุณและก็ฟรีและ Open Source เพียงแค่เลื่อนเมาส์ของคุณปิดขอบของหน้าจอคอมพิวเตอร์เครื่องหนึ่งของเมื่อไปยังอีก คุณยังสามารถแบ่งปันทั้งหมดของ clipboards ของคุณ ทั้งหมดที่คุณต้องมีการเชื่อมต่อเครือข่าย Synergy เป็นข้ามแพลตฟอร์ม (เมื่อใช้งานบน Windows, Mac OS X และ Linux)</translation>
+        <translation>सिनर्जी सह तुम्ही तुमचा कीबोर्ड आणि माऊस अनेक संगणकांसमवेत वापरू शकता. एका पडद्याच्या कडेतून माऊस दुसऱ्या पडद्यावर नेऊ शकता, सामाईक क्लिपबोर्ड वारू शकता. आवश्यकता आहे ती केवळ एका नेटवर्क कनेक्शनची. सिनर्जी मोफत आहे, मुक्त स्रोत आहे आणि अनेक प्रणाल्यांवर चालू शकते. (विंडोज, मॅक ओ-एस एक्स आणि लिनक्स)</translation>
     </message>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="146"/>

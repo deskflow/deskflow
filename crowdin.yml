@@ -1,0 +1,3 @@
+files:
+  - source: /src/gui/res/lang/gui_en.ts
+    translation: /src/gui/res/lang/gui_%locale%.ts

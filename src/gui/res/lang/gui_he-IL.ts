@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="th-TH" sourcelanguage="en">
+<TS version="2.1" language="he-IL" sourcelanguage="en">
 <context>
     <name>AboutDialogBase</name>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="38"/>
         <source>About Synergy</source>
-        <translation>เกี่ยวกับเรา Synergy</translation>
+        <translation>אודות Synergy</translation>
     </message>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="140"/>
         <location filename="../../src/AboutDialogBase.ui" line="174"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>לא ידוע</translation>
     </message>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="124"/>
         <source>Version:</source>
-        <translation>รุ่น:</translation>
+        <translation>גירסא:</translation>
     </message>
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="53"/>
@@ -40,7 +40,7 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="../../src/AboutDialogBase.ui" line="194"/>
         <source>&amp;Ok</source>
-        <translation>&amp;ตกลง</translation>
+        <translation>&amp;אישור</translation>
     </message>
 </context>
 <context>
@@ -48,82 +48,82 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="14"/>
         <source>Configure Action</source>
-        <translation>กำหนดค่าการกระทำ</translation>
+        <translation>הגדר פעולה</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="20"/>
         <source>Choose the action to perform</source>
-        <translation type="unfinished"></translation>
+        <translation>בחר פעולה לביצוע</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="26"/>
         <source>Press a hotkey</source>
-        <translation type="unfinished"></translation>
+        <translation>לחיצה על מקש כלשהו</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="36"/>
         <source>Release a hotkey</source>
-        <translation type="unfinished"></translation>
+        <translation>שחרור מקש כלשהו</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="43"/>
         <source>Press and release a hotkey</source>
-        <translation type="unfinished"></translation>
+        <translation>לחיצה ושחרור מקש כלשהו</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="69"/>
         <source>only on these screens</source>
-        <translation type="unfinished"></translation>
+        <translation>רק במסכים האלו</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="119"/>
         <source>Switch to screen</source>
-        <translation type="unfinished"></translation>
+        <translation>עבור למסך</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="150"/>
         <source>Switch in direction</source>
-        <translation type="unfinished"></translation>
+        <translation>החלף בכיוון</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="174"/>
         <source>left</source>
-        <translation>ซ้าย</translation>
+        <translation>שמאל</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="179"/>
         <source>right</source>
-        <translation>ขวา</translation>
+        <translation>ימין</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="184"/>
         <source>up</source>
-        <translation>ขึ้น</translation>
+        <translation>למעלה</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="189"/>
         <source>down</source>
-        <translation>ลง</translation>
+        <translation>למטה</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="201"/>
         <source>Lock cursor to screen</source>
-        <translation type="unfinished"></translation>
+        <translation>נעל את סמן העכבר במסך</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="225"/>
         <source>toggle</source>
-        <translation type="unfinished"></translation>
+        <translation>הדלקה\כיבוי</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="230"/>
         <source>on</source>
-        <translation>เปิด</translation>
+        <translation>דלוק</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="235"/>
         <source>off</source>
-        <translation>ปิด</translation>
+        <translation>כיבוי</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="247"/>
@@ -133,17 +133,17 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="259"/>
         <source>This action is performed when</source>
-        <translation type="unfinished"></translation>
+        <translation>הפעולה מבוצעת כאשר</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="265"/>
         <source>the hotkey is pressed</source>
-        <translation type="unfinished"></translation>
+        <translation>המקש לחוץ</translation>
     </message>
     <message>
         <location filename="../../src/ActionDialogBase.ui" line="275"/>
         <source>the hotkey is released</source>
-        <translation type="unfinished"></translation>
+        <translation>המקש אינו לחוץ</translation>
     </message>
 </context>
 <context>
@@ -270,12 +270,12 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
         <location filename="../../src/HotkeyDialogBase.ui" line="14"/>
         <source>Hotkey</source>
-        <translation type="unfinished"></translation>
+        <translation>מקש קיצור</translation>
     </message>
     <message>
         <location filename="../../src/HotkeyDialogBase.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
-        <translation type="unfinished"></translation>
+        <translation>הכנס פירוט עבור מקש הקיצור:</translation>
     </message>
 </context>
 <context>
@@ -283,27 +283,27 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
         <location filename="../../src/MainWindow.cpp" line="954"/>
         <source>&amp;Start</source>
-        <translation>&amp;เริ่มต้น</translation>
+        <translation>התחל</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="259"/>
         <source>&amp;File</source>
-        <translation>&amp;ไฟล์</translation>
+        <translation>&amp;קובץ</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="260"/>
         <source>&amp;Edit</source>
-        <translation>&amp;แก้ไข</translation>
+        <translation>&amp;עריכה</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="261"/>
         <source>&amp;Window</source>
-        <translation>&amp;หน้าต่าง</translation>
+        <translation>&amp;חלון</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="262"/>
         <source>&amp;Help</source>
-        <translation>&amp;ช่วยเหลือ</translation>
+        <translation>ע&amp;זרה</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="385"/>
@@ -330,22 +330,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="676"/>
         <source>Program can not be started</source>
-        <translation type="unfinished"></translation>
+        <translation>לא ניתן להפעיל את התוכנה</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="676"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation type="unfinished"></translation>
+        <translation>היישום:&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;קיים, אך לא ניתן להפעילו. בדוק אם מוגדרות עבורך ההראשות המתאימות להפעלתו.</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="715"/>
         <source>Synergy client not found</source>
-        <translation type="unfinished"></translation>
+        <translation>לקוח Synergy לא נמצא</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="716"/>
         <source>The executable for the synergy client does not exist.</source>
-        <translation type="unfinished"></translation>
+        <translation>תוכנת הלקוח של Synergy לא קיימת.</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="743"/>
@@ -360,27 +360,27 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="759"/>
         <source>Hostname is empty</source>
-        <translation type="unfinished"></translation>
+        <translation>לא צוין שם מחשב</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="760"/>
         <source>Please fill in a hostname for the synergy client to connect to.</source>
-        <translation type="unfinished"></translation>
+        <translation>אנא ציין שם מחשב שלקוח Synergy יתחבר אליו.</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="785"/>
         <source>Cannot write configuration file</source>
-        <translation type="unfinished"></translation>
+        <translation>לא ניתן לכתוב את קובץ ההגדרות</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="785"/>
         <source>The temporary configuration file required to start synergy can not be written.</source>
-        <translation type="unfinished"></translation>
+        <translation>לא ניתן לכתוב לקובץ ההגדרות הזמני. הדבר הכרחי על מנת להפעיל את Synergy.</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="798"/>
         <source>Configuration filename invalid</source>
-        <translation type="unfinished"></translation>
+        <translation>שם קובץ ההגדרות אינו חוקי</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="799"/>
@@ -390,17 +390,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="827"/>
         <source>Synergy server not found</source>
-        <translation type="unfinished"></translation>
+        <translation>שרת ה-Synergy לא נמצא.</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="828"/>
         <source>The executable for the synergy server does not exist.</source>
-        <translation type="unfinished"></translation>
+        <translation>תוכנת השרת של Synergy לא נמצאה.</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="947"/>
         <source>&amp;Stop</source>
-        <translation>&amp;หยุด</translation>
+        <translation>עצור</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="970"/>
@@ -445,12 +445,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="1047"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>לא ידוע</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="1201"/>
         <source>Browse for a synergys config file</source>
-        <translation type="unfinished"></translation>
+        <translation>מציאת קובץ הגדרות של Synergy</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="499"/>
@@ -460,12 +460,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="1214"/>
         <source>Save configuration as...</source>
-        <translation type="unfinished"></translation>
+        <translation>שמור הגדרות &amp;בשם...</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="1218"/>
         <source>Save failed</source>
-        <translation type="unfinished"></translation>
+        <translation>שמירה נכשלה</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="1218"/>
@@ -478,7 +478,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="26"/>
         <source>Synergy</source>
-        <translation type="unfinished"></translation>
+        <translation>Synergy</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="216"/>
@@ -489,12 +489,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="../../src/MainWindowBase.ui" line="522"/>
         <location filename="../../src/MainWindowBase.ui" line="551"/>
         <source>&amp;Start</source>
-        <translation>&amp;เริ่มต้น</translation>
+        <translation>התחל</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="307"/>
         <source>Use existing configuration:</source>
-        <translation type="unfinished"></translation>
+        <translation>השתמש בהגדרות הקיימות</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="58"/>
@@ -519,7 +519,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="336"/>
         <source>&amp;Browse...</source>
-        <translation type="unfinished"></translation>
+        <translation>חפש...</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="273"/>
@@ -554,17 +554,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="492"/>
         <source>Ready</source>
-        <translation>พร้อมแล้ว</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="438"/>
         <source>Log</source>
-        <translation>บันทึกการเปลี่ยนแปลง</translation>
+        <translation>תיעוד פעילות (Log)</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="515"/>
         <source>&amp;Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;שמור שינויים</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="233"/>
@@ -584,72 +584,72 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindowBase.ui" line="540"/>
         <source>&amp;Quit</source>
-        <translation>&amp;ออก</translation>
+        <translation>&amp;יציאה</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="543"/>
         <source>Quit</source>
-        <translation>ออก</translation>
+        <translation>יציאה</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="554"/>
         <source>Run</source>
-        <translation>เปิดทำงาน</translation>
+        <translation>הפעל</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="565"/>
         <source>S&amp;top</source>
-        <translation type="unfinished"></translation>
+        <translation>ע&amp;צור</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="568"/>
         <source>Stop</source>
-        <translation>หยุด</translation>
+        <translation>עצור</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="576"/>
         <source>S&amp;how Status</source>
-        <translation type="unfinished"></translation>
+        <translation>הצג &amp;מצב</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="584"/>
         <source>&amp;Hide</source>
-        <translation>&amp;ซ่อน</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="587"/>
         <source>Hide</source>
-        <translation>ซ๋อน</translation>
+        <translation>הסתר</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="595"/>
         <source>&amp;Show</source>
-        <translation>&amp;แสดง</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="598"/>
         <source>Show</source>
-        <translation>แสดง</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="606"/>
         <source>Save configuration &amp;as...</source>
-        <translation type="unfinished"></translation>
+        <translation>שמור הגדרות קונפיגורציה כ...</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="609"/>
         <source>Save the interactively generated server configuration to a file.</source>
-        <translation type="unfinished"></translation>
+        <translation>שמור הגדרות השרת הנוכחיות לקובץ.</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="617"/>
         <source>Settings</source>
-        <translation>ตั้งค่า</translation>
+        <translation>הגדרות</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="620"/>
         <source>Edit settings</source>
-        <translation>แก้ไขการตั้งค่า</translation>
+        <translation>שנה הגדרות</translation>
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="628"/>
@@ -663,7 +663,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/NewScreenWidget.cpp" line="32"/>
         <source>Unnamed</source>
-        <translation>ยังไม่มีชื่อ</translation>
+        <translation>ללא שם</translation>
     </message>
 </context>
 <context>
@@ -671,12 +671,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/MainWindow.cpp" line="56"/>
         <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
-        <translation type="unfinished"></translation>
+        <translation>קבצי הגדרות של Synergy (*.sgc);;All Files (*.*)</translation>
     </message>
     <message>
         <location filename="../../src/MainWindow.cpp" line="59"/>
         <source>Synergy Configurations (*.conf);;All files (*.*)</source>
-        <translation type="unfinished"></translation>
+        <translation>קבצי הגדרות של Synergy (*.conf);;All Files (*.*)</translation>
     </message>
     <message>
         <location filename="../../src/main.cpp" line="139"/>
@@ -689,7 +689,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ScreenSettingsDialog.cpp" line="67"/>
         <source>Screen name is empty</source>
-        <translation type="unfinished"></translation>
+        <translation>לא הוקלד שם מסך</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialog.cpp" line="68"/>
@@ -712,27 +712,27 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="14"/>
         <source>Screen Settings</source>
-        <translation>ตั้งค่าหน้าจอ</translation>
+        <translation>הגדרות מסך</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="22"/>
         <source>Screen &amp;name:</source>
-        <translation type="unfinished"></translation>
+        <translation>שם מסך:</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="42"/>
         <source>A&amp;liases</source>
-        <translation type="unfinished"></translation>
+        <translation>שמות &amp;נוספים: </translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="57"/>
         <source>&amp;Add</source>
-        <translation>&amp;เพิ่ม</translation>
+        <translation>&amp;הוסף</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="74"/>
         <source>&amp;Remove</source>
-        <translation>&amp;ลบออก</translation>
+        <translation>ה&amp;סר</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="97"/>
@@ -742,7 +742,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="106"/>
         <source>&amp;Shift:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Shift:</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="117"/>
@@ -778,7 +778,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="273"/>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="320"/>
         <source>Meta</source>
-        <translation type="unfinished"></translation>
+        <translation>Meta</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="137"/>
@@ -796,22 +796,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="283"/>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="330"/>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>ללא</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="150"/>
         <source>&amp;Ctrl:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ctrl</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="197"/>
         <source>Al&amp;t:</source>
-        <translation type="unfinished"></translation>
+        <translation>Al&amp;t:</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="244"/>
         <source>M&amp;eta:</source>
-        <translation type="unfinished"></translation>
+        <translation>M&amp;eta:</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="291"/>
@@ -821,32 +821,32 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="358"/>
         <source>&amp;Dead corners</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;פינות מתות</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="367"/>
         <source>Top-left</source>
-        <translation type="unfinished"></translation>
+        <translation>עליון-שמאל</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="374"/>
         <source>Top-right</source>
-        <translation type="unfinished"></translation>
+        <translation>עליון-ימין</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="381"/>
         <source>Bottom-left</source>
-        <translation type="unfinished"></translation>
+        <translation>שמאלית-תחתונה</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="388"/>
         <source>Bottom-right</source>
-        <translation type="unfinished"></translation>
+        <translation>ימנית-תחתונה</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="397"/>
         <source>Corner Si&amp;ze:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;גודל הפינה:</translation>
     </message>
     <message>
         <location filename="../../src/ScreenSettingsDialogBase.ui" line="428"/>
@@ -895,12 +895,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="14"/>
         <source>Server Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>הגדרות שרת</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="24"/>
         <source>Screens and links</source>
-        <translation type="unfinished"></translation>
+        <translation>מסכים וחיבורים</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="35"/>
@@ -915,7 +915,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="73"/>
         <source>Drag this button to the grid to add a new screen.</source>
-        <translation type="unfinished"></translation>
+        <translation>גרור את כפתור זה לרשת להוספת מסך.</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="128"/>
@@ -937,69 +937,69 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="175"/>
         <source>&amp;New</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;חדש</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="185"/>
         <source>&amp;Edit</source>
-        <translation>&amp;แก้ไข</translation>
+        <translation>&amp;עריכה</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="195"/>
         <source>&amp;Remove</source>
-        <translation>&amp;ลบออก</translation>
+        <translation>ה&amp;סר</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="218"/>
         <source>A&amp;ctions</source>
-        <translation type="unfinished"></translation>
+        <translation>פ&amp;עולות</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="230"/>
         <source>Ne&amp;w</source>
-        <translation type="unfinished"></translation>
+        <translation>חדש</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="240"/>
         <source>E&amp;dit</source>
-        <translation type="unfinished"></translation>
+        <translation>כריכה</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="250"/>
         <source>Re&amp;move</source>
-        <translation type="unfinished"></translation>
+        <translation>הסרה</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="274"/>
         <source>Advanced server settings</source>
-        <translation type="unfinished"></translation>
+        <translation>הגדרות שרת &amp;מתקדמות</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="280"/>
         <source>&amp;Switch</source>
-        <translation type="unfinished"></translation>
+        <translation>ה&amp;חלפה</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="291"/>
         <source>Switch &amp;after waiting</source>
-        <translation type="unfinished"></translation>
+        <translation>החלף לאחר ה&amp;מתנה של </translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="330"/>
         <location filename="../../src/ServerConfigDialogBase.ui" line="383"/>
         <location filename="../../src/ServerConfigDialogBase.ui" line="552"/>
         <source>ms</source>
-        <translation type="unfinished"></translation>
+        <translation>אלפיות שניה</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="344"/>
         <source>Switch on double &amp;tap within</source>
-        <translation type="unfinished"></translation>
+        <translation>החלף בלחיצה &amp;כפולה בתוך</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="408"/>
         <source>&amp;Options</source>
-        <translation type="unfinished"></translation>
+        <translation>א&amp;פשרויות</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="416"/>
@@ -1019,17 +1019,17 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="513"/>
         <source>&amp;Check clients every</source>
-        <translation type="unfinished"></translation>
+        <translation>בדוק את הלקוח &amp;בכל</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="481"/>
         <source>Use &amp;relative mouse moves</source>
-        <translation type="unfinished"></translation>
+        <translation>השתמש בהזזות עכבר &amp;יחסיות</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="564"/>
         <source>S&amp;ynchronize screen savers</source>
-        <translation type="unfinished"></translation>
+        <translation>סנכרן &amp;שומרי מסך</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="471"/>
@@ -1049,32 +1049,32 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="581"/>
         <source>&amp;Dead corners</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;פינות מתות</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="590"/>
         <source>To&amp;p-left</source>
-        <translation type="unfinished"></translation>
+        <translation>שמאלית-עליונה</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="597"/>
         <source>Top-rig&amp;ht</source>
-        <translation type="unfinished"></translation>
+        <translation>ימנית-עליונה</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="604"/>
         <source>&amp;Bottom-left</source>
-        <translation type="unfinished"></translation>
+        <translation>שמאלית-תחתונה</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="611"/>
         <source>Bottom-ri&amp;ght</source>
-        <translation type="unfinished"></translation>
+        <translation>ימנית-תחתונה</translation>
     </message>
     <message>
         <location filename="../../src/ServerConfigDialogBase.ui" line="633"/>
         <source>Cor&amp;ner Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;גודל הפינה:</translation>
     </message>
 </context>
 <context>
@@ -1090,17 +1090,17 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="14"/>
         <source>Settings</source>
-        <translation>ตั้งค่า</translation>
+        <translation>הגדרות</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="32"/>
         <source>Sc&amp;reen name:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;שם מסך:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="49"/>
         <source>P&amp;ort:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;פורט:</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="78"/>
@@ -1170,22 +1170,22 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="293"/>
         <source>Logging</source>
-        <translation type="unfinished"></translation>
+        <translation>תיעוד פעולה (Log)</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="311"/>
         <source>&amp;Logging level:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;רמת תיעוד פעולה (Log)</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="345"/>
         <source>Log to file:</source>
-        <translation type="unfinished"></translation>
+        <translation>תיעוד לקובץ: </translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="362"/>
         <source>Browse...</source>
-        <translation type="unfinished"></translation>
+        <translation>עיון...</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="107"/>
@@ -1200,22 +1200,22 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="322"/>
         <source>Info</source>
-        <translation>ข้อมูล</translation>
+        <translation>מידע</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="327"/>
         <source>Debug</source>
-        <translation type="unfinished"></translation>
+        <translation>Debug</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="332"/>
         <source>Debug1</source>
-        <translation type="unfinished"></translation>
+        <translation>Debug1</translation>
     </message>
     <message>
         <location filename="../../src/SettingsDialogBase.ui" line="337"/>
         <source>Debug2</source>
-        <translation type="unfinished"></translation>
+        <translation>Debug2</translation>
     </message>
 </context>
 <context>
@@ -1223,12 +1223,12 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SetupWizard.cpp" line="65"/>
         <source>Setup Synergy</source>
-        <translation type="unfinished"></translation>
+        <translation>הגדרת Synergy</translation>
     </message>
     <message>
         <location filename="../../src/SetupWizard.cpp" line="75"/>
         <source>Please select an option.</source>
-        <translation type="unfinished"></translation>
+        <translation>אנא בחר אופציה.</translation>
     </message>
 </context>
 <context>
@@ -1236,7 +1236,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="26"/>
         <source>Setup Synergy</source>
-        <translation type="unfinished"></translation>
+        <translation>הגדרת Synergy</translation>
     </message>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="30"/>
@@ -1251,7 +1251,7 @@ Double click on a screen to edit its settings.</source>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="114"/>
         <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-        <translation>Synergy ช่วยให้คุณสามารถแบ่งปันเมาส์และแป้นพิมพ์ระหว่างคอมพิวเตอร์หลายเครื่องบนโต๊ะทำงานของคุณและก็ฟรีและ Open Source เพียงแค่เลื่อนเมาส์ของคุณปิดขอบของหน้าจอคอมพิวเตอร์เครื่องหนึ่งของเมื่อไปยังอีก คุณยังสามารถแบ่งปันทั้งหมดของ clipboards ของคุณ ทั้งหมดที่คุณต้องมีการเชื่อมต่อเครือข่าย Synergy เป็นข้ามแพลตฟอร์ม (เมื่อใช้งานบน Windows, Mac OS X และ Linux)</translation>
+        <translation>Synergy מאפשרת לשתף בקלות את העכבר והמקלדת בין מספר מחשבים על השולחן, וזה חופשית וקוד פתוח. רק להזיז את העכבר מקצה מסך אחד של המחשב לאחר. אתה יכול גם לשתף את כל לוחות כתיבה שלך. כל מה שצריך הוא חיבור לרשת. סינרגיה היא חוצה פלטפורמות (עובד ב-Windows, Mac OS X ו-Linux).</translation>
     </message>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="146"/>
@@ -1284,7 +1284,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="131"/>
         <source>Server or Client?</source>
-        <translation type="unfinished"></translation>
+        <translation>שרת או לקוח?</translation>
     </message>
 </context>
 <context>
@@ -1315,7 +1315,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../src/VersionChecker.cpp" line="145"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>לא ידוע</translation>
     </message>
 </context>
 <context>
