@@ -19,6 +19,7 @@ jobs:
     QLI_BASE_URL: 'http://mirrors.ocf.berkeley.edu/qt/online/qtsdkrepository/'
     QT_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
     BONJOUR_SDK_DIR: 'C:\Program Files\Bonjour SDK'
+    BONJOUR_SDK_LIB: '$(BONJOUR_SDK_DIR)\Lib\x64\dnssd.lib'
 
   steps:
 #As the official installer is rather 'slow' use an unofficial installer QLI
@@ -76,6 +77,6 @@ jobs:
   - script: |
       mkdir build
       cd build
-      cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH) -DBONJOUR_SDK_HOME=$(BONJOUR_SDK_DIR) ..
+      cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH) -DDNSSD_LIB=$(DNSSD_LIB) ..
       msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Release /m
     displayName: 'Build x64'
