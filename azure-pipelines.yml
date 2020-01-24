@@ -25,9 +25,10 @@ jobs:
   - task: CmdLine@2
     inputs:
       script: |
+        export PATH="$(QT_PATH):$PATH"
         mkdir build
         cd build 
-        cmake -DCMAKE_PREFIX_PATH=$(QT_PATH) -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release ..
+        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release ..
     displayName: 'Cmake'
 
   - task: CmdLine@2
