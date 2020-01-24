@@ -8,7 +8,7 @@ jobs:
   strategy:
     matrix:
       centos7:
-        image: centos:7
+        image: symless/centos-sudo:7
 
   container: $[ variables['image'] ]
 
