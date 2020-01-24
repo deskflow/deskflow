@@ -15,7 +15,8 @@ jobs:
   steps:
   - script: |
       sudo yum -y update
-      sudo yum -y install epel-release cmake3 boost-static git libXtst-devel qt5-qtbase-devel qt5-qtdeclarative-devel libcurl-devel openssl-devel avahi-compat-libdns_sd-devel autoconf automake gcc gcc-c++ make rpm-build redhat-rpm-config rpm-sign
+      sudo yum -y install epel-release boost-static git libXtst-devel qt5-qtbase-devel qt5-qtdeclarative-devel libcurl-devel openssl-devel avahi-compat-libdns_sd-devel autoconf automake gcc gcc-c++ make rpm-build redhat-rpm-config rpm-sign
+      sudo yum -y install cmake3 #This must be installed seperatly otherwise yum cant find it for some reason
     displayName: 'Install Pakages'
     
   - script: |
