@@ -113,8 +113,7 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'Release'
-      msbuildArguments: '/m'
-      maximumCpuCount: false
+      msbuildArguments: '/m /p:useenv=true'
     displayName: 'Compiling x64'
 
   - task: MSBuild@1
