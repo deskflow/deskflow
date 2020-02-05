@@ -11,6 +11,8 @@ license: GPL-2.0
 apps:
   barrier:
     command: desktop-launch barrier #first run might take longer
+    environment:
+      DISABLE_WAYLAND: 1
     desktop: usr/share/applications/barrier.desktop
     common-id: com.github.debauchee.barrier
     plugs: &plugs
