@@ -45,6 +45,7 @@ parts:
       - "-DCMAKE_INSTALL_PREFIX=/usr"
       - "-DCMAKE_BUILD_TYPE=Release"
     build-packages:
+      - build-essential
       - xorg-dev
       - libcurl4-openssl-dev
       - libavahi-compat-libdnssd-dev
