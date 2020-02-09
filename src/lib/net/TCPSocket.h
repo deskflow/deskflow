@@ -76,7 +76,8 @@ protected:
 
     void removeJob();
     void setJob(std::unique_ptr<ISocketMultiplexerJob>&& job);
-    
+    MultiplexerJobStatus newJobOrStopServicing();
+
     bool                isReadable() { return m_readable; }
     bool                isWritable() { return m_writable; }
 

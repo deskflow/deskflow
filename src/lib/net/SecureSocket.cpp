@@ -761,7 +761,7 @@ MultiplexerJobStatus SecureSocket::serviceConnect(ISocketMultiplexerJob* job,
     // If status > 0, success
     if (status > 0) {
         sendEvent(m_events->forIDataSocket().secureConnected());
-        return {true, newJob()};
+        return newJobOrStopServicing();
     }
 
     // Retry case
@@ -793,7 +793,7 @@ MultiplexerJobStatus SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
     // If status > 0, success
     if (status > 0) {
         sendEvent(m_events->forClientListener().accepted());
-        return {true, newJob()};
+        return newJobOrStopServicing();
     }
 
     // Retry case
