@@ -116,7 +116,38 @@ class AppConfig: public QObject
         void saveSettings();
         void setLastVersion(QString version);
 
+        /// @brief settingsExist Checks ths settings to see if they exist in the QSettings location
+        /// @param [in] settings The QSettings object to check
+        /// @return True if the setting was found.
+        static bool settingsExist(QSettings* settings);
+
 protected:
+    /// @brief The enumeration to easily access the names of the setting inside m_SynergySettingsName
+    enum Setting {
+        ScreenName,
+        Port,
+        InterfaceSetting,
+        LogLevel,
+        LogToFile,
+        LogFilename,
+        WizardLastRun,
+        Language,
+        StartedBefore,
+        AutoConfig,
+        AutoConfigServer,
+        ElevateModeSetting,
+        ElevateModeEnum,
+        EditionSetting,
+        CryptoEnabled,
+        AutoHide,
+        SerialKey,
+        LastVersion,
+        LastExpireWarningTime,
+        ActivationHasRun,
+        MinimizeToTray,
+        ActivateEmail,
+    };
+
         QSettings& settings();
         void setScreenName(const QString& s);
         void setPort(int i);
@@ -129,6 +160,7 @@ protected:
         void setStartedBefore(bool b);
         void setElevateMode(ElevateMode em);
         void loadSettings();
+        static QString settingName(AppConfig::Setting name);
 
     private:
         QSettings* m_pSettings;
@@ -158,6 +190,20 @@ protected:
         static const char m_SynergysName[];
         static const char m_SynergycName[];
         static const char m_SynergyLogDir[];
+
+        /// @brief Contains the string values of the settings names that will be saved
+        static const char* m_SynergySettingsName[];
+
+        /// @brief Sets the value of a setting
+        /// @param [in] name The Setting to be saved
+        /// @param [in] value The Value to be saved
+        template <typename T>
+        void setSetting(AppConfig::Setting name, T value);
+
+        /// @brief Loads a setting
+        /// @param [in] name The setting to be loaded
+        /// @param [in] defaultValue The default value of the setting
+        QVariant loadSetting(AppConfig::Setting name, const QVariant& defaultValue = QVariant());
 
     signals:
         void sslToggled(bool enabled);

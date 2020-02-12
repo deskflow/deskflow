@@ -36,6 +36,32 @@ const char AppConfig::m_SynergyLogDir[] = "/var/log/";
 
 const ElevateMode defaultElevateMode = ElevateAsNeeded;
 
+const char* AppConfig::m_SynergySettingsName[] = {
+        "screenName",
+        "port",
+        "interface",
+        "logLevel2",
+        "logToFile",
+        "logFilename",
+        "wizardLastRun",
+        "language",
+        "startedBefore",
+        "autoConfig",
+        "autoConfigServer",
+        "elevateMode",
+        "elevateModeEnum",
+        "edition",
+        "cryptoEnabled",
+        "autoHide",
+        "serialKey",
+        "lastVersion",
+        "lastExpiringWarningTime",
+        "activationHasRun",
+        "minimizeToTray"
+};
+
+
+
 static const char* logLevelNames[] =
 {
     "INFO",
@@ -141,59 +167,66 @@ QString AppConfig::autoConfigServer() const { return m_AutoConfigServer; }
 
 void AppConfig::loadSettings()
 {
-    m_ScreenName = settings().value("screenName", QHostInfo::localHostName()).toString();
-    m_Port = settings().value("port", 24800).toInt();
-    m_Interface = settings().value("interface").toString();
-    m_LogLevel = settings().value("logLevel2", 0).toInt(); // level 0: INFO
-    m_LogToFile = settings().value("logToFile", false).toBool();
-    m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
-    m_WizardLastRun = settings().value("wizardLastRun", 0).toInt();
-    m_Language = settings().value("language", QLocale::system().name()).toString();
-    m_StartedBefore = settings().value("startedBefore", false).toBool();
-    m_AutoConfig = settings().value("autoConfig", false).toBool();
-    m_AutoConfigServer = settings().value("autoConfigServer", "").toString();
-    QVariant elevateMode = settings().value("elevateModeEnum");
-    if (!elevateMode.isValid()) {
-        elevateMode = settings().value ("elevateMode",
-                                        QVariant(static_cast<int>(defaultElevateMode)));
+    m_ScreenName        = loadSetting(ScreenName, QHostInfo::localHostName()).toString();
+    m_Port              = loadSetting(Port, 24800).toInt();
+    m_Interface         = loadSetting(InterfaceSetting).toString();
+    m_LogLevel          = loadSetting(LogLevel, 0).toInt();
+    m_LogToFile         = loadSetting(LogToFile, false).toBool();
+    m_LogFilename       = loadSetting(LogFilename,synergyLogDir() + "synergy.log").toString();
+    m_WizardLastRun     = loadSetting(WizardLastRun,0).toInt();
+    m_Language          = loadSetting(Language, QLocale::system().name()).toString();
+    m_StartedBefore     = loadSetting(StartedBefore, false).toBool();
+    m_AutoConfig        = loadSetting(AutoConfig, false).toBool();
+    m_AutoConfigServer  = loadSetting(AutoConfigServer,"").toString();
+
+    {   //Scope related code together
+        // TODO Investigate why ElevateModeEnum isn't loaded fully
+        QVariant elevateMode = loadSetting(ElevateModeEnum);
+        if (!elevateMode.isValid()) {
+            elevateMode = loadSetting(ElevateModeSetting,
+                                           QVariant(static_cast<int>(defaultElevateMode)));
+        }
+        m_ElevateMode        = static_cast<ElevateMode>(elevateMode.toInt());
     }
-    m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
-    m_Edition = static_cast<Edition>(settings().value("edition", kUnregistered).toInt());
-    m_ActivateEmail = settings().value("activateEmail", "").toString();
-    m_CryptoEnabled = settings().value("cryptoEnabled", true).toBool();
-    m_AutoHide = settings().value("autoHide", false).toBool();
-    m_Serialkey = settings().value("serialKey", "").toString().trimmed();
-    m_lastVersion = settings().value("lastVersion", "Unknown").toString();
-    m_LastExpiringWarningTime = settings().value("lastExpiringWarningTime", 0).toInt();
-    m_ActivationHasRun = settings().value("activationHasRun", false).toBool();
-    m_MinimizeToTray = settings().value("minimizeToTray", false).toBool();
+
+    m_Edition                   = static_cast<Edition>(loadSetting(EditionSetting, kUnregistered).toInt());
+    m_ActivateEmail             = loadSetting(ActivateEmail, "").toString();
+    m_CryptoEnabled             = loadSetting(CryptoEnabled, true).toBool();
+    m_AutoHide                  = loadSetting(AutoHide, false).toBool();
+    m_Serialkey                 = loadSetting(SerialKey, "").toString().trimmed();
+    m_lastVersion               = loadSetting(LastVersion, "Unknown").toString();
+    m_LastExpiringWarningTime   = loadSetting(LastExpireWarningTime, 0).toInt();
+    m_ActivationHasRun          = loadSetting(ActivationHasRun, false).toBool();
+    m_MinimizeToTray            = loadSetting(MinimizeToTray, false).toBool();
+
 }
 
 void AppConfig::saveSettings()
 {
-    settings().setValue("screenName", m_ScreenName);
-    settings().setValue("port", m_Port);
-    settings().setValue("interface", m_Interface);
-    settings().setValue("logLevel2", m_LogLevel);
-    settings().setValue("logToFile", m_LogToFile);
-    settings().setValue("logFilename", m_LogFilename);
-    settings().setValue("wizardLastRun", kWizardVersion);
-    settings().setValue("language", m_Language);
-    settings().setValue("startedBefore", m_StartedBefore);
-    settings().setValue("autoConfig", m_AutoConfig);
-    settings().setValue("autoConfigServer", m_AutoConfigServer);
+    setSetting(ScreenName, m_ScreenName);
+    setSetting(Port, m_Port);
+    setSetting(InterfaceSetting, m_Interface);
+    setSetting(LogLevel, m_LogLevel);
+    setSetting(LogToFile, m_LogToFile);
+    setSetting(LogFilename, m_LogFilename);
+    setSetting(WizardLastRun, kWizardVersion);
+    setSetting(Language, m_Language);
+    setSetting(StartedBefore, m_StartedBefore);
+    setSetting(AutoConfig, m_AutoConfig);
+    setSetting(AutoConfigServer, m_AutoConfigServer);
     // Refer to enum ElevateMode declaration for insight in to why this
     // flag is mapped this way
-    settings().setValue("elevateMode", m_ElevateMode == ElevateAlways);
-    settings().setValue("elevateModeEnum", static_cast<int>(m_ElevateMode));
-    settings().setValue("edition", m_Edition);
-    settings().setValue("cryptoEnabled", m_CryptoEnabled);
-    settings().setValue("autoHide", m_AutoHide);
-    settings().setValue("serialKey", m_Serialkey);
-    settings().setValue("lastVersion", m_lastVersion);
-    settings().setValue("lastExpiringWarningTime", m_LastExpiringWarningTime);
-    settings().setValue("activationHasRun", m_ActivationHasRun);
-    settings().setValue("minimizeToTray", m_MinimizeToTray);
+    setSetting(ElevateModeSetting, m_ElevateMode == ElevateAlways);
+    setSetting(ElevateModeEnum, static_cast<int>(m_ElevateMode));
+    setSetting(EditionSetting, m_Edition);
+    setSetting(CryptoEnabled, m_CryptoEnabled);
+    setSetting(AutoHide, m_AutoHide);
+    setSetting(SerialKey, m_Serialkey);
+    setSetting(LastVersion, m_lastVersion);
+    setSetting(LastExpireWarningTime, m_LastExpiringWarningTime);
+    setSetting(ActivationHasRun, m_ActivationHasRun);
+    setSetting(MinimizeToTray, m_MinimizeToTray);
+
     settings().sync();
 }
 
@@ -305,3 +338,23 @@ bool AppConfig::getAutoHide() { return m_AutoHide; }
 void AppConfig::setMinimizeToTray(bool b) { m_MinimizeToTray = b; }
 
 bool AppConfig::getMinimizeToTray() { return m_MinimizeToTray; }
+
+bool AppConfig::settingsExist(QSettings* settings) {
+    //Use screen name as the test to see if the settings have been saved to this location
+    return settings->contains(settingName(ScreenName));
+}
+
+QString AppConfig::settingName(AppConfig::Setting name) {
+    return m_SynergySettingsName[name];
+}
+
+template<typename T>
+void AppConfig::setSetting(AppConfig::Setting name, T value) {
+    settings().setValue(settingName(name), value);
+}
+
+QVariant AppConfig::loadSetting(AppConfig::Setting name, const QVariant& defaultValue) {
+    return settings().value(settingName(name), defaultValue);
+}
+
+
