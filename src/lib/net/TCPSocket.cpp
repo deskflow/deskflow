@@ -403,6 +403,15 @@ void TCPSocket::setJob(std::unique_ptr<ISocketMultiplexerJob>&& job)
     }
 }
 
+MultiplexerJobStatus TCPSocket::newJobOrStopServicing()
+{
+    auto new_job = newJob();
+    if (new_job)
+        return {true, std::move(new_job)};
+    else
+        return {false, {}};
+}
+
 std::unique_ptr<ISocketMultiplexerJob> TCPSocket::newJob()
 {
     // note -- must have m_mutex locked on entry
@@ -519,22 +528,14 @@ MultiplexerJobStatus TCPSocket::serviceConnecting(ISocketMultiplexerJob* job, bo
         catch (XArchNetwork& e) {
             sendConnectionFailedEvent(e.what());
             onDisconnected();
-            auto new_job = newJob();
-            if (new_job)
-                return {true, std::move(new_job)};
-            else
-                return {false, {}};
+            return newJobOrStopServicing();
         }
     }
 
     if (write) {
         sendEvent(m_events->forIDataSocket().connected());
         onConnected();
-        auto new_job = newJob();
-        if (new_job)
-            return {true, std::move(new_job)};
-        else
-            return {false, {}};
+        return newJobOrStopServicing();
     }
 
     return {true, {}};
@@ -548,7 +549,7 @@ MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
     if (error) {
         sendEvent(m_events->forISocket().disconnected());
         onDisconnected();
-        return {true, newJob()};
+        return newJobOrStopServicing();
     }
 
     EJobResult writeResult = kRetry;
@@ -603,7 +604,7 @@ MultiplexerJobStatus TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
     if (writeResult == kBreak || readResult == kBreak) {
         return {false, {}};
     } else if (writeResult == kNew || readResult == kNew) {
-        return {true, newJob()};
+        return newJobOrStopServicing();
     } else {
         return {true, {}};
     }
