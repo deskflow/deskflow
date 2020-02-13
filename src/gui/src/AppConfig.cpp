@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "QSynergyApplication.h"
 #include "AppConfig.h"
 #include "QUtility.h"
 
@@ -70,8 +71,8 @@ static const char* logLevelNames[] =
     "DEBUG2"
 };
 
-AppConfig::AppConfig(QSettings* settings) :
-    m_pSettings(settings),
+AppConfig::AppConfig(QSettings* userSettings, QSettings* systemSettings) :
+    m_pSettings(userSettings),
     m_ScreenName(),
     m_Port(24800),
     m_Interface(),
@@ -87,6 +88,15 @@ AppConfig::AppConfig(QSettings* settings) :
     m_MinimizeToTray(false)
 {
     Q_ASSERT(m_pSettings);
+
+    //If user setting dont exist but system ones do, load the system setting and save them to user settings
+    if (!settingsExist(userSettings) && settingsExist(systemSettings))
+    {
+        m_pSettings = systemSettings;
+        loadSettings();
+        m_pSettings = userSettings;
+        saveSettings();
+    }
 
     loadSettings();
 }
@@ -356,5 +366,3 @@ void AppConfig::setSetting(AppConfig::Setting name, T value) {
 QVariant AppConfig::loadSetting(AppConfig::Setting name, const QVariant& defaultValue) {
     return settings().value(settingName(name), defaultValue);
 }
-
-

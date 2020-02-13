@@ -89,8 +89,17 @@ int main(int argc, char* argv[])
     QApplication::setQuitOnLastWindowClosed(false);
 #endif
 
-    QSettings settings;
-    AppConfig appConfig (&settings);
+    //Config will default to User settings if they exist,
+    // otherwise it will load System setting and save them to User settings
+    QSettings systemSettings(QSettings::Scope::SystemScope,
+            QCoreApplication::organizationName(),
+            QCoreApplication::applicationName());
+
+    QSettings userSettings(QSettings::Scope::UserScope,
+            QCoreApplication::organizationName(),
+            QCoreApplication::applicationName());
+
+    AppConfig appConfig (&userSettings, &systemSettings);
     qRegisterMetaType<Edition>("Edition");
 #ifndef SYNERGY_ENTERPRISE
     LicenseManager licenseManager (&appConfig);
@@ -101,7 +110,7 @@ int main(int argc, char* argv[])
 #ifdef SYNERGY_ENTERPRISE
     MainWindow mainWindow(settings, appConfig);
 #else
-    MainWindow mainWindow(settings, appConfig, licenseManager);
+    MainWindow mainWindow(userSettings, appConfig, licenseManager);
 #endif
 
     QObject::connect(dynamic_cast<QObject*>(&app), SIGNAL(aboutToQuit()),

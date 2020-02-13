@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QVariant>
 #include "ElevateMode.h"
 #include <shared/EditionType.h>
 
@@ -59,7 +60,7 @@ class AppConfig: public QObject
     friend class SetupWizard;
 
     public:
-        AppConfig(QSettings* settings);
+        AppConfig(QSettings* userSettings, QSettings* systemSettings);
         ~AppConfig();
 
     public:
@@ -204,6 +205,9 @@ protected:
         /// @param [in] name The setting to be loaded
         /// @param [in] defaultValue The default value of the setting
         QVariant loadSetting(AppConfig::Setting name, const QVariant& defaultValue = QVariant());
+
+        /// @brief This will save the settings to globalScope instead of userScope
+        void saveToGlobalScope();
 
     signals:
         void sslToggled(bool enabled);
