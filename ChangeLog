@@ -1,10 +1,19 @@
-v1.11.1-snapshot
-==============
+v1.11.1-rc2
+===========
 
 Bug fixes:
-- #6608 Synergy cant create TLS certificate on windows
-- #6611 Mismatched TLS SHA fingerprint types
 
+- #6622 Language files not updated during build
+- #6611 Mismatched TLS SHA fingerprint types
+- #6608 TLS certificate is not created on Windows
+- #6593 Non-ASCII characters replaced with ? on client
+- #4288 Using print screen key also sends alt key
+- #4 Quote chars broken on US-International keyboard
+
+Enhancements:
+
+- #6632 Support for building with LibreSSL
+- #6396 Black and white icons for macOS toolbar
 
 v1.11.0-stable
 ==============
@@ -25,7 +34,6 @@ Enhancements:
 
 Features:
 - #6518 Key combination that will force a server restart
-
 
 v1.10.3-stable
 ==============
