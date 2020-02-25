@@ -97,7 +97,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 #ifdef SYNERGY_ENTERPRISE
         MainWindow(QSettings& settings, AppConfig& appConfig);
 #else
-        MainWindow(QSettings& settings, AppConfig& appConfig,
+        MainWindow(AppConfig& appConfig,
                    LicenseManager& licenseManager);
 #endif
         ~MainWindow();
@@ -160,7 +160,7 @@ public slots:
         void saveSettings();
 
     protected:
-        QSettings& settings() { return m_Settings; }
+        QSettings& settings() { return appConfig().settings(); }
         AppConfig& appConfig() { return *m_AppConfig; }
         QProcess* synergyProcess() { return m_pSynergy; }
         void setSynergyProcess(QProcess* p) { m_pSynergy = p; }
@@ -212,7 +212,6 @@ public slots:
         QStringList         m_PendingClientNames;
 #endif
         Zeroconf*           m_pZeroconf;
-        QSettings&          m_Settings;
         AppConfig*          m_AppConfig;
         QProcess*           m_pSynergy;
         int                 m_SynergyState;

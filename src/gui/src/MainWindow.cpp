@@ -97,7 +97,7 @@ static const char* synergyDefaultIconFiles[] =
 #ifdef SYNERGY_ENTERPRISE
 MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig)
 #else
-MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
+MainWindow::MainWindow (AppConfig& appConfig,
                         LicenseManager& licenseManager)
 #endif
 :
@@ -106,11 +106,10 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
     m_ActivationDialogRunning(false),
 #endif
     m_pZeroconf(nullptr),
-    m_Settings(settings),
     m_AppConfig(&appConfig),
     m_pSynergy(NULL),
     m_SynergyState(synergyDisconnected),
-    m_ServerConfig(&m_Settings, 5, 3, m_AppConfig->screenName(), this),
+    m_ServerConfig(&appConfig.settings(), 5, 3, m_AppConfig->screenName(), this),
     m_pTempConfigFile(NULL),
     m_pTrayIcon(NULL),
     m_pTrayIconMenu(NULL),

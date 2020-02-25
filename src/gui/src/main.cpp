@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
 #ifdef SYNERGY_ENTERPRISE
     MainWindow mainWindow(settings, appConfig);
 #else
-    MainWindow mainWindow(userSettings, appConfig, licenseManager);
+    MainWindow mainWindow(appConfig, licenseManager);
 #endif
 
     QObject::connect(dynamic_cast<QObject*>(&app), SIGNAL(aboutToQuit()),

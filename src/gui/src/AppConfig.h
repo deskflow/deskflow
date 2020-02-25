@@ -64,6 +64,10 @@ class AppConfig: public QObject
         ~AppConfig();
 
     public:
+        /// @brief Gets the current settings.
+        /// @return The scoped setting currently selected
+        QSettings& settings();
+
         const QString& screenName() const;
         int port() const;
         const QString& networkInterface() const;
