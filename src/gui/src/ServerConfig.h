@@ -32,6 +32,7 @@ class QString;
 class QFile;
 class ServerConfigDialog;
 class MainWindow;
+class AppConfig;
 
 class ServerConfig : public BaseConfig
 {
@@ -39,7 +40,7 @@ class ServerConfig : public BaseConfig
     friend QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config);
 
     public:
-        ServerConfig(QSettings* settings, int numColumns, int numRows,
+        ServerConfig(AppConfig* settings, int numColumns, int numRows,
             QString serverName, MainWindow* mainWindow);
         ~ServerConfig();
 
@@ -75,7 +76,7 @@ class ServerConfig : public BaseConfig
         int autoAddScreen(const QString name);
 
     protected:
-        QSettings& settings() { return *m_pSettings; }
+        QSettings& settings();
         ScreenList& screens() { return m_Screens; }
         void setScreens(const ScreenList& screens) { m_Screens = screens; }
         void addScreen(const Screen& screen) { m_Screens.append(screen); }
@@ -110,7 +111,7 @@ class ServerConfig : public BaseConfig
         void addToFirstEmptyGrid(const QString& clientName);
 
     private:
-        QSettings* m_pSettings;
+        AppConfig* m_pAppConfig;
         ScreenList m_Screens;
         int m_NumColumns;
         int m_NumRows;
