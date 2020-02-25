@@ -25,6 +25,7 @@
 #include <QVariant>
 #include "ElevateMode.h"
 #include <shared/EditionType.h>
+#include <mutex>
 
 // this should be incremented each time a new page is added. this is
 // saved to settings when the user finishes running the wizard. if
@@ -64,6 +65,12 @@ class AppConfig: public QObject
         ~AppConfig();
 
     public:
+        enum SaveChoice {
+            Save,
+            Cancel,
+            SaveToUser
+        };
+
         /// @brief Gets the current settings.
         /// @return The scoped setting currently selected
         QSettings& settings();
@@ -112,6 +119,14 @@ class AppConfig: public QObject
         bool activationHasRun() const;
         AppConfig& activationHasRun(bool value);
 #endif
+        /// @brief Sets the user preference to load from SystemScope.
+        /// @param [in] value
+        ///             True - This will set the variable, and save the user settings before loading the global scope settings
+        ///             False - This will load the UserScope then set the variable and save.
+        void setLoadFromSystemScope(bool value);
+
+        /// @brief Returns true if the setting should be set to global scope. Only useful if current scope is UserScope
+        bool getLoadFromSystemScope() const;
 
         QString lastVersion() const;
 
@@ -125,6 +140,16 @@ class AppConfig: public QObject
         /// @param [in] settings The QSettings object to check
         /// @return True if the setting was found.
         static bool settingsExist(QSettings* settings);
+
+        /// @brief If the scope is set to system, this function will query the user
+        ///         if they want to continue saving to global scope or switch to user scope
+        ///         if the scope is set to User the function will just return Save
+        /// @return SaveChoice The choice that was selected, or Save if the scope is user already
+        SaveChoice checkGlobalSave();
+
+        /// @brief This will switch the scope to or from global
+        /// @param [in] global bool Defaults to true to switch to global scope, False to set to User scope
+        void switchToGlobal(bool global = true);
 
 protected:
     /// @brief The enumeration to easily access the names of the setting inside m_SynergySettingsName
@@ -151,9 +176,9 @@ protected:
         ActivationHasRun,
         MinimizeToTray,
         ActivateEmail,
+        LoadSystemSettings,
     };
 
-        QSettings& settings();
         void setScreenName(const QString& s);
         void setPort(int i);
         void setNetworkInterface(const QString& s);
@@ -164,11 +189,16 @@ protected:
         void setLanguage(const QString language);
         void setStartedBefore(bool b);
         void setElevateMode(ElevateMode em);
-        void loadSettings();
+
+        /// @brief loads the setting from the current scope
+        /// @param ignoreSystem should the load feature ignore the globalScope setting that was saved
+        void loadSettings(bool ignoreSystem = false);
         static QString settingName(AppConfig::Setting name);
 
     private:
-        QSettings* m_pSettings;
+        QSettings* m_pSettings;          /// @brief  Contain the current settings scope
+        QSettings* m_pUserSettings;      /// @brief  Contains the setting in UserScope
+        QSettings* m_pSystemSettings;    /// @brief  Contains the setting in SystemScope
         QString m_ScreenName;
         int m_Port;
         QString m_Interface;
@@ -191,6 +221,9 @@ protected:
         int m_LastExpiringWarningTime;
         bool m_ActivationHasRun;
         bool m_MinimizeToTray;
+        bool m_LoadFromSystemScope;     /// @brief should the setting be loaded from SystemScope
+                                        ///         If the user has settings but this is true then
+                                        ///         system settings will be loaded instead of the users
 
         static const char m_SynergysName[];
         static const char m_SynergycName[];
@@ -210,8 +243,10 @@ protected:
         /// @param [in] defaultValue The default value of the setting
         QVariant loadSetting(AppConfig::Setting name, const QVariant& defaultValue = QVariant());
 
-        /// @brief This will save the settings to globalScope instead of userScope
-        void saveToGlobalScope();
+        /// @brief As the settings will be accessible by multiple objects this lock will ensure that
+        ///         it cant be modified by more that one object at a time if the setting is being switched
+        ///         from system to user.
+        std::mutex m_settings_lock;
 
     signals:
         void sslToggled(bool enabled);

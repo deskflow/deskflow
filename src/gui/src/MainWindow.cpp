@@ -35,6 +35,7 @@
 #include "ProcessorArch.h"
 #include "SslCertificate.h"
 #include "Zeroconf.h"
+#include <QPushButton>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -109,7 +110,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_AppConfig(&appConfig),
     m_pSynergy(NULL),
     m_SynergyState(synergyDisconnected),
-    m_ServerConfig(&appConfig.settings(), 5, 3, m_AppConfig->screenName(), this),
+    m_ServerConfig(m_AppConfig, 5, 3, m_AppConfig->screenName(), this),
     m_pTempConfigFile(NULL),
     m_pTrayIcon(NULL),
     m_pTrayIconMenu(NULL),
@@ -348,7 +349,19 @@ void MainWindow::saveSettings()
     settings().setValue("groupClientChecked", m_pGroupClient->isChecked());
     settings().setValue("serverHostname", m_pLineEditHostname->text());
 
-    settings().sync();
+    auto choice = appConfig().checkGlobalSave();
+
+    switch (choice)
+    {
+        case AppConfig::SaveToUser:
+            //Switch to local and overrun into the save case
+            appConfig().switchToGlobal(false);
+        case AppConfig::Save:
+            settings().sync();
+            break;
+        default:
+            break;
+    }
 }
 
 void MainWindow::setIcon(qSynergyState state)

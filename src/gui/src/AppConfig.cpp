@@ -22,6 +22,8 @@
 
 #include <QtCore>
 #include <QtNetwork>
+#include <QtWidgets/QMessageBox>
+#include <QPushButton>
 
 #if defined(Q_OS_WIN)
 const char AppConfig::m_SynergysName[] = "synergys.exe";
@@ -58,7 +60,8 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "lastVersion",
         "lastExpiringWarningTime",
         "activationHasRun",
-        "minimizeToTray"
+        "minimizeToTray",
+        "loadFromSystemScope"
 };
 
 
@@ -72,7 +75,9 @@ static const char* logLevelNames[] =
 };
 
 AppConfig::AppConfig(QSettings* userSettings, QSettings* systemSettings) :
-    m_pSettings(userSettings),
+    m_pSettings(nullptr),
+    m_pUserSettings(userSettings),
+    m_pSystemSettings(systemSettings),
     m_ScreenName(),
     m_Port(24800),
     m_Interface(),
@@ -87,16 +92,16 @@ AppConfig::AppConfig(QSettings* userSettings, QSettings* systemSettings) :
     m_AutoConfigServer(),
     m_MinimizeToTray(false)
 {
-    Q_ASSERT(m_pSettings);
 
-    //If user setting dont exist but system ones do, load the system setting and save them to user settings
+    //If user setting don't exist but system ones do, load the system settings
     if (!settingsExist(userSettings) && settingsExist(systemSettings))
     {
         m_pSettings = systemSettings;
-        loadSettings();
+    } else { // Otherwise just load to user scope
         m_pSettings = userSettings;
-        saveSettings();
     }
+
+    Q_ASSERT(m_pSettings);
 
     loadSettings();
 }
@@ -175,7 +180,7 @@ bool AppConfig::autoConfig() const {
 
 QString AppConfig::autoConfigServer() const { return m_AutoConfigServer; }
 
-void AppConfig::loadSettings()
+void AppConfig::loadSettings(bool ignoreSystem)
 {
     m_ScreenName        = loadSetting(ScreenName, QHostInfo::localHostName()).toString();
     m_Port              = loadSetting(Port, 24800).toInt();
@@ -208,7 +213,17 @@ void AppConfig::loadSettings()
     m_LastExpiringWarningTime   = loadSetting(LastExpireWarningTime, 0).toInt();
     m_ActivationHasRun          = loadSetting(ActivationHasRun, false).toBool();
     m_MinimizeToTray            = loadSetting(MinimizeToTray, false).toBool();
+    m_LoadFromSystemScope       = loadSetting(LoadSystemSettings, false).toBool();
 
+    //If this is user scope and the user chose switch to global but ignoreSystem is not set.
+    if (settings().scope() == QSettings::UserScope &&
+        m_LoadFromSystemScope &&
+        !ignoreSystem)
+    {
+        //Switch to global scope and reload settings
+        switchToGlobal();
+        loadSettings();
+    }
 }
 
 void AppConfig::saveSettings()
@@ -365,4 +380,61 @@ void AppConfig::setSetting(AppConfig::Setting name, T value) {
 
 QVariant AppConfig::loadSetting(AppConfig::Setting name, const QVariant& defaultValue) {
     return settings().value(settingName(name), defaultValue);
+}
+
+AppConfig::SaveChoice AppConfig::checkGlobalSave() {
+    if (settings().scope() == QSettings::Scope::SystemScope) {
+
+        QMessageBox query;
+        query.setWindowTitle(tr("Save global settings."));
+        query.setText(tr("This will overwrite the settings of anybody else that uses this computer."));
+
+        query.addButton(QMessageBox::Save);
+        const auto* pBtnCancel    =  query.addButton(QMessageBox::Cancel);
+        const auto* pBtnSaveLocal =  query.addButton(tr("Save to user"), QMessageBox::ActionRole);
+
+        query.setDefaultButton(QMessageBox::Cancel);
+
+        query.exec();
+
+        if(query.clickedButton() == pBtnSaveLocal)
+        {
+            return SaveToUser;
+        }
+        else if(query.clickedButton() == pBtnCancel)
+        {
+            return Cancel;
+        }
+    }
+    return Save;
+}
+
+void AppConfig::switchToGlobal(bool global) {
+    m_settings_lock.lock();
+    if (global)
+    {
+        m_pSettings = m_pSystemSettings;
+    }
+    else
+    {
+        m_pSettings = m_pUserSettings;
+    }
+    m_settings_lock.unlock();
+}
+
+void AppConfig::setLoadFromSystemScope(bool value) {
+    if (value && settings().scope() == QSettings::UserScope)
+    {
+        m_LoadFromSystemScope = value;
+        saveSettings();     //Save user prefs
+        switchToGlobal();   //Switch the the System Scope
+        loadSettings();     //Load the settings.
+    }
+    else if (!value && settings().scope() == QSettings::SystemScope)
+    {
+        switchToGlobal(false);      // Switch to UserScope
+        loadSettings(true);    // Load user settings ignoring System scope setting
+        m_LoadFromSystemScope = value;     // Set the user pref
+        saveSettings();                    // Save user prefs
+    }
 }
