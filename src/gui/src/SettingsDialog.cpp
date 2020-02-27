@@ -60,6 +60,13 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     m_pCheckBoxMinimizeToTray->setChecked(appConfig().getMinimizeToTray());
     m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
 
+    if (m_appConfig.isSystemScoped()) {
+        m_pRadioSystemScope->setChecked(true);
+    }
+    else {
+        m_pRadioUserScope->setChecked(true);
+    }
+
 #if defined(Q_OS_WIN)
     m_pBonjourWindows = new BonjourWindows(this, m_pMainWindow, m_appConfig);
     if (m_pBonjourWindows->isRunning()) {
@@ -111,6 +118,9 @@ void SettingsDialog::accept()
     appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
     appConfig().setAutoConfig(m_pCheckBoxAutoConfig->isChecked());
     appConfig().setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
+
+    //We only need to test the System scoped Radio as they are connected
+    appConfig().setLoadFromSystemScope(m_pRadioSystemScope->isChecked());
     appConfig().saveSettings();
     QDialog::accept();
 }
