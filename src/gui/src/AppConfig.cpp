@@ -61,10 +61,9 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "lastExpiringWarningTime",
         "activationHasRun",
         "minimizeToTray",
+        "ActivateEmail",
         "loadFromSystemScope"
 };
-
-
 
 static const char* logLevelNames[] =
 {
@@ -251,6 +250,7 @@ void AppConfig::saveSettings()
     setSetting(LastExpireWarningTime, m_LastExpiringWarningTime);
     setSetting(ActivationHasRun, m_ActivationHasRun);
     setSetting(MinimizeToTray, m_MinimizeToTray);
+    setSetting(LoadSystemSettings, m_LoadFromSystemScope);
 
     settings().sync();
 }
@@ -383,7 +383,7 @@ QVariant AppConfig::loadSetting(AppConfig::Setting name, const QVariant& default
 }
 
 AppConfig::SaveChoice AppConfig::checkGlobalSave() {
-    if (settings().scope() == QSettings::Scope::SystemScope) {
+    if (isSystemScoped()) {
 
         QMessageBox query;
         query.setWindowTitle(tr("Save global settings."));
@@ -423,18 +423,22 @@ void AppConfig::switchToGlobal(bool global) {
 }
 
 void AppConfig::setLoadFromSystemScope(bool value) {
-    if (value && settings().scope() == QSettings::UserScope)
+    if (value && !isSystemScoped())
     {
         m_LoadFromSystemScope = value;
         saveSettings();     //Save user prefs
         switchToGlobal();   //Switch the the System Scope
         loadSettings();     //Load the settings.
     }
-    else if (!value && settings().scope() == QSettings::SystemScope)
+    else if (!value && isSystemScoped())
     {
         switchToGlobal(false);      // Switch to UserScope
         loadSettings(true);    // Load user settings ignoring System scope setting
         m_LoadFromSystemScope = value;     // Set the user pref
         saveSettings();                    // Save user prefs
     }
+}
+
+bool AppConfig::isSystemScoped() const {
+    return m_pSettings->scope() == QSettings::SystemScope;
 }

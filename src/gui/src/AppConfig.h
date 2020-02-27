@@ -75,6 +75,8 @@ class AppConfig: public QObject
         /// @return The scoped setting currently selected
         QSettings& settings();
 
+        bool isSystemScoped() const;
+
         const QString& screenName() const;
         int port() const;
         const QString& networkInterface() const;
