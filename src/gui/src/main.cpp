@@ -88,10 +88,16 @@ int main(int argc, char* argv[])
 #ifndef Q_OS_WIN
     QApplication::setQuitOnLastWindowClosed(false);
 #endif
+    //Set the path of the system settings to the programs local folder
+    //as the default system settings path has problems writing without Admin/root permission
+    QSettings::setPath(QSettings::Format::IniFormat,
+                       QSettings::Scope::SystemScope,
+                       QString("SystemSettings"));
 
     //Config will default to User settings if they exist,
     // otherwise it will load System setting and save them to User settings
-    QSettings systemSettings(QSettings::Scope::SystemScope,
+    QSettings systemSettings(QSettings::Format::IniFormat,
+            QSettings::Scope::SystemScope,
             QCoreApplication::organizationName(),
             QCoreApplication::applicationName());
 
