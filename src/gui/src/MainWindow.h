@@ -149,6 +149,7 @@ public slots:
         void on_m_pButtonConfigureServer_clicked();
         bool on_m_pActionSave_triggered();
         void on_m_pActionAbout_triggered();
+        void on_m_pActionHelp_triggered();
         void on_m_pActionSettings_triggered();
         void on_m_pActivate_triggered();
         void synergyFinished(int exitCode, QProcess::ExitStatus);
