@@ -55,12 +55,6 @@
 /* Define if you have a POSIX `sigwait` function. */
 #cmakedefine HAVE_POSIX_SIGWAIT ${HAVE_POSIX_SIGWAIT}
 
-/* Define if you have POSIX threads libraries and header files. */
-#cmakedefine HAVE_PTHREAD ${HAVE_PTHREAD}
-
-/* Define if you have `pthread_sigmask` and `pthread_kill` functions. */
-#cmakedefine HAVE_PTHREAD_SIGNAL ${HAVE_PTHREAD_SIGNAL}
-
 /* Define if your compiler defines socklen_t. */
 #cmakedefine HAVE_SOCKLEN_T ${HAVE_SOCKLEN_T}
 
