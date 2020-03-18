@@ -70,6 +70,7 @@ A:
   - MacOS/OS X
   - Linux
   - FreeBSD
+  - OpenBSD
 
 Q: Are 32-bit versions of Windows supported?
 
