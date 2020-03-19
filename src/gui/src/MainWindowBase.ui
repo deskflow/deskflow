@@ -535,6 +535,14 @@
     <string notr="true"/>
    </property>
   </action>
+  <action name="m_pActionHelp">
+   <property name="text">
+    <string>Visit &amp;help site</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true"/>
+   </property>
+  </action>
   <action name="m_pActionQuit">
    <property name="text">
     <string>&amp;Quit</string>
