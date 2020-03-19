@@ -118,6 +118,48 @@ HEADERS += src/MainWindow.h \
     ../lib/shared/EditionType.h \
     ../lib/shared/SerialKey.h \
     src/LicenseManager.h
+TRANSLATIONS = res/lang/gui_ar-SA.ts \
+    res/lang/gui_bg-BG.ts \
+    res/lang/gui_ca-ES.ts \
+    res/lang/gui_cs-CZ.ts \
+    res/lang/gui_cy-GB.ts \
+    res/lang/gui_da-DK.ts \
+    res/lang/gui_de-DE.ts \
+    res/lang/gui_el-GR.ts \
+    res/lang/gui_es-ES.ts \
+    res/lang/gui_et-EE.ts \
+    res/lang/gui_fi-FI.ts \
+    res/lang/gui_fr-FR.ts \
+    res/lang/gui_gl-ES.ts \
+    res/lang/gui_he-IL.ts \
+    res/lang/gui_hr-HR.ts \
+    res/lang/gui_hu-HU.ts \
+    res/lang/gui_id-ID.ts \
+    res/lang/gui_it-IT.ts \
+    res/lang/gui_ja-JP.ts \
+    res/lang/gui_ko-KR.ts \
+    res/lang/gui_lt-LT.ts \
+    res/lang/gui_lv-LV.ts \
+    res/lang/gui_mr-IN.ts \
+    res/lang/gui_nl-NL.ts \
+    res/lang/gui_no-NO.ts \
+    res/lang/gui_pl-PL.ts \
+    res/lang/gui_pt-BR.ts \
+    res/lang/gui_pt-PT.ts \
+    res/lang/gui_ro-RO.ts \
+    res/lang/gui_ru-RU.ts \
+    res/lang/gui_sk-SK.ts \
+    res/lang/gui_sl-SI.ts \
+    res/lang/gui_sq-AL.ts \
+    res/lang/gui_sr-SP.ts \
+    res/lang/gui_sv-SE.ts \
+    res/lang/gui_th-TH.ts \
+    res/lang/gui_tr-TR.ts \
+    res/lang/gui_uk-UA.ts \
+    res/lang/gui_ur-IN.ts \
+    res/lang/gui_vi-VN.ts \
+    res/lang/gui_zh-CN.ts \
+    res/lang/gui_zh-TW.ts
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 
@@ -127,6 +169,8 @@ macx {
     QSYNERGY_ICON.path = Contents/Resources
     QMAKE_BUNDLE_DATA += QSYNERGY_ICON
     LIBS += $$MACX_LIBS
+    HEADERS += src/OSXHelpers.h
+    SOURCES += src/OSXHelpers.mm
 }
 unix:!macx:LIBS += -ldns_sd
 debug { 

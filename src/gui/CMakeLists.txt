@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.4)
 
-find_package (Qt5 COMPONENTS Core Widgets Network)
+find_package (Qt5 COMPONENTS Core Widgets Network LinguistTools)
 set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
 set (CMAKE_AUTOUIC ON)
@@ -10,6 +10,14 @@ file (GLOB LEGACY_GUI_SOURCE_FILES src/*.cpp src/*.h)
 file (GLOB LEGACY_GUI_UI_FILES src/*.ui)
 file (GLOB LEGACY_ACTIVATION_FILES src/*Activation* src/*License*)
 file (GLOB LEGACY_ZEROCONF_FILES src/Zeroconf*)
+file (GLOB LEGACY_LANGUAGE_FILES res/lang/*.ts)
+
+qt5_add_translation(QM_FILES ${LEGACY_LANGUAGE_FILES})
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    file (GLOB LEGACY_GUI_MAC_SOURCE_FILES src/*.mm)
+    list (APPEND LEGACY_GUI_SOURCE_FILES ${LEGACY_GUI_MAC_SOURCE_FILES})
+endif()
 
 if (SYNERGY_ENTERPRISE)
     list (REMOVE_ITEM LEGACY_GUI_SOURCE_FILES ${LEGACY_ACTIVATION_FILES})
@@ -26,6 +34,7 @@ add_executable (synergy WIN32
     ${LEGACY_GUI_UI_FILES}
     ${LEGACY_GUI_RC_FILES}
     res/Synergy.qrc
+    ${QM_FILES}
 )
 
 include_directories (./src)

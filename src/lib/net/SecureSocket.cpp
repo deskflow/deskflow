@@ -683,7 +683,7 @@ SecureSocket::verifyCertFingerprint()
     EVP_MD* tempDigest;
     unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
     unsigned int tempFingerprintLen;
-    tempDigest = (EVP_MD*)EVP_sha1();
+    tempDigest = (EVP_MD*)EVP_sha256();
     int digestResult = X509_digest(cert, tempDigest, tempFingerprint, &tempFingerprintLen);
 
     if (digestResult <= 0) {
@@ -814,12 +814,13 @@ SecureSocket::showSecureCipherInfo()
         showCipherStackDesc(sStack);
     }
 
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 	// m_ssl->m_ssl->session->ciphers is not forward compatable,
 	// In future release of OpenSSL, it's not visible,
+	// however, LibreSSL still uses this.
     STACK_OF(SSL_CIPHER) * cStack = m_ssl->m_ssl->session->ciphers;
 #else
-	// Use SSL_get_client_ciphers() for newer versions
+	// Use SSL_get_client_ciphers() for newer versions of OpenSSL.
 	STACK_OF(SSL_CIPHER) * cStack = SSL_get_client_ciphers(m_ssl->m_ssl);
 #endif
 	if (cStack == NULL) {

@@ -1,0 +1,210 @@
+trigger:
+- master
+
+jobs: 
+- job: LinuxRHEL
+  pool: 
+    vmImage: 'ubuntu-16.04'
+  strategy:
+    matrix:
+      centos7:
+        image: symless/centos-sudo:7
+
+  container: $[ variables['image'] ]
+
+  steps:
+  - script: |
+      sudo yum -y update
+      sudo yum -y install epel-release boost-static git libXtst-devel qt5-qtbase-devel qt5-qtdeclarative-devel libcurl-devel openssl-devel avahi-compat-libdns_sd-devel autoconf automake gcc gcc-c++ make rpm-build redhat-rpm-config rpm-sign qt5-qttools-devel
+      sudo yum -y install cmake3 #for some reason this needs to be seperate otherwise it wont install
+    displayName: 'Install Pakages'
+    
+  - script: |
+      mkdir build
+      cd build
+      cmake3 ..
+      make
+    displayName: 'Build'
+
+- job: LinuxDeb
+  pool: 
+    vmImage: 'ubuntu-16.04'
+  strategy:
+    matrix:
+      ubuntu16:
+        image: symless/ubuntu-sudo:16.04
+      ubuntu18:
+        image: symless/ubuntu-sudo:18.04
+      ubuntu19:
+        image: symless/ubuntu-sudo:19.04
+      debian9:
+        image: symless/debian-sudo:stretch
+
+  container: $[ variables['image'] ]
+
+  steps:
+  - script: |
+      sudo ln -snf /usr/share/zoneinfo/Europe/London /etc/localtime
+      sudo bash -c "echo 'Europe/London' > /etc/timezone"
+    displayName: 'Sort out timezones for updates'
+  - script: |
+      sudo DEBIAN_FRONTEND=noninteractive 
+      sudo apt-get -y update
+      sudo apt-get -y upgrade
+      sudo apt-get -y install git cmake qtbase5-dev build-essential libx11-dev libxtst-dev libgl1-mesa-dev libssl-dev libavahi-compat-libdnssd-dev debhelper devscripts
+      sudo apt-get -y install qttools5-dev qttools5-dev-tools --no-install-recommends #These will try to install gnome if we allow dependancies
+    displayName: 'Install Pakages'
+  - script: |
+      mkdir build
+      cd build
+      cmake ..
+      make
+    displayName: 'Build'
+
+- job: MacOS
+  strategy:
+    matrix:
+      sierra:
+        image: macOS-10.13
+      mojave:
+        image: macOS-10.14
+
+  pool: 
+    vmImage: $[ variables['image'] ]
+
+  variables:
+    QT_PATH: '/usr/local/opt/qt/bin'
+
+  steps:
+  - task: CmdLine@2
+    inputs:
+      script: 'brew install qt'
+    displayName: 'Installing QT'
+
+  - task: CmdLine@2
+    inputs:
+      script: |
+        export PATH="$(QT_PATH):$PATH"
+        mkdir build
+        cd build 
+        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release ..
+    displayName: 'Cmake'
+
+  - task: CmdLine@2
+    inputs:
+      script: |
+        cd build
+        make
+    displayName: 'Compiling'
+
+- job: Windows
+  strategy:
+    matrix:
+      vs2019:
+        image: windows-2019
+
+  pool: 
+    vmImage: $[ variables['image'] ]
+
+  variables:
+    QT_VERSION: '5.12.6'
+    QLI_VERSION: '2019.05.26.1'
+    QLI_OUT_DIR: '.\deps\Qt'
+    QLI_BASE_URL: 'http://mirrors.ocf.berkeley.edu/qt/online/qtsdkrepository/'
+    QT_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
+    QT_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
+    BONJOUR_SDK_DIR: 'deps\BonjourSDK'
+    ENV_BAT: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\vsdevcmd'
+
+  steps:
+#As the official installer is rather 'slow' use an unofficial installer QLI
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        New-Item -Force -ItemType Directory -Path ".\deps\"
+        $client = new-object System.Net.WebClient
+        $client.DownloadFile("https://github.com/nelsonjchen/qli-installer/archive/v$(QLI_VERSION).zip","deps\qli.zip")
+    displayName: 'Downloading QLI v$(QLI_VERSION)'
+
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        New-Item -Force -ItemType Directory -Path ".\deps\"
+        $client = new-object System.Net.WebClient
+        $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\deps\bonjoursdk.zip")
+        $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi",".\deps\Bonjour64.msi")
+    displayName: 'Downloading Bonjour SKD'
+
+  - task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: './deps/*.zip'
+      destinationFolder: './deps/'
+      cleanDestinationFolder: false
+    displayName: 'Extracting zips'
+
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: 'pip install -r .\deps\qli-installer-$(QLI_VERSION)\requirements.txt'
+    displayName: 'Install QLI requirements'
+
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        Get-ChildItem '.\deps'
+        msiexec.exe /i ${pwd}\deps\Bonjour64.msi INSTALLDIR="${pwd}\deps\Bonjour" /qb
+    displayName: 'Installing bonjour SDK'
+
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
+      arguments: '$(QT_VERSION) windows desktop win64_msvc2017_64'
+    displayName: 'Installing QT $(QT_VERSION) x64'
+
+  - script: |
+      call "$(ENV_BAT)" -arch=x64
+      set BONJOUR_SDK_HOME=%cd%\$(BONJOUR_SDK_DIR)
+      mkdir build64
+      cd build64
+      cmake -G "Visual Studio 16 2019" -A x64 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH) ..
+    displayName: 'Cmake x64'
+
+  - task: MSBuild@1
+    inputs:
+      solution: 'build64/synergy-core.sln'
+      msbuildVersion: '16.0'
+      msbuildArchitecture: 'x64'
+      platform: 'x64'
+      configuration: 'Release'
+      msbuildArguments: '/m'
+      maximumCpuCount: true
+    displayName: 'Compiling x64'
+
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
+      arguments: '$(QT_VERSION) windows desktop win32_msvc2017'
+    displayName: 'Installing QT $(QT_VERSION) x32'
+
+  - script: |
+      call "$(ENV_BAT)" -arch=x86
+      set BONJOUR_SDK_HOME=%cd%\$(BONJOUR_SDK_DIR)
+      mkdir build32
+      cd build32
+      cmake -G "Visual Studio 16 2019" -A Win32 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH_32) ..
+    displayName: 'Cmake x86'
+  - task: MSBuild@1
+    inputs:
+      solution: 'build32/synergy-core.sln'
+      msbuildVersion: '16.0'
+      msbuildArchitecture: 'x86'
+      platform: 'Win32'
+      configuration: 'Release'
+      msbuildArguments: '/m'
+      maximumCpuCount: true
+    displayName: 'Compiling x86'

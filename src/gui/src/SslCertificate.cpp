@@ -34,8 +34,8 @@ static const char kSslDir[] = "SSL";
 static const char kUnixOpenSslCommand[] = "openssl";
 
 #if defined(Q_OS_WIN)
-static const char kWinOpenSslBinary[] = "openssl.exe";
-static const char kConfigFile[] = "synergy.conf";
+static const char kWinOpenSslBinary[] = "OpenSSL\\openssl.exe";
+static const char kConfigFile[] = "OpenSSL\\synergy.conf";
 #endif
 
 SslCertificate::SslCertificate(QObject *parent) :
