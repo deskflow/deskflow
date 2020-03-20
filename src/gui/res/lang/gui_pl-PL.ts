@@ -19,14 +19,14 @@ Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</source>
-      <translation type="unfinished">&lt;p&gt;
-Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2012-2019 Symless Ltd.&lt;br /&gt;
-Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (symless.com).
+      <translation>&lt;p&gt;
+Aplikacja do udostępniania klawiatury i myszy. Wieloplatformowa i otwartoźródłowa.&lt;br /&gt;&lt;br /&gt;
+Prawa autorskie © 2012-2019 Symless Ltd.&lt;br /&gt;
+Prawa autorskie© 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Synergy jest wydany na licencji GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Synergy bazuje na CosmoSynergy od Richard Lee i Adam Feder.&lt;br /&gt;
+GIU Synergy bazuje na QSynergy od Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Odwiedź naszą stronę internetową, aby uzyskać pomoc i informacje (symless.com).
 &lt;/p&gt;</translation>
     </message>
     <message>
@@ -43,12 +43,12 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="167"/>
       <source>Build Date: </source>
-      <translation type="unfinished">Build Date: </translation>
+      <translation>Data kompilacji: </translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="194"/>
       <source>&amp;Ok</source>
-      <translation type="unfinished">&amp;Ok</translation>
+      <translation>&amp;Ok</translation>
     </message>
   </context>
   <context>
@@ -136,7 +136,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="247"/>
       <source>Restart server</source>
-      <translation type="unfinished">Restart server</translation>
+      <translation>Restart serwera</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="259"/>
@@ -159,17 +159,17 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActivationDialog.ui" line="14"/>
       <source>Activate Synergy</source>
-      <translation type="unfinished">Activate Synergy</translation>
+      <translation>Aktywacja Synergy</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="26"/>
       <source>Serial key</source>
-      <translation type="unfinished">Serial key</translation>
+      <translation>Klucz seryjny</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="33"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This can be found on your &lt;a href=&quot;https://symless.com/account/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This can be found on your &lt;a href=&quot;https://symless.com/account/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Możesz go znaleźć na stronie swojego &lt;a href=&quot;https://symless.com/account/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;konta&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="49"/>
@@ -178,7 +178,7 @@ Visit our website for help and info (symless.com).
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+      <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
@@ -187,40 +187,40 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/ActivationDialog.ui" line="88"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Your trial has expired. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Your trial has expired. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Twoja wersja próbna wygasła. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Kup teraz!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="36"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Your trial has expired. &lt;a href=&quot;https://symless.com/synergy/trial/thanks?id=%1&quot;&gt;&lt;span style=&quot;text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Your trial has expired. &lt;a href=&quot;https://symless.com/synergy/trial/thanks?id=%1&quot;&gt;&lt;span style=&quot;text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Twoja wersja próbna wygasła. &lt;a href=&quot;https://symless.com/synergy/trial/thanks?id=%1&quot;&gt;&lt;span style=&quot;text-decoration: underline; color:#0000ff;&quot;&gt;Kup teraz!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="79"/>
       <source>An error occurred while trying to activate Synergy. Please contact the helpdesk, and provide the following information:
 
 %1</source>
-      <translation type="unfinished">An error occurred while trying to activate Synergy. Please contact the helpdesk, and provide the following information:
+      <translation>Wystąpił problem podczas aktywacji Synergy. Skontaktuj się z działem pomocy i podaj następujące informacje:
 
 %1</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="88"/>
       <source>%1</source>
-      <translation type="unfinished">%1</translation>
+      <translation>%1</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="97"/>
       <source>Thanks for trying %1! %5
 
 %2 day%3 of your trial remain%4</source>
-      <translation type="unfinished">Thanks for trying %1! %5
+      <translation>Dziękujemy za wypróbowanie %1! %5
 
-%2 day%3 of your trial remain%4</translation>
+%2 dzień%3 okresu próbnego pozostało%4</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="116"/>
       <source>Thanks for activating %1!</source>
-      <translation type="unfinished">Thanks for activating %1!</translation>
+      <translation>Dziękujemy za aktywację %1!</translation>
     </message>
   </context>
   <context>
