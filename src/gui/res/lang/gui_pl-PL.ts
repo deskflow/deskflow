@@ -238,7 +238,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/AddClientDialogBase.ui" line="83"/>
       <source>Ignore auto connect clients</source>
-      <translation>Ignoruj automatycznie łączących się klientów</translation>
+      <translation>Ignoruj klientów za automatycznym łączeniem</translation>
     </message>
   </context>
   <context>
@@ -776,7 +776,7 @@ Aby automatycznie zaufać temu odciskowi palca dla przyszłych połączeń, klik
       <location filename="src/ScreenSettingsDialogBase.ui" line="258"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="305"/>
       <source>Shift</source>
-      <translation type="unfinished">Shift</translation>
+      <translation>Shift</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="122"/>
@@ -785,7 +785,7 @@ Aby automatycznie zaufać temu odciskowi palca dla przyszłych połączeń, klik
       <location filename="src/ScreenSettingsDialogBase.ui" line="263"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="310"/>
       <source>Ctrl</source>
-      <translation type="unfinished">Ctrl</translation>
+      <translation>Ctrl</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="127"/>
@@ -794,7 +794,7 @@ Aby automatycznie zaufać temu odciskowi palca dla przyszłych połączeń, klik
       <location filename="src/ScreenSettingsDialogBase.ui" line="268"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="315"/>
       <source>Alt</source>
-      <translation type="unfinished">Alt</translation>
+      <translation>Alt</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="132"/>
@@ -803,7 +803,7 @@ Aby automatycznie zaufać temu odciskowi palca dla przyszłych połączeń, klik
       <location filename="src/ScreenSettingsDialogBase.ui" line="273"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="320"/>
       <source>Meta</source>
-      <translation type="unfinished">Meta</translation>
+      <translation>Meta</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="137"/>
@@ -812,7 +812,7 @@ Aby automatycznie zaufać temu odciskowi palca dla przyszłych połączeń, klik
       <location filename="src/ScreenSettingsDialogBase.ui" line="278"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="325"/>
       <source>Super</source>
-      <translation type="unfinished">Super</translation>
+      <translation>Super</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="142"/>
@@ -826,22 +826,22 @@ Aby automatycznie zaufać temu odciskowi palca dla przyszłych połączeń, klik
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="150"/>
       <source>&amp;Ctrl:</source>
-      <translation type="unfinished">&amp;Ctrl:</translation>
+      <translation>&amp;Ctrl:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="197"/>
       <source>Al&amp;t:</source>
-      <translation type="unfinished">Al&amp;t:</translation>
+      <translation>Al&amp;t:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="244"/>
       <source>M&amp;eta:</source>
-      <translation type="unfinished">M&amp;eta:</translation>
+      <translation>M&amp;eta:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="291"/>
       <source>S&amp;uper:</source>
-      <translation type="unfinished">S&amp;uper:</translation>
+      <translation>S&amp;uper:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="358"/>
@@ -912,7 +912,7 @@ Aby automatycznie zaufać temu odciskowi palca dla przyszłych połączeń, klik
     <message>
       <location filename="src/ServerConfigDialog.cpp" line="83"/>
       <source>Configure server</source>
-      <translation type="unfinished">Configure server</translation>
+      <translation>Konfiguruj serwer</translation>
     </message>
   </context>
   <context>
@@ -1016,7 +1016,7 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
       <location filename="src/ServerConfigDialogBase.ui" line="383"/>
       <location filename="src/ServerConfigDialogBase.ui" line="552"/>
       <source>ms</source>
-      <translation type="unfinished">ms</translation>
+      <translation>ms</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="344"/>
@@ -1031,17 +1031,17 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="416"/>
       <source>Enable clipboard sharing</source>
-      <translation type="unfinished">Enable clipboard sharing</translation>
+      <translation>Włącz udostępnianie schowka</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="452"/>
       <source>MB</source>
-      <translation type="unfinished">MB</translation>
+      <translation>MB</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="461"/>
       <source>Enable drag and drop file transfers</source>
-      <translation type="unfinished">Enable drag and drop file transfers</translation>
+      <translation>Włącz transfer plików za pomocą przeciągnij i upuść</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="471"/>
@@ -1056,7 +1056,7 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="501"/>
       <source>Ignore auto config clients</source>
-      <translation type="unfinished">Ignore auto config clients</translation>
+      <translation>Ignoruj klientów z automatyczną konfiguracją</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="513"/>
@@ -1071,7 +1071,7 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="571"/>
       <source>Disable lock to screen</source>
-      <translation type="unfinished">Disable lock to screen</translation>
+      <translation>Wyłącz blokadę ekranu</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="581"/>
@@ -1147,27 +1147,27 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="120"/>
       <source>Specify when the Synergy service should run at an elevated privilege level</source>
-      <translation type="unfinished">Specify when the Synergy service should run at an elevated privilege level</translation>
+      <translation>Określ kiedy usługa Synergy powinna być uruchomiona na podwyższonym poziomie uprawnień</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="127"/>
       <source>As Needed</source>
-      <translation type="unfinished">As Needed</translation>
+      <translation>Zgodnie z potrzebami</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="132"/>
       <source>Always</source>
-      <translation type="unfinished">Always</translation>
+      <translation>Zawsze</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="137"/>
       <source>Never</source>
-      <translation type="unfinished">Never</translation>
+      <translation>Nigdy</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="145"/>
       <source>Elevate</source>
-      <translation type="unfinished">Elevate</translation>
+      <translation>Podnieś</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="152"/>
