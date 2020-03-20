@@ -508,17 +508,17 @@ Aby automatycznie zaufać temu odciskowi palca dla przyszłych połączeń, klik
     <message>
       <location filename="src/MainWindowBase.ui" line="58"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; days of your Synergy Pro trial remain. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; days of your Synergy Pro trial remain. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; dni pozostało do końca okresu testowego Synergy Pro. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Kup teraz!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="184"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manual Config mode active, consider using Auto Config instead (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Settings&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manual Config mode active, consider using Auto Config instead (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Settings&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tryb ręcznej konfiguracji aktywny, zamiast tego rozważ użycie automatycznej konfiguracji (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Ustawienia&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="216"/>
       <source>Ser&amp;ver (share this computer&apos;s mouse and keyboard):</source>
-      <translation type="unfinished">Ser&amp;ver (share this computer&apos;s mouse and keyboard):</translation>
+      <translation>Ser&amp;wer (udostępnij mysz i klawiaturę tego komputera):</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="233"/>
@@ -528,7 +528,7 @@ Aby automatycznie zaufać temu odciskowi palca dla przyszłych połączeń, klik
     <message>
       <location filename="src/MainWindowBase.ui" line="257"/>
       <source>SSL Fingerprint:</source>
-      <translation type="unfinished">SSL Fingerprint:</translation>
+      <translation>Odcisk SSL:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="273"/>
@@ -558,7 +558,7 @@ Aby automatycznie zaufać temu odciskowi palca dla przyszłych połączeń, klik
     <message>
       <location filename="src/MainWindowBase.ui" line="354"/>
       <source>&amp;Client (use another computer&apos;s mouse and keyboard):</source>
-      <translation type="unfinished">&amp;Client (use another computer&apos;s mouse and keyboard):</translation>
+      <translation>&amp;Klient (użyj myszy i klawiatury innego komputera):</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="369"/>
