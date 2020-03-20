@@ -563,27 +563,27 @@ Aby automatycznie zaufać temu odciskowi palca dla przyszłych połączeń, klik
     <message>
       <location filename="src/MainWindowBase.ui" line="369"/>
       <source>Client name:</source>
-      <translation type="unfinished">Client name:</translation>
+      <translation>Nazwa klienta:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="383"/>
       <source>&amp;Server:</source>
-      <translation type="unfinished">&amp;Server:</translation>
+      <translation>&amp;Serwer:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="405"/>
       <source>Hostname or IP address of the server computer.</source>
-      <translation type="unfinished">Hostname or IP address of the server computer.</translation>
+      <translation>Nazwa hosta lub adres IP komputera serwera.</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="428"/>
       <source>Server:</source>
-      <translation type="unfinished">Server:</translation>
+      <translation>Serwer:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="438"/>
       <source>Log</source>
-      <translation type="unfinished">Log</translation>
+      <translation>Raport</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="492"/>
@@ -680,7 +680,7 @@ Aby automatycznie zaufać temu odciskowi palca dla przyszłych połączeń, klik
       <location filename="src/MainWindowBase.ui" line="628"/>
       <location filename="src/MainWindowBase.ui" line="631"/>
       <source>Activate</source>
-      <translation type="unfinished">Activate</translation>
+      <translation>Aktywuj</translation>
     </message>
   </context>
   <context>
@@ -706,7 +706,7 @@ Aby automatycznie zaufać temu odciskowi palca dla przyszłych połączeń, klik
     <message>
       <location filename="src/main.cpp" line="139"/>
       <source>System tray is unavailable, don&apos;t close your window.</source>
-      <translation type="unfinished">System tray is unavailable, don&apos;t close your window.</translation>
+      <translation>Pasek systemu jest niedostępny, nie zamykaj twojego okna.</translation>
     </message>
   </context>
   <context>
