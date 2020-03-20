@@ -1142,7 +1142,7 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="107"/>
       <source>&amp;Language:</source>
-      <translation>Język</translation>
+      <translation>&amp;Język:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="120"/>
@@ -1297,16 +1297,16 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;My main mouse and keyboard are connected to this computer. This will allow you to move your mouse over to another computer&apos;s screen. There can only be one server in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+      <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;My main mouse and keyboard are connected to this computer. This will allow you to move your mouse over to another computer&apos;s screen. There can only be one server in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Moja główna mysz i klawiatura są połączone do tego komputera. Pozwoli to na przesunięcie myszki na ekran innego komputera. Może być tylko jeden serwer w twojej konfiguracji.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="195"/>
       <source>&amp;Client (use another computer&apos;s mouse and keyboard)</source>
-      <translation type="unfinished">&amp;Client (use another computer&apos;s mouse and keyboard)</translation>
+      <translation>&amp;Klient (użyj myszy i klawiatury innego komputera)</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="208"/>
@@ -1315,11 +1315,11 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;You have already set up a server. This computer will be controlled using the server&apos;s mouse and keyboard. There can be many clients in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+      <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;You have already set up a server. This computer will be controlled using the server&apos;s mouse and keyboard. There can be many clients in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Już ustawiłeś serwer. Ten komputer będzie sterowany przez mysz i klawiaturę serwera. Może być wielu klientów w twojej konfiguracji.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
   </context>
   <context>
@@ -1327,22 +1327,22 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/SslCertificate.cpp" line="46"/>
       <source>Failed to get profile directory.</source>
-      <translation type="unfinished">Failed to get profile directory.</translation>
+      <translation>Nie udało się pobrać katalogu profilu.</translation>
     </message>
     <message>
       <location filename="src/SslCertificate.cpp" line="148"/>
       <source>SSL certificate generated.</source>
-      <translation type="unfinished">SSL certificate generated.</translation>
+      <translation>Wygenerowano certyfikat SSL.</translation>
     </message>
     <message>
       <location filename="src/SslCertificate.cpp" line="178"/>
       <source>SSL fingerprint generated.</source>
-      <translation type="unfinished">SSL fingerprint generated.</translation>
+      <translation>Wygenerowano odcisk klucza SSL.</translation>
     </message>
     <message>
       <location filename="src/SslCertificate.cpp" line="181"/>
       <source>Failed to find SSL fingerprint.</source>
-      <translation type="unfinished">Failed to find SSL fingerprint.</translation>
+      <translation>Nie udało się znaleźć odcisku SSL.</translation>
     </message>
   </context>
   <context>
@@ -1358,40 +1358,40 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/ZeroconfService.cpp" line="82"/>
       <source>zeroconf server detected: %1</source>
-      <translation type="unfinished">zeroconf server detected: %1</translation>
+      <translation>Wykryto serwer zeroconf: %1</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="91"/>
       <source>zeroconf client detected: %1</source>
-      <translation type="unfinished">zeroconf client detected: %1</translation>
+      <translation>Wykryto klienta zeroconf: %1</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="100"/>
       <location filename="src/ZeroconfService.cpp" line="132"/>
       <location filename="src/ZeroconfService.cpp" line="143"/>
       <source>Synergy Auto Config</source>
-      <translation type="unfinished">Synergy Auto Config</translation>
+      <translation>Automatyczna konfiguracja Synergy</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="101"/>
       <source>Error code: %1.</source>
-      <translation type="unfinished">Error code: %1.</translation>
+      <translation>Kod błędu: %1.</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="133"/>
       <source>Unable to start zeroconf: %1.</source>
-      <translation type="unfinished">Unable to start zeroconf: %1.</translation>
+      <translation>Nie można uruchomić zeroconf: %1.</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="144"/>
       <source>Failed to get local IP address. Please manually type in server address on your clients</source>
-      <translation type="unfinished">Failed to get local IP address. Please manually type in server address on your clients</translation>
+      <translation>Nie udało się uzyskać lokalnego adresu IP. Wpisz ręcznie adres serwera na swoich klientach</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="150"/>
       <location filename="src/ZeroconfService.cpp" line="157"/>
       <source>%1</source>
-      <translation type="unfinished">%1</translation>
+      <translation>%1</translation>
     </message>
   </context>
 </TS>
