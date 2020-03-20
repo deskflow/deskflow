@@ -1172,37 +1172,37 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="152"/>
       <source>&amp;Hide on startup</source>
-      <translation type="unfinished">&amp;Hide on startup</translation>
+      <translation>&amp;Ukryj przy starcie</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="159"/>
       <source>Minimize to System &amp;Tray</source>
-      <translation type="unfinished">Minimize to System &amp;Tray</translation>
+      <translation>Minimalizuj do zasobnika systemowego</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="194"/>
       <source>&amp;Network</source>
-      <translation type="unfinished">&amp;Network</translation>
+      <translation>&amp;Sieć</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="226"/>
       <source>Enable &amp;TLS Encryption</source>
-      <translation type="unfinished">Enable &amp;TLS Encryption</translation>
+      <translation>Włącz &amp;szyfrowanie TLS</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="236"/>
       <source>Enable Auto Config</source>
-      <translation type="unfinished">Enable Auto Config</translation>
+      <translation>Włącz automatyczną konfigurację</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="243"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Install Bonjour&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Install Bonjour&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Zainstaluj Bonjour&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="253"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account?source=gui&amp;amp;intent=upgrade&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Upgrade to Pro&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account?source=gui&amp;intent=upgrade&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Upgrade to Pro&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account?source=gui&amp;intent=upgrade&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Ulepsz do Pro&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="293"/>
@@ -1217,22 +1217,22 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="322"/>
       <source>Info</source>
-      <translation type="unfinished">Info</translation>
+      <translation>Informacje</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="327"/>
       <source>Debug</source>
-      <translation type="unfinished">Debug</translation>
+      <translation>Debuguj</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="332"/>
       <source>Debug1</source>
-      <translation type="unfinished">Debug1</translation>
+      <translation>Debuguj1</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="337"/>
       <source>Debug2</source>
-      <translation type="unfinished">Debug2</translation>
+      <translation>Debuguj2</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="345"/>
@@ -1288,7 +1288,7 @@ Kliknij dwukrotnie w ekran, aby edytować jego ustawienia.</translation>
     <message>
       <location filename="src/SetupWizardBase.ui" line="146"/>
       <source>&amp;Server (share this computer&apos;s mouse and keyboard)</source>
-      <translation type="unfinished">&amp;Server (share this computer&apos;s mouse and keyboard)</translation>
+      <translation>&amp;Serwer (udostępnij mysz i klawiaturę tego komputera)</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="159"/>
