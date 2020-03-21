@@ -1198,17 +1198,17 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="243"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Install Bonjour&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Install Bonjour&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Bonjour をインストール&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="253"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account?source=gui&amp;amp;intent=upgrade&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Upgrade to Pro&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account?source=gui&amp;intent=upgrade&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Upgrade to Pro&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account?source=gui&amp;intent=upgrade&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Pro 版にアップグレード&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="293"/>
       <source>Logging</source>
-      <translation>ログ</translation>
+      <translation>ログ記録</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="311"/>
@@ -1251,7 +1251,7 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="src/SetupWizard.cpp" line="65"/>
       <source>Setup Synergy</source>
-      <translation>Synergyのセットアップ</translation>
+      <translation>Synergy のセットアップ</translation>
     </message>
     <message>
       <location filename="src/SetupWizard.cpp" line="75"/>
@@ -1264,7 +1264,7 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="src/SetupWizardBase.ui" line="26"/>
       <source>Setup Synergy</source>
-      <translation>Synergyのセットアップ</translation>
+      <translation>Synergy のセットアップ</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="30"/>
@@ -1274,22 +1274,22 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="src/SetupWizardBase.ui" line="39"/>
       <source>Thanks for installing Synergy!</source>
-      <translation>Synergyをインストールしていただき、ありがとうございます！</translation>
+      <translation>Synergy をインストールしていただき、ありがとうございます！</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="114"/>
       <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-      <translation>Synergyは複数のコンピュータ間のマウスとキーボードを簡単に共有することができるフリーのオープンソースソフトウェアです。あるコンピュータの画面の端にマウスを移動すると別のコンピュータの画面に移ります。クリップボードを共有することもできます。必要なのは ネットワーク接続だけです。 SynergyはクロスプラットフォームでWindows, Mac OS X, Linux上で動作します。</translation>
+      <translation>Synergy によって、複数のデスクトップパソコン間でマウスとキーボードを簡単に共有することができます。そしてこれは無料でオープンソースのソフトウェアです。あるコンピュータの画面の端にマウスを移動するだけで、別のコンピュータの画面に移ることができます。クリップボードを共有することもできます。必要なのはネットワーク接続だけです。 Synergy はクロスプラットフォームで Windows, Mac OS X, Linux で動作します。</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="131"/>
       <source>Server or Client?</source>
-      <translation>サーバーまたはクライアント</translation>
+      <translation>サーバーにしますか？またはクライアントですか？</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="146"/>
       <source>&amp;Server (share this computer&apos;s mouse and keyboard)</source>
-      <translation type="unfinished">&amp;Server (share this computer&apos;s mouse and keyboard)</translation>
+      <translation>サーバー (このコンピューターのキーボードとマウスを共有する)(&amp;V)</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="159"/>
@@ -1298,16 +1298,16 @@ Double click on a screen to edit its settings.</source>
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;My main mouse and keyboard are connected to this computer. This will allow you to move your mouse over to another computer&apos;s screen. There can only be one server in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+      <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;My main mouse and keyboard are connected to this computer. This will allow you to move your mouse over to another computer&apos;s screen. There can only be one server in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;使いたいマウスとキーボードがこのパソコンに接続されている場合、こちらを選択することで、別のパソコンのモニタへとマウスを移動することができます。サーバーは1つしか設置できません。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="195"/>
       <source>&amp;Client (use another computer&apos;s mouse and keyboard)</source>
-      <translation type="unfinished">&amp;Client (use another computer&apos;s mouse and keyboard)</translation>
+      <translation>クライアント (ほかのコンピューターのマウスとキーボードを使う)(&amp;C)</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="208"/>
@@ -1316,11 +1316,11 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;You have already set up a server. This computer will be controlled using the server&apos;s mouse and keyboard. There can be many clients in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+      <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;You have already set up a server. This computer will be controlled using the server&apos;s mouse and keyboard. There can be many clients in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;既にサーバーを設置してある場合、このパソコンをサーバーに接続されたマウスとキーボードで制御できます。複数の数のクライアントを配置できます。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
   </context>
   <context>
@@ -1328,22 +1328,22 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/SslCertificate.cpp" line="46"/>
       <source>Failed to get profile directory.</source>
-      <translation type="unfinished">Failed to get profile directory.</translation>
+      <translation>プロファイルのフォルダ取得に失敗しました。</translation>
     </message>
     <message>
       <location filename="src/SslCertificate.cpp" line="148"/>
       <source>SSL certificate generated.</source>
-      <translation type="unfinished">SSL certificate generated.</translation>
+      <translation>SSL 証明書を生成しました。</translation>
     </message>
     <message>
       <location filename="src/SslCertificate.cpp" line="178"/>
       <source>SSL fingerprint generated.</source>
-      <translation type="unfinished">SSL fingerprint generated.</translation>
+      <translation>SSL フィンガープリントを生成しました。</translation>
     </message>
     <message>
       <location filename="src/SslCertificate.cpp" line="181"/>
       <source>Failed to find SSL fingerprint.</source>
-      <translation type="unfinished">Failed to find SSL fingerprint.</translation>
+      <translation>SSL フィンガープリントが見つかりませんでした。</translation>
     </message>
   </context>
   <context>
@@ -1359,34 +1359,34 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/ZeroconfService.cpp" line="82"/>
       <source>zeroconf server detected: %1</source>
-      <translation type="unfinished">zeroconf server detected: %1</translation>
+      <translation>ゼロ構成のサーバーを検出: %1</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="91"/>
       <source>zeroconf client detected: %1</source>
-      <translation type="unfinished">zeroconf client detected: %1</translation>
+      <translation>ゼロ構成のクライアントを検出: %1</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="100"/>
       <location filename="src/ZeroconfService.cpp" line="132"/>
       <location filename="src/ZeroconfService.cpp" line="143"/>
       <source>Synergy Auto Config</source>
-      <translation type="unfinished">Synergy Auto Config</translation>
+      <translation>Synergy 自動構成</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="101"/>
       <source>Error code: %1.</source>
-      <translation type="unfinished">Error code: %1.</translation>
+      <translation>エラーコード: %1</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="133"/>
       <source>Unable to start zeroconf: %1.</source>
-      <translation type="unfinished">Unable to start zeroconf: %1.</translation>
+      <translation>ゼロ構成は開始できません: %1</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="144"/>
       <source>Failed to get local IP address. Please manually type in server address on your clients</source>
-      <translation type="unfinished">Failed to get local IP address. Please manually type in server address on your clients</translation>
+      <translation>ローカル IP アドレスの取得に失敗しました。クライアント上でサーバーのアドレスを手動で入力してください</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="150"/>
