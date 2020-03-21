@@ -19,14 +19,14 @@ Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</source>
-      <translation type="unfinished">&lt;p&gt;
-Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+      <translation>&lt;p&gt;
+キーボードとマウスの共有ソフトウェアです。クロスプラットフォームでオープンソースです。&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2019 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (symless.com).
+Synergy は GNU General Public (GPLv2). のライセンスで公開されています。&lt;br /&gt;&lt;br /&gt;
+Synergy のベースは CosmoSynergy (Richard Lee, Adam Feder 開発) です。&lt;br /&gt;
+Synergy の GUI は QSynergy (Volker Lanz 開発) がベースです。&lt;br /&gt;&lt;br /&gt;
+私たちのウェブサイトには情報とサポートがあります(symless.com)。
 &lt;/p&gt;</translation>
     </message>
     <message>
