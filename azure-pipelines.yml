@@ -64,8 +64,6 @@ jobs:
 - job: MacOS
   strategy:
     matrix:
-      sierra:
-        image: macOS-10.13
       mojave:
         image: macOS-10.14
 
