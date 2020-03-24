@@ -50,7 +50,7 @@ jobs:
   - script: |
       sudo apt-get -y update
       sudo apt-get -y upgrade
-      sudo apt install wget
+      sudo apt-get -y install wget
       wget https://github.com/Kitware/CMake/releases/download/v3.14.7/cmake-3.14.7-Linux-x86_64.sh
       sudo chmod +x ./cmake-3.14.7-Linux-x86_64.sh
       sudo ./cmake-3.14.7-Linux-x86_64.sh --skip-license
