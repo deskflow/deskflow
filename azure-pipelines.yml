@@ -48,10 +48,15 @@ jobs:
       sudo bash -c "echo 'Europe/London' > /etc/timezone"
     displayName: 'Sort out timezones for updates'
   - script: |
+      wget https://github.com/Kitware/CMake/releases/download/v3.14.7/cmake-3.14.7-Linux-x86_64.sh
+      chmod +x ./cmake-3.14.7-Linux-x86_64.sh
+      ./cmake-3.14.7-Linux-x86_64.sh --skip-license
+    displayName: 'Installing CMake 3.14'
+  - script: |
       sudo DEBIAN_FRONTEND=noninteractive 
       sudo apt-get -y update
       sudo apt-get -y upgrade
-      sudo apt-get -y install git cmake qtbase5-dev build-essential libx11-dev libxtst-dev libgl1-mesa-dev libssl-dev libavahi-compat-libdnssd-dev debhelper devscripts
+      sudo apt-get -y install git qtbase5-dev build-essential libx11-dev libxtst-dev libgl1-mesa-dev libssl-dev libavahi-compat-libdnssd-dev debhelper devscripts
       sudo apt-get -y install qttools5-dev qttools5-dev-tools --no-install-recommends #These will try to install gnome if we allow dependancies
     displayName: 'Install Pakages'
   - script: |
