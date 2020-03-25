@@ -26,19 +26,15 @@ jobs:
       make
     displayName: 'Build'
 
-- job: LinuxDeb
+- job: LinuxDeb1
   pool: 
     vmImage: 'ubuntu-16.04'
   strategy:
     matrix:
-      ubuntu16:
-        image: symless/ubuntu-sudo:16.04
       ubuntu18:
         image: symless/ubuntu-sudo:18.04
       ubuntu19:
         image: symless/ubuntu-sudo:19.04
-      debian9:
-        image: symless/debian-sudo:stretch
 
   container: $[ variables['image'] ]
 
@@ -52,17 +48,9 @@ jobs:
       sudo DEBIAN_FRONTEND=noninteractive
       sudo apt-get -y update
       sudo apt-get -y upgrade
-      sudo apt-get -y install git qtbase5-dev build-essential libx11-dev libxtst-dev libgl1-mesa-dev libssl-dev libavahi-compat-libdnssd-dev debhelper devscripts
+      sudo apt-get -y install git cmake qtbase5-dev build-essential libx11-dev libxtst-dev libgl1-mesa-dev libssl-dev libavahi-compat-libdnssd-dev debhelper devscripts
       sudo apt-get -y install qttools5-dev qttools5-dev-tools --no-install-recommends #These will try to install gnome if we allow dependancies
     displayName: 'Install Pakages'
-
-  - script: |
-      sudo DEBIAN_FRONTEND=noninteractive
-      sudo apt-get -y install wget
-      wget https://github.com/Kitware/CMake/releases/download/v3.14.7/cmake-3.14.7-Linux-x86_64.sh
-      sudo chmod +x ./cmake-3.14.7-Linux-x86_64.sh
-      sudo ./cmake-3.14.7-Linux-x86_64.sh --skip-license --prefix=/
-    displayName: 'Installing CMake 3.14'
 
   - script: |
       mkdir build
@@ -70,6 +58,47 @@ jobs:
       cmake ..
       make
     displayName: 'Build'
+
+- job: LinuxDeb2
+  pool:
+    vmImage: 'ubuntu-16.04'
+  strategy:
+    matrix:
+      ubuntu16:
+        image: symless/ubuntu-sudo:16.04
+      debian9:
+        image: symless/debian-sudo:stretch
+
+  container: $[ variables['image'] ]
+
+  steps:
+    - script: |
+        sudo ln -snf /usr/share/zoneinfo/Europe/London /etc/localtime
+        sudo bash -c "echo 'Europe/London' > /etc/timezone"
+      displayName: 'Sort out timezones for updates'
+
+    - script: |
+        sudo DEBIAN_FRONTEND=noninteractive
+        sudo apt-get -y update
+        sudo apt-get -y upgrade
+        sudo apt-get -y install git qtbase5-dev build-essential libx11-dev libxtst-dev libgl1-mesa-dev libssl-dev libavahi-compat-libdnssd-dev debhelper devscripts
+        sudo apt-get -y install qttools5-dev qttools5-dev-tools --no-install-recommends #These will try to install gnome if we allow dependancies
+      displayName: 'Install Pakages'
+
+    - script: |
+        sudo DEBIAN_FRONTEND=noninteractive
+        sudo apt-get -y install wget
+        wget https://github.com/Kitware/CMake/releases/download/v3.14.7/cmake-3.14.7-Linux-x86_64.sh
+        sudo chmod +x ./cmake-3.14.7-Linux-x86_64.sh
+        sudo ./cmake-3.14.7-Linux-x86_64.sh --skip-license --prefix=/
+      displayName: 'Installing CMake 3.14'
+
+    - script: |
+        mkdir build
+        cd build
+        cmake ..
+        make
+      displayName: 'Build'
 
 - job: MacOS
   strategy:
