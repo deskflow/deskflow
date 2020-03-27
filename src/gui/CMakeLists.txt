@@ -12,6 +12,10 @@ file (GLOB LEGACY_ACTIVATION_FILES src/*Activation* src/*License*)
 file (GLOB LEGACY_ZEROCONF_FILES src/Zeroconf*)
 file (GLOB LEGACY_LANGUAGE_FILES res/lang/*.ts)
 
+configure_file(res/Languages.qrc res/Languages.qrc)
+
+set_source_files_properties(${LEGACY_LANGUAGE_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/res/lang")
+
 qt5_add_translation(QM_FILES ${LEGACY_LANGUAGE_FILES})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -34,6 +38,7 @@ add_executable (synergy WIN32
     ${LEGACY_GUI_UI_FILES}
     ${LEGACY_GUI_RC_FILES}
     res/Synergy.qrc
+    ${CMAKE_CURRENT_BINARY_DIR}/res/Languages.qrc
     ${QM_FILES}
 )
 

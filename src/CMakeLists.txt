@@ -22,3 +22,5 @@ add_subdirectory(cmd)
 if (SYNERGY_BUILD_LEGACY_GUI)
 add_subdirectory(gui)
 endif (SYNERGY_BUILD_LEGACY_GUI)
+
+add_subdirectory(test)

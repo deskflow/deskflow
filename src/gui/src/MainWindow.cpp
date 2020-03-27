@@ -17,6 +17,7 @@
  */
 
 #define DOWNLOAD_URL "http://symless.com/?source=gui"
+#define HELP_URL     "http://symless.com/help?source=gui"
 
 #include <iostream>
 
@@ -312,6 +313,8 @@ void MainWindow::createMenuBar()
     m_pMenuWindow->addAction(m_pActionMinimize);
     m_pMenuWindow->addAction(m_pActionRestore);
     m_pMenuHelp->addAction(m_pActionAbout);
+    m_pMenuHelp->addAction(m_pActionHelp);
+
 
     setMenuBar(m_pMenuBar);
 }
@@ -1268,6 +1271,11 @@ void MainWindow::on_m_pActionAbout_triggered()
 {
     AboutDialog dlg(this, appPath(appConfig().synergycName()));
     dlg.exec();
+}
+
+void MainWindow::on_m_pActionHelp_triggered()
+{
+    QDesktopServices::openUrl(QUrl(HELP_URL));
 }
 
 void MainWindow::updateZeroconfService()
