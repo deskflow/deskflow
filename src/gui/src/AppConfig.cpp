@@ -97,7 +97,8 @@ AppConfig::AppConfig(QSettings* userSettings, QSettings* systemSettings) :
     m_AutoHide(false),
     m_LastExpiringWarningTime(0),
     m_AutoConfigServer(),
-    m_MinimizeToTray(false)
+    m_MinimizeToTray(false),
+    m_SettingModified(false)
 {
 
     //If user setting don't exist but system ones do, load the system settings
@@ -273,6 +274,7 @@ void AppConfig::saveSettings()
     setSetting(ServerHostname, m_ServerHostname);
 
     settings().sync();
+    m_SettingModified = false;
 }
 
 #ifndef SYNERGY_ENTERPRISE
@@ -293,53 +295,71 @@ QString AppConfig::lastVersion() const
     return m_lastVersion;
 }
 
-void AppConfig::setLastVersion(QString version) {
-    m_lastVersion = version;
+void AppConfig::setLastVersion(const QString& version) {
+    setSettingModified(m_lastVersion, version);
 }
 
 QSettings &AppConfig::settings() { return *m_pSettings; }
 
-void AppConfig::setScreenName(const QString &s) { m_ScreenName = s; }
+void AppConfig::setScreenName(const QString &s) {
+    setSettingModified(m_ScreenName, s);
+}
 
-void AppConfig::setPort(int i) { m_Port = i; }
+void AppConfig::setPort(int i) {
+    setSettingModified(m_Port, i);
+}
 
-void AppConfig::setNetworkInterface(const QString &s) { m_Interface = s; }
+void AppConfig::setNetworkInterface(const QString &s) {
+    setSettingModified(m_Interface, s);
+}
 
-void AppConfig::setLogLevel(int i) { m_LogLevel = i; }
+void AppConfig::setLogLevel(int i) {
+    setSettingModified(m_LogLevel, i);
+}
 
-void AppConfig::setLogToFile(bool b) { m_LogToFile = b; }
+void AppConfig::setLogToFile(bool b) {
+    setSettingModified(m_LogToFile, b);
+}
 
-void AppConfig::setLogFilename(const QString &s) { m_LogFilename = s; }
+void AppConfig::setLogFilename(const QString &s) {
+    setSettingModified(m_LogFilename, s);
+}
 
-void AppConfig::setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
+void AppConfig::setWizardHasRun() {
+    setSettingModified(m_WizardLastRun, kWizardVersion);
+}
 
-void AppConfig::setLanguage(const QString language) { m_Language = language; }
+void AppConfig::setLanguage(const QString& language) {
+    setSettingModified(m_Language, language);
+}
 
-void AppConfig::setStartedBefore(bool b) { m_StartedBefore = b; }
+void AppConfig::setStartedBefore(bool b) {
+    setSettingModified(m_StartedBefore, b);
+}
 
-void AppConfig::setElevateMode(ElevateMode em) { m_ElevateMode = em; }
+void AppConfig::setElevateMode(ElevateMode em) {
+    setSettingModified(m_ElevateMode, em);
+}
 
 void AppConfig::setAutoConfig(bool autoConfig)
 {
-    m_AutoConfig = autoConfig;
+    setSettingModified(m_AutoConfig, autoConfig);
 }
 
-void AppConfig::setAutoConfigServer(QString autoConfigServer)
+void AppConfig::setAutoConfigServer(const QString& autoConfigServer)
 {
-    m_AutoConfigServer = autoConfigServer;
+    setSettingModified(m_AutoConfigServer, autoConfigServer);
 }
 
 #ifndef SYNERGY_ENTERPRISE
 void AppConfig::setEdition(Edition e) {
-    m_Edition = e;
+    setSettingModified(m_Edition, e);
 }
 
 Edition AppConfig::edition() const { return m_Edition; }
 
-QString AppConfig::setSerialKey(QString serial) {
-    using std::swap;
-    swap (serial, m_Serialkey);
-    return serial;
+void AppConfig::setSerialKey(const QString& serial) {
+    setSettingModified(m_Serialkey, serial);
 }
 
 void AppConfig::clearSerialKey()
@@ -351,7 +371,9 @@ QString AppConfig::serialKey() { return m_Serialkey; }
 
 int AppConfig::lastExpiringWarningTime() const { return m_LastExpiringWarningTime; }
 
-void AppConfig::setLastExpiringWarningTime(int t) { m_LastExpiringWarningTime = t; }
+void AppConfig::setLastExpiringWarningTime(int newValue) {
+    setSettingModified(m_LastExpiringWarningTime, newValue);
+}
 #endif
 
 QString AppConfig::synergysName() const { return m_SynergysName; }
@@ -363,9 +385,9 @@ ElevateMode AppConfig::elevateMode()
     return m_ElevateMode;
 }
 
-void AppConfig::setCryptoEnabled(bool e) {
-    m_CryptoEnabled = e;
-    emit sslToggled(e);
+void AppConfig::setCryptoEnabled(bool newValue) {
+    setSettingModified(m_CryptoEnabled, newValue);
+    emit sslToggled(m_CryptoEnabled);
 }
 
 bool AppConfig::getCryptoEnabled() const {
@@ -376,11 +398,15 @@ bool AppConfig::getCryptoEnabled() const {
     m_CryptoEnabled;
 }
 
-void AppConfig::setAutoHide(bool b) { m_AutoHide = b; }
+void AppConfig::setAutoHide(bool b) {
+    setSettingModified(m_MinimizeToTray, b);
+}
 
 bool AppConfig::getAutoHide() { return m_AutoHide; }
 
-void AppConfig::setMinimizeToTray(bool b) { m_MinimizeToTray = b; }
+void AppConfig::setMinimizeToTray(bool newValue) {
+    setSettingModified(m_MinimizeToTray, newValue);
+}
 
 bool AppConfig::getMinimizeToTray() { return m_MinimizeToTray; }
 
@@ -492,25 +518,35 @@ QString AppConfig::getServerHostname() const {
 }
 
 void AppConfig::setServerGroupChecked(bool newValue) {
-    m_ServerGroupChecked = newValue;
+    setSettingModified(m_ServerGroupChecked, newValue);
 }
 
 void AppConfig::setUseExternalConfig(bool newValue) {
-    m_UseExternalConfig = newValue;
+    setSettingModified(m_UseExternalConfig, newValue);
 }
 
 void AppConfig::setConfigFile(const QString& newValue) {
-    m_ConfigFile = newValue;
+    setSettingModified(m_ConfigFile, newValue);
 }
 
 void AppConfig::setUseInternalConfig(bool newValue) {
-    m_UseInternalConfig = newValue;
+    setSettingModified(m_UseInternalConfig, newValue);
 }
 
 void AppConfig::setClientGroupChecked(bool newValue) {
-    m_ClientGroupChecked = newValue;
+    setSettingModified(m_ClientGroupChecked, newValue);
 }
 
 void AppConfig::setServerHostname(const QString& newValue) {
-    m_ServerHostname = newValue;
+    setSettingModified(m_ServerHostname, newValue);
 }
+
+template<typename T>
+void AppConfig::setSettingModified(T &variable, const T& newValue) {
+    if (variable != newValue)
+    {
+        variable = newValue;
+        m_SettingModified = true;
+    }
+}
+

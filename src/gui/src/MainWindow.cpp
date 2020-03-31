@@ -326,7 +326,7 @@ void MainWindow::loadSettings()
     m_pRadioExternalConfig->setChecked(appConfig().getUseExternalConfig());
     m_pRadioInternalConfig->setChecked(appConfig().getUseInternalConfig());
 
-    m_pGroupServer->setChecked(appConfig().getServerGroupChecked()));
+    m_pGroupServer->setChecked(appConfig().getServerGroupChecked());
     m_pLineEditConfigFile->setText(appConfig().getConfigFile());
     m_pGroupClient->setChecked(appConfig().getClientGroupChecked());
     m_pLineEditHostname->setText(appConfig().getServerHostname());
@@ -362,7 +362,7 @@ void MainWindow::saveSettings()
                 //Switch to local and overrun into the save case
                 appConfig().switchToGlobal(false);
             case AppConfig::Save:
-                settings().sync();
+                appConfig().saveSettings();
                 break;
             default:
                 break;

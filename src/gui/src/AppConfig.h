@@ -92,11 +92,11 @@ class AppConfig: public QObject
         bool autoConfig() const;
         void setAutoConfig(bool autoConfig);
         QString autoConfigServer() const;
-        void setAutoConfigServer(QString autoConfigServer);
+        void setAutoConfigServer(const QString& autoConfigServer);
 #ifndef SYNERGY_ENTERPRISE
         void setEdition(Edition);
         Edition edition() const;
-        QString setSerialKey(QString serial);
+        void setSerialKey(const QString& serial);
         void clearSerialKey();
         QString serialKey();
         int lastExpiringWarningTime() const;
@@ -151,7 +151,11 @@ class AppConfig: public QObject
         bool getMinimizeToTray();
 
         void saveSettings();
-        void setLastVersion(QString version);
+        void setLastVersion(const QString& version);
+
+        /// @brief settingsExist Checks ths settings to see if they exist in the QSettings location
+        /// @return bool True if there are unsaved changes
+        bool unsavedChanges();
 
         /// @brief settingsExist Checks ths settings to see if they exist in the QSettings location
         /// @param [in] settings The QSettings object to check
@@ -209,7 +213,7 @@ protected:
         void setLogToFile(bool b);
         void setLogFilename(const QString& s);
         void setWizardHasRun();
-        void setLanguage(const QString language);
+        void setLanguage(const QString& language);
         void setStartedBefore(bool b);
         void setElevateMode(ElevateMode em);
 
@@ -255,6 +259,7 @@ protected:
         bool m_LoadFromSystemScope;     /// @brief should the setting be loaded from SystemScope
                                         ///         If the user has settings but this is true then
                                         ///         system settings will be loaded instead of the users
+        bool m_SettingModified;         /// @brief Have the setting been changed since the last save
 
         static const char m_SynergysName[];
         static const char m_SynergycName[];
@@ -281,6 +286,13 @@ protected:
         ///         it cant be modified by more that one object at a time if the setting is being switched
         ///         from system to user.
         std::mutex m_settings_lock;
+
+        /// @brief Sets the setting in the config checking if it has changed and flagging that settings
+        ///         needs to be saved if the setting was different
+        /// @param [in] variable the setting that will be changed
+        /// @param [in] newValue The new value of the setting
+        template <typename T>
+        void setSettingModified(T& variable,const T& newValue);
 
     signals:
         void sslToggled(bool enabled);
