@@ -130,6 +130,21 @@ class AppConfig: public QObject
         /// @brief Returns true if the setting should be set to global scope. Only useful if current scope is UserScope
         bool getLoadFromSystemScope() const;
 
+
+        bool    getServerGroupChecked() const;
+        bool    getUseExternalConfig() const;
+        QString getConfigFile() const;
+        bool    getUseInternalConfig() const;
+        bool    getClientGroupChecked() const;
+        QString getServerHostname() const;
+
+        void setServerGroupChecked(bool);
+        void setUseExternalConfig(bool) ;
+        void setConfigFile(const QString&);
+        void setUseInternalConfig(bool) ;
+        void setClientGroupChecked(bool) ;
+        void setServerHostname(const QString&);
+
         QString lastVersion() const;
 
         void setMinimizeToTray(bool b);
@@ -179,6 +194,12 @@ protected:
         MinimizeToTray,
         ActivateEmail,
         LoadSystemSettings,
+        GroupServerCheck,
+        UseExternalConfig,
+        ConfigFile,
+        UseInternalConfig,
+        GroupClientCheck,
+        ServerHostname,
     };
 
         void setScreenName(const QString& s);
@@ -223,6 +244,14 @@ protected:
         int m_LastExpiringWarningTime;
         bool m_ActivationHasRun;
         bool m_MinimizeToTray;
+
+        bool m_ServerGroupChecked;
+        bool m_UseExternalConfig;
+        QString m_ConfigFile;
+        bool m_UseInternalConfig;
+        bool m_ClientGroupChecked;
+        QString m_ServerHostname;
+
         bool m_LoadFromSystemScope;     /// @brief should the setting be loaded from SystemScope
                                         ///         If the user has settings but this is true then
                                         ///         system settings will be loaded instead of the users
@@ -233,6 +262,9 @@ protected:
 
         /// @brief Contains the string values of the settings names that will be saved
         static const char* m_SynergySettingsName[];
+
+        /// @brief Contains the name of the default configuration filename
+        static const char synergyConfigName[];
 
         /// @brief Sets the value of a setting
         /// @param [in] name The Setting to be saved

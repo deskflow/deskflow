@@ -323,13 +323,13 @@ void MainWindow::loadSettings()
 {
     // the next two must come BEFORE loading groupServerChecked and groupClientChecked or
     // disabling and/or enabling the right widgets won't automatically work
-    m_pRadioExternalConfig->setChecked(settings().value("useExternalConfig", false).toBool());
-    m_pRadioInternalConfig->setChecked(settings().value("useInternalConfig", true).toBool());
+    m_pRadioExternalConfig->setChecked(appConfig().getUseExternalConfig());
+    m_pRadioInternalConfig->setChecked(appConfig().getUseInternalConfig());
 
-    m_pGroupServer->setChecked(settings().value("groupServerChecked", false).toBool());
-    m_pLineEditConfigFile->setText(settings().value("configFile", QDir::homePath() + "/" + synergyConfigName).toString());
-    m_pGroupClient->setChecked(settings().value("groupClientChecked", true).toBool());
-    m_pLineEditHostname->setText(settings().value("serverHostname").toString());
+    m_pGroupServer->setChecked(appConfig().getServerGroupChecked()));
+    m_pLineEditConfigFile->setText(appConfig().getConfigFile());
+    m_pGroupClient->setChecked(appConfig().getClientGroupChecked());
+    m_pLineEditHostname->setText(appConfig().getServerHostname());
 }
 
 void MainWindow::initConnections()
@@ -345,25 +345,28 @@ void MainWindow::initConnections()
 void MainWindow::saveSettings()
 {
     // program settings
-    settings().setValue("groupServerChecked", m_pGroupServer->isChecked());
-    settings().setValue("useExternalConfig", m_pRadioExternalConfig->isChecked());
-    settings().setValue("configFile", m_pLineEditConfigFile->text());
-    settings().setValue("useInternalConfig", m_pRadioInternalConfig->isChecked());
-    settings().setValue("groupClientChecked", m_pGroupClient->isChecked());
-    settings().setValue("serverHostname", m_pLineEditHostname->text());
+    appConfig().setServerGroupChecked(m_pGroupServer->isChecked());
+    appConfig().setClientGroupChecked(m_pGroupClient->isChecked());
+    appConfig().setUseExternalConfig(m_pRadioExternalConfig->isChecked());
+    appConfig().setUseInternalConfig(m_pRadioInternalConfig->isChecked());
+    appConfig().setConfigFile(m_pLineEditConfigFile->text());
+    appConfig().setServerHostname(m_pLineEditHostname->text());
 
-    auto choice = appConfig().checkGlobalSave();
 
-    switch (choice)
-    {
-        case AppConfig::SaveToUser:
-            //Switch to local and overrun into the save case
-            appConfig().switchToGlobal(false);
-        case AppConfig::Save:
-            settings().sync();
-            break;
-        default:
-            break;
+    //Save if there are any unsaved changes otherwise skip
+    if (appConfig().unsavedChanges()) {
+        auto choice = appConfig().checkGlobalSave();
+
+        switch (choice) {
+            case AppConfig::SaveToUser:
+                //Switch to local and overrun into the save case
+                appConfig().switchToGlobal(false);
+            case AppConfig::Save:
+                settings().sync();
+                break;
+            default:
+                break;
+        }
     }
 }
 

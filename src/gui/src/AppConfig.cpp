@@ -29,11 +29,13 @@
 const char AppConfig::m_SynergysName[] = "synergys.exe";
 const char AppConfig::m_SynergycName[] = "synergyc.exe";
 const char AppConfig::m_SynergyLogDir[] = "log/";
+const char AppConfig::synergyConfigName[] = "synergy.sgc";
 #define DEFAULT_PROCESS_MODE Service
 #else
 const char AppConfig::m_SynergysName[] = "synergys";
 const char AppConfig::m_SynergycName[] = "synergyc";
 const char AppConfig::m_SynergyLogDir[] = "/var/log/";
+const char AppConfig::synergyConfigName[] = "synergy.conf";
 #define DEFAULT_PROCESS_MODE Desktop
 #endif
 
@@ -62,7 +64,13 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "activationHasRun",
         "minimizeToTray",
         "ActivateEmail",
-        "loadFromSystemScope"
+        "loadFromSystemScope",
+        "groupServerChecked",
+        "useExternalConfig",
+        "configFile",
+        "useInternalConfig",
+        "groupClientChecked",
+        "serverHostname",
 };
 
 static const char* logLevelNames[] =
@@ -213,6 +221,12 @@ void AppConfig::loadSettings(bool ignoreSystem)
     m_ActivationHasRun          = loadSetting(ActivationHasRun, false).toBool();
     m_MinimizeToTray            = loadSetting(MinimizeToTray, false).toBool();
     m_LoadFromSystemScope       = loadSetting(LoadSystemSettings, false).toBool();
+    m_ServerGroupChecked        = loadSetting(GroupServerCheck, false).toBool();
+    m_UseExternalConfig         = loadSetting(UseExternalConfig, false).toBool();
+    m_ConfigFile                = loadSetting(ConfigFile, QDir::homePath() + "/" + synergyConfigName).toString();
+    m_UseInternalConfig         = loadSetting(UseInternalConfig, false).toBool();
+    m_ClientGroupChecked        = loadSetting(GroupClientCheck, true).toBool();
+    m_ServerHostname            = loadSetting(ServerHostname).toString();
 
     //If this is user scope and the user chose switch to global but ignoreSystem is not set.
     if (settings().scope() == QSettings::UserScope &&
@@ -251,6 +265,12 @@ void AppConfig::saveSettings()
     setSetting(ActivationHasRun, m_ActivationHasRun);
     setSetting(MinimizeToTray, m_MinimizeToTray);
     setSetting(LoadSystemSettings, m_LoadFromSystemScope);
+    setSetting(GroupServerCheck, m_ServerGroupChecked);
+    setSetting(UseExternalConfig, m_UseExternalConfig);
+    setSetting(ConfigFile, m_ConfigFile);
+    setSetting(UseInternalConfig, m_UseInternalConfig);
+    setSetting(GroupClientCheck, m_ClientGroupChecked);
+    setSetting(ServerHostname, m_ServerHostname);
 
     settings().sync();
 }
@@ -441,4 +461,56 @@ void AppConfig::setLoadFromSystemScope(bool value) {
 
 bool AppConfig::isSystemScoped() const {
     return m_pSettings->scope() == QSettings::SystemScope;
+}
+
+bool AppConfig::unsavedChanges() {
+    return m_SettingModified;
+}
+
+bool AppConfig::getServerGroupChecked() const {
+    return m_ServerGroupChecked;
+}
+
+bool AppConfig::getUseExternalConfig() const {
+    return m_UseExternalConfig;
+}
+
+QString AppConfig::getConfigFile() const {
+    return m_ConfigFile;
+}
+
+bool AppConfig::getUseInternalConfig() const {
+    return m_UseInternalConfig;
+}
+
+bool AppConfig::getClientGroupChecked() const {
+    return m_ClientGroupChecked;
+}
+
+QString AppConfig::getServerHostname() const {
+    return m_ServerHostname;
+}
+
+void AppConfig::setServerGroupChecked(bool newValue) {
+    m_ServerGroupChecked = newValue;
+}
+
+void AppConfig::setUseExternalConfig(bool newValue) {
+    m_UseExternalConfig = newValue;
+}
+
+void AppConfig::setConfigFile(const QString& newValue) {
+    m_ConfigFile = newValue;
+}
+
+void AppConfig::setUseInternalConfig(bool newValue) {
+    m_UseInternalConfig = newValue;
+}
+
+void AppConfig::setClientGroupChecked(bool newValue) {
+    m_ClientGroupChecked = newValue;
+}
+
+void AppConfig::setServerHostname(const QString& newValue) {
+    m_ServerHostname = newValue;
 }
