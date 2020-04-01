@@ -244,6 +244,7 @@ void AppConfig::setElevateMode(ElevateMode em) { m_ElevateMode = em; }
 void AppConfig::setAutoConfig(bool autoConfig)
 {
     m_AutoConfig = autoConfig;
+    emit zeroConfToggled();
 }
 
 void AppConfig::setAutoConfigServer(QString autoConfigServer)
