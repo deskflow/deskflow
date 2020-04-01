@@ -166,7 +166,7 @@ QString getSystemSettingPath()
     QString path;
 #if defined(Q_OS_WIN)
     // Program file
-    path = ""
+    path = "";
 #elif defined(Q_OS_DARWIN)
     //Global preferances dir
     // Would be nice to use /library, but QT has no elevate system in place
@@ -175,7 +175,7 @@ QString getSystemSettingPath()
     // /usr/local/etc/synergy
     path = "/usr/local/etc/symless/synergy/";
 #else
-    assert("OS not supported")
+    assert("OS not supported");
 #endif
     return path + settingFilename;
 }
