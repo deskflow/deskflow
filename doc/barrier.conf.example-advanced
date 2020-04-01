@@ -50,6 +50,6 @@ end
 # One way to find the actual name of a comptuer is to run hostname from a command window
 section: aliases
 	# Laptop is actually known as John-Smiths-MacBook-3.local
-	desktop2:
-		John-Smiths-MacBook-3.local
+	John-Smiths-MacBook-3.local:
+		desktop2
 end

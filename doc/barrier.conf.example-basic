@@ -34,6 +34,6 @@ end
 
 section: aliases
 	# The "real" name of iMac is John-Smiths-iMac-3.local. If we wanted we could remove this alias and instead use John-Smiths-iMac-3.local everywhere iMac is above. Hopefully it should be easy to see why using an alias is nicer
-	iMac:
-		John-Smiths-iMac-3.local
+	John-Smiths-iMac-3.local:
+		iMac
 end
