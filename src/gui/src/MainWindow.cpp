@@ -181,6 +181,9 @@ MainWindow::MainWindow (AppConfig& appConfig,
     connect (m_AppConfig, SIGNAL(sslToggled(bool)),
              this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
 
+    connect (m_AppConfig, SIGNAL(zeroConfToggled()),
+             this, SLOT(zeroConfToggled()), Qt::QueuedConnection);
+
 #ifdef SYNERGY_ENTERPRISE
     setWindowTitle ("Synergy 1 Enterprise");
 #else
@@ -370,6 +373,15 @@ void MainWindow::saveSettings()
     }
 }
 
+void MainWindow::zeroConfToggled() {
+#ifndef SYNERGY_ENTERPRISE
+    updateZeroconfService();
+
+    addZeroconfServer(m_AppConfig->autoConfigServer());
+
+    updateAutoConfigWidgets();
+#endif
+}
 void MainWindow::setIcon(qSynergyState state)
 {
     QIcon icon;

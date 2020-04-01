@@ -281,43 +281,43 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="954"/>
+        <location filename="../../src/MainWindow.cpp" line="987"/>
         <source>&amp;Start</source>
         <translation>啟動</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="259"/>
+        <location filename="../../src/MainWindow.cpp" line="282"/>
         <source>&amp;File</source>
         <translation>檔案</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="260"/>
+        <location filename="../../src/MainWindow.cpp" line="283"/>
         <source>&amp;Edit</source>
         <translation>編輯</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="261"/>
+        <location filename="../../src/MainWindow.cpp" line="284"/>
         <source>&amp;Window</source>
         <translation>視窗</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="262"/>
+        <location filename="../../src/MainWindow.cpp" line="285"/>
         <source>&amp;Help</source>
         <translation>幫助</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="385"/>
+        <location filename="../../src/MainWindow.cpp" line="418"/>
         <source>&lt;p&gt;Your version of Synergy is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
         <oldsource>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</oldsource>
         <translation>&lt;p&gt;你的Synergy版本已經太舊， 版本 &lt;b&gt;%1&lt;/b&gt;已經可以至 &lt;a href=&quot;%2&quot;&gt;下載&lt;/a&gt;。&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="447"/>
+        <location filename="../../src/MainWindow.cpp" line="480"/>
         <source>Synergy is now connected. You can close the config window and Synergy will remain connected in the background.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="500"/>
+        <location filename="../../src/MainWindow.cpp" line="533"/>
         <source>You are connecting to a server. Here is it&apos;s fingerprint:
 
 %1
@@ -328,147 +328,147 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="676"/>
+        <location filename="../../src/MainWindow.cpp" line="709"/>
         <source>Program can not be started</source>
         <translation>未能啟動程序</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="676"/>
+        <location filename="../../src/MainWindow.cpp" line="709"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation>未能成功啟動執行檔&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;，儘管該檔案存在，請檢查執行程序權限設定。</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="715"/>
+        <location filename="../../src/MainWindow.cpp" line="748"/>
         <source>Synergy client not found</source>
         <translation>找不到Synergy客戶端</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="716"/>
+        <location filename="../../src/MainWindow.cpp" line="749"/>
         <source>The executable for the synergy client does not exist.</source>
         <translation>Synergy客戶端執行檔不存在。</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="743"/>
+        <location filename="../../src/MainWindow.cpp" line="776"/>
         <source>No server selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="744"/>
+        <location filename="../../src/MainWindow.cpp" line="777"/>
         <source>No auto config server was selected, try manual mode instead.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="759"/>
+        <location filename="../../src/MainWindow.cpp" line="792"/>
         <source>Hostname is empty</source>
         <translation>電腦名稱不能空白</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="760"/>
+        <location filename="../../src/MainWindow.cpp" line="793"/>
         <source>Please fill in a hostname for the synergy client to connect to.</source>
         <translation>請輸入synergy客戶端要連接的電腦名稱。</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="785"/>
+        <location filename="../../src/MainWindow.cpp" line="818"/>
         <source>Cannot write configuration file</source>
         <translation>無法寫入設定檔</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="785"/>
+        <location filename="../../src/MainWindow.cpp" line="818"/>
         <source>The temporary configuration file required to start synergy can not be written.</source>
         <translation>無法寫入用以啟動synergy的暫存設定檔</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="798"/>
+        <location filename="../../src/MainWindow.cpp" line="831"/>
         <source>Configuration filename invalid</source>
         <translation>設定檔檔案名稱無效</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="799"/>
+        <location filename="../../src/MainWindow.cpp" line="832"/>
         <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
         <translation>你沒有輸入有效的synergy伺服器設定檔，你需要現在瀏覽設定檔嗎？</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="827"/>
+        <location filename="../../src/MainWindow.cpp" line="860"/>
         <source>Synergy server not found</source>
         <translation>找不到Synergy伺服器</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="828"/>
+        <location filename="../../src/MainWindow.cpp" line="861"/>
         <source>The executable for the synergy server does not exist.</source>
         <translation>Synergy伺服器執行檔不存在。</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="947"/>
+        <location filename="../../src/MainWindow.cpp" line="980"/>
         <source>&amp;Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="970"/>
+        <location filename="../../src/MainWindow.cpp" line="1003"/>
         <source>Synergy is waiting for clients</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="977"/>
+        <location filename="../../src/MainWindow.cpp" line="1010"/>
         <source>Synergy is connected (with %1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="980"/>
+        <location filename="../../src/MainWindow.cpp" line="1013"/>
         <source>Synergy is running (without TLS encryption)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="985"/>
+        <location filename="../../src/MainWindow.cpp" line="1018"/>
         <source>Synergy is starting...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="988"/>
+        <location filename="../../src/MainWindow.cpp" line="1021"/>
         <source>There was an error, retrying...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="991"/>
+        <location filename="../../src/MainWindow.cpp" line="1024"/>
         <source>Synergy is not running</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1303"/>
+        <location filename="../../src/MainWindow.cpp" line="1341"/>
         <source>Please add the server (%1) to the grid.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1309"/>
+        <location filename="../../src/MainWindow.cpp" line="1347"/>
         <source>Please drag the new client screen (%1) to the desired position on the grid.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1047"/>
+        <location filename="../../src/MainWindow.cpp" line="1080"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1201"/>
+        <location filename="../../src/MainWindow.cpp" line="1234"/>
         <source>Browse for a synergys config file</source>
         <translation>瀏覽以選擇設定檔</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="499"/>
+        <location filename="../../src/MainWindow.cpp" line="532"/>
         <source>Security question</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1214"/>
+        <location filename="../../src/MainWindow.cpp" line="1247"/>
         <source>Save configuration as...</source>
         <translation>儲存設定至...</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1218"/>
+        <location filename="../../src/MainWindow.cpp" line="1251"/>
         <source>Save failed</source>
         <translation>儲存失敗</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1218"/>
+        <location filename="../../src/MainWindow.cpp" line="1251"/>
         <source>Could not save configuration to file.</source>
         <translation>無法儲存設定至檔案。</translation>
     </message>
@@ -487,7 +487,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="522"/>
-        <location filename="../../src/MainWindowBase.ui" line="551"/>
+        <location filename="../../src/MainWindowBase.ui" line="559"/>
         <source>&amp;Start</source>
         <translation>啟動</translation>
     </message>
@@ -583,77 +583,82 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     </message>
     <message>
         <location filename="../../src/MainWindowBase.ui" line="540"/>
+        <source>Visit &amp;help site</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/MainWindowBase.ui" line="548"/>
         <source>&amp;Quit</source>
         <translation>離開</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="543"/>
+        <location filename="../../src/MainWindowBase.ui" line="551"/>
         <source>Quit</source>
         <translation>離開</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="554"/>
+        <location filename="../../src/MainWindowBase.ui" line="562"/>
         <source>Run</source>
         <translation>執行</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="565"/>
+        <location filename="../../src/MainWindowBase.ui" line="573"/>
         <source>S&amp;top</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="568"/>
+        <location filename="../../src/MainWindowBase.ui" line="576"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="576"/>
+        <location filename="../../src/MainWindowBase.ui" line="584"/>
         <source>S&amp;how Status</source>
         <translation>顯示狀態</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="584"/>
+        <location filename="../../src/MainWindowBase.ui" line="592"/>
         <source>&amp;Hide</source>
         <translation>隱藏</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="587"/>
+        <location filename="../../src/MainWindowBase.ui" line="595"/>
         <source>Hide</source>
         <translation>隱藏</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="595"/>
+        <location filename="../../src/MainWindowBase.ui" line="603"/>
         <source>&amp;Show</source>
         <translation>顯示(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="598"/>
+        <location filename="../../src/MainWindowBase.ui" line="606"/>
         <source>Show</source>
         <translation>顯示</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="606"/>
+        <location filename="../../src/MainWindowBase.ui" line="614"/>
         <source>Save configuration &amp;as...</source>
         <translation>儲存設定至...</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="609"/>
+        <location filename="../../src/MainWindowBase.ui" line="617"/>
         <source>Save the interactively generated server configuration to a file.</source>
         <translation>儲存動態生成的設定至檔案。</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="617"/>
+        <location filename="../../src/MainWindowBase.ui" line="625"/>
         <source>Settings</source>
         <translation>設定</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="620"/>
+        <location filename="../../src/MainWindowBase.ui" line="628"/>
         <source>Edit settings</source>
         <translation>編輯</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="628"/>
-        <location filename="../../src/MainWindowBase.ui" line="631"/>
+        <location filename="../../src/MainWindowBase.ui" line="636"/>
+        <location filename="../../src/MainWindowBase.ui" line="639"/>
         <source>Activate</source>
         <translation type="unfinished"></translation>
     </message>
@@ -669,12 +674,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="56"/>
+        <location filename="../../src/MainWindow.cpp" line="61"/>
         <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
         <translation>Synergy 設定檔 (*.sgc);;所有檔案 (*.*)</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="59"/>
+        <location filename="../../src/MainWindow.cpp" line="64"/>
         <source>Synergy Configurations (*.conf);;All files (*.*)</source>
         <translation>Synergy 設定檔 (*.conf);;所有檔案 (*.*)</translation>
     </message>
@@ -1262,25 +1267,17 @@ Double click on a screen to edit its settings.</source>
     </message>
     <message>
         <location filename="../../src/SetupWizardBase.ui" line="159"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;My main mouse and keyboard are connected to this computer. This will allow you to move your mouse over to another computer&apos;s screen. There can only be one server in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>My main mouse and keyboard are connected to this computer. This will allow you to move your mouse over to another computer&apos;s screen. There can only be one server in your setup.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SetupWizardBase.ui" line="195"/>
+        <location filename="../../src/SetupWizardBase.ui" line="204"/>
+        <source>You have already set up a server. This computer will be controlled using the server&apos;s mouse and keyboard. There can be many clients in your setup.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/SetupWizardBase.ui" line="191"/>
         <source>&amp;Client (use another computer&apos;s mouse and keyboard)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/SetupWizardBase.ui" line="208"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;You have already set up a server. This computer will be controlled using the server&apos;s mouse and keyboard. There can be many clients in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

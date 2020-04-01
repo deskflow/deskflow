@@ -160,6 +160,9 @@ public slots:
         void updateFound(const QString& version);
         void saveSettings();
 
+        /// @brief Receives the signal that the auto config option has changed
+        void zeroConfToggled();
+
     protected:
         QSettings& settings() { return appConfig().settings(); }
         AppConfig& appConfig() { return *m_AppConfig; }

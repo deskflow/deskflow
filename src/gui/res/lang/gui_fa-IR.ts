@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ar" sourcelanguage="en">
+<TS version="2.1" language="fa" sourcelanguage="en">
   <context>
     <name>AboutDialogBase</name>
     <message>
       <location filename="src/AboutDialogBase.ui" line="38"/>
       <source>About Synergy</source>
-      <translation>عن سينيرجي</translation>
+      <translation type="unfinished">About Synergy</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="53"/>
@@ -32,13 +32,13 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="124"/>
       <source>Version:</source>
-      <translation>الإصدار</translation>
+      <translation type="unfinished">Version:</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="140"/>
       <location filename="src/AboutDialogBase.ui" line="174"/>
       <source>Unknown</source>
-      <translation>غير معروف</translation>
+      <translation type="unfinished">Unknown</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="167"/>
@@ -48,7 +48,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="194"/>
       <source>&amp;Ok</source>
-      <translation>حسنًا</translation>
+      <translation type="unfinished">&amp;Ok</translation>
     </message>
   </context>
   <context>
@@ -56,82 +56,82 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="14"/>
       <source>Configure Action</source>
-      <translation>تكوين العمل</translation>
+      <translation type="unfinished">Configure Action</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="20"/>
       <source>Choose the action to perform</source>
-      <translation>اختار الامر للعمل</translation>
+      <translation type="unfinished">Choose the action to perform</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="26"/>
       <source>Press a hotkey</source>
-      <translation>اضغط على مفتاح التشغيل السريع</translation>
+      <translation type="unfinished">Press a hotkey</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="36"/>
       <source>Release a hotkey</source>
-      <translation>الافراج عنه</translation>
+      <translation type="unfinished">Release a hotkey</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="43"/>
       <source>Press and release a hotkey</source>
-      <translation>اضغط وافرج عن مفتاح التشغيل السريع</translation>
+      <translation type="unfinished">Press and release a hotkey</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="69"/>
       <source>only on these screens</source>
-      <translation>فقط على هذه الشاشات</translation>
+      <translation type="unfinished">only on these screens</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="119"/>
       <source>Switch to screen</source>
-      <translation>تغيير الشاشة</translation>
+      <translation type="unfinished">Switch to screen</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="150"/>
       <source>Switch in direction</source>
-      <translation>تغيير الاتجاه</translation>
+      <translation type="unfinished">Switch in direction</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="174"/>
       <source>left</source>
-      <translation>شمال</translation>
+      <translation type="unfinished">left</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="179"/>
       <source>right</source>
-      <translation>يمين</translation>
+      <translation type="unfinished">right</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="184"/>
       <source>up</source>
-      <translation>اعلى</translation>
+      <translation type="unfinished">up</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="189"/>
       <source>down</source>
-      <translation>اسفل</translation>
+      <translation type="unfinished">down</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="201"/>
       <source>Lock cursor to screen</source>
-      <translation>غلق المؤشر لشاشة</translation>
+      <translation type="unfinished">Lock cursor to screen</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="225"/>
       <source>toggle</source>
-      <translation>تبديل</translation>
+      <translation type="unfinished">toggle</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="230"/>
       <source>on</source>
-      <translation>تشغيل</translation>
+      <translation type="unfinished">on</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="235"/>
       <source>off</source>
-      <translation>تعطيل</translation>
+      <translation type="unfinished">off</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="247"/>
@@ -141,17 +141,17 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="259"/>
       <source>This action is performed when</source>
-      <translation>هذا الامر تم عمله عندما</translation>
+      <translation type="unfinished">This action is performed when</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="265"/>
       <source>the hotkey is pressed</source>
-      <translation>مفتاح التشغيل السريع ضُغط</translation>
+      <translation type="unfinished">the hotkey is pressed</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="275"/>
       <source>the hotkey is released</source>
-      <translation>مفتاح التشغيل السريع افرج عنه</translation>
+      <translation type="unfinished">the hotkey is released</translation>
     </message>
   </context>
   <context>
@@ -290,12 +290,12 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/HotkeyDialogBase.ui" line="14"/>
       <source>Hotkey</source>
-      <translation>مفتاح التشغيل السريع</translation>
+      <translation type="unfinished">Hotkey</translation>
     </message>
     <message>
       <location filename="src/HotkeyDialogBase.ui" line="20"/>
       <source>Enter the specification for the hotkey:</source>
-      <translation>ادخل صفات مفتاح التشغيل السريع:</translation>
+      <translation type="unfinished">Enter the specification for the hotkey:</translation>
     </message>
   </context>
   <context>
@@ -303,22 +303,22 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/MainWindow.cpp" line="259"/>
       <source>&amp;File</source>
-      <translation>ملف</translation>
+      <translation type="unfinished">&amp;File</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="260"/>
       <source>&amp;Edit</source>
-      <translation>تعديل</translation>
+      <translation type="unfinished">&amp;Edit</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="261"/>
       <source>&amp;Window</source>
-      <translation>شباك</translation>
+      <translation type="unfinished">&amp;Window</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="262"/>
       <source>&amp;Help</source>
-      <translation>مساعدة</translation>
+      <translation type="unfinished">&amp;Help</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="385"/>
@@ -355,22 +355,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="676"/>
       <source>Program can not be started</source>
-      <translation>البرناج لا يستطيع ان يبدأ</translation>
+      <translation type="unfinished">Program can not be started</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="676"/>
       <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-      <translation>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</translation>
+      <translation type="unfinished">The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="715"/>
       <source>Synergy client not found</source>
-      <translation>عامل التآزر لم يتم العثور عليه</translation>
+      <translation type="unfinished">Synergy client not found</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="716"/>
       <source>The executable for the synergy client does not exist.</source>
-      <translation>لا وجود للتنفيذ لان عامل  التآزر غير موجود.</translation>
+      <translation type="unfinished">The executable for the synergy client does not exist.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="743"/>
@@ -385,17 +385,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="759"/>
       <source>Hostname is empty</source>
-      <translation>المضيف فارغ</translation>
+      <translation type="unfinished">Hostname is empty</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="760"/>
       <source>Please fill in a hostname for the synergy client to connect to.</source>
-      <translation> الرجاء ملء اسم المضيف لعاملالتآزر للاتصال.</translation>
+      <translation type="unfinished">Please fill in a hostname for the synergy client to connect to.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="785"/>
       <source>Cannot write configuration file</source>
-      <translation>لا يمكن كتابة ملف التكوين</translation>
+      <translation type="unfinished">Cannot write configuration file</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="785"/>
@@ -465,7 +465,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1047"/>
       <source>Unknown</source>
-      <translation>غير معروف</translation>
+      <translation type="unfinished">Unknown</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1201"/>
@@ -503,7 +503,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="26"/>
       <source>Synergy</source>
-      <translation> سينيرجي</translation>
+      <translation type="unfinished">Synergy</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="58"/>
@@ -523,7 +523,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="233"/>
       <source>IP addresses:</source>
-      <translation>عنوان ال IP</translation>
+      <translation type="unfinished">IP addresses:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="257"/>
@@ -533,7 +533,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="273"/>
       <source>Configure interactively:</source>
-      <translation>تكوين تبادلي</translation>
+      <translation type="unfinished">Configure interactively:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="285"/>
@@ -553,7 +553,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="336"/>
       <source>&amp;Browse...</source>
-      <translation>تصفح</translation>
+      <translation type="unfinished">&amp;Browse...</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="354"/>
@@ -583,12 +583,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="438"/>
       <source>Log</source>
-      <translation>سجل</translation>
+      <translation type="unfinished">Log</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="492"/>
       <source>Ready</source>
-      <translation>جاهز</translation>
+      <translation type="unfinished">Ready</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="515"/>
@@ -609,17 +609,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="540"/>
       <source>&amp;Quit</source>
-      <translation>خروج</translation>
+      <translation type="unfinished">&amp;Quit</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="543"/>
       <source>Quit</source>
-      <translation>خروج</translation>
+      <translation type="unfinished">Quit</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="554"/>
       <source>Run</source>
-      <translation>تشغلي</translation>
+      <translation type="unfinished">Run</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="565"/>
@@ -629,7 +629,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="568"/>
       <source>Stop</source>
-      <translation>توقف</translation>
+      <translation type="unfinished">Stop</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="576"/>
@@ -644,7 +644,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="587"/>
       <source>Hide</source>
-      <translation>إخفاء</translation>
+      <translation type="unfinished">Hide</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="595"/>
@@ -654,7 +654,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="598"/>
       <source>Show</source>
-      <translation>اظهر</translation>
+      <translation type="unfinished">Show</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="606"/>
@@ -669,12 +669,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="617"/>
       <source>Settings</source>
-      <translation>إعدادات</translation>
+      <translation type="unfinished">Settings</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="620"/>
       <source>Edit settings</source>
-      <translation>تعديل الإعدادات</translation>
+      <translation type="unfinished">Edit settings</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="628"/>
@@ -688,7 +688,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/NewScreenWidget.cpp" line="32"/>
       <source>Unnamed</source>
-      <translation>غير مسمى</translation>
+      <translation type="unfinished">Unnamed</translation>
     </message>
   </context>
   <context>
@@ -851,22 +851,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="367"/>
       <source>Top-left</source>
-      <translation>شمال</translation>
+      <translation type="unfinished">Top-left</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="374"/>
       <source>Top-right</source>
-      <translation>اليمين الاعلى</translation>
+      <translation type="unfinished">Top-right</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="381"/>
       <source>Bottom-left</source>
-      <translation>يسار</translation>
+      <translation type="unfinished">Bottom-left</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="388"/>
       <source>Bottom-right</source>
-      <translation>يمين</translation>
+      <translation type="unfinished">Bottom-right</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="397"/>
@@ -876,7 +876,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="428"/>
       <source>&amp;Fixes</source>
-      <translation>تصليحات</translation>
+      <translation type="unfinished">&amp;Fixes</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="437"/>
@@ -969,7 +969,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="185"/>
       <source>&amp;Edit</source>
-      <translation>تعديل</translation>
+      <translation type="unfinished">&amp;Edit</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="195"/>
@@ -1117,7 +1117,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="14"/>
       <source>Settings</source>
-      <translation>إعدادات</translation>
+      <translation type="unfinished">Settings</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="20"/>
@@ -1142,7 +1142,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="107"/>
       <source>&amp;Language:</source>
-      <translation>اللغة:</translation>
+      <translation type="unfinished">&amp;Language:</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="120"/>
@@ -1207,7 +1207,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="293"/>
       <source>Logging</source>
-      <translation>تسجيل الدخول</translation>
+      <translation type="unfinished">Logging</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="311"/>
@@ -1217,22 +1217,22 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="322"/>
       <source>Info</source>
-      <translation>معلومات</translation>
+      <translation type="unfinished">Info</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="327"/>
       <source>Debug</source>
-      <translation>تصحيح</translation>
+      <translation type="unfinished">Debug</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="332"/>
       <source>Debug1</source>
-      <translation>تصحيح1</translation>
+      <translation type="unfinished">Debug1</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="337"/>
       <source>Debug2</source>
-      <translation>تصحيح2</translation>
+      <translation type="unfinished">Debug2</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="345"/>
@@ -1255,7 +1255,7 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizard.cpp" line="75"/>
       <source>Please select an option.</source>
-      <translation>الرجاء اختيار خيار.</translation>
+      <translation type="unfinished">Please select an option.</translation>
     </message>
   </context>
   <context>
@@ -1268,17 +1268,17 @@ Double click on a screen to edit its settings.</translation>
     <message>
       <location filename="src/SetupWizardBase.ui" line="30"/>
       <source>Welcome</source>
-      <translation>اهلًا وسهلًا</translation>
+      <translation type="unfinished">Welcome</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="39"/>
       <source>Thanks for installing Synergy!</source>
-      <translation>شكرا لتنزيل السنغري</translation>
+      <translation type="unfinished">Thanks for installing Synergy!</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="114"/>
       <source>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</source>
-      <translation>التآزر يتيح لك بسهولة مشاركة الماوس ولوحة المفاتيح بين العديد من أجهزة الكمبيوتر في مكتبك، وانها لالحرة والمفتوحة المصدر. مجرد تحرك الماوس من على حافة شاشة جهاز كمبيوتر واحد على آخر. يمكنك حتى أن حصة كل من الألواح الكتابة الخاصة بك. كل ما تحتاجه هو اتصال بالشبكة. التآزر هو عبر منصة (يعمل على ويندوز، وماكنتوش ولينكس).</translation>
+      <translation type="unfinished">Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux).</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="131"/>
@@ -1350,7 +1350,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/VersionChecker.cpp" line="145"/>
       <source>Unknown</source>
-      <translation>غير معروف</translation>
+      <translation type="unfinished">Unknown</translation>
     </message>
   </context>
   <context>

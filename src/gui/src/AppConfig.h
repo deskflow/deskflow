@@ -296,6 +296,7 @@ protected:
 
     signals:
         void sslToggled(bool enabled);
+        void zeroConfToggled();
 };
 
 #endif
