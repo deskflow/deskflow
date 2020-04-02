@@ -6,7 +6,7 @@
     <message>
       <location filename="../../src/AboutDialogBase.ui" line="38"/>
       <source>About Synergy</source>
-      <translation>Synergyについて</translation>
+      <translation>Synergy について</translation>
     </message>
     <message>
       <location filename="../../src/AboutDialogBase.ui" line="53"/>
