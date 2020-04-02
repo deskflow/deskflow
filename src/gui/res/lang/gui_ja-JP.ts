@@ -48,7 +48,7 @@ Synergy の GUI は QSynergy (Volker Lanz 開発) がベースです。&lt;br /&
     <message>
       <location filename="../../src/AboutDialogBase.ui" line="194"/>
       <source>&amp;Ok</source>
-      <translation>OK</translation>
+      <translation>OK(&amp;O)</translation>
     </message>
   </context>
   <context>
@@ -435,7 +435,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="../../src/MainWindow.cpp" line="1003"/>
       <source>Synergy is waiting for clients</source>
-      <translation>Synergy はクライアントの接続待機中</translation>
+      <translation>Synergy はクライアントの接続を待機中</translation>
     </message>
     <message>
       <location filename="../../src/MainWindow.cpp" line="1010"/>
@@ -538,7 +538,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="../../src/MainWindowBase.ui" line="285"/>
       <source>&amp;Configure Server...</source>
-      <translation>サーバーを設定</translation>
+      <translation>サーバーの構成設定(&amp;C)...</translation>
     </message>
     <message>
       <location filename="../../src/MainWindowBase.ui" line="307"/>
@@ -553,7 +553,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="../../src/MainWindowBase.ui" line="336"/>
       <source>&amp;Browse...</source>
-      <translation>参照</translation>
+      <translation>参照(&amp;B)...</translation>
     </message>
     <message>
       <location filename="../../src/MainWindowBase.ui" line="354"/>
@@ -624,22 +624,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="../../src/MainWindowBase.ui" line="562"/>
       <source>Run</source>
-      <translation>開始(&amp;S)</translation>
+      <translation>開始(&amp;R)</translation>
     </message>
     <message>
       <location filename="../../src/MainWindowBase.ui" line="573"/>
       <source>S&amp;top</source>
-      <translation>停止(&amp;S)</translation>
+      <translation>停止(&amp;T)</translation>
     </message>
     <message>
       <location filename="../../src/MainWindowBase.ui" line="576"/>
       <source>Stop</source>
-      <translation>停止(&amp;S)</translation>
+      <translation>停止(&amp;T)</translation>
     </message>
     <message>
       <location filename="../../src/MainWindowBase.ui" line="584"/>
       <source>S&amp;how Status</source>
-      <translation>状態を表示(&amp;S)</translation>
+      <translation>状態を表示(&amp;H)</translation>
     </message>
     <message>
       <location filename="../../src/MainWindowBase.ui" line="592"/>
@@ -753,7 +753,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="../../src/ScreenSettingsDialogBase.ui" line="42"/>
       <source>A&amp;liases</source>
-      <translation>別名(&amp;A)</translation>
+      <translation>別名(&amp;L)</translation>
     </message>
     <message>
       <location filename="../../src/ScreenSettingsDialogBase.ui" line="57"/>
@@ -847,7 +847,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="../../src/ScreenSettingsDialogBase.ui" line="291"/>
       <source>S&amp;uper:</source>
-      <translation>スーパー (&amp;S):</translation>
+      <translation>スーパー (&amp;U):</translation>
     </message>
     <message>
       <location filename="../../src/ScreenSettingsDialogBase.ui" line="358"/>
@@ -965,7 +965,7 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="../../src/ServerConfigDialogBase.ui" line="163"/>
       <source>&amp;Hotkeys</source>
-      <translation>ホットキー</translation>
+      <translation>ホットキー(&amp;H)</translation>
     </message>
     <message>
       <location filename="../../src/ServerConfigDialogBase.ui" line="175"/>
@@ -980,7 +980,7 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="../../src/ServerConfigDialogBase.ui" line="195"/>
       <source>&amp;Remove</source>
-      <translation>削除</translation>
+      <translation>除去(&amp;R)</translation>
     </message>
     <message>
       <location filename="../../src/ServerConfigDialogBase.ui" line="218"/>
@@ -990,7 +990,7 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="../../src/ServerConfigDialogBase.ui" line="230"/>
       <source>Ne&amp;w</source>
-      <translation>新規</translation>
+      <translation>新規(&amp;W)</translation>
     </message>
     <message>
       <location filename="../../src/ServerConfigDialogBase.ui" line="240"/>
@@ -1218,7 +1218,7 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="../../src/SettingsDialogBase.ui" line="311"/>
       <source>&amp;Logging level:</source>
-      <translation>ログレベル:</translation>
+      <translation>ログ対象(&amp;L):</translation>
     </message>
     <message>
       <location filename="../../src/SettingsDialogBase.ui" line="322"/>
