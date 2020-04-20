@@ -34,7 +34,7 @@ jobs:
       ubuntu18:
         image: symless/ubuntu-sudo:18.04
       ubuntu19:
-        image: symless/ubuntu-sudo:19.04
+        image: symless/ubuntu-sudo:19.10
 
   container: $[ variables['image'] ]
 

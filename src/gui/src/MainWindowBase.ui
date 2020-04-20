@@ -439,7 +439,7 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QTextEdit" name="m_pLogOutput">
+        <widget class="QPlainTextEdit" name="m_pLogOutput">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -458,10 +458,13 @@
           <bool>false</bool>
          </property>
          <property name="lineWrapMode">
-          <enum>QTextEdit::NoWrap</enum>
+          <enum>QPlainTextEdit::NoWrap</enum>
          </property>
          <property name="readOnly">
           <bool>true</bool>
+         </property>
+         <property name="maximumBlockCount">
+          <number>10000</number>
          </property>
         </widget>
        </item>

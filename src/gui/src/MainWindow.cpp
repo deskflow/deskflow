@@ -460,7 +460,7 @@ void MainWindow::appendLogRaw(const QString& text)
                 continue;
             }
 
-            m_pLogOutput->append(line);
+            m_pLogOutput->appendPlainText(line);
             updateFromLogLine(line);
         }
     }
