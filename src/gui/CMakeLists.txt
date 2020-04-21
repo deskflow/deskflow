@@ -30,7 +30,7 @@ if (SYNERGY_ENTERPRISE)
 endif ()
 
 if (WIN32)
-    set (LEGACY_GUI_RC_FILES res/win/Synergy.rc)
+    set (LEGACY_GUI_RC_FILES res/win/Synergy.rc src/ConfigWriter.cpp src/ConfigWriter.h)
 endif()
 
 add_executable (synergy WIN32
