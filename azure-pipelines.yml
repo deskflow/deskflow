@@ -24,7 +24,7 @@ jobs:
         sshEndpoint: 'Azure on Sandor'
         sourceFolder: '.'
         contents: 'docs.tar.gz'
-        targetFolder: 'synergy-core/docs'
+        targetFolder: 'synergy-core'
         readyTimeout: '20000'
       displayName: 'Publish files to sandor'
 
@@ -33,9 +33,6 @@ jobs:
         sshEndpoint: 'Azure on Sandor'
         runOptions: 'commands'
         commands: |
-          cd synergy-core/docs
-          pwd
-          ls -la
-          tar -xzvf ./docs.tar.gz --overwrite
+          tar -C ./synergy-core/docs -xzvf ./synergy-core/docs.tar.gz --overwrite
         readyTimeout: '20000'
       displayName: 'Extract files on sandor'
