@@ -24,3 +24,4 @@ src/setup/win32/synergy.suo
 /CMakeLists.txt.user
 /.vs
 /CMakeLists.txt.*
+/doxygen/

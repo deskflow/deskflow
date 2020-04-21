@@ -245,3 +245,28 @@ jobs:
       msbuildArguments: '/m'
       maximumCpuCount: true
     displayName: 'Compiling x86'
+
+- job: DoxygenDoc
+  pool:
+    vmImage: 'ubuntu-16.04'
+
+  steps:
+    - script: |
+        sudo DEBIAN_FRONTEND=noninteractive
+        sudo apt-get -y update
+        sudo apt-get -y install doxygen
+      displayName: 'Install Pakages'
+
+    - script: |
+        doxygen Doxyfile
+      displayName: 'Generate'
+
+    - task: CopyFilesOverSSH@0
+      inputs:
+        sshEndpoint: 'Azure on Sandor'
+        sourceFolder: 'doxygen'
+        contents: '**'
+        targetFolder: 'synergy-core/docs'
+        cleanTargetFolder: true
+        readyTimeout: '20000'
+      displayName: 'Publish files to sandor'
