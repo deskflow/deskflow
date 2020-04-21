@@ -259,14 +259,26 @@ jobs:
 
     - script: |
         doxygen Doxyfile
-      displayName: 'Generate'
+        cd doxygen
+        tar -czvf ../docs.tar.gz ./*
+      displayName: 'Generate Docs'
 
     - task: CopyFilesOverSSH@0
       inputs:
         sshEndpoint: 'Azure on Sandor'
-        sourceFolder: 'doxygen'
-        contents: '**'
+        sourceFolder: '.'
+        contents: 'docs.tar.gz'
         targetFolder: 'synergy-core/docs'
-        cleanTargetFolder: true
         readyTimeout: '20000'
       displayName: 'Publish files to sandor'
+
+    - task: SSH@0
+      inputs:
+        sshEndpoint: 'Azure on Sandor'
+        runOptions: 'commands'
+        commands: |
+          cd synergy-core/docs
+          tar -xzvf docs.tar.gz --overwrite
+          rm docs.tar.gz
+        readyTimeout: '20000'
+      displayName: 'Extract files on sandor'
