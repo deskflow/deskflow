@@ -10,7 +10,7 @@ jobs:
     - script: |
         sudo DEBIAN_FRONTEND=noninteractive
         sudo apt-get -y update
-        sudo apt-get -y install doxygen
+        sudo apt-get -y install doxygen graphviz
       displayName: 'Install Pakages'
 
     - script: |
