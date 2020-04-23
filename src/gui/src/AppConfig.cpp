@@ -25,6 +25,8 @@
 #include <QtWidgets/QMessageBox>
 #include <QPushButton>
 
+#include "ConfigWriter.h"
+
 #if defined(Q_OS_WIN)
 const char AppConfig::m_SynergysName[] = "synergys.exe";
 const char AppConfig::m_SynergycName[] = "synergyc.exe";
@@ -81,10 +83,7 @@ static const char* logLevelNames[] =
     "DEBUG2"
 };
 
-AppConfig::AppConfig(QSettings* userSettings, QSettings* systemSettings) :
-    m_pSettings(nullptr),
-    m_pUserSettings(userSettings),
-    m_pSystemSettings(systemSettings),
+AppConfig::AppConfig() :
     m_ScreenName(),
     m_Port(24800),
     m_Interface(),
@@ -98,20 +97,41 @@ AppConfig::AppConfig(QSettings* userSettings, QSettings* systemSettings) :
     m_LastExpiringWarningTime(0),
     m_AutoConfigServer(),
     m_MinimizeToTray(false),
-    m_SettingModified(false)
+    m_Edition(kUnregistered),
+    m_LogToFile(),
+    m_StartedBefore(),
+    m_ActivationHasRun(),
+    m_ServerGroupChecked(),
+    m_UseExternalConfig(),
+    m_UseInternalConfig(),
+    m_ClientGroupChecked(),
+    m_LoadFromSystemScope(),
 {
 
-    //If user setting don't exist but system ones do, load the system settings
-    if (!settingsExist(userSettings) && settingsExist(systemSettings))
+    using GUI::Config::ConfigWriter;
+
+    auto writer = ConfigWriter::make();
+
+    //Register this class to receive global load and saves
+    writer->registerClass(this);
+
+    //User settings exist and the load from system scope variable is true
+    if (writer->hasSetting(settingName(LoadSystemSettings), ConfigWriter::kUser) &&
+        writer->loadSetting(settingName(LoadSystemSettings), false,ConfigWriter::kUser).toBool())
     {
-        m_pSettings = systemSettings;
+        writer->setScope(ConfigWriter::kSystem);
+    }
+    //If user setting don't exist but system ones do, load the system settings
+    else if (!writer->hasSetting(settingName(ScreenName), ConfigWriter::kUser) &&
+        writer->hasSetting(settingName(ScreenName), ConfigWriter::kSystem))
+    {
+        writer->setScope(ConfigWriter::kSystem);
     } else { // Otherwise just load to user scope
-        m_pSettings = userSettings;
+        writer->setScope(ConfigWriter::kUser);
     }
 
-    Q_ASSERT(m_pSettings);
+    //setScope triggers a global load so no need to call it again
 
-    loadSettings();
 }
 
 AppConfig::~AppConfig()
@@ -188,7 +208,7 @@ bool AppConfig::autoConfig() const {
 
 QString AppConfig::autoConfigServer() const { return m_AutoConfigServer; }
 
-void AppConfig::loadSettings(bool ignoreSystem)
+void AppConfig::loadSettings()
 {
     m_ScreenName        = loadSetting(ScreenName, QHostInfo::localHostName()).toString();
     m_Port              = loadSetting(Port, 24800).toInt();
@@ -229,15 +249,7 @@ void AppConfig::loadSettings(bool ignoreSystem)
     m_ClientGroupChecked        = loadSetting(GroupClientCheck, true).toBool();
     m_ServerHostname            = loadSetting(ServerHostname).toString();
 
-    //If this is user scope and the user chose switch to global but ignoreSystem is not set.
-    if (settings().scope() == QSettings::UserScope &&
-        m_LoadFromSystemScope &&
-        !ignoreSystem)
-    {
-        //Switch to global scope and reload settings
-        switchToGlobal();
-        loadSettings();
-    }
+
 }
 
 void AppConfig::saveSettings()
@@ -273,8 +285,7 @@ void AppConfig::saveSettings()
     setSetting(GroupClientCheck, m_ClientGroupChecked);
     setSetting(ServerHostname, m_ServerHostname);
 
-    settings().sync();
-    m_SettingModified = false;
+    m_unsavedChanges = false;
 }
 
 #ifndef SYNERGY_ENTERPRISE
@@ -298,8 +309,6 @@ QString AppConfig::lastVersion() const
 void AppConfig::setLastVersion(const QString& version) {
     setSettingModified(m_lastVersion, version);
 }
-
-QSettings &AppConfig::settings() { return *m_pSettings; }
 
 void AppConfig::setScreenName(const QString &s) {
     setSettingModified(m_ScreenName, s);
@@ -411,87 +420,44 @@ void AppConfig::setMinimizeToTray(bool newValue) {
 
 bool AppConfig::getMinimizeToTray() { return m_MinimizeToTray; }
 
-bool AppConfig::settingsExist(QSettings* settings) {
-    //Use screen name as the test to see if the settings have been saved to this location
-    return settings->contains(settingName(ScreenName));
-}
-
 QString AppConfig::settingName(AppConfig::Setting name) {
     return m_SynergySettingsName[name];
 }
 
 template<typename T>
 void AppConfig::setSetting(AppConfig::Setting name, T value) {
-    settings().setValue(settingName(name), value);
+    using GUI::Config::ConfigWriter;
+    ConfigWriter::make()->setSetting(settingName(name), value);
 }
 
 QVariant AppConfig::loadSetting(AppConfig::Setting name, const QVariant& defaultValue) {
-    return settings().value(settingName(name), defaultValue);
+    using GUI::Config::ConfigWriter;
+    return ConfigWriter::make()->loadSetting(settingName(name), defaultValue);
 }
 
-AppConfig::SaveChoice AppConfig::checkGlobalSave() {
-    if (isSystemScoped()) {
-
-        QMessageBox query;
-        query.setWindowTitle(tr("Save global settings."));
-        query.setText(tr("This will overwrite the settings of anybody else that uses this computer."));
-
-        query.addButton(QMessageBox::Save);
-        const auto* pBtnCancel    =  query.addButton(QMessageBox::Cancel);
-        const auto* pBtnSaveLocal =  query.addButton(tr("Save to user"), QMessageBox::ActionRole);
-
-        query.setDefaultButton(QMessageBox::Cancel);
-
-        query.exec();
-
-        if(query.clickedButton() == pBtnSaveLocal)
-        {
-            return SaveToUser;
-        }
-        else if(query.clickedButton() == pBtnCancel)
-        {
-            return Cancel;
-        }
-    }
-    return Save;
-}
-
-void AppConfig::switchToGlobal(bool global) {
-    m_settings_lock.lock();
-    if (global)
-    {
-        m_pSettings = m_pSystemSettings;
-    }
-    else
-    {
-        m_pSettings = m_pUserSettings;
-    }
-    m_settings_lock.unlock();
-}
 
 void AppConfig::setLoadFromSystemScope(bool value) {
-    if (value && !isSystemScoped())
+    using GUI::Config::ConfigWriter;
+
+    auto writer = ConfigWriter::make();
+
+    if (value && writer->getScope() != ConfigWriter::kSystem)
     {
         m_LoadFromSystemScope = value;
-        saveSettings();     //Save user prefs
-        switchToGlobal();   //Switch the the System Scope
-        loadSettings();     //Load the settings.
+        writer->globalSave();     //Save user prefs
+        writer->setScope(ConfigWriter::kSystem);   //Switch the the System Scope and reload
+
     }
-    else if (!value && isSystemScoped())
+    else if (!value && writer->getScope() == ConfigWriter::kSystem)
     {
-        switchToGlobal(false);      // Switch to UserScope
-        loadSettings(true);    // Load user settings ignoring System scope setting
+        writer->setScope(ConfigWriter::kUser);      // Switch to UserScope
         m_LoadFromSystemScope = value;     // Set the user pref
         saveSettings();                    // Save user prefs
     }
 }
 
 bool AppConfig::isSystemScoped() const {
-    return m_pSettings->scope() == QSettings::SystemScope;
-}
-
-bool AppConfig::unsavedChanges() {
-    return m_SettingModified;
+    return GUI::Config::ConfigWriter::make()->getScope() == GUI::Config::ConfigWriter::kSystem;
 }
 
 bool AppConfig::getServerGroupChecked() const {
@@ -547,7 +513,7 @@ void AppConfig::setSettingModified(T &variable, const T& newValue) {
     if (variable != newValue)
     {
         variable = newValue;
-        m_SettingModified = true;
+        m_unsavedChanges = true;
     }
 }
 

@@ -356,21 +356,9 @@ void MainWindow::saveSettings()
     appConfig().setServerHostname(m_pLineEditHostname->text());
 
 
-    //Save if there are any unsaved changes otherwise skip
-    if (appConfig().unsavedChanges()) {
-        auto choice = appConfig().checkGlobalSave();
+    //Save everything
+    GUI::Config::ConfigWriter::make()->globalSave();
 
-        switch (choice) {
-            case AppConfig::SaveToUser:
-                //Switch to local and overrun into the save case
-                appConfig().switchToGlobal(false);
-            case AppConfig::Save:
-                appConfig().saveSettings();
-                break;
-            default:
-                break;
-        }
-    }
 }
 
 void MainWindow::zeroConfToggled() {

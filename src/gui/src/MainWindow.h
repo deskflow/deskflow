@@ -32,6 +32,7 @@
 #include "IpcClient.h"
 #include "Ipc.h"
 #include "ActivationDialog.h"
+#include "ConfigWriter.h"
 
 #include <QMutex>
 
@@ -164,7 +165,8 @@ public slots:
         void zeroConfToggled();
 
     protected:
-        QSettings& settings() { return appConfig().settings(); }
+        // TODO This should be properly using the ConfigWriter system.
+        QSettings& settings() { return GUI::Config::ConfigWriter::make()->settings(); }
         AppConfig& appConfig() { return *m_AppConfig; }
         QProcess* synergyProcess() { return m_pSynergy; }
         void setSynergyProcess(QProcess* p) { m_pSynergy = p; }

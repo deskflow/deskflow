@@ -432,5 +432,7 @@ size_t ServerConfig::setClipboardSharingSize(size_t size) {
 }
 
 QSettings &ServerConfig::settings() {
-    return m_pAppConfig->settings();
+    using GUI::Config::ConfigWriter;
+
+    return ConfigWriter::make()->settings();
 }

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define TRAY_RETRY_COUNT 10
+#define TRAY_RETRY_COUNT 1
 #define TRAY_RETRY_WAIT 2000
 
 #include "QSynergyApplication.h"
@@ -90,22 +90,9 @@ int main(int argc, char* argv[])
     QApplication::setQuitOnLastWindowClosed(false);
 #endif
     //S
-    QSettings::setPath(QSettings::Format::IniFormat,
-            QSettings::Scope::SystemScope,
-            getSystemSettingPath());
 
-    //Config will default to User settings if they exist,
-    // otherwise it will load System setting and save them to User settings
-    QSettings systemSettings(QSettings::Format::IniFormat,
-            QSettings::Scope::SystemScope,
-            QCoreApplication::organizationName(),
-            QCoreApplication::applicationName());
 
-    QSettings userSettings(QSettings::Scope::UserScope,
-            QCoreApplication::organizationName(),
-            QCoreApplication::applicationName());
-
-    AppConfig appConfig (&userSettings, &systemSettings);
+    AppConfig appConfig;
     qRegisterMetaType<Edition>("Edition");
 #ifndef SYNERGY_ENTERPRISE
     LicenseManager licenseManager (&appConfig);
@@ -160,25 +147,7 @@ int waitForTray()
     return true;
 }
 
-QString getSystemSettingPath()
-{
-    const QString settingFilename("SystemConfig.ini");
-    QString path;
-#if defined(Q_OS_WIN)
-    // Program file
-    path = "";
-#elif defined(Q_OS_DARWIN)
-    //Global preferances dir
-    // Would be nice to use /library, but QT has no elevate system in place
-    path = "/usr/local/etc/symless/synergy/";
-#elif defined(Q_OS_LINUX)
-    // /usr/local/etc/synergy
-    path = "/usr/local/etc/symless/synergy/";
-#else
-    assert("OS not supported");
-#endif
-    return path + settingFilename;
-}
+
 
 #if defined(Q_OS_MAC)
 bool checkMacAssistiveDevices()

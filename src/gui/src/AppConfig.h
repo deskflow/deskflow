@@ -26,6 +26,7 @@
 #include "ElevateMode.h"
 #include <shared/EditionType.h>
 #include <mutex>
+#include "ConfigBase.h"
 
 // this should be incremented each time a new page is added. this is
 // saved to settings when the user finishes running the wizard. if
@@ -52,7 +53,7 @@ enum ProcessMode {
     Desktop
 };
 
-class AppConfig: public QObject
+class AppConfig: public QObject, public GUI::Config::ConfigBase
 {
     Q_OBJECT
 
@@ -61,19 +62,10 @@ class AppConfig: public QObject
     friend class SetupWizard;
 
     public:
-        AppConfig(QSettings* userSettings, QSettings* systemSettings);
-        ~AppConfig();
+        AppConfig();
+        ~AppConfig() override;
 
     public:
-        enum SaveChoice {
-            Save,
-            Cancel,
-            SaveToUser
-        };
-
-        /// @brief Gets the current settings.
-        /// @return The scoped setting currently selected
-        QSettings& settings();
 
         bool isSystemScoped() const;
 
@@ -108,7 +100,6 @@ class AppConfig: public QObject
         QString synergyProgramDir() const;
         QString synergyLogDir() const;
 
-        bool detectPath(const QString& name, QString& path);
         void persistLogDir();
         ElevateMode elevateMode();
 
@@ -126,9 +117,6 @@ class AppConfig: public QObject
         ///             True - This will set the variable, and save the user settings before loading the global scope settings
         ///             False - This will load the UserScope then set the variable and save.
         void setLoadFromSystemScope(bool value);
-
-        /// @brief Returns true if the setting should be set to global scope. Only useful if current scope is UserScope
-        bool getLoadFromSystemScope() const;
 
 
         bool    getServerGroupChecked() const;
@@ -150,27 +138,9 @@ class AppConfig: public QObject
         void setMinimizeToTray(bool b);
         bool getMinimizeToTray();
 
-        void saveSettings();
+        void saveSettings() override;
         void setLastVersion(const QString& version);
 
-        /// @brief settingsExist Checks ths settings to see if they exist in the QSettings location
-        /// @return bool True if there are unsaved changes
-        bool unsavedChanges();
-
-        /// @brief settingsExist Checks ths settings to see if they exist in the QSettings location
-        /// @param [in] settings The QSettings object to check
-        /// @return True if the setting was found.
-        static bool settingsExist(QSettings* settings);
-
-        /// @brief If the scope is set to system, this function will query the user
-        ///         if they want to continue saving to global scope or switch to user scope
-        ///         if the scope is set to User the function will just return Save
-        /// @return SaveChoice The choice that was selected, or Save if the scope is user already
-        SaveChoice checkGlobalSave();
-
-        /// @brief This will switch the scope to or from global
-        /// @param [in] global bool Defaults to true to switch to global scope, False to set to User scope
-        void switchToGlobal(bool global = true);
 
 protected:
     /// @brief The enumeration to easily access the names of the setting inside m_SynergySettingsName
@@ -219,23 +189,21 @@ protected:
 
         /// @brief loads the setting from the current scope
         /// @param ignoreSystem should the load feature ignore the globalScope setting that was saved
-        void loadSettings(bool ignoreSystem = false);
+        void loadSettings() override;
         static QString settingName(AppConfig::Setting name);
 
     private:
-        QSettings* m_pSettings;          /// @brief  Contain the current settings scope
-        QSettings* m_pUserSettings;      /// @brief  Contains the setting in UserScope
-        QSettings* m_pSystemSettings;    /// @brief  Contains the setting in SystemScope
+
         QString m_ScreenName;
         int m_Port;
         QString m_Interface;
         int m_LogLevel;
-        bool m_LogToFile;
+        bool m_LogToFile{};
         QString m_LogFilename;
         int m_WizardLastRun;
         ProcessMode m_ProcessMode;
         QString m_Language;
-        bool m_StartedBefore;
+        bool m_StartedBefore{};
         bool m_AutoConfig;
         QString m_AutoConfigServer;
         ElevateMode m_ElevateMode;
@@ -246,20 +214,19 @@ protected:
         QString m_Serialkey;
         QString m_lastVersion;
         int m_LastExpiringWarningTime;
-        bool m_ActivationHasRun;
+        bool m_ActivationHasRun{};
         bool m_MinimizeToTray;
 
-        bool m_ServerGroupChecked;
-        bool m_UseExternalConfig;
+        bool m_ServerGroupChecked{};
+        bool m_UseExternalConfig{};
         QString m_ConfigFile;
-        bool m_UseInternalConfig;
-        bool m_ClientGroupChecked;
+        bool m_UseInternalConfig{};
+        bool m_ClientGroupChecked{};
         QString m_ServerHostname;
 
-        bool m_LoadFromSystemScope;     /// @brief should the setting be loaded from SystemScope
+        bool m_LoadFromSystemScope{};     /// @brief should the setting be loaded from SystemScope
                                         ///         If the user has settings but this is true then
                                         ///         system settings will be loaded instead of the users
-        bool m_SettingModified;         /// @brief Have the setting been changed since the last save
 
         static const char m_SynergysName[];
         static const char m_SynergycName[];
