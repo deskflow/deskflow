@@ -105,7 +105,7 @@ AppConfig::AppConfig() :
     m_UseExternalConfig(),
     m_UseInternalConfig(),
     m_ClientGroupChecked(),
-    m_LoadFromSystemScope(),
+    m_LoadFromSystemScope()
 {
 
     using GUI::Config::ConfigWriter;
