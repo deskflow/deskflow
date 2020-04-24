@@ -2,6 +2,8 @@
 // Created by jamie on 21/04/2020.
 //
 
+#include <cassert>
+
 #include <QCoreApplication>
 #include <QMessageBox>
 #include <QPushButton>
