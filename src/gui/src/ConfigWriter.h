@@ -81,11 +81,17 @@ namespace GUI {
             /// @brief trigger a config save across all registered classes
             void globalSave();
 
+            /// @brief Saves the settings to file
+            void save();
+
             /// @brief Returns the current scopes settings object
             ///         If more specialize control into the settings is needed this can provide
             ///         direct access to the settings file handler
             /// @return QSettings The Settings object as a reference
             QSettings& settings();
+
+            /// @brief This marks the settings as unsaved if the settings() was used to directly affect the config file
+            void markUnsaved();
 
             /// @brief Register a class to receives globalLoad and globalSave events
             /// @param [in] ConfigBase The class that will receive the events
@@ -116,6 +122,9 @@ namespace GUI {
             ///         on a save and reload by any other class
             std::list<ConfigBase*> m_pCallerList;
 
+            /// @brief if this class modified settings then set the flag
+            bool m_unsavedChanges = false;
+
             /// @brief The constructor, as this is a singolton we want to control who can call the constructor
             ConfigWriter();
 
@@ -145,6 +154,7 @@ namespace GUI {
                     m_pSettingsCurrent->setValue(name, value);
                     break;
             }
+            m_unsavedChanges = true;
         }
     }
 }

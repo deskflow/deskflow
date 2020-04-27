@@ -42,6 +42,8 @@ namespace GUI {
                                    QCoreApplication::organizationName(),
                                    QCoreApplication::applicationName());
 
+            //Set scope to user for initially
+            m_pSettingsCurrent = m_pSettingsUser;
         }
 
 
@@ -98,9 +100,6 @@ namespace GUI {
                         //setScope should never be kCurrent
                         assert(scope);
                 }
-
-                //Notify registered classes to reload
-                globalLoad();
             }
         }
 
@@ -129,6 +128,7 @@ namespace GUI {
                         for (auto &i : m_pCallerList) {
                             i->saveSettings();
                         }
+                        save();
                         break;
                     default:
                         break;
@@ -153,10 +153,11 @@ namespace GUI {
 #elif defined(Q_OS_DARWIN)
             //Global preferances dir
             // Would be nice to use /library, but QT has no elevate system in place
-            path = "/usr/local/etc/symless/synergy/";
+            path = "/usr/local/etc/symless/";
 #elif defined(Q_OS_LINUX)
-            // /usr/local/etc/synergy
-            path = "/usr/local/etc/symless/synergy/";
+            // QT adds application and filename to the end of the path already on linux
+            path = "/usr/local/etc/symless/";
+            return path;
 #else
             assert("OS not supported");
 #endif
@@ -164,6 +165,10 @@ namespace GUI {
         }
 
         bool ConfigWriter::unsavedChanges() const {
+            if (m_unsavedChanges) {
+                return true;
+            }
+
             for (const auto &i : m_pCallerList) {
                 if (i->modified()){
                     //If any class returns true there is no point checking more
@@ -172,6 +177,10 @@ namespace GUI {
             }
             // If this line is reached no class has unsaved changes
             return false;
+        }
+
+        void ConfigWriter::markUnsaved() {
+            m_unsavedChanges = true;
         }
 
         ConfigWriter::SaveChoice ConfigWriter::checkSystemSave() const {
@@ -201,6 +210,9 @@ namespace GUI {
             return kSave;
         }
 
-
+        void ConfigWriter::save() {
+            m_pSettingsCurrent->sync();
+            m_unsavedChanges = false;
+        }
     }
 }
