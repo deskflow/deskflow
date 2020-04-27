@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define TRAY_RETRY_COUNT 1
+#define TRAY_RETRY_COUNT 10
 #define TRAY_RETRY_WAIT 2000
 
 #include "QSynergyApplication.h"
@@ -27,7 +27,6 @@
 
 #include <QtCore>
 #include <QtGui>
-#include <QSettings>
 #include <QMessageBox>
 
 #if defined(Q_OS_MAC)

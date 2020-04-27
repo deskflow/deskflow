@@ -68,7 +68,6 @@ void SettingsDialog::accept()
 
     //We only need to test the System scoped Radio as they are connected
     appConfig().setLoadFromSystemScope(m_pRadioSystemScope->isChecked());
-    appConfig().saveSettings();
     QDialog::accept();
 }
 
@@ -201,7 +200,6 @@ void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
 {
     m_appConfig.setCryptoEnabled(checked);
-    m_appConfig.saveSettings();
     if (checked) {
         SslCertificate sslCertificate;
         sslCertificate.generateCertificate();

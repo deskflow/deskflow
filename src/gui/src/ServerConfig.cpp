@@ -42,9 +42,9 @@ static const struct
 
 const int serverDefaultIndex = 7;
 
-ServerConfig::ServerConfig(AppConfig* appConfig, int numColumns, int numRows ,
+ServerConfig::ServerConfig(int numColumns, int numRows ,
                 QString serverName, MainWindow* mainWindow) :
-        m_pAppConfig(appConfig),
+
         m_Screens(),
         m_NumColumns(numColumns),
         m_NumRows(numRows),
@@ -56,8 +56,7 @@ ServerConfig::ServerConfig(AppConfig* appConfig, int numColumns, int numRows ,
         m_ClipboardSharingSize(defaultClipboardSharingSize()),
         m_pMainWindow(mainWindow)
 {
-    Q_ASSERT(m_pAppConfig);
-
+    GUI::Config::ConfigWriter::make()->registerClass(this);
     loadSettings();
 }
 
@@ -142,6 +141,9 @@ void ServerConfig::saveSettings()
     settings().endArray();
 
     settings().endGroup();
+
+    //Tell the config writer there are changes
+    GUI::Config::ConfigWriter::make()->markUnsaved();
 }
 
 void ServerConfig::loadSettings()
