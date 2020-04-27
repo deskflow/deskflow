@@ -97,7 +97,7 @@ static const char* synergyDefaultIconFiles[] =
 };
 
 #ifdef SYNERGY_ENTERPRISE
-MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig)
+MainWindow::MainWindow (AppConfig& appConfig)
 #else
 MainWindow::MainWindow (AppConfig& appConfig,
                         LicenseManager& licenseManager)
@@ -111,7 +111,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_AppConfig(&appConfig),
     m_pSynergy(NULL),
     m_SynergyState(synergyDisconnected),
-    m_ServerConfig(m_AppConfig, 5, 3, m_AppConfig->screenName(), this),
+    m_ServerConfig(5, 3, m_AppConfig->screenName(), this),
     m_pTempConfigFile(NULL),
     m_pTrayIcon(NULL),
     m_pTrayIconMenu(NULL),
@@ -195,7 +195,6 @@ MainWindow::MainWindow (AppConfig& appConfig,
     QString currentVersion = m_VersionChecker.getVersion();
     if (lastVersion != currentVersion) {
         m_AppConfig->setLastVersion (currentVersion);
-        m_AppConfig->saveSettings();
 #ifndef SYNERGY_ENTERPRISE
         m_LicenseManager->notifyUpdate (lastVersion, currentVersion);
 #endif
@@ -497,7 +496,6 @@ void MainWindow::checkConnected(const QString& line)
                     "the background."));
 
             appConfig().setStartedBefore(true);
-            appConfig().saveSettings();
         }
     }
     else if (line.contains("started server"))
@@ -1460,7 +1458,6 @@ void MainWindow::on_m_pLabelAutoConfig_linkActivated(const QString &)
 void MainWindow::on_m_pComboServerList_currentIndexChanged(const QString &server)
 {
     appConfig().setAutoConfigServer(server);
-    appConfig().saveSettings();
 }
 
 void MainWindow::windowStateChanged()

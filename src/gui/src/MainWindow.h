@@ -96,7 +96,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
     public:
 #ifdef SYNERGY_ENTERPRISE
-        MainWindow(QSettings& settings, AppConfig& appConfig);
+        MainWindow(AppConfig& appConfig);
 #else
         MainWindow(AppConfig& appConfig,
                    LicenseManager& licenseManager);
