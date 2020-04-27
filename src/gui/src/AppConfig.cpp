@@ -446,8 +446,12 @@ void AppConfig::setLoadFromSystemScope(bool value) {
         m_LoadFromSystemScope = value;
         m_unsavedChanges = true;
         writer->globalSave();     //Save user prefs
-        writer->setScope(ConfigWriter::kSystem);   //Switch the the System Scope and reload
-        writer->globalLoad();
+        writer->setScope(ConfigWriter::kSystem);   //Switch the the System Scope
+        //If the system scope has settings, trigger a global reload, otherwise keep the current users settings
+        if (writer->hasSetting(settingName(kScreenName), ConfigWriter::kUser)) {
+            // If the system already has settings, then load them up now.
+            writer->globalLoad();
+        }
     }
     else if (!value && writer->getScope() == ConfigWriter::kSystem)
     {
