@@ -198,12 +198,12 @@ protected:
         int m_Port;
         QString m_Interface;
         int m_LogLevel;
-        bool m_LogToFile{};
+        bool m_LogToFile;
         QString m_LogFilename;
         int m_WizardLastRun;
         ProcessMode m_ProcessMode;
         QString m_Language;
-        bool m_StartedBefore{};
+        bool m_StartedBefore;
         bool m_AutoConfig;
         QString m_AutoConfigServer;
         ElevateMode m_ElevateMode;
@@ -214,17 +214,17 @@ protected:
         QString m_Serialkey;
         QString m_lastVersion;
         int m_LastExpiringWarningTime;
-        bool m_ActivationHasRun{};
+        bool m_ActivationHasRun;
         bool m_MinimizeToTray;
 
-        bool m_ServerGroupChecked{};
-        bool m_UseExternalConfig{};
+        bool m_ServerGroupChecked;
+        bool m_UseExternalConfig;
         QString m_ConfigFile;
-        bool m_UseInternalConfig{};
-        bool m_ClientGroupChecked{};
+        bool m_UseInternalConfig;
+        bool m_ClientGroupChecked;
         QString m_ServerHostname;
 
-        bool m_LoadFromSystemScope{};     /// @brief should the setting be loaded from SystemScope
+        bool m_LoadFromSystemScope;     /// @brief should the setting be loaded from SystemScope
                                         ///         If the user has settings but this is true then
                                         ///         system settings will be loaded instead of the users
 
