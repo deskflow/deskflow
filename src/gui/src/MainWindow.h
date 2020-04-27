@@ -188,6 +188,8 @@ public slots:
         void stopDesktop();
         void changeEvent(QEvent* event);
         void retranslateMenuBar();
+        void closeEvent(QCloseEvent *event) override;
+
 #if defined(Q_OS_WIN)
         bool isServiceRunning(QString name);
 #else

@@ -1465,3 +1465,9 @@ void MainWindow::windowStateChanged()
     if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray())
         hide();
 }
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    //If the main window is closing, trigger a save
+    GUI::Config::ConfigWriter::make()->globalSave();
+    event->accept();
+}
