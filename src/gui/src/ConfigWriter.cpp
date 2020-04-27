@@ -1,6 +1,19 @@
-//
-// Created by jamie on 21/04/2020.
-//
+/*
+ * synergy -- mouse and keyboard sharing utility
+ * Copyright (C) 2020-2020 Symless Ltd.
+ *
+ * This package is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * found in the file LICENSE that should have accompanied this file.
+ *
+ * This package is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <cassert>
 
@@ -18,7 +31,7 @@ namespace GUI {
 
 
         ConfigWriter *ConfigWriter::make() {
-            // Only one ConfigWriter can exist at any one time (Singolton)
+            // Only one ConfigWriter can exist at any one time (Singleton)
             if (!s_pConfiguration) {
                 s_pConfiguration = new ConfigWriter();
             }

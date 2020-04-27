@@ -88,8 +88,6 @@ int main(int argc, char* argv[])
 #ifndef Q_OS_WIN
     QApplication::setQuitOnLastWindowClosed(false);
 #endif
-    //S
-
 
     AppConfig appConfig;
     qRegisterMetaType<Edition>("Edition");
