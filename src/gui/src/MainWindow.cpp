@@ -36,6 +36,7 @@
 #include "ProcessorArch.h"
 #include "SslCertificate.h"
 #include "Zeroconf.h"
+#include <QPushButton>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -96,9 +97,9 @@ static const char* synergyDefaultIconFiles[] =
 };
 
 #ifdef SYNERGY_ENTERPRISE
-MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig)
+MainWindow::MainWindow (AppConfig& appConfig)
 #else
-MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
+MainWindow::MainWindow (AppConfig& appConfig,
                         LicenseManager& licenseManager)
 #endif
 :
@@ -107,11 +108,10 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
     m_ActivationDialogRunning(false),
 #endif
     m_pZeroconf(nullptr),
-    m_Settings(settings),
     m_AppConfig(&appConfig),
     m_pSynergy(NULL),
     m_SynergyState(synergyDisconnected),
-    m_ServerConfig(&m_Settings, 5, 3, m_AppConfig->screenName(), this),
+    m_ServerConfig(5, 3, m_AppConfig->screenName(), this),
     m_pTempConfigFile(NULL),
     m_pTrayIcon(NULL),
     m_pTrayIconMenu(NULL),
@@ -195,7 +195,6 @@ MainWindow::MainWindow (QSettings& settings, AppConfig& appConfig,
     QString currentVersion = m_VersionChecker.getVersion();
     if (lastVersion != currentVersion) {
         m_AppConfig->setLastVersion (currentVersion);
-        m_AppConfig->saveSettings();
 #ifndef SYNERGY_ENTERPRISE
         m_LicenseManager->notifyUpdate (lastVersion, currentVersion);
 #endif
@@ -326,13 +325,13 @@ void MainWindow::loadSettings()
 {
     // the next two must come BEFORE loading groupServerChecked and groupClientChecked or
     // disabling and/or enabling the right widgets won't automatically work
-    m_pRadioExternalConfig->setChecked(settings().value("useExternalConfig", false).toBool());
-    m_pRadioInternalConfig->setChecked(settings().value("useInternalConfig", true).toBool());
+    m_pRadioExternalConfig->setChecked(appConfig().getUseExternalConfig());
+    m_pRadioInternalConfig->setChecked(appConfig().getUseInternalConfig());
 
-    m_pGroupServer->setChecked(settings().value("groupServerChecked", false).toBool());
-    m_pLineEditConfigFile->setText(settings().value("configFile", QDir::homePath() + "/" + synergyConfigName).toString());
-    m_pGroupClient->setChecked(settings().value("groupClientChecked", true).toBool());
-    m_pLineEditHostname->setText(settings().value("serverHostname").toString());
+    m_pGroupServer->setChecked(appConfig().getServerGroupChecked());
+    m_pLineEditConfigFile->setText(appConfig().getConfigFile());
+    m_pGroupClient->setChecked(appConfig().getClientGroupChecked());
+    m_pLineEditHostname->setText(appConfig().getServerHostname());
 }
 
 void MainWindow::initConnections()
@@ -348,14 +347,17 @@ void MainWindow::initConnections()
 void MainWindow::saveSettings()
 {
     // program settings
-    settings().setValue("groupServerChecked", m_pGroupServer->isChecked());
-    settings().setValue("useExternalConfig", m_pRadioExternalConfig->isChecked());
-    settings().setValue("configFile", m_pLineEditConfigFile->text());
-    settings().setValue("useInternalConfig", m_pRadioInternalConfig->isChecked());
-    settings().setValue("groupClientChecked", m_pGroupClient->isChecked());
-    settings().setValue("serverHostname", m_pLineEditHostname->text());
+    appConfig().setServerGroupChecked(m_pGroupServer->isChecked());
+    appConfig().setClientGroupChecked(m_pGroupClient->isChecked());
+    appConfig().setUseExternalConfig(m_pRadioExternalConfig->isChecked());
+    appConfig().setUseInternalConfig(m_pRadioInternalConfig->isChecked());
+    appConfig().setConfigFile(m_pLineEditConfigFile->text());
+    appConfig().setServerHostname(m_pLineEditHostname->text());
 
-    settings().sync();
+
+    //Save everything
+    GUI::Config::ConfigWriter::make()->globalSave();
+
 }
 
 void MainWindow::zeroConfToggled() {
@@ -494,7 +496,6 @@ void MainWindow::checkConnected(const QString& line)
                     "the background."));
 
             appConfig().setStartedBefore(true);
-            appConfig().saveSettings();
         }
     }
     else if (line.contains("started server"))
@@ -1457,11 +1458,16 @@ void MainWindow::on_m_pLabelAutoConfig_linkActivated(const QString &)
 void MainWindow::on_m_pComboServerList_currentIndexChanged(const QString &server)
 {
     appConfig().setAutoConfigServer(server);
-    appConfig().saveSettings();
 }
 
 void MainWindow::windowStateChanged()
 {
     if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray())
         hide();
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    //If the main window is closing, trigger a save
+    GUI::Config::ConfigWriter::make()->globalSave();
+    event->accept();
 }

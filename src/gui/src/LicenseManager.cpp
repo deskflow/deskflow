@@ -62,8 +62,6 @@ LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
 				emit beginTrial(m_serialKey.isExpiring(currentTime));
 			}
 		}
-
-		m_AppConfig->saveSettings();
 	}
 
 	return ret;
@@ -118,7 +116,6 @@ void LicenseManager::refresh()
 			setSerialKey(serialKey, true);
 		} catch (...) {
 			m_AppConfig->clearSerialKey();
-			m_AppConfig->saveSettings();
 		}
 	}
 	if (m_serialKey.isExpired(::time(0))) {

@@ -25,6 +25,7 @@
 #include "Screen.h"
 #include "BaseConfig.h"
 #include "Hotkey.h"
+#include "ConfigBase.h"
 
 class QTextStream;
 class QSettings;
@@ -32,14 +33,15 @@ class QString;
 class QFile;
 class ServerConfigDialog;
 class MainWindow;
+class AppConfig;
 
-class ServerConfig : public BaseConfig
+class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
 {
     friend class ServerConfigDialog;
     friend QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config);
 
     public:
-        ServerConfig(QSettings* settings, int numColumns, int numRows,
+        ServerConfig(int numColumns, int numRows,
             QString serverName, MainWindow* mainWindow);
         ~ServerConfig();
 
@@ -67,15 +69,15 @@ class ServerConfig : public BaseConfig
         size_t clipboardSharingSize() const { return m_ClipboardSharingSize; }
         static size_t defaultClipboardSharingSize();
 
-        void saveSettings();
-        void loadSettings();
+        void saveSettings() override;
+        void loadSettings() override;
         bool save(const QString& fileName) const;
         void save(QFile& file) const;
         int numScreens() const;
         int autoAddScreen(const QString name);
 
     protected:
-        QSettings& settings() { return *m_pSettings; }
+        QSettings& settings();
         ScreenList& screens() { return m_Screens; }
         void setScreens(const ScreenList& screens) { m_Screens = screens; }
         void addScreen(const Screen& screen) { m_Screens.append(screen); }
@@ -110,7 +112,6 @@ class ServerConfig : public BaseConfig
         void addToFirstEmptyGrid(const QString& clientName);
 
     private:
-        QSettings* m_pSettings;
         ScreenList m_Screens;
         int m_NumColumns;
         int m_NumRows;
