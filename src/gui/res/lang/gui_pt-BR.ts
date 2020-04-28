@@ -136,7 +136,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="../../src/ActionDialogBase.ui" line="247"/>
       <source>Restart server</source>
-      <translation type="unfinished">Restart server</translation>
+      <translation>Reiniciar servidor</translation>
     </message>
     <message>
       <location filename="../../src/ActionDialogBase.ui" line="259"/>
@@ -159,12 +159,12 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="../../src/ActivationDialog.ui" line="14"/>
       <source>Activate Synergy</source>
-      <translation type="unfinished">Activate Synergy</translation>
+      <translation>Ativar Synergy</translation>
     </message>
     <message>
       <location filename="../../src/ActivationDialog.ui" line="26"/>
       <source>Serial key</source>
-      <translation type="unfinished">Serial key</translation>
+      <translation>Chave serial</translation>
     </message>
     <message>
       <location filename="../../src/ActivationDialog.ui" line="33"/>
@@ -199,14 +199,12 @@ p, li { white-space: pre-wrap; }
       <source>An error occurred while trying to activate Synergy. Please contact the helpdesk, and provide the following information:
 
 %1</source>
-      <translation type="unfinished">An error occurred while trying to activate Synergy. Please contact the helpdesk, and provide the following information:
-
-%1</translation>
+      <translation>Ocorreu um erro ao tentar ativar Synergy. Entre em contato com o suporte técnico e forneça as seguintes informações:</translation>
     </message>
     <message>
       <location filename="../../src/ActivationDialog.cpp" line="88"/>
       <source>%1</source>
-      <translation type="unfinished">%1</translation>
+      <translation>%1</translation>
     </message>
     <message>
       <location filename="../../src/ActivationDialog.cpp" line="97"/>
