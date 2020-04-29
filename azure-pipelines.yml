@@ -247,6 +247,9 @@ jobs:
     displayName: 'Compiling x86'
 
 - job: DoxygenDoc
+
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+
   pool:
     vmImage: 'ubuntu-16.04'
 
