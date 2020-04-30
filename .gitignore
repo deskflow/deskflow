@@ -21,6 +21,8 @@ src/gui/.rnd
 src/setup/win32/synergy.suo
 /.idea
 /cmake-build-debug
+/cmake-build-release/
 /CMakeLists.txt.user
 /.vs
 /CMakeLists.txt.*
+/doxygen/
