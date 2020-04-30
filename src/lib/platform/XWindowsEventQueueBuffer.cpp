@@ -162,31 +162,31 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
     // we want to give the cpu a chance s owe up this to 25ms
 #define TIMEOUT_DELAY 25
 
-    while (((dtimeout < 0.0) || (remaining > 0)) && QLength(m_display)==0 && retval==0){
+//    while (((dtimeout < 0.0) || (remaining > 0)) && QLength(m_display)==0 && retval==0){
 #if HAVE_POLL
-    retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
-     if (pfds[1].revents & POLLIN) {
-         ssize_t read_response = read(m_pipefd[0], buf, 15);
-        
-        // with linux automake, warnings are treated as errors by default
-        if (read_response < 0)
-        {
-            // todo: handle read response
-        }
-
-     }
+//    retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
+//     if (pfds[1].revents & POLLIN) {
+//         ssize_t read_response = read(m_pipefd[0], buf, 15);
+//
+//        // with linux automake, warnings are treated as errors by default
+//        if (read_response < 0)
+//        {
+//            // todo: handle read response
+//        }
+//
+//     }
 #else
-    retval = select(nfds,
-                        SELECT_TYPE_ARG234 &rfds,
-                        SELECT_TYPE_ARG234 NULL,
-                        SELECT_TYPE_ARG234 NULL,
-                        SELECT_TYPE_ARG5   TIMEOUT_DELAY);
-    if (FD_SET(m_pipefd[0], &rfds)) {
-        read(m_pipefd[0], buf, 15);
-    }
+//    retval = select(nfds,
+//                        SELECT_TYPE_ARG234 &rfds,
+//                        SELECT_TYPE_ARG234 NULL,
+//                        SELECT_TYPE_ARG234 NULL,
+//                        SELECT_TYPE_ARG5   TIMEOUT_DELAY);
+//    if (FD_SET(m_pipefd[0], &rfds)) {
+//        read(m_pipefd[0], buf, 15);
+//    }
 #endif
-        remaining-=TIMEOUT_DELAY;
-    }
+//        remaining-=TIMEOUT_DELAY;
+//    }
 
     {
         // we're no longer waiting for events
