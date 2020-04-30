@@ -1,3 +1,17 @@
+v1.12.0-snapshot
+===========
+
+Bug fixes:
+- #6663 Limit GUI log Window to prevent it using up too much RAM over time
+- #6587 Auto config setting doesn't do anything
+- #6620 Unit tests are no longer built
+
+Enhancements:
+- #6666 Add doxygen documentation output from piplines
+
+Features:
+- #6538 System-wide config for all system users
+
 v1.11.1-stable
 ===========
 
