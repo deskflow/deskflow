@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# add warning for users running manually
+function warn() { tput bold; tput setaf 3; echo "$@"; tput sgr0 ; }
+warn "The scripts build_installer.sh and reref_dylibs.sh have been deprecated."
+warn "Please use build_dist.sh instead to deploy using macdeployqt"
+
 # change this to rename the installer package
 B_DMG="Barrier-@BARRIER_VERSION@.dmg"
 
