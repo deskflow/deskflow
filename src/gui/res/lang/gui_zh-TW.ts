@@ -183,26 +183,26 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/ActivationDialog.cpp" line="79"/>
+        <location filename="../../src/ActivationDialog.cpp" line="77"/>
         <source>An error occurred while trying to activate Synergy. Please contact the helpdesk, and provide the following information:
 
 %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/ActivationDialog.cpp" line="88"/>
+        <location filename="../../src/ActivationDialog.cpp" line="86"/>
         <source>%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/ActivationDialog.cpp" line="97"/>
+        <location filename="../../src/ActivationDialog.cpp" line="95"/>
         <source>Thanks for trying %1! %5
 
 %2 day%3 of your trial remain%4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/ActivationDialog.cpp" line="116"/>
+        <location filename="../../src/ActivationDialog.cpp" line="114"/>
         <source>Thanks for activating %1!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -281,43 +281,43 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="987"/>
+        <location filename="../../src/MainWindow.cpp" line="1000"/>
         <source>&amp;Start</source>
         <translation>啟動</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="282"/>
+        <location filename="../../src/MainWindow.cpp" line="284"/>
         <source>&amp;File</source>
         <translation>檔案</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="283"/>
+        <location filename="../../src/MainWindow.cpp" line="285"/>
         <source>&amp;Edit</source>
         <translation>編輯</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="284"/>
+        <location filename="../../src/MainWindow.cpp" line="286"/>
         <source>&amp;Window</source>
         <translation>視窗</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="285"/>
+        <location filename="../../src/MainWindow.cpp" line="287"/>
         <source>&amp;Help</source>
         <translation>幫助</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="418"/>
+        <location filename="../../src/MainWindow.cpp" line="432"/>
         <source>&lt;p&gt;Your version of Synergy is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
         <oldsource>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</oldsource>
         <translation>&lt;p&gt;你的Synergy版本已經太舊， 版本 &lt;b&gt;%1&lt;/b&gt;已經可以至 &lt;a href=&quot;%2&quot;&gt;下載&lt;/a&gt;。&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="480"/>
+        <location filename="../../src/MainWindow.cpp" line="494"/>
         <source>Synergy is now connected. You can close the config window and Synergy will remain connected in the background.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="533"/>
+        <location filename="../../src/MainWindow.cpp" line="546"/>
         <source>You are connecting to a server. Here is it&apos;s fingerprint:
 
 %1
@@ -328,147 +328,147 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="709"/>
+        <location filename="../../src/MainWindow.cpp" line="722"/>
         <source>Program can not be started</source>
         <translation>未能啟動程序</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="709"/>
+        <location filename="../../src/MainWindow.cpp" line="722"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation>未能成功啟動執行檔&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;，儘管該檔案存在，請檢查執行程序權限設定。</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="748"/>
+        <location filename="../../src/MainWindow.cpp" line="761"/>
         <source>Synergy client not found</source>
         <translation>找不到Synergy客戶端</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="749"/>
+        <location filename="../../src/MainWindow.cpp" line="762"/>
         <source>The executable for the synergy client does not exist.</source>
         <translation>Synergy客戶端執行檔不存在。</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="776"/>
+        <location filename="../../src/MainWindow.cpp" line="789"/>
         <source>No server selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="777"/>
+        <location filename="../../src/MainWindow.cpp" line="790"/>
         <source>No auto config server was selected, try manual mode instead.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="792"/>
+        <location filename="../../src/MainWindow.cpp" line="805"/>
         <source>Hostname is empty</source>
         <translation>電腦名稱不能空白</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="793"/>
+        <location filename="../../src/MainWindow.cpp" line="806"/>
         <source>Please fill in a hostname for the synergy client to connect to.</source>
         <translation>請輸入synergy客戶端要連接的電腦名稱。</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="818"/>
+        <location filename="../../src/MainWindow.cpp" line="831"/>
         <source>Cannot write configuration file</source>
         <translation>無法寫入設定檔</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="818"/>
+        <location filename="../../src/MainWindow.cpp" line="831"/>
         <source>The temporary configuration file required to start synergy can not be written.</source>
         <translation>無法寫入用以啟動synergy的暫存設定檔</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="831"/>
+        <location filename="../../src/MainWindow.cpp" line="844"/>
         <source>Configuration filename invalid</source>
         <translation>設定檔檔案名稱無效</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="832"/>
+        <location filename="../../src/MainWindow.cpp" line="845"/>
         <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
         <translation>你沒有輸入有效的synergy伺服器設定檔，你需要現在瀏覽設定檔嗎？</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="860"/>
+        <location filename="../../src/MainWindow.cpp" line="873"/>
         <source>Synergy server not found</source>
         <translation>找不到Synergy伺服器</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="861"/>
+        <location filename="../../src/MainWindow.cpp" line="874"/>
         <source>The executable for the synergy server does not exist.</source>
         <translation>Synergy伺服器執行檔不存在。</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="980"/>
+        <location filename="../../src/MainWindow.cpp" line="993"/>
         <source>&amp;Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1003"/>
+        <location filename="../../src/MainWindow.cpp" line="1016"/>
         <source>Synergy is waiting for clients</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1010"/>
+        <location filename="../../src/MainWindow.cpp" line="1023"/>
         <source>Synergy is connected (with %1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1013"/>
+        <location filename="../../src/MainWindow.cpp" line="1026"/>
         <source>Synergy is running (without TLS encryption)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1018"/>
+        <location filename="../../src/MainWindow.cpp" line="1031"/>
         <source>Synergy is starting...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1021"/>
+        <location filename="../../src/MainWindow.cpp" line="1034"/>
         <source>There was an error, retrying...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1024"/>
+        <location filename="../../src/MainWindow.cpp" line="1037"/>
         <source>Synergy is not running</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1341"/>
+        <location filename="../../src/MainWindow.cpp" line="1354"/>
         <source>Please add the server (%1) to the grid.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1347"/>
+        <location filename="../../src/MainWindow.cpp" line="1360"/>
         <source>Please drag the new client screen (%1) to the desired position on the grid.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1080"/>
+        <location filename="../../src/MainWindow.cpp" line="1093"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1234"/>
+        <location filename="../../src/MainWindow.cpp" line="1247"/>
         <source>Browse for a synergys config file</source>
         <translation>瀏覽以選擇設定檔</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="532"/>
+        <location filename="../../src/MainWindow.cpp" line="545"/>
         <source>Security question</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1247"/>
+        <location filename="../../src/MainWindow.cpp" line="1260"/>
         <source>Save configuration as...</source>
         <translation>儲存設定至...</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1251"/>
+        <location filename="../../src/MainWindow.cpp" line="1264"/>
         <source>Save failed</source>
         <translation>儲存失敗</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="1251"/>
+        <location filename="../../src/MainWindow.cpp" line="1264"/>
         <source>Could not save configuration to file.</source>
         <translation>無法儲存設定至檔案。</translation>
     </message>
@@ -486,8 +486,8 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="522"/>
-        <location filename="../../src/MainWindowBase.ui" line="559"/>
+        <location filename="../../src/MainWindowBase.ui" line="525"/>
+        <location filename="../../src/MainWindowBase.ui" line="562"/>
         <source>&amp;Start</source>
         <translation>啟動</translation>
     </message>
@@ -552,7 +552,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="492"/>
+        <location filename="../../src/MainWindowBase.ui" line="495"/>
         <source>Ready</source>
         <translation>準備</translation>
     </message>
@@ -562,7 +562,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <translation>記錄</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="515"/>
+        <location filename="../../src/MainWindowBase.ui" line="518"/>
         <source>&amp;Apply</source>
         <translation>應用</translation>
     </message>
@@ -577,88 +577,88 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="532"/>
+        <location filename="../../src/MainWindowBase.ui" line="535"/>
         <source>&amp;About Synergy...</source>
         <translation>關於Synergy...</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="540"/>
+        <location filename="../../src/MainWindowBase.ui" line="543"/>
         <source>Visit &amp;help site</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="548"/>
+        <location filename="../../src/MainWindowBase.ui" line="551"/>
         <source>&amp;Quit</source>
         <translation>離開</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="551"/>
+        <location filename="../../src/MainWindowBase.ui" line="554"/>
         <source>Quit</source>
         <translation>離開</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="562"/>
+        <location filename="../../src/MainWindowBase.ui" line="565"/>
         <source>Run</source>
         <translation>執行</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="573"/>
+        <location filename="../../src/MainWindowBase.ui" line="576"/>
         <source>S&amp;top</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="576"/>
+        <location filename="../../src/MainWindowBase.ui" line="579"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="584"/>
+        <location filename="../../src/MainWindowBase.ui" line="587"/>
         <source>S&amp;how Status</source>
         <translation>顯示狀態</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="592"/>
+        <location filename="../../src/MainWindowBase.ui" line="595"/>
         <source>&amp;Hide</source>
         <translation>隱藏</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="595"/>
+        <location filename="../../src/MainWindowBase.ui" line="598"/>
         <source>Hide</source>
         <translation>隱藏</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="603"/>
+        <location filename="../../src/MainWindowBase.ui" line="606"/>
         <source>&amp;Show</source>
         <translation>顯示(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="606"/>
+        <location filename="../../src/MainWindowBase.ui" line="609"/>
         <source>Show</source>
         <translation>顯示</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="614"/>
+        <location filename="../../src/MainWindowBase.ui" line="617"/>
         <source>Save configuration &amp;as...</source>
         <translation>儲存設定至...</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="617"/>
+        <location filename="../../src/MainWindowBase.ui" line="620"/>
         <source>Save the interactively generated server configuration to a file.</source>
         <translation>儲存動態生成的設定至檔案。</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="625"/>
+        <location filename="../../src/MainWindowBase.ui" line="628"/>
         <source>Settings</source>
         <translation>設定</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="628"/>
+        <location filename="../../src/MainWindowBase.ui" line="631"/>
         <source>Edit settings</source>
         <translation>編輯</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindowBase.ui" line="636"/>
         <location filename="../../src/MainWindowBase.ui" line="639"/>
+        <location filename="../../src/MainWindowBase.ui" line="642"/>
         <source>Activate</source>
         <translation type="unfinished"></translation>
     </message>
@@ -674,17 +674,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="61"/>
+        <location filename="../../src/MainWindow.cpp" line="62"/>
         <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
         <translation>Synergy 設定檔 (*.sgc);;所有檔案 (*.*)</translation>
     </message>
     <message>
-        <location filename="../../src/MainWindow.cpp" line="64"/>
+        <location filename="../../src/MainWindow.cpp" line="65"/>
         <source>Synergy Configurations (*.conf);;All files (*.*)</source>
         <translation>Synergy 設定檔 (*.conf);;所有檔案 (*.*)</translation>
     </message>
     <message>
-        <location filename="../../src/main.cpp" line="139"/>
+        <location filename="../../src/main.cpp" line="138"/>
         <source>System tray is unavailable, don&apos;t close your window.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1087,7 +1087,7 @@ Double click on a screen to edit its settings.</source>
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="../../src/SettingsDialog.cpp" line="169"/>
+        <location filename="../../src/SettingsDialog.cpp" line="184"/>
         <source>Save log file to...</source>
         <translation>儲存記錄至檔案...</translation>
     </message>
@@ -1100,127 +1100,142 @@ Double click on a screen to edit its settings.</source>
         <translation>設定</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="32"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="21"/>
+        <source>&amp;Settings Scope</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsDialogBase.ui" line="27"/>
+        <source>System</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsDialogBase.ui" line="37"/>
+        <source>User</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/SettingsDialogBase.ui" line="59"/>
         <source>Sc&amp;reen name:</source>
         <translation>顯示名稱：</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="49"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="76"/>
         <source>P&amp;ort:</source>
         <translation>端口</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="78"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="105"/>
         <source>&amp;Interface:</source>
         <translation>網絡界面：</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="120"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="147"/>
         <source>Specify when the Synergy service should run at an elevated privilege level</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="127"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="154"/>
         <source>As Needed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="132"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="159"/>
         <source>Always</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="137"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="164"/>
         <source>Never</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="145"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="172"/>
         <source>Elevate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="159"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="186"/>
         <source>Minimize to System &amp;Tray</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="194"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="221"/>
         <source>&amp;Network</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="226"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="253"/>
         <source>Enable &amp;TLS Encryption</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="236"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="263"/>
         <source>Enable Auto Config</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="243"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="270"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Install Bonjour&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="253"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="280"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account?source=gui&amp;amp;intent=upgrade&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Upgrade to Pro&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="152"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="179"/>
         <source>&amp;Hide on startup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="293"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="320"/>
         <source>Logging</source>
         <translation>記錄日誌</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="311"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="338"/>
         <source>&amp;Logging level:</source>
         <translation>記錄等級：</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="345"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="372"/>
         <source>Log to file:</source>
         <translation>記錄至檔案：</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="362"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="389"/>
         <source>Browse...</source>
         <translation>瀏覽...</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="107"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="134"/>
         <source>&amp;Language:</source>
         <translation>語言</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="20"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="47"/>
         <source>&amp;Miscellaneous</source>
         <translation>&amp;雜項</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="322"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="349"/>
         <source>Info</source>
         <translation>訊息</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="327"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="354"/>
         <source>Debug</source>
         <translation>偵錯</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="332"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="359"/>
         <source>Debug1</source>
         <translation>偵錯1</translation>
     </message>
     <message>
-        <location filename="../../src/SettingsDialogBase.ui" line="337"/>
+        <location filename="../../src/SettingsDialogBase.ui" line="364"/>
         <source>Debug2</source>
         <translation>偵錯2</translation>
     </message>
