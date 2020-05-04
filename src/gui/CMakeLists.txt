@@ -18,6 +18,8 @@ set_source_files_properties(${LEGACY_LANGUAGE_FILES} PROPERTIES OUTPUT_LOCATION 
 
 qt5_add_translation(QM_FILES ${LEGACY_LANGUAGE_FILES})
 
+add_custom_target(translations ALL DEPENDS ${QM_FILES})
+
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     file (GLOB LEGACY_GUI_MAC_SOURCE_FILES src/*.mm)
     list (APPEND LEGACY_GUI_SOURCE_FILES ${LEGACY_GUI_MAC_SOURCE_FILES})
