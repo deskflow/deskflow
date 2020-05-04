@@ -400,7 +400,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
     configure_files (${BARRIER_BUNDLE_SOURCE_DIR} ${BARRIER_BUNDLE_DIR})
 
-    add_custom_target(Barrier_dmg ALL
+    add_custom_target(Barrier_MacOS ALL
                       bash build_dist.sh
                       DEPENDS barrier barriers barrierc
                       WORKING_DIRECTORY ${BARRIER_BUNDLE_DIR})

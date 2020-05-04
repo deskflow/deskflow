@@ -10,6 +10,8 @@ B_MACOS="Barrier.app/Contents/MacOS"
 B_VERSION="@BARRIER_VERSION@"
 B_BINDIR="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"
 B_BUILDTYPE="@CMAKE_BUILD_TYPE@"
+B_BARRIERC="Barrier.app/Contents/MacOS/barrierc"
+B_BARRIERS="Barrier.app/Contents/MacOS/barriers"
 
 # Colorized output
 function info() { tput bold; echo "$@" ; tput sgr0 ;}
@@ -56,12 +58,16 @@ fi
 # Use macdeployqt to include libraries and create dmg
 if [ "$B_BUILDTYPE" == "Release" ]; then
     info "Building Release disk image (dmg)"
-    "$DEPLOYQT" Barrier.app -dmg || exit 1
+    "$DEPLOYQT" Barrier.app -dmg \
+    -executable="$B_BARRIERC" \
+    -executable="$B_BARRIERS" || exit 1
     mv "Barrier.dmg" "Barrier-$B_VERSION.dmg" || exit 1
     success "Created Barrier-$B_VERSION.dmg"
 else
     warn "Disk image (dmg) only created for Release builds"
     info "Building debug bundle"
-    "$DEPLOYQT" Barrier.app -use-debug-libs -no-strip || exit 1
+    "$DEPLOYQT" Barrier.app -no-strip \
+    -executable="$B_BARRIERC" \
+    -executable="$B_BARRIERS" || exit 1
     success "Bundle created successfully"
 fi
