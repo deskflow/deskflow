@@ -41,10 +41,6 @@ jobs:
         make -j
       displayName: 'Build'
 
-    - script: |
-        ./build/bin/integtests
-      displayName: 'Unit Test'
-
 
 - job: MacOS
   strategy:
