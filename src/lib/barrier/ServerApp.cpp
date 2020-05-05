@@ -560,10 +560,10 @@ ServerApp::startServer()
         return true;
     }
     catch (XSocketAddressInUse& e) {
-        LOG((CLOG_WARN "cannot listen for clients: %s", e.what()));
+        LOG((CLOG_ERR "cannot listen for clients: %s", e.what()));
         closeClientListener(listener);
         updateStatus(String("cannot listen for clients: ") + e.what());
-        retryTime = 10.0;
+        retryTime = 1.0;
     }
     catch (XBase& e) {
         LOG((CLOG_CRIT "failed to start server: %s", e.what()));
