@@ -38,11 +38,11 @@ jobs:
         mkdir build
         cd build
         if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
-        make
+        make -j
       displayName: 'Build'
 
     - script: |
-        ./bin/integtests
+        ./build/bin/integtests
       displayName: 'Unit Test'
 
 
@@ -77,7 +77,7 @@ jobs:
     inputs:
       script: |
         cd build
-        make
+        make -j
     displayName: 'Compiling'
 
 - job: Windows
