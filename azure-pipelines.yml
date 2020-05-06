@@ -82,11 +82,16 @@ jobs:
       Release:
         B_BUILD_TYPE: Release
         BARRIER_VERSION_STAGE: Release
+  variables:
+    VERBOSE: 1
+    TERM: xterm-256color
   steps:
-    - script: brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/aac86fc018c48d7b6f23a2e7535276899774567a/Formula/qt.rb
-      displayName: Installed Pinned Qt
-    - script: brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/aac86fc018c48d7b6f23a2e7535276899774567a/Formula/openssl.rb
-      displayName: Installed Pinned OpenSSL
+    - script: rm -rf /usr/local/opt/openssl
+      displayName: Remove incompatible OpenSSL 1.0.2t from macOS-10.14 vmImage
+    - script: brew reinstall openssl
+      displayName: Installed newer OpenSSL 1.1.x
+    - script: brew install pkg-config qt5
+      displayName: Install Qt5 and pkg-config prereqs
     - script: sh -x ./clean_build.sh
       displayName: Clean Build
     - task: PublishBuildArtifacts@1
