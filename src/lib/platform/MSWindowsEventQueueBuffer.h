@@ -47,4 +47,5 @@ private:
     MSG                    m_event;
     UINT                m_daemonQuit;
     IEventQueue*        m_events;
+    UINT                m_os_supported_message_types;
 };
