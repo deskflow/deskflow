@@ -436,12 +436,6 @@ EventQueue::removeHandlers(void* target)
     }
 }
 
-bool
-EventQueue::isEmpty() const
-{
-    return (m_buffer->isEmpty() && getNextTimerTimeout() != 0.0);
-}
-
 IEventJob*
 EventQueue::getHandler(Event::Type type, void* target) const
 {

@@ -58,7 +58,6 @@ public:
     virtual void        removeHandlers(void* target);
     virtual Event::Type
                         registerTypeOnce(Event::Type& type, const char* name);
-    virtual bool        isEmpty() const;
     virtual IEventJob*    getHandler(Event::Type type, void* target) const;
     virtual const char*    getTypeName(Event::Type type);
     virtual Event::Type
