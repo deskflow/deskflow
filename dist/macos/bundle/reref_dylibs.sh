@@ -3,6 +3,12 @@
 # $1 = binary (program or dylib)
 B_TARGET=$1
 if [ "x$B_TARGET" = "x" ]; then
+
+    # add warning for users running manually
+    function warn() { tput bold; tput setaf 3; echo "$@"; tput sgr0 ; }
+    warn "The scripts build_installer.sh and reref_dylibs.sh have been deprecated."
+    warn "Please use build_dist.sh instead to deploy using macdeployqt"
+
     echo Which binary needs to be re-referenced?
     exit 1
 fi

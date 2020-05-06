@@ -1,0 +1,73 @@
+#!/bin/sh
+
+# Use the same verbose variable as CMake
+[ "$VERBOSE" == "1" ] && set -x
+
+# Exit on unset variables or pipe errors
+set -uo pipefail
+
+B_MACOS="Barrier.app/Contents/MacOS"
+B_VERSION="@BARRIER_VERSION@"
+B_BINDIR="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"
+B_BUILDTYPE="@CMAKE_BUILD_TYPE@"
+B_BARRIERC="Barrier.app/Contents/MacOS/barrierc"
+B_BARRIERS="Barrier.app/Contents/MacOS/barriers"
+
+# Colorized output
+function info() { tput bold; echo "$@" ; tput sgr0 ;}
+function error() { tput bold; tput setaf 1; echo "$@"; tput sgr0 ; }
+function success() { tput bold; tput setaf 2; echo "$@"; tput sgr0 ; }
+function warn() { tput bold; tput setaf 3; echo "$@"; tput sgr0 ; }
+
+info "Checking for bundle contents"
+if [ ! -d "Barrier.app/Contents" ]; then
+    error "Please make sure that the build completed successfully"
+    error "before trying to create the installer."
+    exit 1
+fi
+
+if [ -d "$B_MACOS" ]; then
+    info "Removing old binaries from bundle"
+    rm -r "$B_MACOS"
+fi
+
+info "Copying binaries into bundle"
+# Copy the folder instead of globbing unquoted path
+cp -r "$B_BINDIR" "$B_MACOS" || exit 1
+
+# Check for macdeployqt on MacPorts
+if which -s port ; then
+    info "MacPorts found, searching for macdeployqt"
+    DEPLOYQT="$(port contents qt5-qttools | grep --only --max-count 1 '/.*macdeployqt')"
+    if [ ! -x "$DEPLOYQT" ]; then
+        error Please install package qt5-qttools
+        exit 1
+    fi
+fi
+
+# Check for macdeployqt on Homebrew
+if which -s brew ; then
+    info "Homebrew found, searching for macdeployqt"
+    DEPLOYQT="$(brew list qt | grep --only '/.*macdeployqt' | head -1)"
+    if [ ! -x "$DEPLOYQT" ]; then
+        error Please install package qt
+        exit 1
+    fi
+fi
+
+# Use macdeployqt to include libraries and create dmg
+if [ "$B_BUILDTYPE" == "Release" ]; then
+    info "Building Release disk image (dmg)"
+    "$DEPLOYQT" Barrier.app -dmg \
+    -executable="$B_BARRIERC" \
+    -executable="$B_BARRIERS" || exit 1
+    mv "Barrier.dmg" "Barrier-$B_VERSION.dmg" || exit 1
+    success "Created Barrier-$B_VERSION.dmg"
+else
+    warn "Disk image (dmg) only created for Release builds"
+    info "Building debug bundle"
+    "$DEPLOYQT" Barrier.app -no-strip \
+    -executable="$B_BARRIERC" \
+    -executable="$B_BARRIERS" || exit 1
+    success "Bundle created successfully"
+fi
