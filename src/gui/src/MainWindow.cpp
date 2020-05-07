@@ -956,6 +956,7 @@ void MainWindow::updateSSLFingerprint()
     }
     if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists()) {
         m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
+        m_pLabelLocalFingerprint->setTextInteractionFlags(Qt::TextSelectableByMouse);
     } else {
         m_pLabelLocalFingerprint->setText("Disabled");
     }
