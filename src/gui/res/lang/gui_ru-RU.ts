@@ -43,7 +43,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="167"/>
       <source>Build Date: </source>
-      <translation type="unfinished">Build Date: </translation>
+      <translation>Дата сборки: </translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="194"/>
@@ -136,7 +136,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="247"/>
       <source>Restart server</source>
-      <translation type="unfinished">Restart server</translation>
+      <translation>Перезагрузите сервер</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="259"/>
