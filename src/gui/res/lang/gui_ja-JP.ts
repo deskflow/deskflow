@@ -30,20 +30,20 @@ Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</source>
-      <translation type="unfinished">&lt;p&gt;
-Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+      <translation>&lt;p&gt;
+キーボードとマウスの共有ソフトウェアです。クロスプラットフォームでオープンソースです。&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2019 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (symless.com).
+Synergy は GNU General Public (GPLv2). のライセンスで公開されています。&lt;br /&gt;&lt;br /&gt;
+Synergy のベースは CosmoSynergy (Richard Lee, Adam Feder 開発) です。&lt;br /&gt;
+Synergy の GUI は QSynergy (Volker Lanz 開発) がベースです。&lt;br /&gt;&lt;br /&gt;
+私たちのウェブサイトには情報とサポートがあります(symless.com)。
 &lt;/p&gt;</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="167"/>
       <source>Build Date: </source>
-      <translation type="unfinished">Build Date: </translation>
+      <translation>ビルド日: </translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="194"/>
@@ -136,7 +136,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="247"/>
       <source>Restart server</source>
-      <translation type="unfinished">Restart server</translation>
+      <translation>サーバーを再起動</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="259"/>
@@ -159,12 +159,12 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActivationDialog.ui" line="14"/>
       <source>Activate Synergy</source>
-      <translation type="unfinished">Activate Synergy</translation>
+      <translation>Synergy の認証</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="26"/>
       <source>Serial key</source>
-      <translation type="unfinished">Serial key</translation>
+      <translation>シリアルキー</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="33"/>
@@ -334,7 +334,7 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/MainWindow.cpp" line="494"/>
       <source>Synergy is now connected. You can close the config window and Synergy will remain connected in the background.</source>
-      <translation type="unfinished">Synergy is now connected. You can close the config window and Synergy will remain connected in the background.</translation>
+      <translation>ただいま Synergy は接続されました。設定ウインドウを閉じることができます。それでもバックグラウンドで接続を維持します。</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="546"/>
@@ -376,17 +376,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="789"/>
       <source>No server selected</source>
-      <translation type="unfinished">No server selected</translation>
+      <translation>サーバーが選択されていません</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="790"/>
       <source>No auto config server was selected, try manual mode instead.</source>
-      <translation type="unfinished">No auto config server was selected, try manual mode instead.</translation>
+      <translation>自動構成のサーバーが選択されていません。代わりに手動で試してください。</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="805"/>
       <source>Hostname is empty</source>
-      <translation>ホスト名がありません</translation>
+      <translation>ホスト名が空です</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="806"/>
@@ -431,32 +431,32 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1016"/>
       <source>Synergy is waiting for clients</source>
-      <translation type="unfinished">Synergy is waiting for clients</translation>
+      <translation>Synergy はクライアントの接続を待機中</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1023"/>
       <source>Synergy is connected (with %1)</source>
-      <translation type="unfinished">Synergy is connected (with %1)</translation>
+      <translation>Synergy 接続中 (%1 に接続)</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1026"/>
       <source>Synergy is running (without TLS encryption)</source>
-      <translation type="unfinished">Synergy is running (without TLS encryption)</translation>
+      <translation>Synergy 実行中 (TLS暗号化なし)</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1031"/>
       <source>Synergy is starting...</source>
-      <translation type="unfinished">Synergy is starting...</translation>
+      <translation>Synergy 開始中...</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1034"/>
       <source>There was an error, retrying...</source>
-      <translation type="unfinished">There was an error, retrying...</translation>
+      <translation>エラーです。再試行中...</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1037"/>
       <source>Synergy is not running</source>
-      <translation type="unfinished">Synergy is not running</translation>
+      <translation>Synergy は動作していません</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1354"/>
@@ -504,7 +504,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="26"/>
       <source>Synergy</source>
-      <translation type="unfinished">Synergy</translation>
+      <translation>Synergy</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="216"/>
@@ -535,7 +535,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="257"/>
       <source>SSL Fingerprint:</source>
-      <translation type="unfinished">SSL Fingerprint:</translation>
+      <translation>SSL フィンガープリント</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="316"/>
@@ -560,22 +560,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="369"/>
       <source>Client name:</source>
-      <translation type="unfinished">Client name:</translation>
+      <translation>クライアント名:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="383"/>
       <source>&amp;Server:</source>
-      <translation type="unfinished">&amp;Server:</translation>
+      <translation>サーバー(&amp;S):</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="405"/>
       <source>Hostname or IP address of the server computer.</source>
-      <translation type="unfinished">Hostname or IP address of the server computer.</translation>
+      <translation>サーバーのパソコンのホスト名やIPアドレス。</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="428"/>
       <source>Server:</source>
-      <translation type="unfinished">Server:</translation>
+      <translation>サーバー:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="495"/>
@@ -610,7 +610,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="543"/>
       <source>Visit &amp;help site</source>
-      <translation type="unfinished">Visit &amp;help site</translation>
+      <translation>ヘルプサイトにアクセス(&amp;H)</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="551"/>
@@ -687,7 +687,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/MainWindowBase.ui" line="639"/>
       <location filename="src/MainWindowBase.ui" line="642"/>
       <source>Activate</source>
-      <translation type="unfinished">Activate</translation>
+      <translation>認証</translation>
     </message>
   </context>
   <context>
@@ -713,7 +713,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/main.cpp" line="138"/>
       <source>System tray is unavailable, don&apos;t close your window.</source>
-      <translation type="unfinished">System tray is unavailable, don&apos;t close your window.</translation>
+      <translation>システムトレイが利用できないためウィンドウを閉じないように。</translation>
     </message>
   </context>
   <context>
@@ -783,7 +783,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="258"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="305"/>
       <source>Shift</source>
-      <translation type="unfinished">Shift</translation>
+      <translation>Shift</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="122"/>
@@ -792,7 +792,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="263"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="310"/>
       <source>Ctrl</source>
-      <translation type="unfinished">Ctrl</translation>
+      <translation>Ctrl</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="127"/>
@@ -801,7 +801,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="268"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="315"/>
       <source>Alt</source>
-      <translation type="unfinished">Alt</translation>
+      <translation>Alt</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="132"/>
@@ -1038,17 +1038,17 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="416"/>
       <source>Enable clipboard sharing</source>
-      <translation type="unfinished">Enable clipboard sharing</translation>
+      <translation>クリップボードを共有</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="452"/>
       <source>MB</source>
-      <translation type="unfinished">MB</translation>
+      <translation>MB</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="461"/>
       <source>Enable drag and drop file transfers</source>
-      <translation type="unfinished">Enable drag and drop file transfers</translation>
+      <translation>ドラッグアンドドロップでファイル転送</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="513"/>
@@ -1078,7 +1078,7 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="571"/>
       <source>Disable lock to screen</source>
-      <translation type="unfinished">Disable lock to screen</translation>
+      <translation>画面ロックを無効化</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="581"/>
@@ -1129,17 +1129,17 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="21"/>
       <source>&amp;Settings Scope</source>
-      <translation type="unfinished">&amp;Settings Scope</translation>
+      <translation>設定スコープ(&amp;S)</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="27"/>
       <source>System</source>
-      <translation type="unfinished">System</translation>
+      <translation>システム</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="37"/>
       <source>User</source>
-      <translation type="unfinished">User</translation>
+      <translation>ユーザー</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="59"/>
@@ -1159,42 +1159,42 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="147"/>
       <source>Specify when the Synergy service should run at an elevated privilege level</source>
-      <translation type="unfinished">Specify when the Synergy service should run at an elevated privilege level</translation>
+      <translation>Synergy のサービスを昇格した権限で実行するタイミングの指定</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="154"/>
       <source>As Needed</source>
-      <translation type="unfinished">As Needed</translation>
+      <translation>必要に応じて</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="159"/>
       <source>Always</source>
-      <translation type="unfinished">Always</translation>
+      <translation>常に</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="164"/>
       <source>Never</source>
-      <translation type="unfinished">Never</translation>
+      <translation>なし</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="172"/>
       <source>Elevate</source>
-      <translation type="unfinished">Elevate</translation>
+      <translation>権限昇格</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="186"/>
       <source>Minimize to System &amp;Tray</source>
-      <translation type="unfinished">Minimize to System &amp;Tray</translation>
+      <translation>システムトレイに最小化(&amp;T)</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="221"/>
       <source>&amp;Network</source>
-      <translation type="unfinished">&amp;Network</translation>
+      <translation>ネットワーク(&amp;N)</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="253"/>
       <source>Enable &amp;TLS Encryption</source>
-      <translation type="unfinished">Enable &amp;TLS Encryption</translation>
+      <translation>TLS 暗号化を有効(&amp;T)</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="263"/>
