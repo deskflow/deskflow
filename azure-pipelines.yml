@@ -64,6 +64,11 @@ jobs:
       displayName: "Get keys"
     #   condition: eq(variables['Build.Reason'], 'Manual')
 
+    - script: |
+        echo $gpgContent >> Symless.key
+        echo $gpgPassword | gpg --import Symless.key
+      displayName: 'Install GPG key'
+
 
 # - job: MacOS
 #   strategy:
