@@ -8,28 +8,28 @@ jobs:
 
   strategy:
     matrix:
-      # ubuntu16.04:
-      #   image: symless/synergy-core:ubuntu16.04
+      ubuntu16.04:
+        image: symless/synergy-core:ubuntu16.04
       ubuntu18.04:
         image: symless/synergy-core:ubuntu18.04
-      # ubuntu19.10:
-      #   image: symless/synergy-core:ubuntu19.10
-      # ubuntu20.04:
-      #   image: symless/synergy-core:ubuntu20.04
-      # debian9:
-      #   image: symless/synergy-core:debian9
-      # debian10:
-      #   image: symless/synergy-core:debian10
-      # fedora28:
-      #   image: symless/synergy-core:fedora28
-      # fedora29:
-      #   image: symless/synergy-core:fedora29
-      # fedora30:
-      #   image: symless/synergy-core:fedora30
-      # centos7.6:
-      #   image: symless/synergy-core:centos7.6
-      # centos8:
-        # image: symless/synergy-core:centos8
+      ubuntu19.10:
+        image: symless/synergy-core:ubuntu19.10
+      ubuntu20.04:
+        image: symless/synergy-core:ubuntu20.04
+      debian9:
+        image: symless/synergy-core:debian9
+      debian10:
+        image: symless/synergy-core:debian10
+      fedora28:
+        image: symless/synergy-core:fedora28
+      fedora29:
+        image: symless/synergy-core:fedora29
+      fedora30:
+        image: symless/synergy-core:fedora30
+      centos7.6:
+        image: symless/synergy-core:centos7.6
+      centos8:
+        image: symless/synergy-core:centos8
 
   container: $[ variables['image'] ]
 
