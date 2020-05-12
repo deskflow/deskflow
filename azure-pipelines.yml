@@ -34,27 +34,27 @@ jobs:
   container: $[ variables['image'] ]
 
   steps:
-    - script: |
-        mkdir build-release
-        cd build-release
-        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
-        make -j
-      displayName: 'Build Release'
+    # - script: |
+    #     mkdir build-release
+    #     cd build-release
+    #     if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
+    #     make -j
+    #   displayName: 'Build Release'
 
-    - script: |
-        mkdir build-debug
-        cd build-debug
-        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
-        make -j
-      displayName: 'Build Debug'
+    # - script: |
+    #     mkdir build-debug
+    #     cd build-debug
+    #     if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
+    #     make -j
+    #   displayName: 'Build Debug'
 
-    - script: |
-        mkdir build-ent
-        cd build-ent
-        export SYNERGY_ENTERPRISE=1
-        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; fi
-        make -j
-      displayName: 'Build enterprise'
+    # - script: |
+    #     mkdir build-ent
+    #     cd build-ent
+    #     export SYNERGY_ENTERPRISE=1
+    #     if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; fi
+    #     make -j
+    #   displayName: 'Build enterprise'
 
     - task: AzureKeyVault@1
       inputs:
@@ -65,8 +65,8 @@ jobs:
     #   condition: eq(variables['Build.Reason'], 'Manual')
 
     - script: |
-        echo $gpgContent >> Symless.key
-        echo $gpgPassword | gpg --import Symless.key
+        echo $gpgContent >> Symless.key && echo "Key Saved"
+        echo $gpgPassword | gpg --import Symless.key && echo "Key Imported"
       displayName: 'Install GPG key'
 
 
