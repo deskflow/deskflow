@@ -38,6 +38,13 @@ main(int argc, char** argv)
     // record window instance for tray icon, etc
     ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
+
+#ifdef __APPLE__
+    /* Silence "is calling TIS/TSM in non-main thread environment" as it is a red
+    herring that causes a lot of issues to be filed for the MacOS client/server.
+    */
+    setenv("OS_ACTIVITY_DT_MODE", "NO", true);
+#endif
     
     Arch arch;
     arch.init();
