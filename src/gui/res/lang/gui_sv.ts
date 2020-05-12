@@ -1,12 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE TS><TS language="sv" sourcelanguage="en" version="2.0">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sv" sourcelanguage="en">
 <context>
     <name>AboutDialogBase</name>
     <message>
         <location filename="res/AboutDialogBase.ui" line="38"/>
         <source>About Barrier</source>
-        <translation type="finished">Om Barrier</translation>
+        <translation>Om Barrier</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="res/AboutDialogBase.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
@@ -26,22 +28,30 @@ Barrier is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Barrier GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;
+Program för att dela tangentbord och mus. Plattformsöverskridande och öppen källkod.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2012-2016 Symless Ltd.&lt;br /&gt;
+Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Barrier är släppt under GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Barrier baseras på CosmoSynergy av Richard Lee and Adam Feder.&lt;br /&gt;
+Barrier GUI baseras på QSynergy av Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Besök vår webbplats för hjälp och information (symless.com).
+&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="res/AboutDialogBase.ui" line="140"/>
         <source>Unknown</source>
-        <translation type="finished">Okänd</translation>
+        <translation>Okänd</translation>
     </message>
     <message>
         <location filename="res/AboutDialogBase.ui" line="124"/>
         <source>Version:</source>
-        <translation type="finished">Version:</translation>
+        <translation>Version:</translation>
     </message>
     <message>
         <location filename="res/AboutDialogBase.ui" line="163"/>
         <source>&amp;Ok</source>
-        <translation type="finished">&amp;Ok</translation>
+        <translation>&amp;OK</translation>
     </message>
 </context>
 <context>
@@ -49,97 +59,97 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="res/ActionDialogBase.ui" line="14"/>
         <source>Configure Action</source>
-        <translation type="finished">Konfigurera</translation>
+        <translation>Konfigurera åtgärd</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="20"/>
         <source>Choose the action to perform</source>
-        <translation type="finished">Välj funktion som skall utföras</translation>
+        <translation>Välj den åtgärd som skall utföras</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="26"/>
         <source>Press a hotkey</source>
-        <translation type="finished">Tryck ned en snabbtangent</translation>
+        <translation>Tryck ner en snabbtangent</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="36"/>
         <source>Release a hotkey</source>
-        <translation type="finished">Släpp en snabbtangent</translation>
+        <translation>Släpp en snabbtangent</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="43"/>
         <source>Press and release a hotkey</source>
-        <translation type="finished">Tryck ned och släpp en snabbtangent</translation>
+        <translation>Tryck ner och släpp en snabbtangent</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="69"/>
         <source>only on these screens</source>
-        <translation type="finished">endast på dessa skärmar</translation>
+        <translation>endast på dessa skärmar</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="119"/>
         <source>Switch to screen</source>
-        <translation type="finished">Växla till skärm</translation>
+        <translation>Växla till skärm</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="150"/>
         <source>Switch in direction</source>
-        <translation type="finished">Växla i riktning</translation>
+        <translation>Växla i riktning</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="174"/>
         <source>left</source>
-        <translation type="finished">vänster</translation>
+        <translation>vänster</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="179"/>
         <source>right</source>
-        <translation type="finished">höger</translation>
+        <translation>höger</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="184"/>
         <source>up</source>
-        <translation type="finished">upp</translation>
+        <translation>upp</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="189"/>
         <source>down</source>
-        <translation type="finished">ner</translation>
+        <translation>ner</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="201"/>
         <source>Lock cursor to screen</source>
-        <translation type="finished">Lås muspekaren till skärm</translation>
+        <translation>Lås muspekaren till skärm</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="225"/>
         <source>toggle</source>
-        <translation type="finished">skifta</translation>
+        <translation>växla</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="230"/>
         <source>on</source>
-        <translation type="finished">på</translation>
+        <translation>på</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="235"/>
         <source>off</source>
-        <translation type="finished">Av</translation>
+        <translation>av</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="248"/>
         <source>This action is performed when</source>
-        <translation type="finished">Detta utförs när </translation>
+        <translation>Denna åtgärd utförs när</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="254"/>
         <source>the hotkey is pressed</source>
-        <translation type="finished">snabbtangenten trycks in</translation>
+        <translation>snabbtangenten trycks ner</translation>
     </message>
     <message>
         <location filename="res/ActionDialogBase.ui" line="264"/>
         <source>the hotkey is released</source>
-        <translation type="finished">snabbtangenten släpps</translation>
+        <translation>snabbtangenten släpps</translation>
     </message>
 </context>
 <context>
@@ -147,17 +157,17 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="res/AddClientDialogBase.ui" line="20"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>Dialog</translation>
     </message>
     <message>
         <location filename="res/AddClientDialogBase.ui" line="35"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation>Textetikett</translation>
     </message>
     <message>
         <location filename="res/AddClientDialogBase.ui" line="83"/>
         <source>Ignore auto connect clients</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignorera klienter med automatisk anslutning</translation>
     </message>
 </context>
 <context>
@@ -165,12 +175,12 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="res/HotkeyDialogBase.ui" line="14"/>
         <source>Hotkey</source>
-        <translation type="finished">Snabbtangent</translation>
+        <translation>Snabbtangent</translation>
     </message>
     <message>
         <location filename="res/HotkeyDialogBase.ui" line="20"/>
         <source>Enter the specification for the hotkey:</source>
-        <translation type="finished">Beskriv snabbtangenten:</translation>
+        <translation>Beskriv snabbtangenten:</translation>
     </message>
 </context>
 <context>
@@ -178,189 +188,193 @@ Visit our website for help and info (symless.com).
     <message>
         <location filename="src/MainWindow.cpp" line="790"/>
         <source>&amp;Start</source>
-        <translation type="finished">Start</translation>
+        <translation>&amp;Starta</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="237"/>
         <source>&amp;File</source>
-        <translation type="finished">Arkiv</translation>
+        <translation>&amp;Arkiv</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="238"/>
         <source>&amp;Edit</source>
-        <translation type="finished">&amp;Redigera</translation>
+        <translation>&amp;Redigera</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="239"/>
         <source>&amp;Window</source>
-        <translation type="finished">Fönster</translation>
+        <translation>&amp;Fönster</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="240"/>
         <source>&amp;Help</source>
-        <translation type="finished">Hjälp</translation>
+        <translation>&amp;Hjälp</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="364"/>
         <source>&lt;p&gt;Your version of Barrier is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
         <oldsource>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</oldsource>
-        <translation type="finished">&lt;p&gt;Du kör inte den senaste versionen av Barrier. Version &lt;b&gt;%1&lt;/b&gt; finns tillgänglig för &lt;a href=&quot;%2&quot;&gt;nedladdning&lt;/a&gt;.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Din version av Barrier är utdaterad. Version &lt;b&gt;%1&lt;/b&gt; finns nu tillgänglig för &lt;a href=&quot;%2&quot;&gt;nerladdning&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="577"/>
         <source>Program can not be started</source>
-        <translation type="finished">Programmet kan inte startas</translation>
+        <translation>Programmet kan inte startas</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="577"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation type="finished">Programmet&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;kunde inte startas, men det finns. Var vänlig och kontrollera att du har tillräckliga rättigheter för att köra detta program.</translation>
+        <translation>Programmet&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;kunde inte startas, men det finns tillgängligt. Kontrollera att du har tillräckliga rättigheter för att köra detta program.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="596"/>
         <source>Barrier client not found</source>
-        <translation type="finished">Barrierklienten hittades inte</translation>
+        <translation>Barrier-klienten hittades inte</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="597"/>
         <source>The executable for the barrier client does not exist.</source>
-        <translation type="finished">Den exekverbara filen för Barrierklienten existerar inte.</translation>
+        <translation>Barrier-klientens körbara fil saknas.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="625"/>
         <source>Hostname is empty</source>
-        <translation type="finished">Värddatornamnet är inte satt</translation>
+        <translation>Värdnamnet är tomt</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="626"/>
         <source>Please fill in a hostname for the barrier client to connect to.</source>
-        <translation type="finished">Fyll i det värddatornamn som Barrierklienten skall ansluta till.</translation>
+        <translation>Fyll i det värdnamn som Barrier-klienten skall ansluta till.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="646"/>
         <source>Cannot write configuration file</source>
-        <translation type="finished">Kan inte spara konfigurationsfilen</translation>
+        <translation>Kan inte skriva konfigurationsfilen</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="646"/>
         <source>The temporary configuration file required to start barrier can not be written.</source>
-        <translation type="finished">Den tillfälliga konfigurationsfilen som krävs för att kunna starta Barrier kan inte skapas.</translation>
+        <translation>Den tillfälliga konfigurationsfil som krävs för att starta Barrier, kan inte skrivas.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="659"/>
         <source>Configuration filename invalid</source>
-        <translation type="finished">Namnet på konfigurationsfilen är inte giltigt</translation>
+        <translation>Ogiltigt namn på konfigurationsfilen</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="660"/>
         <source>You have not filled in a valid configuration file for the barrier server. Do you want to browse for the configuration file now?</source>
-        <translation type="finished">Du har inte fyllt i en giltig konfigurationsfil för Barrierservern. Vill du bläddra efter konfigurationsfilen nu?</translation>
+        <translation>Du har inte fyllt i en giltig konfigurationsfil för Barrier-servern. Vill du bläddra efter konfigurationsfilen nu?</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="688"/>
         <source>Barrier server not found</source>
-        <translation type="finished">Barrierservern hittades inte</translation>
+        <translation>Barrier-servern hittades inte</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="689"/>
         <source>The executable for the barrier server does not exist.</source>
-        <translation type="finished">Den körbara filen för Barrierservern existerar inte.</translation>
+        <translation>Barrier-serverns körbara fil finns inte.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
         <source>Barrier terminated with an error</source>
-        <translation type="finished">Barrier avslutades med ett fel</translation>
+        <translation>Barrier avslutades med ett fel</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="764"/>
         <source>Barrier terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
-        <translation type="finished">Barrierterminalen avslutades oväntat med avbrottskoden %1.&lt;br&gt;&lt;br&gt;Kontrollera loggdatan för detaljer.</translation>
+        <translation>Barrier avslutades oväntat med avbrottskoden %1.&lt;br&gt;&lt;br&gt;Se loggdata för detaljerad info.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="783"/>
         <source>&amp;Stop</source>
-        <translation type="finished">Stopp</translation>
+        <translation>&amp;Stopp</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1038"/>
         <source>Please add the server (%1) to the grid.</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till servern (%1) i rutfältet.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1044"/>
         <source>Please drag the new client screen (%1) to the desired position on the grid.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dra den nya klientskämen (%1) till önskad position i rutfältet.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1147"/>
         <source>Failed to detect system architecture.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte identifiera systemarkitektur.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1165"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Avbryt</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1189"/>
         <source>Failed to download Bonjour installer to location: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte ladda ner Bonjour-installerare till platsen: %1</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1226"/>
         <source>Do you want to enable auto config and install Bonjour?
 
 This feature helps you establish the connection.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vill du aktivera automatisk konfiguration och installation av Bonjour?
+
+Denna funktion hjälper dig att etablera anslutningen.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1270"/>
         <source>Auto config feature requires Bonjour.
 
 Do you want to install Bonjour?</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatisk konfiguration kräver Bonjour.
+
+Vill du installera Bonjour?</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="815"/>
         <source>Barrier is starting.</source>
-        <translation type="finished">Barrier startas.</translation>
+        <translation>Barrier startar.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="809"/>
         <source>Barrier is running.</source>
-        <translation type="finished">Barrier körs.</translation>
+        <translation>Barrier körs.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="819"/>
         <source>Barrier is not running.</source>
-        <translation type="finished">Barrier körs inte.</translation>
+        <translation>Barrier körs inte.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="870"/>
         <source>Unknown</source>
-        <translation type="finished">Okänd</translation>
+        <translation>Okänd</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1146"/>
         <location filename="src/MainWindow.cpp" line="1225"/>
         <location filename="src/MainWindow.cpp" line="1269"/>
         <source>Barrier</source>
-        <translation type="finished">Barrier</translation>
+        <translation>Barrier</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="987"/>
         <source>Browse for a barriers config file</source>
-        <translation type="finished">Bläddra efter Barriers konfigurationsfil.</translation>
+        <translation>Bläddra efter Barriers konfigurationsfil</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="408"/>
         <source>Barrier is now connected, You can close the config window. Barrier will remain connected in the background.</source>
-        <translation type="unfinished"></translation>
+        <translation>Barrier är nu ansluten, du kan stänga konfigurationsfönstret. Barrier kommer att fortsätta vara ansluten i bakgrunden.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="434"/>
         <source>Security question</source>
-        <translation type="unfinished"></translation>
+        <translation>Säkerhetsfråga</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="435"/>
@@ -368,25 +382,31 @@ Do you want to install Bonjour?</source>
 
 %1
 
-This is a server fingerprint. You should compare this fingerprint to the one on your server's screen. If the two don't match exactly, then it's probably not the server you're expecting (it could be a malicious user).
+This is a server fingerprint. You should compare this fingerprint to the one on your server&apos;s screen. If the two don&apos;t match exactly, then it&apos;s probably not the server you&apos;re expecting (it could be a malicious user).
 
 To automatically trust this fingerprint for future connections, click Yes. To reject this fingerprint and disconnect from the server, click No.</source>
-        <translation type="unfinished"></translation>
+        <translation>Litar du på fingeravtrycket?
+
+%1
+
+Detta är en servers fingeravtryck. Du bör jämföra det här fingeravtrycket med det på serverns skärm. Om de två inte stämmer exakt, så är det förmodligen inte den server du förväntar dig (det kan vara en skadlig användare).
+
+Klicka &quot;Ja&quot; för att automatiskt lita på fingeravtrycket i framtida anslutningar. Klicka &quot;Nej&quot; för att avvisa det här fingeravtrycket och koppla från servern.</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1000"/>
         <source>Save configuration as...</source>
-        <translation type="finished">Spara konfiguration som...</translation>
+        <translation>Spara konfigurationen som...</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1004"/>
         <source>Save failed</source>
-        <translation type="finished">Sparades inte</translation>
+        <translation>Kunde inte spara</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="1004"/>
         <source>Could not save configuration to file.</source>
-        <translation type="finished">Kunde inte spara konfiguration till fil.</translation>
+        <translation>Kunde inte spara konfigurationen till fil.</translation>
     </message>
 </context>
 <context>
@@ -394,168 +414,168 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/MainWindowBase.ui" line="26"/>
         <source>Barrier</source>
-        <translation type="finished">Barrier</translation>
+        <translation>Barrier</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="90"/>
-        <source>Ser&amp;ver (share this computer's mouse and keyboard):</source>
-        <translation type="unfinished"></translation>
+        <source>Ser&amp;ver (share this computer&apos;s mouse and keyboard):</source>
+        <translation>Ser&amp;ver (dela den här datorns mus och tangentbord):</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="243"/>
         <source>Screen name:</source>
-        <translation type="finished">Skärmnamn:</translation>
+        <translation>Skärmnamn:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="257"/>
         <source>&amp;Server IP:</source>
-        <translation type="finished">Serverns IP:</translation>
+        <translation>&amp;Serverns IP:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="380"/>
         <location filename="res/MainWindowBase.ui" line="409"/>
         <source>&amp;Start</source>
-        <translation type="finished">Start</translation>
+        <translation>&amp;Starta</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="181"/>
         <source>Use existing configuration:</source>
-        <translation type="finished">Använd befintlig konfiguration:</translation>
+        <translation>Använd befintlig konfiguration:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="190"/>
         <source>&amp;Configuration file:</source>
-        <translation type="finished">Konfigurationsfil:</translation>
+        <translation>&amp;Konfigurationsfil:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="210"/>
         <source>&amp;Browse...</source>
-        <translation type="finished">Bläddra...</translation>
+        <translation>&amp;Bläddra...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="147"/>
         <source>Configure interactively:</source>
-        <translation type="finished">Konfigurera interaktivt:</translation>
+        <translation>Konfigurera interaktivt:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="159"/>
         <source>&amp;Configure Server...</source>
-        <translation type="finished">Konfigurera server...</translation>
+        <translation>&amp;Konfigurera server...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="350"/>
         <source>Ready</source>
-        <translation type="finished">Klar</translation>
+        <translation>Klar</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="296"/>
         <source>Log</source>
-        <translation type="finished">Logg</translation>
+        <translation>Logg</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="373"/>
         <source>&amp;Reload</source>
-        <translation type="finished">Verkställ</translation>
+        <translation>&amp;Uppdatera</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="107"/>
         <source>IP addresses:</source>
-        <translation type="finished">IP-adresser:</translation>
+        <translation>IP-adresser:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="131"/>
         <source>Fingerprint:</source>
-        <translation type="unfinished"></translation>
+        <translation>Fingeravtryck:</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="228"/>
-        <source>&amp;Client (use another computer's mouse and keyboard):</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Client (use another computer&apos;s mouse and keyboard):</source>
+        <translation>&amp;Klient (använd en annan dators mus och tangenbord):</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="270"/>
         <source>Auto config</source>
-        <translation type="unfinished"></translation>
+        <translation>Konfigurera automatiskt</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="390"/>
         <source>&amp;About Barrier...</source>
-        <translation type="finished">Om Barrier...</translation>
+        <translation>&amp;Om Barrier...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="398"/>
         <source>&amp;Quit</source>
-        <translation type="finished">Avsluta</translation>
+        <translation>A&amp;vsluta</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="401"/>
         <source>Quit</source>
-        <translation type="finished">Avsluta</translation>
+        <translation>Avsluta</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="412"/>
         <source>Run</source>
-        <translation type="finished">Kör</translation>
+        <translation>Kör</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="423"/>
         <source>S&amp;top</source>
-        <translation type="finished">S&amp;topp</translation>
+        <translation>S&amp;topp</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="426"/>
         <source>Stop</source>
-        <translation type="finished">Stopp</translation>
+        <translation>Stopp</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="434"/>
         <source>S&amp;how Status</source>
-        <translation type="finished">Visa Status</translation>
+        <translation>V&amp;isa status</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="442"/>
         <source>&amp;Hide</source>
-        <translation type="finished">Dölj</translation>
+        <translation>&amp;Dölj</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="445"/>
         <source>Hide</source>
-        <translation type="finished">Dölj</translation>
+        <translation>Dölj</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="453"/>
         <source>&amp;Show</source>
-        <translation type="finished">Visa</translation>
+        <translation>&amp;Visa</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="456"/>
         <source>Show</source>
-        <translation type="finished">Visa</translation>
+        <translation>Visa</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="464"/>
         <source>Save configuration &amp;as...</source>
-        <translation type="finished">Spara konfiguration som...</translation>
+        <translation>S&amp;para konfigurationen som...</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="467"/>
         <source>Save the interactively generated server configuration to a file.</source>
-        <translation type="finished">Spara den interaktivt genererade serverkonfigurationen till en fil.</translation>
+        <translation>Spara den interaktivt skapade serverkonfigurationen till en fil.</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="475"/>
         <source>Settings</source>
-        <translation type="finished">Inställningar</translation>
+        <translation>Inställningar</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="478"/>
         <source>Edit settings</source>
-        <translation type="finished">Ändra inställningar</translation>
+        <translation>Ändra inställningar</translation>
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="486"/>
         <source>Run Wizard</source>
-        <translation type="finished">Kör guiden</translation>
+        <translation>Kör guiden</translation>
     </message>
 </context>
 <context>
@@ -563,7 +583,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="src/NewScreenWidget.cpp" line="32"/>
         <source>Unnamed</source>
-        <translation type="finished">Namnlös</translation>
+        <translation>Namnlös</translation>
     </message>
 </context>
 <context>
@@ -571,28 +591,29 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="src/PluginManager.cpp" line="58"/>
         <source>Failed to get plugin directory.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte hämta mappen för insticksmoduler.</translation>
     </message>
     <message>
         <location filename="src/PluginManager.cpp" line="63"/>
         <source>Failed to get profile directory.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte hämta profilmappen.</translation>
     </message>
     <message>
         <location filename="src/PluginManager.cpp" line="136"/>
-        <source>Failed to download plugin '%1' to: %2
+        <source>Failed to download plugin &apos;%1&apos; to: %2
 %3</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte ladda ner insticksmodulen &quot;%1&quot; till: %2
+%3</translation>
     </message>
     <message>
         <location filename="src/PluginManager.cpp" line="167"/>
         <source>Could not get Windows architecture type.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte hämta Windows arkitekturtyp.</translation>
     </message>
     <message>
         <location filename="src/PluginManager.cpp" line="191"/>
         <source>Could not get Linux architecture type.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte hämta Linux arkitekturtyp.</translation>
     </message>
 </context>
 <context>
@@ -600,48 +621,48 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="14"/>
         <source>Setup Barrier</source>
-        <translation type="finished">Ställ in Barrier</translation>
+        <translation>Ställ in Barrier</translation>
     </message>
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="101"/>
         <source>Please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vänta...</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="72"/>
         <source>Error: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Fel: %1</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="80"/>
         <location filename="src/PluginWizardPage.cpp" line="201"/>
         <source>Setup complete.</source>
-        <translation type="unfinished"></translation>
+        <translation>Inställning slutförd.</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="93"/>
-        <source>Downloading '%1' plugin (%2/%3)...</source>
-        <translation type="unfinished"></translation>
+        <source>Downloading &apos;%1&apos; plugin (%2/%3)...</source>
+        <translation>Laddar ner &quot;%1&quot; (%2/%3)...</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="104"/>
         <source>Plugins installed successfully.</source>
-        <translation type="unfinished"></translation>
+        <translation>Insticksmoduler korrekt installerade.</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="120"/>
         <source>Generating SSL certificate...</source>
-        <translation type="unfinished"></translation>
+        <translation>Genererar SSL-certifikat...</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="170"/>
         <source>Downloading plugin: %1 (1/%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Laddar ner insticksmodul: %1 (1/%2)</translation>
     </message>
     <message>
         <location filename="src/PluginWizardPage.cpp" line="239"/>
         <source>Getting plugin list...</source>
-        <translation type="unfinished"></translation>
+        <translation>Hämtar instickslista...</translation>
     </message>
 </context>
 <context>
@@ -649,17 +670,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
         <source>Barrier Configurations (*.sgc);;All files (*.*)</source>
-        <translation type="finished">Barrier-konfigurationer (*.sgc);;Alla filer (*.*)</translation>
+        <translation>Barrier-konfigurationer (*.sgc);;Alla filer (*.*)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="67"/>
         <source>Barrier Configurations (*.conf);;All files (*.*)</source>
-        <translation type="finished">Barrier-konfigurationer (*.conf);;Alla filer (*.*)</translation>
+        <translation>Barrier-konfigurationer (*.conf);;Alla filer (*.*)</translation>
     </message>
     <message>
         <location filename="src/main.cpp" line="119"/>
         <source>System tray is unavailable, quitting.</source>
-        <translation type="finished">Systemfältet otillgängligt, avslutar.</translation>
+        <translation>Systemfältet otillgängligt, avslutar.</translation>
     </message>
 </context>
 <context>
@@ -667,22 +688,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="src/ScreenSettingsDialog.cpp" line="67"/>
         <source>Screen name is empty</source>
-        <translation type="finished">Skärmnamnet är tomt</translation>
+        <translation>Skärmnamnet är tomt</translation>
     </message>
     <message>
         <location filename="src/ScreenSettingsDialog.cpp" line="68"/>
         <source>The screen name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-        <translation type="finished">Skärmnamnet kan inte vara tomt. Fyll i ett namn eller avbryt dialogrutan.</translation>
+        <translation>Skärmnamnet kan inte vara tomt. Fyll i ett namn eller avbryt.</translation>
     </message>
     <message>
         <location filename="src/ScreenSettingsDialog.cpp" line="83"/>
         <source>Screen name matches alias</source>
-        <translation type="finished">Skärmnamn matchar alias</translation>
+        <translation>Skärmnamnet är samma som alias</translation>
     </message>
     <message>
         <location filename="src/ScreenSettingsDialog.cpp" line="84"/>
         <source>The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</source>
-        <translation type="finished">Skärmnamnet kan inte vara samma som en alias. Var vänlig att antingen ta bort alias eller ändra skärmnamnet.</translation>
+        <translation>Skärmnamnet kan inte vara samma som alias. Ta antingen bort alias eller ändra skärmnamnet.</translation>
     </message>
 </context>
 <context>
@@ -690,37 +711,37 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="14"/>
         <source>Screen Settings</source>
-        <translation type="finished">Skärminställningar</translation>
+        <translation>Skärminställningar</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="22"/>
         <source>Screen &amp;name:</source>
-        <translation type="finished">Skärmnamn:</translation>
+        <translation>Skärm&amp;namn:</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="42"/>
         <source>A&amp;liases</source>
-        <translation type="finished">Alias</translation>
+        <translation>A&amp;lias</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="57"/>
         <source>&amp;Add</source>
-        <translation type="finished">Lägg till</translation>
+        <translation>&amp;Lägg till</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="74"/>
         <source>&amp;Remove</source>
-        <translation type="finished">Ta bort</translation>
+        <translation>&amp;Ta bort</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="97"/>
         <source>&amp;Modifier keys</source>
-        <translation type="finished">Modifieringstangenter</translation>
+        <translation>&amp;Modifieringstangenter</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="106"/>
         <source>&amp;Shift:</source>
-        <translation type="finished">Shift:</translation>
+        <translation>&amp;Shift:</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="117"/>
@@ -729,7 +750,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="res/ScreenSettingsDialogBase.ui" line="258"/>
         <location filename="res/ScreenSettingsDialogBase.ui" line="305"/>
         <source>Shift</source>
-        <translation type="finished">Shift</translation>
+        <translation>Shift</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="122"/>
@@ -738,7 +759,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="res/ScreenSettingsDialogBase.ui" line="263"/>
         <location filename="res/ScreenSettingsDialogBase.ui" line="310"/>
         <source>Ctrl</source>
-        <translation type="finished">Ctrl</translation>
+        <translation>Ctrl</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="127"/>
@@ -747,7 +768,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="res/ScreenSettingsDialogBase.ui" line="268"/>
         <location filename="res/ScreenSettingsDialogBase.ui" line="315"/>
         <source>Alt</source>
-        <translation type="finished">Alt</translation>
+        <translation>Alt</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="132"/>
@@ -756,7 +777,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="res/ScreenSettingsDialogBase.ui" line="273"/>
         <location filename="res/ScreenSettingsDialogBase.ui" line="320"/>
         <source>Meta</source>
-        <translation type="finished">Meta</translation>
+        <translation>Meta</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="137"/>
@@ -765,7 +786,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="res/ScreenSettingsDialogBase.ui" line="278"/>
         <location filename="res/ScreenSettingsDialogBase.ui" line="325"/>
         <source>Super</source>
-        <translation type="finished">Super</translation>
+        <translation>Super</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="142"/>
@@ -774,82 +795,82 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <location filename="res/ScreenSettingsDialogBase.ui" line="283"/>
         <location filename="res/ScreenSettingsDialogBase.ui" line="330"/>
         <source>None</source>
-        <translation type="finished">Ingen</translation>
+        <translation>Ingen</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="150"/>
         <source>&amp;Ctrl:</source>
-        <translation type="finished">&amp;Ctrl:</translation>
+        <translation>&amp;Ctrl:</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="197"/>
         <source>Al&amp;t:</source>
-        <translation type="finished">Alt:</translation>
+        <translation>Al&amp;t:</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="244"/>
         <source>M&amp;eta:</source>
-        <translation type="finished">Meta:</translation>
+        <translation>M%eta:</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="291"/>
         <source>S&amp;uper:</source>
-        <translation type="finished">Super:</translation>
+        <translation>S&amp;uper:</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="358"/>
         <source>&amp;Dead corners</source>
-        <translation type="finished">Döda hörn</translation>
+        <translation>&amp;Döda hörn</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="367"/>
         <source>Top-left</source>
-        <translation type="finished">Över vänster</translation>
+        <translation>Vänster överkant</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="374"/>
         <source>Top-right</source>
-        <translation type="finished">Över höger</translation>
+        <translation>Höger överkant</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="381"/>
         <source>Bottom-left</source>
-        <translation type="finished">Nedre vänstra hörnet</translation>
+        <translation>Vänster underkant</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="388"/>
         <source>Bottom-right</source>
-        <translation type="finished">Nedre höger</translation>
+        <translation>Höger underkant</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="397"/>
         <source>Corner Si&amp;ze:</source>
-        <translation type="finished">Hörnets storlek:</translation>
+        <translation>H&amp;örnstorlek:</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="428"/>
         <source>&amp;Fixes</source>
-        <translation type="finished">Korrigeringar</translation>
+        <translation>&amp;Korrigeringar</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="437"/>
         <source>Fix CAPS LOCK key</source>
-        <translation type="finished">Korrigera CAPS LOCK</translation>
+        <translation>Korrigera CAPS LOCK</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="444"/>
         <source>Fix NUM LOCK key</source>
-        <translation type="finished">Korrigera NUM LOCK</translation>
+        <translation>Korrigera NUM LOCK</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="451"/>
         <source>Fix SCROLL LOCK key</source>
-        <translation type="finished">Korrigera SCROLL LOCK</translation>
+        <translation>Korrigera SCROLL LOCK</translation>
     </message>
     <message>
         <location filename="res/ScreenSettingsDialogBase.ui" line="458"/>
         <source>Fix XTest for Xinerama</source>
-        <translation type="finished">Korrigera XTest för Xinerama</translation>
+        <translation>Korrigera XTest för Xinerama</translation>
     </message>
 </context>
 <context>
@@ -857,7 +878,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="src/ScreenSetupModel.cpp" line="51"/>
         <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-        <translation type="finished">&lt;center&gt;Skärm:&lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Dubbelklicka för att ändra inställningar&lt;br&gt;Dra skärmen till papperskorgen för att ta bort den</translation>
+        <translation>&lt;center&gt;Skärm:&lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Dubbelklicka för att ändra inställningar&lt;br&gt;Dra skärmen till papperskorgen för att ta bort den</translation>
     </message>
 </context>
 <context>
@@ -865,7 +886,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="src/ServerConfigDialog.cpp" line="75"/>
         <source>Configure server</source>
-        <translation type="unfinished"></translation>
+        <translation>Konfigurera server</translation>
     </message>
 </context>
 <context>
@@ -873,168 +894,168 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="14"/>
         <source>Server Configuration</source>
-        <translation type="finished">Serverkonfiguration</translation>
+        <translation>Serverkonfiguration</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="24"/>
         <source>Screens and links</source>
-        <translation type="finished">Skärmar och länkar</translation>
+        <translation>Skärmar och länkar</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="35"/>
         <source>Drag a screen from the grid to the trashcan to remove it.</source>
-        <translation type="finished">Dra en skärm från rutnätet till papperskorgen för att ta bort den.</translation>
+        <translation>Dra en skärm från rutfältet till papperskorgen för att ta bort den.</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="60"/>
         <source>Configure the layout of your barrier server configuration.</source>
-        <translation type="finished">Konfigurera layouten på din Barrier-konfiguration.</translation>
+        <translation>Konfigurera layouten på din Barrier serverkonfiguration.</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="73"/>
         <source>Drag this button to the grid to add a new screen.</source>
-        <translation type="finished">Dra den här knappen till rutnätet för att lägga till en ny skärm.</translation>
+        <translation>Dra den här knappen till rutfältet för att lägga till en ny skärm.</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="128"/>
         <source>Drag new screens to the grid or move existing ones around.
 Drag a screen to the trashcan to delete it.
 Double click on a screen to edit its settings.</source>
-        <translation type="finished">Dra nya skärmar till rutnätet eller flytta runt existerande.
+        <translation>Dra nya skärmar till rutfältet eller flytta runt befintliga.
 Dra en skärm till papperskorgen för att ta bort den.
 Dubbelklicka på en skärm för att ändra dess inställningar.</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="157"/>
         <source>Hotkeys</source>
-        <translation type="finished">Snabbtangenter</translation>
+        <translation>Snabbtangenter</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="163"/>
         <source>&amp;Hotkeys</source>
-        <translation type="finished">Snabbtangenter</translation>
+        <translation>&amp;Snabbtangenter</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="175"/>
         <source>&amp;New</source>
-        <translation type="finished">Ny</translation>
+        <translation>&amp;Nytt</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="185"/>
         <source>&amp;Edit</source>
-        <translation type="finished">&amp;Redigera</translation>
+        <translation>&amp;Redigera</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="195"/>
         <source>&amp;Remove</source>
-        <translation type="finished">Ta bort</translation>
+        <translation>&amp;Ta bort</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="218"/>
         <source>A&amp;ctions</source>
-        <translation type="finished">Åtgärder</translation>
+        <translation>&amp;Åtgärder</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="230"/>
         <source>Ne&amp;w</source>
-        <translation type="finished">Ny</translation>
+        <translation>N&amp;ytt</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="240"/>
         <source>E&amp;dit</source>
-        <translation type="finished">Ändra</translation>
+        <translation>Re&amp;digera</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="250"/>
         <source>Re&amp;move</source>
-        <translation type="finished">Ta bort</translation>
+        <translation>Ta &amp;bort</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="274"/>
         <source>Advanced server settings</source>
-        <translation type="finished">Avancerade serverinställningar</translation>
+        <translation>Avancerade serverinställningar</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="280"/>
         <source>&amp;Switch</source>
-        <translation type="finished">Växla</translation>
+        <translation>&amp;Växla</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="291"/>
         <source>Switch &amp;after waiting</source>
-        <translation type="finished">Växla efter väntan</translation>
+        <translation>V&amp;äxla efter väntan</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="330"/>
         <location filename="res/ServerConfigDialogBase.ui" line="383"/>
         <location filename="res/ServerConfigDialogBase.ui" line="458"/>
         <source>ms</source>
-        <translation type="finished">ms</translation>
+        <translation>ms</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="344"/>
         <source>Switch on double &amp;tap within</source>
-        <translation type="finished">Växla eller dubbelklicka inuti</translation>
+        <translation>Växla vid &amp;dubbelklick inom</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="408"/>
         <source>&amp;Options</source>
-        <translation type="finished">Alternativ</translation>
+        <translation>&amp;Alternativ</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="419"/>
         <source>&amp;Check clients every</source>
-        <translation type="finished">Kontrollera klienter varje</translation>
+        <translation>&amp;Kontrollera klienter varje</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="470"/>
         <source>Use &amp;relative mouse moves</source>
-        <translation type="finished">Använd relativa musrörelser</translation>
+        <translation>Använd &amp;relativa musrörelser</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="480"/>
         <source>S&amp;ynchronize screen savers</source>
-        <translation type="finished">Synkronisera skärmsläckare</translation>
+        <translation>Synkr&amp;onisera skärmsläckare</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="490"/>
-        <source>Don't take &amp;foreground window on Windows servers</source>
-        <translation type="finished">Använd inte förgrundsfönster på Windowsservrar</translation>
+        <source>Don&apos;t take &amp;foreground window on Windows servers</source>
+        <translation>Använd inte &amp;förgrundsfönster på Windowsservrar</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="510"/>
         <source>Ignore auto config clients</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignorera automatiskt konfigurerade klienter</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="520"/>
         <source>&amp;Dead corners</source>
-        <translation type="finished">Döda hörn</translation>
+        <translation>&amp;Döda hörn</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="529"/>
         <source>To&amp;p-left</source>
-        <translation type="finished">Övre vänstra hörnet</translation>
+        <translation>V&amp;änster överkant</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="536"/>
         <source>Top-rig&amp;ht</source>
-        <translation type="finished">Övre högra hörnet</translation>
+        <translation>H&amp;öger överkant</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="543"/>
         <source>&amp;Bottom-left</source>
-        <translation type="finished">Nedre vänstra hörnet</translation>
+        <translation>Vänster &amp;underkant</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="550"/>
         <source>Bottom-ri&amp;ght</source>
-        <translation type="finished">Nedre högra hörnet</translation>
+        <translation>Höger u&amp;nderkant</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="572"/>
         <source>Cor&amp;ner Size:</source>
-        <translation type="finished">Hörnstorlek:</translation>
+        <translation>Hö&amp;rnstorlek:</translation>
     </message>
 </context>
 <context>
@@ -1042,20 +1063,20 @@ Dubbelklicka på en skärm för att ändra dess inställningar.</translation>
     <message>
         <location filename="src/SettingsDialog.cpp" line="131"/>
         <source>Save log file to...</source>
-        <translation type="finished">Spara loggfil till...</translation>
+        <translation>Spara loggfil till...</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="151"/>
         <source>Elevate Barrier</source>
-        <translation type="finished">Förhöj Barriers behörighet</translation>
+        <translation>Höj Barriers behörighet</translation>
     </message>
     <message>
         <location filename="src/SettingsDialog.cpp" line="152"/>
         <source>Are you sure you want to elevate Barrier?
 
 This allows Barrier to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Barrier only if you really need to.</source>
-        <translation type="finished">Är du säker på att du vill förhöja Barriers behörighet?
-Detta låter Barrier interagera med förhöjda processer och UAC-dialogen, men kan skapa program med processer som inte är förhöjda. Förhöj Barriers behörighet enbart om du verkligen måste.</translation>
+        <translation>Vill du verkligen höja Barriers behörighet?
+Detta låter Barrier interagera med förhöjda processer och UAC-dialogen, men kan skapa program med processer som inte är förhöjda. Höj Barriers behörighet enbart om du verkligen måste.</translation>
     </message>
 </context>
 <context>
@@ -1063,107 +1084,107 @@ Detta låter Barrier interagera med förhöjda processer och UAC-dialogen, men k
     <message>
         <location filename="res/SettingsDialogBase.ui" line="14"/>
         <source>Settings</source>
-        <translation type="finished">Inställningar</translation>
+        <translation>Inställningar</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="32"/>
         <source>Sc&amp;reen name:</source>
-        <translation type="finished">Skärmnamn:</translation>
+        <translation>Sk&amp;ärmnamn:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="49"/>
         <source>P&amp;ort:</source>
-        <translation type="finished">Port:</translation>
+        <translation>P&amp;ort:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="78"/>
         <source>&amp;Interface:</source>
-        <translation type="finished">Gränssnitt:</translation>
+        <translation>G&amp;ränssnitt:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="120"/>
         <source>Elevate mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Rättighetsläge</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="127"/>
         <source>&amp;Hide on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Dölj vid programstart</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="146"/>
         <source>&amp;Network Security</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Nätverkssäkerhet</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="155"/>
         <source>Use &amp;SSL encryption (unique certificate)</source>
-        <translation type="unfinished"></translation>
+        <translation>Använd &amp;SSL-kryptering (unikt certifikat)</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="184"/>
         <source>Logging</source>
-        <translation type="finished">Loggning</translation>
+        <translation>Loggning</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="202"/>
         <source>&amp;Logging level:</source>
-        <translation type="finished">Loggningsnivå:</translation>
+        <translation>&amp;Loggningsnivå:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="251"/>
         <source>Log to file:</source>
-        <translation type="finished">Logga till fil:</translation>
+        <translation>Logga till fil:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="268"/>
         <source>Browse...</source>
-        <translation type="finished">Bläddra:</translation>
+        <translation>Bläddra...</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="213"/>
         <source>Error</source>
-        <translation type="finished">Fel</translation>
+        <translation>Fel</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="107"/>
         <source>&amp;Language:</source>
-        <translation type="finished">Språk:</translation>
+        <translation>&amp;Språk:</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="20"/>
         <source>&amp;Miscellaneous</source>
-        <translation type="finished">&amp;Övrigt</translation>
+        <translation>&amp;Diverse</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="218"/>
         <source>Warning</source>
-        <translation type="finished">Varning</translation>
+        <translation>Varning</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="223"/>
         <source>Note</source>
-        <translation type="finished">Notering</translation>
+        <translation>Anteckning</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="228"/>
         <source>Info</source>
-        <translation type="finished">Info</translation>
+        <translation>Information</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="233"/>
         <source>Debug</source>
-        <translation type="finished">Felsök</translation>
+        <translation>Felsök</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="238"/>
         <source>Debug1</source>
-        <translation type="finished">Felsök1</translation>
+        <translation>Felsök1</translation>
     </message>
     <message>
         <location filename="res/SettingsDialogBase.ui" line="243"/>
         <source>Debug2</source>
-        <translation type="finished">Felsök2</translation>
+        <translation>Felsök2</translation>
     </message>
 </context>
 <context>
@@ -1171,17 +1192,17 @@ Detta låter Barrier interagera med förhöjda processer och UAC-dialogen, men k
     <message>
         <location filename="src/SetupWizard.cpp" line="72"/>
         <source>Setup Barrier</source>
-        <translation type="finished">Ställ in Barrier</translation>
+        <translation>Ställ in Barrier</translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="113"/>
         <source>Please select an option.</source>
-        <translation type="finished">Välj ett alternativ.</translation>
+        <translation>Välj ett alternativ.</translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="80"/>
         <source>Please enter your email address and password.</source>
-        <translation type="finished">Var vänlig skriv din e-postaddress och lösenord.</translation>
+        <translation>Ange din e-postadress och lösenord.</translation>
     </message>
 </context>
 <context>
@@ -1189,85 +1210,93 @@ Detta låter Barrier interagera med förhöjda processer och UAC-dialogen, men k
     <message>
         <location filename="res/SetupWizardBase.ui" line="26"/>
         <source>Setup Barrier</source>
-        <translation type="finished">Ställ in Barrier</translation>
+        <translation>Installera Barrier</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="30"/>
         <source>Welcome</source>
-        <translation type="finished">Välkommen</translation>
+        <translation>Välkommen</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="39"/>
         <source>Thanks for installing Barrier!</source>
-        <translation type="finished">Tack för att du installerar Barrier!</translation>
+        <translation>Tack för att du installerar Barrier!</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="114"/>
-        <source>Barrier lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Barrier is cross-platform (works on Windows, Mac OS X and Linux).</source>
-        <translation type="finished">Med Barrier kan du enkelt dela din mus och ditt tangentbord med flera datorer på ditt skrivbord, och det är Fri och Öppen mjukvara. För bara muspekaren över kanten på en datorskärm för att den skall dyka upp på nästa. Du kan till och med dela utklipp. Allt du behöver är en nätverksanslutning. Barrier är multiplattform (fungerar på både Windows, Mac OS X och Linux).</translation>
+        <source>Barrier lets you easily share your mouse and keyboard between multiple computers on your desk, and it&apos;s Free and Open Source. Just move your mouse off the edge of one computer&apos;s screen on to another. You can even share all of your clipboards. All you need is a network connection. Barrier is cross-platform (works on Windows, Mac OS X and Linux).</source>
+        <translation>Med Barrier kan du enkelt dela din mus och ditt tangentbord mellan flera datorer på ditt skrivbord, och det är fri och öppen källkod. För bara muspekaren över kanten på en datorskärm till en annan. Du kan till och med dela urklipp. Allt du behöver är en nätverksanslutning. Barrier är multiplattform (fungerar på både Windows, OSX och Linux).</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="125"/>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktivera</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="131"/>
         <source>&amp;Activate now...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Aktivera nu...</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="152"/>
         <source>Email:</source>
-        <translation type="unfinished"></translation>
+        <translation>E-post:</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="178"/>
         <source>Password:</source>
-        <translation type="unfinished"></translation>
+        <translation>Lösenord:</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="204"/>
         <source>&lt;a href=&quot;https://symless.com/account/reset/&quot;&gt;Forgot password&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;a href=&quot;https://symless.com/account/reset/&quot;&gt;Glömt lösenord&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="232"/>
         <source>&amp;Skip activation</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Skippa aktivering</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="277"/>
-        <source>&amp;Server (share this computer's mouse and keyboard)</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Server (share this computer&apos;s mouse and keyboard)</source>
+        <translation>&amp;Server (dela denna dators mus och tangentbord)</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="290"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;My main mouse and keyboard are connected to this computer. This will allow you to move your mouse over to another computer's screen. There can only be one server in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;My main mouse and keyboard are connected to this computer. This will allow you to move your mouse over to another computer&apos;s screen. There can only be one server in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Min primära mus och tangentbord är anslutna till den här datorn. Detta låter dig flytta musen över till en annan dators skärm. Det kan bara finnas en server i din installation.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="326"/>
-        <source>&amp;Client (use another computer's mouse and keyboard)</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Client (use another computer&apos;s mouse and keyboard)</source>
+        <translation>&amp;Klient (använd en annan dators mus och tangentbord)</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="339"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;You have already set up a server. This computer will be controlled using the server's mouse and keyboard. There can be many clients in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;You have already set up a server. This computer will be controlled using the server&apos;s mouse and keyboard. There can be many clients in your setup.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Du har redan installerat en server. Den här datorn styrs med hjälp av serverns mus och tangentbord. Det kan finnas många klienter i din installation.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="262"/>
         <source>Server or Client?</source>
-        <translation type="finished">Server eller klient?</translation>
+        <translation>Server eller klient?</translation>
     </message>
 </context>
 <context>
@@ -1275,22 +1304,22 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="src/SslCertificate.cpp" line="42"/>
         <source>Failed to get profile directory.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte hämta profilmappen.</translation>
     </message>
     <message>
         <location filename="src/SslCertificate.cpp" line="141"/>
         <source>SSL certificate generated.</source>
-        <translation type="unfinished"></translation>
+        <translation>SSL-certifikat genererat.</translation>
     </message>
     <message>
         <location filename="src/SslCertificate.cpp" line="170"/>
         <source>SSL fingerprint generated.</source>
-        <translation type="unfinished"></translation>
+        <translation>SSL-fingeravtryck genererat.</translation>
     </message>
     <message>
         <location filename="src/SslCertificate.cpp" line="173"/>
         <source>Failed to find SSL fingerprint.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte hitta SSL-fingeravtryck.</translation>
     </message>
 </context>
 <context>
@@ -1298,7 +1327,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="src/VersionChecker.cpp" line="102"/>
         <source>Unknown</source>
-        <translation type="finished">Okänd</translation>
+        <translation>Okänd</translation>
     </message>
 </context>
 <context>
@@ -1308,19 +1337,22 @@ p, li { white-space: pre-wrap; }
         <source>An error occurred while trying to sign in. Please contact the helpdesk, and provide the following details.
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Ett fel uppstod när du försökte logga in. Kontakta supporten och ange följande uppgifter.
+
+%1</translation>
     </message>
     <message>
         <location filename="src/WebClient.cpp" line="65"/>
         <source>Login failed, invalid email or password.</source>
-        <translation type="finished">Inloggning misslyckades, ogiltig e-postaddress eller lösenord.</translation>
+        <translation>Inloggning misslyckades. Ogiltig e-postaddress eller lösenord.</translation>
     </message>
     <message>
         <location filename="src/WebClient.cpp" line="78"/>
         <source>Login failed, an error occurred.
 
 %1</source>
-        <translation type="finished">Inloggning misslyckades, ett problem inträffade.
+        <translation>Inloggning misslyckades. Ett fel uppstod.
+
 %1</translation>
     </message>
     <message>
@@ -1330,8 +1362,10 @@ p, li { white-space: pre-wrap; }
 Server response:
 
 %1</source>
-        <translation type="finished">Inloggning misslyckades, ett problem inträffade.
-Server svar:
+        <translation>Inloggning misslyckades. Ett fel uppstod.
+
+Serversvar:
+
 %1</translation>
     </message>
     <message>
@@ -1339,19 +1373,23 @@ Server svar:
         <source>An error occurred while trying to query the plugin list. Please contact the help desk, and provide the following details.
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Ett fel uppstod när instickslistan anropades. Kontakta supporten och ange följande uppgifter.
+
+%1</translation>
     </message>
     <message>
         <location filename="src/WebClient.cpp" line="120"/>
         <source>Get plugin list failed, invalid user email or password.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte hämta instickslistan. Ogiltig e-postadress eller lösenord.</translation>
     </message>
     <message>
         <location filename="src/WebClient.cpp" line="131"/>
         <source>Get plugin list failed, an error occurred.
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte hämta instickslistan. Ett fel uppstod.
+
+%1</translation>
     </message>
     <message>
         <location filename="src/WebClient.cpp" line="137"/>
@@ -1360,7 +1398,11 @@ Server svar:
 Server response:
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte hämta instickslistan. Ett fel uppstod.
+
+Serversvar:
+
+%1</translation>
     </message>
 </context>
 <context>
@@ -1368,44 +1410,44 @@ Server response:
     <message>
         <location filename="src/ZeroconfService.cpp" line="82"/>
         <source>zeroconf server detected: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>zeroconf-server identifierad: %1</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="91"/>
         <source>zeroconf client detected: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>zeroconf-klient identifierad: %1</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="99"/>
         <location filename="src/ZeroconfService.cpp" line="130"/>
         <source>Zero configuration service</source>
-        <translation type="unfinished"></translation>
+        <translation>Zero konfigurationstjänst</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="100"/>
         <source>Error code: %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Felkod:%1.</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="131"/>
         <source>Unable to start the zeroconf: %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte starta zeroconf: %1.</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="140"/>
         <source>Barrier</source>
-        <translation type="finished">Barrier</translation>
+        <translation>Barrier</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="141"/>
         <source>Failed to get local IP address. Please manually type in server address on your clients</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte inhämta lokal IP-adress. Skriv in serveradressen manuellt, på dina klienter.</translation>
     </message>
     <message>
         <location filename="src/ZeroconfService.cpp" line="147"/>
         <location filename="src/ZeroconfService.cpp" line="154"/>
         <source>%1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1</translation>
     </message>
 </context>
 </TS>
