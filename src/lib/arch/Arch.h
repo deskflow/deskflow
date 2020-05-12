@@ -54,9 +54,7 @@
 #    include "arch/unix/ArchConsoleUnix.h"
 #    include "arch/unix/ArchDaemonUnix.h"
 #    include "arch/unix/ArchLogUnix.h"
-#    if HAVE_PTHREAD
-#        include "arch/unix/ArchMultithreadPosix.h"
-#    endif
+#    include "arch/unix/ArchMultithreadPosix.h"
 #    include "arch/unix/ArchNetworkBSD.h"
 #    include "arch/unix/ArchSleepUnix.h"
 #    include "arch/unix/ArchStringUnix.h"

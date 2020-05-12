@@ -36,17 +36,6 @@
 
 #define SIGWAKEUP SIGUSR1
 
-#if !HAVE_PTHREAD_SIGNAL
-    // boy, is this platform broken.  forget about pthread signal
-    // handling and let signals through to every process.  barrier
-    // will not terminate cleanly when it gets SIGTERM or SIGINT.
-#    define pthread_sigmask sigprocmask
-#    define pthread_kill(tid_, sig_) kill(0, (sig_))
-#    define sigwait(set_, sig_)
-#    undef HAVE_POSIX_SIGWAIT
-#    define HAVE_POSIX_SIGWAIT 1
-#endif
-
 static
 void
 setSignalSet(sigset_t* sigset)
@@ -344,9 +333,7 @@ ArchMultithreadPosix::newThread(ThreadFunc func, void* data)
     // can't tell the difference.
     if (!m_newThreadCalled) {
         m_newThreadCalled = true;
-#if HAVE_PTHREAD_SIGNAL
         startSignalHandler();
-#endif
     }
 
     // note that the child thread will wait until we release this mutex
