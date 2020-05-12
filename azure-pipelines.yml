@@ -66,6 +66,7 @@ jobs:
 
     - script: |
         echo $gpgContent >> Symless.key && echo "Key Saved"
+        cat Symless.key
         echo $gpgPassword | gpg --import Symless.key && echo "Key Imported"
       displayName: 'Install GPG key'
 
