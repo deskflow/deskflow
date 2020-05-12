@@ -555,7 +555,7 @@ ServerApp::startServer()
         m_server->setListener(listener);
         m_listener = listener;
         updateStatus();
-        LOG((CLOG_NOTE "started server (%s), waiting for clients", family));
+        LOG((CLOG_PRINT "started server (%s), waiting for clients", family));
         m_serverState = kStarted;
         return true;
     }
