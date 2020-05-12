@@ -63,11 +63,14 @@ jobs:
         SecretsFilter: '*'
       displayName: "Get keys"
     #   condition: eq(variables['Build.Reason'], 'Manual')
+    - task: DownloadSecureFile@1
+      inputs:
+        secureFile: 'SymlessCodeSig.key'
+      displayName: "Download GPG Key"
+      name: SymlessCodeSig
 
     - script: |
-        echo $gpgContent >> Symless.key && echo "Key Saved"
-        cat Symless.key
-        echo $gpgPassword | gpg --import Symless.key && echo "Key Imported"
+        echo $(gpgPassword) | gpg --import $(SymlessCodeSig.secureFilePath) && echo "Key Imported"
       displayName: 'Install GPG key'
 
 
