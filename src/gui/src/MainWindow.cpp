@@ -345,7 +345,9 @@ void MainWindow::logError()
 
 void MainWindow::appendLogInfo(const QString& text)
 {
-    m_pLogWindow->appendInfo(text);
+    if (appConfig().logLevel() >= 3) {
+        m_pLogWindow->appendInfo(text);
+    }
 }
 
 void MainWindow::appendLogDebug(const QString& text) {
@@ -536,10 +538,7 @@ void MainWindow::startBarrier()
 
     qDebug() << args;
 
-    // show command if debug log level...
-    if (appConfig().logLevel() >= 4) {
-        appendLogInfo(QString("command: %1 %2").arg(app, args.join(" ")));
-    }
+    appendLogDebug(QString("command: %1 %2").arg(app, args.join(" ")));
 
     appendLogInfo("config file: " + configFilename());
     appendLogInfo("log level: " + appConfig().logLevelText());
