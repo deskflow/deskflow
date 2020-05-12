@@ -70,7 +70,7 @@ jobs:
       name: SymlessCodeSig
 
     - script: |
-        echo $(gpgPassword) | gpg --import $(SymlessCodeSig.secureFilePath) && echo "Key Imported"
+        echo $(gpgPassword) | gpg --import --no-tty --batch --yes $(SymlessCodeSig.secureFilePath) && echo "Key Imported"
       displayName: 'Install GPG key'
 
 
