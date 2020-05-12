@@ -35,18 +35,34 @@ jobs:
 
   steps:
     - script: |
-        mkdir build
-        cd build
+        mkdir build-release
+        cd build-release
         if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
         make -j
-      displayName: 'Build'
+      displayName: 'Build Release'
+
+    - script: |
+        mkdir build-debug
+        cd build-debug
+        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
+        make -j
+      displayName: 'Build Debug'
+
+    - script: |
+        mkdir build-ent
+        cd build-ent
+        export SYNERGY_ENTERPRISE=1
+        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; fi
+        make -j
+      displayName: 'Build enterprise'
+
     - task: AzureKeyVault@1
       inputs:
         azureSubscription: 'Free Trial (796b9556-9614-41a6-8040-0eb14d81fe6f'
         KeyVaultName: 'Symless'
         SecretsFilter: '*'
       displayName: "Get keys"
-      condition: eq(variables['Build.Reason'], 'Manual')
+    #   condition: eq(variables['Build.Reason'], 'Manual')
 
 
 # - job: MacOS
