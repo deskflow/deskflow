@@ -100,8 +100,8 @@ jobs:
         mv $filename $filename_new
         ls -la
       displayName: "Package Binary (Standard)"
-      condition: eq($(packager),'deb')
-      #condition: and(eq($(packager),'deb', eq(variables['Build.Reason'], 'Manual'))
+      condition: eq(variables['packager],'deb')
+      #condition: and(eq(variables['packager],'deb', eq(variables['Build.Reason'], 'Manual'))
 
     - script: |
         . ./build/version
@@ -116,8 +116,8 @@ jobs:
         mv $filename $filename_new
         ls -la
       displayName: "Package Binary (Enterprise)"
-      condition: eq($(packager),'deb')
-      #condition: and(eq($(packager),'deb', eq(variables['Build.Reason'], 'Manual'))
+      condition: eq(variables['packager],'deb')
+      #condition: and(eq(variables['packager],'deb', eq(variables['Build.Reason'], 'Manual'))
 
 
 # - job: MacOS
