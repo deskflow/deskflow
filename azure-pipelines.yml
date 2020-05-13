@@ -10,51 +10,41 @@ jobs:
     matrix:
       ubuntu16.04:
         image: symless/synergy-core:ubuntu16.04
+        packager: deb
       ubuntu18.04:
         image: symless/synergy-core:ubuntu18.04
+        packager: deb
       ubuntu19.10:
         image: symless/synergy-core:ubuntu19.10
+        packager: deb
       ubuntu20.04:
         image: symless/synergy-core:ubuntu20.04
+        packager: deb
       debian9:
         image: symless/synergy-core:debian9
+        packager: deb
       debian10:
         image: symless/synergy-core:debian10
+        packager: deb
       fedora28:
         image: symless/synergy-core:fedora28
+        packager: rpm
       fedora29:
         image: symless/synergy-core:fedora29
+        packager: rpm
       fedora30:
         image: symless/synergy-core:fedora30
+        packager: rpm
       centos7.6:
         image: symless/synergy-core:centos7.6
+        packager: rpm
       centos8:
         image: symless/synergy-core:centos8
+        packager: rpm
 
   container: $[ variables['image'] ]
 
   steps:
-    # - script: |
-    #     mkdir build-release
-    #     cd build-release
-    #     if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
-    #     make -j
-    #   displayName: 'Build Release'
-
-    # - script: |
-    #     mkdir build-debug
-    #     cd build-debug
-    #     if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
-    #     make -j
-    #   displayName: 'Build Debug'
-
-    # - script: |
-    #     mkdir build-ent
-    #     cd build-ent
-    #     export SYNERGY_ENTERPRISE=1
-    #     if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; fi
-    #     make -j
-    #   displayName: 'Build enterprise'
 
     - task: AzureKeyVault@1
       inputs:
@@ -62,16 +52,72 @@ jobs:
         KeyVaultName: 'Symless'
         SecretsFilter: '*'
       displayName: "Get keys"
-    #   condition: eq(variables['Build.Reason'], 'Manual')
+      condition: eq(variables['Build.Reason'], 'Manual')
+
     - task: DownloadSecureFile@1
       inputs:
         secureFile: 'SymlessCodeSig.key'
       displayName: "Download GPG Key"
       name: SymlessCodeSig
+      condition: eq(variables['Build.Reason'], 'Manual')
 
     - script: |
         echo $(gpgPassword) | gpg --import --no-tty --batch --yes $(SymlessCodeSig.secureFilePath) && echo "Key Imported"
       displayName: 'Install GPG key'
+      condition: eq(variables['Build.Reason'], 'Manual')
+
+    - script: |
+        mkdir build-release
+        cd build-release
+        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
+        make -j
+      displayName: 'Build Release'
+
+    - script: |
+        mkdir build-debug
+        cd build-debug
+        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
+        make -j
+      displayName: 'Build Debug'
+
+    - script: |
+        mkdir build-ent
+        cd build-ent
+        export SYNERGY_ENTERPRISE=1
+        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; fi
+        make -j
+      displayName: 'Build enterprise'
+
+    - script: |
+        . ./build/version
+        SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
+        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+$(Build.SourceVersion)"
+        dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
+        export DEB_BUILD_OPTIONS="parallel=8"
+        debuild --preserve-envvar SYNERGY_*
+        filename=$(ls *.deb)
+        filename_new=${filename%%${SYNERGY_DEB_VERSION}*}${SYNERGY_DEB_VERSION}_ubuntu19${filename##*${SYNERGY_DEB_VERSION}}
+        mv $filename $filename_new
+        ls -la
+      displayName: "Package Binary (Standard)"
+      condition: eq($[ variables['image'] ],'deb')
+      #condition: and(eq($[ variables['image'] ],'deb', eq(variables['Build.Reason'], 'Manual'))
+
+    - script: |
+        . ./build/version
+        SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
+        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+$(Build.SourceVersion)"
+        dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
+        export DEB_BUILD_OPTIONS="parallel=8"
+        debuild --preserve-envvar SYNERGY_*
+        filename=$(ls *.deb)
+        filename_new=${filename%%${SYNERGY_DEB_VERSION}*}${SYNERGY_DEB_VERSION}_ubuntu19${filename##*${SYNERGY_DEB_VERSION}}
+        filename_new=${filename_new%%synergy*}synergy-enterprise${filename_new##*synergy}
+        mv $filename $filename_new
+        ls -la
+      displayName: "Package Binary (Enterprise)"
+      condition: eq($[ variables['image'] ],'deb')
+      #condition: and(eq($[ variables['image'] ],'deb', eq(variables['Build.Reason'], 'Manual'))
 
 
 # - job: MacOS
