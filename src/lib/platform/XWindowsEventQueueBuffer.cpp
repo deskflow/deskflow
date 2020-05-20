@@ -82,6 +82,19 @@ XWindowsEventQueueBuffer::~XWindowsEventQueueBuffer()
     close(m_pipefd[1]);
 }
 
+int XWindowsEventQueueBuffer::getPendingCountLocked()
+{
+    Lock lock(&m_mutex);
+    // work around a bug in old libx11 which causes the first XPending not to read events under
+    // certain conditions. The issue happens when libx11 has not yet received replies for all
+    // flushed events. In that case, internally XPending will not try to process received events
+    // as the reply for the last event was not found. As a result, XPending will return the number
+    // of pending events without regard to the events it has just read.
+    // https://gitlab.freedesktop.org/xorg/lib/libx11/-/merge_requests/1 fixes this on libx11 side.
+    m_impl->XPending(m_display);
+    return m_impl->XPending(m_display);
+}
+
 void
 XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 {
@@ -163,7 +176,7 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
     // we want to give the cpu a chance s owe up this to 25ms
 #define TIMEOUT_DELAY 25
 
-    while (((dtimeout < 0.0) || (remaining > 0)) && QLength(m_display)==0 && retval==0){
+    while (((dtimeout < 0.0) || (remaining > 0)) && getPendingCountLocked() == 0 && retval == 0) {
 #if HAVE_POLL
     retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
      if (pfds[1].revents & POLLIN) {
