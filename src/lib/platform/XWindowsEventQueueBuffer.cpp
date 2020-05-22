@@ -120,7 +120,7 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
     pfds[1].fd     = m_pipefd[0];
     pfds[1].events = POLLIN;
     int timeout    = (dtimeout < 0.0) ? -1 :
-                        static_cast<int>(dtimeout);
+                        static_cast<int>(1000.0 * dtimeout);
     int remaining  =  timeout;
     int retval     =  0;
 #else
