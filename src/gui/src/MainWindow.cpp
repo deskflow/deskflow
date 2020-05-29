@@ -595,9 +595,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
             args << "[" + serverIp + "]:" + QString::number(appConfig().port());
             return true;
         }
-    }
-
-    if (m_pLineEditHostname->text().isEmpty()) {
+    } else if (m_pLineEditHostname->text().isEmpty()) {
         show();
         if (!m_SuppressEmptyServerWarning) {
             QMessageBox::warning(this, tr("Hostname is empty"),
