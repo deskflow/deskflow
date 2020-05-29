@@ -70,7 +70,7 @@ jobs:
         mkdir build-release
         cd build-release
         if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
-#        make -j
+        make -j
       displayName: 'Build Release'
 #
 #    - script: |
@@ -85,7 +85,7 @@ jobs:
         cd build-ent
         export SYNERGY_ENTERPRISE=1
         if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; fi
-#        make -j
+        make -j
       displayName: 'Build enterprise'
 
     - script: |
