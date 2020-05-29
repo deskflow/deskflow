@@ -26,21 +26,21 @@ jobs:
       debian10:
         image: symless/synergy-core:debian10
         packager: deb
-      fedora28:
-        image: symless/synergy-core:fedora28
-        packager: rpm
-      fedora29:
-        image: symless/synergy-core:fedora29
-        packager: rpm
-      fedora30:
-        image: symless/synergy-core:fedora30
-        packager: rpm
-      centos7.6:
-        image: symless/synergy-core:centos7.6
-        packager: rpm
-      centos8:
-        image: symless/synergy-core:centos8
-        packager: rpm
+#      fedora28:
+#        image: symless/synergy-core:fedora28
+#        packager: rpm
+#      fedora29:
+#        image: symless/synergy-core:fedora29
+#        packager: rpm
+#      fedora30:
+#        image: symless/synergy-core:fedora30
+#        packager: rpm
+#      centos7.6:
+#        image: symless/synergy-core:centos7.6
+#        packager: rpm
+#      centos8:
+#        image: symless/synergy-core:centos8
+#        packager: rpm
 
   container: $[ variables['image'] ]
 
@@ -66,27 +66,27 @@ jobs:
       displayName: 'Install GPG key'
       #condition: eq(variables['Build.Reason'], 'Manual')
 
-    - script: |
-        mkdir build-release
-        cd build-release
-        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
-        make -j
-      displayName: 'Build Release'
-
-    - script: |
-        mkdir build-debug
-        cd build-debug
-        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
-        make -j
-      displayName: 'Build Debug'
-
-    - script: |
-        mkdir build-ent
-        cd build-ent
-        export SYNERGY_ENTERPRISE=1
-        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; fi
-        make -j
-      displayName: 'Build enterprise'
+#    - script: |
+#        mkdir build-release
+#        cd build-release
+#        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
+#        make -j
+#      displayName: 'Build Release'
+#
+#    - script: |
+#        mkdir build-debug
+#        cd build-debug
+#        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
+#        make -j
+#      displayName: 'Build Debug'
+#
+#    - script: |
+#        mkdir build-ent
+#        cd build-ent
+#        export SYNERGY_ENTERPRISE=1
+#        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; fi
+#        make -j
+#      displayName: 'Build enterprise'
 
     - script: |
         . ./build-release/version
@@ -94,6 +94,7 @@ jobs:
         SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+$(Build.SourceVersion)"
         dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
         export DEB_BUILD_OPTIONS="parallel=8"
+        export GPG_TTY=$(tty)
         debuild --preserve-envvar SYNERGY_*
         filename=$(ls *.deb)
         filename_new=${filename%%${SYNERGY_DEB_VERSION}*}${SYNERGY_DEB_VERSION}_ubuntu19${filename##*${SYNERGY_DEB_VERSION}}
@@ -109,6 +110,7 @@ jobs:
         SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+$(Build.SourceVersion)"
         dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
         export DEB_BUILD_OPTIONS="parallel=8"
+        export GPG_TTY=$(tty)
         debuild --preserve-envvar SYNERGY_*
         filename=$(ls *.deb)
         filename_new=${filename%%${SYNERGY_DEB_VERSION}*}${SYNERGY_DEB_VERSION}_ubuntu19${filename##*${SYNERGY_DEB_VERSION}}
