@@ -66,12 +66,12 @@ jobs:
       displayName: 'Install GPG key'
       #condition: eq(variables['Build.Reason'], 'Manual')
 
-#    - script: |
-#        mkdir build-release
-#        cd build-release
-#        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
+    - script: |
+        mkdir build-release
+        cd build-release
+        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
 #        make -j
-#      displayName: 'Build Release'
+      displayName: 'Build Release'
 #
 #    - script: |
 #        mkdir build-debug
@@ -80,13 +80,13 @@ jobs:
 #        make -j
 #      displayName: 'Build Debug'
 #
-#    - script: |
-#        mkdir build-ent
-#        cd build-ent
-#        export SYNERGY_ENTERPRISE=1
-#        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; fi
+    - script: |
+        mkdir build-ent
+        cd build-ent
+        export SYNERGY_ENTERPRISE=1
+        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; fi
 #        make -j
-#      displayName: 'Build enterprise'
+      displayName: 'Build enterprise'
 
     - script: |
         . ./build-release/version
