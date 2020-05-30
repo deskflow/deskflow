@@ -23,6 +23,7 @@
 #include "mt/Lock.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
+#include "base/String.h"
 #include "common/DataDirectories.h"
 
 #include <openssl/ssl.h>
@@ -328,8 +329,7 @@ SecureSocket::initSsl(bool server)
     initContext(server);
 }
 
-bool
-SecureSocket::loadCertificates(String& filename)
+bool SecureSocket::loadCertificates(std::string& filename)
 {
     if (filename.empty()) {
         showError("ssl certificate is not specified");
@@ -341,7 +341,7 @@ SecureSocket::loadCertificates(String& filename)
         file.close();
 
         if (!exist) {
-            String errorMsg("ssl certificate doesn't exist: ");
+            std::string errorMsg("ssl certificate doesn't exist: ");
             errorMsg.append(filename);
             showError(errorMsg.c_str());
             return false;
@@ -630,14 +630,13 @@ SecureSocket::showError(const char* reason)
         LOG((CLOG_ERR "%s", reason));
     }
 
-    String error = getError();
+    std::string error = getError();
     if (!error.empty()) {
         LOG((CLOG_ERR "%s", error.c_str()));
     }
 }
 
-String
-SecureSocket::getError()
+std::string SecureSocket::getError()
 {
     unsigned long e = ERR_get_error();
 
@@ -659,8 +658,7 @@ SecureSocket::disconnect()
     sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
-void
-SecureSocket::formatFingerprint(String& fingerprint, bool hex, bool separator)
+void SecureSocket::formatFingerprint(std::string& fingerprint, bool hex, bool separator)
 {
     if (hex) {
         // to hexidecimal
@@ -696,11 +694,11 @@ SecureSocket::verifyCertFingerprint()
     }
 
     // format fingerprint into hexdecimal format with colon separator
-    String fingerprint(reinterpret_cast<char*>(tempFingerprint), tempFingerprintLen);
+    std::string fingerprint(reinterpret_cast<char*>(tempFingerprint), tempFingerprintLen);
     formatFingerprint(fingerprint);
     LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
-    String trustedServersFilename;
+    std::string trustedServersFilename;
     trustedServersFilename = barrier::string::sprintf(
         "%s/%s/%s",
         DataDirectories::profile().c_str(),
@@ -711,7 +709,7 @@ SecureSocket::verifyCertFingerprint()
     LOG((CLOG_NOTE "trustedServersFilename: %s", trustedServersFilename.c_str() ));
 
     // check if this fingerprint exist
-    String fileLine;
+    std::string fileLine;
     std::ifstream file;
     file.open(trustedServersFilename.c_str());
 

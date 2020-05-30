@@ -20,7 +20,6 @@
 
 #include "net/ISocket.h"
 #include "io/IStream.h"
-#include "base/String.h"
 #include "base/EventTypes.h"
 
 //! Data stream socket interface
@@ -33,7 +32,7 @@ public:
     class ConnectionFailedInfo {
     public:
         ConnectionFailedInfo(const char* what) : m_what(what) { }
-        String            m_what;
+        std::string m_what;
     };
 
     IDataSocket(IEventQueue* events) { }

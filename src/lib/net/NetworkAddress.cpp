@@ -96,7 +96,7 @@ NetworkAddress::NetworkAddress(const NetworkAddress& addr) :
     // do nothing
 }
 
-NetworkAddress::NetworkAddress(const String& hostname, int port) :
+NetworkAddress::NetworkAddress(const std::string& hostname, int port) :
     m_address(NULL),
     m_hostname(hostname),
     m_port(port)
@@ -196,8 +196,7 @@ NetworkAddress::getPort() const
     return m_port;
 }
 
-String
-NetworkAddress::getHostname() const
+std::string NetworkAddress::getHostname() const
 {
     return m_hostname;
 }
