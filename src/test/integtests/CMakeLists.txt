@@ -80,4 +80,4 @@ endif()
 
 add_executable(integtests ${sources})
 target_link_libraries(integtests
-    arch base client common io ipc mt net platform server barrier gtest gmock ${libs} ${OPENSSL_LIBS})
+    arch base client common io ipc mt net platform server synlib gtest gmock ${libs} ${OPENSSL_LIBS})
