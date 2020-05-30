@@ -23,8 +23,7 @@
 // XBadClient
 //
 
-String
-XBadClient::getWhat() const throw()
+String XBadClient::getWhat() const noexcept
 {
     return "XBadClient";
 }
@@ -41,20 +40,17 @@ XIncompatibleClient::XIncompatibleClient(int major, int minor) :
     // do nothing
 }
 
-int
-XIncompatibleClient::getMajor() const throw()
+int XIncompatibleClient::getMajor() const noexcept
 {
     return m_major;
 }
 
-int
-XIncompatibleClient::getMinor() const throw()
+int XIncompatibleClient::getMinor() const noexcept
 {
     return m_minor;
 }
 
-String
-XIncompatibleClient::getWhat() const throw()
+String XIncompatibleClient::getWhat() const noexcept
 {
     return format("XIncompatibleClient", "incompatible client %{1}.%{2}",
                                 barrier::string::sprintf("%d", m_major).c_str(),
@@ -72,14 +68,12 @@ XDuplicateClient::XDuplicateClient(const String& name) :
     // do nothing
 }
 
-const String&
-XDuplicateClient::getName() const throw()
+const String& XDuplicateClient::getName() const noexcept
 {
     return m_name;
 }
 
-String
-XDuplicateClient::getWhat() const throw()
+String XDuplicateClient::getWhat() const noexcept
 {
     return format("XDuplicateClient", "duplicate client %{1}", m_name.c_str());
 }
@@ -95,14 +89,12 @@ XUnknownClient::XUnknownClient(const String& name) :
     // do nothing
 }
 
-const String&
-XUnknownClient::getName() const throw()
+const String& XUnknownClient::getName() const noexcept
 {
     return m_name;
 }
 
-String
-XUnknownClient::getWhat() const throw()
+String XUnknownClient::getWhat() const noexcept
 {
     return format("XUnknownClient", "unknown client %{1}", m_name.c_str());
 }
@@ -118,14 +110,12 @@ XExitApp::XExitApp(int code) :
     // do nothing
 }
 
-int
-XExitApp::getCode() const throw()
+int XExitApp::getCode() const noexcept
 {
     return m_code;
 }
 
-String
-XExitApp::getWhat() const throw()
+String XExitApp::getWhat() const noexcept
 {
     return format(
         "XExitApp", "exiting with code %{1}", 

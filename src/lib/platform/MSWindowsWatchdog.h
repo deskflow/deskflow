@@ -88,5 +88,5 @@ public:
     XMSWindowsWatchdogError(const std::string& msg) : XBarrier(msg) { }
 
     // XBase overrides
-    virtual std::string getWhat() const throw() { return what(); }
+    virtual std::string getWhat() const noexcept { return what(); }
 };

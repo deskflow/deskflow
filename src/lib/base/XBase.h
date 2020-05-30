@@ -31,14 +31,14 @@ public:
     XBase();
     //! Use \c msg as the result of what()
     XBase(const std::string& msg);
-    virtual ~XBase() _NOEXCEPT;
+    virtual ~XBase() noexcept;
 
     //! Reason for exception
-    virtual const char* what() const _NOEXCEPT;
+    virtual const char* what() const noexcept;
 
 protected:
     //! Get a human readable string describing the exception
-    virtual std::string getWhat() const throw() { return ""; }
+    virtual std::string getWhat() const noexcept { return ""; }
 
     //! Format a string
     /*!
@@ -46,7 +46,7 @@ protected:
     no format can be found, then replaces positional parameters in
     the format string and returns the result.
     */
-    virtual std::string format(const char* id, const char* defaultFormat, ...) const throw();
+    virtual std::string format(const char* id, const char* defaultFormat, ...) const noexcept;
 private:
     mutable std::string        m_what;
 };
@@ -62,7 +62,7 @@ class name_ : public super_ {                                            \
 public:                                                                    \
     name_() : super_() { }                                                \
     name_(const std::string& msg) : super_(msg) { }                            \
-    virtual ~name_() _NOEXCEPT { }                                        \
+    virtual ~name_() noexcept { }                                        \
 }
 
 /*!
@@ -76,10 +76,10 @@ class name_ : public super_ {                                            \
 public:                                                                    \
     name_() : super_() { }                                                \
     name_(const std::string& msg) : super_(msg) { }                            \
-    virtual ~name_() _NOEXCEPT { }                                        \
+    virtual ~name_() noexcept { }                                        \
                                                                         \
 protected:                                                                \
-    virtual std::string        getWhat() const throw();                        \
+    virtual std::string getWhat() const noexcept;                        \
 }
 
 /*!
@@ -98,9 +98,9 @@ private:                                                                \
 public:                                                                    \
     name_() : super_(), m_state(kDone) { }                                \
     name_(const std::string& msg) : super_(msg), m_state(kFirst) { }        \
-    virtual ~name_() _NOEXCEPT { }                                        \
+    virtual ~name_() noexcept { }                                        \
                                                                         \
-    virtual const char*    what() const _NOEXCEPT                            \
+    virtual const char* what() const noexcept                            \
     {                                                                    \
         if (m_state == kFirst) {                                        \
             m_state = kFormat;                                            \
@@ -116,7 +116,7 @@ public:                                                                    \
     }                                                                    \
                                                                         \
 protected:                                                                \
-    virtual std::string        getWhat() const throw();                        \
+    virtual std::string getWhat() const noexcept;                        \
                                                                         \
 private:                                                                \
     mutable EState                m_state;                                \

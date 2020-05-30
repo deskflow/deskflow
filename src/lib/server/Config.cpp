@@ -2271,12 +2271,12 @@ XConfigRead::XConfigRead(const ConfigReadContext& context, const char* errorFmt,
 	// do nothing
 }
 
-XConfigRead::~XConfigRead() _NOEXCEPT
+XConfigRead::~XConfigRead() noexcept
 {
 	// do nothing
 }
 
-std::string XConfigRead::getWhat() const throw()
+std::string XConfigRead::getWhat() const noexcept
 {
 	return format("XConfigRead", "read error: %{1}", m_error.c_str());
 }

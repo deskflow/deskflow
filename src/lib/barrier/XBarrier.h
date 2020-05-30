@@ -47,14 +47,14 @@ public:
     //@{
 
     //! Get client's major version number
-    int                    getMajor() const throw();
+    int getMajor() const noexcept;
     //! Get client's minor version number
-    int                    getMinor() const throw();
+    int getMinor() const noexcept;
 
     //@}
 
 protected:
-    virtual std::string getWhat() const throw();
+    virtual std::string getWhat() const noexcept;
 
 private:
     int                    m_major;
@@ -69,18 +69,18 @@ a client that is already connected.
 class XDuplicateClient : public XBarrier {
 public:
     XDuplicateClient(const std::string& name);
-    virtual ~XDuplicateClient() _NOEXCEPT { }
+    virtual ~XDuplicateClient() noexcept { }
 
     //! @name accessors
     //@{
 
     //! Get client's name
-    virtual const std::string& getName() const throw();
+    virtual const std::string& getName() const noexcept;
 
     //@}
 
 protected:
-    virtual std::string getWhat() const throw();
+    virtual std::string getWhat() const noexcept;
 
 private:
     std::string m_name;
@@ -94,18 +94,18 @@ unknown to the server.
 class XUnknownClient : public XBarrier {
 public:
     XUnknownClient(const std::string& name);
-    virtual ~XUnknownClient() _NOEXCEPT { }
+    virtual ~XUnknownClient() noexcept { }
 
     //! @name accessors
     //@{
 
     //! Get the client's name
-    virtual const std::string& getName() const throw();
+    virtual const std::string& getName() const noexcept;
 
     //@}
 
 protected:
-    virtual std::string        getWhat() const throw();
+    virtual std::string getWhat() const noexcept;
 
 private:
     std::string                m_name;
@@ -120,13 +120,13 @@ exit(int).
 class XExitApp : public XBarrier {
 public:
     XExitApp(int code);
-    virtual ~XExitApp() _NOEXCEPT { }
+    virtual ~XExitApp() noexcept { }
 
     //! Get the exit code
-    int getCode() const throw();
+    int getCode() const noexcept;
 
 protected:
-    virtual std::string getWhat() const throw();
+    virtual std::string getWhat() const noexcept;
     
 private:
     int    m_code;

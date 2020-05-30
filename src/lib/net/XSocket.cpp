@@ -23,7 +23,7 @@
 // XSocketAddress
 //
 
-XSocketAddress::XSocketAddress(EError error, const std::string& hostname, int port) _NOEXCEPT :
+XSocketAddress::XSocketAddress(EError error, const std::string& hostname, int port) noexcept :
     m_error(error),
     m_hostname(hostname),
     m_port(port)
@@ -31,25 +31,22 @@ XSocketAddress::XSocketAddress(EError error, const std::string& hostname, int po
     // do nothing
 }
 
-XSocketAddress::EError
-XSocketAddress::getError() const throw()
+XSocketAddress::EError XSocketAddress::getError() const noexcept
 {
     return m_error;
 }
 
-std::string
-XSocketAddress::getHostname() const throw()
+std::string XSocketAddress::getHostname() const noexcept
 {
     return m_hostname;
 }
 
-int
-XSocketAddress::getPort() const throw()
+int XSocketAddress::getPort() const noexcept
 {
     return m_port;
 }
 
-std::string XSocketAddress::getWhat() const throw()
+std::string XSocketAddress::getWhat() const noexcept
 {
     static const char* s_errorID[] = {
         "XSocketAddressUnknown",
@@ -75,7 +72,7 @@ std::string XSocketAddress::getWhat() const throw()
 // XSocketIOClose
 //
 
-std::string XSocketIOClose::getWhat() const throw()
+std::string XSocketIOClose::getWhat() const noexcept
 {
     return format("XSocketIOClose", "close: %{1}", what());
 }
@@ -85,7 +82,7 @@ std::string XSocketIOClose::getWhat() const throw()
 // XSocketBind
 //
 
-std::string XSocketBind::getWhat() const throw()
+std::string XSocketBind::getWhat() const noexcept
 {
     return format("XSocketBind", "cannot bind address: %{1}", what());
 }
@@ -95,7 +92,7 @@ std::string XSocketBind::getWhat() const throw()
 // XSocketConnect
 //
 
-std::string XSocketConnect::getWhat() const throw()
+std::string XSocketConnect::getWhat() const noexcept
 {
     return format("XSocketConnect", "cannot connect socket: %{1}", what());
 }
@@ -105,7 +102,7 @@ std::string XSocketConnect::getWhat() const throw()
 // XSocketCreate
 //
 
-std::string XSocketCreate::getWhat() const throw()
+std::string XSocketCreate::getWhat() const noexcept
 {
     return format("XSocketCreate", "cannot create socket: %{1}", what());
 }

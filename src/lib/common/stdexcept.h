@@ -19,5 +19,5 @@
 
 // apple declares _NOEXCEPT
 #ifndef _NOEXCEPT
-#    define _NOEXCEPT throw()
+#    define _NOEXCEPT noexcept
 #endif

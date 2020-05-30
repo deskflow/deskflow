@@ -22,7 +22,7 @@
 // XMTThreadUnavailable
 //
 
-std::string XMTThreadUnavailable::getWhat() const throw()
+std::string XMTThreadUnavailable::getWhat() const noexcept
 {
     return format("XMTThreadUnavailable", "cannot create thread");
 }

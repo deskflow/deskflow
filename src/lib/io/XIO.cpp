@@ -22,7 +22,7 @@
 // XIOClosed
 //
 
-std::string XIOClosed::getWhat() const throw()
+std::string XIOClosed::getWhat() const noexcept
 {
     return format("XIOClosed", "already closed");
 }
@@ -32,7 +32,7 @@ std::string XIOClosed::getWhat() const throw()
 // XIOEndOfStream
 //
 
-std::string XIOEndOfStream::getWhat() const throw()
+std::string XIOEndOfStream::getWhat() const noexcept
 {
     return format("XIOEndOfStream", "reached end of stream");
 }
@@ -42,7 +42,7 @@ std::string XIOEndOfStream::getWhat() const throw()
 // XIOWouldBlock
 //
 
-std::string XIOWouldBlock::getWhat() const throw()
+std::string XIOWouldBlock::getWhat() const noexcept
 {
     return format("XIOWouldBlock", "stream operation would block");
 }
