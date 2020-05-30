@@ -20,8 +20,8 @@
 
 #include "ipc/Ipc.h"
 #include "base/EventTypes.h"
-#include "base/String.h"
 #include "base/Event.h"
+#include <string>
 
 class IpcMessage : public EventData {
 public:
@@ -58,28 +58,28 @@ public:
 
 class IpcLogLineMessage : public IpcMessage {
 public:
-    IpcLogLineMessage(const String& logLine);
+    IpcLogLineMessage(const std::string& logLine);
     virtual ~IpcLogLineMessage();
 
     //! Gets the log line.
-    String                logLine() const { return m_logLine; }
+    std::string logLine() const { return m_logLine; }
 
 private:
-    String                m_logLine;
+    std::string m_logLine;
 };
 
 class IpcCommandMessage : public IpcMessage {
 public:
-    IpcCommandMessage(const String& command, bool elevate);
+    IpcCommandMessage(const std::string& command, bool elevate);
     virtual ~IpcCommandMessage();
 
     //! Gets the command.
-    String                command() const { return m_command; }
+    std::string command() const { return m_command; }
 
     //! Gets whether or not the process should be elevated on MS Windows.
     bool                elevate() const { return m_elevate; }
 
 private:
-    String                m_command;
+    std::string m_command;
     bool                m_elevate;
 };

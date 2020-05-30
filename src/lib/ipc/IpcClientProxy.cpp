@@ -141,7 +141,7 @@ IpcClientProxy::send(const IpcMessage& message)
     switch (message.type()) {
     case kIpcLogLine: {
         const IpcLogLineMessage& llm = static_cast<const IpcLogLineMessage&>(message);
-        const String logLine = llm.logLine();
+        const std::string logLine = llm.logLine();
         ProtocolUtil::writef(&m_stream, kIpcMsgLogLine, &logLine);
         break;
     }
@@ -171,7 +171,7 @@ IpcClientProxy::parseHello()
 IpcCommandMessage*
 IpcClientProxy::parseCommand()
 {
-    String command;
+    std::string command;
     UInt8 elevate;
     ProtocolUtil::readf(&m_stream, kIpcMsgCommand + 4, &command, &elevate);
 
