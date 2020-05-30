@@ -33,6 +33,8 @@ set B_QT_FULLPATH=%B_QT_ROOT%\%B_QT_VER%\%B_QT_MSVC%
 echo Bonjour: %BONJOUR_SDK_HOME%
 echo Qt: %B_QT_FULLPATH%
 
+git submodule update --init --recursive
+
 rmdir /q /s build
 mkdir build
 if ERRORLEVEL 1 goto failed
