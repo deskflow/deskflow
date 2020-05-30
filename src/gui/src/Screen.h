@@ -50,12 +50,17 @@ class Screen : public BaseConfig
         const QStringList& aliases() const { return m_Aliases; }
 
         bool isNull() const { return m_Name.isEmpty(); }
-        int modifier(int m) const { return m_Modifiers[m] == DefaultMod ? m : m_Modifiers[m]; }
-        const QList<int>& modifiers() const { return m_Modifiers; }
-        bool switchCorner(int c) const { return m_SwitchCorners[c]; }
+        Modifier modifier(Modifier m) const
+        {
+            Modifier overriddenModifier = m_Modifiers[static_cast<int>(m)];
+            return overriddenModifier == Modifier::DefaultMod ? m : overriddenModifier;
+        }
+
+        const QList<Modifier>& modifiers() const { return m_Modifiers; }
+        bool switchCorner(SwitchCorner c) const { return m_SwitchCorners[static_cast<int>(c)]; }
         const QList<bool>& switchCorners() const { return m_SwitchCorners; }
         int switchCornerSize() const { return m_SwitchCornerSize; }
-        bool fix(Fix f) const { return m_Fixes[f]; }
+        bool fix(Fix f) const { return m_Fixes[static_cast<int>(f)]; }
         const QList<bool>& fixes() const { return m_Fixes; }
 
         void loadSettings(QSettings& settings);
@@ -73,13 +78,13 @@ class Screen : public BaseConfig
 
         void setPixmap(const QPixmap& pixmap) { m_Pixmap = pixmap; }
         QStringList& aliases() { return m_Aliases; }
-        void setModifier(int m, int n) { m_Modifiers[m] = n; }
-        QList<int>& modifiers() { return m_Modifiers; }
+        void setModifier(Modifier m, Modifier n) { m_Modifiers[static_cast<int>(m)] = n; }
+        QList<Modifier>& modifiers() { return m_Modifiers; }
         void addAlias(const QString& alias) { m_Aliases.append(alias); }
-        void setSwitchCorner(int c, bool on) { m_SwitchCorners[c] = on; }
+        void setSwitchCorner(SwitchCorner c, bool on) { m_SwitchCorners[static_cast<int>(c)] = on; }
         QList<bool>& switchCorners() { return m_SwitchCorners; }
         void setSwitchCornerSize(int val) { m_SwitchCornerSize = val; }
-        void setFix(int f, bool on) { m_Fixes[f] = on; }
+        void setFix(Fix f, bool on) { m_Fixes[static_cast<int>(f)] = on; }
         QList<bool>& fixes() { return m_Fixes; }
         void setSwapped(bool on) { m_Swapped = on; }
 
@@ -88,7 +93,7 @@ class Screen : public BaseConfig
         QString m_Name;
 
         QStringList m_Aliases;
-        QList<int> m_Modifiers;
+        QList<Modifier> m_Modifiers;
         QList<bool> m_SwitchCorners;
         int m_SwitchCornerSize;
         QList<bool> m_Fixes;
