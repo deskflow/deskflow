@@ -173,6 +173,6 @@ private:
 public:
     SInt32                  group() const { return m_group; }
     void                    group(const SInt32& group) { m_group = group; }
-    KeyModifierMaskList    modifierFromX() const { return m_modifierFromX; }
+    KeyModifierMaskList& modifierFromX() { return m_modifierFromX; }
 #endif
 };

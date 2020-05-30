@@ -29,12 +29,11 @@ TEST(CXWindowsScreenTests, fakeMouseMove_nonPrimary_getCursorPosValuesCorrect)
     EXPECT_CALL(eventQueue, adoptHandler(_, _, _)).Times(2);
     EXPECT_CALL(eventQueue, adoptBuffer(_)).Times(2);
     EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(2);
-    XWindowsScreen screen(
-        ":0.0", false, false, 0, &eventQueue);
+    XWindowsScreen screen(new XWindowsImpl(), ":0.0", false, false, 0, &eventQueue);
 
     screen.fakeMouseMove(10, 20);
 
-    int x, y;
+    SInt32 x, y;
     screen.getCursorPos(x, y);
     ASSERT_EQ(10, x);
     ASSERT_EQ(20, y);

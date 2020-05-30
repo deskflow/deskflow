@@ -14,24 +14,37 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-file(GLOB_RECURSE headers "*.h")
-file(GLOB_RECURSE sources "*.cpp")
-
-# remove platform files (specific platform added later).
-file(GLOB_RECURSE remove_platform "platform/*")
-list(REMOVE_ITEM headers ${remove_platform})
-list(REMOVE_ITEM sources ${remove_platform})
+set(headers
+)
+set(sources
+    arch/ArchInternetTests.cpp
+    ipc/IpcTests.cpp
+    net/NetworkTests.cpp
+    Main.cpp
+)
 
 # platform
 if (WIN32)
-    file(GLOB platform_sources "platform/MSWindows*.cpp")
-    file(GLOB platform_headers "platform/MSWindows*.h")
+    set(platform_sources
+        platform/MSWindowsClipboardTests.cpp
+        platform/MSWindowsKeyStateTests.cpp
+    )
+    set(platform_headers)
 elseif (APPLE)
-    file(GLOB platform_sources "platform/OSX*.cpp")
-    file(GLOB platform_headers "platform/OSX*.h")
+    set(platform_sources
+        platform/OSXClipboardTests.cpp
+        platform/OSXKeyStateTests.cpp
+        platform/OSXScreenTests.cpp
+    )
+    set(platform_headers)
 elseif (UNIX)
-    file(GLOB platform_sources "platform/XWindows*.cpp")
-    file(GLOB platform_headers "platform/XWindows*.h")
+    set(platform_sources
+        platform/XWindowsClipboardTests.cpp
+        platform/XWindowsKeyStateTests.cpp
+        platform/XWindowsScreenSaverTests.cpp
+        platform/XWindowsScreenTests.cpp
+    )
+    set(platform_headers)
 endif()
 
 list(APPEND sources ${platform_sources})
@@ -55,7 +68,6 @@ endif()
 
 include_directories(
     ../../
-    ../../lib/
     ../../../ext/gtest/include
     ../../../ext/gmock/include
 )
@@ -68,4 +80,4 @@ endif()
 
 add_executable(integtests ${sources})
 target_link_libraries(integtests
-    arch base client common io ipc mt net platform server barrier gtest gmock ${libs} ${OPENSSL_LIBS})
+    arch base client common io ipc mt net platform server synlib gtest gmock ${libs} ${OPENSSL_LIBS})
