@@ -49,12 +49,10 @@
 // Client
 //
 
-Client::Client(
-        IEventQueue* events,
-        const String& name, const NetworkAddress& address,
-        ISocketFactory* socketFactory,
-        barrier::Screen* screen,
-        ClientArgs const& args) :
+Client::Client(IEventQueue* events, const std::string& name, const NetworkAddress& address,
+               ISocketFactory* socketFactory,
+               barrier::Screen* screen,
+               ClientArgs const& args) :
     m_mock(false),
     m_name(name),
     m_serverAddress(address),
@@ -373,7 +371,7 @@ Client::setOptions(const OptionsList& options)
     m_screen->setOptions(options);
 }
 
-String
+std::string
 Client::getName() const
 {
     return m_name;
@@ -403,7 +401,7 @@ Client::sendClipboard(ClipboardID id)
         m_timeClipboard[id] = clipboard.getTime();
 
         // marshall the data
-        String data = clipboard.marshall();
+        std::string data = clipboard.marshall();
 
         // save and send data if different or not yet sent
         if (!m_sentClipboard[id] || data != m_dataClipboard[id]) {
@@ -783,7 +781,7 @@ Client::writeToDropDirThread(void*)
 }
 
 void
-Client::dragInfoReceived(UInt32 fileNum, String data)
+Client::dragInfoReceived(UInt32 fileNum, std::string data)
 {
     // TODO: fix duplicate function from CServer
     if (!m_args.m_enableDragDrop) {
@@ -830,7 +828,7 @@ Client::sendFileThread(void* filename)
 }
 
 void
-Client::sendDragInfo(UInt32 fileCount, String& info, size_t size)
+Client::sendDragInfo(UInt32 fileCount, std::string& info, size_t size)
 {
     m_server->sendDragInfo(fileCount, info.c_str(), size);
 }

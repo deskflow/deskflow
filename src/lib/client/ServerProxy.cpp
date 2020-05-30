@@ -361,7 +361,7 @@ ServerProxy::onGrabClipboard(ClipboardID id)
 void
 ServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
 {
-    String data = IClipboard::marshall(clipboard);
+    std::string data = IClipboard::marshall(clipboard);
     LOG((CLOG_DEBUG "sending clipboard %d seqnum=%d", id, m_seqNum));
 
     StreamChunker::sendClipboard(data, data.size(), id, m_seqNum, m_events, this);
@@ -550,7 +550,7 @@ void
 ServerProxy::setClipboard()
 {
     // parse
-    static String dataCached;
+    static std::string dataCached;
     ClipboardID id;
     UInt32 seq;
     
@@ -872,7 +872,7 @@ ServerProxy::fileChunkReceived()
     }
     else if (result == kStart) {
         if (m_client->getDragFileList().size() > 0) {
-            String filename = m_client->getDragFileList().at(0).getFilename();
+            std::string filename = m_client->getDragFileList().at(0).getFilename();
             LOG((CLOG_DEBUG "start receiving %s", filename.c_str()));
         }
     }
@@ -883,7 +883,7 @@ ServerProxy::dragInfoReceived()
 {
     // parse
     UInt32 fileNum = 0;
-    String content;
+    std::string content;
     ProtocolUtil::readf(m_stream, kMsgDDragInfo + 4, &fileNum, &content);
 
     m_client->dragInfoReceived(fileNum, content);
@@ -904,6 +904,6 @@ ServerProxy::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 void
 ServerProxy::sendDragInfo(UInt32 fileCount, const char* info, size_t size)
 {
-    String data(info, size);
+    std::string data(info, size);
     ProtocolUtil::writef(m_stream, kMsgDDragInfo, fileCount, &data);
 }
