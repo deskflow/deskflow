@@ -19,6 +19,7 @@
 #pragma once
 
 #include "arch/IArchDaemon.h"
+#include <string>
 
 #define ARCH_DAEMON ArchDaemonNone
 
@@ -46,5 +47,5 @@ public:
     virtual bool        isDaemonInstalled(const char* name);
     virtual void        installDaemon();
     virtual void        uninstallDaemon();
-    virtual std::string    commandLine() const;
+    virtual std::string commandLine() const;
 };

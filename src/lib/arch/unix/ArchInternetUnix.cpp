@@ -28,8 +28,8 @@ class CurlFacade {
 public:
     CurlFacade();
     ~CurlFacade();
-    String                get(const String& url);
-    String                urlEncode(const String& url);
+    std::string get(const std::string& url);
+    std::string urlEncode(const std::string& url);
 
 private:
     CURL*                m_curl;
@@ -39,15 +39,13 @@ private:
 // ArchInternetUnix
 //
 
-String
-ArchInternetUnix::get(const String& url)
+std::string ArchInternetUnix::get(const std::string& url)
 {
     CurlFacade curl;
     return curl.get(url);
 }
 
-String
-ArchInternetUnix::urlEncode(const String& url)
+std::string ArchInternetUnix::urlEncode(const std::string& url)
 {
     CurlFacade curl;
     return curl.urlEncode(url);
@@ -87,8 +85,7 @@ CurlFacade::~CurlFacade()
     curl_global_cleanup();
 }
 
-String
-CurlFacade::get(const String& url)
+std::string CurlFacade::get(const std::string& url)
 {
     curl_easy_setopt(m_curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, curlWriteCallback);
@@ -110,8 +107,7 @@ CurlFacade::get(const String& url)
     return result;
 }
 
-String
-CurlFacade::urlEncode(const String& url)
+std::string CurlFacade::urlEncode(const std::string& url)
 {
     char* resultCStr = curl_easy_escape(m_curl, url.c_str(), 0);
 

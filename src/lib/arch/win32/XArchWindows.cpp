@@ -18,7 +18,6 @@
 
 #include "arch/win32/XArchWindows.h"
 #include "arch/win32/ArchNetworkWinsock.h"
-#include "base/String.h"
 
 //
 // XArchEvalWindows

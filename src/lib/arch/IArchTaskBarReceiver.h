@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "common/IInterface.h"
+#include <string>
 
 class IScreen;
 class INode;
@@ -88,9 +88,9 @@ public:
     to set the tooltip is left to sublclasses.  Getting and setting
     the icon must be thread safe.
     */
-    virtual std::string    getToolTip() const = 0;
+    virtual std::string getToolTip() const = 0;
 
-    virtual void updateStatus(INode*, const String& errorMsg) = 0;
+    virtual void updateStatus(INode*, const std::string& errorMsg) = 0;
 
     virtual void cleanup() {}
 
