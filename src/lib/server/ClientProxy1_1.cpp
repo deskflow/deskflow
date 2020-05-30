@@ -27,7 +27,8 @@
 // ClientProxy1_1
 //
 
-ClientProxy1_1::ClientProxy1_1(const String& name, barrier::IStream* stream, IEventQueue* events) :
+ClientProxy1_1::ClientProxy1_1(const std::string& name, barrier::IStream* stream,
+                               IEventQueue* events) :
     ClientProxy1_0(name, stream, events)
 {
     // do nothing

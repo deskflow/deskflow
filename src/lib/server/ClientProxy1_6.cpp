@@ -29,7 +29,8 @@
 // ClientProxy1_6
 //
 
-ClientProxy1_6::ClientProxy1_6(const String& name, barrier::IStream* stream, Server* server, IEventQueue* events) :
+ClientProxy1_6::ClientProxy1_6(const std::string& name, barrier::IStream* stream, Server* server,
+                               IEventQueue* events) :
     ClientProxy1_5(name, stream, server, events),
     m_events(events)
 {
@@ -52,7 +53,7 @@ ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
         m_clipboard[id].m_dirty = false;
         Clipboard::copy(&m_clipboard[id].m_clipboard, clipboard);
 
-        String data = m_clipboard[id].m_clipboard.marshall();
+        std::string data = m_clipboard[id].m_clipboard.marshall();
 
         size_t size = data.size();
         LOG((CLOG_DEBUG "sending clipboard %d to \"%s\"", id, getName().c_str()));
@@ -71,7 +72,7 @@ bool
 ClientProxy1_6::recvClipboard()
 {
     // parse message
-    static String dataCached;
+    static std::string dataCached;
     ClipboardID id;
     UInt32 seq;
 

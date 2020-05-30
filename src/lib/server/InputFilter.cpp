@@ -95,8 +95,7 @@ InputFilter::KeystrokeCondition::clone() const
     return new KeystrokeCondition(m_events, m_key, m_mask);
 }
 
-String
-InputFilter::KeystrokeCondition::format() const
+std::string InputFilter::KeystrokeCondition::format() const
 {
     return barrier::string::sprintf("keystroke(%s)",
                             barrier::KeyMap::formatKey(m_key, m_mask).c_str());
@@ -183,10 +182,9 @@ InputFilter::MouseButtonCondition::clone() const
     return new MouseButtonCondition(m_events, m_button, m_mask);
 }
 
-String
-InputFilter::MouseButtonCondition::format() const
+std::string InputFilter::MouseButtonCondition::format() const
 {
-    String key = barrier::KeyMap::formatKey(kKeyNone, m_mask);
+    std::string key = barrier::KeyMap::formatKey(kKeyNone, m_mask);
     if (!key.empty()) {
         key += "+";
     }
@@ -226,8 +224,8 @@ InputFilter::MouseButtonCondition::match(const Event& event)
     return status;
 }
 
-InputFilter::ScreenConnectedCondition::ScreenConnectedCondition(
-        IEventQueue* events, const String& screen) :
+InputFilter::ScreenConnectedCondition::ScreenConnectedCondition(IEventQueue* events,
+                                                                const std::string& screen) :
     m_screen(screen),
     m_events(events)
 {
@@ -245,8 +243,7 @@ InputFilter::ScreenConnectedCondition::clone() const
     return new ScreenConnectedCondition(m_events, m_screen);
 }
 
-String
-InputFilter::ScreenConnectedCondition::format() const
+std::string InputFilter::ScreenConnectedCondition::format() const
 {
     return barrier::string::sprintf("connect(%s)", m_screen.c_str());
 }
@@ -298,8 +295,7 @@ InputFilter::LockCursorToScreenAction::clone() const
     return new LockCursorToScreenAction(*this);
 }
 
-String
-InputFilter::LockCursorToScreenAction::format() const
+std::string InputFilter::LockCursorToScreenAction::format() const
 {
     static const char* s_mode[] = { "off", "on", "toggle" };
 
@@ -323,16 +319,15 @@ InputFilter::LockCursorToScreenAction::perform(const Event& event)
                                 Event::kDeliverImmediately));
 }
 
-InputFilter::SwitchToScreenAction::SwitchToScreenAction(
-        IEventQueue* events, const String& screen) :
+InputFilter::SwitchToScreenAction::SwitchToScreenAction(IEventQueue* events,
+                                                        const std::string& screen) :
     m_screen(screen),
     m_events(events)
 {
     // do nothing
 }
 
-String
-InputFilter::SwitchToScreenAction::getScreen() const
+std::string InputFilter::SwitchToScreenAction::getScreen() const
 {
     return m_screen;
 }
@@ -343,8 +338,7 @@ InputFilter::SwitchToScreenAction::clone() const
     return new SwitchToScreenAction(*this);
 }
 
-String
-InputFilter::SwitchToScreenAction::format() const
+std::string InputFilter::SwitchToScreenAction::format() const
 {
     return barrier::string::sprintf("switchToScreen(%s)", m_screen.c_str());
 }
@@ -354,7 +348,7 @@ InputFilter::SwitchToScreenAction::perform(const Event& event)
 {
     // pick screen name.  if m_screen is empty then use the screen from
     // event if it has one.
-    String screen = m_screen;
+    std::string screen = m_screen;
     if (screen.empty() && event.getType() == m_events->forServer().connected()) {
         Server::ScreenConnectedInfo* info = 
             static_cast<Server::ScreenConnectedInfo*>(event.getData());
@@ -389,8 +383,7 @@ InputFilter::SwitchInDirectionAction::clone() const
     return new SwitchInDirectionAction(*this);
 }
 
-String
-InputFilter::SwitchInDirectionAction::format() const
+std::string InputFilter::SwitchInDirectionAction::format() const
 {
     static const char* s_names[] = {
         "",
@@ -421,10 +414,8 @@ InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(
     // do nothing
 }
 
-InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(
-        IEventQueue* events,
-        Mode mode,
-        const std::set<String>& screens) :
+InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(IEventQueue* events, Mode mode,
+                                                              const std::set<std::string>& screens) :
     m_mode(mode),
     m_screens(IKeyState::KeyInfo::join(screens)),
     m_events(events)
@@ -438,10 +429,9 @@ InputFilter::KeyboardBroadcastAction::getMode() const
     return m_mode;
 }
 
-std::set<String>
-InputFilter::KeyboardBroadcastAction::getScreens() const
+std::set<std::string> InputFilter::KeyboardBroadcastAction::getScreens() const
 {
-    std::set<String> screens;
+    std::set<std::string> screens;
     IKeyState::KeyInfo::split(m_screens.c_str(), screens);
     return screens;
 }
@@ -452,8 +442,7 @@ InputFilter::KeyboardBroadcastAction::clone() const
     return new KeyboardBroadcastAction(*this);
 }
 
-String
-InputFilter::KeyboardBroadcastAction::format() const
+std::string InputFilter::KeyboardBroadcastAction::format() const
 {
     static const char* s_mode[] = { "off", "on", "toggle" };
     static const char* s_name = "keyboardBroadcast";
@@ -525,8 +514,7 @@ InputFilter::KeystrokeAction::clone() const
     return new KeystrokeAction(m_events, info, m_press);
 }
 
-String
-InputFilter::KeystrokeAction::format() const
+std::string InputFilter::KeystrokeAction::format() const
 {
     const char* type = formatName();
 
@@ -607,12 +595,11 @@ InputFilter::MouseButtonAction::clone() const
     return new MouseButtonAction(m_events, info, m_press);
 }
 
-String
-InputFilter::MouseButtonAction::format() const
+std::string InputFilter::MouseButtonAction::format() const
 {
     const char* type = formatName();
 
-    String key = barrier::KeyMap::formatKey(kKeyNone, m_buttonInfo->m_mask);
+    std::string key = barrier::KeyMap::formatKey(kKeyNone, m_buttonInfo->m_mask);
     return barrier::string::sprintf("%s(%s%s%d)", type,
                             key.c_str(), key.empty() ? "" : "+",
                             m_buttonInfo->m_button);
@@ -820,10 +807,9 @@ InputFilter::Rule::handleEvent(const Event& event)
     return true;
 }
 
-String
-InputFilter::Rule::format() const
+std::string InputFilter::Rule::format() const
 {
-    String s;
+    std::string s;
     if (m_condition != NULL) {
         // condition
         s += m_condition->format();
@@ -1019,10 +1005,9 @@ InputFilter::setPrimaryClient(PrimaryClient* client)
     }
 }
 
-String
-InputFilter::format(const String& linePrefix) const
+std::string InputFilter::format(const std::string& linePrefix) const
 {
-    String s;
+    std::string s;
     for (RuleList::const_iterator i = m_ruleList.begin();
                                 i != m_ruleList.end(); ++i) {
         s += linePrefix;
@@ -1048,7 +1033,7 @@ InputFilter::operator==(const InputFilter& x) const
 
     // compare rule lists.  the easiest way to do that is to format each
     // rule into a string, sort the strings, then compare the results.
-    std::vector<String> aList, bList;
+    std::vector<std::string> aList, bList;
     for (RuleList::const_iterator i = m_ruleList.begin();
                                 i != m_ruleList.end(); ++i) {
         aList.push_back(i->format());

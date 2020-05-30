@@ -27,7 +27,7 @@
 // ClientProxy
 //
 
-ClientProxy::ClientProxy(const String& name, barrier::IStream* stream) :
+ClientProxy::ClientProxy(const std::string& name, barrier::IStream* stream) :
     BaseClientProxy(name),
     m_stream(stream)
 {

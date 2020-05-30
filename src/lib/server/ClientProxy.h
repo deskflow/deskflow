@@ -20,7 +20,6 @@
 
 #include "server/BaseClientProxy.h"
 #include "base/Event.h"
-#include "base/String.h"
 #include "base/EventTypes.h"
 
 namespace barrier { class IStream; }
@@ -31,7 +30,7 @@ public:
     /*!
     \c name is the name of the client.
     */
-    ClientProxy(const String& name, barrier::IStream* adoptedStream);
+    ClientProxy(const std::string& name, barrier::IStream* adoptedStream);
     ~ClientProxy();
 
     //! @name manipulators

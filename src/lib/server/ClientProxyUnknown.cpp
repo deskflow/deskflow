@@ -32,7 +32,6 @@
 #include "io/IStream.h"
 #include "io/XIO.h"
 #include "base/Log.h"
-#include "base/String.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 
@@ -176,7 +175,7 @@ ClientProxyUnknown::handleData(const Event&, void*)
 {
     LOG((CLOG_DEBUG1 "parsing hello reply"));
 
-    String name("<unknown>");
+    std::string name("<unknown>");
     try {
         // limit the maximum length of the hello
         UInt32 n = m_stream->getSize();

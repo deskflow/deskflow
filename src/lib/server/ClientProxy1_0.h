@@ -29,7 +29,7 @@ class IEventQueue;
 //! Proxy for client implementing protocol version 1.0
 class ClientProxy1_0 : public ClientProxy {
 public:
-    ClientProxy1_0(const String& name, barrier::IStream* adoptedStream, IEventQueue* events);
+    ClientProxy1_0(const std::string& name, barrier::IStream* adoptedStream, IEventQueue* events);
     ~ClientProxy1_0();
 
     // IScreen

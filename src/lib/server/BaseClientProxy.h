@@ -19,7 +19,6 @@
 #pragma once
 
 #include "barrier/IClient.h"
-#include "base/String.h"
 
 namespace barrier { class IStream; }
 
@@ -29,7 +28,7 @@ public:
     /*!
     \c name is the name of the client.
     */
-    BaseClientProxy(const String& name);
+    BaseClientProxy(const std::string& name);
     ~BaseClientProxy();
 
     //! @name manipulators
@@ -89,11 +88,11 @@ public:
     virtual void        sendDragInfo(UInt32 fileCount, const char* info,
                             size_t size) = 0;
     virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;
-    virtual String        getName() const;
+    virtual std::string getName() const;
     virtual barrier::IStream*
                         getStream() const = 0;
 
 private:
-    String                m_name;
+    std::string m_name;
     SInt32                m_x, m_y;
 };
