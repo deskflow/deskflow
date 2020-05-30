@@ -50,7 +50,6 @@ list(APPEND headers ${platform_sources})
 
 include_directories(
     ../../
-    ../../lib/
     ../../../ext/gtest/include
     ../../../ext/gmock/include
     ../../../ext

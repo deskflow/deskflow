@@ -68,7 +68,6 @@ endif()
 
 include_directories(
     ../../
-    ../../lib/
     ../../../ext/gtest/include
     ../../../ext/gmock/include
 )
