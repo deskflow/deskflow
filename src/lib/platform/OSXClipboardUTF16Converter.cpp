@@ -40,15 +40,13 @@ OSXClipboardUTF16Converter::getOSXFormat() const
     return CFSTR("public.utf16-plain-text");
 }
 
-String
-OSXClipboardUTF16Converter::doFromIClipboard(const String& data) const
+std::string OSXClipboardUTF16Converter::doFromIClipboard(const std::string& data) const
 {
     // convert and add nul terminator
     return Unicode::UTF8ToUTF16(data);
 }
 
-String
-OSXClipboardUTF16Converter::doToIClipboard(const String& data) const
+std::string OSXClipboardUTF16Converter::doToIClipboard(const std::string& data) const
 {
     // convert and strip nul terminator
     return Unicode::UTF16ToUTF8(data);

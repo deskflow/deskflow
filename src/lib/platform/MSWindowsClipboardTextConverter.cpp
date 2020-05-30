@@ -40,20 +40,18 @@ MSWindowsClipboardTextConverter::getWin32Format() const
     return CF_TEXT;
 }
 
-String
-MSWindowsClipboardTextConverter::doFromIClipboard(const String& data) const
+std::string MSWindowsClipboardTextConverter::doFromIClipboard(const std::string& data) const
 {
     // convert and add nul terminator
     return Unicode::UTF8ToText(data) += '\0';
 }
 
-String
-MSWindowsClipboardTextConverter::doToIClipboard(const String& data) const
+std::string MSWindowsClipboardTextConverter::doToIClipboard(const std::string& data) const
 {
     // convert and truncate at first nul terminator
-    String dst          = Unicode::textToUTF8(data);
-    String::size_type n = dst.find('\0');
-    if (n != String::npos) {
+    std::string dst = Unicode::textToUTF8(data);
+    std::string::size_type n = dst.find('\0');
+    if (n != std::string::npos) {
         dst.erase(n);
     }
     return dst;

@@ -34,11 +34,11 @@ public:
 
 protected:
     // MSWindowsClipboardAnyTextConverter overrides
-    virtual String        doFromIClipboard(const String&) const;
-    virtual String        doToIClipboard(const String&) const;
+    virtual std::string doFromIClipboard(const std::string&) const;
+    virtual std::string doToIClipboard(const std::string&) const;
 
 private:
-    String                findArg(const String& data, const String& name) const;
+    std::string findArg(const std::string& data, const std::string& name) const;
 
 private:
     UINT                m_format;

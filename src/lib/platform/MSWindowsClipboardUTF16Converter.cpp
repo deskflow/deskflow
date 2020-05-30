@@ -40,20 +40,18 @@ MSWindowsClipboardUTF16Converter::getWin32Format() const
     return CF_UNICODETEXT;
 }
 
-String
-MSWindowsClipboardUTF16Converter::doFromIClipboard(const String& data) const
+std::string MSWindowsClipboardUTF16Converter::doFromIClipboard(const std::string& data) const
 {
     // convert and add nul terminator
     return Unicode::UTF8ToUTF16(data).append(sizeof(wchar_t), 0);
 }
 
-String
-MSWindowsClipboardUTF16Converter::doToIClipboard(const String& data) const
+std::string MSWindowsClipboardUTF16Converter::doToIClipboard(const std::string& data) const
 {
     // convert and strip nul terminator
-    String dst          = Unicode::UTF16ToUTF8(data);
-    String::size_type n = dst.find('\0');
-    if (n != String::npos) {
+    std::string dst = Unicode::UTF16ToUTF8(data);
+    std::string::size_type n = dst.find('\0');
+    if (n != std::string::npos) {
         dst.erase(n);
     }
     return dst;

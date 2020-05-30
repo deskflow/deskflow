@@ -29,25 +29,24 @@ public:
     // IOSXClipboardConverter overrides
     virtual IClipboard::EFormat
                         getFormat() const;
-    virtual CFStringRef
-                        getOSXFormat() const = 0;
-    virtual String        fromIClipboard(const String &) const;
-    virtual String        toIClipboard(const String &) const;
+    virtual CFStringRef getOSXFormat() const = 0;
+    virtual std::string fromIClipboard(const std::string &) const;
+    virtual std::string toIClipboard(const std::string &) const;
 
 protected:
     //! Convert from IClipboard format
     /*!
     Do UTF-8 conversion and linefeed conversion.
     */
-    virtual String        doFromIClipboard(const String&) const = 0;
+    virtual std::string doFromIClipboard(const std::string&) const = 0;
 
     //! Convert to IClipboard format
     /*!
     Do UTF-8 conversion and Linefeed conversion.
     */
-    virtual String        doToIClipboard(const String&) const = 0;
+    virtual std::string doToIClipboard(const std::string&) const = 0;
 
 private:
-    static String        convertLinefeedToMacOS(const String&);
-    static String        convertLinefeedToUnix(const String&);
+    static std::string convertLinefeedToMacOS(const std::string&);
+    static std::string convertLinefeedToUnix(const std::string&);
 };

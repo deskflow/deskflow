@@ -32,11 +32,10 @@ public:
 
 protected:
     // OSXClipboardAnyTextConverter overrides
-    virtual String        doFromIClipboard(const String&) const;
-    virtual String        doToIClipboard(const String&) const;
+    virtual std::string doFromIClipboard(const std::string&) const;
+    virtual std::string doToIClipboard(const std::string&) const;
 
     // generic encoding converter
-    static String        convertString(const String& data,  
-                            CFStringEncoding fromEncoding,
-                            CFStringEncoding toEncoding);
+    static std::string convertString(const std::string& data, CFStringEncoding fromEncoding,
+                                     CFStringEncoding toEncoding);
 };

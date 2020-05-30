@@ -327,8 +327,7 @@ MSWindowsWatchdog::startProcess()
     }
 }
 
-BOOL
-MSWindowsWatchdog::doStartProcessAsSelf(String& command)
+BOOL MSWindowsWatchdog::doStartProcessAsSelf(std::string& command)
 {
     DWORD creationFlags =
         NORMAL_PRIORITY_CLASS |
@@ -347,8 +346,8 @@ MSWindowsWatchdog::doStartProcessAsSelf(String& command)
     return CreateProcess(NULL, LPSTR(command.c_str()), NULL, NULL, FALSE, creationFlags, NULL, NULL, &si, &m_processInfo);
 }
 
-BOOL
-MSWindowsWatchdog::doStartProcessAsUser(String& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
+BOOL MSWindowsWatchdog::doStartProcessAsUser(std::string& command, HANDLE userToken,
+                                             LPSECURITY_ATTRIBUTES sa)
 {
     // clear, as we're reusing process info struct
     ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));

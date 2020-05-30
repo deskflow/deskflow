@@ -97,9 +97,9 @@ public:
     virtual void        setSequenceNumber(UInt32);
     virtual bool        isPrimary() const;
     virtual void        fakeDraggingFiles(DragFileList fileList);
-    virtual String&    getDraggingFilename();
+    virtual std::string& getDraggingFilename();
     
-    const String&        getDropTarget() const { return m_dropTarget; }
+    const std::string& getDropTarget() const { return m_dropTarget; }
     void                waitForCarbonLoop() const;
     
 protected:
@@ -338,7 +338,7 @@ private:
     IEventQueue*            m_events;
     
     Thread*                m_getDropTargetThread;
-    String                    m_dropTarget;
+    std::string m_dropTarget;
     
 #if defined(MAC_OS_X_VERSION_10_7)
     Mutex*                    m_carbonLoopMutex;

@@ -54,14 +54,12 @@ XWindowsClipboardUCS2Converter::getDataSize() const
     return 16;
 }
 
-String
-XWindowsClipboardUCS2Converter::fromIClipboard(const String& data) const
+std::string XWindowsClipboardUCS2Converter::fromIClipboard(const std::string& data) const
 {
     return Unicode::UTF8ToUCS2(data);
 }
 
-String
-XWindowsClipboardUCS2Converter::toIClipboard(const String& data) const
+std::string XWindowsClipboardUCS2Converter::toIClipboard(const std::string& data) const
 {
     return Unicode::UCS2ToUTF8(data);
 }

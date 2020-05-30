@@ -38,7 +38,6 @@
 #include "arch/Arch.h"
 #include "base/FunctionJob.h"
 #include "base/Log.h"
-#include "base/String.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
@@ -150,7 +149,7 @@ MSWindowsScreen::MSWindowsScreen(
         // SHGetFolderPath is deprecated in vista, but use it for xp support.
         char desktopPath[MAX_PATH];
         if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, desktopPath))) {
-            m_desktopPath = String(desktopPath);
+            m_desktopPath = std::string(desktopPath);
             LOG((CLOG_DEBUG "using desktop for drop target: %s", m_desktopPath.c_str()));
         }
         else {
@@ -378,7 +377,7 @@ MSWindowsScreen::leave()
 void
 MSWindowsScreen::sendDragThread(void*)
 {
-    String& draggingFilename = getDraggingFilename();
+    std::string& draggingFilename = getDraggingFilename();
     size_t size = draggingFilename.size();
 
     if (draggingFilename.empty() == false) {
@@ -1867,8 +1866,7 @@ MSWindowsScreen::fakeDraggingFiles(DragFileList fileList)
     // exception from being thrown.
 }
 
-String&
-MSWindowsScreen::getDraggingFilename()
+std::string& MSWindowsScreen::getDraggingFilename()
 {
     if (m_draggingStarted) {
         m_dropTarget->clearDraggingFilename();
@@ -1894,7 +1892,7 @@ MSWindowsScreen::getDraggingFilename()
         fakeKeyUp(1);
         fakeMouseButton(kButtonLeft, false);
 
-        String filename;
+        std::string filename;
         DOUBLE timeout = ARCH->time() + .5f;
         while (ARCH->time() < timeout) {
             ARCH->sleep(.05f);
@@ -1923,8 +1921,7 @@ MSWindowsScreen::getDraggingFilename()
     return m_draggingFilename;
 }
 
-const String&
-MSWindowsScreen::getDropTarget() const
+const std::string& MSWindowsScreen::getDropTarget() const
 {
     return m_desktopPath;
 }

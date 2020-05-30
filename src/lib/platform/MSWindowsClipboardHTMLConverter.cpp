@@ -46,15 +46,14 @@ MSWindowsClipboardHTMLConverter::getWin32Format() const
     return m_format;
 }
 
-String
-MSWindowsClipboardHTMLConverter::doFromIClipboard(const String& data) const
+std::string MSWindowsClipboardHTMLConverter::doFromIClipboard(const std::string& data) const
 {
     // prepare to CF_HTML format prefix and suffix
-    String prefix("Version:0.9\r\nStartHTML:0000000105\r\n"
+    std::string prefix("Version:0.9\r\nStartHTML:0000000105\r\n"
                     "EndHTML:ZZZZZZZZZZ\r\n"
                     "StartFragment:XXXXXXXXXX\r\nEndFragment:YYYYYYYYYY\r\n"
                     "<!DOCTYPE><HTML><BODY><!--StartFragment-->");
-    String suffix("<!--EndFragment--></BODY></HTML>\r\n");
+    std::string suffix("<!--EndFragment--></BODY></HTML>\r\n");
 
     // Get byte offsets for header
     UInt32 StartFragment = (UInt32)prefix.size();
@@ -75,45 +74,43 @@ MSWindowsClipboardHTMLConverter::doFromIClipboard(const String& data) const
     return prefix;
 }
 
-String
-MSWindowsClipboardHTMLConverter::doToIClipboard(const String& data) const
+std::string MSWindowsClipboardHTMLConverter::doToIClipboard(const std::string& data) const
 {
     // get fragment start/end args
-    String startArg = findArg(data, "StartFragment");
-    String endArg   = findArg(data, "EndFragment");
+    std::string startArg = findArg(data, "StartFragment");
+    std::string endArg   = findArg(data, "EndFragment");
     if (startArg.empty() || endArg.empty()) {
-        return String();
+        return std::string();
     }
 
     // convert args to integers
     SInt32 start = (SInt32)atoi(startArg.c_str());
     SInt32 end   = (SInt32)atoi(endArg.c_str());
     if (start <= 0 || end <= 0 || start >= end) {
-        return String();
+        return std::string();
     }
 
     // extract the fragment
     return data.substr(start, end - start);
 }
 
-String
-MSWindowsClipboardHTMLConverter::findArg(
-                const String& data, const String& name) const
+std::string MSWindowsClipboardHTMLConverter::findArg(const std::string& data,
+                                                     const std::string& name) const
 {
-    String::size_type i = data.find(name);
-    if (i == String::npos) {
-        return String();
+    std::string::size_type i = data.find(name);
+    if (i == std::string::npos) {
+        return std::string();
     }
     i = data.find_first_of(":\r\n", i);
-    if (i == String::npos || data[i] != ':') {
-        return String();
+    if (i == std::string::npos || data[i] != ':') {
+        return std::string();
     }
     i = data.find_first_of("0123456789\r\n", i + 1);
-    if (i == String::npos || data[i] == '\r' || data[i] == '\n') {
-        return String();
+    if (i == std::string::npos || data[i] == '\r' || data[i] == '\n') {
+        return std::string();
     }
-    String::size_type j = data.find_first_not_of("0123456789", i);
-    if (j == String::npos) {
+    std::string::size_type j = data.find_first_not_of("0123456789", i);
+    if (j == std::string::npos) {
         j = data.size();
     }
     return data.substr(i, j - i);

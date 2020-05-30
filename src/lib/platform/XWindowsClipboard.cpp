@@ -170,7 +170,7 @@ XWindowsClipboard::addSimpleRequest(Window requestor,
     }
 
     // handle targets
-    String data;
+    std::string data;
     Atom type  = None;
     int format = 0;
     if (target == m_atomTargets) {
@@ -303,8 +303,7 @@ XWindowsClipboard::empty()
     return true;
 }
 
-void
-XWindowsClipboard::add(EFormat format, const String& data)
+void XWindowsClipboard::add(EFormat format, const std::string& data)
 {
     assert(m_open);
     assert(m_owner);
@@ -387,8 +386,7 @@ XWindowsClipboard::has(EFormat format) const
     return m_added[format];
 }
 
-String
-XWindowsClipboard::get(EFormat format) const
+std::string XWindowsClipboard::get(EFormat format) const
 {
     assert(m_open);
 
@@ -513,7 +511,7 @@ XWindowsClipboard::icccmFillCache()
     // instead of the correct type ATOM;  allow either.
     const Atom atomTargets = m_atomTargets;
     Atom target;
-    String data;
+    std::string data;
     if (!icccmGetSelection(atomTargets, &target, &data) ||
         (target != m_atomAtom && target != m_atomTargets)) {
         LOG((CLOG_DEBUG1 "selection doesn't support TARGETS"));
@@ -557,7 +555,7 @@ XWindowsClipboard::icccmFillCache()
 
         // get the data
         Atom actualTarget;
-        String targetData;
+        std::string targetData;
         if (!icccmGetSelection(target, &actualTarget, &targetData)) {
             LOG((CLOG_DEBUG1 "  no data for target %s", XWindowsUtil::atomToString(m_display, target).c_str()));
             continue;
@@ -573,7 +571,7 @@ XWindowsClipboard::icccmFillCache()
 
 bool
 XWindowsClipboard::icccmGetSelection(Atom target,
-                Atom* actualTarget, String* data) const
+                Atom* actualTarget, std::string* data) const
 {
     assert(actualTarget != NULL);
     assert(data         != NULL);
@@ -597,7 +595,7 @@ IClipboard::Time
 XWindowsClipboard::icccmGetTime() const
 {
     Atom actualTarget;
-    String data;
+    std::string data;
     if (icccmGetSelection(m_atomTimestamp, &actualTarget, &data) &&
         actualTarget == m_atomInteger) {
         Time time = *reinterpret_cast<const Time*>(data.data());
@@ -668,7 +666,7 @@ XWindowsClipboard::motifOwnsClipboard() const
     // get the Motif clipboard header property from the root window
     Atom target;
     SInt32 format;
-    String data;
+    std::string data;
     Window root = RootWindow(m_display, DefaultScreen(m_display));
     if (!XWindowsUtil::getWindowProperty(m_display, root,
                                 m_atomMotifClipHeader,
@@ -697,7 +695,7 @@ XWindowsClipboard::motifFillCache()
     // get the Motif clipboard header property from the root window
     Atom target;
     SInt32 format;
-    String data;
+    std::string data;
     Window root = RootWindow(m_display, DefaultScreen(m_display));
     if (!XWindowsUtil::getWindowProperty(m_display, root,
                                 m_atomMotifClipHeader,
@@ -741,13 +739,13 @@ XWindowsClipboard::motifFillCache()
                                 static_cast<const char*>(data.data()));
 
     // get the available formats
-    typedef std::map<Atom, String> MotifFormatMap;
+    typedef std::map<Atom, std::string> MotifFormatMap;
     MotifFormatMap motifFormats;
     for (SInt32 i = 0; i < numFormats; ++i) {
         // get Motif format property from the root window
         sprintf(name, "_MOTIF_CLIP_ITEM_%d", formats[i]);
         Atom atomFormat = m_impl->XInternAtom(m_display, name, False);
-        String data;
+        std::string data;
         if (!XWindowsUtil::getWindowProperty(m_display, root,
                                     atomFormat, &data,
                                     &target, &format, False)) {
@@ -797,7 +795,7 @@ XWindowsClipboard::motifFillCache()
 
         // get the data (finally)
         Atom actualTarget;
-        String targetData;
+        std::string targetData;
         if (!motifGetSelection(&motifFormat, &actualTarget, &targetData)) {
             LOG((CLOG_DEBUG1 "  no data for target %s", XWindowsUtil::atomToString(m_display, target).c_str()));
             continue;
@@ -813,7 +811,7 @@ XWindowsClipboard::motifFillCache()
 
 bool
 XWindowsClipboard::motifGetSelection(const MotifClipFormat* format,
-                            Atom* actualTarget, String* data) const
+                            Atom* actualTarget, std::string* data) const
 {
     // if the current clipboard owner and the owner indicated by the
     // motif clip header are the same then transfer via a property on
@@ -849,7 +847,7 @@ XWindowsClipboard::insertMultipleReply(Window requestor,
     // get the requested targets
     Atom target;
     SInt32 format;
-    String data;
+    std::string data;
     if (!XWindowsUtil::getWindowProperty(m_display, requestor,
                                 property, &data, &target, &format, False)) {
         // can't get the requested targets
@@ -887,7 +885,7 @@ XWindowsClipboard::insertMultipleReply(Window requestor,
 
     // add reply for MULTIPLE request
     insertReply(new Reply(requestor, m_atomMultiple,
-                                time, property, String(), None, 32));
+                                time, property, std::string(), None, 32));
 
     return true;
 }
@@ -1101,7 +1099,7 @@ XWindowsClipboard::sendReply(Reply* reply)
             LOG((CLOG_DEBUG2 "properties of 0x%08x:", reply->m_requestor));
             for (int i = 0; i < n; ++i) {
                 Atom target;
-                String data;
+                std::string data;
                 char* name = m_impl->XGetAtomName(m_display, props[i]);
                 if (!XWindowsUtil::getWindowProperty(m_display,
                                 reply->m_requestor,
@@ -1112,9 +1110,9 @@ XWindowsClipboard::sendReply(Reply* reply)
                     // if there are any non-ascii characters in string
                     // then print the binary data.
                     static const char* hex = "0123456789abcdef";
-                    for (String::size_type j = 0; j < data.size(); ++j) {
+                    for (std::string::size_type j = 0; j < data.size(); ++j) {
                         if (data[j] < 32 || data[j] > 126) {
-                            String tmp;
+                            std::string tmp;
                             tmp.reserve(data.size() * 3);
                             for (j = 0; j < data.size(); ++j) {
                                 unsigned char v = (unsigned char)data[j];
@@ -1221,8 +1219,7 @@ XWindowsClipboard::wasOwnedAtTime(::Time time) const
     return (/*when >= 0 &&*/ when <= duration);
 }
 
-Atom
-XWindowsClipboard::getTargetsData(String& data, int* format) const
+Atom XWindowsClipboard::getTargetsData(std::string& data, int* format) const
 {
     assert(format != NULL);
 
@@ -1246,8 +1243,7 @@ XWindowsClipboard::getTargetsData(String& data, int* format) const
     return m_atomAtom;
 }
 
-Atom
-XWindowsClipboard::getTimestampData(String& data, int* format) const
+Atom XWindowsClipboard::getTimestampData(std::string& data, int* format) const
 {
     assert(format != NULL);
 
@@ -1285,7 +1281,7 @@ XWindowsClipboard::CICCCMGetClipboard::~CICCCMGetClipboard()
 
 bool
 XWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
-                Atom selection, Atom target, Atom* actualTarget, String* data)
+                Atom selection, Atom target, Atom* actualTarget, std::string* data)
 {
     assert(actualTarget != NULL);
     assert(data         != NULL);
@@ -1430,7 +1426,7 @@ XWindowsClipboard::CICCCMGetClipboard::processEvent(
 
     // get the data from the property
     Atom target;
-    const String::size_type oldSize = m_data->size();
+    const std::string::size_type oldSize = m_data->size();
     if (!XWindowsUtil::getWindowProperty(display, m_requestor,
                                 m_property, m_data, &target, NULL, True)) {
         // unable to read property
@@ -1515,7 +1511,7 @@ XWindowsClipboard::Reply::Reply(Window requestor, Atom target, ::Time time) :
 }
 
 XWindowsClipboard::Reply::Reply(Window requestor, Atom target, ::Time time,
-                Atom property, const String& data, Atom type, int format) :
+                Atom property, const std::string& data, Atom type, int format) :
     m_requestor(requestor),
     m_target(target),
     m_time(time),

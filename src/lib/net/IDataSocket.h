@@ -21,6 +21,7 @@
 #include "net/ISocket.h"
 #include "io/IStream.h"
 #include "base/EventTypes.h"
+#include <string>
 
 //! Data stream socket interface
 /*!
