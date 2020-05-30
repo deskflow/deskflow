@@ -48,7 +48,7 @@ public:
     public:
         FailInfo(const char* what) : m_retry(false), m_what(what) { }
         bool            m_retry;
-        String            m_what;
+        std::string m_what;
     };
 
 public:
@@ -57,7 +57,7 @@ public:
     as its name and \p address as the server's address and \p factory
     to create the socket.  \p screen is    the local screen.
     */
-    Client(IEventQueue* events, const String& name,
+    Client(IEventQueue* events, const std::string& name,
            const NetworkAddress& address, ISocketFactory* socketFactory,
            barrier::Screen* screen, ClientArgs const& args);
 
@@ -86,13 +86,13 @@ public:
     virtual void        handshakeComplete();
 
     //! Received drag information
-    void                dragInfoReceived(UInt32 fileNum, String data);
+    void dragInfoReceived(UInt32 fileNum, std::string data);
 
     //! Create a new thread and use it to send file to Server
     void                sendFileToServer(const char* filename);
     
     //! Send dragging file information back to server
-    void                sendDragInfo(UInt32 fileCount, String& info, size_t size);
+    void sendDragInfo(UInt32 fileCount, std::string& info, size_t size);
 
     
     //@}
@@ -126,7 +126,7 @@ public:
     size_t&                getExpectedFileSize() { return m_expectedFileSize; }
 
     //! Return received file data
-    String&                getReceivedFileData() { return m_receivedFileData; }
+    std::string& getReceivedFileData() { return m_receivedFileData; }
 
     //! Return drag file list
     DragFileList        getDragFileList() { return m_dragFileList; }
@@ -160,7 +160,7 @@ public:
     virtual void        screensaver(bool activate);
     virtual void        resetOptions();
     virtual void        setOptions(const OptionsList& options);
-    virtual String        getName() const;
+    virtual std::string getName() const;
 
 private:
     void                sendClipboard(ClipboardID);
@@ -198,7 +198,7 @@ public:
     bool                m_mock;
 
 private:
-    String                m_name;
+    std::string                m_name;
     NetworkAddress        m_serverAddress;
     ISocketFactory*        m_socketFactory;
     barrier::Screen*    m_screen;
@@ -212,12 +212,12 @@ private:
     bool                m_ownClipboard[kClipboardEnd];
     bool                m_sentClipboard[kClipboardEnd];
     IClipboard::Time    m_timeClipboard[kClipboardEnd];
-    String                m_dataClipboard[kClipboardEnd];
+    std::string m_dataClipboard[kClipboardEnd];
     IEventQueue*        m_events;
     std::size_t            m_expectedFileSize;
-    String                m_receivedFileData;
+    std::string m_receivedFileData;
     DragFileList        m_dragFileList;
-    String                m_dragFileExt;
+    std::string m_dragFileExt;
     Thread*                m_sendFileThread;
     Thread*                m_writeToDropDirThread;
     TCPSocket*            m_socket;

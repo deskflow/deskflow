@@ -22,7 +22,6 @@
 #include "barrier/key_types.h"
 #include "base/Event.h"
 #include "base/Stopwatch.h"
-#include "base/String.h"
 
 class Client;
 class ClientInfo;
