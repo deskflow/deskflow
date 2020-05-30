@@ -23,6 +23,7 @@
 #include "net/TSocketMultiplexerMethodJob.h"
 #include "arch/XArch.h"
 #include "common/DataDirectories.h"
+#include "base/String.h"
 
 static const char s_certificateDir[] = { "SSL" };
 static const char s_certificateFilename[] = { "Barrier.pem" };
@@ -54,7 +55,7 @@ SecureListenSocket::accept()
             setListeningJob();
         }
 
-        String certificateFilename = barrier::string::sprintf("%s/%s/%s",
+        std::string certificateFilename = barrier::string::sprintf("%s/%s/%s",
                                         DataDirectories::profile().c_str(),
                                         s_certificateDir,
                                         s_certificateFilename);
