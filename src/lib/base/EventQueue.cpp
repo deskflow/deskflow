@@ -553,8 +553,7 @@ EventQueue::getNextTimerTimeout() const
     return m_timerQueue.top();
 }
 
-Event::Type
-EventQueue::getRegisteredType(const String& name) const
+Event::Type EventQueue::getRegisteredType(const std::string& name) const
 {
     NameMap::const_iterator found = m_nameMap.find(name);
     if (found != m_nameMap.end())

@@ -19,7 +19,6 @@
 #include "arch/Arch.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
-#include "base/String.h"
 #include "base/log_outputters.h"
 #include "common/Version.h"
 

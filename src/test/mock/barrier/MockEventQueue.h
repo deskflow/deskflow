@@ -41,7 +41,7 @@ public:
     MOCK_METHOD1(dispatchEvent, bool(const Event&));
     MOCK_CONST_METHOD2(getHandler, IEventJob*(Event::Type, void*));
     MOCK_METHOD1(deleteTimer, void(EventQueueTimer*));
-    MOCK_CONST_METHOD1(getRegisteredType, Event::Type(const String&));
+    MOCK_CONST_METHOD1(getRegisteredType, Event::Type(const std::string&));
     MOCK_METHOD0(getSystemTarget, void*());
     MOCK_METHOD0(forClient, ClientEvents&());
     MOCK_METHOD0(forIStream, IStreamEvents&());
