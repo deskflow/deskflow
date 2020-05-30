@@ -54,7 +54,7 @@ public:
     //@}
 
 protected:
-    virtual String        getWhat() const throw();
+    virtual std::string getWhat() const throw();
 
 private:
     int                    m_major;
@@ -68,23 +68,22 @@ a client that is already connected.
 */
 class XDuplicateClient : public XBarrier {
 public:
-    XDuplicateClient(const String& name);
+    XDuplicateClient(const std::string& name);
     virtual ~XDuplicateClient() _NOEXCEPT { }
 
     //! @name accessors
     //@{
 
     //! Get client's name
-    virtual const String&
-                        getName() const throw();
+    virtual const std::string& getName() const throw();
 
     //@}
 
 protected:
-    virtual String        getWhat() const throw();
+    virtual std::string getWhat() const throw();
 
 private:
-    String                m_name;
+    std::string m_name;
 };
 
 //! Client not in map exception
@@ -94,23 +93,22 @@ unknown to the server.
 */
 class XUnknownClient : public XBarrier {
 public:
-    XUnknownClient(const String& name);
+    XUnknownClient(const std::string& name);
     virtual ~XUnknownClient() _NOEXCEPT { }
 
     //! @name accessors
     //@{
 
     //! Get the client's name
-    virtual const String&
-                        getName() const throw();
+    virtual const std::string& getName() const throw();
 
     //@}
 
 protected:
-    virtual String        getWhat() const throw();
+    virtual std::string        getWhat() const throw();
 
 private:
-    String                m_name;
+    std::string                m_name;
 };
 
 //! Generic exit eception
@@ -128,7 +126,7 @@ public:
     int getCode() const throw();
 
 protected:
-    virtual String    getWhat() const throw();
+    virtual std::string getWhat() const throw();
     
 private:
     int    m_code;

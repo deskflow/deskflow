@@ -32,7 +32,7 @@ XBase::XBase() :
     // do nothing
 }
 
-XBase::XBase(const String& msg) :
+XBase::XBase(const std::string& msg) :
     std::runtime_error(msg)
 {
     // do nothing
@@ -54,14 +54,14 @@ XBase::what() const _NOEXCEPT
     return what;
 }
 
-String
+std::string
 XBase::format(const char* /*id*/, const char* fmt, ...) const throw()
 {
     // FIXME -- lookup message string using id as an index.  set
     // fmt to that string if it exists.
 
     // format
-    String result;
+    std::string result;
     va_list args;
     va_start(args, fmt);
     try {

@@ -61,7 +61,7 @@ public:
     //@}
 
 protected:
-    virtual String        getWhat() const throw();
+    virtual std::string getWhat() const throw();
 
 private:
     double                m_timeUntilRetry;
