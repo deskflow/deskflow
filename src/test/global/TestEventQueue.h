@@ -19,7 +19,7 @@
 
 #include "base/EventQueue.h"
 
-class EventQueueTimer;
+class EventQueueTimer {};
 
 class TestEventQueue : public EventQueue {
 public:
