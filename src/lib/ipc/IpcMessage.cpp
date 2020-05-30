@@ -47,9 +47,9 @@ IpcShutdownMessage::~IpcShutdownMessage()
 {
 }
 
-IpcLogLineMessage::IpcLogLineMessage(const String& logLine) :
-IpcMessage(kIpcLogLine),
-m_logLine(logLine)
+IpcLogLineMessage::IpcLogLineMessage(const std::string& logLine) :
+    IpcMessage(kIpcLogLine),
+    m_logLine(logLine)
 {
 }
 
@@ -57,10 +57,10 @@ IpcLogLineMessage::~IpcLogLineMessage()
 {
 }
 
-IpcCommandMessage::IpcCommandMessage(const String& command, bool elevate) :
-IpcMessage(kIpcCommand),
-m_command(command),
-m_elevate(elevate)
+IpcCommandMessage::IpcCommandMessage(const std::string& command, bool elevate) :
+    IpcMessage(kIpcCommand),
+    m_command(command),
+    m_elevate(elevate)
 {
 }
 
