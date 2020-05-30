@@ -76,8 +76,7 @@ TEST_F(XWindowsKeyStateTests, setActiveGroup_pollAndSet_groupIsZero)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
 
     keyState.setActiveGroup(XWindowsKeyState::kGroupPollAndSet);
 
@@ -88,8 +87,7 @@ TEST_F(XWindowsKeyStateTests, setActiveGroup_poll_groupIsNotSet)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
 
     keyState.setActiveGroup(XWindowsKeyState::kGroupPoll);
 
@@ -100,8 +98,7 @@ TEST_F(XWindowsKeyStateTests, setActiveGroup_customGroup_groupWasSet)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
 
     keyState.setActiveGroup(1);
 
@@ -112,8 +109,7 @@ TEST_F(XWindowsKeyStateTests, mapModifiersFromX_zeroState_zeroMask)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
 
     int mask = keyState.mapModifiersFromX(0);
 
@@ -124,8 +120,7 @@ TEST_F(XWindowsKeyStateTests, mapModifiersToX_zeroMask_resultIsTrue)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
 
     unsigned int modifiers = 0;
     bool result = keyState.mapModifiersToX(0, modifiers);
@@ -137,8 +132,7 @@ TEST_F(XWindowsKeyStateTests, fakeCtrlAltDel_default_returnsFalse)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
 
     bool result = keyState.fakeCtrlAltDel();
 
@@ -149,8 +143,7 @@ TEST_F(XWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
 
     KeyModifierMask actual = keyState.pollActiveModifiers();
 
@@ -162,8 +155,7 @@ TEST_F(XWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCor
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
 
     // set mock modifier mapping
     std::fill(keyState.modifierFromX().begin(), keyState.modifierFromX().end(), 0);
@@ -195,8 +187,7 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_defaultState_returnsZero)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
 
     SInt32 actual = keyState.pollActiveGroup();
 
@@ -207,8 +198,7 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_positiveGroup_returnsGroup)
 {
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
 
     keyState.group(3);
 
@@ -222,8 +212,7 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
 #if HAVE_XKB_EXTENSION
     MockKeyMap keyMap;
     MockEventQueue eventQueue;
-    XWindowsKeyState keyState(
-        m_display, true, &eventQueue, keyMap);
+    XWindowsKeyState keyState(new XWindowsImpl(), m_display, true, &eventQueue, keyMap);
 
     // reset the group
     keyState.group(-1);
