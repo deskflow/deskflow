@@ -92,5 +92,5 @@ match the format.
 class XIOReadMismatch : public XIO {
 public:
     // XBase overrides
-    virtual std::string getWhat() const throw();
+    virtual std::string getWhat() const noexcept;
 };

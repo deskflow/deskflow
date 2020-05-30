@@ -20,7 +20,7 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "base/SimpleEventQueueBuffer.h"
-#include "common/stdexcept.h"
+#include <stdexcept>
 
 void
 TestEventQueue::raiseQuitEvent() 

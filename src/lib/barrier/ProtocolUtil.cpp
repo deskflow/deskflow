@@ -539,7 +539,7 @@ ProtocolUtil::read(barrier::IStream* stream, void* vbuffer, UInt32 count)
 //
 
 String
-XIOReadMismatch::getWhat() const throw()
+XIOReadMismatch::getWhat() const noexcept
 {
     return format("XIOReadMismatch", "ProtocolUtil::readf() mismatch");
 }
