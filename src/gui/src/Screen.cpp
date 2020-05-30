@@ -47,13 +47,13 @@ void Screen::init()
 
     // m_Modifiers, m_SwitchCorners and m_Fixes are QLists we use like fixed-size arrays,
     // thus we need to make sure to fill them with the required number of elements.
-    for (int i = 0; i < NumModifiers; i++)
-        modifiers() << i;
+    for (int i = 0; i < static_cast<int>(Modifier::Count); i++)
+        modifiers() << static_cast<Modifier>(i);
 
-    for (int i = 0; i < NumSwitchCorners; i++)
+    for (int i = 0; i < static_cast<int>(SwitchCorner::Count); i++)
         switchCorners() << false;
 
-    for (int i = 0; i < NumFixes; i++)
+    for (int i = 0; i < static_cast<int>(Fix::Count); i++)
         fixes() << false;
 }
 
@@ -66,10 +66,12 @@ void Screen::loadSettings(QSettings& settings)
 
     setSwitchCornerSize(settings.value("switchCornerSize").toInt());
 
-    readSettings(settings, aliases(), "alias", QString(""));
-    readSettings(settings, modifiers(), "modifier", static_cast<int>(DefaultMod), NumModifiers);
-    readSettings(settings, switchCorners(), "switchCorner", false, NumSwitchCorners);
-    readSettings(settings, fixes(), "fix", false, NumFixes);
+    readSettings<QString>(settings, aliases(), "alias", QString(""));
+    readSettings<int>(settings, modifiers(), "modifier", Modifier::DefaultMod,
+                      static_cast<int>(Modifier::Count));
+    readSettings<bool>(settings, switchCorners(), "switchCorner", false,
+                       static_cast<int>(SwitchCorner::Count));
+    readSettings<bool>(settings, fixes(), "fix", false, static_cast<int>(Fix::Count));
 }
 
 void Screen::saveSettings(QSettings& settings) const
@@ -81,27 +83,35 @@ void Screen::saveSettings(QSettings& settings) const
 
     settings.setValue("switchCornerSize", switchCornerSize());
 
-    writeSettings(settings, aliases(), "alias");
-    writeSettings(settings, modifiers(), "modifier");
-    writeSettings(settings, switchCorners(), "switchCorner");
-    writeSettings(settings, fixes(), "fix");
+    writeSettings<QString>(settings, aliases(), "alias");
+    writeSettings<int>(settings, modifiers(), "modifier");
+    writeSettings<bool>(settings, switchCorners(), "switchCorner");
+    writeSettings<bool>(settings, fixes(), "fix");
 }
 
 QTextStream& Screen::writeScreensSection(QTextStream& outStream) const
 {
     outStream << "\t" << name() << ":" << endl;
 
-    for (int i = 0; i < modifiers().size(); i++)
-        if (modifier(i) != i)
-            outStream << "\t\t" << modifierName(i) << " = " << modifierName(modifier(i)) << endl;
+    for (int i = 0; i < modifiers().size(); i++) {
+        auto mod = static_cast<Modifier>(i);
+        if (modifier(mod) != mod) {
+            outStream << "\t\t" << modifierName(mod) << " = " << modifierName(modifier(mod))
+                      << endl;
+        }
+    }
 
-    for (int i = 0; i < fixes().size(); i++)
-        outStream << "\t\t" << fixName(i) << " = " << (fixes()[i] ? "true" : "false") << endl;
+    for (int i = 0; i < fixes().size(); i++) {
+        auto fix = static_cast<Fix>(i);
+        outStream << "\t\t" << fixName(fix) << " = " << (fixes()[i] ? "true" : "false") << endl;
+    }
 
     outStream << "\t\t" << "switchCorners = none ";
-    for (int i = 0; i < switchCorners().size(); i++)
-        if (switchCorners()[i])
-            outStream << "+" << switchCornerName(i) << " ";
+    for (int i = 0; i < switchCorners().size(); i++) {
+        if (switchCorners()[i]) {
+            outStream << "+" << switchCornerName(static_cast<SwitchCorner>(i)) << " ";
+        }
+    }
     outStream << endl;
 
     outStream << "\t\t" << "switchCornerSize = " << switchCornerSize() << endl;
@@ -124,11 +134,16 @@ QTextStream& Screen::writeAliasesSection(QTextStream& outStream) const
 
 QDataStream& operator<<(QDataStream& outStream, const Screen& screen)
 {
+    QList<int> modifiers;
+    for (auto mod : screen.modifiers()) {
+        modifiers.push_back(static_cast<int>(mod));
+    }
+
     return outStream
         << screen.name()
         << screen.switchCornerSize()
         << screen.aliases()
-        << screen.modifiers()
+        << modifiers
         << screen.switchCorners()
         << screen.fixes()
         ;
@@ -136,12 +151,18 @@ QDataStream& operator<<(QDataStream& outStream, const Screen& screen)
 
 QDataStream& operator>>(QDataStream& inStream, Screen& screen)
 {
+    QList<int> modifiers;
     return inStream
         >> screen.m_Name
         >> screen.m_SwitchCornerSize
         >> screen.m_Aliases
-        >> screen.m_Modifiers
+        >> modifiers
         >> screen.m_SwitchCorners
         >> screen.m_Fixes
         ;
+
+    screen.m_Modifiers.clear();
+    for (auto mod : modifiers) {
+        screen.m_Modifiers.push_back(static_cast<Screen::Modifier>(mod));
+    }
 }

@@ -56,7 +56,7 @@ class ServerConfig : public BaseConfig
         int switchDelay() const { return m_SwitchDelay; }
         bool hasSwitchDoubleTap() const { return m_HasSwitchDoubleTap; }
         int switchDoubleTap() const { return m_SwitchDoubleTap; }
-        bool switchCorner(int c) const { return m_SwitchCorners[c]; }
+        bool switchCorner(SwitchCorner c) const { return m_SwitchCorners[static_cast<int>(c)]; }
         int switchCornerSize() const { return m_SwitchCornerSize; }
         const QList<bool>& switchCorners() const { return m_SwitchCorners; }
         const HotkeyList& hotkeys() const { return m_Hotkeys; }
@@ -87,7 +87,7 @@ class ServerConfig : public BaseConfig
         void setSwitchDelay(int val) { m_SwitchDelay = val; }
         void haveSwitchDoubleTap(bool on) { m_HasSwitchDoubleTap = on; }
         void setSwitchDoubleTap(int val) { m_SwitchDoubleTap = val; }
-        void setSwitchCorner(int c, bool on) { m_SwitchCorners[c] = on; }
+        void setSwitchCorner(SwitchCorner c, bool on) { m_SwitchCorners[static_cast<int>(c)] = on; }
         void setSwitchCornerSize(int val) { m_SwitchCornerSize = val; }
         void setIgnoreAutoConfigClient(bool on) { m_IgnoreAutoConfigClient = on; }
         void setEnableDragAndDrop(bool on) { m_EnableDragAndDrop = on; }

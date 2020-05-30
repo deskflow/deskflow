@@ -48,10 +48,10 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
     m_pCheckBoxSwitchDoubleTap->setChecked(serverConfig().hasSwitchDoubleTap());
     m_pSpinBoxSwitchDoubleTap->setValue(serverConfig().switchDoubleTap());
 
-    m_pCheckBoxCornerTopLeft->setChecked(serverConfig().switchCorner(BaseConfig::TopLeft));
-    m_pCheckBoxCornerTopRight->setChecked(serverConfig().switchCorner(BaseConfig::TopRight));
-    m_pCheckBoxCornerBottomLeft->setChecked(serverConfig().switchCorner(BaseConfig::BottomLeft));
-    m_pCheckBoxCornerBottomRight->setChecked(serverConfig().switchCorner(BaseConfig::BottomRight));
+    m_pCheckBoxCornerTopLeft->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::TopLeft));
+    m_pCheckBoxCornerTopRight->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::TopRight));
+    m_pCheckBoxCornerBottomLeft->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::BottomLeft));
+    m_pCheckBoxCornerBottomRight->setChecked(serverConfig().switchCorner(BaseConfig::SwitchCorner::BottomRight));
     m_pSpinBoxSwitchCornerSize->setValue(serverConfig().switchCornerSize());
 
     m_pCheckBoxIgnoreAutoConfigClient->setChecked(serverConfig().ignoreAutoConfigClient());
@@ -95,10 +95,14 @@ void ServerConfigDialog::accept()
     serverConfig().haveSwitchDoubleTap(m_pCheckBoxSwitchDoubleTap->isChecked());
     serverConfig().setSwitchDoubleTap(m_pSpinBoxSwitchDoubleTap->value());
 
-    serverConfig().setSwitchCorner(BaseConfig::TopLeft, m_pCheckBoxCornerTopLeft->isChecked());
-    serverConfig().setSwitchCorner(BaseConfig::TopRight, m_pCheckBoxCornerTopRight->isChecked());
-    serverConfig().setSwitchCorner(BaseConfig::BottomLeft, m_pCheckBoxCornerBottomLeft->isChecked());
-    serverConfig().setSwitchCorner(BaseConfig::BottomRight, m_pCheckBoxCornerBottomRight->isChecked());
+    serverConfig().setSwitchCorner(BaseConfig::SwitchCorner::TopLeft,
+                                   m_pCheckBoxCornerTopLeft->isChecked());
+    serverConfig().setSwitchCorner(BaseConfig::SwitchCorner::TopRight,
+                                   m_pCheckBoxCornerTopRight->isChecked());
+    serverConfig().setSwitchCorner(BaseConfig::SwitchCorner::BottomLeft,
+                                   m_pCheckBoxCornerBottomLeft->isChecked());
+    serverConfig().setSwitchCorner(BaseConfig::SwitchCorner::BottomRight,
+                                   m_pCheckBoxCornerBottomRight->isChecked());
     serverConfig().setSwitchCornerSize(m_pSpinBoxSwitchCornerSize->value());
     serverConfig().setIgnoreAutoConfigClient(m_pCheckBoxIgnoreAutoConfigClient->isChecked());
     serverConfig().setEnableDragAndDrop(m_pCheckBoxEnableDragAndDrop->isChecked());

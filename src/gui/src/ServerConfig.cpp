@@ -88,8 +88,9 @@ void ServerConfig::init()
     screens().clear();
 
     // m_NumSwitchCorners is used as a fixed size array. See Screen::init()
-    for (int i = 0; i < NumSwitchCorners; i++)
+    for (int i = 0; i < static_cast<int>(SwitchCorner::Count); i++) {
         switchCorners() << false;
+    }
 
     // There must always be screen objects for each cell in the screens QList. Unused screens
     // are identified by having an empty name.
@@ -119,7 +120,7 @@ void ServerConfig::saveSettings()
     settings().setValue("enableDragAndDrop", enableDragAndDrop());
     settings().setValue("clipboardSharing", clipboardSharing());
 
-    writeSettings(settings(), switchCorners(), "switchCorner");
+    writeSettings<bool>(settings(), switchCorners(), "switchCorner");
 
     settings().beginWriteArray("screens");
     for (int i = 0; i < screens().size(); i++)
@@ -164,7 +165,8 @@ void ServerConfig::loadSettings()
     setEnableDragAndDrop(settings().value("enableDragAndDrop", true).toBool());
     setClipboardSharing(settings().value("clipboardSharing", true).toBool());
 
-    readSettings(settings(), switchCorners(), "switchCorner", false, NumSwitchCorners);
+    readSettings<bool>(settings(), switchCorners(), "switchCorner", false,
+                       static_cast<int>(SwitchCorner::Count));
 
     int numScreens = settings().beginReadArray("screens");
     Q_ASSERT(numScreens <= screens().size());
@@ -258,9 +260,12 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
         outStream << "\t" << "switchDoubleTap = " << config.switchDoubleTap() << endl;
 
     outStream << "\t" << "switchCorners = none ";
-    for (int i = 0; i < config.switchCorners().size(); i++)
-        if (config.switchCorners()[i])
-            outStream << "+" << config.switchCornerName(i) << " ";
+    for (int i = 0; i < config.switchCorners().size(); i++) {
+        auto corner = static_cast<Screen::SwitchCorner>(i);
+        if (config.switchCorners()[i]) {
+            outStream << "+" << config.switchCornerName(corner) << " ";
+        }
+    }
     outStream << endl;
 
     outStream << "\t" << "switchCornerSize = " << config.switchCornerSize() << endl;
