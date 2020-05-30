@@ -62,7 +62,7 @@ public:
     //! Switch to screen data
     class SwitchToScreenInfo {
     public:
-        static SwitchToScreenInfo* alloc(const String& screen);
+        static SwitchToScreenInfo* alloc(const std::string& screen);
 
     public:
         // this is a C-string;  this type is a variable size structure
@@ -81,10 +81,10 @@ public:
     //! Screen connected data
     class ScreenConnectedInfo {
     public:
-        ScreenConnectedInfo(String screen) : m_screen(screen) { }
+        ScreenConnectedInfo(std::string screen) : m_screen(screen) { }
 
     public:
-        String            m_screen; // was char[1]
+        std::string m_screen;
     };
 
     //! Keyboard broadcast data
@@ -94,7 +94,7 @@ public:
 
         static KeyboardBroadcastInfo* alloc(State state = kToggle);
         static KeyboardBroadcastInfo* alloc(State state,
-                                            const String& screens);
+                                            const std::string& screens);
 
     public:
         State            m_state;
@@ -146,7 +146,7 @@ public:
     void                sendFileToClient(const char* filename);
 
     //! Received dragging information from client
-    void                dragInfoReceived(UInt32 fileNum, String content);
+    void dragInfoReceived(UInt32 fileNum, std::string content);
 
     //! Store ClientListener pointer
     void                setListener(ClientListener* p) { m_clientListener = p; }
@@ -165,7 +165,7 @@ public:
     /*!
     Set the \c list to the names of the currently connected clients.
     */
-    void                getClients(std::vector<String>& list) const;
+    void getClients(std::vector<std::string>& list) const;
     
     //! Return true if recieved file size is valid
     bool                isReceivedFileSizeValid();
@@ -174,7 +174,7 @@ public:
     size_t&                getExpectedFileSize() { return m_expectedFileSize; }
 
     //! Return received file data
-    String&                getReceivedFileData() { return m_receivedFileData; }
+    std::string& getReceivedFileData() { return m_receivedFileData; }
 
     //! Return fake drag file list
     DragFileList        getFakeDragFileList() { return m_fakeDragFileList; }
@@ -183,7 +183,7 @@ public:
 
 private:
     // get canonical name of client
-    String                getName(const BaseClientProxy*) const;
+    std::string getName(const BaseClientProxy*) const;
 
     // get the sides of the primary screen that have neighbors
     UInt32                getActivePrimarySides() const;
@@ -378,8 +378,8 @@ private:
 
     public:
         Clipboard        m_clipboard;
-        String            m_clipboardData;
-        String            m_clipboardOwner;
+        std::string m_clipboardData;
+        std::string m_clipboardOwner;
         UInt32            m_clipboardSeqNum;
     };
 
@@ -387,7 +387,7 @@ private:
     PrimaryClient*        m_primaryClient;
 
     // all clients (including the primary client) indexed by name
-    typedef std::map<String, BaseClientProxy*> ClientList;
+    typedef std::map<std::string, BaseClientProxy*> ClientList;
     typedef std::set<BaseClientProxy*> ClientSet;
     ClientList            m_clients;
     ClientSet            m_clientSet;
@@ -454,7 +454,7 @@ private:
     // flag whether or not we have broadcasting enabled and the screens to
     // which we should send broadcasted keys.
     bool                m_keyboardBroadcasting;
-    String                m_keyboardBroadcastingScreens;
+    std::string m_keyboardBroadcastingScreens;
 
     // screen locking (former scroll lock)
     bool                m_lockedToScreen;
@@ -466,12 +466,12 @@ private:
 
     // file transfer
     size_t                m_expectedFileSize;
-    String                m_receivedFileData;
+    std::string m_receivedFileData;
     DragFileList        m_dragFileList;
     DragFileList        m_fakeDragFileList;
     Thread*                m_sendFileThread;
     Thread*                m_writeToDropDirThread;
-    String                m_dragFileExt;
+    std::string m_dragFileExt;
     bool                m_ignoreFileTransfer;
     bool                m_enableClipboard;
 

@@ -34,7 +34,7 @@ public:
     /*!
     \c name is the name of the server and \p screen is primary screen.
     */
-    PrimaryClient(const String& name, barrier::Screen* screen);
+    PrimaryClient(const std::string& name, barrier::Screen* screen);
     ~PrimaryClient();
 
 #ifdef TEST_ENV

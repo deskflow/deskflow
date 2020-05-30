@@ -27,7 +27,8 @@ class IEventQueue;
 //! Proxy for client implementing protocol version 1.5
 class ClientProxy1_5 : public ClientProxy1_4 {
 public:
-    ClientProxy1_5(const String& name, barrier::IStream* adoptedStream, Server* server, IEventQueue* events);
+    ClientProxy1_5(const std::string& name, barrier::IStream* adoptedStream, Server* server,
+                   IEventQueue* events);
     ~ClientProxy1_5();
 
     virtual void        sendDragInfo(UInt32 fileCount, const char* info, size_t size);

@@ -31,7 +31,8 @@
 // ClientProxy1_0
 //
 
-ClientProxy1_0::ClientProxy1_0(const String& name, barrier::IStream* stream, IEventQueue* events) :
+ClientProxy1_0::ClientProxy1_0(const std::string& name, barrier::IStream* stream,
+                               IEventQueue* events) :
     ClientProxy(name, stream),
     m_heartbeatTimer(NULL),
     m_parser(&ClientProxy1_0::parseHandshakeMessage),
