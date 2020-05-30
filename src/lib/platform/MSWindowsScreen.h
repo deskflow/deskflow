@@ -25,7 +25,7 @@
 #include "platform/synwinhk.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
-#include "base/String.h"
+#include <string>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -118,9 +118,8 @@ public:
     virtual void        setSequenceNumber(UInt32);
     virtual bool        isPrimary() const;
     virtual void        fakeDraggingFiles(DragFileList fileList);
-    virtual String&    getDraggingFilename();
-    virtual const String&    
-                        getDropTarget() const;
+    virtual std::string& getDraggingFilename();
+    virtual const std::string& getDropTarget() const;
 
 protected:
     // IPlatformScreen overrides
@@ -333,7 +332,7 @@ private:
     
     IEventQueue*        m_events;
 
-    String                m_desktopPath;
+    std::string                m_desktopPath;
 
     MSWindowsDropTarget*
                         m_dropTarget;

@@ -19,7 +19,6 @@
 #pragma once
 
 #include "barrier/IScreenSaver.h"
-#include "base/String.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>

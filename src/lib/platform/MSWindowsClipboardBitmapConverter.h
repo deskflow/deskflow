@@ -31,6 +31,6 @@ public:
     virtual IClipboard::EFormat
                         getFormat() const;
     virtual UINT        getWin32Format() const;
-    virtual HANDLE        fromIClipboard(const String&) const;
-    virtual String        toIClipboard(HANDLE) const;
+    virtual HANDLE fromIClipboard(const std::string&) const;
+    virtual std::string toIClipboard(HANDLE) const;
 };

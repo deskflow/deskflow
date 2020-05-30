@@ -54,18 +54,16 @@ XWindowsClipboardTextConverter::getDataSize() const
     return 8;
 }
 
-String
-XWindowsClipboardTextConverter::fromIClipboard(const String& data) const
+std::string XWindowsClipboardTextConverter::fromIClipboard(const std::string& data) const
 {
     return Unicode::UTF8ToText(data);
 }
 
-String
-XWindowsClipboardTextConverter::toIClipboard(const String& data) const
+std::string XWindowsClipboardTextConverter::toIClipboard(const std::string& data) const
 {
     // convert to UTF-8
     bool errors;
-    String utf8 = Unicode::textToUTF8(data, &errors);
+    std::string utf8 = Unicode::textToUTF8(data, &errors);
 
     // if there were decoding errors then, to support old applications
     // that don't understand UTF-8 but can report the exact binary

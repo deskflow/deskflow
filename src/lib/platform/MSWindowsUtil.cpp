@@ -18,29 +18,25 @@
 
 #include "platform/MSWindowsUtil.h"
 
-#include "base/String.h"
-
 #include <stdio.h>
 
 //
 // MSWindowsUtil
 //
 
-String
-MSWindowsUtil::getString(HINSTANCE instance, DWORD id)
+std::string MSWindowsUtil::getString(HINSTANCE instance, DWORD id)
 {
     char* msg = NULL;
     int n = LoadString(instance, id, reinterpret_cast<LPSTR>(&msg), 0);
 
     if (n <= 0) {
-        return String();
+        return {};
     }
 
-    return String (msg, n);
+    return std::string (msg, n);
 }
 
-String
-MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
+std::string MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
 {
     char* buffer;
     if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
@@ -52,12 +48,12 @@ MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
                                 (LPTSTR)&buffer,
                                 0,
                                 NULL) == 0) {
-        String errorString = barrier::string::sprintf("%d", error);
+        std::string errorString = barrier::string::sprintf("%d", error);
         return barrier::string::format(getString(hinstance, id).c_str(),
                             errorString.c_str());
     }
     else {
-        String result(buffer);
+        std::string result(buffer);
         LocalFree(buffer);
         return result;
     }

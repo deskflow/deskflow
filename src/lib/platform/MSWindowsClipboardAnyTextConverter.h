@@ -31,8 +31,8 @@ public:
     virtual IClipboard::EFormat
                         getFormat() const;
     virtual UINT        getWin32Format() const = 0;
-    virtual HANDLE        fromIClipboard(const String&) const;
-    virtual String        toIClipboard(HANDLE) const;
+    virtual HANDLE fromIClipboard(const std::string&) const;
+    virtual std::string toIClipboard(HANDLE) const;
 
 protected:
     //! Convert from IClipboard format
@@ -40,18 +40,18 @@ protected:
     Do UTF-8 conversion only.  Memory handle allocation and
     linefeed conversion is done by this class.  doFromIClipboard()
     must include the nul terminator in the returned string (not
-    including the String's nul terminator).
+    including the std::string's nul terminator).
     */
-    virtual String        doFromIClipboard(const String&) const = 0;
+    virtual std::string doFromIClipboard(const std::string&) const = 0;
 
     //! Convert to IClipboard format
     /*!
     Do UTF-8 conversion only.  Memory handle allocation and
     linefeed conversion is done by this class.
     */
-    virtual String        doToIClipboard(const String&) const = 0;
+    virtual std::string doToIClipboard(const std::string&) const = 0;
 
 private:
-    String                convertLinefeedToWin32(const String&) const;
-    String                convertLinefeedToUnix(const String&) const;
+    std::string convertLinefeedToWin32(const std::string&) const;
+    std::string convertLinefeedToUnix(const std::string&) const;
 };

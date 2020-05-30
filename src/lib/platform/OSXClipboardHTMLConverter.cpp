@@ -42,18 +42,16 @@ OSXClipboardHTMLConverter::getOSXFormat() const
     return CFSTR("public.html");
 }
 
-String 
-OSXClipboardHTMLConverter::convertString(
-                                const String& data,
-                                CFStringEncoding fromEncoding,
-                                CFStringEncoding toEncoding)
+std::string OSXClipboardHTMLConverter::convertString(const std::string& data,
+                                                     CFStringEncoding fromEncoding,
+                                                     CFStringEncoding toEncoding)
 {
     CFStringRef stringRef = CFStringCreateWithCString(
                                 kCFAllocatorDefault,
                                 data.c_str(), fromEncoding);
 
     if (stringRef == NULL) {
-        return String();
+        return {};
     }
 
     CFIndex buffSize;
@@ -66,13 +64,13 @@ OSXClipboardHTMLConverter::convertString(
 
     if (buffer == NULL) {
         CFRelease(stringRef);
-        return String();
+        return {};
     }
     
     CFStringGetBytes(stringRef, entireString, toEncoding,
         0, false, (UInt8*)buffer, buffSize, NULL);
 
-    String result(buffer, buffSize);
+    std::string result(buffer, buffSize);
 
     delete[] buffer;
     CFRelease(stringRef);
@@ -80,15 +78,13 @@ OSXClipboardHTMLConverter::convertString(
     return result;
 }
 
-String
-OSXClipboardHTMLConverter::doFromIClipboard(const String& data) const
+std::string OSXClipboardHTMLConverter::doFromIClipboard(const std::string& data) const
 {
     return convertString(data, kCFStringEncodingUTF8,
                 CFStringGetSystemEncoding());
 }
 
-String
-OSXClipboardHTMLConverter::doToIClipboard(const String& data) const
+std::string OSXClipboardHTMLConverter::doToIClipboard(const std::string& data) const
 {
     return convertString(data, CFStringGetSystemEncoding(),
                 kCFStringEncodingUTF8);

@@ -32,6 +32,6 @@ public:
 
 protected:
     // MSWindowsClipboardAnyTextConverter overrides
-    virtual String        doFromIClipboard(const String&) const;
-    virtual String        doToIClipboard(const String&) const;
+    virtual std::string doFromIClipboard(const std::string&) const;
+    virtual std::string doToIClipboard(const std::string&) const;
 };

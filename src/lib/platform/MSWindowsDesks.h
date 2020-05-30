@@ -25,8 +25,8 @@
 #include "barrier/option_types.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
-#include "base/String.h"
 #include "common/stdmap.h"
+#include <string>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -195,7 +195,7 @@ public:
 private:
     class Desk {
     public:
-        String            m_name;
+        std::string m_name;
         Thread*        m_thread;
         DWORD            m_threadID;
         DWORD            m_targetID;
@@ -204,7 +204,7 @@ private:
         HWND            m_foregroundWindow;
         bool            m_lowLevel;
     };
-    typedef std::map<String, Desk*> Desks;
+    typedef std::map<std::string, Desk*> Desks;
 
     // initialization and shutdown operations
     HCURSOR                createBlankCursor() const;
@@ -222,7 +222,7 @@ private:
     void                deskThread(void* vdesk);
 
     // desk switch checking and handling
-    Desk*                addDesk(const String& name, HDESK hdesk);
+    Desk* addDesk(const std::string& name, HDESK hdesk);
     void                removeDesks();
     void                checkDesk();
     bool                isDeskAccessible(const Desk* desk) const;
@@ -238,7 +238,7 @@ private:
     // desk API wrappers
     HDESK                openInputDesktop();
     void                closeDesktop(HDESK);
-    String                getDesktopName(HDESK);
+    std::string getDesktopName(HDESK);
 
     // our desk window procs
     static LRESULT CALLBACK primaryDeskProc(HWND, UINT, WPARAM, LPARAM);
@@ -276,7 +276,7 @@ private:
 
     // the current desk and it's name
     Desk*                m_activeDesk;
-    String                m_activeDeskName;
+    std::string m_activeDeskName;
 
     // one desk per desktop and a cond var to communicate with it
     Mutex                m_mutex;

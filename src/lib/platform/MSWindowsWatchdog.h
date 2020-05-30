@@ -55,8 +55,8 @@ private:
     HANDLE                duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
     HANDLE                getUserToken(LPSECURITY_ATTRIBUTES security);
     void                startProcess();
-    BOOL                doStartProcessAsUser(String& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
-    BOOL                doStartProcessAsSelf(String& command);
+    BOOL doStartProcessAsUser(std::string& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
+    BOOL doStartProcessAsSelf(std::string& command);
 
 private:
     Thread*                m_thread;
@@ -85,8 +85,8 @@ An error occured in the process watchdog.
 */
 class XMSWindowsWatchdogError : public XBarrier {
 public:
-    XMSWindowsWatchdogError(const String& msg) : XBarrier(msg) { }
+    XMSWindowsWatchdogError(const std::string& msg) : XBarrier(msg) { }
 
     // XBase overrides
-    virtual String        getWhat() const throw() { return what(); }
+    virtual std::string getWhat() const throw() { return what(); }
 };

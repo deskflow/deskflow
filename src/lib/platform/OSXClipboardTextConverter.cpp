@@ -40,18 +40,16 @@ OSXClipboardTextConverter::getOSXFormat() const
     return CFSTR("public.plain-text");
 }
 
-String 
-OSXClipboardTextConverter::convertString(
-                const String& data, 
-                CFStringEncoding fromEncoding,
-                CFStringEncoding toEncoding)
+std::string OSXClipboardTextConverter::convertString(const std::string& data,
+                                                     CFStringEncoding fromEncoding,
+                                                     CFStringEncoding toEncoding)
 {
     CFStringRef stringRef =
         CFStringCreateWithCString(kCFAllocatorDefault,
                             data.c_str(), fromEncoding);
 
     if (stringRef == NULL) {
-        return String();
+        return {};
     }
 
     CFIndex buffSize;
@@ -64,13 +62,13 @@ OSXClipboardTextConverter::convertString(
     
     if (buffer == NULL) {
         CFRelease(stringRef);
-        return String();
+        return {};
     }
     
     CFStringGetBytes(stringRef, entireString, toEncoding,
                             0, false, (UInt8*)buffer, buffSize, NULL);
 
-    String result(buffer, buffSize);
+    std::string result(buffer, buffSize);
 
     delete[] buffer;
     CFRelease(stringRef);
@@ -78,15 +76,13 @@ OSXClipboardTextConverter::convertString(
     return result;
 }
 
-String
-OSXClipboardTextConverter::doFromIClipboard(const String& data) const
+std::string OSXClipboardTextConverter::doFromIClipboard(const std::string& data) const
 {
     return convertString(data, kCFStringEncodingUTF8,
                             CFStringGetSystemEncoding());
 }
 
-String
-OSXClipboardTextConverter::doToIClipboard(const String& data) const
+std::string OSXClipboardTextConverter::doToIClipboard(const std::string& data) const
 {
     return convertString(data, CFStringGetSystemEncoding(),
                             kCFStringEncodingUTF8);

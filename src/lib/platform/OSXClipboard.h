@@ -21,6 +21,7 @@
 #include "barrier/IClipboard.h"
 
 #include <Carbon/Carbon.h>
+#include <string>
 #include <vector>
 
 class IOSXClipboardConverter;
@@ -36,12 +37,12 @@ public:
 
     // IClipboard overrides
     virtual bool        empty();
-    virtual void        add(EFormat, const String& data);
+    virtual void add(EFormat, const std::string& data);
     virtual bool        open(Time) const;
     virtual void        close() const;
     virtual Time        getTime() const;
     virtual bool        has(EFormat) const;
-    virtual String        get(EFormat) const;
+    virtual std::string get(EFormat) const;
 
     bool                synchronize();
 private:
@@ -72,8 +73,7 @@ public:
                         getFormat() const = 0;
 
     //! returns the scrap flavor type that this object converts from/to
-    virtual CFStringRef
-                        getOSXFormat() const = 0;
+    virtual CFStringRef getOSXFormat() const = 0;
 
     //! Convert from IClipboard format
     /*!
@@ -82,14 +82,14 @@ public:
     getFormat().  The return data will be in the scrap
     format returned by getOSXFormat().
     */
-    virtual String        fromIClipboard(const String&) const = 0;
+    virtual std::string fromIClipboard(const std::string&) const = 0;
 
     //! Convert to IClipboard format
     /*!
     Convert from the carbon scrap format to the IClipboard format
     (i.e., the reverse of fromIClipboard()).
     */
-    virtual String        toIClipboard(const String&) const = 0;
+    virtual std::string toIClipboard(const std::string&) const = 0;
 
     //@}
 };

@@ -35,14 +35,12 @@ OSXClipboardAnyBitmapConverter::getFormat() const
     return IClipboard::kBitmap;
 }
 
-String
-OSXClipboardAnyBitmapConverter::fromIClipboard(const String& data) const
+std::string OSXClipboardAnyBitmapConverter::fromIClipboard(const std::string& data) const
 {
     return doFromIClipboard(data);
 }
 
-String
-OSXClipboardAnyBitmapConverter::toIClipboard(const String& data) const
+std::string OSXClipboardAnyBitmapConverter::toIClipboard(const std::string& data) const
 {
     return doToIClipboard(data);
 }
