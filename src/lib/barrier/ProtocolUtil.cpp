@@ -20,6 +20,7 @@
 #include "io/IStream.h"
 #include "base/Log.h"
 #include "common/stdvector.h"
+#include "base/String.h"
 
 #include <cctype>
 #include <cstring>

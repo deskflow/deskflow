@@ -19,7 +19,7 @@
 #pragma once
 
 #include "common/IInterface.h"
-#include "base/String.h"
+#include <string>
 
 //! Interface for architecture dependent daemonizing
 /*!
@@ -122,7 +122,7 @@ public:
     /*!
     Gets the command line with which the application was started.
     */
-    virtual std::string    commandLine() const = 0;
+    virtual std::string commandLine() const = 0;
 
     //@}
 };

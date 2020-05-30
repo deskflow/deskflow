@@ -21,6 +21,7 @@
 #include "arch/Arch.h"
 #include "arch/IArchMultithread.h"
 #include "base/ILogOutputter.h"
+#include "base/String.h"
 #include "ipc/Ipc.h"
 
 #include <deque>
