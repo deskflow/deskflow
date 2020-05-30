@@ -22,7 +22,7 @@
 #define TEST_URL "https://symless.com/tests/?testString"
 //#define TEST_URL "http://localhost/barrier/tests/?testString"
 
-TEST(ArchInternetTests, get)
+TEST(ArchInternetTests, DISABLED_get)
 {
     ARCH_INTERNET internet;
     std::string result = internet.get(TEST_URL);
