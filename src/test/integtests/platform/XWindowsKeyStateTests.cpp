@@ -150,7 +150,6 @@ TEST_F(XWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero)
     ASSERT_EQ(0, actual);
 }
 
-#if 0 // TODO: fix, causes sigsegv
 TEST_F(XWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCorrect)
 {
     MockKeyMap keyMap;
@@ -181,7 +180,6 @@ TEST_F(XWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCor
     EXPECT_TRUE((modUp & KeyModifierShift) == 0)
         << "shift key still in mask - make sure no keys are being held down";
 }
-#endif
 
 TEST_F(XWindowsKeyStateTests, pollActiveGroup_defaultState_returnsZero)
 {
