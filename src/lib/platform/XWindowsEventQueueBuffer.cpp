@@ -81,6 +81,12 @@ XWindowsEventQueueBuffer::~XWindowsEventQueueBuffer()
     close(m_pipefd[1]);
 }
 
+int XWindowsEventQueueBuffer::getPendingCountLocked()
+{
+    Lock lock(&m_mutex);
+    return XPending(m_display);
+}
+
 void
 XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 {
@@ -120,7 +126,7 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
     pfds[1].fd     = m_pipefd[0];
     pfds[1].events = POLLIN;
     int timeout    = (dtimeout < 0.0) ? -1 :
-                        static_cast<int>(dtimeout);
+                        static_cast<int>(1000.0 * dtimeout);
     int remaining  =  timeout;
     int retval     =  0;
 #else
@@ -162,7 +168,7 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
     // we want to give the cpu a chance s owe up this to 25ms
 #define TIMEOUT_DELAY 25
 
-    while (((dtimeout < 0.0) || (remaining > 0)) && QLength(m_display)==0 && retval==0){
+    while (((dtimeout < 0.0) || (remaining > 0)) && getPendingCountLocked() == 0 && retval == 0) {
 #if HAVE_POLL
     retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
      if (pfds[1].revents & POLLIN) {
