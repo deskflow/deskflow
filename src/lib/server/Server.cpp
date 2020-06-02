@@ -163,6 +163,10 @@ Server::Server(
 							m_inputFilter,
 							new TMethodEventJob<Server>(this,
 								&Server::handleSwitchToScreenEvent));
+  m_events->adoptHandler(m_events->forServer().toggleScreen(),
+              m_inputFilter,
+              new TMethodEventJob<Server>(this,
+                &Server::handleToggleScreenEvent));
 	m_events->adoptHandler(m_events->forServer().switchInDirection(),
 							m_inputFilter,
 							new TMethodEventJob<Server>(this,
@@ -1406,6 +1410,24 @@ Server::handleSwitchToScreenEvent(const Event& event, void*)
 		jumpToScreen(index->second);
 	}
 }
+
+void
+Server::handleToggleScreenEvent(const Event& event, void*)
+{
+  std::string current = getName(m_active);
+  ClientList::const_iterator index = m_clients.find(current);
+  if (index == m_clients.end()) {
+    LOG((CLOG_DEBUG1 "screen \"%s\" not active", current.c_str()));
+  }
+  else {
+    ++index;
+    if (index == m_clients.end()) {
+      index = m_clients.begin();
+    }
+    jumpToScreen(index->second);
+  }
+}
+
 
 void
 Server::handleSwitchInDirectionEvent(const Event& event, void*)

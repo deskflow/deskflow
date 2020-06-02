@@ -432,6 +432,7 @@ public:
         m_connected(Event::kUnknown),
         m_disconnected(Event::kUnknown),
         m_switchToScreen(Event::kUnknown),
+        m_toggleScreen(Event::kUnknown),
         m_switchInDirection(Event::kUnknown),
         m_keyboardBroadcast(Event::kUnknown),
         m_lockCursorToScreen(Event::kUnknown),
@@ -469,6 +470,13 @@ public:
     that indicates the target screen.
     */
     Event::Type        switchToScreen();
+
+    //! Get toggle screen event type
+    /*!
+    Returns the toggle screen event type.  The server responds to this
+    by toggling screens.  These is no event data.
+    */
+    Event::Type        toggleScreen();
 
     //! Get switch in direction event type
     /*!
@@ -508,6 +516,7 @@ private:
     Event::Type        m_connected;
     Event::Type        m_disconnected;
     Event::Type        m_switchToScreen;
+    Event::Type        m_toggleScreen;
     Event::Type        m_switchInDirection;
     Event::Type        m_keyboardBroadcast;
     Event::Type        m_lockCursorToScreen;
