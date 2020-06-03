@@ -100,6 +100,7 @@ jobs:
         filename_new=${filename%%${SYNERGY_DEB_VERSION}*}${SYNERGY_DEB_VERSION}_ubuntu19${filename##*${SYNERGY_DEB_VERSION}}
         mv $filename $filename_new
         ls -la
+        ls -la ..
       displayName: "Package Binary (Standard)"
       condition: eq(variables['packager'],'deb')
       #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
@@ -117,6 +118,7 @@ jobs:
         filename_new=${filename_new%%synergy*}synergy-enterprise${filename_new##*synergy}
         mv $filename $filename_new
         ls -la
+        ls -la ..
       displayName: "Package Binary (Enterprise)"
       condition: eq(variables['packager'],'deb')
       #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
