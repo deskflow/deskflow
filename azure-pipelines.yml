@@ -8,16 +8,16 @@ jobs:
 
   strategy:
     matrix:
-      ubuntu16.04:
+      ubuntu1604:
         image: symless/synergy-core:ubuntu16.04
         packager: deb
-      ubuntu18.04:
+      ubuntu1804:
         image: symless/synergy-core:ubuntu18.04
         packager: deb
-      ubuntu19.10:
+      ubuntu1910:
         image: symless/synergy-core:ubuntu19.10
         packager: deb
-      ubuntu20.04:
+      ubuntu2004:
         image: symless/synergy-core:ubuntu20.04
         packager: deb
       debian9:
@@ -91,18 +91,16 @@ jobs:
     - script: |
         . ./build-release/version
         SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
-        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+$(Build.SourceVersion)"
+        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+$(Build.SourceVersion:0:8)"
         dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
         export DEB_BUILD_OPTIONS="parallel=8"
         export GPG_TTY=$(tty)
         debuild --preserve-envvar SYNERGY_* -us -uc
-        debsign
         cd ..
         filename=$(ls *.deb)
-        filename_new=${filename%%${SYNERGY_DEB_VERSION}*}${SYNERGY_DEB_VERSION}_ubuntu19${filename##*${SYNERGY_DEB_VERSION}}
+        filename_new=${filename%%${SYNERGY_DEB_VERSION}*}${SYNERGY_DEB_VERSION}_$(Agent.JobName)${filename##*${SYNERGY_DEB_VERSION}}
         mv $filename $filename_new
         ls -la
-        ls -la ..
       displayName: "Package Binary (Standard)"
       condition: eq(variables['packager'],'deb')
       #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
@@ -110,19 +108,17 @@ jobs:
     - script: |
         . ./build-ent/version
         SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
-        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+$(Build.SourceVersion)"
+        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+$(Build.SourceVersion:0:8)"
         dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
         export DEB_BUILD_OPTIONS="parallel=8"
         export GPG_TTY=$(tty)
         debuild --preserve-envvar SYNERGY_* -us -uc
-        debsign
         cd ..
         filename=$(ls *.deb)
-        filename_new=${filename%%${SYNERGY_DEB_VERSION}*}${SYNERGY_DEB_VERSION}_ubuntu19${filename##*${SYNERGY_DEB_VERSION}}
+        filename_new=${filename%%${SYNERGY_DEB_VERSION}*}${SYNERGY_DEB_VERSION}_$(Agent.JobName)${filename##*${SYNERGY_DEB_VERSION}}
         filename_new=${filename_new%%synergy*}synergy-enterprise${filename_new##*synergy}
-        mv $filename $filename_new
+        mv "$filename" "$filename_new"
         ls -la
-        ls -la ..
       displayName: "Package Binary (Enterprise)"
       condition: eq(variables['packager'],'deb')
       #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
