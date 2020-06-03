@@ -95,7 +95,7 @@ jobs:
         dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
         export DEB_BUILD_OPTIONS="parallel=8"
         export GPG_TTY=$(tty)
-        debuild --preserve-envvar SYNERGY_*
+        debuild -us -uc --preserve-envvar SYNERGY_*
         filename=$(ls *.deb)
         filename_new=${filename%%${SYNERGY_DEB_VERSION}*}${SYNERGY_DEB_VERSION}_ubuntu19${filename##*${SYNERGY_DEB_VERSION}}
         mv $filename $filename_new
@@ -112,7 +112,7 @@ jobs:
         dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
         export DEB_BUILD_OPTIONS="parallel=8"
         export GPG_TTY=$(tty)
-        debuild --preserve-envvar SYNERGY_*
+        debuild -us -uc --preserve-envvar SYNERGY_*
         filename=$(ls *.deb)
         filename_new=${filename%%${SYNERGY_DEB_VERSION}*}${SYNERGY_DEB_VERSION}_ubuntu19${filename##*${SYNERGY_DEB_VERSION}}
         filename_new=${filename_new%%synergy*}synergy-enterprise${filename_new##*synergy}
