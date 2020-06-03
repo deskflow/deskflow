@@ -18,6 +18,7 @@
 #include "arch/win32/ArchInternetWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "arch/Arch.h"
+#include "base/String.h"
 #include "common/Version.h"
 
 #include <sstream>

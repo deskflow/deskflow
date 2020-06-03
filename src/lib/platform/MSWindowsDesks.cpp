@@ -902,7 +902,7 @@ MSWindowsDesks::closeDesktop(HDESK desk)
 std::string MSWindowsDesks::getDesktopName(HDESK desk)
 {
     if (desk == NULL) {
-        return {}
+        return {};
     }
     else {
         DWORD size;

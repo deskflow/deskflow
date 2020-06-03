@@ -19,6 +19,7 @@
 #include "platform/MSWindowsUtil.h"
 
 #include <stdio.h>
+#include "base/String.h"
 
 //
 // MSWindowsUtil

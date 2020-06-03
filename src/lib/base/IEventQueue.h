@@ -20,6 +20,7 @@
 
 #include "common/IInterface.h"
 #include "base/Event.h"
+#include <string>
 
 class IEventJob;
 class IEventQueueBuffer;
