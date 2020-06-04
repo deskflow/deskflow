@@ -91,7 +91,9 @@ jobs:
     - script: |
         . ./build-release/version
         SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
-        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+$(Build.SourceVersion:0:8)"
+        SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
+        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+${SYNERGY_REVISION}"
+        echo "SYNERGY_DEB_VERSION: ${SYNERGY_DEB_VERSION}"
         dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
         export DEB_BUILD_OPTIONS="parallel=8"
         export GPG_TTY=$(tty)
@@ -109,7 +111,8 @@ jobs:
     - script: |
         . ./build-ent/version
         SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
-        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+$(Build.SourceVersion:0:8)"
+        SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
+        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+${SYNERGY_REVISION}"
         dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
         export DEB_BUILD_OPTIONS="parallel=8"
         export GPG_TTY=$(tty)
