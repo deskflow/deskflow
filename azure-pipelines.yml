@@ -102,7 +102,7 @@ jobs:
         echo "##vso[task.setvariable variable=SYNERGY_VERSION]${SYNERGY_VERSION}"
         echo "##vso[task.setvariable variable=SYNERGY_REVISION]${SYNERGY_REVISION}"
         echo "##vso[task.setvariable variable=SYNERGY_DEB_VERSION]${SYNERGY_DEB_VERSION}"
-      displayname: "Setup variables"
+      displayName: "Setup variables"
       #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
 
     - script: |
