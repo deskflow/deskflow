@@ -8,24 +8,30 @@ jobs:
 
   strategy:
     matrix:
-#      ubuntu1604:
-#        image: symless/synergy-core:ubuntu16.04
-#        packager: deb
+      ubuntu1604:
+        image: symless/synergy-core:ubuntu16.04
+        packager: deb
+          name: ubuntu16
       ubuntu1804:
         image: symless/synergy-core:ubuntu18.04
         packager: deb
-#      ubuntu1910:
-#        image: symless/synergy-core:ubuntu19.10
-#        packager: deb
-#      ubuntu2004:
-#        image: symless/synergy-core:ubuntu20.04
-#        packager: deb
-#      debian9:
-#        image: symless/synergy-core:debian9
-#        packager: deb
-#      debian10:
-#        image: symless/synergy-core:debian10
-#        packager: deb
+        name: ubuntu18
+      ubuntu1910:
+        image: symless/synergy-core:ubuntu19.10
+        packager: deb
+          name: ubuntu19
+      ubuntu2004:
+        image: symless/synergy-core:ubuntu20.04
+        packager: deb
+          name: ubuntu20
+      debian9:
+        image: symless/synergy-core:debian9
+        packager: deb
+          name: debian9
+      debian10:
+        image: symless/synergy-core:debian10
+        packager: deb
+          name: debian10
 #      fedora28:
 #        image: symless/synergy-core:fedora28
 #        packager: rpm
@@ -66,12 +72,12 @@ jobs:
       displayName: 'Install GPG key'
       #condition: eq(variables['Build.Reason'], 'Manual')
 
-#    - script: |
-#        mkdir build-release
-#        cd build-release
-#        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
-#        make -j
-#      displayName: 'Build Release'
+    - script: |
+        mkdir build-release
+        cd build-release
+        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
+        make -j
+      displayName: 'Build Release'
 #
 #    - script: |
 #        mkdir build-debug
@@ -88,25 +94,25 @@ jobs:
         make -j
       displayName: 'Build enterprise'
 
-#    - script: |
-#        . ./build-release/version
-#        SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
-#        SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
-#        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+${SYNERGY_REVISION}"
-#        echo "SYNERGY_DEB_VERSION: ${SYNERGY_DEB_VERSION}"
-#        dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
-#        export DEB_BUILD_OPTIONS="parallel=8"
-#        export GPG_TTY=$(tty)
-#        debuild --preserve-envvar SYNERGY_* -us -uc
-#        cd ..
-#        filename=$(ls *.deb)
-#        filename_new=synergy_${SYNERGY_DEB_VERSION}_$(Agent.JobName)${filename##*${SYNERGY_REVISION}}
-#        echo "mv $filename $filename_new"
-#        mv $filename $filename_new
-#        ls -la
-#      displayName: "Package Binary (Standard)"
-#      condition: eq(variables['packager'],'deb')
-#      #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
+    - script: |
+        . ./build-release/version
+        SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
+        SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
+        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+${SYNERGY_REVISION}"
+        echo "SYNERGY_DEB_VERSION: ${SYNERGY_DEB_VERSION}"
+        dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
+        export DEB_BUILD_OPTIONS="parallel=8"
+        export GPG_TTY=$(tty)
+        debuild --preserve-envvar SYNERGY_* -us -uc
+        cd ..
+        filename=$(ls *.deb)
+        filename_new="synergy_${SYNERGY_DEB_VERSION}_$(Build.name)${filename##*${SYNERGY_REVISION}}"
+        echo "mv $filename $filename_new"
+        mv $filename $filename_new
+        ls -la
+      displayName: "Package Binary (Standard)"
+      condition: eq(variables['packager'],'deb')
+      #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
 
     - script: |
         . ./build-ent/version
@@ -119,7 +125,7 @@ jobs:
         debuild --preserve-envvar SYNERGY_* -us -uc
         cd ..
         filename=$(ls *.deb)
-        filename_new="synergy-enterprise_${SYNERGY_DEB_VERSION}_$(Agent.JobName)${filename##*${SYNERGY_REVISION}}"
+        filename_new="synergy-enterprise_${SYNERGY_DEB_VERSION}_$(Build.name)${filename##*${SYNERGY_REVISION}}"
         echo "mv $filename $filename_new"
         mv $filename $filename_new
         ls -la
