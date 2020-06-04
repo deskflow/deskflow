@@ -11,7 +11,7 @@ jobs:
       ubuntu1604:
         image: symless/synergy-core:ubuntu16.04
         packager: deb
-          name: ubuntu16
+        name: ubuntu16
       ubuntu1804:
         image: symless/synergy-core:ubuntu18.04
         packager: deb
@@ -19,19 +19,19 @@ jobs:
       ubuntu1910:
         image: symless/synergy-core:ubuntu19.10
         packager: deb
-          name: ubuntu19
+         name: ubuntu19
       ubuntu2004:
         image: symless/synergy-core:ubuntu20.04
         packager: deb
-          name: ubuntu20
+         name: ubuntu20
       debian9:
         image: symless/synergy-core:debian9
         packager: deb
-          name: debian9
+        name: debian9
       debian10:
         image: symless/synergy-core:debian10
         packager: deb
-          name: debian10
+        name: debian10
 #      fedora28:
 #        image: symless/synergy-core:fedora28
 #        packager: rpm
