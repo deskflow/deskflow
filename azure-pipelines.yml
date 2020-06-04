@@ -19,11 +19,11 @@ jobs:
       ubuntu1910:
         image: symless/synergy-core:ubuntu19.10
         packager: deb
-         name: ubuntu19
+        name: ubuntu19
       ubuntu2004:
         image: symless/synergy-core:ubuntu20.04
         packager: deb
-         name: ubuntu20
+        name: ubuntu20
       debian9:
         image: symless/synergy-core:debian9
         packager: deb
