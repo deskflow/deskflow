@@ -67,9 +67,11 @@ if exist bin\Debug (
 )
 
 echo Build completed successfully
+set BUILD_FAILED=0
 goto done
 
 :failed
+set BUILD_FAILED=%ERRORLEVEL%
 echo Build failed
 
 :done
@@ -84,3 +86,5 @@ set BONJOUR_SDK_HOME=
 set B_QT_FULLPATH=
 set savedir=
 set cmake_gen=
+
+EXIT /B %BUILD_FAILED%

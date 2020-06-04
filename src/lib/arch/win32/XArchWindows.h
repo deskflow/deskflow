@@ -30,7 +30,7 @@ public:
     XArchEvalWindows(DWORD error) : m_error(error) { }
     virtual ~XArchEvalWindows() { }
 
-    virtual std::string    eval() const;
+    virtual std::string    eval() const noexcept;
 
 private:
     DWORD                m_error;
@@ -42,7 +42,7 @@ public:
     XArchEvalWinsock(int error) : m_error(error) { }
     virtual ~XArchEvalWinsock() { }
 
-    virtual std::string    eval() const;
+    virtual std::string    eval() const noexcept;
 
 private:
     int                    m_error;

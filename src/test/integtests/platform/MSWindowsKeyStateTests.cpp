@@ -40,7 +40,6 @@ class MSWindowsKeyStateTests : public ::testing::Test
 protected:
 	virtual void SetUp()
 	{
-		m_hook.loadLibrary();
 		m_screensaver = new MSWindowsScreenSaver();
 	}
 
