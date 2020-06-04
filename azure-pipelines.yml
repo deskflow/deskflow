@@ -119,7 +119,7 @@ jobs:
         debuild --preserve-envvar SYNERGY_* -us -uc
         cd ..
         filename=$(ls *.deb)
-        filename_new=synergy-enterprise_${SYNERGY_DEB_VERSION}_$(Agent.JobName)${filename##*${SYNERGY_REVISION}}
+        filename_new="synergy-enterprise_${SYNERGY_DEB_VERSION}_$(Agent.JobName)${filename##*${SYNERGY_REVISION}}"
         echo "mv $filename $filename_new"
         mv $filename $filename_new
         ls -la
