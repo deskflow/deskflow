@@ -21,6 +21,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "mt/Thread.h"
 #include "base/IEventQueue.h"
+#include <VersionHelpers.h>
 
 //
 // EventQueueTimer
@@ -48,6 +49,15 @@ MSWindowsEventQueueBuffer::MSWindowsEventQueueBuffer(IEventQueue* events) :
     // make sure this thread has a message queue
     MSG dummy;
     PeekMessage(&dummy, NULL, WM_USER, WM_USER, PM_NOREMOVE);
+
+    m_os_supported_message_types = QS_ALLINPUT;
+    if (!IsWindows8OrGreater())
+    {
+        // don't use QS_POINTER, QS_TOUCH
+        // because they can cause GetQueueStatus() to always return 0 and we miss events
+        // since those flags are confusing Windows 7. See QTBUG-29097 for related info
+        m_os_supported_message_types &= ~(QS_TOUCH | QS_POINTER);
+    }
 }
 
 MSWindowsEventQueueBuffer::~MSWindowsEventQueueBuffer()
@@ -79,7 +89,7 @@ MSWindowsEventQueueBuffer::waitForEvent(double timeout)
     // cancellation but that's okay because we're run in the main
     // thread and we never cancel that thread.
     HANDLE dummy[1];
-    MsgWaitForMultipleObjects(0, dummy, FALSE, t, QS_ALLINPUT);
+    MsgWaitForMultipleObjects(0, dummy, FALSE, t, m_os_supported_message_types);
 }
 
 IEventQueueBuffer::Type
@@ -128,9 +138,7 @@ MSWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 bool
 MSWindowsEventQueueBuffer::isEmpty() const
 {
-    // don't use QS_POINTER, QS_TOUCH, or any meta-flags that include them (like QS_ALLINPUT)
-    // because they can cause GetQueueStatus() to always return 0 and we miss events
-    return (HIWORD(GetQueueStatus(QS_POSTMESSAGE)) == 0);
+    return (HIWORD(GetQueueStatus(m_os_supported_message_types)) == 0);
 }
 
 EventQueueTimer*
