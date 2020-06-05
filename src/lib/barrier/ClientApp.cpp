@@ -282,6 +282,8 @@ ClientApp::scheduleClientRestart(double retryTime)
 void
 ClientApp::handleClientConnected(const Event&, void*)
 {
+    // using CLOG_PRINT here allows the GUI to see that the client is connected
+    // regardless of which log level is set
     LOG((CLOG_PRINT "connected to server"));
     resetRestartTimeout();
     updateStatus();
