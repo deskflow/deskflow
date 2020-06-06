@@ -555,6 +555,9 @@ ServerApp::startServer()
         m_server->setListener(listener);
         m_listener = listener;
         updateStatus();
+
+        // using CLOG_PRINT here allows the GUI to see that the server is started
+        // regardless of which log level is set
         LOG((CLOG_PRINT "started server (%s), waiting for clients", family));
         m_serverState = kStarted;
         return true;
