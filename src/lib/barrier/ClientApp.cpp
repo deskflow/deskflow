@@ -282,7 +282,7 @@ ClientApp::scheduleClientRestart(double retryTime)
 void
 ClientApp::handleClientConnected(const Event&, void*)
 {
-    LOG((CLOG_NOTE "connected to server"));
+    LOG((CLOG_PRINT "connected to server"));
     resetRestartTimeout();
     updateStatus();
 }
