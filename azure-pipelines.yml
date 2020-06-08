@@ -99,6 +99,7 @@ jobs:
         SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
         SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
         SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+${SYNERGY_REVISION}"
+        echo "##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]${SYNERGY_VERSION_STAGE}"
         echo "##vso[task.setvariable variable=SYNERGY_VERSION]${SYNERGY_VERSION}"
         echo "##vso[task.setvariable variable=SYNERGY_REVISION]${SYNERGY_REVISION}"
         echo "##vso[task.setvariable variable=SYNERGY_DEB_VERSION]${SYNERGY_DEB_VERSION}"
@@ -111,18 +112,22 @@ jobs:
         export GPG_TTY=$(tty)
         debuild --preserve-envvar SYNERGY_* -us -uc
         mkdir standard_package
-        mv ../synergy_* enterprise_package/
+        mv ../synergy_* standard_package/
         cd standard_package
         filename=$(ls synergy_*.deb)
         filename_new="synergy_${SYNERGY_DEB_VERSION}_$(name)${filename##*${SYNERGY_REVISION}}"
         echo "mv $filename $filename_new"
         mv $filename $filename_new
+        md5sum $filename_new >> ${filename_new}.md5
+        sha1sum $filename_new >> ${filename_new}.sha1
+        sha256sum $filename_new >> ${filename_new}.sha256
         ls -la
       displayName: "Package Binary (Standard)"
       condition: eq(variables['packager'],'deb')
       #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
 
     - script: |
+        export SYNERGY_ENTERPRISE=1
         dch --create --package "synergy-enterprise_" --controlmaint --distribution unstable --newversion $(SYNERGY_DEB_VERSION) "Initial release"
         export DEB_BUILD_OPTIONS="parallel=8"
         export GPG_TTY=$(tty)
@@ -134,9 +139,32 @@ jobs:
         filename_new="synergy-enterprise_$(SYNERGY_DEB_VERSION)_$(name)${filename##*$(SYNERGY_REVISION)}"
         echo "mv $filename $filename_new"
         mv $filename $filename_new
+        md5sum $filename_new >> ${filename_new}.md5
+        sha1sum $filename_new >> ${filename_new}.sha1
+        sha256sum $filename_new >> ${filename_new}.sha256
         ls -la
       displayName: "Package Binary (Enterprise)"
       condition: eq(variables['packager'],'deb')
+      #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
+
+    - task: CopyFilesOverSSH@0
+      inputs:
+        sshEndpoint: 'Azure on Sandor'
+        sourceFolder: './standard_package'
+        contents: '*.deb*'
+        targetFolder: 'synergy-core/v1-core-standard/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+        readyTimeout: '20000'
+      displayName: 'Send standard Package to sandor'
+      #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
+
+    - task: CopyFilesOverSSH@0
+      inputs:
+        sshEndpoint: 'Azure on Sandor'
+        sourceFolder: './enterprise_package'
+        contents: '*.deb*'
+        targetFolder: 'synergy-core/v1-core-enterprise/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+        readyTimeout: '20000'
+      displayName: 'Send enterprise Package to sandor'
       #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
 
 
