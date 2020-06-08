@@ -18,6 +18,10 @@ if [ "$(uname)" = "Darwin" ]; then
 fi
 # allow local customizations to build environment
 [ -r ./build_env.sh ] && . ./build_env.sh
+
+# Initialise Git submodules
+git submodule update --init --recursive
+
 B_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=$B_BUILD_TYPE $B_CMAKE_FLAGS"
 rm -rf build
 mkdir build || exit 1

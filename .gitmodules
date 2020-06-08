@@ -1,0 +1,6 @@
+[submodule "ext/gtest"]
+	path = ext/gtest
+	url = https://github.com/google/googletest.git
+[submodule "ext/gmock"]
+	path = ext/gmock
+	url = https://github.com/google/googlemock.git
