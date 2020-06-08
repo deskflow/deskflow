@@ -110,7 +110,9 @@ jobs:
         export DEB_BUILD_OPTIONS="parallel=8"
         export GPG_TTY=$(tty)
         debuild --preserve-envvar SYNERGY_* -us -uc
-        cd ..
+        mkdir standard_package
+        mv ../synergy_* enterprise_package/
+        cd standard_package
         filename=$(ls synergy_*.deb)
         filename_new="synergy_${SYNERGY_DEB_VERSION}_$(name)${filename##*${SYNERGY_REVISION}}"
         echo "mv $filename $filename_new"
@@ -125,8 +127,10 @@ jobs:
         export DEB_BUILD_OPTIONS="parallel=8"
         export GPG_TTY=$(tty)
         debuild --preserve-envvar SYNERGY_* -us -uc
-        cd ..
-        filename=$(ls synergy-enterprise_*.deb)
+        mkdir enterprise_package
+        mv ../synergy_* enterprise_package/
+        cd enterprise_package
+        filename=$(ls synergy_*.deb)
         filename_new="synergy-enterprise_$(SYNERGY_DEB_VERSION)_$(name)${filename##*$(SYNERGY_REVISION)}"
         echo "mv $filename $filename_new"
         mv $filename $filename_new
