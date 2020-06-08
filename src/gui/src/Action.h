@@ -36,7 +36,9 @@ class Action
     friend QTextStream& operator<<(QTextStream& outStream, const Action& action);
 
     public:
-        enum ActionType { keyDown, keyUp, keystroke, switchToScreen, switchInDirection, lockCursorToScreen, mouseDown, mouseUp, mousebutton };
+        enum ActionType { keyDown, keyUp, keystroke,
+                          switchToScreen, toggleScreen, switchInDirection,
+                          lockCursorToScreen, mouseDown, mouseUp, mousebutton };
         enum SwitchDirection { switchLeft, switchRight, switchUp, switchDown };
         enum LockCursorMode { lockCursorToggle, lockCursonOn, lockCursorOff  };
 

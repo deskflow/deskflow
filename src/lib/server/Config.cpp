@@ -1156,6 +1156,10 @@ void Config::parseAction(ConfigReadContext& s, const std::string& name,
 		action = new InputFilter::SwitchToScreenAction(m_events, screen);
 	}
 
+  else if (name == "toggleScreen") {
+    action = new InputFilter::ToggleScreenAction(m_events);
+  }
+
 	else if (name == "switchInDirection") {
 		if (args.size() != 1) {
 			throw XConfigRead(s, "syntax for action: switchInDirection(<left|right|up|down>)");

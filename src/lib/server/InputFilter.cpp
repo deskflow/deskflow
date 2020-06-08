@@ -363,6 +363,32 @@ InputFilter::SwitchToScreenAction::perform(const Event& event)
                                 Event::kDeliverImmediately));
 }
 
+InputFilter::ToggleScreenAction::ToggleScreenAction(IEventQueue* events) :
+    m_events(events)
+{
+    // do nothing
+}
+
+InputFilter::Action*
+InputFilter::ToggleScreenAction::clone() const
+{
+    return new ToggleScreenAction(*this);
+}
+
+String
+InputFilter::ToggleScreenAction::format() const
+{
+    return barrier::string::sprintf("toggleScreen");
+}
+
+void
+InputFilter::ToggleScreenAction::perform(const Event& event)
+{
+    m_events->addEvent(Event(m_events->forServer().toggleScreen(),
+                             event.getTarget(), NULL,
+                             Event::kDeliverImmediately));
+}
+
 InputFilter::SwitchInDirectionAction::SwitchInDirectionAction(
         IEventQueue* events, EDirection direction) :
     m_direction(direction),

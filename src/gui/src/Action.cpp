@@ -24,7 +24,8 @@
 const char* Action::m_ActionTypeNames[] =
 {
     "keyDown", "keyUp", "keystroke",
-    "switchToScreen", "switchInDirection", "lockCursorToScreen",
+    "switchToScreen", "toggleScreen",
+    "switchInDirection", "lockCursorToScreen",
     "mouseDown", "mouseUp", "mousebutton"
 };
 
@@ -45,7 +46,13 @@ Action::Action() :
 
 QString Action::text() const
 {
-    QString text = QString(m_ActionTypeNames[keySequence().isMouseButton() ? type() + 6 : type()  ]) + "(";
+    /* This function is used to save to config file which is for barriers to
+     * read. However the server config parse does not support functions with ()
+     * in the end but now argument inside. If you need a function with no
+     * argument, it can not have () in the end.
+     */
+    QString text = QString(m_ActionTypeNames[keySequence().isMouseButton() ?
+                                             type() + int(mouseDown) : type()]);
 
     switch (type())
     {
@@ -53,6 +60,7 @@ QString Action::text() const
         case keyUp:
         case keystroke:
             {
+                text += "(";
                 text += keySequence().toString();
 
                 if (!keySequence().isMouseButton())
@@ -72,19 +80,29 @@ QString Action::text() const
                     else
                         text += ",*";
                 }
+                text += ")";
             }
             break;
 
         case switchToScreen:
+            text += "(";
             text += switchScreenName();
+            text += ")";
+            break;
+
+        case toggleScreen:
             break;
 
         case switchInDirection:
+            text += "(";
             text += m_SwitchDirectionNames[m_SwitchDirection];
+            text += ")";
             break;
 
         case lockCursorToScreen:
+            text += "(";
             text += m_LockCursorModeNames[m_LockCursorMode];
+            text += ")";
             break;
 
         default:
@@ -92,7 +110,6 @@ QString Action::text() const
             break;
     }
 
-    text += ")";
 
     return text;
 }

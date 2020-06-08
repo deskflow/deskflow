@@ -145,6 +145,17 @@
       <item>
        <layout class="QHBoxLayout">
         <item>
+         <widget class="QRadioButton" name="m_pRadioToggleScreen">
+          <property name="text">
+           <string>Toggle screen</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout">
+        <item>
          <widget class="QRadioButton" name="m_pRadioSwitchInDirection">
           <property name="text">
            <string>Switch in direction</string>

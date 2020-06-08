@@ -166,6 +166,20 @@ public:
         IEventQueue*            m_events;
     };
     
+    // ToggleScreenAction
+    class ToggleScreenAction : public Action {
+    public:
+        ToggleScreenAction(IEventQueue* events);
+
+        // Action overrides
+        virtual Action* clone() const;
+        virtual String format() const;
+        virtual void perform(const Event&);
+
+    private:
+        IEventQueue* m_events;
+    };
+
     // SwitchInDirectionAction
     class SwitchInDirectionAction : public Action {
     public:
