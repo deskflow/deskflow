@@ -43,6 +43,7 @@ parts:
 
   barrier:
     source: .
+    source-type: git
     plugin: cmake
     configflags:
       - "-DCMAKE_INSTALL_PREFIX=/usr"
