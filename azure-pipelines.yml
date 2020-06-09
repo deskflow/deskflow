@@ -149,7 +149,7 @@ jobs:
 #      #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
 
     - script: |
-        rpmbuild -bb --define "_topdir $WORKSPACE/build/rpm" --buildroot build/rpm/BUILDROOT synergy.spec
+        rpmbuild -bb --define "_topdir ./build/rpm" --buildroot ./build/rpm/BUILDROOT synergy.spec
         rpmlint --verbose build/rpm/RPMS/x86_64/*.rpm
         cd build/rpm/RPMS/x86_64
         filename=$(ls *.rpm)
@@ -165,8 +165,8 @@ jobs:
       #condition: and(eq(variables['packager'],'rpm', eq(variables['Build.Reason'], 'Manual'))
 
     - script: |
-        rpmbuild -bb --define "_topdir $WORKSPACE/build/rpm" --buildroot build/rpm/BUILDROOT synergy.spec
-        rpmlint --verbose build/rpm/RPMS/x86_64/*.rpm
+        rpmbuild -bb --define "_topdir ./build/rpm" --buildroot ./build/rpm/BUILDROOT synergy.spec
+        rpmlint --verbose ./build/rpm/RPMS/x86_64/*.rpm
         cd build/rpm/RPMS/x86_64
         filename=$(ls *.rpm)
         match=.el7
