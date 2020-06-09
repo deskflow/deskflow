@@ -161,7 +161,7 @@ jobs:
         sha256sum $filename_new >> ${filename_new}.sha256
         ls -la
       displayName: "Package Binary RPM(standard)"
-      condition: eq(variables['packager'],'deb')
+      condition: eq(variables['packager'],'rpm')
       #condition: and(eq(variables['packager'],'rpm', eq(variables['Build.Reason'], 'Manual'))
 
     - script: |
@@ -178,7 +178,7 @@ jobs:
         sha256sum $filename_new >> ${filename_new}.sha256
         ls -la
       displayName: "Package Binary RPM(enterprise)"
-      condition: eq(variables['packager'],'deb')
+      condition: eq(variables['packager'],'rpm')
       #condition: and(eq(variables['packager'],'rpm', eq(variables['Build.Reason'], 'Manual'))
 
     - task: CopyFilesOverSSH@0
