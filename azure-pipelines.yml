@@ -185,12 +185,9 @@ jobs:
         rpmlint --verbose RPMS/x86_64/*.rpm
         cd RPMS/x86_64
         filename=$(ls *.rpm)
-        match=.el7
-        filename_new="${filename%%${match}*}_$(name)${filename##*${match}}"
-        mv $filename $filename_new
-        md5sum $filename_new >> ${filename_new}.md5
-        sha1sum $filename_new >> ${filename_new}.sha1
-        sha256sum $filename_new >> ${filename_new}.sha256
+        md5sum $filename >> ${filename}.md5
+        sha1sum $filename >> ${filename}.sha1
+        sha256sum $filename >> ${filename}.sha256
         ls -la
       displayName: "Package Binary RPM(standard)"
       condition: eq(variables['packager'],'rpm')
@@ -202,13 +199,9 @@ jobs:
         rpmlint --verbose RPMS/x86_64/*.rpm
         cd RPMS/x86_64
         filename=$(ls *.rpm)
-        match=.el7
-        filename_new="${filename%%${match}*}_$(name)${filename##*${match}}"
-        filename_new=${filename_new%%synergy*}synergy-enterprise${filename_new##*synergy}
-        mv $filename $filename_new
-        md5sum $filename_new >> ${filename_new}.md5
-        sha1sum $filename_new >> ${filename_new}.sha1
-        sha256sum $filename_new >> ${filename_new}.sha256
+        md5sum $filename >> ${filename}.md5
+        sha1sum $filename >> ${filename}.sha1
+        sha256sum $filename >> ${filename}.sha256
         ls -la
       displayName: "Package Binary RPM(enterprise)"
       condition: eq(variables['packager'],'rpm')
