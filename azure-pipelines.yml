@@ -78,7 +78,20 @@ jobs:
         cd build-release
         if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
         make -j
-      displayName: 'Build Release'
+      condition: eq(variables['packager'],'deb')
+      displayName: 'Build Release deb'
+
+    - script: |
+        mkdir build-release
+        cd build-release
+        if [ -z $(which cmake) ]; then
+        cmake3 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
+        else cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
+        fi
+        make -j
+        make install/strip
+      condition: eq(variables['packager'],'rpm')
+      displayName: 'Build Release rpm'
 #
 #    - script: |
 #        mkdir build-debug
@@ -94,6 +107,19 @@ jobs:
         if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; fi
         make -j
       displayName: 'Build enterprise'
+      condition: eq(variables['packager'],'deb')
+
+    - script: |
+        mkdir build-ent
+        cd build-ent
+        if [ -z $(which cmake) ]; then
+        cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
+        else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
+        fi
+        make -j
+        make install/strip
+      condition: eq(variables['packager'],'rpm')
+      displayName: 'Build enterprise rpm'
 
     - script: |
         . ./build-release/version
@@ -149,9 +175,10 @@ jobs:
 #      #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
 
     - script: |
-        rpmbuild -bb --define "_topdir ./build/rpm" --buildroot ./build/rpm/BUILDROOT synergy.spec
-        rpmlint --verbose build/rpm/RPMS/x86_64/*.rpm
-        cd build/rpm/RPMS/x86_64
+        cd build-release/rpm
+        rpmbuild -bb --define "_topdir $(pwd)" --buildroot $(pwd)/BUILDROOT synergy.spec
+        rpmlint --verbose RPMS/x86_64/*.rpm
+        cd RPMS/x86_64
         filename=$(ls *.rpm)
         match=.el7
         filename_new="${filename%%${match}*}_$(name)${filename##*${match}}"
@@ -165,9 +192,10 @@ jobs:
       #condition: and(eq(variables['packager'],'rpm', eq(variables['Build.Reason'], 'Manual'))
 
     - script: |
-        rpmbuild -bb --define "_topdir ./build/rpm" --buildroot ./build/rpm/BUILDROOT synergy.spec
-        rpmlint --verbose ./build/rpm/RPMS/x86_64/*.rpm
-        cd build/rpm/RPMS/x86_64
+        cd build-ent/rpm
+        rpmbuild -bb --define "_topdir $(pwd)" --buildroot $(pwd)/BUILDROOT synergy.spec
+        rpmlint --verbose RPMS/x86_64/*.rpm
+        cd RPMS/x86_64
         filename=$(ls *.rpm)
         match=.el7
         filename_new="${filename%%${match}*}_$(name)${filename##*${match}}"
