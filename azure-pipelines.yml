@@ -191,6 +191,8 @@ jobs:
         cd ..
         mv x86_64 $(Agent.BuildDirectory)/standard_package
         ls -la
+        ls -la $(Agent.BuildDirectory)
+        ls -la $(Agent.BuildDirectory)/standard_package
       displayName: "Package Binary RPM(standard)"
       condition: eq(variables['packager'],'rpm')
       #condition: and(eq(variables['packager'],'rpm', eq(variables['Build.Reason'], 'Manual'))
