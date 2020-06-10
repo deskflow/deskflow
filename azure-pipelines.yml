@@ -146,10 +146,11 @@ jobs:
         export GPG_TTY=$(tty)
         debuild --preserve-envvar SYNERGY_* -us -uc
         mkdir standard_package
+        cd ..
         filename=$(ls synergy_*.deb)
         filename_new="synergy_${SYNERGY_DEB_VERSION}_$(name)${filename##*${SYNERGY_REVISION}}"
-        mv $filename standard_package/$filename_new
-        cd standard_package
+        mv $filename $(Build.Repository.LocalPath)/standard_package/$filename_new
+        cd $(Build.Repository.LocalPath)/standard_package
         md5sum $filename_new >> ${filename_new}.md5
         sha1sum $filename_new >> ${filename_new}.sha1
         sha256sum $filename_new >> ${filename_new}.sha256
@@ -165,10 +166,11 @@ jobs:
         export GPG_TTY=$(tty)
         debuild --preserve-envvar SYNERGY_* -us -uc
         mkdir enterprise_package
+        cd ..
         filename=$(ls synergy_*.deb)
         filename_new="synergy-enterprise_$(SYNERGY_DEB_VERSION)_$(name)${filename##*$(SYNERGY_REVISION)}"
-        mv $filename enterprise_package/$filename_new
-        cd enterprise_package
+        mv $filename $(Build.Repository.LocalPath)/enterprise_package/$filename_new
+        cd $(Build.Repository.LocalPath)/enterprise_package
         md5sum $filename_new >> ${filename_new}.md5
         sha1sum $filename_new >> ${filename_new}.sha1
         sha256sum $filename_new >> ${filename_new}.sha256
