@@ -13,26 +13,26 @@ jobs:
 #        image: symless/synergy-core:ubuntu16.04
 #        packager: deb
 #        name: ubuntu16
-#      ubuntu1804:
-#        image: symless/synergy-core:ubuntu18.04
-#        packager: deb
-#        name: ubuntu18
-#      ubuntu1910:
-#        image: symless/synergy-core:ubuntu19.10
-#        packager: deb
-#        name: ubuntu19
-#      ubuntu2004:
-#        image: symless/synergy-core:ubuntu20.04
-#        packager: deb
-#        name: ubuntu20
-#      debian9:
-#        image: symless/synergy-core:debian9
-#        packager: deb
-#        name: debian9
-#      debian10:
-#        image: symless/synergy-core:debian10
-#        packager: deb
-#        name: debian10
+      ubuntu1804:
+        image: symless/synergy-core:ubuntu18.04
+        packager: deb
+        name: ubuntu18
+      ubuntu1910:
+        image: symless/synergy-core:ubuntu19.10
+        packager: deb
+        name: ubuntu19
+      ubuntu2004:
+        image: symless/synergy-core:ubuntu20.04
+        packager: deb
+        name: ubuntu20
+      debian9:
+        image: symless/synergy-core:debian9
+        packager: deb
+        name: debian9
+      debian10:
+        image: symless/synergy-core:debian10
+        packager: deb
+        name: debian10
       fedora28:
         image: symless/synergy-core:fedora28
         packager: rpm
@@ -139,45 +139,43 @@ jobs:
         echo "##vso[task.setvariable variable=SYNERGY_RPM_VERSION]${SYNERGY_RPM_VERSION}"
       displayName: "Setup variables"
       #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
-#
-#    - script: |
-#        dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
-#        export DEB_BUILD_OPTIONS="parallel=8"
-#        export GPG_TTY=$(tty)
-#        debuild --preserve-envvar SYNERGY_* -us -uc
-#        mkdir standard_package
-#        mv ../synergy_* standard_package/
-#        cd standard_package
-#        filename=$(ls synergy_*.deb)
-#        filename_new="synergy_${SYNERGY_DEB_VERSION}_$(name)${filename##*${SYNERGY_REVISION}}"
-#        mv $filename $filename_new
-#        md5sum $filename_new >> ${filename_new}.md5
-#        sha1sum $filename_new >> ${filename_new}.sha1
-#        sha256sum $filename_new >> ${filename_new}.sha256
-#        ls -la
-#      displayName: "Package Binary DEB(Standard)"
-#      condition: eq(variables['packager'],'deb')
-#      #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
-#
-#    - script: |
-#        export SYNERGY_ENTERPRISE=1
-#        dch --create --package "synergy-enterprise_" --controlmaint --distribution unstable --newversion $(SYNERGY_DEB_VERSION) "Initial release"
-#        export DEB_BUILD_OPTIONS="parallel=8"
-#        export GPG_TTY=$(tty)
-#        debuild --preserve-envvar SYNERGY_* -us -uc
-#        mkdir enterprise_package
-#        mv ../synergy_* enterprise_package/
-#        cd enterprise_package
-#        filename=$(ls synergy_*.deb)
-#        filename_new="synergy-enterprise_$(SYNERGY_DEB_VERSION)_$(name)${filename##*$(SYNERGY_REVISION)}"
-#        mv $filename $filename_new
-#        md5sum $filename_new >> ${filename_new}.md5
-#        sha1sum $filename_new >> ${filename_new}.sha1
-#        sha256sum $filename_new >> ${filename_new}.sha256
-#        ls -la
-#      displayName: "Package Binary DEB(Enterprise)"
-#      condition: eq(variables['packager'],'deb')
-#      #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
+
+    - script: |
+        dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
+        export DEB_BUILD_OPTIONS="parallel=8"
+        export GPG_TTY=$(tty)
+        debuild --preserve-envvar SYNERGY_* -us -uc
+        mkdir standard_package
+        filename=$(ls synergy_*.deb)
+        filename_new="synergy_${SYNERGY_DEB_VERSION}_$(name)${filename##*${SYNERGY_REVISION}}"
+        mv $filename standard_package/$filename_new
+        cd standard_package
+        md5sum $filename_new >> ${filename_new}.md5
+        sha1sum $filename_new >> ${filename_new}.sha1
+        sha256sum $filename_new >> ${filename_new}.sha256
+        ls -la
+      displayName: "Package Binary DEB(Standard)"
+      condition: eq(variables['packager'],'deb')
+      #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
+
+    - script: |
+        export SYNERGY_ENTERPRISE=1
+        dch --create --package "synergy-enterprise_" --controlmaint --distribution unstable --newversion $(SYNERGY_DEB_VERSION) "Initial release"
+        export DEB_BUILD_OPTIONS="parallel=8"
+        export GPG_TTY=$(tty)
+        debuild --preserve-envvar SYNERGY_* -us -uc
+        mkdir enterprise_package
+        filename=$(ls synergy_*.deb)
+        filename_new="synergy-enterprise_$(SYNERGY_DEB_VERSION)_$(name)${filename##*$(SYNERGY_REVISION)}"
+        mv $filename enterprise_package/$filename_new
+        cd enterprise_package
+        md5sum $filename_new >> ${filename_new}.md5
+        sha1sum $filename_new >> ${filename_new}.sha1
+        sha256sum $filename_new >> ${filename_new}.sha256
+        ls -la
+      displayName: "Package Binary DEB(Enterprise)"
+      condition: eq(variables['packager'],'deb')
+      #condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
 
     - script: |
         cd build-release/rpm
@@ -190,9 +188,6 @@ jobs:
         sha256sum $filename >> ${filename}.sha256
         cd ..
         mv x86_64 $(Build.Repository.LocalPath)/standard_package
-        ls -la
-        ls -la $(Build.Repository.LocalPath)
-        ls -la $(Build.Repository.LocalPath)/standard_package
       displayName: "Package Binary RPM(standard)"
       condition: eq(variables['packager'],'rpm')
       #condition: and(eq(variables['packager'],'rpm', eq(variables['Build.Reason'], 'Manual'))
@@ -217,7 +212,7 @@ jobs:
       inputs:
         sshEndpoint: 'Azure on Sandor'
         sourceFolder: './standard_package'
-        contents: '*.deb* \n *.rpm*'
+        contents: '*'
         targetFolder: 'synergy-core/v1-core-standard/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
         readyTimeout: '20000'
       displayName: 'Send standard Package to sandor'
@@ -227,7 +222,7 @@ jobs:
       inputs:
         sshEndpoint: 'Azure on Sandor'
         sourceFolder: './enterprise_package'
-        contents: '*.deb* \n *.rpm*'
+        contents: '*'
         targetFolder: 'synergy-core/v1-core-enterprise/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
         readyTimeout: '20000'
       displayName: 'Send enterprise Package to sandor'
