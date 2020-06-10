@@ -188,6 +188,7 @@ jobs:
         md5sum $filename >> ${filename}.md5
         sha1sum $filename >> ${filename}.sha1
         sha256sum $filename >> ${filename}.sha256
+        mv RPMS/x86_64 ../../standard_package
         ls -la
       displayName: "Package Binary RPM(standard)"
       condition: eq(variables['packager'],'rpm')
@@ -202,6 +203,7 @@ jobs:
         md5sum $filename >> ${filename}.md5
         sha1sum $filename >> ${filename}.sha1
         sha256sum $filename >> ${filename}.sha256
+        mv RPMS/x86_64 ../../enterprise_package
         ls -la
       displayName: "Package Binary RPM(enterprise)"
       condition: eq(variables['packager'],'rpm')
