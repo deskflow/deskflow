@@ -306,6 +306,12 @@ jobs:
     inputs:
       script: |
         hdiutil create -volname Synergy -srcfolder $(Build.Repository.LocalPath)/build/bundle/ -ov -format UDZO $(SYNERGY_DMG_FILENAME)
+        mkdir pkg
+        mv $(SYNERGY_DMG_FILENAME) pkg/
+        cd pkg
+        md5sum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).md5
+        sha1sum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha1
+        sha256sum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha256
         ls -lah
     displayName: 'Create Installer'
 
@@ -319,8 +325,8 @@ jobs:
   - task: CopyFilesOverSSH@0
     inputs:
       sshEndpoint: 'Azure on Sandor'
-      sourceFolder: '$(Build.Repository.LocalPath)'
-      contents: '*.dmg'
+      sourceFolder: '$(Build.Repository.LocalPath)/pkg'
+      contents: '*'
       targetFolder: 'synergy-core/v1-core-standard/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send Package to sandor'
