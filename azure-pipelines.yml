@@ -318,6 +318,7 @@ jobs:
   - task: Bash@3
     inputs:
       filePath: 'CI/MacOS/notorize.sh'
+      workingDirectory: 'pkg/'
     env:
       ASC_USERNAME: $(ASC_USERNAME)
       NOTORY_APP_PASSWORD: $(NOTORY_APP_PASSWORD)
