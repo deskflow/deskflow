@@ -306,6 +306,7 @@ jobs:
     inputs:
       script: |
         hdiutil create -volname Synergy -srcfolder $(Build.Repository.LocalPath)/build/bundle/ -ov -format UDZO $(SYNERGY_DMG_FILENAME)
+        ls -lah
     displayName: 'Create Installer'
 
   - task: Bash@3
