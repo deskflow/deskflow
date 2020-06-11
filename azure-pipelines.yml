@@ -244,7 +244,7 @@ jobs:
     inputs:
       certSecureFile: 'AppleSigningCert.cer'
       certPwd: '$(AppleCertPass)'
-      keychain: 'default'
+      keychain: 'temp'
 
   - task: CmdLine@2
     inputs:
