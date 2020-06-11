@@ -271,6 +271,8 @@ jobs:
   - task: CmdLine@2
     inputs:
       script: |
+        export PATH="$(QT_PATH):$PATH"
+        ls -la $(QT_PATH)
         macdeployqt $(Build.Repository.LocalPath)/build/bundle/Synergy.app -codesign="$CODESIGN_ID"
         codesign -f --options runtime --deep -s "$CODESIGN_ID" $(Build.Repository.LocalPath)/build/bundle/Synergy.app
         ln -s /Applications $(Build.Repository.LocalPath)/build/bundle/Applications
