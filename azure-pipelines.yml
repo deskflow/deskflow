@@ -227,44 +227,86 @@ jobs:
 #      condition: eq(variables['Build.Reason'], 'Manual')
 
 
- - job: MacOS
-   strategy:
-     matrix:
-       mojave:
-         image: macOS-10.14
+- job: MacOS
+  strategy:
+    matrix:
+      mojave:
+        image: macOS-10.14
 
-   pool:
-     vmImage: $[ variables['image'] ]
+  pool:
+    vmImage: $[ variables['image'] ]
 
-   variables:
-     QT_PATH: '/usr/local/opt/qt/bin'
+  variables:
+    QT_PATH: '/usr/local/opt/qt/bin'
 
-   steps:
-     - task: InstallAppleCertificate@2
-       inputs:
-         certSecureFile: AppleSigningCert.cer
-         keychain: default
+  steps:
+  - task: InstallAppleCertificate@2
+    inputs:
+      certSecureFile: 'AppleSigningCert.cer'
+      certPwd: '$(AppleCertPass)'
+      keychain: 'default'
 
-    - task: CmdLine@2
-     inputs:
-       script: 'brew install qt'
-     displayName: 'Installing QT'
+  - task: CmdLine@2
+    inputs:
+      script: 'brew install qt'
+    displayName: 'Installing QT'
 
-   - task: CmdLine@2
-     inputs:
-       script: |
-         export PATH="$(QT_PATH):$PATH"
-         mkdir build
-         cd build
-         cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release ..
-     displayName: 'Cmake'
+  - task: CmdLine@2
+    inputs:
+      script: |
+        export PATH="$(QT_PATH):$PATH"
+        mkdir build
+        cd build
+        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release ..
+    displayName: 'Cmake'
 
-   - task: CmdLine@2
-     inputs:
-       script: |
-         cd build
-         make -j
-     displayName: 'Compiling'
+  - task: CmdLine@2
+    inputs:
+      script: |
+        cd build
+        make -j
+        make install/strip
+    displayName: 'Compiling'
+
+  - task: CmdLine@2
+    inputs:
+      script: |
+        macdeployqt $(Build.Repository.LocalPath)/build/bundle/Synergy.app -codesign="$CODESIGN_ID"
+        codesign -f --options runtime --deep -s "$CODESIGN_ID" $(Build.Repository.LocalPath)/build/bundle/Synergy.app
+        ln -s /Applications $(Build.Repository.LocalPath)/build/bundle/Applications
+    displayName: 'Signing'
+    env:
+      CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
+
+  - script: |
+      . ./build/version
+      SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
+      SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
+      SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}_b${BUILD_NUMBER}-${SYNERGY_REVISION}"
+      SYNERGY_DMG_FILENAME=synergy_v${SYNERGY_DMG_VERSION}_macos.dmg
+      echo "##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]${SYNERGY_VERSION_STAGE}"
+      echo "##vso[task.setvariable variable=SYNERGY_VERSION]${SYNERGY_VERSION}"
+      echo "##vso[task.setvariable variable=SYNERGY_REVISION]${SYNERGY_REVISION}"
+      echo "##vso[task.setvariable variable=SYNERGY_DMG_VERSION]${SYNERGY_DMG_VERSION}"
+      echo "##vso[task.setvariable variable=SYNERGY_DMG_FILENAME]${SYNERGY_DMG_FILENAME}"
+    displayName: "Setup variables"
+
+  - task: CmdLine@2
+    inputs:
+      script: |
+        hdiutil create -volname Synergy -srcfolder $(Build.Repository.LocalPath)/build/bundle/ -ov -format UDZO $(SYNERGY_DMG_FILENAME)
+    displayName: 'Create Installer'
+
+  - task: CopyFilesOverSSH@0
+    inputs:
+      sshEndpoint: 'Azure on Sandor'
+      sourceFolder: './'
+      contents: '*dmg'
+      targetFolder: 'synergy-core/v1-core-standard/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+      readyTimeout: '20000'
+    displayName: 'Send Package to sandor'
+    condition: eq(variables['Build.Reason'], 'Manual')
+
 
 # - job: Windows
 #   strategy:
