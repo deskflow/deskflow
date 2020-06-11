@@ -12,7 +12,7 @@ NOTARIZE_INFO_LOG=$(mktemp -t notarize-info)
 
 
 # submit app for notarization
-if xcrun altool --verbose --notarize-app --primary-bundle-id "$BUNDLE_ID" --username "$ASC_USERNAME" --password "${NOTORY_APP_PASSWORD}" -f "${SYNERGY_DMG_FILENAME}" > "$NOTARIZE_APP_LOG" 2>&1; then
+if xcrun altool --notarize-app --primary-bundle-id "$BUNDLE_ID" --username "$ASC_USERNAME" --password "${NOTORY_APP_PASSWORD}" -f "${SYNERGY_DMG_FILENAME}" > "$NOTARIZE_APP_LOG" 2>&1; then
 	cat "$NOTARIZE_APP_LOG"
 	RequestUUID=$(awk -F ' = ' '/RequestUUID/ {print $2}' "$NOTARIZE_APP_LOG")
 
