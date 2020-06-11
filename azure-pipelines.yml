@@ -232,6 +232,7 @@ jobs:
     matrix:
       mojave:
         image: macOS-10.14
+        name: mojave
 
   pool:
     vmImage: $[ variables['image'] ]
@@ -284,8 +285,8 @@ jobs:
       . ./build/version
       SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
       SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
-      SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}_b${BUILD_NUMBER}-${SYNERGY_REVISION}"
-      SYNERGY_DMG_FILENAME=synergy_v${SYNERGY_DMG_VERSION}_macos.dmg
+      SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}_b$(Build.BuildNumber)-${SYNERGY_REVISION}"
+      SYNERGY_DMG_FILENAME=synergy_v${SYNERGY_DMG_VERSION}_macos_$(name).dmg
       echo "##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]${SYNERGY_VERSION_STAGE}"
       echo "##vso[task.setvariable variable=SYNERGY_VERSION]${SYNERGY_VERSION}"
       echo "##vso[task.setvariable variable=SYNERGY_REVISION]${SYNERGY_REVISION}"
@@ -299,6 +300,13 @@ jobs:
         hdiutil create -volname Synergy -srcfolder $(Build.Repository.LocalPath)/build/bundle/ -ov -format UDZO $(SYNERGY_DMG_FILENAME)
     displayName: 'Create Installer'
 
+  - task: Bash@3
+    inputs:
+      filePath: 'CI/MacOS/notorize.sh'
+    env:
+      ASC_USERNAME: $(ASC_USERNAME)
+      NOTORY_APP_PASSWORD: $(NOTORY_APP_PASSWORD)
+
   - task: CopyFilesOverSSH@0
     inputs:
       sshEndpoint: 'Azure on Sandor'
@@ -307,7 +315,7 @@ jobs:
       targetFolder: 'synergy-core/v1-core-standard/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send Package to sandor'
-    condition: eq(variables['Build.Reason'], 'Manual')
+    #condition: eq(variables['Build.Reason'], 'Manual')
 
 
 # - job: Windows
