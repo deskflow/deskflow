@@ -247,6 +247,14 @@ jobs:
       certPwd: '$(AppleCertPass)'
       keychain: 'temp'
 
+  - task: AzureKeyVault@1
+    inputs:
+      azureSubscription: 'Free Trial (796b9556-9614-41a6-8040-0eb14d81fe6f'
+      KeyVaultName: 'Symless'
+      SecretsFilter: '*'
+    displayName: "Get keys"
+    #condition: eq(variables['Build.Reason'], 'Manual')
+
   - task: CmdLine@2
     inputs:
       script: 'brew install qt'
