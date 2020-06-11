@@ -319,8 +319,8 @@ jobs:
   - task: CopyFilesOverSSH@0
     inputs:
       sshEndpoint: 'Azure on Sandor'
-      sourceFolder: './'
-      contents: '*dmg'
+      sourceFolder: '$(Build.Repository.LocalPath)'
+      contents: '*.dmg'
       targetFolder: 'synergy-core/v1-core-standard/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send Package to sandor'
