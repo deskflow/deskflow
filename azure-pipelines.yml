@@ -1,6 +1,15 @@
 trigger:
 - master
 
+strategy:
+  matrix:
+    standard:
+      build: standard
+      prefix: synergy
+    enterprise:
+      build: enterprise
+      prefix: synergy-enterprise
+
 jobs:
 #- job: Linux
 #  pool:
@@ -233,6 +242,9 @@ jobs:
       mojave:
         image: macOS-10.14
         name: mojave
+      catalina:
+        image: macOS-10.15
+        name: catalina
 
   pool:
     vmImage: $[ variables['image'] ]
@@ -268,6 +280,18 @@ jobs:
         cd build
         cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release ..
     displayName: 'Cmake'
+      condition: eq(variables['build'], 'standard')
+
+  - task: CmdLine@2
+    inputs:
+      script: |
+        export PATH="$(QT_PATH):$PATH"
+        export SYNERGY_ENTERPRISE=1
+        mkdir build
+        cd build
+        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release -DSYNERGY_ENTERPRISE=ON ..
+    displayName: 'Cmake'
+    condition: eq(variables['build'], 'enterprise')
 
   - task: CmdLine@2
     inputs:
@@ -294,7 +318,7 @@ jobs:
       SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
       SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
       SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}_b$(Build.BuildNumber)-${SYNERGY_REVISION}"
-      SYNERGY_DMG_FILENAME=synergy_v${SYNERGY_DMG_VERSION}_macos_$(name).dmg
+      SYNERGY_DMG_FILENAME=$(prefix)_v${SYNERGY_DMG_VERSION}_macos_$(name).dmg
       echo "##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]${SYNERGY_VERSION_STAGE}"
       echo "##vso[task.setvariable variable=SYNERGY_VERSION]${SYNERGY_VERSION}"
       echo "##vso[task.setvariable variable=SYNERGY_REVISION]${SYNERGY_REVISION}"
@@ -312,7 +336,6 @@ jobs:
         md5sum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).md5
         sha1sum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha1
         sha256sum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha256
-        ls -lah
     displayName: 'Create Installer'
 
   - task: Bash@3
@@ -328,7 +351,7 @@ jobs:
       sshEndpoint: 'Azure on Sandor'
       sourceFolder: '$(Build.Repository.LocalPath)/pkg'
       contents: '*'
-      targetFolder: 'synergy-core/v1-core-standard/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+      targetFolder: 'synergy-core/v1-core-$(build)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send Package to sandor'
     #condition: eq(variables['Build.Reason'], 'Manual')
