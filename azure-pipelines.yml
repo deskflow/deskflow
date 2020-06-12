@@ -4,11 +4,11 @@ trigger:
 strategy:
   matrix:
     standard:
-      buildType: standard
-      prefix: synergy
+      buildType: "standard"
+      prefix: "synergy"
     enterprise:
-      buildType: enterprise
-      prefix: synergy-enterprise
+      buildType: "enterprise"
+      prefix: "synergy-enterprise"
 
 jobs:
 #- job: Linux
