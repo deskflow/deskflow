@@ -4,10 +4,10 @@ trigger:
 strategy:
   matrix:
     standard:
-      build: standard
+      buildType: standard
       prefix: synergy
     enterprise:
-      build: enterprise
+      buildType: enterprise
       prefix: synergy-enterprise
 
 jobs:
@@ -242,9 +242,11 @@ jobs:
       mojave:
         image: macOS-10.14
         name: mojave
+        version: 10.12
       catalina:
         image: macOS-10.15
         name: catalina
+        version: 10.14
 
   pool:
     vmImage: $[ variables['image'] ]
@@ -278,9 +280,9 @@ jobs:
         export PATH="$(QT_PATH):$PATH"
         mkdir build
         cd build
-        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release ..
+        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=$(version) -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release ..
     displayName: 'Cmake'
-      condition: eq(variables['build'], 'standard')
+    condition: eq(variables['buildType'], 'standard')
 
   - task: CmdLine@2
     inputs:
@@ -291,7 +293,7 @@ jobs:
         cd build
         cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release -DSYNERGY_ENTERPRISE=ON ..
     displayName: 'Cmake'
-    condition: eq(variables['build'], 'enterprise')
+    condition: eq(variables['buildType'], 'enterprise')
 
   - task: CmdLine@2
     inputs:
