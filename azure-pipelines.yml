@@ -437,8 +437,9 @@ jobs:
       arguments: '$(QT_VERSION) windows desktop win64_msvc2017_64'
     displayName: 'Installing QT $(QT_VERSION) x64'
 
-  - inputs:
-    filePath: 'CI/Windows/cmake.bat'
+  - task: PowerShell@2
+    inputs:
+      filePath: 'CI/Windows/cmake.bat'
     displayName: 'Cmake x64 Standard'
     env:
       ENV_BAT: $(ENV_BAT)
@@ -465,8 +466,9 @@ jobs:
       arguments: '$(QT_VERSION) windows desktop win32_msvc2017'
     displayName: 'Installing QT $(QT_VERSION) x32'
 
-  - inputs:
-    filePath: 'CI/Windows/cmake.bat'
+  - task: PowerShell@2
+    inputs:
+      filePath: 'CI/Windows/cmake.bat'
     displayName: 'Cmake x64 Standard'
     env:
       ENV_BAT: $(ENV_BAT)
