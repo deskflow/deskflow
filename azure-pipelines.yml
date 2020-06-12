@@ -343,9 +343,9 @@ jobs:
         mkdir pkg
         mv $(SYNERGY_DMG_FILENAME) pkg/
         cd pkg
-        md5sum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).md5
-        sha1sum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha1
-        sha256sum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha256
+        md5 -r $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).md5
+        shasum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha1
+        shasum -a 256 $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha256
     displayName: 'Create Installer'
 
   - task: Bash@3
