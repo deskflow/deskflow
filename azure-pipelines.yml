@@ -4,14 +4,6 @@ trigger:
 
 
 jobs:
-  strategy:
-    matrix:
-      standard:
-        buildType: "standard"
-        prefix: "synergy"
-      enterprise:
-        buildType: "enterprise"
-        prefix: "synergy-enterprise"
 #- job: Linux
 #  pool:
 #    vmImage: 'ubuntu-16.04'
@@ -240,15 +232,30 @@ jobs:
 - job: MacOS
   strategy:
     matrix:
-      mojave:
+      mojave-std:
         image: macOS-10.14
         name: mojave
         version: 10.12
-      catalina:
+        buildType: "standard"
+        prefix: "synergy"
+      mojave-ent:
+        image: macOS-10.14
+        name: mojave
+        version: 10.12
+        buildType: "enterprise"
+        prefix: "synergy-enterprise"
+      catalina-std:
         image: macOS-10.15
         name: catalina
         version: 10.14
-
+        buildType: "standard"
+        prefix: "synergy"
+      catalina-ent:
+        image: macOS-10.15
+        name: catalina
+        version: 10.14
+        buildType: "enterprise"
+        prefix: "synergy-enterprise"
   pool:
     vmImage: $[ variables['image'] ]
 
