@@ -1,16 +1,17 @@
 trigger:
 - master
 
-strategy:
-  matrix:
-    standard:
-      buildType: "standard"
-      prefix: "synergy"
-    enterprise:
-      buildType: "enterprise"
-      prefix: "synergy-enterprise"
+
 
 jobs:
+  strategy:
+    matrix:
+      standard:
+        buildType: "standard"
+        prefix: "synergy"
+      enterprise:
+        buildType: "enterprise"
+        prefix: "synergy-enterprise"
 #- job: Linux
 #  pool:
 #    vmImage: 'ubuntu-16.04'
