@@ -227,256 +227,265 @@ jobs:
 #      condition: eq(variables['Build.Reason'], 'Manual')
 
 
-- job: MacOS
+#- job: MacOS
+#  strategy:
+#    matrix:
+#      mojave-std:
+#        image: macOS-10.14
+#        name: mojave
+#        version: 10.12
+#        buildType: "standard"
+#        prefix: "synergy"
+#      mojave-ent:
+#        image: macOS-10.14
+#        name: mojave
+#        version: 10.12
+#        buildType: "enterprise"
+#        prefix: "synergy-enterprise"
+#      catalina-std:
+#        image: macOS-10.15
+#        name: catalina
+#        version: 10.14
+#        buildType: "standard"
+#        prefix: "synergy"
+#      catalina-ent:
+#        image: macOS-10.15
+#        name: catalina
+#        version: 10.14
+#        buildType: "enterprise"
+#        prefix: "synergy-enterprise"
+#  pool:
+#    vmImage: $[ variables['image'] ]
+#
+#  variables:
+#    QT_PATH: '/usr/local/opt/qt/bin'
+#
+#  steps:
+#  - task: InstallAppleCertificate@2
+#    inputs:
+#      certSecureFile: 'AppleSigningCert.cer'
+#      certPwd: '$(AppleCertPass)'
+#      keychain: 'temp'
+#
+#  - task: AzureKeyVault@1
+#    inputs:
+#      azureSubscription: 'Free Trial (796b9556-9614-41a6-8040-0eb14d81fe6f'
+#      KeyVaultName: 'Symless'
+#      SecretsFilter: '*'
+#    displayName: "Get keys"
+#    #condition: eq(variables['Build.Reason'], 'Manual')
+#
+#  - task: CmdLine@2
+#    inputs:
+#      script: 'brew install qt'
+#    displayName: 'Installing QT'
+#
+#  - task: CmdLine@2
+#    inputs:
+#      script: |
+#        export PATH="$(QT_PATH):$PATH"
+#        mkdir build
+#        cd build
+#        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=$(version) -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release ..
+#    displayName: 'Cmake standard'
+#    condition: eq(variables['buildType'], 'standard')
+#
+#  - task: CmdLine@2
+#    inputs:
+#      script: |
+#        export PATH="$(QT_PATH):$PATH"
+#        export SYNERGY_ENTERPRISE=1
+#        mkdir build
+#        cd build
+#        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release -DSYNERGY_ENTERPRISE=ON ..
+#    displayName: 'Cmake enterprise'
+#    condition: eq(variables['buildType'], 'enterprise')
+#
+#  - task: CmdLine@2
+#    inputs:
+#      script: |
+#        cd build
+#        make -j
+#        make install/strip
+#    displayName: 'Compiling'
+#
+#  - task: CmdLine@2
+#    inputs:
+#      script: |
+#        export PATH="$(QT_PATH):$PATH"
+#        ls -la $(QT_PATH)
+#        macdeployqt $(Build.Repository.LocalPath)/build/bundle/Synergy.app -codesign="$CODESIGN_ID"
+#        codesign -f --options runtime --deep -s "$CODESIGN_ID" $(Build.Repository.LocalPath)/build/bundle/Synergy.app
+#        ln -s /Applications $(Build.Repository.LocalPath)/build/bundle/Applications
+#    displayName: 'Signing'
+#    env:
+#      CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
+#
+#  - script: |
+#      . ./build/version
+#      SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
+#      SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
+#      SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}_b$(Build.BuildNumber)-${SYNERGY_REVISION}"
+#      SYNERGY_DMG_FILENAME=$(prefix)_v${SYNERGY_DMG_VERSION}_macos_$(name).dmg
+#      echo "##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]${SYNERGY_VERSION_STAGE}"
+#      echo "##vso[task.setvariable variable=SYNERGY_VERSION]${SYNERGY_VERSION}"
+#      echo "##vso[task.setvariable variable=SYNERGY_REVISION]${SYNERGY_REVISION}"
+#      echo "##vso[task.setvariable variable=SYNERGY_DMG_VERSION]${SYNERGY_DMG_VERSION}"
+#      echo "##vso[task.setvariable variable=SYNERGY_DMG_FILENAME]${SYNERGY_DMG_FILENAME}"
+#    displayName: "Setup variables"
+#
+#  - task: CmdLine@2
+#    inputs:
+#      script: |
+#        hdiutil create -volname Synergy -srcfolder $(Build.Repository.LocalPath)/build/bundle/ -ov -format UDZO $(SYNERGY_DMG_FILENAME)
+#        mkdir pkg
+#        mv $(SYNERGY_DMG_FILENAME) pkg/
+#        cd pkg
+#        md5 -r $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).md5
+#        shasum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha1
+#        shasum -a 256 $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha256
+#    displayName: 'Create Installer'
+#
+#  - task: Bash@3
+#    inputs:
+#      filePath: 'CI/MacOS/notorize.sh'
+#      workingDirectory: 'pkg/'
+#    env:
+#      ASC_USERNAME: $(ASC_USERNAME)
+#      NOTORY_APP_PASSWORD: $(NOTORY_APP_PASSWORD)
+#    displayName: 'Submit for Notarization'
+#    condition: eq(variables['Build.Reason'], 'Manual')
+#
+#  - task: CopyFilesOverSSH@0
+#    inputs:
+#      sshEndpoint: 'Azure on Sandor'
+#      sourceFolder: '$(Build.Repository.LocalPath)/pkg'
+#      contents: '*'
+#      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+#      readyTimeout: '20000'
+#    displayName: 'Send Package to sandor'
+#    condition: eq(variables['Build.Reason'], 'Manual')
+
+
+- job: Windows
   strategy:
     matrix:
-      mojave-std:
-        image: macOS-10.14
-        name: mojave
-        version: 10.12
+      vs2019:
+        image: windows-2019
         buildType: "standard"
         prefix: "synergy"
-      mojave-ent:
-        image: macOS-10.14
-        name: mojave
-        version: 10.12
-        buildType: "enterprise"
-        prefix: "synergy-enterprise"
-      catalina-std:
-        image: macOS-10.15
-        name: catalina
-        version: 10.14
-        buildType: "standard"
-        prefix: "synergy"
-      catalina-ent:
-        image: macOS-10.15
-        name: catalina
-        version: 10.14
-        buildType: "enterprise"
-        prefix: "synergy-enterprise"
+
   pool:
     vmImage: $[ variables['image'] ]
 
   variables:
-    QT_PATH: '/usr/local/opt/qt/bin'
+    QT_VERSION: '5.12.6'
+    QLI_VERSION: '2019.05.26.1'
+    QLI_OUT_DIR: '.\deps\Qt'
+    QLI_BASE_URL: 'http://mirrors.ocf.berkeley.edu/qt/online/qtsdkrepository/'
+    QT_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
+    QT_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
+    BONJOUR_SDK_DIR: 'deps\BonjourSDK'
+    ENV_BAT: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\vsdevcmd'
 
   steps:
-  - task: InstallAppleCertificate@2
+#As the official installer is rather 'slow' use an unofficial installer QLI
+  - task: PowerShell@2
     inputs:
-      certSecureFile: 'AppleSigningCert.cer'
-      certPwd: '$(AppleCertPass)'
-      keychain: 'temp'
-
-  - task: AzureKeyVault@1
-    inputs:
-      azureSubscription: 'Free Trial (796b9556-9614-41a6-8040-0eb14d81fe6f'
-      KeyVaultName: 'Symless'
-      SecretsFilter: '*'
-    displayName: "Get keys"
-    #condition: eq(variables['Build.Reason'], 'Manual')
-
-  - task: CmdLine@2
-    inputs:
-      script: 'brew install qt'
-    displayName: 'Installing QT'
-
-  - task: CmdLine@2
-    inputs:
+      targetType: 'inline'
       script: |
-        export PATH="$(QT_PATH):$PATH"
-        mkdir build
-        cd build
-        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=$(version) -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release ..
-    displayName: 'Cmake standard'
-    condition: eq(variables['buildType'], 'standard')
+        New-Item -Force -ItemType Directory -Path ".\deps\"
+        $client = new-object System.Net.WebClient
+        $client.DownloadFile("https://github.com/nelsonjchen/qli-installer/archive/v$(QLI_VERSION).zip","deps\qli.zip")
+    displayName: 'Downloading QLI v$(QLI_VERSION)'
 
-  - task: CmdLine@2
+  - task: PowerShell@2
     inputs:
+      targetType: 'inline'
       script: |
-        export PATH="$(QT_PATH):$PATH"
-        export SYNERGY_ENTERPRISE=1
-        mkdir build
-        cd build
-        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release -DSYNERGY_ENTERPRISE=ON ..
-    displayName: 'Cmake enterprise'
-    condition: eq(variables['buildType'], 'enterprise')
+        New-Item -Force -ItemType Directory -Path ".\deps\"
+        $client = new-object System.Net.WebClient
+        $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\deps\bonjoursdk.zip")
+        $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi",".\deps\Bonjour64.msi")
+    displayName: 'Downloading Bonjour SKD'
 
-  - task: CmdLine@2
+  - task: ExtractFiles@1
     inputs:
-      script: |
-        cd build
-        make -j
-        make install/strip
-    displayName: 'Compiling'
+      archiveFilePatterns: './deps/*.zip'
+      destinationFolder: './deps/'
+      cleanDestinationFolder: false
+    displayName: 'Extracting zips'
 
-  - task: CmdLine@2
+  - task: PowerShell@2
     inputs:
+      targetType: 'inline'
+      script: 'pip install -r .\deps\qli-installer-$(QLI_VERSION)\requirements.txt'
+    displayName: 'Install QLI requirements'
+
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
       script: |
-        export PATH="$(QT_PATH):$PATH"
-        ls -la $(QT_PATH)
-        macdeployqt $(Build.Repository.LocalPath)/build/bundle/Synergy.app -codesign="$CODESIGN_ID"
-        codesign -f --options runtime --deep -s "$CODESIGN_ID" $(Build.Repository.LocalPath)/build/bundle/Synergy.app
-        ln -s /Applications $(Build.Repository.LocalPath)/build/bundle/Applications
-    displayName: 'Signing'
+        Get-ChildItem '.\deps'
+        msiexec.exe /i ${pwd}\deps\Bonjour64.msi INSTALLDIR="${pwd}\deps\Bonjour" /qb
+    displayName: 'Installing bonjour SDK'
+
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
+      arguments: '$(QT_VERSION) windows desktop win64_msvc2017_64'
+    displayName: 'Installing QT $(QT_VERSION) x64'
+
+  - inputs:
+    filePath: 'CI/Windows/cmake.bat'
+    displayName: 'Cmake x64 Standard'
     env:
-      CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
+      ENV_BAT: $(ENV_BAT)
+      BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
+      QT_PATH: $(QT_PATH)
+      ARCH: '64'
+      MSARCH: 'x64'
 
-  - script: |
-      . ./build/version
-      SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
-      SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
-      SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}_b$(Build.BuildNumber)-${SYNERGY_REVISION}"
-      SYNERGY_DMG_FILENAME=$(prefix)_v${SYNERGY_DMG_VERSION}_macos_$(name).dmg
-      echo "##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]${SYNERGY_VERSION_STAGE}"
-      echo "##vso[task.setvariable variable=SYNERGY_VERSION]${SYNERGY_VERSION}"
-      echo "##vso[task.setvariable variable=SYNERGY_REVISION]${SYNERGY_REVISION}"
-      echo "##vso[task.setvariable variable=SYNERGY_DMG_VERSION]${SYNERGY_DMG_VERSION}"
-      echo "##vso[task.setvariable variable=SYNERGY_DMG_FILENAME]${SYNERGY_DMG_FILENAME}"
-    displayName: "Setup variables"
-
-  - task: CmdLine@2
+  - task: MSBuild@1
     inputs:
-      script: |
-        hdiutil create -volname Synergy -srcfolder $(Build.Repository.LocalPath)/build/bundle/ -ov -format UDZO $(SYNERGY_DMG_FILENAME)
-        mkdir pkg
-        mv $(SYNERGY_DMG_FILENAME) pkg/
-        cd pkg
-        md5 -r $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).md5
-        shasum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha1
-        shasum -a 256 $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha256
-    displayName: 'Create Installer'
+      solution: 'build64/synergy-core.sln'
+      msbuildVersion: '16.0'
+      msbuildArchitecture: 'x64'
+      platform: 'x64'
+      configuration: 'Release'
+      msbuildArguments: '/m'
+      maximumCpuCount: true
+    displayName: 'Compiling x64'
 
-  - task: Bash@3
+  - task: PythonScript@0
     inputs:
-      filePath: 'CI/MacOS/notorize.sh'
-      workingDirectory: 'pkg/'
+      scriptSource: 'filePath'
+      scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
+      arguments: '$(QT_VERSION) windows desktop win32_msvc2017'
+    displayName: 'Installing QT $(QT_VERSION) x32'
+
+  - inputs:
+    filePath: 'CI/Windows/cmake.bat'
+    displayName: 'Cmake x64 Standard'
     env:
-      ASC_USERNAME: $(ASC_USERNAME)
-      NOTORY_APP_PASSWORD: $(NOTORY_APP_PASSWORD)
-    displayName: 'Submit for Notarization'
+      ENV_BAT: $(ENV_BAT)
+      BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
+      QT_PATH: $(QT_PATH_32)
+      ARCH: '32'
+      MSARCH: 'Win32'
 
-  - task: CopyFilesOverSSH@0
+  - task: MSBuild@1
     inputs:
-      sshEndpoint: 'Azure on Sandor'
-      sourceFolder: '$(Build.Repository.LocalPath)/pkg'
-      contents: '*'
-      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
-      readyTimeout: '20000'
-    displayName: 'Send Package to sandor'
-    #condition: eq(variables['Build.Reason'], 'Manual')
+      solution: 'build32/synergy-core.sln'
+      msbuildVersion: '16.0'
+      msbuildArchitecture: 'x86'
+      platform: 'Win32'
+      configuration: 'Release'
+      msbuildArguments: '/m'
+      maximumCpuCount: true
+    displayName: 'Compiling x86'
 
-
-# - job: Windows
-#   strategy:
-#     matrix:
-#       vs2019:
-#         image: windows-2019
-
-#   pool: 
-#     vmImage: $[ variables['image'] ]
-
-#   variables:
-#     QT_VERSION: '5.12.6'
-#     QLI_VERSION: '2019.05.26.1'
-#     QLI_OUT_DIR: '.\deps\Qt'
-#     QLI_BASE_URL: 'http://mirrors.ocf.berkeley.edu/qt/online/qtsdkrepository/'
-#     QT_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
-#     QT_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
-#     BONJOUR_SDK_DIR: 'deps\BonjourSDK'
-#     ENV_BAT: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\vsdevcmd'
-
-#   steps:
-# #As the official installer is rather 'slow' use an unofficial installer QLI
-#   - task: PowerShell@2
-#     inputs:
-#       targetType: 'inline'
-#       script: |
-#         New-Item -Force -ItemType Directory -Path ".\deps\"
-#         $client = new-object System.Net.WebClient
-#         $client.DownloadFile("https://github.com/nelsonjchen/qli-installer/archive/v$(QLI_VERSION).zip","deps\qli.zip")
-#     displayName: 'Downloading QLI v$(QLI_VERSION)'
-
-#   - task: PowerShell@2
-#     inputs:
-#       targetType: 'inline'
-#       script: |
-#         New-Item -Force -ItemType Directory -Path ".\deps\"
-#         $client = new-object System.Net.WebClient
-#         $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\deps\bonjoursdk.zip")
-#         $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi",".\deps\Bonjour64.msi")
-#     displayName: 'Downloading Bonjour SKD'
-
-#   - task: ExtractFiles@1
-#     inputs:
-#       archiveFilePatterns: './deps/*.zip'
-#       destinationFolder: './deps/'
-#       cleanDestinationFolder: false
-#     displayName: 'Extracting zips'
-
-#   - task: PowerShell@2
-#     inputs:
-#       targetType: 'inline'
-#       script: 'pip install -r .\deps\qli-installer-$(QLI_VERSION)\requirements.txt'
-#     displayName: 'Install QLI requirements'
-
-#   - task: PowerShell@2
-#     inputs:
-#       targetType: 'inline'
-#       script: |
-#         Get-ChildItem '.\deps'
-#         msiexec.exe /i ${pwd}\deps\Bonjour64.msi INSTALLDIR="${pwd}\deps\Bonjour" /qb
-#     displayName: 'Installing bonjour SDK'
-
-#   - task: PythonScript@0
-#     inputs:
-#       scriptSource: 'filePath'
-#       scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
-#       arguments: '$(QT_VERSION) windows desktop win64_msvc2017_64'
-#     displayName: 'Installing QT $(QT_VERSION) x64'
-
-#   - script: |
-#       call "$(ENV_BAT)" -arch=x64
-#       set BONJOUR_SDK_HOME=%cd%\$(BONJOUR_SDK_DIR)
-#       mkdir build64
-#       cd build64
-#       cmake -G "Visual Studio 16 2019" -A x64 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH) ..
-#     displayName: 'Cmake x64'
-
-#   - task: MSBuild@1
-#     inputs:
-#       solution: 'build64/synergy-core.sln'
-#       msbuildVersion: '16.0'
-#       msbuildArchitecture: 'x64'
-#       platform: 'x64'
-#       configuration: 'Release'
-#       msbuildArguments: '/m'
-#       maximumCpuCount: true
-#     displayName: 'Compiling x64'
-
-#   - task: PythonScript@0
-#     inputs:
-#       scriptSource: 'filePath'
-#       scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
-#       arguments: '$(QT_VERSION) windows desktop win32_msvc2017'
-#     displayName: 'Installing QT $(QT_VERSION) x32'
-
-#   - script: |
-#       call "$(ENV_BAT)" -arch=x86
-#       set BONJOUR_SDK_HOME=%cd%\$(BONJOUR_SDK_DIR)
-#       mkdir build32
-#       cd build32
-#       cmake -G "Visual Studio 16 2019" -A Win32 -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$(QT_PATH_32) ..
-#     displayName: 'Cmake x86'
-#   - task: MSBuild@1
-#     inputs:
-#       solution: 'build32/synergy-core.sln'
-#       msbuildVersion: '16.0'
-#       msbuildArchitecture: 'x86'
-#       platform: 'Win32'
-#       configuration: 'Release'
-#       msbuildArguments: '/m'
-#       maximumCpuCount: true
-#     displayName: 'Compiling x86'
 
 # - job: DoxygenDoc
 
