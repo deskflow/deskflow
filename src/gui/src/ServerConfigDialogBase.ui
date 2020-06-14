@@ -334,53 +334,67 @@ Double click on a screen to edit its settings.</string>
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout">
+           <layout class="QVBoxLayout">
             <item>
-             <widget class="QCheckBox" name="m_pCheckBoxSwitchDoubleTap">
-              <property name="enabled">
+             <layout class="QHBoxLayout">
+              <item>
+               <widget class="QCheckBox" name="m_pCheckBoxSwitchDoubleTap">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Switch on double &amp;tap within</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="m_pSpinBoxSwitchDoubleTap">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="minimum">
+                 <number>10</number>
+                </property>
+                <property name="maximum">
+                 <number>10000</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>250</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="m_pLabel_15">
+                <property name="text">
+                 <string>ms</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Bump against the screen edge with the mouse pointer twice in quick succession.</string>
+              </property>
+              <property name="wordWrap">
                <bool>true</bool>
-              </property>
-              <property name="text">
-               <string>Switch on double &amp;tap within</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="m_pSpinBoxSwitchDoubleTap">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="minimum">
-               <number>10</number>
-              </property>
-              <property name="maximum">
-               <number>10000</number>
-              </property>
-              <property name="singleStep">
-               <number>10</number>
-              </property>
-              <property name="value">
-               <number>250</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="m_pLabel_15">
-              <property name="text">
-               <string>ms</string>
               </property>
              </widget>
             </item>
