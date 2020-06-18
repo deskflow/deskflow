@@ -382,7 +382,7 @@ jobs:
     QT_VERSION: '5.12.6'
     QLI_VERSION: '2019.05.26.1'
     QLI_OUT_DIR: '.\deps\Qt'
-    QLI_BASE_URL: 'http://mirrors.ocf.berkeley.edu/qt/online/qtsdkrepository/'
+    QLI_BASE_URL: 'http://qt.mirror.constant.com/online/qtsdkrepository/'
     QT_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
     QT_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
     BONJOUR_SDK_DIR: 'deps\BonjourSDK'
