@@ -588,7 +588,7 @@ jobs:
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 Synergy_v$(SYNERGY_VERSION)_windows_x86.msi > Synergy_v$(SYNERGY_VERSION)_windows_x86.msi.sha1
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha256 Synergy_v$(SYNERGY_VERSION)_windows_x86.msi > Synergy_v$(SYNERGY_VERSION)_windows_x86.msi.sha256
     displayName: "Rename files"
-    condition: and(eq(variables['packager'],'deb', eq(variables['Build.Reason'], 'Manual'))
+
 
   - task: CopyFilesOverSSH@0
     inputs:
@@ -598,7 +598,7 @@ jobs:
       targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send Package to sandor'
-    condition: eq(variables['Build.Reason'], 'Manual')
+
 
 # - job: DoxygenDoc
 
