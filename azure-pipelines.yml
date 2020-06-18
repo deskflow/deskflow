@@ -437,9 +437,16 @@ jobs:
       arguments: '$(QT_VERSION) windows desktop win64_msvc2017_64'
     displayName: 'Installing QT $(QT_VERSION) x64'
 
-  - task: PowerShell@2
-    inputs:
-      filePath: 'CI/Windows/cmake.ps1'
+  - script: |
+      call "%ENV_BAT%" -arch=x%ARCH%
+      set BONJOUR_SDK_HOME=%cd%\%BONJOUR_SDK_DIR%
+      mkdir build%ARCH%
+      cd build%ARCH%
+      IF "%Enterprise%"=="true" (
+          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
+      ) else (
+          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
+      )
     displayName: 'Cmake x64 Standard'
     env:
       ENV_BAT: $(ENV_BAT)
@@ -466,9 +473,16 @@ jobs:
       arguments: '$(QT_VERSION) windows desktop win32_msvc2017'
     displayName: 'Installing QT $(QT_VERSION) x32'
 
-  - task: PowerShell@2
-    inputs:
-      filePath: 'CI/Windows/cmake.ps1'
+  - script: |
+      call "%ENV_BAT%" -arch=x%ARCH%
+      set BONJOUR_SDK_HOME=%cd%\%BONJOUR_SDK_DIR%
+      mkdir build%ARCH%
+      cd build%ARCH%
+      IF "%Enterprise%"=="true" (
+          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
+      ) else (
+          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
+      )
     displayName: 'Cmake x64 Standard'
     env:
       ENV_BAT: $(ENV_BAT)
