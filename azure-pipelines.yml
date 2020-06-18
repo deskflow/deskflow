@@ -383,8 +383,8 @@ jobs:
     QLI_VERSION: '2019.05.26.1'
     QLI_OUT_DIR: '.\deps\Qt'
     QLI_BASE_URL: 'http://qt.mirror.constant.com/online/qtsdkrepository/'
-    QT_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
-    QT_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
+    QT_BIN_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
+    QT_BIN_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
     BONJOUR_SDK_DIR: 'deps\BonjourSDK'
     ENV_BAT: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\vsdevcmd'
 
@@ -451,7 +451,7 @@ jobs:
     env:
       ENV_BAT: $(ENV_BAT)
       BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
-      QT_PATH: $(QT_PATH)
+      QT_PATH: $(QT_BIN_PATH)
       ARCH: '64'
       MSARCH: 'x64'
 
@@ -487,7 +487,7 @@ jobs:
     env:
       ENV_BAT: $(ENV_BAT)
       BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
-      QT_PATH: $(QT_PATH_32)
+      QT_PATH: $(QT_BIN_PATH_32)
       ARCH: '32'
       MSARCH: 'Win32'
 
