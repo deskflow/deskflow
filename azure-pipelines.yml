@@ -439,7 +439,7 @@ jobs:
 
   - task: PowerShell@2
     inputs:
-      filePath: 'CI/Windows/cmake.bat'
+      filePath: 'CI/Windows/cmake.ps1'
     displayName: 'Cmake x64 Standard'
     env:
       ENV_BAT: $(ENV_BAT)
@@ -468,7 +468,7 @@ jobs:
 
   - task: PowerShell@2
     inputs:
-      filePath: 'CI/Windows/cmake.bat'
+      filePath: 'CI/Windows/cmake.ps1'
     displayName: 'Cmake x64 Standard'
     env:
       ENV_BAT: $(ENV_BAT)
