@@ -1,4 +1,4 @@
-call "%ENV_BAT%" -arch=x%ARCH%
+.  "%ENV_BAT%" -arch=x%ARCH%
 set BONJOUR_SDK_HOME=%cd%\%BONJOUR_SDK_DIR%
 mkdir build%ARCH%
 cd build%ARCH%
