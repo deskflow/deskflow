@@ -537,17 +537,6 @@ jobs:
       maximumCpuCount: true
     displayName: 'Making installer x86'
 
-  - script: |
-      cd $(Build.Repository.LocalPath)\build32\installer\bin\
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com Synergy.msi
-      cd $(Build.Repository.LocalPath)\build64\installer\bin\
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com Synergy.msi
-    displayName: 'Signing Installer'
-    env:
-      CODESIGN_PATH: $(WindowsSigningCert.p7b.secureFilePath)
-      CODESIGN_PWD: $(CODESIGN_PWD)
-      SINGTOOL_PATH: "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\"
-
   - task: codesigning@2
     inputs:
       secureFileId: 'WindowsSigningCert'
