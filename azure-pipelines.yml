@@ -498,36 +498,22 @@ jobs:
     inputs:
       secureFile: 'WindowsSigningCert.p7b'
     displayName: 'Getting Signing key'
-
-  - script: |
-      cd $(Build.Repository.LocalPath)\build32\bin
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com synergy.exe
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com synergyd.exe
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com synergys.exe
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com synergyc.exe
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com syntool.exe
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com synwinhk.dll
-      cd $(Build.Repository.LocalPath)\build64\bin
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com synergy.exe
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com synergyd.exe
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com synergys.exe
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com synergyc.exe
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com syntool.exe
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com synwinhk.dll
-      cd $(Build.Repository.LocalPath)\ext\openssl\windows\x86\bin
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com libssl-1_1-x64.dll
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com libcrypto-1_1-x64.dll
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com openssl.exe
-      cd $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com libssl-1_1.dll
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com libcrypto-1_1.dll
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com openssl.exe
-    displayName: 'Signing all binaries'
-    env:
-      CODESIGN_PATH: $(WindowsSigningCert.p7b.secureFilePath)
-      CODESIGN_PWD: $(CODESIGN_PWD)
-      SINGTOOL_PATH: "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\"
-
+  - task: codesigning@2
+    inputs:
+      secureFileId: 'WindowsSigningCert'
+      signCertPassword: '$(CODESIGN_PWD)'
+      files: '+(build32|build64)\bin\*.+(exe|dll)'
+      timeServer: 'http://timestamp.digicert.com'
+      hashingAlgorithm: 'SHA256'
+    displayName: "Signing Synergy binaries"
+  - task: codesigning@2
+    inputs:
+      secureFileId: 'WindowsSigningCert'
+      signCertPassword: '$(CODESIGN_PWD)'
+      files: '\ext\openssl\windows\*\bin\*.+(exe|dll)'
+      timeServer: 'http://timestamp.digicert.com'
+      hashingAlgorithm: 'SHA256'
+    displayName: "Signing SSL binaries"
 
   - task: MSBuild@1
     inputs:
@@ -562,17 +548,15 @@ jobs:
       CODESIGN_PWD: $(CODESIGN_PWD)
       SINGTOOL_PATH: "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\"
 
-  - script: |
-      cd $(Build.Repository.LocalPath)\build32\installer\bin\
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com Synergy.msi
-      cd $(Build.Repository.LocalPath)\build64\installer\bin\
-      "%SINGTOOL_PATH%signtool.exe" sign /f "%CODESIGN_PATH%" /p "%CODESIGN_PWD%" /tr http://timestamp.digicert.com Synergy.msi
-    displayName: 'Signing Installer'
-    env:
-      filename: $(WindowsSigningCert.p7b.secureFilePath)
-      CODESIGN_PWD: $(CODESIGN_PWD)
-      SINGTOOL_PATH: "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\"
-
+  - task: codesigning@2
+    inputs:
+      secureFileId: 'WindowsSigningCert'
+      signCertPassword: '$(CODESIGN_PWD)'
+      files: '*\installer\bin\Synergy.msi'
+      timeServer: 'http://timestamp.digicert.com'
+      hashingAlgorithm: 'SHA256'
+    displayName: "Signing installers"
+    
   - script: |
       . ./build64/version
       SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
