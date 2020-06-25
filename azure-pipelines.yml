@@ -507,7 +507,7 @@ jobs:
     inputs:
       secureFileId: 'WindowsSigningCert.pfx'
       signCertPassword: '$(CODESIGN_PWD)'
-      files: '\ext\openssl\windows\*\bin\*'
+      files: '\ext\openssl\windows\*\bin\*.(exe|dll)'
       timeServer: 'http://timestamp.digicert.com'
       hashingAlgorithm: 'SHA256'
     displayName: "Signing SSL binaries"
