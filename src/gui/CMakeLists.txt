@@ -59,7 +59,6 @@ if (WIN32)
                   HINTS ENV BONJOUR_SDK_HOME
                   PATH_SUFFIXES "Lib/Win32")
     endif()
-
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_link_libraries (synergy dns_sd)
 endif()
@@ -80,4 +79,18 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     install (TARGETS synergy DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     install (TARGETS synergy DESTINATION bin)
+endif()
+
+if (WIN32)
+    # Retrieve the absolute path to qmake and then use that path to find
+    # the binaries
+    get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
+    get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+    find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
+    add_custom_command(TARGET synergy POST_BUILD
+            COMMAND "${CMAKE_COMMAND}" -E
+            env PATH="${_qt_bin_dir}" "${WINDEPLOYQT_EXECUTABLE}"
+            "$<TARGET_FILE:synergy>"
+            COMMENT "Running windeployqt..."
+            )
 endif()
