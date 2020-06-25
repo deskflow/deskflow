@@ -513,6 +513,8 @@ jobs:
       msbuildArguments: '/m'
       maximumCpuCount: true
     displayName: 'Making installer x64'
+    env:
+      QT_PATH: $(QT_BIN_PATH)
 
   - task: MSBuild@1
     inputs:
@@ -524,6 +526,8 @@ jobs:
       msbuildArguments: '/m'
       maximumCpuCount: true
     displayName: 'Making installer x86'
+    env:
+      QT_PATH: $(QT_BIN_PATH_32)
 
   - task: codesigning@2
     inputs:
