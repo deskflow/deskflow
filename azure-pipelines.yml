@@ -458,46 +458,41 @@ jobs:
       maximumCpuCount: true
     displayName: 'Compiling x64'
 
-  - task: PythonScript@0
-    inputs:
-      scriptSource: 'filePath'
-      scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
-      arguments: '$(QT_VERSION) windows desktop win32_msvc2017'
-    displayName: 'Installing QT $(QT_VERSION) x32'
+#   - task: PythonScript@0
+#     inputs:
+#       scriptSource: 'filePath'
+#       scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
+#       arguments: '$(QT_VERSION) windows desktop win32_msvc2017'
+#     displayName: 'Installing QT $(QT_VERSION) x32'
 
-  - script: |
-      call "%ENV_BAT%" -arch=x%ARCH%
-      set BONJOUR_SDK_HOME=%cd%\%BONJOUR_SDK_DIR%
-      mkdir build%ARCH%
-      cd build%ARCH%
-      IF "%Enterprise%"=="true" (
-          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
-      ) else (
-          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
-      )
-    displayName: 'Cmake x64 Standard'
-    env:
-      ENV_BAT: $(ENV_BAT)
-      BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
-      QT_PATH: $(QT_BIN_PATH_32)
-      ARCH: '32'
-      MSARCH: 'Win32'
-
-  - task: MSBuild@1
-    inputs:
-      solution: 'build32/synergy-core.sln'
-      msbuildVersion: '16.0'
-      msbuildArchitecture: 'x86'
-      platform: 'Win32'
-      configuration: 'Release'
-      msbuildArguments: '/m'
-      maximumCpuCount: true
-    displayName: 'Compiling x86'
-
-  - task: DownloadSecureFile@1
-    inputs:
-      secureFile: 'WindowsSigningCert.pfx'
-    displayName: 'Getting Signing key'
+#   - script: |
+#       call "%ENV_BAT%" -arch=x%ARCH%
+#       set BONJOUR_SDK_HOME=%cd%\%BONJOUR_SDK_DIR%
+#       mkdir build%ARCH%
+#       cd build%ARCH%
+#       IF "%Enterprise%"=="true" (
+#           cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
+#       ) else (
+#           cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
+#       )
+#     displayName: 'Cmake x64 Standard'
+#     env:
+#       ENV_BAT: $(ENV_BAT)
+#       BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
+#       QT_PATH: $(QT_BIN_PATH_32)
+#       ARCH: '32'
+#       MSARCH: 'Win32'
+#
+#   - task: MSBuild@1
+#     inputs:
+#       solution: 'build32/synergy-core.sln'
+#       msbuildVersion: '16.0'
+#       msbuildArchitecture: 'x86'
+#       platform: 'Win32'
+#       configuration: 'Release'
+#       msbuildArguments: '/m'
+#       maximumCpuCount: true
+#     displayName: 'Compiling x86'
 
   - task: codesigning@2
     inputs:
