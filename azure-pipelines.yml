@@ -498,19 +498,21 @@ jobs:
     inputs:
       secureFile: 'WindowsSigningCert.p7b'
     displayName: 'Getting Signing key'
+
   - task: codesigning@2
     inputs:
       secureFileId: 'WindowsSigningCert.p7b'
       signCertPassword: '$(CODESIGN_PWD)'
-      files: '+(build32|build64)\bin\*.+(exe|dll)'
+      files: '*\bin\*'
       timeServer: 'http://timestamp.digicert.com'
       hashingAlgorithm: 'SHA256'
     displayName: "Signing Synergy binaries"
+
   - task: codesigning@2
     inputs:
       secureFileId: 'WindowsSigningCert.p7b'
       signCertPassword: '$(CODESIGN_PWD)'
-      files: '\ext\openssl\windows\*\bin\*.+(exe|dll)'
+      files: '\ext\openssl\windows\*\bin\*'
       timeServer: 'http://timestamp.digicert.com'
       hashingAlgorithm: 'SHA256'
     displayName: "Signing SSL binaries"
