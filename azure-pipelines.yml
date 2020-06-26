@@ -447,16 +447,23 @@ jobs:
       ARCH: '64'
       MSARCH: 'x64'
 
-  - task: MSBuild@1
-    inputs:
-      solution: 'build64/synergy-core.sln'
-      msbuildVersion: '16.0'
-      msbuildArchitecture: 'x64'
-      platform: 'x64'
-      configuration: 'Release'
-      msbuildArguments: '/m'
-      maximumCpuCount: true
+  - script: |
+      call "%ENV_BAT%" -arch=x%ARCH%
+      msbuild Synergy.sln /p:Platform="x64" /p:Configuration=Release
     displayName: 'Compiling x64'
+    env:
+      ARCH: '64'
+      ENV_BAT: $(ENV_BAT)
+#   - task: MSBuild@1
+#     inputs:
+#       solution: 'build64/synergy-core.sln'
+#       msbuildVersion: '16.0'
+#       msbuildArchitecture: 'x64'
+#       platform: 'x64'
+#       configuration: 'Release'
+#       msbuildArguments: '/m'
+#       maximumCpuCount: true
+#     displayName: 'Compiling x64'
 
 #   - task: PythonScript@0
 #     inputs:
