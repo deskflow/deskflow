@@ -450,7 +450,7 @@ jobs:
   - script: |
       call "%ENV_BAT%" -arch=x%ARCH%
       cd build64
-      msbuild Synergy.sln /p:Platform="x64" /p:Configuration=Release
+      msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Release
     displayName: 'Compiling x64'
     env:
       ARCH: '64'
