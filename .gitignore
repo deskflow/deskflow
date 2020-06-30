@@ -20,8 +20,7 @@ src/gui/.qmake.stash
 src/gui/.rnd
 src/setup/win32/synergy.suo
 /.idea
-/cmake-build-debug
-/cmake-build-release/
+/cmake-build-*
 /CMakeLists.txt.user
 /.vs
 /CMakeLists.txt.*
