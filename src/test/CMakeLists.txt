@@ -15,13 +15,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include_directories(
-    ../../ext/gtest
-    ../../ext/gtest/include
-    ../../ext/gmock
-    ../../ext/gmock/include)
+    ../../ext/googletest/googletest
+    ../../ext/googletest/googletest/include
+    ../../ext/googletest/googlemock
+    ../../ext/googletest/googlemock/include)
     
-add_library(gtest STATIC ../../ext/gtest/src/gtest-all.cc)
-add_library(gmock STATIC ../../ext/gmock/src/gmock-all.cc)
+add_library(gtest STATIC ../../ext/googletest/googletest/src/gtest-all.cc)
+add_library(gmock STATIC ../../ext/googletest/googlemock/src/gmock-all.cc)
 
 if (UNIX)
     # ignore warnings in gtest and gmock
