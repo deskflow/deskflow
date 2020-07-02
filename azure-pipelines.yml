@@ -414,7 +414,7 @@ jobs:
       targetType: 'inline'
       script: |
         python -m pip install aqtinstall
-        python -m aqt install --outputdir $(QLI_OUT_DIR) $(QT_VERSION) windows desktop win64_msvc2017_64
+        python -m aqt install --outputdir $(Build.Repository.LocalPath)\\deps\\Qt $(QT_VERSION) windows desktop win64_msvc2017_64
     displayName: "Installing QT $(QT_VERSION)"
     
   - script: |
