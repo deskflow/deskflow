@@ -106,9 +106,8 @@ if (WIN32)
         # execute windeployqt in a tmp directory after build
         add_custom_command(TARGET synergy
                 POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_CURRENT_BINARY_DIR}/windeployqt"
                 COMMAND set PATH=%PATH%$<SEMICOLON>${qt5_install_prefix}/bin
-                COMMAND Qt5::windeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/windeployqt" "$<TARGET_FILE_DIR:synergy>/$<TARGET_FILE_NAME:synergy>"
+                COMMAND Qt5::windeployqt "$<TARGET_FILE_DIR:synergy>/$<TARGET_FILE_NAME:synergy>"
                 )
     endif()
 endif()
