@@ -49,6 +49,8 @@ public:
 private:
     void                flush();
 
+    int getPendingCountLocked();
+
 private:
     typedef std::vector<XEvent> EventList;
 

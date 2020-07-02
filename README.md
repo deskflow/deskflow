@@ -13,7 +13,7 @@ Things most people will need.
 * [Download](https://symless.com/synergy/downloads) - Get the compiled version of Synergy 1 or Synergy 2.
 * [Contact Support](https://symless.com/contact/customer-support) - Open a support ticket and talk directly to the Synergy team.
 * [Help Guides](https://symless.com/synergy-help) - Self-help guides and information for when you don't want to talk to people.
-* [Join us on Slack](http://bitly.com/synergy-slack) - Talk to other Synergy users in real time using instant messaging.
+* [Join us on Slack](https://bit.ly/synergy-slack-2020) - Talk to other Synergy users in real time using instant messaging.
 * [Symless Forums](https://symless.com/forums/forum/11-synergy/) - Discuss Synergy issues on the Symless Forums.
 * [Symless Blog](https://symless.com/blog/) - Find out what's happening with Synergy development.
 

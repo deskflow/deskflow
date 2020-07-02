@@ -56,7 +56,7 @@ else()
 endif()
 
 set (libs)
-include_directories (BEFORE SYSTEM ./ext/gtest/include)
+include_directories (BEFORE SYSTEM ./ext/googletest/googletest/include)
 
 if (UNIX)
     if (NOT APPLE)
@@ -299,7 +299,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
         ${OPENSSL_ROOT}/lib/libssl.a
         ${OPENSSL_ROOT}/lib/libcrypto.a
     )
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
     set (OPENSSL_LIBS ssl crypto)
 else()
     message (FATAL_ERROR "Couldn't find OpenSSL")
@@ -336,7 +336,7 @@ macro (configure_files srcDir destDir)
 endmacro (configure_files)
 
 macro(generate_versionfile)
-	if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin" OR ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin" OR ${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
 		FILE(WRITE ${CMAKE_BINARY_DIR}/version
 		"export SYNERGY_VERSION_MAJOR=\"${SYNERGY_VERSION_MAJOR}\"\n"
 		"export SYNERGY_VERSION_MINOR=\"${SYNERGY_VERSION_MINOR}\"\n"
@@ -380,7 +380,7 @@ endif()
 #
 # Linux installation
 #
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
     install(FILES res/synergy.svg DESTINATION share/icons/hicolor/scalable/apps)
     if("${VERSION_MAJOR}" STREQUAL "2") 
