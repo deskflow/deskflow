@@ -442,7 +442,7 @@ jobs:
     displayName: 'Installing QT $(QT_VERSION) x64'
 
   - script: |
-      cd ${QT_BIN_PATH}\bin
+      cd $(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64\bin
       dir
     displayName: 'List qli files'
 
