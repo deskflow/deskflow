@@ -408,12 +408,13 @@ jobs:
       destinationFolder: './deps/'
       cleanDestinationFolder: false
     displayName: 'Extracting zips'
-  - task: PythonScript@0
+
+  - task: PowerShell@2
     inputs:
-      scriptSource: 'inline'
+      targetType: 'inline'
       script: |
-        pip install aqtinstall
-        aqt install --outputdir $(QLI_OUT_DIR) $(QT_VERSION) windows desktop win64_msvc2017_64
+        python -m pip install aqtinstall
+        python -m aqt install --outputdir $(QLI_OUT_DIR) $(QT_VERSION) windows desktop win64_msvc2017_64
     displayName: "Installing QT $(QT_VERSION)"
     
   - script: |
