@@ -478,7 +478,7 @@ jobs:
 
   - script: |
       call "%ENV_BAT%" -arch=x86
-      cd build64
+      cd build32
       msbuild synergy-core.sln /p:Platform="Win32" /p:Configuration=Release
     displayName: 'Compiling x32'
     env:
