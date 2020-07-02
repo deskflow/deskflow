@@ -58,6 +58,10 @@ jobs:
 #
 #  steps:
 #
+#    - checkout:
+#      fetchDepth: 1
+#      submodules: recursive
+#
 #    - task: DownloadSecureFile@1
 #      inputs:
 #        secureFile: 'SymlessCodeSig.key'
@@ -253,6 +257,10 @@ jobs:
 #    QT_PATH: '/usr/local/opt/qt/bin'
 #
 #  steps:
+#  - checkout:
+#    fetchDepth: 1
+#    submodules: recursive
+#
 #  - task: InstallAppleCertificate@2
 #    inputs:
 #      certSecureFile: 'AppleSigningCert.cer'
@@ -381,6 +389,10 @@ jobs:
     ENV_BAT: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\vsdevcmd'
 
   steps:
+
+  - checkout:
+    fetchDepth: 1
+    submodules: recursive
 #As the official installer is rather 'slow' use an unofficial installer QLI
   - task: PowerShell@2
     inputs:
