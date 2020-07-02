@@ -514,6 +514,11 @@ jobs:
 #       maximumCpuCount: true
 #     displayName: 'Compiling x86'
 
+  - script: |
+      cd build64\bin\Release\
+      dir
+    displayName: 'List built files'
+
   - task: codesigning@2
     inputs:
       secureFileId: 'WindowsSigningCert.pfx'
