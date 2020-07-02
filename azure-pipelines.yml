@@ -530,22 +530,22 @@ jobs:
     displayName: "Signing installers"
     
   - script: |
-      . ./build64/version
-      SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
-      SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
-      echo "##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]${SYNERGY_VERSION_STAGE}"
-      echo "##vso[task.setvariable variable=SYNERGY_VERSION]${SYNERGY_VERSION}"
-      echo "##vso[task.setvariable variable=SYNERGY_REVISION]${SYNERGY_REVISION}"
+      call ./build64/version
+      set SYNERGY_VERSION="%SYNERGY_VERSION_MAJOR%.%SYNERGY_VERSION_MINOR%.%SYNERGY_VERSION_PATCH%"
+      set SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
+      echo "##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]%SYNERGY_VERSION_STAGE%"
+      echo "##vso[task.setvariable variable=SYNERGY_VERSION]%SYNERGY_VERSION%"
+      echo "##vso[task.setvariable variable=SYNERGY_REVISION]%SYNERGY_REVISION%"
       cd $(Build.Repository.LocalPath)\build32\installer\bin\Release\
-      ren Synergy.msi Synergy_v$(SYNERGY_VERSION)_windows_x86.msi
-      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe md5 Synergy_v$(SYNERGY_VERSION)_windows_x86.msi > Synergy_v$(SYNERGY_VERSION)_windows_x86.msi.md5
-      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 Synergy_v$(SYNERGY_VERSION)_windows_x86.msi > Synergy_v$(SYNERGY_VERSION)_windows_x86.msi.sha1
-      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha256 Synergy_v$(SYNERGY_VERSION)_windows_x86.msi > Synergy_v$(SYNERGY_VERSION)_windows_x86.msi.sha256
+      ren Synergy.msi Synergy_v%SYNERGY_VERSION%_windows_x86.msi
+      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe md5 Synergy_v%SYNERGY_VERSION%_windows_x86.msi > Synergy_v%SYNERGY_VERSION%_windows_x86.msi.md5
+      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 Synergy_v%SYNERGY_VERSION%_windows_x86.msi > Synergy_v%SYNERGY_VERSION%_windows_x86.msi.sha1
+      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha256 Synergy_v%SYNERGY_VERSION%_windows_x86.msi > Synergy_v%SYNERGY_VERSION%_windows_x86.msi.sha256
       cd $(Build.Repository.LocalPath)\build64\installer\bin\Release\
-      ren Synergy.msi Synergy_v$(SYNERGY_VERSION)_windows_x64.msi
-      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe md5 Synergy_v$(SYNERGY_VERSION)_windows_x86.msi > Synergy_v$(SYNERGY_VERSION)_windows_x86.msi.md5
-      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 Synergy_v$(SYNERGY_VERSION)_windows_x86.msi > Synergy_v$(SYNERGY_VERSION)_windows_x86.msi.sha1
-      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha256 Synergy_v$(SYNERGY_VERSION)_windows_x86.msi > Synergy_v$(SYNERGY_VERSION)_windows_x86.msi.sha256
+      ren Synergy.msi Synergy_v%SYNERGY_VERSION%_windows_x64.msi
+      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe md5 Synergy_v%SYNERGY_VERSION%_windows_x86.msi > Synergy_v%SYNERGY_VERSION%_windows_x86.msi.md5
+      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 Synergy_v%SYNERGY_VERSION%_windows_x86.msi > Synergy_v%SYNERGY_VERSION%_windows_x86.msi.sha1
+      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha256 Synergy_v%SYNERGY_VERSION%_windows_x86.msi > Synergy_v%SYNERGY_VERSION%_windows_x86.msi.sha256
     displayName: "Rename files"
 
 
