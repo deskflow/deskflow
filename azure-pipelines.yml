@@ -380,9 +380,7 @@ jobs:
 
   variables:
     QT_VERSION: '5.12.6'
-    QLI_VERSION: '2019.05.26.1'
     QLI_OUT_DIR: '.\deps\Qt'
-    QLI_BASE_URL: 'http://qt.mirror.constant.com/online/qtsdkrepository/'
     QT_BIN_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
     QT_BIN_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
     BONJOUR_SDK_DIR: 'deps\BonjourSDK'
@@ -393,15 +391,6 @@ jobs:
   - checkout: self
     fetchDepth: 1
     submodules: recursive
-#As the official installer is rather 'slow' use an unofficial installer QLI
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: |
-        New-Item -Force -ItemType Directory -Path ".\deps\"
-        $client = new-object System.Net.WebClient
-        $client.DownloadFile("https://github.com/nelsonjchen/qli-installer/archive/v$(QLI_VERSION).zip","deps\qli.zip")
-    displayName: 'Downloading QLI v$(QLI_VERSION)'
 
   - task: PowerShell@2
     inputs:
@@ -423,7 +412,9 @@ jobs:
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: 'pip install -r .\deps\qli-installer-$(QLI_VERSION)\requirements.txt'
+      script: |
+        pip install aqtinstall
+        python -m aqt install --outputdir $(QLI_OUT_DIR) $(QT_VERSION) windows desktop win64_msvc2017_64
     displayName: 'Install QLI requirements'
 
   - task: PowerShell@2
@@ -433,13 +424,6 @@ jobs:
         Get-ChildItem '.\deps'
         msiexec.exe /i ${pwd}\deps\Bonjour64.msi INSTALLDIR="${pwd}\deps\Bonjour" /qb
     displayName: 'Installing bonjour SDK'
-
-  - task: PythonScript@0
-    inputs:
-      scriptSource: 'filePath'
-      scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
-      arguments: '$(QT_VERSION) windows desktop win64_msvc2017_64'
-    displayName: 'Installing QT $(QT_VERSION) x64'
 
   - script: |
       cd $(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64\bin
