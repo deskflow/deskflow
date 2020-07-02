@@ -58,7 +58,7 @@ jobs:
 #
 #  steps:
 #
-#    - checkout:
+#    - checkout: self
 #      fetchDepth: 1
 #      submodules: recursive
 #
@@ -257,7 +257,7 @@ jobs:
 #    QT_PATH: '/usr/local/opt/qt/bin'
 #
 #  steps:
-#  - checkout:
+#  - checkout: self
 #    fetchDepth: 1
 #    submodules: recursive
 #
@@ -390,7 +390,7 @@ jobs:
 
   steps:
 
-  - checkout:
+  - checkout: self
     fetchDepth: 1
     submodules: recursive
 #As the official installer is rather 'slow' use an unofficial installer QLI
