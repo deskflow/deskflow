@@ -409,13 +409,6 @@ jobs:
       cleanDestinationFolder: false
     displayName: 'Extracting zips'
 
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: |
-        pip install aqtinstall
-        python -m aqt install --outputdir $(QLI_OUT_DIR) $(QT_VERSION) windows desktop win64_msvc2017_64
-    displayName: 'Install QLI requirements'
 
   - task: PowerShell@2
     inputs:
