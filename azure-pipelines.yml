@@ -511,7 +511,7 @@ jobs:
       solution: 'build32/installer/Synergy.sln'
       msbuildVersion: '16.0'
       msbuildArchitecture: 'x86'
-      platform: 'Win32'
+      platform: 'x86'
       configuration: 'Release'
       msbuildArguments: '/m'
       maximumCpuCount: true
