@@ -395,12 +395,6 @@ jobs:
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: 'Get-Childitem –Path C:\ -Include *.msm -Recurse -ErrorAction SilentlyContinue'
-    displayName: "Search drive for msm's"
-
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
       script: |
         New-Item -Force -ItemType Directory -Path ".\deps\"
         $client = new-object System.Net.WebClient
@@ -422,12 +416,8 @@ jobs:
   - script: |
       cd $(Build.SourcesDirectory)
       python -m aqt install --outputdir $(Build.Repository.LocalPath)\\deps\\Qt  $(QT_VERSION) windows desktop win64_msvc2017_64
+      python -m aqt install --outputdir $(Build.Repository.LocalPath)\\deps\\Qt  $(QT_VERSION) windows desktop win32_msvc2017
     displayName: 'Install Qt $(QT_VERSION)'
-    
-  - script: |
-      cd $(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64\bin
-      dir
-    displayName: 'List qli files'
 
   - task: ExtractFiles@1
     inputs:
@@ -470,57 +460,33 @@ jobs:
     env:
       ARCH: '64'
       ENV_BAT: $(ENV_BAT)
-#   - task: MSBuild@1
-#     inputs:
-#       solution: 'build64/synergy-core.sln'
-#       msbuildVersion: '16.0'
-#       msbuildArchitecture: 'x64'
-#       platform: 'x64'
-#       configuration: 'Release'
-#       msbuildArguments: '/m'
-#       maximumCpuCount: true
-#     displayName: 'Compiling x64'
 
-#   - task: PythonScript@0
-#     inputs:
-#       scriptSource: 'filePath'
-#       scriptPath: '.\deps\qli-installer-$(QLI_VERSION)\qli-installer.py'
-#       arguments: '$(QT_VERSION) windows desktop win32_msvc2017'
-#     displayName: 'Installing QT $(QT_VERSION) x32'
-
-#   - script: |
-#       call "%ENV_BAT%" -arch=x%ARCH%
-#       set BONJOUR_SDK_HOME=%cd%\%BONJOUR_SDK_DIR%
-#       mkdir build%ARCH%
-#       cd build%ARCH%
-#       IF "%Enterprise%"=="true" (
-#           cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
-#       ) else (
-#           cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
-#       )
-#     displayName: 'Cmake x64 Standard'
-#     env:
-#       ENV_BAT: $(ENV_BAT)
-#       BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
-#       QT_PATH: $(QT_BIN_PATH_32)
-#       ARCH: '32'
-#       MSARCH: 'Win32'
-#
-#   - task: MSBuild@1
-#     inputs:
-#       solution: 'build32/synergy-core.sln'
-#       msbuildVersion: '16.0'
-#       msbuildArchitecture: 'x86'
-#       platform: 'Win32'
-#       configuration: 'Release'
-#       msbuildArguments: '/m'
-#       maximumCpuCount: true
-#     displayName: 'Compiling x86'
+   - script: |
+       call "%ENV_BAT%" -arch=x%ARCH%
+       set BONJOUR_SDK_HOME=%cd%\%BONJOUR_SDK_DIR%
+       mkdir build%ARCH%
+       cd build%ARCH%
+       IF "%Enterprise%"=="true" (
+           cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
+       ) else (
+           cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
+       )
+     displayName: 'Cmake x32 Standard'
+     env:
+       ENV_BAT: $(ENV_BAT)
+       BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
+       QT_PATH: $(QT_BIN_PATH_32)
+       ARCH: '32'
+       MSARCH: 'Win32'
 
   - script: |
-      cd build64\bin\Release\
-      dir
-    displayName: 'List built files'
+      call "%ENV_BAT%" -arch=x%ARCH%
+      cd build64
+      msbuild synergy-core.sln /p:Platform="Win32" /p:Configuration=Release
+    displayName: 'Compiling x32'
+    env:
+      ARCH: '32'
+      ENV_BAT: $(ENV_BAT)
 
   - task: codesigning@2
     inputs:
@@ -578,7 +544,7 @@ jobs:
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe md5 Synergy_v$(SYNERGY_VERSION)_windows_x86.msi > Synergy_v$(SYNERGY_VERSION)_windows_x86.msi.md5
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 Synergy_v$(SYNERGY_VERSION)_windows_x86.msi > Synergy_v$(SYNERGY_VERSION)_windows_x86.msi.sha1
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha256 Synergy_v$(SYNERGY_VERSION)_windows_x86.msi > Synergy_v$(SYNERGY_VERSION)_windows_x86.msi.sha256
-      cd $(Build.Repository.LocalPath)\build54\installer\bin\
+      cd $(Build.Repository.LocalPath)\build64\installer\bin\
       ren Synergy.msi Synergy_v$(SYNERGY_VERSION)_windows_x64.msi
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe md5 Synergy_v$(SYNERGY_VERSION)_windows_x86.msi > Synergy_v$(SYNERGY_VERSION)_windows_x86.msi.md5
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 Synergy_v$(SYNERGY_VERSION)_windows_x86.msi > Synergy_v$(SYNERGY_VERSION)_windows_x86.msi.sha1

@@ -39,9 +39,9 @@
 				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
 			</Component>
       <?if $(var.Platform) = x64 ?>
-        <Merge Id="VC_Redist" SourceFile="$(env.ProgramFiles)\Microsoft Visual Studio\2019\BuildTools\VC\Redist\MSVC\14.23.27820\MergeModules\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="0"/>
+        <Merge Id="VC_Redist" SourceFile="$(var.DisPath)\wix\msm\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="0"/>
       <?else ?>
-        <Merge Id="VC_Redist" SourceFile="$(env.ProgramFiles)\Microsoft Visual Studio\2019\BuildTools\VC\Redist\MSVC\14.23.27820\MergeModules\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
+        <Merge Id="VC_Redist" SourceFile="$(var.DisPath)\wix\msm\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
       <?endif ?>
 		</DirectoryRef>
 		<Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
