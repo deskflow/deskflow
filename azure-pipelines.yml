@@ -381,6 +381,7 @@ jobs:
   variables:
     QT_VERSION: '5.12.6'
     QLI_OUT_DIR: '.\deps\Qt'
+    QLI_BASE_URL: 'http://qt.mirror.constant.com/'
     QT_BIN_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
     QT_BIN_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
     BONJOUR_SDK_DIR: 'deps\BonjourSDK'
@@ -415,8 +416,8 @@ jobs:
 
   - script: |
       cd $(Build.SourcesDirectory)
-      python -m aqt install --outputdir $(Build.Repository.LocalPath)\\deps\\Qt  $(QT_VERSION) windows desktop win64_msvc2017_64
-      python -m aqt install --outputdir $(Build.Repository.LocalPath)\\deps\\Qt  $(QT_VERSION) windows desktop win32_msvc2017
+      python -m aqt install -b $(QLI_BASE_URL) --outputdir $(Build.Repository.LocalPath)\\deps\\Qt  $(QT_VERSION) windows desktop win64_msvc2017_64
+      python -m aqt install -b $(QLI_BASE_URL) --outputdir $(Build.Repository.LocalPath)\\deps\\Qt  $(QT_VERSION) windows desktop win32_msvc2017
     displayName: 'Install Qt $(QT_VERSION)'
 
   - task: ExtractFiles@1
