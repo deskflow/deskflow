@@ -392,6 +392,12 @@ jobs:
     fetchDepth: 1
     submodules: recursive
 
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: 'Get-Childitem –Path C:\ -Include *.msm -Recurse -ErrorAction SilentlyContinue'
+  displayName: "Search drive for msm's"
+  
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
