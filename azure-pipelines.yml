@@ -532,7 +532,8 @@ jobs:
   - script: |
       call ./build64/version
       set SYNERGY_VERSION="%SYNERGY_VERSION_MAJOR%.%SYNERGY_VERSION_MINOR%.%SYNERGY_VERSION_PATCH%"
-      set SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
+      git rev-parse --short=8 HEAD > gitversion
+      set /p SYNERGY_REVISION= < gitversion
       echo "##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]%SYNERGY_VERSION_STAGE%"
       echo "##vso[task.setvariable variable=SYNERGY_VERSION]%SYNERGY_VERSION%"
       echo "##vso[task.setvariable variable=SYNERGY_REVISION]%SYNERGY_REVISION%"
