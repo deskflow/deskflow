@@ -374,7 +374,7 @@ jobs:
         image: windows-2019
         buildType: "standard"
         prefix: "synergy"
-      vs2019:
+      vs2019ent:
         image: windows-2019
         buildType: "enterprise"
         prefix: "synergy_enterprise"
