@@ -56,7 +56,7 @@ else()
 endif()
 
 set (libs)
-include_directories (BEFORE SYSTEM ./ext/gtest/include)
+include_directories (BEFORE SYSTEM ./ext/googletest/googletest/include)
 
 if (UNIX)
     if (NOT APPLE)
