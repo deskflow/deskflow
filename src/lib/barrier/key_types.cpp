@@ -194,6 +194,12 @@ const KeyNameMapEntry kKeyNameMap[] = {
     { "Bar",            0x007c },
     { "BraceR",            0x007d },
     { "Tilde",            0x007e },
+    { "Copy",           kKeyCopy },
+    { "Cut",            kKeyCut },
+    { "Open",           kKeyOpen },
+    { "Paste",          kKeyPaste },
+    { "Props",          kKeyProps },
+    { "Front",          kKeyFront },
     { NULL, 0 },
 };
 
