@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
     app.switchTranslator(appConfig.language());
 
 #ifdef SYNERGY_ENTERPRISE
-    MainWindow mainWindow(settings, appConfig);
+    MainWindow mainWindow(appConfig);
 #else
     MainWindow mainWindow(appConfig, licenseManager);
 #endif

@@ -39,9 +39,9 @@
 				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
 			</Component>
       <?if $(var.Platform) = x64 ?>
-        <Merge Id="VC_Redist" SourceFile="$(env.ProgramFiles)\Microsoft Visual Studio\2019\BuildTools\VC\Redist\MSVC\14.23.27820\MergeModules\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="0"/>
+        <Merge Id="VC_Redist" SourceFile="$(var.DisPath)\wix\msm\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="0"/>
       <?else ?>
-        <Merge Id="VC_Redist" SourceFile="$(env.ProgramFiles)\Microsoft Visual Studio\2019\BuildTools\VC\Redist\MSVC\14.23.27820\MergeModules\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
+        <Merge Id="VC_Redist" SourceFile="$(var.DisPath)\wix\msm\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
       <?endif ?>
 		</DirectoryRef>
 		<Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
@@ -111,37 +111,37 @@
 					<fire:FirewallException Id="GuiFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
 				</File>
 				<?if $(var.Configuration) = "Debug" ?>
-				<File Source="$(var.QtBinPath)\Qt5Cored.dll"/>
-				<File Source="$(var.QtBinPath)\Qt5Guid.dll"/>
-				<File Source="$(var.QtBinPath)\Qt5Networkd.dll"/>
-				<File Source="$(var.QtBinPath)\Qt5Svgd.dll"/>
-				<File Source="$(var.QtBinPath)\Qt5Widgetsd.dll"/>
-				<File Source="$(var.QtBinPath)\libGLESv2d.dll"/>
-				<File Source="$(var.QtBinPath)\libEGLd.dll"/>
+				<File Source="$(var.BinPath)\Qt5Cored.dll"/>
+				<File Source="$(var.BinPath)\Qt5Guid.dll"/>
+				<File Source="$(var.BinPath)\Qt5Networkd.dll"/>
+				<File Source="$(var.BinPath)\Qt5Svgd.dll"/>
+				<File Source="$(var.BinPath)\Qt5Widgetsd.dll"/>
+				<File Source="$(var.BinPath)\libGLESv2d.dll"/>
+				<File Source="$(var.BinPath)\libEGLd.dll"/>
 				<!-- Hacky -->
 				<File Source="C:\Program Files (x86)\Windows Kits\10\bin\$(var.Platform)\ucrt\ucrtbased.dll"/>
 				<?else ?>
-				<File Source="$(var.QtBinPath)\Qt5Core.dll"/>
-				<File Source="$(var.QtBinPath)\Qt5Gui.dll"/>
-				<File Source="$(var.QtBinPath)\Qt5Network.dll"/>
-				<File Source="$(var.QtBinPath)\Qt5Svg.dll"/>
-				<File Source="$(var.QtBinPath)\Qt5Widgets.dll"/>
-				<File Source="$(var.QtBinPath)\libGLESv2.dll"/>
-				<File Source="$(var.QtBinPath)\libEGL.dll"/>
+				<File Source="$(var.BinPath)\Qt5Core.dll"/>
+				<File Source="$(var.BinPath)\Qt5Gui.dll"/>
+				<File Source="$(var.BinPath)\Qt5Network.dll"/>
+				<File Source="$(var.BinPath)\Qt5Svg.dll"/>
+				<File Source="$(var.BinPath)\Qt5Widgets.dll"/>
+				<File Source="$(var.BinPath)\libGLESv2.dll"/>
+				<File Source="$(var.BinPath)\libEGL.dll"/>
 				<?endif ?>
 			</Component>
 		</ComponentGroup>
 		<ComponentGroup Directory="QTStylesDir" Id="ProductQtStylesComponents">
       <Component Guid="96E0F8D8-64FD-4CE8-94D1-F6EDCBBB4995" Id="Styles">
-        <File Id="qwindowsvistastyle" Source="$(var.QtPluginsPath)\styles\qwindowsvistastyle.dll"/>
+        <File Id="qwindowsvistastyle" Source="$(var.BinPath)\styles\qwindowsvistastyle.dll"/>
       </Component>
 		</ComponentGroup>
 		<ComponentGroup Directory="PlatformsDir" Id="ProductQtPluginComponents">
 			<Component Guid="684EFA14-856B-440E-A5E6-E90E04E36B41" Id="QtPlatformPlugin">
 				<?if $(var.Configuration) = "Debug" ?>
-				<File Source="$(var.QtPluginsPath)\platforms\qwindowsd.dll"/>
+				<File Source="$(var.BinPath)\platforms\qwindowsd.dll"/>
 				<?else ?>
-				<File Source="$(var.QtPluginsPath)\platforms\qwindows.dll"/>
+				<File Source="$(var.BinPath)\platforms\qwindows.dll"/>
 				<?endif ?>
 			</Component>
 		</ComponentGroup>

@@ -6,6 +6,7 @@
     <?define BinPath="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/$(var.Configuration)" ?>
     <?define ResPath="@CMAKE_CURRENT_SOURCE_DIR@/res" ?>
     <?define ExtPath="@CMAKE_CURRENT_SOURCE_DIR@/ext" ?>
+    <?define DisPath="@CMAKE_CURRENT_SOURCE_DIR@/dist" ?>
     <?if $(var.Platform) = "x64" ?>
         <?define ProgramFilesFolder="ProgramFiles64Folder" ?>
         <?define PlatformSimpleName="64-bit" ?>
