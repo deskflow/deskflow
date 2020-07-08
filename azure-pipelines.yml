@@ -2,600 +2,122 @@ trigger:
 - master
 
 jobs:
-- job: Linux
-  pool:
-    vmImage: 'ubuntu-16.04'
+  - template: CI/job-doxygen.yml
 
-  strategy:
-    matrix:
-      #TODO Is breaking during the package phase
-#      ubuntu1604:
-#        image: symless/synergy-core:ubuntu16.04
-#        packager: deb
-#        name: ubuntu16
-      ubuntu1804:
-        image: symless/synergy-core:ubuntu18.04
-        packager: deb
-        name: ubuntu18
-      ubuntu1910:
-        image: symless/synergy-core:ubuntu19.10
-        packager: deb
-        name: ubuntu19
-      ubuntu2004:
-        image: symless/synergy-core:ubuntu20.04
-        packager: deb
-        name: ubuntu20
-      debian9:
-        image: symless/synergy-core:debian9
-        packager: deb
-        name: debian9
-      debian10:
-        image: symless/synergy-core:debian10
-        packager: deb
-        name: debian10
-      fedora28:
-        image: symless/synergy-core:fedora28
-        packager: rpm
-        name: fedora28
-      fedora29:
-        image: symless/synergy-core:fedora29
-        packager: rpm
-        name: fedora29
-      fedora30:
-        image: symless/synergy-core:fedora30
-        packager: rpm
-        name: fedora30
-      centos7.6:
-        image: symless/synergy-core:centos7.6
-        packager: rpm
-        name: centos76
-      centos8:
-        image: symless/synergy-core:centos8
-        packager: rpm
-        name: centos8
+  - job: Linux
+    pool:
+      vmImage: 'ubuntu-16.04'
 
-  container: $[ variables['image'] ]
+    strategy:
+      matrix:
+        ubuntu1804:
+          image: symless/synergy-core:ubuntu18.04
+          packager: deb
+          name: ubuntu18
+        ubuntu1910:
+          image: symless/synergy-core:ubuntu19.10
+          packager: deb
+          name: ubuntu19
+        ubuntu2004:
+          image: symless/synergy-core:ubuntu20.04
+          packager: deb
+          name: ubuntu20
+        debian9:
+          image: symless/synergy-core:debian9
+          packager: deb
+          name: debian9
+        debian10:
+          image: symless/synergy-core:debian10
+          packager: deb
+          name: debian10
+        fedora28:
+          image: symless/synergy-core:fedora28
+          packager: rpm
+          name: fedora28
+        fedora29:
+          image: symless/synergy-core:fedora29
+          packager: rpm
+          name: fedora29
+        fedora30:
+          image: symless/synergy-core:fedora30
+          packager: rpm
+          name: fedora30
+        centos7.6:
+          image: symless/synergy-core:centos7.6
+          packager: rpm
+          name: centos76
+        centos8:
+          image: symless/synergy-core:centos8
+          packager: rpm
+          name: centos8
 
-  steps:
+    container: $[ variables['image'] ]
 
-    - checkout: self
-      fetchDepth: 1
-      submodules: recursive
+    steps:
+      - template: CI/checkout.yml
+      - template: CI/Linux/linux-build.yml
 
-    - script: |
-        mkdir build-release
-        cd build-release
-        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
-        make -j
-      condition: eq(variables['packager'],'deb')
-      displayName: 'Build Release deb'
+  - job: MacOS
+    strategy:
+      matrix:
+        mojave-std:
+          image: macOS-10.14
+          name: mojave
+          version: 10.12
+          buildType: "standard"
+          prefix: "synergy"
+        mojave-ent:
+          image: macOS-10.14
+          name: mojave
+          version: 10.12
+          buildType: "enterprise"
+          prefix: "synergy-enterprise"
+        catalina-std:
+          image: macOS-10.15
+          name: catalina
+          version: 10.14
+          buildType: "standard"
+          prefix: "synergy"
+        catalina-ent:
+          image: macOS-10.15
+          name: catalina
+          version: 10.14
+          buildType: "enterprise"
+          prefix: "synergy-enterprise"
+    pool:
+      vmImage: $[ variables['image'] ]
 
-    - script: |
-        mkdir build-release
-        cd build-release
-        if [ -z $(which cmake) ]; then
-        cmake3 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
-        else cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
-        fi
-        make -j
-        make install/strip
-      condition: eq(variables['packager'],'rpm')
-      displayName: 'Build Release rpm'
+    variables:
+      QT_PATH: '/usr/local/opt/qt/bin'
 
-    - script: |
-        mkdir build-ent
-        cd build-ent
-        export SYNERGY_ENTERPRISE=1
-        if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; fi
-        make -j
-      displayName: 'Build enterprise'
-      condition: eq(variables['packager'],'deb')
+    steps:
+      - template: CI/checkout.yml
+      - template: CI/MacOS/mac-build.yml
 
-    - script: |
-        mkdir build-ent
-        cd build-ent
-        if [ -z $(which cmake) ]; then
-        cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
-        else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
-        fi
-        make -j
-        make install/strip
-      condition: eq(variables['packager'],'rpm')
-      displayName: 'Build enterprise rpm'
+  - job: Windows
+    strategy:
+      matrix:
+        vs2019:
+          image: windows-2019
+          buildType: "standard"
+          prefix: "synergy"
+        vs2019ent:
+          image: windows-2019
+          buildType: "enterprise"
+          prefix: "synergy_enterprise"
 
-    - script: |
-        . ./build-release/version
-        SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
-        SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
-        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+${SYNERGY_REVISION}"
-        SYNERGY_RPM_VERSION="${SYNERGY_VERSION}-$(Build.BuildNumber).${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
-        echo "##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]${SYNERGY_VERSION_STAGE}"
-        echo "##vso[task.setvariable variable=SYNERGY_VERSION]${SYNERGY_VERSION}"
-        echo "##vso[task.setvariable variable=SYNERGY_REVISION]${SYNERGY_REVISION}"
-        echo "##vso[task.setvariable variable=SYNERGY_DEB_VERSION]${SYNERGY_DEB_VERSION}"
-        echo "##vso[task.setvariable variable=SYNERGY_RPM_VERSION]${SYNERGY_RPM_VERSION}"
-      displayName: "Setup variables"
-      condition: and(eq(variables['packager'],'deb'), eq(variables['Build.Reason'], 'Manual'))
+    pool:
+      vmImage: $[ variables['image'] ]
 
-    - script: |
-        dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
-        export DEB_BUILD_OPTIONS="parallel=8"
-        export GPG_TTY=$(tty)
-        debuild --preserve-envvar SYNERGY_* -us -uc
-        mkdir standard_package
-        cd ..
-        filename=$(ls synergy_*.deb)
-        filename_new="synergy_${SYNERGY_DEB_VERSION}_$(name)${filename##*${SYNERGY_REVISION}}"
-        mv $filename $(Build.Repository.LocalPath)/standard_package/$filename_new
-        cd $(Build.Repository.LocalPath)/standard_package
-        md5sum $filename_new >> ${filename_new}.md5
-        sha1sum $filename_new >> ${filename_new}.sha1
-        sha256sum $filename_new >> ${filename_new}.sha256
-        ls -la
-      displayName: "Package Binary DEB(Standard)"
-      condition: and(eq(variables['packager'],'deb'), eq(variables['Build.Reason'], 'Manual'))
+    variables:
+      QT_VERSION: '5.12.6'
+      QLI_OUT_DIR: '.\deps\Qt'
+      QLI_BASE_URL: 'http://qt.mirror.constant.com/'
+      QT_BIN_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
+      QT_BIN_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
+      BONJOUR_SDK_DIR: 'deps\BonjourSDK'
+      ENV_BAT: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\vsdevcmd'
 
-    - script: |
-        export SYNERGY_ENTERPRISE=1
-        dch --create --package "synergy-enterprise_" --controlmaint --distribution unstable --newversion $(SYNERGY_DEB_VERSION) "Initial release"
-        export DEB_BUILD_OPTIONS="parallel=8"
-        export GPG_TTY=$(tty)
-        debuild --preserve-envvar SYNERGY_* -us -uc
-        mkdir enterprise_package
-        cd ..
-        filename=$(ls synergy_*.deb)
-        filename_new="synergy-enterprise_$(SYNERGY_DEB_VERSION)_$(name)${filename##*$(SYNERGY_REVISION)}"
-        mv $filename $(Build.Repository.LocalPath)/enterprise_package/$filename_new
-        cd $(Build.Repository.LocalPath)/enterprise_package
-        md5sum $filename_new >> ${filename_new}.md5
-        sha1sum $filename_new >> ${filename_new}.sha1
-        sha256sum $filename_new >> ${filename_new}.sha256
-        ls -la
-      displayName: "Package Binary DEB(Enterprise)"
-      condition: and(eq(variables['packager'],'deb'), eq(variables['Build.Reason'], 'Manual'))
-
-    - script: |
-        cd build-release/rpm
-        rpmbuild -bb --define "_topdir $(pwd)" --buildroot $(pwd)/BUILDROOT synergy.spec
-        rpmlint --verbose RPMS/x86_64/*.rpm
-        cd RPMS/x86_64
-        filename=$(ls *.rpm)
-        md5sum $filename >> ${filename}.md5
-        sha1sum $filename >> ${filename}.sha1
-        sha256sum $filename >> ${filename}.sha256
-        cd ..
-        mv x86_64 $(Build.Repository.LocalPath)/standard_package
-      displayName: "Package Binary RPM(standard)"
-      condition: and(eq(variables['packager'],'rpm'), eq(variables['Build.Reason'], 'Manual'))
-
-    - script: |
-        cd build-ent/rpm
-        rpmbuild -bb --define "_topdir $(pwd)" --buildroot $(pwd)/BUILDROOT synergy.spec
-        rpmlint --verbose RPMS/x86_64/*.rpm
-        cd RPMS/x86_64
-        filename=$(ls *.rpm)
-        md5sum $filename >> ${filename}.md5
-        sha1sum $filename >> ${filename}.sha1
-        sha256sum $filename >> ${filename}.sha256
-        cd ..
-        mv x86_64 $(Build.Repository.LocalPath)/enterprise_package
-        ls -la
-      displayName: "Package Binary RPM(enterprise)"
-      condition: and(eq(variables['packager'],'rpm'), eq(variables['Build.Reason'], 'Manual'))
-
-    - task: CopyFilesOverSSH@0
-      inputs:
-        sshEndpoint: 'Azure on Sandor'
-        sourceFolder: './standard_package'
-        contents: '*'
-        targetFolder: 'synergy-core/v1-core-standard/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
-        readyTimeout: '20000'
-      displayName: 'Send standard Package to sandor'
-      condition: eq(variables['Build.Reason'], 'Manual')
-
-    - task: CopyFilesOverSSH@0
-      inputs:
-        sshEndpoint: 'Azure on Sandor'
-        sourceFolder: './enterprise_package'
-        contents: '*'
-        targetFolder: 'synergy-core/v1-core-enterprise/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
-        readyTimeout: '20000'
-      displayName: 'Send enterprise Package to sandor'
-      condition: eq(variables['Build.Reason'], 'Manual')
-
-
-- job: MacOS
-  strategy:
-    matrix:
-      mojave-std:
-        image: macOS-10.14
-        name: mojave
-        version: 10.12
-        buildType: "standard"
-        prefix: "synergy"
-      mojave-ent:
-        image: macOS-10.14
-        name: mojave
-        version: 10.12
-        buildType: "enterprise"
-        prefix: "synergy-enterprise"
-      catalina-std:
-        image: macOS-10.15
-        name: catalina
-        version: 10.14
-        buildType: "standard"
-        prefix: "synergy"
-      catalina-ent:
-        image: macOS-10.15
-        name: catalina
-        version: 10.14
-        buildType: "enterprise"
-        prefix: "synergy-enterprise"
-  pool:
-    vmImage: $[ variables['image'] ]
-
-  variables:
-    QT_PATH: '/usr/local/opt/qt/bin'
-
-  steps:
-  - checkout: self
-    fetchDepth: 1
-    submodules: recursive
-
-  - task: InstallAppleCertificate@2
-    inputs:
-      certSecureFile: 'AppleSigningCert.cer'
-      certPwd: '$(AppleCertPass)'
-      keychain: 'temp'
-    condition: eq(variables['Build.Reason'], 'Manual')
-
-  - task: AzureKeyVault@1
-    inputs:
-      azureSubscription: 'Free Trial (796b9556-9614-41a6-8040-0eb14d81fe6f'
-      KeyVaultName: 'Symless'
-      SecretsFilter: '*'
-    displayName: "Get keys"
-    condition: eq(variables['Build.Reason'], 'Manual')
-
-  - task: CmdLine@2
-    inputs:
-      script: 'brew install qt'
-    displayName: 'Installing QT'
-
-  - task: CmdLine@2
-    inputs:
-      script: |
-        export PATH="$(QT_PATH):$PATH"
-        mkdir build
-        cd build
-        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=$(version) -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release ..
-    displayName: 'Cmake standard'
-    condition: eq(variables['buildType'], 'standard')
-
-  - task: CmdLine@2
-    inputs:
-      script: |
-        export PATH="$(QT_PATH):$PATH"
-        export SYNERGY_ENTERPRISE=1
-        mkdir build
-        cd build
-        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release -DSYNERGY_ENTERPRISE=ON ..
-    displayName: 'Cmake enterprise'
-    condition: eq(variables['buildType'], 'enterprise')
-
-  - task: CmdLine@2
-    inputs:
-      script: |
-        cd build
-        make -j
-        make install/strip
-    displayName: 'Compiling'
-
-  - task: CmdLine@2
-    inputs:
-      script: |
-        export PATH="$(QT_PATH):$PATH"
-        macdeployqt $(Build.Repository.LocalPath)/build/bundle/Synergy.app -codesign="$CODESIGN_ID"
-        codesign -f --options runtime --deep -s "$CODESIGN_ID" $(Build.Repository.LocalPath)/build/bundle/Synergy.app
-        ln -s /Applications $(Build.Repository.LocalPath)/build/bundle/Applications
-    displayName: 'Signing'
-    env:
-      CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
-    condition: eq(variables['Build.Reason'], 'Manual')
-
-  - script: |
-      . ./build/version
-      SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
-      SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
-      SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}_b$(Build.BuildNumber)-${SYNERGY_REVISION}"
-      SYNERGY_DMG_FILENAME=$(prefix)_v${SYNERGY_DMG_VERSION}_macos_$(name).dmg
-      echo "##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]${SYNERGY_VERSION_STAGE}"
-      echo "##vso[task.setvariable variable=SYNERGY_VERSION]${SYNERGY_VERSION}"
-      echo "##vso[task.setvariable variable=SYNERGY_REVISION]${SYNERGY_REVISION}"
-      echo "##vso[task.setvariable variable=SYNERGY_DMG_VERSION]${SYNERGY_DMG_VERSION}"
-      echo "##vso[task.setvariable variable=SYNERGY_DMG_FILENAME]${SYNERGY_DMG_FILENAME}"
-    displayName: "Setup variables"
-    condition: eq(variables['Build.Reason'], 'Manual')
-
-  - task: CmdLine@2
-    inputs:
-      script: |
-        hdiutil create -volname Synergy -srcfolder $(Build.Repository.LocalPath)/build/bundle/ -ov -format UDZO $(SYNERGY_DMG_FILENAME)
-        mkdir pkg
-        mv $(SYNERGY_DMG_FILENAME) pkg/
-        cd pkg
-        md5 -r $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).md5
-        shasum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha1
-        shasum -a 256 $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha256
-    displayName: 'Create Installer'
-    condition: eq(variables['Build.Reason'], 'Manual')
-
-  - task: Bash@3
-    inputs:
-      filePath: 'CI/MacOS/notorize.sh'
-      workingDirectory: 'pkg/'
-    env:
-      ASC_USERNAME: $(ASC_USERNAME)
-      NOTORY_APP_PASSWORD: $(NOTORY_APP_PASSWORD)
-    displayName: 'Submit for Notarization'
-    condition: eq(variables['Build.Reason'], 'Manual')
-
-  - task: CopyFilesOverSSH@0
-    inputs:
-      sshEndpoint: 'Azure on Sandor'
-      sourceFolder: '$(Build.Repository.LocalPath)/pkg'
-      contents: '*'
-      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
-      readyTimeout: '20000'
-    displayName: 'Send Package to sandor'
-    condition: eq(variables['Build.Reason'], 'Manual')
-
-
-- job: Windows
-  strategy:
-    matrix:
-      vs2019:
-        image: windows-2019
-        buildType: "standard"
-        prefix: "synergy"
-      vs2019ent:
-        image: windows-2019
-        buildType: "enterprise"
-        prefix: "synergy_enterprise"
-
-  pool:
-    vmImage: $[ variables['image'] ]
-
-  variables:
-    QT_VERSION: '5.12.6'
-    QLI_OUT_DIR: '.\deps\Qt'
-    QLI_BASE_URL: 'http://qt.mirror.constant.com/'
-    QT_BIN_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
-    QT_BIN_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
-    BONJOUR_SDK_DIR: 'deps\BonjourSDK'
-    ENV_BAT: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\vsdevcmd'
-
-  steps:
-
-  - checkout: self
-    fetchDepth: 1
-    submodules: recursive
-
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: |
-        New-Item -Force -ItemType Directory -Path ".\deps\"
-        $client = new-object System.Net.WebClient
-        $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\deps\bonjoursdk.zip")
-        $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi",".\deps\Bonjour64.msi")
-    displayName: 'Downloading Bonjour SKD'
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.x'
-      addToPath: true
-      architecture: 'x64'
-    displayName: 'Set python version'
-
-  - script: |
-      cd $(Build.SourcesDirectory)
-      python -m pip install aqtinstall
-    displayName: 'Install aqtinstall'
-
-  - script: |
-      cd $(Build.SourcesDirectory)
-      python -m aqt install -b $(QLI_BASE_URL) --outputdir $(Build.Repository.LocalPath)\\deps\\Qt  $(QT_VERSION) windows desktop win64_msvc2017_64
-      python -m aqt install -b $(QLI_BASE_URL) --outputdir $(Build.Repository.LocalPath)\\deps\\Qt  $(QT_VERSION) windows desktop win32_msvc2017
-    displayName: 'Install Qt $(QT_VERSION)'
-
-  - task: ExtractFiles@1
-    inputs:
-      archiveFilePatterns: './deps/*.zip'
-      destinationFolder: './deps/'
-      cleanDestinationFolder: false
-    displayName: 'Extracting zips'
-
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: |
-        Get-ChildItem '.\deps'
-        msiexec.exe /i ${pwd}\deps\Bonjour64.msi INSTALLDIR="${pwd}\deps\Bonjour" /qb
-    displayName: 'Installing bonjour SDK'
-
-  - script: |
-      call "%ENV_BAT%" -arch=x64
-      set BONJOUR_SDK_HOME=%cd%\%BONJOUR_SDK_DIR%
-      mkdir build64
-      cd build64
-      IF "$(buildType)"=="enterprise" (
-          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
-      ) else (
-          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
-      )
-    displayName: 'Cmake x64 Standard'
-    env:
-      ENV_BAT: $(ENV_BAT)
-      BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
-      QT_PATH: $(QT_BIN_PATH)
-      MSARCH: 'x64'
-
-  - script: |
-      call "%ENV_BAT%" -arch=x64
-      cd build64
-      msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Release
-    displayName: 'Compiling x64'
-    env:
-      ENV_BAT: $(ENV_BAT)
-
-  - script: |
-      call "%ENV_BAT%" -arch=x86
-      set BONJOUR_SDK_HOME=%cd%\%BONJOUR_SDK_DIR%
-      mkdir build32
-      cd build32
-      IF "$(buildType)"=="enterprise" (
-         cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
-      ) else (
-         cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
-      )
-    displayName: 'Cmake x32 Standard'
-    env:
-      ENV_BAT: $(ENV_BAT)
-      BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
-      QT_PATH: $(QT_BIN_PATH_32)
-      MSARCH: 'Win32'
-
-  - script: |
-      call "%ENV_BAT%" -arch=x86
-      cd build32
-      msbuild synergy-core.sln /p:Platform="Win32" /p:Configuration=Release
-    displayName: 'Compiling x32'
-    env:
-      ENV_BAT: $(ENV_BAT)
-
-  - task: codesigning@2
-    inputs:
-      secureFileId: 'WindowsSigningCert.pfx'
-      signCertPassword: '$(CODESIGN_PWD)'
-      files: '*\bin\Release\*.exe'
-      timeServer: 'http://timestamp.digicert.com'
-      hashingAlgorithm: 'SHA256'
-    displayName: "Signing Synergy binaries"
-    condition: eq(variables['Build.Reason'], 'Manual')
-
-  - task: MSBuild@1
-    inputs:
-      solution: 'build64/installer/Synergy.sln'
-      msbuildVersion: '16.0'
-      msbuildArchitecture: 'x64'
-      platform: 'x64'
-      configuration: 'Release'
-      msbuildArguments: '/m'
-      maximumCpuCount: true
-    displayName: 'Making installer x64'
-    env:
-      QT_PATH: $(QT_BIN_PATH)
-
-  - task: MSBuild@1
-    inputs:
-      solution: 'build32/installer/Synergy.sln'
-      msbuildVersion: '16.0'
-      msbuildArchitecture: 'x86'
-      platform: 'x86'
-      configuration: 'Release'
-      msbuildArguments: '/m'
-      maximumCpuCount: true
-    displayName: 'Making installer x86'
-    env:
-      QT_PATH: $(QT_BIN_PATH_32)
-
-  - task: codesigning@2
-    inputs:
-      secureFileId: 'WindowsSigningCert.pfx'
-      signCertPassword: '$(CODESIGN_PWD)'
-      files: '*\installer\bin\Release\Synergy.msi'
-      timeServer: 'http://timestamp.digicert.com'
-      hashingAlgorithm: 'SHA256'
-    displayName: "Signing installers"
-    condition: eq(variables['Build.Reason'], 'Manual')
-    
-  - script: |
-      call ./build64/version
-      set SYNERGY_VERSION=%SYNERGY_VERSION_MAJOR%.%SYNERGY_VERSION_MINOR%.%SYNERGY_VERSION_PATCH%
-      git rev-parse --short=8 HEAD > gitversion
-      set /p SYNERGY_REVISION= < gitversion
-      echo ##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]%SYNERGY_VERSION_STAGE%
-      echo ##vso[task.setvariable variable=SYNERGY_VERSION]%SYNERGY_VERSION%
-      echo ##vso[task.setvariable variable=SYNERGY_REVISION]%SYNERGY_REVISION%
-      cd $(Build.Repository.LocalPath)\build32\installer\bin\Release\
-      set FILENAME=$(prefix)_v%SYNERGY_VERSION%_windows_x86.msi
-      ren "Synergy.msi" "%FILENAME%"
-      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe md5 %FILENAME% > %FILENAME%.md5
-      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 %FILENAME% > %FILENAME%.sha1
-      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha256 %FILENAME% > %FILENAME%.sha256
-      cd $(Build.Repository.LocalPath)\build64\installer\bin\Release\
-      set FILENAME=$(prefix)_v%SYNERGY_VERSION%_windows_x64.msi
-      ren "Synergy.msi" "%FILENAME%"
-      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe md5 %FILENAME% > %FILENAME%.md5
-      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 %FILENAME% > %FILENAME%.sha1
-      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha256 %FILENAME% > %FILENAME%.sha256
-    displayName: "Rename files"
-    condition: eq(variables['Build.Reason'], 'Manual')
-
-  - task: CopyFilesOverSSH@0
-    inputs:
-      sshEndpoint: 'Azure on Sandor'
-      sourceFolder: '$(Build.Repository.LocalPath)\build32\installer\bin\Release\'
-      contents: '*'
-      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
-      readyTimeout: '20000'
-    displayName: 'Send x86 Package to sandor'
-    condition: eq(variables['Build.Reason'], 'Manual')
-
-  - task: CopyFilesOverSSH@0
-    inputs:
-      sshEndpoint: 'Azure on Sandor'
-      sourceFolder: '$(Build.Repository.LocalPath)\build64\installer\bin\Release\'
-      contents: '*'
-      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
-      readyTimeout: '20000'
-    displayName: 'Send x64 Package to sandor'
-    condition: eq(variables['Build.Reason'], 'Manual')
-
-- job: DoxygenDoc
-
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
-
-  pool:
-    vmImage: 'ubuntu-16.04'
-
-  steps:
-    - script: |
-        sudo DEBIAN_FRONTEND=noninteractive
-        sudo apt-get -y update
-        sudo apt-get -y install doxygen graphviz
-      displayName: 'Install Pakages'
-
-    - script: |
-        doxygen Doxyfile
-        cd doxygen
-        tar -czvf ../docs.tar.gz ./*
-      displayName: 'Generate Docs'
-
-    - task: CopyFilesOverSSH@0
-      inputs:
-        sshEndpoint: 'Azure on Sandor'
-        sourceFolder: '.'
-        contents: 'docs.tar.gz'
-        targetFolder: 'synergy-core'
-        readyTimeout: '20000'
-      displayName: 'Publish files to sandor'
-
-    - task: SSH@0
-      inputs:
-        sshEndpoint: 'Azure on Sandor'
-        runOptions: 'commands'
-        commands: |
-          tar -C ./synergy-core/docs -xzvf ./synergy-core/docs.tar.gz --overwrite
-        readyTimeout: '20000'
-      displayName: 'Extract files on sandor'
+    steps:
+      - template: CI/checkout.yml
+      - template: CI/Windows/windows-build.yml

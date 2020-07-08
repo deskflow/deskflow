@@ -1,0 +1,37 @@
+jobs:
+  - job: DoxygenDoc
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+
+    pool:
+      vmImage: 'ubuntu-16.04'
+
+    steps:
+      - script: |
+          sudo DEBIAN_FRONTEND=noninteractive
+          sudo apt-get -y update
+          sudo apt-get -y install doxygen graphviz
+        displayName: 'Install Pakages'
+
+      - script: |
+          doxygen Doxyfile
+          cd doxygen
+          tar -czvf ../docs.tar.gz ./*
+        displayName: 'Generate Docs'
+
+      - task: CopyFilesOverSSH@0
+        inputs:
+          sshEndpoint: 'Azure on Sandor'
+          sourceFolder: '.'
+          contents: 'docs.tar.gz'
+          targetFolder: 'synergy-core'
+          readyTimeout: '20000'
+        displayName: 'Publish files to sandor'
+
+      - task: SSH@0
+        inputs:
+          sshEndpoint: 'Azure on Sandor'
+          runOptions: 'commands'
+          commands: |
+            tar -C ./synergy-core/docs -xzvf ./synergy-core/docs.tar.gz --overwrite
+          readyTimeout: '20000'
+        displayName: 'Extract files on sandor'
