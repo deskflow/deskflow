@@ -146,7 +146,7 @@ steps:
       replaceExistingArchive: true
       verbose: true
     displayName: "Archive 32-bit binaries"
-#    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
 
   - task: ArchiveFiles@2
     inputs:
@@ -157,7 +157,7 @@ steps:
       replaceExistingArchive: true
       verbose: true
     displayName: "Archive 64-bit binaries"
-#    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
 
   - script: |
       call ./build64/version
@@ -190,7 +190,7 @@ steps:
       targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send archives to sandor'
-#    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
 
   - task: CopyFilesOverSSH@0
     inputs:
