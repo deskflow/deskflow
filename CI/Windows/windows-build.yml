@@ -137,6 +137,28 @@ steps:
     displayName: "Signing installers"
     condition: eq(variables['Build.Reason'], 'Manual')
 
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: 'build32\bin\Release'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/Synergy_x86.zip'
+      replaceExistingArchive: true
+      verbose: true
+    displayName: "Archive 32-bit binaries"
+#    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: 'build64\bin\Release'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/Synergy_x64.zip'
+      replaceExistingArchive: true
+      verbose: true
+    displayName: "Archive 64-bit binaries"
+#    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+
   - script: |
       call ./build64/version
       set SYNERGY_VERSION=%SYNERGY_VERSION_MAJOR%.%SYNERGY_VERSION_MINOR%.%SYNERGY_VERSION_PATCH%
@@ -159,6 +181,16 @@ steps:
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha256 %FILENAME% > %FILENAME%.sha256
     displayName: "Rename files"
     condition: eq(variables['Build.Reason'], 'Manual')
+
+  - task: CopyFilesOverSSH@0
+    inputs:
+      sshEndpoint: 'Azure on Sandor'
+      sourceFolder: '$(Build.ArtifactStagingDirectory)/'
+      contents: '*.zip'
+      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+      readyTimeout: '20000'
+    displayName: 'Send archives to sandor'
+#    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
 
   - task: CopyFilesOverSSH@0
     inputs:
