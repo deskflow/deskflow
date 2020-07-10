@@ -216,7 +216,15 @@ ProtocolUtil::vreadf(synergy::IStream* stream, const char* fmt, va_list args)
                 // allocate a buffer to read the data
                 UInt8* sBuffer = buffer;
                 if (!useFixed) {
-                    sBuffer = new UInt8[len];
+                    try{
+                        sBuffer = new UInt8[len];
+                    }
+                    catch (std::bad_alloc & exception) {
+                        // Added try catch due to GHSA-chfm-333q-gfpp
+                        LOG((CLOG_ERR "ALLOC: Unable to allocate memory %d bytes", len));
+                        LOG((CLOG_DEBUG "bad_alloc detected: %s", exception.what()));
+                        throw;
+                    }
                 }
 
                 // read the data
