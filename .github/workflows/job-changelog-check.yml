@@ -39,7 +39,7 @@ jobs:
     - name: List files
       run: |
         echo ${{ steps.file_changes.outputs.files_modified}}
-        if [[ "${{ steps.file_changes.outputs.files_modified}}" == *"ChangLog"* ]] then
+        if [[ "${{ steps.file_changes.outputs.files_modified}}" == *"ChangLog"* ]]; then
           echo "Changlog has been updated"
         else
           echo "::error file=app.js,line=10,col=15::Changelog hasnt been updated"
