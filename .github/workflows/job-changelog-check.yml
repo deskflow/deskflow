@@ -18,7 +18,10 @@ jobs:
     - id: file_changes
       uses: trilom/file-changes-action@v1.2.3
       with:
+        githubToken: ${{ secrets.GITHUB_TOKEN }}
         prNumber: ${{ steps.pr.outputs.results }}
+        output: ' '
+        fileOutput: ' '
     - name: List files
       run: |
         echo ${{ steps.file_changes.outputs.files_modified}}
