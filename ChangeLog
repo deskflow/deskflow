@@ -9,6 +9,7 @@ Bug fixes:
 - #6670 Build computers failing with language file error
 - #6661 Removed deprecated namespace in gtest/gmock by updating
 - #6601 Update man page with missing crypto option
+- #4036 Client cursor constrained to old resolution
 
 Enhancements:
 - #6666 Add doxygen documentation output from piplines
