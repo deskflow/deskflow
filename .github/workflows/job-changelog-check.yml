@@ -17,6 +17,8 @@ jobs:
     - id: file_changes
       name: Get changed files
       uses: trilom/file-changes-action@v1.2.3
+      with:
+        output: ','
     - name: echo changes
       run: |
         echo Files
@@ -29,7 +31,6 @@ jobs:
         echo '${{ steps.file_changes.outputs.files_removed}}' 
     - name: List files
       run: |
-        echo ${{ steps.file_changes.outputs.files_modified}}
         if [[ "${{ steps.file_changes.outputs.files_modified}}" == *"ChangLog"* ]]; then
           echo "Changlog has been updated"
         else
