@@ -8,6 +8,7 @@
 name: Changlog Updated
 on: 
   pull_request:
+    branches: [ master ]
 
 jobs:
   label:
@@ -17,7 +18,7 @@ jobs:
     - id: file_changes
       uses: trilom/file-changes-action@v1.2.3
       with:
-        pr: ${{ steps.pr.outputs.results }}
+        prNumber: ${{ steps.pr.outputs.results }}
     - name: List files
       run: |
         echo ${{ steps.file_changes.outputs.files_modified}}
