@@ -11,6 +11,7 @@ on:
     branches: [ master ]
 
 jobs:
+  check:
     runs-on: ubuntu-latest
     steps:
     - id: file_changes
