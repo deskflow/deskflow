@@ -16,6 +16,7 @@ Enhancements:
 - #6714 Added windows core binaries upload to sandor
 - #6715 Updated language file from Crowdin
 - #6688 Fully migrate CI from Jenkins to Azure Pipelines
+- #6718 Action to test PR's for updated changelog
 
 Features:
 - #6538 System-wide config for all system users
