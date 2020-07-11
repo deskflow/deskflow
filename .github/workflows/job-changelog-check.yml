@@ -16,12 +16,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - id: file_changes
+      name: Get changed files
       uses: trilom/file-changes-action@v1.2.3
-      with:
-        githubToken: ${{ secrets.GITHUB_TOKEN }}
-        prNumber: ${{ steps.pr.outputs.results }}
-        output: ' '
-        fileOutput: ' '
+    - name: echo changes
+      run: |
+        echo Files
+        cat $HOME/files.json
+        echo Modified
+        cat $HOME/files_modified.json
+        echo Added
+        cat $HOME/files_added.json
+        echo Removed
+        cat $HOME/files_removed.json
+        echo Files
+        echo '${{ steps.file_changes.outputs.files}}'
+        echo Modified
+        echo '${{ steps.file_changes.outputs.files_modified}}'
+        echo Added
+        echo '${{ steps.file_changes.outputs.files_added}}'
+        echo Removed
+        echo '${{ steps.file_changes.outputs.files_removed}}' 
     - name: List files
       run: |
         echo ${{ steps.file_changes.outputs.files_modified}}
