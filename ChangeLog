@@ -17,6 +17,7 @@ Enhancements:
 - #6715 Updated language file from Crowdin
 - #6688 Fully migrate CI from Jenkins to Azure Pipelines
 - #6718 Action to test PR's for updated changelog
+- #6720 Add macqtdeploy to cmake
 
 Features:
 - #6538 System-wide config for all system users
