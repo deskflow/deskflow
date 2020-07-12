@@ -9,14 +9,16 @@ Bug fixes:
 - #6670 Build computers failing with language file error
 - #6661 Removed deprecated namespace in gtest/gmock by updating
 - #6601 Update man page with missing crypto option
+- #4036 Client cursor constrained to old resolution
 
 Enhancements:
-- #6666 Add doxygen documentation output from piplines
+- #6666 Add doxygen documentation output from pipelines
 - #6674 Debian 10 X11 build for CI
 - #6714 Added windows core binaries upload to sandor
 - #6715 Updated language file from Crowdin
 - #6688 Fully migrate CI from Jenkins to Azure Pipelines
 - #6718 Action to test PR's for updated changelog
+- #6722 Allow servers to be announced by screen name instead of IP
 - #6720 Add macqtdeploy to cmake
 
 Features:

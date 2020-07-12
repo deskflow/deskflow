@@ -125,6 +125,7 @@ private:
 
     Display*            openDisplay(const char* displayName);
     void                saveShape();
+    void                setShape(SInt32 width, SInt32 height);
     Window                openWindow() const;
     void                openIM();
 
