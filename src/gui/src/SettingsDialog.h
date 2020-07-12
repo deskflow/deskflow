@@ -45,6 +45,9 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         void changeEvent(QEvent* event);
         AppConfig& appConfig() { return m_appConfig; }
 
+        /// @brief Causes the dialog to load all the settings from m_appConfig
+        void loadFromConfig();
+
     private:
         MainWindow* m_pMainWindow;
         AppConfig& m_appConfig;
@@ -58,6 +61,10 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         void on_m_pCheckBoxLogToFile_stateChanged(int );
         void on_m_pButtonBrowseLog_clicked();
         void on_m_pLabelInstallBonjour_linkActivated(const QString &link);
+
+        /// @brief Handles the toggling of the system scoped radio button
+        ///        As the user scope radio is connected this will fire for either radio button
+        void on_m_pRadioSystemScope_toggled(bool checked);
 };
 
 #endif

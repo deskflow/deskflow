@@ -1,3 +1,26 @@
+v1.12.0-snapshot
+===========
+
+Bug fixes:
+- #6487 Mouse freezes or key repeats on Linux client
+- #6663 Limit GUI log Window to prevent it using up too much RAM over time
+- #6587 Auto config setting doesn't do anything
+- #6620 Unit tests are no longer built
+- #6670 Build computers failing with language file error
+- #6661 Removed deprecated namespace in gtest/gmock by updating
+- #6601 Update man page with missing crypto option
+
+Enhancements:
+- #6666 Add doxygen documentation output from piplines
+- #6674 Debian 10 X11 build for CI
+- #6714 Added windows core binaries upload to sandor
+- #6715 Updated language file from Crowdin
+- #6688 Fully migrate CI from Jenkins to Azure Pipelines
+- #6718 Action to test PR's for updated changelog
+
+Features:
+- #6538 System-wide config for all system users
+
 v1.11.1-stable
 ===========
 

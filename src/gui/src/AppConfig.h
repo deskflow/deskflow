@@ -22,8 +22,11 @@
 
 #include <QObject>
 #include <QString>
+#include <QVariant>
 #include "ElevateMode.h"
 #include <shared/EditionType.h>
+#include <mutex>
+#include "ConfigBase.h"
 
 // this should be incremented each time a new page is added. this is
 // saved to settings when the user finishes running the wizard. if
@@ -50,7 +53,7 @@ enum ProcessMode {
     Desktop
 };
 
-class AppConfig: public QObject
+class AppConfig: public QObject, public GUI::Config::ConfigBase
 {
     Q_OBJECT
 
@@ -59,10 +62,13 @@ class AppConfig: public QObject
     friend class SetupWizard;
 
     public:
-        AppConfig(QSettings* settings);
-        ~AppConfig();
+        AppConfig();
+        ~AppConfig() override;
 
     public:
+
+        bool isSystemScoped() const;
+
         const QString& screenName() const;
         int port() const;
         const QString& networkInterface() const;
@@ -78,11 +84,11 @@ class AppConfig: public QObject
         bool autoConfig() const;
         void setAutoConfig(bool autoConfig);
         QString autoConfigServer() const;
-        void setAutoConfigServer(QString autoConfigServer);
+        void setAutoConfigServer(const QString& autoConfigServer);
 #ifndef SYNERGY_ENTERPRISE
         void setEdition(Edition);
         Edition edition() const;
-        QString setSerialKey(QString serial);
+        void setSerialKey(const QString& serial);
         void clearSerialKey();
         QString serialKey();
         int lastExpiringWarningTime() const;
@@ -94,7 +100,6 @@ class AppConfig: public QObject
         QString synergyProgramDir() const;
         QString synergyLogDir() const;
 
-        bool detectPath(const QString& name, QString& path);
         void persistLogDir();
         ElevateMode elevateMode();
 
@@ -107,17 +112,70 @@ class AppConfig: public QObject
         bool activationHasRun() const;
         AppConfig& activationHasRun(bool value);
 #endif
+        /// @brief Sets the user preference to load from SystemScope.
+        /// @param [in] value
+        ///             True - This will set the variable, and save the user settings before loading the global scope settings
+        ///             False - This will load the UserScope then set the variable and save.
+        void setLoadFromSystemScope(bool value);
+
+
+        bool    getServerGroupChecked() const;
+        bool    getUseExternalConfig() const;
+        QString getConfigFile() const;
+        bool    getUseInternalConfig() const;
+        bool    getClientGroupChecked() const;
+        QString getServerHostname() const;
+
+        void setServerGroupChecked(bool);
+        void setUseExternalConfig(bool) ;
+        void setConfigFile(const QString&);
+        void setUseInternalConfig(bool) ;
+        void setClientGroupChecked(bool) ;
+        void setServerHostname(const QString&);
 
         QString lastVersion() const;
 
         void setMinimizeToTray(bool b);
         bool getMinimizeToTray();
 
-        void saveSettings();
-        void setLastVersion(QString version);
+        void saveSettings() override;
+        void setLastVersion(const QString& version);
+
 
 protected:
-        QSettings& settings();
+    /// @brief The enumeration to easily access the names of the setting inside m_SynergySettingsName
+    enum Setting {
+        kScreenName,
+        kPort,
+        kInterfaceSetting,
+        kLogLevel,
+        kLogToFile,
+        kLogFilename,
+        kWizardLastRun,
+        kLanguage,
+        kStartedBefore,
+        kAutoConfig,
+        kAutoConfigServer,
+        kElevateModeSetting,
+        kElevateModeEnum,
+        kEditionSetting,
+        kCryptoEnabled,
+        kAutoHide,
+        kSerialKey,
+        kLastVersion,
+        kLastExpireWarningTime,
+        kActivationHasRun,
+        kMinimizeToTray,
+        kActivateEmail,
+        kLoadSystemSettings,
+        kGroupServerCheck,
+        kUseExternalConfig,
+        kConfigFile,
+        kUseInternalConfig,
+        kGroupClientCheck,
+        kServerHostname,
+    };
+
         void setScreenName(const QString& s);
         void setPort(int i);
         void setNetworkInterface(const QString& s);
@@ -125,13 +183,17 @@ protected:
         void setLogToFile(bool b);
         void setLogFilename(const QString& s);
         void setWizardHasRun();
-        void setLanguage(const QString language);
+        void setLanguage(const QString& language);
         void setStartedBefore(bool b);
         void setElevateMode(ElevateMode em);
-        void loadSettings();
+
+        /// @brief loads the setting from the current scope
+        /// @param ignoreSystem should the load feature ignore the globalScope setting that was saved
+        void loadSettings() override;
+        static QString settingName(AppConfig::Setting name);
 
     private:
-        QSettings* m_pSettings;
+
         QString m_ScreenName;
         int m_Port;
         QString m_Interface;
@@ -155,12 +217,53 @@ protected:
         bool m_ActivationHasRun;
         bool m_MinimizeToTray;
 
+        bool m_ServerGroupChecked;
+        bool m_UseExternalConfig;
+        QString m_ConfigFile;
+        bool m_UseInternalConfig;
+        bool m_ClientGroupChecked;
+        QString m_ServerHostname;
+
+        bool m_LoadFromSystemScope;     /// @brief should the setting be loaded from SystemScope
+                                        ///         If the user has settings but this is true then
+                                        ///         system settings will be loaded instead of the users
+
         static const char m_SynergysName[];
         static const char m_SynergycName[];
         static const char m_SynergyLogDir[];
 
+        /// @brief Contains the string values of the settings names that will be saved
+        static const char* m_SynergySettingsName[];
+
+        /// @brief Contains the name of the default configuration filename
+        static const char synergyConfigName[];
+
+        /// @brief Sets the value of a setting
+        /// @param [in] name The Setting to be saved
+        /// @param [in] value The Value to be saved
+        template <typename T>
+        void setSetting(AppConfig::Setting name, T value);
+
+        /// @brief Loads a setting
+        /// @param [in] name The setting to be loaded
+        /// @param [in] defaultValue The default value of the setting
+        QVariant loadSetting(AppConfig::Setting name, const QVariant& defaultValue = QVariant());
+
+        /// @brief As the settings will be accessible by multiple objects this lock will ensure that
+        ///         it cant be modified by more that one object at a time if the setting is being switched
+        ///         from system to user.
+        std::mutex m_settings_lock;
+
+        /// @brief Sets the setting in the config checking if it has changed and flagging that settings
+        ///         needs to be saved if the setting was different
+        /// @param [in] variable the setting that will be changed
+        /// @param [in] newValue The new value of the setting
+        template <typename T>
+        void setSettingModified(T& variable,const T& newValue);
+
     signals:
         void sslToggled(bool enabled);
+        void zeroConfToggled();
 };
 
 #endif

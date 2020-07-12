@@ -32,6 +32,7 @@
 #include "IpcClient.h"
 #include "Ipc.h"
 #include "ActivationDialog.h"
+#include "ConfigWriter.h"
 
 #include <QMutex>
 
@@ -95,9 +96,9 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
     public:
 #ifdef SYNERGY_ENTERPRISE
-        MainWindow(QSettings& settings, AppConfig& appConfig);
+        MainWindow(AppConfig& appConfig);
 #else
-        MainWindow(QSettings& settings, AppConfig& appConfig,
+        MainWindow(AppConfig& appConfig,
                    LicenseManager& licenseManager);
 #endif
         ~MainWindow();
@@ -149,6 +150,7 @@ public slots:
         void on_m_pButtonConfigureServer_clicked();
         bool on_m_pActionSave_triggered();
         void on_m_pActionAbout_triggered();
+        void on_m_pActionHelp_triggered();
         void on_m_pActionSettings_triggered();
         void on_m_pActivate_triggered();
         void synergyFinished(int exitCode, QProcess::ExitStatus);
@@ -159,8 +161,12 @@ public slots:
         void updateFound(const QString& version);
         void saveSettings();
 
+        /// @brief Receives the signal that the auto config option has changed
+        void zeroConfToggled();
+
     protected:
-        QSettings& settings() { return m_Settings; }
+        // TODO This should be properly using the ConfigWriter system.
+        QSettings& settings() { return GUI::Config::ConfigWriter::make()->settings(); }
         AppConfig& appConfig() { return *m_AppConfig; }
         QProcess* synergyProcess() { return m_pSynergy; }
         void setSynergyProcess(QProcess* p) { m_pSynergy = p; }
@@ -182,6 +188,8 @@ public slots:
         void stopDesktop();
         void changeEvent(QEvent* event);
         void retranslateMenuBar();
+        void closeEvent(QCloseEvent *event) override;
+
 #if defined(Q_OS_WIN)
         bool isServiceRunning(QString name);
 #else
@@ -212,7 +220,6 @@ public slots:
         QStringList         m_PendingClientNames;
 #endif
         Zeroconf*           m_pZeroconf;
-        QSettings&          m_Settings;
         AppConfig*          m_AppConfig;
         QProcess*           m_pSynergy;
         int                 m_SynergyState;

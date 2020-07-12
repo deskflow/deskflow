@@ -54,7 +54,6 @@ void ActivationDialog::reject()
         if (QDialog::Accepted == cancelActivationDialog.exec()) {
             m_LicenseManager->skipActivation();
             m_appConfig->activationHasRun(true);
-            m_appConfig->saveSettings();
         } else {
             return;
         }
@@ -66,7 +65,6 @@ void ActivationDialog::accept()
 {
     QMessageBox message;
     m_appConfig->activationHasRun(true);
-    m_appConfig->saveSettings();
 
     std::pair<bool, QString> result;
     try {

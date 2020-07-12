@@ -1,0 +1,39 @@
+# This workflow will triage pull requests and apply a label based on the
+# paths that are modified in the pull request.
+#
+# To use this workflow, you will need to set up a .github/labeler.yml
+# file with configuration.  For more information, see:
+# https://github.com/actions/labeler/blob/master/README.md
+
+name: Changlog Updated
+on: 
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+    - id: file_changes
+      name: Get changed files
+      uses: trilom/file-changes-action@v1.2.3
+      with:
+        output: ','
+    - name: echo changes
+      run: |
+        echo Files
+        echo '${{ steps.file_changes.outputs.files}}'
+        echo Modified
+        echo '${{ steps.file_changes.outputs.files_modified}}'
+        echo Added
+        echo '${{ steps.file_changes.outputs.files_added}}'
+        echo Removed
+        echo '${{ steps.file_changes.outputs.files_removed}}' 
+    - name: List files
+      run: |
+        if [[ "${{ steps.file_changes.outputs.files_modified}}" == *"ChangeLog"* ]]; then
+          echo "Changlog has been updated"
+        else
+          echo "::error file=app.js,line=10,col=15::Changelog hasnt been updated"
+          exit 1
+        fi

@@ -27,7 +27,6 @@
 
 #include <QtCore>
 #include <QtGui>
-#include <QSettings>
 #include <QMessageBox>
 
 #if defined(Q_OS_MAC)
@@ -48,6 +47,7 @@ public:
 };
 
 int waitForTray();
+QString getSystemSettingPath();
 
 #if defined(Q_OS_MAC)
 bool checkMacAssistiveDevices();
@@ -89,8 +89,7 @@ int main(int argc, char* argv[])
     QApplication::setQuitOnLastWindowClosed(false);
 #endif
 
-    QSettings settings;
-    AppConfig appConfig (&settings);
+    AppConfig appConfig;
     qRegisterMetaType<Edition>("Edition");
 #ifndef SYNERGY_ENTERPRISE
     LicenseManager licenseManager (&appConfig);
@@ -99,9 +98,9 @@ int main(int argc, char* argv[])
     app.switchTranslator(appConfig.language());
 
 #ifdef SYNERGY_ENTERPRISE
-    MainWindow mainWindow(settings, appConfig);
+    MainWindow mainWindow(appConfig);
 #else
-    MainWindow mainWindow(settings, appConfig, licenseManager);
+    MainWindow mainWindow(appConfig, licenseManager);
 #endif
 
     QObject::connect(dynamic_cast<QObject*>(&app), SIGNAL(aboutToQuit()),
@@ -144,6 +143,8 @@ int waitForTray()
     }
     return true;
 }
+
+
 
 #if defined(Q_OS_MAC)
 bool checkMacAssistiveDevices()

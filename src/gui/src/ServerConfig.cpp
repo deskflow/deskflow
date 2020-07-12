@@ -42,22 +42,21 @@ static const struct
 
 const int serverDefaultIndex = 7;
 
-ServerConfig::ServerConfig(QSettings* settings, int numColumns, int numRows ,
+ServerConfig::ServerConfig(int numColumns, int numRows ,
                 QString serverName, MainWindow* mainWindow) :
-    m_pSettings(settings),
-    m_Screens(),
-    m_NumColumns(numColumns),
-    m_NumRows(numRows),
-    m_ServerName(serverName),
-    m_IgnoreAutoConfigClient(false),
-    m_EnableDragAndDrop(false),
-    m_DisableLockToScreen(false),
-    m_ClipboardSharing(true),
-    m_ClipboardSharingSize(defaultClipboardSharingSize()),
-    m_pMainWindow(mainWindow)
-{
-    Q_ASSERT(m_pSettings);
 
+        m_Screens(),
+        m_NumColumns(numColumns),
+        m_NumRows(numRows),
+        m_ServerName(serverName),
+        m_IgnoreAutoConfigClient(false),
+        m_EnableDragAndDrop(false),
+        m_DisableLockToScreen(false),
+        m_ClipboardSharing(true),
+        m_ClipboardSharingSize(defaultClipboardSharingSize()),
+        m_pMainWindow(mainWindow)
+{
+    GUI::Config::ConfigWriter::make()->registerClass(this);
     loadSettings();
 }
 
@@ -142,6 +141,9 @@ void ServerConfig::saveSettings()
     settings().endArray();
 
     settings().endGroup();
+
+    //Tell the config writer there are changes
+    GUI::Config::ConfigWriter::make()->markUnsaved();
 }
 
 void ServerConfig::loadSettings()
@@ -429,4 +431,10 @@ size_t ServerConfig::setClipboardSharingSize(size_t size) {
 	using std::swap;
 	swap (size, m_ClipboardSharingSize);
 	return size;
+}
+
+QSettings &ServerConfig::settings() {
+    using GUI::Config::ConfigWriter;
+
+    return ConfigWriter::make()->settings();
 }

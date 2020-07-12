@@ -56,7 +56,7 @@ else()
 endif()
 
 set (libs)
-include_directories (BEFORE SYSTEM ./ext/gtest/include)
+include_directories (BEFORE SYSTEM ./ext/googletest/googletest/include)
 
 if (UNIX)
     if (NOT APPLE)
@@ -232,6 +232,12 @@ if (UNIX)
             list (APPEND libs Xi)
         endif()
 
+		set (DnsSdlib "dns_sd.h")
+		set (CMAKE_EXTRA_INCLUDE_FILES "${CMAKE_EXTRA_INCLUDE_FILES};${DnsSdlib}")
+		check_include_files ("${DnsSdlib}" HAVE_DNS_SD)
+		if (NOT HAVE_DNS_SD)
+            message (FATAL_ERROR "Missing header: " ${DnsSdlib})
+        endif()
     endif()
 
     # For config.h, set some static values; it may be a good idea to make
@@ -299,7 +305,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
         ${OPENSSL_ROOT}/lib/libssl.a
         ${OPENSSL_ROOT}/lib/libcrypto.a
     )
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
     set (OPENSSL_LIBS ssl crypto)
 else()
     message (FATAL_ERROR "Couldn't find OpenSSL")
@@ -336,7 +342,7 @@ macro (configure_files srcDir destDir)
 endmacro (configure_files)
 
 macro(generate_versionfile)
-	if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin" OR ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin" OR ${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
 		FILE(WRITE ${CMAKE_BINARY_DIR}/version
 		"export SYNERGY_VERSION_MAJOR=\"${SYNERGY_VERSION_MAJOR}\"\n"
 		"export SYNERGY_VERSION_MINOR=\"${SYNERGY_VERSION_MINOR}\"\n"
@@ -362,7 +368,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
     set (SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
     set (SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
-	
+
 	generate_versionfile()
     configure_files (${SYNERGY_BUNDLE_SOURCE_DIR} ${SYNERGY_BUNDLE_DIR})
 endif()
@@ -380,10 +386,10 @@ endif()
 #
 # Linux installation
 #
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
     install(FILES res/synergy.svg DESTINATION share/icons/hicolor/scalable/apps)
-    if("${VERSION_MAJOR}" STREQUAL "2") 
+    if("${VERSION_MAJOR}" STREQUAL "2")
         install(FILES res/synergy2.desktop DESTINATION share/applications)
     else()
         install(FILES res/synergy.desktop DESTINATION share/applications)

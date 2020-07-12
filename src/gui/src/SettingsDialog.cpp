@@ -49,53 +49,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 
     m_Locale.fillLanguageComboBox(m_pComboLanguage);
 
-    m_pLineEditScreenName->setText(appConfig().screenName());
-    m_pSpinBoxPort->setValue(appConfig().port());
-    m_pLineEditInterface->setText(appConfig().networkInterface());
-    m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
-    m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
-    m_pLineEditLogFilename->setText(appConfig().logFilename());
-    setIndexFromItemData(m_pComboLanguage, appConfig().language());
-    m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
-    m_pCheckBoxMinimizeToTray->setChecked(appConfig().getMinimizeToTray());
-    m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
-
-#if defined(Q_OS_WIN)
-    m_pBonjourWindows = new BonjourWindows(this, m_pMainWindow, m_appConfig);
-    if (m_pBonjourWindows->isRunning()) {
-        allowAutoConfig();
-    }
-
-    m_pComboElevate->setCurrentIndex(static_cast<int>(appConfig().elevateMode()));
-
-#else
-    // elevate checkbox is only useful on ms windows.
-    m_pLabelElevate->hide();
-    m_pComboElevate->hide();
-
-    // for linux and mac, allow auto config by default
-    allowAutoConfig();
-#endif
-
-    m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
-
-#ifdef SYNERGY_ENTERPRISE
-
-     m_pCheckBoxEnableCrypto->setEnabled(true);
-     m_pLabelProUpgrade->hide();
-
-     m_pCheckBoxAutoConfig->hide();
-     m_pLabelInstallBonjour->hide();
-
-#else
-
-    bool isPro = m_appConfig.edition() == kPro;
-    m_pCheckBoxEnableCrypto->setEnabled(isPro);
-    m_pLabelProUpgrade->setVisible(!isPro);
-
-    m_pCheckBoxAutoConfig->setChecked(appConfig().autoConfig());
-
-#endif
+    loadFromConfig();
 }
 
 void SettingsDialog::accept()
@@ -111,7 +65,9 @@ void SettingsDialog::accept()
     appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
     appConfig().setAutoConfig(m_pCheckBoxAutoConfig->isChecked());
     appConfig().setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
-    appConfig().saveSettings();
+
+    //We only need to test the System scoped Radio as they are connected
+    appConfig().setLoadFromSystemScope(m_pRadioSystemScope->isChecked());
     QDialog::accept();
 }
 
@@ -147,6 +103,65 @@ void SettingsDialog::changeEvent(QEvent* event)
         }
     }
 }
+
+void SettingsDialog::loadFromConfig() {
+
+    m_pLineEditScreenName->setText(appConfig().screenName());
+    m_pSpinBoxPort->setValue(appConfig().port());
+    m_pLineEditInterface->setText(appConfig().networkInterface());
+    m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
+    m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
+    m_pLineEditLogFilename->setText(appConfig().logFilename());
+    setIndexFromItemData(m_pComboLanguage, appConfig().language());
+    m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
+    m_pCheckBoxMinimizeToTray->setChecked(appConfig().getMinimizeToTray());
+    m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
+
+    if (m_appConfig.isSystemScoped()) {
+        m_pRadioSystemScope->setChecked(true);
+    }
+    else {
+        m_pRadioUserScope->setChecked(true);
+    }
+
+#if defined(Q_OS_WIN)
+    m_pBonjourWindows = new BonjourWindows(this, m_pMainWindow, m_appConfig);
+    if (m_pBonjourWindows->isRunning()) {
+        allowAutoConfig();
+    }
+
+    m_pComboElevate->setCurrentIndex(static_cast<int>(appConfig().elevateMode()));
+
+#else
+    // elevate checkbox is only useful on ms windows.
+    m_pLabelElevate->hide();
+    m_pComboElevate->hide();
+
+    // for linux and mac, allow auto config by default
+    allowAutoConfig();
+#endif
+
+    m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
+
+#ifdef SYNERGY_ENTERPRISE
+
+    m_pCheckBoxEnableCrypto->setEnabled(true);
+     m_pLabelProUpgrade->hide();
+
+     m_pCheckBoxAutoConfig->hide();
+     m_pLabelInstallBonjour->hide();
+
+#else
+
+    bool isPro = m_appConfig.edition() == kPro;
+    m_pCheckBoxEnableCrypto->setEnabled(isPro);
+    m_pLabelProUpgrade->setVisible(!isPro);
+
+    m_pCheckBoxAutoConfig->setChecked(appConfig().autoConfig());
+
+#endif
+}
+
 
 void SettingsDialog::allowAutoConfig()
 {
@@ -185,7 +200,6 @@ void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
 {
     m_appConfig.setCryptoEnabled(checked);
-    m_appConfig.saveSettings();
     if (checked) {
         SslCertificate sslCertificate;
         sslCertificate.generateCertificate();
@@ -198,4 +212,10 @@ void SettingsDialog::on_m_pLabelInstallBonjour_linkActivated(const QString&)
 #if defined(Q_OS_WIN)
     m_pBonjourWindows->downloadAndInstall();
 #endif
+}
+
+void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked)
+{
+    appConfig().setLoadFromSystemScope(checked);
+    loadFromConfig();
 }

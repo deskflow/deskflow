@@ -12,7 +12,13 @@ file (GLOB LEGACY_ACTIVATION_FILES src/*Activation* src/*License*)
 file (GLOB LEGACY_ZEROCONF_FILES src/Zeroconf*)
 file (GLOB LEGACY_LANGUAGE_FILES res/lang/*.ts)
 
+configure_file(res/Languages.qrc res/Languages.qrc)
+
+set_source_files_properties(${LEGACY_LANGUAGE_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/res/lang")
+
 qt5_add_translation(QM_FILES ${LEGACY_LANGUAGE_FILES})
+
+add_custom_target(translations ALL DEPENDS ${QM_FILES})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     file (GLOB LEGACY_GUI_MAC_SOURCE_FILES src/*.mm)
@@ -34,6 +40,7 @@ add_executable (synergy WIN32
     ${LEGACY_GUI_UI_FILES}
     ${LEGACY_GUI_RC_FILES}
     res/Synergy.qrc
+    ${CMAKE_CURRENT_BINARY_DIR}/res/Languages.qrc
     ${QM_FILES}
 )
 
@@ -52,7 +59,6 @@ if (WIN32)
                   HINTS ENV BONJOUR_SDK_HOME
                   PATH_SUFFIXES "Lib/Win32")
     endif()
-
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_link_libraries (synergy dns_sd)
 endif()
@@ -73,4 +79,35 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     install (TARGETS synergy DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     install (TARGETS synergy DESTINATION bin)
+endif()
+
+if (WIN32)
+    if(Qt5_FOUND AND WIN32 AND TARGET Qt5::qmake AND NOT TARGET Qt5::windeployqt)
+        get_target_property(_qt5_qmake_location Qt5::qmake IMPORTED_LOCATION)
+
+        execute_process(
+                COMMAND "${_qt5_qmake_location}" -query QT_INSTALL_PREFIX
+                RESULT_VARIABLE return_code
+                OUTPUT_VARIABLE qt5_install_prefix
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+
+        set(imported_location "${qt5_install_prefix}/bin/windeployqt.exe")
+
+        if(EXISTS ${imported_location})
+            add_executable(Qt5::windeployqt IMPORTED)
+
+            set_target_properties(Qt5::windeployqt PROPERTIES
+                    IMPORTED_LOCATION ${imported_location}
+                    )
+        endif()
+    endif()
+    if(TARGET Qt5::windeployqt)
+        # execute windeployqt in a tmp directory after build
+        add_custom_command(TARGET synergy
+                POST_BUILD
+                COMMAND set PATH=%PATH%$<SEMICOLON>${qt5_install_prefix}/bin
+                COMMAND Qt5::windeployqt "$<TARGET_FILE_DIR:synergy>/$<TARGET_FILE_NAME:synergy>"
+                )
+    endif()
 endif()

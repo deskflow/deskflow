@@ -1,0 +1,213 @@
+steps:
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        New-Item -Force -ItemType Directory -Path ".\deps\"
+        $client = new-object System.Net.WebClient
+        $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\deps\bonjoursdk.zip")
+        $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi",".\deps\Bonjour64.msi")
+    displayName: 'Downloading Bonjour SKD'
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+      architecture: 'x64'
+    displayName: 'Set python version'
+
+  - script: |
+      cd $(Build.SourcesDirectory)
+      python -m pip install aqtinstall
+    displayName: 'Install aqtinstall'
+
+  - script: |
+      cd $(Build.SourcesDirectory)
+      python -m aqt install -b $(QLI_BASE_URL) --outputdir $(Build.Repository.LocalPath)\\deps\\Qt  $(QT_VERSION) windows desktop win64_msvc2017_64
+      python -m aqt install -b $(QLI_BASE_URL) --outputdir $(Build.Repository.LocalPath)\\deps\\Qt  $(QT_VERSION) windows desktop win32_msvc2017
+    displayName: 'Install Qt $(QT_VERSION)'
+
+  - task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: './deps/*.zip'
+      destinationFolder: './deps/'
+      cleanDestinationFolder: false
+    displayName: 'Extracting zips'
+
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        Get-ChildItem '.\deps'
+        msiexec.exe /i ${pwd}\deps\Bonjour64.msi INSTALLDIR="${pwd}\deps\Bonjour" /qb
+    displayName: 'Installing bonjour SDK'
+
+  - script: |
+      call "%ENV_BAT%" -arch=x64
+      set BONJOUR_SDK_HOME=%cd%\%BONJOUR_SDK_DIR%
+      mkdir build64
+      cd build64
+      IF "$(buildType)"=="enterprise" (
+          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
+      ) else (
+          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
+      )
+    displayName: 'Cmake x64 Standard'
+    env:
+      ENV_BAT: $(ENV_BAT)
+      BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
+      QT_PATH: $(QT_BIN_PATH)
+      MSARCH: 'x64'
+
+  - script: |
+      call "%ENV_BAT%" -arch=x64
+      cd build64
+      msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Release
+    displayName: 'Compiling x64'
+    env:
+      ENV_BAT: $(ENV_BAT)
+
+  - script: |
+      call "%ENV_BAT%" -arch=x86
+      set BONJOUR_SDK_HOME=%cd%\%BONJOUR_SDK_DIR%
+      mkdir build32
+      cd build32
+      IF "$(buildType)"=="enterprise" (
+         cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
+      ) else (
+         cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
+      )
+    displayName: 'Cmake x32 Standard'
+    env:
+      ENV_BAT: $(ENV_BAT)
+      BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
+      QT_PATH: $(QT_BIN_PATH_32)
+      MSARCH: 'Win32'
+
+  - script: |
+      call "%ENV_BAT%" -arch=x86
+      cd build32
+      msbuild synergy-core.sln /p:Platform="Win32" /p:Configuration=Release
+    displayName: 'Compiling x32'
+    env:
+      ENV_BAT: $(ENV_BAT)
+
+  - task: codesigning@2
+    inputs:
+      secureFileId: 'WindowsSigningCert.pfx'
+      signCertPassword: '$(CODESIGN_PWD)'
+      files: '*\bin\Release\*.exe'
+      timeServer: 'http://timestamp.digicert.com'
+      hashingAlgorithm: 'SHA256'
+    displayName: "Signing Synergy binaries"
+    condition: eq(variables['Build.Reason'], 'Manual')
+
+  - task: MSBuild@1
+    inputs:
+      solution: 'build64/installer/Synergy.sln'
+      msbuildVersion: '16.0'
+      msbuildArchitecture: 'x64'
+      platform: 'x64'
+      configuration: 'Release'
+      msbuildArguments: '/m'
+      maximumCpuCount: true
+    displayName: 'Making installer x64'
+    env:
+      QT_PATH: $(QT_BIN_PATH)
+
+  - task: MSBuild@1
+    inputs:
+      solution: 'build32/installer/Synergy.sln'
+      msbuildVersion: '16.0'
+      msbuildArchitecture: 'x86'
+      platform: 'x86'
+      configuration: 'Release'
+      msbuildArguments: '/m'
+      maximumCpuCount: true
+    displayName: 'Making installer x86'
+    env:
+      QT_PATH: $(QT_BIN_PATH_32)
+
+  - task: codesigning@2
+    inputs:
+      secureFileId: 'WindowsSigningCert.pfx'
+      signCertPassword: '$(CODESIGN_PWD)'
+      files: '*\installer\bin\Release\Synergy.msi'
+      timeServer: 'http://timestamp.digicert.com'
+      hashingAlgorithm: 'SHA256'
+    displayName: "Signing installers"
+    condition: eq(variables['Build.Reason'], 'Manual')
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: 'build32\bin\Release'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/Synergy_x86.zip'
+      replaceExistingArchive: true
+      verbose: true
+    displayName: "Archive 32-bit binaries"
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: 'build64\bin\Release'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/Synergy_x64.zip'
+      replaceExistingArchive: true
+      verbose: true
+    displayName: "Archive 64-bit binaries"
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+
+  - script: |
+      call ./build64/version
+      set SYNERGY_VERSION=%SYNERGY_VERSION_MAJOR%.%SYNERGY_VERSION_MINOR%.%SYNERGY_VERSION_PATCH%
+      git rev-parse --short=8 HEAD > gitversion
+      set /p SYNERGY_REVISION= < gitversion
+      echo ##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]%SYNERGY_VERSION_STAGE%
+      echo ##vso[task.setvariable variable=SYNERGY_VERSION]%SYNERGY_VERSION%
+      echo ##vso[task.setvariable variable=SYNERGY_REVISION]%SYNERGY_REVISION%
+      cd $(Build.Repository.LocalPath)\build32\installer\bin\Release\
+      set FILENAME=$(prefix)_v%SYNERGY_VERSION%_windows_x86.msi
+      ren "Synergy.msi" "%FILENAME%"
+      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe md5 %FILENAME% > %FILENAME%.md5
+      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 %FILENAME% > %FILENAME%.sha1
+      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha256 %FILENAME% > %FILENAME%.sha256
+      cd $(Build.Repository.LocalPath)\build64\installer\bin\Release\
+      set FILENAME=$(prefix)_v%SYNERGY_VERSION%_windows_x64.msi
+      ren "Synergy.msi" "%FILENAME%"
+      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe md5 %FILENAME% > %FILENAME%.md5
+      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 %FILENAME% > %FILENAME%.sha1
+      $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha256 %FILENAME% > %FILENAME%.sha256
+    displayName: "Rename files"
+    condition: eq(variables['Build.Reason'], 'Manual')
+
+  - task: CopyFilesOverSSH@0
+    inputs:
+      sshEndpoint: 'Azure on Sandor'
+      sourceFolder: '$(Build.ArtifactStagingDirectory)/'
+      contents: '*.zip'
+      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+      readyTimeout: '20000'
+    displayName: 'Send archives to sandor'
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+
+  - task: CopyFilesOverSSH@0
+    inputs:
+      sshEndpoint: 'Azure on Sandor'
+      sourceFolder: '$(Build.Repository.LocalPath)\build32\installer\bin\Release\'
+      contents: '*'
+      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+      readyTimeout: '20000'
+    displayName: 'Send x86 Package to sandor'
+    condition: eq(variables['Build.Reason'], 'Manual')
+
+  - task: CopyFilesOverSSH@0
+    inputs:
+      sshEndpoint: 'Azure on Sandor'
+      sourceFolder: '$(Build.Repository.LocalPath)\build64\installer\bin\Release\'
+      contents: '*'
+      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+      readyTimeout: '20000'
+    displayName: 'Send x64 Package to sandor'
+    condition: eq(variables['Build.Reason'], 'Manual')
