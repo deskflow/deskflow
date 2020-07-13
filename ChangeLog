@@ -19,6 +19,7 @@ Enhancements:
 - #6688 Fully migrate CI from Jenkins to Azure Pipelines
 - #6718 Action to test PR's for updated changelog
 - #6722 Allow servers to be announced by screen name instead of IP
+- #6720 Add macqtdeploy to cmake
 
 Features:
 - #6538 System-wide config for all system users
