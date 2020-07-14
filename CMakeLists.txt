@@ -20,6 +20,7 @@ project (synergy-core C CXX)
 option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" ON)
 option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
 option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" ON)
+option (BUILD_TESTS "Override building of tests" ON)
 
 if (DEFINED ENV{SYNERGY_ENTERPRISE})
   option (SYNERGY_ENTERPRISE "Build Enterprise" ON)

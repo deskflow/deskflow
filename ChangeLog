@@ -21,6 +21,7 @@ Enhancements:
 - #6718 Action to test PR's for updated changelog
 - #6722 Allow servers to be announced by screen name instead of IP
 - #6720 Add macqtdeploy to cmake
+- #6725 Disable the building of tests with CMake option
 
 Features:
 - #6538 System-wide config for all system users
