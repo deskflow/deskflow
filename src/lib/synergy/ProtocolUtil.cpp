@@ -61,6 +61,9 @@ ProtocolUtil::readf(synergy::IStream* stream, const char* fmt, ...)
     catch (XIO&) {
         result = false;
     }
+    catch (std::bad_alloc & exception) {
+        result = false;
+    }
     va_end(args);
     return result;
 }
@@ -222,8 +225,8 @@ ProtocolUtil::vreadf(synergy::IStream* stream, const char* fmt, va_list args)
                     catch (std::bad_alloc & exception) {
                         // Added try catch due to GHSA-chfm-333q-gfpp
                         LOG((CLOG_ERR "ALLOC: Unable to allocate memory %d bytes", len));
-                        LOG((CLOG_DEBUG "bad_alloc detected: %s", exception.what()));
-                        throw;
+                        LOG((CLOG_DEBUG "bad_alloc detected: Do you have enough free memory?"));
+                        throw exception;
                     }
                 }
 
