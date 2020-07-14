@@ -10,6 +10,7 @@ Bug fixes:
 - #6661 Removed deprecated namespace in gtest/gmock by updating
 - #6601 Update man page with missing crypto option
 - #4036 Client cursor constrained to old resolution
+- #6716 Denial of Service vulnerability on servers with 4GB of ram or less
 
 Enhancements:
 - #6666 Add doxygen documentation output from pipelines
