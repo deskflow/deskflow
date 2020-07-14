@@ -1,7 +1,7 @@
 name: barrier
 base: core18
 version: master
-version-script: git describe --tags --long | sed "s/^v//"
+version-script: git describe --tags | sed "s/^v//"
 adopt-info: appstream-flathub
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
