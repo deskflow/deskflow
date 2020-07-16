@@ -18,7 +18,7 @@ Enhancements:
 - #6714 Added windows core binaries upload to sandor
 - #6715 Updated language file from Crowdin
 - #6688 Fully migrate CI from Jenkins to Azure Pipelines
-- #6718 Action to test PR's for updated changelog
+- #6718 GitHub Action to test PR's for if ChangeLog was updated
 - #6722 Allow servers to be announced by screen name instead of IP
 - #6720 Add macqtdeploy to cmake
 - #6725 Disable the building of tests with CMake option
