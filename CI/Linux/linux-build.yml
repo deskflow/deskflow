@@ -52,7 +52,7 @@ steps:
       echo "##vso[task.setvariable variable=SYNERGY_DEB_VERSION]${SYNERGY_DEB_VERSION}"
       echo "##vso[task.setvariable variable=SYNERGY_RPM_VERSION]${SYNERGY_RPM_VERSION}"
     displayName: "Setup variables"
-    condition: and(eq(variables['packager'],'deb'), eq(variables['Build.Reason'], 'Manual'))
+    condition: eq(variables['Build.Reason'], 'Manual')
 
   - script: |
       dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
