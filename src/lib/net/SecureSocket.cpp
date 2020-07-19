@@ -349,19 +349,19 @@ bool SecureSocket::loadCertificates(const std::string& filename)
     int r = 0;
     r = SSL_CTX_use_certificate_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
     if (r <= 0) {
-        showError("could not use ssl certificate");
+        showError("could not use ssl certificate: " + filename);
         return false;
     }
 
     r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
     if (r <= 0) {
-        showError("could not use ssl private key");
+        showError("could not use ssl private key: " + filename);
         return false;
     }
 
     r = SSL_CTX_check_private_key(m_ssl->m_context);
     if (!r) {
-        showError("could not verify ssl private key");
+        showError("could not verify ssl private key: " + filename);
         return false;
     }
 
