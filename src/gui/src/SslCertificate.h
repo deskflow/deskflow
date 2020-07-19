@@ -18,6 +18,7 @@
 #pragma once
 
 #include <QObject>
+#include <string>
 
 class SslCertificate : public QObject
 {
@@ -35,10 +36,9 @@ signals:
     void generateFinished();
 
 private:
-    bool runTool(const QStringList& args);
+    std::pair<bool, std::string> runTool(const QStringList& args);
     void generateFingerprint(const QString& certificateFilename);
 
 private:
     QString m_ProfileDir;
-    QString m_ToolOutput;
 };

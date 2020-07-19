@@ -43,7 +43,7 @@ SslCertificate::SslCertificate(QObject *parent) :
     }
 }
 
-bool SslCertificate::runTool(const QStringList& args)
+std::pair<bool, std::string> SslCertificate::runTool(const QStringList& args)
 {
     QString program;
 #if defined(Q_OS_WIN)
@@ -66,11 +66,12 @@ bool SslCertificate::runTool(const QStringList& args)
     process.start(program, args);
 
     bool success = process.waitForStarted();
+    std::string output;
 
     QString standardError;
     if (success && process.waitForFinished())
     {
-        m_ToolOutput = process.readAllStandardOutput().trimmed();
+        output = process.readAllStandardOutput().trimmed().toStdString();
         standardError = process.readAllStandardError().trimmed();
     }
 
@@ -82,10 +83,10 @@ bool SslCertificate::runTool(const QStringList& args)
                 .arg(program)
                 .arg(process.exitCode())
                 .arg(standardError.isEmpty() ? "Unknown" : standardError));
-        return false;
+        return {false, output};
     }
 
-    return true;
+    return {true, output};
 }
 
 void SslCertificate::generateCertificate()
@@ -136,7 +137,7 @@ void SslCertificate::generateCertificate()
         arguments.append("-out");
         arguments.append(filename);
 
-        if (!runTool(arguments)) {
+        if (!runTool(arguments).first) {
             return;
         }
 
@@ -158,21 +159,26 @@ void SslCertificate::generateFingerprint(const QString& certificateFilename)
     arguments.append("-in");
     arguments.append(certificateFilename);
 
-    if (!runTool(arguments)) {
+    auto ret = runTool(arguments);
+    bool success = ret.first;
+    std::string output = ret.second;
+
+    if (!success) {
         return;
     }
 
     // find the fingerprint from the tool output
-    int i = m_ToolOutput.indexOf("=");
-    if (i != -1) {
+    auto i = output.find_first_of('=');
+    if (i != std::string::npos) {
         i++;
-        QString fingerprint = m_ToolOutput.mid(
-            i, m_ToolOutput.size() - i);
+        auto fingerprint = output.substr(
+            i, output.size() - i);
 
-        Fingerprint::local().trust(fingerprint, false);
+        Fingerprint::local().trust(QString::fromStdString(fingerprint), false);
         emit info(tr("SSL fingerprint generated."));
     }
     else {
         emit error(tr("Failed to find SSL fingerprint."));
     }
 }
+
