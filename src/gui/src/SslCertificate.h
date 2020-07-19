@@ -42,6 +42,7 @@ private:
     std::string getCertificatePath();
     std::string getCertificateDirectory();
 
+    bool isCertificateValid(const QString& path);
 private:
     std::string m_ProfileDir;
 };

@@ -23,6 +23,12 @@
 #include <QDir>
 #include <QCoreApplication>
 
+#include <openssl/bio.h>
+#include <openssl/err.h>
+#include <openssl/evp.h>
+#include <openssl/pem.h>
+#include <openssl/x509.h>
+
 static const char kCertificateLifetime[] = "365";
 static const char kCertificateSubjectInfo[] = "/CN=Barrier";
 static const char kCertificateFilename[] = "Barrier.pem";
@@ -94,7 +100,7 @@ void SslCertificate::generateCertificate()
     auto filename = QString::fromStdString(getCertificatePath());
 
     QFile file(filename);
-    if (!file.exists()) {
+    if (!file.exists() || !isCertificateValid(filename)) {
         QStringList arguments;
 
         // self signed certificate
@@ -182,4 +188,59 @@ std::string SslCertificate::getCertificatePath()
 std::string SslCertificate::getCertificateDirectory()
 {
     return m_ProfileDir + QDir::separator().toLatin1() + kSslDir;
+}
+
+bool SslCertificate::isCertificateValid(const QString& path)
+{
+    OpenSSL_add_all_algorithms();
+    ERR_load_BIO_strings();
+    ERR_load_crypto_strings();
+
+    BIO* bio = BIO_new(BIO_s_file());
+
+    auto ret = BIO_read_filename(bio, path.toStdString().c_str());
+    if (!ret) {
+        emit info(tr("Could not read from default certificate file."));
+        BIO_free_all(bio);
+        return false;
+    }
+
+    X509* cert = PEM_read_bio_X509(bio, NULL, 0, NULL);
+    if (!cert) {
+        emit info(tr("Error loading default certificate file to memory."));
+        BIO_free_all(bio);
+        return false;
+    }
+
+    EVP_PKEY* pubkey = X509_get_pubkey(cert);
+    if (!pubkey) {
+        emit info(tr("Default certificate key file does not contain valid public key"));
+        X509_free(cert);
+        BIO_free_all(bio);
+        return false;
+    }
+
+    auto type = EVP_PKEY_type(EVP_PKEY_id(pubkey));
+    if (type != EVP_PKEY_RSA && type != EVP_PKEY_DSA) {
+        emit info(tr("Public key in default certificate key file is not RSA or DSA"));
+        EVP_PKEY_free(pubkey);
+        X509_free(cert);
+        BIO_free_all(bio);
+        return false;
+    }
+
+    auto bits = EVP_PKEY_bits(pubkey);
+    if (bits < 2048) {
+        // We could have small keys in old barrier installations
+        emit info(tr("Public key in default certificate key file is too small."));
+        EVP_PKEY_free(pubkey);
+        X509_free(cert);
+        BIO_free_all(bio);
+        return false;
+    }
+
+    EVP_PKEY_free(pubkey);
+    X509_free(cert);
+    BIO_free_all(bio);
+    return true;
 }
