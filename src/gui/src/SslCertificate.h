@@ -39,6 +39,9 @@ private:
     std::pair<bool, std::string> runTool(const QStringList& args);
     void generateFingerprint(const QString& certificateFilename);
 
+    std::string getCertificatePath();
+    std::string getCertificateDirectory();
+
 private:
-    QString m_ProfileDir;
+    std::string m_ProfileDir;
 };

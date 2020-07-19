@@ -37,8 +37,8 @@ static const char kConfigFile[] = "barrier.conf";
 SslCertificate::SslCertificate(QObject *parent) :
     QObject(parent)
 {
-    m_ProfileDir = QString::fromStdString(DataDirectories::profile());
-    if (m_ProfileDir.isEmpty()) {
+    m_ProfileDir = DataDirectories::profile();
+    if (m_ProfileDir.empty()) {
         emit error(tr("Failed to get profile directory."));
     }
 }
@@ -91,15 +91,7 @@ std::pair<bool, std::string> SslCertificate::runTool(const QStringList& args)
 
 void SslCertificate::generateCertificate()
 {
-    QString sslDirPath = QString("%1%2%3")
-        .arg(m_ProfileDir)
-        .arg(QDir::separator())
-        .arg(kSslDir);
-
-    QString filename = QString("%1%2%3")
-        .arg(sslDirPath)
-        .arg(QDir::separator())
-        .arg(kCertificateFilename);
+    auto filename = QString::fromStdString(getCertificatePath());
 
     QFile file(filename);
     if (!file.exists()) {
@@ -124,7 +116,7 @@ void SslCertificate::generateCertificate()
         arguments.append("-newkey");
         arguments.append("rsa:2048");
 
-        QDir sslDir(sslDirPath);
+        QDir sslDir(QString::fromStdString(getCertificateDirectory()));
         if (!sslDir.exists()) {
             sslDir.mkpath(".");
         }
@@ -182,3 +174,12 @@ void SslCertificate::generateFingerprint(const QString& certificateFilename)
     }
 }
 
+std::string SslCertificate::getCertificatePath()
+{
+    return getCertificateDirectory() + QDir::separator().toLatin1() + kCertificateFilename;
+}
+
+std::string SslCertificate::getCertificateDirectory()
+{
+    return m_ProfileDir + QDir::separator().toLatin1() + kSslDir;
+}
