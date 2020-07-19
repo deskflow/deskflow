@@ -329,7 +329,7 @@ SecureSocket::initSsl(bool server)
     initContext(server);
 }
 
-bool SecureSocket::loadCertificates(std::string& filename)
+bool SecureSocket::loadCertificates(const std::string& filename)
 {
     if (filename.empty()) {
         showError("ssl certificate is not specified");
@@ -341,9 +341,7 @@ bool SecureSocket::loadCertificates(std::string& filename)
         file.close();
 
         if (!exist) {
-            std::string errorMsg("ssl certificate doesn't exist: ");
-            errorMsg.append(filename);
-            showError(errorMsg.c_str());
+            showError("ssl certificate doesn't exist: " + filename);
             return false;
         }
     }
@@ -403,7 +401,7 @@ SecureSocket::initContext(bool server)
     SSL_CTX_set_options(m_ssl->m_context, SSL_OP_NO_SSLv3);
 
     if (m_ssl->m_context == NULL) {
-        showError();
+        showError("");
     }
 }
 
@@ -618,16 +616,15 @@ SecureSocket::checkResult(int status, int& retry)
 
     if (isFatal()) {
         retry = 0;
-        showError();
+        showError("");
         disconnect();
     }
 }
 
-void
-SecureSocket::showError(const char* reason)
+void SecureSocket::showError(const std::string& reason)
 {
-    if (reason != NULL) {
-        LOG((CLOG_ERR "%s", reason));
+    if (!reason.empty()) {
+        LOG((CLOG_ERR "%s", reason.c_str()));
     }
 
     std::string error = getError();
