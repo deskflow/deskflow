@@ -51,9 +51,10 @@ namespace GUI {
                                              QCoreApplication::organizationName(),
                                              QCoreApplication::applicationName());
 
-            m_pSettingsUser = new QSettings(QSettings::Scope::UserScope,
-                                   QCoreApplication::organizationName(),
-                                   QCoreApplication::applicationName());
+            //defaults to user scope, if we set the scope specifically then we also have to set
+            // the application name and the organisation name which breaks backwards compatibility
+            // See #6730
+            m_pSettingsUser = new QSettings();
 
             //Set scope to user for initially
             m_pSettingsCurrent = m_pSettingsUser;
