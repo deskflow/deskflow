@@ -172,13 +172,13 @@ steps:
 
   - script: |
       cd $(Build.Repository.LocalPath)\build32\installer\bin\Release\
-      set FILENAME=$(prefix)_v$(SYNERGY_VERSION)-$(SYNERGY_VERSION_STAGE)_$(Build.BuildNumber).$(SYNERGY_VERSION_STAGE)_windows_x86.msi
+      set FILENAME=$(prefix)_v$(SYNERGY_VERSION)-$(SYNERGY_VERSION_STAGE)_$(Build.BuildNumber).$(SYNERGY_REVISION)_windows_x86.msi
       ren "Synergy.msi" "%FILENAME%"
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe md5 %FILENAME% > %FILENAME%.checksum.txt
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 %FILENAME% >> %FILENAME%.checksum.txt
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha256 %FILENAME% >> %FILENAME%.checksum.txt
       cd $(Build.Repository.LocalPath)\build64\installer\bin\Release\
-      set FILENAME=$(prefix)_v$(SYNERGY_VERSION)-$(SYNERGY_VERSION_STAGE)_$(Build.BuildNumber).$(SYNERGY_VERSION_STAGE)_windows_x64.msi
+      set FILENAME=$(prefix)_v$(SYNERGY_VERSION)-$(SYNERGY_VERSION_STAGE)_$(Build.BuildNumber).$(SYNERGY_REVISION)_windows_x64.msi
       ren "Synergy.msi" "%FILENAME%"
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe md5 %FILENAME% > %FILENAME%.checksum.txt
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 %FILENAME% >> %FILENAME%.checksum.txt

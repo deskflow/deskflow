@@ -6,6 +6,8 @@ steps:
       make -j
     condition: eq(variables['packager'],'deb')
     displayName: 'Build Release deb'
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       mkdir build-release
@@ -17,6 +19,8 @@ steps:
       make -j
     condition: eq(variables['packager'],'rpm')
     displayName: 'Build Release rpm'
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       mkdir build-ent
@@ -26,6 +30,8 @@ steps:
       make -j
     displayName: 'Build enterprise'
     condition: eq(variables['packager'],'deb')
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       mkdir build-ent
@@ -37,6 +43,8 @@ steps:
       make -j
     condition: eq(variables['packager'],'rpm')
     displayName: 'Build enterprise rpm'
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       . ./build-release/version
