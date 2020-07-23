@@ -81,9 +81,9 @@ steps:
         mkdir pkg
         mv $(SYNERGY_DMG_FILENAME) pkg/
         cd pkg
-        md5 -r $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).md5
-        shasum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha1
-        shasum -a 256 $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).sha256
+        md5 -r $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).checksum.txt
+        shasum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).checksum.txt
+        shasum -a 256 $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).checksum.txt
     displayName: 'Create Installer'
     condition: eq(variables['Build.Reason'], 'Manual')
 
