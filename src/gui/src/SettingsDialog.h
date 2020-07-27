@@ -65,6 +65,10 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         /// @brief Handles the toggling of the system scoped radio button
         ///        As the user scope radio is connected this will fire for either radio button
         void on_m_pRadioSystemScope_toggled(bool checked);
+
+        /// @brief Handles the click event of the Cert Path browse button
+        ///        displaying a file browser
+        void on_m_pPushButtonBrowseCert_clicked();
 };
 
 #endif

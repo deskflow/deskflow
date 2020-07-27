@@ -29,7 +29,11 @@ public:
     explicit SslCertificate(QObject *parent = 0);
 
 public slots:
-    void generateCertificate();
+    /// @brief Generates a TLS cert and private key
+    /// @param [in] QString path The path of the file to be generated
+    /// @param [in] QString keyLength The size of the private key. default: 2048
+    /// @param [in] bool Should the file be created regardless of if the file already exists
+    void generateCertificate(const QString& path = QString(), const QString& keyLength = "2048", bool forceGen = false);
 
 signals:
     void error(QString e);

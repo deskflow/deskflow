@@ -27,6 +27,7 @@
 #include <shared/EditionType.h>
 #include <mutex>
 #include "ConfigBase.h"
+#include "CoreInterface.h"
 
 // this should be incremented each time a new page is added. this is
 // saved to settings when the user finishes running the wizard. if
@@ -126,12 +127,29 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         bool    getClientGroupChecked() const;
         QString getServerHostname() const;
 
+        /// @brief Gets the current TLS certificate path
+        /// @return QString The path to the cert
+        QString getTLSCertPath() const;
+
+        /// @brief Get the key length to be used for the private key of a TLS cert
+        /// @return QString The key length in bits
+        QString     getTLSKeyLength() const;
+
         void setServerGroupChecked(bool);
         void setUseExternalConfig(bool) ;
         void setConfigFile(const QString&);
         void setUseInternalConfig(bool) ;
         void setClientGroupChecked(bool) ;
         void setServerHostname(const QString&);
+
+        /// @brief Set the path to the TLS/SSL certificate file that will be used
+        /// @param [in] path The path to the Certificate
+        void setTLSCertPath(const QString& path);
+
+        /// @brief Sets the key length of the private key to use in a TLS connection
+        /// @param [in] QString length The key length eg: 1024, 2048, 4096
+        void setTLSKeyLength(const QString& length);
+
 
         QString lastVersion() const;
 
@@ -174,6 +192,8 @@ protected:
         kUseInternalConfig,
         kGroupClientCheck,
         kServerHostname,
+        kTLSCertPath,
+        kTLSKeyLength,
     };
 
         void setScreenName(const QString& s);
@@ -224,9 +244,14 @@ protected:
         bool m_ClientGroupChecked;
         QString m_ServerHostname;
 
+        QString m_TLSCertificatePath;   /// @brief The path to the TLS certificate file
+        QString m_TLSKeyLength;         /// @brief The key length of the TLS cert to make
+
         bool m_LoadFromSystemScope;     /// @brief should the setting be loaded from SystemScope
                                         ///         If the user has settings but this is true then
                                         ///         system settings will be loaded instead of the users
+
+        CoreInterface m_CoreInterface;
 
         static const char m_SynergysName[];
         static const char m_SynergycName[];

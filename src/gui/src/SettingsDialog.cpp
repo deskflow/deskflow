@@ -65,9 +65,22 @@ void SettingsDialog::accept()
     appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
     appConfig().setAutoConfig(m_pCheckBoxAutoConfig->isChecked());
     appConfig().setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
+    appConfig().setTLSCertPath(m_pLineEditCertificatePath->text());
+
+    bool keyLengthChanged = appConfig().getTLSKeyLength() != m_pComboBoxKeyLength->currentText();
+    appConfig().setTLSKeyLength(m_pComboBoxKeyLength->currentText());
 
     //We only need to test the System scoped Radio as they are connected
     appConfig().setLoadFromSystemScope(m_pRadioSystemScope->isChecked());
+
+    if(m_pCheckBoxEnableCrypto->isChecked()) {
+        SslCertificate sslCertificate;
+        sslCertificate.generateCertificate(appConfig().getTLSCertPath(),
+                                           m_pComboBoxKeyLength->currentText(),
+                                           keyLengthChanged);
+    }
+    m_appConfig.setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
+
     QDialog::accept();
 }
 
@@ -116,6 +129,8 @@ void SettingsDialog::loadFromConfig() {
     m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
     m_pCheckBoxMinimizeToTray->setChecked(appConfig().getMinimizeToTray());
     m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
+    m_pLineEditCertificatePath->setText(appConfig().getTLSCertPath());
+    m_pComboBoxKeyLength->setCurrentIndex(m_pComboBoxKeyLength->findText(appConfig().getTLSKeyLength()));
 
     if (m_appConfig.isSystemScoped()) {
         m_pRadioSystemScope->setChecked(true);
@@ -204,7 +219,11 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
         SslCertificate sslCertificate;
         sslCertificate.generateCertificate();
         m_pMainWindow->updateLocalFingerprint();
+        verticalSpacer_4->changeSize(10, 10, QSizePolicy::Minimum);
+    } else {
+        verticalSpacer_4->changeSize(10, 0, QSizePolicy::Ignored);
     }
+    adjustSize();
 }
 
 void SettingsDialog::on_m_pLabelInstallBonjour_linkActivated(const QString&)
@@ -218,4 +237,17 @@ void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked)
 {
     appConfig().setLoadFromSystemScope(checked);
     loadFromConfig();
+}
+
+void SettingsDialog::on_m_pPushButtonBrowseCert_clicked() {
+    QString fileName = QFileDialog::getSaveFileName(
+            this, tr("Select a TLS certificate to use..."),
+            m_pLineEditCertificatePath->text(),
+            "Cert (*.pem)",
+            nullptr,
+            QFileDialog::DontConfirmOverwrite);
+
+    if (!fileName.isEmpty()) {
+        m_pLineEditCertificatePath->setText(fileName);
+    }
 }

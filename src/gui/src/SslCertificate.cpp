@@ -25,7 +25,7 @@
 
 
 
-static const char kCertificateKeyLength[] = "rsa:2048"; //RSA Bit length (e.g. 1024/2048/4096)
+static const char kCertificateKeyLength[] = "rsa:"; //RSA Bit length (e.g. 1024/2048/4096)
 static const char kCertificateHashAlgorithm[] = "-sha256"; //fingerprint hashing algorithm
 static const char kCertificateLifetime[] = "365";
 static const char kCertificateSubjectInfo[] = "/CN=Synergy";
@@ -93,7 +93,7 @@ bool SslCertificate::runTool(const QStringList& args)
     return true;
 }
 
-void SslCertificate::generateCertificate()
+void SslCertificate::generateCertificate(const QString& path, const QString& keyLength, bool forceGen)
 {
     QString sslDirPath = QString("%1%2%3")
         .arg(m_ProfileDir)
@@ -105,8 +105,11 @@ void SslCertificate::generateCertificate()
         .arg(QDir::separator())
         .arg(kCertificateFilename);
 
-    QFile file(filename);
-    if (!file.exists()) {
+    QString keySize = kCertificateKeyLength + keyLength;
+
+    //If path is empty use filename
+    QFile file(path.isEmpty() ? filename : path);
+    if (!file.exists() || forceGen) {
         QStringList arguments;
 
         // self signed certificate
@@ -126,7 +129,7 @@ void SslCertificate::generateCertificate()
 
         // private key
         arguments.append("-newkey");
-        arguments.append(kCertificateKeyLength);
+        arguments.append(keySize);
 
         QDir sslDir(sslDirPath);
         if (!sslDir.exists()) {

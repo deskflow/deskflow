@@ -73,6 +73,8 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "useInternalConfig",
         "groupClientChecked",
         "serverHostname",
+        "tlsCertPath",
+        "tlsKeyLength",
 };
 
 static const char* logLevelNames[] =
@@ -249,6 +251,13 @@ void AppConfig::loadSettings()
     m_ClientGroupChecked        = loadSetting(kGroupClientCheck, true).toBool();
     m_ServerHostname            = loadSetting(kServerHostname).toString();
 
+    //Set the default path of the TLS certificate file in the users DIR
+    QString certificateFilename = QString("%1/%2/%3").arg(m_CoreInterface.getProfileDir(),
+                                                          "SSL",
+                                                          "Synergy.pem");
+
+    m_TLSCertificatePath        = loadSetting(kTLSCertPath, certificateFilename).toString();
+    m_TLSKeyLength              = loadSetting(kTLSKeyLength, 2048).toInt();
 
 }
 
@@ -525,5 +534,21 @@ void AppConfig::setSettingModified(T &variable, const T& newValue) {
         variable = newValue;
         m_unsavedChanges = true;
     }
+}
+
+void AppConfig::setTLSCertPath(const QString& path) {
+    m_TLSCertificatePath = path;
+}
+
+QString AppConfig::getTLSCertPath() const {
+    return m_TLSCertificatePath;
+}
+
+QString AppConfig::getTLSKeyLength() const {
+    return m_TLSKeyLength;
+}
+
+void AppConfig::setTLSKeyLength(const QString& length) {
+    m_TLSKeyLength = length;
 }
 

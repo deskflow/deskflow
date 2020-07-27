@@ -744,10 +744,6 @@ void MainWindow::retryStart()
 void
 MainWindow::sslToggled (bool enabled)
 {
-    if (enabled) {
-        m_pSslCertificate = new SslCertificate(this);
-        m_pSslCertificate->generateCertificate();
-    }
     updateLocalFingerprint();
 }
 
