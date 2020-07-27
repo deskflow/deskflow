@@ -56,8 +56,10 @@ else()
     set (SYNERGY_ADD_HEADERS TRUE)
 endif()
 
+
+
 set (libs)
-include_directories (BEFORE SYSTEM ./ext/googletest/googletest/include)
+include_directories (BEFORE SYSTEM ${PROJECT_SOURCE_DIR}/ext/googletest/googletest/include)
 
 if (UNIX)
     if (NOT APPLE)
@@ -311,6 +313,32 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
 else()
     message (FATAL_ERROR "Couldn't find OpenSSL")
 endif()
+
+#
+# Check submodules
+#
+find_package(Git QUIET)
+if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+# Update submodules as needed
+  option(GIT_SUBMODULE "Check submodules during build" ON)
+  if(GIT_SUBMODULE)
+    message(STATUS "Submodule update")
+    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      RESULT_VARIABLE GIT_SUBMOD_RESULT)
+    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+      message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+    endif()
+  endif()
+endif()
+
+#
+# Google Test
+#
+if(NOT EXISTS "${PROJECT_SOURCE_DIR}/ext/googletest/CMakeLists.txt")
+  message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
+endif()
+
 
 #
 # Configure_file... but for directories, recursively.
