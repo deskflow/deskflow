@@ -45,7 +45,11 @@ class ClientListener;
 class EventQueueTimer;
 class ILogOutputter;
 class IEventQueue;
-class ServerArgs;
+namespace lib {
+    namespace synergy{
+        class ServerArgs;
+    }
+}
 
 class ServerApp : public App {
 public:
@@ -59,7 +63,7 @@ public:
     void help();
 
     // Returns arguments that are common and for server.
-    ServerArgs& args() const { return (ServerArgs&)argsBase(); }
+    lib::synergy::ServerArgs& args() const { return (lib::synergy::ServerArgs&)argsBase(); }
 
     const char* daemonName() const;
     const char* daemonInfo() const;

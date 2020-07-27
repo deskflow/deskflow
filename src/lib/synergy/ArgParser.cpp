@@ -29,8 +29,8 @@
 #ifdef WINAPI_MSWINDOWS
 #include <VersionHelpers.h>
 #endif
- 
-ArgsBase* ArgParser::m_argsBase = NULL;
+
+lib::synergy::ArgsBase* ArgParser::m_argsBase = NULL;
 
 ArgParser::ArgParser(App* app) :
     m_app(app)
@@ -38,7 +38,7 @@ ArgParser::ArgParser(App* app) :
 }
 
 bool
-ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
+ArgParser::parseServerArgs(lib::synergy::ServerArgs& args, int argc, const char* const* argv)
 {
     setArgsBase(args);
     updateCommonArgs(argv);
@@ -78,7 +78,7 @@ ArgParser::parseServerArgs(ServerArgs& args, int argc, const char* const* argv)
 }
 
 bool
-ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
+ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char* const* argv)
 {
     setArgsBase(args);
     updateCommonArgs(argv);
@@ -130,7 +130,7 @@ ArgParser::parseClientArgs(ClientArgs& args, int argc, const char* const* argv)
 }
 
 bool
-ArgParser::parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
+ArgParser::parsePlatformArg(lib::synergy::ArgsBase& argsBase, const int& argc, const char* const* argv, int& i)
 {
 #if WINAPI_MSWINDOWS
     if (isArg(i, argc, argv, NULL, "--service")) {
@@ -289,6 +289,9 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
     }
     else if (isArg(i, argc, argv, NULL, "--plugin-dir", 1)) {
         argsBase().m_pluginDirectory = argv[++i];
+    }
+    else if (isArg(i, argc, argv, NULL, "--tls-cert", 1)) {
+        argsBase().m_tlsCertFile = argv[++i];
     }
     else {
         // option not supported here

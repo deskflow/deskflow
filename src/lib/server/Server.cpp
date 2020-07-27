@@ -62,7 +62,7 @@ Server::Server(
 		PrimaryClient* primaryClient,
 		synergy::Screen* screen,
 		IEventQueue* events,
-		ServerArgs const& args) :
+		lib::synergy::ServerArgs const& args) :
 	m_mock(false),
 	m_primaryClient(primaryClient),
 	m_active(primaryClient),

@@ -22,8 +22,13 @@
 
 typedef int (*StartupFunc)(int, char**);
 
+namespace lib {
+    namespace synergy {
+        class ArgsBase;
+    }
+}
+
 class ILogOutputter;
-class ArgsBase;
 class IArchTaskBarReceiver;
 namespace synergy { class Screen; }
 class IEventQueue;
@@ -32,7 +37,7 @@ class IApp : public IInterface
 {
 public:
     virtual void setByeFunc(void(*bye)(int)) = 0;
-    virtual ArgsBase& argsBase() const = 0;
+    virtual lib::synergy::ArgsBase& argsBase() const = 0;
     virtual int standardStartup(int argc, char** argv) = 0;
     virtual int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup) = 0;
     virtual void startNode() = 0;

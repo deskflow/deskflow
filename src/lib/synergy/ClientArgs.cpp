@@ -15,9 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ClientArgs.h"
+#include "ClientArgs.h"
 
-ClientArgs::ClientArgs() :
-    m_yscroll(0)
-{
+namespace lib {
+    namespace synergy {
+
+        ClientArgs::~ClientArgs() {
+
+        }
+
+        ClientArgs::ClientArgs() {
+            m_classType = kClient;
+        }
+    }
 }

@@ -25,7 +25,11 @@ class Event;
 class Client;
 class NetworkAddress;
 class Thread;
-class ClientArgs;
+namespace lib {
+    namespace synergy {
+        class ClientArgs;
+    }
+}
 
 class ClientApp : public App {
 public:
@@ -39,7 +43,7 @@ public:
     void help();
 
     // Returns arguments that are common and for client.
-    ClientArgs& args() const { return (ClientArgs&)argsBase(); }
+    lib::synergy::ClientArgs& args() const { return (lib::synergy::ClientArgs&)argsBase(); }
 
     const char* daemonName() const;
     const char* daemonInfo() const;

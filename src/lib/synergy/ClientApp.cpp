@@ -63,7 +63,7 @@
 #define RETRY_TIME 1.0
 
 ClientApp::ClientApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
-    App(events, createTaskBarReceiver, new ClientArgs()),
+    App(events, createTaskBarReceiver, new lib::synergy::ClientArgs()),
     m_client(NULL),
     m_clientScreen(NULL),
     m_serverAddress(NULL)

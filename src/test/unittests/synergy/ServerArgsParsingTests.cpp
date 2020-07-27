@@ -42,7 +42,7 @@ TEST(ServerArgsParsingTests, parseServerArgs_addressArg_setSynergyAddress)
     NiceMock<MockArgParser> argParser;
     ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
     ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
-    ServerArgs serverArgs;
+    lib::synergy::ServerArgs serverArgs;
     const int argc = 3;
     const char* kAddressCmd[argc] = { "stub", "--address", "mock_address" };
 
@@ -56,7 +56,7 @@ TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile)
     NiceMock<MockArgParser> argParser;
     ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
     ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
-    ServerArgs serverArgs;
+    lib::synergy::ServerArgs serverArgs;
     const int argc = 3;
     const char* kConfigCmd[argc] = { "stub", "--config", "mock_configFile" };
 
