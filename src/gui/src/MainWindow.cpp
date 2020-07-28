@@ -670,6 +670,7 @@ void MainWindow::startSynergy()
 
     if (m_AppConfig->getCryptoEnabled()) {
         args << "--enable-crypto";
+        args << "--tls-cert" << m_AppConfig->getTLSCertPath();
     }
 
 #if defined(Q_OS_WIN)

@@ -357,7 +357,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="m_pPushButtonRegenCert">
         <property name="text">
          <string>Regenerate Cert</string>
         </property>
@@ -510,6 +510,7 @@
   <tabstop>m_pComboBoxKeyLength</tabstop>
   <tabstop>m_pLineEditCertificatePath</tabstop>
   <tabstop>m_pPushButtonBrowseCert</tabstop>
+  <tabstop>m_pPushButtonRegenCert</tabstop>
   <tabstop>m_pComboLogLevel</tabstop>
   <tabstop>m_pCheckBoxLogToFile</tabstop>
   <tabstop>m_pLineEditLogFilename</tabstop>

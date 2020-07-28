@@ -107,8 +107,10 @@ void SslCertificate::generateCertificate(const QString& path, const QString& key
 
     QString keySize = kCertificateKeyLength + keyLength;
 
+    const QString pathToUse = path.isEmpty() ? filename : path;
+
     //If path is empty use filename
-    QFile file(path.isEmpty() ? filename : path);
+    QFile file(pathToUse);
     if (!file.exists() || forceGen) {
         QStringList arguments;
 
@@ -138,11 +140,11 @@ void SslCertificate::generateCertificate(const QString& path, const QString& key
 
         // key output filename
         arguments.append("-keyout");
-        arguments.append(filename);
+        arguments.append(pathToUse);
 
         // certificate output filename
         arguments.append("-out");
-        arguments.append(filename);
+        arguments.append(pathToUse);
 
         if (!runTool(arguments)) {
             return;
@@ -151,7 +153,7 @@ void SslCertificate::generateCertificate(const QString& path, const QString& key
         emit info(tr("SSL certificate generated."));
     }
 
-    generateFingerprint(filename);
+    generateFingerprint(pathToUse);
 
     emit generateFinished();
 }
@@ -183,4 +185,29 @@ void SslCertificate::generateFingerprint(const QString& certificateFilename)
     else {
         emit error(tr("Failed to find SSL fingerprint."));
     }
+}
+
+QString SslCertificate::getCertKeyLength(const QString &path) {
+
+    QStringList arguments;
+    arguments.append("rsa");
+    arguments.append("-in");
+    arguments.append(path);
+    arguments.append("-text");
+    arguments.append("-noout");
+
+    if (!runTool(arguments)) {
+        return QString();
+    }
+    const QString searchStart("Private-Key: (");
+    const QString searchEnd(" bit");
+
+    //Get the line that contains the key length from the output
+    const auto indexStart = m_ToolOutput.indexOf(searchStart);
+    const auto indexEnd = m_ToolOutput.indexOf(searchEnd, indexStart);
+    const auto start = indexStart + searchStart.length();
+    const auto end = indexEnd - (indexStart + searchStart.length());
+    auto keyLength = m_ToolOutput.mid(start, end);
+
+    return keyLength;
 }

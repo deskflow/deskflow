@@ -257,7 +257,7 @@ void AppConfig::loadSettings()
                                                           "Synergy.pem");
 
     m_TLSCertificatePath        = loadSetting(kTLSCertPath, certificateFilename).toString();
-    m_TLSKeyLength              = loadSetting(kTLSKeyLength, 2048).toInt();
+    m_TLSKeyLength              = loadSetting(kTLSKeyLength, "2048").toString();
 
 }
 
