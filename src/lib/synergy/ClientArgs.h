@@ -15,16 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef SYNERGY_CORE_CLIENTARGS_H
+#define SYNERGY_CORE_CLIENTARGS_H
 
-#include "synergy/ArgsBase.h"
+#include "ArgsBase.h"
 
-class NetworkAddress;
 
-class ClientArgs : public ArgsBase {
-public:
-    ClientArgs();
+namespace lib {
+    namespace synergy {
+        class ClientArgs : public ArgsBase {
 
-public:
-    int                    m_yscroll;
-};
+            /// Public functions
+        public:
+            ClientArgs();
+
+            ~ClientArgs() override;
+
+        public:
+            int                  m_yscroll      = 0;
+
+        private:
+
+        };
+    }
+}
+#endif //SYNERGY_CORE_CLIENTARGS_H

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014-2016 Symless Ltd.
+ * Copyright (C) 2014-2020 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,20 +15,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef SYNERGY_CORE_SERVERARGS_H
+#define SYNERGY_CORE_SERVERARGS_H
 
-#include "synergy/ArgsBase.h"
+#include "ArgsBase.h"
 #include "shared/SerialKey.h"
+#include "server/Config.h"
 
-class NetworkAddress;
-class Config;
+namespace lib {
+    namespace synergy {
+        class ServerArgs : public ArgsBase {
+            /// Public Functions
+        public:
+            ServerArgs();
+            ~ServerArgs() override;
 
-class ServerArgs : public ArgsBase {
-public:
-    ServerArgs();
+            /// Public variables
+        public:
+            String               m_configFile    = "";       /// @brief Contains the path to the config file
+            SerialKey            m_serial;                   /// @brief Contains the serial number and license info
+            Config*              m_config        = nullptr;  /// @brief Contains the Parsed Configuration settings
 
-public:
-    String                m_configFile;
-    SerialKey            m_serial;
-    Config*                m_config;
-};
+            /// Private Functions
+        private:
+
+
+        };
+    }
+}
+#endif //SYNERGY_CORE_SERVERARGS_H

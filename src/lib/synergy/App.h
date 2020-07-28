@@ -43,11 +43,11 @@ typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const BufferedLogOutp
 
 class App : public IApp {
 public:
-    App(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, ArgsBase* args);
+    App(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, lib::synergy::ArgsBase* args);
     virtual ~App();
 
     // Returns args that are common between server and client.
-    ArgsBase& argsBase() const { return *m_args; }
+    lib::synergy::ArgsBase& argsBase() const { return *m_args; }
 
     // Prints the current compiled version.
     virtual void version();
@@ -113,7 +113,7 @@ protected:
     IEventQueue*        m_events;
 
 private:
-    ArgsBase* m_args;
+    lib::synergy::ArgsBase* m_args;
     static App* s_instance;
     FileLogOutputter* m_fileLog;
     CreateTaskBarReceiverFunc m_createTaskBarReceiver;
@@ -164,7 +164,8 @@ private:
     "  -l  --log <file>         write log messages to file.\n" \
     "      --no-tray            disable the system tray icon.\n" \
     "      --enable-drag-drop   enable file drag & drop.\n" \
-    "      --enable-crypto      enable the crypto (ssl) plugin.\n"
+    "      --enable-crypto      enable the crypto (ssl) plugin.\n" \
+    "      --tls-cert           specify the path to the tls certificate file.\n"
 
 #define HELP_COMMON_INFO_2 \
     "  -h, --help               display this help and exit.\n" \

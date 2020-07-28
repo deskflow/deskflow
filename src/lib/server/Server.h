@@ -107,7 +107,7 @@ public:
     ownership of \p primaryClient.
     */
     Server(Config& config, PrimaryClient* primaryClient,
-        synergy::Screen* screen, IEventQueue* events, ServerArgs const& args);
+        synergy::Screen* screen, IEventQueue* events, lib::synergy::ServerArgs const& args);
     ~Server();
 
 #ifdef TEST_ENV
@@ -481,5 +481,5 @@ private:
     bool                m_waitDragInfoThread;
 
     ClientListener*        m_clientListener;
-    ServerArgs            m_args;
+    lib::synergy::ServerArgs            m_args;
 };

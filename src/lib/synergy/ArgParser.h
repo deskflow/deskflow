@@ -20,10 +20,15 @@
 #include "base/String.h"
 #include "common/stdvector.h"
 
-class ServerArgs;
-class ClientArgs;
+namespace lib {
+    namespace synergy {
+        class ArgsBase;
+        class ServerArgs;
+        class ClientArgs;
+    }
+}
+
 class ToolArgs;
-class ArgsBase;
 class App;
 
 class ArgParser {
@@ -31,13 +36,13 @@ class ArgParser {
 public:
     ArgParser(App* app);
 
-    bool                parseServerArgs(ServerArgs& args, int argc, const char* const* argv);
-    bool                parseClientArgs(ClientArgs& args, int argc, const char* const* argv);
-    bool                parsePlatformArg(ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
+    bool                parseServerArgs(lib::synergy::ServerArgs& args, int argc, const char* const* argv);
+    bool                parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char* const* argv);
+    bool                parsePlatformArg(lib::synergy::ArgsBase& argsBase, const int& argc, const char* const* argv, int& i);
     bool                parseToolArgs(ToolArgs& args, int argc, const char* const* argv);
     bool                parseGenericArgs(int argc, const char* const* argv, int& i);
     bool                parseDeprecatedArgs(int argc, const char* const* argv, int& i);
-    void                setArgsBase(ArgsBase& argsBase) { m_argsBase = &argsBase; }
+    void                setArgsBase(lib::synergy::ArgsBase& argsBase) { m_argsBase = &argsBase; }
 
     static    bool        isArg(int argi, int argc, const char* const* argv,
                             const char* name1, const char* name2,
@@ -50,14 +55,15 @@ public:
     static String        assembleCommand(std::vector<String>& argsArray, 
                             String ignoreArg = "", int parametersRequired = 0);
 
+    static lib::synergy::ArgsBase&    argsBase() { return *m_argsBase; }
+
 private:
     void                updateCommonArgs(const char* const* argv);
     bool                checkUnexpectedArgs();
-    
-    static ArgsBase&    argsBase() { return *m_argsBase; }
+
 
 private:
     App*                m_app;
     
-    static ArgsBase*    m_argsBase;
+    static lib::synergy::ArgsBase*    m_argsBase;
 };

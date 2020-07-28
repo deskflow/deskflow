@@ -308,24 +308,23 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                 ArgParser::splitCommandString(command, argsArray);
                 ArgParser argParser(NULL);
                 const char** argv = argParser.getArgv(argsArray);
-                ServerArgs serverArgs;
-                ClientArgs clientArgs;
+
                 int argc = static_cast<int>(argsArray.size());
-                bool server = argsArray[0].find("synergys") != String::npos ? true : false;
-                ArgsBase* argBase = NULL;
+                bool server = argsArray[0].find("synergys") != String::npos;
+
 
                 if (server) {
-                    argParser.parseServerArgs(serverArgs, argc, argv);
-                    argBase = &serverArgs;
+                    auto serverArgs = new lib::synergy::ServerArgs();
+                    argParser.parseServerArgs(*serverArgs, argc, argv);
+
                 }
                 else {
-                    argParser.parseClientArgs(clientArgs, argc, argv);
-                    argBase = &clientArgs;
+                    auto clientArgs = new lib::synergy::ClientArgs();
+                    argParser.parseClientArgs(*clientArgs, argc, argv);
                 }
 
                 delete[] argv;
-                
-                String logLevel(argBase->m_logFilter);
+                String logLevel(ArgParser::argsBase().m_logFilter);
                 if (!logLevel.empty()) {
                     try {
                         // change log level based on that in the command string

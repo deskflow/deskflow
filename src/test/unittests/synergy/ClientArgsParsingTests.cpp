@@ -42,7 +42,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_yScrollArg_setYScroll)
     NiceMock<MockArgParser> argParser;
     ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));
     ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-    ClientArgs clientArgs;
+    lib::synergy::ClientArgs clientArgs;
     const int argc = 3;
     const char* kYScrollCmd[argc] = { "stub", "--yscroll", "1" };
 
@@ -56,7 +56,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_addressArg_setSynergyAddress)
     NiceMock<MockArgParser> argParser;
     ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));
     ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-    ClientArgs clientArgs;
+    lib::synergy::ClientArgs clientArgs;
     const int argc = 2;
     const char* kAddressCmd[argc] = { "stub", "mock_address" };
 
@@ -71,7 +71,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_noAddressArg_returnFalse)
     NiceMock<MockArgParser> argParser;
     ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));
     ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-    ClientArgs clientArgs;
+    lib::synergy::ClientArgs clientArgs;
     const int argc = 1;
     const char* kNoAddressCmd[argc] = { "stub" };
 
@@ -85,7 +85,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_unrecognizedArg_returnFalse)
     NiceMock<MockArgParser> argParser;
     ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));
     ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-    ClientArgs clientArgs;
+    lib::synergy::ClientArgs clientArgs;
     const int argc = 3;
     const char* kUnrecognizedCmd[argc] = { "stub", "mock_arg", "mock_address"};
 

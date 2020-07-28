@@ -56,7 +56,7 @@ Client::Client(
         const String& name, const NetworkAddress& address,
         ISocketFactory* socketFactory,
         synergy::Screen* screen,
-        ClientArgs const& args) :
+        lib::synergy::ClientArgs const& args) :
     m_mock(false),
     m_name(name),
     m_serverAddress(address),

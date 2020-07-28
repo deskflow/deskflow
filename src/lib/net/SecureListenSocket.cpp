@@ -22,6 +22,8 @@
 #include "net/SocketMultiplexer.h"
 #include "net/TSocketMultiplexerMethodJob.h"
 #include "arch/XArch.h"
+#include "synergy/ArgParser.h"
+#include "synergy/ArgsBase.h"
 
 static const char s_certificateDir[] = { "SSL" };
 static const char s_certificateFilename[] = { "Synergy.pem" };
@@ -53,10 +55,16 @@ SecureListenSocket::accept()
             setListeningJob();
         }
 
+        //default location of the TLS cert file in users dir
         String certificateFilename = synergy::string::sprintf("%s/%s/%s",
-                                        ARCH->getProfileDirectory().c_str(),
-                                        s_certificateDir,
-                                        s_certificateFilename);
+                                                              ARCH->getProfileDirectory().c_str(),
+                                                              s_certificateDir,
+                                                              s_certificateFilename);
+
+        //if the tls cert option is set use that for the certificate file
+        if (!ArgParser::argsBase().m_tlsCertFile.empty()) {
+            certificateFilename = ArgParser::argsBase().m_tlsCertFile;
+        }
 
         bool loaded = socket->loadCertificates(certificateFilename);
         if (!loaded) {

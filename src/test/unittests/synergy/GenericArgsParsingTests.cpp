@@ -48,7 +48,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_logLevelCmd_setLogLevel)
     const char* kLogLevelCmd[argc] = { "stub", "--debug", "DEBUG" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kLogLevelCmd, i);
@@ -66,7 +66,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_logFileCmd_saveLogFilename)
     const char* kLogFileCmd[argc] = { "stub", "--log", "mock_filename" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kLogFileCmd, i);
@@ -84,7 +84,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_logFileCmdWithSpace_saveLogFilena
     const char* kLogFileCmdWithSpace[argc] = { "stub", "--log", "mo ck_filename" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kLogFileCmdWithSpace, i);
@@ -102,7 +102,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noDeamonCmd_daemonFalse)
     const char* kNoDeamonCmd[argc] = { "stub", "-f" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kNoDeamonCmd, i);
@@ -118,7 +118,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_deamonCmd_daemonTrue)
     const char* kDeamonCmd[argc] = { "stub", "--daemon" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kDeamonCmd, i);
@@ -134,7 +134,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_nameCmd_saveName)
     const char* kNameCmd[argc] = { "stub", "--name", "mock" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kNameCmd, i);
@@ -150,7 +150,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noRestartCmd_restartFalse)
     const char* kNoRestartCmd[argc] = { "stub", "--no-restart" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kNoRestartCmd, i);
@@ -166,7 +166,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_restartCmd_restartTrue)
     const char* kRestartCmd[argc] = { "stub", "--restart" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kRestartCmd, i);
@@ -182,7 +182,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_backendCmd_backendTrue)
     const char* kBackendCmd[argc] = { "stub", "-z" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kBackendCmd, i);
@@ -198,7 +198,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noHookCmd_noHookTrue)
     const char* kNoHookCmd[argc] = { "stub", "--no-hooks" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kNoHookCmd, i);
@@ -216,7 +216,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_helpCmd_showHelp)
 
     NiceMock<MockApp> app;
     ArgParser argParser(&app);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     ON_CALL(app, help()).WillByDefault(Invoke(showMockHelp));
     
@@ -236,7 +236,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_versionCmd_showVersion)
 
     NiceMock<MockApp> app;
     ArgParser argParser(&app);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     ON_CALL(app, version()).WillByDefault(Invoke(showMockVersion));
     
@@ -253,7 +253,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noTrayCmd_disableTrayTrue)
     const char* kNoTrayCmd[argc] = { "stub", "--no-tray" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kNoTrayCmd, i);
@@ -269,7 +269,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue)
     const char* kIpcCmd[argc] = { "stub", "--ipc" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kIpcCmd, i);
@@ -286,7 +286,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnNonLinux_enableDragD
     const char* kDragDropCmd[argc] = { "stub", "--enable-drag-drop" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kDragDropCmd, i);
@@ -304,7 +304,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnLinux_enableDragDrop
     const char* kDragDropCmd[argc] = { "stub", "--enable-drag-drop" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kDragDropCmd, i);
