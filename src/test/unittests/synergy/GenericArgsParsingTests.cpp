@@ -286,7 +286,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnNonLinux_enableDragD
     const char* kDragDropCmd[argc] = { "stub", "--enable-drag-drop" };
 
     ArgParser argParser(NULL);
-    ArgsBase argsBase;
+    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     
     argParser.parseGenericArgs(argc, kDragDropCmd, i);
