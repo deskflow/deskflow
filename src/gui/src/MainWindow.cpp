@@ -670,6 +670,7 @@ void MainWindow::startSynergy()
 
     if (m_AppConfig->getCryptoEnabled()) {
         args << "--enable-crypto";
+        args << "--tls-cert" << m_AppConfig->getTLSCertPath();
     }
 
 #if defined(Q_OS_WIN)
@@ -744,10 +745,6 @@ void MainWindow::retryStart()
 void
 MainWindow::sslToggled (bool enabled)
 {
-    if (enabled) {
-        m_pSslCertificate = new SslCertificate(this);
-        m_pSslCertificate->generateCertificate();
-    }
     updateLocalFingerprint();
 }
 

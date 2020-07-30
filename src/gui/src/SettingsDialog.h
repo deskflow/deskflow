@@ -48,6 +48,16 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         /// @brief Causes the dialog to load all the settings from m_appConfig
         void loadFromConfig();
 
+        /// @brief Forces the regeneration of the TLS cert from the saved settings
+        void regenerateSSLCert();
+
+        /// @brief Check if the regenerate button should be enabled or disabled and sets it
+        void updateRegenButton();
+
+        /// @brief Updates the key length value based on the loaded file
+        /// @param [in] QString path The path to the file to test
+        void updateKeyLengthOnFile(const QString& path);
+
     private:
         MainWindow* m_pMainWindow;
         AppConfig& m_appConfig;
@@ -65,6 +75,17 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         /// @brief Handles the toggling of the system scoped radio button
         ///        As the user scope radio is connected this will fire for either radio button
         void on_m_pRadioSystemScope_toggled(bool checked);
+
+        /// @brief Handles the click event of the Cert Path browse button
+        ///        displaying a file browser
+        void on_m_pPushButtonBrowseCert_clicked();
+
+        /// @brief Handles the TLS cert key length changed event
+        void on_m_pComboBoxKeyLength_currentIndexChanged(int index);
+
+        /// @brief handels the regenerate cert button event
+        ///         This will regenerate the TLS certificate as long as the settings haven't changed
+        void on_m_pPushButtonRegenCert_clicked();
 };
 
 #endif

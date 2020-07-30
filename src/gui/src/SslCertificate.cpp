@@ -25,7 +25,7 @@
 
 
 
-static const char kCertificateKeyLength[] = "rsa:2048"; //RSA Bit length (e.g. 1024/2048/4096)
+static const char kCertificateKeyLength[] = "rsa:"; //RSA Bit length (e.g. 1024/2048/4096)
 static const char kCertificateHashAlgorithm[] = "-sha256"; //fingerprint hashing algorithm
 static const char kCertificateLifetime[] = "365";
 static const char kCertificateSubjectInfo[] = "/CN=Synergy";
@@ -93,7 +93,7 @@ bool SslCertificate::runTool(const QStringList& args)
     return true;
 }
 
-void SslCertificate::generateCertificate()
+void SslCertificate::generateCertificate(const QString& path, const QString& keyLength, bool forceGen)
 {
     QString sslDirPath = QString("%1%2%3")
         .arg(m_ProfileDir)
@@ -105,8 +105,13 @@ void SslCertificate::generateCertificate()
         .arg(QDir::separator())
         .arg(kCertificateFilename);
 
-    QFile file(filename);
-    if (!file.exists()) {
+    QString keySize = kCertificateKeyLength + keyLength;
+
+    const QString pathToUse = path.isEmpty() ? filename : path;
+
+    //If path is empty use filename
+    QFile file(pathToUse);
+    if (!file.exists() || forceGen) {
         QStringList arguments;
 
         // self signed certificate
@@ -126,7 +131,7 @@ void SslCertificate::generateCertificate()
 
         // private key
         arguments.append("-newkey");
-        arguments.append(kCertificateKeyLength);
+        arguments.append(keySize);
 
         QDir sslDir(sslDirPath);
         if (!sslDir.exists()) {
@@ -135,11 +140,11 @@ void SslCertificate::generateCertificate()
 
         // key output filename
         arguments.append("-keyout");
-        arguments.append(filename);
+        arguments.append(pathToUse);
 
         // certificate output filename
         arguments.append("-out");
-        arguments.append(filename);
+        arguments.append(pathToUse);
 
         if (!runTool(arguments)) {
             return;
@@ -148,7 +153,7 @@ void SslCertificate::generateCertificate()
         emit info(tr("SSL certificate generated."));
     }
 
-    generateFingerprint(filename);
+    generateFingerprint(pathToUse);
 
     emit generateFinished();
 }
@@ -180,4 +185,29 @@ void SslCertificate::generateFingerprint(const QString& certificateFilename)
     else {
         emit error(tr("Failed to find SSL fingerprint."));
     }
+}
+
+QString SslCertificate::getCertKeyLength(const QString &path) {
+
+    QStringList arguments;
+    arguments.append("rsa");
+    arguments.append("-in");
+    arguments.append(path);
+    arguments.append("-text");
+    arguments.append("-noout");
+
+    if (!runTool(arguments)) {
+        return QString();
+    }
+    const QString searchStart("Private-Key: (");
+    const QString searchEnd(" bit");
+
+    //Get the line that contains the key length from the output
+    const auto indexStart = m_ToolOutput.indexOf(searchStart);
+    const auto indexEnd = m_ToolOutput.indexOf(searchEnd, indexStart);
+    const auto start = indexStart + searchStart.length();
+    const auto end = indexEnd - (indexStart + searchStart.length());
+    auto keyLength = m_ToolOutput.mid(start, end);
+
+    return keyLength;
 }

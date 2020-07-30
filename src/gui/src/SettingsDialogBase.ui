@@ -6,16 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>357</width>
-    <height>496</height>
+    <width>378</width>
+    <height>756</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
-
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
+  <layout class="QGridLayout" name="gridLayout_5">
+   <item row="0" column="0">
     <widget class="QGroupBox" name="m_pGroupScope">
      <property name="title">
       <string>&amp;Settings Scope</string>
@@ -41,7 +40,7 @@
      </layout>
     </widget>
    </item>
-   <item>
+   <item row="1" column="0">
     <widget class="QGroupBox" name="m_pGroupAdvanced">
      <property name="title">
       <string>&amp;Miscellaneous</string>
@@ -190,7 +189,7 @@
      </layout>
     </widget>
    </item>
-   <item>
+   <item row="2" column="0">
     <spacer name="verticalSpacer_2">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -206,7 +205,7 @@
      </property>
     </spacer>
    </item>
-   <item>
+   <item row="3" column="0">
     <widget class="QGroupBox" name="m_pGroupNetwork">
      <property name="enabled">
       <bool>true</bool>
@@ -220,10 +219,7 @@
      <property name="title">
       <string>&amp;Network</string>
      </property>
-     <layout class="QFormLayout" name="formLayout">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
+     <layout class="QGridLayout" name="gridLayout_6">
       <property name="leftMargin">
        <number>2</number>
       </property>
@@ -236,7 +232,7 @@
       <property name="bottomMargin">
        <number>12</number>
       </property>
-      <item row="0" column="1">
+      <item row="0" column="0">
        <layout class="QGridLayout" name="m_pGridLayoutNetwork">
         <property name="leftMargin">
          <number>0</number>
@@ -244,36 +240,6 @@
         <property name="verticalSpacing">
          <number>12</number>
         </property>
-        <item row="1" column="0">
-         <widget class="QCheckBox" name="m_pCheckBoxEnableCrypto">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Enable &amp;TLS Encryption</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="m_pCheckBoxAutoConfig">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Enable Auto Config</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="m_pLabelInstallBonjour">
-          <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Install Bonjour&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="textFormat">
-           <enum>Qt::RichText</enum>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="1">
          <widget class="QLabel" name="m_pLabelProUpgrade">
           <property name="text">
@@ -287,12 +253,42 @@
           </property>
          </widget>
         </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="m_pLabelInstallBonjour">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Install Bonjour&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::RichText</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="m_pCheckBoxAutoConfig">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Enable Auto Config</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QCheckBox" name="m_pCheckBoxEnableCrypto">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Enable &amp;TLS Encryption</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
      </layout>
     </widget>
    </item>
-   <item>
+   <item row="4" column="0">
     <spacer name="verticalSpacer_3">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -308,7 +304,85 @@
      </property>
     </spacer>
    </item>
-   <item>
+   <item row="5" column="0">
+    <widget class="QGroupBox" name="m_pGroupBoxTLS">
+     <property name="title">
+      <string>TLS/SSL Settings</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="m_pLineEditCertificatePath"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="m_pLabel_29">
+        <property name="text">
+         <string>Key length</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="m_pLabel_30">
+        <property name="text">
+         <string>Certificate Path</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="m_pPushButtonBrowseCert">
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="QComboBox" name="m_pComboBoxKeyLength">
+        <property name="currentText">
+         <string>2048</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>1024</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2048</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>4096</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="m_pPushButtonRegenCert">
+        <property name="text">
+         <string>Regenerate Cert</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <spacer name="verticalSpacer_4">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Minimum</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>10</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="7" column="0">
     <widget class="QGroupBox" name="m_pGroupLog">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -393,7 +467,7 @@
      </layout>
     </widget>
    </item>
-   <item>
+   <item row="8" column="0">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -409,7 +483,7 @@
      </property>
     </spacer>
    </item>
-   <item>
+   <item row="9" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -422,13 +496,21 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>m_pRadioSystemScope</tabstop>
+  <tabstop>m_pRadioUserScope</tabstop>
   <tabstop>m_pComboLanguage</tabstop>
   <tabstop>m_pLineEditScreenName</tabstop>
   <tabstop>m_pSpinBoxPort</tabstop>
   <tabstop>m_pLineEditInterface</tabstop>
-  <tabstop>m_pCheckBoxMinimizeToTray</tabstop>
   <tabstop>m_pComboElevate</tabstop>
   <tabstop>m_pCheckBoxAutoHide</tabstop>
+  <tabstop>m_pCheckBoxMinimizeToTray</tabstop>
+  <tabstop>m_pCheckBoxAutoConfig</tabstop>
+  <tabstop>m_pCheckBoxEnableCrypto</tabstop>
+  <tabstop>m_pComboBoxKeyLength</tabstop>
+  <tabstop>m_pLineEditCertificatePath</tabstop>
+  <tabstop>m_pPushButtonBrowseCert</tabstop>
+  <tabstop>m_pPushButtonRegenCert</tabstop>
   <tabstop>m_pComboLogLevel</tabstop>
   <tabstop>m_pCheckBoxLogToFile</tabstop>
   <tabstop>m_pLineEditLogFilename</tabstop>
@@ -465,6 +547,22 @@
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pCheckBoxEnableCrypto</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pGroupBoxTLS</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>100</x>
+     <y>413</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>188</x>
+     <y>508</y>
     </hint>
    </hints>
   </connection>
