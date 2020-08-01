@@ -1250,7 +1250,7 @@ XK_uhorn
 // map "Internet" keys to KeyIDs
 static const KeySym s_map1008FF[] =
 {
-    /* 0x00 */ 0, 0, kKeyBrightnessUp, kKeyBrightnessDown, 0, 0, 0, 0,
+    /* 0x00 */ 0, 0, kKeyBrightnessUp, kKeyBrightnessDown, 0, kKeyKbdBrightnessUp, kKeyKbdBrightnessDown, 0,
     /* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
     /* 0x10 */ 0, kKeyAudioDown, kKeyAudioMute, kKeyAudioUp,
     /* 0x14 */ kKeyAudioPlay, kKeyAudioStop, kKeyAudioPrev, kKeyAudioNext,
