@@ -3,6 +3,7 @@ steps:
       mkdir build-release
       cd build-release
       if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
+      . ./version
       make -j
     condition: eq(variables['packager'],'deb')
     displayName: 'Build Release deb'
@@ -16,6 +17,7 @@ steps:
       cmake3 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
       else cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
       fi
+      . ./version
       make -j
     condition: eq(variables['packager'],'rpm')
     displayName: 'Build Release rpm'
@@ -27,6 +29,7 @@ steps:
       cd build-ent
       export SYNERGY_ENTERPRISE=1
       if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; fi
+      . ./version
       make -j
     displayName: 'Build enterprise'
     condition: eq(variables['packager'],'deb')
@@ -40,6 +43,7 @@ steps:
       cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
       else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
       fi
+      . ./version
       make -j
     condition: eq(variables['packager'],'rpm')
     displayName: 'Build enterprise rpm'

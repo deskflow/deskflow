@@ -57,14 +57,17 @@ steps:
       BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
       QT_PATH: $(QT_BIN_PATH)
       MSARCH: 'x64'
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       call "%ENV_BAT%" -arch=x64
       cd build64
+      call version
       msbuild synergy-core.sln /p:Platform="x64" /p:Configuration=Release
     displayName: 'Compiling x64'
     env:
       ENV_BAT: $(ENV_BAT)
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       call "%ENV_BAT%" -arch=x86
@@ -82,14 +85,17 @@ steps:
       BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
       QT_PATH: $(QT_BIN_PATH_32)
       MSARCH: 'Win32'
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       call "%ENV_BAT%" -arch=x86
       cd build32
+      call version
       msbuild synergy-core.sln /p:Platform="Win32" /p:Configuration=Release
     displayName: 'Compiling x32'
     env:
       ENV_BAT: $(ENV_BAT)
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - task: codesigning@2
     inputs:
