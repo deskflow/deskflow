@@ -1,3 +1,155 @@
+barrier (2.3.3) UNRELEASED; urgency=medium
+
+  [ Aaron Bieber ]
+  * tell build system about openbsd
+
+  [ Tetja Rediske ]
+  * make non-gui variants build without avahi
+
+  [ Erik Nordstrøm ]
+  * Replace hard-coded names of build directory in build_installer.sh script for macOS with looking at the location of the script by the script itself when it is run. This makes it possible to have differently named build dirs for debug and release builds, and without restricting what each of those directories must be named.
+  * Remove shell script that changes directory and then executes barrier on macOS, and execute barrier directly instead.
+  * Add settings in the Info.plist file that enable high-DPI support on macOS.
+
+  [ Daniel Seither ]
+  * Remove unused variables
+  * IpcLogOutputter: Put member initializers in execution order
+  * OSXDragView: Get rid of uninitialized variable warning
+  * Add override specifiers
+  * Let tray image blend into macOS menu bar
+
+  [ Vasily Galkin ]
+  * Man page: fix incorrect name of user conf file in barriers.1
+
+  [ Keegan Quinn ]
+  * Cast values to fix build errors on OS X 10.11.
+
+  [ Maximiliano Bertacchini ]
+  * Update readme with mention of the snap package.
+
+  [ Javier Candeira ]
+  * Fix #503 - Clarify on README how to report issues
+
+  [ Micael Jarniac ]
+  * Build status badges added to a table
+
+  [ Maximiliano Bertacchini ]
+  * Add build-essential to the snap's build deps.
+  * Explicitly disable wayland support in the snap.
+  * Add comment on snap env var
+
+  [ Vasily Galkin ]
+  * Fix infinite loop on fast TCP disconnection
+
+  [ Dom Rodriguez ]
+  * README: Add OpenBSD to list of supported OSes
+
+  [ Åke Engelbrektson ]
+  * Update gui_sv.ts
+
+  [ the-wes ]
+  * Add more detailed description of what Barrier does
+
+  [ James Le Cuirot ]
+  * Use -pthread flag and simplify pthread build logic
+  * Only require Qt5 when building the GUI
+
+  [ Tomáš Chvátal ]
+  * Fix desktop file Categories to match standard
+
+  [ Chris Simons ]
+  * Add script that uses macdeployqt instead of `reref_dylibs.sh` shell script to create the `.app` bundle
+  * Use `build_dist.sh` in CMake instead of `build_installer.sh` Have CMake always build a bundle, the `build_dist.sh` script will only build a dmg if the build type is "Release"
+  * Add warnings for users manually running `build_installer.sh` and `reref_dylibs.sh` manually
+  * Homebrew (Ruby) throws an error when it gets `SIGPIPE` from the `--max-count` on `grep`.
+  * added barrierc and barriers to macdeployqt targets
+  * Change MacOS Build Steps
+  * Fix TIS/TSM in logs
+  * Elevate XSocketAddressInUse to ERROR
+  * Allow selecting Fingerprint Qlabel
+  * replace tabs with spaces
+  * Change log level on several status messages (Fixes #652, Fixes #516)
+
+  [ Ben Plessinger ]
+  * A few more log cleanups
+
+  [ Vasily Galkin ]
+  * Remove unused IEventQueue::isEmpty() method to simplify code understanding
+
+  [ Povilas Kanapickas ]
+  * XWindowsEventQueueBuffer: Fix delays when waiting for new events
+
+  [ Jonathan Martens ]
+  * Fix Auto config missing hostname prompt #704
+
+  [ Vasily Galkin ]
+  * Windows 8+: make waiting for messages correspond to emptiness check
+
+  [ Povilas Kanapickas ]
+  * gui: Use enum class to scope enum values
+  * lib/client: Use std::string directly instead of String typedef
+  * lib/arch: Use std::string directly instead of String typedef
+  * lib/net: Use std::string directly instead of String typedef
+  * lib/server: Use std::string directly instead of String typedef
+  * lib/base: Use std::string directly instead of String typedef
+  * lib/ipc: Use std::string directly instead of String typedef
+  * lib/net: Add missing include
+  * lib/platform: Use std::string directly instead of String typedef
+  * test: Enable building of tests
+  * test: Reduce the number of implicit include directories
+  * test: Remove unresolved merge conflict markers
+  * test: Fix referenced library name
+  * test: Update to new APIs
+  * tests: Fix crash in XWindowsKeyStateTests
+  * test: Fix undefined behavior of deleting incomplete type
+  * tests: Disable test that depends on external state
+  * Use noexcept instead of exception specifications
+  * lib/common: Remove no longer used stdexcept.h
+
+  [ Jonathan Martens ]
+  * Make connection message a NOTE for consistency
+
+  [ zhexiwang ]
+  * Added toggleScreen function, using hot key to loop through all screens. Comparing to switchToScreen, it is more handy since the user only need to hit one hotkey.
+
+  [ GeorgH93 ]
+  * Fix build on Windows
+  * Keep errorlevel
+
+  [ Povilas Kanapickas ]
+  * Revert "Make connection message a NOTE for consistency"
+
+  [ Chris Simons ]
+  * add comments explaining the use of CLOG_PRINT
+
+  [ Dom Rodriguez ]
+  * Remove ext/gtest, ext/gmock to replace with Git submodule
+  * Add gtest/gmock framework, locked at 1.6.0
+  * Fix CI infrastructure (.bat/.sh) to initialise Git submodules before build
+
+  [ Maximiliano Bertacchini ]
+  * Fix snap build failing to initialize submodules.
+
+  [ Niklas Hambüchen ]
+  * ui: Settings: Explain what "double tap" means
+
+  [ Dom Rodriguez ]
+  * Prepare for v2.3.3 release
+
+  [ Maximiliano Bertacchini ]
+  * Shorten snap version on tagged revisions
+
+  [ Tomoya Tanjo ]
+  * Add Eisu_toggle and Muhenkan keys
+
+  [ Michael Zimmermann ]
+  * add support for keyboard backlight media keys
+
+  [ Dom Rodriguez ]
+  * [Build]: Bump Build.properties
+
+ -- root <root@873b8d543aab>  Fri, 07 Aug 2020 16:25:54 +0000
+
 barrier (2.3.2) disco; urgency=medium
 
   [ walker0643 ]
