@@ -159,7 +159,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActivationDialog.ui" line="14"/>
       <source>Activate Synergy</source>
-      <translation type="unfinished">Activate Synergy</translation>
+      <translation>Activar Synergy</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="26"/>
@@ -199,7 +199,7 @@ p, li { white-space: pre-wrap; }
       <source>An error occurred while trying to activate Synergy. Please contact the helpdesk, and provide the following information:
 
 %1</source>
-      <translation type="unfinished">An error occurred while trying to activate Synergy. Please contact the helpdesk, and provide the following information:
+      <translation>Ocurrió un error mientras se trataba de activar Synergy. Póngase en contacto con el servicio técnico, y proporcione la siguiente información:
 
 %1</translation>
     </message>
@@ -220,7 +220,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/ActivationDialog.cpp" line="114"/>
       <source>Thanks for activating %1!</source>
-      <translation type="unfinished">Thanks for activating %1!</translation>
+      <translation>¡Gracias por activar %1!</translation>
     </message>
   </context>
   <context>
@@ -228,7 +228,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/AddClientDialogBase.ui" line="20"/>
       <source>Dialog</source>
-      <translation type="unfinished">Dialog</translation>
+      <translation>Cuadro de diálogo</translation>
     </message>
     <message>
       <location filename="src/AddClientDialogBase.ui" line="35"/>
@@ -246,7 +246,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/CancelActivationDialog.ui" line="14"/>
       <source>Cancel Activation</source>
-      <translation type="unfinished">Cancel Activation</translation>
+      <translation>Cancelar Activación</translation>
     </message>
     <message>
       <location filename="src/CancelActivationDialog.ui" line="20"/>
@@ -268,7 +268,7 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/FailedLoginDialog.ui" line="14"/>
       <source>Activation Error</source>
-      <translation type="unfinished">Activation Error</translation>
+      <translation>Error de activación</translation>
     </message>
     <message>
       <location filename="src/FailedLoginDialog.ui" line="42"/>
@@ -334,7 +334,7 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/MainWindow.cpp" line="494"/>
       <source>Synergy is now connected. You can close the config window and Synergy will remain connected in the background.</source>
-      <translation type="unfinished">Synergy is now connected. You can close the config window and Synergy will remain connected in the background.</translation>
+      <translation>Synergy está conectado. Puede cerrar la ventana de configuración y Synergy permanecerá conectado en segundo plano.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="546"/>
@@ -376,7 +376,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="789"/>
       <source>No server selected</source>
-      <translation type="unfinished">No server selected</translation>
+      <translation>Ningún servidor seleccionado</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="790"/>
@@ -431,12 +431,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1016"/>
       <source>Synergy is waiting for clients</source>
-      <translation type="unfinished">Synergy is waiting for clients</translation>
+      <translation>Synergy está esperando por clientes</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1023"/>
       <source>Synergy is connected (with %1)</source>
-      <translation type="unfinished">Synergy is connected (with %1)</translation>
+      <translation>Synergy está conectado (con %1)</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1026"/>
@@ -446,17 +446,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1031"/>
       <source>Synergy is starting...</source>
-      <translation type="unfinished">Synergy is starting...</translation>
+      <translation>Synergy está iniciándose...</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1034"/>
       <source>There was an error, retrying...</source>
-      <translation type="unfinished">There was an error, retrying...</translation>
+      <translation>Hubo un error, reintentando...</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1037"/>
       <source>Synergy is not running</source>
-      <translation type="unfinished">Synergy is not running</translation>
+      <translation>Sinergy no se está ejecutando</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1354"/>
@@ -481,7 +481,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="545"/>
       <source>Security question</source>
-      <translation type="unfinished">Security question</translation>
+      <translation>Pregunta de seguridad</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1260"/>
@@ -504,7 +504,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="26"/>
       <source>Synergy</source>
-      <translation type="unfinished">Synergy</translation>
+      <translation>Synergy</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="216"/>
@@ -535,7 +535,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="257"/>
       <source>SSL Fingerprint:</source>
-      <translation type="unfinished">SSL Fingerprint:</translation>
+      <translation>Huella digital SSL:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="316"/>
@@ -560,12 +560,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="369"/>
       <source>Client name:</source>
-      <translation type="unfinished">Client name:</translation>
+      <translation>Nombre del cliente:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="383"/>
       <source>&amp;Server:</source>
-      <translation type="unfinished">&amp;Server:</translation>
+      <translation>&amp;Servidor:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="405"/>
@@ -575,7 +575,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="428"/>
       <source>Server:</source>
-      <translation type="unfinished">Server:</translation>
+      <translation>Servidor:</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="495"/>
@@ -610,7 +610,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="543"/>
       <source>Visit &amp;help site</source>
-      <translation type="unfinished">Visit &amp;help site</translation>
+      <translation>Visitar sitio de &amp;ayuda</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="551"/>
@@ -686,7 +686,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/MainWindowBase.ui" line="639"/>
       <location filename="src/MainWindowBase.ui" line="642"/>
       <source>Activate</source>
-      <translation type="unfinished">Activate</translation>
+      <translation>Activar</translation>
     </message>
   </context>
   <context>
@@ -773,7 +773,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="106"/>
       <source>&amp;Shift:</source>
-      <translation type="unfinished">&amp;Shift:</translation>
+      <translation>Mayú&amp;scula:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="117"/>
@@ -791,7 +791,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="263"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="310"/>
       <source>Ctrl</source>
-      <translation type="unfinished">Ctrl</translation>
+      <translation>Ctrl</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="127"/>
@@ -809,7 +809,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="273"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="320"/>
       <source>Meta</source>
-      <translation type="unfinished">Meta</translation>
+      <translation>Meta</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="137"/>
@@ -818,7 +818,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="278"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="325"/>
       <source>Super</source>
-      <translation type="unfinished">Super</translation>
+      <translation>Super</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="142"/>
@@ -837,7 +837,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="197"/>
       <source>Al&amp;t:</source>
-      <translation type="unfinished">Al&amp;t:</translation>
+      <translation>Al&amp;t:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="244"/>
@@ -847,7 +847,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="291"/>
       <source>S&amp;uper:</source>
-      <translation type="unfinished">S&amp;uper:</translation>
+      <translation>S&amp;uper:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="358"/>
@@ -918,7 +918,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ServerConfigDialog.cpp" line="83"/>
       <source>Configure server</source>
-      <translation type="unfinished">Configure server</translation>
+      <translation>Configurar servidor</translation>
     </message>
   </context>
   <context>
@@ -1037,7 +1037,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="416"/>
       <source>Enable clipboard sharing</source>
-      <translation type="unfinished">Enable clipboard sharing</translation>
+      <translation>Habilitar compartir portapapeles</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="452"/>
@@ -1047,7 +1047,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="461"/>
       <source>Enable drag and drop file transfers</source>
-      <translation type="unfinished">Enable drag and drop file transfers</translation>
+      <translation>Habilitar transferencias de archivos vía arrastrar y soltar</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="513"/>
@@ -1198,7 +1198,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="263"/>
       <source>Enable Auto Config</source>
-      <translation type="unfinished">Enable Auto Config</translation>
+      <translation>Activar configuración automática</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="270"/>
@@ -1208,7 +1208,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="280"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account?source=gui&amp;amp;intent=upgrade&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Upgrade to Pro&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account?source=gui&amp;intent=upgrade&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Upgrade to Pro&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account?source=gui&amp;intent=upgrade&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Actualizar a Pro&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="179"/>
@@ -1338,7 +1338,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/SslCertificate.cpp" line="148"/>
       <source>SSL certificate generated.</source>
-      <translation type="unfinished">SSL certificate generated.</translation>
+      <translation>Certificado SSL generado.</translation>
     </message>
     <message>
       <location filename="src/SslCertificate.cpp" line="178"/>
@@ -1348,7 +1348,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/SslCertificate.cpp" line="181"/>
       <source>Failed to find SSL fingerprint.</source>
-      <translation type="unfinished">Failed to find SSL fingerprint.</translation>
+      <translation>No se pudo encontrar la huella SSL.</translation>
     </message>
   </context>
   <context>
@@ -1376,7 +1376,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
       <location filename="src/ZeroconfService.cpp" line="132"/>
       <location filename="src/ZeroconfService.cpp" line="143"/>
       <source>Synergy Auto Config</source>
-      <translation type="unfinished">Synergy Auto Config</translation>
+      <translation>Configuración automática Sinergy</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="133"/>
