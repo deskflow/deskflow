@@ -43,12 +43,12 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/AboutDialogBase.ui" line="167"/>
       <source>Build Date: </source>
-      <translation type="unfinished">Build Date: </translation>
+      <translation>Fecha de compilación: </translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="194"/>
       <source>&amp;Ok</source>
-      <translation type="unfinished">&amp;Ok</translation>
+      <translation>&amp;Ok</translation>
     </message>
   </context>
   <context>
@@ -136,7 +136,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="247"/>
       <source>Restart server</source>
-      <translation type="unfinished">Restart server</translation>
+      <translation>Reiniciar el servidor</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="259"/>
@@ -164,7 +164,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActivationDialog.ui" line="26"/>
       <source>Serial key</source>
-      <translation type="unfinished">Serial key</translation>
+      <translation>Clave de serie</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="33"/>
@@ -206,7 +206,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/ActivationDialog.cpp" line="86"/>
       <source>%1</source>
-      <translation type="unfinished">%1</translation>
+      <translation>%1</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="95"/>
@@ -233,7 +233,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/AddClientDialogBase.ui" line="35"/>
       <source>TextLabel</source>
-      <translation type="unfinished">TextLabel</translation>
+      <translation>TextLabel</translation>
     </message>
     <message>
       <location filename="src/AddClientDialogBase.ui" line="83"/>
@@ -800,7 +800,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="268"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="315"/>
       <source>Alt</source>
-      <translation type="unfinished">Alt</translation>
+      <translation>Alt</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="132"/>
@@ -1022,7 +1022,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
       <location filename="src/ServerConfigDialogBase.ui" line="383"/>
       <location filename="src/ServerConfigDialogBase.ui" line="552"/>
       <source>ms</source>
-      <translation type="unfinished">ms</translation>
+      <translation>ms</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="344"/>
@@ -1042,7 +1042,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="452"/>
       <source>MB</source>
-      <translation type="unfinished">MB</translation>
+      <translation>MB</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="461"/>
@@ -1077,7 +1077,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="571"/>
       <source>Disable lock to screen</source>
-      <translation type="unfinished">Disable lock to screen</translation>
+      <translation>Desactivar la pantalla de bloqueo</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="581"/>
@@ -1133,12 +1133,12 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="27"/>
       <source>System</source>
-      <translation type="unfinished">System</translation>
+      <translation>Sistema</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="37"/>
       <source>User</source>
-      <translation type="unfinished">User</translation>
+      <translation>Usuario</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="59"/>
@@ -1163,37 +1163,37 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="154"/>
       <source>As Needed</source>
-      <translation type="unfinished">As Needed</translation>
+      <translation>En tanto necesario</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="159"/>
       <source>Always</source>
-      <translation type="unfinished">Always</translation>
+      <translation>Siempre</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="164"/>
       <source>Never</source>
-      <translation type="unfinished">Never</translation>
+      <translation>Nunca</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="172"/>
       <source>Elevate</source>
-      <translation type="unfinished">Elevate</translation>
+      <translation>Elevar</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="186"/>
       <source>Minimize to System &amp;Tray</source>
-      <translation type="unfinished">Minimize to System &amp;Tray</translation>
+      <translation>Minimizar a la bandeja del &amp;sistema</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="221"/>
       <source>&amp;Network</source>
-      <translation type="unfinished">&amp;Network</translation>
+      <translation>&amp;Red</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="253"/>
       <source>Enable &amp;TLS Encryption</source>
-      <translation type="unfinished">Enable &amp;TLS Encryption</translation>
+      <translation>Habilitar cifrado &amp;TLS</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="263"/>
@@ -1213,7 +1213,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="179"/>
       <source>&amp;Hide on startup</source>
-      <translation type="unfinished">&amp;Hide on startup</translation>
+      <translation>&amp;Ocultar al iniciar</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="320"/>
@@ -1386,7 +1386,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/ZeroconfService.cpp" line="101"/>
       <source>Error code: %1.</source>
-      <translation type="unfinished">Error code: %1.</translation>
+      <translation>Código de error: %1.</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="144"/>
@@ -1397,7 +1397,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
       <location filename="src/ZeroconfService.cpp" line="150"/>
       <location filename="src/ZeroconfService.cpp" line="157"/>
       <source>%1</source>
-      <translation type="unfinished">%1</translation>
+      <translation>%1</translation>
     </message>
   </context>
 </TS>
