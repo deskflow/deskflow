@@ -68,6 +68,7 @@ steps:
 
   - script: |
       export SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
+      echo $SYNERGY_REVISION
       dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
       export DEB_BUILD_OPTIONS="parallel=8"
       export GPG_TTY=$(tty)
