@@ -83,6 +83,8 @@ steps:
       ls -la
     displayName: "Package Binary DEB(Standard)"
     condition: and(eq(variables['packager'],'deb'), eq(variables['Build.Reason'], 'Manual'))
+    env:
+      SYNERGY_REVISION: $(Build.SourceVersion)
 
   - script: |
       export SYNERGY_ENTERPRISE=1
@@ -102,7 +104,9 @@ steps:
       ls -la
     displayName: "Package Binary DEB(Enterprise)"
     condition: and(eq(variables['packager'],'deb'), eq(variables['Build.Reason'], 'Manual'))
-
+    env:
+      SYNERGY_REVISION: $(Build.SourceVersion)
+      
   - script: |
       cd build-release
       make install/strip
