@@ -8,7 +8,7 @@ steps:
     condition: eq(variables['packager'],'deb')
     displayName: 'Build Release deb'
     env:
-      GIT_COMMIT: $(Build.SourceVersion)
+      SYNERGY_REVISION: $(Build.SourceVersion)
 
   - script: |
       mkdir build-release
@@ -22,7 +22,7 @@ steps:
     condition: eq(variables['packager'],'rpm')
     displayName: 'Build Release rpm'
     env:
-      GIT_COMMIT: $(Build.SourceVersion)
+      SYNERGY_REVISION: $(Build.SourceVersion)
 
   - script: |
       mkdir build-ent

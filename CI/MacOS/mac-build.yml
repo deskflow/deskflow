@@ -29,7 +29,7 @@ steps:
     displayName: 'Cmake standard'
     condition: eq(variables['buildType'], 'standard')
     env:
-      GIT_COMMIT: $(Build.SourceVersion)
+      SYNERGY_REVISION: $(Build.SourceVersion)
 
   - task: CmdLine@2
     inputs:
@@ -42,7 +42,7 @@ steps:
     displayName: 'Cmake enterprise'
     condition: eq(variables['buildType'], 'enterprise')
     env:
-      GIT_COMMIT: $(Build.SourceVersion)
+      SYNERGY_REVISION: $(Build.SourceVersion)
 
   - task: CmdLine@2
     inputs:
