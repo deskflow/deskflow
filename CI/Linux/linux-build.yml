@@ -8,8 +8,6 @@ steps:
       make -j
     condition: eq(variables['packager'],'deb')
     displayName: 'Build Release deb'
-    env:
-      SYNERGY_REVISION: $(Build.SourceVersion)
 
   - script: |
       mkdir build-release
@@ -23,8 +21,6 @@ steps:
       make -j
     condition: eq(variables['packager'],'rpm')
     displayName: 'Build Release rpm'
-    env:
-      SYNERGY_REVISION: $(Build.SourceVersion)
 
   - script: |
       mkdir build-ent
@@ -35,8 +31,6 @@ steps:
       make -j
     displayName: 'Build enterprise'
     condition: eq(variables['packager'],'deb')
-    env:
-      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       mkdir build-ent
@@ -49,8 +43,6 @@ steps:
       make -j
     condition: eq(variables['packager'],'rpm')
     displayName: 'Build enterprise rpm'
-    env:
-      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       . ./build-release/version
@@ -72,7 +64,7 @@ steps:
       dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
       export DEB_BUILD_OPTIONS="parallel=8"
       export GPG_TTY=$(tty)
-      debuild --preserve-envvar SYNERGY_* -us -uc
+      debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
       mkdir standard_package
       cd ..
       filename=$(ls synergy_*.deb)
@@ -86,14 +78,14 @@ steps:
     displayName: "Package Binary DEB(Standard)"
     condition: and(eq(variables['packager'],'deb'), eq(variables['Build.Reason'], 'Manual'))
     env:
-      SYNERGY_REVISION: $(Build.SourceVersion)
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       export SYNERGY_ENTERPRISE=1
       dch --create --package "synergy-enterprise_" --controlmaint --distribution unstable --newversion $(SYNERGY_DEB_VERSION) "Initial release"
       export DEB_BUILD_OPTIONS="parallel=8"
       export GPG_TTY=$(tty)
-      debuild --preserve-envvar SYNERGY_* -us -uc
+      debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
       mkdir enterprise_package
       cd ..
       filename=$(ls synergy_*.deb)
@@ -107,7 +99,7 @@ steps:
     displayName: "Package Binary DEB(Enterprise)"
     condition: and(eq(variables['packager'],'deb'), eq(variables['Build.Reason'], 'Manual'))
     env:
-      SYNERGY_REVISION: $(Build.SourceVersion)
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       cd build-release
