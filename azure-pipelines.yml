@@ -22,34 +22,34 @@ jobs:
           image: symless/synergy-core:ubuntu20.04
           packager: deb
           name: ubuntu20
-#        debian9:
-#          image: symless/synergy-core:debian9
-#          packager: deb
-#          name: debian9
-#        debian10:
-#          image: symless/synergy-core:debian10
-#          packager: deb
-#          name: debian10
-#        fedora28:
-#          image: symless/synergy-core:fedora28
-#          packager: rpm
-#          name: fedora28
-#        fedora29:
-#          image: symless/synergy-core:fedora29
-#          packager: rpm
-#          name: fedora29
-#        fedora30:
-#          image: symless/synergy-core:fedora30
-#          packager: rpm
-#          name: fedora30
-#        centos7.6:
-#          image: symless/synergy-core:centos7.6
-#          packager: rpm
-#          name: centos76
-#        centos8:
-#          image: symless/synergy-core:centos8
-#          packager: rpm
-#          name: centos8
+        debian9:
+          image: symless/synergy-core:debian9
+          packager: deb
+          name: debian9
+        debian10:
+          image: symless/synergy-core:debian10
+          packager: deb
+          name: debian10
+        fedora28:
+          image: symless/synergy-core:fedora28
+          packager: rpm
+          name: fedora28
+        fedora29:
+          image: symless/synergy-core:fedora29
+          packager: rpm
+          name: fedora29
+        fedora30:
+          image: symless/synergy-core:fedora30
+          packager: rpm
+          name: fedora30
+        centos7.6:
+          image: symless/synergy-core:centos7.6
+          packager: rpm
+          name: centos76
+        centos8:
+          image: symless/synergy-core:centos8
+          packager: rpm
+          name: centos8
 
     container: $[ variables['image'] ]
 
@@ -57,67 +57,67 @@ jobs:
       - template: CI/checkout.yml
       - template: CI/Linux/linux-build.yml
 
-#  - job: MacOS
-#    strategy:
-#      matrix:
-#        mojave-std:
-#          image: macOS-10.14
-#          name: mojave
-#          version: 10.12
-#          buildType: "standard"
-#          prefix: "synergy"
-#        mojave-ent:
-#          image: macOS-10.14
-#          name: mojave
-#          version: 10.12
-#          buildType: "enterprise"
-#          prefix: "synergy-enterprise"
-#        catalina-std:
-#          image: macOS-10.15
-#          name: catalina
-#          version: 10.14
-#          buildType: "standard"
-#          prefix: "synergy"
-#        catalina-ent:
-#          image: macOS-10.15
-#          name: catalina
-#          version: 10.14
-#          buildType: "enterprise"
-#          prefix: "synergy-enterprise"
-#    pool:
-#      vmImage: $[ variables['image'] ]
-#
-#    variables:
-#      QT_PATH: '/usr/local/opt/qt/bin'
-#
-#    steps:
-#      - template: CI/checkout.yml
-#      - template: CI/MacOS/mac-build.yml
-#
-#  - job: Windows
-#    strategy:
-#      matrix:
-#        vs2019:
-#          image: windows-2019
-#          buildType: "standard"
-#          prefix: "synergy"
-#        vs2019ent:
-#          image: windows-2019
-#          buildType: "enterprise"
-#          prefix: "synergy_enterprise"
-#
-#    pool:
-#      vmImage: $[ variables['image'] ]
-#
-#    variables:
-#      QT_VERSION: '5.12.6'
-#      QLI_OUT_DIR: '.\deps\Qt'
-#      QLI_BASE_URL: 'http://qt.mirror.constant.com/'
-#      QT_BIN_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
-#      QT_BIN_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
-#      BONJOUR_SDK_DIR: 'deps\BonjourSDK'
-#      ENV_BAT: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\vsdevcmd'
-#
-#    steps:
-#      - template: CI/checkout.yml
-#      - template: CI/Windows/windows-build.yml
+  - job: MacOS
+    strategy:
+      matrix:
+        mojave-std:
+          image: macOS-10.14
+          name: mojave
+          version: 10.12
+          buildType: "standard"
+          prefix: "synergy"
+        mojave-ent:
+          image: macOS-10.14
+          name: mojave
+          version: 10.12
+          buildType: "enterprise"
+          prefix: "synergy-enterprise"
+        catalina-std:
+          image: macOS-10.15
+          name: catalina
+          version: 10.14
+          buildType: "standard"
+          prefix: "synergy"
+        catalina-ent:
+          image: macOS-10.15
+          name: catalina
+          version: 10.14
+          buildType: "enterprise"
+          prefix: "synergy-enterprise"
+    pool:
+      vmImage: $[ variables['image'] ]
+
+    variables:
+      QT_PATH: '/usr/local/opt/qt/bin'
+
+    steps:
+      - template: CI/checkout.yml
+      - template: CI/MacOS/mac-build.yml
+
+  - job: Windows
+    strategy:
+      matrix:
+        vs2019:
+          image: windows-2019
+          buildType: "standard"
+          prefix: "synergy"
+        vs2019ent:
+          image: windows-2019
+          buildType: "enterprise"
+          prefix: "synergy_enterprise"
+
+    pool:
+      vmImage: $[ variables['image'] ]
+
+    variables:
+      QT_VERSION: '5.12.6'
+      QLI_OUT_DIR: '.\deps\Qt'
+      QLI_BASE_URL: 'http://qt.mirror.constant.com/'
+      QT_BIN_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
+      QT_BIN_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
+      BONJOUR_SDK_DIR: 'deps\BonjourSDK'
+      ENV_BAT: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\vsdevcmd'
+
+    steps:
+      - template: CI/checkout.yml
+      - template: CI/Windows/windows-build.yml
