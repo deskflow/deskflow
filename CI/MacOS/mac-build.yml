@@ -6,14 +6,6 @@ steps:
       keychain: 'temp'
     condition: eq(variables['Build.Reason'], 'Manual')
 
-  - task: AzureKeyVault@1
-    inputs:
-      azureSubscription: 'Free Trial (796b9556-9614-41a6-8040-0eb14d81fe6f'
-      KeyVaultName: 'Symless'
-      SecretsFilter: '*'
-    displayName: "Get keys"
-    condition: eq(variables['Build.Reason'], 'Manual')
-
   - task: CmdLine@2
     inputs:
       script: 'brew install qt'
@@ -29,7 +21,7 @@ steps:
     displayName: 'Cmake standard'
     condition: eq(variables['buildType'], 'standard')
     env:
-      SYNERGY_REVISION: $(Build.SourceVersion)
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - task: CmdLine@2
     inputs:
@@ -42,7 +34,7 @@ steps:
     displayName: 'Cmake enterprise'
     condition: eq(variables['buildType'], 'enterprise')
     env:
-      SYNERGY_REVISION: $(Build.SourceVersion)
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - task: CmdLine@2
     inputs:

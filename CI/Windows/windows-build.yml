@@ -57,7 +57,7 @@ steps:
       BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
       QT_PATH: $(QT_BIN_PATH)
       MSARCH: 'x64'
-      SYNERGY_REVISION: $(Build.SourceVersion)
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       call "%ENV_BAT%" -arch=x64
@@ -85,7 +85,7 @@ steps:
       BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
       QT_PATH: $(QT_BIN_PATH_32)
       MSARCH: 'Win32'
-      SYNERGY_REVISION: $(Build.SourceVersion)
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       call "%ENV_BAT%" -arch=x86
