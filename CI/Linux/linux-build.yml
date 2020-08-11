@@ -3,6 +3,7 @@ steps:
       mkdir build-release
       cd build-release
       if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
+      . ./version
       make -j
     condition: eq(variables['packager'],'deb')
     displayName: 'Build Release deb'
@@ -16,6 +17,7 @@ steps:
       cmake3 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
       else cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
       fi
+      . ./version
       make -j
     condition: eq(variables['packager'],'rpm')
     displayName: 'Build Release rpm'
@@ -27,6 +29,7 @@ steps:
       cd build-ent
       export SYNERGY_ENTERPRISE=1
       if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..; fi
+      . ./version
       make -j
     displayName: 'Build enterprise'
     condition: eq(variables['packager'],'deb')
@@ -40,6 +43,7 @@ steps:
       cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
       else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
       fi
+      . ./version
       make -j
     condition: eq(variables['packager'],'rpm')
     displayName: 'Build enterprise rpm'
@@ -64,7 +68,7 @@ steps:
       dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
       export DEB_BUILD_OPTIONS="parallel=8"
       export GPG_TTY=$(tty)
-      debuild --preserve-envvar SYNERGY_* -us -uc
+      debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
       mkdir standard_package
       cd ..
       filename=$(ls synergy_*.deb)
@@ -77,13 +81,15 @@ steps:
       ls -la
     displayName: "Package Binary DEB(Standard)"
     condition: and(eq(variables['packager'],'deb'), eq(variables['Build.Reason'], 'Manual'))
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       export SYNERGY_ENTERPRISE=1
       dch --create --package "synergy-enterprise_" --controlmaint --distribution unstable --newversion $(SYNERGY_DEB_VERSION) "Initial release"
       export DEB_BUILD_OPTIONS="parallel=8"
       export GPG_TTY=$(tty)
-      debuild --preserve-envvar SYNERGY_* -us -uc
+      debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
       mkdir enterprise_package
       cd ..
       filename=$(ls synergy_*.deb)
@@ -96,6 +102,8 @@ steps:
       ls -la
     displayName: "Package Binary DEB(Enterprise)"
     condition: and(eq(variables['packager'],'deb'), eq(variables['Build.Reason'], 'Manual'))
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       cd build-release
@@ -112,6 +120,8 @@ steps:
       mv x86_64 $(Build.Repository.LocalPath)/standard_package
     displayName: "Package Binary RPM(standard)"
     condition: and(eq(variables['packager'],'rpm'), eq(variables['Build.Reason'], 'Manual'))
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       cd build-release
@@ -129,6 +139,8 @@ steps:
       ls -la
     displayName: "Package Binary RPM(enterprise)"
     condition: and(eq(variables['packager'],'rpm'), eq(variables['Build.Reason'], 'Manual'))
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - task: CopyFilesOverSSH@0
     inputs:
