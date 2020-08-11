@@ -43,6 +43,8 @@ steps:
       make -j
     condition: eq(variables['packager'],'rpm')
     displayName: 'Build enterprise rpm'
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       . ./build-release/version
@@ -114,6 +116,8 @@ steps:
       mv x86_64 $(Build.Repository.LocalPath)/standard_package
     displayName: "Package Binary RPM(standard)"
     condition: and(eq(variables['packager'],'rpm'), eq(variables['Build.Reason'], 'Manual'))
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
       cd build-release
@@ -131,6 +135,8 @@ steps:
       ls -la
     displayName: "Package Binary RPM(enterprise)"
     condition: and(eq(variables['packager'],'rpm'), eq(variables['Build.Reason'], 'Manual'))
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - task: CopyFilesOverSSH@0
     inputs:
