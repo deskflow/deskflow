@@ -4,6 +4,7 @@ v1.12.0-rc2
 Bug fixes:
 - #6730 Updating synergy looses settings
 - #6734 Fixed naming of installers for linux and windows
+- #6743 Azure build git revision showing as 0badc0de
 
 Enhancements:
 - #6739 Add submodules cloning to cmake
