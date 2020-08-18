@@ -1,3 +1,9 @@
+v1.12.0-rc3
+===========
+
+Bug fixes:
+- #6748 Copyright year in about dialog isn't updated
+
 v1.12.0-rc2
 ===========
 
