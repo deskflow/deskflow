@@ -36,5 +36,5 @@ jobs:
           type: create
           body: |
             Jira Issue: ${{ steps.create.outputs.issue }}
-          issue_number: ${{ github.event.issue.id }}
+          issue_number: ${{ github.event.issue.number }}
           token: ${{ secrets.GITHUB_TOKEN }}
