@@ -29,13 +29,12 @@ jobs:
             Opened by:  ${{ github.event.issue.user.login }}
             ${{ github.event.issue.body }}
             
-      - name: Comment Action
-        uses: JungWinter/comment@v1.1.0
+      - name: Create comment
+        uses: jungwinter/comment@v1
+        id: createComment
         with:
-          type: edit
+          type: create
           body: |
             Jira Issue: ${{ steps.create.outputs.issue }}
-            ${{ github.event.issue.body }}
-          comment_id: ${{ github.event.issue.id }}
+          issue_number: ${{ github.event.issue.id }}
           token: ${{ secrets.GITHUB_TOKEN }}
-            
