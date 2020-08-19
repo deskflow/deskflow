@@ -8,7 +8,6 @@ jobs:
     name: Jira Issue Creation Demo
     runs-on: ubuntu-latest
     
-    
     steps:
       - name: Login
         uses: atlassian/gajira-login@master
@@ -26,7 +25,8 @@ jobs:
           summary: |
             ${{ github.event.issue.title }}
           description: |
-            Opened by:  ${{ github.event.issue.user.login }}
+            Opened by: ${{ github.event.issue.user.login }}
+            Link: ${{ github.event.issue.url }}
             ${{ github.event.issue.body }}
             
       - name: Create comment
