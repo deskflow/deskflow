@@ -35,6 +35,6 @@ jobs:
         with:
           type: create
           body: |
-            Jira Issue: ${{ steps.create.outputs.issue }}
+            Jira Issue: [${{ steps.create.outputs.issue }}](https://symless.atlassian.net/browse/${{ steps.create.outputs.issue }})
           issue_number: ${{ github.event.issue.number }}
           token: ${{ secrets.GITHUB_TOKEN }}
