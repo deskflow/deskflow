@@ -24,6 +24,16 @@ jobs:
           project: SYNERGY
           issuetype: Task
           summary: |
-            Build completed for ${{ github.repository }}
+            ${{ github.event.issue.title }}
           description: |
-            Compare branch
+            Opened by:  ${{ github.event.issue.user.login }}
+            ${{ github.event.issue.body }}
+            
+      - name: Update issue body
+        uses: AsasInnab/pr-body-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            Jira Issue: ${{ steps.create.outputs.issue }}
+            ${{ github.event.issue.body }}
+            
