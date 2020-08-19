@@ -21,7 +21,7 @@ jobs:
         id: create          
         uses: atlassian/gajira-create@master
         with:
-          project: SYMLESS
+          project: SYNERGY
           issuetype: Task
           summary: |
             Build completed for ${{ github.repository }}
