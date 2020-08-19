@@ -26,7 +26,7 @@ jobs:
             ${{ github.event.issue.title }}
           description: |
             Opened by: ${{ github.event.issue.user.login }}
-            Link: ${{ github.event.issue.url }}
+            Link: ${{ github.event.issue.html_url }}
             ${{ github.event.issue.body }}
             
       - name: Create comment
