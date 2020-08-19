@@ -7,15 +7,23 @@ jobs:
   jiraIssueCreation:
     name: Jira Issue Creation Demo
     runs-on: ubuntu-latest
+    
+    
     steps:
-      - uses: actions/checkout@master
-      - name: Jira Creation Demo
-        uses: bryannice/gitactions-jira-issue-creation@master
+      - name: Login
+        uses: atlassian/gajira-login@master
         env:
-          JIRA_ACCOUNT_URL: https://symless.atlassian.net/
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_ISSUE_DESCRIPTION: Demo'ing Jira Issue Creation
-          JIRA_ISSUE_SUMMARY: Demo'ing Jira Issue Creation
-          JIRA_ISSUE_TYPE: Task
-          JIRA_PROJECT: SYMLESS
-          JIRA_USERNAME: jamie@symless.com
+        
+      - name: Create
+        id: create          
+        uses: atlassian/gajira-create@master
+        with:
+          project: SYMLESS
+          issuetype: Task
+          summary: |
+            Build completed for ${{ github.repository }}
+          description: |
+            Compare branch
