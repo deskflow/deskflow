@@ -1,0 +1,20 @@
+on: 
+  issues:
+    types: [ opened ]
+    
+name: Send Issue to Jira
+jobs:
+  jiraIssueCreation:
+    name: Jira Issue Creation Demo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Jira Creation Demo
+        uses: bryannice/gitactions-jira-issue-creation@master
+        env:
+          JIRA_ACCOUNT_URL: https://symless.atlassian.net/
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_ISSUE_DESCRIPTION: Demo'ing Jira Issue Creation
+          JIRA_ISSUE_TYPE: Task
+          JIRA_PROJECT: SYMLESS
+          JIRA_USERNAME: jamie@symless.com
