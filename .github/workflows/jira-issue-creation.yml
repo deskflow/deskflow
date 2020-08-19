@@ -29,11 +29,13 @@ jobs:
             Opened by:  ${{ github.event.issue.user.login }}
             ${{ github.event.issue.body }}
             
-      - name: Update issue body
-        uses: AsasInnab/pr-body-action@v1
+      - name: Comment Action
+        uses: JungWinter/comment@v1.1.0
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          type: edit
           body: |
             Jira Issue: ${{ steps.create.outputs.issue }}
             ${{ github.event.issue.body }}
+          comment_id: ${{ github.event.issue.id }}
+          token: ${{ secrets.GITHUB_TOKEN }}
             
