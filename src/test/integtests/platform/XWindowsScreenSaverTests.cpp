@@ -23,6 +23,7 @@
 #include "platform/XWindowsScreenSaver.h"
 
 #include "test/global/gtest.h"
+#include <cstdlib>
 #include <X11/Xlib.h>
 
 using ::testing::_;
@@ -30,7 +31,12 @@ using ::testing::_;
 // TODO: not working on build machine for some reason
 TEST(CXWindowsScreenSaverTests, activate_defaultScreen_todo)
 {
-    Display* display = XOpenDisplay(":0.0");
+    const char* displayName = std::getenv("DISPLAY");
+    if (displayName == NULL) {
+        displayName = ":0.0";
+    }
+
+    Display* display = XOpenDisplay(displayName);
     Window window = DefaultRootWindow(display);
     MockEventQueue eventQueue;
     EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(1);
