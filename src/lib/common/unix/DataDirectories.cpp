@@ -18,7 +18,7 @@
 #include "../DataDirectories.h"
 
 #include <unistd.h>    // sysconf
-#include <stdlib.h>    // getenv
+#include <cstdlib>     // getenv
 #include <sys/types.h> // getpwuid(_r)
 #include <pwd.h>       // getpwuid(_r)
 
@@ -63,7 +63,7 @@ static std::string profile_basedir()
 #ifdef WINAPI_XWINDOWS
     // linux/bsd adheres to freedesktop standards
     // https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
-    const char* dir = getenv("XDG_DATA_HOME");
+    const char* dir = std::getenv("XDG_DATA_HOME");
     if (dir != NULL)
         return dir;
     return unix_home() + "/.local/share";
