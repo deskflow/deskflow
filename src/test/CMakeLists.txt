@@ -14,19 +14,33 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-include_directories(
-    ../../ext/gtest
-    ../../ext/gtest/include
-    ../../ext/gmock
-    ../../ext/gmock/include)
-    
-add_library(gtest STATIC ../../ext/gtest/src/gtest-all.cc)
-add_library(gmock STATIC ../../ext/gmock/src/gmock-all.cc)
+if (BARRIER_USE_EXTERNAL_GTEST)
+    include (FindPkgConfig)
+    find_package(GTest REQUIRED)
+    pkg_check_modules(GMOCK REQUIRED gmock)
+    include_directories(
+        ${GTEST_INCLUDE_DIRS}
+        ${GMOCK_INCLUDE_DIRS}
+    )
+else()
+    include_directories(
+        ../../ext/gtest
+        ../../ext/gtest/include
+        ../../ext/gmock
+        ../../ext/gmock/include
+    )
 
-if (UNIX)
-    # ignore warnings in gtest and gmock
-    set_target_properties(gtest PROPERTIES COMPILE_FLAGS "-w")
-    set_target_properties(gmock PROPERTIES COMPILE_FLAGS "-w")
+    add_library(gtest STATIC ../../ext/gtest/src/gtest-all.cc)
+    add_library(gmock STATIC ../../ext/gmock/src/gmock-all.cc)
+
+    set(GTEST_LIBRARIES gtest)
+    set(GMOCK_LIBRARIES gmock)
+
+    if (UNIX)
+        # ignore warnings in gtest and gmock
+        set_target_properties(gtest PROPERTIES COMPILE_FLAGS "-w")
+        set_target_properties(gmock PROPERTIES COMPILE_FLAGS "-w")
+    endif()
 endif()
 
 add_subdirectory(integtests)

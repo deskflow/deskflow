@@ -24,7 +24,9 @@
 #include "common/stdset.h"
 #include "common/stdvector.h"
 
+#ifdef TEST_ENV
 #include <gtest/gtest_prod.h>
+#endif
 
 namespace barrier {
 
@@ -327,6 +329,7 @@ public:
     //@}
 
 private:
+#ifdef TEST_ENV
     FRIEND_TEST(KeyMapTests,
                 findBestKey_requiredDown_matchExactFirstItem);
     FRIEND_TEST(KeyMapTests,
@@ -340,6 +343,7 @@ private:
     FRIEND_TEST(KeyMapTests,
                 findBestKey_onlyOneRequiredDown_matchTwoRequiredChangesItem);
     FRIEND_TEST(KeyMapTests, findBestKey_noRequiredDown_cannotMatch);
+#endif
 
 private:
     //! Ways to synthesize a key
