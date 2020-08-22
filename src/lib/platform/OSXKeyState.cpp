@@ -122,7 +122,11 @@ static const KeyEntry    s_controlKeys[] = {
     { kKeyMissionControl, s_missionControlVK },
     { kKeyLaunchpad, s_launchpadVK },
     { kKeyBrightnessUp,  s_brightnessUp },
-    { kKeyBrightnessDown, s_brightnessDown }
+    { kKeyBrightnessDown, s_brightnessDown },
+
+    // JIS keyboards only
+    { kKeyEisuToggle, kVK_JIS_Eisu },
+    { kKeyKana, kVK_JIS_Kana }
 };
 
 
