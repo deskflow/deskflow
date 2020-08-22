@@ -23,6 +23,12 @@
 #include <QDir>
 #include <QCoreApplication>
 
+#include <openssl/bio.h>
+#include <openssl/err.h>
+#include <openssl/evp.h>
+#include <openssl/pem.h>
+#include <openssl/x509.h>
+
 static const char kCertificateLifetime[] = "365";
 static const char kCertificateSubjectInfo[] = "/CN=Barrier";
 static const char kCertificateFilename[] = "Barrier.pem";
@@ -37,13 +43,13 @@ static const char kConfigFile[] = "barrier.conf";
 SslCertificate::SslCertificate(QObject *parent) :
     QObject(parent)
 {
-    m_ProfileDir = QString::fromStdString(DataDirectories::profile());
-    if (m_ProfileDir.isEmpty()) {
+    m_ProfileDir = DataDirectories::profile();
+    if (m_ProfileDir.empty()) {
         emit error(tr("Failed to get profile directory."));
     }
 }
 
-bool SslCertificate::runTool(const QStringList& args)
+std::pair<bool, std::string> SslCertificate::runTool(const QStringList& args)
 {
     QString program;
 #if defined(Q_OS_WIN)
@@ -66,11 +72,12 @@ bool SslCertificate::runTool(const QStringList& args)
     process.start(program, args);
 
     bool success = process.waitForStarted();
+    std::string output;
 
     QString standardError;
     if (success && process.waitForFinished())
     {
-        m_ToolOutput = process.readAllStandardOutput().trimmed();
+        output = process.readAllStandardOutput().trimmed().toStdString();
         standardError = process.readAllStandardError().trimmed();
     }
 
@@ -82,26 +89,18 @@ bool SslCertificate::runTool(const QStringList& args)
                 .arg(program)
                 .arg(process.exitCode())
                 .arg(standardError.isEmpty() ? "Unknown" : standardError));
-        return false;
+        return {false, output};
     }
 
-    return true;
+    return {true, output};
 }
 
 void SslCertificate::generateCertificate()
 {
-    QString sslDirPath = QString("%1%2%3")
-        .arg(m_ProfileDir)
-        .arg(QDir::separator())
-        .arg(kSslDir);
-
-    QString filename = QString("%1%2%3")
-        .arg(sslDirPath)
-        .arg(QDir::separator())
-        .arg(kCertificateFilename);
+    auto filename = QString::fromStdString(getCertificatePath());
 
     QFile file(filename);
-    if (!file.exists()) {
+    if (!file.exists() || !isCertificateValid(filename)) {
         QStringList arguments;
 
         // self signed certificate
@@ -123,7 +122,7 @@ void SslCertificate::generateCertificate()
         arguments.append("-newkey");
         arguments.append("rsa:2048");
 
-        QDir sslDir(sslDirPath);
+        QDir sslDir(QString::fromStdString(getCertificateDirectory()));
         if (!sslDir.exists()) {
             sslDir.mkpath(".");
         }
@@ -136,7 +135,7 @@ void SslCertificate::generateCertificate()
         arguments.append("-out");
         arguments.append(filename);
 
-        if (!runTool(arguments)) {
+        if (!runTool(arguments).first) {
             return;
         }
 
@@ -158,21 +157,90 @@ void SslCertificate::generateFingerprint(const QString& certificateFilename)
     arguments.append("-in");
     arguments.append(certificateFilename);
 
-    if (!runTool(arguments)) {
+    auto ret = runTool(arguments);
+    bool success = ret.first;
+    std::string output = ret.second;
+
+    if (!success) {
         return;
     }
 
     // find the fingerprint from the tool output
-    int i = m_ToolOutput.indexOf("=");
-    if (i != -1) {
+    auto i = output.find_first_of('=');
+    if (i != std::string::npos) {
         i++;
-        QString fingerprint = m_ToolOutput.mid(
-            i, m_ToolOutput.size() - i);
+        auto fingerprint = output.substr(
+            i, output.size() - i);
 
-        Fingerprint::local().trust(fingerprint, false);
+        Fingerprint::local().trust(QString::fromStdString(fingerprint), false);
         emit info(tr("SSL fingerprint generated."));
     }
     else {
         emit error(tr("Failed to find SSL fingerprint."));
     }
+}
+
+std::string SslCertificate::getCertificatePath()
+{
+    return getCertificateDirectory() + QDir::separator().toLatin1() + kCertificateFilename;
+}
+
+std::string SslCertificate::getCertificateDirectory()
+{
+    return m_ProfileDir + QDir::separator().toLatin1() + kSslDir;
+}
+
+bool SslCertificate::isCertificateValid(const QString& path)
+{
+    OpenSSL_add_all_algorithms();
+    ERR_load_BIO_strings();
+    ERR_load_crypto_strings();
+
+    BIO* bio = BIO_new(BIO_s_file());
+
+    auto ret = BIO_read_filename(bio, path.toStdString().c_str());
+    if (!ret) {
+        emit info(tr("Could not read from default certificate file."));
+        BIO_free_all(bio);
+        return false;
+    }
+
+    X509* cert = PEM_read_bio_X509(bio, NULL, 0, NULL);
+    if (!cert) {
+        emit info(tr("Error loading default certificate file to memory."));
+        BIO_free_all(bio);
+        return false;
+    }
+
+    EVP_PKEY* pubkey = X509_get_pubkey(cert);
+    if (!pubkey) {
+        emit info(tr("Default certificate key file does not contain valid public key"));
+        X509_free(cert);
+        BIO_free_all(bio);
+        return false;
+    }
+
+    auto type = EVP_PKEY_type(EVP_PKEY_id(pubkey));
+    if (type != EVP_PKEY_RSA && type != EVP_PKEY_DSA) {
+        emit info(tr("Public key in default certificate key file is not RSA or DSA"));
+        EVP_PKEY_free(pubkey);
+        X509_free(cert);
+        BIO_free_all(bio);
+        return false;
+    }
+
+    auto bits = EVP_PKEY_bits(pubkey);
+    if (bits < 2048) {
+        // We could have small keys in old barrier installations
+        emit info(tr("Public key in default certificate key file is too small."));
+        EVP_PKEY_free(pubkey);
+        X509_free(cert);
+        BIO_free_all(bio);
+        return false;
+    }
+
+    EVP_PKEY_free(pubkey);
+    X509_free(cert);
+    BIO_free_all(bio);
+    return true;
 }

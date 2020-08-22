@@ -949,6 +949,10 @@ void MainWindow::updateSSLFingerprint()
 {
     if (m_AppConfig->getCryptoEnabled() && m_pSslCertificate == nullptr) {
         m_pSslCertificate = new SslCertificate(this);
+        connect(m_pSslCertificate, &SslCertificate::info, [&](QString info)
+        {
+            appendLogInfo(info);
+        });
         m_pSslCertificate->generateCertificate();
     }
     if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists()) {

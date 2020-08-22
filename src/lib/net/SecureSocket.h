@@ -55,7 +55,7 @@ public:
     EJobResult            doRead() override;
     EJobResult            doWrite() override;
     void                initSsl(bool server);
-    bool loadCertificates(std::string& CertFile);
+    bool loadCertificates(const std::string& filename);
 
 private:
     // SSL
@@ -65,7 +65,7 @@ private:
     int                    secureConnect(int s);
     bool                showCertificate();
     void                checkResult(int n, int& retry);
-    void                showError(const char* reason = NULL);
+    void                showError(const std::string& reason);
     std::string getError();
     void                disconnect();
     void formatFingerprint(std::string& fingerprint, bool hex = true, bool separator = true);
