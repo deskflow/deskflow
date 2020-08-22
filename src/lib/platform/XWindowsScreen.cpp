@@ -877,7 +877,7 @@ XWindowsScreen::openDisplay(const char* displayName)
 {
 	// get the DISPLAY
 	if (displayName == NULL) {
-		displayName = getenv("DISPLAY");
+		displayName = std::getenv("DISPLAY");
 		if (displayName == NULL) {
 			displayName = ":0.0";
 		}
