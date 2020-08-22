@@ -17,7 +17,7 @@
 
 #pragma once
 
-#define TEST_ENV
+#define BARRIER_TEST_ENV
 
 #include "server/PrimaryClient.h"
 #include "base/String.h"

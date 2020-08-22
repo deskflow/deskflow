@@ -82,7 +82,7 @@ private:
     ClientList            m_clients;
     mutable std::mutex m_clientsMutex;
 
-#ifdef TEST_ENV
+#ifdef BARRIER_TEST_ENV
 public:
     IpcServer() :
         m_mock(true),

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define TEST_ENV
+#define BARRIER_TEST_ENV
 
 #include "barrier/KeyMap.h"
 
