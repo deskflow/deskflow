@@ -37,7 +37,7 @@ public:
     PrimaryClient(const std::string& name, barrier::Screen* screen);
     ~PrimaryClient();
 
-#ifdef TEST_ENV
+#ifdef BARRIER_TEST_ENV
     PrimaryClient() : BaseClientProxy("") { }
 #endif
 

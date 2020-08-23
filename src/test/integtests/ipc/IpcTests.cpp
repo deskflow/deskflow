@@ -19,7 +19,7 @@
 // TODO: fix, tests failing intermittently on mac.
 #ifndef WINAPI_CARBON
 
-#define TEST_ENV
+#define BARRIER_TEST_ENV
 
 #include "test/global/TestEventQueue.h"
 #include "ipc/IpcServer.h"

@@ -24,7 +24,7 @@
 #include "common/stdset.h"
 #include "common/stdvector.h"
 
-#ifdef TEST_ENV
+#ifdef BARRIER_TEST_ENV
 #include <gtest/gtest_prod.h>
 #endif
 
@@ -329,7 +329,7 @@ public:
     //@}
 
 private:
-#ifdef TEST_ENV
+#ifdef BARRIER_TEST_ENV
     FRIEND_TEST(KeyMapTests,
                 findBestKey_requiredDown_matchExactFirstItem);
     FRIEND_TEST(KeyMapTests,
