@@ -37,7 +37,6 @@ jobs:
           build-wrapper-linux-x86-64 --out-dir bw-output make -j
 
           make unit_coverage
-          make integ_coverage
           make clangtidy
 
           sonar-scanner \
@@ -48,7 +47,7 @@ jobs:
             -Dsonar.exclusions=./ext/**,**/build-release/** \
             -Dsonar.cfamily.build-wrapper-output=bw-output \
             -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.cxx.coverage.reportPath=./build-release/integ_coverage.xml
+            -Dsonar.cxx.coverage.reportPath=./build-release/unit_coverage.xml
             -Dsonar.cxx.clangtidy.reportPath=./build-release/clang-tidy.txt
       env:
         SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
