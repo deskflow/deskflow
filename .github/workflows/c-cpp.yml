@@ -41,4 +41,4 @@ jobs:
             -Dsonar.cfamily.build-wrapper-output=bw-output \
             -Dsonar.host.url=https://sonarcloud.io
       env:
-        NODE_AUTH_TOKEN: ${{secrets.SONAR_TOKEN}}
+        SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
