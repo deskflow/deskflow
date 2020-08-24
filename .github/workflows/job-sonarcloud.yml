@@ -35,7 +35,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_COVERAGE=ON ..
           . ./version
           echo "Building, output redirected to file due to verbrosity this may take 10-15 mins to complete..."
-          build-wrapper-linux-x86-64 --out-dir bw-output make -j > tee output.txt
+          build-wrapper-linux-x86-64 --out-dir bw-output make -j > output.txt
 
           echo "Outputting last 200 lines of the build..."
           tail -200 output.txt
