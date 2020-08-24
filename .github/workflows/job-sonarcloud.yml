@@ -34,10 +34,13 @@ jobs:
           cd build-release
           cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_COVERAGE=ON ..
           . ./version
-          build-wrapper-linux-x86-64 --out-dir bw-output make -j
+          echo "Building, output redirected to file due to verbrosity this may take 10-15 mins to complete..."
+          build-wrapper-linux-x86-64 --out-dir bw-output make -j > tee output.txt
+
+          echo "Outputting last 200 lines of the build..."
+          tail -200 output.txt
 
           make unit_coverage
-          make clangtidy
 
           sonar-scanner \
             -Dsonar.organization=symless \
@@ -48,6 +51,6 @@ jobs:
             -Dsonar.cfamily.build-wrapper-output=bw-output \
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.cxx.coverage.reportPath=./build-release/unit_coverage.xml
-            -Dsonar.cxx.clangtidy.reportPath=./build-release/clang-tidy.txt
+            -Dsonar.cxx.clangtidy.reportPath=./build-release/output.txt
       env:
         SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
