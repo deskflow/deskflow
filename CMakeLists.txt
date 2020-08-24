@@ -21,6 +21,7 @@ option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" ON)
 option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
 option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" ON)
 option (BUILD_TESTS "Override building of tests" ON)
+option (ENABLE_COVERAGE "Build with coverage")
 
 if (DEFINED ENV{SYNERGY_ENTERPRISE})
   option (SYNERGY_ENTERPRISE "Build Enterprise" ON)
@@ -33,6 +34,33 @@ set (CMAKE_CXX_EXTENSIONS OFF)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+
+if (ENABLE_COVERAGE)
+    # Add Code Coverage
+    include(cmake/CodeCoverage.cmake)
+    append_coverage_compiler_flags()
+    setup_target_for_coverage_gcovr_xml(
+            NAME unit_coverage
+            EXECUTABLE unittests
+            BASE_DIRECTORY "${PROJECT_SOURCE_DIR}/src"
+            EXCLUDE "ext/*")
+    setup_target_for_coverage_gcovr_xml(
+            NAME integ_coverage
+            EXECUTABLE integtests
+            BASE_DIRECTORY "${PROJECT_SOURCE_DIR}/src"
+            EXCLUDE "ext/*")
+
+    #Add ClangTidy Reports
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+    file(GLOB_RECURSE CT_C_SOURCES  "src/*.c")
+    file(GLOB_RECURSE CT_CPP_SOURCES "src/*.cpp")
+    file(GLOB_RECURSE CT_C_HEADERS "src/*.h")
+    file(GLOB_RECURSE CT_CPP_HEADERS "src/*.hpp")
+    add_custom_target(clangtidy
+            COMMAND clang-tidy -checks='*' ${PROJECT_SOURCE_DIR} ${CT_C_SOURCES} ${CT_CPP_SOURCES} ${CT_C_HEADERS} ${CT_CPP_HEADERS} > clang-tidy.txt)
+
+endif()
 
 if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions (-DNDEBUG)

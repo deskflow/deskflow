@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: SonarCloud Static Analisis
 
 on:
   push:
@@ -17,6 +17,7 @@ jobs:
     
     - name: Run Sonar
       run: |
+          sudo apt-get install -y gcovr
           export SONAR_SCANNER_VERSION=4.4.0.2170
           export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
           curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip
@@ -30,10 +31,14 @@ jobs:
 
           mkdir build-release
           cd build-release
-          if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
+          cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_COVERAGE=ON
           . ./version
           build-wrapper-linux-x86-64 --out-dir bw-output make -j
-          
+
+          make unit_coverage
+          make integ_coverage
+          make clangtidy
+
           sonar-scanner \
             -Dsonar.organization=symless \
             -Dsonar.projectKey=symless_synergy-core \
@@ -42,5 +47,7 @@ jobs:
             -Dsonar.exclusions=./ext/**,**/build-release/** \
             -Dsonar.cfamily.build-wrapper-output=bw-output \
             -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.cxx.coverage.reportPath=./build-release/integ_coverage.xml
+            -Dsonar.cxx.clangtidy.reportPath=./build-release/clang-tidy.txt
       env:
         SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
