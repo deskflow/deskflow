@@ -33,12 +33,12 @@ jobs:
           if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
           . ./version
           build-wrapper-linux-x86-64 --out-dir bw-output make -j
-
+          cd ..
           sonar-scanner \
             -Dsonar.organization=symless \
             -Dsonar.projectKey=symless_synergy-core \
-            -Dsonar.sources=../ \
-            -Dsonar.exclusions=../ext/**,./** \
+            -Dsonar.sources=. \
+            -Dsonar.exclusions=./ext/**,**/build-release/** \
             -Dsonar.cfamily.build-wrapper-output=bw-output \
             -Dsonar.host.url=https://sonarcloud.io
       env:
