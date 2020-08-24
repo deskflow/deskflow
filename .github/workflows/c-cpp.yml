@@ -37,7 +37,8 @@ jobs:
           sonar-scanner \
             -Dsonar.organization=symless \
             -Dsonar.projectKey=symless_synergy-core \
-            -Dsonar.sources=. \
+            -Dsonar.sources=../ \
+            -Dsonar.exclusions=../ext/**,./** \
             -Dsonar.cfamily.build-wrapper-output=bw-output \
             -Dsonar.host.url=https://sonarcloud.io
       env:
