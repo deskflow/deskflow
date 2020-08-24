@@ -14,6 +14,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     
     - name: Run Sonar
       run: |
@@ -35,7 +37,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_COVERAGE=ON ..
           . ./version
           echo "Building, output redirected to file due to verbrosity this may take 10-15 mins to complete..."
-          build-wrapper-linux-x86-64 --out-dir bw-output make -j 2>&1 > output.txt
+          build-wrapper-linux-x86-64 --out-dir bw-output make -j > output.txt 2>&1
 
           echo "Outputting last 200 lines of the build..."
           tail -200 output.txt
@@ -50,7 +52,7 @@ jobs:
             -Dsonar.exclusions=./ext/**,**/build-release/** \
             -Dsonar.cfamily.build-wrapper-output=bw-output \
             -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.cxx.coverage.reportPath=./build-release/unit_coverage.xml
-            -Dsonar.cxx.clangtidy.reportPath=./build-release/output.txt
+            -Dsonar.cxx.coverage.reportPath=unit_coverage.xml
+            -Dsonar.cxx.clangtidy.reportPath=output.txt
       env:
         SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
