@@ -51,14 +51,10 @@ if (ENABLE_COVERAGE)
             EXCLUDE "ext/*")
 
     #Add ClangTidy Reports
-    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-    file(GLOB_RECURSE CT_C_SOURCES  "src/*.c")
-    file(GLOB_RECURSE CT_CPP_SOURCES "src/*.cpp")
-    file(GLOB_RECURSE CT_C_HEADERS "src/*.h")
-    file(GLOB_RECURSE CT_CPP_HEADERS "src/*.hpp")
-    add_custom_target(clangtidy
-            COMMAND clang-tidy -checks='*' ${PROJECT_SOURCE_DIR} ${CT_C_SOURCES} ${CT_CPP_SOURCES} ${CT_C_HEADERS} ${CT_CPP_HEADERS} > clang-tidy.txt)
+    set(CMAKE_CXX_CLANG_TIDY
+            clang-tidy;
+            -header-filter=.;
+            -checks=*;)
 
 endif()
 
