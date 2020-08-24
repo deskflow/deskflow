@@ -38,6 +38,7 @@ jobs:
             -Dsonar.organization=symless \
             -Dsonar.projectKey=symless_synergy-core \
             -Dsonar.sources=. \
+            -Dsonar.projectBaseDir=../ \
             -Dsonar.exclusions=./ext/**,**/build-release/** \
             -Dsonar.cfamily.build-wrapper-output=bw-output \
             -Dsonar.host.url=https://sonarcloud.io
