@@ -17,6 +17,7 @@ jobs:
     
     - name: Run Sonar
       run: |
+          apt-get update
           apt-get install -y gcovr
           export SONAR_SCANNER_VERSION=4.4.0.2170
           export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
