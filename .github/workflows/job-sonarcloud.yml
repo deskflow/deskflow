@@ -14,8 +14,8 @@ jobs:
 
     env:
       SONAR_SCANNER_VERSION: 4.4.0.2170
-      SONAR_SCANNER_HOME: "~/.sonar/sonar-scanner-4.4.0.2170-linux"
-      SONAR_SCANNER_OPTS: "-server"
+      SONAR_SCANNER_HOME: $HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
+      SONAR_SCANNER_OPTS: -server
 
     steps:
     - uses: actions/checkout@v2
