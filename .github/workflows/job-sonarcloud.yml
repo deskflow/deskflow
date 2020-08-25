@@ -14,7 +14,6 @@ jobs:
 
     env:
       SONAR_SCANNER_VERSION: 4.4.0.2170
-      SONAR_SCANNER_HOME: $HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
       SONAR_SCANNER_OPTS: -server
 
     steps:
@@ -31,9 +30,7 @@ jobs:
         pip install gcovr
     - name: Installing Sonar Scanner
       run: |
-        echo ${SONAR_SCANNER_HOME}
-        echo $SONAR_SCANNER_HOME
-        echo $SONAR_SCANNER_HOME/bin:$PATH
+        export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-4.4.0.2170-linux
         curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip
         unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
 
@@ -58,7 +55,7 @@ jobs:
 
     - name: Run Sonar
       run: |
-        export PATH=$SONAR_SCANNER_HOME/bin:$PATH
+        export PATH=$HOME/.sonar/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/bin:$PATH
         cd build-release
         sonar-scanner \
           -Dsonar.organization=symless \
