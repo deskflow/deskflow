@@ -83,9 +83,11 @@ App::~App()
 void
 App::version()
 {
-    char buffer[500];
-    sprintf(
+    static const int buffer_size = 500;
+    char buffer[buffer_size];
+    snprintf(
         buffer,
+        buffer_size,
         "%s %s, protocol version %d.%d\n%s",
         argsBase().m_pname,
         kVersion,
