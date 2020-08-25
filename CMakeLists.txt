@@ -21,6 +21,7 @@ option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" ON)
 option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
 option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" ON)
 option (BUILD_TESTS "Override building of tests" ON)
+option (ENABLE_COVERAGE "Build with coverage")
 
 if (DEFINED ENV{SYNERGY_ENTERPRISE})
   option (SYNERGY_ENTERPRISE "Build Enterprise" ON)
@@ -33,6 +34,18 @@ set (CMAKE_CXX_EXTENSIONS OFF)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+
+if (ENABLE_COVERAGE)
+    # Add Code Coverage
+    include(cmake/CodeCoverage.cmake)
+    append_coverage_compiler_flags()
+    setup_target_for_coverage_gcovr_xml(
+            NAME coverage
+            EXECUTABLE unittests
+            BASE_DIRECTORY "${PROJECT_SOURCE_DIR}/src"
+            EXCLUDE "ext/*")
+
+endif()
 
 if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions (-DNDEBUG)
