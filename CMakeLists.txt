@@ -40,21 +40,10 @@ if (ENABLE_COVERAGE)
     include(cmake/CodeCoverage.cmake)
     append_coverage_compiler_flags()
     setup_target_for_coverage_gcovr_xml(
-            NAME unit_coverage
+            NAME coverage
             EXECUTABLE unittests
             BASE_DIRECTORY "${PROJECT_SOURCE_DIR}/src"
             EXCLUDE "ext/*")
-    setup_target_for_coverage_gcovr_xml(
-            NAME integ_coverage
-            EXECUTABLE integtests
-            BASE_DIRECTORY "${PROJECT_SOURCE_DIR}/src"
-            EXCLUDE "ext/*")
-
-    #Add ClangTidy Reports
-    set(CMAKE_CXX_CLANG_TIDY
-            clang-tidy;
-            -header-filter=.;
-            -checks=*;)
 
 endif()
 

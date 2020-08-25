@@ -20,7 +20,7 @@ jobs:
     - name: Run Sonar
       run: |
           apt-get update
-          apt-get install -y gcovr clang-tidy
+          apt-get install -y gcovr
           export SONAR_SCANNER_VERSION=4.4.0.2170
           export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
           curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip
@@ -36,13 +36,10 @@ jobs:
           cd build-release
           cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_COVERAGE=ON ..
           . ./version
-          echo "Building, output redirected to file due to verbrosity this may take 10-15 mins to complete..."
-          build-wrapper-linux-x86-64 --out-dir bw-output make -j > output.txt 2>&1
 
-          echo "Outputting last 200 lines of the build..."
-          tail -200 output.txt
+          build-wrapper-linux-x86-64 --out-dir bw-output make -j
 
-          make unit_coverage
+          make coverage
 
           sonar-scanner \
             -Dsonar.organization=symless \
@@ -51,8 +48,8 @@ jobs:
             -Dsonar.projectBaseDir=../ \
             -Dsonar.exclusions=./ext/**,**/build-release/** \
             -Dsonar.cfamily.build-wrapper-output=bw-output \
-            -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.cxx.coverage.reportPath=unit_coverage.xml
-            -Dsonar.cxx.clangtidy.reportPath=output.txt
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.coverageReportPaths=build-release/coverage.xml
+
       env:
         SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
