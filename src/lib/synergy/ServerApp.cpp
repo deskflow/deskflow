@@ -119,10 +119,11 @@ ServerApp::help()
 #  define WINAPI_ARGS
 #  define WINAPI_INFO
 #endif
-
-    char buffer[3000];
-    sprintf(
+    static const int buffer_size = 3000;
+    char buffer[buffer_size];
+    snprintf(
         buffer,
+        buffer_size,
         "Usage: %s"
         " [--address <address>]"
         " [--config <pathname>]"

@@ -1,5 +1,7 @@
 v1.12.x-snapshot
 ===========
+Bug fixes:
+- #6753 Fixed a number of vulnerabilities detected by static analysis
 
 Enhancements:
 - #6750 Integrate SonarCloud for static analysis and test coverage
