@@ -39,6 +39,8 @@ jobs:
 
           build-wrapper-linux-x86-64 --out-dir bw-output make -j
 
+          ./bin/unittests
+          echo "hmm"
           make coverage
 
           sonar-scanner \
