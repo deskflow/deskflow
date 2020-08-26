@@ -45,7 +45,7 @@ jobs:
         export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
         mkdir build-release
         cd build-release
-        cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_COVERAGE=ON ..
+        cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON ..
         . ./version
         build-wrapper-linux-x86-64 --out-dir bw-output make -j
 
