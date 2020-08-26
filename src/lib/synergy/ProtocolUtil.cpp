@@ -112,39 +112,47 @@ ProtocolUtil::vreadf(synergy::IStream* stream, const char* fmt, va_list args)
             switch (*fmt) {
             case 'i': {
                 // check for valid length
-                assert(len == 1 || len == 2 || len == 4);
+                if (len == 4 || len == 2 || len == 1) {
 
-                // read the data
-                UInt8 buffer[4];
-                read(stream, buffer, len);
+                    static const int buffer_size = 4;
+                    // read the data
+                    UInt8 buffer[buffer_size];
+                    //Read the buffer till the len or buffers_size, which ever is smaller
+                    read(stream, buffer, len > buffer_size ? buffer_size : len);
 
-                // convert it
-                void* v = va_arg(args, void*);
-                switch (len) {
-                case 1:
-                    // 1 byte integer
-                    *static_cast<UInt8*>(v) = buffer[0];
-                    LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt8*>(v), *static_cast<UInt8*>(v)));
-                    break;
+                    // convert it
+                    void* v = va_arg(args, void*);
+                    switch (len) {
+                    case 1:
+                        // 1 byte integer
+                        *static_cast<UInt8*>(v) = buffer[0];
+                        LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt8*>(v), *static_cast<UInt8*>(v)));
+                        break;
 
-                case 2:
-                    // 2 byte integer
-                    *static_cast<UInt16*>(v) =
-                        static_cast<UInt16>(
-                        (static_cast<UInt16>(buffer[0]) << 8) |
-                         static_cast<UInt16>(buffer[1]));
-                    LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt16*>(v), *static_cast<UInt16*>(v)));
-                    break;
+                    case 2:
+                        // 2 byte integer
+                        *static_cast<UInt16*>(v) =
+                            static_cast<UInt16>(
+                            (static_cast<UInt16>(buffer[0]) << 8) |
+                             static_cast<UInt16>(buffer[1]));
+                        LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt16*>(v), *static_cast<UInt16*>(v)));
+                        break;
 
-                case 4:
-                    // 4 byte integer
-                    *static_cast<UInt32*>(v) =
-                        (static_cast<UInt32>(buffer[0]) << 24) |
-                        (static_cast<UInt32>(buffer[1]) << 16) |
-                        (static_cast<UInt32>(buffer[2]) <<  8) |
-                         static_cast<UInt32>(buffer[3]);
-                    LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt32*>(v), *static_cast<UInt32*>(v)));
-                    break;
+                    case 4:
+                        // 4 byte integer
+                        *static_cast<UInt32*>(v) =
+                            (static_cast<UInt32>(buffer[0]) << 24) |
+                            (static_cast<UInt32>(buffer[1]) << 16) |
+                            (static_cast<UInt32>(buffer[2]) <<  8) |
+                             static_cast<UInt32>(buffer[3]);
+                        LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt32*>(v), *static_cast<UInt32*>(v)));
+                        break;
+                    }
+                }
+                else {
+                    //the length is wrong
+                    LOG((CLOG_ERR "read: length to be read is wrong: '%d' should be 1,2, or 4", len));
+                    assert(false); //assert for debugging
                 }
                 break;
             }
