@@ -30,20 +30,20 @@ Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</source>
-      <translation type="unfinished">&lt;p&gt;
-Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+      <translation>&lt;p&gt;
+跨平台、开源的键盘鼠标共享软件。&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2019 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (symless.com).
+如需帮助或获取信息请访问我们的官网。 (symless.com).
 &lt;/p&gt;</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="167"/>
       <source>Build Date: </source>
-      <translation type="unfinished">Build Date: </translation>
+      <translation>创建日期：%s</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="194"/>
@@ -136,7 +136,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="247"/>
       <source>Restart server</source>
-      <translation type="unfinished">Restart server</translation>
+      <translation>重新启服务器</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="259"/>
@@ -159,12 +159,12 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActivationDialog.ui" line="14"/>
       <source>Activate Synergy</source>
-      <translation type="unfinished">Activate Synergy</translation>
+      <translation>激活Synergy</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="26"/>
       <source>Serial key</source>
-      <translation type="unfinished">Serial key</translation>
+      <translation>序列号</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="33"/>
