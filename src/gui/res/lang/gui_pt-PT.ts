@@ -17,7 +17,7 @@
     <message>
       <location filename="src/AboutDialogBase.ui" line="124"/>
       <source>Version:</source>
-      <translation>Versão</translation>
+      <translation>Versão:</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="53"/>
