@@ -2,6 +2,7 @@ v1.12.x-snapshot
 ===========
 Bug fixes:
 - #6753 Fixed a number of vulnerabilities detected by static analysis
+- #6567 Fixed Synergy spawning hundreds of zombie processes
 
 Enhancements:
 - #6750 Integrate SonarCloud for static analysis and test coverage
