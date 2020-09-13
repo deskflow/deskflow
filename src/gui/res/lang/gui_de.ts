@@ -984,7 +984,7 @@ Klicken sie doppelt auf eine Anzeige um die Einstellungen zu bearbeiten.</transl
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="419"/>
         <source>&amp;Check clients every</source>
-        <translation type="finished">Prüfe auf Meldungen vom &amp;Client aller</translation>
+        <translation type="finished">Prüfe auf Meldungen vom &amp;Client alle</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="470"/>
