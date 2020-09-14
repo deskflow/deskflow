@@ -111,146 +111,15 @@ ProtocolUtil::vreadf(synergy::IStream* stream, const char* fmt, va_list args)
             UInt32 len = eatLength(&fmt);
             switch (*fmt) {
             case 'i': {
-                // check for valid length
-                assert(len == 1 || len == 2 || len == 4);
-
-                // read the data
-                UInt8 buffer[4];
-                read(stream, buffer, len);
-
-                // convert it
-                void* v = va_arg(args, void*);
-                switch (len) {
-                case 1:
-                    // 1 byte integer
-                    *static_cast<UInt8*>(v) = buffer[0];
-                    LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt8*>(v), *static_cast<UInt8*>(v)));
-                    break;
-
-                case 2:
-                    // 2 byte integer
-                    *static_cast<UInt16*>(v) =
-                        static_cast<UInt16>(
-                        (static_cast<UInt16>(buffer[0]) << 8) |
-                         static_cast<UInt16>(buffer[1]));
-                    LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt16*>(v), *static_cast<UInt16*>(v)));
-                    break;
-
-                case 4:
-                    // 4 byte integer
-                    *static_cast<UInt32*>(v) =
-                        (static_cast<UInt32>(buffer[0]) << 24) |
-                        (static_cast<UInt32>(buffer[1]) << 16) |
-                        (static_cast<UInt32>(buffer[2]) <<  8) |
-                         static_cast<UInt32>(buffer[3]);
-                    LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt32*>(v), *static_cast<UInt32*>(v)));
-                    break;
-                }
+                readInt(stream, len, args);
                 break;
             }
-
             case 'I': {
-                // check for valid length
-                assert(len == 1 || len == 2 || len == 4);
-
-                // read the vector length
-                UInt8 buffer[4];
-                read(stream, buffer, 4);
-                UInt32 n = (static_cast<UInt32>(buffer[0]) << 24) |
-                           (static_cast<UInt32>(buffer[1]) << 16) |
-                           (static_cast<UInt32>(buffer[2]) <<  8) |
-                            static_cast<UInt32>(buffer[3]);
-
-                // convert it
-                void* v = va_arg(args, void*);
-                switch (len) {
-                case 1:
-                    // 1 byte integer
-                    for (UInt32 i = 0; i < n; ++i) {
-                        read(stream, buffer, 1);
-                        static_cast<std::vector<UInt8>*>(v)->push_back(
-                            buffer[0]);
-                        LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, static_cast<std::vector<UInt8>*>(v)->back(), static_cast<std::vector<UInt8>*>(v)->back()));
-                    }
-                    break;
-
-                case 2:
-                    // 2 byte integer
-                    for (UInt32 i = 0; i < n; ++i) {
-                        read(stream, buffer, 2);
-                        static_cast<std::vector<UInt16>*>(v)->push_back(
-                            static_cast<UInt16>(
-                            (static_cast<UInt16>(buffer[0]) << 8) |
-                             static_cast<UInt16>(buffer[1])));
-                        LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, static_cast<std::vector<UInt16>*>(v)->back(), static_cast<std::vector<UInt16>*>(v)->back()));
-                    }
-                    break;
-
-                case 4:
-                    // 4 byte integer
-                    for (UInt32 i = 0; i < n; ++i) {
-                        read(stream, buffer, 4);
-                        static_cast<std::vector<UInt32>*>(v)->push_back(
-                            (static_cast<UInt32>(buffer[0]) << 24) |
-                            (static_cast<UInt32>(buffer[1]) << 16) |
-                            (static_cast<UInt32>(buffer[2]) <<  8) |
-                             static_cast<UInt32>(buffer[3]));
-                        LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, static_cast<std::vector<UInt32>*>(v)->back(), static_cast<std::vector<UInt32>*>(v)->back()));
-                    }
-                    break;
-                }
+                readVectorInt(stream, len, args);
                 break;
             }
-
             case 's': {
-                assert(len == 0);
-
-                // read the string length
-                UInt8 buffer[128];
-                read(stream, buffer, 4);
-                UInt32 len = (static_cast<UInt32>(buffer[0]) << 24) |
-                             (static_cast<UInt32>(buffer[1]) << 16) |
-                             (static_cast<UInt32>(buffer[2]) <<  8) |
-                              static_cast<UInt32>(buffer[3]);
-
-                // use a fixed size buffer if its big enough
-                const bool useFixed = (len <= sizeof(buffer));
-
-                // allocate a buffer to read the data
-                UInt8* sBuffer = buffer;
-                if (!useFixed) {
-                    try{
-                        sBuffer = new UInt8[len];
-                    }
-                    catch (std::bad_alloc & exception) {
-                        // Added try catch due to GHSA-chfm-333q-gfpp
-                        LOG((CLOG_ERR "ALLOC: Unable to allocate memory %d bytes", len));
-                        LOG((CLOG_DEBUG "bad_alloc detected: Do you have enough free memory?"));
-                        throw exception;
-                    }
-                }
-
-                // read the data
-                try {
-                    read(stream, sBuffer, len);
-                }
-                catch (...) {
-                    if (!useFixed) {
-                        delete[] sBuffer;
-                    }
-                    throw;
-                }
-
-                LOG((CLOG_DEBUG2 "readf: read %d byte string", len));
-
-                // save the data
-                String* dst = va_arg(args, String*);
-                dst->assign((const char*)sBuffer, len);
-
-                // release the buffer
-                if (!useFixed) {
-                    delete[] sBuffer;
-                }
+                readBytes(stream, len, args);
                 break;
             }
 
@@ -540,6 +409,155 @@ ProtocolUtil::read(synergy::IStream* stream, void* vbuffer, UInt32 count)
         // prepare for next read
         buffer += n;
         count  -= n;
+    }
+}
+
+void ProtocolUtil::readInt(synergy::IStream * stream, UInt32 len, va_list args) {
+    // check for valid length
+    if (len == 4 || len == 2 || len == 1) {
+
+        static const int buffer_size = 4;
+        // read the data
+        UInt8 buffer[buffer_size];
+        //Read the buffer till the len or buffers_size, which ever is smaller
+        read(stream, buffer, len > buffer_size ? buffer_size : len);
+
+        // convert it
+        void* v = va_arg(args, void*);
+        switch (len) {
+            case 1:
+                // 1 byte integer
+                *static_cast<UInt8*>(v) = buffer[0];
+                LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt8*>(v), *static_cast<UInt8*>(v)));
+                break;
+
+            case 2:
+                // 2 byte integer
+                *static_cast<UInt16*>(v) =
+                        static_cast<UInt16>(
+                                (static_cast<UInt16>(buffer[0]) << 8) |
+                                static_cast<UInt16>(buffer[1]));
+                LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt16*>(v), *static_cast<UInt16*>(v)));
+                break;
+
+            case 4:
+                // 4 byte integer
+                *static_cast<UInt32*>(v) =
+                        (static_cast<UInt32>(buffer[0]) << 24) |
+                        (static_cast<UInt32>(buffer[1]) << 16) |
+                        (static_cast<UInt32>(buffer[2]) <<  8) |
+                        static_cast<UInt32>(buffer[3]);
+                LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt32*>(v), *static_cast<UInt32*>(v)));
+                break;
+        }
+    }
+    else {
+        //the length is wrong
+        LOG((CLOG_ERR "read: length to be read is wrong: '%d' should be 1,2, or 4", len));
+        assert(false); //assert for debugging
+    }
+}
+
+void ProtocolUtil::readVectorInt(synergy::IStream * stream, UInt32 len, va_list args) {
+    // check for valid length
+    assert(len == 1 || len == 2 || len == 4);
+
+    // read the vector length
+    UInt8 buffer[4];
+    read(stream, buffer, 4);
+    UInt32 n = (static_cast<UInt32>(buffer[0]) << 24) |
+               (static_cast<UInt32>(buffer[1]) << 16) |
+               (static_cast<UInt32>(buffer[2]) <<  8) |
+               static_cast<UInt32>(buffer[3]);
+
+    // convert it
+    void* v = va_arg(args, void*);
+    switch (len) {
+        case 1:
+            // 1 byte integer
+            for (UInt32 i = 0; i < n; ++i) {
+                read(stream, buffer, 1);
+                static_cast<std::vector<UInt8>*>(v)->push_back(
+                        buffer[0]);
+                LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, static_cast<std::vector<UInt8>*>(v)->back(), static_cast<std::vector<UInt8>*>(v)->back()));
+            }
+            break;
+
+        case 2:
+            // 2 byte integer
+            for (UInt32 i = 0; i < n; ++i) {
+                read(stream, buffer, 2);
+                static_cast<std::vector<UInt16>*>(v)->push_back(
+                        static_cast<UInt16>(
+                                (static_cast<UInt16>(buffer[0]) << 8) |
+                                static_cast<UInt16>(buffer[1])));
+                LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, static_cast<std::vector<UInt16>*>(v)->back(), static_cast<std::vector<UInt16>*>(v)->back()));
+            }
+            break;
+
+        case 4:
+            // 4 byte integer
+            for (UInt32 i = 0; i < n; ++i) {
+                read(stream, buffer, 4);
+                static_cast<std::vector<UInt32>*>(v)->push_back(
+                        (static_cast<UInt32>(buffer[0]) << 24) |
+                        (static_cast<UInt32>(buffer[1]) << 16) |
+                        (static_cast<UInt32>(buffer[2]) <<  8) |
+                        static_cast<UInt32>(buffer[3]));
+                LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, static_cast<std::vector<UInt32>*>(v)->back(), static_cast<std::vector<UInt32>*>(v)->back()));
+            }
+            break;
+    }
+}
+
+void ProtocolUtil::readBytes(synergy::IStream * stream, UInt32 len, va_list args) {
+    assert(len == 0);
+
+    // read the string length
+    UInt8 buffer[128];
+    read(stream, buffer, 4);
+    len = (static_cast<UInt32>(buffer[0]) << 24) |
+             (static_cast<UInt32>(buffer[1]) << 16) |
+             (static_cast<UInt32>(buffer[2]) <<  8) |
+             static_cast<UInt32>(buffer[3]);
+
+    // use a fixed size buffer if its big enough
+    const bool useFixed = (len <= sizeof(buffer));
+
+    // allocate a buffer to read the data
+    UInt8* sBuffer = buffer;
+    if (!useFixed) {
+        try{
+            sBuffer = new UInt8[len];
+        }
+        catch (std::bad_alloc & exception) {
+            // Added try catch due to GHSA-chfm-333q-gfpp
+            LOG((CLOG_ERR "ALLOC: Unable to allocate memory %d bytes", len));
+            LOG((CLOG_DEBUG "bad_alloc detected: Do you have enough free memory?"));
+            throw exception;
+        }
+    }
+
+    // read the data
+    try {
+        read(stream, sBuffer, len);
+    }
+    catch (...) {
+        if (!useFixed) {
+            delete[] sBuffer;
+        }
+        throw;
+    }
+
+    LOG((CLOG_DEBUG2 "readf: read %d byte string", len));
+
+    // save the data
+    String* dst = va_arg(args, String*);
+    dst->assign((const char*)sBuffer, len);
+
+    // release the buffer
+    if (!useFixed) {
+        delete[] sBuffer;
     }
 }
 
