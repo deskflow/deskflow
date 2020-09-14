@@ -3,6 +3,8 @@ v1.12.x-snapshot
 Bug fixes:
 - #6753 Fixed a number of vulnerabilities detected by static analysis
 - #6755 Fixed Vulnerability in vreadf function detected by Static analysis
+- #6758 Account name with space on windows causes synergy to error when starting
+- #6760 Synergy loses license when creating a System scope config
 
 Enhancements:
 - #6750 Integrate SonarCloud for static analysis and test coverage

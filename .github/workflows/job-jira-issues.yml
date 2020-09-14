@@ -1,0 +1,40 @@
+on:
+  issues:
+    types: [ opened ]
+
+name: Send Issue to Jira
+jobs:
+  jiraIssueCreation:
+    name: Jira Issue Creation Demo
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Login
+        uses: atlassian/gajira-login@master
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+
+      - name: Create
+        id: create
+        uses: atlassian/gajira-create@master
+        with:
+          project: SYNERGY
+          issuetype: Task
+          summary: |
+            ${{ github.event.issue.title }}
+          description: |
+            Opened by: ${{ github.event.issue.user.login }}
+            Link: ${{ github.event.issue.html_url }}
+            ${{ github.event.issue.body }}
+
+      - name: Create comment
+        uses: jungwinter/comment@v1
+        id: createComment
+        with:
+          type: create
+          body: |
+            Jira Issue: [${{ steps.create.outputs.issue }}](https://symless.atlassian.net/browse/${{ steps.create.outputs.issue }})
+          issue_number: ${{ github.event.issue.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
