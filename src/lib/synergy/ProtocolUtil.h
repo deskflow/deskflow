@@ -50,7 +50,7 @@ public:
     - \%s   -- converts String* to stream of bytes
     - \%S   -- converts integer N and const UInt8* to stream of N bytes
     */
-    static void            writef(synergy::IStream*,
+    static void           writef(synergy::IStream*,
                             const char* fmt, ...);
 
     //! Read formatted data
@@ -69,19 +69,34 @@ public:
     - \%4I  -- reads NBO 4 byte integers;  arg is std::vector<UInt32>*
     - \%s   -- reads bytes;  argument must be a String*, \b not a char*
     */
-    static bool            readf(synergy::IStream*,
+    static bool           readf(synergy::IStream*,
                             const char* fmt, ...);
 
 private:
-    static void            vwritef(synergy::IStream*,
+    static void           vwritef(synergy::IStream*,
                             const char* fmt, UInt32 size, va_list);
-    static void            vreadf(synergy::IStream*,
+    static void           vreadf(synergy::IStream*,
                             const char* fmt, va_list);
 
-    static UInt32        getLength(const char* fmt, va_list);
-    static void            writef(void*, const char* fmt, va_list);
-    static UInt32        eatLength(const char** fmt);
-    static void            read(synergy::IStream*, void*, UInt32);
+    static UInt32         getLength(const char* fmt, va_list);
+    static void           writef(void*, const char* fmt, va_list);
+    static UInt32         eatLength(const char** fmt);
+    static void           read(synergy::IStream*, void*, UInt32);
+
+    /**
+     * @brief Handles 1,2, or 4 byte Integers
+     */
+    static void           readInt(synergy::IStream*, UInt32, va_list);
+
+    /**
+     * @brief Handles a Vector of integers
+     */
+    static void           readVectorInt(synergy::IStream*, UInt32, va_list);
+
+    /**
+     * @brief Handles an array of bytes
+     */
+    static void           readBytes(synergy::IStream*, UInt32, va_list);
 };
 
 //! Mismatched read exception
