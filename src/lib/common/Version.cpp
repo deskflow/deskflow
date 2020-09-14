@@ -18,8 +18,9 @@
 
 #include "common/Version.h"
 
+const char* kBuildYear = __DATE__ + 7;
 const char* kApplication = "Synergy";
-const char* kCopyright   = "Copyright (C) 2012-2019 Symless Ltd.\n"
+const char* kCopyright   = "Copyright (C) 2012-%s Symless Ltd.\n"
                            "Copyright (C) 2008-2014 Nick Bolton\n"
                            "Copyright (C) 2002-2014 Chris Schoeneman";
 const char* kContact     = "Email: engineering@symless.com";
