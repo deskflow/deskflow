@@ -238,7 +238,6 @@ void AppConfig::loadSettings()
     m_ActivateEmail             = loadSetting(kActivateEmail, "").toString();
     m_CryptoEnabled             = loadSetting(kCryptoEnabled, true).toBool();
     m_AutoHide                  = loadSetting(kAutoHide, false).toBool();
-    m_Serialkey                 = loadSetting(kSerialKey, "").toString().trimmed();
     m_lastVersion               = loadSetting(kLastVersion, "Unknown").toString();
     m_LastExpiringWarningTime   = loadSetting(kLastExpireWarningTime, 0).toInt();
     m_ActivationHasRun          = loadSetting(kActivationHasRun, false).toBool();
@@ -250,6 +249,16 @@ void AppConfig::loadSettings()
     m_UseInternalConfig         = loadSetting(kUseInternalConfig, false).toBool();
     m_ClientGroupChecked        = loadSetting(kGroupClientCheck, true).toBool();
     m_ServerHostname            = loadSetting(kServerHostname).toString();
+
+    //only change the serial key if the settings being loaded contains a key
+    bool updateSerial = GUI::Config::ConfigWriter::make()
+            ->hasSetting(settingName(kLoadSystemSettings),GUI::Config::ConfigWriter::kCurrent);
+    //if the setting exists and is not empty
+    updateSerial = updateSerial && !loadSetting(kSerialKey, "").toString().trimmed().isEmpty();
+
+    if (updateSerial) {
+        m_Serialkey                 = loadSetting(kSerialKey, "").toString().trimmed();
+    }
 
     //Set the default path of the TLS certificate file in the users DIR
     QString certificateFilename = QString("%1/%2/%3").arg(m_CoreInterface.getProfileDir(),
