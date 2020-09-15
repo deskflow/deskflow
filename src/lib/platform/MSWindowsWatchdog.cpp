@@ -574,6 +574,7 @@ MSWindowsWatchdog::shutdownExistingProcesses()
                 
                 HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
                 shutdownProcess(handle, entry.th32ProcessID, 10);
+                CloseHandle(handle);
             }
         }
 
