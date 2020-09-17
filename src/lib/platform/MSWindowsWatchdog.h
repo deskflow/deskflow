@@ -26,6 +26,7 @@
 #include <Windows.h>
 #include <string>
 #include <list>
+#include <map>
 
 class Thread;
 class IpcLogOutputter;
@@ -42,7 +43,7 @@ public:
     virtual ~MSWindowsWatchdog();
 
     void                startAsync();
-    std::string            getCommand() const;
+    std::string         getCommand() const;
     void                setCommand(const std::string& command, bool elevate);
     void                stop();
     bool                isProcessActive();
@@ -53,8 +54,8 @@ private:
     void                outputLoop(void*);
     void                shutdownProcess(HANDLE handle, DWORD pid, int timeout);
     void                shutdownExistingProcesses();
-    HANDLE                duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
-    HANDLE                getUserToken(LPSECURITY_ATTRIBUTES security);
+    HANDLE              duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
+    HANDLE              getUserToken(LPSECURITY_ATTRIBUTES security);
     void                startProcess();
 	BOOL                startProcessAsUser(String& command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
 	BOOL                startProcessInForeground(String& command);
@@ -62,29 +63,45 @@ private:
     void                getActiveDesktop(LPSECURITY_ATTRIBUTES security);
     void                testOutput(String buffer);
 	void				setStartupInfo(STARTUPINFO& si);
+	void 				checkChildren();
+	/**
+	 * @brief This closes the handles held to a child thread
+	 * @param pid the ID of the process to kill, will do nothing if PID is not a valid child
+	 * @param removeFromMap should the function remove the item from the children map
+	 */
+	void                closeProcessHandles(unsigned long pid, bool removeFromMap = true);
+	/**
+	 * @brief This kills off all children's handles created by this process
+	 */
+	void 				clearAllChildren();
 
 private:
-    Thread*                m_thread;
+    Thread*             m_thread;
     bool                m_autoDetectCommand;
-    std::string            m_command;
+    std::string         m_command;
     bool                m_monitoring;
     bool                m_commandChanged;
-    HANDLE                m_stdOutWrite;
-    HANDLE                m_stdOutRead;
-    Thread*                m_outputThread;
-    IpcServer&            m_ipcServer;
+    HANDLE              m_stdOutWrite;
+    HANDLE              m_stdOutRead;
+    Thread*             m_outputThread;
+    IpcServer&          m_ipcServer;
     IpcLogOutputter&    m_ipcLogOutputter;
     bool                m_elevateProcess;
     MSWindowsSession    m_session;
     PROCESS_INFORMATION m_processInfo;
-    int                    m_processFailures;
+    int                 m_processFailures;
     bool                m_processRunning;
-    FileLogOutputter*    m_fileLogOutputter;
+    FileLogOutputter*   m_fileLogOutputter;
     bool                m_autoElevated;
-    ArchMutex            m_mutex;
+    ArchMutex           m_mutex;
     ArchCond            m_condVar;
     bool                m_ready;
 	bool				m_foreground;
+
+    /// @brief Save the info of all process made
+    ///         We will use this to track all processes we make and
+    ///         kill off handels and children that we no longer need
+	std::map<unsigned long, PROCESS_INFORMATION>   m_children;
 };
 
 //! Relauncher error

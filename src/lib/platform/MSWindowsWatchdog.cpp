@@ -37,6 +37,7 @@
 #include <UserEnv.h>
 #include <Shellapi.h>
 
+#define CURRENT_PROCESS_ID 0
 #define MAXIMUM_WAIT_TIME 3
 enum {
     kOutputBufferSize = 4096
@@ -338,6 +339,7 @@ MSWindowsWatchdog::startProcess()
         // wait for program to fail.
         ARCH->sleep(1);
         if (!isProcessActive()) {
+            closeProcessHandles(m_processInfo.dwProcessId);
             throw XMSWindowsWatchdogError("process immediately stopped");
         }
 
@@ -376,9 +378,13 @@ MSWindowsWatchdog::startProcessInForeground(String& command)
 	si.dwFlags |= STARTF_USESHOWWINDOW;
 	si.wShowWindow = SW_MINIMIZE;
 
-	return CreateProcess(
+	BOOL result =  CreateProcess(
 		NULL, LPSTR(command.c_str()), NULL, NULL,
 		TRUE, 0, NULL, NULL, &si, &m_processInfo);
+
+    m_children.insert(std::make_pair(m_processInfo.dwProcessId, m_processInfo));
+
+    return result;
 }
 
 BOOL
@@ -408,6 +414,8 @@ MSWindowsWatchdog::startProcessAsUser(String& command, HANDLE userToken, LPSECUR
         userToken, NULL, LPSTR(command.c_str()),
         sa, NULL, TRUE, creationFlags,
         environment, NULL, &si, &m_processInfo);
+
+    m_children.insert(std::make_pair(m_processInfo.dwProcessId, m_processInfo));
 
     DestroyEnvironmentBlock(environment);
     CloseHandle(userToken);
@@ -529,13 +537,15 @@ MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
             ARCH->sleep(1);
         }
     }
+
+    closeProcessHandles(pid);
 }
 
 void
 MSWindowsWatchdog::shutdownExistingProcesses()
 {
     // first we need to take a snapshot of the running processes
-    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, CURRENT_PROCESS_ID);
     if (snapshot == INVALID_HANDLE_VALUE) {
         LOG((CLOG_ERR "could not get process snapshot"));
         throw XArch(new XArchEvalWindows);
@@ -564,6 +574,7 @@ MSWindowsWatchdog::shutdownExistingProcesses()
                 
                 HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
                 shutdownProcess(handle, entry.th32ProcessID, 10);
+                CloseHandle(handle);
             }
         }
 
@@ -581,6 +592,7 @@ MSWindowsWatchdog::shutdownExistingProcesses()
         }
     }
 
+    clearAllChildren();
     CloseHandle(snapshot);
     m_processRunning = false;
 }
@@ -601,7 +613,7 @@ MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
         m_elevateProcess = elevateProcess;
 
         BOOL createRet = startProcessAsUser(syntoolCommand, userToken, security);
-
+        auto pid = m_processInfo.dwProcessId;
         if (!createRet) {
             DWORD rc = GetLastError();
             RevertToSelf();
@@ -622,6 +634,7 @@ MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
         }
         m_ready = false;
         ARCH->unlockMutex(m_mutex);
+        closeProcessHandles(pid);
     }
 } 
 
@@ -643,4 +656,23 @@ MSWindowsWatchdog::testOutput(String buffer)
         ARCH->broadcastCondVar(m_condVar);
         ARCH->unlockMutex(m_mutex);
     }
+}
+
+void MSWindowsWatchdog::closeProcessHandles(unsigned long pid, bool removeFromMap) {
+    auto processInfo = m_children.find(pid);
+    if (processInfo != m_children.end()) {
+        CloseHandle(processInfo->second.hProcess);
+        CloseHandle(processInfo->second.hThread);
+        if(removeFromMap) {
+            m_children.erase(processInfo);
+        }
+    }
+}
+
+void MSWindowsWatchdog::clearAllChildren() {
+    for (auto it = m_children.begin(); it != m_children.end(); ++it)
+    {
+        closeProcessHandles(it->second.dwThreadId, false);
+    }
+    m_children.clear();
 }
