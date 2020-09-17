@@ -83,7 +83,17 @@ App::~App()
 void
 App::version()
 {
-    static const int buffer_size = 500;
+    static const size_t buffer_size = 500;
+    static const size_t cpight_size = 200;
+
+    char copyrightBuffer[cpight_size];
+    snprintf(
+            copyrightBuffer,
+            cpight_size,
+            kCopyright,
+            kBuildYear
+    );
+
     char buffer[buffer_size];
     snprintf(
         buffer,
@@ -93,7 +103,7 @@ App::version()
         kVersion,
         kProtocolMajorVersion,
         kProtocolMinorVersion,
-        kCopyright
+        copyrightBuffer
         );
 
     std::cout << buffer << std::endl;

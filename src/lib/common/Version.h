@@ -30,6 +30,7 @@ extern const char* kApplication;
 extern const char* kCopyright;
 extern const char* kContact;
 extern const char* kWebsite;
+extern const char* kBuildYear;
 
 // build version.  follows linux kernel style:  an even minor number implies
 // a release version, odd implies development version.
