@@ -27,4 +27,4 @@ jobs:
         make -j
 
     - name: Run unit test
-      run: ./build/bin/unittest
+      run: ./build/bin/unittests
