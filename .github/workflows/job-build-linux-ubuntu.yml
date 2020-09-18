@@ -11,7 +11,6 @@ jobs:
           - distro: ubuntu20.04
           - distro: ubuntu19.10
           - distro: ubuntu18.04
-          - distro: ubuntu16.04
 
     name: ${{ matrix.distro }}
 
@@ -29,7 +28,7 @@ jobs:
     - name: Run unit test
       run: ./build/bin/unittests
 
-  build_armv8:
+  build_armhf:
     runs-on: [self-hosted, armv8]
     name: armv8
 
@@ -42,7 +41,7 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
           . ./version
-          make
+          make -j
 
       - name: Run unit test
         run: ./build/bin/unittests
