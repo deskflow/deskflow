@@ -2,6 +2,7 @@ on: push
 
 jobs:
   ubuntu20:
+    runs-on: ubuntu-latest
     container: symless:ubuntu20.04
 
     steps:
