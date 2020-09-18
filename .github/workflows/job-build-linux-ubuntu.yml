@@ -19,6 +19,7 @@ jobs:
 
     - name: Build
       run: |
+        git status
         mkdir build
         cd build
         cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -30,7 +31,6 @@ jobs:
 
   build_armhf:
     runs-on: [self-hosted, armv8]
-    name: armv8
 
     steps:
       - uses: actions/checkout@v2
