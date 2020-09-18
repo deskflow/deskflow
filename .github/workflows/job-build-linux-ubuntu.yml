@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     container: symless/synergy-core:${{ matrix.distro }}
     env:
-      GIT_COMMIT: ${{ GITHUB_SHA }}
+      GIT_COMMIT: ${{ github.sha }}
     strategy:
       matrix:
         include:
