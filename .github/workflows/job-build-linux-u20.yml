@@ -1,0 +1,16 @@
+on: push
+
+jobs:
+  ubuntu20:
+    container: symless:ubuntu20.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        . ./version
+        make -j
