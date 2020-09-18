@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: centos7
+          - distro: centos7.6
           - distro: centos8
 
     name: ${{ matrix.distro }}
