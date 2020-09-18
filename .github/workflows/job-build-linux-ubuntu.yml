@@ -32,7 +32,7 @@ jobs:
   build_armhf:
     runs-on: [self-hosted, armv8]
     env:
-      GIT_COMMIT: ${ GITHUB_SHA }
+      GIT_COMMIT: ${GITHUB_SHA}
     steps:
       - uses: actions/checkout@v2
 
