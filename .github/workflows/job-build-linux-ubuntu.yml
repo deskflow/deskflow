@@ -30,7 +30,7 @@ jobs:
 #      run: ./build/bin/unittests
 
   build_armhf:
-    runs-on: [self-hosted, armv8]
+    runs-on: [self-hosted, armhf]
     env:
       GIT_COMMIT: ${{ github.sha }}
     steps:
