@@ -1,3 +1,5 @@
+name: Build Fedora
+
 on: push
 
 jobs:
@@ -9,7 +11,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: fedora28
+#          - distro: fedora28 #Need to install git 2.18+
           - distro: fedora29
           - distro: fedora30
 

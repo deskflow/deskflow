@@ -1,3 +1,5 @@
+name: Build Ubuntu
+
 on: push
 
 jobs:
@@ -11,8 +13,8 @@ jobs:
         include:
           - distro: ubuntu20.04
           - distro: ubuntu19.10
-#          - distro: ubuntu18.04
-#          - distro: ubuntu16.04
+#          - distro: ubuntu18.04 #Need to install git 2.18+
+#          - distro: ubuntu16.04 #Need to install git 2.18+
 
     name: ${{ matrix.distro }}
 
