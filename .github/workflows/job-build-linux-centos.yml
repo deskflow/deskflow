@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: centos7.6
+#          - distro: centos7.6 #Need to install git 2.18+
           - distro: centos8
 
     name: ${{ matrix.distro }}
