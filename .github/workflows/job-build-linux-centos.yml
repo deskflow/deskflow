@@ -1,4 +1,4 @@
-name: Build Fedora
+name: Build CentOS
 
 on: push
 
@@ -11,9 +11,8 @@ jobs:
     strategy:
       matrix:
         include:
-#          - distro: fedora28 #Need to install git 2.18+
-          - distro: fedora29
-          - distro: fedora30
+          - distro: centos7
+          - distro: centos8
 
     name: ${{ matrix.distro }}
 
@@ -24,7 +23,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..
+        cmake3 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..
         . ./version
         make -j
 
