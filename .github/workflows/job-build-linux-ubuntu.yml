@@ -11,7 +11,8 @@ jobs:
         include:
           - distro: ubuntu20.04
           - distro: ubuntu19.10
-          - distro: ubuntu18.04
+#          - distro: ubuntu18.04
+#          - distro: ubuntu16.04
 
     name: ${{ matrix.distro }}
 
