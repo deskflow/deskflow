@@ -1,9 +1,19 @@
 on: push
 
 jobs:
-  ubuntu20:
+  build:
     runs-on: ubuntu-latest
-    container: symless/synergy-core:ubuntu20.04
+    container: symless/synergy-core:${{ matrix.distro }}
+
+    strategy:
+      matrix:
+        include:
+          - distro: ubuntu20.04
+            cmake: cmake
+          - distro: ubuntu19.10
+            cmake: cmake
+
+    name: ${{ matrix.distro }}
 
     steps:
     - uses: actions/checkout@v2
@@ -12,6 +22,9 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
+        ${{ matrix.cmake }} -DCMAKE_BUILD_TYPE=Release ..
         . ./version
         make -j
+
+    - name: Run unit test
+      run: ./build/unittest
