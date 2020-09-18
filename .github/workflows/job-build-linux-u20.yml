@@ -3,7 +3,7 @@ on: push
 jobs:
   ubuntu20:
     runs-on: ubuntu-latest
-    container: symless:ubuntu20.04
+    container: symless/synergy-core:ubuntu20.04
 
     steps:
     - uses: actions/checkout@v2
