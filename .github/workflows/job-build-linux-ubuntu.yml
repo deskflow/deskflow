@@ -1,0 +1,48 @@
+on: push
+
+jobs:
+  build-arch64:
+    runs-on: ubuntu-latest
+    container: symless/synergy-core:${{ matrix.distro }}
+
+    strategy:
+      matrix:
+        include:
+          - distro: ubuntu20.04
+          - distro: ubuntu19.10
+          - distro: ubuntu18.04
+          - distro: ubuntu16.04
+
+    name: ${{ matrix.distro }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        . ./version
+        make
+
+    - name: Run unit test
+      run: ./build/bin/unittests
+
+  build_armv8:
+    runs-on: [self-hosted, armv8]
+    name: armv8
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          . ./version
+          make
+
+      - name: Run unit test
+        run: ./build/bin/unittests
