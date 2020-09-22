@@ -66,7 +66,6 @@ steps:
 
   - script: |
       dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
-      export DEB_BUILD_OPTIONS="parallel=8"
       export GPG_TTY=$(tty)
       debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
       mkdir standard_package
@@ -87,7 +86,6 @@ steps:
   - script: |
       export SYNERGY_ENTERPRISE=1
       dch --create --package "synergy-enterprise_" --controlmaint --distribution unstable --newversion $(SYNERGY_DEB_VERSION) "Initial release"
-      export DEB_BUILD_OPTIONS="parallel=8"
       export GPG_TTY=$(tty)
       debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
       mkdir enterprise_package
