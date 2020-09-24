@@ -25,10 +25,8 @@
 #include <sstream>
 #include <iomanip>
 #include <stdexcept>
-#include <iostream>
 
 using namespace std;
-static std::string hexEncode (std::string const& str);
 
 SerialKey::SerialKey(Edition edition):
     m_userLimit(1),
@@ -37,9 +35,6 @@ SerialKey::SerialKey(Edition edition):
     m_edition(edition),
     m_KeyType()
 {
-    std::string MyLicense = "{v2;temp;basic;Bob;1;email;company name;1600972418;1600992418}";
-    std::string Hex = hexEncode(MyLicense);
-    std::cout<<"MyLicense = "<<Hex<<std::endl;
 }
 
 SerialKey::SerialKey(std::string serial) :
@@ -66,7 +61,7 @@ SerialKey::isExpiring(time_t currentTime) const
 
     if (isTemporary()) {
 		unsigned long long currentTimeAsLL = static_cast<unsigned long long>(currentTime);
-        if ((m_warnTime >= currentTimeAsLL) && (currentTimeAsLL < m_expireTime)) {
+        if ((m_warnTime <= currentTimeAsLL) && (currentTimeAsLL < m_expireTime)) {
             result = true;
         }
     }
