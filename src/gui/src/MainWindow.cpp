@@ -171,11 +171,11 @@ MainWindow::MainWindow (AppConfig& appConfig,
     connect (m_LicenseManager, SIGNAL(editionChanged(Edition)),
              this, SLOT(setEdition(Edition)), Qt::QueuedConnection);
 
-    connect (m_LicenseManager, SIGNAL(beginTrial(bool)),
-             this, SLOT(beginTrial(bool)), Qt::QueuedConnection);
+    connect (m_LicenseManager, SIGNAL(showLicenseNotice(QString)),
+             this, SLOT(showLicenseNotice(QString)), Qt::QueuedConnection);
 
-    connect (m_LicenseManager, SIGNAL(endTrial(bool)),
-             this, SLOT(endTrial(bool)), Qt::QueuedConnection);
+    connect (m_LicenseManager, SIGNAL(LicenseExpired()),
+             this, SLOT(LicenseExpired()), Qt::QueuedConnection);
 #endif
 
     connect (m_AppConfig, SIGNAL(sslToggled(bool)),
@@ -1152,54 +1152,21 @@ void MainWindow::setEdition(Edition edition)
 }
 
 #ifndef SYNERGY_ENTERPRISE
-void MainWindow::beginTrial(bool isExpiring)
+void MainWindow::LicenseExpired()
 {
-    //Hack
-    //if (isExpiring) {
-    time_t daysLeft = m_LicenseManager->serialKey().daysLeft(::time(0));
-        QString expiringNotice ("<html><head/><body><p><span style=\""
-                     "font-weight:600;\">%1</span> day%3 of "
-                     "your %2 trial remain%5. <a href="
-                     "\"https://symless.com/synergy/trial/thanks?id=%4\">"
-                     "<span style=\"text-decoration: underline;"
-                     " color:#0000ff;\">Buy now!</span></a>"
-                     "</p></body></html>");
-        expiringNotice = expiringNotice
-            .arg (daysLeft)
-            .arg (LicenseManager::getEditionName
-                    (m_LicenseManager->activeEdition()))
-            .arg ((daysLeft == 1) ? "" : "s")
-            .arg (QString::fromStdString
-                    (m_LicenseManager->serialKey().toString()))
-            .arg ((daysLeft == 1) ? "s" : "");
-        this->m_trialLabel->setText(expiringNotice);
-        this->m_trialWidget->show();
-    //}
-    setWindowTitle (m_LicenseManager->activeEditionName());
+   stopSynergy();
+   m_AppConfig->activationHasRun(false);
 }
 
-void MainWindow::endTrial(bool isExpired)
+void MainWindow::showLicenseNotice(const QString& notice)
 {
-    if (isExpired) {
-        QString expiredNotice (
-            "<html><head/><body><p>Your %1 trial has expired. <a href="
-            "\"https://symless.com/synergy/trial/thanks?id=%2\">"
-            "<span style=\"text-decoration: underline;color:#0000ff;\">"
-            "Buy now!</span></a></p></body></html>"
-        );
-        expiredNotice = expiredNotice
-            .arg(LicenseManager::getEditionName
-                    (m_LicenseManager->activeEdition()))
-            .arg(QString::fromStdString
-                    (m_LicenseManager->serialKey().toString()));
+    this->m_trialWidget->hide();
 
-        this->m_trialLabel->setText(expiredNotice);
+    if (!notice.isEmpty()) {
+        this->m_trialLabel->setText(notice);
         this->m_trialWidget->show();
-        stopSynergy();
-        m_AppConfig->activationHasRun(false);
-    } else {
-        this->m_trialWidget->hide();
     }
+
     setWindowTitle (m_LicenseManager->activeEditionName());
 }
 #endif

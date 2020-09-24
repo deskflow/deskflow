@@ -46,21 +46,14 @@ LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
 									(m_serialKey.toString()));
 		emit serialKeyChanged(m_serialKey);
 
-		if (serialKey.isTrial()) {
-			emit endTrial(false);
-		}
+        emit showLicenseNotice(getLicenseNotice());
+        if (m_serialKey.isExpired(currentTime)) {
+            emit LicenseExpired();
+        }
 
 		if (m_serialKey.edition() != serialKey.edition()) {
 			m_AppConfig->setEdition(m_serialKey.edition());
 			emit editionChanged(m_serialKey.edition());
-		}
-
-		if (m_serialKey.isTrial()) {
-			if (m_serialKey.isExpired(currentTime)) {
-				emit endTrial(true);
-			} else {
-				emit beginTrial(m_serialKey.isExpiring(currentTime));
-			}
 		}
 	}
 
@@ -119,7 +112,7 @@ void LicenseManager::refresh()
 		}
 	}
 	if (m_serialKey.isExpired(::time(0))) {
-		emit endTrial(true);
+        emit LicenseExpired();
 	}
 }
 
@@ -162,4 +155,86 @@ void LicenseManager::notifyActivation(QString identity)
 	thread->start();
 
 	QMetaObject::invokeMethod(notifier, "notify", Qt::QueuedConnection);
+}
+
+QString LicenseManager::getLicenseNotice() const
+{
+    QString Notice;
+
+    if (m_serialKey.isTemporary()){
+        if (m_serialKey.isTrial()){
+            Notice = getTrialNotice();
+        }
+        else{
+            Notice = getTemporaryNotice();
+        }
+    }
+
+    return Notice;
+}
+
+QString LicenseManager::getTrialNotice() const
+{
+    QString Notice;
+
+    if (m_serialKey.isExpired(::time(0))){
+        Notice = "<html><head/><body><p>Your %1 trial has expired. <a href="
+                 "\"https://symless.com/synergy/trial/thanks?id=%2\">"
+                 "<span style=\"text-decoration: underline;color:#0000ff;\">"
+                 "Buy now!</span></a></p></body></html>";
+        Notice = Notice
+            .arg(LicenseManager::getEditionName(activeEdition()))
+            .arg(QString::fromStdString(m_serialKey.toString()));
+    }
+    else{
+        time_t daysLeft = m_serialKey.daysLeft(::time(0));
+        Notice = "<html><head/><body><p><span style=\""
+                 "font-weight:600;\">%1</span> day%3 of "
+                 "your %2 trial remain%5. <a href="
+                 "\"https://symless.com/synergy/trial/thanks?id=%4\">"
+                 "<span style=\"text-decoration: underline;"
+                 " color:#0000ff;\">Buy now!</span></a>"
+                 "</p></body></html>";
+        Notice = Notice
+                .arg (daysLeft)
+                .arg (LicenseManager::getEditionName(activeEdition()))
+                .arg ((daysLeft == 1) ? "" : "s")
+                .arg (QString::fromStdString(m_serialKey.toString()))
+                .arg ((daysLeft == 1) ? "s" : "");
+    }
+
+    return Notice;
+}
+
+QString LicenseManager::getTemporaryNotice() const
+{
+    QString Notice;
+
+    if (m_serialKey.isExpired(::time(0))){
+        Notice = "<html><head/><body><p>Your %1 has expired. <a href="
+                 "\"https://symless.com/synergy/trial/thanks?id=%2\">"
+                 "<span style=\"text-decoration: underline;color:#0000ff;\">"
+                 "Buy now!</span></a></p></body></html>";
+        Notice = Notice
+            .arg(LicenseManager::getEditionName(activeEdition()))
+            .arg(QString::fromStdString(m_serialKey.toString()));
+    }
+    else if (m_serialKey.isExpiring(::time(0))){
+        time_t daysLeft = m_serialKey.daysLeft(::time(0));
+        Notice = "<html><head/><body><p><span style=\""
+                 "font-weight:600;\">%1</span> day%3 of "
+                 "your %2 remain%5. <a href="
+                 "\"https://symless.com/synergy/trial/thanks?id=%4\">"
+                 "<span style=\"text-decoration: underline;"
+                 " color:#0000ff;\">Buy now!</span></a>"
+                 "</p></body></html>";
+        Notice = Notice
+                .arg (daysLeft)
+                .arg (LicenseManager::getEditionName(activeEdition()))
+                .arg ((daysLeft == 1) ? "" : "s")
+                .arg (QString::fromStdString(m_serialKey.toString()))
+                .arg ((daysLeft == 1) ? "s" : "");
+    }
+
+    return Notice;
 }

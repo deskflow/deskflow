@@ -41,6 +41,7 @@ public:
     void notifyUpdate(QString fromVersion, QString toVersion);
     static QString getEditionName(Edition edition, bool trial = false);
     void notifyActivation(QString identity);
+    QString getLicenseNotice() const;
 
 private:
     AppConfig* m_AppConfig;
@@ -49,6 +50,10 @@ private:
 signals:
     void serialKeyChanged (SerialKey) const;
     void editionChanged (Edition) const;
-    void beginTrial (bool expiring) const;
-    void endTrial (bool expired) const;
+    void LicenseExpired () const;
+    void showLicenseNotice(const QString& notice) const;
+
+protected:
+    QString getTrialNotice() const;
+    QString getTemporaryNotice() const;
 };

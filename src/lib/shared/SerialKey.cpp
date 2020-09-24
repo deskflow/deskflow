@@ -25,16 +25,21 @@
 #include <sstream>
 #include <iomanip>
 #include <stdexcept>
+#include <iostream>
 
 using namespace std;
+static std::string hexEncode (std::string const& str);
 
 SerialKey::SerialKey(Edition edition):
     m_userLimit(1),
     m_warnTime(ULLONG_MAX),
     m_expireTime(ULLONG_MAX),
     m_edition(edition),
-    m_trial(false)
+    m_KeyType()
 {
+    std::string MyLicense = "{v2;temp;basic;Bob;1;email;company name;1600972418;1600992418}";
+    std::string Hex = hexEncode(MyLicense);
+    std::cout<<"MyLicense = "<<Hex<<std::endl;
 }
 
 SerialKey::SerialKey(std::string serial) :
@@ -42,7 +47,7 @@ SerialKey::SerialKey(std::string serial) :
     m_warnTime(0),
     m_expireTime(0),
     m_edition(kBasic),
-    m_trial(true)
+    m_KeyType()
 {
     string plainText = decode(serial);
     bool valid = false;
@@ -59,9 +64,9 @@ SerialKey::isExpiring(time_t currentTime) const
 {
     bool result = false;
 
-    if (m_trial) {
+    if (isTemporary()) {
 		unsigned long long currentTimeAsLL = static_cast<unsigned long long>(currentTime);
-        if ((m_warnTime <= currentTimeAsLL) && (currentTimeAsLL < m_expireTime)) {
+        if ((m_warnTime >= currentTimeAsLL) && (currentTimeAsLL < m_expireTime)) {
             result = true;
         }
     }
@@ -73,8 +78,9 @@ bool
 SerialKey::isExpired(time_t currentTime) const
 {
     bool result = false;
+    std::cout<<"Current time = "<<static_cast<unsigned long long>(currentTime)<<std::endl;
 
-    if (m_trial) {
+    if (isTemporary()) {
 		unsigned long long currentTimeAsLL = static_cast<unsigned long long>(currentTime);
         if (m_expireTime <= currentTimeAsLL) {
             result = true;
@@ -87,7 +93,13 @@ SerialKey::isExpired(time_t currentTime) const
 bool
 SerialKey::isTrial() const
 {
-    return m_trial;
+    return m_KeyType.isTrial();
+}
+
+bool
+SerialKey::isTemporary() const
+{
+    return m_KeyType.isTemporary();
 }
 
 Edition
@@ -130,8 +142,13 @@ SerialKey::toString() const
 {
     std::ostringstream oss;
     oss << "{";
-    if (isTrial()) {
-        oss << "v2;trial;";
+    if (isTemporary()) {
+        if (isTrial()){
+            oss << "v2;" << SerialKeyType::TRIAL << ";";
+        }
+        else{
+            oss << "v2;" << SerialKeyType::TEMPORARY << ";";
+        }
     } else {
         oss << "v1;";
     }
@@ -140,8 +157,8 @@ SerialKey::toString() const
     oss << m_userLimit << ";";
     oss << m_email << ";";
     oss << m_company << ";";
-    oss << (isTrial() ? m_warnTime : 0) << ";";
-    oss << (isTrial() ? m_expireTime : 0);
+    oss << (isTemporary() ? m_warnTime : 0) << ";";
+    oss << (isTemporary() ? m_expireTime : 0);
     oss << "}";
     return hexEncode(oss.str());
 }
@@ -230,7 +247,6 @@ SerialKey::parse(std::string plainSerial)
             // e.g.: {v1;basic;Bob;1;email;company name;1398297600;1398384000}
             m_edition = parseEdition(parts.at(1));
             m_name = parts.at(2);
-            m_trial = false;
             sscanf(parts.at(3).c_str(), "%d", &m_userLimit);
             m_email = parts.at(4);
             m_company = parts.at(5);
@@ -241,7 +257,7 @@ SerialKey::parse(std::string plainSerial)
         else if ((parts.size() == 9)
                  && (parts.at(0).find("v2") != string::npos)) {
             // e.g.: {v2;trial;basic;Bob;1;email;company name;1398297600;1398384000}
-            m_trial = parts.at(1) == "trial" ? true : false;
+            m_KeyType.setKeyType(parts.at(1));
             m_edition = parseEdition(parts.at(2));
             m_name = parts.at(3);
             sscanf(parts.at(4).c_str(), "%d", &m_userLimit);
