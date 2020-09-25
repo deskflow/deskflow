@@ -52,8 +52,8 @@ jobs:
         $client = new-object System.Net.WebClient
         $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
         $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi",".\Bonjour64.msi")
-        [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", $env:BONJOUR_BASE_DIR)
         msiexec.exe /i Bonjour64.msi INSTALLDIR="$env:BONJOUR_BASE_DIR" /qb
+        [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", $env:BONJOUR_BASE_DIR)
         dir
         cd $env:BONJOUR_BASE_DIR
         dir
