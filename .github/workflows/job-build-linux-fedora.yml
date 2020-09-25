@@ -1,6 +1,10 @@
-name: Build Fedora
+name: Fedora
 
-on: push
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build-arch64:

@@ -1,6 +1,10 @@
-name: Build CentOS
+name: CentOS
 
-on: push
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build-arch64:
