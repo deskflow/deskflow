@@ -24,13 +24,19 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ${{ env.QT_BASE_DIR }}
-        key: ${{ runner.os }}-Qt_${{ env.version }}
+        key: ${{ runner.os }}-Qt_${{ env.QT_VERSION }}
 
     - name: Install Qt
       if: steps.cache-qt.outputs.cache-hit != 'true'
       run: |
         pip install aqtinstall
         python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop win64_msvc2019_64
+        dir
+        cd $env:QT_BASE_URL
+        dir
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.1
 
     - name: Build
       run: |
@@ -38,7 +44,7 @@ jobs:
         cd build
         cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$env:QT_BASE_DIR/win64_msvc2019_64 ..
         . ./version
-        make -j
+        msbild synergy-core.sln /p:Configuration=Release
 
     - name: Run unit test
       run: ./build/bin/unittests
