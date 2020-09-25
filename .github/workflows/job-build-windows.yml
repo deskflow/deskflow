@@ -41,7 +41,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$env:QT_BASE_DIR/$env:QT_VERSION/msvc2019_64 ..
+        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../$env:QT_BASE_DIR/$env:QT_VERSION/msvc2019_64 ..
         . ./version
         msbuild synergy-core.sln /p:Configuration=Release
 
