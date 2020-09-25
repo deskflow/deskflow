@@ -1,6 +1,7 @@
 name: Fedora
 
 on:
+  -
   push:
     branches: [ master ]
   pull_request:
