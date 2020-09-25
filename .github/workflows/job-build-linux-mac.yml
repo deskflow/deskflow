@@ -19,14 +19,11 @@ jobs:
     - name: install qt
       run: brew install qt
 
-    - name: install libsodium
-      run: brew install libsodium
-
     - name: Build
       run: |
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/local/opt/qt ..
         . ./version
         make -j
 
