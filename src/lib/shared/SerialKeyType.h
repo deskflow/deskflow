@@ -14,40 +14,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef SERIALKEYTYPE_H
-#define SERIALKEYTYPE_H
+#pragma once
 
 #include <string>
 
 class SerialKeyType
 {
 private:
-    friend bool operator== (SerialKeyType const&, SerialKeyType const&);
+	friend bool operator== (SerialKeyType const&, SerialKeyType const&);
 public:
-    static const std::string TRIAL;
-    static const std::string TEMPORARY;
+	static const std::string TRIAL;
+	static const std::string TEMPORARY;
 
 public:
-    SerialKeyType();
+	SerialKeyType();
 
-    void setKeyType(const std::string& Type);
-    bool isTrial() const;
-    bool isTemporary() const;
-    bool isPermanent() const;
+	void setKeyType(const std::string& Type);
+	bool isTrial() const;
+	bool isTemporary() const;
+	bool isPermanent() const;
 
 protected:
-    bool m_isTrial;
-    bool m_isTemporary;
+	bool m_isTrial;
+	bool m_isTemporary;
 };
 
 inline bool
 operator== (SerialKeyType const& lhs, SerialKeyType const& rhs) {
-    return (lhs.m_isTrial == rhs.m_isTrial) && (lhs.m_isTemporary == rhs.m_isTemporary);
+	return (lhs.m_isTrial == rhs.m_isTrial) && (lhs.m_isTemporary == rhs.m_isTemporary);
 }
 
 inline bool
 operator!= (SerialKeyType const& lhs, SerialKeyType const& rhs) {
-    return !(lhs == rhs);
+	return !(lhs == rhs);
 }
 
-#endif // SERIALKEYTYPE_H

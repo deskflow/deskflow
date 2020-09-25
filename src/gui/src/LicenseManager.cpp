@@ -46,10 +46,10 @@ LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
 									(m_serialKey.toString()));
 		emit serialKeyChanged(m_serialKey);
 
-        emit showLicenseNotice(getLicenseNotice());
-        if (m_serialKey.isExpired(currentTime)) {
-            emit LicenseExpired();
-        }
+		emit showLicenseNotice(getLicenseNotice());
+		if (m_serialKey.isExpired(currentTime)) {
+			emit LicenseExpired();
+		}
 
 		if (m_serialKey.edition() != serialKey.edition()) {
 			m_AppConfig->setEdition(m_serialKey.edition());
@@ -101,7 +101,8 @@ LicenseManager::serialKey() const
 	return m_serialKey;
 }
 
-void LicenseManager::refresh()
+void
+LicenseManager::refresh()
 {
 	if (!m_AppConfig->serialKey().isEmpty()) {
 		try {
@@ -112,11 +113,12 @@ void LicenseManager::refresh()
 		}
 	}
 	if (m_serialKey.isExpired(::time(0))) {
-        emit LicenseExpired();
+		emit LicenseExpired();
 	}
 }
 
-void LicenseManager::skipActivation()
+void
+LicenseManager::skipActivation()
 {
 	notifyActivation ("skip:unknown");
 }
@@ -124,7 +126,7 @@ void LicenseManager::skipActivation()
 QString
 LicenseManager::getEditionName(Edition const edition, bool trial)
 {
-    std::string name ("Synergy 1");
+	std::string name ("Synergy 1");
 	switch (edition) {
 		case kUnregistered:
 			name += " (UNREGISTERED)";
@@ -141,7 +143,8 @@ LicenseManager::getEditionName(Edition const edition, bool trial)
 	return QString::fromUtf8 (name.c_str(), static_cast<int>(name.size()));
 }
 
-void LicenseManager::notifyActivation(QString identity)
+void
+LicenseManager::notifyActivation(QString identity)
 {
 	ActivationNotifier* notifier = new ActivationNotifier();
 	notifier->setIdentity(identity);
@@ -157,84 +160,78 @@ void LicenseManager::notifyActivation(QString identity)
 	QMetaObject::invokeMethod(notifier, "notify", Qt::QueuedConnection);
 }
 
-QString LicenseManager::getLicenseNotice() const
+QString
+LicenseManager::getLicenseNotice() const
 {
-    QString Notice;
+	QString Notice;
 
-    if (m_serialKey.isTemporary()){
-        if (m_serialKey.isTrial()){
-            Notice = getTrialNotice();
-        }
-        else{
-            Notice = getTemporaryNotice();
-        }
-    }
+	if (m_serialKey.isTemporary()){
+		if (m_serialKey.isTrial()){
+			Notice = getTrialNotice();
+		}
+		else{
+			Notice = getTemporaryNotice();
+		}
+	}
 
-    return Notice;
+	return Notice;
 }
 
-QString LicenseManager::getTrialNotice() const
+QString
+LicenseManager::getTrialNotice() const
 {
-    QString Notice;
+	QString Notice;
 
-    if (m_serialKey.isExpired(::time(0))){
-        Notice = "<html><head/><body><p>Your %1 trial has expired. <a href="
-                 "\"https://symless.com/synergy/trial/thanks?id=%2\">"
-                 "<span style=\"text-decoration: underline;color:#0000ff;\">"
-                 "Buy now!</span></a></p></body></html>";
-        Notice = Notice
-            .arg(LicenseManager::getEditionName(activeEdition()))
-            .arg(QString::fromStdString(m_serialKey.toString()));
-    }
-    else{
-        time_t daysLeft = m_serialKey.daysLeft(::time(0));
-        Notice = "<html><head/><body><p><span style=\""
-                 "font-weight:600;\">%1</span> day%3 of "
-                 "your %2 trial remain%5. <a href="
-                 "\"https://symless.com/synergy/trial/thanks?id=%4\">"
-                 "<span style=\"text-decoration: underline;"
-                 " color:#0000ff;\">Buy now!</span></a>"
-                 "</p></body></html>";
-        Notice = Notice
-                .arg (daysLeft)
-                .arg (LicenseManager::getEditionName(activeEdition()))
-                .arg ((daysLeft == 1) ? "" : "s")
-                .arg (QString::fromStdString(m_serialKey.toString()))
-                .arg ((daysLeft == 1) ? "s" : "");
-    }
+	if (m_serialKey.isExpired(::time(0))){
+		Notice = "<html><head/><body><p>Your %1 trial has expired. <a href="
+				"\"https://members.symless.com/purchase\">"
+				"<span style=\"text-decoration: underline;color:#0000ff;\">"
+				"Buy now!</span></a></p></body></html>";
+		Notice = Notice.arg(LicenseManager::getEditionName(activeEdition()));
+	}
+	else{
+		Notice = "<html><head/><body><p><span style=\""
+				"font-weight:600;\">%1</span> day%3 of "
+				"your %2 trial remain%5. <a href="
+				"\"https://members.symless.com/purchase\">"
+				"<span style=\"text-decoration: underline;"
+				" color:#0000ff;\">Buy now!</span></a>"
+				"</p></body></html>";
 
-    return Notice;
+		time_t daysLeft = m_serialKey.daysLeft(::time(0));
+		Notice = Notice
+				.arg (daysLeft)
+				.arg (LicenseManager::getEditionName(activeEdition()))
+				.arg ((daysLeft == 1) ? "" : "s")
+				.arg ((daysLeft == 1) ? "s" : "");
+	}
+
+	return Notice;
 }
 
-QString LicenseManager::getTemporaryNotice() const
+QString
+LicenseManager::getTemporaryNotice() const
 {
-    QString Notice;
+	QString Notice;
 
-    if (m_serialKey.isExpired(::time(0))){
-        Notice = "<html><head/><body><p>Your %1 has expired. <a href="
-                 "\"https://symless.com/synergy/trial/thanks?id=%2\">"
-                 "<span style=\"text-decoration: underline;color:#0000ff;\">"
-                 "Buy now!</span></a></p></body></html>";
-        Notice = Notice
-            .arg(LicenseManager::getEditionName(activeEdition()))
-            .arg(QString::fromStdString(m_serialKey.toString()));
-    }
-    else if (m_serialKey.isExpiring(::time(0))){
-        time_t daysLeft = m_serialKey.daysLeft(::time(0));
-        Notice = "<html><head/><body><p><span style=\""
-                 "font-weight:600;\">%1</span> day%3 of "
-                 "your %2 remain%5. <a href="
-                 "\"https://symless.com/synergy/trial/thanks?id=%4\">"
-                 "<span style=\"text-decoration: underline;"
-                 " color:#0000ff;\">Buy now!</span></a>"
-                 "</p></body></html>";
-        Notice = Notice
-                .arg (daysLeft)
-                .arg (LicenseManager::getEditionName(activeEdition()))
-                .arg ((daysLeft == 1) ? "" : "s")
-                .arg (QString::fromStdString(m_serialKey.toString()))
-                .arg ((daysLeft == 1) ? "s" : "");
-    }
+	if (m_serialKey.isExpired(::time(0))) {
+		Notice = "<html><head/><body><p>Your license has expired. <a href="
+				"\"https://members.symless.com/purchase\">"
+				"<span style=\"text-decoration: underline;color:#0000ff;\">"
+				"Renew now!</span></a></p></body></html>";
+	}
+	else if (m_serialKey.isExpiring(::time(0))) {
+		Notice = "<html><head/><body><p><span style=\""
+				"font-weight:600;\">%1</span> day%2 / "
+				"before your license expires.<a href="
+				"\"https://members.symless.com/purchase\">"
+				"<span style=\"text-decoration: underline;"
+				" color:#0000ff;\">Renew now!</span></a>"
+				"</p></body></html>";
 
-    return Notice;
+		time_t daysLeft = m_serialKey.daysLeft(::time(0));
+		Notice = Notice.arg (daysLeft).arg ((daysLeft == 1) ? "" : "s");
+	}
+
+	return Notice;
 }
