@@ -12,8 +12,8 @@ jobs:
 
     env:
       GIT_COMMIT: ${{ github.sha }}
-      QT_BASE_DIR: ${{ github.workspace }}\Qt
-      BONJOUR_BASE_DIR: ${{ github.workspace }}\bonjour
+      QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
+      BONJOUR_BASE_DIR: ${{ github.workspace }}\deps\bonjour
       QT_VERSION: 5.12.6
       QT_BASE_URL: http://qt.mirror.constant.com/
 
@@ -50,10 +50,10 @@ jobs:
       run: |
         New-Item -Force -ItemType Directory -Path ".\deps\"
         $client = new-object System.Net.WebClient
-        $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
+#        $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
         $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi",".\Bonjour64.msi")
         msiexec.exe /i Bonjour64.msi INSTALLDIR="$env:BONJOUR_BASE_DIR"
-        [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", $env:BONJOUR_BASE_DIR)
+#        [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", $env:BONJOUR_BASE_DIR)
         dir
         cd $env:BONJOUR_BASE_DIR
         dir
