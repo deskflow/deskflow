@@ -12,7 +12,7 @@ jobs:
 
     env:
       GIT_COMMIT: ${{ github.sha }}
-      QT_BASE_DIR: ${{ HOME }}/Qt
+      QT_BASE_DIR: ${{ github.home }}/Qt
       QT_VERSION: 5.12.6
       QT_BASE_URL: http://qt.mirror.constant.com/
 
