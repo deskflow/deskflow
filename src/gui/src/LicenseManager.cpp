@@ -144,7 +144,7 @@ LicenseManager::getEditionName(Edition const edition, bool trial)
 }
 
 void
-LicenseManager::notifyActivation(QString identity)
+LicenseManager::notifyActivation(QString identity) const
 {
 	ActivationNotifier* notifier = new ActivationNotifier();
 	notifier->setIdentity(identity);
@@ -222,7 +222,7 @@ LicenseManager::getTemporaryNotice() const
 	}
 	else if (m_serialKey.isExpiring(::time(0))) {
 		Notice = "<html><head/><body><p><span style=\""
-				"font-weight:600;\">%1</span> day%2 / "
+				"font-weight:600;\">%1</span> day%2 "
 				"before your license expires.<a href="
 				"\"https://members.symless.com/purchase\">"
 				"<span style=\"text-decoration: underline;"

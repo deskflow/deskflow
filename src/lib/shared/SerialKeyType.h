@@ -35,8 +35,8 @@ public:
 	bool isPermanent() const;
 
 protected:
-	bool m_isTrial;
-	bool m_isTemporary;
+	bool m_isTrial = false;
+	bool m_isTemporary = false;
 };
 
 inline bool

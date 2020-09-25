@@ -40,7 +40,7 @@ public:
     void skipActivation();
     void notifyUpdate(QString fromVersion, QString toVersion);
     static QString getEditionName(Edition edition, bool trial = false);
-    void notifyActivation(QString identity);
+	void notifyActivation(QString identity) const;
     QString getLicenseNotice() const;
 
 private:

@@ -33,8 +33,7 @@ SerialKey::SerialKey(Edition edition):
 	m_userLimit(1),
 	m_warnTime(ULLONG_MAX),
 	m_expireTime(ULLONG_MAX),
-	m_edition(edition),
-	m_KeyType()
+	m_edition(edition)
 {
 }
 
@@ -42,8 +41,7 @@ SerialKey::SerialKey(std::string serial) :
 	m_userLimit(1),
 	m_warnTime(0),
 	m_expireTime(0),
-	m_edition(kBasic),
-	m_KeyType()
+	m_edition(kBasic)
 {
 	string plainText = decode(serial);
 	bool valid = false;
@@ -74,7 +72,6 @@ bool
 SerialKey::isExpired(time_t currentTime) const
 {
 	bool result = false;
-	std::cout<<"Current time = "<<static_cast<unsigned long long>(currentTime)<<std::endl;
 
 	if (isTemporary()) {
 		unsigned long long currentTimeAsLL = static_cast<unsigned long long>(currentTime);

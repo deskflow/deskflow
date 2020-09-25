@@ -20,9 +20,7 @@
 const std::string SerialKeyType::TRIAL = "trial";
 const std::string SerialKeyType::TEMPORARY = "temp";
 
-SerialKeyType::SerialKeyType() :
-	m_isTrial(false),
-	m_isTemporary(false)
+SerialKeyType::SerialKeyType()
 {
 
 }
