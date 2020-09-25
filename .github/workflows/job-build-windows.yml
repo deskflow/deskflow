@@ -13,7 +13,7 @@ jobs:
     env:
       GIT_COMMIT: ${{ github.sha }}
       QT_BASE_DIR: Qt
-      QT_VERSION: 5.15.2
+      QT_VERSION: 5.15.1
       QT_BASE_URL: http://qt.mirror.constant.com/
 
     steps:
@@ -36,7 +36,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/local/opt/qt ..
+        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$env:QT_BASE_DIR/win64_msvc2019_64 ..
         . ./version
         make -j
 
