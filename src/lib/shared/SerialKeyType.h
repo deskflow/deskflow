@@ -26,7 +26,6 @@ public:
 	static const std::string TRIAL;
 	static const std::string TEMPORARY;
 
-public:
 	SerialKeyType();
 
 	void setKeyType(const std::string& Type);
@@ -34,7 +33,7 @@ public:
 	bool isTemporary() const;
 	bool isPermanent() const;
 
-protected:
+private:
 	bool m_isTrial = false;
 	bool m_isTemporary = false;
 };

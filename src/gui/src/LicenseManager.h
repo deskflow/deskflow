@@ -37,9 +37,9 @@ public:
     Edition activeEdition() const;
     QString activeEditionName() const;
     SerialKey serialKey() const;
-    void skipActivation();
-    void notifyUpdate(QString fromVersion, QString toVersion);
-    static QString getEditionName(Edition edition, bool trial = false);
+	void skipActivation() const;
+	void notifyUpdate(QString fromVersion, QString toVersion) const;
+	static QString getEditionName(Edition edition, bool trial = false);
 	void notifyActivation(QString identity) const;
     QString getLicenseNotice() const;
 

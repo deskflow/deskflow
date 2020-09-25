@@ -61,7 +61,7 @@ LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
 }
 
 void
-LicenseManager::notifyUpdate(QString fromVersion, QString toVersion) {
+LicenseManager::notifyUpdate(QString fromVersion, QString toVersion) const {
 	if ((fromVersion == "Unknown")
 		&& (m_serialKey == SerialKey(kUnregistered))) {
 		return;
@@ -118,7 +118,7 @@ LicenseManager::refresh()
 }
 
 void
-LicenseManager::skipActivation()
+LicenseManager::skipActivation() const
 {
 	notifyActivation ("skip:unknown");
 }
