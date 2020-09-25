@@ -30,7 +30,7 @@ jobs:
       if: steps.cache-qt.outputs.cache-hit != 'true'
       run: |
         pip install aqtinstall
-        python -m aqt --outputdir ${env:QT_BASE_DIR} --base ${env:QT_BASE_URL} ${env:QT_VERSION} windows desktop win64_msvc2019_64
+        python -m aqt --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop win64_msvc2019_64
 
     - name: Build
       run: |
