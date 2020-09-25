@@ -31,7 +31,7 @@ jobs:
       run: |
         pip install aqtinstall
         python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop win64_msvc2017_64
-        cd $env:QT_BASE_DIR/$env:QT_VERSION/msvc2017_64
+        cd $env:QT_BASE_DIR\$env:QT_VERSION\msvc2017_64
         dir
 
     - name: Add msbuild to PATH
@@ -39,9 +39,10 @@ jobs:
 
     - name: Build
       run: |
+        $env:Path = $env:QT_BASE_DIR\$env:QT_VERSION\msvc2017_64\bin;$env:Path
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$env:QT_BASE_DIR/$env:QT_VERSION/msvc2017_64 ..
+        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$env:QT_BASE_DIR\$env:QT_VERSION\msvc2017_64 ..
         . ./version
         msbuild synergy-core.sln /p:Configuration=Release
 
