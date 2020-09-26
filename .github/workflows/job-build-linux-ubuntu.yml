@@ -1,7 +1,6 @@
 name: Ubuntu
 
 on:
-  -
   push:
     branches: [ master ]
   pull_request:

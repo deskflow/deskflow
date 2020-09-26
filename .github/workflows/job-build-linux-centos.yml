@@ -1,7 +1,6 @@
 name: CentOS
 
 on:
-  -
   push:
     branches: [ master ]
   pull_request:
