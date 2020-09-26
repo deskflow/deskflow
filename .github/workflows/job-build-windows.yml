@@ -53,9 +53,9 @@ jobs:
         $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
         [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", $env:BONJOUR_BASE_DIR)
 
-    - name: Install Bonjour
-      run: |
-        choco install bonjour
+#    - name: Install Bonjour
+#      run: |
+#        choco install bonjour
 
     - name: set Bonjour path
       run:  echo "::set-env name=BONJOUR_SDK_HOME::$env:BONJOUR_BASE_DIR\BonjourSDK"
@@ -72,4 +72,4 @@ jobs:
         msbuild synergy-core.sln /p:Configuration=Release
 
     - name: Run unit test
-      run: ./build/bin/unittests.exe
+      run: .\build\bin\Release\unittests.exe
