@@ -50,8 +50,8 @@ jobs:
       run: |
         New-Item -Force -ItemType Directory -Path ".\deps\"
         $client = new-object System.Net.WebClient
-        $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi",".\Bonjour64.msi")
-        msiexec.exe /i Bonjour64.msi INSTALLDIR="$env:BONJOUR_BASE_DIR"
+        $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi","${{ github.workspace }}\Bonjour64.msi")
+        msiexec.exe /i "${{ github.workspace }}\Bonjour64.msi" TARGETDIR="$env:BONJOUR_BASE_DIR"
         dir
         cd $env:BONJOUR_BASE_DIR
         dir
