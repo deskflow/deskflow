@@ -56,23 +56,15 @@ jobs:
     - name: Install Bonjour
       run: |
         choco install bonjour
-        dir "C:\Program Files (x86)"
-        dir "C:\Program Files"
-        dir "C:\Program Files (x86)\Bonjour"
-        dir "C:\Program Files\Bonjour"
-        dir "C:\Program Files (x86)\Bonjour SDK"
-        dir "C:\Program Files\Bonjour SDK"
-
 
     - name: set Bonjour path
-      run:  echo "::set-env name=BONJOUR_SDK_DIR::$env:BONJOUR_BASE_DIR\BonjourSDK"
+      run:  echo "::set-env name=BONJOUR_SDK_HOME::$env:BONJOUR_BASE_DIR\BonjourSDK"
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.1
 
     - name: Build
       run: |
-        echo $env:CMAKE_PREFIX_PATH
         mkdir build
         cd build
         cmake -DCMAKE_BUILD_TYPE=Release ..
