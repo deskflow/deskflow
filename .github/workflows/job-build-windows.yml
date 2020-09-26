@@ -45,16 +45,16 @@ jobs:
         path: ${{ env.BONJOUR_BASE_DIR }}
         key: ${{ runner.os }}-Bonjour
 
-    - name: Install Bonjour
+    - name: Install Bonjour SDK
       if: steps.cache-bonjour.outputs.cache-hit != 'true'
       run: |
-        New-Item -Force -ItemType Directory -Path ".\deps\"
+        New-Item -Force -ItemType Directory -Path ".\deps\bonjour"
         $client = new-object System.Net.WebClient
-        $client.DownloadFile("https://binaries.symless.com/bonjour/Bonjour64.msi","${{ github.workspace }}\Bonjour64.msi")
-        msiexec.exe /i "${{ github.workspace }}\Bonjour64.msi" TARGETDIR="$env:BONJOUR_BASE_DIR"
-        dir
-        cd $env:BONJOUR_BASE_DIR
-        dir
+        $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
+        [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", $env:BONJOUR_BASE_DIR)
+
+    - name: Install Bonjour
+      run: choco install bonjour
 
     - name: set Bonjour path
       run:  echo "::set-env name=BONJOUR_SDK_DIR::$env:BONJOUR_BASE_DIR\BonjourSDK"
