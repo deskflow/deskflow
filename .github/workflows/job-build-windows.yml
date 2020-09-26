@@ -52,8 +52,6 @@ jobs:
         $client = new-object System.Net.WebClient
         $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
         [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", $env:BONJOUR_BASE_DIR)
-        dir $env:BONJOUR_BASE_DIR
-        dir $env:BONJOUR_BASE_DIR\BonjourSDK
 
     - name: Install Bonjour
       run: |
@@ -74,4 +72,4 @@ jobs:
         msbuild synergy-core.sln /p:Configuration=Release
 
     - name: Run unit test
-      run: ./build/bin/unittests
+      run: ./build/bin/unittests.exe
