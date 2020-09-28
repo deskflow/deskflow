@@ -18,7 +18,7 @@
 #include "SerialKeyType.h"
 
 const std::string SerialKeyType::TRIAL = "trial";
-const std::string SerialKeyType::TEMPORARY = "temp";
+const std::string SerialKeyType::SUBSCRIPTION = "subscription";
 
 SerialKeyType::SerialKeyType()
 {
@@ -35,7 +35,7 @@ SerialKeyType::setKeyType(const std::string& Type)
 		m_isTrial = true;
 		m_isTemporary = true;
 	}
-	else if (Type == SerialKeyType::TEMPORARY){
+	else if (Type == SerialKeyType::SUBSCRIPTION){
 		m_isTemporary = true;
 	}
 }

@@ -41,7 +41,7 @@ TEST(SerialKeyTypeTests, TrialTemporaryKeyType_true)
 TEST(SerialKeyTypeTests, TemporaryKeyType_true)
 {
 	SerialKeyType KeyType;
-	KeyType.setKeyType("temp");
+	KeyType.setKeyType("subscription");
 	EXPECT_EQ(false, KeyType.isTrial());
 	EXPECT_EQ(true, KeyType.isTemporary());
 	EXPECT_EQ(false, KeyType.isPermanent());

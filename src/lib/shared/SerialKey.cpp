@@ -140,7 +140,7 @@ SerialKey::toString() const
 			oss << "v2;" << SerialKeyType::TRIAL << ";";
 		}
 		else{
-			oss << "v2;" << SerialKeyType::TEMPORARY << ";";
+			oss << "v2;" << SerialKeyType::SUBSCRIPTION << ";";
 		}
 	} else {
 		oss << "v1;";

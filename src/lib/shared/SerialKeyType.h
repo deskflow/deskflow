@@ -24,7 +24,7 @@ private:
 	friend bool operator== (SerialKeyType const&, SerialKeyType const&);
 public:
 	static const std::string TRIAL;
-	static const std::string TEMPORARY;
+	static const std::string SUBSCRIPTION;
 
 	SerialKeyType();
 
