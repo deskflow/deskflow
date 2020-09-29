@@ -14,14 +14,14 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-        stale-issue-message: "This issue has been automatically marked as stale due to inactivity. It will be closed if no further activity occurs. Thank you for your contributions."
-        stale-pr-message: "This PR has been automatically marked as stale due to inactivity. It will be closed if no further activity occurs. Thank you for your contributions."
+        stale-issue-message: "Is this issue still an issue for you? Please do comment and let us know!"
+        stale-pr-message: "Is this PR still being worked on? Please do comment and let us know!"
 
         close-issue-message: "This issue will now be closed due to inactivty. It may be reopened if the demand indicates it should be."
         close-pr-message: "This PR will now be closed due to inactivty. It may be reopened if the demand indicates it should be."
 
         days-before-stale: 60
-        days-before-close: 7
+        days-before-close: -1
 
         stale-issue-label: "no-issue-activity"
         stale-pr-label: "no-pr-activity"
