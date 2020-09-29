@@ -20,7 +20,7 @@ jobs:
         close-issue-message: "This issue will now be closed due to inactivty. It may be reopened if the demand indicates it should be."
         close-pr-message: "This PR will now be closed due to inactivty. It may be reopened if the demand indicates it should be."
 
-        days-before-stale: 60
+        days-before-stale: 182
         days-before-close: -1
 
         stale-issue-label: "no-issue-activity"
