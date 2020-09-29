@@ -14,8 +14,8 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-        stale-issue-message: "Is this issue still an issue for you? Please do comment and let us know!"
-        stale-pr-message: "Is this PR still being worked on? Please do comment and let us know!"
+        stale-issue-message: "Is this issue still an issue for you? Please do comment and let us know! Alternatively, you may close the issue yourself if it is no longer an problem"
+        stale-pr-message: "Is this PR still being worked on? Please do comment and let us know! Alternatively, you may close the PR yourself if you no longer wish to work on the PR."
 
         close-issue-message: "This issue will now be closed due to inactivty. It may be reopened if the demand indicates it should be."
         close-pr-message: "This PR will now be closed due to inactivty. It may be reopened if the demand indicates it should be."
