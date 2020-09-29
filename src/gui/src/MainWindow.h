@@ -132,8 +132,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 public slots:
         void setEdition(Edition edition);
 #ifndef SYNERGY_ENTERPRISE
-        void beginTrial(bool isExpiring);
-        void endTrial(bool isExpired);
+        void LicenseExpired();
+        void showLicenseNotice(const QString& message);
 #endif
         void appendLogRaw(const QString& text);
         void appendLogInfo(const QString& text);

@@ -30,16 +30,10 @@ ActivationDialog::ActivationDialog(QWidget* parent, AppConfig& appConfig,
 
 void ActivationDialog::refreshSerialKey()
 {
-    ui->m_pTextEditSerialKey->setText(m_appConfig->serialKey());
-    ui->m_pTextEditSerialKey->setFocus();
-    ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
-    ui->m_trialLabel->setText(tr("<html><head/><body><p>Your trial has "
-                                 "expired. <a href=\"https://symless.com/"
-                                 "synergy/trial/thanks?id=%1\"><span "
-                                 "style=\"text-decoration: underline; "
-                                 "color:#0000ff;\">Buy now!</span></a>"
-                                 "</p></body></html>")
-                              .arg (m_appConfig->serialKey()));
+	ui->m_pTextEditSerialKey->setText(m_appConfig->serialKey());
+	ui->m_pTextEditSerialKey->setFocus();
+	ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
+	ui->m_trialLabel->setText(tr(m_LicenseManager->getLicenseNotice().toStdString().c_str()));
 }
 
 ActivationDialog::~ActivationDialog()
