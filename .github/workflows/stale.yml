@@ -2,7 +2,7 @@ name: Mark stale issues and pull requests
 
 on:
   schedule:
-  - cron: "30 1 * * *"
+  - cron: "00 0 * * *"
 
 jobs:
   stale:
@@ -10,18 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/stale@v1
+    - uses: actions/stale@v3
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-        stale-issue-message: "This issue has been automatically marked as stale due to inactivity. It will be closed if no further activity occurs. Thank you for your contributions."
-        stale-pr-message: "This PR has been automatically marked as stale due to inactivity. It will be closed if no further activity occurs. Thank you for your contributions."
+        stale-issue-message: "Is this issue still an issue for you? Please do comment and let us know! Alternatively, you may close the issue yourself if it is no longer an problem"
+        stale-pr-message: "Is this PR still being worked on? Please do comment and let us know! Alternatively, you may close the PR yourself if you no longer wish to work on the PR."
 
         close-issue-message: "This issue will now be closed due to inactivty. It may be reopened if the demand indicates it should be."
         close-pr-message: "This PR will now be closed due to inactivty. It may be reopened if the demand indicates it should be."
 
-        days-before-stale: 60
-        days-before-close: 7
+        days-before-stale: 182
+        days-before-close: -1
 
         stale-issue-label: "no-issue-activity"
         stale-pr-label: "no-pr-activity"
