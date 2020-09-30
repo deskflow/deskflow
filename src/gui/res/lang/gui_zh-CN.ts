@@ -30,20 +30,20 @@ Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</source>
-      <translation type="unfinished">&lt;p&gt;
-Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+      <translation>&lt;p&gt;
+跨平台、开源的键盘鼠标共享软件。&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2019 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (symless.com).
+如需帮助或获取信息请访问我们的官网。 (symless.com).
 &lt;/p&gt;</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="167"/>
       <source>Build Date: </source>
-      <translation type="unfinished">Build Date: </translation>
+      <translation>创建日期：%s</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="194"/>
@@ -106,17 +106,17 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="184"/>
       <source>up</source>
-      <translation>上方</translation>
+      <translation>上</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="189"/>
       <source>down</source>
-      <translation>下方</translation>
+      <translation>下</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="201"/>
       <source>Lock cursor to screen</source>
-      <translation>锁定指针于屏幕</translation>
+      <translation>锁定光标到屏幕</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="225"/>
@@ -136,7 +136,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="247"/>
       <source>Restart server</source>
-      <translation type="unfinished">Restart server</translation>
+      <translation>重新启服务器</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="259"/>
@@ -159,17 +159,17 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActivationDialog.ui" line="14"/>
       <source>Activate Synergy</source>
-      <translation type="unfinished">Activate Synergy</translation>
+      <translation>激活Synergy</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="26"/>
       <source>Serial key</source>
-      <translation type="unfinished">Serial key</translation>
+      <translation>序列号</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="33"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This can be found on your &lt;a href=&quot;https://symless.com/account/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This can be found on your &lt;a href=&quot;https://symless.com/account/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;这可以在您的 &lt;a href=&quot;https://symless.com/account/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;帐户&lt;/span&gt;&lt;/a&gt; 页面中找到。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="49"/>
@@ -178,7 +178,7 @@ Visit our website for help and info (symless.com).
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+      <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
@@ -187,40 +187,40 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/ActivationDialog.ui" line="88"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Your trial has expired. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Your trial has expired. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;您的试用已超期。 &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;现在购买！ &lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="36"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Your trial has expired. &lt;a href=&quot;https://symless.com/synergy/trial/thanks?id=%1&quot;&gt;&lt;span style=&quot;text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Your trial has expired. &lt;a href=&quot;https://symless.com/synergy/trial/thanks?id=%1&quot;&gt;&lt;span style=&quot;text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;您的试用已超期。&lt;a href=&quot;https://symless.com/synergy/trial/thanks?id=%1&quot;&gt;&lt;span style=&quot;text-decoration: underline; color:#0000ff;&quot;&gt;现在购买！&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="77"/>
       <source>An error occurred while trying to activate Synergy. Please contact the helpdesk, and provide the following information:
 
 %1</source>
-      <translation type="unfinished">An error occurred while trying to activate Synergy. Please contact the helpdesk, and provide the following information:
+      <translation>在您尝试激活Synergy的时候发生了一个错误。请联系客服并提供如下信息：
 
 %1</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="86"/>
       <source>%1</source>
-      <translation type="unfinished">%1</translation>
+      <translation>%1</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="95"/>
       <source>Thanks for trying %1! %5
 
 %2 day%3 of your trial remain%4</source>
-      <translation type="unfinished">Thanks for trying %1! %5
+      <translation>感谢您的试用 %1! %5
 
-%2 day%3 of your trial remain%4</translation>
+%2 天 %3 您的试用期剩余%4</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="114"/>
       <source>Thanks for activating %1!</source>
-      <translation type="unfinished">Thanks for activating %1!</translation>
+      <translation>感谢您激活 %1!</translation>
     </message>
   </context>
   <context>
@@ -228,17 +228,17 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/AddClientDialogBase.ui" line="20"/>
       <source>Dialog</source>
-      <translation type="unfinished">Dialog</translation>
+      <translation>对话</translation>
     </message>
     <message>
       <location filename="src/AddClientDialogBase.ui" line="35"/>
       <source>TextLabel</source>
-      <translation type="unfinished">TextLabel</translation>
+      <translation>文本标签</translation>
     </message>
     <message>
       <location filename="src/AddClientDialogBase.ui" line="83"/>
       <source>Ignore auto connect clients</source>
-      <translation type="unfinished">Ignore auto connect clients</translation>
+      <translation>忽略自动配置的客户端</translation>
     </message>
   </context>
   <context>
@@ -246,21 +246,21 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/CancelActivationDialog.ui" line="14"/>
       <source>Cancel Activation</source>
-      <translation type="unfinished">Cancel Activation</translation>
+      <translation>取消激活</translation>
     </message>
     <message>
       <location filename="src/CancelActivationDialog.ui" line="20"/>
       <source>Are you sure?
 
 If you don&apos;t activate Synergy you&apos;ll be missing out on some great features.</source>
-      <translation type="unfinished">Are you sure?
+      <translation>您确定么？
 
-If you don&apos;t activate Synergy you&apos;ll be missing out on some great features.</translation>
+假如您没有激活Synergy，您将不能使用Synergy的部分特性。</translation>
     </message>
     <message>
       <location filename="src/CancelActivationDialog.ui" line="35"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/pricing?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/pricing?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/pricing?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;现在购买&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
   </context>
   <context>
@@ -268,19 +268,19 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/FailedLoginDialog.ui" line="14"/>
       <source>Activation Error</source>
-      <translation type="unfinished">Activation Error</translation>
+      <translation>激活错误</translation>
     </message>
     <message>
       <location filename="src/FailedLoginDialog.ui" line="42"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account/reset/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Forgotten your password?&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account/reset/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Forgotten your password?&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/account/reset/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;找回密码&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/FailedLoginDialog.ui" line="58"/>
       <source>An error occurred while trying to activate Synergy. The Symless server returned the following error:
 
 %1</source>
-      <translation type="unfinished">An error occurred while trying to activate Synergy. The Symless server returned the following error:
+      <translation>在您尝试提货Synergy的过程中发生了错误。Symless的服务器返回了如下错误信息：
 
 %1</translation>
     </message>
@@ -334,7 +334,7 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/MainWindow.cpp" line="494"/>
       <source>Synergy is now connected. You can close the config window and Synergy will remain connected in the background.</source>
-      <translation type="unfinished">Synergy is now connected. You can close the config window and Synergy will remain connected in the background.</translation>
+      <translation>Synergy已连接。您可以关闭配置界面，Synergy将在后台保持运行。</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="546"/>
@@ -345,13 +345,13 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
 Compare this fingerprint to the one on your server&apos;s screen.If the two don&apos;t match exactly, then it&apos;s probably not the server you&apos;re expecting (it could be a malicious user).
 
 To automatically trust this fingerprint for future connections, click Yes. To reject this fingerprint and disconnect from the server, click No.</source>
-      <translation type="unfinished">You are connecting to a server. Here is it&apos;s fingerprint:
+      <translation>您连已连接服务器。他的认证信息是：
 
 %1
 
-Compare this fingerprint to the one on your server&apos;s screen.If the two don&apos;t match exactly, then it&apos;s probably not the server you&apos;re expecting (it could be a malicious user).
+比对这个认证信息和您服务器显示认证信息。假如两个认证信息不能匹配，则您可能没有连接到您的服务器（这或许是一个恶意用户）。
 
-To automatically trust this fingerprint for future connections, click Yes. To reject this fingerprint and disconnect from the server, click No.</translation>
+如果您希望自动信任未来连接的认证信息，请点击是。如果您希望自动拒接并与服务器断开连接，请点击否。</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="722"/>
@@ -376,12 +376,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="789"/>
       <source>No server selected</source>
-      <translation type="unfinished">No server selected</translation>
+      <translation>没有指定服务器</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="790"/>
       <source>No auto config server was selected, try manual mode instead.</source>
-      <translation type="unfinished">No auto config server was selected, try manual mode instead.</translation>
+      <translation>没有找到自匹配的服务器，请尝试手动模式。</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="805"/>
@@ -431,42 +431,42 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1016"/>
       <source>Synergy is waiting for clients</source>
-      <translation type="unfinished">Synergy is waiting for clients</translation>
+      <translation>Synergy 正在等待客户端接入</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1023"/>
       <source>Synergy is connected (with %1)</source>
-      <translation type="unfinished">Synergy is connected (with %1)</translation>
+      <translation>Synergy 已与 %1 连接</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1026"/>
       <source>Synergy is running (without TLS encryption)</source>
-      <translation type="unfinished">Synergy is running (without TLS encryption)</translation>
+      <translation>Synergy 正在运行（未进行TLS加密）</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1031"/>
       <source>Synergy is starting...</source>
-      <translation type="unfinished">Synergy is starting...</translation>
+      <translation>Synergy 正在启动 ……</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1034"/>
       <source>There was an error, retrying...</source>
-      <translation type="unfinished">There was an error, retrying...</translation>
+      <translation>发生了一个错误，正在重试……</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1037"/>
       <source>Synergy is not running</source>
-      <translation type="unfinished">Synergy is not running</translation>
+      <translation>Synergy 未运行</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1354"/>
       <source>Please add the server (%1) to the grid.</source>
-      <translation type="unfinished">Please add the server (%1) to the grid.</translation>
+      <translation>请添加服务器 (%1) 到网格图中。</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1360"/>
       <source>Please drag the new client screen (%1) to the desired position on the grid.</source>
-      <translation type="unfinished">Please drag the new client screen (%1) to the desired position on the grid.</translation>
+      <translation>请拖拽新的客服端屏幕 (%1) 到网格图中您期待的位置。</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1093"/>
@@ -481,7 +481,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="545"/>
       <source>Security question</source>
-      <translation type="unfinished">Security question</translation>
+      <translation>安全问题</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1260"/>
@@ -504,7 +504,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="26"/>
       <source>Synergy</source>
-      <translation type="unfinished">Synergy</translation>
+      <translation>Synergy</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="216"/>
@@ -525,17 +525,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="58"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; days of your Synergy Pro trial remain. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; days of your Synergy Pro trial remain. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; 天内您的协同Pro 试用仍然有效。 &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;现在购买 ！&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="184"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manual Config mode active, consider using Auto Config instead (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Settings&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manual Config mode active, consider using Auto Config instead (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Settings&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;手动配置模式激活，考虑使用自动配置(&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;设置&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="257"/>
       <source>SSL Fingerprint:</source>
-      <translation type="unfinished">SSL Fingerprint:</translation>
+      <translation>SSL认证信息</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="316"/>
@@ -560,22 +560,22 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="369"/>
       <source>Client name:</source>
-      <translation type="unfinished">Client name:</translation>
+      <translation>客户端名称</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="383"/>
       <source>&amp;Server:</source>
-      <translation type="unfinished">&amp;Server:</translation>
+      <translation>服务器IP</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="405"/>
       <source>Hostname or IP address of the server computer.</source>
-      <translation type="unfinished">Hostname or IP address of the server computer.</translation>
+      <translation>服务器的主机名或IP地址</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="428"/>
       <source>Server:</source>
-      <translation type="unfinished">Server:</translation>
+      <translation>服务器：</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="495"/>
@@ -610,7 +610,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="543"/>
       <source>Visit &amp;help site</source>
-      <translation type="unfinished">Visit &amp;help site</translation>
+      <translation>访问 &amp;help 网站</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="551"/>
@@ -686,7 +686,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/MainWindowBase.ui" line="639"/>
       <location filename="src/MainWindowBase.ui" line="642"/>
       <source>Activate</source>
-      <translation type="unfinished">Activate</translation>
+      <translation>激活</translation>
     </message>
   </context>
   <context>
@@ -712,7 +712,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/main.cpp" line="138"/>
       <source>System tray is unavailable, don&apos;t close your window.</source>
-      <translation type="unfinished">System tray is unavailable, don&apos;t close your window.</translation>
+      <translation>系统托盘不可用，请不要关闭您的窗口。</translation>
     </message>
   </context>
   <context>
@@ -782,7 +782,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="258"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="305"/>
       <source>Shift</source>
-      <translation type="unfinished">Shift</translation>
+      <translation>Shift键</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="122"/>
@@ -791,7 +791,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="263"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="310"/>
       <source>Ctrl</source>
-      <translation type="unfinished">Ctrl</translation>
+      <translation>Ctrl 键</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="127"/>
@@ -800,7 +800,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="268"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="315"/>
       <source>Alt</source>
-      <translation type="unfinished">Alt</translation>
+      <translation>Alt 键</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="132"/>
@@ -809,7 +809,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/ScreenSettingsDialogBase.ui" line="273"/>
       <location filename="src/ScreenSettingsDialogBase.ui" line="320"/>
       <source>Meta</source>
-      <translation type="unfinished">Meta</translation>
+      <translation>Win键/⌘键</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="137"/>
@@ -918,7 +918,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ServerConfigDialog.cpp" line="83"/>
       <source>Configure server</source>
-      <translation type="unfinished">Configure server</translation>
+      <translation>配置服务器</translation>
     </message>
   </context>
   <context>
@@ -1037,17 +1037,17 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="416"/>
       <source>Enable clipboard sharing</source>
-      <translation type="unfinished">Enable clipboard sharing</translation>
+      <translation>启动剪贴板共享</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="452"/>
       <source>MB</source>
-      <translation type="unfinished">MB</translation>
+      <translation>MB</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="461"/>
       <source>Enable drag and drop file transfers</source>
-      <translation type="unfinished">Enable drag and drop file transfers</translation>
+      <translation>启动拖拽文件传送</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="513"/>
@@ -1072,7 +1072,7 @@ Double click on a screen to edit its settings.</source>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="501"/>
       <source>Ignore auto config clients</source>
-      <translation type="unfinished">Ignore auto config clients</translation>
+      <translation>忽略自动配置的客户端</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="571"/>
