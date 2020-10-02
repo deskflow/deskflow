@@ -47,7 +47,7 @@ LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
 		emit serialKeyChanged(m_serialKey);
 
 		emit showLicenseNotice(getLicenseNotice());
-		if (m_serialKey.isValid()) {
+		if (!m_serialKey.isValid()) {
 			emit InvalidLicense();
 		}
 
@@ -112,7 +112,7 @@ LicenseManager::refresh()
 			m_AppConfig->clearSerialKey();
 		}
 	}
-	if (m_serialKey.isValid()) {
+	if (!m_serialKey.isValid()) {
 		emit InvalidLicense();
 	}
 }
