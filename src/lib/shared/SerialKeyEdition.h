@@ -28,8 +28,8 @@ public:
 	explicit SerialKeyEdition(const std::string& type);
 
 	Edition getType() const;
-	const std::string getName() const;
-	const std::string getDisplayName() const;
+	std::string getName() const;
+	std::string getDisplayName() const;
 
 	void setType(Edition type);
 	void setType(const std::string& type);

@@ -28,7 +28,7 @@ SerialKeyEdition::getType() const
 	return m_Type;
 }
 
-const std::string
+std::string
 SerialKeyEdition::getName() const
 {
 	std::string Name;
@@ -53,7 +53,7 @@ SerialKeyEdition::getName() const
 	return Name;
 }
 
-const std::string
+std::string
 SerialKeyEdition::getDisplayName() const
 {
 	const std::string ApplicationName = "Synergy 1 ";
@@ -65,7 +65,7 @@ SerialKeyEdition::getDisplayName() const
 			EditionName = "(" + EditionName +")";
 		}
 		else{
-			EditionName[0] = ::toupper(EditionName[0]);
+			EditionName[0] = static_cast<char>(::toupper(EditionName[0]));
 		}
 	}
 
