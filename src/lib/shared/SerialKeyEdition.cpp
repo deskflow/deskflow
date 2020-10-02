@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "SerialKeyEdition.h"
 
 const std::string SerialKeyEdition::PRO = "pro";
