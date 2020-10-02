@@ -1378,10 +1378,9 @@ int MainWindow::raiseActivationDialog()
 void MainWindow::on_windowShown()
 {
 #ifndef SYNERGY_ENTERPRISE
-	if (!m_AppConfig->activationHasRun()){
-		if (!m_LicenseManager->serialKey().isValid()) {
+	if (!m_AppConfig->activationHasRun() &&
+		!m_LicenseManager->serialKey().isValid()){
 			raiseActivationDialog();
-		}
 	}
 #endif
 }
