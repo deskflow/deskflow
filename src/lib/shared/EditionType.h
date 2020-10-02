@@ -24,7 +24,8 @@ enum Edition {
     kBasic,
     kPro,
     Trial_DO_NOT_USE_OR_THERE_WILL_BE_PAIN,
-    kUnregistered
+    kUnregistered,
+    kBusiness
 };
 
 #endif // EDITIONTYPE_H

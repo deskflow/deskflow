@@ -25,6 +25,7 @@
 #include <sstream>
 #include <iomanip>
 #include <stdexcept>
+#include "SerialKeyEdition.h"
 
 using namespace std;
 static std::string hexEncode (std::string const& str);
@@ -98,23 +99,7 @@ SerialKey::isTemporary() const
 Edition
 SerialKey::edition() const
 {
-	return m_edition;
-}
-
-std::string
-SerialKey::editionString() const
-{
-	switch (edition()) {
-		case kBasic:
-			return "basic";
-		case kPro:
-			return "pro";
-		default: {
-			std::ostringstream oss;
-			oss << static_cast<int>(edition());
-			return oss.str();
-		}
-	}
+	return m_edition.getType();
 }
 
 static std::string
@@ -145,7 +130,7 @@ SerialKey::toString() const
 	} else {
 		oss << "v1;";
 	}
-	oss << editionString() << ";";
+	oss << m_edition.getName() << ";";
 	oss << m_name << ";";
 	oss << m_userLimit << ";";
 	oss << m_email << ";";
@@ -238,7 +223,7 @@ SerialKey::parse(std::string plainSerial)
 		if ((parts.size() == 8)
 				&& (parts.at(0).find("v1") != string::npos)) {
 			// e.g.: {v1;basic;Bob;1;email;company name;1398297600;1398384000}
-			m_edition = parseEdition(parts.at(1));
+			m_edition.setType(parts.at(1));
 			m_name = parts.at(2);
 			sscanf(parts.at(3).c_str(), "%d", &m_userLimit);
 			m_email = parts.at(4);
@@ -251,7 +236,7 @@ SerialKey::parse(std::string plainSerial)
 				 && (parts.at(0).find("v2") != string::npos)) {
 			// e.g.: {v2;trial;basic;Bob;1;email;company name;1398297600;1398384000}
 			m_KeyType.setKeyType(parts.at(1));
-			m_edition = parseEdition(parts.at(2));
+			m_edition.setType(parts.at(2));
 			m_name = parts.at(3);
 			sscanf(parts.at(4).c_str(), "%d", &m_userLimit);
 			m_email = parts.at(5);
@@ -263,15 +248,4 @@ SerialKey::parse(std::string plainSerial)
 	}
 
 	return valid;
-}
-
-Edition
-SerialKey::parseEdition(std::string const& editionStr)
-{
-	Edition e = kBasic;
-	if (editionStr == "pro") {
-		e = kPro;
-	}
-
-	return e;
 }
