@@ -21,6 +21,7 @@
 #include <ctime>
 #include "EditionType.h"
 #include "SerialKeyType.h"
+#include "SerialKeyEdition.h"
 
 #ifdef TEST_ENV
 #include <gtest/gtest_prod.h>
@@ -42,11 +43,9 @@ public:
     std::string            toString() const;
 
     static std::string  decode(const std::string& serial);
-    static Edition      parseEdition(const std::string& editionStr);
 
 private:
     bool                parse(std::string plainSerial);
-    std::string            editionString() const;
 
 #ifdef TEST_ENV
 private:
@@ -63,7 +62,7 @@ private:
     unsigned              m_userLimit;
     unsigned long long    m_warnTime;
     unsigned long long    m_expireTime;
-    Edition               m_edition;
+	SerialKeyEdition      m_edition;
     SerialKeyType         m_KeyType;
 };
 

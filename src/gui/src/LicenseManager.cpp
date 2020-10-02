@@ -126,20 +126,13 @@ LicenseManager::skipActivation() const
 QString
 LicenseManager::getEditionName(Edition const edition, bool trial)
 {
-	std::string name ("Synergy 1");
-	switch (edition) {
-		case kUnregistered:
-			name += " (UNREGISTERED)";
-			return QString::fromUtf8 (name.c_str(), static_cast<int>(name.size()));
-		case kBasic:
-			name += " Basic";
-			break;
-		default:
-			name += " Pro";
-	}
+	SerialKeyEdition KeyEdition(edition);
+	std::string name = KeyEdition.getDisplayName();
+
 	if (trial) {
 		name += " (Trial)";
 	}
+
 	return QString::fromUtf8 (name.c_str(), static_cast<int>(name.size()));
 }
 
