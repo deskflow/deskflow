@@ -70,7 +70,7 @@ TEST(SerialKeyTests, parse_validV2Serial_valid)
     bool r = serial.parse("{v2;trial;pro;Bob;1;email;company name;0;86400}");
     EXPECT_EQ(true, r);
     EXPECT_EQ(kPro, serial.edition());
-    EXPECT_FALSE(serial.isExpired(0));
+	EXPECT_FALSE(serial.isExpired(0));
     EXPECT_EQ(true, serial.daysLeft(0));
     EXPECT_EQ(true, serial.isExpiring(1));
     EXPECT_EQ(true, serial.isTrial());
@@ -205,6 +205,25 @@ TEST(SerialKeyTests, toStringV1BasicSerialKey)
 	const std::string Expected = "7B76313B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B307D";
 	SerialKey serial(Expected);
 	EXPECT_EQ(Expected, serial.toString());
+}
+
+TEST(SerialKeyTests, IsValidKey_false)
+{
+	//{v1;basic;Bob;1;email;company name;0;0}
+	SerialKey serial(kUnregistered);
+	EXPECT_EQ(false, serial.isValid());
+}
+
+TEST(SerialKeyTests, IsValidKey_true)
+{
+	SerialKey serial(kBasic);
+	EXPECT_EQ(true, serial.isValid());
+}
+
+TEST(SerialKeyTests, IsValidExpiredKey_false)
+{
+	SerialKey serial("7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
+	EXPECT_EQ(false, serial.isValid());
 }
 
 

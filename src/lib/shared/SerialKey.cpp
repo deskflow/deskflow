@@ -96,6 +96,19 @@ SerialKey::isTemporary() const
 	return m_KeyType.isTemporary();
 }
 
+bool
+SerialKey::isValid() const
+{
+	bool Valid = true;
+
+	if (m_edition.getType() == kUnregistered || isExpired(::time(0)))
+	{
+		Valid = false;
+	}
+
+	return Valid;
+}
+
 Edition
 SerialKey::edition() const
 {

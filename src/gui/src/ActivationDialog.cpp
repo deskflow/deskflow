@@ -43,16 +43,15 @@ ActivationDialog::~ActivationDialog()
 
 void ActivationDialog::reject()
 {
-    if (m_LicenseManager->activeEdition() == kUnregistered) {
-        CancelActivationDialog cancelActivationDialog(this);
-        if (QDialog::Accepted == cancelActivationDialog.exec()) {
-            m_LicenseManager->skipActivation();
-            m_appConfig->activationHasRun(true);
-        } else {
-            return;
-        }
-    }
-    QDialog::reject();
+	if (m_LicenseManager->activeEdition() == kUnregistered) {
+		CancelActivationDialog cancelActivationDialog(this);
+		if (QDialog::Accepted == cancelActivationDialog.exec()) {
+			m_LicenseManager->skipActivation();
+		} else {
+			return;
+		}
+	}
+	QDialog::reject();
 }
 
 void ActivationDialog::accept()

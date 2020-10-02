@@ -174,8 +174,8 @@ MainWindow::MainWindow (AppConfig& appConfig,
     connect (m_LicenseManager, SIGNAL(showLicenseNotice(QString)),
              this, SLOT(showLicenseNotice(QString)), Qt::QueuedConnection);
 
-    connect (m_LicenseManager, SIGNAL(LicenseExpired()),
-             this, SLOT(LicenseExpired()), Qt::QueuedConnection);
+	connect (m_LicenseManager, SIGNAL(InvalidLicense()),
+			 this, SLOT(InvalidLicense()), Qt::QueuedConnection);
 #endif
 
     connect (m_AppConfig, SIGNAL(sslToggled(bool)),
@@ -613,8 +613,7 @@ void MainWindow::startSynergy()
 {
 #ifndef SYNERGY_ENTERPRISE
     SerialKey serialKey = m_LicenseManager->serialKey();
-    time_t currentTime = ::time(0);
-    if (serialKey.isExpired(currentTime)) {
+	if (!serialKey.isValid()) {
         if (QDialog::Rejected == raiseActivationDialog()) {
             return;
         }
@@ -1152,7 +1151,7 @@ void MainWindow::setEdition(Edition edition)
 }
 
 #ifndef SYNERGY_ENTERPRISE
-void MainWindow::LicenseExpired()
+void MainWindow::InvalidLicense()
 {
    stopSynergy();
    m_AppConfig->activationHasRun(false);
@@ -1379,12 +1378,11 @@ int MainWindow::raiseActivationDialog()
 void MainWindow::on_windowShown()
 {
 #ifndef SYNERGY_ENTERPRISE
-    time_t currentTime = ::time(0);
-    if (!m_AppConfig->activationHasRun()
-            && ((m_AppConfig->edition() == kUnregistered) ||
-                (m_LicenseManager->serialKey().isExpired(currentTime)))) {
-        raiseActivationDialog();
-    }
+	if (!m_AppConfig->activationHasRun()){
+		if (!m_LicenseManager->serialKey().isValid()) {
+			raiseActivationDialog();
+		}
+	}
 #endif
 }
 

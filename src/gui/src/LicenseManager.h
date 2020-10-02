@@ -50,7 +50,7 @@ private:
 signals:
     void serialKeyChanged (SerialKey) const;
     void editionChanged (Edition) const;
-    void LicenseExpired () const;
+	void InvalidLicense () const;
     void showLicenseNotice(const QString& notice) const;
 
 protected:
