@@ -30,10 +30,10 @@ ActivationDialog::ActivationDialog(QWidget* parent, AppConfig& appConfig,
 
 void ActivationDialog::refreshSerialKey()
 {
-	ui->m_pTextEditSerialKey->setText(m_appConfig->serialKey());
-	ui->m_pTextEditSerialKey->setFocus();
-	ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
-	ui->m_trialLabel->setText(tr(m_LicenseManager->getLicenseNotice().toStdString().c_str()));
+    ui->m_pTextEditSerialKey->setText(m_appConfig->serialKey());
+    ui->m_pTextEditSerialKey->setFocus();
+    ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
+    ui->m_trialLabel->setText(tr(m_LicenseManager->getLicenseNotice().toStdString().c_str()));
 }
 
 ActivationDialog::~ActivationDialog()
@@ -43,15 +43,15 @@ ActivationDialog::~ActivationDialog()
 
 void ActivationDialog::reject()
 {
-	if (m_LicenseManager->activeEdition() == kUnregistered) {
-		CancelActivationDialog cancelActivationDialog(this);
-		if (QDialog::Accepted == cancelActivationDialog.exec()) {
-			m_LicenseManager->skipActivation();
-		} else {
-			return;
-		}
-	}
-	QDialog::reject();
+    if (m_LicenseManager->activeEdition() == kUnregistered) {
+        CancelActivationDialog cancelActivationDialog(this);
+        if (QDialog::Accepted == cancelActivationDialog.exec()) {
+            m_LicenseManager->skipActivation();
+        } else {
+            return;
+        }
+    }
+    QDialog::reject();
 }
 
 void ActivationDialog::accept()

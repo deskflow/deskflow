@@ -174,8 +174,8 @@ MainWindow::MainWindow (AppConfig& appConfig,
     connect (m_LicenseManager, SIGNAL(showLicenseNotice(QString)),
              this, SLOT(showLicenseNotice(QString)), Qt::QueuedConnection);
 
-	connect (m_LicenseManager, SIGNAL(InvalidLicense()),
-			 this, SLOT(InvalidLicense()), Qt::QueuedConnection);
+    connect (m_LicenseManager, SIGNAL(InvalidLicense()),
+             this, SLOT(InvalidLicense()), Qt::QueuedConnection);
 #endif
 
     connect (m_AppConfig, SIGNAL(sslToggled(bool)),
@@ -569,8 +569,8 @@ void MainWindow::checkSecureSocket(const QString& line)
     // obviously not very secure, since this can be tricked by injecting something
     // into the log. however, since we don't have IPC between core and GUI... patches welcome.
     const int index = line.indexOf(tlsCheckString, 0, Qt::CaseInsensitive);
-	  if (index > 0) {
-		    secureSocket(true);
+    if (index > 0) {
+        secureSocket(true);
 
         //Get the protocol version from the line
         m_SecureSocketVersion = line.mid(index + strlen(tlsCheckString));
@@ -613,7 +613,7 @@ void MainWindow::startSynergy()
 {
 #ifndef SYNERGY_ENTERPRISE
     SerialKey serialKey = m_LicenseManager->serialKey();
-	if (!serialKey.isValid()) {
+    if (!serialKey.isValid()) {
         if (QDialog::Rejected == raiseActivationDialog()) {
             return;
         }
