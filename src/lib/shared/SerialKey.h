@@ -37,7 +37,7 @@ public:
     bool                isExpired(time_t currentTime) const;
     bool                isTrial() const;
     bool                isTemporary() const;
-	bool                isValid() const;
+    bool                isValid() const;
     time_t                daysLeft(time_t currentTime) const;
     std::string            email() const;
     Edition                edition() const;
@@ -63,7 +63,7 @@ private:
     unsigned              m_userLimit;
     unsigned long long    m_warnTime;
     unsigned long long    m_expireTime;
-	SerialKeyEdition      m_edition;
+    SerialKeyEdition      m_edition;
     SerialKeyType         m_KeyType;
 };
 
