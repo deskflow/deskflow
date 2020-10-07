@@ -8,6 +8,7 @@ Bug fixes:
 - #6760 Synergy loses license when creating a System scope config
 - #6342 Updated copyright year in version to use build date
 - #6771 Added Ubuntu 16 to CI/CD
+- #6804 Synergy loses edition when creating a System scope config
 
 
 Enhancements:
