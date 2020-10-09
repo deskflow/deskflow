@@ -1,0 +1,35 @@
+name: Debian
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-arch64:
+    runs-on: ubuntu-latest
+    container: symless/synergy-core:${{ matrix.distro }}
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+    strategy:
+      matrix:
+        include:
+#          - distro: debian9 #Need to install git 2.18+
+          - distro: debian10
+
+    name: ${{ matrix.distro }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        . ./version
+        make -j
+
+    - name: Run unit test
+      run: ./build/bin/unittests
