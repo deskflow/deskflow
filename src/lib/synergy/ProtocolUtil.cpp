@@ -47,24 +47,25 @@ ProtocolUtil::writef(synergy::IStream* stream, const char* fmt, ...)
 bool
 ProtocolUtil::readf(synergy::IStream* stream, const char* fmt, ...)
 {
-    assert(stream != NULL);
-    assert(fmt != NULL);
-    LOG((CLOG_DEBUG2 "readf(%s)", fmt));
+    bool result = false;
 
-    bool result;
-    va_list args;
-    va_start(args, fmt);
-    try {
-        vreadf(stream, fmt, args);
-        result = true;
+    if (stream && fmt) {
+        LOG((CLOG_DEBUG2 "readf(%s)", fmt));
+        va_list args;
+        va_start(args, fmt);
+        try {
+            vreadf(stream, fmt, args);
+            result = true;
+        }
+        catch (XIO&) {
+            result = false;
+        }
+        catch (std::bad_alloc & exception) {
+            result = false;
+        }
+        va_end(args);
     }
-    catch (XIO&) {
-        result = false;
-    }
-    catch (std::bad_alloc & exception) {
-        result = false;
-    }
-    va_end(args);
+
     return result;
 }
 
