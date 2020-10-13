@@ -101,34 +101,8 @@ TEST(ProtocolUtilTests, readf_asserts)
 TEST(ProtocolUtilTests, readf_string)
 {
     std::string Data;
-    const std::string Expected = "expected string";
-    const UInt8 Length = Expected.length();
-    UInt8 Size[4] = {0,0,0,Length};
-
-    MockStream stream;
-    EXPECT_CALL(stream, read(_, _))
-        .WillOnce(
-            DoAll(
-                SetValueToVoidPointerArg0(&Size, sizeof(Size)),
-                Return(sizeof(Size))
-            )
-         )
-        .WillOnce(
-            DoAll(
-                SetValueToVoidPointerArg0(Expected.c_str(), Expected.length()),
-                Return(Expected.length())
-            )
-        );
-
-    EXPECT_TRUE(ProtocolUtil::readf(&stream, "%s", &Data));
-    EXPECT_EQ(Expected, Data);
-}
-
-TEST(ProtocolUtilTests, readf_string_200)
-{
-    std::string Data;
-    const std::string Expected(200, 'x');
-    const UInt8 Length = Expected.length();
+    const UInt8 Length = 200;
+    const std::string Expected(Length, 'x');
     UInt8 Size[4] = {0,0,0,Length};
 
     MockStream stream;
@@ -264,8 +238,8 @@ INSTANTIATE_TEST_CASE_P(
 TEST(ProtocolUtilTests, readf_int1byte_and_string)
 {
     std::string ActualString;
-    const std::string ExpectedString(200, 'x');
-    const UInt8 StringLength = ExpectedString.length();
+    const UInt8 StringLength = 200;
+    const std::string ExpectedString(StringLength, 'x');
     UInt8 Size[4] = {0,0,0,StringLength};
 
     UInt8 ActualInt = 0;
@@ -301,13 +275,13 @@ TEST(ProtocolUtilTests, readf_int1byte_and_string)
 TEST(ProtocolUtilTests, readf_int2byte_and_string)
 {
     std::string ActualString;
-    const std::string ExpectedString(200, 'x');
-    const UInt8 StringLength = ExpectedString.length();
+    const UInt8 StringLength = 200;
+    const std::string ExpectedString(StringLength, 'x');
     UInt8 Size[4] = {0,0,0,StringLength};
 
-    UInt8 ActualInt = 0;
-    const int ExpectedInt = 10;
-    UInt8 StreamIntData[2] = {0, ExpectedInt};
+    UInt16 ActualInt = 0;
+    const UInt16 ExpectedInt = 10;
+    UInt8 StreamIntData[2] = {0, 10};
 
     MockStream stream;
     EXPECT_CALL(stream, read(_, _))
@@ -337,8 +311,8 @@ TEST(ProtocolUtilTests, readf_int2byte_and_string)
 
 TEST(ProtocolUtilTests, readf_int4byte_and_string)
 {
-    UInt8 ActualInt = 0;
-    const int ExpectedInt = 10;
+    UInt32 ActualInt = 0;
+    const UInt8 ExpectedInt = 10;
     UInt8 StreamIntData[4] = {0,0,0,ExpectedInt};
 
     std::string ActualString;
@@ -371,13 +345,131 @@ TEST(ProtocolUtilTests, readf_int4byte_and_string)
     EXPECT_EQ(ExpectedInt, ActualInt);
 }
 
+TEST(ProtocolUtilTests, readf_string_and_int4bytes)
+{
+    UInt32 ActualInt = 0;
+    const UInt8 ExpectedInt = 10;
+    UInt8 StreamIntData[4] = {0,0,0,ExpectedInt};
 
+    std::string ActualString;
+    const std::string ExpectedString(32768, 'x');
+    UInt8 Size[4] = {0,0,128,0};
 
+    MockStream stream;
+    EXPECT_CALL(stream, read(_, _))
+        .WillOnce(
+            DoAll(
+                SetValueToVoidPointerArg0(&Size, sizeof(Size)),
+                Return(sizeof(Size))
+            )
+         )
+        .WillOnce(
+            DoAll(
+                SetValueToVoidPointerArg0(ExpectedString.c_str(), ExpectedString.length()),
+                Return(ExpectedString.length())
+            )
+        )
+        .WillOnce(
+            DoAll(
+                SetValueToVoidPointerArg0(&StreamIntData, sizeof(StreamIntData)),
+                Return(sizeof(StreamIntData))
+            )
+        );
 
+    EXPECT_TRUE(ProtocolUtil::readf(&stream, "%s%4i", &ActualString, &ActualInt));
+    EXPECT_EQ(ExpectedString, ActualString);
+    EXPECT_EQ(ExpectedInt, ActualInt);
+}
 
+TEST(ProtocolUtilTests, readf_string_and_vector_int4bytes)
+{
+    std::vector<UInt32> Actual4Bytes = {};
+    const std::vector<UInt32> Expected4Bytes = {10,10};
+    UInt8 StreamVectorSize[4] = {0,0,0,2};
+    UInt8 StreamData4Bytes[4] = {0, 0, 0, 10};
 
+    std::string ActualString;
+    const std::string ExpectedString(32768, 'x');
+    UInt8 Size[4] = {0,0,128,0};
 
+    MockStream stream;
+    EXPECT_CALL(stream, read(_, _))
+        .WillOnce(
+            DoAll(
+                SetValueToVoidPointerArg0(&Size, sizeof(Size)),
+                Return(sizeof(Size))
+            )
+         )
+        .WillOnce(
+            DoAll(
+                SetValueToVoidPointerArg0(ExpectedString.c_str(), ExpectedString.length()),
+                Return(ExpectedString.length())
+            )
+        )
+        .WillOnce(
+            DoAll(
+                SetValueToVoidPointerArg0(StreamVectorSize, sizeof(StreamVectorSize)),
+                Return(sizeof(StreamVectorSize))
+            )
+        )
+        .WillRepeatedly(
+            DoAll(
+                SetValueToVoidPointerArg0(StreamData4Bytes, sizeof(StreamData4Bytes)),
+                Return(sizeof(StreamData4Bytes))
+            )
+        );
 
+    EXPECT_TRUE(ProtocolUtil::readf(&stream, "%s%4I", &ActualString, &Actual4Bytes));
+    EXPECT_EQ(ExpectedString, ActualString);
+    EXPECT_EQ(Expected4Bytes, Actual4Bytes);
+}
 
+TEST(ProtocolUtilTests, readf_vector_int4bytes_and_string)
+{
+    std::vector<UInt32> Actual4Bytes = {};
+    const std::vector<UInt32> Expected4Bytes = {10,10};
+    UInt8 StreamVectorSize[4] = {0,0,0,2};
+    UInt8 StreamData4Bytes[4] = {0, 0, 0, 10};
 
+    std::string ActualString;
+    const std::string ExpectedString(32768, 'x');
+    UInt8 Size[4] = {0,0,128,0};
+
+    MockStream stream;
+    EXPECT_CALL(stream, read(_, _))
+        .WillOnce(
+            DoAll(
+                SetValueToVoidPointerArg0(StreamVectorSize, sizeof(StreamVectorSize)),
+                Return(sizeof(StreamVectorSize))
+            )
+        )
+        .WillOnce(
+            DoAll(
+                SetValueToVoidPointerArg0(StreamData4Bytes, sizeof(StreamData4Bytes)),
+                Return(sizeof(StreamData4Bytes))
+            )
+        )
+        .WillOnce(
+            DoAll(
+                SetValueToVoidPointerArg0(StreamData4Bytes, sizeof(StreamData4Bytes)),
+                Return(sizeof(StreamData4Bytes))
+            )
+        )
+        .WillOnce(
+            DoAll(
+                SetValueToVoidPointerArg0(&Size, sizeof(Size)),
+                Return(sizeof(Size))
+            )
+         )
+        .WillOnce(
+            DoAll(
+                SetValueToVoidPointerArg0(ExpectedString.c_str(), ExpectedString.length()),
+                Return(ExpectedString.length())
+            )
+        );
+
+    EXPECT_TRUE(ProtocolUtil::readf(&stream, "%4I%s", &Actual4Bytes, &ActualString));
+    EXPECT_EQ(ExpectedString, ActualString);
+    EXPECT_EQ(Expected4Bytes, Actual4Bytes);
+}
 

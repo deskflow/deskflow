@@ -111,15 +111,18 @@ ProtocolUtil::vreadf(synergy::IStream* stream, const char* fmt, va_list args)
             UInt32 len = eatLength(&fmt);
             switch (*fmt) {
             case 'i': {
-                readInt(stream, len, args);
+                void* destination = va_arg(args, void*);
+                readInt(stream, len, destination);
                 break;
             }
             case 'I': {
-                readVectorInt(stream, len, args);
+                void* destination = va_arg(args, void*);
+                readVectorInt(stream, len, destination);
                 break;
             }
             case 's': {
-                readBytes(stream, len, args);
+                String* destination = va_arg(args, String*);
+                readBytes(stream, len, destination);
                 break;
             }
 
@@ -412,7 +415,7 @@ ProtocolUtil::read(synergy::IStream* stream, void* vbuffer, UInt32 count)
     }
 }
 
-void ProtocolUtil::readInt(synergy::IStream * stream, UInt32 len, va_list args) {
+void ProtocolUtil::readInt(synergy::IStream * stream, UInt32 len, void* destination) {
     // check for valid length
     if (len == 4 || len == 2 || len == 1) {
 
@@ -422,32 +425,39 @@ void ProtocolUtil::readInt(synergy::IStream * stream, UInt32 len, va_list args) 
         //Read the buffer till the len or buffers_size, which ever is smaller
         read(stream, buffer, len > buffer_size ? buffer_size : len);
 
-        // convert it
-        void* v = va_arg(args, void*);
         switch (len) {
             case 1:
                 // 1 byte integer
-                *static_cast<UInt8*>(v) = buffer[0];
-                LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt8*>(v), *static_cast<UInt8*>(v)));
+                *static_cast<UInt8*>(destination) = buffer[0];
+                LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)",
+                        len,
+                        *static_cast<UInt8*>(destination),
+                        *static_cast<UInt8*>(destination)));
                 break;
 
             case 2:
                 // 2 byte integer
-                *static_cast<UInt16*>(v) =
+                *static_cast<UInt16*>(destination) =
                         static_cast<UInt16>(
                                 (static_cast<UInt16>(buffer[0]) << 8) |
                                 static_cast<UInt16>(buffer[1]));
-                LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt16*>(v), *static_cast<UInt16*>(v)));
+                LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)",
+                            len,
+                            *static_cast<UInt16*>(destination),
+                            *static_cast<UInt16*>(destination)));
                 break;
 
             case 4:
                 // 4 byte integer
-                *static_cast<UInt32*>(v) =
+                *static_cast<UInt32*>(destination) =
                         (static_cast<UInt32>(buffer[0]) << 24) |
                         (static_cast<UInt32>(buffer[1]) << 16) |
                         (static_cast<UInt32>(buffer[2]) <<  8) |
                         static_cast<UInt32>(buffer[3]);
-                LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *static_cast<UInt32*>(v), *static_cast<UInt32*>(v)));
+                LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)",
+                            len,
+                            *static_cast<UInt32*>(destination),
+                            *static_cast<UInt32*>(destination)));
                 break;
         }
     }
@@ -458,7 +468,7 @@ void ProtocolUtil::readInt(synergy::IStream * stream, UInt32 len, va_list args) 
     }
 }
 
-void ProtocolUtil::readVectorInt(synergy::IStream * stream, UInt32 len, va_list args) {
+void ProtocolUtil::readVectorInt(synergy::IStream * stream, UInt32 len, void* destination) {
     // check for valid length
     assert(len == 1 || len == 2 || len == 4);
 
@@ -471,15 +481,16 @@ void ProtocolUtil::readVectorInt(synergy::IStream * stream, UInt32 len, va_list 
                static_cast<UInt32>(buffer[3]);
 
     // convert it
-    void* v = va_arg(args, void*);
     switch (len) {
         case 1:
             // 1 byte integer
             for (UInt32 i = 0; i < n; ++i) {
                 read(stream, buffer, 1);
-                static_cast<std::vector<UInt8>*>(v)->push_back(
-                        buffer[0]);
-                LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, static_cast<std::vector<UInt8>*>(v)->back(), static_cast<std::vector<UInt8>*>(v)->back()));
+                static_cast<std::vector<UInt8>*>(destination)->push_back(buffer[0]);
+                LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)",
+                     len, i,
+                     static_cast<std::vector<UInt8>*>(destination)->back(),
+                     static_cast<std::vector<UInt8>*>(destination)->back()));
             }
             break;
 
@@ -487,11 +498,14 @@ void ProtocolUtil::readVectorInt(synergy::IStream * stream, UInt32 len, va_list 
             // 2 byte integer
             for (UInt32 i = 0; i < n; ++i) {
                 read(stream, buffer, 2);
-                static_cast<std::vector<UInt16>*>(v)->push_back(
+                static_cast<std::vector<UInt16>*>(destination)->push_back(
                         static_cast<UInt16>(
                                 (static_cast<UInt16>(buffer[0]) << 8) |
                                 static_cast<UInt16>(buffer[1])));
-                LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, static_cast<std::vector<UInt16>*>(v)->back(), static_cast<std::vector<UInt16>*>(v)->back()));
+                LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)",
+                        len, i,
+                        static_cast<std::vector<UInt16>*>(destination)->back(),
+                        static_cast<std::vector<UInt16>*>(destination)->back()));
             }
             break;
 
@@ -499,18 +513,21 @@ void ProtocolUtil::readVectorInt(synergy::IStream * stream, UInt32 len, va_list 
             // 4 byte integer
             for (UInt32 i = 0; i < n; ++i) {
                 read(stream, buffer, 4);
-                static_cast<std::vector<UInt32>*>(v)->push_back(
+                static_cast<std::vector<UInt32>*>(destination)->push_back(
                         (static_cast<UInt32>(buffer[0]) << 24) |
                         (static_cast<UInt32>(buffer[1]) << 16) |
                         (static_cast<UInt32>(buffer[2]) <<  8) |
                         static_cast<UInt32>(buffer[3]));
-                LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, static_cast<std::vector<UInt32>*>(v)->back(), static_cast<std::vector<UInt32>*>(v)->back()));
+                LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)",
+                        len, i,
+                        static_cast<std::vector<UInt32>*>(destination)->back(),
+                        static_cast<std::vector<UInt32>*>(destination)->back()));
             }
             break;
     }
 }
 
-void ProtocolUtil::readBytes(synergy::IStream * stream, UInt32 len, va_list args) {
+void ProtocolUtil::readBytes(synergy::IStream * stream, UInt32 len, String* destination) {
     assert(len == 0);
 
     // read the string length
@@ -552,8 +569,10 @@ void ProtocolUtil::readBytes(synergy::IStream * stream, UInt32 len, va_list args
     LOG((CLOG_DEBUG2 "readf: read %d byte string", len));
 
     // save the data
-    String* dst = va_arg(args, String*);
-    dst->assign((const char*)sBuffer, len);
+
+    if (destination){
+        destination->assign((const char*)sBuffer, len);
+    }
 
     // release the buffer
     if (!useFixed) {

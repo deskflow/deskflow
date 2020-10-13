@@ -86,17 +86,17 @@ private:
     /**
      * @brief Handles 1,2, or 4 byte Integers
      */
-    static void           readInt(synergy::IStream*, UInt32, va_list);
+    static void           readInt(synergy::IStream*, UInt32, void*);
 
     /**
      * @brief Handles a Vector of integers
      */
-    static void           readVectorInt(synergy::IStream*, UInt32, va_list);
+    static void           readVectorInt(synergy::IStream*, UInt32, void*);
 
     /**
      * @brief Handles an array of bytes
      */
-    static void           readBytes(synergy::IStream*, UInt32, va_list);
+    static void           readBytes(synergy::IStream*, UInt32, String*);
 };
 
 //! Mismatched read exception
