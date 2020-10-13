@@ -688,34 +688,17 @@ MSWindowsKeyState::mapKeyFromEvent(WPARAM charAndVirtKey,
 		KeyModifierControl | KeyModifierAlt;
 
 	// extract character, virtual key, and if we didn't use AltGr
-	char c       = (char)((charAndVirtKey & 0xff00u) >> 8);
-	UINT vkCode  = (charAndVirtKey & 0xffu);
-	bool noAltGr = ((charAndVirtKey & 0xff0000u) != 0);
+	WCHAR wc     = (WCHAR)(charAndVirtKey & 0xffffu);
+	UINT vkCode  = ((charAndVirtKey >> 16) & 0xffu);
+	bool noAltGr = ((charAndVirtKey & 0xff000000u) != 0);
 
 	// handle some keys via table lookup
 	KeyID id     = getKeyID(vkCode, (KeyButton)((info >> 16) & 0x1ffu));
 
 	// check if not in table;  map character to key id
-	if (id == kKeyNone && c != 0) {
-		if ((c & 0x80u) == 0) {
-			// ASCII
-			id = static_cast<KeyID>(c) & 0xffu;
-		}
-		else {
-			// character is not really ASCII.  instead it's some
-			// character in the current ANSI code page.  try to
-			// convert that to a Unicode character.  if we fail
-			// then use the single byte character as is.
-			char src = c;
-			wchar_t unicode;
-			if (MultiByteToWideChar(CP_THREAD_ACP, MB_PRECOMPOSED,
-										&src, 1, &unicode, 1) > 0) {
-				id = static_cast<KeyID>(unicode);
-			}
-			else {
-				id = static_cast<KeyID>(c) & 0xffu;
-			}
-		}
+	if (id == kKeyNone && wc != 0) {
+		// UTF16
+		id = static_cast<KeyID>(wc) & 0xffffu;
 	}
 
 	// set modifier mask
