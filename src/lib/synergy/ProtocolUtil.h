@@ -86,12 +86,16 @@ private:
     /**
      * @brief Handles 1,2, or 4 byte Integers
      */
-    static void           readInt(synergy::IStream*, UInt32, void*);
+    static UInt8          read1ByteInt(synergy::IStream * stream);
+    static UInt16         read2BytesInt(synergy::IStream * stream);
+    static UInt32         read4BytesInt(synergy::IStream * stream);
 
     /**
      * @brief Handles a Vector of integers
      */
-    static void           readVectorInt(synergy::IStream*, UInt32, void*);
+    static void           readVector1ByteInt(synergy::IStream*, std::vector<UInt8>&);
+    static void           readVector2BytesInt(synergy::IStream*, std::vector<UInt16>&);
+    static void           readVector4BytesInt(synergy::IStream*, std::vector<UInt32>&);
 
     /**
      * @brief Handles an array of bytes

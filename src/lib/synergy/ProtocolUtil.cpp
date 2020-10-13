@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <array>
 #include "synergy/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "base/Log.h"
@@ -60,7 +61,7 @@ ProtocolUtil::readf(synergy::IStream* stream, const char* fmt, ...)
         catch (XIO&) {
             result = false;
         }
-        catch (std::bad_alloc & exception) {
+        catch (std::bad_alloc&) {
             result = false;
         }
         va_end(args);
@@ -113,14 +114,52 @@ ProtocolUtil::vreadf(synergy::IStream* stream, const char* fmt, va_list args)
             switch (*fmt) {
             case 'i': {
                 void* destination = va_arg(args, void*);
-                readInt(stream, len, destination);
+                switch (len) {
+                    case 1:
+                        // 1 byte integer
+                        *static_cast<UInt8*>(destination) = read1ByteInt(stream);
+                        break;
+                    case 2:
+                        // 2 byte integer
+                        *static_cast<UInt16*>(destination) = read2BytesInt(stream);
+                        break;
+                    case 4:
+                        // 4 byte integer
+                        *static_cast<UInt32*>(destination) = read4BytesInt(stream);
+                        break;
+                    default:
+                        //the length is wrong
+                        LOG((CLOG_ERR "read: length to be read is wrong: '%d' should be 1,2, or 4", len));
+                        assert(false); //assert for debugging
+                        break;
+                }
                 break;
             }
+
             case 'I': {
                 void* destination = va_arg(args, void*);
-                readVectorInt(stream, len, destination);
+                switch (len) {
+                    case 1:
+                        // 1 byte integer
+                        readVector1ByteInt(stream, *static_cast<std::vector<UInt8>*>(destination));
+                        break;
+                    case 2:
+                        // 2 byte integer
+                        readVector2BytesInt(stream, *static_cast<std::vector<UInt16>*>(destination));
+                        break;
+                    case 4:
+                        // 4 byte integer
+                        readVector4BytesInt(stream, *static_cast<std::vector<UInt32>*>(destination));
+                        break;
+                    default:
+                        //the length is wrong
+                        LOG((CLOG_ERR "read: length to be read is wrong: '%d' should be 1,2, or 4", len));
+                        assert(false); //assert for debugging
+                        break;
+                }
                 break;
             }
+
             case 's': {
                 String* destination = va_arg(args, String*);
                 readBytes(stream, len, destination);
@@ -416,115 +455,67 @@ ProtocolUtil::read(synergy::IStream* stream, void* vbuffer, UInt32 count)
     }
 }
 
-void ProtocolUtil::readInt(synergy::IStream * stream, UInt32 len, void* destination) {
-    // check for valid length
-    if (len == 4 || len == 2 || len == 1) {
+UInt8 ProtocolUtil::read1ByteInt(synergy::IStream * stream)
+{
+    const UInt32 BufferSize = 1;
+    std::array<UInt8, 1> buffer = {};
+    read(stream, buffer.data(), BufferSize);
 
-        static const int buffer_size = 4;
-        // read the data
-        UInt8 buffer[buffer_size];
-        //Read the buffer till the len or buffers_size, which ever is smaller
-        read(stream, buffer, len > buffer_size ? buffer_size : len);
+    UInt8 Result = buffer[0];
+    LOG((CLOG_DEBUG2 "readf: read 1 byte integer: %d (0x%x)", Result, Result));
 
-        switch (len) {
-            case 1:
-                // 1 byte integer
-                *static_cast<UInt8*>(destination) = buffer[0];
-                LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)",
-                        len,
-                        *static_cast<UInt8*>(destination),
-                        *static_cast<UInt8*>(destination)));
-                break;
+    return Result;
+}
 
-            case 2:
-                // 2 byte integer
-                *static_cast<UInt16*>(destination) =
-                        static_cast<UInt16>(
-                                (static_cast<UInt16>(buffer[0]) << 8) |
-                                static_cast<UInt16>(buffer[1]));
-                LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)",
-                            len,
-                            *static_cast<UInt16*>(destination),
-                            *static_cast<UInt16*>(destination)));
-                break;
+UInt16 ProtocolUtil::read2BytesInt(synergy::IStream * stream)
+{
+    const UInt32 BufferSize = 2;
+    std::array<UInt8, BufferSize> buffer = {};
+    read(stream, buffer.data(), BufferSize);
 
-            case 4:
-                // 4 byte integer
-                *static_cast<UInt32*>(destination) =
-                        (static_cast<UInt32>(buffer[0]) << 24) |
-                        (static_cast<UInt32>(buffer[1]) << 16) |
-                        (static_cast<UInt32>(buffer[2]) <<  8) |
-                        static_cast<UInt32>(buffer[3]);
-                LOG((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)",
-                            len,
-                            *static_cast<UInt32*>(destination),
-                            *static_cast<UInt32*>(destination)));
-                break;
-        }
-    }
-    else {
-        //the length is wrong
-        LOG((CLOG_ERR "read: length to be read is wrong: '%d' should be 1,2, or 4", len));
-        assert(false); //assert for debugging
+    UInt16 Result = (static_cast<UInt16>(buffer[0]) << 8) | static_cast<UInt16>(buffer[1]);
+    LOG((CLOG_DEBUG2 "readf: read 2 byte integer: %d (0x%x)", Result, Result));
+
+    return Result;
+}
+
+UInt32 ProtocolUtil::read4BytesInt(synergy::IStream * stream)
+{
+    const int BufferSize = 4;
+    std::array<UInt8, BufferSize> buffer = {};
+    read(stream, buffer.data(), BufferSize);
+
+    UInt32 Result = (static_cast<UInt32>(buffer[0]) << 24) |
+                    (static_cast<UInt32>(buffer[1]) << 16) |
+                    (static_cast<UInt32>(buffer[2]) <<  8) |
+                    (static_cast<UInt32>(buffer[3]));
+
+    LOG((CLOG_DEBUG2 "readf: read 4 byte integer: %d (0x%x)", Result, Result));
+
+    return Result;
+}
+
+void ProtocolUtil::readVector1ByteInt(synergy::IStream* stream, std::vector<UInt8>& destination)
+{
+    UInt32 size = read4BytesInt(stream);
+    for (UInt32 i = 0; i < size; ++i) {
+        destination.push_back(read1ByteInt(stream));
     }
 }
 
-void ProtocolUtil::readVectorInt(synergy::IStream * stream, UInt32 len, void* destination) {
-    // check for valid length
-    assert(len == 1 || len == 2 || len == 4);
+void ProtocolUtil::readVector2BytesInt(synergy::IStream* stream, std::vector<UInt16>& destination)
+{
+    UInt32 size = read4BytesInt(stream);
+    for (UInt32 i = 0; i < size; ++i) {
+        destination.push_back(read2BytesInt(stream));
+    }
+}
 
-    // read the vector length
-    UInt8 buffer[4];
-    read(stream, buffer, 4);
-    UInt32 n = (static_cast<UInt32>(buffer[0]) << 24) |
-               (static_cast<UInt32>(buffer[1]) << 16) |
-               (static_cast<UInt32>(buffer[2]) <<  8) |
-               static_cast<UInt32>(buffer[3]);
-
-    // convert it
-    switch (len) {
-        case 1:
-            // 1 byte integer
-            for (UInt32 i = 0; i < n; ++i) {
-                read(stream, buffer, 1);
-                static_cast<std::vector<UInt8>*>(destination)->push_back(buffer[0]);
-                LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)",
-                     len, i,
-                     static_cast<std::vector<UInt8>*>(destination)->back(),
-                     static_cast<std::vector<UInt8>*>(destination)->back()));
-            }
-            break;
-
-        case 2:
-            // 2 byte integer
-            for (UInt32 i = 0; i < n; ++i) {
-                read(stream, buffer, 2);
-                static_cast<std::vector<UInt16>*>(destination)->push_back(
-                        static_cast<UInt16>(
-                                (static_cast<UInt16>(buffer[0]) << 8) |
-                                static_cast<UInt16>(buffer[1])));
-                LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)",
-                        len, i,
-                        static_cast<std::vector<UInt16>*>(destination)->back(),
-                        static_cast<std::vector<UInt16>*>(destination)->back()));
-            }
-            break;
-
-        case 4:
-            // 4 byte integer
-            for (UInt32 i = 0; i < n; ++i) {
-                read(stream, buffer, 4);
-                static_cast<std::vector<UInt32>*>(destination)->push_back(
-                        (static_cast<UInt32>(buffer[0]) << 24) |
-                        (static_cast<UInt32>(buffer[1]) << 16) |
-                        (static_cast<UInt32>(buffer[2]) <<  8) |
-                        static_cast<UInt32>(buffer[3]));
-                LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)",
-                        len, i,
-                        static_cast<std::vector<UInt32>*>(destination)->back(),
-                        static_cast<std::vector<UInt32>*>(destination)->back()));
-            }
-            break;
+void ProtocolUtil::readVector4BytesInt(synergy::IStream* stream, std::vector<UInt32>& destination)
+{
+    UInt32 size = read4BytesInt(stream);
+    for (UInt32 i = 0; i < size; ++i) {
+        destination.push_back(read4BytesInt(stream));
     }
 }
 
@@ -533,12 +524,7 @@ void ProtocolUtil::readBytes(synergy::IStream * stream, UInt32 len, String* dest
 
     // read the string length
     UInt8 buffer[128];
-    read(stream, buffer, 4);
-    len = (static_cast<UInt32>(buffer[0]) << 24) |
-             (static_cast<UInt32>(buffer[1]) << 16) |
-             (static_cast<UInt32>(buffer[2]) <<  8) |
-             static_cast<UInt32>(buffer[3]);
-
+    len = read4BytesInt(stream);
     // use a fixed size buffer if its big enough
     const bool useFixed = (len <= sizeof(buffer));
 
