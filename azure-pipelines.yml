@@ -7,6 +7,9 @@ jobs:
     pool:
       vmImage: 'ubuntu-16.04'
 
+    #As apparently the trigger set to none doesn't work
+    condition: eq(variables['Build.Reason'], 'Manual')
+
     strategy:
       matrix:
         ubuntu1604:
@@ -90,6 +93,9 @@ jobs:
     pool:
       vmImage: $[ variables['image'] ]
 
+    #As apparently the trigger set to none doesn't work
+    condition: eq(variables['Build.Reason'], 'Manual')
+
     variables:
       QT_PATH: '/usr/local/opt/qt/bin'
 
@@ -111,6 +117,9 @@ jobs:
 
     pool:
       vmImage: $[ variables['image'] ]
+
+    #As apparently the trigger set to none doesn't work
+    condition: eq(variables['Build.Reason'], 'Manual')
 
     variables:
       QT_VERSION: '5.12.6'
