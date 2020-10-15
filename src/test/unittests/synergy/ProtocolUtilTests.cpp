@@ -262,7 +262,7 @@ TEST_P(ReadfIntAndStringTest, readf_int_and_string)
         )
         .WillOnce(
             DoAll(
-                SetValueToVoidPointerArg0(StringSize.data(), sizeof(StringSize.size())),
+                SetValueToVoidPointerArg0(StringSize.data(), StringSize.size()),
                 Return(StringSize.size())
             )
          )
