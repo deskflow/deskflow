@@ -234,7 +234,6 @@ void AppConfig::loadSettings()
         m_ElevateMode        = static_cast<ElevateMode>(elevateMode.toInt());
     }
 
-    m_Edition                   = static_cast<Edition>(loadSetting(kEditionSetting, kUnregistered).toInt());
     m_ActivateEmail             = loadSetting(kActivateEmail, "").toString();
     m_CryptoEnabled             = loadSetting(kCryptoEnabled, true).toBool();
     m_AutoHide                  = loadSetting(kAutoHide, false).toBool();
@@ -258,6 +257,7 @@ void AppConfig::loadSettings()
 
     if (updateSerial) {
         m_Serialkey                 = loadSetting(kSerialKey, "").toString().trimmed();
+        m_Edition                   = static_cast<Edition>(loadSetting(kEditionSetting, kUnregistered).toInt());
     }
 
     //Set the default path of the TLS certificate file in the users DIR
