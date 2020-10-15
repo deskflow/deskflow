@@ -61,7 +61,7 @@ ProtocolUtil::readf(synergy::IStream* stream, const char* fmt, ...)
         catch (XIO&) {
             result = false;
         }
-        catch (std::bad_alloc&) {
+        catch (const std::bad_alloc&) {
             result = false;
         }
         va_end(args);
@@ -473,7 +473,7 @@ UInt16 ProtocolUtil::read2BytesInt(synergy::IStream * stream)
     std::array<UInt8, BufferSize> buffer = {};
     read(stream, buffer.data(), BufferSize);
 
-    UInt16 Result = (static_cast<UInt16>(buffer[0]) << 8) | static_cast<UInt16>(buffer[1]);
+    UInt16 Result = static_cast<UInt16>((static_cast<UInt16>(buffer[0]) << 8) | static_cast<UInt16>(buffer[1]));
     LOG((CLOG_DEBUG2 "readf: read 2 byte integer: %d (0x%x)", Result, Result));
 
     return Result;
