@@ -9,12 +9,16 @@ Bug fixes:
 - #6342 Updated copyright year in version to use build date
 - #6771 Added Ubuntu 16 to CI/CD
 - #6804 Synergy loses edition when creating a System scope config
+- #6660 + #6582 Add missing XAtom for utf-8 handling with Xorg
 
 
 Enhancements:
 - #6750 Integrate SonarCloud for static analysis and test coverage
 - #6792 License key expiry
 - #6799 Synergy "Business" edition
+- #6803 Update Synergy icons
+- #6800 Update behaviour when unregistered
+- #6806 Move to Github Action for general PR builds and tests
 
 v1.12.0-stable
 ===========

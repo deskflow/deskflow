@@ -156,55 +156,74 @@ TEST(SerialKeyTests, daysLeft_expiredV2TrialBasicSerial_returnZero)
 //Subscription license tests
 TEST(SerialKeyTests, isExpiring_validV2SubscriptionBasicSerial_returnFalse)
 {
-	// {v2;subscription;basic;Bob;1;email;company name;1;86400}
-	SerialKey serial("7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B313B38363430307D");
-	EXPECT_EQ(false, serial.isTrial());
-	EXPECT_EQ(true, serial.isTemporary());
-	EXPECT_FALSE(serial.isExpiring(0));
-	EXPECT_EQ(kBasic, serial.edition());
+    // {v2;subscription;basic;Bob;1;email;company name;1;86400}
+    SerialKey serial("7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B313B38363430307D");
+    EXPECT_EQ(false, serial.isTrial());
+    EXPECT_EQ(true, serial.isTemporary());
+    EXPECT_FALSE(serial.isExpiring(0));
+    EXPECT_EQ(kBasic, serial.edition());
 }
 
 TEST(SerialKeyTests, isExpiring_expiringV2SubscriptionBasicSerial_returnTrue)
 {
-	// {v2;subscription;basic;Bob;1;email;company name;0;86400}
-	SerialKey serial("7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
-	EXPECT_EQ(false, serial.isTrial());
-	EXPECT_EQ(true, serial.isTemporary());
-	EXPECT_EQ(true, serial.isExpiring(1));
+    // {v2;subscription;basic;Bob;1;email;company name;0;86400}
+    SerialKey serial("7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
+    EXPECT_EQ(false, serial.isTrial());
+    EXPECT_EQ(true, serial.isTemporary());
+    EXPECT_EQ(true, serial.isExpiring(1));
 }
 
 TEST(SerialKeyTests, isExpired_expiredV2SubscriptionBasicSerial_returnTrue)
 {
-	// {v2;subscription;basic;Bob;1;email;company name;0;86400}
-	SerialKey serial("7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
-	EXPECT_EQ(false, serial.isTrial());
-	EXPECT_EQ(true, serial.isTemporary());
-	EXPECT_EQ(true, serial.isExpired(86401));
+    // {v2;subscription;basic;Bob;1;email;company name;0;86400}
+    SerialKey serial("7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
+    EXPECT_EQ(false, serial.isTrial());
+    EXPECT_EQ(true, serial.isTemporary());
+    EXPECT_EQ(true, serial.isExpired(86401));
 }
 
 //toString method tests
 TEST(SerialKeyTests, toStringV2SubscriptionBasicSerialKey)
 {
-	//{v2;subscription;basic;Bob;1;email;company name;0;86400}
-	const std::string Expected = "7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D";
-	SerialKey serial(Expected);
-	EXPECT_EQ(Expected, serial.toString());
+    //{v2;subscription;basic;Bob;1;email;company name;0;86400}
+    const std::string Expected = "7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D";
+    SerialKey serial(Expected);
+    EXPECT_EQ(Expected, serial.toString());
 }
 
 TEST(SerialKeyTests, toStringV2TrialBasicSerialKey)
 {
-	//{v2;trial;basic;Bob;1;email;company name;0;86400}
-	const std::string Expected = "7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D";
-	SerialKey serial(Expected);
-	EXPECT_EQ(Expected, serial.toString());
+    //{v2;trial;basic;Bob;1;email;company name;0;86400}
+    const std::string Expected = "7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D";
+    SerialKey serial(Expected);
+    EXPECT_EQ(Expected, serial.toString());
 }
 
 TEST(SerialKeyTests, toStringV1BasicSerialKey)
 {
-	//{v1;basic;Bob;1;email;company name;0;0}
-	const std::string Expected = "7B76313B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B307D";
-	SerialKey serial(Expected);
-	EXPECT_EQ(Expected, serial.toString());
+    //{v1;basic;Bob;1;email;company name;0;0}
+    const std::string Expected = "7B76313B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B307D";
+    SerialKey serial(Expected);
+    EXPECT_EQ(Expected, serial.toString());
+}
+
+TEST(SerialKeyTests, IsValidKey_false)
+{
+    //{v1;basic;Bob;1;email;company name;0;0}
+    SerialKey serial(kUnregistered);
+    EXPECT_EQ(false, serial.isValid());
+}
+
+TEST(SerialKeyTests, IsValidKey_true)
+{
+    SerialKey serial(kBasic);
+    EXPECT_EQ(true, serial.isValid());
+}
+
+TEST(SerialKeyTests, IsValidExpiredKey_false)
+{
+    SerialKey serial("7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
+    EXPECT_EQ(false, serial.isValid());
 }
 
 
