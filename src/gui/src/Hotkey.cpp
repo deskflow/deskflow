@@ -68,8 +68,20 @@ void Hotkey::saveSettings(QSettings& settings) const
 
 QTextStream& operator<<(QTextStream& outStream, const Hotkey& hotkey)
 {
-    for (int i = 0; i < hotkey.actions().size(); i++)
-        outStream << "\t" << hotkey.text() << " = " << hotkey.actions()[i] << endl;
+    // Don't write config if there are no actions
+    if (hotkey.actions().size() == 0) {
+        return outStream;
+    }
+
+    outStream << "\t" << hotkey.text() << " = ";
+    for (int i = 0; i < hotkey.actions().size(); i++) {
+        outStream << hotkey.actions()[i];
+        if (i != hotkey.actions().size() - 1) {
+            outStream << ", ";
+        }
+    }
+
+    outStream << "\n";
 
     return outStream;
 }

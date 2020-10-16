@@ -316,5 +316,5 @@ TEST(HotkeyToTexStreamTests, KeysMultipleAction)
         }
     };
     ASSERT_EQ(hotkeyToStringViaTextStream(createHotkey(hotkey)),
-              "\tkeystroke(a+b) = keyDown(z,*)\n\tkeystroke(a+b) = switchToScreen(test_screen)\n");
+              "\tkeystroke(a+b) = keyDown(z,*), switchToScreen(test_screen)\n");
 }
