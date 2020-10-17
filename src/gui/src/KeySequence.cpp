@@ -55,6 +55,8 @@ static const struct
     { Qt::Key_Help,         "Help" },
     { Qt::Key_Enter,        "KP_Enter" },
     { Qt::Key_Clear,        "Clear" },
+    { Qt::Key_Comma,        "Comma" },
+    { Qt::Key_Semicolon,    "Semicolon" },
 
     { Qt::Key_Back,         "WWWBack" },
     { Qt::Key_Forward,      "WWWForward" },
@@ -211,22 +213,21 @@ QString KeySequence::keyToString(int key)
     // treat key pad like normal keys (FIXME: we should have another lookup table for keypad keys instead)
      key &= ~Qt::KeypadModifier;
 
+    // a special key?
+    int i = 0;
+    while (keyname[i].name) {
+        if (key == keyname[i].key)
+            return QString::fromUtf8(keyname[i].name);
+        i++;
+    }
+
     // a printable 7 bit character?
-     if (key < 0x80 && key != Qt::Key_Space)
+     if (key < 0x80)
          return QChar(key & 0x7f).toLower();
 
     // a function key?
     if (key >= Qt::Key_F1 && key <= Qt::Key_F35)
         return QString::fromUtf8("F%1").arg(key - Qt::Key_F1 + 1);
-
-    // a special key?
-    int i=0;
-    while (keyname[i].name)
-    {
-        if (key == keyname[i].key)
-            return QString::fromUtf8(keyname[i].name);
-        i++;
-    }
 
     // representable in ucs2?
     if (key < 0x10000)

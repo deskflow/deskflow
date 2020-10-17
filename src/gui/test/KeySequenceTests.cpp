@@ -133,9 +133,9 @@ TEST(KeySequenceTests, ToString)
     ASSERT_EQ(keySequenceToString({{Qt::Key_A, 0}, {Qt::Key_B, 0}}),
               "a+b");
     ASSERT_EQ(keySequenceToString({{Qt::Key_A, 0}, {Qt::Key_Comma, 0}, {Qt::Key_B, 0}}),
-              "a+,+b");
+              "a+Comma+b");
     ASSERT_EQ(keySequenceToString({{Qt::Key_A, 0}, {Qt::Key_Semicolon, 0}, {Qt::Key_B, 0}}),
-              "a+;+b");
+              "a+Semicolon+b");
     ASSERT_EQ(keySequenceToString({{Qt::Key_A, 0}, {Qt::Key_Shift, Qt::ShiftModifier},
                                    {Qt::Key_0, Qt::ShiftModifier}}),
               "a+Shift+0");

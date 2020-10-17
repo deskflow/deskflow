@@ -300,7 +300,7 @@ TEST(HotkeyToTexStreamTests, KeysCommaSingleAction)
         }
     };
     ASSERT_EQ(hotkeyToStringViaTextStream(createHotkey(hotkey)),
-              "\tkeystroke(a+,+b) = keyDown(z,*)\n");
+              "\tkeystroke(a+Comma+b) = keyDown(z,*)\n");
 }
 
 TEST(HotkeyToTexStreamTests, KeysMultipleAction)
