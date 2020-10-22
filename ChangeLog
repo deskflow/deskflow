@@ -10,7 +10,7 @@ Bug fixes:
 - #6771 Added Ubuntu 16 to CI/CD
 - #6804 Synergy loses edition when creating a System scope config
 - #6660 + #6582 Add missing XAtom for utf-8 handling with Xorg
-
+- #6814 The system asks to save twice. 
 
 Enhancements:
 - #6750 Integrate SonarCloud for static analysis and test coverage
