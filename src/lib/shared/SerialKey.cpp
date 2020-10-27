@@ -171,6 +171,20 @@ SerialKey::daysLeft(time_t currentTime) const
     return timeLeft / day + daysLeft;
 }
 
+std::chrono::milliseconds
+SerialKey::getMillisecondsLeft(time_t time) const
+{
+    std::chrono::milliseconds TimeLeft{-1};
+
+    if (isTemporary()){
+        auto Expire = std::chrono::system_clock::from_time_t(m_expireTime);
+        auto Target = std::chrono::system_clock::from_time_t(time);
+        TimeLeft = std::chrono::duration_cast<std::chrono::milliseconds>(Expire - Target);
+    }
+
+    return TimeLeft;
+}
+
 std::string
 SerialKey::email() const
 {
