@@ -80,6 +80,14 @@ static const char* barrierIconFiles[] =
 #endif
 };
 
+static const char* barrierIconNames[] =
+{
+    "barrier-disconnected",
+    "barrier-disconnected",
+    "barrier-connected",
+    "barrier-transfering"
+};
+
 static const char* barrierLargeIcon = ":/res/icons/256x256/barrier.ico";
 
 MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
@@ -296,7 +304,7 @@ void MainWindow::saveSettings()
 void MainWindow::setIcon(qBarrierState state)
 {
     if (m_pTrayIcon) {
-        QIcon icon = QIcon(barrierIconFiles[state]);
+        QIcon icon = QIcon::fromTheme(barrierIconNames[state], QIcon(barrierIconFiles[state]));
 #if defined(Q_OS_MAC)
         icon.setIsMask(true);
 #endif
