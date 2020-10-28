@@ -35,21 +35,3 @@ jobs:
 
     - name: Run unit test
       run: ./build/bin/unittests
-
-  build_armhf:
-    runs-on: [self-hosted, armhf]
-    env:
-      GIT_COMMIT: ${{ github.sha }}
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Build
-        run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
-          . ./version
-          make -j3
-
-      - name: Run unit test
-        run: ./build/bin/unittests
