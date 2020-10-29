@@ -248,13 +248,15 @@ if (UNIX)
             list (APPEND libs Xi)
         endif()
 
-		set (DnsSdlib "dns_sd.h")
-		set (CMAKE_EXTRA_INCLUDE_FILES "${CMAKE_EXTRA_INCLUDE_FILES};${DnsSdlib}")
-		check_include_files ("${DnsSdlib}" HAVE_DNS_SD)
-		if (NOT HAVE_DNS_SD)
+       if (NOT SYNERGY_ENTERPRISE)
+          set (DnsSdlib "dns_sd.h")
+          set (CMAKE_EXTRA_INCLUDE_FILES "${CMAKE_EXTRA_INCLUDE_FILES};${DnsSdlib}")
+          check_include_files ("${DnsSdlib}" HAVE_DNS_SD)
+          if (NOT HAVE_DNS_SD)
             message (FATAL_ERROR "Missing header: " ${DnsSdlib})
-        endif()
-    endif()
+         endif()
+       endif()
+   endif()
 
     # For config.h, set some static values; it may be a good idea to make
     # these values dynamic for non-standard UNIX compilers.
