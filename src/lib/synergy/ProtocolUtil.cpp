@@ -144,7 +144,7 @@ ProtocolUtil::vwritef(synergy::IStream* stream,
         LOG((CLOG_DEBUG2 "wrote %d bytes", size));
     }
     catch (const XBase& exception) {
-        LOG((CLOG_DEBUG2 "Exception <%s> during wrote %d bytes into stream", size, exception.what()));
+        LOG((CLOG_DEBUG2 "Exception <%s> during wrote %d bytes into stream", exception.what(), size));
         throw;
     }
 }
