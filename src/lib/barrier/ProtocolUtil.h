@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -38,7 +38,7 @@ public:
     regular characters and format specifiers.  Format specifiers
     begin with \%.  All characters not part of a format specifier
     are regular and are transmitted unchanged.
-    
+
     Format specifiers are:
     - \%\%   -- literal `\%'
     - \%1i  -- converts integer argument to 1 byte integer
@@ -58,7 +58,7 @@ public:
     Read formatted binary data from a buffer.  This performs the
     reverse operation of writef().  Returns true if the entire
     format was successfully parsed, false otherwise.
-    
+
     Format specifiers are:
     - \%\%   -- read (and discard) a literal `\%'
     - \%1i  -- reads a 1 byte integer; argument is a SInt32* or UInt32*

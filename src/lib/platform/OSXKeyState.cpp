@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -97,7 +97,7 @@ static const KeyEntry    s_controlKeys[] = {
     { kKeyKP_Divide,    kVK_ANSI_KeypadDivide },
     { kKeyKP_Subtract,    kVK_ANSI_KeypadMinus },
     { kKeyKP_Enter,        kVK_ANSI_KeypadEnter },
-    
+
     // virtual key 110 is fn+enter and i have no idea what that's supposed
     // to map to.  also the enter key with numlock on is a modifier but i
     // don't know which.
@@ -118,7 +118,7 @@ static const KeyEntry    s_controlKeys[] = {
     // toggle modifiers
     { kKeyNumLock,        s_numLockVK },
     { kKeyCapsLock,        s_capsLockVK },
-    
+
     { kKeyMissionControl, s_missionControlVK },
     { kKeyLaunchpad, s_launchpadVK },
     { kKeyBrightnessUp,  s_brightnessUp },
@@ -163,7 +163,7 @@ OSXKeyState::init()
     // build virtual key map
     for (size_t i = 0; i < sizeof(s_controlKeys) / sizeof(s_controlKeys[0]);
         ++i) {
-        
+
         m_virtualKeyMap[s_controlKeys[i].m_virtualKey] =
             s_controlKeys[i].m_keyID;
     }
@@ -218,11 +218,11 @@ OSXKeyState::mapModifiersToCarbon(UInt32 mask) const
     if ((mask & kCGEventFlagMaskNumericPad) != 0) {
         outMask |= s_osxNumLock;
     }
-    
+
     return outMask;
 }
 
-KeyButton 
+KeyButton
 OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
                 KeyModifierMask* maskOut, CGEventRef event) const
 {
@@ -257,7 +257,7 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
     }
 
     // get keyboard info
-    TISInputSourceRef currentKeyboardLayout = TISCopyCurrentKeyboardLayoutInputSource(); 
+    TISInputSourceRef currentKeyboardLayout = TISCopyCurrentKeyboardLayoutInputSource();
 
     if (currentKeyboardLayout == NULL) {
         return kKeyNone;
@@ -342,27 +342,27 @@ CGEventFlags
 OSXKeyState::getModifierStateAsOSXFlags()
 {
     CGEventFlags modifiers = CGEventFlags(0);
-    
+
     if (m_shiftPressed) {
         modifiers |= CGEventFlags(kCGEventFlagMaskShift);
     }
-    
+
     if (m_controlPressed) {
         modifiers |= CGEventFlags(kCGEventFlagMaskControl);
     }
-    
+
     if (m_altPressed) {
         modifiers |= CGEventFlags(kCGEventFlagMaskAlternate);
     }
-    
+
     if (m_superPressed) {
         modifiers |= CGEventFlags(kCGEventFlagMaskCommand);
     }
-    
+
     if (m_capsPressed) {
         modifiers |= CGEventFlags(kCGEventFlagMaskAlphaShift);
     }
-    
+
     return modifiers;
 }
 
@@ -404,12 +404,12 @@ OSXKeyState::pollActiveGroup() const
     TISInputSourceRef keyboardLayout = TISCopyCurrentKeyboardLayoutInputSource();
     CFDataRef id = (CFDataRef)TISGetInputSourceProperty(
                         keyboardLayout, kTISPropertyInputSourceID);
-    
+
     GroupMap::const_iterator i = m_groupMap.find(id);
     if (i != m_groupMap.end()) {
         return i->second;
     }
-    
+
     LOG((CLOG_DEBUG "can't get the active group, use the first group instead"));
 
     return 0;
@@ -451,7 +451,7 @@ OSXKeyState::getKeyMap(barrier::KeyMap& keyMap)
 
         const void* resource;
         bool layoutValid = false;
-        
+
         // add regular keys
         // try uchr resource first
         CFDataRef resourceRef = (CFDataRef)TISGetInputSourceProperty(
@@ -479,19 +479,19 @@ static io_connect_t getEventDriver(void)
     static mach_port_t sEventDrvrRef = 0;
     mach_port_t masterPort, service, iter;
     kern_return_t kr;
-    
+
     if (!sEventDrvrRef) {
         // Get master device port
         kr = IOMasterPort(bootstrap_port, &masterPort);
         assert(KERN_SUCCESS == kr);
-        
+
         kr = IOServiceGetMatchingServices(masterPort,
                 IOServiceMatching(kIOHIDSystemClass), &iter);
         assert(KERN_SUCCESS == kr);
-        
+
         service = IOIteratorNext(iter);
         assert(service);
-        
+
         kr = IOServiceOpen(service, mach_task_self(),
                 kIOHIDParamConnectType, &sEventDrvrRef);
         assert(KERN_SUCCESS == kr);
@@ -499,7 +499,7 @@ static io_connect_t getEventDriver(void)
         IOObjectRelease(service);
         IOObjectRelease(iter);
     }
-    
+
     return sEventDrvrRef;
 }
 
@@ -508,7 +508,7 @@ OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
                 const bool postDown)
 {
     static UInt32 modifiers = 0;
-    
+
     NXEventData event;
     IOGPoint loc = { 0, 0 };
     UInt32 modifiersDelta = 0;
@@ -545,7 +545,7 @@ OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
                 m_capsPressed = postDown;
                 break;
         }
-        
+
         // update the modifier bit
         if (postDown) {
             modifiers |= modifiersDelta;
@@ -553,7 +553,7 @@ OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
         else {
             modifiers &= ~modifiersDelta;
         }
-            
+
         kern_return_t kr;
         event.key.keyCode = virtualKeyCode;
         kr = IOHIDPostEvent(getEventDriver(), NX_FLAGSCHANGED, loc,
@@ -579,11 +579,11 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
 {
     switch (keystroke.m_type) {
     case Keystroke::kButton: {
-        
+
         KeyButton button = keystroke.m_data.m_button.m_button;
         bool keyDown = keystroke.m_data.m_button.m_press;
         CGKeyCode virtualKey = mapKeyButtonToVirtualKey(button);
-        
+
         LOG((CLOG_DEBUG1
             "  button=0x%04x virtualKey=0x%04x keyDown=%s",
             button, virtualKey, keyDown ? "down" : "up"));
@@ -767,7 +767,7 @@ OSXKeyState::mapBarrierHotKeyToMac(KeyID key, KeyModifierMask mask,
         return false;
     }
     macVirtualKey = mapKeyButtonToVirtualKey(button);
-    
+
     // calculate modifier mask
     macModifierMask = 0;
     if ((mask & KeyModifierShift) != 0) {
@@ -788,10 +788,10 @@ OSXKeyState::mapBarrierHotKeyToMac(KeyID key, KeyModifierMask mask,
     if ((mask & KeyModifierNumLock) != 0) {
         macModifierMask |= s_osxNumLock;
     }
-    
+
     return true;
 }
-                        
+
 void
 OSXKeyState::handleModifierKeys(void* target,
                 KeyModifierMask oldMask, KeyModifierMask newMask)
@@ -859,7 +859,7 @@ OSXKeyState::getGroups(GroupList& groups) const
     groups.clear();
     for (CFIndex i = 0; i < n; ++i) {
         bool addToGroups = true;
-        TISInputSourceRef keyboardLayout = 
+        TISInputSourceRef keyboardLayout =
             (TISInputSourceRef)CFArrayGetValueAtIndex(kbds, i);
 
         if (addToGroups)

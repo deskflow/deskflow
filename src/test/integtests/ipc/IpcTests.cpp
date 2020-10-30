@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -46,7 +46,7 @@ class IpcTests : public ::testing::Test
 public:
     IpcTests();
     virtual ~IpcTests();
-    
+
     void                connectToServer_handleMessageReceived(const Event&, void*);
     void                sendMessageToServer_serverHandleMessageReceived(const Event&, void*);
     void                sendMessageToClient_serverHandleClientConnected(const Event&, void*);
@@ -76,15 +76,15 @@ TEST_F(IpcTests, connectToServer)
         m_events.forIpcServer().messageReceived(), &server,
         new TMethodEventJob<IpcTests>(
         this, &IpcTests::connectToServer_handleMessageReceived));
-    
+
     IpcClient client(&m_events, &socketMultiplexer, TEST_IPC_PORT);
     client.connect();
-    
+
     m_events.initQuitTimeout(5);
     m_events.loop();
     m_events.removeHandler(m_events.forIpcServer().messageReceived(), &server);
     m_events.cleanupQuitTimeout();
-    
+
     EXPECT_EQ(true, m_connectToServer_helloMessageReceived);
     EXPECT_EQ(true, m_connectToServer_hasClientNode);
 }
@@ -94,13 +94,13 @@ TEST_F(IpcTests, sendMessageToServer)
     SocketMultiplexer socketMultiplexer;
     IpcServer server(&m_events, &socketMultiplexer, TEST_IPC_PORT);
     server.listen();
-    
+
     // event handler sends "test" command to server.
     m_events.adoptHandler(
         m_events.forIpcServer().messageReceived(), &server,
         new TMethodEventJob<IpcTests>(
         this, &IpcTests::sendMessageToServer_serverHandleMessageReceived));
-    
+
     IpcClient client(&m_events, &socketMultiplexer, TEST_IPC_PORT);
     client.connect();
     m_sendMessageToServer_client = &client;
@@ -128,7 +128,7 @@ TEST_F(IpcTests, sendMessageToClient)
 
     IpcClient client(&m_events, &socketMultiplexer, TEST_IPC_PORT);
     client.connect();
-    
+
     m_events.adoptHandler(
         m_events.forIpcClient().messageReceived(), &client,
         new TMethodEventJob<IpcTests>(

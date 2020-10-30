@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -37,7 +37,7 @@ extern "C" {
     typedef int CGSConnectionID;
     CGError CGSSetConnectionProperty(CGSConnectionID cid, CGSConnectionID targetCID, CFStringRef key, CFTypeRef value);
     int _CGSDefaultConnection();
-}    
+}
 
 
 template <class T>
@@ -98,10 +98,10 @@ public:
     virtual bool        isPrimary() const;
     virtual void        fakeDraggingFiles(DragFileList fileList);
     virtual std::string& getDraggingFilename();
-    
+
     const std::string& getDropTarget() const { return m_dropTarget; }
     void                waitForCarbonLoop() const;
-    
+
 protected:
     // IPlatformScreen overrides
     virtual void        handleSystemEvent(const Event&, void*);
@@ -112,7 +112,7 @@ private:
     void                updateScreenShape();
     void                updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
     void                postMouseEvent(CGPoint&) const;
-    
+
     // convenience function to send events
     void                sendEvent(Event::Type type, void* = NULL) const;
     void                sendClipboardEvent(Event::Type type, ClipboardID id) const;
@@ -124,16 +124,16 @@ private:
     // of the button pressed using the mac button mapping.
     bool                onMouseButton(bool pressed, UInt16 macButton);
     bool                onMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
-    
+
     void                constructMouseButtonEventMap();
 
     bool                onKey(CGEventRef event);
 
     void                onMediaKey(CGEventRef event);
-    
+
     bool                onHotKey(EventRef event) const;
-    
-    // Added here to allow the carbon cursor hack to be called. 
+
+    // Added here to allow the carbon cursor hack to be called.
     void                showCursor();
     void                hideCursor();
 
@@ -172,7 +172,7 @@ private:
     static pascal OSStatus
                         userSwitchCallback(EventHandlerCallRef nextHandler,
                            EventRef theEvent, void* inUserData);
-    
+
     // sleep / wakeup support
     void                watchSystemPowerThread(void*);
     static void            testCanceled(CFRunLoopTimerRef timer, void*info);
@@ -182,12 +182,12 @@ private:
                              void* messageArgument);
 
     void                handleConfirmSleep(const Event& event, void*);
-    
+
     // global hotkey operating mode
     static bool            isGlobalHotKeyOperatingModeAvailable();
     static void            setGlobalHotKeysEnabled(bool enabled);
     static bool            getGlobalHotKeysEnabled();
-    
+
     // Quartz event tap support
     static CGEventRef    handleCGInputEvent(CGEventTapProxy proxy,
                                            CGEventType type,
@@ -197,12 +197,12 @@ private:
                                                     CGEventType type,
                                                     CGEventRef event,
                                                     void* refcon);
-    
+
     // convert CFString to char*
     static char*        CFStringRefToUTF8String(CFStringRef aString);
-    
+
     void                getDropTargetThread(void*);
-    
+
 private:
     struct HotKeyItem {
     public:
@@ -225,13 +225,13 @@ private:
         kMouseButtonDown,
         kMouseButtonStateMax
     };
-    
+
 
     class MouseButtonState {
     public:
         void set(UInt32 button, EMouseButtonState state);
         bool any();
-        void reset(); 
+        void reset();
         void overwrite(UInt32 buttons);
 
         bool test(UInt32 button) const;
@@ -262,7 +262,7 @@ private:
     // mouse state
     mutable SInt32        m_xCursor, m_yCursor;
     mutable bool        m_cursorPosValid;
-    
+
     /* FIXME: this data structure is explicitly marked mutable due
        to a need to track the state of buttons since the remote
        side only lets us know of change events, and because the
@@ -321,7 +321,7 @@ private:
     // global hotkey operating mode
     static bool                s_testedForGHOM;
     static bool                s_hasGHOM;
-    
+
     // Quartz input event support
     CFMachPortRef            m_eventTapPort;
     CFRunLoopSourceRef        m_eventTapRLSR;
@@ -336,10 +336,10 @@ private:
     bool                    m_autoShowHideCursor;
 
     IEventQueue*            m_events;
-    
+
     Thread*                m_getDropTargetThread;
     std::string m_dropTarget;
-    
+
 #if defined(MAC_OS_X_VERSION_10_7)
     Mutex*                    m_carbonLoopMutex;
     CondVar<bool>*            m_carbonLoopReady;

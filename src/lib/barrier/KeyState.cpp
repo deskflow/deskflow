@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -529,7 +529,7 @@ KeyState::addActiveModifierCB(KeyID, SInt32 group,
         (keyItem.m_generates & context->m_mask) != 0) {
         context->m_activeModifiers.insert(std::make_pair(
                                 keyItem.m_generates, keyItem));
-    }    
+    }
 }
 
 void
@@ -581,10 +581,10 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
             LOG((CLOG_DEBUG1 "emulating media key"));
             fakeMediaKey(id);
         }
-        
+
         return;
     }
-    
+
     KeyButton localID = (KeyButton)(keyItem->m_button & kButtonMask);
     updateModifierKeyState(localID, oldActiveModifiers, m_activeModifiers);
     if (localID != 0) {

@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -192,7 +192,7 @@ TEST(ClipboardTests, marshall_withTextAdded_lastSizeCharIs14)
     EXPECT_EQ(14, (int)actual[11]);
 }
 
-// TODO: there's some integer -> char encoding going on here. i find it 
+// TODO: there's some integer -> char encoding going on here. i find it
 // hard to believe that the clipboard is the only thing doing this. maybe
 // we should refactor this stuff out of the clipboard.
 TEST(ClipboardTests, marshall_withTextSize285_sizeCharsValid)
@@ -212,12 +212,12 @@ TEST(ClipboardTests, marshall_withTextSize285_sizeCharsValid)
 
     String actual = clipboard.marshall();
 
-    // 4 asserts here, but that's ok because we're really just asserting 1 
+    // 4 asserts here, but that's ok because we're really just asserting 1
     // thing. the 32-bit size value is split into 4 chars. if the size is 285
-    // (29 more than the 8-bit max size), the last char "rolls over" to 29 
-    // (this is caused by a bit-wise & on 0xff and 8-bit truncation). each 
-    // char before the last stores a bit-shifted version of the number, each 
-    // 1 more power than the last, which is done by bit-shifting [0] by 24, 
+    // (29 more than the 8-bit max size), the last char "rolls over" to 29
+    // (this is caused by a bit-wise & on 0xff and 8-bit truncation). each
+    // char before the last stores a bit-shifted version of the number, each
+    // 1 more power than the last, which is done by bit-shifting [0] by 24,
     // [1] by 16, [2] by 8 ([3] is not bit-shifted).
     EXPECT_EQ(0, actual[8]); // 285 >> 24 = 285 / (256^3) = 0
     EXPECT_EQ(0, actual[9]); // 285 >> 16 = 285 / (256^2) = 0

@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -1776,7 +1776,7 @@ operator<<(std::ostream& s, const Config& config)
 
 		for (Config::link_const_iterator
 				link = config.beginNeighbor(*screen),
-				nend = config.endNeighbor(*screen); link != nend; ++link) {			
+				nend = config.endNeighbor(*screen); link != nend; ++link) {
 			s << "\t\t" << Config::dirName(link->first.getSide()) <<
 				Config::formatInterval(link->first.getInterval()) <<
 				" = " << link->second.getName().c_str() <<

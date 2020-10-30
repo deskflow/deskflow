@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2005 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -322,7 +322,7 @@ public:
     Converts a string into a modifier mask.  Returns \c true on success
     and \c false if the string cannot be parsed.  The modifiers plus any
     remaining leading and trailing whitespace is stripped from the input
-    string. 
+    string.
     */
     static bool            parseModifiers(String&, KeyModifierMask&);
 
@@ -355,7 +355,7 @@ private:
         kKeystrokeModify,        //!< Synthesize pressing a modifier
         kKeystrokeUnmodify        //!< Synthesize releasing a modifier
     };
-        
+
     // A list of ways to synthesize a KeyID
     typedef std::vector<KeyItemList> KeyEntryList;
 

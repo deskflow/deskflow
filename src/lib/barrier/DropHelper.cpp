@@ -1,11 +1,11 @@
 /*
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -39,7 +39,7 @@ DropHelper::writeToDir(const String& destination, DragFileList& fileList, String
         if (!file.is_open()) {
             LOG((CLOG_ERR "drop file failed: can not open %s", dropTarget.c_str()));
         }
-        
+
         file.write(data.c_str(), data.size());
         file.close();
 

@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -150,7 +150,7 @@ public:
 
     //! Store ClientListener pointer
     void                setListener(ClientListener* p) { m_clientListener = p; }
-    
+
     //@}
     //! @name accessors
     //@{
@@ -166,7 +166,7 @@ public:
     Set the \c list to the names of the currently connected clients.
     */
     void getClients(std::vector<std::string>& list) const;
-    
+
     //! Return true if recieved file size is valid
     bool                isReceivedFileSizeValid();
 
@@ -356,10 +356,10 @@ private:
 
     // force the cursor off of \p client
     void                forceLeaveClient(BaseClientProxy* client);
-    
+
     // thread funciton for sending file
     void                sendFileThread(void*);
-    
+
     // thread function for writing file to drop directory
     void                writeToDropDirThread(void*);
 
@@ -448,7 +448,7 @@ private:
     bool                m_switchNeedsShift;
     bool                m_switchNeedsControl;
     bool                m_switchNeedsAlt;
-    
+
     // relative mouse move option
     bool                m_relativeMoves;
 

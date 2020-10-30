@@ -121,12 +121,12 @@ std::string WinINetRequest::send()
     openSession();
     connect();
     openRequest();
-    
+
     std::string headers("Content-Type: text/html");
     if (!HttpSendRequest(m_request, headers.c_str(), (DWORD)headers.length(), NULL, NULL)) {
         throw XArch(new XArchEvalWindows());
     }
-    
+
     std::stringstream result;
     CHAR buffer[1025];
     DWORD read = 0;
@@ -170,7 +170,7 @@ WinINetRequest::connect()
         INTERNET_SERVICE_HTTP,
         NULL,
         NULL);
-    
+
     if (m_connect == NULL) {
         throw XArch(new XArchEvalWindows());
     }

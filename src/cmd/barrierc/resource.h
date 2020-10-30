@@ -26,7 +26,7 @@
 #define IDC_TASKBAR_LOG_LEVEL_DEBUG2    40015
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        109

@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -44,7 +44,7 @@ main(int argc, char **argv)
 
     Arch arch;
     arch.init();
-    
+
     Log log;
     log.setFilter(kDEBUG2);
 
@@ -67,7 +67,7 @@ main(int argc, char **argv)
     if (!lockFile.empty()) {
         unlock(lockFile);
     }
-  
+
   // gtest seems to randomly finish with error codes (e.g. -1, -1073741819)
   // even when no tests have failed. not sure what causes this, but it
   // happens on all platforms and  keeps leading to false positives.
@@ -80,7 +80,7 @@ void
 lock(string lockFile)
 {
     double start = ARCH->time();
-    
+
     // keep checking until timeout is reached.
     while ((ARCH->time() - start) < LOCK_TIMEOUT) {
 
@@ -102,7 +102,7 @@ lock(string lockFile)
 }
 
 void
-unlock(string lockFile) 
+unlock(string lockFile)
 {
     remove(lockFile.c_str());
 }

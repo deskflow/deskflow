@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -86,11 +86,11 @@ App::version()
 
 int
 App::run(int argc, char** argv)
-{    
+{
 #if MAC_OS_X_VERSION_10_7
     // dock hide only supported on lion :(
     ProcessSerialNumber psn = { 0, kCurrentProcess };
-    
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     GetCurrentProcess(&psn);
@@ -101,7 +101,7 @@ App::run(int argc, char** argv)
 
     // install application in to arch
     appUtil().adoptApp(this);
-    
+
     // HACK: fail by default (saves us setting result in each catch)
     int result = kExitFailed;
 
@@ -110,7 +110,7 @@ App::run(int argc, char** argv)
     }
     catch (XExitApp& e) {
         // instead of showing a nasty error, just exit with the error code.
-        // not sure if i like this behaviour, but it's probably better than 
+        // not sure if i like this behaviour, but it's probably better than
         // using the exit(int) function!
         result = e.getCode();
     }
@@ -122,7 +122,7 @@ App::run(int argc, char** argv)
     }
 
     appUtil().beforeAppExit();
-    
+
     return result;
 }
 
@@ -137,7 +137,7 @@ App::daemonMainLoop(int, const char**)
     return mainLoop();
 }
 
-void 
+void
 App::setupFileLogging()
 {
     if (argsBase().m_logFile != NULL) {
@@ -147,23 +147,23 @@ App::setupFileLogging()
     }
 }
 
-void 
+void
 App::loggingFilterWarning()
 {
     if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
         if (argsBase().m_logFile == NULL) {
-            LOG((CLOG_WARN "log messages above %s are NOT sent to console (use file logging)", 
+            LOG((CLOG_WARN "log messages above %s are NOT sent to console (use file logging)",
                 CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
         }
     }
 }
 
-void 
+void
 App::initApp(int argc, const char** argv)
 {
     // parse command line
     parseArgs(argc, argv);
-    
+
     DataDirectories::profile(argsBase().m_profileDirectory);
 
     // set log filter
@@ -173,7 +173,7 @@ App::initApp(int argc, const char** argv)
         m_bye(kExitArgs);
     }
     loggingFilterWarning();
-    
+
     if (argsBase().m_enableDragDrop) {
         LOG((CLOG_INFO "drag and drop enabled"));
     }
@@ -230,11 +230,11 @@ void
 App::runEventsLoop(void*)
 {
     m_events->loop();
-    
+
 #if defined(MAC_OS_X_VERSION_10_7)
-    
+
     stopCocoaLoop();
-    
+
 #endif
 }
 

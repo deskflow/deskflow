@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -54,7 +54,7 @@ ClientListener::ClientListener(const NetworkAddress& address,
                     m_listen,
                     new TMethodEventJob<ClientListener>(this,
                             &ClientListener::handleClientConnecting));
-        
+
         // bind listen address
         LOG((CLOG_DEBUG1 "binding listen socket"));
         m_listen->bind(address);
@@ -130,14 +130,14 @@ ClientListener::handleClientConnecting(const Event&, void*)
     if (socket == NULL) {
         return;
     }
-    
+
     m_clientSockets.insert(socket);
 
     m_events->adoptHandler(m_events->forClientListener().accepted(),
                 socket->getEventTarget(),
                 new TMethodEventJob<ClientListener>(this,
                         &ClientListener::handleClientAccepted, socket));
-    
+
     // When using non SSL, server accepts clients immediately, while SSL
     // has to call secure accept which may require retry
     if (!m_useSecureNetwork) {
@@ -152,7 +152,7 @@ ClientListener::handleClientAccepted(const Event&, void* vsocket)
     LOG((CLOG_NOTE "accepted client connection"));
 
     IDataSocket* socket = static_cast<IDataSocket*>(vsocket);
-    
+
     // filter socket messages, including a packetizing filter
     barrier::IStream* stream = new PacketStreamFilter(m_events, socket, false);
     assert(m_server != NULL);

@@ -1,11 +1,11 @@
 /*
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2013-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -41,7 +41,7 @@ DragInformation::parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, Strin
     if (data.find("/", startPos) != string::npos) {
         slash = "/";
     }
-    
+
     UInt32 index = 0;
     while (index < fileNum) {
         findResult1 = data.find(',', startPos);
@@ -51,7 +51,7 @@ DragInformation::parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, Strin
             //TODO: file number does not match, something goes wrong
             break;
         }
-        
+
         // set filename
         if (findResult1 - findResult2 > 1) {
             String filename = data.substr(findResult2 + 1,
@@ -61,7 +61,7 @@ DragInformation::parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, Strin
             dragFileList.push_back(di);
         }
         startPos = findResult1 + 1;
-        
+
         //set filesize
         findResult2 = data.find(',', startPos);
         if (findResult2 - findResult1 > 1) {
@@ -71,7 +71,7 @@ DragInformation::parseDragInfo(DragFileList& dragFileList, UInt32 fileNum, Strin
             dragFileList.at(index).setFilesize(size);
         }
         startPos = findResult1 + 1;
-        
+
         ++index;
     }
 
@@ -151,8 +151,8 @@ DragInformation::getFileSize(String& filename)
 
     stringstream ss;
     ss << size;
-    
+
     file. close();
-    
+
     return ss.str();
 }
