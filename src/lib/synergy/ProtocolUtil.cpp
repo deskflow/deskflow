@@ -38,17 +38,17 @@ writeInt(UInt32 Value, UInt32 Length, std::vector<UInt8>& Buffer)
     switch(Length)
     {
         case 1:
-            Buffer.push_back(static_cast<UInt8>(Value & 0xffu));
+            Buffer.push_back(static_cast<UInt8>(Value & 0xffU));
             break;
         case 4:
-            Buffer.push_back(static_cast<UInt8>((Value >> 24u) & 0xffu));
-            Buffer.push_back(static_cast<UInt8>((Value >> 16u) & 0xffu));
-            Buffer.push_back(static_cast<UInt8>((Value >>  8u) & 0xffu));
-            Buffer.push_back(static_cast<UInt8>( Value        & 0xffu));
+            Buffer.push_back(static_cast<UInt8>((Value >> 24U) & 0xffU));
+            Buffer.push_back(static_cast<UInt8>((Value >> 16U) & 0xffU));
+            Buffer.push_back(static_cast<UInt8>((Value >>  8U) & 0xffU));
+            Buffer.push_back(static_cast<UInt8>( Value         & 0xffU));
             break;
         case 2:
-            Buffer.push_back(static_cast<UInt8>((Value >> 8u) & 0xffu));
-            Buffer.push_back(static_cast<UInt8>( Value       & 0xffu));
+            Buffer.push_back(static_cast<UInt8>((Value >> 8U) & 0xffU));
+            Buffer.push_back(static_cast<UInt8>( Value        & 0xffU));
             break;
         default:
              assert(0 && "invalid integer format length");
