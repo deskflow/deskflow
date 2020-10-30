@@ -17,6 +17,7 @@
  */
 
 #include <array>
+#include <iterator>
 #include "synergy/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "base/Log.h"
@@ -57,11 +58,24 @@ writeInt(UInt32 Value, UInt32 Length, std::vector<UInt8>& Buffer)
 
 template <typename T>
 void
-writeVectorInt(const std::vector<T>& Vector, std::vector<UInt8>& Buffer)
+writeVectorInt(const std::vector<T>* VectorData, std::vector<UInt8>& Buffer)
 {
-    writeInt((UInt32)Vector.size(), sizeof(UInt32), Buffer);
-    for (size_t i = 0; i < Vector.size(); ++i) {
-        writeInt(Vector[i], sizeof(T), Buffer);
+    if (VectorData) {
+        const std::vector<T>& Vector = *VectorData;
+        writeInt((UInt32)Vector.size(), sizeof(UInt32), Buffer);
+        for (size_t i = 0; i < Vector.size(); ++i) {
+            writeInt(Vector[i], sizeof(T), Buffer);
+        }
+    }
+}
+
+void
+writeString(const String* StringData, std::vector<UInt8>& Buffer)
+{
+    const UInt32 len = (StringData != NULL) ? (UInt32)StringData->size() : 0;
+    writeInt(len, sizeof(len), Buffer);
+    if (len != 0) {
+        std::copy(StringData->begin(), StringData->end(), std::back_inserter(Buffer));
     }
 }
 
@@ -126,10 +140,11 @@ ProtocolUtil::vwritef(synergy::IStream* stream,
 
     try {
         // write buffer
-        stream->write(Buffer.data(), Buffer.size());
-        LOG((CLOG_DEBUG2 "wrote %d bytes", Buffer.size()));
+        stream->write(Buffer.data(), size);
+        LOG((CLOG_DEBUG2 "wrote %d bytes", size));
     }
-    catch (XBase&) {
+    catch (const XBase& exception) {
+        LOG((CLOG_DEBUG2 "Exception <%s> during wrote %d bytes into stream", size, exception.what()));
         throw;
     }
 }
@@ -317,27 +332,21 @@ ProtocolUtil::writef(std::vector<UInt8>& buffer, const char* fmt, va_list args)
                 case 1: {
                     // 1 byte integers
                     const std::vector<UInt8>* list = va_arg(args, const std::vector<UInt8>*);
-                    if (list) {
-                        writeVectorInt(*list, buffer);
-                    }
+                    writeVectorInt(list, buffer);
                     break;
                 }
 
                 case 2: {
                     // 2 byte integers
                     const std::vector<UInt16>* list = va_arg(args, const std::vector<UInt16>*);
-                    if (list) {
-                        writeVectorInt(*list, buffer);
-                    }
+                    writeVectorInt(list, buffer);
                     break;
                 }
 
                 case 4: {
                     // 4 byte integers
                     const std::vector<UInt32>* list = va_arg(args, const std::vector<UInt32>*);
-                    if (list) {
-                        writeVectorInt(*list, buffer);
-                    }
+                    writeVectorInt(list, buffer);
                     break;
                 }
 
@@ -351,11 +360,7 @@ ProtocolUtil::writef(std::vector<UInt8>& buffer, const char* fmt, va_list args)
             case 's': {
                 assert(len == 0);
                 const String* src = va_arg(args, String*);
-                const UInt32 len = (src != NULL) ? (UInt32)src->size() : 0;
-                writeInt(len, sizeof(len), buffer);
-                if (len != 0) {
-                    std::copy(src->begin(), src->end(), std::back_inserter(buffer));
-                }
+                writeString(src, buffer);
                 break;
             }
 
