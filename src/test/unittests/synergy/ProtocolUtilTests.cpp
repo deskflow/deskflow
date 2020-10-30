@@ -24,13 +24,111 @@ using ::testing::_;
 using ::testing::Return;
 using ::testing::DoAll;
 using ::testing::SetArgPointee;
+using ::testing::Pointee;
 using ::testing::Eq;
 using ::testing::StrEq;
 using ::testing::TypedEq;
+using ::testing::ElementsAreArray;
 
 ACTION_P2(SetValueToVoidPointerArg0, value, size)
 {
     memcpy(arg0, value, size);
+}
+
+MATCHER_P(EqVoidPointeeInt8, expected, "")
+{
+    const UInt8 Actual8 = (*static_cast<const UInt8*>(arg));
+    return (expected == Actual8);
+}
+
+MATCHER_P(EqVoidPointeeInt16, expected, "")
+{
+    const UInt16 Actual16 = (*static_cast<const UInt16*>(arg));
+    return (expected == (Actual16 >> 8));
+}
+
+MATCHER_P(EqVoidPointeeInt32, expected, "")
+{
+    const UInt32 Actual32 = (*static_cast<const UInt32*>(arg));
+    return (expected == (Actual32 >> 24));
+}
+
+MATCHER_P(EqVoidVectorInt1byte, expected, "")
+{
+    bool Result = true;
+    const UInt8* Actual = (static_cast<const UInt8*>(arg)) + sizeof (UInt32);
+    const size_t Size = *(Actual - 1);
+
+    if (Size == expected.size()){
+        for(size_t i = 0; i < expected.size(); ++i){
+          if (expected[i] != Actual[i]){
+              Result = false;
+              break;
+          }
+        }
+    }
+    else{
+        Result = false;
+    }
+
+    return Result;
+}
+
+MATCHER_P(EqVoidVectorInt2bytes, expected, "")
+{
+    bool Result = true;
+    const UInt16* Actual = (static_cast<const UInt16*>(arg)) + sizeof (UInt16);
+    const size_t Size = *(Actual - 1) >> 8;
+
+    if (Size == expected.size()){
+        for(size_t i = 0; i < expected.size(); ++i){
+          if (expected[i] != (Actual[i] >> 8) ){
+              Result = false;
+              break;
+          }
+        }
+    }
+    else{
+        Result = false;
+    }
+
+    return Result;
+}
+
+MATCHER_P(EqVoidVectorInt4bytes, expected, "")
+{
+    bool Result = true;
+    const UInt32* Actual = (static_cast<const UInt32*>(arg)) + 1;
+    const size_t Size = *(Actual - 1) >> 24;
+
+    if (Size == expected.size()){
+        for(size_t i = 0; i < expected.size(); ++i){
+          if (expected[i] != (Actual[i] >> 24) ){
+              Result = false;
+              break;
+          }
+        }
+    }
+    else{
+        Result = false;
+    }
+
+    return Result;
+}
+
+MATCHER_P(EqVectorSymbols, expected, "")
+{
+    bool Result = true;
+    const UInt8* Actual = (static_cast<const UInt8*>(arg));
+
+    for(size_t i = 0; i < expected.size(); ++i){
+        if (expected[i] != (Actual[i]) ){
+            Result = false;
+            break;
+        }
+    }
+
+    return Result;
 }
 
 ACTION(ThrowBadAlloc)
@@ -418,5 +516,104 @@ TEST_F(ProtocolUtilTests, readf_vector_int4bytes_and_string)
     EXPECT_TRUE(ProtocolUtil::readf(&stream, "%4I%s", &Actual4Bytes, &ActualString));
     EXPECT_EQ(ExpectedString, ActualString);
     EXPECT_EQ(Expected4Bytes, Actual4Bytes);
+}
+
+class WriteIntTest : public ::testing::TestWithParam< std::tuple<const char*, int> >
+{
+public:
+    MockStream stream;
+    UInt8 Expected1Byte = 5;
+    UInt16 Expected2Bytes = 10;
+    UInt32 Expected4Bytes = 15;
+};
+
+TEST_P(WriteIntTest, write_int)
+{
+    const char* Format = std::get<0>(GetParam());
+    const int DataSize = std::get<1>(GetParam());
+    switch(DataSize)
+    {
+        case 2:
+            EXPECT_CALL(stream, write(EqVoidPointeeInt16(Expected2Bytes), Eq(DataSize)));
+            ProtocolUtil::writef(&stream, Format, Expected2Bytes);
+            break;
+        case 4:
+            EXPECT_CALL(stream, write(EqVoidPointeeInt32(Expected4Bytes), Eq(DataSize)));
+            ProtocolUtil::writef(&stream, Format, Expected4Bytes);
+            break;
+        default:
+            EXPECT_CALL(stream, write(EqVoidPointeeInt8(Expected1Byte), Eq(DataSize)));
+            ProtocolUtil::writef(&stream, Format, Expected1Byte);
+            break;
+    }
+}
+
+INSTANTIATE_TEST_CASE_P(
+        WriteIntTest,
+        WriteIntTest,
+        ::testing::Values(
+                std::make_tuple("%1i", 1),
+                std::make_tuple("%2i", 2),
+                std::make_tuple("%4i", 4)));
+
+class WriteIntVectorTest : public ::testing::TestWithParam< std::tuple<const char*, int> >
+{
+public:
+    MockStream stream;
+    const std::vector<UInt8> Expected1Byte = {10, 20, 30};
+    const std::vector<UInt16> Expected2Byte = {40, 50, 60};
+    const std::vector<UInt32> Expected4Byte = {70, 80, 90};
+};
+
+TEST_P(WriteIntVectorTest, write_vector_int)
+{
+    const char* Format = std::get<0>(GetParam());
+    const int Type = std::get<1>(GetParam());
+
+    switch(Type){
+        case 2:
+            EXPECT_CALL(stream, write(EqVoidVectorInt2bytes(Expected2Byte), Eq(Type * Expected2Byte.size() + sizeof(UInt32))));
+            ProtocolUtil::writef(&stream, Format, &Expected2Byte);
+            break;
+        case 4:
+            EXPECT_CALL(stream, write(EqVoidVectorInt4bytes(Expected4Byte), Eq(Type * Expected4Byte.size() + sizeof(UInt32))));
+            ProtocolUtil::writef(&stream, Format, &Expected4Byte);
+            break;
+        default:
+            EXPECT_CALL(stream, write(EqVoidVectorInt1byte(Expected1Byte), Eq(Expected1Byte.size() + sizeof(UInt32))));
+            ProtocolUtil::writef(&stream, Format, &Expected1Byte);
+            break;
+    }
+}
+
+INSTANTIATE_TEST_CASE_P(
+        WriteIntVectorTest,
+        WriteIntVectorTest,
+        ::testing::Values(
+                std::make_tuple("%1I", 1),
+                std::make_tuple("%2I", 2),
+                std::make_tuple("%4I", 4)));
+
+TEST_F(ProtocolUtilTests, write_string_test)
+{
+    const String Expected = "Expected";
+    const std::vector<UInt8> ExpectedVector = {'E', 'x', 'p', 'e', 'c', 't', 'e', 'd'};
+    EXPECT_CALL(stream, write(EqVoidVectorInt1byte(ExpectedVector), Expected.size() + sizeof (UInt32)));
+    ProtocolUtil::writef(&stream, "%s", &Expected);
+}
+
+TEST_F(ProtocolUtilTests, write_raw_bytes_test)
+{
+    const UInt32 Size = 5;
+    const std::array<UInt8, Size> Expected = {10, 20, 30, 40, 50};
+    EXPECT_CALL(stream, write(EqVoidVectorInt1byte(Expected), Expected.size() + sizeof (UInt32)));
+    ProtocolUtil::writef(&stream, "%S", Size, &Expected);
+}
+
+TEST_F(ProtocolUtilTests, write_symbols_from_format_test)
+{
+    const std::vector<UInt8> Expected = {'%', '1', '2', '3', '4', '5'};
+    EXPECT_CALL(stream, write(EqVectorSymbols(Expected), Expected.size()));
+    ProtocolUtil::writef(&stream, "%%12345");
 }
 

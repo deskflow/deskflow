@@ -17,6 +17,7 @@
  */
 
 #include <array>
+#include <iterator>
 #include "synergy/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "base/Log.h"
@@ -28,6 +29,57 @@
 //
 // ProtocolUtil
 //
+
+namespace  {
+
+void
+writeInt(UInt32 Value, UInt32 Length, std::vector<UInt8>& Buffer)
+{
+    switch(Length)
+    {
+        case 1:
+            Buffer.push_back(static_cast<UInt8>(Value & 0xffU));
+            break;
+        case 4:
+            Buffer.push_back(static_cast<UInt8>((Value >> 24U) & 0xffU));
+            Buffer.push_back(static_cast<UInt8>((Value >> 16U) & 0xffU));
+            Buffer.push_back(static_cast<UInt8>((Value >>  8U) & 0xffU));
+            Buffer.push_back(static_cast<UInt8>( Value         & 0xffU));
+            break;
+        case 2:
+            Buffer.push_back(static_cast<UInt8>((Value >> 8U) & 0xffU));
+            Buffer.push_back(static_cast<UInt8>( Value        & 0xffU));
+            break;
+        default:
+             assert(0 && "invalid integer format length");
+             return;
+    }
+}
+
+template <typename T>
+void
+writeVectorInt(const std::vector<T>* VectorData, std::vector<UInt8>& Buffer)
+{
+    if (VectorData) {
+        const std::vector<T>& Vector = *VectorData;
+        writeInt((UInt32)Vector.size(), sizeof(UInt32), Buffer);
+        for (size_t i = 0; i < Vector.size(); ++i) {
+            writeInt(Vector[i], sizeof(T), Buffer);
+        }
+    }
+}
+
+void
+writeString(const String* StringData, std::vector<UInt8>& Buffer)
+{
+    const UInt32 len = (StringData != NULL) ? (UInt32)StringData->size() : 0;
+    writeInt(len, sizeof(len), Buffer);
+    if (len != 0) {
+        std::copy(StringData->begin(), StringData->end(), std::back_inserter(Buffer));
+    }
+}
+
+} //namespace
 
 void
 ProtocolUtil::writef(synergy::IStream* stream, const char* fmt, ...)
@@ -83,18 +135,16 @@ ProtocolUtil::vwritef(synergy::IStream* stream,
     }
 
     // fill buffer
-    UInt8* buffer = new UInt8[size];
-    writef(buffer, fmt, args);
+    std::vector<UInt8> Buffer;
+    writef(Buffer, fmt, args);
 
     try {
         // write buffer
-        stream->write(buffer, size);
+        stream->write(Buffer.data(), size);
         LOG((CLOG_DEBUG2 "wrote %d bytes", size));
-
-        delete[] buffer;
     }
-    catch (XBase&) {
-        delete[] buffer;
+    catch (const XBase& exception) {
+        LOG((CLOG_DEBUG2 "Exception <%s> during wrote %d bytes into stream", exception.what(), size));
         throw;
     }
 }
@@ -260,11 +310,11 @@ ProtocolUtil::getLength(const char* fmt, va_list args)
     return n;
 }
 
-void
-ProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
-{
-    UInt8* dst = static_cast<UInt8*>(buffer);
 
+
+void
+ProtocolUtil::writef(std::vector<UInt8>& buffer, const char* fmt, va_list args)
+{
     while (*fmt) {
         if (*fmt == '%') {
             // format specifier.  determine argument size.
@@ -273,30 +323,7 @@ ProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
             switch (*fmt) {
             case 'i': {
                 const UInt32 v = va_arg(args, UInt32);
-                switch (len) {
-                case 1:
-                    // 1 byte integer
-                    *dst++ = static_cast<UInt8>(v & 0xff);
-                    break;
-
-                case 2:
-                    // 2 byte integer
-                    *dst++ = static_cast<UInt8>((v >> 8) & 0xff);
-                    *dst++ = static_cast<UInt8>( v       & 0xff);
-                    break;
-
-                case 4:
-                    // 4 byte integer
-                    *dst++ = static_cast<UInt8>((v >> 24) & 0xff);
-                    *dst++ = static_cast<UInt8>((v >> 16) & 0xff);
-                    *dst++ = static_cast<UInt8>((v >>  8) & 0xff);
-                    *dst++ = static_cast<UInt8>( v        & 0xff);
-                    break;
-
-                default:
-                    assert(0 && "invalid integer format length");
-                    return;
-                }
+                writeInt(v, len, buffer);
                 break;
             }
 
@@ -304,52 +331,22 @@ ProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
                 switch (len) {
                 case 1: {
                     // 1 byte integers
-                    const std::vector<UInt8>* list =
-                        va_arg(args, const std::vector<UInt8>*);
-                    const UInt32 n = (UInt32)list->size();
-                    *dst++ = static_cast<UInt8>((n >> 24) & 0xff);
-                    *dst++ = static_cast<UInt8>((n >> 16) & 0xff);
-                    *dst++ = static_cast<UInt8>((n >>  8) & 0xff);
-                    *dst++ = static_cast<UInt8>( n        & 0xff);
-                    for (UInt32 i = 0; i < n; ++i) {
-                        *dst++ = (*list)[i];
-                    }
+                    const std::vector<UInt8>* list = va_arg(args, const std::vector<UInt8>*);
+                    writeVectorInt(list, buffer);
                     break;
                 }
 
                 case 2: {
                     // 2 byte integers
-                    const std::vector<UInt16>* list =
-                        va_arg(args, const std::vector<UInt16>*);
-                    const UInt32 n = (UInt32)list->size();
-                    *dst++ = static_cast<UInt8>((n >> 24) & 0xff);
-                    *dst++ = static_cast<UInt8>((n >> 16) & 0xff);
-                    *dst++ = static_cast<UInt8>((n >>  8) & 0xff);
-                    *dst++ = static_cast<UInt8>( n        & 0xff);
-                    for (UInt32 i = 0; i < n; ++i) {
-                        const UInt16 v = (*list)[i];
-                        *dst++ = static_cast<UInt8>((v >> 8) & 0xff);
-                        *dst++ = static_cast<UInt8>( v       & 0xff);
-                    }
+                    const std::vector<UInt16>* list = va_arg(args, const std::vector<UInt16>*);
+                    writeVectorInt(list, buffer);
                     break;
                 }
 
                 case 4: {
                     // 4 byte integers
-                    const std::vector<UInt32>* list =
-                        va_arg(args, const std::vector<UInt32>*);
-                    const UInt32 n = (UInt32)list->size();
-                    *dst++ = static_cast<UInt8>((n >> 24) & 0xff);
-                    *dst++ = static_cast<UInt8>((n >> 16) & 0xff);
-                    *dst++ = static_cast<UInt8>((n >>  8) & 0xff);
-                    *dst++ = static_cast<UInt8>( n        & 0xff);
-                    for (UInt32 i = 0; i < n; ++i) {
-                        const UInt32 v = (*list)[i];
-                        *dst++ = static_cast<UInt8>((v >> 24) & 0xff);
-                        *dst++ = static_cast<UInt8>((v >> 16) & 0xff);
-                        *dst++ = static_cast<UInt8>((v >>  8) & 0xff);
-                        *dst++ = static_cast<UInt8>( v        & 0xff);
-                    }
+                    const std::vector<UInt32>* list = va_arg(args, const std::vector<UInt32>*);
+                    writeVectorInt(list, buffer);
                     break;
                 }
 
@@ -363,15 +360,7 @@ ProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
             case 's': {
                 assert(len == 0);
                 const String* src = va_arg(args, String*);
-                const UInt32 len = (src != NULL) ? (UInt32)src->size() : 0;
-                *dst++ = static_cast<UInt8>((len >> 24) & 0xff);
-                *dst++ = static_cast<UInt8>((len >> 16) & 0xff);
-                *dst++ = static_cast<UInt8>((len >>  8) & 0xff);
-                *dst++ = static_cast<UInt8>( len        & 0xff);
-                if (len != 0) {
-                    memcpy(dst, src->data(), len);
-                    dst += len;
-                }
+                writeString(src, buffer);
                 break;
             }
 
@@ -379,18 +368,14 @@ ProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
                 assert(len == 0);
                 const UInt32 len = va_arg(args, UInt32);
                 const UInt8* src = va_arg(args, UInt8*);
-                *dst++ = static_cast<UInt8>((len >> 24) & 0xff);
-                *dst++ = static_cast<UInt8>((len >> 16) & 0xff);
-                *dst++ = static_cast<UInt8>((len >>  8) & 0xff);
-                *dst++ = static_cast<UInt8>( len        & 0xff);
-                memcpy(dst, src, len);
-                dst += len;
+                writeInt(len, sizeof(len), buffer);
+                std::copy(src, src + len, std::back_inserter(buffer));
                 break;
             }
 
             case '%':
                 assert(len == 0);
-                *dst++ = '%';
+                buffer.push_back('%');
                 break;
 
             default:
@@ -402,7 +387,7 @@ ProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
         }
         else {
             // copy regular character
-            *dst++ = *fmt++;
+            buffer.push_back(*fmt++);
         }
     }
 }
