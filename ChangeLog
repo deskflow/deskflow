@@ -21,6 +21,7 @@ Enhancements:
 - #6803 Update Synergy icons
 - #6800 Update behaviour when unregistered
 - #6806 Move to Github Action for general PR builds and tests
+- #6816 Improve license validation
 
 v1.12.0-stable
 ===========

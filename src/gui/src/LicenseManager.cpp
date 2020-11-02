@@ -21,6 +21,7 @@
 #include <stdexcept>
 #include <utility>
 #include <QThread>
+#include <QTimer>
 
 LicenseManager::LicenseManager(AppConfig* appConfig) :
     m_AppConfig(appConfig),
@@ -44,12 +45,9 @@ LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
         swap (serialKey, m_serialKey);
         m_AppConfig->setSerialKey(QString::fromStdString
                                   (m_serialKey.toString()));
-        emit serialKeyChanged(m_serialKey);
 
         emit showLicenseNotice(getLicenseNotice());
-        if (!m_serialKey.isValid()) {
-            emit InvalidLicense();
-        }
+        validateSerialKey();
 
         if (m_serialKey.edition() != serialKey.edition()) {
             m_AppConfig->setEdition(m_serialKey.edition());
@@ -227,4 +225,17 @@ LicenseManager::getTemporaryNotice() const
     }
 
     return Notice;
+}
+
+void
+LicenseManager::validateSerialKey() const
+{
+    if (m_serialKey.isValid()) {
+        if (m_serialKey.isTemporary()){
+           QTimer::singleShot(m_serialKey.getSpanLeft(), this, SLOT(validateSerialKey()));
+        }
+    }
+    else{
+        emit InvalidLicense();
+    }
 }

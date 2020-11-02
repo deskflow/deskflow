@@ -47,8 +47,10 @@ private:
     AppConfig* m_AppConfig;
     SerialKey m_serialKey;
 
+public slots:
+    void validateSerialKey() const;
+
 signals:
-    void serialKeyChanged (SerialKey) const;
     void editionChanged (Edition) const;
     void InvalidLicense () const;
     void showLicenseNotice(const QString& notice) const;
