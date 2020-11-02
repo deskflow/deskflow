@@ -232,7 +232,7 @@ LicenseManager::validateSerialKey() const
 {
     if (m_serialKey.isValid()) {
         if (m_serialKey.isTemporary()){
-           QTimer::singleShot(m_serialKey.getMillisecondsLeft(), this, SLOT(validateSerialKey()));
+           QTimer::singleShot(m_serialKey.getSpanLeft(), this, SLOT(validateSerialKey()));
         }
     }
     else{

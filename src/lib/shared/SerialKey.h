@@ -40,7 +40,7 @@ public:
     bool                isTemporary() const;
     bool                isValid() const;
     time_t              daysLeft(time_t currentTime) const;
-    std::chrono::milliseconds getMillisecondsLeft(time_t time = ::time(0)) const;
+    std::chrono::milliseconds getSpanLeft(time_t time = ::time(0)) const;
     std::string         email() const;
     Edition             edition() const;
     std::string         toString() const;

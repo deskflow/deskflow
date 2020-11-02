@@ -172,17 +172,17 @@ SerialKey::daysLeft(time_t currentTime) const
 }
 
 std::chrono::milliseconds
-SerialKey::getMillisecondsLeft(time_t time) const
+SerialKey::getSpanLeft(time_t time) const
 {
-    std::chrono::milliseconds TimeLeft{-1};
+    std::chrono::milliseconds timeLeft{-1};
 
     if (isTemporary()){
-        auto Expire = std::chrono::system_clock::from_time_t(m_expireTime);
-        auto Target = std::chrono::system_clock::from_time_t(time);
-        TimeLeft = std::chrono::duration_cast<std::chrono::milliseconds>(Expire - Target);
+        auto expire{std::chrono::system_clock::from_time_t(m_expireTime)};
+        auto target{std::chrono::system_clock::from_time_t(time)};
+        timeLeft = std::chrono::duration_cast<std::chrono::milliseconds>(expire - target);
     }
 
-    return TimeLeft;
+    return timeLeft;
 }
 
 std::string
