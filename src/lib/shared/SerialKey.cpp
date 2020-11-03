@@ -25,7 +25,6 @@
 #include <sstream>
 #include <iomanip>
 #include <stdexcept>
-#include <chrono>
 #include "SerialKeyEdition.h"
 
 using namespace std;
