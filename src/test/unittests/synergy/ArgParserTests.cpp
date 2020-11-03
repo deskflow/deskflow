@@ -45,8 +45,8 @@ TEST(ArgParserTests, isArg_missingArgs_returnFalse)
     int i = 1;
     const int argc = 2;
     const char* argv[argc] = { "stub", "-t" };
+    static lib::synergy::ArgsBase argsBase;
     ArgParser argParser(NULL);
-    lib::synergy::ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
 
     bool result = ArgParser::isArg(i, argc, argv, "-t", NULL, 1);
