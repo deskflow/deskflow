@@ -180,7 +180,7 @@ SerialKey::getSpanLeft(time_t time) const
         auto timeLeft = (m_expireTime - time) * 1000;
 
         if (timeLeft < INT_MAX){
-            result = timeLeft;
+            result = static_cast<int>(timeLeft);
         }
         else{
             result = INT_MAX;
