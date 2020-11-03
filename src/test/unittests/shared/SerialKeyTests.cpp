@@ -229,7 +229,7 @@ TEST(SerialKeyTests, IsValidExpiredKey_false)
 TEST(SerialKeyTests, test_getSpanLeft)
 {
     SerialKey key;
-    std::chrono::milliseconds expected{-1};
+    int expected{-1};
     EXPECT_EQ(expected, key.getSpanLeft());
 }
 
@@ -237,8 +237,15 @@ TEST(SerialKeyTests, test_getSpanLeft_subscription)
 {
     // {v2;subscription;basic;Bob;1;email;company name;0;86400}
     SerialKey key("7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D");
-    std::chrono::milliseconds expected{1000};
-    EXPECT_EQ(expected, key.getSpanLeft(86399));
+    EXPECT_EQ(1000, key.getSpanLeft(86399));
+    EXPECT_EQ(-1, key.getSpanLeft(86401));
+}
+
+TEST(SerialKeyTests, test_getSpanLeft_max_int)
+{
+    //"{v2;subscription;basic;Bob;1;email;company name;0;3147483647}"
+    SerialKey key("7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B333134373438333634377D");
+    EXPECT_EQ(INT_MAX, key.getSpanLeft(1));
 }
 
 
