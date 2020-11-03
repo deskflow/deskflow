@@ -28,7 +28,12 @@ class IEventQueue;
 class ClientProxy1_5 : public ClientProxy1_4 {
 public:
     ClientProxy1_5(const String& name, synergy::IStream* adoptedStream, Server* server, IEventQueue* events);
+    ClientProxy1_5(ClientProxy1_5 const &) =delete;
+    ClientProxy1_5(ClientProxy1_5 &&) =delete;
     ~ClientProxy1_5();
+
+    ClientProxy1_5& operator=(ClientProxy1_5 const &) =delete;
+    ClientProxy1_5& operator=(ClientProxy1_5 &&) =delete;
 
     virtual void        sendDragInfo(UInt32 fileCount, const char* info, size_t size);
     virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize);

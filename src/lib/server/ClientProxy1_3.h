@@ -24,7 +24,12 @@
 class ClientProxy1_3 : public ClientProxy1_2 {
 public:
     ClientProxy1_3(const String& name, synergy::IStream* adoptedStream, IEventQueue* events);
+    ClientProxy1_3(ClientProxy1_3 const &) =delete;
+    ClientProxy1_3(ClientProxy1_3 &&) =delete;
     ~ClientProxy1_3();
+
+    ClientProxy1_3& operator=(ClientProxy1_3 const &) =delete;
+    ClientProxy1_3& operator=(ClientProxy1_3 &&) =delete;
 
     // IClient overrides
     virtual void        mouseWheel(SInt32 xDelta, SInt32 yDelta);

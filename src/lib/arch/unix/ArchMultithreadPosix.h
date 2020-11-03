@@ -39,7 +39,12 @@ public:
 class ArchMultithreadPosix : public IArchMultithread {
 public:
     ArchMultithreadPosix();
+    ArchMultithreadPosix(ArchMultithreadPosix const &) =delete;
+    ArchMultithreadPosix(ArchMultithreadPosix &&) =delete;
     virtual ~ArchMultithreadPosix();
+
+    ArchMultithreadPosix& operator=(ArchMultithreadPosix const &) =delete;
+    ArchMultithreadPosix& operator=(ArchMultithreadPosix &&) =delete;
 
     //! @name manipulators
     //@{

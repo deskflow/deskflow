@@ -33,7 +33,12 @@ A listen socket using TCP.
 class TCPListenSocket : public IListenSocket {
 public:
     TCPListenSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
+    TCPListenSocket(TCPListenSocket const &) =delete;
+    TCPListenSocket(TCPListenSocket &&) =delete;
     virtual ~TCPListenSocket();
+
+    TCPListenSocket& operator=(TCPListenSocket const &) =delete;
+    TCPListenSocket& operator=(TCPListenSocket &&) =delete;
 
     // ISocket overrides
     virtual void        bind(const NetworkAddress&);

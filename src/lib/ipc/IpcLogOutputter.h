@@ -41,6 +41,7 @@ public:
     using the \c sendBuffer() function.
     */
     IpcLogOutputter(IpcServer& ipcServer, EIpcClientType clientType, bool useThread);
+    IpcLogOutputter(IpcLogOutputter const &) =delete;
     virtual ~IpcLogOutputter();
 
     // ILogOutputter overrides

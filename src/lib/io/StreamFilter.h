@@ -34,7 +34,12 @@ public:
     d'tor.
     */
     StreamFilter(IEventQueue* events, synergy::IStream* stream, bool adoptStream = true);
+    StreamFilter(StreamFilter const &) =delete;
+    StreamFilter(StreamFilter &&) =delete;
     virtual ~StreamFilter();
+
+    StreamFilter& operator=(StreamFilter const &) =delete;
+    StreamFilter& operator=(StreamFilter &&) =delete;
 
     // IStream overrides
     // These all just forward to the underlying stream except getEventTarget.

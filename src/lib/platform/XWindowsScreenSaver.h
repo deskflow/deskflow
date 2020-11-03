@@ -35,7 +35,12 @@ class EventQueueTimer;
 class XWindowsScreenSaver : public IScreenSaver {
 public:
     XWindowsScreenSaver(Display*, Window, void* eventTarget, IEventQueue* events);
+    XWindowsScreenSaver(XWindowsScreenSaver const &) =delete;
+    XWindowsScreenSaver(XWindowsScreenSaver &&) =delete;
     virtual ~XWindowsScreenSaver();
+
+    XWindowsScreenSaver& operator=(XWindowsScreenSaver const &) =delete;
+    XWindowsScreenSaver& operator=(XWindowsScreenSaver &&) =delete;
 
     //! @name manipulators
     //@{
@@ -115,7 +120,7 @@ private:
     // the X display
     Display*            m_display;
 
-    // window to receive xscreensaver repsonses
+    // window to receive xscreensaver responses
     Window                m_xscreensaverSink;
 
     // the target for the events we generate

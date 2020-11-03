@@ -59,7 +59,12 @@ public:
 class ArchNetworkBSD : public IArchNetwork {
 public:
     ArchNetworkBSD();
+    ArchNetworkBSD(ArchNetworkBSD const &) =delete;
+    ArchNetworkBSD(ArchNetworkBSD &&) =delete;
     virtual ~ArchNetworkBSD();
+
+    ArchNetworkBSD& operator=(ArchNetworkBSD const &) =delete;
+    ArchNetworkBSD& operator=(ArchNetworkBSD &&) =delete;
 
     virtual void init();
 

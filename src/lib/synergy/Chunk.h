@@ -22,7 +22,12 @@
 class Chunk {
 public:
     Chunk(size_t size);
+    Chunk(Chunk const &) =delete;
+    Chunk(Chunk &&) =delete;
     ~Chunk();
+
+    Chunk& operator=(Chunk const &) =delete;
+    Chunk& operator=(Chunk &&) =delete;
 
 public:
     size_t                m_dataSize;

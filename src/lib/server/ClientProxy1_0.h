@@ -30,7 +30,12 @@ class IEventQueue;
 class ClientProxy1_0 : public ClientProxy {
 public:
     ClientProxy1_0(const String& name, synergy::IStream* adoptedStream, IEventQueue* events);
+    ClientProxy1_0(ClientProxy1_0 const &) =delete;
+    ClientProxy1_0(ClientProxy1_0 &&) =delete;
     ~ClientProxy1_0();
+
+    ClientProxy1_0& operator=(ClientProxy1_0 const &) =delete;
+    ClientProxy1_0& operator=(ClientProxy1_0 &&) =delete;
 
     // IScreen
     virtual bool        getClipboard(ClipboardID id, IClipboard*) const;

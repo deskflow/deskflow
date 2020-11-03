@@ -43,7 +43,12 @@ class IpcServer {
 public:
     IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
     IpcServer(IEventQueue* events, SocketMultiplexer* socketMultiplexer, int port);
+    IpcServer(IpcServer const &) =delete;
+    IpcServer(IpcServer &&) =delete;
     virtual ~IpcServer();
+
+    IpcServer& operator=(IpcServer const &) =delete;
+    IpcServer& operator=(IpcServer &&) =delete;
 
     //! @name manipulators
     //@{

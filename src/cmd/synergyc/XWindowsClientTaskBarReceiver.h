@@ -28,7 +28,12 @@ class CXWindowsClientTaskBarReceiver : public ClientTaskBarReceiver {
 public:
     CXWindowsClientTaskBarReceiver(
         const BufferedLogOutputter*, IEventQueue* events);
+    CXWindowsClientTaskBarReceiver(const CXWindowsClientTaskBarReceiver &) =delete;
+    CXWindowsClientTaskBarReceiver(CXWindowsClientTaskBarReceiver &&) =delete;
     virtual ~CXWindowsClientTaskBarReceiver();
+
+    CXWindowsClientTaskBarReceiver& operator=(const CXWindowsClientTaskBarReceiver &) =delete;
+    CXWindowsClientTaskBarReceiver& operator=(CXWindowsClientTaskBarReceiver &&) =delete;
 
     // IArchTaskBarReceiver overrides
     virtual void        showStatus();
