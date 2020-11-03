@@ -17,6 +17,7 @@
 
 #define TEST_ENV
 
+#include <climits>
 #include "shared/SerialKey.h"
 
 #include "test/global/gtest.h"
