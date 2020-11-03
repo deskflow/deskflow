@@ -14,6 +14,7 @@ Bug fixes:
 - #6817 Configure requires dns_sd.h for enterprise version
 - #6821 Blocker bugs found by sonar
 - #6826 SonarCloud Critical bugs
+- #6825 The system requires google test even when tests are disabled with BUILD_TESTS=OFF
 
 Enhancements:
 - #6750 Integrate SonarCloud for static analysis and test coverage
@@ -22,6 +23,7 @@ Enhancements:
 - #6803 Update Synergy icons
 - #6800 Update behaviour when unregistered
 - #6806 Move to Github Action for general PR builds and tests
+- #6816 Improve license validation
 
 v1.12.0-stable
 ===========
