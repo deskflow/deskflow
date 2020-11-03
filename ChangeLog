@@ -13,6 +13,7 @@ Bug fixes:
 - #6814 The system asks to save twice. 
 - #6817 Configure requires dns_sd.h for enterprise version
 - #6821 Blocker bugs found by sonar
+- #6826 SonarCloud Critical bugs
 
 Enhancements:
 - #6750 Integrate SonarCloud for static analysis and test coverage
