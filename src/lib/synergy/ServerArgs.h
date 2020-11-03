@@ -29,16 +29,12 @@ namespace lib {
             /// Public Functions
         public:
             ServerArgs();
-            ServerArgs(ServerArgs const &src) {
-                m_configFile = src.m_configFile;
-                m_serial = src.m_serial;
-                m_config = src.m_config;
-            }
-            ServerArgs(ServerArgs &&) =delete;
+            ServerArgs(ServerArgs const &src) =default;
+            ServerArgs(ServerArgs &&) =default;
             ~ServerArgs() override;
 
-            ServerArgs& operator=(ServerArgs const &) =delete;
-            ServerArgs& operator=(ServerArgs &&) =delete;
+            ServerArgs& operator=(ServerArgs const &) =default;
+            ServerArgs& operator=(ServerArgs &&) =default;
 
             /// Public variables
         public:

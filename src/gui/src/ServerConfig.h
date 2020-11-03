@@ -43,37 +43,11 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
     public:
         ServerConfig(int numColumns, int numRows,
             QString serverName, MainWindow* mainWindow);
-        ServerConfig(const ServerConfig &src) {
-            *this = src;
-        }
-        ServerConfig(ServerConfig &&) =delete;
-        ~ServerConfig();
 
-        ServerConfig& operator=(const ServerConfig &src) {
-            m_Screens = src.m_Screens;
-            m_NumColumns = src.m_NumColumns;
-            m_NumRows = src.m_NumRows;
-            m_HasHeartbeat = src.m_HasHeartbeat;
-            m_Heartbeat = src.m_Heartbeat;
-            m_RelativeMouseMoves = src.m_RelativeMouseMoves;
-            m_ScreenSaverSync = src.m_ScreenSaverSync;
-            m_Win32KeepForeground = src.m_Win32KeepForeground;
-            m_HasSwitchDelay = src.m_HasSwitchDelay;
-            m_SwitchDelay = src.m_SwitchDelay;
-            m_HasSwitchDoubleTap = src.m_HasSwitchDoubleTap;
-            m_SwitchDoubleTap = src.m_SwitchDoubleTap;
-            m_SwitchCornerSize = src.m_SwitchCornerSize;
-            m_SwitchCorners = src.m_SwitchCorners;
-            m_Hotkeys = src.m_Hotkeys;
-            m_ServerName = src.m_ServerName;
-            m_IgnoreAutoConfigClient = src.m_IgnoreAutoConfigClient;
-            m_EnableDragAndDrop = src.m_EnableDragAndDrop;
-            m_DisableLockToScreen = src.m_DisableLockToScreen;
-            m_ClipboardSharing = src.m_ClipboardSharing;
-            m_ClipboardSharingSize = src.m_ClipboardSharingSize;
-            m_pMainWindow = src.m_pMainWindow;
-            return *this;
-        };
+        ServerConfig(const ServerConfig &src) =default;
+        ServerConfig(ServerConfig &&) =default;
+        ~ServerConfig();
+        ServerConfig& operator=(const ServerConfig &src) =default;
         ServerConfig& operator=(ServerConfig &&) =delete;
 
     public:
