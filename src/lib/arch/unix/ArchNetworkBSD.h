@@ -70,7 +70,8 @@ public:
 
     // IArchNetwork overrides
     virtual ArchSocket     newSocket(EAddressFamily, ESocketType);
-    virtual ArchSocket     copySocket(ArchSocket s);    virtual void        closeSocket(ArchSocket s);
+    virtual ArchSocket     copySocket(ArchSocket s);
+    virtual void        closeSocket(ArchSocket s);
     virtual void        closeSocketForRead(ArchSocket s);
     virtual void        closeSocketForWrite(ArchSocket s);
     virtual void        bindSocket(ArchSocket s, ArchNetAddress addr);
