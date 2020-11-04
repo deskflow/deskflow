@@ -1,3 +1,4 @@
+.vscode
 config.h
 .DS_Store
 *.pyc
