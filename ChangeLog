@@ -12,7 +12,7 @@ Bug fixes:
 - #6660 + #6582 Add missing XAtom for utf-8 handling with Xorg
 - #6814 The system asks to save twice. 
 - #6817 Configure requires dns_sd.h for enterprise version
-- #6826 SonarCloud Critical bugs
+- #6826 + #6829 SonarCloud Critical bugs
 - #6821 Blocker bugs found by sonar in synergy and in tests
 - #6825 The system requires google test even when tests are disabled with BUILD_TESTS=OFF
 
