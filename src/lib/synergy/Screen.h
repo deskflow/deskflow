@@ -40,7 +40,12 @@ primary or secondary screen.
 class Screen : public IScreen {
 public:
     Screen(IPlatformScreen* platformScreen, IEventQueue* events);
+    Screen(Screen const &) =delete;
+    Screen(Screen &&) =delete;
     virtual ~Screen();
+
+    Screen& operator&(Screen const &) =delete;
+    Screen& operator&(Screen &&) =delete;
 
 #ifdef TEST_ENV
     Screen() : m_mock(true) { }

@@ -43,7 +43,12 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
     public:
         ServerConfig(int numColumns, int numRows,
             QString serverName, MainWindow* mainWindow);
+
+        ServerConfig(const ServerConfig &src) =default;
+        ServerConfig(ServerConfig &&) =default;
         ~ServerConfig();
+        ServerConfig& operator=(const ServerConfig &src) =default;
+        ServerConfig& operator=(ServerConfig &&) =delete;
 
     public:
         const ScreenList& screens() const { return m_Screens; }

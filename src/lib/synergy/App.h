@@ -44,7 +44,12 @@ typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const BufferedLogOutp
 class App : public IApp {
 public:
     App(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, lib::synergy::ArgsBase* args);
+    App(App const &) =delete;
+    App(App &&) =delete;
     virtual ~App();
+
+    App& operator=(App const &) =delete;
+    App& operator=(App &&) =delete;
 
     // Returns args that are common between server and client.
     lib::synergy::ArgsBase& argsBase() const { return *m_args; }

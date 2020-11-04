@@ -38,7 +38,12 @@ class TCPSocket : public IDataSocket {
 public:
     TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family = IArchNetwork::kINET);
     TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket);
+    TCPSocket(TCPSocket const &) =delete;
+    TCPSocket(TCPSocket &&) =delete;
     virtual ~TCPSocket();
+
+    TCPSocket& operator=(TCPSocket const &) =delete;
+    TCPSocket& operator=(TCPSocket &&) =delete;
 
     // ISocket overrides
     virtual void        bind(const NetworkAddress&);

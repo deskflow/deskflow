@@ -21,7 +21,6 @@ namespace lib {
     namespace synergy {
 
         ServerArgs::~ServerArgs() {
-            destroy(m_config);
         }
 
 

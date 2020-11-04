@@ -37,6 +37,14 @@ server_stubCheckUnexpectedArgs()
     return false;
 }
 
+TEST(ServerArgs, ServerArgs_will_construct_from_copy)
+{
+    lib::synergy::ServerArgs serverArgs;
+    serverArgs.m_display = "display0";
+    auto serverArgs2 {serverArgs};
+    EXPECT_EQ(serverArgs.m_display, serverArgs2.m_display);
+}
+
 TEST(ServerArgsParsingTests, parseServerArgs_addressArg_setSynergyAddress)
 {
     NiceMock<MockArgParser> argParser;

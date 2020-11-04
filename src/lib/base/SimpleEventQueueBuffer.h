@@ -28,8 +28,13 @@ An event queue buffer provides a queue of events for an IEventQueue.
 */
 class SimpleEventQueueBuffer : public IEventQueueBuffer {
 public:
-    SimpleEventQueueBuffer();    
+    SimpleEventQueueBuffer();
+    SimpleEventQueueBuffer(SimpleEventQueueBuffer const &) = delete;
+    SimpleEventQueueBuffer(SimpleEventQueueBuffer &&) = delete;
     ~SimpleEventQueueBuffer();
+
+    SimpleEventQueueBuffer& operator=(SimpleEventQueueBuffer const &) = delete;
+    SimpleEventQueueBuffer& operator=(SimpleEventQueueBuffer &&) = delete;
 
     // IEventQueueBuffer overrides
     void                init() { }

@@ -59,13 +59,19 @@ public:
 class ArchNetworkBSD : public IArchNetwork {
 public:
     ArchNetworkBSD();
+    ArchNetworkBSD(ArchNetworkBSD const &) =delete;
+    ArchNetworkBSD(ArchNetworkBSD &&) =delete;
     virtual ~ArchNetworkBSD();
+
+    ArchNetworkBSD& operator=(ArchNetworkBSD const &) =delete;
+    ArchNetworkBSD& operator=(ArchNetworkBSD &&) =delete;
 
     virtual void init();
 
     // IArchNetwork overrides
     virtual ArchSocket     newSocket(EAddressFamily, ESocketType);
-    virtual ArchSocket     copySocket(ArchSocket s);    virtual void        closeSocket(ArchSocket s);
+    virtual ArchSocket     copySocket(ArchSocket s);
+    virtual void        closeSocket(ArchSocket s);
     virtual void        closeSocketForRead(ArchSocket s);
     virtual void        closeSocketForWrite(ArchSocket s);
     virtual void        bindSocket(ArchSocket s, ArchNetAddress addr);

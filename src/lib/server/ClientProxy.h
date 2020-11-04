@@ -32,7 +32,12 @@ public:
     \c name is the name of the client.
     */
     ClientProxy(const String& name, synergy::IStream* adoptedStream);
+    ClientProxy(ClientProxy const &) =delete;
+    ClientProxy(ClientProxy &&) =delete;
     ~ClientProxy();
+
+    ClientProxy& operator=(ClientProxy const &) =delete;
+    ClientProxy& operator=(ClientProxy &&) =delete;
 
     //! @name manipulators
     //@{

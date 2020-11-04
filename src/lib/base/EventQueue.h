@@ -39,7 +39,11 @@ delegates the platform dependent parts to a subclass.
 class EventQueue : public IEventQueue {
 public:
     EventQueue();
+    EventQueue(EventQueue const &) =delete;
+    EventQueue(EventQueue &&) =delete;
     virtual ~EventQueue();
+    EventQueue& operator=(EventQueue const &) =delete;
+    EventQueue& operator=(EventQueue &&) =delete;
 
     // IEventQueue overrides
     virtual void        loop();

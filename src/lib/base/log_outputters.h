@@ -113,7 +113,12 @@ the scope.
 class SystemLogger {
 public:
     SystemLogger(const char* title, bool blockConsole);
+    SystemLogger(SystemLogger const &) =delete;
+    SystemLogger(SystemLogger &&) =delete;
     ~SystemLogger();
+
+    SystemLogger& operator=(SystemLogger const &) =delete;
+    SystemLogger& operator=(SystemLogger &&) =delete;
 
 private:
     ILogOutputter*        m_syslog;

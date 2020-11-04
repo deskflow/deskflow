@@ -34,7 +34,12 @@ class IpcClientProxy {
 
 public:
     IpcClientProxy(synergy::IStream& stream, IEventQueue* events);
+    IpcClientProxy(IpcClientProxy const &) =delete;
+    IpcClientProxy(IpcClientProxy &&) =delete;
     virtual ~IpcClientProxy();
+
+    IpcClientProxy& operator=(IpcClientProxy const &) =delete;
+    IpcClientProxy& operator=(IpcClientProxy &&) =delete;
 
 private:
     void                send(const IpcMessage& message);

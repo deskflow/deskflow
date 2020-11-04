@@ -101,7 +101,7 @@ public:
     //! Call init on other arch classes.
     /*!
     Some arch classes depend on others to exist first. When init is called
-    these clases will have ARCH available for use.
+    these classes will have ARCH available for use.
     */
     virtual void init();
 
@@ -129,10 +129,15 @@ public:
     {
         ARCH->lockMutex(m_mutex);
     }
+    ArchMutexLock(ArchMutexLock const &) =delete;
+    ArchMutexLock(ArchMutexLock  &&) =delete;
     ~ArchMutexLock()
     {
         ARCH->unlockMutex(m_mutex);
     }
+
+    ArchMutexLock& operator=(ArchMutexLock const &) =delete;
+    ArchMutexLock& operator=(ArchMutexLock  &&) =delete;
 
 private:
     ArchMutex            m_mutex;

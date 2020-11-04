@@ -43,7 +43,12 @@ public:
     \p client.
     */
     ServerProxy(Client* client, synergy::IStream* stream, IEventQueue* events);
+    ServerProxy(ServerProxy const &) =delete;
+    ServerProxy(ServerProxy &&) =delete;
     ~ServerProxy();
+
+    ServerProxy& operator=(ServerProxy const &) =delete;
+    ServerProxy& operator=(ServerProxy &&) =delete;
 
     //! @name manipulators
     //@{

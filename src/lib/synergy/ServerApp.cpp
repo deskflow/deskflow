@@ -789,7 +789,7 @@ ServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
 {
     // general initialization
     m_synergyAddress = new NetworkAddress;
-    args().m_config         = new Config(m_events);
+    args().m_config         = std::make_shared<Config>(m_events);
     args().m_pname          = ARCH->getBasename(argv[0]);
 
     // install caller's output filter
@@ -806,7 +806,6 @@ ServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc
         delete m_taskBarReceiver;
     }
 
-    delete args().m_config;
     delete m_synergyAddress;
     return result;
 }
