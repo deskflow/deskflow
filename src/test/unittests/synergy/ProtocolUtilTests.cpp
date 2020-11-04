@@ -200,7 +200,7 @@ TEST_F(ProtocolUtilTests, readf_string)
 {
     const UInt8 Length = 200;
     const std::string Expected(Length, 'x');
-    std::array<UInt8, 4> StringSize = {0,0,0,Length};
+    std::array<UInt8, 4> StringSize{{0,0,0,Length}};
 
     EXPECT_CALL(stream, read(_, _))
         .WillOnce(
@@ -225,8 +225,8 @@ class ReadfIntTestFixture : public ::testing::TestWithParam< std::tuple<const ch
 public:
     MockStream stream;
     UInt8 StreamData1Byte = 10;
-    std::array<UInt8, 2> StreamData2Bytes = {0, 10};
-    std::array<UInt8, 4> StreamData4Bytes = {0, 0, 0, 10};
+    std::array<UInt8, 2> StreamData2Bytes{{0, 10}};
+    std::array<UInt8, 4> StreamData4Bytes{{0, 0, 0, 10}};
 
     UInt8* getStreamData(int size)
     {
@@ -287,7 +287,7 @@ TEST_P(ReadfIntVectorTestFixture, readf_int_vector)
     const std::vector<UInt8> Expected1Byte = {10,10};
     const std::vector<UInt16> Expected2Bytes = {10,10};
     const std::vector<UInt32> Expected4Bytes = {10,10};
-    std::array<UInt8, 4> StreamVectorSize = {0,0,0,2};
+    std::array<UInt8, 4> StreamVectorSize{{0,0,0,2}};
 
     const char* Format = std::get<0>(GetParam());
     int StreamDataSize = std::get<1>(GetParam());
@@ -345,7 +345,7 @@ TEST_P(ReadfIntAndStringTest, readf_int_and_string)
     const int ExpectedInt = 10;
     const UInt8 StringLength = 200;
     const std::string ExpectedString(StringLength, 'x');
-    std::array<UInt8, 4> StringSize = {0,0,0,StringLength};
+    std::array<UInt8, 4> StringSize{{0,0,0,StringLength}};
 
     const char* Format = std::get<0>(GetParam());
     int StreamDataSize = std::get<1>(GetParam());
@@ -400,10 +400,10 @@ INSTANTIATE_TEST_CASE_P(
 TEST_F(ProtocolUtilTests, readf_string_and_int4bytes)
 {
     const UInt8 ExpectedInt = 10;
-    std::array<UInt8, 4> StreamIntData = {0,0,0,ExpectedInt};
+    std::array<UInt8, 4> StreamIntData{{0,0,0,ExpectedInt}};
 
     const std::string ExpectedStr(32768, 'x');
-    std::array<UInt8, 4> Size = {0,0,128,0};
+    std::array<UInt8, 4> Size{{0,0,128,0}};
 
     EXPECT_CALL(stream, read(_, _))
         .WillOnce(
@@ -434,11 +434,11 @@ TEST_F(ProtocolUtilTests, readf_string_and_vector_int4bytes)
 {
     std::vector<UInt32> Actual = {};
     const std::vector<UInt32> Expected4Bytes = {10,10};
-    std::array<UInt8, 4> StreamVectorSize = {0,0,0,2};
-    std::array<UInt8, 4> StreamData4Bytes = {0, 0, 0, 10};
+    std::array<UInt8, 4> StreamVectorSize{{0,0,0,2}};
+    std::array<UInt8, 4> StreamData4Bytes{{0, 0, 0, 10}};
 
     const std::string ExpString(32768, 'x');
-    std::array<UInt8, 4> SizeString = {0,0,128,0};
+    std::array<UInt8, 4> SizeString{{0,0,128,0}};
 
     EXPECT_CALL(stream, read(_, _))
         .WillOnce(
@@ -475,11 +475,11 @@ TEST_F(ProtocolUtilTests, readf_vector_int4bytes_and_string)
 {
     std::vector<UInt32> Actual4Bytes = {};
     const std::vector<UInt32> Expected4Bytes = {10,10};
-    std::array<UInt8, 4> StreamVectorSize = {0,0,0,2};
-    std::array<UInt8, 4> StreamData4Bytes = {0, 0, 0, 10};
+    std::array<UInt8, 4> StreamVectorSize{{0,0,0,2}};
+    std::array<UInt8, 4> StreamData4Bytes{{0, 0, 0, 10}};
 
     const std::string ExpectedString(32768, 'x');
-    std::array<UInt8, 4> StringSize = {0,0,128,0};
+    std::array<UInt8, 4> StringSize{{0,0,128,0}};
 
     EXPECT_CALL(stream, read(_, _))
         .WillOnce(
@@ -605,7 +605,7 @@ TEST_F(ProtocolUtilTests, write_string_test)
 TEST_F(ProtocolUtilTests, write_raw_bytes_test)
 {
     const UInt32 Size = 5;
-    const std::array<UInt8, Size> Expected = {10, 20, 30, 40, 50};
+    const std::array<UInt8, Size> Expected{{10, 20, 30, 40, 50}};
     EXPECT_CALL(stream, write(EqVoidVectorInt1byte(Expected), Expected.size() + sizeof (UInt32)));
     ProtocolUtil::writef(&stream, "%S", Size, &Expected);
 }
