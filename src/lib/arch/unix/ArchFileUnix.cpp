@@ -61,7 +61,7 @@ ArchFileUnix::getUserDirectory()
     std::string dir;
 #if HAVE_GETPWUID_R
     struct passwd pwent;
-    struct passwd* pwentp;
+    struct passwd* pwentp {};
 #if defined(_SC_GETPW_R_SIZE_MAX)
     long size = sysconf(_SC_GETPW_R_SIZE_MAX);
     if (size == -1) {
