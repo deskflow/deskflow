@@ -15,6 +15,7 @@ Bug fixes:
 - #6826 + #6829 SonarCloud Critical bugs
 - #6821 Blocker bugs found by sonar in synergy and in tests
 - #6825 The system requires google test even when tests are disabled with BUILD_TESTS=OFF
+- #6832 TLS certificate error on macOS system
 
 Enhancements:
 - #6750 Integrate SonarCloud for static analysis and test coverage

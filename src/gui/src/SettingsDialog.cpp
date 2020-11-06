@@ -166,7 +166,6 @@ void SettingsDialog::loadFromConfig() {
     m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
     m_pGroupBoxTLS->setVisible(m_appConfig.getCryptoEnabled());
 
-
 #ifdef SYNERGY_ENTERPRISE
 
     m_pCheckBoxEnableCrypto->setEnabled(true);
@@ -177,9 +176,8 @@ void SettingsDialog::loadFromConfig() {
 
 #else
 
-    bool isPro = m_appConfig.edition() == kPro;
-    m_pCheckBoxEnableCrypto->setEnabled(isPro);
-    m_pLabelProUpgrade->setVisible(!isPro);
+    m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.isCryptoAvailable());
+    m_pLabelProUpgrade->setVisible(!m_appConfig.isCryptoAvailable());
 
     m_pCheckBoxAutoConfig->setChecked(appConfig().autoConfig());
 
