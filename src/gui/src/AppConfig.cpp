@@ -418,12 +418,18 @@ void AppConfig::setCryptoEnabled(bool newValue) {
     emit sslToggled(m_CryptoEnabled);
 }
 
-bool AppConfig::getCryptoEnabled() const {
-    return
+bool AppConfig::isCryptoAvailable() const {
+    bool result {true};
+
 #ifndef SYNERGY_ENTERPRISE
-    (edition() == kPro) &&
+    result = (edition() == kPro || edition() == kBusiness);
 #endif
-    m_CryptoEnabled;
+
+    return result;
+}
+
+bool AppConfig::getCryptoEnabled() const {
+    return isCryptoAvailable() && m_CryptoEnabled;
 }
 
 void AppConfig::setAutoHide(bool b) {

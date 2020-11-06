@@ -665,17 +665,22 @@ void MainWindow::startSynergy()
 
 #endif
 
+#if defined(Q_OS_WIN)
     if (m_AppConfig->getCryptoEnabled()) {
         args << "--enable-crypto";
         args << "--tls-cert" <<  QString("\"%1\"").arg(m_AppConfig->getTLSCertPath());
     }
-
-#if defined(Q_OS_WIN)
     // on windows, the profile directory changes depending on the user that
     // launched the process (e.g. when launched with elevation). setting the
     // profile dir on launch ensures it uses the same profile dir is used
     // no matter how its relaunched.
     args << "--profile-dir" << getProfileRootForArg();
+
+#else
+    if (m_AppConfig->getCryptoEnabled()) {
+        args << "--enable-crypto";
+        args << "--tls-cert" << m_AppConfig->getTLSCertPath();
+    }
 #endif
 
     if ((synergyType() == synergyClient && !clientArgs(args, app))

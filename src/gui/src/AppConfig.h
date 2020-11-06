@@ -104,6 +104,7 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         void persistLogDir();
         ElevateMode elevateMode();
 
+        bool isCryptoAvailable() const;
         void setCryptoEnabled(bool e);
         bool getCryptoEnabled() const;
 
