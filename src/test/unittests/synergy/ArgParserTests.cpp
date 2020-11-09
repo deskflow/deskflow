@@ -220,12 +220,12 @@ TEST(ArgParserTests, parseToolArgs_matches_correspondingly)
     for (auto const &test: tests) {
         ToolArgs toolArgs;
         EXPECT_FALSE(test.second(toolArgs));
-        const char *twoArgs[2] {"syntool", test.first};
-        EXPECT_TRUE(parser.parseToolArgs(toolArgs, 2, twoArgs));
+        std::array<const char *, 2> twoArgs {"syntool", test.first};
+        EXPECT_TRUE(parser.parseToolArgs(toolArgs, 2, twoArgs.data()));
         EXPECT_TRUE(test.second(toolArgs));
     }
     ToolArgs toolArgs;
-    const char *twoArgs[2] {"syntool", "--garbage"};
-    EXPECT_FALSE(parser.parseToolArgs(toolArgs, 2, twoArgs));
+    std::array<const char *, 2> twoArgs {"syntool", "--garbage"};
+    EXPECT_FALSE(parser.parseToolArgs(toolArgs, 2, twoArgs.data()));
 }
 
