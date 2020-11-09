@@ -16,6 +16,7 @@
  */
 
 #include <functional>
+#include <array>
 
 #include "synergy/ArgParser.h"
 #include "synergy/ArgsBase.h"
