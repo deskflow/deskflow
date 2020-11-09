@@ -224,5 +224,8 @@ TEST(ArgParserTests, parseToolArgs_matches_correspondingly)
         EXPECT_TRUE(parser.parseToolArgs(toolArgs, 2, twoArgs));
         EXPECT_TRUE(test.second(toolArgs));
     }
+    ToolArgs toolArgs;
+    const char *twoArgs[2] {"syntool", "--garbage"};
+    EXPECT_FALSE(parser.parseToolArgs(toolArgs, 2, twoArgs));
 }
 
