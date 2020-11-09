@@ -160,6 +160,9 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         void saveSettings() override;
         void setLastVersion(const QString& version);
 
+        /// @brief Generates TLS certificate
+        /// @param [in] bool forceGeneration Generate certificate even if it's exists.
+        void generateCertificate(bool forceGeneration=false) const;
 
 protected:
     /// @brief The enumeration to easily access the names of the setting inside m_SynergySettingsName
@@ -288,7 +291,7 @@ protected:
         void setSettingModified(T& variable,const T& newValue);
 
     signals:
-        void sslToggled(bool enabled);
+        void sslToggled() const;
         void zeroConfToggled();
 };
 
