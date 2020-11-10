@@ -26,6 +26,7 @@
 #include <QPushButton>
 
 #include "ConfigWriter.h"
+#include "SslCertificate.h"
 
 #if defined(Q_OS_WIN)
 const char AppConfig::m_SynergysName[] = "synergys.exe";
@@ -414,8 +415,10 @@ ElevateMode AppConfig::elevateMode()
 }
 
 void AppConfig::setCryptoEnabled(bool newValue) {
+    if (m_CryptoEnabled != newValue && newValue){
+        generateCertificate();
+    }
     setSettingModified(m_CryptoEnabled, newValue);
-    emit sslToggled(m_CryptoEnabled);
 }
 
 bool AppConfig::isCryptoAvailable() const {
@@ -564,6 +567,16 @@ QString AppConfig::getTLSKeyLength() const {
 }
 
 void AppConfig::setTLSKeyLength(const QString& length) {
-    m_TLSKeyLength = length;
+    if (m_TLSKeyLength != length) {
+        m_TLSKeyLength = length;
+        generateCertificate(true);
+    }
 }
+
+void AppConfig::generateCertificate(bool forceGeneration) const {
+    SslCertificate sslCertificate;
+    sslCertificate.generateCertificate(getTLSCertPath(), getTLSKeyLength(), forceGeneration);
+    emit sslToggled();
+}
+
 

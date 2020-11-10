@@ -66,19 +66,10 @@ void SettingsDialog::accept()
     appConfig().setAutoConfig(m_pCheckBoxAutoConfig->isChecked());
     appConfig().setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
     appConfig().setTLSCertPath(m_pLineEditCertificatePath->text());
-
-    bool keyLengthChanged = appConfig().getTLSKeyLength() != m_pComboBoxKeyLength->currentText();
     appConfig().setTLSKeyLength(m_pComboBoxKeyLength->currentText());
 
     //We only need to test the System scoped Radio as they are connected
     appConfig().setLoadFromSystemScope(m_pRadioSystemScope->isChecked());
-
-    if(m_pCheckBoxEnableCrypto->isChecked()) {
-        SslCertificate sslCertificate;
-        sslCertificate.generateCertificate(appConfig().getTLSCertPath(),
-                                           m_pComboBoxKeyLength->currentText(),
-                                           keyLengthChanged);
-    }
     m_appConfig.setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
 
     QDialog::accept();
@@ -224,9 +215,6 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
 {
     m_appConfig.setCryptoEnabled(checked);
     if (checked) {
-        SslCertificate sslCertificate;
-        sslCertificate.generateCertificate(m_pLineEditCertificatePath->text(), m_pComboBoxKeyLength->currentText());
-        m_pMainWindow->updateLocalFingerprint();
         verticalSpacer_4->changeSize(10, 10, QSizePolicy::Minimum);
     } else {
         verticalSpacer_4->changeSize(10, 0, QSizePolicy::Ignored);
@@ -265,15 +253,6 @@ void SettingsDialog::on_m_pPushButtonBrowseCert_clicked() {
     updateRegenButton();
 }
 
-void SettingsDialog::regenerateSSLCert() {
-    SslCertificate sslCertificate;
-    sslCertificate.generateCertificate(appConfig().getTLSCertPath(),
-                                       appConfig().getTLSKeyLength(),
-                                       true);
-
-    m_pMainWindow->updateLocalFingerprint();
-}
-
 void SettingsDialog::on_m_pComboBoxKeyLength_currentIndexChanged(int index) {
     updateRegenButton();
 }
@@ -289,7 +268,7 @@ void SettingsDialog::updateRegenButton() {
 }
 
 void SettingsDialog::on_m_pPushButtonRegenCert_clicked() {
-    regenerateSSLCert();
+    appConfig().generateCertificate(true);
 }
 
 void SettingsDialog::updateKeyLengthOnFile(const QString &path) {

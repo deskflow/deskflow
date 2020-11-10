@@ -163,7 +163,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     // hide padlock icon
     secureSocket(false);
 
-    sslToggled(appConfig.getCryptoEnabled());
+    updateLocalFingerprint();
 
     connect (this, SIGNAL(windowShown()),
              this, SLOT(on_windowShown()), Qt::QueuedConnection);
@@ -178,8 +178,8 @@ MainWindow::MainWindow (AppConfig& appConfig,
              this, SLOT(InvalidLicense()), Qt::QueuedConnection);
 #endif
 
-    connect (m_AppConfig, SIGNAL(sslToggled(bool)),
-             this, SLOT(sslToggled(bool)), Qt::QueuedConnection);
+    connect (m_AppConfig, SIGNAL(sslToggled()),
+             this, SLOT(updateLocalFingerprint()), Qt::QueuedConnection);
 
     connect (m_AppConfig, SIGNAL(zeroConfToggled()),
              this, SLOT(zeroConfToggled()), Qt::QueuedConnection);
@@ -742,12 +742,6 @@ void MainWindow::retryStart()
     {
         startSynergy();
     }
-}
-
-void
-MainWindow::sslToggled (bool enabled)
-{
-    updateLocalFingerprint();
 }
 
 bool MainWindow::clientArgs(QStringList& args, QString& app)

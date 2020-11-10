@@ -120,7 +120,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         void showConfigureServer() { showConfigureServer(""); }
         void autoAddScreen(const QString name);
         void addZeroconfServer(const QString name);
-        void updateLocalFingerprint();
         Zeroconf& zeroconf() { return *m_pZeroconf; }
 #ifndef SYNERGY_ENTERPRISE
         LicenseManager& licenseManager() const;
@@ -143,7 +142,7 @@ public slots:
         void retryStart(); // If the connection failed this will retry a startSynergy
 
     protected slots:
-        void sslToggled(bool enabled);
+        void updateLocalFingerprint();
         void on_m_pGroupClient_toggled(bool on);
         void on_m_pGroupServer_toggled(bool on);
         bool on_m_pButtonBrowseConfigFile_clicked();

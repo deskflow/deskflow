@@ -48,9 +48,6 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         /// @brief Causes the dialog to load all the settings from m_appConfig
         void loadFromConfig();
 
-        /// @brief Forces the regeneration of the TLS cert from the saved settings
-        void regenerateSSLCert();
-
         /// @brief Check if the regenerate button should be enabled or disabled and sets it
         void updateRegenButton();
 
