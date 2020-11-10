@@ -49,7 +49,7 @@ jobs:
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
     - run: |
-        export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get upgrade -y && apt-get install -y \
+        sudo sh -c 'export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get upgrade -y && apt-get install -y \
           git \
           cmake3 \
           qtbase5-dev \
@@ -63,7 +63,7 @@ jobs:
           devscripts \
           qttools5-dev \
           qttools5-dev-tools \
-          && rm -rf /var/lib/apt/lists
+          && rm -rf /var/lib/apt/lists'
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
