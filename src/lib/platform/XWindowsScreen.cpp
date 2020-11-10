@@ -848,12 +848,7 @@ void
 XWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 {
 	// FIXME -- ignore xinerama for now
-	if (false && m_xinerama && m_xtestIsXineramaUnaware) {
-//		XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
-	}
-	else {
-		XTestFakeRelativeMotionEvent(m_display, dx, dy, CurrentTime);
-	}
+	XTestFakeRelativeMotionEvent(m_display, dx, dy, CurrentTime);
 	XFlush(m_display);
 }
 

@@ -15,8 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <functional>
+#include <array>
+
 #include "synergy/ArgParser.h"
 #include "synergy/ArgsBase.h"
+#include "synergy/ToolArgs.h"
 
 #include "test/global/gtest.h"
 
@@ -203,5 +207,26 @@ TEST(ArgParserTests, assembleCommand_stringArrayWithSpace_returnCommand)
     String command = ArgParser::assembleCommand(argArray);
 
     EXPECT_EQ("\"stub1 space\" stub2 \"stub3 space\"", command);
+}
+
+TEST(ArgParserTests, parseToolArgs_matches_correspondingly)
+{
+    ArgParser parser(nullptr);
+    std::map<const char *, std::function<bool(ToolArgs const &)>> tests = {
+        {"--get-active-desktop", [](ToolArgs const &a){ return a.m_printActiveDesktopName; }},
+        {"--get-installed-dir", [](ToolArgs const &a){ return a.m_getInstalledDir; }},
+        {"--get-profile-dir", [](ToolArgs const &a){ return a.m_getProfileDir; }},
+        {"--get-arch", [](ToolArgs const &a){ return a.m_getArch; }}
+    };
+    for (auto const &test: tests) {
+        ToolArgs toolArgs;
+        EXPECT_FALSE(test.second(toolArgs));
+        std::array<const char *, 2> twoArgs {"syntool", test.first};
+        EXPECT_TRUE(parser.parseToolArgs(toolArgs, 2, twoArgs.data()));
+        EXPECT_TRUE(test.second(toolArgs));
+    }
+    ToolArgs toolArgs;
+    std::array<const char *, 2> twoArgs {"syntool", "--garbage"};
+    EXPECT_FALSE(parser.parseToolArgs(toolArgs, 2, twoArgs.data()));
 }
 
