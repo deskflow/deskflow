@@ -112,7 +112,6 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_pSynergy(NULL),
     m_SynergyState(synergyDisconnected),
     m_ServerConfig(5, 3, m_AppConfig->screenName(), this),
-    m_pTempConfigFile(NULL),
     m_pTrayIcon(NULL),
     m_pTrayIconMenu(NULL),
     m_AlreadyHidden(false),
@@ -818,17 +817,19 @@ QString MainWindow::configFilename()
     {
         // TODO: no need to use a temporary file, since we need it to
         // be permenant (since it'll be used for Windows services, etc).
-        m_pTempConfigFile = new QTemporaryFile();
-        if (!m_pTempConfigFile->open())
+        QTemporaryFile tempConfigFile;
+        tempConfigFile.setAutoRemove(false);
+
+        if (!tempConfigFile.open())
         {
             QMessageBox::critical(this, tr("Cannot write configuration file"), tr("The temporary configuration file required to start synergy can not be written."));
             return "";
         }
 
-        serverConfig().save(*m_pTempConfigFile);
-        filename = m_pTempConfigFile->fileName();
+        serverConfig().save(tempConfigFile);
+        filename = tempConfigFile.fileName();
 
-        m_pTempConfigFile->close();
+        tempConfigFile.close();
     }
     else
     {
@@ -912,13 +913,6 @@ void MainWindow::stopSynergy()
     }
 
     setSynergyState(synergyDisconnected);
-
-    // HACK: deleting the object deletes the physical file, which is
-    // bad, since it could be in use by the Windows service!
-#if !defined(Q_OS_WIN)
-    delete m_pTempConfigFile;
-#endif
-    m_pTempConfigFile = NULL;
 
     // reset so that new connects cause auto-hide.
     m_AlreadyHidden = false;

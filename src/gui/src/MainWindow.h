@@ -46,7 +46,6 @@ class QComboBox;
 class QTabWidget;
 class QCheckBox;
 class QRadioButton;
-class QTemporaryFile;
 class QMessageBox;
 class QAbstractButton;
 
@@ -222,7 +221,6 @@ public slots:
         QProcess*           m_pSynergy;
         int                 m_SynergyState;
         ServerConfig        m_ServerConfig;
-        QTemporaryFile*     m_pTempConfigFile;
         QSystemTrayIcon*    m_pTrayIcon;
         QMenu*              m_pTrayIconMenu;
         bool                m_AlreadyHidden;
