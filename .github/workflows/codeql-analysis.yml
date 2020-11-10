@@ -49,8 +49,21 @@ jobs:
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
     - run: |
-        sudo apt-get update
-        sudo apt-get install libxtst-dev libxext-dev qt
+        export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get upgrade -y && apt-get install -y \
+          git \
+          cmake3 \
+          qtbase5-dev \
+          build-essential \
+          libx11-dev \
+          libxtst-dev \
+          libgl1-mesa-dev \
+          libssl-dev \
+          libavahi-compat-libdnssd-dev \
+          debhelper \
+          devscripts \
+          qttools5-dev \
+          qttools5-dev-tools \
+          && rm -rf /var/lib/apt/lists
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
