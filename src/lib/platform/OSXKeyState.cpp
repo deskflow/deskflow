@@ -255,7 +255,7 @@ OSXKeyState::mapKeyFromEvent(KeyIDs& ids,
     // get keyboard info
     AutoTISInputSourceRef currentKeyboardLayout(TISCopyCurrentKeyboardLayoutInputSource(), CFRelease);
 
-    if (currentKeyboardLayout) {
+    if (!currentKeyboardLayout) {
         return kKeyNone;
     }
 

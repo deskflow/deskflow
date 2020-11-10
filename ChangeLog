@@ -1,6 +1,7 @@
 ===========
 Bug fixes:
 - #6831 Incorporating Sonar's major
+- #6837 Memory leaks on macOS system
 
 Enhancements:
 
