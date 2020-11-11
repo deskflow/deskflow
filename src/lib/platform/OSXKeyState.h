@@ -25,8 +25,8 @@
 
 #include <Carbon/Carbon.h>
 
-typedef TISInputSourceRef KeyLayout;
 class IOSXKeyResource;
+
 
 //! OS X key state
 /*!
@@ -106,7 +106,11 @@ protected:
 
 private:
     class KeyResource;
-    typedef std::vector<KeyLayout> GroupList;
+    typedef void(*CFDeallocator)(CFTypeRef);
+    typedef std::unique_ptr<const __CFArray, CFDeallocator> GroupList;
+    typedef std::unique_ptr<const __CFDictionary, CFDeallocator> AutoCFDictionary;
+    typedef std::unique_ptr<__TISInputSource, CFDeallocator> AutoTISInputSourceRef;
+
 
     // Add hard coded special keys to a synergy::KeyMap.
     void                getKeyMapForSpecialKeys(
@@ -121,10 +125,6 @@ private:
 
     // Change active keyboard group to group
     void                setGroup(SInt32 group);
-
-    // Check if the keyboard layout has changed and update keyboard state
-    // if so.
-    void                checkKeyboardLayout();
 
     // Send an event for the given modifier key
     void                handleModifierKey(void* target,
@@ -170,7 +170,7 @@ private:
 
     VirtualKeyMap        m_virtualKeyMap;
     mutable UInt32        m_deadKeyState;
-    GroupList            m_groups;
+    GroupList           m_groups{nullptr, CFRelease};
     GroupMap            m_groupMap;
     bool                m_shiftPressed;
     bool                m_controlPressed;
