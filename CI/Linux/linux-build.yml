@@ -122,7 +122,7 @@ steps:
       GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
-      cd build-release
+      cd build-ent
       make install/strip
       cd rpm
       rpmbuild -bb --define "_topdir $(pwd)" --buildroot $(pwd)/BUILDROOT synergy.spec
