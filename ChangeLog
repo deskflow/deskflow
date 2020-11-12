@@ -2,6 +2,7 @@
 Bug fixes:
 - #6831 Incorporating Sonar's major
 - #6837 Memory leaks on macOS system
+- #6838 Enterprise asks for serial key on Linux system
 
 Enhancements:
 
