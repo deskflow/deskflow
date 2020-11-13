@@ -5,7 +5,6 @@
 		<Package Compressed="yes" InstallScope="perMachine" InstallerVersion="301"/>
 		<MajorUpgrade DowngradeErrorMessage="A newer version of $(var.Name) is already installed."/>
 		<MediaTemplate EmbedCab="yes"/>
-		<UIRef Id="WixUI_InstallDir"/>
 		<!-- causes ICE61 warning, but stops user from installing many instances from nightly builds. -->
 		<Upgrade Id="$(var.UpgradeGuid)">
 			<UpgradeVersion Minimum="0.0.0.0" Property="UPGRADE"/>
@@ -26,13 +25,13 @@
 
 				<RegistryKey Id="synergyc" Root="HKLM"
 					Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
-					Action="createAndRemoveOnUninstall">
+					ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes">
 					<RegistryValue Type="string" Name="[INSTALLFOLDER]synergyc.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
 				</RegistryKey>
 
 				<RegistryKey Id="synergy" Root="HKLM"
 					Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
-					Action="createAndRemoveOnUninstall">
+					ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes">
 					<RegistryValue Type="string" Name="[INSTALLFOLDER]synergy.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
 				</RegistryKey>
 				<!-- Windows 8 and later only -->
@@ -44,9 +43,11 @@
         <Merge Id="VC_Redist" SourceFile="$(var.DisPath)\wix\msm\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
       <?endif ?>
 		</DirectoryRef>
+		<Property Id="SynergyCommonBackground">common_background</Property>
+		<Binary Id="common_background" SourceFile="$(var.ResPath)\common_background.png"/>
 		<Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
-		<WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\banner.bmp"/>
-		<WixVariable Id="WixUIDialogBmp" Value="$(var.ResPath)\dialog.bmp"/>
+		<WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\banner.png"/>
+		<WixVariable Id="WixUIDialogBmp" Value="$(var.ResPath)\dialog.png"/>
 		<Property Id="ARPPRODUCTICON" Value="synergy.ico"/>
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER"/>
 		<Property Id="LEGACY_UNINSTALL_EXISTS">
@@ -58,18 +59,7 @@
     </Condition>
 		<CustomAction ExeCommand="" FileKey="GuiProgram" Id="StartGui" Return="asyncNoWait"/>
 		<UI>
-		    <UIRef Id="WixUI_InstallDir" />
-		    <Publish Dialog="WelcomeDlg"
-		          Control="Next"
-			  Event="NewDialog"
-			  Value="InstallDirDlg"
-			  Order="2">1</Publish>
-			<Publish Dialog="InstallDirDlg"
-			  Control="Back"
-			  Event="NewDialog"
-			  Value="WelcomeDlg"
-			  Order="2">1</Publish>
-			<Publish Control="Finish" Dialog="ExitDialog" Event="DoAction" Value="StartGui">NOT Installed</Publish>
+			<UIRef Id="SynergyDlgSequence" />
 		</UI>
 	</Product>
 	<Fragment>
