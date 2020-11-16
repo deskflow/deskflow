@@ -5,6 +5,7 @@ Bug fixes:
 - #6838 Enterprise asks for serial key on Linux system
 
 Enhancements:
+- #6841 Windows installer has been updated.
 
 v1.12.x-snapshot
 ===========
