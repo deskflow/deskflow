@@ -95,7 +95,7 @@
                <Publish Event="SpawnDialog" Value="OutOfDiskDlg">(OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")</Publish>
             </Control>
 
-            <Control Id="InstallTitle" Type="Text" X="15" Y="15" Width="300" Height="15" Transparent="yes" NoPrefix="yes" Hidden="yes" Text="!(loc.VerifyReadyDlgInstallTitle)">
+            <Control Id="InstallTitle" Type="Text" X="15" Y="15" Width="300" Height="15" Transparent="yes" NoPrefix="yes" Hidden="yes" Text="{\WixUI_Font_Title}Ready to install">
                <Condition Action="show">NOT Installed</Condition>
             </Control>
             <Control Id="InstallText" Transparent="yes" Type="Text" X="25" Y="70" Width="320" Height="80" Hidden="yes" Text="!(loc.VerifyReadyDlgInstallText)">
