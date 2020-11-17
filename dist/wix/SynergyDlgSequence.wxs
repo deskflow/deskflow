@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+First-time install dialog sequence:
+ - WixUI_WelcomeDlg
+ - WixUI_LicenseAgreementDlg
+ - WixUI_InstallDirDlg
+ - WixUI_VerifyReadyDlg
+ - WixUI_DiskCostDlg
+Maintenance dialog sequence:
+ - WixUI_MaintenanceWelcomeDlg
+ - WixUI_MaintenanceTypeDlg
+ - WixUI_InstallDirDlg
+ - WixUI_VerifyReadyDlg
+Patch dialog sequence:
+ - WixUI_WelcomeDlg
+ - WixUI_VerifyReadyDlg
+-->
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <UI Id="SynergyDlgSequence">
+            <TextStyle Id="WixUI_Font_Normal" FaceName="Roboto" Size="9" />
+            <TextStyle Id="WixUI_Font_Bigger" FaceName="Roboto" Size="14" />
+            <TextStyle Id="WixUI_Font_Title" FaceName="Roboto" Size="12" Bold="yes"  Blue="255" Red="255" Green="255"/>
+
+            <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+            <Property Id="WixUI_Mode" Value="InstallDir" />
+
+            <DialogRef Id="BrowseDlg" />
+            <DialogRef Id="DiskCostDlg" />
+            <DialogRef Id="ErrorDlg" />
+            <DialogRef Id="FatalError" />
+            <DialogRef Id="FilesInUse" />
+            <DialogRef Id="MsiRMFilesInUse" />
+            <DialogRef Id="PrepareDlg" />
+            <DialogRef Id="ProgressDlg" />
+            <DialogRef Id="ResumeDlg" />
+            <DialogRef Id="UserExit" />
+            
+            <Publish Dialog="SynergyBrowseDlg" Control="OK" Event="DoAction" Value="WixUIValidatePath" Order="3">1</Publish>
+            <Publish Dialog="SynergyBrowseDlg" Control="OK" Event="SpawnDialog" Value="InvalidDirDlg" Order="4"><![CDATA[WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+
+            <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+            <Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="StartGui">NOT Installed</Publish>
+
+            <Publish Dialog="SynergyWelcome" Control="Next" Event="NewDialog" Value="SynergyInstallDirDlg" Order="1">1</Publish>
+            <Publish Dialog="SynergyWelcome" Control="Next" Event="NewDialog" Value="SynergyVerifyReadyDlg">Installed AND PATCH</Publish>
+
+            <Publish Dialog="SynergyInstallDirDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+            <Publish Dialog="SynergyInstallDirDlg" Control="Next" Event="DoAction" Value="WixUIValidatePath" Order="2">NOT WIXUI_DONTVALIDATEPATH</Publish>
+            <Publish Dialog="SynergyInstallDirDlg" Control="Next" Event="SpawnDialog" Value="InvalidDirDlg" Order="3"><![CDATA[NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+            <Publish Dialog="SynergyInstallDirDlg" Control="Next" Event="NewDialog" Value="SynergyVerifyReadyDlg" Order="4">WIXUI_DONTVALIDATEPATH OR WIXUI_INSTALLDIR_VALID="1"</Publish>
+            <Publish Dialog="SynergyInstallDirDlg" Control="ChangeFolder" Property="_BrowseProperty" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+            <Publish Dialog="SynergyInstallDirDlg" Control="ChangeFolder" Event="SpawnDialog" Value="SynergyBrowseDlg" Order="2">1</Publish>
+            <Publish Dialog="SynergyInstallDirDlg" Control="Back" Event="NewDialog" Value="SynergyWelcome" Order="2">1</Publish>
+            
+            <Publish Dialog="SynergyVerifyReadyDlg" Control="Back" Event="NewDialog" Value="SynergyInstallDirDlg" Order="1">NOT Installed</Publish>
+            <Publish Dialog="SynergyVerifyReadyDlg" Control="Back" Event="NewDialog" Value="SynergyMaintenanceTypeDlg" Order="2">Installed AND NOT PATCH</Publish>
+            <Publish Dialog="SynergyVerifyReadyDlg" Control="Back" Event="NewDialog" Value="SynergyInstallDirDlg" Order="2">Installed AND PATCH</Publish>
+
+            <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="SynergyMaintenanceTypeDlg">1</Publish>
+
+            <Publish Dialog="SynergyMaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="SynergyVerifyReadyDlg">1</Publish>
+            <Publish Dialog="SynergyMaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="SynergyVerifyReadyDlg">1</Publish>
+            <Publish Dialog="SynergyMaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+
+            <Property Id="ARPNOMODIFY" Value="1" />
+        </UI>
+
+        <UIRef Id="WixUI_Common" />
+    </Fragment>
+</Wix>

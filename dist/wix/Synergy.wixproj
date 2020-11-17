@@ -10,6 +10,12 @@
     <IntermediateOutputPath>wix\obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(SolutionDir)/SynergyWelcome.wxs" />
+    <Compile Include="$(SolutionDir)/SynergyInstallDlg.wxs" />
+    <Compile Include="$(SolutionDir)/SynergyBrowseDlg.wxs" />
+    <Compile Include="$(SolutionDir)/SynergyVerifyReadyDlg.wxs" />
+    <Compile Include="$(SolutionDir)/SynergyMaintenanceTypeDlg.wxs" />
+    <Compile Include="$(SolutionDir)/SynergyDlgSequence.wxs" />
     <Compile Include="$(SolutionDir)/Product.wxs" />
     <Content Include="$(SolutionDir)/Include.wxi" />
 

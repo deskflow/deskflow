@@ -7,6 +7,7 @@ Bug fixes:
 
 Enhancements:
 - #6836 Enabling Github Code Scanning
+- #6841 Windows installer has been updated.
 
 v1.12.x-snapshot
 ===========

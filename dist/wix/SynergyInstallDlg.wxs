@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+   <?include Include.wxi?>
+   <Fragment>
+      <UI Id="SynergyInstallDirDlg">
+         <Dialog Id="SynergyInstallDirDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
+            <Control Id="Title" Type="Text" X="15" Y="15" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.InstallDirDlgTitle)" />
+            
+            <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)" />
+            <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+            <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+               <Publish Event="SpawnDialog" Value="CancelDlg" />
+            </Control>
+
+            <Control Id="InstallDirDlgBackground" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="[SynergyCommonBackground]" />
+            <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+
+            <Control Id="FolderLabel" Transparent="yes" Type="Text" X="20" Y="70" Width="290" Height="30" NoPrefix="yes" Text="!(loc.InstallDirDlgFolderLabel)" />
+            <Control Id="Folder" Type="PathEdit" X="20" Y="90" Width="320" Height="18" Property="WIXUI_INSTALLDIR" Indirect="yes" />
+            <Control Id="ChangeFolder" Type="PushButton" X="20" Y="112" Width="56" Height="17" Text="!(loc.InstallDirDlgChange)" />
+         </Dialog>
+      </UI>
+   </Fragment>
+</Wix>
