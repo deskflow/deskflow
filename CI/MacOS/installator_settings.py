@@ -43,7 +43,7 @@ symlinks = { 'Applications': '/Applications' }
 # will be used to badge the system's Removable Disk icon
 #
 #icon = '/path/to/icon.icns'
-badge_icon = icon_from_app(application)
+badge_icon = os.path.join(application, 'Contents', 'Resources', 'Install.icns')
 
 # Where to put the icons
 icon_locations = {
