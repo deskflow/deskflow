@@ -16,6 +16,8 @@ jobs:
       BONJOUR_BASE_DIR: ${{ github.workspace }}\deps\bonjour
       QT_VERSION: 5.12.6
       QT_BASE_URL: http://qt.mirror.constant.com/
+      BONJOUR_SDK_HOME: ${{ github.workspace }}\deps\bonjour\BonjourSDK
+      CMAKE_PREFIX_PATH: ${{ github.workspace }}\deps\Qt\5.12.6\msvc2017_64\
 
     steps:
     - uses: actions/checkout@v2
@@ -35,9 +37,6 @@ jobs:
         cd $env:QT_BASE_DIR\$env:QT_VERSION\msvc2017_64
         dir
 
-    - name: set QT path
-      run:  echo "CMAKE_PREFIX_PATH=$env:QT_BASE_DIR\$env:QT_VERSION\msvc2017_64\" >> $GITHUB_ENV
-
     - name: Cache Bonjour
       id: cache-bonjour
       uses: actions/cache@v1
@@ -52,9 +51,6 @@ jobs:
         $client = new-object System.Net.WebClient
         $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
         [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", $env:BONJOUR_BASE_DIR)
-
-    - name: set Bonjour path
-      run:  echo "BONJOUR_SDK_HOME=$env:BONJOUR_BASE_DIR\BonjourSDK" >> $GITHUB_ENV
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
