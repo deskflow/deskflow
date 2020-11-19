@@ -57,7 +57,7 @@ jobs:
       run:  echo "BONJOUR_SDK_HOME=$env:BONJOUR_BASE_DIR\BonjourSDK" >> $GITHUB_ENV
 
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.1
+      uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Build
       run: |
