@@ -269,6 +269,10 @@ void AppConfig::loadSettings()
     m_TLSCertificatePath        = loadSetting(kTLSCertPath, certificateFilename).toString();
     m_TLSKeyLength              = loadSetting(kTLSKeyLength, "2048").toString();
 
+    if (getCryptoEnabled()) {
+        generateCertificate();
+    }
+
 }
 
 void AppConfig::saveSettings()
