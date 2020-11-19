@@ -36,7 +36,7 @@ jobs:
         dir
 
     - name: set QT path
-      run:  echo "::set-env name=CMAKE_PREFIX_PATH::$env:QT_BASE_DIR\$env:QT_VERSION\msvc2017_64\"
+      run:  echo "CMAKE_PREFIX_PATH=$env:QT_BASE_DIR\$env:QT_VERSION\msvc2017_64\" >> $GITHUB_ENV
 
     - name: Cache Bonjour
       id: cache-bonjour
@@ -54,7 +54,7 @@ jobs:
         [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", $env:BONJOUR_BASE_DIR)
 
     - name: set Bonjour path
-      run:  echo "::set-env name=BONJOUR_SDK_HOME::$env:BONJOUR_BASE_DIR\BonjourSDK"
+      run:  echo "BONJOUR_SDK_HOME=$env:BONJOUR_BASE_DIR\BonjourSDK" >> $GITHUB_ENV
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.1
