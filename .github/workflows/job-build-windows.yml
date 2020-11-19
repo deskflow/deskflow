@@ -44,7 +44,7 @@ jobs:
         path: ${{ env.BONJOUR_BASE_DIR }}
         key: ${{ runner.os }}-Bonjour
 
-    - name: Install Bonjour SDK
+    - name: Install Bonjour SDK 
       if: steps.cache-bonjour.outputs.cache-hit != 'true'
       run: |
         New-Item -Force -ItemType Directory -Path ".\deps\bonjour"
