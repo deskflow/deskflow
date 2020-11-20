@@ -436,7 +436,7 @@ bool AppConfig::getCryptoEnabled() const {
 }
 
 void AppConfig::setAutoHide(bool b) {
-    setSettingModified(m_MinimizeToTray, b);
+    setSettingModified(m_AutoHide, b);
 }
 
 bool AppConfig::getAutoHide() { return m_AutoHide; }
