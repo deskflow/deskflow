@@ -4,7 +4,7 @@ This is the open source core component of Synergy, a keyboard and mouse sharing 
 
 **[We're hiring!](https://careers.symless.com/)** *Join the Synergy Team (Node.js, React, C++)*
 
-**News:** [We Are Putting UX First](https://symless.com/blog/putting-ux-first) (Symless Blog)
+**News:** Visit the [Symless blog](https://symless.com/blog/) for updates
 
 ## Recommended
 

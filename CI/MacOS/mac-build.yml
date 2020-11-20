@@ -13,6 +13,11 @@ steps:
 
   - task: CmdLine@2
     inputs:
+      script: 'pip install dmgbuild'
+    displayName: 'Installing dmgbuild'
+
+  - task: CmdLine@2
+    inputs:
       script: |
         export PATH="$(QT_PATH):$PATH"
         mkdir build
@@ -76,7 +81,12 @@ steps:
   - task: CmdLine@2
     inputs:
       script: |
-        hdiutil create -volname Synergy -srcfolder $(Build.Repository.LocalPath)/build/bundle/ -ov -format UDZO $(SYNERGY_DMG_FILENAME)
+        dmgbuild \
+          -s CI/MacOS/installator_settings.py \
+          -D app=$(Build.Repository.LocalPath)/build/bundle/Synergy.app \
+          -D background=$(Build.Repository.LocalPath)/build/bundle/Synergy.app/Contents/Resources/installer_background.png \
+          "Synergy" \
+          $(SYNERGY_DMG_FILENAME)
         mkdir pkg
         mv $(SYNERGY_DMG_FILENAME) pkg/
         cd pkg
