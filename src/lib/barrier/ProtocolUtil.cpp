@@ -80,7 +80,7 @@ ProtocolUtil::vwritef(barrier::IStream* stream,
 
     // fill buffer
     UInt8* buffer = new UInt8[size];
-    writef(buffer, fmt, args);
+    writef_void(buffer, fmt, args);
 
     try {
         // write buffer
@@ -339,7 +339,7 @@ ProtocolUtil::getLength(const char* fmt, va_list args)
 }
 
 void
-ProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
+ProtocolUtil::writef_void(void* buffer, const char* fmt, va_list args)
 {
     UInt8* dst = static_cast<UInt8*>(buffer);
 
