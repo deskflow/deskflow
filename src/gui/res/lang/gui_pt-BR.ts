@@ -30,20 +30,20 @@ Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</source>
-      <translation type="unfinished">&lt;p&gt;
-Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+      <translation>&lt;p&gt;
+Aplicativo de compartilhamento de teclado e mouse. Multiplataforma e código aberto.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2019 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (symless.com).
+Synergy é distribuído sob a Licença Pública Geral GNU (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Synergy é baseado no CosmoSynergy, por Richard Lee e Adam Feder.&lt;br /&gt;
+A GUI do Synergy é baseada no QSynergy por Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Visite nosso site para obter ajuda e informações (symless.com).
 &lt;/p&gt;</translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="167"/>
       <source>Build Date: </source>
-      <translation type="unfinished">Build Date: </translation>
+      <translation>Data da compilação: </translation>
     </message>
     <message>
       <location filename="src/AboutDialogBase.ui" line="194"/>
@@ -136,7 +136,7 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActionDialogBase.ui" line="247"/>
       <source>Restart server</source>
-      <translation type="unfinished">Restart server</translation>
+      <translation>Reiniciar servidor</translation>
     </message>
     <message>
       <location filename="src/ActionDialogBase.ui" line="259"/>
@@ -159,12 +159,12 @@ Visit our website for help and info (symless.com).
     <message>
       <location filename="src/ActivationDialog.ui" line="14"/>
       <source>Activate Synergy</source>
-      <translation type="unfinished">Activate Synergy</translation>
+      <translation>Ativar Synergy</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="26"/>
       <source>Serial key</source>
-      <translation type="unfinished">Serial key</translation>
+      <translation>Chave serial</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="33"/>
@@ -199,14 +199,14 @@ p, li { white-space: pre-wrap; }
       <source>An error occurred while trying to activate Synergy. Please contact the helpdesk, and provide the following information:
 
 %1</source>
-      <translation type="unfinished">An error occurred while trying to activate Synergy. Please contact the helpdesk, and provide the following information:
+      <translation>Um erro ocorreu ao tentar ativar o Synergy. Entre em contato com o suporte técnico e forneça as seguintes informações:
 
 %1</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="86"/>
       <source>%1</source>
-      <translation type="unfinished">%1</translation>
+      <translation>%1</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.cpp" line="95"/>
@@ -238,7 +238,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/AddClientDialogBase.ui" line="83"/>
       <source>Ignore auto connect clients</source>
-      <translation type="unfinished">Ignore auto connect clients</translation>
+      <translation>Ignorar clientes conectados automaticamente</translation>
     </message>
   </context>
   <context>
@@ -253,9 +253,9 @@ p, li { white-space: pre-wrap; }
       <source>Are you sure?
 
 If you don&apos;t activate Synergy you&apos;ll be missing out on some great features.</source>
-      <translation type="unfinished">Are you sure?
+      <translation>Tem certeza?
 
-If you don&apos;t activate Synergy you&apos;ll be missing out on some great features.</translation>
+Se você não ativar o Synergy irá perder ótimos recursos.</translation>
     </message>
     <message>
       <location filename="src/CancelActivationDialog.ui" line="35"/>
@@ -268,7 +268,7 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/FailedLoginDialog.ui" line="14"/>
       <source>Activation Error</source>
-      <translation type="unfinished">Activation Error</translation>
+      <translation>Erro de Ativação</translation>
     </message>
     <message>
       <location filename="src/FailedLoginDialog.ui" line="42"/>
@@ -280,7 +280,7 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
       <source>An error occurred while trying to activate Synergy. The Symless server returned the following error:
 
 %1</source>
-      <translation type="unfinished">An error occurred while trying to activate Synergy. The Symless server returned the following error:
+      <translation>Ocorreu um erro ao tentar ativar o Synergy. O servidor Symless retornou o seguinte erro:
 
 %1</translation>
     </message>
@@ -334,7 +334,7 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
     <message>
       <location filename="src/MainWindow.cpp" line="494"/>
       <source>Synergy is now connected. You can close the config window and Synergy will remain connected in the background.</source>
-      <translation type="unfinished">Synergy is now connected. You can close the config window and Synergy will remain connected in the background.</translation>
+      <translation>Synergy agora está conectado. Você pode fechar a janela de configuração e o Synergy permanecerá conectado em segundo plano.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="546"/>
@@ -345,13 +345,13 @@ If you don&apos;t activate Synergy you&apos;ll be missing out on some great feat
 Compare this fingerprint to the one on your server&apos;s screen.If the two don&apos;t match exactly, then it&apos;s probably not the server you&apos;re expecting (it could be a malicious user).
 
 To automatically trust this fingerprint for future connections, click Yes. To reject this fingerprint and disconnect from the server, click No.</source>
-      <translation type="unfinished">You are connecting to a server. Here is it&apos;s fingerprint:
+      <translation>Você está se conectando a um servidor. Aqui está a impressão digital:
 
 %1
 
-Compare this fingerprint to the one on your server&apos;s screen.If the two don&apos;t match exactly, then it&apos;s probably not the server you&apos;re expecting (it could be a malicious user).
+Compare esta impressão digital com a existente na tela de seu servidor. Se as duas não são exatamente iguais, então esse provavelmente não é o servidor que você está esperando (pode ser um usuário malicioso).
 
-To automatically trust this fingerprint for future connections, click Yes. To reject this fingerprint and disconnect from the server, click No.</translation>
+Para confiar automaticamente nesta impressão digital para conexões futuras, clique em Sim. Para rejeitar esta impressão digital e desconectar do servidor, clique em Não.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="722"/>
@@ -376,12 +376,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="789"/>
       <source>No server selected</source>
-      <translation type="unfinished">No server selected</translation>
+      <translation>Nenhum servidor selecionado</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="790"/>
       <source>No auto config server was selected, try manual mode instead.</source>
-      <translation type="unfinished">No auto config server was selected, try manual mode instead.</translation>
+      <translation>Nenhum servidor de configuração automática foi selecionado, tente o modo manual em vez disso.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="805"/>
@@ -431,7 +431,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1016"/>
       <source>Synergy is waiting for clients</source>
-      <translation type="unfinished">Synergy is waiting for clients</translation>
+      <translation>O Synergy está à espera de clientes</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1023"/>
@@ -441,17 +441,17 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1026"/>
       <source>Synergy is running (without TLS encryption)</source>
-      <translation type="unfinished">Synergy is running (without TLS encryption)</translation>
+      <translation>Synergy está sendo executado (sem criptografia TLS)</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1031"/>
       <source>Synergy is starting...</source>
-      <translation type="unfinished">Synergy is starting...</translation>
+      <translation>Synergy está iniciando...</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1034"/>
       <source>There was an error, retrying...</source>
-      <translation type="unfinished">There was an error, retrying...</translation>
+      <translation>Ocorreu um erro, tentando novamente...</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1037"/>
@@ -461,7 +461,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1354"/>
       <source>Please add the server (%1) to the grid.</source>
-      <translation type="unfinished">Please add the server (%1) to the grid.</translation>
+      <translation>Por favor adicione o servidor (%1) à grade.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1360"/>
@@ -481,7 +481,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="545"/>
       <source>Security question</source>
-      <translation type="unfinished">Security question</translation>
+      <translation>Pergunta de segurança</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1260"/>
@@ -570,7 +570,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="405"/>
       <source>Hostname or IP address of the server computer.</source>
-      <translation type="unfinished">Hostname or IP address of the server computer.</translation>
+      <translation>Nome do host ou endereço IP do servidor.</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="428"/>
@@ -686,7 +686,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <location filename="src/MainWindowBase.ui" line="639"/>
       <location filename="src/MainWindowBase.ui" line="642"/>
       <source>Activate</source>
-      <translation type="unfinished">Activate</translation>
+      <translation>Ativar</translation>
     </message>
   </context>
   <context>
