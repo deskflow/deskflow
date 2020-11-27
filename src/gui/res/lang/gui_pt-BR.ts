@@ -220,7 +220,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/ActivationDialog.cpp" line="114"/>
       <source>Thanks for activating %1!</source>
-      <translation type="unfinished">Thanks for activating %1!</translation>
+      <translation>Obrigado por ativar %1!</translation>
     </message>
   </context>
   <context>
@@ -246,7 +246,7 @@ p, li { white-space: pre-wrap; }
     <message>
       <location filename="src/CancelActivationDialog.ui" line="14"/>
       <source>Cancel Activation</source>
-      <translation type="unfinished">Cancel Activation</translation>
+      <translation>Cancelar Ativação</translation>
     </message>
     <message>
       <location filename="src/CancelActivationDialog.ui" line="20"/>
