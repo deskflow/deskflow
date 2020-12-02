@@ -4,6 +4,7 @@ Bug fixes:
 - #6831 Incorporating Sonar's major
 - #6837 Memory leaks on macOS system
 - #6838 Enterprise asks for serial key on Linux system
+- #6849 Auto-hide resets itself
 - #6846 TLS certificate is not created by default for Synergy Enterprise.
 
 Enhancements:
