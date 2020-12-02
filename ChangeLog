@@ -5,6 +5,7 @@ Bug fixes:
 - #6837 Memory leaks on macOS system
 - #6838 Enterprise asks for serial key on Linux system
 - #6846 TLS certificate is not created by default for Synergy Enterprise.
+- #6??? Systray Icon on Ubuntu Auto Start
 
 Enhancements:
 - #6836 Enabling Github Code Scanning
