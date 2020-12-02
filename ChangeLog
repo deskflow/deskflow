@@ -6,6 +6,7 @@ Bug fixes:
 - #6838 Enterprise asks for serial key on Linux system
 - #6849 Auto-hide resets itself
 - #6846 TLS certificate is not created by default for Synergy Enterprise.
+- #6??? Systray Icon on Ubuntu Auto Start
 
 Enhancements:
 - #6836 Enabling Github Code Scanning
