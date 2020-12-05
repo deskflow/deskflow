@@ -56,14 +56,13 @@ static BYTE                g_deadKeyState[256] = { 0 };
 static BYTE                g_keyState[256] = { 0 };
 static bool                g_fakeServerInput = false;
 static std::vector<DWORD> g_immuneKeys;
-
-static const std::string ImmuneKeysPath = DataDirectories::profile() + "\\ImmuneKeys.txt";
+static std::string g_immuneKeysPath;
 
 static std::vector<DWORD> immune_keys_list()
 {
     std::vector<DWORD> keys;
     std::string badLine;
-    if (!ImmuneKeysReader::get_list(ImmuneKeysPath.c_str(), keys, badLine))
+    if (!ImmuneKeysReader::get_list(g_immuneKeysPath.c_str(), keys, badLine))
         LOG((CLOG_ERR "Reading immune keys stopped at: %s", badLine.c_str()));
     return keys;
 }
@@ -575,8 +574,9 @@ MSWindowsHook::install()
     g_fakeServerInput = false;
 
     // setup immune keys
+    g_immuneKeysPath = DataDirectories::profile() + "\\ImmuneKeys.txt";
     g_immuneKeys = immune_keys_list();
-    LOG((CLOG_DEBUG "Found %u immune keys in %s", g_immuneKeys.size(), ImmuneKeysPath.c_str()));
+    LOG((CLOG_DEBUG "Found %u immune keys in %s", g_immuneKeys.size(), g_immuneKeysPath.c_str()));
 
 #if NO_GRAB_KEYBOARD
     // we only need the mouse hook
