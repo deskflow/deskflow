@@ -128,6 +128,12 @@ ServerApp::help()
 #  define WINAPI_INFO ""
 #endif
 
+    // refer to custom profile directory even if not saved yet
+    String profilePath = argsBase().m_profileDirectory;
+    if (profilePath.empty()) {
+        profilePath = DataDirectories::profile();
+    }
+
     std::ostringstream buffer;
     buffer << "Start the barrier server component." << std::endl
            << std::endl
@@ -150,7 +156,7 @@ ServerApp::help()
            << std::endl
            << "If no configuration file pathname is provided then the first of the" << std::endl
            << "following to load successfully sets the configuration:" << std::endl
-           << "  " << PathUtilities::concat(DataDirectories::profile(), USR_CONFIG_NAME) << std::endl
+           << "  " << PathUtilities::concat(profilePath, USR_CONFIG_NAME) << std::endl
            << "  " << PathUtilities::concat(DataDirectories::systemconfig(), SYS_CONFIG_NAME) << std::endl;
 
     LOG((CLOG_PRINT "%s", buffer.str().c_str()));
