@@ -197,6 +197,7 @@ public:
     virtual void        fakeDraggingFiles(DragFileList fileList) = 0;
     virtual const String&
                         getDropTarget() const = 0;
+    virtual void        setDropTarget(const String&) = 0;
 
 protected:
     //! Handle system event

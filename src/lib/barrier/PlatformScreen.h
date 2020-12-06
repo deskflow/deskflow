@@ -101,6 +101,7 @@ public:
     virtual void        fakeDraggingFiles(DragFileList fileList) { throw std::runtime_error("fakeDraggingFiles not implemented"); }
     virtual const String&
                         getDropTarget() const { throw std::runtime_error("getDropTarget not implemented"); }
+    virtual void        setDropTarget(const String&) { throw std::runtime_error("setDropTarget not implemented"); }
 
 protected:
     //! Update mouse buttons

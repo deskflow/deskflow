@@ -38,6 +38,7 @@ public:
     bool                m_disableTray;
     bool                m_enableIpc;
     bool                m_enableDragDrop;
+    String              m_dropTarget;
 #if SYSAPI_WIN32
     bool                m_debugServiceWait;
     bool                m_pauseOnExit;
