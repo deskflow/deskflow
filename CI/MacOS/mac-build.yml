@@ -8,6 +8,26 @@ steps:
 
   - task: CmdLine@2
     inputs:
+      script: 'brew uninstall openssl'
+    displayName: 'Uninstalling bogous tap'
+
+  - task: CmdLine@2
+    inputs:
+      script: 'brew cleanup'
+    displayName: 'Cleaning Up Homebrew'
+
+  - task: CmdLine@2
+    inputs:
+      script: 'brew update'
+    displayName: 'Updating Homebrew'
+
+  - task: CmdLine@2
+    inputs:
+      script: 'brew upgrade'
+    displayName: 'Upgrading Homebrew'
+
+  - task: CmdLine@2
+    inputs:
       script: 'brew install qt'
     displayName: 'Installing QT'
 
