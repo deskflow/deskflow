@@ -43,6 +43,11 @@ steps:
 
   - task: CmdLine@2
     inputs:
+      script: 'xcode-select --install'
+    displayName: 'Reinstalling Xcode Tools'    
+
+  - task: CmdLine@2
+    inputs:
       script: |
         export PATH="$(QT_PATH):$PATH"
         mkdir build
