@@ -28,6 +28,11 @@ steps:
 
   - task: CmdLine@2
     inputs:
+      script: 'brew install openssl'
+    displayName: 'Installing OpenSSL'
+
+  - task: CmdLine@2
+    inputs:
       script: 'brew install qt'
     displayName: 'Installing QT'
 
