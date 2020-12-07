@@ -33,6 +33,11 @@ steps:
 
   - task: CmdLine@2
     inputs:
+      script: 'brew link openssl --force'
+    displayName: 'creating Links for OpenSSL'
+
+  - task: CmdLine@2
+    inputs:
       script: 'brew install qt'
     displayName: 'Installing QT'
 
@@ -40,11 +45,6 @@ steps:
     inputs:
       script: 'pip install dmgbuild'
     displayName: 'Installing dmgbuild'
-
-  - task: CmdLine@2
-    inputs:
-      script: 'xcode-select --install'
-    displayName: 'Reinstalling Xcode Tools'    
 
   - task: CmdLine@2
     inputs:
