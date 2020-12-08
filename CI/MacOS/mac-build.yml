@@ -6,15 +6,15 @@ steps:
       keychain: 'temp'
     condition: eq(variables['Build.Reason'], 'Manual')
 
-  - task: CmdLine@2
-    inputs:
-      script: 'brew uninstall openssl'
-    displayName: 'Uninstalling bogous tap'
+  # - task: CmdLine@2
+  #   inputs:
+  #     script: 'brew uninstall openssl'
+  #   displayName: 'Uninstalling bogous tap'
 
-  - task: CmdLine@2
-    inputs:
-      script: 'brew cleanup'
-    displayName: 'Cleaning Up Homebrew'
+  # - task: CmdLine@2
+  #   inputs:
+  #     script: 'brew cleanup'
+  #   displayName: 'Cleaning Up Homebrew'
 
   - task: CmdLine@2
     inputs:
@@ -26,20 +26,20 @@ steps:
       script: 'brew upgrade'
     displayName: 'Upgrading Homebrew'
 
-  - task: CmdLine@2
-    inputs:
-      script: 'brew install openssl'
-    displayName: 'Installing OpenSSL'
+  # - task: CmdLine@2
+  #   inputs:
+  #     script: 'brew install openssl'
+  #   displayName: 'Installing OpenSSL'
 
-  - task: CmdLine@2
-    inputs:
-      script: 'brew link openssl --force'
-    displayName: 'creating Links for OpenSSL'
+  # - task: CmdLine@2
+  #   inputs:
+  #     script: 'brew link openssl --force'
+  #   displayName: 'creating Links for OpenSSL'
 
-  - task: CmdLine@2
-    inputs:
-      script: 'ln -s /usr/local/opt/openssl/include/openssl /usr/local/include/.'
-    displayName: 'Manual Link'
+  # - task: CmdLine@2
+  #   inputs:
+  #     script: 'ln -s /usr/local/opt/openssl/include/openssl /usr/local/include/.'
+  #   displayName: 'Manual Link'
 
   - task: CmdLine@2
     inputs:
