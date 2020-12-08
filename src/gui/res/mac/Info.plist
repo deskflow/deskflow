@@ -24,5 +24,9 @@
     <string>1.8.8</string>
     <key>NSHumanReadableCopyright</key>
     <string>© 2012-2016, Symless Ltd</string>
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+    <key>NSHighResolutionCapable</key>
+    <string>True</string>
   </dict>
 </plist>
