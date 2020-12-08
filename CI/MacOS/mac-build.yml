@@ -8,9 +8,9 @@ steps:
 
   - task: CmdLine@2
     inputs:
-      script: 'brew install qt'
-      env:
-        HOMEBREW_NO_INSTALL_CLEANUP: "1"
+      script: |
+        export HOMEBREW_NO_INSTALL_CLEANUP=1
+        brew install qt
     displayName: 'Installing QT'
 
   - task: CmdLine@2
