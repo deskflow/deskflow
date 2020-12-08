@@ -7,6 +7,7 @@ Bug fixes:
 - #6849 Auto-hide resets itself
 - #6846 TLS certificate is not created by default for Synergy Enterprise.
 - #6??? Systray Icon on Ubuntu Auto Start
+- #6858 Application is blurry and unfocused on macOS
 
 Enhancements:
 - #6836 Enabling Github Code Scanning
