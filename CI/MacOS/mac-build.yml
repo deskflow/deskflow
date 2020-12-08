@@ -38,6 +38,11 @@ steps:
 
   - task: CmdLine@2
     inputs:
+      script: 'ln -s /usr/local/opt/openssl/include/openssl /usr/local/include/.'
+    displayName: 'Manual Link'
+
+  - task: CmdLine@2
+    inputs:
       script: 'brew install qt'
     displayName: 'Installing QT'
 
