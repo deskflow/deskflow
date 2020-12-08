@@ -15,6 +15,12 @@ steps:
   #   inputs:
   #     script: 'brew cleanup'
   #   displayName: 'Cleaning Up Homebrew'
+  # /usr/local/Cellar/openssl
+
+  - task: CmdLine@2
+    inputs:
+      script: 'mkdir -p /usr/local/Cellar/openssl'
+    displayName: 'Creating placebo directory'
 
   - task: CmdLine@2
     inputs:
