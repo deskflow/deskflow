@@ -22,11 +22,7 @@
 #include "common/stdmap.h"
 #include "common/stdvector.h"
 
-#if X_DISPLAY_MISSING
-#    error X11 is required to build barrier
-#else
-#    include <X11/Xlib.h>
-#endif
+#include <X11/Xlib.h>
 
 #include <string>
 

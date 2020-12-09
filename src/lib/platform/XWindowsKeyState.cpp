@@ -24,17 +24,13 @@
 
 #include <cstddef>
 #include <algorithm>
-#if X_DISPLAY_MISSING
-#    error X11 is required to build barrier
-#else
-#    include <X11/X.h>
-#    include <X11/Xutil.h>
-#    define XK_MISCELLANY
-#    define XK_XKB_KEYS
-#    include <X11/keysymdef.h>
+#include <X11/X.h>
+#include <X11/Xutil.h>
+#define XK_MISCELLANY
+#define XK_XKB_KEYS
+#include <X11/keysymdef.h>
 #if HAVE_XKB_EXTENSION
 #    include <X11/XKBlib.h>
-#endif
 #endif
 
 static const size_t ModifiersFromXDefaultSize = 32;

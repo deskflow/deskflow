@@ -160,8 +160,5 @@
 /* Define to 1 if your <sys/time.h> declares `struct tm`. */
 #cmakedefine TM_IN_SYS_TIME ${TM_IN_SYS_TIME}
 
-/* Define to 1 if the X Window System is missing or not being used. */
-#cmakedefine X_DISPLAY_MISSING ${X_DISPLAY_MISSING}
-
 /* Define to `unsigned int` if <sys/types.h> does not define. */
 #cmakedefine size_t ${size_t}
