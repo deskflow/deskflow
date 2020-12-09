@@ -16,6 +16,9 @@
 
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
+if (WIN32)
+    list(APPEND sources barrierd.rc)
+endif()
 
 if (WIN32)
   add_executable (barrierd WIN32 ${sources})
