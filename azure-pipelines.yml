@@ -66,27 +66,15 @@ jobs:
   - job: MacOS
     strategy:
       matrix:
-        mojave-std:
-          image: macOS-10.14
-          name: mojave
-          version: 10.12
-          buildType: "standard"
-          prefix: "synergy"
-        mojave-ent:
-          image: macOS-10.14
-          name: mojave
-          version: 10.12
-          buildType: "enterprise"
-          prefix: "synergy-enterprise"
         catalina-std:
           image: macOS-10.15
-          name: catalina
+          platform: x86-64
           version: 10.14
           buildType: "standard"
           prefix: "synergy"
         catalina-ent:
           image: macOS-10.15
-          name: catalina
+          platform: x86-64
           version: 10.14
           buildType: "enterprise"
           prefix: "synergy-enterprise"
