@@ -49,7 +49,7 @@ badge_icon = icon_from_app(application)
 icon_locations = {
     appname:        (144, 190),
     'Applications': (455, 190),
-    '.background.png': (150, 450),
+    '.background.tiff': (150, 450),
     '.VolumeIcon.icns': (455, 450)
     }
 
