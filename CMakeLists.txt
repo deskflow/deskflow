@@ -195,11 +195,6 @@ if (UNIX)
         check_include_files ("X11/extensions/XInput2.h" HAVE_XI2)
         check_include_files ("dns_sd.h" HAVE_DNSSD)
 
-        if (HAVE_X11_EXTENSIONS_DPMS_H)
-            # Assume that function prototypes declared, when include exists.
-            set (HAVE_DPMS_PROTOTYPES 1)
-        endif()
-
         if (NOT HAVE_X11_EXTENSIONS_XTEST_H)
             message (FATAL_ERROR "Missing header: X11/extensions/XTest.h")
         endif()

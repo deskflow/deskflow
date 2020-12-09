@@ -19,9 +19,6 @@
 /* Define if your compiler has standard C++ library support. */
 #cmakedefine HAVE_CXX_STDLIB ${HAVE_CXX_STDLIB}
 
-/* Define if the <X11/extensions/dpms.h> header file declares function prototypes. */
-#cmakedefine HAVE_DPMS_PROTOTYPES ${HAVE_DPMS_PROTOTYPES}
-
 /* Define if you have a working `getpwuid_r` function. */
 #cmakedefine HAVE_GETPWUID_R ${HAVE_GETPWUID_R}
 
