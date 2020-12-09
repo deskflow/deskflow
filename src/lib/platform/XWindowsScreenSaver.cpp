@@ -26,11 +26,7 @@
 #include "base/TMethodEventJob.h"
 
 #include <X11/Xatom.h>
-#if HAVE_X11_EXTENSIONS_XTEST_H
-#    include <X11/extensions/XTest.h>
-#else
-#    error The XTest extension is required to build barrier
-#endif
+#include <X11/extensions/XTest.h>
 #if HAVE_X11_EXTENSIONS_DPMS_H
 extern "C" {
 #    include <X11/Xmd.h>

@@ -24,11 +24,7 @@
 #include "XWindowsImpl.h"
 
 #include <X11/Xlib.h>
-#if HAVE_X11_EXTENSIONS_XTEST_H
-#    include <X11/extensions/XTest.h>
-#else
-#    error The XTest extension is required to build barrier
-#endif
+#include <X11/extensions/XTest.h>
 #if HAVE_XKB_EXTENSION
 #    include <X11/extensions/XKBstr.h>
 #endif

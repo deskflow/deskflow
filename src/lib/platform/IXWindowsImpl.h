@@ -13,11 +13,7 @@
 #	include <X11/extensions/dpms.h>
      }
 #endif
-#if HAVE_X11_EXTENSIONS_XTEST_H
-#	include <X11/extensions/XTest.h>
-#else
-#	error The XTest extension is required to build barrier
-#endif
+#include <X11/extensions/XTest.h>
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
      // Xinerama.h may lack extern "C" for inclusion by C++
      extern "C" {
