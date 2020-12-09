@@ -73,9 +73,9 @@ BEGIN
             VALUE "LegalCopyright", "Copyright (C) 2018 Debauchee Open Source Group\nCopyright (C) 2012-2016 Symless Ltd.\nCopyright (C) 2008-2014 Nick Bolton\nCopyright (C) 2002-2014 Chris Schoeneman"
             VALUE "ProductName", "Barrier"
             VALUE "ProductVersion", BARRIER_VERSION
-            VALUE "OriginalFilename", "barrierc.exe"
-            VALUE "FileDescription", "Open source KVM software client"
-            VALUE "InternalName", "barrierc"
+            VALUE "OriginalFilename", "barrierd.exe"
+            VALUE "FileDescription", "Open source KVM software deamon"
+            VALUE "InternalName", "barrierd"
         END
     END
     BLOCK "VarFileInfo"
@@ -92,66 +92,8 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_BARRIER               ICON                    "barrierc.ico"
-IDI_TASKBAR_NOT_RUNNING   ICON                    "tb_idle.ico"
-IDI_TASKBAR_NOT_WORKING   ICON                    "tb_error.ico"
-IDI_TASKBAR_NOT_CONNECTED ICON                    "tb_wait.ico"
-IDI_TASKBAR_CONNECTED     ICON                    "tb_run.ico"
+IDI_BARRIER             ICON                    "barrierd.ico"
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Menu
-//
-
-IDR_TASKBAR MENU
-BEGIN
-    POPUP "Barrier"
-    BEGIN
-        MENUITEM "Show Status",                 IDC_TASKBAR_STATUS
-        MENUITEM "Show Log",                    IDC_TASKBAR_SHOW_LOG
-        MENUITEM "Copy Log To Clipboard",       IDC_TASKBAR_LOG
-        POPUP "Set Log Level"
-        BEGIN
-            MENUITEM "Error",                       IDC_TASKBAR_LOG_LEVEL_ERROR
-            MENUITEM "Warning",                     IDC_TASKBAR_LOG_LEVEL_WARNING
-            MENUITEM "Note",                        IDC_TASKBAR_LOG_LEVEL_NOTE
-            MENUITEM "Info",                        IDC_TASKBAR_LOG_LEVEL_INFO
-            MENUITEM "Debug",                       IDC_TASKBAR_LOG_LEVEL_DEBUG
-            MENUITEM "Debug1",                      IDC_TASKBAR_LOG_LEVEL_DEBUG1
-            MENUITEM "Debug2",                      IDC_TASKBAR_LOG_LEVEL_DEBUG2
-        END
-        MENUITEM SEPARATOR
-        MENUITEM "Quit",                        IDC_TASKBAR_QUIT
-    END
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
-
-IDD_TASKBAR_STATUS DIALOG  0, 0, 145, 18
-STYLE DS_MODALFRAME | WS_POPUP
-FONT 8, "MS Sans Serif"
-BEGIN
-    EDITTEXT        IDC_TASKBAR_STATUS_STATUS,3,3,139,12,ES_AUTOHSCROLL | 
-                    ES_READONLY | NOT WS_BORDER
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// String Table
-//
-
-STRINGTABLE
-BEGIN
-    IDS_FAILED              "Barrier is about to quit with errors or warnings.  Please check the log then click OK."
-    IDS_INIT_FAILED         "Barrier failed to initialize: %{1}"
-    IDS_UNCAUGHT_EXCEPTION  "Uncaught exception: %{1}"
-END
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
