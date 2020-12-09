@@ -3,39 +3,31 @@
 
 #include "config.h"
 
-#if X_DISPLAY_MISSING
-#	error X11 is required to build barrier
-#else
-#	include <X11/X.h>
-#	include <X11/Xutil.h>
-#	define XK_MISCELLANY
-#	define XK_XKB_KEYS
-#	include <X11/keysymdef.h>
-#	if HAVE_X11_EXTENSIONS_DPMS_H
-        extern "C" {
-#		include <X11/extensions/dpms.h>
-        }
-#	endif
-#	if HAVE_X11_EXTENSIONS_XTEST_H
-#		include <X11/extensions/XTest.h>
-#	else
-#		error The XTest extension is required to build barrier
-#	endif
-#	if HAVE_X11_EXTENSIONS_XINERAMA_H
-        // Xinerama.h may lack extern "C" for inclusion by C++
-        extern "C" {
-#		include <X11/extensions/Xinerama.h>
-        }
-#	endif
-#	if HAVE_X11_EXTENSIONS_XRANDR_H
-#		include <X11/extensions/Xrandr.h>
-#	endif
-#	if HAVE_XKB_EXTENSION
-#		include <X11/XKBlib.h>
-#	endif
-#	ifdef HAVE_XI2
-#		include <X11/extensions/XInput2.h>
-#	endif
+#include <X11/X.h>
+#include <X11/Xutil.h>
+#define XK_MISCELLANY
+#define XK_XKB_KEYS
+#include <X11/keysymdef.h>
+#if HAVE_X11_EXTENSIONS_DPMS_H
+     extern "C" {
+#	include <X11/extensions/dpms.h>
+     }
+#endif
+#include <X11/extensions/XTest.h>
+#if HAVE_X11_EXTENSIONS_XINERAMA_H
+     // Xinerama.h may lack extern "C" for inclusion by C++
+     extern "C" {
+#	include <X11/extensions/Xinerama.h>
+     }
+#endif
+#if HAVE_X11_EXTENSIONS_XRANDR_H
+#	include <X11/extensions/Xrandr.h>
+#endif
+#if HAVE_XKB_EXTENSION
+#	include <X11/XKBlib.h>
+#endif
+#ifdef HAVE_XI2
+#	include <X11/extensions/XInput2.h>
 #endif
 
 class IXWindowsImpl {

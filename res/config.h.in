@@ -19,9 +19,6 @@
 /* Define if your compiler has standard C++ library support. */
 #cmakedefine HAVE_CXX_STDLIB ${HAVE_CXX_STDLIB}
 
-/* Define if the <X11/extensions/dpms.h> header file declares function prototypes. */
-#cmakedefine HAVE_DPMS_PROTOTYPES ${HAVE_DPMS_PROTOTYPES}
-
 /* Define if you have a working `getpwuid_r` function. */
 #cmakedefine HAVE_GETPWUID_R ${HAVE_GETPWUID_R}
 
@@ -115,9 +112,6 @@
 /* Define to 1 if you have the <X11/extensions/XKBstr.h> header file. */
 #cmakedefine HAVE_X11_EXTENSIONS_XKBSTR_H ${HAVE_X11_EXTENSIONS_XKBSTR_H}
 
-/* Define to 1 if you have the <X11/extensions/XTest.h> header file. */
-#cmakedefine HAVE_X11_EXTENSIONS_XTEST_H ${HAVE_X11_EXTENSIONS_XTEST_H}
-
 /* Define to 1 if you have the <X11/XKBlib.h> header file. */
 #cmakedefine HAVE_X11_XKBLIB_H ${HAVE_X11_XKBLIB_H}
 
@@ -159,9 +153,6 @@
 
 /* Define to 1 if your <sys/time.h> declares `struct tm`. */
 #cmakedefine TM_IN_SYS_TIME ${TM_IN_SYS_TIME}
-
-/* Define to 1 if the X Window System is missing or not being used. */
-#cmakedefine X_DISPLAY_MISSING ${X_DISPLAY_MISSING}
 
 /* Define to `unsigned int` if <sys/types.h> does not define. */
 #cmakedefine size_t ${size_t}

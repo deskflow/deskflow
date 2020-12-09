@@ -23,18 +23,10 @@
 #include "common/stdvector.h"
 #include "XWindowsImpl.h"
 
-#if X_DISPLAY_MISSING
-#    error X11 is required to build barrier
-#else
-#    include <X11/Xlib.h>
-#    if HAVE_X11_EXTENSIONS_XTEST_H
-#        include <X11/extensions/XTest.h>
-#    else
-#        error The XTest extension is required to build barrier
-#    endif
-#    if HAVE_XKB_EXTENSION
-#        include <X11/extensions/XKBstr.h>
-#    endif
+#include <X11/Xlib.h>
+#include <X11/extensions/XTest.h>
+#if HAVE_XKB_EXTENSION
+#    include <X11/extensions/XKBstr.h>
 #endif
 
 class IEventQueue;
