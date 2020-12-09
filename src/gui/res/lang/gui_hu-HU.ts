@@ -648,13 +648,18 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>QObject</name>
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
-        <source>Barrier Configurations (*.sgc);;All files (*.*)</source>
-        <translation type="finished">Barrier konfiguráció (*.sgc);;Minden fájl (*.*)</translation>
+        <source>All files (*.*)</source>
+        <translation type="finished">Minden fájl (*.*)</translation>
+    </message>
+    <message>
+        <location filename="src/MainWindow.cpp" line="60"/>
+        <source>Barrier Configurations (*.sgc)</source>
+        <translation type="finished">Barrier konfiguráció (*.sgc)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="67"/>
-        <source>Barrier Configurations (*.conf);;All files (*.*)</source>
-        <translation type="finished">Barrier konfiguráció (*.conf);;Minden fájl (*.*)</translation>
+        <source>Barrier Configurations (*.conf)</source>
+        <translation type="finished">Barrier konfiguráció (*.conf)</translation>
     </message>
     <message>
         <location filename="src/main.cpp" line="119"/>

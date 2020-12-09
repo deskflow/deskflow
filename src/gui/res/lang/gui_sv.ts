@@ -669,13 +669,18 @@ Klicka &quot;Ja&quot; för att automatiskt lita på fingeravtrycket i framtida a
     <name>QObject</name>
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
-        <source>Barrier Configurations (*.sgc);;All files (*.*)</source>
-        <translation>Barrier-konfigurationer (*.sgc);;Alla filer (*.*)</translation>
+        <source>All files (*.*)</source>
+        <translation>Alla filer (*.*)</translation>
+    </message>
+    <message>
+        <location filename="src/MainWindow.cpp" line="60"/>
+        <source>Barrier Configurations (*.sgc)</source>
+        <translation>Barrier-konfigurationer (*.sgc)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="67"/>
-        <source>Barrier Configurations (*.conf);;All files (*.*)</source>
-        <translation>Barrier-konfigurationer (*.conf);;Alla filer (*.*)</translation>
+        <source>Barrier Configurations (*.conf)</source>
+        <translation>Barrier-konfigurationer (*.conf)</translation>
     </message>
     <message>
         <location filename="src/main.cpp" line="119"/>

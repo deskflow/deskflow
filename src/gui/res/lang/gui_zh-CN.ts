@@ -648,13 +648,18 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <name>QObject</name>
     <message>
         <location filename="src/MainWindow.cpp" line="60"/>
-        <source>Barrier Configurations (*.sgc);;All files (*.*)</source>
-        <translation type="finished">Barrier配置文件(*.sgc);;所有文件 (*.*)</translation>
+        <source>All files (*.*)</source>
+        <translation type="finished">所有文件 (*.*)</translation>
+    </message>
+    <message>
+        <location filename="src/MainWindow.cpp" line="60"/>
+        <source>Barrier Configurations (*.sgc)</source>
+        <translation type="finished">Barrier配置文件(*.sgc)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="67"/>
-        <source>Barrier Configurations (*.conf);;All files (*.*)</source>
-        <translation type="finished">Barrier配置文件(*.conf);;所有文件 (*.*)</translation>
+        <source>Barrier Configurations (*.conf)</source>
+        <translation type="finished">Barrier配置文件(*.conf)</translation>
     </message>
     <message>
         <location filename="src/main.cpp" line="119"/>

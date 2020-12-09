@@ -53,17 +53,20 @@
 #include <Windows.h>
 #endif
 
+static const QString allFilesFilter(QObject::tr("All files (*.*)"));
 #if defined(Q_OS_WIN)
 static const char barrierConfigName[] = "barrier.sgc";
-static const QString barrierConfigFilter(QObject::tr("Barrier Configurations (*.sgc);;All files (*.*)"));
+static const QString barrierConfigFilter(QObject::tr("Barrier Configurations (*.sgc)"));
 static QString bonjourBaseUrl = "http://binaries.symless.com/bonjour/";
 static const char bonjourFilename32[] = "Bonjour.msi";
 static const char bonjourFilename64[] = "Bonjour64.msi";
 static const char bonjourTargetFilename[] = "Bonjour.msi";
 #else
 static const char barrierConfigName[] = "barrier.conf";
-static const QString barrierConfigFilter(QObject::tr("Barrier Configurations (*.conf);;All files (*.*)"));
+static const QString barrierConfigFilter(QObject::tr("Barrier Configurations (*.conf)"));
 #endif
+static const QString barrierConfigOpenFilter(barrierConfigFilter + ";;" + allFilesFilter);
+static const QString barrierConfigSaveFilter(barrierConfigFilter);
 
 static const char* barrierIconFiles[] =
 {
@@ -989,7 +992,7 @@ void MainWindow::on_m_pGroupServer_toggled(bool on)
 
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a barriers config file"), QString(), barrierConfigFilter);
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a barriers config file"), QString(), barrierConfigOpenFilter);
 
     if (!fileName.isEmpty())
     {
@@ -1002,7 +1005,7 @@ bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
 
 bool  MainWindow::on_m_pActionSave_triggered()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."), QString(), tr("Barrier Configuration (*.sgc)"));
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."), QString(), barrierConfigSaveFilter);
 
     if (!fileName.isEmpty() && !serverConfig().save(fileName))
     {
