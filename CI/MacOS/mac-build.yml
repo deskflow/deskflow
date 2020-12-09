@@ -86,7 +86,7 @@ steps:
         dmgbuild \
           -s CI/MacOS/installator_settings.py \
           -D app=$(Build.Repository.LocalPath)/build/bundle/Synergy.app \
-          -D background=$(Build.Repository.LocalPath)/build/bundle/Synergy.app/Contents/Resources/installer_background.png \
+          -D background=$(Build.Repository.LocalPath)/build/bundle/Synergy.app/Contents/Resources/installer_background.tiff \
           "Synergy" \
           $(SYNERGY_DMG_FILENAME)
         mkdir pkg
