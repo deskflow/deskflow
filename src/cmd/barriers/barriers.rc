@@ -16,60 +16,8 @@
 // English (U.S.) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Version
-//
-#ifndef NOVERSIONINFO
-VS_VERSION_INFO VERSIONINFO
-FILEVERSION BARRIER_VERSION_MAJOR, BARRIER_VERSION_MINOR, BARRIER_VERSION_PATCH, BARRIER_BUILD_NUMBER
-PRODUCTVERSION BARRIER_VERSION_MAJOR, BARRIER_VERSION_MINOR, BARRIER_VERSION_PATCH, BARRIER_BUILD_NUMBER
-FILEFLAGSMASK 0x3fL
-#ifdef _DEBUG
-FILEFLAGS 0x1L
-#else
-FILEFLAGS 0x0L
-#endif
-FILEOS VOS_NT
-FILETYPE VFT_APP
-FILESUBTYPE 0x0L
-BEGIN
-
-BLOCK "StringFileInfo"
-BEGIN
-
-// Language block for LANG_ENGLISH/SUBLANG_ENGLISH_US, Unicode CP
-BLOCK "040904b0"
-BEGIN
-VALUE "CompanyName", "Debauchee Open Source Group"
-VALUE "CompanyWeb", "https://github.com/debauchee/barrier/"
-VALUE "FileVersion", BARRIER_VERSION
-VALUE "LegalCopyright", "Copyright (C) 2018 Debauchee Open Source Group\nCopyright (C) 2012-2016 Symless Ltd.\nCopyright (C) 2008-2014 Nick Bolton\nCopyright (C) 2002-2014 Chris Schoeneman"
-VALUE "ProductName", "Barrier"
-VALUE "ProductVersion", BARRIER_VERSION
-VALUE "OriginalFilename", "barriers.exe"
-VALUE "FileDescription", "Open source KVM software server"
-VALUE "InternalName", "barrierc"
-END
-
-// Any other language blocks here
-
-END
-
-BLOCK "VarFileInfo"
-BEGIN
-/* Unordered list of Lang IDs and their code page IDs (Unicode = 1200 in case of Win32).
-   These can be expressed using either hexadecimal or decimal. */
-VALUE "Translation", 0x409, 1200
-END
-
-END
-#endif
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -77,18 +25,18 @@ END
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#include <winresrc.h>\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "\r\n"
     "\0"
@@ -99,23 +47,64 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION BARRIER_VERSION_MAJOR, BARRIER_VERSION_MINOR, BARRIER_VERSION_PATCH, BARRIER_BUILD_NUMBER
+ PRODUCTVERSION BARRIER_VERSION_MAJOR, BARRIER_VERSION_MINOR, BARRIER_VERSION_PATCH, BARRIER_BUILD_NUMBER
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS VOS_NT_WINDOWS32
+ FILETYPE VFT_APP
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "Debauchee Open Source Group"
+            VALUE "CompanyWeb", "https://github.com/debauchee/barrier/"
+            VALUE "FileVersion", BARRIER_VERSION
+            VALUE "LegalCopyright", "Copyright (C) 2018 Debauchee Open Source Group\nCopyright (C) 2012-2016 Symless Ltd.\nCopyright (C) 2008-2014 Nick Bolton\nCopyright (C) 2002-2014 Chris Schoeneman"
+            VALUE "ProductName", "Barrier"
+            VALUE "ProductVersion", BARRIER_VERSION
+            VALUE "OriginalFilename", "barriers.exe"
+            VALUE "FileDescription", "Open source KVM software server"
+            VALUE "InternalName", "barriers"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // Icon
 //
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_BARRIER             ICON                    "barriers.ico"
-IDI_TASKBAR_NOT_RUNNING ICON                    "tb_idle.ico"
-IDI_TASKBAR_NOT_WORKING ICON                    "tb_error.ico"
+IDI_BARRIER               ICON                    "barriers.ico"
+IDI_TASKBAR_NOT_RUNNING   ICON                    "tb_idle.ico"
+IDI_TASKBAR_NOT_WORKING   ICON                    "tb_error.ico"
 IDI_TASKBAR_NOT_CONNECTED ICON                    "tb_wait.ico"
-IDI_TASKBAR_CONNECTED   ICON                    "tb_run.ico"
+IDI_TASKBAR_CONNECTED     ICON                    "tb_run.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Menu
 //
 
-IDR_TASKBAR MENU 
+IDR_TASKBAR MENU
 BEGIN
     POPUP "Barrier"
     BEGIN
@@ -160,7 +149,7 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_FAILED              "Barrier is about to quit with errors or warnings.  Please check the log then click OK."
     IDS_INIT_FAILED         "Barrier failed to initialize: %{1}"

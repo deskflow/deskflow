@@ -21,16 +21,7 @@ set(sources
 if (WIN32)
     file(GLOB arch_headers "MSWindows*.h")
     file(GLOB arch_sources "MSWindows*.cpp")
-    list(APPEND sources
-        resource.h
-        barrierc.ico
-        barrierc.rc
-        tb_error.ico
-        tb_idle.ico
-        tb_run.ico
-        tb_wait.ico
-        barrierc.exe.manifest
-    )
+    list(APPEND sources barrierc.rc)
 elseif (APPLE)
     file(GLOB arch_headers "OSX*.h")
     file(GLOB arch_sources "OSX*.cpp")
