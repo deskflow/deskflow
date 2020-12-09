@@ -19,6 +19,7 @@
 
 #include "ProcessorArch.h"
 #include "CommandProcess.h"
+#include "common/DataDirectories.h"
 
 #if defined(Q_OS_LINUX)
 #include <QProcess>
@@ -112,4 +113,12 @@ QString getOSInformation()
 #endif
 
     return result;
+}
+
+QString profilePath()
+{
+    // Get path to current profile directory, properly converted
+    // from an OS locale std::string to Unicode QString.
+    auto localePath = DataDirectories::profile();
+    return QString::fromLocal8Bit(localePath.c_str(), localePath.size());
 }

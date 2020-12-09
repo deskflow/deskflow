@@ -41,9 +41,9 @@
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
+#include "common/win32/KnownFolderPaths.h"
 
 #include <string.h>
-#include <Shlobj.h>
 #include <comutil.h>
 #include <algorithm>
 
@@ -1916,14 +1916,12 @@ const std::string&
 MSWindowsScreen::getDropTarget() const
 {
     if (m_dropTargetPath.empty()) {
-        // SHGetFolderPath is deprecated in vista, but use it for xp support.
-        char desktopPath[MAX_PATH];
-        if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, desktopPath))) {
-            m_dropTargetPath = std::string(desktopPath);
-            LOG((CLOG_INFO "using desktop for drop target: %s", m_dropTargetPath.c_str()));
+        m_dropTargetPath = desktopPath();
+        if (!m_dropTargetPath.empty()) {
+            LOG((CLOG_DEBUG "using desktop for drop target: %s", m_dropTargetPath.c_str()));
         }
         else {
-            LOG((CLOG_ERR "failed to get desktop path, no drop target available, error=%d", GetLastError()));
+            LOG((CLOG_ERR "failed to get desktop path, no drop target available"));
         }
     }
     return m_dropTargetPath;

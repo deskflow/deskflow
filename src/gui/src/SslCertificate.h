@@ -36,13 +36,13 @@ signals:
     void generateFinished();
 
 private:
-    std::pair<bool, std::string> runTool(const QStringList& args);
+    std::pair<bool, QString> runTool(const QStringList& args);
     void generateFingerprint(const QString& certificateFilename);
 
-    std::string getCertificatePath();
-    std::string getCertificateDirectory();
+    QString getCertificatePath();
+    QString getCertificateDirectory();
 
     bool isCertificateValid(const QString& path);
 private:
-    std::string m_ProfileDir;
+    QString m_ProfileDir;
 };

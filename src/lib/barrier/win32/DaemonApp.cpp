@@ -34,6 +34,7 @@
 #include "base/log_outputters.h"
 #include "base/Log.h"
 #include "common/DataDirectories.h"
+#include "base/Unicode.h"
 
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
@@ -257,7 +258,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
     switch (m->type()) {
         case kIpcCommand: {
             IpcCommandMessage* cm = static_cast<IpcCommandMessage*>(m);
-            String command = cm->command();
+            String command = Unicode::UTF8ToText(cm->command());
 
             // if empty quotes, clear.
             if (command == "\"\"") {
