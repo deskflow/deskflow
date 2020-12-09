@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -91,7 +91,7 @@ public:
     then it simply returns true.
     */
     bool                setFilter(const char* name);
-    
+
     //! Set the minimum priority filter (by ordinal).
     void                setFilter(int);
 
@@ -193,9 +193,9 @@ otherwise it expands to a call that doesn't.
 #define CLOG_TRACE        __FILE__, __LINE__,
 #endif
 
-// the CLOG_* defines are line and file plus %z and an octal number (060=0, 
-// 071=9), but the limitation is that once we run out of numbers at either 
-// end, then we resort to using non-numerical chars. this still works (since 
+// the CLOG_* defines are line and file plus %z and an octal number (060=0,
+// 071=9), but the limitation is that once we run out of numbers at either
+// end, then we resort to using non-numerical chars. this still works (since
 // to deduce the number we subtract octal \060, so '/' is -1, and ':' is 10
 
 #define CLOG_PRINT        CLOG_TRACE "%z\057" // char is '/'

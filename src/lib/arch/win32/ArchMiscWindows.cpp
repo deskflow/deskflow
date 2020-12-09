@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -429,7 +429,7 @@ ArchMiscWindows::wakeupDisplay()
 }
 
 bool
-ArchMiscWindows::wasLaunchedAsService() 
+ArchMiscWindows::wasLaunchedAsService()
 {
     std::string name;
     if (!getParentProcessName(name)) {
@@ -441,7 +441,7 @@ ArchMiscWindows::wasLaunchedAsService()
 }
 
 bool ArchMiscWindows::getParentProcessName(std::string &name)
-{    
+{
     PROCESSENTRY32 parentEntry;
     if (!getParentProcessEntry(parentEntry)){
         LOG((CLOG_ERR "could not get entry for parent process"));
@@ -452,14 +452,14 @@ bool ArchMiscWindows::getParentProcessName(std::string &name)
     return true;
 }
 
-BOOL WINAPI 
+BOOL WINAPI
 ArchMiscWindows::getSelfProcessEntry(PROCESSENTRY32& entry)
 {
     // get entry from current PID
     return getProcessEntry(entry, GetCurrentProcessId());
 }
 
-BOOL WINAPI 
+BOOL WINAPI
 ArchMiscWindows::getParentProcessEntry(PROCESSENTRY32& entry)
 {
     // get the current process, so we can get parent PID
@@ -472,24 +472,24 @@ ArchMiscWindows::getParentProcessEntry(PROCESSENTRY32& entry)
     return getProcessEntry(entry, selfEntry.th32ParentProcessID);
 }
 
-BOOL WINAPI 
+BOOL WINAPI
 ArchMiscWindows::getProcessEntry(PROCESSENTRY32& entry, DWORD processID)
 {
     // first we need to take a snapshot of the running processes
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (snapshot == INVALID_HANDLE_VALUE) {
-        LOG((CLOG_ERR "could not get process snapshot (error: %i)", 
+        LOG((CLOG_ERR "could not get process snapshot (error: %i)",
             GetLastError()));
         return FALSE;
     }
 
     entry.dwSize = sizeof(PROCESSENTRY32);
 
-    // get the first process, and if we can't do that then it's 
+    // get the first process, and if we can't do that then it's
     // unlikely we can go any further
     BOOL gotEntry = Process32First(snapshot, &entry);
     if (!gotEntry) {
-        LOG((CLOG_ERR "could not get first process entry (error: %i)", 
+        LOG((CLOG_ERR "could not get first process entry (error: %i)",
             GetLastError()));
         return FALSE;
     }

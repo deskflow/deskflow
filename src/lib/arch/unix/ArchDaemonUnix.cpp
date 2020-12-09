@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -53,9 +53,9 @@ execSelfNonDaemonized()
 {
     extern char** NXArgv;
     char** selfArgv = NXArgv;
-    
+
     setenv("_BARRIER_DAEMONIZED", "", 1);
-    
+
     execvp(selfArgv[0], selfArgv);
     return 0;
 }
@@ -73,7 +73,7 @@ ArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
     if (alreadyDaemonized())
         return func(1, &name);
 #endif
-    
+
     // fork so shell thinks we're done and so we're not a process
     // group leader
     switch (fork()) {
@@ -92,7 +92,7 @@ ArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
 
     // become leader of a new session
     setsid();
-    
+
 #ifndef __APPLE__
     // NB: don't run chdir on apple; causes strange behaviour.
     // chdir to root so we don't keep mounted filesystems points busy
@@ -115,18 +115,18 @@ ArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
     // of standard I/O safely goes in the bit bucket.
     open("/dev/null", O_RDONLY);
     open("/dev/null", O_RDWR);
-    
+
     int dupErr = dup(1);
 
     if (dupErr < 0) {
         // NB: file logging actually isn't working at this point!
         LOG((CLOG_ERR "dup error: %i", dupErr));
     }
-    
+
 #ifdef __APPLE__
     return execSelfNonDaemonized();
 #endif
-    
+
     // invoke function
     return func(1, &name);
 }

@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -104,7 +104,7 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 
     char buf[16];
     ssize_t read_response = read(m_pipefd[0], buf, 15);
-    
+
     // with linux automake, warnings are treated as errors by default
     if (read_response < 0)
     {
@@ -181,7 +181,7 @@ XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
     retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
      if (pfds[1].revents & POLLIN) {
          ssize_t read_response = read(m_pipefd[0], buf, 15);
-        
+
         // with linux automake, warnings are treated as errors by default
         if (read_response < 0)
         {

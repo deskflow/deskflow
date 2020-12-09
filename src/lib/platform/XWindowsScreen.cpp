@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -97,7 +97,7 @@ XWindowsScreen::XWindowsScreen(
 
 	if (mouseScrollDelta==0) m_mouseScrollDelta=120;
 	s_screen = this;
-	
+
 	if (!disableXInitThreads) {
 	  // initializes Xlib support for concurrent threads.
       if (m_impl->XInitThreads() == 0)
@@ -266,14 +266,14 @@ XWindowsScreen::enter()
             m_impl->DPMSForceLevel(m_display, DPMSModeOn);
 	}
 	#endif
-	
+
 	// unmap the hider/grab window.  this also ungrabs the mouse and
 	// keyboard if they're grabbed.
     m_impl->XUnmapWindow(m_display, m_window);
 
 /* maybe call this if entering for the screensaver
 	// set keyboard focus to root window.  the screensaver should then
-	// pick up key events for when the user enters a password to unlock. 
+	// pick up key events for when the user enters a password to unlock.
 	XSetInputFocus(m_display, PointerRoot, PointerRoot, CurrentTime);
 */
 

@@ -94,16 +94,16 @@ std::string CurlFacade::get(const std::string& url)
     userAgent << "Barrier ";
     userAgent << kVersion;
     curl_easy_setopt(m_curl, CURLOPT_USERAGENT, userAgent.str().c_str());
-    
+
     std::string result;
     curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, &result);
-            
+
     CURLcode code = curl_easy_perform(m_curl);
     if (code != CURLE_OK) {
         LOG((CLOG_ERR "curl perform error: %s", curl_easy_strerror(code)));
         throw XArch("CURL perform failed.");
     }
-    
+
     return result;
 }
 
@@ -114,7 +114,7 @@ std::string CurlFacade::urlEncode(const std::string& url)
     if (resultCStr == NULL) {
         throw XArch("CURL escape failed.");
     }
-    
+
     std::string result(resultCStr);
     curl_free(resultCStr);
 

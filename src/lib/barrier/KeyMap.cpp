@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2005 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -733,7 +733,7 @@ KeyMap::keyForModifier(KeyButton button, SInt32 group,
     assert(modifierBit >= 0 && modifierBit < kKeyModifierNumBits);
     assert(group >= 0 && group < getNumGroups());
 
-    // find a key that generates the given modifier in the given group 
+    // find a key that generates the given modifier in the given group
     // but doesn't use the given button, presumably because we're trying
     // to generate a KeyID that's only bound the the given button.
     // this is important when a shift button is modified by shift;  we
@@ -989,7 +989,7 @@ KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
             }
         }
         break;
-        
+
     case kKeystrokeRelease:
         keystrokes.push_back(Keystroke(button, false, false, data));
         if (keyItem.m_generates != 0 && !keyItem.m_lock) {
@@ -1011,19 +1011,19 @@ KeyMap::addKeystrokes(EKeystroke type, const KeyItem& keyItem,
             }
         }
         break;
-        
+
     case kKeystrokeRepeat:
         keystrokes.push_back(Keystroke(button, false, true, data));
         keystrokes.push_back(Keystroke(button,  true, true, data));
         // no modifier changes on key repeat
         break;
-        
+
     case kKeystrokeClick:
         keystrokes.push_back(Keystroke(button,  true, false, data));
         keystrokes.push_back(Keystroke(button, false, false, data));
         // no modifier changes on key click
         break;
-        
+
     case kKeystrokeModify:
     case kKeystrokeUnmodify:
         if (keyItem.m_lock) {

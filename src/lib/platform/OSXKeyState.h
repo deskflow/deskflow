@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -67,7 +67,7 @@ public:
     Still required in a few places for translation calls.
     */
     KeyModifierMask        mapModifiersToCarbon(UInt32 mask) const;
-    
+
     //! Map key event to keys
     /*!
     Converts a key event into a sequence of KeyIDs and the shadow modifier
@@ -149,7 +149,7 @@ private:
     static UInt32        mapKeyButtonToVirtualKey(KeyButton keyButton);
 
     void                init();
-    
+
     // Post a key event to HID manager. It posts an event to HID client, a
     // much lower level than window manager which's the target from carbon
     // CGEventPost

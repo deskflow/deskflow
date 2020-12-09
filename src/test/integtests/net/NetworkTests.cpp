@@ -1,11 +1,11 @@
 /*
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2013-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -84,19 +84,19 @@ public:
     }
 
     void                sendMockData(void* eventTarget);
-    
+
     void                sendToClient_mockData_handleClientConnected(const Event&, void* vlistener);
     void                sendToClient_mockData_fileRecieveCompleted(const Event&, void*);
-    
+
     void                sendToClient_mockFile_handleClientConnected(const Event&, void* vlistener);
     void                sendToClient_mockFile_fileRecieveCompleted(const Event& event, void*);
-    
+
     void                sendToServer_mockData_handleClientConnected(const Event&, void* vlistener);
     void                sendToServer_mockData_fileRecieveCompleted(const Event& event, void*);
 
     void                sendToServer_mockFile_handleClientConnected(const Event&, void* vlistener);
     void                sendToServer_mockFile_fileRecieveCompleted(const Event& event, void*);
-    
+
 public:
     TestEventQueue        m_events;
     UInt8*                m_mockData;
@@ -111,7 +111,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
     NetworkAddress serverAddress(TEST_HOST, TEST_PORT);
 
     serverAddress.resolve();
-    
+
     // server
     SocketMultiplexer serverSocketMultiplexer;
     TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
@@ -120,7 +120,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
     NiceMock<MockPrimaryClient> primaryClient;
     NiceMock<MockConfig> serverConfig;
     NiceMock<MockInputFilter> serverInputFilter;
-    
+
     m_events.adoptHandler(
         m_events.forClientListener().connected(), &listener,
         new TMethodEventJob<NetworkTests>(
@@ -128,7 +128,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
 
     ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
     ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
-    
+
     ServerArgs serverArgs;
     serverArgs.m_enableDragDrop = true;
     Server server(serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
@@ -139,7 +139,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
     NiceMock<MockScreen> clientScreen;
     SocketMultiplexer clientSocketMultiplexer;
     TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
-    
+
     ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
     ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
@@ -148,7 +148,7 @@ TEST_F(NetworkTests, sendToClient_mockData)
     clientArgs.m_enableDragDrop = true;
     clientArgs.m_enableCrypto = false;
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
-        
+
     m_events.adoptHandler(
         m_events.forFile().fileRecieveCompleted(), &client,
         new TMethodEventJob<NetworkTests>(
@@ -169,7 +169,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
     NetworkAddress serverAddress(TEST_HOST, TEST_PORT);
 
     serverAddress.resolve();
-    
+
     // server
     SocketMultiplexer serverSocketMultiplexer;
     TCPSocketFactory* serverSocketFactory = new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
@@ -178,7 +178,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
     NiceMock<MockPrimaryClient> primaryClient;
     NiceMock<MockConfig> serverConfig;
     NiceMock<MockInputFilter> serverInputFilter;
-    
+
     m_events.adoptHandler(
         m_events.forClientListener().connected(), &listener,
         new TMethodEventJob<NetworkTests>(
@@ -186,7 +186,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
 
     ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
     ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
-    
+
     ServerArgs serverArgs;
     serverArgs.m_enableDragDrop = true;
     Server server(serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
@@ -197,7 +197,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
     NiceMock<MockScreen> clientScreen;
     SocketMultiplexer clientSocketMultiplexer;
     TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
-    
+
     ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
     ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
@@ -206,7 +206,7 @@ TEST_F(NetworkTests, sendToClient_mockFile)
     clientArgs.m_enableDragDrop = true;
     clientArgs.m_enableCrypto = false;
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
-        
+
     m_events.adoptHandler(
         m_events.forFile().fileRecieveCompleted(), &client,
         new TMethodEventJob<NetworkTests>(
@@ -238,7 +238,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
 
     ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
     ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
-    
+
     ServerArgs serverArgs;
     serverArgs.m_enableDragDrop = true;
     Server server(serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
@@ -249,7 +249,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
     NiceMock<MockScreen> clientScreen;
     SocketMultiplexer clientSocketMultiplexer;
     TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
-    
+
     ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
     ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
@@ -257,7 +257,7 @@ TEST_F(NetworkTests, sendToServer_mockData)
     clientArgs.m_enableDragDrop = true;
     clientArgs.m_enableCrypto = false;
     Client client(&m_events, "stub", serverAddress, clientSocketFactory, &clientScreen, clientArgs);
-    
+
     m_events.adoptHandler(
         m_events.forClientListener().connected(), &listener,
         new TMethodEventJob<NetworkTests>(
@@ -295,7 +295,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
 
     ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
     ON_CALL(serverConfig, getInputFilter()).WillByDefault(Return(&serverInputFilter));
-    
+
     ServerArgs serverArgs;
     serverArgs.m_enableDragDrop = true;
     Server server(serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
@@ -306,7 +306,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
     NiceMock<MockScreen> clientScreen;
     SocketMultiplexer clientSocketMultiplexer;
     TCPSocketFactory* clientSocketFactory = new TCPSocketFactory(&m_events, &clientSocketMultiplexer);
-    
+
     ON_CALL(clientScreen, getShape(_, _, _, _)).WillByDefault(Invoke(getScreenShape));
     ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
@@ -334,7 +334,7 @@ TEST_F(NetworkTests, sendToServer_mockFile)
     m_events.cleanupQuitTimeout();
 }
 
-void 
+void
 NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vlistener)
 {
     ClientListener* listener = static_cast<ClientListener*>(vlistener);
@@ -352,7 +352,7 @@ NetworkTests::sendToClient_mockData_handleClientConnected(const Event&, void* vl
     sendMockData(server);
 }
 
-void 
+void
 NetworkTests::sendToClient_mockData_fileRecieveCompleted(const Event& event, void*)
 {
     Client* client = static_cast<Client*>(event.getTarget());
@@ -361,7 +361,7 @@ NetworkTests::sendToClient_mockData_fileRecieveCompleted(const Event& event, voi
     m_events.raiseQuitEvent();
 }
 
-void 
+void
 NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vlistener)
 {
     ClientListener* listener = static_cast<ClientListener*>(vlistener);
@@ -379,7 +379,7 @@ NetworkTests::sendToClient_mockFile_handleClientConnected(const Event&, void* vl
     server->sendFileToClient(kMockFilename);
 }
 
-void 
+void
 NetworkTests::sendToClient_mockFile_fileRecieveCompleted(const Event& event, void*)
 {
     Client* client = static_cast<Client*>(event.getTarget());
@@ -388,14 +388,14 @@ NetworkTests::sendToClient_mockFile_fileRecieveCompleted(const Event& event, voi
     m_events.raiseQuitEvent();
 }
 
-void 
+void
 NetworkTests::sendToServer_mockData_handleClientConnected(const Event&, void* vclient)
 {
     Client* client = static_cast<Client*>(vclient);
     sendMockData(client);
 }
 
-void 
+void
 NetworkTests::sendToServer_mockData_fileRecieveCompleted(const Event& event, void*)
 {
     Server* server = static_cast<Server*>(event.getTarget());
@@ -404,14 +404,14 @@ NetworkTests::sendToServer_mockData_fileRecieveCompleted(const Event& event, voi
     m_events.raiseQuitEvent();
 }
 
-void 
+void
 NetworkTests::sendToServer_mockFile_handleClientConnected(const Event&, void* vclient)
 {
     Client* client = static_cast<Client*>(vclient);
     client->sendFileToServer(kMockFilename);
 }
 
-void 
+void
 NetworkTests::sendToServer_mockFile_fileRecieveCompleted(const Event& event, void*)
 {
     Server* server = static_cast<Server*>(event.getTarget());
@@ -420,13 +420,13 @@ NetworkTests::sendToServer_mockFile_fileRecieveCompleted(const Event& event, voi
     m_events.raiseQuitEvent();
 }
 
-void 
+void
 NetworkTests::sendMockData(void* eventTarget)
 {
     // send first message (file size)
     String size = barrier::string::sizeTypeToString(kMockDataSize);
     FileChunk* sizeMessage = FileChunk::start(size);
-    
+
     m_events.addEvent(Event(m_events.forFile().fileChunkSending(), eventTarget, sizeMessage));
 
     // send chunk messages with incrementing chunk size
@@ -452,7 +452,7 @@ NetworkTests::sendMockData(void* eventTarget)
         }
 
     }
-    
+
     // send last message
     FileChunk* transferFinished = FileChunk::end();
     m_events.addEvent(Event(m_events.forFile().fileChunkSending(), eventTarget, transferFinished));

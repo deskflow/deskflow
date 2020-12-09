@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -60,13 +60,13 @@ BOOL WINAPI AppUtilWindows::consoleHandler(DWORD)
 }
 
 static
-int 
-mainLoopStatic() 
+int
+mainLoopStatic()
 {
     return AppUtil::instance().app().mainLoop();
 }
 
-int 
+int
 AppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
 {
     app().initApp(argc, argv);
@@ -74,11 +74,11 @@ AppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
 
     // NB: what the hell does this do?!
     app().argsBase().m_backend = false;
-    
+
     return ArchMiscWindows::runDaemon(mainLoopStatic);
 }
 
-void 
+void
 AppUtilWindows::exitApp(int code)
 {
     switch (m_exitMode) {
@@ -97,7 +97,7 @@ int daemonNTMainLoopStatic(int argc, const char** argv)
     return AppUtilWindows::instance().daemonNTMainLoop(argc, argv);
 }
 
-int 
+int
 AppUtilWindows::daemonNTStartup(int, char**)
 {
     SystemLogger sysLogger(app().daemonName(), false);
@@ -155,13 +155,13 @@ AppUtilWindows::run(int argc, char** argv)
     return app().runInner(argc, argv, NULL, startup);
 }
 
-AppUtilWindows& 
+AppUtilWindows&
 AppUtilWindows::instance()
 {
     return (AppUtilWindows&)AppUtil::instance();
 }
 
-void 
+void
 AppUtilWindows::debugServiceWait()
 {
     if (app().argsBase().m_debugServiceWait)
@@ -169,8 +169,8 @@ AppUtilWindows::debugServiceWait()
         while(true)
         {
             // this code is only executed when the process is launched via the
-            // windows service controller (and --debug-service-wait arg is 
-            // used). to debug, set a breakpoint on this line so that 
+            // windows service controller (and --debug-service-wait arg is
+            // used). to debug, set a breakpoint on this line so that
             // execution is delayed until the debugger is attached.
             ARCH->sleep(1);
             LOG((CLOG_INFO "waiting for debugger to attach"));
@@ -178,7 +178,7 @@ AppUtilWindows::debugServiceWait()
     }
 }
 
-void 
+void
 AppUtilWindows::startNode()
 {
     app().startNode();

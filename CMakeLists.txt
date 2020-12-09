@@ -319,7 +319,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     find_program(BREW_PROGRAM "brew")
     find_program(PORT_PROGRAM "port")
-    
+
     if (IS_DIRECTORY /opt/local AND PORT_PROGRAM)
         # macports
         set (OPENSSL_ROOT /opt/local)
@@ -420,7 +420,7 @@ endif()
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
     install(FILES res/barrier.svg DESTINATION share/icons/hicolor/scalable/apps)
-    if("${VERSION_MAJOR}" STREQUAL "2") 
+    if("${VERSION_MAJOR}" STREQUAL "2")
         install(FILES res/barrier2.desktop DESTINATION share/applications)
     else()
         install(FILES res/barrier.desktop DESTINATION share/applications)

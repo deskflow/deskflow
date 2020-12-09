@@ -1,11 +1,11 @@
 /*
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -50,7 +50,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_logLevelCmd_setLogLevel)
     ArgParser argParser(NULL);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
-    
+
     argParser.parseGenericArgs(argc, kLogLevelCmd, i);
 
     String logFilter(argsBase.m_logFilter);
@@ -68,7 +68,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_logFileCmd_saveLogFilename)
     ArgParser argParser(NULL);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
-    
+
     argParser.parseGenericArgs(argc, kLogFileCmd, i);
 
     String logFile(argsBase.m_logFile);
@@ -86,7 +86,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_logFileCmdWithSpace_saveLogFilena
     ArgParser argParser(NULL);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
-    
+
     argParser.parseGenericArgs(argc, kLogFileCmdWithSpace, i);
 
     String logFile(argsBase.m_logFile);
@@ -104,7 +104,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noDeamonCmd_daemonFalse)
     ArgParser argParser(NULL);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
-    
+
     argParser.parseGenericArgs(argc, kNoDeamonCmd, i);
 
     EXPECT_FALSE(argsBase.m_daemon);
@@ -120,7 +120,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_deamonCmd_daemonTrue)
     ArgParser argParser(NULL);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
-    
+
     argParser.parseGenericArgs(argc, kDeamonCmd, i);
 
     EXPECT_EQ(true, argsBase.m_daemon);
@@ -136,7 +136,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_nameCmd_saveName)
     ArgParser argParser(NULL);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
-    
+
     argParser.parseGenericArgs(argc, kNameCmd, i);
 
     EXPECT_EQ("mock", argsBase.m_name);
@@ -152,7 +152,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noRestartCmd_restartFalse)
     ArgParser argParser(NULL);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
-    
+
     argParser.parseGenericArgs(argc, kNoRestartCmd, i);
 
     EXPECT_FALSE(argsBase.m_restartable);
@@ -168,7 +168,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_restartCmd_restartTrue)
     ArgParser argParser(NULL);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
-    
+
     argParser.parseGenericArgs(argc, kRestartCmd, i);
 
     EXPECT_EQ(true, argsBase.m_restartable);
@@ -184,7 +184,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_backendCmd_backendTrue)
     ArgParser argParser(NULL);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
-    
+
     argParser.parseGenericArgs(argc, kBackendCmd, i);
 
     EXPECT_EQ(true, argsBase.m_backend);
@@ -200,7 +200,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noHookCmd_noHookTrue)
     ArgParser argParser(NULL);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
-    
+
     argParser.parseGenericArgs(argc, kNoHookCmd, i);
 
     EXPECT_EQ(true, argsBase.m_noHooks);
@@ -219,7 +219,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_helpCmd_showHelp)
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     ON_CALL(app, help()).WillByDefault(Invoke(showMockHelp));
-    
+
     argParser.parseGenericArgs(argc, kHelpCmd, i);
 
     EXPECT_EQ(true, g_helpShowed);
@@ -239,7 +239,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_versionCmd_showVersion)
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
     ON_CALL(app, version()).WillByDefault(Invoke(showMockVersion));
-    
+
     argParser.parseGenericArgs(argc, kVersionCmd, i);
 
     EXPECT_EQ(true, g_versionShowed);
@@ -255,7 +255,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_noTrayCmd_disableTrayTrue)
     ArgParser argParser(NULL);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
-    
+
     argParser.parseGenericArgs(argc, kNoTrayCmd, i);
 
     EXPECT_EQ(true, argsBase.m_disableTray);
@@ -271,7 +271,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue)
     ArgParser argParser(NULL);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
-    
+
     argParser.parseGenericArgs(argc, kIpcCmd, i);
 
     EXPECT_EQ(true, argsBase.m_enableIpc);
@@ -288,7 +288,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnNonLinux_enableDragD
     ArgParser argParser(NULL);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
-    
+
     argParser.parseGenericArgs(argc, kDragDropCmd, i);
 
     EXPECT_EQ(true, argsBase.m_enableDragDrop);
@@ -306,7 +306,7 @@ TEST(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnLinux_enableDragDrop
     ArgParser argParser(NULL);
     ArgsBase argsBase;
     argParser.setArgsBase(argsBase);
-    
+
     argParser.parseGenericArgs(argc, kDragDropCmd, i);
 
     EXPECT_FALSE(argsBase.m_enableDragDrop);

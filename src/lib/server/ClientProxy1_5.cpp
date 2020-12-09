@@ -1,11 +1,11 @@
 /*
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2013-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -86,7 +86,7 @@ ClientProxy1_5::fileChunkReceived()
                     getStream(),
                     server->getReceivedFileData(),
                     server->getExpectedFileSize());
-    
+
 
     if (result == kFinish) {
         m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), server));
@@ -106,6 +106,6 @@ ClientProxy1_5::dragInfoReceived()
     UInt32 fileNum = 0;
     std::string content;
     ProtocolUtil::readf(getStream(), kMsgDDragInfo + 4, &fileNum, &content);
-    
+
     m_server->dragInfoReceived(fileNum, content);
 }

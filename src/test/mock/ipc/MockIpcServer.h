@@ -34,7 +34,7 @@ public:
     MockIpcServer() :
         m_sendCond(ARCH->newCondVar()),
         m_sendMutex(ARCH->newMutex()) { }
-    
+
     ~MockIpcServer() {
         if (m_sendCond != NULL) {
             ARCH->closeCondVar(m_sendCond);

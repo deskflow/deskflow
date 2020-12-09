@@ -1,11 +1,11 @@
 /*
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2013-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -45,7 +45,7 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
     PROCESSENTRY32 entry;
     entry.dwSize = sizeof(PROCESSENTRY32);
 
-    // get the first process, and if we can't do that then it's 
+    // get the first process, and if we can't do that then it's
     // unlikely we can go any further
     BOOL gotEntry = Process32First(snapshot, &entry);
     if (!gotEntry) {
@@ -119,7 +119,7 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
     }
 }
 
-HANDLE 
+HANDLE
 MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
 {
     HANDLE sourceToken;
@@ -127,7 +127,7 @@ MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
         LOG((CLOG_ERR "could not get token from session %d", m_activeSessionId));
         throw XArch(new XArchEvalWindows);
     }
-    
+
     HANDLE newToken;
     if (!DuplicateTokenEx(
         sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
@@ -136,7 +136,7 @@ MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
         LOG((CLOG_ERR "could not duplicate token"));
         throw XArch(new XArchEvalWindows);
     }
-    
+
     LOG((CLOG_DEBUG "duplicated, new token: %i", newToken));
     return newToken;
 }

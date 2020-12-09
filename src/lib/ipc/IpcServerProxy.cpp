@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -56,7 +56,7 @@ IpcServerProxy::handleData(const Event&, void*)
 
         LOG((CLOG_DEBUG "ipc read: %c%c%c%c",
             code[0], code[1], code[2], code[3]));
-        
+
         IpcMessage* m = nullptr;
         if (memcmp(code, kIpcMsgLogLine, 4) == 0) {
             m = parseLogLine();
@@ -68,7 +68,7 @@ IpcServerProxy::handleData(const Event&, void*)
             LOG((CLOG_ERR "invalid ipc message"));
             disconnect();
         }
-        
+
         // don't delete with this event; the data is passed to a new event.
         Event e(m_events->forIpcServerProxy().messageReceived(), this, NULL, Event::kDontFreeData);
         e.setDataObject(m);
@@ -76,7 +76,7 @@ IpcServerProxy::handleData(const Event&, void*)
 
         n = m_stream.read(code, 4);
     }
-    
+
     LOG((CLOG_DEBUG "finished ipc handle data"));
 }
 
@@ -110,7 +110,7 @@ IpcServerProxy::parseLogLine()
 {
     std::string logLine;
     ProtocolUtil::readf(&m_stream, kIpcMsgLogLine + 4, &logLine);
-    
+
     // must be deleted by event handler.
     return new IpcLogLineMessage(logLine);
 }

@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -24,21 +24,21 @@
 class ArchThreadImpl;
 typedef ArchThreadImpl* ArchThread;
 
-/*!      
+/*!
 \class ArchSocketImpl
 \brief Internal socket data.
 An architecture dependent type holding the necessary data for a socket.
 */
 class ArchSocketImpl;
 
-/*!      
+/*!
 \var ArchSocket
 \brief Opaque socket type.
 An opaque type representing a socket.
 */
 typedef ArchSocketImpl* ArchSocket;
 
-/*!      
+/*!
 \class ArchNetAddressImpl
 \brief Internal network address data.
 An architecture dependent type holding the necessary data for a network
@@ -46,7 +46,7 @@ address.
 */
 class ArchNetAddressImpl;
 
-/*!      
+/*!
 \var ArchNetAddress
 \brief Opaque network address type.
 An opaque type representing a network address.

@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -125,7 +125,7 @@ ServerTaskBarReceiver::getToolTip() const
     case kNotWorking:
         return barrier::string::sprintf("%s:  %s",
                                 kAppVersion, m_errorMessage.c_str());
-                        
+
     case kNotConnected:
         return barrier::string::sprintf("%s:  Waiting for clients", kAppVersion);
 

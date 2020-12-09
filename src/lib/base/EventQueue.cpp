@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -100,7 +100,7 @@ EventQueue::~EventQueue()
     delete m_buffer;
     delete m_readyCondVar;
     delete m_readyMutex;
-    
+
     ARCH->setSignalHandler(Arch::kINTERRUPT, NULL, NULL);
     ARCH->setSignalHandler(Arch::kTERMINATE, NULL, NULL);
 }
@@ -121,7 +121,7 @@ EventQueue::loop()
         addEventToBuffer(event);
         m_pending.pop();
     }
-    
+
     Event event;
     getEvent(event);
     while (event.getType() != Event::kQuit) {
@@ -298,7 +298,7 @@ EventQueue::addEvent(const Event& event)
     default:
         break;
     }
-    
+
     if ((event.getFlags() & Event::kDeliverImmediately) != 0) {
         dispatchEvent(event);
         Event::deleteData(event);
@@ -315,10 +315,10 @@ void
 EventQueue::addEventToBuffer(const Event& event)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
-    
+
     // store the event's data locally
     UInt32 eventID = saveEvent(event);
-    
+
     // add it
     if (!m_buffer->addEvent(eventID)) {
         // failed to send event
@@ -568,7 +568,7 @@ EventQueue::waitForReady() const
 {
     double timeout = ARCH->time() + 10;
     Lock lock(m_readyMutex);
-    
+
     while (!m_readyCondVar->wait()) {
         if (ARCH->time() > timeout) {
             throw std::runtime_error("event queue is not ready within 5 sec");

@@ -26,7 +26,7 @@ extern "C" {
 #endif
 
 CFStringRef                getDraggedFileURL();
-    
+
 #if defined(__cplusplus)
 }
 #endif

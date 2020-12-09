@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -64,7 +64,7 @@ public:
     Installs the default daemon.
     */
     virtual void        installDaemon() = 0;
-    
+
     //! Uninstall daemon
     /*!
     Uninstalls the default daemon.
@@ -76,7 +76,7 @@ public:
     Daemonize.  Throw XArchDaemonFailed on error.  \c name is the name
     of the daemon.  Once daemonized, \c func is invoked and daemonize
     returns when and what it does.
-    
+
     Exactly what happens when daemonizing depends on the platform.
     <ul>
     <li>unix:

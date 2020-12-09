@@ -1,11 +1,11 @@
 /*
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -30,7 +30,7 @@ using ::testing::ReturnRef;
 using ::testing::SaveArg;
 
 namespace barrier {
-    
+
 TEST(KeyMapTests, findBestKey_requiredDown_matchExactFirstItem)
 {
     KeyMap keyMap;
@@ -46,7 +46,7 @@ TEST(KeyMapTests, findBestKey_requiredDown_matchExactFirstItem)
 
     EXPECT_EQ(0, keyMap.findBestKey(entryList, currentState, desiredState));
 }
-    
+
 TEST(KeyMapTests, findBestKey_requiredAndExtraSensitiveDown_matchExactFirstItem)
 {
     KeyMap keyMap;
@@ -84,7 +84,7 @@ TEST(KeyMapTests, findBestKey_requiredAndExtraSensitiveDown_matchExactSecondItem
 
     EXPECT_EQ(1, keyMap.findBestKey(entryList, currentState, desiredState));
 }
-    
+
 TEST(KeyMapTests, findBestKey_extraSensitiveDown_matchExactSecondItem)
 {
     KeyMap keyMap;
@@ -103,7 +103,7 @@ TEST(KeyMapTests, findBestKey_extraSensitiveDown_matchExactSecondItem)
     itemList2.push_back(item2);
     entryList.push_back(itemList1);
     entryList.push_back(itemList2);
-        
+
     EXPECT_EQ(1, keyMap.findBestKey(entryList, currentState, desiredState));
 }
 
@@ -125,7 +125,7 @@ TEST(KeyMapTests, findBestKey_noRequiredDown_matchOneRequiredChangeItem)
     itemList2.push_back(item2);
     entryList.push_back(itemList1);
     entryList.push_back(itemList2);
-    
+
     EXPECT_EQ(1, keyMap.findBestKey(entryList, currentState, desiredState));
 }
 
@@ -150,7 +150,7 @@ TEST(KeyMapTests, findBestKey_onlyOneRequiredDown_matchTwoRequiredChangesItem)
 
     EXPECT_EQ(1, keyMap.findBestKey(entryList, currentState, desiredState));
 }
-    
+
 TEST(KeyMapTests, findBestKey_noRequiredDown_cannotMatch)
 {
     KeyMap keyMap;
@@ -163,31 +163,31 @@ TEST(KeyMapTests, findBestKey_noRequiredDown_cannotMatch)
     KeyModifierMask desiredState = 0;
     itemList.push_back(item);
     entryList.push_back(itemList);
-    
+
     EXPECT_EQ(-1, keyMap.findBestKey(entryList, currentState, desiredState));
 }
-    
+
 TEST(KeyMapTests, isCommand_shiftMask_returnFalse)
 {
     KeyMap keyMap;
     KeyModifierMask mask= KeyModifierShift;
-    
+
     EXPECT_FALSE(keyMap.isCommand(mask));
 }
-    
+
 TEST(KeyMapTests, isCommand_controlMask_returnTrue)
 {
     KeyMap keyMap;
     KeyModifierMask mask= KeyModifierControl;
-        
+
     EXPECT_EQ(true, keyMap.isCommand(mask));
 }
-    
+
 TEST(KeyMapTests, isCommand_alternateMask_returnTrue)
 {
     KeyMap keyMap;
     KeyModifierMask mask= KeyModifierAlt;
-    
+
     EXPECT_EQ(true, keyMap.isCommand(mask));
 }
 
@@ -195,15 +195,15 @@ TEST(KeyMapTests, isCommand_alternateGraphicMask_returnTrue)
 {
     KeyMap keyMap;
     KeyModifierMask mask= KeyModifierAltGr;
-    
+
     EXPECT_EQ(true, keyMap.isCommand(mask));
 }
-    
+
 TEST(KeyMapTests, isCommand_metaMask_returnTrue)
 {
     KeyMap keyMap;
     KeyModifierMask mask= KeyModifierMeta;
-    
+
     EXPECT_EQ(true, keyMap.isCommand(mask));
 }
 
@@ -211,8 +211,8 @@ TEST(KeyMapTests, isCommand_superMask_returnTrue)
 {
     KeyMap keyMap;
     KeyModifierMask mask= KeyModifierSuper;
-    
+
     EXPECT_EQ(true, keyMap.isCommand(mask));
 }
-    
+
 }

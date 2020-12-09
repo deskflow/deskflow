@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -64,7 +64,7 @@ public:
     void handleClientConnected(const Event&, void*);
     void handleClientFailed(const Event& e, void*);
     void handleClientDisconnected(const Event&, void*);
-    Client* openClient(const String& name, const NetworkAddress& address, 
+    Client* openClient(const String& name, const NetworkAddress& address,
                 barrier::Screen* screen);
     void closeClient(Client* client);
     bool startClient();

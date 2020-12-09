@@ -1,11 +1,11 @@
 /*
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -50,7 +50,7 @@ TEST(IpcLogOutputterTests, write_threadingEnabled_bufferIsSent)
 {
     MockIpcServer mockServer;
     mockServer.delegateToFake();
-    
+
     ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
     EXPECT_CALL(mockServer, hasClients(_)).Times(AtLeast(3));
@@ -67,7 +67,7 @@ TEST(IpcLogOutputterTests, write_threadingEnabled_bufferIsSent)
 TEST(IpcLogOutputterTests, write_overBufferMaxSize_firstLineTruncated)
 {
     MockIpcServer mockServer;
-    
+
     ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
     EXPECT_CALL(mockServer, hasClients(_)).Times(1);
     EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 2\nmock 3\n"), _)).Times(1);
@@ -85,7 +85,7 @@ TEST(IpcLogOutputterTests, write_overBufferMaxSize_firstLineTruncated)
 TEST(IpcLogOutputterTests, write_underBufferMaxSize_allLinesAreSent)
 {
     MockIpcServer mockServer;
-    
+
     ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
     EXPECT_CALL(mockServer, hasClients(_)).Times(1);
@@ -107,7 +107,7 @@ TEST(IpcLogOutputterTests, write_underBufferMaxSize_allLinesAreSent)
 TEST(IpcLogOutputterTests, write_overBufferRateLimit_lastLineTruncated)
 {
     MockIpcServer mockServer;
-    
+
     ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
     EXPECT_CALL(mockServer, hasClients(_)).Times(2);
@@ -123,7 +123,7 @@ TEST(IpcLogOutputterTests, write_overBufferRateLimit_lastLineTruncated)
     outputter.write(kNOTE, "mock 3");
 
     outputter.sendBuffer();
-    
+
     // after waiting the time limit send another to make sure
     // we can log after the time limit passes.
     // HACK: sleep causes the unit test to fail intermittently,
@@ -140,7 +140,7 @@ TEST(IpcLogOutputterTests, write_overBufferRateLimit_lastLineTruncated)
 TEST(IpcLogOutputterTests, write_underBufferRateLimit_allLinesAreSent)
 {
     MockIpcServer mockServer;
-    
+
     ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 
     EXPECT_CALL(mockServer, hasClients(_)).Times(2);
@@ -154,7 +154,7 @@ TEST(IpcLogOutputterTests, write_underBufferRateLimit_allLinesAreSent)
     outputter.write(kNOTE, "mock 1");
     outputter.write(kNOTE, "mock 2");
     outputter.sendBuffer();
-    
+
     // after waiting the time limit send another to make sure
     // we can log after the time limit passes.
     outputter.write(kNOTE, "mock 3");

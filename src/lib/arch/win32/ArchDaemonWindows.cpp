@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -441,7 +441,7 @@ ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
     // create synchronization objects
     m_serviceMutex        = ARCH->newMutex();
     m_serviceCondVar      = ARCH->newCondVar();
-    
+
     // register our service handler function
     m_statusHandle = RegisterServiceCtrlHandler(argv[0],
                                 &ArchDaemonWindows::serviceHandlerEntry);
@@ -667,7 +667,7 @@ ArchDaemonWindows::stop(const char* name)
     // ask the service to stop, asynchronously
     SERVICE_STATUS ss;
     if (!ControlService(service, SERVICE_CONTROL_STOP, &ss)) {
-        DWORD dwErrCode = GetLastError(); 
+        DWORD dwErrCode = GetLastError();
         if (dwErrCode != ERROR_SERVICE_NOT_ACTIVE) {
             throw XArchDaemonFailed(new XArchEvalWindows());
         }
@@ -681,7 +681,7 @@ ArchDaemonWindows::installDaemon()
     if (!isDaemonInstalled(DEFAULT_DAEMON_NAME)) {
         char path[MAX_PATH];
         GetModuleFileName(ArchMiscWindows::instanceWin32(), path, MAX_PATH);
-        
+
         // wrap in quotes so a malicious user can't start \Program.exe as admin.
         std::stringstream ss;
         ss << '"';

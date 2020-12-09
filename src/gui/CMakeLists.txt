@@ -28,7 +28,7 @@ target_compile_definitions (barrier PRIVATE -DBARRIER_REVISION="${BARRIER_REVISI
 
 if (WIN32)
     include_directories ($ENV{BONJOUR_SDK_HOME}/Include)
-    find_library (DNSSD_LIB dnssd.lib 
+    find_library (DNSSD_LIB dnssd.lib
                   HINTS ENV BONJOUR_SDK_HOME
                   PATH_SUFFIXES "Lib/x64")
     set_target_properties (barrier PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")

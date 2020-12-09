@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -122,14 +122,14 @@ public:
     complete and false if normal key processing should continue.
     */
     virtual bool        fakeCtrlAltDel() = 0;
-    
+
     //! Fake a media key
     /*!
      Synthesizes a media key down and up. Only Mac would implement this by
      use cocoa appkit framework.
      */
     virtual bool        fakeMediaKey(KeyID id) = 0;
-    
+
     //@}
     //! @name accessors
     //@{

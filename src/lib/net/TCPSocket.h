@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -59,7 +59,7 @@ public:
     // IDataSocket overrides
     virtual void        connect(const NetworkAddress&);
 
-    
+
     virtual std::unique_ptr<ISocketMultiplexerJob> newJob();
 
 protected:
@@ -68,7 +68,7 @@ protected:
         kRetry,            //!< Retry the same job
         kNew            //!< Require a new job
     };
-    
+
     ArchSocket            getSocket() { return m_socket; }
     IEventQueue*        getEvents() { return m_events; }
     virtual EJobResult    doRead();
@@ -105,7 +105,7 @@ protected:
     IEventQueue*        m_events;
     StreamBuffer        m_inputBuffer;
     StreamBuffer        m_outputBuffer;
-    
+
 private:
     Mutex                m_mutex;
     ArchSocket            m_socket;

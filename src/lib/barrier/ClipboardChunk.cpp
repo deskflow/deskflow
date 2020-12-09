@@ -1,11 +1,11 @@
 /*
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -74,7 +74,7 @@ ClipboardChunk::end(ClipboardID id, UInt32 sequence)
 {
     ClipboardChunk* end = new ClipboardChunk(CLIPBOARD_CHUNK_META_SIZE);
     char* chunk = end->m_chunk;
-    
+
     chunk[0] = id;
     std::memcpy (&chunk[1], &sequence, 4);
     chunk[5] = kDataEnd;
@@ -95,7 +95,7 @@ ClipboardChunk::assemble(barrier::IStream* stream,
     if (!ProtocolUtil::readf(stream, kMsgDClipboard + 4, &id, &sequence, &mark, &data)) {
         return kError;
     }
-    
+
     if (mark == kDataStart) {
         s_expectedSize = barrier::string::stringToSizeType(data);
         LOG((CLOG_DEBUG "start receiving clipboard data"));

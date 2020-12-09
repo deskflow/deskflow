@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -24,7 +24,7 @@
 // OSXClipboardTextConverter
 //
 
-OSXClipboardTextConverter::OSXClipboardTextConverter() 
+OSXClipboardTextConverter::OSXClipboardTextConverter()
 {
     // do nothing
 }
@@ -59,12 +59,12 @@ std::string OSXClipboardTextConverter::convertString(const std::string& data,
                             0, false, NULL, 0, &buffSize);
 
     char* buffer = new char[buffSize];
-    
+
     if (buffer == NULL) {
         CFRelease(stringRef);
         return {};
     }
-    
+
     CFStringGetBytes(stringRef, entireString, toEncoding,
                             0, false, (UInt8*)buffer, buffSize, NULL);
 
@@ -72,7 +72,7 @@ std::string OSXClipboardTextConverter::convertString(const std::string& data,
 
     delete[] buffer;
     CFRelease(stringRef);
-    
+
     return result;
 }
 

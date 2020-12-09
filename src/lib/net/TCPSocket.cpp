@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -335,19 +335,19 @@ TCPSocket::doRead()
     UInt8 buffer[4096];
     memset(buffer, 0, sizeof(buffer));
     size_t bytesRead = 0;
-    
+
     bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
-    
+
     if (bytesRead > 0) {
         bool wasEmpty = (m_inputBuffer.getSize() == 0);
-        
+
         // slurp up as much as possible
         do {
             m_inputBuffer.write(buffer, (UInt32)bytesRead);
 
             bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
         } while (bytesRead > 0);
-        
+
         // send input ready if input buffer was empty
         if (wasEmpty) {
             sendEvent(m_events->forIStream().inputReady());
@@ -365,7 +365,7 @@ TCPSocket::doRead()
         m_readable = false;
         return kNew;
     }
-    
+
     return kRetry;
 }
 
@@ -384,7 +384,7 @@ TCPSocket::doWrite()
         discardWrittenData(bytesWrote);
         return kNew;
     }
-    
+
     return kRetry;
 }
 

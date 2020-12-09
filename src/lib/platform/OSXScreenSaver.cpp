@@ -2,11 +2,11 @@
  * barrier -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -48,17 +48,17 @@ OSXScreenSaver::OSXScreenSaver(IEventQueue* events, void* eventTarget) :
     launchEventTypes[0].eventKind  = kEventAppLaunched;
     launchEventTypes[1].eventClass = kEventClassApplication;
     launchEventTypes[1].eventKind  = kEventAppTerminated;
-    
+
     EventHandlerUPP launchTerminationEventHandler =
         NewEventHandlerUPP(launchTerminationCallback);
     InstallApplicationEventHandler(launchTerminationEventHandler, 2,
                                 launchEventTypes, this,
                                 &m_launchTerminationEventHandlerRef);
     DisposeEventHandlerUPP(launchTerminationEventHandler);
-    
+
     m_screenSaverPSN.highLongOfPSN = 0;
     m_screenSaverPSN.lowLongOfPSN  = 0;
-    
+
     if (isActive()) {
         getProcessSerialNumber("ScreenSaverEngine", m_screenSaverPSN);
     }
@@ -128,7 +128,7 @@ OSXScreenSaver::processTerminated(ProcessSerialNumber psn)
                 Event(m_events->forIPrimaryScreen().screensaverDeactivated(),
                     m_eventTarget));
         }
-        
+
         m_screenSaverPSN.highLongOfPSN = 0;
         m_screenSaverPSN.lowLongOfPSN  = 0;
     }
@@ -140,7 +140,7 @@ OSXScreenSaver::launchTerminationCallback(
                 EventRef theEvent, void* userData)
 {
     OSStatus        result;
-    ProcessSerialNumber psn; 
+    ProcessSerialNumber psn;
     EventParamType    actualType;
     ByteCount        actualSize;
 
