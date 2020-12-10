@@ -502,6 +502,9 @@ barrier::Screen*
 ServerApp::openServerScreen()
 {
     barrier::Screen* screen = createScreen();
+    if (!argsBase().m_dropTarget.empty()) {
+        screen->setDropTarget(argsBase().m_dropTarget);
+    }
     screen->setEnableDragDrop(argsBase().m_enableDragDrop);
     m_events->adoptHandler(m_events->forIScreen().error(),
         screen->getEventTarget(),

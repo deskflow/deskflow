@@ -146,16 +146,6 @@ MSWindowsScreen::MSWindowsScreen(
         LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
         LOG((CLOG_DEBUG "window is 0x%08x", m_window));
 
-        // SHGetFolderPath is deprecated in vista, but use it for xp support.
-        char desktopPath[MAX_PATH];
-        if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, desktopPath))) {
-            m_desktopPath = std::string(desktopPath);
-            LOG((CLOG_DEBUG "using desktop for drop target: %s", m_desktopPath.c_str()));
-        }
-        else {
-            LOG((CLOG_ERR "failed to get desktop path, no drop target available, error=%d", GetLastError()));
-        }
-
         OleInitialize(0);
         m_dropWindow = createDropWindow(m_class, "DropWindow");
         m_dropTarget = new MSWindowsDropTarget();
@@ -1888,6 +1878,7 @@ std::string& MSWindowsScreen::getDraggingFilename()
             SWP_SHOWWINDOW);
 
         // TODO: fake these keys properly
+        ARCH->sleep(.05f); // A tiny sleep here makes the DragEnter event on m_dropWindow trigger much more consistently
         fakeKeyDown(kKeyEscape, 8192, 1);
         fakeKeyUp(1);
         fakeMouseButton(kButtonLeft, false);
@@ -1909,21 +1900,39 @@ std::string& MSWindowsScreen::getDraggingFilename()
                 m_draggingFilename = filename;
             }
             else {
-                LOG((CLOG_DEBUG "drag file name is invalid: %s", filename.c_str()));
+                LOG((CLOG_ERR "drag file name is invalid: %s", filename.c_str()));
             }
         }
 
         if (m_draggingFilename.empty()) {
-            LOG((CLOG_DEBUG "failed to get drag file name from OLE"));
+            LOG((CLOG_ERR "failed to get drag file name from OLE"));
         }
     }
 
     return m_draggingFilename;
 }
 
-const std::string& MSWindowsScreen::getDropTarget() const
+const std::string&
+MSWindowsScreen::getDropTarget() const
 {
-    return m_desktopPath;
+    if (m_dropTargetPath.empty()) {
+        // SHGetFolderPath is deprecated in vista, but use it for xp support.
+        char desktopPath[MAX_PATH];
+        if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, desktopPath))) {
+            m_dropTargetPath = std::string(desktopPath);
+            LOG((CLOG_INFO "using desktop for drop target: %s", m_dropTargetPath.c_str()));
+        }
+        else {
+            LOG((CLOG_ERR "failed to get desktop path, no drop target available, error=%d", GetLastError()));
+        }
+    }
+    return m_dropTargetPath;
+}
+
+void
+MSWindowsScreen::setDropTarget(const std::string& target)
+{
+    m_dropTargetPath = target;
 }
 
 bool

@@ -466,6 +466,12 @@ Screen::getDropTarget() const
     return m_screen->getDropTarget();
 }
 
+void
+Screen::setDropTarget(const String& target)
+{
+    return m_screen->setDropTarget(target);
+}
+
 void*
 Screen::getEventTarget() const
 {

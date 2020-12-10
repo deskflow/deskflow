@@ -290,6 +290,8 @@ public:
 
     //! Get the drop target directory
     const String&        getDropTarget() const;
+    //! Set the drop target directory
+    void                 setDropTarget(const String&);
 
     //@}
 

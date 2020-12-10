@@ -120,6 +120,7 @@ public:
     virtual void        fakeDraggingFiles(DragFileList fileList);
     virtual std::string& getDraggingFilename();
     virtual const std::string& getDropTarget() const;
+    virtual void        setDropTarget(const std::string&);
 
 protected:
     // IPlatformScreen overrides
@@ -332,7 +333,7 @@ private:
 
     IEventQueue*        m_events;
 
-    std::string                m_desktopPath;
+    mutable std::string m_dropTargetPath;
 
     MSWindowsDropTarget*
                         m_dropTarget;
