@@ -1900,12 +1900,12 @@ std::string& MSWindowsScreen::getDraggingFilename()
                 m_draggingFilename = filename;
             }
             else {
-                LOG((CLOG_DEBUG "drag file name is invalid: %s", filename.c_str()));
+                LOG((CLOG_ERR "drag file name is invalid: %s", filename.c_str()));
             }
         }
 
         if (m_draggingFilename.empty()) {
-            LOG((CLOG_DEBUG "failed to get drag file name from OLE"));
+            LOG((CLOG_ERR "failed to get drag file name from OLE"));
         }
     }
 
@@ -1920,7 +1920,7 @@ MSWindowsScreen::getDropTarget() const
         char desktopPath[MAX_PATH];
         if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, desktopPath))) {
             m_dropTargetPath = std::string(desktopPath);
-            LOG((CLOG_DEBUG "using desktop for drop target: %s", m_dropTargetPath.c_str()));
+            LOG((CLOG_INFO "using desktop for drop target: %s", m_dropTargetPath.c_str()));
         }
         else {
             LOG((CLOG_ERR "failed to get desktop path, no drop target available, error=%d", GetLastError()));
