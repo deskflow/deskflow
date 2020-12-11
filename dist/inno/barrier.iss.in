@@ -26,6 +26,7 @@ SetupIconFile=@CMAKE_CURRENT_SOURCE_DIR@/res/barrier.ico
 Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64 ia64
+UninstallDisplayIcon={app}\{#MyAppExeName}
 
 #include "scripts\lang\english.iss"
 
@@ -51,10 +52,11 @@ Filename: {sys}\sc.exe; Parameters: "start {#MyAppServiceName}"; Flags: runhidde
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
-Type: files; Name: "{app}\barrierd.log"
+Type: filesandordirs; Name: "{commonappdata}\Barrier"
 
 [UninstallRun]
-Filename: {sys}\sc.exe; Parameters: "stop {#MyAppServiceName}"; Flags: runhidden
+Filename: {sys}\taskkill; Parameters: "/im {#MyAppExeName} /f /t"; Flags: runhidden
+Filename: {sys}\net.exe; Parameters: "stop {#MyAppServiceName}"; Flags: runhidden
 Filename: {sys}\sc.exe; Parameters: "delete {#MyAppServiceName}"; Flags: runhidden
 Filename: {sys}\netsh.exe; Parameters: "advfirewall firewall delete rule name=""{#MyAppListenerDesc}"""; Flags: runhidden
 
