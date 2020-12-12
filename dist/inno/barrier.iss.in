@@ -1,7 +1,9 @@
 #define MyAppName "Barrier"
-#define MyAppVersion "@BARRIER_VERSION@"
+#define MyAppVersion "@BARRIER_VERSION_MAJOR@.@BARRIER_VERSION_MINOR@.@BARRIER_VERSION_PATCH@.@BARRIER_BUILD_NUMBER@"
+#define MyAppTextVersion "@BARRIER_VERSION@"
 #define MyAppPublisher "Debauchee Open Source Group"
 #define MyAppURL "https://github.com/debauchee/barrier/wiki"
+#define MyAppCopyright "Copyright (C) 2018 Debauchee Open Source Group"
 #define MyAppExeName "barrier.exe"
 #define MyAppServiceName "Barrier"
 #define MyAppServiceExe "barrierd.exe"
@@ -11,8 +13,8 @@
 [Setup]
 AppId={{41036EA6-3F7A-4803-8AE0-469E5E91EFCC}
 AppName={#MyAppName}
-AppVersion={#MyAppVersion}
-AppVerName={#MyAppName} {#MyAppVersion}
+AppVersion={#MyAppTextVersion}
+AppVerName={#MyAppName} {#MyAppTextVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
@@ -21,8 +23,14 @@ DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
 LicenseFile=@CMAKE_CURRENT_SOURCE_DIR@/res/License.rtf
 OutputDir=@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/../installer-inno/bin
-OutputBaseFilename=BarrierSetup-{#MyAppVersion}
+OutputBaseFilename=BarrierSetup-{#MyAppTextVersion}
 SetupIconFile=@CMAKE_CURRENT_SOURCE_DIR@/res/barrier.ico
+VersionInfoProductTextVersion={#MyAppTextVersion}
+VersionInfoProductVersion={#MyAppVersion}
+VersionInfoTextVersion={#MyAppTextVersion}
+VersionInfoVersion={#MyAppVersion}
+VersionInfoCopyright={#MyAppCopyright}
+
 Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64 ia64
