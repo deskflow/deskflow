@@ -5,7 +5,7 @@ Bug fixes:
 - #6872 Check for dns_sd.h only when building GUI
 
 Enhancements:
-
+- #6867 Create only 1 artefact for macOS
 
 v1.13.0-rc2
 ===========
