@@ -1,4 +1,13 @@
-v1.13.x-??
+v1.13.x
+===========
+Bug fixes:
+- #6858 Application is blurry and unfocused on macOS
+- #6872 Check for dns_sd.h only when building GUI
+
+Enhancements:
+
+
+v1.13.0-rc2
 ===========
 Bug fixes:
 - #6831 Incorporating Sonar's major
@@ -6,14 +15,15 @@ Bug fixes:
 - #6838 Enterprise asks for serial key on Linux system
 - #6849 Auto-hide resets itself
 - #6846 TLS certificate is not created by default for Synergy Enterprise.
-- #6??? Systray Icon on Ubuntu Auto Start
-- #6858 Application is blurry and unfocused on macOS
+- #6859 Systray Icon on Ubuntu Auto Start
+- #6863 Adding MacOS CI Build Steps for Homebrew Cleanup
 
 Enhancements:
 - #6836 Enabling Github Code Scanning
 - #6841 Windows installer has been updated.
 - #6844 macOS installer has been updated.
-- #6??? About Synergy logo refreshed
+- #6860 About Synergy logo refreshed
+- #6865 Updated visual assets
 
 v1.12.x-snapshot
 ===========
