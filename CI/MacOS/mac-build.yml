@@ -8,7 +8,9 @@ steps:
 
   - task: CmdLine@2
     inputs:
-      script: 'brew install qt'
+      script: |
+        export HOMEBREW_NO_INSTALL_CLEANUP=1
+        brew install qt
     displayName: 'Installing QT'
 
   - task: CmdLine@2
@@ -84,7 +86,7 @@ steps:
         dmgbuild \
           -s CI/MacOS/installator_settings.py \
           -D app=$(Build.Repository.LocalPath)/build/bundle/Synergy.app \
-          -D background=$(Build.Repository.LocalPath)/build/bundle/Synergy.app/Contents/Resources/installer_background.png \
+          -D background=$(Build.Repository.LocalPath)/build/bundle/Synergy.app/Contents/Resources/.installer_background.tiff \
           "Synergy" \
           $(SYNERGY_DMG_FILENAME)
         mkdir pkg
