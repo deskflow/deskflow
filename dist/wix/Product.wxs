@@ -97,7 +97,9 @@
 			</Component>
 			<Component Guid="BAC8149B-6287-45BF-9C27-43D71ED40214" Id="Gui">
 				<File Id="GuiProgram" KeyPath="yes" Source="$(var.BinPath)/synergy.exe">
-					<Shortcut Advertise="yes" Directory="ProgramMenuFolder" Icon="synergy.ico" Id="GuiShortcut" Name="$(var.Name)"/>
+					<Shortcut Advertise="yes" Directory="ProgramMenuFolder" Icon="synergy.exe" Id="GuiShortcut" Name="$(var.Name)">
+						<Icon Id="synergy.exe" SourceFile="$(var.ResPath)/synergy.ico"/>
+					</Shortcut>
 					<fire:FirewallException Id="GuiFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
 				</File>
 				<?if $(var.Configuration) = "Debug" ?>
