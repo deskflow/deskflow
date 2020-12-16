@@ -266,7 +266,7 @@ TEST_P(ReadfIntTestFixture, readf_int)
     EXPECT_EQ(Expected, Actual);
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
         ReadfIntTests,
         ReadfIntTestFixture,
         ::testing::Values(
@@ -323,7 +323,7 @@ TEST_P(ReadfIntVectorTestFixture, readf_int_vector)
     }
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
         ReadfIntVectorTests,
         ReadfIntVectorTestFixture,
         ::testing::Values(
@@ -388,7 +388,7 @@ TEST_P(ReadfIntAndStringTest, readf_int_and_string)
     EXPECT_EQ(ExpectedString, ActualString);
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
         IntAndStringTest,
         ReadfIntAndStringTest,
         ::testing::Values(
@@ -548,7 +548,7 @@ TEST_P(WriteIntTest, write_int)
     }
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
         WriteIntTest,
         WriteIntTest,
         ::testing::Values(
@@ -586,7 +586,7 @@ TEST_P(WriteIntVectorTest, write_vector_int)
     }
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
         WriteIntVectorTest,
         WriteIntVectorTest,
         ::testing::Values(
