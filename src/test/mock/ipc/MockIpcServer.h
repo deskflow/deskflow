@@ -45,9 +45,9 @@ public:
         }
     }
 
-    MOCK_METHOD0(listen, void());
-    MOCK_METHOD2(send, void(const IpcMessage&, EIpcClientType));
-    MOCK_CONST_METHOD1(hasClients, bool(EIpcClientType));
+    MOCK_METHOD(void, listen, (), (override));
+    MOCK_METHOD(void, send, (const IpcMessage&, EIpcClientType), (override));
+    MOCK_METHOD(bool, hasClients, (EIpcClientType), (const, override));
 
     void delegateToFake() {
         ON_CALL(*this, send(_, _)).WillByDefault(Invoke(this, &MockIpcServer::mockSend));

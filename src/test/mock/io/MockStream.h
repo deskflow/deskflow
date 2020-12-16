@@ -28,17 +28,17 @@ class MockStream : public synergy::IStream
 {
 public:
     MockStream() { }
-    MOCK_METHOD0(close, void());
-    MOCK_METHOD2(read, UInt32(void*, UInt32));
-    MOCK_METHOD2(write, void(const void*, UInt32));
-    MOCK_METHOD0(flush, void());
-    MOCK_METHOD0(shutdownInput, void());
-    MOCK_METHOD0(shutdownOutput, void());
-    MOCK_METHOD0(getInputReadyEvent, Event::Type());
-    MOCK_METHOD0(getOutputErrorEvent, Event::Type());
-    MOCK_METHOD0(getInputShutdownEvent, Event::Type());
-    MOCK_METHOD0(getOutputShutdownEvent, Event::Type());
-    MOCK_CONST_METHOD0(getEventTarget, void*());
-    MOCK_CONST_METHOD0(isReady, bool());
-    MOCK_CONST_METHOD0(getSize, UInt32());
+    MOCK_METHOD(void, close, (), (override));
+    MOCK_METHOD(UInt32, read, (void*, UInt32), (override));
+    MOCK_METHOD(void, write, (const void*, UInt32), (override));
+    MOCK_METHOD(void, flush, (), (override));
+    MOCK_METHOD(void, shutdownInput, (), (override));
+    MOCK_METHOD(void, shutdownOutput, (), (override));
+    MOCK_METHOD(Event::Type, getInputReadyEvent, ());
+    MOCK_METHOD(Event::Type, getOutputErrorEvent, ());
+    MOCK_METHOD(Event::Type, getInputShutdownEvent, ());
+    MOCK_METHOD(Event::Type, getOutputShutdownEvent, ());
+    MOCK_METHOD(void*, getEventTarget, (), (const, override));
+    MOCK_METHOD(bool, isReady, (), (const, override));
+    MOCK_METHOD(UInt32, getSize, (), (const, override));
 };

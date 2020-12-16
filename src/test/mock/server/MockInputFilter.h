@@ -26,5 +26,5 @@
 class MockInputFilter : public InputFilter
 {
 public:
-     MOCK_METHOD1(setPrimaryClient, void(PrimaryClient*));
+     MOCK_METHOD(void, setPrimaryClient, (PrimaryClient*), (override));
 };
