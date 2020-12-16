@@ -4,6 +4,7 @@ Bug fixes:
 - #6858 Application is blurry and unfocused on macOS
 - #6872 Check for dns_sd.h only when building GUI
 - #6874 The logo on Windows taskbar is incorrect.
+- #6878 Update googletest library to latest version
 
 Enhancements:
 - #6867 Create only 1 artefact for macOS
