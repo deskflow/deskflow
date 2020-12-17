@@ -27,6 +27,6 @@ class MockConfig : public Config
 {
 public:
     MockConfig() : Config() { }
-    MOCK_METHOD0(getInputFilter, InputFilter*());
-    MOCK_CONST_METHOD1(isScreen, bool(const String&));
+    MOCK_METHOD(InputFilter*, getInputFilter, (), (override));
+    MOCK_METHOD(bool, isScreen, (const String&), (const, override));
 };

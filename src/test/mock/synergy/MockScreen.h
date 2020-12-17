@@ -27,10 +27,10 @@ class MockScreen : public synergy::Screen
 {
 public:
     MockScreen() : synergy::Screen() { }
-    MOCK_METHOD0(disable, void());
-    MOCK_CONST_METHOD4(getShape, void(SInt32&, SInt32&, SInt32&, SInt32&));
-    MOCK_CONST_METHOD2(getCursorPos, void(SInt32&, SInt32&));
-    MOCK_METHOD0(resetOptions, void());
-    MOCK_METHOD1(setOptions, void(const OptionsList&));
-    MOCK_METHOD0(enable, void());
+    MOCK_METHOD(void, disable, (), (override));
+    MOCK_METHOD(void, getShape, (SInt32&, SInt32&, SInt32&, SInt32&), (const, override));
+    MOCK_METHOD(void, getCursorPos, (SInt32&, SInt32&), (const, override));
+    MOCK_METHOD(void, resetOptions, (), (override));
+    MOCK_METHOD(void, setOptions, (const OptionsList&), (override));
+    MOCK_METHOD(void, enable, (), (override));
 };

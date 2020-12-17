@@ -28,17 +28,17 @@ class MockApp : public App
 public:
     MockApp() : App(NULL, NULL, NULL) { }
 
-    MOCK_METHOD0(help, void());
-    MOCK_METHOD0(loadConfig, void());
-    MOCK_METHOD1(loadConfig, bool(const String&));
-    MOCK_CONST_METHOD0(daemonInfo, const char*());
-    MOCK_CONST_METHOD0(daemonName, const char*());
-    MOCK_METHOD2(parseArgs, void(int, const char* const*));
-    MOCK_METHOD0(version, void());
-    MOCK_METHOD2(standardStartup, int(int, char**));
-    MOCK_METHOD4(runInner, int(int, char**, ILogOutputter*, StartupFunc));
-    MOCK_METHOD0(startNode, void());
-    MOCK_METHOD0(mainLoop, int());
-    MOCK_METHOD2(foregroundStartup, int(int, char**));
-    MOCK_METHOD0(createScreen, synergy::Screen*());
+    MOCK_METHOD(void, help, (), (override));
+    MOCK_METHOD(void, loadConfig, (), (override));
+    MOCK_METHOD(bool, loadConfig, (const String&), (override));
+    MOCK_METHOD(const char*, daemonInfo, (), (const, override));
+    MOCK_METHOD(const char*, daemonName, (), (const, override));
+    MOCK_METHOD(void, parseArgs, (int, const char* const*), (override));
+    MOCK_METHOD(void, version, (), (override));
+    MOCK_METHOD(int, standardStartup, (int, char**), (override));
+    MOCK_METHOD(int, runInner, (int, char**, ILogOutputter*, StartupFunc), (override));
+    MOCK_METHOD(void, startNode, (), (override));
+    MOCK_METHOD(int, mainLoop, (), (override));
+    MOCK_METHOD(int, foregroundStartup, (int, char**), (override));
+    MOCK_METHOD(synergy::Screen*, createScreen, (), (override));
 };
