@@ -85,7 +85,9 @@ jobs:
     condition: eq(variables['Build.Reason'], 'Manual')
 
     variables:
-      QT_PATH: '/usr/local/opt/qt/bin'
+      QT_VERSION: '5.15.2'
+      QT_PATH: '/usr/local/opt/qt'
+      Qt5_DIR: '$(QT_PATH)/$(QT_VERSION)/clang_64'
 
     steps:
       - template: CI/checkout.yml
