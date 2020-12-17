@@ -15,7 +15,7 @@ steps:
 
   - task: CmdLine@2
     inputs:
-      script: 'pip install dmgbuild'
+      script: 'python3 -m pip install dmgbuild'
     displayName: 'Installing dmgbuild'
 
   - task: CmdLine@2
