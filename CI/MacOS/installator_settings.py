@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import biplist
 import os.path
 
 # Use like this: dmgbuild -s settings.py "Test Volume" test.dmg
@@ -11,16 +10,6 @@ import os.path
 
 application = defines.get('app', 'Synergy.app')
 appname = os.path.basename(application)
-
-def icon_from_app(app_path):
-    plist_path = os.path.join(app_path, 'Contents', 'Info.plist')
-    plist = biplist.readPlist(plist_path)
-    icon_name = plist['CFBundleIconFile']
-    icon_root,icon_ext = os.path.splitext(icon_name)
-    if not icon_ext:
-        icon_ext = '.icns'
-    icon_name = icon_root + icon_ext
-    return os.path.join(app_path, 'Contents', 'Resources', icon_name)
 
 # .. Basics ....................................................................
 
@@ -42,8 +31,7 @@ symlinks = { 'Applications': '/Applications' }
 # image, *or* you can define badge_icon, in which case the icon file you specify
 # will be used to badge the system's Removable Disk icon
 #
-#icon = '/path/to/icon.icns'
-badge_icon = icon_from_app(application)
+icon = os.path.join(application, 'Contents', 'Resources', 'Drive.icns')
 
 # Where to put the icons
 icon_locations = {
