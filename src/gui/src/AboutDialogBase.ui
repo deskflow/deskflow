@@ -177,7 +177,7 @@
     </spacer>
    </item>
    <item row="0" column="1">
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="label_Logo">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -208,7 +208,6 @@
  </widget>
  <resources>
   <include location="../res/Synergy.qrc"/>
-  <include location="Synergy.qrc"/>
  </resources>
  <connections>
   <connection>
