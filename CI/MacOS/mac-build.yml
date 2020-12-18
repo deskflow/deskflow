@@ -8,20 +8,21 @@ steps:
 
   - task: CmdLine@2
     inputs:
+      script: | 
+        python3 -m pip install dmgbuild
+        python3 -m pip install aqtinstall
+    displayName: 'Installing utilities'
+
+  - task: CmdLine@2
+    inputs:
       script: |
-        export HOMEBREW_NO_INSTALL_CLEANUP=1
-        brew install qt
+        python3 -m aqt install $(QT_VERSION) mac desktop -O $(QT_PATH)
     displayName: 'Installing QT'
 
   - task: CmdLine@2
     inputs:
-      script: 'python3 -m pip install dmgbuild'
-    displayName: 'Installing dmgbuild'
-
-  - task: CmdLine@2
-    inputs:
       script: |
-        export PATH="$(QT_PATH):$PATH"
+        export PATH="$(Qt5_DIR)/bin:$PATH"
         mkdir build
         cd build
         cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=$(version) -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release ..
@@ -33,7 +34,7 @@ steps:
   - task: CmdLine@2
     inputs:
       script: |
-        export PATH="$(QT_PATH):$PATH"
+        export PATH="$(Qt5_DIR)/bin:$PATH"
         export SYNERGY_ENTERPRISE=1
         mkdir build
         cd build
