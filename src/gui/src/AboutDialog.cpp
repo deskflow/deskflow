@@ -21,6 +21,8 @@
 #include <QtCore>
 #include <QtGui>
 
+#include "OSXHelpers.h"
+
 AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::AboutDialogBase()
@@ -58,6 +60,14 @@ Visit our website for help and info (symless.com).
 	setMaximumSize(size);
 	setMinimumSize(size);
 	resize(size);
+
+    if (isOSXInterfaceStyleDark()) {
+        QPixmap logo(":/res/image/about-dark.png");
+        if (!logo.isNull()) {
+            label_Logo->setPixmap(logo);
+        }
+    }
+
 #elif defined(Q_OS_LINUX)
 	QSize size(600, 330);
 	setMaximumSize(size);
