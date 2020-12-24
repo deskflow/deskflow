@@ -83,7 +83,7 @@ steps:
       sha256sum $filename_new >> ${filename_new}.checksum.txt
       ls -la
     displayName: "Package Binary DEB(Standard)"
-    condition: and(eq(variables['packager'],'deb')))
+    condition: and(eq(variables['packager'],'deb'))
     env:
       GIT_COMMIT: $(Build.SourceVersion)
 
