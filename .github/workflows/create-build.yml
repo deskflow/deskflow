@@ -1,6 +1,8 @@
 name: Create Build
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [ master ]
 
 jobs:
   create-release:
@@ -34,3 +36,10 @@ jobs:
           commitish: master
           draft: false
           prerelease: true
+
+      - name: Run build on Azure
+        uses: Azure/pipelines@v1
+        with:
+          azure-devops-project-url: 'https://dev.azure.com/symless/synergy-core'
+          azure-pipeline-name: 'symless.synergy-core'
+          azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN }}'

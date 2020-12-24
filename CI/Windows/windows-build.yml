@@ -16,6 +16,10 @@ steps:
     displayName: 'Set python version'
 
   - script: |
+      python3 CI/build_version.py
+    displayName: 'Update Version.cmake'
+
+  - script: |
       cd $(Build.SourcesDirectory)
       python -m pip install aqtinstall
     displayName: 'Install aqtinstall'
@@ -170,6 +174,7 @@ steps:
       set SYNERGY_VERSION=%SYNERGY_VERSION_MAJOR%.%SYNERGY_VERSION_MINOR%.%SYNERGY_VERSION_PATCH%
       git rev-parse --short=8 HEAD > gitversion
       set /p SYNERGY_REVISION= < gitversion
+      echo ##vso[task.setvariable variable=SYNERGY_VERSION_BUILD]%SYNERGY_VERSION_BUILD%
       echo ##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]%SYNERGY_VERSION_STAGE%
       echo ##vso[task.setvariable variable=SYNERGY_VERSION]%SYNERGY_VERSION%
       echo ##vso[task.setvariable variable=SYNERGY_REVISION]%SYNERGY_REVISION%
@@ -197,7 +202,7 @@ steps:
       sshEndpoint: 'Azure on Sandor'
       sourceFolder: '$(Build.ArtifactStagingDirectory)/'
       contents: '*.zip'
-      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send archives to sandor'
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
@@ -207,7 +212,7 @@ steps:
       sshEndpoint: 'Azure on Sandor'
       sourceFolder: '$(Build.Repository.LocalPath)\build32\installer\bin\Release\'
       contents: '*'
-      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send x86 Package to sandor'
     condition: eq(variables['Build.Reason'], 'Manual')
@@ -217,7 +222,7 @@ steps:
       sshEndpoint: 'Azure on Sandor'
       sourceFolder: '$(Build.Repository.LocalPath)\build64\installer\bin\Release\'
       contents: '*'
-      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send x64 Package to sandor'
     condition: eq(variables['Build.Reason'], 'Manual')

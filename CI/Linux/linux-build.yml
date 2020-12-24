@@ -1,5 +1,9 @@
 steps:
   - script: |
+      python3 CI/build_version.py
+    displayName: 'Update Version.cmake'
+
+  - script: |
       mkdir build-release
       cd build-release
       if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release ..; else cmake -DCMAKE_BUILD_TYPE=Release ..; fi
@@ -56,6 +60,7 @@ steps:
       SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
       SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}~b$(Build.BuildNumber)+${SYNERGY_REVISION}"
       SYNERGY_RPM_VERSION="${SYNERGY_VERSION}-$(Build.BuildNumber).${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+      echo "##vso[task.setvariable variable=SYNERGY_VERSION_BUILD]${SYNERGY_VERSION_BUILD}"
       echo "##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]${SYNERGY_VERSION_STAGE}"
       echo "##vso[task.setvariable variable=SYNERGY_VERSION]${SYNERGY_VERSION}"
       echo "##vso[task.setvariable variable=SYNERGY_REVISION]${SYNERGY_REVISION}"
@@ -145,7 +150,7 @@ steps:
       sshEndpoint: 'Azure on Sandor'
       sourceFolder: './standard_package'
       contents: '*'
-      targetFolder: 'synergy-core/v1-core-standard/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+      targetFolder: 'synergy-core/v1-core-standard/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send standard Package to sandor'
     condition: eq(variables['Build.Reason'], 'Manual')
@@ -155,7 +160,7 @@ steps:
       sshEndpoint: 'Azure on Sandor'
       sourceFolder: './enterprise_package'
       contents: '*'
-      targetFolder: 'synergy-core/v1-core-enterprise/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+      targetFolder: 'synergy-core/v1-core-enterprise/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send enterprise Package to sandor'
     condition: eq(variables['Build.Reason'], 'Manual')
