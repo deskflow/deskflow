@@ -1,5 +1,5 @@
-trigger: none
 pr: none
+trigger: none
 
 jobs:
   - template: CI/job-doxygen.yml
