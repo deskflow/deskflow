@@ -177,7 +177,7 @@ steps:
       echo ##vso[task.setvariable variable=SYNERGY_VERSION]%SYNERGY_VERSION%
       echo ##vso[task.setvariable variable=SYNERGY_REVISION]%SYNERGY_REVISION%
     displayName: "Set Variables"
-    condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
 
   - script: |
       cd $(Build.Repository.LocalPath)\build32\installer\bin\Release\
