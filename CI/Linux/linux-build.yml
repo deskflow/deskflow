@@ -83,7 +83,7 @@ steps:
       sha256sum $filename_new >> ${filename_new}.checksum.txt
       ls -la
     displayName: "Package Binary DEB(Standard)"
-    condition: and(eq(variables['packager'],'deb'))
+    condition: eq(variables['packager'],'deb')
     env:
       GIT_COMMIT: $(Build.SourceVersion)
 
@@ -103,7 +103,7 @@ steps:
       sha256sum $filename_new >> ${filename_new}.checksum.txt
       ls -la
     displayName: "Package Binary DEB(Enterprise)"
-    condition: and(eq(variables['packager'],'deb'))
+    condition: eq(variables['packager'],'deb')
     env:
       GIT_COMMIT: $(Build.SourceVersion)
 
@@ -121,7 +121,7 @@ steps:
       cd ..
       mv x86_64 $(Build.Repository.LocalPath)/standard_package
     displayName: "Package Binary RPM(standard)"
-    condition: and(eq(variables['packager'],'rpm'))
+    condition: eq(variables['packager'],'rpm')
     env:
       GIT_COMMIT: $(Build.SourceVersion)
 
@@ -140,7 +140,7 @@ steps:
       mv x86_64 $(Build.Repository.LocalPath)/enterprise_package
       ls -la
     displayName: "Package Binary RPM(enterprise)"
-    condition: and(eq(variables['packager'],'rpm'))
+    condition: eq(variables['packager'],'rpm')
     env:
       GIT_COMMIT: $(Build.SourceVersion)
 
