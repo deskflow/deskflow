@@ -8,7 +8,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-16.04'
 
-     strategy:
+    strategy:
       matrix:
         ubuntu1604:
           image: symless/synergy-core:ubuntu16.04
