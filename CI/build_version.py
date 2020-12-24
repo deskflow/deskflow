@@ -62,9 +62,6 @@ class Version:
       result += str(self.build) 
       return  result
 
-   def nextBuild(self):
-      self.build.number += 1
-
 class VersionFile:
    def __init__(self, file):
       self.file = file
@@ -104,6 +101,5 @@ def updateVersionFile(number):
 
 if __name__ == '__main__':
    version = Version(getVesionFromGit())
-   version.nextBuild()
    updateVersionFile(version.build.number)
    print('INFO: Generate build number is: <' + str(version) + '>')
