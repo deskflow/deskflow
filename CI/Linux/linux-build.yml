@@ -67,7 +67,6 @@ steps:
       echo "##vso[task.setvariable variable=SYNERGY_DEB_VERSION]${SYNERGY_DEB_VERSION}"
       echo "##vso[task.setvariable variable=SYNERGY_RPM_VERSION]${SYNERGY_RPM_VERSION}"
     displayName: "Setup variables"
-    condition: eq(variables['Build.Reason'], 'Manual')
 
   - script: |
       dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
@@ -84,7 +83,7 @@ steps:
       sha256sum $filename_new >> ${filename_new}.checksum.txt
       ls -la
     displayName: "Package Binary DEB(Standard)"
-    condition: and(eq(variables['packager'],'deb'), eq(variables['Build.Reason'], 'Manual'))
+    condition: and(eq(variables['packager'],'deb')))
     env:
       GIT_COMMIT: $(Build.SourceVersion)
 
@@ -104,7 +103,7 @@ steps:
       sha256sum $filename_new >> ${filename_new}.checksum.txt
       ls -la
     displayName: "Package Binary DEB(Enterprise)"
-    condition: and(eq(variables['packager'],'deb'), eq(variables['Build.Reason'], 'Manual'))
+    condition: and(eq(variables['packager'],'deb'))
     env:
       GIT_COMMIT: $(Build.SourceVersion)
 
@@ -122,7 +121,7 @@ steps:
       cd ..
       mv x86_64 $(Build.Repository.LocalPath)/standard_package
     displayName: "Package Binary RPM(standard)"
-    condition: and(eq(variables['packager'],'rpm'), eq(variables['Build.Reason'], 'Manual'))
+    condition: and(eq(variables['packager'],'rpm'))
     env:
       GIT_COMMIT: $(Build.SourceVersion)
 
@@ -141,7 +140,7 @@ steps:
       mv x86_64 $(Build.Repository.LocalPath)/enterprise_package
       ls -la
     displayName: "Package Binary RPM(enterprise)"
-    condition: and(eq(variables['packager'],'rpm'), eq(variables['Build.Reason'], 'Manual'))
+    condition: and(eq(variables['packager'],'rpm'))
     env:
       GIT_COMMIT: $(Build.SourceVersion)
 
@@ -153,7 +152,6 @@ steps:
       targetFolder: 'synergy-core/v1-core-standard/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send standard Package to sandor'
-    condition: eq(variables['Build.Reason'], 'Manual')
 
   - task: CopyFilesOverSSH@0
     inputs:
@@ -163,4 +161,3 @@ steps:
       targetFolder: 'synergy-core/v1-core-enterprise/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send enterprise Package to sandor'
-    condition: eq(variables['Build.Reason'], 'Manual')

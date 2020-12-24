@@ -4,7 +4,6 @@ steps:
       certSecureFile: 'AppleSigningCert.cer'
       certPwd: '$(AppleCertPass)'
       keychain: 'temp'
-    condition: eq(variables['Build.Reason'], 'Manual')
 
   - task: CmdLine@2
     inputs:
@@ -71,7 +70,6 @@ steps:
     displayName: 'Signing'
     env:
       CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
-    condition: eq(variables['Build.Reason'], 'Manual')
 
   - script: |
       . ./build/version
@@ -86,7 +84,6 @@ steps:
       echo "##vso[task.setvariable variable=SYNERGY_DMG_VERSION]${SYNERGY_DMG_VERSION}"
       echo "##vso[task.setvariable variable=SYNERGY_DMG_FILENAME]${SYNERGY_DMG_FILENAME}"
     displayName: "Setup variables"
-    condition: eq(variables['Build.Reason'], 'Manual')
 
   - task: CmdLine@2
     inputs:
@@ -104,7 +101,6 @@ steps:
         shasum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).checksum.txt
         shasum -a 256 $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).checksum.txt
     displayName: 'Create Installer'
-    condition: eq(variables['Build.Reason'], 'Manual')
 
   - task: Bash@3
     inputs:
@@ -114,7 +110,6 @@ steps:
       ASC_USERNAME: $(ASC_USERNAME)
       NOTORY_APP_PASSWORD: $(NOTORY_APP_PASSWORD)
     displayName: 'Submit for Notarization'
-    condition: eq(variables['Build.Reason'], 'Manual')
 
   - task: CopyFilesOverSSH@0
     inputs:
@@ -124,4 +119,3 @@ steps:
       targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send Package to sandor'
-    condition: eq(variables['Build.Reason'], 'Manual')

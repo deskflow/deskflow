@@ -1,4 +1,5 @@
 trigger: none
+pr: none
 
 jobs:
   - template: CI/job-doxygen.yml
@@ -7,10 +8,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-16.04'
 
-    #As apparently the trigger set to none doesn't work
-    condition: eq(variables['Build.Reason'], 'Manual')
-
-    strategy:
+     strategy:
       matrix:
         ubuntu1604:
           image: symless/synergy-core:ubuntu16.04
@@ -81,9 +79,6 @@ jobs:
     pool:
       vmImage: $[ variables['image'] ]
 
-    #As apparently the trigger set to none doesn't work
-    condition: eq(variables['Build.Reason'], 'Manual')
-
     variables:
       QT_VERSION: '5.15.2'
       QT_PATH: '/usr/local/opt/qt'
@@ -107,9 +102,6 @@ jobs:
 
     pool:
       vmImage: $[ variables['image'] ]
-
-    #As apparently the trigger set to none doesn't work
-    condition: eq(variables['Build.Reason'], 'Manual')
 
     variables:
       QT_VERSION: '5.12.6'
