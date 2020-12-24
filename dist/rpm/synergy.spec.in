@@ -7,7 +7,7 @@ Source: https://symless.com/synergy/downloads
 Vendor: Symless
 Packager: Symless <engineering@symless.com>
 License: GPLv2
-Release: @SYNERGY_BUILD_NUMBER@@SYNERGY_SNAPSHOT_INFO@%{?dist}
+Release: @SYNERGY_VERSION_BUILD@@SYNERGY_SNAPSHOT_INFO@%{?dist}
 
 %description
 Synergy allows you to share one mouse and keyboard between multiple computers.

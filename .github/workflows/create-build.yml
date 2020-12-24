@@ -1,0 +1,45 @@
+name: Create Build
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@master"
+
+      - name: 'Install git core'
+        run: npm install @actions/core
+
+      - name: 'Generate next build number'
+        id: build
+        uses: "./.github/actions/build-number"
+        with:
+           previous-build: ${{ steps.previoustag.outputs.tag }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.build.outputs.next-build }}
+          release_name: Version ${{ steps.build.outputs.next-build }}
+          commitish: master
+          draft: false
+          prerelease: true
+
+      - name: Run build on Azure
+        uses: Azure/pipelines@v1
+        with:
+          azure-devops-project-url: 'https://dev.azure.com/symless/synergy-core'
+          azure-pipeline-name: 'symless.synergy-core'
+          azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN }}'

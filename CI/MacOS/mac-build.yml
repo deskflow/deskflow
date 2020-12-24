@@ -9,6 +9,12 @@ steps:
   - task: CmdLine@2
     inputs:
       script: | 
+        python3 CI/build_version.py
+    displayName: 'Update Version.cmake'
+
+  - task: CmdLine@2
+    inputs:
+      script: | 
         python3 -m pip install dmgbuild
         python3 -m pip install aqtinstall
     displayName: 'Installing utilities'
@@ -74,6 +80,7 @@ steps:
       SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}_b$(Build.BuildNumber)-${SYNERGY_REVISION}"
       SYNERGY_DMG_FILENAME=$(prefix)_v${SYNERGY_DMG_VERSION}_macos_$(platform).dmg
       echo "##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]${SYNERGY_VERSION_STAGE}"
+      echo "##vso[task.setvariable variable=SYNERGY_VERSION_BUILD]${SYNERGY_VERSION_BUILD}"
       echo "##vso[task.setvariable variable=SYNERGY_VERSION]${SYNERGY_VERSION}"
       echo "##vso[task.setvariable variable=SYNERGY_REVISION]${SYNERGY_REVISION}"
       echo "##vso[task.setvariable variable=SYNERGY_DMG_VERSION]${SYNERGY_DMG_VERSION}"
@@ -114,7 +121,7 @@ steps:
       sshEndpoint: 'Azure on Sandor'
       sourceFolder: '$(Build.Repository.LocalPath)/pkg'
       contents: '*'
-      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/$(SYNERGY_REVISION)/'
+      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
     displayName: 'Send Package to sandor'
     condition: eq(variables['Build.Reason'], 'Manual')

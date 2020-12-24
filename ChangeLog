@@ -11,6 +11,7 @@ Bug fixes:
 
 Enhancements:
 - #6867 Create only 1 artefact for macOS
+- #6885 Make build for every merge to master
 
 v1.13.0-rc2
 ===========
