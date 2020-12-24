@@ -82,7 +82,7 @@ def getVesionFromGit():
    cmd = ('git tag --sort=-creatordate').split()
 
    try:
-      proccess = subprocess.run(cmd, stdout=subprocess.PIPE, text=True)
+      proccess = subprocess.run(cmd, stdout=subprocess.PIPE, universal_newlines=True)
       versions = proccess.stdout.split()
       print('INFO: Version '+ versions[0] + ' has been read from git')
       return versions[0]
