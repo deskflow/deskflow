@@ -80,7 +80,8 @@ class VersionFile:
 
 def getVesionFromGit():
    try:
-      cmd = ('git describe --tags --abbrev=0').split()
+      taggedRevision = subprocess.check_output(('git rev-list --tags --max-count=1').split(), universal_newlines=True)
+      cmd = ('git describe --tags ' + taggedRevision).split()
       versions = subprocess.check_output(cmd, universal_newlines=True).split()
       print('INFO: Version '+ versions[0] + ' has been read from git')
       return versions[0]
