@@ -79,11 +79,9 @@ class VersionFile:
 
 
 def getVesionFromGit():
-   cmd = ('git tag --sort=-creatordate').split()
-
    try:
-      proccess = subprocess.run(cmd, stdout=subprocess.PIPE, universal_newlines=True)
-      versions = proccess.stdout.split()
+      cmd = ('git describe --tags --abbrev=0').split()
+      versions = subprocess.check_output(cmd, universal_newlines=True).split()
       print('INFO: Version '+ versions[0] + ' has been read from git')
       return versions[0]
    except subprocess.CalledProcessError:
