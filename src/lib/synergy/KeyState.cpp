@@ -532,6 +532,98 @@ KeyState::addActiveModifierCB(KeyID, SInt32 group,
     }    
 }
 
+// region 'Edited by bellerofonte'
+void 
+KeyState::remapKeyID(KeyID &id)
+{
+    remapKeyIDCyrillic(id); /*
+        || remapKeyIDArabic(id)
+        || remapKeyIDEtc(id); */
+    // the idea is to go through all keymaps and stop at firts succeded
+}
+
+bool 
+KeyState::remapKeyIDCyrillic(KeyID &id)
+{
+    static KeyRemap cyrillicKeymap = {
+        /* SMALL LETTERS */
+        { 0x0451, 0x60 }, /* CYRILLIC SMALL LETTER IO */
+        { 0x0401, 0x7e }, /* CYRILLIC CAPITAL LETTER IO */
+        { 0x044e, 0x2e }, /* CYRILLIC SMALL LETTER YU */
+        { 0x0430, 0x66 }, /* CYRILLIC SMALL LETTER A */
+        { 0x0431, 0x2c }, /* CYRILLIC SMALL LETTER BE */
+        { 0x0446, 0x77 }, /* CYRILLIC SMALL LETTER TSE */
+        { 0x0434, 0x6c }, /* CYRILLIC SMALL LETTER DE */
+        { 0x0435, 0x74 }, /* CYRILLIC SMALL LETTER IE */
+        { 0x0444, 0x61 }, /* CYRILLIC SMALL LETTER EF */
+        { 0x0433, 0x75 }, /* CYRILLIC SMALL LETTER GHE */
+        { 0x0445, 0x5b }, /* CYRILLIC SMALL LETTER HA */
+        { 0x0438, 0x62 }, /* CYRILLIC SMALL LETTER I */
+        { 0x0439, 0x71 }, /* CYRILLIC SMALL LETTER SHORT I */
+        { 0x043a, 0x72 }, /* CYRILLIC SMALL LETTER KA */
+        { 0x043b, 0x6b }, /* CYRILLIC SMALL LETTER EL */
+        { 0x043c, 0x76 }, /* CYRILLIC SMALL LETTER EM */
+        { 0x043d, 0x79 }, /* CYRILLIC SMALL LETTER EN */
+        { 0x043e, 0x6a }, /* CYRILLIC SMALL LETTER O */
+        { 0x043f, 0x67 }, /* CYRILLIC SMALL LETTER PE */
+        { 0x044f, 0x7a }, /* CYRILLIC SMALL LETTER YA */
+        { 0x0440, 0x68 }, /* CYRILLIC SMALL LETTER ER */
+        { 0x0441, 0x63 }, /* CYRILLIC SMALL LETTER ES */
+        { 0x0442, 0x6e }, /* CYRILLIC SMALL LETTER TE */
+        { 0x0443, 0x65 }, /* CYRILLIC SMALL LETTER U */
+        { 0x0436, 0x3b }, /* CYRILLIC SMALL LETTER ZHE */
+        { 0x0432, 0x64 }, /* CYRILLIC SMALL LETTER VE */
+        { 0x044c, 0x6d }, /* CYRILLIC SMALL LETTER SOFT SIGN */
+        { 0x044b, 0x73 }, /* CYRILLIC SMALL LETTER YERU */
+        { 0x0437, 0x70 }, /* CYRILLIC SMALL LETTER ZE */
+        { 0x0448, 0x69 }, /* CYRILLIC SMALL LETTER SHA */
+        { 0x044d, 0x27 }, /* CYRILLIC SMALL LETTER E */
+        { 0x0449, 0x6f }, /* CYRILLIC SMALL LETTER SHCHA */
+        { 0x0447, 0x78 }, /* CYRILLIC SMALL LETTER CHE */
+        { 0x044a, 0x5d }, /* CYRILLIC SMALL LETTER HARD SIGN */
+        /* CAPITAL LETTERS */
+        { 0x042e, 0x3e }, /* CYRILLIC CAPITAL LETTER YU */
+        { 0x0410, 0x46 }, /* CYRILLIC CAPITAL LETTER A */
+        { 0x0411, 0x3c }, /* CYRILLIC CAPITAL LETTER BE */
+        { 0x0426, 0x57 }, /* CYRILLIC CAPITAL LETTER TSE */
+        { 0x0414, 0x4c }, /* CYRILLIC CAPITAL LETTER DE */
+        { 0x0415, 0x54 }, /* CYRILLIC CAPITAL LETTER IE */
+        { 0x0424, 0x41 }, /* CYRILLIC CAPITAL LETTER EF */
+        { 0x0413, 0x55 }, /* CYRILLIC CAPITAL LETTER GHE */
+        { 0x0425, 0x7b }, /* CYRILLIC CAPITAL LETTER HA */
+        { 0x0418, 0x42 }, /* CYRILLIC CAPITAL LETTER I */
+        { 0x0419, 0x51 }, /* CYRILLIC CAPITAL LETTER SHORT I */
+        { 0x041a, 0x52 }, /* CYRILLIC CAPITAL LETTER KA */
+        { 0x041b, 0x4b }, /* CYRILLIC CAPITAL LETTER EL */
+        { 0x041c, 0x56 }, /* CYRILLIC CAPITAL LETTER EM */
+        { 0x041d, 0x59 }, /* CYRILLIC CAPITAL LETTER EN */
+        { 0x041e, 0x4a }, /* CYRILLIC CAPITAL LETTER O */
+        { 0x041f, 0x47 }, /* CYRILLIC CAPITAL LETTER PE */
+        { 0x042f, 0x5a }, /* CYRILLIC CAPITAL LETTER YA */
+        { 0x0420, 0x48 }, /* CYRILLIC CAPITAL LETTER ER */
+        { 0x0421, 0x43 }, /* CYRILLIC CAPITAL LETTER ES */
+        { 0x0422, 0x4e }, /* CYRILLIC CAPITAL LETTER TE */
+        { 0x0423, 0x45 }, /* CYRILLIC CAPITAL LETTER U */
+        { 0x0416, 0x3a }, /* CYRILLIC CAPITAL LETTER ZHE */
+        { 0x0412, 0x44 }, /* CYRILLIC CAPITAL LETTER VE */
+        { 0x042c, 0x4d }, /* CYRILLIC CAPITAL LETTER SOFT SIGN */
+        { 0x042b, 0x53 }, /* CYRILLIC CAPITAL LETTER YERU */
+        { 0x0417, 0x50 }, /* CYRILLIC CAPITAL LETTER ZE */
+        { 0x0428, 0x49 }, /* CYRILLIC CAPITAL LETTER SHA */
+        { 0x042d, 0x22 }, /* CYRILLIC CAPITAL LETTER E */
+        { 0x0429, 0x4f }, /* CYRILLIC CAPITAL LETTER SHCHA */
+        { 0x0427, 0x58 }, /* CYRILLIC CAPITAL LETTER CHE */
+        { 0x042a, 0x7d }, /* CYRILLIC CAPITAL LETTER HARD SIGN */
+    };
+    KeyRemap::iterator it = cyrillicKeymap.find(id);
+    if (it == cyrillicKeymap.end()) 
+       return false;
+    
+    id = it->second;
+    return true;
+}
+// end region
+
 void
 KeyState::setHalfDuplexMask(KeyModifierMask mask)
 {
@@ -550,6 +642,12 @@ KeyState::setHalfDuplexMask(KeyModifierMask mask)
 void
 KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
 {
+    // region 'Edited by bellerofonte'    
+    LOG((CLOG_DEBUG1 "fakeKeyDown: in %d(%03x) -> %d(%03x)", id, id, serverID, serverID));
+    remapKeyID(id);
+    LOG((CLOG_DEBUG1 "fakeKeyDown: out %d(%03x)", id, id));    
+    // end region
+    
     // if this server key is already down then this is probably a
     // mis-reported autorepeat.
     serverID &= kButtonMask;

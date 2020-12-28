@@ -196,7 +196,19 @@ private:
     // active modifiers collection callback
     static void            addActiveModifierCB(KeyID id, SInt32 group,
                             synergy::KeyMap::KeyItem& keyItem, void* vcontext);
-
+    
+    // region 'Edited by bellerofonte'
+    using KeyRemap = std::map<KeyID, KeyID>;
+    
+    void remapKeyID(KeyID &id);
+    bool remapKeyIDCyrillic(KeyID &id);
+    /*
+    bool remapKeyIDArabic(KeyID &id);
+    bool remapKeyIDEtc(KeyID &id);
+    */
+    
+    // end region
+    
 private:
     // must be declared before m_keyMap. used when this class owns the key map.
     synergy::KeyMap*            m_keyMapPtr;
