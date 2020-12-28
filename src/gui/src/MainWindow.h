@@ -23,6 +23,7 @@
 #include <QSettings>
 #include <QProcess>
 #include <QThread>
+#include <QMutex>
 
 #include "ui_MainWindowBase.h"
 
@@ -34,7 +35,7 @@
 #include "ActivationDialog.h"
 #include "ConfigWriter.h"
 
-#include <QMutex>
+#include "TrayIcon.h"
 
 class QAction;
 class QMenu;
@@ -221,8 +222,6 @@ public slots:
         QProcess*           m_pSynergy;
         int                 m_SynergyState;
         ServerConfig        m_ServerConfig;
-        QSystemTrayIcon*    m_pTrayIcon;
-        QMenu*              m_pTrayIconMenu;
         bool                m_AlreadyHidden;
         VersionChecker      m_VersionChecker;
         IpcClient           m_IpcClient;
@@ -232,6 +231,7 @@ public slots:
         QMenu*              m_pMenuWindow;
         QMenu*              m_pMenuHelp;
         QAbstractButton*    m_pCancelButton;
+        TrayIcon            m_trayIcon;
         qRuningState        m_ExpectedRunningState;
         QMutex              m_StopDesktopMutex;
         SslCertificate*     m_pSslCertificate;
