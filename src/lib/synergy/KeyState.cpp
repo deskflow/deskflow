@@ -651,6 +651,7 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
     // if this server key is already down then this is probably a
     // mis-reported autorepeat.
     serverID &= kButtonMask;
+    
     if (m_serverKeys[serverID] != 0) {
         fakeKeyRepeat(id, mask, 1, serverID);
         return;
@@ -702,6 +703,12 @@ KeyState::fakeKeyRepeat(
                 KeyID id, KeyModifierMask mask,
                 SInt32 count, KeyButton serverID)
 {
+    // region 'Edited by bellerofonte'    
+    LOG((CLOG_DEBUG1 "fakeKeyRepeat: in %d(%03x) -> %d(%03x)", id, id, serverID, serverID));
+    remapKeyID(id);
+    LOG((CLOG_DEBUG1 "fakeKeyRepeat: out %d(%03x)", id, id));    
+    // end region
+    
     serverID &= kButtonMask;
 
     // if we haven't seen this button go down then ignore it
