@@ -51,7 +51,7 @@ jobs:
           packager: rpm
           name: centos76
         centos8:
-          image: symless/synergy-core:centos8
+          image: sgad/synergy-core:centos8
           packager: rpm
           name: centos8
 
