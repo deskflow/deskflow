@@ -3,7 +3,8 @@
 
 void TrayIcon::tryCreate() 
 {
-    if (QSystemTrayIcon::isSystemTrayAvailable()) {
+    QSystemTrayIcon trayIcon;
+    if (trayIcon.isSystemTrayAvailable()) {
         std::cerr << "system tray available" << std::endl;
         m_pTrayIcon->show();
         m_connector(m_pTrayIcon.get(), SIGNAL(activated(QSystemTrayIcon::ActivationReason)));
