@@ -62,9 +62,6 @@ class Version:
       result += str(self.build) 
       return  result
 
-   def nextBuild(self):
-      self.build.number += 1
-
 class VersionFile:
    def __init__(self, file):
       self.file = file
@@ -82,11 +79,10 @@ class VersionFile:
 
 
 def getVesionFromGit():
-   cmd = ('git tag --sort=-creatordate').split()
-
    try:
-      proccess = subprocess.run(cmd, stdout=subprocess.PIPE, text=True)
-      versions = proccess.stdout.split()
+      taggedRevision = subprocess.check_output(('git rev-list --tags --max-count=1').split(), universal_newlines=True)
+      cmd = ('git describe --tags ' + taggedRevision).split()
+      versions = subprocess.check_output(cmd, universal_newlines=True).split()
       print('INFO: Version '+ versions[0] + ' has been read from git')
       return versions[0]
    except subprocess.CalledProcessError:
@@ -104,6 +100,5 @@ def updateVersionFile(number):
 
 if __name__ == '__main__':
    version = Version(getVesionFromGit())
-   version.nextBuild()
    updateVersionFile(version.build.number)
    print('INFO: Generate build number is: <' + str(version) + '>')

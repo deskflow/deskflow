@@ -14,12 +14,6 @@ steps:
   - task: CmdLine@2
     inputs:
       script: | 
-        python3 CI/build_version.py
-    displayName: 'Update Version.cmake'
-
-  - task: CmdLine@2
-    inputs:
-      script: | 
         python3 -m pip install dmgbuild
         python3 -m pip install aqtinstall
     displayName: 'Installing utilities'

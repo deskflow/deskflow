@@ -1,6 +1,6 @@
 steps:
   - script: |
-      python3 CI/build_version.py
+      command -v python3 >/dev/null 2>&1 && python3 CI/build_version.py || python CI/build_version.py
     displayName: 'Update Version.cmake'
 
   - script: |
