@@ -5,12 +5,10 @@ void TrayIcon::tryCreate()
 {
     QSystemTrayIcon trayIcon;
     if (trayIcon.isSystemTrayAvailable()) {
-        std::cerr << "system tray available" << std::endl;
         m_pTrayIcon->show();
         m_connector(m_pTrayIcon.get(), SIGNAL(activated(QSystemTrayIcon::ActivationReason)));
     }
     else {
-        std::cerr << "system tray available" << std::endl;
         QTimer::singleShot(1500, this, &TrayIcon::tryCreate);
     }
 }
