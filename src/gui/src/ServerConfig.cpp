@@ -217,23 +217,23 @@ int ServerConfig::adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) co
 
 QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
 {
-    outStream << "section: screens" << Qt::endl;
+    outStream << "section: screens" << endl;
 
     foreach (const Screen& s, config.screens())
         if (!s.isNull())
             s.writeScreensSection(outStream);
 
-    outStream << "end" << Qt::endl << Qt::endl;
+    outStream << "end" << endl << endl;
 
-    outStream << "section: aliases" << Qt::endl;
+    outStream << "section: aliases" << endl;
 
     foreach (const Screen& s, config.screens())
         if (!s.isNull())
             s.writeAliasesSection(outStream);
 
-    outStream << "end" << Qt::endl << Qt::endl;
+    outStream << "end" << endl << endl;
 
-    outStream << "section: links" << Qt::endl;
+    outStream << "section: links" << endl;
 
     for (int i = 0; i < config.screens().size(); i++)
         if (!config.screens()[i].isNull())
@@ -248,38 +248,38 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
             }
         }
 
-    outStream << "end" << Qt::endl << Qt::endl;
+    outStream << "end" << endl << endl;
 
-    outStream << "section: options" << Qt::endl;
+    outStream << "section: options" << endl;
 
     if (config.hasHeartbeat())
-        outStream << "\t" << "heartbeat = " << config.heartbeat() << Qt::endl;
+        outStream << "\t" << "heartbeat = " << config.heartbeat() << endl;
 
-    outStream << "\t" << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << Qt::endl;
-    outStream << "\t" << "screenSaverSync = " << (config.screenSaverSync() ? "true" : "false") << Qt::endl;
-    outStream << "\t" << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << Qt::endl;
-    outStream << "\t" << "disableLockToScreen = " << (config.disableLockToScreen() ? "true" : "false") << Qt::endl;
-    outStream << "\t" << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << Qt::endl;
-    outStream << "\t" << "clipboardSharingSize = " << config.clipboardSharingSize() << Qt::endl;
+    outStream << "\t" << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << endl;
+    outStream << "\t" << "screenSaverSync = " << (config.screenSaverSync() ? "true" : "false") << endl;
+    outStream << "\t" << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << endl;
+    outStream << "\t" << "disableLockToScreen = " << (config.disableLockToScreen() ? "true" : "false") << endl;
+    outStream << "\t" << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << endl;
+    outStream << "\t" << "clipboardSharingSize = " << config.clipboardSharingSize() << endl;
 
     if (config.hasSwitchDelay())
-        outStream << "\t" << "switchDelay = " << config.switchDelay() << Qt::endl;
+        outStream << "\t" << "switchDelay = " << config.switchDelay() << endl;
 
     if (config.hasSwitchDoubleTap())
-        outStream << "\t" << "switchDoubleTap = " << config.switchDoubleTap() << Qt::endl;
+        outStream << "\t" << "switchDoubleTap = " << config.switchDoubleTap() << endl;
 
     outStream << "\t" << "switchCorners = none ";
     for (int i = 0; i < config.switchCorners().size(); i++)
         if (config.switchCorners()[i])
             outStream << "+" << config.switchCornerName(i) << " ";
-    outStream << Qt::endl;
+    outStream << endl;
 
-    outStream << "\t" << "switchCornerSize = " << config.switchCornerSize() << Qt::endl;
+    outStream << "\t" << "switchCornerSize = " << config.switchCornerSize() << endl;
 
     foreach(const Hotkey& hotkey, config.hotkeys())
         outStream << hotkey;
 
-    outStream << "end" << Qt::endl << Qt::endl;
+    outStream << "end" << endl << endl;
 
     return outStream;
 }
