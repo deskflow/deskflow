@@ -104,14 +104,12 @@ void IpcClient::sendCommand(const QString& command, ElevateMode const elevate)
 
     stream.writeRawData(kIpcMsgCommand, 4);
 
-    std::string stdStringCommand = command.toStdString();
-    const char* charCommand = stdStringCommand.c_str();
-    int length = (int)strlen(charCommand);
+    QByteArray utf8Command = command.toUtf8();
 
     char lenBuf[4];
-    intToBytes(length, lenBuf, 4);
+    intToBytes(utf8Command.size(), lenBuf, 4);
     stream.writeRawData(lenBuf, 4);
-    stream.writeRawData(charCommand, length);
+    stream.writeRawData(utf8Command.constData(), utf8Command.size());
 
     char elevateBuf[1];
     // Refer to enum ElevateMode documentation for why this flag is mapped this way

@@ -17,7 +17,7 @@
 
 #include "SslCertificate.h"
 #include "Fingerprint.h"
-#include "common/DataDirectories.h"
+#include "QUtility.h"
 
 #include <QProcess>
 #include <QDir>
@@ -43,13 +43,13 @@ static const char kConfigFile[] = "barrier.conf";
 SslCertificate::SslCertificate(QObject *parent) :
     QObject(parent)
 {
-    m_ProfileDir = DataDirectories::profile();
-    if (m_ProfileDir.empty()) {
+    m_ProfileDir = profilePath();
+    if (m_ProfileDir.isEmpty()) {
         emit error(tr("Failed to get profile directory."));
     }
 }
 
-std::pair<bool, std::string> SslCertificate::runTool(const QStringList& args)
+std::pair<bool, QString> SslCertificate::runTool(const QStringList& args)
 {
     QString program;
 #if defined(Q_OS_WIN)
@@ -68,17 +68,15 @@ std::pair<bool, std::string> SslCertificate::runTool(const QStringList& args)
 #endif
 
     QProcess process;
+    QString standardOutput, standardError;
     process.setEnvironment(environment);
     process.start(program, args);
-
     bool success = process.waitForStarted();
-    std::string output;
 
-    QString standardError;
     if (success && process.waitForFinished())
     {
-        output = process.readAllStandardOutput().trimmed().toStdString();
-        standardError = process.readAllStandardError().trimmed();
+        standardOutput = QString::fromLocal8Bit(process.readAllStandardOutput().trimmed());
+        standardError = QString::fromLocal8Bit(process.readAllStandardError().trimmed());
     }
 
     int code = process.exitCode();
@@ -89,15 +87,15 @@ std::pair<bool, std::string> SslCertificate::runTool(const QStringList& args)
                 .arg(program)
                 .arg(process.exitCode())
                 .arg(standardError.isEmpty() ? "Unknown" : standardError));
-        return {false, output};
+        return {false, standardOutput};
     }
 
-    return {true, output};
+    return {true, standardOutput};
 }
 
 void SslCertificate::generateCertificate()
 {
-    auto filename = QString::fromStdString(getCertificatePath());
+    auto filename = getCertificatePath();
 
     QFile file(filename);
     if (!file.exists() || !isCertificateValid(filename)) {
@@ -122,7 +120,7 @@ void SslCertificate::generateCertificate()
         arguments.append("-newkey");
         arguments.append("rsa:2048");
 
-        QDir sslDir(QString::fromStdString(getCertificateDirectory()));
+        QDir sslDir(getCertificateDirectory());
         if (!sslDir.exists()) {
             sslDir.mkpath(".");
         }
@@ -159,20 +157,17 @@ void SslCertificate::generateFingerprint(const QString& certificateFilename)
 
     auto ret = runTool(arguments);
     bool success = ret.first;
-    std::string output = ret.second;
-
     if (!success) {
         return;
     }
 
     // find the fingerprint from the tool output
-    auto i = output.find_first_of('=');
-    if (i != std::string::npos) {
-        i++;
-        auto fingerprint = output.substr(
-            i, output.size() - i);
+    QString fingerprint = ret.second;
+    auto i = fingerprint.indexOf('=');
+    if (i != -1) {
+        fingerprint.remove(0, i+1);
 
-        Fingerprint::local().trust(QString::fromStdString(fingerprint), false);
+        Fingerprint::local().trust(fingerprint, false);
         emit info(tr("SSL fingerprint generated."));
     }
     else {
@@ -180,14 +175,14 @@ void SslCertificate::generateFingerprint(const QString& certificateFilename)
     }
 }
 
-std::string SslCertificate::getCertificatePath()
+QString SslCertificate::getCertificatePath()
 {
-    return getCertificateDirectory() + QDir::separator().toLatin1() + kCertificateFilename;
+    return getCertificateDirectory() + QDir::separator() + kCertificateFilename;
 }
 
-std::string SslCertificate::getCertificateDirectory()
+QString SslCertificate::getCertificateDirectory()
 {
-    return m_ProfileDir + QDir::separator().toLatin1() + kSslDir;
+    return m_ProfileDir + QDir::separator() + kSslDir;
 }
 
 bool SslCertificate::isCertificateValid(const QString& path)
@@ -198,7 +193,7 @@ bool SslCertificate::isCertificateValid(const QString& path)
 
     BIO* bio = BIO_new(BIO_s_file());
 
-    auto ret = BIO_read_filename(bio, path.toStdString().c_str());
+    auto ret = BIO_read_filename(bio, path.toLocal8Bit().constData());
     if (!ret) {
         emit info(tr("Could not read from default certificate file."));
         BIO_free_all(bio);

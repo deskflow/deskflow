@@ -29,6 +29,7 @@
 #include "base/EventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
+#include "base/Unicode.h"
 
 enum EIpcLogOutputter {
     kBufferMaxSize = 1000,
@@ -196,7 +197,7 @@ IpcLogOutputter::sendBuffer()
         return;
     }
 
-    IpcLogLineMessage message(getChunk(kMaxSendLines));
+    IpcLogLineMessage message(Unicode::textToUTF8(getChunk(kMaxSendLines)));
     m_sending = true;
     m_ipcServer.send(message, kIpcClientGui);
     m_sending = false;
