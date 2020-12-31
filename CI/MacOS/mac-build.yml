@@ -75,8 +75,8 @@ steps:
       . ./build/version
       SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
       SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
-      SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}_b$(Build.BuildNumber)-${SYNERGY_REVISION}"
-      SYNERGY_DMG_FILENAME=$(prefix)_v${SYNERGY_DMG_VERSION}_macos_$(platform).dmg
+      SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+      SYNERGY_DMG_FILENAME=$(prefix)_${SYNERGY_DMG_VERSION}_macos_$(platform).dmg
       echo "##vso[task.setvariable variable=SYNERGY_VERSION_STAGE]${SYNERGY_VERSION_STAGE}"
       echo "##vso[task.setvariable variable=SYNERGY_VERSION_BUILD]${SYNERGY_VERSION_BUILD}"
       echo "##vso[task.setvariable variable=SYNERGY_VERSION]${SYNERGY_VERSION}"
