@@ -17,6 +17,10 @@ function VersionPart(part) {
       return m_number;
    }
 
+   self.getSuffix = function(){
+       return m_suffix;
+   }
+
    self.toString = function() {
       return m_prefix + m_number.toString() + m_suffix;
    }
@@ -93,6 +97,7 @@ function Version(version) {
          m_minor.setPart(versionParts[1]);
          m_build.setPart(versionParts[2]);
          m_patch.setNumber(m_build.getNumber());
+         m_build.setNumber(0);
       }
       else if (versionParts.length == 4) {
          m_major.setPart(versionParts[0]);
@@ -117,10 +122,15 @@ function Version(version) {
       return m_patch.getNumber();
    }
 
+   this.getStage = function(){
+       return m_build.getSuffix();
+   }
+
    this.isSamePatch = function(version) {
-      return (m_major.getNumber() == version.getMajor() &&
-              m_minor.getNumber() == version.getMinor() &&
-              m_patch.getNumber() == version.getPatch());
+      return (this.getMajor() == version.getMajor() &&
+              this.getMinor() == version.getMinor() &&
+              this.getPatch() == version.getPatch() &&
+              this.getStage() == version.getStage());
    }
 
    init();
