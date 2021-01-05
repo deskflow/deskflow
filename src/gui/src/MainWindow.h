@@ -109,7 +109,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         int synergyState() const { return m_SynergyState; }
         QString hostname() const { return m_pLineEditHostname->text(); }
         QString configFilename();
-        QString address();
+        QString address() const;
         QString appPath(const QString& name);
         void open();
         void clearLog();
@@ -167,6 +167,7 @@ public slots:
         // TODO This should be properly using the ConfigWriter system.
         QSettings& settings() { return GUI::Config::ConfigWriter::make()->settings(); }
         AppConfig& appConfig() { return *m_AppConfig; }
+        AppConfig const& appConfig() const { return *m_AppConfig; }
         QProcess* synergyProcess() { return m_pSynergy; }
         void setSynergyProcess(QProcess* p) { m_pSynergy = p; }
         void initConnections();

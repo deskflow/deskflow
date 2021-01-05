@@ -833,7 +833,7 @@ QString MainWindow::configFilename()
     return filename;
 }
 
-QString MainWindow::address()
+QString MainWindow::address() const
 {
     QString i = appConfig().networkInterface();
     return (!i.isEmpty() ? i : "") + ":" + QString::number(appConfig().port());
