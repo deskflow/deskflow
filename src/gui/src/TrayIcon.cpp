@@ -1,5 +1,4 @@
 #include "TrayIcon.h"
-#include <iostream>
 
 void TrayIcon::tryCreate() 
 {
