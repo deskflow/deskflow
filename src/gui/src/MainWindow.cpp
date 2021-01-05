@@ -236,7 +236,7 @@ void MainWindow::open()
         m_pActionQuit
     };
 
-    m_trayIcon.create(trayMenu, [&](QObject *o, const char *s) {
+    m_trayIcon.create(trayMenu, [this](QObject const *o, const char *s) {
         connect(o, s, this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
         setIcon(synergyDisconnected);
     });

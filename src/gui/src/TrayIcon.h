@@ -10,10 +10,10 @@ class TrayIcon : public QObject
 {
     Q_OBJECT
 public:
-    using TConnector = std::function<void(QObject *, const char *)>;
+    using TConnector = std::function<void(QObject const *, const char *)>;
 
     template<typename TActionContainer>
-    void create(TActionContainer const &actionContainer, TConnector connector) 
+    void create(TActionContainer const &actionContainer, TConnector const &connector) 
     {
         m_connector = connector;
         m_pTrayIconMenu = std::make_unique<QMenu>();
@@ -34,9 +34,9 @@ public:
         tryCreate();
     }
 
-    void tryCreate();
+    void tryCreate() const;
 
-    void set(const QIcon& icon);
+    void set(const QIcon& icon) const;
 
 private:
     std::unique_ptr<QSystemTrayIcon>    m_pTrayIcon {};
