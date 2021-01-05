@@ -19,6 +19,8 @@
 #define DOWNLOAD_URL "http://symless.com/?source=gui"
 #define HELP_URL     "http://symless.com/help?source=gui"
 
+#include <array>
+
 #include "MainWindow.h"
 
 #include "Fingerprint.h"
@@ -224,7 +226,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::open()
 {
-    QAction *trayMenu[] = {
+    std::array<QAction *, 7> trayMenu = {
         m_pActionStartSynergy,
         m_pActionStopSynergy,
         nullptr,
@@ -234,7 +236,7 @@ void MainWindow::open()
         m_pActionQuit
     };
 
-    m_trayIcon.create(trayMenu, trayMenu + sizeof(trayMenu)/sizeof(trayMenu[0]), [&](QObject *o, const char *s) {
+    m_trayIcon.create(trayMenu, [&](QObject *o, const char *s) {
         connect(o, s, this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
         setIcon(synergyDisconnected);
     });

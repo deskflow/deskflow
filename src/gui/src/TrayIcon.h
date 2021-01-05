@@ -12,15 +12,15 @@ class TrayIcon : public QObject
 public:
     using TConnector = std::function<void(QObject *, const char *)>;
 
-    template<typename TActionIterator>
-    void create(TActionIterator *begin, TActionIterator *end, TConnector connector) 
+    template<typename TActionContainer>
+    void create(TActionContainer const &actionContainer, TConnector connector) 
     {
         m_connector = connector;
         m_pTrayIconMenu = std::make_unique<QMenu>();
 
-        for (TActionIterator *p {begin}; p != end; ++p) {
-            if (*p) {
-                m_pTrayIconMenu->addAction(*p);
+        for (auto action: actionContainer) {
+            if (action) {
+                m_pTrayIconMenu->addAction(action);
             }
             else {
                 m_pTrayIconMenu->addSeparator();
