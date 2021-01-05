@@ -174,7 +174,7 @@ public slots:
         void createStatusBar();
         void createTrayIcon();
         void loadSettings();
-        void setIcon(qSynergyState state);
+        void setIcon(qSynergyState state) const;
         void setSynergyState(qSynergyState state);
         bool checkForApp(int which, QString& app);
         bool clientArgs(QStringList& args, QString& app);

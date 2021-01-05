@@ -353,7 +353,7 @@ void MainWindow::zeroConfToggled() {
 #endif
 }
 
-void MainWindow::setIcon(qSynergyState state)
+void MainWindow::setIcon(qSynergyState state) const
 {
     QIcon icon;
 
