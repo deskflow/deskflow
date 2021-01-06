@@ -896,7 +896,8 @@ KeyMap::keysForModifierState(KeyButton button, SInt32 group,
     // we'll assume that modifiers with higher bits are affected by modifiers
     // with lower bits.  there's not much basis for that assumption except
     // that we're pretty sure shift isn't changed by other modifiers.
-    for (SInt32 bit = kKeyModifierNumBits; bit-- > 0; ) {
+    SInt32 bit = kKeyModifierNumBits;
+    while (bit-- > 0) {
         KeyModifierMask mask = (1u << bit);
         if ((flipMask & mask) == 0) {
             // modifier is already correct

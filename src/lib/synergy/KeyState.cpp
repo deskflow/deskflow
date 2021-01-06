@@ -823,10 +823,12 @@ KeyState::addCombinationEntries()
 {
     for (SInt32 g = 0, n = m_keyMap.getNumGroups(); g < n; ++g) {
         // add dead and compose key composition sequences
-        for (const KeyID* i = s_decomposeTable; *i != 0; ++i) {
+        const KeyID* i = s_decomposeTable;
+        while (*i != 0) {
             // count the decomposed keys for this key
             UInt32 numKeys = 0;
-            for (const KeyID* j = i; *++j != 0; ) {
+            const KeyID* j = i;
+            while (*++j != 0) {
                 ++numKeys;
             }
 
@@ -835,6 +837,7 @@ KeyState::addCombinationEntries()
 
             // next key
             i += numKeys + 1;
+            ++i;
         }
     }
 }

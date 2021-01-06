@@ -32,6 +32,17 @@
 typedef int socklen_t;
 #endif
 
+#if HAVE_POLL
+#    include <poll.h>
+#else
+#    if HAVE_SYS_SELECT_H
+#        include <sys/select.h>
+#    endif
+#    if HAVE_SYS_TIME_H
+#        include <sys/time.h>
+#    endif
+#endif
+
 // old systems may use char* for [gs]etsockopt()'s optval argument.
 // this should be void on modern systems but char is forwards
 // compatible so we always use it.
@@ -98,6 +109,19 @@ public:
     virtual int                getAddrPort(ArchNetAddress);
     virtual bool            isAnyAddr(ArchNetAddress);
     virtual bool            isEqualAddr(ArchNetAddress, ArchNetAddress);
+
+    struct Connectors 
+    {
+#if HAVE_POLL
+        int (*poll_impl)(struct pollfd *, nfds_t, int);
+#endif // HAVE_POLL
+        Connectors() {
+#if HAVE_POLL
+            poll_impl = poll;
+#endif // HAVE_POLL
+        }
+    };
+    static Connectors s_connectors;
 
 private:
     const int*            getUnblockPipe();

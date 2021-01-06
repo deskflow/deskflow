@@ -53,7 +53,8 @@ vformat(const char* fmt, va_list args)
     std::vector<size_t> width;
     std::vector<size_t> index;
     size_t maxIndex = 0;
-    for (const char* scan = fmt; *scan != '\0'; ++scan) {
+    const char* scan = fmt;
+    while ( *scan ) {
         if (*scan == '%') {
             ++scan;
             if (*scan == '\0') {
@@ -88,6 +89,7 @@ vformat(const char* fmt, va_list args)
                 // improper escape -- ignore
             }
         }
+        ++scan;
     }
 
     // get args

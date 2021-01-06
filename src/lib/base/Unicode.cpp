@@ -406,9 +406,10 @@ Unicode::doUCS2ToUTF8(const UInt8* data, UInt32 n, bool* errors)
     }
 
     // convert each character
-    for (; n > 0; data += 2, --n) {
+    for (; n > 0; --n) {
         UInt32 c = decode16(data, byteSwapped);
         toUTF8(dst, c, errors);
+        data += 2;
     }
 
     return dst;
@@ -442,9 +443,10 @@ Unicode::doUCS4ToUTF8(const UInt8* data, UInt32 n, bool* errors)
     }
 
     // convert each character
-    for (; n > 0; data += 4, --n) {
+    for (; n > 0; --n) {
         UInt32 c = decode32(data, byteSwapped);
         toUTF8(dst, c, errors);
+        data += 4;
     }
 
     return dst;
@@ -478,7 +480,7 @@ Unicode::doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors)
     }
 
     // convert each character
-    for (; n > 0; data += 2, --n) {
+    while (n > 0) {
         UInt32 c = decode16(data, byteSwapped);
         if (c < 0x0000d800 || c > 0x0000dfff) {
             toUTF8(dst, c, errors);
@@ -507,6 +509,8 @@ Unicode::doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors)
             setError(errors);
             toUTF8(dst, s_replacement, NULL);
         }
+        data += 2;
+        --n;
     }
 
     return dst;
@@ -540,13 +544,14 @@ Unicode::doUTF32ToUTF8(const UInt8* data, UInt32 n, bool* errors)
     }
 
     // convert each character
-    for (; n > 0; data += 4, --n) {
+    for (; n > 0; --n) {
         UInt32 c = decode32(data, byteSwapped);
         if (c >= 0x00110000) {
             setError(errors);
             c = s_replacement;
         }
         toUTF8(dst, c, errors);
+        data += 4;
     }
 
     return dst;
