@@ -12,7 +12,7 @@ Bug fixes:
 - #6878 Update googletest library to latest version
 - #6882 Build macOS using qt 5.15.2 and avoid using brew for build
 - #6884 Fix logo for Linux and dark logo for macOS
-- #6886 Upadte Welcome screen
+- #6886 Update Welcome screen
 
 Enhancements:
 - #6867 Create only 1 artefact for macOS
