@@ -24,14 +24,14 @@ if (BARRIER_USE_EXTERNAL_GTEST)
     )
 else()
     include_directories(
-        ../../ext/gtest
-        ../../ext/gtest/include
-        ../../ext/gmock
-        ../../ext/gmock/include
+        ../ext/gtest
+        ../ext/gtest/include
+        ../ext/gmock
+        ../ext/gmock/include
     )
 
-    add_library(gtest STATIC ../../ext/gtest/src/gtest-all.cc)
-    add_library(gmock STATIC ../../ext/gmock/src/gmock-all.cc)
+    add_library(gtest STATIC ../ext/gtest/src/gtest-all.cc)
+    add_library(gmock STATIC ../ext/gmock/src/gmock-all.cc)
 
     set(GTEST_LIBRARIES gtest)
     set(GMOCK_LIBRARIES gmock)
@@ -42,6 +42,3 @@ else()
         set_target_properties(gmock PROPERTIES COMPILE_FLAGS "-w")
     endif()
 endif()
-
-add_subdirectory(integtests)
-add_subdirectory(unittests)

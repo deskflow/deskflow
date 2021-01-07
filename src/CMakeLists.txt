@@ -20,8 +20,11 @@ include_directories (${CMAKE_CURRENT_BINARY_DIR}/lib)
 add_subdirectory(lib)
 add_subdirectory(cmd)
 
+include(../cmake/gtest.cmake)
+
 if (BARRIER_BUILD_TESTS)
-    add_subdirectory(test)
+    add_subdirectory(test/integtests)
+    add_subdirectory(test/unittests)
 endif()
 
 if (BARRIER_BUILD_GUI)
