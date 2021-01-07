@@ -6,6 +6,15 @@ set (CMAKE_AUTORCC ON)
 set (CMAKE_AUTOUIC ON)
 set (CMAKE_INCLUDE_CURRENT_DIR ON)
 
+# files that are used both in tests and the app
+set(GUI_COMMON_SOURCE_FILES
+    src/KeySequence.cpp
+)
+
+set(GUI_COMMON_HEADER_FILES
+    src/KeySequence.h
+)
+
 set(GUI_SOURCE_FILES
     src/AboutDialog.cpp
     src/Action.cpp
@@ -23,7 +32,6 @@ set(GUI_SOURCE_FILES
     src/IpcClient.cpp
     src/Ipc.cpp
     src/IpcReader.cpp
-    src/KeySequence.cpp
     src/KeySequenceWidget.cpp
     src/LogWindow.cpp
     src/main.cpp
@@ -67,7 +75,6 @@ set(GUI_HEADER_FILES
     src/IpcClient.h
     src/Ipc.h
     src/IpcReader.h
-    src/KeySequence.h
     src/KeySequenceWidget.h
     src/LogWindow.h
     src/MainWindow.h
@@ -113,6 +120,8 @@ if (WIN32)
 endif()
 
 add_executable (barrier WIN32
+    ${GUI_COMMON_SOURCE_FILES}
+    ${GUI_COMMON_HEADER_FILES}
     ${GUI_SOURCE_FILES}
     ${GUI_HEADER_FILES}
     ${GUI_UI_FILES}
@@ -150,4 +159,22 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     install (TARGETS barrier DESTINATION ${BARRIER_BUNDLE_BINARY_DIR})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "BSD")
     install (TARGETS barrier DESTINATION bin)
+endif()
+
+if (BARRIER_BUILD_TESTS)
+    set(GUI_TEST_SOURCE_FILES
+        test/KeySequenceTests.cpp
+        test/main.cpp
+    )
+
+    add_executable(guiunittests
+        ${GUI_TEST_SOURCE_FILES}
+        ${GUI_COMMON_SOURCE_FILES}
+        ${GUI_COMMON_HEADER_FILES}
+    )
+
+    add_test(guiunittests guiunittests)
+
+    target_include_directories(guiunittests PUBLIC ../../ext)
+    target_link_libraries(guiunittests gtest gmock Qt5::Core Qt5::Widgets Qt5::Network pthread)
 endif()
