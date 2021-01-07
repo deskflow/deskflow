@@ -1,1 +1,1 @@
-lupdate -noobsolete gui.pro -ts gui.ts
+lupdate -noobsolete src/* -ts gui.ts

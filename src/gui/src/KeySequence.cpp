@@ -152,12 +152,12 @@ bool KeySequence::appendKey(int key, int modifiers)
 
 void KeySequence::loadSettings(QSettings& settings)
 {
-    sequence().clear();
+    m_Sequence.clear();
     int num = settings.beginReadArray("keys");
     for (int i = 0; i < num; i++)
     {
         settings.setArrayIndex(i);
-        sequence().append(settings.value("key", 0).toInt());
+        m_Sequence.append(settings.value("key", 0).toInt());
     }
     settings.endArray();
 
@@ -168,10 +168,10 @@ void KeySequence::loadSettings(QSettings& settings)
 void KeySequence::saveSettings(QSettings& settings) const
 {
     settings.beginWriteArray("keys");
-    for (int i = 0; i < sequence().size(); i++)
+    for (int i = 0; i < m_Sequence.size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("key", sequence()[i]);
+        settings.setValue("key", m_Sequence[i]);
     }
     settings.endArray();
 }

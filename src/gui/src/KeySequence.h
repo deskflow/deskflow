@@ -32,7 +32,7 @@ class KeySequence
 
     public:
         QString toString() const;
-        bool appendKey(int modifiers, int key);
+        bool appendKey(int key, int modifiers);
         bool appendMouseButton(int button);
         bool isMouseButton() const;
         bool valid() const { return m_IsValid; }
@@ -44,7 +44,6 @@ class KeySequence
     private:
         void setValid(bool b) { m_IsValid = b; }
         void setModifiers(int i) { m_Modifiers = i; }
-        QList<int>& sequence() { return m_Sequence; }
 
     private:
         QList<int> m_Sequence;
