@@ -44,7 +44,6 @@ class KeySequence
     private:
         void setValid(bool b) { m_IsValid = b; }
         void setModifiers(int i) { m_Modifiers = i; }
-        QList<int>& sequence() { return m_Sequence; }
 
     private:
         QList<int> m_Sequence;
