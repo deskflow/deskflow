@@ -26,6 +26,14 @@
 #endif
 #if HAVE_SYS_SOCKET_H
 #    include <sys/socket.h>
+#else
+struct sockaddr_storage {
+	unsigned char       ss_len;         /* address length */
+	unsigned char     ss_family;      /* [XSI] address family */
+	char                    __ss_pad1[_SS_PAD1SIZE];
+	long long       __ss_align;     /* force structure storage alignment */
+	char                    __ss_pad2[_SS_PAD2SIZE];
+};
 #endif
 
 #if !HAVE_SOCKLEN_T
@@ -131,5 +139,5 @@ private:
     void                throwNameError(int);
 
 private:
-    ArchMutex            m_mutex;
+    ArchMutex            m_mutex {};
 };

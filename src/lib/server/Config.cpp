@@ -576,40 +576,33 @@ Config::operator==(const Config& x) const
 	if (m_globalOptions != x.m_globalOptions) {
 		return false;
 	}
-	{
-		auto index2 = x.m_map.cbegin();
-		for (auto index1 = m_map.cbegin(); index1 != m_map.cend(); ++index1) {
-			if (index2 == x.m_map.cend()) {
-				return false; // second source ended prematurely
-			}
 
-			// compare names
-			if (!CaselessCmp::equal(index1->first, index2->first)) {
-				return false;
-			}
+	auto index2map = x.m_map.cbegin();
+	for (auto const &index1: m_map) {
+		// compare names
+		if (!CaselessCmp::equal(index1.first, index2map->first)) {
+			return false;
+		}
 
-			// compare cells
-			if (index1->second != index2->second) {
-				return false;
-			}
-			++index2;
+		// compare cells
+		if (index1.second != index2map->second) {
+			return false;
 		}
+		++index2map;
 	}
-	{	
-		auto index2 = x.m_nameToCanonicalName.cbegin();
-		for (NameMap::const_iterator index1 = m_nameToCanonicalName.begin();
-									index1 != m_nameToCanonicalName.end();
-									++index1) {
-			if (index2 == x.m_nameToCanonicalName.cend()) {
-				return false; // second source ended
-			}
-			if (!CaselessCmp::equal(index1->first,  index2->first) ||
-				!CaselessCmp::equal(index1->second, index2->second)) {
-				return false;
-			}
-			++index2;
+
+	auto index2 = x.m_nameToCanonicalName.cbegin();
+	for (auto const &index1: m_nameToCanonicalName) {
+		if (index2 == x.m_nameToCanonicalName.cend()) {
+			return false; // second source ended
 		}
+		if (!CaselessCmp::equal(index1.first,  index2->first) ||
+			!CaselessCmp::equal(index1.second, index2->second)) {
+			return false;
+		}
+		++index2;
 	}
+
 	// compare input filters
 	if (m_inputFilter != x.m_inputFilter) {
 		return false;
@@ -1764,28 +1757,25 @@ Config::Cell::operator==(const Cell& x) const
 	if (m_neighbors.size() != x.m_neighbors.size()) {
 		return false;
 	}
-	{
-		auto index2 = x.m_neighbors.cbegin();
-		for (auto index1 = m_neighbors.cbegin(); index1 != m_neighbors.end(); ++index1) {
-			if (index2 == x.m_neighbors.cend()) {
-				return false;
-			}
-			if (index1->first != index2->first) {
-				return false;
-			}
-			if (index1->second != index2->second) {
-				return false;
-			}
 
-			// operator== doesn't compare names.  only compare destination
-			// names.
-			if (!CaselessCmp::equal(index1->second.getName(),
-									index2->second.getName())) {
-				return false;
-			}
-			++index2;
+	auto index2neighbors = x.m_neighbors.cbegin();
+	for (auto const &index1: m_neighbors) {
+		if (index1.first != index2neighbors->first) {
+			return false;
 		}
+		if (index1.second != index2neighbors->second) {
+			return false;
+		}
+
+		// operator== doesn't compare names.  only compare destination
+		// names.
+		if (!CaselessCmp::equal(index1.second.getName(),
+								index2neighbors->second.getName())) {
+			return false;
+		}
+		++index2neighbors;
 	}
+
 	return true;
 }
 

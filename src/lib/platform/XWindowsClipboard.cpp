@@ -1111,7 +1111,7 @@ XWindowsClipboard::sendReply(Reply* reply)
                     // then print the binary data.
                     static const char* hex = "0123456789abcdef";
                     String::size_type j = 0;
-                    for (j < data.size()) {
+                    while (j < data.size()) {
                         if (data[j] < 32 || data[j] > 126) {
                             String tmp;
                             tmp.reserve(data.size() * 3);

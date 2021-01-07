@@ -15,7 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _WIN32
+#include <array>
+#include <sys/types.h>
+#include <netinet/in.h>
 #include "lib/arch/unix/ArchNetworkBSD.h"
+#include "lib/arch/XArch.h"
 #include "test/global/gtest.h"
 
 TEST(ArchNetworkBSDTests, pollSocket_errs_EACCES)
@@ -23,14 +28,35 @@ TEST(ArchNetworkBSDTests, pollSocket_errs_EACCES)
     ArchNetworkBSD networkBSD;
     ArchNetworkBSD::s_connectors.poll_impl = [](struct pollfd *, nfds_t, int){ errno = EACCES; return -1; };
     try {
-        IArchNetwork::PollEntry pe[1] = {{nullptr,0,0}};
-        networkBSD.pollSocket(pe, 2, 1);
+        std::array<IArchNetwork::PollEntry,2>  pe {{nullptr,0,0}};
+        networkBSD.pollSocket(pe.data(), pe.size(), 1);
         FAIL() << "Expected to throw";
     }
     catch(XArchNetworkAccess const &err)
     {
+        EXPECT_STREQ(err.what(), "Permission denied");
     }
-    catch() {
-        FAIL() << "Expected to throw XArchNetworkAccess"
+    catch(std::runtime_error const &baseerr) {
+        FAIL() << "Expected to throw XArchNetworkAccess but got " << baseerr.what();
     }
 }
+
+TEST(ArchNetworkBSDTests, isAnyAddr_IP6)
+{
+    ArchNetworkBSD networkBSD;
+    auto addr = networkBSD.newAnyAddr(IArchNetwork::kINET6);
+    EXPECT_TRUE(networkBSD.isAnyAddr(addr));
+
+    auto scratch = (char *)&addr->m_addr;
+    scratch[2] = 'b';
+    scratch[3] = 'a';
+    scratch[4] = 'd';
+    scratch[5] = 'a';
+    scratch[6] = 'd';
+    scratch[7] = 'd';
+    scratch[8] = 'r';
+    EXPECT_FALSE(networkBSD.isAnyAddr(addr));
+    delete addr;
+}
+
+#endif // #ifdnef _WIN32

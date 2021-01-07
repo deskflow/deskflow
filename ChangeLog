@@ -1,6 +1,7 @@
 v1.13.1-snapshot
 ===========
-===========
+Bug fixes:
+- #6900 Remaining SonarCloud reported bug items
 
 v1.13.0-stable
 ===========

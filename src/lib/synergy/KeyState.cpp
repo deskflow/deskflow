@@ -476,13 +476,18 @@ KeyState::sendKeyEvent(
 }
 
 void
-KeyState::updateKeyMap()
+KeyState::updateKeyMap(synergy::KeyMap* existing)
 {
-    // get the current keyboard map
-    synergy::KeyMap keyMap;
-    getKeyMap(keyMap);
-    m_keyMap.swap(keyMap);
-    m_keyMap.finish();
+    if (existing) {
+        m_keyMap.swap(*existing);
+    }
+    else {
+        // get the current keyboard map
+        synergy::KeyMap keyMap;
+        getKeyMap(keyMap);
+        m_keyMap.swap(keyMap);
+        m_keyMap.finish();
+    }
 
     // add special keys
     addCombinationEntries();

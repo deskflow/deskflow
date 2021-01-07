@@ -214,5 +214,25 @@ TEST(KeyMapTests, isCommand_superMask_returnTrue)
     
     EXPECT_EQ(true, keyMap.isCommand(mask));
 }
+
+TEST(KeyMapTests, mapkey_handles_setmodifier_with_no_mapped)
+{
+    KeyMap keyMap {};
+    KeyMap::Keystroke stroke('A', true, false, 1);
+    KeyMap::KeyItem keyItem;
+    keyItem.m_button = 'A';
+    keyItem.m_group = 1;
+    keyItem.m_id = 'A';
+    keyMap.addKeyEntry(keyItem);
+    keyMap.finish();
+    KeyMap::Keystrokes strokes {stroke};
+    KeyMap::ModifierToKeys activeModifiers {};
+    KeyModifierMask currentState {};
+    KeyModifierMask desiredMask {};
+    auto result = keyMap.mapKey(strokes, kKeySetModifiers, 1, activeModifiers, currentState, desiredMask, false);
     
+    EXPECT_FALSE(result == nullptr);
+}
+    
+
 }

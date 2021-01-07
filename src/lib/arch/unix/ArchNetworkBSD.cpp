@@ -83,7 +83,7 @@ ArchNetworkBSD::ArchNetworkBSD()
 
 ArchNetworkBSD::~ArchNetworkBSD()
 {
-    ARCH->closeMutex(m_mutex);
+    if (m_mutex) ARCH->closeMutex(m_mutex);
 }
 
 void
@@ -842,7 +842,7 @@ ArchNetworkBSD::isAnyAddr(ArchNetAddress addr)
     case kINET6: {
         struct sockaddr_in6* ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
         return (addr->m_len == (socklen_t)sizeof(struct sockaddr_in6) &&
-            memcmp(&ipAddr->sin6_addr.__u6_addr.__u6_addr32, &in6addr_any.__u6_addr.__u6_addr32, sizeof(in6_addr)) == 0);
+            memcmp(static_cast<const void*>(&ipAddr->sin6_addr), static_cast<const void*>(&in6addr_any), sizeof(in6_addr)) == 0);
     }
 
     default:
