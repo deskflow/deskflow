@@ -229,9 +229,11 @@ TEST(KeyMapTests, mapkey_handles_setmodifier_with_no_mapped)
     KeyMap::ModifierToKeys activeModifiers {};
     KeyModifierMask currentState {};
     KeyModifierMask desiredMask {};
-    auto result = keyMap.mapKey(strokes, kKeySetModifiers, 1, activeModifiers, currentState, desiredMask, false);
-    
+    auto result = keyMap.mapKey(strokes, kKeySetModifiers, 1, activeModifiers, currentState, desiredMask, false);    
     EXPECT_FALSE(result == nullptr);
+    desiredMask = KeyModifierControl;
+    result = keyMap.mapKey(strokes, kKeySetModifiers, 1, activeModifiers, currentState, desiredMask, false);    
+    EXPECT_TRUE(result == nullptr);
 }
     
 
