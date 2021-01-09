@@ -17,9 +17,16 @@
 cmake_minimum_required (VERSION 3.4)
 project (synergy-core C CXX)
 
-option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" ON)
-option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
-option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" ON)
+if (DEFINED ENV{SYNERGY_NO_LEGACY})
+    option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" OFF)
+    option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" OFF)
+    option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" OFF)
+else()
+    option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" ON)
+    option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
+    option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" ON)
+endif()
+
 option (BUILD_TESTS "Override building of tests" ON)
 option (ENABLE_COVERAGE "Build with coverage")
 
