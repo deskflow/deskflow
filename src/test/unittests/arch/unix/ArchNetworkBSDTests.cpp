@@ -16,9 +16,10 @@
  */
 
 #ifndef _WIN32
-#include <array>
 #include <sys/types.h>
 #include <netinet/in.h>
+#include <array>
+#include <memory>
 #include "lib/arch/unix/ArchNetworkBSD.h"
 #include "lib/arch/XArch.h"
 #include "test/global/gtest.h"
@@ -44,8 +45,9 @@ TEST(ArchNetworkBSDTests, pollSocket_errs_EACCES)
 TEST(ArchNetworkBSDTests, isAnyAddr_IP6)
 {
     ArchNetworkBSD networkBSD;
-    auto addr = networkBSD.newAnyAddr(IArchNetwork::kINET6);
-    EXPECT_TRUE(networkBSD.isAnyAddr(addr));
+    std::unique_ptr<ArchNetAddressImpl> addr;
+    addr.reset(networkBSD.newAnyAddr(IArchNetwork::kINET6));
+    EXPECT_TRUE(networkBSD.isAnyAddr(addr.get()));
 
     auto scratch = (char *)&addr->m_addr;
     scratch[2] = 'b';
@@ -55,8 +57,7 @@ TEST(ArchNetworkBSDTests, isAnyAddr_IP6)
     scratch[6] = 'd';
     scratch[7] = 'd';
     scratch[8] = 'r';
-    EXPECT_FALSE(networkBSD.isAnyAddr(addr));
-    delete addr;
+    EXPECT_FALSE(networkBSD.isAnyAddr(addr.get()));
 }
 
 #endif // #ifdnef _WIN32
