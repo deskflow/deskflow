@@ -16,7 +16,7 @@ steps:
     displayName: 'Set python version'
 
   - script: |
-      python3 CI/build_version.py
+      python CI/build_version.py
     displayName: 'Update Version.cmake'
 
   - script: |
@@ -177,17 +177,16 @@ steps:
       echo ##vso[task.setvariable variable=SYNERGY_VERSION]%SYNERGY_VERSION%
       echo ##vso[task.setvariable variable=SYNERGY_REVISION]%SYNERGY_REVISION%
     displayName: "Set Variables"
-    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
 
   - script: |
       cd $(Build.Repository.LocalPath)\build32\installer\bin\Release\
-      set FILENAME=$(prefix)_v$(SYNERGY_VERSION)-$(SYNERGY_VERSION_STAGE)_$(Build.BuildNumber).$(SYNERGY_REVISION)_windows_x86.msi
+      set FILENAME=$(prefix)_$(SYNERGY_VERSION)-$(SYNERGY_VERSION_STAGE).$(SYNERGY_REVISION)_windows_x86.msi
       ren "Synergy.msi" "%FILENAME%"
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe md5 %FILENAME% > %FILENAME%.checksum.txt
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 %FILENAME% >> %FILENAME%.checksum.txt
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha256 %FILENAME% >> %FILENAME%.checksum.txt
       cd $(Build.Repository.LocalPath)\build64\installer\bin\Release\
-      set FILENAME=$(prefix)_v$(SYNERGY_VERSION)-$(SYNERGY_VERSION_STAGE)_$(Build.BuildNumber).$(SYNERGY_REVISION)_windows_x64.msi
+      set FILENAME=$(prefix)_$(SYNERGY_VERSION)-$(SYNERGY_VERSION_STAGE).$(SYNERGY_REVISION)_windows_x64.msi
       ren "Synergy.msi" "%FILENAME%"
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe md5 %FILENAME% > %FILENAME%.checksum.txt
       $(Build.Repository.LocalPath)\ext\openssl\windows\x64\bin\openssl.exe sha1 %FILENAME% >> %FILENAME%.checksum.txt
