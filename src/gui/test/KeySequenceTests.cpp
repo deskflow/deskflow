@@ -15,6 +15,7 @@
 */
 
 #include "../src/KeySequence.h"
+#include "Utils.h"
 #include <gtest/gtest.h>
 #include <cstdio>
 
@@ -73,14 +74,7 @@ namespace {
         Qt::Key_Launch1,
         Qt::Key_Select,
     };
-
-    QString getTemporaryFilename()
-    {
-        QTemporaryFile temp_file;
-        temp_file.open();
-        return temp_file.fileName();
-    }
-}
+} // namespace
 
 class KeySequenceLoadSaveTestFixture :
         public ::testing::TestWithParam<std::tr1::tuple<Qt::Key, QSettings::Format>> {};
