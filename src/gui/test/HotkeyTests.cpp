@@ -131,6 +131,21 @@ namespace {
         }
         return action;
     }
+
+    Hotkey createHotkey(const TestHotKey& test_hotkey)
+    {
+        Hotkey hotkey;
+        KeySequence sequence;
+        for (auto key : test_hotkey.keys) {
+            sequence.appendKey(key.key, key.modifier);
+        }
+        hotkey.setKeySequence(sequence);
+
+        for (auto action : test_hotkey.actions) {
+            hotkey.appendAction(createAction(action));
+        }
+        return hotkey;
+    }
 } // namespace
 
 void doHotkeyLoadSaveTest(const TestHotKey& test_hotkey, QSettings::Format format)
@@ -141,16 +156,7 @@ void doHotkeyLoadSaveTest(const TestHotKey& test_hotkey, QSettings::Format forma
     {
         QSettings settings(filename, format);
 
-
-        KeySequence sequence;
-        for (auto key : test_hotkey.keys) {
-            sequence.appendKey(key.key, key.modifier);
-        }
-        hotkey_before.setKeySequence(sequence);
-
-        for (auto action : test_hotkey.actions) {
-            hotkey_before.appendAction(createAction(action));
-        }
+        hotkey_before = createHotkey(test_hotkey);
 
         settings.beginGroup("test");
         hotkey_before.saveSettings(settings);
