@@ -91,9 +91,10 @@ QMimeData* ScreenSetupModel::mimeData(const QModelIndexList& indexes) const
 
     QDataStream stream(&encodedData, QIODevice::WriteOnly);
 
-    foreach (const QModelIndex& index, indexes)
+    for (const QModelIndex& index : indexes) {
         if (index.isValid())
             stream << index.column() << index.row() << screen(index);
+    }
 
     pMimeData->setData(m_MimeType, encodedData);
 

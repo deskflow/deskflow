@@ -58,7 +58,7 @@ ActionDialog::ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey
     m_pGroupBoxScreens->setChecked(m_Action.haveScreens());
 
     int idx = 0;
-    foreach(const Screen& screen, serverConfig().screens())
+    for (const Screen& screen : serverConfig().screens()) {
         if (!screen.isNull())
         {
             QListWidgetItem *pListItem = new QListWidgetItem(screen.name());
@@ -72,6 +72,7 @@ ActionDialog::ActionDialog(QWidget* parent, ServerConfig& config, Hotkey& hotkey
 
             idx++;
         }
+    }
 }
 
 void ActionDialog::accept()
@@ -84,8 +85,9 @@ void ActionDialog::accept()
     m_Action.setHaveScreens(m_pGroupBoxScreens->isChecked());
 
     m_Action.clearTypeScreenNames();
-    foreach(const QListWidgetItem* pItem, m_pListScreens->selectedItems())
+    for (const QListWidgetItem* pItem : m_pListScreens->selectedItems()) {
         m_Action.appendTypeScreenName(pItem->text());
+    }
 
     m_Action.setSwitchScreenName(m_pComboSwitchToScreen->currentText());
     m_Action.setSwitchDirection(m_pComboSwitchInDirection->currentIndex());

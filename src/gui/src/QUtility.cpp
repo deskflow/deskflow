@@ -52,8 +52,7 @@ QString hash(const QString& string)
 QString getFirstMacAddress()
 {
     QString mac;
-    foreach (const QNetworkInterface &interface,  QNetworkInterface::allInterfaces())
-    {
+    for (const QNetworkInterface &interface : QNetworkInterface::allInterfaces()) {
         mac = interface.hardwareAddress();
         if (mac.size() != 0)
         {

@@ -335,8 +335,7 @@ void MainWindow::logOutput()
     if (m_pBarrier)
     {
         QString text(m_pBarrier->readAllStandardOutput());
-        foreach(QString line, text.split(QRegExp("\r|\n|\r\n")))
-        {
+        for (QString line : text.split(QRegExp("\r|\n|\r\n"))) {
             if (!line.isEmpty())
             {
                 appendLogRaw(line);
@@ -373,7 +372,7 @@ void MainWindow::appendLogError(const QString& text)
 
 void MainWindow::appendLogRaw(const QString& text)
 {
-    foreach(QString line, text.split(QRegExp("\r|\n|\r\n"))) {
+    for (QString line : text.split(QRegExp("\r|\n|\r\n"))) {
         if (!line.isEmpty()) {
             m_pLogWindow->appendRaw(line);
             updateFromLogLine(line);
