@@ -33,17 +33,14 @@ class QSettings;
 
 class Hotkey
 {
-    friend class HotkeyDialog;
-    friend QTextStream& operator<<(QTextStream& outStream, const Hotkey& hotkey);
-
     public:
         Hotkey();
 
-    public:
         QString text() const;
         const KeySequence& keySequence() const { return m_KeySequence; }
-        const ActionList& actions() const { return m_Actions; }
+        void setKeySequence(const KeySequence& seq) { m_KeySequence = seq; }
 
+        const ActionList& actions() const { return m_Actions; }
         void appendAction(const Action& action) { m_Actions.append(action); }
         void setAction(int index, const Action& action) { m_Actions[index] = action; }
         void removeAction(int index) { m_Actions.removeAt(index); }
@@ -51,8 +48,6 @@ class Hotkey
         void loadSettings(QSettings& settings);
         void saveSettings(QSettings& settings) const;
 
-    protected:
-        void setKeySequence(const KeySequence& seq) { m_KeySequence = seq; }
 
     private:
         KeySequence m_KeySequence;
