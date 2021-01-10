@@ -135,29 +135,29 @@ ServerApp::help()
     }
 
     std::ostringstream buffer;
-    buffer << "Start the barrier server component." << std::endl
-           << std::endl
+    buffer << "Start the barrier server component.\n"
+           << "\n"
            << "Usage: " << args().m_exename
            << " [--address <address>]"
            << " [--config <pathname>]"
-           << WINAPI_ARGS << HELP_SYS_ARGS << HELP_COMMON_ARGS << std::endl
-           << std::endl
-           << "Options:" << std::endl
-           << "  -a, --address <address>  listen for clients on the given address." << std::endl
-           << "  -c, --config <pathname>  use the named configuration file instead." << std::endl
-           << HELP_COMMON_INFO_1 << WINAPI_INFO << HELP_SYS_INFO << HELP_COMMON_INFO_2 << std::endl
-           << "Default options are marked with a *" << std::endl
-           << std::endl
-           << "The argument for --address is of the form: [<hostname>][:<port>].  The" << std::endl
-           << "hostname must be the address or hostname of an interface on the system." << std::endl
-           << "Placing brackets around an IPv6 address is required when also specifying " << std::endl
-           << "a port number and optional otherwise. The default is to listen on all" << std::endl
-           << "interfaces using port number " << kDefaultPort << "." << std::endl
-           << std::endl
-           << "If no configuration file pathname is provided then the first of the" << std::endl
-           << "following to load successfully sets the configuration:" << std::endl
-           << "  " << PathUtilities::concat(profilePath, USR_CONFIG_NAME) << std::endl
-           << "  " << PathUtilities::concat(DataDirectories::systemconfig(), SYS_CONFIG_NAME) << std::endl;
+           << WINAPI_ARGS << HELP_SYS_ARGS << HELP_COMMON_ARGS << "\n"
+           << "\n"
+           << "Options:\n"
+           << "  -a, --address <address>  listen for clients on the given address.\n"
+           << "  -c, --config <pathname>  use the named configuration file instead.\n"
+           << HELP_COMMON_INFO_1 << WINAPI_INFO << HELP_SYS_INFO << HELP_COMMON_INFO_2 << "\n"
+           << "Default options are marked with a *\n"
+           << "\n"
+           << "The argument for --address is of the form: [<hostname>][:<port>].  The\n"
+           << "hostname must be the address or hostname of an interface on the system.\n"
+           << "Placing brackets around an IPv6 address is required when also specifying \n"
+           << "a port number and optional otherwise. The default is to listen on all\n"
+           << "interfaces using port number " << kDefaultPort << ".\n"
+           << "\n"
+           << "If no configuration file pathname is provided then the first of the\n"
+           << "following to load successfully sets the configuration:\n"
+           << "  " << PathUtilities::concat(profilePath, USR_CONFIG_NAME) << "\n"
+           << "  " << PathUtilities::concat(DataDirectories::systemconfig(), SYS_CONFIG_NAME) << "\n";
 
     LOG((CLOG_PRINT "%s", buffer.str().c_str()));
 }
