@@ -86,17 +86,16 @@ namespace {
 } // namespace
 
 class KeySequenceLoadSaveTestFixture :
-        public ::testing::TestWithParam<std::tr1::tuple<Qt::Key, QSettings::Format>> {};
+        public ::testing::TestWithParam<Qt::Key> {};
 
 TEST_P(KeySequenceLoadSaveTestFixture, SupportsSpecialSymbols)
 {
-    int key = std::tr1::get<0>(GetParam());
-    QSettings::Format format = std::tr1::get<1>(GetParam());
+    int key = GetParam();
 
     auto filename = getTemporaryFilename();
 
     {
-        QSettings settings(filename, format);
+        QSettings settings(filename, QSettings::NativeFormat);
         KeySequence sequence;
 
         sequence.appendKey(key, 0);
@@ -106,7 +105,7 @@ TEST_P(KeySequenceLoadSaveTestFixture, SupportsSpecialSymbols)
         settings.endGroup();
     }
     {
-        QSettings settings(filename, format);
+        QSettings settings(filename, QSettings::NativeFormat);
         KeySequence sequence;
 
         settings.beginGroup("test");
@@ -125,8 +124,7 @@ TEST_P(KeySequenceLoadSaveTestFixture, SupportsSpecialSymbols)
 INSTANTIATE_TEST_CASE_P(
         KeySequenceLoadSaveTests,
         KeySequenceLoadSaveTestFixture,
-        ::testing::Combine(::testing::ValuesIn(s_key_sequence_test_keys),
-                           ::testing::Values(QSettings::NativeFormat, QSettings::IniFormat)));
+        ::testing::ValuesIn(s_key_sequence_test_keys));
 
 TEST(KeySequenceTests, ToString)
 {
