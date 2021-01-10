@@ -56,8 +56,6 @@ class Hotkey
         std::vector<Action> m_Actions;
 };
 
-typedef QList<Hotkey> HotkeyList;
-
 QTextStream& operator<<(QTextStream& outStream, const Hotkey& hotkey);
 
 #endif

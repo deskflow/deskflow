@@ -183,7 +183,7 @@ void ServerConfig::loadSettings()
         settings().setArrayIndex(i);
         Hotkey h;
         h.loadSettings(settings());
-        hotkeys().append(h);
+        hotkeys().push_back(h);
     }
     settings().endArray();
 

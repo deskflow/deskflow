@@ -121,7 +121,7 @@ void ServerConfigDialog::on_m_pButtonNewHotkey_clicked()
     HotkeyDialog dlg(this, hotkey);
     if (dlg.exec() == QDialog::Accepted)
     {
-        serverConfig().hotkeys().append(hotkey);
+        serverConfig().hotkeys().push_back(hotkey);
         m_pListHotkeys->addItem(hotkey.text());
     }
 }
@@ -140,7 +140,7 @@ void ServerConfigDialog::on_m_pButtonRemoveHotkey_clicked()
 {
     int idx = m_pListHotkeys->currentRow();
     Q_ASSERT(idx >= 0 && idx < serverConfig().hotkeys().size());
-    serverConfig().hotkeys().removeAt(idx);
+    serverConfig().hotkeys().erase(serverConfig().hotkeys().begin() + idx);
     m_pListActions->clear();
     delete m_pListHotkeys->item(idx);
 }

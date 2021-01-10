@@ -59,7 +59,7 @@ class ServerConfig : public BaseConfig
         bool switchCorner(SwitchCorner c) const { return m_SwitchCorners[static_cast<int>(c)]; }
         int switchCornerSize() const { return m_SwitchCornerSize; }
         const QList<bool>& switchCorners() const { return m_SwitchCorners; }
-        const HotkeyList& hotkeys() const { return m_Hotkeys; }
+        const std::vector<Hotkey>& hotkeys() const { return m_Hotkeys; }
         bool ignoreAutoConfigClient() const { return m_IgnoreAutoConfigClient; }
         bool enableDragAndDrop() const { return m_EnableDragAndDrop; }
         bool clipboardSharing() const { return m_ClipboardSharing; }
@@ -93,7 +93,7 @@ class ServerConfig : public BaseConfig
         void setEnableDragAndDrop(bool on) { m_EnableDragAndDrop = on; }
         void setClipboardSharing(bool on) { m_ClipboardSharing = on; }
         QList<bool>& switchCorners() { return m_SwitchCorners; }
-        HotkeyList& hotkeys() { return m_Hotkeys; }
+        std::vector<Hotkey>& hotkeys() { return m_Hotkeys; }
 
         void init();
         int adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const;
@@ -120,7 +120,7 @@ class ServerConfig : public BaseConfig
         int m_SwitchDoubleTap;
         int m_SwitchCornerSize;
         QList<bool> m_SwitchCorners;
-        HotkeyList m_Hotkeys;
+        std::vector<Hotkey> m_Hotkeys;
         QString m_ServerName;
         bool m_IgnoreAutoConfigClient;
         bool m_EnableDragAndDrop;
