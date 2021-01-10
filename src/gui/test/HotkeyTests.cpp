@@ -20,6 +20,7 @@
 #include "Utils.h"
 
 #include <QtCore/QSettings>
+#include <QtCore/QTextStream>
 
 struct TestAction
 {
@@ -146,6 +147,14 @@ namespace {
         }
         return hotkey;
     }
+
+    std::string hotkeyToStringViaTextStream(const Hotkey& hotkey)
+    {
+        QString result;
+        QTextStream stream{&result};
+        stream << hotkey;
+        return result.toStdString();
+    }
 } // namespace
 
 void doHotkeyLoadSaveTest(const TestHotKey& test_hotkey)
@@ -245,4 +254,67 @@ TEST(HotkeyLoadSaveTests, KeysMultipleAction)
         }
     };
     doHotkeyLoadSaveTest(hotkey);
+}
+
+TEST(HotkeyToTexStreamTests, Empty)
+{
+    TestHotKey hotkey;
+    ASSERT_EQ(hotkeyToStringViaTextStream(createHotkey(hotkey)), "");
+}
+
+TEST(HotkeyToTexStreamTests, KeysNoActions)
+{
+    TestHotKey hotkey = {
+        {
+            {Qt::Key_A, Qt::NoModifier},
+            {Qt::Key_B, Qt::NoModifier}
+        },
+        {}
+    };
+    ASSERT_EQ(hotkeyToStringViaTextStream(createHotkey(hotkey)), "");
+}
+
+TEST(HotkeyToTexStreamTests, KeysSingleAction)
+{
+    TestHotKey hotkey = {
+        {
+            {Qt::Key_A, Qt::NoModifier},
+            {Qt::Key_B, Qt::NoModifier}
+        },
+        {}
+    };
+    ASSERT_EQ(hotkeyToStringViaTextStream(createHotkey(hotkey)), "");
+}
+
+
+TEST(HotkeyToTexStreamTests, KeysCommaSingleAction)
+{
+    TestHotKey hotkey = {
+        {
+            {Qt::Key_A, Qt::NoModifier},
+            {Qt::Key_Comma, Qt::NoModifier},
+            {Qt::Key_B, Qt::NoModifier}
+        },
+        {
+            TestAction::createKeyDown({{Qt::Key_Z, Qt::NoModifier}})
+        }
+    };
+    ASSERT_EQ(hotkeyToStringViaTextStream(createHotkey(hotkey)),
+              "\tkeystroke(a+,+b) = keyDown(z,*)\n");
+}
+
+TEST(HotkeyToTexStreamTests, KeysMultipleAction)
+{
+    TestHotKey hotkey = {
+        {
+            {Qt::Key_A, Qt::NoModifier},
+            {Qt::Key_B, Qt::NoModifier}
+        },
+        {
+            TestAction::createKeyDown({{Qt::Key_Z, Qt::NoModifier}}),
+            TestAction::createSwitchToScreen("test_screen")
+        }
+    };
+    ASSERT_EQ(hotkeyToStringViaTextStream(createHotkey(hotkey)),
+              "\tkeystroke(a+b) = keyDown(z,*)\n\tkeystroke(a+b) = switchToScreen(test_screen)\n");
 }
