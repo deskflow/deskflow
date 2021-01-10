@@ -38,8 +38,7 @@ QBarrierApplication::~QBarrierApplication()
 
 void QBarrierApplication::commitData(QSessionManager&)
 {
-    foreach(QWidget* widget, topLevelWidgets())
-    {
+    for (QWidget* widget : topLevelWidgets()) {
         MainWindow* mainWindow = qobject_cast<MainWindow*>(widget);
         if (mainWindow)
             mainWindow->saveSettings();

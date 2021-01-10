@@ -66,8 +66,7 @@ bool Fingerprint::fileExists() const
 bool Fingerprint::isTrusted(const QString& fingerprintText)
 {
     QStringList list = readList();
-    foreach (QString trusted, list)
-    {
+    for (QString trusted : list) {
         if (trusted == fingerprintText) {
             return true;
         }

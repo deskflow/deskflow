@@ -212,17 +212,19 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
 {
     outStream << "section: screens" << endl;
 
-    foreach (const Screen& s, config.screens())
+    for (const Screen& s : config.screens()) {
         if (!s.isNull())
             s.writeScreensSection(outStream);
+    }
 
     outStream << "end" << endl << endl;
 
     outStream << "section: aliases" << endl;
 
-    foreach (const Screen& s, config.screens())
+    for (const Screen& s : config.screens()) {
         if (!s.isNull())
             s.writeAliasesSection(outStream);
+    }
 
     outStream << "end" << endl << endl;
 
@@ -270,8 +272,9 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
 
     outStream << "\t" << "switchCornerSize = " << config.switchCornerSize() << endl;
 
-    foreach(const Hotkey& hotkey, config.hotkeys())
+    for (const Hotkey& hotkey : config.hotkeys()) {
         outStream << hotkey;
+    }
 
     outStream << "end" << endl << endl;
 
@@ -282,9 +285,10 @@ int ServerConfig::numScreens() const
 {
     int rval = 0;
 
-    foreach(const Screen& s, screens())
+    for (const Screen& s : screens()) {
         if (!s.isNull())
             rval++;
+    }
 
     return rval;
 }
