@@ -1,0 +1,1 @@
+Fix build failure on mips*el and riscv64 architecture.

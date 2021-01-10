@@ -55,7 +55,11 @@ For short and simple questions or to just say hello find us on the Freenode IRC 
 
 ### Contributions
 
-At this time we are looking for developers to help fix the issues found in the issue tracker. Submit pull requests once you've polished up your patch and we'll review and possibly merge it.
+At this time we are looking for developers to help fix the issues found in the issue tracker.
+Submit pull requests once you've polished up your patch and we'll review and possibly merge it.
+
+Most pull requests will need to include a release note.
+See docs/newsfragments/README.md for documentation of how to do that.
 
 ## Distro specific packages
 

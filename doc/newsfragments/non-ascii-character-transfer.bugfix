@@ -1,0 +1,1 @@
+Fixed transfer of non-ASCII characters coming from a Windows server in certain cases (https://github.com/debauchee/barrier/issues/527).

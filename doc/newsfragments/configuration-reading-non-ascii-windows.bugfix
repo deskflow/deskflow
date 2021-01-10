@@ -1,0 +1,1 @@
+Fixed reading of configuration on Windows when the paths contain non-ASCII characters (https://github.com/debauchee/barrier/issues/976, https://github.com/debauchee/barrier/issues/974, https://github.com/debauchee/barrier/issues/444).
