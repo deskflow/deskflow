@@ -19,7 +19,7 @@
 #define DOWNLOAD_URL "http://symless.com/?source=gui"
 #define HELP_URL     "http://symless.com/help?source=gui"
 
-#include <iostream>
+#include <array>
 
 #include "MainWindow.h"
 
@@ -112,8 +112,6 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_pSynergy(NULL),
     m_SynergyState(synergyDisconnected),
     m_ServerConfig(5, 3, m_AppConfig->screenName(), this),
-    m_pTrayIcon(NULL),
-    m_pTrayIconMenu(NULL),
     m_AlreadyHidden(false),
     m_pMenuBar(NULL),
     m_pMenuFile(NULL),
@@ -228,7 +226,20 @@ MainWindow::~MainWindow()
 
 void MainWindow::open()
 {
-    createTrayIcon();
+    std::array<QAction *, 7> trayMenu = {
+        m_pActionStartSynergy,
+        m_pActionStopSynergy,
+        nullptr,
+        m_pActionMinimize,
+        m_pActionRestore,
+        nullptr,
+        m_pActionQuit
+    };
+
+    m_trayIcon.create(trayMenu, [this](QObject const *o, const char *s) {
+        connect(o, s, this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+        setIcon(synergyDisconnected);
+    });
 
     if (appConfig().getAutoHide()) {
         hide();
@@ -249,31 +260,6 @@ void MainWindow::open()
 void MainWindow::setStatus(const QString &status)
 {
     m_pStatusLabel->setText(status);
-}
-
-void MainWindow::createTrayIcon()
-{
-    m_pTrayIconMenu = new QMenu(this);
-
-    m_pTrayIconMenu->addAction(m_pActionStartSynergy);
-    m_pTrayIconMenu->addAction(m_pActionStopSynergy);
-    m_pTrayIconMenu->addSeparator();
-
-    m_pTrayIconMenu->addAction(m_pActionMinimize);
-    m_pTrayIconMenu->addAction(m_pActionRestore);
-    m_pTrayIconMenu->addSeparator();
-    m_pTrayIconMenu->addAction(m_pActionQuit);
-
-    m_pTrayIcon = new QSystemTrayIcon(this);
-    m_pTrayIcon->setContextMenu(m_pTrayIconMenu);
-    m_pTrayIcon->setToolTip("Synergy");
-
-    connect(m_pTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-            this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
-
-    setIcon(synergyDisconnected);
-
-    m_pTrayIcon->show();
 }
 
 void MainWindow::retranslateMenuBar()
@@ -366,7 +352,8 @@ void MainWindow::zeroConfToggled() {
     updateAutoConfigWidgets();
 #endif
 }
-void MainWindow::setIcon(qSynergyState state)
+
+void MainWindow::setIcon(qSynergyState state) const
 {
     QIcon icon;
 
@@ -379,8 +366,7 @@ void MainWindow::setIcon(qSynergyState state)
     icon.addFile(synergyDefaultIconFiles[state]);
 #endif
 
-    if (m_pTrayIcon)
-        m_pTrayIcon->setIcon(icon);
+    m_trayIcon.set(icon);
 }
 
 void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
@@ -847,7 +833,7 @@ QString MainWindow::configFilename()
     return filename;
 }
 
-QString MainWindow::address()
+QString MainWindow::address() const
 {
     QString i = appConfig().networkInterface();
     return (!i.isEmpty() ? i : "") + ":" + QString::number(appConfig().port());
