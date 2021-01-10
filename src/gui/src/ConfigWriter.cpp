@@ -204,8 +204,8 @@ namespace GUI {
                 query.setWindowTitle(tr("Save global settings."));
                 query.setText(tr("This will overwrite the settings of anybody else that uses this computer."));
 
-                query.addButton(QMessageBox::Save);
-                const auto* pBtnCancel    =  query.addButton(QMessageBox::Cancel);
+                query.addButton(tr("Save for all users"), QMessageBox::ActionRole);
+                const auto* pBtnCancel    =  query.addButton(tr("Do not save"), QMessageBox::ActionRole);
                 const auto* pBtnSaveLocal =  query.addButton(tr("Save to user"), QMessageBox::ActionRole);
 
                 query.setDefaultButton(QMessageBox::Cancel);
