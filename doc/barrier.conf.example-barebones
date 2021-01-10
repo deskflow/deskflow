@@ -1,0 +1,17 @@
+# barebones barrier.conf example
+# for two computers side by side
+# replace screen.name.server and screen.name.client with your screen names from gui
+# there's a 50/50 chance you'll want to swap left and right
+# save this as barrier.conf in your home folder and "Use existing configuration" on server
+
+section: screens
+  screen.name.server:
+  screen.name.client:
+end
+
+section: links
+  screen.name.server:
+    left = screen.name.client
+  screen.name.client:
+    right = screen.name.server
+end
