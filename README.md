@@ -1,6 +1,6 @@
 # Barrier
 
-Eliminate the barrier between your machines. 
+Eliminate the barrier between your machines.
 Find [releases for windows and macOS here](https://github.com/debauchee/barrier/releases).
 Your distro probably already has barrier packaged for it, see [distro specific packages](#distro-specific-packages)
 below for a list. Alternatively, we also provide a [flatpak](https://github.com/flathub/com.github.debauchee.barrier)
@@ -32,7 +32,9 @@ Barrier was forked from Symless's Synergy 1.9 codebase. Synergy was a commercial
 
 ### What's different?
 
-Whereas Synergy has moved beyond its goals from the 1.x era, Barrier aims to maintain that simplicity. Barrier will let you use your keyboard and mouse from machine A to control machine B (or more). It's that simple.
+Whereas Synergy has moved beyond its goals from the 1.x era, Barrier aims to maintain that simplicity.
+Barrier will let you use your keyboard and mouse from one computer to control one or more other computers.
+That's it.
 
 ### Project goals
 
