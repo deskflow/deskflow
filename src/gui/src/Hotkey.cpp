@@ -47,7 +47,7 @@ void Hotkey::loadSettings(QSettings& settings)
         settings.setArrayIndex(i);
         Action a;
         a.loadSettings(settings);
-        m_Actions.append(a);
+        m_Actions.push_back(a);
     }
 
     settings.endArray();

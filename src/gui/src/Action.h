@@ -87,8 +87,6 @@ class Action
         static const char* m_LockCursorModeNames[];
 };
 
-typedef QList<Action> ActionList;
-
 QTextStream& operator<<(QTextStream& outStream, const Action& action);
 
 #endif

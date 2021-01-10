@@ -27,6 +27,8 @@
 #include "Action.h"
 #include "KeySequence.h"
 
+#include <vector>
+
 class HotkeyDialog;
 class ServerConfigDialog;
 class QSettings;
@@ -40,10 +42,10 @@ class Hotkey
         const KeySequence& keySequence() const { return m_KeySequence; }
         void setKeySequence(const KeySequence& seq) { m_KeySequence = seq; }
 
-        const ActionList& actions() const { return m_Actions; }
-        void appendAction(const Action& action) { m_Actions.append(action); }
+        const std::vector<Action>& actions() const { return m_Actions; }
+        void appendAction(const Action& action) { m_Actions.push_back(action); }
         void setAction(int index, const Action& action) { m_Actions[index] = action; }
-        void removeAction(int index) { m_Actions.removeAt(index); }
+        void removeAction(int index) { m_Actions.erase(m_Actions.begin() + index); }
 
         void loadSettings(QSettings& settings);
         void saveSettings(QSettings& settings) const;
@@ -51,10 +53,8 @@ class Hotkey
 
     private:
         KeySequence m_KeySequence;
-        ActionList m_Actions;
+        std::vector<Action> m_Actions;
 };
-
-typedef QList<Hotkey> HotkeyList;
 
 QTextStream& operator<<(QTextStream& outStream, const Hotkey& hotkey);
 

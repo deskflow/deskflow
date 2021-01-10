@@ -44,7 +44,7 @@ class ServerConfig : public BaseConfig
         ~ServerConfig();
 
     public:
-        const ScreenList& screens() const { return m_Screens; }
+        const std::vector<Screen>& screens() const { return m_Screens; }
         int numColumns() const { return m_NumColumns; }
         int numRows() const { return m_NumRows; }
         bool hasHeartbeat() const { return m_HasHeartbeat; }
@@ -59,7 +59,7 @@ class ServerConfig : public BaseConfig
         bool switchCorner(SwitchCorner c) const { return m_SwitchCorners[static_cast<int>(c)]; }
         int switchCornerSize() const { return m_SwitchCornerSize; }
         const QList<bool>& switchCorners() const { return m_SwitchCorners; }
-        const HotkeyList& hotkeys() const { return m_Hotkeys; }
+        const std::vector<Hotkey>& hotkeys() const { return m_Hotkeys; }
         bool ignoreAutoConfigClient() const { return m_IgnoreAutoConfigClient; }
         bool enableDragAndDrop() const { return m_EnableDragAndDrop; }
         bool clipboardSharing() const { return m_ClipboardSharing; }
@@ -73,9 +73,9 @@ class ServerConfig : public BaseConfig
 
     protected:
         QSettings& settings() { return *m_pSettings; }
-        ScreenList& screens() { return m_Screens; }
-        void setScreens(const ScreenList& screens) { m_Screens = screens; }
-        void addScreen(const Screen& screen) { m_Screens.append(screen); }
+        std::vector<Screen>& screens() { return m_Screens; }
+        void setScreens(const std::vector<Screen>& screens) { m_Screens = screens; }
+        void addScreen(const Screen& screen) { m_Screens.push_back(screen); }
         void setNumColumns(int n) { m_NumColumns = n; }
         void setNumRows(int n) { m_NumRows = n; }
         void haveHeartbeat(bool on) { m_HasHeartbeat = on; }
@@ -93,7 +93,7 @@ class ServerConfig : public BaseConfig
         void setEnableDragAndDrop(bool on) { m_EnableDragAndDrop = on; }
         void setClipboardSharing(bool on) { m_ClipboardSharing = on; }
         QList<bool>& switchCorners() { return m_SwitchCorners; }
-        HotkeyList& hotkeys() { return m_Hotkeys; }
+        std::vector<Hotkey>& hotkeys() { return m_Hotkeys; }
 
         void init();
         int adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const;
@@ -106,7 +106,7 @@ class ServerConfig : public BaseConfig
 
     private:
         QSettings* m_pSettings;
-        ScreenList m_Screens;
+        std::vector<Screen> m_Screens;
         int m_NumColumns;
         int m_NumRows;
         bool m_HasHeartbeat;
@@ -120,7 +120,7 @@ class ServerConfig : public BaseConfig
         int m_SwitchDoubleTap;
         int m_SwitchCornerSize;
         QList<bool> m_SwitchCorners;
-        HotkeyList m_Hotkeys;
+        std::vector<Hotkey> m_Hotkeys;
         QString m_ServerName;
         bool m_IgnoreAutoConfigClient;
         bool m_EnableDragAndDrop;
