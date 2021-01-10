@@ -8,16 +8,19 @@ set (CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # files that are used both in tests and the app
 set(GUI_COMMON_SOURCE_FILES
+    src/Action.cpp
+    src/Hotkey.cpp
     src/KeySequence.cpp
 )
 
 set(GUI_COMMON_HEADER_FILES
+    src/Action.h
+    src/Hotkey.h
     src/KeySequence.h
 )
 
 set(GUI_SOURCE_FILES
     src/AboutDialog.cpp
-    src/Action.cpp
     src/ActionDialog.cpp
     src/AddClientDialog.cpp
     src/AppConfig.cpp
@@ -27,7 +30,6 @@ set(GUI_SOURCE_FILES
     src/DataDownloader.cpp
     src/DisplayIsValid.cpp
     src/Fingerprint.cpp
-    src/Hotkey.cpp
     src/HotkeyDialog.cpp
     src/IpcClient.cpp
     src/Ipc.cpp
@@ -60,7 +62,6 @@ set(GUI_SOURCE_FILES
 set(GUI_HEADER_FILES
     src/AboutDialog.h
     src/ActionDialog.h
-    src/Action.h
     src/AddClientDialog.h
     src/AppConfig.h
     src/BarrierLocale.h
@@ -71,7 +72,6 @@ set(GUI_HEADER_FILES
     src/ElevateMode.h
     src/Fingerprint.h
     src/HotkeyDialog.h
-    src/Hotkey.h
     src/IpcClient.h
     src/Ipc.h
     src/IpcReader.h
@@ -164,6 +164,7 @@ endif()
 if (BARRIER_BUILD_TESTS)
     set(GUI_TEST_SOURCE_FILES
         test/KeySequenceTests.cpp
+        test/HotkeyTests.cpp
         test/main.cpp
     )
 
@@ -176,5 +177,5 @@ if (BARRIER_BUILD_TESTS)
     add_test(guiunittests guiunittests)
 
     target_include_directories(guiunittests PUBLIC ../../ext)
-    target_link_libraries(guiunittests gtest gmock Qt5::Core Qt5::Widgets Qt5::Network pthread)
+    target_link_libraries(guiunittests gtest gmock Qt5::Core Qt5::Widgets Qt5::Network ${libs})
 endif()

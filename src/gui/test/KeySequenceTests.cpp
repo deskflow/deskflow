@@ -15,6 +15,7 @@
 */
 
 #include "../src/KeySequence.h"
+#include "Utils.h"
 #include <gtest/gtest.h>
 #include <cstdio>
 
@@ -74,13 +75,15 @@ namespace {
         Qt::Key_Select,
     };
 
-    QString getTemporaryFilename()
+    std::string keySequenceToString(const std::vector<TestKey>& key_pairs)
     {
-        QTemporaryFile temp_file;
-        temp_file.open();
-        return temp_file.fileName();
+        KeySequence sequence;
+        for (auto key_pair : key_pairs) {
+            sequence.appendKey(key_pair.key, key_pair.modifier);
+        }
+        return sequence.toString().toStdString();
     }
-}
+} // namespace
 
 class KeySequenceLoadSaveTestFixture :
         public ::testing::TestWithParam<std::tr1::tuple<Qt::Key, QSettings::Format>> {};
@@ -124,3 +127,21 @@ INSTANTIATE_TEST_CASE_P(
         KeySequenceLoadSaveTestFixture,
         ::testing::Combine(::testing::ValuesIn(s_key_sequence_test_keys),
                            ::testing::Values(QSettings::NativeFormat, QSettings::IniFormat)));
+
+TEST(KeySequenceTests, ToString)
+{
+    ASSERT_EQ(keySequenceToString({{Qt::Key_Menu, Qt::MetaModifier}}),
+              "Meta");
+    ASSERT_EQ(keySequenceToString({{Qt::Key_A, 0}, {Qt::Key_B, 0}}),
+              "a+b");
+    ASSERT_EQ(keySequenceToString({{Qt::Key_A, 0}, {Qt::Key_Comma, 0}, {Qt::Key_B, 0}}),
+              "a+,+b");
+    ASSERT_EQ(keySequenceToString({{Qt::Key_A, 0}, {Qt::Key_Semicolon, 0}, {Qt::Key_B, 0}}),
+              "a+;+b");
+    ASSERT_EQ(keySequenceToString({{Qt::Key_A, 0}, {Qt::Key_Shift, Qt::ShiftModifier},
+                                   {Qt::Key_0, Qt::ShiftModifier}}),
+              "a+Shift+0");
+    ASSERT_EQ(keySequenceToString({{Qt::Key_A, 0}, {Qt::Key_Control, Qt::ControlModifier},
+                                   {Qt::Key_0, Qt::ControlModifier}}),
+              "a+Control+0");
+}

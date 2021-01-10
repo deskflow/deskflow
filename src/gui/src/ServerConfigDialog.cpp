@@ -183,7 +183,7 @@ void ServerConfigDialog::on_m_pButtonNewAction_clicked()
     ActionDialog dlg(this, serverConfig(), hotkey, action);
     if (dlg.exec() == QDialog::Accepted)
     {
-        hotkey.actions().append(action);
+        hotkey.appendAction(action);
         m_pListActions->addItem(action.text());
     }
 }
@@ -196,11 +196,13 @@ void ServerConfigDialog::on_m_pButtonEditAction_clicked()
 
     int idxAction = m_pListActions->currentRow();
     Q_ASSERT(idxAction >= 0 && idxAction < hotkey.actions().size());
-    Action& action = hotkey.actions()[idxAction];
+    Action action = hotkey.actions()[idxAction];
 
     ActionDialog dlg(this, serverConfig(), hotkey, action);
-    if (dlg.exec() == QDialog::Accepted)
+    if (dlg.exec() == QDialog::Accepted) {
+        hotkey.setAction(idxAction, action);
         m_pListActions->currentItem()->setText(action.text());
+    }
 }
 
 void ServerConfigDialog::on_m_pButtonRemoveAction_clicked()
@@ -212,7 +214,7 @@ void ServerConfigDialog::on_m_pButtonRemoveAction_clicked()
     int idxAction = m_pListActions->currentRow();
     Q_ASSERT(idxAction >= 0 && idxAction < hotkey.actions().size());
 
-    hotkey.actions().removeAt(idxAction);
+    hotkey.removeAction(idxAction);
     delete m_pListActions->currentItem();
 }
 

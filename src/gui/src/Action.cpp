@@ -51,7 +51,7 @@ QString Action::text() const
      * in the end but now argument inside. If you need a function with no
      * argument, it can not have () in the end.
      */
-    QString text = QString(m_ActionTypeNames[keySequence().isMouseButton() ?
+    QString text = QString(m_ActionTypeNames[m_KeySequence.isMouseButton() ?
                                              type() + int(mouseDown) : type()]);
 
     switch (type())
@@ -61,9 +61,9 @@ QString Action::text() const
         case keystroke:
             {
                 text += "(";
-                text += keySequence().toString();
+                text += m_KeySequence.toString();
 
-                if (!keySequence().isMouseButton())
+                if (!m_KeySequence.isMouseButton())
                 {
                     const QStringList& screens = typeScreenNames();
                     if (haveScreens() && !screens.isEmpty())
@@ -116,15 +116,15 @@ QString Action::text() const
 
 void Action::loadSettings(QSettings& settings)
 {
-    keySequence().loadSettings(settings);
+    m_KeySequence.loadSettings(settings);
     setType(settings.value("type", keyDown).toInt());
 
-    typeScreenNames().clear();
+    m_TypeScreenNames.clear();
     int numTypeScreens = settings.beginReadArray("typeScreenNames");
     for (int i = 0; i < numTypeScreens; i++)
     {
         settings.setArrayIndex(i);
-        typeScreenNames().append(settings.value("typeScreenName").toString());
+        m_TypeScreenNames.append(settings.value("typeScreenName").toString());
     }
     settings.endArray();
 
@@ -137,7 +137,7 @@ void Action::loadSettings(QSettings& settings)
 
 void Action::saveSettings(QSettings& settings) const
 {
-    keySequence().saveSettings(settings);
+    m_KeySequence.saveSettings(settings);
     settings.setValue("type", type());
 
     settings.beginWriteArray("typeScreenNames");

@@ -83,9 +83,9 @@ void ActionDialog::accept()
     m_Action.setType(m_pButtonGroupType->checkedId());
     m_Action.setHaveScreens(m_pGroupBoxScreens->isChecked());
 
-    m_Action.typeScreenNames().clear();
+    m_Action.clearTypeScreenNames();
     foreach(const QListWidgetItem* pItem, m_pListScreens->selectedItems())
-        m_Action.typeScreenNames().append(pItem->text());
+        m_Action.appendTypeScreenName(pItem->text());
 
     m_Action.setSwitchScreenName(m_pComboSwitchToScreen->currentText());
     m_Action.setSwitchDirection(m_pComboSwitchInDirection->currentIndex());
