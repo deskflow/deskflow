@@ -1285,6 +1285,45 @@ static const KeySym s_map1008FF[] =
     /* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
 };
 
+// map Sun keyboard keys to KeyIDs
+// This is based on the the "Internet" keymap plus the missing keys
+// Copy/Cut/Open/Paste/Props/Front
+static const KeySym s_map1009FF[] =
+{
+    /* 0x00 */ 0, 0, kKeyBrightnessUp, kKeyBrightnessDown, 0, 0, 0, 0,
+    /* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x10 */ 0, kKeyAudioDown, kKeyAudioMute, kKeyAudioUp,
+    /* 0x14 */ kKeyAudioPlay, kKeyAudioStop, kKeyAudioPrev, kKeyAudioNext,
+    /* 0x18 */ kKeyWWWHome, kKeyAppMail, 0, kKeyWWWSearch, 0, 0, 0, 0,
+    /* 0x20 */ 0, 0, 0, 0, 0, 0, kKeyWWWBack, kKeyWWWForward,
+    /* 0x28 */ kKeyWWWStop, kKeyWWWRefresh, 0, 0, kKeyEject, 0, 0, 0,
+    /* 0x30 */ kKeyWWWFavorites, 0, kKeyAppMedia, 0, 0, 0, 0, 0,
+    /* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x40 */ kKeyAppUser1, kKeyAppUser2, 0, 0, 0, 0, 0, 0,
+    /* 0x48 */ 0, 0, kKeyMissionControl, kKeyLaunchpad, 0, 0, 0, 0,
+    /* 0x50 */ 0, 0, 0, 0, 0, 0, 0, kKeyCopy,
+    /* 0x58 */ kKeyCut, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x68 */ 0, 0, 0, kKeyOpen, 0, kKeyPaste, 0, 0,
+    /* 0x70 */ kKeyProps, kKeyFront, 0, 0, 0, 0, 0, 0,
+    /* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
+};
 
 //
 // XWindowsUtil
@@ -1545,6 +1584,10 @@ XWindowsUtil::mapKeySymToKeyID(KeySym k)
     case 0x1008ff00:
         // "Internet" keys
         return s_map1008FF[k & 0xff];
+
+    case 0x1009ff00:
+        // Additional Left-side keys provided by Sun Microsystems USB keyboards
+        return s_map1009FF[k & 0xff];
 
     default: {
         // lookup character in table

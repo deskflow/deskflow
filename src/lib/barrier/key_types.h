@@ -236,6 +236,13 @@ static const KeyID		kKeySuper_R		= 0xEFEC;	/* Right super */
 static const KeyID		kKeyHyper_L		= 0xEFED;	/* Left hyper */
 static const KeyID		kKeyHyper_R		= 0xEFEE;	/* Right hyper */
 
+static const KeyID		kKeyCopy		= 0x1008EF57;
+static const KeyID		kKeyCut			= 0x1008EF58;
+static const KeyID		kKeyOpen		= 0x1008EF6b;
+static const KeyID		kKeyPaste		= 0x1008EF6d;
+static const KeyID		kKeyProps		= 0x1005EF70;
+static const KeyID		kKeyFront		= 0x1005EF71;
+
 // multi-key character composition
 static const KeyID		kKeyCompose			= 0xEF20;
 static const KeyID		kKeyDeadGrave		= 0x0300;
