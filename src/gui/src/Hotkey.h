@@ -49,7 +49,6 @@ class Hotkey
         void saveSettings(QSettings& settings) const;
 
     protected:
-        KeySequence& keySequence() { return m_KeySequence; }
         void setKeySequence(const KeySequence& seq) { m_KeySequence = seq; }
         ActionList& actions() { return m_Actions; }
 
