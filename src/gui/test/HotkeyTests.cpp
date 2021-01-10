@@ -148,13 +148,13 @@ namespace {
     }
 } // namespace
 
-void doHotkeyLoadSaveTest(const TestHotKey& test_hotkey, QSettings::Format format)
+void doHotkeyLoadSaveTest(const TestHotKey& test_hotkey)
 {
     auto filename = getTemporaryFilename();
 
     Hotkey hotkey_before, hotkey_after;
     {
-        QSettings settings(filename, format);
+        QSettings settings(filename, QSettings::NativeFormat);
 
         hotkey_before = createHotkey(test_hotkey);
 
@@ -163,7 +163,7 @@ void doHotkeyLoadSaveTest(const TestHotKey& test_hotkey, QSettings::Format forma
         settings.endGroup();
     }
     {
-        QSettings settings(filename, format);
+        QSettings settings(filename, QSettings::NativeFormat);
 
         settings.beginGroup("test");
         hotkey_after.loadSettings(settings);
@@ -198,15 +198,13 @@ void doHotkeyLoadSaveTest(const TestHotKey& test_hotkey, QSettings::Format forma
 TEST(HotkeyLoadSaveTests, Empty)
 {
     TestHotKey hotkey;
-    doHotkeyLoadSaveTest(hotkey, QSettings::NativeFormat);
-    doHotkeyLoadSaveTest(hotkey, QSettings::IniFormat);
+    doHotkeyLoadSaveTest(hotkey);
 }
 
 TEST(HotkeyLoadSaveTests, KeysNoActions)
 {
     TestHotKey hotkey = {{{Qt::Key_A, Qt::NoModifier}, {Qt::Key_B, Qt::NoModifier}}, {}};
-    doHotkeyLoadSaveTest(hotkey, QSettings::NativeFormat);
-    doHotkeyLoadSaveTest(hotkey, QSettings::IniFormat);
+    doHotkeyLoadSaveTest(hotkey);
 }
 
 TEST(HotkeyLoadSaveTests, CommaKeyNoActions)
@@ -217,8 +215,7 @@ TEST(HotkeyLoadSaveTests, CommaKeyNoActions)
             {Qt::Key_Comma, Qt::NoModifier},
             {Qt::Key_B, Qt::NoModifier}
         }, {}};
-    doHotkeyLoadSaveTest(hotkey, QSettings::NativeFormat);
-    doHotkeyLoadSaveTest(hotkey, QSettings::IniFormat);
+    doHotkeyLoadSaveTest(hotkey);
 }
 
 TEST(HotkeyLoadSaveTests, KeysSingleAction)
@@ -232,8 +229,7 @@ TEST(HotkeyLoadSaveTests, KeysSingleAction)
             TestAction::createKeyDown({{Qt::Key_Z, Qt::NoModifier}})
         }
     };
-    doHotkeyLoadSaveTest(hotkey, QSettings::NativeFormat);
-    doHotkeyLoadSaveTest(hotkey, QSettings::IniFormat);
+    doHotkeyLoadSaveTest(hotkey);
 }
 
 TEST(HotkeyLoadSaveTests, KeysMultipleAction)
@@ -248,6 +244,5 @@ TEST(HotkeyLoadSaveTests, KeysMultipleAction)
             TestAction::createSwitchToScreen("test_screen")
         }
     };
-    doHotkeyLoadSaveTest(hotkey, QSettings::NativeFormat);
-    doHotkeyLoadSaveTest(hotkey, QSettings::IniFormat);
+    doHotkeyLoadSaveTest(hotkey);
 }
