@@ -96,39 +96,42 @@ struct TestHotKey
     std::vector<TestAction> actions;
 };
 
-Action createAction(const TestAction& test_action)
-{
-    Action action;
-    action.setType(test_action.type);
+namespace {
 
-    switch (test_action.type) {
-        case Action::keyDown:
-        case Action::keyUp:
-        case Action::keystroke: {
-            KeySequence sequence;
-            for (auto key : test_action.keys) {
-                sequence.appendKey(key.key, key.modifier);
+    Action createAction(const TestAction& test_action)
+    {
+        Action action;
+        action.setType(test_action.type);
+
+        switch (test_action.type) {
+            case Action::keyDown:
+            case Action::keyUp:
+            case Action::keystroke: {
+                KeySequence sequence;
+                for (auto key : test_action.keys) {
+                    sequence.appendKey(key.key, key.modifier);
+                }
+                action.setKeySequence(sequence);
+                for (const auto& type_screen_name : test_action.type_screen_names) {
+                    action.appendTypeScreenName(QString::fromStdString(type_screen_name));
+                }
+                break;
             }
-            action.setKeySequence(sequence);
-            for (const auto& type_screen_name : test_action.type_screen_names) {
-                action.appendTypeScreenName(QString::fromStdString(type_screen_name));
-            }
-            break;
+            case Action::switchToScreen:
+                action.setSwitchScreenName(QString::fromStdString(test_action.screen_name));
+                break;
+            case Action::toggleScreen:
+                break;
+            case Action::switchInDirection:
+                action.setSwitchDirection(test_action.switch_direction);
+                break;
+            case Action::lockCursorToScreen:
+                action.setLockCursorMode(test_action.lock_cursor_mode);
+                break;
         }
-        case Action::switchToScreen:
-            action.setSwitchScreenName(QString::fromStdString(test_action.screen_name));
-            break;
-        case Action::toggleScreen:
-            break;
-        case Action::switchInDirection:
-            action.setSwitchDirection(test_action.switch_direction);
-            break;
-        case Action::lockCursorToScreen:
-            action.setLockCursorMode(test_action.lock_cursor_mode);
-            break;
+        return action;
     }
-    return action;
-}
+} // namespace
 
 void doHotkeyLoadSaveTest(const TestHotKey& test_hotkey, QSettings::Format format)
 {
