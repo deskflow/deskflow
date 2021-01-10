@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>368</width>
-    <height>380</height>
+    <height>428</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -123,6 +123,13 @@
        <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
         <property name="text">
          <string>&amp;Hide on startup</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxAutoStart">
+        <property name="text">
+         <string>Start &amp;Barrier on startup</string>
         </property>
        </widget>
       </item>
@@ -322,6 +329,7 @@
   <tabstop>m_pComboElevate</tabstop>
   <tabstop>m_pCheckBoxMinimizeToTray</tabstop>
   <tabstop>m_pCheckBoxAutoHide</tabstop>
+  <tabstop>m_pCheckBoxAutoStart</tabstop>
   <tabstop>m_pSpinBoxPort</tabstop>
   <tabstop>m_pLineEditInterface</tabstop>
   <tabstop>m_pCheckBoxEnableCrypto</tabstop>

@@ -201,7 +201,7 @@ void MainWindow::open()
     // only start if user has previously started. this stops the gui from
     // auto hiding before the user has configured barrier (which of course
     // confuses first time users, who think barrier has crashed).
-    if (appConfig().startedBefore() && appConfig().processMode() == Desktop) {
+    if (appConfig().startedBefore() && appConfig().getAutoStart()) {
         m_SuppressEmptyServerWarning = true;
         startBarrier();
         m_SuppressEmptyServerWarning = false;

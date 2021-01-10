@@ -94,6 +94,9 @@ class AppConfig: public QObject
         void setAutoHide(bool b);
         bool getAutoHide();
 
+        void setAutoStart(bool b);
+        bool getAutoStart();
+
         void setMinimizeToTray(bool b);
         bool getMinimizeToTray();
 
@@ -130,6 +133,7 @@ protected:
         bool m_AutoConfigPrompted;
         bool m_CryptoEnabled;
         bool m_AutoHide;
+        bool m_AutoStart;
         bool m_MinimizeToTray;
 
         static const char m_BarriersName[];
