@@ -20,6 +20,14 @@
 #include <QtCore/QFile>
 #include <QtCore/QTemporaryFile>
 
+struct TestKey
+{
+    int key = 0;
+    int modifier = Qt::NoModifier;
+
+    TestKey(int key, int modifier) : key{key}, modifier{modifier} {}
+};
+
 inline QString getTemporaryFilename()
 {
     QTemporaryFile temp_file;
