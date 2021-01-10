@@ -1,0 +1,1 @@
+Barrier will now regenerate server certificate if it's invalid instead of failing to launch (https://github.com/debauchee/barrier/issues/802)
