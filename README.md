@@ -30,6 +30,8 @@ Barrier is software that mimics the functionality of a KVM switch, which histori
 
 Barrier was forked from Symless's Synergy 1.9 codebase. Synergy was a commercialized reimplementation of the original CosmoSynergy written by Chris Schoeneman.
 
+At the moment, barrier is not compatible with synergy. Barrier needs to be installed on all machines that will share keyboard and mouse.
+
 ### What's different?
 
 Whereas Synergy has moved beyond its goals from the 1.x era, Barrier aims to maintain that simplicity. Barrier will let you use your keyboard and mouse from machine A to control machine B (or more). It's that simple.
