@@ -101,8 +101,6 @@ class Screen : public BaseConfig
         bool m_Swapped;
 };
 
-typedef QList<Screen> ScreenList;
-
 QDataStream& operator<<(QDataStream& outStream, const Screen& screen);
 QDataStream& operator>>(QDataStream& inStream, Screen& screen);
 

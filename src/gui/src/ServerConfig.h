@@ -44,7 +44,7 @@ class ServerConfig : public BaseConfig
         ~ServerConfig();
 
     public:
-        const ScreenList& screens() const { return m_Screens; }
+        const std::vector<Screen>& screens() const { return m_Screens; }
         int numColumns() const { return m_NumColumns; }
         int numRows() const { return m_NumRows; }
         bool hasHeartbeat() const { return m_HasHeartbeat; }
@@ -73,9 +73,9 @@ class ServerConfig : public BaseConfig
 
     protected:
         QSettings& settings() { return *m_pSettings; }
-        ScreenList& screens() { return m_Screens; }
-        void setScreens(const ScreenList& screens) { m_Screens = screens; }
-        void addScreen(const Screen& screen) { m_Screens.append(screen); }
+        std::vector<Screen>& screens() { return m_Screens; }
+        void setScreens(const std::vector<Screen>& screens) { m_Screens = screens; }
+        void addScreen(const Screen& screen) { m_Screens.push_back(screen); }
         void setNumColumns(int n) { m_NumColumns = n; }
         void setNumRows(int n) { m_NumRows = n; }
         void haveHeartbeat(bool on) { m_HasHeartbeat = on; }
@@ -106,7 +106,7 @@ class ServerConfig : public BaseConfig
 
     private:
         QSettings* m_pSettings;
-        ScreenList m_Screens;
+        std::vector<Screen> m_Screens;
         int m_NumColumns;
         int m_NumRows;
         bool m_HasHeartbeat;
