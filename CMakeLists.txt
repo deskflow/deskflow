@@ -310,31 +310,7 @@ endif()
 #
 # OpenSSL
 #
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    set (OPENSSL_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/windows)
-    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set (OPENSSL_ROOT "${OPENSSL_ROOT}/x64")
-    else()
-        set (OPENSSL_ROOT "${OPENSSL_ROOT}/x86")
-    endif()
-
-    include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
-    set (OPENSSL_LIBS
-        ${OPENSSL_ROOT}/lib/libssl.lib
-        ${OPENSSL_ROOT}/lib/libcrypto.lib
-    )
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set (OPENSSL_ROOT /usr/local/opt/openssl)
-    include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
-    set (OPENSSL_LIBS
-        ${OPENSSL_ROOT}/lib/libssl.a
-        ${OPENSSL_ROOT}/lib/libcrypto.a
-    )
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
-    set (OPENSSL_LIBS ssl crypto)
-else()
-    message (FATAL_ERROR "Couldn't find OpenSSL")
-endif()
+find_package(OpenSSL REQUIRED)
 
 #
 # Check submodules
@@ -412,43 +388,43 @@ endmacro(generate_versionfile)
 
 
 if (${SYNERGY_BUILD_LEGACY_INSTALLER})
-#
-# macOS app Bundle
-#
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set (CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
-    set (SYNERGY_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
-    set (SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
-    set (SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
-    set (SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
+    #
+    # macOS app Bundle
+    #
+    if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        set (CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
+        set (SYNERGY_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
+        set (SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
+        set (SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
+        set (SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
 
-    generate_versionfile()
-    configure_files (${SYNERGY_BUNDLE_SOURCE_DIR} ${SYNERGY_BUNDLE_DIR})
-endif()
-
-#
-# Windows installer
-#
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    message (STATUS "Configuring the v1 installer")
-    generate_versionfile()
-    set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
-    configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
-endif()
-
-#
-# Linux installation
-#
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
-    configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
-    install(FILES res/synergy.svg DESTINATION share/icons/hicolor/scalable/apps)
-    if("${VERSION_MAJOR}" STREQUAL "2")
-        install(FILES res/synergy2.desktop DESTINATION share/applications)
-    else()
-        install(FILES res/synergy.desktop DESTINATION share/applications)
+        generate_versionfile()
+        configure_files (${SYNERGY_BUNDLE_SOURCE_DIR} ${SYNERGY_BUNDLE_DIR})
     endif()
-    generate_versionfile()
-endif()
+
+    #
+    # Windows installer
+    #
+    if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        message (STATUS "Configuring the v1 installer")
+        generate_versionfile()
+        set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
+        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
+    endif()
+
+    #
+    # Linux installation
+    #
+    if (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
+        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
+        install(FILES res/synergy.svg DESTINATION share/icons/hicolor/scalable/apps)
+        if("${VERSION_MAJOR}" STREQUAL "2")
+            install(FILES res/synergy2.desktop DESTINATION share/applications)
+        else()
+            install(FILES res/synergy.desktop DESTINATION share/applications)
+        endif()
+        generate_versionfile()
+    endif()
 
 else()
     message (STATUS "NOT configuring the v1 installer")

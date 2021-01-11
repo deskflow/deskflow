@@ -47,8 +47,9 @@ if (SYNERGY_ADD_HEADERS)
 endif()
 
 add_executable(synergyc ${sources})
+target_include_directories(synergyc PUBLIC ${OPENSSL_INCLUDE_DIR})
 target_link_libraries(synergyc
-    arch base client common io mt net ipc platform server synlib ${libs} ${OPENSSL_LIBS})
+    arch base client common io mt net ipc platform server synlib ${libs} ${OPENSSL_LIBRARIES})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     install (TARGETS synergyc DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})

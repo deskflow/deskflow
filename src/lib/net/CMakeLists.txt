@@ -22,7 +22,6 @@ if (SYNERGY_ADD_HEADERS)
 endif()
 
 add_library(net STATIC ${sources})
-
-if (UNIX)
-    target_link_libraries(net mt io ${OPENSSL_LIBS})
-endif()
+target_include_directories(net PUBLIC ${OPENSSL_INCLUDE_DIR})
+target_link_libraries(net
+    mt io ${OPENSSL_LIBRARIES})

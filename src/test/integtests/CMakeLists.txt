@@ -67,5 +67,6 @@ if (UNIX)
 endif()
 
 add_executable(integtests ${sources})
+target_include_directories(integtests PUBLIC ${OPENSSL_INCLUDE_DIR})
 target_link_libraries(integtests
-    arch base client common io ipc mt net platform server synlib gtest gmock ${libs} ${OPENSSL_LIBS})
+    arch base client common io ipc mt net platform server synlib gtest gmock ${libs} ${OPENSSL_LIBRARIES})
