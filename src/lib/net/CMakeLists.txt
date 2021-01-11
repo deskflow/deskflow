@@ -25,3 +25,6 @@ add_library(net STATIC ${sources})
 target_include_directories(net PUBLIC ${OPENSSL_INCLUDE_DIR})
 target_link_libraries(net
     mt io ${OPENSSL_LIBRARIES})
+if(WIN32)
+    target_link_libraries(net Crypt32 ws2_32)
+endif()

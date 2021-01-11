@@ -310,6 +310,7 @@ endif()
 #
 # OpenSSL
 #
+set(OPENSSL_USE_STATIC_LIBS TRUE)
 find_package(OpenSSL REQUIRED)
 
 #
