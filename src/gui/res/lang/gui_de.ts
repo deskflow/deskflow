@@ -957,7 +957,7 @@ Klicken sie doppelt auf eine Anzeige um die Einstellungen zu bearbeiten.</transl
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="274"/>
         <source>Advanced server settings</source>
-        <translation type="finished">Erwiterte Servereinstellungen</translation>
+        <translation type="finished">Erweiterte Servereinstellungen</translation>
     </message>
     <message>
         <location filename="res/ServerConfigDialogBase.ui" line="280"/>
