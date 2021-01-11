@@ -16,7 +16,7 @@ public:
     void create(TActionContainer const &actionContainer, TConnector const &connector) 
     {
         m_connector = connector;
-        m_pTrayIconMenu.reset(new QMenu());
+        m_pTrayIconMenu = std::make_unique<QMenu>();
 
         for (auto action: actionContainer) {
             if (action) {
@@ -27,7 +27,7 @@ public:
             }
         }
 
-        m_pTrayIcon.reset(new QSystemTrayIcon());
+        m_pTrayIcon = std::make_unique<QSystemTrayIcon>();
         m_pTrayIcon->setContextMenu(m_pTrayIconMenu.get());
         m_pTrayIcon->setToolTip("Synergy");
 
