@@ -1,5 +1,6 @@
 #! /bin/zsh
 
+export SYNERGY_NO_LEGACY=1
 mkdir -p build
 pushd build
 cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl \
