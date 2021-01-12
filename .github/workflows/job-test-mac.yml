@@ -1,4 +1,4 @@
-name: Debian
+name: macOS
 
 on:
   push:
@@ -8,26 +8,22 @@ on:
 
 jobs:
   build-arch64:
-    runs-on: ubuntu-latest
-    container: symless/synergy-core:${{ matrix.distro }}
+    runs-on: macos-10.15
+
     env:
       GIT_COMMIT: ${{ github.sha }}
-    strategy:
-      matrix:
-        include:
-#          - distro: debian9 #Need to install git 2.18+
-          - distro: debian10
-
-    name: ${{ matrix.distro }}
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: install qt
+      run: brew install qt
 
     - name: Build
       run: |
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/local/opt/qt ..
         . ./version
         make -j
 
