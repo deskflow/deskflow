@@ -23,6 +23,5 @@ else()
     add_executable (synergyd ${sources})
 endif()
 
-target_include_directories(synergyd PUBLIC ${OPENSSL_INCLUDE_DIR})
 target_link_libraries (synergyd
-        arch base common io ipc mt net platform synlib shared ${libs} ${OPENSSL_LIBRARIES})
+        arch base common io ipc mt net platform synlib shared ${libs})

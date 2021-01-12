@@ -22,9 +22,17 @@ if (SYNERGY_ADD_HEADERS)
 endif()
 
 add_library(net STATIC ${sources})
-target_include_directories(net PUBLIC ${OPENSSL_INCLUDE_DIR})
 target_link_libraries(net
-    mt io ${OPENSSL_LIBRARIES})
+    PUBLIC
+        OpenSSL::SSL
+    PRIVATE
+        mt
+        io
+)
 if(WIN32)
-    target_link_libraries(net Crypt32 ws2_32)
+    target_link_libraries(net
+        PRIVATE
+            Crypt32
+            ws2_32
+    )
 endif()

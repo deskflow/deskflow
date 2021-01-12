@@ -17,9 +17,8 @@ file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
 add_executable(syntool ${sources})
-target_include_directories(syntool PUBLIC ${OPENSSL_INCLUDE_DIR})
 target_link_libraries(syntool
-    synlib arch base client common io ipc mt net platform server ${libs} ${OPENSSL_LIBRARIES})
+    synlib arch base client common io ipc mt net platform server ${libs})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     install (TARGETS syntool DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
