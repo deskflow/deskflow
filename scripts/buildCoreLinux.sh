@@ -6,4 +6,5 @@ mkdir -p build
 pushd build
 cmake -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE ..
 make synergyc synergys
+zip -m synergy-core-macos-x64.zip bin/*
 popd

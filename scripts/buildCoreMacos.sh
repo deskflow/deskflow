@@ -11,4 +11,5 @@ cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl \
   -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE \
   ..
 make synergyc synergys
+zip -m synergy-core-macos-x64.zip bin/*
 popd

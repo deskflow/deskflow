@@ -83,7 +83,11 @@ If (-not (Test-Path env:SYNERGY_BUILD_DIRECTORY)) {
 #
 # Create build folder and make builds
 #
-New-Item -Path . -Name $env:SYNERGY_BUILD_DIRECTORY -ItemType "directory" -ErrorAction SilentlyContinue | Out-Null
+New-Item `
+    -Path . `
+    -Name $env:SYNERGY_BUILD_DIRECTORY `
+    -ItemType "directory" `
+    -ErrorAction SilentlyContinue | Out-Null
 Push-Location $env:SYNERGY_BUILD_DIRECTORY
 Try {
     cmake `
@@ -97,6 +101,9 @@ Try {
         /m `
         /t:synergys `
         /t:synergyc
+    Compress-Archive `
+        -Path ".\bin\${env:SYNERGY_BUILD_TYPE}\*" `
+        -DestinationPath "synergy-core-win-x64.zip"
 } Finally {
     Pop-Location
 }
