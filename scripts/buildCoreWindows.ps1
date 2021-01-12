@@ -73,7 +73,7 @@ If (-not (Test-Path env:LIBPATH)) {
 #
 $env:SYNERGY_NO_LEGACY = 1
 If (-not (Test-Path env:SYNERGY_BUILD_TYPE)) {
-    $env:SYNERGY_BUILD_TYPE = "Debug"
+    $env:SYNERGY_BUILD_TYPE = "Release"
 }
 If (-not (Test-Path env:SYNERGY_BUILD_DIRECTORY)) {
     $env:SYNERGY_BUILD_DIRECTORY = '.\build'
