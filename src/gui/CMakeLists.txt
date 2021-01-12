@@ -25,10 +25,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     list (APPEND LEGACY_GUI_SOURCE_FILES ${LEGACY_GUI_MAC_SOURCE_FILES})
 endif()
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    add_compile_options(-std=c++14)
-endif()
-
 # Retrieve the absolute path to qmake and then use that path to find
 # the binaries
 get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
