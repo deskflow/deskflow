@@ -17,6 +17,19 @@ steps:
   - script: |
       mkdir build-release
       cd build-release
+      yum install -y centos-release-scl-rh
+      yum install -y devtoolset-9-gcc-c++
+      scl enable devtoolset-9 'cmake3 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;'
+      . ./version
+      scl enable devtoolset-9 'make -j'
+    condition: eq(variables['packager'],'centos76-rpm')
+    displayName: 'Build Release rpm'
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
+
+  - script: |
+      mkdir build-release
+      cd build-release
       if [ -z $(which cmake) ]; then
       cmake3 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
       else cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;

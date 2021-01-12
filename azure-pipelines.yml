@@ -48,7 +48,7 @@ jobs:
           name: fedora30
         centos7.6:
           image: symless/synergy-core:centos7.6
-          packager: rpm
+          packager: centos76-rpm
           name: centos76
         centos8:
           image: sgad/synergy-core:centos8
