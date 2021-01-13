@@ -104,6 +104,8 @@ Try {
     Compress-Archive `
         -Path ".\bin\${env:SYNERGY_BUILD_TYPE}\*" `
         -DestinationPath "synergy-core-win-x64.zip"
+    Write-Output "::set-output name=location::build\synergy-core-win-x64.zip"
+    Write-Output "::set-output name=name::synergy-core-win-x64.zip"
 } Finally {
     Pop-Location
 }
