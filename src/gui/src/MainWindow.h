@@ -23,6 +23,7 @@
 #include <QSettings>
 #include <QProcess>
 #include <QThread>
+#include <QMutex>
 
 #include "ui_MainWindowBase.h"
 
@@ -34,7 +35,7 @@
 #include "ActivationDialog.h"
 #include "ConfigWriter.h"
 
-#include <QMutex>
+#include "TrayIcon.h"
 
 class QAction;
 class QMenu;
@@ -108,7 +109,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         int synergyState() const { return m_SynergyState; }
         QString hostname() const { return m_pLineEditHostname->text(); }
         QString configFilename();
-        QString address();
+        QString address() const;
         QString appPath(const QString& name);
         void open();
         void clearLog();
@@ -166,6 +167,7 @@ public slots:
         // TODO This should be properly using the ConfigWriter system.
         QSettings& settings() { return GUI::Config::ConfigWriter::make()->settings(); }
         AppConfig& appConfig() { return *m_AppConfig; }
+        AppConfig const& appConfig() const { return *m_AppConfig; }
         QProcess* synergyProcess() { return m_pSynergy; }
         void setSynergyProcess(QProcess* p) { m_pSynergy = p; }
         void initConnections();
@@ -173,7 +175,7 @@ public slots:
         void createStatusBar();
         void createTrayIcon();
         void loadSettings();
-        void setIcon(qSynergyState state);
+        void setIcon(qSynergyState state) const;
         void setSynergyState(qSynergyState state);
         bool checkForApp(int which, QString& app);
         bool clientArgs(QStringList& args, QString& app);
@@ -221,8 +223,6 @@ public slots:
         QProcess*           m_pSynergy;
         int                 m_SynergyState;
         ServerConfig        m_ServerConfig;
-        QSystemTrayIcon*    m_pTrayIcon;
-        QMenu*              m_pTrayIconMenu;
         bool                m_AlreadyHidden;
         VersionChecker      m_VersionChecker;
         IpcClient           m_IpcClient;
@@ -232,6 +232,7 @@ public slots:
         QMenu*              m_pMenuWindow;
         QMenu*              m_pMenuHelp;
         QAbstractButton*    m_pCancelButton;
+        TrayIcon            m_trayIcon;
         qRuningState        m_ExpectedRunningState;
         QMutex              m_StopDesktopMutex;
         SslCertificate*     m_pSslCertificate;
