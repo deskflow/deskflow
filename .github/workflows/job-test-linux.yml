@@ -25,12 +25,14 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release ..
           . ./version
           make -j
+          zip -m synergy.zip bin/*
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: linux-test-artifacts
-          path: ./build/bin
+          path: build/synergy.zip
+          retention-days: 1
 
   test-artifacts:
     runs-on: ubuntu-latest
@@ -52,20 +54,10 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: linux-test-artifacts
+        path: synergy.zip
 
     - name: Set execute flag
-      run: chmod +x ./bin/*
+      run: unzip synergy.zip
 
     - name: Run unit test
       run: ./bin/unittests
-
-  remove-artifacts:
-    runs-on: ubuntu-latest
-    if: always()
-    needs: [build-artifacts, test-artifacts]
-    steps:
-    - name: Remove Artifacts
-      uses: geekyeggo/delete-artifact@v1
-      with:
-        name: linux-test-artifacts
-  
