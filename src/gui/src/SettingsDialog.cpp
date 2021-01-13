@@ -72,6 +72,8 @@ void SettingsDialog::accept()
     appConfig().setLoadFromSystemScope(m_pRadioSystemScope->isChecked());
     m_appConfig.setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
 
+    appConfig().saveSettings();
+
     QDialog::accept();
 }
 
