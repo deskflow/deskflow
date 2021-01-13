@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: linux-test-artifacts
-          path: ./build/bin/*
+          path: ./build/bin
 
   test-artifacts:
     runs-on: ubuntu-latest
@@ -53,16 +53,19 @@ jobs:
       with:
         name: linux-test-artifacts
 
-    - name: Run unit test
-      run: ./unittests
+    - name: Set execute flag
+      run: chmod +x ./bin/*
 
-  # remove-artifacts:
-  #   runs-on: ubuntu-latest
-  #   if: always()
-  #   needs: [build-artifacts, test-artifacts]
-  #   steps:
-  #   - name: Remove Artifacts
-  #     uses: geekyeggo/delete-artifact@v1
-  #     with:
-  #       name: linux-test-artifacts
+    - name: Run unit test
+      run: ./bin/unittests
+
+  remove-artifacts:
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [build-artifacts, test-artifacts]
+    steps:
+    - name: Remove Artifacts
+      uses: geekyeggo/delete-artifact@v1
+      with:
+        name: linux-test-artifacts
   
