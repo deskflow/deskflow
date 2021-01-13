@@ -43,10 +43,10 @@ jobs:
           - distro: ubuntu20.04
           - distro: ubuntu19.10
           - distro: debian10
-          - distro: fedora29
           - distro: fedora30
-          # - distro: centos7.6 #Need to install git 2.18+
+          - distro: fedora29
           - distro: centos8
+          # - distro: centos7.6 #Need to install git 2.18+
     steps:
     - name: Download Artifacts
       uses: actions/download-artifact@v2
@@ -56,13 +56,13 @@ jobs:
     - name: Run unit test
       run: ./unittests
 
-  remove-artifacts:
-    runs-on: ubuntu-latest
-    if: always()
-    needs: [build-artifacts, test-artifacts]
-    steps:
-    - name: Remove Artifacts
-      uses: geekyeggo/delete-artifact@v1
-      with:
-        name: linux-test-artifacts
+  # remove-artifacts:
+  #   runs-on: ubuntu-latest
+  #   if: always()
+  #   needs: [build-artifacts, test-artifacts]
+  #   steps:
+  #   - name: Remove Artifacts
+  #     uses: geekyeggo/delete-artifact@v1
+  #     with:
+  #       name: linux-test-artifacts
   
