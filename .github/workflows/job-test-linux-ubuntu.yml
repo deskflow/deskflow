@@ -1,0 +1,37 @@
+name: Ubuntu
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-arch64:
+    runs-on: ubuntu-latest
+    container: symless/synergy-core:${{ matrix.distro }}
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+    strategy:
+      matrix:
+        include:
+          - distro: ubuntu20.04
+          - distro: ubuntu19.10
+#          - distro: ubuntu18.04 #Need to install git 2.18+
+#          - distro: ubuntu16.04 #Need to install git 2.18+
+
+    name: ${{ matrix.distro }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        . ./version
+        make -j
+
+    - name: Run unit test
+      run: ./build/bin/unittests
