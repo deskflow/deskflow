@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: linux-test-artifacts
-          path: ./build/bin
+          path: ./build/bin/*
 
   test-artifacts:
     runs-on: ubuntu-latest
@@ -54,7 +54,7 @@ jobs:
         name: linux-test-artifacts
 
     - name: Run unit test
-      run: ./build/bin/unittests
+      run: ./unittests
 
   remove-artifacts:
     runs-on: ubuntu-latest
