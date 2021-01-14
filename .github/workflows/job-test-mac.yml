@@ -23,7 +23,11 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/local/opt/qt ..
+        cmake -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_PREFIX_PATH=/usr/local/opt/qt \
+          -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl \
+          -DOPENSSL_LIBRARIES=/usr/local/opt/openssl/lib \
+          ..
         . ./version
         make -j
 
