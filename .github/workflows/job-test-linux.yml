@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: linux-test-artifacts
-          path: build/synergy.zip
+          path: build/synergy.tar
           retention-days: 1
 
   test-artifacts:
@@ -54,7 +54,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: linux-test-artifacts
-        path: synergy.zip
+        path: synergy.tar
 
     - name: Set execute flag
       run: tar -xcf synergy.tar
