@@ -36,7 +36,7 @@ jobs:
 
   test-artifacts:
     runs-on: ubuntu-latest
-    needs: build-artifacts
+    needs: build-test-artifacts
     name: ${{ matrix.distro }}
     container: symless/synergy-core:${{ matrix.distro }}
     strategy:
