@@ -63,5 +63,12 @@ jobs:
         . ./version
         msbuild synergy-core.sln /p:Configuration=Release
 
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: windows-binaries
+        path: build/bin/Release
+        retention-days: 1
+
     - name: Run unit test
       run: .\build\bin\Release\unittests.exe
