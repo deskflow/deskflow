@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-artifacts:
+  build-test-artifacts:
     runs-on: ubuntu-latest
     container: symless/synergy-core:ubuntu20.04
 
@@ -25,7 +25,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release ..
           . ./version
           make -j
-          zip -m synergy.zip bin/*
+          tar -cvf synergy.tar ./bin/*
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
@@ -57,7 +57,7 @@ jobs:
         path: synergy.zip
 
     - name: Set execute flag
-      run: unzip synergy.zip
+      run: tar -xcf synergy.tar
 
     - name: Run unit test
       run: ./bin/unittests
