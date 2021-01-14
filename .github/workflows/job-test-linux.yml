@@ -54,7 +54,6 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: linux-test-artifacts
-        path: synergy.tar
 
     - name: Extract Archive
       run: tar -xvf synergy.tar
