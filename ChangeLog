@@ -1,7 +1,10 @@
 v1.13.1-snapshot
 ===========
+Bug fixes:
 - #6889 Systray Icon on Ubuntu Auto Start (take 2)
-===========
+
+Enhancements:
+- #6909 Document CLI Arguments
 
 v1.13.0-stable
 ===========
