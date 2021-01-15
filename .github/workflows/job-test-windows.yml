@@ -53,7 +53,7 @@ jobs:
         [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", $env:BONJOUR_BASE_DIR)
     
     - name: Install OpenSSL (full)
-      run: choco install openssl
+      run: choco install openssl --no-progress
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2

@@ -62,6 +62,9 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
+      - name: Install OpenSSL (full)
+        run: choco install openssl --no-progress
+
       - name: Build
         id: build-script
         shell: pwsh
