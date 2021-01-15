@@ -51,6 +51,9 @@ jobs:
         $client = new-object System.Net.WebClient
         $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
         [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", $env:BONJOUR_BASE_DIR)
+    
+    - name: Install OpenSSL (full)
+      run: choco install openssl
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
