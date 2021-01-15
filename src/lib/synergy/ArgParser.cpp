@@ -42,8 +42,8 @@ ArgParser::parseServerArgs(lib::synergy::ServerArgs& args, int argc, const char*
 {
     setArgsBase(args);
     updateCommonArgs(argv);
-
-    for (int i = 1; i < argc; ++i) {
+    int i = 1;
+    while ( i < argc) {
         if (parsePlatformArg(args, argc, argv, i)) {
             continue;
         }
@@ -68,6 +68,7 @@ ArgParser::parseServerArgs(lib::synergy::ServerArgs& args, int argc, const char*
             LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
             return false;
         }
+        ++i;
     }
 
     if (checkUnexpectedArgs()) {
@@ -83,8 +84,8 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
     setArgsBase(args);
     updateCommonArgs(argv);
 
-    int i;
-    for (i = 1; i < argc; ++i) {
+    int i {1};
+    while (i < argc) {
         if (parsePlatformArg(args, argc, argv, i)) {
             continue;
         }
@@ -113,6 +114,7 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
             LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
             return false;
         }
+        ++i;
     }
 
     // exactly one non-option argument (server-address)

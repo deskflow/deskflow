@@ -1110,7 +1110,8 @@ XWindowsClipboard::sendReply(Reply* reply)
                     // if there are any non-ascii characters in string
                     // then print the binary data.
                     static const char* hex = "0123456789abcdef";
-                    for (String::size_type j = 0; j < data.size(); ++j) {
+                    String::size_type j = 0;
+                    while (j < data.size()) {
                         if (data[j] < 32 || data[j] > 126) {
                             String tmp;
                             tmp.reserve(data.size() * 3);
@@ -1123,6 +1124,7 @@ XWindowsClipboard::sendReply(Reply* reply)
                             data = tmp;
                             break;
                         }
+                        ++j;
                     }
                     char* type = XGetAtomName(m_display, target);
                     LOG((CLOG_DEBUG2 "  %s (%s): %s", name, type, data.c_str()));

@@ -35,17 +35,6 @@
 #include <fcntl.h>
 #include <cstring>
 
-#if HAVE_POLL
-#    include <poll.h>
-#else
-#    if HAVE_SYS_SELECT_H
-#        include <sys/select.h>
-#    endif
-#    if HAVE_SYS_TIME_H
-#        include <sys/time.h>
-#    endif
-#endif
-
 #if !HAVE_INET_ATON
 #    include <stdio.h>
 #endif
@@ -87,12 +76,14 @@ inet_aton(const char* cp, struct in_addr* inp)
 // ArchNetworkBSD
 //
 
+ArchNetworkBSD::Connectors ArchNetworkBSD::s_connectors;
+
 ArchNetworkBSD::ArchNetworkBSD()
 = default;
 
 ArchNetworkBSD::~ArchNetworkBSD()
 {
-    ARCH->closeMutex(m_mutex);
+    if (m_mutex) ARCH->closeMutex(m_mutex);
 }
 
 void
@@ -321,7 +312,7 @@ ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
     int t = (timeout < 0.0) ? -1 : static_cast<int>(1000.0 * timeout);
 
     // do the poll
-    n = poll(pfd, n, t);
+    n = s_connectors.poll_impl(pfd, n, t);
 
     // reset the unblock pipe
     if (n > 0 && unblockPipe != nullptr && (pfd[num].revents & POLLIN) != 0) {
@@ -347,6 +338,7 @@ ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
         }
         delete[] pfd;
         throwError(errno);
+        return -1;
     }
 
     // translate back
@@ -849,8 +841,8 @@ ArchNetworkBSD::isAnyAddr(ArchNetAddress addr)
 
     case kINET6: {
         struct sockaddr_in6* ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
-        return (memcmp(&ipAddr->sin6_addr, &in6addr_any, sizeof(in6addr_any)) == 0 &&
-                addr->m_len == (socklen_t)sizeof(struct sockaddr_in6));
+        return (addr->m_len == (socklen_t)sizeof(struct sockaddr_in6) &&
+            memcmp(static_cast<const void*>(&ipAddr->sin6_addr), static_cast<const void*>(&in6addr_any), sizeof(in6_addr)) == 0);
     }
 
     default:
