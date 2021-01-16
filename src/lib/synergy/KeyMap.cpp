@@ -896,7 +896,8 @@ KeyMap::keysForModifierState(KeyButton button, SInt32 group,
     // we'll assume that modifiers with higher bits are affected by modifiers
     // with lower bits.  there's not much basis for that assumption except
     // that we're pretty sure shift isn't changed by other modifiers.
-    for (SInt32 bit = kKeyModifierNumBits; bit-- > 0; ) {
+    SInt32 bit = kKeyModifierNumBits;
+    while (bit-- > 0) {
         KeyModifierMask mask = (1u << bit);
         if ((flipMask & mask) == 0) {
             // modifier is already correct
@@ -1326,20 +1327,15 @@ KeyMap::KeyItem::operator==(const KeyItem& x) const
 
 KeyMap::Keystroke::Keystroke(KeyButton button,
                 bool press, bool repeat, UInt32 data) :
-    m_type(kButton)
+    m_type(kButton), m_data{}
 {
-    m_data.m_button.m_button = button;
-    m_data.m_button.m_press  = press;
-    m_data.m_button.m_repeat = repeat;
-    m_data.m_button.m_client = data;
+    m_data.m_button = {button, press, repeat, data};
 }
 
 KeyMap::Keystroke::Keystroke(SInt32 group, bool absolute, bool restore) :
-    m_type(kGroup)
+    m_type(kGroup), m_data{}
 {
-    m_data.m_group.m_group    = group;
-    m_data.m_group.m_absolute = absolute;
-    m_data.m_group.m_restore  = restore;
+    m_data.m_group = {group, absolute, restore};
 }
 
 }
