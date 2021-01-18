@@ -1,5 +1,6 @@
 v1.13.1-snapshot
 ===========
+- #6xxx Removes UI for Screen Saver Sync and Files Drag and Drop
 - #6889 Systray Icon on Ubuntu Auto Start (take 2)
 ===========
 
