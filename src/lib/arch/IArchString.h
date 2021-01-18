@@ -45,8 +45,9 @@ public:
     enum EWideCharEncoding {
         kUCS2,        //!< The UCS-2 encoding
         kUCS4,        //!< The UCS-4 encoding
-        kUTF16,        //!< The UTF-16 encoding
-        kUTF32        //!< The UTF-32 encoding
+        kUTF16,       //!< The UTF-16 encoding
+        kUTF32,       //!< The UTF-32 encoding
+        kPlatformDetermined
     };
 
     //! @name manipulators

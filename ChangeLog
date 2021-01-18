@@ -1,8 +1,11 @@
 v1.13.1-snapshot
 ===========
-- #6912 Removes UI for Screen Saver Sync and Files Drag and Drop
+Bug fixes:
+- #6900 Remaining SonarCloud reported bug items
 - #6889 Systray Icon on Ubuntu Auto Start (take 2)
-===========
+
+Enhancements:
+- #6912 Removes UI for Screen Saver Sync and Files Drag and Drop
 
 v1.13.0-stable
 ===========
