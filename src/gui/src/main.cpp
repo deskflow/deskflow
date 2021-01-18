@@ -97,10 +97,9 @@ int main(int argc, char* argv[])
     QObject::connect(dynamic_cast<QObject*>(&app), SIGNAL(aboutToQuit()),
                 &mainWindow, SLOT(saveSettings()));
 
-    SetupWizard setupWizard(mainWindow, true);
-
     if (appConfig.wizardShouldRun())
     {
+        SetupWizard setupWizard(mainWindow, true);
         setupWizard.show();
     }
     else
