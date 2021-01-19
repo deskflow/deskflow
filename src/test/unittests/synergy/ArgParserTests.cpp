@@ -22,6 +22,7 @@
 #include "synergy/ArgsBase.h"
 #include "synergy/ToolArgs.h"
 #include "synergy/ServerArgs.h"
+#include "synergy/ClientArgs.h"
 
 #include "test/global/gtest.h"
 
@@ -235,7 +236,18 @@ TEST(ArgParserTests, parseServerArgs_parses_single_help)
 {
     ArgParser parser(nullptr);
     lib::synergy::ServerArgs args;
+    args.m_daemon = false;
     char const *argv[] = {"synergy", "--help"};
     EXPECT_TRUE(parser.parseServerArgs(args, 2, argv));
+    EXPECT_EQ(args.m_shouldExit, true);
+}
+
+TEST(ArgParserTests, parseClientArgs_parses_single_help) 
+{
+    ArgParser parser(nullptr);
+    lib::synergy::ClientArgs args;
+    args.m_daemon = false;
+    char const *argv[] = {"synergy", "--help", "127.0.0.1"};
+    EXPECT_TRUE(parser.parseClientArgs(args, 3, argv));
     EXPECT_EQ(args.m_shouldExit, true);
 }
