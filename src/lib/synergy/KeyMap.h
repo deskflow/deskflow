@@ -50,15 +50,15 @@ public:
 	*/
 	struct KeyItem {
 	public:
-		KeyID			m_id;			//!< KeyID
-		SInt32			m_group;		//!< Group for key
-		KeyButton		m_button;		//!< Button to generate KeyID
-		KeyModifierMask	m_required;		//!< Modifiers required for KeyID
-		KeyModifierMask	m_sensitive;	//!< Modifiers key is sensitive to
-		KeyModifierMask	m_generates;	//!< Modifiers key is mapped to
-		bool			m_dead;			//!< \c true if this is a dead KeyID
-		bool			m_lock;			//!< \c true if this locks a modifier
-		UInt32			m_client;		//!< Client data
+		KeyID			m_id {};		//!< KeyID
+		SInt32			m_group {};		//!< Group for key
+		KeyButton		m_button {};	//!< Button to generate KeyID
+		KeyModifierMask	m_required {};	//!< Modifiers required for KeyID
+		KeyModifierMask	m_sensitive {};	//!< Modifiers key is sensitive to
+		KeyModifierMask	m_generates {};	//!< Modifiers key is mapped to
+		bool			m_dead {};		//!< \c true if this is a dead KeyID
+		bool			m_lock {};		//!< \c true if this locks a modifier
+		UInt32			m_client {};	//!< Client data
 
 	public:
 		bool			operator==(const KeyItem&) const;
@@ -90,24 +90,24 @@ public:
 	public:
 		struct Button {
 		public:
-			KeyButton	m_button;		//!< Button to synthesize
-			bool		m_press;		//!< \c true iff press
-			bool		m_repeat;		//!< \c true iff for an autorepeat
-			UInt32		m_client;		//!< Client data
+			KeyButton	m_button {};		//!< Button to synthesize
+			bool		m_press {};		//!< \c true iff press
+			bool		m_repeat {};		//!< \c true iff for an autorepeat
+			UInt32		m_client{};		//!< Client data
 		};
 		struct Group {
 		public:
-			SInt32		m_group;		//!< Group/offset to change to/by
-			bool		m_absolute;		//!< \c true iff change to, else by
-			bool		m_restore;		//!< \c true iff for restoring state
+			SInt32		m_group {};		//!< Group/offset to change to/by
+			bool		m_absolute {};		//!< \c true iff change to, else by
+			bool		m_restore {};		//!< \c true iff for restoring state
 		};
 		union Data {
 		public:
-			Button		m_button;
+			Button		m_button {};
 			Group		m_group;
 		};
 
-		EType			m_type;
+		EType			m_type {};
 		Data			m_data;
 	};
 

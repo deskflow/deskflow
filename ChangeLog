@@ -1,6 +1,7 @@
 v1.13.1-snapshot
 ===========
 Bug fixes:
+- #6900 Remaining SonarCloud reported bug items
 - #6889 Systray Icon on Ubuntu Auto Start (take 2)
 
 Enhancements:
