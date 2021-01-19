@@ -263,6 +263,6 @@ TEST(ArgParserTests, parseClientArgs_parses_single_help)
     , "--res-w"
     , "888"    
     , "127.0.0.1" };
-    EXPECT_TRUE(parser.parseClientArgs(args, 3, argv));
+    EXPECT_TRUE(parser.parseClientArgs(args, sizeof(argv)/sizeof(argv[0]), argv));
     EXPECT_EQ(args.m_shouldExit, true);
 }
