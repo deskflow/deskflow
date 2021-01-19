@@ -21,6 +21,7 @@
 #include "synergy/ArgParser.h"
 #include "synergy/ArgsBase.h"
 #include "synergy/ToolArgs.h"
+#include "synergy/ServerArgs.h"
 
 #include "test/global/gtest.h"
 
@@ -230,3 +231,11 @@ TEST(ArgParserTests, parseToolArgs_matches_correspondingly)
     EXPECT_FALSE(parser.parseToolArgs(toolArgs, 2, twoArgs.data()));
 }
 
+TEST(ArgParserTests, parseServerArgs_parses_single_help) 
+{
+    ArgParser parser(nullptr);
+    lib::synergy::ServerArgs args;
+    char const *argv[] = {"synergy", "--help"};
+    EXPECT_TRUE(parser.parseServerArgs(args, 2, argv));
+    EXPECT_EQ(args.m_shouldExit, true);
+}
