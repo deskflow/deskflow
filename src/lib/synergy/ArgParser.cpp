@@ -45,12 +45,15 @@ ArgParser::parseServerArgs(lib::synergy::ServerArgs& args, int argc, const char*
     int i = 1;
     while ( i < argc) {
         if (parsePlatformArg(args, argc, argv, i)) {
+            ++i;
             continue;
         }
         else if (parseGenericArgs(argc, argv, i)) {
+            ++i;
             continue;
         }
         else if (parseDeprecatedArgs(argc, argv, i)) {
+            ++i;
             continue;
         }
         else if (isArg(i, argc, argv, "-a", "--address", 1)) {
@@ -87,12 +90,15 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
     int i {1};
     while (i < argc) {
         if (parsePlatformArg(args, argc, argv, i)) {
+            ++i;
             continue;
         }
         else if (parseGenericArgs(argc, argv, i)) {
+            ++i;
             continue;
         }
         else if (parseDeprecatedArgs(argc, argv, i)) {
+            ++i;
             continue;
         }
         else if (isArg(i, argc, argv, NULL, "--camp")) {
