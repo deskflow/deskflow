@@ -5,6 +5,13 @@ Bug fixes:
 - #6903 Save global settings
 - #6889 Systray Icon on Ubuntu Auto Start (take 2)
 
+Enhancements:
+- #6909 Document CLI Arguments
+- #6916 Main Window receives screen name change
+- #6910 Don't use the word “Version” for release names because it can lead to errors during update checking.
+- #6918 Removing positional union initialisation
+===========
+
 v1.13.0-stable
 ===========
 Bug fixes:
