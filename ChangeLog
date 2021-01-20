@@ -4,7 +4,7 @@ Bug fixes:
 - #6900 Remaining SonarCloud reported bug items (test fixed)
 - #6889 Systray Icon on Ubuntu Auto Start (take 2)
 - #6910 Don't use the word “Version” for release names because it can lead to errors during update checking.
-- #69XX Removing positional union initialisation
+- #6918 Removing positional union initialisation
 ===========
 
 v1.13.0-stable
