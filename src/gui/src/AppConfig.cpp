@@ -335,6 +335,7 @@ void AppConfig::setLastVersion(const QString& version) {
 
 void AppConfig::setScreenName(const QString &s) {
     setSettingModified(m_ScreenName, s);
+    emit screenNameChanged();
 }
 
 void AppConfig::setPort(int i) {
