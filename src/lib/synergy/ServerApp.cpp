@@ -538,7 +538,7 @@ ServerApp::startServer()
         assert(m_serverState == kInitialized);
     }
 
-    double retryTime;
+    double retryTime {};
     ClientListener* listener = NULL;
     try {
         listener   = openClientListener(args().m_config->getSynergyAddress());

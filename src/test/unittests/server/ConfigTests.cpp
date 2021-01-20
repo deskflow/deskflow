@@ -73,8 +73,12 @@ TEST(ServerConfigTests, serverconfig_will_deem_equal_configs_with_same_cell_name
     b.getInputFilter()->addFilterRule(InputFilter::Rule{new OnlySystemFilter()});
     a.addAlias("screenA", "aliasA");
     b.addAlias("screenA", "aliasA");
-    a.setSynergyAddress(NetworkAddress(8080));
-    b.setSynergyAddress(NetworkAddress(8080));
+    NetworkAddress addr1("localhost", 8080);
+    addr1.resolve();
+    NetworkAddress addr2("localhost", 8080);
+    addr2.resolve();
+    a.setSynergyAddress(addr1);
+    b.setSynergyAddress(addr2);
 
     EXPECT_TRUE(a == b);
     EXPECT_TRUE(b == a);
