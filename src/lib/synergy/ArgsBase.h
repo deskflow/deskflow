@@ -40,7 +40,6 @@ namespace lib {
             Type                 m_classType         = kBase;      /// @brief Stores what type of object this is
 
             bool                 m_daemon            = true;       /// @brief Should run as a daemon
-            bool                 m_backend           = false;      /// @brief //TODO Unsure what this is used for
             bool                 m_restartable       = true;       /// @brief Should the app restart automatically
             bool                 m_noHooks           = false;      /// @brief Should the app use hooks
             const char*          m_pname             = nullptr;    /// @brief The filename of the running process

@@ -1329,13 +1329,18 @@ KeyMap::Keystroke::Keystroke(KeyButton button,
                 bool press, bool repeat, UInt32 data) :
     m_type(kButton), m_data{}
 {
-    m_data.m_button = {button, press, repeat, data};
+    m_data.m_button.m_button = button;
+    m_data.m_button.m_press = press;
+    m_data.m_button.m_repeat = repeat;
+    m_data.m_button.m_client = data;
 }
 
 KeyMap::Keystroke::Keystroke(SInt32 group, bool absolute, bool restore) :
     m_type(kGroup), m_data{}
 {
-    m_data.m_group = {group, absolute, restore};
+    m_data.m_group.m_group = group;
+    m_data.m_group.m_absolute = absolute;
+    m_data.m_group.m_restore = restore;
 }
 
 }

@@ -143,6 +143,7 @@ public slots:
 
     protected slots:
         void updateLocalFingerprint();
+        void updateScreenName();
         void on_m_pGroupClient_toggled(bool on);
         void on_m_pGroupServer_toggled(bool on);
         bool on_m_pButtonBrowseConfigFile_clicked();
