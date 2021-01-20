@@ -12,6 +12,6 @@ cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl \
   ..
 make synergyc synergys
 zip synergy-core-macos-x64.zip bin/*
-echo "::set-output name=location::build\synergy-core-macos-x64.zip"
+echo "::set-output name=location::build/synergy-core-macos-x64.zip"
 echo "::set-output name=name::synergy-core-macos-x64.zip"
 popd
