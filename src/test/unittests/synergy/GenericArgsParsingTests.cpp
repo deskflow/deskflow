@@ -160,16 +160,13 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_restartCmd_restartTrue)
     EXPECT_EQ(1, i);
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_backendCmd_backendTrue)
+TEST_F(GenericArgsParsingTests, parseGenericArgs_backendCmd_rejected)
 {
     int i = 1;
     const int argc = 2;
     const char* kBackendCmd[argc] = { "stub", "-z" };
 
-    m_argParser->parseGenericArgs(argc, kBackendCmd, i);
-
-    EXPECT_EQ(true, argsBase.m_backend);
-    EXPECT_EQ(1, i);
+    EXPECT_FALSE(m_argParser->parseGenericArgs(argc, kBackendCmd, i));
 }
 
 TEST_F(GenericArgsParsingTests, parseGenericArgs_noHookCmd_noHookTrue)
