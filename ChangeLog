@@ -10,6 +10,7 @@ Enhancements:
 - #6916 Main Window receives screen name change
 - #6910 Don't use the word “Version” for release names because it can lead to errors during update checking.
 - #6918 Removing positional union initialisation
+- #6913 Create binaries and attach them to GitHub releases
 ===========
 
 v1.13.0-stable

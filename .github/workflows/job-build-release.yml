@@ -1,0 +1,80 @@
+name: Build Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-linux-release:
+    runs-on: ubuntu-latest
+    container: symless/synergy-core:ubuntu20.04
+
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Build
+        id: build-script
+        run: ./scripts/buildCoreLinux.sh
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ steps.build-script.outputs.location }}
+          asset_name: ${{ steps.build-script.outputs.name }}
+          tag: ${{ github.ref }}
+          overwrite: false
+
+  build-macos-release:
+    runs-on: macos-10.15
+
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Build
+        id: build-script
+        run: ./scripts/buildCoreMacos.sh
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ steps.build-script.outputs.location }}
+          asset_name: ${{ steps.build-script.outputs.name }}
+          tag: ${{ github.ref }}
+          overwrite: false
+
+  build-windows-release:
+    runs-on: windows-2019
+
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Install OpenSSL (full)
+        run: choco install openssl --no-progress
+
+      - name: Build
+        id: build-script
+        shell: pwsh
+        run: ./scripts/buildCoreWindows.ps1
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ steps.build-script.outputs.location }}
+          asset_name: ${{ steps.build-script.outputs.name }}
+          tag: ${{ github.ref }}
+          overwrite: false
