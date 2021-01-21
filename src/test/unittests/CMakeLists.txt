@@ -68,4 +68,4 @@ endif()
 
 add_executable(unittests ${sources})
 target_link_libraries(unittests
-    arch base client server common io net platform server synlib mt ipc gtest gmock shared ${libs} ${OPENSSL_LIBS})
+    arch base client server common io net platform server synlib mt ipc gtest gmock shared ${libs})

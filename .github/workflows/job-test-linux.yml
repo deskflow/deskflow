@@ -1,0 +1,60 @@
+name: Linux
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-test-artifacts:
+    name: Building on ${{ matrix.source }}
+    strategy:
+      matrix:
+        source: [debian10, centos8]
+    runs-on: ubuntu-latest
+    container: symless/synergy-core:${{ matrix.source }}
+
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          . ./version
+          make -j
+          tar -cvf synergy.tar ./bin/*
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-test-artifacts-${{ matrix.source }}
+          path: build/synergy.tar
+          retention-days: 1
+
+  test-artifacts:
+    runs-on: ubuntu-latest
+    needs: build-test-artifacts
+    name: ${{ matrix.distro }} running ${{ matrix.source }}
+    container: symless/synergy-core:${{ matrix.distro }}
+    strategy:
+      matrix:
+        distro: [ubuntu20.04, ubuntu19.10, debian10, fedora30, fedora29, centos8]
+        source: [debian10, centos8]
+    steps:
+    - name: Download Artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: linux-test-artifacts-${{ matrix.source }}
+
+    - name: Extract Archive
+      run: tar -xvf synergy.tar
+
+    - name: Run unit test
+      run: ./bin/unittests

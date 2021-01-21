@@ -30,14 +30,14 @@ Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (symless.com).
 &lt;/p&gt;</source>
-      <translation type="unfinished">&lt;p&gt;
-Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+      <translation>&lt;p&gt;
+Aplicación para compartir ratón y teclado. Multiplataforma y de código abierto.&lt;br /&gt;&lt;br /&gt;
 Copyright © 2012-2019 Symless Ltd.&lt;br /&gt;
 Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
-Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
-The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
-Visit our website for help and info (symless.com).
+Synergy se distribuye bajo la Licencia Pública General GNU (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Synergy se basa en CosmoSynergy por Richard Lee y Adam Feder.&lt;br /&gt;
+La interfaz de Synergy se basa en QSynergy por Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Visite nuestro sitio Web para obtener ayuda e información (symless.com).
 &lt;/p&gt;</translation>
     </message>
     <message>
@@ -461,12 +461,12 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindow.cpp" line="1354"/>
       <source>Please add the server (%1) to the grid.</source>
-      <translation type="unfinished">Please add the server (%1) to the grid.</translation>
+      <translation>Por favor, agregue el servidor (%1) en la grilla.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1360"/>
       <source>Please drag the new client screen (%1) to the desired position on the grid.</source>
-      <translation type="unfinished">Please drag the new client screen (%1) to the desired position on the grid.</translation>
+      <translation>Por favor, arrastre la pantalla cliente (%1) a la posición deseada.</translation>
     </message>
     <message>
       <location filename="src/MainWindow.cpp" line="1093"/>
@@ -530,7 +530,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="184"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manual Config mode active, consider using Auto Config instead (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Settings&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manual Config mode active, consider using Auto Config instead (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Settings&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Modo de configuración Manual, considere usar Auto Config (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Preferencias&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="257"/>
@@ -570,7 +570,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/MainWindowBase.ui" line="405"/>
       <source>Hostname or IP address of the server computer.</source>
-      <translation type="unfinished">Hostname or IP address of the server computer.</translation>
+      <translation>Nombre o dirección IP del servidor.</translation>
     </message>
     <message>
       <location filename="src/MainWindowBase.ui" line="428"/>
@@ -709,11 +709,6 @@ To automatically trust this fingerprint for future connections, click Yes. To re
       <source>Synergy Configurations (*.conf);;All files (*.*)</source>
       <translation>Configuraciones Synergy (*.conf);;Todos los archivos (*.*)</translation>
     </message>
-    <message>
-      <location filename="src/main.cpp" line="138"/>
-      <source>System tray is unavailable, don&apos;t close your window.</source>
-      <translation type="unfinished">System tray is unavailable, don&apos;t close your window.</translation>
-    </message>
   </context>
   <context>
     <name>ScreenSettingsDialog</name>
@@ -832,7 +827,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="150"/>
       <source>&amp;Ctrl:</source>
-      <translation type="unfinished">&amp;Ctrl:</translation>
+      <translation>&amp;Ctrl:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="197"/>
@@ -842,7 +837,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="244"/>
       <source>M&amp;eta:</source>
-      <translation type="unfinished">M&amp;eta:</translation>
+      <translation>M&amp;eta:</translation>
     </message>
     <message>
       <location filename="src/ScreenSettingsDialogBase.ui" line="291"/>
@@ -1072,7 +1067,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="501"/>
       <source>Ignore auto config clients</source>
-      <translation type="unfinished">Ignore auto config clients</translation>
+      <translation>Ignorar la configuración automatica de clientes</translation>
     </message>
     <message>
       <location filename="src/ServerConfigDialogBase.ui" line="571"/>
@@ -1128,7 +1123,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="21"/>
       <source>&amp;Settings Scope</source>
-      <translation type="unfinished">&amp;Settings Scope</translation>
+      <translation>&amp;Alcance de las preferencias</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="27"/>
@@ -1158,7 +1153,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="147"/>
       <source>Specify when the Synergy service should run at an elevated privilege level</source>
-      <translation type="unfinished">Specify when the Synergy service should run at an elevated privilege level</translation>
+      <translation>Especifique cuándo el servicio de Synergy debe ejecutarse con privilegios elevados</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="154"/>
@@ -1203,7 +1198,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="270"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Install Bonjour&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Install Bonjour&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Instalar Bonjour&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/SettingsDialogBase.ui" line="280"/>
@@ -1305,22 +1300,22 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/SetupWizardBase.ui" line="159"/>
       <source>My main mouse and keyboard are connected to this computer. This will allow you to move your mouse over to another computer&apos;s screen. There can only be one server in your setup.</source>
-      <translation type="unfinished">My main mouse and keyboard are connected to this computer. This will allow you to move your mouse over to another computer&apos;s screen. There can only be one server in your setup.</translation>
+      <translation>Mi ratón y teclado principales están conectados a este ordenador. Esto le permitirá mover el puntero hacia otra pantalla en otro ordenador. Puede haber sólo un servidor en su configuración.</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="204"/>
       <source>You have already set up a server. This computer will be controlled using the server&apos;s mouse and keyboard. There can be many clients in your setup.</source>
-      <translation type="unfinished">You have already set up a server. This computer will be controlled using the server&apos;s mouse and keyboard. There can be many clients in your setup.</translation>
+      <translation>Ya ha configurado un servidor. Este ordenador será controlado utilizando el ratón y teclado del servidor. Se pueden agregar varios clientes en su configuración.</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="146"/>
       <source>&amp;Server (share this computer&apos;s mouse and keyboard)</source>
-      <translation>&amp;Server (share this computer&apos;s mouse and keyboard)</translation>
+      <translation>&amp;Servidor (compartir el teclado y ratón de este ordenador)</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="191"/>
       <source>&amp;Client (use another computer&apos;s mouse and keyboard)</source>
-      <translation>&amp;Client (use another computer&apos;s mouse and keyboard)</translation>
+      <translation>&amp;Cliente (usar el teclado y ratón de otro ordenador)</translation>
     </message>
     <message>
       <location filename="src/SetupWizardBase.ui" line="131"/>
@@ -1333,7 +1328,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/SslCertificate.cpp" line="46"/>
       <source>Failed to get profile directory.</source>
-      <translation type="unfinished">Failed to get profile directory.</translation>
+      <translation>No fue posible encontrar el directorio de perfil.</translation>
     </message>
     <message>
       <location filename="src/SslCertificate.cpp" line="148"/>
@@ -1343,7 +1338,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/SslCertificate.cpp" line="178"/>
       <source>SSL fingerprint generated.</source>
-      <translation type="unfinished">SSL fingerprint generated.</translation>
+      <translation>Se generó la huella digital SSL.</translation>
     </message>
     <message>
       <location filename="src/SslCertificate.cpp" line="181"/>
@@ -1364,12 +1359,12 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/ZeroconfService.cpp" line="82"/>
       <source>zeroconf server detected: %1</source>
-      <translation type="unfinished">zeroconf server detected: %1</translation>
+      <translation>se detectó un servidor zeroconf: %1</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="91"/>
       <source>zeroconf client detected: %1</source>
-      <translation type="unfinished">zeroconf client detected: %1</translation>
+      <translation>se detectó un cliente zeroconf: %1</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="100"/>
@@ -1381,7 +1376,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/ZeroconfService.cpp" line="133"/>
       <source>Unable to start zeroconf: %1.</source>
-      <translation type="unfinished">Unable to start zeroconf: %1.</translation>
+      <translation>No fue posible iniciar zeroconf: %1.</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="101"/>
@@ -1391,7 +1386,7 @@ Haz doble click sobre una pantalla para modificar sus ajustes.</translation>
     <message>
       <location filename="src/ZeroconfService.cpp" line="144"/>
       <source>Failed to get local IP address. Please manually type in server address on your clients</source>
-      <translation type="unfinished">Failed to get local IP address. Please manually type in server address on your clients</translation>
+      <translation>No fue posible obtener la IP local. Por favor, ingrese la IP manualmente en sus clientes.</translation>
     </message>
     <message>
       <location filename="src/ZeroconfService.cpp" line="150"/>
