@@ -14,7 +14,7 @@ public:
 
     TrayIcon() 
     {
-        set = [this](const QIcon &icon){
+        m_set = [this](const QIcon &icon){
             m_init = [this,icon](){
                 this->set(icon);
             };
@@ -39,7 +39,7 @@ public:
         m_pTrayIcon = std::make_unique<QSystemTrayIcon>();
         m_pTrayIcon->setContextMenu(m_pTrayIconMenu.get());
         m_pTrayIcon->setToolTip("Synergy");
-        set = [this](const QIcon& icon) { m_pTrayIcon->setIcon(icon); };
+        m_set = [this](const QIcon& icon) { m_pTrayIcon->setIcon(icon); };
 
         tryCreate();
         if (m_init) {
@@ -49,12 +49,12 @@ public:
     }
 
     void tryCreate() const;
-
-    std::function<void(const QIcon& icon)> set;
+    void set(const QIcon& icon) const { m_set(icon); }
 
 private:
-    std::unique_ptr<QSystemTrayIcon>    m_pTrayIcon {};
-    std::unique_ptr<QMenu>              m_pTrayIconMenu {};
-    TConnector                          m_connector;
-    std::function<void()>               m_init;
+    std::unique_ptr<QSystemTrayIcon>        m_pTrayIcon {};
+    std::unique_ptr<QMenu>                  m_pTrayIconMenu {};
+    TConnector                              m_connector;
+    std::function<void()>                   m_init;
+    std::function<void(const QIcon& icon)>  m_set;
 };
