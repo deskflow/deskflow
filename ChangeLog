@@ -6,6 +6,7 @@ Bug fixes:
 - #6889 Systray Icon on Ubuntu Auto Start (take 2)
 - #6914 Fix for Qt Word Wrap on Mac
 - #6920 Windows Installer checksums
+- #6921 Handling pre-main window creation status notifications
 - #6922 macOS CI build
 
 Enhancements:
@@ -15,7 +16,6 @@ Enhancements:
 - #6910 Don't use the word “Version” for release names because it can lead to errors during update checking.
 - #6918 Removing positional union initialisation
 - #6913 Create binaries and attach them to GitHub releases
-===========
 
 v1.13.0-stable
 ===========
