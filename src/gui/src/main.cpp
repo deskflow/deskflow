@@ -97,10 +97,11 @@ int main(int argc, char* argv[])
     QObject::connect(dynamic_cast<QObject*>(&app), SIGNAL(aboutToQuit()),
                 &mainWindow, SLOT(saveSettings()));
 
+    std::unique_ptr<SetupWizard> setupWizard;
     if (appConfig.wizardShouldRun())
     {
-        SetupWizard setupWizard(mainWindow, true);
-        setupWizard.show();
+        setupWizard.reset(new SetupWizard(mainWindow, true));
+        setupWizard->show();
     }
     else
     {
