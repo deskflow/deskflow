@@ -42,6 +42,10 @@ public:
         set = [this](const QIcon& icon) { m_pTrayIcon->setIcon(icon); };
 
         tryCreate();
+        if (m_init) {
+            m_init();
+            m_init = std::function<void()>();
+        }
     }
 
     void tryCreate() const;
