@@ -12,6 +12,15 @@ class TrayIcon : public QObject
 public:
     using TConnector = std::function<void(QObject const *, const char *)>;
 
+    TrayIcon() 
+    {
+        set = [this](const QIcon &icon){
+            m_init = [this,icon](){
+                this->set(icon);
+            };
+        };
+    }
+
     template<typename TActionContainer>
     void create(TActionContainer const &actionContainer, TConnector const &connector) 
     {
@@ -30,16 +39,18 @@ public:
         m_pTrayIcon = std::make_unique<QSystemTrayIcon>();
         m_pTrayIcon->setContextMenu(m_pTrayIconMenu.get());
         m_pTrayIcon->setToolTip("Synergy");
+        set = [this](const QIcon& icon) { m_pTrayIcon->setIcon(icon); };
 
         tryCreate();
     }
 
     void tryCreate() const;
 
-    void set(const QIcon& icon) const;
+    std::function<void(const QIcon& icon)> set;
 
 private:
     std::unique_ptr<QSystemTrayIcon>    m_pTrayIcon {};
     std::unique_ptr<QMenu>              m_pTrayIconMenu {};
     TConnector                          m_connector;
+    std::function<void()>               m_init;
 };
