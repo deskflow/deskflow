@@ -37,6 +37,9 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
     resize(600, 500);
     setMinimumSize(size());
 
+    // additionally, we identified an issue with presenting dots, see SYNERGY-719
+    duplicateSpaces();
+
 #elif defined(Q_OS_WIN)
 
     // when areo is disabled on windows, the next/back buttons
@@ -146,4 +149,19 @@ void SetupWizard::on_m_pComboLanguage_currentIndexChanged(int index)
 {
     QString ietfCode = m_pComboLanguage->itemData(index).toString();
     QSynergyApplication::getInstance()->switchTranslator(ietfCode);
+#if defined(Q_OS_MAC)
+    duplicateSpaces();
+#endif // defined(Q_OS_MAC)
 }
+
+#if defined(Q_OS_MAC)
+void SetupWizard::duplicateSpaces()
+{
+    auto list = this->findChildren<QLabel *>();
+    foreach(QLabel *l, list) {
+        if (l->wordWrap()) {
+            l->setText(l->text().replace(". ", ".  "));
+        }
+    }
+}
+#endif // defined(Q_OS_MAC)
