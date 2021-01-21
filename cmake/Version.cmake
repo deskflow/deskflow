@@ -50,7 +50,7 @@ if (DEFINED SYNERGY_REVISION)
     endif()
     unset (SYNERGY_REVISION_LENGTH)
 else()
-	set (SYNERGY_REVISION "0badc0de")
+    set (SYNERGY_REVISION "0badc0de")
 endif()
 
 if (DEFINED ENV{BUILD_NUMBER})
